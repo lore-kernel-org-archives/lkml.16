@@ -1,302 +1,185 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1655521B9D3
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6979721D3F6;
+	Thu, 10 Apr 2025 09:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276741; cv=none; b=abj191lyzsnfTUsez56I1mPDbN00oUELQXt4JrLtO0Nf2URJWGbjo4g1CscS91+8ZMoBvcOtvl/vyeEkgN8/8C8IjKIioK8F2/4XrfknASuJasNsnw0uasxTQ9O7wFtoDeG3UZ1MiOLy8RJV72jmhE9zczfUyZtBgBDqn9y8/f0=
+	t=1744276771; cv=none; b=XaMZl/keiZ1Fwh+q/A033DPjUBXv8+pJb5zj1zok/z4GPa66rmT0U+6LeAwX1oE9ST4c3nYGutq/5mb1uFj1f8bPveVt4jw/Ul20CMevs9nJ2k6WeB+5Iqdg+3QzCBrN3x3is2qn1H/N327+r1M2AbzTPK/vl83MbWrbecMBBjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276741; c=relaxed/simple;
-	bh=aI5DckRcY3uvGVitEQyezExuiLfiGorC7LFw35ahPaE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=awgbb+HA6OjbfU0SKZP5z9VJVgOx/dIlSO3iXWEjNKVKPqE6phg4f4nX4HJWgtAD00B/lbZtOgj4UkEeHJb7c1wB8pxd/VkXzR9SiPsmJhNWe4os/5iWPoEbjneFmSvGu2U5QHBlP8sYj1UTARDcMgM1JQq2CAeQ4uUlIXfCogI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZaeFFJn5; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744276771; c=relaxed/simple;
+	bh=jyp8zbK16dxt+pX+B0WDW/DB8XOD++gFP8UT7RAEGFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bM4VgSxUoskY6P2Q4H2Mzxl87mHZdAWl6ODX5Lwd/3HU61rvHrWRrmMRvvX5h0blBqQi6DreOYxM3RBbPJDHYxrelItlYnLNslUr4jlAnpG7PiC3AP79FTbxA4/80n8qbhH8GukRHLMCcQRqp2YnnotUED82yhGzjkIzo52xzRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQQ3DxEG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZaeFFJn5"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso6445705e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744276737; x=1744881537; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WwIUe5xeYKahYAImN2NVHeSMnWwIAKuXbFFVaCCoOAA=;
-        b=ZaeFFJn5qOel80UQTiSeHHVUC+XtCw+vwQ1Xpt51wf5UGWTBipNIp4hNUlKKw5lJXp
-         AmOSeHdEvCyJZWnqQ8ng5g/1GJhnCetvmJQZk0fZfcvG/BCueYZCeavH/x6j/IPQ585f
-         YlMgWZ5HjyZ3JOtjTgDPaBkZNoOrEP7RXpDsoWoUTx//79Zda9EfNISZquHCtUJDthLe
-         ai4wkuLDq2fXxCajEPWNjOtH3RIfICnrpPilzJjEMqO8BgE0JJqvAuBJH5UhIdHfmaCH
-         dIVNpEvJH0cA+DY9Fv4Psz+rlCwdfhodU/58Hpim6EJ30ctWUtcsPqGNN0NxxZcJ0Zln
-         ZsRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744276737; x=1744881537;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WwIUe5xeYKahYAImN2NVHeSMnWwIAKuXbFFVaCCoOAA=;
-        b=sO+2hOmk+sqMbwxniQf0rL4XGiPWXukKOWNwUz0QsONRgyUO6By+O+YJGHyzT89s+w
-         ePC1gIBVWmv4Z03Bz/XxOZx+HzUp0Dg4Z7jcTDS+7kmgxaSgmOEFifN2aWXDjaACDyPi
-         BKG2TzYsZPiRPk5MqQVO+vpqiCi/+MEALLCqckXB0BOpHfWV7/otetxmygSZBM17vqP2
-         sJ93kt1FGr+d054mX0CeZ+NhIrYDomdyVT58JhMlF3nH+Egm0UVYjeF/mq2UCYHRq6Be
-         ilri/z/HFvBw5QnlsN6iHGe4kHEtkbIwqojmEdyXodHtpF1G/ZM48C1Ti2OhU6R2HDaI
-         qlAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYv8iWruxaxbCI/gnoNRBwhasop9u5nstIatkvM7sc16bfEYMmJF1I9zheblNUk7Js5IYif3PDQxKzOCo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDlhRmqdQmVGYRE0iy7Bojwxt5TzjICR7H45/DEMKLSJeV1Ojx
-	SIt471NtOPwOOsPBRzRgmBKvOT3cOAvfiyrOpcW8v7PC5s/WGIPFcGB6uT18gaY=
-X-Gm-Gg: ASbGnctvGw1XZvd6onBeJkb2VfMPTo1xr1zWFZ4aqB05jnBfhHh2whYOdPoqm6kmRSP
-	xF7LgV5/rFrqnjBb6dvE/f68nDmvX85Jxk3VxdUrOQcz0RxLpe9RMKKX6mQ0QmrGvZaVw3WwO17
-	exlt1C3kL/J6ShYVw6XYn//MIAIu8JpVNu9f5gppQ048/Xu6LagOZfJzkzGYKFYu8fOKmYTzjrB
-	D1fP8Nntlv7ztU20v5yFPP8MgMgMZ6riN3vTkWS72TH5hCgTZh4oebtf5gElY7WMqy+BdnSNuMd
-	ZNl4NjCBgGmDGzehYRHFcAc8upLeUNTbWYifuoovqMZ/kXoZYPbd88n/MkRW4oP4SYwHuA3YJ5J
-	zMkuAATXLWjCEYQW0RQ==
-X-Google-Smtp-Source: AGHT+IEkF5jqV7dBUbgzdx+/fTWhr/zHL1/1GLifD4OF7RcHvWlZSXLeUY7vA0Vpns/o+mMzhQgeEg==
-X-Received: by 2002:a05:600c:1d10:b0:43d:683:8cb2 with SMTP id 5b1f17b1804b1-43f2d7bc1cbmr21322675e9.14.1744276737360;
-        Thu, 10 Apr 2025 02:18:57 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:1a13:cd5d:5261:ebfe? ([2a01:e0a:3d9:2080:1a13:cd5d:5261:ebfe])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f23572cf0sm46300245e9.27.2025.04.10.02.18.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:18:57 -0700 (PDT)
-Message-ID: <f1bd21b9-6f77-4112-bc3d-9c94f170857e@linaro.org>
-Date: Thu, 10 Apr 2025 11:18:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQQ3DxEG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81EFAC4CEDD;
+	Thu, 10 Apr 2025 09:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744276770;
+	bh=jyp8zbK16dxt+pX+B0WDW/DB8XOD++gFP8UT7RAEGFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QQQ3DxEGDF9pyyPblYM8Xn5VeUqluQYvDaI3IAIHr6q2ffOCVY3X/b5HOWc2o2i1t
+	 nWeirPwmNvuLwtoBo1PxW+6UXKm4wiiwi9pQXAvmTOrGanlYqcqnTfLi7TUcmPrelB
+	 4EdpxjCoARZesnvC4MCRxDJ3cNiTc8QRuoRpOWyQy9XqnWFMOFGXUA+xPfGo2ZnTPM
+	 RyUoDsMFHbAbHKmgYOCkISiKgIDouoqPljHq5vtmoBy21+UyWnDKt5POkKllL84wVS
+	 vpe/wZYS+VQksyrEeZrvHemdal8oyoB63RORYlPI+ifTdlCt78lKATAB/QUBW3U43B
+	 IVtqBFo6RAV3g==
+Date: Thu, 10 Apr 2025 10:19:24 +0100
+From: Lee Jones <lee@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v6 0/6] Maxim Integrated MAX77759 PMIC MFD-based drivers
+Message-ID: <20250410091924.GR372032@google.com>
+References: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v4 6/6] media: platform: qcom/iris: add sm8650 support
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
- <20250409-topic-sm8x50-iris-v10-v4-6-40e411594285@linaro.org>
- <36e25d6e-36de-fec6-e54d-0683503c7a09@quicinc.com>
- <1550c870-188e-4b41-b17c-2009cda41ffc@linaro.org>
- <8cade183-72ac-eac1-1a57-a9db37657fca@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <8cade183-72ac-eac1-1a57-a9db37657fca@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
 
-On 10/04/2025 11:13, Vikash Garodia wrote:
+On Tue, 25 Mar 2025, André Draszik wrote:
+
+> Hi,
 > 
-> On 4/10/2025 2:31 PM, Neil Armstrong wrote:
->> On 09/04/2025 18:57, Vikash Garodia wrote:
->>> Hi Neil,
->>>
->>> On 4/9/2025 8:08 PM, Neil Armstrong wrote:
->>>> Add support for the SM8650 platform by re-using the SM8550
->>>> definitions and using the vpu33 ops.
->>>>
->>>> The SM8650/vpu33 requires more reset lines, but the H.264
->>>> decoder capabilities are identical.
->>>>
->>>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
->>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>> ---
->>>>    .../platform/qcom/iris/iris_platform_common.h      |  1 +
->>>>    .../platform/qcom/iris/iris_platform_sm8550.c      | 64 ++++++++++++++++++++++
->>>>    drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
->>>>    3 files changed, 69 insertions(+)
->>>>
->>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>> b/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>> index
->>>> fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
->>>> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>> @@ -35,6 +35,7 @@ enum pipe_type {
->>>>      extern struct iris_platform_data sm8250_data;
->>>>    extern struct iris_platform_data sm8550_data;
->>>> +extern struct iris_platform_data sm8650_data;
->>>>      enum platform_clk_type {
->>>>        IRIS_AXI_CLK,
->>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>> b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>> index
->>>> 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
->>>> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>> @@ -144,6 +144,10 @@ static const struct icc_info sm8550_icc_table[] = {
->>>>      static const char * const sm8550_clk_reset_table[] = { "bus" };
->>>>    +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
->>>> +
->>>> +static const char * const sm8650_controller_reset_table[] = { "xo" };
->>>> +
->>>>    static const struct bw_info sm8550_bw_table_dec[] = {
->>>>        { ((4096 * 2160) / 256) * 60, 1608000 },
->>>>        { ((4096 * 2160) / 256) * 30,  826000 },
->>>> @@ -264,3 +268,63 @@ struct iris_platform_data sm8550_data = {
->>>>        .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
->>>>        .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
->>>>    };
->>>> +
->>>> +/*
->>>> + * Shares most of SM8550 data except:
->>>> + * - vpu_ops to iris_vpu33_ops
->>>> + * - clk_rst_tbl to sm8650_clk_reset_table
->>>> + * - controller_rst_tbl to sm8650_controller_reset_table
->>>> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
->>>> + */
->>>> +struct iris_platform_data sm8650_data = {
->>>> +    .get_instance = iris_hfi_gen2_get_instance,
->>>> +    .init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
->>>> +    .init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
->>>> +    .vpu_ops = &iris_vpu33_ops,
->>>> +    .set_preset_registers = iris_set_sm8550_preset_registers,
->>>> +    .icc_tbl = sm8550_icc_table,
->>>> +    .icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
->>>> +    .clk_rst_tbl = sm8650_clk_reset_table,
->>>> +    .clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
->>>> +    .controller_rst_tbl = sm8650_controller_reset_table,
->>>> +    .controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
->>>> +    .bw_tbl_dec = sm8550_bw_table_dec,
->>>> +    .bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
->>>> +    .pmdomain_tbl = sm8550_pmdomain_table,
->>>> +    .pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
->>>> +    .opp_pd_tbl = sm8550_opp_pd_table,
->>>> +    .opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
->>>> +    .clk_tbl = sm8550_clk_table,
->>>> +    .clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
->>>> +    /* Upper bound of DMA address range */
->>>> +    .dma_mask = 0xe0000000 - 1,
->>>> +    .fwname = "qcom/vpu/vpu33_p4.mbn",
->>>> +    .pas_id = IRIS_PAS_ID,
->>>> +    .inst_caps = &platform_inst_cap_sm8550,
->>>> +    .inst_fw_caps = inst_fw_cap_sm8550,
->>>> +    .inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
->>>> +    .tz_cp_config_data = &tz_cp_config_sm8550,
->>>> +    .core_arch = VIDEO_ARCH_LX,
->>>> +    .hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
->>>> +    .ubwc_config = &ubwc_config_sm8550,
->>>> +    .num_vpp_pipe = 4,
->>>> +    .max_session_count = 16,
->>>> +    .max_core_mbpf = ((8192 * 4352) / 256) * 2,
->>>> +    .input_config_params =
->>>> +        sm8550_vdec_input_config_params,
->>>> +    .input_config_params_size =
->>>> +        ARRAY_SIZE(sm8550_vdec_input_config_params),
->>>> +    .output_config_params =
->>>> +        sm8550_vdec_output_config_params,
->>>> +    .output_config_params_size =
->>>> +        ARRAY_SIZE(sm8550_vdec_output_config_params),
->>>> +    .dec_input_prop = sm8550_vdec_subscribe_input_properties,
->>>> +    .dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
->>>> +    .dec_output_prop = sm8550_vdec_subscribe_output_properties,
->>>> +    .dec_output_prop_size =
->>>> ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
->>>> +
->>>> +    .dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
->>>> +    .dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
->>>> +    .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
->>>> +    .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
->>>> +};
->>> While i was extending the data for QCS8300 (one another iris-v3 variant), i
->>> realize that this file iris_platform_sm8550.c is getting dumped with all SOC
->>> platform data. It would be a good idea at this point to split it into something
->>> like this
->>> 1. Introduce SOC specific c file and move the respective SOC platform data to
->>> it, for ex, in this case sm8650_data
->>> 2. Move the common structs from iris_platform_sm8550.c to
->>> iris_platform_common.h. This way more SOCs getting added in future, can include
->>> the common header to reuse them, otherwise it would end up using 8550.c for all
->>> future SOC.
->>>
->>> Share your comments if you have any better approach to manage/re-use these
->>> platform data considering more SOCs getting added.
->>
->> Right, yes the architecture is fine, but I don't feel iris_platform_common is
->> the right
->> place, perhaps we could introduce a platform_catalog.c where we could place all
->> the common
->> platform data and reuse them from the platform_<soc>.c files ?
-> Common structs would certainly need to be part of a header which can be
-> included. Where do you plan to keep common struct to be used across SOC specific
-> file in your approach ?
-
-Common struct in header would mean they would be duplicated for each platform
-when compiled, which would sub-optimal.
-
-I tried to look at the drm/msm/dpu1 catalog, but:
-1) in our case 99% is common, only a few stuff differs
-2) we have a single struct which requires the array sizes
-
-This makes using the drm/msm/dpu1 catalog structure impossible.
-
->>
->> I can design prototype on top of this patchset as an RFC.
-> I was thinking that the changes are not that big, and can be done in existing
-> series though.
-
-I disagree, this is a much larger subject than sm8650 support itself.
-
-Neil
-
+> This series improves support for the Maxim Integrated MAX77759
+> companion PMIC for USB Type-C applications using the MFD framework.
 > 
-> Thanks,
-> Vikash
->>
->> Neil
->>
->>>
->>> Regards,
->>> Vikash
->>>
->>>> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c
->>>> b/drivers/media/platform/qcom/iris/iris_probe.c
->>>> index
->>>> 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
->>>> --- a/drivers/media/platform/qcom/iris/iris_probe.c
->>>> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
->>>> @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
->>>>                .data = &sm8250_data,
->>>>            },
->>>>    #endif
->>>> +    {
->>>> +        .compatible = "qcom,sm8650-iris",
->>>> +        .data = &sm8650_data,
->>>> +    },
->>>>        { },
->>>>    };
->>>>    MODULE_DEVICE_TABLE(of, iris_dt_match);
->>>>
->>
+> This series must be applied in-order, due to interdependencies of some
+> of the patches:
+> * to avoid use of undocumented compatibles by the newly added drivers,
+>   the bindings are added first in this series
+> * patch 1 ("dt-bindings: gpio: add max77759 binding") also creates a
+>   new MAINTAINERS entry, including a wildcard match for the other
+>   bindings in this series
+> * patch 3 ("dt-bindings: mfd: add max77759 binding") references the
+>   bindings added in patch 1 and 2 and can not work if those aren't
+>   available
+> * patch 4 ("mfd: max77759: add Maxim MAX77759 core mfd driver") adds
+>   the core MFD driver, which also exposes an API to its leaf drivers
+>   and is used by patches 5 and 6
+> * patches 5 and 6 won't compile without patch 4
+> 
+> The MAX77759 PMIC includes Battery Charger, Fuel Gauge, temperature
+> sensors, USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
+> 
+> This PMIC is used on the Google Pixel 6 and 6 Pro (oriole / raven).
+> 
+> This series adds support for the top-level MFD device, the gpio, and
+> nvmem cells. Other components are excluded for the following reasons:
+> 
+>     While in the same package, Fuel Gauge and TCPC have separate and
+>     independent I2C addresses, register maps, interrupt lines, and
+>     aren't part of the top-level package interrupt hierarchy.
+>     Furthermore, a driver for the TCPC part exists already (in
+>     drivers/usb/typec/tcpm/tcpci_maxim_core.c).
+> 
+>     I'm leaving out temperature sensors and charger in this submission,
+>     because the former are not in use on Pixel 6 and I therefore can
+>     not test them, and the latter can be added later, once we look at
+>     the whole charging topic in more detail.
+> 
+> To make maintainers' work easier, I am planning to send the relevant
+> DTS and defconfig changes via a different series, unless everything
+> is expected to go via Lee's MFD tree in one series?
+> 
+> Cheers,
+> Andre'
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+> Changes in v6:
+> - add one missing change in core driver
+> - Link to v5: https://lore.kernel.org/r/20250325-max77759-mfd-v5-0-69bd6f07a77b@linaro.org
+> 
+> Changes in v5:
+> - core: incorporate Lee's comments (hoping I didn't miss any :-)
+> - Link to v4: https://lore.kernel.org/r/20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org
+> 
+> Changes in v4:
+> - collect tags
+> - mfd: add missing build_bug.h include
+> - mfd: update an irq chip comment
+> - mfd: fix a whitespace in register definitions
+> - Link to v3: https://lore.kernel.org/r/20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org
+> 
+> Changes in v3:
+> - collect tags
+> - mfd: drop gpio-controller and gpio-cells, GPIO is provided by the
+>   child (Rob)
+> - gpio: drop duplicate init of 'handled' variable in irq handler
+> - gpio: use boolean with IRQ_RETVAL() (Linus)
+> - gpio: drop 'virq' variable inside irq handler to avoid confusion
+>   (Linus)
+> - gpio: drop assignment of struct gpio_chip::owner (Linus)
+> - Link to v2: https://lore.kernel.org/r/20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org
+> 
+> Changes in v2:
+> - reorder bindings patches to avoid validation failures
+> - add dependency information to cover letter (Krzysztof)
+> - fix max77759_gpio_direction_from_control() in gpio driver
+> - gpio: drop 'interrupts' property from binding and sort properties
+>   alphabetically (Rob)
+> - nvmem: drop example from nvmem binding as the MFD binding has a
+>   complete one (Rob)
+> - nvmem: rename expected nvmem subdev nodename to 'nvmem-0' (Rob)
+> - mfd: add kernel doc
+> - mfd: fix an msec / usec typo
+> - mfd: error handling of devm_mutex_init (Christophe)
+> - whitespace fixes & tidy-ups (Christophe)
+> - Link to v1: https://lore.kernel.org/r/20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org
+> 
+> ---
+> André Draszik (6):
+>       dt-bindings: gpio: add max77759 binding
+>       dt-bindings: nvmem: add max77759 binding
+>       dt-bindings: mfd: add max77759 binding
+>       mfd: max77759: add Maxim MAX77759 core mfd driver
+>       gpio: max77759: add Maxim MAX77759 gpio driver
+>       nvmem: max77759: add Maxim MAX77759 NVMEM driver
+> 
+>  .../bindings/gpio/maxim,max77759-gpio.yaml         |  44 ++
+>  .../devicetree/bindings/mfd/maxim,max77759.yaml    |  99 +++
+>  .../bindings/nvmem/maxim,max77759-nvmem.yaml       |  32 +
+>  MAINTAINERS                                        |  10 +
+>  drivers/gpio/Kconfig                               |  13 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-max77759.c                       | 524 ++++++++++++++++
+>  drivers/mfd/Kconfig                                |  20 +
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/max77759.c                             | 690 +++++++++++++++++++++
+>  drivers/nvmem/Kconfig                              |  12 +
+>  drivers/nvmem/Makefile                             |   2 +
+>  drivers/nvmem/max77759-nvmem.c                     | 156 +++++
+>  include/linux/mfd/max77759.h                       | 165 +++++
+>  14 files changed, 1769 insertions(+)
+> ---
+> base-commit: 9388ec571cb1adba59d1cded2300eeb11827679c
+> change-id: 20250224-max77759-mfd-aaa7a3121b62
+> 
+> Best regards,
+> -- 
+> André Draszik <andre.draszik@linaro.org>
 
+Didn't apply cleanly.  Please rebase onto v6.15-rc1.
+
+-- 
+Lee Jones [李琼斯]
