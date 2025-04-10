@@ -1,33 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAC41FA262;
-	Thu, 10 Apr 2025 20:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367B228F935;
+	Thu, 10 Apr 2025 20:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744316929; cv=none; b=Rc94UM9Cz4i0NETarwiY+Ih1Bd4j1YKuhBr1DF8b20IL9fmcT1JusN2tdaM1vEMEQuFwrhFF1Qd47ceiNBrep5OguVUvJEy8YtGQQv8MDFEfsiqCc0SWI2Ht9Ic3+ZU6f0+yhfy6kv+rjCPPGtbxHjWDWkSe+Dh/Dqma1KB/pY0=
+	t=1744316965; cv=none; b=Y+meNFDMY9c9gKpJQICXPdg3Xxd6NzmFPqlfr3Dn20JWjszMNDKH4IcI8dQibU9rdD2dsOJmEVNTK4iit+SURr1+aJQnmHATsqlSAj01pIMkuYmsaSZwHbDMlwR/kmhqX3HlzxL9frc3+50SKz88MwNpuAFNlqehy5+uXethpso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744316929; c=relaxed/simple;
-	bh=MdZll6tFozWJMjFFh16yPz8vmYh5QIgv5cptZKSEuGo=;
+	s=arc-20240116; t=1744316965; c=relaxed/simple;
+	bh=bAPpSmXmep09QFx7T7SmLGDGLykTds7V22GP0yiKg9o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IeUGVClSKhVB4VCrSq1y6rtig5vln3SaPbhgC/0iIDC0G8jGUW5TiTx29weuN07s4XuG1ItabVJraZToeQedBmvqMcqIvOHBH2YB/6+Pv0lflJO2HFxZukBLgb5EIEx7q9jxOIIg1sHDb5AhLKyRN2Ev/ndD+muG1dMnKmvYEQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVNjAUHB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=fPyygOGTBXsxy/tCMdBlDfqYXqkwWfgRgvxz9VigqksvWfZM6GypwYzHLbYaviYpS3wOzX0ilhSXDVlOwcF/do+uf4gBPUuuSKA5iJrGJ7eTIr2pVXhKaLuBkvpbbBrZ+5TfAjIuYCL9AVcgfyTfDXdLewjdEZtKVyTDhERfVgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eNrqHXbQ; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVNjAUHB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 755B2C4CEDD;
-	Thu, 10 Apr 2025 20:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744316929;
-	bh=MdZll6tFozWJMjFFh16yPz8vmYh5QIgv5cptZKSEuGo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jVNjAUHBG7rogXBbeg5XTNMikVNJBGcxBIfQKG1wRINM7vXr8s+1opdkF+3CuOgvO
-	 1uzymBEoSZyvy1eUAwFhOLRa4bcmSI0XJVNn1g69yDZMK5zlNOoLQ0XapJaGdHUg4J
-	 EzjJ4C/f4rllBsZ9T1gyCsJabApm5T+J48bEPUQaxs4po4IC2KAwA5PEntiTvKLVpD
-	 O1K9UPWPs5C7buZ0TNULPtRNqfc3otFfr8qJbjGInnLMaNspv6FlrlgxRmn5xLd1wR
-	 7jC9H1dwYlWkue1HarQpTKHPU3sTEqR3sEW0bXgQjrenZY/QznaG3nLF2vUjG9cmXc
-	 8R0oZzhdNEdzA==
-Message-ID: <f509da3d-71de-4b90-b13b-ef0584bf05b8@kernel.org>
-Date: Thu, 10 Apr 2025 15:28:47 -0500
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eNrqHXbQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=nPskVwgV7dIOuOWR2CRzYXy3W//a83XC7JObcBuOeQs=; b=eNrqHXbQHa4jzONqzh9REJsMAN
+	uihg7oE8Geel9srCIiStUM4xZh+HbzFMwqBZlSbkib8SFlOh0OE3a3PEvIkz6D8oXGTX9VLWwijIY
+	RHwGHIR5/v+pKah4uh84DjpYphlpEle8zPgASS7klEl6MZ+jg2lpzEH2Qd6zun6K7wSuy1xmJqnuC
+	jAIUj88uIHMs37nlfYDpz9toHWe5nei++kG9WdwQVIAUq3ugZRussdKsjeMLpUjhXnvp+vdcZqoCJ
+	28r9pnsVDx++Ekv64Ltk7osrX/2dnNNk8zlfzP8Phf1GFN3Z7pD6KP08hsIqCp68XD2yqnjWVmli7
+	qxGfnkbg==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2yWU-00000008s10-1aqg;
+	Thu, 10 Apr 2025 20:29:19 +0000
+Message-ID: <5cf231e1-0bba-4595-9441-46acc5255512@infradead.org>
+Date: Thu, 10 Apr 2025 13:29:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,81 +39,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: amd: Fix use of undeclared identifier
- 'pinctrl_amd_s2idle_dev_ops'
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>,
- Linus Walleij <linus.walleij@linaro.org>,
- "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- kernel test robot <lkp@intel.com>
-References: <20250409213521.2218692-1-superm1@kernel.org>
- <CAJZ5v0h9v+OmqzRDuBAXBHY1oWq3BizP9FxyzdqkmJ353KjO1w@mail.gmail.com>
+Subject: Re: linux-next: Tree for Apr 10 (backlight: ktd2801)
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, =?UTF-8?Q?Duje_Mihanovi=C4=87?=
+ <duje.mihanovic@skole.hr>
+References: <20250410151146.6a05dd21@canb.auug.org.au>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAJZ5v0h9v+OmqzRDuBAXBHY1oWq3BizP9FxyzdqkmJ353KjO1w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250410151146.6a05dd21@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 4/10/2025 7:50 AM, Rafael J. Wysocki wrote:
-> On Wed, Apr 9, 2025 at 11:35 PM Mario Limonciello <superm1@kernel.org> wrote:
->>
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> `pinctrl_amd_s2idle_dev_ops` is hidden under both `CONFIG_ACPI` and
->> `CONFIG_PM_SLEEP` so the functions that use it need the same scope.
-> 
-> Shouldn't this be CONFIG_SUSPEND given what's going on in acpi.h?
 
-Really - I think we probably should change all of pinctrl-amd.c to use 
-CONFIG_SUSPEND.
 
+On 4/9/25 10:11 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Also, there is one more report regarding pinctrl_dev being unused:
+> Changes since 20250409:
 > 
-> https://lore.kernel.org/linux-acpi/202504101106.hPCEcoHr-lkp@intel.com/T/#u
-> 
-> Any chance to address all of this in one patch?
 
-Sure; I'll spin again and get something out to cover both cases soon.
+on x86_64, when CONFIG_GPIOLIB is not set:
 
-> 
->> Adjust checks to look for both.
->>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202504100420.88UPkUTU-lkp@intel.com/
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/pinctrl/pinctrl-amd.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
->> index b6fafed79b289..472a5aed4cd05 100644
->> --- a/drivers/pinctrl/pinctrl-amd.c
->> +++ b/drivers/pinctrl/pinctrl-amd.c
->> @@ -1209,7 +1209,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
->>
->>          platform_set_drvdata(pdev, gpio_dev);
->>          acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
->> -#ifdef CONFIG_ACPI
->> +#if defined(CONFIG_ACPI) && defined(CONFIG_PM_SLEEP)
->>          acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
->>   #endif
->>
->> @@ -1230,7 +1230,7 @@ static void amd_gpio_remove(struct platform_device *pdev)
->>
->>          gpiochip_remove(&gpio_dev->gc);
->>          acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
->> -#ifdef CONFIG_ACPI
->> +#if defined(CONFIG_ACPI) && defined(CONFIG_PM_SLEEP)
->>          acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
->>   #endif
->>   }
->> --
->> 2.43.0
->>
->>
+WARNING: unmet direct dependencies detected for LEDS_EXPRESSWIRE
+  Depends on [n]: GPIOLIB [=n] || NEW_LEDS [=y] && GPIOLIB [=n]
+  Selected by [m]:
+  - BACKLIGHT_KTD2801 [=m] && HAS_IOMEM [=y] && BACKLIGHT_CLASS_DEVICE [=y]
+
+
+-- 
+~Randy
 
