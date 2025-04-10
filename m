@@ -1,40 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178D91552FA;
-	Thu, 10 Apr 2025 07:59:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D1B1E32A3;
+	Thu, 10 Apr 2025 07:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271960; cv=none; b=BXSLCvMGf3tC2cbL0Oz8jaScBJh6YbVVSi09G1VHFu/FxCe4Iw+mt+hX0jbv2asP7rTi5ZhhY/gU+wNTJlr5vRtFLNvgzxVvSNEasRuT7M9d/LBGWUGq0+eksLQs9b1JJjcKMuBjOprgifgwnHZWnoWqE71LtR7xdQbrQq93tNQ=
+	t=1744271976; cv=none; b=SXEHF9keqtCHEw4/GSzOaVIuryxQDrN8K/WNwoPnTUXWqLTYhB+9xxFI2rX2Z95ToKUqq1TQQPzsmadBqphqi57KRLNByTywAyWRjL3EQYLCdSd1ybC4YExpn/W8APIKi1L5PzIFuJyy4jM02p2VR3CjA5ehnhN/3zRoCDNGzqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271960; c=relaxed/simple;
-	bh=b1PN+I/M0/lIShuUTza3W983gyrPy404n6n3jDGAWBs=;
+	s=arc-20240116; t=1744271976; c=relaxed/simple;
+	bh=UiSeec8bgOQw16nTOooUF8MdvjIJ33hXBd2rH5yhSCU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xld9ZQXEQkHurI6VUsh2Q4OAF3qeXpqZHSfsc1fJr7Ryb3RO61pKNREfLcUDSSb7QZMkO0RUBvVkZEhQpvM6/hsr3WTTdSmYaQ1n8Ec9pJ5Ur1RHH4YYJsNgsWW5NeXEIvw5eBfDmnTYAclAqQTo+8eZEEhH3z8browutK7e1NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pCrf2TZx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=abDF0E6WcfwK7Zv6awIDvA4ouT5Mek1PNEEGsn4usxOMRHEQVMSCSYADRcZtUTLZmFlqBx0kbOFIvbcrfbeJXO5pNC1AHQs85KewF9437r0Ej039biHpaa7DIka2JkLDlpmnwC1Ms0+QqFcCr2uMB8iR+whpy7xzpWPh+n6UzEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWEIc/rX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pCrf2TZx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3764FC4CEDD;
-	Thu, 10 Apr 2025 07:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744271959;
-	bh=b1PN+I/M0/lIShuUTza3W983gyrPy404n6n3jDGAWBs=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWEIc/rX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36842C4CEDD;
+	Thu, 10 Apr 2025 07:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744271976;
+	bh=UiSeec8bgOQw16nTOooUF8MdvjIJ33hXBd2rH5yhSCU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pCrf2TZx28Eg0mxOMXCDWkWDnzwMbwubPBlqFJn8wQczA+ZgMijtgByzoqCsPrKaX
-	 oV3Rjxy+gFD8uHIL+Rib/tMiHkt/LkDe5uLpeXd6AHnK3or8g7YA4nJkPaO1zppDti
-	 qx6zbSN00Da2pp6IFztz0bUuc9LuLK7rI2c+2o6M=
-Date: Thu, 10 Apr 2025 09:57:44 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Denis OSTERLAND-HEIM <denis.osterland@diehl.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Rodolfo Giometti <giometti@enneenne.com>
-Subject: Re: Re: [PATCH] pps: fix poll support
-Message-ID: <2025041031-agreement-hardener-0f9f@gregkh>
-References: <0231dfc22dd34a5aaee09a6a19074de1@diehl.com>
- <636c5ad9-25ad-44f7-9454-a7787de7a6aa@enneenne.com>
- <df3dd18b292941a1aaf3bd04f3df6bf3@diehl.com>
+	b=SWEIc/rX/KxApXAtDmJfJ55hJ00ScI52B8dPy00YaUEhWl7b6YeJK5+n+uSuWPWkL
+	 QBC76xoUicSo3qCD42e89bWhRzl4iPw0eN7pSlFjz43l5OYcj8fkS9aF0xw7NgaLgX
+	 KBG9QOUmtc3wFsGq/9x+4D4/p2Uwy1CBFw2s8JZ1m82o2OWcpUvGbJuXxWd2SxRDhT
+	 JRRoLND1ivpuU3OrOUgySVUBYvFmK8doxbEDflMlUmgnOWuQM8/uhWilR/nRztPFiT
+	 sQP0kkZ+NGj9lBcH+R1XI7zd6oKHrSWnTXYmPj5sHx7iEE8zeVEClEwWvFzLDZQkaI
+	 HttyTZWdQt65g==
+Date: Thu, 10 Apr 2025 10:59:28 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@kernel.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux <linux@treblig.org>, Maher Sanalla <msanalla@nvidia.com>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/hfi1: use a struct group to avoid warning
+Message-ID: <20250410075928.GN199604@unreal>
+References: <20250403144801.3779379-1-arnd@kernel.org>
+ <20250407182750.GA1727154@ziepe.ca>
+ <e477f8c0-5478-43b5-9d59-297efc32d20e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,9 +50,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <df3dd18b292941a1aaf3bd04f3df6bf3@diehl.com>
+In-Reply-To: <e477f8c0-5478-43b5-9d59-297efc32d20e@app.fastmail.com>
 
-On Thu, Apr 10, 2025 at 07:42:32AM +0000, Denis OSTERLAND-HEIM wrote:
-> Before printing, think about environmental responsibility.This message may contain confidential information. If you are not authorized to receive this information please advise the sender immediately by reply e-mail and delete this message without making any copies. Any form of unauthorized use, publication, reproduction, copying or disclosure of the e-mail is not permitted. Information about data protection can be found on our homepage<https://www.diehl.com/metering/en/data-protection/>.
+On Tue, Apr 08, 2025 at 02:40:38PM +0200, Arnd Bergmann wrote:
+> On Mon, Apr 7, 2025, at 20:27, Jason Gunthorpe wrote:
+> > On Thu, Apr 03, 2025 at 04:47:53PM +0200, Arnd Bergmann wrote:
+> >> From: Arnd Bergmann <arnd@arndb.de>
+> >> 
+> >> On gcc-11 and earlier, the driver sometimes produces a warning
+> >> for memset:
+> >> 
+> >> In file included from include/linux/string.h:392,
+> >>                  from drivers/infiniband/hw/hfi1/mad.c:6:
+> >> In function 'fortify_memset_chk',
+> >>     inlined from '__subn_get_opa_hfi1_cong_log' at drivers/infiniband/hw/hfi1/mad.c:3873:2,
+> >>     inlined from 'subn_get_opa_sma' at drivers/infiniband/hw/hfi1/mad.c:4114:9:
+> >> include/linux/fortify-string.h:480:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror]
+> >>     __write_overflow_field(p_size_field, size);
+> >>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >> 
+> >> This seems to be a false positive, and I found no nice way to rewrite
+> >> the code to avoid the warning, but adding a a struct group works.
+> >
+> > Er.. so do we really want to fix it or just ignore this on gcc-11? Or
+> > is there really a compile bug here and it is mis-generating the code?
+> >
+> > The unneeded struct group seems ugly to me?
+> 
+> Having a clean build would be nice though. Do you think a patch
+> that just turns off the warning locally would be better?
 
-Now deleted.
+I don't think so, as you will need to disable warning for specific
+compiler, which won't be nice.
+
+My preference is to have a fix.
+
+Thanks
+
+> 
+>       Arnd
