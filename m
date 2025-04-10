@@ -1,210 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBDE189B84
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7430E4207F;
+	Thu, 10 Apr 2025 07:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271164; cv=none; b=N8XqpagtcnAIhe8j5vGrLKGiG5GkyGueAip91mFCPGkrmQqZmkt8yCFSi4Y6ndygNsZmZQPzgW+JP1sACgWXgTTx5c/dQChHTnAsXr2b9bT694HMCCxIHJZiXxN6dIhEygGUlwzfLCkd6MPYgNrzlRMpyUnYPKTC2peeiqd9/f0=
+	t=1744271249; cv=none; b=OK30Sf+nN4GTvvM/czKrDU08kErHIROX/BxLyaS67QZm0bvKW75TL7jhHIrUnuSUbG0X6UwdQfe05G0bS3LYoPnjMUfrL1dBfvbQ20Hs0dMjCE8JYd9GZY/XhLo9kfg4qRf8JpJLaTw4jqeiSFQ+ZSV6QRI216u1OYuggtGD5K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271164; c=relaxed/simple;
-	bh=9KkuM3PxR3O/kSEkhfLpDrsgcymd6VI76hN32SdMmuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gEGAEtNGgm3hNd0M4/znSN1acZp9ML7AhNLQKseVk59CGptWbEP18mXhWlFPxQE2mzQ+45qkA+o3kMOFTxKmwhILutvV7CMJNmcKs48XDcb6uQVmJapDR35nKvW0NvMcIEg9aYmhyaZmgpkVxEGAe+cVGyTMOt6sMwH6KgwIQ14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bif+PO2W; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bif+PO2W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744271160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F58ZWliydz3U6uMmvLSlm0nGnQbwI4yd1xZW1tjL3iY=;
-	b=bif+PO2W6fBh+9Wz1BgJHJJdLYSA0PXm8+sPEhTf4u00av6nMOB10bQ8UD9afgKIdxFhFM
-	P1wLvbSboqJz33ynVRkvwAokGmgvbKcDjx5yKESA+bFOXuOd02JGiBFdluciBRCtfYKUpV
-	yD7Xd1TmW7nZl59IRlR/pXu4tQ58hTQ=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-379-gl3OVORbO3iDtlv_t2Huzg-1; Thu,
- 10 Apr 2025 03:45:56 -0400
-X-MC-Unique: gl3OVORbO3iDtlv_t2Huzg-1
-X-Mimecast-MFC-AGG-ID: gl3OVORbO3iDtlv_t2Huzg_1744271154
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C48C19541B1;
-	Thu, 10 Apr 2025 07:45:54 +0000 (UTC)
-Received: from [10.44.33.222] (unknown [10.44.33.222])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F81019560AD;
-	Thu, 10 Apr 2025 07:45:48 +0000 (UTC)
-Message-ID: <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
-Date: Thu, 10 Apr 2025 09:45:47 +0200
+	s=arc-20240116; t=1744271249; c=relaxed/simple;
+	bh=jVQLPwJUsRBRKypXnzmJa2WRIb88zmnp65JMO8PaOuM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fC5X+N84+QDnZuzzsx6iryAviciOiLgqIopRvwwZi+sAbphViDnMNZY8kM4+dANC+bKbmY89vefteOOf6systsGI3Ouuye45RsRsE/qXfxZsWc8sDSdF6MwtZk9RNHj98yhOi2x9XTSLH0nyqA+/UCPToE5fcGp40e7yJvWCros=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A55081007;
+	Thu, 10 Apr 2025 00:47:26 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8C88D3F6A8;
+	Thu, 10 Apr 2025 00:47:23 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	yury.khrustalev@arm.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	shmeerali.kolothum.thodi@huawei.com,
+	james.morse@arm.com,
+	mark.rutland@arm.com,
+	huangxiaojia2@huawei.com,
+	akpm@linux-foundation.org,
+	surenb@google.com,
+	robin.murphy@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	nd@arm.com,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v3 0/3] support FEAT_MTE_TAGGED_FAR feature
+Date: Thu, 10 Apr 2025 08:47:18 +0100
+Message-Id: <20250410074721.947380-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
- Azurite chip family
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-3-ivecera@redhat.com>
- <20250410-skylark-of-silent-symmetry-afdec9@shite>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250410-skylark-of-silent-symmetry-afdec9@shite>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
+The FEAT_MTE_TAGGED_FAR feature provides support for
+reporting all non-address bits during a synchronous MTE tag check fault.
 
+This patchset extends the reporting tag to include
+not only the memory tag (logical tag) but also the address tag via
+si_addr when FEAT_MTE_TAGGED_FAR feature is supported.
 
-On 10. 04. 25 9:06 dop., Krzysztof Kozlowski wrote:
-> On Wed, Apr 09, 2025 at 04:42:38PM GMT, Ivan Vecera wrote:
->> Add DT bindings for Microchip Azurite DPLL chip family. These chips
->> provides 2 independent DPLL channels, up to 10 differential or
->> single-ended inputs and up to 20 differential or 20 single-ended outputs.
->> It can be connected via I2C or SPI busses.
->>
->> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->> ---
->>   .../bindings/dpll/microchip,zl3073x-i2c.yaml  | 74 ++++++++++++++++++
->>   .../bindings/dpll/microchip,zl3073x-spi.yaml  | 77 +++++++++++++++++++
-> 
-> No, you do not get two files. No such bindings were accepted since some
-> years.
-> 
->>   2 files changed, 151 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
->>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
->> new file mode 100644
->> index 0000000000000..d9280988f9eb7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
->> @@ -0,0 +1,74 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/dpll/microchip,zl3073x-i2c.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: I2C-attached Microchip Azurite DPLL device
->> +
->> +maintainers:
->> +  - Ivan Vecera <ivecera@redhat.com>
->> +
->> +description:
->> +  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
->> +  provides 2 independent DPLL channels, up to 10 differential or
->> +  single-ended inputs and up to 20 differential or 20 single-ended outputs.
->> +  It can be connected via multiple busses, one of them being I2C.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - microchip,zl3073x-i2c
-> 
-> I already said: you have one compatible, not two. One.
+Since v1:
+  - add hwcap test for MTE_FAR feature.
+  - add MTE_FAR doc into elf_hwcap.rst
 
-Ah, you mean something like:
-iio/accel/adi,adxl313.yaml
+Since v2:
+  - Rebase to 6.15-rc1
 
-Do you?
+Yeoreum Yun (3):
+  arm64: add FEAT_MTE_TAGGED_FAR feature
+  arm64/mm/fault: use original FAR_EL1 value when ARM64_MTE_FAR is
+    supported
+  tools/kselftest: add MTE_FAR hwcap test
 
-> Also, still wildcard, so still a no.
+ Documentation/arch/arm64/elf_hwcaps.rst      |  3 +++
+ Documentation/arch/arm64/tagged-pointers.rst | 11 ++++++-----
+ arch/arm64/include/asm/hwcap.h               |  1 +
+ arch/arm64/include/uapi/asm/hwcap.h          |  1 +
+ arch/arm64/kernel/cpufeature.c               |  9 +++++++++
+ arch/arm64/kernel/cpuinfo.c                  |  1 +
+ arch/arm64/mm/fault.c                        |  7 +++++--
+ arch/arm64/tools/cpucaps                     |  1 +
+ tools/testing/selftests/arm64/abi/hwcap.c    |  6 ++++++
+ 9 files changed, 33 insertions(+), 7 deletions(-)
 
-This is not wildcard, Microchip uses this to designate DPLL devices with 
-the same characteristics.
-
-But I can use microchip,azurite, is it more appropriate?
-
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +allOf:
->> +  - $ref: /schemas/dpll/dpll-device.yaml#
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      dpll@70 {
->> +        compatible = "microchip,zl3073x-i2c";
->> +        reg = <0x70>;
->> +        #address-cells = <0>;
->> +        #size-cells = <0>;
-> 
-> Again, not used. Drop.
-
-Sorry, will do.
-
->> +        dpll-types = "pps", "eec";
->> +
->> +        input-pins {
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +
->> +          pin@0 { /* REF0P */
->> +            reg = <0>;
->> +            label = "Input 0";
->> +            supported-frequencies = /bits/ 64 <1 1000>;
->> +            type = "ext";
->> +          };
->> +        };
->> +
->> +        output-pins {
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +
->> +          pin@3 { /* OUT1N */
->> +            reg = <3>;
->> +            esync-control;
->> +            label = "Output 1";
->> +            supported-frequencies = /bits/ 64 <1 10000>;
->> +            type = "gnss";
->> +          };
->> +        };
->> +      };
->> +    };
->> +...
->> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
->> new file mode 100644
->> index 0000000000000..7bd6e5099e1ce
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
-> 
-> No, you do not get two files. Neither two compatibles, nor two files.
-> Please look at existing bindings how they do it for such devices.
-
-Thanks Krzysztof for comments.
-
-Ivan
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
