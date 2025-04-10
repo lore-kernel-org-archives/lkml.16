@@ -1,122 +1,159 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8456C28A3ED;
-	Thu, 10 Apr 2025 13:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BA728C5C8
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744292169; cv=none; b=j3G3Y3X2vhKjI9udIBClZOOwHFQlIdmnHGYs+ebxzmL9vvhrchn0/61Ioah5bVpbsulPbTDIw7DtYB2Xvd0HM385Bh38E11plackYShu47gtbHwqzui/7vt9X0mCgLhYIiKgHCFGRNmDJgzIMzdBt4zfUFK2m7QNEByzOM6KrNE=
+	t=1744292173; cv=none; b=BIBqS8bIpvJ1lSXjGg6+uK84XXxKK9Un1fSZ8sjl/RxI1Kq5OL9XXiv/CfFwX2LARK5x7xG/BladBk80j6N8gGhk8p2oKI3OkO/utNMTeQJA3sgkNjJ0df3IA6Rei1ImDtfU6Y70CU8wSpSJSWTdlNrEAm4qn1Zo8W9k5oKxOfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744292169; c=relaxed/simple;
-	bh=8w7p142ZI6H8+1uOKiDKtSC1X5Go4vUEdku/HxK6xEE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PBGqLEQWPgXsvo6pe/qKG1i3Z4yjIbvZn4kKyY+xWZ27gs7Q0svBP+flJrRAHxJKjWyAxSN0We63eMmxXKQrvblvj3Iix3sSXyAU7Vo/ryNpgW6NBsaqtRCFT5X9aXEXC7l7JygvsraYtSOjylh3jaCilIswG4ADqkzrOwPWYfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pXWLultO; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744292173; c=relaxed/simple;
+	bh=5tYVFZIQYWA/C+9gLwzJ3xPs4I8Ri6YFpxx6K2/PD6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ppLgi2Qk0tIqauzGtQJ3Q0SrJ3GHZsyp+aipIQB7SnNsi/H/XIiJ0sEQ2aAw4G1qaedUtdHClBXmG8sFsjZWrc47Plg4AH2Op0Uz4Xo/JxZQwmKtJvxQs3xXiLjRYlq0MmysXwpLbOfBpPPR+RQxaW9ywL4+b0tOSKBDPTJ8UXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PnC6FyCW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pXWLultO"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A8FWKD026291;
-	Thu, 10 Apr 2025 13:36:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=yL9HWn+60Q9EVZ3uJcJqHtpRSmwUoWL83MLKIjRHr
-	8o=; b=pXWLultOX4xmtFyzi7qYc7BS38Ec6JwExL0Cw61ntWyxHQa1tVf4wzuLd
-	R39dDWQGofLSqMj1sRfE9jcpC7GOKRa8QGtt8xvHa7thV7DCrPsg3Yign0uelC3k
-	unckfI7u7AtL9Aqfp/dwIZIUI6KxML4gUd5Rq1tE6zmqr1BOPIet/pY3WUPWJlX8
-	0H+E1RHh9q40OVXW197xg2Dxzy8JHRSn4mOtxPE/IIrZVChTgwpeQUEINOmgXHS0
-	7CNCyQlxMHbSt9hoFi2XKF7oTXhBHZhET/BM+nlcoXXbP6e73bwdmKVp1l3fG+qc
-	Qb807dK8qPtZGh8rHHfL5WPyuDT6w==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wtaq77qb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 13:36:02 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53ACmZjX013860;
-	Thu, 10 Apr 2025 13:36:00 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ufunx5fr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 13:36:00 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ADZvhS59310496
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 13:35:57 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E58EE20040;
-	Thu, 10 Apr 2025 13:35:56 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D8C0920043;
-	Thu, 10 Apr 2025 13:35:54 +0000 (GMT)
-Received: from vishalc-ibm.in.ibm.com (unknown [9.109.245.223])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 10 Apr 2025 13:35:54 +0000 (GMT)
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-To: tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, corbet@lwn.net,
-        cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Vishal Chourasia <vishalc@linux.ibm.com>
-Subject: [PATCH] doc,cgroup-v2: memory.max is reported in multiples of page size
-Date: Thu, 10 Apr 2025 19:04:40 +0530
-Message-ID: <20250410133439.4028817-2-vishalc@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PnC6FyCW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744292170;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KDNRXx/pLf3PiSQ+7oCQArk/I5u6Iz6jliw3UN4JAj8=;
+	b=PnC6FyCWwGRj/M0iU/d+68nd0fqBdQvhuNEcmmP6AXdRdaV/sc7ELXOoLQx1YrRzp0A7Rn
+	WC2pLDvBBD6muNnTI5W3neBrdAo80hFYVFuSOigbrCY7lFlWTusk88udSgkpTmDjYPTKk6
+	ZCPSODaNfxH+71M//2x7V1yje/euh+g=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-544-Ah2_ozVZMqy_FIL9WYqSjw-1; Thu,
+ 10 Apr 2025 09:36:05 -0400
+X-MC-Unique: Ah2_ozVZMqy_FIL9WYqSjw-1
+X-Mimecast-MFC-AGG-ID: Ah2_ozVZMqy_FIL9WYqSjw_1744292162
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A64EB19560AB;
+	Thu, 10 Apr 2025 13:36:01 +0000 (UTC)
+Received: from [10.45.225.124] (unknown [10.45.225.124])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C18219560AD;
+	Thu, 10 Apr 2025 13:35:56 +0000 (UTC)
+Message-ID: <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
+Date: Thu, 10 Apr 2025 15:35:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: DcsFspk4L96Youfsu3210IadEjLZGFFa
-X-Proofpoint-ORIG-GUID: DcsFspk4L96Youfsu3210IadEjLZGFFa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_03,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- spamscore=0 malwarescore=0 impostorscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2504100097
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+To: Conor Dooley <conor@kernel.org>,
+ "Prathosh.Satish@microchip.com" <Prathosh.Satish@microchip.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-3-ivecera@redhat.com>
+ <20250410-skylark-of-silent-symmetry-afdec9@shite>
+ <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
+ <20250410-puritan-flatbed-00bf339297c0@spud>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250410-puritan-flatbed-00bf339297c0@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Update documentation for memory.max to clarify that the reported value
-is in multiples of the system page_size. The following example
-demonstrates this behavior:
 
-  # cd /sys/fs/cgroup/
-  # cat cgroup.subtree_control
-  cpu io memory pids
-  # mkdir mem
-  # cd mem
-  # echo 8000000 > memory.max
-  # cat memory.max
-  7995392
 
-  # getconf PAGESIZE
-  65536
+On 10. 04. 25 3:18 odp., Conor Dooley wrote:
+> On Thu, Apr 10, 2025 at 09:45:47AM +0200, Ivan Vecera wrote:
+>>
+>>
+>> On 10. 04. 25 9:06 dop., Krzysztof Kozlowski wrote:
+>>> On Wed, Apr 09, 2025 at 04:42:38PM GMT, Ivan Vecera wrote:
+>>>> Add DT bindings for Microchip Azurite DPLL chip family. These chips
+>>>> provides 2 independent DPLL channels, up to 10 differential or
+>>>> single-ended inputs and up to 20 differential or 20 single-ended outputs.
+>>>> It can be connected via I2C or SPI busses.
+>>>>
+>>>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+>>>> ---
+>>>>    .../bindings/dpll/microchip,zl3073x-i2c.yaml  | 74 ++++++++++++++++++
+>>>>    .../bindings/dpll/microchip,zl3073x-spi.yaml  | 77 +++++++++++++++++++
+>>>
+>>> No, you do not get two files. No such bindings were accepted since some
+>>> years.
+>>>
+>>>>    2 files changed, 151 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>>>>    create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>>>> new file mode 100644
+>>>> index 0000000000000..d9280988f9eb7
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>>>> @@ -0,0 +1,74 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/dpll/microchip,zl3073x-i2c.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: I2C-attached Microchip Azurite DPLL device
+>>>> +
+>>>> +maintainers:
+>>>> +  - Ivan Vecera <ivecera@redhat.com>
+>>>> +
+>>>> +description:
+>>>> +  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
+>>>> +  provides 2 independent DPLL channels, up to 10 differential or
+>>>> +  single-ended inputs and up to 20 differential or 20 single-ended outputs.
+>>>> +  It can be connected via multiple busses, one of them being I2C.
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    enum:
+>>>> +      - microchip,zl3073x-i2c
+>>>
+>>> I already said: you have one compatible, not two. One.
+>>
+>> Ah, you mean something like:
+>> iio/accel/adi,adxl313.yaml
+>>
+>> Do you?
+>>
+>>> Also, still wildcard, so still a no.
+>>
+>> This is not wildcard, Microchip uses this to designate DPLL devices with the
+>> same characteristics.
+> 
+> That's the very definition of a wildcard, no? The x is matching against
+> several different devices. There's like 14 different parts matching
+> zl3073x, with varying numbers of outputs and channels. One compatible
+> for all of that hardly seems suitable.
 
-  # echo $((8000000/65536*65536))
-  7995392
+Prathosh, could you please bring more light on this?
 
-Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
----
- Documentation/admin-guide/cgroup-v2.rst | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 1a16ce68a4d7..577d05c03ffa 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1316,6 +1316,9 @@ PAGE_SIZE multiple when read back.
- 	Caller could retry them differently, return into userspace
- 	as -ENOMEM or silently ignore in cases like disk readahead.
- 
-+        Note that the value set for memory.max is reported in units
-+        corresponding to the system's page size.
-+
-   memory.reclaim
- 	A write-only nested-keyed file which exists for all cgroups.
- 
--- 
-2.49.0
+Thanks.
+> 
+>>
+>> But I can use microchip,azurite, is it more appropriate?
+> 
+> No, I think that is worse actually.
 
