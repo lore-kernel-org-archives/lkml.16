@@ -1,48 +1,62 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860501E990B;
-	Thu, 10 Apr 2025 15:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299477; cv=none; b=ugMuYpO6v/ZOiBKF3SGWu0t4zfZCGMR+uErBeGgs6re7EF22wpLE4HJ//gCWrmDg8t4WrYvuHK8qyagY5YNvgcY1hoUZmB/M5Lauc0C0lcUB5+QWuKa4mkfrLK3osItTSewwEoB/lanL+X1XyMAp7ILZ4ICccHHLbKAADxpjiMk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7141C5D62
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744299477; cv=fail; b=oFitFzBu69YWPaRR0EG1pJC4P8DakeC2Z+pCinf1l/ymUfRN4o9687ZwF0wTa0CyL+NqOrap0uc758AXlMY79h5qNJRmxqvQKo3aMYczZjufNodXpakgD7AavUw9T1FD52KSOcyGiikDxHQZlx+N1S7PEOsmn9JLQ3NX9bNBgw8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744299477; c=relaxed/simple;
-	bh=EMYuLPJWM6t/QbvZf7ywpIWpg26tA/P0uWIEh8ao1Cg=;
+	bh=YgWv6VHAXtss8sXlLUO2N/+fl/y6gWAkwXdHdV1CQI4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mje5N2Z/eLhG3P/3dESZ8KuBLpirHEHMtd9QBG6GY821OKIQljNHF1DLo3fGlPM3u+EkHadHO5NkJ9ZGno6U189sSCW+cSnp79x7hU6eLoiWIFYakTJoVReaFvZF5huZ4ST6vMjmL/x34W11DzZvw3Y4oEOTHd0379z92waR5Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jVlypefq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	 In-Reply-To:Content-Type; b=aJ21iG14Io+r/iIfJVHXrhu3RVy6unpbfHOAFIUhWm/odEpTAQDh9CnYpV6V6M8GPuXVj5UMmt1M3tig1+IJZz60frGjGrSyPWp3hJ/NqadgxBmUW7iRLxU1eAH6xJu3d4n2KuqRIRA7ciwijMKN5LHQKcSYciiS5U4y+NyX5J0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T/TUPPie; arc=fail smtp.client-ip=40.107.92.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jVlypefq"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A75cjs018370;
-	Thu, 10 Apr 2025 15:37:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	F1tK8A5KiVjnbhi2rhR7y0Y7Tn8k6euzMRCiQt761SM=; b=jVlypefqgYPtx6II
-	034IxYHAeRxNa0PI0ZzPGVkY+Z5GMBC6uX9dCSp9+JUjNLXyMkwsyVXJatAhdL4H
-	6Ul5vy+esWyw58+pjsSppb8h+YcGuV6jj3ZekjC9KB69gr/1LM/h/VhORECqf9/9
-	tIWVeUMP3eDmYSSUfTK0MYhF/DjLUqZlrv9JBvVZzIx1kqCuFebSGkp64+5+QCWU
-	XuWsW4DRUkUeIonJUFyQ/PbTqL8F1747UtiTx2rGu4jywxCCERAmRXBI/epzlT4O
-	xW+a7Oj1K5bSADR835Al1Sc3puogwhwvqAId8AOe+hJabY25SYMTxzStX/dtspW+
-	9wLWug==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twtb7h4b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 15:37:44 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53AFbh3q017023
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 15:37:43 GMT
-Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
- 2025 08:37:40 -0700
-Message-ID: <124fb13c-c41a-42b0-a521-158876b1b00c@quicinc.com>
-Date: Thu, 10 Apr 2025 21:07:37 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T/TUPPie"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Sjw7a61B/Eo3eFZkwSZzzaTutWXuIsNNyw1EHJWHBBMAspwtrriC3XVc44I3ljELOBFrEvODRYDlA+bmdXYfOKqXYT6w0K8mR1fuzt87rakH2WN8HdVzt2B+HA+//bumLkWqVNs52eOK7p0VRJMXqJ4kGjSVHdLmq7UgGC5eCv+eQfnU3gPWCLaSUejt62obOU17XBIYbs5Jip1ZK8Fg8RoT5mLxJYzK0uhGb29LUN7DdJrYp7rIO4ijJ3DEpFQf8TViOzbe3eOZCYGdp39FhIoRXFhCEd8Fav/VqF3AhlleAuNGqmTPIBVfUB2JNzwW5g8hK4SHD9Vd5q8l15KO5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5fFniaR8OO0wsk8IAzdzBg8vmW9fWibtMwWnGXqi0W0=;
+ b=qFUZfPxewbI/GjxOhFHsCb845wVjnz8vdkl/xIWiP2rbLEmKw5YrIu5B8ggGuoiwHZsfHqfu0gGATFILhs7sqfhrbKrENn5YcTrQeQp89GgAroTrWQoAPt1/25kFBw67j3d856ISGD9DvpHJY2W7OMWIsK23GAovR7EQ1MqOMN8sbbYbu0PizxD7oh7zlw+p4fadAH5ivAPUrt8jdlP1UT4C7Sez87nGVX/fAprTAOEZX5O01zccJIQxAvSYFqxVxfMKrguMA8Xx/6TRPPWMaVc1MrrbfiXk8Eg3yy2d81EFpmMBu1jtdmeKToipVPWlm725xz/frUZZ3DNavFibvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5fFniaR8OO0wsk8IAzdzBg8vmW9fWibtMwWnGXqi0W0=;
+ b=T/TUPPieZL0LgnuWxnz3wV4bXgOenqN/GWx5IqdjuRYbBOJXmau/I0004oiRwv0AXWawh5gL45tXKg2h9gkpEHd2fmvvwNVmLg4MvC2CJ1ZdQkS/O7so//uL64fSIFhXcZfuGRBO/XDvqcYKL7o1lWtcDBw383lcYN3TAYWhR6w=
+Received: from SA9PR13CA0038.namprd13.prod.outlook.com (2603:10b6:806:22::13)
+ by DM4PR12MB5722.namprd12.prod.outlook.com (2603:10b6:8:5d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Thu, 10 Apr
+ 2025 15:37:50 +0000
+Received: from SN1PEPF00026367.namprd02.prod.outlook.com
+ (2603:10b6:806:22:cafe::7c) by SA9PR13CA0038.outlook.office365.com
+ (2603:10b6:806:22::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.8 via Frontend Transport; Thu,
+ 10 Apr 2025 15:37:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF00026367.mail.protection.outlook.com (10.167.241.132) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8632.13 via Frontend Transport; Thu, 10 Apr 2025 15:37:49 +0000
+Received: from [172.31.188.187] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 10 Apr
+ 2025 10:37:46 -0500
+Message-ID: <96d7c406-95dc-43a2-9daf-819b78979c75@amd.com>
+Date: Thu, 10 Apr 2025 21:07:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,267 +64,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 3/6] phy: qcom-qmp-ufs: Refactor UFS PHY reset
-To: Bjorn Andersson <andersson@kernel.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>,
-        <manivannan.sadhasivam@linaro.org>,
-        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-        <konrad.dybcio@oss.qualcomm.com>, <quic_rdwivedi@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-References: <20250318144944.19749-1-quic_nitirawa@quicinc.com>
- <20250318144944.19749-4-quic_nitirawa@quicinc.com>
- <w3si5lpps5nzpyxjulxynl3fxwobtbnfsqwau6et5s2pkgehub@vcmkdaevbf5w>
+Subject: Re: [RFC PATCH 5/5] sched/fair: Proactive idle balance using push
+ mechanism
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>, <linux-kernel@vger.kernel.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, "Gautham R.
+ Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>
+References: <20250409111539.23791-1-kprateek.nayak@amd.com>
+ <20250409111539.23791-6-kprateek.nayak@amd.com>
+ <20250410102945.GD30687@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <w3si5lpps5nzpyxjulxynl3fxwobtbnfsqwau6et5s2pkgehub@vcmkdaevbf5w>
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250410102945.GD30687@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: cwJEHaUvcl9U1x2AlFUUBburphREsOXj
-X-Authority-Analysis: v=2.4 cv=LLlmQIW9 c=1 sm=1 tr=0 ts=67f7e5c8 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=WIYHiBWYbOpNOST8Gw0A:9
- a=QEXdDO2ut3YA:10 a=-_B0kFfA75AA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: cwJEHaUvcl9U1x2AlFUUBburphREsOXj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=999 malwarescore=0 phishscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100113
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00026367:EE_|DM4PR12MB5722:EE_
+X-MS-Office365-Filtering-Correlation-Id: 93501ddb-976a-4db2-877f-08dd7845a691
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T1c0OXcrYS9Zek1pRE9iNjJOMkhDcjhmR0dQbEZTNk0xNEo2cGJHQ21vT3I2?=
+ =?utf-8?B?SXo0aStackhTcGU4K1ZJUElBZGNhbkh4ZnQveVM1M0xGVXpPNUZCZmhZbzhv?=
+ =?utf-8?B?YXRUUm1NQ0FoQ3NvZXhDL2MycFpqSGp2eUdpZ0l0NTViSTg2SVRjSkw2WHpE?=
+ =?utf-8?B?bW1TdWdoRGpidUlUQXRQUGo2azZwak5yRjJhcUg3NFlWVUs1eXNZQXB3RkZS?=
+ =?utf-8?B?UjNUdnBtdFRIRzJRQ0xrRFB4NTA0bWRyWTFBcUZ0Um9COHE0ZXlwNGpLZXl1?=
+ =?utf-8?B?WHpidHJiZXhNd3NObHRRVGZyNVg3QUZUcXJsL1pMeWcrdlBOL1ZQdDdhZ2lF?=
+ =?utf-8?B?WVpQUTk1T3QxaTdzMENBeG9WejFjWVhnTmtJWVBRMmpnK0xvS0hjcDQyRm1r?=
+ =?utf-8?B?OFlRRXJlTjhFWS9wSS9Fc0lGN1ZEbG9LRlFTYldRUlJ1alkxS2p5ak9TS1d3?=
+ =?utf-8?B?c3dXekdOZFRrOTlDU1NBcnlDKzVEWEczckx1d245bGE3MGZUK04wS2F0N1JF?=
+ =?utf-8?B?bFk4YVhHODRnYjJmMHFRYVlYcnhZaTFHdkVVTVVVQTVOSUdobEFsSjM4dFZk?=
+ =?utf-8?B?bE1YRHI4cG0yd1k4N3dNaVhYcG9Fd1BLODZWRVo5YlVIUDBjakNMVjBxYnN1?=
+ =?utf-8?B?ZWs2anFMOG9mcGF4MllzNDhwbmtSSVRRdkRzSVJITWZ2ZUpQTkxUcTRoN3Ur?=
+ =?utf-8?B?SVRDRlFpUGVHMzZIeEhDdC9GZVVDQjE5am9YWTFqNytzZHFMVmF6MzNzS2Ew?=
+ =?utf-8?B?eDRwcU9YRks2TElUZWxRUWZ5bDVZVHg1S2tpblZ1b01MeU9Xc1EvVnZEZXJI?=
+ =?utf-8?B?QW9YQUxLSE8vYWtaSVFSUUxnSyt1bEo0a1ZiZjBabGhhaHdhOEVvcDEwN1o5?=
+ =?utf-8?B?MGhONlZ1L09yMmRLY3FkT2U1a2w5cDEvTCszU2U5MzcrMXkwcll2TWVZdWx6?=
+ =?utf-8?B?dFpsRCs3MDRPdkRIZG9MQ3RnYS8xWWtoMU9vSlpIdW1Fb1JQYjZsaklYQVB4?=
+ =?utf-8?B?TGpCSTFwUmdSMU9pUkY2YUtrNW5obHlIRllOd3FzMVJ3aDdrWVVtOHlZOWNK?=
+ =?utf-8?B?SXo5eDJQQjNwQlFtSjlzSTE3a0IwSHFVU3ZkdDE3ck5CdHk1VCtaY2JuRytZ?=
+ =?utf-8?B?M1BiSG94SjFsb0VOa0NYK0pxczRtT29Wd21vUWNJU21ZaW00K1hGM241eEt0?=
+ =?utf-8?B?eHZRTXBkTnZIZGZ1anl3UUVib1NuV3Mxa1VLaWIzSnVPNnkyTkJiV21VSFFG?=
+ =?utf-8?B?alREd0NDY2FCN21ZQUV5SjJQQ1RReWJrR2crVVdlbDlaRVVSOHl0NVpvbi9S?=
+ =?utf-8?B?S2JSWk9PZ0g3V3pJYjFDeXEwNW5PV0hDS1FkK3labEFHNFAvN3pneVlzeThl?=
+ =?utf-8?B?RXhFdUY3dEEzQ1BoUkZQUzdJRzB0MTVoZXhndDB2by93WFNLMTYxS2pvczQr?=
+ =?utf-8?B?T1FIUU9ydEEyZzh2VmNGYm9iY1QyY3liVEtIZE5lT3AzVjZTVytVdTU2UkRT?=
+ =?utf-8?B?OEtFbnJOcjdGU09nZFFDUHNmVjdpK1grM1ZpY1d0bVIybEs5eW43STh0QXhz?=
+ =?utf-8?B?dlJEL3dQOUpVNnVXS3ZoUDZGaW42bGhZemFiM1ZkQUZtbDNjamkwZ3dmRWVt?=
+ =?utf-8?B?MFZzOW03VWJHUGFGSW9vUGtQaDhac0Z1M3dMRjhVdjlwNjlvbnYzQWtPczdz?=
+ =?utf-8?B?am1zaHFYMGVvUThpZUt5ZTFwc2Y1MCtzcTcxbFQzYUF5K2pMeGVFTjQ2bDN1?=
+ =?utf-8?B?U09VTmpyM0hPajE0ZHJrWjZQblFBZXpsOTVlREUxZ2N2eXNGdmZjbkRWWEhZ?=
+ =?utf-8?B?RkRHTnc2WFpaZXdhS1A5MDhDbk81T3h1b3N1SWJKa0dqaWxRK0I1TU9tdmZT?=
+ =?utf-8?B?a3N3WE93UkZ6TitOWWRSSUZicTBZU2Qwb2tQak9mY2ZHRVpvNThIbUlIZUxG?=
+ =?utf-8?B?MmZNZ0pSeTVxd2ZnL0ZyOVp0cndKeUozUkgxcmZhTGk2KzlvMTZ6bmJvOFla?=
+ =?utf-8?Q?MRrR5L3SQvxtlpRHbKdEhRyxpfxxPY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 15:37:49.8485
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93501ddb-976a-4db2-877f-08dd7845a691
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00026367.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5722
 
+On 4/10/2025 3:59 PM, Peter Zijlstra wrote:
 
+[..snip..]
 
-On 3/19/2025 1:16 AM, Bjorn Andersson wrote:
-> On Tue, Mar 18, 2025 at 08:19:41PM +0530, Nitin Rawat wrote:
->> Refactor the UFS PHY reset handling to parse the reset logic only once
->> during probe, instead of every resume.
->>
-> 
-> This looks very reasonable! But it would be preferred to see the commit
-> messages following the what format outlines in
-> https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-> with a clear problem description followed by a description of the
-> technical solution.
-> 
->> Move the UFS PHY reset parsing logic from qmp_phy_power_on to
->> qmp_ufs_probe to avoid unnecessary parsing during resume.
-> 
-> Please add ()-suffix to function names in your commit messages.
-> 
-> Also, this series moves things around a lot, can you confirm that UFS is
-> working inbetween each one of this patches, so that the branch is
-> bisectable when this is being picked up?
-
-Hi Bjorn,
-
-Thanks for the review. I've addressed the bisectability compliance in my 
-latest patch set (patchset #3) that I posted today. I just realized I 
-missed your other comments about adding the ()-suffix to function names 
-in commit messages. Sorry about that. I'll make sure to include this in 
-my next patch set.
-
-Thanks,
-Nitin
-
-
-> 
->>
->> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
->> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
->> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 104 ++++++++++++------------
->>   1 file changed, 50 insertions(+), 54 deletions(-)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> index 0089ee80f852..3a80c2c110d2 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> @@ -1757,32 +1757,6 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
->>   	qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->>   }
->>
->> -static int qmp_ufs_com_init(struct qmp_ufs *qmp)
->> -{
->> -	const struct qmp_phy_cfg *cfg = qmp->cfg;
->> -	void __iomem *pcs = qmp->pcs;
->> -	int ret;
->> -
->> -	ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
->> -	if (ret) {
->> -		dev_err(qmp->dev, "failed to enable regulators, err=%d\n", ret);
->> -		return ret;
->> -	}
->> -
->> -	ret = clk_bulk_prepare_enable(qmp->num_clks, qmp->clks);
->> -	if (ret)
->> -		goto err_disable_regulators;
->> -
->> -	qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRDN);
->> -
->> -	return 0;
->> -
->> -err_disable_regulators:
->> -	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
->> -
->> -	return ret;
->> -}
->> -
->>   static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+>>   /*
+>>    * See if the non running fair tasks on this rq can be sent on other CPUs
+>>    * that fits better with their profile.
+>>    */
+>>   static bool push_fair_task(struct rq *rq)
 >>   {
->>   	const struct qmp_phy_cfg *cfg = qmp->cfg;
->> @@ -1800,41 +1774,27 @@ static int qmp_ufs_power_on(struct phy *phy)
->>   {
->>   	struct qmp_ufs *qmp = phy_get_drvdata(phy);
->>   	const struct qmp_phy_cfg *cfg = qmp->cfg;
->> +	void __iomem *pcs = qmp->pcs;
-> 
-> This is only used once, perhaps not worth a local variable to save 5
-> characters on that line?
-> 
->>   	int ret;
->> -	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
->> -
->> -	if (cfg->no_pcs_sw_reset) {
->> -		/*
->> -		 * Get UFS reset, which is delayed until now to avoid a
->> -		 * circular dependency where UFS needs its PHY, but the PHY
->> -		 * needs this UFS reset.
->> -		 */
->> -		if (!qmp->ufs_reset) {
->> -			qmp->ufs_reset =
->> -				devm_reset_control_get_exclusive(qmp->dev,
->> -								 "ufsphy");
->> -
->> -			if (IS_ERR(qmp->ufs_reset)) {
->> -				ret = PTR_ERR(qmp->ufs_reset);
->> -				dev_err(qmp->dev,
->> -					"failed to get UFS reset: %d\n",
->> -					ret);
->> -
->> -				qmp->ufs_reset = NULL;
->> -				return ret;
->> -			}
->> -		}
->>
->> -		ret = reset_control_assert(qmp->ufs_reset);
->> -		if (ret)
->> -			return ret;
->> +	ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
->> +	if (ret) {
->> +		dev_err(qmp->dev, "failed to enable regulators, err=%d\n", ret);
-> 
-> regulator_bulk_enable() will already have printed a more useful error
-> message, letting you know which of the vregs[] it was that failed to
-> enable.
-> 
->> +		return ret;
->>   	}
->>
->> -	ret = qmp_ufs_com_init(qmp);
->> +	ret = clk_bulk_prepare_enable(qmp->num_clks, qmp->clks);
->>   	if (ret)
->> -		return ret;
->> +		goto err_disable_regulators;
+>> +	struct cpumask *cpus = this_cpu_cpumask_var_ptr(load_balance_mask);
+>> +	struct task_struct *p = pick_next_pushable_fair_task(rq);
+>> +	int cpu, this_cpu = cpu_of(rq);
 >> +
->> +	qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRDN);
->>
->>   	return 0;
+>> +	if (!p)
+>> +		return false;
 >> +
->> +err_disable_regulators:
->> +	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
->> +
->> +	return ret;
->>   }
->>
->>   static int qmp_ufs_phy_calibrate(struct phy *phy)
->> @@ -1846,6 +1806,10 @@ static int qmp_ufs_phy_calibrate(struct phy *phy)
->>   	unsigned int val;
->>   	int ret;
->>
->> +	ret = reset_control_assert(qmp->ufs_reset);
->> +	if (ret)
->> +		return ret;
->> +
->>   	qmp_ufs_init_registers(qmp, cfg);
->>
->>   	ret = reset_control_deassert(qmp->ufs_reset);
->> @@ -2088,6 +2052,34 @@ static int qmp_ufs_parse_dt(struct qmp_ufs *qmp)
->>   	return 0;
->>   }
->>
->> +static int qmp_ufs_get_phy_reset(struct qmp_ufs *qmp)
->> +{
->> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
->> +	int ret;
->> +
->> +	if (!cfg->no_pcs_sw_reset)
->> +		return 0;
->> +
->> +	/*
->> +	 * Get UFS reset, which is delayed until now to avoid a
->> +	 * circular dependency where UFS needs its PHY, but the PHY
->> +	 * needs this UFS reset.
+>> +	if (!cpumask_and(cpus, nohz.idle_cpus_mask, housekeeping_cpumask(HK_TYPE_KERNEL_NOISE)))
+>> +		goto requeue;
 > 
-> This is invoked only once, from qcom_ufs_probe(), so it doesn't seem
-> accurate anymore. How come this is no longer needed? Please describe
-> what changed int he commit message.
+> So I think the main goal here should be to get rid of the whole single
+> nohz balancing thing.
 > 
->> +	 */
->> +	if (!qmp->ufs_reset) {
->> +		qmp->ufs_reset =
->> +		devm_reset_control_get_exclusive(qmp->dev, "ufsphy");
+> This global state/mask has been shown to be a problem over and over again.
 > 
-> The line break here is really weird, are you sure checkpatch --strict
-> didn't complain about this one?
+> Ideally we keep a nohz idle mask per LLC (right next to the overload
+> mask you introduced earlier), along with a bit in the sched_domain tree
+> upwards of that to indicate a particular llc/ node / distance-group has
+> nohz idle.
 > 
->> +
->> +		if (IS_ERR(qmp->ufs_reset)) {
->> +			ret = PTR_ERR(qmp->ufs_reset);
->> +			dev_err(qmp->dev, "failed to get PHY reset: %d\n", ret);
+> Then if the topmost domain has the bit set it means there are nohz cpus
+> to be found, and we can (slowly) iterate the domain tree up from
+> overloaded LLC to push tasks around.
+
+I'll to through fair.c to understand all the usecases of
+"nohz.idle_cpus_mask" and then start with this bit for v2 to see if that
+blows up in some way. I'll be back shortly.
+
 > 
-> return dev_err_probe(qmp->dev, PTR_ERR(qmp->ufs_reset), "failed to...: %pe\n", qmp->ufs_reset);
-> 
-> While being more succinct, it also stores the reason for failing the
-> probe so that you can find it in /sys/kernel/debug/devices_deferred
-> 
->> +			qmp->ufs_reset = NULL;
-> 
-> Use a local variable if you're worried about someone accessing the stale
-> error code after returning here.
-> 
-> Regards,
-> Bjorn
-> 
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int qmp_ufs_probe(struct platform_device *pdev)
->>   {
->>   	struct device *dev = &pdev->dev;
->> @@ -2114,6 +2106,10 @@ static int qmp_ufs_probe(struct platform_device *pdev)
->>   	if (ret)
->>   		return ret;
->>
->> +	ret = qmp_ufs_get_phy_reset(qmp);
->> +	if (ret)
->> +		return ret;
->> +
->>   	/* Check for legacy binding with child node. */
->>   	np = of_get_next_available_child(dev->of_node, NULL);
->>   	if (np) {
->> --
->> 2.48.1
->>
->>
+> Anyway, yes, you gotta start somewhere :-)
+
+Thanks a ton for the initial review. I'll go analyze more to see what
+bits are making benchmarks go sad.
+
+-- 
+Thanks and Regards,
+Prateek
 
