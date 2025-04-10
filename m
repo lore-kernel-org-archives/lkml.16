@@ -1,137 +1,128 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301021C5D7B;
-	Thu, 10 Apr 2025 08:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28C2381A3;
+	Thu, 10 Apr 2025 08:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272021; cv=none; b=fYILRAOZgGP5y7UP9JZT7rnalxd22aTw2Xha4ZzDVNgftQ3oXmjh96eGUZG76AH1niNB3F27LdA640AgC95e5M8f6p3xue8a/2dC/LmGndH6NWNsl4dAVerAvxpAdzxjTT1mGczMBjzgZSuf1PQDyMtgStHUM3yyDytCMGwSp9U=
+	t=1744272157; cv=none; b=rJ4UZn7nkjQxhD4pNtKScrOC+miCS6QEJBg/r76glr7T2+3kH/1+iElLK9gnIU5+xnx0unZjfdy0Xhi5z/Ex4i/Va5eGVmvU++7CVBfQFFrYKfBfFsDQZpOsFkGNfay4BNH9JCuFQ9uuwGMPoA4NvsI7FYtZoCPUh8bpMG/e6jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272021; c=relaxed/simple;
-	bh=BNs36cFblgpNUrlfgerskcnvl+4ODLGqjQaWjV2nbQk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=mv/N0Iqw6tvPQ9qiWIGve4vOcN+G9LB9wLhsmmH6ct3zk0jOu/WYWTvF/1j0PUvXTsw2L3tWkW3d/ZDTrAuU1RCMQjPzH3asxjG4XWgWXFWTRfyld3uaq6HQBOS0Cv4ylfcKgXW2dskP4QqPOIEnldNMWOPacQ4WeSRdJre7C80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Hx0NLMPi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fcPV92j9; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744272157; c=relaxed/simple;
+	bh=FqsQ/mYhFu7t1FoIrEwny3QHUYvXb566G8N8Z42Mbs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QvhQoIo3yNWoB7KNjEYBTDlLcOPrfsKBgPd10ZNPb7aeZjSbx9riijgXLh0m2mqiGxUVP8jfmbm6omie/mXR4RqoKBd+SmXZMHnDA++bvdUtanE2oNKbH37fiDOIGVoaxFWXFeHe7SRPapyeS7LmZQsaVOoEOIYjvKdRweKNCrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwur5bLq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Hx0NLMPi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fcPV92j9"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id F114C2540229;
-	Thu, 10 Apr 2025 04:00:14 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Thu, 10 Apr 2025 04:00:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744272014;
-	 x=1744358414; bh=vqd+an8KzXjGcgrrzFgvmuFuLXgqiHUn3jGJ2YEVl6E=; b=
-	Hx0NLMPiXyE1YQ86SebCLF3W12WY1IioWIfq1mWquoe68p3aw/Ctw2gyCO7J1y4Y
-	nf6BFz7qOTjShAo18ecvfoZ1/LCrV8ZEIbcOWWmcLqtkGOh8otNwVtBh+sN1iE65
-	+N42IEp9dDn2KBXKnjrUk3g5O9RV2QStfAZWxGU7Jo7pGRLWH7SJ/whlm4rgniCC
-	Yjp6PrzfU0MHV0+pYz52ED6/C1uR4EIQD0CX8KZC6ymcVnpKv4AHAO0NnVhSY5fF
-	g0elQktLD7Pn7r1X/9lN19CNyZ+BtDEphyuqMND51CGbkbxeiZAEdC9G/2/8ox6a
-	NgeizINB+ai+CNy67L9xaw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744272014; x=
-	1744358414; bh=vqd+an8KzXjGcgrrzFgvmuFuLXgqiHUn3jGJ2YEVl6E=; b=f
-	cPV92j92d5IZn4lx+B99WEghiDBqzEeOqel+uV1ReDor5TexLY6BaLzYNdKH0WGZ
-	v5frIPWBSghVBd26sdbvvri0TksPiQ1EA1MEgXVy/Tdfmvn7C+d+/S/EvI2JfAKy
-	bSYEWQua7yDglmWGQBq2lSN4tBXjK2ZTgARwOI99QK0MuDRcbdDOrERefAkU5u6g
-	qPWf8moNR1sM1z3SqOPXNxEV68elS6kwMupJv10xMX/5w0OXNo6KtMifJhMciRlP
-	xFZ8ASzCg1ZrdhEz+bYadV7Kx3IUydYWz23DQDdy+3thMVCctobus66QbYGzIVvM
-	7IdrnPBrRUk2hJGCmG7/Q==
-X-ME-Sender: <xms:jnr3ZxRGQ9hMYMU9hy4gqbC9vI885ZxMpYJRNU_h6DxvJLzhR7r2nw>
-    <xme:jnr3Z6zqAMBSavjnMhslQk92V6alM0_ij0lIvIODZkCJEXq8JnkUSFqkTbCKRWMBm
-    vfc7ub9nPnx6imxaYE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekfeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepvefgieeugfffleekjeeiledtueduledtveej
-    uedtkeevleffjefhfeehlefhfffhnecuffhomhgrihhnpehphhhrrggtkhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehmihgtseguihhgihhkohgurdhnvghtpdhrtghpthhtohepghhnohgrtghk
-    sehgohhoghhlvgdrtghomhdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgv
-    vghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugi
-    dqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghn
-    ihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvg
-    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhs
-    vggtuhhrihhthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:jnr3Z23LKgl9hZ6QcREDgqwpMmhfLDt6lAALKbbCP_NoKIJCosyM-w>
-    <xmx:jnr3Z5D3W62L5bLVYc85RsVpiUQwOFJo2J_vLbJF9S1_XHi5k4SWLg>
-    <xmx:jnr3Z6iMl8WcJZv1cwMdAPotalW6C98EFI1qolSibGqvJc1TF1y8QQ>
-    <xmx:jnr3Z9pvrCW4jNtcNLIQICPw3jBIzR-q02jOyQYUSfID_ETX1mPU2g>
-    <xmx:jnr3Z-41hWrlmOzfeS929v4IhapaQuO_5TJksYkBKtYuUmpaadop9ZR6>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3BF582220073; Thu, 10 Apr 2025 04:00:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwur5bLq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB65C4CEDD;
+	Thu, 10 Apr 2025 08:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744272157;
+	bh=FqsQ/mYhFu7t1FoIrEwny3QHUYvXb566G8N8Z42Mbs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rwur5bLq9O7t1p/zAhYTqgQawZNcM74MfsiJojMkUBO+e6ctBrO1h64GI2qRORN67
+	 xBdwWb2kmPtKrcPpso6wEPH2dJgDHAJhQoWSCCdoDviCEMw71KlhcD0EcppxpMAvW3
+	 uJRFPIszwOzrj0BXUCQsg+/6fmmVaM0VtAx5ORmTQwqQwG/ESYvRkVu1l4NhRyNCTL
+	 7+5LhcPoKopK7CKY2j/5/fGjvZhlcE2ANez5xzOrmgucyB94r1yAGcCc1XEDEn5vdz
+	 Gwf0rV13rdQkrcdxtvgF1nB/1IMdBevh8z1aSFckqbUcoe//Jgd9UsRyHEt4p4Ausz
+	 NxWvIEoln8kYQ==
+Date: Thu, 10 Apr 2025 09:02:33 +0100
+From: Lee Jones <lee@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/14] Support ROHM Scalable PMIC family
+Message-ID: <20250410080233.GO372032@google.com>
+References: <cover.1742802856.git.mazziesaccount@gmail.com>
+ <20250404154355.GH372032@google.com>
+ <ddd8882f-05b6-40f0-9a26-ab21d9644364@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T00187b92ccd5616f
-Date: Thu, 10 Apr 2025 09:58:13 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Mark Brown" <broonie@kernel.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, "Ard Biesheuvel" <ardb@kernel.org>
-Message-Id: <657fd022-4056-4f7f-aaf2-b4bf88fbcb38@app.fastmail.com>
-In-Reply-To: <482D3DA9-7336-4D36-8758-4F8DB48EA8B9@kernel.org>
-References: 
- <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
- <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
- <8cbe0cac-2952-47b6-9b0d-1400aec0bf25@sirena.org.uk>
- <08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com>
- <482D3DA9-7336-4D36-8758-4F8DB48EA8B9@kernel.org>
-Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ddd8882f-05b6-40f0-9a26-ab21d9644364@gmail.com>
 
-On Tue, Apr 8, 2025, at 22:37, Kees Cook wrote:
-> On April 8, 2025 2:22:52 AM PDT, Arnd Bergmann <arnd@arndb.de> wrote:
->>>
->>> indicates that Talos 1.9.1 uses latent_entropy (but we didn't check how
->>> accurate that survey is).
->
-> The early RNG for small machines remains pretty bad, so I can 
-> understand wanting to keep that around. For bigger machines it's not as 
-> much of a benefit.
+On Tue, 08 Apr 2025, Matti Vaittinen wrote:
 
-Does "small machines" still mean those without a cycle counter
-as in the 2009 article [https://phrack.org/issues/66/15#article]
-or are you thinking of those that may have a working
-random_get_entropy() but that remains too predictable for
-add_device_randomness() because of the low frequency (e.g.
-19.2 MHz on many ARMv7/v8)?
+> On 04/04/2025 18:43, Lee Jones wrote:
+> > On Mon, 24 Mar 2025, Matti Vaittinen wrote:
+> > 
+> > > Support ROHM BD96802, BD96805 and BD96806 PMICs
+> > > 
+> > > The ROHM BD96801 [1] and BD96805 [2] are almost identical PMICs what comes
+> > > to the digital interface. Main difference is voltage tuning range.
+> > > Supporting BD96805 with BD96801 drivers is mostly just a matter of being
+> > > able to differentiate the PMICs (done based on the devicetree
+> > > compatible) and then providing separate voltage tables.
+> > > 
+> > > The ROHM BD96802 [3] is a companion PMIC which is intended to be used to
+> > > provide more capacity on systems where the BD96801 alone is not
+> > > sufficient. Startup sequence of these PMICs can be synchronized in
+> > > hardware level, and there seems to be some mechanisms which allow
+> > > delivering the companion PMIC (BD96802) status to the main PMIC
+> > > (BD96801/BD96805). This patch series does treat the companion PMIC(s) as
+> > > individual PMICs and allows using them from software point of view as a
+> > > stand alone ICs. From the digital point of view, the BD96802 is a subset
+> > > of BD96801, providing only buck1 and buck2 regulators. Please see the
+> > > data sheet
+> > > 
+> > > The ROHM BD96806 [4] is similar to the BD96802, except that it does also
+> > > provide different voltage tuning ranges.
+> > > 
+> > > This series adds basic voltage monitoring and control as well as a
+> > > watchdog support for these PMICs using the BD96801 drivers.
+> > > 
+> > > Similarly to the BD96801, these PMICs too have a few configurations
+> > > which can only be done when the PMIC is in STBY state. Similarly to the
+> > > BD96801, doing these configurations isn't supported by the driver. The
+> > > original BD96801 RFC [5] driver should be able to cover those
+> > > configurations, if modified to support these models.
+> > > 
+> > > [1]: ROHM BD96801 data sheet:
+> > > https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96801qxx-c-e.pdf
+> > > [2]: ROHM BD96805 data sheet:
+> > > https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96805qxx-c-e.pdf
+> > > [3]: ROHM BD96802 data sheet:
+> > > https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96802qxx-c-e.pdf
+> > > [4]: ROHM BD96806 data sheet:
+> > > https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96806qxx-c-e.pdf
+> > > [5]: Original BD96801 RFC:
+> > > https://lore.kernel.org/all/cover.1712058690.git.mazziesaccount@gmail.com/
+> > > 
+> > > Revision history:
+> > > 
+> > > v1 => v2: MFD driver changes after review by Lee
+> > >   - Use enum for chip type instead of picking the data directly from the
+> > >     of_match_data.
+> > >   - rename "chip data" variable 'cd' to more widely used 'ddata'.
+> > >   link to v1:
+> > >    https://lore.kernel.org/all/cover.1741864404.git.mazziesaccount@gmail.com/
+> 
+> > 
+> > The MFD stuff looks okay to me now.
+> > 
+> > Let me know when everything else is ready to go.
+> > 
+> 
+> I'll treat this as an ACK for the V3. Please, let me know if that's not
+> Okay.
 
-The former (ARMv5, AMD Elan, Xburst) were still common back then
-but are mostly extinct now, while the latter obviously remain
-in wide use.
+Acks are tricky because another maintainer might (have have in the past)
+assume that they can apply the set with my blessing, this is not the
+case.  I used to use `Acked-for-MFD-by: <me>`, but these ended up being
+merged.  *face palm*
 
->>Talos also uses stackleak. I also see that alpine and qubes have the
->>same two gcc plugins enabled.
->
-> Yeah, stackleak has no viable alternative. It's effectively 
-> init_on_free for stack. It's be nice if there were a way to do this 
-> with upstream compilers (track call depth).
+Anyway, no harm done this time around I think.
 
-I guess a simplified version could in theory be done in the kernel
-using _mcount without compiler help, but that would be much more
-expensive if every function entry has to call it, right?
-
-     Arnd
+-- 
+Lee Jones [李琼斯]
