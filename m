@@ -1,40 +1,55 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE20F381A3;
-	Thu, 10 Apr 2025 08:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DA62381A3
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272401; cv=none; b=h/kxqHlLYRh6DzfTWjKfmVvCj071Qgh3qU4vGi7ZrtjA8kuLM1EP0uR4TLXZ4vBEWUkssKY/CjPhkYKBXwZh31dhAAUJnkYypCMlWyuFJiD/Ol1d6n38nxM7VobHlk/oJz/xjl/UQqDvy8Xt0rLu3aYwBvlleW7MTzcI1aHxLEc=
+	t=1744272451; cv=none; b=PbwjhFe9rlAl0XqQFdHImjembhJQmA1zvx9MbwE6w3xBHy5ohTfF/T4e/XoC9Ovx00KZehIP19F2v4QHE4sMFo4M5Vei6LXIVWEhKsBoB7OU5OPfBJejBJYA4LbZZAfHDoq6yIiCxzhTmT7I3y676TlzFSdKl4/b7BNPRYgjMrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272401; c=relaxed/simple;
-	bh=Eu7ZUw1kA+huwNWmhYz+sYJqpRJLQFYkskDCGUdGFsg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dCKawVikFFIiyaIbKWidef5JN5LeVlwbd7Sd5whuXhOcVo9yVD22qgxoaNCrQsVu3asbvaGmtLGuTI50H0hKPxkUDrOwubVXs4Nd+o7iHiM+657UEchrjlphNLD0H3fYgBfMxoOS/8lhGiB6bPQZAgkgsl3mP6KcEXyDDDO/GJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-b1-67f77c09ae62
-From: Rakie Kim <rakie.kim@sk.com>
-To: akpm@linux-foundation.org
-Cc: gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	ying.huang@linux.alibaba.com,
+	s=arc-20240116; t=1744272451; c=relaxed/simple;
+	bh=mkLm0BKF7/zvsej2Gbgj/eFY/QKzpohFK6IqkaReCZE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Egc6Wqb9dsg6WKcO8KBdvlOTVrxx1OhizgOCx388zQBKfbQpaOH/xKFzXgFzP6LzDVaHXW1cTlIXYEF4IqeYtw5dTc+HrsBy6Epntvo7ae+uVMqT7pNSLjhaMdQGJbmVNPB/Rn+wn+n4Bj8iy9N1dNjDEDJUru3l0yG39tBd/Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EEC41007;
+	Thu, 10 Apr 2025 01:07:29 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AC7493F694;
+	Thu, 10 Apr 2025 01:07:25 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	james.morse@arm.com,
+	hardevsinh.palaniya@siliconsignals.io,
+	shameerali.kolothum.thodi@huawei.com,
+	huangxiaojia2@huawei.com,
+	mark.rutland@arm.com,
+	samuel.holland@sifive.com,
+	palmer@rivosinc.com,
+	charlie@rivosinc.com,
+	thiago.bauermann@linaro.org,
+	bgray@linux.ibm.com,
+	tglx@linutronix.de,
+	puranjay@kernel.org,
 	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	osalvador@suse.de,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v7 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
-Date: Thu, 10 Apr 2025 17:06:19 +0900
-Message-ID: <20250410080629.564-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250410075341.549-1-rakie.kim@sk.com>
-References: 
+	yang@os.amperecomputing.com,
+	mbenes@suse.cz,
+	joel.granados@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	nd@arm.com,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v3 0/4] support FEAT_MTE_STORE_ONLY feature
+Date: Thu, 10 Apr 2025 09:07:19 +0100
+Message-Id: <20250410080723.953525-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,135 +57,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsXC9ZZnoS5nzfd0g/1tshZz1q9hs5g+9QKj
-	xdf1v5gtft49zm6xauE1NovjW+exW5yfdYrF4vKuOWwW99b8Z7U4M63IYvWaDAduj52z7rJ7
-	dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz2Hy62uPzJrkArigum5TUnMyy
-	1CJ9uwSujMu3GpgLnmtUfOv/xt7AuEuhi5GTQ0LARGLp0e3MMPa5b6vZuhg5ONgElCSO7Y0B
-	CYsIyEpM/XuepYuRi4NZ4BOTxMFXP1hBEsICcRL7fm9kA7FZBFQl+tc9BIvzChhLvFmxjR1i
-	pqZEw6V7TCA2J8j8P7fBaoQEeCRebdjPCFEvKHFy5hMWEJtZQF6ieetsZpBlEgLf2STurvnJ
-	BDFIUuLgihssExj5ZyHpmYWkZwEj0ypGocy8stzEzBwTvYzKvMwKveT83E2MwAhYVvsnegfj
-	pwvBhxgFOBiVeHg9Mr6lC7EmlhVX5h5ilOBgVhLh9TT8ni7Em5JYWZValB9fVJqTWnyIUZqD
-	RUmc1+hbeYqQQHpiSWp2ampBahFMlomDU6qB0ebf7f+hrAqZuueeBO+bEFX195X58RiV++oX
-	1KR1JdfPLArgvjlN9UrdkS372uP/LT/QPSvc8dqjilNrefwnT/0rNCe82uT4Y8GZyU/+Xiu4
-	Uvqzbf2PuEsqVhzFzyTPv+7Ycqo43/pvyWzBtzqr0jgTee/sefayqjnbqPS25Js/7zXWXc31
-	OqfEUpyRaKjFXFScCADKl+KAfAIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsXCNUNNS5ez5nu6weeTQhZz1q9hs5g+9QKj
-	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLc5MK7I4
-	dO05q8XqNRkWv7etYHPg99g56y67R3fbZXaPliNvWT0W73nJ5LHp0yR2jxMzfrN47Hxo6fF+
-	31U2j2+3PTwWv/jA5LH5dLXH501yATxRXDYpqTmZZalF+nYJXBmXbzUwFzzXqPjW/429gXGX
-	QhcjJ4eEgInEuW+r2boYOTjYBJQkju2NAQmLCMhKTP17nqWLkYuDWeATk8TBVz9YQRLCAnES
-	+35vZAOxWQRUJfrXPQSL8woYS7xZsY0dYqamRMOle0wgNifI/D+3wWqEBHgkXm3YzwhRLyhx
-	cuYTFhCbWUBeonnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJERj0
-	y2r/TNzB+OWy+yFGAQ5GJR5ej4xv6UKsiWXFlbmHGCU4mJVEeD0Nv6cL8aYkVlalFuXHF5Xm
-	pBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1MM7abfvgpewkbpP0gEcnzPyY/fx3
-	ZUe1WF66en257+kGEZs36n4Xjxd8WbL2VEZHVhrXquK+0If1i+IZle85yy7Rud25N+vjAsGm
-	ec+riiOOPNt/ssH41hSJm3I7RXWVbbfoLUnSnPKM71eUX9t3AfY72+8rTtLdN1vv2r4f6RxV
-	2yJPrGpMklZiKc5INNRiLipOBABEqBxVdgIAAA==
-X-CFilter-Loop: Reflected
 
-On Thu, 10 Apr 2025 16:53:33 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
-> On Wed, 9 Apr 2025 11:51:36 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> > Rakie Kim wrote:
-> > > > > > +static void sysfs_wi_node_delete(int nid)
-> > > > > >  {
-> > > > > > -	if (!node_attr)
-> > > > > > +	if (!wi_group->nattrs[nid])
-> > > > > >  		return;
-> > > > > > -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
-> > > > > > -	kfree(node_attr->kobj_attr.attr.name);
-> > > > > > -	kfree(node_attr);
-> > > > > > +
-> > > > > > +	sysfs_remove_file(&wi_group->wi_kobj,
-> > > > > > +			  &wi_group->nattrs[nid]->kobj_attr.attr);
-> > > > > 
-> > > > > This still looks broken to me, but I think this is more a problem that
-> > > > > was present in the original code.
-> > > > > 
-> > > > > At this point @wi_group's reference count is zero because
-> > > > > sysfs_wi_release() has been called. However, it can only be zero if it has
-> > > > > properly transitioned through kobject_del() and final kobject_put(). It
-> > > > > follows that kobject_del() arranges for kobj->sd to be NULL. That means
-> > > > > that this *should* be hitting the WARN() in kernfs_remove_by_name_ns()
-> > > > > for the !parent case.
-> > > > > 
-> > > > > So, either you are not triggering that path, or testing that path, but
-> > > > > sys_remove_file() of the child attributes should be happening *before*
-> > > > > sysfs_wi_release().
-> > > > > 
-> > > > > Did I miss something?
-> > > > 
-> > > > I think the missing change is that sysfs_wi_node_add() failures need to
-> > > > be done with a sysfs_wi_node_delete() of the added attrs *before* the
-> > > > kobject_del() of @wi_group.
-> > > 
-> > > Hi Dan Williams
-> > > 
-> > > Thank you very much for identifying this potential issue in the code.
-> > > 
-> > > As you pointed out, this seems to be a problem that was already present in
-> > > the original implementation, and I agree that it needs to be addressed.
-> > > 
-> > > However, since this issue existed prior to the changes in this patch
-> > > series, I believe it would be more appropriate to fix it in a separate
-> > > follow-up patch rather than include it here.
-> > 
-> > I tend to disagree. The whole motivation of this series is to get the
-> > kobject lifetime handling correct in order to add the new dynamic
-> > capability. The claimed correctness fixups are incomplete. There is time
-> > to respin this (we are only at -rc1) and get it right before landing the
-> > new dynamic capability.
-> > 
-> > One of the outcomes of the "MM Process" topic at LSF/MM was that Andrew
-> > wanted more feedback on when patches are not quite ready for prime-time
-> > and I think this is an example of a patch set that deserves another spin
-> > to meet the stated goals.
-> > 
-> > > I will start preparing a new patch to address this problem, and I would
-> > > greatly appreciate it if you could review it once it's ready.
-> > 
-> > Will definitely review it. I will leave to Andrew if he wants an
-> > incremental fixup on top of this series, or rebase on top of a fully
-> > fixed baseline. My preference is finish fixing all the old kobject()
-> > issues and then rebase the new dynamic work on top. Either way, do not
-> > be afraid to ask Andrew to replace a series in -mm, that's a sign of the
-> > process working as expected.
-> 
-> Thank you very much for your advice, and I completely agree with your
-> recommendation. I will immediately ask Andrew to remove this patch series
-> from -mm. Then, I will prepare a new version, v8, which properly addresses
-> the kobject-related issues you pointed out.
-> 
-> Once again, I sincerely appreciate your thoughtful and detailed feedback.
-> 
-> Rakie
-> 
+ARMv8.5 based processors introduce the Memory Tagging Extension (MTE) feature.
+MTE is built on top of the ARMv8.0 virtual address tagging TBI
+(Top Byte Ignore) feature and allows software to access a 4-bit
+allocation tag for each 16-byte granule in the physical address space.
+A logical tag is derived from bits 59-56 of the virtual
+address used for the memory access. A CPU with MTE enabled will compare
+the logical tag against the allocation tag and potentially raise an
+tag check fault on mismatch, subject to system registers configuration.
 
-To Andrew
+Since ARMv8.9, FEAT_MTE_STORE_ONLY can be used to restrict raise of tag
+check fault on store operation only.
+For this, application can use PR_MTE_STORE_ONLY flag
+when it sets the MTE setting with prctl().
 
-I sincerely apologize for the inconvenience. It appears that this commit still
-requires additional corrections. I would appreciate it if you could drop the
-changes you merged into -mm, mm-new branch yesterday.
+This feature omits tag check for fetch/read operation.
+So it might be used not only debugging purpose but also be used
+by application requiring strong memory safty in normal env.
 
-<1>
-The patch titled
-     Subject: mm/mempolicy: fix memory leaks in weighted interleave sysfs has been added to the -mm mm-new branch.  Its filename is
-     mm-mempolicy-fix-memory-leaks-in-weighted-interleave-sysfs.patch
-This patch will shortly appear at
-     https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/mm-mempolicy-fix-memory-leaks-in-weighted-interleave-sysfs.patch
+Since v1:
+  - add doc to elf_hwcaps.rst
+  - add MTE_STORE_ONLY hwcap test
 
-<2>
-The patch titled
-     Subject: mm/mempolicy: prepare weighted interleave sysfs for memory hotplug has been added to the -mm mm-new branch.  Its filename is
-     mm-mempolicy-prepare-weighted-interleave-sysfs-for-memory-hotplug.patch
-This patch will shortly appear at
-     https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/mm-mempolicy-prepare-weighted-interleave-sysfs-for-memory-hotplug.patch
+Since v2:
+  - Rebase to 6.15.-rc1
 
-<3>
-The patch titled
-     Subject: mm/mempolicy: support memory hotplug in weighted interleave has been added to the -mm mm-new branch.  Its filename is
-     mm-mempolicy-support-memory-hotplug-in-weighted-interleave.patch
-This patch will shortly appear at
-     https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/mm-mempolicy-support-memory-hotplug-in-weighted-interleave.patch
+NOTE:
+  This patches based on https://lore.kernel.org/all/20250410074721.947380-1-yeoreum.yun@arm.com/
 
-Rakie
+Yeoreum Yun (4):
+  arm64/feature: add MTE_STORE_ONLY feature
+  prtcl: introduce PR_MTE_STORE_ONLY
+  arm64/kernel: support store-only mte tag check
+  tools/kselftest: add MTE_STORE_ONLY feature hwcap test
+
+ Documentation/arch/arm64/elf_hwcaps.rst   |  3 +++
+ arch/arm64/include/asm/hwcap.h            |  1 +
+ arch/arm64/include/asm/processor.h        |  2 ++
+ arch/arm64/include/uapi/asm/hwcap.h       |  1 +
+ arch/arm64/kernel/cpufeature.c            |  9 +++++++++
+ arch/arm64/kernel/cpuinfo.c               |  1 +
+ arch/arm64/kernel/mte.c                   | 11 ++++++++++-
+ arch/arm64/kernel/process.c               |  6 +++++-
+ arch/arm64/tools/cpucaps                  |  1 +
+ include/uapi/linux/prctl.h                |  2 ++
+ tools/testing/selftests/arm64/abi/hwcap.c |  6 ++++++
+ 11 files changed, 41 insertions(+), 2 deletions(-)
+
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
