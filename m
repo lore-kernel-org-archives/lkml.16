@@ -1,155 +1,209 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E64320409D
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851001D5143;
+	Thu, 10 Apr 2025 06:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267729; cv=none; b=QCNs+BWkGbYLuJm8ZPrRjepW/lBUWDW3qhG3cmpKGCEgs2NeZGSZ8G3QbitusICtLKtIY7ozALxuQJCjoM7zc7QLWHyPNGQd1N/sWrhNpul2h7FVXrtR531ybZkCBBAr0RqW3g354YRswoskZ2Et3ETmEJFNQxV8dLd/Fm4jAFo=
+	t=1744267757; cv=none; b=eq93B6etqlwDy1OVqx8LotVBpxnYZhWAHgjeio1BtZAzNkZLcXX5iFkXw43MEFA9qwNx+oa0jBqsGdEnhWsc+VQiclUqVLKR0KmsFcSsYzIpkkSVOmQDvE2DIuD5QtSqaarv/625ieXi4ceC4m84yCs7igqVDXGIsc4Ems8EZlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267729; c=relaxed/simple;
-	bh=sZM9CP//2z8V6Uj/FTh7LVuB83U+xRpiCRHizaMJ//w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QKpqkWhUwmiKWkCgs/0Zy4sVH8XSdKyp6csd+u7x231CqPhkGX9uj4k4IDxcSM7YU4kwKEP3GhxRruUYDkoq6iZlxW8hofiAnuqx04CFlwEmQBFBvgiGYjDgUFEIyw4t7o2RzpY950VoDKJhtx5t87xfcbQOzvysTy1yoUh4ONs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2Zfht4AQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xLg12l5B; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2Zfht4AQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xLg12l5B"
-Date: Thu, 10 Apr 2025 08:48:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744267725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2cDfQjMVvP2bl8F3g4a6IR3khW0kxUFdh8FMWtAJKLQ=;
-	b=2Zfht4AQPI7fM/2v77p7eH9APYGCt+J7iXPqq+32fb6KGk82WSl9xVfczj7YVHcGM/Y3dV
-	/fa1M+ilScbHzxdz4tsEVDV921i9qwNUqFum7fpX6it7dP8zvLyV/l2pOvQ6UWeup8AJau
-	EA3onaaIjVVvVYrbA75lLJnuY6uE+b2iTGv0dh29G9mzv4o9Rs96tHNSXKWviY12m9gay2
-	6WyFcqHvQFKzp8/PpEMyGnjLKkcp+omArULWc8UB/QEmUYK9lOsU4K2j+CNLBwu6qjg4e5
-	OaOQKKEik4HVzT4g5FzVN8i9bdXYzU77pYScK04Vdh4iRXi+frkx23oL/6SUxg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744267725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2cDfQjMVvP2bl8F3g4a6IR3khW0kxUFdh8FMWtAJKLQ=;
-	b=xLg12l5BQw8aXErIR0/4IbfoonTlxjP51TpzIISdt+LpAVaSe2SDIVtcbEYMbndkjMXv71
-	bOHRCAUkbbF6sbDQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
-	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
-	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Juri Lelli <juri.lelli@redhat.com>, lclaudio00@gmail.com,
-	Ben Segall <bsegall@google.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] sched: do not call __put_task_struct() on rt if
- pi_blocked_on is set
-Message-ID: <20250410064844.wm4KbunL@linutronix.de>
-References: <Z_bDWN2pAnijPAMR@uudg.org>
+	s=arc-20240116; t=1744267757; c=relaxed/simple;
+	bh=k+a2QW6F+/jdpGG/jLmL3WIvZZGQdPahmizjCXGP7+k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tQ5UxUuyWCzrY3B4Je+wDQqP5+4RRl+ssqxfyqbyR5XvJ6+9WCuN/oGWDuLdBYRh23++9PwANt8OLGC5YILR6+APsQk4U4v8kcKjVhLu4nJ8DO4VbIPUq2zbbBucpWH3f0eWOoaVBRRllyJWOCJFyFZT8CcLEQxIopca64ShsME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af743.dynamic.kabel-deutschland.de [95.90.247.67])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id EECB161E64783;
+	Thu, 10 Apr 2025 08:48:46 +0200 (CEST)
+Message-ID: <754b8493-f6e9-4af5-9fb6-eaabccb5ded2@molgen.mpg.de>
+Date: Thu, 10 Apr 2025 08:48:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z_bDWN2pAnijPAMR@uudg.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kernel WARNING (RCU) with btnxpuart on TI AM62 platform
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+ Amitkumar Karwar <amitkumar.karwar@nxp.com>,
+ Neeraj Kale <neeraj.sanjaykale@nxp.com>, Nishanth Menon <nm@ti.com>,
+ Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+ linux-serial@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>
+References: <20250408083512.GA26035@francesco-nb>
+ <24b28bda-e294-4680-bed5-c44efcb6c455@ti.com>
+ <20250410062006.GA7506@francesco-nb>
+ <4107dda8-25fe-4f30-a0e6-906441f9b4c9@molgen.mpg.de>
+Content-Language: en-US
+In-Reply-To: <4107dda8-25fe-4f30-a0e6-906441f9b4c9@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-+ sched folks.
+Am 10.04.25 um 08:34 schrieb Paul Menzel:
+> [Cc: +Marcel]
 
-On 2025-04-09 15:58:32 [-0300], Luis Claudio R. Goncalves wrote:
-> With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
-> from rt_mutex_adjust_prio_chain() could happen in preemptible context and
-> with a mutex enqueued. That could lead to this sequence:
+[Remove, as email is not valid anymore.]
+
+> Dear Francesco,
 > 
-> 	rt_mutex_adjust_prio_chain()
-> 	  put_task_struct()
-> 	    __put_task_struct()
-> 	      sched_ext_free()
-> 	        spin_lock_irqsave()
-> 	          rtlock_lock() --->  TRIGGERS
-> 	                              lockdep_assert(!current->pi_blocked_on);
 > 
-> Adjust the check in put_task_struct() to also consider pi_blocked_on before
-> calling __put_task_struct(), resorting to the deferred call in case it is
-> set.
+> Am 10.04.25 um 08:20 schrieb Francesco Dolcini:
 > 
-> v2: Rostedt suggested removing the #ifdef from put_task_struct() and
->     creating tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
-
-I complained about this special RT case in put_task_struct() when it was
-first got introduced. Couldn't we just just unconditionally do the RCU
-put?
-
-> Suggested-by: Crystal Wood <crwood@redhat.com>
-> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> ---
->  include/linux/sched.h      |   12 ++++++++++++
->  include/linux/sched/task.h |   10 +++++++---
->  2 files changed, 19 insertions(+), 3 deletions(-)
+>> On Tue, Apr 08, 2025 at 09:15:26PM +0530, Vignesh Raghavendra wrote:
+>>> On 08/04/25 14:05, Francesco Dolcini wrote:
+>>>> I do have the following kernel warning with 6.15-rc1, on a TI AM62
+>>>> platform (arm64), single CPU core, using btnxpuart driver, any idea?
+>>>> PREEMPT_RT is enabled, if it matters.
+>>>>
+>>>> Either the issue is not systematic, or multi cores SoCs are not 
+>>>> affected
+>>>> (no error on the exact same image on a dual nor on quad core TI AM62).
+>>>>
+>>>> [   23.139080] Voluntary context switch within RCU read-side critical section!
+>>>> [   23.139119] WARNING: CPU: 0 PID: 61 at /kernel/rcu/tree_plugin.h:332 rcu_note_context_switch+0x3c4/0x430
+>>>> [   23.139172] Modules linked in: uas onboard_usb_dev optee_rng dwc3 evdev btnxpuart spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card snd_soc_simple_card_utils optee spi_cadence_quadspi tee gpio_keys usb_conn_gpio display_connector roles dwc3_am62 mwifiex_sdio k3_j72xx_bandgap mwifiex rtc_ti_k3 cfg80211 tidss sa2ul sha512_generic snd_soc_davinci_mcasp authenc drm_display_helper snd_soc_ti_udma crypto_null snd_soc_ti_edma sha1_generic snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx snd_soc_wm8904 ti_ads1015 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c tps65219_pwrbutton crc_ccitt tpm_tis_core tpm rng_core tc358768 m_can_platform pwm_tiehrpwm m_can spi_omap2_mcspi can_dev bluetooth ecdh_generic ecc rfkill libaes loop fuse ipv6 autofs4
+>>>> [   23.139459] CPU: 0 UID: 0 PID: 61 Comm: kworker/u5:0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT_RT
+>>>> [   23.139471] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
+>>>> [   23.139478] Workqueue: hci0 hci_power_off [bluetooth]
+>>>> [   23.139615] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>>>> [   23.139625] pc : rcu_note_context_switch+0x3c4/0x430
+>>>> [   23.139647] lr : rcu_note_context_switch+0x3c4/0x430
+>>>> [   23.139658] sp : ffff8000819fb740
+>>>> [   23.139661] x29: ffff8000819fb740 x28: 0000000000000000 x27: ffff0000079d2010
+>>>> [   23.139673] x26: ffff0000011e7810 x25: ffff000001c2c200 x24: 0000000000000000
+>>>> [   23.139688] x23: 0000000000000000 x22: ffff000001c2c200 x21: ffff000001c2c200
+>>>> [   23.139700] x20: ffff800081083ec0 x19: ffff00001da9fec0 x18: fffffffffffe7e78
+>>>> [   23.139712] x17: ffff7fff9ca1c000 x16: ffff800080000000 x15: ffff00001da9f8c0
+>>>> [   23.139726] x14: fffffffffffc7e77 x13: 216e6f6974636573 x12: 206c616369746972
+>>>> [   23.139738] x11: 6320656469732d64 x10: 6165722055435220 x9 : 206e696874697720
+>>>> [   23.139750] x8 : ffff80008113f040 x7 : ffff8000819fb4e0 x6 : 000000000000000c
+>>>> [   23.139761] x5 : ffff00001da95888 x4 : 0000000000000000 x3 : 0000000000000027
+>>>> [   23.139775] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000001c2c200
+>>>> [   23.139788] Call trace:
+>>>> [   23.139793]  rcu_note_context_switch+0x3c4/0x430 (P)
+>>>> [   23.139813]  __schedule+0xa0/0x7dc
+>>>> [   23.139830]  schedule+0x34/0x11c
+>>>> [   23.139841]  schedule_timeout+0x8c/0x110
+>>>> [   23.139861]  wait_for_completion_timeout+0x78/0x14c
+>>>> [   23.139873]  ti_sci_set_device_state+0x120/0x1fc
+>>>> [   23.139886]  ti_sci_cmd_get_device_exclusive+0x18/0x30
+>>>> [   23.139899]  ti_sci_pd_power_on+0x28/0x54
+>>>> [   23.139916]  _genpd_power_on+0x98/0x188
+>>>> [   23.139927]  genpd_power_on+0xa8/0x168
+>>>> [   23.139940]  genpd_runtime_resume+0xc0/0x298
+>>>> [   23.139957]  __rpm_callback+0x48/0x1a4
+>>>> [   23.139974]  rpm_callback+0x74/0x80
+>>>> [   23.139987]  rpm_resume+0x3b0/0x698
+>>>> [   23.140000]  __pm_runtime_resume+0x48/0x88
+>>>> [   23.140012]  omap8250_set_mctrl+0x2c/0xbc
+>>>> [   23.140030]  serial8250_set_mctrl+0x20/0x40
+>>>> [   23.140046]  uart_update_mctrl+0x80/0x110
+>>>
+>>> I think issue is that uart_update_mctrl() holds a spinlock:
+>>>
+>>>     uart_port_lock_irqsave(port, &flags);
+>>>
+>>> and then omap8250_set_mctrl() calls pm_runtime APIs which on K3 SoC
+>>> needs to talk to a Firmware to enable pd. This IPC call is a sleeping
+>>> call leading to scheduling with IRQs disabled.
+>>>
+>>> I guess this is what RT linux is complaining? I dont have a solution
+>>> though, maybe serdev delays pm_runtime_put till the port is closed?
+>>
+>> Our CI reproduced what looks like the same issue also on current
+>> torvalds/master (6.15-rc1+) branch, without PREEMPT_RT.
+>>
+>> The call trace seems just the same, but attaching it here for
+>> completeness.
+>>
+>>
+>> [   20.931923] BUG: scheduling while atomic: kworker/u5:0/42/0x00000002
+>> [   20.938429] Modules linked in: sd_mod uas onboard_usb_dev btnxpuart optee_rng dwc3 evdev spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card 
+>> snd_soc_simple_card_utils mwifiex_sdio mwifiex display_connector spi_cadence_quadspi optee usb_conn_gpio tee gpio_keys roles k3_j72xx_bandgap cfg80211 rtc_ti_k3 dwc3_am62 bluetooth ecdh_generic ecc sa2ul sha512_generic rfkill authenc tidss crypto_null libaes snd_soc_davinci_mcasp sha1_generic drm_display_helper snd_soc_ti_udma snd_soc_ti_edma snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx ti_ads1015 snd_soc_wm8904 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c crc_ccitt tps65219_pwrbutton tpm_tis_core tpm m_can_platform m_can rng_core tc358768 can_dev pwm_tiehrpwm spi_omap2_mcspi loop fuse ipv6 autofs4
+>> [   20.938865] CPU: 0 UID: 0 PID: 42 Comm: kworker/u5:0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT
+>> [   20.938878] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
+>> [   20.938895] Workqueue: hci0 hci_power_off [bluetooth]
+>> [   20.939032] Call trace:
+>> [   20.939037]  show_stack+0x2c/0x84 (C)
+>> [   20.939063]  dump_stack_lvl+0x60/0x80
+>> [   20.939084]  dump_stack+0x18/0x24
+>> [   20.939096]  __schedule_bug+0x54/0x70
+>> [   20.939116]  __schedule+0x628/0x7dc
+>> [   20.939129]  schedule+0x34/0x11c
+>> [   20.939138]  rpm_resume+0x17c/0x6a0
+>> [   20.939155]  __pm_runtime_resume+0x50/0x9c
+>> [   20.939168]  omap8250_set_mctrl+0x2c/0xc0
+>> [   20.939183]  serial8250_set_mctrl+0x20/0x40
+>> [   20.939193]  uart_update_mctrl+0x88/0x11c
+>> [   20.939215]  uart_dtr_rts+0x104/0x120
+>> [   20.939226]  tty_port_shutdown+0xd4/0xdc
+>> [   20.939236]  tty_port_close+0x40/0xc0
+>> [   20.939248]  uart_close+0x34/0x9c
+>> [   20.939259]  ttyport_close+0x50/0xa0
+>> [   20.939272]  serdev_device_close+0x40/0x5c
+>> [   20.939283]  btnxpuart_close+0x1c/0xa0 [btnxpuart]
+>> [   20.939309]  hci_dev_close_sync+0x304/0x7cc [bluetooth]
+>> [   20.939376]  hci_dev_do_close+0x2c/0x70 [bluetooth]
+>> [   20.939441]  hci_power_off+0x20/0x64 [bluetooth]
+>> [   20.939508]  process_one_work+0x148/0x290
+>> [   20.939528]  worker_thread+0x2c8/0x3e4
+>> [   20.939541]  kthread+0x12c/0x204
+>> [   20.939554]  ret_from_fork+0x10/0x20
+>> [   20.943567] BUG: scheduling while atomic: kworker/u5:0/42/0x00000000
+>> [   20.950126] Modules linked in: sd_mod uas onboard_usb_dev btnxpuart optee_rng dwc3 evdev spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card 
+>> snd_soc_simple_card_utils mwifiex_sdio mwifiex display_connector spi_cadence_quadspi optee usb_conn_gpio tee gpio_keys roles k3_j72xx_bandgap cfg80211 rtc_ti_k3 dwc3_am62 bluetooth ecdh_generic ecc sa2ul sha512_generic rfkill authenc tidss crypto_null libaes snd_soc_davinci_mcasp sha1_generic drm_display_helper snd_soc_ti_udma snd_soc_ti_edma snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx ti_ads1015 snd_soc_wm8904 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c crc_ccitt tps65219_pwrbutton tpm_tis_core tpm m_can_platform m_can rng_core tc358768 can_dev pwm_tiehrpwm spi_omap2_mcspi loop fuse ipv6 autofs4
+>> [   20.950550] CPU: 0 UID: 0 PID: 42 Comm: kworker/u5:0 Tainted: G        W           6.15.0-rc1-0.0.0-devel #1 PREEMPT
+>> [   20.950566] Tainted: [W]=WARN
+>> [   20.950570] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
+>> [   20.950584] Workqueue: hci0 hci_power_off [bluetooth]
+>> [   20.950721] Call trace:
+>> [   20.950726]  show_stack+0x2c/0x84 (C)
+>> [   20.950747]  dump_stack_lvl+0x60/0x80
+>> [   20.950771]  dump_stack+0x18/0x24
+>> [   20.950783]  __schedule_bug+0x54/0x70
+>> [   20.950798]  __schedule+0x628/0x7dc
+>> [   20.950815]  schedule+0x34/0x11c
+>> [   20.950824]  schedule_timeout+0xd4/0x110
+>> [   20.950838]  wait_for_completion+0x78/0x140
+>> [   20.950853]  __flush_work+0x250/0x340
+>> [   20.950868]  flush_work+0x14/0x20
+>> [   20.950879]  omap_8250_shutdown+0x2c/0x1a4
+>> [   20.950903]  serial8250_shutdown+0x18/0x40
+>> [   20.950913]  uart_port_shutdown+0x40/0x58
+>> [   20.950926]  uart_tty_port_shutdown+0x5c/0x178
+>> [   20.950940]  tty_port_shutdown+0x84/0xdc
+>> [   20.950950]  tty_port_close+0x40/0xc0
+>> [   20.950958]  uart_close+0x34/0x9c
+>> [   20.950969]  ttyport_close+0x50/0xa0
+>> [   20.950990]  serdev_device_close+0x40/0x5c
+>> [   20.951001]  btnxpuart_close+0x1c/0xa0 [btnxpuart]
+>> [   20.951017]  hci_dev_close_sync+0x304/0x7cc [bluetooth]
+>> [   20.951082]  hci_dev_do_close+0x2c/0x70 [bluetooth]
+>> [   20.951149]  hci_power_off+0x20/0x64 [bluetooth]
+>> [   20.951214]  process_one_work+0x148/0x290
+>> [   20.951227]  worker_thread+0x2c8/0x3e4
+>> [   20.951242]  kthread+0x12c/0x204
+>> [   20.951258]  ret_from_fork+0x10/0x20
 > 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 5ec93e5ba53a9..9fbfa7f55a83d 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -2148,6 +2148,18 @@ static inline bool task_is_runnable(struct task_struct *p)
->  	return p->on_rq && !p->se.sched_delayed;
->  }
->  
-> +#ifdef CONFIG_RT_MUTEXES
-> +static inline bool tsk_is_pi_blocked_on(struct task_struct *tsk)
-> +{
-> +	return tsk->pi_blocked_on != NULL;
-> +}
-> +#else
-> +static inline bool tsk_is_pi_blocked_on(strut task_struct *tsk)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
->  extern bool sched_task_on_rq(struct task_struct *p);
->  extern unsigned long get_wchan(struct task_struct *p);
->  extern struct task_struct *cpu_curr_snapshot(int cpu);
-> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> index 0f2aeb37bbb04..1f17a3dd51774 100644
-> --- a/include/linux/sched/task.h
-> +++ b/include/linux/sched/task.h
-> @@ -135,9 +135,11 @@ static inline void put_task_struct(struct task_struct *t)
->  
->  	/*
->  	 * In !RT, it is always safe to call __put_task_struct().
-> -	 * Under RT, we can only call it in preemptible context.
-> +	 * Under RT, we can only call it in preemptible context,
-> +	 * when not blocked on a PI chain.
->  	 */
-> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
-> +	if (!IS_ENABLED(CONFIG_PREEMPT_RT) ||
-> +	    (preemptible() || !tsk_is_pi_blocked_on(current))) {
->  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
->  
->  		lock_map_acquire_try(&put_task_map);
-> @@ -149,7 +151,9 @@ static inline void put_task_struct(struct task_struct *t)
->  	/*
->  	 * under PREEMPT_RT, we can't call put_task_struct
->  	 * in atomic context because it will indirectly
-> -	 * acquire sleeping locks.
-> +	 * acquire sleeping locks. The same is true if the
-> +	 * current process has a mutex enqueued (blocked on
-> +	 * a PI chain).
->  	 *
->  	 * call_rcu() will schedule delayed_put_task_struct_rcu()
->  	 * to be called in process context.
-
-Sebastian
+> CVE-2024-26959 [1] has the same trace, and supposedly was fixed by 
+> Marcel’s commit 664130c0b030 (Bluetooth: btnxpuart: Fix btnxpuart_close) 
+> present since v6.9-rc1, that is also signed off by you.
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+> [1]: https://nvd.nist.gov/vuln/detail/cve-2024-26959
+> [2]: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=664130c0b0309b360bc5bdd40a30604a9387bde8
