@@ -1,107 +1,230 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCB920E33A;
-	Thu, 10 Apr 2025 09:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998C220C476
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276198; cv=none; b=UO8GgaMp8EM6z/0O9M+MGWb5JsEbM3bCJoZpUdXDyFIP/Ud9kK0v1ampmKTuCqKgCrn1aiBGoBNaXakYh4xg5MExJUB1t56bOZdP7qGcTPThY4u7BbbTW0IHpA0Q6X/2RnRMYvBR/YZq/D2l4p3mY/fbqbVGKjl9y5mzcrW5Ttg=
+	t=1744276229; cv=none; b=L7CamUTr3eku0HG74oQo58gIFg9mVBvmGPE9OOtTNRmXlE3Ui+HyATYc6w4qlGMi9/8aH4qoQWPA1pjzZC2kvjZTsrU+wHYwDuKLRoQCk5gjgtwlEhtXaYaE6+Kk39bN7CLvZ3yBn39UPGk+ZYSId+4TWpbkLnaQC4Jr6T5VZl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276198; c=relaxed/simple;
-	bh=QzdvsrmdC8ZVPxZM6HHYJn2xGTypliiPzhu2tEsqJGw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qsT0yVv2B07CXKh8ceOhPH805/CGtOCIQ32p2oOfs2JkDn/iNwO8+U4kY01zFVmKe7Ck9DzAyDJOVvHiy/OtpIvOCPmoQbNM2tLoQBObCqfupaBqUFIO7EBsevBUot7EozQ48in15ugk1ZovNwLeNXLG5VPNJdR5n60qv7gmmXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-525b44b7720so293312e0c.0;
-        Thu, 10 Apr 2025 02:09:56 -0700 (PDT)
+	s=arc-20240116; t=1744276229; c=relaxed/simple;
+	bh=S4gD+3ui7K1tm6lBvIKO/M5DULRUHhtuzWDJL/fuqYo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bWJUCF4b+co0FNgQn0qElhXwTzzsAEApPPSlmZPyjRp3GymtVip0Z9ETbs7DlqmQMEySj5eGZECmU4A1Vo51/RjkFw3xJOcrY16LZvaqAYhh7AgHwsxwb6aJlhx1HJhnmCF8b0D0OMqunFSR18sT7arLASZzLAd+sWZM7UI7Rag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WlYb1Vd6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WlYb1Vd6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744276226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=27eNNzuEQxbmkvmFUCfr+IytzedlUHGjPUYmckfSXUM=;
+	b=WlYb1Vd66OuwxAfn+GCndWD0WkrQmfbuf/EfA/cuj8Enz3z6yQIGqrBQmpZS1Bc3SdJ3Dp
+	lx0mDVqd52zIQY0CXaf41c0SUwYwyE5vN2QuwemAacMTzuSeqQfmmRE1fpxC4bm/w2fEuS
+	KP4L8cSzL5zQUeD6MHQFGP5eTv6K7zo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-14-dsDwJFRhN3W5f3usRjMV0w-1; Thu, 10 Apr 2025 05:10:24 -0400
+X-MC-Unique: dsDwJFRhN3W5f3usRjMV0w-1
+X-Mimecast-MFC-AGG-ID: dsDwJFRhN3W5f3usRjMV0w_1744276224
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf327e9a2so5205595e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:10:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744276194; x=1744880994;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1744276224; x=1744881024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=e+4Ism3nybkdIu4M5oGMw9weAjI5XWety4odcvOD83Q=;
-        b=P1+B3ogAIrRcPz8zK4BalTc6SI06pIcCCiVx81B9PLxFRAKXayVoIhTZ3cZ6QxQY/s
-         xixb65e4oS8wzevv4fW6SxX9V7Lux0K2VZ9prlX7Y3vpD/fGhmH1Eorx9D1Y3Q+vJKsH
-         lhnHoqTO/brxA+EQX2PwEeFinFzAHCXa9IuAvFz+8+Jso/SNnZpTRSYjhEss9F18VqKn
-         nDYD59u7BTPx5z1V8FNv71LEsPUechMCesZLADQoMNyRWiPnP1ECpzQraM+tCXNj2kCp
-         MzYs1woNEkhHa53gxYjD1Rw5Zg4kS8oQg9DwLxF/moUvJzy+bL4ira20RJETTsyIP2JB
-         QyQw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2aTAgUxF1CR3QCNBcInyWltR+9bj6MLQZketC6Kv81RJ5A3YxXw3nCl39tn7xlSjEh2hqsu1JxGaY@vger.kernel.org, AJvYcCV63ea61wTfzgygzKpTMqLmkltqLDu1859b8zaXeagnXs/fQYHfmcler/81ejiGEaE5AWGZKQ8wAZ27ENsOtn4CPfI=@vger.kernel.org, AJvYcCVZfoZGnY6mQHl2xjuZtHwO5VSOa2qiGLty/zz6lgYVgTFrB1nggT6GLcjpKAsmR4aT65RnU52bz6F5E17L@vger.kernel.org, AJvYcCVkvzTqRhP2VMQCQBMLrXZvEohJ0wc9n8uqpQ8OxlpwXSXOTJrXhNU/e+G6fFi3p8XKmkhWDRAz8wTQ@vger.kernel.org, AJvYcCVlQhEtfbQ/+oVMAY4jnwx3h07WeiY+ZEfgqRKtCDl7vqA7poGqeHNfiR1p3sszuBXNufTXE85q0Tf5qg==@vger.kernel.org, AJvYcCW5cldt6t1oGqx/Gi+DndCS4MTX1pi3KA1rCfv8RHTKxz8sRoly9l+a1zn7OH+/zVO6japRsVorNTMwxjX+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxSPgLalAYnrzOVfPXG2p3jrsFsN5l0y7zOrvNGmcLYrnQ3s1W
-	ixGy2ZgFd7dXPmkC/z66g2dwGUS5J2jL3Q8ECNZ4mJPI9XGnx92TWyY+uJNA
-X-Gm-Gg: ASbGncvmWBMq3dxEKkKYktrH4BprrzMz/A0Y2/XQFiGerr9QiQSG1jHqjPsXHQJfBAc
-	NQH4Yt5/xVdzLmygnmHiwT2ROzp8ctXwgI+o6Wr36x/06I78VrIC1i1SUbv7trdDVxV+BIlts4L
-	QiFNPzgAU8u+Z+U/pyGpFlWKcwkmyNBymQ8QmVY9b17cPVxbv0+fM4zv/1VHYJobr3qQY5SVaJB
-	jMbpFJqGHV3DM7IyUbQm67//ZDwpBMcBycD/Zj3qvWtx8fs3OrsyQh83mtlSGlkzC01gsLWmwjI
-	U/pf0ska4JFpv/477Fom/6IRwtxjoD0G18cLdbxC0fAb8Q9txfuICWesnUZ4FPfXLnLK/wHaDFW
-	UErs=
-X-Google-Smtp-Source: AGHT+IGsfdRQ3bq+sRFOynBDnPdM91dL8JeTsQA/kWhHtmhgpaGKW/qjgRWYbdh135PW/LjPZ9qekw==
-X-Received: by 2002:a05:6122:168d:b0:526:483:95fd with SMTP id 71dfb90a1353d-527b50f5076mr1148110e0c.10.1744276194384;
-        Thu, 10 Apr 2025 02:09:54 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87555547509sm593614241.0.2025.04.10.02.09.53
+        bh=27eNNzuEQxbmkvmFUCfr+IytzedlUHGjPUYmckfSXUM=;
+        b=HTfhltfSKPSz25fI+J3Z12yce9b+HNKESe4k23X3169DTMilS1SqreauUC1D+Jzc1h
+         Ih+REzjIs50BtFavsDwptN4MvNqMGMPN2OD9VYTgm1yLlIOm7hGMU1afQjuKJA2krLpt
+         qfP/GZ/k7TDpy44atLECa9GtdB+u8QQ9x3BLUd/f3CUo8dUK1pqipNlrKRQrbDXd3sCh
+         UV/+eBqq5zDhofhy/ubXphNV3+1mJXPeN9Kk+ZWQzGUWyz+0D35PJEfHrwr/5tiYc3KC
+         EkqiGFMXUCY3ZWNN6NeTN6M7LVBdrnHe5q5J6zY0XgakfSJaIMjuLNNo2nNfJGIrRaR1
+         WtDQ==
+X-Gm-Message-State: AOJu0Yx5aZ6gQ3XsBIvJRXak1XaeyMHAB3cpReJqrOT/3yi1ZUdgUs3Q
+	ATMbCLdX8mcjVabSxbCNywEhFCrggtfeIYVipLk4Ld39YM0F43JGZ+dwfkrTTylRSSj6/WdFCKY
+	L/aS8TZkaTSm/FOFluXTDCEfhiWoySUFTGkbxGXRDfiZJCAzLCZdHzvQnGOa6dVpClkDVO2eQqn
+	6nKCnSKbROsl69Qf1XVxJNT7tnm62gbh12Mk6feSpKGQ==
+X-Gm-Gg: ASbGnctzb6G3Hz885LNC4QhZAoIksQRVxO/TGAqOeIFYALpT5XtjD0QVA3a/get5FzD
+	c/9GaXSa8gyHKUQLc5A0uXiM3j6aoMZBbp2xAxq2W/3P0C/hr6ie1tZniKtoO6ybbfDJIGJVs2n
+	UevdopBebBRI/kIiDC/6GsVPAWR3xqujsu+R9ENz8zknMsE5BTWRpkziQUOOFhhg1x70POV8boK
+	HDl01J8v1UDOP9gdVAiq0lyy9bYP1WrP1P0665/SdWHOc5qq5NkezpEl0FDXUUCUCZyouyNmcgP
+	6uxseObfD4qMrKFhRs+ASZdlc4VUJvE8bPjtpia1Wr7L8dkcGZYojxgK2I44rSeTwOJI7l1+
+X-Received: by 2002:a5d:59ad:0:b0:39c:13fa:3eb with SMTP id ffacd0b85a97d-39d8f4e43c0mr1524439f8f.39.1744276223592;
+        Thu, 10 Apr 2025 02:10:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9o//1YdnfQaWfNqnIWzI/WV2dN54LX94NnfwgJ3jSA+I3+tbjCeuQrP5snslAD47XW4PEGg==
+X-Received: by 2002:a5d:59ad:0:b0:39c:13fa:3eb with SMTP id ffacd0b85a97d-39d8f4e43c0mr1524393f8f.39.1744276222986;
+        Thu, 10 Apr 2025 02:10:22 -0700 (PDT)
+Received: from localhost (p200300cbc71a5900d1064706528a7cd5.dip0.t-ipconnect.de. [2003:cb:c71a:5900:d106:4706:528a:7cd5])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d893773a0sm4135334f8f.25.2025.04.10.02.10.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:09:54 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso228644241.1;
-        Thu, 10 Apr 2025 02:09:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVgEqBIE4nv3y50CP2Cc0iew1WC4KDYl6TS/EHEtUgc/IpFzDvyoqx1jS3VxQcb/7836LpaqKGAO8r@vger.kernel.org, AJvYcCUrCVA/Ha5BuwYvdY278ALDhpj1VbfEAmGRN4gD5wzDslHsEbQEn26ZQ7APbILZDzZ2YIxmjkwxedeMUw==@vger.kernel.org, AJvYcCUzxCfd+KrGJx/ztVzrCCVLgDIhTZ6xARQd1flV5L8Nvf1EMTvBZttJAp1JC191haRZVKIROMRIe6ccrWus@vger.kernel.org, AJvYcCWDOEhPe2cJYGFPGaXXIeVeOrX6yvCXMv/YnAbn8RjMhZrxdiJpU48dyJz/Frf+Hx3NlFlNFkIHBDmAhfH9@vger.kernel.org, AJvYcCWMJ2sJPC/dOfgU3824eEk9qunqzV6f1ukvT/KQVf2842UBzU/J/4MsHbVZA2CtiYxR2eyf135pnW11dcBtB6oVqWo=@vger.kernel.org, AJvYcCXUd2X308/4BZjHJybqWvYmH9dyW/4uMwlRXW/aOtfzx2X05pmWi/RwcWul5nLOESMxyeJbJuHUL/L7@vger.kernel.org
-X-Received: by 2002:a05:6102:6cd:b0:4c1:9780:3830 with SMTP id
- ada2fe7eead31-4c9d362cf82mr1086322137.23.1744276193774; Thu, 10 Apr 2025
- 02:09:53 -0700 (PDT)
+        Thu, 10 Apr 2025 02:10:22 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	David Hildenbrand <david@redhat.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v1] fs/dax: fix folio splitting issue by resetting old folio order + _nr_pages
+Date: Thu, 10 Apr 2025 11:10:20 +0200
+Message-ID: <20250410091020.119116-1-david@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407191628.323613-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 11:09:42 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW5TVByqNKgZ6UpEUEzT6Gj3UK_g9c9sE6JqMcZy++uPA@mail.gmail.com>
-X-Gm-Features: ATxdqUFwmEObbAhJi8W14BlD1YfbKbKlORWkmE5uLsdB29hvqZQyn7Wk-5suNRo
-Message-ID: <CAMuHMdW5TVByqNKgZ6UpEUEzT6Gj3UK_g9c9sE6JqMcZy++uPA@mail.gmail.com>
-Subject: Re: [PATCH v2 03/12] dt-bindings: soc: renesas: Document SYS for
- RZ/V2N SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add the RZ/V2N (R9A09G056) variant to the existing RZ/V2H(P) System
-> Controller (SYS) binding, as both IPs are very similar.
->
-> However, they have different SoC IDs, and the RZ/V2N does not have
-> PCIE1 configuration registers, unlike the RZ/V2H(P) SYS IP. To handle
-> these differences, introduce a new compatible string
-> `renesas,r9a09g056-sys`.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Alison reports an issue with fsdax when large extends end up using
+large ZONE_DEVICE folios:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.16.
+[  417.796271] BUG: kernel NULL pointer dereference, address: 0000000000000b00
+[  417.796982] #PF: supervisor read access in kernel mode
+[  417.797540] #PF: error_code(0x0000) - not-present page
+[  417.798123] PGD 2a5c5067 P4D 2a5c5067 PUD 2a5c6067 PMD 0
+[  417.798690] Oops: Oops: 0000 [#1] SMP NOPTI
+[  417.799178] CPU: 5 UID: 0 PID: 1515 Comm: mmap Tainted: ...
+[  417.800150] Tainted: [O]=OOT_MODULE
+[  417.800583] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[  417.801358] RIP: 0010:__lruvec_stat_mod_folio+0x7e/0x250
+[  417.801948] Code: ...
+[  417.803662] RSP: 0000:ffffc90002be3a08 EFLAGS: 00010206
+[  417.804234] RAX: 0000000000000000 RBX: 0000000000000200 RCX: 0000000000000002
+[  417.804984] RDX: ffffffff815652d7 RSI: 0000000000000000 RDI: ffffffff82a2beae
+[  417.805689] RBP: ffffc90002be3a28 R08: 0000000000000000 R09: 0000000000000000
+[  417.806384] R10: ffffea0007000040 R11: ffff888376ffe000 R12: 0000000000000001
+[  417.807099] R13: 0000000000000012 R14: ffff88807fe4ab40 R15: ffff888029210580
+[  417.807801] FS:  00007f339fa7a740(0000) GS:ffff8881fa9b9000(0000) knlGS:0000000000000000
+[  417.808570] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  417.809193] CR2: 0000000000000b00 CR3: 000000002a4f0004 CR4: 0000000000370ef0
+[  417.809925] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  417.810622] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  417.811353] Call Trace:
+[  417.811709]  <TASK>
+[  417.812038]  folio_add_file_rmap_ptes+0x143/0x230
+[  417.812566]  insert_page_into_pte_locked+0x1ee/0x3c0
+[  417.813132]  insert_page+0x78/0xf0
+[  417.813558]  vmf_insert_page_mkwrite+0x55/0xa0
+[  417.814088]  dax_fault_iter+0x484/0x7b0
+[  417.814542]  dax_iomap_pte_fault+0x1ca/0x620
+[  417.815055]  dax_iomap_fault+0x39/0x40
+[  417.815499]  __xfs_write_fault+0x139/0x380
+[  417.815995]  ? __handle_mm_fault+0x5e5/0x1a60
+[  417.816483]  xfs_write_fault+0x41/0x50
+[  417.816966]  xfs_filemap_fault+0x3b/0xe0
+[  417.817424]  __do_fault+0x31/0x180
+[  417.817859]  __handle_mm_fault+0xee1/0x1a60
+[  417.818325]  ? debug_smp_processor_id+0x17/0x20
+[  417.818844]  handle_mm_fault+0xe1/0x2b0
+[...]
 
-Gr{oetje,eeting}s,
+The issue is that when we split a large ZONE_DEVICE folio to order-0
+ones, we don't reset the order/_nr_pages. As folio->_nr_pages overlays
+page[1]->memcg_data, once page[1] is a folio, it suddenly looks like it
+has folio->memcg_data set. And we never manually initialize
+folio->memcg_data in fsdax code, because we never expect it to be set at
+all.
 
-                        Geert
+When __lruvec_stat_mod_folio() then stumbles over such a folio, it tries to
+use folio->memcg_data (because it's non-NULL) but it does not actually
+point at a memcg, resulting in the problem.
 
+Alison also observed that these folios sometimes have "locked"
+set, which is rather concerning (folios locked from the beginning ...).
+The reason is that the order for large folios is stored in page[1]->flags,
+which become the folio->flags of a new small folio.
+
+Let's fix it by adding a folio helper to clear order/_nr_pages for
+splitting purposes.
+
+Maybe we should reinitialize other large folio flags / folio members as
+well when splitting, because they might similarly cause harm once
+page[1] becomes a folio? At least other flags in PAGE_FLAGS_SECOND should
+not be set for fsdax, so at least page[1]->flags might be as expected with
+this fix.
+
+From a quick glimpse, initializing ->mapping, ->pgmap and ->share should
+re-initialize most things from a previous page[1] used by large folios
+that fsdax cares about. For example folio->private might not get
+reinitialized, but maybe that's not relevant -- no traces of it's use in
+fsdax code. Needs a closer look.
+
+Another thing that should be considered in the future is performing similar
+checks as we perform in free_tail_page_prepare() -- checking pincount etc.
+-- when freeing a large fsdax folio.
+
+Fixes: 4996fc547f5b ("mm: let _folio_nr_pages overlay memcg_data in first tail page")
+Fixes: 38607c62b34b ("fs/dax: properly refcount fs dax pages")
+Reported-by: Alison Schofield <alison.schofield@intel.com>
+Closes: https://lkml.kernel.org/r/Z_W9Oeg-D9FhImf3@aschofie-mobl2.lan
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ fs/dax.c           |  1 +
+ include/linux/mm.h | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/fs/dax.c b/fs/dax.c
+index af5045b0f476e..676303419e9e8 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -396,6 +396,7 @@ static inline unsigned long dax_folio_put(struct folio *folio)
+ 	order = folio_order(folio);
+ 	if (!order)
+ 		return 0;
++	folio_reset_order(folio);
+ 
+ 	for (i = 0; i < (1UL << order); i++) {
+ 		struct dev_pagemap *pgmap = page_pgmap(&folio->page);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index b7f13f087954b..bf55206935c46 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1218,6 +1218,23 @@ static inline unsigned int folio_order(const struct folio *folio)
+ 	return folio_large_order(folio);
+ }
+ 
++/**
++ * folio_reset_order - Reset the folio order and derived _nr_pages
++ * @folio: The folio.
++ *
++ * Reset the order and derived _nr_pages to 0. Must only be used in the
++ * process of splitting large folios.
++ */
++static inline void folio_reset_order(struct folio *folio)
++{
++	if (WARN_ON_ONCE(!folio_test_large(folio)))
++		return;
++	folio->_flags_1 &= ~0xffUL;
++#ifdef NR_PAGES_IN_LARGE_FOLIO
++	folio->_nr_pages = 0;
++#endif
++}
++
+ #include <linux/huge_mm.h>
+ 
+ /*
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.48.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
