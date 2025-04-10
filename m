@@ -1,65 +1,37 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F151B85F8;
-	Thu, 10 Apr 2025 08:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6716838F80;
+	Thu, 10 Apr 2025 08:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272563; cv=none; b=HMvF49VGJNBJAdf7I1xOMTO+5QpZz9fk8OvtbvYonGDDWLFnIXleqZX/K7JKUqektL/ufBgokXn9Hb2nA2D1ymTwyCUT62BDt7cf9ziaLDjOalIqpSA5V9zb4J0LPphZvI5hka6ABXy7/KnWXeFXnan/U7sH87vDThXrsd+1B28=
+	t=1744272695; cv=none; b=Pl3YfOEJdp6BYge+8RR/bCiaYJZog8UAQRViNAcjg7KO9qD5avKdh1EyIdQm8lsbN1pE6jGpcDzvLn+qQNfTJPLh70YZ98dIXYIKnZpCcR8ozuTOD9Qq0hDO51oAoeRM/q8n5DsRK9rVZTg+okjP78YSZU34ZMHdyLoX9ijfeuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272563; c=relaxed/simple;
-	bh=Vyno924JZezqTnFi39JNlTWkIO0+AmDF/Z/qP+4RgJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AqhA6P1ygwuytcrIHzc8hYed89nIe32zqK9HEuD4ZKvYK5jVMubYSk8E4qRtWoVsdDI5MyYffB5mRFi0i0H75ZnAYn4JUK7xVCwQ8KBaqIL++he0Qj/ZavvJAS5Y6h6Qcfc6LYZ803Vs3059It8c20LQ2chtG+rAEwKegbWQJGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UqiiYjQ+; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744272695; c=relaxed/simple;
+	bh=h1003F0QZGmGgkXcaTbt5rlum3PQM14c1jtQvYoOmmI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=cfEAmOapjhBiE9EuCEud+WbQkmDEq6C7DlYUCMI0M7DjMdA5yCL1e0sreCTRQIF/K060wl2fbq3GOaAMHjgiFr98phU0tkxCzUTpDtlKA28FyK7psdeOP3tBbctSpXKyApR18PW4Rz3WL8Kal9uzdrkOxUJQ5VB8+MxQ90VVmX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=bpcE7JJx; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqiiYjQ+"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af6a315b491so555700a12.1;
-        Thu, 10 Apr 2025 01:09:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744272561; x=1744877361; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AjG0X0ILsaEZt1vBf8MVQgDYPYTp29VUnEYLYjosri4=;
-        b=UqiiYjQ+DKxd5CciMNKBKpygRw1wjcqh2lMMMNLIVQKJm4LGb1u8gS5KMBYEEY3Hlc
-         zQpf1skvMLeHbDuUAFYt6YTvbQIJSTkPYR70x0IZKWF5hT7Ry+cSkWueokxflcTTSl29
-         /2otoLCUlFi9Pq8u2NPANayjWz0FBTD8HcKBjo8TlFpHM7tmI8tAqxrbEiyQcf0whs5T
-         n/Ad+PD5oyS0f5Ot4mHpJkExXq4LN0o8LHLuzBGg486xfVNhYTSDGuurdxl7sJCUB6cS
-         uOOpF6PQ7DD7kRIrGXs1gBYL/qC86hB6WbnbZXWeJ/nELvjDQ0WLMxkwEJCEYSAsBZTl
-         t1Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744272561; x=1744877361;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AjG0X0ILsaEZt1vBf8MVQgDYPYTp29VUnEYLYjosri4=;
-        b=n2Db9YvA1pqoumJwlw2EZqYl3AOp0GQuTM/9unhFrf9WXDim4D3WOv336AGhXmHdHP
-         aJk6UcZ/CgZLCYkFmc1GoqsWLBeo7PG/bQpjb6gMVKuqk6nnTNm461SmyYj/0vAwx/c2
-         JmxRXiNfhu2FDhbXjB00JeqBy5ROg98U6wVYGEqZQMwuMBeiwgDrfrjwlLPVZxxkJezs
-         xLEOLBN342AsVNO1AIqz4hA/kWRXO+1W9IaL+EzlgHGKc3XuT1FehCS4r/6gb3MTMaPk
-         gDIdX3rAJuXB72SQSBc2tG8GTz26Npfoitm6NjGlAwjmjUhd/FxQTwK0BJk5f+XixLSR
-         l4Og==
-X-Forwarded-Encrypted: i=1; AJvYcCVi2CiBE2PQgdT6kTHA2vtc33fZd8UjILS2NV/ggy9QOyn9zUIX53Lt4crhkQ7x7CIQRiH00ouN@vger.kernel.org, AJvYcCWBGz5hBWwMhGKz+EyduqqyYgDrAvy91gJCibpFHUKWcEWYoeYYgnj42pw+WWRXEPNenp+HtmjnAX4EVOiA@vger.kernel.org, AJvYcCXHBEBZHjHN4GcVd6ujqUVDo9T+kq7Mse0zQLlF+rvmaYpW+QVMqtaZDGuAdGAfuXiH9zY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG5EmjKWnMe+USi7tZrbmxdofvrXjvxyFjOtdAi38fUPIB4Z2X
-	hfrfSSEHN64yCiusmpSVf9YaE56ZeV6Nd+5tj1SHNcZ05Fy5o+8L
-X-Gm-Gg: ASbGncvvbHmpFiGLYuddaEYhW9MFWegjsYEa7RjNNpf4rDo4ljjjVJUGFiJ30HQk+Yf
-	mlCE/QluMFEkeMolMHBuX1piWW69ZJCH+SmB/YQ+PbYeQfmxQaeb2hwh/dPsBKeIDBOeF7ZPh78
-	zo1baX4ViaPy8KWJRMlnlipO6reSlRksJ1nMnbtn7JEE1VW7ynX7tg6SvV+7nYjOz9+fADOSSSy
-	NfIEOft/4jsrNK2wVCBA1x6ejjQCDiI6cG1iMbWhQyJrq9ULyv9KHwc7v+eIIV5Bdte0Ku2/r/p
-	soCpOTvislZ+yNJ1tKtKqJfJqD+oOsS6X1Mv/Q/Ih99YNrok/5SEiNi5kqC43uAILFkqHwwYd+H
-	MtvsdD3YbY7DgultaeJg=
-X-Google-Smtp-Source: AGHT+IGlFaX35JSmF5xXiiSbldTiaLvL6d+ktyX+51i5YLyTONObh2bMZLgvRVqMK1AZZfqqaQtgRg==
-X-Received: by 2002:a17:90a:d64b:b0:2ee:f687:6acb with SMTP id 98e67ed59e1d1-30718b76a8emr2884244a91.13.1744272560461;
-        Thu, 10 Apr 2025 01:09:20 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:959f:bd4a:33b6:cab1? ([2001:ee0:4f0e:fb30:959f:bd4a:33b6:cab1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b2absm24625785ad.83.2025.04.10.01.09.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 01:09:20 -0700 (PDT)
-Message-ID: <84adec63-0ccd-449c-babf-994d579f3677@gmail.com>
-Date: Thu, 10 Apr 2025 15:09:13 +0700
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="bpcE7JJx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744272681;
+	bh=h1003F0QZGmGgkXcaTbt5rlum3PQM14c1jtQvYoOmmI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To;
+	b=bpcE7JJxIpSd5+0jpfAsuh2U8z7XdXYORpfbkIquMRKZmqHkNIwfcyv4/QAhyhpwl
+	 Paz7P56V7en7X9wqF3lZPwGHTjDCI9atb59t694EHXc/JFSsxhbqnTSLINWtV6Ubnv
+	 DyeqOxMqgb3Pw31jb9KL8cMAN0WV5pjEOIjl5CMc=
+X-QQ-mid: bizesmtpip2t1744272677ta87555
+X-QQ-Originating-IP: /h+wDAVJUlffUr78bBdsbBCNBZWqYQOKuYblzmS2FuQ=
+Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 10 Apr 2025 16:11:15 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11749788466428975768
+Message-ID: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
+Date: Thu, 10 Apr 2025 16:11:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,169 +39,141 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] virtio-net: hold netdev_lock when pausing rx
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- virtualization@lists.linux.dev
-References: <20250404093903.37416-1-minhquangbui99@gmail.com>
- <1743987836.9938157-1-xuanzhuo@linux.alibaba.com>
- <30419bd6-13b1-4426-9f93-b38b66ef7c3a@gmail.com>
- <CACGkMEs7O7D5sztwJVn45c+1pap20Oi5f=02Sy_qxFjbeHuYiQ@mail.gmail.com>
- <4195db62-db43-4d61-88c3-7a7fbb164726@gmail.com>
- <b7b1f5de-7003-4960-a9d1-883bf2f1aa77@gmail.com>
- <4d3a1478-b6fc-47a3-8d77-7eca6a973a06@gmail.com>
- <20250410035158-mutt-send-email-mst@kernel.org>
 Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <20250410035158-mutt-send-email-mst@kernel.org>
+From: WangYuli <wangyuli@uniontech.com>
+Subject: [Bug Report] A compilation failure occurs when landlock and
+ RANDSTRUCT are combined with GCC 14.2.0.
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+To: mic@digikod.net, gnoack@google.com, paul@paul-moore.com,
+ jmorris@namei.org, serge@hallyn.com, kees@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, nicolas@fjasle.eu
+Cc: linux-security-module@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------rkKKFJ8ZZADublAHtF5vsiAg"
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MQZ/dZQlO/THh3UJCihfMz999YL5l1BQuSyINAyHgpSlKiWJfEk7vjv/
+	yRGpmgRqJlQ3f80UqRxQadksN6SmlIeb04Kc+jCbIq3CdN2CR3uXrzK8E5C//hVLKuoqH+f
+	YXXzoggknlrQ7hnIeQvlx4QBg+blpjhSSNMYSgpN282yODrOFYcUtNRaCckQHa8iTcn/X9z
+	zsRjpjFn9gOHblIdKbwjU7/YI2sPxt9Ui3wsY/2gRmhHOFXPx0Hld9zPUjIjxlV550ON1NP
+	O8Amgv6cVuLcJVp1BFF6GoGWCbnqjQsci9acKtt20JqFkYeY4bYgZa5p5uwgvuaJLGSXrNn
+	Gp8lnCdCZ7eE8HHHF1EsXzs7xrYy+qLEnOWMCRo9S1Umj7OBEvzrlnexONr7wpQKKrazLDW
+	IldUzbjeaacGwPVlEtaugu62PsmERoPjmcYSXc2WAfL/LjcLUrSh0MgP+7YnKPK3feeyO2+
+	W5u6XBLedG2zENiN+k+OM+SsB2tz53dNUugswtxttZsKEBEvg9LY5r3/ptq+enVeoa8Tpr8
+	o4OsLcM0xLY8L0oz43F3eMe34qudrFwUdSbAw+C60YjtKsZgvRf3h5rSGX8JYx28Dp/cs3I
+	xr/tUkS0jnc3SFBMtVgp0gszHShhB8OBC36M9cScZCu0B0N6mwuyUAJy7qAUb0E33law8Gg
+	plLt0n4FAKvw8t/07TEsRhj0BfYlBN+JxgcnS/2Bsl/gicYcYGUj9LaKHQj7+M91IPc1x16
+	nN3PstUvzTn4L+ugKOtigcwORXFNY/GuJ/fB5kGZB41FdtMBmBVvXThMNnWzU44IDhciDYA
+	4oHEaVmRTgAiIHUNkytr0U/DEDI82rypS/YHVaQSSNp/UCxUNAg05lB98NBJ2b+xZB7dz7S
+	Ld0c1erqilw0Mpg65r80/GrDjTx+kHrUp5LXRUY07KeV9DpaS8a4WjJlbK/1Mo6pqlobpcO
+	9jouSZaxGKQrlPoh2bYcV4jlWBkLwbI6Z+84bh1kIHPKCYpmYnVs0WvqO
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------rkKKFJ8ZZADublAHtF5vsiAg
+Content-Type: multipart/mixed; boundary="------------4e5rwFPgEBCozYnellBD9s8v";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: mic@digikod.net, gnoack@google.com, paul@paul-moore.com,
+ jmorris@namei.org, serge@hallyn.com, kees@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, nicolas@fjasle.eu
+Cc: linux-security-module@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Message-ID: <3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
+Subject: [Bug Report] A compilation failure occurs when landlock and
+ RANDSTRUCT are combined with GCC 14.2.0.
+
+--------------4e5rwFPgEBCozYnellBD9s8v
+Content-Type: multipart/mixed; boundary="------------zGPahLwRiqRp0uKPNCcbdmlY"
+
+--------------zGPahLwRiqRp0uKPNCcbdmlY
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
 
-On 4/10/25 14:58, Michael S. Tsirkin wrote:
-> On Thu, Apr 10, 2025 at 02:05:57PM +0700, Bui Quang Minh wrote:
->> When pausing rx (e.g. set up xdp, xsk pool, rx resize), we call
->> napi_disable() on the receive queue's napi. In delayed refill_work, it
->> also calls napi_disable() on the receive queue's napi. When
->> napi_disable() is called on an already disabled napi, it will sleep in
->> napi_disable_locked while still holding the netdev_lock. As a result,
->> later napi_enable gets stuck too as it cannot acquire the netdev_lock.
->> This leads to refill_work and the pause-then-resume tx are stuck
->> altogether.
->>
->> This scenario can be reproducible by binding a XDP socket to virtio-net
->> interface without setting up the fill ring. As a result, try_fill_recv
->> will fail until the fill ring is set up and refill_work is scheduled.
->>
->> This commit makes the pausing rx path hold the netdev_lock until
->> resuming, prevent any napi_disable() to be called on a temporarily
->> disabled napi.
->>
->> Fixes: 413f0271f396 ("net: protect NAPI enablement with netdev_lock()")
->> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
->> ---
->>   drivers/net/virtio_net.c | 74 +++++++++++++++++++++++++---------------
->>   1 file changed, 47 insertions(+), 27 deletions(-)
->>
->> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
->> index 7e4617216a4b..74bd1065c586 100644
->> --- a/drivers/net/virtio_net.c
->> +++ b/drivers/net/virtio_net.c
->> @@ -2786,9 +2786,13 @@ static void skb_recv_done(struct virtqueue *rvq)
->>   }
->>
->>   static void virtnet_napi_do_enable(struct virtqueue *vq,
->> -                   struct napi_struct *napi)
->> +                   struct napi_struct *napi,
->> +                   bool netdev_locked)
->>   {
->> -    napi_enable(napi);
->> +    if (netdev_locked)
->> +        napi_enable_locked(napi);
->> +    else
->> +        napi_enable(napi);
->>
->>       /* If all buffers were filled by other side before we napi_enabled, we
->>        * won't get another interrupt, so process any outstanding packets now.
->> @@ -2799,16 +2803,16 @@ static void virtnet_napi_do_enable(struct virtqueue
->> *vq,
->
->
->
-> Your patch is line-wrapped, unfortunately. Here and elsewhere.
->
->
->
->
->>       local_bh_enable();
->>   }
->>
->> -static void virtnet_napi_enable(struct receive_queue *rq)
->> +static void virtnet_napi_enable(struct receive_queue *rq, bool
->> netdev_locked)
->>   {
->>       struct virtnet_info *vi = rq->vq->vdev->priv;
->>       int qidx = vq2rxq(rq->vq);
->>
->> -    virtnet_napi_do_enable(rq->vq, &rq->napi);
->> +    virtnet_napi_do_enable(rq->vq, &rq->napi, netdev_locked);
->>       netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_RX, &rq->napi);
->>   }
->>
->> -static void virtnet_napi_tx_enable(struct send_queue *sq)
->> +static void virtnet_napi_tx_enable(struct send_queue *sq, bool
->> netdev_locked)
->>   {
->>       struct virtnet_info *vi = sq->vq->vdev->priv;
->>       struct napi_struct *napi = &sq->napi;
->> @@ -2825,11 +2829,11 @@ static void virtnet_napi_tx_enable(struct send_queue
->> *sq)
->>           return;
->>       }
->>
->> -    virtnet_napi_do_enable(sq->vq, napi);
->> +    virtnet_napi_do_enable(sq->vq, napi, netdev_locked);
->>       netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_TX, napi);
->>   }
->>
->> -static void virtnet_napi_tx_disable(struct send_queue *sq)
->> +static void virtnet_napi_tx_disable(struct send_queue *sq, bool
->> netdev_locked)
->>   {
->>       struct virtnet_info *vi = sq->vq->vdev->priv;
->>       struct napi_struct *napi = &sq->napi;
->> @@ -2837,18 +2841,24 @@ static void virtnet_napi_tx_disable(struct
->> send_queue *sq)
->>
->>       if (napi->weight) {
->>           netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_TX, NULL);
->> -        napi_disable(napi);
->> +        if (netdev_locked)
->> +            napi_disable_locked(napi);
->> +        else
->> +            napi_disable(napi);
->>       }
->>   }
->>
->> -static void virtnet_napi_disable(struct receive_queue *rq)
->> +static void virtnet_napi_disable(struct receive_queue *rq, bool
->> netdev_locked)
->>   {
->>       struct virtnet_info *vi = rq->vq->vdev->priv;
->>       struct napi_struct *napi = &rq->napi;
->>       int qidx = vq2rxq(rq->vq);
->>
->>       netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_RX, NULL);
->> -    napi_disable(napi);
->> +    if (netdev_locked)
->> +        napi_disable_locked(napi);
->> +    else
->> +        napi_disable(napi);
->>   }
->>
->>   static void refill_work(struct work_struct *work)
->> @@ -2875,9 +2885,11 @@ static void refill_work(struct work_struct *work)
->>            *     instance lock)
->>            *   - check netif_running() and return early to avoid a race
->>            */
->> -        napi_disable(&rq->napi);
->> +        netdev_lock(vi->dev);
->> +        napi_disable_locked(&rq->napi);
->>           still_empty = !try_fill_recv(vi, rq, GFP_KERNEL);
->
-> This does mean netdev_lock is held potentially for a long while,
-> while try_fill_recv and processing inside virtnet_napi_do_enable
-> finish. Better ideas?
-I prefer the first patch in this thread where we disable delayed refill 
-and cancel all inflight refill_work before pausing rx.
+WyBDb21waWxhdGlvbiBmYWlsdXJlIGxvZzogXQ0KDQoqKiogV0FSTklORyAqKiogdGhlcmUg
+YXJlIGFjdGl2ZSBwbHVnaW5zLCBkbyBub3QgcmVwb3J0IHRoaXMgYXMgYSBidWcgDQp1bmxl
+c3MgeW91IGNhbiByZXByb2R1Y2UgaXQgd2l0aG91dCBlbmFibGluZyBhbg0KeSBwbHVnaW5z
+Lg0KRXZlbnTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfCBQbHVnaW5zDQpQTFVHSU5fRklOSVNIX1RZUEXCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHwgcmFuZG9taXplX2xheW91dF9wbHVnaW4NClBMVUdJTl9GSU5JU0hf
+REVDTMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCByYW5kb21pemVfbGF5b3V0X3Bs
+dWdpbg0KUExVR0lOX0FUVFJJQlVURVPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fCBsYXRlbnRfZW50cm9weV9wbHVnaW4gDQpyYW5kb21pemVfbGF5b3V0X3BsdWdpbg0KUExV
+R0lOX1NUQVJUX1VOSVTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCBsYXRlbnRf
+ZW50cm9weV9wbHVnaW4gc3RhY2tsZWFrX3BsdWdpbg0KUExVR0lOX0FMTF9JUEFfUEFTU0VT
+X1NUQVJUwqDCoMKgwqDCoCB8IHJhbmRvbWl6ZV9sYXlvdXRfcGx1Z2luDQpzZWN1cml0eS9s
+YW5kbG9jay9mcy5jOkluIGZ1bmN0aW9uIOKAmGhvb2tfZmlsZV9pb2N0bF9jb21tb27igJk6
+DQpzZWN1cml0eS9sYW5kbG9jay9mcy5jOjE3NDU6NjE6aW50ZXJuYWwgY29tcGlsZXIgZXJy
+b3I6IGluIA0KY291bnRfdHlwZV9lbGVtZW50cywgYXQgZXhwci5jYzo3MDc1DQoxNzQ1IHzC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLnUub3Ag
+PSAmKHN0cnVjdCBsc21faW9jdGxvcF9hdWRpdCkgew0KIMKgwqDCoMKgIHzCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgXg0KMHg3ZjI3ZmE2YmRjYTcgX19saWJjX3N0YXJ0X2NhbGxfbWFpbg0KIMKgwqDCoMKg
+wqDCoCAuLi9zeXNkZXBzL25wdGwvbGliY19zdGFydF9jYWxsX21haW4uaDo1OA0KMHg3ZjI3
+ZmE2YmRkNjQgX19saWJjX3N0YXJ0X21haW5faW1wbA0KIMKgwqDCoMKgwqDCoCAuLi9jc3Uv
+bGliYy1zdGFydC5jOjM2MA0KUGxlYXNlIHN1Ym1pdCBhIGZ1bGwgYnVnIHJlcG9ydCwgd2l0
+aCBwcmVwcm9jZXNzZWQgc291cmNlIChieSB1c2luZyANCi1mcmVwb3J0LWJ1ZykuDQpQbGVh
+c2UgaW5jbHVkZSB0aGUgY29tcGxldGUgYmFja3RyYWNlIHdpdGggYW55IGJ1ZyByZXBvcnQu
+DQpTZWUgPGZpbGU6Ly8vdXNyL3NoYXJlL2RvYy9nY2MtMTQvUkVBRE1FLkJ1Z3M+IGZvciBp
+bnN0cnVjdGlvbnMuDQptYWtlWzRdOiAqKiogW3NjcmlwdHMvTWFrZWZpbGUuYnVpbGQ6MjAz
+OiBzZWN1cml0eS9sYW5kbG9jay9mcy5vXSBFcnJvciAxDQptYWtlWzNdOiAqKiogW3Njcmlw
+dHMvTWFrZWZpbGUuYnVpbGQ6NDYxOiBzZWN1cml0eS9sYW5kbG9ja10gRXJyb3IgMg0KbWFr
+ZVsyXTogKioqIFtzY3JpcHRzL01ha2VmaWxlLmJ1aWxkOjQ2MTogc2VjdXJpdHldIEVycm9y
+IDINCg0KDQoNClsgUmVwcm9kdWNpbmcgc3RlcHM6IF0NCg0Kb3MtcmVsZWFzZTogRGViaWFu
+IEdOVS9MaW51eCB0cml4aWUvc2lkDQoNCkNvbXBpbGVyOiBnY2MgdmVyc2lvbiAxNC4yLjAg
+KERlYmlhbiAxNC4yLjAtMTkpDQoNClRhcmdldDogeDg2XzY0LWxpbnV4LWdudQ0KDQpTdGVw
+OiBtYWtlIGFsbG1vZGNvbmZpZyAmJiBtYWtlIC1qJChucHJvYykNCg0KDQoNClsgRnVsbCBj
+b25maWcgXQ0KDQpXaWxsIGJlIHJlcGlsZWQgdG8gdGhpcyBtYWlsLg0KDQoNCg0KVGhhbmtz
+LA0KDQotLSANCg0KV2FuZ1l1bGkNCg==
+--------------zGPahLwRiqRp0uKPNCcbdmlY
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Quang Minh.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------zGPahLwRiqRp0uKPNCcbdmlY--
+
+--------------4e5rwFPgEBCozYnellBD9s8v--
+
+--------------rkKKFJ8ZZADublAHtF5vsiAg
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/d9IwUDAAAAAAAKCRDF2h8wRvQL7tE7
+AQDZyqgD8aXHYKfx+cF74l182O189kgmRS9eNUrD4P5RTgD+PcQjU8QZ48YNG+PaCWj1HIrLv9wB
+dLzgpl4Tiru/uQA=
+=G0nq
+-----END PGP SIGNATURE-----
+
+--------------rkKKFJ8ZZADublAHtF5vsiAg--
