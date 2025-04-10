@@ -1,63 +1,63 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A137E13B298;
-	Thu, 10 Apr 2025 00:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FBE15B135;
+	Thu, 10 Apr 2025 00:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744246770; cv=none; b=Omh8d7L58CF5UYbJ1eNvHD3EKqy1KaZ2M8maViMIVOVeHuz/E42vVyF2I96sBAUsRb+HwNE3zKyr9Riiyd30kLK4N/tiwO1+oDU2sRgD8WQbVwtGKLpr4hS+D+PjGhNnNpNpqzwnm82GRjMoZIunNYfJTVfIO9BTal3slkMGARc=
+	t=1744246772; cv=none; b=op5XwhivrwfDPYSy/tEOQuNZqYK+A80U7XWMEIrae2ia0/FPBhHfJr+RtZQFyNb4Xxxzj7ZMpI3mQGRSbfmIxCYxtWmoF6wJfIcxynrVzNskELbipfmoGtjudvL5/tP3JZQe0osPu9zz25s8NW7oWZPgSVisc6Yy9PPbIC+ijCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744246770; c=relaxed/simple;
-	bh=LIsVjG80noSF0/+UYFzuTPI2eRaKHkJYrTzw0CaDVPo=;
+	s=arc-20240116; t=1744246772; c=relaxed/simple;
+	bh=SWhM1Y9cbsDX3DmoQkxqoydODQzVCEIE8uwUZP2DfSQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LB8fiOZcmQilLlXLO51OCRTTpfHv2A5z34QeRwKkJTzXpILfSi8sEUD3GUB7PPJLGFkZiUpSNEVmgot4cBBW81qLHcrrJP1dBTTCP0ydmj71jCfZBt6rjWgvW1ZHQBHLGtapCRIEus8IJndE0GETtYRVwyxnjUp4bsTjlzw344U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eF3IkyO0; arc=none smtp.client-ip=209.85.222.179
+	 MIME-Version; b=Wk4qHUy0rHImJQhJjmqMDP4RmANk7qw4u3tOnqgButOURVv+qCT/ZG58ooDXzpav5EVtBvQHTXKe270AxEmwdVrifTo3jZFR9PFkHvscVqz8E+3s6fVFqwKQKAKYB3zIfOBkc4RpFpm7ITYuVPfEIhsU5YQiJ9rNtFQLvBFpi2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EZoMQdrO; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eF3IkyO0"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c597760323so28644185a.3;
-        Wed, 09 Apr 2025 17:59:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZoMQdrO"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5a88b34a6so31083785a.3;
+        Wed, 09 Apr 2025 17:59:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744246767; x=1744851567; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744246770; x=1744851570; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CeG5k7eeG5nrvh8Eq49sU4B3j2ymx/30X9ZLGBFGRWk=;
-        b=eF3IkyO0eh58JtLrErmxSYafrTkJVAIY7o1RhLz6k1eBRmu5dlh/bMWIT25RhEEcHg
-         b2//SPdnIPczyKw56h59PUSctdmLOEZ+7g2Ve9KBrGJK0lXFP3DW5sg2m3NIQVFQEBqY
-         r0G9PqoCle4bwlRG56p9i4q9qB3cDfmtlHAyn3tdRCGuE6kBeCM02lkBgTuYwGb5sD/O
-         bcRYUmB+/NSxEmCfd143ocvkAx6jnALOJ75xiReOFTS0Wb03h9lGzpOwcv6MJdO+uq0h
-         ThF2D1Yyzcmv5OSWSJSHVzhEmpb/RpwzaSQ4jzjS+YBjgICZ4EvUKldJ3Lxl1/pJc3Tu
-         BTiw==
+        bh=DWzUEf6VPqNr8t6mjQWXtWJZNm2EpdCNeJxperBpJB8=;
+        b=EZoMQdrOjdPfNpUP99pdIifiyZQqX0eOutUKtuVq0GJPfC7dtEeiJVHYY/2EGocw7D
+         x+rmRRqSrMoiJREBF4TF3zwGnSWHKXa7K9upN4PsC9+iSydN5J+MB3nhZCQuMAmSNJCN
+         WCNUoP75OitPwmjlcG6ITJttgnMOefdUuZDQ9ALWVbqdGU+GaC5E28PqqE1m75ZvQQHG
+         8cT1GUn15VgdfYlJDy0V6WhV2SgLVk5jY7ncRT8DbRbzJUcNXn7yW6zbouZ/6/FspMrT
+         JKF4d1UX3n/3/vgJAxYlscpNXRpRj87cf5Rukuk2CqXRo3f4gbWHU8LznaubDLEEaKis
+         ro/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744246767; x=1744851567;
+        d=1e100.net; s=20230601; t=1744246770; x=1744851570;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CeG5k7eeG5nrvh8Eq49sU4B3j2ymx/30X9ZLGBFGRWk=;
-        b=AksJRerNNv/vb4RrMdlQoSMx1+I96O7ZnI2nI0uBpizSZUyqtdGwaF8bFqjZEctjBP
-         gDEYGfpuppl1i0e2KcmBfOc7hHxDjb4RWthn/KJsW+cyIAYNZIOYsU1m8qPcbEA/++KI
-         9+FrTmVv9eWmgRdi1OqEPiOPvb1ed1KdCZsjpeuoj3+iucR/cwfiy566RhMqxiApAY/V
-         nddg75wZ4zy+y6sBQV6fOOfs+gJIYogOSuZ/fTfXRDPRriNaenqKrfLirF6NCd6TSFwj
-         O0gdUkfSovbR1I2aO3Dc3duDtUJi6yJOUs+D/AwaZnYYcHa5h0eifxgWKm4+is+Tw/Mb
-         kVPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUad7tnfqUw1oCTqkLLtjm1N//jHV5bXgQVC2rNgZsT2h0HfeRG+nyobNAtmJ8eDjvu7nkmnqiF8Vjy@vger.kernel.org, AJvYcCUbny2a18W40rpKK35V0YXKBwmFWQ4yGLunaDp3EkgUl4PwCy11uNagcwYdxJ+k8XSPIOIv3ATO9CDTez/D@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5PsEIN9p18hOVwVrrbcRbn8vT+AC0fnMI047hxdqHOA/KenUk
-	LN4EwJwx7dvY8aINNDxaQF6/lhmwXtRwoZP9+KDZ+yX+gZ8cmCam
-X-Gm-Gg: ASbGnctW+gtAuDInD+lJ+qOtzT/LmahKwHiFpOffJBsxFdciego2jilpls4wmeCNbsg
-	m19ax9QE8+Eue2Ct/r3+XaYPHGqSvC0GKDjEWKrE72pBvIwdJsiQVAsygm1luvWBi7HOOKoWfhj
-	B8UdYevtGgavGXGzCv8BLW7CN4t0/A6BmBTMPkFIt+QOHpmt6v5kobeD3H2cNX3tEwMjtihHXxG
-	++CpllA79WjK4YfNTdOJf5PpOgdXJyuK0TEL8kgbMbHbv5O83LngdXSxGuY2NxUX7JZMtbPXLUA
-	SJMmVycUCV7mnaNFHXfu+FxWTC596q6gqzOguhq8+Brdvq1P+LcI+WWxhsvI5BsCrTkABLEGnM+
-	a4hZwd6EPRxQF6B8=
-X-Google-Smtp-Source: AGHT+IHDQDEm510Zep6ehXFGr0QIvBVvOcXxaZ4hhWGvwNKkFEXwQS8kRk2/D5K9n/qyNnT7NjYeFQ==
-X-Received: by 2002:a05:620a:468a:b0:7c5:5d4b:e62f with SMTP id af79cd13be357-7c7a76bfdebmr138512985a.43.1744246767488;
-        Wed, 09 Apr 2025 17:59:27 -0700 (PDT)
+        bh=DWzUEf6VPqNr8t6mjQWXtWJZNm2EpdCNeJxperBpJB8=;
+        b=fpFAxOLrOVa+Z72MxktbZvXI1RCYSNkfkV/YhjqJ/IN/Amo1o1Ej0OZs/k37/EuLng
+         iSD5P472kMleVMl4sR1eJbedQckJIaKu5IXJ2I8T6ygqMD6QayMq0yZw3u/o/Uls6LR/
+         fcam9NjOaEWrTYjZt5h44gHcjYeozbniC++OtcsnJUEGRn/HidPpT//HgoUa9vjeVD2J
+         kyOUmV1Zkvug7v5RnCX/q8NORzSc+v9ZNuPZtimS7OCdajJ5YQJ/ipLRvsyfikC4CcLG
+         NjhBYZ1poGX8QJmWk+2mqjNDYBKF9+b9NmxNr+lQhzeMOr/ZLHWuOZOstOGfUU8UL710
+         06+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUg6ehZujgNamb1Kwhnd45ccEYGmc99nvSPE/AwZXBDvSyM9xd7XNIj8H+AUx1Ef/JKoFaf6TUzbn9ZB0D0@vger.kernel.org, AJvYcCUtbUjHQlBXO/BTCM9r1W1M/4H/LfC60LvYEaWbvIRej8/hCkzIQpddpOBpEkeInXcip7CWDa6iMn4I@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhHX9Sb5wZ85T1rB/ESR4yl5lSg8PAUDtlEm5lHXcfTldhkPVS
+	zKJxmnudK6Mk3V/HM9hLenRSoNJPfPfdQBWhmCW8Azn+tEfsj1h3
+X-Gm-Gg: ASbGncuFK3obWaDGQbrQOoVRsUHeKt6++r0PvhHFeyrsvyPSrTiETEOvPdnYXRPMRqh
+	sbZYbALmaS3+VW/6HpYweSPKyF4qzYCBHxYYn/tl+58wFHMaUmkXIJ1ppf5fgP/UaRwBO2Rzpmd
+	Z0U9S1j+4VuQL00LgGAWtzyEfbOOjNCE0IuSaed5lrwDUtC2pZ/OX6hPHSNnNJcOMKD1b+80AMg
+	9WhN2AbIy72oRHlsC9qjaIqf0Saa1DitwuVlZNNwgCzrPBHFi+n9DBWOMArDvsmqOhtlOtf/cu1
+	cnbWpsvQB4uLMvE5FLpyuBMUL/9uo7pZkYtWkqrCm7UzyQGQaPhaDYFw/WpzxSLtSvPrRTA8Mhv
+	kQMKOV4s7m9u4+o4=
+X-Google-Smtp-Source: AGHT+IEOUsk3UgJ2ZjGZnVGL3oNGyliUXyIV9Ti6Sx7NFXjHWz4LHaoRQc2J2+koxguq/sC09DyYdQ==
+X-Received: by 2002:a05:620a:3944:b0:7c0:b523:e1b6 with SMTP id af79cd13be357-7c7a765becbmr144726185a.11.1744246769928;
+        Wed, 09 Apr 2025 17:59:29 -0700 (PDT)
 Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a895180esm9590685a.46.2025.04.09.17.59.26
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a895180esm9590685a.46.2025.04.09.17.59.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 17:59:27 -0700 (PDT)
+        Wed, 09 Apr 2025 17:59:29 -0700 (PDT)
 From: Adam Ford <aford173@gmail.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: aford@beaconembedded.com,
@@ -72,9 +72,9 @@ Cc: aford@beaconembedded.com,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/9] arm64: dts: imx8mn-beacon: Fix RTC capacitive load
-Date: Wed,  9 Apr 2025 19:58:56 -0500
-Message-ID: <20250410005912.118732-2-aford173@gmail.com>
+Subject: [PATCH 3/9] arm64: dts: imx8mp-beacon: Fix RTC capacitive load
+Date: Wed,  9 Apr 2025 19:58:57 -0500
+Message-ID: <20250410005912.118732-3-aford173@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250410005912.118732-1-aford173@gmail.com>
 References: <20250410005912.118732-1-aford173@gmail.com>
@@ -91,17 +91,17 @@ when left to sit over time.  This is due to the capacitive load
 default being 7000, when the hardware is really using 12500.
 Fixing this setting to fix the drift.
 
-Fixes: 36ca3c8ccb53 ("arm64: dts: imx: Add Beacon i.MX8M Nano development kit")
+Fixes: 25a5ccdce767 ("arm64: dts: freescale: Introduce imx8mp-beacon-kit")
 Signed-off-by: Adam Ford <aford173@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mn-beacon-som.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-beacon-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-beacon-som.dtsi
-index 2a64115eebf1..bb11590473a4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-beacon-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-beacon-som.dtsi
-@@ -242,6 +242,7 @@ eeprom@50 {
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
+index 15f7ab58db36..88561df70d03 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
+@@ -257,6 +257,7 @@ eeprom@50 {
  	rtc: rtc@51 {
  		compatible = "nxp,pcf85263";
  		reg = <0x51>;
