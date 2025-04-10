@@ -1,108 +1,158 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6181E573B;
-	Thu, 10 Apr 2025 02:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744253212; cv=none; b=p60qevsWLlkhmStClD/M8Izmjfe0Mb1/jR2dIMvEqpaLamQss1cHyrzfPjWe3tVKuCLVVyjs6EaqH/MhO5F1OtBuxeAEUkvPk4xQgtVMmXMZhUX6+mJkdpevULZtlGd5650iwz63W46m5Y/PpXhs2qaOJKcLTEieHlEkfdcIpYE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744253212; c=relaxed/simple;
-	bh=QOZQEHQyBXXxcPrT6oX3nR5O2Rhae5MEEUplAr+tytI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pb+k8T82P0Sr+IskxZjsTmeY5zKfBJ/L2ZVA8HEs/UDJsZHMwrMoesjajkRdN5TwVt5Qbaarz4wBe/83FuIXVT91j0pbq39+4FFpmVbxDZpf1++wsKvUrr3d8SMKga3oHHUwGAILQOlI9TSRRqltGu4bPayiPDPeUQaLK9IRcd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=AS7/sY4O; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7440E38F80;
+	Thu, 10 Apr 2025 02:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744253275; cv=pass; b=HotaWUib4y1wFStcLyqdg6IPmoT/o1bgMCGuUUdVUM/cV3E6okFMyxMD7jD+tXibHetc7zzseoBY9eDWHcs/bH0jxlqmZOoxSYVLNzWwDXItSVGpDBlEsFGCERDIMNHy0jDOrcVcQ75wVyGDeLjaA4m9O9SpfmNT1cT9B141+fI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744253275; c=relaxed/simple;
+	bh=V2+eqICYcR2afJREmYpW8q6aaS4HFXGfLL1G6+76JLw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CtJLtqU/LzYP8rWc3cMIay8YH9PW4uWwjDFvvXiN+SAb8JT1vvA7y9eOMsWtYyuvcytnVTsDc4aYV8AEMvv1pj+5/9tjtkSMcX4j85juz4GF6TR75B7Cc01iNeNLPwY3ahGifscWF0X29l30dG7rp6VJnCjXdSFkAoAkVboSbdk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=YziRertb; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AS7/sY4O"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39bf44be22fso112241f8f.0;
-        Wed, 09 Apr 2025 19:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1744253209; x=1744858009; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4Ph0sMnCNGa5VTSi5U0q7oZGDLT8fbaCzu7xWDmfDqw=;
-        b=AS7/sY4OX0R/rkXbtOcl33kO7nbq2RlBfNey/rmXr+qUjotIH3qMO7sEr0GodFktR5
-         DzRjiJq+nOjXraaZoBp6xjIU65/mtjKKv0Sl8ge2CbzTdcr24jl01CAt9SpRtyGz22qP
-         F8hUDLahym2qSS06MmcyzMeqV13kCEe5D5sp+M6eMzclez6gj2jnOBmMO9P4jwd0W0pS
-         v09gECzn/aA2JXdAzFvFvyuqntV7RlNtqSTQfYqir8WU0+ZoCVWXfKSJMJm40r7BFS8L
-         FKN2UiCJO3KOg/3hTlfD1tADUqRdKhQvT9PedjzLCAj6pBQ351HkI3dF5Q54LorHooUa
-         0rGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744253209; x=1744858009;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Ph0sMnCNGa5VTSi5U0q7oZGDLT8fbaCzu7xWDmfDqw=;
-        b=kf4Cal9XfZlvrabgYcbfz2cnpLosCbFoAd6jWe/1QAOR/zl38ZEJ+96IrIejc85tkz
-         TGSUDOH90aFmN7twEF3JUjU5BApy/e7Hi8xBRDEZYcsWByMySy1JN6aupAvY/K7wEHrr
-         1AL7N5FTgtAQ8/zLzkKs4aWH+w/raUT41osa7PNxIbjIZFi8OzPXZrNKOT82ncsMB9q7
-         yUl/hoL8HN1wrej5j/16eUPObzSRpjuXRedPYpyBQXRpO9/orymc0fyJt51aZvbqBu/X
-         qznffPj1JA2zkC5E3vpfUj3KDE3y0KK+ii3ibqTSblbGKTAK9DzsAnDqDlvwGaN6hwyK
-         pVLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFKOga0ywX/23IDiRgNpZDj3mgxz90C3Ha+08UG3xSTo98zU5Tmke3KBRCSsa8AYHOX+1CPyG7IOjMIFk=@vger.kernel.org, AJvYcCVhQw/zxeBEvTlGtsbUr82+3YTJbBnghpHYvErFip6jduEH8B4Hl+okR93rn44dH2W1ai7ATR8/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0KPmMGYLMUyF3Gj5bm/7sJRg3jfjVu5pjpvVdWwt93I+JaShT
-	DDEuN1EzrmSh5KxH6zxfyayHl1TTku5uEZTKqqI3ArMqWfpX61s=
-X-Gm-Gg: ASbGncvd5wXxcO9GTqMu40wfdOHIGT4ZD72A+aKeExsOuZ9Ix+umjU8JA8kJtNHQCpG
-	mzmH2zc4ojDweaVx8sPNk/b0Gr2mcZrmuxQsPn0O+5EPbeAVMff05Ki1lhuNCKboxjYT7mHslu1
-	3WlB+QEc2Ld3FUZR+/cJUvwN471w+JhYWDmtxNIVbYu2eYeis9clPpISYkSjiiQDsgC91Fh1uA8
-	Snz+HwGygYADmEi2ql1nDha51xrv9TT0cNOeooyc125cfl84la9KcEX4afMBWG8GTRC+RWwEvgP
-	sUN7Tq1EFy4dXFncJ6oH0pP/xKlsuzKvuQZXGUMEnx4gQNzvRbxRPoJgEwWBajI1aYZM6J4YnbJ
-	pvMOfCx0vdy0yT2/q
-X-Google-Smtp-Source: AGHT+IHOE7jiEy7hV+dNeZEvjMEJVqKsUfhz2BDR1aM/BcXoA5fDODP+FoIOTe8FppaftAyDPrucgA==
-X-Received: by 2002:adf:b643:0:b0:391:3094:d696 with SMTP id ffacd0b85a97d-39d8f4fa19cmr511308f8f.54.1744253209347;
-        Wed, 09 Apr 2025 19:46:49 -0700 (PDT)
-Received: from [192.168.1.3] (p5b057414.dip0.t-ipconnect.de. [91.5.116.20])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89377785sm3229950f8f.28.2025.04.09.19.46.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 19:46:48 -0700 (PDT)
-Message-ID: <b0b3c83a-862c-488d-bb05-67b9d3a5019b@googlemail.com>
-Date: Thu, 10 Apr 2025 04:46:46 +0200
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="YziRertb"
+ARC-Seal: i=1; a=rsa-sha256; t=1744253259; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=AScMilOms0nHdKmRawVWhD+zVPm1NxWpJSBxv4qCvHenxbhDZjTCRwcay1Ns+Q+L81YgcoRD5tl4o27yXdOz1dGcmQtRjegqiKJAnJexUWmER4AAG149KFScPCPg8eztgEqiNBgULtP9yp7cCNHGWpAzPMmr7EUEHd3ON7+SFR8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744253259; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=9sK5g4CBmElHUEKgj48pT0GOpRw0wtqgCLJifWEmYRc=; 
+	b=cgEQNcSn5yz72WJnI/zeqUpqslXtFcrcrDGRu454MbaMeu6ecz4i+2UyrLHJnBDpCuHCItXt3ucftt7BIbQGoinm+pbLNovA/psFoZPmVDWD4BA52D0/e0XJASbOjSnnARuF/uIlwYaPpze2CzkMf9QgTx01m+sgtqUtyIALVSc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744253258;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=9sK5g4CBmElHUEKgj48pT0GOpRw0wtqgCLJifWEmYRc=;
+	b=YziRertbWfXsMKVYxeiWaLP6LtaDNRR1fa4GOa6mcLbG9NJvB7iRzECLDmzIM/jI
+	IXxXjXalmZq12mKuewhtNBYaHAZauxeuHmGJEJlvLEB2OTuFwN1l8qz7Lbd5stnWzMK
+	h8luLTtbYHjs3P1MZcopLOAhPcygKrGbGOpzK07A=
+Received: by mx.zohomail.com with SMTPS id 1744253256739340.1341885488831;
+	Wed, 9 Apr 2025 19:47:36 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shiju.jose@huawei.com,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v2 1/1] cxl/feature: Using Full Data Transfer only when offset is 0
+Date: Thu, 10 Apr 2025 10:47:26 +0800
+Message-Id: <20250410024726.514170-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.1 000/205] 6.1.134-rc2 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250409115832.610030955@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250409115832.610030955@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Feedback-ID: rr080112278271cfa2fba9f509467738cc00006ba6dacfb7be599d12093cd85f80dbd5d545065ecbf80a7f47:zu080112279e0903e7835bd38c18db22160000a5f8098144cc8295739cd2664163cb0166b5762a69fb134f0f:rf0801122d48826ba0bbd7240d0c33376f0000fc0d4cd5c444bd578b9265302d16f3b8b06c695d5c3b896f82a59e5f44190d:ZohoMail
+X-ZohoMailClient: External
 
-Am 09.04.2025 um 14:02 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.1.134 release.
-> There are 205 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Per CXL r3.2 section 8.2.10.6.3 Set Feature(Opcode 0502h)
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+"If the Feature data is transferred in its entirely, the caller makes
+one call to Set Feature with Action = Full Data Transfer. The Offset
+field is not used and shall be ignored."
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+It implies if using Full Data Transfer, the received data will be
+updated from offset 0 on device side.
 
+Current driver implementation is if feature data size is less than mbox
+payload - set feature header, driver will use Full Data Transfer even if
+user provides an offset. Per above description, feature data will be
+written from offset 0 rather than the offset value user provided, the
+result will not be what user expects.
 
-Beste Grüße,
-Peter Schneider
+The changes is checking if the offset caller provides is equal to 0, if
+yes, using Full Data Transfer, if not, using Initiate Data Transfer -
+Finish Data Transfer.
 
+After the changes, all Set Feature transfer scenarios are below:
+
+1. data size + header is less than mbox payload and offset is 0
+	Full Data Transfer
+
+2. data size + header is less than mbox payload and offset is not 0
+	Initiate Data Transfer(with all feature data) - Finish Data Transfer(with no feature data)
+
+3. data size + header is greater than mbox payload with any value of offset
+	Initiate Data Transfer - Continue Data Transfer(s) - Finish Data Transfer
+
+Fixes: 14d502cc2718 ("cxl/mbox: Add SET_FEATURE mailbox command")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
+
+v2:
+- Drop RFC tag. (Dave)
+- Fix typo issue in changelog
+---
+ drivers/cxl/core/features.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+index f4daefe3180e..fcc624cefe89 100644
+--- a/drivers/cxl/core/features.c
++++ b/drivers/cxl/core/features.c
+@@ -259,6 +259,17 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 	return data_rcvd_size;
+ }
+ 
++static bool is_last_feat_transfer(struct cxl_mbox_set_feat_in *pi)
++{
++	switch (le32_to_cpu(pi->flags) & CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK) {
++	case CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER:
++	case CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ /*
+  * FEAT_DATA_MIN_PAYLOAD_SIZE - min extra number of bytes should be
+  * available in the mailbox for storing the actual feature data so that
+@@ -294,14 +305,14 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+ 	if (hdr_size + FEAT_DATA_MIN_PAYLOAD_SIZE > cxl_mbox->payload_size)
+ 		return -ENOMEM;
+ 
+-	if (hdr_size + feat_data_size <= cxl_mbox->payload_size) {
++	if (hdr_size + feat_data_size <= cxl_mbox->payload_size && !offset) {
+ 		pi->flags = cpu_to_le32(feat_flag |
+ 					CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
+ 		data_in_size = feat_data_size;
+ 	} else {
+ 		pi->flags = cpu_to_le32(feat_flag |
+ 					CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
+-		data_in_size = cxl_mbox->payload_size - hdr_size;
++		data_in_size = min(feat_data_size, cxl_mbox->payload_size - hdr_size);
+ 	}
+ 
+ 	do {
+@@ -322,7 +333,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+ 		}
+ 
+ 		data_sent_size += data_in_size;
+-		if (data_sent_size >= feat_data_size) {
++		if (data_sent_size >= feat_data_size &&
++		    is_last_feat_transfer(pi)) {
+ 			if (return_code)
+ 				*return_code = CXL_MBOX_CMD_RC_SUCCESS;
+ 			return 0;
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+2.34.1
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
