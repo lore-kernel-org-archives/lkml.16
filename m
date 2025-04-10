@@ -1,187 +1,167 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40522676FE
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9DC26A0D4;
+	Thu, 10 Apr 2025 09:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278363; cv=none; b=G9orJpi9K4DJaZ8B7O0epPR2d+cxkdsr2MhsXSyAX0umiDRMXnW1LwyWLuXmteEef/ErwgzBKyl9HcLHSUfc0+OB7KwqpqcRa9alcxvQXaQN8Lpb/8ULoxL3E7eInza4xXqEtZsyFYhNHKjDnp1EGZ8Pyy9WMLQu/bTdC8G1E4g=
+	t=1744278370; cv=none; b=s9hcc5rDHAo6ig8X1hYWLup6b18z9+h0ful/8s7ph0Jihi8YxkQ9OEIQSXxlvRjIYOQNcY0JD/dzjrzahpC4JibyuIoJHnKKHOYE/alnxEftW+WcnzLHc3LdPYLBUcTIcJv5owILUJAoVdbEQE5roaua6lFc2gB3DM5Emrb5i8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278363; c=relaxed/simple;
-	bh=cWjCm2K3mXJ4hsQfSC0tAiTyj6UZ6wJSPp2mVTIRSAE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=MqsCAjcRRZ/axwRaB3qFmp6pNVbm9mX49JLmk00LXbi5KyzL4ljTJrBGoHOk9thPD+/DesNg8zwP5BR7qNNSPVIODNr2RgbSavhV7EwhkDf+lxYitnQKiTkA4wJtb/QQjet8Vv55E9oeKfBKZQJk1Ypdxh/wK7r9Q8aVlVz9C8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=iOKdyDnc; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1744278370; c=relaxed/simple;
+	bh=4s3ZacDmF0acLH/4llQMYAZNHTv/D6yaEavN2T8m6+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uwZL2D8oNozCQUL03n0b1nhKGgnURl1WFZUL4v0EH0qS5UwjSyR1H3YUj2d/rWUF7nPH4WtsR4gkea+o/AuVKlzH6AggkvOavhgRqTaKsrOo5rI8sHv2wnyIvYtDTfS3kb3DR60BYUjoXKru4a8/RuJ71gZVcWqVjN0QqShIFh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OT6SR8K5; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="iOKdyDnc"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d0953d3e1so588535e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:46:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OT6SR8K5"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7376dd56f60so369154b3a.3;
+        Thu, 10 Apr 2025 02:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1744278360; x=1744883160; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T8i8GZtfdY75DsuPGV8mdkCHtexeE8J8QTGC238f61s=;
-        b=iOKdyDncUDwDoD5psxtgcxvM35zh6Zae+qpWAmKco41uJCREAZCoR7K8S7IA3unsVB
-         ZLZJJ7O5A44WBkO0BpX9nDVjl2uYUmcHudz6SqaZBzP+UmPFVDzXhmJzGcaBiulFSx4I
-         9M1YJse8NEmCU/uFhyoOzwMFwXj85VGsKg7zIVTE3wbX09wTNTKOnvWi6aGN5fDiyDdw
-         yOJZpIPd6CZ/NhXDC5iqJUdzUxngSzfAIcoBCZOOy+ukcP/VHsScp2jtRoXVlaAQ+fU+
-         EFkm2l7XqI6tRvYPXxgzLTNwsUOVxZfelavab8LBT3AVBrUbOVUh6tWtQ+T78MQr2/QN
-         LEVw==
+        d=gmail.com; s=20230601; t=1744278368; x=1744883168; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X/OI6E9F737xY7P25JwnmZaPm/Y8Wf+gvRZpSuTpy6E=;
+        b=OT6SR8K5twmenZmiGPtc5rp2i3q1k8aoQYIWf5Y9dHPXp3txA3BWCqOCLssQ3/br7Q
+         s8Jn7ZqN8/7kAd05XGpH/hUF4c1m3hl/GDtMlXb8c6Dejm47rGr5nDne1F5Bc7k3GeTW
+         K054+A6/fZ9c5V0+L3EmiXWIlkUUi7MjkRccKJMB+FbX2nauiWpqb1HhLOLGyafU3nl4
+         CTJ1lb+6oTBwTtZemZdkgjz+2dTRre0SwqudTs4UNArAMxc9e9hPztEPwDhQMdXmJgz6
+         thGFTGomyJG8HGd15dVgNydquU6LSEyME6A2GqzpHBHzVozFcLIdm8VcJYTrtBatUvzC
+         J/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744278360; x=1744883160;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=T8i8GZtfdY75DsuPGV8mdkCHtexeE8J8QTGC238f61s=;
-        b=otiIJj/hOkII8nHBWX9RHJ19N4JVoTs3vx2+sTMLuuBj8J4zb8hAYtAJsa7hzC7zyt
-         3AkM99fhZyHjoynYNibp7TFJp13JfaywoG3m8XphFrR29RUMdd/afjH3itRLSc1pUpn8
-         +1m2f4sO4eVsNjR4xVvNRa/lXo1yN5qjq5neyZ6jzz+/RErad9+xlk3EH0Dh6hNKGo1S
-         jh/f/Tmfbd4hGaVyQ6e/xP7SOntK9ihE9aXjCgw/u+UwrTRAaX8RYPIrBQX4PeiC6Aj8
-         BnZyy9LYkfmpGOOJouNzM/ujQ6scPJYQrz+CHXpkATsQIQ8INECAn0PXe4ew4/XQdgAm
-         29JQ==
-X-Gm-Message-State: AOJu0Yw15/n54IPxtDn0Zpfm/67Plh8nQBIawUoGrTrclv4MLTqoGHAz
-	8BPR33rPCAfPUz8iDaeojV78vdzieSL8krc9rhx3E3QYbRM9Mb35AJFmWpZ12SI=
-X-Gm-Gg: ASbGncsPeAxy37MGHsfENHdcOYJXNKMSWsGCU6ttL/ybAqOnwJ1SbFAv3YqcXIgmfXf
-	uZ8XoZ2+b41rYkqDqBX1spJ/rckvBNpYnhYGcS7E/yraOe7zF+JUiWp4lYVtq26Ub1RZBR7KLdw
-	Yy9ArHKE+wzHqMyBhETlo53gZk0yACoggaQnHzCcLv7vh1zpXOhY8k8lZLWJExuA+v8DekFZ4JN
-	Lyq6FS8KsDSdCN3CuA3r2oG350r0at9piJVZIQ/GYyeZPIUjoyQPjtZtcWVFCbvSK1gVw5E3MfZ
-	nncE3fD5XAAc6uz2kdkh44aStHacGDaWu85VwQNIw8GEB6pt
-X-Google-Smtp-Source: AGHT+IGtn4otBiHZ5rhpzGojxm7Tp3rcDjovrmZXPH6P8CvTrnSeGNCclbDgZlnTp+GpEEnuS4B3vQ==
-X-Received: by 2002:a05:6000:430d:b0:39c:1258:32d4 with SMTP id ffacd0b85a97d-39d87ce1a29mr1909263f8f.16.1744278359773;
-        Thu, 10 Apr 2025 02:45:59 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:7d22:13bb:e539:15ee])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893611dcsm4217671f8f.9.2025.04.10.02.45.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 02:45:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744278368; x=1744883168;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X/OI6E9F737xY7P25JwnmZaPm/Y8Wf+gvRZpSuTpy6E=;
+        b=fVZmtHvy3SWgf9N/ogq5A8t1UBrLQPzAg6EYs5U7KQ4a9pPu2JZO0lmy1HCI8BvWsQ
+         aT/KR8DoMBMYpdKYN9anSX/+NWLgzZAu2bP/aztzNk2OgwCYheqR8bVkscdQu3GGB7/K
+         HLBKdhzSmgnafMF2Y0vH8HF+CpxJz89PBgwZFSWX0EuLdy5t9z5msEH6UBjdHTYliMMC
+         RKTAZF20irjrB+IVoGTUOhr80ApohKlHHG65z+ZVblcqmIkmI9VGEJCU5hqQxFCWXrZK
+         wVDmWh3wXGOw3ctO94AshIplxF0omhWviWfSTXo9pEQqNLw+IOMFSzsEguvc13xnt+re
+         qQeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCzsqaO+wXlZ5btUXgo+FdrnT88VlEbfibW8w8NxqIaObnUAvfCOeg+bAr83yq3u6I/mr1T5pN18D0NhCY@vger.kernel.org, AJvYcCW53aNvCgNKYxxCj+riRABWw1h2HXqJe4IfRyurHB/cMXKP6SIlc9Y6sn1xQnD6fGgJuP+hhXQeaJw3pWu+t78=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMPYGNpIzcR38MFfBeWPClKwfCSGhF44dp3xlgTjEUv13xGGUP
+	cWN+WXJkdNyeDxx5ZuEKdLRn3jjPMZPOcdgZOzC0Fb/i1hEU+mlw
+X-Gm-Gg: ASbGncu4zER2uwxJNXMiogBwvxcQVxEPD/WyYE1R2Z9oanRzZRbnF2Tt5IL9/aoeXi/
+	Gw3QOeyz300stqWhj6TQfDTGEtTU9np92OKpNTzzEy/FNyDt+gk8uytWEfHesKp64UPoIMd5qjA
+	e3kCpOdd3eLtYN40o52b7RA0dEgcSGM7cyivxBQa2opTdI00N87k2laR/axR/+yHHHbFB3J2myC
+	WpdZmbZwbR9EPQdMQ/ssuSd+NSnocfAPLVOL1iZt0kz6/ikrVabu3hI0o8bRd8PZw7Ophs3iuov
+	DdZd1jTwWTggCqVw4JyDVtLiO9n5Eol58haZIl7Cpg3MdhuWyulqVVFf1nnpsv4Pw78VmDWkjsm
+	7fgiViZNf9BXmNww=
+X-Google-Smtp-Source: AGHT+IGxbykd1xi8RysmDEKp0xcBu26rSmEn29jOu9EKsE75TvAMZ2b+c2vZBXR06+5s39q7XPlTqg==
+X-Received: by 2002:a05:6a00:170b:b0:736:4110:5579 with SMTP id d2e1a72fcca58-73bc0a074eamr2649067b3a.2.1744278368431;
+        Thu, 10 Apr 2025 02:46:08 -0700 (PDT)
+Received: from ?IPV6:2409:4080:204:a537:5da0:ac0c:6934:f07? ([2409:4080:204:a537:5da0:ac0c:6934:f07])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2b34dsm2816398b3a.4.2025.04.10.02.46.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 02:46:07 -0700 (PDT)
+Message-ID: <70de56d3-1cdd-466b-b2b9-a4f69981d696@gmail.com>
+Date: Thu, 10 Apr 2025 15:16:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 10 Apr 2025 11:45:58 +0200
-Message-Id: <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
-Subject: Re: [PATCH v12 12/28] riscv: Implements arch agnostic shadow stack
- prctls
-Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
- <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
- <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
- <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
- <broonie@kernel.org>, <rick.p.edgecombe@intel.com>, "linux-riscv"
- <linux-riscv-bounces@lists.infradead.org>
-To: "Deepak Gupta" <debug@rivosinc.com>, "Thomas Gleixner"
- <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
- <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- "Vlastimil Babka" <vbabka@suse.cz>, "Lorenzo Stoakes"
- <lorenzo.stoakes@oracle.com>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Arnd Bergmann"
- <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>, "Eric Biederman"
- <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>, "Jonathan Corbet"
- <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann Horn"
- <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
-In-Reply-To: <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in
+ read helpers
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Stefano Garzarella <sgarzare@redhat.com>, peterhuewe@gmx.de,
+ jgg@ziepe.ca, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409205536.210202-1-purvayeshi550@gmail.com>
+ <Z_dh4tRIa6xxAWQ2@kernel.org>
+ <t2ri7facyvtmt6rx6xwcjos7rgtyiln7cywl2gt4effgukeejc@f3ml4apdh4zs>
+ <fab2bb2d-a78e-4130-a5fd-bf07430210c7@gmail.com>
+ <Z_eHei1jT0YoPgki@kernel.org>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <Z_eHei1jT0YoPgki@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-2025-03-14T14:39:31-07:00, Deepak Gupta <debug@rivosinc.com>:
-> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/us=
-ercfi.h
-> @@ -14,7 +15,8 @@ struct kernel_clone_args;
->  struct cfi_status {
->  	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
-> -	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 1);
-> +	unsigned long ubcfi_locked : 1;
-> +	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
+On 10/04/25 14:25, Jarkko Sakkinen wrote:
+> On Thu, Apr 10, 2025 at 02:12:07PM +0530, Purva Yeshi wrote:
+>> On 10/04/25 13:21, Stefano Garzarella wrote:
+>>> On Thu, Apr 10, 2025 at 09:14:58AM +0300, Jarkko Sakkinen wrote:
+>>>> On Thu, Apr 10, 2025 at 02:25:36AM +0530, Purva Yeshi wrote:
+>>>>> Fix Smatch-detected error:
+>>>>> drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
+>>>>> uninitialized symbol 'value'.
+>>>>> drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
+>>>>> uninitialized symbol 'value'.
+>>>>> drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
+>>>>> uninitialized symbol 'value'.
+>>>>>
+>>>>> Call tpm_buf_read() to populate value but do not check its return
+>>>>> status. If the read fails, value remains uninitialized, causing
+>>>>> undefined behavior when returned or processed.
+>>>>>
+>>>>> Initialize value to zero to ensure a defined return even if
+>>>>> tpm_buf_read() fails, avoiding undefined behavior from using
+>>>>> an uninitialized variable.
+>>>>
+>>>> How does tpm_buf_read() fail?
+>>>
+>>> If TPM_BUF_BOUNDARY_ERROR is set (or we are setting it), we are
+>>> effectively returning random stack bytes to the caller.
+>>> Could this be a problem?
+>>>
+>>> If it is, maybe instead of this patch, we could set `*output` to zero in
+>>> the error path of tpm_buf_read(). Or return an error from tpm_buf_read()
+>>> so callers can return 0 or whatever they want.
+>>>
+>>> Thanks,
+>>> Stefano
+>>>
+>>
+>> Hi Jarkko, Stefano,
+>> Thank you for the review.
+>>
+>> I've revisited the issue and updated the implementation of tpm_buf_read() to
+>> zero out the *output buffer in the error paths, instead of initializing the
+>> return value in each caller.
+>>
+>> static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t count,
+>> void *output)
+>> {
+>> 	off_t next_offset;
+>>
+>> 	/* Return silently if overflow has already happened. */
+>> 	if (buf->flags & TPM_BUF_BOUNDARY_ERROR) {
+>> 		memset(output, 0, count);
+>> 		return;
+>> 	}
+>>
+>> 	next_offset = *offset + count;
+>> 	if (next_offset > buf->length) {
+>> 		WARN(1, "tpm_buf: read out of boundary\n");
+>> 		buf->flags |= TPM_BUF_BOUNDARY_ERROR;
+>> 		memset(output, 0, count);
+>> 		return;
+>> 	}
+>>
+>> 	memcpy(output, &buf->data[*offset], count);
+>> 	*offset = next_offset;
+>> }
+> 
+> Please don't touch this.
 
-The rsvd field shouldn't be necessary as the container for the bitfield
-is 'unsigned long' sized.
+Got it, thanks!
 
-Why don't we use bools here, though?
-It might produce a better binary and we're not hurting for struct size.
+> 
+>>
+>> This approach ensures that output is always zeroed when the read fails,
+>> which avoids returning uninitialized stack values from the helper functions
+>> like tpm_buf_read_u8(), tpm_buf_read_u16(), and tpm_buf_read_u32().
+>>
+>> Does this solution look acceptable for the next version of the patch?
+>>
+>> Best regards,
+>> Purva Yeshi
+> 
+> BR, Jarkko
 
-> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
-> @@ -24,6 +24,16 @@ bool is_shstk_enabled(struct task_struct *task)
-> +bool is_shstk_allocated(struct task_struct *task)
-> +{
-> +	return task->thread_info.user_cfi_state.shdw_stk_base ? true : false;
-
-I think that the following is clearer:
-
-  return task->thread_info.user_cfi_state.shdw_stk_base
-
-(Similar for all other implicit conversion ternaries.)
-
-> @@ -42,6 +52,26 @@ void set_active_shstk(struct task_struct *task, unsign=
-ed long shstk_addr)
-> +void set_shstk_status(struct task_struct *task, bool enable)
-> +{
-> +	if (!cpu_supports_shadow_stack())
-> +		return;
-> +
-> +	task->thread_info.user_cfi_state.ubcfi_en =3D enable ? 1 : 0;
-> +
-> +	if (enable)
-> +		task->thread.envcfg |=3D ENVCFG_SSE;
-> +	else
-> +		task->thread.envcfg &=3D ~ENVCFG_SSE;
-> +
-> +	csr_write(CSR_ENVCFG, task->thread.envcfg);
-
-There is a new helper we could reuse for this:
-
-  envcfg_update_bits(task, ENVCFG_SSE, enable ? ENVCFG_SSE : 0);
-
-> +}
-> @@ -262,3 +292,83 @@ void shstk_release(struct task_struct *tsk)
-> +int arch_set_shadow_stack_status(struct task_struct *t, unsigned long st=
-atus)
-> +{
-> +	/* Request is to enable shadow stack and shadow stack is not enabled al=
-ready */
-> +	if (enable_shstk && !is_shstk_enabled(t)) {
-> +		/* shadow stack was allocated and enable request again
-> +		 * no need to support such usecase and return EINVAL.
-> +		 */
-> +		if (is_shstk_allocated(t))
-> +			return -EINVAL;
-> +
-> +		size =3D calc_shstk_size(0);
-> +		addr =3D allocate_shadow_stack(0, size, 0, false);
-
-Why don't we use the userspace-allocated stack?
-
-I'm completely missing the design idea here...  Userspace has absolute
-over the shadow stack pointer CSR, so we don't need to do much in Linux:
-
-1. interface to set up page tables with -W- PTE and
-2. interface to control senvcfg.SSE.
-
-Userspace can do the rest.
-
-> +int arch_lock_shadow_stack_status(struct task_struct *task,
-> +				  unsigned long arg)
-> +{
-> +	/* If shtstk not supported or not enabled on task, nothing to lock here=
- */
-> +	if (!cpu_supports_shadow_stack() ||
-> +	    !is_shstk_enabled(task) || arg !=3D 0)
-> +		return -EINVAL;
-
-The task might want to prevent shadow stack from being enabled?
-
-Thanks.
