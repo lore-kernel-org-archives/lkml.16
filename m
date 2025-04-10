@@ -1,71 +1,55 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626D23596F;
-	Thu, 10 Apr 2025 01:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B5270800;
+	Thu, 10 Apr 2025 01:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744249948; cv=none; b=ZB5gPxm3JeTV12cKiRf1w0WKjDpeT/si4ZSoawsg2VbEjBqoOd/e4MHWZbCz/fN2XD6b3J3d9fNd06kmTN0/bFW7kNhvVrMUutccctdh+MqfhowCmHoPdRCUUvY3DfU7ynVRnShq2WLvLku8K/ATTmD56FDCqV8bi7t84UC9DQY=
+	t=1744250157; cv=none; b=f3RHg2wkPMJQRQ0LncgmWpSLsF/4GIPl9LBphGZmk/rbJwzRfiBQgqO37r+AKCrPQCp+KmKHI2o+hKG7RMQFZh8xrmL+bcrUTp+C5X2+ezlgXDGKgRp3JYrE+mlRxsRY0eZdhTxX5tq3zphiPAgH0iwu36akOKDix8XxpJTd3HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744249948; c=relaxed/simple;
-	bh=vKLzshF1zBPzzTMXiGt8BdyQZzHIDPA5ufOZaf1gACk=;
+	s=arc-20240116; t=1744250157; c=relaxed/simple;
+	bh=XmaKd+S/DqswSqfYVPzLG9jI4c9YIGnYHhOZDkKiBnE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I/ieysIhYXTVRH8l6BuaH/9upOUGY6dSfXVlxcYcyVFGZDUTVzr5jFM1tVYYsY+XgbxQfZA0ijYhvdk4p9qiu4Rr24KLN0GTxnicgZnXwY1fdrrBaNEeV3z1lBJyhYJdOmfOE2hn5EbhyhRSDfG58P+0+jZPEJO3wqEw7jiSZuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2254e0b4b79so3792565ad.2;
-        Wed, 09 Apr 2025 18:52:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744249944; x=1744854744;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jaJxqLk3V06ArQnoQFKz5rLPJR/azvazadpvaNzDZW8=;
-        b=PQIEkQX0ucShjrpg8ZrCh+3wri4vk5AToyfIAtrkQ58fdieZdfDlQBhY0mjpycrmcP
-         OLJJl5HhFYGmTu1Qz17edVMf9c9ffNHrBlDAZoUbdOqYy/S/B0WhK0MfgpGVzfkVWk4a
-         UTRRpjpmcq/XZWyDicmMrnH4HgnPs36O+WFrxZyo+0uytkP5a6B4USJWYLDycJBW0lkk
-         +id/P0Ool00T+j+P90PBN+nYJ3UEosbgvW8KcaLXzoSxSxYBgnHekrXmSFmYTUGgy+Pu
-         qeqykfog2P1br3hLK2/4o4iP1/jsAELGkVuuYzt3+98K4bVraxxzNPaYBncCvimemrZc
-         M0Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVvwoWoIMCYI1DEL6eI0sfTb7PluPnLIg6HaIR/i+OSn0skz/+Iphf72/vjH+VWe2ihzwdASHfNBp61Pc=@vger.kernel.org, AJvYcCXkXWxeP4dADW52GAk8bhvNHYiGUnXJ/nf7LJKpfU4JISYKcO44UoxjB4eGcDGJwKCBYMrBec+RQf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbBqVmlSdRg3cVc1A8Y8PL+0QIEdYa4jldji4yE+6Corf1NZUu
-	LUqBvdPf6y6yqoU1En+NvncGnftyWtE0S2wDqRsmn79AAPopzKbe
-X-Gm-Gg: ASbGnctULVsmlToqsvGJXC4uKNXmQc7Urqgzh/1o6/Ty5PilbI6B2SC75/NkiqRBf1i
-	80rbmX/9KyX8m705RMsOru5ApToS8J1txAWQmZZCmAQ/VrT4U/Nhr1JIahmFLWpaNi25dz/tPW9
-	6ZR+mfu1FAygSI8YmTCDD8n1C8l2S8rz+hASjOHcW5QVPqVQYhTACuYk6gSktNi4TZQN7uK2Zsm
-	wpYNOy62Jtl8GtjYH742rWp7TF2O9x5iZatmKlztwMx7CvYTVE2wEQISwb1Kg7tB1n2CInSrEcj
-	Y830VfmJhcJRBA6pJjcoYFlm2fNhvzCRsLv52m72F4IgPw5urhJEOIpT0aI=
-X-Google-Smtp-Source: AGHT+IH5DMA8QYKm1WbSD1sLTN8mlWGKoMcvZflMV5qQELvdqIA+8gtpJaS3iupJUAV6K+BCGVRtRg==
-X-Received: by 2002:a17:902:f64d:b0:21f:164d:93fe with SMTP id d9443c01a7336-22be04199b5mr8933505ad.53.1744249944613;
-        Wed, 09 Apr 2025 18:52:24 -0700 (PDT)
-Received: from sultan-box.localdomain ([142.147.89.201])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd10dc40sm2679257a91.9.2025.04.09.18.52.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 18:52:24 -0700 (PDT)
-Date: Wed, 9 Apr 2025 18:52:20 -0700
-From: Sultan Alsawaf <sultan@kerneltoast.com>
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused
- by need_freq_update
-Message-ID: <Z_ckVIK5zAeHHyVb@sultan-box.localdomain>
-References: <20241212015734.41241-1-sultan@kerneltoast.com>
- <20241212015734.41241-2-sultan@kerneltoast.com>
- <Z_Tlc6Qs-tYpxWYb@linaro.org>
- <Z_U_LN0AtH_n4YtE@sultan-box.localdomain>
- <Z_VTRspvmOUfrawh@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eCNot3np1gYK50YJJnlMmCvgTo/OwEraqcWdrVYbqlICvku+kQEqk6MyWxrZA2DrbyZAjym6Bxgrb2x/PXs/d5KPvc6HQtZc90zdtFLJ0hIiNrlkZw/GMq3EiBScLLKLkFrApRou8o4YYGslhN0vnSxfgLopiW27141q6o8ngOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 3882934322C;
+	Thu, 10 Apr 2025 01:55:53 +0000 (UTC)
+Date: Thu, 10 Apr 2025 01:55:49 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Alex Elder <elder@riscstar.com>, Haylen Chu <heylenay@4d2.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Haylen Chu <heylenay@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	spacemit@lists.linux.dev, Inochi Amaoto <inochiama@outlook.com>,
+	Chen Wang <unicornxdotw@foxmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
+Subject: Re: [PATCH v6 3/6] clk: spacemit: Add clock support for SpacemiT K1
+ SoC
+Message-ID: <20250410015549-GYA19471@gentoo>
+References: <20250401172434.6774-1-heylenay@4d2.org>
+ <20250401172434.6774-4-heylenay@4d2.org>
+ <8fe0aaaa-b8e9-45dd-b792-c32be49cca1a@riscstar.com>
+ <20250410003756-GYA19359@gentoo>
+ <dm4lwnplwcxj3t3qx3a3bdxtziowjfoqdy4vrd3ahmzkhejrov@fa5rujatatew>
+ <z27ri5eue43ti6b2te2cbxiow66mtgbnyudoo5cs4quabgbx5r@uipzoxvfoysi>
+ <a8e5adca-8eff-4bbb-a7fa-ce4489b63fa5@riscstar.com>
+ <sl752im2sn5sz6yzc23ctprh3rwryuhgtggsaauxixn3b267ag@6sf5fahu6b5i>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,162 +58,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_VTRspvmOUfrawh@linaro.org>
+In-Reply-To: <sl752im2sn5sz6yzc23ctprh3rwryuhgtggsaauxixn3b267ag@6sf5fahu6b5i>
 
-On Tue, Apr 08, 2025 at 06:48:06PM +0200, Stephan Gerhold wrote:
-> Hi Sultan,
-> 
-> On Tue, Apr 08, 2025 at 08:22:20AM -0700, Sultan Alsawaf wrote:
-> > On Tue, Apr 08, 2025 at 10:59:31AM +0200, Stephan Gerhold wrote:
-> > > On Wed, Dec 11, 2024 at 05:57:32PM -0800, Sultan Alsawaf wrote:
-> > > > From: "Sultan Alsawaf (unemployed)" <sultan@kerneltoast.com>
-> > > > 
-> > > > A redundant frequency update is only truly needed when there is a policy
-> > > > limits change with a driver that specifies CPUFREQ_NEED_UPDATE_LIMITS.
-> > > > 
-> > > > In spite of that, drivers specifying CPUFREQ_NEED_UPDATE_LIMITS receive a
-> > > > frequency update _all the time_, not just for a policy limits change,
-> > > > because need_freq_update is never cleared.
-> > > > 
-> > > > Furthermore, ignore_dl_rate_limit()'s usage of need_freq_update also leads
-> > > > to a redundant frequency update, regardless of whether or not the driver
-> > > > specifies CPUFREQ_NEED_UPDATE_LIMITS, when the next chosen frequency is the
-> > > > same as the current one.
-> > > > 
-> > > > Fix the superfluous updates by only honoring CPUFREQ_NEED_UPDATE_LIMITS
-> > > > when there's a policy limits change, and clearing need_freq_update when a
-> > > > requisite redundant update occurs.
-> > > > 
-> > > > This is neatly achieved by moving up the CPUFREQ_NEED_UPDATE_LIMITS test
-> > > > and instead setting need_freq_update to false in sugov_update_next_freq().
-> > > > 
-> > > > Signed-off-by: Sultan Alsawaf (unemployed) <sultan@kerneltoast.com>
-> > > > ---
-> > > >  kernel/sched/cpufreq_schedutil.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > > > index 28c77904ea74..e51d5ce730be 100644
-> > > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
-> > > >  
-> > > >  	if (unlikely(sg_policy->limits_changed)) {
-> > > >  		sg_policy->limits_changed = false;
-> > > > -		sg_policy->need_freq_update = true;
-> > > > +		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > >  		return true;
-> > > >  	}
-> > > >  
-> > > > @@ -96,7 +96,7 @@ static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
-> > > >  				   unsigned int next_freq)
-> > > >  {
-> > > >  	if (sg_policy->need_freq_update)
-> > > > -		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > > +		sg_policy->need_freq_update = false;
-> > > >  	else if (sg_policy->next_freq == next_freq)
-> > > >  		return false;
-> > > >  
-> > > 
-> > > This patch breaks cpufreq throttling (e.g. for thermal cooling) for
-> > > cpufreq drivers that:
-> > > 
-> > >  - Have policy->fast_switch_enabled/fast_switch_possible set, but
-> > >  - Do not have CPUFREQ_NEED_UPDATE_LIMITS flag set
-> > > 
-> > > There are several examples for this in the tree (search for
-> > > "fast_switch_possible"). Of all those drivers, only intel-pstate and
-> > > amd-pstate (sometimes) set CPUFREQ_NEED_UPDATE_LIMITS.
-> > > 
-> > > I can reliably reproduce this with scmi-cpufreq on a Qualcomm X1E
-> > > laptop:
-> > > 
-> > >  1. I added some low temperature trip points in the device tree,
-> > >     together with passive cpufreq cooling.
-> > >  2. I run a CPU stress test on all CPUs and monitor the temperatures
-> > >     and CPU frequencies.
-> > > 
-> > > When using "performance" governor instead of "schedutil", the CPU
-> > > frequencies are being throttled as expected, as soon as the temperature
-> > > trip points are reached.
-> > > 
-> > > When using "schedutil", the CPU frequencies stay at maximum as long as
-> > > the stress test is running. No throttling happens, so the device heats
-> > > up far beyond the defined temperature trip points. Throttling is applied
-> > > only after stopping the stress test, since this forces schedutil to
-> > > re-evaluate the CPU frequency.
-> > > 
-> > > Reverting this commit fixes the problem.
-> > > 
-> > > Looking at the code, I think the problem is that:
-> > >  - sg_policy->limits_changed does not result in
-> > >    sg->policy->need_freq_update without CPUFREQ_NEED_UPDATE_LIMITS
-> > >    anymore, and
-> > >  - Without sg->policy->need_freq_update, get_next_freq() skips calling
-> > >    cpufreq_driver_resolve_freq(), which would normally apply the policy
-> > >    min/max constraints.
-> > > 
-> > > Do we need to set CPUFREQ_NEED_UPDATE_LIMITS for all cpufreq drivers
-> > > that set policy->fast_switch_possible? If I'm reading the documentation
-> > > comment correctly, that flag is just supposed to enable notifications if
-> > > the policy min/max changes, but the resolved target frequency is still
-> > > the same. This is not the case here, the target frequency needs to be
-> > > throttled, but schedutil isn't applying the new limits.
-> > > 
-> > > Any suggestions how to fix this? I'm happy to test patches with my
-> > > setup.
+Hi Inochi,
+
+On 09:20 Thu 10 Apr     , Inochi Amaoto wrote:
+> On Wed, Apr 09, 2025 at 08:10:53PM -0500, Alex Elder wrote:
+> > On 4/9/25 7:57 PM, Inochi Amaoto wrote:
+> > > > > > > diff --git a/drivers/clk/spacemit/Kconfig b/drivers/clk/spacemit/Kconfig
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..4c4df845b3cb
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/drivers/clk/spacemit/Kconfig
+> > > > > > > @@ -0,0 +1,18 @@
+> > > > > > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > > > > > +
+> > > > > > > +config SPACEMIT_CCU
+> > > > > > > +	tristate "Clock support for SpacemiT SoCs"
+> > > > > > I don't know the answer to this, but...  Should this be a Boolean
+> > > > > > rather than tristate?  Can a SpacemiT K1 SoC function without the
+> > > > > > clock driver built in to the kernel?
+> > > > > > 
+> > > > > I agree to make it a Boolean, we've already made pinctrl driver Boolean
+> > > > > and pinctrl depend on clk, besides, the SoC is unlikely functional
+> > > > > without clock built in as it's such critical..
+> > > > > 
+> > > > I disagree. The kernel is only for spacemit only, and the pinctrl
+> > > Sorry for a mistake, this first "only" should be "not".
 > > 
-> > Thank you for reporting this. As I see it, sg_policy->need_freq_update is
-> > working correctly now; however, sg_policy->limits_changed relied on the broken
-> > behavior of sg_policy->need_freq_update and therefore sg_policy->limits_changed
-> > needs to be fixed.
+> > This is a general problem.  You can't make a bootable
+> > SpacemiT kernel unless you define this as built-in (at
+> > least, that's what Yixun is saying). 
 > 
-> Thanks for the quick reply and the patch!
+> Why not putting the module in the initramfs? I have tested
+> this in quite a lot of boards (Allwinner, rockchip, sophgo,
+> starfive and etc.), all of them work well.
 > 
-> > 
-> > Can you try this patch:
-> > 
-> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > index 1a19d69b91ed3..f37b999854d52 100644
-> > --- a/kernel/sched/cpufreq_schedutil.c
-> > +++ b/kernel/sched/cpufreq_schedutil.c
-> > @@ -82,7 +82,6 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
-> >  		return false;
-> >  
-> >  	if (unlikely(sg_policy->limits_changed)) {
-> > -		sg_policy->limits_changed = false;
-> >  		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> >  		return true;
-> >  	}
-> > @@ -171,9 +170,11 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
-> >  	freq = get_capacity_ref_freq(policy);
-> >  	freq = map_util_freq(util, freq, max);
-> >  
-> > -	if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
-> > +	if (freq == sg_policy->cached_raw_freq && !sg_policy->limits_changed &&
-> > +	    !sg_policy->need_freq_update)
-> >  		return sg_policy->next_freq;
-> >  
-> > +	sg_policy->limits_changed = false;
-> >  	sg_policy->cached_raw_freq = freq;
-> >  	return cpufreq_driver_resolve_freq(policy, freq);
-> >  }
+it works, but not optimal, why delay clk initialzation at modules load stage?
+IMO, it brings more overhead for using initramfs..
+
+but there is always tradeoff and bikeshedding..
+
+> > But we'd really rather *only* build it in to the kernel
+> > for SpacemiT builds. You clearly want to minimize what
+> > must be built in, but what if this is indeed required?
+> > What goes in defconfig?
 > > 
 > 
-> This is working correctly for me, CPU frequency is being throttled again
-> when the temperature trip points are reached.
+> As defconfig is more like for a minimum example system. It
+> is OK to put a y in the defconfig. But for a custom system,
+> you do give a choice for the builder to remove your module
+> in non spacemit system.
 
-Great to hear, thanks for testing that so quickly!
+I get your meaning here to remove/disable at run time stage, while
+we do provide compile time option, if don't want spacemit system
+just disable CONFIG_ARCH_SPACEMIT I mentioned, clk/pinctrl will be gone
 
-> If you send this, feel free to add:
-> 
-> Tested-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+anyway, I'm open for this, make it tristate do provide more choices,
+and it's probably better leave users to decide..
 
-I'll do Reported-and-tested-by if you don't mind. :-)
+Ok, I'm fine with leave clk as tristate with proper default deconfig,
+but if people want to pursue more to make more driver(pinctrl) modulized
+feel free to test and send patches, I just won't put efforts myself.
 
-> 
-> Thanks!
-> Stephan
+thanks
 
-Thanks,
-Sultan
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
