@@ -1,212 +1,344 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010006.outbound.protection.outlook.com [52.103.68.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6D228EA50;
-	Thu, 10 Apr 2025 18:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744310532; cv=fail; b=YAJ7UOKEsPD34HoHk7JvfxwG4BWi3SqH4dKwBJzsb/n7nWhUPiNPYhOb8lRLDiP1cxlDYH8AjfcMake7sDiiETW6X6ZKPyCBZsj3Rokpy7M04MX67d48+JsCqKCJmKZxguN4+q3TsoMwKMc0fDRIKdeuf76V+PglGAogGT6Vq9U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744310532; c=relaxed/simple;
-	bh=AABUJV60jkoyk9pf4/HftEI1WuCcagwn1KgS4S9M+Ec=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OuDOUEzmOI3bYwibLc85/yFa5u+eK/cXTz9Eal2BoFD5Ac7COOdD3dToxCfEtV2tvCGG6q5F+Sofc3lHIEP3EmLYOJEsxXRPiy20r8BD5YAjJpi1v3aP5DKIuhE6bPdy8s06CNLOqjb6ms+pJOk/X6PpudR/v+D6HLNgUMZjG7U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=IvFRmJjz; arc=fail smtp.client-ip=52.103.68.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="IvFRmJjz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qN8gg3Z6EG29QTT3RBsyxluQkiKxVGDyi0kONMtounH2Nr58c5UzkPNPgihKgdzFCnhDhVpOMtTCH/JuiatCXeKIEoqNJC/P8cYZFbEsMuhKYYwYbl9eeMtjsnPiUZcXSVRUUKoeWLwZOSpA4cJq+fPKDq9dkMLW6zbOoXh6KNWfM0Y9Dj9S9x4Ad1ePljKGmsxdc/LJT9d1DTDWbgIOw0OXukc67X8lnTJ4NP5MUfJ0IfDoHB9DYpAB8MYTUPSjufyWkRLeaHcr96GKS0H2tFRB8p/v3FnnXqrrs4irflzYggjffEOKFUue06KOjIUhfsmMrAlHtzlIarWm8Wsd9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LYHWEs+E0rUU0Aaji7IOwn3khWFDU08OfBnWr8FMw+E=;
- b=sRRGSk1Kgg/NKpiI3uwTP4W8HAVn1X3df8O3pAOKaDaLGiQSLLu8cOTH8xoGiTuI+b5u/7isarRa807gSJZsh9lF8cKrkBAc8qBv+vYT/1PtNDb1eyp/MoTLVsL9PIpuqTZugI5fam68CwNg5FXlcwuzb0+ycKmZpnsI6klRbQ5jqBFjAToGUWzdmsIOM26eXyZx9/VjYEF7a5ooyod9MHaIc1yoWNnAmksCq0ovSpygVnmEVFpnxbFaNSbeqEa39gbGLEUWfbanEpKt0BAVxoAz5PS3msT+o0Kj5jqaK4+NNavuoV8On4SjyR8wlcMM3C4/oCd061Cu3JSpWtf6WQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LYHWEs+E0rUU0Aaji7IOwn3khWFDU08OfBnWr8FMw+E=;
- b=IvFRmJjzELgrHQRk5BBv4TYlpPwoDwqA1T0USfcKOb7E4/BZ9HE3kl4OxNFJZjRYHyvYRGgahGeTFClasm5nYKATkV9fIuoGGVzbTRbgTSTsKZoM/4ql/cmlwGCE12MubJySdPPhK9ez5Im1wYmRDmPNEQ9stTTJcrGBAOPh3G7NfmgnDZv31cuIcl+TqAhdkDemiUJM0W70TeOH/7Ml0YwmHuUlJRz+6kdN87ypLX9BxdtZ6a2bHLO68J8bEOmYd1v0rfogF6bYPokbIBf2ihs/ysi9Q2UBkiHbkthffdMnP5n+IR2D30f+1VoIS3hPnCKCFGgMvCZPEj0UlJcvaQ==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by PN0PR01MB8880.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:11d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
- 2025 18:42:05 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 18:42:05 +0000
-Message-ID:
- <PN3PR01MB9597210260BA668139E6E0E6B8B72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Date: Fri, 11 Apr 2025 00:12:02 +0530
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH RESEND v2 1/5] HID: multitouch: Get the contact ID from
- HID_DG_TRANSDUCER_INDEX fields in case of Apple Touch Bar
-From: Aditya Garg <gargaditya08@live.com>
-To: Jiri Kosina <jikos@kernel.org>, Jiri Kosina <jkosina@suse.com>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Kerem Karabay <kekrby@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-References: <PN3PR01MB95973D930911AF73E262F299B8B72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Content-Language: en-US
-In-Reply-To: <PN3PR01MB95973D930911AF73E262F299B8B72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0096.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::13) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:f7::14)
-X-Microsoft-Original-Message-ID:
- <e556d6f2-db86-4d51-a42f-f625e9e8decf@live.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A4628EA4E;
+	Thu, 10 Apr 2025 18:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744310543; cv=none; b=InMYuQVIQ0CVcUV3GYeeUvjMwjyUTUCsM805Wt8o96DIdQkUFJBPLFnFbfPa6lsNcutvU+n/7AinySkKV7wcbQWHjsp+U1I6YpIS9GrcxrVMw24AsDFiaLS0L5c5p11d6h9FCnh9oO4X5LmWFGVPBEVP4oYN4F/39MLqUvm67SQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744310543; c=relaxed/simple;
+	bh=82Ms4EEB+jbHpf3t83nCFYc2SOEuijrmv8IQsEsD83o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ngb7bSrcoxpz6RUy0ukRHg+GkYfci/n6fCmWhNVjX+yZSl7H4ZhAuIDARRZL9ErXm2k2VWL3VsKXXvtzwzfukkdYZjnfmn+H4pamFMt4HOowNx1qpBsoahlkUx+NJwk/w2hGkVm9JLSw+YyeA1dTWL27XlYhqk1P48JIlQ9Tf2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC90C4CEDD;
+	Thu, 10 Apr 2025 18:42:20 +0000 (UTC)
+Message-ID: <b817327c-cad8-45f2-a649-f433795a3605@xs4all.nl>
+Date: Thu, 10 Apr 2025 20:42:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN0PR01MB8880:EE_
-X-MS-Office365-Filtering-Correlation-Id: 48db4b5c-9131-4483-b775-08dd785f63d6
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799006|7092599003|6090799003|5072599009|19110799003|461199028|8060799006|3412199025|440099028|41001999003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cktUbS8veVRvc2pFOEV0YzVHTmVyTG5ROHZHUVNjelBTUjRxTUM5citXM21l?=
- =?utf-8?B?RU1SZmk1OU45dnAydXg5M2Z0cHZnTDNJZUZxM3RFZG5IbmxxOUhuakF2SWdR?=
- =?utf-8?B?S3grTy9nZEtUU1B4VzZyMWRRWFp2QTkyOHJsRFpFbys0R0hkeG00a2xPQkMy?=
- =?utf-8?B?R0FwQTMwQldvMDA1UzMxRGs2V2tpWEtCdElqZ2FRTUIwbHhiK1hFcE5QNlVv?=
- =?utf-8?B?cE9BU2VXS2tGc3A0ZzJTanJTNStTYmtya2ZCZkNBK1NIT0xNRXRvdVNYQjdn?=
- =?utf-8?B?VFYzU2JheDAvSDFGZlpSRS8vVVlxM0MvZHAyVWVRb3hheFh4RzZxVEcyWkJx?=
- =?utf-8?B?cGhRdkdBd2V5K0VVd0NycVdPSjY0RTN5YlIrNStRVFdETzVKUXFRaUZwSjFP?=
- =?utf-8?B?NlVFUWc3N1J6a3orZVBVVFRLWHd3ZFVJNHBFTGJidGVXSjFyRE5uVUdMQXlZ?=
- =?utf-8?B?NWFrYktFcjhFZEJ2ZnZnQ3dVNnNKbW1HTU1jRVpBUUF6YVVVUUhkcnl5VFlm?=
- =?utf-8?B?cXZaN0ZjQ2t6cGYzNDdIN2pjMjY2TEpxRm1WU1JHY3YrVmpTTnRGNWZ3TWhp?=
- =?utf-8?B?TXhYWlovQ0o0TVpoMVZidzd3U3lRMTdiQUp2VzVmVEZMTXo3L1pGbHRSOUx2?=
- =?utf-8?B?eUxGUSt1WERpVVN6NWhaZ1VjMXFaZktLM1lpSzBnUCtTNDc5Z2N6WmVlNGE1?=
- =?utf-8?B?cFUyanlYd1NaWFZjYTFLZEpvanpUNkxNL1FwZS9wYWloZkh6amRFNXBHMSt4?=
- =?utf-8?B?OFJCQlNhOFBUZk45ZUpDdEtaMGozd09ZVFkxUElUWnF0YkdhMTYwb2JRdEtZ?=
- =?utf-8?B?cEYvVXNLVXFleGpFYzlpZXlvdUZQUFlvUHQrc1p2TndCMWZvTW1zcTZkVWVG?=
- =?utf-8?B?dDlCKzZYSHhmU28xVHZOVlBHSy91azZMVXdvVHlQQ3NSbW16NGhYaCtoaDVK?=
- =?utf-8?B?cHc1d0srL3FFamxvcVd3Y3NYZ1hvRFp3ekdtWmsyWjJjMEtxMHVidXZScjdM?=
- =?utf-8?B?Rm1GUE5wZk5HWFU0dGFSdVQ0WEt5OW5ISlRGc3F1Z0dPMlFidGFkaVJUMVZz?=
- =?utf-8?B?d3JGQUtuRlU3UHg0OTkyTTE2dVhXVVVZdU9ITnZpNzVaSzd4TW02bFU1RHR5?=
- =?utf-8?B?L2s3M2J0ZWt6VVVIN0FnUUR6TmR5dktNVjJNdGpJSUNlZGdOdHgzVEYxdGRo?=
- =?utf-8?B?T2hZNmpGTXRrWVkwa3RwYzBhaUJxNzVWTndSaWdzc0IxVDNlaExuM0pXa3dI?=
- =?utf-8?B?NDlyeXlKbWFEekVLMFp6UkZFQ1g3bWpyS2tPYzh2MGFMMEhHMEk0em16S2hP?=
- =?utf-8?B?emxmSHNEclZFVm9FOGErbFYxamJ5SmNkMkZIZnBWU2ZBdC9iZFdsYjI0cFF0?=
- =?utf-8?B?OXY5VmpSZEd1R0dSRjZ4WE9ja2FTN0NBWDZzRXhyMmNSTHR0Wmx4QkIzTWIy?=
- =?utf-8?B?a1czUmM2R2ZmUTNtMktnaE9EcmJ2aCtLVnN1RVAvdGptZDZ2UWp0UDRZQ0Ry?=
- =?utf-8?B?Q1pIUEF0QzhSdU1mUTQ5YTRhV1MvMUlIVDdpdHhZSTIybHN5b09lRUFFQmU5?=
- =?utf-8?Q?jIHLeSGxhC7hEDbEibx0Uv7kU=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bzRYNE9Iaklibnl3Z3A4SDJkNm43Rm5HV2o2T2pkRnNlbWI3N1BpQWhZOHU3?=
- =?utf-8?B?T1MreHN1bTNJWkwzT0hONGpPME44Ujc5VTBwQmh4T2xqUkM0T2twaHhyYzF5?=
- =?utf-8?B?UXF1MDBFQ2gxZU1pOHlpWWpxRzlieExjSEZIbFVmUFUxZmlqTDZQOFEwNGJJ?=
- =?utf-8?B?VlVFS2NWY1ZHR0N1VTRVSmRyN1V4V1VCQVcyZWtYRDgwanpsRWFMTWgvOVJW?=
- =?utf-8?B?Ri9UamtIb2FEUzMza05sT1RCM01saW9FK0J1b1g3VktZeGtGSUJTRy93OFR0?=
- =?utf-8?B?N1oxanEvZVNqZGJQa2xOSEhxRmFWdVgyaGU2NFBjUGRZa0VpTklFZkI0cWlY?=
- =?utf-8?B?WGFYYnN0UzM2V2NmdHRZTGloL2paMjVQWk9HR2pnenVKRTQ4SHBWVENLOVZZ?=
- =?utf-8?B?SHI1dEtDZEVvR3cwUGlRdWdlcHNTTlAzTXFWUkdZcGhkaTA1OWhKRzFNNlVu?=
- =?utf-8?B?UTZCK1ZZOVlpVC94cU9td3owbElmU3VMWFNoVjE5WXpEekw2dmZ6WFlrQTg1?=
- =?utf-8?B?bjg1V1k5SDkzY1dBcmt4ckF5MEhUVXFpd0tFbHlESmNtTndWZStGdmtOa0pY?=
- =?utf-8?B?ZFdISmNIRjFKQ0YyNG9nV1M3ZEJsb1pKZmR4QWVIQzdJaEwzSUoxVGVENVJw?=
- =?utf-8?B?VU1mOWVtd2lySS9XWVpKc25RdVdTSXVscENjUEFqNThMZTJkbTVNTXRySEpi?=
- =?utf-8?B?aHV2dWFQbVpDb3A3OHNoNXNPUllDV2FLVWhkaVo1bk80Sk8vakxmLzJla0ln?=
- =?utf-8?B?Q3REZjdQa2lzR3ByUytRMHFna2JqNGk5NVJIY3hJMmUvWnlHNkd6SUtDV2U2?=
- =?utf-8?B?QnR2V25Oc2ZSNDJQUzV5TEZ0VHBzb01DZUtMZ3kyWS9JZW84L3NZbXFNWWtL?=
- =?utf-8?B?ZjU0eW1KUVZ4R01aQ2QzbnpMKzg1OUNGeVFIcExFYmJnRVlvVDJxNDBiejVD?=
- =?utf-8?B?eW5NYzhVSEtvOXhFNGd3SUhORkc0U2x0TFh2SDFvZmJONEJxTGljTXVqY0lp?=
- =?utf-8?B?K2NnM1JsRjduQXc0cFRzQ1d4eE1MQkV2Z2NNOGVvbWx2RTNybHJmZkJWUmNN?=
- =?utf-8?B?Y2grT05OTklrYUZiRnZ6Q3pWKzRYT2pSRnlFMDFPRFpYbGxzc1QzUUhRY1RF?=
- =?utf-8?B?MUFHWFJPTjBqNy93M1VaQXNNUExCQ3cvYUR6S1A3U29obUZLNE4xNHVkZ3Vh?=
- =?utf-8?B?UWNxMm52WDdQUFkxbmhKcSttZ1ZGQkdZTk01N1phV0Nwd1ZZd3pwYzV6WC9J?=
- =?utf-8?B?ZUJRckgydEdqTUZReXVqb3RoVjMvZ2ZobTViR3FoUVFFblByN1llOE4zUUxk?=
- =?utf-8?B?WHB4Rzd5aVVPa3dWbEFURVB4ZUU3RkRFTmJpVjBmdUNqeHBQVC8wb0s4OVRv?=
- =?utf-8?B?WFAzSmk0TXYrN2hsd2dsdWFvOFh2ZldOVFlEUG9pSW15cEZFcDhVSmRObmha?=
- =?utf-8?B?ZlVSbWRNeXhrWVIyR2NoOGVxQ01TYlcycnRLYnhJekN0dkliV1lvcGgwbEZm?=
- =?utf-8?B?NXNnK1l4K0dQaUNmcUVEdW9vcnk4d3dNWjlxQjVINC9yc1dEM2pDakZwOFN0?=
- =?utf-8?B?RkNkcElZK1N0ck15NW1VUWhsZmNRaVAzc1V1UWd6U0h3R3lJRkQ0WlpZc2Ri?=
- =?utf-8?B?ZWxWL3dwQUdtRURCQ2N2Wk9waHMwNnNKRlA5cFhnd05wTjg4Q3BxVk0yNGs3?=
- =?utf-8?B?Ukk1YTlFWm1Ya1VGdzgrTFdsYjRkWHpHYUpkVm5SUElZM253Nk93d1pkeXNk?=
- =?utf-8?Q?M+mR7+Lody8YBHYRXiJw1A6Qol1K082H2x3QANj?=
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48db4b5c-9131-4483-b775-08dd785f63d6
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 18:42:05.1255
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB8880
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] media: mc: add manual request completion
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Tiffany Lin <tiffany.lin@mediatek.com>,
+ Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+ Yunfei Dong <yunfei.dong@mediatek.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, kernel@collabora.com,
+ linux-media@vger.kernel.org,
+ Sebastian Fricke <sebastian.fricke@collabora.com>
+References: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
+ <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-1-5b99ec0450e6@collabora.com>
+ <20250410175010.GF27870@pendragon.ideasonboard.com>
+ <829f05dc918a9a8a1848ecb68d175c8d7f892584.camel@collabora.com>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <829f05dc918a9a8a1848ecb68d175c8d7f892584.camel@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Kerem Karabay <kekrby@gmail.com>
+On 10/04/2025 20:26, Nicolas Dufresne wrote:
+> Hi Hans, 
+> 
+> another question for you below.
+> 
+> Le jeudi 10 avril 2025 à 20:50 +0300, Laurent Pinchart a écrit :
+>> Hi Nicolas,
+>>
+>> Thank you for the patch.
+>>
+>> On Thu, Apr 10, 2025 at 11:39:56AM -0400, Nicolas Dufresne wrote:
+>>> From: Hans Verkuil <hverkuil@xs4all.nl>
+>>>
+>>> By default when the last request object is completed, the whole
+>>> request completes as well.
+>>>
+>>> But sometimes you want to manually complete a request in a driver,
+>>> so add a manual complete mode for this.
+>>
+>> I didn't immediately understand this was about delaying completion of
+>> the request. It would be nice to make that more explicit in the
+>> commit
+>> message and in the documentation of
+>> media_request_mark_manual_completion(). A sample use case would also
+>> help.
+>>
+>>> In req_queue the driver marks the request for manual completion by
+>>> calling media_request_mark_manual_completion, and when the driver
+>>> wants to manually complete the request it calls
+>>> media_request_manual_complete().
+>>>
+>>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> 
+> The CI is not happy that the Sob did not match the author, shall we
+> ignore the CI or edit one of the two ?
 
-In Apple Touch Bar, the contact ID is contained in fields with the
-HID_DG_TRANSDUCER_INDEX usage rather than HID_DG_CONTACTID, thus differing
-from the HID spec. Add a quirk for the same.
+It's an old patch, so just edit the Sob and drop the '-cisco' part.
+I stopped using that alias since it caused problems like this.
 
-Acked-by: Benjamin Tissoires <bentiss@kernel.org>
-Signed-off-by: Kerem Karabay <kekrby@gmail.com>
-Co-developed-by: Aditya Garg <gargaditya08@live.com>
-Signed-off-by: Aditya Garg <gargaditya08@live.com>
----
- drivers/hid/hid-multitouch.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Regards,
 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index e50887a6d..6e7f34a47 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -73,6 +73,7 @@ MODULE_LICENSE("GPL");
- #define MT_QUIRK_FORCE_MULTI_INPUT	BIT(20)
- #define MT_QUIRK_DISABLE_WAKEUP		BIT(21)
- #define MT_QUIRK_ORIENTATION_INVERT	BIT(22)
-+#define MT_QUIRK_APPLE_TOUCHBAR		BIT(23)
- 
- #define MT_INPUTMODE_TOUCHSCREEN	0x02
- #define MT_INPUTMODE_TOUCHPAD		0x03
-@@ -625,6 +626,7 @@ static struct mt_application *mt_find_application(struct mt_device *td,
- static struct mt_report_data *mt_allocate_report_data(struct mt_device *td,
- 						      struct hid_report *report)
- {
-+	struct mt_class *cls = &td->mtclass;
- 	struct mt_report_data *rdata;
- 	struct hid_field *field;
- 	int r, n;
-@@ -649,7 +651,11 @@ static struct mt_report_data *mt_allocate_report_data(struct mt_device *td,
- 
- 		if (field->logical == HID_DG_FINGER || td->hdev->group != HID_GROUP_MULTITOUCH_WIN_8) {
- 			for (n = 0; n < field->report_count; n++) {
--				if (field->usage[n].hid == HID_DG_CONTACTID) {
-+				unsigned int hid = field->usage[n].hid;
-+
-+				if (hid == HID_DG_CONTACTID ||
-+				   (cls->quirks & MT_QUIRK_APPLE_TOUCHBAR &&
-+				   hid == HID_DG_TRANSDUCER_INDEX)) {
- 					rdata->is_mt_collection = true;
- 					break;
- 				}
-@@ -827,6 +833,14 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
- 						     EV_KEY, BTN_TOUCH);
- 			MT_STORE_FIELD(tip_state);
- 			return 1;
-+		case HID_DG_TRANSDUCER_INDEX:
-+			/*
-+			 * Contact ID in case of Apple Touch Bars is contained
-+			 * in fields with HID_DG_TRANSDUCER_INDEX usage.
-+			 */
-+			if (!(cls->quirks & MT_QUIRK_APPLE_TOUCHBAR))
-+				return 0;
-+			fallthrough;
- 		case HID_DG_CONTACTID:
- 			MT_STORE_FIELD(contactid);
- 			app->touches_by_report++;
--- 
-2.49.0
+	Hans
+
+> 
+> Nicolas
+> 
+>>> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+>>> ---
+>>>  drivers/media/mc/mc-request.c | 38
+>>> ++++++++++++++++++++++++++++++++++++--
+>>>  include/media/media-request.h | 36
+>>> +++++++++++++++++++++++++++++++++++-
+>>>  2 files changed, 71 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-
+>>> request.c
+>>> index
+>>> 5edfc2791ce7c7485def5db675bbf53ee223d837..398d0806d1d274eb8c454fc5c
+>>> 37b77476abe1e74 100644
+>>> --- a/drivers/media/mc/mc-request.c
+>>> +++ b/drivers/media/mc/mc-request.c
+>>> @@ -54,6 +54,7 @@ static void media_request_clean(struct
+>>> media_request *req)
+>>>  	req->access_count = 0;
+>>>  	WARN_ON(req->num_incomplete_objects);
+>>>  	req->num_incomplete_objects = 0;
+>>> +	req->manual_completion = false;
+>>>  	wake_up_interruptible_all(&req->poll_wait);
+>>>  }
+>>>  
+>>> @@ -313,6 +314,7 @@ int media_request_alloc(struct media_device
+>>> *mdev, int *alloc_fd)
+>>>  	req->mdev = mdev;
+>>>  	req->state = MEDIA_REQUEST_STATE_IDLE;
+>>>  	req->num_incomplete_objects = 0;
+>>> +	req->manual_completion = false;
+>>>  	kref_init(&req->kref);
+>>>  	INIT_LIST_HEAD(&req->objects);
+>>>  	spin_lock_init(&req->lock);
+>>> @@ -459,7 +461,7 @@ void media_request_object_unbind(struct
+>>> media_request_object *obj)
+>>>  
+>>>  	req->num_incomplete_objects--;
+>>>  	if (req->state == MEDIA_REQUEST_STATE_QUEUED &&
+>>> -	    !req->num_incomplete_objects) {
+>>> +	    !req->num_incomplete_objects && !req-
+>>>> manual_completion) {
+>>>  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+>>>  		completed = true;
+>>>  		wake_up_interruptible_all(&req->poll_wait);
+>>> @@ -488,7 +490,7 @@ void media_request_object_complete(struct
+>>> media_request_object *obj)
+>>>  	    WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
+>>>  		goto unlock;
+>>>  
+>>> -	if (!--req->num_incomplete_objects) {
+>>> +	if (!--req->num_incomplete_objects && !req-
+>>>> manual_completion) {
+>>>  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+>>>  		wake_up_interruptible_all(&req->poll_wait);
+>>>  		completed = true;
+>>> @@ -499,3 +501,35 @@ void media_request_object_complete(struct
+>>> media_request_object *obj)
+>>>  		media_request_put(req);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(media_request_object_complete);
+>>> +
+>>> +void media_request_manual_complete(struct media_request *req)
+>>> +{
+>>> +	unsigned long flags;
+>>> +	bool completed = false;
+>>> +
+>>> +	if (WARN_ON(!req))
+>>> +		return;
+>>> +	if (WARN_ON(!req->manual_completion))
+>>> +		return;
+>>> +
+>>> +	spin_lock_irqsave(&req->lock, flags);
+>>> +	if (WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
+>>> +		goto unlock;
+>>> +
+>>> +	req->manual_completion = false;
+>>> +	/*
+>>> +	 * It is expected that all other objects in this request
+>>> are
+>>> +	 * completed when this function is called. WARN if that is
+>>> +	 * not the case.
+>>> +	 */
+>>> +	if (!WARN_ON(req->num_incomplete_objects)) {
+>>> +		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+>>> +		wake_up_interruptible_all(&req->poll_wait);
+>>> +		completed = true;
+>>> +	}
+>>> +unlock:
+>>> +	spin_unlock_irqrestore(&req->lock, flags);
+>>> +	if (completed)
+>>> +		media_request_put(req);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(media_request_manual_complete);
+>>> diff --git a/include/media/media-request.h b/include/media/media-
+>>> request.h
+>>> index
+>>> d4ac557678a78372222704400c8c96cf3150b9d9..645d18907be7148ca50dcc924
+>>> 8ff06bd8ccdf953 100644
+>>> --- a/include/media/media-request.h
+>>> +++ b/include/media/media-request.h
+>>> @@ -56,6 +56,10 @@ struct media_request_object;
+>>>   * @access_count: count the number of request accesses that are in
+>>> progress
+>>>   * @objects: List of @struct media_request_object request objects
+>>>   * @num_incomplete_objects: The number of incomplete objects in
+>>> the request
+>>> + * @manual_completion: if true, then the request won't be marked
+>>> as completed
+>>> + * when @num_incomplete_objects reaches 0. Call
+>>> media_request_manual_complete()
+>>> + * to set this field to false and complete the request
+>>
+>> I'd drop "set this field to false and " here.
+>>
+>>> + * if @num_incomplete_objects == 0.
+>>
+>>  * after @num_incomplete_objects reaches 0.
+>>
+>>>   * @poll_wait: Wait queue for poll
+>>>   * @lock: Serializes access to this struct
+>>>   */
+>>> @@ -68,6 +72,7 @@ struct media_request {
+>>>  	unsigned int access_count;
+>>>  	struct list_head objects;
+>>>  	unsigned int num_incomplete_objects;
+>>> +	bool manual_completion;
+>>>  	wait_queue_head_t poll_wait;
+>>>  	spinlock_t lock;
+>>>  };
+>>> @@ -218,6 +223,35 @@ media_request_get_by_fd(struct media_device
+>>> *mdev, int request_fd);
+>>>  int media_request_alloc(struct media_device *mdev,
+>>>  			int *alloc_fd);
+>>>  
+>>> +/**
+>>> + * media_request_mark_manual_completion - Set manual_completion to
+>>> true
+>>> + *
+>>> + * @req: The request
+>>> + *
+>>> + * Mark that the request has to be manually completed by calling
+>>> + * media_request_manual_complete().
+>>> + *
+>>> + * This function should be called in the req_queue callback.
+>>
+>> s/should/shall/ unless it's not a hard requirement. Any way to catch
+>> incorrect call patterns ?
+>>
+>>> + */
+>>> +static inline void
+>>> +media_request_mark_manual_completion(struct media_request *req)
+>>> +{
+>>> +	req->manual_completion = true;
+>>> +}
+>>> +
+>>> +/**
+>>> + * media_request_manual_complete - Set manual_completion to false
+>>
+>> The main purpose of the function is to complete the request, not
+>> setting
+>> manual_completion to false.
+>>
+>>> + *
+>>> + * @req: The request
+>>> + *
+>>> + * Set @manual_completion to false, and if @num_incomplete_objects
+>>> + * is 0, then mark the request as completed.
+>>> + *
+>>> + * If there are still incomplete objects in the request, then
+>>> + * WARN for that since that suggests a driver error.
+>>
+>> If that's an error then I'd document it more explicitly, as the first
+>> sentence makes it sound that both cases are valid. Maybe
+>>
+>>  * This function completes a request that was marked for manual
+>> completion by an
+>>  * earlier call to media_request_mark_manual_completion(). The
+>> request's
+>>  * @manual_completion flag is reset to false.
+>>  *
+>>  * All objects contained in the request must have been completed
+>> previously. It
+>>  * is an error to call this function otherwise. The request will not
+>> be
+>>  * completed in that case, and the function will WARN.
+>>
+>>> + */
+>>> +void media_request_manual_complete(struct media_request *req);
+>>> +
+>>>  #else
+>>>  
+>>>  static inline void media_request_get(struct media_request *req)
+>>> @@ -336,7 +370,7 @@ void media_request_object_init(struct
+>>> media_request_object *obj);
+>>>   * @req: The media request
+>>>   * @ops: The object ops for this object
+>>>   * @priv: A driver-specific priv pointer associated with this
+>>> object
+>>> - * @is_buffer: Set to true if the object a buffer object.
+>>> + * @is_buffer: Set to true if the object is a buffer object.
+>>>   * @obj: The object
+>>>   *
+>>>   * Bind this object to the request and set the ops and priv values
+>>> of
+> 
 
