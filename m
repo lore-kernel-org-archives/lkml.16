@@ -1,128 +1,87 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FEF1D61BB;
-	Thu, 10 Apr 2025 07:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA662A8C1
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270231; cv=none; b=e86nee5k5MNDbbmSbG33NQZmzLBF9so6/TEpctkixLhKCSHjV/zUJxf5Oe3IOWsxOs7kmb8qlZOnlxqVVyAAySs5McDTCrF16a86VMlInitqAChDJUAK0PSg1wYAUnRPcHobDPTJBehkM+mK5KNQ1pld4gjJqFT0EE9glkBsfP8=
+	t=1744270274; cv=none; b=eQTBMJJo6Z92YcSvSN0ShfIxcnda9U1je98QDfE4G5mkOujluxXdrfLrCGB0UvP+C7y3oXEdmwYSeY2eqMTmnOzISNbxF2QB9mZtTZetUtsl7tsqeY+yPmLtNcg8aZmK6h7uLocPTHynwIoR75XGBX7Qbj5vnmV09kNhKP6ib5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270231; c=relaxed/simple;
-	bh=iFW+QfyIwEbGD+j1q5thV7kMOb3+F5ptBk/zfUifQ5I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KWTVwvClIiXeHKz2izooH1o6mI4lU0e2Je90DmNhn7XpOQG9i6j/hiuGVw+/At8PKTzg7BcJn7FAHt9sgLNQkCpAYyf6TKaoZ83RLMpZV9Whxn4EhKXIQqK3Km+BmMHZYkSRx/2OFCwZN7knfJ/SMCJo7SbWKGRM7fQ1+qM0ERU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-523fa0df55dso1537482e0c.1;
-        Thu, 10 Apr 2025 00:30:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744270228; x=1744875028;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9o1fBfdX3QCvvMjGP9Bb3+iIudc9m8AmMEftLcu43No=;
-        b=BiC0slc7q6cMyUMFEiBHhvs/68vibZA2bTv7SvDgR+pg02qOQzu+LFkm49W8HNHoPz
-         oKS0qoyIlnNEYyceOA+UIY04anMh4X0ZD7w9LfNeJOyyPCpF9m8ZffmW143JiqhbSQEM
-         whvbx1ZuXn/ZUAk1VE662a+A+vvXGRQUAkjng8e9hoM6NztJPGyq7bKsXMQjqiUVU3SC
-         FanLMVZg8sXqAJE/6Eq0zCDzP9ekFTecGcA4hrPiTnn0kxAfFDM6t8n7lg4c3temX2ZJ
-         jAHweZcCyBZTaz9clz6h3HbgmkK99DbxXt/upxdp0msvqpjoDtEZUeHmPWlvRRwMlVVZ
-         v+Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSiUg+vBC6J4Uuj8QqNQ9euW0fr+aBNVAawI9I54UehftYMlFN4HG9uo0Egx5ZfiIRz6XXe/JZfMghLTu0GUI=@vger.kernel.org, AJvYcCX8fvHIxgJlQPeY+71uppnTYy+WJ85lG6abE9Coc7nGiPZY2acRHSrF1rEhKF5qb/dNwtJqPQp/O2DSBJ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmGCH4Ilr8BVIvUFxzrObj+7N6wsM0cW+38+VGozvSqYpEws1M
-	lsMVegiejN/uVox0MkkKDbCyVx+2aLbUk2SK1FSinM/laoZRn/zMNvdC061IEgg=
-X-Gm-Gg: ASbGncvgF35mXmj57ZSZregf56TGxoVp63dJ6A3CLVpAnjUx/v1IMTKnn6gK9PQHfvt
-	1HI7lieTNCVFuiuJJ9FHWSZFcBETTaXYlUsgWx3oeeYGdUw+KbJ2DEyTLkARNkVReSz1hWxPQuT
-	M2dY+YR5ut0URr35mO8TAcSCgPZwhocIkuXQVadhtf7rKFNXtNFRtE7e0PX/fPvOgfuw8yO7l05
-	Dscp0/c5zoIzQLxtMeTowXZwH/xnzwPY6RUGrKrnQCwohynGpcE5/yIzgnK24AhM97WODfsImZe
-	ZgTmsDzdeBA93wiSqM/VN6r2RNwhIECswqFAcO0IroEqvo5b03/vcZ4EAcy9c20IoUInaleGcxX
-	CTGWldyJzNj1rKA==
-X-Google-Smtp-Source: AGHT+IEU3c+ZXC9asy7zunAQLhEms0N8OOIiZxDv5KYjW91SpzndoqVlpeU34scyZLcCXrM9e8Hpow==
-X-Received: by 2002:a05:6102:5548:b0:4b2:9eee:666e with SMTP id ada2fe7eead31-4c9d4246c31mr840038137.4.1744270227911;
-        Thu, 10 Apr 2025 00:30:27 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c98afd43sm487261137.20.2025.04.10.00.30.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 00:30:27 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86dc3482b3dso1581657241.0;
-        Thu, 10 Apr 2025 00:30:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUDyzqS+SZVzpGKdc4WgLTHbdKFIs1PrY3SnwOjywJBvL9FbNgGuXYoLMt4YXKQbrc4tFwnI8HvDxaWNbQ=@vger.kernel.org, AJvYcCVfJHB1GPx78fqB6w9z2wWNrszqOt/qJCqwSOkEFtbTXSgljuW13MK8giagBaj+ABbFzQbImL1dWc+t/gb0YaM=@vger.kernel.org
-X-Received: by 2002:a67:f5c7:0:b0:4c3:b75:16e6 with SMTP id
- ada2fe7eead31-4c9d3fc4c38mr837750137.10.1744270227560; Thu, 10 Apr 2025
- 00:30:27 -0700 (PDT)
+	s=arc-20240116; t=1744270274; c=relaxed/simple;
+	bh=O9SKMc3mxvMEK+Nr0d+TGWyr+wDX8pqQ3+eJOrzSuiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F+UTgWnVp+AnHz7hseA8lrmf/X+1/n1foB5mCcUmTr1fnyn9woCWlizytnjWpSXT8tG6n2ySj7rGPO3mx6bv9CHqBq0LGov+5uoZJnltrvEGZXbc7GSQq6AA/UJTGKsXIw9JIpz6z/6blguMJ56CSt3G0mxz2bdI4FgV0WvlnGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a2555q3m; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a2555q3m"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ou7lB6hxNQI+3XpnxH4z+mXX/Bc+b+6P3IC4LgxM5zU=; b=a2555q3mGBrH0tczJfEiCmNIyy
+	doL0XXKFl4zE+j6DevGS3R2h15nU2AJ20kJE4oQtydwv8c6LJCTeFW4lyaT8BndSnkTcXucyPpZNR
+	6q4kEPMhhpDelu9kBbO1qGvwgFw8sJ9AfrxBsUNkizM8h49xehGCOAN7cyh5D10MfWfto9VCKr+dL
+	PQxg+9pEHph0KKVkSLrZS5koa+kQnniq0yOoM+DviGYpwyg5sGN+BBaG98tNDJNOi5ElfSMkbWte/
+	kfKE/epa+MplTNLwB1UY3TaCYjEJL6kjGdbaea693du6Pnw4F/4prxUtHpG356Grh798cegE5fOQ0
+	UARrfiIQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2mNP-00000002YmB-0xu7;
+	Thu, 10 Apr 2025 07:31:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 419F83003C4; Thu, 10 Apr 2025 09:31:07 +0200 (CEST)
+Date: Thu, 10 Apr 2025 09:31:07 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@intel.com>, Xin Li <xin@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 00/20] x86 MSR in-kernel API type cleanup and rename
+Message-ID: <20250410073107.GS9833@noisy.programming.kicks-ass.net>
+References: <20250409202907.3419480-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409061129.136788-1-fujita.tomonori@gmail.com>
- <CANiq72mbci8kxEx5jrq=HVc6WKuJqq8NCLzNsjH1wFcJNoHm+w@mail.gmail.com>
- <CAMuHMdWtgSjxeGYJVNzeWPOCd9nUWeKQnCtFQaROQ1o=r_-QwQ@mail.gmail.com> <ab0490cc-ce86-4492-a088-fd2ae03f1475@app.fastmail.com>
-In-Reply-To: <ab0490cc-ce86-4492-a088-fd2ae03f1475@app.fastmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 09:30:15 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXk+MfwPtm_whA2nWde0t_Ft=n=4xCO9hqAm-yuS+He5w@mail.gmail.com>
-X-Gm-Features: ATxdqUEn3DKP5E0KW6CdNHS_yejpIaRbcErnLPFBtAL1D8Oqr0CTfb75MAhqP40
-Message-ID: <CAMuHMdXk+MfwPtm_whA2nWde0t_Ft=n=4xCO9hqAm-yuS+He5w@mail.gmail.com>
-Subject: Re: [PATCH v1] um: fix incompatible argument type in iounmap()
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>, 
-	Stephen Bates <sbates@raithlin.com>, Danilo Krummrich <dakr@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409202907.3419480-1-mingo@kernel.org>
 
-Hi Arnd,
+On Wed, Apr 09, 2025 at 10:28:47PM +0200, Ingo Molnar wrote:
 
-On Wed, 9 Apr 2025 at 21:07, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wed, Apr 9, 2025, at 19:07, Geert Uytterhoeven wrote:
-> > On Wed, 9 Apr 2025 at 16:48, Miguel Ojeda
-> > <miguel.ojeda.sandonis@gmail.com> wrote:
-> >> On Wed, Apr 9, 2025 at 8:16=E2=80=AFAM FUJITA Tomonori
-> >> <fujita.tomonori@gmail.com> wrote:
-> >> >
-> >> > Align iounmap() signature with other architectures.
-> >>
-> >> Most indeed have `volatile`, but nios2 and m68k don't -- Cc'ing them
-> >> just in case.
-> >
-> > Indeed. Apparently the volatile keyword has not always been there...
-> > Why does iounmap() need the volatile keyword?
-> > Why does pci_iounmap() not have the volatile keyword?
->
-> In the old days, a lot of drivers marked MMIO pointers
-> as 'volatile void *' rather than 'void __iomem *', so iounmap()
-> and the readl() family of accessors need to be compatible
-> with that type to avoid a warning.
->
-> By the time we introduced pci_iomap()/pci_iounmap(), this was
-> no longer common, so they never needed it.
+> Ingo Molnar (20):
+>   x86/msr: Standardize on u64 in <asm/msr.h>
+>   x86/msr: Standardize on u64 in <asm/msr-index.h>
+>   x86/msr: Use u64 in rdmsrl_amd_safe() and wrmsrl_amd_safe()
+>   x86/msr: Use u64 in rdmsrl_safe() and paravirt_read_pmc()
+>   x86/msr: Harmonize the prototype and definition of do_trace_rdpmc()
+>   x86/msr: Standardize on 'u32' MSR indices in <asm/msr.h>
 
-IC.
+Yay, thanks!
 
-> In theory we could go through all the old drivers and
-> also remove the 'volatile' markers from struct members that
-> store __iomem pointers, but there is no practical benefit to
-> that.
+>   x86/msr: Rename 'rdmsrl()' to 'rdmsrq()'
+>   x86/msr: Rename 'wrmsrl()' to 'wrmsrq()'
+>   x86/msr: Rename 'rdmsrl_safe()' to 'rdmsrq_safe()'
+>   x86/msr: Rename 'wrmsrl_safe()' to 'wrmsrq_safe()'
+>   x86/msr: Rename 'rdmsrl_safe_on_cpu()' to 'rdmsrq_safe_on_cpu()'
+>   x86/msr: Rename 'wrmsrl_safe_on_cpu()' to 'wrmsrq_safe_on_cpu()'
+>   x86/msr: Rename 'rdmsrl_on_cpu()' to 'rdmsrq_on_cpu()'
+>   x86/msr: Rename 'wrmsrl_on_cpu()' to 'wrmsrq_on_cpu()'
+>   x86/msr: Rename 'mce_rdmsrl()' to 'mce_rdmsrq()'
+>   x86/msr: Rename 'mce_wrmsrl()' to 'mce_wrmsrq()'
+>   x86/msr: Rename 'rdmsrl_amd_safe()' to 'rdmsrq_amd_safe()'
+>   x86/msr: Rename 'wrmsrl_amd_safe()' to 'wrmsrq_amd_safe()'
+>   x86/msr: Rename 'native_wrmsrl()' to 'native_wrmsrq()'
+>   x86/msr: Rename 'wrmsrl_cstar()' to 'wrmsrq_cstar()'
 
-Most drivers must have been fixed already, as m68k allmodconfig
-does not complain.  Still, I guess I should update m68k to match the
-others, right? (FTR, that also builds fine)
+I'm so going to be typo-ing this for a while, but yeah, I suppose these
+are better names.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>	
