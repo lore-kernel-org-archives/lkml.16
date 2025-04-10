@@ -1,110 +1,114 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC26281369;
-	Thu, 10 Apr 2025 10:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0994F4690;
+	Thu, 10 Apr 2025 10:58:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744282593; cv=none; b=CsvICx/YAMtyX60OsH8EiMKHL/A7jPX95x0au6Dxm785vZFHA7OVrfRZ2eYdeCdlNw7Fi9+EBPQk/APT08BKP3ehRES8fNcDwxwTHpdJWckl/k4eFIz9qlXWNcgLkG0HO++nMpG1w3hkG/B8VCi/o9hr6y5KHf3xhOaggmUAHxM=
+	t=1744282734; cv=none; b=EtrP0TOJ+uwUfhXjTXov/t8fZU4sKwuKt45+QNnb+vwwBbSFhBAGBuBj1whdDMorEJpGJzBFye4wVhhhlyUPAEL4eJ4+FvyZCQWG27GSfEBSvLTc4GjZKbP8pbSnkdMKQuABzIeCw3vkxd+HBvBoTtGO5OSd95tF7pj21wGduUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744282593; c=relaxed/simple;
-	bh=qmUb5SCG0FCeX7A0GUYhS+E7gdF+eDJWyP8VwWfIE/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VqwmXKMbhopiPXTHec3Nvq9NZX3QgPMnjRyjZ5FNXcUfAUMgtUaUkfG7pVUaviGL3xiWB8WvURcAqi8iaBoVfjE+S1Typk6q5ySw7iezKVXan84uLiVFxcXXZAKrP1BXJKyX72Ko1X4lAcO5oDwRrpqQyHOiOvsCAsXwcXsgz/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3vcKCSTy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ELgFsRcH; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1744282734; c=relaxed/simple;
+	bh=I85KrcPVNbeEsFqHofgSAfg3Fa6FXvobyZxNEDeG1Mg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=El7As5W/hGvWBtlibSqPp2FtRsEAwaS9LRYBJBQB4z8G9xmJcxRUSoWbrTJT6FMZn9cPXv6HV9ufhhJbLsFteG0O4lvChH2+rj6m7xTeGo77HY0qHqfwAS20+WeYsz4RSp0LksomhKcXTCWFewdD27AvYTscTbU5uKxCT80mCz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qtKtxh88; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L4k4ICgH; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3vcKCSTy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELgFsRcH"
-Date: Thu, 10 Apr 2025 12:56:28 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qtKtxh88";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L4k4ICgH"
+Date: Thu, 10 Apr 2025 10:58:46 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744282589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	s=2020; t=1744282730;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KxSFCVZqgfyJslzQMneu/OUO8qGifnZ7r8Kr8VGaOAU=;
-	b=3vcKCSTySTJpT9OnsNBVJmM3ZelGKa3zGpQglH1b5KAnjYgz7hzscL23/vxoY/q6uEajuW
-	8zpmghmsbNvYN86G2+zFN+UPx03CmsPIjM5S1dQIY9l24rqYthj6n3rjAKaGEFKa6bWxxZ
-	g3Y6N1GBcx19tIXYTGNZUWQlMUOv4bIlitD0vcnWfvW3t3yiYgCWZHs33XgEm+9MpiuY9H
-	fRN9fR9k+IRtvvkVoUE/f7MZOCRwQ/u/KCyaQItxB3sYosEdcNiUbPJlHHJtFLmQqhfHP3
-	pMJPWV6lIFUkr2bmDIfe4W6IrHHRfRxQ+xvcvZlNtT4x+kpIWF8iomJDZy6OhA==
+	bh=j4Cu69QuKLGxsMceHEWHe2OF18dV3H/L1mMneAY1InM=;
+	b=qtKtxh88oy//MTYQ9Wq2xizGzXelifOOVYFjtocqWlbOeGS/Pog56lXnQ4XS7WOZ6KGUbw
+	6DT/ct/JpkFoJ2A5Y8QhFnazeJE+uWx2sWCUtsZOHpIUVkGJonJDEF62YMFW+t6NQ2xc5L
+	KUMkkhSxbnmYTAQdPlUIcXYDwOG59DQmxl7ocXwxC5cPxWmv4FixTS9xNaKhgPQ0XrG9hY
+	2w8vAL6avCgbqNLVhFDbGnpHrNRD8zx6f35OD6ULarVvTIVNnok1QKVETbssQzpDrKDIC0
+	qfa9+PmNtC3/dYfu99pJ8Ky+ZYsP9e28Zj/GKR5KlHXT6aOibc455Jz7lpXkvA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744282589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	s=2020e; t=1744282730;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KxSFCVZqgfyJslzQMneu/OUO8qGifnZ7r8Kr8VGaOAU=;
-	b=ELgFsRcHNKUAQPWYJEGHuQL30/mfCRn32we0rykYyUQ752Jnc2S9hdp6KuROoQ3Edi20VB
-	ImnBm2hXbzzFqPBQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-kernel@vger.kernel.org
-Cc: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v11 19/19] futex: Allow to make the private hash
- immutable.
-Message-ID: <20250410105628.cLaq6gVO@linutronix.de>
-References: <20250407155742.968816-1-bigeasy@linutronix.de>
- <20250407155742.968816-20-bigeasy@linutronix.de>
+	bh=j4Cu69QuKLGxsMceHEWHe2OF18dV3H/L1mMneAY1InM=;
+	b=L4k4ICgH5mNw7ojtE+N2DU68icP8q1I15D/rcp0DfRrdNmavRoa2I3ATkklQQg+Fycxl0E
+	aQ7sEUFuD1XJ80Bg==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: core/urgent] compiler.h: Avoid the usage of __typeof_unqual__()
+ when __GENKSYMS__ is defined
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Uros Bizjak <ubizjak@gmail.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250404102535.705090-1-ubizjak@gmail.com>
+References: <20250404102535.705090-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250407155742.968816-20-bigeasy@linutronix.de>
+Message-ID: <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-07 17:57:42 [+0200], To linux-kernel@vger.kernel.org wrote:
-> - Xeon CPU E5-2650, 2 NUMA nodes, total 32 CPUs:
->   - Before the introducing task local hash
->     shared  Averaged 1.487.148 operations/sec (+- 0,53%), total secs = 10
->     private Averaged 2.192.405 operations/sec (+- 0,07%), total secs = 10
-> 
->   - With the series
->     shared  Averaged 1.326.342 operations/sec (+- 0,41%), total secs = 10
->     -b128   Averaged   141.394 operations/sec (+- 1,15%), total secs = 10
->     -Ib128  Averaged   851.490 operations/sec (+- 0,67%), total secs = 10
->     -b8192  Averaged   131.321 operations/sec (+- 2,13%), total secs = 10
->     -Ib8192 Averaged 1.923.077 operations/sec (+- 0,61%), total secs = 10
->     128 is the default allocation of hash buckets.
->     8192 was the previous amount of allocated hash buckets.
-> 
-> - Xeon(R) CPU E7-8890 v3, 4 NUMA nodes, total 144 CPUs:
->   - Before the introducing task local hash
->     shared   Averaged 1.810.936 operations/sec (+- 0,26%), total secs = 20
->     private  Averaged 2.505.801 operations/sec (+- 0,05%), total secs = 20
-> 
->   - With the series
->     shared   Averaged 1.589.002 operations/sec (+- 0,25%), total secs = 20
->     -b1024   Averaged    42.410 operations/sec (+- 0,20%), total secs = 20
->     -Ib1024  Averaged   740.638 operations/sec (+- 1,51%), total secs = 20
->     -b65536  Averaged    48.811 operations/sec (+- 1,35%), total secs = 20
->     -Ib65536 Averaged 1.963.165 operations/sec (+- 0,18%), total secs = 20
->     1024 is the default allocation of hash buckets.
->     65536 was the previous amount of allocated hash buckets.
+The following commit has been merged into the core/urgent branch of tip:
 
-On EPYC 7713, 2 NUMA nodes, 256 CPUs:
-				ops/sec		buckets
- -t 250                     25.393 (+- 1,51%)     1024
- -t 250 -b 1024 -I       1.645.327 (+- 0,34%)     1024
- -t 250 -b 65536            25.445 (+- 2,41%)    65536
- -t 250 -b 65536 -I      1.733.745 (+- 0,36%)    65536
- -t 250 -b 0             1.745.242 (+- 0,21%)    32768 * 2
+Commit-ID:     e696e5a114b59035f5a889d5484fedec4f40c1f3
+Gitweb:        https://git.kernel.org/tip/e696e5a114b59035f5a889d5484fedec4f40c1f3
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Fri, 04 Apr 2025 12:24:37 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Thu, 10 Apr 2025 12:44:27 +02:00
 
-Sebastian
+compiler.h: Avoid the usage of __typeof_unqual__() when __GENKSYMS__ is defined
+
+Current version of genksyms doesn't know anything about __typeof_unqual__()
+operator.  Avoid the usage of __typeof_unqual__() with genksyms to prevent
+errors when symbols are versioned.
+
+There were no problems with gendwarfksyms.
+
+Fixes: ac053946f5c40 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
+Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-131151e1c035@molgen.mpg.de/
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Link: https://lore.kernel.org/r/20250404102535.705090-1-ubizjak@gmail.com
+---
+ include/linux/compiler.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 27725f1..98057f9 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -229,10 +229,10 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ /*
+  * Use __typeof_unqual__() when available.
+  *
+- * XXX: Remove test for __CHECKER__ once
+- * sparse learns about __typeof_unqual__().
++ * XXX: Remove test for __GENKSYMS__ once "genksyms" handles
++ * __typeof_unqual__(), and test for __CHECKER__ once "sparse" handles it.
+  */
+-#if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
++#if CC_HAS_TYPEOF_UNQUAL && !defined(__GENKSYMS__) && !defined(__CHECKER__)
+ # define USE_TYPEOF_UNQUAL 1
+ #endif
+ 
