@@ -1,116 +1,196 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90550130A54
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F438130A54;
+	Thu, 10 Apr 2025 07:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271481; cv=none; b=C8SIGZOhl2ZIh19bQzPMhJayIsG2r27lbwwkf5X9jAia4gIM/wJputkkl66rxrPexKJ/CUKdcq5yfo62qnegUeJlwf7Q9eCbehQJI/fGsD+6WFIlCpFZ/GPUT8KoRx1pHuPDo7HNjj/dqjQle5yG0eWYoS2OJ+UpvVcyHF5BGN4=
+	t=1744271543; cv=none; b=F8O/jntRRhNb9Ie6Y3PFYM04HOUphX0Es6/pVZ0pwE8UInxzaYK/7l5eX0xyN31VyWSyx7oAV7mVNf6fBlEwT6rJYy/eMkNcwKWoZwl7CeWhTMx+KMigWaNpJlsZoq899CFQXlWt59DEHRIYcpOzHYuCL11BiuCOWnwlAiiV/yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271481; c=relaxed/simple;
-	bh=/x/sdAmlKBLB6ANTVAOUKEOQ2pYfuORpJBZOwj1Zl3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DX7/kMXLSuZEYszvhVvisRyPQ/tT2StgqTwjbt5vNL1Ek9iJ871Th3rhAR9a22anEfRes2ePk1waPHxNMgA6IIpx3Vlbijsg+YuLtSC4u8XGVs5IogBEx3Cj0jzZ6tqoIwnazr8MYwTYsIx0a7xcQC7P4/DTKFbS0KOOZIEtz4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OjeWQie/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744271543; c=relaxed/simple;
+	bh=WjIIYhaS9Rv5kyJoUwOUYfZ9+oirV43H1dKift/3PWw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mH+j33mBwBSvYS1ZM8WMwt00VPUyp9OC7KHgYF+XCLXkDx/0VwIURzs5qY9CAiBSXfd/OwfCqRBYRTC/k8YW/yt520C+z84dXynw8fEqckFuo2h6AZ3M2GMbX1WqQ5Ouj9OqNjBXpMyOI0ncyEN+DVqOR5hAeoLDKABSJWunEXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYeOhx9L; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OjeWQie/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744271478;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ncwEW164eIm02E7SqERquGllFqE6R8n6rhgXWGPPjCY=;
-	b=OjeWQie/ZgYydRNrJiUBNQacqD0cAxF6V7DdYYjJ4ylNn1zMUMVSsanxnZszShC0dIh2y1
-	z0i0T+Y3aJPR+SoQYXyNjwYfubbgme2b1+Vt5jW2BX3HGJr2Nv8WM5vU1pbZGTgAZTtltD
-	A4PodiNrAUoRGsOY4OghRGZ/GSn9Mm8=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-ys0n4ArlN_CAVY5uQnjojQ-1; Thu, 10 Apr 2025 03:51:17 -0400
-X-MC-Unique: ys0n4ArlN_CAVY5uQnjojQ-1
-X-Mimecast-MFC-AGG-ID: ys0n4ArlN_CAVY5uQnjojQ_1744271476
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac27f00a8a5so41831566b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:51:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYeOhx9L"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e904f53151so4217136d6.3;
+        Thu, 10 Apr 2025 00:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744271541; x=1744876341; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rPgrAp1ioPsOu1pRk1UNApK8KW8zvUTEfp5lJdooVAQ=;
+        b=NYeOhx9LBmOwyYgKNvrJqrsUdzmzwAch5tqa/d//poooR6lol7T2c0q5np1/Et8vJf
+         y2nNP9rDPuCWNODHFisSTYYgDjGtYk/ITeZv3hXIQ+nYAmer7aHzKPsPJKymmIJ8C8cc
+         91sLA51slMs8MuWWgUL1CjZ/9xFA4yp6zlcjQpQKGOGisDbNhT5XWQmeTG422Wy/RsZd
+         98kejaAGggLOd+N7UUo2CeP22xZUSgXl7YrOJ3PfBoA5h+ZTckLMP3lZS+2+XyxZU2rc
+         BgFOnyEFGph0vdqP7f8Y74pPQ6IrMvhhON4IUtQ1UEJi4bGxOkmCTodkENkdIXHurHT2
+         KM0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744271476; x=1744876276;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ncwEW164eIm02E7SqERquGllFqE6R8n6rhgXWGPPjCY=;
-        b=Krf4DHgXwQx0bsCL66FrTkWrUKl5bLguhTD39DR5MtiE4efS6iB/Kmbyl500hhYyCc
-         n9f/+2IlQZRr+eUEI1wsJgBsL1TdTMsqGWUgXH6LuqINsNP5yXl3tK7ynZ1zCGvl0Bnu
-         7HWinottad/UOjNIoO3ri04QAlfW7ldbXgW7iu005ZGw5sN3BTrzBKMxWMjq6Tl6I0eg
-         cAPK+WsSEJp7Bq+mIoJGIlEoin4HSy1gC0UW/oi98TMd17FdJzHDkgnLBuPU6TXYzkxt
-         bZOkd4dEJmfDDuNvXGK5EaJpGkPdXwVhhMJcqGQ/xVo2sdCoEggpmSSjvh+od5xqTpCu
-         l9SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1koXZ0OMbcXrIzwlBXwtzen8Z+wyFcBZJniOabsi61n5n+UtqDgkPW4JHq/qEbA72fMMcXvYKxrZTwkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsQcuao0PEEoiMWK/5+onkPb1RZxY+23kw+x33ADWQ2VaO8jKe
-	MBM4O0Vfo8bsetaFYAKFQHVQsV7PwN36B0PEssjsbZZaJ8fzD6qjk04YxDhFt1Uffy6c8aGYria
-	TbzxHibPy6Qa0mfo6pGCa7jxI5x4YmVkv3gqC2e9Rfz0H6EMstYuskewK6u8how==
-X-Gm-Gg: ASbGnctP1DnLyYJ7xkhBFJ2lobBzUFUEtgHl3mmLuKttH76nBrReRmSjC7JGGqixYrz
-	+v3+zhg6h16ebp+rjUUS2Y6kOoF0FQUh+hZdzfVLvkdficatcB/JHYdXsEJ0Bo+MirG43zr4Z9K
-	oQ23aV58Ar5wv7+V1DNY5gE1unD4eowy9TmWFtBAHUED1ZqUdLmWJ7aHxzv8Qxv53jniOJTB+0v
-	WpVbsOQWVkJOgWYphgaNpWyes9D7AbwLuk75CW/jnUDCwoF4HaQsDaAqX+NJb2sohfrWSaaTEB2
-	vHLD5YTppnXZWoJ5nCvpbSwFlnNGiO89rtlNJAytduX2uC+bRxUO0DmsOqgq
-X-Received: by 2002:a17:906:7956:b0:ac2:758f:9814 with SMTP id a640c23a62f3a-acac0080da0mr107851266b.23.1744271475762;
-        Thu, 10 Apr 2025 00:51:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG39WP8R6g3L71aG5bOHh176hMN6GTv/0pLjw6bk7AARBM3hGYhEni5D0BkGErIWIflkTXBgw==
-X-Received: by 2002:a17:906:7956:b0:ac2:758f:9814 with SMTP id a640c23a62f3a-acac0080da0mr107849166b.23.1744271475184;
-        Thu, 10 Apr 2025 00:51:15 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb422asm223457566b.115.2025.04.10.00.51.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 00:51:14 -0700 (PDT)
-Date: Thu, 10 Apr 2025 09:51:09 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Purva Yeshi <purvayeshi550@gmail.com>, peterhuewe@gmx.de, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in
- read helpers
-Message-ID: <t2ri7facyvtmt6rx6xwcjos7rgtyiln7cywl2gt4effgukeejc@f3ml4apdh4zs>
-References: <20250409205536.210202-1-purvayeshi550@gmail.com>
- <Z_dh4tRIa6xxAWQ2@kernel.org>
+        d=1e100.net; s=20230601; t=1744271541; x=1744876341;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rPgrAp1ioPsOu1pRk1UNApK8KW8zvUTEfp5lJdooVAQ=;
+        b=TcVRS6pO7WMrEn61bHD6+oBgF2zWBGMjyGr36lI4w02fb3vCYYOaBLg+eTSAINAC73
+         /be8AVcZEO4EgReTgcnEPBQLQ0f2Dk+wtGZkDxKRpVJxZXpLzX49bSH8CvXRMHHQ49VN
+         ZGdpn6REkaOVX5ufvtVUNPRys7gXll3DQP5d7AJ95rnoh/fB0QKC+muGBj7VTPh3gCi8
+         TTnXFM7k/MqaSBXcQwBkYMzPW6flKSDXQYA4Sj8hw8UA9hN/4hA6iDtxFZfVYTZAtlzG
+         21qwPNqrtFobPnhOGcl4yCKkPYzbh+cuCSg5biRfNKfbOaWbVXPa44WSdMcK0OpyoyGp
+         Bo9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUm5I2rGhhtIqpl9r2MIu7E3ntZkUAOnh1IFeWTBTv2WChnQBmQiaCZxWPWg8e1SNAXrbCdSzT9@vger.kernel.org, AJvYcCXQAY9yOKLiLo1+YkVjS/dV7MofWWBOiHg26sz9tMZ/6ZQ+uh4mRC7fryPW7QrvA6BUnsOAyjzgqcFpYIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/f1SU/xiiHZZGs89janw8GUVVIzlEmZh//hu45AMgZxNweSzW
+	gG74+zknCLg5ZkLYud+lUWv3y1EqE9PNMiMtTYrAdengN/P2DMOCVsYxfZ97NaYyNNW/r+YQQyP
+	9Kr8zfknhei3cyTaLFhiUapyIU4Y=
+X-Gm-Gg: ASbGncsKU4IqB83043Z3JDq1J1eZS5qb6laEg0Pt8j2hJ1loKsZQJfzKflkv/TFrNQC
+	/vL8Tvrm8+JMClKEBjpY5ODw99Upq83L6OFjxw9/iHqsoyh2Hoy8UqATn/Ki2/29svYKhf01oLf
+	uiXCs14heudkJCRuBmaHUtQFU=
+X-Google-Smtp-Source: AGHT+IGmo10EO6VRBCzkr/4u6V0/nISxHfmr8hPwwCaYWSsM4gVz3GgJIMnBEl9wRop/Dy+dQqdBz+CLv4b6Uj4wcYE=
+X-Received: by 2002:a05:6214:27c1:b0:6ea:d604:9e5b with SMTP id
+ 6a1803df08f44-6f0e75ff30fmr15906146d6.2.1744271540867; Thu, 10 Apr 2025
+ 00:52:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z_dh4tRIa6xxAWQ2@kernel.org>
+References: <CGME20250409125216eucas1p150b189cd13807197a233718302103a02@eucas1p1.samsung.com>
+ <20250409142011.82687-1-e.kubanski@partner.samsung.com>
+In-Reply-To: <20250409142011.82687-1-e.kubanski@partner.samsung.com>
+From: Magnus Karlsson <magnus.karlsson@gmail.com>
+Date: Thu, 10 Apr 2025 09:52:10 +0200
+X-Gm-Features: ATxdqUHDXRydohpF4LyJdWYoG0wuyL72TUWel4GcvGw5MasjmOcFYrB_FkNWfII
+Message-ID: <CAJ8uoz2DtSGWy3EcQoAUz7BmJW4znAcb+xhfP7rE__Ddy71W9g@mail.gmail.com>
+Subject: Re: Re: [PATCH] xsk: Fix race condition in AF_XDP generic RX path
+To: "e.kubanski" <e.kubanski@partner.samsung.com>
+Cc: magnus.karlsson@intel.com, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, bjorn@kernel.org, maciej.fijalkowski@intel.com, 
+	jonathan.lemon@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 10, 2025 at 09:14:58AM +0300, Jarkko Sakkinen wrote:
->On Thu, Apr 10, 2025 at 02:25:36AM +0530, Purva Yeshi wrote:
->> Fix Smatch-detected error:
->> drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
->> uninitialized symbol 'value'.
->> drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
->> uninitialized symbol 'value'.
->> drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
->> uninitialized symbol 'value'.
->>
->> Call tpm_buf_read() to populate value but do not check its return
->> status. If the read fails, value remains uninitialized, causing
->> undefined behavior when returned or processed.
->>
->> Initialize value to zero to ensure a defined return even if
->> tpm_buf_read() fails, avoiding undefined behavior from using
->> an uninitialized variable.
+On Wed, 9 Apr 2025 at 16:21, e.kubanski <e.kubanski@partner.samsung.com> wrote:
 >
->How does tpm_buf_read() fail?
+> > I do not fully understand what you are doing in user space. Could you
+> > please provide a user-space code example that will trigger this
+> > problem?
+>
+> We want to scale single hardware queue AF_XDP setup to
+> receive packets on multiple threads through RPS mechanisms.
+> The problem arises when RPS is enabled in the kernel.
+> In this situation single hardware queue flow can scale across
+> multiple CPU cores. Then we perform XDP/eBPF load-balancing
+> to multiple sockets, by using CPU_ID of issued XDP call.
+>
+> Every socket is binded to queue number 0, device has single queue.
+>
+> User-space socket setup looks more-or-less like that (with libxdp):
+> ```
+> xsk_ring_prod fq{};
+> xsk_ring_cons cq{};
+>
+> xsk_umem_config umem_cfg{ ... };
+> xsk_umem* umem;
+> auto result = xsk_umem__create(&umem, umem_memory, pool_size_bytes, &fq, &cq, &umem_cfg);
+>
+> ...
+>
+> xsk_socket_config xsk_cfg{
+>     ...
+>     .xdp_flags = XDP_FLAGS_SKB_MODE,
+>     ...
+> };
+>
+> xsk_socket* sock1{nullptr};
+> xsk_ring_cons rq1{};
+> xsk_ring_prod tq1{};
+> auto result = xsk_socket__create_shared(
+>     &sock1,
+>     device_name,
+>     0,
+>     &rq1,
+>     &tq1,
+>     &fq,
+>     &cq,
+>     &cfg
+> );
+>
+> xsk_socket* sock2{nullptr};
+> xsk_ring_cons rq2{};
+> xsk_ring_prod tq2{};
+> auto result = xsk_socket__create_shared(
+>     &sock2,
+>     device_name,
+>     0,
+>     &rq2,
+>     &tq2,
+>     &fq,
+>     &cq,
+>     &cfg
+> );
+>
+> ...
+> ```
+>
+> We're working on cloud native deploymetns, where
+> it's not possible to scale RX through RSS mechanism only.
+>
+> That's why we wanted to use RPS to scale not only
+> user-space processing but also XDP processing.
+>
+> This patch effectively allows us to use RPS to scale XDP
+> in Generic mode.
+>
+> The same goes for RPS disabled, where we use MACVLAN
+>
+> child device attached to parent device with multiple queues.
+> In this situation MACVLAN allows for multi-core kernel-side
+> processing, but xsk_buff_pool isn't protected.
+>
+> We can't do any passthrough in this situation, we must rely
+> on MACVLAN with single RX/TX queue pair.
+>
+> Of course this is not a problem in situation where every device
+> packet is processed on single core.
 
-If TPM_BUF_BOUNDARY_ERROR is set (or we are setting it), we are 
-effectively returning random stack bytes to the caller.
-Could this be a problem?
+Thanks, this really helped. You are correct that there is a race and
+that the previous fix (6 years ago) did not take into account this
+shared umem case. I am fine with your fix, just a few things you need
+to add to the patch and resubmit a v2.
 
-If it is, maybe instead of this patch, we could set `*output` to zero in 
-the error path of tpm_buf_read(). Or return an error from tpm_buf_read() 
-so callers can return 0 or whatever they want.
+* Write [PATCH bpf] in your subject and base your code on the bpf
+tree, if you did not do that already.
 
-Thanks,
-Stefano
+* You need to add a Fixes tag.
 
+And yes, let us worry about performance at some later stage, if it
+needs addressing at all. The important thing for this patch is to make
+the code solid.
+
+Thank you for spotting this. Highly appreciated.
+
+> > Please note that if you share an Rx ring or the fill ring between
+> > processes/threads, then you have to take care about mutual exclusion
+> > in user space.
+>
+> Of course, RX/TX/FILL/COMP are SPSC queues, we included mutual
+> exclusion for FILL/COMP because RX/TX are accessed by single thread.
+> Im doing single process deployment with multiple threads, where every
+> thread has it's own AF_XDP socket and pool is shared across threads.
+
+Good. Just wanted to make sure.
+
+> > If you really want to do this, it is usually a better
+> > idea to use the other shared umem mode in which each process gets its
+> > own rx and fill ring, removing the need for mutual exclusion.
+>
+> If I understand AF_XDP architecture correctly it's not possible for single
+> queue deployment, or maybe Im missing something? We need to maintain
+> single FILL/COMP pair per device queue.
+
+This is correct. You cannot use that mode in your setup.
+
+>
