@@ -1,73 +1,88 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367B228F935;
-	Thu, 10 Apr 2025 20:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC651CEACB;
+	Thu, 10 Apr 2025 20:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744316965; cv=none; b=Y+meNFDMY9c9gKpJQICXPdg3Xxd6NzmFPqlfr3Dn20JWjszMNDKH4IcI8dQibU9rdD2dsOJmEVNTK4iit+SURr1+aJQnmHATsqlSAj01pIMkuYmsaSZwHbDMlwR/kmhqX3HlzxL9frc3+50SKz88MwNpuAFNlqehy5+uXethpso=
+	t=1744317087; cv=none; b=Muw+w0TywHxpvjFi6yaaQWemgk0ks9j87a6ZSrENUqj0kw/JoktAZSTJ51OuZQW0rxixBbKpuWmxs9Evf5iYXhZtrRQHJJ2BncZEBhkYltdLW+SGYpVjLWzPOcylTvGINP8aiqU1TlG5iltGjWFuW33O4bXLCAinpDrCU/7TEmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744316965; c=relaxed/simple;
-	bh=bAPpSmXmep09QFx7T7SmLGDGLykTds7V22GP0yiKg9o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fPyygOGTBXsxy/tCMdBlDfqYXqkwWfgRgvxz9VigqksvWfZM6GypwYzHLbYaviYpS3wOzX0ilhSXDVlOwcF/do+uf4gBPUuuSKA5iJrGJ7eTIr2pVXhKaLuBkvpbbBrZ+5TfAjIuYCL9AVcgfyTfDXdLewjdEZtKVyTDhERfVgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eNrqHXbQ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744317087; c=relaxed/simple;
+	bh=NxpQFlw6f7L2R3J5eNPi9qFp9lIFC9OIiytf+y/FSmE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D8WUBb5QBixAUGVkQFum7oKc/gmyNVLL5Ub29U/ZAfpXccKUT93+Ws7UhoKIEF7f0yuOEFzefwjgdNxhyXfYcNvlDewtjh+MzF56kIwQZu+EM00aR7kkmvNXmrv/YLyaSKpFqc7JCanLOGLBMx/nLa2jK5xP3BfxH/B+B7hrOlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dQIqs26W; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eNrqHXbQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=nPskVwgV7dIOuOWR2CRzYXy3W//a83XC7JObcBuOeQs=; b=eNrqHXbQHa4jzONqzh9REJsMAN
-	uihg7oE8Geel9srCIiStUM4xZh+HbzFMwqBZlSbkib8SFlOh0OE3a3PEvIkz6D8oXGTX9VLWwijIY
-	RHwGHIR5/v+pKah4uh84DjpYphlpEle8zPgASS7klEl6MZ+jg2lpzEH2Qd6zun6K7wSuy1xmJqnuC
-	jAIUj88uIHMs37nlfYDpz9toHWe5nei++kG9WdwQVIAUq3ugZRussdKsjeMLpUjhXnvp+vdcZqoCJ
-	28r9pnsVDx++Ekv64Ltk7osrX/2dnNNk8zlfzP8Phf1GFN3Z7pD6KP08hsIqCp68XD2yqnjWVmli7
-	qxGfnkbg==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2yWU-00000008s10-1aqg;
-	Thu, 10 Apr 2025 20:29:19 +0000
-Message-ID: <5cf231e1-0bba-4595-9441-46acc5255512@infradead.org>
-Date: Thu, 10 Apr 2025 13:29:14 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQIqs26W"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86d5a786c7cso548551241.2;
+        Thu, 10 Apr 2025 13:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744317084; x=1744921884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NxpQFlw6f7L2R3J5eNPi9qFp9lIFC9OIiytf+y/FSmE=;
+        b=dQIqs26WiapW/fvv1X5DeGyvaY4Yf2pgWDWSHXM47ROFA2GuqVE4+j8nBv2df7OZmT
+         n17C2VQ2cYOynUXg+C0uq9QVAvj7OUzOQlEo2eJrOJN3PLoSvkrRvi740DfucE0kB1cj
+         XQCJErHBHhBw+83S4hdTV1EjMQCMpD8xv9eNQe7EGj6bduQ2JxOqIogI45uTrKfqN8Bb
+         +oZ2mqS2DtnU0qYC94hwZoLs/lbLy3thnuUDbp/QFpE7Jdz+YPiokxV91hIZfP1PKgEX
+         v4UIlP8564RBm83AzQuNVJ0BlSLkCfgL0ZYNMcockbLQ6HkLpmfuJbDmpY79zrmA1E2c
+         91Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744317084; x=1744921884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NxpQFlw6f7L2R3J5eNPi9qFp9lIFC9OIiytf+y/FSmE=;
+        b=Z6yENqnwt7LqEbeNXC4/Ob5U+8uHn13U5b7WadUbqqCYElMuaKVTSeEKL+1GIsAYmW
+         ilPc4cSbPv53AkoAPABF/6B/u/b0hvmWQHculUx9SFZBsLgx/7zVrT6WzLvnILQO0cth
+         BBg0tLbMqbyEL2ShPcj1KKAGfs/BmEbsQHJZuHGdd4orRuuNpnhJUq9hVY0JoEi0Fshj
+         wsf+nWKm7WcJ2F1FSwC5H9+V/qBT2U395tdJfZcRZy+sOCu5BWiH0CZCEVgg1W4ZHz6m
+         VY+dIWJaoN/sL8J7zEmGaysyJWSzqhfDmhKE1y/z/QBPMx2AdRZFhZ96pLXO5cF4Yd1q
+         AXFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKqQQkybySkTdaJvs7TXeNNnsCoaRr8GTfZ/3YIDXWlyBono6uy8Xo/2LABQWtEG6yVsazchfK6/bEc/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAqy8QNFkVIGWFwrplcueuWhGYOwBtKPdDa55f6VOJJrrriYc0
+	fboZ3dBd6nMrsp5E8uhR4Sbf7H2867LFclS08hKp4L5sG3G3gOcaF5NUW8RjjilrDpjqHHoMvAv
+	cN2u+KUsCRQsSAcN08LV2or+X4gRR1g==
+X-Gm-Gg: ASbGncuVepOnTgVMnijqkvFE89cH72KyYntTKQwQmlHCAClOC9ilPF+4Rm2DnlOZ40b
+	NYU2k4PqkdyeKbxdGoHbQ1abvTtXQdFINylXZbo/HbR/ZaCclwWv5VbYAG3e2/ajRuFZGh8vjwp
+	A5Mtq9rQuRfyP7QmvzxPmZAQvnk8SYkHVoRFo=
+X-Google-Smtp-Source: AGHT+IGpkQT8+tGZKPjRJPzXpQgj5TNkgnXW/EznGexoBQ/GvGuQDhUlhbeGDXZCuv7AC5fLJIvQO6o4mF5uCm+4+Lo=
+X-Received: by 2002:a05:6102:3309:b0:4bb:b809:36c0 with SMTP id
+ ada2fe7eead31-4c9d35c5eccmr4239438137.20.1744317082084; Thu, 10 Apr 2025
+ 13:31:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for Apr 10 (backlight: ktd2801)
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- dri-devel@lists.freedesktop.org, =?UTF-8?Q?Duje_Mihanovi=C4=87?=
- <duje.mihanovic@skole.hr>
-References: <20250410151146.6a05dd21@canb.auug.org.au>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250410151146.6a05dd21@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250410004130.49620-1-rosenp@gmail.com> <87plhktgwy.fsf@toke.dk>
+In-Reply-To: <87plhktgwy.fsf@toke.dk>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Thu, 10 Apr 2025 13:31:10 -0700
+X-Gm-Features: ATxdqUE2MASratXaiwZ3TQ9YovT3u3h7OwvHIQxUlqYvCWa3QkIthPnj8mxha9g
+Message-ID: <CAKxU2N-PpA2JLZu2Yt6-UOwW+7TEZfjJoiULve-jqnyyd-Sipw@mail.gmail.com>
+Subject: Re: [PATCH net-next] wifi: ath9k: use devm for irq and ioremap resource
+To: =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@toke.dk>
+Cc: linux-wireless@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 4/9/25 10:11 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20250409:
-> 
-
-on x86_64, when CONFIG_GPIOLIB is not set:
-
-WARNING: unmet direct dependencies detected for LEDS_EXPRESSWIRE
-  Depends on [n]: GPIOLIB [=n] || NEW_LEDS [=y] && GPIOLIB [=n]
-  Selected by [m]:
-  - BACKLIGHT_KTD2801 [=m] && HAS_IOMEM [=y] && BACKLIGHT_CLASS_DEVICE [=y]
-
-
--- 
-~Randy
-
+On Thu, Apr 10, 2025 at 4:06=E2=80=AFAM Toke H=C3=B8iland-J=C3=B8rgensen <t=
+oke@toke.dk> wrote:
+>
+> Rosen Penev <rosenp@gmail.com> writes:
+>
+> > Avoids having to manually free. Both of these get called and removed in
+> > probe only and are safe to convert.
+>
+> Erm, huh? The request_irq() change in ath_ahb_probe() is literally the
+> same change that you sent once and that we had to revert. Not taking any
+> more of these, sorry.
+You're right about this. The first change is correct as it happens
+before it is assigned to sc. Will send a v2 without irq changes.
+>
+> Nacked-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk>
