@@ -1,119 +1,111 @@
-Received: from pv50p00im-zteg10021301.me.com (pv50p00im-zteg10021301.me.com [17.58.6.46])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A312EAF7
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744246917; cv=none; b=CzVMuFYQs2ddxYo9hr7j7AambIpSNJRPzGAPO3Uu32rXu/iuAo4mNjBrZkFcey7/97jsETbXQIseGK+3Rd1sCJk4u57J+WneHuF4icsYQNiMerh1sXNjR/QMHexeRtQXNRYAFzjJTeoyvwZGQngpMarqlmpZ0S0zl4vZdjOIcfE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744246917; c=relaxed/simple;
-	bh=hmkSbI1RrCSW4iI+AN1JDlh5YqLETWMidlQr5NyKUSM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kQrjSduN5deGjks0hLGxzJRMARkAKO7Bsuosm/SRWaHYcmysbAT/Vq+b6EgYZoXhp6Jg7V3M4dazXU2zafM4ZPH8EBhS4ZsauYsXGhdIGpsLuvuFtRLaPd/OYRhWFM9NHxFw+pXBDZ4xUEwAhWrBVP0r2ysRglYNbAlmomCyphE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=LgVxenhK; arc=none smtp.client-ip=17.58.6.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E776E1F930;
+	Thu, 10 Apr 2025 01:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744246956; cv=pass; b=eWc1hgx06DsHU3xJFHSJyALsrCflF0UacJ/jdOC89/1IJWDIr5qSVd0jfJ3ONXM3FaaxqOEPilbRTOrGgM3Ul89+sfV0PVVqdcm+uDWOTDI3OHHIfFZ2l3RnOGKkVBP/Aj3Q9hDqBCNFx+OIvs3Q74l467nbE0uadNfh8yNv5VI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744246956; c=relaxed/simple;
+	bh=MrxcKYFtfSYZKLYuEYQVdxRMiWDquY/naspmGHw0tVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eH+In2ZGp0Xa3jlpG5XHgrqqsgvEYof2ZmYPEMvjQJkEntKzNmLN9o2wgAhTjOdZQBovJ+nAZMQ17piK1C9YWbl+pM5bW76hcdgu2iKh4FYIlr4gokz5Shn03oCyw8Nfd1kOzom/BqzYjwOwu+QqBFvZLGcksB3JEK5rbnnEja4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=RYoVyMEZ; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="LgVxenhK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=3yc4qS7kFZST3PgJRD2DZgFRmKW168rR8JYSKGLq9ms=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=LgVxenhKsueoYUJ96y16TmEtbivKhQDAdiXLOK0fflpOAAc65jWNdaCgwhdAihJJT
-	 YoU5tWK82YAVHBvGXsyHNL5FALDY4ab4gBnANwTcQXBGOqNy74Wr3Tlo+W7SIiDTkY
-	 GXipL92WH0ja2pLawWpSEpTa7OsnHTYxCo1YCt6kCDwEGi7XfbCJBQ5BHQSWKBJB+w
-	 94QAVg8z9yUHWZcG00D/h8hNhGnatrHplHT/22Ht49LUPLNB8AI3jX5bNVtlG2o1Nv
-	 xhiJ5kzdqLSjGxL9Qrf6EnjlLm8l9971TjnrgVVppFAE8dHVo5v2xhXP/gFaoyrO+X
-	 nwx3rcttJdgoA==
-Received: from pv50p00im-zteg10021301.me.com (pv50p00im-zteg10021301.me.com [17.58.6.46])
-	by pv50p00im-zteg10021301.me.com (Postfix) with ESMTPS id 0364B5001B6;
-	Thu, 10 Apr 2025 01:01:50 +0000 (UTC)
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10021301.me.com (Postfix) with ESMTPSA id 3954C50021C;
-	Thu, 10 Apr 2025 01:01:47 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Thu, 10 Apr 2025 09:01:27 +0800
-Subject: [PATCH net-next v2] sock: Correct error checking condition for
- (assign|release)_proto_idx()
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="RYoVyMEZ"
+ARC-Seal: i=1; a=rsa-sha256; t=1744246941; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=f2oqtgtEIj7w+ItXf9V4BDfwS+ugN8MiAC3IMibGEZ+k+QJsFSXwn/BX5C/2fumA+/eOT4RhYyniWAyCk7txALtAahKuYLKzsgVZjX/CX0XrUC1MQBZrqVjG3mIvxNz0g4iqoNg+NV2jAQuVdELs5yVqA7NyxqRgjFSRs9xkAxQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744246941; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=OLgUik1lavsa4dvzL1XWz9uETF9zNws6mzgEbiJosDU=; 
+	b=B2Af/dczb5l7H2eFyLbkmcRPdllPRjChGPZpgGr4ixUm0KFzL5O54FFotFnkwMm2uWIBluSus6PTfuosqpmfoqRkahojTw3YSHOL/J/oXhfHm1o0SAkEO+47fwRROHUhpNHMRivSuu8vtjmTv320AAiZgFIV1WWF5RAT4jJEDT4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744246941;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=OLgUik1lavsa4dvzL1XWz9uETF9zNws6mzgEbiJosDU=;
+	b=RYoVyMEZqPAhpXq9QoGMnIrCpfu5erE7DQodbwx64GL7dUo8yW0rJpUcK228HHXq
+	hpFZPeb1OssCHtFheKFmriN47K8NlBg3ZH4lShg27CcH4WhBeFrl0YpFVQLdvK+mLAO
+	Vk0pD1WqFV6XzOV8Z1bW3962w6oxmJgp92TowcSg=
+Received: by mx.zohomail.com with SMTPS id 1744246927063883.6331792523235;
+	Wed, 9 Apr 2025 18:02:07 -0700 (PDT)
+Message-ID: <6bfb9815-0270-41e5-95c3-7ecefe8d46f4@zohomail.com>
+Date: Thu, 10 Apr 2025 09:02:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-fix_net-v2-1-d69e7c5739a4@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGYY92cC/z2Nyw7CIBBFf6WZtRgexVZX/odpTEOndhaCApKah
- n8XiXF5cm7O3SCgJwxwajbwmCiQswXkrgGzjPaGjKbCILnUvOWazbReLUamsFeHdlJczjOU9cN
- jUbV0ge/A4hphKGahEJ1/14skqv/V+n8tCSaY6rTsxNgdjRDn54sMWbM37g5DzvkDL/I6zqoAA
- AA=
-X-Change-ID: 20250405-fix_net-3e8364d302ff
-To: Eric Dumazet <edumazet@google.com>, 
- Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>, 
- Willem de Bruijn <willemb@google.com>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
- Simon Horman <horms@kernel.org>, Pavel Emelyanov <xemul@openvz.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, Eric Dumazet <dada1@cosmosbay.com>, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: VE4z8XHw115b9nu_j831GHZYeTMQCROw
-X-Proofpoint-GUID: VE4z8XHw115b9nu_j831GHZYeTMQCROw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 clxscore=1015
- bulkscore=0 adultscore=0 malwarescore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2504100006
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] cxl/feature: Update out_len in set feature failure
+ case
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20250409022521.510146-1-ming.li@zohomail.com>
+ <1be19059-e879-4404-a68a-10093fef7522@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <1be19059-e879-4404-a68a-10093fef7522@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227992645d5d2c7868c64dd78f10000e9006b009f7b49c9a435aebfb3330aba26f303c7659b66c985:zu080112270e4f283cd5b666dda86c7fb100006255011d5eb43def78a455df14279ec3107627889034eb23ea:rf0801122d72bc644ccb62eab6600b0df0000020babff4686c6ca42bb0e13137bf51fedcf0e20be1ae287ac0b3484e52019f:ZohoMail
+X-ZohoMailClient: External
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On 4/9/2025 11:37 PM, Dave Jiang wrote:
+>
+> On 4/8/25 7:25 PM, Li Ming wrote:
+>> CXL subsystem supports userspace to configure features via fwctl
+>> interface, it will configure features by using Set Feature command.
+>> Whatever Set Feature succeeds or fails, CXL driver always needs to
+>> return a structure fwctl_rpc_cxl_out to caller, and returned size is
+>> updated in a out_len parameter. The out_len should be updated not only
+>> when the set feature succeeds, but also when the set feature fails.
+> Good catch! Can you add a Fixes tag please? Otherwise 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>、
 
-(assign|release)_proto_idx() wrongly check find_first_zero_bit() failure
-by condition '(prot->inuse_idx == PROTO_INUSE_NR - 1)' obviously.
+Yes, forgot to add a Fixes tag. Thanks for that.
 
-Fix by correcting the condition to '(prot->inuse_idx == PROTO_INUSE_NR)'
 
-Fixes: 13ff3d6fa4e6 ("[SOCK]: Enumerate struct proto-s to facilitate percpu inuse accounting (v2).")
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
-Changes in v2:
-- Remove @prot->inuse_idx checks in fastpath
-- Correct tile and commit message
-- Link to v1: https://lore.kernel.org/r/20250408-fix_net-v1-1-375271a79c11@quicinc.com
----
- net/core/sock.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Ming
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 323892066def8ba517ff59f98f2e4ab47edd4e63..e2c3c4bd9cd915706678137d98a15ca8c1a35cb8 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -3999,7 +3999,7 @@ static int assign_proto_idx(struct proto *prot)
- {
- 	prot->inuse_idx = find_first_zero_bit(proto_inuse_idx, PROTO_INUSE_NR);
- 
--	if (unlikely(prot->inuse_idx == PROTO_INUSE_NR - 1)) {
-+	if (unlikely(prot->inuse_idx == PROTO_INUSE_NR)) {
- 		pr_err("PROTO_INUSE_NR exhausted\n");
- 		return -ENOSPC;
- 	}
-@@ -4010,7 +4010,7 @@ static int assign_proto_idx(struct proto *prot)
- 
- static void release_proto_idx(struct proto *prot)
- {
--	if (prot->inuse_idx != PROTO_INUSE_NR - 1)
-+	if (prot->inuse_idx != PROTO_INUSE_NR)
- 		clear_bit(prot->inuse_idx, proto_inuse_idx);
- }
- #else
+>
+>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>> ---
+>> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
+>>
+>> v2:
+>> - Adjust changelog
+>> ---
+>>  drivers/cxl/core/features.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+>> index f4daefe3180e..066dfc29a3dd 100644
+>> --- a/drivers/cxl/core/features.c
+>> +++ b/drivers/cxl/core/features.c
+>> @@ -528,13 +528,13 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+>>  	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
+>>  			     feat_in->version, feat_in->feat_data,
+>>  			     data_size, flags, offset, &return_code);
+>> +	*out_len = sizeof(*rpc_out);
+>>  	if (rc) {
+>>  		rpc_out->retval = return_code;
+>>  		return no_free_ptr(rpc_out);
+>>  	}
+>>  
+>>  	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
+>> -	*out_len = sizeof(*rpc_out);
+>>  
+>>  	return no_free_ptr(rpc_out);
+>>  }
 
----
-base-commit: 34a07c5b257453b5fcadc2408719c7b075844014
-change-id: 20250405-fix_net-3e8364d302ff
-
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
 
