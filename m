@@ -1,120 +1,90 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181D920468C;
-	Thu, 10 Apr 2025 06:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916DD2040A8;
+	Thu, 10 Apr 2025 06:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268265; cv=none; b=WXpMJsJNJg9mjaVIu+ami/sSTWJGhZgpIWmD4W5CyvvVrhF8Y2BofaNPyNTGh2TMA/856XJN3tezGZnYvnvI9zyMsX8lmtOp6Oi+w4+1Hvy0mntpCI9G9pGOPT/YHIw6eQa7tZjVTJDtozp9Er4/uwPpDkeKPybzag1LhVPV0Lk=
+	t=1744268302; cv=none; b=euIw7UwpbvVQ9LaWLNht+aS/K6o4FAfC3B89SZxcVmgtyMYFGAC4Ts4E1TWoETsPn64/T5FNf3RMoejBIMrm7k0PMelau6iFvvYFBuocUkfiZV9Qd2/bBHGVGj8mxi+QC91iX7YZwEqLQt4EmhB7J678dMNUS1h79rDS5y8Wreo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744268265; c=relaxed/simple;
-	bh=oyIr5iTfb5YM9mIuiyQYpeUKyglx6GScjq9LoFWefQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EFGNuCfgh8UU5oCamFCpEdFKPt6I14XjUBrQkQGSlEppdb30KLH321ZDTUicdslSfjTTX6RFJRfHKiv5e7TyLRBOECJ9vpT9rAShwm2Mv/siIpj0Q1SckaXqLDUwjgnHK1ZsOs4mM+kn9bzGiF4hEg4hwWjmfPKxbf2SvvBAH5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=L6VhcyBo; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744268302; c=relaxed/simple;
+	bh=W+EjxpeVVScky8ANFtmNgCyiOFblKlvus+RVoVF6ZF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ftx0K3U1LEjSjUErfkeQ3/m7QZyDVqUbt2MA+1wdpEsu3FnNGaaJuzlQceHEuYutMoiOz6QN8fVA4E22KesRo+IywS2kePf5YBRrObik6BtirgQ7un6lCQlVQ4H8wmYg+EjmS/tHPoBs+EMVq0UAhhhU7cbJQXN29lMUnzg2w10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khKiGgoM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="L6VhcyBo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=37p8BZ/65Jkyek9wSY796hP1q62D7VjD6me8lvqHT1s=;
-	b=L6VhcyBoKkGDBvZcAGTYPoDplpksaObP0Jt7OPZVGnj3eh+AnwOeNUizpjW4/n
-	esKJAcTqIWFm1y+LrkNNZ/mZOVYKVoIIf5tRzpKx7TJ75+ka+oponZ93k8K8P6R1
-	PjiVpaVatP/dM8HCdrTME/cb6FZO73fy32ysRt2XGms+k=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnVwmwa_dnW6O2FQ--.53411S2;
-	Thu, 10 Apr 2025 14:56:49 +0800 (CST)
-Message-ID: <085d0e48-436d-46af-8bdf-8477169e8939@163.com>
-Date: Thu, 10 Apr 2025 14:56:48 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khKiGgoM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC65AC4CEDD;
+	Thu, 10 Apr 2025 06:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744268302;
+	bh=W+EjxpeVVScky8ANFtmNgCyiOFblKlvus+RVoVF6ZF0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=khKiGgoMdhXNa4Q70CPeyvi4b3wCMd8N+O2H3+z7Ol88vgsgfxTPIDAxIEsQonDwh
+	 sGT7UllzMkwwdS7LYMH+Mzh/q4q8plLOBqgYY5Vav1o13Ol6unC7eK1bfxubJWttg7
+	 lJe369QP9Ya169umKfrum8V+a+iCv6hE3xdQ+eG14F1jt403D9Y13V9iRXMjCmuwzP
+	 +z2nR4ioD0EIREd0RyMhCESXtzsNK8GBw23kUGd4KZO9dRDSjMZDTkoAPhvE8c88N0
+	 z4msUQXu2dhkXyrwmGVIzFPR/1XBh17OybNue+17NBoqzF2mZwUnd9klmdCLMsZZ2a
+	 T9AxYUcuzy6NA==
+Date: Thu, 10 Apr 2025 08:58:19 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: imu: icm42600: add interrupt
+ naming support
+Message-ID: <20250410-wonderful-stereotyped-jackal-87fbf5@shite>
+References: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-0-dab85a0a7c2b@tdk.com>
+ <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-1-dab85a0a7c2b@tdk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 4/6] PCI: dwc: Use common PCI host bridge APIs for
- finding the capabilities
-To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
- bhelgaas@google.com
-Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
- manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
- robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250409034156.92686-5-18255117159@163.com>
- <202504101228.CX8tAgfW-lkp@intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <202504101228.CX8tAgfW-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnVwmwa_dnW6O2FQ--.53411S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17tF17ur17Xr4fWrW3Wrg_yoW5tFy7pr
-	W7Jr1DAFyrGFn0gws7ZFy2vw17JFsrGw13AF4rW34fCFW7uryqk34F9Fy5GrnrCF1ak3W5
-	urWDtas5tw4xZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UQYFAUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgwro2f3WO-kyAABs0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-1-dab85a0a7c2b@tdk.com>
 
+On Wed, Apr 09, 2025 at 05:14:31PM GMT, Jean-Baptiste Maneyrol wrote:
+> Add interrupt-names field for specifying interrupt pin configured.
+> Chips are supporting 2 interrupt pins, change interrupt to support 2
+> entries.
+> 
+> Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+> ---
+>  .../devicetree/bindings/iio/imu/invensense,icm42600.yaml    | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> index 7e4492bbd0278a336587dc5ac04da7153453da29..d4d4e5c3d8562523872a737864610c26c8fccd82 100644
+> --- a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> @@ -39,7 +39,16 @@ properties:
+>      maxItems: 1
+>  
+>    interrupts:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      enum:
+> +        - INT1
+> +        - INT2
 
-
-On 2025/4/10 14:02, kernel test robot wrote:
-> Hi Hans,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on a24588245776dafc227243a01bfbeb8a59bafba9]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Introduce-generic-bus-config-read-helper-function/20250409-115839
-> base:   a24588245776dafc227243a01bfbeb8a59bafba9
-> patch link:    https://lore.kernel.org/r/20250409034156.92686-5-18255117159%40163.com
-> patch subject: [PATCH v9 4/6] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
-> config: arc-randconfig-001-20250410 (https://download.01.org/0day-ci/archive/20250410/202504101228.CX8tAgfW-lkp@intel.com/config)
-> compiler: arc-linux-gcc (GCC) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250410/202504101228.CX8tAgfW-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202504101228.CX8tAgfW-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->     drivers/pci/controller/dwc/pcie-designware.c: In function '__dw_pcie_find_vsec_capability':
->>> drivers/pci/controller/dwc/pcie-designware.c:239:24: error: implicit declaration of function 'dw_pcie_find_next_ext_capability'; did you mean 'pci_find_next_ext_capability'? [-Wimplicit-function-declaration]
->       239 |         while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
->           |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->           |                        pci_find_next_ext_capability
-> 
-> 
-> vim +239 drivers/pci/controller/dwc/pcie-designware.c
-> 
-> 5b0841fa653f6c Vidya Sagar  2019-08-13  229
-> efaf16de43f599 Shradha Todi 2025-02-21  230  static u16 __dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id,
-> efaf16de43f599 Shradha Todi 2025-02-21  231  					  u16 vsec_id)
-> efaf16de43f599 Shradha Todi 2025-02-21  232  {
-> efaf16de43f599 Shradha Todi 2025-02-21  233  	u16 vsec = 0;
-> efaf16de43f599 Shradha Todi 2025-02-21  234  	u32 header;
-> efaf16de43f599 Shradha Todi 2025-02-21  235
-> efaf16de43f599 Shradha Todi 2025-02-21  236  	if (vendor_id != dw_pcie_readw_dbi(pci, PCI_VENDOR_ID))
-> efaf16de43f599 Shradha Todi 2025-02-21  237  		return 0;
-> efaf16de43f599 Shradha Todi 2025-02-21  238
-> efaf16de43f599 Shradha Todi 2025-02-21 @239  	while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
-> efaf16de43f599 Shradha Todi 2025-02-21  240  						       PCI_EXT_CAP_ID_VNDR))) {
-> efaf16de43f599 Shradha Todi 2025-02-21  241  		header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
-> efaf16de43f599 Shradha Todi 2025-02-21  242  		if (PCI_VNDR_HEADER_ID(header) == vsec_id)
-> efaf16de43f599 Shradha Todi 2025-02-21  243  			return vsec;
-> efaf16de43f599 Shradha Todi 2025-02-21  244  	}
-> efaf16de43f599 Shradha Todi 2025-02-21  245
-> efaf16de43f599 Shradha Todi 2025-02-21  246  	return 0;
-> efaf16de43f599 Shradha Todi 2025-02-21  247  }
-> efaf16de43f599 Shradha Todi 2025-02-21  248
-> 
-I'm terribly sorry. The latest 6.15 rc1 merge 
-__dw_pcie_find_vsec_capability, which uses 
-dw_pcie_find_next_ext_capability. This should be replaced with 
-PCI_FIND_NEXT_CAP_TTL.
-
-This will be changed in the next version.
+Why INT2+INT1 should be valid? Why is this flexible? Commit msg should
+explain that, otherwise we expect fixed number of interrupts. Actually
+commit msg is here specific - always 2 interrupts, so I do not
+understand why 1 is allowed.
 
 Best regards,
-Hans
+Krzysztof
 
