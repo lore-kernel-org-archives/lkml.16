@@ -1,78 +1,125 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC2728EA50;
-	Thu, 10 Apr 2025 17:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E479C28EA41
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744306612; cv=none; b=A90J4muWuOW9Lk+k2Yl2RQ85Uc2sX+qMjzs7CLpAFsuS2nNuBrzNnWlblVeQbjKSUBB3O6C9vxTVDjwnrsV/yB1xXItbO+q2L8IWFOQpUoqcf5WzWWCKy63Q62I3t/SI6bAa3u4/X5kxIeqGncMUdnvka2503u6NSsHo6W+QmVU=
+	t=1744306612; cv=none; b=rL6aO8TjOxqi7ZbRn/QQjgHP5Fp4Wd+fzvbJX+vfEHlbzo9vmX1OD1OULgO930jB+zAh/FUYnWwyvYsysKvSdPV0EgCnUTebWhUQjfcb/d0miQCJSy6pCcvJsAqDgIl/ec+I0dIuVtgR8EIPzqyZHvd2bNddcknG/++sRPfAtdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744306612; c=relaxed/simple;
-	bh=t7HKnATgmCsf3hGTnDANUpJF1Vs2UUV5sxwrpaZGqZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvNNRAUtA5tMr+N43TgYGT0249pc7UihMss5kY+4LYw+51DHvlFmWJHA49RM4E+7TCIWaP0I39CYJi1Bptr8cDDOLCZp2r1WVjINavMurN8btdL1t9+WNUwqMqgaKxvLqk8qaxBZobCVsNJN+m9zFxH9LohRFx2DNy6vOdNjRfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=dpWrYRR9; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	bh=X1Vcc+qhXCvLi9/obxnmkB3AaP6EATpW0kQwymqqBMY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=fJXHznOuH+cbAEW8bf1lRFp/OxYLjpSN8vZLHe0bpLFl9ZyxST9M8D+E9ohKl/6dV/L3TKjFErqFbSKNcfG+6U065HQ7Ppjg8iQTgjkMFLy06+dJuWrfRKCU1EneI21A3QSOg3HSJuZTFlLP+OAuNL8hfsvQBG25ZQZB6YyoGto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H48Jm23n; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dpWrYRR9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=bekYy2UKLDPJOi383/IFEmXjLc1ik86Fy2UFdlonMbA=; b=dpWrYRR9yUA+NgE9r8G+CzYkAe
-	KUpxJql71SsF2pILHM75BFUdI8lmtedbJ8coxAsPPs53US+gBqjKxm7/NjSMDIfYOoL0tgGF5qSXG
-	ndzU0R6jfAXplP6wL4vZP/XY33f5rlGMdBCr067cGmjrKC1cIHafG8BmPfnamuCrnrqk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2vpO-008iGA-I5; Thu, 10 Apr 2025 19:36:38 +0200
-Date: Thu, 10 Apr 2025 19:36:38 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Prathosh.Satish@microchip.com
-Cc: ivecera@redhat.com, conor@kernel.org, krzk@kernel.org,
-	netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
-	arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
-	kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
-	mschmidt@redhat.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
- Azurite chip family
-Message-ID: <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-3-ivecera@redhat.com>
- <20250410-skylark-of-silent-symmetry-afdec9@shite>
- <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
- <20250410-puritan-flatbed-00bf339297c0@spud>
- <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
- <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H48Jm23n"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-306b51e31c7so873934a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:36:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744306610; x=1744911410; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4ozcx3/NEBUmkXi0QyyKv5MD92Ay8My7ba9iOvtFuV0=;
+        b=H48Jm23neCtCAc4RWQtkGTwQCUP3gJ3Ej3+tuTTfSaGJNJgmPLYsAfcimzR0IAcYxQ
+         /P+hg5kHPJtZ4gaNOn1dOHaqAcSr6jr/0jejCMPlZ7zV0NYj0sOEr2bxTqRLAVVNUOG4
+         fgfDNcpxr5Nyg4Pvmo1D91r0itfdoRVkGaVgL0usUHdeC0vA3CEAkI8n6LuG2AXuZSKf
+         08xYSV9coscZQpOugaGUfXOOdinPKPSz4H0RNwuiIX5HbpLOe/GMT71LKVodm2spDVh4
+         z7Y4hQ54snq/2YevMM+h8kWYbQ/IKrdPGDCPKaEdfwEIiuiikXmjsPM0MwSFlta2N2Gm
+         ZQew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744306610; x=1744911410;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ozcx3/NEBUmkXi0QyyKv5MD92Ay8My7ba9iOvtFuV0=;
+        b=W9eT8EnjYmtbpxzRoj+LwbppT7dL5H2DAwtzfsBfMTFpVnhmFc3MbevlXhghJC5CbL
+         aAMZ4MUIuYKiBajNxBGczECmsNUyXoWa1QWFK4GSz7hK3FqiOGUjsFucLxOhdwrNoZ5L
+         2FxAtRal5g8qGVxANXD/8f39JllpAoeLZGpAevsnC8ezQYZRJ8zqPptP70/5rvpdCOX+
+         FxoctqO5XGM1lQvbjnqOnHo88FJAaZJWzpFCP/3GHjqJSnZ4LdUbw2TGAETRwFWTEfq5
+         AbTQ34Llff0GbZOXStMgbMP5eqfl9A+1XHkXunWDO32oDjeQHOxTkfnYvqlDyKraRgIq
+         TamA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXq2O/9S86FUpJFl4njUKHighZxme/L3egZWQhfAzMmzpwFqz6JWKoct4FNkxIu0nSKzAWIZUt4sYMQLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/Z20Oy+zfowOerbYpUZjyC84n5bp3XdLQ3RxHqwsR626VJDC1
+	Uo+Wcz58k8uEJeqs0XjtkbkBECO+XO2uH20qDT4G/P7TZNtA56I2RIH93rQk9qegV5YIt0WZ0/l
+	9+YKfkg==
+X-Google-Smtp-Source: AGHT+IHdgEuNsiGXTbMC46t9gyRQdDCOonL+w+/N7Gojul8jN+3BYg75AGrbFGU24EeEJ5jxduYta8cOlPQ2
+X-Received: from pjx7.prod.google.com ([2002:a17:90b:5687:b0:2ea:9d23:79a0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:582f:b0:305:2d68:8d39
+ with SMTP id 98e67ed59e1d1-30718b6f388mr6668076a91.12.1744306610002; Thu, 10
+ Apr 2025 10:36:50 -0700 (PDT)
+Date: Thu, 10 Apr 2025 10:36:22 -0700
+In-Reply-To: <20250410173631.1713627-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
+Mime-Version: 1.0
+References: <20250410173631.1713627-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+Message-ID: <20250410173631.1713627-4-irogers@google.com>
+Subject: [PATCH v2 03/12] perf parse-events filter: Use evsel__find_pmu
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> Prathosh, could you please bring more light on this?
-> 
-> > Just to clarify, the original driver was written specifically with 2-channel 
-> > chips in mind (ZL30732) with 10 input and 20 outputs, which led to some confusion of using zl3073x as compatible.
-> > However, the final version of the driver will support the entire ZL3073x family 
-> > ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc 
-> > ensuring compatibility across all variants.
+Rather than manually scanning PMUs, use evsel__find_pmu that can use
+the PMU set during event parsing.
 
-Hi Prathosh
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-Your email quoting is very odd, i nearly missed this reply.
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 5152fd5a6ead..ad5b40843b18 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2459,9 +2459,8 @@ foreach_evsel_in_last_glob(struct evlist *evlist,
+ static int set_filter(struct evsel *evsel, const void *arg)
+ {
+ 	const char *str = arg;
+-	bool found = false;
+ 	int nr_addr_filters = 0;
+-	struct perf_pmu *pmu = NULL;
++	struct perf_pmu *pmu;
+ 
+ 	if (evsel == NULL) {
+ 		fprintf(stderr,
+@@ -2479,16 +2478,11 @@ static int set_filter(struct evsel *evsel, const void *arg)
+ 		return 0;
+ 	}
+ 
+-	while ((pmu = perf_pmus__scan(pmu)) != NULL)
+-		if (pmu->type == evsel->core.attr.type) {
+-			found = true;
+-			break;
+-		}
+-
+-	if (found)
++	pmu = evsel__find_pmu(evsel);
++	if (pmu) {
+ 		perf_pmu__scan_file(pmu, "nr_addr_filters",
+ 				    "%d", &nr_addr_filters);
+-
++	}
+ 	if (!nr_addr_filters)
+ 		return perf_bpf_filter__parse(&evsel->bpf_filters, str);
+ 
+-- 
+2.49.0.604.gff1f9ca942-goog
 
-Does the device itself have an ID register? If you know you have
-something in the range ZL30731 to ZL30735, you can ask the hardware
-what it is, and the driver then does not need any additional
-information from DT, it can hard code it all based on the ID in the
-register?
-
-	Andrew
