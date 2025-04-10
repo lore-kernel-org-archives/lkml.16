@@ -1,286 +1,419 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19013087.outbound.protection.outlook.com [52.103.7.87])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A7F18B48B;
-	Thu, 10 Apr 2025 01:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744247780; cv=fail; b=UaML0bFZLE909BFg7ovzhRRAZN3gMEl8I5FpfNenU/p8TpHmLVp9g6wXk26rGDKkuQuAhr30ZkDtId4K2gf6tXUaQQtw0qIPSF/NtznLkDULOCfzVj/ASmji5mRZbEyrkzXD7GLtNK0Ed5AWMnaimS9hByA+XKzuutZRstHMnpA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744247780; c=relaxed/simple;
-	bh=fMGZMkZqAbTj2f77VjkweA0Ni3qZz9aOtsXiich+/5g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=oRThYfy35tYMf/teypWf3FjGEV4Ia8TRWyvQd5n+WvF/lFGTokWh/+Lw5adWSMfMoJd9gSJtvU+hbxc7DF+CSKIudqo5L8lgj9zs7TrOs3eXC2qteg79/u9ZRnBD7aZzm0/ZhE9nVljIix7N1cqprUTcLtYjEyi4aKjSITHnIWs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LdfDVBIo; arc=fail smtp.client-ip=52.103.7.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A99881ACA
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744247855; cv=none; b=XUD5PcAw4eEwq2ALb2z2Zo5BZALX1vrp5E02kp0lMYSPBxdBsmwuhQhg/KiIPO6x9jTG1AIjOpT/LHOkFrPWA5NxD2GPgWlkOJbmeEzLqp2oMuGS5Fdq1ASSJS+m7QyfJsROHkPBY1oITQJBn9N1TRZW1906873Beozesby6PNE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744247855; c=relaxed/simple;
+	bh=M4iFrckRcXXL+edTeVe0caH6az2Ta8HC+CqJUEd80WE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KX/R44r+0x5Fr0Ci66fugnqNGK5RgJ4api608tZxDZULZv4L7Lcih5t6UmFoJ8a3eqU2QV7Lh99ctoSJV0BuYbO9RcnX0leP6QSyFcYAlwxsHY2Ur/lRyi2naZSaEJcpIrauy9xFi2+d9sffu0RV9PVAdEhBuO1e02RSivgHsHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D8jlp+Ku; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LdfDVBIo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Gy0GA0FKChiJme8FjuQvLBCN4qGZHFW6BUeSpsAv/ciCLIxvr5mPUDXjEboOktM8H3z42UMSQj8UOQ6R+eDiKFxFxXtAeD6cqBEB7kIale7SdHN0Alc4xr+je2UdkBTULdVCquRJkFI2ZmXv9jpf4VzCpW68Yo1gxLpZhdKrKmw0y7iBTwsbR0DL+TmxIr/SZUgns780vXamtcW8vDfaErALzXsoL8bd0os2TNAah+Yg8nESFeIkjE3rTabig4LthSRNHb5GG/Pdl2V0apvkj7BGhChHStOnTbiB/3sAkGhPbMhT9xspyEpV2LHwBHAXwyD289jujG7whmCjDpbj5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fMGZMkZqAbTj2f77VjkweA0Ni3qZz9aOtsXiich+/5g=;
- b=HQcmQM95rQ8rrqgCOnWyoRscOYcHkYsImI4WWOH0Nhj8raOnHs/QQn4zmHBAmz14tP2e/QNgb9ykJCtoLml7/yqzZnJzR3oSkwUK67nVtS4QNqbYnJSM6QCU9DBWX+jgwN3OjHm2kldjUtpizYQ+xI9v9D7CVghApEMx2HHNyvYo2qApHvdpybxz7I5Jz4hus27+lOZeRk3r+WTBfdWAoOBL9Av7GPP4H3qRVF7M0NlpBYBbbUmSpVvkoctbhNA4T3pqCzOwJyaw82pm4NGduUMQ9WdQQDgtKsac1YzQkfw07XPqmLijYSmS/EGXs/sjaQa99kPK0xTYyxfUrPUAtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fMGZMkZqAbTj2f77VjkweA0Ni3qZz9aOtsXiich+/5g=;
- b=LdfDVBIoB8lH3oPtSNhP/ER1xhJFD6ouukywVzG7gNZ2ARIlm+Upl8ieTEdAf13TuugYn4JMCo2VXzPaGB+VIGAdqEdrAfrJ+lRwhSDLirMnVSw0rBsCduF464m1Gj1QEHzpdqU5baDcWmOSRB1cRFODmShMja0MrtKemAzRuM3BiQejB4sOo7A0ZF519pO6ms5vJM37qntLOL9d+TVkFCeOg5bApUzsab7E0gLu4JALWVDyDhp8xZkonPjK3EEIrFGuiV9SwPRGszsbTFI0fWu9S6eXvfFGA42C70AKjGqUkRpooqO1hhJpkBXZhsu/KWAU3Gc9IFOnNFfykBUIwg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CY8PR02MB10188.namprd02.prod.outlook.com (2603:10b6:930:55::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Thu, 10 Apr
- 2025 01:16:15 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 01:16:15 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Dan Williams <dan.j.williams@intel.com>, Roman Kisel
-	<romank@linux.microsoft.com>, Robin Murphy <robin.murphy@arm.com>,
-	"aleksander.lobakin@intel.com" <aleksander.lobakin@intel.com>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "corbet@lwn.net"
-	<corbet@lwn.net>, "dakr@kernel.org" <dakr@kernel.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"decui@microsoft.com" <decui@microsoft.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "hch@lst.de" <hch@lst.de>, "hpa@zytor.com"
-	<hpa@zytor.com>, "James.Bottomley@hansenpartnership.com"
-	<James.Bottomley@hansenpartnership.com>, "Jonathan.Cameron@huawei.com"
-	<Jonathan.Cameron@huawei.com>, "kys@microsoft.com" <kys@microsoft.com>,
-	"leon@kernel.org" <leon@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
-	"luto@kernel.org" <luto@kernel.org>, "m.szyprowski@samsung.com"
-	<m.szyprowski@samsung.com>, "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "quic_zijuhu@quicinc.com"
-	<quic_zijuhu@quicinc.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
-	<will@kernel.org>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org"
-	<linux-scsi@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
-	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>, Suzuki K Poulose
-	<suzuki.poulose@arm.com>, "linux-coco@lists.linux.dev"
-	<linux-coco@lists.linux.dev>
-Subject: RE: [PATCH hyperv-next 5/6] arch, drivers: Add device struct bitfield
- to not bounce-buffer
-Thread-Topic: [PATCH hyperv-next 5/6] arch, drivers: Add device struct
- bitfield to not bounce-buffer
-Thread-Index: AQHbqOPfbMEO/VxdVECSYxt0gRTVfbObf/mAgAALcoCAAHGBgIAAGRsQ
-Date: Thu, 10 Apr 2025 01:16:14 +0000
-Message-ID:
- <SN6PR02MB4157328CAB1EBD021093DD3FD4B72@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250409000835.285105-1-romank@linux.microsoft.com>
- <20250409000835.285105-6-romank@linux.microsoft.com>
- <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com>
- <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com>
- <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CY8PR02MB10188:EE_
-x-ms-office365-filtering-correlation-id: b87c3ce7-142a-4f6e-7470-08dd77cd4a0d
-x-microsoft-antispam:
- BCL:0;ARA:14566002|12121999004|19110799003|8060799006|15080799006|8062599003|461199028|3412199025|440099028|102099032|12091999003|41001999003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?PwhT/Fia8E1U9ChqRNjhYc0D4Kdv/TKebzYsECN/XuX3OQ90MjMj0s8mQFl0?=
- =?us-ascii?Q?G2NL4BqhvVf2o9MYBaKXOAwAIo7oZXbvPkifDlBYI4h9wMulaCIy3z++nYzx?=
- =?us-ascii?Q?W8X+Lk9rFz5mdVw1ipUdQ+Jjp7/I6d32wMo+xGc0Dxmyr5/qLoC1ma3HV7nz?=
- =?us-ascii?Q?tIZsb+L9e/HW15k2llnGIAcRjpKbzngfG5fGQlQcKB6un15fsiKpfvkidVxy?=
- =?us-ascii?Q?8fi+Hzxr2efe68oy6199EfPuGnCL63GtYZaFkxfwiVf7kQaQaLBf+ncSVidq?=
- =?us-ascii?Q?P8DLtHw+Zn4TvuxEdqZ+Kw75JUO8Wu59GlEPXv5Ecv0rktbAPbK7rRXvELZw?=
- =?us-ascii?Q?BE6pHl7kpIvJj5ADijwvtFmc0gI7bX6G/ltxixINPgxgvtObNAH2FkLZZydD?=
- =?us-ascii?Q?QGgHPZBA6eatx9UrQIa3B+RcHXKu4toYdE6+TnDOuiEbCfRFSadNyKv85ggx?=
- =?us-ascii?Q?+WB44LLXB9CwDdiOi3tEdEnvGPtx1HI6jtZZb7cTIQT2cRSqm65OTA8PcjME?=
- =?us-ascii?Q?gVfOWsJYwW+yuvgoyLccXuuur/+mYQC2QHa1IUeOAxMcIjLwTLxVdAXpDXrX?=
- =?us-ascii?Q?2zNTCRA+kR4Nizi2kgOp3svmKd6WmtQzvYM9J4XQMiGzQ5x6BOD7a54ym+i3?=
- =?us-ascii?Q?ZxP/UTAGmCfZjKLOYv5DsUuBXTAMH04iaDQ5hWM7T/Ec/ZIa89BmlyTq0NbL?=
- =?us-ascii?Q?P2Gf+mZWrumVQeYUl85jKyWLLlfMv/VcOg5LLINoyU71QcHsBaP7o/og/pYr?=
- =?us-ascii?Q?EZo8SJR1/xbtWJ/YExiQgpwLcP2RhgwpYOk0Ov/lvBiz4G7QJtucOGxygka3?=
- =?us-ascii?Q?CommPqHfFDic1n/AKACGP7+ryxaOiA0Dvxr4Qo5m3L4nSpUGgBxRTVKvZS+5?=
- =?us-ascii?Q?9cS4uuAQT8rvncWIvHX+PZxEltWdPtbbPJ07gd/R0qn+3DxUv6GYfPEF+tpH?=
- =?us-ascii?Q?lJUafXsb7Jhs8i+pCcLgcQfJNq1PyVhkizd9/AHPa7iMSXEq7Wb8p8wwoCOy?=
- =?us-ascii?Q?WyAuGHZ9+D7S9Lc2krzp9ZNP55+AxtcpJnXYdGb/Y1RCeMxBPw3tlDM9Gi8w?=
- =?us-ascii?Q?EKwD2ksl2iypypFj3HiTVu9MLg2Et0uXxDWHnawNbELogU0yaMtj7e+4rs02?=
- =?us-ascii?Q?WTa9AXFCqltytWUhMXj/L8LhP1sSJ6nuzevhBnfA/iFZr5gCVBECpYE=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?A6+vKqkKYS6vsuywgRRj1BjJwmC1LUQzu38UEzsPfdKavvuqBwUIWPHbid3x?=
- =?us-ascii?Q?Olfk7HGKKzHFmcOBNqgIo9FM52tlMJ6CiNtAt8oVhm/mBvywPAa8aJe4gxvR?=
- =?us-ascii?Q?/NuAoY6ylNNc75kOcFwDsBuAPdO7k2d/MxTLq7xkL52sDMiykkYcsgWRP86m?=
- =?us-ascii?Q?a9mRW27nAd6YjyOBhdvdgl4tIIR3KkTnvqSfngG6gtsUzBnfkjXUjU5iYL0j?=
- =?us-ascii?Q?9ouVI0w6nYl4sdy3tVQ2hLJMMZjT3S034oHkFj6jd7aHsQNeKG40FNU7YGl6?=
- =?us-ascii?Q?yiocbnqXJTbJx+EV+IqKdPjBuYj5+hh2zx6+3T3hbdTSCTiuiwPhFT5KaLjh?=
- =?us-ascii?Q?tsltZLHCgF6k1BBS/uHz8Nalp2nJgDTjaZp3m5tP5eQ6nezLilAkd6gk53iV?=
- =?us-ascii?Q?5NMhJ3YRdzAOmkbLQuXwRsj/nlqMpSKfmNyQDNfQNCh6+z63pYk587/7ppod?=
- =?us-ascii?Q?1wgdIvZ+snQocc4+qGUy1CdlNCk9SYQLiJ1B+AhHO25Z4BZthUHUv4VwADDC?=
- =?us-ascii?Q?Zi4AjRVlSLBMqiw32G+0fiFIY0nth1xhx0PFkc3SITWvv8k8v1KlVf7ZtwVh?=
- =?us-ascii?Q?PZnRoVoOC8qiHAXraBw0Ck1pfBALuBNlr6gNuzYmV7dFbxK1i2KgjxlS52vf?=
- =?us-ascii?Q?LK+8wOD9T7STg5MgJE9pUGMAuO/OSl2+C76+jIggf88gO2wMjKZlXj3ncj0G?=
- =?us-ascii?Q?8NDrB7Y5E1hqRdbZfKJYybJXP45qF0lsvAe4fG8g1nOLjSyc+XtA1SD5i89t?=
- =?us-ascii?Q?Aq418ijrIGGzlHfboQbxUCZxqup3yh+m4qj9d5f9HbDslzVFk7lBvhkc96vj?=
- =?us-ascii?Q?1XJTmQ9e7acJAoB1ZScQ/IbmfDk6xsKcF3Xn6uiJmsvXpWmstv8X5ny2BXcV?=
- =?us-ascii?Q?mnPbAlHV69SgcIC8gJrl2pSbMkyt/OQRtTuYGcKahg5gKkTsGkhj/WnMSoPd?=
- =?us-ascii?Q?nMoNTV36RaTK1CjVe/4lltYWQSebRg171MXm/ucUajIogwk4jwiOBDlkkVvZ?=
- =?us-ascii?Q?YiswCCbILpkLZD30txSmah9E9aE+esEtnY1JrYxXhvyGAlMeRUi+Cho+RRIT?=
- =?us-ascii?Q?pWjt+RGl+xPBQSD2d+mTl58Iq42MFU0iYIX2lQDUFMWb+hJrhleU2i4pqqBa?=
- =?us-ascii?Q?8fXCs5iN2YWw1c48NenljDC67CrPKEkoT1nO51bmLr5w9xI/ZQqpdoggM5NB?=
- =?us-ascii?Q?22ZWla+xh95VGVweGDZbhKCqQGprMRpVdFLMZG9skIg8Y/OFFka4KQMbKgY?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D8jlp+Ku"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744247852;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=7xzS7XLZY2qdrM4JSVF6iQPAbqPC6buSHi7Kkm+Ts/w=;
+	b=D8jlp+KuWvH85KbH0XAtD41uQptUdAvjGtIsyOEGez94vM7/7wg+7dANcrnPFoHgMSKOBC
+	epNuevRKhFA7nMvOpkOGNdK1kVXX/wgJHXznxPRYGZLl1l/hpYN5kS8RRbCW+6t/gYKQM6
+	4VuG/uxbHNk9RVihNEF1faQ6HzqRI/8=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-490-55Ufwx4PMPeXsvytWIdkgA-1; Wed, 09 Apr 2025 21:17:30 -0400
+X-MC-Unique: 55Ufwx4PMPeXsvytWIdkgA-1
+X-Mimecast-MFC-AGG-ID: 55Ufwx4PMPeXsvytWIdkgA_1744247849
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2262051205aso1823575ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 18:17:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744247849; x=1744852649;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7xzS7XLZY2qdrM4JSVF6iQPAbqPC6buSHi7Kkm+Ts/w=;
+        b=Z1PGmjfQuTAHraCSPpDI/VA3Zb3F82mMUb4yQqmBkIRgBsRKv5Qt559cUFUUMn1ecA
+         VHrIjjbzt5BXAcbEt4BdrWFVS1e83iHsNhGQiwYObump3hrk+2d/5yqgM0H9CnyDbyuv
+         q7vR8oNav3NBEonYnbNNwhOZu4M2KmsdobyP6wy5m6feGkqTGt19BknpNP3EGLU98CSM
+         vIxVRjY8bH3oFXeCwvzl//8tcOh5M4OGbcoso2TI256SAds7nqv3wnvWTiUrpP3top3z
+         CHaMKdlv+HVPRRkEukmkc59D+f6ftvX8bmr0nikIWrXSD3axTttDNsKb+g4uwPTibFIh
+         j7Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbcJMyoToBdx2frrghET/qZPh7fEHmJsYly39WjMeUzSmxXy4qtqe7pk/HFwKNtFONU+khaFWOMlOkRic=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2AMyy62YD2+w+g/+4EUxznINk/lJVHo8C9nW1pOiOZnREzDbe
+	alJj63aWooQy7T7hKjofHwEoUly+8jj+EbXTwvOOCWB/TK5s72ZhgUtUdXLNiLbM7vaqqczxKjF
+	v5iInAWGoflJ9bZ5RLXJLVVW7HyH1jN/UhxcM53gOzQocoIVwTOyta7ojcecQWg==
+X-Gm-Gg: ASbGncuJ2MT2yYgNqzJFgz13CeLxkSCcLD+6cBtt4c/9yMd+zf6521swKlovmDQKczr
+	uXly9X+w//mfMItVMGc16G3OerYuUdQ9hBAZe6YOFkpRR/6cWk+HIPOKgmoVVte5sUi9fWpyHUp
+	TNK6RCHvuPrSSWDhuAk2ha5PWwQ5D/Hw9Hb3InRQErLOFovE133nfo/ADB02zgmhfWvNDv6NE1j
+	VYZyAQrwALzRH6qMh3L0HoCRzP/FCzL8uHI3VHTH3Yv3GLHk9y1RYh84oJ9NabLsIbXMOCI49YK
+	Ce2tG87nVw4Sbp3Y3X+DR72PyjPSHcyeUfCX/cqFLiBap6x4k8j57OzCdVGoHbbl
+X-Received: by 2002:a17:902:ce0a:b0:224:1d1c:8837 with SMTP id d9443c01a7336-22b2edcf2a7mr14689865ad.19.1744247849313;
+        Wed, 09 Apr 2025 18:17:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHbv/B25q/BG5rbos8mxYjUX40TLjvJ7m9oY6FlTJ/MEsfzB1q0qTMpChUkwgKeFWkzHCTyQ==
+X-Received: by 2002:a17:902:ce0a:b0:224:1d1c:8837 with SMTP id d9443c01a7336-22b2edcf2a7mr14689475ad.19.1744247848844;
+        Wed, 09 Apr 2025 18:17:28 -0700 (PDT)
+Received: from [192.168.0.229] (159-196-82-144.9fc452.per.static.aussiebb.net. [159.196.82.144])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cafdaasm18861255ad.165.2025.04.09.18.17.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 18:17:28 -0700 (PDT)
+Message-ID: <18e35aab-9cbc-4df0-b88f-34e390a21c8c@redhat.com>
+Date: Thu, 10 Apr 2025 09:17:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: b87c3ce7-142a-4f6e-7470-08dd77cd4a0d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2025 01:16:15.0620
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR02MB10188
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+To: Christian Brauner <brauner@kernel.org>,
+ Eric Chanudet <echanude@redhat.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, Alexander Larsson <alexl@redhat.com>,
+ Lucas Karpinski <lkarpins@redhat.com>
+References: <20250408210350.749901-12-echanude@redhat.com>
+ <20250409-egalisieren-halbbitter-23bc252d3a38@brauner>
+Content-Language: en-US
+From: Ian Kent <ikent@redhat.com>
+Autocrypt: addr=ikent@redhat.com; keydata=
+ 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
+In-Reply-To: <20250409-egalisieren-halbbitter-23bc252d3a38@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Dan Williams <dan.j.williams@intel.com> Sent: Wednesday, April 9, 202=
-5 4:30 PM
->=20
-> [ add linux-coco ]
->=20
-> Roman Kisel wrote:
-> >
-> >
-> > On 4/9/2025 9:03 AM, Robin Murphy wrote:
-> > > On 2025-04-09 1:08 am, Roman Kisel wrote:
-> > >> Bounce-buffering makes the system spend more time copying
-> > >> I/O data. When the I/O transaction take place between
-> > >> a confidential and a non-confidential endpoints, there is
-> > >> no other way around.
-> > >>
-> > >> Introduce a device bitfield to indicate that the device
-> > >> doesn't need to perform bounce buffering. The capable
-> > >> device may employ it to save on copying data around.
-> > >
-> > > It's not so much about bounce buffering, it's more fundamentally abou=
-t
-> > > whether the device is trusted and able to access private memory at al=
-l
-> > > or not. And performance is hardly the biggest concern either - if you=
- do
-> > > trust a device to operate on confidential data in private memory, the=
-n
-> > > surely it is crucial to actively *prevent* that data ever getting int=
-o
-> > > shared SWIOTLB pages where anyone else could also get at it. At worst
-> > > that means CoCo VMs might need an *additional* non-shared SWIOTLB to
-> > > support trusted devices with addressing limitations (and/or
-> > > "swiotlb=3Dforce" debugging, potentially).
-> >
-> > Thanks, I should've highlighted that facet most certainly!
->=20
-> One would hope that no one is building a modern device with trusted I/O
-> capability, *and* with a swiotlb addressing dependency. However, I agree
-> that a non-shared swiotlb would be needed in such a scenario.
->=20
-> Otherwise the policy around "a device should not even be allowed to
-> bounce buffer any private page" is a userspace responsibility to either
-> not load the driver, not release secrets to this CVM, or otherwise make
-> sure the device is only ever bounce buffering private memory that does
-> not contain secrets.
->=20
-> > > Also whatever we do for this really wants to tie in with the nascent
-> > > TDISP stuff as well, since we definitely don't want to end up with mo=
-re
-> > > than one notion of whether a device is in a trusted/locked/private/et=
-c.
-> > > vs. unlocked/shared/etc. state with respect to DMA (or indeed anythin=
-g
-> > > else if we can avoid it).
-> >
-> > Wouldn't TDISP be per-device as well? In which case, a flag would be
-> > needed just as being added in this patch.
-> >
-> > Although, there must be a difference between a device with TDISP where
-> > the flag would be the indication of the feature, and this code where th=
-e
-> > driver may flip that back and forth...
-> >
-> > Do you feel this is shoehorned in `struct device`? I couldn't find an
-> > appropriate private (=3D=3D opaque pointer) part in the structure to st=
-ore
-> > that bit (`struct device_private` wouldn't fit the bill) and looked lik=
-e
-> > adding it to the struct itself would do no harm. However, my read of th=
-e
-> > room is that folks see that as dubious :)
-> >
-> > What would be your opinion on where to store that flag to tie together
-> > its usage in the Hyper-V SCSI and not bounce-buffering?
->=20
-> The name and location of a flag bit is not the issue, it is the common
-> expectation of how and when that flag is set.
->=20
-> tl;dr Linux likely needs a "private_accepted" flag for devices
->=20
-> Like Christoph said, a driver really has no business opting itself into
-> different DMA addressing domains. For TDISP we are also being careful to
-> make sure that flipping a device from shared to private is a suitably
-> violent event. This is because the Linux DMA layer does not have a
-> concept of allowing a device to have mappings from two different
-> addressing domains simultaneously.
->=20
-> In the current TDISP proposal, a device starts in shared mode and only
-> after validating all of the launch state of the CVM, device
-> measurements, and a device interface report is it granted access to
-> private memory. Without dumping a bunch of golden measurement data into
-> the kernel that validation can really only be performed by userspace.
->=20
-> Enter this vmbus proposal that wants to emulate devices with a paravisor
-> that is presumably within the TCB at launch, but the kernel can not
-> really trust that until a "launch state of the CVM + paravisor"
-> attestation event.
->=20
-> Like PCIe TDISP the capability of this device to access private memory
-> is a property of the bus and the iommu. However, acceptance of the
-> device into private operation is a willful policy action. It needs to
-> validate not only the device provenance and state, but also the Linux
-> DMA layer requirements of not holding shared or swiotlb mappings over
-> the "entry into private mode operation" event.
+On 9/4/25 18:37, Christian Brauner wrote:
+> On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
+>> Defer releasing the detached file-system when calling namespace_unlock()
+>> during a lazy umount to return faster.
+>>
+>> When requesting MNT_DETACH, the caller does not expect the file-system
+>> to be shut down upon returning from the syscall. Calling
+>> synchronize_rcu_expedited() has a significant cost on RT kernel that
+>> defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
+>> mount in a separate list and put it on a workqueue to run post RCU
+>> grace-period.
+>>
+>> w/o patch, 6.15-rc1 PREEMPT_RT:
+>> perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
+>>      0.02455 +- 0.00107 seconds time elapsed  ( +-  4.36% )
+>> perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
+>>      0.02555 +- 0.00114 seconds time elapsed  ( +-  4.46% )
+>>
+>> w/ patch, 6.15-rc1 PREEMPT_RT:
+>> perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
+>>      0.026311 +- 0.000869 seconds time elapsed  ( +-  3.30% )
+>> perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
+>>      0.003194 +- 0.000160 seconds time elapsed  ( +-  5.01% )
+>>
+>> Signed-off-by: Alexander Larsson <alexl@redhat.com>
+>> Signed-off-by: Lucas Karpinski <lkarpins@redhat.com>
+>> Signed-off-by: Eric Chanudet <echanude@redhat.com>
+>> ---
+>>
+>> Attempt to re-spin this series based on the feedback received in v3 that
+>> pointed out the need to wait the grace-period in namespace_unlock()
+>> before calling the deferred mntput().
+> I still hate this with a passion because it adds another special-sauce
+> path into the unlock path. I've folded the following diff into it so it
+> at least doesn't start passing that pointless boolean and doesn't
+> introduce __namespace_unlock(). Just use a global variable and pick the
+> value off of it just as we do with the lists. Testing this now:
 
-To flesh this out the swiotlb aspect a bit, once a TDISP device has
-gone private, how does it prevent the DMA layer from ever doing
-bounce buffering through the swiotlb? My understanding is that
-the DMA layer doesn't make any promises to not do bounce buffering.
-Given the vagaries of memory alignment, perhaps add in a virtual
-IOMMU, etc., it seems like a device driver can't necessarily predict
-what DMA operations might result in bounce buffering. Does TDISP
-anticipate needing a formal way to tell the DMA layer "don't bounce
-buffer"? (and return an error instead?) Or would there be a separate
-swiotlb memory pool that is private memory so that bounce buffer
-could be done when necessary and still maintain confidentiality?
+Yeah, it's painful that's for sure.
 
-Just wondering if there's any thinking on this topic ...
 
-Thanks,
+I also agree with you about the parameter, changing the call signature
 
-Michael
+always rubbed me the wrong way but I didn't push back on it mostly because
+
+we needed to find a way to do it sensibly and it sounds like that's still
+
+the case.
+
+
+AFAICT what's needed is a way to synchronize umount with the lockless path
+
+walk. Now umount detaches the mounts concerned, calls the rcu synchronize
+
+(essentially sleeps) to ensure that any lockless path walks see the umount
+
+before completing. But that rcu sync. is, as we can see, really wasteful so
+
+we do need to find a viable way to synchronize this.
+
+
+Strictly speaking the synchronization problem exists for normal and detached
+
+umounts but if we can find a sound solution for detached mounts perhaps 
+we can
+
+extend later (but now that seems like a stretch) ...
+
+
+I'm not sure why, perhaps it's just me, I don't know, but with this we don't
+
+seem to be working well together to find a solution, I hope we can 
+change that
+
+this time around.
+
+
+I was thinking of using a completion for this synchronization but even that
+
+would be messy because of possible multiple processes doing walks at the 
+time
+
+which doesn't lend cleanly to using a completion.
+
+
+Do you have any ideas on how this could be done yourself?
+
+
+Ian
+
+>
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index e5b0b920dd97..25599428706c 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -82,8 +82,9 @@ static struct hlist_head *mount_hashtable __ro_after_init;
+>   static struct hlist_head *mountpoint_hashtable __ro_after_init;
+>   static struct kmem_cache *mnt_cache __ro_after_init;
+>   static DECLARE_RWSEM(namespace_sem);
+> -static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
+> -static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+> +static bool unmounted_lazily;          /* protected by namespace_sem */
+> +static HLIST_HEAD(unmounted);          /* protected by namespace_sem */
+> +static LIST_HEAD(ex_mountpoints);      /* protected by namespace_sem */
+>   static DEFINE_SEQLOCK(mnt_ns_tree_lock);
+>
+>   #ifdef CONFIG_FSNOTIFY
+> @@ -1807,17 +1808,18 @@ static void free_mounts(struct hlist_head *mount_list)
+>
+>   static void defer_free_mounts(struct work_struct *work)
+>   {
+> -       struct deferred_free_mounts *d = container_of(
+> -               to_rcu_work(work), struct deferred_free_mounts, rwork);
+> +       struct deferred_free_mounts *d;
+>
+> +       d = container_of(to_rcu_work(work), struct deferred_free_mounts, rwork);
+>          free_mounts(&d->release_list);
+>          kfree(d);
+>   }
+>
+> -static void __namespace_unlock(bool lazy)
+> +static void namespace_unlock(void)
+>   {
+>          HLIST_HEAD(head);
+>          LIST_HEAD(list);
+> +       bool defer = unmounted_lazily;
+>
+>          hlist_move_list(&unmounted, &head);
+>          list_splice_init(&ex_mountpoints, &list);
+> @@ -1840,29 +1842,21 @@ static void __namespace_unlock(bool lazy)
+>          if (likely(hlist_empty(&head)))
+>                  return;
+>
+> -       if (lazy) {
+> -               struct deferred_free_mounts *d =
+> -                       kmalloc(sizeof(*d), GFP_KERNEL);
+> +       if (defer) {
+> +               struct deferred_free_mounts *d;
+>
+> -               if (unlikely(!d))
+> -                       goto out;
+> -
+> -               hlist_move_list(&head, &d->release_list);
+> -               INIT_RCU_WORK(&d->rwork, defer_free_mounts);
+> -               queue_rcu_work(system_wq, &d->rwork);
+> -               return;
+> +               d = kmalloc(sizeof(struct deferred_free_mounts), GFP_KERNEL);
+> +               if (d) {
+> +                       hlist_move_list(&head, &d->release_list);
+> +                       INIT_RCU_WORK(&d->rwork, defer_free_mounts);
+> +                       queue_rcu_work(system_wq, &d->rwork);
+> +                       return;
+> +               }
+>          }
+> -
+> -out:
+>          synchronize_rcu_expedited();
+>          free_mounts(&head);
+>   }
+>
+> -static inline void namespace_unlock(void)
+> -{
+> -       __namespace_unlock(false);
+> -}
+> -
+>   static inline void namespace_lock(void)
+>   {
+>          down_write(&namespace_sem);
+> @@ -2094,7 +2088,7 @@ static int do_umount(struct mount *mnt, int flags)
+>          }
+>   out:
+>          unlock_mount_hash();
+> -       __namespace_unlock(flags & MNT_DETACH);
+> +       namespace_unlock();
+>          return retval;
+>   }
+>
+>
+>> v4:
+>> - Use queue_rcu_work() to defer free_mounts() for lazy umounts
+>> - Drop lazy_unlock global and refactor using a helper
+>> v3: https://lore.kernel.org/all/20240626201129.272750-2-lkarpins@redhat.com/
+>> - Removed unneeded code for lazy umount case.
+>> - Don't block within interrupt context.
+>> v2: https://lore.kernel.org/all/20240426195429.28547-1-lkarpins@redhat.com/
+>> - Only defer releasing umount'ed filesystems for lazy umounts
+>> v1: https://lore.kernel.org/all/20230119205521.497401-1-echanude@redhat.com/
+>>
+>>   fs/namespace.c | 52 +++++++++++++++++++++++++++++++++++++++++++-------
+>>   1 file changed, 45 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/fs/namespace.c b/fs/namespace.c
+>> index 14935a0500a2..e5b0b920dd97 100644
+>> --- a/fs/namespace.c
+>> +++ b/fs/namespace.c
+>> @@ -45,6 +45,11 @@ static unsigned int m_hash_shift __ro_after_init;
+>>   static unsigned int mp_hash_mask __ro_after_init;
+>>   static unsigned int mp_hash_shift __ro_after_init;
+>>   
+>> +struct deferred_free_mounts {
+>> +	struct rcu_work rwork;
+>> +	struct hlist_head release_list;
+>> +};
+>> +
+>>   static __initdata unsigned long mhash_entries;
+>>   static int __init set_mhash_entries(char *str)
+>>   {
+>> @@ -1789,11 +1794,29 @@ static bool need_notify_mnt_list(void)
+>>   }
+>>   #endif
+>>   
+>> -static void namespace_unlock(void)
+>> +static void free_mounts(struct hlist_head *mount_list)
+>>   {
+>> -	struct hlist_head head;
+>>   	struct hlist_node *p;
+>>   	struct mount *m;
+>> +
+>> +	hlist_for_each_entry_safe(m, p, mount_list, mnt_umount) {
+>> +		hlist_del(&m->mnt_umount);
+>> +		mntput(&m->mnt);
+>> +	}
+>> +}
+>> +
+>> +static void defer_free_mounts(struct work_struct *work)
+>> +{
+>> +	struct deferred_free_mounts *d = container_of(
+>> +		to_rcu_work(work), struct deferred_free_mounts, rwork);
+>> +
+>> +	free_mounts(&d->release_list);
+>> +	kfree(d);
+>> +}
+>> +
+>> +static void __namespace_unlock(bool lazy)
+>> +{
+>> +	HLIST_HEAD(head);
+>>   	LIST_HEAD(list);
+>>   
+>>   	hlist_move_list(&unmounted, &head);
+>> @@ -1817,12 +1840,27 @@ static void namespace_unlock(void)
+>>   	if (likely(hlist_empty(&head)))
+>>   		return;
+>>   
+>> -	synchronize_rcu_expedited();
+>> +	if (lazy) {
+>> +		struct deferred_free_mounts *d =
+>> +			kmalloc(sizeof(*d), GFP_KERNEL);
+>>   
+>> -	hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
+>> -		hlist_del(&m->mnt_umount);
+>> -		mntput(&m->mnt);
+>> +		if (unlikely(!d))
+>> +			goto out;
+>> +
+>> +		hlist_move_list(&head, &d->release_list);
+>> +		INIT_RCU_WORK(&d->rwork, defer_free_mounts);
+>> +		queue_rcu_work(system_wq, &d->rwork);
+>> +		return;
+>>   	}
+>> +
+>> +out:
+>> +	synchronize_rcu_expedited();
+>> +	free_mounts(&head);
+>> +}
+>> +
+>> +static inline void namespace_unlock(void)
+>> +{
+>> +	__namespace_unlock(false);
+>>   }
+>>   
+>>   static inline void namespace_lock(void)
+>> @@ -2056,7 +2094,7 @@ static int do_umount(struct mount *mnt, int flags)
+>>   	}
+>>   out:
+>>   	unlock_mount_hash();
+>> -	namespace_unlock();
+>> +	__namespace_unlock(flags & MNT_DETACH);
+>>   	return retval;
+>>   }
+>>   
+>> -- 
+>> 2.49.0
+>>
+
