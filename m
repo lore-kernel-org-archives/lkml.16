@@ -1,39 +1,50 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD3918A6C4;
-	Thu, 10 Apr 2025 02:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CFC8BEA;
+	Thu, 10 Apr 2025 02:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744253684; cv=none; b=bQRfGn0B8499MAKDLO5lYajBXn5bynwHdDlX4DpCDVJKNkVcC9CxmqZ32VUcKZ9VR2PK8kF3S86dU1W633UBvbDXZjemEeF1m02OgbTSK2S7eI+z06UzbEApnAgL/cDRkKqwoU2LN90mZVZU0KGTswC23/xeDgMZV4jhZjVJbzE=
+	t=1744253709; cv=none; b=glrkLVvwLMG4J4HC7jaV476bbtKRXIAb4KQejb733QdsVYCMlDs1YjH7nQy2lAlPv8EDeT9wSxQzEloe+OHvTIqWsXW5c0sbHxG9eiNpYigqF4NNkH1lfzradCRmVYmfb0riLkpLt+3Gw62aHkD/kZC/Twwk/g4PqviRO4fJk0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744253684; c=relaxed/simple;
-	bh=D8Gt7U14f7E5akNQWxL4TI1DqEtJhC1ZuLgq1Pq2ipM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oh54XlkKY6Ffk328vmxPIphR0HS7u57Po/Qt7zNkAXAd9Emh7NDMahlTaSfG2dk6az9rL7fb+iSlztHORWHZdTYsFx4NYytRJokuCe+Llv3GS4p+nUn7kQ/DvLScKCU3pHBhmJ4c3BFAokfseJw19YXbbrOH4Lm8pdqTY4lEpJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowABnDf7fMvdnNSHDBw--.25448S2;
-	Thu, 10 Apr 2025 10:54:25 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: robdclark@gmail.com,
-	sean@poorly.run,
-	konradybcio@kernel.org,
-	quic_abhinavk@quicinc.com,
-	lumag@kernel.org,
-	marijn.suijten@somainline.org,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] drm/msm: Convert comma to semicolon
-Date: Thu, 10 Apr 2025 10:52:21 +0800
-Message-Id: <20250410025221.3358387-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744253709; c=relaxed/simple;
+	bh=ntJDYlFgj9fz/wJJAGnGgdBadWpsnZOLS8ysbhL8i3Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Kk6abV9civcKe2rkLJTyu6aP7X+hGF2zPu5QMlB1yzBDsPck43DIz2Gm4GG3Vhv4rIl8K8r0q/knNRcqVSHMb2XdhQ2Z7AmnuEMoGK5rU6oBv3xoiTLg2xagjNSRaL3EUSHAoza4kC75TmNpzEnzR7dg2YkZVMQBqoZ0l7e8gHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=LNeURRFM; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="LNeURRFM"
+Received: from canonical.com (118-163-61-247.hinet-ip.hinet.net [118.163.61.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 38FDA3F10A;
+	Thu, 10 Apr 2025 02:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1744253190;
+	bh=Tn+OooYTtNSV3ykkQzsFSQ8UTaiB3yu7GZAh112kkm0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=LNeURRFMFkUfySNzGo257C6TakvvNYZqKVASj1swinz6sC5cz1AC08KWWjMa3+3E1
+	 +yM2463DZG4ZoGwVWbzCA1I+iL0DCJBW8In9/UP7+VjZrKhm5eOjYu+xrfPl39GjDa
+	 GcOPb1+AxGZLw1qayfPT7WkKQCFSa+MMeiMNFkCTAzFjvvqCAYi3H4eBx35Y/DhmTv
+	 HYB+X2G8FSftvgkI4hCdrG5UYvSD7pfvUp7x2Kr7GZU9lG9yPhIQhZ7Ba9LH3XIL4t
+	 e0jAc+gxWPuBRcOo2j+XiatLzG4OKLh1P/TG73DSF26IlKX+5uvoV6QvJd8dH68y6Y
+	 9xVt8+9UuyKNQ==
+From: Ivan Hu <ivan.hu@canonical.com>
+To: gregkh@linuxfoundation.org,
+	krzysztof.kozlowski@linaro.org,
+	limiao@kylinos.cn,
+	wangyuli@uniontech.com,
+	jinxiaobo@uniontech.com,
+	huanglei@kylinos.cn,
+	mathias.nyman@linux.intel.com
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: quirks: Add quirk to prefer vendor-specific configuration
+Date: Thu, 10 Apr 2025 10:46:26 +0800
+Message-Id: <20250410024626.981215-1-ivan.hu@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,53 +52,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABnDf7fMvdnNSHDBw--.25448S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gr4rCw4kuw4kuw1xGrW3ZFb_yoWDWFbEk3
-	9YgwsrCF47KFnYkFn3ArWSvFyakw1YkFW8Wr12q3yYyr1qkFs5ur9IqFyDXw1UZF4jvFyD
-	ZayrXF45AF9xWjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHyIUUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Replace comma between expressions with semicolons.
+Some USB devices with multiple configurations expose a vendor-specific
+interface class that should be preferred by default. However, the generic
+usb_choose_configuration() logic selects the first configuration whose
+first interface uses a non-vendor-specific class, which can lead to
+incomplete or limited functionality.
 
-Using a ',' in place of a ';' can have unintended side effects.
-Although that is not the case here, it is seems best to use ';'
-unless ',' is intended.
+Introduce a new quirk, USB_QUIRK_CHOOSE_VENDOR_SPEC_CFG, which
+instructs the USB core to prefer a configuration that contains a
+vendor-specific interface class when multiple configurations are present.
 
-Found by inspection.
-No functional change intended.
-Compile tested only.
+Apply this quirk to the ASIX AX88179 USB Ethernet adapter
+(0x0b95:0x1790), which requires selecting its vendor-specific
+configuration for full functionality, instead of falling back to
+cdc_ncm.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Ivan Hu <ivan.hu@canonical.com>
 ---
- drivers/gpu/drm/msm/msm_ringbuffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/generic.c | 15 +++++++++++++++
+ drivers/usb/core/quirks.c  |  3 +++
+ include/linux/usb/quirks.h |  3 +++
+ 3 files changed, 21 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.c b/drivers/gpu/drm/msm/msm_ringbuffer.c
-index c5651c39ac2a..89dce15eed3b 100644
---- a/drivers/gpu/drm/msm/msm_ringbuffer.c
-+++ b/drivers/gpu/drm/msm/msm_ringbuffer.c
-@@ -93,7 +93,7 @@ struct msm_ringbuffer *msm_ringbuffer_new(struct msm_gpu *gpu, int id,
- 	}
+diff --git a/drivers/usb/core/generic.c b/drivers/usb/core/generic.c
+index 9c6ae5e1198b..19bf35ede5a0 100644
+--- a/drivers/usb/core/generic.c
++++ b/drivers/usb/core/generic.c
+@@ -23,6 +23,7 @@
+ #include <linux/usb/hcd.h>
+ #include <linux/string_choices.h>
+ #include <uapi/linux/usb/audio.h>
++#include <linux/usb/quirks.h>
+ #include "usb.h"
  
- 	msm_gem_object_set_name(ring->bo, "ring%d", id);
--	args.name = to_msm_bo(ring->bo)->name,
-+	args.name = to_msm_bo(ring->bo)->name;
+ static int is_rndis(struct usb_interface_descriptor *desc)
+@@ -155,6 +156,20 @@ int usb_choose_configuration(struct usb_device *udev)
+ 			continue;
+ 		}
  
- 	ring->end   = ring->start + (MSM_GPU_RINGBUFFER_SZ >> 2);
- 	ring->next  = ring->start;
++		/* This quirk forces the selection of a vendor-specific
++		 * interface class configuration when multiple configurations
++		 * are present.
++		 */
++		if (num_configs > 1 &&
++			udev->descriptor.bDeviceClass ==
++						USB_CLASS_PER_INTERFACE &&
++				udev->quirks & USB_QUIRK_CHOOSE_VENDOR_SPEC_CFG
++				&& (desc && desc->bInterfaceClass ==
++						USB_CLASS_VENDOR_SPEC)) {
++			best = c;
++			break;
++		}
++
+ 		/* When the first config's first interface is one of Microsoft's
+ 		 * pet nonstandard Ethernet-over-USB protocols, ignore it unless
+ 		 * this kernel has enabled the necessary host side driver.
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index 8efbacc5bc34..1e0e05cb29df 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -565,6 +565,9 @@ static const struct usb_device_id usb_quirk_list[] = {
+ 	/* INTEL VALUE SSD */
+ 	{ USB_DEVICE(0x8086, 0xf1a5), .driver_info = USB_QUIRK_RESET_RESUME },
+ 
++	/* ASIX AS88179 */
++	{ USB_DEVICE(0x0b95, 0x1790), .driver_info = USB_QUIRK_CHOOSE_VENDOR_SPEC_CFG },
++
+ 	{ }  /* terminating entry must be last */
+ };
+ 
+diff --git a/include/linux/usb/quirks.h b/include/linux/usb/quirks.h
+index 59409c1fc3de..1f73bfc191f0 100644
+--- a/include/linux/usb/quirks.h
++++ b/include/linux/usb/quirks.h
+@@ -75,4 +75,7 @@
+ /* short SET_ADDRESS request timeout */
+ #define USB_QUIRK_SHORT_SET_ADDRESS_REQ_TIMEOUT	BIT(16)
+ 
++/* force selection of vendor-specific configuration*/
++#define USB_QUIRK_CHOOSE_VENDOR_SPEC_CFG	BIT(17)
++
+ #endif /* __LINUX_USB_QUIRKS_H */
 -- 
-2.25.1
+2.34.1
 
