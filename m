@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586DA1EFFA4;
-	Thu, 10 Apr 2025 07:29:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9E120AF77;
+	Thu, 10 Apr 2025 07:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270170; cv=none; b=nqk4xQmDwVI8hPUT5//N/phaWcJi9e5a+XhBfj0blwtsTtII07MTIUM/TvcRExLtw409J0goZVDANr0QPrfD85SSb0t00KYL7wgbECEs20wJATkQ8C2vi7W5lSb/fiS3O0Cp9txWOuYwIRAIVbmrqBQfBxgr4ftlik/4opS9m6E=
+	t=1744270172; cv=none; b=ogJ2CbSWRURZoL1KkeME7vjV098ZYYCd3AtdP9+ZjT66/qqGjE+5WlmQ0FhKk83U+I56hJLfykdFkNCaSXeXDtnie8d10Br6IFvJOI+/bCmO9/DONhVBeLyoF56728BhzwWCwn4kQ4vt2V4ogAW0IEuGs+7Zg05BQHOXYpDZA74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270170; c=relaxed/simple;
-	bh=9wI4FzW4dvPTJaaSaTVoIrjJlrBAMIwR0zeIruLJujo=;
+	s=arc-20240116; t=1744270172; c=relaxed/simple;
+	bh=OGYNRgQopSq7MTnNOOCJV0HUeFVtR+nQ/5cCkY8zlEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AxIlB9X0lK2+VcGqR/927m7WEa9hHgGBptJ3oIu9HOodmq1AQaKqMZwtzBFfTETZFv57OZ47LBIEaAoY5IzG7CFsiMj/h5iwIooY8v0UaHrJHmil9lhnFHVQaiMHCYt4l5W98g0FXe4+RP0TI7o+cS+PxHkRdCckYmCaB3OGIU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALJX1Ds/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=M4S3yXYcCMwGiVr2BH4RXSA10rAoChW26Q1cPZBt0ja0/PyGB/e86OeP9luKhLRpNVc1aiCmng66xKBTjUn4ZVaJLI7YlB4CSZuCCP8EUzGP/ko0N45GfXIpUcF//GFH2RuZirFrVszev9ZbPSecGfDmrt5mr3DTtV03EaGB1bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fp+Sj79S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALJX1Ds/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC3C6C4CEDD;
-	Thu, 10 Apr 2025 07:29:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fp+Sj79S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45765C4CEEA;
+	Thu, 10 Apr 2025 07:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744270169;
-	bh=9wI4FzW4dvPTJaaSaTVoIrjJlrBAMIwR0zeIruLJujo=;
+	s=k20201202; t=1744270170;
+	bh=OGYNRgQopSq7MTnNOOCJV0HUeFVtR+nQ/5cCkY8zlEg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ALJX1Ds/AVuStx7ClGgLEJ6F++y+T5sz8o+jketTwnYuvE8wZDAEquKUcpYFYS/3J
-	 RZJNmKU6gn9GitNPbdU0pgQUvVZwQpUwBWVVRC+9xgv4FNPqKjXSWn2Iu9T5gtkiPN
-	 OFvQBQD7ExUj7rf6WIYwYeEopzCoaNFnITLd3HPt/Fv7GiBjCS4FSXiErDDgkRWXDM
-	 /CZDqvEGwthnwDhvCltO9K/GSJYpeFLvJw5T6Tp83LhAOD8hxFCcKkNdjLO2Q0RomM
-	 B70r9oIT0YFruQ3GLP7uSVw62QiPGziYTTawRNV/QeWKMsoqtlWCSd/eiZwQSehrc/
-	 IQ9jHAp5wAOnA==
-Date: Thu, 10 Apr 2025 08:29:23 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
-Message-ID: <20250410072923.GK372032@google.com>
-References: <20250409144250.206590-1-ivecera@redhat.com>
+	b=Fp+Sj79S4PEoDdHd6SL77A77I9x4L+/H97awloSYzSb+qwGjS24WULW21oAyEHdqt
+	 Y/Vn3YBpduLwtwnj/TQlwBerBpkFp8FEhxIQT9ff1wOZxRcO/nO0jWVwa47Q2QoCV3
+	 frDGz/4bVhWMLdQQEchkiC14TgOUdeQ5LNi5wZG/KDmB5GSPY9kg04+5LySqFNH59r
+	 imdd3x3+ttQKh4BN7uYs+vbhbdiIlw6hFlJFnYfMYZNAYFsUqZthXzJrERV7ptk4uI
+	 rXcn1ONdmlnesAWGhy00P30R8Imhv9luMalQ2zbhgRG/B+ryBd9YqgxJPifImfh+U5
+	 RTPHZ2CpaqHFA==
+Date: Thu, 10 Apr 2025 09:29:28 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Nipun Gupta <nipun.gupta@amd.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, krzk+dt@kernel.org, gregkh@linuxfoundation.org, robh@kernel.org, 
+	conor+dt@kernel.org, ogabbay@kernel.org, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	derek.kiernan@amd.com, dragan.cvetic@amd.com, arnd@arndb.de, praveen.jain@amd.com, 
+	harpreet.anand@amd.com, nikhil.agarwal@amd.com, srivatsa@csail.mit.edu, code@tyhicks.com, 
+	ptsm@linux.microsoft.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: accel: add device tree for AMD PKI
+ accelerator
+Message-ID: <20250410-flat-violet-bull-a2a0b7@shite>
+References: <20250409173033.2261755-1-nipun.gupta@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,82 +48,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250409144250.206590-1-ivecera@redhat.com>
+In-Reply-To: <20250409173033.2261755-1-nipun.gupta@amd.com>
 
-On Wed, 09 Apr 2025, Ivan Vecera wrote:
+On Wed, Apr 09, 2025 at 11:00:31PM GMT, Nipun Gupta wrote:
+> Add binding documentation for AMD PKI accelerator supported for AMD
+> versal-net SoC.
+>
 
-> Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
-> provides DPLL and PTP functionality. This series bring first part
-> that adds the common MFD driver that provides an access to the bus
-> that can be either I2C or SPI.
-> 
-> The next series will bring the DPLL driver that will covers DPLL
-> functionality. And another ones will bring PTP driver and flashing
-> capability via devlink.
-> 
-> Testing was done by myself and by Prathosh Satish on Microchip EDS2
-> development board with ZL30732 DPLL chip connected over I2C bus.
-> 
-> Patch breakdown
-> ===============
-> Patch 1 - Common DT schema for DPLL device and pin
-> Patch 3 - Basic support for I2C, SPI and regmap
-> Patch 4 - Devlink registration
-> Patches 5-6 - Helpers for accessing device registers
-> Patches 7-8 - Component versions reporting via devlink dev info
-> Patches 9-10 - Helpers for accessing register mailboxes
-> Patch 11 - Clock ID generation for DPLL driver
-> Patch 12 - Export strnchrnul function for modules
->            (used by next patch)
-> Patch 13 - Support for MFG config initialization file
-> Patch 14 - Fetch invariant register values used by DPLL and later by
->            PTP driver
-> 
-> Ivan Vecera (14):
->   dt-bindings: dpll: Add device tree bindings for DPLL device and pin
->   dt-bindings: dpll: Add support for Microchip Azurite chip family
->   mfd: Add Microchip ZL3073x support
->   mfd: zl3073x: Register itself as devlink device
->   mfd: zl3073x: Add register access helpers
->   mfd: zl3073x: Add macros for device registers access
->   mfd: zl3073x: Add components versions register defs
->   mfd: zl3073x: Implement devlink device info
->   mfd: zl3073x: Add macro to wait for register value bits to be cleared
->   mfd: zl3073x: Add functions to work with register mailboxes
->   mfd: zl3073x: Add clock_id field
->   lib: Allow modules to use strnchrnul
->   mfd: zl3073x: Load mfg file into HW if it is present
->   mfd: zl3073x: Fetch invariants during probe
-> 
->  .../devicetree/bindings/dpll/dpll-device.yaml |  76 ++
->  .../devicetree/bindings/dpll/dpll-pin.yaml    |  44 +
->  .../bindings/dpll/microchip,zl3073x-i2c.yaml  |  74 ++
->  .../bindings/dpll/microchip,zl3073x-spi.yaml  |  77 ++
->  MAINTAINERS                                   |  11 +
->  drivers/mfd/Kconfig                           |  32 +
->  drivers/mfd/Makefile                          |   5 +
->  drivers/mfd/zl3073x-core.c                    | 883 ++++++++++++++++++
->  drivers/mfd/zl3073x-i2c.c                     |  59 ++
->  drivers/mfd/zl3073x-spi.c                     |  59 ++
->  drivers/mfd/zl3073x.h                         |  14 +
->  include/linux/mfd/zl3073x.h                   | 363 +++++++
->  lib/string.c                                  |   1 +
->  13 files changed, 1698 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
->  create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
->  create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
->  create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
->  create mode 100644 drivers/mfd/zl3073x-core.c
->  create mode 100644 drivers/mfd/zl3073x-i2c.c
->  create mode 100644 drivers/mfd/zl3073x-spi.c
->  create mode 100644 drivers/mfd/zl3073x.h
->  create mode 100644 include/linux/mfd/zl3073x.h
+A nit, subject: drop second/last, redundant "device tree for". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-FWIW, I'm not planning to even look at this until Andy and Krzysztof are
-satisfied.  What I will say is that all of those horrible macros will
-have to be removed and no abstractions will be accepted unless they are
-accompanied with very good reasons as to why they are required.
+You already got this comment...
 
--- 
-Lee Jones [李琼斯]
+> AMD PKI accelerator is a device on AMD versa-net SoC to execute public key
+> asymmetric crypto operations like ECDSA, ECDH, RSA etc. with high performance.
+> The driver provides accel interface to applications for configuring the device
+> and performing the required operations. AMD PKI device comprises of multiple
+> Barco Silex ba414 PKI engines bundled together, and providing a queue based
+> interface to interact with the device.
+
+...
+
+> 
+>  .../bindings/accel/amd,versal-net-pki.yaml    | 58 +++++++++++++++++++
+>  MAINTAINERS                                   |  8 +++
+>  2 files changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/accel/amd,versal-net-pki.yaml
+
+That's a crypto device, so goes to 'crypto' directory.
+
+> 
+> diff --git a/Documentation/devicetree/bindings/accel/amd,versal-net-pki.yaml b/Documentation/devicetree/bindings/accel/amd,versal-net-pki.yaml
+> new file mode 100644
+> index 000000000000..2dca7458f845
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/accel/amd,versal-net-pki.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/accel/amd,versal-net-pki.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: AMD PKI accelerator device
+> +
+> +maintainers:
+> +  - Nipun Gupta <nipun.gupta@amd.com>
+> +  - Praveen Jain <praveen.jain@amd.com>
+> +
+> +description: |
+> +  AMD PKI accelerator handles the public key asymmetric crypto operations.
+> +  The driver provides accel interface to the application for configuring the
+> +  device and performing the required operations. AMD PKI device comprises of
+> +  multiple Barco Silex ba414 PKI engines bundled together, and providing a
+> +  queue based interface to interact with these devices on AMD versal-net SoC.
+> +
+> +  Link to ba414 datasheet:
+> +  https://datasheet.datasheetarchive.com/originals/crawler/barco-silex.com/34b540b9dc5db40c5bc01999401cf1e4.pdf
+> +
+> +properties:
+> +  compatible:
+> +    const: amd,versal-net-pki
+> +
+> +  reg:
+> +    description: AMD PKI register space
+
+Drop description, obvious.
+
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+
+And the resets? I understand from previous email that there is a reset controller.
+
+> +  iommus: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - iommus
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        amdpk@20400000000 {
+
+crypto@
+
+> +            compatible = "amd,versal-net-pki";
+> +            interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
+> +            reg = <0x204 0x00000000 0x0 0x10000>;
+> +            iommus = <&smmu 0x25b>;
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 96b827049501..11f8815daa77 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1154,6 +1154,14 @@ F:	Documentation/networking/device_drivers/ethernet/amd/pds_core.rst
+>  F:	drivers/net/ethernet/amd/pds_core/
+>  F:	include/linux/pds/
+> 
+> +AMD PKI DRIVER
+> +M:	Nipun Gupta <nipun.gupta@amd.com>
+> +M:	Praveen Jain <praveen.jain@amd.com>
+> +L:	dri-devel@lists.freedesktop.org
+> +S:	Maintained
+> +T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+
+Are you going to apply patches to this tree?
+
+Best regards,
+Krzysztof
+
