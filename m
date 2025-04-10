@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB8C20C012
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42D1215F7F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277083; cv=none; b=TzoOf39xfdnyejP37PexA5bPexRb2nkeeRi4eOI/qZAWr6tO76PsNwnLtgBE8CK9W5MfENGuL5VyaR8pUOUH1ySRD1L3EkVQrx358SAins570X71pRET/8H7i19FpixrGqlLFj2TJP5BbOvHAQd7b2Bj7elOt92CSh++9aUSkSY=
+	t=1744277087; cv=none; b=FanSwNNLSKJvb1+MgV+NZYTJvb9aO7u7MeE61DYioooV8duZeuTOrPJwYW182Zzp2eSKTqoSOeHHsnY/GahAaxWpkagQGRQ3EuqaxCl7rAa6zdf8P5C3CYg6RmdigkdbKS5nw/Oiyx2X78XSVjyKDUHD2e8BtgkfA3GPd2gYhLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277083; c=relaxed/simple;
-	bh=1rME6v6gtNb/UyD8b6NnpJlZDiSJcu7bGJOqqZsY4ss=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RG7qnO9i9Bqxr7q5zjTp9hfIcfporVnnuuT8fI4BBzAz3AdkhrMwhGWIuuGA9F1+/BbqUoYyuxIVPAVJ0sW1h+8czEE9kZxHur0TiODKQ4rFtM8hVoJ4myygdF4HPD5HfNvO1eOA2CEz9OLKtj4q87l0Jwji6SvT3ozI3zjcvyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EenVMZ7c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744277087; c=relaxed/simple;
+	bh=PbDhGkzquJrqYI/6wUXbKMcD1qZhasVialAXVfJ/YPg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UkusR9zjcX9mgHTHOM1LbJEbAmHRf5EDFt65JTRJHu05eeVSw6RADkZJ4nfo2isbKNBfTSC0OlVnZmWYUtiXefT2YytuPqA0o8q8Qc1LUqyqJoCDRtaOlk/FoIAgZfQsNtXyNb5LIOp290JH4Y/CPxsRdFxcbftNhOdIj9vhgxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FEflj/nA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EenVMZ7c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BC24C4CEDD;
-	Thu, 10 Apr 2025 09:24:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FEflj/nA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49627C4CEE3;
+	Thu, 10 Apr 2025 09:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744277082;
-	bh=1rME6v6gtNb/UyD8b6NnpJlZDiSJcu7bGJOqqZsY4ss=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EenVMZ7cR3M/EW8OKmstJ/KtKHKTuSzyU8rF71gbQ29mLNmcCI6zwNzq7mbmlevNx
-	 J6kDyFq4IKeE7m7ZSzmksPX8/9G3BhJNDWPRSWSmTQ6I+BpHf69CCq7cvf0LMc7bqT
-	 tnaW5Cw4tPoayATZYcVEqwad0aC2Gk98yq96EzlbHT5u1vsrXz7WYgyQWqxyd5/E0J
-	 tnlPZyV/nfcN352XcG4dyVeaNV1Nn9rLYyHZyZgNszswXdlRGXzMWZ5sP9xuJzwNmL
-	 BQDzDCl54CR2p2W48WjaYH/x1IRWakI1xfkaoNZ6l55UdRHTex9CRcTCN2hn5ZaaQi
-	 2DWLT5eHCtwMQ==
+	s=k20201202; t=1744277087;
+	bh=PbDhGkzquJrqYI/6wUXbKMcD1qZhasVialAXVfJ/YPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FEflj/nAewXKCN/6QKq0FnGfuTI/Ruy3/WKcI3nV31yyN2I/9TXQ7MMXbtAa5MnSx
+	 MyR6tIWEeNpfMzZE8ofsrLsRkOURP+YF2NRRhizwpWRq/3n7KjxFm82+ZcDm2W8dx8
+	 DuT1ln7H3L6ThtNVc8pT1W1RMQxBhZwhA76NyCov+/PwjP36oTp2+OI/4beRzFohkA
+	 eNtWOh6EXlV8XjUVymtOfVrZZthqxcntVIwzXD/ZPjiNdw2Hx2JvGfZuTqjBU+oJdM
+	 CSTJ+IPH/r3j6tavU20XBuWuOwAvSgjHwQ+n2nPwB/XH7PqW4RIkSyTazgQpoPFsme
+	 MgaA+LdPQDsFQ==
 From: alexs@kernel.org
 To: 
 Cc: linux-kernel@vger.kernel.org,
 	Alex Shi <alexs@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH 1/4] tick/nohz: remove function tick_nohz_full_add_cpus_to
-Date: Thu, 10 Apr 2025 17:24:16 +0800
-Message-ID: <20250410092423.9831-1-alexs@kernel.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: [PATCH 2/4] sched/isolation: clean up housekeeping_cpu
+Date: Thu, 10 Apr 2025 17:24:17 +0800
+Message-ID: <20250410092423.9831-2-alexs@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250410092423.9831-1-alexs@kernel.org>
+References: <20250410092423.9831-1-alexs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,42 +49,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Alex Shi <alexs@kernel.org>
 
-This function isn't used by anyone. Remove it.
+housekeeping_test_cpu will check 'housekeeping_overridden' again in
+itself so we don't need do it again outside. just call
+housekeeping_test_cpu is fine.
 
 Signed-off-by: Alex Shi <alexs@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra  <peterz@infradead.org>
+Cc: Waiman Long <longman@redhat.com>
 Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
 ---
- include/linux/tick.h | 7 -------
- 1 file changed, 7 deletions(-)
+ include/linux/sched/isolation.h | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index b8ddc8e631a3..ac76ae9fa36d 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -195,12 +195,6 @@ static inline bool tick_nohz_full_enabled(void)
- 	__ret;								\
- })
+diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+index d8501f4709b5..231bc5766f76 100644
+--- a/include/linux/sched/isolation.h
++++ b/include/linux/sched/isolation.h
+@@ -63,11 +63,7 @@ static inline void housekeeping_init(void) { }
  
--static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask)
--{
--	if (tick_nohz_full_enabled())
--		cpumask_or(mask, mask, tick_nohz_full_mask);
--}
--
- extern void tick_nohz_dep_set(enum tick_dep_bits bit);
- extern void tick_nohz_dep_clear(enum tick_dep_bits bit);
- extern void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit);
-@@ -281,7 +275,6 @@ extern void __init tick_nohz_full_setup(cpumask_var_t cpumask);
- #else
- static inline bool tick_nohz_full_enabled(void) { return false; }
- static inline bool tick_nohz_full_cpu(int cpu) { return false; }
--static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask) { }
+ static inline bool housekeeping_cpu(int cpu, enum hk_type type)
+ {
+-#ifdef CONFIG_CPU_ISOLATION
+-	if (static_branch_unlikely(&housekeeping_overridden))
+-		return housekeeping_test_cpu(cpu, type);
+-#endif
+-	return true;
++	return housekeeping_test_cpu(cpu, type);
+ }
  
- static inline void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit) { }
- static inline void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit) { }
+ static inline bool cpu_is_isolated(int cpu)
 -- 
 2.47.1
 
