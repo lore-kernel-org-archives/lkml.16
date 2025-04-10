@@ -1,123 +1,69 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAA26EB79
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E6E6EB79;
+	Thu, 10 Apr 2025 21:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744319220; cv=none; b=IVQQy+fdJxk/7z/QY68aXoSqq8vaeC4XV7D6nJYDfOIuWCOJh+jipAwkTLPJD40LbrRzDbL+T72cZpgs+0S1NZVvHJV4FT86X3A63lImTKm1D4+ZJXlAFdid5IalipnHJxlXtEHWweq+YlqBVfnPdNpZDKV64wJGNypgIGC6A1A=
+	t=1744319233; cv=none; b=rscpp11c93Pz2OySSFn+cwXLBd7ZXw9u3krBZhgI4yzCWpJlymwcw+pYOFelKR7A0csYJOlAYvFlaoJzNqRjii689/uLiC1Nx1UpjMPyaE4GBE6kxEq1KGOyC/I92jQbZFgNhrxlHOKffPkZlKcFLqn/9EHI80+LtCb3sMqcf5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744319220; c=relaxed/simple;
-	bh=0DMtd8z4cVfG0P0JrHiZFJzYyiNvQeqDTmT2YCX5dzI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KnpieKC56JllCmtU3qutjcK4k/pkh+RR9YlonOubNRvDLp2UVq5wFr88tQsZ0nBFqJMRNeM2x4lsoFgRVE1sD/cK/mJHIYC8LQ+oE3QHwlczMvDUpgT2t4WcOjwksKcAXNstFQLbZx+/I+HFW1W7LWUb7VtfrnGihU8CwmzBjhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ode1u+//; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744319233; c=relaxed/simple;
+	bh=KwyzvKEFF2j5LkPa6b0yQ0XGOhj8/U4qBjPGsD96guw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IZVFpZsdeU+dkMpQqtynuwyqJnzbrWjZt5RUa5TwkTleYEwWDOFunq3xq7fJgmROay6Dv2hANd10F9HFyk+LJMKJcCoFHxIMTb7yuw0dKIGkVAZrzSDlBUEMElQx26KF5diWabrhGn+5BnsUxlyGzT0KGQLRkSX5kMhwzTYOBYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rnE6spxU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ode1u+//"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744319206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eqKHtHIKdZRFnIVHPqA+xldT1tQxP5YolVvro+sDJq8=;
-	b=Ode1u+//ukIHUqPcNQtouHpRbufdKBk3KfzUHB5JsjsEMVMCVortoXL7MeQBO9APmXLg8J
-	kcU/d4xYIS8p+PIAgS4vyn26X1t0BrOV2pCnpP80Hh6xL3weqrt+klui2Y5E7D3RbkdV1L
-	+DBTQFXnjdOJH8zOkVmoP2fSb29t8DU=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Waiman Long <llong@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
-Date: Thu, 10 Apr 2025 14:06:23 -0700
-Message-ID: <20250410210623.1016767-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rnE6spxU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69BBDC4CEDD;
+	Thu, 10 Apr 2025 21:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744319232;
+	bh=KwyzvKEFF2j5LkPa6b0yQ0XGOhj8/U4qBjPGsD96guw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rnE6spxUyg5djIvitXPXVeyRhdmU+5eVVtmfhMDcYPzjQCjBYBuwmHYxdZDyXNXAF
+	 qQca0offnA82uwYeRkGXieqswdVKZC81jKkc8Dkchby+7RlejDCbc+ylspa+EJfKkh
+	 qEEugRAAns2xCVAj26UkSsM8eWjBDVOrJemZ/MkDVpRT3OIS6JJCPNDrCX32wLZvA3
+	 sqLKfbobB2UVWOfATbGFXrm0aduOrdPOBKPNjUDa2RP0iAwkcF1HddGiNIF1g25pOQ
+	 nH6G34EiRLKcQgzyjvFZ8vx486JubmUpNq7JIyep8jU3IrIJSJ9Nssc965nvhwEK60
+	 ocf/0iZilHBNA==
+Date: Thu, 10 Apr 2025 16:07:11 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>, linux-watchdog@vger.kernel.org,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: fsl,scu-wdt: Document imx8qm
+Message-ID: <174431923074.1071351.3036987096266250197.robh@kernel.org>
+References: <20250407-imx8qm-watchdog-v1-0-20c219b15fd2@bootlin.com>
+ <20250407-imx8qm-watchdog-v1-1-20c219b15fd2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407-imx8qm-watchdog-v1-1-20c219b15fd2@bootlin.com>
 
-The function memcg_hotplug_cpu_dead works on the stock of a remote dead
-CPU and drain_obj_stock works on the given stock instead of local stock,
-so there is no need to take local stock_lock anymore.
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- mm/memcontrol.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+On Mon, 07 Apr 2025 19:03:25 +0200, Thomas Richard wrote:
+> Add an entry for 'fsl,imx8qm-sc-wdt' as imx8qm also contains the SCU
+> watchdog block.
+> 
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/watchdog/fsl,scu-wdt.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index f23a4d0ad239..2178a051bd09 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1789,7 +1789,7 @@ static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
- };
- static DEFINE_MUTEX(percpu_charge_mutex);
- 
--static void drain_obj_stock(struct memcg_stock_pcp *stock);
-+static void __drain_obj_stock(struct memcg_stock_pcp *stock);
- static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
- 				     struct mem_cgroup *root_memcg);
- 
-@@ -1873,7 +1873,7 @@ static void drain_local_stock(struct work_struct *dummy)
- 	local_lock_irqsave(&memcg_stock.stock_lock, flags);
- 
- 	stock = this_cpu_ptr(&memcg_stock);
--	drain_obj_stock(stock);
-+	__drain_obj_stock(stock);
- 	drain_stock(stock);
- 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
- 
-@@ -1964,10 +1964,10 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
- 
- 	stock = &per_cpu(memcg_stock, cpu);
- 
--	/* drain_obj_stock requires stock_lock */
--	local_lock_irqsave(&memcg_stock.stock_lock, flags);
--	drain_obj_stock(stock);
--	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-+	local_irq_save(flag);
-+	/* stock of a remote dead cpu, no need for stock_lock. */
-+	__drain_obj_stock(stock);
-+	local_irq_restore(flag);
- 
- 	drain_stock(stock);
- 
-@@ -2837,7 +2837,11 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 	return ret;
- }
- 
--static void drain_obj_stock(struct memcg_stock_pcp *stock)
-+/*
-+ * Works on the given stock. The callers are responsible for the proper locking
-+ * for the local or remote stocks.
-+ */
-+static void __drain_obj_stock(struct memcg_stock_pcp *stock)
- {
- 	struct obj_cgroup *old = READ_ONCE(stock->cached_objcg);
- 
-@@ -2925,7 +2929,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 
- 	stock = this_cpu_ptr(&memcg_stock);
- 	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
--		drain_obj_stock(stock);
-+		__drain_obj_stock(stock);
- 		obj_cgroup_get(objcg);
- 		stock->nr_bytes = atomic_read(&objcg->nr_charged_bytes)
- 				? atomic_xchg(&objcg->nr_charged_bytes, 0) : 0;
--- 
-2.47.1
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
