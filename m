@@ -1,254 +1,137 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B13290BDE;
-	Thu, 10 Apr 2025 20:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8841E572F;
+	Thu, 10 Apr 2025 20:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744316628; cv=none; b=XGVGPlvEIgRE5/fLKEXCH27G0TfVwVBD28q6h8rzcTp5So59sFT6PgHnETrOdIR2D/U1qfCVzlL2h9rUfGrHEu4jsFsxJFdawNi70j5nRcueFuC54rkq4eSZxMJ3ultp3J95smoN+w9GjZB7Uk79rWhp31UAa70ssQDk3nxEFVo=
+	t=1744316668; cv=none; b=e/OwjxZO8Vi8XDV5szv36OFhww/JROD/AZocFtFNnIAVFJza/N4xTURfqZ8K6yH/SgdjAYCyRlSpFEWdeFz0w59eJI7WsNL31046cOx9HME93tct8aXX2OohheBACy2o0tmxVsfGH3dNortAiYm+g+183W6x0PU0C+qOk2fgrB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744316628; c=relaxed/simple;
-	bh=29MwE5bOHbzihqKS98mIQfYlP2+1BKDsSNDg2G+7wwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ORwyFyIwmAx9IJwcrv7UHFTJQNCfvOk1gfeRODPo/+racSZC1YG5LEN9W8Td1DXqNLQePaErRDR85uNCMB6jFxXE++fH3vTQf9/f0DCt0k4hLeodX5CpTYcS222+UW/OeYKGlHlIzfxSoAGGNKGGYFbIDrtW6VkbzZ5HG4NQXxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ghOgjhDj; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744316668; c=relaxed/simple;
+	bh=1mDwEovVKKM/u+OaIa4/q+5QqidtchBzXzC3jBMYQ7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MaVwMb4ASItcSGr0GzGwhp0edEjjF7PmONn8nxhssP3zgyH7ioi06ElYr/GcPK3ZFWW8dsFW6fFjVZOeXL7AvXtjpsbHFfL4hj63BHah5x2dppT6aMEksBPgfMDwCyo6H/QWIR7f/G7/8GLNTXaxDTV0M5sNYxRjoxE/CThcqOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuos2pOD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghOgjhDj"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394a823036so12763825e9.0;
-        Thu, 10 Apr 2025 13:23:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744316625; x=1744921425; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2aB27vvwT7DSR/rq1zNxpJ8AqSNFk9AHof2SWw8w5sY=;
-        b=ghOgjhDjOHsbk8gXbu4yg6Rt/YfCI4yan/8daA/Nck06gCnQsOMXg1eFxtDsb+Ijl/
-         hm+xYp+Zoa2R4IKjKA9qaVxwhjGHRZlofj/F9SBCPE47jwxTPH+EV5BnVqLXTtw56/Pd
-         r5FOyhpE+2R/hO28lzQzw3YWxs2iJ1kvIm1IJBh8gILR4Ah47nbFF+pvRc4L/EGIkJxP
-         IMZnnFIk+5zhBnEtTuApMz0oajmvYdldRNSqsnECWJpocVzlnWid5FOKMtfXXpE8kh8m
-         +qiA8IxFJqKu+qnPOD02cUZ5r518WotL7k6x7/cf2gNln3Fp62kKq9D1eXqbuquz1Xan
-         57QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744316625; x=1744921425;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2aB27vvwT7DSR/rq1zNxpJ8AqSNFk9AHof2SWw8w5sY=;
-        b=HDo1YAhkmMOiHKT3cZrHlXRu0oPn0piK+u97bjLgUab++wn16fJOKdxDzpQ5otFlVm
-         kqbd8QRfCF174IWqOyJjgwV/r1aAxIhe5yTXBC48K8YmB+OwBCM8Yziv1CmQ3UL06Yjk
-         nnBUZpHc78qxrlFpFI7zkOpq6tzajmrt92Vk/5ew24255o0FMQ+50aiETiLXl9M/b01z
-         BSWCEeytnvzAUf1yowQfU0vMhCOD98RZ6uxjyb6rGZwGh/zBLOE1t2dJVyymREoIUGRB
-         ciBV0TqSq0MwyeeYrf811cW5CJRgfi+j0YXbjsGddWJyrCBFnm8ZU4yP9WQ3g0Xcq7iF
-         iDbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDanyQ/+MDNWFF7ksV6wdk8avovhhs/m5cvzzBs59hBrOgHyd4UB558ipOvNcrvOLf560VGhjJ1vQ9@vger.kernel.org, AJvYcCVrKnegaS8E3tDylLTOjPLLsPsp0UFt7HhbdzJeJfyRjZ7kPjZnmT9AZ5fhUibvlCWS3JXLSNMwxbWWYCb/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3zO+N1stVjsh8EOo/l6HQk/AKuOsOZk/XHgVAYu94g3LFfPjZ
-	1OKmePSMB6s7n5Kw5mt3DcKPKPLLZviZMPBAv/etiQVB03AQyUM6
-X-Gm-Gg: ASbGncvd3FezRPNmg1Z61qYaVgJPmFnPUf0xtjScKVExKqUx3SKKq/ZpxDIgZ4s6Xvi
-	IY9PqlV/3QSNdbLjpnxyI8dHOVO2AelHBkbzKWfHMbU+YXts72pVKYDT7V1TESjvS6eFr4g+1fh
-	nmBmg5N0QnwUODmz8P2m/9etAuLyMa4+U49j6IBf/cL5Ey6Pbpf+8H0yfPKBBJE60ltKvASrME6
-	imdELiqNKW/70jsKoQ0cJ2wxmfgi5KaPdce9+U8ezLVSh0bq4OeKREvmw+hXuzJbNegTedn+IK5
-	d4/3+Cjjz/IWR1+fHDW0MhTyg86fsgZz4eLF5S/3vO5uzYC9JrNfF78PlfQNUhQokSpH
-X-Google-Smtp-Source: AGHT+IG8eRmwUe7uP4Lvrhjpc6E+6izutYZJF8iXl4m/cVd72XyLQ5YRD0EFjcKouL//mH6R1h45qQ==
-X-Received: by 2002:a05:600c:83c4:b0:43c:fb8e:aec0 with SMTP id 5b1f17b1804b1-43f3a925ademr26335e9.1.1744316624488;
-        Thu, 10 Apr 2025 13:23:44 -0700 (PDT)
-Received: from localhost.localdomain ([78.211.153.93])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c817dsm60998745e9.23.2025.04.10.13.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 13:23:43 -0700 (PDT)
-From: Antoni Pokusinski <apokusinski01@gmail.com>
-To: alexandre.belloni@bootlin.com,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	robh@kernel.org,
-	alexander.stein@ew.tq-group.com
-Cc: linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Antoni Pokusinski <apokusinski01@gmail.com>
-Subject: [PATCH v3 3/3] rtc: pcf85063: add support for RV8063
-Date: Thu, 10 Apr 2025 22:23:17 +0200
-Message-Id: <20250410202317.25873-4-apokusinski01@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250410202317.25873-1-apokusinski01@gmail.com>
-References: <20250410202317.25873-1-apokusinski01@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuos2pOD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38241C4CEDD;
+	Thu, 10 Apr 2025 20:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744316667;
+	bh=1mDwEovVKKM/u+OaIa4/q+5QqidtchBzXzC3jBMYQ7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tuos2pODt7ndB3uGIKBBn07blkZnFjh+IUQ72tojoXJjOnpXHP2zmgjC/YEjXUKZd
+	 hbE3DDjxZIIStACWoXY6hemrp3KOyyN3jlRY7CAseLHp5beebvhJmPffj0XARuuxdG
+	 DUCc/Hencz/LavS3KabLFXhhXOaNtwRoDDspvsGnhuUqNapN6+/3l40gZ8xz1o48kb
+	 Hz/BKCIhW8i09QoWMyf+rwJwg9qBkJEN1oYLN6S5cbRt8xiwQu7YzzFcMhDvOQGwM0
+	 8aKbRnzYmgJrr8hfgiArjIxc+YSafaUq9QBULTdBw+0xPrfmOruDawnhNqRg/epxGY
+	 xXyaOoUxPLwMQ==
+Date: Thu, 10 Apr 2025 22:24:22 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
+	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org, 
+	Peter Ziljstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH] pidfs: ensure consistent ENOENT/ESRCH reporting
+Message-ID: <20250410-akademie-skaten-75bd4686ad6b@brauner>
+References: <20250409-sesshaft-absurd-35d97607142c@brauner>
+ <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
+ <20250409184040.GF32748@redhat.com>
+ <20250410101801.GA15280@redhat.com>
+ <20250410-barhocker-weinhandel-8ed2f619899b@brauner>
+ <20250410131008.GB15280@redhat.com>
+ <20250410-inklusive-kehren-e817ba060a34@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250410-inklusive-kehren-e817ba060a34@brauner>
 
-Microcrystal RV8063 is a real-time clock with SPI interface. Its
-functionality is very similar to the RV8263 rtc.
+On Thu, Apr 10, 2025 at 10:05:58PM +0200, Christian Brauner wrote:
+> On Thu, Apr 10, 2025 at 03:10:09PM +0200, Oleg Nesterov wrote:
+> > On 04/10, Christian Brauner wrote:
+> > >
+> > > On Thu, Apr 10, 2025 at 12:18:01PM +0200, Oleg Nesterov wrote:
+> > > > On 04/09, Oleg Nesterov wrote:
+> > > > >
+> > > > > On 04/09, Christian Brauner wrote:
+> > > > > >
+> > > > > > The seqcounter might be
+> > > > > > useful independent of pidfs.
+> > > > >
+> > > > > Are you sure? ;) to me the new pid->pid_seq needs more justification...
+> > >
+> > > Yeah, pretty much. I'd make use of this in other cases where we need to
+> > > detect concurrent changes to struct pid without having to take any
+> > > locks. Multi-threaded exec in de_exec() comes to mind as well.
+> > 
+> > Perhaps you are right, but so far I am still not sure it makes sense.
+> > And we can always add it later if we have another (more convincing)
+> > use-case.
+> > 
+> > > > To remind, detach_pid(pid, PIDTYPE_PID) does wake_up_all(&pid->wait_pidfd) and
+> > > > takes pid->wait_pidfd->lock.
+> > > >
+> > > > So if pid_has_task(PIDTYPE_PID) succeeds, __unhash_process() -> detach_pid(TGID)
+> > > > is not possible until we drop pid->wait_pidfd->lock.
+> > > >
+> > > > If detach_pid(PIDTYPE_PID) was already called and have passed wake_up_all(),
+> > > > pid_has_task(PIDTYPE_PID) can't succeed.
+> > >
+> > > I know. I was trying to avoid having to take the lock and just make this
+> > > lockless. But if you think we should use this lock here instead I'm
+> > > willing to do this. I just find the sequence counter more elegant than
+> > > the spin_lock_irq().
+> > 
+> > This is subjective, and quite possibly I am wrong. But yes, I'd prefer
+> > to (ab)use pid->wait_pidfd->lock in pidfd_prepare() for now and not
+> > penalize __unhash_process(). Simply because this is simpler.
 
-Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
----
- drivers/rtc/Kconfig        | 21 +++++-----
- drivers/rtc/rtc-pcf85063.c | 80 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 91 insertions(+), 10 deletions(-)
+Looking close at this. Why is:
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 838bdc138ffe..1b9be96faa13 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -483,15 +483,6 @@ config RTC_DRV_PCF8523
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-pcf8523.
- 
--config RTC_DRV_PCF85063
--	tristate "NXP PCF85063"
--	select REGMAP_I2C
--	help
--	  If you say yes here you get support for the PCF85063 RTC chip
+        if (type == PIDTYPE_PID) {
+                WARN_ON_ONCE(pid_has_task(pid, PIDTYPE_PID));
+                wake_up_all(&pid->wait_pidfd);
+        }
+
+located in __change_pid()? The only valid call to __change_pid() with a NULL
+argument and PIDTYPE_PID is from __unhash_process(), no?
+
+So why isn't this in __unhash_process() where it's immediately obvious
+that it's the only valid place this can currently be called from?
+
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 1b51dc099f1e..d92e8bee0ab7 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -135,6 +135,7 @@ static void __unhash_process(struct release_task_post *post, struct task_struct
+ {
+        nr_threads--;
+        detach_pid(post->pids, p, PIDTYPE_PID);
++       wake_up_all(&post->pids[PIDTYPE_PID]->wait_pidfd);
+        if (group_dead) {
+                detach_pid(post->pids, p, PIDTYPE_TGID);
+                detach_pid(post->pids, p, PIDTYPE_PGID);
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 4ac2ce46817f..26f1e136f017 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -359,11 +359,6 @@ static void __change_pid(struct pid **pids, struct task_struct *task,
+        hlist_del_rcu(&task->pid_links[type]);
+        *pid_ptr = new;
+
+-       if (type == PIDTYPE_PID) {
+-               WARN_ON_ONCE(pid_has_task(pid, PIDTYPE_PID));
+-               wake_up_all(&pid->wait_pidfd);
+-       }
 -
--	  This driver can also be built as a module. If so, the module
--	  will be called rtc-pcf85063.
--
- config RTC_DRV_PCF85363
- 	tristate "NXP PCF85363"
- 	select REGMAP_I2C
-@@ -971,6 +962,18 @@ config RTC_DRV_PCF2127
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-pcf2127.
- 
-+config RTC_DRV_PCF85063
-+	tristate "NXP PCF85063"
-+	depends on RTC_I2C_AND_SPI
-+	select REGMAP_I2C if I2C
-+	select REGMAP_SPI if SPI_MASTER
-+	help
-+	  If you say yes here you get support for the PCF85063 and RV8063
-+	  RTC chips.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-pcf85063.
-+
- config RTC_DRV_RV3029C2
- 	tristate "Micro Crystal RV3029/3049"
- 	depends on RTC_I2C_AND_SPI
-diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-index 03dfc58f4cd7..bcfefe823044 100644
---- a/drivers/rtc/rtc-pcf85063.c
-+++ b/drivers/rtc/rtc-pcf85063.c
-@@ -17,6 +17,7 @@
- #include <linux/of.h>
- #include <linux/pm_wakeirq.h>
- #include <linux/regmap.h>
-+#include <linux/spi/spi.h>
- 
- /*
-  * Information for this driver was pulled from the following datasheets.
-@@ -29,6 +30,9 @@
-  *
-  *  https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-8263-C7_App-Manual.pdf
-  *  RV8263 -- Rev. 1.0 — January 2019
-+ *
-+ *  https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-8063-C7_App-Manual.pdf
-+ *  RV8063 -- Rev. 1.1 - October 2018
-  */
- 
- #define PCF85063_REG_CTRL1		0x00 /* status */
-@@ -559,6 +563,18 @@ static const struct pcf85063_config config_rv8263 = {
- 	.force_cap_7000 = 1,
- };
- 
-+static const struct pcf85063_config config_rv8063 = {
-+	.regmap = {
-+		.reg_bits = 8,
-+		.val_bits = 8,
-+		.max_register = 0x11,
-+		.read_flag_mask = BIT(7) | BIT(5),
-+		.write_flag_mask = BIT(5),
-+	},
-+	.has_alarms = 1,
-+	.force_cap_7000 = 1,
-+};
-+
- static int pcf85063_probe(struct device *dev, struct regmap *regmap, int irq,
- 			  const struct pcf85063_config *config)
- {
-@@ -725,14 +741,76 @@ static void pcf85063_unregister_driver(void)
- 
- #endif /* IS_ENABLED(CONFIG_I2C) */
- 
-+#if IS_ENABLED(CONFIG_SPI_MASTER)
-+
-+static const struct spi_device_id rv8063_id[] = {
-+	{ "rv8063" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, rv8063_id);
-+
-+static int rv8063_probe(struct spi_device *spi)
-+{
-+	const struct pcf85063_config *config = &config_rv8063;
-+	struct regmap *regmap;
-+
-+	regmap = devm_regmap_init_spi(spi, &config->regmap);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	return pcf85063_probe(&spi->dev, regmap, spi->irq, config);
-+}
-+
-+static struct spi_driver rv8063_driver = {
-+	.driver         = {
-+		.name   = "rv8063",
-+	},
-+	.probe          = rv8063_probe,
-+	.id_table	= rv8063_id,
-+};
-+
-+static int __init rv8063_register_driver(void)
-+{
-+	return spi_register_driver(&rv8063_driver);
-+}
-+
-+static void __exit rv8063_unregister_driver(void)
-+{
-+	spi_unregister_driver(&rv8063_driver);
-+}
-+
-+#else
-+
-+static int __init rv8063_register_driver(void)
-+{
-+	return 0;
-+}
-+
-+static void __exit rv8063_unregister_driver(void)
-+{
-+}
-+
-+#endif /* IS_ENABLED(CONFIG_SPI_MASTER) */
-+
- static int __init pcf85063_init(void)
- {
--	return pcf85063_register_driver();
-+	int ret;
-+
-+	ret = pcf85063_register_driver();
-+	if (ret)
-+		return ret;
-+
-+	ret = rv8063_register_driver();
-+	if (ret)
-+		pcf85063_unregister_driver();
-+
-+	return ret;
- }
- module_init(pcf85063_init);
- 
- static void __exit pcf85063_exit(void)
- {
-+	rv8063_unregister_driver();
- 	pcf85063_unregister_driver();
- }
- module_exit(pcf85063_exit);
--- 
-2.25.1
+        for (tmp = PIDTYPE_MAX; --tmp >= 0; )
+                if (pid_has_task(pid, tmp))
+                        return;
 
+I'm probably missing something obvious.
