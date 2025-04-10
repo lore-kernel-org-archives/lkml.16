@@ -1,102 +1,109 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7AF2836A2;
-	Thu, 10 Apr 2025 12:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9842836A2
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744287580; cv=none; b=kPSnytZMqoVvuVZ683eff5/bJYyO8T2Gh/ByMwn499gmoN8+pH7n7fi4Ldo3W9cZtFFFoxY4vwg8rluzguS5ovrBPcFEkQgeSEYSNHXJ8Ib2zcmJhhqd+8n55kG4q969aUi247HC3qF+0zdG5veCJDQf56IDyjCdABpAPM6UdoE=
+	t=1744287608; cv=none; b=V7J1yJnwCAN3hx7DwGjS4oWhd5bbZmLDoVruNkQ2Kr0jSIU1C6QDFcpAt6D2v/bWCknD1kVjT2F/8EtE8ZjfSo+eH7aV3qyjS9nz+sdBBfmvJ6clG3UrWi3AOcQqFKdiyy01P7REUqXcE9h1jySvXkwLG+vg6Miux8HxkjuvRaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744287580; c=relaxed/simple;
-	bh=+bkcC9ICduzN8N8QJYZdisyD3IQ13VyfzY/5VkBa+6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Na1oZEUghK8dpTCfdfAqLsPNOz368wnP6KDOMRD9D5/8EKObVqmx81GhrfbCBBvPO274nzLARViSXCa3nUe/R+Out8F55kmHHXd5DuLn/fPqwkUZf31nmELqJSGJQ2vEr4CHu/a3C7YQOf/O7r/GSESfxd4aVnX8FxIsQmz4vD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from [IPV6:2a01:e0a:3e8:c0d0:e821:d300:7d96:6ab2] (unknown [IPv6:2a01:e0a:3e8:c0d0:e821:d300:7d96:6ab2])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 6775B325F8B;
-	Thu, 10 Apr 2025 12:19:29 +0000 (UTC)
-Authentication-Results: Plesk;
-        spf=pass (sender IP is 2a01:e0a:3e8:c0d0:e821:d300:7d96:6ab2) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=[IPV6:2a01:e0a:3e8:c0d0:e821:d300:7d96:6ab2]
-Received-SPF: pass (Plesk: connection is authenticated)
-Message-ID: <05ee21e6-ff5a-4ee2-a918-f4d7d0cf686c@arnaud-lcm.com>
-Date: Thu, 10 Apr 2025 14:19:27 +0200
+	s=arc-20240116; t=1744287608; c=relaxed/simple;
+	bh=r4YN+6THFRqD857AEAmFYAZV7Q34wl4AiyDmQEvfLag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dtj2UPG78UUBmyyR+zn/XX21QHm1WaXUQm+6QG2UE4v1V32Y4TSAa77V6ErdwubRjjrGMB41Vje6LhPdE6cgye0vvGZzkkmLWmACblwsBhJWgIwFeRWX7hX5grHdotBQiDgyOnM7HTRGJ6HVoO0bC7uSG1GXmxHaPr7ULoshsSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xkIbW/xH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XjJ7laHp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xkIbW/xH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XjJ7laHp"
+Date: Thu, 10 Apr 2025 14:20:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744287604;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pUz3XfGhWfvbtgammCb+KQml+nvemb+oZndlJttITBI=;
+	b=xkIbW/xHzPrqrZSEg8QZABEM2E43uwvLYpnzekfDMX/S5T5oB/pyi/qX+6lVflR56xbdQA
+	L8PNimBmMeW0N/T0tZYJNiW9txpXW05yO19kdcyQMMk9tCMhabwUppJaa6v3444BRk/KzJ
+	zkDwLFbHBqkkMCeArPBl0CGCukWDmr5dgpLhjxwI1Fplea8KspYiwVuDoEK+vjQB2tktR5
+	NPR0zdtuFEiO46RlU7d4u9smbnFsmrEdVGR7zKRbspJ9RdCpx9WnTiZMkcmtu/aN5vSMgF
+	uZuasbxwcupiZmIEMW2tiCZMw0Kuefhv+XN8NGrw5m89DgBnu/utf2okp7lJXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744287604;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pUz3XfGhWfvbtgammCb+KQml+nvemb+oZndlJttITBI=;
+	b=XjJ7laHpjd0V25mYg0lVL2+d69SdVU0UL0vnH+fdxAX9CAUHzbg35jYa7vEJtR2G8Hx9K8
+	pCTP6BAqF483UhBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
+	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>, lclaudio00@gmail.com
+Subject: Re: [PATCH v3] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <20250410122002.JxN9F-nE@linutronix.de>
+References: <Z_e0uh36Ezz6isYo@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] net: ppp: Add bound checking for skb d on
- ppp_sync_txmung
-To: Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
- syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-References: 
- <20250408-bound-checking-ppp_txmung-v2-1-94bb6e1b92d0@arnaud-lcm.com>
- <09aeed01-405d-4eb7-9a12-297203f1edcc@redhat.com>
-Content-Language: en-US
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-In-Reply-To: <09aeed01-405d-4eb7-9a12-297203f1edcc@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174428756993.4472.15861295526733373794@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z_e0uh36Ezz6isYo@uudg.org>
 
-Thanks Paolo for the feedback, I'll make sure to follow your 
-recommendations next time.
+On 2025-04-10 09:10:12 [-0300], Luis Claudio R. Goncalves wrote:
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -134,22 +134,12 @@ static inline void put_task_struct(struct task_struct *t)
+>  		return;
+>  
+>  	/*
+> -	 * In !RT, it is always safe to call __put_task_struct().
+> -	 * Under RT, we can only call it in preemptible context.
+> -	 */
+> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
+> -		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
+> -
+> -		lock_map_acquire_try(&put_task_map);
+> -		__put_task_struct(t);
+> -		lock_map_release(&put_task_map);
+> -		return;
+> -	}
+> -
+> -	/*
+> -	 * under PREEMPT_RT, we can't call put_task_struct
+> +	 * In !RT, it is always safe to call __put_task_struct(),
+> +	 * but under PREEMPT_RT, we can't call put_task_struct
+>  	 * in atomic context because it will indirectly
+> -	 * acquire sleeping locks.
+> +	 * acquire sleeping locks. The same is true if the
+> +	 * current process has a mutex enqueued (blocked on
+> +	 * a PI chain).
+>  	 *
+>  	 * call_rcu() will schedule delayed_put_task_struct_rcu()
+>  	 * to be called in process context.
 
-Have a lovely day,
+Did you test it with lockdep with and without PREEMPT_RT? It would be
+nice to throw some testing on it.
+This comment here "call_rcu will schedule bla in process context" is
+wrong. It will schedule the callback in softirq context. Unless RCU is
+configured to run the callbacks in rcuc/ thread which is the default for
+PREEMPT_RT. Also delayed_put_task_struct_rcu() does not exist, imho
+never did.
 
-Arnaud
-
-On 10/04/2025 11:30, Paolo Abeni wrote:
-> On 4/8/25 5:55 PM, Arnaud Lecomte wrote:
->> Ensure we have enough data in linear buffer from skb before accessing
->> initial bytes. This prevents potential out-of-bounds accesses
->> when processing short packets.
->>
->> When ppp_sync_txmung receives an incoming package with an empty
->> payload:
->> (remote) gef➤  p *(struct pppoe_hdr *) (skb->head + skb->network_header)
->> $18 = {
->> 	type = 0x1,
->> 	ver = 0x1,
->> 	code = 0x0,
->> 	sid = 0x2,
->>          length = 0x0,
->> 	tag = 0xffff8880371cdb96
->> }
->>
->> from the skb struct (trimmed)
->>        tail = 0x16,
->>        end = 0x140,
->>        head = 0xffff88803346f400 "4",
->>        data = 0xffff88803346f416 ":\377",
->>        truesize = 0x380,
->>        len = 0x0,
->>        data_len = 0x0,
->>        mac_len = 0xe,
->>        hdr_len = 0x0,
->>
->> it is not safe to access data[2].
->>
->> Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
->> Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
->> Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
->> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
->> Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
-> A couple of notes for future submission: you should have included the
-> target tree in the subj prefix (in this case: "[PATCH net v2]..."), and
-> there is a small typo in the subjected (skb d -> skb data). The patch
-> looks good I'm applying it.
->
-> Thanks,
->
-> Paolo
->
+Sebastian
