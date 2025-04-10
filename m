@@ -1,192 +1,145 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBCA1E1A17
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B3E204C30
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273591; cv=none; b=Q0YwcwsTvUS3+LMLMuIm3YAAs62QF8dYVxTgazNgdYTlWKsA9RXBCEwcFyxqEbSZ48V0+kcZHdff9wSBMMIYM5lrCjjdO4bfnhMNoaP2HeHp4yMMuK3j/HOORdx5KJp5KQCjDe0temXHZ9+W7eeD2vhllZxLAkefdcu5+Rj4Us4=
+	t=1744273608; cv=none; b=f98YLrjf+7CaUohRGxuU4xb2a02vnT2dEK5BLzT0Blj8cCjdwJ1iO73M/rltgtJj9BLB8ztWtv/33Fi6AjDGLWuSQx3GPfRUSb3EUX+Tjc0ycheuFSppHvVIsZ1vEYKpD35l8IzlaN+rMOAA18tYUlRQce+S2j4Hvd1YCcWBgNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273591; c=relaxed/simple;
-	bh=Zt5wT8BxHcC6U8kz+EOUAJtbJ0+dgEe+qtaubnwIykQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OIf6qXMcQ+XmIBX/azoRdvla6YbIDcwpIR9lUmRKj0rlIXhBEcwvqJq/CizQnHfJdcKXQURmyma06gToVzV59Y5Oa0ClgAX3WYuOWKfXw7q9FQRCs+cRIfAYSu8nvpB7sGJPxCm3Uyp2HTYbQ7ENoU556jdl7rpaIxRGkRmgyfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IrCY+a8Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K2lCdSzW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744273608; c=relaxed/simple;
+	bh=1MwayweBMCGI1FLlKVhQxmnVp9c11rxMnbmLOw/VEXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a2xx+KlLnEcUVjeGQGBaX+++v59ZUp+7oVBMzXKy6f8NwSYagoeBqukF7XyAIhU1Dq2/3/EtWeHYX09wYa3riznD9+dBVmRfAt7DEHm9azJh4bFyFYSfpQewYMx/KbmMcdwv9NrMb8iWH08HCOimuBsK5UlntWNrZHaf7TUoeKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JHbPptnu; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IrCY+a8Z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K2lCdSzW"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744273587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GcP8bp/Bwxaz8iMlCvzBl968xjN5im+xVM+3YcYabbk=;
-	b=IrCY+a8ZKPOrJCYZ1CKJKGPAILCcmdHhY1saDz0LyEz8CfcKsTGo4O0zLliEddWX6NSJcw
-	N3rH/hNZn854OhQqeBK2O2wCyPajirHi2Tmu3N1mHEWJwNwWIpuyvUZ4wx+ojH2kzXbmGM
-	lz5RXL6iPiEXnOPNMxk84ruHmRtuokIcLqPWCmLy+8tAnyR+bqSJP1Iz3o2wXifp+Q3QyC
-	cUvBnx9NqkRAmXvN5bNlCKmOTfRytU4Q7EVgYXtFCHey5VRtmHOBhGynt4eXoKOwTuL5RP
-	WI4L+PSsfmYeJSslSMxZLCO38L3B9SrZ91svLdS2dfVyD2TsiNjEOjoN/h/pKw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744273587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GcP8bp/Bwxaz8iMlCvzBl968xjN5im+xVM+3YcYabbk=;
-	b=K2lCdSzWG57FDviMSN5qmowD3D4yuX86cH4rzn/LSewWL3haeE75uBrXY8ZxzUX4eydR14
-	U+TuzdE1AN7HNyBw==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Waiman Long <longman@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
-In-Reply-To: <20250410065446.57304-2-gmonaco@redhat.com>
-References: <20250410065446.57304-2-gmonaco@redhat.com>
-Date: Thu, 10 Apr 2025 10:26:26 +0200
-Message-ID: <87ecy0tob1.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JHbPptnu"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso5485065e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:26:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744273605; x=1744878405; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=by0C3qcBJWPP2R5Tts84nwTn6pqrbnhx93UsShQdVNQ=;
+        b=JHbPptnuJMFxceSbvazDapKu5L+m0xCVYqqxx4PJC/hk4QM7H6uujswVXqWcG4x4qX
+         WJEDDP+7rsQDWT6w13Q26NjzQKEwZ2mjdTLkYdsBiitSvaiPUuLker7d0TWtTjpyhJJm
+         mHpxeAcqtHi7wcYEqYmAQEimg1ZaIz4RZM434lWv4H2BkHFZT1GQJjoL1U3td04deZRg
+         8CLfk+F9JMOkL+UBIX1ua9Z8MgbUeviEgpXzja4PnkHjxtrVINPbPdm2+BUt3TXEUg/m
+         FGdX1vNLss27fT71mVz+sY1G/2yW9TcCj93rNnTuaCD7kr4DRXmw6K5dzzXKHo7GXN4C
+         EwLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744273605; x=1744878405;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=by0C3qcBJWPP2R5Tts84nwTn6pqrbnhx93UsShQdVNQ=;
+        b=kMw5rFeqfqJFoiVruGGLrS2At9Mp+HQqOkZ9O51DDtK+VunvtKKgJZIe13pV6YgKsZ
+         2esjgsXKoBLkG6j1vC3j5uof/3Sk6OX710H5ale/0WFCGqS7Dw61QxZtB8tyYtJbeYWK
+         dAu688mPQoduO6agNfbe+aGutdLwzQOxjYyXCQS8+z+72CAs4ll5iuPGIXZifYn+oDRN
+         8+YhuI2TQYRv2wZ7Bmx60AOTKdenEYqDtraXos2un8QWF6/fTyBRtPzQS64BPeLoWPdm
+         ujCMeZ64YGE+cAY2IJXG4Bsz2pCcISUtp5BQ036tQVWXFeBsGQcGEL/nhEdrfQcTJSQw
+         0QRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuOP0Nka5rcx1dTtDhockve4mMEGy4xuewwzaHVPAgApIuvZK73q0GQcS2etpGQwhfsVqCC1cKSUjS/Kw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHu2LQNn25+za8wd4fuGUKu0bscRoH+p5HSvEErxbNz1adLCYN
+	FIISfUPSZbkBCA3ORY6MwmmEhFJgmYarOdPTcoBr0Qj/CDCjyFO1P5ofw4FGHyM=
+X-Gm-Gg: ASbGncsCNOmOj89mimVyiyhYPR6eeh563/UXPj8tdrbE7ZAft6gtVFBwOw2AT0QoLJ/
+	TyGoKA8o2H8BCV1DWBIiqMatcHucDl4hykQIY08rrVJPAif76yJ18DnWGCI7dcX+Xls0fJQREjs
+	kxVpuAZ93PGtI5884iyLwcQhTSnAWIXzEDjfbpVHvD9znfCSrUmS/6r+7+80Tv/lWxoOp35Z8S5
+	fxgLmtw5rlMsNEbaIT+06zwV1unC1dW867VeGN58mdYa5/MWmicDHTbeclnhKs97JHVBkypbP3b
+	Qgcn+kBv7BWY2G8A0BYL7YL3XtM6eZNqWOB1SMiMCRVFKoaIqLgHojRdwRvORM05JjE=
+X-Google-Smtp-Source: AGHT+IFY9hRZTvaafYq2hL5p30TOnetIisE6/GIMeJNcOc0jS1+hW0A56uPnzu4Ixw/+IUcYhD8Lxg==
+X-Received: by 2002:a05:600c:1da4:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-43f2fdced9cmr13942095e9.2.1744273604558;
+        Thu, 10 Apr 2025 01:26:44 -0700 (PDT)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a2c84sm42884645e9.11.2025.04.10.01.26.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 01:26:44 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: wim@linux-watchdog.org
+Cc: linux@roeck-us.net,
+	linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	S32@nxp.com,
+	ghennadi.procopciuc@nxp.com,
+	thomas.fossati@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	alexandru-catalin.ionita@nxp.com
+Subject: [PATCH v4 0/2] Add the NXP S32 Watchdog
+Date: Thu, 10 Apr 2025 10:26:12 +0200
+Message-ID: <20250410082616.1855860-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 10 2025 at 08:54, Gabriele Monaco wrote:
->  
-> +/*  cpumask excluded from migration */
-> +static cpumask_var_t tmigr_unavailable_cpumask;
+The NXP S32 watchdog, referenced in the documentation as the Software
+Watchdog Timer is actually a hardware watchdog. The system has one
+watchdog per core but an assertation does not directly reset the
+system as this behavior relies on a particular setup and another
+component which is not part of these changes. However the first
+watchdog on the system, tied with the Cortex-M4 #0 is a particular
+case where it will reset the system directly. This is enough for the
+watchdog purpose on Linux.
 
-Why is this a negated mask instead of being the obvious and intuitive
-available mask?
+The watchdog relies on the default timeout described in the device
+tree but if another timeout is needed at boot time, it can be changed
+with the module parameter.
 
->  	if (firstexp != KTIME_MAX) {
-> -		migrator = cpumask_any_but(cpu_online_mask, cpu);
-> +		migrator = cpumask_nth_andnot(0, cpu_possible_mask,
-> +					      tmigr_unavailable_cpumask);
+If the kernel has to service the watchdog in place of the userspace,
+it can specify the 'early-enable' option at boot time.
 
-That's exactly what this negated mask causes: incomprehensible code.
+And finally, if starting the watchdog has no wayback then the option
+'nowayout' can be also specified in the boot option.
 
-	cpumask_clear_cpu(cpu, available_mask);
-        ...               
-		migrator = cpumask_first(available_mask);
+Changelog:
 
-is too simple and obvious, right?
+ - v4:
+    - Update the watchdog timeout when the callback is called (Alexandru-Catalin Ionita)
+    - Fix the clocks bindings to have all the clocks described (Krzysztof Kozlowski)
 
-> +		/* Fall back to any online in case all are isolated. */
+ - v3:
+    - Add the clocks for the module and the register (Ghennadi Procopciuc)
+    - Use the clock name from the driver
+    - Removed Review-by tag from Krzysztof Kozlowski as the bindings changed
 
-How can that happen? There is always at least _ONE_ housekeeping,
-non-isolated, CPU online, no?
+ - v2:
+    - Removed debugfs code as considered pointless for a such simple
+      driver (Arnd Bergmann)
+    - Replaced __raw_readl / __raw_writel by readl and writel (Arnd Bergmann)
+    - Reordered alphabetically the headers (Guenter Roeck)
+    - Enclosed macro parameter into parenthesis (Guenter Roeck)
+    - Fixed checkpatch reported errors (Guenter Roeck)
+    - Clarified a ping on a stopped timer does not affect it (Guenter Roeck)
+    - Used wdt_is_running() to save an extra IO (Guenter Roeck)
+    - Fixed a misleading comment about starting the watchdog at boot time (Guenter Roeck)
+    - Replaced allocation size sizeof(struct ...) by sizeof(*var) (Krzysztof Kozlowski)
+    - Drop old way of describing the module and use table module device (Krzysztof Kozlowski)
+    - Replaced additionalProperties by unevaluatedProperties (Rob Herring)
+    - Removed the DT bindings description as it is obvious (Ghennadi Procopciuc)
+    - Fixed DT bindings compatible string (Krzysztof Kozlowski)
 
-> +		if (migrator >= nr_cpu_ids)
-> +			migrator = cpumask_any_but(cpu_online_mask, cpu);
->  		work_on_cpu(migrator, tmigr_trigger_active, NULL);
->  	}
->  
->  	return 0;
->  }
->  
-> -static int tmigr_cpu_online(unsigned int cpu)
-> +static int tmigr_cpu_available(unsigned int cpu)
->  {
-> -	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
-> +	struct tmigr_cpu *tmc = per_cpu_ptr(&tmigr_cpu, cpu);
->  
->  	/* Check whether CPU data was successfully initialized */
->  	if (WARN_ON_ONCE(!tmc->tmgroup))
->  		return -EINVAL;
->  
-> +	/* Silently ignore online requests if isolated */
+ - v1: initial posting
 
-This comment makes no sense.
+Daniel Lezcano (2):
+  dt-bindings: watchdog: Add NXP Software Watchdog Timer
+  watchdog: Add the Watchdog Timer for the NXP S32 platform
 
-     /* Isolated CPUs are not participating in timer migration */
+ .../bindings/watchdog/nxp,s32g2-swt.yaml      |  54 +++
+ drivers/watchdog/Kconfig                      |   9 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/s32g_wdt.c                   | 315 ++++++++++++++++++
+ 4 files changed, 379 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml
+ create mode 100644 drivers/watchdog/s32g_wdt.c
 
-makes it entirely clear what this is about, no?
+-- 
+2.43.0
 
-That brings me to the general design decision here. Your changelog
-explains at great length WHAT the change is doing, but completely fails
-to explain the consequences and the rationale why this is the right
-thing to do.
-
-By excluding the isolated CPUs from migration completely, any 'global'
-timer, which is armed on such a CPU, has to be expired on that isolated
-CPU. That's fundamentaly different from e.g. RCU isolation.
-
-It might be the right thing to do and harmless, but without a proper
-explanation it's a silent side effect of your changes, which leaves
-people scratching their heads.
-
-> +	if (cpu_is_isolated(cpu))
-> +		return 0;
->  	raw_spin_lock_irq(&tmc->lock);
-> -	trace_tmigr_cpu_online(tmc);
-> +	trace_tmigr_cpu_available(tmc);
->  	tmc->idle = timer_base_is_idle();
->  	if (!tmc->idle)
->  		__tmigr_cpu_activate(tmc);
-> -	tmc->online = true;
-> +	tmc->available = true;
-> +	tmc->idle = true;
-
-How so?
-
-> +	cpumask_clear_cpu(cpu, tmigr_unavailable_cpumask);
->  	raw_spin_unlock_irq(&tmc->lock);
->  	return 0;
->  }
->  
-> +int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask)
-
-cpumask_var_t is wrong here. 'const struct cpumask *' is what you want.
-
-> +{
-> +	int cpu;
-> +	cpumask_var_t cpumask;
-
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#coding-style-notes
-
-> +	if (!zalloc_cpumask_var(&cpumask, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	cpumask_copy(cpumask, tmigr_unavailable_cpumask);
-
-What serializes this against concurrent CPU hotplug? I assume it's done
-by the caller, but then this code should have a lockdep assert to
-validate it. If it's not, then this is broken.
-
-As it is serialized it does not need a copy either, right?
-
-> +	/* Was not excluded but should be excluded now. */
-> +	for_each_cpu_andnot(cpu, exclude_cpumask, cpumask)
-> +		tmigr_cpu_unavailable(cpu);
-> +
-> +	/* Was excluded but should be included now */
-> +	for_each_cpu_andnot(cpu, cpumask, exclude_cpumask)
-> +		if (cpu_online(cpu))
-> +			tmigr_cpu_available(cpu);
-
-My brain hurts by now.
-
-         for_each_cpu_and(cpu, available_mask, exclude_mask)
-         	tmigr_cpu_unavailable(cpu);
-
-         for_each_cpu_andnot(cpu, cpu_online_mask, exclude_mask) {
-         	if (!cpumask_test_cpu(cpu, available_mask))
-                	tmigr_cpu_available(cpu);
-         }
-
-No?
-
-Also this patch is doing too many things at once. It want's to be split
-into:
-
-    Patch 1: Rename 'online' to 'available' (bit and function names)
-    Patch 2: Add the available mask logic
-    Patch 3: Add the isolation functionality
-
-Thanks,
-
-        tglx
