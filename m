@@ -1,329 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABBF28C5D4;
-	Thu, 10 Apr 2025 18:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F161EE7DD;
+	Thu, 10 Apr 2025 18:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744309745; cv=none; b=SEoFNOxipzmrZDJMcMwgJGpTbZQ7rQ7NyknRbLEX8reVKBQwK8v/++Ny1zeLAI/mb1gbeFzG6Zj4mbt87b0/nuxqWwbKC5W2FZUhM0OPUxY2CYNvTERmWl6/O/XKYyH/3DMlALYYmwCSr27vJOLRbRyTIQxrq/InHKzqt0r0pxk=
+	t=1744309944; cv=none; b=Ws88Oa3gH6TG6xunHhiVLOmJw57xekdV6ONyDK+rJWo3Mw6Twg/Pc7pOYJQBvOadoY6m6op8PZgCTn9VV4/X5Fd4p3VYLh66OoKI+b97YS+KCzfoarvCSprp3U81QAy7iOLcWRemXsU0Vi7iQLlXQjOSNaPa8u8rjEtOz3tOvA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744309745; c=relaxed/simple;
-	bh=ZepABpyn3AV1QCLlijKL/5EUv7okaxepn573DXE5+/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ggZJi0YMqIukjIixbkUZuXCzakveGtK9o4zy/X5/4mu3XMKDGAAIlLMG6Lc6+GkWqrGAS3vHRQ4+sGduuWosqSdDLkQtBdOXegUjDOCMrBxqFDTNhMKchR0AEe0UpCiWPYnLHl5Zq1d6sx/fsoK0bm00TYDp2NmhnDOV71dL5a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=os5/H92M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744309944; c=relaxed/simple;
+	bh=rhq98F1oAt15i089HgDHKF8FTORTwBNqnGhkaUMvkGE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ij3MLisIZ59CQxFUIb3UNkVlyvt+ukcouNXs2JvE2LPo+w0tgx+suixciuMt7eP0Uot/HFCq4Gz73tVFoSQtUT9UNDyOBMVWLqbqjFPw3tWczMPvksAdkaWfttKevY6iW1X0eerQP40dpFe8Lda896BW7zm+lWE0ZvqQ2qV2brw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AulYPUUG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="os5/H92M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF54C4CEDD;
-	Thu, 10 Apr 2025 18:29:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AulYPUUG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB60BC4CEE9;
+	Thu, 10 Apr 2025 18:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744309744;
-	bh=ZepABpyn3AV1QCLlijKL/5EUv7okaxepn573DXE5+/k=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=os5/H92Maxj5RUpg0niesZfc3C2HHRpKRAw+zj2+qD0vYhX973hsFLbSgtbKyV842
-	 nJtWiT2QziD7W5wPOb1FSJHW6+75tLZW5t2UF+OfM3PcdQrew06M9lrYANk/PlppMd
-	 sohq1helSK9jtx7cftZ+ZHmyFxQd41u3eVkMUWSaION7+XAq+g94Bi3jmkEHJtVhSF
-	 2nt5NamN3Uw0SiVAh/ckvOKKW49htgzQPDZoREE6Y29GBYk5Zqc8FGv+OzRTXUljBP
-	 1rAj3spaChdHPlVc6MKRa6UPNCLfsbY+Pfnp7P6krfEvWx9fpq0FllKCqASLV1PP+S
-	 /IxtwA2b7EEDg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D32E4CE087D; Thu, 10 Apr 2025 11:29:03 -0700 (PDT)
-Date: Thu, 10 Apr 2025 11:29:03 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, rcu@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rcutorture: Perform more frequent testing of
- ->gpwrap
-Message-ID: <11caaa93-7acf-417c-9223-1b14a76310b2@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250410150329.3807285-1-joelagnelf@nvidia.com>
- <20250410150329.3807285-2-joelagnelf@nvidia.com>
+	s=k20201202; t=1744309943;
+	bh=rhq98F1oAt15i089HgDHKF8FTORTwBNqnGhkaUMvkGE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AulYPUUGsOPhwa+Kt6zt/bF4SQ+MXk286rhsVsmpe2mlfpPgF70lZBTSnsR5ntMwT
+	 ZkZ1ToXf/gNg5d0kTQ3LaxQHhZ/OV8AyMKmXZAXIySY6/dt80IAZs/Dq4S7TCaD1RG
+	 oibILCU7xUCwRzh85baDrWOsnoswhPJvtEXC2U0GJngapQVeRRPBUuBcfovgE7X6WP
+	 xWeGG90XHGWZ76vzkeD0FhF3cQxYlBMQnGKXJx+X4Gs55Pqxu6zXwRTUYNyNRPLgrp
+	 AKAEj6NwSrvd65oWn/btbRNM+RkN6o/0/d3P2d3KfgpG9Ra5zNqi63peDg7+DHZKtA
+	 fZfxddu2IO8/Q==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30bef9b04adso11403061fa.1;
+        Thu, 10 Apr 2025 11:32:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV8zpenzvHWUa5mxLiZLRzMr4+7ZTI9sj0QnFBG/V9J3Vo/xvq102hmIUu76b6w8yvvZCCITHcuml/VLo0N@vger.kernel.org, AJvYcCXN4ZWAu6XVlVYo6xk1PV/5O5R5Hj22ndgx2y+aXuwFQ0bxLoeJFN0ClcMQc0UPd6s6/5OOkhfJHkvnSzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzsb+XunjRHuSN4EFjuxhoSM3MEUVaggMsuxwp+1l5VVJ/r3QeU
+	7sIb5ophz6ho+FVmK2AveNk0qdxTgDllkyHvJZghIs5mjEiom/JE6wiC301D9MB5lJgCKdwbqnc
+	rzNJ8Y5bPr1FF/20tjhayxZSbRXI=
+X-Google-Smtp-Source: AGHT+IGGRB7Ex6YVXi0NvNO+40T2HkvRuSGCeSMU/GnQkY0sfugEXhoQVsAzbBNrtu6Y5hVIAnWVcOlNqjOfW1Ob5aU=
+X-Received: by 2002:a05:651c:2118:b0:30b:cb10:3a20 with SMTP id
+ 38308e7fff4ca-30faccb2938mr17777751fa.32.1744309940933; Thu, 10 Apr 2025
+ 11:32:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410150329.3807285-2-joelagnelf@nvidia.com>
+References: <20250403134200.385077-1-alexghiti@rivosinc.com>
+ <CAMj1kXGzrn6i20LvUBnz_mGi946=GCogNHHUL=mNsv513qYv7A@mail.gmail.com>
+ <2874fc20-9135-4b13-b825-43fb350ce552@ghiti.fr> <CAK7LNAT5sDhh1v3U2xUuVnrbhNXp3SJ_ngxSqAgwmZL0E2QGpA@mail.gmail.com>
+ <CAHVXubgZ+Dwx70vU03R9MZ7BjkzbdR21y-Ort6pBngFmFYs-uw@mail.gmail.com> <e760a42c-1147-4fe8-9c65-6c4919f15fff@ghiti.fr>
+In-Reply-To: <e760a42c-1147-4fe8-9c65-6c4919f15fff@ghiti.fr>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 11 Apr 2025 03:31:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATik6YPYZ5H2n9NXcG=WP3ThvCHpN=azAULmvUEMs5R3A@mail.gmail.com>
+X-Gm-Features: ATxdqUFhBy0hx4SI9K9tecnkTRNiTM5aHBLCMene6OVtrID6RDX8fCW86LYQ_CA
+Message-ID: <CAK7LNATik6YPYZ5H2n9NXcG=WP3ThvCHpN=azAULmvUEMs5R3A@mail.gmail.com>
+Subject: Re: [PATCH v2] scripts: Do not strip .rela.dyn section
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Charlie Jenkins <charlie@rivosinc.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 11:03:27AM -0400, Joel Fernandes wrote: >
-Currently, the ->gpwrap is not tested (at all per my testing) due to
-the > requirement of a large delta between a CPU's rdp->gp_seq and its
-node's > rnp->gpseq.  > > This results in no testing of ->gpwrap being
-set. This patch by default > adds 5 minutes of testing with ->gpwrap
-forced by lowering the delta > between rdp->gp_seq and rnp->gp_seq to
-just 8 GPs. All of this is > configurable, including the active time for
-the setting and a full > testing cycle.  > > By default, the first 25
-minutes of a test will have the _default_ > behavior there is right now
-(ULONG_MAX / 4) delta. Then for 5 minutes, > we switch to a smaller delta
-causing 1-2 wraps in 5 minutes. I believe > this is reasonable since we
-at least add a little bit of testing for > usecases where ->gpwrap is set.
-> > Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+On Mon, Apr 7, 2025 at 5:43=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> wrot=
+e:
+>
+>
+> On 07/04/2025 10:15, Alexandre Ghiti wrote:
+> > Hi Masahiro,
+> >
+> > On Fri, Apr 4, 2025 at 5:25=E2=80=AFPM Masahiro Yamada <masahiroy@kerne=
+l.org> wrote:
+> >> On Fri, Apr 4, 2025 at 12:45=E2=80=AFAM Alexandre Ghiti <alex@ghiti.fr=
+> wrote:
+> >>> Hi Ard,
+> >>>
+> >>> On 03/04/2025 17:11, Ard Biesheuvel wrote:
+> >>>> On Thu, 3 Apr 2025 at 16:42, Alexandre Ghiti <alexghiti@rivosinc.com=
+> wrote:
+> >>>>> riscv uses the .rela.dyn section to relocate the kernel at runtime =
+but
+> >>>>> that section is stripped from vmlinux. That prevents kexec to
+> >>>>> successfully load vmlinux since it does not contain the relocations=
+ info
+> >>>>> needed.
+> >>>>>
+> >>>> Maybe explain that .rela.dyn contains runtime relocations, which are
+> >>>> only emitted if they are actually needed - as opposed to the static
+> >>>> relocations that are not emitted as SHF_ALLOC sections, and are not
+> >>>> considered to be part of the runtime image in the first place.
+> >>>
+> >>> Ok I'll do.
+> >>>
+> >>>
+> >>>> It
+> >>>> would be nice if we could use --remove-relocations=3D here, which on=
+ly
+> >>>> removes static relocations, but unfortunately, llvm-objcopy does not
+> >>>> support this.
+> >>>>
+> >>>> Also, I wonder if this should apply to all of .rel.dyn, .rela.dyn an=
+d
+> >>>> .relr.dyn, as they all carry runtime relocations.
+> >>>
+> >>> Ok, I'll add them to the next version.
+> >>>
+> >>>
+> >>>> Finally, I'd be curious to know why RISC-V relies on --emit-relocs i=
+n
+> >>>> the first place? Is the relocs check really needed? If not, it would
+> >>>> be a nice opportunity to get rid of Makefile.postlink entirely.
+> >>>
+> >>> So I had to check and it happens that this was an issue with the
+> >>> toolchain, I should check if that still happens with newer ones.
+> >>>
+> >>> commit 559d1e45a16dcf1542e430ea3dce9ab625be98d0
+> >>> Author: Alexandre Ghiti <alexghiti@rivosinc.com>
+> >>> Date:   Wed Mar 29 06:53:29 2023 +0200
+> >>>
+> >>>       riscv: Use --emit-relocs in order to move .rela.dyn in init
+> >>
+> >>
+> >>
+> >> So,
+> >>
+> >> Fixes: 559d1e45a16d ("riscv: Use --emit-relocs in order to move
+> >> .rela.dyn in init")
+> >>
+> >> Is this the correct tag?
+> > This is the initial culprit yes, but if we use this tag, the fix won't
+> > apply. So I decided to pick Ard's patch so that this fix can be easily
+> > backported to 6.14, and I'll come up with a new version for previous
+> > releases. Is that ok with you?
+>
+>
+> And I have just looked at 6.15-rc1 and noticed that the relocation
+> stripping was moved to Makefile.vmlinux, so this fix won't apply to 6.14
+> neither.
+>
+> I'll then use the initial culprit, which is Fixes: 559d1e45a16d ("riscv:
+> Use --emit-relocs in order to move.rela.dyn in init").
+>
+> Sorry for the noise,
 
-Much better, thank you!
+You do not need to worry about whether this commit can be cleanly
+back-ported to the stable kernels or not.
 
-One potential nit below.  I will run some tests on this version.
+If the fix cleanly applies, the process should be easy (and almost automati=
+c).
 
-						Thanx, Paul
+If not, we can modify the patch context and submit to the stable ML.
+This needs manual modification, but is still possible.
 
-> ---
->  kernel/rcu/rcu.h        |  4 +++
->  kernel/rcu/rcutorture.c | 67 ++++++++++++++++++++++++++++++++++++++++-
->  kernel/rcu/tree.c       | 34 +++++++++++++++++++--
->  kernel/rcu/tree.h       |  1 +
->  4 files changed, 103 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> index eed2951a4962..516b26024a37 100644
-> --- a/kernel/rcu/rcu.h
-> +++ b/kernel/rcu/rcu.h
-> @@ -572,6 +572,8 @@ void do_trace_rcu_torture_read(const char *rcutorturename,
->  			       unsigned long c_old,
->  			       unsigned long c);
->  void rcu_gp_set_torture_wait(int duration);
-> +void rcu_set_gpwrap_lag(unsigned long lag);
-> +int rcu_get_gpwrap_count(int cpu);
->  #else
->  static inline void rcutorture_get_gp_data(int *flags, unsigned long *gp_seq)
->  {
-> @@ -589,6 +591,8 @@ void do_trace_rcu_torture_read(const char *rcutorturename,
->  	do { } while (0)
->  #endif
->  static inline void rcu_gp_set_torture_wait(int duration) { }
-> +static inline void rcu_set_gpwrap_lag(unsigned long lag) { }
-> +static inline int rcu_get_gpwrap_count(int cpu) { return 0; }
->  #endif
->  unsigned long long rcutorture_gather_gp_seqs(void);
->  void rcutorture_format_gp_seqs(unsigned long long seqs, char *cp, size_t len);
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 4fa7772be183..74de92c3a9ab 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -115,6 +115,9 @@ torture_param(int, nreaders, -1, "Number of RCU reader threads");
->  torture_param(int, object_debug, 0, "Enable debug-object double call_rcu() testing");
->  torture_param(int, onoff_holdoff, 0, "Time after boot before CPU hotplugs (s)");
->  torture_param(int, onoff_interval, 0, "Time between CPU hotplugs (jiffies), 0=disable");
-> +torture_param(int, gpwrap_lag_cycle_mins, 30, "Total cycle duration for ovf lag testing (in minutes)");
-> +torture_param(int, gpwrap_lag_active_mins, 5, "Duration for which ovf lag is active within each cycle (in minutes)");
-> +torture_param(int, gpwrap_lag_gps, 8, "Value to set for set_gpwrap_lag during an active testing period.");
->  torture_param(int, nocbs_nthreads, 0, "Number of NOCB toggle threads, 0 to disable");
->  torture_param(int, nocbs_toggle, 1000, "Time between toggling nocb state (ms)");
->  torture_param(int, preempt_duration, 0, "Preemption duration (ms), zero to disable");
-> @@ -413,6 +416,8 @@ struct rcu_torture_ops {
->  	bool (*reader_blocked)(void);
->  	unsigned long long (*gather_gp_seqs)(void);
->  	void (*format_gp_seqs)(unsigned long long seqs, char *cp, size_t len);
-> +	void (*set_gpwrap_lag)(unsigned long lag);
-> +	int (*get_gpwrap_count)(int cpu);
->  	long cbflood_max;
->  	int irq_capable;
->  	int can_boost;
-> @@ -619,6 +624,8 @@ static struct rcu_torture_ops rcu_ops = {
->  				  : NULL,
->  	.gather_gp_seqs		= rcutorture_gather_gp_seqs,
->  	.format_gp_seqs		= rcutorture_format_gp_seqs,
-> +	.set_gpwrap_lag		= rcu_set_gpwrap_lag,
-> +	.get_gpwrap_count	= rcu_get_gpwrap_count,
->  	.irq_capable		= 1,
->  	.can_boost		= IS_ENABLED(CONFIG_RCU_BOOST),
->  	.extendables		= RCUTORTURE_MAX_EXTEND,
-> @@ -2394,6 +2401,7 @@ rcu_torture_stats_print(void)
->  	int i;
->  	long pipesummary[RCU_TORTURE_PIPE_LEN + 1] = { 0 };
->  	long batchsummary[RCU_TORTURE_PIPE_LEN + 1] = { 0 };
-> +	long n_gpwraps = 0;
->  	struct rcu_torture *rtcp;
->  	static unsigned long rtcv_snap = ULONG_MAX;
->  	static bool splatted;
-> @@ -2404,6 +2412,7 @@ rcu_torture_stats_print(void)
->  			pipesummary[i] += READ_ONCE(per_cpu(rcu_torture_count, cpu)[i]);
->  			batchsummary[i] += READ_ONCE(per_cpu(rcu_torture_batch, cpu)[i]);
->  		}
-> +		n_gpwraps += cur_ops->get_gpwrap_count(cpu);
->  	}
->  	for (i = RCU_TORTURE_PIPE_LEN; i >= 0; i--) {
->  		if (pipesummary[i] != 0)
-> @@ -2435,8 +2444,9 @@ rcu_torture_stats_print(void)
->  		data_race(n_barrier_attempts),
->  		data_race(n_rcu_torture_barrier_error));
->  	pr_cont("read-exits: %ld ", data_race(n_read_exits)); // Statistic.
-> -	pr_cont("nocb-toggles: %ld:%ld\n",
-> +	pr_cont("nocb-toggles: %ld:%ld ",
->  		atomic_long_read(&n_nocb_offload), atomic_long_read(&n_nocb_deoffload));
-> +	pr_cont("gpwraps: %ld\n", n_gpwraps);
->  
->  	pr_alert("%s%s ", torture_type, TORTURE_FLAG);
->  	if (atomic_read(&n_rcu_torture_mberror) ||
-> @@ -3607,6 +3617,54 @@ static int rcu_torture_preempt(void *unused)
->  
->  static enum cpuhp_state rcutor_hp;
->  
-> +static struct hrtimer gpwrap_lag_timer;
-> +static bool gpwrap_lag_active;
-> +
-> +/* Timer handler for toggling RCU grace-period sequence overflow test lag value */
-> +static enum hrtimer_restart rcu_gpwrap_lag_timer(struct hrtimer *timer)
-> +{
-> +	ktime_t next_delay;
-> +
-> +	if (gpwrap_lag_active) {
-> +		pr_alert("rcu-torture: Disabling ovf lag (value=0)\n");
-> +		cur_ops->set_gpwrap_lag(0);
-> +		gpwrap_lag_active = false;
-> +		next_delay = ktime_set((gpwrap_lag_cycle_mins - gpwrap_lag_active_mins) * 60, 0);
-> +	} else {
-> +		pr_alert("rcu-torture: Enabling ovf lag (value=%d)\n", gpwrap_lag_gps);
-> +		cur_ops->set_gpwrap_lag(gpwrap_lag_gps);
-> +		gpwrap_lag_active = true;
-> +		next_delay = ktime_set(gpwrap_lag_active_mins * 60, 0);
-> +	}
-> +
-> +	if (torture_must_stop())
-> +		return HRTIMER_NORESTART;
-> +
-> +	hrtimer_forward_now(timer, next_delay);
-> +	return HRTIMER_RESTART;
-> +}
-> +
-> +static int rcu_gpwrap_lag_init(void)
-> +{
-> +	if (gpwrap_lag_cycle_mins <= 0 || gpwrap_lag_active_mins <= 0) {
-> +		pr_alert("rcu-torture: lag timing parameters must be positive\n");
-> +		return -EINVAL;
 
-When rcutorture is initiated by modprobe, this makes perfect sense.
-
-But if rcutorture is built in, we have other choices:  (1) Disable gpwrap
-testing and do other testing but splat so that the bogus scripting can
-be fixed, (2) Force default values and splat as before, (3) Splat and
-halt the system.
-
-The usual approach has been #1, but what makes sense in this case?
-
-> +	}
-> +
-> +	hrtimer_setup(&gpwrap_lag_timer, rcu_gpwrap_lag_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> +	gpwrap_lag_active = false;
-> +	hrtimer_start(&gpwrap_lag_timer,
-> +		      ktime_set((gpwrap_lag_cycle_mins - gpwrap_lag_active_mins) * 60, 0), HRTIMER_MODE_REL);
-> +
-> +	return 0;
-> +}
-> +
-> +static void rcu_gpwrap_lag_cleanup(void)
-> +{
-> +	hrtimer_cancel(&gpwrap_lag_timer);
-> +	cur_ops->set_gpwrap_lag(0);
-> +	gpwrap_lag_active = false;
-> +}
->  static void
->  rcu_torture_cleanup(void)
->  {
-> @@ -3776,6 +3834,9 @@ rcu_torture_cleanup(void)
->  	torture_cleanup_end();
->  	if (cur_ops->gp_slow_unregister)
->  		cur_ops->gp_slow_unregister(NULL);
-> +
-> +	if (cur_ops->set_gpwrap_lag)
-> +		rcu_gpwrap_lag_cleanup();
->  }
->  
->  static void rcu_torture_leak_cb(struct rcu_head *rhp)
-> @@ -4275,6 +4336,10 @@ rcu_torture_init(void)
->  	torture_init_end();
->  	if (cur_ops->gp_slow_register && !WARN_ON_ONCE(!cur_ops->gp_slow_unregister))
->  		cur_ops->gp_slow_register(&rcu_fwd_cb_nodelay);
-> +
-> +	if (cur_ops->set_gpwrap_lag && rcu_gpwrap_lag_init())
-> +		goto unwind;
-> +
->  	return 0;
->  
->  unwind:
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 659f83e71048..6ec30d07759d 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -80,6 +80,15 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *);
->  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
->  	.gpwrap = true,
->  };
-> +
-> +int rcu_get_gpwrap_count(int cpu)
-> +{
-> +	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> +
-> +	return READ_ONCE(rdp->gpwrap_count);
-> +}
-> +EXPORT_SYMBOL_GPL(rcu_get_gpwrap_count);
-> +
->  static struct rcu_state rcu_state = {
->  	.level = { &rcu_state.node[0] },
->  	.gp_state = RCU_GP_IDLE,
-> @@ -757,6 +766,25 @@ void rcu_request_urgent_qs_task(struct task_struct *t)
->  	smp_store_release(per_cpu_ptr(&rcu_data.rcu_urgent_qs, cpu), true);
->  }
->  
-> +/**
-> + * rcu_set_gpwrap_lag - Set RCU GP sequence overflow lag value.
-> + * @lag_gps: Set overflow lag to this many grace period worth of counters
-> + * which is used by rcutorture to quickly force a gpwrap situation.
-> + * @lag_gps = 0 means we reset it back to the boot-time value.
-> + */
-> +static unsigned long seq_gpwrap_lag = ULONG_MAX / 4;
-> +
-> +void rcu_set_gpwrap_lag(unsigned long lag_gps)
-> +{
-> +	unsigned long lag_seq_count;
-> +
-> +	lag_seq_count = (lag_gps == 0)
-> +			? ULONG_MAX / 4
-> +			: lag_gps << RCU_SEQ_CTR_SHIFT;
-> +	WRITE_ONCE(seq_gpwrap_lag, lag_seq_count);
-> +}
-> +EXPORT_SYMBOL_GPL(rcu_set_gpwrap_lag);
-> +
->  /*
->   * When trying to report a quiescent state on behalf of some other CPU,
->   * it is our responsibility to check for and handle potential overflow
-> @@ -767,9 +795,11 @@ void rcu_request_urgent_qs_task(struct task_struct *t)
->  static void rcu_gpnum_ovf(struct rcu_node *rnp, struct rcu_data *rdp)
->  {
->  	raw_lockdep_assert_held_rcu_node(rnp);
-> -	if (ULONG_CMP_LT(rcu_seq_current(&rdp->gp_seq) + ULONG_MAX / 4,
-> -			 rnp->gp_seq))
-> +	if (ULONG_CMP_LT(rcu_seq_current(&rdp->gp_seq) + seq_gpwrap_lag,
-> +			 rnp->gp_seq)) {
->  		WRITE_ONCE(rdp->gpwrap, true);
-> +		WRITE_ONCE(rdp->gpwrap_count, READ_ONCE(rdp->gpwrap_count) + 1);
-> +	}
->  	if (ULONG_CMP_LT(rdp->rcu_iw_gp_seq + ULONG_MAX / 4, rnp->gp_seq))
->  		rdp->rcu_iw_gp_seq = rnp->gp_seq + ULONG_MAX / 4;
->  }
-> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-> index a9a811d9d7a3..63bea388c243 100644
-> --- a/kernel/rcu/tree.h
-> +++ b/kernel/rcu/tree.h
-> @@ -183,6 +183,7 @@ struct rcu_data {
->  	bool		core_needs_qs;	/* Core waits for quiescent state. */
->  	bool		beenonline;	/* CPU online at least once. */
->  	bool		gpwrap;		/* Possible ->gp_seq wrap. */
-> +	unsigned int	gpwrap_count;	/* Count of GP sequence wrap. */
->  	bool		cpu_started;	/* RCU watching this onlining CPU. */
->  	struct rcu_node *mynode;	/* This CPU's leaf of hierarchy */
->  	unsigned long grpmask;		/* Mask to apply to leaf qsmask. */
-> -- 
-> 2.43.0
-> 
+--=20
+Best Regards
+Masahiro Yamada
