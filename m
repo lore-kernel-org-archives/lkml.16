@@ -1,109 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319F5211713;
-	Thu, 10 Apr 2025 23:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F2A1EB1A1;
+	Thu, 10 Apr 2025 23:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744327792; cv=none; b=O4MULvkZBtJ+Q1OSgbvQzSWSBhPqVIcdPnz65asO2tSWjx4kMquEAVjBaqV9WtxxmzCTRVNnuHae/ufFTDmj+lGoPcVmWomMnoCINmEnESCb131Qa7F/Wj1jX4ocVhS4Kk2EnNoaiH19/0PWbiFA6iXn8ddZmmjz+fD73r4AHD4=
+	t=1744327883; cv=none; b=sxze7uQ5mriffe6g+3iTKtpl/m1gwSGugGzvrBoWJ/4VRDg/HGSGKfeBg/d+xOcNoI2NVhPfksmUhFfoQwQZNQDFufXUhwvfNW6xnzUUXx5NMzcaIlfg3AdL4zKF9HwVzbxB351NlrtB80lTRwAw+wdz13EvxFqcic9jV/jocgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744327792; c=relaxed/simple;
-	bh=8jOpSPwprOxkM/J3OPiEEMfzk9Ma6DGiirJIc7Jwjko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HBu9OM3ZZhmgoNEP85aH4cREamm1IATsmYPpw44PtHWH9iWiK+VmILLFIvqYF1tvrXYYiYJulu1KJU0MqOs0kEOn+uy3e2vRpjgdiTM2Uxfzt/ZY9XvuJI4xlvnmICUz7ahq75pfsBiCaxuPCGx66GZyUTkSyManZHJAIVOAAB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MwjTAC9s; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744327883; c=relaxed/simple;
+	bh=0Vad+E3w7U+JnMUzlV2hA2BHgUo7/l3ew51N/EPhyc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BL0QLwpNqLKeCLk3yDQu6xGB2C6o2/trdlmR/+UEfo8Yh4CrWRGp4g1nnVePWCZ94zuYzd1lU9AcUCY8lCfgLwoZLIlrEhdnHjaP6xLLTNNugxuvqMJbRtrIVTQeVYKbHRZIxXV/s6/YAmQRwFK9ukz0tt8CYamAFxHCdWSUOJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3YDSXNj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MwjTAC9s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744327789; x=1775863789;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8jOpSPwprOxkM/J3OPiEEMfzk9Ma6DGiirJIc7Jwjko=;
-  b=MwjTAC9sYMKnSL0DEaMTEwezMa/j42XoClIxK8QPUPnmaEiA7exDT6mG
-   3oWjjYZ8z4kSO0ra52lMUjmYBjN8dlmo+vwsMU1KhcdFTsV63tjCElcey
-   f5/Y7sTbRycCnyT6Q+yZeN9Ic6jDoQXSErE8jjyPPQxn575DLi+oro4ji
-   aOQoLjqnXDK5MpgqVSowjJL7jsnA7wE5SAuGjvStqzCxaIgpeVT5A/2fr
-   a4XW0uk81tRu8+GeH6QYAIr/ZIhwp3cwp8rRYAgc2FwDvXBoQiU0YWZ/S
-   nx0MgDrkBmNLlyRMrJ6iT81zP7IHASxOqCr8S5Oo5H/TgXOw/rGOlfRbx
-   A==;
-X-CSE-ConnectionGUID: XaHqcMXKToCG9XZvewmVow==
-X-CSE-MsgGUID: KxQTWAVGS9azDo/6/w1Zaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="56514844"
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="56514844"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 16:29:48 -0700
-X-CSE-ConnectionGUID: SAiMB3F/Q26IBsQ5XFPr9g==
-X-CSE-MsgGUID: Lsse+SNpR+WTRSUoqqDiRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="160005628"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 10 Apr 2025 16:29:44 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u31L4-000AdH-0E;
-	Thu, 10 Apr 2025 23:29:42 +0000
-Date: Fri, 11 Apr 2025 07:29:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>, chenhuacai@kernel.org,
-	kernel@xen0n.name, jiaxun.yang@flygoat.com, rppt@kernel.org,
-	akpm@linux-foundation.org, david@redhat.com,
-	Jonathan.Cameron@huawei.com, dave.hansen@linux.intel.com,
-	dan.j.williams@intel.com, alison.schofield@intel.com
-Cc: oe-kbuild-all@lists.linux.dev, chenbaozi@phytium.com.cn,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: Re: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
-Message-ID: <202504110627.AIvtEzM7-lkp@intel.com>
-References: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3YDSXNj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFFCC4CEDD;
+	Thu, 10 Apr 2025 23:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744327882;
+	bh=0Vad+E3w7U+JnMUzlV2hA2BHgUo7/l3ew51N/EPhyc0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=h3YDSXNjdYnrn2Jp9zAIzIESVGSpxRDPMQNcNfsvkmoPZ8TgwQ/OuAjs+bvtGNrOj
+	 fSeOhwm4flzim0UQRMX755MnuQLUXjK8b6KVBoRhCelg2CWtTLRjteAY/noy6d3UoP
+	 SBFXvk59bnSL2PMyg8mpGO5ShsOsP/rGtqBZhPbs4vp1C9uJs9bS2NgcolxXzjw/1B
+	 o9FlYQZsoHB2jyqBaV68zYU8W0VdGqVdEfSuLU64wl621AV4YTfgPbsqnajUSGWB3d
+	 MypUPhcd9bGO6wSZphj8iBZ9vGnxjQDd36RdRzdtdWIPnl+JQ2SwtunwkaxFcKKT05
+	 uqc+hRXj2Wcng==
+Date: Thu, 10 Apr 2025 16:31:21 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: netdev@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Christian
+ Brauner <brauner@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org, Herbert Xu
+ <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH net-next v2 06/13] rxrpc: rxgk: Provide infrastructure
+ and key derivation
+Message-ID: <20250410163121.04d56770@kernel.org>
+In-Reply-To: <2099212.1744268049@warthog.procyon.org.uk>
+References: <20250409190335.3858426f@kernel.org>
+	<20250407161130.1349147-1-dhowells@redhat.com>
+	<20250407161130.1349147-7-dhowells@redhat.com>
+	<2099212.1744268049@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Yuquan,
+On Thu, 10 Apr 2025 07:54:09 +0100 David Howells wrote:
+> Good catch, thanks.  That path should never trigger, but it should really do
+> "ret = -EINVAL; goto out;".
+> 
+> Do you want me to respin the patches or follow up with a fix patch?
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on linus/master v6.15-rc1 next-20250410]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Yuquan-Wang/LoongArch-Introduce-the-numa_memblks-conversion/20250409-150524
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250409070250.3225839-1-wangyuquan1236%40phytium.com.cn
-patch subject: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
-config: loongarch-randconfig-002-20250410 (https://download.01.org/0day-ci/archive/20250411/202504110627.AIvtEzM7-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250411/202504110627.AIvtEzM7-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504110627.AIvtEzM7-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
->> mm/numa_memblks.c:125:5: warning: no previous prototype for '__node_distance' [-Wmissing-prototypes]
-     125 | int __node_distance(int from, int to)
-         |     ^~~~~~~~~~~~~~~
---
-   loongarch64-linux-ld: mm/numa_memblks.o: in function `numa_set_distance':
->> mm/numa_memblks.c:104: multiple definition of `numa_set_distance'; arch/loongarch/kernel/acpi.o:arch/loongarch/kernel/acpi.c:253: first defined here
->> loongarch64-linux-ld: mm/numa_memblks.o:mm/numa_memblks.c:13: multiple definition of `numa_nodes_parsed'; arch/loongarch/kernel/numa.o:arch/loongarch/kernel/numa.c:47: first defined here
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sorry for the delay. I was hoping you could respin and maybe fix/give
+up on the annotation in patch 3? Right now patch 3 gets flagged as 
+a build warning which terminates the CI processing before we get to
+make htmldocs. And it would be nice to get that run given patch 1.
