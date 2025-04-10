@@ -1,91 +1,94 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A02A26B2BA;
-	Thu, 10 Apr 2025 12:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21500204594;
+	Thu, 10 Apr 2025 12:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744289000; cv=none; b=Irldb9aE0rKStVcUsDU5/KZ3Yv4LgoYYLncRysofM8NaBivfooBH5eqv4cbpqWkxmV5Jfahfi+Lf/Hc0bERLrcd5juu/HMZEMsluzt3TbW+lOJyEIN8YtjBOh+JSNd0BUjDOJ+gxxiInWsG0yx0uG4aIdo/TBEsZxOCUqljTywU=
+	t=1744289038; cv=none; b=GNaXUPZqgvblJgAN5EgtJhO8Eb7b31o+w99aRy00Hcq1rR7ZLl/Up9rP1mGxIapYHsDQc3rEreEmJSIE54Rfiotd1hxlCQjSvf5cVFfds7uolV76/zY+vKzui1cLkexhBHn449wruiDpUCXJSgys74JvhLxt6P8G98FOGKy2yXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744289000; c=relaxed/simple;
-	bh=FdnbocKbRHhtLFIRneUZ+/1khNFKq2SMICJ8698GBPY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eWJsg3O657Sj0/QJ3ws9JfHsmTrg3YN1hSD3hWgYRXNKZQWuHahrGqvH4gWhpMo0+M4SxuHQR1wEuiN0/TPRaXq4AXHhl1EciY9TcQ+0rHlSZDiosZZqnat4RtFtbNzCM7PSaRM9TYW+/E41LCcmDoUlTdxYuSkEOcIz+kj5qW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C5J44iI1; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744289038; c=relaxed/simple;
+	bh=xwaR9XYSdQUCeqfL0a9Vy+BmO2PDEo5QHtWus2v3bRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nDYQUKD8fiP0UY8i1hSymJZN84Oh+wwJnNNfzIoCEUKApftzbImOVeyMAX4Y9uJQiI8hB4HcOIFdWEXcvCNnQCJMA6MwpnLMc/m4w3u/wYqO8orwIowBrtALPL08QrT0ST00ejQjLrbVTgxku6JKb3qh6DTOJGJx2d+0jDVB8oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZLqJuvoJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5J44iI1"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso5825115e9.0;
-        Thu, 10 Apr 2025 05:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744288997; x=1744893797; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FdnbocKbRHhtLFIRneUZ+/1khNFKq2SMICJ8698GBPY=;
-        b=C5J44iI1FaqQ7HdWFzHc5dJptGqV+HQA+UguaaRUI4ZdeMT+1D2hSYJ4JEvJL3zlxP
-         ifDjgUaxTgv9Iqb3Uc3AkJxmrWWbigd88FfuQH6NfgsXm0KXv0HNJN8AXPh+C2MNJfwJ
-         7gFeNLPN9/DkHe/BrzngKfvWbGs5j8AnsxkzI0Nrope6vpXdJzYoJlhbMbFxB8Vub0ZT
-         YKusjr2s0YCXVzGN173jTWdlbqBRpld/q5J0STeCgnN6J2DYkPjnFREJZY6ednwsX6my
-         cncXRUV1qwjqLwwmcz3gcUIsL3ryNgeKV+BRo9ArabVrEsNsEYBAgTVb+PqnjE/ZSYWY
-         +zoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744288997; x=1744893797;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FdnbocKbRHhtLFIRneUZ+/1khNFKq2SMICJ8698GBPY=;
-        b=V75Bibr/UkVa2HIiDHV9CewYQg0AH11sEwDowW7XRVQoA73HsVClTNhL4FrPhksCam
-         lWR0ff5rafJ+l3XIdn76iKWyEibaOy9Hf5KXVcYOI6fwyzwvTKa1+CBAkqCwr1+Ecx94
-         mpyrInzteneeeMf1Uokzb9iJars5qtBYJkdySbvkOK3gwk+KaZ0Gx1G3YMwqWCTX10vd
-         KC60W9b3cwUEQSaoCBgRq1xLSP/bEmchBnVRIlgadSC5CXLywHSEsPrzUPMmHIH6a3CX
-         AazWyXfvaT3AYq/1ulbi9Ppn3QfwCnn0MeEEwHw2rS/OTnpKtj0b1GfjMqHD+3Ea0Bk0
-         nXQw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/sdqANdfsKlkYpViFmyZPVDJFPhdcf/WRr1jMMeSccRdqLNRlRyAUg5/9IRVJd9EkvPE=@vger.kernel.org, AJvYcCUrz+5wFzztzPS9NvVwIkHMH4k5kaqGjcS+nJh+89H47fVXE84t6EoXFGQZxnMd+3mRnk7eXlzF@vger.kernel.org, AJvYcCVENS/HShnsp4CYID3Q3UBqu9PtDlkDkUvcnz6mwwZMfb4JtkTcF/Hqu17WBs1YlSHF0dtpyH8ul47jP4te@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnD/9Ql8AJQYxO/qmG7M9/g4U3NyKjSlMUJodSYSShyYQg2XBa
-	jP31LDqyD3Ssbuf90usXf3waJeTKBjaju/uCc+mYu458u+zciYFg
-X-Gm-Gg: ASbGncvCRmOWy0jg7rPrgHSzm3MzWSnO6AhSnlqId0X0uoLXy9mDFJGsCOoXQWNWdE1
-	XjQ0ln8bjcpro9VuhZCSJv6qZoWoiZAi1bBmBVryPIm1O9wpYqeQ1bQO2ZymSlh4Ki7sqcns+Px
-	DGObEJKY/jEL/0OQ+ZIGbNewroxSudJJVqx/fhTuLzfqZo1bUeEkbkra2prDfLo29/olnad43Jz
-	PF4cos8Ql246FXPyFnOpHwrJWYzQ3uJf89HZuRXmu0rVTIoJXOznqmxpcl7gFBQnS2WnsenrLbF
-	w51f5yZHJFK4wG1Xf9ImRIuMGykYmg==
-X-Google-Smtp-Source: AGHT+IE1O/g9eSCNeD9X1PupioWSc5DczuV6yqkTZrHoR7wnetv602/KyAnSaHmO/djaQj3YLxmu3A==
-X-Received: by 2002:a05:600c:1f8d:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-43f2ffa3188mr16121285e9.33.1744288996732;
-        Thu, 10 Apr 2025 05:43:16 -0700 (PDT)
-Received: from localhost ([2a03:2880:31ff:7::])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f205ecc73sm54187835e9.8.2025.04.10.05.43.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 05:43:16 -0700 (PDT)
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-To: syzbot+8bdfc2c53fb2b63e1871@syzkaller.appspotmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	john.fastabend@gmail.com,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	netdev@vger.kernel.org,
-	song@kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	yonghong.song@linux.dev
-Subject: [syzbot] [bpf?] possible deadlock in __queue_map_get
-Date: Thu, 10 Apr 2025 05:43:15 -0700
-Message-ID: <20250410124315.1201290-1-memxor@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <0000000000004c3fc90615f37756@google.com>
-References: <0000000000004c3fc90615f37756@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLqJuvoJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243FFC4CEDD;
+	Thu, 10 Apr 2025 12:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744289037;
+	bh=xwaR9XYSdQUCeqfL0a9Vy+BmO2PDEo5QHtWus2v3bRY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZLqJuvoJ5+3WOT9aSmeUQ+exzI0Edu08Eaey+hgTkpAGlztGl8YNms2K6alwnWVQC
+	 F1H87/409EHH8AzPTksZftTkGX0i1hzqXTDlhh6pBUEuc3An5Pt9tSGxW3GIQdk/GG
+	 rgGdZNwd5ZDquE1hdfHh8CvSEMXvhdWPHSHp3FB45b0764MxhrhjiQ7dC7pffHLij5
+	 1tWUzX0AYuGxNGELhRH5Agmn0kI47dRa9FPVX+VEjRWEXvkujL+yM4FrdF6+hjStgj
+	 pjnLCbEKQZRAjYtUJtESOS+rokE8Et3IdK19uA3VZWkCbU4LIsmXgb+v8Mg82Qv9Ij
+	 1zcpH20uKBxrA==
+Date: Thu, 10 Apr 2025 15:43:53 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: keyrings@vger.kernel.org
+Cc: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>, stable@vger.kernel.org,
+	David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v8] KEYS: Add a list for unreferenced keys
+Message-ID: <Z_e9CVsmiXD3QYkg@kernel.org>
+References: <20250407125801.40194-1-jarkko@kernel.org>
+ <Z_VIaxyGoRlg3vyo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_VIaxyGoRlg3vyo@kernel.org>
 
-#syz test: https://github.com/kkdwivedi/linux.git res-lock-next
+On Tue, Apr 08, 2025 at 07:01:47PM +0300, Jarkko Sakkinen wrote:
+> On Mon, Apr 07, 2025 at 03:58:01PM +0300, Jarkko Sakkinen wrote:
+> > From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> > 
+> > Add an isolated list of unreferenced keys to be queued for deletion, and
+> > try to pin the keys in the garbage collector before processing anything.
+> > Skip unpinnable keys.
+> > 
+> > Use this list for blocking the reaping process during the teardown:
+> > 
+> > 1. First off, the keys added to `keys_graveyard` are snapshotted, and the
+> >    list is flushed. This the very last step in `key_put()`.
+> > 2. `key_put()` reaches zero. This will mark key as busy for the garbage
+> >    collector.
+> > 3. `key_garbage_collector()` will try to increase refcount, which won't go
+> >    above zero. Whenever this happens, the key will be skipped.
+> > 
+> > Cc: stable@vger.kernel.org # v6.1+
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> 
+> This version is my master branch now:
+> 
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/log/
+> 
+> For the time being not in next.
+
+I just updated it to my -next, so probably tomorrow will be in
+linux-next.
+
+I believe this is absolutely right thing to do but please be aware of
+this (now it is *knowingly* applied) and ping me for any issues.
+
+Summaery: it sets walls against using struct key in the middle of
+destruction (e.g. when key_put() is accessing it after zero refcount, GC
+should never touch it).
+
+BR, Jarkko
