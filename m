@@ -1,145 +1,113 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B290D26A1BB
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F135D25E45B;
+	Thu, 10 Apr 2025 09:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277710; cv=none; b=Lf7vo1lIrTrgoU7MOtSXzQ8KUdOrUnYAv8Z2JAPNTk84/hFoMcH07gRiyzIoIcm1pFoGLoUj3nis1lZ7rhvZIccqFk1W/AnB3DpME5fCyfWacZBGpBXbyIKffD1IcOghJ22t7j05PP7ogD/FF5NtSoc4bCLElm13j8gmerKCC6c=
+	t=1744277755; cv=none; b=Zgdo0+HFBCcsHJbT8W5w+AhAQXLG0pODl6dXhc8s2Cl57PimUlaxoTRU2cms3W/n+IkNoFf8/hWjswkpyyuSoKIydVrFfXG9kp8axUfxSSCWXs06LGQGyFbpahHaBOCtiEGvMOUZ4y/fdVgRM9oFFV9E/QJ8jSBE8TiWy6EHxs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277710; c=relaxed/simple;
-	bh=eVo2TmgtlN2R2X3Zf9Lol8n9FuUHnBY+y4wdcdE50E0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c/fZOi3+AqbRlHyTuyfCpztad0q6bQpTFsbmZVKbHOzJY20Fkxhx3lNv5lBSWJCqfnOlNIpDPD7TZei/LlegPxJRkdoFm2OTZ6Ioy6+KV/ifD9tu0t9jZmZn5RormSvuWx3dkxJnrd/HS4vTwsuVhxDxVZC6d3exzXLbl8oDCxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=COQDoNwG; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="COQDoNwG"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so4922885e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744277707; x=1744882507; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9wnrmZrdHGq/Ptu9FCMC7eVlEpQiRVau7cfrJW7kOec=;
-        b=COQDoNwGdlffzA3xauBKXcvWNWKHAmwSy/n5dICwNAj4Zu+S7Yh6sGF/Nv1zwsVoji
-         iWLbfw6sdMb0kuBPgwlEfunA89MJ3wm3xFbw9p5pzpMMQy3/uRtA4R/5tPYfdbogU/fL
-         0wzBg50cIfBTwGqegKbG8H+5qoUhk0bIzDQ0f1FLUbmO0NOK5HNUXPftrUH6ZMNUz9ns
-         NfLgMJI16TjTB+g5MCCaKtKq/kASz8g4rdaLkyMBz1vNJipE9hfO5fB4Ax8+GNB/wQUO
-         SaoUK0mpqOC6taPkkbc/NOKpChKBOb3JCPlfNvQuvWFAKxSNDTB5Nwr9U/GBhx1lEImD
-         Z2Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744277707; x=1744882507;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9wnrmZrdHGq/Ptu9FCMC7eVlEpQiRVau7cfrJW7kOec=;
-        b=TnsngFr4dXZ4feXNof9PymO1mKMRHE3+CM1q7oLvV/5VNPD9C9bGMyuj0ZUfcpccm6
-         Zz7VQEiaHi1UIytTzQYOIMmkIo7h8A4+F3ADOG6/k86bCJSKUMlRG9MvtiTwe7dqnuaw
-         LyuqWZE5BNfP5lD8cInnQtQQvqpe1WNjdaWdALFs5SoAOnwRoBAYT3OhLEnQHAxeuiPL
-         WTdP+1GOF04zkwQnKtlkky0MRl+Y25a0EON5Y3RceGCq3zilXtht1ebgAU928AodDx6z
-         EPfAjzHDEsSqTFfVtWf8GCYdwz/lkzGOJSSslGak3TfXdT+05U1qTXe7kes622UVRvfh
-         sG8g==
-X-Forwarded-Encrypted: i=1; AJvYcCURetK3Q3bxvTfveqF10Fw4zeT/BfJVKyA0VbBlJvBrCA8c2Edi+xQ5rKvKqZvb7QacqeIBHgKRa6dJoTw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2UCl+6JZCy99Ylfi3EyeixWiGNOEoNIEl0mtIUf7oAe0gnBX+
-	cw1AyMIeemNyjUpnvDLwrgZ71yjp8CYXHDbbuWP3Ylq/6h9t+rprZiBzUAtt0Qo=
-X-Gm-Gg: ASbGncs4lUaHBD2k8Nj4ZsFA4g0zkJfgkBo2lajvAAOr8R2rSSwTXBQprAqcV+8OOuq
-	BGe5+3WdF1flKSXuraP4giO94dvB0mj36pfRNhT6ovd/wmNQlbu/8gWILdkM5lM9/bPtjqHKhux
-	wA/yXfYXksO5lCHgvkP8GmafT+/aUtnliVz0Nb2KAd8IIqq8zjdnMcDrD/LfMgUmVhap44UumMX
-	bed+rlF23axxHyOTQzPRJGK7Ah8tb2WbN5pu3wRKbqXtSTenrAdU1fJd4pk3YDCsuBNHdfQ2v8s
-	y2VvbIQlsl3n3cm87tWLbDNHbMys91i3xA==
-X-Google-Smtp-Source: AGHT+IGakQPRYAPoJeyW7V5nBHKcFb/A/w0K9tmVzuwevmUfE7eHObjlPjw7A8Ij+9x62tILpo5Brg==
-X-Received: by 2002:a05:600c:138a:b0:43d:4e9:27ff with SMTP id 5b1f17b1804b1-43f2d7af1cdmr21099305e9.7.1744277706886;
-        Thu, 10 Apr 2025 02:35:06 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:7c4f:f9d1:94e0:53f8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f206264a1sm49698435e9.9.2025.04.10.02.35.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 02:35:06 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 10 Apr 2025 11:34:48 +0200
-Subject: [PATCH 6/6] pinctrl: qcom: ssbi-mpp: use new GPIO line value
- setter callbacks
+	s=arc-20240116; t=1744277755; c=relaxed/simple;
+	bh=ivEwnUgWmXZxQZ46vxW33DSnaFX1TgTeaPOIVDxd0Cg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nMqOaSNyg7FEuZykT4mrtCODVI/ad0CdMaMrqbCsph6MIUHgZQwvNP3dqgn+ODq8I4uw5QUY+GbVtS5Qrp2J8ejrrQjvS7oOY8VyFMU09yfWKubQ4l28+RXKz1xv+tVHn2F1LDAl9disywwq8M7DeSv8Aymj1fXhfiwWS0yB5i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZYF6L69nHz4f3jXp;
+	Thu, 10 Apr 2025 17:35:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 51F761A1687;
+	Thu, 10 Apr 2025 17:35:46 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgBXvGDvkPdnWY46JA--.28764S3;
+	Thu, 10 Apr 2025 17:35:46 +0800 (CST)
+Message-ID: <db5bf241-0fb6-4009-963b-32b89d3c1648@huaweicloud.com>
+Date: Thu, 10 Apr 2025 17:35:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-gpiochip-set-rv-pinctrl-qcom-v1-6-6a6891338aae@linaro.org>
-References: <20250410-gpiochip-set-rv-pinctrl-qcom-v1-0-6a6891338aae@linaro.org>
-In-Reply-To: <20250410-gpiochip-set-rv-pinctrl-qcom-v1-0-6a6891338aae@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1522;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=tLV0wE3qzspwnGpVRf4xL5olQ7zvo+pba8sfw+/Sleg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn95DEzBrkMLJs75LETQ44j8nkxaxMY86Ykysn0
- smsHuuKeWyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/eQxAAKCRARpy6gFHHX
- cqkMEADblPn6aOx+OrtpJrETH6MXqe+xcAyk6YzC7QkHT1ed7muXekwa5z/ns4vdBg+vjdYe5cA
- nI6MYeBI00QuCAulcPLG1PaDhiWlQVGCoKo72gVtvrQ7WWX3KYEO2h3KolApV6VO9vBzxRmlNNp
- oXeEVu4yntXxVjgQW9IwqNNdA9yby+74CIgFnZW3oPm80l40U+u2KrmkPG6WI0l27I4CaBm7wvj
- 6upPOcO7XcL3U2AHw2W6oiy1NBYz1pdVBA0xnaZOp+jwG4GbC51HZDq/xZXA1/0UgAckLRIHBsS
- YDwKFv+kmvXMkik7EFFktVOnfHlpTsl6/pZvru5GoW6RW3DEX4wcdHxTAIBIe071BtRqUzbvdGd
- hSpEteSq3knJDiqMuizmpSIPpHkHjNJrT5uqTABHeWDWYMC1rlO9AvxoDA6/Q/eZkGzDhx006YE
- gfTwRTW2CAL4hZ9ZftY8v6DMu+WVoJyw8aBf2ICV5BetJDvlOoIHWJ/bF9GGAgpGddTRz9AMpJY
- VBkvNZQTn+iztj94eQY8Il+YZUpeQ764BhVBFOjBGfrowahfLBn5DRwThWHV0ZK6/Y7+Uh9zgFp
- XgWwQcDrFTpcHyvNfHR7eaL93gK1K/L3Iohr3pHj1bnBK+aGxihS3zWsWOoEcg/ENxTZZeA3dxR
- O06WXteu3SoaDMg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH -next v3 01/10] block: introduce
+ BLK_FEAT_WRITE_ZEROES_UNMAP to queue limits features
+To: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
+ chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, yi.zhang@huawei.com,
+ chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250318073545.3518707-1-yi.zhang@huaweicloud.com>
+ <20250318073545.3518707-2-yi.zhang@huaweicloud.com>
+ <20250409103148.GA4950@lst.de>
+ <43a34aa8-3f2f-4d86-be53-8a832be8532f@huaweicloud.com>
+ <20250410071559.GA32420@lst.de> <Z_d_VDvgBkgt4UhS@kbusch-mbp>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <Z_d_VDvgBkgt4UhS@kbusch-mbp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXvGDvkPdnWY46JA--.28764S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFW5tw1kKw1ktFWkKFy3urg_yoW8Ar43pF
+	W3KFs7tFn7t3Waywn2vw18Wa4F93s3KFs8Wws0vry2yrnIgF1IgF1a93W09FyDur1Iqr1j
+	vayjqa4fJF1jva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 2025/4/10 16:20, Keith Busch wrote:
+> On Thu, Apr 10, 2025 at 09:15:59AM +0200, Christoph Hellwig wrote:
+>> On Thu, Apr 10, 2025 at 11:52:17AM +0800, Zhang Yi wrote:
+>>>
+>>> Thank you for your review and comments. However, I'm not sure I fully
+>>> understand your points. Could you please provide more details?
+>>>
+>>> AFAIK, the NVMe protocol has the following description in the latest
+>>> NVM Command Set Specification Figure 82 and Figure 114:
+>>>
+>>> ===
+>>> Deallocate (DEAC): If this bit is set to `1´, then the host is
+>>> requesting that the controller deallocate the specified logical blocks.
+>>> If this bit is cleared to `0´, then the host is not requesting that
+>>> the controller deallocate the specified logical blocks...
+>>>
+>>> DLFEAT:
+>>> Write Zeroes Deallocation Support (WZDS): If this bit is set to `1´,
+>>> then the controller supports the Deallocate bit in the Write Zeroes
+>>> command for this namespace...
+>>
+>> Yes.  The host is requesting, not the controller shall.  It's not
+>> guaranteed behavior and the controller might as well actually write
+>> zeroes to the media.  That is rather stupid, but still.
+> 
+> I guess some controllers _really_ want specific alignments to
+> successfully do a proper discard. While still not guaranteed in spec, I
+> think it is safe to assume a proper deallocation will occur if you align
+> to NPDA and NPDG. Otherwise, the controller may do a read-modify-write
+> to ensure zeroes are returned for the requested LBA range on anything
+> that straddles an implementation specific boundary.
+> 
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+I understand. A proper deallocation has certain constraints, but I
+guess it should be useful for most scenarios. Thank you for
+the explanation.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-index 4841bbfe4864..087c37d304fc 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-@@ -511,14 +511,15 @@ static int pm8xxx_mpp_get(struct gpio_chip *chip, unsigned offset)
- 	return ret;
- }
- 
--static void pm8xxx_mpp_set(struct gpio_chip *chip, unsigned offset, int value)
-+static int pm8xxx_mpp_set(struct gpio_chip *chip, unsigned int offset,
-+			  int value)
- {
- 	struct pm8xxx_mpp *pctrl = gpiochip_get_data(chip);
- 	struct pm8xxx_pin_data *pin = pctrl->desc.pins[offset].drv_data;
- 
- 	pin->output_value = !!value;
- 
--	pm8xxx_mpp_update(pctrl, pin);
-+	return pm8xxx_mpp_update(pctrl, pin);
- }
- 
- static int pm8xxx_mpp_of_xlate(struct gpio_chip *chip,
-@@ -633,7 +634,7 @@ static const struct gpio_chip pm8xxx_mpp_template = {
- 	.direction_input = pm8xxx_mpp_direction_input,
- 	.direction_output = pm8xxx_mpp_direction_output,
- 	.get = pm8xxx_mpp_get,
--	.set = pm8xxx_mpp_set,
-+	.set_rv = pm8xxx_mpp_set,
- 	.of_xlate = pm8xxx_mpp_of_xlate,
- 	.dbg_show = pm8xxx_mpp_dbg_show,
- 	.owner = THIS_MODULE,
-
--- 
-2.45.2
+Thanks,
+Yi.
 
