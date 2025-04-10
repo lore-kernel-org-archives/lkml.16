@@ -1,35 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139A01519B9;
-	Thu, 10 Apr 2025 03:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B0C1519B9;
+	Thu, 10 Apr 2025 03:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744254601; cv=none; b=HeYiPuwiL4AvKJgKOxfKa/BSUy5Kdq4l7qL7zv+Tmxyl1+nLRuPRtdya8tAPZKxVLBHh95JAQTgyBRZgGTFtY6JbxJ0JSl5JjXibh1dXGft6KrIQNTCxVdxQzWlh7JhaCUbXs9qRnhrdk5G9knElnNBOU1Pec92qzbDoxBlq8Ns=
+	t=1744254610; cv=none; b=aj+Xf31ZS/ed1RhyC+aBiZvH8NWqFWBak6SLPi68cW880NUa9fF2Iv9HHhbFOmS+Lt9HkOedZKKKtgXlSLW8Z5vkvwsq1QrILZRTxqFkzUEXXT+TiKoeWGaZuVpdbDA2iY6TCZfLcb3T7xYNpX6cykSVkPJgO0+JBeloKV5utsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744254601; c=relaxed/simple;
-	bh=+x4N2KddczS3M2cHECoSS1dKNDFNd/yQmKExhiectpI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=sCX+4wE/iRu/d4NJB7h+h+Xs4nn0sltMjn4g1v0Ht8lOgWnChXlEIoReWPA5hiBl8dv49Xj4hSUlNo1Wkosr/Jdu8uy+WUgKudD6PnE4p8DoL7kFHMUfVJsH36ZpWgjgYYgXZ3HEzUiVlJd+7J358XaBPM7rlMug7GcIydTviss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ROdXnBIo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ROdXnBIo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7598DC4CEE2;
-	Thu, 10 Apr 2025 03:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744254600;
-	bh=+x4N2KddczS3M2cHECoSS1dKNDFNd/yQmKExhiectpI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ROdXnBIoGfSQnZutmUYLq205AAvoPagEkqWsBjdtNeobBK9N/WZAy3lFcwPKHHSK4
-	 Fn2pYLli3pLZV+LN1wyzRA58A7t9UJAKjfYyl14FsFbDaJe1Ooks0Ga9By3ZYJugZS
-	 3CJm7rs5UFcW4QFaqt/n/u7OSyL3kOqaYyDNJsyp18BsNFttH9Hcjgk3zEW4duOnBe
-	 i5DKwzVmXpw/UA4PlOXmuwRcCF7Hw5VItsEzA/Br0RR7eEQeEon82QgnriFVxE9Ou/
-	 5jEeq+U2rSQiKj2buqeKYuZJXRW6LFltJ66r5eHCgDqPIwlct2i38l2mZbEtkrjcy+
-	 GuHlxsfgQk4cg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 2C38F380CEF9;
-	Thu, 10 Apr 2025 03:10:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1744254610; c=relaxed/simple;
+	bh=utMjnAUYDwC4rLWZpE9SIK4ZIbnGRYa+OQLR9OXYOSc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=INvEPXhz8C1l1Px7/xz/IN4FSz9l9xa9AnVzAvI+SlllXQkIkBOS8HXOu5AP3kqbIAH7vIefySGoH09NPvy7iV6jVRHJh9X55JocfyL3D5DmzKi40bDXrTN9bvRgNDkm5YtsPnvjo1US49EWQuGmDxDvDGuPLm4QcZmvkPGeHFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZY4Tr66f6zHrGD;
+	Thu, 10 Apr 2025 11:06:40 +0800 (CST)
+Received: from kwepemg200007.china.huawei.com (unknown [7.202.181.34])
+	by mail.maildlp.com (Postfix) with ESMTPS id 96A41180B51;
+	Thu, 10 Apr 2025 11:10:04 +0800 (CST)
+Received: from huawei.com (10.175.103.91) by kwepemg200007.china.huawei.com
+ (7.202.181.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 10 Apr
+ 2025 11:10:03 +0800
+From: Xiangwei Li <liwei728@huawei.com>
+To: <make24@iscas.ac.cn>, <bhelgaas@google.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<liwei728@huawei.com>, <bobo.shaobowang@huawei.com>,
+	<wangxiongfeng2@huawei.com>
+Subject: [PATCH] Revert "PCI: Fix reference leak in pci_register_host_bridge()"
+Date: Thu, 10 Apr 2025 11:28:42 +0800
+Message-ID: <20250410032842.246396-1-liwei728@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,55 +39,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v1 0/4] bpf, sockmap: Fix data loss and panic issues
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174425463772.3131897.3560283890937950515.git-patchwork-notify@kernel.org>
-Date: Thu, 10 Apr 2025 03:10:37 +0000
-References: <20250407142234.47591-1-jiayuan.chen@linux.dev>
-In-Reply-To: <20250407142234.47591-1-jiayuan.chen@linux.dev>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com, john.fastabend@gmail.com,
- jakub@cloudflare.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
- kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- mykolal@fb.com, shuah@kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg200007.china.huawei.com (7.202.181.34)
 
-Hello:
+This reverts commit 804443c1f27883926de94c849d91f5b7d7d696e9.
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+The newly added logic incorrectly sets bus_registered to true even when
+device_register returns an error, this is incorrect.
 
-On Mon,  7 Apr 2025 22:21:19 +0800 you wrote:
-> I was writing a benchmark based on sockmap + TCP and discovered several
-> issues:
-> 
-> 1. When EAGAIN occurs, the direction of skb is incorrect, causing data
->    loss when retry.
-> 2. When sending partial data, the offset is not recorded, leading to
->    duplicate data being sent when retry.
-> 3. An unexpected BUG_ON() judgment in skb_linearize is triggered.
-> 4. The memory of psock->ingress_skb is not limited by the socket buffer
->    and memcg.
-> 
-> [...]
+When device_register fails, there is no need to release the reference count,
+and there are no direct error-handling operations following its execution.
 
-Here is the summary with links:
-  - [bpf-next,v1,1/4] bpf, sockmap: Fix data lost during EAGAIN retries
-    https://git.kernel.org/bpf/bpf-next/c/7683167196bd
-  - [bpf-next,v1,2/4] bpf, sockmap: fix duplicated data transmission
-    https://git.kernel.org/bpf/bpf-next/c/3b4f14b79428
-  - [bpf-next,v1,3/4] bpf, sockmap: Fix panic when calling skb_linearize
-    https://git.kernel.org/bpf/bpf-next/c/5ca2e29f6834
-  - [bpf-next,v1,4/4] selftest/bpf/benchs: Add benchmark for sockmap usage
-    https://git.kernel.org/bpf/bpf-next/c/7b2fa44de5e7
+Therefore, this patch is meaningless and should be reverted.
 
-You are awesome, thank you!
+Fixes: 804443c1f278 ("PCI: Fix reference leak in pci_register_host_bridge()")
+Signed-off-by: Xiangwei Li <liwei728@huawei.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/pci/probe.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 364fa2a514f8..8595d41add09 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -957,7 +957,6 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	resource_size_t offset, next_offset;
+ 	LIST_HEAD(resources);
+ 	struct resource *res, *next_res;
+-	bool bus_registered = false;
+ 	char addr[64], *fmt;
+ 	const char *name;
+ 	int err;
+@@ -1021,7 +1020,6 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	name = dev_name(&bus->dev);
+ 
+ 	err = device_register(&bus->dev);
+-	bus_registered = true;
+ 	if (err)
+ 		goto unregister;
+ 
+@@ -1110,15 +1108,12 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ unregister:
+ 	put_device(&bridge->dev);
+ 	device_del(&bridge->dev);
++
+ free:
+ #ifdef CONFIG_PCI_DOMAINS_GENERIC
+ 	pci_bus_release_domain_nr(parent, bus->domain_nr);
+ #endif
+-	if (bus_registered)
+-		put_device(&bus->dev);
+-	else
+-		kfree(bus);
+-
++	kfree(bus);
+ 	return err;
+ }
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
