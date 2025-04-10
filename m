@@ -1,180 +1,330 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E1828152B
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798401D89FD;
+	Thu, 10 Apr 2025 11:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744284651; cv=none; b=YLdyGfI+OItUoTAcp74I8zW71MZVHk54MwRh2x2nRuI1Jx7RsjjdoKK8SqAXkPztsgA5vw7ptAGt88ZrSuzagLCpP7EHirdeYqL6DOHkUNGxPuMny8sIHSk4GmH7aRM6zod2qIUyyzanztrVv8og1iVCUb2LuiPpIEwkGy1K0+g=
+	t=1744284688; cv=none; b=Oz1ml5Lv+Am/yMtpE4XbSB16GHN4WCtBnxJfO+HzGXm7o45C5xuaVbw9x2IIgI7WVolNMl8PP1WKknOJQCcZfQoptxBmJFxcBJHyvslQ6XUEaR3WpQklpjr31d+V5r/CUQsvZskDu2DaNzphHSsXUnRVgQxfwDYp/hQRvPA70Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744284651; c=relaxed/simple;
-	bh=2wj2H+xgpG567iUeEpxfyB3hJ0RlXzb8V5u5HvOrATY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=YyyU8P12GMdiHoEYkGB2jwKtgfrOc363T2e7+2UlW+HJWXWYx6kcNGxKmTSXp19iLZZHCtI8h5sLtyzX6vVsakcY+ne40gq8afzeKjtOcgtc4k8cvF+JmeqKes2eJfl1IMUS9GHK703KLXqYPSGkm7qeD33yqPZImAjfcauFl4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lq/Zziay; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744284688; c=relaxed/simple;
+	bh=YAbWMDqb6A/MktOyCsKaT7umT1NIMOnxoCuuD+8LUZw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=C9XaK6xxXseRXNHfyCtdl61v3R+3xkQHtGgqnLa1j4kG9qrLlCbfotXSyly+ZWNPU/YQEGW5CaboGQLAN3YcxIbVYTz8zWr4Zi926OSGnK01y8PPUTTxfJFVsymCcbi4ev2rsU+m/cylZh8UOPsC5lDAehSUsmQ6TxjxOG2EO6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FiMZpwon; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lq/Zziay"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744284648; x=1775820648;
-  h=date:from:to:cc:subject:message-id;
-  bh=2wj2H+xgpG567iUeEpxfyB3hJ0RlXzb8V5u5HvOrATY=;
-  b=Lq/Zziayg2OcvC+u5hPTT54InOLoc2K9pRDjlXLaTZLh0RhdWXpvM+QE
-   I2OR/ZmgvfBH7Ile+psE8m7QhnQHb4fjSRKt0Yj2KkaHH+jRe8BZ90uMq
-   s9QP+UcpfgAEZX/HW6eHyxp3YJOqwbLKLbjqgEAUkTASD5toZaPzwK2S6
-   LPWS44O76IL9lEjlhR7q5AAPlP95XezoKtvlj1QIoEEZWUodi9RR4O0QH
-   VjDubnRRot7CmWsGIwghgNVmqlt/+3mwr6PplU70aL3vmYBWa8UIKTzcw
-   iqZ4yWo4rec5BuOe40eHFG9seSt6f+z0X71XGWNQW1pw/llMIEud2nwNS
-   A==;
-X-CSE-ConnectionGUID: nuu+m8gQT5SxwHFT7Zsfcw==
-X-CSE-MsgGUID: EZOal/BpSxa6dOcmSiRJEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45924368"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="45924368"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 04:30:47 -0700
-X-CSE-ConnectionGUID: 8LNYsLjYQFqdPdsUx9H9xw==
-X-CSE-MsgGUID: 6r92pzuWTk2wEh2ebE8sGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="129724569"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 10 Apr 2025 04:30:46 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2q7I-000A0F-2g;
-	Thu, 10 Apr 2025 11:30:44 +0000
-Date: Thu, 10 Apr 2025 19:30:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/boot] BUILD SUCCESS
- d9fa398fe82728ee703ad2bd9cf5247df9626470
-Message-ID: <202504101925.wQkSTScq-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FiMZpwon"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A82lpA026359;
+	Thu, 10 Apr 2025 11:31:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=A0xZZt
+	8lP25cShHGZagWIGb2cnCUIRRznY2e5ZGnV6c=; b=FiMZpwonG9z4SOQbI7ZD9R
+	4020nGSpTxcA+hvIYVf1F67aXbn678iOqgeZDwSdXGZcnABxno8MnssQ357U1yKQ
+	4PEimAMsOtqBhDR6KD/jMccfq5ac9e57rWEaGC46wLq7ebOI599HYoiA6iDchUqn
+	bEAFmH/6622WkDR1Kl+R+boL23yBD7SPpIaz7g7r3A4zIrZalQ+2HsH6qtBQCEiC
+	F0qeV1GpIizN4oPsB4B+Pzy54ubnj7SjYDdCSAQpzf1N+1C0e9LkAS+OIVxGGtan
+	OGPGLyWKIFDzNMNODZMqFLkmkPzmJfT6D7gWdpHXI7aq3NuqYUBD4PTh/UtpLTIA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wtaq6m69-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 11:31:20 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53ABTD3E003612;
+	Thu, 10 Apr 2025 11:31:20 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wtaq6m64-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 11:31:19 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53A85Fax011326;
+	Thu, 10 Apr 2025 11:31:18 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7ywwu1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 11:31:18 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ABVIw729295290
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 11:31:18 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4F2F258058;
+	Thu, 10 Apr 2025 11:31:18 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0E8945805B;
+	Thu, 10 Apr 2025 11:31:15 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.204.204.179])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 10 Apr 2025 11:31:14 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCHSET 00/10] tools headers: Sync header files with the kernel
+From: Venkat <venkat88@linux.ibm.com>
+In-Reply-To: <20250410001125.391820-1-namhyung@kernel.org>
+Date: Thu, 10 Apr 2025 17:01:01 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FE96FD04-4396-4C34-A70D-2A592FD5F916@linux.ibm.com>
+References: <20250410001125.391820-1-namhyung@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Mc4vQUsr0RQgJsWEEyU4UIUgEdOzbkff
+X-Proofpoint-ORIG-GUID: bYxo1ZiWoHlXtOy6d9IPNd9829kldJMS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_02,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
+ spamscore=0 malwarescore=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504100086
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
-branch HEAD: d9fa398fe82728ee703ad2bd9cf5247df9626470  x86/boot/startup: Disable objtool validation for library code
 
-elapsed time: 1473m
 
-configs tested: 103
-configs skipped: 1
+> On 10 Apr 2025, at 5:41=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>=20
+> Hello,
+>=20
+> FYI I'm carrying these changes in the perf tools tree so make perf =
+trace
+> beautifiers get the recent changes in syscall, ioctl, and so on.  For =
+the
+> background, please see tools/include/uapi/README.
+>=20
+> Still there are some remaining items but it requires a bit more =
+changes.
+> So I'd like to leave them for the next cycle.
+>=20
+>  Warning: Kernel ABI header differences:
+>    diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+>    diff -u tools/include/linux/bits.h include/linux/bits.h
+>    diff -u tools/arch/arm64/include/asm/cputype.h =
+arch/arm64/include/asm/cputype.h
+>=20
+> Thanks,
+> Namhyung
+>=20
+>=20
+> Namhyung Kim (10):
+>  tools headers: Update the KVM headers with the kernel sources
+>  tools headers: Update the socket headers with the kernel sources
+>  tools headers: Update the uapi/linux/perf_event.h copy with the =
+kernel sources
+>  tools headers: Update the VFS headers with the kernel sources
+>  tools headers: Update the syscall table with the kernel sources
+>  tools headers: Update the uapi/linux/prctl.h copy with the kernel =
+sources
+>  tools headers: Update the uapi/asm-generic/mman-common.h copy with =
+the kernel sources
+>  tools headers: Update the linux/unaligned.h copy with the kernel =
+sources
+>  tools headers: Update the x86 headers with the kernel sources
+>  tools headers: Update the arch/x86/lib/memset_64.S copy with the =
+kernel sources
+>=20
+> tools/arch/arm64/include/uapi/asm/kvm.h       |  5 +-
+> tools/arch/arm64/include/uapi/asm/unistd.h    | 24 +----
+> tools/arch/x86/include/asm/cpufeatures.h      | 28 ++++--
+> tools/arch/x86/include/asm/msr-index.h        | 31 +++---
+> tools/arch/x86/include/uapi/asm/kvm.h         |  4 +
+> tools/arch/x86/include/uapi/asm/svm.h         |  2 +
+> tools/arch/x86/lib/memset_64.S                |  3 +-
+> tools/include/linux/cfi_types.h               | 45 +++++++++
+> tools/include/uapi/asm-generic/mman-common.h  |  1 +
+> tools/include/uapi/asm-generic/unistd.h       |  4 +-
+> tools/include/uapi/linux/in.h                 |  2 +
+> tools/include/uapi/linux/kvm.h                |  9 +-
+> tools/include/uapi/linux/perf_event.h         |  2 +
+> tools/include/uapi/linux/stat.h               | 99 ++++++++++++++-----
+> .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
+> .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
+> .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
+> .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
+> tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
+> .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
+> .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 +-
+> .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
+> .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
+> tools/perf/check-headers.sh                   |  1 +
+> .../perf/trace/beauty/include/linux/socket.h  |  2 +
+> .../trace/beauty/include/uapi/linux/fcntl.h   |  4 +
+> .../perf/trace/beauty/include/uapi/linux/fs.h | 21 +++-
+> .../trace/beauty/include/uapi/linux/mount.h   | 10 +-
+> .../trace/beauty/include/uapi/linux/prctl.h   | 11 +++
+> .../trace/beauty/include/uapi/linux/stat.h    | 99 ++++++++++++++-----
+> .../trace/beauty/include/uapi/sound/asound.h  |  8 +-
+> tools/scripts/syscall.tbl                     |  1 +
+> 32 files changed, 318 insertions(+), 109 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Tested this patch series by applying on the base commit: =
+0af2f6be1b4281385b618cb86ad946eded089ac8 and it fixes the warnings.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250409    gcc-12.4.0
-arc                   randconfig-002-20250409    gcc-10.5.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250409    gcc-7.5.0
-arm                   randconfig-002-20250409    gcc-7.5.0
-arm                   randconfig-003-20250409    gcc-7.5.0
-arm                   randconfig-004-20250409    clang-14
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250409    clang-21
-arm64                 randconfig-002-20250409    clang-21
-arm64                 randconfig-003-20250409    clang-15
-arm64                 randconfig-004-20250409    gcc-6.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250409    gcc-14.2.0
-csky                  randconfig-002-20250409    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250409    clang-21
-hexagon               randconfig-002-20250409    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250409    gcc-12
-i386        buildonly-randconfig-002-20250409    clang-20
-i386        buildonly-randconfig-003-20250409    gcc-11
-i386        buildonly-randconfig-004-20250409    clang-20
-i386        buildonly-randconfig-005-20250409    gcc-12
-i386        buildonly-randconfig-006-20250409    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250409    gcc-14.2.0
-loongarch             randconfig-002-20250409    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250409    gcc-10.5.0
-nios2                 randconfig-002-20250409    gcc-8.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250409    gcc-13.3.0
-parisc                randconfig-002-20250409    gcc-13.3.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250409    gcc-6.5.0
-powerpc               randconfig-002-20250409    clang-21
-powerpc               randconfig-003-20250409    clang-21
-powerpc64             randconfig-001-20250409    clang-21
-powerpc64             randconfig-002-20250409    gcc-8.5.0
-powerpc64             randconfig-003-20250409    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250409    clang-21
-riscv                 randconfig-002-20250409    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250409    gcc-9.3.0
-s390                  randconfig-002-20250409    gcc-9.3.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250409    gcc-12.4.0
-sh                    randconfig-002-20250409    gcc-12.4.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250409    gcc-13.3.0
-sparc                 randconfig-002-20250409    gcc-7.5.0
-sparc64               randconfig-001-20250409    gcc-11.5.0
-sparc64               randconfig-002-20250409    gcc-13.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250409    gcc-12
-um                    randconfig-002-20250409    clang-14
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250409    clang-20
-x86_64      buildonly-randconfig-002-20250409    gcc-12
-x86_64      buildonly-randconfig-003-20250409    clang-20
-x86_64      buildonly-randconfig-004-20250409    clang-20
-x86_64      buildonly-randconfig-005-20250409    gcc-12
-x86_64      buildonly-randconfig-006-20250409    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250409    gcc-11.5.0
-xtensa                randconfig-002-20250409    gcc-11.5.0
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+
+Before this patch:
+
+ make
+  BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+  diff -u tools/include/uapi/linux/in.h include/uapi/linux/in.h
+  diff -u tools/include/uapi/linux/perf_event.h =
+include/uapi/linux/perf_event.h
+  diff -u tools/include/uapi/linux/stat.h include/uapi/linux/stat.h
+  diff -u tools/include/linux/bits.h include/linux/bits.h
+  diff -u tools/arch/x86/include/asm/cpufeatures.h =
+arch/x86/include/asm/cpufeatures.h
+  diff -u tools/arch/x86/include/asm/msr-index.h =
+arch/x86/include/asm/msr-index.h
+  diff -u tools/arch/x86/include/uapi/asm/kvm.h =
+arch/x86/include/uapi/asm/kvm.h
+  diff -u tools/arch/x86/include/uapi/asm/svm.h =
+arch/x86/include/uapi/asm/svm.h
+  diff -u tools/arch/arm64/include/uapi/asm/kvm.h =
+arch/arm64/include/uapi/asm/kvm.h
+  diff -u tools/arch/arm64/include/uapi/asm/unistd.h =
+arch/arm64/include/uapi/asm/unistd.h
+  diff -u tools/include/uapi/asm-generic/mman-common.h =
+include/uapi/asm-generic/mman-common.h
+  diff -u tools/include/uapi/asm-generic/unistd.h =
+include/uapi/asm-generic/unistd.h
+  diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
+  diff -u tools/arch/x86/lib/memset_64.S arch/x86/lib/memset_64.S
+  diff -u tools/arch/arm64/include/asm/cputype.h =
+arch/arm64/include/asm/cputype.h
+  diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl =
+arch/x86/entry/syscalls/syscall_32.tbl
+  diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl =
+arch/x86/entry/syscalls/syscall_64.tbl
+  diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl =
+arch/powerpc/kernel/syscalls/syscall.tbl
+  diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl =
+arch/s390/kernel/syscalls/syscall.tbl
+  diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl =
+arch/mips/kernel/syscalls/syscall_n64.tbl
+  diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl =
+arch/arm/tools/syscall.tbl
+  diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl =
+arch/sh/kernel/syscalls/syscall.tbl
+  diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl =
+arch/sparc/kernel/syscalls/syscall.tbl
+  diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl =
+arch/xtensa/kernel/syscalls/syscall.tbl
+  diff -u tools/perf/trace/beauty/include/linux/socket.h =
+include/linux/socket.h
+  diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h =
+include/uapi/linux/fcntl.h
+  diff -u tools/perf/trace/beauty/include/uapi/linux/fs.h =
+include/uapi/linux/fs.h
+  diff -u tools/perf/trace/beauty/include/uapi/linux/mount.h =
+include/uapi/linux/mount.h
+  diff -u tools/perf/trace/beauty/include/uapi/linux/prctl.h =
+include/uapi/linux/prctl.h
+  diff -u tools/perf/trace/beauty/include/uapi/linux/stat.h =
+include/uapi/linux/stat.h
+  diff -u tools/perf/trace/beauty/include/uapi/sound/asound.h =
+include/uapi/sound/asound.h
+Makefile.config:1093: No libcapstone found, disables disasm engine =
+support for 'perf script', please install libcapstone-dev/capstone-devel
+Makefile.config:1155: libpfm4 not found, disables libpfm4 support. =
+Please install libpfm4-dev
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ OFF ]
+...                             libcapstone: [ OFF ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ OFF ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+  GEN     common-cmds.h
+  GEN     =
+/root/linux/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
+  PERF_VERSION =3D 6.15.rc1.g0af2f6be1b42
+  GEN     perf-archive
+
+
+After this patch:
+
+ make
+  BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+  diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+  diff -u tools/include/linux/bits.h include/linux/bits.h
+  diff -u tools/arch/arm64/include/asm/cputype.h =
+arch/arm64/include/asm/cputype.h
+Makefile.config:1093: No libcapstone found, disables disasm engine =
+support for 'perf script', please install libcapstone-dev/capstone-devel
+Makefile.config:1155: libpfm4 not found, disables libpfm4 support. =
+Please install libpfm4-dev
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ OFF ]
+...                             libcapstone: [ OFF ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ OFF ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+  GEN     common-cmds.h
+  GEN     =
+/root/linux/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
+  PERF_VERSION =3D 6.15.rc1.g634c975b88f0
+  GEN     perf-archive
+
+
+
+>  create mode 100644 tools/include/linux/cfi_types.h
+>=20
+>=20
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> --=20
+> 2.49.0.504.g3bcea36a83-goog
+>=20
+>=20
+
