@@ -1,129 +1,254 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A57284B21;
-	Thu, 10 Apr 2025 14:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9DE1E515;
+	Thu, 10 Apr 2025 14:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293719; cv=none; b=lGN68+HHP4rWqeqllfkzWCLgYBtivfCqKLsTO8idthZ1B3deOr8UEZvIMOh+96W0GQCY+p81SxRW9zWhxX42aeCfeAWkUV0PA3lkHsEu1W4h0OxE1JgZRwj2QRKfFMUMSPIsVkp2BABo1AsJIUldhUSKnz/4pPJGwNkQrjXfGq8=
+	t=1744293802; cv=none; b=C7dEyGt3yWlw1RSuvJtyfW8mjbHRfLHuJt/cdEWVKuPecp/b2U1UHGgI1v2+nDXjMbrrdYj89VHGqOiZiLf8aEgvcfnB1Ur+OWYA57nPJpXaGFIJcGW7Qp7mFGMp4jWGU7PWXb/MhLBfofy15nsBvykoRPvLEEA6euOZP+W6jJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293719; c=relaxed/simple;
-	bh=sw3vK6z8fQjBuRgQszQR109R2Cqf5C0TdwJ61a/B8JQ=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FASz1vNZSt5VfYa/eLmpmmvCQa5VzY/718T0VUdDtArmpXmp7sY6yytwYdS2HVnK8a7xRVsvDD49dGO+rKibCs2yEh5/W4+kj+EUF1PY1+qvOZoV0KYHozuFNebCd7GcJb5q9u1W63Fc8UemzlromG/vP9J3UKYvdXHWDj5N0NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eWLkeK9T; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744293802; c=relaxed/simple;
+	bh=pBRvknAVUD0G3K153267322eDRSeCF9wcCoZODOKnYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQdWdBaKbjJzZKWan17p73FsD3G+Rwe63I3M9XIoIHEvoB436qKxlK2be4rX8UXn68aXDW3oH8PlNhMFQHnQQ+OcUFaTJrD8s3hptJexACMLw5PrHw8uq4Hc74wj9DcXiTrhB6rCY3c5v9jQKCkZGrBv2va15uWgSjfIsqrARBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hq7MFxXY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWLkeK9T"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso1047435b3a.2;
-        Thu, 10 Apr 2025 07:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744293715; x=1744898515; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cWAOaB8U3KFCIOrhTxD2O2vP23GerEEFQhxVmQdK6Js=;
-        b=eWLkeK9T9a+y0qHsMHIHQj/fCUU9J0lRrOBLYMB/t2ofgN+Q/jJqYTGNImgyq03EaH
-         eAEMSgsEthf9Fdr8GFaW4VbS6Q59exlvlF+MV1/99+taNGTup2cgNhOYsv0jBdLQc/Hg
-         Ao75S+M6XplQwcmhsLeuZ9gsJb9bdExCCquSy9N4PUezKHubylU/sGqtR9cGfOVjj4TH
-         45LtlxQxVrHW7Rm4lfgmE2QhtbKtb0G32Bw9WgTbddAMv8mTmnmqCIssdCZ1rIAsYhzO
-         xTQTfYeyjs1tl1Cxrq20ZuwlKt1QCeRWJ6I5NSwakr/vy4ZZdHIpNDRxTslpKv4CnBet
-         bCbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744293715; x=1744898515;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cWAOaB8U3KFCIOrhTxD2O2vP23GerEEFQhxVmQdK6Js=;
-        b=H+SNAePb6WmNPo/FRwzox9N52gBMZmkPpfzuTlAmgVLoiBKsoCWADUEdW7w+4dQYxr
-         g8e7yLqvbdUgmsrCZ+fgWvvUUZvkgKsOw5KwDywGt9IpCkn+WXaflyDnYknZu9w6PGEM
-         lz7XJnmTQqd621PeiFVSjZev6b1xqMGMXqxp4Clw/aCgdN3c+fkeGahHH4UUgp6NeJd+
-         bvQ9vK1DiaekUz1vTlx66dwOeDGjo7pzfmneBR3sKVI8beBqqrNUrYq0THDy/3wT3i8o
-         dZagndtfMZQ1/IE2M/iDVIVofUYHEHlSyeEPy08Z4nIVKLsL7mizKPFQKQZzX7iulqhz
-         CXwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVenepheHRzG/kUkz31Qw2tObJaj9VtXuXGR8di/mTLNt4V9uTttbJM5oFcDnfLH4baqQ+dwtS/Izge1tI=@vger.kernel.org, AJvYcCXM14eRiE9HC62n+ws8gdWmZ8PW7kuuPKV7OmeaAAYA8BJ+vajcRc4Z99TUP2HwBezqiZa+D4ESmh2SZY5jWFE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLxCNFPOu44kVcQUOJg28a6wUA+LjGdSbhY7bWixOLiFV4JYAF
-	JxC6BzFyu5SXyrl05asptIi5DdAGyD8LQHklqK4+gNDnGrmcPYE8
-X-Gm-Gg: ASbGnctrUO+0b+0UM2olUa9K32JGaWLSmniBtMznS2Y3kU+zJrz9a/tevvhGNT2WeyG
-	wcIfVwaB/MzF0X9ZSwvwdUTF/kpWWNxryPE+tv6PJd5XwQoDMeWlt+L5pNBBu3Mt7gXthPpnVl7
-	8/l5GkHRIoSuOXn+t+tUc7TMT2fqqtCXISTgJjP9sPHgHgrHx0tA+4aNHuoa80UDW6Lp7o/CIM9
-	ruUHazg5XURN+fI3umZgRj2Gxzi/EcGxFCFi4SgY5RvF1Urt5IpqCKpG8Op5+qq+7AJMudF5J+Q
-	zDFxG/QZacRskU5Q5jIaia4VqiIBmG6T/Y2bwAGQi+iJuDDW5O01d9k5XFc3Ym/GXKw13/qa7Bu
-	6mntMq0ZRIhEaheJq0xX8Cko=
-X-Google-Smtp-Source: AGHT+IHBTE6t3tMPyBmMiDGR0D6P+It1/bo69iX0No3GsbY7YKBIFvGuQ1V6G4gotfqVUWbx+i87Xg==
-X-Received: by 2002:a05:6a00:8c9:b0:736:a973:748 with SMTP id d2e1a72fcca58-73bbf01e262mr3359584b3a.22.1744293714003;
-        Thu, 10 Apr 2025 07:01:54 -0700 (PDT)
-Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e3824asm3362820b3a.103.2025.04.10.07.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 07:01:53 -0700 (PDT)
-Date: Thu, 10 Apr 2025 23:01:38 +0900 (JST)
-Message-Id: <20250410.230138.20974725432146108.fujita.tomonori@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, x86@kernel.org,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org,
- hpa@zytor.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, tangyouling@loongson.cn,
- hejinyang@loongson.cn, yangtiezhu@loongson.cn, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
- aliceryhl@google.com, tmgross@umich.edu
-Subject: Re: [PATCH v5 4/4] rust: Add warn_on macro
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <2025040954-prenatal-enamel-373f@gregkh>
-References: <20250409065802.136971-1-fujita.tomonori@gmail.com>
-	<20250409065802.136971-5-fujita.tomonori@gmail.com>
-	<2025040954-prenatal-enamel-373f@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hq7MFxXY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A21C4CEDD;
+	Thu, 10 Apr 2025 14:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744293801;
+	bh=pBRvknAVUD0G3K153267322eDRSeCF9wcCoZODOKnYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hq7MFxXYBX66LGaM4VQN7NGb6kNqa1n5Z42SucADWQULAttYry1XLDJvVrpnocxqr
+	 PgG66SvVdsYDKPIQWCoxU7j3sxusEB5W5NSr+5228TNuU8Oqk7mj21ieMXRhY3F1F2
+	 ebqLRGAivO/uTEFdPuu6ReRQ/Ff6kO1LV7Ww7L1kMY1nM0fpC1VkP8pslvWNyWW+aC
+	 QBFO2LlvglWcXHgDdloimnGf8vwu4LAD9Nd2gEH3SVefTIRxF7kLujFKwJj+E++lE0
+	 Uiz9ZRwq9QEBnh1zeREBanPB11g3sP+VXTn+1iVlSkGko9ordx7KF1PdJBFvzhii2w
+	 qiD//jRAt7tbA==
+Date: Thu, 10 Apr 2025 11:03:18 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Fixes for perf build system and TUI browsers was Re: [perf top]
+ annotation doesn't work, libunwind doesn't seem to be working either
+Message-ID: <Z_fPpmHZu5ppip5V@x1>
+References: <Z_Rz10stoLzBocIO@x1>
+ <Z_TYux5fUg2pW-pF@gmail.com>
+ <Z_XaOp4TCBKe-M0o@x1>
+ <Z_ZltdaHx9XuKcd9@x1>
+ <Z_aY0fTs53id77CS@x1>
+ <Z_bHtD7umCsKeWJ6@x1>
+ <Z_bI7wK8mJYVOWDH@x1>
+ <Z_bl8tabAwfqKuy-@gmail.com>
+ <Z_chCGYb1_hMS1F9@x1>
+ <Z_dkNDj9EPFwPqq1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_dkNDj9EPFwPqq1@gmail.com>
 
-On Wed, 9 Apr 2025 09:38:53 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
+On Thu, Apr 10, 2025 at 08:24:52AM +0200, Ingo Molnar wrote:
+> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > On Wed, Apr 09, 2025 at 11:26:10PM +0200, Ingo Molnar wrote:
+> > > * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > Anyway, back to the bug.
 
-> On Wed, Apr 09, 2025 at 03:58:01PM +0900, FUJITA Tomonori wrote:
->> Add warn_on macro, uses the BUG/WARN feature (lib/bug.c) via assembly
->> for x86_64/arm64/riscv.
->> 
->> The current Rust code simply wraps BUG() macro but doesn't provide the
->> proper debug information. The BUG/WARN feature can only be used from
->> assembly.
->> 
->> This uses the assembly code exported by the C side via ARCH_WARN_ASM
->> macro. To avoid duplicating the assembly code, this approach follows
->> the same strategy as the static branch code: it generates the assembly
->> code for Rust using the C preprocessor at compile time.
->> 
->> Similarly, ARCH_WARN_REACHABLE is also used at compile time to
->> generate the assembly code; objtool's reachable anotation code. It's
->> used for only architectures that use objtool.
->> 
->> For now, Loongarch and arm32 just use a wrapper for WARN macro.
->> 
->> UML doesn't use the assembly BUG/WARN feature; just wrapping generic
->> BUG/WARN functions implemented in C works.
->> 
->> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> > > Thanks for having a look! :)
+
+> > I guess I found it, another one-liner (well, two if you count removing a
+> > comment line) with a long explanation, see below.
+
+> > There is a tidy up patch before this, all is at:
+
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-annotate+build
+ 
+> Wow, that's quite a lot!
+
+You reported various problems that accumulated thru over a decade, which
+shows how difficult is to regression test TUIs :-\
+
+We have 'perf test' to test various aspects of the tools, with C ones
+testing APIs, shell ones running the tools and looking if they are
+generating expected results by grepping output and using other
+techniques, the perf test shell infrastructure is itself checked using
+ShellCheck, if installed:
+
+⬢ [acme@toolbox perf-tools-next]$ rpm -q --qf "%{description}\n" ShellCheck
+The goals of ShellCheck are:
+
+* To point out and clarify typical beginner's syntax issues,
+  that causes a shell to give cryptic error messages.
+
+* To point out and clarify typical intermediate level semantic problems,
+  that causes a shell to behave strangely and counter-intuitively.
+
+* To point out subtle caveats, corner cases and pitfalls, that may cause an
+  advanced user's otherwise working script to fail under future circumstances.
+⬢ [acme@toolbox perf-tools-next]$
+
+A big regression test suite that lived/lives inside Red Hat,
+created/maintained by Michael Petlan (and was continuosly used to test
+perf) is being merged with it over time.
+
+Ian did lots of work on making it parallel, with some tests needing to
+be run exclusively as it changes global state (perf probe adding stuff,
+etc).
+
+But one area we lack is to test things that interact with the user, like
+the TUI, something to improve!
+
+So I'm rather happy when someone that uses the TUI comes along and
+points out problems, as this isn't an area that we are automatically
+testing, it all depends on sheer code review, with corner case bugs
+living in the codebase for years, sometimes decades...
+ 
+> So, I can confirm that the build warning is gone - as the libunwind 
+> entry is gone:
+
+Great!
+ 
+>  Auto-detecting system features:
+>  ...                                   libdw: [ on  ]
+>  ...                                   glibc: [ on  ]
+>  ...                                  libelf: [ on  ]
+>  ...                                 libnuma: [ on  ]
+>  ...                  numa_num_possible_cpus: [ on  ]
+>  ...                                 libperl: [ on  ]
+>  ...                               libpython: [ on  ]
+>  ...                               libcrypto: [ on  ]
+>  ...                             libcapstone: [ on  ]
+>  ...                               llvm-perf: [ on  ]
+>  ...                                    zlib: [ on  ]
+>  ...                                    lzma: [ on  ]
+>  ...                               get_cpuid: [ on  ]
+>  ...                                     bpf: [ on  ]
+>  ...                                  libaio: [ on  ]
+>  ...                                 libzstd: [ on  ]
 > 
-> I don't object to this change, but I would STRONGLY recommend never
-> using this in any driver if at all possible.  Only use this if the
-> system is in such a state that the only way out is to reboot the kernel,
-> which is what both WARN() and BUG() will do.
+> And there's this second round of auto-detection:
+ 
+>  Auto-detecting system features:
+>  ...                         clang-bpf-co-re: [ on  ]
+>  ...                                    llvm: [ on  ]
+>  ...                                  libcap: [ on  ]
+>  ...                                  libbfd: [ on  ]
+ 
+> which is all-green as well.
+ 
+> I still have these dependency warnings:
+ 
+>   Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install elfutils-debuginfod-client-devel or equivalent
+>   Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+>   Makefile.config:1191: libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
+ 
+> The libtracefs one was resolved via 'apt install libtracefs-dev', 
+> leaving two:
+ 
+>  Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install elfutils-debuginfod-client-devel or equivalent
+>  Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+ 
+> I cannot resolve the openjdk dependency warning, despite installing a 
+> plethora of packages:
 
-Totally agree.
+This one is a sore spot, I'll try to take a look.
+ 
+> kepler:~/tip> dpkg -l | grep openjdk
+> rc  openjdk-14-jre-headless:amd64                               14.0.2+12-1                                         amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
+> ii  openjdk-17-jre:amd64                                        17.0.14+7-1~24.10                                   amd64        OpenJDK Java runtime, using Hotspot JIT
+> ii  openjdk-17-jre-headless:amd64                               17.0.14+7-1~24.10                                   amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
+> rc  openjdk-18-jre-headless:amd64                               18.0.2+9-2ubuntu1                                   amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
+> ii  openjdk-21-jdk-headless:amd64                               21.0.6+7-1~24.10.1                                  amd64        OpenJDK Development Kit (JDK) (headless)
+> ii  openjdk-21-jre:amd64                                        21.0.6+7-1~24.10.1                                  amd64        OpenJDK Java runtime, using Hotspot JIT
+> ii  openjdk-21-jre-headless:amd64                               21.0.6+7-1~24.10.1                                  amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
+> ii  openjdk-8-jdk:amd64                                         8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Development Kit (JDK)
+> ii  openjdk-8-jdk-headless:amd64                                8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Development Kit (JDK) (headless)
+> ii  openjdk-8-jre:amd64                                         8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Java runtime, using Hotspot JIT
+> ii  openjdk-8-jre-headless:amd64                                8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
 
-As stated in the commit log, BUG() is already used in multiple
-locations within the Rust abstractions.
+> And I managed to resolve the elfutils/debuginfod.h warning via an 
+> apt-file search and installing the libdebuginfod-dev package, the 
+> warning message should probably be updated via the patch further below 
+> that gives a more specific package name to install.
 
-I'm not trying to introduce BUG() or WARN() as new features. This
-patchset aims to improve the information provided by BUG() and WARN().
+I've folded your patch in the patch I added in this series while
+addressing the other problems you pointed out with libunwind, ditto for
+libbfd.
+
+> With that resolved, I now have only a single dependency failure left:
+ 
+>   Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+
+I'll work on that.
+ 
+> On the UI front:
+> 
+>  - I can confirm that the left-arrow now works intuitively wrt. context 
+>    zooming, thanks for implementing that!
+
+Great! the good thing was that minor changes were needed.
+ 
+>  - Likewise, the Esc key suggested in the 'h' screen now works 
+>    intuitively as well.
+
+Right, I didn't even try to fix that one explicitely, it was that
+do_zoom_thread() (that does zoom in and out) not having act->thread set
+when handling the left arrow, that happens to also handle the ESC case.
+ 
+>  - When pressing an unbound key I now get a helpful message.
+
+Great.
+ 
+>     - One small detail with the unbound key warning I noticed: it now 
+>       says "'l' key not associated, use 'h'/'?'/F1 to see actions!", but 
+>       pressing 'h' will only work after dismissing this window. It might 
+>       be a nice little extra UI tweak to allow 'h/?/F1' to jump to the 
+>       help window straight away from warning windows, instead of 
+>       requiring two keys to be pressed?
+
+Sure, I'll add a patch on top of this series doing that.
+ 
+>  - I also see that 'P' now works in a broader context as well, saving 
+>    the perf.hist.0 file.
+
+I did nothing in this regard, a good fallout from the other changes then.
+ 
+>     - A small observation with the 'P' key too: maybe the status line 
+>       at the bottom should update with the action performed? I only see 
+>       a small flash and the "Press '?' for help on key bindings" 
+>       message is reprinted.
+
+Right, I think this is a case to use a popup window stating that the
+"screenshot" was produced and was saved in file xyz.bla
+ 
+> Anyway, I'd say that the large majority of my TUI complaints were 
+> resolved by your changes, and I had no new problems, so for the
+> changes so far:
+ 
+>   Tested-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks, I added that to the patches and will use what I have right now
+to open the perf-tools-next.git tree, so that in addition to this work I
+start processing the many patches that are out there for 6.16!
+
+Please, if you have further comments, just send them my way but do not
+forget to CC perf's co-maintainer, reviewers and the mailing list, its
+not always that I can focus on something like this ;-)
+
+Cheers,
+
+- Arnaldo
