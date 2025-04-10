@@ -1,160 +1,110 @@
-Received: from mail-m49212.qiye.163.com (mail-m49212.qiye.163.com [45.254.49.212])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7311372
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.212
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A121520766E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744285669; cv=none; b=TcH5VlCwF2FRXd/D6mPYOs7InsEbfAAN1TzoHYSaXdfPGdrwR3O3DiRGQaN7CbIZWmFejAZ2/M2/q6JjZK0OWYzmQXWduRAsAWv2L2nQjd+g+61c5WVl20wt2rPaCcc6uGeKZYwwpUu67Ws9YmlXhlgx7k4jjqOFYTPFmH+cPYY=
+	t=1744285784; cv=none; b=FEdWfWbhsb7NTIJTF67JJKkCZFnli6yNf7+9NoVi0gHXzU2H1tYfb1shT6WHPD0gt8DoKPmhe4ZicpN2JeBXYwoiUiE3I84PJTu+O44oCoJpWWx//Aj4MLr1qS6ejA6Bo7/YAGhB5LIy7Qfu/V6aZwOyUHmvzKIDaH9++RjRN4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744285669; c=relaxed/simple;
-	bh=HmDwf9qpGgeScX4/Nj4sprSsCc5AOfESV3gh/s+oOB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SSQ02pRpEQ3uhMAUq33r49he159LPNmIy7qXnkwiL3ebTF8HntF3z0wh3DAYIMOvDxYwvzV8Mp5fNNoOPf/+qeCqGIPj/1EDrBP4z/cgWKkRf7jg1cmc9F4Wxm8q+YenmpUtOwvFq7EMv9ZiDzy/sLpUL9skh5FFfD+LyfaepOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=45.254.49.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
-Received: from localhost.localdomain (unknown [122.224.147.158])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 11665dc53;
-	Thu, 10 Apr 2025 19:42:27 +0800 (GMT+08:00)
-From: Shouping Wang <allen.wang@hj-micro.com>
-To: will@kernel.org
-Cc: robin.murphy@arm.com,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	allen.wang@hj-micro.com,
-	peter.du@hj-micro.com,
-	andy.xu@hj-micro.com
-Subject: [PATCH 1/2] perf: arm-ni: Unregister PMUs on probe failure
-Date: Thu, 10 Apr 2025 19:42:13 +0800
-Message-ID: <20250410114214.1599777-2-allen.wang@hj-micro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250410114214.1599777-1-allen.wang@hj-micro.com>
-References: <20250410114214.1599777-1-allen.wang@hj-micro.com>
+	s=arc-20240116; t=1744285784; c=relaxed/simple;
+	bh=CyX2dkyDy2TN3OuSCMBhy3trR7Q2dHlQ8ESZVuYmIvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r8+V48JPeMstZuaWdPHr722HftuY9+dVLr10G7DoINezR92dQswIOSfTa1OeIBFJCICw6Cboq6oWri/uTrm51AO0cjeGcKcPJKPLpK3Pi4ujoxYdWxOBmvvnalhYqgBaWZRnm2iiVuVB2JUkqeFgfC/k5PbhXHlHgxll35LrAH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aETAk7Cx; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aETAk7Cx"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A8IfdJ025839;
+	Thu, 10 Apr 2025 11:49:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=YycHY8LXypsniPbyo7Jy/mpsvEN/74
+	51F4aByubUeHU=; b=aETAk7CxebMy70E0bg+qwnZ4DG43urQ3ygCh39/euNKuj0
+	e+QwxSynbCl5K99Oe0X0WXB8EME+BHUfW76Gw4GmIHhIeQuNYa0C3cBOBu6gJRzH
+	DYHMjpBILNjd8cdc2EhhWaem+BbIybne7quui+B6VPwGVx/za9bgXm+pDGxN5Or7
+	onKLt8MMuww8GHBr3Jmt3HdPPfznDuWVtHAQZfA2hJcMGEHmqEV8szh7DpcaaET3
+	CorEAuCzDGSko2Mte3GbmaVE9PENWJf3KI3PLDgJzTSfk+wohelEHiprYrkbSSKV
+	EFh/D0H+7u8vewwjI7ZRGZdLQFmjPVnx+xTuZ65A==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ww2xdekq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 11:49:32 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53A8jEoP025537;
+	Thu, 10 Apr 2025 11:49:32 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbm5sfu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 11:49:32 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ABnS1O34407126
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 11:49:28 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 558D120040;
+	Thu, 10 Apr 2025 11:49:28 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 81CE020043;
+	Thu, 10 Apr 2025 11:49:25 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.39.22.212])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 10 Apr 2025 11:49:25 +0000 (GMT)
+Date: Thu, 10 Apr 2025 17:19:23 +0530
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: Gavin Shan <gshan@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Danilo Krummrich <dakr@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [REPORT] Softlockups on PowerNV with upstream
+Message-ID: <eyy6fqvthcafbkt54e6ihydwuvnmo7xcaoprcmghziwz4thtju@m7kkfamzyksc>
+References: <20250409180344.477916-1-adityag@linux.ibm.com>
+ <Z_dWTU8UsvCHFMpN@localhost.localdomain>
+ <dc4c0d4e-a9a5-4fa5-b39d-4248fba26043@redhat.com>
+ <Z_d_8fyQzGuwzbIv@localhost.localdomain>
+ <675d6580-814f-4fae-9dc5-9470645adc07@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZS08fVhgaQx5LHxhPTEpMSVYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0hVSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a961f822d6909d9kunm11665dc53
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MhA6MAw*QjIMQzcTEEgwTD86
-	NzUKCj5VSlVKTE9PSUNOSE9DSktDVTMWGhIXVRoXFx4VVQwaFRw7ExFWFhIYCRRVGBQWRVlXWRIL
-	WUFZSklJVUlJT1VKT0xVSk5DWVdZCAFZQU9KQ0I3Bg++
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <675d6580-814f-4fae-9dc5-9470645adc07@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 5CQ-Zl-R9tsj6QqgOZRJVhOUi4mDhqWO
+X-Proofpoint-ORIG-GUID: 5CQ-Zl-R9tsj6QqgOZRJVhOUi4mDhqWO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_02,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=476 bulkscore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100086
 
-From: Hongbo Yao <andy.xu@hj-micro.com>
+Hi Gavin,
 
-When a resource allocation fails in one clock domain of an NI device,
-we need to properly roll back all previously registered perf PMUs in
-other clock domains of the same device.
+On 25/04/10 07:44PM, Gavin Shan wrote:
+> > <...snip...>
+>
+> Aditya, please have a try when you get a chance, thanks! I verified it on Power9
+> machine where the issue exists and on one of my ARM64 machine.
 
-Otherwise, it can lead to kernel panics.
+Yes Gavin, will try the patch and then reply.
 
-Calling arm_ni_init+0x0/0xff8 [arm_ni] @ 2374
-arm-ni ARMHCB70:00: Failed to request PMU region 0x1f3c13000
-arm-ni ARMHCB70:00: probe with driver arm-ni failed with error -16
-list_add corruption: next->prev should be prev (fffffd01e9698a18),
-but was 0000000000000000. (next=ffff10001a0decc8).
-pstate: 6340009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-pc : list_add_valid_or_report+0x7c/0xb8
-lr : list_add_valid_or_report+0x7c/0xb8
-Call trace:
- __list_add_valid_or_report+0x7c/0xb8
- perf_pmu_register+0x22c/0x3a0
- arm_ni_probe+0x554/0x70c [arm_ni]
- platform_probe+0x70/0xe8
- really_probe+0xc6/0x4d8
- driver_probe_device+0x48/0x170
- __driver_attach+0x8e/0x1c0
- bus_for_each_dev+0x64/0xf0
- driver_add+0x138/0x260
- bus_add_driver+0x68/0x138
- __platform_driver_register+0x2c/0x40
- arm_ni_init+0x14/0x2a [arm_ni]
- do_init_module+0x36/0x298
----[ end trace 0000000000000000 ]---
-Kernel panic - not syncing: Oops - BUG: Fatal exception
-SMP: stopping secondary CPUs
+Thanks,
+- Aditya G
 
-Fixes: 4d5a7680f2b4 ("perf: Add driver for Arm NI-700 interconnect PMU")
-Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/perf/arm-ni.c | 39 +++++++++++++++++++++------------------
- 1 file changed, 21 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-index 90fcfe693439..3f3d2e0f91fa 100644
---- a/drivers/perf/arm-ni.c
-+++ b/drivers/perf/arm-ni.c
-@@ -576,6 +576,23 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
- 	return err;
- }
- 
-+static void arm_ni_remove(struct platform_device *pdev)
-+{
-+	struct arm_ni *ni = platform_get_drvdata(pdev);
-+
-+	for (int i = 0; i < ni->num_cds; i++) {
-+		struct arm_ni_cd *cd = ni->cds + i;
-+
-+		if (!cd->pmu_base)
-+			continue;
-+
-+		writel_relaxed(0, cd->pmu_base + NI_PMCR);
-+		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
-+		perf_pmu_unregister(&cd->pmu);
-+		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
-+	}
-+}
-+
- static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
- {
- 	u32 reg = readl_relaxed(base + NI_NODE_TYPE);
-@@ -657,8 +674,11 @@ static int arm_ni_probe(struct platform_device *pdev)
- 				reg = readl_relaxed(pd.base + NI_CHILD_PTR(c));
- 				arm_ni_probe_domain(base + reg, &cd);
- 				ret = arm_ni_init_cd(ni, &cd, res->start);
--				if (ret)
-+				if (ret) {
-+					ni->cds[cd.id].pmu_base = NULL;
-+					arm_ni_remove(pdev);
- 					return ret;
-+				}
- 			}
- 		}
- 	}
-@@ -666,23 +686,6 @@ static int arm_ni_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static void arm_ni_remove(struct platform_device *pdev)
--{
--	struct arm_ni *ni = platform_get_drvdata(pdev);
--
--	for (int i = 0; i < ni->num_cds; i++) {
--		struct arm_ni_cd *cd = ni->cds + i;
--
--		if (!cd->pmu_base)
--			continue;
--
--		writel_relaxed(0, cd->pmu_base + NI_PMCR);
--		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
--		perf_pmu_unregister(&cd->pmu);
--		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
--	}
--}
--
- #ifdef CONFIG_OF
- static const struct of_device_id arm_ni_of_match[] = {
- 	{ .compatible = "arm,ni-700" },
--- 
-2.43.0
-
+> 
+> Thanks,
+> Gavin
+> 
