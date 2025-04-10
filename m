@@ -1,73 +1,101 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D22F84039;
-	Thu, 10 Apr 2025 15:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C114A1DD0F2;
+	Thu, 10 Apr 2025 15:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744297643; cv=none; b=e3Ip/wn9+eTdPXx8xjGr8XiJL23okCk/sOS9kluPtavJMYqjvxL6GFAMDPvR1qk++WUJqtRvDxs6pPk1rzBaKudV2AyJhlEvs1oIxaAmUqu6MU0tnIb4urKMRu+dTzRYsg8eGQobFALBTtzkKRDSLrjRTM+LkR6ASpBqzRYPZZ8=
+	t=1744297655; cv=none; b=WJpkS3pfTeWRpTZAWfQjJrFtQqpJ0y9644gItdMV7RYn15yFH4SycGf1MjUNkqvxQR0xlPOKC8a4QpNBiLAHUi+oYL3SD0orjsAUae1WdqjBGVoHFhQuQkW39E9QnrTIZPD+I7o0sLmxraTssnHjnmhpf42uHridDrF3m7SykkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744297643; c=relaxed/simple;
-	bh=eboaS5c05OyvAb+NBPFm2wN3NGNx/XKe73+3Wz4fRNs=;
+	s=arc-20240116; t=1744297655; c=relaxed/simple;
+	bh=29zjlfK0mXnUdbnnsCXfS6Oi8Qrp5HNYmCj3Q7Up+6s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gce9G60G8BWWqmbu1gvD6tBJabixUEaOJVKCIMxri5SsHbi46lFRu6ppVWakWuq2IHR4UlbGr6PGOP86k/LRtMpLxVT+xBVHhpBq2KDcGVyG8Yd7dTbgjro2uCcipcNlZfzngGPuNJODQqnVj/eF2PpBsw1YSDRcsHA1+Afosg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4fQScCd; arc=none smtp.client-ip=209.85.215.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZFA8T5/E69kW2ox6TRFwZyRUP84kZPN1lVaB59MAnI4jQ2pRjrag3T/vyEpCa82OxjT1c1VYojosoK0TWZxB6FhZa+AQ/PDIXLHSjCRPQE0A5hIBaI/4Kn90cNLAZn6hjAjdD/p130JtWi7dentQLMFmZRoYNOHs9A13WxQjysc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=amDTfSbD; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4fQScCd"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af28bc68846so916266a12.1;
-        Thu, 10 Apr 2025 08:07:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amDTfSbD"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso925995b3a.2;
+        Thu, 10 Apr 2025 08:07:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744297641; x=1744902441; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744297653; x=1744902453; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=brD0jvjX625bzsG6fgbmQ6q3jKQyaVH5CAKGozygZW4=;
-        b=Y4fQScCdBm7TYTc2CO/GK2xHK2xFEykki0+FIk13PeMSfMZSbypl3klPQdjaHfqCNh
-         sdwHCz2ccdYIKyb1TjGx2lz8PaOfEfSJEsQBjzXX9PcIRIz/AGguNDB2R1Je5iOOlvAR
-         FexJxObppUR/dXUUtLT+XKzR5oJfVymXGux/qcz2hqxQFTvQD50axZ3Avtz+xAqWD9Tu
-         AdhDyc0osLPhQ6FSitAIQ7T83Bk+p6EJTgbM3Svuj+Pw3FsWqhr2WhK510mE4MRFybRq
-         7YgMVlzMoW1bCs2INXe7FIRn611na87jiyjZgz4Z+k6d56r+BRCjPgTk0DX/IQItCsOK
-         NSkQ==
+        bh=3D5EegHjNXWtRqs7oVUZyDcWwG0k9rfQtFHn9dOK4Lo=;
+        b=amDTfSbD53YThn8o+gHPCYOPaXb3ht5o+9iKLu1o8PGhl4GpZUUeanQNe27NLA8QqB
+         O4WVra5EoYRlYnIuhpRllVhR8IRIqI/2JiLnhZm/D7QD0t8pCjCQpp+THJGEXWLj3Qg8
+         OkZTXtaSwuzjyQZhtPFNBvEkOv5bBPo7Q9v+yFcMmjQfJwh1u8IC7aAyMvzgDUf4fiMp
+         7u1kVUArdSUPogbagebUmlDBxKcr15uUCVS2BPetFHz11bXGdg9YCXx/OTyrqOJiXM2f
+         +FS8Hr6MaSXRd4iikSg7hTTfnDZtHtKYwHBnK9FSzklkFdYGRDB9erLEXwDGwdwIdMkG
+         qRog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744297641; x=1744902441;
+        d=1e100.net; s=20230601; t=1744297653; x=1744902453;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=brD0jvjX625bzsG6fgbmQ6q3jKQyaVH5CAKGozygZW4=;
-        b=m61RxGzGY7+4IvBJhEYepWHS1BB3sp4b0uNkGcsf9JWKchkUIpn0ZDdeuZf0ggv8Ji
-         ziO2fgJhR+kzPQw82gnKdh3dWG5/GyUk1tLVpghN7uk72xFdcRxhhsaXHPYjC5ABh3H5
-         +28xZOmU0zXQfVA6/+fBjG4IjsM4R3FvzuueZsOfgJnwGfFepZQoDB1j4NF5NgHLdHkA
-         Rl+v0DF8NR3ct6o607WSmBGI7SYKrHVB73vai8GGvnNc1SfUHPtMsPS+XI5m9hDPsEA3
-         FrE37v34ee9XCs5L5eHxa345EUOB56YMQKnUKm2n9vKSIc9R8l/zo1JTtvFj2eYhb9a4
-         lDQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkake7YC+Cx7FIZVy8aaheNTdbh1BxYIKq59S7C6DI8kKmG7rIFXwWHfroBPWaOQZYB+EIBr2U5EBJ@vger.kernel.org, AJvYcCWOoPTpuowzbexyL11ACVpltt2AHkZKD6WSp6CTWtrn0Q0yE2gLJqd6f8oOS9MK0TXj6/Dr0K1roco=@vger.kernel.org, AJvYcCXquWq+VjRxMtO3cAbC6gZrBs34MxRPNZuMaV64U8e3W5GKqK6lmehzVB0z9yMm0evJOejQnecN1yBcifW3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0RVEu3eY4oflf70ioG3l+DaYESkK5rSS19xeUrdIyH/7ejwyt
-	m8n61z2PKJ16ZTpZHOIANlDd7bzXOxOI4YCXQPlkMKiw+WDBJKjN
-X-Gm-Gg: ASbGncuOUce8+83DGyypqMzVm0ghJKr7dY9d/SuR5KY8hSOtcvRPjzG8vn1atrymToD
-	mtgFJuWHJhHnJyqqPuZi3UfXtnyERTNWeOfBInJsw9YLxu7rmBmtGg/npXnDs69LkO13RZTbXAc
-	aAHQvbgRrbraf7hTEXCVdBWEDI5upWdRT9HCBKehFB5/zy+b9Ri78BtWjuFF5bTHc3Jj797hhmq
-	LlxCtuUW+mBsdz+K4jdrMrkD/h6BwJE2Hp7YBBqIY0Xd0qmVwJ82Jtm8lLe/z/oPW1qOEfyjXjX
-	6BolBf9X2uCrwZNzdK1TGeZ/Qs6ef+rMzVx3lkcRVVxQueCSuA==
-X-Google-Smtp-Source: AGHT+IFipQ50ghFnCXKI8zRF8Bt+A/DpNB00DQaIIZ1RLRoPjkBbjJFwo/iHx851n7lTd+u7pGjTKA==
-X-Received: by 2002:a05:6a21:9214:b0:1f5:8153:9407 with SMTP id adf61e73a8af0-2016cd5ec22mr4138335637.20.1744297641304;
-        Thu, 10 Apr 2025 08:07:21 -0700 (PDT)
-Received: from localhost ([2804:30c:979:8400:d3a1:d5f7:94ea:b576])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bb1d46586sm3471204b3a.64.2025.04.10.08.07.19
+        bh=3D5EegHjNXWtRqs7oVUZyDcWwG0k9rfQtFHn9dOK4Lo=;
+        b=Rwbnt88uwAgdeZE/7/6ZPxWrmiAB5+XBCF5NxE64049+Lozqgcr8uVXedjUKTiVpCl
+         7/G3uVjQCIkbzgiGOnXhBDH3jQ++xuadQueY9ox5UGiJlYAgSn8oxvLXGNnCjhqFfY2M
+         GXiNQVCV9KvRKq5CyRE3d53loMR4aIEfIDdrwX02ZS1I+HguoxvLJPVGYF0I2FF3okCV
+         SbjdvXaITe8fnK/BE7ipjTkJXWCz4R8PyGJXNTLRrLl9zbXhsl2t9wyQcqFi5iUmmL6v
+         5kSiw49H0sRrRJjQIwOkpIJCWksNkEEyNSc+Q7hKwypqPZgr3y9t+sAsZw4V2j1X0j9o
+         Tqxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOXZc/jSHOaGYJZ8V9U3oGXV91M2rU7mUlsWvjjXce98piQd0KgaaUsC5biHt6u1HQBN/A8pnb6VxDFNo=@vger.kernel.org, AJvYcCUtV5dT5rk3w9GBdMX/eau0G0v3F2jG+O2VW4uINRyUHWb2/Qg+FS11+mJR7sfN3d+xvQlcQWErHRgozTlfyq8=@vger.kernel.org, AJvYcCUvp9CHFBXUToar8Pc6Id4+IT0PAhwXBfnNhDeCl1xFoyB4dxcVLqHm4aLo/UG47gAQlYi0LjO+YXmUJiA=@vger.kernel.org, AJvYcCV8/8EubvyJx+OkrdRqrgGX0xdbf6V4OtpPhaON/RaRLZNmVnf2dYSmy9bGeSKhweIGt+PAyUSQcNbZTvim@vger.kernel.org, AJvYcCVa6OSqmh4AqIVHFOKC7ASrcX+jCf4kOprby2u2Q8RyfNCU2+y5GVn5WnX7eE3t0ADQrZ9+HQWr@vger.kernel.org, AJvYcCWMEYGjekVzJ+XYFaYRw9Q5QiJsTdJBipT1nKrKqthRDzIVtwzuYVKiciVqSfyOGRYg8hXJEo4Gp35fuog=@vger.kernel.org, AJvYcCX40BhYTeD5D25GEcix4kPLNhNREHZW1Chb3JtiEzNqXXxqg8GGwYnJsKDx9tWWVm2q8es=@vger.kernel.org, AJvYcCXD8go/IeqNJ4ZtWOfTUg2nK00VdAJDxJI0jmEIhBI4ySF/0u3uVLOtFpbc2r0WUdfyu7aWoewHufQThMOm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRNV0Ni7lrRayLQw40texyWx54h8br7248G9tHz1Eo4QJTICMS
+	EQ8ftGmiZwLPqb/q4lG59kQEHuFQfZEj05olQCzA0nndfiHRnM6K
+X-Gm-Gg: ASbGncsNSYc5k9RpBlkjv2zau/fW183kDN8nqJFcxJMoH4mXEQCezpJTmUtcGZrzaw6
+	krbqntr0f3+7VEO4fKCLNbBkoU5Cd5ZjA1HMyicVMoRHaw496/VQo3aB5oCDM5WPeSSpMakN/rC
+	iD8R5Knw8TmlxQYtOfQ9IlLVoeFug2RwuIPwRk3C0iLbegi4Q8zeKhZuq0uaglHklUf14BvKZVF
+	bnZLEQdAHlj+QUidSeLqx/NDqKtwcE2pGaB8nsPa8AHe/EtqUfa2AM045i/cZoxTa8iVa30eRNW
+	SvmP8diy5i4+3ZeAgQEXn7CeEmpSYNM1csAmLnzH
+X-Google-Smtp-Source: AGHT+IFy1ewRYIQi2QM4ZSLkQhokapTj0gR7Ltj5GpPkDsZlOlyCTjP19Ec1IKFhcZrwo1l74Iw4rg==
+X-Received: by 2002:a05:6a00:240a:b0:736:ab1d:83c4 with SMTP id d2e1a72fcca58-73bbec49f99mr4365817b3a.0.1744297652831;
+        Thu, 10 Apr 2025 08:07:32 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e51f1csm3501019b3a.145.2025.04.10.08.07.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 08:07:20 -0700 (PDT)
-Date: Thu, 10 Apr 2025 12:08:27 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-	corbet@lwn.net
-Subject: Re: [PATCH v4 1/4] iio: adc: ad4000: Add support for SPI offload
-Message-ID: <Z_fe69bn90oVjPNk@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1743110188.git.marcelo.schmitt@analog.com>
- <386ce043a0e3fc9e8ff71f17aef8de128ce5869e.1743110188.git.marcelo.schmitt@analog.com>
- <97d0cc16-cdd4-449c-87f5-f62e0515de97@baylibre.com>
+        Thu, 10 Apr 2025 08:07:31 -0700 (PDT)
+Date: Thu, 10 Apr 2025 11:07:29 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
+	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, akpm@linux-foundation.org, jdelvare@suse.com,
+	linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com,
+	hpa@zytor.com, alistair@popple.id.au, linux@rasmusvillemoes.dk,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw, Frank.Li@nxp.com,
+	linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v4 02/13] media: media/test_drivers: Replace open-coded
+ parity calculation with parity_odd()
+Message-ID: <Z_fesYbCnSjAo-K4@yury>
+References: <20250409154356.423512-1-visitorckw@gmail.com>
+ <20250409154356.423512-3-visitorckw@gmail.com>
+ <Z_aobrK3t7zdwZRK@yury>
+ <Z/a7DecDljuLtKeS@visitorckw-System-Product-Name>
+ <Z_a_PzmNnvC2z7se@yury>
+ <Z/bC6cygo0hem5IO@visitorckw-System-Product-Name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,43 +104,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <97d0cc16-cdd4-449c-87f5-f62e0515de97@baylibre.com>
+In-Reply-To: <Z/bC6cygo0hem5IO@visitorckw-System-Product-Name>
 
-On 04/09, David Lechner wrote:
-> On 3/27/25 4:24 PM, Marcelo Schmitt wrote:
-> > FPGA HDL projects can include a PWM generator in addition to SPI-Engine.
-> > The PWM IP is used to trigger SPI-Engine offload modules that in turn set
-> > SPI-Engine to execute transfers to poll data from the ADC. That allows data
-> > to be read at the maximum sample rates. Also, it is possible to set a
-> > specific sample rate by setting the proper PWM duty cycle and related state
-> > parameters, thus allowing an adjustable ADC sample rate when a PWM (offload
-> > trigger) is used in combination with SPI-Engine.
+On Thu, Apr 10, 2025 at 02:56:41AM +0800, Kuan-Wei Chiu wrote:
+> On Wed, Apr 09, 2025 at 02:41:03PM -0400, Yury Norov wrote:
+> > On Thu, Apr 10, 2025 at 02:23:09AM +0800, Kuan-Wei Chiu wrote:
+> > > On Wed, Apr 09, 2025 at 01:03:42PM -0400, Yury Norov wrote:
+> > > > On Wed, Apr 09, 2025 at 11:43:45PM +0800, Kuan-Wei Chiu wrote:
+
+> > > > So, if val == 0 than parity_odd(val) is also 0, and this can be
+> > > > simplified just to:
+> > > >         return parity(val) ? 0 : 0x80;
+> > > > Or I miss something?
+> > > >
+> > > If val == 0x01, the return value of calc_parity() will remain 0x01.
+> > > If changed to return parity_odd(val) ? 0 : 0x80;, the return value will
+> > > be changed to 0x00.
 > > 
-> > Add support for SPI offload.
+> > Sorry, I meant
+> >         return val ? 0 : 0x80;
 > > 
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> > ---
+> > This 'val | (parity_odd(val)' is only false when val == 0, right?
+> > When val != 0, compiler will return true immediately, not even calling
+> > parity().
+> >
+> I'm still confused.
 > 
-> I think I spotted a bug. With that fixed...
+> Maybe you're interpreting the code as:
 > 
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
+> 	(val | parity(val)) ? 0 : 0x80
 > 
-> > @@ -690,6 +942,15 @@ static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
-> >  
-> >  	xfers[1].rx_buf = &st->scan.data;
-> >  	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
+> But what we're trying to do is:
 > 
-> Now this needs to be:
+> 	val | (parity(val) ? 0 : 0x80)
 > 
-> 	xfer->len = chan->scan_type.realbits > 16 ? 4 : 2;
-> 
-> Otherwise when there is SPI offload, this could read 2 words because
-> storagebits is always == 32.
+> So, for example, if val == 0x06, the return value will be 0x86.
+> Only returning 0 or 0x80 seems wrong to me.
+> Or did I misunderstand something?
 
-I've just tested both versions with ADAQ4003 and with AD7687.
-There's no practical difference between the suggestion and what already is in
-IIO testing. I don't mind sending a patch with the change, but don't think it
-fixes anything.
-
-Thanks,
-Marcelo
+I misread the whole construction. Sorry, you're right. Scratch this.
