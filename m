@@ -1,449 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9D51DC994
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A981E1E10
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744274110; cv=none; b=be1kb9i+6r4UxsuaDDmtHDG6ZEqQjyqbGyiTDw3I1gQd4voWX6Nv3QNF0U5csYuEYsiY102hfnq2Ev5sRuSlPTa+mKbczbm41AgD5OvGVe9ypAPTBcErFMqCik/O55jr6e7IpTLmvthWAv0tcgfdwLQQ8NDK0P9MxVmhwAGOmZE=
+	t=1744274127; cv=none; b=TPpRp5m5r4jqBAY7gF06z366fcwZEHTVnpqo8WoUb+BG7ZgZpMVAVMud4OYXfkk1P76Y5ff1yp/r+3MGjkkVxPIb32WBL/Z9LK477POAE7KItGg7ELh80yXH7iThHKrap26vQcgAxkVBxC1NHuDOlHdrfIT5HHtDZVg2sKn5U3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744274110; c=relaxed/simple;
-	bh=GV77dv96NUESm0ZK3z1NPQjDUbxPj//RoNnDUJ60y3k=;
+	s=arc-20240116; t=1744274127; c=relaxed/simple;
+	bh=vm+n/DN3r38uNGuHnCe/hDNr8ZYmr9HpOBN6gHBJQ8I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jLontgFw/RIBnPdtZzjCvS9fWbrvTvsTh1g3gmNpbfmfpWB0En/FPjvjcpv0aI2aS0ZHPNkVSAA9UakHFRMmZbTbR0/6oaz4MAGwJNDO6nhLF4mggaOauTV9j+VZawT7wqnK6u+60xVTRJla8lblWn3E7tAHTUWqKSgrYzah1N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODEFwvmO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R75wkJPsZMAuzLcVIPADRNv4XiaR0RUgg3AopfyuYCY6CmY8NrkajsxXEcepsXoGbrNLSw97+dXYXTaSyu7awFdUGysSH9IL1OqmcV3UjudJGfk5tXRvPNZ1RNZ8QEfJs/QjHn1N386d6zvqMtCdAlSeXxn2MrEUgvoy/j1qo+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i2qeRoQe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODEFwvmO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D99DC4CEDD;
-	Thu, 10 Apr 2025 08:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744274109;
-	bh=GV77dv96NUESm0ZK3z1NPQjDUbxPj//RoNnDUJ60y3k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ODEFwvmO0XWJUiowp+QdB5m0avw/lAz4EXKOf+KqWG+SWlyuT/IO3LpyA4c5Hl5lD
-	 K0fs5dHYdJaQl16oQs2ljhYWaRUxBN7/2ZxJpsBFNP3Mx1+1mXe/stdDxgVi4dokQg
-	 Mnu038PYre/3DQ0Rs0noUHMDG3yFfAF1vi+42I9KJJAVCHw+dhtRNewLbVE6iMd5Fo
-	 XKXck7i3dT64kgSVeBIqluTzB8n3ssbBkNX1yRx1O2zCymUNIN1T+yTB1o0TH41mbX
-	 nlxrN+vJK5nDCUBDhTPD/34ZTLDFfsMFAjN2yp0Rq99422e4KLyaoxff1O9aALUbmG
-	 SM+BfPc0kc/4g==
-Date: Thu, 10 Apr 2025 10:35:06 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	kernel@collabora.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 14/15] drm/tests: hdmi: Add max TMDS rate fallback
- tests for YUV420 mode
-Message-ID: <20250410-cyan-smilodon-of-courtesy-38766c@houat>
-References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
- <20250326-hdmi-conn-yuv-v3-14-294d3ebbb4b2@collabora.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2qeRoQe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744274124;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CxHaTazFkHPO5uhaMckeowRpsl34ZLTSQwo1R7YrUH0=;
+	b=i2qeRoQeiCRnQV3PF4HK3ZjUQdodtlDPccRse3l4Bx+R+K1g0sBWZEHuPhFxtTnOTj7paY
+	lvAM40E99nfWbksUqZWYzSRZGsNeMWTUfbtsIJU3pTmpspiaoAWPfurISt+tW8pX3nv7Id
+	YeMs6zfa8AhsfY1/DFfgYZhtfZcbbBg=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-vXEc_BuaNT2-A0S-b0lwlQ-1; Thu,
+ 10 Apr 2025 04:35:22 -0400
+X-MC-Unique: vXEc_BuaNT2-A0S-b0lwlQ-1
+X-Mimecast-MFC-AGG-ID: vXEc_BuaNT2-A0S-b0lwlQ_1744274121
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6680F1801A12;
+	Thu, 10 Apr 2025 08:35:21 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.38])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE3683001D11;
+	Thu, 10 Apr 2025 08:35:18 +0000 (UTC)
+Date: Thu, 10 Apr 2025 16:35:09 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: akpm@linux-foundation.org, sj@kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [patch] mm: swap: add __maybe_unused attribute for
+ swap_is_last_ref() and update it's comment
+Message-ID: <Z/eCvQpn0gE75crD@MiWiFi-R3L-srv>
+References: <20250410153908.612984-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tfr4puaibfh26idy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250326-hdmi-conn-yuv-v3-14-294d3ebbb4b2@collabora.com>
+In-Reply-To: <20250410153908.612984-1-shikemeng@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-
---tfr4puaibfh26idy
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 14/15] drm/tests: hdmi: Add max TMDS rate fallback
- tests for YUV420 mode
-MIME-Version: 1.0
-
-On Wed, Mar 26, 2025 at 12:20:03PM +0200, Cristian Ciocaltea wrote:
-> Provide tests to verify drm_atomic_helper_connector_hdmi_check() helper
-> fallback behavior when using YUV420 output.
->=20
-> Also rename drm_test_check_max_tmds_rate_{bpc|format}_fallback() to
-> better differentiate from the newly introduced *_yuv420() variants.
->=20
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+On 04/10/25 at 11:39pm, Kemeng Shi wrote:
+> Add __maybe_unused attribute for swap_is_last_ref ()to fix following
+> building warning:
+> mm/swapfile.c:1517:20: warning: function 'swap_is_last_ref' is not needed and will not be emitted [-Wunneeded-internal-declaration]
+>     1517 | static inline bool swap_is_last_ref(unsigned char count)
+>          |                    ^~~~~~~~~~~~~~~~
+>    1 warning generated.
+> 
+> Besides, original comment for swap_entries_free() is placed before
+> swap_is_last_ref() which may introduce confusion. Update comment to
+> address this.
+> 
+> Fixes: 6bb001b6b64ec ("mm: swap: enable swap_entry_range_free() to drop any kind of last ref")
+> Suggested-by: Baoquan He <bhe@redhat.com>
+> Tested-by: SeongJae Park <sj@kernel.org>
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 > ---
->  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 152 +++++++++++++++=
-+++++-
->  drivers/gpu/drm/tests/drm_kunit_edid.h             | 110 +++++++++++++++
->  2 files changed, 258 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers=
-/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> index 3fae7ccf65309a1d8a4acf12de961713b9163096..99bedb2d6f555b3b140256000=
-dfa7491d2a8f515 100644
-> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> @@ -1224,7 +1224,7 @@ static void drm_test_check_hdmi_funcs_reject_rate(s=
-truct kunit *test)
->   * Then we will pick the latter, and the computed TMDS character rate
->   * will be equal to 1.25 times the mode pixel clock.
->   */
-> -static void drm_test_check_max_tmds_rate_bpc_fallback(struct kunit *test)
-> +static void drm_test_check_max_tmds_rate_bpc_fallback_rgb(struct kunit *=
-test)
->  {
->  	struct drm_atomic_helper_connector_hdmi_priv *priv;
->  	struct drm_modeset_acquire_ctx ctx;
-> @@ -1279,6 +1279,75 @@ static void drm_test_check_max_tmds_rate_bpc_fallb=
-ack(struct kunit *test)
->  	drm_modeset_acquire_fini(&ctx);
+>  mm/swapfile.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+
+LGTM,
+
+Reviewed-by: Baoquan He <bhe@redhat.com>
+
+> 
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index c46b56d636af..4b5fc0c33a85 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1537,15 +1537,19 @@ static bool swap_entries_put_map_nr(struct swap_info_struct *si,
 >  }
-> =20
-> +/*
-> + * Test that if:
-> + * - We have an HDMI connector supporting both RGB and YUV420
-
-I assume the monitor also supports both?
-
-> + * - The chosen mode can be supported in YUV420 output format only
-> + * - The chosen mode has a TMDS character rate higher than the display
-> + *   supports in YUV420/12bpc
-> + * - The chosen mode has a TMDS character rate lower than the display
-> + *   supports in YUV420/10bpc.
-> + *
-> + * Then we will pick the latter, and the computed TMDS character rate
-> + * will be equal to 1.25 * 0.5 times the mode pixel clock.
-> + */
-> +static void drm_test_check_max_tmds_rate_bpc_fallback_yuv420(struct kuni=
-t *test)
-> +{
-> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
-> +	struct drm_modeset_acquire_ctx ctx;
-> +	struct drm_connector_state *conn_state;
-> +	struct drm_display_info *info;
-> +	struct drm_display_mode *yuv420_only_mode;
-> +	unsigned long long rate;
-> +	struct drm_connector *conn;
-> +	struct drm_device *drm;
-> +	struct drm_crtc *crtc;
-> +	int ret;
-> +
-> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid(test,
-> +				BIT(HDMI_COLORSPACE_RGB) |
-> +				BIT(HDMI_COLORSPACE_YUV420),
-> +				12,
-> +				test_edid_hdmi_1080p_rgb_yuv_4k_yuv420_dc_max_200mhz);
-> +	KUNIT_ASSERT_NOT_NULL(test, priv);
-> +
-> +	drm =3D &priv->drm;
-> +	crtc =3D priv->crtc;
-> +	conn =3D &priv->connector;
-> +	info =3D &conn->display_info;
-> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
-> +	KUNIT_ASSERT_GT(test, info->max_tmds_clock, 0);
-> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
-> +
-> +	yuv420_only_mode =3D drm_kunit_display_mode_from_cea_vic(test, drm, 95);
-> +	KUNIT_ASSERT_NOT_NULL(test, yuv420_only_mode);
-> +	KUNIT_ASSERT_TRUE(test, drm_mode_is_420_only(info, yuv420_only_mode));
-> +
-> +	rate =3D drm_hdmi_compute_mode_clock(yuv420_only_mode, 12, HDMI_COLORSP=
-ACE_YUV420);
-> +	KUNIT_ASSERT_GT(test, rate, info->max_tmds_clock * 1000);
-> +
-> +	rate =3D drm_hdmi_compute_mode_clock(yuv420_only_mode, 10, HDMI_COLORSP=
-ACE_YUV420);
-> +	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
-> +
-> +	drm_modeset_acquire_init(&ctx, 0);
-> +
-> +	ret =3D drm_kunit_helper_enable_crtc_connector(test, drm,
-> +						     crtc, conn,
-> +						     yuv420_only_mode,
-> +						     &ctx);
-> +	KUNIT_EXPECT_EQ(test, ret, 0);
-
-We need to handle EDEADLK
-
-> +
-> +	conn_state =3D conn->state;
-> +	KUNIT_ASSERT_NOT_NULL(test, conn_state);
-> +
-> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_bpc, 10);
-> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_Y=
-UV420);
-> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.tmds_char_rate, yuv420_only_mode=
-->clock * 625);
-> +
-> +	drm_modeset_drop_locks(&ctx);
-> +	drm_modeset_acquire_fini(&ctx);
-> +}
-> +
+>  
 >  /*
->   * Test that if:
->   * - We have an HDMI connector supporting both RGB and YUV422 and up to
-> @@ -1292,7 +1361,7 @@ static void drm_test_check_max_tmds_rate_bpc_fallba=
-ck(struct kunit *test)
->   * Then we will prefer to keep the RGB format with a lower bpc over
->   * picking YUV422.
+> - * Drop the last ref(1, SWAP_HAS_CACHE or SWAP_MAP_SHMEM) of swap entries,
+> - * caller have to ensure all entries belong to the same cgroup and cluster.
+> + * Check if it's the last ref of swap entry in the freeing path.
+> + * Qualified vlaue includes 1, SWAP_HAS_CACHE or SWAP_MAP_SHMEM.
 >   */
-> -static void drm_test_check_max_tmds_rate_format_fallback(struct kunit *t=
-est)
-> +static void drm_test_check_max_tmds_rate_format_fallback_yuv422(struct k=
-unit *test)
+> -static inline bool swap_is_last_ref(unsigned char count)
+> +static inline bool __maybe_unused swap_is_last_ref(unsigned char count)
 >  {
->  	struct drm_atomic_helper_connector_hdmi_priv *priv;
->  	struct drm_modeset_acquire_ctx ctx;
-> @@ -1351,6 +1420,79 @@ static void drm_test_check_max_tmds_rate_format_fa=
-llback(struct kunit *test)
->  	drm_modeset_acquire_fini(&ctx);
+>  	return (count == SWAP_HAS_CACHE) || (count == 1) ||
+>  	       (count == SWAP_MAP_SHMEM);
 >  }
-> =20
+>  
 > +/*
-> + * Test that if:
-> + * - We have an HDMI connector supporting both RGB and YUV420 and up to
-> + *   12 bpc
-> + * - The chosen mode has a TMDS character rate higher than the display
-> + *   supports in RGB/10bpc but lower than the display supports in
-> + *   RGB/8bpc
-> + * - The chosen mode has a TMDS character rate lower than the display
-> + *   supports in YUV420/12bpc.
-> + *
-> + * Then we will prefer to keep the RGB format with a lower bpc over
-> + * picking YUV420.
+> + * Drop the last ref of swap entries, caller have to ensure all entries
+> + * belong to the same cgroup and cluster.
 > + */
-> +static void drm_test_check_max_tmds_rate_format_fallback_yuv420(struct k=
-unit *test)
+>  static void swap_entries_free(struct swap_info_struct *si,
+>  			      struct swap_cluster_info *ci,
+>  			      swp_entry_t entry, unsigned int nr_pages)
+> -- 
+> 2.30.0
+> 
 
-Are you sure about the name here? It looks like we're not testing the
-YUV420 fallback at all?
-
-> +{
-> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
-> +	struct drm_modeset_acquire_ctx ctx;
-> +	struct drm_connector_state *conn_state;
-> +	struct drm_display_info *info;
-> +	struct drm_display_mode *preferred;
-> +	unsigned long long rate;
-> +	struct drm_connector *conn;
-> +	struct drm_device *drm;
-> +	struct drm_crtc *crtc;
-> +	int ret;
-> +
-> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid(test,
-> +				BIT(HDMI_COLORSPACE_RGB) |
-> +				BIT(HDMI_COLORSPACE_YUV420),
-> +				12,
-> +				test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz);
-> +	KUNIT_ASSERT_NOT_NULL(test, priv);
-> +
-> +	drm =3D &priv->drm;
-> +	crtc =3D priv->crtc;
-> +	conn =3D &priv->connector;
-> +	info =3D &conn->display_info;
-> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
-> +	KUNIT_ASSERT_GT(test, info->max_tmds_clock, 0);
-> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
-> +
-> +	preferred =3D find_preferred_mode(conn);
-> +	KUNIT_ASSERT_NOT_NULL(test, preferred);
-> +	KUNIT_ASSERT_FALSE(test, preferred->flags & DRM_MODE_FLAG_DBLCLK);
-> +	KUNIT_ASSERT_TRUE(test, drm_mode_is_420_also(info, preferred));
-> +
-> +	rate =3D drm_hdmi_compute_mode_clock(preferred, 8, HDMI_COLORSPACE_RGB);
-> +	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
-> +
-> +	rate =3D drm_hdmi_compute_mode_clock(preferred, 10, HDMI_COLORSPACE_RGB=
-);
-> +	KUNIT_ASSERT_GT(test, rate, info->max_tmds_clock * 1000);
-> +
-> +	rate =3D drm_hdmi_compute_mode_clock(preferred, 12, HDMI_COLORSPACE_YUV=
-420);
-> +	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
-> +
-> +	drm_modeset_acquire_init(&ctx, 0);
-> +
-> +	ret =3D drm_kunit_helper_enable_crtc_connector(test, drm,
-> +						     crtc, conn,
-> +						     preferred,
-> +						     &ctx);
-> +	KUNIT_EXPECT_EQ(test, ret, 0);
-> +
-> +	conn_state =3D conn->state;
-> +	KUNIT_ASSERT_NOT_NULL(test, conn_state);
-> +
-> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_bpc, 8);
-> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_R=
-GB);
-> +
-> +	drm_modeset_drop_locks(&ctx);
-> +	drm_modeset_acquire_fini(&ctx);
-> +}
-
->  /*
->   * Test that if a driver and screen supports RGB and YUV formats, and we
->   * try to set the VIC 1 mode, we end up with 8bpc RGB even if we could
-> @@ -1738,8 +1880,10 @@ static struct kunit_case drm_atomic_helper_connect=
-or_hdmi_check_tests[] =3D {
->  	KUNIT_CASE(drm_test_check_broadcast_rgb_crtc_mode_not_changed),
->  	KUNIT_CASE(drm_test_check_disable_connector),
->  	KUNIT_CASE(drm_test_check_hdmi_funcs_reject_rate),
-> -	KUNIT_CASE(drm_test_check_max_tmds_rate_bpc_fallback),
-> -	KUNIT_CASE(drm_test_check_max_tmds_rate_format_fallback),
-
-These name changes belong in a separate patch
-
-> +	KUNIT_CASE(drm_test_check_max_tmds_rate_bpc_fallback_rgb),
-> +	KUNIT_CASE(drm_test_check_max_tmds_rate_bpc_fallback_yuv420),
-> +	KUNIT_CASE(drm_test_check_max_tmds_rate_format_fallback_yuv422),
-> +	KUNIT_CASE(drm_test_check_max_tmds_rate_format_fallback_yuv420),
-
-We should also test what happens when the monitor or connector doesn't
-support YUV420, and we'd still need to fallback. In such a case, we
-should return an error.
-
->  	KUNIT_CASE(drm_test_check_output_bpc_crtc_mode_changed),
->  	KUNIT_CASE(drm_test_check_output_bpc_crtc_mode_not_changed),
->  	KUNIT_CASE(drm_test_check_output_bpc_dvi),
-> diff --git a/drivers/gpu/drm/tests/drm_kunit_edid.h b/drivers/gpu/drm/tes=
-ts/drm_kunit_edid.h
-> index ff316e6114d65c96b1338cd83bc0d8d9e6e143e9..8e9086df20c690f34623d7858=
-c716032d77d0c26 100644
-> --- a/drivers/gpu/drm/tests/drm_kunit_edid.h
-> +++ b/drivers/gpu/drm/tests/drm_kunit_edid.h
-> @@ -695,4 +695,114 @@ static const unsigned char test_edid_hdmi_1080p_rgb=
-_yuv_4k_yuv420_dc_max_200mhz[
->  	0x00, 0x00, 0x00, 0xca
->  };
-> =20
-> +/*
-> + * edid-decode (hex):
-> + *
-> + * 00 ff ff ff ff ff ff 00 31 d8 34 00 00 00 00 00
-> + * ff 23 01 03 80 60 36 78 0f ee 91 a3 54 4c 99 26
-> + * 0f 50 54 20 00 00 01 01 01 01 01 01 01 01 01 01
-> + * 01 01 01 01 01 01 04 74 00 30 f2 70 5a 80 b0 58
-> + * 8a 00 40 84 63 00 00 1e 00 00 00 fc 00 54 65 73
-> + * 74 20 45 44 49 44 0a 20 20 20 00 00 00 fd 00 18
-> + * 55 18 5e 22 00 0a 20 20 20 20 20 20 00 00 00 10
-> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 ce
-> + *
-> + * 02 03 27 31 41 5f 6c 03 0c 00 10 00 78 44 20 00
-> + * 00 01 03 6d d8 5d c4 01 44 80 07 00 00 00 00 00
-> + * 00 e3 0f 01 00 e1 0e 00 00 00 00 00 00 00 00 00
-> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 84
-> + *
-> + * ----------------
-> + *
-> + * Block 0, Base EDID:
-> + *   EDID Structure Version & Revision: 1.3
-> + *   Vendor & Product Identification:
-> + *     Manufacturer: LNX
-> + *     Model: 52
-> + *     Model year: 2025
-> + *   Basic Display Parameters & Features:
-> + *     Digital display
-> + *     Maximum image size: 96 cm x 54 cm
-> + *     Gamma: 2.20
-> + *     RGB color display
-> + *     Default (sRGB) color space is primary color space
-> + *     First detailed timing is the preferred timing
-> + *     Supports GTF timings within operating range
-> + *   Color Characteristics:
-> + *     Red  : 0.6396, 0.3300
-> + *     Green: 0.2998, 0.5996
-> + *     Blue : 0.1503, 0.0595
-> + *     White: 0.3125, 0.3291
-> + *   Established Timings I & II:
-> + *     DMT 0x04:   640x480    59.940476 Hz   4:3     31.469 kHz     25.1=
-75000 MHz
-> + *   Standard Timings: none
-> + *   Detailed Timing Descriptors:
-> + *     DTD 1:  3840x2160   30.000000 Hz  16:9     67.500 kHz    297.0000=
-00 MHz (1600 mm x 900 mm)
-> + *                  Hfront  176 Hsync  88 Hback  296 Hpol P
-> + *                  Vfront    8 Vsync  10 Vback   72 Vpol P
-> + *     Display Product Name: 'Test EDID'
-> + *     Display Range Limits:
-> + *       Monitor ranges (GTF): 24-85 Hz V, 24-94 kHz H, max dotclock 340=
- MHz
-> + *     Dummy Descriptor:
-> + *   Extension blocks: 1
-> + * Checksum: 0xce
-> + *
-> + * ----------------
-> + *
-> + * Block 1, CTA-861 Extension Block:
-> + *   Revision: 3
-> + *   Supports YCbCr 4:4:4
-> + *   Supports YCbCr 4:2:2
-> + *   Native detailed modes: 1
-> + *   Video Data Block:
-> + *     VIC  95:  3840x2160   30.000000 Hz  16:9     67.500 kHz    297.00=
-0000 MHz
-> + *   Vendor-Specific Data Block (HDMI), OUI 00-0C-03:
-> + *     Source physical address: 1.0.0.0
-> + *     DC_48bit
-> + *     DC_36bit
-> + *     DC_30bit
-> + *     DC_Y444
-> + *     Maximum TMDS clock: 340 MHz
-> + *     Extended HDMI video details:
-> + *   Vendor-Specific Data Block (HDMI Forum), OUI C4-5D-D8:
-> + *     Version: 1
-> + *     Maximum TMDS Character Rate: 340 MHz
-> + *     SCDC Present
-> + *     Supports 16-bits/component Deep Color 4:2:0 Pixel Encoding
-> + *     Supports 12-bits/component Deep Color 4:2:0 Pixel Encoding
-> + *     Supports 10-bits/component Deep Color 4:2:0 Pixel Encoding
-> + *   YCbCr 4:2:0 Capability Map Data Block:
-> + *     VIC  95:  3840x2160   30.000000 Hz  16:9     67.500 kHz    297.00=
-0000 MHz
-> + *   YCbCr 4:2:0 Video Data Block:
-> + * Checksum: 0x84
-> + */
-> +static const unsigned char test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz[] =
-=3D {
-> +	0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x31, 0xd8, 0x34, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0xff, 0x23, 0x01, 0x03, 0x80, 0x60, 0x36, 0x78,
-> +	0x0f, 0xee, 0x91, 0xa3, 0x54, 0x4c, 0x99, 0x26, 0x0f, 0x50, 0x54, 0x20,
-> +	0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-> +	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x04, 0x74, 0x00, 0x30, 0xf2, 0x70,
-> +	0x5a, 0x80, 0xb0, 0x58, 0x8a, 0x00, 0x40, 0x84, 0x63, 0x00, 0x00, 0x1e,
-> +	0x00, 0x00, 0x00, 0xfc, 0x00, 0x54, 0x65, 0x73, 0x74, 0x20, 0x45, 0x44,
-> +	0x49, 0x44, 0x0a, 0x20, 0x20, 0x20, 0x00, 0x00, 0x00, 0xfd, 0x00, 0x18,
-> +	0x55, 0x18, 0x5e, 0x22, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
-> +	0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xce, 0x02, 0x03, 0x27, 0x31,
-> +	0x41, 0x5f, 0x6c, 0x03, 0x0c, 0x00, 0x10, 0x00, 0x78, 0x44, 0x20, 0x00,
-> +	0x00, 0x01, 0x03, 0x6d, 0xd8, 0x5d, 0xc4, 0x01, 0x44, 0x80, 0x07, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0xe3, 0x0f, 0x01, 0x00, 0xe1, 0x0e, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +	0x00, 0x00, 0x00, 0x84
-> +};
-
-This should be a separate patch as well, but most importantly it's
-pretty hard to know the difference with the one you introduced in a
-previous patch. We should document it better than just with edid-decode.
-Also, how did you generate it?
-
-Maxime
-
---tfr4puaibfh26idy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/eCugAKCRDj7w1vZxhR
-xVZFAQCeRfZ9Q5P/p7t/O22wnbBJKGVrGzpWcbw/XHz7FJm4ugEA31c4K8s9gk8R
-V3WtcCG4t2OKAkCbaDN4xTq6mZ/UPgg=
-=JB7r
------END PGP SIGNATURE-----
-
---tfr4puaibfh26idy--
