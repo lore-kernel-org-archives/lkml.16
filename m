@@ -1,433 +1,449 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D2E20B7F0;
-	Thu, 10 Apr 2025 08:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9D51DC994
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273950; cv=none; b=kOP1XeYScuxxkY/lGLTGUuqWS7xE9rEz39KNngvQmMe/qOMoRJ5VCqNdpv4Epwm4JgGdcIZeCbxFaqcjNn4Yc0q2LUzNvorCEu8sa/ckuvUhVLIcYJbuFY99csZFCSe9aVx1J+FBVTyDST0OjFOS6b6+nvEAcO1B4jZUvIHZNOg=
+	t=1744274110; cv=none; b=be1kb9i+6r4UxsuaDDmtHDG6ZEqQjyqbGyiTDw3I1gQd4voWX6Nv3QNF0U5csYuEYsiY102hfnq2Ev5sRuSlPTa+mKbczbm41AgD5OvGVe9ypAPTBcErFMqCik/O55jr6e7IpTLmvthWAv0tcgfdwLQQ8NDK0P9MxVmhwAGOmZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273950; c=relaxed/simple;
-	bh=1e7/OjUhEXwZPCD9GM2yZH+DvnWimfcmZt83n9VV4UE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IJUF0vjCi8ugmWDg39i1YOCcNvQNcCazc79Ik8CVZXuWNTwj8EryHt2hZ/N9/87K+BZ4peY983OdbHTCdcm95RSTuH2TIy8XCk7cZhf7Ao3CvQmRx0+j1CXIeOga1A2AkD6TPnd+isDWD0Za41o5SS9uP5JmHtAnTG8DmhSX0R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=P8L2Ud/z; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1744274110; c=relaxed/simple;
+	bh=GV77dv96NUESm0ZK3z1NPQjDUbxPj//RoNnDUJ60y3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLontgFw/RIBnPdtZzjCvS9fWbrvTvsTh1g3gmNpbfmfpWB0En/FPjvjcpv0aI2aS0ZHPNkVSAA9UakHFRMmZbTbR0/6oaz4MAGwJNDO6nhLF4mggaOauTV9j+VZawT7wqnK6u+60xVTRJla8lblWn3E7tAHTUWqKSgrYzah1N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODEFwvmO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="P8L2Ud/z"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id F3D63258D8;
-	Thu, 10 Apr 2025 10:32:25 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id NQpFZHzrZK0J; Thu, 10 Apr 2025 10:32:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1744273944; bh=1e7/OjUhEXwZPCD9GM2yZH+DvnWimfcmZt83n9VV4UE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=P8L2Ud/zpcHOD3p7ZXIBjfV+CxoTuLKD1gYYn4Oy9SNvOgKM3HVYchP+BVPUc8Vte
-	 iF+a/LPCf55P3bAlgB9S1CyLoHV11xiEk6pGxz03iPUOeoUmoP4X8iHCaZvTON8W1v
-	 Bn2FEhF3DhGRsicXdAyL1utKOcIlqdAS9p6whvjd70G8Uq2ydbnX7TKJ/5gBmRgSws
-	 zKQDkv7C4Te6Gy5OwGljlMZC9WRtaLzZDMezKhde6cXv+Q3RY1pFnY8KNvkWGb5VXc
-	 36p5++5Yvx/N8gh84PDaCU1mpoWseG/ZtwlN6six1V0qx0XP9KireS0yhi1Y3gYOjL
-	 s9L1fu7u0K35w==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Thu, 10 Apr 2025 14:01:14 +0530
-Subject: [PATCH RESEND v2 3/3] phy: exynos5-usbdrd: add exynos7870 USBDRD
- support
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODEFwvmO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D99DC4CEDD;
+	Thu, 10 Apr 2025 08:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744274109;
+	bh=GV77dv96NUESm0ZK3z1NPQjDUbxPj//RoNnDUJ60y3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ODEFwvmO0XWJUiowp+QdB5m0avw/lAz4EXKOf+KqWG+SWlyuT/IO3LpyA4c5Hl5lD
+	 K0fs5dHYdJaQl16oQs2ljhYWaRUxBN7/2ZxJpsBFNP3Mx1+1mXe/stdDxgVi4dokQg
+	 Mnu038PYre/3DQ0Rs0noUHMDG3yFfAF1vi+42I9KJJAVCHw+dhtRNewLbVE6iMd5Fo
+	 XKXck7i3dT64kgSVeBIqluTzB8n3ssbBkNX1yRx1O2zCymUNIN1T+yTB1o0TH41mbX
+	 nlxrN+vJK5nDCUBDhTPD/34ZTLDFfsMFAjN2yp0Rq99422e4KLyaoxff1O9aALUbmG
+	 SM+BfPc0kc/4g==
+Date: Thu, 10 Apr 2025 10:35:06 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	kernel@collabora.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 14/15] drm/tests: hdmi: Add max TMDS rate fallback
+ tests for YUV420 mode
+Message-ID: <20250410-cyan-smilodon-of-courtesy-38766c@houat>
+References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
+ <20250326-hdmi-conn-yuv-v3-14-294d3ebbb4b2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-exynos7870-usbphy-v2-3-2eb005987455@disroot.org>
-References: <20250410-exynos7870-usbphy-v2-0-2eb005987455@disroot.org>
-In-Reply-To: <20250410-exynos7870-usbphy-v2-0-2eb005987455@disroot.org>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744273913; l=13245;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=1e7/OjUhEXwZPCD9GM2yZH+DvnWimfcmZt83n9VV4UE=;
- b=ktLxZqBolcYxXjVMI4aQyjn6YSy6vAowz+qgGz9d+Szse5pdS9vRXnWQ64nd4SoAB/37cgyBr
- AmwBNXuOKlnAeSC+Ie6J1xWsZIZbYzNVPnpa7/wQUrLELhCjziwXLXQ
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="tfr4puaibfh26idy"
+Content-Disposition: inline
+In-Reply-To: <20250326-hdmi-conn-yuv-v3-14-294d3ebbb4b2@collabora.com>
 
-Implement support for Exynos7870 USB DRD on top of the existing
-exynos5-usbdrd driver.
 
-Exynos7870 has a single USB 2.0 DRD PHY controller and no 3.0 PHYs. Thus,
-it only supports the UTMI interface.
+--tfr4puaibfh26idy
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 14/15] drm/tests: hdmi: Add max TMDS rate fallback
+ tests for YUV420 mode
+MIME-Version: 1.0
 
-Moreover, the PMU register offset for enabling the PHY controller is
-different for SoCs such as Exynos7870, where BIT(0) is for the 3.0 PHY and
-BIT(1) is for the 2.0 PHY. The phy_isol function for Exynos7870 uses the
-appropriate register offsets.
+On Wed, Mar 26, 2025 at 12:20:03PM +0200, Cristian Ciocaltea wrote:
+> Provide tests to verify drm_atomic_helper_connector_hdmi_check() helper
+> fallback behavior when using YUV420 output.
+>=20
+> Also rename drm_test_check_max_tmds_rate_{bpc|format}_fallback() to
+> better differentiate from the newly introduced *_yuv420() variants.
+>=20
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 152 +++++++++++++++=
++++++-
+>  drivers/gpu/drm/tests/drm_kunit_edid.h             | 110 +++++++++++++++
+>  2 files changed, 258 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers=
+/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> index 3fae7ccf65309a1d8a4acf12de961713b9163096..99bedb2d6f555b3b140256000=
+dfa7491d2a8f515 100644
+> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> @@ -1224,7 +1224,7 @@ static void drm_test_check_hdmi_funcs_reject_rate(s=
+truct kunit *test)
+>   * Then we will pick the latter, and the computed TMDS character rate
+>   * will be equal to 1.25 times the mode pixel clock.
+>   */
+> -static void drm_test_check_max_tmds_rate_bpc_fallback(struct kunit *test)
+> +static void drm_test_check_max_tmds_rate_bpc_fallback_rgb(struct kunit *=
+test)
+>  {
+>  	struct drm_atomic_helper_connector_hdmi_priv *priv;
+>  	struct drm_modeset_acquire_ctx ctx;
+> @@ -1279,6 +1279,75 @@ static void drm_test_check_max_tmds_rate_bpc_fallb=
+ack(struct kunit *test)
+>  	drm_modeset_acquire_fini(&ctx);
+>  }
+> =20
+> +/*
+> + * Test that if:
+> + * - We have an HDMI connector supporting both RGB and YUV420
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- drivers/phy/samsung/phy-exynos5-usbdrd.c    | 260 ++++++++++++++++++++++++++++
- include/linux/soc/samsung/exynos-regs-pmu.h |   2 +
- 2 files changed, 262 insertions(+)
+I assume the monitor also supports both?
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index 534ccea9379539a1250e192660d169e47a5b193e..634c4310c660a50e5d0869645506ab1b64fffd4b 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -39,10 +39,22 @@
- /* Exynos5: USB 3.0 DRD PHY registers */
- #define EXYNOS5_DRD_LINKSYSTEM			0x04
- #define LINKSYSTEM_XHCI_VERSION_CONTROL		BIT(27)
-+#define LINKSYSTEM_FORCE_VBUSVALID		BIT(8)
-+#define LINKSYSTEM_FORCE_BVALID			BIT(7)
- #define LINKSYSTEM_FLADJ			GENMASK(6, 1)
- 
- #define EXYNOS5_DRD_PHYUTMI			0x08
-+#define PHYUTMI_UTMI_SUSPEND_COM_N		BIT(12)
-+#define PHYUTMI_UTMI_L1_SUSPEND_COM_N		BIT(11)
-+#define PHYUTMI_VBUSVLDEXTSEL			BIT(10)
-+#define PHYUTMI_VBUSVLDEXT			BIT(9)
-+#define PHYUTMI_TXBITSTUFFENH			BIT(8)
-+#define PHYUTMI_TXBITSTUFFEN			BIT(7)
- #define PHYUTMI_OTGDISABLE			BIT(6)
-+#define PHYUTMI_IDPULLUP			BIT(5)
-+#define PHYUTMI_DRVVBUS				BIT(4)
-+#define PHYUTMI_DPPULLDOWN			BIT(3)
-+#define PHYUTMI_DMPULLDOWN			BIT(2)
- #define PHYUTMI_FORCESUSPEND			BIT(1)
- #define PHYUTMI_FORCESLEEP			BIT(0)
- 
-@@ -91,6 +103,16 @@
- #define PHYPARAM0_REF_USE_PAD			BIT(31)
- #define PHYPARAM0_REF_LOSLEVEL			GENMASK(30, 26)
- #define PHYPARAM0_REF_LOSLEVEL_VAL		0x9
-+#define PHYPARAM0_TXVREFTUNE			GENMASK(25, 22)
-+#define PHYPARAM0_TXRISETUNE			GENMASK(21, 20)
-+#define PHYPARAM0_TXRESTUNE			GENMASK(19, 18)
-+#define PHYPARAM0_TXPREEMPPULSETUNE		BIT(17)
-+#define PHYPARAM0_TXPREEMPAMPTUNE		GENMASK(16, 15)
-+#define PHYPARAM0_TXHSXVTUNE			GENMASK(14, 13)
-+#define PHYPARAM0_TXFSLSTUNE			GENMASK(12, 9)
-+#define PHYPARAM0_SQRXTUNE			GENMASK(8, 6)
-+#define PHYPARAM0_OTGTUNE			GENMASK(5, 3)
-+#define PHYPARAM0_COMPDISTUNE			GENMASK(2, 0)
- 
- #define EXYNOS5_DRD_PHYPARAM1			0x20
- #define PHYPARAM1_PCS_TXDEEMPH			GENMASK(4, 0)
-@@ -110,6 +132,12 @@
- #define EXYNOS5_DRD_PHYRESUME			0x34
- 
- #define EXYNOS5_DRD_LINKPORT			0x44
-+#define LINKPORT_HOST_U3_PORT_DISABLE		BIT(8)
-+#define LINKPORT_HOST_U2_PORT_DISABLE		BIT(7)
-+#define LINKPORT_HOST_PORT_OVCR_U3		BIT(5)
-+#define LINKPORT_HOST_PORT_OVCR_U2		BIT(4)
-+#define LINKPORT_HOST_PORT_OVCR_U3_SEL		BIT(3)
-+#define LINKPORT_HOST_PORT_OVCR_U2_SEL		BIT(2)
- 
- /* USB 3.0 DRD PHY SS Function Control Reg; accessed by CR_PORT */
- #define EXYNOS5_DRD_PHYSS_LOSLEVEL_OVRD_IN		(0x15)
-@@ -130,6 +158,24 @@
- #define LANE0_TX_DEBUG_RXDET_MEAS_TIME_62M5		(0x20 << 4)
- #define LANE0_TX_DEBUG_RXDET_MEAS_TIME_96M_100M		(0x40 << 4)
- 
-+/* Exynos7870: USB DRD PHY registers */
-+#define EXYNOS7870_DRD_PHYPCSVAL		0x3C
-+#define PHYPCSVAL_PCS_RX_LOS_MASK		GENMASK(9, 0)
-+
-+#define EXYNOS7870_DRD_PHYPARAM2		0x50
-+#define PHYPARAM2_TX_VBOOST_LVL		        GENMASK(6, 4)
-+#define PHYPARAM2_LOS_BIAS			GENMASK(2, 0)
-+
-+#define EXYNOS7870_DRD_HSPHYCTRL		0x54
-+#define HSPHYCTRL_PHYSWRSTALL			BIT(31)
-+#define HSPHYCTRL_SIDDQ				BIT(6)
-+#define HSPHYCTRL_PHYSWRST			BIT(0)
-+
-+#define EXYNOS7870_DRD_HSPHYPLLTUNE		0x70
-+#define HSPHYPLLTUNE_PLL_B_TUNE			BIT(6)
-+#define HSPHYPLLTUNE_PLL_I_TUNE			GENMASK(5, 4)
-+#define HSPHYPLLTUNE_PLL_P_TUNE			GENMASK(3, 0)
-+
- /* Exynos850: USB DRD PHY registers */
- #define EXYNOS850_DRD_LINKCTRL			0x04
- #define LINKCTRL_FORCE_RXELECIDLE		BIT(18)
-@@ -1078,6 +1124,172 @@ static const struct phy_ops exynos5_usbdrd_phy_ops = {
- 	.owner		= THIS_MODULE,
- };
- 
-+static void exynos7870_usbdrd_phy_isol(struct phy_usb_instance *inst,
-+				       bool isolate)
-+{
-+	unsigned int val;
-+
-+	if (!inst->reg_pmu)
-+		return;
-+
-+	val = isolate ? 0 : EXYNOS7870_USB2PHY_ENABLE;
-+
-+	regmap_update_bits(inst->reg_pmu, inst->pmu_offset,
-+			   EXYNOS7870_USB2PHY_ENABLE, val);
-+}
-+
-+static void exynos7870_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
-+{
-+	u32 reg;
-+
-+	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
-+	/* Use PADREFCLK as ref clock */
-+	reg &= ~PHYCLKRST_REFCLKSEL;
-+	reg |= FIELD_PREP_CONST(PHYCLKRST_REFCLKSEL,
-+				PHYCLKRST_REFCLKSEL_PAD_REFCLK);
-+	/* Select ref clock rate */
-+	reg &= ~PHYCLKRST_FSEL_UTMI;
-+	reg &= ~PHYCLKRST_FSEL_PIPE;
-+	reg |= FIELD_PREP(PHYCLKRST_FSEL_UTMI, phy_drd->extrefclk);
-+	/* Enable suspend and reset the port */
-+	reg |= PHYCLKRST_EN_UTMISUSPEND;
-+	reg |= PHYCLKRST_COMMONONN;
-+	reg |= PHYCLKRST_PORTRESET;
-+	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
-+	udelay(10);
-+
-+	/* Clear the port reset bit */
-+	reg &= ~PHYCLKRST_PORTRESET;
-+	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
-+
-+	/* Change PHY PLL tune value */
-+	reg = readl(phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYPLLTUNE);
-+	if (phy_drd->extrefclk == EXYNOS5_FSEL_24MHZ)
-+		reg |= HSPHYPLLTUNE_PLL_B_TUNE;
-+	else
-+		reg &= ~HSPHYPLLTUNE_PLL_B_TUNE;
-+	reg &= ~HSPHYPLLTUNE_PLL_P_TUNE;
-+	reg |= FIELD_PREP_CONST(HSPHYPLLTUNE_PLL_P_TUNE, 14);
-+	writel(reg, phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYPLLTUNE);
-+
-+	/* High-Speed PHY control */
-+	reg = readl(phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYCTRL);
-+	reg &= ~HSPHYCTRL_SIDDQ;
-+	reg &= ~HSPHYCTRL_PHYSWRST;
-+	reg &= ~HSPHYCTRL_PHYSWRSTALL;
-+	writel(reg, phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYCTRL);
-+	udelay(500);
-+
-+	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
-+	/*
-+	 * Setting the Frame length Adj value[6:1] to default 0x20
-+	 * See xHCI 1.0 spec, 5.2.4
-+	 */
-+	reg |= LINKSYSTEM_XHCI_VERSION_CONTROL;
-+	reg |= FIELD_PREP_CONST(LINKSYSTEM_FLADJ, 0x20);
-+	/* Set VBUSVALID signal as the VBUS pad is not used */
-+	reg |= LINKSYSTEM_FORCE_BVALID;
-+	reg |= LINKSYSTEM_FORCE_VBUSVALID;
-+	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
-+
-+	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
-+	/* Release force_sleep & force_suspend */
-+	reg &= ~PHYUTMI_FORCESLEEP;
-+	reg &= ~PHYUTMI_FORCESUSPEND;
-+	/* DP/DM pull down control */
-+	reg &= ~PHYUTMI_DMPULLDOWN;
-+	reg &= ~PHYUTMI_DPPULLDOWN;
-+	reg &= ~PHYUTMI_DRVVBUS;
-+	/* Set DP-pull up as the VBUS pad is not used */
-+	reg |= PHYUTMI_VBUSVLDEXTSEL;
-+	reg |= PHYUTMI_VBUSVLDEXT;
-+	/* Disable OTG block and VBUS valid comparator */
-+	reg |= PHYUTMI_OTGDISABLE;
-+	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
-+
-+	/* Configure OVC IO usage */
-+	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_LINKPORT);
-+	reg |= LINKPORT_HOST_PORT_OVCR_U3_SEL | LINKPORT_HOST_PORT_OVCR_U2_SEL;
-+	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_LINKPORT);
-+
-+	/* High-Speed PHY swrst */
-+	reg = readl(phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYCTRL);
-+	reg |= HSPHYCTRL_PHYSWRST;
-+	writel(reg, phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYCTRL);
-+	udelay(20);
-+
-+	/* Clear the PHY swrst bit */
-+	reg = readl(phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYCTRL);
-+	reg &= ~HSPHYCTRL_PHYSWRST;
-+	writel(reg, phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYCTRL);
-+
-+	if (phy_drd->drv_data->phy_tunes)
-+		exynos5_usbdrd_apply_phy_tunes(phy_drd,
-+					       PTS_UTMI_POSTINIT);
-+}
-+
-+static int exynos7870_usbdrd_phy_init(struct phy *phy)
-+{
-+	struct phy_usb_instance *inst = phy_get_drvdata(phy);
-+	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(phy_drd->drv_data->n_clks, phy_drd->clks);
-+	if (ret)
-+		return ret;
-+
-+	/* UTMI or PIPE3 specific init */
-+	inst->phy_cfg->phy_init(phy_drd);
-+
-+	clk_bulk_disable_unprepare(phy_drd->drv_data->n_clks, phy_drd->clks);
-+
-+	return 0;
-+}
-+
-+static int exynos7870_usbdrd_phy_exit(struct phy *phy)
-+{
-+	int ret;
-+	u32 reg;
-+	struct phy_usb_instance *inst = phy_get_drvdata(phy);
-+	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
-+
-+	ret = clk_bulk_prepare_enable(phy_drd->drv_data->n_clks, phy_drd->clks);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Disable the VBUS signal and the ID pull-up resistor.
-+	 * Enable force-suspend and force-sleep modes.
-+	 */
-+	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
-+	reg &= ~(PHYUTMI_DRVVBUS | PHYUTMI_VBUSVLDEXT | PHYUTMI_VBUSVLDEXTSEL);
-+	reg &= ~PHYUTMI_IDPULLUP;
-+	reg |= PHYUTMI_FORCESUSPEND | PHYUTMI_FORCESLEEP;
-+	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
-+
-+	/* Power down PHY analog blocks */
-+	reg = readl(phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYCTRL);
-+	reg |= HSPHYCTRL_SIDDQ;
-+	writel(reg, phy_drd->reg_phy + EXYNOS7870_DRD_HSPHYCTRL);
-+
-+	/* Clear VBUSVALID signal as the VBUS pad is not used */
-+	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
-+	reg &= ~(LINKSYSTEM_FORCE_BVALID | LINKSYSTEM_FORCE_VBUSVALID);
-+	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
-+
-+	clk_bulk_disable_unprepare(phy_drd->drv_data->n_clks, phy_drd->clks);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops exynos7870_usbdrd_phy_ops = {
-+	.init		= exynos7870_usbdrd_phy_init,
-+	.exit		= exynos7870_usbdrd_phy_exit,
-+	.power_on	= exynos5_usbdrd_phy_power_on,
-+	.power_off	= exynos5_usbdrd_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
- static void
- exynos5_usbdrd_usb_v3p1_pipe_override(struct exynos5_usbdrd_phy *phy_drd)
- {
-@@ -1504,6 +1716,14 @@ static const struct exynos5_usbdrd_phy_config phy_cfg_exynos5[] = {
- 	},
- };
- 
-+static const struct exynos5_usbdrd_phy_config phy_cfg_exynos7870[] = {
-+	{
-+		.id		= EXYNOS5_DRDPHY_UTMI,
-+		.phy_isol	= exynos7870_usbdrd_phy_isol,
-+		.phy_init	= exynos7870_usbdrd_utmi_init,
-+	},
-+};
-+
- static const struct exynos5_usbdrd_phy_config phy_cfg_exynos850[] = {
- 	{
- 		.id		= EXYNOS5_DRDPHY_UTMI,
-@@ -1512,6 +1732,30 @@ static const struct exynos5_usbdrd_phy_config phy_cfg_exynos850[] = {
- 	},
- };
- 
-+static
-+const struct exynos5_usbdrd_phy_tuning exynos7870_tunes_utmi_postinit[] = {
-+	PHY_TUNING_ENTRY_PHY(EXYNOS5_DRD_PHYPARAM0,
-+			     (PHYPARAM0_TXVREFTUNE | PHYPARAM0_TXRISETUNE |
-+			      PHYPARAM0_TXRESTUNE | PHYPARAM0_TXPREEMPPULSETUNE |
-+			      PHYPARAM0_TXPREEMPAMPTUNE | PHYPARAM0_TXHSXVTUNE |
-+			      PHYPARAM0_TXFSLSTUNE | PHYPARAM0_SQRXTUNE |
-+			      PHYPARAM0_OTGTUNE | PHYPARAM0_COMPDISTUNE),
-+			     (FIELD_PREP_CONST(PHYPARAM0_TXVREFTUNE, 14) |
-+			      FIELD_PREP_CONST(PHYPARAM0_TXRISETUNE, 1) |
-+			      FIELD_PREP_CONST(PHYPARAM0_TXRESTUNE, 3) |
-+			      FIELD_PREP_CONST(PHYPARAM0_TXPREEMPAMPTUNE, 0) |
-+			      FIELD_PREP_CONST(PHYPARAM0_TXHSXVTUNE, 0) |
-+			      FIELD_PREP_CONST(PHYPARAM0_TXFSLSTUNE, 3) |
-+			      FIELD_PREP_CONST(PHYPARAM0_SQRXTUNE, 6) |
-+			      FIELD_PREP_CONST(PHYPARAM0_OTGTUNE, 2) |
-+			      FIELD_PREP_CONST(PHYPARAM0_COMPDISTUNE, 3))),
-+	PHY_TUNING_ENTRY_LAST
-+};
-+
-+static const struct exynos5_usbdrd_phy_tuning *exynos7870_tunes[PTS_MAX] = {
-+	[PTS_UTMI_POSTINIT] = exynos7870_tunes_utmi_postinit,
-+};
-+
- static const char * const exynos5_clk_names[] = {
- 	"phy",
- };
-@@ -1578,6 +1822,19 @@ static const struct exynos5_usbdrd_phy_drvdata exynos7_usbdrd_phy = {
- 	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
- };
- 
-+static const struct exynos5_usbdrd_phy_drvdata exynos7870_usbdrd_phy = {
-+	.phy_cfg		= phy_cfg_exynos7870,
-+	.phy_tunes		= exynos7870_tunes,
-+	.phy_ops		= &exynos7870_usbdrd_phy_ops,
-+	.pmu_offset_usbdrd0_phy	= EXYNOS5_USBDRD_PHY_CONTROL,
-+	.clk_names		= exynos5_clk_names,
-+	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
-+	.core_clk_names		= exynos5_core_clk_names,
-+	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
-+	.regulator_names	= exynos5_regulator_names,
-+	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
-+};
-+
- static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
- 	.phy_cfg		= phy_cfg_exynos850,
- 	.phy_ops		= &exynos850_usbdrd_phy_ops,
-@@ -1784,6 +2041,9 @@ static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
- 	}, {
- 		.compatible = "samsung,exynos7-usbdrd-phy",
- 		.data = &exynos7_usbdrd_phy
-+	}, {
-+		.compatible = "samsung,exynos7870-usbdrd-phy",
-+		.data = &exynos7870_usbdrd_phy
- 	}, {
- 		.compatible = "samsung,exynos850-usbdrd-phy",
- 		.data = &exynos850_usbdrd_phy
-diff --git a/include/linux/soc/samsung/exynos-regs-pmu.h b/include/linux/soc/samsung/exynos-regs-pmu.h
-index ce1a3790d6fb0400021f5cc22394afedfb742152..cde299a85384a70d04dae49ee9a4e2daa88fbbf6 100644
---- a/include/linux/soc/samsung/exynos-regs-pmu.h
-+++ b/include/linux/soc/samsung/exynos-regs-pmu.h
-@@ -55,6 +55,8 @@
- #define EXYNOS4_MIPI_PHY_SRESETN		(1 << 1)
- #define EXYNOS4_MIPI_PHY_MRESETN		(1 << 2)
- #define EXYNOS4_MIPI_PHY_RESET_MASK		(3 << 1)
-+/* USB PHY enable bit, valid for Exynos7870 */
-+#define EXYNOS7870_USB2PHY_ENABLE		(1 << 1)
- 
- #define S5P_INFORM0				0x0800
- #define S5P_INFORM1				0x0804
+> + * - The chosen mode can be supported in YUV420 output format only
+> + * - The chosen mode has a TMDS character rate higher than the display
+> + *   supports in YUV420/12bpc
+> + * - The chosen mode has a TMDS character rate lower than the display
+> + *   supports in YUV420/10bpc.
+> + *
+> + * Then we will pick the latter, and the computed TMDS character rate
+> + * will be equal to 1.25 * 0.5 times the mode pixel clock.
+> + */
+> +static void drm_test_check_max_tmds_rate_bpc_fallback_yuv420(struct kuni=
+t *test)
+> +{
+> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
+> +	struct drm_modeset_acquire_ctx ctx;
+> +	struct drm_connector_state *conn_state;
+> +	struct drm_display_info *info;
+> +	struct drm_display_mode *yuv420_only_mode;
+> +	unsigned long long rate;
+> +	struct drm_connector *conn;
+> +	struct drm_device *drm;
+> +	struct drm_crtc *crtc;
+> +	int ret;
+> +
+> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid(test,
+> +				BIT(HDMI_COLORSPACE_RGB) |
+> +				BIT(HDMI_COLORSPACE_YUV420),
+> +				12,
+> +				test_edid_hdmi_1080p_rgb_yuv_4k_yuv420_dc_max_200mhz);
+> +	KUNIT_ASSERT_NOT_NULL(test, priv);
+> +
+> +	drm =3D &priv->drm;
+> +	crtc =3D priv->crtc;
+> +	conn =3D &priv->connector;
+> +	info =3D &conn->display_info;
+> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
+> +	KUNIT_ASSERT_GT(test, info->max_tmds_clock, 0);
+> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
+> +
+> +	yuv420_only_mode =3D drm_kunit_display_mode_from_cea_vic(test, drm, 95);
+> +	KUNIT_ASSERT_NOT_NULL(test, yuv420_only_mode);
+> +	KUNIT_ASSERT_TRUE(test, drm_mode_is_420_only(info, yuv420_only_mode));
+> +
+> +	rate =3D drm_hdmi_compute_mode_clock(yuv420_only_mode, 12, HDMI_COLORSP=
+ACE_YUV420);
+> +	KUNIT_ASSERT_GT(test, rate, info->max_tmds_clock * 1000);
+> +
+> +	rate =3D drm_hdmi_compute_mode_clock(yuv420_only_mode, 10, HDMI_COLORSP=
+ACE_YUV420);
+> +	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
+> +
+> +	drm_modeset_acquire_init(&ctx, 0);
+> +
+> +	ret =3D drm_kunit_helper_enable_crtc_connector(test, drm,
+> +						     crtc, conn,
+> +						     yuv420_only_mode,
+> +						     &ctx);
+> +	KUNIT_EXPECT_EQ(test, ret, 0);
 
--- 
-2.49.0
+We need to handle EDEADLK
 
+> +
+> +	conn_state =3D conn->state;
+> +	KUNIT_ASSERT_NOT_NULL(test, conn_state);
+> +
+> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_bpc, 10);
+> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_Y=
+UV420);
+> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.tmds_char_rate, yuv420_only_mode=
+->clock * 625);
+> +
+> +	drm_modeset_drop_locks(&ctx);
+> +	drm_modeset_acquire_fini(&ctx);
+> +}
+> +
+>  /*
+>   * Test that if:
+>   * - We have an HDMI connector supporting both RGB and YUV422 and up to
+> @@ -1292,7 +1361,7 @@ static void drm_test_check_max_tmds_rate_bpc_fallba=
+ck(struct kunit *test)
+>   * Then we will prefer to keep the RGB format with a lower bpc over
+>   * picking YUV422.
+>   */
+> -static void drm_test_check_max_tmds_rate_format_fallback(struct kunit *t=
+est)
+> +static void drm_test_check_max_tmds_rate_format_fallback_yuv422(struct k=
+unit *test)
+>  {
+>  	struct drm_atomic_helper_connector_hdmi_priv *priv;
+>  	struct drm_modeset_acquire_ctx ctx;
+> @@ -1351,6 +1420,79 @@ static void drm_test_check_max_tmds_rate_format_fa=
+llback(struct kunit *test)
+>  	drm_modeset_acquire_fini(&ctx);
+>  }
+> =20
+> +/*
+> + * Test that if:
+> + * - We have an HDMI connector supporting both RGB and YUV420 and up to
+> + *   12 bpc
+> + * - The chosen mode has a TMDS character rate higher than the display
+> + *   supports in RGB/10bpc but lower than the display supports in
+> + *   RGB/8bpc
+> + * - The chosen mode has a TMDS character rate lower than the display
+> + *   supports in YUV420/12bpc.
+> + *
+> + * Then we will prefer to keep the RGB format with a lower bpc over
+> + * picking YUV420.
+> + */
+> +static void drm_test_check_max_tmds_rate_format_fallback_yuv420(struct k=
+unit *test)
+
+Are you sure about the name here? It looks like we're not testing the
+YUV420 fallback at all?
+
+> +{
+> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
+> +	struct drm_modeset_acquire_ctx ctx;
+> +	struct drm_connector_state *conn_state;
+> +	struct drm_display_info *info;
+> +	struct drm_display_mode *preferred;
+> +	unsigned long long rate;
+> +	struct drm_connector *conn;
+> +	struct drm_device *drm;
+> +	struct drm_crtc *crtc;
+> +	int ret;
+> +
+> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid(test,
+> +				BIT(HDMI_COLORSPACE_RGB) |
+> +				BIT(HDMI_COLORSPACE_YUV420),
+> +				12,
+> +				test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz);
+> +	KUNIT_ASSERT_NOT_NULL(test, priv);
+> +
+> +	drm =3D &priv->drm;
+> +	crtc =3D priv->crtc;
+> +	conn =3D &priv->connector;
+> +	info =3D &conn->display_info;
+> +	KUNIT_ASSERT_TRUE(test, info->is_hdmi);
+> +	KUNIT_ASSERT_GT(test, info->max_tmds_clock, 0);
+> +	KUNIT_ASSERT_TRUE(test, conn->ycbcr_420_allowed);
+> +
+> +	preferred =3D find_preferred_mode(conn);
+> +	KUNIT_ASSERT_NOT_NULL(test, preferred);
+> +	KUNIT_ASSERT_FALSE(test, preferred->flags & DRM_MODE_FLAG_DBLCLK);
+> +	KUNIT_ASSERT_TRUE(test, drm_mode_is_420_also(info, preferred));
+> +
+> +	rate =3D drm_hdmi_compute_mode_clock(preferred, 8, HDMI_COLORSPACE_RGB);
+> +	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
+> +
+> +	rate =3D drm_hdmi_compute_mode_clock(preferred, 10, HDMI_COLORSPACE_RGB=
+);
+> +	KUNIT_ASSERT_GT(test, rate, info->max_tmds_clock * 1000);
+> +
+> +	rate =3D drm_hdmi_compute_mode_clock(preferred, 12, HDMI_COLORSPACE_YUV=
+420);
+> +	KUNIT_ASSERT_LT(test, rate, info->max_tmds_clock * 1000);
+> +
+> +	drm_modeset_acquire_init(&ctx, 0);
+> +
+> +	ret =3D drm_kunit_helper_enable_crtc_connector(test, drm,
+> +						     crtc, conn,
+> +						     preferred,
+> +						     &ctx);
+> +	KUNIT_EXPECT_EQ(test, ret, 0);
+> +
+> +	conn_state =3D conn->state;
+> +	KUNIT_ASSERT_NOT_NULL(test, conn_state);
+> +
+> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_bpc, 8);
+> +	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_R=
+GB);
+> +
+> +	drm_modeset_drop_locks(&ctx);
+> +	drm_modeset_acquire_fini(&ctx);
+> +}
+
+>  /*
+>   * Test that if a driver and screen supports RGB and YUV formats, and we
+>   * try to set the VIC 1 mode, we end up with 8bpc RGB even if we could
+> @@ -1738,8 +1880,10 @@ static struct kunit_case drm_atomic_helper_connect=
+or_hdmi_check_tests[] =3D {
+>  	KUNIT_CASE(drm_test_check_broadcast_rgb_crtc_mode_not_changed),
+>  	KUNIT_CASE(drm_test_check_disable_connector),
+>  	KUNIT_CASE(drm_test_check_hdmi_funcs_reject_rate),
+> -	KUNIT_CASE(drm_test_check_max_tmds_rate_bpc_fallback),
+> -	KUNIT_CASE(drm_test_check_max_tmds_rate_format_fallback),
+
+These name changes belong in a separate patch
+
+> +	KUNIT_CASE(drm_test_check_max_tmds_rate_bpc_fallback_rgb),
+> +	KUNIT_CASE(drm_test_check_max_tmds_rate_bpc_fallback_yuv420),
+> +	KUNIT_CASE(drm_test_check_max_tmds_rate_format_fallback_yuv422),
+> +	KUNIT_CASE(drm_test_check_max_tmds_rate_format_fallback_yuv420),
+
+We should also test what happens when the monitor or connector doesn't
+support YUV420, and we'd still need to fallback. In such a case, we
+should return an error.
+
+>  	KUNIT_CASE(drm_test_check_output_bpc_crtc_mode_changed),
+>  	KUNIT_CASE(drm_test_check_output_bpc_crtc_mode_not_changed),
+>  	KUNIT_CASE(drm_test_check_output_bpc_dvi),
+> diff --git a/drivers/gpu/drm/tests/drm_kunit_edid.h b/drivers/gpu/drm/tes=
+ts/drm_kunit_edid.h
+> index ff316e6114d65c96b1338cd83bc0d8d9e6e143e9..8e9086df20c690f34623d7858=
+c716032d77d0c26 100644
+> --- a/drivers/gpu/drm/tests/drm_kunit_edid.h
+> +++ b/drivers/gpu/drm/tests/drm_kunit_edid.h
+> @@ -695,4 +695,114 @@ static const unsigned char test_edid_hdmi_1080p_rgb=
+_yuv_4k_yuv420_dc_max_200mhz[
+>  	0x00, 0x00, 0x00, 0xca
+>  };
+> =20
+> +/*
+> + * edid-decode (hex):
+> + *
+> + * 00 ff ff ff ff ff ff 00 31 d8 34 00 00 00 00 00
+> + * ff 23 01 03 80 60 36 78 0f ee 91 a3 54 4c 99 26
+> + * 0f 50 54 20 00 00 01 01 01 01 01 01 01 01 01 01
+> + * 01 01 01 01 01 01 04 74 00 30 f2 70 5a 80 b0 58
+> + * 8a 00 40 84 63 00 00 1e 00 00 00 fc 00 54 65 73
+> + * 74 20 45 44 49 44 0a 20 20 20 00 00 00 fd 00 18
+> + * 55 18 5e 22 00 0a 20 20 20 20 20 20 00 00 00 10
+> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 ce
+> + *
+> + * 02 03 27 31 41 5f 6c 03 0c 00 10 00 78 44 20 00
+> + * 00 01 03 6d d8 5d c4 01 44 80 07 00 00 00 00 00
+> + * 00 e3 0f 01 00 e1 0e 00 00 00 00 00 00 00 00 00
+> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> + * 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 84
+> + *
+> + * ----------------
+> + *
+> + * Block 0, Base EDID:
+> + *   EDID Structure Version & Revision: 1.3
+> + *   Vendor & Product Identification:
+> + *     Manufacturer: LNX
+> + *     Model: 52
+> + *     Model year: 2025
+> + *   Basic Display Parameters & Features:
+> + *     Digital display
+> + *     Maximum image size: 96 cm x 54 cm
+> + *     Gamma: 2.20
+> + *     RGB color display
+> + *     Default (sRGB) color space is primary color space
+> + *     First detailed timing is the preferred timing
+> + *     Supports GTF timings within operating range
+> + *   Color Characteristics:
+> + *     Red  : 0.6396, 0.3300
+> + *     Green: 0.2998, 0.5996
+> + *     Blue : 0.1503, 0.0595
+> + *     White: 0.3125, 0.3291
+> + *   Established Timings I & II:
+> + *     DMT 0x04:   640x480    59.940476 Hz   4:3     31.469 kHz     25.1=
+75000 MHz
+> + *   Standard Timings: none
+> + *   Detailed Timing Descriptors:
+> + *     DTD 1:  3840x2160   30.000000 Hz  16:9     67.500 kHz    297.0000=
+00 MHz (1600 mm x 900 mm)
+> + *                  Hfront  176 Hsync  88 Hback  296 Hpol P
+> + *                  Vfront    8 Vsync  10 Vback   72 Vpol P
+> + *     Display Product Name: 'Test EDID'
+> + *     Display Range Limits:
+> + *       Monitor ranges (GTF): 24-85 Hz V, 24-94 kHz H, max dotclock 340=
+ MHz
+> + *     Dummy Descriptor:
+> + *   Extension blocks: 1
+> + * Checksum: 0xce
+> + *
+> + * ----------------
+> + *
+> + * Block 1, CTA-861 Extension Block:
+> + *   Revision: 3
+> + *   Supports YCbCr 4:4:4
+> + *   Supports YCbCr 4:2:2
+> + *   Native detailed modes: 1
+> + *   Video Data Block:
+> + *     VIC  95:  3840x2160   30.000000 Hz  16:9     67.500 kHz    297.00=
+0000 MHz
+> + *   Vendor-Specific Data Block (HDMI), OUI 00-0C-03:
+> + *     Source physical address: 1.0.0.0
+> + *     DC_48bit
+> + *     DC_36bit
+> + *     DC_30bit
+> + *     DC_Y444
+> + *     Maximum TMDS clock: 340 MHz
+> + *     Extended HDMI video details:
+> + *   Vendor-Specific Data Block (HDMI Forum), OUI C4-5D-D8:
+> + *     Version: 1
+> + *     Maximum TMDS Character Rate: 340 MHz
+> + *     SCDC Present
+> + *     Supports 16-bits/component Deep Color 4:2:0 Pixel Encoding
+> + *     Supports 12-bits/component Deep Color 4:2:0 Pixel Encoding
+> + *     Supports 10-bits/component Deep Color 4:2:0 Pixel Encoding
+> + *   YCbCr 4:2:0 Capability Map Data Block:
+> + *     VIC  95:  3840x2160   30.000000 Hz  16:9     67.500 kHz    297.00=
+0000 MHz
+> + *   YCbCr 4:2:0 Video Data Block:
+> + * Checksum: 0x84
+> + */
+> +static const unsigned char test_edid_hdmi_4k_rgb_yuv420_dc_max_340mhz[] =
+=3D {
+> +	0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x31, 0xd8, 0x34, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0xff, 0x23, 0x01, 0x03, 0x80, 0x60, 0x36, 0x78,
+> +	0x0f, 0xee, 0x91, 0xa3, 0x54, 0x4c, 0x99, 0x26, 0x0f, 0x50, 0x54, 0x20,
+> +	0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+> +	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x04, 0x74, 0x00, 0x30, 0xf2, 0x70,
+> +	0x5a, 0x80, 0xb0, 0x58, 0x8a, 0x00, 0x40, 0x84, 0x63, 0x00, 0x00, 0x1e,
+> +	0x00, 0x00, 0x00, 0xfc, 0x00, 0x54, 0x65, 0x73, 0x74, 0x20, 0x45, 0x44,
+> +	0x49, 0x44, 0x0a, 0x20, 0x20, 0x20, 0x00, 0x00, 0x00, 0xfd, 0x00, 0x18,
+> +	0x55, 0x18, 0x5e, 0x22, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+> +	0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xce, 0x02, 0x03, 0x27, 0x31,
+> +	0x41, 0x5f, 0x6c, 0x03, 0x0c, 0x00, 0x10, 0x00, 0x78, 0x44, 0x20, 0x00,
+> +	0x00, 0x01, 0x03, 0x6d, 0xd8, 0x5d, 0xc4, 0x01, 0x44, 0x80, 0x07, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0xe3, 0x0f, 0x01, 0x00, 0xe1, 0x0e, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x84
+> +};
+
+This should be a separate patch as well, but most importantly it's
+pretty hard to know the difference with the one you introduced in a
+previous patch. We should document it better than just with edid-decode.
+Also, how did you generate it?
+
+Maxime
+
+--tfr4puaibfh26idy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/eCugAKCRDj7w1vZxhR
+xVZFAQCeRfZ9Q5P/p7t/O22wnbBJKGVrGzpWcbw/XHz7FJm4ugEA31c4K8s9gk8R
+V3WtcCG4t2OKAkCbaDN4xTq6mZ/UPgg=
+=JB7r
+-----END PGP SIGNATURE-----
+
+--tfr4puaibfh26idy--
