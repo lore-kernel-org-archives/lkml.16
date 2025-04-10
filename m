@@ -1,110 +1,105 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0AE285402;
-	Thu, 10 Apr 2025 14:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D29928A404;
+	Thu, 10 Apr 2025 14:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294341; cv=none; b=KyXg0FguiRuQPM4R7YWMDJuNrePOaMEA1zHEMS2gC6ni1gPmM4Nx3bG5uHit0OHkhgpksXI/I7AHogqVKokv6PYVWS0dxnHNbRej2mO1vdd3nfgswkDemPo4+DPAdi2XT1I8ZcEkw80WjkmVQBTBdiMeGntSBeOUjVnS8IiJNF8=
+	t=1744294359; cv=none; b=jfjwpLwc4ZoJ1dtRLV2XciAhWJ64vEuBfbPUcONaO2arxFv3ExWIayq0eMnda345/7zlDYgiusG9kj5ceua4zTRlL2bSchfVgWdtHHHM24fwjofbwNo+oRTOEHdH2Y9TIoROsAVWk/Uqe6Cq3sevWnNb2nUxwSU71tl7cLnmxS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294341; c=relaxed/simple;
-	bh=cyEcl36ZMQ+7BYVhQwxTXtcjxL+uQlChfsTdqwYxBUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D5+s+YdMsi5azk7lHyjdYFmFAeDdtWfky25NvpbyDwokP6kqx3IiwqXV965dm4f3b1Zn5QExs2GglAOCIRpwPvvjFNJu8gUIkVmd3V3eAtwertkx2JmDWpZO5/5/5AHvb1xQ/j2O7YsagB9NKJxm7Xd0/Sh3aOh3Y/2lD9GJpaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=kFYSLZGn; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kFYSLZGn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=/62dN21h79tYKEiUugMiakrgOMqBRCXopLSb/2cAcC0=; b=kFYSLZGniClDHL+em4RSrwPVXr
-	uFmmmKhYKYMK3nTEiQRcB49K0Rwq7gwfndYsV/056SSLcXX2jotRAL3IZBwbFoI/5wwIzVjrNmnUx
-	NASlpDZu6M1qnI9C6VvfkMWlfurFMsIUgP5c+J9cYB7w8U1KNuTZT7j8Z3znkF+nICoA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2sdV-008gne-MY; Thu, 10 Apr 2025 16:12:09 +0200
-Date: Thu, 10 Apr 2025 16:12:09 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] net: add debugfs files for showing netns refcount
- tracking info
-Message-ID: <f4722246-5694-4b1a-9b1b-d4352fa54ee7@lunn.ch>
-References: <20250408-netns-debugfs-v2-0-ca267f51461e@kernel.org>
- <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
- <1e717326-8551-419e-b185-5cfb20573b4f@lunn.ch>
- <91d6d3c60ef5d4ed90418f8a06228767be8a5b1b.camel@kernel.org>
- <ff2b7cfb7657a185469747d930b834dbdfdf6eac.camel@kernel.org>
+	s=arc-20240116; t=1744294359; c=relaxed/simple;
+	bh=psl50KAtRcLQOaQaQ4SrC3pogar+YmTVfN6Q7lie2I4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rwf/3JYiDI/XOpletHpjioLMX3Ho3Nze+9e+UmWD3/LPwtunkX3mJRSYXFBNk+87gDMHZI+N6GhWyAyTmfzhYs15N8nb3Ii1a3H/uQFQpMdA6+MTstzEY6H91Hc1i8VOHC2tv8Bnw8iLJRjHt+7UxU57syeuX7SV1tykgUIb9bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB321106F;
+	Thu, 10 Apr 2025 07:12:35 -0700 (PDT)
+Received: from usa.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EC74B3F59E;
+	Thu, 10 Apr 2025 07:12:27 -0700 (PDT)
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	zhouyanjie@wanyeetech.com,
+	Conor Dooley <conor@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-rockchip@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 03/19] arm64: dts: morello: Fix-up cache nodes
+Date: Thu, 10 Apr 2025 15:12:24 +0100
+Message-Id: <174429419461.849581.1546326667716816793.b4-ty@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250403-dt-cpu-schema-v1-3-076be7171a85@kernel.org>
+References: <20250403-dt-cpu-schema-v1-3-076be7171a85@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff2b7cfb7657a185469747d930b834dbdfdf6eac.camel@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-> Oh, ok. I guess you mean these names?
+On Thu, 03 Apr 2025 21:59:21 -0500, Rob Herring (Arm) wrote:
+> The Arm cpu.yaml schema fails to restrict allowed properties in 'cpu'
+> nodes. The result, not surprisely, is a number of additional properties
+> and errors in .dts files. This series resolves those issues.
 > 
->         ref_tracker_dir_init(&net->refcnt_tracker, 128, "net refcnt");
->         ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net notrefcnt");
+> There's still more properties in arm32 DTS files which I have not
+> documented. Mostly yet more supply names and "fsl,soc-operating-points".
+> What's a few more warnings on the 10000s of warnings...
 > 
-> Two problems there:
-> 
-> 1/ they have an embedded space in the name which is just painful. Maybe we can replace those with underscores?
-> 2/ they aren't named in a per-net namespace way
+> [...]
 
-So the first question is, are the names ABI? Are they exposed to
-userspace anywhere? Can we change them?
+Applied to sudeep.holla/linux (for-next/juno/fixes), thanks!
 
-If we can change them, space to _ is a simple change. Another option
-is what hwmon does, hwmon_sanitize_name() which turns a name into
-something which is legal in a filesystem. If all of this code can be
-pushed into the core tracker, so all trackers appear in debugfs, such
-a sanitiser is the way i would go.
+[03/19] arm64: dts: morello: Fix-up cache nodes
+        https://git.kernel.org/sudeep.holla/c/0c562281199f
+--
+Regards,
+Sudeep
 
-And if we can change the name, putting the netns into the name would
-also work. There is then no need for the directory, if they have
-unique names.
-
-Looking at other users of ref_tracker_dir_init():
-
-~/linux$ grep -r ref_tracker_dir_init
-lib/test_ref_tracker.c:	ref_tracker_dir_init(&ref_dir, 100, "selftest");
-
-Can only be loaded once, so is unique.
-
-drivers/gpu/drm/i915/intel_wakeref.c:	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, name);
-
-Looks like it is unique for one GPU, but if you have multiple GPUs
-they are not unique.
-
-drivers/gpu/drm/i915/intel_runtime_pm.c:	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT, dev_name(rpm->kdev));
-
-At a guess kdev is unique.
-
-drivers/gpu/drm/display/drm_dp_tunnel.c:	ref_tracker_dir_init(&mgr->ref_tracker, 16, "dptun");
-
-Probably not unique.
-
-net/core/net_namespace.c:	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net refcnt");
-net/core/net_namespace.c:	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net notrefcnt");
-
-Not unique across name spaces, but ...
-
-So could the tracker core check if the debugfs file already exists,
-emit a warning if it does, and keep going? I think debugfs_lookup()
-will tell you if a file already exists, or debugfs_create_file() will
-return -EEXIST, which is probably safer, no race condition.
-
-	Andrew
