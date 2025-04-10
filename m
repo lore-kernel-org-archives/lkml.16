@@ -1,240 +1,174 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E777128A416
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE9421324E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293333; cv=none; b=BwlSnsHGzfWNT5jeODV2k1DlQrPcmJY5CsppuhSrJ6ipH59sNbi0IGxGN17y4h0DL3JVKXANyDWSJWTVUmyExX3Rc7aqutyvugpgU4pHT3vm+ppJPMY3Z88+Ji3kwqPRxdJzIT/4VsqKpn8TwWdhcJM3ukNV6v48M0oC/jTAMdM=
+	t=1744293370; cv=none; b=M/7lC2UtA5u1AZVTYHGv1jHDEWwPfUJJ+vcNa53wdRJHR35TJZgtwyJ1MGP6s1V549MK+6NJPJRFN2bz0KcicWxB1si6G8TZaGG4tddUHcFAq89KSvNF9iieU5AQOdmr620xCrvTuphqliy4bAMbwx6NLTWGJXLSD/7IjvWN8xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293333; c=relaxed/simple;
-	bh=VOpVt+41yrli7ULy6Cv44zxlFXhK+7x2i4JhnJeRJ00=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qnWWoefdqKt2RU5macbzlbAJCVXIz6QTsaczA1AuwdrlmU/hFSXOONxh/X1xwya2nNnEhK1JY5iG5q6b42XEsYH92FSHOsepvYbYJG7VUc6jomjxm+UKK9t7zMOVzM/v7K7RyHmzJYMouCdHA4CqJSLvNIlD7VSJq2qVVnt6YmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h8IOpwpq; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1744293370; c=relaxed/simple;
+	bh=buq4GocT9v50gY04pTIphqlX6CgAP6sdAyF9TXmLaCY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WlT478Ubegk5Mj2TuuQnd2EQS2qyuFgmxVsFeQpBKh4Xl/iPq7V/iKcgWkT02Lc9sy+s3tG4ERBDypifFPiv8Lpg40DUQBiR+nSBabNHFNyzNX4Th6Oj98uj/Dn0Ndxg+bckbBkPSASIswIR069BtexDEWw4RlR7MJRVIpXfmPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Clu9++ix; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h8IOpwpq"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf327e9a2so7782605e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:55:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744293329; x=1744898129; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QDFIq8Rc3inYMDqZcvdxiRvCnaWwkWGcb7xaJWd+b3Y=;
-        b=h8IOpwpqE56cXjot7MTRc8AnOdvgoZ2H8MOwQLFpKANonKIAoSdeO+cnBWwpYoPhWz
-         RQt5hQiR1AunUnhuJtReteDZ2VCYmhy+qTWxFzcVJ94J4e3o2cpPWD9jJEW6wv2OeNOl
-         dHgBKZe2eQmarcBzL8KVQDd13biIvnFL8IVGdVwjyq239q2u3RYZqDo+rmpSqoy6WJcQ
-         TOqJ/kK/BYIDgsCXBU/wHfOnalQU6WNtmpuhK+2lpYHxzT3FHKCBqFOLSZefaLU0eXks
-         I+6/Yb0RdvqDHXPK697CNfp5NyzC6okc5+skwayliZXfmAaYxsBlLGpuTGSgVRe1ny3P
-         6WLw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Clu9++ix"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744293367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Y6AsNBwkam7Rs89sYQFcRmB96tHIPh3DZfLWLS0l5g8=;
+	b=Clu9++ix6PN7e9BMDWaObzT6j9angLARJQ9wVOYDh97dXF2d8oDXvGfQXCbGRWNdgVCeGu
+	L7r9s5+2ImLSBDVda1FI2ZtLgWGl39TfXq7xF9NfGWwMZ/oxy/gS31Vi+5xDKIKje0+jVg
+	uxK9R7UFwaL5Kyu7jeRQXblEGD0pSw0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-60-x04a3esbP9SCbCKel6TPgw-1; Thu, 10 Apr 2025 09:56:06 -0400
+X-MC-Unique: x04a3esbP9SCbCKel6TPgw-1
+X-Mimecast-MFC-AGG-ID: x04a3esbP9SCbCKel6TPgw_1744293365
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3912fe32a30so365759f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:56:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744293329; x=1744898129;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QDFIq8Rc3inYMDqZcvdxiRvCnaWwkWGcb7xaJWd+b3Y=;
-        b=QsIGKeEvWaqGdqhdS4vfwl5suNAsJqO+X4GUppZAEgKOQtqTtBeG+3G4kfyXGbixcs
-         2CwTIPn6RAm1f8ZQAsataMsUkCr4xJI3oF8g6ZHvKq4Hqo4GBg+i6JIdLIySmIhMU3OF
-         9SwRuh3K6ZN2ezxDwYqL5Ofkw2aTWNQhN4lcGvhKxZt0hJAemKi21QcRD4BOIVEejEp5
-         BLyrqSl7DDuvmyi9faFXjrQSIRRIp0H5JOOEpD1D7ZDfL20ODRXSAte95nv5fRIaFPjC
-         +TACiXxnkOBFDHif/0weqCf8ebAlzGdbsZXBvUjRwWmjHLcQ5X9vF8QaWAsWdo7IPLzQ
-         9HOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUimTjJvQmoCN2Ye9XhaY9Q7t8uaTDqOAapo+Qb1ZPh7fKtcLS1XZbyjlGL06b5UNzx5VK03TxaoO9ZpBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8dxDJlYegK1qk7nERqI6QWeewEDSFY4KAewvFswwPhXSA4Sqf
-	FW818SK6sqkD+Mmgd2sjTW5xJVZVC8oQNW/WK0KuBXT9xWmeo+BA53oHPfHfRuU1OjpgoAh1Z+2
-	Hs/U0gYX5Ww==
-X-Google-Smtp-Source: AGHT+IF36wK+RgxWudcaKSM179JMydTdTYiZ6lfF38iCsfbydhNnVkj9Jh+6mJ8bFYUC1D8C/FVuSmbhjqfnsA==
-X-Received: from wmbh17.prod.google.com ([2002:a05:600c:a111:b0:43d:1c11:4e5d])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1c8e:b0:43c:f64c:44a4 with SMTP id 5b1f17b1804b1-43f2d7b4ed6mr22820475e9.8.1744293329091;
- Thu, 10 Apr 2025 06:55:29 -0700 (PDT)
-Date: Thu, 10 Apr 2025 13:55:27 +0000
-In-Reply-To: <20250407180154.63348-2-hannes@cmpxchg.org>
+        d=1e100.net; s=20230601; t=1744293365; x=1744898165;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y6AsNBwkam7Rs89sYQFcRmB96tHIPh3DZfLWLS0l5g8=;
+        b=ENsRGatXV+mAzMg43dOPCopUjEXbINRnfsz5WLbQXz7NJYc4yVwHVE/MMQBGX80g6M
+         8qTjZMrvuMdQQRWgrzsT3gdeOd98nKXvEkqUPVI8fypDAXl5HuyCntoBhjYrsT41DRRC
+         KdD3DjHm1VsWbpFVgcQSlrNAo4TC4KOKcFj3YR89zHRHyhrRd92yzLpXLpsajI/8hokq
+         22h4PCb7VfFFKkdAz1Y+ahRNQ6L8DVCrE9yO/FyBWJL4omQM63X5R1lIhgL6c/JkkU+4
+         twwqSlS278HCXs8o7Fbc8Ust3ctVXobD5JMEZ1GC/EEgkA+DHbnXC2LiVz5t4ERk95LO
+         t+JQ==
+X-Gm-Message-State: AOJu0Yza7b1ZthsTH17zejJhfPX3PZkS+ZqWxq/CbAGE0JJWMT0XHx3M
+	nzzeQFbTb5mGWvl3QdlOr1qSUe79Pl3k5ekWDaMn6HzHLBNfGRbXRlqk549bqqrm/JbPbg7GwO7
+	bkh6ZBPlWPcz516oQjBgUi1TpI94COwBo0wf0WoUPcrHdhLsd/MfPAAwOjP97rA==
+X-Gm-Gg: ASbGncvj547gLkc5bITwSySENUI8RjnuqwPXwQnqQXFOJOBGG+bjz5Wck2rz0LF3y/i
+	k6GtyzAe2fYuUpCOV2vGg63RtGkDbgB9wnJOyhow3R4O1xulWFyMKOL3QLE58ZvS+lalXXcDz6v
+	L6HBziufMs1ZlJ4R1UYw5/+RAJJ1Ez5+mjTiQf0Jjab2CD0ZtJ1hAEpkV4ktzg5DGoFXuKuKeXR
+	p87KdVZ4k3phdAfeqiZ5n0/iWxcVKy1BX8pV87eD6/nGvOJCjM5sNm12avPTzYdUrr9f/noEx28
+	fLcsu4V4FInRKO/jzVlxtX5VjEptxF04C4TMSQ==
+X-Received: by 2002:a5d:64e6:0:b0:39c:cc7:3c5f with SMTP id ffacd0b85a97d-39d8f4dd012mr2438306f8f.45.1744293365437;
+        Thu, 10 Apr 2025 06:56:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFa9U9YbrHYbtZLOuihXbzRt3CqB8r0uJ7jXJmmJ975NQnZFvT+hClpDLESHtrysiCs+B2i+g==
+X-Received: by 2002:a5d:64e6:0:b0:39c:cc7:3c5f with SMTP id ffacd0b85a97d-39d8f4dd012mr2438287f8f.45.1744293365089;
+        Thu, 10 Apr 2025 06:56:05 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89362cecsm4916297f8f.11.2025.04.10.06.56.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 06:56:04 -0700 (PDT)
+Message-ID: <4fdc6582c828fbcd8c6ad202ed7ab560134d1fc3.camel@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner
+	 <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
+Date: Thu, 10 Apr 2025 15:56:02 +0200
+In-Reply-To: <Z_fHLM4nWP5XVGBU@localhost.localdomain>
+References: <20250410065446.57304-2-gmonaco@redhat.com>
+	 <87ecy0tob1.ffs@tglx>
+	 <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
+	 <Z_fBq2AQjzyg8m5w@localhost.localdomain> <87wmbsrwca.ffs@tglx>
+	 <Z_fHLM4nWP5XVGBU@localhost.localdomain>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250407180154.63348-1-hannes@cmpxchg.org> <20250407180154.63348-2-hannes@cmpxchg.org>
-X-Mailer: aerc 0.20.1-64-g7cb8e0e7ce24
-Message-ID: <D930DO9PAJR8.SOYZSGRG5Y2O@google.com>
-Subject: Re: [PATCH 2/2] mm: page_alloc: tighten up find_suitable_fallback()
-From: Brendan Jackman <jackmanb@google.com>
-To: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Brendan Jackman <jackmanb@google.com>, 
-	Mel Gorman <mgorman@techsingularity.net>, Carlos Song <carlos.song@nxp.com>, <linux-mm@kvack.org>, 
-	<linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
 
-On Mon Apr 7, 2025 at 6:01 PM UTC, Johannes Weiner wrote:
-> find_suitable_fallback() is not as efficient as it could be, and
-> somewhat difficult to follow.
->
-> 1. should_try_claim_block() is a loop invariant. There is no point in
->    checking fallback areas if the caller is interested in claimable
->    blocks but the order and the migratetype don't allow for that.
->
-> 2. __rmqueue_steal() doesn't care about claimability, so it shouldn't
->    have to run those tests.
->
-> Different callers want different things from this helper:
->
-> 1. __compact_finished() scans orders up until it finds a claimable block
-> 2. __rmqueue_claim() scans orders down as long as blocks are claimable
-> 3. __rmqueue_steal() doesn't care about claimability at all
->
-> Move should_try_claim_block() out of the loop. Only test it for the
-> two callers who care in the first place. Distinguish "no blocks" from
-> "order + mt are not claimable" in the return value; __rmqueue_claim()
-> can stop once order becomes unclaimable, __compact_finished() can keep
-> advancing until order becomes claimable.
 
-Nice!
 
-My initial thought was: now we can drop the boolean arg and just have
-the callers who care about claimability just call
-should_try_claim_block() themselves. Then we can also get rid of the
-magic -2 return value and find_suitable_fallback() becomes a pretty
-obvious function.
+On Thu, 2025-04-10 at 15:27 +0200, Frederic Weisbecker wrote:
+> Le Thu, Apr 10, 2025 at 03:15:49PM +0200, Thomas Gleixner a =C3=A9crit :
+> > On Thu, Apr 10 2025 at 15:03, Frederic Weisbecker wrote:
+> > > Le Thu, Apr 10, 2025 at 12:38:25PM +0200, Gabriele Monaco a =C3=A9cri=
+t
+> > > :
+> > > Speaking of, those are two different issues here:
+> > >=20
+> > > * nohz_full CPUs are handled just like idle CPUs. Once the tick
+> > > is stopped,
+> > > =C2=A0 the global timers are handled by other CPUs (housekeeping).
+> > > There is always
+> > > =C2=A0 one housekeeping CPU that never goes idle.
+> > > =C2=A0 One subtle thing though: if the nohz_full CPU fires a tick,
+> > > because there
+> > > =C2=A0 is a local timer to be handled for example, it will also
+> > > possibly handle
+> > > =C2=A0 some global timers along the way. If it happens to be a
+> > > problem, it should
+> > > =C2=A0 be easy to resolve.
+> > >=20
+> > > * Domain isolated CPUs are treated just like other CPUs. But
+> > > there is not
+> > > =C2=A0 always a housekeeping CPU around. And no guarantee that there
+> > > is always
+> > > =C2=A0 a non-idle CPU to take care of global timers.
+> >=20
+> > That's an insianity.
+>=20
+> It works, but it doesn't make much sense arguably.
 
-I think it's a win on balance but it does make more verbosity at the
-callsites, and an extra interface between page_alloc.c and compaction.c
-So maybe it's a wash, maybe you already considered it and decided you
-don't prefer it.
+I wonder if we should really worry about this scenario though.
 
-So, LGTM either way, I will attempt to attach the optional additional
-patch for your perusal, hopefully without molesting the mail encoding
-this time...
+>=20
+> >=20
+> > > > Thinking about it now, since global timers /can/ start on
+> > > > isolated
+> > > > cores, that makes them quite different from offline ones and
+> > > > probably
+> > > > considering them the same is just not the right thing to do..
+> > > >=20
+> > > > I'm going to have a deeper thought about this whole approach,
+> > > > perhaps
+> > > > something simpler just preventing migration in that one
+> > > > direction would
+> > > > suffice.
+> > >=20
+> > > I think we can use your solution, which involves isolating the
+> > > CPU from tmigr
+> > > hierarchy. And also always queue global timers to non-isolated
+> > > targets.
+> >=20
+> > Why do we have to inflict extra complexity into the timer enqueue
+> > path
+> > instead of preventing the migration to, but not the migration from
+> > isolated CPUs?
+>=20
+> But how do we handle global timers that have been initialized and
+> queued from
+> isolated CPUs?
 
-Reviewed-by: Brendan Jackman <jackmanb@google.com>
+I need to sketch a bit more the solution but the rough idea is:
+1. isolated CPUs don't pull remote timers
+2. isolated CPUs ignore their global timers and let others pull them
+  perhaps with some more logic to avoid it expiring
 
----
 
-From 25f77012674db95354fb2496bc89954b8f8b4e6c Mon Sep 17 00:00:00 2001
-From: Brendan Jackman <jackmanb@google.com>
-Date: Thu, 10 Apr 2025 13:22:58 +0000
-Subject: [PATCH] mm: page_alloc: Split up find_suitable_fallback()
+Wouldn't that be sufficient?
 
-Now that it's been simplified, it's clear that the bool arg isn't
-needed, callers can just use should_try_claim_block(). Once that logic
-is stripped out, the function becomes very obvious and can get a more
-straightforward name and comment.
+Also, I would definitely do 1. for any kind of isolation, but I'm not
+sure about 2.
+Strictly speaking domain isolated cores don't claim to be free of
+kernel noise, even if they initiate it (but nohz_full ones do).
+What would be the expectation there?
 
-Signed-off-by: Brendan Jackman <jackmanb@google.com>
----
- mm/compaction.c |  3 ++-
- mm/internal.h   |  5 +++--
- mm/page_alloc.c | 33 +++++++++++++--------------------
- 3 files changed, 18 insertions(+), 23 deletions(-)
-
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 39a4d178dff3c..d735c22e71029 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2363,7 +2363,8 @@ static enum compact_result __compact_finished(struct compact_control *cc)
- 		 * Job done if allocation would steal freepages from
- 		 * other migratetype buddy lists.
- 		 */
--		if (find_suitable_fallback(area, order, migratetype, true) >= 0)
-+		if (should_try_claim_block(order, migratetype) &&
-+		    find_fallback_migratetype(area, order, migratetype) >= 0)
- 			/*
- 			 * Movable pages are OK in any pageblock. If we are
- 			 * stealing for a non-movable allocation, make sure
-diff --git a/mm/internal.h b/mm/internal.h
-index 4e0ea83aaf1c8..93a8be54924f4 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -914,8 +914,9 @@ static inline void init_cma_pageblock(struct page *page)
- #endif
- 
- 
--int find_suitable_fallback(struct free_area *area, unsigned int order,
--			   int migratetype, bool claimable);
-+int find_fallback_migratetype(struct free_area *area, unsigned int order,
-+			   int migratetype);
-+bool should_try_claim_block(unsigned int order, int start_mt);
- 
- static inline bool free_area_empty(struct free_area *area, int migratetype)
- {
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 0a1f28bf5255c..604cad16e1b5a 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2034,7 +2034,7 @@ static inline bool boost_watermark(struct zone *zone)
-  * try to claim an entire block to satisfy further allocations, instead of
-  * polluting multiple pageblocks?
-  */
--static bool should_try_claim_block(unsigned int order, int start_mt)
-+bool should_try_claim_block(unsigned int order, int start_mt)
- {
- 	/*
- 	 * Leaving this order check is intended, although there is
-@@ -2076,20 +2076,12 @@ static bool should_try_claim_block(unsigned int order, int start_mt)
- 	return false;
- }
- 
--/*
-- * Check whether there is a suitable fallback freepage with requested order.
-- * If claimable is true, this function returns fallback_mt only if
-- * we would do this whole-block claiming. This would help to reduce
-- * fragmentation due to mixed migratetype pages in one pageblock.
-- */
--int find_suitable_fallback(struct free_area *area, unsigned int order,
--			   int migratetype, bool claimable)
-+/* Find a fallback migratetype with at least one page of the given order. */
-+int find_fallback_migratetype(struct free_area *area, unsigned int order,
-+			      int migratetype)
- {
- 	int i;
- 
--	if (claimable && !should_try_claim_block(order, migratetype))
--		return -2;
--
- 	if (area->nr_free == 0)
- 		return -1;
- 
-@@ -2209,18 +2201,19 @@ __rmqueue_claim(struct zone *zone, int order, int start_migratetype,
- 	 */
- 	for (current_order = MAX_PAGE_ORDER; current_order >= min_order;
- 				--current_order) {
-+
-+		/* Advanced into orders too low to claim, abort */
-+		if (!should_try_claim_block(order, start_migratetype))
-+			break;
-+
- 		area = &(zone->free_area[current_order]);
--		fallback_mt = find_suitable_fallback(area, current_order,
--						     start_migratetype, true);
-+		fallback_mt = find_fallback_migratetype(area, current_order,
-+						     start_migratetype);
- 
- 		/* No block in that order */
- 		if (fallback_mt == -1)
- 			continue;
- 
--		/* Advanced into orders too low to claim, abort */
--		if (fallback_mt == -2)
--			break;
--
- 		page = get_page_from_free_area(area, fallback_mt);
- 		page = try_to_claim_block(zone, page, current_order, order,
- 					  start_migratetype, fallback_mt,
-@@ -2249,8 +2242,8 @@ __rmqueue_steal(struct zone *zone, int order, int start_migratetype)
- 
- 	for (current_order = order; current_order < NR_PAGE_ORDERS; current_order++) {
- 		area = &(zone->free_area[current_order]);
--		fallback_mt = find_suitable_fallback(area, current_order,
--						     start_migratetype, false);
-+		fallback_mt = find_fallback_migratetype(area, current_order,
-+							start_migratetype);
- 		if (fallback_mt == -1)
- 			continue;
- 
-
-base-commit: 0e56a6f04d3b06eafe0000d2e3c3d7c2d554366a
--- 
-2.49.0.504.g3bcea36a83-goog
+Thanks,
+Gabriele
 
