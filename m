@@ -1,491 +1,240 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn2069.outbound.protection.outlook.com [40.92.90.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377401C5D4B;
-	Thu, 10 Apr 2025 05:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C8217E;
+	Thu, 10 Apr 2025 05:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.90.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744262114; cv=fail; b=oPGlLfk1gzBSj/cbrc8vjRAY8F7YAYCG0ObwwxmZ9WQTh9SoDWTgUdiQnyIPqqOFdt3FAICQ4DL4JW6xNOV23GpdrLckDmNnwWf/ub/8ipfL6bqaKUMkv8m5xdoUbI4nUDPW/Lmvg6eqiHgi/e0mYevH0VM8K9XZd0EbNLWDs+g=
+	t=1744262286; cv=fail; b=C8ucw5yWFnLWd5Fn1jto+XDkiswNbA7W4llXrVpcU6AXlUIVxqbWzTi+rjJoXJvAKqvZyUpvSN9Rc9Yrc3zNCn6xNRnEDTTsZVWmSiM402LgPgHbMD2bPjSFfFRNbuYkqJJ1FHziSOVXwoOZ5Uw2rgUZZPAgQMzPaI+C1N319kA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744262114; c=relaxed/simple;
-	bh=FSYh4Kb9esbgOAwSSd94VZQizcxeg35jiihEv199H0w=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=fsJKX68jO9d7+V8HYxaxwe+npLvec7+RR7PcIyv3hojKat954qx2VVbI7BYpZyBPaKHdLVt/+Cvwom5/pBdqRowWEZKPoVS5Yv27n80jvg0ofCYp86wV5n4HyYJiDLel0vZzBnkZvJWDwXwLkvfNkLKf4BNSPjX8J7Bp9pbWMTc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ii39sJqT; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744262286; c=relaxed/simple;
+	bh=XOOkzS4xq3ZCwJuOaDeAYb2Gzj9haeTO6neoso5qJRU=;
+	h=Message-ID:Date:To:Cc:References:Subject:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nAd5wdqBP8z1WFzV2ONNwlKjvQTZA/jeJzcw5m9OIPsJ7rYcwWWSZodG3IkUQaWxaQC/12Bx3dMhooHD4FqsYrj/1wYI1vzPfGm2OLG8jDf1TdQm26WsGNU2O5sjElTNkIbeehGO3OZKAiJKNd3O1ySTMUxy9D9XowrIZDX1Ztg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=VtB7TNds; arc=fail smtp.client-ip=40.92.90.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ii39sJqT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744262112; x=1775798112;
-  h=date:from:to:cc:subject:message-id:
-   content-transfer-encoding:mime-version;
-  bh=FSYh4Kb9esbgOAwSSd94VZQizcxeg35jiihEv199H0w=;
-  b=Ii39sJqTsdMUpwpCcjD6JfGBrux1BlkSLd3zTA7eTExVeE5tSDMft0Bh
-   y9yykAKDaQIhXlRcZpsziCJ4NbnB/OUi9o2UYLhw/mlOXgcjdEyRRy9mN
-   jS58ZQ0jjssv+2b4Q59xjlE+0oJ3yAO1BZHLl6JNN2v+2c3K9NAaG4KGl
-   jTvO6n6Mychpjc95FLTJilshErt12FViZusNMoR42uG6DS36LhxqLW8/U
-   pbKIbIpzN/D+O9TFuhrURvVavOtq8XBxrJgHeBHc9JW6iU77ei2rl3pOD
-   ukLGE6TfXvi8aKuk45PFbQpSBzg3CPqpOS1/WniPJCjy049mRYcQyIjIl
-   Q==;
-X-CSE-ConnectionGUID: 9BOPgiMOTsiwzAt9BvFzbA==
-X-CSE-MsgGUID: XN6sT2FHRk6nCHK/WXgH1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56401424"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="56401424"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 22:15:11 -0700
-X-CSE-ConnectionGUID: ++9NzUysREKzcK507WuoAQ==
-X-CSE-MsgGUID: kZ15x0sBROynq+PNr1rV5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="129624644"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 22:15:10 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 9 Apr 2025 22:15:09 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 9 Apr 2025 22:15:09 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 9 Apr 2025 22:15:09 -0700
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="VtB7TNds"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Gb1c/ktBsNOdWXKvTtuF5k8I7VbSh5NwcnfxCpj3TIQyzMvycIQymWAxN4pF67efHriIgglEaLuu2pajHW88OwfTL1TuAn6XBmektWGnicaPpjbTnUt0q7eHyN1BM2BMrMfHQFG6DF7bpBsFMxkGsSCz9RblvFE1XmdbmBJ7Gg+7NPDsH7v3gMDy8ZrVQNGAjX/ZxQ5+QjYmlYql+x6HmZrZyjEpbHgc3C5bwLKAqJtGgt2okkjcHmCX9crBP+SD781RZW/EE3K4LbJ1lL3qliJLHweyGfAhaMXmGJkC8m7WmAH3SsoqbmdfWjZr0RuSE6xdEUPizIAh5LOHG3Ak6g==
+ b=nJ1M3edN9s6sLgxJg+U6m+g9bU68lzPVZkybl2gdvpSXC9U4fcrYlDgpnCZfbGcOqbXJLz+GRZg6FT/eM2UZFmq1GFW+7KHRSAkG/U3lDGbyTEg2Nx3VTetiudpsZsJh0H+lAR4gkyTpkNfz2ZxIdyAcTJho5cpclMAfvaWtMZtNneWTtU/gVZ9wFsZygnWk2qeuglkg3I+QNOgnUNBreeRfVMYtBsG89qcEpNV2EhP6WHqnWdu5IZEeWGlqJjus176mpB62QXypE2SWytFrqthT7sCh67k1f9PM+UNuhL1l/VpO1t+zldggmIGysU3k+8y7ttJIyfoi9t0UPUYVUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Msgqn5MS68pHKZ0ZkDt2ghDH9VgeFBZKJzPWrNWzpr8=;
- b=VPTQpDohCrbgcmGIru+y90qEPtWylMv/22CuPxNI8b/LsWz2pX2eGE4lRH7cSoC6+R1eEbD94zx8ZZGpPbilGVVuGVvIadJWTiBpO2/v2kqNgi1SJdqs6eesZt0B+IYLkw+QXYFhsRChKu6SchjaY+v2OFEs5Z/4r02XpLRh80w/zorH7tKDTufVnpGODVYSkD8+TXvJ/TxvXtvlO5Jm6dJtkB/0ByMUbOdrTtIeHSgXPfsYQlhJ/8pRvsIHhkDycWyPTaPAEGl6KT4OM/IfWnBTAMq0zeup5INAI3CYaQXnIJqY077qv2tLjGYZJbEakxetyBzYBUwtwohWSHoxPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by DS0PR11MB8162.namprd11.prod.outlook.com (2603:10b6:8:166::18) with
+ bh=9cLZQXr70KQjZZhkVP72fOkaJaZuqhAgM9fKrMjEL6Y=;
+ b=UOFNMv/g1ZZHu3sUGqEFpuBtUTvk5wV6sFqCuSw7C8FCtAXB0PJc/C/KzfR1DytyIiU9LqT9PNI78q6OK7cezNxO2m+46dgVKV/gT5Gf1YC18bsyxqqdGOQ4yCLXUNz8v2/3rsjgjPCr4/OZLWQ5yBWhiMIzyuX6aKzv6f8kCdZemWF7FaoOKB4XJZpdVIumic6Ilh7AGImbPCpsX2KL7jMJiAJLtNvn1HGtveKnWSiubMp58Own+FqKbHgBNqzS6Y6bDCTykNtWfrZGzUIFFCqMi8ENcOYfDwdMcY60fjszw3UpeuNFG2dueDrVDbcCu5EB5SnbL1QfC7HIqJkUKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9cLZQXr70KQjZZhkVP72fOkaJaZuqhAgM9fKrMjEL6Y=;
+ b=VtB7TNdsjRv4GPV2IM9Es95P6V/kBXOYR+ixa8lMJ1NwLOUrm8v5iPctW9p9rJBBxx76v75Puc1IK2IIXF1Bc5knVDVbFaFXgCe+McdwzxaB+Z1CMukVVsMvH985N9Yy1YbREQ1ZrWjIwkK7Lv/ba0R55rOYhM8iiv5XjYsgiqnju+wW26SVpZWZqlQs30zTmlPL9dEUh/UT+pjeGjFkEN1RP6YT3DLvrBuvSe6Lr/N1+4XBAY3NGuosVr7ooex9xukhtPTQijhCmr/PPHcmYr7JxHVNEiDpfJtnL67NTNPMRNt1RNH+SpvTpb4L/12yHbmLWHMCGdA2tJbwM7lt6Q==
+Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:175::17)
+ by DU0P189MB2614.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:475::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Thu, 10 Apr
- 2025 05:15:01 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%4]) with mapi id 15.20.8632.017; Thu, 10 Apr 2025
- 05:15:01 +0000
-Date: Thu, 10 Apr 2025 13:14:42 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Alistair Popple <apopple@nvidia.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Dan Williams
-	<dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>, Asahi Lina <lina@asahilina.net>,
-	Balbir Singh <balbirs@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>, Christian Borntraeger
-	<borntraeger@linux.ibm.com>, Christoph Hellwig <hch@lst.de>, Chunyan Zhang
-	<zhang.lyra@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, Dave Chinner
-	<david@fromorbit.com>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, David Hildenbrand <david@redhat.com>, Gerald Schaefer
-	<gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, "Huacai
- Chen" <chenhuacai@kernel.org>, Ira Weiny <ira.weiny@intel.com>, Jan Kara
-	<jack@suse.cz>, Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe
-	<jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, linmiaohe
-	<linmiaohe@huawei.com>, Logan Gunthorpe <logang@deltatee.com>, Matthew Wilcow
-	<willy@infradead.org>, Michael Camp Drill Sergeant Ellerman
-	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Peter Xu
-	<peterx@redhat.com>, Sven Schnelle <svens@linux.ibm.com>, Ted Ts'o
-	<tytso@mit.edu>, Vasily Gorbik <gor@linux.ibm.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Vivek Goyal <vgoyal@redhat.com>, WANG Xuerui
-	<kernel@xen0n.name>, Will Deacon <will@kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-xfs@vger.kernel.org>, <oliver.sang@intel.com>
-Subject: [linus:master] [fs/dax]  bde708f1a6:
- WARNING:at_mm/truncate.c:#truncate_folio_batch_exceptionals
-Message-ID: <202504101036.390f29a5-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: SI1PR02CA0027.apcprd02.prod.outlook.com
- (2603:1096:4:1f4::18) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Thu, 10 Apr
+ 2025 05:18:01 +0000
+Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
+ ([fe80::e9f1:a878:e797:ee1a]) by AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
+ ([fe80::e9f1:a878:e797:ee1a%5]) with mapi id 15.20.8632.024; Thu, 10 Apr 2025
+ 05:18:01 +0000
+Message-ID:
+ <AM7P189MB1009B07E5A67B1B16298B3EFE3B72@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+Date: Thu, 10 Apr 2025 07:17:53 +0200
+User-Agent: Mozilla Thunderbird
+To: juerg.haefliger@canonical.com
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ konradybcio@kernel.org, krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, robh@kernel.org
+References: <20250408145252.581060-2-juerg.haefliger@canonical.com>
+Subject: Re: [PATCH v2 1/3] arm64: dts: qcom: x1e80100-hp-omnibook-x14: add
+ sound label and pull out the model
+Content-Language: en-US
+From: Maud Spierings <maud_spierings@hotmail.com>
+In-Reply-To: <20250408145252.581060-2-juerg.haefliger@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AS4P190CA0031.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d1::6) To AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:20b:175::17)
+X-Microsoft-Original-Message-ID:
+ <37a8cd62-9d00-4f97-a7de-4aedd2b7e05c@hotmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|DS0PR11MB8162:EE_
-X-MS-Office365-Filtering-Correlation-Id: df34b696-ea22-47f4-b21c-08dd77eea52a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?MLrSsmsiDOqnYfm/HAvhIU5kBSwcAdq0S2HCgO1tCBhiLW8srwF7WVByJGqd?=
- =?us-ascii?Q?/axGXmjsoYXTxoruItAxnroI6B94nabW7C9Qgq9TdDqorLcItq6+0wJMAs6Q?=
- =?us-ascii?Q?Dsvbv3j/gqaXrbO1V859NS25t254Tt0HFiGjvGTowMr3sBfE0MbORJ91B+sy?=
- =?us-ascii?Q?W0yHC4iQKk03d5ztvVTpL3z0rpEBWJepBCQ2EwNJV+4xcmrtPKEtGyAGjwQm?=
- =?us-ascii?Q?an/KJNgrnrSZNRDLou9g+KbGJW6Y2St9pjLYtVSqK2xIsfIIFQDyqfjyCO8Z?=
- =?us-ascii?Q?LbAqQbu6Eplas3EvHLoXq763AovAB95i1nNKWMCYzptyjXzOgxmAZRKUjtz9?=
- =?us-ascii?Q?AdOMlIi59gmsbxmlAUbjZIBknmcw8XV6UEJi3dgb5r7363oA+NQIyqMrkbbv?=
- =?us-ascii?Q?MJSj3dX1mqOyWYQcXYAcB5Pw1Ul8/KxdXtckTIYGaq8tPMB481ZsDd9jpl+v?=
- =?us-ascii?Q?gJb5XZ/kHeT1bfdsHQjLu6IBHIob8qTj9sqGJKPGjQtnrq9ssWI+vXGgrQnK?=
- =?us-ascii?Q?eBTYlItjonKeqqZNHy8IFB3nXfDtlGl0eiJZSMmoniXVSTVu9039BOEhstBP?=
- =?us-ascii?Q?h3/CJMKKE0YEr1e3fyx00BiSNp8nW8wNGXCL0rMsKQPI5RyT9u81sQD7QtJY?=
- =?us-ascii?Q?QOwcNdrQfUwj50o4Sh3jHMzwf6wACnZCXV/cPS150ZkLeRuczqHmwn9PlQa5?=
- =?us-ascii?Q?Ze3no6uRZTFN5SV4QLR66UZsovqCfrYPAU/xHEG/hz/qaav1QdlGj1+lAueG?=
- =?us-ascii?Q?hkCNUVoLrckIabXtrJql14jPAZ55ORd7ntsTGXsVP+sARU36Wurx0v/54B8d?=
- =?us-ascii?Q?q2BE3n6yQruJ0JqwaYp1/wWC0xEJ2iNfFZ5retgiuAop/anP4e2b9nLRUSR1?=
- =?us-ascii?Q?KWqPrO1UhWPIafjbSHb/BbfaIlTNJ9wiTvPnw3iKHj+w8RgDTXSX4/C2pR4/?=
- =?us-ascii?Q?R0zbP/vVYgrXz3YZracwdF7fSSJLfFVLOG7Pumj6DaYU6cV2R/4zSjXgHkDO?=
- =?us-ascii?Q?Rkxt0gB+fVcqnbOH8yUy5I1POh4XzhgCUEV7YVKqSkU2H8gSqMBfWNNTliiD?=
- =?us-ascii?Q?od09vfekJbyhLahl0k4HD2vN/dJ1a33O72fACTSgRZUTlQM4nwwhiEHU5Wvz?=
- =?us-ascii?Q?0jV5MtGw1dsLomJ105OjmunMg0P4oD8ZPQbwpD66ib6SN19AwZKLJtJTwns0?=
- =?us-ascii?Q?9LQotzm+0jks2EiE3IXsZcLMH8hvA1Tthl8FO+5F8guxpoI6jZ8InIqNwQ31?=
- =?us-ascii?Q?PS4hlVzyHIB2Skjyk91U5J0QTMAbU30Xm8wBHizGxqlUIuagiZBJMT6TXHGF?=
- =?us-ascii?Q?3ZBoRt6cTDEbjpjvlppW9Xjux78n+jGbtSt8qvJ5aWgV15mX2pZsyn0u7rEb?=
- =?us-ascii?Q?iR+znFLLBnIgtGdunR22ZSDWgDi6?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-TrafficTypeDiagnostic: AM7P189MB1009:EE_|DU0P189MB2614:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4828f98c-102c-4363-a9c3-08dd77ef0ee1
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|5072599009|6090799003|461199028|19110799003|8060799006|8022599003|15080799006|440099028|3412199025|13041999003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q01Fd3ZGRlVrWXRKQzkrL2FnOWgzT0h3WmJLWmQzNk9idEJrWnVRSWxjRWxo?=
+ =?utf-8?B?ZmUyOUQ2aVljeTRvRlpmcW9kTkRDckdhL21DQ2FoY0dDMEQwR2d0MlNtbFVy?=
+ =?utf-8?B?R0NlLzdlVVpjUnZlTmtzTCtKZGd2T2NnM24zcWlNazlENExWZWVsSjJwWTFK?=
+ =?utf-8?B?czBSSWRUc3cxbXNyZXIzaUpPaVc0UVk1UUZQUEJtY2d2QXYxSGplUjNQeW0r?=
+ =?utf-8?B?NEdlZTRFd3NlUTZqYVkxSlk3c3k3RDRFT0ZwcVE0Lzc0UW1ZVXRyUzV3WE90?=
+ =?utf-8?B?RmkyTlowQjh0U2gvNUsyRHZhK2M4Z1k3SHZ6U0NBUHA1RDFSNFlYNXJ0a1RU?=
+ =?utf-8?B?c1c3UGpPREd6VkJTRU11MnEwakU0MCtHaUJ0b0F4UEdIUWdBcVhkU1VhWGdT?=
+ =?utf-8?B?Y2ZyQWpjRXFRVnhKODcvOXp3SXI2Z1ZEMUhuaHRQRVFpVmxWejZPVjcxcmJi?=
+ =?utf-8?B?UjZDcjIxUXdDaGcxS2NDVGlyRkJ1aysyanRlMHl4Sng4bnp3ZFU2S1pvd2ww?=
+ =?utf-8?B?YmErcEJFVnBMK1M0VWNVMmxWWWhlZGRaMWkxQ0gycTRRRG1BTjY2VWJ4OXRO?=
+ =?utf-8?B?TjV4MS9FSnBGenZEblFjMGNKb0lrazVFT0JzMUZQMzgxT09BdEl6REI1NHp3?=
+ =?utf-8?B?d0MzK204Q0FTcHRqbm5jaGZHNDVZakQyN054K3N1RHJEOXdxZHVRejI4RnJV?=
+ =?utf-8?B?c1N2a3JNdDl6Y3RQY0czTksxbS9QTnhHS1ZBNnROQWZzbGpqTDI5STkrYVln?=
+ =?utf-8?B?NFVtSGdOZVBDRnJ6UUE2dGh3L1JCT0NlNjBBdkMrT0M4eEJXQ3pCVXNEa1Fz?=
+ =?utf-8?B?TXZqUk9Uek5vSDRkZUk3bmF4OERTdUNCcDdMeUMvanVCOFdRc20yWktQcndH?=
+ =?utf-8?B?OTlGc1JVbEs4TUlBclJzM0kzdm93VHo5QjJTYzliRWh2dmVSMjFaQWI2d045?=
+ =?utf-8?B?VkJ4Y1c0dnhxeVpCN2s0ZUNlejZnSXNoUkt2Ky9tc3hQWmMzWFdIVUl0RGtz?=
+ =?utf-8?B?U2dqUHpQNlJTb2pyZGc1WDVyL1JOT0JiQ2JUbjdpVWtBWFZ4UVVQMFBaNHU2?=
+ =?utf-8?B?cmF6aGhCVklNcDBMYWN5MVEraGhXK25KQXdHUGlUTDI0TW12eHdSV09uNktB?=
+ =?utf-8?B?ck1Qak1xeDhEY0NicTNHWHZjSDRXbktUNkd5YVhGdENlVElQU3V3NnJtNUtP?=
+ =?utf-8?B?djhwYXU3MlkxZ0hyNVVDdXJ6VWFld1VYWEk0VTBJa0tWMlRUelBtN3ZwZzlz?=
+ =?utf-8?B?am5WTjV2cjJiZVF4L05aclJzenFhZVk4ZzlQdnFtbzd1ckdPVlpQdjVOb3Bk?=
+ =?utf-8?B?aVNITGxReUtKVEtTTnFmQkFQYkZnSmYxZU1QUEJodzYvcWFjaTkvTFR2QnRq?=
+ =?utf-8?B?NHF2TUZHK1pDYm5EQ1VGUG9YWjh6WVh5ZWlmay9NbG1lM0VyQ1pmOHpaSzhs?=
+ =?utf-8?B?WkNQMTdXSFVMeFZrRGcxT3dTODJJT25odkIrS0pTY1dPYlNEeDFlZ29WbUFx?=
+ =?utf-8?B?VGVtNkRrbnltcVhRRHRQV1Y1d2lZTitXSW1KQ01LbTNHSUNrZkE2Qit5YTd5?=
+ =?utf-8?Q?88UZCTVcPRp31ziLNoFrEdkDI=3D?=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hFzq5q7zFTwfR0H/Z5aInfNl9duI5g5bo09edoUNlToE4Zw2HwthdBeNlcUg?=
- =?us-ascii?Q?LgzQ5PoiHb057jy4TTd8F9+/MsMGk6w4Hnznw+v4AFos7OvcxOrFM47Sx0za?=
- =?us-ascii?Q?1bJcoSuBG82oRxP+pPHX9br+mMCcDjhk/uCwOMFXxKMKjKiI3I5hMmPRo2F+?=
- =?us-ascii?Q?lUOu/D5lYMwMjEQoZNroSN56lN1lGWIZMFXXRw5wQoOSzN3uxqdaP5GGgS4B?=
- =?us-ascii?Q?ukbiZwih+brq+MLWQcgE5Xb1naUZuUOM4s7qte+atl0c0fMQvubjp13nMdp9?=
- =?us-ascii?Q?T/iIu1LE8DbiiJGuiCkmMQoiM/rBofljKi+NLGbIb6M4FUEcjQDe7n4xZjbI?=
- =?us-ascii?Q?s0Vi6ucCe8hyKntHkxZk6mnGFyovSbUDzjHxdRazDkVtdDznvPyNbrKRLD9F?=
- =?us-ascii?Q?uvWFigmkZqyISEnpxfB8HpJYfQf0PvQ0aeUoEytHOCCiu9cIAHhcpd87WnPl?=
- =?us-ascii?Q?bNo2r1QK39WlrRWQm0DOBUXLhnkRUKt4eJWCByNlcjdKu06CG5fghqY0VRQq?=
- =?us-ascii?Q?BRq+LRB2oT41dSfFaKgNY0VKE65cAEc0ovsRBGE2OfH08FnWIK6qdeHUsFJd?=
- =?us-ascii?Q?W0BZtTgsGvzUQcuLCwE/o9Ym7KCMzuujJN0S6CIuB/noaCRF3nrvTVHFJGR/?=
- =?us-ascii?Q?GPUedlB4AsDWLGX2ePkCOPr4Ccf37C6J5Osh6A3Z4RAJHsBvHnUZ+cZdMgby?=
- =?us-ascii?Q?zJpp7DdRTmKrtjHuNWUt83qA33PGA4y8EUNQle+9t1DEi/vPM5jxbcGWs/eY?=
- =?us-ascii?Q?6pgKfghBhTnWn/luozalXj5TKjVJ6Tt+UDVLH/R0hgXd8mzULqopQXeWYQT/?=
- =?us-ascii?Q?9XqynqE+FdbIC0YB+mqCZjDq4djW5XhZJ1IeoILAW+utrVMpjjQjZLjoUDdQ?=
- =?us-ascii?Q?vFiIjvvzFtGIFbfm8dW7OR5W9K90jvgeS5oSnIKzWXjm1JAIQTJ3XsjSyZYs?=
- =?us-ascii?Q?EIBlGAQFvyaShkCj3Bf3npTSURrVtqUJORvxtP3hlK7rOdilXzxfcA/TSKAY?=
- =?us-ascii?Q?P5pVr1UR4ZijPrX/+qBdNpMQD8QJOwXGQTvX8Ce4YAClNiFqUe/sEnS65NIP?=
- =?us-ascii?Q?UEdzqDj/oUI8/VytnU8nMDFFM/XCl0idKXB5TYzQyTo/yTkJW/BuUQIOvF1a?=
- =?us-ascii?Q?Q/CKSRURVIqcl0QVh5w4ed/bjr8BNxfWsfZXPMiZVPlBv0yALN+S1crr0O++?=
- =?us-ascii?Q?1uxoMtc+B5nAHMOAxouFC6EEdpg6hDE30je1YfmWhFl+rMO31Mrgu/xKqqtC?=
- =?us-ascii?Q?hSIkejvHSFMwVs5wjwodB3QsuWf6vemYcRSYP6+rtV0JIB5J2j3YnqCYmoCD?=
- =?us-ascii?Q?4eRZ95EdJCys1zseZFPrqCQndNCcVPXtk8mwgARnk9q7lwcVT9w8uRCX94Z0?=
- =?us-ascii?Q?83we9twzCjZReCBhA8jpKMRvJR/LmvQlt1ieELqFLFV1nyl6H2M/mJtjf4hp?=
- =?us-ascii?Q?S/9TEtMvPhE/QJksiAtCg0JUpkdjiUnwoW6AFqkr5SQeumEfu8UeMwO3gfa9?=
- =?us-ascii?Q?by5HAVnd5iYD6YjRftvQV7yftGdCs6/m4tuv2W/SgQKiSct3MEpkpmpZbITn?=
- =?us-ascii?Q?RwIZN7GKRcxC/p5RV4/dPYDdqjlCR3rn9C3bfYrjnDF4aFVybahZOUM+kIaU?=
- =?us-ascii?Q?lQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: df34b696-ea22-47f4-b21c-08dd77eea52a
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?amY5MDVvRTF4T3FCa3FzeCtDQ3lvVDl4UWZVV0RhRU1qaW5Zc05jbFlFRmFS?=
+ =?utf-8?B?bk1YcHlsOGw2WU1IVDlWeHZraGJLK2lKa3JjYlRmRWNMdURYb3ZWSVFKdHFa?=
+ =?utf-8?B?Q25ZaDJPYmlsa3g1MjNmZlFwK3d3Yzh1WjFyM1orc0h3OGJwQkNEMC9zWjlC?=
+ =?utf-8?B?QytXT3BZaFNrR3M3cE9xTU44ZXpobzBSVUo0S21LbmptWjJabEJjT0lWT0dZ?=
+ =?utf-8?B?RENudXkwbms3bXlYUmV0T0lyVUZLcmVWUUlSUmdqK0FCUEEybE9hWVpqZDNJ?=
+ =?utf-8?B?UzNlZ1JvRE9xbWoxM1J3eDJVaUdmSUtIbTVaR0RiT0ptTU4wSXkyTGxJQm02?=
+ =?utf-8?B?a0xZQmVQLzVPVDBESDg0bGNCR0dES2Z1eW91NE83bWV4VUZyMk15cS9jMkZy?=
+ =?utf-8?B?N3pFdU81WTQ5Z0YwU1ExdDJ2V2NaZFZxUUVZSmQwVGdWbFpGVDNJVG9yOHYy?=
+ =?utf-8?B?a3FKQjcybEJUUjhzcXR3RHhpS25QMlhPREZrcTJXN0ZyM1B3cllVWnBxR1RJ?=
+ =?utf-8?B?OVZCSGh0YmRnSUNKZE0zS2w5WW5PR1hzVGFPMnZWbXJPNXB2b1FOOFYwNHF2?=
+ =?utf-8?B?MEU3OVpFWDVUVklkYUQwVndtS3NYQW1CeG5veXlJbkhwanl1OE1aTDBtZWRu?=
+ =?utf-8?B?c3BDMDdvYUtKdzBBVHd3T3lVMVJBU2F6eEJJWlRHc0w2MGlTZ2JZb05BLzBi?=
+ =?utf-8?B?NjE0UktnV3lMTkRucUcyMFQyNTEvT240ZFViak4wbEUyYnFKaVc5V3hDb2xm?=
+ =?utf-8?B?WE9zeUNYdGkxRDVRUlZERVZQUnNRc2FrVUNYdkNuSXJwOUVTbG5qZlBXV21j?=
+ =?utf-8?B?ZE9zZDZTd2wzVDRUUGNJUUg3dTlxWjkySldCK1JIKzFhbkVmd0lHSzN4aEJk?=
+ =?utf-8?B?VkdxaXdFaDdPWkUyZW0yUVNMcXdZVERrbU9NMkpmbUw1M1dxV3VDZW5yL1Va?=
+ =?utf-8?B?NldSMkhmOUNCWjkwUVkvRmQ0YWZVZkJiYkZ5eGlXbHNPNmdWUzd6OHg3WDVp?=
+ =?utf-8?B?NzdJaXNjd2ZrTGM0eWxtak9vVjVPODhTVC94NnY4MDJUOTRVbDEvRDJPUldH?=
+ =?utf-8?B?Q3ZCWW9kTU9MZWp0eHhDYnBXUGhkLzhtNzZLZFM3KzlsTWZaL3BLb1lxWTN6?=
+ =?utf-8?B?Vi9HQStVU1hqU25XKzFFMlBnVDUxMG54bDMveCtiVlE0RzcvUDNjeEZ4VE5k?=
+ =?utf-8?B?QU5YNWl3YlVsQkRJMmNLdG01VGpKRWdIY0JiYmJLZnZmUWJLTVhHU1I3ZWY4?=
+ =?utf-8?B?UDJ5eGZNNmFNaHFMcnpBdVJKK3V5RkY1QmJMZTkya2JBQmh5RU1kSFpZZ3kz?=
+ =?utf-8?B?cEMwYzc5NjcrRkFkSU14eXdaRUhyZjZSWE05TWtoU1I1alFWL2JRWVgvOEFn?=
+ =?utf-8?B?dXpxSzVNUXhQNnJ0b3gyM2NiQ01JK1VQOEl5VjA1R3ZDNERxWWJWb0owUlBk?=
+ =?utf-8?B?bWw4S0FiWm9UdlY1UG8yOXpwTyt2cVFuTUQ5MGtPWkpRb2kxN2o0cTNIMDBD?=
+ =?utf-8?B?em0wNi9HYTNEZWwvcGN2R2ZzVXZ3emVqVCs4NnFOd1B6ejY5V0E0REtpRkpa?=
+ =?utf-8?B?RHJXRVhZKy8zQWVSYUhSdXFMSi9qcW02YnltdG5rWnNKSit6ZWVzV3NGZ0ZX?=
+ =?utf-8?B?STE4S293eldHRmg2ckx4N0NYYXNHbXBGa2RjM0RpWk5OQThxczV1bUw1RHlo?=
+ =?utf-8?B?aTBmcGxoTXBWZnZ2VHNCMm9mLzRqTkNjVFNDdXY3elFSUUVEUjhkM1ozb3cv?=
+ =?utf-8?Q?7NPbX3YaUc2Xo33zCxNSxC+b+ftb2sSPgkFoeGL?=
+X-OriginatorOrg: sct-15-20-7719-19-msonline-outlook-3b3e0.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4828f98c-102c-4363-a9c3-08dd77ef0ee1
+X-MS-Exchange-CrossTenant-AuthSource: AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 05:15:01.4568
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 05:18:01.2367
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UOvYh5OqCscrqGMWCcZEMEYqFm6N1j1dLduEXmxwf9s6kdboHho/sZjQIJ4HXlZC1S4vJ/qCOf2C6mnbSSij2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8162
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0P189MB2614
 
+> Introduce a device tree for the HP EliteBook Ultra G1q 14" AI laptop. It
+> seems to be using the same baseboard as the HP OmniBook X 14 so just use
+> that for now.
+> 
+> Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |  1 +
+>  .../qcom/x1e80100-hp-elitebook-ultra-g1q.dts  | 36 +++++++++++++++++++
+>  drivers/firmware/qcom/qcom_scm.c              |  1 +
+>  3 files changed, 38 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 710879d94c00..3d98bb95e8b1 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -294,6 +294,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= x1e78100-lenovo-thinkpad-t14s-oled.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-asus-vivobook-s15.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-crd.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-xps13-9345.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-elitebook-ultra-g1q.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-omnibook-x14.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-lenovo-yoga-slim7x.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-microsoft-romulus13.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
+> new file mode 100644
+> index 000000000000..9f3aac1a83fd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
+> @@ -0,0 +1,36 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +
+> +/dts-v1/;
+> +
+> +#include "x1e80100-hp-omnibook-x14.dts"
+> +
+> +/ {
+> +	model = "HP EliteBook Ultra G1q";
+> +	compatible = "hp,elitebook-ultra-g1q", "qcom,x1e80100";
+> +};
+> +
+> +&gpu {
+> +	status = "okay";
 
+status should not be needed as it is already set in the omnibook dts
 
-Hello,
+> +
+> +	zap-shader {
+> +		firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qcdxkmsuc8380.mbn";
+> +	};
+> +};
+> +
+> +&remoteproc_adsp {
+> +	firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qcadsp8380.mbn",
+> +			"qcom/x1e80100/hp/elitebook-ultra-g1q/adsp_dtbs.elf";
+> +
+> +	status = "okay";
 
-kernel test robot noticed "WARNING:at_mm/truncate.c:#truncate_folio_batch_e=
-xceptionals" on:
+same here
 
-commit: bde708f1a65d025c45575bfe1e7bf7bdf7e71e87 ("fs/dax: always remove DA=
-X page-cache entries when breaking layouts")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> +};
+> +
+> +&remoteproc_cdsp {
+> +	firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qccdsp8380.mbn",
+> +			"qcom/x1e80100/hp/elitebook-ultra-g1q/cdsp_dtbs.elf";
+> +
+> +	status = "okay";
 
-in testcase: xfstests
-version: xfstests-x86_64-8467552f-1_20241215
-with following parameters:
+same here
 
-	bp1_memmap: 4G!8G
-	bp2_memmap: 4G!10G
-	bp3_memmap: 4G!16G
-	bp4_memmap: 4G!22G
-	nr_pmem: 4
-	fs: ext2
-	test: generic-dax
+Kind regards,
+Maud
 
+> +};
+> +
+> +&sound {
+> +	model = "X1E80100-HP-ELITEBOOK-ULTRA-G1Q";
+> +};
+> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+> index fc4d67e4c4a6..e7262ad11509 100644
+> --- a/drivers/firmware/qcom/qcom_scm.c
+> +++ b/drivers/firmware/qcom/qcom_scm.c
+> @@ -1987,6 +1987,7 @@ EXPORT_SYMBOL_GPL(qcom_scm_qseecom_app_send);
+>  static const struct of_device_id qcom_scm_qseecom_allowlist[] __maybe_unused = {
+>  	{ .compatible = "asus,vivobook-s15" },
+>  	{ .compatible = "dell,xps13-9345" },
+> +	{ .compatible = "hp,elitebook-ultra-g1q" },
+>  	{ .compatible = "hp,omnibook-x14" },
+>  	{ .compatible = "huawei,gaokun3" },
+>  	{ .compatible = "lenovo,flex-5g" },
+> -- 
+> 2.43.0
 
-
-config: x86_64-rhel-9.4-func
-compiler: gcc-12
-test machine: 8 threads Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz (Skylake) w=
-ith 28G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new versio=
-n of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202504101036.390f29a5-lkp@intel.co=
-m
-
-
-[   46.394237][ T4025] ------------[ cut here ]------------
-[ 46.399593][ T4025] WARNING: CPU: 7 PID: 4025 at mm/truncate.c:89 truncate=
-_folio_batch_exceptionals (mm/truncate.c:89 (discriminator 1))=20
-[   46.409748][ T4025] Modules linked in: ext2 snd_hda_codec_hdmi snd_ctl_l=
-ed snd_hda_codec_realtek snd_hda_codec_generic snd_hda_scodec_component int=
-el_rapl_msr btrfs intel_rapl_common blake2b_generic xor ipmi_devintf zstd_c=
-ompress ipmi_msghandler x86_pkg_temp_thermal snd_soc_avs intel_powerclamp r=
-aid6_pq snd_soc_hda_codec snd_hda_ext_core coretemp snd_soc_core snd_compre=
-ss kvm_intel i915 sd_mod snd_hda_intel kvm snd_intel_dspcfg sg snd_intel_sd=
-w_acpi intel_gtt snd_hda_codec cec dell_pc platform_profile drm_buddy ghash=
-_clmulni_intel snd_hda_core sha512_ssse3 dell_wmi ttm sha256_ssse3 snd_hwde=
-p nd_pmem sha1_ssse3 dell_smbios drm_display_helper nd_btt snd_pcm dax_pmem=
- mei_wdt rapl drm_kms_helper ahci mei_me snd_timer libahci rfkill nd_e820 i=
-ntel_cstate sparse_keymap video wmi_bmof dcdbas dell_wmi_descriptor libnvdi=
-mm libata pcspkr intel_uncore i2c_i801 snd mei i2c_smbus soundcore intel_pc=
-h_thermal intel_pmc_core intel_vsec wmi pmt_telemetry acpi_pad pmt_class bi=
-nfmt_misc fuse loop drm dm_mod ip_tables
-[   46.498759][ T4025] CPU: 7 UID: 0 PID: 4025 Comm: umount Not tainted 6.1=
-4.0-rc6-00297-gbde708f1a65d #1
-[   46.508156][ T4025] Hardware name: Dell Inc. OptiPlex 7040/0Y7WYT, BIOS =
-1.2.8 01/26/2016
-[ 46.516324][ T4025] RIP: 0010:truncate_folio_batch_exceptionals (mm/trunca=
-te.c:89 (discriminator 1))=20
-[ 46.523347][ T4025] Code: 84 70 ff ff ff 4d 63 fd 49 83 ff 1e 0f 87 d4 01 =
-00 00 4c 89 f0 48 c1 e8 03 42 80 3c 00 00 0f 85 9b 01 00 00 41 f6 06 01 74 =
-c6 <0f> 0b 48 89 c8 48 c1 e8 03 42 80 3c 00 00 0f 85 d6 01 00 00 48 8b
-All code
-=3D=3D=3D=3D=3D=3D=3D=3D
-   0:	84 70 ff             	test   %dh,-0x1(%rax)
-   3:	ff                   	(bad)
-   4:	ff 4d 63             	decl   0x63(%rbp)
-   7:	fd                   	std
-   8:	49 83 ff 1e          	cmp    $0x1e,%r15
-   c:	0f 87 d4 01 00 00    	ja     0x1e6
-  12:	4c 89 f0             	mov    %r14,%rax
-  15:	48 c1 e8 03          	shr    $0x3,%rax
-  19:	42 80 3c 00 00       	cmpb   $0x0,(%rax,%r8,1)
-  1e:	0f 85 9b 01 00 00    	jne    0x1bf
-  24:	41 f6 06 01          	testb  $0x1,(%r14)
-  28:	74 c6                	je     0xfffffffffffffff0
-  2a:*	0f 0b                	ud2		<-- trapping instruction
-  2c:	48 89 c8             	mov    %rcx,%rax
-  2f:	48 c1 e8 03          	shr    $0x3,%rax
-  33:	42 80 3c 00 00       	cmpb   $0x0,(%rax,%r8,1)
-  38:	0f 85 d6 01 00 00    	jne    0x214
-  3e:	48                   	rex.W
-  3f:	8b                   	.byte 0x8b
-
-Code starting with the faulting instruction
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-   0:	0f 0b                	ud2
-   2:	48 89 c8             	mov    %rcx,%rax
-   5:	48 c1 e8 03          	shr    $0x3,%rax
-   9:	42 80 3c 00 00       	cmpb   $0x0,(%rax,%r8,1)
-   e:	0f 85 d6 01 00 00    	jne    0x1ea
-  14:	48                   	rex.W
-  15:	8b                   	.byte 0x8b
-[   46.542938][ T4025] RSP: 0018:ffffc9000d74f370 EFLAGS: 00010202
-[   46.548900][ T4025] RAX: 1ffff92001ae9ec8 RBX: ffff8881e2d959d8 RCX: fff=
-fc9000d74f4f8
-[   46.556787][ T4025] RDX: 0000000000000001 RSI: ffffc9000d74f638 RDI: fff=
-f8881e2d95874
-[   46.564676][ T4025] RBP: 1ffff92001ae9e74 R08: dffffc0000000000 R09: fff=
-ff52001ae9eec
-[   46.572557][ T4025] R10: 0000000000000003 R11: 1ffff110d4bf8d9c R12: fff=
-fc9000d74f638
-[   46.580439][ T4025] R13: 0000000000000000 R14: ffffc9000d74f640 R15: 000=
-0000000000000
-[   46.588319][ T4025] FS:  00007fe696f3a840(0000) GS:ffff8886a5f80000(0000=
-) knlGS:0000000000000000
-[   46.597163][ T4025] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   46.603691][ T4025] CR2: 00007fff266c5ec0 CR3: 00000001ead7e002 CR4: 000=
-00000003726f0
-[   46.611586][ T4025] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
-0000000000000
-[   46.619468][ T4025] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
-0000000000400
-[   46.627353][ T4025] Call Trace:
-[   46.630520][ T4025]  <TASK>
-[ 46.633337][ T4025] ? __warn (kernel/panic.c:748)=20
-[ 46.637296][ T4025] ? truncate_folio_batch_exceptionals (mm/truncate.c:89 =
-(discriminator 1))=20
-[ 46.643697][ T4025] ? report_bug (lib/bug.c:180 lib/bug.c:219)=20
-[ 46.648091][ T4025] ? handle_bug (arch/x86/kernel/traps.c:285)=20
-[ 46.652322][ T4025] ? exc_invalid_op (arch/x86/kernel/traps.c:309 (discrim=
-inator 1))=20
-[ 46.656905][ T4025] ? asm_exc_invalid_op (arch/x86/include/asm/idtentry.h:=
-574)=20
-[ 46.661838][ T4025] ? truncate_folio_batch_exceptionals (mm/truncate.c:89 =
-(discriminator 1))=20
-[ 46.668239][ T4025] ? __kernel_text_address (kernel/extable.c:79)=20
-[ 46.673356][ T4025] ? __pfx_truncate_folio_batch_exceptionals (mm/truncate=
-.c:62)=20
-[ 46.680123][ T4025] ? arch_stack_walk (arch/x86/kernel/stacktrace.c:26)=20
-[ 46.684782][ T4025] truncate_inode_pages_range (mm/truncate.c:339)=20
-[ 46.690407][ T4025] ? __pfx_truncate_inode_pages_range (mm/truncate.c:304)=
-=20
-[ 46.696546][ T4025] ? __pfx_i_callback (fs/inode.c:322)=20
-[ 46.701292][ T4025] ? kasan_save_stack (mm/kasan/common.c:49)=20
-[ 46.706032][ T4025] ? kasan_record_aux_stack (mm/kasan/generic.c:548)=20
-[ 46.711298][ T4025] ? __call_rcu_common+0xc3/0x9e0=20
-[ 46.717279][ T4025] ? evict (fs/inode.c:772 (discriminator 2))=20
-[ 46.721236][ T4025] ? dispose_list (fs/inode.c:846)=20
-[ 46.725751][ T4025] ? evict_inodes (fs/inode.c:860)=20
-[ 46.730339][ T4025] ? generic_shutdown_super (fs/super.c:633)=20
-[ 46.735699][ T4025] ? kill_block_super (fs/super.c:1711)=20
-[ 46.740447][ T4025] ? deactivate_locked_super (fs/super.c:473)=20
-[ 46.745905][ T4025] ? cleanup_mnt (fs/namespace.c:281 fs/namespace.c:1414)=
-=20
-[ 46.750400][ T4025] ? task_work_run (kernel/task_work.c:227 (discriminator=
- 1))=20
-[ 46.755076][ T4025] ? syscall_exit_to_user_mode (include/linux/resume_user=
-_mode.h:50 kernel/entry/common.c:114 include/linux/entry-common.h:329 kerne=
-l/entry/common.c:207 kernel/entry/common.c:218)=20
-[ 46.760796][ T4025] ? do_syscall_64 (arch/x86/entry/common.c:102)=20
-[ 46.765381][ T4025] ? entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry=
-_64.S:130)=20
-[ 46.771363][ T4025] ? blk_finish_plug (block/blk-core.c:1241 block/blk-cor=
-e.c:1237)=20
-[ 46.776026][ T4025] ? blkdev_writepages (block/fops.c:453)=20
-[ 46.780864][ T4025] ? __pfx_blkdev_writepages (block/fops.c:453)=20
-[ 46.786241][ T4025] ? __blk_flush_plug (include/linux/blk-mq.h:234 block/b=
-lk-core.c:1220)=20
-[ 46.791152][ T4025] ? xas_find_marked (lib/xarray.c:1382)=20
-[ 46.795990][ T4025] ? __pfx_inode_free_by_rcu (security/security.c:1708)=20
-[ 46.801351][ T4025] ? rcu_segcblist_enqueue (arch/x86/include/asm/atomic64=
-_64.h:25 include/linux/atomic/atomic-arch-fallback.h:2672 include/linux/ato=
-mic/atomic-long.h:121 include/linux/atomic/atomic-instrumented.h:3261 kerne=
-l/rcu/rcu_segcblist.c:214 kernel/rcu/rcu_segcblist.c:231 kernel/rcu/rcu_seg=
-cblist.c:332)=20
-[ 46.806537][ T4025] ? fsnotify_grab_connector (fs/notify/mark.c:702)=20
-[ 46.811898][ T4025] ? _raw_spin_lock (arch/x86/include/asm/atomic.h:107 in=
-clude/linux/atomic/atomic-arch-fallback.h:2170 include/linux/atomic/atomic-=
-instrumented.h:1302 include/asm-generic/qspinlock.h:111 include/linux/spinl=
-ock.h:187 include/linux/spinlock_api_smp.h:134 kernel/locking/spinlock.c:15=
-4)=20
-[ 46.816473][ T4025] ? inode_wait_for_writeback (arch/x86/include/asm/atomi=
-c.h:23 include/linux/atomic/atomic-arch-fallback.h:457 include/linux/atomic=
-/atomic-instrumented.h:33 include/asm-generic/qspinlock.h:57 fs/fs-writebac=
-k.c:1541)=20
-[ 46.822012][ T4025] ? _raw_spin_lock_irq (arch/x86/include/asm/atomic.h:10=
-7 include/linux/atomic/atomic-arch-fallback.h:2170 include/linux/atomic/ato=
-mic-instrumented.h:1302 include/asm-generic/qspinlock.h:111 include/linux/s=
-pinlock.h:187 include/linux/spinlock_api_smp.h:120 kernel/locking/spinlock.=
-c:170)=20
-[   46.824528][  T331] LKP: stdout: 302: HOSTNAME lkp-skl-d01, MAC f4:8e:38=
-:7c:5b:de, kernel 6.14.0-rc6-00297-gbde708f1a65d 1
-[ 46.826917][ T4025] ? __pfx__raw_spin_lock_irq (kernel/locking/spinlock.c:=
-169)=20
-[   46.826949][  T331]
-[ 46.838033][ T4025] ? _raw_spin_lock (arch/x86/include/asm/atomic.h:107 in=
-clude/linux/atomic/atomic-arch-fallback.h:2170 include/linux/atomic/atomic-=
-instrumented.h:1302 include/asm-generic/qspinlock.h:111 include/linux/spinl=
-ock.h:187 include/linux/spinlock_api_smp.h:134 kernel/locking/spinlock.c:15=
-4)=20
-[ 46.838054][ T4025] ext2_evict_inode (fs/ext2/inode.c:99) ext2=20
-[   46.847318][  T333] 262144 bytes (262 kB, 256 KiB) copied, 0.0043872 s, =
-59.8 MB/s
-[ 46.850251][ T4025] evict (fs/inode.c:796)=20
-[   46.855527][  T333]
-[ 46.863038][ T4025] ? __pfx_evict (fs/inode.c:772)=20
-[ 46.863056][ T4025] ? _raw_spin_lock (arch/x86/include/asm/atomic.h:107 in=
-clude/linux/atomic/atomic-arch-fallback.h:2170 include/linux/atomic/atomic-=
-instrumented.h:1302 include/asm-generic/qspinlock.h:111 include/linux/spinl=
-ock.h:187 include/linux/spinlock_api_smp.h:134 kernel/locking/spinlock.c:15=
-4)=20
-[   46.867191][  T333] 512+0 records in
-[ 46.869033][ T4025] ? __pfx__raw_spin_lock (kernel/locking/spinlock.c:153)=
-=20
-[   46.873347][  T333]
-[ 46.877892][ T4025] dispose_list (fs/inode.c:846)=20
-[   46.881842][  T333] 512+0 records out
-[ 46.886610][ T4025] evict_inodes (fs/inode.c:860)=20
-[   46.888832][  T333]
-[ 46.893113][ T4025] ? __pfx_evict_inodes (fs/inode.c:860)=20
-[ 46.893135][ T4025] ? filemap_check_errors (arch/x86/include/asm/bitops.h:=
-206 (discriminator 6) arch/x86/include/asm/bitops.h:238 (discriminator 6) i=
-nclude/asm-generic/bitops/instrumented-non-atomic.h:142 (discriminator 6) m=
-m/filemap.c:349 (discriminator 6))=20
-[ 46.913439][ T4025] generic_shutdown_super (fs/super.c:633)=20
-[ 46.918627][ T4025] kill_block_super (fs/super.c:1711)=20
-[ 46.923204][ T4025] deactivate_locked_super (fs/super.c:473)=20
-[ 46.928477][ T4025] cleanup_mnt (fs/namespace.c:281 fs/namespace.c:1414)=20
-[ 46.932792][ T4025] task_work_run (kernel/task_work.c:227 (discriminator 1=
-))=20
-[ 46.937282][ T4025] ? __pfx_task_work_run (kernel/task_work.c:195)=20
-[ 46.942292][ T4025] ? __x64_sys_umount (fs/namespace.c:2074 fs/namespace.c=
-:2079 fs/namespace.c:2077 fs/namespace.c:2077)=20
-[ 46.947218][ T4025] ? __pfx___x64_sys_umount (fs/namespace.c:2077)=20
-[ 46.952480][ T4025] ? vfs_fstatat (fs/stat.c:372)=20
-[ 46.956809][ T4025] syscall_exit_to_user_mode (include/linux/resume_user_m=
-ode.h:50 kernel/entry/common.c:114 include/linux/entry-common.h:329 kernel/=
-entry/common.c:207 kernel/entry/common.c:218)=20
-[ 46.962348][ T4025] do_syscall_64 (arch/x86/entry/common.c:102)=20
-[ 46.966749][ T4025] ? syscall_exit_to_user_mode (arch/x86/include/asm/irqf=
-lags.h:37 arch/x86/include/asm/irqflags.h:92 include/linux/entry-common.h:2=
-32 kernel/entry/common.c:206 kernel/entry/common.c:218)=20
-[ 46.972284][ T4025] ? syscall_exit_to_user_mode (arch/x86/include/asm/irqf=
-lags.h:37 arch/x86/include/asm/irqflags.h:92 include/linux/entry-common.h:2=
-32 kernel/entry/common.c:206 kernel/entry/common.c:218)=20
-[ 46.977832][ T4025] ? syscall_exit_to_user_mode (arch/x86/include/asm/irqf=
-lags.h:37 arch/x86/include/asm/irqflags.h:92 include/linux/entry-common.h:2=
-32 kernel/entry/common.c:206 kernel/entry/common.c:218)=20
-[ 46.983369][ T4025] ? do_syscall_64 (arch/x86/entry/common.c:102)=20
-[ 46.987953][ T4025] ? check_heap_object (mm/usercopy.c:189)=20
-[ 46.992887][ T4025] ? kasan_save_track (arch/x86/include/asm/current.h:49 =
-mm/kasan/common.c:60 mm/kasan/common.c:69)=20
-[ 46.997649][ T4025] ? kmem_cache_free (mm/slub.c:4622 mm/slub.c:4724)=20
-[   47.000912][  T333] 262144 bytes (262 kB, 256 KiB) copied, 0.00767215 s,=
- 34.2 MB/s
-[ 47.002474][ T4025] ? vfs_fstatat (fs/stat.c:372)=20
-[   47.002504][  T333]
-[ 47.010137][ T4025] ? vfs_fstatat (fs/stat.c:372)=20
-[   47.014750][  T333] 512+0 records in
-[ 47.016647][ T4025] ? __do_sys_newfstatat (fs/stat.c:533)=20
-[ 47.016665][ T4025] ? __pfx___do_sys_newfstatat (fs/stat.c:528)=20
-[   47.020981][  T333]
-[ 47.024567][ T4025] ? __count_memcg_events (mm/memcontrol.c:583 mm/memcont=
-rol.c:859)=20
-[ 47.024588][ T4025] ? handle_mm_fault (mm/memory.c:6102 mm/memory.c:6255)=
-=20
-[ 47.024593][ T4025] ? syscall_exit_to_user_mode (arch/x86/include/asm/irqf=
-lags.h:37 arch/x86/include/asm/irqflags.h:92 include/linux/entry-common.h:2=
-32 kernel/entry/common.c:206 kernel/entry/common.c:218)=20
-[   47.029926][  T333] 512+0 records out
-[ 47.035106][ T4025] ? do_syscall_64 (arch/x86/entry/common.c:102)=20
-[ 47.035129][ T4025] ? exc_page_fault (arch/x86/include/asm/irqflags.h:37 a=
-rch/x86/include/asm/irqflags.h:92 arch/x86/mm/fault.c:1488 arch/x86/mm/faul=
-t.c:1538)=20
-[   47.037332][  T333]
-[ 47.042576][ T4025] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_6=
-4.S:130)=20
-[   47.042596][ T4025] RIP: 0033:0x7fe697166af7
-[   47.048552][  T333] 262144 bytes (262 kB, 256 KiB) copied, 0.00560232 s,=
- 46.8 MB/s
-[ 47.052938][ T4025] Code: 0f 93 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 0f 1f =
-44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f =
-05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 d9 92 0c 00 f7 d8 64 89 02 b8
-All code
-=3D=3D=3D=3D=3D=3D=3D=3D
-   0:	0f 93 0c 00          	setae  (%rax,%rax,1)
-   4:	f7 d8                	neg    %eax
-   6:	64 89 01             	mov    %eax,%fs:(%rcx)
-   9:	48 83 c8 ff          	or     $0xffffffffffffffff,%rax
-   d:	c3                   	ret
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250410/202504101036.390f29a5-lkp@=
-intel.com
-
-
-
---=20
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
