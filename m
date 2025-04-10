@@ -1,94 +1,45 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A7F1EF363;
-	Thu, 10 Apr 2025 17:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944F41F098E;
+	Thu, 10 Apr 2025 17:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744305840; cv=none; b=u8y2kKvxqKpnxkq4e/9mR1N7OKVSuj7yd768TyKymVz6kktuxQWuuGaJ2OXpvz89EDt1cJm8BDyA0vpw+yCwNkKyMSqfvlZJ+tbipvtGm7Qjva4QjPZzKI82W8GRuHhyAw9Y4KkjRvKuG/34wc5SJBgvG7uKi0YZAeGF8mPKGoc=
+	t=1744305854; cv=none; b=B3Y6uIkchB4v2UL0z9rrqNVgTQe2HW3lhgu0Ht+wO2VbSkQzAM6roKapCr/wJYDmfoJElJraoduHlqjstOeI/+EpiO/hAK3Ta68kam6TyVZtGhwketB+Z0WYaC2kmpD5+LsygpGw7x107HQzypmsRGl9ZknU4lh0+BSPU2KW5Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744305840; c=relaxed/simple;
-	bh=ClReNv4tZNKYKHIKcr+3YRA9kSYs6eYQ6ZoMhlVPy0I=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BsknDtMqTQ4DtiHRVS9ljnerAXaIcnTZoWGbEztwm8IAl2oGihb1BxkdzgpG2s5ksZWsMa7WmeesB4QU47/Ttfdrm92t8NAxg5m4kO/ARQ5/UtAMjT422/ZyrzhAp3JzeCIs7fagWuWQJ5ZfALGwfCA5MpGBhn0rEZRESmuQoho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0gJmHzb; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744305854; c=relaxed/simple;
+	bh=LytjVK/uTAfK1ATja76akWBApQICg4D2IClyyAxnKiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTMrqbgrpAPkPbOyKnRgWr1QtLCIkF4O4a93d7zuTGtqjmuPD7JsVbJmjpcBsjRuhOX0pqdFfD/PsnWx6++E+fMKX4aMr99c9FqaK1TybhH+QgKdkwCWCvvvJCZYaCdxu8fc0ayDSDf/Pcg30C4Pk/nuIjuHJ3X4FYV0he2YLyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=st7Ba1Lu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0gJmHzb"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso569449f8f.2;
-        Thu, 10 Apr 2025 10:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744305836; x=1744910636; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=RVEmfdcIK+nAC24P6F8Ud5S0YAAGuFYjRvgCZ39ZrCQ=;
-        b=S0gJmHzbpt4uWdJ5XDWZodPTbEJFbfn4vAjDlsOTNKl/WuUqPCGbaZoYvkHQd6Emef
-         Nof2K+CVxvfrBFL6JTmGKrrxmRsqzLIotk1jAUTPuN6Y++PyykumCTMkRBV+DDjnzMrH
-         GiPotdoonWaPtRsFfEkO2xDHDOBzqz4jMLAMlD1WAv6+usSUmeKuus56WivnEyUJHrrF
-         Y1F+39mLK7vUq15u8qTaclykr4t6lzijCkJe8JCUuB1902ExK/eyh47LCk2RJASC7C3N
-         UkUI3lFd/NgLzbRDgmVGjdq+WG29mu8fRGRh8lx2TzmlljcFn84gqE9XmUgnE3e9FrwQ
-         yotA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744305836; x=1744910636;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RVEmfdcIK+nAC24P6F8Ud5S0YAAGuFYjRvgCZ39ZrCQ=;
-        b=TcB6f46/5hRuZWIzJDeTROsR2SXGOTVG3zeN90sy7SGPEvFLG1ZyHklY7hEhjQHxOX
-         vpDz/Y+CsXNG2x7lDQpUdM2tE3ZmD4w2x1ZZM8JGJKi5ZdmDhzKohMdfFX5zsqyA4IB1
-         uovr8Fx1tb5ETa3jxmKkPn7xAncDDcRw9dyjbVXJVy83+Ehf3XODKlXYxpcICbsWCRVq
-         tRJUvfBB5gBxfe8Dcj1UrrKgRJxmxoCzKJgfR6K1tDCtNJdjiQNq/M5360Cm2QrhFqLN
-         c6itbZhc+uC7Cj2zXUUMAtWMO1aDTjV37tO5DTVKySsFu/BVAov5xld0tP9KoHTNyKX3
-         gjQA==
-X-Forwarded-Encrypted: i=1; AJvYcCU508S7r7LMviC/KniFSNIzAU0rbv1WhPcuvt+G0Zbucmaejr2KHMAeGf1Lihe7WaQpQUoPa8F6A39xT5+9@vger.kernel.org, AJvYcCUVhxMf5BEkPX9FyQGbluINLnPSWgioTU/nZCv0LbCTAKXXvAx2TES9ga77YET/d3f/b0JCAzCw@vger.kernel.org, AJvYcCUsHDLgneAtTeA9fOsCsY9VlW8/s6h4TbczE5UvqAVquU6LNCEAfftCxhdKPvh4nOcn1XINUZZ+4OCp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn5T+7n33/7wdGETsWTzwORUmgeL20sSdAnT9UlNqTprBc1fl9
-	NzE7TwNfpciMg+skLvnfrdwxE+tjp+hnecEW3qBOQ3bzNStAeBNu
-X-Gm-Gg: ASbGncsKAdhA+UX/cyfwLXMCv/WWK0vH08SC3jXteNqagf2SH9+16xB3loO7o7nyLeJ
-	fUXUWBEjgjlDdOCHJ2aidrcXxhPes3a1veU/O4cotomzT+0clyUC4DntvWc7ZfL1kLo6m0T+BoB
-	OUA+cF2she86PzeOU84ZNo2I0TZ8PXjM/4XCaIM43bWg15rL8bRjM0EbZihow7prWLup1zw3rpt
-	dhDaGKjJbLLwCvyaNReGU4KDhQ+fp/MPNPaQpmRZtd0FCx9o5UBIqegLQCoYKFnyVL2rzINnElX
-	eOYDDWQDSvvSihG9T49hnBEVsRBLEbFfDzV6H1iQea6qYRox8ts6TFck2S3IdiFjTcLoaZMX6Wc
-	PFO8E3fk=
-X-Google-Smtp-Source: AGHT+IFqhoIbl8rG6Xm1pydrcNvSBmIecSBYlMaEofFIFMZzgUR9B34igWvZcOG2E52kzZjCqGGyAw==
-X-Received: by 2002:a05:6000:2586:b0:391:3aaf:1d5d with SMTP id ffacd0b85a97d-39d8f47497bmr3207232f8f.27.1744305836300;
-        Thu, 10 Apr 2025 10:23:56 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0a75sm5495874f8f.62.2025.04.10.10.23.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 10:23:55 -0700 (PDT)
-Message-ID: <67f7feab.df0a0220.40a6f.c911@mx.google.com>
-X-Google-Original-Message-ID: <Z_f-qflwHutRYS6_@Ansuel-XPS.>
-Date: Thu, 10 Apr 2025 19:23:53 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	"Chester A. Unal" <chester.a.unal@arinc9.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Simon Horman <horms@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [net-next PATCH v14 06/16] net: mdio: regmap: prepare support
- for multiple valid addr
-References: <20250408095139.51659-1-ansuelsmth@gmail.com>
- <20250408095139.51659-7-ansuelsmth@gmail.com>
- <6f29a01d-35da-4d51-b309-a1799950a707@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="st7Ba1Lu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29FAAC4CEEA;
+	Thu, 10 Apr 2025 17:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744305854;
+	bh=LytjVK/uTAfK1ATja76akWBApQICg4D2IClyyAxnKiM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=st7Ba1LuzVZa0v54c9Ukc2WUdpZnIkKxlfeukTkFvSwLPgVfrDsskz1HCRHKJQ0T7
+	 uMSXiewUUu9WBVsQ/8Pjt22rGUmOdeb7hmG4uKGTYR2WX3JqwccflfNdC6oG0cu7XV
+	 cwlKJfsSwQSpZ7ywbAmDv5zWTvPU2SgrZnMjcaE/9DB5r9KZg+RSoTblyxRnjQv5iw
+	 2N85PRGR6SkAy2O/Znz0ys7TnbfNo9rmHMm8bgR+lCv1lQYMj/yQf6LAr65+6mN8a2
+	 NEg9CZAW62k7agS6GwhSs763Yw+J/F5oHCEu7MJr7KGZoscDny/YkmwI0KVN/V4rAA
+	 quhT8VvqDf9tg==
+Date: Thu, 10 Apr 2025 17:24:08 +0000
+From: sergeh@kernel.org
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Kees Cook <kees@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org, zohar@linux.ibm.com
+Subject: Re: Credentials not fully initialized before bprm_check LSM hook
+Message-ID: <Z_f-uBGhBq9CYmaw@lei>
+References: <fb9f7900d411a3ab752759d818c3da78e2f8f0f1.camel@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,24 +48,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6f29a01d-35da-4d51-b309-a1799950a707@lunn.ch>
+In-Reply-To: <fb9f7900d411a3ab752759d818c3da78e2f8f0f1.camel@huaweicloud.com>
 
-On Thu, Apr 10, 2025 at 07:18:02PM +0200, Andrew Lunn wrote:
-> On Tue, Apr 08, 2025 at 11:51:13AM +0200, Christian Marangi wrote:
-> > Rework the valid_addr and convert it to a mask in preparation for mdio
-> > regmap to support multiple valid addr in the case the regmap can support
-> > it.
+On Thu, Apr 10, 2025 at 01:47:07PM +0200, Roberto Sassu wrote:
+> Hi everyone
 > 
-> I think it would be good to pull these MDIO regmap patches out into a
-> series of their own. We know there is a user, so i'm happy for us the
-> accept it without that user. But this code needs further discusion,
-> which will be irrelevant for the switch.
->
+> recently I discovered a problem in the implementation of our IMA
+> bprm_check hook, in particular when the policy is matched against the
+> bprm credentials (to be committed later during execve().
+> 
+> Before commit 56305aa9b6fab ("exec: Compute file based creds only
+> once"), bprm_fill_uid() was called in prepare_binprm() and filled the
+> euid/egid before calling security_bprm_check(), which in turns calls
+> IMA.
+> 
+> After that commit, bprm_fill_uid() was moved to begin_new_exec(), which
+> is when the last interpreter is found.
+> 
+> The consequence is that IMA still sees the not yet ready credentials
+> and an IMA rule like:
+> 
+> measure func=CREDS_CHECK euid=0
 
-Ok so how you would like to proceed for the remaining patch? Repost as RFC?
+"IMA still sees" at which point exactly?
 
-Still waiting feedback for nvmem and mfd so I would love to get feedback
-for them (that are also irrelevant to the switch)
+Do I understand right that the problem is that ima's version of
+security_bprm_creds_for_exec() needs to run after
+bprm_creds_from_file()?
 
--- 
-	Ansuel
+Given that Eric's commit message said that no bprm handlers use
+the uid, it seems it should be safe to just move that?
+
+> will not be matched for sudo-like applications.
+> 
+> It does work however with SELinux, because it computes the transition
+> before IMA in the bprm_creds_for_exec hook.
+> 
+> Since IMA needs to be involved for each execution in the chain of
+> interpreters, we cannot move to the bprm_creds_from_file hook.
+> 
+> How do we solve this problem? The commit mentioned that it is an
+> optimization, so probably would not be too hard to partially revert it
+> (and keeping what is good).
+> 
+> Thanks
+> 
+> Roberto
+> 
