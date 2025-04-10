@@ -1,185 +1,102 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C3E1E5B66
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF738F80;
+	Thu, 10 Apr 2025 03:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744255583; cv=none; b=tao9XcoO6xr3ssyrLgrS0l1aoeFnWA5k6BtaauUMpWhwH0b7vFsC11K3Oiv1a+GEGxUoOs3nT+jFKkzdy7GMPR7s4jvXOo6t7v4TC6mBSmhTfE1qEPe8tzQD1PbbSQXM/WZeXmmmZp5WMnyZ5qxxhuvn0RCsJQ+3WLNN3GVH0pc=
+	t=1744255739; cv=none; b=fKa5Kxmh0bPwCdUbF9W5Wgo40uPsm169A1GGarCrL0ZNNgg4XciL7GMTKDe/h6/8+jlSuE4j7zLsxLxyrkMvx7dNakt+9tF5u27QZT+zPIP/zsy/DGSeIjJoaV5DsPJsk7eoG84Y6ODRYbYhTx2/WInBI6qEyhJxbEs8HaDOr20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744255583; c=relaxed/simple;
-	bh=M/vGV3Mpk6prS0Ozism8D5Ws1lcrSpDFZMZNWgiINj0=;
+	s=arc-20240116; t=1744255739; c=relaxed/simple;
+	bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IDCgl2xXqk1iJJKDEs7IStEwJuD0QBOjNlrmk3NDrT9LFyaOIRLcSAcYckBAMQQECwCnfQhZ4qjXrYE4fs3JIXOsgqeNvozT4XlTd0Ankg/T30i2VZ7eC0+UcsqwLRUCgpVhWNIPtLyAF8ilIOIVACsyHsq5MVRKgWPGvoRpr7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yhV6DGp5; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=c7hNMKhoF23aIELNjaMt3pGTFwbElweZqLRM1tHefrEuyxK9dh0OqsIOg4+I2KbUvzsvnUwnBhP5s8mdwMiSHJEuKeQmVCho199wk5Sa1MIfaoQMR9EkMpxWtnLq4Ynn9jwjAkY9hbOFlsa9xrra6rik+PJs3x3tFkcV1Ami2zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KBa7mlap; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yhV6DGp5"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so624289a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 20:26:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBa7mlap"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso1515135e9.3;
+        Wed, 09 Apr 2025 20:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744255580; x=1744860380; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744255736; x=1744860536; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LRcWQsIL/ZObsYFazuQjFAzWBbG6LKR31TJBSpTWZNg=;
-        b=yhV6DGp5tJ18sgd7YG5eDEr1fFg33iZ5Cox7fDHByibuKtYNRm6/OkifiZTN8guCdN
-         aPp60/oM1fN44fkNb8rDhx1TVyhhmtwBKTeW/NjWlkoRRJfb6Wv59evk/fIR/18mIIbe
-         QLF2GzqZ3PnJoi+AEBRMh+RT1ZL/q/s/FgoLMlanbtx32doezv01NnEKxXq5lNHkjylk
-         CfuHzgVm5yNBf5ep6bORGa1vDRmvf/h0h7khVwoXzOGcLd5aXqmNgcu2BSEA2vl8EIN0
-         HR4sRYCfa+ZYluEn4JEGSE3rggLhXD+PWiTdIUkaea+g48ABX6q5GBZ0Us6WdLFIikcb
-         6smw==
+        bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
+        b=KBa7mlapEi+XYZ1G7ob00H/Gj6IZR9kKJIdqFmUo6VVVd8/FQkz1YsC0fu8oaJGJL1
+         tedgv52S8CqvFC516b9w3ulePMJ0kn4VG+OD+bA4UcIQJoYPII4zqpzjJmeE7UWl0s+q
+         rGuJoxeGQ1e4bCemEY51xPtLZvzvMZV6dYSv174XPnIiIOolVA8H4YLMGHms0QFA2bZx
+         XbSHY1MY0O+8pesPoRBY20BP9Zj3qM9vo9QFG4x9UA+FLdP0LUIBe7NER4z7JejZqJzq
+         UN16u9W0C3ggnAusQml0NKGOImlOljkrF2Vu6yUXIFI6t5HOdaU+PQtAv5E0QvXlYTUS
+         e1Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744255580; x=1744860380;
+        d=1e100.net; s=20230601; t=1744255736; x=1744860536;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LRcWQsIL/ZObsYFazuQjFAzWBbG6LKR31TJBSpTWZNg=;
-        b=m8XWjNflTH72vm3MnKmwTpqsALTuhhRNUhYa1cwlvBFX1fhB8/OZ2C2BqrO/TZoITG
-         7zh3cBhsP+J5PM4sIXsf5nzVx2NTtXfBe/q0GMeymjX89D44u/2BbDeUJV99Yx5Ubeop
-         6Ugcep75e7hzVHf9IxfeS7CpwSoCcrnp3ar/irFifHS8Dim65sFhO04ZkvBy3GJqdwKW
-         VI98hRtbasuUF7v9qB+DedKyAn1FSw5VV4gEFpYwdEB2WsADu0WLlBD3PgdeSnzYmmwl
-         HNKts8PhGnAaAJRxyDR+qH4LjD7yKxw7LwwbAuWRK24xNaBR71oLcRlfHvyZBCmV+O2S
-         zOsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPV7zwSBNzrrENPHFvoLDevvIVdJ9Uv5lCd/yeV3IMYdFilICI7hpEIJ4LbP1A9h78j95FbPkIwnorVAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeChnHq8ANBJ6QPTrvc3H884+STCle0ZxMSm9fh5Kp+JbV77Zv
-	y2+bTlwiz+kR8OG6FNpk3C0ScDkQfN6CvsBiq82gz54AGP6BwfC7b11oK9A+2jGDks6O+2B2r1Y
-	V7JORrAWyKRL5G639739RKsgaAal1QxSHgeHe
-X-Gm-Gg: ASbGncvRRPGCbox0bEgWJbYfnMPX6BsxkN3cZ8b5xnM2XtKA/fwvHcvrWoyev+xSA1D
-	K6V1JLfGVx/SZX1Sj7V+pNuP79uJ/NoptYZPSYacvDQFtSxQYD8BZr7RXWwvd2J38X+XsetcJWI
-	0QuY5OZy6tJLgPUXNZwA0Q
-X-Google-Smtp-Source: AGHT+IHfdpbDUty8qm3lnEg2XA0Oiq+40JKXIA4G+b4cSmskVRXbuU2/OT3e2+ICwZmj7nphhqpQr7kL4i/A0759s9Y=
-X-Received: by 2002:a17:907:1c22:b0:ac3:3cff:268 with SMTP id
- a640c23a62f3a-acac00ba91cmr64701866b.30.1744255580219; Wed, 09 Apr 2025
- 20:26:20 -0700 (PDT)
+        bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
+        b=RElQqV90WDiuMLP228tLhZE5wnyPZTnM4RQLoXcVFra5vhCp+7pwtBIZDY8a7iwL85
+         759vCzmTpztSe8ke+mqp5mgJGw+yOCwkpZidkA0QqzBA2yH3qzawI4plELcney3mUt7d
+         KvySYtNa0nPJsyudyXPfKh/mqSZ2Rel2eryG1kkIYMabylc7LAwZBdoaVr75+16McZRX
+         B6v0Nhx8F77e6XDckuEGOzQImBwGy6Uag6Ipr3FMiT/PwnBCnYOektrvpC3o72MHAzDo
+         Z2YhQ+pROvkZA8KgVAHYSxEZMvnUtilarsDTwaCrhwNCrdBMLn2p8lEOPTvFCFQMCeRl
+         Gkeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpE0xz8wZgSL0iUodjVorMlb6IcNiLjPJAcZC0im4sztH5UicDqbbqNbhFI46ZGjBA6Qu2czyATnX7oYA5@vger.kernel.org, AJvYcCV2nlneVOcm71IZmDT5YjXfd30mETWCHV8ubZToGvBRtpy/VWMM1uVSnt2UJV3T2VeOwOo=@vger.kernel.org, AJvYcCXL6En3dPo16G21GwAROZt/xFIlhsQEN9UwbBlJIjNYnri1FfQpPZnoIlUb8w9Pn7epTUQwDA/vL904JcJ3ST1fCwjE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa/N9Bm2xWoEQQjVG9VepVyqK9xCygcCUex24iNXfARKaXmxe8
+	1EBR3lcrj2objFf6ofCI2KWWYdA3ZjWT9WveDh6+Hcb/3a3V33TXZhwjSV3ue2leQQa7fxyTAmt
+	EzPrS6DnWJS8X3KQ5D5QqjlM21Ag=
+X-Gm-Gg: ASbGncscjpcKgldVdBUQR4cwzN6wjukgqZV9dPk+sMrab7csXDlM4/9s2KKkFoDk8vV
+	63IVcyzuNvVPPunzBKOJnJb9dDOyG9k1BBQ6+J0DxKJ5UXIBbxOGQgUv4a9akD28WUOc/3YSCX4
+	wmkfGZzdeAyp2e7GBZlYEZEsjtxipPy23bVm1liQ==
+X-Google-Smtp-Source: AGHT+IGaWEojXqplR70DbA9KIqtKUCqO8VdfLfrSloms0d9yOELhm5b7xSv8e9WS2CXXMJ/1dZ+1aka/ieMX4Fqfd8o=
+X-Received: by 2002:a05:600c:1c86:b0:43d:160:cd97 with SMTP id
+ 5b1f17b1804b1-43f2ff9afa2mr3886615e9.25.1744255735922; Wed, 09 Apr 2025
+ 20:28:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410010252.402221-1-namhyung@kernel.org>
-In-Reply-To: <20250410010252.402221-1-namhyung@kernel.org>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Wed, 9 Apr 2025 20:26:07 -0700
-X-Gm-Features: ATxdqUHmAHPAs6VDJuowq4uVYhO0jQGIbi8PN3dtZqS653OEvaiYdqy3CkAdJGM
-Message-ID: <CAJpZYjWTN09uXcArncRVXRRDcCH042MeN4UC1FAokoUNzsuG6A@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Remove evsel__handle_error_quirks()
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250408071151.229329-1-yangfeng59949@163.com>
+In-Reply-To: <20250408071151.229329-1-yangfeng59949@163.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 9 Apr 2025 20:28:44 -0700
+X-Gm-Features: ATxdqUECZ8hBo3V-Su9Z4qQwgeWEVH-SqaCOC-Ef80OY_wkuUAeTqwDGyTS9qH8
+Message-ID: <CAADnVQKAUWaiV-D1noBnWvLgvXCr1PNQvby+0arFei+tSwzz1w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2] bpf: Remove duplicate judgments
+To: Feng Yang <yangfeng59949@163.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 9, 2025 at 6:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+On Tue, Apr 8, 2025 at 12:13=E2=80=AFAM Feng Yang <yangfeng59949@163.com> w=
 rote:
 >
-> The evsel__handle_error_quirks() is to fixup invalid event attributes on
-> some architecture based on the error code.  Currently it's only used for
-> AMD to disable precise_ip not to use IBS which has more restrictions.
+> From: Feng Yang <yangfeng@kylinos.cn>
 >
-> But the commit c33aea446bf555ab changed call evsel__precise_ip_fallback
-> for any errors so there's no difference with the above function.  To
-> make matter worse, it caused a problem with branch stack on Zen3.
->
-> The IBS doesn't support branch stack so it should use a regular core
-> PMU event.  The default event is set precise_max and it starts with 3.
-> And evsel__precise_ip_fallback() tries with it and reduces the level one
-> by one.  At last it tries with 0 but it also failed on Zen3 since the
-> branch stack is not supported for the cycles event.
->
-> At this point, evsel__precise_ip_fallback() restores the original
-> precise_ip value (3) in the hope that it can succeed with other modifier
-> (like exclude_kernel).  Then evsel__handle_error_quirks() see it has
-> precise_ip !=3D 0 and make it retry with 0.  This created an infinite
-> loop.
->
-> Before:
->
->   $ perf record -b -vv |& grep removing
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   removing precise_ip on AMD
->   ...
->
-> After:
->
->   $ perf record -b true
->   Error:
->   Failure to open event 'cycles:P' on PMU 'cpu' which will be removed.
->   Invalid event (cycles:P) in per-thread mode, enable system wide with '-=
-a'.
->   Error:
->   Failure to open any events for recording.
->
-> Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Tested-by: Chun-Tse Shao <ctshao@google.com>
-> ---
->  tools/perf/util/evsel.c | 22 ----------------------
->  1 file changed, 22 deletions(-)
->
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 1974395492d7da5e..3c030da2e477c707 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2566,25 +2566,6 @@ static bool evsel__detect_missing_features(struct =
-evsel *evsel, struct perf_cpu
->         return false;
->  }
->
-> -static bool evsel__handle_error_quirks(struct evsel *evsel, int error)
-> -{
-> -       /*
-> -        * AMD core PMU tries to forward events with precise_ip to IBS PM=
-U
-> -        * implicitly.  But IBS PMU has more restrictions so it can fail =
-with
-> -        * supported event attributes.  Let's forward it back to the core=
- PMU
-> -        * by clearing precise_ip only if it's from precise_max (:P).
-> -        */
-> -       if ((error =3D=3D -EINVAL || error =3D=3D -ENOENT) && x86__is_amd=
-_cpu() &&
-> -           evsel->core.attr.precise_ip && evsel->precise_max) {
-> -               evsel->core.attr.precise_ip =3D 0;
-> -               pr_debug2_peo("removing precise_ip on AMD\n");
-> -               display_attr(&evsel->core.attr);
-> -               return true;
-> -       }
-> -
-> -       return false;
-> -}
-> -
->  static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpu=
-s,
->                 struct perf_thread_map *threads,
->                 int start_cpu_map_idx, int end_cpu_map_idx)
-> @@ -2730,9 +2711,6 @@ static int evsel__open_cpu(struct evsel *evsel, str=
-uct perf_cpu_map *cpus,
->         if (evsel__precise_ip_fallback(evsel))
->                 goto retry_open;
->
-> -       if (evsel__handle_error_quirks(evsel, err))
-> -               goto retry_open;
-> -
->  out_close:
->         if (err)
->                 threads->err_thread =3D thread;
-> --
-> 2.49.0.504.g3bcea36a83-goog
->
+> Many judgments and bpf_base_func_proto functions are repetitive, remove t=
+hem.
+
+Judgments?!
+
+"
+A judgment is a court's official ruling that resolves a legal case,
+determining the rights and obligations of the parties involved
+"
+
+Please use AI or human help to make commit log readable.
+
+English is a second language for lots of developers and maintainers,
+but please try harder.
+
+pw-bot: cr
