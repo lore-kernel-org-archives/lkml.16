@@ -1,125 +1,99 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904031BB6BA;
-	Thu, 10 Apr 2025 04:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074571BB6BA;
+	Thu, 10 Apr 2025 04:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744258351; cv=none; b=VZ0vToLZJy1GBOhEwolSwhuT9lD88y3JfVu7fhtanF9AxybJhIqVf5rPbTPaU+eAjITTXaJINnU1DRqL2rr4ihUL8bkkcl1NH/gsUZhmWX1ZyBUNoVTBdVjsS2usYOp/jNurpqlEq3ZNCZEdw8aibdAajtSkb/Mll29vZqKnMzg=
+	t=1744258457; cv=none; b=ZoG8ms0YloXGU3/pNgRlx1NJz5aZ973WQyuNeyQ7klQKcGFSGmOlt38CB3SL+CIBLVPKBLLAVRF0iCRBZOQb1bKMmOS3w4ELT669fa6kfZ/Kys/cRmz2lEJl31CrFqYwjSw+e0fLgsSs0quAP+k0og7NhvMfSUsDtsRnZJKPHk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744258351; c=relaxed/simple;
-	bh=vpU0jqyzYggE9pqYkka5SOv7jl7U8aHC+OFdlFP+Mus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o+AoAEEOPAW1KeYyuFg8ZNahQSszQ2NqHkvo1OAxvu8PgOtZGMOBEh6bwp6qm91j4zj4oVJPKGwQTL35fH1lXvt0QqBmjDojCtRiKvftO2VsXTXloiCJcFEQgjGPzKKPHwavQ7kupX4FquEI37LaFO7fPUzYJz51vSp4fvje1TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=hCWABpiE; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=LBc7TJQ6; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	s=arc-20240116; t=1744258457; c=relaxed/simple;
+	bh=0eD9VL33YeCoJeo1RYLS81d+ryBC2kaugHJfF+ygWN8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TSx+poYzfazwcqsv8yACLexZBqxrzBnU6IbZpUCCAj1bE6fBBJGWxscwkdwlQzvWVFVER5kV4f2fwvjabkNYobtOA3aaoU6jE2iGp/6ot/P3D9ZvVvVJ2RlmMQkGwXW3F4qivUoTmX/lFNL/ZrQz7dRSYDS9bb8Zlr/kUHnMEuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=zDdspdWO; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="hCWABpiE";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="LBc7TJQ6"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id C899C12FB451;
-	Wed, 09 Apr 2025 21:12:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1744258348; bh=vpU0jqyzYggE9pqYkka5SOv7jl7U8aHC+OFdlFP+Mus=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hCWABpiESCZwmNdguKYrROd+srKJ6YMfrJrbZTm0uKb8zOxUw2TXWYOL9D5fB1/gx
-	 g2DTOAGxD3TKSnglhXv5CWVNmChorZRMrhB7kXKz9asGah0uwdA9+7xnsMvRjAssj5
-	 GMmaKGZlLpVW4xsH4z8DxzwxJbUtJkSz6be3es9tPkOGT1Zvm11hZx7iaE5yNGPfcE
-	 CP/oQXwDdLjrH4KG1LTeJZDGkVMIfXTPO0+GgoxwA1oonn35WMUfrRnQ4xeVJ7ZBj8
-	 ic1BeQ2kN1gDqk4q5H5w1btSkWm0F4mS0HOP4+VrVt92atiBuk2aZh67d1RU3yvr0s
-	 R5vWuvn1EhGTg==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id 5CSmZvWc90vW; Wed,  9 Apr 2025 21:12:25 -0700 (PDT)
-Received: from ketchup (unknown [183.217.80.181])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id AAACE12FB430;
-	Wed, 09 Apr 2025 21:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1744258345; bh=vpU0jqyzYggE9pqYkka5SOv7jl7U8aHC+OFdlFP+Mus=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LBc7TJQ6LNgmZMi0U0v3CO6KLvvq1xjvWdg6L+o+h0WboloJpHGJi+QZUr8BbXHVK
-	 hqmVbmedYMqMGQd8mNz+SwYnZMFW31lcviw5g2ABrC21uY52PWyhYzb8AkOsfDUAP5
-	 ZAfsIU4xWyDZiFioL3DP6boikHFqnl24hf7Q46qaGXX+2uOKycHxDEnPKXpVvQxLtp
-	 IN2+DwEqtcWegErlM83Di6BluBZhaOByUXmGZ8Wg+WqFiVLoVJy1gymZuZM54Bcea8
-	 tWyyXn+pEAx107Wq48guANSAiPW8KjYhKzg/nhaICsIbfJmGbi/rNTQt3dRm603YeZ
-	 h8JHrHFstcz6w==
-Date: Thu, 10 Apr 2025 04:12:17 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Alex Elder <elder@riscstar.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haylen Chu <heylenay@outlook.com>, Yixun Lan <dlan@gentoo.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	spacemit@lists.linux.dev, Inochi Amaoto <inochiama@outlook.com>,
-	Chen Wang <unicornxdotw@foxmail.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
-Subject: Re: [PATCH v6 6/6] riscv: defconfig: enable clock controller unit
- support for SpacemiT K1
-Message-ID: <Z_dFIavJT9_KwT1O@ketchup>
-References: <20250401172434.6774-1-heylenay@4d2.org>
- <20250401172434.6774-7-heylenay@4d2.org>
- <e2c5c2c2-61a8-458d-8e95-521c5ea752f9@riscstar.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zDdspdWO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1744258456; x=1775794456;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0eD9VL33YeCoJeo1RYLS81d+ryBC2kaugHJfF+ygWN8=;
+  b=zDdspdWOKIwDimAqKgnXa/u2KsdCvT5BPRoTNydAuWiJYEx8vzuGBggq
+   UB5XhofGrsMhRGtLz6FCF9JAnYOBC8eohTuE1em0BRfZ8cIyIl4QK3FH/
+   Pus6UGODxbEbrlRhF0TorUUbkIzndd1+XuJLdoKI3EQKpYP1VX9isr6ie
+   4PgiRgj4qnkdC80OLiQRKR2dMWX4ibh9sqsGDHef1MWw52UYENhqvHJKo
+   pdjf2JQMiFqu8/AJbBcfFzGRzQrzvd2jDNe+YY8JH7lUtkfDu8e3o+0fU
+   y3z94XIcMRD70SMk09X/st6pO+34Oo/IHlbTkmiO7FolAEdUG4kCBYVg2
+   Q==;
+X-CSE-ConnectionGUID: rOlfZuRETmefZMrPijj2jQ==
+X-CSE-MsgGUID: YL4bVxb2TBKs0/Ock90PPA==
+X-IronPort-AV: E=Sophos;i="6.15,202,1739862000"; 
+   d="scan'208";a="40766564"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Apr 2025 21:14:09 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 9 Apr 2025 21:13:43 -0700
+Received: from che-ld-unglab06.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Wed, 9 Apr 2025 21:13:40 -0700
+From: Thangaraj Samynathan <thangaraj.s@microchip.com>
+To: <netdev@vger.kernel.org>
+CC: <bryan.whitehead@microchip.com>, <UNGLinuxDriver@microchip.com>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next v2] net: ethernet: microchip: lan743x: Fix memory allocation failure
+Date: Thu, 10 Apr 2025 09:40:34 +0530
+Message-ID: <20250410041034.17423-1-thangaraj.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2c5c2c2-61a8-458d-8e95-521c5ea752f9@riscstar.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, Apr 08, 2025 at 02:37:35PM -0500, Alex Elder wrote:
-> On 4/1/25 12:24 PM, Haylen Chu wrote:
-> > Clock controller unit, or CCU, generates various clocks frequency for
-> > peripherals integrated in SpacemiT K1 SoC and is essential for normal
-> > operation. Let's enable it in defconfig.
-> > 
-> > Signed-off-by: Haylen Chu <heylenay@4d2.org>
-> > ---
-> >   arch/riscv/configs/defconfig | 2 ++
-> >   1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> > index 0f7dcbe3c45b..011788d16d93 100644
-> > --- a/arch/riscv/configs/defconfig
-> > +++ b/arch/riscv/configs/defconfig
-> > @@ -252,6 +252,8 @@ CONFIG_CLK_SOPHGO_CV1800=y
-> >   CONFIG_CLK_SOPHGO_SG2042_PLL=y
-> >   CONFIG_CLK_SOPHGO_SG2042_CLKGEN=y
-> >   CONFIG_CLK_SOPHGO_SG2042_RPGATE=y
-> > +CONFIG_SPACEMIT_CCU=y
-> > +CONFIG_SPACEMIT_K1_CCU=y
-> 
-> Maybe these could be specified with default values that
-> are based on the value of CONFIG_ARCH_SPACEMIT instead of
-> forcing them to be defined here?
+The driver allocates ring elements using GFP_DMA flags. There is
+no dependency from LAN743x hardware on memory allocation should be
+in DMA_ZONE. Hence modifying the flags to use only GFP_ATOMIC
 
-As mentioned by Inochi earlier[1], putting defaults configuration in
-defconfig instead through a "default" kconfig property is the preference
-of clk subsystem, so I'd like to follow.
+Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
+---
+v0
+-Initial Commit
 
-> 					-Alex
-> 
-> >   CONFIG_SUN8I_DE2_CCU=m
-> >   CONFIG_SUN50I_IOMMU=y
-> >   CONFIG_RPMSG_CHAR=y
-> 
+v1
+-Modified GFP flags from GFP_KERNEL to GFP_ATOMIC
+-added fixes tag
 
-Regards,
-Haylen Chu
+v2
+-Resubmit net-next instead of net
 
-[1] https://lore.kernel.org/all/xwo2jjqy634z4rimgyrbjmxlgzxzauxmqzl57qr5oasph74qwj@7we45fnhwfzh/
+---
+ drivers/net/ethernet/microchip/lan743x_main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
+index 23760b613d3e..8b6b9b6efe18 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -2495,8 +2495,7 @@ static int lan743x_rx_process_buffer(struct lan743x_rx *rx)
+ 
+ 	/* save existing skb, allocate new skb and map to dma */
+ 	skb = buffer_info->skb;
+-	if (lan743x_rx_init_ring_element(rx, rx->last_head,
+-					 GFP_ATOMIC | GFP_DMA)) {
++	if (lan743x_rx_init_ring_element(rx, rx->last_head, GFP_ATOMIC)) {
+ 		/* failed to allocate next skb.
+ 		 * Memory is very low.
+ 		 * Drop this packet and reuse buffer.
+-- 
+2.25.1
+
