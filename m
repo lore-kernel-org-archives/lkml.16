@@ -1,228 +1,192 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10699.protonmail.ch (mail-10699.protonmail.ch [79.135.106.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849FB27C14A;
-	Thu, 10 Apr 2025 10:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AACC26B2B5
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744279483; cv=none; b=ReuokBHBClcjOX1OGj8DW0lcpJc71BrOtukbtMowkU8LBeOVPcUu0M6Dj3bGtL+Vv6WmCk4wq4PoOMw2DcuuMKtleenr6ZMorjrsLW1bvbrAc1M9GBBoSs/siHbCx5kRQHZ9q2zS1xN6b8dLgo+eQfCNg12tdFh4CKXM+ZbXioY=
+	t=1744279555; cv=none; b=O4GkZBmHBl7WM6cXEBNgI87YSpXmi1clUs6fZOU8pN11gtdu16i78p1Qm/0VFyhnDO68MbXvo44/n3bwV3KiuWvPNgCGNBqOlan8rVfjAGdDSSK43G8xCL2HWPcFlLOIdEv8Cu3z/d89gpow8aPVbUy/06k6RvAPymzVwr0yh5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744279483; c=relaxed/simple;
-	bh=d2l0bgeOa75neO0E5WT9wRpN8pWI6q1OkesNZ42wDTU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZCuGBqCv1Hm62tymxSE5DOvnBh4ttvvRIa8/Wlssb5zgOiPNFoaFRYban7wyVvLqznhTjVDQgAZKGJ1gGxw0x1kA8+HQZFrOJC9nKAIVkzFy4CPmWy193GUYBtQHNm54Cgb4AqQ+KCJUFG3q6JPAo0NQ6VtQ4o17x5MKOdaEOBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N/19l36g; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744279555; c=relaxed/simple;
+	bh=J3fb56fK1B3gbUj2pzfyp50//yjK+KnrcziWvaCJB6c=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TELy9S0Y8k8+OPKKO+PfZ/De9ofq2PED4qiZmJxolqw2d/gv3wpgxItAQW8+3+l/+w7vshVlOsURoK2V1iR+Xksa3tGQ2l82yS+ciQtROJfq1MmmN6TfNvI4BjVWNmc1pUjmvRlxnboS8PuHUd/mxdOrPK5tPI2VIlF2YFTxQGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=jz0UmgOx; arc=none smtp.client-ip=79.135.106.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/19l36g"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf257158fso4925305e9.2;
-        Thu, 10 Apr 2025 03:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744279480; x=1744884280; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CdUAxzWtLeB6HjxCg5m7G0qo3TL8BAYNXQpF7s4o0Vo=;
-        b=N/19l36g6reOy+VscO+vvmD0zLbcof8CfTw/w7I0tNL7SQ2PSNv1/acy02cF4hmWwS
-         QZytdeApKEbJ9QyaD0vfAWJqtVHZ/1CnPjn6baHKMiu2AiXZJX03inQneFfYfr7Pbkd4
-         GLPsatmKp8hDuQDhk9J9u5CJ90vY8FTwfaDPHe78u5hl+rpB0AYFc+boutLmglYgpjK4
-         1LFU3P0VawWGOLe2meP3BcV4w5g25IUj9uTszEwVM+iwsxfEwWm28LM60AX98WU794FI
-         dpTItKYAAYhooCR+8WkftyVT/ninAwmmGI1KshNbZBEMI1VcAvZbAuoIZbYiljQQwoE9
-         Poiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744279480; x=1744884280;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CdUAxzWtLeB6HjxCg5m7G0qo3TL8BAYNXQpF7s4o0Vo=;
-        b=lmDTf4PcN6fLGDQ2kJEkMV609U4ow4y5eYPcRTm7rbqqGFavKtQ/5CoIK8YPeAhutX
-         PDAjKJWV29leDomRv2ers29ty1D+O0E+XczscblVI02wYUNzwJvq0gFQvN3ekSHqM9s3
-         GO+FCjQQLQi4kWYq9wHHr65opAhrLCg85h3snsh+PMBeSmtjSgCsgS8Uf/phppUF3j92
-         BaFcwodU0JsVxSzlmkp4P/Ydj+243hiKiprPG6rknEJkdR7pRrmDVmdJQSiK7xN5E5bP
-         zQjkPwKB3JUxQv2VHso10Opp6Usm98LU1GGgZcPUEOaT4tAQA96YWJnZW7KVtBjq4L9p
-         p5LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUj4Zdv9DWDjMBBNyYJf/fitoUV5JywGR9m4HqYYS22xhDsR2VPFLKgYQ8ajrTdAfTOlwc8+ymt@vger.kernel.org, AJvYcCXEemManOYn1ohOnP28y4cyVJnwI9L3xSdbONDtl4aggfmg95EWouvATVwnfaqLvuT/ST7ZVS16yWBZSwE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAOTDOlxLEtmkit3VLxi/DN5idsxrqFwF66vtMkEW/YUtVoWuH
-	Y17iM5CWzSvYXkx/pakqVwLFXmfCqsggHPZG79T9bTROyZIQTOkr
-X-Gm-Gg: ASbGncuYIJ1CGrbwlubecnpPafTcmF2hJ2PPkYlShk9xDf1IHAUGtXU/z5sTEwcmv5V
-	qu+s4YVebuvqLmED2+48wYh/Obgt13I9Hy8Wo9eE5u6+SEJz/Jzu2Zdt6cOsE7tjyNJyLosUMHs
-	9HmFOkpu55qNoMAonw6PhqaGNQgaPGSDt2KbNSkto5xXuRRIYVw4C0WrLvVpidklyZZrRTZRKVR
-	Ualb8G/o/2BzCFxJZCyzPFumrMvWHZQ0OlHEtsj2h1lRwYcyH4NteUxCupW9NRVCasekd2Qt8Ls
-	harCTuzlzPYknR1T4d6zQS76LyXzHJCDo37vv8UbTNw0LC50wmYUrYblKtIqybfGtTrCHyBt1K2
-	W5hQMHVjb4g==
-X-Google-Smtp-Source: AGHT+IGYoTyBBqFICuMkH3mR4Fg8hmdezzL5DfQ1KcqV7+Ty4VNQeL8aQBID3P+joTDw2WBxubY1eQ==
-X-Received: by 2002:a05:600c:4f4e:b0:43c:fae1:5151 with SMTP id 5b1f17b1804b1-43f2d9599efmr19305005e9.25.1744279479484;
-        Thu, 10 Apr 2025 03:04:39 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43f2066d109sm50193065e9.20.2025.04.10.03.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 03:04:39 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	SkyLake Huang <SkyLake.Huang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Simon Horman <horms@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [net-next PATCH v2 2/2] net: phy: mediatek: add Airoha PHY ID to SoC driver
-Date: Thu, 10 Apr 2025 12:04:04 +0200
-Message-ID: <20250410100410.348-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250410100410.348-1-ansuelsmth@gmail.com>
-References: <20250410100410.348-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="jz0UmgOx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=7giegmf7kjdlhnpqpulaenm6im.protonmail; t=1744279543; x=1744538743;
+	bh=LWZWX8CmYnjGqKew7oQ/owkId4RwazrHJ+HYjtd+24g=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=jz0UmgOxaJbA5Yf6bup/ILmwTZy1MJvqUwNYc/q87S6gb1e73rI3uVJnHfkZDxNJE
+	 7/TvtgZYT1RsOo2mmBWa0pb35zWJeVrjlDIizgsev1twmcIXumrVP82N74M0NaCtyW
+	 DEG1iBqrkGUsc80lPrP+TVD2jJk361SC2l3F8rMJIGyWPEvi4cDdeNQr2s8cX8AWzZ
+	 B+c75ocKFc6cHM7gl6qaDH0leM59hNSyR7BWTdO3dHmACdyO04VrKsZ8RjxIINxi8m
+	 OBcMT0ondHWbFVm2uFo6JWETuAsVGDhlGNK1UOgH8u24unoyAU9XaWEVm2epucf1Ho
+	 Wp1mHCu8nS0dA==
+Date: Thu, 10 Apr 2025 10:05:38 +0000
+To: Yan Zhao <yan.y.zhao@intel.com>
+From: Myrsky Lintu <myrskylintu@proton.me>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Vitaly Kuznetsov <vkuznets@redhat.com>, Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, rcu@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>, Yiwei Zhang <zzyiwei@google.com>, Lai Jiangshan <jiangshanlai@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Josh Triplett <josh@joshtriplett.org>, Gerd Hoffmann <kraxel@redhat.com>
+Subject: Re: [PATCH 5/5] KVM: VMX: Always honor guest PAT on CPUs that support self-snoop
+Message-ID: <e9f762bc-d158-4b5b-86f0-8ca0de024200@proton.me>
+In-Reply-To: <Z/dTIRE3NCsSM2fH@yzhao56-desk.sh.intel.com>
+References: <0f37f8e5-3cfe-4efb-bec9-b0882d85ead2@proton.me> <Z/dTIRE3NCsSM2fH@yzhao56-desk.sh.intel.com>
+Feedback-ID: 89599038:user:proton
+X-Pm-Message-ID: bc02de826c83081390a5cd0b61733ce60d7d43fb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Airoha AN7581 SoC ship with a Switch based on the MT753x Switch embedded
-in other SoC like the MT7581 and the MT7988. Similar to these they
-require configuring some pin to enable LED PHYs.
+Thank you. I will try to bring this up with QEMU developers then.
 
-Add support for the PHY ID for the Airoha embedded Switch and define a
-simple probe function to toggle these pins. Also fill the LED functions
-and add dedicated function to define LED polarity.
+On 2025-04-10 05:12:01, Yan Zhao wrote:
+> Hi,
+>=20
+> AFAIK, the commit c9c1e20b4c7d ("KVM: x86: Introduce Intel specific quirk
+> KVM_X86_QUIRK_IGNORE_GUEST_PAT") which re-allows honoring guest PAT on In=
+tel's
+> platforms has been in kvm/queue now.
+>=20
+> However, as the quirk is enabled by default, userspace(like QEMU) needs t=
+o turn
+> it off by code like "kvm_vm_enable_cap(kvm_state, KVM_CAP_DISABLE_QUIRKS2=
+, 0,
+> KVM_X86_QUIRK_IGNORE_GUEST_PAT)" to honor guest PAT, according to the doc=
+:
+>=20
+> KVM_X86_QUIRK_IGNORE_GUEST_PAT   ...
+>                                   Userspace can disable the quirk to hono=
+r
+>                                   guest PAT if it knows that there is no =
+such
+>                                   guest software, for example if it does =
+not
+>                                   expose a bochs graphics device (which i=
+s
+>                                   known to have had a buggy driver).
+>=20
+> Thanks
+> Yan
+>=20
+> On Thu, Apr 10, 2025 at 01:13:18AM +0000, Myrsky Lintu wrote:
+>> Hello,
+>>
+>> I am completely new to and uninformed about kernel development. I was
+>> pointed here from Mesa documentation for Venus (Vulkan encapsulation for
+>> KVM/QEMU): https://docs.mesa3d.org/drivers/venus.html
+>>
+>> Based on my limited understanding of what has happened here, this patch
+>> series was partially reverted due to an issue with the Bochs DRM driver.
+>> A fix for that issue has been merged months ago according to the link
+>> provided in an earlier message. Since then work on this detail of KVM
+>> seems to have stalled.
+>>
+>> Is it reasonable to ask here for this patch series to be evaluated and
+>> incorporated again?
+>>
+>> My layperson's attempt at applying the series against 6.14.1 source code
+>> failed. In addition to the parts that appear to have already been
+>> incorporated there are some parts of the patch series that are rejected.
+>> I lack the knowledge to correct that.
+>>
+>> Distro kernels currently ship without it which limits the usability of
+>> Venus on AMD and NVIDIA GPUs paired with Intel CPUs. Convincing
+>> individual distro maintainers of the necessity of this patch series
+>> without the specialized knowledge required for understanding what it
+>> does and performing that evaluation is quite hard. If upstream (kernel)
+>> would apply it now the distros would ship a kernel including the
+>> required changes to users, including me, without that multiplicated effo=
+rt.
+>>
+>> Thank you for your time. If this request is out of place here please
+>> forgive me for engaging this mailing list without a proper understanding
+>> of the list's scope.
+>>
+>> On 2024-10-07 14:04:24, Linux regression tracking (Thorsten Leemhuis) wr=
+ote:
+>>> On 07.10.24 15:38, Vitaly Kuznetsov wrote:
+>>>> "Linux regression tracking (Thorsten Leemhuis)"
+>>>> <regressions@leemhuis.info> writes:
+>>>>
+>>>>> On 30.08.24 11:35, Vitaly Kuznetsov wrote:
+>>>>>> Sean Christopherson <seanjc@google.com> writes:
+>>>>>>
+>>>>>>> Unconditionally honor guest PAT on CPUs that support self-snoop, as
+>>>>>>> Intel has confirmed that CPUs that support self-snoop always snoop =
+caches
+>>>>>>> and store buffers.  I.e. CPUs with self-snoop maintain cache cohere=
+ncy
+>>>>>>> even in the presence of aliased memtypes, thus there is no need to =
+trust
+>>>>>>> the guest behaves and only honor PAT as a last resort, as KVM does =
+today.
+>>>>>>>
+>>>>>>> Honoring guest PAT is desirable for use cases where the guest has a=
+ccess
+>>>>>>> to non-coherent DMA _without_ bouncing through VFIO, e.g. when a vi=
+rtual
+>>>>>>> (mediated, for all intents and purposes) GPU is exposed to the gues=
+t, along
+>>>>>>> with buffers that are consumed directly by the physical GPU, i.e. w=
+hich
+>>>>>>> can't be proxied by the host to ensure writes from the guest are pe=
+rformed
+>>>>>>> with the correct memory type for the GPU.
+>>>>>>
+>>>>>> Necroposting!
+>>>>>>
+>>>>>> Turns out that this change broke "bochs-display" driver in QEMU even
+>>>>>> when the guest is modern (don't ask me 'who the hell uses bochs for
+>>>>>> modern guests', it was basically a configuration error :-). E.g:
+>>>>>> [...]
+>>>>>
+>>>>> This regression made it to the list of tracked regressions. It seems
+>>>>> this thread stalled a while ago. Was this ever fixed? Does not look l=
+ike
+>>>>> it, but I might have missed something. Or is this a regression I shou=
+ld
+>>>>> just ignore for one reason or another?
+>>>>>
+>>>>
+>>>> The regression was addressed in by reverting 377b2f359d1f in 6.11
+>>>>
+>>>> commit 9d70f3fec14421e793ffbc0ec2f739b24e534900
+>>>> Author: Paolo Bonzini <pbonzini@redhat.com>
+>>>> Date:   Sun Sep 15 02:49:33 2024 -0400
+>>>>
+>>>>       Revert "KVM: VMX: Always honor guest PAT on CPUs that support se=
+lf-snoop"
+>>>
+>>> Thx. Sorry, missed that, thx for pointing me towards it. I had looked
+>>> for things like that, but seems I messed up my lore query. Apologies fo=
+r
+>>> the noise!
+>>>
+>>>> Also, there's a (pending) DRM patch fixing it from the guest's side:
+>>>> https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/9388ccf6992522=
+3223c87355a417ba39b13a5e8e
+>>>
+>>> Great!
+>>>
+>>> Ciao, Thorsten
+>>>
+>>> P.S.:
+>>>
+>>> #regzbot fix: 9d70f3fec14421e793ffbc0ec2f739b24e534900
+>>>
+>>>
+>>>
+>>
+>>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
-Changes v2:
-- Add Reviewed-by tag
-- Address suggested dependency from Russell
-
- drivers/net/phy/mediatek/Kconfig      |  4 +-
- drivers/net/phy/mediatek/mtk-ge-soc.c | 62 +++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/mediatek/Kconfig b/drivers/net/phy/mediatek/Kconfig
-index 6a4c2b328c41..4308002bb82c 100644
---- a/drivers/net/phy/mediatek/Kconfig
-+++ b/drivers/net/phy/mediatek/Kconfig
-@@ -15,7 +15,9 @@ config MEDIATEK_GE_PHY
- 
- config MEDIATEK_GE_SOC_PHY
- 	tristate "MediaTek SoC Ethernet PHYs"
--	depends on (ARM64 && ARCH_MEDIATEK && NVMEM_MTK_EFUSE) || COMPILE_TEST
-+	depends on ARM64 || COMPILE_TEST
-+	depends on ARCH_AIROHA || (ARCH_MEDIATEK && NVMEM_MTK_EFUSE) || \
-+		   COMPILE_TEST
- 	select MTK_NET_PHYLIB
- 	help
- 	  Supports MediaTek SoC built-in Gigabit Ethernet PHYs.
-diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
-index 175cf5239bba..fd0e447ffce7 100644
---- a/drivers/net/phy/mediatek/mtk-ge-soc.c
-+++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
-@@ -11,8 +11,11 @@
- #include "../phylib.h"
- #include "mtk.h"
- 
-+#define MTK_PHY_MAX_LEDS			2
-+
- #define MTK_GPHY_ID_MT7981			0x03a29461
- #define MTK_GPHY_ID_MT7988			0x03a29481
-+#define MTK_GPHY_ID_AN7581			0x03a294c1
- 
- #define MTK_EXT_PAGE_ACCESS			0x1f
- #define MTK_PHY_PAGE_STANDARD			0x0000
-@@ -1406,6 +1409,53 @@ static int mt7981_phy_probe(struct phy_device *phydev)
- 	return mt798x_phy_calibration(phydev);
- }
- 
-+static int an7581_phy_probe(struct phy_device *phydev)
-+{
-+	struct mtk_socphy_priv *priv;
-+	struct pinctrl *pinctrl;
-+
-+	/* Toggle pinctrl to enable PHY LED */
-+	pinctrl = devm_pinctrl_get_select(&phydev->mdio.dev, "gbe-led");
-+	if (IS_ERR(pinctrl))
-+		dev_err(&phydev->mdio.bus->dev,
-+			"Failed to setup PHY LED pinctrl\n");
-+
-+	priv = devm_kzalloc(&phydev->mdio.dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	phydev->priv = priv;
-+
-+	return 0;
-+}
-+
-+static int an7581_phy_led_polarity_set(struct phy_device *phydev, int index,
-+				       unsigned long modes)
-+{
-+	u32 mode;
-+	u16 val;
-+
-+	if (index >= MTK_PHY_MAX_LEDS)
-+		return -EINVAL;
-+
-+	for_each_set_bit(mode, &modes, __PHY_LED_MODES_NUM) {
-+		switch (mode) {
-+		case PHY_LED_ACTIVE_LOW:
-+			val = MTK_PHY_LED_ON_POLARITY;
-+			break;
-+		case PHY_LED_ACTIVE_HIGH:
-+			val = 0;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return phy_modify_mmd(phydev, MDIO_MMD_VEND2, index ?
-+			      MTK_PHY_LED1_ON_CTRL : MTK_PHY_LED0_ON_CTRL,
-+			      MTK_PHY_LED_ON_POLARITY, val);
-+}
-+
- static struct phy_driver mtk_socphy_driver[] = {
- 	{
- 		PHY_ID_MATCH_EXACT(MTK_GPHY_ID_MT7981),
-@@ -1441,6 +1491,17 @@ static struct phy_driver mtk_socphy_driver[] = {
- 		.led_hw_control_set = mt798x_phy_led_hw_control_set,
- 		.led_hw_control_get = mt798x_phy_led_hw_control_get,
- 	},
-+	{
-+		PHY_ID_MATCH_EXACT(MTK_GPHY_ID_AN7581),
-+		.name		= "Airoha AN7581 PHY",
-+		.probe		= an7581_phy_probe,
-+		.led_blink_set	= mt798x_phy_led_blink_set,
-+		.led_brightness_set = mt798x_phy_led_brightness_set,
-+		.led_hw_is_supported = mt798x_phy_led_hw_is_supported,
-+		.led_hw_control_set = mt798x_phy_led_hw_control_set,
-+		.led_hw_control_get = mt798x_phy_led_hw_control_get,
-+		.led_polarity_set = an7581_phy_led_polarity_set,
-+	},
- };
- 
- module_phy_driver(mtk_socphy_driver);
-@@ -1448,6 +1509,7 @@ module_phy_driver(mtk_socphy_driver);
- static const struct mdio_device_id __maybe_unused mtk_socphy_tbl[] = {
- 	{ PHY_ID_MATCH_EXACT(MTK_GPHY_ID_MT7981) },
- 	{ PHY_ID_MATCH_EXACT(MTK_GPHY_ID_MT7988) },
-+	{ PHY_ID_MATCH_EXACT(MTK_GPHY_ID_AN7581) },
- 	{ }
- };
- 
--- 
-2.48.1
 
