@@ -1,178 +1,213 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63302836AA
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A121D5175
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744315302; cv=none; b=dtuQdOpHsZt1XYpGyIBndpP6KvBtMv4/2Ns6SlWMQbb3k5G2CPohnBODhX0CxeYZvc/b8uVZFmWF8eRUDtQVecINdWV0mudLuweTjyMs0EUsiRBYhveXXNudP5Zdlj/18EL0uQX5LYBhHhAMUQVw6G62T/bJZDDzUREVKhXnZgk=
+	t=1744315314; cv=none; b=ro35rxV4xyC9O710/mtRChs7d/K8XCHmMQMfPYDHXj4xUAXtmKraQPUxO2J7ak6JwLn1UZnC9vNZRiDTlazRqJu3zwfPeStG34EvImFSZlVSVpzZ8j9HajYtjlqIK/0BJOVduVeV+MXmRk5nXp12UspKJypNIyIuKfY/Z58WpGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744315302; c=relaxed/simple;
-	bh=Ms/oOeKSEMXS64ZazNDVvDxHOh6Vnicgt8yf3H6sLTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KCkX4Fjuz4AyAo5w5nvjnorDF9YONXvey0OOmaJrQ1h8VL8owKCpLWELluWRS0UyXJzRmNZojJKE9et//dqRH7O2Vtj3GVckkampSjNhhTDmATgMVgI6vwmVtzayn2kF0oPLpsOhQ9vbmZ4PX93nznkhxFDYhKQsbktZcS2TMio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DdmOoAWr; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744315314; c=relaxed/simple;
+	bh=TrzVZsIqMWU4hMxLem7e7/TD9bck0PlIEl82VVz4dgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j7v462RsmmeKZl1gkQXIirtQfRy4gWT7sd7PJplpd4qH+cGk6CaZnoBB+oO9Y4aEJ1w2EwlKINEHbIRjuIoRpvOTiZ614WTtxaUNm/GmdX+IKGKTGkSeCVYTYo+euc9LsVQY/iiWDpYv5usO2QdtnFdbM6KuwJIBIznemdNRIyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CekWLmOX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DdmOoAWr"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85e73562577so120226639f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744315299; x=1744920099; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JTExV2/x6J7An5Mf72xYq5DzHVrycRROkLdZFeM6opQ=;
-        b=DdmOoAWrcSZXGgiu+F3R4fDg6yz4wsWW4FB6JQrVhVTgO5fwKXzRyMLnsgk0uAOyJN
-         0O+Ih4jQL3MmnEuu6iQYkQ5aD3JSOXGrfKyBJaOC1nS1LGJ1zOww4KhYi8+kHmlG/qoX
-         2n5BbYA5r2ReXhQ5wymjPYoLhNYod81gP+pJU=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CekWLmOX"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AFsroS013887
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:01:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=cQKF/VxyCC/OpmAoONC18oPV
+	cOgA+smPZj7cgddFWhE=; b=CekWLmOXP/799feVGPBXyj1rLU0O205hSip17lRn
+	1ZYB/jJTw5GWr9C/+D3Y/7cwpC90R0y32893q7WDyQNgHlzMZj12S3UeIrpNrgSh
+	AmyPeytI35uNhNHR38qcioQoKtpU4o77PbSq7KmkdTUUnR5GzST/AxmBQ0kAUW+u
+	Wuf9R+Q+0I38BY+GQBgxtnVwwhOO+FyT+dyyn4GqFBedvqdYnAtZQbFHx6pELFWQ
+	jy/fqStHIgA1D6p8GZDWF8B9TTt2AxLyJmooiEP769ozMIoUfLbDGye2UmEz/qpt
+	mnG3iudCH4i8IMKScfwJ+X5qjE3170a9RGSYFJad9KSwKQ==
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbeg8cn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:01:52 +0000 (GMT)
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b402f69d4so145826639f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:01:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744315299; x=1744920099;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JTExV2/x6J7An5Mf72xYq5DzHVrycRROkLdZFeM6opQ=;
-        b=K+6UsEim2okjp0kth/CXj8vXWaHbWgTNBk6lTyDqPISNO1Tb0iTsRbN8CQ8Y0+BbkB
-         /zNDQK5Sib0nh1duc65H6DHOv8rIi7akNfRKmnEaZ0QxsIxau8FhOTJ/tMiyE6K5EFpu
-         GhoABnCMq/XdTYC4sTiErHTh/5ISxCU31FQjo+E/0hxb6ooMKXL4eetmesBTHVCkp6xZ
-         n27nBp2i2XUE7JMjLJoDsjuLoMqQlSAzbtiH8m5XpkifcgQ6imDkIvdQ0h8+4Dqyby6e
-         OFyUNwR/kueGmzQQVGxc+mE3gH2eyTNQaK2/et7RVptV4DMNoMj3UvGEtBky0QN0q730
-         qtlQ==
-X-Gm-Message-State: AOJu0YyQkJx0chh6euUuDKvngV9sgnEKHXlh7VJx0oHh3lvZyJV2UtSV
-	km/eFWWsV9plR0PGwWHWGzuP7GkSOCo5CCT2BD2a9SLGV2riu1tnFlCyX8xegz0=
-X-Gm-Gg: ASbGncusswbxuM6qiYYJo6RzFTCQ1zhwvg5NlMzcpgRh1VeaNcE553UX0IScx4Uva9t
-	fzj5dlS7Gh5cO8xx21vcc9GnJpOl0YP1mQVEWbyYRTmB2r/JmOYJAKNV+g1ZlVpj2aI+QeJsBGm
-	HLL2s0TRddlW1tL8bce81gOF9zRKx1bW5ePrvi/17Btim+cSQuVsHFPTe/lFk2IkXTI8bU6iXXT
-	81vqlyl71/afwslrN3udbQJQrVTsSe11GZ7eH3MgcEj9m81CRQSFxV5gn+o3f+l+Av67a0FEHQN
-	hs6n9pukcT2eH1juEGSYKCtdInOA40swuHx24iuGDej2GwVjaB4=
-X-Google-Smtp-Source: AGHT+IEamSjMZo51Y/WT0FkpK3Y3HQ6M3NFrIP9orG53L5IoXNqmvwloYy4Vaei+SdIQbSb9eK1H3g==
-X-Received: by 2002:a05:6e02:1806:b0:3d1:9999:4f62 with SMTP id e9e14a558f8ab-3d7ec1dc817mr2203095ab.2.1744315298542;
-        Thu, 10 Apr 2025 13:01:38 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e2ecebsm889447173.128.2025.04.10.13.01.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 13:01:38 -0700 (PDT)
-Message-ID: <58b846c8-ce58-44b3-b93e-828fbe98b42d@linuxfoundation.org>
-Date: Thu, 10 Apr 2025 14:01:37 -0600
+        d=1e100.net; s=20230601; t=1744315311; x=1744920111;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cQKF/VxyCC/OpmAoONC18oPVcOgA+smPZj7cgddFWhE=;
+        b=B9tbwmCPYnly3dxI6ZQllbGyKhu/fpcg13SNU+bHWQJe+CIGIlp7yMvnYrqgI0eyto
+         QSGMBJOPW4j34NZAowJd+vRvZBcM1TidlnDl+jB9lb6SK5IT7Sp22qA0IFxBHPdZFnMA
+         CekhE/oJDbcKJIWLO4Bo4ZxNwP+plxlKHCsMod0vJ6m8PbjTqVxBARF9zQOH+u/ovP/x
+         KkWrjE6mZVKi5UEN8QqASCSPnmSEr7qW6ESk53xTh+5sVWh47WhGQ8fPauRp5AA2bKiQ
+         jtyX7LyFkWTrO1ocXvQSNCnSklwHuKy3pNl/3ud9/AYCm22PpN9+5R5EeNlVNV85j7O5
+         tcXA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0q+71NMicoFpXDCBVottR58DxHiSK4elOuNUCgBdigWN5iHnj+IlaUd0KW/npSkp7N1ObZ5gx5Pp7ifk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU86qRLY9FPawLk4+GRNIt0CYUyhUZ9TsmtZkW+iAhh1xdZib/
+	Jp26cGLYJmwX0xRn1RJ3cUgkjS1IgYh51y+qA4vBjDwmZ1GBSXMsiiXdkT3RIZiqzruDeFDQltV
+	xhjnCWGjJUr5p0tFDFKHzNwkgVshrWTRf1rR/cHw8SHvgOYnc1tC0UKu/f/VmN6M=
+X-Gm-Gg: ASbGncustdKAVvgV8mPfdfihR4CJh3SQXMZSoG3EtyFwYK9u57dfQcylVWXuR7neM0v
+	AnySjnnpkkQCEw+sHR+cjMvO8V5Elp5RZlBW5ciQLUxkqHztufvhItg0jpBl8gnWZ3uJShLoa2o
+	nnvG01Yp55WcayYrlH2qEKwy0YUXaUNhHuiICyeB5Z5mX+j4HNSlQLF1Ntaocl7RpG6TzZc2XZI
+	ZK41yxqfIbACv9dEo/EG6lTS28QGRR5YAdon0fkKiUCnV4B05nEr/BmEuKWTFcfE0jSx2lSF51F
+	KRh1i7nx3RzTDisPQl2XMssXUHuFaZi2zT3wif0k2Sl8Rzc020pxoqg93H7Lbkr/v0I+QBTwZeQ
+	=
+X-Received: by 2002:a05:6e02:989:b0:3d6:d162:be12 with SMTP id e9e14a558f8ab-3d7ec277267mr1619205ab.21.1744315311156;
+        Thu, 10 Apr 2025 13:01:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOcgglq72/KtLWeA8A2vkExuJ9YEmeKKzeIWF0tQFF4TsI9WFOgD8ectS26sdoezA0dGVAXQ==
+X-Received: by 2002:a05:6e02:989:b0:3d6:d162:be12 with SMTP id e9e14a558f8ab-3d7ec277267mr1618855ab.21.1744315310705;
+        Thu, 10 Apr 2025 13:01:50 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d51006bsm234397e87.170.2025.04.10.13.01.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 13:01:48 -0700 (PDT)
+Date: Thu, 10 Apr 2025 23:01:45 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ayushi Makhija <quic_amakhija@quicinc.com>
+Cc: konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+Message-ID: <wzqct2y67h6bkazxv3se77slsheaw5rspgcrcfjm7ngr5t4alw@nktpqrt5woky>
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+ <20250404115539.1151201-8-quic_amakhija@quicinc.com>
+ <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
+ <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/32] kselftest harness and nolibc compatibility
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Shuah Khan <shuah@kernel.org>, Willy Tarreau <w@1wt.eu>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
- <04bf6bbc-d813-488d-9117-def19717b8b5@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <04bf6bbc-d813-488d-9117-def19717b8b5@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
+X-Proofpoint-GUID: -ZYVdNr_eZURmm1doTuwELaJpvtv9oT-
+X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f823b0 cx=c_pps a=uNfGY+tMOExK0qre0aeUgg==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=u-yodfwXetj8OPw8cswA:9 a=CjuIK1q_8ugA:10 a=61Ooq9ZcVZHF1UnRMGoz:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: -ZYVdNr_eZURmm1doTuwELaJpvtv9oT-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_06,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100145
 
-On 4/10/25 09:19, Shuah Khan wrote:
-> On 4/7/25 00:52, Thomas Weißschuh wrote:
->> Nolibc is useful for selftests as the test programs can be very small,
->> and compiled with just a kernel crosscompiler, without userspace support.
->> Currently nolibc is only usable with kselftest.h, not the more
->> convenient to use kselftest_harness.h
->> This series provides this compatibility by adding new features to nolibc
->> and removing the usage of problematic features from the harness.
->>
->> The first half of the series are changes to the harness, the second one
->> are for nolibc. Both parts are very independent and should go through
->> different trees.
->> The last patch is not meant to be applied and serves as test that
->> everything works together correctly.
->>
->> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
->> ---
->> Changes in v2:
->> - Rebase unto v6.15-rc1
->> - Rename internal nolibc symbols
->> - Handle edge case of waitpid(INT_MIN) == ESRCH
->> - Fix arm configurations for final testing patch
->> - Clean up global getopt.h variable declarations
->> - Add Acks from Willy
->> - Link to v1: https://lore.kernel.org/r/20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de
+On Thu, Apr 10, 2025 at 06:37:54PM +0530, Ayushi Makhija wrote:
+> Hi Dmirity/Konard
 > 
-> Thank you. I am going to start reviewing the series. It could take
-> me a few days to get through all 32 patches. :)
+> On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
+> > On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
+> >> Add anx7625 DSI to DP bridge device nodes.
+> >>
+> >> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+> >> ---
+> >>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
+> >>  1 file changed, 207 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> >> index 175f8b1e3b2d..8e784ccf4138 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> >> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> >> @@ -28,6 +28,13 @@ chosen {
+> >>  		stdout-path = "serial0:115200n8";
+> >>  	};
+> >>  
+> >> +	vph_pwr: vph-pwr-regulator {
+> >> +		compatible = "regulator-fixed";
+> >> +		regulator-name = "vph_pwr";
+> >> +		regulator-always-on;
+> >> +		regulator-boot-on;
+> >> +	};
+> >> +
+> >>  	vreg_conn_1p8: vreg_conn_1p8 {
+> >>  		compatible = "regulator-fixed";
+> >>  		regulator-name = "vreg_conn_1p8";
+> >> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
+> >>  			};
+> >>  		};
+> >>  	};
+> >> +
+> >> +	dp-dsi0-connector {
+> >> +		compatible = "dp-connector";
+> >> +		label = "DSI0";
+> >> +		type = "full-size";
+> >> +
+> >> +		port {
+> >> +			dp_dsi0_connector_in: endpoint {
+> >> +				remote-endpoint = <&dsi2dp_bridge0_out>;
+> >> +			};
+> >> +		};
+> >> +	};
+> >> +
+> >> +	dp-dsi1-connector {
+> >> +		compatible = "dp-connector";
+> >> +		label = "DSI1";
+> >> +		type = "full-size";
+> >> +
+> >> +		port {
+> >> +			dp_dsi1_connector_in: endpoint {
+> >> +				remote-endpoint = <&dsi2dp_bridge1_out>;
+> >> +			};
+> >> +		};
+> >> +	};
+> >>  };
+> >>  
+> >>  &apps_rsc {
+> >> @@ -517,9 +548,135 @@ &i2c11 {
+> >>  
+> >>  &i2c18 {
+> >>  	clock-frequency = <400000>;
+> >> -	pinctrl-0 = <&qup_i2c18_default>;
+> >> +	pinctrl-0 = <&qup_i2c18_default>,
+> >> +		    <&io_expander_intr_active>,
+> >> +		    <&io_expander_reset_active>;
+> > 
+> > These pinctrl entries should go to the IO expander itself.
+> > 
+> >>  	pinctrl-names = "default";
+> >> +
+> >>  	status = "okay";
+> >> +
+> >> +	io_expander: gpio@74 {
+> >> +		compatible = "ti,tca9539";
+> >> +		reg = <0x74>;
+> >> +		interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+> >> +		gpio-controller;
+> >> +		#gpio-cells = <2>;
+> >> +		interrupt-controller;
+> >> +		#interrupt-cells = <2>;
+> >> +
+> >> +		gpio2-hog {
+> > 
+> > This needs a huuge explanation in the commit message. Otherwise I'd say
+> > these pins should likely be used by the corresponding anx bridges.
 > 
->>
->> ---
->> Thomas Weißschuh (32):
->>        selftests: harness: Add harness selftest
->>        selftests: harness: Use C89 comment style
->>        selftests: harness: Ignore unused variant argument warning
->>        selftests: harness: Mark functions without prototypes static
->>        selftests: harness: Remove inline qualifier for wrappers
->>        selftests: harness: Remove dependency on libatomic
->>        selftests: harness: Implement test timeouts through pidfd
->>        selftests: harness: Don't set setup_completed for fixtureless tests
->>        selftests: harness: Always provide "self" and "variant"
->>        selftests: harness: Move teardown conditional into test metadata
->>        selftests: harness: Add teardown callback to test metadata
->>        selftests: harness: Stop using setjmp()/longjmp()
->>        selftests: harness: Guard includes on nolibc
->>        tools/nolibc: handle intmax_t/uintmax_t in printf
->>        tools/nolibc: use intmax definitions from compiler
->>        tools/nolibc: use pselect6_time64 if available
->>        tools/nolibc: use ppoll_time64 if available
->>        tools/nolibc: add tolower() and toupper()
->>        tools/nolibc: add _exit()
->>        tools/nolibc: add setpgrp()
->>        tools/nolibc: implement waitpid() in terms of waitid()
->>        Revert "selftests/nolibc: use waitid() over waitpid()"
->>        tools/nolibc: add dprintf() and vdprintf()
->>        tools/nolibc: add getopt()
->>        tools/nolibc: allow different write callbacks in printf
->>        tools/nolibc: allow limiting of printf destination size
->>        tools/nolibc: add snprintf() and friends
->>        selftests/nolibc: use snprintf() for printf tests
->>        selftests/nolibc: rename vfprintf test suite
->>        selftests/nolibc: add test for snprintf() truncation
->>        tools/nolibc: implement width padding in printf()
->>        HACK: selftests/nolibc: demonstrate usage of the kselftest harness
->>
->>   tools/include/nolibc/Makefile                      |    1 +
->>   tools/include/nolibc/getopt.h                      |  101 ++
->>   tools/include/nolibc/nolibc.h                      |    1 +
->>   tools/include/nolibc/stdint.h                      |    4 +-
->>   tools/include/nolibc/stdio.h                       |  127 +-
->>   tools/include/nolibc/string.h                      |   17 +
->>   tools/include/nolibc/sys.h                         |  105 +-
->>   tools/testing/selftests/Makefile                   |    1 +
->>   tools/testing/selftests/kselftest/.gitignore       |    1 +
->>   tools/testing/selftests/kselftest/Makefile         |    6 +
->>   .../testing/selftests/kselftest/harness-selftest.c |  129 ++
-
-One more thing. You are missing kselftest_harness maintainers.
-Please send v3 with the changes I requested for test name and
-directory, and make cleanup?
-
-The fixes to existing kselftest_harness compile warnings and such
-can go in an upcoming rc and the others can go into the next release.
-
->>   .../selftests/kselftest/harness-selftest.expected  |   62 +
->>   .../selftests/kselftest/harness-selftest.sh        |   14 +
->>   tools/testing/selftests/kselftest_harness.h        |  181 +-
->>   tools/testing/selftests/nolibc/Makefile            |   13 +-
->>   tools/testing/selftests/nolibc/harness-selftest.c  |    1 +
->>   tools/testing/selftests/nolibc/nolibc-test.c       | 1729 +-------------------
->>   tools/testing/selftests/nolibc/run-tests.sh        |    2 +-
->>   18 files changed, 635 insertions(+), 1860 deletions(-)
->> ---
->> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
->> change-id: 20250130-nolibc-kselftest-harness-8b2c8cac43bf
->>
+> Thanks, for the review.
 > 
+> Previously, I was referring to the downstream DT and misunderstood the use of gpio-hog.
+> After reading the schematic, I realized that gpio2, gpio3, gpio10, and gpio11 are all input pins
+> to the IO expander TC9539. We have already configured gpio2 and gpio10 as interrupts in the
+> ANX7625 bridges, so the gpio-hog is not required. It is working without the gpio-hog configuration.
 
-thanks,
--- Shuah
+Please make sure that there are pinctrl entries for all pins.
+
+-- 
+With best wishes
+Dmitry
