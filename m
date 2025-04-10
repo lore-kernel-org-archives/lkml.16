@@ -1,255 +1,176 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE18938F80;
-	Thu, 10 Apr 2025 08:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE20F381A3;
+	Thu, 10 Apr 2025 08:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272396; cv=none; b=A2iKXBA8+t+pc9A/oMNAQTPZg9b/2SX7VM/a9/raPtTKmksRCbp7o5W4HCZVDKBoYHSF5EYL7j8GCxrrLS/nlLAGHJWCp/WVEuMMjeFnPkeUPVe0fuSSwi6R1NmfkV4sJsZ4aHBFlG99PJ9KNptvrHWU3xkpXaeLRR0XThtTa9Q=
+	t=1744272401; cv=none; b=h/kxqHlLYRh6DzfTWjKfmVvCj071Qgh3qU4vGi7ZrtjA8kuLM1EP0uR4TLXZ4vBEWUkssKY/CjPhkYKBXwZh31dhAAUJnkYypCMlWyuFJiD/Ol1d6n38nxM7VobHlk/oJz/xjl/UQqDvy8Xt0rLu3aYwBvlleW7MTzcI1aHxLEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272396; c=relaxed/simple;
-	bh=1Pn+UNZD5wmywn8Y3Wm5SqEvf+30u57D0FX8q3S5eWk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oxyyhRsK7m+8b3PPDmXA0edq7EkF6e2D9g+hfL6Fv+K+c5otexpiNqT2AtlR3BeQ7yjuCWu0/A+CqbfB2AGnaNkqT4w+hFtnCisXsmZcuW7w5ks7wv0MvQ7OS1POGzxdodZJejTRP0FuQaQ7EI1YC2WPaJg3TQCBRkdUB6Pi/MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZYC6B58NQznfYw;
-	Thu, 10 Apr 2025 16:05:06 +0800 (CST)
-Received: from kwepemo200002.china.huawei.com (unknown [7.202.195.209])
-	by mail.maildlp.com (Postfix) with ESMTPS id 52F131402EB;
-	Thu, 10 Apr 2025 16:06:30 +0800 (CST)
-Received: from [10.174.179.13] (10.174.179.13) by
- kwepemo200002.china.huawei.com (7.202.195.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 10 Apr 2025 16:06:29 +0800
-Message-ID: <2699b9d3-595e-2640-6b53-298ba835f929@huawei.com>
-Date: Thu, 10 Apr 2025 16:06:28 +0800
+	s=arc-20240116; t=1744272401; c=relaxed/simple;
+	bh=Eu7ZUw1kA+huwNWmhYz+sYJqpRJLQFYkskDCGUdGFsg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dCKawVikFFIiyaIbKWidef5JN5LeVlwbd7Sd5whuXhOcVo9yVD22qgxoaNCrQsVu3asbvaGmtLGuTI50H0hKPxkUDrOwubVXs4Nd+o7iHiM+657UEchrjlphNLD0H3fYgBfMxoOS/8lhGiB6bPQZAgkgsl3mP6KcEXyDDDO/GJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-b1-67f77c09ae62
+From: Rakie Kim <rakie.kim@sk.com>
+To: akpm@linux-foundation.org
+Cc: gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	osalvador@suse.de,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v7 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
+Date: Thu, 10 Apr 2025 17:06:19 +0900
+Message-ID: <20250410080629.564-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <20250410075341.549-1-rakie.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH V4] mm/gup: Clear the LRU flag of a page before adding to
- LRU batch
-To: David Hildenbrand <david@redhat.com>, <yangge1116@126.com>,
-	<akpm@linux-foundation.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>, <21cnbao@gmail.com>,
-	<baolin.wang@linux.alibaba.com>, <aneesh.kumar@linux.ibm.com>,
-	<liuzixing@hygon.cn>, Kefeng Wang <wangkefeng.wang@huawei.com>
-References: <1720075944-27201-1-git-send-email-yangge1116@126.com>
- <4119c1d0-5010-b2e7-3f1c-edd37f16f1f2@huawei.com>
- <91ac638d-b2d6-4683-ab29-fb647f58af63@redhat.com>
- <076babae-9fc6-13f5-36a3-95dde0115f77@huawei.com>
- <26870d6f-8bb9-44de-9d1f-dcb1b5a93eae@redhat.com>
- <5d0cb178-6436-d98b-3abf-3bcf8710eb6f@huawei.com>
- <207a00a2-0895-4086-97ae-d31ead423cf8@redhat.com>
-From: Jinjiang Tu <tujinjiang@huawei.com>
-In-Reply-To: <207a00a2-0895-4086-97ae-d31ead423cf8@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemo200002.china.huawei.com (7.202.195.209)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsXC9ZZnoS5nzfd0g/1tshZz1q9hs5g+9QKj
+	xdf1v5gtft49zm6xauE1NovjW+exW5yfdYrF4vKuOWwW99b8Z7U4M63IYvWaDAduj52z7rJ7
+	dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz2Hy62uPzJrkArigum5TUnMyy
+	1CJ9uwSujMu3GpgLnmtUfOv/xt7AuEuhi5GTQ0LARGLp0e3MMPa5b6vZuhg5ONgElCSO7Y0B
+	CYsIyEpM/XuepYuRi4NZ4BOTxMFXP1hBEsICcRL7fm9kA7FZBFQl+tc9BIvzChhLvFmxjR1i
+	pqZEw6V7TCA2J8j8P7fBaoQEeCRebdjPCFEvKHFy5hMWEJtZQF6ieetsZpBlEgLf2STurvnJ
+	BDFIUuLgihssExj5ZyHpmYWkZwEj0ypGocy8stzEzBwTvYzKvMwKveT83E2MwAhYVvsnegfj
+	pwvBhxgFOBiVeHg9Mr6lC7EmlhVX5h5ilOBgVhLh9TT8ni7Em5JYWZValB9fVJqTWnyIUZqD
+	RUmc1+hbeYqQQHpiSWp2ampBahFMlomDU6qB0ebf7f+hrAqZuueeBO+bEFX195X58RiV++oX
+	1KR1JdfPLArgvjlN9UrdkS372uP/LT/QPSvc8dqjilNrefwnT/0rNCe82uT4Y8GZyU/+Xiu4
+	Uvqzbf2PuEsqVhzFzyTPv+7Ycqo43/pvyWzBtzqr0jgTee/sefayqjnbqPS25Js/7zXWXc31
+	OqfEUpyRaKjFXFScCADKl+KAfAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsXCNUNNS5ez5nu6weeTQhZz1q9hs5g+9QKj
+	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLc5MK7I4
+	dO05q8XqNRkWv7etYHPg99g56y67R3fbZXaPliNvWT0W73nJ5LHp0yR2jxMzfrN47Hxo6fF+
+	31U2j2+3PTwWv/jA5LH5dLXH501yATxRXDYpqTmZZalF+nYJXBmXbzUwFzzXqPjW/429gXGX
+	QhcjJ4eEgInEuW+r2boYOTjYBJQkju2NAQmLCMhKTP17nqWLkYuDWeATk8TBVz9YQRLCAnES
+	+35vZAOxWQRUJfrXPQSL8woYS7xZsY0dYqamRMOle0wgNifI/D+3wWqEBHgkXm3YzwhRLyhx
+	cuYTFhCbWUBeonnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJERj0
+	y2r/TNzB+OWy+yFGAQ5GJR5ej4xv6UKsiWXFlbmHGCU4mJVEeD0Nv6cL8aYkVlalFuXHF5Xm
+	pBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1MM7abfvgpewkbpP0gEcnzPyY/fx3
+	ZUe1WF66en257+kGEZs36n4Xjxd8WbL2VEZHVhrXquK+0If1i+IZle85yy7Rud25N+vjAsGm
+	ec+riiOOPNt/ssH41hSJm3I7RXWVbbfoLUnSnPKM71eUX9t3AfY72+8rTtLdN1vv2r4f6RxV
+	2yJPrGpMklZiKc5INNRiLipOBABEqBxVdgIAAA==
+X-CFilter-Loop: Reflected
 
+On Thu, 10 Apr 2025 16:53:33 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
+> On Wed, 9 Apr 2025 11:51:36 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+> > Rakie Kim wrote:
+> > > > > > +static void sysfs_wi_node_delete(int nid)
+> > > > > >  {
+> > > > > > -	if (!node_attr)
+> > > > > > +	if (!wi_group->nattrs[nid])
+> > > > > >  		return;
+> > > > > > -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
+> > > > > > -	kfree(node_attr->kobj_attr.attr.name);
+> > > > > > -	kfree(node_attr);
+> > > > > > +
+> > > > > > +	sysfs_remove_file(&wi_group->wi_kobj,
+> > > > > > +			  &wi_group->nattrs[nid]->kobj_attr.attr);
+> > > > > 
+> > > > > This still looks broken to me, but I think this is more a problem that
+> > > > > was present in the original code.
+> > > > > 
+> > > > > At this point @wi_group's reference count is zero because
+> > > > > sysfs_wi_release() has been called. However, it can only be zero if it has
+> > > > > properly transitioned through kobject_del() and final kobject_put(). It
+> > > > > follows that kobject_del() arranges for kobj->sd to be NULL. That means
+> > > > > that this *should* be hitting the WARN() in kernfs_remove_by_name_ns()
+> > > > > for the !parent case.
+> > > > > 
+> > > > > So, either you are not triggering that path, or testing that path, but
+> > > > > sys_remove_file() of the child attributes should be happening *before*
+> > > > > sysfs_wi_release().
+> > > > > 
+> > > > > Did I miss something?
+> > > > 
+> > > > I think the missing change is that sysfs_wi_node_add() failures need to
+> > > > be done with a sysfs_wi_node_delete() of the added attrs *before* the
+> > > > kobject_del() of @wi_group.
+> > > 
+> > > Hi Dan Williams
+> > > 
+> > > Thank you very much for identifying this potential issue in the code.
+> > > 
+> > > As you pointed out, this seems to be a problem that was already present in
+> > > the original implementation, and I agree that it needs to be addressed.
+> > > 
+> > > However, since this issue existed prior to the changes in this patch
+> > > series, I believe it would be more appropriate to fix it in a separate
+> > > follow-up patch rather than include it here.
+> > 
+> > I tend to disagree. The whole motivation of this series is to get the
+> > kobject lifetime handling correct in order to add the new dynamic
+> > capability. The claimed correctness fixups are incomplete. There is time
+> > to respin this (we are only at -rc1) and get it right before landing the
+> > new dynamic capability.
+> > 
+> > One of the outcomes of the "MM Process" topic at LSF/MM was that Andrew
+> > wanted more feedback on when patches are not quite ready for prime-time
+> > and I think this is an example of a patch set that deserves another spin
+> > to meet the stated goals.
+> > 
+> > > I will start preparing a new patch to address this problem, and I would
+> > > greatly appreciate it if you could review it once it's ready.
+> > 
+> > Will definitely review it. I will leave to Andrew if he wants an
+> > incremental fixup on top of this series, or rebase on top of a fully
+> > fixed baseline. My preference is finish fixing all the old kobject()
+> > issues and then rebase the new dynamic work on top. Either way, do not
+> > be afraid to ask Andrew to replace a series in -mm, that's a sign of the
+> > process working as expected.
+> 
+> Thank you very much for your advice, and I completely agree with your
+> recommendation. I will immediately ask Andrew to remove this patch series
+> from -mm. Then, I will prepare a new version, v8, which properly addresses
+> the kobject-related issues you pointed out.
+> 
+> Once again, I sincerely appreciate your thoughtful and detailed feedback.
+> 
+> Rakie
+> 
 
-在 2025/4/8 18:04, David Hildenbrand 写道:
-> On 08.04.25 10:47, Jinjiang Tu wrote:
->>
->> 在 2025/4/1 22:33, David Hildenbrand 写道:
->>> On 27.03.25 12:16, Jinjiang Tu wrote:
->>>>
->>>> 在 2025/3/26 20:46, David Hildenbrand 写道:
->>>>> On 26.03.25 13:42, Jinjiang Tu wrote:
->>>>>> Hi,
->>>>>>
->>>>>
->>>>> Hi!
->>>>>
->>>>>> We notiched a 12.3% performance regression for LibMicro pwrite
->>>>>> testcase due to
->>>>>> commit 33dfe9204f29 ("mm/gup: clear the LRU flag of a page before
->>>>>> adding to LRU batch").
->>>>>>
->>>>>> The testcase is executed as follows, and the file is tmpfs file.
->>>>>>        pwrite -E -C 200 -L -S -W -N "pwrite_t1k" -s 1k -I 500 -f 
->>>>>> $TFILE
->>>>>
->>>>> Do we know how much that reflects real workloads? (IOW, how much
->>>>> should we care)
->>>>
->>>> No, it's hard to say.
->>>>
->>>>>
->>>>>>
->>>>>> this testcase writes 1KB (only one page) to the tmpfs and repeats
->>>>>> this step for many times. The Flame
->>>>>> graph shows the performance regression comes from
->>>>>> folio_mark_accessed() and workingset_activation().
->>>>>>
->>>>>> folio_mark_accessed() is called for the same page for many times.
->>>>>> Before this patch, each call will
->>>>>> add the page to cpu_fbatches.activate. When the fbatch is full, the
->>>>>> fbatch is drained and the page
->>>>>> is promoted to active list. And then, folio_mark_accessed() does
->>>>>> nothing in later calls.
->>>>>>
->>>>>> But after this patch, the folio clear lru flags after it is added to
->>>>>> cpu_fbatches.activate. After then,
->>>>>> folio_mark_accessed will never call folio_activate() again due to 
->>>>>> the
->>>>>> page is without lru flag, and
->>>>>> the fbatch will not be full and the folio will not be marked active,
->>>>>> later folio_mark_accessed()
->>>>>> calls will always call workingset_activation(), leading to
->>>>>> performance regression.
->>>>>
->>>>> Would there be a good place to drain the LRU to effectively get that
->>>>> processed? (we can always try draining if the LRU flag is not set)
->>>>
->>>> Maybe we could drain the search the cpu_fbatches.activate of the
->>>> local cpu in __lru_cache_activate_folio()? Drain other fbatches is
->>>> meaningless .
->>>
->>> So the current behavior is that folio_mark_accessed() will end up
->>> calling folio_activate()
->>> once, and then __lru_cache_activate_folio() until the LRU was drained
->>> (which can
->>> take a looong time).
->>>
->>> The old behavior was that folio_mark_accessed() would keep calling
->>> folio_activate() until
->>> the LRU was drained simply because it was full of "all the same pages"
->>> ?. Only *after*
->>> the LRU was drained, folio_mark_accessed() would actually not do
->>> anything (desired behavior).
->>>
->>> So the overhead comes primarily from __lru_cache_activate_folio()
->>> searching through
->>> the list "more" repeatedly because the LRU does get drained less
->>> frequently; and
->>> it would never find it in there in this case.
->>>
->>> So ... it used to be suboptimal before, now it's more suboptimal I
->>> guess?! :)
->>>
->>> We'd need a way to better identify "this folio is already queued for
->>> activation". Searching
->>> that list as well would be one option, but the hole "search the list"
->>> is nasty.
->>>
->>> Maybe we can simply set the folio as active when staging it for
->>> activation, after having
->>> cleared the LRU flag? We already do that during folio_add.
->>>
->>> As the LRU flag was cleared, nobody should be messing with that folio
->>> until the cache was
->>> drained and the move was successful.
->>>
->>>
->>> Pretty sure this doesn't work, but just to throw out an idea:
->>>
->>>  From c26e1c0ceda6c818826e5b89dc7c7c9279138f80 Mon Sep 17 00:00:00 2001
->>> From: David Hildenbrand <david@redhat.com>
->>> Date: Tue, 1 Apr 2025 16:31:56 +0200
->>> Subject: [PATCH] test
->>>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>   mm/swap.c | 21 ++++++++++++++++-----
->>>   1 file changed, 16 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/mm/swap.c b/mm/swap.c
->>> index fc8281ef42415..bbf9aa76db87f 100644
->>> --- a/mm/swap.c
->>> +++ b/mm/swap.c
->>> @@ -175,6 +175,8 @@ static void folio_batch_move_lru(struct
->>> folio_batch *fbatch, move_fn_t move_fn)
->>>       folios_put(fbatch);
->>>   }
->>>
->>> +static void lru_activate(struct lruvec *lruvec, struct folio *folio);
->>> +
->>>   static void __folio_batch_add_and_move(struct folio_batch __percpu
->>> *fbatch,
->>>           struct folio *folio, move_fn_t move_fn,
->>>           bool on_lru, bool disable_irq)
->>> @@ -191,6 +193,10 @@ static void __folio_batch_add_and_move(struct
->>> folio_batch __percpu *fbatch,
->>>       else
->>>           local_lock(&cpu_fbatches.lock);
->>>
->>> +    /* We'll only perform the actual list move deferred. */
->>> +    if (move_fn == lru_activate)
->>> +        folio_set_active(folio);
->>> +
->>>       if (!folio_batch_add(this_cpu_ptr(fbatch), folio) ||
->>> folio_test_large(folio) ||
->>>           lru_cache_disabled())
->>>           folio_batch_move_lru(this_cpu_ptr(fbatch), move_fn);
->>> @@ -299,12 +305,14 @@ static void lru_activate(struct lruvec *lruvec,
->>> struct folio *folio)
->>>   {
->>>       long nr_pages = folio_nr_pages(folio);
->>>
->>> -    if (folio_test_active(folio) || folio_test_unevictable(folio))
->>> -        return;
->>> -
->>> +    /*
->>> +     * We set the folio active after clearing the LRU flag, and set 
->>> the
->>> +     * LRU flag only after moving it to the right list.
->>> +     */
->>> +    VM_WARN_ON_ONCE(!folio_test_active(folio));
->>> +    VM_WARN_ON_ONCE(folio_test_unevictable(folio));
->>>
->>>       lruvec_del_folio(lruvec, folio);
->>> -    folio_set_active(folio);
->>>       lruvec_add_folio(lruvec, folio);
->>>       trace_mm_lru_activate(folio);
->>>
->>> @@ -342,7 +350,10 @@ void folio_activate(struct folio *folio)
->>>           return;
->>>
->>>       lruvec = folio_lruvec_lock_irq(folio);
->>> -    lru_activate(lruvec, folio);
->>> +    if (!folio_test_unevictable(folio)) {
->>> +        folio_set_active(folio);
->>> +        lru_activate(lruvec, folio);
->>> +    }
->>>       unlock_page_lruvec_irq(lruvec);
->>>       folio_set_lru(folio);
->>>   }
->>
->> I test with the patch, and the performance regression disappears.
->>
->> By the way, I find folio_test_unevictable() is called in 
->> lru_deactivate, lru_lazyfree, etc.
->> unevictable flag is set when the caller clears lru flag. IIUC, since 
->> commit 33dfe9204f29 ("mm/gup: clear the LRU flag of a page before
->> adding to LRU batch"), folios in fbatch can't be set unevictable 
->> flag, so there is no need to check unevictable flag in 
->> lru_deactivate, lru_lazyfree, etc?
->
-> I was asking myself the exact same question when crafting this patch. 
-> Sounds like a cleanup worth investigating! :)
+To Andrew
 
-folio_activate                 __mlock_folio
-   folio_test_unevictable
-                                      folio_test_clear_lru
-                                      folio_set_unevictable
-                                      folio_set_lru
-   folio_batch_add_and_move
-     folio_test_clear_lru
+I sincerely apologize for the inconvenience. It appears that this commit still
+requires additional corrections. I would appreciate it if you could drop the
+changes you merged into -mm, mm-new branch yesterday.
 
-In the above case, unevictable flag will be set before lru flag is cleared in folio_activate(). So folio may still be
-unevictable in lru_activate().
+<1>
+The patch titled
+     Subject: mm/mempolicy: fix memory leaks in weighted interleave sysfs has been added to the -mm mm-new branch.  Its filename is
+     mm-mempolicy-fix-memory-leaks-in-weighted-interleave-sysfs.patch
+This patch will shortly appear at
+     https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/mm-mempolicy-fix-memory-leaks-in-weighted-interleave-sysfs.patch
 
->
-> Do you have capacity to look into that, and to turn my proposal into a 
-> proper patch? It might take me a bit until I get to it.
->
+<2>
+The patch titled
+     Subject: mm/mempolicy: prepare weighted interleave sysfs for memory hotplug has been added to the -mm mm-new branch.  Its filename is
+     mm-mempolicy-prepare-weighted-interleave-sysfs-for-memory-hotplug.patch
+This patch will shortly appear at
+     https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/mm-mempolicy-prepare-weighted-interleave-sysfs-for-memory-hotplug.patch
+
+<3>
+The patch titled
+     Subject: mm/mempolicy: support memory hotplug in weighted interleave has been added to the -mm mm-new branch.  Its filename is
+     mm-mempolicy-support-memory-hotplug-in-weighted-interleave.patch
+This patch will shortly appear at
+     https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/mm-mempolicy-support-memory-hotplug-in-weighted-interleave.patch
+
+Rakie
+
