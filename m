@@ -1,154 +1,78 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389EE28CF66
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC2728EA50;
+	Thu, 10 Apr 2025 17:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744306611; cv=none; b=sb4/XcpGtAlqD+UhAe9UAUmZPk1q+SLk5WIrcVgKxcOmKFDPEfFJkA4B1z1zHnYZHcr/1CCE7+oLkwaRmTPJXAKsIoyKLJkSSjcNqES4z+tocWcheERPrQRe5Upu9uL9I+/U5Q2y6Kvgbaa18yhV38mMEXn3PmT5zJQwy85E7aY=
+	t=1744306612; cv=none; b=A90J4muWuOW9Lk+k2Yl2RQ85Uc2sX+qMjzs7CLpAFsuS2nNuBrzNnWlblVeQbjKSUBB3O6C9vxTVDjwnrsV/yB1xXItbO+q2L8IWFOQpUoqcf5WzWWCKy63Q62I3t/SI6bAa3u4/X5kxIeqGncMUdnvka2503u6NSsHo6W+QmVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744306611; c=relaxed/simple;
-	bh=G1gAgZUvOfcfqAATJ+QPOb6uS3I1bA5GRxZVqHLeqq4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=c+7b6lZmYlaoEEYKVUZYp6N7ykPtTlH9pn+LJnrdo7XVL68Twsr1ZFN56oie/++0uy7IWRbcXs0wvgigc1iiqi7yw/ZBBPS2wsKNoL8nOF5gLFoet84XibKnHB2SGl1LTHteD8W/5moMvbrd2kAbUwX93sbMJ1dvL8500C3jvJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nZ2je+Ut; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1744306612; c=relaxed/simple;
+	bh=t7HKnATgmCsf3hGTnDANUpJF1Vs2UUV5sxwrpaZGqZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rvNNRAUtA5tMr+N43TgYGT0249pc7UihMss5kY+4LYw+51DHvlFmWJHA49RM4E+7TCIWaP0I39CYJi1Bptr8cDDOLCZp2r1WVjINavMurN8btdL1t9+WNUwqMqgaKxvLqk8qaxBZobCVsNJN+m9zFxH9LohRFx2DNy6vOdNjRfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=dpWrYRR9; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nZ2je+Ut"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227ea16b03dso14091825ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744306608; x=1744911408; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jBep772rAPnbEAws0gmIZzBWpvWIV/iE0VJyGXGhVdQ=;
-        b=nZ2je+UtpxEcOJRbSuZk1OVhBg5siLcwYycv54wdQGkfJjDkrHZFWbpZm9hnJye/KX
-         oOuZJtG89k+bnXN8h/Zt/12gxmGtxsj4PNSrkqDxmkdjj7g6vbb96IRsUo3ylccgeqIk
-         aN61sgvqFWEed+KihjidyRa9rkQYNohtLOGq/doePbdJTEEtFUclUoANte8l/EaLV4o6
-         UHxPQCj6D9Lkynms2mpVy+6Oktspp8z3viXLh1R17vO/Z+nH8kRo3BgD07tRy7zdAKCc
-         /85VPmWfS6Tvg1owPSpaCRc/9C42hJeCcJjJ0VlzJhhhxrGfn1t/Q9eP/VQVecXsNPVF
-         CXuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744306608; x=1744911408;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jBep772rAPnbEAws0gmIZzBWpvWIV/iE0VJyGXGhVdQ=;
-        b=IVAfhnSBKMohYH8qLOf2kVlbYKUvz0CSWQdApfD3UMdHaBNDts9D1Rw++Mu345OmmS
-         HXnRJFQpOWgmwfhVFN9eC9un7C7aSw4CwxZCCQWiTbGsaK3yvxmJnjWrfO5tY0yErN/S
-         sBrqH2yVS+tT1Rs42BlZp+KCDAZwDxTjOpCGg3cNJLpC+LqDO0fAzvri9qlr3luPRbto
-         lOrMbuPLZA3GG6bB79xW15HW3nzM8SVd4EnLP/NWO1Y2GoqyfnNLdQrP6yKsr4iBXiaD
-         7jfgIXC55bP24/VvaVyBdAJkLL5fzJgSb+Mx1/DkfOTctde7sNe0XzmUqgKtBHRU7qYl
-         KEjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVl9D57MKU/3KcHHnHxNo8pb5lGtNV6CzK2wTt/5Bp/xAKCooKEZ4GE21Ygh2OzlOVqnHM7A/jUZ6LiNJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf0VdA65a3teRyEiC8Ss5RN43D9pm1TdoAmCymGktb3cUxmEf8
-	btgXDQ8SLkvHpGnqFOE4q0cYz+qj/Uz+WS8UJjLeRpncPcYiRKRNJLpVEN2FyAf6uRHTmJYSh0+
-	K6n3g5Q==
-X-Google-Smtp-Source: AGHT+IFTo0lN/DGGBZMtGdBm9V4Gd+ZDzBjeI4vL2FnktYYk1TbWtujx99ZirSakEtrM/OA2kI73D73SRWn8
-X-Received: from plal20.prod.google.com ([2002:a17:903:54:b0:215:48e7:5dc8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4cc:b0:21f:617a:f1b2
- with SMTP id d9443c01a7336-22b42c5bd38mr51689375ad.46.1744306608453; Thu, 10
- Apr 2025 10:36:48 -0700 (PDT)
-Date: Thu, 10 Apr 2025 10:36:21 -0700
-In-Reply-To: <20250410173631.1713627-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dpWrYRR9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=bekYy2UKLDPJOi383/IFEmXjLc1ik86Fy2UFdlonMbA=; b=dpWrYRR9yUA+NgE9r8G+CzYkAe
+	KUpxJql71SsF2pILHM75BFUdI8lmtedbJ8coxAsPPs53US+gBqjKxm7/NjSMDIfYOoL0tgGF5qSXG
+	ndzU0R6jfAXplP6wL4vZP/XY33f5rlGMdBCr067cGmjrKC1cIHafG8BmPfnamuCrnrqk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u2vpO-008iGA-I5; Thu, 10 Apr 2025 19:36:38 +0200
+Date: Thu, 10 Apr 2025 19:36:38 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Prathosh.Satish@microchip.com
+Cc: ivecera@redhat.com, conor@kernel.org, krzk@kernel.org,
+	netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
+	arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
+	kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
+	mschmidt@redhat.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+Message-ID: <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-3-ivecera@redhat.com>
+ <20250410-skylark-of-silent-symmetry-afdec9@shite>
+ <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
+ <20250410-puritan-flatbed-00bf339297c0@spud>
+ <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
+ <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250410173631.1713627-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250410173631.1713627-3-irogers@google.com>
-Subject: [PATCH v2 02/12] perf bench evlist-open-close: Reduce scope of 2 variables
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
 
-Make 2 global variables local. Reduces ELF binary size by removing
-relocations. For a no flags build, the perf binary size is reduced by
-4,144 bytes on x86-64.
+> Prathosh, could you please bring more light on this?
+> 
+> > Just to clarify, the original driver was written specifically with 2-channel 
+> > chips in mind (ZL30732) with 10 input and 20 outputs, which led to some confusion of using zl3073x as compatible.
+> > However, the final version of the driver will support the entire ZL3073x family 
+> > ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc 
+> > ensuring compatibility across all variants.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/bench/evlist-open-close.c | 42 +++++++++++++++-------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+Hi Prathosh
 
-diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
-index 5a27691469ed..79cedcf94a39 100644
---- a/tools/perf/bench/evlist-open-close.c
-+++ b/tools/perf/bench/evlist-open-close.c
-@@ -46,25 +46,6 @@ static struct record_opts opts = {
- 	.ctl_fd_ack          = -1,
- };
- 
--static const struct option options[] = {
--	OPT_STRING('e', "event", &event_string, "event", "event selector. use 'perf list' to list available events"),
--	OPT_INTEGER('n', "nr-events", &nr_events,
--		     "number of dummy events to create (default 1). If used with -e, it clones those events n times (1 = no change)"),
--	OPT_INTEGER('i', "iterations", &iterations, "Number of iterations used to compute average (default=100)"),
--	OPT_BOOLEAN('a', "all-cpus", &opts.target.system_wide, "system-wide collection from all CPUs"),
--	OPT_STRING('C', "cpu", &opts.target.cpu_list, "cpu", "list of cpus where to open events"),
--	OPT_STRING('p', "pid", &opts.target.pid, "pid", "record events on existing process id"),
--	OPT_STRING('t', "tid", &opts.target.tid, "tid", "record events on existing thread id"),
--	OPT_STRING('u', "uid", &opts.target.uid_str, "user", "user to profile"),
--	OPT_BOOLEAN(0, "per-thread", &opts.target.per_thread, "use per-thread mmaps"),
--	OPT_END()
--};
--
--static const char *const bench_usage[] = {
--	"perf bench internals evlist-open-close <options>",
--	NULL
--};
--
- static int evlist__count_evsel_fds(struct evlist *evlist)
- {
- 	struct evsel *evsel;
-@@ -225,6 +206,29 @@ static char *bench__repeat_event_string(const char *evstr, int n)
- 
- int bench_evlist_open_close(int argc, const char **argv)
- {
-+	const struct option options[] = {
-+		OPT_STRING('e', "event", &event_string, "event",
-+			   "event selector. use 'perf list' to list available events"),
-+		OPT_INTEGER('n', "nr-events", &nr_events,
-+			    "number of dummy events to create (default 1). If used with -e, it clones those events n times (1 = no change)"),
-+		OPT_INTEGER('i', "iterations", &iterations,
-+			    "Number of iterations used to compute average (default=100)"),
-+		OPT_BOOLEAN('a', "all-cpus", &opts.target.system_wide,
-+			    "system-wide collection from all CPUs"),
-+		OPT_STRING('C', "cpu", &opts.target.cpu_list, "cpu",
-+			   "list of cpus where to open events"),
-+		OPT_STRING('p', "pid", &opts.target.pid, "pid",
-+			   "record events on existing process id"),
-+		OPT_STRING('t', "tid", &opts.target.tid, "tid",
-+			   "record events on existing thread id"),
-+		OPT_STRING('u', "uid", &opts.target.uid_str, "user", "user to profile"),
-+		OPT_BOOLEAN(0, "per-thread", &opts.target.per_thread, "use per-thread mmaps"),
-+		OPT_END()
-+	};
-+	const char *const bench_usage[] = {
-+		"perf bench internals evlist-open-close <options>",
-+		NULL
-+	};
- 	char *evstr, errbuf[BUFSIZ];
- 	int err;
- 
--- 
-2.49.0.604.gff1f9ca942-goog
+Your email quoting is very odd, i nearly missed this reply.
 
+Does the device itself have an ID register? If you know you have
+something in the range ZL30731 to ZL30735, you can ask the hardware
+what it is, and the driver then does not need any additional
+information from DT, it can hard code it all based on the ID in the
+register?
+
+	Andrew
