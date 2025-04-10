@@ -1,208 +1,192 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2051.outbound.protection.outlook.com [40.107.241.51])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD0D20AF73;
-	Thu, 10 Apr 2025 08:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273564; cv=fail; b=ofiulAAKzaVAQXq1fTJr3USxy6SmGY6tLJX9+ZaUj9zSdOEFkDdvH6V/arAUznno19N3zfT3H5haag8A8PzYP5VOh5nvaHW7F+BYr0Q/Y4Iw9qKjSF1D2LXWVkhN0UX9UkBff8NSLQBpHIdyNd0xgNCxeVYpEMgC92B0OHZqaFM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273564; c=relaxed/simple;
-	bh=rtDP+q3oSxJTACZ8X6P6hpNII6VRGTtDXEUS1KET+2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OB3D6/IvqmfGxRWgmRwkRvhKnRhWG/HVuopc7bO5plM4G6jUZnNy5+cgMUnuVAVTRDZBqp4HzsQY4YwHrzZpt7K4wIOr343ASi3cZ3hSrKkXiknFN1OEXOij1+CWh8i4tiz+CHuP5SYITO3QH8CynB++ioHTl4pQD8Q/eov/Fow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=fh8hJmia; arc=fail smtp.client-ip=40.107.241.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBCA1E1A17
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744273591; cv=none; b=Q0YwcwsTvUS3+LMLMuIm3YAAs62QF8dYVxTgazNgdYTlWKsA9RXBCEwcFyxqEbSZ48V0+kcZHdff9wSBMMIYM5lrCjjdO4bfnhMNoaP2HeHp4yMMuK3j/HOORdx5KJp5KQCjDe0temXHZ9+W7eeD2vhllZxLAkefdcu5+Rj4Us4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744273591; c=relaxed/simple;
+	bh=Zt5wT8BxHcC6U8kz+EOUAJtbJ0+dgEe+qtaubnwIykQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OIf6qXMcQ+XmIBX/azoRdvla6YbIDcwpIR9lUmRKj0rlIXhBEcwvqJq/CizQnHfJdcKXQURmyma06gToVzV59Y5Oa0ClgAX3WYuOWKfXw7q9FQRCs+cRIfAYSu8nvpB7sGJPxCm3Uyp2HTYbQ7ENoU556jdl7rpaIxRGkRmgyfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IrCY+a8Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K2lCdSzW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="fh8hJmia"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pZpitpfV/kCC3qhs/yygOgNr2B5wYUVSk4TBztczet4fyQN9CPb8YVjTB+oXC6TxirCKfoh4En1Ydg4q+2wMIK5nuvDmq2AUPQL9NzG5zHuh/xJ/w5pM4vVIIfAgf57SgD6/Prrbxfn4gxo8Lxye0bkJY9sZoig8go8zQEDEKRxzMuEt5BLkYUbC9SK+qZz6MYvxXadbAFHvyj9M6ezsuoDe/6pxCu4/7n4hRHN3ixjirbhIZ5cD6hT94t5EzUMNTlDp0MMim9ZSNXw1+Is04xKUTIX0Pat+SrACoZ9Ku85ntNjyVXgM3qfYl/f7mIfcME02P4Cw+sDilwgJ50rYNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3OVPQi7wRoh/sfZHT3FH56+4ubgbxw+Z+gdwDPTfhN0=;
- b=GETdwla73HkkbKfHL2A2/XP5AQOoMOXcXTVr11rbvQ2D0ET/6Z3H58sG98vsd9wuvfzLvaFGs7SSjdQwnhvTkMbWJ7DOBB4SGFkwcYFjRcMVMek76mrFa2taN4FiPB6aLXmiZejBFXbumgoMDCP7Co3YIHHRooOmCfXGK3OGD8BMruPZKoTl1QIWyJIG72rFE4jBzmAI29XT91Xw5GS/6AxFjPKJkmQGeY4hyjm/W/j1IEQ0Sbc8WSQruK7kpVTv9GmrHEyAkvB7RMT8rVSWsm6HZOW9rvf3S2wnvX1E8pqzkhMZ+M4otXgOfHj4xqlrb3kyo5rjHL1qyztZ4bUGqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3OVPQi7wRoh/sfZHT3FH56+4ubgbxw+Z+gdwDPTfhN0=;
- b=fh8hJmiaILwEtlUDB3K5Ma6ztUD+WtmPfpsQ0RR/23UgR1iPbpPzKE45fnica3HD2NrqtWpTzzNdJRTlLtk3ve9hDtaDTtnp6Og1nxJg2/5YfVcwazB+JGtnwoLWh1v/rMegAmziIJMSLHAL824dUmVSrlHLbGRVmWGlQiwMzBEBfLgc2jny9iJREw8/O7Cu5WLK3r5S6wPkUIAo+uhV7Y8UcXt141Nag2Y6qQ90IAeAbu6rfeDVluHAs9YAjf1uDidDPjj0IJPYz6sl/f7iHHOJta3pEozYMGIBIkQr+ykXbhuAXAHRJQ59mI/c2h0MqQCgC+ad1e5yQHFI+S73Og==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU0PR04MB9251.eurprd04.prod.outlook.com (2603:10a6:10:352::15)
- by AM9PR04MB8858.eurprd04.prod.outlook.com (2603:10a6:20b:409::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
- 2025 08:25:56 +0000
-Received: from DU0PR04MB9251.eurprd04.prod.outlook.com
- ([fe80::708f:69ee:15df:6ebd]) by DU0PR04MB9251.eurprd04.prod.outlook.com
- ([fe80::708f:69ee:15df:6ebd%4]) with mapi id 15.20.8606.033; Thu, 10 Apr 2025
- 08:25:56 +0000
-From: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: linux-rtc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	s32@nxp.com,
-	imx@lists.linux.dev,
-	Christophe Lizzi <clizzi@redhat.com>,
-	Alberto Ruiz <aruizrui@redhat.com>,
-	Enric Balletbo <eballetb@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>,
-	Larisa Grigore <larisa.grigore@nxp.com>
-Subject: [PATCH 2/2] rtc: pcf85063: handle stopped oscillator at startup
-Date: Thu, 10 Apr 2025 11:25:48 +0300
-Message-ID: <20250410082548.3821228-3-ciprianmarian.costea@oss.nxp.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250410082548.3821228-1-ciprianmarian.costea@oss.nxp.com>
-References: <20250410082548.3821228-1-ciprianmarian.costea@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR02CA0222.eurprd02.prod.outlook.com
- (2603:10a6:20b:28f::29) To DU0PR04MB9251.eurprd04.prod.outlook.com
- (2603:10a6:10:352::15)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IrCY+a8Z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K2lCdSzW"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744273587;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GcP8bp/Bwxaz8iMlCvzBl968xjN5im+xVM+3YcYabbk=;
+	b=IrCY+a8ZKPOrJCYZ1CKJKGPAILCcmdHhY1saDz0LyEz8CfcKsTGo4O0zLliEddWX6NSJcw
+	N3rH/hNZn854OhQqeBK2O2wCyPajirHi2Tmu3N1mHEWJwNwWIpuyvUZ4wx+ojH2kzXbmGM
+	lz5RXL6iPiEXnOPNMxk84ruHmRtuokIcLqPWCmLy+8tAnyR+bqSJP1Iz3o2wXifp+Q3QyC
+	cUvBnx9NqkRAmXvN5bNlCKmOTfRytU4Q7EVgYXtFCHey5VRtmHOBhGynt4eXoKOwTuL5RP
+	WI4L+PSsfmYeJSslSMxZLCO38L3B9SrZ91svLdS2dfVyD2TsiNjEOjoN/h/pKw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744273587;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GcP8bp/Bwxaz8iMlCvzBl968xjN5im+xVM+3YcYabbk=;
+	b=K2lCdSzWG57FDviMSN5qmowD3D4yuX86cH4rzn/LSewWL3haeE75uBrXY8ZxzUX4eydR14
+	U+TuzdE1AN7HNyBw==
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, Waiman Long <longman@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+In-Reply-To: <20250410065446.57304-2-gmonaco@redhat.com>
+References: <20250410065446.57304-2-gmonaco@redhat.com>
+Date: Thu, 10 Apr 2025 10:26:26 +0200
+Message-ID: <87ecy0tob1.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9251:EE_|AM9PR04MB8858:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb335c31-39c0-4f09-f71b-08dd780950a1
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bTIyZVlWeGJud0ZkUklzMUs3SDRvOWVsWm5BWDBmLzZPOVUxVEM1Z1g2d3Fm?=
- =?utf-8?B?dk1VTlJoS3U2akZEUnV5Q3dCTDJTS1ZxaVFjSTA3UmdIcjVCMVNSZk02NnlJ?=
- =?utf-8?B?QTZPTitwd29DTERPdW02dmRJM3doekwzc1QxdnVqNk05Q3pMT2lCYU1WRTNQ?=
- =?utf-8?B?Rnh0UWNzdFE3c29ZTjBWN0lENjJZS0EvMlAra0tnUUN3ajhDRk5mUGdNK3M1?=
- =?utf-8?B?dXAxTWkzUVBXU0lxWDRUOXQrQWZVK1NmRytwMWNNYnpKbW9zVnpDU1ZheUlo?=
- =?utf-8?B?QzNFME12UVFFWE5HQzdPdkYrZWwreG5ZWWROa25KNjN5VVZJZ1IxODBaZVgz?=
- =?utf-8?B?TFJaVm5jeWliNlpSd1ErSVIrTnlPajNaa0R1WUlZaTdRNnJoaTFlWjltRmE4?=
- =?utf-8?B?YXNFTE9lbHhOanovRUlHazBldVFlZ2RFRWtDT29heEpzZWpzaE9ldXAwR2h6?=
- =?utf-8?B?dmJpcGF5ZDdwdGMxTksrN1RKbE1qcllHMUxCdENnUi9KSzFvcUplR3ZIbWFy?=
- =?utf-8?B?OW5GK3lybGFEaUtDWmluUkY0ZDExWDVPSEdzcm9kU2RnenRpbDlZWWtQMlBx?=
- =?utf-8?B?bThvYzlOaTl3RkdXWEY4aFpIczlSMHg2ZEV6c1hCOWl3dUVyYzQ5YkdvNWpF?=
- =?utf-8?B?TEdjQlJ4UjQzT0VDVVBOOXFNeWwrblJqMnBUSlJ6czZSNjExUUx0anZwZGpD?=
- =?utf-8?B?b09ibGVZQjQ4NVNmT3BhK282N2pZSDdJR0dPVmhENkU5aGlRT3Z4VEdkaGJV?=
- =?utf-8?B?K3JDT0RvYVBNKzZkSDVnZTZLVzRCOGxNcFg3QmFKdGxmRkQ4MEZnNXErZ0hs?=
- =?utf-8?B?bTJCMTVLZlVDc3Y1VDdnQUh3NjZieUYwdmpiME5hV3crY3oxQ0RVZE1EY1FZ?=
- =?utf-8?B?N2M2Y1ZvM2E5NitwUWQrbXI5ZG9wak5FajFhL2d4ditkSkwweHJKRzMwazNn?=
- =?utf-8?B?ZWkzY3VER3Zjc2xCUWhxYWFiWEYzT04wTndjdVhDbEZnWWx6NURxTXhtWWpO?=
- =?utf-8?B?b0xYV1piUHo3OGNaV0RRKzVxRStJemFHZXJJUzZsY2dCQ1U2b1pyVVg5TWwx?=
- =?utf-8?B?dnQ0NWJzeWovOWh5dFVvUDVpdFgyYjNYRXgzUG1ic1g3UHdqczNrdkI2N3RR?=
- =?utf-8?B?dFlidTlYRDF3Z2F0aG1aUHJoQkZyNUtYRG1ndHdSdXM2ckpKcXdJOUNOeVB4?=
- =?utf-8?B?anhkOGNEejZubWFqbVVFaGFiekF6OE8xYjd4SlNZNzdjcCtEaEtHNzRJWWpZ?=
- =?utf-8?B?YWU2ZGxjcXlsSkRSUUdrZC92b1VNT2haTzRhT0svZlp5QUpVeEM2dVcvNDk0?=
- =?utf-8?B?TTltMzVrdG1JNkM4WFBmZFpvVXQ2TGVycGZBWXRhUHJsWGlBc3J4UVEzNHZn?=
- =?utf-8?B?NHRtQzNTZTV0a3lsSnpxTFd1bTNmZzBHZVRGWVp2Umd4Q0hwU3E1TDVPSzFQ?=
- =?utf-8?B?V082ZG93aFdidEJzZnozdHNNZmIzTFdYVWhRSzgySHJwRGZiMEhpZGtKR1Nm?=
- =?utf-8?B?Z1Q5bEU5dnh4VkQ5NTV6dVhWbHpuRHJqaktKVVkvUkdBSzNzdEVQQWhoUGVx?=
- =?utf-8?B?aXBTK0paOTZVb2N5NmloNDE5b3NkYUtCaEZXY21WSlRVQXM5eGlsS0VMKzZl?=
- =?utf-8?B?c0pBYThZclVIcVk0cUt6QndMakhobFlrWkQrMXh4RDdEYzFjYk4yRHN0ZXlY?=
- =?utf-8?B?VHEzL0hCbElmOEM5b2ZiQ2V2WmlCZjdiRU9JR0tkc2tZK0c2Z1FnNXIyS1VP?=
- =?utf-8?B?dVhpS0hmVGk4RGptYXRjcDN3Qmx1NTVtWE1lZXdIMlE3d1pibHlyellNRDFu?=
- =?utf-8?B?aGhvVHFCYzFRdnJwYjBETHQzQWdNRXdIOEFhcEI2WXA5MitRR1pjQ1dOMHlz?=
- =?utf-8?Q?xAkk5KcLlW0pp?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9251.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UGNJM090T0VZY3ZiKytTMXZ6emllMUZ5V2Q4TTN0ay9zWXR2Uk9xTkdzMmxG?=
- =?utf-8?B?R05wcVpMVnBpUmI5NUVuMm5RdkR1YVF3VzhudklDSjNhV09MTDgxNDFUOXp6?=
- =?utf-8?B?M3hQbWZLcXl1TmwwVlVhUmNKQlRQbXhEUnBGalo1WVNoSTZBSzA0WGlYYzN1?=
- =?utf-8?B?dkQ1RHlIc0FhV0s1WWdvOFRaRG81U3pvQTBvVkN6SHh6NkttN2VmSmUyOTM2?=
- =?utf-8?B?T1hnTmZVcFJERWJaeTNhN3I5a2NGdHAxWVVWaktBTTlOTS9kbDhibGg1NjVy?=
- =?utf-8?B?bUYwTmJEMlQ2eC9uVkhuOEd1czJzVFZXbjRkaVVITWorMmhwSTM5aE94MW5q?=
- =?utf-8?B?ZW1VWERhaG85ajIvUUlmMkRBK09ReHpxYnFEaHpvaTB2SUVVWXFyT2lHalpx?=
- =?utf-8?B?Wlp6cnlxbkNuUGxqZ2pZdmhRWEEwcHgzVWdNZ1NpMHE0TVlPTnNKbm4rN2Nt?=
- =?utf-8?B?RktUL1lOMnNYalcyUklXMWpndVdSWEFMcWlCZlNjZjA5MHhXSGpidTdRZ2M5?=
- =?utf-8?B?WmppQU9ubTJKWW13UVc0bk5ORUhqVmxjSmZWQXlwOVdvdnJKRkJSQWowUi8r?=
- =?utf-8?B?T2E4OGRScHd5anFaVEw3YkNDb2dEOEhBRjIyN1hMNDNoRTVXQjUvbHBBZ2x4?=
- =?utf-8?B?UzJnZzMzbzVFQVVUZiszdHFLSm5ibnBDVndESm9oaWNJZGIybVBoTXFMbHUv?=
- =?utf-8?B?SnREM0JYUXV1eVhjUTljWFdtV2lPVnJRZHZBM1FPb3BFVzZQaEZJelNCWHdE?=
- =?utf-8?B?NEZ0RGJqVk1nQ1dFeS9uODBRQ1czaFV3c2VPZy9UWmZJZUt3dmNHdTlnNHVh?=
- =?utf-8?B?ZXNYMCtvSDYwMkZLSWJ5MVFTb2JDKzd3WE9Db1J1bDVLeFl4QjhXdThOTUxI?=
- =?utf-8?B?d1lrNnJ6Y0ZqYmZDTkhxSm54Nk9BOFd6dkg2M3ZPM3VPU2VNeXFFZzMrVzBL?=
- =?utf-8?B?VjBIeEcyZDczQjZVeG9iYU5ZeW9ERytPRVFLdXNIR3N5TU9mR0hsaFZTTWE0?=
- =?utf-8?B?R3Y1K2QrZ2JkTGsxOXh1ZW16MzEzckdvSzloejEwNnQwNFZ6RzE5cWFTdUFo?=
- =?utf-8?B?WXJUdytnU3FIb2NZQnpkQUNBV2hLbnh6cTBVTytZSFp0aW5Ma0hMTjBST3Fl?=
- =?utf-8?B?NWM1Tm81R0FNWC9XQk9aZjZ3eXRQSWdUWW5iWXB1aWZ5SXdaTXNOYStPM0NE?=
- =?utf-8?B?UXNGRGVxVUtTTGxaN3o3d0xMTTJURXpGUHBVOGpkTEM5MUFjZmx0MWxHMFVE?=
- =?utf-8?B?bnlac0tZdjBtQXNZdFN0N2s5eDV3cXVaOGZ1UjVqNFN1M01BWEQ1NVhaOWlZ?=
- =?utf-8?B?RHJJcE5zWk0zSDBFd0RTSTQ0dmV2SS83WFhuTWZUZ0xub1NUdUpPcGpyVm44?=
- =?utf-8?B?KzN4UERHREJnOGp1OWNsYnE0RFZSZkxMS3MwdE8yYzNkT1ljMm9yK0ZrMG9C?=
- =?utf-8?B?VzJKaXJ3TDYvbzJCdnZPNzMzQk5CRU9GdGdvUmtmUW5Fb0pHKzg5Yng2a3Zl?=
- =?utf-8?B?NTFtdDhOa2U0T0VsaHl3b3Y4Z2JIZURLWlZySStvUWRnN2RlckJYZ0hvMkJ2?=
- =?utf-8?B?Y3JCaDlZNkFuUlJ6ZnBMVzhpY1o4K2E4UU1UenNBdlc4V1hNc3ZTZm1uNS83?=
- =?utf-8?B?bWR6dU1SSDFDWldzVHI3YUpLRENqaUNyM0tIa0JsaVVSdmk4WXg3NFBmOW1m?=
- =?utf-8?B?T0puZWRWRlJCOHVUUmlUS1pYaHgvakZzamFpVlI2Q2FlOXQ2M0lxYnhvS0hp?=
- =?utf-8?B?Tlp2SHdndGdsdjhabnY4ZXJDQU1HNkhaN2RqelFRN1lXbkFwMGtLTzhEeWJw?=
- =?utf-8?B?MytWWExlS1NkYVhET0hJNmdXTDFFejFtdTAzL3hpSXk1WWFkTFh5bk5LdXl0?=
- =?utf-8?B?MmNYQ1JMdzZlem1GRDc1bUE4Qk5PcHhnNyt4eHV6bE5JYnVVVGdSWCs5b3p5?=
- =?utf-8?B?azNVY1FrUGo5M0lkY2JueGlBaHd6WnowQUhUUWJyc2ZQd1g2VjdVTDZnbGls?=
- =?utf-8?B?WWFyOGk0S1ZTZlZQSXh3M0FibTIwQS85OWlrc1hJYTJjODNYUEtHYll0RWo3?=
- =?utf-8?B?Ukd5M05EK0cvaVpUeGpUSXJXQURPZCtnemVYUnorRU1kaXNXOENiN1lFZGZS?=
- =?utf-8?B?Mld2Z2xFdHJ5YmlPY0wra3p3eUFMcVg3cmJWeVZITzlxRmlwVG5lSnVrVzVX?=
- =?utf-8?B?M0E9PQ==?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb335c31-39c0-4f09-f71b-08dd780950a1
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9251.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 08:25:56.1153
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GXt4ULHjqTqjwPkrZXV4PZPfQ9Vp18x6HuhvCWWAJtyAMteO8+LAbsPn6HtDdnWlMmuFJlowVao6SnQqwRYaeT89vpkxpXmmXt9duvGMA3M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8858
+Content-Type: text/plain
 
-From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+On Thu, Apr 10 2025 at 08:54, Gabriele Monaco wrote:
+>  
+> +/*  cpumask excluded from migration */
+> +static cpumask_var_t tmigr_unavailable_cpumask;
 
-If the RTC is not linked to any battery, the oscillator is stopped at
-startup and a SW reset command is generated to the PCF85063 RTC.
-Manually start the oscillator in case the PCF85063 RTC is not battery
-backed.
+Why is this a negated mask instead of being the obvious and intuitive
+available mask?
 
-Co-developed-by: Larisa Grigore <larisa.grigore@nxp.com>
-Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
-Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
----
- drivers/rtc/rtc-pcf85063.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+>  	if (firstexp != KTIME_MAX) {
+> -		migrator = cpumask_any_but(cpu_online_mask, cpu);
+> +		migrator = cpumask_nth_andnot(0, cpu_possible_mask,
+> +					      tmigr_unavailable_cpumask);
 
-diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-index 4fa5c4ecdd5a..6de7344d2469 100644
---- a/drivers/rtc/rtc-pcf85063.c
-+++ b/drivers/rtc/rtc-pcf85063.c
-@@ -590,6 +590,14 @@ static int pcf85063_probe(struct i2c_client *client)
- 
- 	i2c_set_clientdata(client, pcf85063);
- 
-+	if (of_property_read_bool(client->dev.of_node, "no-battery")) {
-+		err = regmap_update_bits(pcf85063->regmap, PCF85063_REG_SC,
-+					 PCF85063_REG_SC_OS, 0);
-+		if (err)
-+			return dev_err_probe(&client->dev, err,
-+					"Failed to start the oscillator\n");
-+	}
-+
- 	err = regmap_read(pcf85063->regmap, PCF85063_REG_SC, &tmp);
- 	if (err)
- 		return dev_err_probe(&client->dev, err, "RTC chip is not present\n");
--- 
-2.45.2
+That's exactly what this negated mask causes: incomprehensible code.
 
+	cpumask_clear_cpu(cpu, available_mask);
+        ...               
+		migrator = cpumask_first(available_mask);
+
+is too simple and obvious, right?
+
+> +		/* Fall back to any online in case all are isolated. */
+
+How can that happen? There is always at least _ONE_ housekeeping,
+non-isolated, CPU online, no?
+
+> +		if (migrator >= nr_cpu_ids)
+> +			migrator = cpumask_any_but(cpu_online_mask, cpu);
+>  		work_on_cpu(migrator, tmigr_trigger_active, NULL);
+>  	}
+>  
+>  	return 0;
+>  }
+>  
+> -static int tmigr_cpu_online(unsigned int cpu)
+> +static int tmigr_cpu_available(unsigned int cpu)
+>  {
+> -	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+> +	struct tmigr_cpu *tmc = per_cpu_ptr(&tmigr_cpu, cpu);
+>  
+>  	/* Check whether CPU data was successfully initialized */
+>  	if (WARN_ON_ONCE(!tmc->tmgroup))
+>  		return -EINVAL;
+>  
+> +	/* Silently ignore online requests if isolated */
+
+This comment makes no sense.
+
+     /* Isolated CPUs are not participating in timer migration */
+
+makes it entirely clear what this is about, no?
+
+That brings me to the general design decision here. Your changelog
+explains at great length WHAT the change is doing, but completely fails
+to explain the consequences and the rationale why this is the right
+thing to do.
+
+By excluding the isolated CPUs from migration completely, any 'global'
+timer, which is armed on such a CPU, has to be expired on that isolated
+CPU. That's fundamentaly different from e.g. RCU isolation.
+
+It might be the right thing to do and harmless, but without a proper
+explanation it's a silent side effect of your changes, which leaves
+people scratching their heads.
+
+> +	if (cpu_is_isolated(cpu))
+> +		return 0;
+>  	raw_spin_lock_irq(&tmc->lock);
+> -	trace_tmigr_cpu_online(tmc);
+> +	trace_tmigr_cpu_available(tmc);
+>  	tmc->idle = timer_base_is_idle();
+>  	if (!tmc->idle)
+>  		__tmigr_cpu_activate(tmc);
+> -	tmc->online = true;
+> +	tmc->available = true;
+> +	tmc->idle = true;
+
+How so?
+
+> +	cpumask_clear_cpu(cpu, tmigr_unavailable_cpumask);
+>  	raw_spin_unlock_irq(&tmc->lock);
+>  	return 0;
+>  }
+>  
+> +int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask)
+
+cpumask_var_t is wrong here. 'const struct cpumask *' is what you want.
+
+> +{
+> +	int cpu;
+> +	cpumask_var_t cpumask;
+
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#coding-style-notes
+
+> +	if (!zalloc_cpumask_var(&cpumask, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	cpumask_copy(cpumask, tmigr_unavailable_cpumask);
+
+What serializes this against concurrent CPU hotplug? I assume it's done
+by the caller, but then this code should have a lockdep assert to
+validate it. If it's not, then this is broken.
+
+As it is serialized it does not need a copy either, right?
+
+> +	/* Was not excluded but should be excluded now. */
+> +	for_each_cpu_andnot(cpu, exclude_cpumask, cpumask)
+> +		tmigr_cpu_unavailable(cpu);
+> +
+> +	/* Was excluded but should be included now */
+> +	for_each_cpu_andnot(cpu, cpumask, exclude_cpumask)
+> +		if (cpu_online(cpu))
+> +			tmigr_cpu_available(cpu);
+
+My brain hurts by now.
+
+         for_each_cpu_and(cpu, available_mask, exclude_mask)
+         	tmigr_cpu_unavailable(cpu);
+
+         for_each_cpu_andnot(cpu, cpu_online_mask, exclude_mask) {
+         	if (!cpumask_test_cpu(cpu, available_mask))
+                	tmigr_cpu_available(cpu);
+         }
+
+No?
+
+Also this patch is doing too many things at once. It want's to be split
+into:
+
+    Patch 1: Rename 'online' to 'available' (bit and function names)
+    Patch 2: Add the available mask logic
+    Patch 3: Add the isolation functionality
+
+Thanks,
+
+        tglx
