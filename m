@@ -1,333 +1,121 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04CC1F873E;
-	Thu, 10 Apr 2025 14:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2358C2857D7;
+	Thu, 10 Apr 2025 14:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744295254; cv=none; b=NvvdiLn8J96QWlGMOm79WlZmFVdDX8L3jw0/SwHeg8Wkvul8tQAEqGoKseYjdey3SUIOtwj/BKU3FIUGuDM1lFLbBnJpJ27VUQLPcZrZog0qk8fIQCNEK+Avehdg/bPMI2cXbuFoIG4eqTPLty4o0QZiDYmMKG2+77kG6DOj1aA=
+	t=1744295304; cv=none; b=WAXdwyHMkRm3yijeAv3a9e6IWvWGcdUeCwkiM/Y8rg/HArr1bP4CQqynUB+9kLvFObKwvxnsgzrHXXj1uXlXYy+zest9mJERMagaMJj7gXsvLMUqJcZYGJc2PzqLKSNPhMoi7OVbUmlsXLQy4xS0EyPQAaSu5ub7Cxzod+IVT4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744295254; c=relaxed/simple;
-	bh=brhRcL/BA3B7ayxZCilOde7eFu+DE09Bp210LvtFnKg=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=ZShVC7KKg6r78bATqnyWR0auCOMOonP6p+8Nql3VOXRc4Rsa+H/bF64fZfcLBzRnzSmps5rGFLWBK8zLEMKeZcIfI9Lea61IwPN43GoSsYZKCvj4Qjep8VYi+xfgd/8NY8GWqKukCu6vYME8RlfkBxuYv2nOKPdLxnOCb0hg7Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y6SZsQaG; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744295304; c=relaxed/simple;
+	bh=07lRH/Xs/03N+5c/0GvvGnaaiwRX1lGStx7S5SnlxLM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mbWglP/4E/LSHgyfyZXX+F2AbcN74riAbCpp2gDKMJHFZM9AMy+I2gwduVcE1FrnqnsdYHuCTpk8bV017HnnZ1KUNBm2rJeba7o0lnhuOcddQd+6zwzlXwbLxeOyffsiAVe4HCtfFbUiqBii6vn8g9zRCUL1U1Iy2e+tFfwB3TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3I9cHWb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y6SZsQaG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3I9cHWb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9C613C4CEE8;
+	Thu, 10 Apr 2025 14:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744295303;
+	bh=07lRH/Xs/03N+5c/0GvvGnaaiwRX1lGStx7S5SnlxLM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=g3I9cHWbNlwgKVZ0ewPfNMUlKM0AFXM3LLouylmkXOQmtqYvYHOMXi3PZuAIwyCqK
+	 HYrH7AS5uYtHkQSEmGJ7CDTOsqtc1/hGP7JeGoBsRmpDeHGiF//+wqxwFuWRsT8Av5
+	 ZV3c5U9CXYT2KlrXNoyvAspNZXbNa6rQovUIEjs/FBkgjPnrJ/5BbKIg75PZBvAcX5
+	 OGTFCifdGci1LalUdKt1ikclnboaEN1sSu+2iKuPdAFryfYef0bagzam7o5CKMNgz3
+	 TWrp/LJc1AJDhjUQd3uMCnonrYr6wy8pP9j+3B/EfKwOo7xHqcpWD3zFVpjrMk9MaI
+	 apDHE65yZs5dQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DC5C369AA;
+	Thu, 10 Apr 2025 14:28:23 +0000 (UTC)
+From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Date: Thu, 10 Apr 2025 16:28:19 +0200
+Subject: [PATCH v5 1/7] dt-bindings: input: syna,rmi4: Document
+ syna,rmi4-s3706b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744295239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pen+hTCi9Y0t6tkeXWgyEYw/3+/q7c9d33Ri3lI9qsM=;
-	b=Y6SZsQaGbhuKaFQxQJXLzu9VuBRzLyBRcr2xzt/+kfdp36cUBZi3yBrxhWAMrONFS20CQG
-	GjuI6Tgtr82vmGj0iQMqzjj8RL7otQ8C50uhO9lFA7B0WnRPngcAuwzT/247rwygKo5SaL
-	BRjvd2xMMm7/0WcJBOQY7DHmq9/hasU=
-Date: Thu, 10 Apr 2025 14:27:17 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <0cfe4cc98a818d83a9b4bbe55006a17a7452ee38@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
- for sockmap
-To: "Jakub Sitnicki" <jakub@cloudflare.com>
-Cc: bpf@vger.kernel.org, mrpre@163.com, "Alexei Starovoitov"
- <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
- Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Martin  KaFai Lau" <martin.lau@linux.dev>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "KP  Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao  Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu  Desnoyers"
- <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub 
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon 
- Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-In-Reply-To: <87ikncgyyd.fsf@cloudflare.com>
-References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
- <87ikncgyyd.fsf@cloudflare.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250410-synaptics-rmi4-v5-1-b41bb90f78b9@ixit.cz>
+References: <20250410-synaptics-rmi4-v5-0-b41bb90f78b9@ixit.cz>
+In-Reply-To: <20250410-synaptics-rmi4-v5-0-b41bb90f78b9@ixit.cz>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, 
+ Vincent Huang <vincent.huang@tw.synaptics.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Caleb Connolly <caleb.connolly@linaro.org>, 
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ David Heidelberg <david@ixit.cz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1304; i=david@ixit.cz;
+ h=from:subject:message-id;
+ bh=vZ1A1BKo6qcJdGwTku+fpPYc8gaI2CIp5TJIm0fjjbo=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn99WFPKRohmi+kM4ZwOrlgDzZ8E75/XLNBy1c0
+ 21mvrqCIdSJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ/fVhQAKCRBgAj/E00kg
+ cvghD/9ZcQbkw1tVd2KIYU39rQZH8BDZ5SUAf3Nb1lZwArrntOQANjeQHN1D7VOCPDz+mRK+IiP
+ OBnObNOPr/NhYLvbxD4bbQUQvvRPF/shH9mPTIGrbaPZcloQLnH3onV1pqbGPSaRPIjB6BX2EzU
+ hPVq7UjsMNR+x4HnSMmHc/j959chBjaUG7IRts2SkDb2XiFCWqART8nVs5+SMrzoeDt1sgn5HEQ
+ 3hdQQXMciIsxbonEH8HpT61pOdRDaYnaCuZ/fU3Y+3ceSQDJM7BbU3MYyyw8ZN6ibrRN75HllDZ
+ phqOk2ti3O4UIbf3k1HOywxzMkTHa2qfFODdubI4ZMqytfLbP/eG25fXL2ZayMbQLy+hFHBppaI
+ dDP2rvMWVHpmANOghMba9HENLriwDSwR1VQzUNOAQPCDwDqPC7f5R6K5Ojb0BQ3DGecZWM5+qIP
+ IRSME8rr+pbH/qlL0FcxSzzjasMfA/JszSzArJ2YTBVeBzWgH8vDBYGd6KX3dMMzGdl/MQAbVdx
+ G7WFjLI+6F3nq7e7YguI8+IOTTLFlrRR5k+bqYT+5e9Pt5YPvxIz/+nAcinAhr5NxZ+cGYEk2QH
+ vvm5bKku7Dpn7wyuQVtxFu8o+fJ2zj7W8ebMhkOQse5AFMcWYmzVJ4rfDsRkeTffqeOwlENZIph
+ uB60GktHxtOnjbQ==
+X-Developer-Key: i=david@ixit.cz; a=openpgp;
+ fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
+X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
+X-Original-From: David Heidelberg <david@ixit.cz>
+Reply-To: david@ixit.cz
 
-April 10, 2025 at 17:14, "Jakub Sitnicki" <jakub@cloudflare.com> wrote:
+From: David Heidelberg <david@ixit.cz>
+
+Mostly irrelevant for authentic Synaptics touchscreens, but very important
+for applying workarounds to cheap TS knockoffs.
+
+These knockoffs work well with the downstream driver, and since the user
+has no way to distinguish them, later in this patch set, we introduce
+workarounds to ensure they function as well as possible.
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+ Documentation/devicetree/bindings/input/syna,rmi4.yaml | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/syna,rmi4.yaml b/Documentation/devicetree/bindings/input/syna,rmi4.yaml
+index b522c8d3ce0db719ff379f2fefbdca79e73d027c..d5d0225e3826fa5a0559cbd99115c505ab113aa0 100644
+--- a/Documentation/devicetree/bindings/input/syna,rmi4.yaml
++++ b/Documentation/devicetree/bindings/input/syna,rmi4.yaml
+@@ -18,9 +18,14 @@ description: |
+ 
+ properties:
+   compatible:
+-    enum:
+-      - syna,rmi4-i2c
+-      - syna,rmi4-spi
++    oneOf:
++      - enum:
++          - syna,rmi4-i2c
++          - syna,rmi4-spi
++      - items:
++          - enum:
++              - syna,rmi4-s3706b  # OnePlus 6/6T
++          - const: syna,rmi4-i2c
+ 
+   reg:
+     maxItems: 1
+
+-- 
+2.49.0
 
 
-
->=20
->=20On Wed, Apr 09, 2025 at 06:29 PM +08, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> Sockmap has the same high-performance forwarding capability as XDP,=
- but
-> >=20
->=20>  operates at Layer 7.
-> >=20
->=20>  Introduce tracing capability for sockmap, similar to XDP, to trace=
- the
-> >=20
->=20>  execution results of BPF programs without modifying the programs
-> >=20
->=20>  themselves, similar to the existing trace_xdp_redirect{_map}.
-> >=20
->=20>  It is crucial for debugging BPF programs, especially in production
-> >=20
->=20>  environments.
-> >=20
->=20>  Additionally, a header file was added to bpf_trace.h to automatica=
-lly
-> >=20
->=20>  generate tracepoints.
-> >=20
->=20>  Test results:
-> >=20
->=20>  $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
-> >=20
->=20>  skb:
-> >=20
->=20>  sockmap_redirect: sk=3D00000000d3266a8d, type=3Dskb, family=3D2, p=
-rotocol=3D6, \
-> >=20
->=20>  prog_id=3D73, length=3D256, action=3DPASS
-> >=20
->=20>  msg:
-> >=20
->=20>  sockmap_redirect: sk=3D00000000528c7614, type=3Dmsg, family=3D2, p=
-rotocol=3D6, \
-> >=20
->=20>  prog_id=3D185, length=3D5, action=3DREDIRECT
-> >=20
->=20>  tls:
-> >=20
->=20>  sockmap_redirect: sk=3D00000000d04d2224, type=3Dskb, family=3D2, p=
-rotocol=3D6, \
-> >=20
->=20>  prog_id=3D143, length=3D35, action=3DPASS
-> >=20
->=20>  strparser:
-> >=20
->=20>  sockmap_skb_strp_parse: sk=3D00000000ecab0b30, family=3D2, protoco=
-l=3D6, \
-> >=20
->=20>  prog_id=3D170, size=3D5
-> >=20
->=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> >=20
->=20>  ---
-> >=20
->=20>  MAINTAINERS | 1 +
-> >=20
->=20>  include/linux/bpf_trace.h | 2 +-
-> >=20
->=20>  include/trace/events/sockmap.h | 89 ++++++++++++++++++++++++++++++=
-++++
-> >=20
->=20>  net/core/skmsg.c | 6 +++
-> >=20
->=20>  4 files changed, 97 insertions(+), 1 deletion(-)
-> >=20
->=20>  create mode 100644 include/trace/events/sockmap.h
-> >=20
->=20>  diff --git a/MAINTAINERS b/MAINTAINERS
-> >=20
->=20>  index a7a1d121a83e..578e16d86853 100644
-> >=20
->=20>  --- a/MAINTAINERS
-> >=20
->=20>  +++ b/MAINTAINERS
-> >=20
->=20>  @@ -4420,6 +4420,7 @@ L: netdev@vger.kernel.org
-> >=20
->=20>  L: bpf@vger.kernel.org
-> >=20
->=20>  S: Maintained
-> >=20
->=20>  F: include/linux/skmsg.h
-> >=20
->=20>  +F: include/trace/events/sockmap.h
-> >=20
->=20>  F: net/core/skmsg.c
-> >=20
->=20>  F: net/core/sock_map.c
-> >=20
->=20>  F: net/ipv4/tcp_bpf.c
-> >=20
->=20>  diff --git a/include/linux/bpf_trace.h b/include/linux/bpf_trace.h
-> >=20
->=20>  index ddf896abcfb6..896346fb2b46 100644
-> >=20
->=20>  --- a/include/linux/bpf_trace.h
-> >=20
->=20>  +++ b/include/linux/bpf_trace.h
-> >=20
->=20>  @@ -3,5 +3,5 @@
-> >=20
->=20>  #define __LINUX_BPF_TRACE_H__
-> >=20
->=20>=20=20
->=20>=20
->=20>  #include <trace/events/xdp.h>
-> >=20
->=20>  -
-> >=20
->=20>  +#include <trace/events/sockmap.h>
-> >=20
->=20>  #endif /* __LINUX_BPF_TRACE_H__ */
-> >=20
->=20>  diff --git a/include/trace/events/sockmap.h b/include/trace/events=
-/sockmap.h
-> >=20
->=20>  new file mode 100644
-> >=20
->=20>  index 000000000000..2a69b011e88f
-> >=20
->=20>  --- /dev/null
-> >=20
->=20>  +++ b/include/trace/events/sockmap.h
-> >=20
->=20>  @@ -0,0 +1,89 @@
-> >=20
->=20>  +/* SPDX-License-Identifier: GPL-2.0 */
-> >=20
->=20>  +#undef TRACE_SYSTEM
-> >=20
->=20>  +#define TRACE_SYSTEM sockmap
-> >=20
->=20>  +
-> >=20
->=20>  +#if !defined(_TRACE_SOCKMAP_H) || defined(TRACE_HEADER_MULTI_READ=
-)
-> >=20
->=20>  +#define _TRACE_SOCKMAP_H
-> >=20
->=20>  +
-> >=20
->=20>  +#include <linux/filter.h>
-> >=20
->=20>  +#include <linux/tracepoint.h>
-> >=20
->=20>  +#include <linux/bpf.h>
-> >=20
->=20>  +#include <linux/skmsg.h>
-> >=20
->=20>  +
-> >=20
->=20>  +TRACE_DEFINE_ENUM(__SK_DROP);
-> >=20
->=20>  +TRACE_DEFINE_ENUM(__SK_PASS);
-> >=20
->=20>  +TRACE_DEFINE_ENUM(__SK_REDIRECT);
-> >=20
->=20>  +TRACE_DEFINE_ENUM(__SK_NONE);
-> >=20
->=20>  +
-> >=20
->=20>  +#define show_act(x) \
-> >=20
->=20>  + __print_symbolic(x, \
-> >=20
->=20>  + { __SK_DROP, "DROP" }, \
-> >=20
->=20>  + { __SK_PASS, "PASS" }, \
-> >=20
->=20>  + { __SK_REDIRECT, "REDIRECT" }, \
-> >=20
->=20>  + { __SK_NONE, "NONE" })
-> >=20
->=20>  +
-> >=20
->=20>  +#define trace_sockmap_skmsg_redirect(sk, prog, msg, act) \
-> >=20
->=20>  + trace_sockmap_redirect((sk), "msg", (prog), (msg)->sg.size, (act=
-))
-> >=20
->=20>  +
-> >=20
->=20>  +#define trace_sockmap_skb_redirect(sk, prog, skb, act) \
-> >=20
->=20>  + trace_sockmap_redirect((sk), "skb", (prog), (skb)->len, (act))
-> >=20
->=20>  +
-> >=20
->=20>  +TRACE_EVENT(sockmap_redirect,
-> >=20
->=20>  + TP_PROTO(const struct sock *sk, const char *type,
-> >=20
->=20>  + const struct bpf_prog *prog, int length, int act),
-> >=20
->=20>  + TP_ARGS(sk, type, prog, length, act),
-> >=20
->=20>  +
-> >=20
->=20>  + TP_STRUCT__entry(
-> >=20
->=20>  + __field(const void *, sk)
-> >=20
->=20>  + __field(const char *, type)
-> >=20
->=20>  + __field(__u16, family)
-> >=20
->=20>  + __field(__u16, protocol)
-> >=20
->=20>  + __field(int, prog_id)
-> >=20
->=20>  + __field(int, length)
-> >=20
->=20>  + __field(int, act)
-> >=20
->=20>  + ),
-> >=20
->=20>  +
-> >=20
->=20>  + TP_fast_assign(
-> >=20
->=20>  + __entry->sk =3D sk;
-> >=20
->=20>  + __entry->type =3D type;
-> >=20
->=20>  + __entry->family =3D sk->sk_family;
-> >=20
->=20>  + __entry->protocol =3D sk->sk_protocol;
-> >=20
->=20>  + __entry->prog_id =3D prog->aux->id;
-> >=20
->=20>  + __entry->length =3D length;
-> >=20
->=20>  + __entry->act =3D act;
-> >=20
->=20>  + ),
-> >=20
->=20>  +
-> >=20
->=20>  + TP_printk("sk=3D%p, type=3D%s, family=3D%d, protocol=3D%d, prog_=
-id=3D%d, length=3D%d, action=3D%s",
-> >=20
->=20>  + __entry->sk, __entry->type, __entry->family, __entry->protocol,
-> >=20
->=20>  + __entry->prog_id, __entry->length,
-> >=20
->=20>  + show_act(__entry->act))
-> >=20
->=20
-> sk address is useful if you're going to attach a bpf program to the
-> tracepoint. Not so much if you're printing the recorded trace.
->=20
->=20I'd print the netns and the socket inode instead, or in addition to.
-> These can be cross-referenced against `lsns` and `ss` output.
-
-Good suggestions. I will print all of this.
-sk address helps us track connection more easily.
-
-Thanks~
