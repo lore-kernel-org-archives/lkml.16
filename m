@@ -1,164 +1,108 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946861D5CE8;
-	Thu, 10 Apr 2025 02:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DED1C860A;
+	Thu, 10 Apr 2025 02:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744251760; cv=none; b=Wn5nkFfQPe6D9Jd9ubh8Tkc/bK8YWK8UQOks1YPz8D1pOAP5yEobKK1jxoS0y2O63W7muepagk7Q6T/ASiqNUDX5wDZrf7O98ZXqiRZljs4phQryX4PFfBoyFuVpTw0Ap1Wtw4VUnyKLVSMo6AWFQJBA3emv2cqkbs5kva3eqr8=
+	t=1744251882; cv=none; b=usSiUYddqTvHUE/u/DJYy/bLLum1TYiOLQSpBWBaG4jb6jYPsG7FYiqOoPdCVMWOH9egt4LAmK22FUmM0p1iqMAVxFtPONJU9vSJDgHs2s6zq+x0pSMz6fOvFbdZP6VNVub8ReECbd3ULB06PqAatq1at95uw0kDuHBR6nt6EQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744251760; c=relaxed/simple;
-	bh=TynPGdAb63B4UsxmATz2ZTCj66atvpV90vkCQ2IdeiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kMR8+34QCe76RaYQM6TkSPmoH0ECqg0c/DIg4m2GRMz2o0jMTCVLJGECZXPcfSqL3i+Yha/Ij43+J5H9RjUEYgUa6RMup2ibdi+h3H3ZxrMt0Xmt1M5R/YvK3NcmijqmnwCj2SQIZPKyuTxqQturXSFrwljd6O9xLLgmR/fvytQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2279915e06eso2783965ad.1;
-        Wed, 09 Apr 2025 19:22:38 -0700 (PDT)
+	s=arc-20240116; t=1744251882; c=relaxed/simple;
+	bh=Eo1gt9bKvrZ5+HJR/BHOywwDv1Yl4/abKqF64Ryk0ek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TTTdm76/tkpM9Xw/xNJhzFA+vGNKBQFjEjOwiyBC0kwtPKIsax6oC4RRCpXA2R+bcE3ld8roJ7bMAKYo8iJmoO3rr7bRD8hv+HkMU2tLZ4xM7aZmQ5C3dqIcJlbVkoOjV5pgBzfLvYHEStOJ048l/SqCy33zgb8Ii9FtX/K6zmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=cr6dmU5N; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cr6dmU5N"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so2595775e9.0;
+        Wed, 09 Apr 2025 19:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1744251879; x=1744856679; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aLsoh2OIC00QijQVonaJXsKWz3fOoh+K0IKMEyFAzFw=;
+        b=cr6dmU5N5xQXqSG3H1gPUazzj+UJWPI1hMmt2hx4BpJogkll3xFXoMHDKC8n3AlYUp
+         uXSj9RosPZuVvnXca09NZVbyLgNaRUa1cp1PsEKCxTW+LW1/poGrBJ7S82ZpXKX7XHry
+         c0ALtiPTGaTIdHv8x8nwbrNp/xrEOiiXRZBRTbblyYev5I6I11S1Qu8yZTdIlwixUaCU
+         KqHs7RzOMz2FLpP9A4O4Nouucaw9QgJUtDTE51Us5BkV5wWUf7KQex7t+SyOifBRaUv+
+         gEmXQ/n6QX6ieg0ybpb7XjpRzQ4X1C5d4Vw4/ltOKDB6I9rzfs7OQ1/xGF9FGmcTNOBQ
+         yD1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744251758; x=1744856558;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1744251879; x=1744856679;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eIr+mC1fO6LkSb3ZOhdC8i0ipLDLm1eqpXFxb8ZVEQw=;
-        b=QT2qnVGeoWQyKiMBqw749Z2PqE7yAMFwoZ23n+303WZNKYoyYXsCSsPwRkY7XijSh0
-         9lMFlpfq9uZfN4mNc3EmN4l9IzGBiTDbtZfNY5EDEWGRHyPRRNSS5/FR/p5ZIORkMXYT
-         aoVkfP5brFcSp1W+jhuZTAnMKNhxsIdSnby9kHB2gNz1sTfChLbEbUYHetwd9JRr9nbY
-         fWcDCsDYVJVrndPcR9xZJWmzlnY4knRemHGu5tQh78gWZBGDgo5VAnKqqX4zQDFgTVaX
-         ZylYtrZ+KIuvm4DZEKUTtqtqmCbyYRZdTz6I99LzmswXS4u4bNNUm5PJiILPk4etOeEt
-         CoHg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPjNpc7bTRM79MKme9y0hX3yM6GYqqXmPI+mKVCWifV/4N4Fr9FZaIKlYdRk1CgKOLoBYejbtUL8Xsguk=@vger.kernel.org, AJvYcCXOm10jvfnYiT6agAect5sLKFCUX+Fb7Wwuy0MVvZWg/WY6ZaYHLIjfXCqZU3O9engfm9+n5BXxuqU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzElPMcdXvlNlMN8ZP4v8aeQQdxJLEHnjb3RrFvbpLnZoHnZrNd
-	DdZ8Pke51FyCRpbpGYNEioLNaIrY91KhcUsgo6unTJ3sLkj0e9Un
-X-Gm-Gg: ASbGnctXaDLbAasdOLqEwhyd4hNvUECYUpDsgdbDPNdRHvvLFBLsr8LTpCGE3zwGglp
-	Kds6U9KB2ocy8gvq4npIO4vOa6stK4FEqfMO6nnafmvBVnCIcDac+V97HT2rijEoFR1hP/pQGbt
-	Shi27VAQtkEpftHoRfBOm0+bHpIW1arm8SUEmo6EcE8bQjqJ5TkSBGm7fRjipHQ6fjR3aRPvsBq
-	4zDg9610pT45MtjPTAkjBrpTIB6RmOnPEII765JhPqnEa1FDpvMqawGn+9ujP+k459CNi9AI+da
-	Q1i4Pf+9f9ORdJ/29gtyFg5Hv0StbZdPIg73ILdz/I9+ZjTJb5gwEmkpUo++ll3JSwzZ9A==
-X-Google-Smtp-Source: AGHT+IFZHQQqw4sZWzNWH0yG0EKerIkJXfP6ZMCi6Ewbi6upzfzLq13xirC41miWfZY1k7nOOkUKaw==
-X-Received: by 2002:a17:903:246:b0:223:66bc:f1de with SMTP id d9443c01a7336-22b2edd566bmr18732045ad.21.1744251757639;
-        Wed, 09 Apr 2025 19:22:37 -0700 (PDT)
-Received: from sultan-box.localdomain ([142.147.89.201])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb0400sm19496045ad.160.2025.04.09.19.22.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 19:22:37 -0700 (PDT)
-Date: Wed, 9 Apr 2025 19:22:33 -0700
-From: Sultan Alsawaf <sultan@kerneltoast.com>
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused
- by need_freq_update
-Message-ID: <Z_cracmQRfB8hF06@sultan-box.localdomain>
-References: <20241212015734.41241-2-sultan@kerneltoast.com>
- <Z_Tlc6Qs-tYpxWYb@linaro.org>
- <Z_U_LN0AtH_n4YtE@sultan-box.localdomain>
- <Z_VTRspvmOUfrawh@linaro.org>
- <CAB8ipk8ARRdR8UPgLqJ3EcAzuE4KNEO=cmLNJLk6thTxdBSHWw@mail.gmail.com>
- <CAB8ipk_Ayqmh=Ch2aH2c+i-q+qdiQ317VBH1kOHYN=R9dt6LOw@mail.gmail.com>
- <Z_cjv0EJ45NShYOp@sultan-box.localdomain>
- <CAB8ipk8WOh5_XvRYJrPi6b6wf8G4=zjoFRWpXk3viv3gkHCn1g@mail.gmail.com>
- <Z_coNmh-CabcfIWD@sultan-box.localdomain>
- <CAB8ipk8AAFFtV3OA4S=g9X9AXsC4Ntr911DLLRkhgQtvMvXAvg@mail.gmail.com>
+        bh=aLsoh2OIC00QijQVonaJXsKWz3fOoh+K0IKMEyFAzFw=;
+        b=qhNfT23zq3UrmhxNwlAzCWh5hL/w7FZr0hiHy/G3WPjNy+r2p3GTZq/+Ob+V01FsOq
+         oJNzVzcYJHcctQlOlPyOfM/IAbkR5iv3hXV15cmDVqsRQ67Us23s3BFJmQEVb7+i2mzv
+         MbQFUX8BUOLRcTotQkGrZkgseAZBFE1UWwU1ei5Nm48Ye/I3aMOP03uY1CPOE2a8xFo9
+         XBY+98UFBoaww47acImZG951P+km6yOm8l3VN5MLA7gX7C2NmBFeAhdEOOy5j7V0jNjq
+         XtS3zOP/TQwJdubNmY0ULraG/xm5CT2ydLE7BJkkC2KTNKZpzNFZMsoh0UkEouRP6OjL
+         KniA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxT+KTYBT+D5NC4ke9kZohmbTOQZcpute1LIlO8vCj6Cn78ieNUvfBiATiZGTl6XtyvnlpfDZz40LuFU0=@vger.kernel.org, AJvYcCX65nYErgye456mKAeU1tVDDBcbSOFhX+Oh2ScR7PFVd4Lxa9m+cObZbNiRnkmGRxN1PR2a49Tv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq6yK8QwNlZ+JZtzKFMkeLCsHXYk/YYmeW2v6AmAQv5OjrAYJv
+	m70A7wzixpkHxYzERUX6W3dFvQ+MgbdJH4gqmwNWaIR0HZ8J1cc=
+X-Gm-Gg: ASbGncunCXMr1uQkVLLRI2W7/8/PLDK6orX9JrX/DxsATWFjoT8Dd+kHmmxeTHPxbJw
+	cGrNITUjK7sUiVanmxUUjBbDWFiK8w/OGBaq0vGpnfKgGH1JKFdHeYEe7B2gslTu1WHlYtp0wL1
+	zVbcKLXBeHza0PH913kNgeAEr3rY5TDCNTnQ9ZNx8egvcRDRLDiIh6CTGFItmcII6t7q9fnehl6
+	rDvHtApfKuj6sTgo+brpJqxZwgKyHrm9sX4UarxZmJPEKvLKM4JojgS/omWF0FFStPp1yLHaXfk
+	lnlym3FwjCPI+QgSTIW/+EwT8BNCJ33Nb3we5TqEjrhw2gD1MHQPXelHMjfUQiHKYBdUQi+sCLH
+	OLd93dopUQqzPOjMR
+X-Google-Smtp-Source: AGHT+IGWCWxesOK7jbekbPCv/x0NNcwUVBmp03gM9Ij6w0NKiLZ6YXEuDKJaUpEmxnowZDntDgDmPg==
+X-Received: by 2002:a05:600c:1e1e:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-43f2d98b7ddmr11478485e9.30.1744251879071;
+        Wed, 09 Apr 2025 19:24:39 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057414.dip0.t-ipconnect.de. [91.5.116.20])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20a9f14csm24512175e9.1.2025.04.09.19.24.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 19:24:38 -0700 (PDT)
+Message-ID: <cc67b805-4ed5-416b-ba5f-3b52877a96b6@googlemail.com>
+Date: Thu, 10 Apr 2025 04:24:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 000/269] 6.6.87-rc2 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250409115840.028123334@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250409115840.028123334@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAB8ipk8AAFFtV3OA4S=g9X9AXsC4Ntr911DLLRkhgQtvMvXAvg@mail.gmail.com>
 
-On Thu, Apr 10, 2025 at 10:13:04AM +0800, Xuewen Yan wrote:
-> On Thu, Apr 10, 2025 at 10:09 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> >
-> > On Thu, Apr 10, 2025 at 10:06:41AM +0800, Xuewen Yan wrote:
-> > > On Thu, Apr 10, 2025 at 9:49 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> > > >
-> > > > On Wed, Apr 09, 2025 at 07:48:05PM +0800, Xuewen Yan wrote:
-> > > > > Or can we modify it as follows?
-> > > > >
-> > > > > -->8--
-> > > > >
-> > > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > > > > index 1a19d69b91ed..0e8d3b92ffe7 100644
-> > > > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > > > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct
-> > > > > sugov_policy *sg_policy, u64 time)
-> > > > >
-> > > > >         if (unlikely(sg_policy->limits_changed)) {
-> > > > >                 sg_policy->limits_changed = false;
-> > > > > -               sg_policy->need_freq_update =
-> > > > > cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > > > +               sg_policy->need_freq_update = true;
-> > > > >                 return true;
-> > > > >         }
-> > > > >
-> > > > > @@ -95,11 +95,15 @@ static bool sugov_should_update_freq(struct
-> > > > > sugov_policy *sg_policy, u64 time)
-> > > > >  static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
-> > > > >                                    unsigned int next_freq)
-> > > > >  {
-> > > > > -       if (sg_policy->need_freq_update)
-> > > > > +       if (sg_policy->need_freq_update) {
-> > > > >                 sg_policy->need_freq_update = false;
-> > > > > -       else if (sg_policy->next_freq == next_freq)
-> > > > > -               return false;
-> > > > > +               if (cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS))
-> > > > > +                       goto change;
-> > > > > +       }
-> > > > >
-> > > > > +       if (sg_policy->next_freq == next_freq)
-> > > > > +               return false;
-> > > > > +change:
-> > > > >         sg_policy->next_freq = next_freq;
-> > > > >         sg_policy->last_freq_update_time = time;
-> > > >
-> > > > If CPUFREQ_NEED_UPDATE_LIMITS isn't specified, then there's no need to request a
-> > > > frequency switch from the driver when the current frequency is exactly the same
-> > > > as the next frequency.
-> > >
-> > > Yes, the following check would return false:
-> > >
-> > >  +       if (sg_policy->next_freq == next_freq)
-> > >  +               return false;
-> >
-> > But what does that change fix? In fact, that change causes a limits update to
-> > trigger a frequency switch request to the driver even when the new frequency is
-> > the same as the current one.
-> 
-> We set the sg_policy->need_freq_update = false instead of
-> sg_policy->need_freq_update =
-> cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS),
-> to fix the original issue, and then add the
-> +               if (cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS))
-> +                       goto change;
-> 
-> to allow cpufreq to update when CPUFREQ_NEED_UPDATE_LIMITS is set.
+Am 09.04.2025 um 14:02 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.87 release.
+> There are 269 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Please take a closer look at this snippet in sugov_update_next_freq():
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-	if (sg_policy->need_freq_update)
-		sg_policy->need_freq_update = false;
-	else if (sg_policy->next_freq == next_freq)
-		return false;
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-The 2nd if-statement is an else-if. Therefore, when need_freq_update is true, it
-is set to false *and* skips the (sg_policy->next_freq == next_freq) check.
 
-Sultan
+Beste Grüße,
+Peter Schneider
+
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
