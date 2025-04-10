@@ -1,84 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8795B28D83E;
-	Thu, 10 Apr 2025 19:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B4B1BF37
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 19:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744312430; cv=none; b=rmzoI68yd0MDjhK21EMhp8UEwyQZXjo3LpblfuAFHOQ1i4Jm3vlaHmRZWIUx5LSgqWDuQJBmSe5Esq5ECddxDurDFlS+XxIX25WHQzBQKu2fTBiOaMuq41QKLoOyxe1de9aHfBcdptdbMUU9+Ait/EC1hvCJd5mLeFPo2/EKbrM=
+	t=1744312506; cv=none; b=dCDILv0fgpn3p3+03Cl1XsPBmIwcS2u7Nt6IiJ6R9kiHSLujBO/o0C+qSPOgjkQNt5a4OkswJYQCoajYLYVdWiBnrraSRAHr1yRAYAihiPPWfcMWLbArndfGFsrKqFpuHT6wPQfALBEPyyUIviWj6N8i4nzDnS1oqAeAZKfFrCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744312430; c=relaxed/simple;
-	bh=CDqDQPLUl5izS3auCwD9l5FEWium8D8RPnEJ3vuRgDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A7+bXBluGpWFlgwkz/YIPWZcBdtdvU5YxY6e+BrMwTvzNI5kP6GzggURnOgxmZI8uo54G6O035Jz7ORlyhWl2+4fcpPgvjQqFxLlyzhKDHkS9UVx9nv3jlEjz7dJhy/h7WSNL3LIyHAHMj8Gi5eMLSes1KQ6TluuAeLg/vFwQnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVy9BELN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744312506; c=relaxed/simple;
+	bh=bN/wby9GJTyHNrfTR8MR87g9+BbHW99FSM7/16TluMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BcGJuP+eaC7xGYko20sNXR6CdgSuEMUPbYictypuP0e7Xdd5LMwBUUGYZ5E+EDLw3dND6D9QApy+KnyGwQHNh1f9I8RGhP9cU188l9xQVQ+mzPleuT7WfdRviepXimb2e59GlyrUhJfEolnaraUYP6RJx/uYd8fpjXXly1nZhF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ta1Y01ti; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVy9BELN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BAF3C4CEDD;
-	Thu, 10 Apr 2025 19:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744312430;
-	bh=CDqDQPLUl5izS3auCwD9l5FEWium8D8RPnEJ3vuRgDo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dVy9BELNAhiNn/Oce7YoCROIl+3jfwzVH88gi/KvvLaGqGxISHZL64rNIbF4MR/rs
-	 kkERVhxf7jXm2G34dRihTIb64a1VnMr1+4P7+WohGq49aK8DCIpKdcZkv9R9UKTxui
-	 AvP+VDQafFOXFGeq2V4FtPE+2Z8UiT/Ppn1GuLHXuoFpc2JuOpZwBMLAMmAamdDHWV
-	 ojxelK2mTw8O5vHEe+HyCTj3kMQy9SMDqQDYysP1GYvq6jQsKCGrnYhGNG5bKIMBfD
-	 oOxr2lfzyCjGxQXWom/VYRrvHC0ln8wmNPDc6IiKdIv5UwVxWlJhBx4Uq9k2/7W/Sc
-	 iSJe2G4jaUrLA==
-Date: Thu, 10 Apr 2025 12:13:47 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: tip-bot2 for Josh Poimboeuf <tip-bot2@linutronix.de>
-Cc: linux-tip-commits@vger.kernel.org, kernel test robot <lkp@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [tip: objtool/urgent] objtool: Fix false-positive "ignoring
- unreachables" warning
-Message-ID: <jd2rsmxvbvawlwwaatx323pzh5on3tjt5cxx5m7icf3sgj6vao@kjmjgb252u3x>
-References: <5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org>
- <174426568347.31282.17971680226674649784.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ta1Y01ti"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AHv49n030910;
+	Thu, 10 Apr 2025 19:14:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=bWJjw
+	0o7BbqQgCw33nopo5k8/4LIRBtq0w5bjnsN5bc=; b=Ta1Y01tiixjTIg11fVb1U
+	Vs6Un+54F1lMe1zMik+3M2GiqcBT5usJgyhS/ino/YBMgivrnwh2xxziXpVNuDl6
+	23ffqTidprnCeGmw/mtyd73pnJaIwR1gA4Gp0Y31UoC0jflAc+9dyWyIe7CuV7Ok
+	0PiSGDZ/763WI7X5amOuIM6xTI31Yz+qOpTUGgJuBgDnv/lsng/v353NR531/bEg
+	81FpyKAiWxjs7JTDaJ9q+7nqu597I0j4JkgMJI2p+i7kBrHG/JEk7zI2W9f4Bkp1
+	igVSrXogsZToJtfnz/PZQwf0hZCsDzvDpeohhi+066efCO7tIBhBpTW++akE1Gu+
+	w==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45xju3g6ar-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 19:14:56 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53AInuKw023836;
+	Thu, 10 Apr 2025 19:14:55 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyk1gjx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 19:14:55 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53AJEn94040606;
+	Thu, 10 Apr 2025 19:14:55 GMT
+Received: from sidhakum-ubuntu.osdevelopmeniad.oraclevcn.com (sidhakum-ubuntu.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.250.108])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 45ttyk1gg6-5;
+	Thu, 10 Apr 2025 19:14:55 +0000
+From: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+To: linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, liam.howlett@oracle.com,
+        willy@infradead.org, Sidhartha Kumar <sidhartha.kumar@oracle.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Liam R . Howlett" <Liam.Howlett@Oracle.com>
+Subject: [PATCH v5 4/6] maple_tree: break on convergence in mas_spanning_rebalance()
+Date: Thu, 10 Apr 2025 19:14:44 +0000
+Message-ID: <20250410191446.2474640-5-sidhartha.kumar@oracle.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250410191446.2474640-1-sidhartha.kumar@oracle.com>
+References: <20250410191446.2474640-1-sidhartha.kumar@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <174426568347.31282.17971680226674649784.tip-bot2@tip-bot2>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504100139
+X-Proofpoint-GUID: IP9YCkA5Kq5Y17sI9bPL-LaoxMXu4I7k
+X-Proofpoint-ORIG-GUID: IP9YCkA5Kq5Y17sI9bPL-LaoxMXu4I7k
 
-On Thu, Apr 10, 2025 at 06:14:43AM +0000, tip-bot2 for Josh Poimboeuf wrote:
-> The following commit has been merged into the objtool/urgent branch of tip:
-> 
-> Commit-ID:     8af6f0fe9c4340ed97f0ba4f3f6cc7bb16558e87
-> Gitweb:        https://git.kernel.org/tip/8af6f0fe9c4340ed97f0ba4f3f6cc7bb16558e87
-> Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-> AuthorDate:    Wed, 09 Apr 2025 15:49:36 -07:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Thu, 10 Apr 2025 08:03:05 +02:00
-> 
-> objtool: Fix false-positive "ignoring unreachables" warning
-> 
-> There's no need to try to automatically disable unreachable warnings if
-> they've already been manually disabled due to CONFIG_KCOV quirks.
-> 
-> This avoids a spurious warning with a KCOV kernel:
-> 
->   fs/smb/client/cifs_unicode.o: warning: objtool: cifsConvertToUTF16.part.0+0xce5: ignoring unreachables due to jump table quirk
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Link: https://lore.kernel.org/r/5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org
-> 
-> Closes: https://lore.kernel.org/r/202504090910.QkvTAR36-lkp@intel.com/
+This allows support for using the vacant height to calculate the worst
+case number of nodes needed for wr_rebalance operation.
+mas_spanning_rebalance() was seen to perform unnecessary node allocations.
+We can reduce allocations by breaking early during the rebalancing loop
+once we realize that we have ascended to a common ancestor.
 
-Superfluous newline there.
+Suggested-by: Liam Howlett <liam.howlett@oracle.com>
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Reviewed-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
+Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+---
+ lib/maple_tree.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Also, this probably could use a fixes tag:
-
-Fixes: eeff7ac61526 ("objtool: Warn when disabling unreachable warnings")
-
-Thanks!
-
+diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+index 3f794ef072f4..5610b3742a79 100644
+--- a/lib/maple_tree.c
++++ b/lib/maple_tree.c
+@@ -2893,11 +2893,21 @@ static void mas_spanning_rebalance(struct ma_state *mas,
+ 		mast_combine_cp_right(mast);
+ 		mast->orig_l->last = mast->orig_l->max;
+ 
+-		if (mast_sufficient(mast))
+-			continue;
++		if (mast_sufficient(mast)) {
++			if (mast_overflow(mast))
++				continue;
++
++			if (mast->orig_l->node == mast->orig_r->node) {
++			       /*
++				* The data in b_node should be stored in one
++				* node and in the tree
++				*/
++				slot = mast->l->offset;
++				break;
++			}
+ 
+-		if (mast_overflow(mast))
+ 			continue;
++		}
+ 
+ 		/* May be a new root stored in mast->bn */
+ 		if (mas_is_root_limits(mast->orig_l))
 -- 
-Josh
+2.43.0
+
