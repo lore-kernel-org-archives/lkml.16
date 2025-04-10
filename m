@@ -1,68 +1,265 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7382A47
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C67F1F1538;
+	Thu, 10 Apr 2025 04:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744259174; cv=none; b=fAGgA39jzWR1tRs2jVFj/dyavbanjWnnqHN94u25qAjGR7412jJ+bLE+dYhff0P2lJuQq9hZuEylwSKFCqqHEZP5P9T5m4w9EE/H5dSTMYtnERZ8b0fSeGOP894wFWTVBh3SbYsMzL4dpoxD1W/ibcXVWPqpfSziJkUq68aoEmw=
+	t=1744259179; cv=none; b=IeSTFUGu7GClOoKR3MuLKwxJlpgXL3V8w+bw3awryJ1iOOgwEHbfTcsCJ9R4DwWNOvHXvG7s5ivedvwly9+k3n+KWUyeCKSO6A8srmxbt1x0Nx3OB0lXMZVbLi1k8drhUm+phbxmoarD+siPEcqMqVjZGD0AdM2uOB5NZ50cWjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744259174; c=relaxed/simple;
-	bh=YKkP8+I2mLaJSe85LeC/ocsoyvTwsfg7HiWRYmjS7iA=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=t8yGCiGSuWryFLZ2gxLPIlir+FcT3C7VAZmVxcfc5vbqjtFTulUyOT39ELC3Tat+TexP6D37raoIgmsIiLY7l65tggU+BlFcjm3W04Iyn5DY81xlh6+pHo1IFtgaB0IYhFQuHUYQMb4NNM2tcMM9wa4PdbvEtjicboU9kVpSOSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=F0L8Sza8; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
+	s=arc-20240116; t=1744259179; c=relaxed/simple;
+	bh=i2rsA0GJ5JL9p9YLnj53F8I4XkKH+f57A+JCAXPDoxg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f7KEhziSV0A91lsExP5k/vViGIT9+hNbrph+3x7yrO4h/R0nTDAebJg6sAhTQceZ0p5qk1o70RCzscGguEQfJxkio4WJZDmKaqBjs1vV3lyuYckd+RUm0mcUsDa2+ANi/TM5eg//h0J40TkBWi08Tn3G7L2cjFCgRcSCJ5foWZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=tbpBpfhc; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="F0L8Sza8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Xb7yQwX5cd0KkdaIcjvaLL8D9LTDqz4TYT+msiWYcfo=; b=F0L8Sza8+RbDtRQWRoRewZl8Ok
-	DB1zG0ZMUm9lZEUicI9ILR6CDY11k4seCkuLqgjizS8sr3iVJJqoGWi+XJmUAoMi+1hECoxfW3U3Q
-	FrLpCHWEF5k5uSAY4Oh6zeDRbZneRXeTHC5+0liyAVLBK39d2iIzU1an5A8aYH2gUGs3ZFeIBSBtU
-	P4pSrIpkQFIgdzIaFL0PN1vNOMZM6rEGBahmaxe/Rr+8AcVkt6dvfqktrDUfmf6WKfG+D2zpVH9By
-	BR0cYP7bNLiAmfLqzeLLAu6fYitYrVwyH129/yBSuu8fWOdySAbye2768AmWtvwolJuKHi+FHeDq/
-	SmCvEFOA==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1u2ipM-00G7lu-NQ
-	for linux-kernel@vger.kernel.org;
-	Thu, 10 Apr 2025 05:43:44 +0200
-Message-ID: <a217814c-d1b6-4d54-83c2-67483d4a8cfb@bit-philosophy.net>
-Date: Thu, 10 Apr 2025 05:43:42 +0200
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tbpBpfhc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744259178; x=1775795178;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jWrgfCuyAlswd5qJJIv7RiCXg6fDzAQOV2joMZ360dQ=;
+  b=tbpBpfhcyP8iLDQQ5pLhtobUroCv317SzMct4RQ7F15yCKIfPMPsLTik
+   9mZF4/pxvWpnQdhPDw4Jfo/kEKMDztIyw+MRt05I1mgKrTK7zqWEAWxYO
+   SnScg/N1vGeBwAZWXAQG/RLl+4Nlpf6dD+KNuIk7YsdcRQwURix7bKVQy
+   4=;
+X-IronPort-AV: E=Sophos;i="6.15,202,1739836800"; 
+   d="scan'208";a="481854576"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 04:26:14 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:55004]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.195:2525] with esmtp (Farcaster)
+ id 5eb5ee46-9dd5-4e4c-9964-7a70054ce6e7; Thu, 10 Apr 2025 04:26:13 +0000 (UTC)
+X-Farcaster-Flow-ID: 5eb5ee46-9dd5-4e4c-9964-7a70054ce6e7
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 10 Apr 2025 04:26:12 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.41) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 10 Apr 2025 04:26:09 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jlayton@kernel.org>
+CC: <akpm@linux-foundation.org>, <andrew@lunn.ch>, <davem@davemloft.net>,
+	<edumazet@google.com>, <horms@kernel.org>, <kuba@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <kuniyu@amazon.com>
+Subject: Re: [PATCH v2 2/2] net: add debugfs files for showing netns refcount tracking info
+Date: Wed, 9 Apr 2025 21:24:59 -0700
+Message-ID: <20250410042602.27471-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
+References: <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe@bit-philosophy.net>
-Subject: Bitstreams (OS) (previously low-jitter fair pay philosophy)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D033UWC003.ant.amazon.com (10.13.139.217) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-My webpage and conceptology is coming to perfection.
+From: Jeff Layton <jlayton@kernel.org>
+Date: Tue, 08 Apr 2025 09:36:38 -0400
+> CONFIG_NET_NS_REFCNT_TRACKER currently has no convenient way to display
+> its tracking info. Add a new net_ns directory under the debugfs
+> ref_tracker directory. Create a directory in there for every netns, with
+> refcnt and notrefcnt files that show the currently tracked active and
+> passive references.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  net/core/net_namespace.c | 151 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 151 insertions(+)
+> 
+> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> index 4303f2a4926243e2c0ff0c0387383cd8e0658019..7e9dc487f46d656ee4ae3d6d18d35bb2aba2b176 100644
+> --- a/net/core/net_namespace.c
+> +++ b/net/core/net_namespace.c
+> @@ -1512,3 +1512,154 @@ const struct proc_ns_operations netns_operations = {
+>  	.owner		= netns_owner,
+>  };
+>  #endif
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
+> +
+> +#include <linux/debugfs.h>
+> +
+> +static struct dentry *ns_ref_tracker_dir;
+> +static unsigned int ns_debug_net_id;
+> +
+> +struct ns_debug_net {
+> +	struct dentry *netdir;
+> +	struct dentry *refcnt;
+> +	struct dentry *notrefcnt;
+> +};
+> +
+> +#define MAX_NS_DEBUG_BUFSIZE	(32 * PAGE_SIZE)
+> +
+> +static int
+> +ns_debug_tracker_show(struct seq_file *f, void *v)
 
-The words in translation of philosophy now is optimal in linguistics.
+I think there is no clear rule about where to break, but could you
+remove \n after int so that it will match with other functions in
+this file ?
 
-The OS is Bistreams simply, the pop version of the computer bit concept 
-that is at the root of unix derivaties and BCPL programming language.
+Same for other new functions, looks like none of them go over 80 columns.
 
-I was part of developing and popularizing the bitstream concept myself.
+> +{
+> +	struct ref_tracker_dir *tracker = f->private;
+> +	int len, bufsize = PAGE_SIZE;
+> +	char *buf;
+> +
+> +	for (;;) {
+> +		buf = kvmalloc(bufsize, GFP_KERNEL);
+> +		if (!buf)
+> +			return -ENOMEM;
+> +
+> +		len = ref_tracker_dir_snprint(tracker, buf, bufsize);
+> +		if (len < bufsize)
+> +			break;
+> +
+> +		kvfree(buf);
+> +		bufsize *= 2;
+> +		if (bufsize > MAX_NS_DEBUG_BUFSIZE)
+> +			return -ENOBUFS;
+> +	}
+> +	seq_write(f, buf, len);
+> +	kvfree(buf);
+> +	return 0;
+> +}
+> +
+> +static int
+> +ns_debug_ref_open(struct inode *inode, struct file *filp)
+> +{
+> +	int ret;
+> +	struct net *net = inode->i_private;
 
-Sense indicates to use bitstream centric instead of files if it works 
-better!
+nit: Please sort in the reverse xmas order.
 
-https://www.youtube.com/playlist?list=PLVLVrw5JZ0BhvjUMhiU7BIXcTotvU5mfr
+https://docs.kernel.org/process/maintainer-netdev.html#local-variable-ordering-reverse-xmas-tree-rcs
 
-Light,
-Ywe.
-https://bit-philosophy.net/
+> +
+> +	ret = single_open(filp, ns_debug_tracker_show, &net->refcnt_tracker);
+> +	if (!ret)
+> +		net_passive_inc(net);
+> +	return ret;
+> +}
+> +
+> +static int
+> +ns_debug_notref_open(struct inode *inode, struct file *filp)
+> +{
+> +	int ret;
+> +	struct net *net = inode->i_private;
+
+Same here.
+
+
+> +
+> +	ret = single_open(filp, ns_debug_tracker_show, &net->notrefcnt_tracker);
+> +	if (!ret)
+> +		net_passive_inc(net);
+> +	return ret;
+> +}
+> +
+> +static int
+> +ns_debug_ref_release(struct inode *inode, struct file *filp)
+> +{
+> +	struct net *net = inode->i_private;
+> +
+> +	net_passive_dec(net);
+> +	return single_release(inode, filp);
+> +}
+> +
+> +static const struct file_operations ns_debug_ref_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= ns_debug_ref_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= ns_debug_ref_release,
+> +};
+> +
+> +static const struct file_operations ns_debug_notref_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= ns_debug_notref_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= ns_debug_ref_release,
+> +};
+> +
+> +static int
+> +ns_debug_init_net(struct net *net)
+> +{
+> +	struct ns_debug_net *dnet = net_generic(net, ns_debug_net_id);
+> +	char name[11]; /* 10 decimal digits + NULL term */
+> +	int len;
+> +
+> +	len = snprintf(name, sizeof(name), "%u", net->ns.inum);
+> +	if (len >= sizeof(name))
+> +		return -EOVERFLOW;
+> +
+> +	dnet->netdir = debugfs_create_dir(name, ns_ref_tracker_dir);
+> +	if (IS_ERR(dnet->netdir))
+> +		return PTR_ERR(dnet->netdir);
+> +
+> +	dnet->refcnt = debugfs_create_file("refcnt", S_IFREG | 0400, dnet->netdir,
+> +					   net, &ns_debug_ref_fops);
+> +	if (IS_ERR(dnet->refcnt)) {
+> +		debugfs_remove(dnet->netdir);
+> +		return PTR_ERR(dnet->refcnt);
+> +	}
+> +
+> +	dnet->notrefcnt = debugfs_create_file("notrefcnt", S_IFREG | 0400, dnet->netdir,
+> +					      net, &ns_debug_notref_fops);
+> +	if (IS_ERR(dnet->notrefcnt)) {
+> +		debugfs_remove_recursive(dnet->netdir);
+> +		return PTR_ERR(dnet->notrefcnt);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void
+> +ns_debug_exit_net(struct net *net)
+> +{
+> +	struct ns_debug_net *dnet = net_generic(net, ns_debug_net_id);
+> +
+> +	debugfs_remove_recursive(dnet->netdir);
+> +}
+> +
+> +static struct pernet_operations ns_debug_net_ops = {
+> +	.init = ns_debug_init_net,
+> +	.exit = ns_debug_exit_net,
+> +	.id = &ns_debug_net_id,
+> +	.size = sizeof(struct ns_debug_net),
+> +};
+> +
+> +static int __init ns_debug_init(void)
+> +{
+> +	ns_ref_tracker_dir = debugfs_create_dir("net_ns", ref_tracker_debug_dir);
+> +	if (IS_ERR(ns_ref_tracker_dir))
+> +		return PTR_ERR(ns_ref_tracker_dir);
+> +
+> +	register_pernet_subsys(&ns_debug_net_ops);
+> +	return 0;
+
+register_pernet_subsys() could fail, so
+
+	return register_pernet_subsys(&ns_debug_net_ops);
+
+
+> +}
+> +late_initcall(ns_debug_init);
+> +#endif /* CONFIG_NET_NS_REFCNT_TRACKER */
+> +#endif /* CONFIG_DEBUG_FS */
+> 
+> -- 
+> 2.49.0
+> 
