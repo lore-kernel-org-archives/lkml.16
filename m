@@ -1,132 +1,163 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BCF284B3D;
-	Thu, 10 Apr 2025 13:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ECE26ACB;
+	Thu, 10 Apr 2025 13:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293513; cv=none; b=rfQ8A9TEXQdqcydH4F3hrfbxRv42X0TTBcxF3qV1k7Ex7o2QVHcUcA9XeZEV6AOYM3LePF3cYyVx2RK8X/LbHtta+3BufT48VioeYZ7HzHrrBLzMNz1ZExvBs5tmU4ydsmRjiX8ZewSxi8df3YyIOGAe6u5wWM/X9KQn0orT6/o=
+	t=1744293528; cv=none; b=c9iLW9+ZZe3gFcYyz4iXeuTFFSYkXPdsZBUzPc+dt4bVvHbOrcCnWmGZnKv2MRqHd46kpcqfMsAKVWD2+OLgItflVfMXJxY3SH/9bBdLwoGOAODNOYN7pjbS8GYPxpZsO0IyPuIjZBjYJQ4xCgukpUpbTMLiCO+2SZjGSuXwhD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293513; c=relaxed/simple;
-	bh=yCmoVsBset/qt1RxJ6GlsGyFRfgaOPxZBecAiL0QW1U=;
+	s=arc-20240116; t=1744293528; c=relaxed/simple;
+	bh=tc3sjsEyh+ECbexe09u7lpewpQnE1mf7v/fkj4+zOy0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tN1RxcA4LCA+Hfch2jPzioy+PwFcQKu5pz/W09QDRDIozQxDdKa+S2n7xquNX3p63AztUaKhmWIJvLMyNEYrGb9dc+qAfF9gfPPHq3JVzQedrtw0AKkLTmHXtnLNJBBRkhVCcG8uBm8N2XxaZVIEOp7nrS7P1reRQCCn7wsR3qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OpVVKr0B; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mJyHdYHyWdIL0RMzm/2m/yY+6z5bQOV5+TeVB8pg7Wg69LWpr2Bk/d+FlbR3CEBK/wXbUaQjdn84Xh3fMuY8ESyTOdnnXg+zxIPg/7IHVu9MlxiKDddj7VOizUjZYSCYnc0tCdf84p8Dccw1N7XALiv0hk9vQHaP0S5DHVMxitg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKApxj71; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OpVVKr0B"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53ACS1JJ002961;
-	Thu, 10 Apr 2025 13:58:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Dzww3L
-	KlrnUtIm0R5u+tO3syAZ1j8WxAkgmrtRtvAXs=; b=OpVVKr0B+wsZSXCfUeVbj+
-	yfR3I3kKvHuPRc6MiyESZAE05QJWqgry+iGJPe3f9u5qSYYpJkWnBPChJxuqB9IF
-	pqU7MH5OXj08qbxJz/75onxa5ckaikhGzFkZOSAi6avGuEYWNLkp9gquQzu1y3ND
-	1emlopCT8zAQIY4Qo/YKCztxvRIH5iVIZGb3ntVPRRKB087WozQWBe2Ek8UuxbJ0
-	cMLgnOzl8gIWQl4qx/y8wbEDwzOEF+89d0KkxQ4sfjKLv8DDpSnKLRkOkXvmxp2B
-	iWoylT0jt1pDTy1kcDb3nfcGBuKEDwtVxn2LTwmVPzhlrqD1JjBHgmpFtpd3rc8w
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xe13rfg3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 13:58:26 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53ADaXAE025510;
-	Thu, 10 Apr 2025 13:58:25 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbm67c9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 13:58:25 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ADwN2B35652118
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 13:58:23 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 17CED2004B;
-	Thu, 10 Apr 2025 13:58:23 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3244C20043;
-	Thu, 10 Apr 2025 13:58:21 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.109.245.223])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 10 Apr 2025 13:58:21 +0000 (GMT)
-Date: Thu, 10 Apr 2025 19:28:18 +0530
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: tj@kernel.org, hannes@cmpxchg.org, corbet@lwn.net, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc,cgroup-v2: memory.max is reported in multiples of
- page size
-Message-ID: <Z_fOenjfni55JsbV@linux.ibm.com>
-References: <20250410133439.4028817-2-vishalc@linux.ibm.com>
- <la6q2koug4ohzcfc5eqguod7x6fdwhndqkhzfrttsfnjo5fbb3@xzxodtpjl6ww>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKApxj71"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 061C7C4CEDD;
+	Thu, 10 Apr 2025 13:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744293528;
+	bh=tc3sjsEyh+ECbexe09u7lpewpQnE1mf7v/fkj4+zOy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TKApxj71kO7MtG3mvtlzsnBLPdsk6DOvpqsDJLj5Zp2cK0YLoAFOsmy157pN4IXf2
+	 BZ428qjsIMaN2cDly63aH7BoR4eqDIQA/J10/KETejdkzXCHVDNaTx5Gtb7YfYUCz5
+	 OMyBZ7xyBzph+iaBZXlVpXZHQkGJDDf71Ct49kMF8E6u4HXJxxIV9ZuICkRQFon32x
+	 AkUQWwvQB9uosvTnIs+rOib20WBt2FSJZe3ilEJpwdMpBF0llh0wCrxoUpS8LACVfM
+	 xFp2XDBhNNWjN+DF5IkSDGRNewTMEgcItf9JkODT7Js4xgeHryVP9R20ppzOgkJ2C6
+	 nw1+mRfubH16g==
+Date: Thu, 10 Apr 2025 16:58:43 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>,
+	Phani R Burra <phani.r.burra@intel.com>
+Subject: Re: [PATCH iwl-next 05/14] libeth: add control queue support
+Message-ID: <20250410135843.GV199604@unreal>
+References: <20250408124816.11584-1-larysa.zaremba@intel.com>
+ <20250408124816.11584-6-larysa.zaremba@intel.com>
+ <20250410082137.GO199604@unreal>
+ <Z_ehEXmlEBREQWQM@soc-5CG4396X81.clients.intel.com>
+ <20250410112349.GP199604@unreal>
+ <Z_fAdLJ4quuP2lip@soc-5CG4396X81.clients.intel.com>
+ <20250410132706.GR199604@unreal>
+ <7e3f2eb8-b668-4ac5-8b49-43eebff2b3e0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <la6q2koug4ohzcfc5eqguod7x6fdwhndqkhzfrttsfnjo5fbb3@xzxodtpjl6ww>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4Gk_z1bq9BSjNQCwh15X2ZYL-Z3CsoPH
-X-Proofpoint-GUID: 4Gk_z1bq9BSjNQCwh15X2ZYL-Z3CsoPH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_03,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 adultscore=0
- suspectscore=0 priorityscore=1501 spamscore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504100101
+In-Reply-To: <7e3f2eb8-b668-4ac5-8b49-43eebff2b3e0@intel.com>
 
-On Thu, Apr 10, 2025 at 03:47:06PM +0200, Michal Koutný wrote:
-> Hello.
+On Thu, Apr 10, 2025 at 03:33:40PM +0200, Alexander Lobakin wrote:
+> From: Leon Romanovsky <leon@kernel.org>
+> Date: Thu, 10 Apr 2025 16:27:06 +0300
 > 
-> On Thu, Apr 10, 2025 at 07:04:40PM +0530, Vishal Chourasia <vishalc@linux.ibm.com> wrote:
-> > Update documentation for memory.max to clarify that the reported value
-> > is in multiples of the system page_size. The following example
-> > demonstrates this behavior:
+> > On Thu, Apr 10, 2025 at 02:58:28PM +0200, Larysa Zaremba wrote:
+> >> On Thu, Apr 10, 2025 at 02:23:49PM +0300, Leon Romanovsky wrote:
+> >>> On Thu, Apr 10, 2025 at 12:44:33PM +0200, Larysa Zaremba wrote:
+> >>>> On Thu, Apr 10, 2025 at 11:21:37AM +0300, Leon Romanovsky wrote:
+> >>>>> On Tue, Apr 08, 2025 at 02:47:51PM +0200, Larysa Zaremba wrote:
+> >>>>>> From: Phani R Burra <phani.r.burra@intel.com>
+> >>>>>>
+> >>>>>> Libeth will now support control queue setup and configuration APIs.
+> >>>>>> These are mainly used for mailbox communication between drivers and
+> >>>>>> control plane.
+> >>>>>>
+> >>>>>> Make use of the page pool support for managing controlq buffers.
+> >>>>>
+> >>>>> <...>
+> >>>>>
+> >>>>>>  libeth-y			:= rx.o
+> >>>>>>  
+> >>>>>> +obj-$(CONFIG_LIBETH_CP)		+= libeth_cp.o
+> >>>>>> +
+> >>>>>> +libeth_cp-y			:= controlq.o
+> >>>>>
+> >>>>> So why did you create separate module for it?
+> >>>>> Now you have pci -> libeth -> libeth_cp -> ixd, with the potential races between ixd and libeth, am I right?
+> >>>>>
+> >>>>
+> >>>> I am not sure what kind of races do you mean, all libeth modules themselves are 
+> >>>> stateless and will stay this way [0], all used data is owned by drivers.
+> >>>
+> >>> Somehow such separation doesn't truly work. There are multiple syzkaller
+> >>> reports per-cycle where module A tries to access module C, which already
+> >>> doesn't exist because it was proxied through module B.
+> >>
+> >> Are there similar reports for libeth and libie modules when iavf is enabled?
+> > 
+> > To get such report, syzkaller should run on physical iavf, it looks like it doesn't.
+> > Did I miss it here?
+> > https://syzkaller.appspot.com/upstream/s/net
+> > 
+> >> It is basically the same hierarchy. (iavf uses both libeth and libie, libie 
+> >> depends on libeth).
+> >>
+> >> I am just trying to understand, is this a regular situation or did I just mess 
+> >> smth up?
+> > 
+> > My review comment was general one. It is almost impossible to review
+> > this newly proposed architecture split for correctness.
+> > 
+> >>
+> >>>
+> >>>>
+> >>>> As for the module separation, I think there is no harm in keeping it modular. 
+> >>>
+> >>> Syzkaller reports disagree with you. 
+> >>>
+> >>
+> >> Could you please share them?
+> > 
+> > It is not an easy question to answer, because all these reports are complaining
+> > about some wrong locking order or NULL-pointer access. You will never know if
+> > it is because of programming or design error.
+> > 
+> > As an approximate example, see commits a27c6f46dcec ("RDMA/bnxt_re: Fix an issue in bnxt_re_async_notifier")
+> > and f0df225d12fc ("RDMA/bnxt_re: Add sanity checks on rdev validity").
+> > At the first glance, they look unrelated to our discussion, however
+> > they can serve as an example or races between deinit/disable paths in
+> > parent module vs. child.
 > 
-> This applies to any of page_counter-based attribute, not only
-> memory.max.
+> Unrelated. At first, you were talking about module dependencies, now
+> you're talking about struct device etc dependencies, which is a
+> completely different thing.
 > 
-Yes. This is already documented, and I missed it.
+> As already said, libeth is stateless, so the latter one can't happen.
+> The former one is impossible at all. As long as at least 1 child module
+> is loaded, you can't unload the parent. And load/unload is serialized,
+> see module core code.
 
-From Documentation/admin-api/cgroup-v2.rst:
-...
-Memory Interface Files
-~~~~~~~~~~~~~~~~~~~~~~
+It is not only module load/unload. It is bind/unbind, devlink operations
+e.t.c, everything that can cause to reload driver in module C.
 
-All memory amounts are in bytes.  If a value which is not aligned to
-PAGE_SIZE is written, the value may be rounded up to the closest
-PAGE_SIZE multiple when read back.
-...
-> > --- a/Documentation/admin-guide/cgroup-v2.rst
-> > +++ b/Documentation/admin-guide/cgroup-v2.rst
-> > @@ -1316,6 +1316,9 @@ PAGE_SIZE multiple when read back.
-> >  	Caller could retry them differently, return into userspace
-> >  	as -ENOMEM or silently ignore in cases like disk readahead.
-> >  
-> > +        Note that the value set for memory.max is reported in units
-> > +        corresponding to the system's page size.
-> > +
-> 
-> There seems to be mismatch in whitespace to surrounding text.
-> 
-> Also the wording would be more precise if it referred to 'multiples',
-> not 'units' (units are simply bytes).
-> 
-> Michal
->
-Got it. But, it seems this patch is redundant. So, I won't be sending
-another version.
-
-Thanks,
-Vishal
-
+Thanks
