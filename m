@@ -1,166 +1,71 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997A728153D
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B438F283CB7
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744284239; cv=none; b=G9cwa9Cs6U5f73EAFp/JAv396PAV3DvmSrOHGjEizUuJUoPjRW4cq6gbtrUI3Ywqw7NDLBoOIpnhJvmGxP1BxQnldEs+c1/fCXKgz+RzBel0J9x6uqybXIy+Mf73es5p64WPgIcP1i8dVyqSvy5a6CbQyLCpHarNAXEF0qFJ9ZU=
+	t=1744284243; cv=none; b=eEHDR/pSTQV2jDb6qYklTsZLWGfiHkNUPhWiPFZqeLLaGpvMp7FoHbAs92/fDIGlAAewWTJc2crMMuLKn6i2seQs0y3skr3++AZ1g10sh83+OG8Dm5/pz8PM7BYtS/Wl9dfoiktxrpgv+GogQ9o40DVKNuShQUNj+c5o3mtMtTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744284239; c=relaxed/simple;
-	bh=H1MOL01bOC2XjD4KcBtXBweTCA9sLh6CPjez1MjmAig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pDQPrX6+DWPfwovqJzFRhV2j0HFmZpzpILXB7UMW8J6MuOHXvEllPkrmPjBEsSmvAsJdzmJ7bNILvPWwMGocdJSzQsKERnk9rrFQH9tRZ5Q03yBiFBbDoPpx/zN3j8pMfI+cE6MCvwOatD8NxOc8w/XLGqnH83f217ks0WkCAL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jpYt/8HD; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jpYt/8HD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744284235;
-	bh=H1MOL01bOC2XjD4KcBtXBweTCA9sLh6CPjez1MjmAig=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jpYt/8HD2/WtWOcV0oU0Wb11l8Fv2FAQTVcngbdOaIGWPbIHRZo/hazauwrl2D3ib
-	 SexCDU6OQM6EtTtaM4s4/86NW6BOy4TLvTYRxKcYl7W+/gWD9keqemLv8K2jNwNoQJ
-	 UTwzS7kKKqevgQ/y+2KqbQ8dIoed2QoB5D7GicR21rCEw1rDaf4oUIuIdbALRsDxRn
-	 FaYGpULlCPf+aaXHPM7VqdZIzt7W/gsCnf86figZYmaSjYElE0VRmUAu+HKdFIq/+d
-	 8Heu11Hq5cjkawRTIJPAI277esX/OE6UKPtmz6mJb5IdRoL52Jb72Ky6oc3jIRcmLs
-	 /i7uh10znjs3A==
-Received: from [192.168.1.90] (unknown [82.79.138.25])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 229BF17E0B2D;
-	Thu, 10 Apr 2025 13:23:55 +0200 (CEST)
-Message-ID: <4df10482-2082-4542-912f-c9ebc3803b6f@collabora.com>
-Date: Thu, 10 Apr 2025 14:23:54 +0300
+	s=arc-20240116; t=1744284243; c=relaxed/simple;
+	bh=ZpJRcgRPPvr1dbeU8awzO83J0hZZRmNCC19u/pWXEYI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KE5Gvq8nazoGrW8S0GHfqoxo0qGyR9xpaTX0+zCRSHOBDLocXgkC36YIKJulyAaPAQUhBOPDd7k8bwnlWu1LIxjUCqP50jxPZKbZ8wz07kMOnYxXzXRV42yvv/Jl63y5pTHcxzfbxs2d8KxkjU245FsrX5wmb8GU7dxmW/Gfw4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3630E106F;
+	Thu, 10 Apr 2025 04:24:01 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B3293F6A8;
+	Thu, 10 Apr 2025 04:24:00 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: joro@8bytes.org,
+	will@kernel.org
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Chen-Yu Tsai <wenst@chromium.org>
+Subject: [PATCH] iommu: Clear iommu-dma ops on cleanup
+Date: Thu, 10 Apr 2025 12:23:48 +0100
+Message-Id: <e788aa927f6d827dd4ea1ed608fada79f2bab030.1744284228.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 13/15] drm/tests: hdmi: Add limited range tests for
- YUV420 mode
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
- <20250326-hdmi-conn-yuv-v3-13-294d3ebbb4b2@collabora.com>
- <20250410-daffodil-toucanet-of-effort-b4dcbd@houat>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20250410-daffodil-toucanet-of-effort-b4dcbd@houat>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/10/25 10:18 AM, Maxime Ripard wrote:
-> On Wed, Mar 26, 2025 at 12:20:02PM +0200, Cristian Ciocaltea wrote:
->> Provide tests to verify that drm_atomic_helper_connector_hdmi_check()
->> helper behaviour when using YUV420 output format is to always set the
->> limited RGB quantization range to 'limited', no matter what the value of
->> Broadcast RGB property is.
->>
->> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->> ---
->>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c |  89 +++++++++++++++-
->>  drivers/gpu/drm/tests/drm_kunit_edid.h             | 112 +++++++++++++++++++++
->>  2 files changed, 196 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> index 6897515189a0649a267196b246944efc92ace336..3fae7ccf65309a1d8a4acf12de961713b9163096 100644
->> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->> @@ -731,6 +731,88 @@ static void drm_test_check_broadcast_rgb_limited_cea_mode_vic_1(struct kunit *te
->>  	drm_modeset_acquire_fini(&ctx);
->>  }
->>  
->> +/*
->> + * Test that for an HDMI connector, with an HDMI monitor, we will
->> + * get a limited RGB Quantization Range with a YUV420 mode, no
->> + * matter what the value of the Broadcast RGB property is set to.
->> + */
->> +static void drm_test_check_broadcast_rgb_cea_mode_yuv420(struct kunit *test)
->> +{
->> +	struct drm_atomic_helper_connector_hdmi_priv *priv;
->> +	enum drm_hdmi_broadcast_rgb broadcast_rgb;
->> +	struct drm_modeset_acquire_ctx ctx;
->> +	struct drm_connector_state *conn_state;
->> +	struct drm_atomic_state *state;
->> +	struct drm_display_mode *mode;
->> +	struct drm_connector *conn;
->> +	struct drm_device *drm;
->> +	struct drm_crtc *crtc;
->> +	int ret;
->> +
->> +	broadcast_rgb = *(enum drm_hdmi_broadcast_rgb *)test->param_value;
->> +
->> +	priv = drm_kunit_helper_connector_hdmi_init_with_edid(test,
->> +				BIT(HDMI_COLORSPACE_RGB) |
->> +				BIT(HDMI_COLORSPACE_YUV420),
->> +				8,
->> +				test_edid_hdmi_1080p_rgb_yuv_4k_yuv420_dc_max_200mhz);
->> +	KUNIT_ASSERT_NOT_NULL(test, priv);
->> +
->> +	drm = &priv->drm;
->> +	crtc = priv->crtc;
->> +	conn = &priv->connector;
->> +	KUNIT_ASSERT_TRUE(test, conn->display_info.is_hdmi);
->> +
->> +	mode = drm_kunit_display_mode_from_cea_vic(test, drm, 95);
->> +	KUNIT_ASSERT_NOT_NULL(test, mode);
->> +
->> +	drm_modeset_acquire_init(&ctx, 0);
->> +
->> +	ret = drm_kunit_helper_enable_crtc_connector(test, drm,
->> +						     crtc, conn,
->> +						     mode, &ctx);
->> +	KUNIT_ASSERT_EQ(test, ret, 0);
-> 
-> drm_kunit_helper_enable_crtc_connector() can return EDEADLK, so you need
-> to handle it and restart the sequence if it happens.
+If iommu_device_register() encounters an error, it can end up tearing
+down already-configured groups and default domains, however this
+currently still leaves devices hooked up to iommu-dma (and even
+historically the behaviour in this area was at best inconsistent across
+architectures/drivers...) Although in the case that an IOMMU is present
+whose driver has failed to probe, users cannot necessarily expect DMA to
+work anyway, it's still arguable that we should do our best to put
+things back as if the IOMMU driver was never there at all, and certainly
+the potential for crashing in iommu-dma itself is undesirable. Make sure
+we clean up the dev->dma_iommu flag along with everything else.
 
-Right, there are actually many users of the helper since
+Reported-by: Chen-Yu Tsai <wenst@chromium.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/iommu/iommu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-6a5c0ad7e08e ("drm/tests: hdmi_state_helpers: Switch to new helper")
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index c8033ca66377..095f9e9afe8c 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -538,6 +538,9 @@ static void iommu_deinit_device(struct device *dev)
+ 	dev->iommu_group = NULL;
+ 	module_put(ops->owner);
+ 	dev_iommu_free(dev);
++#ifdef CONFIG_IOMMU_DMA
++	dev->dma_iommu = false;
++#endif
+ }
+ 
+ static struct iommu_domain *pasid_array_entry_to_domain(void *entry)
+-- 
+2.39.2.101.g768bb238c484.dirty
 
-Probably a stupid question, as I haven't checked which are the mandatory
-operations of the restart sequence, but I wonder if this could be
-handled inside the helper instead of trying to fix all test cases.
->> +	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->> +
->> +	conn_state = drm_atomic_get_connector_state(state, conn);
->> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, conn_state);
-> 
-> Ditto.
-> 
->> +	conn_state->hdmi.broadcast_rgb = broadcast_rgb;
->> +
->> +	ret = drm_atomic_check_only(state);
->> +	KUNIT_ASSERT_EQ(test, ret, 0);
->> +
->> +	conn_state = drm_atomic_get_connector_state(state, conn);
->> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, conn_state);
-> 
-> Ditto, but I'm not sure you need drm_atomic_get_connector_state() here.
-> We know at this point that the state is there and we don't need to
-> allocate it anymore. drm_atomic_get_new_connector_state() will probably
-> be enough 
-
-Will check.
-
-> and that one can't return EDEADLK.
-
-Same question as above, could we handle EDEADLK at helper(s) level to
-avoid open coding the restart sequence?
-
-Thanks,
-Cristian
