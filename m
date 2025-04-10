@@ -1,203 +1,84 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F84A20468C;
-	Thu, 10 Apr 2025 06:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3251CA84;
+	Thu, 10 Apr 2025 06:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267811; cv=none; b=jgin0lyJXcQ7vadbZTy8rE19naolKSlapww26iqSGbmim0OsIwcIbnNOmjFsjIHdHntvMe74fa2E3OulDSon51p/tAxxqMCaXH0OhUQf6eld7+DQiGGFGTR0A8L69mFmYw4mJ57bXcyBQLKpq2F+Q2us3tZW/RHSDrlEEuIdxfQ=
+	t=1744267857; cv=none; b=QfTFml2tv7/Jtgy373DJVBdF1GS+kNRQuIW9sgX3IqAY5qKw97CUnAC3D4N6VsriEmKjco/2MuyPjGGNGgt0DYRSkp1DmT9DDQitoO13eqjjQ/OfgJOfisdNODbPzmjuEaLHVHRXNFU+YhntlvzlhYvHZKVBtLXN6V4mWdC35Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267811; c=relaxed/simple;
-	bh=7CSFEhqIHstgVCRXuQHhQ+VWZRZj5jqLoBJkK2Okah8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nSEo+o0yBlrya6yd+im/gye4jk1bgS+kZdm2iVJ3s6sbbxBxUXRm/7Vr4/In1texQoPWy0zg3bsTfOH2XBIjDR4BhtgmQvJ9BaeKu9/smVAvjLrat/uTa06uD30RWdMJvyXiTiScDMrKekchNBxE+dqce7G5G/UvwpyACibGrQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=UR+56h7r; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744267857; c=relaxed/simple;
+	bh=oVVypfIZykbJEQUFj6tpG/UltoN/4XMwbZYbd2kQ7kI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mj6yagRU5mUPSRVfUuec8z2+xq9GZkuEL1gzP909xPQ9k8/qtelOOg0s+gtt3EpqhcFgmk6IMUEubSZ06NTc8Caw9cooViFcx2N0Pc9TP0K24y64yGV3+qbpUezFOTjooGgtINZIv1cC7dYHJHl7r0PjuPxyp1nWLxXmKGB6k5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqEnuwia; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UR+56h7r"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:389d:1fcb:c0f8:ff7c:208d])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 73C03EE4;
-	Thu, 10 Apr 2025 08:48:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744267690;
-	bh=7CSFEhqIHstgVCRXuQHhQ+VWZRZj5jqLoBJkK2Okah8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UR+56h7rhH8+fhJhEPkLqIODKYRxxYgW6SZb5IdZoPT/Kaj8CaRdbfwtB0crQqZZk
-	 qnAdYUBmDl5JO1L89QhvTlD1Uw7hWHVjlJ4l+SOiYjx0aF12ZpxmEju7ogV9Sufuo6
-	 L4e1Co/8SJI6d8PdiO4ZPWsHys5S3uegY3XxRRGc=
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Date: Thu, 10 Apr 2025 12:19:04 +0530
-Subject: [PATCH v2 6/6] media: ti: j721e-csi2rx: Support multiple pixels
- per clock
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqEnuwia"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 140FBC4CEDD;
+	Thu, 10 Apr 2025 06:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744267857;
+	bh=oVVypfIZykbJEQUFj6tpG/UltoN/4XMwbZYbd2kQ7kI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gqEnuwiaej19DrqZe+DtruKMOvFDBPrz1QRZkGnfR90J82xJFUK/V19L5osLCbaP+
+	 8J8881p+fwLJIpI6i7PeJ0ICDTnWhsaikSxkITW+wgsCG1vLtfEFCBSks8iIXcOVGj
+	 SvSqJvpID3Fh8JNzSgvKzFeBfgXVpA3qeZ/aAnnQ1PPtZVyYd8XmrNH/79BHrGM24l
+	 QaCUtSkXya7xNbjO+/Yh7dmQSjzoRAsqb3VEKiMExDrMEI1rxKJBCI8BKtzrsFgKvi
+	 MqT2Og637tuyWSzGO1UAaTWJMydMFn42WSciFXVtXS3iiWRXWWs4tt+XlJF0dl/TaQ
+	 6pkfMcPXOZClA==
+Date: Thu, 10 Apr 2025 08:50:52 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] media: dt-bindings: Document Tegra186 and
+ Tegra194 cec
+Message-ID: <20250410-hallowed-poised-copperhead-eedc4d@shite>
+References: <20250409-tegra-cec-v3-0-91640131dfa2@gmail.com>
+ <20250409-tegra-cec-v3-1-91640131dfa2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-probe_fixes-v2-6-801bc6eebdea@ideasonboard.com>
-References: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
-In-Reply-To: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>
-Cc: Devarsh Thakkar <devarsht@ti.com>, 
- Rishikesh Donadkar <r-donadkar@ti.com>, Vaishnav Achath <vaishnav.a@ti.com>, 
- Changhuang Liang <changhuang.liang@starfivetech.com>, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jai Luthra <jai.luthra@ideasonboard.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4663;
- i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
- bh=7CSFEhqIHstgVCRXuQHhQ+VWZRZj5jqLoBJkK2Okah8=;
- b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBn92n4e+A2woCaYzS+8DXrNCUMIX+adStKKofAU
- oOAZmp0AV2JAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ/dp+AAKCRBD3pH5JJpx
- RRwID/9l5jxEg97SGAnZgGLD1cphoYNc7Jgsj5vOzmJ9bKAumn9sobr7Ty7cNttm6951TmeDDUf
- 5RSoZGpNNA+T+pV11VQWjVdRJYmUv3oXZ6jdhRNKsN/pkBZETrL+sncpFyV4a+9aMWdyBwR7CED
- CEfr+lbH2d+Q0oQIlNEYGZ9GrTGxTBcYIBJ9Kp7Y0nK28yZx9gire816DK1x1VKZL1Z5NjleWqo
- MbePTqwveWK1vYOwNgz7cQEcxaajQ90nvXVTgX6FVJ4Lk77tHBoaUVjLaQeHG0zO7jKAcXcN52o
- snQaxpQ8eoxlkASOsrqfG3fcBBW3JI6LWUco7at/rbawO3hw00MSd6HD/hCVeYaS3bAezYpNM8y
- KYjZjhEd2JJD6+RQS1vjPYSzXhvzBAvKuCEY0b094eNGIZWnCHPBIrmoI0swWavfFmXvYuknD04
- i5oaeYb0hyaWbkYpT3TmE8O82UENr4KfUMI1Vmc3pRFViAWVcAGvQBoVlq0epkYNtlATSyRCuLb
- HKetun0QD2UMrRSyOL6Mh+frMJ2tCBRJ6ZCFdI2uYJ8UQi7fuS9/qkPnmcgUYQrnArC4PkCKsR1
- NG2ZxeNEboj1HgHtn2seZ8EZCo4Z3YDd/IwwBm8D5IC/tIt15r/QN1E5BsZ65wgptg4mqh6A9WW
- IWuD5FUgKZZ5Vog==
-X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
- fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250409-tegra-cec-v3-1-91640131dfa2@gmail.com>
 
-Add support for negotiating the highest possible pixel mode (from
-single, dual, quad) with the Cadence CSI2RX bridge. This is required to
-drain the Cadence stream FIFOs without overflowing when the source is
-operating at a high link-frequency [1].
+On Wed, Apr 09, 2025 at 05:57:22PM GMT, Aaron Kling wrote:
+> These are already used in device trees, so describe them here. As the
+> driver only declares up through Tegra210, these must use a fallback
+> compatible of tegra210-cec.
+> 
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  .../bindings/media/cec/nvidia,tegra114-cec.yaml           | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml b/Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml
+> index a6b73498bc217a2e884e31af91e9d8845c9b1d76..3637fe2dfbd0dbb1baf265d7c128954df8faf740 100644
+> --- a/Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml
+> +++ b/Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml
+> @@ -14,10 +14,17 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - nvidia,tegra114-cec
+> -      - nvidia,tegra124-cec
+> -      - nvidia,tegra210-cec
+> +    oneOf:
+> +      - items:
 
-Also, update the Kconfig as this introduces a hard build-time dependency
-on the Cadence CSI2RX driver, even for a COMPILE_TEST.
+That's just enum. Drop items and de-indent by two.
 
-[1] Section 12.6.1.4.8.14 CSI_RX_IF Programming Restrictions of AM62 TRM
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Link: https://www.ti.com/lit/pdf/spruj16
-Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
----
- drivers/media/platform/ti/Kconfig                  |  3 +-
- .../media/platform/ti/j721e-csi2rx/j721e-csi2rx.c  | 38 ++++++++++++++++++++--
- 2 files changed, 37 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/media/platform/ti/Kconfig b/drivers/media/platform/ti/Kconfig
-index bab998c4179aca3b07372782b9be7de340cb8d45..3bc4aa35887e6edc9fa8749d9956a67714c59001 100644
---- a/drivers/media/platform/ti/Kconfig
-+++ b/drivers/media/platform/ti/Kconfig
-@@ -67,7 +67,8 @@ config VIDEO_TI_J721E_CSI2RX
- 	tristate "TI J721E CSI2RX wrapper layer driver"
- 	depends on VIDEO_DEV && VIDEO_V4L2_SUBDEV_API
- 	depends on MEDIA_SUPPORT && MEDIA_CONTROLLER
--	depends on (PHY_CADENCE_DPHY_RX && VIDEO_CADENCE_CSI2RX) || COMPILE_TEST
-+	depends on VIDEO_CADENCE_CSI2RX
-+	depends on PHY_CADENCE_DPHY_RX || COMPILE_TEST
- 	depends on ARCH_K3 || COMPILE_TEST
- 	select VIDEOBUF2_DMA_CONTIG
- 	select V4L2_FWNODE
-diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-index ad51d033b6725426550578bdac1bae8443458f13..425324c3d6802cfda79d116d3967b61a2e7a015a 100644
---- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-+++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-@@ -21,6 +21,8 @@
- #include <media/v4l2-mc.h>
- #include <media/videobuf2-dma-contig.h>
- 
-+#include "../../cadence/cdns-csi2rx.h"
-+
- #define TI_CSI2RX_MODULE_NAME		"j721e-csi2rx"
- 
- #define SHIM_CNTL			0x10
-@@ -29,6 +31,7 @@
- #define SHIM_DMACNTX			0x20
- #define SHIM_DMACNTX_EN			BIT(31)
- #define SHIM_DMACNTX_YUV422		GENMASK(27, 26)
-+#define SHIM_DMACNTX_DUAL_PCK_CFG	BIT(24)
- #define SHIM_DMACNTX_SIZE		GENMASK(21, 20)
- #define SHIM_DMACNTX_FMT		GENMASK(5, 0)
- #define SHIM_DMACNTX_YUV422_MODE_11	3
-@@ -40,6 +43,7 @@
- #define SHIM_PSI_CFG0_SRC_TAG		GENMASK(15, 0)
- #define SHIM_PSI_CFG0_DST_TAG		GENMASK(31, 16)
- 
-+#define TI_CSI2RX_MAX_PIX_PER_CLK	4
- #define PSIL_WORD_SIZE_BYTES		16
- /*
-  * There are no hard limits on the width or height. The DMA engine can handle
-@@ -110,6 +114,7 @@ struct ti_csi2rx_dev {
- 	struct v4l2_format		v_fmt;
- 	struct ti_csi2rx_dma		dma;
- 	u32				sequence;
-+	u8				pix_per_clk;
- };
- 
- static const struct ti_csi2rx_fmt ti_csi2rx_formats[] = {
-@@ -485,6 +490,26 @@ static int ti_csi2rx_notifier_register(struct ti_csi2rx_dev *csi)
- 	return 0;
- }
- 
-+/* Request maximum possible pixels per clock from the bridge */
-+static void ti_csi2rx_request_max_ppc(struct ti_csi2rx_dev *csi)
-+{
-+	struct media_pad *pad;
-+	int ret;
-+	u8 ppc = TI_CSI2RX_MAX_PIX_PER_CLK;
-+
-+	pad = media_entity_remote_source_pad_unique(&csi->vdev.entity);
-+	if (!pad)
-+		return;
-+
-+	ret = cdns_csi2rx_negotiate_ppc(csi->source, pad->index, &ppc);
-+	if (ret) {
-+		dev_warn(csi->dev, "NUM_PIXELS negotiation failed: %d\n", ret);
-+		csi->pix_per_clk = 1;
-+	} else {
-+		csi->pix_per_clk = ppc;
-+	}
-+}
-+
- static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
- {
- 	const struct ti_csi2rx_fmt *fmt;
-@@ -496,6 +521,9 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
- 	reg = SHIM_CNTL_PIX_RST;
- 	writel(reg, csi->shim + SHIM_CNTL);
- 
-+	/* Negotiate pixel count from the source */
-+	ti_csi2rx_request_max_ppc(csi);
-+
- 	reg = SHIM_DMACNTX_EN;
- 	reg |= FIELD_PREP(SHIM_DMACNTX_FMT, fmt->csi_dt);
- 
-@@ -524,14 +552,18 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
- 	case V4L2_PIX_FMT_YVYU:
- 		reg |= FIELD_PREP(SHIM_DMACNTX_YUV422,
- 				  SHIM_DMACNTX_YUV422_MODE_11);
-+		/* Multiple pixels are handled differently for packed YUV */
-+		if (csi->pix_per_clk == 2)
-+			reg |= SHIM_DMACNTX_DUAL_PCK_CFG;
-+		reg |= FIELD_PREP(SHIM_DMACNTX_SIZE, fmt->size);
- 		break;
- 	default:
--		/* Ignore if not YUV 4:2:2 */
-+		/* By default we change the shift size for multiple pixels */
-+		reg |= FIELD_PREP(SHIM_DMACNTX_SIZE,
-+				  fmt->size + (csi->pix_per_clk >> 1));
- 		break;
- 	}
- 
--	reg |= FIELD_PREP(SHIM_DMACNTX_SIZE, fmt->size);
--
- 	writel(reg, csi->shim + SHIM_DMACNTX);
- 
- 	reg = FIELD_PREP(SHIM_PSI_CFG0_SRC_TAG, 0) |
-
--- 
-2.49.0
+Best regards,
+Krzysztof
 
