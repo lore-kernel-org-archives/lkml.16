@@ -1,29 +1,29 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB231E2845;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E032D1E3772;
 	Thu, 10 Apr 2025 02:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744251608; cv=none; b=POcs35pJDVI1+QRLaDwIiFONAlC6yw53NCNS3UZ5DNrl0m3Ke9RW58AINDt07yw9hipxRHl00rHInlWtAmbCTdpSNcYFK47ww7O5QzJYD1vTMf+40XCLwMni7qlrs9Qi9Hjl0VpWx4ayV0SAQQqDfE0bWEZyDzm5dEzNS6j3bxs=
+	t=1744251608; cv=none; b=HByU4vPaqEgBQE5f4bTYrwp/5FBpCoKnPxuJKm9hAW7HTGcREZNSUBCF3hMrFfD+YHRARIFEI9942E8r1YAg2P108+wHJiFUcvRT8QH3qcMd43I1vgMLu1YNOyLK6cwnl5Vd4V8w8bpG/R5Wg6mxoZCSQQecEN4x3y5+jZD1ZYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744251608; c=relaxed/simple;
-	bh=mkEBsARjksLeX2+g3bv48+qM7C1Y3MYbhEFBfLSPeGc=;
+	bh=vzCXWZGzihP3BhWZ8/TdNt8+q3fIshrw7ROTfyrMnUs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HwbUUWWMdHGuoAulcSwi1WH3fbEhlCEIlu0pXH0HbpChEsJ/ysLCBWLiyG9kWXVagUiMRqEay93B8v1WRd3NYyMXDxgji1yoPw22X4p+1sWUwCN9cJ09WeD6cNGcPK+RPQRNzRBkmaG9q9IdKhF8TvyH4f2QZOMBLRjxXEIrpq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+	 MIME-Version:Content-Type; b=WZqdI97ls1RUnn4+RYpXgPTqLDCuScFBpw8nipNfPurA80pTwaSmo1yOC452grnQ1fpHCoO/iGdSAguCwHfY5QDpdX4EiESUT02jaX7RB0rIlCCdzD4jMSth6otKTHXkzFjBP9xu/EpxeOBxBn5ImvJscuuVscEZ0ij9t4CnUHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZY3N56rXlzHrRv;
-	Thu, 10 Apr 2025 10:16:37 +0800 (CST)
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZY3QM1sFwzQwPR;
+	Thu, 10 Apr 2025 10:18:35 +0800 (CST)
 Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id A06831401E0;
-	Thu, 10 Apr 2025 10:20:01 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id DB0E31401E0;
+	Thu, 10 Apr 2025 10:19:58 +0800 (CST)
 Received: from localhost.localdomain (10.90.30.45) by
  kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 10 Apr 2025 10:20:00 +0800
+ 15.2.1544.11; Thu, 10 Apr 2025 10:19:58 +0800
 From: Jijie Shao <shaojijie@huawei.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
@@ -33,9 +33,9 @@ CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
 	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
 	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH net v3 6/7] net: hibmcge: fix not restore rx pause mac addr after reset issue
-Date: Thu, 10 Apr 2025 10:13:26 +0800
-Message-ID: <20250410021327.590362-7-shaojijie@huawei.com>
+Subject: [PATCH net v3 2/7] net: hibmcge: fix incorrect multicast filtering issue
+Date: Thu, 10 Apr 2025 10:13:22 +0800
+Message-ID: <20250410021327.590362-3-shaojijie@huawei.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250410021327.590362-1-shaojijie@huawei.com>
 References: <20250410021327.590362-1-shaojijie@huawei.com>
@@ -50,59 +50,48 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemk100013.china.huawei.com (7.202.194.61)
 
-The MAC hardware supports receiving two types of
-pause frames from link partner.
-One is a pause frame with a destination address
-of 01:80:C2:00:00:01.
-The other is a pause frame whose destination address
-is the address of the hibmcge driver.
+The driver does not support multicast filtering,
+the mask must be set to 0xFFFFFFFF. Otherwise,
+incorrect filtering occurs.
 
-01:80:C2:00:00:01 is supported by default.
+This patch fixes this problem.
 
-In .ndo_set_mac_address(), the hibmcge driver calls
-.hbg_hw_set_rx_pause_mac_addr() to set its mac address as the
-destination address of the rx puase frame.
-Therefore, pause frames with two types of MAC addresses can be received.
-
-Currently, the rx pause addr does not restored after reset.
-As a result, pause frames whose destination address is
-the hibmcge driver address cannot be correctly received.
-
-This patch restores the configuration by calling
-.hbg_hw_set_rx_pause_mac_addr() after reset is complete.
-
-Fixes: 3f5a61f6d504 ("net: hibmcge: Add reset supported in this module")
+Fixes: 37b367d60d0f ("net: hibmcge: Add unicast frame filter supported in this module")
 Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 Reviewed-by: Simon Horman <horms@kernel.org>
 ---
-ChangeLog:
-v2 -> v3:
-  - Add more details in commit log, suggested by Jakub.
-  v2: https://lore.kernel.org/all/20250403135311.545633-7-shaojijie@huawei.com/
----
- drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c  | 4 ++++
+ drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c
-index 4e8cb66f601c..a0bcfb5a713d 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c
-@@ -26,12 +26,15 @@ static void hbg_restore_mac_table(struct hbg_priv *priv)
- 
- static void hbg_restore_user_def_settings(struct hbg_priv *priv)
+diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
+index 7d3bbd3e2adc..9b65eef62b3f 100644
+--- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
++++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
+@@ -234,6 +234,10 @@ void hbg_hw_set_mac_filter_enable(struct hbg_priv *priv, u32 enable)
  {
-+	/* The index of host mac is always 0. */
-+	u64 rx_pause_addr = ether_addr_to_u64(priv->filter.mac_table[0].addr);
- 	struct ethtool_pauseparam *pause_param = &priv->user_def.pause_param;
- 
- 	hbg_restore_mac_table(priv);
- 	hbg_hw_set_mtu(priv, priv->netdev->mtu);
- 	hbg_hw_set_pause_enable(priv, pause_param->tx_pause,
- 				pause_param->rx_pause);
-+	hbg_hw_set_rx_pause_mac_addr(priv, rx_pause_addr);
+ 	hbg_reg_write_field(priv, HBG_REG_REC_FILT_CTRL_ADDR,
+ 			    HBG_REG_REC_FILT_CTRL_UC_MATCH_EN_B, enable);
++
++	/* only uc filter is supported, so set all bits of mc mask reg to 1 */
++	hbg_reg_write64(priv, HBG_REG_STATION_ADDR_LOW_MSK_0, U64_MAX);
++	hbg_reg_write64(priv, HBG_REG_STATION_ADDR_LOW_MSK_1, U64_MAX);
  }
  
- int hbg_rebuild(struct hbg_priv *priv)
+ void hbg_hw_set_pause_enable(struct hbg_priv *priv, u32 tx_en, u32 rx_en)
+diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
+index fd623cfd13de..a6e7f5e62b48 100644
+--- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
++++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
+@@ -135,6 +135,8 @@
+ #define HBG_REG_STATION_ADDR_HIGH_4_ADDR	(HBG_REG_SGMII_BASE + 0x0224)
+ #define HBG_REG_STATION_ADDR_LOW_5_ADDR		(HBG_REG_SGMII_BASE + 0x0228)
+ #define HBG_REG_STATION_ADDR_HIGH_5_ADDR	(HBG_REG_SGMII_BASE + 0x022C)
++#define HBG_REG_STATION_ADDR_LOW_MSK_0		(HBG_REG_SGMII_BASE + 0x0230)
++#define HBG_REG_STATION_ADDR_LOW_MSK_1		(HBG_REG_SGMII_BASE + 0x0238)
+ 
+ /* PCU */
+ #define HBG_REG_TX_FIFO_THRSLD_ADDR		(HBG_REG_SGMII_BASE + 0x0420)
 -- 
 2.33.0
 
