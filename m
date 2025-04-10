@@ -1,102 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B64420C470;
-	Thu, 10 Apr 2025 22:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FD820C470;
+	Thu, 10 Apr 2025 22:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744325832; cv=none; b=cjlYfvXW0ffgcg9Bm0lc6Kj7tBru6RZ8cAd3XXjC1f1WAw2iE6yrIIfsluYtL/0CcHBoe5YYIodXp0HXib8TYzrP5vgsscxuqHw2yKACn1i0dC3u7wBrIRLVE9A/9CkmumXH4IUwEqDMxlEUwIIZiYEJEJvKtKn89ayJOnOmIIk=
+	t=1744325841; cv=none; b=BtRictZSfTazSaLPej8vDX1B9tyZ+hpWxcQMS6R9MNpCFKp8kVaHjN0Hxl9Y+y5jZOg0W43deD7b2COG0P/6OpFpKNsfSIUkE61r/4oJIWdSnGGLpS7Unlw69RW7ZH652wcU4/PwpuR6X7vDiC8yxunp9Sr+KIGHnR2G+VQ6y7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744325832; c=relaxed/simple;
-	bh=dFjSj+0XP33Tq5fvO9OJcLGRfVuicnfCNBFxi1smsew=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IDLMhQy9kX5/WQZu1I2PzDhFLrG5u+8Da4ML/zvPmdb4R60mFdbVMZuHAPbrokniulhoUezwtzjAtLKymRSkIQNR9CIHaeG7ezwhoImlb+3JY27g+R5tGea+MbMVLZA+AKvhQ4QeI1AH3pgdNoGyPY4sH70DGGV0YngyAjf903A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjea6f97; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744325841; c=relaxed/simple;
+	bh=fVG/ZCCtMdkebkfeV7Ag76Fh56IwNGhk6a61jPghErM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rSfJsXjVBgP2QHvsQVekl6oP1Bnh5CgC/+dQ/vc2CkCgwnKMzgHrtWq2PiuBcAzRn3WK9ptI+PNpCtw5hA79zTSAsstDHnM7jDdzrx07TB9uyOxOm9dmh0b054NgMpdwGhJNTeFQlJ3wPeG+P5t+DixmznY9UiR3CGzPPxyJrio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V9uwp9nu; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjea6f97"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC36C4CEDD;
-	Thu, 10 Apr 2025 22:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744325831;
-	bh=dFjSj+0XP33Tq5fvO9OJcLGRfVuicnfCNBFxi1smsew=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hjea6f97bl1ND8IhXBcyyoRfCD5qyNUa4prZrat/d6tm9yWKT4pkXtP++59cIxb0o
-	 sT9Bjc5amMt9BwUuK/ahI5rMyvwJknMAjNLX3fwRUzTPUgU3gcQbakEYvlb4MXFJvG
-	 xL/tXnxhNMNGSjRqI/j7Odg9jxIiNtq57ogvv4lhfwWY5+KQzHfFf+ayMfUJCZqw1w
-	 ihd4gEOrNJWZob8ZcnkhWDwATFUMVbmmM9se7uA8OKQe2e0q7v+U9X7Lfr5wwZVk4q
-	 SKM/jLFstYNok683XRkde4V8zvEg6TIWEzAtCOYsZ49z5VxJQ1knS9ydGKLhtjaKNk
-	 gqs1U7EB1PsiQ==
-Date: Thu, 10 Apr 2025 15:57:10 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko
- <jiri@resnulli.us>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Prathosh Satish
- <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, Kees Cook
- <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
-Message-ID: <20250410155710.067a97f7@kernel.org>
-In-Reply-To: <889e68eb-d5b5-41ae-876d-9efc45416db6@redhat.com>
-References: <20250409144250.206590-1-ivecera@redhat.com>
-	<20250409171713.6e9fb666@kernel.org>
-	<889e68eb-d5b5-41ae-876d-9efc45416db6@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9uwp9nu"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-739525d4e12so1287270b3a.3;
+        Thu, 10 Apr 2025 15:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744325838; x=1744930638; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NdiNz2ETjLMDRaxG4YYpquRQHWA81DiTaDkqO6t96S8=;
+        b=V9uwp9nuOCuID3ShrmyDM5lQ1aY1URUCkYWMWSz7rLOCRpfSYnTjEtCN0DSoST/0OG
+         50JOx90KD8V+IJStqTF9B115ERmGflAG68C0oPoDC/emYGIzNF0QOBN+eurhUEMU1Vkt
+         YZgcqyOmAC+h/ALcsR53NAtM9RsMklO+xSs7GXltkASb5UjSfcw4m8dRS+nRF5cDEb+3
+         JcosaDNVgRtjhqPlt9mOkuWyXrFruHVWegbh7H/zvne887YM9C0jyl7bzSd7cMSHmvGO
+         ynIZAD7DgysYMsDNwWU3GJAShxNiH3O2O98FCrJuaOQk7K0qUHThQxnwXmDhSbbWA3oG
+         VG8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744325838; x=1744930638;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NdiNz2ETjLMDRaxG4YYpquRQHWA81DiTaDkqO6t96S8=;
+        b=cXH6CkqxNMhBxdoSO4nG2FiMIIt7VJrBuJzZb0U5p0Aceyd1ZdNO5uoTzb6BdMOZsN
+         zPUPNAh61QZJCKLeruoCUe7vbDvOzD95ufGNDBFhRuBq9QtAmqqqQks9NgQZQApkEj6U
+         OmjbXXP+4wQ9YT2MjO6fkjQb1Kx57Pn8j1dWkHvrXVs2aE5wS3xV/rGeKX3dt7HMLZ21
+         3iNxmj0aVNyOk6DOl/iZYUo2zzNdjbRjR7fzeLZbWK7PIYjN7LfbU88FgPjwUjH6xNfb
+         xOYajQuUe0G2EMefT+8YDxr+ww+FIjbI/g73Zanfd9bFxQ5rEq2SsJhEA9l0qpNFjVVz
+         cbKw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNkSE7740L2QBWKc0Uh5teY7h1ZptW08BGpya/+CQx52AYtntV8hU2UBF1damAwJDOFKWdqzbzkLbBMJk25Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBsxh/tpfP/Fge9/U20TME7U3TOf6erdRJXURm7Se1D3GwhgBs
+	cGxNWS8/Nk7RvbE7/HoHVO0p/xMxb0p/LyppoCmnnE9EaFg2yf/PdX+tpQKi
+X-Gm-Gg: ASbGnctC6a7mOC0mB3lqePnn9KJi5lehigA6OORDoZ2I/lr9JqfK93qRBMskazQF8JS
+	0P1z9E9h0ky633RzKmdSBxYC+8qEOviBuJsL72/ZHW8iSX2erHBjAcUNnj+pwmAzaZe9AE+2zNu
+	g0InnXkrGzs6SzMs/2S+qvFz14UIukyLue/xPdxACC2e+IxYETTF8QsPKyEytkAHWr8h29j9ahM
+	R3/cQpZONFwEPixfqwpMGjjYwudC7gR9NTUl+Hep//tI7gSdxshrZZQho8GTZbDTR6NINhrkujD
+	lF3ClMpY9DVZLVUj04XkU6ymKHvcPeAG/XsOti8JMPgw/DWGhCuuKYcfxtQoMcRvUCztU8Dmjzc
+	yFiHKN6PG307ePE2vRg==
+X-Google-Smtp-Source: AGHT+IGyPFv10qBvicuGfSuBLqhBgYgXT05H9WUcgXQm8CIxUwH+NrgHWCeIsg7gKAijjdGT0Y6JWA==
+X-Received: by 2002:a05:6a21:1084:b0:1ee:c7c8:ca4 with SMTP id adf61e73a8af0-2017999056amr1211622637.36.1744325838179;
+        Thu, 10 Apr 2025 15:57:18 -0700 (PDT)
+Received: from mew.. (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a2d3a5e5sm3583310a12.54.2025.04.10.15.57.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 15:57:17 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	pmladek@suse.com
+Subject: [PATCH v2 0/2] add Rust version of might_sleep()
+Date: Fri, 11 Apr 2025 07:56:21 +0900
+Message-ID: <20250410225623.152616-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 10 Apr 2025 11:18:24 +0200 Ivan Vecera wrote:
-> On 10. 04. 25 2:17 dop., Jakub Kicinski wrote:
-> > On Wed,  9 Apr 2025 16:42:36 +0200 Ivan Vecera wrote:  
-> >> Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
-> >> provides DPLL and PTP functionality. This series bring first part
-> >> that adds the common MFD driver that provides an access to the bus
-> >> that can be either I2C or SPI.
-> >>
-> >> The next series will bring the DPLL driver that will covers DPLL
-> >> functionality. And another ones will bring PTP driver and flashing
-> >> capability via devlink.
-> >>
-> >> Testing was done by myself and by Prathosh Satish on Microchip EDS2
-> >> development board with ZL30732 DPLL chip connected over I2C bus.  
-> > 
-> > The DPLL here is for timing, right? Not digital logic?
-> > After a brief glance I'm wondering why mfd, PHC + DPLL
-> > is a pretty common combo. Am I missing something?  
-> 
-> Well, you are right, this is not pretty common combo right now. But how 
-> many DPLL implementations we have now in kernel?
-> 
-> There are 3 mlx5, ice and ptp_ocp. The first two are ethernet NIC 
-> drivers that re-expose (translate) DPLL API provided by their firmwares 
-> and the 3rd timecard that acts primarily as PTP clock.
-> 
-> Azurite is primarly the DPLL chip with multiple DPLL channels and one of 
-> its use-case is time synchronization or signal synchronization. Other 
-> one can be PTP clock and even GPIO controller where some of input or 
-> output pins can be configured not to receive or send periodic signal but 
-> can act is GPIO inputs or outputs (depends on wiring and usage).
-> 
-> So I have taken an approach to have common MFD driver that provides a 
-> synchronized access to device registers and to have another drivers for 
-> particular functionality in well bounded manner (DPLL sub-device (MFD 
-> cell) for each DPLL channel, PTP cell for channel that is configured to 
-> provide PTP clock and potentially GPIO controller cell but this is 
-> out-of-scope now).
+This patchset adds Rust version of might_sleep().
 
-Okay, my understanding was that if you need to reuse the component
-drivers across multiple different SoCs or devices, and there is no
-"natural" bus then MFD is the go to. OTOH using MFD as a software
-abstraction/to organize your code is a pointless complication.
-(We're going to merge the MFD parts via Lee's tree and the all actual
-drivers via netdev?) Admittedly that's just my feeling and not based 
-on any real info or experience. I defer to Lee and others to pass
-judgment.
+These patches were previously part of the IO polling patchset [1], but
+they were split out to make upstreaming easier.
+
+The first patch is for sched/core, which adds
+__might_sleep_precision(), rust friendly version of __might_sleep(),
+which takes a pointer to a string with the length instead of a
+null-terminated string. Rust's core::panic::Location::file(), which
+gives the file name of a caller, doesn't provide a null-terminated
+string. __might_sleep_precision() uses a precision specifier in the
+printk format, which specifies the length of a string; a string
+doesn't need to be a null-terminated. Providing a null-terminated
+string for better C interoperability is under discussion [2].
+
+The second patch adds a Rust implementation of might_sleep(), on top
+of the changes in the first patch.
+
+[1]: https://lore.kernel.org/lkml/20250220070611.214262-1-fujita.tomonori@gmail.com/
+[2]: https://github.com/rust-lang/libs-team/issues/466
+
+v2:
+- improve SAFETY comment
+v1: https://lore.kernel.org/lkml/20250406110718.126146-1-fujita.tomonori@gmail.com/
+
+FUJITA Tomonori (2):
+  sched/core: Add __might_sleep_precision()
+  rust: task: add Rust version of might_sleep()
+
+ include/linux/kernel.h |  2 ++
+ kernel/sched/core.c    | 62 ++++++++++++++++++++++++++++--------------
+ rust/helpers/task.c    |  6 ++++
+ rust/kernel/task.rs    | 28 +++++++++++++++++++
+ 4 files changed, 77 insertions(+), 21 deletions(-)
+
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.43.0
+
