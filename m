@@ -1,159 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA4C28CF55
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8AA2857E0
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293106; cv=none; b=ddPD0LoiQ56oePoa1FONuOPXrO+sySTSfSZEOnKUyxkSasBMUyRHGt/zIuz4/yQze0QIO8xGUKDDrz+VpjVbL1MK2GYmtUaVi0lRUsMjF5PWXRxL2igRdI2Qxe8GRH6aQ1CrvTbX0RkMRULq1MCRYT8ONqjvLceCnoOpjSctbmE=
+	t=1744293199; cv=none; b=ti2aOwKRvGlF6jYoLvynDTI6BDCstW1NT/Ufatt6zbb49p1lsvYHByz+dCO9uj9SG17vtynnAAbZRyshfV+5NA46077Tcd50+WkfvPCUj1fojErczJ88OByoe16lVlmDeMkcg/aO69L/o3v1eRpPm0NbliydnWTu1lWLOUcUVBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293106; c=relaxed/simple;
-	bh=jjdOFFgqlMZcJK0ENY0EeRcZvGY/PqG+Cg3KwCJxajM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LT+SkUwTtLi/m9pRKX42rJqvpZGDXOD0JP9ClqPOI9azNjTcU1FNJg3Oh8A6iy4Ur284RVMYsm7PUp6EmyBRIQNmUzjB5dIxWZmrkGasY7gCIPf6afTpCvoBFPwDDioHXyzRYM1Xl9zYYfI5C0Vat1VWMmS/bVSnCSnFFnMb+L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gfi3aRmW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744293199; c=relaxed/simple;
+	bh=6EzNCLAlf1iloxVtrXjGElQcW7269jazRrghVzl9gM8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EsQEXUBhQR/AOFm9681j12kHWKAoV8y/2+FZqLb48PH6WcaBs0e15wayWRuR+5TmoT9EWTjEn0pT35+EOoQWjm2+R6hMKhACyH2zt7bpUuGQucaHkATGRidNF/rRUfJ+tb4jpsX33X85N0pP+txkWxLHTFcwYUvqb088VA7TtLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HDd0cqKH; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gfi3aRmW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744293103;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hirGwPCk5S8fr8wcRk+QWxpexKbLzBx8zDafwqq8PVw=;
-	b=Gfi3aRmWaU2PwbOF4asO/LZwJwQ3yoD6Ai2dh0rwLCpC+xBsFMcsrHHneAS2kG2GI11RIi
-	+k+65vkXvROTYRENdNzbAisILkI4egOfSl2KC8J+xB4aQaBzOHcBGitgS/URgz3zdPBYaE
-	BSzqUr+dC1W+DOFfBRbxwEslYuqfO1M=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-62-rHoxc2yKPPS_ZHS0TyL-Tg-1; Thu, 10 Apr 2025 09:51:42 -0400
-X-MC-Unique: rHoxc2yKPPS_ZHS0TyL-Tg-1
-X-Mimecast-MFC-AGG-ID: rHoxc2yKPPS_ZHS0TyL-Tg_1744293101
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so7716985e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:51:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDd0cqKH"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8340d547so793406a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744293196; x=1744897996; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4wxcHUnCCezh6nWr6RFH2iv1Y8IeCzojzwMbdNb4Do=;
+        b=HDd0cqKHGtPrIPrD3zaBYMCfjaq0/jDRlkSiDB73JzjB0UBHODNk9a3ToIcIcWqe7W
+         fv0+pYJUjE9TAiXXhDVSySGegZUoKXhfjljrlVuSruuOJc0pq6kffB7El9RfXwtMDP7J
+         gf2MRN5X1xzPMUmrWBNH7tiTsdhbj7wIHRtFnLu9CInE5QZnyAh4z8INRoxpeG+tkMjV
+         QsrMN45AKpwqQazIHPuCshcCx4XBDQ/mmxOdtRRas9iE38FKpeRMGEXel6aFCd/91cMh
+         UU6Yz70trLPM9SMB/Tnr5+AyDoxot2o9cxPh9zdjUXBd5lyBi8XTScMlfCH24mC8ZLiu
+         Kv9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744293101; x=1744897901;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hirGwPCk5S8fr8wcRk+QWxpexKbLzBx8zDafwqq8PVw=;
-        b=NImr3SfV+OMH78I/COSPXtmCZCvzQ5r1+LIzVWgZJmGcZP3sCCYbwVm9f2gvkodWg3
-         TqISqZh7okYn1Xn1ZffzNs24S/qyaTaqjcc3s7oEJ/4EjQkVG3KS2TILepatvrDsyE7u
-         C8hRp0FW9A8GKzehw7xJDYwbwjQg7JLm9fNtskGjCqjg3O2H0fg97O5h30En4Jt8uW4y
-         dIzlu6Vterj+e8GIkd9k5v+KkZzA6Od+8OgGkVj/6XwfDk/FSAAamwyKXsNAxDDb0KUt
-         d9y7M/+ynyV6micu1WtBkGwza+u24rV5BOFeVg50LLJrduMb5xdNLREBFg9p+p/U0F5F
-         EMFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWK2lNIH1aE6zQng6p5uhpsXyAi9KvoWy/JVXkg90EP75H35OT6XjsS2ED3FyrZeqoGjHjLi2D42LAd758=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg2NWGXk8X1eY7hsyYLh/gciMayZ6uZLKclA+cbG1Vc7UHvkUD
-	XAq7rI2DdAoUoPvdjAEvfeYxuN2P1uxreiVOennOXxVFKNpLF7kLhYycQSbCWGA4BUvjIT+cdWq
-	QOssklA7bjLtNblXxaE4qoydfsVSONjUz7ybXdbxE/gqCrW8GrfqRF78lIMhvCA==
-X-Gm-Gg: ASbGncsby6Wb8rYUi2frvurSMAKsHi1XaLEwrdWoO/7Haobpj8/+1ytN+N8nFtraniL
-	38rDXwebgL4ZwdM55AvZBP2zhY1sRdkxR8NI0ad6kL/be7CyGD9UEhcVE9WsxtGeqL+k3tdZaLG
-	QoD4nKlF2NYSvBkj/91hyCn/QaS9/wBtuVGj/6NjEX46tk5W+JgTIKq7tjI9KpI30Xduz/JsUE7
-	fg1HIl+hxEE8wwD0mGQPKLe+WeTu9ARfSMpPP4bmZ/7MZsetpwVb4yHNuioSvLeWX2m1T4mic8D
-	BLhrzQFbrk3qCSPsaIu7+Fa+LaElJwoGAza9I8KZq/RkyegC12uNdEKJAhwqCQ==
-X-Received: by 2002:a05:600c:1e21:b0:43c:fa0e:471a with SMTP id 5b1f17b1804b1-43f2fdcece5mr23351965e9.5.1744293101428;
-        Thu, 10 Apr 2025 06:51:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFW/+UygbSs3rimVhsZR25l1U5u5O39Yy7PeRlqUDpdrrg1Z1uyMNvSAu+c2o2wo8JQdf6sGQ==
-X-Received: by 2002:a05:600c:1e21:b0:43c:fa0e:471a with SMTP id 5b1f17b1804b1-43f2fdcece5mr23351565e9.5.1744293100851;
-        Thu, 10 Apr 2025 06:51:40 -0700 (PDT)
-Received: from stex1.redhat.com (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893fdfbesm4768782f8f.88.2025.04.10.06.51.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 06:51:40 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Borislav Petkov <bp@alien8.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Joerg Roedel <jroedel@suse.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Dov Murik <dovmurik@linux.ibm.com>,
-	linux-integrity@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	x86@kernel.org,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	linux-coco@lists.linux.dev,
-	Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH v7 4/4] x86/sev: register tpm-svsm platform device
-Date: Thu, 10 Apr 2025 15:51:16 +0200
-Message-ID: <20250410135118.133240-5-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250410135118.133240-1-sgarzare@redhat.com>
-References: <20250410135118.133240-1-sgarzare@redhat.com>
+        d=1e100.net; s=20230601; t=1744293196; x=1744897996;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4wxcHUnCCezh6nWr6RFH2iv1Y8IeCzojzwMbdNb4Do=;
+        b=dziRq1SJHciEeDEjPiWUwlhEqnFQIza9lhNbwlVsKHsIolh5N565W7SW7pPMoI9+Ys
+         PvkF6DzpDCNxwSyW0q/YEMgjIsM18q4W5awx2BF6JCz0QnNLXjj2E28kAQUMnKZBFgu+
+         dySBPRVyb+GMZAtVI92lJuqxYefKwUwPbgJPe01jYraf661CoyZ/dUxvrWHTiibXMTjg
+         yuJnhUeZucCPusxn6LHRRjHMB07hau/3IEQoxwDNNrYX69UCWyDfjdvf8LXAAYMkJKHx
+         ZAupnpZXclsKA9yYsM+V37vD95OvmvX2GauzJQSIEajneRMHlznUlCwxpcdUAhtk5TrS
+         9zqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwB2+RyP5aS/9iZCXEcAAZ0Cxbg0DvEXNEDEmPIHHUSEnqD6E1iffSRFAF84Ta7jax2PBLkEtp+ONGY2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUMdDEKplHjsdrEDpDZhzTg4JD+NXwr92ofDXbPoCNZtO/wQeM
+	+ZeAMUkaSX0cxFPa33e10WreQE9G5XLzoniGUlBEn/pc1B64NpO3A1nwQBPmzaSvIptFXHg89xd
+	klkj6hQubMngnnkyqNpAYfA==
+X-Google-Smtp-Source: AGHT+IGEOFVmeMKiNYyGdVgVnjUwRuQMOBh3p67Kck++ZyIayxkYnmKh+TTYDv35m8GZuGIZaSBy6hjI9GDfCfcztg==
+X-Received: from pjbtb11.prod.google.com ([2002:a17:90b:53cb:b0:301:1ea9:63b0])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90a:d2ce:b0:2ee:f440:53ed with SMTP id 98e67ed59e1d1-3072ba1f6e0mr4252531a91.31.1744293196650;
+ Thu, 10 Apr 2025 06:53:16 -0700 (PDT)
+Date: Thu, 10 Apr 2025 06:53:15 -0700
+In-Reply-To: <Z_eEfjrkspAt4ACP@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250408112402.181574-1-shivankg@amd.com> <20250408112402.181574-6-shivankg@amd.com>
+ <Z_eEfjrkspAt4ACP@infradead.org>
+Message-ID: <diqz4iyw5dis.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [PATCH RFC v7 5/8] KVM: guest_memfd: Make guest mem use guest mem
+ inodes instead of anonymous inodes
+From: Ackerley Tng <ackerleytng@google.com>
+To: Christoph Hellwig <hch@infradead.org>, Shivank Garg <shivankg@amd.com>
+Cc: seanjc@google.com, david@redhat.com, vbabka@suse.cz, willy@infradead.org, 
+	akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com, 
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, 
+	bfoster@redhat.com, tabba@google.com, vannapurve@google.com, 
+	chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com, 
+	yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, 
+	michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com, 
+	peterx@redhat.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+Christoph Hellwig <hch@infradead.org> writes:
 
-SNP platform can provide a vTPM device emulated by SVSM.
+> On Tue, Apr 08, 2025 at 11:23:59AM +0000, Shivank Garg wrote:
+>> From: Ackerley Tng <ackerleytng@google.com>
+>> 
+>> Using guest mem inodes allows us to store metadata for the backing
+>> memory on the inode. Metadata will be added in a later patch to support
+>> HugeTLB pages.
+>> 
+>> Metadata about backing memory should not be stored on the file, since
+>> the file represents a guest_memfd's binding with a struct kvm, and
+>> metadata about backing memory is not unique to a specific binding and
+>> struct kvm.
+>> 
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> Signed-off-by: Fuad Tabba <tabba@google.com>
+>> Signed-off-by: Shivank Garg <shivankg@amd.com>
+>> ---
+>>  include/uapi/linux/magic.h |   1 +
+>>  virt/kvm/guest_memfd.c     | 133 +++++++++++++++++++++++++++++++------
+>>  2 files changed, 113 insertions(+), 21 deletions(-)
+>> 
+>> <snip>
+>>  
+>> +static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
+>> +						      loff_t size, u64 flags)
+>> +{
+>> +	const struct qstr qname = QSTR_INIT(name, strlen(name));
+>> +	struct inode *inode;
+>> +	int err;
+>> +
+>> +	inode = alloc_anon_inode(kvm_gmem_mnt->mnt_sb);
+>> +	if (IS_ERR(inode))
+>> +		return inode;
+>> +
+>> +	err = security_inode_init_security_anon(inode, &qname, NULL);
+>> +	if (err) {
+>> +		iput(inode);
+>> +		return ERR_PTR(err);
+>> +	}
+>
+> So why do other alloc_anon_inode callers not need
+> security_inode_init_security_anon?
 
-The "tpm-svsm" device can be handled by the platform driver added
-by the previous commit in drivers/char/tpm/tpm_svsm.c
+Thanks for this tip!
 
-Register the platform device only when SVSM is available and it
-supports vTPM commands as checked by snp_svsm_vtpm_probe().
+When I did this refactoring, I was just refactoring
+anon_inode_create_getfile(), to set up the guest_memfd inode and file in
+separate stages, and anon_inode_create_getfile() was already using
+security_inode_init_security_anon().
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v7:
-- added Jarkko's R-b
-- call snp_svsm_vtpm_probe() before registering the device [Borislav]
-- s/device/devices in pr_info [Tom]
-- updated commit description
-v6:
-- added Tom's R-b
-v4:
-- explained better why we register it anyway in the commit message
----
- arch/x86/coco/sev/core.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+In the next revision I can remove this call.
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 3bc5b47e7304..54272c9777cf 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -2688,6 +2688,11 @@ static struct platform_device sev_guest_device = {
- 	.id		= -1,
- };
- 
-+static struct platform_device tpm_svsm_device = {
-+	.name		= "tpm-svsm",
-+	.id		= -1,
-+};
-+
- static int __init snp_init_platform_device(void)
- {
- 	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-@@ -2696,7 +2701,11 @@ static int __init snp_init_platform_device(void)
- 	if (platform_device_register(&sev_guest_device))
- 		return -ENODEV;
- 
--	pr_info("SNP guest platform device initialized.\n");
-+	if (snp_svsm_vtpm_probe() &&
-+	    platform_device_register(&tpm_svsm_device))
-+		return -ENODEV;
-+
-+	pr_info("SNP guest platform devices initialized.\n");
- 	return 0;
- }
- device_initcall(snp_init_platform_device);
--- 
-2.49.0
-
+Is it too late to remove the call to security_inode_init_security_anon()
+though? IIUC it is used by LSMs, which means security modules may
+already be assuming this call?
