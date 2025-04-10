@@ -1,129 +1,131 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 174A3281369;
-	Thu, 10 Apr 2025 14:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81C921CC6A;
+	Thu, 10 Apr 2025 14:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294559; cv=none; b=Y1cFNcnOeNSWX9LMbykr2W6hLAZYTgQdrUbllr11hy9gH5o34Wu4b/FdNGbUqdkrOuY1DNW09c1H4tFzFf8Ke77uIQmcl5fdrr5wmrt4JV/clMrRZROSbL14C4UxZ3203U4PavjDDNHHeNmE4AXP07VlhdOtA2lMvSpuB3j952s=
+	t=1744294594; cv=none; b=Rr9uFLRB2czwGLigFPZtAyXB4gD7zFwIASQ6P0scQ17njHtJZIHSdmBcutH3wfmu6OBX0xKBZzu6im3mo8Kx91zWBWSFCB7YywxcJw4xP4pyonkTYETenKLMwYdDrS9zzteImthJ4hVQ5iFdwfOWUHqSZjKFRrV+ZuZV2rzR9S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294559; c=relaxed/simple;
-	bh=LEbTWlzpaihB6IQHTlbaA5Ot/ypsjb5J6qcme4C6YZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pCMv71okVNUtXYK1cgajqCIt61UubtQFwOThimM5kT3hzXWMmelJ58wHeSoZJoNIb1Pn6zF2D0it1SVNnBUH+G6RrS9AkH5JFSE0rtfpOo81mJw11onGorbqZePioDro2y1I+70BARPL12xG018kSMc9NYGj0mBJ9weEIjvuCYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n7LJlLUT; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1744294594; c=relaxed/simple;
+	bh=wpnB+mY98/YzeerltwfWpXe/v1r9KQTMtXB8eBWKulE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e3NG+sKSNcv3NhF3pXFimLRbcYGi2X+kMeBHeQ8lqnJG7ywNNCc72PIRW417up7j5r0G8AReYY3/QZ2XkWljMMGRHQ9OdqQmTfdlLXZ2KmrhcVIOiYRqJY4ag1BNuamxQoDrm1Z8w2brbeChtRos6vyZ7GQWKsXMsdhBfOjldII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gS4nQLJK; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n7LJlLUT"
-Received: from [100.70.200.180] (unknown [172.200.70.13])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 680852113E88;
-	Thu, 10 Apr 2025 07:15:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 680852113E88
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744294556;
-	bh=XmfJAaDZRcuR0IspL/CV2qpL+dgL7BxJ5z1ZXihUDxU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n7LJlLUTIHoUKqUDPHHPpZzH1WJi5CQ8KlXno+uTZvwvdN8pM4Z+WPo2tZqF/BKwG
-	 0ktcd7KAKLp+gQVRrUeYUhJAPVHUk0l+0DtBVoLoHkF3BF8hLT8JYqFQ3Yui4nCDQg
-	 sKieQ7MXh4X0Af+AcESsv9OuyreI5id5K4RRqudY=
-Message-ID: <98c63e22-b9f7-40b9-90d0-aa67534f9107@linux.microsoft.com>
-Date: Thu, 10 Apr 2025 07:15:52 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gS4nQLJK"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30eef9ce7feso8409401fa.0;
+        Thu, 10 Apr 2025 07:16:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744294590; x=1744899390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/LuqIm7oDS3cJFB5A2Gy16/wM9hH8Ae4bhB21+gT2cY=;
+        b=gS4nQLJKh6V7lenem95flPd8uiBi8qFNTDVHZvMleCrRzRQwVsTIUuXcQb3YhNEGpB
+         ij1dIjOUokVrpVNKpyAqf4DRAhKnvga9ec8M2KAmTGzM4M9gLsIZxah8hzc3maST5c9S
+         3+rgq2B3R8QQ1U1342L5KMKMhk7WsJbWx1NZKSRS9Y6VY1YkNuXsEV/WkWpz02fGNSqk
+         2yurk1TkM76LOu0JrXNSw6RRlvFuft1P/V0iDxl6oTEZujTiAqTl2QgsRc+OYi+wsw6J
+         p0V6G7fvVGi1/VI1vAuZoqHibxIQaTjuY0UsUyPjKtKwxyf9HbC1n8Ot/TlWjV5CLu0E
+         E6yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744294590; x=1744899390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/LuqIm7oDS3cJFB5A2Gy16/wM9hH8Ae4bhB21+gT2cY=;
+        b=fSkkP1PVQMomCHPOYp+Bg1lQ/qNUMsbuY8bqRz0wkM53RQjD4/DHm71qs8O19QsvOy
+         PPtJgJJlmvUWS4tpg4NLA4Y7Q+J/RvYENhMzfG8I5OLfkEusW9v2E1QlITMPIMdo73pi
+         54XiN4nBkLhQgf1GFwB2Rdritq3lCNYBX7yynyjlhvNbcjLlK++ON2z4oy3FLwbUyA0L
+         VuKpg1U49/7kto32uuuesfrSBQIgpm9MzOX+/ih3ofzrsKlwqyfOLhCyji2RVn57zAop
+         6FJLS+R4YFxjm9mzF0eL2TOfU+eJtnfb/T1jYF6bSlYdW8ecF4MSvJicyvpuWZlNtJYx
+         ri1A==
+X-Forwarded-Encrypted: i=1; AJvYcCV22peE0oAvnc30q4vbp81LUmk3wbaK3CB3WesfhHwOFiwAatZhJa9T4egC8/5uZjMZlsTwIsnpHTg6LWM=@vger.kernel.org, AJvYcCVan8rjnKruSWpjM6wiwu9dJ8r8ydwZoP4VL5a0upwKgUXAyt0RZdhmbt4mBeEmykr6+Rrnz16ITdur@vger.kernel.org, AJvYcCWp4BPKkzhfsniCIL096QoSYLtHWqDpuawn2DD8KlibVrQ5rsDs2ebbM9fqlYWimmAXg3c7Qt+luRMX7mNq5GE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4M8aJDpXwxH8XRjliwC4VMlyDQnLhLHpSzY8FKEKihZudS78H
+	j6vfMrw5WipKFnVglOBEhhiWZQBlbFhSB6xl41l/+EzINE7CI8Tg2AqHvl9geROANj57xSdViXo
+	wtJq0uw4/hgqfdEtx5NiZwPwCgIc=
+X-Gm-Gg: ASbGncvv3gwMcVPP/tCVjEEadxUjPXlD3U+V6gAiH6toTbWBgaExUtRaqn5Z8zcPmAO
+	tghYFvpIaDgOuAfZoZk5mExLyJiSI9vQ9pTWEiyNLheQ0i9ETD+yGhOeCjAUBiFjNumw5+WYF6O
+	AqxD7XMRr0D0aaVxWLAdQFxFhPr2gfwEN+yI6iRg==
+X-Google-Smtp-Source: AGHT+IEKYFsCJw05RuYVwzcEOx6C4Kdg0vX7NCgG95ngBstS4sq7EDxb6p4TkKQLd/5jeOhcyilGdhzUG5optTokoLU=
+X-Received: by 2002:a05:651c:515:b0:308:e8d3:7578 with SMTP id
+ 38308e7fff4ca-30faccc2c3dmr9320731fa.35.1744294589559; Thu, 10 Apr 2025
+ 07:16:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 6/9] ima: kexec: move IMA log copy from kexec load to
- execute
-To: Mimi Zohar <zohar@linux.ibm.com>, stefanb@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
- James.Bottomley@HansenPartnership.com, bhe@redhat.com, vgoyal@redhat.com,
- dyoung@redhat.com
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
- <20250402124725.5601-7-chenste@linux.microsoft.com>
- <96ae5a8efbcb894e096881f1dd7a4939ce0a9490.camel@linux.ibm.com>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <96ae5a8efbcb894e096881f1dd7a4939ce0a9490.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250409-no-offset-v2-0-dda8e141a909@gmail.com>
+ <20250409-no-offset-v2-2-dda8e141a909@gmail.com> <Z_eMe7y0ixrBrHaz@google.com>
+In-Reply-To: <Z_eMe7y0ixrBrHaz@google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 10 Apr 2025 10:15:53 -0400
+X-Gm-Features: ATxdqUG2ZcipzfhLY0pg0ohs4AsJQbvOEHI9iiCmTdCNpeZTeZnJKPrpt4cauq4
+Message-ID: <CAJ-ks9kms_jFEAHX9MnW1pUOyTeuFuyWwXk-A+qhCPQQNfJdAw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] rust: workqueue: remove HasWork::OFFSET
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/8/2025 9:17 AM, Mimi Zohar wrote:
-> On Wed, 2025-04-02 at 05:47 -0700, steven chen wrote:
->> ima_dump_measurement_list() is called during kexec 'load', which may
->> result in loss of IMA measurements during kexec soft reboot. Due to
->> missed measurements that only occurred after kexec 'load', this function
->> needs to be called during kexec 'execute'.
-> Re-use the motivation from 5/9 (with tweak):
+On Thu, Apr 10, 2025 at 5:16=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
 >
-> The IMA log is currently copied to the new kernel during kexec 'load' using
-> ima_dump_measurement_list(). However, the IMA measurement list copied at kexec
-> 'load' may result in loss of IMA measurements records that only occurred after
-> the kexec 'load'.
+> On Wed, Apr 09, 2025 at 06:03:22AM -0400, Tamir Duberstein wrote:
+> > Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+> > the interface of `HasWork` and replacing pointer arithmetic with
+> > `container_of!`. Remove the provided implementation of
+> > `HasWork::get_work_offset` without replacement; an implementation is
+> > already generated in `impl_has_work!`. Remove the `Self: Sized` bound o=
+n
+> > `HasWork::work_container_of` which was apparently necessary to access
+> > `OFFSET` as `OFFSET` no longer exists.
+> >
+> > A similar API change was discussed on the hrtimer series[1].
+> >
+> > Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5b=
+d3bf0ce6cc@kernel.org/ [1]
+> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > Tested-by: Alice Ryhl <aliceryhl@google.com>
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> >  rust/kernel/workqueue.rs | 45 ++++++++++++----------------------------=
+-----
+> >  1 file changed, 12 insertions(+), 33 deletions(-)
+> >
+> > diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+> > index f98bd02b838f..1d640dbdc6ad 100644
+> > --- a/rust/kernel/workqueue.rs
+> > +++ b/rust/kernel/workqueue.rs
+> > @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut b=
+indings::work_struct {
+> >  ///
+> >  /// # Safety
+> >  ///
+> > -/// The [`OFFSET`] constant must be the offset of a field in `Self` of=
+ type [`Work<T, ID>`]. The
+> > -/// methods on this trait must have exactly the behavior that the defi=
+nitions given below have.
+> > +/// The methods on this trait must have exactly the behavior that the =
+definitions given below have.
 >
-> And finish the paragraph with:
-> Move the IMA measurement list log copy from kexec 'load' to 'execute'.
->
->> Make the kexec_segment_size variable a local static variable within the
->> file, so it can be accessed during both kexec 'load' and 'execute'.
->>   
->> Implement the kexec_post_load() function to be invoked after the new kernel
->> image has been loaded for kexec. Instead of calling machine_kexec_post_load()
->> directly from the kexec_file_load() syscall, call kexec_post_load(), which in
->> turn calls machine_kexec_post_load() to maintain the original image processing.
-> Define kexec_post_load() as a wrapper for calling ima_kexec_post_load() and
-> machine_kexec_post_load().  Replace the existing direct call to
-> machine_kexec_post_load() with kexec_post_load().
->
->>   
->> Invoke ima_kexec_post_load() within the kexec_post_load() API only for kexec
->> soft reboot scenarios, excluding KEXEC_FILE_ON_CRASH.
-> "Don't call ima_kexec_post_load() on KEXEC_FILE_ON_CRASH" would be listed in the
-> Changelog if it changed, not here in the patch description.  Please remove.
->
->>   
->> Register a reboot notifier for the ima_update_kexec_buffer() API within
->> ima_kexec_post_load() to ensure it is called upon receiving a reboot
->> notification.
-> Registering the reboot notifier was done in "[PATCH v11 5/9] ima: kexec: define
-> functions to copy IMA log at soft boot", not here.  Please remove.
->
->>   
->> Move the ima_dump_measurement_list() call from ima_add_kexec_buffer() to
->> ima_update_kexec_buffer() to copy the IMA log at the kexec 'execute' stage.
-> This information was already stated in the first paragraph as part of the
-> motivation for the patch.  Please remove.
->
->>   
->> When there is insufficient memory to copy all the measurement logs, copy as
->> much of the measurement list as possible.
-> Is this comment still applicable to this patch?
->
-> Please review your patch descriptions before posting, making sure that
-> everything is still applicable.
->
-> thanks,
->
-> Mimi
+> This wording probably needs to be rephrased. You got rid of the
+> definitions that sentence refers to.
 
-Hi Mimi,
+I don't follow. What definitions was it referring to? I interpreted it
+as having referred to all the items: constants *and* methods.
 
-Thanks for your comments. I will update in next version.
-
-Steven
-
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Cc: Eric Biederman <ebiederm@xmission.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Vivek Goyal <vgoyal@redhat.com>
->> Cc: Dave Young <dyoung@redhat.com>
->> Signed-off-by: steven chen <chenste@linux.microsoft.com>
->> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-
-
+Could you propose an alternate phrasing?
