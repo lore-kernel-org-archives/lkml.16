@@ -1,74 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2C91EFF9F
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1221C1A2C3A
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744308880; cv=none; b=fDr57+b1rOru/SZUEZchHo2ZqQE8AiA9eemCBmFm5eD9E+wyT/kzflOLGG2wdn2vDLsuWWgsH0ubWKYrDthJ9zMnFoTkHGDDR+cuPTeRIZvupWf/OQRJbl1oJ4h4iKFOj6nUbjb7bQTbXc8ciM1VGqreB49uaALSy3cKJFsXrlI=
+	t=1744308961; cv=none; b=eD8zrhfS7N1HLsB/nFZaF3Vh9LXgohoVG+5ldr2ajszolq62MZvSzWQoT31FG/vcJTETf3I2m3dCX/eUY4UnEIDNnw7CpNsuZiLLMYPWLpN87uV+C8NAYUqHqta1KGQupunLkj/a7K/7t1xsCWVMXxkgrmKqwbbBv5k/mVPgJJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744308880; c=relaxed/simple;
-	bh=VWX8nIUUxN/PJaDyhkXcvkoxpd4L3vJdwDD6owJjZlk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u4ffoyMhMorjhQ65/PDOvSI+Y/JLkKTiPLZWGPBhsp8R6zzoBHvwk4iHaBtjXd96OPBdon8RO1XmN9rAyT08U4V95SLw2F/mnCyINaEA8g+tG3I02d+EMlBVvZP0Huqsk5QauPHTa+yQ0uPdPKWH9EFIGpWFLghqyImNTXwZzRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqCAVXkf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744308961; c=relaxed/simple;
+	bh=P+NsnfmzBAzufTG0wW3WdJQWorHgLSJlgvSzTOodi18=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=tQzXWRIZBlsDCrSQX/gMR3RmkFyGPwqtDaPVZc8dbOFprXHO6+lUXQVuVi3Fwcw8az3UDWLtP5iRYxMezomLusSFcBDumWdUdoHscNSkuh3HL8VOZ3Z7gItVzKhWxVGYV9MCiAq4sZ4Gtx2fz3kH91S1rty3P89u0T4NLd0ypd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=fSF/bphC; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqCAVXkf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8067C4CEE3;
-	Thu, 10 Apr 2025 18:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744308880;
-	bh=VWX8nIUUxN/PJaDyhkXcvkoxpd4L3vJdwDD6owJjZlk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IqCAVXkfex0D97iDhxIa20/CKQ7LmmVdnqhHshPRQ8s/XtLMKs8tscnS0mT+jFUu7
-	 853VYpVdpkud8MS1fKndDSh2OqwXgVpYzn+OXKgYaDNzrnRX6LPs7WgXH8NHBMCus+
-	 92d7RxalsT6ECS+7uazU1f9gNWhQxY88eEyyeSxF5XcJG62DUKhARkyINM/x3vLvKe
-	 LKXPnq71lQTMzX8OG28MnD4I/Mh6IRXp5sQQnq191NN15HidgYJ3LTVpMU8exJwS3g
-	 idueTd/h87bMo+i9iK+93/yUicfzTWdWBt6Op0jDrQUD4av9TbMR7lP9xZ+H+Rz8wG
-	 ni8XIYR78H0AA==
-Date: Thu, 10 Apr 2025 11:14:38 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
-	Brendan Jackman <jackmanb@google.com>, Derek Manwaring <derekmn@amazon.com>
-Subject: Re: [PATCH v4 17/36] Documentation/x86: Document the new attack
- vector controls
-Message-ID: <fkl2b3ymatulazt2xjegubqcejx5bgaraktztpkitodrbbsozw@xrskej3fg3jf>
-References: <20250310164023.779191-1-david.kaplan@amd.com>
- <20250310164023.779191-18-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fSF/bphC"
+Received: from smtpclient.apple ([IPv6:2600:1010:b058:a1e9:b4d4:76c1:a502:6662])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53AIFYph039316
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 10 Apr 2025 11:15:38 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53AIFYph039316
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744308939;
+	bh=JGkHoNgRSzcTjuLBgKhwZf1s4HtCb1TW+38/xtj9+KU=;
+	h=From:Subject:Date:References:Cc:In-Reply-To:To:From;
+	b=fSF/bphCMu/t67wjUR4n665Hv3dgm4f+f+Fh0capi3BtcF7XCyqZQpRH22RpvP/NP
+	 G4VldBe/sZSEh5yxXZMglpchlrhtUwMJdl7MKNinWpssBc5GxKgIi8mK9t3knNRvdS
+	 0SMVMP6QOGgO0DZkVYkZSqHq6VdBNq8PLxkOssji7YcKBeOX6SkaWEjpdxdmxyWVZq
+	 mir+ZJS7XGAnbUh8fdSL+AMfBPbGbepftemSBjCypxjzqv8xYtHunG0C9hHYEXexfz
+	 1bWVK8+aHQpuCqHp8nYHI0btlblM2VANWZSMrvVfal2tVcoIa0Fxrsx9Ce0Iic4SZR
+	 jSwe1tYpNbkDQ==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Xin Li <xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250310164023.779191-18-david.kaplan@amd.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] x86/cpufeatures: Clean up formatting
+Date: Thu, 10 Apr 2025 11:15:18 -0700
+Message-Id: <DA17F1E4-C17A-43D0-88A7-746EAD28B4E8@zytor.com>
+References: <20250410180556.GHZ_gIhKb431qGH5Ja@fat_crate.local>
+Cc: Petkov Borislav <bp@kernel.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20250410180556.GHZ_gIhKb431qGH5Ja@fat_crate.local>
+To: Petkov Borislav <bp@alien8.de>
+X-Mailer: iPhone Mail (22E240)
 
-On Mon, Mar 10, 2025 at 11:40:04AM -0500, David Kaplan wrote:
-> +=============== ============== ============ ============= ============== ============
-> +Vulnerability   User-to-Kernel User-to-User Guest-to-Host Guest-to-Guest Cross-Thread
-> +=============== ============== ============ ============= ============== ============
-> +BHI                   X                           X
-> +GDS                   X              X            X              X        (Note 1)
-> +L1TF                  X                           X                       (Note 2)
-> +MDS                   X              X            X              X        (Note 2)
-> +MMIO                  X              X            X              X        (Note 2)
-> +Meltdown              X
-> +Retbleed              X                           X                       (Note 3)
-> +RFDS                  X              X            X              X
-> +Spectre_v1            X
-> +Spectre_v2            X                           X
-> +Spectre_v2_user                      X                           X        (Note 1)
-> +SRBDS                 X              X            X              X
-> +SRSO                  X                           X
-> +SSB (Note 4)
+On Apr 10, 2025, at 11:07=E2=80=AFAM, Borislav Petkov <bp@alien8.de> wrote:
+>=20
+> =EF=BB=BFOn Thu, Apr 10, 2025 at 10:52:56AM -0700, Xin Li wrote:
+>> I ever had a patch in which the last column of the same type macros are
+>> not aligned and tglx asked me to make them aligned.  But that didn't
+>> need any name shortened.
+>=20
+> If you wanna, You can take mine, and then do two more patches ontop,
+> shortening one name in each one.
+>=20
+> :-)
 
-Any reason not to put the "Note 4" in the same column as the others?
+Sure :)=20
 
--- 
-Josh
