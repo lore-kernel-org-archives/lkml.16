@@ -1,154 +1,219 @@
-Received: from invmail3.skhynix.com (exvmail3.hynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0C1719E975
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014321E9B0B
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744262649; cv=none; b=aHEXXGBVXYuEHjohlmLsSBIthGXQzfbChqprZsYdpyZmWJKQbIm5E2UoFCQOR5KwbON3NVZZbVK07eDOD4S/11bVCCB3xVS5P4r2FLFxXw+CASuu960YlE8mONEvZru11/N2vD1ovfTFM+zExf2q4l7HwSjq/DdTGoDNg6ZFL18=
+	t=1744262649; cv=none; b=FCThLV3HimPMsobEn0Qi5Dqf8jiyUZCv4hDGnAW2mW+ogbxmz/nUylvgYMgNhTwPHxo6h0YAv6IoRe6DMyXg11CUKFoGW4Maaxq0GnnpvCtWHJ9mW1RZbQS/KhFgng4Cfv2kT4zye/NyQgiTlT4yBzRk/Yeiokh1SqrBbB6WpRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744262649; c=relaxed/simple;
-	bh=45xxdm3AlVmZ5DosbCB1BpmXEPfDJ3dwMPc075YgBHM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jfuym14y5ttZ5raJGdJTF3ZMYwPizWi54XlSQZGjSjPnRAqYkhw1ZO9WVoHRg/TPfM0xjJeqNKF8Zwc3w/RNniRyBPjErvSFK1KV/8H6nKWa2SXXym95CIAmibZGMYWEx/UqRCeTWLg10ycEpAOmFiuXKuaJklwC0G2wn5onbrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-057ff7000000aab6-35-67f755f181ca
-From: "yohan.joung" <yohan.joung@sk.com>
-To: "yohan.joung" <yohan.joung@sk.com>
-Cc: pilhyun.kim@sk.com,
-	linux-kernel@vger.kernel.org,
-	Jaegeuk Kim via Linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net>
-Subject: Re: [f2fs-dev] [PATCH v5] f2fs: prevent the current section from being selected as a victim during GC
-Date: Thu, 10 Apr 2025 14:23:37 +0900
-Message-ID: <20250410052347.1928-1-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <20250410051244.1870-1-yohan.joung@sk.com> (raw)
-References: 
+	bh=AvvJAYBIs5by7MUm027EyrQQeOiSll/0ZVufQ4rC9yc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KqPSVt/jj015TZQizd7Tg6RDjZkSeIXP2YgI0DHh5eZgUPoAGBJdu0Q1dF9uac+XZH/ar/sN6oNjl4ximJGTNKgNdK5yGqgMbhunr0ffuVcsyeGWBpaFiRFNz2cCCTlZL11UcoXe3Kq/A8SUPEnFOBzz+GORthTkN7AZN/Nqc0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Q06OStfN; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Q06OStfN"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3012a0c8496so308098a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 22:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744262646; x=1744867446; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PZYMzQXIXSU/bXW26sRzTu+9m/v0haq3s3VFwVwrb1s=;
+        b=Q06OStfNnyhk6geDn6XJVdrTgl9RLokjP8fFq1dQ5Ji+TXVzONRg8FXehDUrWs7g4y
+         ow0UE9yJ80OHMRNMVUuPCELlh75h4elSC02YCbIpkF+up6qXmlfcOitm/Kc+Dz0qDgCq
+         VIn9Bl01QVVVq7GS+sou1aoLgIaE0uSS7ZXuFZB+f4CXFTK0l7fX4nP3Z/jDmDizTO7H
+         uOUZ5cRkMngYz7mdK7Z5PEek0Io4x6hT8vSTqHCXek+twna6uNudanzqx4e5j834oFwx
+         a+/w6v0Mgqoe7HWMnwXAl43j3VvtbMG/Kv5s337nQORHOSEmLRmRlMqMt6BV/UCyD1VJ
+         10+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744262646; x=1744867446;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PZYMzQXIXSU/bXW26sRzTu+9m/v0haq3s3VFwVwrb1s=;
+        b=a7C+4O6QMwZ9QdLlSYCRrf+qrbA+V389VfGWFJI2EDiQHE5sC/V0GTwxe0r8lPoARy
+         zuVgEKZ4KDKnKcDsV/nSuwOlbSZby+0UxAYs+VtKZKHf51Qjp0ZitfGZsQDSKWk01nG/
+         c5kza61HpH4eN+VUdNGT3ECayOrinKwKrxEdAOCfqEpMtKxrhFzLboSWKIHHJyfBOhxK
+         PHaIgEOY4JckY0FpwxmXYYOUJ09xY5Bb0wjPU5RFhmduKihZmJeVX4+WhhQvVp7WZq/I
+         f2xmvND8PKKy3BKgJA0hNZ6Qea7dlJeM5yvPzWtJVS+tE7WeoLDmgnllec5e5zrePHdm
+         OrIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnOO1NdcdJ6dnozUuw7SYkZTheCAjuY1nKJny6Em+xQLBL0i7qvyUo59zbCRN8xWECDGj2qxKFM79BoPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyojHmAjrWfH8hfWMDTCZTrKlk06jTXADfKaatnASKClaVRvWyE
+	E7qFy0QRMOL8AmzMmD08qfuAuZ554ErAXwYY/C0kVzth3DmVD2t86j/4FkgMHiU=
+X-Gm-Gg: ASbGncsbodHZDeU5m7WSDdw6LrPXi8S77gHEDC/j4fv5I5v+S8sOj0HWYjWxZIYzSA/
+	ldovWvz+EzWcSV2cYyjQbrazclZ+eXJ6lIZnd+neQGQxyWe/MlS7CSlYHulQSbasMefXqmVdEVu
+	wYyins/8fuxNHchum84JrbnBa6YhqsWtefXhEElcpjF+hbhpC8zLeibAcxN3KsoPdmdtfEUH8H9
+	d9SvMp058OVMToFA9iQ9yMO8q9vqzg3J0XsdfTKZs/EcDTM68+RI6Vu9XqIo8C/NGyegj2wiKf2
+	2lh7WH9d2WNh0PcqAxYU9oxdLZ78gmJvi1Q4KiW+yJM1Jc12jg8=
+X-Google-Smtp-Source: AGHT+IEFGYLi01GN6t1Qu8phsbyE3bnOEDBZkOiu+MAV/bjppeYPX1aHEWOs4wEGQPAvVv3qM4pyaQ==
+X-Received: by 2002:a17:90a:d64b:b0:2fa:13d9:39c with SMTP id 98e67ed59e1d1-30718b75cebmr2953474a91.14.1744262646173;
+        Wed, 09 Apr 2025 22:24:06 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm21649615ad.217.2025.04.09.22.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 22:24:05 -0700 (PDT)
+Date: Wed, 9 Apr 2025 22:24:02 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, alexghiti@rivosinc.com,
+	samitolvanen@google.com, broonie@kernel.org,
+	rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>
+Subject: Re: [PATCH v12 27/28] riscv: Documentation for shadow stack on riscv
+Message-ID: <Z_dV8v54vfD9zHLV@debug.ba.rivosinc.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-27-e51202b53138@rivosinc.com>
+ <2a24cc43-4150-4a56-ba09-0d136dde893f@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLMWRmVeSWpSXmKPExsXC9ZZnoe7H0O/pBsdWsltcWuRucXnXHDYH
-	Jo/dCz4zeXzeJBfAFMVlk5Kak1mWWqRvl8CVcf5YB1PBM/mKix3XmRsYT0h0MXJySAiYSPx6
-	2MAOY8/dsIIRxGYT0JD409vLDGKLCKhJLH/5HijOxcEs0MwocWHeFhaQhLBAnsT0hyfBilgE
-	VCVe7L0AFucVMJPYeu02K8RQTYkdX84zgdicArYSGw4tBIsLCfBIvNqwnxGiXlDi5MwnYL3M
-	AvISzVtnM4MskxB4yCrRMOUn1CBJiYMrbrBMYOSfhaRnFpKeBYxMqxhFMvPKchMzc4z1irMz
-	KvMyK/SS83M3MQJDbFntn8gdjN8uBB9iFOBgVOLh9cj4li7EmlhWXJl7iFGCg1lJhNfT8Hu6
-	EG9KYmVValF+fFFpTmrxIUZpDhYlcV6jb+UpQgLpiSWp2ampBalFMFkmDk6pBsZKqa01t2M+
-	zLB9bB0hWPYn36Z3/QOFqHfXl397EwD0d1jxhYkN/h/zhaNt42aeDg8sWrLEr/JI/m324uhA
-	rXf7/ISbWaaJHlrIOKemR//ZzxW9vgZxohs1Wit3iTAHpF/mr70gp5CwJIYhTsVy9/xdPXoR
-	FoZXUg+z7Fq9026BbaHYKqnbSizFGYmGWsxFxYkA9kDRCC0CAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmluLIzCtJLcpLzFFi42LhmqEyR/dj6Pd0g/a/jBaXFrlbXN41h81i
-	wtyrTBbvt95jdGDx2L3gM5PHt9seHp83yQUwR3HZpKTmZJalFunbJXBlnD/WwVTwTL7iYsd1
-	5gbGExJdjJwcEgImEnM3rGAEsdkENCT+9PYyg9giAmoSy1++B4pzcTALNDNKXJi3hQUkISyQ
-	JzH94UmwIhYBVYkXey+AxXkFzCS2XrvNCjFUU2LHl/NMIDangK3EhkMLweJCAjwSrzbsZ4So
-	F5Q4OfMJWC+zgLxE89bZzBMYeWYhSc1CklrAyLSKUSQzryw3MTPHTK84O6MyL7NCLzk/dxMj
-	MGiW1f6ZtIPx22X3Q4wCHIxKPLweGd/ShVgTy4orcw8xSnAwK4nwehp+TxfiTUmsrEotyo8v
-	Ks1JLT7EKM3BoiTO6xWemiAkkJ5YkpqdmlqQWgSTZeLglGpgTDERdeCa/DwncC97vYII98S4
-	PwwfX+4Mulcsvd1NvKazJ/TU/bVJJ9vO2DddbXpvssI5aBvf823SqxJO3bZPcE2U75/TIc26
-	S2HvLuHLQvWmu6LmX5LJmK97+ZJOSLeHyJ85beHav4QKPHfd/Cqq4vlHVFkhIy09qUHpVrdG
-	xXe/LFURR1YlluKMREMt5qLiRAB2UMbXFgIAAA==
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <2a24cc43-4150-4a56-ba09-0d136dde893f@ghiti.fr>
 
-On Thu, 10 Apr 2025 14:12:39 +0900	[thread overview] "yohan.joung" <yohan.joung@sk.com> wrote:
-> On Thu, 10 Apr 2025 03:53:07 +0000	[thread overview] Jaegeuk Kim via Linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net> wrote:
-> > On 04/07, Chao Yu wrote:
-> > > On 4/7/25 10:08, Chao Yu wrote:
-> > > > On 4/5/25 03:55, Jaegeuk Kim wrote:
-> > > >> Hi Yohan,
-> > > >>
-> > > >> I modified this patch after applying the clean up by
-> > > >>
-> > > >> https://lore.kernel.org/linux-f2fs-devel/20250404195442.413945-1-jaegeuk@kernel.org/T/#u
-> > > >>
-> > > >> --- a/fs/f2fs/segment.h
-> > > >> +++ b/fs/f2fs/segment.h
-> > > >> @@ -486,6 +486,11 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
-> > > >>
-> > > >>         free_i->free_sections++;
-> > > >>
-> > > >> +       if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[BG_GC]) == secno)
-> > > >> +               sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-> > > >> +       if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[FG_GC]) == secno)
-> > > >> +               sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
-> > > > 
-> > > > Reviewed-by: Chao Yu <chao@kernel.org>
-> > > 
-> > > Oh, can we add Fixes line to make it to be merged into stable kernel?
-> > 
-> > Which one would be good to add?
-> jaegeuk, please apply the patch above
-> Thanks
-sorry it is correct to apply the one below.
-> > > 
-> > > Thanks,
-> > > 
-> > > > 
-> > > > Thanks,
-> > > > 
-> > > >> +
-> > > >>  unlock_out:
-> > > >>         spin_unlock(&free_i->segmap_lock);
-> > > >>  }
-> > > >>
-> > > >> On 04/04, yohan.joung wrote:
-> > > >>> When selecting a victim using next_victim_seg in a large section, the
-> > > >>> selected section might already have been cleared and designated as the
-> > > >>> new current section, making it actively in use.
-> > > >>> This behavior causes inconsistency between the SIT and SSA.
-> > > >>>
-> > > >>> F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and SIT
-> > > >>> Call trace:
-> > > >>> dump_backtrace+0xe8/0x10c
-> > > >>> show_stack+0x18/0x28
-> > > >>> dump_stack_lvl+0x50/0x6c
-> > > >>> dump_stack+0x18/0x28
-> > > >>> f2fs_stop_checkpoint+0x1c/0x3c
-> > > >>> do_garbage_collect+0x41c/0x271c
-> > > >>> f2fs_gc+0x27c/0x828
-> > > >>> gc_thread_func+0x290/0x88c
-> > > >>> kthread+0x11c/0x164
-> > > >>> ret_from_fork+0x10/0x20
-> > > >>>
-> > > >>> issue scenario
-> > > >>> segs_per_sec=2
-> > > >>> - seg#0 and seg#1 are all dirty
-> > > >>> - all valid blocks are removed in seg#1
-> > > >>> - gc select this sec and next_victim_seg=seg#0
-> > > >>> - migrate seg#0, next_victim_seg=seg#1
-> > > >>> - checkpoint -> sec(seg#0, seg#1)  becomes free
-> > > >>> - allocator assigns sec(seg#0, seg#1) to curseg
-> > > >>> - gc tries to migrate seg#1
-> > > >>>
-> > > >>> Signed-off-by: yohan.joung <yohan.joung@sk.com>
-> > > >>> Signed-off-by: Chao Yu <chao@kernel.org>
-> > > >>> ---
-> > > >>>  fs/f2fs/segment.h | 9 ++++++++-
-> > > >>>  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > >>>
-> > > >>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> > > >>> index 0465dc00b349..0773283babfa 100644
-> > > >>> --- a/fs/f2fs/segment.h
-> > > >>> +++ b/fs/f2fs/segment.h
-> > > >>> @@ -474,8 +474,15 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
-> > > >>>  		next = find_next_bit(free_i->free_segmap,
-> > > >>>  				start_segno + SEGS_PER_SEC(sbi), start_segno);
-> > > >>>  		if (next >= start_segno + usable_segs) {
-> > > >>> -			if (test_and_clear_bit(secno, free_i->free_secmap))
-> > > >>> +			if (test_and_clear_bit(secno, free_i->free_secmap)) {
-> > > >>>  				free_i->free_sections++;
-> > > >>> +
-> > > >>> +				if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[BG_GC]) == secno)
-> > > >>> +					sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-> > > >>> +
-> > > >>> +				if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[FG_GC]) == secno)
-> > > >>> +					sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
-> > > >>> +			}
-> > > >>>  		}
-> > > >>>  	}
-> > > >>>  skip_free:
-> > > >>> -- 
-> > > >>> 2.33.0
+On Tue, Apr 08, 2025 at 10:48:08AM +0200, Alexandre Ghiti wrote:
+>
+>On 14/03/2025 22:39, Deepak Gupta wrote:
+>>Adding documentation on shadow stack for user mode on riscv and kernel
+>>interfaces exposed so that user tasks can enable it.
+>>
+>>Reviewed-by: Zong Li <zong.li@sifive.com>
+>>Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>>---
+>>  Documentation/arch/riscv/index.rst   |   1 +
+>>  Documentation/arch/riscv/zicfiss.rst | 176 +++++++++++++++++++++++++++++++++++
+>>  2 files changed, 177 insertions(+)
+>>
+>>diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
+>>index be7237b69682..e240eb0ceb70 100644
+>>--- a/Documentation/arch/riscv/index.rst
+>>+++ b/Documentation/arch/riscv/index.rst
+>>@@ -15,6 +15,7 @@ RISC-V architecture
+>>      vector
+>>      cmodx
+>>      zicfilp
+>>+    zicfiss
+>>      features
+>>diff --git a/Documentation/arch/riscv/zicfiss.rst b/Documentation/arch/riscv/zicfiss.rst
+>>new file mode 100644
+>>index 000000000000..5ba389f15b3f
+>>--- /dev/null
+>>+++ b/Documentation/arch/riscv/zicfiss.rst
+>>@@ -0,0 +1,176 @@
+>>+.. SPDX-License-Identifier: GPL-2.0
+>>+
+>>+:Author: Deepak Gupta <debug@rivosinc.com>
+>>+:Date:   12 January 2024
+>>+
+>>+=========================================================
+>>+Shadow stack to protect function returns on RISC-V Linux
+>>+=========================================================
+
+<... snipped ..>
+
+>>+
+>>+5. violations related to returns with shadow stack enabled
+>>+-----------------------------------------------------------
+>>+
+>>+Pertaining to shadow stack, CPU raises software check exception in following
+>>+condition:
+>>+
+>>+- On execution of ``sspopchk x1/x5``, ``x1/x5`` didn't match top of shadow
+>>+  stack. If mismatch happens then cpu does ``*tval = 3`` and raise software
+>>+  check exception.
+>>+
+>>+Linux kernel will treat this as :c:macro:`SIGSEV`` with code =
+>>+:c:macro:`SEGV_CPERR` and follow normal course of signal delivery.
+>>+
+>>+6. Shadow stack tokens
+>>+-----------------------
+>>+Regular stores on shadow stacks are not allowed and thus can't be tampered
+>>+with via arbitrary stray writes due to bugs. Method of pivoting / switching to
+>>+shadow stack is simply writing to csr ``CSR_SSP`` changes active shadow stack.
+>
+>
+>I don't understand the end of this sentence.
+
+I'll rephrase it to make it readable and understandable.
+
+>
+>
+>>+This can be problematic because usually value to be written to ``CSR_SSP`` will
+>>+be loaded somewhere in writeable memory and thus allows an adversary to
+>>+corruption bug in software to pivot to an any address in shadow stack range.
+>
+>
+>Remove "an"
+>
+>
+>>+Shadow stack tokens can help mitigate this problem by making sure that:
+>>+
+>>+- When software is switching away from a shadow stack, shadow stack pointer
+>>+  should be saved on shadow stack itself and call it ``shadow stack token``
+>>+
+>>+- When software is switching to a shadow stack, it should read the
+>>+  ``shadow stack token`` from shadow stack pointer and verify that
+>>+  ``shadow stack token`` itself is pointer to shadow stack itself.
+>>+
+>>+- Once the token verification is done, software can perform the write to
+>>+  ``CSR_SSP`` to switch shadow stack.
+>>+
+>>+Here software can be user mode task runtime itself which is managing various
+>>+contexts as part of single thread. Software can be kernel as well when kernel
+>>+has to deliver a signal to user task and must save shadow stack pointer. Kernel
+>>+can perform similar procedure by saving a token on user shadow stack itself.
+>>+This way whenever :c:macro:`sigreturn` happens, kernel can read the token and
+>>+verify the token and then switch to shadow stack. Using this mechanism, kernel
+>>+helps user task so that any corruption issue in user task is not exploited by
+>>+adversary by arbitrarily using :c:macro:`sigreturn`. Adversary will have to
+>>+make sure that there is a ``shadow stack token`` in addition to invoking
+>>+:c:macro:`sigreturn`
+>>+
+>>+7. Signal shadow stack
+>>+-----------------------
+>>+Following structure has been added to sigcontext for RISC-V::
+>>+
+>>+    struct __sc_riscv_cfi_state {
+>>+        unsigned long ss_ptr;
+>>+    };
+>>+
+>>+As part of signal delivery, shadow stack token is saved on current shadow stack
+>>+itself and updated pointer is saved away in :c:macro:`ss_ptr` field in
+>>+:c:macro:`__sc_riscv_cfi_state` under :c:macro:`sigcontext`. Existing shadow
+>>+stack allocation is used for signal delivery. During :c:macro:`sigreturn`,
+>>+kernel will obtain :c:macro:`ss_ptr` from :c:macro:`sigcontext` and verify the
+>>+saved token on shadow stack itself and switch shadow stack.
+>>
