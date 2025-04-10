@@ -1,239 +1,162 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8C01E285A;
-	Thu, 10 Apr 2025 02:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABE61E5702
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744252848; cv=none; b=KjMWkFOWHwwza7b/Dcy+x6KJfgVzMs7XMMKZVsvXSN/9eTAk+n1O4W3OM5aSqnthQYgssSFXeTxjCliOAXZzUiwTHW101D48d0TxH2VciNLmwTO60b7knii8tGVH1pGmtOzIpGSQnrXYvPhRIksQ1hgTPEmccsOIKSecoipZg8U=
+	t=1744252878; cv=none; b=HwVsAv+5i1opatqlXcuazHijHMM7aiMh8C78fT85QuAHh+4R8HZAjInYcSc03p5rGgwhpyyiNvbLEogzvUW5Bsak/rfxQLh8MusV83MWYjOgWBMe6EeCGyC+TMLtCs+3o1uJ1H79GJ81IjiqbIthvpO/atnb0k81AmuvxAYSds8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744252848; c=relaxed/simple;
-	bh=3/tfsE5WqQ4jsxy0JOcV1bgcuEhi9GuIovCCra7x0/o=;
+	s=arc-20240116; t=1744252878; c=relaxed/simple;
+	bh=K1uI3BgOLpNU3c/dPlGn6O+fNCX4PSeSETqGOFDq2/I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lkGTpujUKNo+MCc1M6Qri/+WoGuoExfrJUiEqZmfnTHMdLwn5ILvoTWFDQE3k4sbhW+JTDspJBCuGVyLUzRNKSLj/4YnjdDX7YWld9UwHtpRDEoXzG8G5I9BEibjLbMrpWavPDuJXxYLE7MqmnW8tAbE47oJCCvjM1zxuIl+sjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ep0VsQTf; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=bFy9DNcnRswNa41e12aKKZgAhZld2RVlHvf22w+WjnUQzWGf+gG94Ru4fpjuZgzg3nide4TyerykqohXc2cCb0EtMMWJa64mtURJAFoEgd7Dspr1+9ShUdJ8YR8F6KcZnHZaOu2eAxg9PExxbBmaZTH5SENzD6drjqQ9uH9hcLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0/9s4UQI; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ep0VsQTf"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e6dee579f38so243005276.0;
-        Wed, 09 Apr 2025 19:40:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0/9s4UQI"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so376661e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 19:41:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744252846; x=1744857646; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744252875; x=1744857675; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KcuOTVyHU6jhzBy0xZ293tFvt3BaYYRswaEJVrukAHE=;
-        b=Ep0VsQTf5v+ZELQRtqkzYH1/5DRHxxQ7gVeHZZm8UGBURjtGsxEnpFFhn7ePBIwDDL
-         v6hcMA6CgADw5yrJ/GjhoOGOYxdpqpSl43oQyk9wQxDmOyEzNZJc+odEmA3gtEojxS+D
-         OfiGzdUd/9pXUFfTOJDdfWcRdYEeWb29wW/ruVbVtuHjHFmhA8BrsZfarbnZaxSrjUaa
-         knQM3UMtZZ8WjaDbJt4+XctOxuwy2cKbIYFzlhHx1KlM85DqTbg4+URg/ohTx09c3ahL
-         elXao5WpDk2vG5nUneDiMtodRJzAUl0/nG5gS6gjyNuuY+ubdotV7Gko7RFlLzYz0zR1
-         ebxA==
+        bh=8mEbSaV3IFoOUbSGNJB9bI99s6y7XneTXliYuLT9ZK0=;
+        b=0/9s4UQIJAhoYvpngVOXJGA/xrGePmVcF914qFV6x5TDlQokULvd67rT3+4U5MZmS3
+         9ejV+O8RSZjeWRmD8ywGmMbzhjlBSf0JrdmbhCTtvAem9azb2DbSJCIPzuLYp6Iij2NP
+         7FAFxrFKjg6zGsxPGLyZUiraIwl13tDGogVKfsQBdZDn9mC3yjiyKQAqacet3LQR4w3Y
+         bQIrCtzLbKSc3RAUKpzSdB5dJw/ZRhAd+QBDdV76OtKm5h7Y0uYaIQACk3dAmw0vOr1x
+         8IHtAv8prAzstd/TKUruel3VBQgG6KkOyyvvXAwuO8LWt4XKRCqtoqYaxywaFpqTDL9K
+         jplQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744252846; x=1744857646;
+        d=1e100.net; s=20230601; t=1744252875; x=1744857675;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KcuOTVyHU6jhzBy0xZ293tFvt3BaYYRswaEJVrukAHE=;
-        b=h8tMtq5rnnHdhOGbQBoSkvUbbyd5M1R+L9JrC/9030IDqKo3w7sfd0D00lOLv1oQzf
-         GGk3pjQSrtSk3TU/ECS9VA53rndRSVR98qwNodH3WHH53CByim47WnB3vcZP24CVwSni
-         fuWNJBiSviN0KHq29t/qcOIcU7ISIGE3zd58CRgyL+HSbhw4Gx0OSE0ZEhpbNsAjS7Oi
-         t25g7WiipkrA229BIA2LQ3ZlMx/UpP2bXT78ck8pJxyBomd4TIJWkr+JXEZhdYKKBuF/
-         GZ1eEo1ukX5P40akrr9P3+kZtmbxwonvidL9LD2gs6HxxezXpI6YhRIvKBiP89lASuQS
-         J9CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKAqzRv/TCfnZSzQAk0asjIuuEAcomNxNFNQWAWLph3tWh9j9amoWecIcjZbuQbkM4DC8LLhmIQnJV@vger.kernel.org, AJvYcCUX/lL3I2k4hWFy4WBySQ2q8Z+KlOyaeysfpVvE3U2GoqzFTMFcoIisXawrdZ4jG+FcB/h/bHh7FUA=@vger.kernel.org, AJvYcCVPE+AW2wGJybhPvGOteNXTYA8v9Jwq5C7eAAvkHubY3csjd8VBlhArqzSSvZZgvjFIvuhDQ7No0Gj8voGEZ/4=@vger.kernel.org, AJvYcCVWvLo0tRWLyhCLa5+zfkUO+0gHQoO0kCPaAdzPbP/0I7zMzFezhWTurSTAqWKUFMRw2ovJPKjsbyl1ZQ==@vger.kernel.org, AJvYcCWF2sivcCMa7hDhWF0cJvWPKvLDse0ktPWCadLWU9KC0Gk3EAUTskxHGrv8r/mBgkd18IAV0r+EAfhJ+Kjl@vger.kernel.org, AJvYcCWKaQtfSZVOVbTGZqYeOJmocKAU7Hn+U6c5R0ODGbhJBQ2bIRnyVeT/8VkqT5U4kb5miraUNVbAcHMLtr0=@vger.kernel.org, AJvYcCWOW21NxHoYlEdaS5zIiQrrJfIt+d5hlfMYX5RS7R8WiPa3woE0LlEXqagDhxIa6sG4uHHk9v2l@vger.kernel.org, AJvYcCXbINYZP7Hl7NA5/cotrHn07tD0uGLpE5+3DhGNAP7z3jtZa1q0IvQAfo2Y1J7PDUnEOJ1DujKndV4H@vger.kernel.org, AJvYcCXqkHV9/RgtBZVlDYXRELfjF+olewpO9rnVcUpYLV6EDTT4w9u6G7E7FYoe5LPZMzAcceTdKLbV8x1z@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAM4Z5i3kEcp3hdZcLGcG0JdLhORFsUy9pryxhizVi8vi412cy
-	mPlm4JlXY4aLpBn/QgUXro3mZ2XNbBCcu0i1GkKz4GQ1SYQHxKJVtLVm4zB27k9nfJPQatD8e9G
-	44GSl50kEeaXIbnu76XuK89TpHKA=
-X-Gm-Gg: ASbGncvXPDy0zgDGCJ75jBA1I3XIM957a7Jbf7IBoCP5RJFm0RLLLOkZ1IfnMtwt5vI
-	HrL3VHism/4rsvyC6WbccSnQIODa6lhOgnbwuu5gc2QNEAtZfFbdqsNACo86JnnvBPG4siKS6RH
-	4yKzASJhJJZt6oeoUd03CIvAzMGEnFNGxfw8tAAYXJW1eQQabPLIJ40YXc
-X-Google-Smtp-Source: AGHT+IF3IaahFFEt95p88L2E+DMS5YlqS8f6R+jKEhaHG6PmdCAg0utj1GK9fsdr5gTPdjPGEMMC0Hqk+ak++gS3uUU=
-X-Received: by 2002:a05:6902:981:b0:e6d:f0a6:4cc5 with SMTP id
- 3f1490d57ef6-e703e0dce41mr1936544276.1.1744252845873; Wed, 09 Apr 2025
- 19:40:45 -0700 (PDT)
+        bh=8mEbSaV3IFoOUbSGNJB9bI99s6y7XneTXliYuLT9ZK0=;
+        b=o9x9dZpe/RAqXnUPAIlVtC8OaAjLKk4GrKse+wDRTAACUNHVRz915ArdL1Bk8bIj3/
+         ihCtw5lJSbiWGa7LY3BTCqLSoFb0eRFX3fAJZeMGg1xXP+mmnMWpBHwT7HxVcbhAmy7V
+         DnKAecoEUsOIP6B+eqcP/klniKcGX8JDZWvaKVIjrHnmgqedYUPTiU8fBpRDlng4zQkV
+         yKk0KNsy9hO5IXzNoclqHqIvuQ4MD4mdtqXc+FDnUkWE3zWyllueoq9e+FX8CgtVT5I/
+         Gj+BJrpg/wtHKR0V06Fh9W1/OvGQQga6AktZAG4F/f/JhhX9JtRyKkXh/pROWT99ke+H
+         iLjQ==
+X-Gm-Message-State: AOJu0YyhKgeo5uUKIpoYDjpZkFSMB64y4qNDqX7bygL8M3l9atVkpy8a
+	hlvCmyvcYP3Uvm6JbJwh6xtOULhG3aYBpZPrM5QVWI8OoENR5//hRA97sP3zDlDi8axCZ+HjEIj
+	BhIgUatWagii6RVl5H03u8oxY8eW2i03G6d3XTloK/Mys73WhRCQ=
+X-Gm-Gg: ASbGnct+o67Oa6i6ZGf3i+XIE+1HOObWKeMPUyg/YHTvl6NBvZZbx9xKCxAj9IdthSH
+	gioyjmrPe4zojAw/iy+xpZCHN75Fe0HNz4C6O7gEKTcJtd8RY2m8uw/+qppabuv89h4EXr7UnJA
+	IAtZ04Fv/b2gKUzjmgzakFqPoAyyt3fks4KFdoQ1FRe2mfzUx4h99CMDJ71iL2+Q==
+X-Google-Smtp-Source: AGHT+IEWdTot1olMr/SB3OsmQZpPucADaNdLkNX6bbSQ65NuI0raqXpFQ0q/lKOiIktv57Kf0k0N/CeF9yvDSAWf+eQ=
+X-Received: by 2002:a05:6512:1594:b0:549:39b1:65c2 with SMTP id
+ 2adb3069b0e04-54d3c64227dmr142943e87.48.1744252874511; Wed, 09 Apr 2025
+ 19:41:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409082752.3697532-1-tmyu0@nuvoton.com> <20250409082752.3697532-5-tmyu0@nuvoton.com>
- <20250409-cooperative-elastic-pillbug-672a03-mkl@pengutronix.de>
-In-Reply-To: <20250409-cooperative-elastic-pillbug-672a03-mkl@pengutronix.de>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Thu, 10 Apr 2025 10:40:34 +0800
-X-Gm-Features: ATxdqUHWhDl-xyLqC0glS-YG8IxmYyFFtwBiJ5M-DMW7Jb2-OYIl3qY47lOEkyg
-Message-ID: <CAOoeyxULns52vAwzsLoXB+BwT+CN+VGBwqrg61pjKJH8bTD5bw@mail.gmail.com>
-Subject: Re: [PATCH v9 4/7] can: Add Nuvoton NCT6694 CANFD support
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Ming Yu <tmyu0@nuvoton.com>
+References: <20250407134712.93062-1-hupu.gm@gmail.com>
+In-Reply-To: <20250407134712.93062-1-hupu.gm@gmail.com>
+From: John Stultz <jstultz@google.com>
+Date: Wed, 9 Apr 2025 19:41:03 -0700
+X-Gm-Features: ATxdqUFSDmo2HVchmBi3JFwyIhe2RoKpkw6j2H5bS_MSn7KY53jrE8MktrY79Qs
+Message-ID: <CANDhNCosvML9XKH8HV1QBXKzxt3zMWxzsPSUfYxoyPCORf6Krw@mail.gmail.com>
+Subject: Re: [RFC 1/1] sched: Skip redundant operations for proxy tasks
+ needing return migration
+To: hupu <hupu.gm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, juri.lelli@redhat.com, peterz@infradead.org, 
+	vschneid@redhat.com, mingo@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, hupu@transsion.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Dear Marc,
-
-Thank you for reviewing.
-
-Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B44=E6=9C=889=
-=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:21=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-...
-> > +static void nct6694_canfd_handle_state_change(struct net_device *ndev,=
- u8 status)
-> > +{
-> > +     struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
-> > +     enum can_state new_state, rx_state, tx_state;
-> > +     struct can_berr_counter bec;
-> > +     struct can_frame *cf;
-> > +     struct sk_buff *skb;
-> > +
-> > +     nct6694_canfd_get_berr_counter(ndev, &bec);
-> > +     can_state_get_by_berr_counter(ndev, &bec, &tx_state, &rx_state);
-> > +
-> > +     new_state =3D max(tx_state, rx_state);
-> > +
-> > +     /* state hasn't changed */
-> > +     if (new_state =3D=3D priv->can.state)
-> > +             return;
-> > +
-> > +     skb =3D alloc_can_err_skb(ndev, &cf);
-> > +
-> > +     can_change_state(ndev, cf, tx_state, rx_state);
-> > +
-> > +     if (new_state =3D=3D CAN_STATE_BUS_OFF) {
-> > +             can_bus_off(ndev);
+On Mon, Apr 7, 2025 at 6:47=E2=80=AFAM hupu <hupu.gm@gmail.com> wrote:
 >
-> What does your device do when it goes into bus off? Does it recover itsel=
-f?
+> Move the proxy_needs_return() check earlier in ttwu_runnable() to avoid
+> unnecessary scheduling operations when a proxy task requires return
+> migration to its original CPU.
 >
-
-No, the device does not support automatic bus-off recovery. It
-requires an explicit CAN Setting and Initialization(CMD0) command to
-re-initialize the controller after entering bus-off state.
-
-> > +     } else if (cf) {
-> > +             cf->can_id |=3D CAN_ERR_CNT;
-> > +             cf->data[6] =3D bec.txerr;
-> > +             cf->data[7] =3D bec.rxerr;
-> > +     }
-> > +
-> > +     if (skb)
-> > +             nct6694_canfd_rx_offload(&priv->offload, skb);
-> > +}
-> > +
-> > +static void nct6694_canfd_handle_bus_err(struct net_device *ndev, u8 b=
-us_err)
-> > +{
-> > +     struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
-> > +     struct can_frame *cf;
-> > +     struct sk_buff *skb;
-> > +
-> > +     if (bus_err =3D=3D NCT6694_CANFD_EVT_ERR_NO_ERROR)
-> > +             return;
+> The current implementation performs several operations (rq clock update,
+> enqueue, and wakeup preemption checks) before checking for return
+> migration needs. This is inefficient because:
 >
-> I think this has already been checked nct6694_canfd_irq()
+> 1. For tasks needing return migration, these operations are redundant
+>    since the task will be dequeued from current rq anyway
+> 2. The task may not even be allowed to run on current CPU due to
+>    possible affinity changes during blocking
+> 3. The proper CPU selection will be handled by select_task_rq() in
+>    the subsequent try_to_wake_up() logic
 >
-
-Drop it in v10.
-
-> > +
-...
-> > +static int nct6694_canfd_start(struct net_device *ndev)
-> > +{
-> > +     struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
-> > +     const struct can_bittiming *d_bt =3D &priv->can.data_bittiming;
-> > +     const struct can_bittiming *n_bt =3D &priv->can.bittiming;
-> > +     struct nct6694_canfd_setting *setting __free(kfree) =3D NULL;
-> > +     const struct nct6694_cmd_header cmd_hd =3D {
-> > +             .mod =3D NCT6694_CANFD_MOD,
-> > +             .cmd =3D NCT6694_CANFD_SETTING,
-> > +             .sel =3D ndev->dev_port,
-> > +             .len =3D cpu_to_le16(sizeof(*setting))
-> > +     };
-> > +     int ret;
-> > +
-> > +     setting =3D kzalloc(sizeof(*setting), GFP_KERNEL);
-> > +     if (!setting)
-> > +             return -ENOMEM;
-> > +
-> > +     setting->nbr =3D cpu_to_le32(n_bt->bitrate);
-> > +     setting->dbr =3D cpu_to_le32(d_bt->bitrate);
-> > +
-> > +     if (priv->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
-> > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_CTR=
-L1_MON);
-> > +
-> > +     if (priv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
-> > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_CTR=
-L1_NISO);
-> > +
-> > +     if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK)
-> > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_CTR=
-L1_LBCK);
-> > +
-> > +     setting->nbtp =3D cpu_to_le32(FIELD_PREP(NCT6694_CANFD_SETTING_NB=
-TP_NSJW,
-> > +                                            n_bt->sjw - 1) |
-> > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NBTP=
-_NBRP,
-> > +                                            n_bt->brp - 1) |
-> > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NBTP=
-_NTSEG2,
-> > +                                            n_bt->phase_seg2 - 1) |
-> > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NBTP=
-_NTSEG1,
-> > +                                            n_bt->prop_seg + n_bt->pha=
-se_seg1 - 1));
-> > +
-> > +     setting->dbtp =3D cpu_to_le32(FIELD_PREP(NCT6694_CANFD_SETTING_DB=
-TP_DSJW,
-> > +                                            d_bt->sjw - 1) |
-> > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DBTP=
-_DBRP,
-> > +                                            d_bt->brp - 1) |
-> > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DBTP=
-_DTSEG2,
-> > +                                            d_bt->phase_seg2 - 1) |
-> > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DBTP=
-_DTSEG1,
-> > +                                            d_bt->prop_seg + d_bt->pha=
-se_seg1 - 1));
+> By moving the proxy_needs_return() check to the beginning, we:
+> - Avoid unnecessary rq clock updates
+> - Skip redundant enqueue operations
+> - Eliminate meaningless wakeup preemption checks
+> - Let the normal wakeup path handle proper CPU selection
 >
-> What does your device do, if you set the bitrates _and_ the bit timing
-> parameters? They are redundant.
+> This optimization is particularly valuable in proxy execution scenarios
+> where tasks frequently migrate between CPUs.
+
+Hey hupu! Thanks again for your review of the proxy series and your
+sharing of this improvement!
+
+The proposal sounds attractive, however...
+
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index ca4ca739eb85..ebb4bc1800e3 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4162,6 +4162,10 @@ static int ttwu_runnable(struct task_struct *p, in=
+t wake_flags)
 >
+>         rq =3D __task_rq_lock(p, &rf);
+>         if (task_on_rq_queued(p)) {
+> +               if (proxy_needs_return(rq, p)) {
+> +                       _trace_sched_pe_return_migration(p);
+> +                       goto out;
+> +               }
+>                 update_rq_clock(rq);
+>                 if (p->se.sched_delayed) {
+>                         proxy_remove_from_sleeping_owner(p);
+> @@ -4174,10 +4178,6 @@ static int ttwu_runnable(struct task_struct *p, in=
+t wake_flags)
+>                          */
+>                         wakeup_preempt(rq, p, wake_flags);
+>                 }
+> -               if (proxy_needs_return(rq, p)) {
+> -                       _trace_sched_pe_return_migration(p);
+> -                       goto out;
+> -               }
+>                 ttwu_do_wakeup(p);
+>                 ret =3D 1;
+>         }
+> --
 
-The firmware calculates the default bit timing parameters when it
-receives the bitrates, and then overwrites them if it later receives
-explicit bit timing parameters.
+Unfortunately this patch crashes pretty quickly in my testing. The
+first issue was proxy_needs_return() calls deactivate_task() w/
+DEQUEUE_NOCLOCK, which causes warnings when the update_rq_clock()
+hasn't been called. Preserving the update_rq_clock() line before
+checking proxy_needs_return() avoided that issue, but then I saw hangs
+during bootup, which I suspect is due to us shortcutting over the
+sched_delayed case.
 
-To avoid confusion and ensure consistent behavior, I will remove the
-bitrate setting logic in next patch. Instead, the bit timing will be
-determined solely based on the provided bit timing parameters.
+Moving the proxy_needs_return above the if(task_on_cpu())
+wakeup_preempt() logic booted ok, but I'm still a little hesitant of
+what side-effects that might cause.
 
-> > +     setting->active =3D NCT6694_CANFD_SETTING_ACTIVE_CTRL1 |
-> > +                       NCT6694_CANFD_SETTING_ACTIVE_NBTP_DBTP;
-> > +
-> > +     ret =3D nct6694_write_msg(priv->nct6694, &cmd_hd, setting);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     priv->can.state =3D CAN_STATE_ERROR_ACTIVE;
-> > +
-> > +     return 0;
-> > +}
->
+Part of the approach with proxy_needs_return() from ttwu_runnable() is
+making sure everything is ready for the queued task to run, but in the
+case where we need return migration, to dequeue the task and cause
+ttwu_runnable() to fail, forcing the rest of try_to_wake_up() to
+complete.  I do really appreciate your thoughts here though, as I
+agree that the potential enqueue/dequeue/enqueue could be wasteful.
 
-Best regards,
-Ming
+I'll take a bit more time to see how we might be able to avoid this
+extra work without skipping needed steps. If you have further ideas,
+I'd love to hear them!
+
+thanks again!
+-john
