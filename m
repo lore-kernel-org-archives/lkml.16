@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8483D283CAC
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A423283CB7
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744285996; cv=none; b=obv8WM50FGpZqvCQipsUtE8DouEPU8mXSGRBUIEBb4v0SO9qS9kTKvdgtHanlI/M00EcdqScSmR6qa6Nd+Lsd8wdaAIN/et+Q6PsBjbwsouFlrfuH3PM42+QfZAxF4pAn+FUq+xNQFg8hgdKN91494h1TFxUu1bm4qjN9cCnT9c=
+	t=1744285997; cv=none; b=PiCIk40cjjtR8jqsMg9ZGcAok0/6+ydQXxJbkMJnh4ZRUSj3i88+8o9y4gfFLK9k9gzzOSdFKB0j0Xg4Z48nqUcTsXbstEYdx24JmziWtZF47y1dubnM9WA733m/gyNt3jMO55B1EpiA+XtyQlq6wFceOnw8TZc/OIQ776RikqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744285996; c=relaxed/simple;
-	bh=4Dq5q6vQpxp11jLmZAmrmPjRMXs2nGaOQk1/aPtFpPs=;
+	s=arc-20240116; t=1744285997; c=relaxed/simple;
+	bh=Q0Mvhai2To5XWXiLGg+QWiS8JSPcUg0mYYM3/fwWzig=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jVgAWyID1FvTwXccIyC4wCplbMs7fIk7g+ZpXvJLd8eO5lyz63vSABAnG8TTd3svqTqprpgSP4gaDnnb2297pOXfWaleUK90W1sT5gB4fac8NonTjsI2ZYLPpHKvjVdugqeCPju+AoOkWYof3e2Vo2wJC4fdzaQRSFyhTAfA8VM=
+	 MIME-Version; b=ug1JmOe+ccYykE+/YC8fYXn0Y2GnfMdH/2lPRXpo6nsjXNr3FpR7+eKnTajo5RwdgnT8J/72wKbz3C/cptRTv8LGwWIxrtPaaWWQ+ss3JUutmvPbqCBZ+mnvibEjbbTFx0v3y8QHERd0nQhGN0c+A6LRjFdrlKQYzK9R8pv8xMM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,17 +18,17 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u2qSw-0002xw-Q3; Thu, 10 Apr 2025 13:53:06 +0200
+	id 1u2qSw-0002xz-Px; Thu, 10 Apr 2025 13:53:06 +0200
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u2qSu-004GL0-03;
+	id 1u2qSu-004GLA-0R;
 	Thu, 10 Apr 2025 13:53:04 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u2qSt-00Akf9-2z;
-	Thu, 10 Apr 2025 13:53:03 +0200
+	id 1u2qSu-00Akg0-04;
+	Thu, 10 Apr 2025 13:53:04 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -40,16 +40,16 @@ To: "David S. Miller" <davem@davemloft.net>,
 	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
 	Rengarajan Sundararajan <Rengarajan.S@microchip.com>
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	UNGLinuxDriver@microchip.com,
 	Phil Elwell <phil@raspberrypi.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v6 04/12] net: usb: lan78xx: move LED DT configuration to helper
-Date: Thu, 10 Apr 2025 13:52:54 +0200
-Message-Id: <20250410115302.2562562-5-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v6 09/12] net: usb: lan78xx: Use ethtool_op_get_link to reflect current link status
+Date: Thu, 10 Apr 2025 13:52:59 +0200
+Message-Id: <20250410115302.2562562-10-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250410115302.2562562-1-o.rempel@pengutronix.de>
 References: <20250410115302.2562562-1-o.rempel@pengutronix.de>
@@ -65,110 +65,48 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Extract the LED enable logic based on the "microchip,led-modes"
-property into a new helper function lan78xx_configure_leds_from_dt().
-
-This simplifies lan78xx_phy_init() and improves modularity.
-No functional changes intended.
+Replace the custom lan78xx_get_link implementation with the standard
+ethtool_op_get_link helper, which uses netif_carrier_ok to reflect
+the current link status accurately.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
-changes v6:
-- this patch is added in v6
----
- drivers/net/usb/lan78xx.c | 72 +++++++++++++++++++++++++--------------
- 1 file changed, 46 insertions(+), 26 deletions(-)
+ drivers/net/usb/lan78xx.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
 diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index a54d246244b8..6965013ebc59 100644
+index 03d8102026f1..ee01f021fa3a 100644
 --- a/drivers/net/usb/lan78xx.c
 +++ b/drivers/net/usb/lan78xx.c
-@@ -2649,6 +2649,49 @@ static int lan78xx_mac_prepare_for_phy(struct lan78xx_net *dev)
- 	return 0;
+@@ -1839,18 +1839,6 @@ static int lan78xx_set_eee(struct net_device *net, struct ethtool_keee *edata)
+ 	return ret;
  }
  
-+/**
-+ * lan78xx_configure_leds_from_dt() - Configure LED enables based on DT
-+ * @dev: LAN78xx device
-+ * @phydev: PHY device (must be valid)
-+ *
-+ * Reads "microchip,led-modes" property from the PHY's DT node and enables
-+ * the corresponding number of LEDs by writing to HW_CFG.
-+ *
-+ * This helper preserves the original logic, enabling up to 4 LEDs.
-+ * If the property is not present, this function does nothing.
-+ *
-+ * Return: 0 on success or a negative error code.
-+ */
-+static int lan78xx_configure_leds_from_dt(struct lan78xx_net *dev,
-+					  struct phy_device *phydev)
-+{
-+	struct device_node *np = phydev->mdio.dev.of_node;
-+	u32 reg;
-+	int len, ret;
-+
-+	if (!np)
-+		return 0;
-+
-+	len = of_property_count_elems_of_size(np, "microchip,led-modes",
-+					      sizeof(u32));
-+	if (len < 0)
-+		return 0;
-+
-+	ret = lan78xx_read_reg(dev, HW_CFG, &reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	reg &= ~(HW_CFG_LED0_EN_ | HW_CFG_LED1_EN_ |
-+		 HW_CFG_LED2_EN_ | HW_CFG_LED3_EN_);
-+
-+	reg |= (len > 0) * HW_CFG_LED0_EN_ |
-+	       (len > 1) * HW_CFG_LED1_EN_ |
-+	       (len > 2) * HW_CFG_LED2_EN_ |
-+	       (len > 3) * HW_CFG_LED3_EN_;
-+
-+	return lan78xx_write_reg(dev, HW_CFG, reg);
-+}
-+
- static int lan78xx_phy_init(struct lan78xx_net *dev)
+-static u32 lan78xx_get_link(struct net_device *net)
+-{
+-	u32 link;
+-
+-	mutex_lock(&net->phydev->lock);
+-	phy_read_status(net->phydev);
+-	link = net->phydev->link;
+-	mutex_unlock(&net->phydev->lock);
+-
+-	return link;
+-}
+-
+ static void lan78xx_get_drvinfo(struct net_device *net,
+ 				struct ethtool_drvinfo *info)
  {
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(fc) = { 0, };
-@@ -2704,32 +2747,9 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+@@ -1970,7 +1958,7 @@ lan78xx_get_regs(struct net_device *netdev, struct ethtool_regs *regs,
+ }
  
- 	phy_support_eee(phydev);
- 
--	if (phydev->mdio.dev.of_node) {
--		u32 reg;
--		int len;
--
--		len = of_property_count_elems_of_size(phydev->mdio.dev.of_node,
--						      "microchip,led-modes",
--						      sizeof(u32));
--		if (len >= 0) {
--			/* Ensure the appropriate LEDs are enabled */
--			ret = lan78xx_read_reg(dev, HW_CFG, &reg);
--			if (ret < 0)
--				return ret;
--
--			reg &= ~(HW_CFG_LED0_EN_ |
--				 HW_CFG_LED1_EN_ |
--				 HW_CFG_LED2_EN_ |
--				 HW_CFG_LED3_EN_);
--			reg |= (len > 0) * HW_CFG_LED0_EN_ |
--				(len > 1) * HW_CFG_LED1_EN_ |
--				(len > 2) * HW_CFG_LED2_EN_ |
--				(len > 3) * HW_CFG_LED3_EN_;
--			ret = lan78xx_write_reg(dev, HW_CFG, reg);
--			if (ret < 0)
--				return ret;
--		}
--	}
-+	ret = lan78xx_configure_leds_from_dt(dev, phydev);
-+	if (ret)
-+		goto free_phy;
- 
- 	genphy_config_aneg(phydev);
- 
+ static const struct ethtool_ops lan78xx_ethtool_ops = {
+-	.get_link	= lan78xx_get_link,
++	.get_link	= ethtool_op_get_link,
+ 	.nway_reset	= phy_ethtool_nway_reset,
+ 	.get_drvinfo	= lan78xx_get_drvinfo,
+ 	.get_msglevel	= lan78xx_get_msglevel,
 -- 
 2.39.5
 
