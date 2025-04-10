@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF301F09BC
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036701F150F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744258197; cv=none; b=t6uQbPdqgebBijF53wzK33dtpzaaQZ6b9zoBBlYOvUyuY9oKrs1fzJJrS+YnzIl9mWH47wyoKezR8V3thlCxLlxD6N4jhvIdeF/VS4NR9odHbos6BOgptSz3PRpQMfknNY0cAoxz/7zdW/ayDAAqqRwI1h029rz7dtPUx8E869g=
+	t=1744258199; cv=none; b=kztMF2HUAbM9qtbQm4e6ia1k5f3uEXPdUXV+BLJ+pCxQYEPknAAUw6zKUpf0KkzbAd39HB4Ma2bwm66U3qecEH81MtUqezA3fuJ3m7QmnXGz8Vz6NjMGrlMaGzotroVTA7g/hJiLzu7uEwEDjmDSTxG3cSDCxOKsfq4fhq1UZCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744258197; c=relaxed/simple;
-	bh=MxQmQXDfASm1KPFqYDhl4v/yAuddVzhL0fvjTL/VhLg=;
+	s=arc-20240116; t=1744258199; c=relaxed/simple;
+	bh=tEYKdeRfcTul1MXSng5Vi4LchF3VJtYyaCoLzaI3JlQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=W18nLlzUOAZsVD+hllDb0HJYwjlLYebNE5XS9tBU/uAOy9cEuKTzTdcFPN2yIioVMHWmSE6VZUPrPlUzF7RZDQT4zfWl9z7rCQMGczw5JPaZvfN5C7+Zf8nE9LmV2cmc7B/9cM49Ck9LfJo8vaWhmNKgWQK6EDGPnt5Pi0NF6qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MC9IKyH7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ctWo7RQzeb8G5xfdJMkbBqYCm+bspbrZHe1AZov0o2+7rx9UGfDLNbyKD5JTwLFR0nm4XJC3/1+ig0SJU3FZrnLTe+mK9FUWZG9cI56J45BbbDecSCwksSYunHqruPfTw12tWtZ0r2CO4kEqonquyPMTKtE2QprCoEAwOEl7+6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DDx89Fo7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MC9IKyH7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45A4CC4CEDD;
-	Thu, 10 Apr 2025 04:09:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DDx89Fo7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 734B1C4CEDD;
+	Thu, 10 Apr 2025 04:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744258197;
-	bh=MxQmQXDfASm1KPFqYDhl4v/yAuddVzhL0fvjTL/VhLg=;
+	s=k20201202; t=1744258198;
+	bh=tEYKdeRfcTul1MXSng5Vi4LchF3VJtYyaCoLzaI3JlQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MC9IKyH7lcBJHzGnhihmdhiDdv5Qk07pwV9DcbVBoZjJ8nCz9NCDesx6JOXTJfA/r
-	 tXyWBC146+9RliIlo139bIdeAlMuFZCXstaQfoLyIRRELjGoJ/HBIKt8yHn51tO2UR
-	 YwWCSz593lnWF1Ji0IK+fKexD/Wkj83bJWueByBI6QAgzzC0TXIzdSmPWlpPS0dVf4
-	 Eeywo7CObmJUkAfMEBoFgVRpJ5DmG2bxY2tape4Kd7bHJiJ7PMSTjGG7O/YVMTBZ2p
-	 WYKoe4HP5RVUh2N+6QAYjNvALAzxMRNB8z7wmn0LfyYipUKCK9gfXlwkvu8l5CyWuv
-	 XkUMIagvmgi5Q==
+	b=DDx89Fo7xPntr3qDjxYlXciVCvbp6GioM+KiN9FtVMx0V6STJ1Iv9ICXlkWeteMah
+	 RNgnt2imnCKxAPXjCDPLCVywVy6iim7IA7IrY4krL+fG3VNnUAsoXNbYl5FuG+yLQb
+	 QsrUyYApr9dUkJiq6eBzLxBhprXvj1CgCPS97EV8QpnYNCzl0UIONuEWHy3EnPqjhc
+	 ie228EpCqVK00TCnXjNd3wTS4t4nLlrFHiQsiUWvPXNcnsFnS//g2K6fj34xstQBFI
+	 1HDiohBEodhYFcrB/8eNBaxAtQoqk7QxLtlkufiKfH1V7LZt1dRHT7DZsNfozmbrpE
+	 5Xi17LciWhFsQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB5F0380CEF9;
-	Thu, 10 Apr 2025 04:10:35 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 30925380CEF9;
+	Thu, 10 Apr 2025 04:10:37 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,58 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v2 1/2] f2fs: add a proc entry show inject stats
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: support to disable linear lookup
+ fallback
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <174425823476.3146257.16619631062841973924.git-patchwork-notify@kernel.org>
-Date: Thu, 10 Apr 2025 04:10:34 +0000
-References: <20250320022230.1938110-1-chao@kernel.org>
-In-Reply-To: <20250320022230.1938110-1-chao@kernel.org>
+ <174425823600.3146257.11616360860207146898.git-patchwork-notify@kernel.org>
+Date: Thu, 10 Apr 2025 04:10:36 +0000
+References: <20250401035800.51504-1-chao@kernel.org>
+In-Reply-To: <20250401035800.51504-1-chao@kernel.org>
 To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+Cc: jaegeuk@kernel.org, krisman@suse.de, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
 
-This series was applied to jaegeuk/f2fs.git (dev)
+This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Thu, 20 Mar 2025 10:22:29 +0800 you wrote:
-> This patch adds a proc entry named inject_stats to show total injected
-> count for each fault type.
+On Tue,  1 Apr 2025 11:58:00 +0800 you wrote:
+> After commit 91b587ba79e1 ("f2fs: Introduce linear search for
+> dentries"), f2fs forced to use linear lookup whenever a hash-based
+> lookup fails on casefolded directory, it may affect performance
+> for scenarios: a) create a new file w/ filename it doesn't exist
+> in directory, b) lookup a file which may be removed.
 > 
-> cat /proc/fs/f2fs/<dev>/inject_stats
-> fault_type              injected_count
-> kmalloc                 0
-> kvmalloc                0
-> page alloc              0
-> page get                0
-> alloc bio(obsolete)     0
-> alloc nid               0
-> orphan                  0
-> no more block           0
-> too big dir depth       0
-> evict_inode fail        0
-> truncate fail           0
-> read IO error           0
-> checkpoint error        0
-> discard error           0
-> write IO error          0
-> slab alloc              0
-> dquot initialize        0
-> lock_op                 0
-> invalid blkaddr         0
-> inconsistent blkaddr    0
-> no free segment         0
-> inconsistent footer     0
+> This patch supports to disable linear lookup fallback, so, once there
+> is a solution for commit 5c26d2f1d3f5 ("unicode: Don't special case
+> ignorable code points") to fix red heart unicode issue, then we can
+> set an encodeing flag to disable the fallback for performance recovery.
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev,v2,1/2] f2fs: add a proc entry show inject stats
-    https://git.kernel.org/jaegeuk/f2fs/c/e073e9278983
-  - [f2fs-dev,v2,2/2] f2fs: fix to update injection attrs according to fault_option
-    https://git.kernel.org/jaegeuk/f2fs/c/2be96c2147e2
+  - [f2fs-dev,v2] f2fs: support to disable linear lookup fallback
+    https://git.kernel.org/jaegeuk/f2fs/c/51dc491a0855
 
 You are awesome, thank you!
 -- 
