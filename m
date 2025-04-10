@@ -1,74 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC8C1D5ADE;
-	Thu, 10 Apr 2025 22:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464B11D5ADE
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744325266; cv=none; b=YzxZ5U3ZmsbvVg3VwzU/NJYUQ9plyNhtqCtsphuhv8RNoG94QdnXkH++LwEJaQkDUpBbKqDIPo3Go4kZyygW2lRSzW3xf42v1KMbVdenI2tJbzRck8TN/MBGXasKJgQOR4eJ4vOKW1vFquPUems1cwqXsr5LHko9N41APqc1SAM=
+	t=1744325485; cv=none; b=D8MUF7ygelfPZau8Dgsk4Bmhsj44/oF8lvyVlFso7sklCtJrgKDZ2633hXRvAYdK7EWY49j2eZzDy54cBAqKLb6WPirAuyxf2TmX5C2elM9i/oTJSDIG5ZY5rHK5Ra6r2ejgU2ExiCNr5KxohMHtiisL9GjWAT8ZQo9ISXErO54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744325266; c=relaxed/simple;
-	bh=1tnfPuvkdBHhkMd126G0IxK9k3gsj3KHkqYbgp6rqwk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=t9VJB7dKsIqJ0fR3u5VO/GgfvMZXiTtgIulRHQBTRfTcBkvvq1B3VBSO1sWk60QvWpneBY3h4QknNWYr9lU0lHrf/rqu6IX7NDuA276YqQjhgrRA/6OENHkz6qYaqBiH0RN+cxlCIPmee0BamBXER1ak9ibAwwVjmn3NdsmOaUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=e6xef16q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744325485; c=relaxed/simple;
+	bh=Ug9WLwlJeRwqilcFUM5UvOs3MgA+hQUuC8+jSXObsH0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=WP+8llYVXAyKSqHMAoEAliimv6uuc6SZGmD5GlFt8TWVhsAIJjGkkpGaoH+JvhGeAnpmr/ckmo7mLER1Xa5ewtEZRTU6Fo72J7eJS0F46AJv5tobqU/Daquc3XuFK06UJscJ4280jIZeFrK/JlVhWN7ZefthkjD31MQEc0FVD5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pa5xStZ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="e6xef16q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72DF3C4CEDD;
-	Thu, 10 Apr 2025 22:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744325266;
-	bh=1tnfPuvkdBHhkMd126G0IxK9k3gsj3KHkqYbgp6rqwk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e6xef16qlSCuaWmvesXMrxudpX3PdJoqdNQrXzsVNJrRRrc/hIgkchadNM34Ppb4j
-	 YRP22ogIXwogTnAqDkh7D1n1YtKcQftorM0XAqg0S2/V4Yun6qCg+vGECTW9UKKua2
-	 l9Tu9D3P64Os0dK/iz7clScFQuOJTR8wIZOF5Qj8=
-Date: Thu, 10 Apr 2025 15:47:44 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Hugh Dickins
- <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>, Guenter Roeck
- <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>, Jeremy Fitzhardinge
- <jeremy@goop.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kasan-dev@googlegroups.com, sparclinux@vger.kernel.org,
- xen-devel@lists.xenproject.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] mm: Protect kernel pgtables in
- apply_to_pte_range()
-Message-Id: <20250410154744.44991b2abe5f842e34320917@linux-foundation.org>
-In-Reply-To: <Z/fauW5hDSt+ciwr@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <cover.1744128123.git.agordeev@linux.ibm.com>
-	<ef8f6538b83b7fc3372602f90375348f9b4f3596.1744128123.git.agordeev@linux.ibm.com>
-	<Z/fauW5hDSt+ciwr@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pa5xStZ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9404C4CEDD;
+	Thu, 10 Apr 2025 22:51:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744325484;
+	bh=Ug9WLwlJeRwqilcFUM5UvOs3MgA+hQUuC8+jSXObsH0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=pa5xStZ60dxv9JeE/qb4ZatL2X8yCiC4rbl7yVOV9lZenGaIvhd1IrKkiJBveyj71
+	 YLvm4BwWSTAGM3qnjahmH8p7Gg9wGDCK91mGkuf9uIJYrJr3XfEV8TzkVEXN5ttB3f
+	 FeC9clIJZzQddDXErSeikiXsn52IixTJQiXDucJgkyE3rYaMERZlsvKKZeV6OETKVT
+	 PYdgftFpI5E/h+GKF/zqzVIyOi0bcwdorgL3uUwoo6yM0cjuGCqs7M7W1XRJ4Eigsp
+	 ggpnU2oVvCg81EUs8uOXcL0Z6oUWOfkHF5ZQa8xPQlUr7qQjmjcO+oNYo/ssE9xDah
+	 8LkWIBVjh2lKw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7123D380CEF4;
+	Thu, 10 Apr 2025 22:52:03 +0000 (UTC)
+Subject: Re: [GIT PULL] objtool fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Z_gyLithD84kC30H@gmail.com>
+References: <Z_gyLithD84kC30H@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Z_gyLithD84kC30H@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2025-04-10
+X-PR-Tracked-Commit-Id: 87cb582d2f55d379ce95b5bcc4ec596e29b0a65e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 54a012b6223580c74b77f3dc2a7c6b3c29084d18
+Message-Id: <174432552212.3849546.746624842195787097.pr-tracker-bot@kernel.org>
+Date: Thu, 10 Apr 2025 22:52:02 +0000
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Apr 2025 16:50:33 +0200 Alexander Gordeev <agordeev@linux.ibm.com> wrote:
+The pull request you sent on Thu, 10 Apr 2025 23:03:42 +0200:
 
-> On Tue, Apr 08, 2025 at 06:07:32PM +0200, Alexander Gordeev wrote:
-> 
-> Hi Andrew,
-> 
-> > The lazy MMU mode can only be entered and left under the protection
-> > of the page table locks for all page tables which may be modified.
-> 
-> Heiko Carstens noticed that the above claim is not valid, since
-> v6.15-rc1 commit 691ee97e1a9d ("mm: fix lazy mmu docs and usage"),
-> which restates it to:
-> 
-> "In the general case, no lock is guaranteed to be held between entry and exit
-> of the lazy mode. So the implementation must assume preemption may be enabled"
-> 
-> That effectively invalidates this patch, so it needs to be dropped.
-> 
-> Patch 2 still could be fine, except -stable and Fixes tags and it does
-> not need to aim 6.15-rcX. Do you want me to repost it?
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2025-04-10
 
-I dropped the whole series - let's start again.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/54a012b6223580c74b77f3dc2a7c6b3c29084d18
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
