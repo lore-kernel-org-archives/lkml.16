@@ -1,53 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E652580C8
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF063256C68;
+	Thu, 10 Apr 2025 09:24:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277093; cv=none; b=i3Nyvatx5tx2f2LKPi5tePGyVWyos//fXyLwqUBdyyvJw/MVYDM4+UpuEe4GhdkUr0pC/6FtsvUIdxKh5Z5koig1SfikUqVWfHaoqKA2CbwOFhRqrAgDkxQ7VercYGbR4P5SGLTOTorjrkGMct9d+u3QGJhfSCaazLvriUUxGfQ=
+	t=1744277094; cv=none; b=SEVZJE2jvRQZvzDsu5SYuJfW6XZGleMY7iz6jTt7J8BV5YT0ZcZqP8bcLDWuni3pES4ei42XGkBU1QVcHvww7maG0oWN39n6mbaJT2SHacMfAzBLci0E8QSRwFEkPKoIuyD/VtuuJ7PAA42blERD7WOADIAZjoO4ZrrRmG8HkQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277093; c=relaxed/simple;
-	bh=s0ByrIZGehzFenjo/aRbEBhVdxZiQ2oWe2UfFc3+t0g=;
+	s=arc-20240116; t=1744277094; c=relaxed/simple;
+	bh=3P7s4nXmSskx7iFVqJGduWVlN7qiQQvgN5d+ysuJyiI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q6mZ+wS2s9+TNjsN5FptPLuakDC/vUlOMZ8Sh7G0hv0wMmNC/LTf3En4O4RpaX+ZgR/eLUofJOS8s1VXq7r4KnFWfXgk4QIBMBLlft8cqVqMBVwq6RzMJGn3CjIwOX/MxuzeIJ1SP301emaxbQkz2wzWcOsUdAMuPU0sTsR7tcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLePQnGg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=c6WAKrGTQhobSbwfKVe+eojL5thobZYhWeDcK5DQNKAREktpqnOLqlab3q/14wjTcSbZEZRITWhy2SII7tED4n4154yKJLSwvTj9fyZcB78qjn5ppSEfhbspNTEUumN8QplueiXnIfOs6PCm55krSDaap1ekJV4+QUcO7eMV85w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G99ccvzB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLePQnGg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D99BC4CEE3;
-	Thu, 10 Apr 2025 09:24:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G99ccvzB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF2DC4CEE9;
+	Thu, 10 Apr 2025 09:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744277093;
-	bh=s0ByrIZGehzFenjo/aRbEBhVdxZiQ2oWe2UfFc3+t0g=;
+	bh=3P7s4nXmSskx7iFVqJGduWVlN7qiQQvgN5d+ysuJyiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DLePQnGgiLJYrpj1HRDUZ6LmANlDNEUvDXw+stzAa+SqQUbkGm+0aD0R8FP2c1g1K
-	 MPx7HlTw5dHwhWFYuAa1hnN612K8KBeZBeRqEFSFci+YlTVAC/+y7rVYVzLyY/2hRJ
-	 fIuUhF0klYPiLsLrY8AAVKvapJrKJphCIGoTJUpZuUltoek1P65283sVazaNjq0UCn
-	 JCLP9HBIW25GtClpZwp/wjfQ4kWqPcPI3vlP1hMFbE9a1RsmuQOO162l/TMOwVSv0d
-	 pk/XWm93I6X2ls1VaKx3LuyyjiETLAI2/FmXAlFHhUCDKvzDmuGLX6ymgrBrQnx1yC
-	 irjVxyh+HX6sA==
-From: alexs@kernel.org
-To: 
-Cc: linux-kernel@vger.kernel.org,
-	Alex Shi <alexs@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Tejun Heo <tj@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH 3/4] sched/isolation: merge housekeeping_cpu() and housekeeping_test_cpu()
-Date: Thu, 10 Apr 2025 17:24:18 +0800
-Message-ID: <20250410092423.9831-3-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250410092423.9831-1-alexs@kernel.org>
-References: <20250410092423.9831-1-alexs@kernel.org>
+	b=G99ccvzBekwF9w28ZdrT3WI90UdaES2VHm6CttD7Z3rn10sY7nJBSVjBweaIBtSBz
+	 du7leLWJhVQRElmAZ+QWxL6MM1c9xjK9xurwfHmTWf4rBsj4SrqH2xgHTtlAWZyc8m
+	 R701q5aFobVxj/Mgn244Kus6EqysQ5ITd2sT8irG140N3vX3HC2pAOTTuWxHMfshsg
+	 mBlu5qQIy6UZ2fNtBOwi3YTUReLyAvIVmGzdC9LflXh5eVQxd5cgvDDFITTV54rUbS
+	 BJkuBdN6GqLzGBeGyrRlw1xTN/hy9hz7DywZyN0CAzHcpWBGAloL5P84pp2OYRwPf+
+	 jhIt5jr10fNmA==
+From: Philipp Stanner <phasta@kernel.org>
+To: Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	Philipp Stanner <phasta@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/3] drm/nouveau: Prevent signaled fences in pending list
+Date: Thu, 10 Apr 2025 11:24:17 +0200
+Message-ID: <20250410092418.135258-3-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250410092418.135258-2-phasta@kernel.org>
+References: <20250410092418.135258-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,110 +56,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Alex Shi <alexs@kernel.org>
+Nouveau currently relies on the assumption that dma_fences will only
+ever get signaled through nouveau_fence_signal(), which takes care of
+removing a signaled fence from the list nouveau_fence_chan.pending.
 
-Since the function just call housekeeping_test_cpu() without doing any other
-things, we could just merge them together with name housekeeping_cpu();
+This self-imposed rule is violated in nouveau_fence_done(), where
+dma_fence_is_signaled() (somewhat surprisingly, considering its name)
+can signal the fence without removing it from the list. This enables
+accesses to already signaled fences through the list, which is a bug.
 
-Signed-off-by: Alex Shi <alexs@kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
+In particular, it can race with nouveau_fence_context_kill(), which
+would then attempt to set an error code on an already signaled fence,
+which is illegal.
+
+In nouveau_fence_done(), the call to nouveau_fence_update() already
+ensures to signal all ready fences. Thus, the signaling potentially
+performed by dma_fence_is_signaled() is actually not necessary.
+
+Replace the call to dma_fence_is_signaled() with
+nouveau_fence_base_is_signaled().
+
+Cc: <stable@vger.kernel.org> # 4.10+, precise commit not to be determined
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- include/linux/sched/isolation.h | 19 +++++++------------
- kernel/sched/isolation.c        |  4 ++--
- kernel/workqueue.c              |  2 +-
- 3 files changed, 10 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-index 231bc5766f76..90e46440fc85 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -30,7 +30,7 @@ extern int housekeeping_any_cpu(enum hk_type type);
- extern const struct cpumask *housekeeping_cpumask(enum hk_type type);
- extern bool housekeeping_enabled(enum hk_type type);
- extern void housekeeping_affine(struct task_struct *t, enum hk_type type);
--extern bool housekeeping_test_cpu(int cpu, enum hk_type type);
-+extern bool housekeeping_cpu(int cpu, enum hk_type type);
- extern void __init housekeeping_init(void);
- 
- #else
-@@ -50,26 +50,21 @@ static inline bool housekeeping_enabled(enum hk_type type)
- 	return false;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
+index 7cc84472cece..33535987d8ed 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fence.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+@@ -274,7 +274,7 @@ nouveau_fence_done(struct nouveau_fence *fence)
+ 			nvif_event_block(&fctx->event);
+ 		spin_unlock_irqrestore(&fctx->lock, flags);
+ 	}
+-	return dma_fence_is_signaled(&fence->base);
++	return test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->base.flags);
  }
  
--static inline void housekeeping_affine(struct task_struct *t,
--				       enum hk_type type) { }
--
--static inline bool housekeeping_test_cpu(int cpu, enum hk_type type)
-+static inline bool housekeeping_cpu(int cpu, enum hk_type type)
- {
- 	return true;
- }
- 
-+static inline void housekeeping_affine(struct task_struct *t,
-+				       enum hk_type type) { }
-+
- static inline void housekeeping_init(void) { }
- #endif /* CONFIG_CPU_ISOLATION */
- 
--static inline bool housekeeping_cpu(int cpu, enum hk_type type)
--{
--	return housekeeping_test_cpu(cpu, type);
--}
--
- static inline bool cpu_is_isolated(int cpu)
- {
--	return !housekeeping_test_cpu(cpu, HK_TYPE_DOMAIN) ||
--	       !housekeeping_test_cpu(cpu, HK_TYPE_TICK) ||
-+	return !housekeeping_cpu(cpu, HK_TYPE_DOMAIN) ||
-+	       !housekeeping_cpu(cpu, HK_TYPE_TICK) ||
- 	       cpuset_cpu_is_isolated(cpu);
- }
- 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 81bc8b329ef1..e93776740725 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -73,14 +73,14 @@ void housekeeping_affine(struct task_struct *t, enum hk_type type)
- }
- EXPORT_SYMBOL_GPL(housekeeping_affine);
- 
--bool housekeeping_test_cpu(int cpu, enum hk_type type)
-+bool housekeeping_cpu(int cpu, enum hk_type type)
- {
- 	if (static_branch_unlikely(&housekeeping_overridden))
- 		if (housekeeping.flags & BIT(type))
- 			return cpumask_test_cpu(cpu, housekeeping.cpumasks[type]);
- 	return true;
- }
--EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
-+EXPORT_SYMBOL_GPL(housekeeping_cpu);
- 
- void __init housekeeping_init(void)
- {
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index bfe030b443e2..69a02c9e53fb 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2518,7 +2518,7 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
- 	if (housekeeping_enabled(HK_TYPE_TIMER)) {
- 		/* If the current cpu is a housekeeping cpu, use it. */
- 		cpu = smp_processor_id();
--		if (!housekeeping_test_cpu(cpu, HK_TYPE_TIMER))
-+		if (!housekeeping_cpu(cpu, HK_TYPE_TIMER))
- 			cpu = housekeeping_any_cpu(HK_TYPE_TIMER);
- 		add_timer_on(timer, cpu);
- 	} else {
+ static long
 -- 
-2.47.1
+2.48.1
 
