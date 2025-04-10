@@ -1,138 +1,155 @@
-Received: from server4.hayhost.am (server4.hayhost.am [2.56.206.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A922036ED
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=2.56.206.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2839A204C39;
+	Thu, 10 Apr 2025 07:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268549; cv=none; b=dspt5yYBmT/lzfNT2xsOnYVfjmvJpnbdh63NkbLsq8ePFz8Wrm6uGZzRBzneuGZh0xaCshsJHyUui1lYRzXJ/waJ2o4zZlmDZMki8qArdMAjuEcSpWIjIIWHTTbjl5YZfYX1guhW8TzzNGbQy5D4kUzybqvam8TCX1bdKZy70uk=
+	t=1744268558; cv=none; b=llGr8MhASjSiU2S+PbQtfyrTThTNduveuwCjJlgqvSEi9fwvRQHaSF5bVTwgZer1pSaZ0ArC//RU58ADNuuTSA2vWIAX5gskH8lBA4vaggGk3TX5CvIgo2tjiJR7QtHHQL7HUpERZeqYnSQNQEXCIH9G//ZnQcrzJkGNVari4fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744268549; c=relaxed/simple;
-	bh=Ty3wfbkYGid/c8LJyC7C9XKcQvbGvUAoykWgPvfRXS0=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=VWF/+Lus5I8QePwYOUNpa43vwF/5c9yluJcFEaTSdvmkIfLFtfW1Xe4HuNY7NsBhTn/nZoXFW8MgBWb4CKdfVepeHBR5kU7vIFJPytY5BwkFjPncsancG3USx6/+2xjch7nscXXQ1X80cpiGBaV51LNbFf+FdBqXJ0Fq/YNkSeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am; spf=pass smtp.mailfrom=beldev.am; dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b=PM2B6bWS; arc=none smtp.client-ip=2.56.206.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beldev.am
+	s=arc-20240116; t=1744268558; c=relaxed/simple;
+	bh=2TX+VQKkEDPh4jVMYOB8FirTibI+S3VlTt0lpJQiw1M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fWCxR/LrJjYopo5j0fsl0DyS0Q3t6OQJAHJQmKi9/JKESauVUQp9sbxIiJpKtO7EnPpMtir1JiE6dnxE8lM49wdFlC18BWu8N5ooO+pQMrjftyYbTX0g4HadionfxYe9TnLv4PluH4FEqG64eoSqivA59mOksHwqGfWP1HzjY/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W0thslPk; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b="PM2B6bWS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=beldev.am;
-	s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
-	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=DWL82tPIOM6tWzfIcLAFHYbFC9Hsnba5uU2kE1Kr1Jw=; b=PM2B6bWS971oxZKQ9UzRyHAxKW
-	MO/d4O00gCyQr/ts0I6+D55yytt5BNEbPAA29vYe2lBhv71AEjF3EGkNAMxriqMkrkVxZyXCKt8c0
-	pfRsw0y2cea25Zol6g3e3s4FdmgaRuH6jzu5lai1tUF6paCeBIxqg4gzmBrj/S3gelsRQuWyi1bEV
-	JPd5QIsMR48uVAbie/Iwu1hlEUkt/0dEeYHKDQ/B1IVzm3x27yPmfxTXMSAcjsm93KtTno9vBeQui
-	prYW8hNWU11MT1nfAEGxq06UjK0OfHGEJ6TEDTArFtMr5mbSXyb5AKaNTrtSn5cBT0G2NxDAMGSW2
-	NOTD/3pg==;
-Received: from [::1] (port=39210 helo=server4.hayhost.am)
-	by server4.hayhost.am with esmtpa (Exim 4.98.1)
-	(envelope-from <igor.b@beldev.am>)
-	id 1u2lvl-00000000CQ2-2CCd;
-	Thu, 10 Apr 2025 11:02:33 +0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0thslPk"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so425168b3a.1;
+        Thu, 10 Apr 2025 00:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744268556; x=1744873356; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NK6DKsleLDedEDUoOJ6FfHyENnTO114saQVV2MVI27k=;
+        b=W0thslPku+e69RSl8BIUJnJnmfGMkZFxvDxhXDoIQ6Wwf6R7YO4mmW/zhhYHKEqV6f
+         QELLOp2tl1JSuhHSQSUaW9iv6eti068/1TqqNoU+eoofv3E7p8EuW8id1JLRYuMfj1AO
+         s6mtpxD5cJV7hf0YdZ+0AJcVQVcdZtnQLP0djbvWu7ZHzHJvDquhlOLviJgbeeyfS723
+         nEHHInDc1Z3NJ6dBsBX9UVeH+K75u4z1j4uN4PesUBv/zSLEy3MIUIGgyXm/nZwti2e7
+         t47Q8Bd/n4CI9uTvw/gcpKI70fEA2tNMZ87vlXvu3Ei8UMEM7RyKLpF1onENZ+eNj6yM
+         +lhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744268556; x=1744873356;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NK6DKsleLDedEDUoOJ6FfHyENnTO114saQVV2MVI27k=;
+        b=qYdpO0+ChCk2BOiKXks+T4YMKkUNuQFLgbHOUg0Fr3WceT1O3bTmswdRCqHqfnhncq
+         l7yEsgNT31Oc8IZaQstP+Xi6cgzsk759Z+liVpHZVaeneAWKoX/6wB7lG1YTC8U/drDh
+         gkXxQm5iFaxJs5HTjFE7DEgB7MJWe8iwYZXnmROD95O3/9+bNFr/xIof5rd4OvmLlDGG
+         wMz5rP+kOOicC1FShIpPT2+a/QCz6x5dbzQnTuS8rxBBnHSov05nzNzamgAdBmj/cUBp
+         Kd1/Od0q9N261g6SCnVusbo/PKZX/0G/xNgls7x3VH8gOtpfWa9hVI+BFel6RmgKGbUa
+         1n+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWAO99zT5NqvZaEoWKGAKi0pDkh4JVgtOVQ401pwDaCrDvNr12v0H2yfpdH2izE46BZ+5/nT2sdpeRCRL3c@vger.kernel.org, AJvYcCXIrXYr3H7pwZ9LMLmTaFjwn8m1mQ6rlJv/bNqTKzHloWSVOZtGe2nM1igOWdtC7qZB97/HDvKY@vger.kernel.org, AJvYcCXcq38UwLXmm9Rsk6bm+UwnETysxRhSaAF4aMdHUbqzoh2mquxPBvFWPvBIlozLo6Ttlp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBhKf2NWV723cB2/JWa/FKqSSxO6/iYEoxwDmoehpqNNxDot1m
+	6IbF6HDroVCBaDuGM17eOz+cpoTCveCIu9xrQJ28HePI9IYmTY/3
+X-Gm-Gg: ASbGncsbGok7SO3XfLcEIFXqWD3OTlgIQ0OExpkQAITl2epALHCHYvs6Qd6oNlF3Pcy
+	lK+mT9C1h9szPg5PEetFR2vIn4W0Oq7J69e6CXFZU4bvY/5nCTI1LWhVMbUHTqjX/twftCoKW4Q
+	gXAijeLz5YaQ7gN/+DMQmgvh8r7tcaSTn1LPdmzYXzERJaGvbuU/DWn8Crq/HMv/6kO7ofz4xXS
+	vwUh1HHXJ6qnyUiLoVi0D91bm9ZLnXt4P9Qjtlw4hKWntC68SaSIliz/ThEAbDdzpRmnfULBJXg
+	8wpj8GnVh91I/YHdbWrweawrFh1MJ9qO08qeQk8c/GlE/92maA2ipUPTB9DaoKhpmcKofw2I2Pz
+	WOk/Iv4lXfvZVaaG8+Fc=
+X-Google-Smtp-Source: AGHT+IHR7wErMqs6toXfdLAhBSnptfh78wJMNtMX9vyDLNp19zuG+N7r2GGC3hWvA1EXN0f9XAM0vQ==
+X-Received: by 2002:a05:6a20:1587:b0:1f5:8678:183d with SMTP id adf61e73a8af0-20169480c0fmr3203289637.14.1744268556356;
+        Thu, 10 Apr 2025 00:02:36 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:959f:bd4a:33b6:cab1? ([2001:ee0:4f0e:fb30:959f:bd4a:33b6:cab1])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a12c9c05sm2342598a12.42.2025.04.10.00.02.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 00:02:35 -0700 (PDT)
+Message-ID: <b7b1f5de-7003-4960-a9d1-883bf2f1aa77@gmail.com>
+Date: Thu, 10 Apr 2025 14:02:27 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 10 Apr 2025 11:02:31 +0400
-From: Igor Belousov <igor.b@beldev.am>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Nhat Pham <nphamcs@gmail.com>, vitaly.wool@konsulko.se,
- linux-mm@kvack.org, akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- Shakeel Butt <shakeel.butt@linux.dev>, Yosry Ahmed <yosryahmed@google.com>
-Subject: Re: [PATCH v2] mm: add zblock allocator
-In-Reply-To: <6e1c6b20481c2cb41930d37da4fe8aeb@beldev.am>
-References: <1743810988579.7.125720@webmail-backend-production-7b88b644bb-5mmj8>
- <0dbbbe9d17ed489d4a7dbe12026fc6fd@beldev.am>
- <f8063d3fa7e148fecdda82e40b36e10a@beldev.am>
- <CAKEwX=NMjfC1bKTVsB+C7eq3y=O0x3v8MW7KxUfhpg6UUr23rw@mail.gmail.com>
- <f023ba8341f9b44610cc4ac00cf0ee33@beldev.am>
- <CAKEwX=MXD9EB242WkB50ZBmZgV-CwrAHp=_oE+e=7yHDfrMHtg@mail.gmail.com>
- <3f013184c80e254585b56c5f16b7e778@beldev.am>
- <20250408195533.GA99052@cmpxchg.org>
- <6e1c6b20481c2cb41930d37da4fe8aeb@beldev.am>
-User-Agent: Roundcube Webmail/1.6.9
-Message-ID: <019035e5ecae12390048b73c042ec54d@beldev.am>
-X-Sender: igor.b@beldev.am
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server4.hayhost.am
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - beldev.am
-X-Get-Message-Sender-Via: server4.hayhost.am: authenticated_id: igor.b@beldev.am
-X-Authenticated-Sender: server4.hayhost.am: igor.b@beldev.am
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] virtio-net: disable delayed refill when pausing rx
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ "Michael S . Tsirkin" <mst@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ virtualization@lists.linux.dev
+References: <20250404093903.37416-1-minhquangbui99@gmail.com>
+ <1743987836.9938157-1-xuanzhuo@linux.alibaba.com>
+ <30419bd6-13b1-4426-9f93-b38b66ef7c3a@gmail.com>
+ <CACGkMEs7O7D5sztwJVn45c+1pap20Oi5f=02Sy_qxFjbeHuYiQ@mail.gmail.com>
+ <4195db62-db43-4d61-88c3-7a7fbb164726@gmail.com>
+Content-Language: en-US
+In-Reply-To: <4195db62-db43-4d61-88c3-7a7fbb164726@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> Hi Johannes,
-> 
->>> Sure. zstd/8 cores/make -j32:
->>> 
->>> zsmalloc:
->>> real	7m36.413s
->>> user	38m0.481s
->>> sys	7m19.108s
->>> Zswap:            211028 kB
->>> Zswapped:         925904 kB
->>> zswpin 397851
->>> zswpout 1625707
->>> zswpwb 5126
->>> 
->>> zblock:
->>> real	7m55.009s
->>> user	39m23.147s
->>> sys	7m44.004s
->>> Zswap:            253068 kB
->>> Zswapped:         919956 kB
->>> zswpin 456843
->>> zswpout 2058963
->>> zswpwb 3921
->> 
->> So zstd results in nearly double the compression ratio, which in turn
->> cuts total execution time *almost in half*.
->> 
->> The numbers speak for themselves. Compression efficiency >>> allocator
->> speed, because compression efficiency ultimately drives the continuous
->> *rate* at which allocations need to occur. You're trying to optimize a
->> constant coefficient at the expense of a higher-order one, which is a
->> losing proposition.
-> 
-> Actually there's a slight bug in zblock code for 4K page case which 
-> caused storage inefficiency for small (== well compressed) memory 
-> blocks. With that one fixed, the results look a lot brighter for 
-> zblock:
-> 
-> 1. zblock/zstd/8 cores/make -j32 bzImage
-> real	7m28.290s
-> user	37m27.055s
-> sys	7m18.629s
-> Zswap:            221516 kB
-> Zswapped:         904104 kB
-> zswpin 425424
-> zswpout 2011503
-> zswpwb 4111
+On 4/9/25 13:44, Bui Quang Minh wrote:
+> On 4/8/25 14:34, Jason Wang wrote:
+>> On Mon, Apr 7, 2025 at 10:27 AM Bui Quang Minh 
+>> <minhquangbui99@gmail.com> wrote:
+>>> On 4/7/25 08:03, Xuan Zhuo wrote:
+>>>> On Fri,  4 Apr 2025 16:39:03 +0700, Bui Quang Minh 
+>>>> <minhquangbui99@gmail.com> wrote:
+>>>>> When pausing rx (e.g. set up xdp, xsk pool, rx resize), we call
+>>>>> napi_disable() on the receive queue's napi. In delayed 
+>>>>> refill_work, it
+>>>>> also calls napi_disable() on the receive queue's napi. This can 
+>>>>> leads to
+>>>>> deadlock when napi_disable() is called on an already disabled 
+>>>>> napi. This
+>>>>> scenario can be reproducible by binding a XDP socket to virtio-net
+>>>>> interface without setting up the fill ring. As a result, 
+>>>>> try_fill_recv
+>>>>> will fail until the fill ring is set up and refill_work is scheduled.
+>>>> So, what is the problem? The refill_work is waiting? As I know, 
+>>>> that thread
+>>>> will sleep some time, so the cpu can do other work.
+>>> When napi_disable is called on an already disabled napi, it will sleep
+>>> in napi_disable_locked while still holding the netdev_lock. As a 
+>>> result,
+>>> later napi_enable gets stuck too as it cannot acquire the netdev_lock.
+>>> This leads to refill_work and the pause-then-resume tx are stuck 
+>>> altogether.
+>> This needs to be added to the chagelog. And it looks like this is a 
+>> fix for
+>>
+>> commit 413f0271f3966e0c73d4937963f19335af19e628
+>> Author: Jakub Kicinski <kuba@kernel.org>
+>> Date:   Tue Jan 14 19:53:14 2025 -0800
+>>
+>>      net: protect NAPI enablement with netdev_lock()
+>>
+>> ?
+>
+> I'm not aware of this, will update the fix tags in the next patch.
+>
+>> I wonder if it's simpler to just hold the netdev lock in resize or xsk
+>> binding instead of this.
+>
+> That looks cleaner, let me try that approach.
 
-For the sake of completeness I re-ran that test with the bugfix and LZ4 
-(so, zblock/lz4/8 cores/make -j32 bzImage) and I got:
-real	7m44.154s
-user	38m26.645s
-sys	7m38.302s
-zswpin 648108
-zswpout 2490449
-zswpwb 9499
+We need to hold the netdev_lock in the refill work too. Otherwise, we 
+get this race
 
-So there's *no* significant cut with zstd in execution time, even on a 
-Ryzen 9 and that invalidates your point. Sorry for the past confusion, 
-it was an honest mistake from our side. If zsmalloc didn't OOM with lz4 
-we probably would have seen the discrepancy and found the bug earlier.
+refill_work                                xdp bind
+napi_disable()
 
-And on ARM64 and RISC-V targets we have run the tests on, zstd is slower 
-than lz4.
+                                             netdev_lock(dev)
+                                             napi_disable_locked() <- hang
+napi_enable() <- cannot acquire the lock
 
-/Igor
+
+I don't like the idea to hold netdev_lock in refill_work. I will reply 
+with the patch for you to review.
+
+Thanks,
+Quang Minh.
+
