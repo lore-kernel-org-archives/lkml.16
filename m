@@ -1,47 +1,50 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1951EFFAD;
-	Thu, 10 Apr 2025 16:55:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554541EF376;
+	Thu, 10 Apr 2025 16:55:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744304111; cv=none; b=TbqN4H6Ck9j4pHgmFW6LnBdpz+hLlrr3/40y2sKjUrc5pVRcmG6F/C54hCac+nQ53znZKjIRIP75ocoxPKZbbBBCA3bjjfzU2KtnVxUuePeFLvdVc7X6JxZqx2BYAEJkmMaRBuY0cBQFth0Yge/te3Zuv3gyQGnhr3kY5ktaahE=
+	t=1744304122; cv=none; b=O6v6q5VZEozkrfTLMP4awYzKmJx/AvbnQCVTiwCLu/fw2yn7sLkDnQjJ/c4eoc0OufejVMw6DF2ezmIXNFObQ7aKG6j86OPn6UYuwbpg2HxryjVNS7gJ5jRNe1j4murYcX3AnFlSfUNu3EGgZseQIbJ1U8SZ9SAyKwWGA6MjlM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744304111; c=relaxed/simple;
-	bh=jr7IvKeCXX2HCm0pjy23wiCb6QGdEzIViDoHGwXVNK0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rciKmi1YMt82Lc2RHcVr5EUt0A3h4iMA1SMnh8FhQg35y+Se4CPsiOh5xFhgJT9JlU+d0JxfjVy6KhvCssBOsGpINikhPj15qUhCcVwgv7qP/Gpi9u0PESMD74kKzVEFWaKXwEaSZtv5Ofr3krDXSVUHDdrdVFBR9RoDd5z4ZvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=AiHIN+8C; arc=none smtp.client-ip=212.227.17.20
+	s=arc-20240116; t=1744304122; c=relaxed/simple;
+	bh=qIjKVz0o/qsw/7k4DyWMBBl+ZLuJOgLNmBrx66+OnH8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Nzo81sJYi9CxsESJy3rE+13i9hcoOujiqLW1dOXm+vggd7qMFii4czV6CVHjY71r59oep8fGg3fHVRnNOmgBxOtcsFuljTZonO68fE17lzQL0Ui58p/3HAe4V6T6MDJJEHQ5i4RaiOhTqkVB440Z3gVLTi8WuMIezoIR4DUihjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MdYsLCof; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="AiHIN+8C"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MdYsLCof"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744304107; x=1744908907; i=w_armin@gmx.de;
-	bh=E5IEqst5QifiNmEPxnMLO7fV0b71J9ICRr3urOpzNUY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
+	s=s31663417; t=1744304111; x=1744908911; i=w_armin@gmx.de;
+	bh=XKDVlJ1S472IrTqYQzZq0rnJAxNsudD3NR6aRC7hpz4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=AiHIN+8CQEK7bQK7ReJH5JbtEtg6EpdT8CUFJWJj5uoMKerF84zKa32AtDRyKIr+
-	 7aUwYpXPDG6VLIvVduAfy9onzWouD1aWhksyYLtD3R0s3uWL7mraWCshOcSBc8rrE
-	 Y8zIEikYP1Koq5FIVkCZOkpYlvGLYNWEuX8BIAO45HBVSB6QHMfqZMIMSXCGJs3TL
-	 KhuDCGchG+CZf3xzW/Jv1bVqkmN2QwQTLevqzDDFImVlKODti0QBolZvAbAU8EUdp
-	 SKYFz5IW0QzdZrzeYmUsMEiTjw2D+vKblkVEI+7jDDpvGc91nGDZXH4WLRq6T/q/v
-	 cGYFXFbbIvfQAE6qlw==
+	b=MdYsLCofg7uYxpZYg79SyIr1k+0T2RM/qdpGMaKryoSe6UdmVnMa+p4GPe+/JGap
+	 LHXjFFVL98yYwvUykso/6byfNFn2f3hlLKaN0wu3L4pO64+fM4cuCrAwumSjDL2V4
+	 sX9kmSzZYecyLk3VPMhEXwrvUiWWqZ8EF0KWN7TdDr6bxH9ua4C0b6O7xtN9rO52G
+	 BXDwFFrgHActPy7ylXx+/+eQtEDvRa8e8NbadkO5NoeWXYjtd4kikNei5oteMNfkY
+	 cKXARNL6Of2AZyKoUcPJf6wyOof1dyDcuPFi89cfK5lNgE+iqiU5LNzmC8NEjkA7C
+	 WtuQBNY1F5LJlYIQMA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
  (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1Mnpnm-1tHzVI396w-00p9CE; Thu, 10 Apr 2025 18:55:06 +0200
+ 1MIwz4-1tmuSj2VK6-00Kbcc; Thu, 10 Apr 2025 18:55:11 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: rafael@kernel.org,
 	rui.zhang@intel.com
 Cc: lenb@kernel.org,
 	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] ACPI: thermal: Properly support the _SCP control method
-Date: Thu, 10 Apr 2025 18:54:53 +0200
-Message-Id: <20250410165456.4173-1-W_Armin@gmx.de>
+Subject: [PATCH 2/3] ACPI: thermal: Execute _SCP before reading trip points
+Date: Thu, 10 Apr 2025 18:54:55 +0200
+Message-Id: <20250410165456.4173-3-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250410165456.4173-1-W_Armin@gmx.de>
+References: <20250410165456.4173-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,99 +52,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QYLUBy5UNdTZv8Wdch5JKS3IJaGVumN3Dp24EqAlX9ai1MZySeu
- fLVO5rPpJ1gDvBwcTRrwC42Vt6GUeaA7qW4giynp1hLNQdO1vjh0ZAaxuBXBnK/4L6nC3ka
- BvCXsfsU3Lolc8nlyQqIvdZsShsz3g4ObkSG+6rmLeXr1p4gp2sR+ON6xCR2zDELYZByfou
- KcEVmanj0sLdzj3Kaqahg==
+X-Provags-ID: V03:K1:x/e9h8HjEkr3E6Y3rSlOCZ3HcBPAj6dDFxw075ekYpDp9OlHOGI
+ j/Byt8hTZ6FlOihWyyK1dT1dMNAeB6qA823+cjpsgV0+mKvqptUVWD+d8OLQRIOHdeA0oPd
+ a1aIsUhWIrFGJdvvPf+Rrf50eDC8bVDC55IAjoGuizdt2uIEVndeuIoFAngR9mivCl5y9LM
+ dRHMuuuTWsAwpf+CDL+og==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SoTVxWYJg2s=;dy+1h/FxkSP6TYvl7SyDb5dXVGG
- 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
- gulLjNrJJq9k/Dnje0drB4=
+UI-OutboundReport: notjunk:1;M01:P0:EWxuqpPprxk=;fTen949bYHgKA7sJfggR4UGl1CC
+ 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
+ ps5iwCYElMFwumjgY2InJ8=
 
-The ACPI specification defines an interface for the operating system
-to change the preferred cooling mode of a given ACPI thermal zone.
-This interface takes the form of a special ACPI control method called
-_SCP (see section 11.4.13 for details) and is already supported by the
-ACPI thermal driver.
+As specified in section 11.4.13 of the ACPI specification the
+operating system is required to evaluate the _ACx and _PSV objects
+after executing the _SCP control method.
 
-However this support as many issues:
+Move the execution of the _SCP control method before the invocation
+of acpi_thermal_get_trip_points() to avoid missing updates to the
+_ACx and _PSV objects.
 
- - the kernel advertises support for the "3.0 _SCP Extensions" yet the
-   ACPI thermal driver does not support those extensions. This may
-   confuse the ACPI firmware.
+Fixes: b09872a652d3 ("ACPI: thermal: Fold acpi_thermal_get_info() into its=
+ caller")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/acpi/thermal.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
- - the execution of the _SCP control method happens after the driver
-   retrieved the trip point values. This conflicts with the ACPI
-   specification:
+diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+index 0c874186f8ae..5c2defe55898 100644
+=2D-- a/drivers/acpi/thermal.c
++++ b/drivers/acpi/thermal.c
+@@ -803,6 +803,12 @@ static int acpi_thermal_add(struct acpi_device *devic=
+e)
 
-	"OSPM will automatically evaluate _ACx and _PSV objects after
-	 executing _SCP."
+ 	acpi_thermal_aml_dependency_fix(tz);
 
- - the cooling mode is hardcoded to active cooling and cannot be
-   changed by the user.
++	/*
++	 * Set the cooling mode [_SCP] to active cooling. This needs to happen b=
+efore
++	 * we retrieve the trip point values.
++	 */
++	acpi_execute_simple_method(tz->device->handle, "_SCP", ACPI_THERMAL_MODE=
+_ACTIVE);
++
+ 	/* Get trip points [_ACi, _PSV, etc.] (required). */
+ 	acpi_thermal_get_trip_points(tz);
 
-Those issues are fixed in this patch series. In the end the user
-will be able to tell the ACPI firmware wether he prefers active or
-passive cooling. This setting will also be interesting for
-applications like TLP (https://linrunner.de/tlp/index.html).
+@@ -814,10 +820,6 @@ static int acpi_thermal_add(struct acpi_device *devic=
+e)
+ 	if (result)
+ 		goto free_memory;
 
-The whole series was tested on various devices supporting the _SCP
-control method and on a device without the _SCP control method and
-appears to work flawlessly.
-
-Armin Wolf (3):
-  ACPI: OSI: Stop advertising support for "3.0 _SCP Extensions"
-  ACPI: thermal: Execute _SCP before reading trip points
-  ACPI: thermal: Allow userspace applications to change the cooling mode
-
- .../ABI/testing/sysfs-driver-thermal          |  14 ++
- MAINTAINERS                                   |   1 +
- drivers/acpi/osi.c                            |   1 -
- drivers/acpi/thermal.c                        | 129 ++++++++++++++++--
- 4 files changed, 133 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-thermal
-
+-	/* Set the cooling mode [_SCP] to active cooling. */
+-	acpi_execute_simple_method(tz->device->handle, "_SCP",
+-				   ACPI_THERMAL_MODE_ACTIVE);
+-
+ 	/* Determine the default polling frequency [_TZP]. */
+ 	if (tzp)
+ 		tz->polling_frequency =3D tzp;
 =2D-
 2.39.5
 
