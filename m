@@ -1,114 +1,261 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1E34503B
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153CC4503B;
+	Thu, 10 Apr 2025 17:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307417; cv=none; b=far8KFJ+CoEz/OKYjlVOdNfcbfmfYMicvCdybewpFZkMiqPi59dKmKyM2VC36XswEG/txyPl12PgrKiyaAcStmfb7MyuLcMIMq+F5KCKGOUlwMQ26/ctXpxjmEegTN2w5Q+qZiGXw7m18kA1CUDfy1iikY6SjNmXG/8YPXDM9lM=
+	t=1744307441; cv=none; b=l4zt7GjKA+FcG3sUQlcvmoBFupTf4Je4NKpZDz4esCFUKcnOdV01ebwOUX7aL9IZ2M3GHxM/ag8E2p0+EOsLF4FuOibwF3Bh0mcoTCz2Hj+k1cm+cHGQUV2mmimxceGFYd6z5kuYQeSnRZaKdHxmk1a+eCcOBq0BeSuJyHcFNVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307417; c=relaxed/simple;
-	bh=lY9Y1px5P/T0puiH7BaGtKHUBDN6WoqTLWKxNXRuM/E=;
+	s=arc-20240116; t=1744307441; c=relaxed/simple;
+	bh=LU5dwri1TjU740CvlReL/wlTOs+9Az6hmBvzPrhh88E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XqYIxjcg+IaBiiVtpddmPP7QrmBFUYRumUibdL8Wxf80fskQFbfoLdn20OkJDZiWd3JXQ23cmT2oN2fE3gqirCZF9BxPph7xtX0UXIjqvTwsECsXEXwOXen9zGTYMCgRcTRowGnHsZQBDvjNp6gntPPrKZIZdK/O5o3buv5ot1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kkphNOJk; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FkQwjvG3X8GNXuDrVf4cyNorCRVzXuh3zTX5NyzRvnD2kQe6af35MvDsKmjx9Q69mZYUuVD8j44n94Xu3t9a2miY92lyd0+8GAxEnQknnWTp5uF9UJlT6vztCwjWoQIZnO/+XkZXK1xvBwvlkuDu7vrQMU2TyMRJyaAmoQZaIP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=PDX8KAwg; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kkphNOJk"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2295d78b45cso16168225ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744307412; x=1744912212; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZFvKBztlvaO+hpuywxVFq1Ch6C+gHqQXzW5kBxcM2OQ=;
-        b=kkphNOJkIM3PK9y5ytq7EZKAjnuuZlCqbwdk9/HDnmyvn09DKUPpQcmUxPDMxEUQGN
-         VBmZm0I30wEfuWj+teFbNQgf4XaHVXBUykXacx5l3/YJYeQtmxRRt3sMS4j5pgbfBh/1
-         yKsOFqyv1Ga5xG0tfvDT85l9/3kVavlgL2zz0iigz+ZrD7bux/MuOGzsBuXl2RH1yE7g
-         6T193yNm7ynjZUvPVu4N4lJxKHRV4PdA4ULKjpuEfNyTP8Uhu12jOAL/Uis0F64FaAvr
-         t2tPCn/cZlGXtIPX3wGiYNYdpShZ2jMxfoc24CIX7264OCIjXu5KqIdOHsKbxNujCDmI
-         GI0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744307412; x=1744912212;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZFvKBztlvaO+hpuywxVFq1Ch6C+gHqQXzW5kBxcM2OQ=;
-        b=OCBhdP4PnyF+GGMpsvSSXR0fOUAAAVkZ9E9JHpvOkkIbzhVqpDoTGH+O/No7owJ+49
-         WB48lE3YcPceRYYzco+PHyMck2X5a3B2YBT8SZ+bPXZRIfTv/3ENhfDWbXKJqIHDW+cw
-         X4IVleam8ju8gdR9vf15KL3f/R35DCNgc0oibRGFdaJg+IVvLE4/JSn7zTdqyS70ftPq
-         4347NO3WA1ZM8MOJ68ImgPD+ROWc/vGMlfPT4FubOXFM5Jz4P4OqyMyfBer0oF3uidUE
-         qvyB40oJ/fi36EODDKIH0V0CgW5st1iFvwd8O7ET/Na9RJX4V2lW/kRJThWGetJsWfEs
-         2fzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFWLvYpG8g2S7X7NL6JZudYhvqniUwx9Rs2yu5B5bGm5HGbyUMUJmXrz4Oy8YZiLP94S5KiaUFJXICbvQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDbtooZ8SiFrmfKrGP9sno+K3cMWGFD1RjDzMecMCkjnnCINg1
-	J8ociewMDLo2BqbvrRH5BQTTWxSkj7u+bEWIjKHoV+BAleKFA1pjJrdT5oaamDs=
-X-Gm-Gg: ASbGnct4dHA0PM25p516JArnLO/cDt/1KfQVGGT0BqcqRz+DHmfG3czF8hE+eoRLViU
-	TVWluL1lNmP8KLL9mVtpuBPTGhe+UU/R6Z37iPaluKk4tnPiIqfRsc7AhWbvw81X40Q+pLnpVKZ
-	6S9kwUKi2Wy9lEic8c98YaQi3O671aKtlfXlfs4Yu+L/fCuJMahqbGdli2IxcBnUuVHMzF0uPVY
-	HapWofZy79TI4dMci4lStr507bmUXMKM8Det8EK/HF/9H4+570QIMOrKTjipC6fujQcuzjuRcBe
-	/Qey/eoEEWo+NfvQefL1+wZ8v6zBn635EmBqsVhVa6mKTIklWtJLyuEMftefmZSnyd7EoxiK8Cf
-	VtIpWgMWA3go=
-X-Google-Smtp-Source: AGHT+IFQfLjl5b/4pxjR0AKJRtL4njnVrLI7qc5hXSk6wBYhGK6iLJeFS3Z7hjVwQHKFbPW7UQz95Q==
-X-Received: by 2002:a17:902:d50e:b0:223:517a:d2e2 with SMTP id d9443c01a7336-22b42c6e367mr57462235ad.53.1744307411718;
-        Thu, 10 Apr 2025 10:50:11 -0700 (PDT)
-Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8bce5sm33652735ad.90.2025.04.10.10.50.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 10:50:11 -0700 (PDT)
-Date: Thu, 10 Apr 2025 10:49:56 -0700
-From: Sukrut Bellary <sbellary@baylibre.com>
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	Kevin Hilman <khilman@baylibre.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] dt-bindings: clock: ti: Convert to yaml
-Message-ID: <Z/gExA95AnQzxYmt@dev-linux>
-References: <20250404014500.2789830-1-sbellary@baylibre.com>
- <20250404014500.2789830-3-sbellary@baylibre.com>
- <20250409111002.5b88a127@akair>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PDX8KAwg"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1ADA2352;
+	Thu, 10 Apr 2025 19:48:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744307318;
+	bh=LU5dwri1TjU740CvlReL/wlTOs+9Az6hmBvzPrhh88E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PDX8KAwgi86ce2bRZRSSM1USB2zOndffk2GMIjRwwbDCSqGWV1F3a+IZni7iRoXln
+	 RYCqrRdwWQ2Y2IvcJWA/HS9azfvtog9PlEbC/ge0EEZyJUoa4DaurTI2AnfiVlXwoc
+	 sKXutYrzfCLnsHz2Rb4v83vflzuJZ4lomlBoCaFw=
+Date: Thu, 10 Apr 2025 20:50:10 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Tiffany Lin <tiffany.lin@mediatek.com>,
+	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+	Yunfei Dong <yunfei.dong@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, kernel@collabora.com,
+	linux-media@vger.kernel.org,
+	Sebastian Fricke <sebastian.fricke@collabora.com>
+Subject: Re: [PATCH v2 1/5] media: mc: add manual request completion
+Message-ID: <20250410175010.GF27870@pendragon.ideasonboard.com>
+References: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
+ <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-1-5b99ec0450e6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250409111002.5b88a127@akair>
+In-Reply-To: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-1-5b99ec0450e6@collabora.com>
 
-On Wed, Apr 09, 2025 at 11:10:02AM +0200, Andreas Kemnade wrote:
-> Am Thu,  3 Apr 2025 18:44:58 -0700
-> schrieb Sukrut Bellary <sbellary@baylibre.com>:
-> 
-> > This binding doesn't define a new clock binding type,
-> > it is used to group the existing clock nodes under the hardware hierarchy.
-> > 
-> > As this is not a provider clock, remove #clock-cells and
-> > clock-output-names properties.
-> > Though few clockdomain nodes in the dts use these properties,
-> > we are not fixing dts here.
-> > Clean up the example to meet the current standards.
-> > 
-> > Add the creator of the original binding as a maintainer.
-> > 
-> > Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
-> > ---
-> >  .../bindings/clock/ti/clockdomain.txt         | 25 ------------
-> >  .../bindings/clock/ti/ti,clockdomain.yaml     | 38 +++++++++++++++++++
-> 
-> I am wondering whether this should just be part of a converted version
-> of Documentation/devicetree/bindings/arm/omap/prcm.txt. I doubt there
-> is any other usage for this compatible.
-> 
+Hi Nicolas,
 
-Yes, OK. So, do you want to take this with prcm conversion? If so, I will
-drop this from v2
+Thank you for the patch.
 
-> Regards,
-> Andreas
+On Thu, Apr 10, 2025 at 11:39:56AM -0400, Nicolas Dufresne wrote:
+> From: Hans Verkuil <hverkuil@xs4all.nl>
 > 
+> By default when the last request object is completed, the whole
+> request completes as well.
+> 
+> But sometimes you want to manually complete a request in a driver,
+> so add a manual complete mode for this.
+
+I didn't immediately understand this was about delaying completion of
+the request. It would be nice to make that more explicit in the commit
+message and in the documentation of
+media_request_mark_manual_completion(). A sample use case would also
+help.
+
+> In req_queue the driver marks the request for manual completion by
+> calling media_request_mark_manual_completion, and when the driver
+> wants to manually complete the request it calls
+> media_request_manual_complete().
+> 
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> ---
+>  drivers/media/mc/mc-request.c | 38 ++++++++++++++++++++++++++++++++++++--
+>  include/media/media-request.h | 36 +++++++++++++++++++++++++++++++++++-
+>  2 files changed, 71 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
+> index 5edfc2791ce7c7485def5db675bbf53ee223d837..398d0806d1d274eb8c454fc5c37b77476abe1e74 100644
+> --- a/drivers/media/mc/mc-request.c
+> +++ b/drivers/media/mc/mc-request.c
+> @@ -54,6 +54,7 @@ static void media_request_clean(struct media_request *req)
+>  	req->access_count = 0;
+>  	WARN_ON(req->num_incomplete_objects);
+>  	req->num_incomplete_objects = 0;
+> +	req->manual_completion = false;
+>  	wake_up_interruptible_all(&req->poll_wait);
+>  }
+>  
+> @@ -313,6 +314,7 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
+>  	req->mdev = mdev;
+>  	req->state = MEDIA_REQUEST_STATE_IDLE;
+>  	req->num_incomplete_objects = 0;
+> +	req->manual_completion = false;
+>  	kref_init(&req->kref);
+>  	INIT_LIST_HEAD(&req->objects);
+>  	spin_lock_init(&req->lock);
+> @@ -459,7 +461,7 @@ void media_request_object_unbind(struct media_request_object *obj)
+>  
+>  	req->num_incomplete_objects--;
+>  	if (req->state == MEDIA_REQUEST_STATE_QUEUED &&
+> -	    !req->num_incomplete_objects) {
+> +	    !req->num_incomplete_objects && !req->manual_completion) {
+>  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+>  		completed = true;
+>  		wake_up_interruptible_all(&req->poll_wait);
+> @@ -488,7 +490,7 @@ void media_request_object_complete(struct media_request_object *obj)
+>  	    WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
+>  		goto unlock;
+>  
+> -	if (!--req->num_incomplete_objects) {
+> +	if (!--req->num_incomplete_objects && !req->manual_completion) {
+>  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+>  		wake_up_interruptible_all(&req->poll_wait);
+>  		completed = true;
+> @@ -499,3 +501,35 @@ void media_request_object_complete(struct media_request_object *obj)
+>  		media_request_put(req);
+>  }
+>  EXPORT_SYMBOL_GPL(media_request_object_complete);
+> +
+> +void media_request_manual_complete(struct media_request *req)
+> +{
+> +	unsigned long flags;
+> +	bool completed = false;
+> +
+> +	if (WARN_ON(!req))
+> +		return;
+> +	if (WARN_ON(!req->manual_completion))
+> +		return;
+> +
+> +	spin_lock_irqsave(&req->lock, flags);
+> +	if (WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
+> +		goto unlock;
+> +
+> +	req->manual_completion = false;
+> +	/*
+> +	 * It is expected that all other objects in this request are
+> +	 * completed when this function is called. WARN if that is
+> +	 * not the case.
+> +	 */
+> +	if (!WARN_ON(req->num_incomplete_objects)) {
+> +		req->state = MEDIA_REQUEST_STATE_COMPLETE;
+> +		wake_up_interruptible_all(&req->poll_wait);
+> +		completed = true;
+> +	}
+> +unlock:
+> +	spin_unlock_irqrestore(&req->lock, flags);
+> +	if (completed)
+> +		media_request_put(req);
+> +}
+> +EXPORT_SYMBOL_GPL(media_request_manual_complete);
+> diff --git a/include/media/media-request.h b/include/media/media-request.h
+> index d4ac557678a78372222704400c8c96cf3150b9d9..645d18907be7148ca50dcc9248ff06bd8ccdf953 100644
+> --- a/include/media/media-request.h
+> +++ b/include/media/media-request.h
+> @@ -56,6 +56,10 @@ struct media_request_object;
+>   * @access_count: count the number of request accesses that are in progress
+>   * @objects: List of @struct media_request_object request objects
+>   * @num_incomplete_objects: The number of incomplete objects in the request
+> + * @manual_completion: if true, then the request won't be marked as completed
+> + * when @num_incomplete_objects reaches 0. Call media_request_manual_complete()
+> + * to set this field to false and complete the request
+
+I'd drop "set this field to false and " here.
+
+> + * if @num_incomplete_objects == 0.
+
+ * after @num_incomplete_objects reaches 0.
+
+>   * @poll_wait: Wait queue for poll
+>   * @lock: Serializes access to this struct
+>   */
+> @@ -68,6 +72,7 @@ struct media_request {
+>  	unsigned int access_count;
+>  	struct list_head objects;
+>  	unsigned int num_incomplete_objects;
+> +	bool manual_completion;
+>  	wait_queue_head_t poll_wait;
+>  	spinlock_t lock;
+>  };
+> @@ -218,6 +223,35 @@ media_request_get_by_fd(struct media_device *mdev, int request_fd);
+>  int media_request_alloc(struct media_device *mdev,
+>  			int *alloc_fd);
+>  
+> +/**
+> + * media_request_mark_manual_completion - Set manual_completion to true
+> + *
+> + * @req: The request
+> + *
+> + * Mark that the request has to be manually completed by calling
+> + * media_request_manual_complete().
+> + *
+> + * This function should be called in the req_queue callback.
+
+s/should/shall/ unless it's not a hard requirement. Any way to catch
+incorrect call patterns ?
+
+> + */
+> +static inline void
+> +media_request_mark_manual_completion(struct media_request *req)
+> +{
+> +	req->manual_completion = true;
+> +}
+> +
+> +/**
+> + * media_request_manual_complete - Set manual_completion to false
+
+The main purpose of the function is to complete the request, not setting
+manual_completion to false.
+
+> + *
+> + * @req: The request
+> + *
+> + * Set @manual_completion to false, and if @num_incomplete_objects
+> + * is 0, then mark the request as completed.
+> + *
+> + * If there are still incomplete objects in the request, then
+> + * WARN for that since that suggests a driver error.
+
+If that's an error then I'd document it more explicitly, as the first
+sentence makes it sound that both cases are valid. Maybe
+
+ * This function completes a request that was marked for manual completion by an
+ * earlier call to media_request_mark_manual_completion(). The request's
+ * @manual_completion flag is reset to false.
+ *
+ * All objects contained in the request must have been completed previously. It
+ * is an error to call this function otherwise. The request will not be
+ * completed in that case, and the function will WARN.
+
+> + */
+> +void media_request_manual_complete(struct media_request *req);
+> +
+>  #else
+>  
+>  static inline void media_request_get(struct media_request *req)
+> @@ -336,7 +370,7 @@ void media_request_object_init(struct media_request_object *obj);
+>   * @req: The media request
+>   * @ops: The object ops for this object
+>   * @priv: A driver-specific priv pointer associated with this object
+> - * @is_buffer: Set to true if the object a buffer object.
+> + * @is_buffer: Set to true if the object is a buffer object.
+>   * @obj: The object
+>   *
+>   * Bind this object to the request and set the ops and priv values of
+
+-- 
+Regards,
+
+Laurent Pinchart
