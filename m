@@ -1,265 +1,109 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BDF276057
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5EF280CF5;
+	Thu, 10 Apr 2025 10:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744281784; cv=none; b=imC0GAbvMONPmpwv7zD+pu7Xv0AivPHhkOICV3Y/MLWpe4TyKqIJbwvZKRu5xUToiD9az17bjh4GzLQonvT2qiWudHT9h/avIdOq7tQJgAi1aWCQcxl17p8YfZ5JN3inOxiB18t4b6cYiP2yfNsqJzGjtzUQ4ksKLscnqu4oqYE=
+	t=1744281801; cv=none; b=O7WcZMPMTasjzJF6d7ZU7p+KXT4cHye7cgF3+lghR5Miusa9SOC/G2FDlEqVFPkaAQvDWD42Ng4Qb6+dP/Qdlr8epDcRpei2UxmWE3qNF1ZU7o1oj7V58Oe1XL1rRKS4hs9xeWXOqG7Zr+9EM+3fWHeCKzICVWxury4LOg2XgHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744281784; c=relaxed/simple;
-	bh=Srtta9cGgCFg++cVV09zEVE846z5qF8qC76tlEbf7Rw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=ZflovzJkuqereEm9Ldd5SovND9s3GBpV+IrhW6rSpAW2e9Idnm23GC+hrPxuUA/E0Yx97cyyk4LrNgnNIHUu2Y/hxscuYvmNrrX4zgdsoYFeZlvb3uMJY6ZV3Fg6qmwADlr9q4sYoGrCI0dN3LK1aT7MR69oD3NTfw34eOdx4G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pk+nnR3l; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744281801; c=relaxed/simple;
+	bh=fO12BmA5JGZJ0a/09O+FMjxB+Lf4TKa7uC+u44wx1e8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q6SEnHDkOqhTY0/3kxEn/LFdE4HPWETP84TQ8F1gfztHQ9454I6DnpgoXvBKP/qVBKymqH2yrVzRV1f+BVbEQ5grbp1zpwtwLmwb9hN10Fg31RDB+/hcnVmG1CiLKOJ8508hjKY9XXNaLFhz2zoO0woTAKqeAVTYubiN0ggxXh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtdUtN8v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pk+nnR3l"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250410104254euoutp010e5890f1d482c394e8e38f8f6b9222a8~07whJ6Jtk0267002670euoutp01M
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:42:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250410104254euoutp010e5890f1d482c394e8e38f8f6b9222a8~07whJ6Jtk0267002670euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744281774;
-	bh=nb5PBMN992cQrfZoW1L1vIqwCTRi/cgZ29CTyxTafgg=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=pk+nnR3lwa9Pmbgeq9yAeS66NRe3AxWxoGQXAVW97JYncbbDdmXSfyV2nqLmirjXw
-	 RGsfZQdDE9GA2edTSrLVFFGBIwB2vvPzhRXuDoyR/59me93QgNFPtHGfH1jAGRArl8
-	 H12gaRXsnnyh27bt64aE9ASlN2OMBxa/wpJ4P4TU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250410104253eucas1p23b40ef8384b0114a446b04d0f0620f87~07wglSOeq2331023310eucas1p2V;
-	Thu, 10 Apr 2025 10:42:53 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 2F.3B.20409.DA0A7F76; Thu, 10
-	Apr 2025 11:42:53 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250410104253eucas1p2a8d4c9b9d95af9b2040e9a86230b5755~07wgBMXG22331023310eucas1p2U;
-	Thu, 10 Apr 2025 10:42:53 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250410104253eusmtrp2a487d0181ab9cf886f44b36beca22ed5~07wgAWPVt1782417824eusmtrp2I;
-	Thu, 10 Apr 2025 10:42:53 +0000 (GMT)
-X-AuditID: cbfec7f4-c39fa70000004fb9-ec-67f7a0ad1082
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id E0.7A.19654.DA0A7F76; Thu, 10
-	Apr 2025 11:42:53 +0100 (BST)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250410104252eusmtip2b23662068a11a1d5810de1be34ca6be7~07wfWH59V0811708117eusmtip2G;
-	Thu, 10 Apr 2025 10:42:52 +0000 (GMT)
-Message-ID: <75f97336-6cb5-47fc-ac88-5fe7842e2838@samsung.com>
-Date: Thu, 10 Apr 2025 12:42:52 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtdUtN8v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68DD1C4CEDD;
+	Thu, 10 Apr 2025 10:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744281799;
+	bh=fO12BmA5JGZJ0a/09O+FMjxB+Lf4TKa7uC+u44wx1e8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VtdUtN8vsdalGLWxoa2QelKR/UBek09CdFsGshGvUvuHyoUMCnahrj0xJmIIgj56k
+	 H4CsRkYzdOMe20rq5ADTpaUui9Vg7StqzQe0NKO1pfAGPw6I7m84V5EyMc5sY7IpXm
+	 XAR5gnunwXGL5QvN+VVP98z9q6p+QYzXdaoZF6OgtB9Kryk0tAnMCJqK7WttgKSbCV
+	 sMSLPFgFfh88CSWJ/duJFJGlyyK74CpKeKa9oe9y3y6ADttYkyYhLjj2c6jY6oH2b+
+	 epZj53gwzfo59TuvouxNGJc/jgdNzhQiy6Ccy4epDBO9hrzOl/q4sHj4TsYEk7Ko+g
+	 odY0Kuc4uBVXQ==
+Date: Thu, 10 Apr 2025 12:43:14 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
+	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org, 
+	Peter Ziljstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH] pidfs: ensure consistent ENOENT/ESRCH reporting
+Message-ID: <20250410-barhocker-weinhandel-8ed2f619899b@brauner>
+References: <20250409-sesshaft-absurd-35d97607142c@brauner>
+ <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
+ <20250409184040.GF32748@redhat.com>
+ <20250410101801.GA15280@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: thead,th1520: Add clocks
- and resets
-To: Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com,
-	guoren@kernel.org, wefu@redhat.com, p.zabel@pengutronix.de,
-	m.szyprowski@samsung.com, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-pm@vger.kernel.org,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <CAPDyKFpoSwKAmiWyvNt1fVyu6=NU1oVOmQLVuzX_bG=-5KrM2Q@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDKsWRmVeSWpSXmKPExsWy7djP87prF3xPN9h9w8xizd5zTBbzj5xj
-	tbh3aQuTxYu9jSwWL2fdY7O4vGsOm8Xn3iOMFts+t7BZrD1yl93i7r0TLBb/9+xgt/h3bSOL
-	xfG14RYt+6ewOPB5bFrVyeZx59oeNo/NS+o9WtYeY/Lo/2vg8X7fVTaPvi2rGD0+b5IL4Iji
-	sklJzcksSy3St0vgylj4bwVLwVK1ikXPehgbGE/JdjFyckgImEjcmdvP2MXIxSEksIJR4uD0
-	M2wQzhdGiZn/9zOCVAkJfGaUmPKBG6ZjRnsbVNFyRokZZxYxQzhvGSXWz2oC6+AVsJO4/nQZ
-	K4jNIqAq0fb8CDNEXFDi5MwnLCC2qIC8xP1bM9hBbGGBCIkdny+B2SICnhIzrjeC3cQssJdJ
-	4lvnIrBBzALiEreezGcCsdkEjCQeLJ8PFucUCJTo2b6LEaJGXqJ562ywiyQEFnNKtPbOY4O4
-	20Xi/b1eFghbWOLV8S3sELaMxP+dEEMlBPIlHmz9xAxh10js7DkOZVtL3Dn3C2gOB9ACTYn1
-	u/Qhwo4Sna83sYKEJQT4JG68FYQ4gU9i0rbpzBBhXomONiGIajWJqT29cEvPrdjGNIFRaRZS
-	qMxC8uQsJM/MQti7gJFlFaN4amlxbnpqsVFearlecWJucWleul5yfu4mRmCCO/3v+JcdjMtf
-	fdQ7xMjEwXiIUYKDWUmE19Pwe7oQb0piZVVqUX58UWlOavEhRmkOFiVx3kX7W9OFBNITS1Kz
-	U1MLUotgskwcnFINTM0bLh3e/4RJ8bStrtHNk+s+x2zidzuaHbqMoYh9Te3hA/U74ydkWExe
-	qXup58DZi05ON7Y6icQs3rbWX4z7mN30de6nGrRs6v94tX45It3gsmOv9Zva/R9izYQ3scZk
-	+TcduRPv7vNE8VHx3l2arXeyI2YuN92jx83p5r34QJxYd7DQChZ2t7NvFH8+Uz93oEd4wpXP
-	xumfAxtnzXjyI2L2h7WWGddXXPq//emLpEk2uj87D+ftYawuVPxVx+hjwOM7p6L5+al0bsdb
-	n25mrRTIYrH/etFxsnBo5/3+dRbFInsFFFyOcfV6rfJTvllzKeVMnQ3/BKuWByXVL6+d9Tl0
-	8NDmKarpVqI1Jb6/g5RYijMSDbWYi4oTASkYyLnfAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRmVeSWpSXmKPExsVy+t/xe7prF3xPN1i4VMBizd5zTBbzj5xj
-	tbh3aQuTxYu9jSwWL2fdY7O4vGsOm8Xn3iOMFts+t7BZrD1yl93i7r0TLBb/9+xgt/h3bSOL
-	xfG14RYt+6ewOPB5bFrVyeZx59oeNo/NS+o9WtYeY/Lo/2vg8X7fVTaPvi2rGD0+b5IL4IjS
-	synKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy1j4bwVL
-	wVK1ikXPehgbGE/JdjFyckgImEjMaG9jA7GFBJYyStxfzAcRl5G41v2SBcIWlvhzrQuohguo
-	5jWjxNSz7WAJXgE7ietPl7GC2CwCqhJtz48wQ8QFJU7OfAJWIyogL3H/1gx2EFtYIEJix+dL
-	YLaIgKfEjOuNjCBDmQX2Mkn86+tmhdgwgUni9KFzYFOZBcQlbj2ZzwRiswkYSTxYPh8szikQ
-	KNGzfRdQNwdQjbrE+nlCEOXyEs1bZzNPYBSaheSOWUgmzULomIWkYwEjyypGkdTS4tz03GIj
-	veLE3OLSvHS95PzcTYzAiN527OeWHYwrX33UO8TIxMF4iFGCg1lJhNfT8Hu6EG9KYmVValF+
-	fFFpTmrxIUZTYFhMZJYSTc4HppS8knhDMwNTQxMzSwNTSzNjJXFetivn04QE0hNLUrNTUwtS
-	i2D6mDg4pRqYNp93sNQ43RJU9Hurt+vhY5wX2tZe2xWqV71yqeLjx0Jxers/R2gczGa2v3nh
-	5GGv3RnHOG5173FbF8n+Jo1Tcfbpvv4FXQH37JfY/NCbOdFJ7f2hd1OEXiWu3iTx4gn/pOky
-	q3OMv22/7D3nUbtxtcDxk3d2MuYdmdTiq7N2gXHIxu1CfcfXHgtpEbp19tQ3llVGAhK7Jidr
-	t1+xufjBdifLfM7/Ieoq3btWS8sfv//ArJ1fRfeEJcdNbR7+295RJSFlf/J7U6xSj+SFVIil
-	Xlm6oSLOdkLyhPollV1P75m+vTOL44fcxrXSgW0BX06Karqd7P+zvbvj7qQ/3EufyEX98Wsv
-	EZxdVbfU985yKyWW4oxEQy3mouJEAE/o13lxAwAA
-X-CMS-MailID: 20250410104253eucas1p2a8d4c9b9d95af9b2040e9a86230b5755
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250409093031eucas1p2222e9dc4d354e9b66b7183922c0fb3cf
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250409093031eucas1p2222e9dc4d354e9b66b7183922c0fb3cf
-References: <CGME20250409093031eucas1p2222e9dc4d354e9b66b7183922c0fb3cf@eucas1p2.samsung.com>
-	<20250409093025.2917087-1-m.wilczynski@samsung.com>
-	<20250409093025.2917087-2-m.wilczynski@samsung.com>
-	<CAPDyKFpoSwKAmiWyvNt1fVyu6=NU1oVOmQLVuzX_bG=-5KrM2Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250410101801.GA15280@redhat.com>
 
+On Thu, Apr 10, 2025 at 12:18:01PM +0200, Oleg Nesterov wrote:
+> On 04/09, Oleg Nesterov wrote:
+> >
+> > Christian,
+> >
+> > I will actually read your patch tomorrow, but at first glance
+> >
+> > On 04/09, Christian Brauner wrote:
+> > >
+> > > The seqcounter might be
+> > > useful independent of pidfs.
+> >
+> > Are you sure? ;) to me the new pid->pid_seq needs more justification...
 
+Yeah, pretty much. I'd make use of this in other cases where we need to
+detect concurrent changes to struct pid without having to take any
+locks. Multi-threaded exec in de_exec() comes to mind as well.
 
-On 4/9/25 12:41, Ulf Hansson wrote:
-> On Wed, 9 Apr 2025 at 11:30, Michal Wilczynski <m.wilczynski@samsung.com> wrote:
->>
->> Prepare for handling GPU clock and reset sequencing through a generic
->> power domain by adding clock and reset properties to the TH1520 AON
->> firmware bindings.
->>
->> The T-HEAD TH1520 GPU requires coordinated management of two clocks
->> (core and sys) and two resets (GPU and GPU CLKGEN). Due to SoC-specific
->> requirements, the CLKGEN reset must be carefully managed alongside clock
->> enables to ensure proper GPU operation, as discussed on the mailing list
->> [1].
->>
->> Since the coordination is now handled through a power domain, only the
->> programmable clocks (core and sys) are exposed. The GPU MEM clock is
->> ignored, as it is not controllable on the TH1520 SoC.
->>
->> This approach follows upstream maintainers' recommendations [1] to
->> avoid SoC-specific details leaking into the GPU driver or clock/reset
->> frameworks directly.
->>
->> [1] - https://lore.kernel.org/all/38d9650fc11a674c8b689d6bab937acf@kernel.org/
->>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->> ---
->>  .../bindings/firmware/thead,th1520-aon.yaml   | 28 +++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
->> index bbc183200400..8075874bcd6b 100644
->> --- a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
->> +++ b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
->> @@ -25,6 +25,16 @@ properties:
->>    compatible:
->>      const: thead,th1520-aon
->>
->> +  clocks:
->> +    items:
->> +      - description: GPU core clock
->> +      - description: GPU sys clock
->> +
->> +  clock-names:
->> +    items:
->> +      - const: gpu-core
->> +      - const: gpu-sys
+> > Again, can't we use pid->wait_pidfd->lock if we want to avoid the
+> > (minor) problem with the wrong ENOENT?
 > 
-> These clocks don't look like they belong to the power-domain node, but
-> rather the GPU's node.
+> I mean
 > 
-> Or is this in fact the correct description of the HW?
-
-Hi,
-Thank you for your input. Based on my understanding of Stephen
-presentation the power-domain layer could act as a middleware layer
-(like ACPI) that could own resources. That being said it was also stated
-that the proposed approach should work with already existing device
-trees, which implies that the DT should remain as is.
-
-So I could get the resources using attach_dev and detach_dev, but there
-are two problems with that:
-
-1) The GPU driver will try to manage clocks/reset on it's own using those functions
-   if I provide non-stub working clocks and reset:
-static const struct dev_pm_ops pvr_pm_ops = {
-	RUNTIME_PM_OPS(pvr_power_device_suspend, pvr_power_device_resume,
-		       pvr_power_device_idle)
-};
-
-So obviously I should invent a way to tell the drm/imagination driver to
-NOT manage. One obvious way to do this is to introduce new flag to genpd.flags
-called let's say GENPD_FLAG_EXCLUSIVE_CONTROL, which would tell the consumer
-driver that the power management is being done only done from the PM
-middleware driver.
-
-2) The GPU node doesn't want to own the gpu-clkgen reset. In fact nobody
-   seems to want to own it, even though theoretically it should be owned by
-   the clk_vo as this would describe the hardware best (it's resetting the
-   GPU clocks). But then it would be trickier to get it from the PM driver,
-   making the code more complex and harder to understand. Nonetheless I
-   think it would work.
-
-If this sounds good to you I will work on the code.
-
-Regards,
-Michał
-
+> 	int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
+> 	{
+> 		int err = 0;
 > 
->> +
->>    mboxes:
->>      maxItems: 1
->>
->> @@ -32,13 +42,27 @@ properties:
->>      items:
->>        - const: aon
->>
->> +  resets:
->> +    items:
->> +      - description: GPU reset
->> +      - description: GPU CLKGEN reset
->> +
->> +  reset-names:
->> +    items:
->> +      - const: gpu
->> +      - const: gpu-clkgen
->> +
+> 		spin_lock_irq(&pid->wait_pidfd->lock);
 > 
-> Ditto for the reset.
+> 		if (!pid_has_task(pid, PIDTYPE_PID))
+> 			err = -ESRCH;
+> 		else if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
+> 			err = -ENOENT;
 > 
->>    "#power-domain-cells":
->>      const: 1
->>
->>  required:
->>    - compatible
->> +  - clocks
->> +  - clock-names
->>    - mboxes
->>    - mbox-names
->> +  - resets
->> +  - reset-names
->>    - "#power-domain-cells"
->>
->>  additionalProperties: false
->> @@ -47,7 +71,11 @@ examples:
->>    - |
->>      aon: aon {
->>          compatible = "thead,th1520-aon";
->> +        clocks = <&clk_vo 0>, <&clk_vo 1>;
->> +        clock-names = "gpu-core", "gpu-sys";
->>          mboxes = <&mbox_910t 1>;
->>          mbox-names = "aon";
->> +        resets = <&rst 0>, <&rst 1>;
->> +        reset-names = "gpu", "gpu-clkgen";
->>          #power-domain-cells = <1>;
->>      };
->> --
->> 2.34.1
->>
+> 		spin_lock_irq(&pid->wait_pidfd->lock);
 > 
-> That said, it's still possible to make both the clocks and reset being
-> managed from the genpd provider. I will comment on that separately for
-> patch2.
+> 		return err ?: __pidfd_prepare(pid, flags, ret);
+> 	}
 > 
-> Kind regards
-> Uffe
+> To remind, detach_pid(pid, PIDTYPE_PID) does wake_up_all(&pid->wait_pidfd) and
+> takes pid->wait_pidfd->lock.
 > 
+> So if pid_has_task(PIDTYPE_PID) succeeds, __unhash_process() -> detach_pid(TGID)
+> is not possible until we drop pid->wait_pidfd->lock.
+> 
+> If detach_pid(PIDTYPE_PID) was already called and have passed wake_up_all(),
+> pid_has_task(PIDTYPE_PID) can't succeed.
+
+I know. I was trying to avoid having to take the lock and just make this
+lockless. But if you think we should use this lock here instead I'm
+willing to do this. I just find the sequence counter more elegant than
+the spin_lock_irq().
+
+And note that it doesn't grow struct pid. There's a 4 byte hole I would
+place it into just before struct dentry *. So there's no downside to
+this imho and it would give pidfds a reliable way to detect relevant
+concurrent changes locklessly without penalizing other critical paths
+(e.g., under tasklist_lock) in the kernel.
