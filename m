@@ -1,143 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C6A1A3BD7
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2C91EFF9F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744308867; cv=none; b=MUjzq7GLbznp2UcbYWO5WSTP2kMX7oj9d3/95rjcWi37p9QW5vTQKPz+DmZM203j/06EnklN68s5BYHUg8fPW8M+sb024hAQGeL90nc7vNHuMZE72xP2hJD6yw2cVqhQcm1N2pY8sVheWU7JkP+i9IBjdVkEjf39tVFGTALzYlo=
+	t=1744308880; cv=none; b=fDr57+b1rOru/SZUEZchHo2ZqQE8AiA9eemCBmFm5eD9E+wyT/kzflOLGG2wdn2vDLsuWWgsH0ubWKYrDthJ9zMnFoTkHGDDR+cuPTeRIZvupWf/OQRJbl1oJ4h4iKFOj6nUbjb7bQTbXc8ciM1VGqreB49uaALSy3cKJFsXrlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744308867; c=relaxed/simple;
-	bh=wn3mPPR27RYVkuHWJkv09h07bHWGcncI5FZuMl88yoY=;
+	s=arc-20240116; t=1744308880; c=relaxed/simple;
+	bh=VWX8nIUUxN/PJaDyhkXcvkoxpd4L3vJdwDD6owJjZlk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+w60d3cHgQ/NM50BdEULCk99wcYMsqZscpDKvwCfnl6DiVYDcepMUYfTzsvftFRxGZ1ti5fwIa41ET+MekoSLBSe/6tQQk+CWLJJT3bOrTRtvI2ts20UPCDPBp223IwqFBN6RPBV4NFfYuuZo5rwFbMdkqNxCEy4V6hee03Oa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEwQefQH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=u4ffoyMhMorjhQ65/PDOvSI+Y/JLkKTiPLZWGPBhsp8R6zzoBHvwk4iHaBtjXd96OPBdon8RO1XmN9rAyT08U4V95SLw2F/mnCyINaEA8g+tG3I02d+EMlBVvZP0Huqsk5QauPHTa+yQ0uPdPKWH9EFIGpWFLghqyImNTXwZzRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqCAVXkf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEwQefQH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F7CC4CEDD;
-	Thu, 10 Apr 2025 18:14:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqCAVXkf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8067C4CEE3;
+	Thu, 10 Apr 2025 18:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744308866;
-	bh=wn3mPPR27RYVkuHWJkv09h07bHWGcncI5FZuMl88yoY=;
+	s=k20201202; t=1744308880;
+	bh=VWX8nIUUxN/PJaDyhkXcvkoxpd4L3vJdwDD6owJjZlk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KEwQefQHMvoaGAPG5Jq1tyUxVrHdrtUKIqxCAYJU99HmpQSU677N0ZPBiJXv3NIyf
-	 VGb9OtOZXSVbihGsbbvNzX8WPzcPPx36xbK8MWa6P8r25IJzavqyF7efUwnJxi0pRY
-	 H46RO/VR4zQF36e10Juec6x5qb/Cv+lfCOUKG9/0Sj+Cl0kqBGuB9oWXCJ8I29Q0QW
-	 IpCCdbf2X/j1vNCXC4HwCWg54ojPhXBbzE/vsRWtqUEz4jJ7n9HFVi0RCqdlQKWEIG
-	 ibbxP5/bF7AOobnmz1uJiR0J5jQNEQcUuicn8gx5vOLd1Q+K47znTeUUX9/HGfH5Tr
-	 tmSt0AkwI3nvA==
-Date: Thu, 10 Apr 2025 11:14:22 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Dmitry V. Levin" <ldv@strace.io>, Oleg Nesterov <oleg@redhat.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Arnd Bergmann <arnd@arndb.de>, strace-devel@lists.strace.io,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v7 2/6] syscall.h: add syscall_set_arguments()
-Message-ID: <20250410181422.GA3431770@ax162>
-References: <20250303111910.GA24170@strace.io>
- <20250303112009.GC24170@strace.io>
- <20250408213131.GA2872426@ax162>
+	b=IqCAVXkfex0D97iDhxIa20/CKQ7LmmVdnqhHshPRQ8s/XtLMKs8tscnS0mT+jFUu7
+	 853VYpVdpkud8MS1fKndDSh2OqwXgVpYzn+OXKgYaDNzrnRX6LPs7WgXH8NHBMCus+
+	 92d7RxalsT6ECS+7uazU1f9gNWhQxY88eEyyeSxF5XcJG62DUKhARkyINM/x3vLvKe
+	 LKXPnq71lQTMzX8OG28MnD4I/Mh6IRXp5sQQnq191NN15HidgYJ3LTVpMU8exJwS3g
+	 idueTd/h87bMo+i9iK+93/yUicfzTWdWBt6Op0jDrQUD4av9TbMR7lP9xZ+H+Rz8wG
+	 ni8XIYR78H0AA==
+Date: Thu, 10 Apr 2025 11:14:38 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
+	Brendan Jackman <jackmanb@google.com>, Derek Manwaring <derekmn@amazon.com>
+Subject: Re: [PATCH v4 17/36] Documentation/x86: Document the new attack
+ vector controls
+Message-ID: <fkl2b3ymatulazt2xjegubqcejx5bgaraktztpkitodrbbsozw@xrskej3fg3jf>
+References: <20250310164023.779191-1-david.kaplan@amd.com>
+ <20250310164023.779191-18-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250408213131.GA2872426@ax162>
+In-Reply-To: <20250310164023.779191-18-david.kaplan@amd.com>
 
-Hi Andrew,
+On Mon, Mar 10, 2025 at 11:40:04AM -0500, David Kaplan wrote:
+> +=============== ============== ============ ============= ============== ============
+> +Vulnerability   User-to-Kernel User-to-User Guest-to-Host Guest-to-Guest Cross-Thread
+> +=============== ============== ============ ============= ============== ============
+> +BHI                   X                           X
+> +GDS                   X              X            X              X        (Note 1)
+> +L1TF                  X                           X                       (Note 2)
+> +MDS                   X              X            X              X        (Note 2)
+> +MMIO                  X              X            X              X        (Note 2)
+> +Meltdown              X
+> +Retbleed              X                           X                       (Note 3)
+> +RFDS                  X              X            X              X
+> +Spectre_v1            X
+> +Spectre_v2            X                           X
+> +Spectre_v2_user                      X                           X        (Note 1)
+> +SRBDS                 X              X            X              X
+> +SRSO                  X                           X
+> +SSB (Note 4)
 
-Can you please fold the diff at the end of my message into
-syscallh-add-syscall_set_arguments.patch? It sounds like Palmer will
-apply the same diff to syscall_get_arguments():
-https://lore.kernel.org/mhng-cf999eb1-59c4-4784-8c01-44b1e2482a50@palmer-ri-x1c9a/
+Any reason not to put the "Note 4" in the same column as the others?
 
-Thanks!
-Nathan
-
-On Tue, Apr 08, 2025 at 02:31:31PM -0700, Nathan Chancellor wrote:
-> Hi Dmitry,
-> 
-> [dropping majority of folks since this seems irrelevant to them]
-> 
-> On Mon, Mar 03, 2025 at 01:20:09PM +0200, Dmitry V. Levin wrote:
-> > This function is going to be needed on all HAVE_ARCH_TRACEHOOK
-> > architectures to implement PTRACE_SET_SYSCALL_INFO API.
-> > 
-> > This partially reverts commit 7962c2eddbfe ("arch: remove unused
-> > function syscall_set_arguments()") by reusing some of old
-> > syscall_set_arguments() implementations.
-> > 
-> > Signed-off-by: Dmitry V. Levin <ldv@strace.io>
-> > Tested-by: Charlie Jenkins <charlie@rivosinc.com>
-> > Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
-> > Acked-by: Helge Deller <deller@gmx.de> # parisc
-> > Reviewed-by: Maciej W. Rozycki <macro@orcam.me.uk> # mips
-> ...
-> > diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
-> > index 121fff429dce..8d389ba995c8 100644
-> > --- a/arch/riscv/include/asm/syscall.h
-> > +++ b/arch/riscv/include/asm/syscall.h
-> > @@ -66,6 +66,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
-> >  	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
-> >  }
-> >  
-> > +static inline void syscall_set_arguments(struct task_struct *task,
-> > +					 struct pt_regs *regs,
-> > +					 const unsigned long *args)
-> > +{
-> > +	regs->orig_a0 = args[0];
-> > +	args++;
-> > +	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
-> > +}
-> 
-> This upsets the compiletime fortify checks, as I see a warning after
-> syscall_set_arguments() starts being used in kernel/ptrace.c later in
-> the series.
-> 
->   $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux- allmodconfig kernel/ptrace.o
->   In file included from include/linux/string.h:392,
->                    from include/linux/bitmap.h:13,
->                    from include/linux/cpumask.h:12,
->                    from arch/riscv/include/asm/processor.h:55,
->                    from include/linux/sched.h:13,
->                    from kernel/ptrace.c:13:
->   In function 'fortify_memcpy_chk',
->       inlined from 'syscall_set_arguments.isra' at arch/riscv/include/asm/syscall.h:82:2:
->   include/linux/fortify-string.h:571:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->     571 |                         __write_overflow_field(p_size_field, size);
->         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   cc1: all warnings being treated as errors
-> 
-> The compiler knows the size of the destination and the size to be copied
-> so it knows there will be an (intentional) overwrite here.
-> struct_group() would normally work but I think this structure already
-> has a struct_group() around some of the members that would be needed. I
-> build tested eliminating the memcpy() altogether, which would appear to
-> work, but I am not sure if there is a better solution, hence just the
-> report.
-> 
-> Cheers,
-> Nathan
-> 
-> diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
-> index a5281cdf2b10..70ec19dc8506 100644
-> --- a/arch/riscv/include/asm/syscall.h
-> +++ b/arch/riscv/include/asm/syscall.h
-> @@ -78,8 +78,11 @@ static inline void syscall_set_arguments(struct task_struct *task,
->                                          const unsigned long *args)
->  {
->         regs->orig_a0 = args[0];
-> -       args++;
-> -       memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
-> +       regs->a1 = args[1];
-> +       regs->a2 = args[2];
-> +       regs->a3 = args[3];
-> +       regs->a4 = args[4];
-> +       regs->a5 = args[5];
->  }
-> 
->  static inline int syscall_get_arch(struct task_struct *task)
+-- 
+Josh
