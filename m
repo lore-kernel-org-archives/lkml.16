@@ -1,203 +1,175 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2073.outbound.protection.outlook.com [40.107.93.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2A81F12FB;
-	Thu, 10 Apr 2025 19:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744314313; cv=none; b=nInk7Lny3SZG9bFikScBi21wLTk4o4osR5KFgLsTrXOwAQ5gry32Y/h+Pre3IMS6PQMsM+O0tmv+kRGpg54tWyfx/z3ep2eFWB1yPxnwI4JYgsZsv6Q/dOAnzSlXYsL04Me1lQXVwMWeT0yb8uYZI7r4ljJWmHNvwBrxgwvz6/s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744314313; c=relaxed/simple;
-	bh=nYuYtFWEsen9f2D7ItDfNNjWzV+yKZLxUypDQA+DWlk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B2S59ISvGr/658nCKLgNqoSkWTeiRGOu8+vE3wJcdNJPbS71nxImX26rjH/tR6yMFyduL3mNWo9wYqw+wtnQKNIGMNPskHEit9Q6U8cAmmKcdKGbRlx0Hm+GlQX2UYFHHbPyEBSV6P8uzMwRGoM+uPPV5/fuvi291qSKw/P0h8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=P7XuaM/z; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F010A1AAA1E;
+	Thu, 10 Apr 2025 19:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744314391; cv=fail; b=mE6V8a+hkNq9NFHs/hmtcMpc9vwl94g6FnMbT++T2Liux9xTk20TL2iCKOZVdxMs/cpyiQXArOMsxznQF4MJe9Hr09sRc7RAoHlX7Tqtl8zntFPtmoGN326OUj/qUSHDGbhs1VfIRkxyRxFdpwBdFGALbqJBQgWNt/6oDEw4uyM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744314391; c=relaxed/simple;
+	bh=okuHlgdGqvyAccGuP9TuXDJbq1DuGN2GJY8esIIjcxQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qg7QLPD28tgvfDhdeX5UBu5r1JNjR53qB34yxJG8q0BA2fTeHTRpZ1L3HH+9cR0WZxGI03aLS/Ap9HF7g/ppSpUVx4Tg/rmb/wQOz+sutauTngdqiQLSlBogNFTbmXoMXExCnvhApfvdxmFjIz7UXOIRBTUDDMqt2d3q22MHcrE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BvYb5FCX; arc=fail smtp.client-ip=40.107.93.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="P7XuaM/z"
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id A25F12E09463;
-	Thu, 10 Apr 2025 22:39:22 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1744313963;
-	bh=FOGdZqRgrRfjCXzxKmtyNviIBZYCEd5J8vC9FJL0iik=;
-	h=Received:From:Subject:To;
-	b=P7XuaM/zM6DP0rEWAXZcH2n1hCr3kvjNBcEgCE6nnOntDxpAE4leGK0lFuNfOeI/p
-	 Yjuh/Uc/8BM5v1U8GMGwtHdhJ2rpEttLlhBlGHXg84vtKRb4KrXT5N3Im3OxbmYj6O
-	 CCTTE4Rto/aVkjzNR41ZSyk6pLPunrQTSXO8Z8SA=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.178) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f178.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f178.google.com with SMTP id
- 38308e7fff4ca-30effbfaf4aso11471611fa.3;
-        Thu, 10 Apr 2025 12:39:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCU88GyfGnBKRBYviP7AWW10zoib5yT5F9OdTWm1TV6CEaCf+pfW2+yOPfqLGQY+z7uT94ksrxmBaQ5tCaNv@vger.kernel.org,
- AJvYcCXxp7K8KvuyELcnGgL3oEqp5lSoWMzSGUZIeo0m2BGHJkvx5tFzBOlAwi/4/QCQAhaHvob2Gekqn94d4A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGjpOb4PSvU6ayMLI0RWoQA63Bc3nrc18hHdigx7O8vkbc8NGD
-	OS28ys2volO8Ybb4uBKd3kHiOEUWtRQQxeNoeU1WDS0iyGReRnXg1+jY2hi+dWg7EYJU24QtUyd
-	UywPUst5W9zYqLMI3qN2WXVf8C2c=
-X-Google-Smtp-Source: 
- AGHT+IEepTHsF241IzEilHxJsf/PKafP8ocYWw9ljd0ITH+/epE0kwn561dq9fLGrkwW9h8DsARHPA4q+CGzK5B2XLI=
-X-Received: by 2002:a05:651c:12ca:b0:30b:9813:b00e with SMTP id
- 38308e7fff4ca-30facc202a3mr12439491fa.24.1744313961756; Thu, 10 Apr 2025
- 12:39:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BvYb5FCX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F3EFV8OkRoiC30io4RpjX6u3NfNYNswsZ495MYBqfZnqdNRGMztqnJBIp2l/gkuGQPsAB3y+BxqQ3D4+BBn+3CmrNqxpfavO4aMryO6/o4clxN86QEaJ/TvjRYDdWpjpGNU3/Jli0bUZy39QpHpdo+IIWEzsiGqbbbRK3g4r+ahrdIk9bgBvke6bqmEGWKKs2O8yQa9g+sc2iPyqb6ts+6y9bAWpQoXPFx17xOlpHVAIifcB3TnuPM+ykjUARRlEzhqsRrZpH5raYMLQRyMLgm7+srGZpCUIYSwMYdPt3cZZh34uFkZeh6lYVnZOujYeFBE1gjV+RCxGRZorQWnKhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AB69JFk1i49b86kBWGo23ofimFm3uaNqDWsNz0pBNxg=;
+ b=thdMbjobrSQcp9g1rO/LwO5wEU+ICFTAwLFEteNcKjM5uqJ91oU918kXQvUhfkjniB5n/+Fp0U5ZjTAIPPq8t/oluIW9eN3AioAufi95i52M3b8x3XwBhXDwWPPAPMTgtrJ8xl2mYcSMEoRKZ1YNwzQkzuCTTkdf3Tst/N13cMeNiQ9ZcqkqRU3br63BjPPsCmNu9/7yoo6NNAfdoAvdBd5tR/gwmwX3h1Drs7FqRN2xiwE1/Ma2NCnq2Bbpg3AmRvp1MPjXsRzySVH5QlXMZ4Ssi5vmExtLiSjYd5E3Hw7ks0NOZeJt8bhSbekvLP8CIecNYmFQyzfUvl4881dMlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AB69JFk1i49b86kBWGo23ofimFm3uaNqDWsNz0pBNxg=;
+ b=BvYb5FCXWpWr0aA/mMIEQzB49QqTcwX5zl3CMAr4BZ7MueEG1LSnHxZtUSXkPYdEg1qbs4XyL4DyttrgEDj9DFjDrFmzEr8VjJRxIUxJ1UwBSpZ1Fw0eXumcl+q2gVDnw4piDxRNgrHw+dHnDyMcJxbcbzvEsIBSEj4MNh7ktQ9sk7oRHi9TKgy7mWA6Inrug71n95qC9Mksj+7Ck/PUsm8D6lm6gRH6nxDBHVdaIHbonMLHutPky8/n2u18gtbABqbtXOmsnutctMmuFEnBKc8nxkJVY2eFfZTI1FBVwC1gi/VTN+JWCYpXz2JgCu0UOI2RhHOr+ga3M0yMREMtmw==
+Received: from BYAPR21CA0010.namprd21.prod.outlook.com (2603:10b6:a03:114::20)
+ by DM6PR12MB4435.namprd12.prod.outlook.com (2603:10b6:5:2a6::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Thu, 10 Apr
+ 2025 19:46:25 +0000
+Received: from CO1PEPF000075F3.namprd03.prod.outlook.com
+ (2603:10b6:a03:114:cafe::a9) by BYAPR21CA0010.outlook.office365.com
+ (2603:10b6:a03:114::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.10 via Frontend Transport; Thu,
+ 10 Apr 2025 19:46:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CO1PEPF000075F3.mail.protection.outlook.com (10.167.249.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8632.13 via Frontend Transport; Thu, 10 Apr 2025 19:46:24 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 10 Apr
+ 2025 12:46:10 -0700
+Received: from vidyas-server.nvidia.com (10.126.230.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 10 Apr 2025 12:46:06 -0700
+From: Vidya Sagar <vidyas@nvidia.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <bhelgaas@google.com>,
+	<cassel@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
+	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V2] PCI: dwc: tegra194: Broaden architecture dependency
+Date: Fri, 11 Apr 2025 01:15:52 +0530
+Message-ID: <20250410194552.944818-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250128044244.2766334-1-vidyas@nvidia.com>
+References: <20250128044244.2766334-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325184601.10990-1-lkml@antheas.dev>
- <20250325184601.10990-11-lkml@antheas.dev>
- <648a1d1f-a222-480a-aec9-ab3e0cf790a1@ljones.dev>
- <CAGwozwFrbspt+OfzaCR1B98Z=1GFS6nTdnVpWFeb71aLJLBUxQ@mail.gmail.com>
-In-Reply-To: 
- <CAGwozwFrbspt+OfzaCR1B98Z=1GFS6nTdnVpWFeb71aLJLBUxQ@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 10 Apr 2025 21:39:08 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwGqy344a_hr=2sKOiB3zUN36M12nOKp4_JpUuhW-pYBXA@mail.gmail.com>
-X-Gm-Features: ATxdqUHqeB-knh3wXRj4IY16EpcxPgWnylWSLpRJ0qODGgQdGYA57RGvwYyQHxk
-Message-ID: 
- <CAGwozwGqy344a_hr=2sKOiB3zUN36M12nOKp4_JpUuhW-pYBXA@mail.gmail.com>
-Subject: Re: [PATCH v5 10/11] HID: asus: add RGB support to the ROG Ally units
-To: "Luke D. Jones" <luke@ljones.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174431396302.30498.17323684915039915382@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075F3:EE_|DM6PR12MB4435:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d0a935b-31e1-4aed-a9a7-08dd78686077
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YT3zq607+K+sJD497JX/NrNFAAaoV572K29tS+3JRofioyFLhK94/DKRNTiD?=
+ =?us-ascii?Q?dsXLGANJf9ve9zpJt97MPORSA736WmiZ79y9ocWdCewqITeEKjbsDkWDk6Xb?=
+ =?us-ascii?Q?RU03e9NmzQbmiGdzK+cAlueWR6OmKnE4ZPLuUNdLGeA4vIcHtY5QbOKlqKNA?=
+ =?us-ascii?Q?URfmAk8+WBwFNSwIfL1DpiaLFT3WSouKjK+zf17VCRTdIcEK6iE96yZyDbu5?=
+ =?us-ascii?Q?arrBriq7/V2BZKFFbtRe7bEhf4cdy4FY6VZB1ZE5eBHutVReon7LlWxDk0c8?=
+ =?us-ascii?Q?V2TtWhOBHcvQ1vuiQj6lZg2SNKNtiaBXmRmJIjvZNxLvLD7ZeoPn2HBfXLs9?=
+ =?us-ascii?Q?OScASBqHIiOmgjvgY608bLUiABwVxAMHJ91Bn+l7Kvoxb1dF9vXeT1lk1Ohe?=
+ =?us-ascii?Q?oH5535Z+XYCAWZU+dahrBt26bpApQ3WVlJvIqIWE6qlh3wYb8kjkaIr846jB?=
+ =?us-ascii?Q?BgzL7XDEymaTBMBIbDn3UryVHT9daWAg9t5B1oSQeCGsWQgCb+dhyO6jyCW7?=
+ =?us-ascii?Q?6VYACo83h1vgEf0CAThUfq9J0gez1+bosY8/GcSbMj9MOrPBBwnvpPsUonBP?=
+ =?us-ascii?Q?qtLqatHjbRrSKTL+bDvxh55FhOeAhL4+6na2epyUb28LOiIRyS3CF7aY9DLp?=
+ =?us-ascii?Q?EZLCHCZpThE9RQNdX50uouqfbyyLfBKMRoAW3mA1P9yZ7nch8N7hMN2mJKRQ?=
+ =?us-ascii?Q?zoxZPzOMcDz8xQGZpmmQabJrll7I5hW23RhFKajaWEpPiEPvpe6K3XCaGh/6?=
+ =?us-ascii?Q?XfkTis9k2c3q1OrgQMq6B6AKtmVCsyJt8Ri36Pm5svB9UX5ckarXFhDfiBhj?=
+ =?us-ascii?Q?MCsmtR2xkN1ohnxbOK2kRt9veZvmwtaoNh9tqkjc9vky//M9S2TkACMDkTSg?=
+ =?us-ascii?Q?5omZxx6ODBQT+6PQAqNfSLE9U1D5ddJBQv25SIJF0/Uie+fhHprfnVsEtmzL?=
+ =?us-ascii?Q?pCacL+fTW7IiTq0X5UVhwHr+SM28bSCwcXFXNyW1+vi+jT44FHFN83hQ6kI9?=
+ =?us-ascii?Q?ItQasTf2dYFTVwb7JZKNRP2+c94t376iJCRwiku1tESUKeejKnSHeyp/5S66?=
+ =?us-ascii?Q?h2Mgaiufq1GFqEQpcjyD8OTe7YLRWE3OV82bEFFJ9W0BCzkhw4C83YTesXS2?=
+ =?us-ascii?Q?ltZZp9DgIHizzyguuXb7dxKxrJ90Z9Ax9jIn/IabfjJM8bdeWxWJWH1Vg0bV?=
+ =?us-ascii?Q?OZqxmik6gaJ+LuciFCgE9+ZZ/TPP/YOd/tWS+veF8mAa2TI66NvuZxHAZu+M?=
+ =?us-ascii?Q?FLjHwcEvYfn7dZSiBtGW4MJLP0i1c+Uu8u62azIQo9BoXgkENdzwBJN4eyPz?=
+ =?us-ascii?Q?RnKKs4XPDm+3HV/lzgJAzVXq2C/qcQt5aRhaAEAZwW6q1st9/PUQSvokdWlr?=
+ =?us-ascii?Q?8bBsLmhFT6kRgdWusOPZvPfWfNroz/BKxgmAkaXtm1hi5IJLfQbI+irrkibY?=
+ =?us-ascii?Q?mjcYK/nXDnXpxK6KSix7yVQSMA1/yO54fTUtTkzIVKI8WPLKgf9IiF0d6MkP?=
+ =?us-ascii?Q?Bh/phANUbsrOXMKJ6H8X52WkreuSoSZCdCV4aJYBfJFcrcPxTXzf7Wh2jw?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 19:46:24.5927
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d0a935b-31e1-4aed-a9a7-08dd78686077
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000075F3.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4435
 
-On Mon, 31 Mar 2025 at 09:52, Antheas Kapenekakis <lkml@antheas.dev> wrote:
->
-> On Mon, 31 Mar 2025 at 00:11, Luke D. Jones <luke@ljones.dev> wrote:
-> >
-> > On 26/03/25 07:45, Antheas Kapenekakis wrote:
-> > > Apply the RGB quirk to the QOG Ally units to enable basic RGB support.
-> > >
-> > > Reviewed-by: Luke D. Jones <luke@ljones.dev>
-> > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > > ---
-> > >   drivers/hid/hid-asus.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > > index c135c9ff87b74..fa8ec237efe26 100644
-> > > --- a/drivers/hid/hid-asus.c
-> > > +++ b/drivers/hid/hid-asus.c
-> > > @@ -1424,10 +1424,10 @@ static const struct hid_device_id asus_devices[] = {
-> > >         QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> > >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> > >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
-> > > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> > >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> > >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X),
-> > > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> > >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> > >           USB_DEVICE_ID_ASUSTEK_ROG_CLAYMORE_II_KEYBOARD),
-> > >         QUIRK_ROG_CLAYMORE_II_KEYBOARD },
-> >
-> > Hi Antheas,
-> >
-> > I have some good news for you, ASUS got back to me, there *is* a way to
-> > get the feature level of a keyboard.
-> >
-> > ## 2.2. Configuration command
-> >
-> > In order to confirm what functions are the USB device supported, host
-> > retrieves the
-> > configuration information by feature report method. Therefore, the
-> > firmware has to
-> > return the data (byte 0x06~) to the host.
-> >
-> > ### 2.2.1. Set feature
-> >
-> > | Byte 0    | Byte 1    | Byte 2   | Byte 3   | Byte 4     | Byte 5  |
-> > |-----------|-----------|----------|----------|------------|---------|
-> > | Report ID | OP code   | Addr_L   | Addr_H   | Read ROM   | Length  |
-> > | Report ID | 0x05      | 0x20     | 0x31     | 0x00       | 0x08    |
-> >
-> > ### 2.2.2. Get feature
-> >
-> > | Byte 0    | Byte 1    | Byte 2   | Byte 3   | Byte 4     | Byte 5  |
-> > |-----------|-----------|----------|----------|------------|---------|
-> > | Report ID | 0x05      | 0x20     | 0x31     | 0x00       | 0x08    |
-> >
-> > **Byte 6**
-> > - 0x00: KB, 1-zone with single color
->
-> Nice find. The asus-hid driver already implements this and checks for
-> 0x00 to bail the backlight.
->
-> So that check should be removed as it does not work with single color
-> keyboards and instead checked for 2,3,4 to enable RGB.
->
-> This also means removing the RGB check and getting global support in one go.
->
-> Antheas
->
-> > - 0x01: KB, QWERASD-partition
-> > - 0x02: KB, 4-zone with RGB
-> > - 0x03: KB, Per-key with RGB
-> > - 0x04: KB, 1-zone with RGB
-> > - Other: reserved
-> >
-> > **Byte 7(keyboard language)**
-> > - 0x01: US
-> > - 0x02: UK
-> > - 0x03: JP
-> > - Other: reserved
-> >
-> > I've not done anything with this myself yet, circumstances last week
-> > weren't great for me. If you implement this in driver I will ensure I
-> > get it tested as I have both single colour and rgb laptops.
-> >
-> > What i *do* know is:
-> >
-> > - 0x00: KB, 1-zone with single color
-> > - 0x01: KB, QWERASD-partition
-> > These can be standard kb_backlight
-> >
-> > - 0x02: KB, 4-zone with RGB
-> > - 0x03: KB, Per-key with RGB
-> > - 0x04: KB, 1-zone with RGB
-> > These work with the regular EC-mode RGB command for static/solid colour
-> > and you don't need to worry about zone/per-key. It would be good to
-> > document those as defines or enum or something for future.
+Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
+check, allowing the PCIe controller to be built on Tegra platforms
+beyond Tegra194. Additionally, ensure compatibility by requiring
+ARM64 or COMPILE_TEST.
 
-Let's start slowly getting back into this.
+Link: https://patchwork.kernel.org/project/linux-pci/patch/20250128044244.2766334-1-vidyas@nvidia.com/
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+v2:
+* Addressed review comments from Niklas Cassel and Manivannan Sadhasivam
 
-Ok, the lightbar of the Z13 returns:
-5a05203100080100010423000100060214020000000000000153550000000000
+ drivers/pci/controller/dwc/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-And the keyboard returns:
-5a052031000801000004250501002e0000000000000000000000000000000000
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index d9f0386396ed..815b6e0d6a0c 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -226,7 +226,7 @@ config PCIE_TEGRA194
+ 
+ config PCIE_TEGRA194_HOST
+ 	tristate "NVIDIA Tegra194 (and later) PCIe controller (host mode)"
+-	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
++	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+ 	depends on PCI_MSI
+ 	select PCIE_DW_HOST
+ 	select PHY_TEGRA194_P2U
+@@ -241,7 +241,7 @@ config PCIE_TEGRA194_HOST
+ 
+ config PCIE_TEGRA194_EP
+ 	tristate "NVIDIA Tegra194 (and later) PCIe controller (endpoint mode)"
+-	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
++	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_DW_EP
+ 	select PHY_TEGRA194_P2U
+-- 
+2.25.1
 
-That is 01 for both the lightbar and keyboard when it comes to zone
-(QWERASD) and 00/undefined when it comes to keyboard?
-
-Now, if they meant byte 6 _after_ the header:
-5a0520310008 01 00 01 04 23 00 01 00060214020000000000000153550000000000
-5a0520310008 01 00 00 04 25 05 01 002e0000000000000000000000000000000000
-
-It is still inconclusive
-
-So I am unsure what to make of this
-
-Antheas
-
-> > Hope this helps.
-> >
-> > Cheers,
-> > Luke.
