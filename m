@@ -1,136 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03921266B72
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E00E26A0DC;
+	Thu, 10 Apr 2025 09:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277466; cv=none; b=AGcEOqpnnTDd4O7NvqYtPyakLcJleT5GKOQ7BZF8x/x9llZCw2UmTHFjCgQDgUzvmp3pEnFrn46OX7btA/OZSA/TjA0cs5eGkpMjHwIxMKd1eyGDJAu/60rxt/T/ZWaZrRpI9Nqk6MvMuHHsvzfVCnCNqYnSrZppOcxZNhBKUFo=
+	t=1744277483; cv=none; b=kpcJmQ/qg8VM5+tnghIcTTYnoHzjAcRGVNc5EpuLRWB4H5E9K06g68dP649XYEbLZzXrvDpKgh1gtvBNUBX9Vi5KLP27uc9L8nCh3NJol+wVDvjxY45uJ2QPG5huIeDIZwHH2oDbQ3mf4r89B+pDs+ixMMG+i5uHgFZDii2HAiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277466; c=relaxed/simple;
-	bh=p8WnN1jop2bnv+TBKh5ZzVW7Loud1RsCr86Lhw1nSC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N3/9vVP0U+onJc0dYCmvtmpz39HFn2OwBXAYKUqeAKxrp5nTydcFuXwililE76a2GQzBlze2Sn7bDbIdFGMQJllPiwq5OFF1mwDm/W4mHYwU+t5WvsQ6ZVHutx5HyeCnuZqGIOKmOToDclP6QQ+qMHIJVdmOxw1KtoG7W5HXhfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Byc2DOiu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744277483; c=relaxed/simple;
+	bh=NUQSl8+KNt2Gck3bg5zy+/lvTkACE7uM59VfdQMYJzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J+izQEV29kQrPmy6IrAe/wEwNdFM76QCcDotPbvx1bj6ts0B/I85+r8n6rVwrbKCQyoskmCp/XVjhB4oVf21MIGh0hK/iwYq0pxmnTkFZZPguANwx5t+8ycqkUN2Mrz4ueqcJBu1euljHTa5xIQhhfYRE7HbeJck++gFk8YYnx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjL9FtRZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Byc2DOiu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744277462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mVfmgRn9b+MKfQINqgY7O8gFSVgjcr0dyC/SYpb7QXA=;
-	b=Byc2DOiuIxr7B13Vco52L1NfV4xSYlr3ZGmr+QZ0Agv6vYRssPP30qkOSYBYX4E4p0kkkN
-	WnRcN6MPAL5tEZ5dQYrUIQiHvAu6QdoKf8zrEJMWTKv/Abe1G7vahN5cB94RYf4SqFTFlY
-	RCVp0vmUZ58ziO//7685pV/AccIREbo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-eHl-dKk7P66KDw-LPENLvg-1; Thu, 10 Apr 2025 05:31:01 -0400
-X-MC-Unique: eHl-dKk7P66KDw-LPENLvg-1
-X-Mimecast-MFC-AGG-ID: eHl-dKk7P66KDw-LPENLvg_1744277460
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39ac9b0cb6aso363368f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:31:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744277460; x=1744882260;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mVfmgRn9b+MKfQINqgY7O8gFSVgjcr0dyC/SYpb7QXA=;
-        b=lc5UHZIY1lkBzSWwYKx1hh9HBMvcqpfbHqSewAh5e6th3xqIjSspmzWXMMOoSd87Pk
-         FtLeWO1DF02PynCYglQbv5asG/HtB+ovj3tPWw2MEwvs/+H9YOICEZf0lsb2UeEIco+a
-         JlgDYTWWmAWOW9MVZrHrZULJygKOng+osRTNl9rNgOnLG3ld/r3hXwH7q0+Icg5wRVBm
-         SmDwzj73zvMMw0SiYdnO9FOTbxvuDOReOw9ey2lA5TdERL8Em7b5Av469HewmWQzWSWP
-         kJ8iCqfmO81iuNwrvvhXgzdshVSPDojU/3OlbTmDzSabT2TzL1TmFc+26vWzLz9TwHEF
-         EsQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfjCrlUptYepI6Rw1Hn6WL8Kxm4ZCZ9Tgv8kbwixaLIKcnbB3TDcBVNWsbHydpRjzT+UQeBLYmvUs9u7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmpYbuKrnIhQSLKjT+Bloqz4RsAhF1I0uHp12m99Ef04viXouT
-	z5cK8sE2iw2XeSf2cO+BPJIY4hKsh8uXo75mPnNrqIle2CbQ63oSafeiljV7Hx6BwoVII1hNhIp
-	YeWlg8KQNrFBpPD9z/4vApKDSS4Hlu5TwIdpya/6lsl9XNYxNV9uOI/kOX4AGyA==
-X-Gm-Gg: ASbGncvLvFp9fmABmGNIHsHGkXmGF70BCxOZY14Ev94ysX/N6FuwaOlDr53+xih6nCI
-	Hw9u9dA8pBrfR9sHreo6gtFGjyeGWI7v1zSzVpb2xinBbhTC1cxHToCDpQNhFC5D6CDvoynnnOM
-	kqhWIfMIo6jRrmWU8fUK7mUN9NKlzZC7feM1wB3RRF9k2eou9FKGa/roa1Ko4dDjTbXWy2Vf/gR
-	wajl3F3T6LDLXLaqNOvraRRpgTOi/Q/KGZQNZD11tRSsag8NKg42hM8Ce1yIfD4QcctIgD/A626
-	1yPdZTy2OEQN45qvVd18IVVULCYT57ImD7ehvzM=
-X-Received: by 2002:a05:6000:4202:b0:391:487f:2828 with SMTP id ffacd0b85a97d-39d8f4657abmr1372765f8f.10.1744277460113;
-        Thu, 10 Apr 2025 02:31:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFsq3LGvvA3jJ5Ac8MsDzHgTZ2+T6jVK8OnBPioVOk7F1bhAo8k8hGKF874SxsPTxBYjyatKA==
-X-Received: by 2002:a05:6000:4202:b0:391:487f:2828 with SMTP id ffacd0b85a97d-39d8f4657abmr1372740f8f.10.1744277459756;
-        Thu, 10 Apr 2025 02:30:59 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-84-24.dyn.eolo.it. [146.241.84.24])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f23572c4esm45760155e9.26.2025.04.10.02.30.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:30:58 -0700 (PDT)
-Message-ID: <09aeed01-405d-4eb7-9a12-297203f1edcc@redhat.com>
-Date: Thu, 10 Apr 2025 11:30:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjL9FtRZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F6AC4CEDD;
+	Thu, 10 Apr 2025 09:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744277481;
+	bh=NUQSl8+KNt2Gck3bg5zy+/lvTkACE7uM59VfdQMYJzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VjL9FtRZYiAIUa//U1cc/2gKUgnwvHeK4bT+9LIGC9mtHU1f4UcjRF0h8D7rOx7pz
+	 iR5HtXzcxamzNeae3/JNe/gPTy7boaa5FX9rOMKNiug9wVM0NIp6ZsP3YrBz8ld8hC
+	 emGVRKGBrQZolj9q3AkTLhoPDH3Cmug/BsiPEJafWnEdVDPuWXvw4oPf7MVZ883aIT
+	 SJ+/eOuPhOaJ8rHhdMAey+nmq2fZo514q3YXzOeVeKf81mzqfrbZtp/H00V0m26P/k
+	 8ejdZ+VOEcTpTcNVTPAcNqpNmuKDVGm/wMQYhjBLxEDHI30rSti3DVMXfe8kASLaYC
+	 blPbZfprIw1cQ==
+Date: Thu, 10 Apr 2025 11:31:19 +0200
+From: Daniel Gomez <da.gomez@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, 
+	willy@infradead.org, linux-mm@kvack.org, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	David Hildenbrand <david@redhat.com>, gost.dev@samsung.com, linux-doc@vger.kernel.org, 
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH v3] docs: update THP admin guide about non-tmpfs
+ filesystem support
+Message-ID: <bozpegwoihmwakmmtkk2lhkwycv3yv4ovpfthguhcr4vbjgzpm@bjv7aioyg6ql>
+References: <20250404140657.29285-1-kernel@pankajraghav.com>
+ <Z-_7fzU02OU1hVOT@bombadil.infradead.org>
+ <qy52tvn6atrlt5rhgzbtueyqbs56ik3rfg2b7yopynhhoipvtj@qph743k6m7kg>
+ <Z_Aexql5FDVLtuQp@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] net: ppp: Add bound checking for skb d on
- ppp_sync_txmung
-To: Arnaud Lecomte <contact@arnaud-lcm.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
- syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-References: <20250408-bound-checking-ppp_txmung-v2-1-94bb6e1b92d0@arnaud-lcm.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250408-bound-checking-ppp_txmung-v2-1-94bb6e1b92d0@arnaud-lcm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_Aexql5FDVLtuQp@bombadil.infradead.org>
 
-On 4/8/25 5:55 PM, Arnaud Lecomte wrote:
-> Ensure we have enough data in linear buffer from skb before accessing
-> initial bytes. This prevents potential out-of-bounds accesses
-> when processing short packets.
+On Fri, Apr 04, 2025 at 11:02:46AM +0100, Luis Chamberlain wrote:
+> On Fri, Apr 04, 2025 at 06:31:16PM +0200, Pankaj Raghav (Samsung) wrote:
+> > On Fri, Apr 04, 2025 at 08:32:15AM -0700, Luis Chamberlain wrote:
+> > > On Fri, Apr 04, 2025 at 04:06:57PM +0200, Pankaj Raghav (Samsung) wrote:
+> > > > From: Pankaj Raghav <p.raghav@samsung.com>
+> > > > 
+> > > > THP support for non-tmpfs filesystem has been around for some time now.
+> > > > Update the admin guide to reflect it.
+> > > > 
+> > > > While we are at it, move FilePmdMapped to previous paragraph for clarity,
+> > > > and clarify ShmemPmdMapped & ShmemHugePage.
+> > > > 
+> > > > Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> > > > Acked-by: David Hildenbrand <david@redhat.com>
+> > > > ---
+> > > > 
+> > > > Changes since v2:
+> > > > - Address comment from Bagas Sanjaya
+> > > > - Squash commits and Ack from David
+> > > > 
+> > > >  Documentation/admin-guide/mm/transhuge.rst | 22 +++++++++++++++-------
+> > > >  1 file changed, 15 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> > > > index dff8d5985f0f..f8aae64e38d0 100644
+> > > > --- a/Documentation/admin-guide/mm/transhuge.rst
+> > > > +++ b/Documentation/admin-guide/mm/transhuge.rst
+> > > > @@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
+> > > >  that supports the automatic promotion and demotion of page sizes and
+> > > >  without the shortcomings of hugetlbfs.
+> > > >  
+> > > > -Currently THP only works for anonymous memory mappings and tmpfs/shmem.
+> > > > -But in the future it can expand to other filesystems.
+> > > > +Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
+> > > > +filesystems that support large folios.
+> > > 
+> > > That seems to allude that THP can be supported on filesystems
+> > > that suppor large folios. I don't think we want to call that THP
+> > 
+> > But we do allocate a THP in the page cache if we support large folios.
+> > 
+> > See [1] where THP was supported through page cache. From what I
+> > understand, THP support was added first to the page cache and then large
+> > folios (orders in between) support came later.
 > 
-> When ppp_sync_txmung receives an incoming package with an empty
-> payload:
-> (remote) gef➤  p *(struct pppoe_hdr *) (skb->head + skb->network_header)
-> $18 = {
-> 	type = 0x1,
-> 	ver = 0x1,
-> 	code = 0x0,
-> 	sid = 0x2,
->         length = 0x0,
-> 	tag = 0xffff8880371cdb96
-> }
-> 
-> from the skb struct (trimmed)
->       tail = 0x16,
->       end = 0x140,
->       head = 0xffff88803346f400 "4",
->       data = 0xffff88803346f416 ":\377",
->       truesize = 0x380,
->       len = 0x0,
->       data_len = 0x0,
->       mac_len = 0xe,
->       hdr_len = 0x0,
-> 
-> it is not safe to access data[2].
-> 
-> Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
-> Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
+> I see, yes Do we want to clarify this further?
 
-A couple of notes for future submission: you should have included the
-target tree in the subj prefix (in this case: "[PATCH net v2]..."), and
-there is a small typo in the subjected (skb d -> skb data). The patch
-looks good I'm applying it.
+According to this thread [1], large folios currently depends on
+CONFIG_TRANSPARENT_HUGEPAGE, but that will be removed eventually.
 
-Thanks,
+https://lore.kernel.org/all/ZPINmXyTgy2wqLqr@casper.infradead.org/
 
-Paolo
-
+I agree this needs to be clarified. THP for anonymous memory and tmpfs/shmem is
+not the same for filesystems that support large folios.
