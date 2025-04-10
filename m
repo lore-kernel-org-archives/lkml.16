@@ -1,387 +1,268 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C7D2045BF;
-	Thu, 10 Apr 2025 09:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8271420C47C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275685; cv=none; b=JDfNndYfcHD1wFFD+oRXou8EWEkNXbUsHvsKMlposkWFG3PT3CfdmI3RRjzJJ6uMds+cP/uh2WcJSEyh0qeF32+yZ2HFnNpl5fkHw8/7gl0Di9uRJlziW1ov893uWkxmJVETIX1G/ggtAEQ/rsYH+lfuNMm/ffVTaKcGMJxeBfc=
+	t=1744275690; cv=none; b=IricgBp9jHQY6ENmZfkrGAOhp6JGDpI0IClzgojreHiw65E4MS3Z2/FlyJVhgHDkgjr5LGa8D5zyW0iTRe1nr+AThVhg4m0mV0ujasu8YiyJsTeEXMuYze/k5wm0O7io6sgtrVrdPfWeeIZZE70Q2zfuYmkiXI7ImwjWYE56BfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275685; c=relaxed/simple;
-	bh=PzR5AoYa0LNmRQeQyXIX32HQT0g8b0LNKUhhChQHPYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G3AlAeSy83sQh+xMl77Ed4zB7ifrP9q2eLhD/i4y93an5I6V2Ma0j3TxHIFokVV7O7dzaewJqULre0ULp2Q+DhY2lKwtgoygx6T1mZVWUpCPuLcmJynpzqbQm2o6nyX0CHFuJ3dYzvfVgm40qqHp6dXYPacUHiUB+zOYFVJoHQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sTU+3k3W; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744275690; c=relaxed/simple;
+	bh=2VneLB8/xCuP6Q1rawp6bZVIX/46Zf8DzoFjno1k0yc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IV6LHTL62s7ZvVsPXOwRcRrsC7d9cNmrqEs1Ryo9Zvyjw8qEPrjmWN3UgZk3HvvFcww5F/Ha2DJ8PF0PkZNBM6PGD+H4m/CkQW6d6GFWCKOlALP71r1roU4BuHbUdO5Hv7nj9asXvgr7BhrEouxE/3ZtpVFM/tit668VynYr02Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u9Bpe9a4; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sTU+3k3W"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53A917Nf1235056
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 04:01:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744275667;
-	bh=cc5ekfHnrvOs+1pRJK1H7PbWsw3yfPpOvi2+tBhTZPA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=sTU+3k3WVae23FM08Du+C7ftUAUouanodcI3wm3NxOBYAdqtDond9x4M7Eya/fd41
-	 twzA1Nng8gjTqNpG93ro9HfZ5gwd0amI0Uv3xfjsHyqCBtnqZxYptKzae7QMNddZ8k
-	 4akG5U2EyGKS3CxCwR70RUTxzEjhcIwWXBRQaY70=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53A917wZ001564
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 10 Apr 2025 04:01:07 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
- Apr 2025 04:01:06 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 10 Apr 2025 04:01:06 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53A910It043856;
-	Thu, 10 Apr 2025 04:01:00 -0500
-Message-ID: <091c0869-525b-4b40-b5fe-a5c1907ec606@ti.com>
-Date: Thu, 10 Apr 2025 14:30:59 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u9Bpe9a4"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf848528aso4419305e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:01:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744275686; x=1744880486; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oh8/If+oBEjrA7bnRqmKCZXwh8GIaPRWwY+4IzOPAWY=;
+        b=u9Bpe9a4IZTYow8Ovu3x43ruXNe2ZyC7HDEJINTePqLdo8HidO0/9wH0IxjZ9Goz/7
+         TG9E3jUJuS5pQH5Ejg2EPcF0T9TMecWl40fpTZQ6PWP29YeLy2DGnXwKw30DuckuLHJY
+         snqddyrJy8CRTZb/5Ba9r8o6H/jlu9JnVCEkrrzuCVxQ8omCmeA63XIqakDzSOUFkn8Z
+         YaKPvcdVcak7Qxv6N+WpEQCTK3H6HcaQq5J0TPw3YJFWlX9H3nTPReGpvi+U1dCj1x8Y
+         EHwFeNWgUj6FL/L9wvhs5CEZnx8IELqdn2Gj35YO6RzConkClP8j03yG7Cf2YQruA57p
+         ElZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744275686; x=1744880486;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oh8/If+oBEjrA7bnRqmKCZXwh8GIaPRWwY+4IzOPAWY=;
+        b=X2NjzkN05x0iU8d2xRYBAXOjIr7XvSjWHr8QkYJd9q0NuhQZcs8IHNUVXWwRc4tONT
+         6EW4SxH+BHsHXq0VpvKfmO67H3wNyKdwvrBERqh+Rs4OTyOhnmAX9uIz48mMBSWwpdeO
+         sat7DFMHGXanGVakeP1yxVAaaDrpYushCksQOIFdlkJReVLQ9qQFQ9nmZXlEXKA0EP7o
+         ODbflO6OJYsiL8aKZwUqSETwaaXQPgNtAMP7//8TmibLuvhUj1iQG3A1pdtcEwz0Gbez
+         f3Ofp53Rt+50E7fi/iWwdPCgZgYB+7AtS2fZF/ZtW9eKFXBY/EFyA0lDI3xokuXqwUS6
+         6jhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVj0p0IonvtZMe4VN44nQpUbwqV61BRY9vU+iL0FJgmM3RTiufyxAHqB3og4AtDCyBAi3z5t7+12zVP8AA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC1sowGJ+Y+9iSKUlRuPxUF0/u4foDh08df90f13h+jyhI8xFK
+	laqeN34cSEIT1vPgBDcLPegxTqvcK0A46sinraeIMxaEA/kMU3iXPyhwturPJRA=
+X-Gm-Gg: ASbGncv72uzvpfs/AMMNRqm6NpNnzp043yJ+RtzuFpy3Ls1C+qwpYobdgDZqM5pMWHI
+	dWjXa+DsWxW+Bo40lSR3eCuy1usd5QIm+g3gzs4EPD+sMcrQgbiPGmhR2sUCQlgUMt8tW5pnL0s
+	i4PwsP9O60f4TvIdBXsX57VL341jZFSweSHRY+0DscdHfL9QxfAPtAO3nXIAY4AHwUT8F6aYGMI
+	13/4U28XwMLHdYVPs28Uy5BYfAqyzOZmC299uQ6FSR/fHR+277nn8lZ2AgZbfV0QiMmzP1FjuRw
+	/71mkJHEW2YFd0OHnuxzW5uyPGlYayQNWlrn8LEEacNz3qgRwlcjfP6bQqtwQ6HuPag7qRgsetC
+	PYXFb1Fxvfe93bfRJGg==
+X-Google-Smtp-Source: AGHT+IGtOq7myY4YJoi4d1yK1mMfcXZ0/5kdRDE4Co36xHftaRobcvo3Am7x0j49xmwISyb9r7/LGg==
+X-Received: by 2002:a05:600c:3b9f:b0:43c:eec7:eab7 with SMTP id 5b1f17b1804b1-43f2d7b8143mr17238855e9.11.1744275685639;
+        Thu, 10 Apr 2025 02:01:25 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:1a13:cd5d:5261:ebfe? ([2a01:e0a:3d9:2080:1a13:cd5d:5261:ebfe])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893776dfsm4204227f8f.33.2025.04.10.02.01.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 02:01:25 -0700 (PDT)
+Message-ID: <1550c870-188e-4b41-b17c-2009cda41ffc@linaro.org>
+Date: Thu, 10 Apr 2025 11:01:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-To: Andrew Davis <afd@ti.com>, Judith Mendez <jm@ti.com>,
-        Devarsh Thakkar
-	<devarsht@lewv0571a.ent.ti.com>,
-        Nishanth Menon <nm@ti.com>, Hari Nagalla
-	<hnagalla@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Beleswar Padhi <b-padhi@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Markus Schneider-Pargmann <msp@baylibre.com>, <praneeth@ti.com>,
-        "Khasim, Syed Mohammed" <khasim@ti.com>,
-        <tomi.valkeinen@ideasonboard.com>, <jai.luthra@ideasonboard.com>,
-        <v-krishnamoorthy@ti.com>, <s-tripathy@ti.com>, <s-tripathi1@ti.com>,
-        <c-shilwant@ti.com>
-References: <20250405001518.1315273-1-jm@ti.com>
- <20250405001518.1315273-7-jm@ti.com>
- <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
- <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
- <e131298f-3713-482a-a740-ff89709270b4@ti.com>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <e131298f-3713-482a-a740-ff89709270b4@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v4 6/6] media: platform: qcom/iris: add sm8650 support
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
+ <20250409-topic-sm8x50-iris-v10-v4-6-40e411594285@linaro.org>
+ <36e25d6e-36de-fec6-e54d-0683503c7a09@quicinc.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <36e25d6e-36de-fec6-e54d-0683503c7a09@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andrew, Judith,
-
-Thanks for the quick revert.
-
-On 07/04/25 21:28, Andrew Davis wrote:
-> On 4/7/25 9:13 AM, Judith Mendez wrote:
->> Hi Devarsh,
+On 09/04/2025 18:57, Vikash Garodia wrote:
+> Hi Neil,
+> 
+> On 4/9/2025 8:08 PM, Neil Armstrong wrote:
+>> Add support for the SM8650 platform by re-using the SM8550
+>> definitions and using the vpu33 ops.
 >>
->> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
->>> Hi Judith,
->>>
->>> On 05/04/25 05:45, Judith Mendez wrote:
->>>  > From: Devarsh Thakkar <devarsht@ti.com>
->>>>
->>>
->>> Thanks for the patch.
->>>
->>>> For each remote proc, reserve memory for IPC and bind the mailbox
->>>> assignments. Two memory regions are reserved for each remote processor.
->>>> The first region of 1MB of memory is used for Vring shared buffers
->>>> and the second region is used as external memory to the remote 
->>>> processor
->>>> for the resource table and for tracebuffer allocations.
->>>>
->>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->>>> Signed-off-by: Judith Mendez <jm@ti.com>
->>>> ---
->>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 +++++++++++++++++++++ 
->>>> ++--
->>>>   1 file changed, 90 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/ 
->>>> boot/dts/ti/k3-am62a7-sk.dts
->>>> index 1c9d95696c839..7d817b447c1d0 100644
->>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>> @@ -52,6 +52,42 @@ linux,cma {
->>>>               linux,cma-default;
->>>>           };
->>>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x99800000 0x00 0x100000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        c7x_0_memory_region: c7x-memory@99900000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9b800000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>>           secure_tfa_ddr: tfa@9e780000 {
->>>>               reg = <0x00 0x9e780000 0x00 0x80000>;
->>>>               alignment = <0x1000>;
->>>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
->>>>               alignment = <0x1000>;
->>>>               no-map;
->>>>           };
->>>> -
->>>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>>> -            compatible = "shared-dma-pool";
->>>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
->>>> -            no-map;
->>>> -        };
->>>>       };
->>>
->>> This is missing the edgeAI specific remote-core carveouts and RTOS- 
->>> to-RTOS IPC memory regions [1] being used by edgeAI firmwares which 
->>> come as pre-packaged in the official SDK release for AM62A.
->>>
->>> There is only one official SDK release for AM62A (which is edgeAI 
->>> based) [2] which packages these edgeAI remoteproc firmwares and in my 
->>> view it is a fair expectation that remote core careveouts in device- 
->>> tree should align with firmwares released in SDK.
->>>
-> 
-> Why should Linux upstream care about what we do in our current evil 
-> vendor SDKs?
-
-These carveouts are specific to remote-cores and so have to match with 
-firmwares running in these remote-cores. The debate is on which 
-firmwares it should match to. The firmwares being packaged in SDK are 
-the most used-ones and so in my view it is safe to account them as the 
-official ones, unless of-course there is a major overhaul and 
-re-architecture planned and accepted for these firmwares in which case 
-we should wait for it.
-
-> We change things around every cycle, and do all kinds of hacky things to 
-> just
-> "make it work" for the current SDK release.
-> 
-
-I don't see any changes done in memory map for last set of releases, but 
-agreed if there is big architecture change planned for these firmwares 
-then we should rather wait for updated firmwares then adding bloated 
-carve-outs.
-
->>> This is because most developers (including me) and vendors download 
->>> this official SDK release and use it with latest upstream kernel and 
->>> modules (right now we are applying required patches locally) and this 
->>> patch won't suffice for this, in-fact it won't work since the 
->>> remoteproc firmwares are already using regions beyond the reserved- 
->>> regions from this patch.
-> 
-> Then that firmware team should fix their firmware, Linux should not
-> do things just because some builds of a firmware did the wrong thing.
-
-Maybe some optimizations would be missing, but carve-outs for lot of 
-things which these firm-wares do out-of-box (and not even related fully 
-to AI) are missing. For e.g. there is RTOS-to-RTOS IPC test which runs 
-on startup and there is no reserved region for same, this would lead to 
-tricky failures. The DM R5 remote core also controls ISP, but all 
-required regions for same are also not present either.
-
-> 
-> Just a random example from the top of my mind here, a while back
-> someone on the codec firmware team decided to take the standard RPMSG
-> name service structure and modify it to suit some specific usecase
-> they had, suddenly all the firmware we made for AM57x devices stopped
-> working on upstream kernels. Instead of fixing the firmware we just
-> carried a hack for the same in our vendor kernel trees. Now customers
-> have no path to use this old firmware on newer kernels as adding the
-> hack to upstream Linux (rightly) failed [0].
-> 
-> Let's not do that again, if we have firmware that doesn't follow
-> upstream, then let's fix the firmware, not hack around it upstream.
-> 
-> The edgeAI firmware folks have no issue ignoring existing upstream
-> IPC carveouts and simply replacing them all with their own custom
-> ones in their SDK[1], I see no reason they cannot continue doing that
-> if they don't want to fix their firmware.
-> 
-
-There is no apples-to-apples comparison with TDA4VM, unlike AM62A7 it 
-offers SDK for both edgeAI and generic Linux [1], so if someone just 
-uses latest upstream kernel and device-tree with this generic linux SDK, 
-that would still work without any overlays applied or carveouts added. 
-Same is not true for AM62A, as AM62A offers only edgeAI SDK with 
-firmwares packaged for AI use-cases. So if someone, just replaces latest 
-upstream kernel and device-tree with the patches from this series in 
-edgeAI wic image, it won't work cleanly due to missing carve-outs.
-
-Also even if we keep aside edgeAI, basic camera+ISP use-case won't work 
-without the carveouts and we would prefer not to clone another layer to 
-grab the overlay and apply it every-time we want to test run camera+ISP 
-(and even the edgeAI use-case) on AM62A which would be a pain.
-
+>> The SM8650/vpu33 requires more reset lines, but the H.264
+>> decoder capabilities are identical.
 >>
->> I understand your point, currently with this patch remoteproc loading
->> will not work for some cores. However, the goal here is to standardize
->> as much as possible the memory carveout sizes, push the "demo firmware"
->> to request resources the correct way from resource table, and move away
->> from this dependency and limitations that we have with our firmware.
-
-I understand this, but my view is that w.r.t firmware only goal should 
-not just be tp demonstrate correct way of requesting resources from 
-resource-tables, optimize the carve-outs etc but also to demonstrate the 
-primary use-cases (camera+ISP+edgeAI) which the device is capable of.
-
->> should soon be able to generate our own firmware using Zephyr,  which
->> Andrew is pioneering, so with this firmware we should move to the
->> correct direction upstream. Downstream we are still using the memory
->> carveout sizes that the firmware folk want so desperately to keep, for
->> now..
+>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>>   .../platform/qcom/iris/iris_platform_common.h      |  1 +
+>>   .../platform/qcom/iris/iris_platform_sm8550.c      | 64 ++++++++++++++++++++++
+>>   drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
+>>   3 files changed, 69 insertions(+)
 >>
+>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
+>> index fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+>> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+>> @@ -35,6 +35,7 @@ enum pipe_type {
+>>   
+>>   extern struct iris_platform_data sm8250_data;
+>>   extern struct iris_platform_data sm8550_data;
+>> +extern struct iris_platform_data sm8650_data;
+>>   
+>>   enum platform_clk_type {
+>>   	IRIS_AXI_CLK,
+>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+>> index 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+>> @@ -144,6 +144,10 @@ static const struct icc_info sm8550_icc_table[] = {
+>>   
+>>   static const char * const sm8550_clk_reset_table[] = { "bus" };
+>>   
+>> +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
+>> +
+>> +static const char * const sm8650_controller_reset_table[] = { "xo" };
+>> +
+>>   static const struct bw_info sm8550_bw_table_dec[] = {
+>>   	{ ((4096 * 2160) / 256) * 60, 1608000 },
+>>   	{ ((4096 * 2160) / 256) * 30,  826000 },
+>> @@ -264,3 +268,63 @@ struct iris_platform_data sm8550_data = {
+>>   	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>>   	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>>   };
+>> +
+>> +/*
+>> + * Shares most of SM8550 data except:
+>> + * - vpu_ops to iris_vpu33_ops
+>> + * - clk_rst_tbl to sm8650_clk_reset_table
+>> + * - controller_rst_tbl to sm8650_controller_reset_table
+>> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
+>> + */
+>> +struct iris_platform_data sm8650_data = {
+>> +	.get_instance = iris_hfi_gen2_get_instance,
+>> +	.init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
+>> +	.init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
+>> +	.vpu_ops = &iris_vpu33_ops,
+>> +	.set_preset_registers = iris_set_sm8550_preset_registers,
+>> +	.icc_tbl = sm8550_icc_table,
+>> +	.icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
+>> +	.clk_rst_tbl = sm8650_clk_reset_table,
+>> +	.clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
+>> +	.controller_rst_tbl = sm8650_controller_reset_table,
+>> +	.controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
+>> +	.bw_tbl_dec = sm8550_bw_table_dec,
+>> +	.bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
+>> +	.pmdomain_tbl = sm8550_pmdomain_table,
+>> +	.pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
+>> +	.opp_pd_tbl = sm8550_opp_pd_table,
+>> +	.opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
+>> +	.clk_tbl = sm8550_clk_table,
+>> +	.clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
+>> +	/* Upper bound of DMA address range */
+>> +	.dma_mask = 0xe0000000 - 1,
+>> +	.fwname = "qcom/vpu/vpu33_p4.mbn",
+>> +	.pas_id = IRIS_PAS_ID,
+>> +	.inst_caps = &platform_inst_cap_sm8550,
+>> +	.inst_fw_caps = inst_fw_cap_sm8550,
+>> +	.inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
+>> +	.tz_cp_config_data = &tz_cp_config_sm8550,
+>> +	.core_arch = VIDEO_ARCH_LX,
+>> +	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
+>> +	.ubwc_config = &ubwc_config_sm8550,
+>> +	.num_vpp_pipe = 4,
+>> +	.max_session_count = 16,
+>> +	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
+>> +	.input_config_params =
+>> +		sm8550_vdec_input_config_params,
+>> +	.input_config_params_size =
+>> +		ARRAY_SIZE(sm8550_vdec_input_config_params),
+>> +	.output_config_params =
+>> +		sm8550_vdec_output_config_params,
+>> +	.output_config_params_size =
+>> +		ARRAY_SIZE(sm8550_vdec_output_config_params),
+>> +	.dec_input_prop = sm8550_vdec_subscribe_input_properties,
+>> +	.dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
+>> +	.dec_output_prop = sm8550_vdec_subscribe_output_properties,
+>> +	.dec_output_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+>> +
+>> +	.dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
+>> +	.dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
+>> +	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>> +	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>> +};
+> While i was extending the data for QCS8300 (one another iris-v3 variant), i
+> realize that this file iris_platform_sm8550.c is getting dumped with all SOC
+> platform data. It would be a good idea at this point to split it into something
+> like this
+> 1. Introduce SOC specific c file and move the respective SOC platform data to
+> it, for ex, in this case sm8650_data
+> 2. Move the common structs from iris_platform_sm8550.c to
+> iris_platform_common.h. This way more SOCs getting added in future, can include
+> the common header to reuse them, otherwise it would end up using 8550.c for all
+> future SOC.
 > 
-> +1
+> Share your comments if you have any better approach to manage/re-use these
+> platform data considering more SOCs getting added.
+
+Right, yes the architecture is fine, but I don't feel iris_platform_common is the right
+place, perhaps we could introduce a platform_catalog.c where we could place all the common
+platform data and reuse them from the platform_<soc>.c files ?
+
+I can design prototype on top of this patchset as an RFC.
+
+Neil
+
 > 
-> I have this Zephyr based firmware for AM62A working and it uses the
-> standard IPC regions as specified in this patch. I'll be posting the PR
-> for it in Zephyr upstream by the end of week.
+> Regards,
+> Vikash
 > 
-
-I understand this, but will this zephyr based firmware support vision + 
-edgeAI analytics ? Does it demonstrate all the unique capabilities of 
-AM62A SoC ? If not, then what would be utility of such firmware on AM62A 
-where these are the primary use-cases w.r.t AM62A ?
-
-Why should upstream device-tree use carve-outs which match to this demo 
-zephyr based firmware (which apparently not many are using and is not 
-going into any official SDK release) instead of official firmwares going 
-into SDK ? SDK released firmwares are being used by so many customers 
-and SDK documentation maps to it, but zephyr firmware that is being 
-pitched here, who would be the potential users and what would be it's 
-utility ?
-
-[1]: https://www.ti.com/tool/PROCESSOR-SDK-J721E
-
-Regards
-Devarsh
-
-> For this patch as it is:
-> 
-> Acked-by: Andrew Davis <afd@ti.com>
-> 
-
-
-> Andrew
-> 
-> [0] https://lore.kernel.org/lkml/20241011123922.23135-1-richard@nod.at/
-> [1] https://git.ti.com/cgit/edgeai/meta-edgeai/tree/recipes-kernel/ 
-> linux/linux-ti-staging/j721e-evm/0001-arm64-dts-ti-Add-DTB-overlays-for- 
-> vision-apps-and-ed.patch?h=kirkstone
-> 
->> ~ Judith
+>> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+>> index 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+>> @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
+>>   			.data = &sm8250_data,
+>>   		},
+>>   #endif
+>> +	{
+>> +		.compatible = "qcom,sm8650-iris",
+>> +		.data = &sm8650_data,
+>> +	},
+>>   	{ },
+>>   };
+>>   MODULE_DEVICE_TABLE(of, iris_dt_match);
 >>
->>>
->>> [1]: https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/ 
->>> arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
->>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
->>>
->>> Regards
->>> Devarsh
->>>
->>>>       opp-table {
->>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
->>>>           };
->>>>       };
->>>>   };
->>>> +
->>>> +&mailbox0_cluster0 {
->>>> +    status = "okay";
->>>> +
->>>> +    mbox_r5_0: mbox-r5-0 {
->>>> +        ti,mbox-rx = <0 0 0>;
->>>> +        ti,mbox-tx = <1 0 0>;
->>>> +    };
->>>> +};
->>>> +
->>>> +&mailbox0_cluster1 {
->>>> +    status = "okay";
->>>> +
->>>> +    mbox_c7x_0: mbox-c7x-0 {
->>>> +        ti,mbox-rx = <0 0 0>;
->>>> +        ti,mbox-tx = <1 0 0>;
->>>> +    };
->>>> +};
->>>> +
->>>> +&mailbox0_cluster2 {
->>>> +    status = "okay";
->>>> +
->>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
->>>> +        ti,mbox-rx = <0 0 0>;
->>>> +        ti,mbox-tx = <1 0 0>;
->>>> +    };
->>>> +};
->>>> +
->>>> +&wkup_r5fss0 {
->>>> +    status = "okay";
->>>> +};
->>>> +
->>>> +&wkup_r5fss0_core0 {
->>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
->>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
->>>> +            <&wkup_r5fss0_core0_memory_region>;
->>>> +};
->>>> +
->>>> +&mcu_r5fss0 {
->>>> +    status = "okay";
->>>> +};
->>>> +
->>>> +&mcu_r5fss0_core0 {
->>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
->>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
->>>> +            <&mcu_r5fss0_core0_memory_region>;
->>>> +};
->>>> +
->>>> +&c7x_0 {
->>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
->>>> +    memory-region = <&c7x_0_dma_memory_region>,
->>>> +            <&c7x_0_memory_region>;
->>>> +    status = "okay";
->>>> +};
->>>
->>
-> 
 
