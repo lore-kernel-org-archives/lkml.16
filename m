@@ -1,131 +1,216 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14D11D5143;
-	Thu, 10 Apr 2025 06:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2745E204C3E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267790; cv=none; b=fjAeiPlHnjFJWJ/Gff0rJZWnc7ewCEMJz2wdi9RfAHPMbFTGCKzuaOMNCIOz/2MEfbj4p3O9ydWFFrX8Hg41gAcF0U7Q1l9kGIkgDW9/vZkZiuKNOTjPpTnxm+7wpCVzHPfNhfeuKbfC9JYXFryYkcAKYG2z74E8UDn+mzlNrDk=
+	t=1744267793; cv=none; b=QFxO5fCWMJpOIsItdenkBWi5JHgO71hz/l9vjJq/H8CcmBwroS8X2chAsAiiBb5Hc6wiT99mf/viRIOPUqHct76ohX3/ZNmRC2RZnR74raRwh75tt2aAqyf4WJ+n8yV/vFP1EIZKxUIJqdeIOleCv09aOt7gvLIHp/QRRqUeCzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267790; c=relaxed/simple;
-	bh=Qmh6mblMPaKUFpH+6loOYkLwSxCVt2hNWZhCNqv1ojs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k2n3kMr7G/SoTR6zcEClWTWvHyNkZz298xudjuKltP2uz3cJIKVaZ4iCWB2IbX7LqYpILSz6EUE8PvYc62gnIbwK/GlhH7U1wyTdbrrtFsRKF14VIhGcRCoCvBTjbjJKvi9tpp2osWBlrfdnaVcYPFakeP+2VjrtRW9pAWeyBH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LoXQ87V2; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744267793; c=relaxed/simple;
+	bh=qKsDk9EZ2dacQJ71qnkeU1d5QGUNiU0xLXDxuP55mBQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qyrtslNFuo0ITvbe83c/SoQ7ciTdX+ZQ6bDN3OP/GQhqtdDaS6cKE0pb6Z05MtGdjefDgoOu8dYNX8bYKIMUjbWgs4sibHqPZ/m/UC/XXCgqY2I9l34LDpMYZBraZYf7Qsf284+6ACppYjvRDev3ehWEXnNNsdZSRdAGJkgNDZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YdTw5jaV; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LoXQ87V2"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:389d:1fcb:c0f8:ff7c:208d])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C7BAAEE4;
-	Thu, 10 Apr 2025 08:47:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744267669;
-	bh=Qmh6mblMPaKUFpH+6loOYkLwSxCVt2hNWZhCNqv1ojs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LoXQ87V26TjCoAP0Zyg77KBuyawJ8fJwnF5+wK8U+Vl1gW4soNZ8nlhEiP+WTtFO3
-	 ZvPJMQbbdztAo/LqyshtKSK6c+zKqMKbmdGKaQOLSyKtiUJEU44maC5BLjjMdYrqPN
-	 WuyMpQ85PMcR2Xa+9H4X/iERBUG7DS6rC/S0jKCU=
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Date: Thu, 10 Apr 2025 12:19:00 +0530
-Subject: [PATCH v2 2/6] media: ti: j721e-csi2rx: Use
- fwnode_get_named_child_node
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YdTw5jaV"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2d0a742df27so441280fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744267791; x=1744872591; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FpF7wEE+1cJWx9zAtKf9QlygCmnNGJM9CNsxuBDedRk=;
+        b=YdTw5jaVbVvFDS+IIkiX5jXkIPFo9OSWKYMWyeu6FGDMlZO3wR/C3EkZmLkGpI4sAF
+         cMaONnpmZiqZzp+v6Ck+pFBivMkJX3+gr5/x+0oLtyl6F2nKAmU+QKdPUqNWo8WQOwm+
+         FBB0C8hMTOMdQz1lKqlnz0sethzBRjW1TBKI65ydbdTEtH9/le2M0iHBX2Ft6OrnsKHo
+         L+Rc2C4OkaVaYiAa8b6qMNPvV2CLT/iuGjBv5u+Mb2ea2REKDLFFdmh8kWAd5p0Nov7f
+         ZP3/Tk/6WiNifD16eKQM3qfkHJtL00CFl1OdWaViDMKzlx7rI4uumbPHFCoxwAx8mA4D
+         U6kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744267791; x=1744872591;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FpF7wEE+1cJWx9zAtKf9QlygCmnNGJM9CNsxuBDedRk=;
+        b=lOA5fHm+RTEmCEGlexuktUjH/eOGpZCadRVpuGFI6Qn7Gwv8LoBjZf+rpcPBwc4yEH
+         6WaZ8vlRhZvq/m+uOq2oiH6ga35t8tHysYfvwyMHPFLOL2H4h1kdmAiJamotJZDc0exg
+         G8/Ka9xwWmvt2UOu1xZT0H28EiVKZOtifAdDo4PjqG97/LRC+/+pzDyMi1IWzT8JtUEv
+         46VpXEAxIvRbyXMo/vfUi4tTI0r2sI0AQuS/His1+8Dl9aR5MQcP49GywVafnLH4awAI
+         aQv3Q1JWPerJzBgAip3rPzBbw1BLUc06eZ5LEAQnnnR3w6+YEEubbMasrQ/f4P1lZxAF
+         8J8Q==
+X-Gm-Message-State: AOJu0YwEfgHh4o2vPlf0Bl4+FJwBe24MrUntYnS6Bewq55VppTPCmxAo
+	pGjg/8V8Frz6jJsaBsxX6qyOUz0Ldl3feC28xt3180OcgGD1vkjCQKwS/eiEpmHVvmbtNBC2f9l
+	p60NJ9c9ikDmo9FIo3zjVVyXki3mkDp0apEF2WA==
+X-Gm-Gg: ASbGncvW7ZTpP2VsqYPaAdH1pFc/XI/YVa1btCPbhfVXQmLSsOf1VIJ/BbGwbJoY2ys
+	dBxavvr0W2hV3M/P9mkCe7Q8pFTTAHHeGPim4yrbIZAt5eSeOlfMyKxtSFWVzb3CN2OdZGKkSp8
+	DYVJipFPcP0uDfvsc539DHBp4=
+X-Google-Smtp-Source: AGHT+IHI4FgOoH6eOg0ztL2Lx7hiXdosqXiiUD+d8J9IOEiCubchzZoLqMtVD0Mmvo3sJz+QQ7r84CVnm0uFw++DJDA=
+X-Received: by 2002:a05:6871:4009:b0:2c4:1b1c:42c3 with SMTP id
+ 586e51a60fabf-2d0b3a2a298mr929589fac.9.1744267791101; Wed, 09 Apr 2025
+ 23:49:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-probe_fixes-v2-2-801bc6eebdea@ideasonboard.com>
-References: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
-In-Reply-To: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>
-Cc: Devarsh Thakkar <devarsht@ti.com>, 
- Rishikesh Donadkar <r-donadkar@ti.com>, Vaishnav Achath <vaishnav.a@ti.com>, 
- Changhuang Liang <changhuang.liang@starfivetech.com>, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jai Luthra <jai.luthra@ideasonboard.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1925;
- i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
- bh=Qmh6mblMPaKUFpH+6loOYkLwSxCVt2hNWZhCNqv1ojs=;
- b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBn92n3JSzLrDTKSmTlsu6K4vn3vcSvKyj09Eu0J
- t4u78alPSCJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ/dp9wAKCRBD3pH5JJpx
- Ra1oEACNhrTaNHHA+VsNdppXcFqScfJbsz42AWsmSrzbRjWd5O+YdtFgPaAh7jx6M6yeGCr1RUT
- W9WS16fDXPIGDU9RFu1dunif9A48hSBHozMCVjmeJXbROdTDvQLHneohNTmy7QQQxM7gTBkfeah
- 9Jy3DfaTFruKX1Fvn/hR0zg9MdUUv+F0i+0r8Z69FS3BbI4R5aHFJ8ZcOPUQIcI7DdmqGv5XO4f
- V3msA22ZN2AWkPPpTBAmt56udLJMOi2J0OFQm9cZTZFbnjmsY7x9fe1xm82z9lTWYeq/9iuXnJu
- gzrqsra2bhRU405mwxjaK9N+fL8PEs4sPOfugHx4nuIawlCgIIxt9HnzT73YBPc7XEXAsXJXlT6
- N4YuEyfyLoYaz2SZXE5QUZBIJwQh5oiYQQtQV/BK3b5hjVeU7orpbcVb5Dkkoq+Qx6sJbCFT2fi
- r6kqnuTD2A1mBNBShDWHWs9II4Vy/aLqvA5EJZ4aU61PAcNQGRJ6ZWXI5hB+hu8/ORcYzv31e2U
- oBVWlqhNxvyCG6Yd6jS3lW59pprqqM/BVyfO/WWJA2G9ztHKmNOGJv/Ltx4e6wJj7H4rwt80iVQ
- 5/5CrpDAlqpNVKk6KlJNtTIUEZ5aO+5PNfQbgT0OXbIRYQpvOJtKFcgxxor9y+a314VEou4zjG/
- pY6G0apCLfAe1Hg==
-X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
- fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-6-jens.wiklander@linaro.org> <Z-JOPgcWlpTlskgd@sumit-X1>
+ <CAHUa44GjpHT5Nqo+Ar5jNYNPV-YJQYpLTCf=7oJ1o0VjP-t0nA@mail.gmail.com>
+ <Z-ucuPzwz4IqVTgb@sumit-X1> <CAHUa44FpsCVrbwj1=nsJVJFVJSF1kzKdWAkAMXRu6EdLrLvh8g@mail.gmail.com>
+ <Z_To9V-JOKZ7ChhE@sumit-X1> <CAHUa44EGWuVPjoxpG-S66he=6dkvkwzxNewaGKVKXUxrO41ztg@mail.gmail.com>
+ <Z_ZtDQQY4eouqBh8@sumit-X1>
+In-Reply-To: <Z_ZtDQQY4eouqBh8@sumit-X1>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Thu, 10 Apr 2025 08:49:39 +0200
+X-Gm-Features: ATxdqUEvXiuy3pdj5yJylN_i-qNjZAR_HHoPy2N2W57yI_8PinKhMCxfS6kRFGI
+Message-ID: <CAHUa44GFzG8dr1Kbapbjy77c-wJb4gQVVom24eLLueOK=gCq=A@mail.gmail.com>
+Subject: Re: [PATCH v6 05/10] tee: implement restricted DMA-heap
+To: Sumit Garg <sumit.garg@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
+	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
+	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Simplify notifier registration logic. Instead of first getting the
-device node, get the fwnode of the child directly.
+On Wed, Apr 9, 2025 at 2:50=E2=80=AFPM Sumit Garg <sumit.garg@kernel.org> w=
+rote:
+>
+> On Tue, Apr 08, 2025 at 03:28:45PM +0200, Jens Wiklander wrote:
+> > On Tue, Apr 8, 2025 at 11:14=E2=80=AFAM Sumit Garg <sumit.garg@kernel.o=
+rg> wrote:
+> > >
+> > > On Tue, Apr 01, 2025 at 10:33:04AM +0200, Jens Wiklander wrote:
+> > > > On Tue, Apr 1, 2025 at 9:58=E2=80=AFAM Sumit Garg <sumit.garg@kerne=
+l.org> wrote:
+> > > > >
+> > > > > On Tue, Mar 25, 2025 at 11:55:46AM +0100, Jens Wiklander wrote:
+> > > > > > Hi Sumit,
+> > > > > >
+> > > > >
+> > > > > <snip>
+> > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > > +
+> > > > > > > > +#include "tee_private.h"
+> > > > > > > > +
+> > > > > > > > +struct tee_dma_heap {
+> > > > > > > > +     struct dma_heap *heap;
+> > > > > > > > +     enum tee_dma_heap_id id;
+> > > > > > > > +     struct tee_rstmem_pool *pool;
+> > > > > > > > +     struct tee_device *teedev;
+> > > > > > > > +     /* Protects pool and teedev above */
+> > > > > > > > +     struct mutex mu;
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +struct tee_heap_buffer {
+> > > > > > > > +     struct tee_rstmem_pool *pool;
+> > > > > > > > +     struct tee_device *teedev;
+> > > > > > > > +     size_t size;
+> > > > > > > > +     size_t offs;
+> > > > > > > > +     struct sg_table table;
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +struct tee_heap_attachment {
+> > > > > > > > +     struct sg_table table;
+> > > > > > > > +     struct device *dev;
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +struct tee_rstmem_static_pool {
+> > > > > > > > +     struct tee_rstmem_pool pool;
+> > > > > > > > +     struct gen_pool *gen_pool;
+> > > > > > > > +     phys_addr_t pa_base;
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_DMABUF_HEA=
+PS)
+> > > > > > >
+> > > > > > > Can this dependency rather be better managed via Kconfig?
+> > > > > >
+> > > > > > This was the easiest yet somewhat flexible solution I could fin=
+d. If
+> > > > > > you have something better, let's use that instead.
+> > > > > >
+> > > > >
+> > > > > --- a/drivers/tee/optee/Kconfig
+> > > > > +++ b/drivers/tee/optee/Kconfig
+> > > > > @@ -5,6 +5,7 @@ config OPTEE
+> > > > >         depends on HAVE_ARM_SMCCC
+> > > > >         depends on MMU
+> > > > >         depends on RPMB || !RPMB
+> > > > > +       select DMABUF_HEAPS
+> > > > >         help
+> > > > >           This implements the OP-TEE Trusted Execution Environmen=
+t (TEE)
+> > > > >           driver.
+> > > >
+> > > > I wanted to avoid that since there are plenty of use cases where
+> > > > DMABUF_HEAPS aren't needed.
+> > >
+> > > Yeah, but how the users will figure out the dependency to enable DMA
+> > > heaps with TEE subsystem.
+> >
+> > I hope, without too much difficulty. They are after all looking for a
+> > way to allocate memory from a DMA heap.
+> >
+> > > So it's better we provide a generic kernel
+> > > Kconfig which enables all the default features.
+> >
+> > I disagree, it should be possible to configure without DMABUF_HEAPS if =
+desired.
+>
+> It's hard to see a use-case for that additional compile time option. If
+> you are worried about kernel size then those can be built as modules. On
+> the other hand the benifit is that we avoid ifdefery and providing sane
+> TEE defaults where features can be detected and enabled at runtime
+> instead.
 
-Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
-Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
----
- drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+My primary concern isn't kernel size, even if it shouldn't be
+irrelevant. It doesn't seem right to enable features that are not
+asked for casually. In this case, it's not unreasonable or unexpected
+that DMABUF_HEAPS must be explicitly enabled in the config if a heap
+interface is needed. It's the same as before this patch set.
 
-diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-index a066024bf745450e2ba01d06c0fec4e6bdbfa97e..6d406925e092660cb67c04cc2a7e1e10c14e295e 100644
---- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-+++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- 
- #include <media/mipi-csi2.h>
- #include <media/v4l2-device.h>
-@@ -450,25 +451,23 @@ static int ti_csi2rx_notifier_register(struct ti_csi2rx_dev *csi)
- {
- 	struct fwnode_handle *fwnode;
- 	struct v4l2_async_connection *asc;
--	struct device_node *node;
- 	int ret;
- 
--	node = of_get_child_by_name(csi->dev->of_node, "csi-bridge");
--	if (!node)
-+	fwnode = fwnode_get_named_child_node(csi->dev->fwnode, "csi-bridge");
-+	if (!fwnode)
- 		return -EINVAL;
- 
--	fwnode = of_fwnode_handle(node);
--	if (!fwnode) {
--		of_node_put(node);
--		return -EINVAL;
--	}
--
- 	v4l2_async_nf_init(&csi->notifier, &csi->v4l2_dev);
- 	csi->notifier.ops = &csi_async_notifier_ops;
- 
- 	asc = v4l2_async_nf_add_fwnode(&csi->notifier, fwnode,
- 				       struct v4l2_async_connection);
--	of_node_put(node);
-+	/*
-+	 * Calling v4l2_async_nf_add_fwnode grabs a refcount,
-+	 * so drop the one we got in fwnode_get_named_child_node
-+	 */
-+	fwnode_handle_put(fwnode);
-+
- 	if (IS_ERR(asc)) {
- 		v4l2_async_nf_cleanup(&csi->notifier);
- 		return PTR_ERR(asc);
+>
+> >
+> > >
+> > > > This seems to do the job:
+> > > > +config TEE_DMABUF_HEAP
+> > > > + bool
+> > > > + depends on TEE =3D y && DMABUF_HEAPS
+> > > >
+> > > > We can only use DMABUF_HEAPS if the TEE subsystem is compiled into =
+the kernel.
+> > >
+> > > Ah, I see. So we aren't exporting the DMA heaps APIs for TEE subsyste=
+m
+> > > to use. We should do that such that there isn't a hard dependency to
+> > > compile them into the kernel.
+> >
+> > I was saving that for a later patch set as a later problem. We may
+> > save some time by not doing it now.
+> >
+>
+> But I think it's not a correct way to just reuse internal APIs from DMA
+> heaps subsystem without exporting them. It can be seen as a inter
+> subsystem API contract breach. I hope it won't be an issue with DMA heap
+> maintainers regarding export of those APIs.
 
--- 
-2.49.0
+Fair enough. I'll add a patch in the next patch set for that. I guess
+the same goes for CMA.
 
+Cheers,
+Jens
