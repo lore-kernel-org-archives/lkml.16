@@ -1,273 +1,251 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2061.outbound.protection.outlook.com [40.107.223.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115C3259C;
-	Thu, 10 Apr 2025 04:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744260132; cv=fail; b=fwwX0fsY1+E0bIapUrrTwOOQTcow9PpQGlWnx1JI5Hxh9F3Cg/XhaeI0Po/7zrJxAqrnFVCAK9qf3xwlax1KtLFiIYGUXl8Bma3STCklsNvY1hWUw/7UK2QWOFrSe+iZ/WFK9H7Dq9fqB7pL2GZ0QesSfiJg13NJQ1Yrp20K2oE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744260132; c=relaxed/simple;
-	bh=BQZ5ZYz1W7S8zKavimvmv0WJbe34Tfs1vutm/aPBDQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ppzt775eDZHTt8yKJ9SGUWzdwOi+xH2cUwY5J4zvqeQfwl5eL0Tdhs1uzyXl+sjEZ1tOrN8H/awDGP/Huhk0nNSQWNabjYqTW8lKQ3NVXEtrBi+qhNdPnL+lqBLmEypPj+xxD4rjrJ2ybZsSh//EhD/rQwuIfop8KJWvlNuMD/w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LbIT7m+D; arc=fail smtp.client-ip=40.107.223.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LbIT7m+D"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hXMve0Lc+mZ1e/IivFk4O1j6eJg617oq2A2xmGRBBu74uWtMVY7oT5VXnMXiZ+0xM16cRvDejvslVKY7r6kyH3BARxubfGuFErmV7P3S+f7VTmjwa63fZrUdxmX/GlZwm6snuDv6AIXiVd6dvMapW6S0JrzwaPc22wL7DXtYTv49Wlo3PvjgYDTCmFluWE/rhJ1od/is/CE93SWjyVLjhyuPgoSg9h/wHLBAXGXOpCU7Y+qsdYi65et7ObvxE8p6bXs/CgAu5xn1wDOPQ29I88yPxiqyuYm4aEfLshZVkGtGOTfnNqNYk9YBpl0wSY5UV1gLwEAbH+RXh23H6yXRSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cu++Cp5MK6uEbbOldRMN5/bHjR+cMwhhSbVeFfE2Gow=;
- b=sie2RMMGwVhUfUoLukEGBv/iPbqJM2rbvvHUkMY05rqu9q4SaMRGc5omwTN7Qb+uM3mlv56bISGLBIJFu5i/ulNohJgtEqXnzMvtqGivbzYkAIiA9hbPP2FJHcdKagrJ+qItaSfnXeQ/vyS6muPz2qP60IGY+NdRmHQwHF+AuX2r/ci0P4Sx3+hEQuHd3trrT6hmCe3lBQIvfSmnAEisKWhw+xNzIk2OMxbskNVUni5ftpnvOOhpBXxuP3eT5qoMif5n2SHwxF225NP8Cwx85SxI05eXCTRUNdhcXPe+wnkof6tkx8VldQrASJZx+KbLUqDF6ckkwBuPlRuLLsGmnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cu++Cp5MK6uEbbOldRMN5/bHjR+cMwhhSbVeFfE2Gow=;
- b=LbIT7m+D6pNxGT2SrofFuOe06GPQU07Zdqhp7fXqLoIhsQJ7CPy+Av1ztTrwW0n90+NRJDxqLyjrn6niZdBYLsCrkonEFFQrW/C/O1NjSL6vQiZ93TXDis3rSibRDCl6KzX4E26tFeuM1YDYT8NmQIXP5jsXwlQPoN/YHydasYY=
-Received: from MW4PR04CA0242.namprd04.prod.outlook.com (2603:10b6:303:88::7)
- by CY8PR12MB7148.namprd12.prod.outlook.com (2603:10b6:930:5c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.24; Thu, 10 Apr
- 2025 04:42:04 +0000
-Received: from MWH0EPF000971E3.namprd02.prod.outlook.com
- (2603:10b6:303:88:cafe::4b) by MW4PR04CA0242.outlook.office365.com
- (2603:10b6:303:88::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.35 via Frontend Transport; Thu,
- 10 Apr 2025 04:42:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E3.mail.protection.outlook.com (10.167.243.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8632.13 via Frontend Transport; Thu, 10 Apr 2025 04:42:04 +0000
-Received: from [172.31.188.187] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 9 Apr
- 2025 23:42:00 -0500
-Message-ID: <f62e5ac5-313b-4668-a6ab-a683e5ddfcda@amd.com>
-Date: Thu, 10 Apr 2025 10:11:53 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF2C259C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744260185; cv=none; b=peoGbkr+eGJY9Rjlwr14OgnslBc9a4yEDrqD0BTZ5ZPn9aNkPmjFv3bRyC6sQJx6qw1lOATerNbKbLK8vBUUVA1Vm7Dulq8I2RKERf7Jamu+jEw+z9tkKBJztHmeGRrKRNA70mUvrdDlqzLQCm3Sf6BWQAwa9ooSU4D2+LxT7XM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744260185; c=relaxed/simple;
+	bh=5qDB1A741tq9yxqMEjEi0qotVMcBlK/2Usuf2TUm0EA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=P8alro77IiCFme12Boo5PkzEnksUZPXTCDrsjfFvRvfDwt8iXW3zSScrCXmbjKIft+rAtue/YvW/WxtMQrGoCy5V88xSPw4TrbxJxsHbDnzagNuxhDrX+lFu9tk1gDdpYpE4Cy7R0LQGuWAE6fkUchEEx45a4Wn+4st6DMhXdIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b41b906b3so51066039f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 21:43:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744260182; x=1744864982;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=swpjCqrL7HCuu/zXnUsI0yjwOLKo5bRSvMQrIRCr1VM=;
+        b=p5VNFH1w54leQjoe25f67m1icn6gPy7pY0Atd/G4EA3SsRcqqM+0tbeJjGx/J9Jctq
+         U0fP81zcLgTHyQPUHOr/uAGy4lll7qg9Ckb00s8+gmWsLRLFZiQ9xdmX3vtGNQfaOwA0
+         WpUK/xpws31OPmdKjBphDM1hmZnFt08+97fK3HEZ89On3v/Fqzl7U7FaAqzpUh3Pgo0b
+         +zy2oxP5/ThFUNpMyeHNMpy9kxNbPu0/ImPE+RDPailLC4KQWEH0P2EEUX0YEoOZv4pk
+         UxL5mZPE6ivri45WEeaJUPNqlfcUfiAtA3jqAX74wbHuDTunrUUh5ANXulPDQeSLPXpm
+         ZLOg==
+X-Gm-Message-State: AOJu0Yzq+wBbz8GCs/Y5YnYTJZ6jhOBjL8Oo/C3nOdS2WTbuK7wihfuK
+	qKfPhGsQVuukGEZSyErojRrKRq7wUZjVY8d1bdcH30dGSy7SMRNxz5XzX23WHtKORBgDqfoIHJP
+	B+4NfyTsVerr+gLoB0bcclHLx1C82IgOUhuVDDBjQBbnHNQCtJHJBLdk=
+X-Google-Smtp-Source: AGHT+IFszUOL1h2bZ9QIQrcm0A6sPHp+j+f2RlY1aHpo/y3Kzv1TSFEDX0WKo75sRVQmrITckyVOV7m1ooNBLc9F8RexD91DAe1u
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq/amd-pstate: Enable ITMT support after
- initializing core rankings
-To: Mario Limonciello <mario.limonciello@amd.com>, "Gautham R. Shenoy"
-	<gautham.shenoy@amd.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Viresh
- Kumar" <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, Huang Rui
-	<ray.huang@amd.com>, Perry Yuan <perry.yuan@amd.com>, Meng Li
-	<li.meng@amd.com>
-References: <20250409030004.23008-1-kprateek.nayak@amd.com>
- <483e9fc0-28bb-4531-88bb-738cd9ce9eb3@amd.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <483e9fc0-28bb-4531-88bb-738cd9ce9eb3@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E3:EE_|CY8PR12MB7148:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce8f6316-d056-411a-cc96-08dd77ea0ad8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VmRJMU9BeWY2blJHazlZVUt2c1d5dE1raUhSWFE5bWlVS1NsV0xlZytIbG9h?=
- =?utf-8?B?R0xReTlvS2lhMGNyS2xBSDlRekd1TmdUTEdHSU9zMlpGWFdIaGJnUTFGdStO?=
- =?utf-8?B?eWhBTlF4RU1sb0N0L1NqbzJ2SThObFlMTFpjNVkwc3FvRk1kak4wQVMvL3Bu?=
- =?utf-8?B?SnQwNFhaMWFqS3B0Y3NLVHZWL0V0REtWUUZmYkMxeThmTFZ3eWVWWjBFSE9w?=
- =?utf-8?B?eVdRU3RRa3RtU3JDQnJhR1llbFUzWFdVNkpYcEtRK3pVRE1hUGh5ek9tWGw0?=
- =?utf-8?B?TTl6QUZsbkU1Y2FLRGVKU0NsOTRrMm5pbE00cUwrZEJQc0tSMnJ1b21JMlJk?=
- =?utf-8?B?dU1hOVNBZXY3OTY2TUZNM1BMU0VRbng2TVlQMEk4b2R2K3FyNGJDeWRYZFhE?=
- =?utf-8?B?YjJ1SjhDU1NGQ2JZYnJTY3BNVmt1Y3lnY2l2OUdmZmgzWHBxcW02Tmoyb3lv?=
- =?utf-8?B?REUzWG1NU0haSUZQM1d5ZG1zTFZUbVI2ek1pZk96aFEwY0ZIQ3F6OGFkTW5a?=
- =?utf-8?B?a2tjTHJOeDQ1RzUrSFU0WEZCMnhQZXNwVi9mbDA0YjFhWnZqRW9ZZEtzcjlZ?=
- =?utf-8?B?SDZGTTdBS3dQUXg5UFR3dzVPanZEMi8ybmpvc2RhWkNWWU5ZbFV5QmUyd1pE?=
- =?utf-8?B?c1pPTUVaczUvc2k2aU9jSXpWY3VjRkd4b05ISXdidW95cW5yZlN0TkZpR2h4?=
- =?utf-8?B?Q1R2UEVsMFRkdzRUaHJiSy9JK3lhQzV0ajdYYmdITjdKNXhWVW0vK1kwd2VP?=
- =?utf-8?B?RmovdklKTWlxTTFTbG5sNDlwaGpCbUZOOTZaRk9tamtnTmp2WEsvTmw1emlN?=
- =?utf-8?B?RmdtUkpnK0VLUGZwamFvMzZ6eVpYVDJNV1F3azlCbXcyZWRreFU1cGwxZU0x?=
- =?utf-8?B?U1VubEVJMS9iOWFuSGNWTFUxT0ZObkZEdHJ1Q0cwdU9uNmp3SXRLY0p1QmJI?=
- =?utf-8?B?eFpDWWtvNThyR05XQ1YzcWlsQ0N6NE9RMmNkaEZSZWZSc09xNlNZTENtLzMy?=
- =?utf-8?B?MmszTzRjTEtnNC9tb3BWRGE5OVg3MHkxa3pSdWxVbnNLVEdjdXJ4RUp2Zmwx?=
- =?utf-8?B?YkxpeDZjTTRvMTlFTmx5OTVOOEJXdmE0a2phSERTK3NkanNoQWFqc3ozRUJj?=
- =?utf-8?B?Rk1KVXN3TlVHVTVsZzh6T2lOQTFpRjdNL0xnYmJkYkdzai9PNHFYb1hwZjNt?=
- =?utf-8?B?am1nQStkZGQrSnVRUlB6L2JZbUV5ekZxUXhSeWtMYlJRSU9yVU85UjdWeWZh?=
- =?utf-8?B?Y2lXcE5ESFd1R3p5UVBCSWNNWElES0t4N3RUdFZ1WXd2NERCZXh4R0kwK2Rs?=
- =?utf-8?B?S29VOE9ZMWNWRk0yY1A2elFGUXkzN01teExLOVlOU3p1NVZOR0t1NkExV1ls?=
- =?utf-8?B?UXNacGtFanlINEpwSmJNRzJPbkpoak5SU25mdCtQb3A0SEVzOGc1S3BVMkNZ?=
- =?utf-8?B?QmJuQ015bjhaay9vc0c0R3pncy9uRzQydnpOeHBzZlV2OE5Ea3FQZTB2anJQ?=
- =?utf-8?B?bVhVbndhQ09ZSmdhNGJBYmEycURHeUY5eUJBUTlXTk1vcGtmRzlBV1Z3cFpa?=
- =?utf-8?B?aGNmWittTlVuczVOSzIyY2hpbFlZN1J4VnFGNXZwNGtCZlFlZ0Q3RkNGam9M?=
- =?utf-8?B?SmhLY2hoTnByRmxObXpMbXJFMk8zUXdKTFNWOGd1VEZtRDN3bG5qaEZOdXdT?=
- =?utf-8?B?ZXE1RzU2dCtNaTE1ZWUxNEtBaDFwS1M4TE1jdHhBM2tnL1hHeHlBWkhLc3Ba?=
- =?utf-8?B?bS9LbGI0RVQwclJNQTdJeVBpVXFVZVlnZGpLM3JtNmhyWTVPNDl3VUUrY2NG?=
- =?utf-8?B?dy9pbmtIdmlnaFNHbUtNR2FaNUdkTmVoNVlqNUdXOXl3R3ZJNzR6YmkyNlFB?=
- =?utf-8?B?VUN4ZGs0UTNUbUtjUDlDN3V5MmVSdWo0TjlObzNMcW5CUWh3TEpBSDdvaUFR?=
- =?utf-8?B?cHlnM3U0NU1JZFZQSGNocmJrQ2htVkQzeXgvNXgvb0ZxOWxsVXRXdnFlR0Vw?=
- =?utf-8?B?OXpvQnQydnVWSFU1aENBaUs1Y2pFanFsU2hKdGdqWCtiUXBuMm00Vnp1L3I1?=
- =?utf-8?Q?CdewGN?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 04:42:04.2948
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce8f6316-d056-411a-cc96-08dd77ea0ad8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E3.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7148
+X-Received: by 2002:a05:6e02:3f05:b0:3d2:bac3:b45f with SMTP id
+ e9e14a558f8ab-3d7e46e20b9mr18570025ab.4.1744260182307; Wed, 09 Apr 2025
+ 21:43:02 -0700 (PDT)
+Date: Wed, 09 Apr 2025 21:43:02 -0700
+In-Reply-To: <20250410005712.2532007-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f74c56.050a0220.25d1c8.000e.GAE@google.com>
+Subject: Re: [syzbot] [acpi?] KASAN: slab-use-after-free Read in software_node_notify_remove
+From: syzbot <syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Mario,
+Hello,
 
-On 4/10/2025 2:28 AM, Mario Limonciello wrote:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KASAN: slab-use-after-free Read in software_node_notify_remove
 
-[..snip..]
+RBP: 00007f4f5e989090 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+R13: 0000000000000000 R14: 00007f4f5dda5fa0 R15: 00007fffe901ed38
+ </TASK>
+iommufd_mock iommufd_mock0: Adding to iommu group 0
+==================================================================
+BUG: KASAN: slab-use-after-free in software_node_notify_remove+0x1bc/0x1c0 drivers/base/swnode.c:1108
+Read of size 1 at addr ffff888071ba7108 by task syz.0.18/6145
 
->>   #define CPPC_MAX_PERF    U8_MAX
->> -static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
->> +static void amd_pstate_init_asym_prio(struct amd_cpudata *cpudata)
-> 
-> I think the previous function name was fine.
-> 
-> 1) It still does set cpudata->hw_prefcore afterall and
-> 2) We still have an amd_detect_prefcore() that is used to determine whether amd_pstate_prefcore is set.
+CPU: 1 UID: 0 PID: 6145 Comm: syz.0.18 Not tainted 6.15.0-rc1-syzkaller-g3b07108ada81-dirty #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0x16e/0x5b0 mm/kasan/report.c:521
+ kasan_report+0x143/0x180 mm/kasan/report.c:634
+ software_node_notify_remove+0x1bc/0x1c0 drivers/base/swnode.c:1108
+ device_platform_notify_remove drivers/base/core.c:2388 [inline]
+ device_del+0x5d6/0xa10 drivers/base/core.c:3859
+ device_unregister+0x20/0xc0 drivers/base/core.c:3897
+ mock_dev_destroy drivers/iommu/iommufd/selftest.c:960 [inline]
+ iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:1022 [inline]
+ iommufd_test+0x3715/0x56a0 drivers/iommu/iommufd/selftest.c:1866
+ iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4f5db8d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4f5e989038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f4f5dda5fa0 RCX: 00007f4f5db8d169
+RDX: 0000200000000200 RSI: 0000000000003ba0 RDI: 0000000000000003
+RBP: 00007f4f5e989090 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+R13: 0000000000000000 R14: 00007f4f5dda5fa0 R15: 00007fffe901ed38
+ </TASK>
 
-Ack. I'll change it back in v2.
+Allocated by task 6145:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x9d/0xb0 mm/kasan/common.c:394
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __kmalloc_cache_noprof+0x236/0x370 mm/slub.c:4362
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ swnode_register+0x5a/0x540 drivers/base/swnode.c:790
+ fwnode_create_software_node+0x199/0x1f0 drivers/base/swnode.c:949
+ device_create_managed_software_node+0xd5/0x1f0 drivers/base/swnode.c:1060
+ mock_dev_create drivers/iommu/iommufd/selftest.c:942 [inline]
+ iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:989 [inline]
+ iommufd_test+0x3335/0x56a0 drivers/iommu/iommufd/selftest.c:1866
+ iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-> 
->>   {
->>       /* user disabled or not detected */
->>       if (!amd_pstate_prefcore)
->> @@ -814,14 +804,8 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
->>       cpudata->hw_prefcore = true;
->> -    /*
->> -     * The priorities can be set regardless of whether or not
->> -     * sched_set_itmt_support(true) has been called and it is valid to
->> -     * update them at any time after it has been called.
->> -     */
->> +    /* The priorities must be initialized before ITMT support can be toggled on. */
->>       sched_set_itmt_core_prio((int)READ_ONCE(cpudata->prefcore_ranking), cpudata->cpu);
->> -
->> -    schedule_work(&sched_prefcore_work);
->>   }
->>   static void amd_pstate_update_limits(unsigned int cpu)
->> @@ -974,7 +958,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->>       if (ret)
->>           goto free_cpudata1;
->> -    amd_pstate_init_prefcore(cpudata);
->> +    amd_pstate_init_asym_prio(cpudata);
->>       ret = amd_pstate_init_freq(cpudata);
->>       if (ret)
->> @@ -1450,7 +1434,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->>       if (ret)
->>           goto free_cpudata1;
->> -    amd_pstate_init_prefcore(cpudata);
->> +    amd_pstate_init_asym_prio(cpudata);
->>       ret = amd_pstate_init_freq(cpudata);
->>       if (ret)
->> @@ -1780,6 +1764,10 @@ static int __init amd_pstate_init(void)
->>           }
->>       }
->> +    /* Enable ITMT support once all CPUs have initialized their asym priorities. */
->> +    if (amd_pstate_prefcore)
->> +        sched_set_itmt_support();
->> +
-> 
-> Hmm, by moving it after the first registration that has the side effect that if you changed driver modes from active to passive (for example) ITMT priorities stay identical and aren't updated.
-> I guess that makes sense since the rankings /shouldn't/ change.
+Freed by task 6145:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2389 [inline]
+ slab_free mm/slub.c:4646 [inline]
+ kfree+0x198/0x430 mm/slub.c:4845
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x22f/0x480 lib/kobject.c:737
+ software_node_notify_remove+0x159/0x1c0 drivers/base/swnode.c:1106
+ device_platform_notify_remove drivers/base/core.c:2388 [inline]
+ device_del+0x5d6/0xa10 drivers/base/core.c:3859
+ device_unregister+0x20/0xc0 drivers/base/core.c:3897
+ mock_dev_destroy drivers/iommu/iommufd/selftest.c:960 [inline]
+ iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:1022 [inline]
+ iommufd_test+0x3715/0x56a0 drivers/iommu/iommufd/selftest.c:1866
+ iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Currently, when amd-pstate unregisters during mode switch, ITMT remains
-enabled and if the rankings change before the new driver is registered,
-update_limits() is never called and that too can cause issues.
+The buggy address belongs to the object at ffff888071ba7000
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 264 bytes inside of
+ freed 512-byte region [ffff888071ba7000, ffff888071ba7200)
 
-Based on discussion with Dhananjay, and the fact that one can mode
-switch to disable amd-pstate completely, What are your thoughts on this
-addition diff:
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x71ba4
+head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff88801b041c80 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000080100010 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff88801b041c80 dead000000000100 dead000000000122
+head: 0000000000000000 0000000080100010 00000000f5000000 0000000000000000
+head: 00fff00000000002 ffffea0001c6e901 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000004
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5885, tgid 5885 (syz-executor), ts 87258936943, free_ts 87221957323
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1717
+ prep_new_page mm/page_alloc.c:1725 [inline]
+ get_page_from_freelist+0x352b/0x36c0 mm/page_alloc.c:3652
+ __alloc_frozen_pages_noprof+0x211/0x5b0 mm/page_alloc.c:4934
+ alloc_pages_mpol+0x339/0x690 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2459 [inline]
+ allocate_slab+0x8f/0x3a0 mm/slub.c:2623
+ new_slab mm/slub.c:2676 [inline]
+ ___slab_alloc+0xc3b/0x1500 mm/slub.c:3862
+ __slab_alloc+0x58/0xa0 mm/slub.c:3952
+ __slab_alloc_node mm/slub.c:4027 [inline]
+ slab_alloc_node mm/slub.c:4188 [inline]
+ __kmalloc_cache_noprof+0x26a/0x370 mm/slub.c:4357
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ mca_alloc net/ipv6/mcast.c:884 [inline]
+ __ipv6_dev_mc_inc+0x431/0xac0 net/ipv6/mcast.c:975
+ ipv6_add_dev+0xe7a/0x1430 net/ipv6/addrconf.c:473
+ addrconf_notify+0x6a7/0x1020 net/ipv6/addrconf.c:3650
+ notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+ call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
+ call_netdevice_notifiers net/core/dev.c:2235 [inline]
+ register_netdevice+0x16c0/0x1b80 net/core/dev.c:11054
+ veth_newlink+0x4c3/0xb80 drivers/net/veth.c:1818
+ rtnl_newlink_create+0x39b/0xcb0 net/core/rtnetlink.c:3833
+ __rtnl_newlink net/core/rtnetlink.c:3950 [inline]
+ rtnl_newlink+0x18b0/0x1fe0 net/core/rtnetlink.c:4065
+page last free pid 5885 tgid 5885 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0xde8/0x10a0 mm/page_alloc.c:2680
+ discard_slab mm/slub.c:2720 [inline]
+ __put_partials+0x160/0x1c0 mm/slub.c:3189
+ put_cpu_partial+0x17e/0x250 mm/slub.c:3264
+ __slab_free+0x294/0x390 mm/slub.c:4516
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x9a/0x140 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:329
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4151 [inline]
+ slab_alloc_node mm/slub.c:4200 [inline]
+ __kmalloc_cache_noprof+0x1c8/0x370 mm/slub.c:4357
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ ref_tracker_alloc+0x159/0x4c0 lib/ref_tracker.c:203
+ __netdev_tracker_alloc include/linux/netdevice.h:4331 [inline]
+ netdev_hold include/linux/netdevice.h:4360 [inline]
+ netdev_queue_add_kobject net/core/net-sysfs.c:1973 [inline]
+ netdev_queue_update_kobjects+0x1df/0x740 net/core/net-sysfs.c:2035
+ register_queue_kobjects net/core/net-sysfs.c:2098 [inline]
+ netdev_register_kobject+0x234/0x2f0 net/core/net-sysfs.c:2340
+ register_netdevice+0x12b0/0x1b80 net/core/dev.c:11016
+ veth_newlink+0x4c3/0xb80 drivers/net/veth.c:1818
+ rtnl_newlink_create+0x39b/0xcb0 net/core/rtnetlink.c:3833
+ __rtnl_newlink net/core/rtnetlink.c:3950 [inline]
+ rtnl_newlink+0x18b0/0x1fe0 net/core/rtnetlink.c:4065
+ rtnetlink_rcv_msg+0x80f/0xd70 net/core/rtnetlink.c:6955
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 40d908188b78..320b9551947e 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -1177,6 +1177,9 @@ static ssize_t show_energy_performance_preference(
-  
-  static void amd_pstate_driver_cleanup(void)
-  {
-+	if (amd_pstate_prefcore)
-+		sched_clear_itmt_support();
-+
-  	cppc_state = AMD_PSTATE_DISABLE;
-  	current_pstate_driver = NULL;
-  }
-@@ -1219,6 +1222,10 @@ static int amd_pstate_register_driver(int mode)
-  		return ret;
-  	}
-  
-+	/* Enable ITMT support once all CPUs have initialized their asym priorities. */
-+	if (amd_pstate_prefcore)
-+		sched_set_itmt_support();
-+
-  	return 0;
-  }
-  
-@@ -1761,10 +1768,6 @@ static int __init amd_pstate_init(void)
-  		}
-  	}
-  
--	/* Enable ITMT support once all CPUs have initialized their asym priorities. */
--	if (amd_pstate_prefcore)
--		sched_set_itmt_support();
--
-  	return ret;
-  
-  global_attr_free:
---
+Memory state around the buggy address:
+ ffff888071ba7000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888071ba7080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888071ba7100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                      ^
+ ffff888071ba7180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888071ba7200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
 
-This way, when the new driver registers, it can repopulate the rankings
-and then the sched domain rebuild will get everything right. The only
-concern is that disabling ITMT support during mode switch will cause the
-sched domains to be rebuilt twice but I'm assuming mode switch is a rare
-operation.
 
-If disabling and re-enabling ITMT support during mode switch is a
-concern, I can work something into my dynamic asym priority support
-series to detect any changes to the ranking during mode switch and use
-sched_update_asym_prefer_cpu() to update the "asym_prefer_cpu" that way.
+Tested on:
 
-Let me know your thoughts.
-
-> 
-> I feel this should be OK, thanks.
-> 
->>       return ret;
->>   global_attr_free:
->>
->> base-commit: 56a49e19e1aea1374e9ba58cfd40260587bb7355
-> 
-
--- 
-Thanks and Regards,
-Prateek
+commit:         3b07108a Merge tag 'linux_kselftest-fixes-6.15-rc2' of..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17ae723f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=eecd7902e39d7933
+dashboard link: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=113e074c580000
 
