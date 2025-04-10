@@ -1,59 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C906620C48A;
-	Thu, 10 Apr 2025 22:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1111BAD5E;
+	Thu, 10 Apr 2025 22:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744323233; cv=none; b=W5mZCSFhF986sK+7KqJOoZI4oWFZEwdAgfYyGS+N6zSPD0tQXGbyw+SlmH/fvdBI9YBipG55/91TNmV+XM5kAk3Q5+lOhXQSsCF0PNEJHSNi8iWghcQfN6/pxQfFfes8EAqg8AkgDhKCovlOmGAQpN7MTMiqAedvK4v5Qahir5Y=
+	t=1744323335; cv=none; b=euuxiwl9POjdmnaoz3o9L/UkLkGQqB4vvMpQ3YgpBsxsuZokY1v+QA7p1jfeidVIcwfjdM9qffMY6WpHLPfiTOP7Nslltk/GZZewcRzpVBqltTQEzmQq+Cv2E6GhXcsSHOmawLg4uAuPdyWeVWuajpXKcM7StMjXBA07UkQZD/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744323233; c=relaxed/simple;
-	bh=IBo89qHKQdv1YlyiUpkbXqVARTQ+YsXgrEGUhF/Pl7Q=;
+	s=arc-20240116; t=1744323335; c=relaxed/simple;
+	bh=eD7OpbrV355NOsVgIK+u+xFAJHuoZLTjFTxvYn3y7kk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PQQmGC3LqQMdHIEFIqj4o1lvXg+A4u/fifPOla/mlDotjoCpQrvCEwR19p35SNueV7CyvZ2MH3jK3MMgrjzVbbAXSKlyRlGnswmoyEjt0vfOC9/oOj+yxVx/SBiHAUHnOzGASgtm0DvPVYatboNpadQFbygVZh0aIsDGgQHlHrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=klVA0IxL; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fkSqFtDIGMu5XIiten+Db2t+BCWaPuPU0LFnPhaJLfOqbA2L0rN/La+AO9eXqyQ5Q2fCgfCczeiHQwtCWEtPkw3pdBu4ToG/tLFxQJGFoLBzcnUSsEtq9BB6CPEN13fxMkLXePFVOfwYK1KC2Xs2pEChZ5w1zxyESy3GgxHpQrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RkYh24IS; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="klVA0IxL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744323232; x=1775859232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IBo89qHKQdv1YlyiUpkbXqVARTQ+YsXgrEGUhF/Pl7Q=;
-  b=klVA0IxL1DtkCE45TnhIXALGOzUSR1KZG5VU5nNXfO/fv4n1sGGyzx3j
-   WmR9pWff6s134VLz8V50921FuYFyT1s87+lqsYF3v+9Ibzf6OOEIn5n9/
-   sxrqAMbzDrmMa+mC7RjDeg/AoOuKI4rxcetHnf5rU9Yjodx3fw1slUAN9
-   M2NCyiK9jzvxFOCE3efqToVFb2eRs2GqkXLjOuS2ex18uS2oJEOHYHiLC
-   x5jvhobGh89qILkVyNFX0GjxYCQOeFFtykvFHrENPzZOpaZKSBl2TQyL9
-   r0VxN0X5g9N405M05gDOMH1wP9SZvO2k1K72zlp6+PinYy+ym/knzqPQ0
-   A==;
-X-CSE-ConnectionGUID: ftmE/BIlRS2/esHW/+rUHA==
-X-CSE-MsgGUID: 4k6b17HvST6CRuNNzpVSyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45105407"
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="45105407"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 15:13:51 -0700
-X-CSE-ConnectionGUID: SDQvF7IAR3ujJGgrwS0qDQ==
-X-CSE-MsgGUID: 8/JxH8PtSo2nCyqO5LulaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="129577555"
-Received: from dstill-mobl.amr.corp.intel.com (HELO desk) ([10.125.145.218])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 15:13:50 -0700
-Date: Thu, 10 Apr 2025 15:13:45 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH] x86/bugs/mmio: Rename mmio_stale_data_clear to
- cpu_buf_vm_clear
-Message-ID: <20250410221345.ewyagu7coscpr3l7@desk>
-References: <20250410-mmio-rename-v1-1-fd4b2e7fc04e@linux.intel.com>
- <Z_gsgHzgGWqnNwKv@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkYh24IS"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso14645555e9.1;
+        Thu, 10 Apr 2025 15:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744323332; x=1744928132; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2D0fm6noiDhUqbW229izXLjEq5gR5IU1/g8b5nJLWms=;
+        b=RkYh24ISbo9RkfQU0dZlXu3EXNQo7RUSnionBaRfRBBcp2inqlZF36mCVjQ46sjDhc
+         QChEqEriNep5CmLl5Jz3jOuUIVjNcbqFuc2d6i3/xfLqsCnkJkMtRLJoUNBsO/VIyUYs
+         ZnrbEzPFrH7VbSx0UpMOWlNPmQPuV7fl3/H2+/+6LUOLf3Yn+YNj8Mm3D7E3aa7CGPU5
+         Z0ZFi+z2/wdb4Jp2M0h2c0+/eWUJOYywlgEKi2J0D7D1isJ1Q2y7mNRdI7/rA4MzDY8s
+         crhjf/8OuntNy3xGS7KOjGBciFlSWbwWqwYhOSBx6euTMHrxHrjdxbOi45R9z9FA8B0H
+         Cj0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744323332; x=1744928132;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2D0fm6noiDhUqbW229izXLjEq5gR5IU1/g8b5nJLWms=;
+        b=eh3fCqnlLH4iXvTCPwac21L965Q8IkKTqOSxFmppylwg2JbMjpLJA1V9WXCQ5+fEyK
+         gv48oSwj26tkn7Gjm8ExwvnEJZiVzdjQnFxtIN45bgKNNHgTIpCIvPy7I96AeaCfmiW6
+         5mVOX+4MkAPv09J9aWbs7KZ2WiWNWiLFwRgNpcDWmxBC34m95NxqT9PYlETBW+0oCJPB
+         SHvpSZiEH5f7tp1mAzQVu9AJjY9VwvjuuFwFghpgnYKMrwaoqxWza2FvTyyMyZ6bKLiA
+         YnEUvbrnYWTYm+Bjx/AU+h84XtzS7d9m56CQqPcYwQPQtQ9L2Su09LAIcSotR1eQsf17
+         GqLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUU/VKL3+KGMKVwANWLbClXk/RrM9p+3ZrO59EcCeuyGwIlluXoVwWiME76TpKJHWsVTT0UBOfYAEaKXUo=@vger.kernel.org, AJvYcCUnOZuqDiW809C2kTpn7tXwJ4e78AAkNYYg8xF11egYnUOOuHJgT3zFb3Qa23tOQRxcRLW6ihYI20dg@vger.kernel.org, AJvYcCXuorECJr9W7K//DFdkZtrGyKmUtqUJRYuY97sjc+dt+eKftExj8MIPBbEwwBL6ETBIXlASQ3Ld@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgXISl6pvdpttlDj5E4ukBvu3uSVEIQ0iMpK+KkOKxgNHt/jX1
+	LPN0h6Y9//ACWvnMQ9Ay2aOeT4sJ4Lp0lRX1oV9EnbiqdXOYTlZH
+X-Gm-Gg: ASbGncv+GP0+V+XavxzJyO6YML8eECd+927f3L+6ldsZNsHFbjVJWSuQbx1hS9gP44X
+	MgQe2QeEymNo9gsfDyoAhfnf2I1Vhrtpd50f+YJG2EcCJ4TTEdQxPGA/d6y/jiFxOSUsnuPBLxt
+	5gi9d6YLHhE3Nokf6k3b2gis/pTPkZEsTMhck1P+hJBPDUy/4AcAC3j68LGoqbmLNtxY5Dnb+29
+	BPepIEgoQBDEBpKS2skQnuajQcwjZIc/ytU+glmAyVw7aXF2PwiobfVeHilkuhU5JHHjatKkMpb
+	+RlRfmt4gUcMmN/vkpxsO4pW94qwbeDJ2eUSDjG9EMNY
+X-Google-Smtp-Source: AGHT+IGFZ4o1lTVxW+yAhuxVsX9mcVfiNdXCNZsSNdzp8rAl0RUCEbUwySvdn6Xq8tbTeM0CQsze8A==
+X-Received: by 2002:a5d:59a3:0:b0:390:e1e0:1300 with SMTP id ffacd0b85a97d-39eaaea4548mr215313f8f.33.1744323332170;
+        Thu, 10 Apr 2025 15:15:32 -0700 (PDT)
+Received: from qasdev.system ([2a02:c7c:6696:8300:a7c3:c7a5:ff1b:f4fa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445270sm151066f8f.81.2025.04.10.15.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 15:15:31 -0700 (PDT)
+Date: Thu, 10 Apr 2025 23:15:23 +0100
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
+Subject: Re: [PATCH 1/4] net: fix uninitialised access in mii_nway_restart()
+Message-ID: <Z_hC-9C7Bc2lPrig@qasdev.system>
+References: <20250319112156.48312-1-qasdev00@gmail.com>
+ <20250319112156.48312-2-qasdev00@gmail.com>
+ <20250325063307.15336182@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,64 +77,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_gsgHzgGWqnNwKv@google.com>
+In-Reply-To: <20250325063307.15336182@kernel.org>
 
-On Thu, Apr 10, 2025 at 01:39:28PM -0700, Sean Christopherson wrote:
-> On Thu, Apr 10, 2025, Pawan Gupta wrote:
-> > The static key mmio_stale_data_clear controls the KVM-only mitigation for
-> > MMIO Stale Data vulnerability. Rename it to reflect its purpose.
-> > 
-> > No functional change.
-> > 
-> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > ---
-> >  arch/x86/include/asm/nospec-branch.h |  2 +-
-> >  arch/x86/kernel/cpu/bugs.c           | 16 ++++++++++------
-> >  arch/x86/kvm/vmx/vmx.c               |  2 +-
-> >  3 files changed, 12 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-> > index 8a5cc8e70439e10aab4eeb5b0f5e116cf635b43d..c0474e2b741737dad129159adf3b5fc056b6097c 100644
-> > --- a/arch/x86/include/asm/nospec-branch.h
-> > +++ b/arch/x86/include/asm/nospec-branch.h
-> > @@ -561,7 +561,7 @@ DECLARE_STATIC_KEY_FALSE(mds_idle_clear);
+On Tue, Mar 25, 2025 at 06:33:07AM -0700, Jakub Kicinski wrote:
+> On Wed, 19 Mar 2025 11:21:53 +0000 Qasim Ijaz wrote:
+> > --- a/drivers/net/mii.c
+> > +++ b/drivers/net/mii.c
+> > @@ -464,6 +464,8 @@ int mii_nway_restart (struct mii_if_info *mii)
 > >  
-> >  DECLARE_STATIC_KEY_FALSE(switch_mm_cond_l1d_flush);
+> >  	/* if autoneg is off, it's an error */
+> >  	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
+> > +	if (bmcr < 0)
+> > +		return bmcr;
 > >  
-> > -DECLARE_STATIC_KEY_FALSE(mmio_stale_data_clear);
-> > +DECLARE_STATIC_KEY_FALSE(cpu_buf_vm_clear);
+> >  	if (bmcr & BMCR_ANENABLE) {
+> >  		bmcr |= BMCR_ANRESTART;
 > 
-> Could we tack on "if_mmio" or something?  E.g. cpu_buf_vm_clear_if_mmio.  FWIW,
-> I don't love that name, so if anyone can come up with something better...
+> We error check just one mdio_read() but there's a whole bunch of them
+> in this file. What's the expected behavior then? Are all of them buggy?
+>
+ 
+Hi Jakub
+    
+Apologies for my delayed response, I had another look at this and I
+think my patch may be off a bit. You are correct that there are multiple
+mdio_read() calls and looking at the mii.c file we can see that calls to
+functions like mdio_read (and a lot of others) dont check return values.
+  
+So in light of this I think a better patch would be to not edit the 
+mii.c file at all and just make ch9200_mdio_read return 0 on     
+error. This way if mdio_read fails and 0 is returned, the         
+check for "bmcr & BMCR_ANENABLE" won't be triggered and mii_nway_restart
+will just return 0 and end. If we return a negative on error it may
+contain the exact bit the function checks.
 
-Keeping it generic has an advantage that it plays nicely with "Attack vector
-controls" series:
+Similiar to this patch:
+<https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=c68b2c9eba38>
 
-  https://lore.kernel.org/lkml/20250310164023.779191-1-david.kaplan@amd.com/
+If this sounds good, should i send another patch series with all the
+changes? 
 
-The idea being to allow mitigations to be enabled/disabled based on
-user-defined threat model. MDS/TAA mitigations may be able to take
-advantage this KVM-only control.
-
-> I like the idea of tying the static key back to X86_FEATURE_CLEAR_CPU_BUF, but
-> when looking at just the usage in KVM, "cpu_buf_vm_clear" doesn't provide any
-> hints as to when/why KVM needs to clear buffers.
-
-Thats fair, can we cover that with a comment like below:
-
----
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c79720aad3df..cddad4a6eb46 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7358,6 +7358,10 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
- 	 * mitigation for MDS is done late in VMentry and is still
- 	 * executed in spite of L1D Flush. This is because an extra VERW
- 	 * should not matter much after the big hammer L1D Flush.
-+	 *
-+	 * cpu_buf_vm_clear is used when system is not vulnerable to MDS/TAA,
-+	 * but is affected by MMIO Stale Data that only needs mitigation
-+	 * against a rogue guest.
- 	 */
- 	if (static_branch_unlikely(&vmx_l1d_should_flush))
- 		vmx_l1d_flush(vcpu);
+> This patch should be split into core and driver parts.
+> -- 
+> pw-bot: cr
