@@ -1,344 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A4628EA4E;
-	Thu, 10 Apr 2025 18:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9656028A408
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744310543; cv=none; b=InMYuQVIQ0CVcUV3GYeeUvjMwjyUTUCsM805Wt8o96DIdQkUFJBPLFnFbfPa6lsNcutvU+n/7AinySkKV7wcbQWHjsp+U1I6YpIS9GrcxrVMw24AsDFiaLS0L5c5p11d6h9FCnh9oO4X5LmWFGVPBEVP4oYN4F/39MLqUvm67SQ=
+	t=1744310559; cv=none; b=aNzLUetCytFnYzQ09vuj2/Itn1i9Zq25rTzy+I21lkFc4A+Sxr94QrNAhsUTi9DD+4zqr0nMIBEzuo9WkRwCEMy4i6hTWR6MsnhfN6BU5N/vNmbpz5t8/l+76RhCS3ECJNGYLMxgforclNzjJzoGAJhiZgfc3zAMGnpYBCW2I5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744310543; c=relaxed/simple;
-	bh=82Ms4EEB+jbHpf3t83nCFYc2SOEuijrmv8IQsEsD83o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ngb7bSrcoxpz6RUy0ukRHg+GkYfci/n6fCmWhNVjX+yZSl7H4ZhAuIDARRZL9ErXm2k2VWL3VsKXXvtzwzfukkdYZjnfmn+H4pamFMt4HOowNx1qpBsoahlkUx+NJwk/w2hGkVm9JLSw+YyeA1dTWL27XlYhqk1P48JIlQ9Tf2Q=
+	s=arc-20240116; t=1744310559; c=relaxed/simple;
+	bh=cCjU0u5FLGWS5wodXQ9H/+8YnyisWfHTYC2sJInL8pU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=KY68g14e21AlOFdbWFe3Gi/ZJNtly/iZuJhbKSBHw6tgeQxbcAGhzRbRgJGHoYpIfcfA9cW2LlVgaHAqXS9hXJMGhETinUZjq9FLr76CulJrNFgvnAeVN4Vh18GMfoPCQQ624azXQSJp1V82wCq+LOk7Y+gJ4IbSOO4RVkW/Zf0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC90C4CEDD;
-	Thu, 10 Apr 2025 18:42:20 +0000 (UTC)
-Message-ID: <b817327c-cad8-45f2-a649-f433795a3605@xs4all.nl>
-Date: Thu, 10 Apr 2025 20:42:19 +0200
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBFD2C4CEDD;
+	Thu, 10 Apr 2025 18:42:37 +0000 (UTC)
+Date: Thu, 10 Apr 2025 14:43:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Akinobu Mita <akinobu.mita@gmail.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ Petr Mladek <pmladek@suse.com>, Dmitry Vyukov <dvyukov@google.com>, Thomas
+ Gleixner <tglx@linutronix.de>
+Subject: [RFC][PATCH] panic: lib: Add TAINT for FAULT_INJECTION
+Message-ID: <20250410144359.526476bc@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] media: mc: add manual request completion
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Tiffany Lin <tiffany.lin@mediatek.com>,
- Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
- Yunfei Dong <yunfei.dong@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, kernel@collabora.com,
- linux-media@vger.kernel.org,
- Sebastian Fricke <sebastian.fricke@collabora.com>
-References: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
- <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-1-5b99ec0450e6@collabora.com>
- <20250410175010.GF27870@pendragon.ideasonboard.com>
- <829f05dc918a9a8a1848ecb68d175c8d7f892584.camel@collabora.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <829f05dc918a9a8a1848ecb68d175c8d7f892584.camel@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 10/04/2025 20:26, Nicolas Dufresne wrote:
-> Hi Hans, 
-> 
-> another question for you below.
-> 
-> Le jeudi 10 avril 2025 à 20:50 +0300, Laurent Pinchart a écrit :
->> Hi Nicolas,
->>
->> Thank you for the patch.
->>
->> On Thu, Apr 10, 2025 at 11:39:56AM -0400, Nicolas Dufresne wrote:
->>> From: Hans Verkuil <hverkuil@xs4all.nl>
->>>
->>> By default when the last request object is completed, the whole
->>> request completes as well.
->>>
->>> But sometimes you want to manually complete a request in a driver,
->>> so add a manual complete mode for this.
->>
->> I didn't immediately understand this was about delaying completion of
->> the request. It would be nice to make that more explicit in the
->> commit
->> message and in the documentation of
->> media_request_mark_manual_completion(). A sample use case would also
->> help.
->>
->>> In req_queue the driver marks the request for manual completion by
->>> calling media_request_mark_manual_completion, and when the driver
->>> wants to manually complete the request it calls
->>> media_request_manual_complete().
->>>
->>> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> 
-> The CI is not happy that the Sob did not match the author, shall we
-> ignore the CI or edit one of the two ?
+From: Steven Rostedt <rostedt@goodmis.org>
 
-It's an old patch, so just edit the Sob and drop the '-cisco' part.
-I stopped using that alias since it caused problems like this.
+There's been several times where syzbot reports a bug that was caused by a
+fault injection, but it doesn't report this fact in its email reports.
+The bug report could happen in code that wasn't involved with the fault
+injection due to the code that faulted not cleaning up things properly,
+leading to an unstable kernel, which in turn can trigger issues elsewhere
+that doesn't have a bug (much like a proprietary module could do).
 
-Regards,
+It would be very useful if the syzbot report notified the developer that
+the test had injected faults into the kernel.
 
-	Hans
+Introduce a new taint flag 'V' that gets set when a fault injection takes
+place. (Note, there's not many taint flags left, so 'V' looked as good as
+any other value).
 
-> 
-> Nicolas
-> 
->>> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->>> ---
->>>  drivers/media/mc/mc-request.c | 38
->>> ++++++++++++++++++++++++++++++++++++--
->>>  include/media/media-request.h | 36
->>> +++++++++++++++++++++++++++++++++++-
->>>  2 files changed, 71 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-
->>> request.c
->>> index
->>> 5edfc2791ce7c7485def5db675bbf53ee223d837..398d0806d1d274eb8c454fc5c
->>> 37b77476abe1e74 100644
->>> --- a/drivers/media/mc/mc-request.c
->>> +++ b/drivers/media/mc/mc-request.c
->>> @@ -54,6 +54,7 @@ static void media_request_clean(struct
->>> media_request *req)
->>>  	req->access_count = 0;
->>>  	WARN_ON(req->num_incomplete_objects);
->>>  	req->num_incomplete_objects = 0;
->>> +	req->manual_completion = false;
->>>  	wake_up_interruptible_all(&req->poll_wait);
->>>  }
->>>  
->>> @@ -313,6 +314,7 @@ int media_request_alloc(struct media_device
->>> *mdev, int *alloc_fd)
->>>  	req->mdev = mdev;
->>>  	req->state = MEDIA_REQUEST_STATE_IDLE;
->>>  	req->num_incomplete_objects = 0;
->>> +	req->manual_completion = false;
->>>  	kref_init(&req->kref);
->>>  	INIT_LIST_HEAD(&req->objects);
->>>  	spin_lock_init(&req->lock);
->>> @@ -459,7 +461,7 @@ void media_request_object_unbind(struct
->>> media_request_object *obj)
->>>  
->>>  	req->num_incomplete_objects--;
->>>  	if (req->state == MEDIA_REQUEST_STATE_QUEUED &&
->>> -	    !req->num_incomplete_objects) {
->>> +	    !req->num_incomplete_objects && !req-
->>>> manual_completion) {
->>>  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
->>>  		completed = true;
->>>  		wake_up_interruptible_all(&req->poll_wait);
->>> @@ -488,7 +490,7 @@ void media_request_object_complete(struct
->>> media_request_object *obj)
->>>  	    WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
->>>  		goto unlock;
->>>  
->>> -	if (!--req->num_incomplete_objects) {
->>> +	if (!--req->num_incomplete_objects && !req-
->>>> manual_completion) {
->>>  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
->>>  		wake_up_interruptible_all(&req->poll_wait);
->>>  		completed = true;
->>> @@ -499,3 +501,35 @@ void media_request_object_complete(struct
->>> media_request_object *obj)
->>>  		media_request_put(req);
->>>  }
->>>  EXPORT_SYMBOL_GPL(media_request_object_complete);
->>> +
->>> +void media_request_manual_complete(struct media_request *req)
->>> +{
->>> +	unsigned long flags;
->>> +	bool completed = false;
->>> +
->>> +	if (WARN_ON(!req))
->>> +		return;
->>> +	if (WARN_ON(!req->manual_completion))
->>> +		return;
->>> +
->>> +	spin_lock_irqsave(&req->lock, flags);
->>> +	if (WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
->>> +		goto unlock;
->>> +
->>> +	req->manual_completion = false;
->>> +	/*
->>> +	 * It is expected that all other objects in this request
->>> are
->>> +	 * completed when this function is called. WARN if that is
->>> +	 * not the case.
->>> +	 */
->>> +	if (!WARN_ON(req->num_incomplete_objects)) {
->>> +		req->state = MEDIA_REQUEST_STATE_COMPLETE;
->>> +		wake_up_interruptible_all(&req->poll_wait);
->>> +		completed = true;
->>> +	}
->>> +unlock:
->>> +	spin_unlock_irqrestore(&req->lock, flags);
->>> +	if (completed)
->>> +		media_request_put(req);
->>> +}
->>> +EXPORT_SYMBOL_GPL(media_request_manual_complete);
->>> diff --git a/include/media/media-request.h b/include/media/media-
->>> request.h
->>> index
->>> d4ac557678a78372222704400c8c96cf3150b9d9..645d18907be7148ca50dcc924
->>> 8ff06bd8ccdf953 100644
->>> --- a/include/media/media-request.h
->>> +++ b/include/media/media-request.h
->>> @@ -56,6 +56,10 @@ struct media_request_object;
->>>   * @access_count: count the number of request accesses that are in
->>> progress
->>>   * @objects: List of @struct media_request_object request objects
->>>   * @num_incomplete_objects: The number of incomplete objects in
->>> the request
->>> + * @manual_completion: if true, then the request won't be marked
->>> as completed
->>> + * when @num_incomplete_objects reaches 0. Call
->>> media_request_manual_complete()
->>> + * to set this field to false and complete the request
->>
->> I'd drop "set this field to false and " here.
->>
->>> + * if @num_incomplete_objects == 0.
->>
->>  * after @num_incomplete_objects reaches 0.
->>
->>>   * @poll_wait: Wait queue for poll
->>>   * @lock: Serializes access to this struct
->>>   */
->>> @@ -68,6 +72,7 @@ struct media_request {
->>>  	unsigned int access_count;
->>>  	struct list_head objects;
->>>  	unsigned int num_incomplete_objects;
->>> +	bool manual_completion;
->>>  	wait_queue_head_t poll_wait;
->>>  	spinlock_t lock;
->>>  };
->>> @@ -218,6 +223,35 @@ media_request_get_by_fd(struct media_device
->>> *mdev, int request_fd);
->>>  int media_request_alloc(struct media_device *mdev,
->>>  			int *alloc_fd);
->>>  
->>> +/**
->>> + * media_request_mark_manual_completion - Set manual_completion to
->>> true
->>> + *
->>> + * @req: The request
->>> + *
->>> + * Mark that the request has to be manually completed by calling
->>> + * media_request_manual_complete().
->>> + *
->>> + * This function should be called in the req_queue callback.
->>
->> s/should/shall/ unless it's not a hard requirement. Any way to catch
->> incorrect call patterns ?
->>
->>> + */
->>> +static inline void
->>> +media_request_mark_manual_completion(struct media_request *req)
->>> +{
->>> +	req->manual_completion = true;
->>> +}
->>> +
->>> +/**
->>> + * media_request_manual_complete - Set manual_completion to false
->>
->> The main purpose of the function is to complete the request, not
->> setting
->> manual_completion to false.
->>
->>> + *
->>> + * @req: The request
->>> + *
->>> + * Set @manual_completion to false, and if @num_incomplete_objects
->>> + * is 0, then mark the request as completed.
->>> + *
->>> + * If there are still incomplete objects in the request, then
->>> + * WARN for that since that suggests a driver error.
->>
->> If that's an error then I'd document it more explicitly, as the first
->> sentence makes it sound that both cases are valid. Maybe
->>
->>  * This function completes a request that was marked for manual
->> completion by an
->>  * earlier call to media_request_mark_manual_completion(). The
->> request's
->>  * @manual_completion flag is reset to false.
->>  *
->>  * All objects contained in the request must have been completed
->> previously. It
->>  * is an error to call this function otherwise. The request will not
->> be
->>  * completed in that case, and the function will WARN.
->>
->>> + */
->>> +void media_request_manual_complete(struct media_request *req);
->>> +
->>>  #else
->>>  
->>>  static inline void media_request_get(struct media_request *req)
->>> @@ -336,7 +370,7 @@ void media_request_object_init(struct
->>> media_request_object *obj);
->>>   * @req: The media request
->>>   * @ops: The object ops for this object
->>>   * @priv: A driver-specific priv pointer associated with this
->>> object
->>> - * @is_buffer: Set to true if the object a buffer object.
->>> + * @is_buffer: Set to true if the object is a buffer object.
->>>   * @obj: The object
->>>   *
->>>   * Bind this object to the request and set the ops and priv values
->>> of
-> 
+This will let the syzbot see that the kernel had a fault injection during
+the test and can report that it happened when sending out its emails.
+
+It may also be useful for other bug reports.
+
+Link: https://lore.kernel.org/all/67f67726.050a0220.25d1c8.0004.GAE@google.com/
+Link: https://github.com/google/syzkaller/issues/5621
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+
+[
+ Currently this keeps lockdep enabled. Should lockdep be turned off too?
+
+ Also, I'm surprised that fault injection didn't already taint the kernel.
+]
+
+ include/linux/panic.h | 3 ++-
+ kernel/panic.c        | 1 +
+ lib/fault-inject.c    | 3 +++
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/panic.h b/include/linux/panic.h
+index 2494d51707ef..2d9048af6f89 100644
+--- a/include/linux/panic.h
++++ b/include/linux/panic.h
+@@ -75,7 +75,8 @@ static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
+ #define TAINT_RANDSTRUCT		17
+ #define TAINT_TEST			18
+ #define TAINT_FWCTL			19
+-#define TAINT_FLAGS_COUNT		20
++#define TAINT_FAULT_INJECTION		20
++#define TAINT_FLAGS_COUNT		21
+ #define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
+ 
+ struct taint_flag {
+diff --git a/kernel/panic.c b/kernel/panic.c
+index a3889f38153d..fec561f07ca7 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -512,6 +512,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
+ 	TAINT_FLAG(RANDSTRUCT,			'T', ' ', true),
+ 	TAINT_FLAG(TEST,			'N', ' ', true),
+ 	TAINT_FLAG(FWCTL,			'J', ' ', true),
++	TAINT_FLAG(FAULT_INJECTION,		'V', ' ', false),
+ };
+ 
+ #undef TAINT_FLAG
+diff --git a/lib/fault-inject.c b/lib/fault-inject.c
+index 999053fa133e..2dac4c20adc1 100644
+--- a/lib/fault-inject.c
++++ b/lib/fault-inject.c
+@@ -176,6 +176,9 @@ bool should_fail_ex(struct fault_attr *attr, ssize_t size, int flags)
+ 	if (atomic_read(&attr->times) != -1)
+ 		atomic_dec_not_zero(&attr->times);
+ 
++	pr_notice_once("Tainting kernel with TAINT_FAULT_INJECTION\n");
++	add_taint(TAINT_FAULT_INJECTION, LOCKDEP_STILL_OK);
++
+ 	return true;
+ }
+ 
+-- 
+2.47.2
 
