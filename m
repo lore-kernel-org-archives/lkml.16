@@ -1,264 +1,97 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546AE28D85E;
-	Thu, 10 Apr 2025 14:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DBC2857D7
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744296807; cv=none; b=JxamlJCgLUmCIjLHEMOR9k9auu8kFCLiSBg7StYhNcs2FbEVZEo4u+In6LDj+DnCAmwls0XmUgc2sXRSerl20JVKiXCyG02pMirlB4KANjG3P25v62a/QSgjCyMJCCgkQ4s5Zz6tsBuF0KdQwfm7OKC92za51Wt9U6M2gvvEFJ4=
+	t=1744296847; cv=none; b=AqTA+q5ZtzFZWONOOBS7eqwetZWEzqsAJmKgPt4ieKIBAWQtQfVP6FrGSelwm3z4EyvpYzu/LXzqELpRGX1AlElYVQU6FkDAa7k4eM2I8rS3ek7vs60r00MoEh62O7coS14107Om979pHO9B6tfvEqrQtZ1HXSI1EqYKJLit8eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744296807; c=relaxed/simple;
-	bh=QcskMbCCOtFEPTMI9pIZwwmENlcYs2y/qGKBTNghQJg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q0LBnLNJ52HFcB2gVHUWk4uR60br/12KF0wwHlFuw0tw9zkPX3ChDADOxzYhi4JZ/IhgY9nOWI7fd26nnySYrWnWzHTb+sWBN+WoF0McqHRzFXpxXhtYdNWbbKM9epBGAmYXcj5i5CKNKDc2GgIWbzauxVzVIgALsPOksOBEgp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hH1poRN5; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744296847; c=relaxed/simple;
+	bh=uRSn452baF7eSP5Tm/VTy3S3qZr8O9Gq44NuQ8ETi9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ch5RPg/1K4wqdv5GgJBQ+ouJWnoWg09Kfj1JYFQOEE1/2k3u25sBDGIbgzEq9CIgOQpM5i+WNvpGlbeDfrlTrtUQxGWO4yyhS8pEjNrQVIhR9QFL4Y8ZnfWjLATh4Q2uVngBDJ+wYwdANN44TqHU3Ey70O1/f0Xk/GtYsd0aAT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvjQ8B5a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hH1poRN5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3DD7F44339;
-	Thu, 10 Apr 2025 14:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744296802;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NO5o2gLsjg/fYr8Sfdfzm0+WOdUe2aREMsUjD6hGuw0=;
-	b=hH1poRN5LKnBl1WVpo//1Utx5CtOETUIJ5r9rsAyKBGXXbp4i7KK3KH+ss6wP+Au+zVLSI
-	Lk53grJWGQ8h1NVzQirQGLKs2QNy45Lh/8EJrESAlcNaC2nIw3Ob+WsQdg2hytGkAqAoLN
-	QUZSv0fCBHIJysyiecYtl6rVOaJ675jtD0Qvc/bYobUwIlkaZ5zJUy3m4NZogy8DO3OjWn
-	jI80cUC6T9CWPu3CqLHpCtPX4NyclOoB4xRYGIqRzhWO9kMsvLdP8+PiAkQuWR9Fqzd6gU
-	nUTl4yL1OkZt5R3Iz87yi60D94C6HbzwggvXAIzfHp+cpRa16+fbs8A0Okz+Sg==
-From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Date: Thu, 10 Apr 2025 16:53:20 +0200
-Subject: [PATCH 3/3] uio: Add UIO_DMABUF_HEAP
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvjQ8B5a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 740B2C4CEDD;
+	Thu, 10 Apr 2025 14:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744296845;
+	bh=uRSn452baF7eSP5Tm/VTy3S3qZr8O9Gq44NuQ8ETi9Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lvjQ8B5ajXYboqXHVz5vR5AI20ULr4U6pOZVkMsJxnKbAC8jpAguEDgDzXl5k6HKF
+	 1gCw9m4P61fdrNprlAE9Aq44qT0FpGHkW8MrQ2SqqSijcLUUiwMXwH8Q7+Tl3fK7HW
+	 OyPHBCil8/RHXeV0nmJuNS7h6wacr/iIR1zJxoWPNYNUIEq4xXI1kYXeYzGJSqXPQk
+	 7S2GqlenwXv28mb+hu+RyQns1aNXdJ2K6KaWGouvzZ8eAyoX8htpxDCRcznn7wVE23
+	 PmEKPCcpI9c5QGsuCO7yqZYQfnU3AIV8M3kabwDKX+YEolU4l90WHNIOaVrA4rQf1Q
+	 74/a5dGWIa9+w==
+Date: Thu, 10 Apr 2025 16:54:02 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+Message-ID: <Z_fbimtUBqBiWr16@localhost.localdomain>
+References: <20250410065446.57304-2-gmonaco@redhat.com>
+ <87ecy0tob1.ffs@tglx>
+ <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
+ <Z_fBq2AQjzyg8m5w@localhost.localdomain>
+ <87wmbsrwca.ffs@tglx>
+ <Z_fHLM4nWP5XVGBU@localhost.localdomain>
+ <4fdc6582c828fbcd8c6ad202ed7ab560134d1fc3.camel@redhat.com>
+ <Z_fTmzdvLEmrAth6@localhost.localdomain>
+ <87semgrs5t.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-uio-dma-v1-3-6468ace2c786@bootlin.com>
-References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
-In-Reply-To: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
-To: Sumit Semwal <sumit.semwal@linaro.org>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, 
- Bastien Curutchet <bastien.curutchet@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdelvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepuegrshhtihgvnhcuvehurhhuthgthhgvthcuoegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtvdehfffgjeduteekgeekuddvffejueevkeektdeggfetkeeghefffeehudethfenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrheegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepshhumhhithdrshgvmhifrghlsehlihhnrghrohdrohhrghdprhgtphhtthhopegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdro
- hhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnrghrohdqmhhmqdhsihhgsehlihhsthhsrdhlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomh
-X-GND-Sasl: bastien.curutchet@bootlin.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87semgrs5t.ffs@tglx>
 
-Some UIO users need to access DMA addresses from userspace to be able to
-configure DMA done by the UIO device. Currently there is no way of doing
-this.
+Le Thu, Apr 10, 2025 at 04:46:06PM +0200, Thomas Gleixner a écrit :
+> On Thu, Apr 10 2025 at 16:20, Frederic Weisbecker wrote:
+> > Le Thu, Apr 10, 2025 at 03:56:02PM +0200, Gabriele Monaco a écrit :
+> >> On Thu, 2025-04-10 at 15:27 +0200, Frederic Weisbecker wrote:
+> >> > But how do we handle global timers that have been initialized and
+> >> > queued from
+> >> > isolated CPUs?
+> >> 
+> >> I need to sketch a bit more the solution but the rough idea is:
+> >> 1. isolated CPUs don't pull remote timers
+> >
+> > That's the "easy" part.
+> >
+> >> 2. isolated CPUs ignore their global timers and let others pull them
+> >>   perhaps with some more logic to avoid it expiring
+> >
+> > This will always involve added overhead because you may need to wake up
+> > a CPU upon enqueueing a global timer to make sure it will be handled.
+> > At least when all other CPUs are idle.
+> 
+> Which is true for the remote enqueue path too. But you inflict the
+> handling of this muck into the generic enqueue path as you have to turn
+> a 'global' timer into a remote timer right in the hot path.
 
-Add a UIO_DMABUF_HEAP Kconfig option. When selected, a dma-heap
-allocator is created for every new UIO device. This allocator only
-implements 4 basic operations: allocate, release, mmap and get_dma_addr.
-The buffer allocation is done through dma_alloc_coherent().
+Fair point.
 
-Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
----
- drivers/uio/Kconfig        |   9 ++++
- drivers/uio/Makefile       |   1 +
- drivers/uio/uio.c          |   4 ++
- drivers/uio/uio_heap.c     | 120 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/uio_driver.h |   2 +
- 5 files changed, 136 insertions(+)
+> 
+> When you enqueue it in the regular way on the 'global' list, then you
+> can delegate the expiry to a remote CPU on return to user, no?
 
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index b060dcd7c6350191726c0830a1ae7b9a388ca4bb..2f3b1e57fceb01354b65cc4d39f342f645a238db 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -164,4 +164,13 @@ config UIO_DFL
- 	    opae-sdk/tools/libopaeuio/
- 
- 	  If you compile this as a module, it will be called uio_dfl.
-+
-+config UIO_DMABUF_HEAP
-+	bool "DMA-BUF UIO Heap"
-+	select DMABUF_HEAPS
-+	help
-+	  Choose this option to enable DMA-BUF UIO heap. It will create a new
-+	  heap allocator under /dev/dma_heap/ for every UIO device. This
-+	  allocator allows userspace applications to allocate DMA buffers and
-+	  access their DMA addresses thanks to the DMA_BUF_IOCTL_GET_DMA_HANDLE
- endif
-diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-index 1c5f3b5a95cf5b681a843b745a046d7ce123255d..f6696daa36567a4e5d18b1b89ba688057e758400 100644
---- a/drivers/uio/Makefile
-+++ b/drivers/uio/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
- obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
- obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
- obj-$(CONFIG_UIO_DFL)	+= uio_dfl.o
-+obj-$(CONFIG_UIO_DMABUF_HEAP) += uio_heap.o
-diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
-index d93ed4e86a174b5bad193a61aa522cd833fe7bb5..f31936a897805a284165cccfee3d66e96acd4b39 100644
---- a/drivers/uio/uio.c
-+++ b/drivers/uio/uio.c
-@@ -1046,7 +1046,11 @@ int __uio_register_device(struct module *owner,
- 		}
- 	}
- 
-+#if defined(CONFIG_UIO_DMABUF_HEAP)
-+	return add_uio_heap(idev);
-+#else
- 	return 0;
-+#endif
- 
- err_request_irq:
- 	uio_dev_del_attributes(idev);
-diff --git a/drivers/uio/uio_heap.c b/drivers/uio/uio_heap.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..2e836b503458e280babba0e0adc4f6d8344efc82
---- /dev/null
-+++ b/drivers/uio/uio_heap.c
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/dma-buf.h>
-+#include <linux/dma-heap.h>
-+#include <linux/uio_driver.h>
-+
-+struct uio_heap {
-+	struct dma_heap *heap;
-+	struct device *dev;
-+};
-+
-+struct uio_heap_buffer {
-+	struct uio_heap *heap;
-+	dma_addr_t dma_addr;
-+	unsigned long len;
-+	void *vaddr;
-+};
-+
-+static int uio_heap_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma)
-+{
-+	struct uio_heap_buffer *buffer = dmabuf->priv;
-+
-+	return dma_mmap_coherent(buffer->heap->dev, vma, buffer->vaddr,
-+				 buffer->dma_addr, buffer->len);
-+}
-+
-+static void uio_heap_dma_buf_release(struct dma_buf *dmabuf)
-+{
-+	struct uio_heap_buffer *buffer = dmabuf->priv;
-+
-+	dma_free_coherent(buffer->heap->dev, buffer->len, buffer->vaddr,
-+			  buffer->dma_addr);
-+	kfree(buffer);
-+}
-+
-+static int uio_heap_get_dma_addr(struct dma_buf *dmabuf, u64 *addr)
-+{
-+	struct uio_heap_buffer *buffer = dmabuf->priv;
-+
-+	*addr = buffer->dma_addr;
-+	return 0;
-+}
-+
-+static const struct dma_buf_ops uio_heap_buf_ops = {
-+	.mmap = uio_heap_mmap,
-+	.release = uio_heap_dma_buf_release,
-+	.get_dma_addr = uio_heap_get_dma_addr,
-+};
-+
-+static struct dma_buf *uio_heap_allocate(struct dma_heap *heap,
-+					 unsigned long len,
-+					 u32 fd_flags,
-+					 u64 heap_flags)
-+{
-+	struct uio_heap *uio_heap = dma_heap_get_drvdata(heap);
-+	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-+	struct uio_heap_buffer *buffer;
-+	struct dma_buf *dmabuf;
-+
-+	buffer = kzalloc(sizeof(*buffer), GFP_KERNEL);
-+	if (!buffer)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dma_set_coherent_mask(uio_heap->dev, DMA_BIT_MASK(32));
-+
-+	buffer->heap = uio_heap;
-+	buffer->len = len;
-+	buffer->vaddr = dma_alloc_coherent(uio_heap->dev, buffer->len,
-+					   &buffer->dma_addr, GFP_KERNEL);
-+	if (IS_ERR(buffer->vaddr))
-+		goto free_buf;
-+
-+	exp_info.exp_name = dma_heap_get_name(heap);
-+	exp_info.ops = &uio_heap_buf_ops;
-+	exp_info.size = buffer->len;
-+	exp_info.flags = fd_flags;
-+	exp_info.priv = buffer;
-+	dmabuf = dma_buf_export(&exp_info);
-+	if (IS_ERR(dmabuf))
-+		goto free_dma;
-+
-+	return dmabuf;
-+
-+free_dma:
-+	dma_free_coherent(uio_heap->dev, buffer->len, buffer->vaddr, buffer->dma_addr);
-+free_buf:
-+	kfree(buffer);
-+
-+	return ERR_PTR(-ENOMEM);
-+}
-+
-+static const struct dma_heap_ops uio_heap_ops = {
-+	.allocate = uio_heap_allocate,
-+};
-+
-+int add_uio_heap(struct uio_device *uio)
-+{
-+	struct dma_heap_export_info exp_info;
-+	struct uio_heap *uio_heap;
-+
-+	uio_heap = kzalloc(sizeof(*uio_heap), GFP_KERNEL);
-+	if (!uio_heap)
-+		return -ENOMEM;
-+
-+	uio_heap->dev = &uio->dev;
-+
-+	/* Use device name as heap name */
-+	exp_info.name = uio_heap->dev->kobj.name;
-+	exp_info.ops = &uio_heap_ops;
-+	exp_info.priv = uio_heap;
-+
-+	uio_heap->heap = dma_heap_add(&exp_info);
-+	if (IS_ERR(uio_heap->heap)) {
-+		int ret = PTR_ERR(uio_heap->heap);
-+
-+		kfree(uio_heap);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
-index 18238dc8bfd356a20996ba6cd84f1ff508bbb81c..f8b774d2fa1c7de4b6af881f1e53dfa9f25b3dbf 100644
---- a/include/linux/uio_driver.h
-+++ b/include/linux/uio_driver.h
-@@ -143,6 +143,8 @@ extern int __must_check
- 				   struct device *parent,
- 				   struct uio_info *info);
- 
-+extern int add_uio_heap(struct uio_device *uio);
-+
- /* use a define to avoid include chaining to get THIS_MODULE */
- 
- /**
+If you're referring to nohz_full, it's not a problem there because
+it's already considered as an idle CPU.
+
+But for isolcpus alone that notification is necessary. I'm not sure
+if return to user is the best place. I hear that some kernel threads
+can spend a lot of time doing things...
+
+But to begin with, is this all really necessary for isolcpus users?
 
 -- 
-2.49.0
-
+Frederic Weisbecker
+SUSE Labs
