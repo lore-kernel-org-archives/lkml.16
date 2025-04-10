@@ -1,219 +1,250 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014321E9B0B
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2652819E975
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744262649; cv=none; b=FCThLV3HimPMsobEn0Qi5Dqf8jiyUZCv4hDGnAW2mW+ogbxmz/nUylvgYMgNhTwPHxo6h0YAv6IoRe6DMyXg11CUKFoGW4Maaxq0GnnpvCtWHJ9mW1RZbQS/KhFgng4Cfv2kT4zye/NyQgiTlT4yBzRk/Yeiokh1SqrBbB6WpRY=
+	t=1744262744; cv=none; b=PO1rDcXP6uDKn2Kye5lzrNIxoCx8hNSLa4G1OqorCS8jayzyH0jZIi8BNXUu8Omtj+DpO08ZZYz7q32Y1xlLJB+EHQ7lvq5fBO3gbi4ugZ/6G7QazwgIQtnFkA+vgQc91z8zND0vYXklfSJUs7lwz9Q3EMG7sZWnIKq5joMRfh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744262649; c=relaxed/simple;
-	bh=AvvJAYBIs5by7MUm027EyrQQeOiSll/0ZVufQ4rC9yc=;
+	s=arc-20240116; t=1744262744; c=relaxed/simple;
+	bh=CDc0rurRDPM43Jts4lwXuvxVPR25QqQZ/+Ykh0MoRgw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KqPSVt/jj015TZQizd7Tg6RDjZkSeIXP2YgI0DHh5eZgUPoAGBJdu0Q1dF9uac+XZH/ar/sN6oNjl4ximJGTNKgNdK5yGqgMbhunr0ffuVcsyeGWBpaFiRFNz2cCCTlZL11UcoXe3Kq/A8SUPEnFOBzz+GORthTkN7AZN/Nqc0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Q06OStfN; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGwmJJn3mpFGok+HTXYuJoi32/U/jQJZdeMcWRI7fEKTiVRy55oHmnu3JWl28OfIo1xm7DZHyQsFaxWigQF8HKN61OHDM+aI/hPZ+sMd2a0pEriytpSrZtRF6yVk35ggNqa1rd4V6JYYZoNW+wxUOnSGFXW6HdhqcobPPWGZdeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tgKERqRW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+sfd0kBa; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tgKERqRW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+sfd0kBa; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Q06OStfN"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3012a0c8496so308098a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 22:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744262646; x=1744867446; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PZYMzQXIXSU/bXW26sRzTu+9m/v0haq3s3VFwVwrb1s=;
-        b=Q06OStfNnyhk6geDn6XJVdrTgl9RLokjP8fFq1dQ5Ji+TXVzONRg8FXehDUrWs7g4y
-         ow0UE9yJ80OHMRNMVUuPCELlh75h4elSC02YCbIpkF+up6qXmlfcOitm/Kc+Dz0qDgCq
-         VIn9Bl01QVVVq7GS+sou1aoLgIaE0uSS7ZXuFZB+f4CXFTK0l7fX4nP3Z/jDmDizTO7H
-         uOUZ5cRkMngYz7mdK7Z5PEek0Io4x6hT8vSTqHCXek+twna6uNudanzqx4e5j834oFwx
-         a+/w6v0Mgqoe7HWMnwXAl43j3VvtbMG/Kv5s337nQORHOSEmLRmRlMqMt6BV/UCyD1VJ
-         10+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744262646; x=1744867446;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PZYMzQXIXSU/bXW26sRzTu+9m/v0haq3s3VFwVwrb1s=;
-        b=a7C+4O6QMwZ9QdLlSYCRrf+qrbA+V389VfGWFJI2EDiQHE5sC/V0GTwxe0r8lPoARy
-         zuVgEKZ4KDKnKcDsV/nSuwOlbSZby+0UxAYs+VtKZKHf51Qjp0ZitfGZsQDSKWk01nG/
-         c5kza61HpH4eN+VUdNGT3ECayOrinKwKrxEdAOCfqEpMtKxrhFzLboSWKIHHJyfBOhxK
-         PHaIgEOY4JckY0FpwxmXYYOUJ09xY5Bb0wjPU5RFhmduKihZmJeVX4+WhhQvVp7WZq/I
-         f2xmvND8PKKy3BKgJA0hNZ6Qea7dlJeM5yvPzWtJVS+tE7WeoLDmgnllec5e5zrePHdm
-         OrIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnOO1NdcdJ6dnozUuw7SYkZTheCAjuY1nKJny6Em+xQLBL0i7qvyUo59zbCRN8xWECDGj2qxKFM79BoPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyojHmAjrWfH8hfWMDTCZTrKlk06jTXADfKaatnASKClaVRvWyE
-	E7qFy0QRMOL8AmzMmD08qfuAuZ554ErAXwYY/C0kVzth3DmVD2t86j/4FkgMHiU=
-X-Gm-Gg: ASbGncsbodHZDeU5m7WSDdw6LrPXi8S77gHEDC/j4fv5I5v+S8sOj0HWYjWxZIYzSA/
-	ldovWvz+EzWcSV2cYyjQbrazclZ+eXJ6lIZnd+neQGQxyWe/MlS7CSlYHulQSbasMefXqmVdEVu
-	wYyins/8fuxNHchum84JrbnBa6YhqsWtefXhEElcpjF+hbhpC8zLeibAcxN3KsoPdmdtfEUH8H9
-	d9SvMp058OVMToFA9iQ9yMO8q9vqzg3J0XsdfTKZs/EcDTM68+RI6Vu9XqIo8C/NGyegj2wiKf2
-	2lh7WH9d2WNh0PcqAxYU9oxdLZ78gmJvi1Q4KiW+yJM1Jc12jg8=
-X-Google-Smtp-Source: AGHT+IEFGYLi01GN6t1Qu8phsbyE3bnOEDBZkOiu+MAV/bjppeYPX1aHEWOs4wEGQPAvVv3qM4pyaQ==
-X-Received: by 2002:a17:90a:d64b:b0:2fa:13d9:39c with SMTP id 98e67ed59e1d1-30718b75cebmr2953474a91.14.1744262646173;
-        Wed, 09 Apr 2025 22:24:06 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm21649615ad.217.2025.04.09.22.24.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 22:24:05 -0700 (PDT)
-Date: Wed, 9 Apr 2025 22:24:02 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>
-Subject: Re: [PATCH v12 27/28] riscv: Documentation for shadow stack on riscv
-Message-ID: <Z_dV8v54vfD9zHLV@debug.ba.rivosinc.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-27-e51202b53138@rivosinc.com>
- <2a24cc43-4150-4a56-ba09-0d136dde893f@ghiti.fr>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tgKERqRW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+sfd0kBa";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tgKERqRW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+sfd0kBa"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2C9E21F385;
+	Thu, 10 Apr 2025 05:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744262740; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sz//AQNK6HBfjELDubxkvHQdxuVnx9BP9YnbKTYNU8Y=;
+	b=tgKERqRWxcrS8WKKiKkjXpx11PHfw9lYAjJriM7NXmreAr5wDDkL2XyuOtPeHCLYy/7HZh
+	1wRreeUJ41jiSmzJzRcoloCGE+T9QZTOAZPl4bWyxgw49NGO+udj7OxD7oY2LsM33rCmx6
+	buz9y+2b2KtffpuKxdAYygmA1LyxLEk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744262740;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sz//AQNK6HBfjELDubxkvHQdxuVnx9BP9YnbKTYNU8Y=;
+	b=+sfd0kBaZgy9Ou8qAc0gy2ji7HnprFQ6btY+MFjO7tY5ylp6ybMPn0YyRCEsnvqSKhz6HH
+	rqeAgLVqNBZx+/Dg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744262740; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sz//AQNK6HBfjELDubxkvHQdxuVnx9BP9YnbKTYNU8Y=;
+	b=tgKERqRWxcrS8WKKiKkjXpx11PHfw9lYAjJriM7NXmreAr5wDDkL2XyuOtPeHCLYy/7HZh
+	1wRreeUJ41jiSmzJzRcoloCGE+T9QZTOAZPl4bWyxgw49NGO+udj7OxD7oY2LsM33rCmx6
+	buz9y+2b2KtffpuKxdAYygmA1LyxLEk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744262740;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sz//AQNK6HBfjELDubxkvHQdxuVnx9BP9YnbKTYNU8Y=;
+	b=+sfd0kBaZgy9Ou8qAc0gy2ji7HnprFQ6btY+MFjO7tY5ylp6ybMPn0YyRCEsnvqSKhz6HH
+	rqeAgLVqNBZx+/Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8FAA8139D5;
+	Thu, 10 Apr 2025 05:25:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 6wELIFNW92dJWgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 10 Apr 2025 05:25:39 +0000
+Date: Thu, 10 Apr 2025 07:25:33 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Aditya Gupta <adityag@linux.ibm.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REPORT] Softlockups on PowerNV with upstream
+Message-ID: <Z_dWTU8UsvCHFMpN@localhost.localdomain>
+References: <20250409180344.477916-1-adityag@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2a24cc43-4150-4a56-ba09-0d136dde893f@ghiti.fr>
+In-Reply-To: <20250409180344.477916-1-adityag@linux.ibm.com>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, Apr 08, 2025 at 10:48:08AM +0200, Alexandre Ghiti wrote:
->
->On 14/03/2025 22:39, Deepak Gupta wrote:
->>Adding documentation on shadow stack for user mode on riscv and kernel
->>interfaces exposed so that user tasks can enable it.
->>
->>Reviewed-by: Zong Li <zong.li@sifive.com>
->>Signed-off-by: Deepak Gupta <debug@rivosinc.com>
->>---
->>  Documentation/arch/riscv/index.rst   |   1 +
->>  Documentation/arch/riscv/zicfiss.rst | 176 +++++++++++++++++++++++++++++++++++
->>  2 files changed, 177 insertions(+)
->>
->>diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
->>index be7237b69682..e240eb0ceb70 100644
->>--- a/Documentation/arch/riscv/index.rst
->>+++ b/Documentation/arch/riscv/index.rst
->>@@ -15,6 +15,7 @@ RISC-V architecture
->>      vector
->>      cmodx
->>      zicfilp
->>+    zicfiss
->>      features
->>diff --git a/Documentation/arch/riscv/zicfiss.rst b/Documentation/arch/riscv/zicfiss.rst
->>new file mode 100644
->>index 000000000000..5ba389f15b3f
->>--- /dev/null
->>+++ b/Documentation/arch/riscv/zicfiss.rst
->>@@ -0,0 +1,176 @@
->>+.. SPDX-License-Identifier: GPL-2.0
->>+
->>+:Author: Deepak Gupta <debug@rivosinc.com>
->>+:Date:   12 January 2024
->>+
->>+=========================================================
->>+Shadow stack to protect function returns on RISC-V Linux
->>+=========================================================
+On Wed, Apr 09, 2025 at 11:33:44PM +0530, Aditya Gupta wrote:
+> Hi,
+> 
+> While booting current upstream kernel, I consistently get "softlockups", on IBM PowerNV system.
+> 
+> I have tested it only on PowerNV systems. But some architectures/platforms also
+> might have it. PSeries systems don't have this issue though.
+> 
+> Bisect points to the following commit:
+> 
+>     commit 61659efdb35ce6c6ac7639342098f3c4548b794b
+>     Author: Gavin Shan <gshan@redhat.com>
+>     Date:   Wed Mar 12 09:30:43 2025 +1000
+> 
+>         drivers/base/memory: improve add_boot_memory_block()
+> 
+... 
+> Console log
+> -----------
+> 
+>     [    2.783371] smp: Brought up 4 nodes, 256 CPUs
+>     [    2.783475] numa: Node 0 CPUs: 0-63
+>     [    2.783537] numa: Node 2 CPUs: 64-127
+>     [    2.783591] numa: Node 4 CPUs: 128-191
+>     [    2.783653] numa: Node 6 CPUs: 192-255
+>     [    2.804945] Memory: 735777792K/738197504K available (17536K kernel code, 5760K rwdata, 15232K rodata, 6528K init, 2517K bss, 1369664K reserved, 0K cma-reserved)
 
-<... snipped ..>
+If I am not mistaken this is ~700GB, and PowerNV uses 16MB as section size,
+and sections_per_block == 1 (I think).
 
->>+
->>+5. violations related to returns with shadow stack enabled
->>+-----------------------------------------------------------
->>+
->>+Pertaining to shadow stack, CPU raises software check exception in following
->>+condition:
->>+
->>+- On execution of ``sspopchk x1/x5``, ``x1/x5`` didn't match top of shadow
->>+  stack. If mismatch happens then cpu does ``*tval = 3`` and raise software
->>+  check exception.
->>+
->>+Linux kernel will treat this as :c:macro:`SIGSEV`` with code =
->>+:c:macro:`SEGV_CPERR` and follow normal course of signal delivery.
->>+
->>+6. Shadow stack tokens
->>+-----------------------
->>+Regular stores on shadow stacks are not allowed and thus can't be tampered
->>+with via arbitrary stray writes due to bugs. Method of pivoting / switching to
->>+shadow stack is simply writing to csr ``CSR_SSP`` changes active shadow stack.
->
->
->I don't understand the end of this sentence.
+The code before the mentioned commit, was something like:
 
-I'll rephrase it to make it readable and understandable.
+ for (nr = base_section_nr; nr < base_section_nr + sections_per_block; nr++)
+       if (present_section_nr(nr))
+          section_count++;
 
->
->
->>+This can be problematic because usually value to be written to ``CSR_SSP`` will
->>+be loaded somewhere in writeable memory and thus allows an adversary to
->>+corruption bug in software to pivot to an any address in shadow stack range.
->
->
->Remove "an"
->
->
->>+Shadow stack tokens can help mitigate this problem by making sure that:
->>+
->>+- When software is switching away from a shadow stack, shadow stack pointer
->>+  should be saved on shadow stack itself and call it ``shadow stack token``
->>+
->>+- When software is switching to a shadow stack, it should read the
->>+  ``shadow stack token`` from shadow stack pointer and verify that
->>+  ``shadow stack token`` itself is pointer to shadow stack itself.
->>+
->>+- Once the token verification is done, software can perform the write to
->>+  ``CSR_SSP`` to switch shadow stack.
->>+
->>+Here software can be user mode task runtime itself which is managing various
->>+contexts as part of single thread. Software can be kernel as well when kernel
->>+has to deliver a signal to user task and must save shadow stack pointer. Kernel
->>+can perform similar procedure by saving a token on user shadow stack itself.
->>+This way whenever :c:macro:`sigreturn` happens, kernel can read the token and
->>+verify the token and then switch to shadow stack. Using this mechanism, kernel
->>+helps user task so that any corruption issue in user task is not exploited by
->>+adversary by arbitrarily using :c:macro:`sigreturn`. Adversary will have to
->>+make sure that there is a ``shadow stack token`` in addition to invoking
->>+:c:macro:`sigreturn`
->>+
->>+7. Signal shadow stack
->>+-----------------------
->>+Following structure has been added to sigcontext for RISC-V::
->>+
->>+    struct __sc_riscv_cfi_state {
->>+        unsigned long ss_ptr;
->>+    };
->>+
->>+As part of signal delivery, shadow stack token is saved on current shadow stack
->>+itself and updated pointer is saved away in :c:macro:`ss_ptr` field in
->>+:c:macro:`__sc_riscv_cfi_state` under :c:macro:`sigcontext`. Existing shadow
->>+stack allocation is used for signal delivery. During :c:macro:`sigreturn`,
->>+kernel will obtain :c:macro:`ss_ptr` from :c:macro:`sigcontext` and verify the
->>+saved token on shadow stack itself and switch shadow stack.
->>
+ if (section_count == 0)
+    return 0;
+ return add_memory_block()
+
+So, in case of PowerNV , we will just check one section at a time and
+either return or call add_memory_block depending whether it is present.
+
+Now, with the current code that is something different.
+We now have 
+
+memory_dev_init:
+ for(nr = 0, nr <= __highest_present_section_nr; nr += 1)
+     ret = add_boot_memory_block
+
+add_boot_memory_block:
+ for_each_present_section_nr(base_section_nr, nr) {
+     if (nr >= (base_section_nr + sections_per_block))
+            break;
+
+     return add_memory_block();
+ }
+ return 0;
+
+The thing is that next_present_section_nr() (which is called in
+for_each_present_section_nr()) will loop until we find a present
+section.
+And then we will check whether the found section is beyond
+base_section_nr + sections_per_block (where sections_per_block = 1).
+If so, we skip add_memory_block.
+
+Now, I think that the issue comes from for_each_present_section_nr
+having to loop a lot until we find a present section.
+And then the loop in memory_dev_init increments only by 1, which means
+that the next iteration we might have to loop a lot again to find the
+another present section. And so on and so forth.
+
+Maybe we can fix this by making memory_dev_init() remember in which
+section add_boot_memory_block returns.
+Something like the following (only compile-tested)
+
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 8f3a41d9bfaa..d97635cbfd1d 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -816,18 +816,25 @@ static int add_memory_block(unsigned long block_id, unsigned long state,
+ 	return 0;
+ }
+
+-static int __init add_boot_memory_block(unsigned long base_section_nr)
++static int __init add_boot_memory_block(unsigned long *base_section_nr)
+ {
++	int ret;
+ 	unsigned long nr;
+
+-	for_each_present_section_nr(base_section_nr, nr) {
+-		if (nr >= (base_section_nr + sections_per_block))
++	for_each_present_section_nr(*base_section_nr, nr) {
++		if (nr >= (*base_section_nr + sections_per_block))
+ 			break;
+
+-		return add_memory_block(memory_block_id(base_section_nr),
+-					MEM_ONLINE, NULL, NULL);
++		ret = add_memory_block(memory_block_id(*base_section_nr),
++				       MEM_ONLINE, NULL, NULL);
++		*base_section = nr;
++		return ret;
+ 	}
+
++	if (nr == -1)
++		*base_section = __highest_present_section_nr + 1;
++	else
++		*base_section = nr;
+ 	return 0;
+ }
+
+@@ -973,9 +980,9 @@ void __init memory_dev_init(void)
+ 	 * Create entries for memory sections that were found
+ 	 * during boot and have been initialized
+ 	 */
+-	for (nr = 0; nr <= __highest_present_section_nr;
+-	     nr += sections_per_block) {
+-		ret = add_boot_memory_block(nr);
++	nr = first_present_section_nr();
++	for (; nr <= __highest_present_section_nr; nr += sections_per_block) {
++		ret = add_boot_memory_block(&nr);
+ 		if (ret)
+ 			panic("%s() failed to add memory block: %d\n", __func__,
+ 			      ret);
+ 
+
+@Aditya: can you please give it a try?
+
+
+
+-- 
+Oscar Salvador
+SUSE Labs
