@@ -1,96 +1,160 @@
-Received: from mr85p00im-zteg06021601.me.com (mr85p00im-zteg06021601.me.com [17.58.23.187])
+Received: from mail-m49212.qiye.163.com (mail-m49212.qiye.163.com [45.254.49.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ADE285403
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7311372
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744285572; cv=none; b=GS5b9BBdUG+r5Zyssa47oFtLRDjziLjzi50/AxvKK4Uaa2v40L98xP3R3iqxY+gt9KYb16Ty0FNJ2FjucGZXgxNwIAS36aV5LFFiy5CDZ40nZdhTW9qKE4s8CaO0aaNQmFfZ/ltHggY+nNXBwCunFC3QG7z4pTLGFGIYJd0toDE=
+	t=1744285669; cv=none; b=TcH5VlCwF2FRXd/D6mPYOs7InsEbfAAN1TzoHYSaXdfPGdrwR3O3DiRGQaN7CbIZWmFejAZ2/M2/q6JjZK0OWYzmQXWduRAsAWv2L2nQjd+g+61c5WVl20wt2rPaCcc6uGeKZYwwpUu67Ws9YmlXhlgx7k4jjqOFYTPFmH+cPYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744285572; c=relaxed/simple;
-	bh=swxv/69OXoGMQgh78vmQsv5ee1jjhh4aaX6GUHX0zD0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ClhV9KUHw/9TiP6VT7iXmTj+QvKpjlv2tCwbUYQE5qc06BX+gAw41ruOe7tWKTjrtzWqLldwYGM+0DucIk7P2Ngri5vGoTMrNUbE64kf6vqyt4sOFcUDLpV2GTDc28vilkgIKtHIPu2GJUquPrrFBVLlb/pFs1dyOJExUpx/YNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=OFGIu3Gt; arc=none smtp.client-ip=17.58.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="OFGIu3Gt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=7ogrfVUjfpDxF4h8Zei+Mv0WcYgXNX6lZECoUKIoJsg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=OFGIu3GtVCOg5A+CFVJQN5Qpsfs1qDMCNZlLU2VYFM1KceLSfQyssCZp8kXTeOE0+
-	 Ec+b7IW7Avh8V3HnHki/qbOAjdghbySXA43bwxAnCMCHwGL6jwUYrNvu3ZL4vb/b5U
-	 nfsFCseXzAU0ehuBL81vvkf5HOlkDotbcm8Ff3oD2CuA3c3pKsW4e2gpg/5kvoya9b
-	 J3r28tkwOtme7RlHPRRj/3W0upME644BnDwmu4aQwf9Y6byiWW8fOnaAFEkzM2QzuF
-	 sguMS1sgJe3N34fFJ8LcOx51hUQGqMnWQ9kdHXcd2fE0fBcuezXJOmi4MLpfHG6p5q
-	 w8ymdTuPMQXtw==
-Received: from mr85p00im-zteg06021601.me.com (mr85p00im-zteg06021601.me.com [17.58.23.187])
-	by mr85p00im-zteg06021601.me.com (Postfix) with ESMTPS id DC91930585D8;
-	Thu, 10 Apr 2025 11:46:09 +0000 (UTC)
-Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-zteg06021601.me.com (Postfix) with ESMTPSA id 9324D30583EB;
-	Thu, 10 Apr 2025 11:46:07 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Thu, 10 Apr 2025 19:45:31 +0800
-Subject: [PATCH 5/5] fs/fs_context: Mark an unlikely if condition with
- unlikely() in vfs_parse_monolithic_sep()
+	s=arc-20240116; t=1744285669; c=relaxed/simple;
+	bh=HmDwf9qpGgeScX4/Nj4sprSsCc5AOfESV3gh/s+oOB0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SSQ02pRpEQ3uhMAUq33r49he159LPNmIy7qXnkwiL3ebTF8HntF3z0wh3DAYIMOvDxYwvzV8Mp5fNNoOPf/+qeCqGIPj/1EDrBP4z/cgWKkRf7jg1cmc9F4Wxm8q+YenmpUtOwvFq7EMv9ZiDzy/sLpUL9skh5FFfD+LyfaepOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=45.254.49.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
+Received: from localhost.localdomain (unknown [122.224.147.158])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11665dc53;
+	Thu, 10 Apr 2025 19:42:27 +0800 (GMT+08:00)
+From: Shouping Wang <allen.wang@hj-micro.com>
+To: will@kernel.org
+Cc: robin.murphy@arm.com,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	allen.wang@hj-micro.com,
+	peter.du@hj-micro.com,
+	andy.xu@hj-micro.com
+Subject: [PATCH 1/2] perf: arm-ni: Unregister PMUs on probe failure
+Date: Thu, 10 Apr 2025 19:42:13 +0800
+Message-ID: <20250410114214.1599777-2-allen.wang@hj-micro.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250410114214.1599777-1-allen.wang@hj-micro.com>
+References: <20250410114214.1599777-1-allen.wang@hj-micro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-fix_fs-v1-5-7c14ccc8ebaa@quicinc.com>
-References: <20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com>
-In-Reply-To: <20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- David Howells <dhowells@redhat.com>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: bh0hhOatG7ST1xaITvng1aKmLh8pS4WA
-X-Proofpoint-ORIG-GUID: bh0hhOatG7ST1xaITvng1aKmLh8pS4WA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_02,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 clxscore=1015 adultscore=0
- phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2504100087
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZS08fVhgaQx5LHxhPTEpMSVYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0hVSk
+	tLVUpCS0tZBg++
+X-HM-Tid: 0a961f822d6909d9kunm11665dc53
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MhA6MAw*QjIMQzcTEEgwTD86
+	NzUKCj5VSlVKTE9PSUNOSE9DSktDVTMWGhIXVRoXFx4VVQwaFRw7ExFWFhIYCRRVGBQWRVlXWRIL
+	WUFZSklJVUlJT1VKT0xVSk5DWVdZCAFZQU9KQ0I3Bg++
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+From: Hongbo Yao <andy.xu@hj-micro.com>
 
-There is no mount option with pattern "...,=key_or_value,...", so the if
-condition '(value == key)' in while loop of vfs_parse_monolithic_sep() is
-is unlikely true.
+When a resource allocation fails in one clock domain of an NI device,
+we need to properly roll back all previously registered perf PMUs in
+other clock domains of the same device.
 
-Mark the condition with unlikely() to improve both performance and
-readability.
+Otherwise, it can lead to kernel panics.
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Calling arm_ni_init+0x0/0xff8 [arm_ni] @ 2374
+arm-ni ARMHCB70:00: Failed to request PMU region 0x1f3c13000
+arm-ni ARMHCB70:00: probe with driver arm-ni failed with error -16
+list_add corruption: next->prev should be prev (fffffd01e9698a18),
+but was 0000000000000000. (next=ffff10001a0decc8).
+pstate: 6340009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+pc : list_add_valid_or_report+0x7c/0xb8
+lr : list_add_valid_or_report+0x7c/0xb8
+Call trace:
+ __list_add_valid_or_report+0x7c/0xb8
+ perf_pmu_register+0x22c/0x3a0
+ arm_ni_probe+0x554/0x70c [arm_ni]
+ platform_probe+0x70/0xe8
+ really_probe+0xc6/0x4d8
+ driver_probe_device+0x48/0x170
+ __driver_attach+0x8e/0x1c0
+ bus_for_each_dev+0x64/0xf0
+ driver_add+0x138/0x260
+ bus_add_driver+0x68/0x138
+ __platform_driver_register+0x2c/0x40
+ arm_ni_init+0x14/0x2a [arm_ni]
+ do_init_module+0x36/0x298
+---[ end trace 0000000000000000 ]---
+Kernel panic - not syncing: Oops - BUG: Fatal exception
+SMP: stopping secondary CPUs
+
+Fixes: 4d5a7680f2b4 ("perf: Add driver for Arm NI-700 interconnect PMU")
+Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 ---
- fs/fs_context.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/perf/arm-ni.c | 39 +++++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/fs/fs_context.c b/fs/fs_context.c
-index 582d33e8111739402d38dc9fc268e7d14ced3c49..284301d88bc90ef462a08c9ea893f822075a6d4d 100644
---- a/fs/fs_context.c
-+++ b/fs/fs_context.c
-@@ -222,7 +222,7 @@ int vfs_parse_monolithic_sep(struct fs_context *fc, void *data,
- 			char *value = strchr(key, '=');
+diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
+index 90fcfe693439..3f3d2e0f91fa 100644
+--- a/drivers/perf/arm-ni.c
++++ b/drivers/perf/arm-ni.c
+@@ -576,6 +576,23 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
+ 	return err;
+ }
  
- 			if (value) {
--				if (value == key)
-+				if (unlikely(value == key))
- 					continue;
- 				*value++ = 0;
- 				v_len = strlen(value);
-
++static void arm_ni_remove(struct platform_device *pdev)
++{
++	struct arm_ni *ni = platform_get_drvdata(pdev);
++
++	for (int i = 0; i < ni->num_cds; i++) {
++		struct arm_ni_cd *cd = ni->cds + i;
++
++		if (!cd->pmu_base)
++			continue;
++
++		writel_relaxed(0, cd->pmu_base + NI_PMCR);
++		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
++		perf_pmu_unregister(&cd->pmu);
++		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
++	}
++}
++
+ static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
+ {
+ 	u32 reg = readl_relaxed(base + NI_NODE_TYPE);
+@@ -657,8 +674,11 @@ static int arm_ni_probe(struct platform_device *pdev)
+ 				reg = readl_relaxed(pd.base + NI_CHILD_PTR(c));
+ 				arm_ni_probe_domain(base + reg, &cd);
+ 				ret = arm_ni_init_cd(ni, &cd, res->start);
+-				if (ret)
++				if (ret) {
++					ni->cds[cd.id].pmu_base = NULL;
++					arm_ni_remove(pdev);
+ 					return ret;
++				}
+ 			}
+ 		}
+ 	}
+@@ -666,23 +686,6 @@ static int arm_ni_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static void arm_ni_remove(struct platform_device *pdev)
+-{
+-	struct arm_ni *ni = platform_get_drvdata(pdev);
+-
+-	for (int i = 0; i < ni->num_cds; i++) {
+-		struct arm_ni_cd *cd = ni->cds + i;
+-
+-		if (!cd->pmu_base)
+-			continue;
+-
+-		writel_relaxed(0, cd->pmu_base + NI_PMCR);
+-		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
+-		perf_pmu_unregister(&cd->pmu);
+-		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
+-	}
+-}
+-
+ #ifdef CONFIG_OF
+ static const struct of_device_id arm_ni_of_match[] = {
+ 	{ .compatible = "arm,ni-700" },
 -- 
-2.34.1
+2.43.0
 
