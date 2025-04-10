@@ -1,119 +1,118 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7A21EF375
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA79E21324E;
+	Thu, 10 Apr 2025 16:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744302383; cv=none; b=kog5z3REBvs/x6EulgQ4TrfH/wMpNHDFUDbFxWZUzEy1NMRLDcxQkwSU7P15aaDKs5nzIxBSnj2plRwRpE2zsIsf7t3Q6ovnIGx+nc7UZED2LwiWkR9EdkZ0/b+9WYM6dzWqlM4hzENFx+KwefTdQUI1uV30zDQOar7TD+h3VX8=
+	t=1744302387; cv=none; b=iUvbqTHOP8Lv/A9lCHT/7GllzjdoeqKZvHTd2n02/ku+X3AOWOM9wnRU5Srqv5Unjk0/vr9Sf/GISvBr8uQ92M5iMG5Ah6jxFceKaP6DLwdRRwEtnuRSwpBC2TJ4p9p8NFE7ihj1Xzl1zI1sVLCUOb2UvUeoN2w+laQlzHOmG0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744302383; c=relaxed/simple;
-	bh=uahR4xkljdW6YAEH4HqJNn8IYJmLvcayuCU2q8UueVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Eo4ueFv9zsHQh8hJn5j3HgciF+lK6T1/4UiSZxXqsuZJXX1A8ZPPTf9a5MnpE24LDCDRoTWw0GF2M0LN1Bjxl+nI1l+Iz3EdTPhdEP/1dnz6ROb8Mmm5VwzV8IsCj7WQHblvTzkdBpg1G/Tyz9LL6D6DJ/CmcybaF3gbVlgWOTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l9sSImZE; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744302387; c=relaxed/simple;
+	bh=4PguwaFAXOUDYKLsldD8hprnRinLS29L76LJbAXk37o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=py/VqoPfX+nxFD9eVk196lOuAd3HYhPm67L13F2718ZRbegXiWEQjNLorur7UTD+uvNzODTYnHxnO6CuK/rEZIYTVQX4NZMCvZS7aQiMsh/KD7lQyD+mSeIl3s9Ann7M8vkErFMWszFO1sMZlbUXsJb3TGE9mrJsCqvO1jlFR2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cli/O/J8; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l9sSImZE"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so9609615e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744302380; x=1744907180; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y9ckJ5dfd0gLEO4J9dWqs05uCPbUjSjr2AMEvPSWIg4=;
-        b=l9sSImZE0eZRKee+ZfzwBqfW4Tq+KbG0zohtpgkkS7v6ndsheUuHJcxggaoqeIEdfT
-         sZWTbAQvdbqieo+2jOXwnJdDuG+Ya2IAz2foFfvpDLS+nCin0Jy3aZdlLwxgThxJ0YLS
-         TkQJ0UCcT4mvRz5bAr5YhqmNY6XgRm01tZLBmZJVbuntE74z2MWSxsgRbA6SZYw8xFHc
-         X+riralRPQycB3srXYL+3uEh6/+zf7i8KU24ALwZx6VIhXy7Kdy3hmnapZlS0ZpvJy5M
-         3WWXFsdO38dzYlGIr4svKU6e+0lru94G3M2pNCtxbohG9nVza3NNA5JuyY2Jz+wmU6hk
-         j4Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744302380; x=1744907180;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y9ckJ5dfd0gLEO4J9dWqs05uCPbUjSjr2AMEvPSWIg4=;
-        b=QDgtFM2dcIavWqt+y+q25ih1HC/gvaW2u3UHvHFU1u5x591FSxDaiq+sI9NIqg0PXB
-         722Ntk/FEtJZPOCG+UbsgieDB3UmTgvviSCC+k1IPlO3cL4/Q3/aXWlJrIvKV0Pr7TOV
-         INDcXKwNiVWr0bF19tmdK1QE3j2z/XPV9anDzwmnh5XfFzjofywGf7nxM8Ka94FRNPEw
-         Oa4JY9UKjmKK+jjWNZBRaTeab+VPcutgahnXdJbHIZIvIUiRs1+EmIL5CZCfj92QuV0h
-         likKa1CND+XrhTNQRBKZFftEUfh8YV4QBiL5UgQpyGLndi7eEVPhtrVBKwFQ/4uTYJ7U
-         DPoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXe+k9pZEIMbWKsAunZ4M1LihJwlE95XdXo4em08lj15Y2MlyW4MQrd77JIlbqcUiQv/bChzYYhnydY27U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGBRwVfZa0N3JZ5LEqd3CjBzNpoXbCDsIvcgtjVETjxkvjWiVz
-	nKdcX+l5YDAfngkBc/ulIxLmowEt9ndBr9sk1rmak+MK+AAEA+kJ6hghxc42VMc=
-X-Gm-Gg: ASbGnctUtW83VjJe5aEJdTnysQOQtFJQP/nCeCnyZDULk1649686ho5COEGGpd2bqDM
-	mRh5nzUjUwyCoeLl3md20jd6QiW/Fx9TGZ/doXFgbd8fcGedeodUworw88p2od28MtG85RCFUqF
-	cgxKdkVu/fFOgekkbM7nNnsKo2miPUnMC38J2K85Y6tNs7x0LBwdrMwsKqzpicM6oNO/qdL5kre
-	DWNec4247gQMQV4dAIvI5n7m0LnMlAq/8sx7+iCQTwe8/I+6Wl3WvKcw/HTq9sOrfG2WSQAkpid
-	6SbkkjtWvxLGynZuZOXVNioR5Wn9AJ2K3R1EWPcYGUQu3/trLnlcJ+tF
-X-Google-Smtp-Source: AGHT+IE1nYH0HBU/WHO1w0aQZJhBOQ2ARrY9ROHGDPijYcKFnQf4Jd5ojzOvEeX3hT9ouKniOfxAnQ==
-X-Received: by 2002:a05:600c:190c:b0:439:9e13:2dd7 with SMTP id 5b1f17b1804b1-43f2d798f17mr40725835e9.2.1744302379796;
-        Thu, 10 Apr 2025 09:26:19 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d89389ed6sm5196989f8f.41.2025.04.10.09.26.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 09:26:19 -0700 (PDT)
-Date: Thu, 10 Apr 2025 19:26:16 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
-Cc: Jeff Johnson <jjohnson@kernel.org>,
-	Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
-	Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
-	Balamurugan S <quic_bselvara@quicinc.com>,
-	P Praneesh <quic_ppranees@quicinc.com>,
-	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] wifi: ath12k: Fix a couple NULL vs IS_ERR() bugs
-Message-ID: <937abc74-9648-4c05-a2c3-8db408b3ed9e@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cli/O/J8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744302386; x=1775838386;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4PguwaFAXOUDYKLsldD8hprnRinLS29L76LJbAXk37o=;
+  b=Cli/O/J8xRrtchxD9IVPc1VwxNKuEbcEV88QbhRYNeK8Ogtkc0IfgeTT
+   tiuyOE5Hjs5UcWNCJ/WIQA4Xj+21mUObwZNq6tmyOherEaQaMNAOUK7XO
+   /rQ8LBPTBsVIp9vFLVXgL9hvwwS27yim+NfCHs+7qZTCZHvrlKfsbN1Da
+   qQTa7E48GASl6NPdhr1ZNE8GlWBUWqg72IyMabW4erq+XIQZrt37K7oDC
+   WN+K/9tOQgCwRKQqN3ef2rs3fjLireRkgmsbPvqudeVlUZ01+RHwiN3KD
+   IrpPIQ9j+NJgCvuaOaguRMImAi4AOnFicK+jPWO/yiB+/UwvnQWSHvb5O
+   g==;
+X-CSE-ConnectionGUID: 0ODhkfrPRDOtXK8QvM1toA==
+X-CSE-MsgGUID: 7MI3zzoxQxmpCRXrGbV7SQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45726266"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="45726266"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 09:26:26 -0700
+X-CSE-ConnectionGUID: XcvdZQA0SMCR8Ax4YwbLFw==
+X-CSE-MsgGUID: YRWvO29RT0K9EwoXfOlNIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="166148824"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.92]) ([10.125.108.92])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 09:26:24 -0700
+Message-ID: <4792da6c-f7f7-414b-9725-5cb74e81a6ea@intel.com>
+Date: Thu, 10 Apr 2025 09:26:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cxl: core/region - ignore interleave granularity when
+ ways=1
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ dan.j.williams@intel.com, vishal.l.verma@intel.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com, ira.weiny@intel.com
+References: <20250402232552.999634-1-gourry@gourry.net>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250402232552.999634-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The devm_memremap() function returns error pointers on error and the
-ioremap() function returns NULL on error.  The error checking here got
-those flipped around.
 
-Fixes: c01d5cc9b9fe ("wifi: ath12k: Power up userPD")
-Fixes: 6cee30f0da75 ("wifi: ath12k: add AHB driver support for IPQ5332")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/net/wireless/ath/ath12k/ahb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
-index a9d9943a73f4..636dfe237a79 100644
---- a/drivers/net/wireless/ath/ath12k/ahb.c
-+++ b/drivers/net/wireless/ath/ath12k/ahb.c
-@@ -360,10 +360,10 @@ static int ath12k_ahb_power_up(struct ath12k_base *ab)
- 	mem_phys = rmem->base;
- 	mem_size = rmem->size;
- 	mem_region = devm_memremap(dev, mem_phys, mem_size, MEMREMAP_WC);
--	if (!mem_region) {
-+	if (IS_ERR(mem_region)) {
- 		ath12k_err(ab, "unable to map memory region: %pa+%pa\n",
- 			   &rmem->base, &rmem->size);
--		return -ENOMEM;
-+		return PTR_ERR(mem_region);
- 	}
- 
- 	snprintf(fw_name, sizeof(fw_name), "%s/%s/%s%d%s", ATH12K_FW_DIR,
-@@ -929,7 +929,7 @@ static int ath12k_ahb_resource_init(struct ath12k_base *ab)
- 		 * for accessing them.
- 		 */
- 		ab->mem_ce = ioremap(ce_remap->base, ce_remap->size);
--		if (IS_ERR(ab->mem_ce)) {
-+		if (!ab->mem_ce) {
- 			dev_err(&pdev->dev, "ce ioremap error\n");
- 			ret = -ENOMEM;
- 			goto err_mem_unmap;
--- 
-2.47.2
+On 4/2/25 4:25 PM, Gregory Price wrote:
+> When validating decoder IW/IG when setting up regions, the granularity
+> is irrelevant when iw=1 - all accesses will always route to the only
+> target anyway - so all ig values are "correct". Loosen the requirement
+> that `ig = (parent_iw * parent_ig)` when iw=1.
+> 
+> On some Zen5 platforms, the platform BIOS specifies a 256-byte
+> interleave granularity window for host bridges when there is only
+> one target downstream.  This leads to Linux rejecting the configuration
+> of a region with a x2 root with two x1 hostbridges.
+> 
+> Decoder Programming:
+>    root - iw:2 ig:256
+>    hb1  - iw:1 ig:256  (Linux expects 512)
+>    hb2  - iw:1 ig:256  (Linux expects 512)
+>    ep1  - iw:2 ig:256
+>    ep2  - iw:2 ig:256
+> 
+> This change allows all decoders downstream of a passthrough decoder to
+> also be configured as passthrough (iw:1 ig:X), but still disallows
+> downstream decoders from applying subsequent interleaves.
+> 
+> e.g. in the above example if there was another decoder south of hb1
+> attempting to interleave 2 endpoints - Linux would enforce hb1.ig=512
+> because the southern decoder would have iw:2 and require ig=pig*piw.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+Applied to cxl/next, with fixup against 6.15-rc1
+
+> ---
+>  drivers/cxl/core/region.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 04bc6cad092c..dec262eadf9a 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1553,7 +1553,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  
+>  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+>  		if (cxld->interleave_ways != iw ||
+> -		    cxld->interleave_granularity != ig ||
+> +		    (iw > 1 && cxld->interleave_granularity != ig) ||
+>  		    cxled->spa_range.start != p->res->start ||
+>  		    cxled->spa_range.end != p->res->end ||
+>  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
 
