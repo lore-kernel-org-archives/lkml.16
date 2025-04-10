@@ -1,134 +1,171 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.mail.protection.outlook.com (mail-eastasiaazon11011009.outbound.protection.outlook.com [52.101.129.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C986C21ABDD;
-	Thu, 10 Apr 2025 11:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744283395; cv=none; b=mxf4YC1jUjjZ1yzjiDQeRejHKYq9ozaydZw8cwTnp2DTTWmZ5R2zv06SdVQnClJAsVcIK465+rHn8jFdIreNcEFLc0Li+GyBr/prpgyFVBGYDDYKceWkXNyQ4+vsIMnaujL7tHbM4Ou3ZIUnZNqMRngWma2XUz6Qh2g+SFikloc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744283395; c=relaxed/simple;
-	bh=MpBqDValHr2CSUHutlF5cCsPOXNMQ+yA0JfuD3qn/8U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OpgYFnD+XyJcnBdphntye15L2EzFG2tY8pL/IAta8zt80vmP6+XmvZRlh5B4VTV8uQDEsQpyPeMhz9MP7Btu2Uuz4p8ReQ3op18BUHbvmcLydQggqYqh05VJvcEc8zQWCm2i6Ph96nmU+T6XiRJ2nc7NiCVPLHhtq7TZF3Bkliw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7QQRRW+; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD76F21ABDF;
+	Thu, 10 Apr 2025 11:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744283481; cv=fail; b=A0mtazqL86tv0wvnp2vzb/clOERpY4Shqn1EfHuKzjLNQv4bjiLDe1sapoKF0kkGPDc6FwZFbu/RlP6jZCHpcFyOAmCZ5tr7p2SwknDT3CTmm61+ZF5YiF62xCG99mAkSbBli5W931b7UU3Xw9YLpro2RsO1Pv9zWI/meXvJMWo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744283481; c=relaxed/simple;
+	bh=RhEEp+8kUGmaH9l9YuDA2sCBWfkovks4CIscInPUr9E=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=B2ZVf44Dl6AG9rbzk3pW5f91qQJIEo7zN2o4koqry/FmH3tMPuNhBTIOsdGEzf5fMtrPkIo2o1XteVc9wbW+c+1M9aC6FE0/p5TjUHW8fZ9vSSgwu6yIC1GmQq2tQrXiBfwBsOWuicVcUACxG38GW2+/qDTZ6sBP3yJYNLsnMQQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=m0+0OszP; arc=fail smtp.client-ip=52.101.129.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7QQRRW+"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so5736365e9.1;
-        Thu, 10 Apr 2025 04:09:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744283392; x=1744888192; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MbDe+EbLr5OyfnaFcs8M7gYax2PYGkoxb0x00OKFLW0=;
-        b=G7QQRRW+ImIdh3TtrUpUKSXBkj07guDRnGLVr292FyGVMx8GKdZvi6FUA6SxsUDhYP
-         iDlM19QiPc5mGmtgjdEaoqzOFwlDCP+RY6xkQo+3Qvld+bSuitNXsMdHFSLcQJ3IJ3u9
-         7AA1cVpiBqJog3yS26bFkXHoXlIeTR55RUyhYd97iLW9REnQ/8x2EBAUBsop9GM7ok3P
-         H/BYXkBmWBYsvILa3lMpeQft12p3FdtXvohe5K6s9jn5XjGV/6pXmPPMgcSSsD6f+lvv
-         kkhjcW2G+Ul45vd1sUwEtaxGK5nv+W9kXhPwKba2IAXpdhEucPp634sTf2weJW+yAqWZ
-         fDwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744283392; x=1744888192;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MbDe+EbLr5OyfnaFcs8M7gYax2PYGkoxb0x00OKFLW0=;
-        b=f9ObU+/CqTlylMQ/NUnYcGRbd44Y7gTXpGJl5nkeLnIOTHXjiwSets4aHI/tVo4q4Y
-         bprh/620l5XToHPAS/uIaLCZnr87X+MSlEVWNTg4pPIAKN4zr48jPVWjp/k+IU5ZuhFK
-         wenasp+orFjtEj8SZBz+TaoKwi7EEC/wKOjScSwRWm47EhR/SQH+Q1VAykPRveWzw0wh
-         jABnAT3I0/wnjD+39d0BiK85kMOG1oLRomnHzOrRV0LlTA3VRKWPccEwuQRQwRemK7Iu
-         e8eWddnVWGlVZVwlLJHnSD44k0XU8+5StnKD/6VE8qeHYWTrfGbG0cMoJhscAOW5suc2
-         NpjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/0/0B+l1IlFl8sTEOAcKPGiKJM158XkhkkDV7srf7UjMvnwopLewP10ZSrF6TB6qF4Ev222+TNcRLjno=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6eMOknQXdS3HSwKUDsCcHK0glMmuu7zKpwivBzJXXGc4onCYi
-	dqdoPIedVLz/WPndyc+o18e1e2VIdTgqjU0eRvrlWhGzn3QXZo1W
-X-Gm-Gg: ASbGnctaH9kYN0Mo8DZgrlb0UXpiXGyvfk4sXigMjFsPQtne97fZiC0sXMwUA1ReB1j
-	XWHHv98mvAjvfXbwphwYv+qfwUM8lRgu3Py1runZxPFnCAt3VAo0fdrJxfSyS75TNMtF0IHz82H
-	zNsX4GWli75iEwOJD1uo6RJ7QWod/nuIA2DPMjVcguWj1VVv4JP4JDeJ/MEC9KVYIJHJ87RCBzM
-	XjBfZ4PvvyN0Xl/1WoJlQsWcgFC/3tExALtG7dY+TBpffRxAo+qJrA58/GUtk+598gwcMR/e0fe
-	NiDeq9efu89qXh0AsYVIN25Sjp9shwWmOcuCo4c8mN88U6qP1JC4I0trpxgHDWRLXFGGvH0b89B
-	/hPr5hfsPKp38LGWrIzMc/Us=
-X-Google-Smtp-Source: AGHT+IGXicWffcw8M39J49w3jd7iIxYiNcKX82U0HLXCO9NcqiFD4gVIG+kJvxdz3XZqhzVhtvmJlg==
-X-Received: by 2002:a5d:5f47:0:b0:391:253b:405d with SMTP id ffacd0b85a97d-39d8fd8c45dmr1957609f8f.41.1744283391864;
-        Thu, 10 Apr 2025 04:09:51 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20626c19sm52998355e9.15.2025.04.10.04.09.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 04:09:51 -0700 (PDT)
-Message-ID: <3ed7564cf2749ee207da8ddc5ef06b54d8aea881.camel@gmail.com>
-Subject: Re: [PATCH] iio: adc: ad_sigma_delta: Fix use of uninitialized
- variable status_pos
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Purva Yeshi <purvayeshi550@gmail.com>, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 10 Apr 2025 12:09:53 +0100
-In-Reply-To: <20250409200151.201327-1-purvayeshi550@gmail.com>
-References: <20250409200151.201327-1-purvayeshi550@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="m0+0OszP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iMqJHqGYUvoP5i5a3+7YmdZqk7omNwaqpB9ieBbR7MsWXgoLwGZbAquWXuzYqbu9hBeAjDk2ffl1b5ipdBamkyLfZqtwCGj6jjrsUDnD+38pW1JyTkEr68Ax4AqPQZwhQLRtOqA8DZ1aHAgsepO+Fiddh3C6cHeBWohsthWFd54neqnwzLdUha40WL9npDYtgYnyDyhBKlfdpRUmXNGqIUkobECueeVNB2VvJ6hKuBaDNPqF6GT9fGCiZom87V7c5CTHeop9SvUaaQoDiPFYi59HQjOi2mCl17k65x4DNmtPq9YddH+szqRZhITNB3XirvIhRm2nnck5sOPEW59rzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RhEEp+8kUGmaH9l9YuDA2sCBWfkovks4CIscInPUr9E=;
+ b=p4H/cMAIZaDFWF+i3ttG84MNIHU82B0MSCb/Mbqq9xfQvxaTB7Vz5H+wIAbuZw9mar8lWpnN/3s1I+IJLknjUqb9Gnry1AWI8WCptbATPUG7rapJpXc+0+5PmxlLW1INLj946h/xHmrS717ICEGGTscY9YlcBtobVS1iMFifU76zb+0eOizhSAr0YB0wirG16ZwwCY2CjYDxrSKJVeIiDvuw7p9kbgxYLGKDWnDZ3SIzLdUkZWLzLabJTLv1OPktkRTlugtRKadSha0STSwglr9kwyCfpCZyru9bdmmQUxsQoWHYYAVSdIFAqsTHzjCYf5iG56NG9UQe1dCGAa8r5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RhEEp+8kUGmaH9l9YuDA2sCBWfkovks4CIscInPUr9E=;
+ b=m0+0OszPhYFTbKLfuBUvY8hO4A/YrwpHta0n5ppXRNkAB2ZN1EbmyJ2CpWFIDyO5x+ZOcsNSYyurCCWM4+GlKjABIOoaF/C6UqtGO94P52/j/AqOBsOgK+saWw18MnTGjqulNNC70PUDj3pDTuw7mFdhfYuS/2avOm3Tqz0JpCZfqTTHenhz+oYGV6X7Cnv4Y95FMYNX3CAeNPtzwLujP0uc19TdovjneoNdAmFsLG/NNDlj9O6Ylje1/bVCY1SqchkYoYkTgdqtH7qyv7wNMxiBPdQuAFOBVLImwGyPDO6nIFU4Qvy9xYdr+v0lc6XzoB7QqFgQ6tCGSPZHQphgHQ==
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by KL1PR06MB6961.apcprd06.prod.outlook.com (2603:1096:820:120::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
+ 2025 11:11:13 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535%6]) with mapi id 15.20.8606.033; Thu, 10 Apr 2025
+ 11:11:12 +0000
+From: =?gb2312?B?wO7R7+i6?= <frank.li@vivo.com>
+To: "dsterba@suse.cz" <dsterba@suse.cz>
+CC: "clm@fb.com" <clm@fb.com>, "josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"dsterba@suse.com" <dsterba@suse.com>, "linux-btrfs@vger.kernel.org"
+	<linux-btrfs@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject:
+ =?gb2312?B?u9i4tDogW1BBVENIIDEvMl0gYnRyZnM6IGNvbnZlcnQgdG8gc3BpbmxvY2sg?=
+ =?gb2312?B?Z3VhcmRzIGluIGJ0cmZzX3VwZGF0ZV9pb2N0bF9iYWxhbmNlX2FyZ3MoKQ==?=
+Thread-Topic: [PATCH 1/2] btrfs: convert to spinlock guards in
+ btrfs_update_ioctl_balance_args()
+Thread-Index: AQHbqUw4sYIPuqvLkESzkGRvsTDgGrObqE8AgAEW+fA=
+Date: Thu, 10 Apr 2025 11:11:11 +0000
+Message-ID:
+ <SEZPR06MB52695564F5DE73356D0EFF06E8B72@SEZPR06MB5269.apcprd06.prod.outlook.com>
+References: <20250409125724.145597-1-frank.li@vivo.com>
+ <20250409183022.GG13292@suse.cz>
+In-Reply-To: <20250409183022.GG13292@suse.cz>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEZPR06MB5269:EE_|KL1PR06MB6961:EE_
+x-ms-office365-filtering-correlation-id: bcafddd8-3ec9-43fe-2424-08dd7820672b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?gb2312?B?MWdobkJlVFhNbXpEWnprSXhPQnIyYXVTKzJhOEpvTktmcHVVMm9xeFlRdE1s?=
+ =?gb2312?B?V01ZdzhRd2VMV1grTlRtU2lxTTVvOWhpQlpmQUdxVHQyRzVUTlhWRFNrcFF3?=
+ =?gb2312?B?aUcrRFlzdzVPbmVmZ1UzOEpoMFU0U0puWC9Fd0liSkl5eWxleEVOV29zTVEy?=
+ =?gb2312?B?YURFOHFlZnBnajY1MjVCMURuK3QwUmYrU09ORWY2QWdhdVpNVkpmbUhqb1VP?=
+ =?gb2312?B?by9tNndMVE9QTENhK2MzNStZYzZ2bDlaZktxcHV4NVZjbWhWeEtWa1kvQTcv?=
+ =?gb2312?B?Zklta1VBekU4WmRFaGJmcFJEdStNeWJINkxSRnE2N0FvSW04UzFRUXFibmxw?=
+ =?gb2312?B?OHVUUE1pV0ZXN2VYaUxxVmxtSzNZL1RQMU9XMzBhSDF3ZGNtTCtBa2lPaHQ1?=
+ =?gb2312?B?T294blRqVEd0MGpTU2R5blJRQVRCZXpuSk8zSGkzOUdyWTdnUC9OWXpMRUhG?=
+ =?gb2312?B?UytjMm5kRjFTSy9XdVdVcS9OQmVqZHoxL0V0UTdMaXVLd1k5QWxvaW84MTZV?=
+ =?gb2312?B?TEtHMXVwdS9hNlBwWS9rdWpCZG44WitieW43cnhzckFmZllZN1UycVB0aGww?=
+ =?gb2312?B?WkQrbTdEYUZnTUVOeFRERDNwZG1JSXFqVUtwdTFuTTkwc3d3S0RwSjNBN2JV?=
+ =?gb2312?B?dWxmaW9IQVhnSi9MUEVya1V2V0dlRjc4cHdYeng5YjVuWE5HMjVyQ3hSYllR?=
+ =?gb2312?B?WlRvZTJPZHpVbUg5Z1VjeFVKWkkvS3dvY2RtL2hLWXBxdTcyVmt5NnpBVSsx?=
+ =?gb2312?B?eWhNVmpxK0VJSzNOaFhJaEZyS0JHNFVPb3hWZkNxWjliRktaWU01SHUvc1JD?=
+ =?gb2312?B?bURJNDFpczlmMlVrSTAvRjBLMWlSR2lzZ1plSGk3N0JKU2hQQ094UVBjajJW?=
+ =?gb2312?B?a2hZSmhRV1Myd0VsSWFBbURaUHVqY3p5cFlzUmQ3MU41VDJvYUhjbEx3aVBn?=
+ =?gb2312?B?QXdtbzVaQmxjdXU1ZG9lRjFEMG1FVzNFMTBGZW9GWUJnN2hicTJwajFkQlZz?=
+ =?gb2312?B?ZWRJMU1FbUFGR29JUE5PRFBRRy9hRUdmLzZCMVdrVTFMK2wvMjQzUFM4cjVH?=
+ =?gb2312?B?cXZxNzQ0RG1mSkdSeGpobGFmMUV4dXBiMWNjUlhtUmhmNjNVakFzRXRrYitK?=
+ =?gb2312?B?MDhCWnJNaDIveXlIMmFrbElWb2ZlUExlbkxTa2J0SDRNZjFvczhhSkZvQVJL?=
+ =?gb2312?B?TVQ2Y05Td2VtMW5KcDY0OTRnWmVCaXJmM1Rzc3ZWb2E0T0s2NVIyNEV2RnRC?=
+ =?gb2312?B?TlhPWVdoU1FFWmwrRGVKUVNVY0NwZWlpeWR4bjRCbHpONi9lYmpSbTR1Mi9x?=
+ =?gb2312?B?bW8wekdrZWRtcG0wWGVKRnd2Rjg1aFlxMDRnM1U5aEpHTnMxbGlURkJnUzN6?=
+ =?gb2312?B?a0V5STBEY2JlKzhYTWEvSTlRM2VZSlZvUWJOT1ROWTFidUl1YVJ4SlkzODV1?=
+ =?gb2312?B?cjZHaU9iaTZEMG1reDViUkdKRGNoVTFDQkk3Qm1ia0JzdHJ0UDFSckx4MVVz?=
+ =?gb2312?B?Z3R5OHcxQXNxZzBiQ3draVF5eVhDK0FJVGF6UU5tS0Q0Y0tjaHpxbTF1YVF6?=
+ =?gb2312?B?Z1R5UVh6SWlmNkVhZVA5KzYxNDAxME51TndJOWdBNzJ5MXVZODhrQmIvb3dk?=
+ =?gb2312?B?M0lzTElQV0ZhUjNkOXBxZlB6SEpJRFU3bjMrLytZTUVEdnpac1Rlblh4WjJh?=
+ =?gb2312?B?Q3BkTlk3QXMraU1PcVBkb1RTMlg2NUc5OTN6VDJtNnQ5ZFJjRUZMeUZxd0Zw?=
+ =?gb2312?B?OUY3eTZjT3JwY3ZyaGd6emllZ1FPM0tyY3QwdHNHVmhieVYrTGo1OTdicUFS?=
+ =?gb2312?B?d0xqV3hQVTN1UjNickQ5a2VmWjBreVZuQWNKbEhVVURrRTllMlRsTDMwaTFt?=
+ =?gb2312?B?TTFodFJ1d0Mwd0RMbVBUWUVoSStpMVBrMDU4WFZES29SNGlVMllhUUtBNG1x?=
+ =?gb2312?B?dGxoaDZzV3ZZRHJvRFAwTDJINXRYS3VvQk11Uit6SzRadXQ3VHhYdytwbFhh?=
+ =?gb2312?B?TnA0ZE9LaS9RPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?bDkxT0J0KzU0djZISzliMmZEODFCcTJuRHh1UkRnUEtaNis3TW1sQzRGY3dl?=
+ =?gb2312?B?RDVYMXRDUW44a2k4Z0IzekJ4RGpyL2c4RkFpV01tVUx3cUFRd1hCRW1ERFNh?=
+ =?gb2312?B?TFN6MnJWUSsxb0dCZ3dub2lJUUlBQkdWakd4OERrR2VoaWM3WXFoUnZneXVq?=
+ =?gb2312?B?Y0JPUE1VSC9GTWd2YlBuUlNUUTQrMC91bzVxYWVYZFdUNUZnODVrRFlyOUxN?=
+ =?gb2312?B?UGJmS1NIVy9XdTFVSEkzL1NqTE8wZExHbE9sUDQ4a3dSSWkzM0dqc0ZTd25I?=
+ =?gb2312?B?VzN3c0l4ZVB3TFlLcngvdENiTnlYMFB4SlRMWjVPNTgzMHlXRmlkWmNoODBX?=
+ =?gb2312?B?VUsrQnhHSWZEaVNuTTRzVzF0bnF2Vnp3b214blNXYUtzRzRjK0ZaQVFMYWlH?=
+ =?gb2312?B?b2FrUXkrazFEdjVvN0NmWlRiYUNqNUtjWjBZb0Uvd3ovUWNHL2NJYTlEcTBU?=
+ =?gb2312?B?dktPU2pEUFlJaUJLZWpXTjYya1QxS2dPOTFmTVF6bUZLUll0MXFFQ1hGeG81?=
+ =?gb2312?B?VU5aalBLUVFpTHVBL056cXJkWTJSc2dmd0g3UDl4OGpaWkd3V01acUNsMlUw?=
+ =?gb2312?B?UEFvbUpCZUFkY0dVTkxNSDB4bkhSSVc2MWNLOGVXSE1BRnoxWk55Qk5kQnZG?=
+ =?gb2312?B?d3ZtaFJjcjd3TlNrR0d1QVRWM0o5UzVmTHZiem9wNVlNSkVjOFlHbmJxcGUw?=
+ =?gb2312?B?NzMyRGQxMDZCYXNDTGgxMmM2RlR2WHBYWkhrVzloMkJTTldSOUdwSVBXeGJa?=
+ =?gb2312?B?cVNwZHhYaHhNd2Q3OGluN2llUitRWVRHbU9PUTVydE5lZ2lsaldrR21YMEhi?=
+ =?gb2312?B?WFlKVXhZWDVWbGhFb1BkTnRWR1I2djZlN1B2Yy9za2ltNnRwUkVtVWdUNUFo?=
+ =?gb2312?B?aXBKdEdQMjI0Si81cE9KTHhBeVM3NjRlajNKRDB2SEFyMHNOTURXTU9sYzFE?=
+ =?gb2312?B?ck9OTnVWTk0wU3ltb0RCRDJzN1BlR1FlcXFGTC83TU5qcWdMOUplTm9xVE1z?=
+ =?gb2312?B?OXRkQlMvdjUxZHBvbUhWWWVpODM2dml1YzV3YXFZcEMyOTcrZUVYNzI0dFV2?=
+ =?gb2312?B?YlRnS2VsN0kxaU04VzBxNXNFTDBCdTgySjRtVVRoV3UzdnIyNytlS1BZc1Rx?=
+ =?gb2312?B?MktMVnlJNWRPVDg5SGMrOGdSUEV1ckVOMGtRaFovZzcrN2hnNitma29yWVRY?=
+ =?gb2312?B?bnFjUXJveEJOQjBoNGVNWE1MTGhrT3c4dmc3QWtKclJjNithVUszNXR0K28w?=
+ =?gb2312?B?ZkVMZ0RkWnlsMlU2TTE0Ym1nRXBHdkdML0NVa1VWOW5BVmE4Tys0VUY2OWhU?=
+ =?gb2312?B?bmg2ajBxaVhlM3hWaHpPWkZPeXhTcFdkYWJqeEZteE1aOWxVQndMTkdPdnlv?=
+ =?gb2312?B?Tmg2WjFFdkdKY2JxQWhtaEpxb0NFejl2N0FMMGJHVDdvWXJ6SWFxTlpCd1ha?=
+ =?gb2312?B?VzArRTlnRmIzYW9xUnVuMXYyWGJVZm1TaTQvbCtaOWk2MmU3QWRELzJJNmxD?=
+ =?gb2312?B?dEZtY3JJbVVOWlVFZVU3alBxN2RJeEkvWW51c0x6MHhDMzY2bHJVQ2ZtemRR?=
+ =?gb2312?B?NEg0L1QrK042clVRUjNzOXFKY0c2Vi9ybXJ6V3R6QUN0TGc3U0dpM05lTDFt?=
+ =?gb2312?B?aVk5cTloQm8yUmdqaTBnQWJMajVsQWFvbHBieVNyMjhNaUQvZkZpdXFEbVhV?=
+ =?gb2312?B?eDV4anNBY3RoSGxzNVp1VktBK0lMSHg5L0JPMG5maS81UiszT2lqVVUrVE5Y?=
+ =?gb2312?B?RzhOK3lRNWJta3h5cmFFWW1QdHhPeDBpNE1qZTd4NUZIMmoxMXVxM21CTHlR?=
+ =?gb2312?B?djFqbDVzR2Q2VVM5bllETnR6MTMrdjhYVFROL1hDVmptMTY3clFLRjJBT0Fo?=
+ =?gb2312?B?NmttVHorZ1dIejEzYjUrZC80MW9OSWtVU3A5VHl5MlVkcVAzTS9VbFp4Um9h?=
+ =?gb2312?B?QThSQTI3M1ZHWXFWMndWbkxBeTM1TC9nRGp0czN5QnZxWkE2M3hrQnpNLzNt?=
+ =?gb2312?B?TUJZQ3NlbzBQWHRiUEU0K0dKYm9wTGVqS2grMHlqQnI2d2RKMFVRL1MwM1dL?=
+ =?gb2312?B?TmRXMEFRZ0pydmtTN01QQ2lWdzBlcFNnRTNJdm1Sa1ZoQjRkSkJmWGZrMHlU?=
+ =?gb2312?Q?m7fY=3D?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcafddd8-3ec9-43fe-2424-08dd7820672b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2025 11:11:12.1501
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F/4mq7Cg/Bjx/d71ZNk0Vji+LL0QZVTG/ZkaMBqNu1QuXJACnAkC81nbGkqGrF687UhhrHeLj70oDNcDSqnDcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6961
 
-Hi Purva,
-
-Thanks for your patch... See below
-On Thu, 2025-04-10 at 01:31 +0530, Purva Yeshi wrote:
-> Fix Smatch-detected error:
-> drivers/iio/adc/ad_sigma_delta.c:604 ad_sd_trigger_handler() error:
-> uninitialized symbol 'status_pos'.
->=20
-> The variable `status_pos` was only initialized in specific switch cases
-> (1, 2, 3, 4), which could leave it uninitialized if `reg_size` had an
-> unexpected value.
->=20
-> Fix by validating `reg_size` before the switch block. If it=E2=80=99s not
-> one of the expected values, return early and log an error. This ensures
-> `status_pos` is always initialized before use and prevents undefined
-> behavior.
->=20
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
-> =C2=A0drivers/iio/adc/ad_sigma_delta.c | 5 +++++
-> =C2=A01 file changed, 5 insertions(+)
->=20
-> diff --git a/drivers/iio/adc/ad_sigma_delta.c
-> b/drivers/iio/adc/ad_sigma_delta.c
-> index 6c37f8e21120..d3b59d90b728 100644
-> --- a/drivers/iio/adc/ad_sigma_delta.c
-> +++ b/drivers/iio/adc/ad_sigma_delta.c
-> @@ -568,6 +568,11 @@ static irqreturn_t ad_sd_trigger_handler(int irq, vo=
-id
-> *p)
-> =C2=A0	else
-> =C2=A0		transfer_size =3D reg_size;
-> =C2=A0
-> +	if (reg_size !=3D 1 && reg_size !=3D 2 && reg_size !=3D 3 && reg_size !=
-=3D 4)
-> {
-> +		dev_err(&indio_dev->dev, "Unsupported reg_size: %u\n",
-> reg_size);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-
-Use the switch case for this. Add a default branch for the invalid case. Yo=
-u
-should also use dev_err_ratelimited() and instead of 'return IRQ_HANDLED', =
-do
-'goto irq_handled'.
-
-Thx!
-- Nuno S=C3=A1
-
-> =C2=A0	switch (reg_size) {
-> =C2=A0	case 4:
-> =C2=A0	case 2:
+PiBQbGVhc2UgZG9uJ3QgZG8gdGhlIGd1YXJkKCkgY29udmVyc2lvbnMgaW4gZnMvYnRyZnMvLCB0
+aGUgZXhwbGljaXQgbG9ja2luZyBpcyB0aGUgcHJlZmVycmVkIHN0eWxlLiBJZiBvdGhlciBzdWJz
+eXN0ZW1zIHVzZSB0aGUgc2NvcGVkIGxvY2tpbmcgZ3VhcmRzIHRoZW4gbGV0IHRoZW0gZG8gaXQu
+DQoNCk9LLCBpcyB0aGVyZSBhbnl0aGluZyB3ZSBjYW4gZG8gcXVpY2tseSBpbiB0aGUgYnRyZnMg
+Y29kZSBjdXJyZW50bHk/DQoNClRoeCwNCllhbmd0YW8NCg==
