@@ -1,145 +1,225 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAB8283CAF
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFBC42AA3
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291718; cv=none; b=FyopZVczP21DlChXXf0pSCKjNw1EdnBW4JO0vFXrepkU5iGnuHGQPn2ypRj7FsRdJDr8RgKOcV9MQh4GJf0vYbrp+QbDvzudjYOSNcYcFTTjDDqlxu50/t1LLdT1wBXLkfmPZxANIvVvtyO9OxhwxMKyT/qVOjVmsIYBcQny1ZI=
+	t=1744291738; cv=none; b=hGFfJhZT1ERjkI2RH0lDidWICtAl/VjWKXw9yluQiOCGnR6PymrEBqL6KW/ZuYDgEbORAegTXsaLDbxyna9c0DIcYd8OzMkcrqU6FOUGaJyJoIvCDDwQ4liLcqhjG1HMsJIv2z072D7lmigTCRzwMdjrK6Tm+cLlaLlYif/OQSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291718; c=relaxed/simple;
-	bh=3KApgwCiz/mn4nM/a6V2TmijRQ0DsEmKj9cP8YeMNtI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YD5TaeOhE89j089GkE5E7EvDTxVPyo6BtAPffyg5MN+yS/KIr/qcpIzqtM3KNP0o6WTxdEl6xCHXeYlJ2V8Zw9wogZsc7uSYkzDV25m5QEGb6UQYi6R18ErUWkb46hc3HlFV1vlBAAS4m4WLgzI830JRXJSTMtRBgL7FxnxwcMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=evnzpUEn; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744291738; c=relaxed/simple;
+	bh=C8c/5h00VNf73qWbummLMf0CGChlKbIF8uEpD6iaxoY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jG77S0r6s0XhMrXg7J4l00vC+ZLMqayN2sw5USlIMvylbLuOqL8SlcprajZMQRnDgNoBNDGYYzJqj7hKalVp9KwDaVgQaZPv1pXRcw/X8Dj2z2LSauxrm1jeLU5xVcgOOcz7V87n1Hcq0ltTQLp18muNo20wkLsdyb3TujYW56M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eQhHKe6s; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="evnzpUEn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744291707;
-	bh=3KApgwCiz/mn4nM/a6V2TmijRQ0DsEmKj9cP8YeMNtI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=evnzpUEnDgg6zdvJPLeWcsJfrqP9GYwDt4PAQ5C5iHUYN2XA/PcKnc4bedxQd133K
-	 7AqyjlUV+xMKXqlwtoERQVIIg0J8D7xKbzI1PJV4vnLUYMcpH47ufPKFxSnDsG7o3+
-	 26AJwzWJWcBzT2RqxHk0dVdRPDVv2bfzpEkkubyduX2FLALAtS5otTiiOHirvwqnzl
-	 Qz9GXdeRDuKEvnY5Pzge/KLbDvCiJ1hWyc4Vl0grRToflX/pqcXW4RL3tlA1GyOO3q
-	 kKdGPm0gUdpSVXTG2J3F3KUvSJWxfnL6Pl2b9NtKxkmrOhb5sd62G7hWL0CPRSHEyq
-	 Y6xxAVoVWPQlw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5681C17E0B2D;
-	Thu, 10 Apr 2025 15:28:27 +0200 (CEST)
-Date: Thu, 10 Apr 2025 15:28:22 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Karunika Choo <karunika.choo@arm.com>
-Cc: dri-devel@lists.freedesktop.org, nd@arm.com, Steven Price
- <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/9] drm/panthor: Add 64-bit and poll register
- accessors
-Message-ID: <20250410152822.632b09b8@collabora.com>
-In-Reply-To: <d9a4aa99-2f00-4da9-9f7e-26729f7f8fda@arm.com>
-References: <20250320111741.1937892-1-karunika.choo@arm.com>
-	<20250320111741.1937892-2-karunika.choo@arm.com>
-	<20250321084809.5f217049@collabora.com>
-	<d9a4aa99-2f00-4da9-9f7e-26729f7f8fda@arm.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eQhHKe6s"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d08915f61so4844685e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744291735; x=1744896535; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SS5Sb1QiEJlBf4gnyxvUbwQU6CF/Mt8Qf5/ZSXRB/sE=;
+        b=eQhHKe6sX33UvLf1AEB6B1MbCZ38ZWed9nnmwQj9AN+h6RHq6EHZaAayNhAJRmL9YJ
+         VJo8z66aqkiLswVklypMlcEWMAeqo9UubTkFcmPeRN60IlVwCGZyYj59DuQQuHlPhI1N
+         DNdc7C4QrC/cEokZi9y73fh0Xd2+uhgouKlg+LftPaGWJEjsX7bJHTJ/CvIuTwU6o6Zq
+         bsy5h21iQqSK8x4Xcs1q9+rvv5n8vuDALbuc1ejkIhkdbDA8pOxTbnXwA7KthLMxLVkB
+         6DXCheO07Pghx5B6TZ1XpHVuoyv2Thco2bIMdjDjyIlyarT4drfMTLdOWWCW6rbmRT81
+         /xig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744291735; x=1744896535;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SS5Sb1QiEJlBf4gnyxvUbwQU6CF/Mt8Qf5/ZSXRB/sE=;
+        b=cs5G9i+nKfCwmxVi0bRYIhzqzHCuCwnQhBHzZTZKkgts3ioQ4d9is5T4+2WNeQvzbe
+         mxGa5ssf9xASQemVlDt5xgdyE8v+DaahqFG4TN8LxhSEKaJdERyEs5owKYWBHIYSOVHA
+         HtS8WIcsMSEUBhYPgoCQXsvgU45zfNL0X0T12OAbLwPJZpPLdMSNzm3y9Xgmx61z83Kl
+         0XPQFdOZYGUzkgn+ZSZ6cTjNNIUgObPLusMju5ruBQnYMWl6gfF4o00QermiDEd5bV75
+         M3eYt9okvXpAwfQg/rZOu7fQiBJbTz3M1bqlmRb5tw9HxlOBsHb+OrjzWRUKyZ4LmgCA
+         ltbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlx/bgUZMg7nipF/+NyXcXA6g4m0KybxAkDU0Z5JkRYu9s8vB8gcJIRz7/hFXFJ2mrgk6XWIQP0AEfCi0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw47C+WYosGbZZvIX6xra5OfCMCZh1MUTfrmqZ+8evLFA+hW73
+	3KLXy6wUZhUbZZALka4HbVZ67LRfCA9m0HpmnRvZyYF/aVLeM/esDJUBQ++AVJM4JfcLxg==
+X-Google-Smtp-Source: AGHT+IEqA9UEaF4ovqknxeoCna5e+h2A9LJb/CATGs/nfpQpZnxXMAv/pjBpPSrEELNjCWQnGZi85feW
+X-Received: from wmbz25.prod.google.com ([2002:a05:600c:c099:b0:43c:f6b3:fa10])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1911:b0:43d:82c:2b11
+ with SMTP id 5b1f17b1804b1-43f2ff9b203mr17956385e9.23.1744291735014; Thu, 10
+ Apr 2025 06:28:55 -0700 (PDT)
+Date: Thu, 10 Apr 2025 15:28:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4666; i=ardb@kernel.org;
+ h=from:subject; bh=Th5F1nSY0iulqmnlKz0W9Dv7fXivwlI/yQUmNM3/K/g=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf378ck7fnsfvpf9XbU66UeIPdcnLRaVDLfdqd5eaY0XZ
+ vAtb+jvKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABO5+4rhn4GGqOqihbOiGHuM
+ fSYsNQ1wP/1RdHHpyzB7lpeWbKm9uxj+2R5pLz6qb1mXVOViJ7kos3vPttj9jwr+bW84/4r9Ras jLwA=
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250410132850.3708703-2-ardb+git@google.com>
+Subject: [PATCH v3] x86/boot/sev: Avoid shared GHCB page for early memory acceptance
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-efi@vger.kernel.org
+Cc: x86@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Borislav Petkov <bp@alien8.de>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 9 Apr 2025 14:00:54 +0100
-Karunika Choo <karunika.choo@arm.com> wrote:
+From: Ard Biesheuvel <ardb@kernel.org>
 
-> On 21/03/2025 07:48, Boris Brezillon wrote:
-> > On Thu, 20 Mar 2025 11:17:33 +0000
-> > Karunika Choo <karunika.choo@arm.com> wrote:
-> >  
-> >> This patch adds 64-bit register accessors to simplify register access in
-> >> Panthor. It also adds 32-bit and 64-bit variants for read_poll_timeout.
-> >>
-> >> Signed-off-by: Karunika Choo <karunika.choo@arm.com>
-> >> ---
-> >>  drivers/gpu/drm/panthor/panthor_regs.h | 55 ++++++++++++++++++++++++++
-> >>  1 file changed, 55 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/panthor/panthor_regs.h  
-> b/drivers/gpu/drm/panthor/panthor_regs.h
-> >> index 42dc3fedb0d4..7ec4a1d04e20 100644
-> >> --- a/drivers/gpu/drm/panthor/panthor_regs.h
-> >> +++ b/drivers/gpu/drm/panthor/panthor_regs.h
-> >> @@ -238,4 +238,59 @@
-> >>  #define gpu_read(dev, reg) \
-> >>  	readl((dev)->iomem + (reg))
-> >>
-> >> +#define gpu_read_relaxed(dev, reg) readl_relaxed((dev)->iomem + (reg))
-> >> +
-> >> +#define gpu_write64(dev, reg, data)                            \
-> >> +	do {                                                   \
-> >> +		u64 __val = (u64)(data);                       \
-> >> +		gpu_write(dev, reg, lower_32_bits(__val));     \
-> >> +		gpu_write(dev, reg + 4, upper_32_bits(__val)); \
-> >> +	} while (0)  
-> >
-> > We're not doing funky name concatenation in these macros, so I'd rather
-> > have them defined as static inline funcs in panthor_device.h. We
-> > probably want to move the gpu_read/write definitions there as well if
-> > we do that.  
-> 
-> I see where you're coming from, and it makes sense. I was thinking it
-> might be better to keep it in panthor_regs.h since that's the file we
-> include when accessing GPU registers.
+Communicating with the hypervisor using the shared GHCB page requires
+clearing the C bit in the mapping of that page. When executing in the
+context of the EFI boot services, the page tables are owned by the
+firmware, and this manipulation is not possible.
 
-Well, yes, but also gpu_write/read() take a panthor_device, which is
-defined in panthor_device.h. I guess we can keep those in
-panthor_regs.h and include panthor_device.h from panthor_regs.h if
-there's no circular inclusion. I'm fine either way.
+So switch to a different API for accepting memory in SEV-SNP guests, one
+which is actually supported at the point during boot where the EFI stub
+may need to accept memory, but the SEV-SNP init code has not executed
+yet.
 
-> That said, we could certainly
-> convert them to static inline functions if you prefer.
+For simplicity, also switch the memory acceptance carried out by the
+decompressor when not booting via EFI - this only involves the
+allocation for the decompressed kernel, and is generally only called
+after kexec, as normal boot will jump straight into the kernel from the
+EFI stub.
 
-Yeah, I'd prefer that.
+Cc: Tom Lendacky <thomas.lendacky@amd.com>,
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>,
+Cc: Dionna Amalie Glaze <dionnaglaze@google.com>,
+Cc: Kevin Loughlin <kevinloughlin@google.com>
+Co-developed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+Changes since v2 [0]:
+- avoid two separate acceptance APIs; instead, use MSR based page-by-page
+  acceptance for the decompressor as well
 
-> 
-> >> +
-> >> +#define gpu_read64(dev, reg) \
-> >> +	(gpu_read(dev, reg) | ((u64)gpu_read(dev, reg + 4) << 32))
-> >> +
-> >> +#define gpu_read64_relaxed(dev, reg)  \
-> >> +	(gpu_read_relaxed(dev, reg) | \
-> >> +	 ((u64)gpu_read_relaxed(dev, reg + 4) << 32))
-> >> +
-> >> +#define gpu_read64_sync(dev, reg)                     \
-> >> +	({                                            \
-> >> +		u32 lo, hi1, hi2;                     \
-> >> +		do {                                  \
-> >> +			hi1 = gpu_read(dev, reg + 4); \
-> >> +			lo = gpu_read(dev, reg);      \
-> >> +			hi2 = gpu_read(dev, reg + 4); \
-> >> +		} while (hi1 != hi2);                 \
-> >> +		lo | ((u64)hi2 << 32);                \
-> >> +	})  
-> >
-> > I would name that one gpu_read64_counter and make it a static inline
-> > function. Note that we already have panthor_gpu_read_64bit_counter()
-> > which does the same thing, so maybe move it there and rename it along
-> > the way.  
-> 
-> Happy to rename this to gpu_read64_counter in v3, if you're okay with
-> us keeping the macros/functions in this file.
+[0] https://lore.kernel.org/all/20250404082921.2767593-8-ardb+git@google.com/T/#m38389f607accd0cfa83c41c3bd0d410514b023c6
 
-Renaming the function is orthogonal to moving its definition to a
-different header, no? I'm not sure I see why one depends on the other.
+ arch/x86/boot/compressed/sev.c | 67 +++++---------------
+ 1 file changed, 15 insertions(+), 52 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index bb55934c1cee..89ba168f4f0f 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -164,10 +164,7 @@ bool sev_snp_enabled(void)
+ 
+ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ {
+-	u64 val;
+-
+-	if (!sev_snp_enabled())
+-		return;
++	u64 val, msr;
+ 
+ 	/*
+ 	 * If private -> shared then invalidate the page before requesting the
+@@ -176,6 +173,9 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ 	if (op == SNP_PAGE_STATE_SHARED)
+ 		pvalidate_4k_page(paddr, paddr, false);
+ 
++	/* Save the current GHCB MSR value */
++	msr = sev_es_rd_ghcb_msr();
++
+ 	/* Issue VMGEXIT to change the page state in RMP table. */
+ 	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
+ 	VMGEXIT();
+@@ -185,6 +185,9 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ 	if ((GHCB_RESP_CODE(val) != GHCB_MSR_PSC_RESP) || GHCB_MSR_PSC_RESP_VAL(val))
+ 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
+ 
++	/* Restore the GHCB MSR value */
++	sev_es_wr_ghcb_msr(msr);
++
+ 	/*
+ 	 * Now that page state is changed in the RMP table, validate it so that it is
+ 	 * consistent with the RMP entry.
+@@ -195,11 +198,17 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ 
+ void snp_set_page_private(unsigned long paddr)
+ {
++	if (!sev_snp_enabled())
++		return;
++
+ 	__page_state_change(paddr, SNP_PAGE_STATE_PRIVATE);
+ }
+ 
+ void snp_set_page_shared(unsigned long paddr)
+ {
++	if (!sev_snp_enabled())
++		return;
++
+ 	__page_state_change(paddr, SNP_PAGE_STATE_SHARED);
+ }
+ 
+@@ -223,56 +232,10 @@ static bool early_setup_ghcb(void)
+ 	return true;
+ }
+ 
+-static phys_addr_t __snp_accept_memory(struct snp_psc_desc *desc,
+-				       phys_addr_t pa, phys_addr_t pa_end)
+-{
+-	struct psc_hdr *hdr;
+-	struct psc_entry *e;
+-	unsigned int i;
+-
+-	hdr = &desc->hdr;
+-	memset(hdr, 0, sizeof(*hdr));
+-
+-	e = desc->entries;
+-
+-	i = 0;
+-	while (pa < pa_end && i < VMGEXIT_PSC_MAX_ENTRY) {
+-		hdr->end_entry = i;
+-
+-		e->gfn = pa >> PAGE_SHIFT;
+-		e->operation = SNP_PAGE_STATE_PRIVATE;
+-		if (IS_ALIGNED(pa, PMD_SIZE) && (pa_end - pa) >= PMD_SIZE) {
+-			e->pagesize = RMP_PG_SIZE_2M;
+-			pa += PMD_SIZE;
+-		} else {
+-			e->pagesize = RMP_PG_SIZE_4K;
+-			pa += PAGE_SIZE;
+-		}
+-
+-		e++;
+-		i++;
+-	}
+-
+-	if (vmgexit_psc(boot_ghcb, desc))
+-		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
+-
+-	pvalidate_pages(desc);
+-
+-	return pa;
+-}
+-
+ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
+ {
+-	struct snp_psc_desc desc = {};
+-	unsigned int i;
+-	phys_addr_t pa;
+-
+-	if (!boot_ghcb && !early_setup_ghcb())
+-		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
+-
+-	pa = start;
+-	while (pa < end)
+-		pa = __snp_accept_memory(&desc, pa, end);
++	for (phys_addr_t pa = start; pa < end; pa += PAGE_SIZE)
++		__page_state_change(pa, SNP_PAGE_STATE_PRIVATE);
+ }
+ 
+ void sev_es_shutdown_ghcb(void)
+-- 
+2.49.0.504.g3bcea36a83-goog
+
