@@ -1,140 +1,150 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C66A20C473;
-	Thu, 10 Apr 2025 21:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0CB1F0E23
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744322075; cv=none; b=XN6L5lY5jcLXnYWw5dgZycce6xaSaLEb4jHH6ExGuSa1bZhlBqXZGb4S/8spkWGcwkbiiH8diVl0C/schK6XDII2ZrB/+VSdGDQnQCmBAHn+cWYXbM+jEPT0hWEtAvPdBCOPR0juMEVw19nC8y7j5wdAmAzbtwk1490fk/Zf4MY=
+	t=1744322091; cv=none; b=DCYz15j5QiVO8tiyBjhKGQK7vUvfLsF0m5w/n+x12Sq+zYGUMMWj1iuJ1cWN0hoiuVK27K9CtvSCPdH7sflq7AdgZmUvL98RldFOl9meJHKHiBgeujGTj4T83p8hsyB04fODjPIQcXQnNG4wmuFIl5s/wsj1BqthIMYKCodPFcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744322075; c=relaxed/simple;
-	bh=eaQNmB6AuNlU+KBlHA0uSaualDavgEDCP9pPFGhTook=;
+	s=arc-20240116; t=1744322091; c=relaxed/simple;
+	bh=fta3R4t40tTXB23G6QY7NjF/Qlb0isrhbuKlqi8dmNw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TGC+uNQz/7FUxRU84SHKcUwPMgczlxTqL3JxyzkL2fqFWQnCeX9mNa2UPQ08jhTNWqaXNcodWArM2cQlv/e2qEB0RxyRJn/JQKXxBQ+zE9krd75G1P5rtSVsWKLqOJahBpNc7Ln2s3W+VVszfqwskqd/JalfWj0c0xcA+wrcsP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Hnujsjol; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Hnujsjol"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=+Tm4+Z7Aj1JN3MuOyJBY1dm5PY2Ga9gM+2/LN/4Z2DI=; b=HnujsjolCAGt25aSwbyuEhUDMi
-	HFYojurzRvmaVDoc1QRWtwX30V/hr9FE7NSwgt2NEdw/o/4fpwwcE/oLKSKEmWvpUFe0GFoq1wLqq
-	Zknr1M9G199OMM0et14gAHCzJJWvmWzM9PlxqOI3GzjCKfFIFYZbid3Tp6OX7GH7x2xc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2zqi-008jRI-SZ; Thu, 10 Apr 2025 23:54:16 +0200
-Date: Thu, 10 Apr 2025 23:54:16 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-Message-ID: <8c5fb149-af25-4713-a9c8-f49b516edbff@lunn.ch>
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
- <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
- <098b0477-3367-4f96-906b-520fcd95befb@lunn.ch>
- <003bfece-7487-4c65-b4f1-2de59207bd5d@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=afc6u+XOgBGhUFrdPR6syWd4Up/MUYj441IBzSvYRvNBu8XEZ8KMq3LAlgeNqnt62OQwI+lGCerzuakz2iyCDPqc1HXU9RzX/1hwXIVlaO9LQ8Ga+PLEdM4qWWz+PwTRN16pth1h+3UBURWVKMW55GautsWDM8MjxG2zmBzd+Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1u2zr6-0005Z1-IA; Thu, 10 Apr 2025 23:54:40 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1u2zr4-004Kdv-2Y;
+	Thu, 10 Apr 2025 23:54:38 +0200
+Received: from mgr by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1u2zr4-00ATw4-2E;
+	Thu, 10 Apr 2025 23:54:38 +0200
+Date: Thu, 10 Apr 2025 23:54:38 +0200
+From: Michael Grzeschik <mgr@pengutronix.de>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH] usb: typec: mux: fsa4480: add regulator support
+Message-ID: <Z_g-Hl-G9IwRZmqF@pengutronix.de>
+References: <20250404-ml-topic-typec-mux-fs4480-v1-1-475377ef22a3@pengutronix.de>
+ <aiechdq62mjgta5p5g3s33okgnp56fe5ing2va7vaaf74nerug@nvrwrgnoyp7g>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fcBZ+xgpOmCxkGr9"
 Content-Disposition: inline
-In-Reply-To: <003bfece-7487-4c65-b4f1-2de59207bd5d@redhat.com>
+In-Reply-To: <aiechdq62mjgta5p5g3s33okgnp56fe5ing2va7vaaf74nerug@nvrwrgnoyp7g>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Apr 10, 2025 at 08:44:43PM +0200, Ivan Vecera wrote:
-> 
-> 
-> On 10. 04. 25 7:41 odp., Andrew Lunn wrote:
-> > > > > +	/* Take device lock */
-> > > > 
-> > > > What is a device lock? Why do you need to comment standard guards/mutexes?
-> > > 
-> > > Just to inform code reader, this is a section that accesses device registers
-> > > that are protected by this zl3073x device lock.
-> > 
-> > I didn't see a reply to my question about the big picture. Why is the
-> > regmap lock not sufficient. Why do you need a device lock.
-> > 
-> > > 
-> > > > > +	scoped_guard(zl3073x, zldev) {
-> > > > > +		rc = zl3073x_read_id(zldev, &id);
-> > > > > +		if (rc)
-> > > > > +			return rc;
-> > > > > +		rc = zl3073x_read_revision(zldev, &revision);
-> > > > > +		if (rc)
-> > > > > +			return rc;
-> > > > > +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
-> > > > > +		if (rc)
-> > > > > +			return rc;
-> > > > > +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
-> > > > > +		if (rc)
-> > > > > +			return rc;
-> > > > > +	}
-> > > > 
-> > > > Nothing improved here. Andrew comments are still valid and do not send
-> > > > v3 before the discussion is resolved.
-> > > 
-> > > I'm accessing device registers here and they are protected by the device
-> > > lock. I have to take the lock, register access functions expect this by
-> > > lockdep_assert.
-> > 
-> > Because lockdep asserts is not a useful answer. Locks are there to
-> > protect you from something. What are you protecting yourself from? If
-> > you cannot answer that question, your locking scheme is built on sand
-> > and very probably broken.
-> > 
-> >      Andrew
-> 
-> Hi Andrew,
-> I have described the locking requirements under different message [v1
-> 05/28]. Could you please take a look?
 
-So a small number of registers in the regmap need special locking. It
-was not clear to me what exactly those locking requirements are,
-because they don't appear to be described.
+--fcBZ+xgpOmCxkGr9
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But when i look at the code above, the scoped guard gives the
-impression that i have to read id, revision, fw_vr and cfg_ver all in
-one go without any other reads/writes happening. I strongly suspect
-that impression is wrong. The question then becomes, how can i tell
-apart reads/writes which do need to be made as one group, form others
-which can be arbitrarily ordered with other read/writes.
+On Tue, Apr 08, 2025 at 03:18:14PM +0300, Dmitry Baryshkov wrote:
+>On Fri, Apr 04, 2025 at 01:02:20AM +0200, Michael Grzeschik wrote:
+>> The fsa4480 vcc lane could be driven by some external regulator.
+>> This patch is adding support to enable the regulator before probing.
+>>
+>> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+>> ---
+>>  drivers/usb/typec/mux/fsa4480.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/usb/typec/mux/fsa4480.c b/drivers/usb/typec/mux/fsa=
+4480.c
+>> index f71dba8bf07c9..c54e42c7e6a16 100644
+>> --- a/drivers/usb/typec/mux/fsa4480.c
+>> +++ b/drivers/usb/typec/mux/fsa4480.c
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/regmap.h>
+>>  #include <linux/usb/typec_dp.h>
+>>  #include <linux/usb/typec_mux.h>
+>> +#include <linux/regulator/consumer.h>
+>>
+>>  #define FSA4480_DEVICE_ID	0x00
+>>   #define FSA4480_DEVICE_ID_VENDOR_ID	GENMASK(7, 6)
+>> @@ -273,6 +274,10 @@ static int fsa4480_probe(struct i2c_client *client)
+>>  	if (IS_ERR(fsa->regmap))
+>>  		return dev_err_probe(dev, PTR_ERR(fsa->regmap), "failed to initialize=
+ regmap\n");
+>>
+>> +	ret =3D devm_regulator_get_enable_optional(dev, "vcc");
+>
+>Missing DT bindings update that describes this supply.
 
-What i suggest you do is try to work out how to push the locking down
-as low as possible. Make the lock cover only what it needs to cover.
+Looking into "Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml" it
+seems vcc-supply is alread documented. Is more needed?
 
-Probably for 95% of the registers, the regmap lock is sufficient.
+>> +	if (ret && ret !=3D -ENODEV)
+>> +		return dev_err_probe(dev, ret, "Failed to get regulator\n");
+>> +
+>>  	ret =3D regmap_read(fsa->regmap, FSA4480_DEVICE_ID, &val);
+>>  	if (ret)
+>>  		return dev_err_probe(dev, -ENODEV, "FSA4480 not found\n");
+>>
+>> ---
+>> base-commit: a1b5bd45d4ee58af4f56e49497b8c3db96d8f8a3
+>> change-id: 20250404-ml-topic-typec-mux-fs4480-392407f94f84
+>>
+>> Best regards,
+>> --
+>> Michael Grzeschik <m.grzeschik@pengutronix.de>
+>>
+>
+>--=20
+>With best wishes
+>Dmitry
+>
 
-Just throwing out ideas, i've no idea if they are good or not. Create
-two regmaps onto your i2c device, covering different register
-ranges. The 'normal' one uses standard regmap locking, the second
-'special' one has locking disabled. You additionally provide your own
-lock functions to the 'normal' one, so you have access to the
-lock. When you need to access the mailboxes, take the lock, so you
-know the 'normal' regmap cannot access anything, and then use the
-'special' regmap to do what you need to do. A structure like this
-should help explain what the special steps are for those special
-registers, while not scattering wrong ideas about what the locking
-scheme actually is all over the code.
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-	Andrew
+--fcBZ+xgpOmCxkGr9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAmf4Pg8ACgkQC+njFXoe
+LGQMCQ//anu/yApazaQv7M3ivouebs1Zozc2yhZYcrZvNZWAkqltbU3h1tV5uGyZ
+slQJemSkuXpI4kQOs0l4ExZup+qDudlYetr0w7VrrttgsW5dQVVE5+HLUwL25c3d
+NkwuXPAi/JlgX7K/coxHo8ztoHZviZ1BbN1rn+/MIMUdAEg+eDchLdthUJ2ZcoAH
+BQKf/29NRrDKrwvfJFA2BHzbxzyFxod5NIt+4oVmk2S+9mZgtotHLgGx/1Y19vEG
+mkPLJ1wcc196Te4s6RtH1FS0SG+OIniZuw6gQ0+zpL1L7CUIc9QAZfwSqwzc1Hk4
+h8M7nUeYQsLMpNlXayAXCA0L12aITJbzYYj+bXi36LWQUPFl8lHoSEan4cIVDzFO
+aJJoqef+OxhSB9R607kFttXBLPgdXzlv3b2IZU7IahjZYuzaAL+yQJQB+qx2L7yh
+zQDtj21keMTbsT1GU+BWg7mgv7W3MOWVpJ+mb5uY6ON5X8xPg7/N3TGZROobU4eu
+YJ9N6MvTfemJnuenBngnQ6fjlu5EpjnNxGZ5dy45zeVzsO1jNiBQtzoISA+SPDcR
+H4SlWtNt2hrozIDmEOFusSySGRSGzJShQrgw0I1my3oMMqdJjKZK0khYqAh2zMPd
+MMnGGqvsEG59wal+LRCNRMLdolrG0XAyUd1AhxV5VKAKZUEqC+g=
+=IbVA
+-----END PGP SIGNATURE-----
+
+--fcBZ+xgpOmCxkGr9--
