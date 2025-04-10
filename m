@@ -1,100 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D441D5CE8
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2AB1D5CE8;
+	Thu, 10 Apr 2025 17:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744304931; cv=none; b=EQXjHZaMfkXVA48zDsxlYaDft0nGQyjPx/h7LJKFMZ0Xl6CYpLjUQb6KMGKKfRN997XfPDBFiDJNsxX9IGdE9fx12UHI16dH3n8M/z/pGU0KpNpbEY7J7qFoKLlgELo7kyuRrx9LYeACwW5KwwpRE9uUhzSL1pxqFAP6O2l6r7I=
+	t=1744304972; cv=none; b=ZPsM4u7LkWVGM1j2V3ykaFBywrHCtG8veocLyJVPLMPnJmxAUS1ecGaCzNCr0CQMrC2qQPUKZBFdrrxF17z8eh0XBBkh2BwZTR5vMZMgEl7eDOE5454IZV2vO/iYSflszz3TcvK/7XUJUjPIvIpAevAb0izfKLfOp2ux3IEkjs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744304931; c=relaxed/simple;
-	bh=NLI2VkAb1xPOJ4XzNb+KccXuF5MzPJGHMA4BfMItFvM=;
+	s=arc-20240116; t=1744304972; c=relaxed/simple;
+	bh=Ug4lEjA1gs4L+Ah+ss6ctQKV51r9X17j7n35KVsDUXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIw1gSb2VEU67/agXmk/gC7UlCTZldwe/QCJy1tFDH8u8SSv4RM4b8C/V49F0ZD4Q75Hko8JpKT0OiRO/ZU4cZ7BeYUSCJH6AkrOOBe0pukVfxAxtY7InV3XOvj6xVn1nHkOBcx3ktqAJzrxCpWCQCWZVoZQ/PXWSQ+kdXmMXzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeJxAvSC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=d2ZKhyo/lv3FfLK5e/0PJWfB1rSAVGElQ/gLzJ0fgC4Lman+8sSqwssZ3Yb2YH2gIjS29l9hjlzJeHBMf07WNFBBg6YgCCDFNdIx6eeCxESi49KE0yOcCvqlL+tp4X1yZbpdBPh2/XQPDozPqq/mN8MhDDOZeAG5O34mLk+lynk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=xmuRXX4c; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeJxAvSC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADEB4C4CEDD;
-	Thu, 10 Apr 2025 17:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744304930;
-	bh=NLI2VkAb1xPOJ4XzNb+KccXuF5MzPJGHMA4BfMItFvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PeJxAvSCc82jt2eMiJUWtLInIDdaFDCdY6nlCHdJK9skZzWyw1OOuu/8gvpq1gApT
-	 d9HwNM2cMGyq/H5QkruXIitnbju0TWN+mrNU78Z2Ve0BNyArRkhf0+pY/SNUfAaFML
-	 4ilQzpzd7p+memN6XBA+/xUruwA8HGOevJKY77IfiBpW2aPG317PFqiXS9TvaLSwb/
-	 ZpXdEN36pVRgchwCUkjeBAaf2RyVNYxKYwXITJdIfr/5nXqaSMFX2u3zf7NC5dz2c4
-	 eZMPpRl2P1uVK4v7UbLE4Z+k6XVILat+voitEsaBVzy+sdz+WkKNjPaRrqTCv2zr8v
-	 jcGTrsjNMnhsA==
-Date: Thu, 10 Apr 2025 10:08:47 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
-	Brendan Jackman <jackmanb@google.com>, Derek Manwaring <derekmn@amazon.com>
-Subject: Re: [PATCH v4 13/36] x86/bugs: Restructure spectre_v2 mitigation
-Message-ID: <pl56rfs34temiqmi5guqcnfivrpc7eeq2435btjimtnhaawj7t@2zqh7eufl34c>
-References: <20250310164023.779191-1-david.kaplan@amd.com>
- <20250310164023.779191-14-david.kaplan@amd.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xmuRXX4c"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=amQTBAOZwMkJ1j1LtN/s0dLA/fANsCSGlX6qX2vDPVo=; b=xmuRXX4ckQGKPcGs/K603KyGOs
+	QmoAeM637i5YHNIvTohfYiqLxX93Z3FRa6YXYpZ3sxWZQaV+btppFVPLy85jiSRgABw3vFLLBk6LK
+	xaO/iLPaVu5lFyziZmfyk26lo31+TSjMFLJb1ZwR28icKNlvd1R5aSjMBK+W8E6ffK54=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u2vOX-008i2l-LS; Thu, 10 Apr 2025 19:08:53 +0200
+Date: Thu, 10 Apr 2025 19:08:53 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Simon Horman <horms@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	upstream@airoha.com
+Subject: Re: [net-next PATCH v14 07/16] net: mdio: regmap: add support for
+ C45 read/write
+Message-ID: <50c7328d-b8f7-4b07-9e34-6d7c34923335@lunn.ch>
+References: <20250408095139.51659-1-ansuelsmth@gmail.com>
+ <20250408095139.51659-8-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250310164023.779191-14-david.kaplan@amd.com>
+In-Reply-To: <20250408095139.51659-8-ansuelsmth@gmail.com>
 
-On Mon, Mar 10, 2025 at 11:40:00AM -0500, David Kaplan wrote:
-> Restructure spectre_v2 to use select/update/apply functions to create
-> consistent vulnerability handling.
+On Tue, Apr 08, 2025 at 11:51:14AM +0200, Christian Marangi wrote:
+> Add support for C45 read/write for mdio regmap. This can be done
+> by enabling the support_encoded_addr bool in mdio regmap config and by
+> using the new API devm_mdio_regmap_init to init a regmap.
 > 
-> The spectre_v2 mitigation may be updated based on the selected retbleed
-> mitigation.
+> To support C45, additional info needs to be appended to the regmap
+> address passed to regmap OPs.
 > 
-> Signed-off-by: David Kaplan <david.kaplan@amd.com>
-> ---
->  arch/x86/kernel/cpu/bugs.c | 79 +++++++++++++++++++++++---------------
->  1 file changed, 48 insertions(+), 31 deletions(-)
+> The logic applied to the regmap address value:
+> - First the regnum value (20, 16)
+> - Second the devnum value (25, 21)
+> - A bit to signal if it's C45 (26)
 > 
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index 96cb2ac70245..b4a72ddf159c 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -56,6 +56,8 @@
->  static void __init spectre_v1_select_mitigation(void);
->  static void __init spectre_v1_apply_mitigation(void);
->  static void __init spectre_v2_select_mitigation(void);
-> +static void __init spectre_v2_update_mitigation(void);
-> +static void __init spectre_v2_apply_mitigation(void);
->  static void __init retbleed_select_mitigation(void);
->  static void __init retbleed_update_mitigation(void);
->  static void __init retbleed_apply_mitigation(void);
-> @@ -212,7 +214,12 @@ void __init cpu_select_mitigations(void)
->  	/*
->  	 * After mitigations are selected, some may need to update their
->  	 * choices.
-> +	 *
-> +	 * Note that retbleed_update_mitigation() relies on the state set by
-> +	 * spectre_v2_update_mitigation(); specifically it wants to know about
-> +	 * spectre_v2=ibrs.
->  	 */
-> +	spectre_v2_update_mitigation();
->  	retbleed_update_mitigation();
+> devm_mdio_regmap_init MUST be used to register a regmap for this to
+> correctly handle internally the encode/decode of the address.
+> 
+> Drivers needs to define a mdio_regmap_init_config where an optional regmap
+> name can be defined and MUST define C22 OPs (mdio_read/write).
+> To support C45 operation also C45 OPs (mdio_read/write_c45).
+> 
+> The regmap from devm_mdio_regmap_init will internally decode the encoded
+> regmap address and extract the various info (addr, devnum if C45 and
+> regnum). It will then call the related OP and pass the extracted values to
+> the function.
+> 
+> Example for a C45 read operation:
+> - With an encoded address with C45 bit enabled, it will call the
+>   .mdio_read_c45 and addr, devnum and regnum will be passed.
+>   .mdio_read_c45 will then return the val and val will be stored in the
+>   regmap_read pointer and will return 0. If .mdio_read_c45 returns
+>   any error, then the regmap_read will return such error.
+> 
+> With support_encoded_addr enabled, also C22 will encode the address in
+> the regmap address and .mdio_read/write will called accordingly similar
+> to C45 operation.
 
-I'd suggest moving that dependency comment to above
-retbleed_update_mitigaton() and making it more concise:
+This patchset needs pulling apart, there are two many things going on.
 
- 	/*
- 	 * After mitigations are selected, some may need to update their
- 	 * choices.
-	 */
-	spectre_v2_update_mitigation();
-	/* retbleed_update_mitigation() depends on spectre_v2_update_mitigation() */
-	retbleed_update_mitigation();
+You are adding at least two different features here. The current code
+only supports a single device on the bus, and it assumes the regmap
+provider knows what device that is. That is probably because all
+current users only have a single device. You now appear to want to
+pass that address to the regmap provider. I don't see the need for
+that, since it is still a single device on the bus. So adding this
+feature on its own, with a good commit message, will explain that.
 
--- 
-Josh
+You want to add C45 support. So that is another patch.
+
+C22 and C45 are different address spaces. To me, it seems logical to
+have different regmaps. That makes the regmap provider simpler. A C22
+regmap provider probably is just a straight access. A C45 regmap
+provider might need to handle the hardware having a sparse register
+map, only some of these 32 block of 65536 are implemented, etc.
+
+So i think:
+
+struct mdio_regmap_config {
+        struct device *parent;
+        struct regmap *regmap;
+        char name[MII_BUS_ID_SIZE];
+        u8 valid_addr;
+        bool autoscan;
+};
+
+should be extended with a second regmap, used for C45.
+
+	Andrew
