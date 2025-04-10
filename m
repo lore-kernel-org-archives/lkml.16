@@ -1,110 +1,66 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CBD03596F;
-	Thu, 10 Apr 2025 00:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372FEF510
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744244908; cv=none; b=D5y0J0boBk3q72kESk2HEMd4MFgDz/m04uQUxemDJmD6k3LRl8l+r28UoVd0D7hjNuM1yFhSv3Ef2kmwyCOTaPbrerY6VnXltf1fPv3q7c+q51oZ0U+IzNrHQ4DN4Uqv+uiqtmgzshXnZ/opCxFsUCL/03+hcKAVOp17U9VWRvM=
+	t=1744244995; cv=none; b=I8i1YO3FMWc2XQZnUugVq6UjTOAszGNVyD7ATE+QUZ6CTj4+nQ2eNprxzHIsirjF8Qy+Q1o+CWjh2kItUxJUw4xTrUyHTwr3ROJ+/t83KRZVGFriacK5IF0KOSY20kX85sUao+xH2alLjq1OXMTGvmTxeXwLY//N4DjvoJN//Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744244908; c=relaxed/simple;
-	bh=urdk/C6cNo2xp8sTslRc5Ph6KdmwcBk1p7LFugSPaFI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=r9BaxbgD0jY3WeM/uDAuxDylYWGOrQI2dTLJ3NwuGy5b2b7jXHXJDxgTf9on/gQniQaIXhTowMAaPjwZLnrUKqEXdRGX1XeDmHIe5W75lAnIStistZPrLU9BgjwA1Oz1r073nUyd5Xzydxn/IuL+wvu2HXnqMn7JnYtZFUBh4NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=JMHP1iYr reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744244995; c=relaxed/simple;
+	bh=33ON1ERBYPgrXnV5bSI759t6YNFtUk0885EAiuewKqY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LavWPvKZ89891byWuUqjpircuE0m3XYUrbApy5pAzlDZx6yj9em1j9vv4cJbxGakJEBF8kU8jLTfs5lzc43/OAodI43DI98xDlHNXNP3c/2VAfW03Z/6VMyYFHK+d/6TsO9Ux7T6Joglycdkn2KT9b9ycjqhZl5Yo6OXO74AVI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TrrKjjh9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="JMHP1iYr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=FU89nmJGK3MmjRRDkrqt7x0SrwcewmRIp34YsV8rY2I=; b=J
-	MHP1iYrpD0s/uF5ggxfuUkGoVU9GPlmMFACuKSEnJP4OEXl3kzWhCAJ3OcjU+Rl6
-	cQsdzCuDmiR2E21CY5nYOZ2v6ukQVTvwMVylRbtCSqqSblSTLoEvaayxLC7NxNgg
-	NMvO+LrrCZy/Zs5frNwUgrcG42olsWYYWUJl1jRGeg=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-131 (Coremail) ; Thu, 10 Apr 2025 08:27:16 +0800
- (CST)
-Date: Thu, 10 Apr 2025 08:27:16 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Nicolas Dufresne" <nicolas.dufresne@collabora.com>
-Cc: "Benjamin Gaignard" <benjamin.gaignard@collabora.com>,
-	"Philipp Zabel" <p.zabel@pengutronix.de>,
-	"Mauro Carvalho Chehab" <mchehab@kernel.org>,
-	"Heiko Stuebner" <heiko@sntech.de>, linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-Subject: Re:[PATCH] media: verisilicono: Enable NV15 support for Rockchip
- VDPU981
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250409-b4-hantro-nv15-support-v1-1-7e11e47fd0c9@collabora.com>
-References: <20250409-b4-hantro-nv15-support-v1-1-7e11e47fd0c9@collabora.com>
-X-NTES-SC: AL_Qu2fBv6fu0Ao4CWfYelSzDJG5Lh7O6vv+JRShMQdW/AxqTHp1CMpUFZ4O3zE3sliJbM7Es2CSj5lxTzXEBWW
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TrrKjjh9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2B6C4CEE2;
+	Thu, 10 Apr 2025 00:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744244994;
+	bh=33ON1ERBYPgrXnV5bSI759t6YNFtUk0885EAiuewKqY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TrrKjjh90HMHsGdd4+Y8ilKRcjv6Lc0EA9YC3OGhvE+x3vp+siCgOHYBrD58wIO5r
+	 fu/omkdhtQXGRWPEbGbcW8CyzvkTvyeWy/RtAswCtkgDqC8UaALINkOmByodJ4ko4+
+	 4uACPmBO5xlAURZ1JGq5+dVbJLF+0IuVAsbUHP8M=
+Date: Wed, 9 Apr 2025 17:29:54 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+Cc: linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org,
+ linux-mm@kvack.org, liam.howlett@oracle.com, willy@infradead.org
+Subject: Re: [PATCH v4 0/6] Track node vacancy to reduce worst case
+ allocation counts
+Message-Id: <20250409172954.7e17e083ac8f061ea829663c@linux-foundation.org>
+In-Reply-To: <d25b3d0d-ebc3-4cf8-bf87-7d42dd23dc36@oracle.com>
+References: <20250407184102.2155415-1-sidhartha.kumar@oracle.com>
+	<d25b3d0d-ebc3-4cf8-bf87-7d42dd23dc36@oracle.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <7b70a71a.448.1961d1808e5.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:gygvCgDnT3lkEPdne_CRAA--.25738W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqAkqXmf3AWfu2wABsX
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-CkhpIE5pY29sYXPvvIwKICAgICAgVHlwbyBpbiBzdWJqZWN077yfIHMvdmVyaXNpbGljb25vL3Zl
-cmlzaWxpY29uLyAgICAgIAoKQXQgMjAyNS0wNC0xMCAwMzozMDowOSwgIk5pY29sYXMgRHVmcmVz
-bmUiIDxuaWNvbGFzLmR1ZnJlc25lQGNvbGxhYm9yYS5jb20+IHdyb3RlOgo+VGhpcyBpcyBhICJj
-dXN0b21lciIgZm9ybWF0LCB0aG91Z2ggb24gUm9ja2NoaXAgUkszNTg4IGl0IGhhcyBiZWVuCj52
-ZXJpZmllZCB0byBiZSBOVjE1IGZvcm1hdCwgd2hpY2ggbWF0Y2hlcyB3aGF0IHRoZSBHUFUgYW5k
-IGRpc3BsYXkKPmhhbmRsZXMgaGFzIDEwYml0IHBpeGVsIGZvcm1hdHMuCj4KPlNpZ25lZC1vZmYt
-Ynk6IE5pY29sYXMgRHVmcmVzbmUgPG5pY29sYXMuZHVmcmVzbmVAY29sbGFib3JhLmNvbT4KPi0t
-LQo+IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdmVyaXNpbGljb24vaGFudHJvX3Y0bDIuYyAgICAg
-ICAgICAgfCAgMSArCj4gLi4uL3BsYXRmb3JtL3ZlcmlzaWxpY29uL3JvY2tjaGlwX3ZwdTk4MV9o
-d19hdjFfZGVjLmMgICAgICB8ICA0ICsrKysKPiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3Zlcmlz
-aWxpY29uL3JvY2tjaGlwX3ZwdV9ody5jICAgICAgIHwgMTQgKysrKysrKysrKysrKysKPiAzIGZp
-bGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykKPgo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVk
-aWEvcGxhdGZvcm0vdmVyaXNpbGljb24vaGFudHJvX3Y0bDIuYyBiL2RyaXZlcnMvbWVkaWEvcGxh
-dGZvcm0vdmVyaXNpbGljb24vaGFudHJvX3Y0bDIuYwo+aW5kZXggMmJjZTk0MGE1ODIyN2MyYmZl
-ZjJiYzMzNDM5OTJlNDU4OGFiMzZhNC4uN2MzNTE1Y2Y3ZDY0YTA5MGFkZmI4ZDhhZmYzNjhmOWE2
-MTdmOGM4YSAxMDA2NDQKPi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdmVyaXNpbGljb24v
-aGFudHJvX3Y0bDIuYwo+KysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS92ZXJpc2lsaWNvbi9o
-YW50cm9fdjRsMi5jCj5AQCAtNzcsNiArNzcsNyBAQCBpbnQgaGFudHJvX2dldF9mb3JtYXRfZGVw
-dGgodTMyIGZvdXJjYykKPiAJc3dpdGNoIChmb3VyY2MpIHsKPiAJY2FzZSBWNEwyX1BJWF9GTVRf
-UDAxMDoKPiAJY2FzZSBWNEwyX1BJWF9GTVRfUDAxMF80TDQ6Cj4rCWNhc2UgVjRMMl9QSVhfRk1U
-X05WMTU6Cj4gCWNhc2UgVjRMMl9QSVhfRk1UX05WMTVfNEw0Ogo+IAkJcmV0dXJuIDEwOwo+IAlk
-ZWZhdWx0Ogo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdmVyaXNpbGljb24v
-cm9ja2NoaXBfdnB1OTgxX2h3X2F2MV9kZWMuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdmVy
-aXNpbGljb24vcm9ja2NoaXBfdnB1OTgxX2h3X2F2MV9kZWMuYwo+aW5kZXggNjliNWQ5ZTEyOTI2
-ZmI0MDhjMDhmOGJhMjEzOWQwNWJhNDQzODliNy4uZTQ3MDNiYjZiZTdjMTc1YTg5YzBiODg2OGNm
-MmVhZmI4NGE4NzJlZCAxMDA2NDQKPi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdmVyaXNp
-bGljb24vcm9ja2NoaXBfdnB1OTgxX2h3X2F2MV9kZWMuYwo+KysrIGIvZHJpdmVycy9tZWRpYS9w
-bGF0Zm9ybS92ZXJpc2lsaWNvbi9yb2NrY2hpcF92cHU5ODFfaHdfYXYxX2RlYy5jCj5AQCAtMjIw
-Miw2ICsyMjAyLDEwIEBAIHN0YXRpYyB2b2lkIHJvY2tjaGlwX3ZwdTk4MV9wb3N0cHJvY19lbmFi
-bGUoc3RydWN0IGhhbnRyb19jdHggKmN0eCkKPiAJY2FzZSBWNEwyX1BJWF9GTVRfTlYxMjoKPiAJ
-CWhhbnRyb19yZWdfd3JpdGUodnB1LCAmYXYxX3BwX291dF9mb3JtYXQsIDMpOwo+IAkJYnJlYWs7
-Cj4rCWNhc2UgVjRMMl9QSVhfRk1UX05WMTU6Cj4rCQkvKiB0aGlzIG1hcHBpbmcgaXMgUksgc3Bl
-Y2lmaWMgKi8KPisJCWhhbnRyb19yZWdfd3JpdGUodnB1LCAmYXYxX3BwX291dF9mb3JtYXQsIDEw
-KTsKPisJCWJyZWFrOwo+IAlkZWZhdWx0Ogo+IAkJaGFudHJvX3JlZ193cml0ZSh2cHUsICZhdjFf
-cHBfb3V0X2Zvcm1hdCwgMCk7Cj4gCX0KPmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRm
-b3JtL3ZlcmlzaWxpY29uL3JvY2tjaGlwX3ZwdV9ody5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9y
-bS92ZXJpc2lsaWNvbi9yb2NrY2hpcF92cHVfaHcuYwo+aW5kZXggOTY0MTIyZTdjMzU1OTM0Y2Q4
-MGViNDQyMjE5ZjZiYTUxYmJhOGI3MS4uZjdjNGExNzYxNjdiNDBmZTc5ZWM1YTY3NTlkZmY4YTc3
-ZTg0OWFlMyAxMDA2NDQKPi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdmVyaXNpbGljb24v
-cm9ja2NoaXBfdnB1X2h3LmMKPisrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdmVyaXNpbGlj
-b24vcm9ja2NoaXBfdnB1X2h3LmMKPkBAIC05Miw2ICs5MiwyMCBAQCBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGhhbnRyb19mbXQgcm9ja2NoaXBfdnB1OTgxX3Bvc3Rwcm9jX2ZtdHNbXSA9IHsKPiAJCQku
-c3RlcF9oZWlnaHQgPSBNQl9ESU0sCj4gCQl9LAo+IAl9LAo+Kwl7Cj4rCQkuZm91cmNjID0gVjRM
-Ml9QSVhfRk1UX05WMTUsCj4rCQkuY29kZWNfbW9kZSA9IEhBTlRST19NT0RFX05PTkUsCj4rCQku
-bWF0Y2hfZGVwdGggPSB0cnVlLAo+KwkJLnBvc3Rwcm9jZXNzZWQgPSB0cnVlLAo+KwkJLmZybXNp
-emUgPSB7Cj4rCQkJLm1pbl93aWR0aCA9IFJPQ0tDSElQX1ZQVTk4MV9NSU5fU0laRSwKPisJCQku
-bWF4X3dpZHRoID0gRk1UXzRLX1dJRFRILAo+KwkJCS5zdGVwX3dpZHRoID0gTUJfRElNLAo+KwkJ
-CS5taW5faGVpZ2h0ID0gUk9DS0NISVBfVlBVOTgxX01JTl9TSVpFLAo+KwkJCS5tYXhfaGVpZ2h0
-ID0gRk1UXzRLX0hFSUdIVCwKPisJCQkuc3RlcF9oZWlnaHQgPSBNQl9ESU0sCj4rCQl9LAo+Kwl9
-LAo+IAl7Cj4gCQkuZm91cmNjID0gVjRMMl9QSVhfRk1UX1AwMTAsCj4gCQkuY29kZWNfbW9kZSA9
-IEhBTlRST19NT0RFX05PTkUsCj4KPi0tLQo+YmFzZS1jb21taXQ6IDlkZGMzZDZjMTZlYTI1ODc4
-OThhMzE1ZjIwZjdiOGZiZDc5MWRjMWIKPmNoYW5nZS1pZDogMjAyNTA0MDMtYjQtaGFudHJvLW52
-MTUtc3VwcG9ydC0wN2RlZjRlN2E1MzcKPgo+QmVzdCByZWdhcmRzLAo+LS0gCj5OaWNvbGFzIER1
-ZnJlc25lIDxuaWNvbGFzLmR1ZnJlc25lQGNvbGxhYm9yYS5jb20+Cj4K
+On Wed, 9 Apr 2025 13:51:29 -0400 Sidhartha Kumar <sidhartha.kumar@oracle.com> wrote:
+
+> On 4/7/25 2:40 PM, Sidhartha Kumar wrote:
+> > v3[3] -> v4:
+> >    - fix bug reported by Vasily Gorbik by fixing condition for
+> >      mast_overflow() and add test case for this condition. This fix
+> >      was also tested on s390 by Vasily.
+> > 
+> >    - cleanup new_height variable usage in mas_spanning_rebalance()
+> >      and add an additional test to make sure mt_height() is correct
+> >      after a rebalance causes a tree's height to decrease per Liam.
+> > 
+> Hi Andrew,
+> 
+> Could the following fixup patch be applied to the end of this series? If 
+> you'd prefer a new version of the series I can do that as well.
+
+Liam mentioned a couple of "nits" so I think a V5 would be appropriate,
+thanks.
+
