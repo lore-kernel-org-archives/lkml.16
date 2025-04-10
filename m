@@ -1,158 +1,154 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA6126A1C3
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCCC2673BE
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744279080; cv=none; b=Cop7wJt+rPHbbH44wabg7sID6kIYI6p3uFpL5ORqZtGgreLu/XDU+ed8UpqdC0bIb3je1ccZaMQyoIO8JBp5KTlOS/mGxxzRgKlkrAmDyQfDgBrBRiaJxevXZwkj9o2+VaGIEMhHmMGiCUx2tdtMQ+Bd0L5SkowcGPFJo44E8rw=
+	t=1744279149; cv=none; b=crcrZxrrXf7U+/9OjDoDUk81tLUPYEjA76xEPMtDDBvKg0kJE+g1fnxAljKbYK9JNxymxu3ZraIDeP3G6lApy/a2bYkTl94agFVfpDUMbj1ph/g/ABDSRWz2ftEiCzvkraDURVlgQhYCxokLZOkBPinBpb9xcZQ2vNe0r6fhpRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744279080; c=relaxed/simple;
-	bh=CW5g3wYp9KL1gVQvH/LT0BdadUWQJrj72wibka1rya4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E8w8PH53rcA/ZEbu4j/RTOQ78CCprSF+GxBwm5dYJn22ejfrlb1nwKk1ZCgAsAx52a/9Yv+HUDFf57fUUj/rm62CMzBT9gYnfXpEnkbm9NHUhXoisUjiWGg6uq0tmc7C/PVONzd8gjf+tvjl7zyoYdQQP11YDF8N5JlOeMNTJT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eZlh9D5H; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744279149; c=relaxed/simple;
+	bh=to6vm0rC1fbCpBMfSCTmB7z9mZRggxqxOXHu7KnOZC0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AvJkYeB4N++VSjKsJbHzzXOyECpQ1rue6LMYaanS853KXe2VAIMn2jtBt6s+ZXNOSppbMT2/Nxdxhagn1XSCpVpIcxgotzH23jvm9l/BqbpO55/Iuub44hOvlRREIPO1ORqaQuanPTD5RCndcmrawd3+UUNzaX0aUezyIET7s1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cFMo5xIY; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZlh9D5H"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf848528aso4817605e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:57:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cFMo5xIY"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaecf50578eso109121266b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744279075; x=1744883875; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=z8W+GulkDGBime4ZK9OwOUCjZYgRnq/dZvJvvvfuncM=;
-        b=eZlh9D5HLpdQ1qoqM2u9RUioS6Qh4POaNMZMb0dho22ZQzQh+AIW7Oo+9hse/8alxt
-         dlPDP37MtV0gFViHFdyHedGvL2NPkXz41GWMwiaQ9SY3GKisnVzkpVImL+Qb6NiLcGlV
-         wvlKeIOX4Cj7+Ru30GaRFxZlo8SLVZY3MBE71lfQW6URspktK5t2YigPslgrs2yJvXI2
-         MUws763C0uGSWh1jDxosu4SmXDPnts5z9nGHcgu+R6Q7g7T/fJqhrQpDxIRFS7XWElQP
-         eEnTxrwgQprEpvPYyXpgzSBcpz0Wtnff6XAAIUvMjjCMXb1qSmgRObfKWGBrAEqIN7mF
-         3nQw==
+        d=chromium.org; s=google; t=1744279146; x=1744883946; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SL0HpDhrZM9n98xZWp9B/ltCY9esMwVPBh6P4iWMURc=;
+        b=cFMo5xIYrAr2c5HeWlSfp7z8gUDjwxqpsIX34Is9Ta5jN7oHCCJktI7g9Xo+x1MQQW
+         t+nE/7CavbhFwJVgPYWy9p4J8a7ht4TbwYDYt3ELDMBzqjJL8/0hU8iARetGs3IFyR8s
+         eUseRaHA9kuDetXm0s0QbFPLLufjm+UHzKOaU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744279075; x=1744883875;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z8W+GulkDGBime4ZK9OwOUCjZYgRnq/dZvJvvvfuncM=;
-        b=e+aRE/IUQF7qQTilqOcXWwsqgTE2WcvuyUu18XYJda3uEM1VYaPp1naN8EroqxZeyu
-         kBqy5dwHe3pgusONC2DvRuj0bMdcnJgdqSSQhuBjIu0wNGOZvovrdFHK+2x93iKS1wpU
-         4Dqi9RzhgvoCmyKH1fL5hqPPSexb1AZMLLBwmXT5zveZQkr/R/MU/ks71ELu9wWVAGuE
-         SmWJ3sVPfR+Z4dFE2huTvUcGPYhE+Ns/jNJe70amOFRaForPtnHIlewMfd3BPJnezLCl
-         6NXpfoiEfjVDHJTHR5Xjq5wz01MfInOApZAiVPs5v4XfMwE+Fw7mimP3N3U97BfglI4/
-         BQ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCU0ufqNbJ5B1KtvtIdOgE7T/WI/uVtu7dkBt7Bj4vP9ljtfflBxHz5mRYbT9MvtXF8+rgl21TfBqnU1s1Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNntpiySLVMR2POObm6u7tu/6UN1vVMGBz62LEzo7nUCBLcAHy
-	AlP8pMnOIZXxoLyAg2787L1uLSiMuoE4iUk8M6aKghWpGCeuVciUaBbUAuJcOSc=
-X-Gm-Gg: ASbGncskjI408jJIfysDPQu0aAWnbzZV/NAVHuROpdCMrOpP1PygnFZvI5U0TI+S74s
-	LTfs5qV5QZ0VlMyEwbM/dd4OkC+2nbZi/IkbNL93CKWE978ak9IByYT9g2CcqX3C78DcPyKvGbT
-	GDOvldG5APEGRRYRXQucGDmz50edys29QLDvpuBCf8lturBWWMbt+ZFV06DjLpVON+5kbb+suSM
-	e8T5EFUWUwEaOgpZv6B8ZU5PLR1cgYE2C0/nENrFdWCwHWu/SEcWpfhM6ifSrXCwVjYICHhStYJ
-	XeMAximeLckyh0i1fw3FzJVQg3oVXm5Sj88OZdwyT8WhpucPRMtxFBxf
-X-Google-Smtp-Source: AGHT+IEI7OSG+hIdjY4nTYGxTWexSVcR9vMqNh2S58M8qMW4Ld4ib5ru6erbmUkRfTs1cPbuiU/iwA==
-X-Received: by 2002:a05:600c:1d94:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43f2d7b88edmr23069305e9.14.1744279074833;
-        Thu, 10 Apr 2025 02:57:54 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f2338d7d8sm47906135e9.4.2025.04.10.02.57.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 02:57:54 -0700 (PDT)
-Date: Thu, 10 Apr 2025 12:57:51 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	oe-kbuild@lists.linux.dev, lkp@intel.com,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Melissa Wen <mwen@igalia.com>
-Subject: Re: drivers/gpu/drm/vc4/vc4_gem.c:604 vc4_lock_bo_reservations()
- error: uninitialized symbol 'ret'.
-Message-ID: <6ddfc908-22a0-4ed6-b5a4-6df9be85ff4e@stanley.mountain>
-References: <f5dd7fb6-6a99-407f-846f-0de2d0abe177@stanley.mountain>
- <b402252a-91de-4983-abc1-65f78e7e6ae7@igalia.com>
- <95ed4d91-85b6-4514-9d94-8324f4fcceb4@amd.com>
+        d=1e100.net; s=20230601; t=1744279146; x=1744883946;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SL0HpDhrZM9n98xZWp9B/ltCY9esMwVPBh6P4iWMURc=;
+        b=W13NgaLKFQMPiuQ/A8dbHagdb29TS2Ndvf3+vWNPlgS1U8TYapOyLzEwlLiW9X8H9l
+         do5yt35KexA0ezbMa93q9NjKUA5VvPI4KZTgl58IBnzvIpU22pK0INwbHK40lvzBhOnQ
+         DCsdJTJfRCthkVw9ihZnIOWqIYeC6vhe+QlWelWDLGHDcpJGQk5CcQVrDIvpxfWgNwvq
+         xZFZ/j4CmmNDohdCuGsoVvLpKlj7qr57CbszPOinXKO+2NzJ1fsEGphU07FHoa1224Jg
+         jINpcOwDLMTWq93DwXWU/9nei3I18bkFONB/Cs6f9Xz1rs3kdnPh8qKplpOjS0nchuhV
+         47EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOMa0lQRZ0SedxGsi3SWeHMT6kRqwlwBCIdDy5Qzt0bPAhVkg0fwnxoNyaDLsAHTH2JMrjbwNdXK8LfJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNY5U/ZvZpEYAC2oe8LccLIZg1IbK0CeBUDXJN1Up3TxPJYc1W
+	qeWIQ6wH9+Nx3ziF9H/498OPr2ri5/tg+xfYmFwY+n+itM5bbLoKrNlsV4QtJeAGoo/cGnlxlhY
+	=
+X-Gm-Gg: ASbGncuikBCgM2B1vPr9VkMzxKmoRoOK+K9Ir1yUzw5xXTTQtl8qa+QLq/u6XLnnUIj
+	XfyHvR6piuhi6NB4JuxspJQJe39/OnRmAdq4E5wr5dQVGekJXKq+5YP+ml70iuzUWzsAVF7nDJF
+	sZgS/wDatNyVaHSD9sPqCJeyMIkz91YJIpCgbJAVvzyabARupbCDdC6trDhiaHqRIQKLsUJaidP
+	i7dH1Nj2i9XuOS8du1neg/jf9dxWLY71e6G44kU+LTYxZLZDML5lhgHJkvE+x3klLwfFaWKn+o0
+	PBMLIFUGkTsaGdwWKZIR41RuZsf1oCTtJ4JSAB787s0Exn5yNZ2yjWIhX2mCE4VIhtSZAWVgwQe
+	PplIw4DI=
+X-Google-Smtp-Source: AGHT+IGgZncBDIjDJNpX+2cIMkO2hSD4ene9Jyn8fEUe9kJd4mMPEYm0NG0otBR7PuQT2VZ/T5QqLw==
+X-Received: by 2002:a17:907:3c85:b0:aca:a67d:c0b9 with SMTP id a640c23a62f3a-acabd1c526dmr227523166b.24.1744279145907;
+        Thu, 10 Apr 2025 02:59:05 -0700 (PDT)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce70c1sm243761666b.175.2025.04.10.02.59.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 02:59:05 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e789411187so6467a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:59:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX+8ma8oXADrAln0Mk3fArvilAGyFmo5usdr7WMaTa+LiF3GHF05zBiaysAf8WwBwHh0IFGn8eBHQEL3Qw=@vger.kernel.org
+X-Received: by 2002:a50:955a:0:b0:5de:bcd9:4aa with SMTP id
+ 4fb4d7f45d1cf-5f32be7ca56mr44710a12.3.1744279144410; Thu, 10 Apr 2025
+ 02:59:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <95ed4d91-85b6-4514-9d94-8324f4fcceb4@amd.com>
+References: <20250409-temp-v1-1-9a391d8c60fd@chromium.org> <CAJZ5v0ixiiSiGvc_8D8YxK22yKOAzkdrNaMNjydOHD7gQVc9tQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0ixiiSiGvc_8D8YxK22yKOAzkdrNaMNjydOHD7gQVc9tQ@mail.gmail.com>
+From: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Date: Thu, 10 Apr 2025 17:58:27 +0800
+X-Gmail-Original-Message-ID: <CAHc4DNJs-tq+KbukyovABkp8-GEbia3KfgEURcNqqRiJ2vvwyA@mail.gmail.com>
+X-Gm-Features: ATxdqUH6chIPMhKRb7zUFrIDu_id5vmjZQ0E6lQUwzdQ0QTxOC9fNvtyIJfZVTE
+Message-ID: <CAHc4DNJs-tq+KbukyovABkp8-GEbia3KfgEURcNqqRiJ2vvwyA@mail.gmail.com>
+Subject: Re: [PATCH] thermal: sysfs: Return ENODATA instead of EAGAIN for reads
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hsin-Te Yuan <yuanhsinte@chromium.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 11:27:43AM +0200, Christian König wrote:
-> Hi Maira,
-> 
-> Am 09.04.25 um 21:49 schrieb Maíra Canal:
-> > + König
+On Thu, Apr 10, 2025 at 1:31=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Wed, Apr 9, 2025 at 11:13=E2=80=AFAM Hsin-Te Yuan <yuanhsinte@chromium=
+.org> wrote:
 > >
-> > Hi Dan,
-> >
-> > On 02/04/25 05:43, Dan Carpenter wrote:
-> >> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> >> head:   acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
-> >> commit: 04630796c437a9285643097825cbd3cd06603f47 drm/vc4: Use DRM Execution Contexts
-> >> date:   2 months ago
-> >> config: arm64-randconfig-r073-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021500.3AM1hKKS-lkp@intel.com/config)
-> >> compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-> >>
-> >> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> >> the same patch/commit), kindly add following tags
-> >> | Reported-by: kernel test robot <lkp@intel.com>
-> >> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> >> | Closes: https://lore.kernel.org/r/202504021500.3AM1hKKS-lkp@intel.com/
-> >>
-> >> smatch warnings:
-> >> drivers/gpu/drm/vc4/vc4_gem.c:604 vc4_lock_bo_reservations() error: uninitialized symbol 'ret'.
-> >>
-> >> vim +/ret +604 drivers/gpu/drm/vc4/vc4_gem.c
-> >>
-> >> cdec4d3613230f Eric Anholt 2017-04-12  589  static int
-> >> 04630796c437a9 Maíra Canal 2024-12-20  590  vc4_lock_bo_reservations(struct vc4_exec_info *exec,
-> >> 04630796c437a9 Maíra Canal 2024-12-20  591               struct drm_exec *exec_ctx)
-> >> cdec4d3613230f Eric Anholt 2017-04-12  592  {
-> >> 04630796c437a9 Maíra Canal 2024-12-20  593      int ret;
-> >> cdec4d3613230f Eric Anholt 2017-04-12  594
-> >> cdec4d3613230f Eric Anholt 2017-04-12  595      /* Reserve space for our shared (read-only) fence references,
-> >> cdec4d3613230f Eric Anholt 2017-04-12  596       * before we commit the CL to the hardware.
-> >> cdec4d3613230f Eric Anholt 2017-04-12  597       */
-> >> 04630796c437a9 Maíra Canal 2024-12-20  598      drm_exec_init(exec_ctx, DRM_EXEC_INTERRUPTIBLE_WAIT, exec->bo_count);
-> >> 04630796c437a9 Maíra Canal 2024-12-20  599      drm_exec_until_all_locked(exec_ctx) {
-> >> 04630796c437a9 Maíra Canal 2024-12-20  600          ret = drm_exec_prepare_array(exec_ctx, exec->bo,
-> >> 04630796c437a9 Maíra Canal 2024-12-20  601                           exec->bo_count, 1);
-> >>
-> >> This is a false positive in Smatch.  I can silence the warning on my
-> >> end easily enough to say that we always enter the drm_exec_until_all_locked()
-> >> loop.  But the question is why do we only test the last "ret" instead of
-> >> testing all of them?
-> >
-> > AFAIU `drm_exec_until_all_locked` will loop until all GEM objects are
-> > locked and no more contention exists. As we have a single operation
-> > inside the loop, we don't need to check "ret" for every iteration.
-> >
-> > I believe Christian will possibly give you a more precise answer as he
-> > designed the API.
-> 
-> Yeah that explanation is absolutely correct.
-> 
-> The drm_exec_until_all_locked() helper loops until all contention is resolved and all buffer locked.
-> 
-> You could avoid the snatch warning if you move the error handling into the loop, e.g. something like this here:
-> 
-> drm_exec_until_all_locked(exec_ctx) {
->     ret = drm_exec_prepare_array(exec_ctx, exec->bo, exec->bo_count, 1);
->     drm_exec_continue_on_contention(exec_ctx);
->     if (ret) {
->         drm_exec_fini(exec_ctx);
->         return ret;
->     }
-> }
-> 
+> > When userspace nonblocking reads temperature via sysfs, EAGAIN error
+> > returned by thermal driver will confuse user from the usual meaning of
+> > EAGAIN, the read would block.
+>
+> Why would it block?
 
-Don't worry about silencing it.  I already silenced it in Smatch a couple
-days ago.
+I mean EAGAIN returned by nonblocking read implies the read would
+block (source: manpage of read)
+>
+> > Change to throw ENODATA instead of EAGAIN to userspace.
+>
+> Casting error codes tends to be confusing.
+>
+> > Also, ENODATA more accurately reflects that data is not currently avail=
+able.
+>
+> It means something else, "try again" vs "no data available (possibly at a=
+ll)".
+>
+> The error code comes from the thermal driver and if it wants to say
+> "try again" then this is what it wants to say.
 
-regards,
-dan carpenter
+Yes, but EAGAIN has special meaning when returned by nonblocking read.
+Hence, we need to avoid returning EAGAIN to userspace and ENODATA is
+the most suitable alternative in my opinion.
 
+>
+> > Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+> > ---
+> >  drivers/thermal/thermal_sysfs.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_=
+sysfs.c
+> > index 24b9055a0b6c515b865e0d7e2db1d0de176ff767..3d1713e053dfb867933d951=
+31f1f2491d2ecd07e 100644
+> > --- a/drivers/thermal/thermal_sysfs.c
+> > +++ b/drivers/thermal/thermal_sysfs.c
+> > @@ -40,8 +40,11 @@ temp_show(struct device *dev, struct device_attribut=
+e *attr, char *buf)
+> >
+> >         ret =3D thermal_zone_get_temp(tz, &temperature);
+> >
+> > -       if (ret)
+> > +       if (ret) {
+> > +               if (ret =3D=3D -EAGAIN)
+> > +                       return -ENODATA;
+> >                 return ret;
+> > +       }
+> >
+> >         return sprintf(buf, "%d\n", temperature);
+> >  }
+> >
+> > ---
+> > base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+> > change-id: 20250409-temp-6ebd13ad0dbd
+> >
+> > Best regards,
+> > --
+> > Hsin-Te Yuan <yuanhsinte@chromium.org>
+> >
+> >
