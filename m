@@ -1,114 +1,166 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C43F1E835B
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576311E8323;
+	Thu, 10 Apr 2025 16:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744303284; cv=none; b=VCYPYVmjByYyii6knxPxZ+yixBgdkrsF9jvQkE4BlGs5hVi7XtzVxIwTocJEvWhtQr9QZG63lKX4xozRMCUdvNrNs1gwY2nTvJzJk8FjBkVJdSMuFJYaKeYV4cAjmnwvY1rFx4C0fkAYlUsqnKliIjbW0Nc6Yupsut1SimtrUYk=
+	t=1744303335; cv=none; b=fODso+cxuJNgktGsAufakOCF66MWRN38o9ZAhK9L0Er70UwPqNL1LI5AE8LvmQJOTy2bLQQ3ePt63Ki6iLMHzbATQd1ySz//COxe+gQmpG9VDVQTtPvgH1MUEShKK0Nk79z+APRNCo7WRwYqjB56ffAX/t9fxkoSVct1/aTLV2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744303284; c=relaxed/simple;
-	bh=Hcr+OsbV0giuq3OJQt+MLAFzhy4z/J4/UvCBYVt5Ipc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G4LgsXtT9DJKpmDdvidOGOAJfK4RCSn5ZiFRfzIvH7kKzIARpK5tJRtP/U8w+VB8ByhpQTL9cPJz/VTC/dcRAnEszomssVJTtek7URa9OtvZgMMS882HIzGPNrC/3WS/oS6flblOA+lMC5IsIfNMlZQxbDiEOjaBvs9von63CPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jooRrozr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744303335; c=relaxed/simple;
+	bh=0pec9tSTAyfGRrcsnc0vSe6OqB5VVBTdEeHYiFjZ7G4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzURRcbVkYXqAs6MAZuWnI/FyAJK8lzDGxCEJqDMYxDsznEGj/SC0KZqhigInx7W49VJxgFVL86pfnL0TNa0sdolp5dday8PNjiC1mMTkwiD+h/0al8dhb6XKduvKRYEqmpJHbmRsgI9bx02R4aT2njaS+PhpXocljEHliAQTLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tyhicks.com; spf=pass smtp.mailfrom=tyhicks.com; dkim=pass (2048-bit key) header.d=tyhicks.com header.i=@tyhicks.com header.b=VhrPxT/6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kaeseGV1; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tyhicks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tyhicks.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jooRrozr"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AGB4Nh016340
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:41:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Nz3AV0ZTJrVixT1lebo/KxCHi2vspT4PrctEXCftC3c=; b=jooRrozrTmVsxT8y
-	iVOKgnQF/yctxkX/Riuy9pLd2BkHVUGuOC/0MM9M1YnC8Saj2EAT4z0/55c0l7Ix
-	LVSCAA39XdGqSxhirFSNQwg9SQNxEG2J8oX7aXSDjefkQl2mxMppbz0N5cUfWI4h
-	MqGgKAseeILwa4vHLi4eDzyMJGpF6Z8o6DeVY8dCTRQm3Doq8x5lsNruqkn6MWx1
-	6Ow90tWKjPjSc42dxlbpS15e8aqXKgNWWAgo/c0EubPPR3oUHoG6nUB3ltoULHFg
-	2Kn9GJfW3qY/e2sEC3HkaSbEiet8vk4aOdt4GOVVDAnrnUjCc7rOA2lMoqBfr1QH
-	oVwuKQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1qeq0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:41:21 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5841ae28eso28093085a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:41:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744303281; x=1744908081;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nz3AV0ZTJrVixT1lebo/KxCHi2vspT4PrctEXCftC3c=;
-        b=PbxWIyiLhP7hAEiUI5JQk6GoRfKeuLbuk0KdaGC4PE5Qg7Gcm/f/kvR+/DXCB7TlDx
-         A39hKUxozL42Czq/QZ2rYRZJlqAaU0iFkT4noIpLGwUwW0d4NB9fTgHcxb/tr8LrdGg1
-         DPblulKI3h/eKerQn3x4gw3/k8mZx1J8dJMorLmSWvktb2rmwe2y3eUnrMdFp7BrGf9U
-         qb92bHaEBwVJG1DXFvVbYf/oLKYGrRYhqIqLpyBMWQHV3fLWHFpyhvcavmAbJAIcXexR
-         sUuoOPc+rJFOpDuZq6kMW5IIPUHiCucglKq/3pHZrX0O7lHn2Blmr14mDmrO81Dl+0DI
-         V0aw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgGcyBUg92r17yxnLXeitVwdIdkw7PzcbIyBsUakFv2bQtyVslK5NyjeKWlX6YABI6V5NmwMO5cajGDdo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw864uldgDzNuX8RPHnTzaSznd0xUqpY+GNeIvozUqdSM5Kopb0
-	+NqfWRxafmly8rezgGktdytrjtjumqHO7ry7AvXK2mUh3jcr5hVp6XdOI46pzAgEH6mpRPbVeV5
-	a0/z4fnicAw27ZpsiLtG8r2boBeGB+I7aJBv79T6lP1tFNEqMG1lbNi1jF5ltauw=
-X-Gm-Gg: ASbGncsEEIPHzJUD6V4LnvzCvYqZVIZtk1ZnhZWCCFOhckMsCpTfZ/fXN9lCCI5/blJ
-	0b42z4lzY188UBfVPEsRmGY7dmYLCX7uRZrs+hdZg7WnsTs+nOmG46zz+x+Pc2p01WDm6HxVL7F
-	U25luB10hCmnve3kMP/b5StTuTEyA3gXJYTHTH2VidfAxQCSP94xGMM4s25JJlixJKPecQE4Sxi
-	ETNztdbzG3Z0owCVe9JUOx0lZZL/a6pUZyT+pNoT+swtMBPMPAz0aug/GPOPh337OuaH58rwvOQ
-	d2PQF+7dzQwEJogL6MJeNyVUCZyrcvcUQYsRaamRhtGwA9jshqrFOMaQRvmNsBnxrw==
-X-Received: by 2002:a05:620a:40cc:b0:7c0:a1ca:93cb with SMTP id af79cd13be357-7c79dd9a8b1mr382562785a.1.1744303281066;
-        Thu, 10 Apr 2025 09:41:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHKyHlrNq2qLH05ohY7PXUtOJFZJXokcW+KLyTTZ5H9Yjn47IJOlgaBBW+DUuMj07LVZzxX8Q==
-X-Received: by 2002:a05:620a:40cc:b0:7c0:a1ca:93cb with SMTP id af79cd13be357-7c79dd9a8b1mr382560885a.1.1744303280439;
-        Thu, 10 Apr 2025 09:41:20 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd17646sm2618786a12.56.2025.04.10.09.41.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 09:41:19 -0700 (PDT)
-Message-ID: <9db38911-4bb3-42c9-90be-51cbd6e523fc@oss.qualcomm.com>
-Date: Thu, 10 Apr 2025 18:41:17 +0200
+	dkim=pass (2048-bit key) header.d=tyhicks.com header.i=@tyhicks.com header.b="VhrPxT/6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kaeseGV1"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 383991140296;
+	Thu, 10 Apr 2025 12:42:12 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Thu, 10 Apr 2025 12:42:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tyhicks.com; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1744303332; x=1744389732; bh=CK1BZr0s7R
+	Ll9/uVCGwj1ZHvD1hBab9SNzcYfgX31g4=; b=VhrPxT/6dng2dnGvhQnWjtj/Nt
+	pnOb5YiamTyfcfFDM/wT1e92NHsIbR71M9loECpRPpjwpULDvOQZR9sDkr0xonzA
+	CXIwAFdiBts/lDRxjOC0iuwlp3Xu8lHsPOCIiU6iK+YJSBeRso6I7AwmOqIrl0db
+	MVJgvIIm9+ODhg0Bds0NgaJVHA4pRM9UdQbOKGEUrwIjI80eEuwvyqDNQAMXHf/q
+	Z+ugNeuC5vCIlW/gvgYqZKXKaUxkapBWf4mIEvwuHTseOQyYUeYUYyLQ6WZHzqBw
+	TR6rU8qWUe+dbGRY50WN4Cu8d1LyvN6OVP15rnKu437p03L1FPLUXgB56nJw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744303332; x=1744389732; bh=CK1BZr0s7RLl9/uVCGwj1ZHvD1hBab9SNzc
+	YfgX31g4=; b=kaeseGV1aUR/uV6ZrNgIkiqHhcMuXDi5kw9CAjkMH7AwiayfWCe
+	N3/Iss3sGLmet/JX3P3/Uh1pMR2yPZthkb3Gd6Tkx23wnNdDLqeLu3XSlTLCD9pM
+	2ODo2Cnk39wwpnH2QOJ35fK9OxL5MSFRIAm8/vmoJ/k0OT92dZoA3zFQQ9RnOd7f
+	6wBzH5lsjlNlxW9brNTcOdNwi/gA5QHKOrxP1h8JpX4KmNs/+kBoW06SZ8EcKI2b
+	vAa8CsSWvciQJowsXDKKt56zQjruCyACKa0rz6Jij33b5Y2s7M8u6Wxu9ozuCvBx
+	AmExmFB6NOWa6ZtccueF9gct9bbeDxS50ng==
+X-ME-Sender: <xms:4_T3ZxSdiEdfErNYgB6MQrMAeHuWy8brzV2IkZ8xWoMbcoRZgiXCcg>
+    <xme:4_T3Z6z1sKCOuvt_gKYzU2yQRQ3i_JyBrZhaARZHRAwta_r6rpCrcpUIjwwHvg40V
+    D2Fw1SFmyvkAQUXcIo>
+X-ME-Received: <xmr:4_T3Z216AQKazIPC7GYp7b6UhnkREcuTxNhMA2xVH43oyH_r_oxH8q5sTA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdelgedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepfdfvhihlvghrucfjihgtkhhsucdlofhitghrohhsohhfthdmfdcuoe
+    gtohguvgesthihhhhitghkshdrtghomheqnecuggftrfgrthhtvghrnhepheeiieeuvefg
+    teelhfejkeeluedttdduleevvefhkeeghffhhfettdffheeuvdetnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheptghouggvsehthihhihgtkhhs
+    rdgtohhmpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepmhgriieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihksehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehvihhjrgihsgeslhhinhhugidrmhhitghrohhsohhfth
+    drtghomhdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopehtohhn
+    hidrlhhutghksehinhhtvghlrdgtohhmpdhrtghpthhtohepjhgrmhgvshdrmhhorhhsvg
+    esrghrmhdrtghomhdprhgtphhtthhopehmtghhvghhrggssehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehrrhhitgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
+    dqvggurggtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:4_T3Z5B6_tXb9CJrY0tNA5mbrjpZvT1ipFJXj0zR2jU5btvxtS4cGQ>
+    <xmx:4_T3Z6hTe9hmX5rytn67sQtiZq1lVGwN0UBHgtmjJxQsUH-6XBhfgg>
+    <xmx:4_T3Z9oqckm_5AFRAUcEWPtOhIGKa60aDznQOqn9J3ogtM-PgIwZAw>
+    <xmx:4_T3Z1issddJEYan6QRcVPWJ0hmrnzQIi6MSJCwo96A1yxEA-qmYKQ>
+    <xmx:5PT3Z6ewBRhdsc-k5I2XLK1KbZWepFrwwv_nqHvzyCOca2cUP8nQqh-O>
+Feedback-ID: i78e14604:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 10 Apr 2025 12:42:10 -0400 (EDT)
+Date: Thu, 10 Apr 2025 11:42:09 -0500
+From: "Tyler Hicks (Microsoft)" <code@tyhicks.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Vijay Balakrishna <vijayb@linux.microsoft.com>,
+	Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
+Message-ID: <Z/f04bEJAUvMCzXC@redbud>
+References: <1744241785-20256-1-git-send-email-vijayb@linux.microsoft.com>
+ <1744241785-20256-3-git-send-email-vijayb@linux.microsoft.com>
+ <319b7c65-3e2f-456b-a845-45f7a57ba2c5@kernel.org>
+ <86o6x4lcf9.wl-maz@kernel.org>
+ <Z/fV+SP0z+slV9/1@redbud>
+ <86frigkmtd.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: x1e80100-hp-elitebook-ultra-g1q:
- DT for HP EliteBook Ultra G1q
-To: Maud Spierings <maud_spierings@hotmail.com>, juerg.haefliger@canonical.com
-Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
-        konradybcio@kernel.org, krzk+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org
-References: <20250408145252.581060-4-juerg.haefliger@canonical.com>
- <AM7P189MB100977CCFD602396E8F01FCBE3B72@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <AM7P189MB100977CCFD602396E8F01FCBE3B72@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: eeXF7PBV--bewknqLlQHQqljuhWoYmDi
-X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f7f4b2 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=g0goBy0-_zJ6c0Nzw48A:9 a=QEXdDO2ut3YA:10 a=QYH75iMubAgA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: eeXF7PBV--bewknqLlQHQqljuhWoYmDi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=563 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86frigkmtd.wl-maz@kernel.org>
 
-On 4/10/25 7:34 AM, Maud Spierings wrote:
-> Sorry I messed up and replied to the wrong patch somehow, this comment was meant for this patch.
+On 2025-04-10 17:23:26, Marc Zyngier wrote:
+> On Thu, 10 Apr 2025 15:30:17 +0100,
+> "Tyler Hicks (Microsoft)" <code@tyhicks.com> wrote:
+> > 
+> > On 2025-04-10 08:10:18, Marc Zyngier wrote:
+> > > On Thu, 10 Apr 2025 07:00:55 +0100,
+> > > Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > > 
+> > > > On 10/04/2025 01:36, Vijay Balakrishna wrote:
+> > > > > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > > > > 
+> > > > > Some ARM Cortex CPUs like the A53, A57 and A72 have Error Detection And
+> > > > > Correction (EDAC) support on their L1 and L2 caches. This is implemented
+> > > > > in implementation defined registers, so usage of this functionality is
+> > > > > not safe in virtualized environments or when EL3 already uses these
+> > > > > registers. This patch adds a edac-enabled flag which can be explicitly
+> > > > > set when EDAC can be used.
+> > > > 
+> > > > Can't hypervisor tell you that?
+> > > 
+> > > No, it can't. This is not an architecture feature, and KVM will gladly
+> > > inject an UNDEF exception if the guest tries to use this.
+> > > 
+> > > Which is yet another reason why this whole exercise is futile.
+> > 
+> > Hi Marc - could you clarify why this is futile for baremetal or were you just
+> > referring to virtualized environments?
 > 
->> Introduce a device tree for the HP EliteBook Ultra G1q 14" AI laptop. It
->> seems to be using the same baseboard as the HP OmniBook X 14 so just use
->> that for now.
+> This is futile in general. This sort of stuff only makes sense if you
+> can take useful action upon detecting an error, such as cache
+> scrubbing. Here, this is just telling you "bang, you're dead", without
+> any other recourse. You are not even sure you'll be able to actually
+> *run* this code. You cannot identify what the blast radius.
 
-https://lore.kernel.org/lkml/20230510183423.never.877-kees@kernel.org/
+We want to use it for monitoring purposes to let us know when a system needs to
+be replaced. Knowing the number of Correctable Errors that a specific system is
+encountering will help prioritize the replacement of that faulty system.
 
-Konrad
+Also, if we can find some breadcrumbs of an Uncorrectable Error (UE) occurring
+just before an important process crashes or before the kernel crashing, then we
+can avoid expensive manual debugging and simply replace the system. Automation
+can be implemented to dig through the kernel core dump contents to look for a
+UE log message from this driver and a kernel engineer will never have to look
+at the dump.
+
+> We have some other EDAC implementation for arm64 CPUs (XGene,
+> ThunderX), and they are all perfectly useless (I have them in my
+> collection of horrors). I know you are familiar enough with the RAS
+> architecture to appreciate the difference with a contemporary
+> implementation that would actually do the right thing.
+
+Yes, those are nice luxuries to have in the newer implementations but there are
+still a lot of older systems in use and making do with what capabilities the
+older hardware provides is still useful.
+
+Tyler
+
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> -- 
+> Without deviation from the norm, progress is not possible.
