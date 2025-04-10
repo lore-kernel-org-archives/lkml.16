@@ -1,120 +1,221 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A08520409F;
-	Thu, 10 Apr 2025 06:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AAF204594
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268229; cv=none; b=Yb1kJt/eHRO3X6CNDj3Aty9f9MEIsXAuPk5ANaPrWBLQnG5GMwK0unalS1uQ0GIYK50Ca+DnKv8DEAKRljVxGkodgJRk1x7LLsle5JfPodVGc+6MpKNBS2WcBfyg5A3TAviGkFxlqBrufPwSCaauqXAT+2Tt2MR9El/07KZ1PlM=
+	t=1744268263; cv=none; b=UXjDeXSLpoEMJicnPGQQWQh3lxAV/E8g32zdxE950HuEhUrPfmoLtR4OrOBN+qjw+MJxICAqV929PrunNKnaNFLBiHpj96/vhuuQWaA0e3G3Q5p0A4R+Xx085rhSIm7NMmIK4YppaVMAU3BdD50inFWsOc5ZhJ55n7l8PAh9skE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744268229; c=relaxed/simple;
-	bh=nfZ/qaCPBRBC+1jXUho0dbH11syiIaVwTmwsgMbqKN4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=G3FtJk+92ElaV2WqM2kIayN/PjcCQkPVZD4IQj7XWIVeesz21U0xJFcbr4xq4yRX20bz1e7SzwHFT6pnU77B2xh3J1/VSJyq10Rf4Jkfegda6oPdAemCHW8pKpMDuRTP2viapvPBOVxvm1wDdetwzryrYbroebrRvTi8kRUZtio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=B7WavQWr; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744268263; c=relaxed/simple;
+	bh=sTwsAjGY0cGXvK0SH9dMyP6DZMtS36qt5mtZ3fR9MlA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EntM51motdO9U3HIKbe8OnMBy0RTfgtY6jF9fIszXFndqYakaqwYhZ0OM0lqH1yjIO8IFXxGFfRGXGHM1r0yOLCB3h1q1FbMcrpAW2CThQNRDyiBuyOvEAae5gGMd+oAUV+iZQ6vQVQiI/TkEaLzqGl5Rv+UT+jAbsshAIByNCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WegCxNm6; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="B7WavQWr"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:389d:1fcb:c0f8:ff7c:208d])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5D3BF352;
-	Thu, 10 Apr 2025 08:47:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744267654;
-	bh=nfZ/qaCPBRBC+1jXUho0dbH11syiIaVwTmwsgMbqKN4=;
-	h=From:Subject:Date:To:Cc:From;
-	b=B7WavQWry6UOc91+kOpcy0Jex2kmF8oQYe4gwHn1e50RhqLKl6lMyj1k7nemN5aTL
-	 G2Ey4Gc4w8lrSbDXip3e6RcG02tD9XxHfDlhIjkrot+a+0DQm73OBrIqZd1CX6lbLV
-	 Nto8GO06wcVoEH2ZxFs4XSuR8J22IAw+0ZKui160=
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Subject: [PATCH v2 0/6] media: ti, cdns: Multiple pixel support and misc
- fixes
-Date: Thu, 10 Apr 2025 12:18:58 +0530
-Message-Id: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WegCxNm6"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d42f08219so185632241.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744268260; x=1744873060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ARRmXRJ2mCRgXoILVP1SStKYj4zjnHUfBxpKz5KWgHA=;
+        b=WegCxNm6ACIpSo0rXU6oya50pl06wvga08zSKecB9dQoq+OTKuFDPN5VZEKykgZUsQ
+         flzC2lZPQnJw9OhsDkKYxcrbKQxd/kpmkX4qCMIDYHNmp/4qLUCwY+E6vvK8wkayBJm/
+         kIeVuyZkmD6VDNYefo4wkAYAblgUINR2oUbM1QmXgAJBfXjNVX6RHf0rI5D57AGn4V27
+         wEGXP0VxT3uGIs9umt1EfqBCozGXmp8wvaNsbnHK88UwG9DNIZCZ1ixILv8jdh/fbQna
+         xAxQVCEY3Zfme5nQ7oDfdsdCczb0/KI7vMpkxtCKW7qy+sS2TiiLVzDo4NUXgnNbt3L8
+         0B3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744268260; x=1744873060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ARRmXRJ2mCRgXoILVP1SStKYj4zjnHUfBxpKz5KWgHA=;
+        b=JUluJnztXNZiVL3aU7gCft3q+tdt5jusH0aCtb9BOkwEFvvKsx5PwcwSpcuK17DgA/
+         s8BzBDG7rXCP2lp9CzmZosn+iHWbwKQBE6MOdNs2TLF3QS+ICgGKMBlXpkC4jKtdfyL1
+         2BkK/7ObFhcURYPajFp+SKWYaVHR/CMkH3pcSP2sqTVI9kj2/h31AdPLNI/PF9DFIXBD
+         9bT6i3DGaeOYz6AMnavcwwy7Ml2lCHMMgycTLNHzJRdPcxkQ141y1WylHuTL+k/1IwUU
+         AdVUXvkq4ZF6xdqN8ObrQ910WmeNF9W1nxZBKID2tLh5Eh+phz/yNh++n5R+JBhevc88
+         unQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeHth3ryA80s/gzardIVhSeQskTPRmXXZM/G6flJTKgTE6w1K8dwXuLEXXyyg0Iyh/M25xleYQEuedxO0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9V4aQ3/7AJTfmmEDPTFBg/atJk/BHV3JsxQiEfblfOr36EvBh
+	XoDcew6V7b/id0hP39wF9+tXzy0/wot6HY2EkFYOkJxBSV+Ntq9Znv/PJnSUUIM8aCYHPm49Bbi
+	HO2k2Vrg/VZJaWp9vR54rACGl//iMr5ndOwZNTQ==
+X-Gm-Gg: ASbGncuh5UI9+ZbxTO9+41jwUrkDON5dESr99ZRrYxLIxg5f+FKBtMRntg9JZ9zJDlu
+	vSKSbrh3iwaPDisAP0bPBjlA6abfM2sinSiHpr0c3r54DTbBgHgcPsZzTlD+ZhlWVpAGoF5hZ4U
+	BFZptG/VoL93WxYAWx5NCXmsEX+w+UqQAR1l12VMTIx+taiRqfDX5ga/0=
+X-Google-Smtp-Source: AGHT+IHnUcAdtPw/Bu+bfLYER0We+JE2unYWgD9+ylsXtm+yAmF1+/a2MICvq/3Z6LjMbkZydv/6M4WXUoGm3z69jlw=
+X-Received: by 2002:a05:6102:5714:b0:4c1:9e65:f90b with SMTP id
+ ada2fe7eead31-4c9d35c5826mr1056195137.17.1744268260583; Wed, 09 Apr 2025
+ 23:57:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANpp92cC/1WMQQ6CMBREr0L+2pq2SIiuvAchpvwO8hdS0hqiI
- b27lbhx+Wby3kYJUZDoUm0UsUqSMBewh4p4cvMdSnxhsto2ujYntcQw4DbKC0m10OC65nYEqBh
- LxH4UoesLT5KeIb73+Gq+669j/zurUVo17JvhDMOj46t4uBTmIbjojxwe1OecP+BadtatAAAA
-X-Change-ID: 20250314-probe_fixes-7e0ec33c7fee
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>
-Cc: Devarsh Thakkar <devarsht@ti.com>, 
- Rishikesh Donadkar <r-donadkar@ti.com>, Vaishnav Achath <vaishnav.a@ti.com>, 
- Changhuang Liang <changhuang.liang@starfivetech.com>, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jai Luthra <jai.luthra@ideasonboard.com>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1935;
- i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
- bh=nfZ/qaCPBRBC+1jXUho0dbH11syiIaVwTmwsgMbqKN4=;
- b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBn92n3h1WpxYc5U+5o8ZhWdDvQsy/67YALCVx+Q
- LKcf5r7SrOJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ/dp9wAKCRBD3pH5JJpx
- RedBEADMoVa6NazGysA+dKxVB4RPurD9DkKRcUp7xqEWs3YyTp1DtvP3blvpD7rdZz+YAQQeyOL
- 4BFroN+n9O8Y5pDEnheys4FxlGz9ct21Z5Kc0Tq7eDGSnGGyihkxW96qZP6K5XcBjVyc8JvPb5u
- pYHJyEDGefZsoCoTjZahgO74VFf1XzqvxM888C0Rv3pnv2RkHNXdksxaw9/0LLMpC9tVEj8iE/N
- r+X4IpUufMkIkzxzcDxaMdRUO+f0ntj07LLmj3jkWcl8ejq+A7kOhg3/d8pE0bvvtjBv/Key/M3
- GYJU5Vzgq6TjzvFkGqSAHcrqIETdpytMAUBNUgkFBGE3jaSXO8TT2n2TqK10doWZB0PLyltMGh8
- CkRJvKXDne8j//bgajYiFDltgoeTq9Z2kp4/SzIsCK6lgt4gbahHpS0i8yLvWLop9zokV7QoJwZ
- 4IbZGfCv94oaD7boTem5yImIvK6DuGUxHlXX6NAThzvJXbHboXFKWbl8hkwXfY/WAMZT/75yqQP
- yAdBjMSBMCdyPbb/K/zSELcsxpLoyE22mgKgG1dB24ymebd04TfyD0QT3Q4dkneKAZoQayiRNYD
- 4xul3H9s/E6xHbtvgBtkWbFCXg5VM0vhNalziO1EcouRsbpKWvjcgO1+Zr9qVnzvXDGjOgcXLO0
- NE3DJdQRpY7cm4A==
-X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
- fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
+References: <20250409115840.028123334@linuxfoundation.org>
+In-Reply-To: <20250409115840.028123334@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 10 Apr 2025 12:27:27 +0530
+X-Gm-Features: ATxdqUFpdOs38enhPpqvgs50sZwp2PaSSnIi3QTcWZBE0JZMUFx3jvgJXa9Sb2k
+Message-ID: <CA+G9fYvgMbV0LK=zHsCO4EGLdKKPPaOwJZ7UzgePNP_9O6Ag_A@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/269] 6.6.87-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, 9 Apr 2025 at 17:34, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.87 release.
+> There are 269 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 11 Apr 2025 11:58:04 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.6.87-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-The first four patches in this series are miscellaneous fixes and
-improvements in the Cadence and TI CSI-RX drivers around probing, fwnode
-and link creation.
 
-The last two patches add support for transmitting multiple pixels per
-clock on the internal bus between Cadence CSI-RX bridge and TI CSI-RX
-wrapper. As this internal bus is 32-bit wide, the maximum number of
-pixels that can be transmitted per cycle depend upon the format's bit
-width. Secondly, the downstream element must support unpacking of
-multiple pixels.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Thus we export a module function that can be used by the downstream
-driver to negotiate the pixels per cycle on the output pixel stream of
-the Cadence bridge.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
----
-Changes in v2:
-- Rebase on v6.15-rc1
-- Fix lkp warnings in PATCH 5/6 missing header for FIELD_PREP
-- Add R-By tags from Devarsh and Changhuang
-- Link to v1: https://lore.kernel.org/r/20250324-probe_fixes-v1-0-5cd5b9e1cfac@ideasonboard.com
+## Build
+* kernel: 6.6.87-rc2
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 327efcc6dcd0abb5f5c298eacd01af487dc297eb
+* git describe: v6.6.86-270-g327efcc6dcd0
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.8=
+6-270-g327efcc6dcd0
 
----
-Jai Luthra (6):
-      media: ti: j721e-csi2rx: Use devm_of_platform_populate
-      media: ti: j721e-csi2rx: Use fwnode_get_named_child_node
-      media: ti: j721e-csi2rx: Fix source subdev link creation
-      media: cadence: csi2rx: Implement get_fwnode_pad op
-      media: cadence: cdns-csi2rx: Support multiple pixels per clock cycle
-      media: ti: j721e-csi2rx: Support multiple pixels per clock
+## Test Regressions (compared to v6.6.83-270-g0d015475ca4d)
 
- drivers/media/platform/cadence/cdns-csi2rx.c       | 76 +++++++++++++++++-----
- drivers/media/platform/cadence/cdns-csi2rx.h       | 19 ++++++
- drivers/media/platform/ti/Kconfig                  |  3 +-
- .../media/platform/ti/j721e-csi2rx/j721e-csi2rx.c  | 66 ++++++++++++++-----
- 4 files changed, 129 insertions(+), 35 deletions(-)
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250314-probe_fixes-7e0ec33c7fee
+## Metric Regressions (compared to v6.6.83-270-g0d015475ca4d)
 
-Best regards,
--- 
-Jai Luthra <jai.luthra@ideasonboard.com>
+## Test Fixes (compared to v6.6.83-270-g0d015475ca4d)
 
+## Metric Fixes (compared to v6.6.83-270-g0d015475ca4d)
+
+## Test result summary
+total: 109721, pass: 87807, fail: 4013, skip: 17422, xfail: 479
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 129 total, 128 passed, 1 failed
+* arm64: 44 total, 42 passed, 2 failed
+* i386: 27 total, 23 passed, 4 failed
+* mips: 26 total, 25 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 32 total, 29 passed, 3 failed
+* riscv: 20 total, 20 passed, 0 failed
+* s390: 14 total, 12 passed, 2 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 7 total, 7 passed, 0 failed
+* x86_64: 37 total, 36 passed, 1 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
