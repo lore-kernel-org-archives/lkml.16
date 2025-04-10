@@ -1,70 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E641D63C7;
-	Thu, 10 Apr 2025 06:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E091D5143;
+	Thu, 10 Apr 2025 06:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267654; cv=none; b=rWaxaanF8LhK2qrjof5erK42Aj3ddpdg7Y0YnrUBVcuSMZosPTBXhRUNFAUZS8MoQNFltcT2Woc6C64z4sDjqCw+7qGbgJ9U2kYoK1I8WF9fbXgFgr5666MzghKij78iG20gvPYdjW08v+zk5dvkN5pjV47qBGoWB5W15n/RUPA=
+	t=1744267700; cv=none; b=hFZTa/11fbXZqL3QFkUf69uy7rL7JUtCNL4Ct5JfaYvH37kQ9ewgFEZG8S982sYrrE53X3iracGqHJTZa/NcTau1eL1dHLfTbmodoenjfLjR9VOjucIO7audFXAgRX9pu8Pau/A1C3+rqywu4csddqiNUDHo9CdKiBclDqeZN2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267654; c=relaxed/simple;
-	bh=8hkLcLDH7nSI13qsqezdG+87BGroYwujWBW8KumB1MM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q97m0YpKnCZKibtN6CWySy08oaoaob7tT1OI5e3iATvNV7F842qT4Xe7DaJR0uM32W+kNiEpT9lhJLjdAKgzKWdwohQa5mZM8sKXGn52voRsrIlcLRpLJIwQAa0w1fKR9FSR87DOxyiHw+yYleD7prKEl49s0iNDFgePByz+wSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYokwitx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744267700; c=relaxed/simple;
+	bh=C5ec5lNyuqtEj/fcsCGEIrivAFsHAGSQ3zeL0mFILag=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GxjtAqlMAAn5MOfDQGZPcaYT1i2wQ2HFh0ncDhgfr64NFi4Wt5pzdaUQLD/l3xsUGm91LxbSgsMFyvDkGXlryyrO5MbgHe8Uuw46uVz8vZdP/kCNmTpSemZakJ8CZhJVziLiFmhEEA47vMeP6rf6PdU5CPDfTzdSKazaWSSOP/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Mwkv66tx; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYokwitx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573C1C4CEE3;
-	Thu, 10 Apr 2025 06:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744267653;
-	bh=8hkLcLDH7nSI13qsqezdG+87BGroYwujWBW8KumB1MM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LYokwitx/IQTfloJqvtw9W73YftJtdBU9KKufIeVzr+DmF74EgudgIWvwL5qBMRS4
-	 jlp6EKU8xwPIazNpv/LIihUWSCGEhx5fFvCcm1Bg7ujD7sWjnmKQ0udLkRJCjla8wG
-	 2la6raLHHiilW8u2uMsju0vz314FXtc5GtUwXJeK8FYzeqPLd3pEN+45lUkKeYRF/G
-	 D7BXESDXQ5HkD+c1IXKwHovGosEVDPYnF6bSALkkjYvyPZRsUHwHyHgRz3SrHxQFoR
-	 NfDhJU1HBUy+zx3oG6MjlVlciUHm1GdOTi8+mPJ1sgInqt6RWcInhWuuEeoMEzTnnB
-	 WQUf2NuxzZ7Xg==
-Date: Thu, 10 Apr 2025 08:47:31 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Jie Gan <jie.gan@oss.qualcomm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Tingwei Zhang <quic_tingweiz@quicinc.com>, Jinlong Mao <quic_jinlmao@quicinc.com>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 2/5] dt-bindings: arm: Add an interrupt property for
- Coresight CTCU
-Message-ID: <20250410-demonic-woodoo-kudu-bcd994@shite>
-References: <20250410013330.3609482-1-jie.gan@oss.qualcomm.com>
- <20250410013330.3609482-3-jie.gan@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Mwkv66tx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B5F4433F1;
+	Thu, 10 Apr 2025 06:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744267694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cb7IK28fqEaigcH00aeaSLMccq7nNJere64F79CGyO8=;
+	b=Mwkv66txch40E6HcDevxLYZTrvLuTp8ktqfEwmvtNg/7fATJe9Enq5Pl4FboeK0VzIrNA3
+	42gz3ZOndZbTsKbnCSq9uIQNaf0wt0lEtOkGJWkO2fqBLqrFyxDvS5GD2FBLfCZxj0URQD
+	gZ1QyODj5QmRHH1WQ/OwA+1UyCoY/MWGdd/wsd3BLh5Lobmsbs58f3VQJD1YnOtJGrhnvB
+	pqQC/Y6BGqq4QwCrX1TEUNCgimIX/wdjzqN4xOcBC+NWqijh5yLav3QVqI8VrZCYAJFaxu
+	bCUFbybtq2gwlHLAz0eU1h7vuZ+O3zuLe8GkHZMakPNnWzfnozRO/3gROFUD8w==
+Date: Thu, 10 Apr 2025 08:48:09 +0200
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
+ support SFPs
+Message-ID: <20250410084809.1829dc65@windsurf>
+In-Reply-To: <c6257afe-36bb-46d8-8c22-da3b85028105@lunn.ch>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+	<20250407145546.270683-16-herve.codina@bootlin.com>
+	<19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
+	<20250408162603.02d6c3a1@bootlin.com>
+	<D91CSNC07NYM.3KC467K0OZ4GG@bootlin.com>
+	<c14dd5c6-2dae-4398-89a9-342e7a25bb30@lunn.ch>
+	<D91XV1I4CY37.20T12FMZ5QLQ5@bootlin.com>
+	<b1b33000-4c10-43cd-bcf4-d24fc73902b1@lunn.ch>
+	<20250409161444.6158d388@windsurf>
+	<c6257afe-36bb-46d8-8c22-da3b85028105@lunn.ch>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250410013330.3609482-3-jie.gan@oss.qualcomm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekvdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefvhhhomhgrshcurfgvthgriiiiohhnihcuoehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepledtgedvjeehgeetgfeufffglefhkedvfeduveeiieelteeliedtfefguefggffhnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopeifihhnughsuhhrfhdpmhgrihhlfhhrohhmpehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedupdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
+ egurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
+X-GND-Sasl: thomas.petazzoni@bootlin.com
 
-On Thu, Apr 10, 2025 at 09:33:27AM GMT, Jie Gan wrote:
-> Add an interrupt property to CTCU device. The interrupt will be triggered
-> when the data size in the ETR buffer exceeds the threshlod of the
+On Wed, 9 Apr 2025 17:03:45 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-typo: threshold?
+> So it only supports a single .dtbo. In its current form it does not
+> scale to multiple .dtso files for multiple different boards built
+> around the PCIe chip.
+> 
+> At the moment, that is not really an issue, but when the second board
+> comes along, some refactoring will be needed.
 
-> BYTECNTRVAL register. Programming a threshold in the BYTECNTRVAL register
-> of CTCU device will enable the interrupt.
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Indeed, but that's really an implementation detail. It doesn't change
+anything to the overall approach. The only thing that would have to
+change is how the driver gets the .dtbo. We could bundle several .dtbos
+in the driver, we could fall back to request_firmware(), etc.
 
 Best regards,
-Krzysztof
 
+Thomas
+-- 
+Thomas Petazzoni, co-owner and CEO, Bootlin
+Embedded Linux and Kernel engineering and training
+https://bootlin.com
