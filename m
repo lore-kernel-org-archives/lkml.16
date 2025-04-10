@@ -1,109 +1,103 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D794B281359
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B6ABA33
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744281448; cv=none; b=jI4tHB27LFFpo8lnUC1KG8nILKlRbGvC1HyELST9VjKy//scyyLwCy4r/k4YZylS/AcXx98QvbO8zy4LMz83bP10gnAKSzLsX9sIf5jtgXfD67OD3Q/WZirTN0S08aTGJ9meBfEXl1+nHNBXAa6uY8WW5vmtk0tHQL2Lt1ZTYHc=
+	t=1744281461; cv=none; b=N7u/tyQOo1kM+lFNk6MxVNy7VkPzjO1I2udswxg6zna6N3ZMPRHabMUIHEHpTvC201yYO5GAFM0ktxEHhoEsrPvLiyXEHQun59nA8moFHXrUJIOMgpeuwrEQhoZsM0cDqOzHR4kvGJlYmvkyGAAt+hFK+Br42OcAj6CrmLtctcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744281448; c=relaxed/simple;
-	bh=L1x+MEpRCSfrf2Z5t+ZWnBQnsCOKl8zGDEi/DBrESfI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=moxVf3GCPAxAnqQnebQPvTaYoXmj5XLL4YLXZin04M7IfnrKxklygI7CM6+k0ado0xe2FSRjZiOKHMRa+BLUwPzFBSp2+RhnC3oxJThIb1IEOM72yLR4xv5xemIaoh4dunA5EF5/6hvXV8t/M5XwY/2LwdBTRuJyDr11PQ67afg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FNs/SU7b; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744281461; c=relaxed/simple;
+	bh=R1nSPk4dQu6wdw6C+cd5gl0zpsdwaxNvu3JXlvComO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EaNazfd8RT+VhyV5KGXorHJ5PikKUPDFSOvfwX325gRi2wV8EnWGfzGUv+Irdk4AezzB0xIeJaVGQ7hd4H4J6ksYkygfjaBcK5NoH9EGh2eet7G6UIZypEKRpyXxcvBqCqYqQIfT8+5ApnnKdJ7dazxAxNkHnwN8PdN3ny65eeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MKEZfzAU; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FNs/SU7b"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-391342fc1f6so439245f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744281445; x=1744886245; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2aYtjGBXatHaseT3Phi2jIW+StTZyswtuqFhYnfH/gE=;
-        b=FNs/SU7b9esSeNgXWoWBwd5rCQX3MZWOFhAf4z6GcdGulWqyVSGQakO48T6QYaJQ0D
-         bZ6t4M7kUnapr8RB27eOQ7r6TP/38pVZoweJ4rqr9SyOUUWN03epYBQSOV2Hy8ZrL57c
-         4Icb1CPI4fST7TAekEoL8camthBXymMTG7zoidS2PxQ2YdKKNNiMamc+j41Zc8hhDYlq
-         1jG4S/A/sXakbKTgM5nmlqpdC0t0zcU4sbhi6T79t4oYEjTgo7/ZtRgxu2C48MzVWkeB
-         jjzTBEAbgTcfVIaBsX8K82GRSXEqQr+/f5b6L4axWHsZvJLYbycrOzvqZZab19NVhgR+
-         dJRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744281445; x=1744886245;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2aYtjGBXatHaseT3Phi2jIW+StTZyswtuqFhYnfH/gE=;
-        b=YgkNTAOAQMU+5YNHNN5myh34D2lBUpO8LVrnaSxYj5E8wGt1AyuY1gb5oKE7Fn6ybY
-         YXvIml9mRztaWWKfpJ/DHTzvmX5ZfGK8SxY2LdCCsicVdmqT9TzRystbruuWvhChGXYl
-         5abVj93aWzIshYInGPoEZLW1Y/kh6tGoH2YNmITFwdUh2SHAoJ5HvIu2MdlYKH+tGUSz
-         DIOfaPJVmTDZ3paIfGAD2TbNELBQ83oOVp55qpg+HHi2h+9hd8LaB33mC6EHNFNwDIzp
-         40/pQHP1+ImHbiH9SYgF2Oeqs2QaWbXZR1OiFtwtD/l9THWTOlt7plQzVE1JhVi4JHgG
-         6BOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkwBaSub9gwH6xwTlxIirfX6aBCj2YmTWoGyGPegmCeFf0ogzR4PzB5EroFobRcxRawI+X+G9SbteAbdc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL4wgcQP4irTsayyOaGph+i8Q1sMeyXaEnJWsynOvWSdtZKEFN
-	wRqmQlGklLuq+0bCiGsO9Ml3kbtgyrtvbcoC+3tJ8VYpMRnqqs7B5CLZEBV1O44=
-X-Gm-Gg: ASbGncsIbjGBr+d8bGBwCMg9eoggFXGMxqVlRMK4PgJ1lYK+vnIRCmoZfhjbUZE3yKN
-	nzva6ijQ0DGL1/P8/i4l1u2jVgL3Cm2DQVsY4rC+iZOSCG3zpZS8ikfkAdqcOwaip6wngdwmP9t
-	zl8DGbCK4ad06YhLNsWWIcHOgY8Kj6kDexfsUabdDEHpAKyJGqUcwWa9vD5r7MYOYUnre6o9pS+
-	iutdihCL/r+5kwWqdkiYcisnvtcpotoUFvODbEkH6hC3vSYrKdOJKpcTzexEaZj+h/t0A6YK2hC
-	aAKwkClcUd2YptnSPLAFTEys5nYPzuD846WqMs81Xy3lsEWyAZuZM0wK3vuTnBdhAw==
-X-Google-Smtp-Source: AGHT+IGGCF1uYN0vSOy+9N6MTk1Sll7akKwdvJm3f6V81SnCFhS1Hq04fztkt0wX1t2RP9Kn4lRv9Q==
-X-Received: by 2002:a05:6000:2210:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-39d8fddf94emr1702026f8f.47.1744281445152;
-        Thu, 10 Apr 2025 03:37:25 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893612dbsm4309388f8f.1.2025.04.10.03.37.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 03:37:24 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: broonie@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	srini@kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/2] mailmap: Add entry for Srinivas Kandagatla
-Date: Thu, 10 Apr 2025 11:37:13 +0100
-Message-Id: <20250410103713.24875-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250410103713.24875-1-srinivas.kandagatla@linaro.org>
-References: <20250410103713.24875-1-srinivas.kandagatla@linaro.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MKEZfzAU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744281457;
+	bh=R1nSPk4dQu6wdw6C+cd5gl0zpsdwaxNvu3JXlvComO8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MKEZfzAUijavMN6vD0hrsD+NwZ/WcVKA7NTe/hMMV/bBi7DdUbBAMcJFDY3LUb3TA
+	 gCHIoLA2XaxyUGNyQokDktMzuNNWRXIxUd8nEwP7zlVgHtjtg+OlNiCrOZv5vp4AlD
+	 w9Q8X4fEqsJwBwpCNQygCXCIYB/s8Sb0qbqKZNIT5DBnBZSGkZ+0i6X8RkyCsPTs5c
+	 T8tzuqBWkR4x5m41+/WTCx/5OicAT8jrN2cvLZnbbAlCJ9gkFNpupa+F2SIW95vV3F
+	 GCznVQq6AjBNIoSCZL1Gsa+kJwqqj8IoFWC3FxbV13QyuTP6iniD4Wd7hnM4odYpRC
+	 Kdwycbel+U13A==
+Received: from [192.168.1.90] (unknown [82.79.138.25])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id ACF9817E1034;
+	Thu, 10 Apr 2025 12:37:36 +0200 (CEST)
+Message-ID: <d11e241f-cb68-4343-87c7-794a97136487@collabora.com>
+Date: Thu, 10 Apr 2025 13:37:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1036; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=ZhYHEoqrUkGkRgz46TiGnWcPMiKR/N1g2slVddB+DV0=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn959Zm3y7kLG6HvBFTp7/7z9RyQCDI8Z0cZJte YmqqO7XWtWJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ/efWQAKCRB6of1ZxzRV N8i4CAC1e4sdQHEe9sOx1teSQqtqYSkc9V8pStNn0lGq2HBACEukAa59Qb7+IxwFcdI/fvNVwoj IZ8PFTqOl2N+eMpABQqYZn11RiZECUCl+LNEF70jhrN8ZolLoeYLYuC+sp7lrPdRRvjTzXlu+Bk QAOcD5+btV+okFLbjsM3CVCFyxYGCSQVlI+hGTDY8A1+VxsUZABV13u8JuXFsPsmCSqTwHeFMCC 9/XJQjg6/D67SzfntnoC/FCsVMA/Z3HQbQJUsVLaVN2RVmdwcLCxDzEnNU5R7QD8dp+7NCAT2fa bG5/S05epDUFKboyGZpLCzqbQLUUVBJNFKO4xdKxG+KlGqpB
-X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp; fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 11/15] drm/tests: hdmi: Drop unused
+ drm_kunit_helper_connector_hdmi_init_funcs()
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
+ <20250326-hdmi-conn-yuv-v3-11-294d3ebbb4b2@collabora.com>
+ <20250409-refreshing-overjoyed-frigatebird-d3ee47@houat>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <20250409-refreshing-overjoyed-frigatebird-d3ee47@houat>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On 4/9/25 6:24 PM, Maxime Ripard wrote:
+> On Wed, Mar 26, 2025 at 12:20:00PM +0200, Cristian Ciocaltea wrote:
+>> After updating the code to make use of the new EDID setup helpers,
+>> drm_kunit_helper_connector_hdmi_init_funcs() became unused, hence drop
+>> it.
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 3 ---
+>>  1 file changed, 3 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> index 7b2aaee5009ce58e6edf2649e2182c43ba834523..1e32694041277a541f0f8941d9c35e8ca9264599 100644
+>> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> @@ -207,9 +207,6 @@ connector_hdmi_init_with_edid_funcs(struct kunit *test,
+>>  	return priv;
+>>  }
+>>  
+>> -#define drm_kunit_helper_connector_hdmi_init_funcs(test, formats, max_bpc, funcs)		\
+>> -	connector_hdmi_init_with_edid_funcs(test, formats, max_bpc, funcs, NULL, 0)
+>> -
+> 
+> Oh, so there's still one we don't need.
+> 
+> I really don't like that back and forth. I think we can avoid it by doing something like:
+> 
+> - Create a common __connector_hdmi_init function out of drm_kunit_helper_connector_hdmi_init.
+> 
+> - Add an EDID parameter to that common function. The API of drm_kunit_helper_connector_hdmi_init and
+>   drm_kunit_helper_connector_hdmi_init_funcs doesn't need to change at that point.
+> 
+> - Create a _with_edid_funcs macro. Note that only that one needs to be a macro.
+> 
+> - Convert the users to _with_edid_funcs, and drop drm_kunit_helper_connector_hdmi_init_funcs.
 
-Add entries for the various addresses that I have been using over
-the years and remap all of them to kernel.org alias.
+Ack, one question though:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .mailmap | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/.mailmap b/.mailmap
-index 4f7cd8e23177..0326d5e75012 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -685,6 +685,8 @@ Simon Wunderlich <sw@simonwunderlich.de> <simon.wunderlich@saxnet.de>
- Simon Wunderlich <sw@simonwunderlich.de> <simon@open-mesh.com>
- Simon Wunderlich <sw@simonwunderlich.de> <siwu@hrz.tu-chemnitz.de>
- Sricharan Ramabadhran <quic_srichara@quicinc.com> <sricharan@codeaurora.org>
-+Srinivas Kandagatla <srini@kernel.org> <srinivas.kandagatla@st.com>
-+Srinivas Kandagatla <srini@kernel.org> <srinivas.kandagatla@linaro.org>
- Srinivas Ramana <quic_sramana@quicinc.com> <sramana@codeaurora.org>
- Sriram R <quic_srirrama@quicinc.com> <srirrama@codeaurora.org>
- Sriram Yagnaraman <sriram.yagnaraman@ericsson.com> <sriram.yagnaraman@est.tech>
--- 
-2.25.1
-
+The common function and the macro should be part of the same patch, or
+you'd like to have it split?
