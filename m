@@ -1,228 +1,135 @@
-Received: from SLXP216CU001.outbound.protection.outlook.com (mail-koreacentralazon11021134.outbound.protection.outlook.com [40.107.42.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D656F1C8633;
-	Thu, 10 Apr 2025 01:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.42.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744247325; cv=fail; b=CbqZzoUsj8eIXyG4KJ/dn9LyrY1rkwSxUAd4rrwY15Q+qbPGnm3HNFfeQ8H+EN8QWl01oaSWYr6AJiekIZrlF/xpQBWa65VoWV50b03AzYL6d8hqoXuNHsbeH+w5wP+Q70KF28eAQxR5VrSKTE9Zno4XIJpPsmSMLEaXbXPuXG0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744247325; c=relaxed/simple;
-	bh=xg/PA/9gRUsESu99tTSwUeXsaGFNFWmJRfwJNaKyy9Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mlqNm6fK6wWZKUfURS3D5uJ0fgEjot87QxhDLk4vjzJe+wyYkfUhwIcJ9wREuGqpJbL9eVzkblCxa5hnqPqzaC0Ov7tSvkKseCyVuDq7ZVg4xbClYh1PygJ5FgCQxCeVtT7gwhlSx38JSj6gW4nu0eKJMRGzi4SANmWdEv8cRLU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=fail smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=I4esTL8+; arc=fail smtp.client-ip=40.107.42.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=chipsnmedia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C2C81ACA
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744247460; cv=none; b=RSKo8SvNKGoegTBhGbCKtgowtPuTw7QTf9rsMMYgMdF463kNuIeRSzxMKJgbIZZQb7d+NkvHvoDNXBqHEXXK6z9FZJTtJRFxAhwHpM4jtdtpU1QAlMKbO9Zxj9uDxRCPF1vMLyjhnLRGQvxYtGcOoqdWEtvsL4k6CCSFv3swTuU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744247460; c=relaxed/simple;
+	bh=4zZXmOT4G5ENrNqVshmx9q3+5vFS9ePvw6JwQw07jlA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZpvuEQb1blnGDH9MvSQ0HvrAz2Sl1oVaVKphxdtzqm8pMjkrgyWi0cIlsIjxnsenAVWStsJWo41kGG4uKNZaqI7HuYZqEdPHM29DGJeYoo9vLkG4FkT1TQdRzncva1bLCTRwBa9cr57280wHb4RdQ91tXInKGYA7svAMSeaxFsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=KHnYo+2N; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="I4esTL8+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MNQ7O7dJSGLAdF+8wxVRyGoncEQHiKE5/YoilzjunW4nbyb19nboFK/slwD9u+/PdmYk0MY10sbHMA6O986ryTDtdz4cj4dKdjFWN4CEeIwnkhyJOYuyYYH7E8zEoX1DeM8f8ttMhRT4HzyA6+mEeiJcffXce6+Pfzg67StolFCC77wMLDmf+emr2VaABnIfzJfbjJGCYmymotkLWRTB6/iAQR3WoEyb94WM3D5vLQA4uYXQVgQ3Q1PXMjj59ylCtwRZ64A24XjTKkkEl7BpWrZ26Jf8/KWQ53O+xvG7VG/KzfcLHTAIhICtFOr4M/dCfUngp/ESMedqtZ/CdA51GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0FT1C53ahmCMpbiN6CEJD58lrxkwXSk8IKWpcgRM+nM=;
- b=sGRtpXTpYeJmEe+ctvPfsV1X95wSWgj79rMwBZ3PUYXQm+epr7pJJveUJCA9tmAQ6FCJ24M+/bHTJ1/iuGaX4Rh13YzFM82N4DjWRT0d/Fb6R+j35d4c7H8oqg2c13btJ8Ge6XK3frj4FbkDMVKQgjc0ntVxH3Ibas9N2qsfxGHU7Me08IYtaUV4LBxDgA9X7hvtSzxQgtPMNFhv4s0FBD2aDV6ar7bLghBkz/F5+ndhNbq32nDFWNgaJZjFhKgyYgLBvMkjOFSqe9ovWTrmwimi70HCDIXeakU80TC0/uABuLBVf84urOmEJBSgHuXQPeih9LCuZ+Wj30S0fkN2qg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
- header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0FT1C53ahmCMpbiN6CEJD58lrxkwXSk8IKWpcgRM+nM=;
- b=I4esTL8+hx7nLq1Heb5jGEfuMOhTt7aTUSsJDT9nMlVpRn0MhYcU3agR8vQHB9wVemoL4QdWXFJ5H1E9HWcBbjZI2ftlNhPx03Nk0Xsqvr2g9y0J/nLGyA6STSN7FsktNrA2UHyF6JE9Y/xy6EXdFQ3Jm2GRmiyiMBQYuYPn5lY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
-Received: from PS2P216MB1297.KORP216.PROD.OUTLOOK.COM (2603:1096:301:73::13)
- by SL2P216MB1403.KORP216.PROD.OUTLOOK.COM (2603:1096:101:32::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Thu, 10 Apr
- 2025 01:08:33 +0000
-Received: from PS2P216MB1297.KORP216.PROD.OUTLOOK.COM
- ([fe80::d095:716:2d14:f386]) by PS2P216MB1297.KORP216.PROD.OUTLOOK.COM
- ([fe80::d095:716:2d14:f386%7]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 01:08:33 +0000
-From: "Jackson.lee" <jackson.lee@chipsnmedia.com>
-To: mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl,
-	sebastian.fricke@collabora.com,
-	nicolas.dufresne@collabora.com,
-	bob.beckett@collabora.com,
-	dafna.hirschfeld@collabora.com
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jackson.lee@chipsnmedia.com,
-	lafley.kim@chipsnmedia.com,
-	b-brnich@ti.com,
-	hverkuil@xs4all.nl,
-	nas.chung@chipsnmedia.com
-Subject: [PATCH v1 6/7] media: chips-media: wave5: Reduce high CPU load
-Date: Thu, 10 Apr 2025 10:08:20 +0900
-Message-Id: <20250410010821.52-7-jackson.lee@chipsnmedia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250410010821.52-1-jackson.lee@chipsnmedia.com>
-References: <20250410010821.52-1-jackson.lee@chipsnmedia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SL2P216CA0151.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:35::6) To PS2P216MB1297.KORP216.PROD.OUTLOOK.COM
- (2603:1096:301:73::13)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="KHnYo+2N"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bbead793dso238906a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 18:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744247456; x=1744852256; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ufe1zC4mIZ9KkFKqcvzjMiU58CZ1PL6NJI/ZAbE/kqA=;
+        b=KHnYo+2Nz1EYxRAiRHemlRHQSqGApk0BlVz9YxVGuvcErtQwTJ4EhhsZ5ycIIRsSem
+         SGmLKUXLfTh+ELcLiX3ut/LZvHVJJ1TbOxiM+9aEVQqdmuFcrufkxG8E9VQjojda2OHP
+         g+Y2dVj27oIf5IABJXYRgIq03nhYwthy+fl9/o6leogap2b/VdrYN3jyJqdzxavGV/AN
+         1jxZYpj3As94XL5U996IV4tM2F99s2WT4YfTcEf5C5IW5v3y/lS8Zr9bRscYEOd6u7i9
+         75aRoIQr0HvoraSE2nEk44f8j8W7/q+ES5Di+x5BnZSvCudTdV8cnqmaJaULNV22BnWT
+         /qPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744247456; x=1744852256;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ufe1zC4mIZ9KkFKqcvzjMiU58CZ1PL6NJI/ZAbE/kqA=;
+        b=KyNfZLgkfmB+3eK2gdPXHo9Rnk6vck/TUZgST7jzaLakO5//0M+DQsmdhNB30RWEhQ
+         eMx1xthCxBMVt/d6/8ACpw5wdc+coWm2jAHOc9N6u1pKPcgVIshCJqmKeHrNVi2xDJHc
+         ZdR+8wPLbKn0MWZUtfx9pQK1GIQ2bwa7fA4m1cUhfYGQYivbvmxSqa2XfmYhC+ySkJ46
+         UMnfjh9UNsztET0MPySsst+Nm/+R5PkTxowHUwZjST7zLKlkCqT2GlfWr6D0MRLAftnE
+         cd/I6fxCrWJQ7NzdBKKAC6RusWLQnXFyecknUu4Cs2j5Ha6pJ0I6we7jbCbKTnS3sSIb
+         mYMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXE6KuE/+vCNBXtXLw9h2C65P20I/fGluDLOaWlAZ+2lkM1/IInGK3M/2ZoZE3Fl6p1yQ4D0lIyckTK278=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEzkjU23D3FEd1Xm+J8EbLwliC73A6aNLnESXaQ5jbRRB+mUbD
+	rF7jqNk4U3/uyvl6XO0Y0GwEdta8g+ya6mG8eFXnh64U5Ul2OJaOB2aCMZfdETc=
+X-Gm-Gg: ASbGncuZhZcOh6hrtv0v5oRUk4ZKMTraOn/avTqDoLv3q5O53GZ6bw+5B3DJwKNPpF3
+	wvFshuCmbafliAcUowsMA/pFH2XJ4fLKnf9VXc7idk7gM8GcTdZ/exsjJxlzaU2qyy8FjANo8XQ
+	7IJg2P+M7bCG7AuF/UxGhno7HXLdgnIeeUpxucOT1iUZDwPcpLklMkHxpVQKliFu52e3SKAiME1
+	Eulueh1cDK7MRl+2XRt9UNgg/6vqLl5gZ1FTcz7AnZeY9MKrMpCwlwUs+0463ZZsUQjnwXuscQu
+	d31khWIOJIyLkL4CtIpaFmwXCXtuqypP5bmroDRl/4ab/VCVoI5KrE4V4oqgyAY72fTPdQW4WtF
+	3ntoz
+X-Google-Smtp-Source: AGHT+IFevsC4sF9gcAaFeEjZSUjvU9SNPUbcIg3nnlkWLdpmBSAknJMYmP8QUt9yMWwVqLYOtLE6Ow==
+X-Received: by 2002:a05:6830:2aa3:b0:72b:940a:a7c9 with SMTP id 46e09a7af769-72e7ce2a553mr338735a34.27.1744247456270;
+        Wed, 09 Apr 2025 18:10:56 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e4d81dsm396029a34.54.2025.04.09.18.10.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 18:10:55 -0700 (PDT)
+Message-ID: <a8e5adca-8eff-4bbb-a7fa-ce4489b63fa5@riscstar.com>
+Date: Wed, 9 Apr 2025 20:10:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PS2P216MB1297:EE_|SL2P216MB1403:EE_
-X-MS-Office365-Filtering-Correlation-Id: d34d0939-3e35-4106-2050-08dd77cc36cf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FnXuwcqR4DXRAg/WS26Q8FVDiHHBva/fsM9eZoUBI3Q5d/LnSWMMymNVWC9s?=
- =?us-ascii?Q?RbMNM6zf6wq3elnt82aBt1wuJrGFjsCgxlXMetcxFl0wS5Zo8wPECJbIMX9S?=
- =?us-ascii?Q?44os5TumRPvpruyxn+IhtZX1HcMAr9NYYFtj1FD+EWDsLnk+j2JRLS6f91+v?=
- =?us-ascii?Q?hyNUn4kgrLn73wfW3Vp4YFQ15HatlKFEVVwpCOqvs91trQOsFv2tDjlhiO74?=
- =?us-ascii?Q?eT9ERQ1kgU0KJCL+di5IdCVj3uQl5cb7AluYTSxHv30Ixz6gYiyGr8GwAQ2n?=
- =?us-ascii?Q?RN75nby548keNN1XBmIPlQNKtOuGJrpCoC3muQ+FWrcP6HBRrylNZrjzyC3A?=
- =?us-ascii?Q?erguMERVwsl/f8CCCNvbbgp5oZQUp43OYx8P9ymGVWLdxZHeHbEHAav+dmFg?=
- =?us-ascii?Q?tUUcPHrP9Z2NOFw8+ICztjyN9ek/WZNPpD1xpalJjgcyhGpIrDoChSxE4G0u?=
- =?us-ascii?Q?Jcb4CPGPJ75EEtFANBsW7mUhIzFgDtnxFq2JPOgjWxwh/4gd1xp6/kfs8gZj?=
- =?us-ascii?Q?ZzdgKyX577ZGaWgGYCi91s1E9qbtKfFiFAQNNL/FSKIN7nyvWIRr8/gQU5l1?=
- =?us-ascii?Q?6mO6im9C2RmcfScLyklMYd2Ll2bnkcWmmroOS5mwv1kvY/mwYPenDn0COylQ?=
- =?us-ascii?Q?pLxXJhOdOjK+akvLkGY90IHzOtdk4vmCPKqlHf3My0LYkRhY4K1Kuoyi1mP9?=
- =?us-ascii?Q?FQVLh0jiQrT5iN7R320hqbj5MjtqKpqFO1DzQxHS9oInfuwqx31JROVAiUSV?=
- =?us-ascii?Q?LZgqxkes2fDLa/6BPGNADT3gMBSMqHPOnOxHIq+os5WlZG7nr86a3esWjAr/?=
- =?us-ascii?Q?gp82BgEXtdcYJIGcvxkhv2bAFD2BDc/tFxBdrPQYvGpPOsrBIkUNZLJ7bFes?=
- =?us-ascii?Q?36n+UsUEzHezXL3l8Uw0AOcvA6XrJZbyLFlWaycrfcU/47OAE7lJzcsqXNlq?=
- =?us-ascii?Q?q193Hv8t2Kpj6zznTTUl7A6Z0IumfPPejmSgCxCmJq0wrcciGNkjobC/vtUM?=
- =?us-ascii?Q?ExMNP6sZkLnxrVs3N46vckU5oJi6b101zc0nJ+iAW5sVacECTc1oSA4JJ14r?=
- =?us-ascii?Q?O3r899ckocgyuRotv/TPFA3va0ZFCS3znqgFnAVBuUcAdIWTeVTuJ5e+e7gB?=
- =?us-ascii?Q?PZSXP2jh4povNNGCCgiHmDmrQ16oN4x2LES7Cd0gI0jxGEV5TRlkBvvhLM+E?=
- =?us-ascii?Q?D1RLow9mZJ1Y/+EH/OBGGz0XcyIQYX3CUxVCGJN/Obxu1f8vYU0Zt+XA106g?=
- =?us-ascii?Q?+R9rlNbZHysTcOH4UOjwQV9okClMw4xj9USlADRTsfDzMPZVE6KijA2MakyQ?=
- =?us-ascii?Q?4LvrW/RbQk0p2zkwjOWOR+fp+IDNKZS9fPKJEl3FV7jXfg7gRfOcVRbxeOY4?=
- =?us-ascii?Q?7DFxRVCrgLw4dKQtQo7/VrYr9mf94PP0ziaYUDUdqJFNC7ETspA3IvjhJr7z?=
- =?us-ascii?Q?MJ3oo+hfDaUQVeH9uKgdiv5r4orxgO1Sdy8yMrk//mfA9Zfr6gHwvw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PS2P216MB1297.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?e7C/o6/nLLPjh3DJLxfQz/iqz0dD/muUrPxAZK0MyNexYaMx0bt/ygTB/l35?=
- =?us-ascii?Q?mhjNWFOIib3Mof2rQA1Hk1imwj/d8OgSNttcFeQXw7nHRMj21rGhdd+l6qk0?=
- =?us-ascii?Q?+UWTJEAb+PWrQxI2nlRVms5Mh+NzN1wyAk0Nqs+TW2SHD8MNSzwOcs7IsGgz?=
- =?us-ascii?Q?rELg28p7cJOEx7jKVVss3J2Hk/JCz/e+xZShYAFFNb18SUHf4nvseCUC1kbl?=
- =?us-ascii?Q?g4mcacCmExGcX9J6kCpwK6+sapydVAkdCkIVSr3+dbVlmFRcAZK68cyujmJg?=
- =?us-ascii?Q?ewxB7Ywm3WqeS1+NxCYqhJLjICeib6Y6TKmU30hyqU3yJmhyBMwOu5Hwwvwg?=
- =?us-ascii?Q?D1+Qi2l70V2PxuDfgMkv3UuKeVlU/NfWo5EL9jKyvAZh63u3eKKO2QOKSaRj?=
- =?us-ascii?Q?quwxwbmBbdL9LfU+kW8bokQ/Djyr7EP6F+rDUR7uwXV35O4u9JJCNRKGiLJF?=
- =?us-ascii?Q?HG5P4A/KT+Km1+pOSuTk1hBAHAsBZNDw8jit7CXU4OVRqR0KqYWfqbx38W9z?=
- =?us-ascii?Q?LVzz2BFBoONXjgvE82fqXIUJ92j1LOI8rfHIS4CPP5ryVVer4SkDrOpHUTln?=
- =?us-ascii?Q?UkGURfICFrg+bmKR8Xh2StxsIAzZNfH/BRjYqLy9XcNE+9anP+a8OHvm5510?=
- =?us-ascii?Q?W6F9dOAgT1XKUdWz0IvE4rpWo33ZNei6/iRq0iqcK7qKQX2aytSzsTv5rj4f?=
- =?us-ascii?Q?mFx5gphZNMX6LkyAgQdpid83osDZ+XuGBDq8rutMsTgYiXpsWnpZU06DKA2r?=
- =?us-ascii?Q?aK32Sa3rAWAdSLu5Ss9XPyljbgPQaTavD841MXdHNSOuTBLSLzHbnte05OI8?=
- =?us-ascii?Q?OJvlDIoSiEttGSySbwy3sZRuilu4ep3LhJshI3TufTX4ciO7BrgvlKSKr+Fw?=
- =?us-ascii?Q?oCUbDjTPl/lqV7rBk3YJlfJBnMDZJgZ+qeS0MmxkB25X+vO4lxJ/12FcuIM5?=
- =?us-ascii?Q?o+1b9nn70yi2ChWdyMT4z/6WLEZOfGzy+4rU2CINXaZjOQAB3f37YkRNQF/G?=
- =?us-ascii?Q?5WvjQxcAof9YQeuYt/S2HnRjcv2dH/H2Ga5bi6EtHFkOwHZQiISPDQBA18Nm?=
- =?us-ascii?Q?n8/3YDdrK3TD0ib9K6T6q5EivgCz+CCLtcqTBtzi2AKNMygnjpsAFCBa+W7i?=
- =?us-ascii?Q?1nMZyZYcAgATpejszR7q8MFe4VuVtlNHmJGZVKLzEinHg/W4kGyyUZOnm3nR?=
- =?us-ascii?Q?Yv/LS8MAb7vYxf2pm+Dr2ZBGRcc9Bx+4C63toUYMVFHtcnqosRMWo2fW3xvV?=
- =?us-ascii?Q?1ZKE7FXaGVK3VHCBINPFwKz6hI849Kp+GIG7E4iCXP57pu4UC/79OPMBKuE5?=
- =?us-ascii?Q?Ajw7faKV8WLa6MQthHeeH0Z+boygvEvrR5Sd8vMwOIfCRt5xAQwhdpAu2Eft?=
- =?us-ascii?Q?tk/2pEnCqRJ6eIyszWPDgP8fpti94OqHWMFkWaWtZyJ/GXj9P/Jva4RrBpiZ?=
- =?us-ascii?Q?QjznDjwA9NbPavfZ+8n9LserdlGngd/03MLPjN15IWmzaDaQ34g4SJb/+vYO?=
- =?us-ascii?Q?psQlYuJPe0B/ZZPMuvs1jxpgE2gE0GIYv2LGlhJdrZ0okhiMg67H4ACW00Xk?=
- =?us-ascii?Q?cRyTOFEWBMiwJtGgwnVxlWa19cZximDAybgx85mSWb/KXnS6QNDIi5MPP52I?=
- =?us-ascii?Q?Nw=3D=3D?=
-X-OriginatorOrg: chipsnmedia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d34d0939-3e35-4106-2050-08dd77cc36cf
-X-MS-Exchange-CrossTenant-AuthSource: PS2P216MB1297.KORP216.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 01:08:33.4614
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8Ewq3Q4lKd8qgtMnXbeyOAWCfhpm2NGeaWb8wVeDzE14R1HX+n9EB0O97v2xIENbcF4803mLn8XbHviji5/eYqjB4dURZukbpc8pfdp7ArA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SL2P216MB1403
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/6] clk: spacemit: Add clock support for SpacemiT K1
+ SoC
+To: Inochi Amaoto <inochiama@gmail.com>, Yixun Lan <dlan@gentoo.org>
+Cc: Haylen Chu <heylenay@4d2.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Haylen Chu <heylenay@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, spacemit@lists.linux.dev,
+ Inochi Amaoto <inochiama@outlook.com>, Chen Wang <unicornxdotw@foxmail.com>,
+ Jisheng Zhang <jszhang@kernel.org>,
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
+References: <20250401172434.6774-1-heylenay@4d2.org>
+ <20250401172434.6774-4-heylenay@4d2.org>
+ <8fe0aaaa-b8e9-45dd-b792-c32be49cca1a@riscstar.com>
+ <20250410003756-GYA19359@gentoo>
+ <dm4lwnplwcxj3t3qx3a3bdxtziowjfoqdy4vrd3ahmzkhejrov@fa5rujatatew>
+ <z27ri5eue43ti6b2te2cbxiow66mtgbnyudoo5cs4quabgbx5r@uipzoxvfoysi>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <z27ri5eue43ti6b2te2cbxiow66mtgbnyudoo5cs4quabgbx5r@uipzoxvfoysi>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Jackson Lee <jackson.lee@chipsnmedia.com>
+On 4/9/25 7:57 PM, Inochi Amaoto wrote:
+>>>>> diff --git a/drivers/clk/spacemit/Kconfig b/drivers/clk/spacemit/Kconfig
+>>>>> new file mode 100644
+>>>>> index 000000000000..4c4df845b3cb
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/clk/spacemit/Kconfig
+>>>>> @@ -0,0 +1,18 @@
+>>>>> +# SPDX-License-Identifier: GPL-2.0-only
+>>>>> +
+>>>>> +config SPACEMIT_CCU
+>>>>> +	tristate "Clock support for SpacemiT SoCs"
+>>>> I don't know the answer to this, but...  Should this be a Boolean
+>>>> rather than tristate?  Can a SpacemiT K1 SoC function without the
+>>>> clock driver built in to the kernel?
+>>>>
+>>> I agree to make it a Boolean, we've already made pinctrl driver Boolean
+>>> and pinctrl depend on clk, besides, the SoC is unlikely functional
+>>> without clock built in as it's such critical..
+>>>
+>> I disagree. The kernel is only for spacemit only, and the pinctrl
+> Sorry for a mistake, this first "only" should be "not".
 
-Since applying changes for performance improvement of decoder,
-there was a problem related to high CPU load.
-CPU load was more than 4 times when comparing CPU load.
-The root cause was the device_run was called many times even if
-there was no bitstream which should be queued.
+This is a general problem.  You can't make a bootable
+SpacemiT kernel unless you define this as built-in (at
+least, that's what Yixun is saying).  But we'd really
+rather *only* build it in to the kernel for SpacemiT
+builds.  You clearly want to minimize what must be
+built in, but what if this is indeed required?  What
+goes in defconfig?
 
-Signed-off-by: Jackson Lee <jackson.lee@chipsnmedia.com>
-Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
----
- .../media/platform/chips-media/wave5/wave5-vpu-dec.c | 12 +++++++++---
- .../media/platform/chips-media/wave5/wave5-vpuapi.h  |  1 +
- 2 files changed, 10 insertions(+), 3 deletions(-)
+					-Alex
 
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-index 485320db9bdc..58340fddcd04 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-@@ -1280,10 +1280,13 @@ static void wave5_vpu_dec_buf_queue(struct vb2_buffer *vb)
- 		__func__, vb->type, vb->index, vb2_plane_size(&vbuf->vb2_buf, 0),
- 		vb2_plane_size(&vbuf->vb2_buf, 1), vb2_plane_size(&vbuf->vb2_buf, 2));
- 
--	if (vb->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
-+	if (vb->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
-+		if (inst->empty_queue)
-+			inst->empty_queue = false;
- 		wave5_vpu_dec_buf_queue_src(vb);
--	else if (vb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
-+	} else if (vb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
- 		wave5_vpu_dec_buf_queue_dst(vb);
-+	}
- }
- 
- static int wave5_vpu_dec_allocate_ring_buffer(struct vpu_instance *inst)
-@@ -1474,6 +1477,7 @@ static void wave5_vpu_dec_stop_streaming(struct vb2_queue *q)
- 
- 	dev_dbg(inst->dev->dev, "%s: type: %u\n", __func__, q->type);
- 	pm_runtime_resume_and_get(inst->dev->dev);
-+	inst->empty_queue = false;
- 
- 	while (check_cmd) {
- 		struct queue_status_info q_status;
-@@ -1592,6 +1596,7 @@ static void wave5_vpu_dec_device_run(void *priv)
- 				inst->queuing_num == 0 &&
- 				inst->state == VPU_INST_STATE_PIC_RUN) {
- 			dev_dbg(inst->dev->dev, "%s: no bitstream for feeding, so skip ", __func__);
-+			inst->empty_queue = true;
- 			goto finish_job_and_return;
- 		}
- 	}
-@@ -1737,7 +1742,8 @@ static int wave5_vpu_dec_job_ready(void *priv)
- 				"No capture buffer ready to decode!\n");
- 			break;
- 		} else if (!wave5_is_draining_or_eos(inst) &&
--			   !v4l2_m2m_num_src_bufs_ready(m2m_ctx)) {
-+			   (!v4l2_m2m_num_src_bufs_ready(m2m_ctx) ||
-+			    inst->empty_queue)) {
- 			dev_dbg(inst->dev->dev,
- 				"No bitstream data to decode!\n");
- 			break;
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-index fd0aef0bac4e..f2596af08cdf 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-@@ -821,6 +821,7 @@ struct vpu_instance {
- 	bool retry; /* retry to feed bitstream if failure reason is WAVE5_SYSERR_QUEUEING_FAIL*/
- 	int queuing_num; /* check if there is input buffer or not */
- 	struct mutex feed_lock; /* lock for feeding bitstream buffers */
-+	bool empty_queue;
- 	struct vpu_buf bitstream_vbuf;
- 	dma_addr_t last_rd_ptr;
- 	size_t remaining_consumed_bytes;
--- 
-2.43.0
+>> should also be a module. It is the builder's right to decide whether
+>> the driver is builtin or a module. In this view, you should always
+>> allow the driver to be built as a module if possible.
+>>
+>> Regards,
+>> Inochi
 
