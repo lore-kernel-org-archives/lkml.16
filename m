@@ -1,65 +1,81 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED81038F80;
-	Thu, 10 Apr 2025 08:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B29202F62
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272767; cv=none; b=aKs0lF8Xe88p/Bha4L477y5fpjbwrBG53VFwslARc2PZmclNWnSsm34QrXDwx2ZWWhi6Cva5bxaw2RYLJbB8G0y599J4ikKumq3dh64Esg1QqhUmy0FpOVZt6M3MRMOwBYsq2/ZhrnSyxeM/M0oFpVSayuS7VTHIkxvYh9PB2/M=
+	t=1744272775; cv=none; b=EmBNhCn/RaQNZb+dEl2BAsmo8BncW8RkUNIrb33asefyPRhb7KYRPlbgcGtdy7SOWNCGncn6YF+J8yeETdvdwWv4nu6wy2QpJqbDM6cz6RczkJM3Cjx0jaxineX8jn10ww/hFCbZHriRvdcWBk2oDz3Isua6l7vyBRATx6XIZoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272767; c=relaxed/simple;
-	bh=3AoGDgwNV7KMGShci6YGW6agw+iL/mF/817ug3TjIhE=;
+	s=arc-20240116; t=1744272775; c=relaxed/simple;
+	bh=JSRO87HqVO4bGSGMxleIYOVX6hrO09crH0pzJpUCGlI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iTFERKzDEDMZEWQpWTpEF0yJNR+wHFuttI8k9U60X8dpQnaze1e189WmwMJmXoezbeS6DxcDjJ+u7dAXGyIg4ob9LjVeuHOV4M+I3zAlRi26q+rpuRoiMUFsZvUTN0Rue/BYK9o9qIRhz4Z4G7Estuq3BEWT9deBff36Y/V0W3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bjDJKemL; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=DLofCHCI3Qfi42qvDqvjWaork8e+9PwXcl2ZfmbzxxnNcmT40FZQnf+BbFD//kAHDVrYh7sJXTMWcY7ClU+SHqTOyA3GlDS2taw1VFwhMbS0vT3yvw0hkhji/g9sKUWf199bNQJrKo7zmjHKl5krzpD3zicHWySNp/dowq2UWtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dk8qpuyw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=svQQQJ+M; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dk8qpuyw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=svQQQJ+M; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjDJKemL"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5497590ffbbso519154e87.1;
-        Thu, 10 Apr 2025 01:12:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744272764; x=1744877564; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Grl2X0AdNCCi9R+lafeqWzTVoLK8D9dH81pG+O46x74=;
-        b=bjDJKemLa40gTOGc+AnJ7saXosPCiYvAKRihVooLxIKnzaF5OEdt1czDi/eicyhDij
-         NV3OpQDdiVC5qOEowIE2Y2c7+8de8ar/frrvwzVT74hmmub+zqwFiA8dpMEPy7kSYoqo
-         WkCdRpeEOzkCd1InxtdR0ze4wuEfigh4zujHQWHMAbpLQZKWJBNmh7ugNDxkS4W50DVC
-         Zi3NP1BV06iNILMSRAqUaBKI5wxbrI24uqOiSTTuxxKgMuL3IvTMcmmvAc6xYo8C/jaC
-         EwCuLiVW+V7/T1aPGvDWw07fHyEBrDcpqZRHoSg9rjkzu8IN5Ht7aLWH5Fk+1crkRcJF
-         zbwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744272764; x=1744877564;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Grl2X0AdNCCi9R+lafeqWzTVoLK8D9dH81pG+O46x74=;
-        b=j33YVol8s29Y8ts48Hc2dm213UWhhwhvjQ/qR4C/Dh0Uo+dVq5lZxXbz4XGZVvf9Cb
-         BYUxS2B7VySO1pTr0DtsoldcBWi80TNnSxORGh8nOvyB3RKrRQwe+PxaxtxPc4/hdv2n
-         rEda4wMslb5wruUrjtrffXbZ9L6GuLnuwdScXDL0EmGh6yvkgFFkhFv9Zmfz/lEr8Hpt
-         RVRnC0CvVeK/WCbhpQ41Y91NZym6b0HBTo/btnnx/dgMGMaSQvMmhMqxoH+7nG+mPECC
-         oPuFQ6e+jg7j7RZsbAIbhRdOwiLXuS7z9wmmDxM66p4F8fQvQVNB3hbM3FlKyyM1QJYP
-         6mpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvv+AEWAVhU1qwJoc5QeF3ZKZS/AuEGE4TQi+nEDlIBpyg4Cufg6mkeX9YBAQgnVt0ZravTvQJmNNA@vger.kernel.org, AJvYcCVccEeq7z6dpCJSSkVbCeuGB3qmL3akRE2e4k8kuR21BNGj5HDjM31b4BjU6a9NCXMoJkF8TVVBkAFOL2VX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLdkbCwzubhKVMDRqTgj9N8fULSbjbcpKmpIFipMnXXbbdyzkA
-	AJbyKPWz7NTKJDN5qM6Hq/nwtKnxJZriC4TiKE4RYIYU33PdtER/
-X-Gm-Gg: ASbGncspvjzeuc1P6lsmI8e+P5rxcvTWmgGZH4jS2GACnAeENBw+idNaguWGB+x+Job
-	mGq2mp2c0gOr8nBNQoGPrk84TQXDtTGPDA4EeG9OeYiNjM5bErwWjyA97bGplaaPFkN4dp1zonO
-	JhNDb8TLB8cA/8DgKB1Ml+PgdqDspYIxVa/fYYmvSM5AtIEfIKA7OdTOcjUfEOEBHdm/6iloK4y
-	ua5pm+vvKQFaq+H6WJwt+1GLnx53MNScmA51I7uht9tA3d9XUcCmTppITA11+Oc3zO8NVNi+D5d
-	QRelmxHPJb9Ey+bPgTTB8e0BzuMAijGB26hTl1dtI3GwtX6BYR7q5SDfd9y/gjVzSaHoJWCDh+v
-	WDGU227pnsuUN9DJLVHT50A==
-X-Google-Smtp-Source: AGHT+IFWmbEOh1Nr1upe9f78hm2o5YATKFuyEjVt78HlmgXqCdbv9VFkmZ3/3po0lLSijlz1ag+8lw==
-X-Received: by 2002:a05:6512:158d:b0:549:8f06:8229 with SMTP id 2adb3069b0e04-54d3c64a477mr420491e87.49.1744272763705;
-        Thu, 10 Apr 2025 01:12:43 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d5035c9sm71061e87.125.2025.04.10.01.12.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 01:12:43 -0700 (PDT)
-Message-ID: <ea291459-5c25-40bc-997a-490fe2a42a12@gmail.com>
-Date: Thu, 10 Apr 2025 11:12:42 +0300
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dk8qpuyw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="svQQQJ+M";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dk8qpuyw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="svQQQJ+M"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0382F2118B;
+	Thu, 10 Apr 2025 08:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744272765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bhnrev0ra4PwSkpyWtVkGoW6BWZCtaecoXBOEh9FMgo=;
+	b=dk8qpuyw27rmjYdfkloqA4RH91rSbf/EEfazfHTiFw88VwkZMhSg79oDsu/saFEmM67X34
+	KYn1kL/M/tTkrqiYU0ZCFYVHpZBLjrAu6sfSCKhUS3/UzIdBaurF2flLvOIHRVMmC+B9DD
+	fuQaEHLVgsjUT+tLHUmFpJvKrNSjV7Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744272765;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bhnrev0ra4PwSkpyWtVkGoW6BWZCtaecoXBOEh9FMgo=;
+	b=svQQQJ+Mv3at12FsHgpdGsUm369PuMtGX7NoIuoTIFdCJDO2+QC9mVj9WfoRSifQGOsg00
+	W1y0yfavdFIPtQCw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=dk8qpuyw;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=svQQQJ+M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744272765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bhnrev0ra4PwSkpyWtVkGoW6BWZCtaecoXBOEh9FMgo=;
+	b=dk8qpuyw27rmjYdfkloqA4RH91rSbf/EEfazfHTiFw88VwkZMhSg79oDsu/saFEmM67X34
+	KYn1kL/M/tTkrqiYU0ZCFYVHpZBLjrAu6sfSCKhUS3/UzIdBaurF2flLvOIHRVMmC+B9DD
+	fuQaEHLVgsjUT+tLHUmFpJvKrNSjV7Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744272765;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bhnrev0ra4PwSkpyWtVkGoW6BWZCtaecoXBOEh9FMgo=;
+	b=svQQQJ+Mv3at12FsHgpdGsUm369PuMtGX7NoIuoTIFdCJDO2+QC9mVj9WfoRSifQGOsg00
+	W1y0yfavdFIPtQCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DD0E6132D8;
+	Thu, 10 Apr 2025 08:12:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VhiYNXx992d0BQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 10 Apr 2025 08:12:44 +0000
+Message-ID: <18217ade-4ac4-4654-9c25-d6b65e6c23e5@suse.cz>
+Date: Thu, 10 Apr 2025 10:12:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,115 +83,117 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/14] Support ROHM Scalable PMIC family
-To: Lee Jones <lee@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
- <20250410075817.GN372032@google.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250410075817.GN372032@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/2] mm: page_alloc: speed up fallbacks in rmqueue_bulk()
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Brendan Jackman <jackmanb@google.com>,
+ Mel Gorman <mgorman@techsingularity.net>, Carlos Song <carlos.song@nxp.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kernel test robot <oliver.sang@intel.com>, stable@vger.kernel.org
+References: <20250407180154.63348-1-hannes@cmpxchg.org>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250407180154.63348-1-hannes@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 0382F2118B
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,intel.com:email];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 10/04/2025 10:58, Lee Jones wrote:
-> On Tue, 08 Apr 2025, Matti Vaittinen wrote:
+On 4/7/25 20:01, Johannes Weiner wrote:
+> The test robot identified c2f6ea38fc1b ("mm: page_alloc: don't steal
+> single pages from biggest buddy") as the root cause of a 56.4%
+> regression in vm-scalability::lru-file-mmap-read.
 > 
->> Support ROHM BD96802, BD96805 and BD96806 PMICs
->>
->> The ROHM BD96801 [1] and BD96805 [2] are almost identical PMICs what comes
->> to the digital interface. Main difference is voltage tuning range.
->> Supporting BD96805 with BD96801 drivers is mostly just a matter of being
->> able to differentiate the PMICs (done based on the devicetree
->> compatible) and then providing separate voltage tables.
->>
->> The ROHM BD96802 [3] is a companion PMIC which is intended to be used to
->> provide more capacity on systems where the BD96801 alone is not
->> sufficient. Startup sequence of these PMICs can be synchronized in
->> hardware level, and there seems to be some mechanisms which allow
->> delivering the companion PMIC (BD96802) status to the main PMIC
->> (BD96801/BD96805). This patch series does treat the companion PMIC(s) as
->> individual PMICs and allows using them from software point of view as a
->> stand alone ICs. From the digital point of view, the BD96802 is a subset
->> of BD96801, providing only buck1 and buck2 regulators. Please see the
->> data sheet
->>
->> The ROHM BD96806 [4] is similar to the BD96802, except that it does also
->> provide different voltage tuning ranges.
->>
->> This series adds basic voltage monitoring and control as well as a
->> watchdog support for these PMICs using the BD96801 drivers.
->>
->> Similarly to the BD96801, these PMICs too have a few configurations
->> which can only be done when the PMIC is in STBY state. Similarly to the
->> BD96801, doing these configurations isn't supported by the driver. The
->> original BD96801 RFC [5] driver should be able to cover those
->> configurations, if modified to support these models.
->>
->> [1]: ROHM BD96801 data sheet:
->> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96801qxx-c-e.pdf
->> [2]: ROHM BD96805 data sheet:
->> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96805qxx-c-e.pdf
->> [3]: ROHM BD96802 data sheet:
->> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96802qxx-c-e.pdf
->> [4]: ROHM BD96806 data sheet:
->> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96806qxx-c-e.pdf
->> [5]: Original BD96801 RFC:
->> https://lore.kernel.org/all/cover.1712058690.git.mazziesaccount@gmail.com/
->>
->> Revision history:
->> v2 => v3:
->>   - Fix BD96806 voltages
->>   - Use defines for voltages to ease spotting (copy-paste) errors in
->>     regulator descs
->>   - Use lowercase node names in the BD96802 dt-binding
->> v1 => v2: MFD driver changes after review by Lee
->>   - Use enum for chip type instead of picking the data directly from the
->>     of_match_data.
->>   - rename "chip data" variable 'cd' to more widely used 'ddata'.
->>   link to v1:
->>    https://lore.kernel.org/all/cover.1741864404.git.mazziesaccount@gmail.com/
->>
->>
->> Matti Vaittinen (14):
->>    dt-bindings: regulator: Add ROHM BD96802 PMIC
->>    dt-bindings: mfd: Add ROHM BD96802 PMIC
->>    dt-bindings: mfd: bd96801: Add ROHM BD96805
->>    dt-bindings: mfd: bd96802: Add ROHM BD96806
->>    mfd: rohm-bd96801: Add chip info
->>    mfd: bd96801: Drop IC name from the regulator IRQ resources
->>    regulator: bd96801: Drop IC name from the IRQ resources
->>    mfd: rohm-bd96801: Support ROHM BD96802
->>    regulator: bd96801: Support ROHM BD96802
->>    mfd: bd96801: Support ROHM BD96805
->>    regulator: bd96801: Support ROHM BD96805 PMIC
->>    mfd: bd96801: Support ROHM BD96806
->>    regulator: bd96801: Support ROHM BD96806 PMIC
->>    MAINTAINERS: Add BD96802 specific header
->>
->>   .../bindings/mfd/rohm,bd96801-pmic.yaml       |  10 +-
->>   .../bindings/mfd/rohm,bd96802-pmic.yaml       | 101 ++++
->>   .../regulator/rohm,bd96802-regulator.yaml     |  44 ++
->>   MAINTAINERS                                   |   1 +
->>   drivers/mfd/rohm-bd96801.c                    | 565 ++++++++++++++----
->>   drivers/regulator/bd96801-regulator.c         | 455 ++++++++++++--
->>   include/linux/mfd/rohm-bd96801.h              |   2 +
->>   include/linux/mfd/rohm-bd96802.h              |  74 +++
->>   include/linux/mfd/rohm-generic.h              |   3 +
->>   9 files changed, 1073 insertions(+), 182 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
->>   create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96802-regulator.yaml
->>   create mode 100644 include/linux/mfd/rohm-bd96802.h
+> Carlos reports an earlier patch, c0cd6f557b90 ("mm: page_alloc: fix
+> freelist movement during block conversion"), as the root cause for a
+> regression in worst-case zone->lock+irqoff hold times.
 > 
-> This set good to go now?
+> Both of these patches modify the page allocator's fallback path to be
+> less greedy in an effort to stave off fragmentation. The flip side of
+> this is that fallbacks are also less productive each time around,
+> which means the fallback search can run much more frequently.
+> 
+> Carlos' traces point to rmqueue_bulk() specifically, which tries to
+> refill the percpu cache by allocating a large batch of pages in a
+> loop. It highlights how once the native freelists are exhausted, the
+> fallback code first scans orders top-down for whole blocks to claim,
+> then falls back to a bottom-up search for the smallest buddy to steal.
+> For the next batch page, it goes through the same thing again.
+> 
+> This can be made more efficient. Since rmqueue_bulk() holds the
+> zone->lock over the entire batch, the freelists are not subject to
+> outside changes; when the search for a block to claim has already
+> failed, there is no point in trying again for the next page.
+> 
+> Modify __rmqueue() to remember the last successful fallback mode, and
+> restart directly from there on the next rmqueue_bulk() iteration.
+> 
+> Oliver confirms that this improves beyond the regression that the test
+> robot reported against c2f6ea38fc1b:
+> 
+> commit:
+>   f3b92176f4 ("tools/selftests: add guard region test for /proc/$pid/pagemap")
+>   c2f6ea38fc ("mm: page_alloc: don't steal single pages from biggest buddy")
+>   acc4d5ff0b ("Merge tag 'net-6.15-rc0' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+>   2c847f27c3 ("mm: page_alloc: speed up fallbacks in rmqueue_bulk()")   <--- your patch
+> 
+> f3b92176f4f7100f c2f6ea38fc1b640aa7a2e155cc1 acc4d5ff0b61eb1715c498b6536 2c847f27c37da65a93d23c237c5
+> ---------------- --------------------------- --------------------------- ---------------------------
+>          %stddev     %change         %stddev     %change         %stddev     %change         %stddev
+>              \          |                \          |                \          |                \
+>   25525364 ±  3%     -56.4%   11135467           -57.8%   10779336           +31.6%   33581409        vm-scalability.throughput
+> 
+> Carlos confirms that worst-case times are almost fully recovered
+> compared to before the earlier culprit patch:
+> 
+>   2dd482ba627d (before freelist hygiene):    1ms
+>   c0cd6f557b90  (after freelist hygiene):   90ms
+>  next-20250319    (steal smallest buddy):  280ms
+>     this patch                          :    8ms
+> 
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Reported-by: Carlos Song <carlos.song@nxp.com>
+> Tested-by: kernel test robot <oliver.sang@intel.com>
+> Fixes: c0cd6f557b90 ("mm: page_alloc: fix freelist movement during block conversion")
+> Fixes: c2f6ea38fc1b ("mm: page_alloc: don't steal single pages from biggest buddy")
+> Closes: https://lore.kernel.org/oe-lkp/202503271547.fc08b188-lkp@intel.com
+> Cc: stable@vger.kernel.org	# 6.10+
 
-Yes :)
+Might be going to be fun with dependency commits.
 
-Yours,
-	-- Matti
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
+Cool stuff.
+
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
