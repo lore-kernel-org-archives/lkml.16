@@ -1,103 +1,110 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A93E22424C
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC26281369;
+	Thu, 10 Apr 2025 10:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744282590; cv=none; b=pob6gZrFeevOQzPyCM51Z5Hn4rkmoW5tkpKyKkIKq5IQMl6BtIGL8dRyuI4s7xBcYL9LryLuPANCVyZkLN6R/UR3/DmqVFEdU60tgy36wTj2O67V+JT5vwuQK9OmwSrSh084Uxbud4kUCXUGYgwt8PEE/QZsViz4qBznNhsNtkQ=
+	t=1744282593; cv=none; b=CsvICx/YAMtyX60OsH8EiMKHL/A7jPX95x0au6Dxm785vZFHA7OVrfRZ2eYdeCdlNw7Fi9+EBPQk/APT08BKP3ehRES8fNcDwxwTHpdJWckl/k4eFIz9qlXWNcgLkG0HO++nMpG1w3hkG/B8VCi/o9hr6y5KHf3xhOaggmUAHxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744282590; c=relaxed/simple;
-	bh=YadL3ZoWvwUG09v0iqOrCwkGYycpVWybtua4+AraQT0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=pwijuFTwo7UwgHYkas4NG4ZwW6Ps2IZVtzyJmvgB86HqJAfo92AEP1v0iWoRfc25HwxhwJDr/+oMmgpn3Im3UVedU8+F1F0fRJABPKQCXVoj1OPxnbqntji8xxkqd7bDqssaKmtOEx1+SX00TI9fHYBJ0DNVJv/78jUszudtaV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fuRKgJvJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=l67fIjCv; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744282593; c=relaxed/simple;
+	bh=qmUb5SCG0FCeX7A0GUYhS+E7gdF+eDJWyP8VwWfIE/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VqwmXKMbhopiPXTHec3Nvq9NZX3QgPMnjRyjZ5FNXcUfAUMgtUaUkfG7pVUaviGL3xiWB8WvURcAqi8iaBoVfjE+S1Typk6q5ySw7iezKVXan84uLiVFxcXXZAKrP1BXJKyX72Ko1X4lAcO5oDwRrpqQyHOiOvsCAsXwcXsgz/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3vcKCSTy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ELgFsRcH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fuRKgJvJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l67fIjCv"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 69469114013D;
-	Thu, 10 Apr 2025 06:56:27 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Thu, 10 Apr 2025 06:56:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744282587;
-	 x=1744368987; bh=oEKpksTSeAZ7w0HXIaMAnTCbQphqyRott0G/ftwAhwg=; b=
-	fuRKgJvJdAuHKoVF//SDuf3SN8R1TsROyxOL/qB2vDzHfXVP2zAQz522d5FrhGfb
-	aC6DiGwIUliTFVKrxiJZDmxSgD+dIgIMiQyC6fWD6YLqtujUKdaA11ANqJKomX4B
-	qYKrisqvtbNmjJJAPBE37RHODYz4TESrZR2JJSJgLBh8W56Pwj9Ot0XxXluQCUgx
-	Se3Y0onhu7E+MdoaU5XNcdBsoFergcNDfbvCsrmDJw9wAwV1fCkRXeUgj8WYFvVI
-	z1Uuh/v9+SPG2QJ5aUTz2kWgcxGJ5GIAlXPjFcK8+zdsKM+zUH42zuOE8f7965ST
-	NnMwptyYUy/sZT8Fm6HHYQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744282587; x=
-	1744368987; bh=oEKpksTSeAZ7w0HXIaMAnTCbQphqyRott0G/ftwAhwg=; b=l
-	67fIjCvIoQ2DB/HHnG7nYVEHfwTiPwFQtwgELUccNJ3KX1pGxYk964qu8aNil0Dw
-	okSKviSDqJ2ZqsvNwfLWCztjSQLsWcVk1gPKTeQV084bVsdx7u1Zu/I9COkySxBP
-	Rs7nXwOSZfauNJ+ZijOngInNqH5zqtwO4A8T+UdipfhtWDAkIAkme05YGBOSjWR5
-	YLb4NRvltZhVS5yxT85PyPNxGJnIc/8cM21ea7P9USbysLmVzpqMEoXiw9xv9b9r
-	IbFK6D+qVNfrdlH8OTDd65HlDXmmBrlLm0PbWYmSgZoIyS3kFNzYRRd6PmXihRy4
-	u0Tc+v6cL9kIpvx4RnZ0w==
-X-ME-Sender: <xms:2qP3Z6SHWqfeI_c7HG6RTazqwTPZ9OSAwIUgbXCBcaJia5WG_vjaOQ>
-    <xme:2qP3Z_w0jyIdTwjPOfmzDFFEGupaBTf3hpcSFanu6QF6nd2daxMQqss53EdQMRz_C
-    z6kta7oJmBdp4ZibfY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekjeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    gedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhprghnihhssegsrgihlhhisg
-    hrvgdrtghomhdprhgtphhtthhopehhrghntghhuhhntghhrghosehinhhsphhurhdrtgho
-    mhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:2qP3Z31PRLjLXEdCJvlF_eJBcBPgWe15p8c6-wagsgWQFKOrpgzhdA>
-    <xmx:26P3Z2CSn8YLX_GBzW_vmlOSOCIhqPV_Cr39AJKk_bgkDUOvnP_JIw>
-    <xmx:26P3ZzhXN1xWhS_8WI_7kMn3hN6jLyOe3fh7G_5IK6XuaCgdS7gHOA>
-    <xmx:26P3ZyoPc3R7Ct6eR8rECn9-QKdLVLOD1l1FYs5OMsaslySocxgzYQ>
-    <xmx:26P3Z3vqvOPIki2gRtkux5Dsh87ojy1vv7ccGGWWLNbJBYEqSG3_ba5V>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DEDCB2220073; Thu, 10 Apr 2025 06:56:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3vcKCSTy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELgFsRcH"
+Date: Thu, 10 Apr 2025 12:56:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744282589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KxSFCVZqgfyJslzQMneu/OUO8qGifnZ7r8Kr8VGaOAU=;
+	b=3vcKCSTySTJpT9OnsNBVJmM3ZelGKa3zGpQglH1b5KAnjYgz7hzscL23/vxoY/q6uEajuW
+	8zpmghmsbNvYN86G2+zFN+UPx03CmsPIjM5S1dQIY9l24rqYthj6n3rjAKaGEFKa6bWxxZ
+	g3Y6N1GBcx19tIXYTGNZUWQlMUOv4bIlitD0vcnWfvW3t3yiYgCWZHs33XgEm+9MpiuY9H
+	fRN9fR9k+IRtvvkVoUE/f7MZOCRwQ/u/KCyaQItxB3sYosEdcNiUbPJlHHJtFLmQqhfHP3
+	pMJPWV6lIFUkr2bmDIfe4W6IrHHRfRxQ+xvcvZlNtT4x+kpIWF8iomJDZy6OhA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744282589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KxSFCVZqgfyJslzQMneu/OUO8qGifnZ7r8Kr8VGaOAU=;
+	b=ELgFsRcHNKUAQPWYJEGHuQL30/mfCRn32we0rykYyUQ752Jnc2S9hdp6KuROoQ3Edi20VB
+	ImnBm2hXbzzFqPBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v11 19/19] futex: Allow to make the private hash
+ immutable.
+Message-ID: <20250410105628.cLaq6gVO@linutronix.de>
+References: <20250407155742.968816-1-bigeasy@linutronix.de>
+ <20250407155742.968816-20-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T5c1313e19ee2af77
-Date: Thu, 10 Apr 2025 12:56:06 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Charles Han" <hanchunchao@inspur.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Julien Panis" <jpanis@baylibre.com>
-Cc: linux-kernel@vger.kernel.org
-Message-Id: <b1632d8b-d5c2-44dd-bec1-78aa0a71eb03@app.fastmail.com>
-In-Reply-To: <20250410105256.70310-1-hanchunchao@inspur.com>
-References: <20250410105256.70310-1-hanchunchao@inspur.com>
-Subject: Re: [PATCH] misc: tps6594-pfsm: Add NULL check in tps6594_pfsm_probe
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250407155742.968816-20-bigeasy@linutronix.de>
 
-On Thu, Apr 10, 2025, at 12:52, Charles Han wrote:
-> +	if (!pfsm->miscdev.name) {
-> +		devm_kfree(dev, pfsm);
-> +		return -ENOMEM;
-> +	}
+On 2025-04-07 17:57:42 [+0200], To linux-kernel@vger.kernel.org wrote:
+> - Xeon CPU E5-2650, 2 NUMA nodes, total 32 CPUs:
+>   - Before the introducing task local hash
+>     shared  Averaged 1.487.148 operations/sec (+- 0,53%), total secs = 10
+>     private Averaged 2.192.405 operations/sec (+- 0,07%), total secs = 10
+> 
+>   - With the series
+>     shared  Averaged 1.326.342 operations/sec (+- 0,41%), total secs = 10
+>     -b128   Averaged   141.394 operations/sec (+- 1,15%), total secs = 10
+>     -Ib128  Averaged   851.490 operations/sec (+- 0,67%), total secs = 10
+>     -b8192  Averaged   131.321 operations/sec (+- 2,13%), total secs = 10
+>     -Ib8192 Averaged 1.923.077 operations/sec (+- 0,61%), total secs = 10
+>     128 is the default allocation of hash buckets.
+>     8192 was the previous amount of allocated hash buckets.
+> 
+> - Xeon(R) CPU E7-8890 v3, 4 NUMA nodes, total 144 CPUs:
+>   - Before the introducing task local hash
+>     shared   Averaged 1.810.936 operations/sec (+- 0,26%), total secs = 20
+>     private  Averaged 2.505.801 operations/sec (+- 0,05%), total secs = 20
+> 
+>   - With the series
+>     shared   Averaged 1.589.002 operations/sec (+- 0,25%), total secs = 20
+>     -b1024   Averaged    42.410 operations/sec (+- 0,20%), total secs = 20
+>     -Ib1024  Averaged   740.638 operations/sec (+- 1,51%), total secs = 20
+>     -b65536  Averaged    48.811 operations/sec (+- 1,35%), total secs = 20
+>     -Ib65536 Averaged 1.963.165 operations/sec (+- 0,18%), total secs = 20
+>     1024 is the default allocation of hash buckets.
+>     65536 was the previous amount of allocated hash buckets.
 
-Since this is the probe function, you don't need to call devm_kfree()
-but just let devres take care of it.
+On EPYC 7713, 2 NUMA nodes, 256 CPUs:
+				ops/sec		buckets
+ -t 250                     25.393 (+- 1,51%)     1024
+ -t 250 -b 1024 -I       1.645.327 (+- 0,34%)     1024
+ -t 250 -b 65536            25.445 (+- 2,41%)    65536
+ -t 250 -b 65536 -I      1.733.745 (+- 0,36%)    65536
+ -t 250 -b 0             1.745.242 (+- 0,21%)    32768 * 2
 
-     Arnd
+Sebastian
