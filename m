@@ -1,634 +1,266 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from SE2P216CU007.outbound.protection.outlook.com (mail-koreacentralazon11021108.outbound.protection.outlook.com [40.107.42.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0834C8F
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744256018; cv=none; b=YiwYShAkW5HDMEz2DbNhSS91EuxY1wx73lUZ1GOzAvLWsk6S0tbwV4ocQ8qKz4qBZnFmpqYxyKZhnuvIqEP2cfwXlobpd5hvwwdK+H9C/R98JnmNz61Yz3vIACLGVx3tsPiS8b6KUSz6C0M2TwRfNFkuY1bl/1J66AJizMGqvUU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744256018; c=relaxed/simple;
-	bh=SpkAA0obsZVi2oKSMKXMSfr8xIGBd61rtNyNvYbL71U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=R9sxcJAkx4dqYE4/6T5rvb0s5n9SH68p7Tdewerepbga8A27OiCaN+VHC7eIncVQq8epiRs82dfdVMK6gd72n0H/Szs4F63Bn6mp6/ApptbKLSHyztt2UfaP/PAgjCcK6i8PGJirqVSfp60QOWJgcCDrzI6hV6c9LDgM5IUhKmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZY50w6gH7zHrVf;
-	Thu, 10 Apr 2025 11:30:08 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id A767B1800B4;
-	Thu, 10 Apr 2025 11:33:32 +0800 (CST)
-Received: from [10.67.120.170] (10.67.120.170) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 10 Apr 2025 11:33:31 +0800
-Message-ID: <d985d65c-ecff-45f8-9188-2bd4c57502a8@huawei.com>
-Date: Thu, 10 Apr 2025 11:33:31 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15ED94C8F;
+	Thu, 10 Apr 2025 03:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.42.108
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744256417; cv=fail; b=gypw7pu2XCroXRIhsmCknFHqeW85hlcitMTVG0SIW0cW7dYZj13t9EN1TD6MoPGRy2MYdTCXhwD6x+qiybGPS+Xl8wKEU0Wj9SFJ0Ub+rRXcJjoP9LKwVINZf/kRpKqKPhWwM9PY2DaUJMTjO7SiS/hmtezxr1lotF5KaoxyRcg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744256417; c=relaxed/simple;
+	bh=Ew1p945uBxa3ssobd2UchAVJlolaff/iNIC2bTRp2gY=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=MwOqSa+j+P3EM53VY/1mu1ue/5TP+bf4qjfzq+mf/ATWQM9GE0eo3fG+BhkiTpxsZJoXi+xNsurZi5CObFT/m3Ni0zWathJPGEU0uAqxVnhpcC9knc8flqFMmB0YUQ6uYu9fsKhfMJO9WRxzt2tOrfT9mTnvdZHWRZ1wZdHnUPk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=fail smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=kQ742YPB; arc=fail smtp.client-ip=40.107.42.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=chipsnmedia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="kQ742YPB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VC8LwjA91KDB90zxC+IUwmxJkss8qMbl7ck7UuGW2yZiO3CCqF1NHkPyLIsirmSrGm9xkdA8bWBnhn7GP8bgt3//SmbrDklKlET0UltQxk8IGOgMPNRT77ZzwAIOJQH+r2Bq0B93jFYssim39IYwuuzOUa09v+D/PfFMBUcuUtKUdyvBaDFAgEHBFjWLsrYMWxJ4lyNs4ssMr7j6NdwFY2KVyIJbJEHbTe3NzAtWP8Hn5B+O3DYi87jBLBn8WONukXk4xS9am6MPPh097LpOeIg0f6oYDRwu7B3lx43WwV008vf+ckgHPzZqZcHtyVOnYRSYB5jCOgMIohrPtf0Yhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aBbtB2YK1yc0dnvOWnLHgXx+WhDWDb/yGFq3t8ECEw4=;
+ b=tBe/2Y7KvjjogdAoEXlgnJ0VYgOtbS1lvABDIo+rAZ6vqziPKKHkzer7woDjGQpS10BzC5L93mtiRHPkdOUam2m8FuVRXQzcgasUwcfcXokkDdSPZtGU7kMAYEYZN3g+9Hz1VoXW4cuwOYKM+JcAGQUANigqrS7Pml8QdSpl5vjoAHv2tqnfuJaewBLV6QRZ/CmntneswStpOjKuKQqxQQuXM21YqAVUC7G0JzmnmldKNgJQgbQ56adGdXzf8RfatwLNaUU3eQ0eL5dJpKsnsFW27A8U21YIqSlO3o7DZ6UHfUNAEKTuMeZYlggni3hX4lG/Bg3/SXQn+LVMGqZ7Ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
+ header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aBbtB2YK1yc0dnvOWnLHgXx+WhDWDb/yGFq3t8ECEw4=;
+ b=kQ742YPB4+Ds902QOL/cPp/6SF9oAUJd2MzwiP3SeD4bkdtLYIuZXPndkIEgRW+oQrWSIpLYnlU8XOoyyax/z8fGqEUl+o+t+WzZp0pcnedh782kOd6C/XqDS5Qv6fBOrVRe6dMdoHiSzJDDz5Pt4LfBOdY1jrgiTmz/9jI6PkM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
+Received: from PS2P216MB1297.KORP216.PROD.OUTLOOK.COM (2603:1096:301:73::13)
+ by PU4P216MB1439.KORP216.PROD.OUTLOOK.COM (2603:1096:301:ce::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
+ 2025 03:40:10 +0000
+Received: from PS2P216MB1297.KORP216.PROD.OUTLOOK.COM
+ ([fe80::d095:716:2d14:f386]) by PS2P216MB1297.KORP216.PROD.OUTLOOK.COM
+ ([fe80::d095:716:2d14:f386%7]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 03:40:10 +0000
+From: "Jackson.lee" <jackson.lee@chipsnmedia.com>
+To: mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl,
+	sebastian.fricke@collabora.com,
+	nicolas.dufresne@collabora.com,
+	bob.beckett@collabora.com,
+	dafna.hirschfeld@collabora.com
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jackson.lee@chipsnmedia.com,
+	lafley.kim@chipsnmedia.com,
+	b-brnich@ti.com,
+	hverkuil@xs4all.nl,
+	nas.chung@chipsnmedia.com
+Subject: [RESEND PATCH v1 0/7] Performance improvement of decoder
+Date: Thu, 10 Apr 2025 12:39:55 +0900
+Message-Id: <20250410034002.88-1-jackson.lee@chipsnmedia.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SEWP216CA0051.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:2bd::12) To PS2P216MB1297.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:301:73::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7] arm64: kprobe: Enable OPTPROBE for arm64
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-CC: <yangyicong@huawei.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
-	<davem@davemloft.net>, <mhiramat@kernel.org>, <linuxarm@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <fanghao11@huawei.com>,
-	<prime.zeng@hisilicon.com>, <xuwei5@huawei.com>,
-	<jonathan.cameron@huawei.com>
-References: <20250216070044.1792872-1-xiaqinxin@huawei.com>
- <Z+59CzngNTKGSuwH@e129823.arm.com>
-From: Qinxin Xia <xiaqinxin@huawei.com>
-In-Reply-To: <Z+59CzngNTKGSuwH@e129823.arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PS2P216MB1297:EE_|PU4P216MB1439:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8523dded-7e27-45d2-de17-08dd77e1653f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|7416014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rc1C+NoVWwh1G+t3AI5vaQikRdVcgozcSSgQJrgvKkHV7wafKd86qMe3MQEi?=
+ =?us-ascii?Q?7/fF2hfY7JEnGOJM4CceQpBhKv4/2GwRoldrHMVAKzkZz7BtlkjmCxTZFa7T?=
+ =?us-ascii?Q?fvncVxgYB0K4onW8Yu9a/wJcOIwssXWc7Qa0b/vmqA70WbCOs/rYrjeu0GS3?=
+ =?us-ascii?Q?tI/XsS4DLNEj6ZbjHkcN5vECJJK8/47++hGdgNjG5SA5dfWppeLht/V4+Ibf?=
+ =?us-ascii?Q?LSb8M+99rrjcZayK+tlwVLYLe+e/3wDnmjX1bkzR4thGNf+Ff32gIsdGr+dl?=
+ =?us-ascii?Q?hqT68OZmlHCMDeNgQ3bR48JLkMBNtGa7aVSlC7zseoTRC43zK43UOQ35Y7yg?=
+ =?us-ascii?Q?NuamaY4y95e2uUBccwKxByCFCL61RbC8ac5GH8qYQUxcGRIN7pDr9L1h3bsW?=
+ =?us-ascii?Q?RGaXVLFWxVDwDUXJPJGms+cLnD61j7Bm3diMjV3j0PbEjhJSAg9WtcVczzAp?=
+ =?us-ascii?Q?mzzAztp7mmf/ncfjP9W1iZ9outY6BDFQio8U+NeyVuy7F5OzJEn2jKBNeEPN?=
+ =?us-ascii?Q?mVG0OJV/7T23g3oyP33nG+JpFStzSOQ0YJiK+eOn5qK9w8cTomlwHxUJpu4i?=
+ =?us-ascii?Q?ALX9q7JlU4JcOAGI3sga5osfqmDWqh4do0g0DFvQR2JeN8XCl2dtVTKXn+hq?=
+ =?us-ascii?Q?cphp42hVG0OgDiqE5Xakd0zzWRoDJWhDeaAF3WcBm7KHwM3pHuGjfg0yIviu?=
+ =?us-ascii?Q?wM2wu12rM+pk084FT0e8mpWnzrUBPjJsq0atbeEvnBrvIVSmMNjgKIFWQkSF?=
+ =?us-ascii?Q?qE4nS1VpKq45j7ugAmi1MoU9HUXUged2VgZO7rNaWPV1pZ852LUK5Fdtvgoi?=
+ =?us-ascii?Q?Rb5xM8brDXzrT2C/qx/RK4l0xaHtqD/nkWs4/elv1IYOTZSPVKdgruTjbVAi?=
+ =?us-ascii?Q?ReO1Nb+mroj11vRs0dzcAPwpTbZyJIGKWInkim8p7lGOzfl5bLEfZtS2GSFa?=
+ =?us-ascii?Q?P8IIHpho5vI2hSUJRmrXmDoRNfEF5JQyZAHEzygl5v6j4Ygk/uUWAYotXcBU?=
+ =?us-ascii?Q?06MVXZorqPRReKSzCkHVRti4zyEnuhwFd6NQRVdc0qlAEjD4ZxFZH1nihcAt?=
+ =?us-ascii?Q?Je9FY6u5ITKMYNEfwT9JmvjlIYvSAAozguMkoifyM123xQ2kij1OfatMvOxF?=
+ =?us-ascii?Q?Oa78qs1YNYrhriKl/GW5LC6LNhWKDA1TlIAVdfEmDKJ/J6+Rs2jTTlaFZnLB?=
+ =?us-ascii?Q?B8a/MvusrsVghnH8Bu0gwXIUnXntIIInMnarHcHUhfpPF8AwJTIlxTfQZbBX?=
+ =?us-ascii?Q?tT2A9eBD7oo3PGAck0jx2LAh8DVXCLqAul9Dx9tPy/CkFcH6HvIMosrDCfR7?=
+ =?us-ascii?Q?u55Q/D+5W026+p0phZMXHFDEMwwF6vmCMcs2+7nT07rP5zrqvX+keMya+c2n?=
+ =?us-ascii?Q?aTuSS3XBIOKjm2ed8IE7IBzZP7a8TbIojwaxYDIdtuAqLwUZDLr+NG752EE3?=
+ =?us-ascii?Q?If1D2LQXGfWz1yx3r7WfS82aZGVyB9hW?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PS2P216MB1297.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(7416014)(376014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zUWYtdGYimUsgVcljc/nA/NzPU2q2QVb99O28n6FyOMEq54F3fbWFyxzNcnn?=
+ =?us-ascii?Q?z6ruNpbbsCcfHlWoG5OhDcFJWmrefaLzFR6rMcSmkLLjawEPBoGjIfUaqk6s?=
+ =?us-ascii?Q?Y+/jLXCOePE0H7UOU5scS7lFSTU17p1btXg9KVMFsuA/Qs69AFihGPp9FYa2?=
+ =?us-ascii?Q?BHP04Z/qRLAGWOIapshQO3cWK8Fk+UJPyV1KC8kcWMgot/AJNAXGwGY/Bb/P?=
+ =?us-ascii?Q?VspaPI5/P47IrQIVWS9dbPcrXrRWbpcSeWMQb29RppTEnxZfTKTMNiZU20C8?=
+ =?us-ascii?Q?VWzH1mz+MT2VXu3ZfsDaNISC9rnKhY/HBHEFJrxGa/1uZgZKPhyJXPmdgi8H?=
+ =?us-ascii?Q?eCB7Xa1lrxbDDmx8Vwxfs0K7UUZ5yzkt8BUm0fn9TzKrMm45eYhVD1EplFhC?=
+ =?us-ascii?Q?JrbdouInPTtPCBW6RLNmeaSo/UxPpkTf/7lwRh8pZxudfEglmivV74SP54zy?=
+ =?us-ascii?Q?xJiho1uYv1QzE8uafeJx1fnZW6GqmzvA35jUf9BIVET97NwzNWF71aM1zata?=
+ =?us-ascii?Q?bAXbnHnJbgG5n9/CGiz9Kga1YSXhJlpLwDwRBJQJSNubEevkGDEcUy4BQctf?=
+ =?us-ascii?Q?20sytix6M+fpThNuPIVt+Udmm17V0v8iBsaeQT4QwTXIay35NmgD3+gwFqOd?=
+ =?us-ascii?Q?qGsH+LN2Sy5gxVHOcfuH5K0tmZoii2Ro4VZT8GlatohWljNiPCbIlsDFj4g5?=
+ =?us-ascii?Q?O/G6/XJOBZG0XGlPSZ6RhHKE+GcBruu/aftE1uFMH0NAfaKOP3nd3lMSV92L?=
+ =?us-ascii?Q?EM/20UgWpmy4F2Z4Ehk9U0Ttd/nYLRMmes3daDvg9HVoFdcdOq5AbWXxd7lC?=
+ =?us-ascii?Q?Yp4soEGkgFE69eZT7usirncsKHbkxOUqwluAowfG8Ea7OvEPu3Llhoe3CtgM?=
+ =?us-ascii?Q?Oi6sunRaa7fwVQmWygWLcE7NjtMinKKlFnWIILPSX6HQOWeoW6swD36lUVa4?=
+ =?us-ascii?Q?spo7jIHVXlvNpdHP4MxtBQBZslfTy3GfHTWMKZw1eH1F8r7n6OCqPE9JryNg?=
+ =?us-ascii?Q?aMJ84RSPjjLxw8zt62oM/ZdNYlCMKX0RnNT/lNlHWKXiqxmGxTLsFHsFX6JJ?=
+ =?us-ascii?Q?H42lTwhbTCloWNivtWN0sqMXsjn1jLam9kgK0N/NzcihqltcZSNi/4OVbpBw?=
+ =?us-ascii?Q?O1n/rd3rF2SOaBQwjX6jSiZKxOKmPExmvuWnHcBKZYHXOOWkbMEzBDBu72+8?=
+ =?us-ascii?Q?x6go8MWAoMMvNU2ynwGaubAGYGk0TIXm5NbV1vsumyAJtj1qfMuFkJG0jMfv?=
+ =?us-ascii?Q?A8CFQBXLZ2Py3JuGVgwtXE5De8uQBF/43ZFzgBqUN58Nyg+iWWRmsBPu1yL9?=
+ =?us-ascii?Q?KDKQxFBowvZSrpr5JmP69a/rBKYW9VqsXZv2BWdGwCXPYybNcZRcFmiajTwJ?=
+ =?us-ascii?Q?Kz1jYPxx9apxnOGUZ+T1yCqHdCft5bRP5Bh+GGQc+QzkUX36aE5ixzLTynvP?=
+ =?us-ascii?Q?bzHg+66rfWrK51hvEbXJsJaSN379/9CXvsPz2rGL1gZLmayJHyHQf8NEeGXW?=
+ =?us-ascii?Q?96AT3RidH1Rhm/flKLY6XPMr+T9MEGovDUFzqQtWmI1Q3wvMNAgVxBZ7SWrc?=
+ =?us-ascii?Q?U7cdeIemulIZaKwndhq0zL+4hVpk8fmQbYYnA4/KngYK4RJANSkj2YQk2xix?=
+ =?us-ascii?Q?OQ=3D=3D?=
+X-OriginatorOrg: chipsnmedia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8523dded-7e27-45d2-de17-08dd77e1653f
+X-MS-Exchange-CrossTenant-AuthSource: PS2P216MB1297.KORP216.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 03:40:10.7924
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: U/YwNZcSTldFi4RQli3a0JFL1UTqG6QcuUAGX8C1KZuf5uz4DrLjpdzA1pf0NWzT+wYTTEK8b3JxdWi9OUFzIJ/1faIQdG5zZVixZvsMDQo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU4P216MB1439
+
+From: Jackson Lee <jackson.lee@chipsnmedia.com>
+
+v4l2-compliance results:
+========================
+
+v4l2-compliance 1.28.1-5233, 64 bits, 64-bit time_t
+
+Buffer ioctls:
+                warn: v4l2-test-buffers.cpp(693): VIDIOC_CREATE_BUFS not supported
+                warn: v4l2-test-buffers.cpp(693): VIDIOC_CREATE_BUFS not supported
+        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+        test CREATE_BUFS maximum buffers: OK
+        test VIDIOC_EXPBUF: OK
+        test Requests: OK (Not Supported)
+
+Total for wave5-dec device /dev/video0: 46, Succeeded: 46, Failed: 0, Warnings: 2
+Total for wave5-enc device /dev/video1: 46, Succeeded: 46, Failed: 0, Warnings: 0
+
+Fluster test results:
+=====================
+
+Running test suite JCT-VC-HEVC_V1 with decoder GStreamer-H.265-V4L2-Gst1.0
+Using 3 parallel job(s)
+Ran 133/147 tests successfully               in 41.629 secs
+
+(1 test fails because of not supporting to parse multi frames, 1 test fails because of a missing frame and slight corruption,
+ 2 tests fail because of sizes which are incompatible with the IP, 11 tests fail because of unsupported 10 bit format)
 
 
-在 2025/4/3 20:20, Yeoreum Yun 写道:
-> Hi,
->
->> This patch introduce optprobe for ARM64. In optprobe, probed
->> instruction is replaced by a branch instruction to trampoline.
->>
->> Performance of optprobe on Hip08 platform is test using kprobe
->> example module to analyze the latency of a kernel function,
->> and here is the result:
->>
->> common kprobe:
->> [280709.846380] do_empty returned 0 and took 1530 ns to execute
->> [280709.852057] do_empty returned 0 and took 550 ns to execute
->> [280709.857631] do_empty returned 0 and took 440 ns to execute
->> [280709.863215] do_empty returned 0 and took 380 ns to execute
->> [280709.868787] do_empty returned 0 and took 360 ns to execute
->> [280709.874362] do_empty returned 0 and took 340 ns to execute
->> [280709.879936] do_empty returned 0 and took 320 ns to execute
->> [280709.885505] do_empty returned 0 and took 300 ns to execute
->> [280709.891075] do_empty returned 0 and took 280 ns to execute
->> [280709.896646] do_empty returned 0 and took 290 ns to execute
->>
->> optprobe:
->> [ 2965.964572] do_empty returned 0 and took 90 ns to execute
->> [ 2965.969952] do_empty returned 0 and took 80 ns to execute
->> [ 2965.975332] do_empty returned 0 and took 70 ns to execute
->> [ 2965.980714] do_empty returned 0 and took 60 ns to execute
->> [ 2965.986128] do_empty returned 0 and took 80 ns to execute
->> [ 2965.991507] do_empty returned 0 and took 70 ns to execute
->> [ 2965.996884] do_empty returned 0 and took 70 ns to execute
->> [ 2966.002262] do_empty returned 0 and took 80 ns to execute
->> [ 2966.007642] do_empty returned 0 and took 70 ns to execute
->> [ 2966.013020] do_empty returned 0 and took 70 ns to execute
->> [ 2966.018400] do_empty returned 0 and took 70 ns to execute
->>
->> As the result shows, optprobe can greatly reduce the latency. Big
->> latency of common kprobe will significantly impact the real result
->> while doing performance analysis or debugging performance issues
->> in lab, so optprobe is useful in this scenario.
->>
->> The trampoline design is illustrated in the following diagram.
->> Some commands will be replaced in arch_prepare_optimized_kprobe.
->> +------------------optprobe_template_entry---------------------+
->> |- Saving stacks and registers                                 |
->> |- Loading params for callback                                 |
->> +------------------optprobe_template_common--------------------+
->> |- nop                                                         |
->> |(replaced to the branch jump to optprobe_common)              |
->> |- Restore stacks and registers                                |
->> +-------------optprobe_template_restore_orig_insn--------------+
->> |- nop                                                         |
->> |(replaced to the kprobe->opcode)                              |
->> +----------------optprobe_template_restore_end-----------------+
->> |- nop                                                         |
->> |(replaced to next address of the probe point)                 |
->> +------------------optprobe_template_val-----------------------+
->> |- 0 (two 32-bit words)                                        |
->> |(replaced to params for optprobe_optimized_callback)          |
->> +-----------------optprobe_template_orig_addr------------------+
->> |- 0 (two 32-bit words)                                        |
->> |(replaced to origin probe point address)                      |
->> +-------------------optprobe_template_end----------------------+
->> |- nop                                                         |
->> +--------------------------------------------------------------+
->>
->> Co-developed-by: Qi Liu <liuqi115@huawei.com>
->> Signed-off-by: Qi Liu <liuqi115@huawei.com>
->> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
->> ---
->>
->> Changes since V6:
->> - Address the comments from Masami, add design of optprobe trampoline in commit.
->> - Address the comments from Yicong, add nop in optprobe_template_end and move
->> optprobe_optimized_callback from framework to arch.
->> - Link: https://lore.kernel.org/lkml/20250103012753.66988-1-xiaqinxin@huawei.com/
->>
->> Changes since V5:
->> - Address the comments from Masami, saves stack frames to obtain correct backtrace
->> and make an array of usage flags to manage the reserved OPT_SLOT_SIZE.
->> - Link: https://lore.kernel.org/lkml/20211207124002.59877-1-liuqi115@huawei.com/
->>
->> Changes since V4:
->> - Address the comments from Masami, update arch_prepare_optimized_kprobe，
->> if the probe address is out of limit return -ERANGE.
->> - Link: https://lore.kernel.org/lkml/20210818073336.59678-1-liuqi115@huawei.com/
->>
->> Changes since V3:
->> - Address the comments from Masami, reduce the number of aarch64_insn_patch_text
->> in arch_optimize_kprobes() and arch_unoptimize_kprobes().
->> - Link: https://lore.kernel.org/lkml/20210810055330.18924-1-liuqi115@huawei.com/
->>
->> Changes since V2:
->> - Address the comments from Masami, prepare another writable buffer in
->> arch_prepare_optimized_kprobe()and build the trampoline code on it.
->> - Address the comments from Amit, move save_all_base_regs and
->> restore_all_base_regs to <asm/assembler.h>, as these two macros are reused
->> in optprobe.
->> - Link: https://lore.kernel.org/lkml/20210804060209.95817-1-liuqi115@huawei.com/
->>
->> Changes since V1:
->> - Address the comments from Masami, checks for all branch instructions, and
->> use aarch64_insn_patch_text_nosync() instead of aarch64_insn_patch_text()
->> in each probe.
->> - Link: https://lore.kernel.org/lkml/20210719122417.10355-1-liuqi115@huawei.com/
->> ---
->>   arch/arm64/Kconfig                            |   1 +
->>   arch/arm64/include/asm/kprobes.h              |  22 ++
->>   arch/arm64/kernel/probes/Makefile             |   2 +
->>   arch/arm64/kernel/probes/opt_arm64.c          | 244 ++++++++++++++++++
->>   .../arm64/kernel/probes/optprobe_trampoline.S | 113 ++++++++
->>   5 files changed, 382 insertions(+)
->>   create mode 100644 arch/arm64/kernel/probes/opt_arm64.c
->>   create mode 100644 arch/arm64/kernel/probes/optprobe_trampoline.S
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 100570a048c5..f9c4e2625595 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -244,6 +244,7 @@ config ARM64
->>   	select HAVE_SYSCALL_TRACEPOINTS
->>   	select HAVE_KPROBES
->>   	select HAVE_KRETPROBES
->> +	select HAVE_OPTPROBES
->>   	select HAVE_GENERIC_VDSO
->>   	select HOTPLUG_CORE_SYNC_DEAD if HOTPLUG_CPU
->>   	select IRQ_DOMAIN
->> diff --git a/arch/arm64/include/asm/kprobes.h b/arch/arm64/include/asm/kprobes.h
->> index be7a3680dadf..bd4973bfb58d 100644
->> --- a/arch/arm64/include/asm/kprobes.h
->> +++ b/arch/arm64/include/asm/kprobes.h
->> @@ -37,6 +37,28 @@ struct kprobe_ctlblk {
->>
->>   void arch_remove_kprobe(struct kprobe *);
->>   int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
->> +
->> +struct arch_optimized_insn {
->> +	kprobe_opcode_t orig_insn[1];
->> +	kprobe_opcode_t *trampoline;
->> +};
->> +
->> +#define MAX_OPTIMIZED_LENGTH	sizeof(kprobe_opcode_t)
->> +#define MAX_OPTINSN_SIZE                                                       \
->> +	((unsigned long)optprobe_template_end - (unsigned long)optprobe_template_entry)
->> +
->> +extern __visible kprobe_opcode_t optprobe_template_entry[];
->> +extern __visible kprobe_opcode_t optprobe_template_val[];
->> +extern __visible kprobe_opcode_t optprobe_template_orig_addr[];
->> +extern __visible kprobe_opcode_t optprobe_template_common[];
->> +extern __visible kprobe_opcode_t optprobe_template_end[];
->> +extern __visible kprobe_opcode_t optprobe_template_restore_begin[];
->> +extern __visible kprobe_opcode_t optprobe_template_restore_orig_insn[];
->> +extern __visible kprobe_opcode_t optprobe_template_restore_end[];
->> +extern __visible kprobe_opcode_t optinsn_slot[];
->> +
->> +void optprobe_common(void);
->> +
->>   void __kretprobe_trampoline(void);
->>   void __kprobes *trampoline_probe_handler(struct pt_regs *regs);
->>
->> diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/Makefile
->> index 8e4be92e25b1..7b2885b23ff6 100644
->> --- a/arch/arm64/kernel/probes/Makefile
->> +++ b/arch/arm64/kernel/probes/Makefile
->> @@ -4,3 +4,5 @@ obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o	\
->>   				   simulate-insn.o
->>   obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o	\
->>   				   simulate-insn.o
->> +obj-$(CONFIG_OPTPROBES)	+= opt_arm64.o			\
->> +				   optprobe_trampoline.o
->> diff --git a/arch/arm64/kernel/probes/opt_arm64.c b/arch/arm64/kernel/probes/opt_arm64.c
->> new file mode 100644
->> index 000000000000..a7f34ab82a2f
->> --- /dev/null
->> +++ b/arch/arm64/kernel/probes/opt_arm64.c
->> @@ -0,0 +1,244 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Code for Kernel probes Jump optimization.
->> + *
->> + * Copyright (C) 2025 HiSilicon Limited
->> + */
->> +
->> +#include <linux/jump_label.h>
->> +#include <linux/kprobes.h>
->> +#include <linux/wordpart.h>
->> +
->> +#include <asm/cacheflush.h>
->> +#include <asm/compiler.h>
->> +#include <asm/insn.h>
->> +#include <asm/kprobes.h>
->> +#include <asm/text-patching.h>
->> +
->> +#define OPTPROBE_BATCH_SIZE 64
->> +
->> +#define TMPL_VAL_IDX \
->> +	(optprobe_template_val - optprobe_template_entry)
->> +#define TMPL_ORIGN_ADDR \
->> +	(optprobe_template_orig_addr - optprobe_template_entry)
->> +#define TMPL_CALL_COMMON \
->> +	(optprobe_template_common - optprobe_template_entry)
->> +#define TMPL_RESTORE_ORIGN_INSN \
->> +	(optprobe_template_restore_orig_insn - optprobe_template_entry)
->> +#define TMPL_RESTORE_END \
->> +	(optprobe_template_restore_end - optprobe_template_entry)
->> +
->> +#define OPT_SLOT_SIZE			65536
->> +#define OPT_INSN_PAGES			(OPT_SLOT_SIZE / PAGE_SIZE)
->> +
->> +static bool insn_page_in_use[OPT_INSN_PAGES];
->> +
->> +void *alloc_optinsn_page(void)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < OPT_INSN_PAGES; i++) {
->> +		if (!insn_page_in_use[i]) {
->> +			insn_page_in_use[i] = true;
->> +			return (void *)((unsigned long)optinsn_slot + PAGE_SIZE * i);
->> +		}
->> +	}
->> +
->> +	return NULL;
->> +}
->> +
->> +void free_optinsn_page(void *page)
->> +{
->> +	unsigned long idx = (unsigned long)page - (unsigned long)optinsn_slot;
->> +
->> +	WARN_ONCE(idx & (PAGE_SIZE - 1), "Invalid idx with wrong align\n");
->> +	idx >>= PAGE_SHIFT;
->> +	if (WARN_ONCE(idx >= OPT_INSN_PAGES, "Invalid idx with wrong size\n"))
->> +		return;
->> +	insn_page_in_use[idx] = false;
->> +}
->> +
->> +/*
->> + * In ARM ISA, kprobe opt always replace one instruction (4 bytes
->> + * aligned and 4 bytes long). It is impossible to encounter another
->> + * kprobe in the address range. So always return 0.
->> + */
->> +int arch_check_optimized_kprobe(struct optimized_kprobe *op)
->> +{
->> +	return 0;
->> +}
->> +
->> +int arch_prepared_optinsn(struct arch_optimized_insn *optinsn)
->> +{
->> +	return optinsn->trampoline != NULL;
->> +}
->> +
->> +int arch_within_optimized_kprobe(struct optimized_kprobe *op, kprobe_opcode_t *addr)
->> +{
->> +	return op->kp.addr == addr;
->> +}
->> +
->> +static int optprobe_check_branch_limit(unsigned long pc, unsigned long addr)
->> +{
->> +	long offset;
->> +
->> +	if ((pc & 0x3) || (addr & 0x3))
->> +		return -ERANGE;
->> +
->> +	offset = (long)addr - (long)pc;
->> +	if (offset < -SZ_128M || offset >= SZ_128M)
->> +		return -ERANGE;
->> +
->> +	return 0;
->> +}
->> +
->> +int arch_prepare_optimized_kprobe(struct optimized_kprobe *op, struct kprobe *orig)
->> +{
->> +	kprobe_opcode_t *code, *buf;
->> +	int ret = -ENOMEM;
->> +	u32 insn;
->> +	int i;
->> +
->> +	buf = kzalloc(MAX_OPTINSN_SIZE, GFP_KERNEL);
->> +	if (!buf)
->> +		return ret;
->> +
->> +	code = get_optinsn_slot();
->> +	if (!code)
->> +		goto out;
->> +
->> +	if (optprobe_check_branch_limit((unsigned long)code, (unsigned long)orig->addr + 8)) {
->> +		ret = -ERANGE;
->> +		goto error;
->> +	}
-> Nit: according to origin opcode, it wouldn't work properly
-> as typical example is adrp. See the arm_probe_decode_insn().
+Running test suite JVT-AVC_V1 with decoder GStreamer-H.264-V4L2-Gst1.0
+Using 3 parallel job(s)
+Ran 78/135 tests successfully               in 44.578 secs
 
-Thank you very much for your advice.
+(57 fail because the hardware is unable to decode  MBAFF / FMO / Field / Extended profile streams.)
 
-Do you mean that you need to verify the probe instructions
+Seek test
+=====================
+1. gst-play-1.0 seek.264
+2. this will use waylandsink since gst-play-1.0 uses playbin.
+   if you don't want to hook up display,
+   you can run gst-play-1.0 seek.264 --videosink=fakevideosink instead
+3. Let pipeline run for 2-3 seconds
+4. press SPACE key to pause
+5. press 0 to reset
+press SPACE to start again
 
-in addition to the trampoline and origin addresses?
+gst-play-1.0 seek.264 --videosink=fakevideosink
+Press 'k' to see a list of keyboard shortcuts.
+Now playing /root/seek.264
+Redistribute latency...
+Redistribute latency...
+Redistribute latency...
+Redistribute latency...
+Redistribute latency...aused
+0:00:09.9 / 0:00:09.7
+Reached end of play list.
 
-But, a little question， according to the comments of arm_probe_decode_insn,
+Sequence Change test
+=====================
+gst-launch-1.0 filesrc location=./switch_1080p_720p_240frames.h264 ! h264parse ! v4l2h264dec ! filesink location=./h264_output_420.yuv
+Setting pipeline to PAUSED ...
+Pipeline is PREROLLING ...
+Redistribute latency...
+Redistribute latency...
+Pipeline is PREROLLED ...
+Setting pipeline to PLAYING ...
+Redistribute latency...
+New clock: GstSystemClock
+Got EOS from element "pipeline0".
+Execution ended after 0:00:05.772414400
+Setting pipeline to NULL ...
+Freeing pipeline ...
 
-the INSN_REJECTED instruction should be for kprobe, not just optprobe,
+Change since v0:
+===================
+* For [PATCH v1 2/7] media: chips-media: wave5: Improve performance of decoder
+ - separates the previous patch to a few patches
 
-and should be guaranteed by the kprobe framework?
+* For [PATCH v1 3/7] media: chips-media: wave5: Fix not to be closed
+ - separated from the previous patch of performance improvement of
+   decoder
 
->> +
->> +	memcpy(buf, optprobe_template_entry, MAX_OPTINSN_SIZE);
->> +
->> +	insn = aarch64_insn_gen_branch_imm((unsigned long)&code[TMPL_CALL_COMMON],
->> +					   (unsigned long)&optprobe_common,
->> +					   AARCH64_INSN_BRANCH_LINK);
->> +	if (insn == AARCH64_BREAK_FAULT) {
->> +		ret = -ERANGE;
->> +		goto error;
->> +	}
->> +
->> +	buf[TMPL_CALL_COMMON] = insn;
->> +
->> +	insn = aarch64_insn_gen_branch_imm((unsigned long)&code[TMPL_RESTORE_END],
->> +					   (unsigned long)(op->kp.addr + 1),
->> +					   AARCH64_INSN_BRANCH_NOLINK);
->> +	if (insn == AARCH64_BREAK_FAULT) {
->> +		ret = -ERANGE;
->> +		goto error;
->> +	}
->> +
->> +	buf[TMPL_RESTORE_END] = insn;
->> +
->> +	buf[TMPL_VAL_IDX] = cpu_to_le32(lower_32_bits((unsigned long)op));
->> +	buf[TMPL_VAL_IDX + 1] = cpu_to_le32(upper_32_bits((unsigned long)op));
->> +	buf[TMPL_ORIGN_ADDR] = cpu_to_le32(lower_32_bits((unsigned long)orig->addr));
->> +	buf[TMPL_ORIGN_ADDR + 1] = cpu_to_le32(upper_32_bits((unsigned long)orig->addr));
->> +
->> +	buf[TMPL_RESTORE_ORIGN_INSN] = orig->opcode;
->> +
->> +	/* Setup template */
->> +	for (i = 0; i < MAX_OPTINSN_SIZE / MAX_OPTIMIZED_LENGTH; i++)
->> +		aarch64_insn_patch_text_nosync(code + i, buf[i]);
->> +
->> +	flush_icache_range((unsigned long)code, (unsigned long)(&code[TMPL_VAL_IDX]));
->> +	/* Set op->optinsn.trampoline means prepared. */
->> +	op->optinsn.trampoline = code;
->> +
->> +	return 0;
->> +error:
->> +	free_optinsn_slot(code, 0);
->> +
->> +out:
->> +	kfree(buf);
->> +	return ret;
->> +}
->> +
->> +void arch_optimize_kprobes(struct list_head *oplist)
->> +{
->> +	struct optimized_kprobe *op, *tmp;
->> +	kprobe_opcode_t insns[OPTPROBE_BATCH_SIZE];
->> +	void *addrs[OPTPROBE_BATCH_SIZE];
->> +	int i = 0;
->> +
->> +	list_for_each_entry_safe(op, tmp, oplist, list) {
->> +		WARN_ON(kprobe_disabled(&op->kp));
->> +
->> +		/*
->> +		 * Backup instructions which will be replaced
->> +		 * by jump address
->> +		 */
->> +		memcpy(op->optinsn.orig_insn, op->kp.addr, AARCH64_INSN_SIZE);
->> +
->> +		addrs[i] = op->kp.addr;
->> +		insns[i] = aarch64_insn_gen_branch_imm((unsigned long)op->kp.addr,
->> +						       (unsigned long)op->optinsn.trampoline,
->> +						       AARCH64_INSN_BRANCH_NOLINK);
->> +
->> +		list_del_init(&op->list);
->> +		if (++i == OPTPROBE_BATCH_SIZE)
->> +			break;
->> +	}
->> +
->> +	aarch64_insn_patch_text(addrs, insns, i);
->> +}
->> +
->> +void arch_unoptimize_kprobe(struct optimized_kprobe *op)
->> +{
->> +	arch_arm_kprobe(&op->kp);
->> +}
->> +
->> +/*
->> + * Recover original instructions and breakpoints from relative jumps.
->> + * Caller must call with locking kprobe_mutex.
->> + */
->> +void arch_unoptimize_kprobes(struct list_head *oplist,
->> +			    struct list_head *done_list)
->> +{
->> +	struct optimized_kprobe *op, *tmp;
->> +	kprobe_opcode_t insns[OPTPROBE_BATCH_SIZE];
->> +	void *addrs[OPTPROBE_BATCH_SIZE];
->> +	int i = 0;
->> +
->> +	list_for_each_entry_safe(op, tmp, oplist, list) {
->> +		addrs[i] = op->kp.addr;
->> +		insns[i] = BRK64_OPCODE_KPROBES;
->> +		list_move(&op->list, done_list);
->> +
->> +		if (++i == OPTPROBE_BATCH_SIZE)
->> +			break;
->> +	}
->> +
->> +	aarch64_insn_patch_text(addrs, insns, i);
->> +}
->> +
->> +void arch_remove_optimized_kprobe(struct optimized_kprobe *op)
->> +{
->> +	if (op->optinsn.trampoline) {
->> +		free_optinsn_slot(op->optinsn.trampoline, 1);
->> +		op->optinsn.trampoline = NULL;
->> +	}
->> +
->> +}
->> +
->> +void optprobe_optimized_callback(struct optimized_kprobe *op, struct pt_regs *regs)
->> +{
->> +	if (kprobe_disabled(&op->kp))
->> +		return;
->> +
->> +	guard(preempt)();
->> +
->> +	if (kprobe_running()) {
->> +		kprobes_inc_nmissed_count(&op->kp);
->> +	} else {
->> +		__this_cpu_write(current_kprobe, &op->kp);
->> +		get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
->> +		opt_pre_handler(&op->kp, regs);
->> +		__this_cpu_write(current_kprobe, NULL);
->> +	}
->> +}
->> +NOKPROBE_SYMBOL(optprobe_optimized_callback)
->> diff --git a/arch/arm64/kernel/probes/optprobe_trampoline.S b/arch/arm64/kernel/probes/optprobe_trampoline.S
->> new file mode 100644
->> index 000000000000..f564b119da69
->> --- /dev/null
->> +++ b/arch/arm64/kernel/probes/optprobe_trampoline.S
->> @@ -0,0 +1,113 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * trampoline entry and return code for optprobes.
->> + */
->> +
->> +#include <linux/linkage.h>
->> +#include <asm/asm-offsets.h>
->> +#include <asm/assembler.h>
->> +
->> +#define        OPT_SLOT_SIZE   65536
->> +
->> +	.global optinsn_slot
->> +optinsn_slot:
->> +	.space  OPT_SLOT_SIZE
->> +
->> +SYM_CODE_START(optprobe_common)
->> +	stp x2, x3, [sp, #S_X2]
->> +	stp x4, x5, [sp, #S_X4]
->> +	stp x6, x7, [sp, #S_X6]
->> +	stp x8, x9, [sp, #S_X8]
->> +	stp x10, x11, [sp, #S_X10]
->> +	stp x12, x13, [sp, #S_X12]
->> +	stp x14, x15, [sp, #S_X14]
->> +	stp x16, x17, [sp, #S_X16]
->> +	stp x18, x19, [sp, #S_X18]
->> +	stp x20, x21, [sp, #S_X20]
->> +	stp x22, x23, [sp, #S_X22]
->> +	stp x24, x25, [sp, #S_X24]
->> +	stp x26, x27, [sp, #S_X26]
->> +	stp x28, x29, [sp, #S_X28]
->> +	add x2, sp, #PT_REGS_SIZE
->> +	str x2, [sp, #S_SP]
->> +	/* Construct a useful saved PSTATE */
->> +	mrs x2, nzcv
->> +	mrs x3, daif
->> +	orr x2, x2, x3
->> +	mrs x3, CurrentEL
->> +	orr x2, x2, x3
->> +	mrs x3, SPSel
->> +	orr x2, x2, x3
->> +	adr x1, 2f
->> +	stp x1, x2, [sp, #S_PC]
->> +
-> Nit: In some context would be, but I think it could raise some problem
-> clearing other bit in the PSTATE to be used restoration.
-> i.e) PSTATE.BTYPE field. not only this it's almost unpredictable
-> what problem will be raised by this and this is one of reason
-> optkprobe isn't improper to arm.
-Hello, thank you very much for your advice. Can you add some more details?
+* For [PATCH v1 4/7] media: chips-media: wave5: Use spinlock whenever state is changed
+ - separated from the previous patch of performance improvement of
+   decoder
 
-Here, I store the original address and pstate in the x1 and x2 
-registers, respectively,
+* For [PATCH v1 5/7] media: chips-media: wave5: Fix not to free resources normally when
+    instance was destroyed
+ - separated from the previous patch of performance improvement of
+   decoder
 
-and then save them to S_PC and S_PSTATE on the stack, according to the 
-definition:
+* For [PATCH v1 7/7] media: chips-media: wave5: Fix SError of kernel panic when closed
+ - separated from the previous patch of performance improvement of
+   decoder
 
-#define S_PSTATE 264 /* offsetof(struct pt_regs, pstate) */
+Jackson Lee (7):
+  media: chips-media: wave5: Fix Null reference while testing fluster
+  media: chips-media: wave5: Improve performance of decoder
+  media: chips-media: wave5: Fix not to be closed
+  media: chips-media: wave5: Use spinlock whenever state is changed
+  media: chips-media: wave5: Fix not to free resources normally when
+    instance was destroyed
+  media: chips-media: wave5: Reduce high CPU load
+  media: chips-media: wave5: Fix SError of kernel panic when closed
 
-#define S_PC 256 /* offsetof(struct pt_regs, pc) */
+ .../platform/chips-media/wave5/wave5-helper.c |  10 +-
+ .../chips-media/wave5/wave5-vpu-dec.c         | 116 +++++++++++-------
+ .../chips-media/wave5/wave5-vpu-enc.c         |   8 +-
+ .../platform/chips-media/wave5/wave5-vpu.c    |  70 +++++++++--
+ .../platform/chips-media/wave5/wave5-vpuapi.c |  36 +++---
+ .../platform/chips-media/wave5/wave5-vpuapi.h |  10 ++
+ .../chips-media/wave5/wave5-vpuconfig.h       |   1 +
+ 7 files changed, 179 insertions(+), 72 deletions(-)
 
-PC and pstate are used as members of pt_regs in the probe handler.
+-- 
+2.43.0
 
-I'm not sure if it affects restoration in this case.
-
->> +	/* set the pt_regs address to x1 */
->> +	mov x1, sp
->> +	/* store lr of optprobe_common temporary */
->> +	stp x29, x30, [sp, #-16]!
->> +	mov x29, sp
->> +
->> +	bl optprobe_optimized_callback
->> +
->> +	ldp x29, x30, [sp], #16
->> +
->> +	ldr x0, [sp, #S_PSTATE]
->> +	and x0, x0, #(PSR_N_BIT | PSR_Z_BIT | PSR_C_BIT | PSR_V_BIT)
->> +	msr nzcv, x0
->> +
->> +	ldp x0, x1, [sp, #S_X0]
->> +	ldp x2, x3, [sp, #S_X2]
->> +	ldp x4, x5, [sp, #S_X4]
->> +	ldp x6, x7, [sp, #S_X6]
->> +	ldp x8, x9, [sp, #S_X8]
->> +	ldp x10, x11, [sp, #S_X10]
->> +	ldp x12, x13, [sp, #S_X12]
->> +	ldp x14, x15, [sp, #S_X14]
->> +	ldp x16, x17, [sp, #S_X16]
->> +	ldp x18, x19, [sp, #S_X18]
->> +	ldp x20, x21, [sp, #S_X20]
->> +	ldp x22, x23, [sp, #S_X22]
->> +	ldp x24, x25, [sp, #S_X24]
->> +	ldp x26, x27, [sp, #S_X26]
->> +	ldp x28, x29, [sp, #S_X28]
->> +	ret
->> +SYM_CODE_END(optprobe_common)
->> +
->> +	.global optprobe_template_entry
->> +optprobe_template_entry:
->> +	stp x29, x30, [sp, #-16]!
->> +	mov x29, sp
->> +	adr x30, 2f
->> +	stp x29, x30, [sp, #-16]!
->> +	mov x29, sp
->> +	sub sp, sp, #PT_REGS_SIZE
->> +	str lr, [sp, #S_LR]
->> +	stp x0, x1, [sp, #S_X0]
->> +	/* Get parameters to optimized_callback() */
->> +	adr x0, 1f
->> +	.global optprobe_template_common
->> +optprobe_template_common:
->> +	nop
->> +	ldr lr, [sp, #S_LR]
->> +	add sp, sp, #PT_REGS_SIZE
->> +	ldp x29, x30, [sp], #16
->> +	ldp x29, x30, [sp], #16
->> +	.global optprobe_template_restore_orig_insn
->> +optprobe_template_restore_orig_insn:
->> +	nop
->> +	.global optprobe_template_restore_end
->> +optprobe_template_restore_end:
->> +	nop
->> +	.balign
->> +	.global optprobe_template_val
->> +optprobe_template_val:
->> +	1:	.long 0
->> +		.long 0
->> +	.balign
->> +	.global optprobe_template_orig_addr
->> +optprobe_template_orig_addr:
->> +	2:	.long 0
->> +		.long 0
->> +	.global optprobe_template_end
->> +optprobe_template_end:
->> +	nop
->> --
->> 2.33.0
->>
-> --
-> Sincerely,
-> Yeoreum Yun
->
