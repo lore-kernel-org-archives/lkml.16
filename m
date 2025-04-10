@@ -1,135 +1,81 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7A81CEACB;
-	Thu, 10 Apr 2025 07:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F921FDE31;
+	Thu, 10 Apr 2025 07:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270881; cv=none; b=gJngUTo6S9sf/6uvI0MS3lSVLNhqX0H2Kbu9bzyCkx5z3LeazwlW69EdJIcML5+leTzDujmrcssDH2xFKEtLZG220Nd7mXWt/eS4rYonLQr+tGjbCS6c9y9HgGOyvTZzuRm5f6nnJb2zwbwKJe/5P5XdeLek08DVlnt82JsG2rE=
+	t=1744270900; cv=none; b=J0JMUHzzBvbcXi5YzOF27XA/oguGYpcD3WL20SnOCKWc8PINZBT1gv0BYzAL2mcSXwYLoZfQ+ZcjF+8OTGLhViBb/b9YJ6JMkWFzoXrujCSo0qxyXkr+mzBMsePdlSMkhA6tcYbg50wV2uCpOZgz0hR76CztlTXChZ1stYAaGwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270881; c=relaxed/simple;
-	bh=T0rl6mtqXz5LmV5LLiBAssGxQHXvEWWXL3EDzwmnWEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JzDsGH4fRkTucNY/ThFz7wHlI7n6/ruM4PvOdodt5FczjwVYAG+TyEZkU+ikbHDFk97hhwsED6/+J81Q123QEWIvAWwlPmfFVtGjXALl5rLdM2ythuuvla2ksHtR1zC93w+csGntkc0MMCOt0vuwzaskazzxTbGetLcwyUe2YDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aot9COST; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aot9COST"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744270877;
-	bh=T0rl6mtqXz5LmV5LLiBAssGxQHXvEWWXL3EDzwmnWEk=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aot9COSTnnKvgbGAq80PH5OkL2BX7fTgqBgoPPT/KOmtsS0JQ3I5AnxJ2kkahytDZ
-	 RMauBQEs4WXQ/fG7+K7cGkem33n5Afdt7mMk2Z3tQBcxJdlFLLdbTUO5xgN1I85hyL
-	 AIUiTLipV5O01P4BySbn1VtLc+LOJFa+/qrPh/OkaN3DE5U5Y6ySrwh5nM3/4QHcR7
-	 al3BIoEy24HMwNHPcIYwwHGTTMZsVpVWxlPq8HYjOi+LycGoj+BuWGykl3AB3Haem0
-	 jt6Om8U14QSdNDNd9ADCaxME29oX/M67NRdEOcbR6F4FvC1LUKphUd1T86EmUifUX3
-	 /XxVPg5vq0Z6Q==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C03ED17E0904;
-	Thu, 10 Apr 2025 09:41:16 +0200 (CEST)
-Message-ID: <58b3bbe7-c036-45c6-b6e9-e2fc150a9256@collabora.com>
-Date: Thu, 10 Apr 2025 09:41:16 +0200
+	s=arc-20240116; t=1744270900; c=relaxed/simple;
+	bh=YDJKQ6vOhGwS3jHjz5JttlFg04jNRvr0vvUZxf9sEIU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A094/L1+S2pedF8ZGXlodXt4r78egm4TTWvj7C6W6CM11VgSlOGW0ZkaTqLBwceagYgKGiK308Lgp4wB0p47ooPP9eg1wjz1zrUaZOS+luiKRF8xqYlG4q12ZA6ZJBS4mhF8ymCqUkXq03uiVu9EBB06IJMKUDXZl9qt5elolh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowADHbf4odvdn9DXUBw--.12114S2;
+	Thu, 10 Apr 2025 15:41:28 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: vkoul@kernel.org,
+	yung-chuan.liao@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	sanyog.r.kale@intel.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] soundwire: debugfs: remove unnecessary NULL check before release_firmware()
+Date: Thu, 10 Apr 2025 15:39:24 +0800
+Message-Id: <20250410073924.3558570-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: mediatek: Correct indentation
- and style in DTS example
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Andy Teng <andy.teng@mediatek.com>,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250324125105.81774-1-krzysztof.kozlowski@linaro.org>
- <20250324125105.81774-2-krzysztof.kozlowski@linaro.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250324125105.81774-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADHbf4odvdn9DXUBw--.12114S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw18ZF4ktr4xXry8CF17KFg_yoWxZwcEkw
+	48GrWkGF1UGr9Fq342ka13ZrWv9a98uan2q3ZIvw43ArWDJrWfX3y8ur1DXFs3G3yDGFn5
+	Ary5tFn8A34vkjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbsAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUbJPEDUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Il 24/03/25 13:51, Krzysztof Kozlowski ha scritto:
-> DTS example in the bindings should be indented with 2- or 4-spaces and
-> aligned with opening '- |', so correct any differences like 3-spaces or
-> mixtures 2- and 4-spaces in one binding.
-> 
-> No functional changes here, but saves some comments during reviews of
-> new patches built on existing code.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->   .../pinctrl/mediatek,mt65xx-pinctrl.yaml      | 83 +++++++------------
->   .../pinctrl/mediatek,mt7622-pinctrl.yaml      | 48 +++++------
->   .../pinctrl/mediatek,mt8183-pinctrl.yaml      | 68 +++++++--------
->   .../pinctrl/mediatek,mt8192-pinctrl.yaml      | 76 ++++++++---------
->   4 files changed, 127 insertions(+), 148 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
-> index 5f2808212f39..b9680b896f12 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
-> @@ -137,64 +137,43 @@ examples:
->           #size-cells = <2>;
->   
->           pinctrl@1c20800 {
-> -          compatible = "mediatek,mt8135-pinctrl";
-> -          reg = <0 0x1000B000 0 0x1000>;
-> -          mediatek,pctl-regmap = <&syscfg_pctl_a>, <&syscfg_pctl_b>;
-> -          gpio-controller;
-> -          #gpio-cells = <2>;
-> -          interrupt-controller;
-> -          #interrupt-cells = <2>;
-> -          interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> -              <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-> -              <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> +            compatible = "mediatek,mt8135-pinctrl";
-> +            reg = <0 0x1000B000 0 0x1000>;
-> +            mediatek,pctl-regmap = <&syscfg_pctl_a>, <&syscfg_pctl_b>;
-> +            gpio-controller;
-> +            #gpio-cells = <2>;
-> +            interrupt-controller;
-> +            #interrupt-cells = <2>;
-> +            interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
->   
-> -          i2c0_pins_a: i2c0-pins {
-> -            pins1 {
-> -              pinmux = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
-> -                <MT8135_PIN_101_SCL0__FUNC_SCL0>;
-> -              bias-disable;
-> -            };
-> -          };
-> -
-> -          i2c1_pins_a: i2c1-pins {
-> -            pins {
-> -              pinmux = <MT8135_PIN_195_SDA1__FUNC_SDA1>,
-> -                <MT8135_PIN_196_SCL1__FUNC_SCL1>;
-> -              bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-> -            };
-> -          };
-> -
-> -          i2c2_pins_a: i2c2-pins {
-> -            pins1 {
-> -              pinmux = <MT8135_PIN_193_SDA2__FUNC_SDA2>;
-> -              bias-pull-down;
-> +            i2c0_pins_a: i2c0-pins {
+release_firmware() checks for NULL pointers internally.
+Remove unneeded NULL check for fmw here.
 
-Agreeing with Rob - if you can please also remove the labels while at it,
-that'd be great, but regardless of that...
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/soundwire/debugfs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
+diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
+index 3099ea074f10..af37299c7d9d 100644
+--- a/drivers/soundwire/debugfs.c
++++ b/drivers/soundwire/debugfs.c
+@@ -292,8 +292,7 @@ static int cmd_go(void *data, u64 value)
+ 	finish_t = ktime_get();
+ 
+ out:
+-	if (fw)
+-		release_firmware(fw);
++	release_firmware(fw);
+ 
+ 	pm_runtime_mark_last_busy(&slave->dev);
+ 	pm_runtime_put(&slave->dev);
+-- 
+2.25.1
 
