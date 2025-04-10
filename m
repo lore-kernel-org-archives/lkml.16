@@ -1,126 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C8E26A1B7;
-	Thu, 10 Apr 2025 09:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915C0269D0C;
+	Thu, 10 Apr 2025 09:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278942; cv=none; b=ELCR8+iUh3KWz9kydFxvJn1kitQE24TQnmKDgZFNDkoJLQjMarjDRcJQusvqv3YX0Rod2aplFaDnpTnBam8u12f9aWFc23WtZjKZRQ/In7e38CLxbEm1FhdX3jDCenhUnCWKqf9PwMeev49yNT99EiVktday7uunKnVDI3kT2mg=
+	t=1744278967; cv=none; b=nnx2sVGqYhs6l22DWQ3LcI/yesBm0Oi5q9WtN1btw3LQw7aPUOyj4hICFW2NTUZDwEGivaUGc7r7vR4/0cKiDvflEVMloSIxxIh7DuYELBWg+4+154+Zqrc2udMI4xmcONEZDtd02vV1qFO8R3oyg0X/SoH+KQrnNsdpQtITkqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278942; c=relaxed/simple;
-	bh=8EcGJQ3GTOpysp09gNVgiLkuakkbV/LHk6mYwlMi9fU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XEDQdO8hvVWOZP/DFPOeTd1Aj8we6+wD8fwjcWf1QE3l2g4KXwOr+/dEyiES8WY3+2SlrJxWNiguumgEBucf7cX2Lz3ZtCx5aMdud5QkZrNI5n3v6h+hF8JKfkCLEHjTrlc0P4k/7GixyyS5wGLdwKXm7xwId4cJV5SPDWLa+vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8Bx41AG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744278967; c=relaxed/simple;
+	bh=4jkPAyYdwNoLCo7GjAAli7ATT33RV/WwXY0qHasYKqo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=mmZbx46JsOw0IdmH0t87Xy0+dQNTHSfYJP5qiiPLJ+bf+BEoryIm1j1dAAelp0YutJwuliY1pc1tCDEQOYJaiB+g+pgnyYrM5AsKUxzBXU6ItKic4eTab7gwil3uOYj7we2WrFT5tgIjCjmfRbI/QM/WzS20Tucu7alHEmvqxLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=GP5+1a/w; arc=none smtp.client-ip=185.132.180.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8Bx41AG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58C41C4CEDD;
-	Thu, 10 Apr 2025 09:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744278941;
-	bh=8EcGJQ3GTOpysp09gNVgiLkuakkbV/LHk6mYwlMi9fU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=W8Bx41AG7OpVbPjErvAMogPWDSIBK/z8os5ohWUvkRE4ds1pTyI5N77noltX8qkor
-	 UNhRtMPnyN7jWVB0nH3We6tE18tfb4tcNsFTaKoz5VMAMxUHxYVhp5o20QyselJCjN
-	 a19Q+859e8NqWBY/XLMbh1pQK9FNumLGtwI0Q8zXWf0lDPwtvsIVpuY0t4suIGtcrK
-	 kyrVDfHcYYiOjj+X9kMaOrOIE/+ieRkHt2WwpGYGTlK4Ii3UmM6sdxi1C/yIxqNi8Z
-	 53UV3vGbDt63kblo1uxnSROmr5pGGoGQ9is4TgcifFaOrWtgm6m4I89Pxz1046lIme
-	 twCnK1xi5Qinw==
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2d060c62b61so346356fac.0;
-        Thu, 10 Apr 2025 02:55:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU1c+5ceZwvQuqPVf2LZoinfcbVN4EyIwiATzF32akjgg1C9xPmv2rcFCZeSqa/ymtKKoIULZY77gU=@vger.kernel.org, AJvYcCUjA1V2ddvVBoMVjqTIuukqdkSYHPe0Fln92546/Ih/Avve02gmxQRlqMKTqarwhV7iBcxGjlB6dNM=@vger.kernel.org, AJvYcCXRZg7iACP53MmFdmcJgeR4zRny7pbzHzoh3E4r8wOF8Ge2R1U+ZFLWJA/4q/wuzYtabUwvVedqbFgFK0vr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5PzhkehK8UhN4eZ3q9fIrB2WDcBNLGzIOClsVHLyAOB6SQnaA
-	kSm66KSftAQxm2Nlm2TopFrU4F9j4mAPdMelyMeftI/QzXfXRC+jBPX3/iPm4yuCCHUkjKWMWg6
-	IlxMcE3nPP+D1z8UO0sNOwmEwXFA=
-X-Google-Smtp-Source: AGHT+IEmexViKlgkEffDpeC2raagEKm0bOhC4vVnIgwdvz8rjn2fVXxuMs9t01QxOTMnRtcIjs9aKVMkp0Kikyx9UK4=
-X-Received: by 2002:a05:6871:20c1:b0:2c8:3620:f595 with SMTP id
- 586e51a60fabf-2d0b35741c2mr1284587fac.6.1744278940407; Thu, 10 Apr 2025
- 02:55:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="GP5+1a/w"
+Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
+	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A60F8U032471;
+	Thu, 10 Apr 2025 10:55:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=O
+	ddvjFyhxOPDYeAktBI2qCK+rXK3SaQu3VEBcWg+tPc=; b=GP5+1a/w7quvT75Ij
+	gfkq1VUQ2NOxq7UF6/RbP0x27T0FqY3P5lUEhl0NYIIfitfTojS0zYZ7hlKnkFqi
+	m9DzjRFDPIb8t8A3lg3QvbA0eycQRVQWBL0t9TxiW55Rgy1Zqm2mcWzRnpmAQH2L
+	5t1furIW6inTW5S6G2bQfRQTqvI8MnR1Q2//oiXGa5dFPN54CVVJV4laGS8NR51j
+	e0/LJmiIBJUmH9bjXHKib8F3HS3f5UoTgUrMinihc62qsDB5xi/I0Zjib0lytbSh
+	rC+qAIXxBbGrB67Z+JAnqaXMgRL93dVDXNF4Q/vtD6SdOwX7DzGYiy2D27gEJv7j
+	WdvvQ==
+Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
+	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45w86h1d34-5
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 10 Apr 2025 10:55:27 +0100 (BST)
+Received: from
+ 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+ (172.25.6.134) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 10 Apr 2025 10:55:24 +0100
+From: Matt Coster <matt.coster@imgtec.com>
+Date: Thu, 10 Apr 2025 10:55:10 +0100
+Subject: [PATCH v6 11/18] drm/imagination: Use a lookup table for fw defs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326-cross-lock-dep-v1-0-3199e49e8652@bootlin.com>
- <20250326-cross-lock-dep-v1-1-3199e49e8652@bootlin.com> <CAJZ5v0gFER-nbWpZK6FMDJCXA+iPQUm5DZDAiRY3ahugR2MM=g@mail.gmail.com>
- <874izdlblm.fsf@bootlin.com> <CAJZ5v0irZj7ttvUqb-iENQS6BX+KTGuTqyVh0DxgKmsoKrBcbA@mail.gmail.com>
- <875xjccuyx.fsf@bootlin.com>
-In-Reply-To: <875xjccuyx.fsf@bootlin.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 10 Apr 2025 11:55:29 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jeMqmeZiVQ_EbZrR0XTMfHwg4fEdVmz1p9S-R-VOCVZw@mail.gmail.com>
-X-Gm-Features: ATxdqUEcZnNYsDm7i-WvsX8bhd5c7nQEp9AuWveDK-FjQNDtrXgZyFSE2rDz40g
-Message-ID: <CAJZ5v0jeMqmeZiVQ_EbZrR0XTMfHwg4fEdVmz1p9S-R-VOCVZw@mail.gmail.com>
-Subject: Re: [PATCH RFC 01/10] PM: runtime: Add helpers to resume consumers
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	Chen-Yu Tsai <wenst@chromium.org>, Lucas Stach <l.stach@pengutronix.de>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Marek Vasut <marex@denx.de>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, 
-	Fabio Estevam <festevam@denx.de>, Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Shengjiu Wang <shengjiu.wang@nxp.com>, linux-imx@nxp.com, 
-	Ian Ray <ian.ray@gehealthcare.com>, =?UTF-8?Q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250410-sets-bxs-4-64-patch-v1-v6-11-eda620c5865f@imgtec.com>
+References: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
+In-Reply-To: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
+To: Frank Binns <frank.binns@imgtec.com>,
+        Matt Coster
+	<matt.coster@imgtec.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        "Vignesh
+ Raghavendra" <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
+        "Michal
+ Wilczynski" <m.wilczynski@samsung.com>,
+        Alessio Belle
+	<alessio.belle@imgtec.com>,
+        Alexandru Dadu <alexandru.dadu@imgtec.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3937;
+ i=matt.coster@imgtec.com; h=from:subject:message-id;
+ bh=4jkPAyYdwNoLCo7GjAAli7ATT33RV/WwXY0qHasYKqo=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaR/n9o0cd8FyS8sFwQPlQcIrdC4u/HNo5572v+qoi7n1
+ P3O5ezy7ChlYRDjYJAVU2TZscJyhdofNS2JG7+KYeawMoEMYeDiFICJ2H5i+Ke/pSsoNi/nZ/qM
+ FzurmVdtnhzIXdYw5SFLtsfFtbtrix4yMszdMv9fzG+vfWtU393Z1865qqkmxkXyj6j6vrylTgs
+ 2/uMCAA==
+X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
+ fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
+X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
+X-Authority-Analysis: v=2.4 cv=MLNgmNZl c=1 sm=1 tr=0 ts=67f7958f cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=iYL5nd4a90DRai7o0HQA:9
+ a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
+X-Proofpoint-GUID: bThOd9AZWJK-0uluZi-NeFm8Sw4f7kFx
+X-Proofpoint-ORIG-GUID: bThOd9AZWJK-0uluZi-NeFm8Sw4f7kFx
 
-Hi,
+With more than two firmware processor types, the if/else chain in
+pvr_fw_init() gets a bit ridiculous. Use a static array indexed on
+pvr_fw_processor_type (which is now a proper enum instead of #defines)
+instead.
 
-On Thu, Apr 10, 2025 at 9:54=E2=80=AFAM Miquel Raynal <miquel.raynal@bootli=
-n.com> wrote:
->
-> Hi Rafael,
->
-> Thanks for taking the time to read all that.
->
-> >> After the LPC discussion with Steven, I also discussed with Saravana
-> >> about this and he pointed that since we were using fw_devlink=3Drpm by
-> >> default now, all providers -including clock controllers of course- wou=
-ld
-> >> already be runtime resumed the first time we would make a
-> >> runtime_resume(clk), and thus all the nested calls were no longer
-> >> needed. This native solution was already addressing point #1 above (an=
-d
-> >> partially point #3) and all I had to do was to make a similar function
-> >> for point #2.
-> >
-> > So this depends on DT being used and fw_devlink=3Drpm being used,
-> > doesn't it?
->
-> DT, not really. fw_devlink=3Drpm however, yes.
+Signed-off-by: Matt Coster <matt.coster@imgtec.com>
+Reviewed-by: Frank Binns <frank.binns@imgtec.com>
+---
+Changes in v6:
+- Add Frank's Rb
+- Link to v5: https://lore.kernel.org/r/20250326-sets-bxs-4-64-patch-v1-v5-11-e4c46e8280a9@imgtec.com
+Changes in v5:
+- None
+- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-11-d987cf4ca439@imgtec.com
+Changes in v4:
+- None
+- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-11-143b3dbef02f@imgtec.com
+Changes in v3:
+- None
+- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-13-3fd45d9fb0cf@imgtec.com
+Changes in v2:
+- None
+- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-13-4ed30e865892@imgtec.com
+---
+ drivers/gpu/drm/imagination/pvr_device.h |  4 ----
+ drivers/gpu/drm/imagination/pvr_fw.c     | 21 ++++++++++++++++-----
+ drivers/gpu/drm/imagination/pvr_fw.h     |  7 +++++++
+ 3 files changed, 23 insertions(+), 9 deletions(-)
 
-Which means DT because fw_devlink=3Drpm is DT-specific.  At least it is
-not used on systems where ACPI is the firmware interface.
+diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
+index 6c01d96657de6dc3904ef5ca28365f06cfe0f40b..12bf0b9e5bfb48ef9e5ed9faa44e0896b7555f49 100644
+--- a/drivers/gpu/drm/imagination/pvr_device.h
++++ b/drivers/gpu/drm/imagination/pvr_device.h
+@@ -739,8 +739,4 @@ pvr_ioctl_union_padding_check(void *instance, size_t union_offset,
+ 					      __union_size, __member_size);  \
+ 	})
+ 
+-#define PVR_FW_PROCESSOR_TYPE_META  0
+-#define PVR_FW_PROCESSOR_TYPE_MIPS  1
+-#define PVR_FW_PROCESSOR_TYPE_RISCV 2
+-
+ #endif /* PVR_DEVICE_H */
+diff --git a/drivers/gpu/drm/imagination/pvr_fw.c b/drivers/gpu/drm/imagination/pvr_fw.c
+index 3441c378d91c61df704bfbfee23488b89b1d4569..962b8cb2119ec5e177fa2a8225e3387d113dcd03 100644
+--- a/drivers/gpu/drm/imagination/pvr_fw.c
++++ b/drivers/gpu/drm/imagination/pvr_fw.c
+@@ -938,16 +938,27 @@ pvr_fw_validate_init_device_info(struct pvr_device *pvr_dev)
+ int
+ pvr_fw_init(struct pvr_device *pvr_dev)
+ {
++	static const struct pvr_fw_defs *fw_defs[PVR_FW_PROCESSOR_TYPE_COUNT] = {
++		[PVR_FW_PROCESSOR_TYPE_META] = &pvr_fw_defs_meta,
++		[PVR_FW_PROCESSOR_TYPE_MIPS] = &pvr_fw_defs_mips,
++		[PVR_FW_PROCESSOR_TYPE_RISCV] = NULL,
++	};
++
+ 	u32 kccb_size_log2 = ROGUE_FWIF_KCCB_NUMCMDS_LOG2_DEFAULT;
+ 	u32 kccb_rtn_size = (1 << kccb_size_log2) * sizeof(*pvr_dev->kccb.rtn);
+ 	struct pvr_fw_device *fw_dev = &pvr_dev->fw_dev;
+ 	int err;
+ 
+-	if (fw_dev->processor_type == PVR_FW_PROCESSOR_TYPE_META)
+-		fw_dev->defs = &pvr_fw_defs_meta;
+-	else if (fw_dev->processor_type == PVR_FW_PROCESSOR_TYPE_MIPS)
+-		fw_dev->defs = &pvr_fw_defs_mips;
+-	else
++	if (fw_dev->processor_type >= PVR_FW_PROCESSOR_TYPE_COUNT)
++		return -EINVAL;
++
++	fw_dev->defs = fw_defs[fw_dev->processor_type];
++
++	/*
++	 * Not all firmware processor types are currently supported.
++	 * Once they are, this check can be removed.
++	 */
++	if (!fw_dev->defs)
+ 		return -EINVAL;
+ 
+ 	err = fw_dev->defs->init(pvr_dev);
+diff --git a/drivers/gpu/drm/imagination/pvr_fw.h b/drivers/gpu/drm/imagination/pvr_fw.h
+index 180d310074e3585c641e540a9e2576b5ab2a5705..88ad713468ce3a1ee459b04dde5363c24791a4f1 100644
+--- a/drivers/gpu/drm/imagination/pvr_fw.h
++++ b/drivers/gpu/drm/imagination/pvr_fw.h
+@@ -402,6 +402,13 @@ struct pvr_fw_device {
+ #define pvr_fw_irq_clear(pvr_dev) \
+ 	pvr_fw_irq_write_reg(pvr_dev, clear, (pvr_dev)->fw_dev.defs->irq.clear_mask)
+ 
++enum pvr_fw_processor_type {
++	PVR_FW_PROCESSOR_TYPE_META = 0,
++	PVR_FW_PROCESSOR_TYPE_MIPS,
++	PVR_FW_PROCESSOR_TYPE_RISCV,
++	PVR_FW_PROCESSOR_TYPE_COUNT,
++};
++
+ extern const struct pvr_fw_defs pvr_fw_defs_meta;
+ extern const struct pvr_fw_defs pvr_fw_defs_mips;
+ 
 
-> > You cannot really assume in general that there will be device links
-> > between parents and children.
->
-> But if runtime PM already mandates fw_devlink to be the information
-> source (which, IIRC is the case since fw_devlink=3Drpm), then why wouldn'=
-t
-> this approach work? For sure there may be holes in fw_devlink, but
-> what is the reason for it if we cannot use it?
+-- 
+2.49.0
 
-Well, see above.
-
-> In other words, are you suggesting that this approach is invalid? If yes
-> could you elaborate a bit? For this approach to work we do not need all
-> the parenting to be perfectly described, just relationships between
-> clock consumers and providers, which are in general rather basic.
-
-So you know which devices are parents and children without fw_devlink
-and this information can be used readily on all systems AFAICS.
-
-IIUC, the overall approach is to resume the entire hierarchy before
-making changes that may deadlock and I think that this is a good idea
-in general.
-
-However, you need to do it in a way that's usable on all systems and
-when you walk the hierarchy from top to bottom, you need to do it
-recursively I think because resuming a device doesn't cause its
-children or consumers to resume.
