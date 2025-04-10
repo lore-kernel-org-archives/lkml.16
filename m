@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60539267722;
-	Thu, 10 Apr 2025 10:08:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6060926B0AB;
+	Thu, 10 Apr 2025 10:08:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744279683; cv=none; b=JjeRdbxMuhs3rnSPBnNwPVf3d0W7W2d7O2G2zI/m9RUsJ78M0X3zMuaLry0h06anTzy97AshVr70weCTmE0D13FXi1SMV5cp0rby4lSZjqbMC3AwA1dSvUHUGirQy1NzrU5i+5Nej9WAgVP+UbZX9hCqSIlXzFPjLYbb6AH8v2c=
+	t=1744279683; cv=none; b=K8R+/NPjuEusJSj4n1SjA23+7TzjdSFQJC6KVSHwtzmYLx7eoW7rIsF0CiyrCV0B7uznbIsg2XQLozSq7XB5SffZfDzQ0FaCeW/KBKVSG80Y+A43hGIofLUkBWDBPwX45UXqF+wB/sPe4LB7Fikm0JD+15ivbUfdhhsOgtq6zP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744279683; c=relaxed/simple;
-	bh=63Q2CP1BjWPMJIsb/dxHjtnUbcBupGKBm9IiQVKWr7o=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=adWq9SMhpwd9cACOzBR8Q5avMWK4demVmZOFlPU042EWzhAxd7316p6321A5SE8gJrQRSD5PWo4GRnhV2ksc7foTkqWZk4Od+aa+SrXw+DHZrOy75IX9wbvD2anNRQBnNOawHt7ElN3zGTrWIBvFQbRYE9MCVyvtBxuLSjyKR7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIDnKzJ3; arc=none smtp.client-ip=10.30.226.201
+	bh=WyCopkUlDcDG1qNxKVxDfBYC9H+9p2D6lgc0Nk0spUs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=K9ppFWCsNFym0K/gOvfFjRTEY7R2gnp9aVlDMpUlrEuoP7X6AFmm44sb7KfThfhSwp6COtkDoQT/RVojPgWWX+ULkfgCyVtu4w0YGAP2mbXETXOGkFykxMJiERc250wKY8l7JE1yvQbadW3XdAoQdrSWxDaA6dn1nr02npkNgWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Llcx2mod; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIDnKzJ3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D038EC4CEDD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Llcx2mod"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 06CC2C4CEED;
 	Thu, 10 Apr 2025 10:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744279682;
-	bh=63Q2CP1BjWPMJIsb/dxHjtnUbcBupGKBm9IiQVKWr7o=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=fIDnKzJ3wWuyN+D28ZX3a75/K6ZAmTj7z1ReQ73W4dFXNVSjospzUtCngaaXJ+m45
-	 gT7rFPGKpoDlNeAbuZsdl9S04vKYEuU7pApb6K4+ebRxSCDRKOKWvyDA4hoHPnBepJ
-	 s4ZL65se4D/y1L1DwIgSu3+IKvZTlR2n0KP1DrM0lRjkcGwScJ5qQjZEedfTbxrr1W
-	 GP3X2/W+lqiyhUMDkqCe9MM7TsPYZa+wbMf1D+bwfLXUu9BUKuBgO+00ORsisocloY
-	 iXoemd8h2fY/vsDOXVfFBCsZY/o6BaT6pPw7Z+/dn+YedK5LvTJB8LGjCMUIF8egeN
-	 UwBFJQ/Rl5nTQ==
+	s=k20201202; t=1744279683;
+	bh=WyCopkUlDcDG1qNxKVxDfBYC9H+9p2D6lgc0Nk0spUs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Llcx2modS1glHrK3A84x9zHjRTwwM96MvX9FYt70GOprysEoFQSn2B4MjuHPWDPoX
+	 fzBwAVLxUylzp67m4iMPwRiiS4TvaOQh9rhlP2yhw82AwnC28O5AckKpTk81wiGq/R
+	 D0uqPujP/UW2Glr0TzCN6LZ1cyURebmj9M9wy25a3zJYfNX3wp22Vr6OHX8ZAgHcHo
+	 kjOkq/QaRMNjF4MyUqqNDOrPe/GVVSanQsYaQY68A0r9UG59Q7Y9ZPwWr3BOqLBNpb
+	 XBYCoDNjH2bzHumbFxkWcd+CAS/apjOxz6hbZWQEQkjrw2ggYYMM6cnkyves39+qEY
+	 9I9nmZ2jf54Xw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B578BC3601E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B60C369AA;
 	Thu, 10 Apr 2025 10:08:02 +0000 (UTC)
 From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Subject: [PATCH v2 0/3] arm64: dts: qcom: x1e80100-hp-x14: add
- usb-1-ss1-sbu-mux
-Date: Thu, 10 Apr 2025 12:07:27 +0200
-Message-Id: <20250410-hp-x14-v2-0-d36414704a0a@oldschoolsolutions.biz>
+Date: Thu, 10 Apr 2025 12:07:30 +0200
+Subject: [PATCH v2 3/3] arm64: dts: qcom: x1e80100-hp-x14: amend order of
+ nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAF+Y92cC/zXOQQ6CMBCF4auQWVvTViDWFfcwLGgZ7CSEkg4Sl
- PTuVqLL/2XyZXZgjIQMt2KHiCsxhSmHPhXgfDc9UFCfG7TUlSylEX4WmyqFHFR/ra2ztTGQj+e
- IA20HdG9ze+IlxNfhruq7/ggl/8SqhBS2xMp1urqgM00Ye3Y+hJHD+FzyJ3y29IY2pfQBG99Ut
- 6kAAAA=
-X-Change-ID: 20250409-hp-x14-0f1d86bcb699
+Message-Id: <20250410-hp-x14-v2-3-d36414704a0a@oldschoolsolutions.biz>
+References: <20250410-hp-x14-v2-0-d36414704a0a@oldschoolsolutions.biz>
+In-Reply-To: <20250410-hp-x14-v2-0-d36414704a0a@oldschoolsolutions.biz>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -54,12 +52,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744279681; l=1464;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744279681; l=1222;
  i=jens.glathe@oldschoolsolutions.biz; s=20240919;
  h=from:subject:message-id;
- bh=63Q2CP1BjWPMJIsb/dxHjtnUbcBupGKBm9IiQVKWr7o=;
- b=tuqFUauzJa7LaauxOGCboKN4tSuMaOgeQubZN0kK0oeSGsOJFIel2tA1kTb4gywWqDDSUfRFw
- V4xOSZ+9scmDW5Od13VRx9SUYjG3VbroHfZ+7DLgFiIsCimIbrouG90
+ bh=bnPuoslWPgNZvAQ9/Qrw/txzq3JvrErhTj3TzDMEntY=;
+ b=kuwVoeZ26n8+Ah4fxp7+P2goDpgr5mMwxtP/V9pTNTnYdmjwxB0NyQdgwbv/++Zb91kI/F6tI
+ ShzMvfYqHCAAgX7AM5t0hkPNNahYYrXtAbPhIONVp0IA821IFO/uMGW
 X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
  pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
 X-Endpoint-Received: by B4 Relay for
@@ -67,45 +65,57 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 Reply-To: jens.glathe@oldschoolsolutions.biz
 
-The usb_1_1 port doesn't have the PS8830 repeater, but apparently some
-MUX for DP altmode control. After a suggestion from sgerhold on
-'#aarch64-laptops' I added gpio-sbu-mux nodes from the x1e80100-QCP
-tree, and this appears to work well. It is still guesswork, but
-working guesswork.
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-Added and rewired for usb_1_1
-
-Also, did some more changes as tested here:
-
-- remove unused i2c buses
-- amend order of nodes.
-
-The series is based on [1] from Johan.
+amend the order of pmk8550_* nodes afte pmc8380_*
 
 Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 ---
-Changes in v2:
-- removed overlapping patches with [1] and [2] - thanks Johan
-- EDITME: use bulletpoints and terse descriptions.
-- Link to v1: https://lore.kernel.org/r/20250410-hp-x14-v1-0-b4e5ca253ec9@oldschoolsolutions.biz
+ .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-[1] https://lore.kernel.org/lkml/20250328084154.16759-1-johan+linaro@kernel.org/
-[2] https://lore.kernel.org/r/20250319160509.1812805-1-juerg.haefliger@canonical.com
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
+index 6c0e56168eaf133b9500c32b98821fa1fc3e7a2d..b492901f2d8c610e955c95aea60eb6c3d80d4f65 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
++++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
+@@ -1196,17 +1196,6 @@ edp_bl_reg_en: edp-bl-reg-en-state {
+ 
+ };
+ 
+-&pmk8550_gpios {
+-	edp_bl_pwm: edp-bl-pwm-state {
+-		pins = "gpio5";
+-		function = "func3";
+-	};
+-};
+-
+-&pmk8550_pwm {
+-	status = "okay";
+-};
+-
+ &pmc8380_5_gpios {
+ 	usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
+ 		pins = "gpio8";
+@@ -1218,6 +1207,17 @@ usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
+ 	};
+ };
+ 
++&pmk8550_gpios {
++	edp_bl_pwm: edp-bl-pwm-state {
++		pins = "gpio5";
++		function = "func3";
++	};
++};
++
++&pmk8550_pwm {
++	status = "okay";
++};
++
+ &qupv3_0 {
+ 	status = "okay";
+ };
 
----
-Jens Glathe (3):
-      arm64: dts: qcom: x1e80100-hp-x14: add usb-1-ss1-sbu-mux
-      arm64: dts: qcom: x1e80100-hp-x14: remove unused i2c buses
-      arm64: dts: qcom: x1e80100-hp-x14: amend order of nodes
-
- .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 98 ++++++++++++++--------
- 1 file changed, 62 insertions(+), 36 deletions(-)
----
-base-commit: 2791023c72489c91f59cfe818776fc6cd164ddad
-change-id: 20250409-hp-x14-0f1d86bcb699
-
-Best regards,
 -- 
-Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+2.48.1
 
 
