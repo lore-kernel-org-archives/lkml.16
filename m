@@ -1,274 +1,127 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8117228EA41;
-	Thu, 10 Apr 2025 14:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFDA293444
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744296056; cv=none; b=uCnHLtFPrEFHFIw/JT8+0+UlFNqocWgA1WKG04BKbisZ3vEj1RV+uKrRDKpxYpIswZtGSY2chIQeNGqgpJooYL3SSk80h/hGN4DCZfvteDTgvLSCYNDgzFtU6sJmINxAo7NKUguBFoYuiNPlcDRO8ibDNv2GI832d0wwxq93QFE=
+	t=1744296061; cv=none; b=t8PPanyFki25f7fHM3Kn3+/S6mFHL3mS9Sm0wbBF7uiYAfczfxlqe0FYLWZuO6B+Ktn4xI3xhuCwyTcQObmw2w5QkZ7qi4IWvqzx+yhCPxi1yvRdTEeYctMT+THP6Xt4gRrQY80u2CtdQtOvhPn7tjN1ZpzaCcalRTnUthw3QjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744296056; c=relaxed/simple;
-	bh=oB91cXMm1Tzc2hrifejWNjhZiJO4j88K+VH6BqBA11s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U9TwrajOpxNggeOpZAOKBIqZbtf2/indBO3vmimbxzZ9UOpJZKlklKvhEgeECVM8mqZwYwA/LDiv8ry0iV862kcw/3rWFC/WGD715VfQb7hMEYoyjhTbgrc1Smjy5QttAPKY/ScIJyuUfns2gRx/vCwM14+UqucQMquYRn7gj6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=d7O0GMrQ; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744296061; c=relaxed/simple;
+	bh=5fL0rgnSzGs1CAG0aabGzOX1kCW1JlrnGcwxY3Sn6z0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LJfsU0i4WUSPxO74H/ABhNtsMGtmxTIcB6X222j1ifUFVQAS+qOVo6R32m3HOh/HpARwN0l7Y5JSZb7jVVPRJN6eqr6tha8udIJIjUAqWo0CCcxX1RiU+LjqDqii1qWgEZ6pf5Dog6bnmblbx0rUhC7UryS3VSJQznrm8/0zrf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=fAW0k68Y; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="d7O0GMrQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744296052;
-	bh=oB91cXMm1Tzc2hrifejWNjhZiJO4j88K+VH6BqBA11s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d7O0GMrQ8lM0yky0xkknlf/3jPUnTkN7VPHoiAPRKRYN1r73hxRXED4Y+yM6d8zEQ
-	 3GIRf5gjFrMtwe0EydvqboJtUvuQxSm1fjIRz7OOBjHt0LRLwhE4byZdommL57ei7q
-	 TZ7fB2PW3+O7vnsmCQTFC9/FELxSxYSvJjiTBwp/0J+6L3HOtWWNHAZ2HGBejeg6Kj
-	 k1HD4+sBSa9KNDJ8P+/flAAegNOZ/723LK37jAiyibZy4yqEdS7iq42D3+z5uUheuI
-	 6RQwyfEpNh47tHv5NnBJqs0Xx6Mc6xLa/1ZdR4CyGusAlXvmLN3LSd7+uvkWTeGlqZ
-	 SshxyuD/WD57A==
-Received: from IcarusMOD.eternityproject.eu (fi-19-199-243.service.infuturo.it [151.19.199.243])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 29F2B17E1072;
-	Thu, 10 Apr 2025 16:40:51 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linus.walleij@linaro.org
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	sean.wang@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	kernel@collabora.com
-Subject: [PATCH v1 1/3] dt-bindings: pinctrl: mediatek: Add support for MT6893
-Date: Thu, 10 Apr 2025 16:40:42 +0200
-Message-ID: <20250410144044.476060-2-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250410144044.476060-1-angelogioacchino.delregno@collabora.com>
-References: <20250410144044.476060-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="fAW0k68Y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=TD9gJDoeIYWoLN39DzPWwvY2Y5ci8qPdXqVd0lqAifM=; b=fAW0k68YRp9bnpjKIBpwOdu8Fm
+	RJr3T6YT+xnmzH+wH+8d3vLrDPSAhX2EcAoIVZ0VHhmZxODYmQUpsosCHVeZGDQHtdiauroSNCchU
+	urMJeBlSY7BfJBQAzDCMXCju7dvOw6JnS/gZBQtknXzjT7X07sOSbniln07z52ox7oXhgaYSionkA
+	rF4yRvU3d92FTci5d2o8Gmlxm+RSPjdnzwdV+BBHXjj8Dhv4lWkumfJBazYfgxXfq9p8g9vbGI+9F
+	uxAfVh3Vnn/CXoQP72FHS9yGwEDhCmzrYzpKkp/atlWqv9FW6ByKk7jb4TTnI4UtOs/uYigVhD2ZL
+	1oR6d3GQ==;
+Received: from [177.134.103.112] (helo=[192.168.68.130])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u2t55-00EiHQ-KJ; Thu, 10 Apr 2025 16:40:39 +0200
+Message-ID: <2266002e-372d-434c-a2f5-282166e28c70@igalia.com>
+Date: Thu, 10 Apr 2025 11:40:32 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] drm/ci: Add devicetree validation and KUnit tests
+To: Vignesh Raman <vignesh.raman@collabora.com>,
+ dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com, daniel@fooishbar.org, helen.fornazier@gmail.com,
+ airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com,
+ guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
+ valentine.burley@collabora.com, lumag@kernel.org, quic_abhinavk@quicinc.com,
+ mripard@kernel.org, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+ linux-kernel@vger.kernel.org
+References: <20250409061543.311184-1-vignesh.raman@collabora.com>
+ <ef5b7030-c38a-44b9-b0bd-28ea6adb17c2@igalia.com>
+ <a16c70e0-9078-4a21-9fa1-ca9d33823ff2@collabora.com>
+Content-Language: en-US
+From: Helen Koike <koike@igalia.com>
+In-Reply-To: <a16c70e0-9078-4a21-9fa1-ca9d33823ff2@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add bindings for the pin controller found in the MediaTek
-Dimensity 1200 (MT6983) SoC.
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- .../pinctrl/mediatek,mt6893-pinctrl.yaml      | 193 ++++++++++++++++++
- 1 file changed, 193 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6893-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6893-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6893-pinctrl.yaml
-new file mode 100644
-index 000000000000..fa189fe00624
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6893-pinctrl.yaml
-@@ -0,0 +1,193 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/mediatek,mt6893-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek MT6893 Pin Controller
-+
-+maintainers:
-+  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+
-+description:
-+  The MediaTek's MT6893 Pin controller is used to control SoC pins.
-+
-+properties:
-+  compatible:
-+    const: mediatek,mt6893-pinctrl
-+
-+  reg:
-+    items:
-+      - description: pin controller base
-+      - description: rm group IO
-+      - description: bm group IO
-+      - description: lm group IO
-+      - description: lb group IO
-+      - description: rt group IO
-+      - description: lt group IO
-+      - description: tm group IO
-+      - description: External Interrupt (EINT) controller base
-+
-+  reg-names:
-+    items:
-+      - const: base
-+      - const: rm
-+      - const: bm
-+      - const: lm
-+      - const: lb
-+      - const: rt
-+      - const: lt
-+      - const: tm
-+      - const: eint
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    description:
-+      Number of cells in GPIO specifier. Since the generic GPIO binding is used,
-+      the amount of cells must be specified as 2. See the below mentioned gpio
-+      binding representation for description of particular cells.
-+    const: 2
-+
-+  gpio-ranges:
-+    maxItems: 1
-+
-+  gpio-line-names: true
-+
-+  interrupts:
-+    description: The interrupt outputs to sysirq
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+# PIN CONFIGURATION NODES
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    additionalProperties: false
-+
-+    patternProperties:
-+      '^pins':
-+        type: object
-+        allOf:
-+          - $ref: /schemas/pinctrl/pincfg-node.yaml
-+          - $ref: /schemas/pinctrl/pinmux-node.yaml
-+        description:
-+          A pinctrl node should contain at least one subnodes representing the
-+          pinctrl groups available on the machine. Each subnode will list the
-+          pins it needs, and how they should be configured, with regard to muxer
-+          configuration, pullups, drive strength, input enable/disable and input
-+          schmitt.
-+
-+        properties:
-+          pinmux:
-+            description:
-+              Integer array, represents gpio pin number and mux setting.
-+              Supported pin number and mux are defined as macros in
-+              arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h for this SoC.
-+
-+          drive-strength:
-+            enum: [2, 4, 6, 8, 10, 12, 14, 16]
-+
-+          drive-strength-microamp:
-+            enum: [125, 250, 500, 1000]
-+
-+          bias-pull-down:
-+            oneOf:
-+              - type: boolean
-+              - enum: [75000, 5000]
-+                description: Pull down RSEL type resistance values (in ohms)
-+            description:
-+              For normal pull down type there is no need to specify a resistance
-+              value, hence this can be specified as a boolean property.
-+              For RSEL pull down type a resistance value (in ohms) can be added.
-+
-+          bias-pull-up:
-+            oneOf:
-+              - type: boolean
-+              - enum: [10000, 5000, 4000, 3000]
-+                description: Pull up RSEL type resistance values (in ohms)
-+            description:
-+              For normal pull up type there is no need to specify a resistance
-+              value, hence this can be specified as a boolean property.
-+              For RSEL pull up type a resistance value (in ohms) can be added.
-+
-+          bias-disable: true
-+
-+          output-high: true
-+
-+          output-low: true
-+
-+          input-enable: true
-+
-+          input-disable: true
-+
-+          input-schmitt-enable: true
-+
-+          input-schmitt-disable: true
-+
-+        required:
-+          - pinmux
-+
-+        additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - gpio-ranges
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/pinctrl/mt65xx.h>
-+    #define PINMUX_GPIO0__FUNC_GPIO0 (MTK_PIN_NO(0) | 0)
-+    #define PINMUX_GPIO99__FUNC_SCL0 (MTK_PIN_NO(99) | 1)
-+    #define PINMUX_GPIO100__FUNC_SDA0 (MTK_PIN_NO(100) | 1)
-+
-+    pio: pinctrl@10005000 {
-+        compatible = "mediatek,mt6893-pinctrl";
-+        reg = <0x10005000 0x1000>,
-+              <0x11c20000 0x0200>,
-+              <0x11d10000 0x0200>,
-+              <0x11e20000 0x0200>,
-+              <0x11e70000 0x0200>,
-+              <0x11ea0000 0x0200>,
-+              <0x11f20000 0x0200>,
-+              <0x11f30000 0x0200>,
-+              <0x1100b000 0x1000>;
-+        reg-names = "base", "rm", "bm", "lm", "lb", "rt",
-+                    "lt", "tm", "eint";
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-ranges = <&pio 0 0 220>;
-+        interrupt-controller;
-+        interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH 0>;
-+        #interrupt-cells = <2>;
-+
-+        gpio-pins {
-+            pins {
-+                pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
-+                bias-pull-up = <4000>;
-+                drive-strength = <6>;
-+            };
-+        };
-+
-+        i2c0-pins {
-+            pins-bus {
-+                pinmux = <PINMUX_GPIO99__FUNC_SCL0>,
-+                         <PINMUX_GPIO100__FUNC_SDA0>;
-+                bias-pull-down = <75000>;
-+                drive-strength-microamp = <1000>;
-+            };
-+        };
-+    };
--- 
-2.49.0
+On 10/04/2025 05:07, Vignesh Raman wrote:
+> Hi Helen,
+> 
+> On 09/04/25 23:53, Helen Koike wrote:
+>> Hi Vignesh,
+>>
+>> Thank you for your patch.
+>>
+>> On 09/04/2025 03:15, Vignesh Raman wrote:
+>>> Add jobs to validate devicetrees and run KUnit tests.
+>>>
+>>> Pipeline link,
+>>> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1400550
+>>
+>> I see the checks are in the same stage as build, does it make sense to 
+>> create another stage? Similar to what was proposed on kci-gitlab?
+>>
+>> Also, I don't think it make sense for kunit to be in the build stage. 
+>> Maybe in software-driver? Since kunit runs on a qemu.
+> 
+> We can add a `test` stage for kunit and a `static-checks` stage for 
+> devicetree validation and check patch. What do you think?
+
+Ack on static-checks stage.
+
+`test` stage confuses me, because all the other stages with driver names 
+are also tests, this is why I suggested to move to `software-driver`.
+
+Or maybe we could just have a kunit stage for now.
+
+Helen
+
+> 
+> Regards,
+> Vignesh
+> 
+>>
+>> Helen
+>>
+>>>
+>>> Link to v1,
+>>> https://lore.kernel.org/all/20250327160117.945165-1- 
+>>> vignesh.raman@collabora.com/
+>>>
+>>> Vignesh Raman (2):
+>>>    drm/ci: Add jobs to validate devicetrees
+>>>    drm/ci: Add jobs to run KUnit tests
+>>>
+>>>   drivers/gpu/drm/ci/check-devicetrees.yml | 43 ++++++++++++++++++++++++
+>>>   drivers/gpu/drm/ci/dt-binding-check.sh   | 16 +++++++++
+>>>   drivers/gpu/drm/ci/dtbs-check.sh         | 19 +++++++++++
+>>>   drivers/gpu/drm/ci/gitlab-ci.yml         |  2 ++
+>>>   drivers/gpu/drm/ci/kunit.sh              | 11 ++++++
+>>>   drivers/gpu/drm/ci/kunit.yml             | 32 ++++++++++++++++++
+>>>   6 files changed, 123 insertions(+)
+>>>   create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
+>>>   create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
+>>>   create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
+>>>   create mode 100755 drivers/gpu/drm/ci/kunit.sh
+>>>   create mode 100644 drivers/gpu/drm/ci/kunit.yml
+>>>
+>>
+> 
 
