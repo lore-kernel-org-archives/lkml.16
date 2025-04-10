@@ -1,64 +1,50 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C51C204C1E
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2788207A2C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269375; cv=none; b=eJ6LN1o4QJN5AyaweEA4Dqh+/bDoEVoPY4SWPD6rslGizXw88RSO3R7/9OBgNyiopA0rWB3V+49WXID8CcFQSJW58wLM0DEcfNuh9N0pXEh1trM3onTc7hTpdyJ0TQEvy9Bk3XXZ1ThtAFoF/AKB93uf39kRd58q3u9fSWdIfSE=
+	t=1744269389; cv=none; b=LDB63y9xbdgcBQNDkghO4yXh1yVIGJFCDB25z15AmkkVizNGT6tONKSiE8sXLjuRt1eS1TEW4KVIRXNzQADFuAYux95CpKMME3Pw4iS0fMHqsO4qm3r9jbnzdKsufYMw+FcnMCamWPqVKauBP7etHFMYOrYeWMKc0v6GrxCMHJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269375; c=relaxed/simple;
-	bh=jtF/nrS6iv9Kj+fvDEFx6uHdSawvFx7PwxIay8a7nrU=;
+	s=arc-20240116; t=1744269389; c=relaxed/simple;
+	bh=R4kkkcVVHPzCslI6+XyVJA1Y1Bm2lhw2qswzN6HQ8vk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f9Z5M8eLyrrQt1Ghiwks1/du8HewIyi1mqudeSIaGF0v/gN1iZwkYJpMD3yEd55oQZx1rXIS3t82GZGyn/VYPLy9MHunr4S0j3ISFjI8kh0vWY4J7NgI4VDhiNfTPNRPcsrIybiZUNrZ2ukwZcJQ7D45hLbECNSSp1RH7CTlwkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=iwA5776c; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	 In-Reply-To:Content-Type; b=BNxt6nLj8fKQJmzHWJ8cnScCU8+KFHATuxxz1+PwrCarg3kZV/gZ84qIo5SvBPs1j0Xa639f2t57X1Q2xCdyyczy0w6wyrxMAnvplBbF+32DjZ4mPcf+ULdzXCGjFYhbj4fflQaEYWGdZmlX00SkuqRWbCAGL1dkijNVWrgARTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eptIZUAl; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="iwA5776c"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso5432545e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1744269372; x=1744874172; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zmLueEOSOx1TOZ/xE11puxSYTKnDaeqcR4nW9ehtutQ=;
-        b=iwA5776cZPPcaLJ6Y6M6rglFih14l61mU9JsC3An+TEN+gRHlT7GQJ4NCz92t5IdiH
-         S8TrzQuqsdm9BDzLdm+kGixXhpQhF8ryPoSLmtd0UZbhtdeBua7QuNrxxMJEGXPh8VEC
-         aegO/uxYFGKeZW1yCS166FpzT/xS3a8oy+wTSWgI/rvDvSIiIFEVXpEKbXkF9LRuYfh6
-         vQ0b686UqGKgy3KTqERZL5r7KRGd/pLP+mVfIlW5+FAm9QrxGJNir9o/Oy0nGSvHiQG2
-         lgeG14tPcwQi8Kd+kxrwmIznDhQfQlKklwoDEhBlBJ0gAkN0cPYzR68IW8fVeGVQDCER
-         7sjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744269372; x=1744874172;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zmLueEOSOx1TOZ/xE11puxSYTKnDaeqcR4nW9ehtutQ=;
-        b=TBXXHR+R31r7sSqXHreqqc3HrQxigvg09F608jVjRXPYcA5srQcPCBOfjsZhiy2xOD
-         Da/2GVKylkj6Nw/ZXuRcz0mQLbKZMn8eMLnDHBIi4bIlBAD5xUYU8CnQE8bxICoSDcde
-         f4AzvscgbPIoniwzryPbyKliQhxkfT4Go5HhE9ckFFvP+EgHxnW70gvNWdrw78wXOx/m
-         RUkfwrUS2PdXd6gkNp9abC6KOCRuzDtYFlXKO0sRmZO6kvMcAatHOr8oxXGid5u9nozi
-         UE+7uHfx0TXOmUoxqUOQZZVcJNUyJosBfx4RqD7zT5DixGMan1DrXGjVo0O5ak9oSqYK
-         Aotw==
-X-Forwarded-Encrypted: i=1; AJvYcCWkHW2IGoTSvqaDRUMG6uqx8DtSuKALxWcTtYsZF7eAHqNNA4PTGMfIVfxxSqygl1lAwgxPVdzZVGpSEa8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi9gmo6su9qu4TqM9ouuv6v8NcEpvD8P9H7fXP9LmVpXvI7OPu
-	JefNUTHlMFKQ9qKMz1JiiehlLNjcgNRMn77OxWh2GoWjJZDTE+WFIfdJEzpMw94=
-X-Gm-Gg: ASbGnctKaFB2HhQsyCMknhcoikM7nyJTx+YfdR+kyx+r4SDg4B3Do7pDSKMgZU1so8M
-	tdVv6IQSX5FX5YMdjt3tIX5B54b9M14K1oDqmXLDyZ5uAl+st67S4MRXRDneIGafaaeQJpiZVtI
-	naTgjXAydJUSSnX3Rq7J8AsTJ2nOz9hjuFYzmnQAXeC2/aj3mw3B/9G/auMw9s6mY5zvKtpObVt
-	KuEat588oIiaSSvGEJy1KTZJMkf0+ocuztqNE1cC/OlzUru6RccH9iTXbmxroquLkodU3I85UY2
-	zPzQ63ZI5GRn7IfAFgl3Xps9g7qfwYTLCWNjuUbhNRDmouV+hi88z4imBlk=
-X-Google-Smtp-Source: AGHT+IEz5IG00lmAVwHCdXdSnJ2Z0KQTlp+V18IFUkzrkAAyElIVx0JjEnVPmuw7GvI+SO1ZUwQhPQ==
-X-Received: by 2002:a05:600c:4ec9:b0:43c:ea1a:720c with SMTP id 5b1f17b1804b1-43f2ff0540fmr11919285e9.18.1744269371500;
-        Thu, 10 Apr 2025 00:16:11 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.57])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2066d069sm45329215e9.17.2025.04.10.00.16.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 00:16:10 -0700 (PDT)
-Message-ID: <b8f356b8-b242-41da-a654-d937a354fc1e@tuxon.dev>
-Date: Thu, 10 Apr 2025 10:16:07 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eptIZUAl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744269388; x=1775805388;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=R4kkkcVVHPzCslI6+XyVJA1Y1Bm2lhw2qswzN6HQ8vk=;
+  b=eptIZUAlrf6iNQmTTJrhK+9Mu/42nkCCbjvXEQjRMhJdXFBpAXB3eTKo
+   J+EKcAWJ93jtYR5IrhbdjL5rMxjsEhFPGAh4LOdmO0XpXluzv4aBMPn6t
+   STfdhCPNImMS37NO5hkHoLaAxEWuKZJODxbC5sX/W3HQ7n7W2pHcKMdYl
+   kBVI+gT5V5ekafvF/vxHGpgGEYnM33DrrOcWpKyP+vR+rigS1OLNFi7WR
+   AP0TiYJWYzOsHTAMzE/YiP5Fn+SuqAJ7VJDCvtVtSimkWQjnXk8+N6GkH
+   PswJMcwhrj+drH7Uf6djr1c+X8lUcToCdoolTshrEO4Lmi0fg5tRBpPHv
+   Q==;
+X-CSE-ConnectionGUID: W6+aUR1ITUqX8APbZqAFZw==
+X-CSE-MsgGUID: 43silI2pSNqgd0ZjnIFCPg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="49612962"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="49612962"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 00:16:27 -0700
+X-CSE-ConnectionGUID: AmHfHo1fRUGdHcMQwo/88g==
+X-CSE-MsgGUID: bnLX8qyeRGWb5DOIaJhyUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="133788870"
+Received: from kwywiol-mobl1.ger.corp.intel.com (HELO [10.245.83.152]) ([10.245.83.152])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 00:16:25 -0700
+Message-ID: <2435f0f1-fef4-4c7c-8584-55d5480ca245@linux.intel.com>
+Date: Thu, 10 Apr 2025 09:16:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,38 +52,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/10] pinctrl: at91-pio4: use new GPIO line value setter
- callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Xianwei Zhao <xianwei.zhao@amlogic.com>,
- Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
- <20250408-gpiochip-set-rv-pinctrl-part1-v1-1-c9d521d7c8c7@linaro.org>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: Re: [PATCH V1] accel/amdxdna: Fix incorrect size of ERT_START_NPU
+ commands
+To: Lizhi Hou <lizhi.hou@amd.com>, ogabbay@kernel.org,
+ quic_jhugo@quicinc.com, dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org, min.ma@amd.com, max.zhen@amd.com,
+ sonal.santan@amd.com, king.tam@amd.com
+References: <20250409210013.10854-1-lizhi.hou@amd.com>
 Content-Language: en-US
-In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-1-c9d521d7c8c7@linaro.org>
+From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
+ Gdansk - KRS 101882 - NIP 957-07-52-316
+In-Reply-To: <20250409210013.10854-1-lizhi.hou@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
 
-
-On 08.04.2025 10:17, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 4/9/2025 11:00 PM, Lizhi Hou wrote:
+> When multiple ERT_START_NPU commands are combined in one buffer, the
+> buffer size calculation is incorrect. Also, the condition to make sure
+> the buffer size is not beyond 4K is also fixed.
 > 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
+> Fixes: aac243092b70 ("accel/amdxdna: Add command execution")
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> ---
+>  drivers/accel/amdxdna/aie2_message.c  |  6 +++---
+>  drivers/accel/amdxdna/aie2_msg_priv.h | 10 ++++------
+>  2 files changed, 7 insertions(+), 9 deletions(-)
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> diff --git a/drivers/accel/amdxdna/aie2_message.c b/drivers/accel/amdxdna/aie2_message.c
+> index bf4219e32cc1..82412eec9a4b 100644
+> --- a/drivers/accel/amdxdna/aie2_message.c
+> +++ b/drivers/accel/amdxdna/aie2_message.c
+> @@ -525,7 +525,7 @@ aie2_cmdlist_fill_one_slot_cf(void *cmd_buf, u32 offset,
+>  	if (!payload)
+>  		return -EINVAL;
+>  
+> -	if (!slot_cf_has_space(offset, payload_len))
+> +	if (!slot_has_space(*buf, offset, payload_len))
+>  		return -ENOSPC;
+>  
+>  	buf->cu_idx = cu_idx;
+> @@ -558,7 +558,7 @@ aie2_cmdlist_fill_one_slot_dpu(void *cmd_buf, u32 offset,
+>  	if (payload_len < sizeof(*sn) || arg_sz > MAX_DPU_ARGS_SIZE)
+>  		return -EINVAL;
+>  
+> -	if (!slot_dpu_has_space(offset, arg_sz))
+> +	if (!slot_has_space(*buf, offset, arg_sz))
+>  		return -ENOSPC;
+>  
+>  	buf->inst_buf_addr = sn->buffer;
+> @@ -569,7 +569,7 @@ aie2_cmdlist_fill_one_slot_dpu(void *cmd_buf, u32 offset,
+>  	memcpy(buf->args, sn->prop_args, arg_sz);
+>  
+>  	/* Accurate buf size to hint firmware to do necessary copy */
+> -	*size += sizeof(*buf) + arg_sz;
+> +	*size = sizeof(*buf) + arg_sz;
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/accel/amdxdna/aie2_msg_priv.h b/drivers/accel/amdxdna/aie2_msg_priv.h
+> index 4e02e744b470..6df9065b13f6 100644
+> --- a/drivers/accel/amdxdna/aie2_msg_priv.h
+> +++ b/drivers/accel/amdxdna/aie2_msg_priv.h
+> @@ -319,18 +319,16 @@ struct async_event_msg_resp {
+>  } __packed;
+>  
+>  #define MAX_CHAIN_CMDBUF_SIZE SZ_4K
+> -#define slot_cf_has_space(offset, payload_size) \
+> -	(MAX_CHAIN_CMDBUF_SIZE - ((offset) + (payload_size)) > \
+> -	 offsetof(struct cmd_chain_slot_execbuf_cf, args[0]))
+> +#define slot_has_space(slot, offset, payload_size)		\
+> +	(MAX_CHAIN_CMDBUF_SIZE >= (offset) + (payload_size) +	\
+> +	 sizeof(typeof(slot)))
+> +
+>  struct cmd_chain_slot_execbuf_cf {
+>  	__u32 cu_idx;
+>  	__u32 arg_cnt;
+>  	__u32 args[] __counted_by(arg_cnt);
+>  };
+>  
+> -#define slot_dpu_has_space(offset, payload_size) \
+> -	(MAX_CHAIN_CMDBUF_SIZE - ((offset) + (payload_size)) > \
+> -	 offsetof(struct cmd_chain_slot_dpu, args[0]))
+>  struct cmd_chain_slot_dpu {
+>  	__u64 inst_buf_addr;
+>  	__u32 inst_size;
 
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
