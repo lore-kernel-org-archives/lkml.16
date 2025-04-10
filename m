@@ -1,242 +1,124 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB4F1E22E9;
-	Thu, 10 Apr 2025 14:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744297131; cv=pass; b=GGz9weLqA71ZTzJdxoIaYAfoAIBm0SXU2GFxV8uH4bSIxAuCCs77ii5YQcsKcS2g66r5pDi/16PaPQvFejA5VSpHO6ioG8K3Uz8cpdvTVwocBXPp16t580jjBlLY12GgxCfTjHmKG/pRrGa7yo91d3T5I+YTOTAellqBl3tOHq8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744297131; c=relaxed/simple;
-	bh=sQdKcyOJjyFXyb7DMKGnoZRedKZ89xXboX5hfzQUXL4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NQiADn4xezjj/djsF87A2kZdfWpURg9vYlZ17pUVLZcbGIjoikAp+dWBC163ly3okyV+AYdjqjS+4lfD0Slb6mSV+gOJX4kNr8BG84wpf2+YjGdEBzeEqifUkaL3J0j0cXZSH3v55zq6k/p5Pupc1Jiegfjt6tDEnjaOOcrSKWw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=JC/nCX8H; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910371581E0
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744297155; cv=none; b=V71ML2u1IsEfoe5F94PNuNrF0qw0Ek1XQqHCOBhMJH6zK6JC56pLzTlrQDGDAxLYL9o34HM/LjJ/cuG1MCSb4uPxwsiiCfLrNfjwGObkwd+CuCpNRXcNa1kCkQ0Z/Wti4TXt/ZDUJs7D9ApGYKiQCBNzYaCwSzkLIRtvuexMAIA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744297155; c=relaxed/simple;
+	bh=HRf0Pc1Z3xBthCPSZUcjN1HfvQ/bbryl1Drb/lcqk0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kwKlNuoshDkbDXKusv632YHPlV6epy2+LHN2K4kvQrr8OyHB5VCHKpCfoXi9EDX6VHAJZY1U1aT6VPX5wvhrhHkd/IjRE+JY8JE1w/QvGKaxy55aTEBWm4bJBr/tv8XUckKyxKtxiUQkMj/fbdEq4NDL3DodHew9nQ2wONTymL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9v855hf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="JC/nCX8H"
-ARC-Seal: i=1; a=rsa-sha256; t=1744297097; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=iOCahUm7PU80m8l7K8or5tfmRg47wqQ2hU7AlGOQ8GCiM0NNiPZaJCz9YYAlV2ntkCFXObAs0i7/9NhJVrz23pFRJYiCq+g/GV6AnqrDUcCj7MDTdeLUuir7ZbWrZD0NFpIfznEwRhGS6Bzf+A2tEEY5shmiukuTEusG2XNrIvE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744297097; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=j6KUxqpvhXLce/PJDd2pNOS0Y+D23pvQbY/jB6EG2Pg=; 
-	b=GbeJIWlbmo9QK5pe3QMweg6xd+PxcAwiQ6Cfe6MJdH+j1Tb6F6vPQcUcp/ZZ0Q9c8xpNdDyHArOepDHCOvxYJP9vPJItVJTij4HK7utRHpfgHHwP8iWzO6SSGckEeG0+QZI4WJBAYGPaGplKcMuvs32Ulgr4bApiavoY3eMA/Ss=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744297097;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=j6KUxqpvhXLce/PJDd2pNOS0Y+D23pvQbY/jB6EG2Pg=;
-	b=JC/nCX8H1RxMZU+s68CVcHaKYh85XcvGjibq0WwguVW2RutQRDwCPXLmPQ9lXNdb
-	bnA9tGkYBeu/+ynGhkPBk0W4ThqL2bFTfhnikD9ZVIBOaoEMSqVisDw6gSGuxHeWTEc
-	lH35rnIKB5Yad/MR2IC4alQv2jbb7K/uK74MhoaY=
-Received: by mx.zohomail.com with SMTPS id 1744297096527931.6945802394524;
-	Thu, 10 Apr 2025 07:58:16 -0700 (PDT)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Yan Zhen <yanzhen@vivo.com>,
-	Youssef Samir <quic_yabdulra@quicinc.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Qiang Yu <quic_qianyu@quicinc.com>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kunwu Chan <chentao@kylinos.cn>
-Cc: kernel@collabora.com,
-	mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org
-Subject: [PATCH v2] bus: mhi: host: don't free bhie tables during suspend/hibernation
-Date: Thu, 10 Apr 2025 19:56:54 +0500
-Message-ID: <20250410145704.207969-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9v855hf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E61C4CEE9;
+	Thu, 10 Apr 2025 14:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744297154;
+	bh=HRf0Pc1Z3xBthCPSZUcjN1HfvQ/bbryl1Drb/lcqk0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I9v855hfQdr5H36V36cGa9PxRPrNOq9QpfEbUs2Zh9ox+VB54zWTGzFybYPmWNTmX
+	 SoWcuNQUh5/5RPbg5jF+LfyX+zflJOkokESvzl3QB7CKyEuiro6ju8jKaZjpfHQy96
+	 dKdJ94AIECsm/oN3LgRXUQzgmYC0VMEb9RN+lYcfg187U2GnoQ42eLLct/7AOb6SQV
+	 Q1xmPhmzF7Hh0k7jdTRtKJRRaDV4pAri4exIXpWRkVMmpPVh8/sKGKPt5Pnvdznjxz
+	 5kv7OhD2Dcz35V5acU85BkY3RtlvED/u26zyZdVvtovEEXUMZN6jkxVpTQgWbXfT+p
+	 Z35johRp7pyvQ==
+Date: Thu, 10 Apr 2025 16:59:11 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+Message-ID: <Z_fcv6CrHk0Qa9HV@localhost.localdomain>
+References: <20250410065446.57304-2-gmonaco@redhat.com>
+ <87ecy0tob1.ffs@tglx>
+ <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
+ <Z_fBq2AQjzyg8m5w@localhost.localdomain>
+ <87wmbsrwca.ffs@tglx>
+ <Z_fHLM4nWP5XVGBU@localhost.localdomain>
+ <4fdc6582c828fbcd8c6ad202ed7ab560134d1fc3.camel@redhat.com>
+ <Z_fTmzdvLEmrAth6@localhost.localdomain>
+ <56eae8396c5531b7a92a8e9e329ad68628e53729.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+In-Reply-To: <56eae8396c5531b7a92a8e9e329ad68628e53729.camel@redhat.com>
 
-Fix dma_direct_alloc() failure at resume time during bhie_table
-allocation. There is a crash report where at resume time, the memory
-from the dma doesn't get allocated and MHI fails to re-initialize.
-There may be fragmentation of some kind which fails the allocation
-call.
+Le Thu, Apr 10, 2025 at 04:46:10PM +0200, Gabriele Monaco a écrit :
+> 
+> 
+> On Thu, 2025-04-10 at 16:20 +0200, Frederic Weisbecker wrote:
+> > Le Thu, Apr 10, 2025 at 03:56:02PM +0200, Gabriele Monaco a écrit :
+> > > On Thu, 2025-04-10 at 15:27 +0200, Frederic Weisbecker wrote:
+> > > > But how do we handle global timers that have been initialized and
+> > > > queued from
+> > > > isolated CPUs?
+> > > 
+> > > I need to sketch a bit more the solution but the rough idea is:
+> > > 1. isolated CPUs don't pull remote timers
+> > 
+> > That's the "easy" part.
+> > 
+> > > 2. isolated CPUs ignore their global timers and let others pull
+> > > them
+> > >   perhaps with some more logic to avoid it expiring
+> > 
+> > This will always involve added overhead because you may need to wake
+> > up
+> > a CPU upon enqueueing a global timer to make sure it will be handled.
+> > At least when all other CPUs are idle.
+> > 
+> > > Wouldn't that be sufficient?
+> > > 
+> > > Also, I would definitely do 1. for any kind of isolation, but I'm
+> > > not
+> > > sure about 2.
+> > > Strictly speaking domain isolated cores don't claim to be free of
+> > > kernel noise, even if they initiate it (but nohz_full ones do).
+> > > What would be the expectation there?
+> > 
+> > I don't know, I haven't heard complains about isolcpus handling
+> > global
+> > timers so far...
+> > 
+> > I wouldn't pay much attention to 2) until anybody complains. Does 1)
+> > even
+> > matter to anybody outside nohz_full ?
+> > 
+> 
+> Makes sense..
+> In our case, 2. is not a big issue because it can usually be solved by
+> other configurations, but 1. is an issue.
+> Most people indeed use nohz_full in that scenario, but some users may
+> not want its overhead.
+> 
+> I find it misleading at best for global timers to migrate from
+> housekeeping to isolcpus cores and since it's "easy", I'd definitely
+> change that.
 
-To fix it, don't free the memory at power down during suspend /
-hibernation. Instead, use the same allocated memory again after every
-resume / hibernation. This patch has been tested with resume and
-hibernation both.
+Easy but still a bit invasive so:
 
-The rddm is of constant size for a given hardware. While the fbc_image
-size depends on the firmware. If the firmware changes, we'll free and
-allocate new memory for it.
+> Does it make sense?
 
-Here are the crash logs:
+It makes sense but is there a real need for that? Have people
+complained about that?
 
-[ 3029.338587] mhi mhi0: Requested to power ON
-[ 3029.338621] mhi mhi0: Power on setup success
-[ 3029.668654] kworker/u33:8: page allocation failure: order:7, mode:0xc04(GFP_NOIO|GFP_DMA32), nodemask=(null),cpuset=/,mems_allowed=0
-[ 3029.668682] CPU: 4 UID: 0 PID: 2744 Comm: kworker/u33:8 Not tainted 6.11.11-valve10-1-neptune-611-gb69e902b4338 #1ed779c892334112fb968aaa3facf9686b5ff0bd7
-[ 3029.668690] Hardware name: Valve Galileo/Galileo, BIOS F7G0112 08/01/2024
-[ 3029.668694] Workqueue: mhi_hiprio_wq mhi_pm_st_worker [mhi]
-[ 3029.668717] Call Trace:
-[ 3029.668722]  <TASK>
-[ 3029.668728]  dump_stack_lvl+0x4e/0x70
-[ 3029.668738]  warn_alloc+0x164/0x190
-[ 3029.668747]  ? srso_return_thunk+0x5/0x5f
-[ 3029.668754]  ? __alloc_pages_direct_compact+0xaf/0x360
-[ 3029.668761]  __alloc_pages_slowpath.constprop.0+0xc75/0xd70
-[ 3029.668774]  __alloc_pages_noprof+0x321/0x350
-[ 3029.668782]  __dma_direct_alloc_pages.isra.0+0x14a/0x290
-[ 3029.668790]  dma_direct_alloc+0x70/0x270
-[ 3029.668796]  mhi_alloc_bhie_table+0xe8/0x190 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
-[ 3029.668814]  mhi_fw_load_handler+0x1bc/0x310 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
-[ 3029.668830]  mhi_pm_st_worker+0x5c8/0xaa0 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
-[ 3029.668844]  ? srso_return_thunk+0x5/0x5f
-[ 3029.668853]  process_one_work+0x17e/0x330
-[ 3029.668861]  worker_thread+0x2ce/0x3f0
-[ 3029.668868]  ? __pfx_worker_thread+0x10/0x10
-[ 3029.668873]  kthread+0xd2/0x100
-[ 3029.668879]  ? __pfx_kthread+0x10/0x10
-[ 3029.668885]  ret_from_fork+0x34/0x50
-[ 3029.668892]  ? __pfx_kthread+0x10/0x10
-[ 3029.668898]  ret_from_fork_asm+0x1a/0x30
-[ 3029.668910]  </TASK>
+Thanks.
 
-Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+> 
+> Thanks,
+> Gabriele
+> 
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
-Changes sice v1:
-- Don't free bhie tables during suspend/hibernation only
-- Handle fbc_image changed size correctly
-- Remove fbc_image getting set to NULL in *free_bhie_table()
----
- drivers/bus/mhi/host/boot.c           | 15 +++++++++++----
- drivers/bus/mhi/host/init.c           | 13 ++++++++++---
- drivers/net/wireless/ath/ath11k/mhi.c |  9 +++++----
- include/linux/mhi.h                   |  7 +++++++
- 4 files changed, 33 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
-index 9dcc7184817d5..0df26100c8f9c 100644
---- a/drivers/bus/mhi/host/boot.c
-+++ b/drivers/bus/mhi/host/boot.c
-@@ -487,10 +487,17 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 	 * device transitioning into MHI READY state
- 	 */
- 	if (mhi_cntrl->fbc_download) {
--		ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
--		if (ret) {
--			release_firmware(firmware);
--			goto error_fw_load;
-+		if (mhi_cntrl->fbc_image && fw_sz != mhi_cntrl->prev_fw_sz) {
-+			mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
-+			mhi_cntrl->fbc_image = NULL;
-+		}
-+		if (!mhi_cntrl->fbc_image) {
-+			ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
-+			if (ret) {
-+				release_firmware(firmware);
-+				goto error_fw_load;
-+			}
-+			mhi_cntrl->prev_fw_sz = fw_sz;
- 		}
- 
- 		/* Load the firmware into BHIE vec table */
-diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
-index a9b1f8beee7bc..09b946b86ac46 100644
---- a/drivers/bus/mhi/host/init.c
-+++ b/drivers/bus/mhi/host/init.c
-@@ -1173,8 +1173,9 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
- 		/*
- 		 * Allocate RDDM table for debugging purpose if specified
- 		 */
--		mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
--				     mhi_cntrl->rddm_size);
-+		if (!mhi_cntrl->rddm_image)
-+			mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
-+					     mhi_cntrl->rddm_size);
- 		if (mhi_cntrl->rddm_image) {
- 			ret = mhi_rddm_prepare(mhi_cntrl,
- 					       mhi_cntrl->rddm_image);
-@@ -1212,12 +1213,18 @@ void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
- 		mhi_cntrl->rddm_image = NULL;
- 	}
- 
-+	mhi_partial_unprepare_after_power_down(mhi_cntrl);
-+}
-+EXPORT_SYMBOL_GPL(mhi_unprepare_after_power_down);
-+
-+void mhi_partial_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
-+{
- 	mhi_cntrl->bhi = NULL;
- 	mhi_cntrl->bhie = NULL;
- 
- 	mhi_deinit_dev_ctxt(mhi_cntrl);
- }
--EXPORT_SYMBOL_GPL(mhi_unprepare_after_power_down);
-+EXPORT_SYMBOL_GPL(mhi_partial_unprepare_after_power_down);
- 
- static void mhi_release_device(struct device *dev)
- {
-diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
-index acd76e9392d31..f77cec79b5b80 100644
---- a/drivers/net/wireless/ath/ath11k/mhi.c
-+++ b/drivers/net/wireless/ath/ath11k/mhi.c
-@@ -460,12 +460,13 @@ void ath11k_mhi_stop(struct ath11k_pci *ab_pci, bool is_suspend)
- 	 * workaround, otherwise ath11k_core_resume() will timeout
- 	 * during resume.
- 	 */
--	if (is_suspend)
-+	if (is_suspend) {
- 		mhi_power_down_keep_dev(ab_pci->mhi_ctrl, true);
--	else
-+		mhi_partial_unprepare_after_power_down(ab_pci->mhi_ctrl);
-+	} else {
- 		mhi_power_down(ab_pci->mhi_ctrl, true);
--
--	mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
-+		mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
-+	}
- }
- 
- int ath11k_mhi_suspend(struct ath11k_pci *ab_pci)
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index 059dc94d20bb6..65a47c712b3a0 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -382,6 +382,7 @@ struct mhi_controller {
- 	const char *fw_image;
- 	const u8 *fw_data;
- 	size_t fw_sz;
-+	size_t prev_fw_sz;
- 	const char *edl_image;
- 	size_t rddm_size;
- 	size_t sbl_size;
-@@ -662,6 +663,12 @@ void mhi_power_down_keep_dev(struct mhi_controller *mhi_cntrl, bool graceful);
-  */
- void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl);
- 
-+/**
-+ * mhi_partial_unprepare_after_power_down - Free any allocated memory after power down partially
-+ * @mhi_cntrl: MHI controller
-+ */
-+void mhi_partial_unprepare_after_power_down(struct mhi_controller *mhi_cntrl);
-+
- /**
-  * mhi_pm_suspend - Move MHI into a suspended state
-  * @mhi_cntrl: MHI controller
 -- 
-2.43.0
-
+Frederic Weisbecker
+SUSE Labs
