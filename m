@@ -1,65 +1,32 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABD31E9B14;
-	Thu, 10 Apr 2025 16:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 555581EE7DA;
+	Thu, 10 Apr 2025 16:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744304309; cv=none; b=rKYXAH2gYeQUY+qByHn0YMcs3ql0feP+3DGxeYMm0I6bu33xS5UvXtwomBilWjWRqY0xNZRelcI1Gsb7G+nG1a24HkBi7KiOLy7h5yt3kx+kVFx1GniYa8vr8UR6yTkZbA8b6NvGdwrPz1MMnALWh3f3dJm++B9bLJa+8AFpHEs=
+	t=1744304387; cv=none; b=du2KgvecShP9APFd0V3ykowGL1HefNhc9n8gnMz3T8kL/p78/MYgnRFcY8pXW3CvFXvQ3FytEjIOidLXbsPz5XjUPr1dAahUK0QfAe9mpSCs84sa/MO3FpCwROCq3gUCF7QWOsZnTCRVR6YLF4BOkNYulxBuLJfuhugl+35FtOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744304309; c=relaxed/simple;
-	bh=QSrLQbtKHzNu7BnbMHKydpM2WZqiXvwGP3dlepduIZY=;
+	s=arc-20240116; t=1744304387; c=relaxed/simple;
+	bh=ud40hiuGG5TAQs7UCvIro5914kQp42ofgoH6rUYjU1o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HkkokOJ9bRUeLEvRdzx41ZIDjKlD0l0kblkAQZ9YoulaEReLzV7oXXVK3JUkyDpedZo/MmOCNpYcpF0pBjsDtxV2ARiAUwg9CdVX1UGmtZT0TF+DOuWmenSnvSShQL86z0poZv7oT4c+FAlGrOW9wShIwJt71BYYFMXoZ341PzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnzZaNqD; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=ZrXFHcCI2tsBUAwp+72AZ7HsTWktNdB9WCJQNGDBfpeMKgLYYOg5TFVX+2m/v1I+MUOtlgSVDgdB7dgi3zjPwgVDK8j+jTZD6uLtY9p4d0/rhLS4wShEQvVBSuphVNxQ4eSjhLwfOoO266fGEmgKoz3lPFudA7XkaXFoimBlkxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JHT8LCdC; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnzZaNqD"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso1123658b3a.2;
-        Thu, 10 Apr 2025 09:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744304307; x=1744909107; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fb4ywqjWz2GIsG+JDj8glrtq3YuAKw64ngABr/SVSQY=;
-        b=HnzZaNqDJFm8O3uQ4kczWO+1QxUNPrGQ7fBiQO6VU63Qf1E+A+xpytbBnwEsm6aPDG
-         3AiW6GhNENqD2VuqJ1El1ETi4GnRLSerJpzP3rTSloOLpk8QO1RLsVaplBSONKMYI/5T
-         2y1uNfaI43W+xUu2Iw8j1bZmsfcdxipEwvu4l5x41/Ox8Kww0CDqezaCkOD9bedwWvAP
-         hjasGsncuFTZYR9I7tygpQ/3vKrVyFSvaX2Qgqj/ChBW59bzlVaUAhB60oWJ/E8eBk/j
-         e2F0F1WRmqJY2zO49VPRL4zfhqbW8ardyrHNcYZ0jZ5m7EpRg9b443m82akFuwR9Keff
-         WwRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744304307; x=1744909107;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fb4ywqjWz2GIsG+JDj8glrtq3YuAKw64ngABr/SVSQY=;
-        b=cDPg+vXZAP5UW5gvz/vVURaQLdVPUkwcSG/yZLsmEO/7+n68kr2lEugRI/okG5WPpt
-         otsrcWQURtmwCT2nlmrzuMyRE9rFDNTiVnQHnEnUUmPWEUFUWpq7mMDuxGHC1woUYoyd
-         EafehhkkSSSpN6PpJB3PJ3eBWuvRFdlFYOZhm8nbd7uS7IvvzRW5UTeQgwzhfGlVwdwd
-         QnYgUNe1/qrszpGaYB9v6ljkawcbsi7HclN7wRS/5Udz2eaNB0SOGa4xRIQy8+0CZxxe
-         8hBC8xDFu4o0B+v1l8UYwdedwSZgNeJD9yHfizAMxgDGLBEl4CUrpkXIsZU19p6V1UQr
-         ZnGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJG1DfYhs4BT7UWo8dq4M2QN6RS9M7LeyRrJu+hBXppUSZ+yoUkyOnOyBIJ8mQnUPQzA7lnBNhWggFqBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+vk1Fl32oIHdJZRp0Z6igh5hdM7GeSj0RhRSwTV8XEw3zJi69
-	Jbxr7SjDM08D9l/mU2nrVIUDQAeQCXCTEn5cOP0WMqNEq4RWtZI5JbFMbs2s
-X-Gm-Gg: ASbGnctk8R7nQ05Oeuq1AWeNLunjWqX4FeuEFsXmmHmEiJBe9KR/ZfIIF7m8NkpcA7s
-	0mFgx8gSSeyf35FHCT9SmdCX9ivv3Ro+yq28T6p5MeVblziwM7gaRNqOAX5K4YnD5/Gn2gOnWv4
-	lzIqhNJX/Crk7NOv3kbSrOcqnYAUAihXJvfwYUduwnTyDAbqEcPYW78G7YbV6aLN6pXAXbTkgl+
-	A4nW7dx/75y40cjSyjkgv9Knh+hgWl+ejEW4ylm6qybPRoMscQ/PWgzCXhytCwudPoA9CgpwKIT
-	UgYtWghM/YfsVILZj10MgfUXGIRVOyW4ZZlOMEpXoTx4fEDCinv/FlcZRbzPVNEegcKHxHafJFp
-	FTPLXo12k6cIdVL+RZw==
-X-Google-Smtp-Source: AGHT+IG0e8qIqAIM5EIct+y0ySqTLEOJKSzlXpmPtTuYYh2lvIRJSPXsoYZJ+u7VgR1oUo1i/OLpow==
-X-Received: by 2002:a05:6a00:2185:b0:736:5dc6:a14b with SMTP id d2e1a72fcca58-73bbee82aa0mr4935340b3a.13.1744304307109;
-        Thu, 10 Apr 2025 09:58:27 -0700 (PDT)
-Received: from ?IPV6:2409:4080:204:a537:70f5:9c3d:61d0:62b9? ([2409:4080:204:a537:70f5:9c3d:61d0:62b9])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d6ae7dsm3532778b3a.82.2025.04.10.09.58.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 09:58:26 -0700 (PDT)
-Message-ID: <c3ad805b-4ccf-4218-8b81-66a8977e2928@gmail.com>
-Date: Thu, 10 Apr 2025 22:28:20 +0530
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JHT8LCdC"
+Received: from [100.70.65.11] (unknown [20.110.218.7])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C81DA2113E87;
+	Thu, 10 Apr 2025 09:59:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C81DA2113E87
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744304385;
+	bh=vxXwkdEOn7BTRh/cnvKn+B0GcVvl6i4koOpR5p1bqWc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JHT8LCdCXgjdyTqcygVEM0A4oBfxyGSsACAFVgSqpF/r46yj9ypHpbSf9+HHuLb0X
+	 pmX4Hwe5MUrRUG6uvpniItcbSKg3gVhZwQfhXHOUMDNCscbXA/4LlNcntMgVGA1fl7
+	 7Dm1oub7U52nP9dRwCvWoI+slg2g3jGZNsdYjDak=
+Message-ID: <8b5e5495-4b11-4acc-8df1-fb94b2a34f0f@linux.microsoft.com>
+Date: Thu, 10 Apr 2025 09:59:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,79 +34,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: adc: ad_sigma_delta: Fix use of uninitialized
- variable status_pos
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>, lars@metafoo.de,
- Michael.Hennerich@analog.com, jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250409200151.201327-1-purvayeshi550@gmail.com>
- <3ed7564cf2749ee207da8ddc5ef06b54d8aea881.camel@gmail.com>
+Subject: Re: [PATCH v11 8/9] ima: make the kexec extra memory configurable
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250402124725.5601-1-chenste@linux.microsoft.com>
+ <20250402124725.5601-9-chenste@linux.microsoft.com>
+ <Z/eVWQw3z7yyzyxb@MiWiFi-R3L-srv>
 Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <3ed7564cf2749ee207da8ddc5ef06b54d8aea881.camel@gmail.com>
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z/eVWQw3z7yyzyxb@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 10/04/25 16:39, Nuno Sá wrote:
-> Hi Purva,
-> 
-> Thanks for your patch... See below
-> On Thu, 2025-04-10 at 01:31 +0530, Purva Yeshi wrote:
->> Fix Smatch-detected error:
->> drivers/iio/adc/ad_sigma_delta.c:604 ad_sd_trigger_handler() error:
->> uninitialized symbol 'status_pos'.
+On 4/10/2025 2:54 AM, Baoquan He wrote:
+> On 04/02/25 at 05:47am, steven chen wrote:
+>> The extra memory allocated for carrying the IMA measurement list across
+>> kexec is hard-coded as half a PAGE.  Make it configurable.
 >>
->> The variable `status_pos` was only initialized in specific switch cases
->> (1, 2, 3, 4), which could leave it uninitialized if `reg_size` had an
->> unexpected value.
+>> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
+>> extra memory (in kb) to be allocated for IMA measurements added during
+>> kexec soft reboot.  Ensure the default value of the option is set such
+>> that extra half a page of memory for additional measurements is allocated
+>> for the additional measurements.
 >>
->> Fix by validating `reg_size` before the switch block. If it’s not
->> one of the expected values, return early and log an error. This ensures
->> `status_pos` is always initialized before use and prevents undefined
->> behavior.
+>> Update ima_add_kexec_buffer() function to allocate memory based on the
+>> Kconfig option value, rather than the currently hard-coded one.
 >>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 >> ---
->>   drivers/iio/adc/ad_sigma_delta.c | 5 +++++
->>   1 file changed, 5 insertions(+)
+>>   security/integrity/ima/Kconfig     | 10 ++++++++++
+>>   security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
+>>   2 files changed, 21 insertions(+), 5 deletions(-)
 >>
->> diff --git a/drivers/iio/adc/ad_sigma_delta.c
->> b/drivers/iio/adc/ad_sigma_delta.c
->> index 6c37f8e21120..d3b59d90b728 100644
->> --- a/drivers/iio/adc/ad_sigma_delta.c
->> +++ b/drivers/iio/adc/ad_sigma_delta.c
->> @@ -568,6 +568,11 @@ static irqreturn_t ad_sd_trigger_handler(int irq, void
->> *p)
->>   	else
->>   		transfer_size = reg_size;
+>> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+>> index 475c32615006..d73c96c3c1c9 100644
+>> --- a/security/integrity/ima/Kconfig
+>> +++ b/security/integrity/ima/Kconfig
+>> @@ -321,4 +321,14 @@ config IMA_DISABLE_HTABLE
+>>   	help
+>>   	   This option disables htable to allow measurement of duplicate records.
 >>   
->> +	if (reg_size != 1 && reg_size != 2 && reg_size != 3 && reg_size != 4)
->> {
->> +		dev_err(&indio_dev->dev, "Unsupported reg_size: %u\n",
->> reg_size);
->> +		return IRQ_HANDLED;
->> +	}
+>> +config IMA_KEXEC_EXTRA_MEMORY_KB
+>> +	int "Extra memory for IMA measurements added during kexec soft reboot"
+>> +	depends on IMA_KEXEC
+>> +	default 0
+> Usually a new Kconfig item which accepts a range should define the range
+> boundary, otherwise it's not clear to people how large or how small it
+> can be set. For example, can I set it as value of 1<<40? We should at
+> least estimate a possible upper limit for it for other people's
+> reference. My personal opinion.
+
+Hi Baoquan,
+
+How about I set range 2-40? Default set as 2, same as the fixed setting.
+
+Thanks,
+
+Steven
+
+> The rest looks good to me.
+>
+>
+>> +	help
+>> +	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
+>> +	  allocated (in kb) for IMA measurements added during kexec soft reboot.
+>> +	  If set to the default value of 0, an extra half page of memory for those
+>> +	  additional measurements will be allocated.
 >> +
-> 
-> Use the switch case for this. Add a default branch for the invalid case. You
-> should also use dev_err_ratelimited() and instead of 'return IRQ_HANDLED', do
-> 'goto irq_handled'.
-> 
-> Thx!
-> - Nuno Sá
+>>   endif
+> ...snip...
 
-Hi Nuno,
-
-Thank you for the review and guidance.
-
-I’ve updated the patch to address your suggestions and will send the 
-next version shortly.
-
-Best regards,
-Purva
-
-> 
->>   	switch (reg_size) {
->>   	case 4:
->>   	case 2:
 
