@@ -1,111 +1,216 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3AF1BD9DD
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7F428CF48;
+	Thu, 10 Apr 2025 14:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293608; cv=none; b=J4rCrt2Z4AEae9DmrIpIWIHVRrmzZNlLgL3XSt2Dy6Cdzsvb3Z8DD9eq40cI/8x+5hNn/Dk5+xxVMLHoMPsvy+sbx45Qv5Tp636/XXQHWLW1jDHAeG7Kqld0y7qeao+DUFFoaV+jV2KzxZgkAVG0egkqkaGmy20zQQ8I1+WFnKQ=
+	t=1744293614; cv=none; b=p0KvVkMKOxS4r/CqZVhjR6IMXHpVbH/kPyE6Q71pqZGzjsjbKhZOVEQffJb6PlqmR5VcxDkyEBLwb7weE7tPGErK8XtGKceLjUcVAcKOu3XaqzltdNbG7EquJlUE4O42NzdyoJjbjxmflJ+5QJBotojcUhkAgFsrGrsj52jLzEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293608; c=relaxed/simple;
-	bh=DkhAAPA6kBndoYkMckkzv2wi0P9heqk3YlBHzr4h9/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DxWJLnzNufA1gvrfmo2YYW/ZAJeL2mzsE5bDwVPpOPPS24HzNDECvtacju1HBnZ2/YGw6D4RHy2BqIEoKFGcEf5lm6kSC/mBNPoXtoMoStULeAQJckJ79tToat960/CRe/giVL3mL4AXL+7IZbW8N5QNWikWEsVAXjtoa+U0t4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PEwJrfpG; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PEwJrfpG"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1401197f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:00:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744293605; x=1744898405; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DkhAAPA6kBndoYkMckkzv2wi0P9heqk3YlBHzr4h9/E=;
-        b=PEwJrfpGn6ScaQ5e28AfnospMcTNVwKp9z6oZ69cATuWsjKY/pE6OWUh62dBukTH+e
-         wyhUOOhBnBTlO3FM4YwMd84no+o5VpPDGGp+Fe2weBXYXV1D5B5PpZgPb/PFxBvpYiml
-         SdR16o+laSUEdagdoopbdRVKTEyzO174iGRHO8GuZKeMtaFgomHOqv8EWrkHTOyYqsQK
-         3lEOKSsnsF3URSkcVRDVjFOFnBmvlFgyfVnkUYLR820xQbhW/I/iGKarF3wO/DxQgsCG
-         1zYDxpOVrxK4IQcJpJAbPiMW/Wq9JljoHa5VTK8vdPS0b1PrU01TFk+krqmou7cNB3xz
-         ffrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744293605; x=1744898405;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DkhAAPA6kBndoYkMckkzv2wi0P9heqk3YlBHzr4h9/E=;
-        b=XuU+9gfSAOcodera6tW7/d6qfhHy5uDKzZ+PIJuz70s8RkWlsv/UMInYXjdC3a+nJr
-         88XjxvobLbPFQ58RAkOg34lapkDIXGt22oLMbpM5KXhHaETbcYTTgHkyZdhmjcmtQl1s
-         aj1NZ5xh16hhLiUeAk5H0S5Is/6QGY21rKe69cpJpUhQEa+ffKE1RodvWHyk/QAxT0mL
-         MrqsI2XSzfZ10y1nT7fPsjBLZojuGehh+i7tb30K+Gi2eLkuR4Ga0IUZK4v0kBUqGVjI
-         PgSfHW94cqo5AYtZOAt70Op7uhW8t/3o9zUC1qGR7OL/aYUUOWrifZf7MuaMD3ZgD5we
-         uBVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb95T43QUtjXxe+75Gqnr3iUzWJw5nOuk3k9fPOlxyxIqPnfOeFZrAD2xXPb4wWw5GbKJimHjFSDD04WQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUMuxCmycaNBvw+A612K20Mtjd5f462CxZteN3kBoCtL7KeF4x
-	qH1TmfEum6iS9Z6oPVbZ+QGKeN0Ju8N9G99iaYlRvwYBNmzxBNUHDjosjH66yxap7rtH5yEoHel
-	OSI8LooOOTvmDrwBj2Ut5SmJqalecdSUM8hlu
-X-Gm-Gg: ASbGncvYrC8bpu0ltcRxdJWjC95s0Woi0f3GoTrVY+wXBRQpKXBgpI0KtZFjU7/vqot
-	W6TvVBXz6Bqxe+fvVR98Z8GIMO93cukcU7C5Cx8p/aC7wog5gQ1hJOWtHv+Lb4+k/ViCWgSwg98
-	BUX4A148QBOnS67kwID9iUZBhb6iJ643rH5YLhfOlFneSk2nSJUWnB
-X-Google-Smtp-Source: AGHT+IE/4Ng88Ghh9b9cz333p4LRZHS/YvWGDKbEw/0wlaYZRQcOHJ8JrXhJUUMtdgnxLoX0Qa6IY3ujoMO0MRt8aoI=
-X-Received: by 2002:a05:6000:2508:b0:39c:1efb:f7c4 with SMTP id
- ffacd0b85a97d-39d8f4dcd59mr2679780f8f.25.1744293605110; Thu, 10 Apr 2025
- 07:00:05 -0700 (PDT)
+	s=arc-20240116; t=1744293614; c=relaxed/simple;
+	bh=7wF8LCmsUqEp2NjHInH4TmmaQeJYNPP+02n9VYtEBHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=U+/4uwgy71v+fgSXmC3y4uG2egkhl7Fe+Dra6heD7605z/h02HsnElPkez1nkTcBjq7mayUhGqwTwbzc7lpcyQLTjTu9Ug8lD+7nHNU44iole8Sxvc9sZ/8gL32XUXfbjuqQz4jdUNtuTW3qXTQNgUMOX11cJ2AGnhkQVsQ8YHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZYLv11WnYzvWty;
+	Thu, 10 Apr 2025 21:55:57 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id AAA08140147;
+	Thu, 10 Apr 2025 22:00:00 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 10 Apr 2025 21:59:59 +0800
+Message-ID: <6df264b9-7d87-4b35-8f56-b593097124a6@huawei.com>
+Date: Thu, 10 Apr 2025 21:59:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410115420.366349-1-panikiel@google.com> <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
- <20250410124526.GB9833@noisy.programming.kicks-ass.net> <20250410130944.GA9003@noisy.programming.kicks-ass.net>
- <CANiq72=k+tZ3ACEB5k9qwJ8ZYu-dXkA3=Lisg1b8ze-2D0STog@mail.gmail.com>
- <20250410132649.GE9833@noisy.programming.kicks-ass.net> <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
- <20250410133446.GF9833@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250410133446.GF9833@noisy.programming.kicks-ass.net>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 10 Apr 2025 15:59:53 +0200
-X-Gm-Features: ATxdqUGg5HChMyH-0LvrurnU48biEJhkOG2za2uBeHgJDdc3xlU1wyOQmbxqTkg
-Message-ID: <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
-Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Matthew Maurer <mmaurer@google.com>, 
-	Ramon de C Valle <rcvalle@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] nfs: Fix shift-out-of-bounds UBSAN warning with
+ negative retrans
+To: <trondmy@kernel.org>, <anna@kernel.org>, <rdunlap@infradead.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<chengzhihao1@huawei.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+References: <20250410073525.1982010-1-wangzhaolong1@huawei.com>
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+In-Reply-To: <20250410073525.1982010-1-wangzhaolong1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Thu, Apr 10, 2025 at 3:34=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Thu, Apr 10, 2025 at 03:27:55PM +0200, Miguel Ojeda wrote:
-> > On Thu, Apr 10, 2025 at 3:26=E2=80=AFPM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
-> > >
-> > > New compiler can't build old core?
-> >
-> > No, that is not intended to work -- `core` is tied to the compiler.
->
-> OMFG, you just gave me another reason to hate on this rust-bucket of a
-> language :-/ What language can't even build an old version of its own
-> runtime :-(
+Friendly ping.
 
-I don't think there's anything unreasonable about having a place to
-put logic that depends on compiler internals.
+Perhaps the easiest way to avoid the UBSAN warning is to add a check at
+the location where the warning is triggered. If a check is to be added during
+the NFS mount process, then the calculation results of the two parameters passed
+from user space must first be verified. This approach, however, seems somewhat
+redundant.
 
-> Anyway, given this core nonsense is now CFI unsound, it is no longer
-> suitable to build the kernel. So either refrain from using part of the
-> core that trips this, or get it fixed asap.
+diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+index 0eab15465511..b714671fa418 100644
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -654,13 +654,20 @@ static unsigned long xprt_abs_ktime_to_jiffies(ktime_t abstime)
+  static unsigned long xprt_calc_majortimeo(struct rpc_rqst *req,
+  		const struct rpc_timeout *to)
+  {
+  	unsigned long majortimeo = req->rq_timeout;
+  
+-	if (to->to_exponential)
+-		majortimeo <<= to->to_retries;
+-	else
++	if (to->to_exponential) {
++		unsigned long shifted_value;
++
++		/* Use safe left shift to avoid undefined behavior */
++		if (check_shl_overflow(majortimeo, to->to_retries,
++				       &shifted_value))
++			majortimeo = to->to_maxval;
++		else
++			majortimeo = shifted_value;
++	} else
+  		majortimeo += to->to_increment * to->to_retries;
+  	if (majortimeo > to->to_maxval || majortimeo == 0)
+  		majortimeo = to->to_maxval;
+  	return majortimeo;
+  }
+-- 
+2.34.3
 
-I submitted a PR that I believe should fix it:
-https://github.com/rust-lang/rust/pull/139632
+Best regards,
+Wang Zhaolong
 
-Alice
+
+> The previous commit c09f11ef3595 ("NFS: fs_context: validate UDP retrans
+> to prevent shift out-of-bounds") attempted to address UBSAN warnings by
+> validating retrans values, but had two key limitations[1]:
+> 
+> 1. It only handled binary mount options, not validating string options
+> 2. It failed to account for negative retrans values, which bypass the
+>     check `data->retrans >= 64` but then get converted to large positive
+>     numbers when assigned to unsigned context->retrans
+> 
+> When these large numbers are later used as shift amounts in
+> xprt_calc_majortimeo(), they trigger the UBSAN shift-out-of-bounds
+> warning. This issue has existed since early kernel versions (2.6.x series)
+> as the code historically lacks proper validation of retrans values from
+> userspace.
+> 
+> As the NFS maintainer has previously indicated that fixes to
+> xprt_calc_majortimeo() wouldn't be accepted for this issue, this patch
+> takes the approach of properly validating input parameters instead:
+> 
+> This patch:
+> - Adds a proper validation check in nfs_validate_transport_protocol(),
+>    which is a common code path for all mount methods (binary or string)
+> - Defines a reasonable upper limit (15) that is still generous for
+>    real-world requirements while preventing undefined behavior
+> - Provides a clearer error message to users when rejecting values
+> - Removes the incomplete check from the binary mount path
+> 
+> By validating the retrans parameter in a common code path, we ensure
+> all mount operations have consistent behavior regardless of how the
+> mount options are provided to the kernel.
+> 
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219988
+> [2] https://lore.kernel.org/all/5850f8a65c59436b607c9d1ac088402d14873577.camel@hammerspace.com/#t
+> 
+> Fixes: c09f11ef3595 ("NFS: fs_context: validate UDP retrans to prevent shift out-of-bounds")
+> Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
+> ---
+>   fs/nfs/fs_context.c | 25 +++++++++++++------------
+>   1 file changed, 13 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 13f71ca8c974..cb3683d5d37f 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -33,10 +33,11 @@
+>   #else
+>   #define NFS_DEFAULT_VERSION 2
+>   #endif
+>   
+>   #define NFS_MAX_CONNECTIONS 16
+> +#define NFS_MAX_UDP_RETRANS 15
+>   
+>   enum nfs_param {
+>   	Opt_ac,
+>   	Opt_acdirmax,
+>   	Opt_acdirmin,
+> @@ -358,10 +359,19 @@ static int nfs_validate_transport_protocol(struct fs_context *fc,
+>   {
+>   	switch (ctx->nfs_server.protocol) {
+>   	case XPRT_TRANSPORT_UDP:
+>   		if (nfs_server_transport_udp_invalid(ctx))
+>   			goto out_invalid_transport_udp;
+> +		/*
+> +		 * For UDP transport, retrans is used as a shift value in
+> +		 * xprt_calc_majortimeo(). To prevent shift-out-of-bounds
+> +		 * and overflow, limit it to 15 bits which is a reasonable
+> +		 * upper limit for any real-world scenario (typical values
+> +		 * are 3-5).
+> +		 */
+> +		if (ctx->retrans > NFS_MAX_UDP_RETRANS)
+> +			goto out_invalid_udp_retrans;
+>   		break;
+>   	case XPRT_TRANSPORT_TCP:
+>   	case XPRT_TRANSPORT_RDMA:
+>   		break;
+>   	default:
+> @@ -378,10 +388,13 @@ static int nfs_validate_transport_protocol(struct fs_context *fc,
+>   	}
+>   
+>   	return 0;
+>   out_invalid_transport_udp:
+>   	return nfs_invalf(fc, "NFS: Unsupported transport protocol udp");
+> +out_invalid_udp_retrans:
+> +	return nfs_invalf(fc, "NFS: UDP protocol requires retrans <= %d (got %d)",
+> +			  NFS_MAX_UDP_RETRANS, ctx->retrans);
+>   out_invalid_xprtsec_policy:
+>   	return nfs_invalf(fc, "NFS: Transport does not support xprtsec");
+>   }
+>   
+>   /*
+> @@ -1155,19 +1168,10 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+>   		memcpy(mntfh->data, data->root.data, mntfh->size);
+>   		if (mntfh->size < sizeof(mntfh->data))
+>   			memset(mntfh->data + mntfh->size, 0,
+>   			       sizeof(mntfh->data) - mntfh->size);
+>   
+> -		/*
+> -		 * for proto == XPRT_TRANSPORT_UDP, which is what uses
+> -		 * to_exponential, implying shift: limit the shift value
+> -		 * to BITS_PER_LONG (majortimeo is unsigned long)
+> -		 */
+> -		if (!(data->flags & NFS_MOUNT_TCP)) /* this will be UDP */
+> -			if (data->retrans >= 64) /* shift value is too large */
+> -				goto out_invalid_data;
+> -
+>   		/*
+>   		 * Translate to nfs_fs_context, which nfs_fill_super
+>   		 * can deal with.
+>   		 */
+>   		ctx->flags	= data->flags & NFS_MOUNT_FLAGMASK;
+> @@ -1270,13 +1274,10 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+>   out_no_address:
+>   	return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
+>   
+>   out_invalid_fh:
+>   	return nfs_invalf(fc, "NFS: invalid root filehandle");
+> -
+> -out_invalid_data:
+> -	return nfs_invalf(fc, "NFS: invalid binary mount data");
+>   }
+>   
+>   #if IS_ENABLED(CONFIG_NFS_V4)
+>   struct compat_nfs_string {
+>   	compat_uint_t len;
+
