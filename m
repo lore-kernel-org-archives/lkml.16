@@ -1,62 +1,62 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB0A28A416
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753C528CF55
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290418; cv=none; b=SU/3d9quyDF3crMmsvO0vh8el8qDcGbxeZU4UtKVMTQgEAyutnH3oxspN2t1je9kOzA5jPuGkSmNHyrq4CU+rmAkwgn0P+DLnzXmA2/rmE+DYhGsXqpn4SnC3zTtfVhO1SE3uHCNj6i6VbOwGHPvCAvKvZxDZ6a6yZ/rex4Jo/Q=
+	t=1744290427; cv=none; b=g++vvdpwDz9J/fKT4tSCuGziApeuUGmgEVueGNKl/DzuBRRvqtt/+yNs6Vdjoj8P8NZaF4lGZOxnstke2uYYvi/OAatK6HMwedLQL58mwsfCo4QhmsYMxFb+Ovsoo2gf76xDLXUToJii2lL21PWj1TId6tWl3ohlmlnfa0Zmi5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290418; c=relaxed/simple;
-	bh=VQttRYk06QeNSdaixcvW75tIFIHyV7qGhkk7znS/CnU=;
+	s=arc-20240116; t=1744290427; c=relaxed/simple;
+	bh=gD/ivy8TozAfZl09YY5BEmq3r9BlB+mpS1btyHwFBW0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MGQQ8h63fAMkrJP/49nnkVKJkLQNQKlXt45k8t2/uzYVKZJ2qJXId+b2vajzzIHGsQVKmNZKHorfNpUcYaiDCgZLNdsL+8KAIm2IxjpkiXFHs22ZACcsCZ1uPvDDoUsmW1BEIjRGOHUtMgu3YwNTvWZuQvl5pW0PJfx1F2Bmd8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RPpFm7lY; arc=none smtp.client-ip=209.85.128.51
+	 MIME-Version; b=RpKzymdxfTvmvX77uSM5PurzYB51D3Q8v97loDni446svYsDf0TYtWyjgAY4xFvOk7s+8r5Q9ed5q+ZEeW6R5dGcrwPUcnxfltoA2hSrTm0MuqPOc1GcxnTvOtW+fybR1BxDkS7bx1cx4wWcklo+/+y5ejtUC+Wx/d+FVuxECE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b79puNDR; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPpFm7lY"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so13269075e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:06:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b79puNDR"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso384845f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:07:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744290414; x=1744895214; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744290424; x=1744895224; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0CfpqZfR6A02wrSENtQAj4aEGC4bV9WD+ngWaFTJ9KI=;
-        b=RPpFm7lYj8Oi6z6zGOsvDsZYshUNZFHEEzia7v1fK2NzYrpcvoRlPdM3fRbqpe9I9d
-         4cMjiTURvxUu1Eg5tccdkmhJQWfjVZhA0vPoWrmxzzbZP162piRxznkpkMW5RGDphiHA
-         JXe/igMWRkBPqvP3zF2NFI1AHFRdBkDEOns+jmdUvTFt2SuoXoD8QmnfyYkKDNLiuzjW
-         CjteCCnq+BE2f4KlEmNpvG/dY+HChfT7LHxxN9eV9W1JcyWonGTo5SGkigPZ9dDDYhpu
-         7jz+BKmo5z0Q3A6TsSGurcYMdEZP46t7ULPLrb+PHzUP62ZAI3WlUrQZlLtQX9kpoBye
-         ifQw==
+        bh=Xb4/K9i3KehiCtF/Usls0i0omViTubWO0lqe6s2Xk6Q=;
+        b=b79puNDRKJy/NtWm7YHTzhyxI/TXMHd2I4l/Dz45ReWqPZwDVpKGTeEyJCvQ6RgRvU
+         cAn6cmuazbpXTMtzN9nt1oM4fswtbCOdFWVZzPBeSTrPP99PZawOnKSsJ0/lyz5O2mkg
+         XzhN47AlYEzFGdwTndFWhtpeZMWkumeucSmVcvfZa9YG1txSXn0o0GWW+RlpusvuwiuL
+         LYuqq8eyrlQu/FI+cnKoViRc9h+1C2fNIW6BT2wcPH4r13R1yUmdHzVT0zPNIKozhear
+         +X0F9H6h86+mllBdyN1bjIT7NrtTKp+8TXkPnUp8yflxs81mG9StxdDeNkaNkZSXzz9g
+         kKyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744290414; x=1744895214;
+        d=1e100.net; s=20230601; t=1744290424; x=1744895224;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0CfpqZfR6A02wrSENtQAj4aEGC4bV9WD+ngWaFTJ9KI=;
-        b=qcxAtyZckhhXO9aj6WK49Bj2O0SgnCzX8ANIsILyjyyznnAWTTOeXPzs8AC2G9S4nk
-         dqHhYBPI5cluPQs08PInaqrMGc1naRBhr4DXRWlO2mw67K40yW8RGGDytknA6aEBHXZy
-         dU5144ZgbCVt3drcRAdH2LDSjPym22MypySiU9kI0FmmhL6qmiqdB7dEXS9zM32Grh8Y
-         yHzSqRJnkwyo3kTvJvxlDZPPnD9XtFbr3k6vJglkAcO9IUKC5zNve3q7HrtMFjj3Jd3P
-         0dNrrjYG1xvasBF5PvHCpszXo2bNmkAm4z0OOAdRkOItFtXQama1bdxKDSF7GQmvhyKS
-         +AWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDvhvQ40dyOmnQ5Wm+cFu1UJhS+i2kxHrd3bBojSRpsSBBi5qBRzlcMfcRPIhXwZxQY2npw/xhmwhCApQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyvolubpzsMULImd9kR1iJP654n2ob9RXwE5c+EluuqDVWEKT5
-	J+Q0g8Uq9jEMx55VmxcBC8qyBfVqraoLw1V69Tl3I/z8q+MGYeZU
-X-Gm-Gg: ASbGncvdfCYuNIC9wt7g3lOOYrJR3Mhxk3u+AvWCMKDec0JkIAl+0L8dYCV/XdX2vBQ
-	Bh+8AGwNlSTOMjqR3pb4+SbPpV7Eeqwaf57NkAjzGH1vVuS4d3mb6VDIASrk0bjr2vbemJyYejI
-	nlZktenR65uBDt9xLpqxpbuSVpOiKwruHdwqvCpZTSVZB/5VHLNn/9TL4NsR9T3DHGhHrMN+BGJ
-	vDrE/J7vk1aYzw0HfmPiD1m0lZayz8HeamdLR7lDHUgdjz/d4npr988LOh3Y/st7fMNrXN+305Q
-	fr7qEXgzVVJ8xxi3YgXHjQPU8s44NsNcgjShDQ==
-X-Google-Smtp-Source: AGHT+IFY3Pun8EqtRMDa2wxLsxLrjnH81SPKup6hFWWMfsvZiMwFXtrIpt5JoTGjSsXV58WmNvts8w==
-X-Received: by 2002:a05:600c:34c2:b0:439:4b23:9e8e with SMTP id 5b1f17b1804b1-43f2efe1e4dmr25903935e9.3.1744290412068;
-        Thu, 10 Apr 2025 06:06:52 -0700 (PDT)
+        bh=Xb4/K9i3KehiCtF/Usls0i0omViTubWO0lqe6s2Xk6Q=;
+        b=gIiYYJc9xuGjlGGikySDT5JfAw9IevIVk60bw4X/lnnJUWPOP7Nwdz4pyvwrlKVy8f
+         c1C/ZdCBdkncnVtNXE5Iu21iRHWXCC5IZHZ4R6Phpq/ElW5UEJNmRaqNAe5+jlsaIfG1
+         anCgQTW9jgm5Ko60OqGUXqMBgT57b0XcN0vGb51pQ1yaQH4+p1R4wj+5fb8XGxgydMqV
+         xcYx20ddG27rJsamHOS4iF8RJzwXX9qt0y4C1aN3TUhfJ/Fu0UGtWEiDUKZJa3jOxf9T
+         41NTplu2S05IPgDk5wR10Tt0evlJorq7Qt9FKB0f7tDSKq0B4lf3AK6DtQtRdfbo53Mq
+         /EYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzPgpkuXiXMnbEVVsTLq6G51w071YVzblpWlG0Kap6Sfwnq6o1T8/xzfPsUhQovsI6D5jGqkDiQAHg/hw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXMRLmHQ1JcY+LFrjg6JuyDSSb6dGXT3mQRoGOP+vVOTQuNLqk
+	4TVQiU7jcA4uqNsJApVyszPNkXN8w+BT6RLxzgSFT45BZ0pFgteH
+X-Gm-Gg: ASbGncu76fKRa25N4P0mVzAq91MGqCIz1IxZQcEm4H7cMhaS5YB8+vviNSy0SdQOVZM
+	9shDkisCfU6KNs+/dYQCSo/r4cLXYhrr3qY2mNKZEKzcf1990Iv4DhWWRFInXDEnc8tS2Z1ydzq
+	nZU7mBUJamXkDiKdZvREmYuW0rNQS+w67h9RW5uqnj2ay4jtCGf40yKYIlqQhZvE3KQ/90xYoNp
+	rLRLLlFhsGGLIxFhLK83EUXK1Bhwsg/nKBHELssKPRnw7hMALDoeti9mzGFtiU5o9QK1poeoJbt
+	hHwZ7YSgl6SNKXrqp+CEpWDzoaeAGTdLQRo2Gg==
+X-Google-Smtp-Source: AGHT+IHJXFAWfo5VZ1vG/fakJyccgk0mpHMtlCd905bv/mlWMdNr7tRkIyIJsjHbOLe4gopOeRo1JQ==
+X-Received: by 2002:a5d:5f4f:0:b0:390:eebc:6f32 with SMTP id ffacd0b85a97d-39d8fda7660mr2252641f8f.48.1744290423424;
+        Thu, 10 Apr 2025 06:07:03 -0700 (PDT)
 Received: from pc.. ([197.155.71.138])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc6dsm55013045e9.28.2025.04.10.06.06.48
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc6dsm55013045e9.28.2025.04.10.06.06.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 06:06:51 -0700 (PDT)
+        Thu, 10 Apr 2025 06:07:02 -0700 (PDT)
 From: Erick Karanja <karanja99erick@gmail.com>
 To: gregkh@linuxfoundation.org,
 	outreachy@lists.linux.dev
@@ -64,9 +64,9 @@ Cc: karanja99erick@gmail.com,
 	philipp.g.hortmann@gmail.com,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] staging: rtl8723bs: Initialize variables at declaration in hal_btcoex.c
-Date: Thu, 10 Apr 2025 16:06:10 +0300
-Message-ID: <b6aeed41cce1dba2bf8a6afdbec95d4bdd789260.1744285781.git.karanja99erick@gmail.com>
+Subject: [PATCH 6/6] staging: rtl8723bs: Initialize variables at declaration in rtl8723bs_recv.c
+Date: Thu, 10 Apr 2025 16:06:11 +0300
+Message-ID: <6acc4efa84d38f5da7cb718d383664832bfb0370.1744285781.git.karanja99erick@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1744285781.git.karanja99erick@gmail.com>
 References: <cover.1744285781.git.karanja99erick@gmail.com>
@@ -84,370 +84,43 @@ is simple and doesn't depend on other variables or complex expressions.
 
 Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
 ---
- drivers/staging/rtl8723bs/hal/hal_btcoex.c | 174 ++++++---------------
- 1 file changed, 45 insertions(+), 129 deletions(-)
+ drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/hal/hal_btcoex.c b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-index 9105594d2dde..b29c6cdf2e21 100644
---- a/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-+++ b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-@@ -28,10 +28,7 @@ static u8 halbtcoutsrc_IsBtCoexistAvailable(struct btc_coexist *pBtCoexist)
- 
- static void halbtcoutsrc_LeaveLps(struct btc_coexist *pBtCoexist)
- {
--	struct adapter *padapter;
--
--
--	padapter = pBtCoexist->Adapter;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	pBtCoexist->btInfo.bBtCtrlLps = true;
- 	pBtCoexist->btInfo.bBtLpsOn = false;
-@@ -41,10 +38,7 @@ static void halbtcoutsrc_LeaveLps(struct btc_coexist *pBtCoexist)
- 
- static void halbtcoutsrc_EnterLps(struct btc_coexist *pBtCoexist)
- {
--	struct adapter *padapter;
--
--
--	padapter = pBtCoexist->Adapter;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	pBtCoexist->btInfo.bBtCtrlLps = true;
- 	pBtCoexist->btInfo.bBtLpsOn = true;
-@@ -54,9 +48,7 @@ static void halbtcoutsrc_EnterLps(struct btc_coexist *pBtCoexist)
- 
- static void halbtcoutsrc_NormalLps(struct btc_coexist *pBtCoexist)
- {
--	struct adapter *padapter;
--
--	padapter = pBtCoexist->Adapter;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	if (pBtCoexist->btInfo.bBtCtrlLps) {
- 		pBtCoexist->btInfo.bBtLpsOn = false;
-@@ -73,15 +65,13 @@ static void halbtcoutsrc_NormalLps(struct btc_coexist *pBtCoexist)
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+index 28c914ec2604..8d0d8e8e837e 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+@@ -367,14 +367,11 @@ static void rtl8723bs_recv_tasklet(struct tasklet_struct *t)
   */
- static void halbtcoutsrc_LeaveLowPower(struct btc_coexist *pBtCoexist)
+ s32 rtl8723bs_init_recv_priv(struct adapter *padapter)
  {
--	struct adapter *padapter;
--	s32 ready;
-+	struct adapter *padapter = pBtCoexist->Adapter;
-+	s32 ready = _FAIL;
- 	unsigned long stime;
- 	unsigned long utime;
- 	u32 timeout; /*  unit: ms */
+-	s32 res;
++	s32 res = _SUCCESS;
+ 	u32 i, n;
+-	struct recv_priv *precvpriv;
++	struct recv_priv *precvpriv = &padapter->recvpriv;
+ 	struct recv_buf *precvbuf;
  
- 
--	padapter = pBtCoexist->Adapter;
--	ready = _FAIL;
- #ifdef LPS_RPWM_WAIT_MS
- 	timeout = LPS_RPWM_WAIT_MS;
- #else /*  !LPS_RPWM_WAIT_MS */
-@@ -108,10 +98,9 @@ static void halbtcoutsrc_LeaveLowPower(struct btc_coexist *pBtCoexist)
-  */
- static void halbtcoutsrc_NormalLowPower(struct btc_coexist *pBtCoexist)
+-	res = _SUCCESS;
+-	precvpriv = &padapter->recvpriv;
+-
+ 	/* 3 1. init recv buffer */
+ 	INIT_LIST_HEAD(&precvpriv->free_recv_buf_queue.queue);
+ 	spin_lock_init(&precvpriv->free_recv_buf_queue.lock);
+@@ -453,11 +450,9 @@ s32 rtl8723bs_init_recv_priv(struct adapter *padapter)
+ void rtl8723bs_free_recv_priv(struct adapter *padapter)
  {
--	struct adapter *padapter;
-+	struct adapter *padapter = pBtCoexist->Adapter;
+ 	u32 i;
+-	struct recv_priv *precvpriv;
++	struct recv_priv *precvpriv = &padapter->recvpriv;
+ 	struct recv_buf *precvbuf;
  
- 
--	padapter = pBtCoexist->Adapter;
- 	rtw_unregister_task_alive(padapter, BTCOEX_ALIVE);
- }
- 
-@@ -126,12 +115,8 @@ static void halbtcoutsrc_DisableLowPower(struct btc_coexist *pBtCoexist, u8 bLow
- 
- static void halbtcoutsrc_AggregationCheck(struct btc_coexist *pBtCoexist)
- {
--	struct adapter *padapter;
--	bool bNeedToAct;
+-	precvpriv = &padapter->recvpriv;
 -
--
--	padapter = pBtCoexist->Adapter;
--	bNeedToAct = false;
-+	struct adapter *padapter = pBtCoexist->Adapter;
-+	bool bNeedToAct = false;
+ 	/* 3 1. kill tasklet */
+ 	tasklet_kill(&precvpriv->recv_tasklet);
  
- 	if (pBtCoexist->btInfo.bRejectAggPkt) {
- 		rtw_btcoex_RejectApAggregatedPacket(padapter, true);
-@@ -176,14 +161,9 @@ static u8 halbtcoutsrc_IsWifiBusy(struct adapter *padapter)
- 
- static u32 _halbtcoutsrc_GetWifiLinkStatus(struct adapter *padapter)
- {
--	struct mlme_priv *pmlmepriv;
--	u8 bp2p;
--	u32 portConnectedStatus;
--
--
--	pmlmepriv = &padapter->mlmepriv;
--	bp2p = false;
--	portConnectedStatus = 0;
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	u8 bp2p = false;
-+	u32 portConnectedStatus = 0;
- 
- 	if (check_fwstate(pmlmepriv, WIFI_ASOC_STATE) == true) {
- 		if (check_fwstate(pmlmepriv, WIFI_AP_STATE) == true) {
-@@ -210,14 +190,9 @@ static u32 halbtcoutsrc_GetWifiLinkStatus(struct btc_coexist *pBtCoexist)
- 	/*  [15:0]=> port connected bit define */
- 	/*  */
- 
--	struct adapter *padapter;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 	u32 retVal;
--	u32 portConnectedStatus, numOfConnectedPort;
--
--
--	padapter = pBtCoexist->Adapter;
--	portConnectedStatus = 0;
--	numOfConnectedPort = 0;
-+	u32 portConnectedStatus = 0, numOfConnectedPort = 0;
- 
- 	retVal = _halbtcoutsrc_GetWifiLinkStatus(padapter);
- 	if (retVal) {
-@@ -244,11 +219,9 @@ static s32 halbtcoutsrc_GetWifiRssi(struct adapter *padapter)
- 
- static u8 halbtcoutsrc_GetWifiScanAPNum(struct adapter *padapter)
- {
--	struct mlme_ext_priv *pmlmeext;
-+	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 	static u8 scan_AP_num;
- 
--	pmlmeext = &padapter->mlmeextpriv;
--
- 	if (!GLBtcWiFiInScanState) {
- 		if (pmlmeext->sitesurvey_res.bss_cnt > 0xFF)
- 			scan_AP_num = 0xFF;
-@@ -363,8 +336,7 @@ static u8 halbtcoutsrc_Get(void *pBtcContext, u8 getType, void *pOutBuf)
- 
- 	case BTC_GET_U4_WIFI_TRAFFIC_DIRECTION:
- 		{
--			struct rt_link_detect_t *plinkinfo;
--			plinkinfo = &padapter->mlmepriv.LinkDetectInfo;
-+			struct rt_link_detect_t *plinkinfo = &padapter->mlmepriv.LinkDetectInfo;
- 
- 			if (plinkinfo->NumTxOkInPeriod > plinkinfo->NumRxOkInPeriod)
- 				*pU4Tmp = BTC_WIFI_TRAFFIC_TX;
-@@ -425,16 +397,13 @@ static u8 halbtcoutsrc_Get(void *pBtcContext, u8 getType, void *pOutBuf)
- 
- static u8 halbtcoutsrc_Set(void *pBtcContext, u8 setType, void *pInBuf)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--	u8 *pu8;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
-+	u8 *pu8 = pInBuf;
- 	u32 *pU4Tmp;
- 	u8 ret;
- 
- 
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
--	pu8 = pInBuf;
- 	pU4Tmp = pInBuf;
- 	ret = true;
- 
-@@ -565,65 +534,43 @@ static u8 halbtcoutsrc_Set(void *pBtcContext, u8 setType, void *pInBuf)
- /*  */
- static u8 halbtcoutsrc_Read1Byte(void *pBtcContext, u32 RegAddr)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	return rtw_read8(padapter, RegAddr);
- }
- 
- static u16 halbtcoutsrc_Read2Byte(void *pBtcContext, u32 RegAddr)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	return	rtw_read16(padapter, RegAddr);
- }
- 
- static u32 halbtcoutsrc_Read4Byte(void *pBtcContext, u32 RegAddr)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	return	rtw_read32(padapter, RegAddr);
- }
- 
- static void halbtcoutsrc_Write1Byte(void *pBtcContext, u32 RegAddr, u8 Data)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	rtw_write8(padapter, RegAddr, Data);
- }
- 
- static void halbtcoutsrc_BitMaskWrite1Byte(void *pBtcContext, u32 regAddr, u8 bitMask, u8 data1b)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--	u8 originalValue, bitShift;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
-+	u8 originalValue = 0, bitShift = 0;
- 	u8 i;
- 
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
--	originalValue = 0;
--	bitShift = 0;
--
- 	if (bitMask != 0xFF) {
- 		originalValue = rtw_read8(padapter, regAddr);
- 
-@@ -641,24 +588,16 @@ static void halbtcoutsrc_BitMaskWrite1Byte(void *pBtcContext, u32 regAddr, u8 bi
- 
- static void halbtcoutsrc_Write2Byte(void *pBtcContext, u32 RegAddr, u16 Data)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	rtw_write16(padapter, RegAddr, Data);
- }
- 
- static void halbtcoutsrc_Write4Byte(void *pBtcContext, u32 RegAddr, u32 Data)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	rtw_write32(padapter, RegAddr, Data);
- }
-@@ -676,12 +615,8 @@ static void halbtcoutsrc_WriteLocalReg1Byte(void *pBtcContext, u32 RegAddr, u8 D
- 
- static void halbtcoutsrc_SetBbReg(void *pBtcContext, u32 RegAddr, u32 BitMask, u32 Data)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	PHY_SetBBReg(padapter, RegAddr, BitMask, Data);
- }
-@@ -689,44 +624,32 @@ static void halbtcoutsrc_SetBbReg(void *pBtcContext, u32 RegAddr, u32 BitMask, u
- 
- static u32 halbtcoutsrc_GetBbReg(void *pBtcContext, u32 RegAddr, u32 BitMask)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	return PHY_QueryBBReg(padapter, RegAddr, BitMask);
- }
- 
- static void halbtcoutsrc_SetRfReg(void *pBtcContext, u8 eRFPath, u32 RegAddr, u32 BitMask, u32 Data)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	PHY_SetRFReg(padapter, eRFPath, RegAddr, BitMask, Data);
- }
- 
- static u32 halbtcoutsrc_GetRfReg(void *pBtcContext, u8 eRFPath, u32 RegAddr, u32 BitMask)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	return PHY_QueryRFReg(padapter, eRFPath, RegAddr, BitMask);
- }
- 
- static void halbtcoutsrc_SetBtReg(void *pBtcContext, u8 RegType, u32 RegAddr, u32 Data)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 	u8 CmdBuffer1[4] = {0};
- 	u8 CmdBuffer2[4] = {0};
- 	u8 *AddrToSet = (u8 *)&RegAddr;
-@@ -734,9 +657,6 @@ static void halbtcoutsrc_SetBtReg(void *pBtcContext, u8 RegType, u32 RegAddr, u3
- 	u8 OperVer = 0;
- 	u8 ReqNum = 0;
- 
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
--
- 	CmdBuffer1[0] |= (OperVer & 0x0f);						/* Set OperVer */
- 	CmdBuffer1[0] |= ((ReqNum << 4) & 0xf0);				/* Set ReqNum */
- 	CmdBuffer1[1] = 0x0d;									/* Set OpCode to BT_LO_OP_WRITE_REG_VALUE */
-@@ -761,12 +681,8 @@ static u32 halbtcoutsrc_GetBtReg(void *pBtcContext, u8 RegType, u32 RegAddr)
- 
- static void halbtcoutsrc_FillH2cCmd(void *pBtcContext, u8 elementId, u32 cmdLen, u8 *pCmdBuffer)
- {
--	struct btc_coexist *pBtCoexist;
--	struct adapter *padapter;
--
--
--	pBtCoexist = (struct btc_coexist *)pBtcContext;
--	padapter = pBtCoexist->Adapter;
-+	struct btc_coexist *pBtCoexist = (struct btc_coexist *)pBtcContext;
-+	struct adapter *padapter = pBtCoexist->Adapter;
- 
- 	rtw_hal_fill_h2c_cmd(padapter, elementId, cmdLen, pCmdBuffer);
- }
 -- 
 2.43.0
 
