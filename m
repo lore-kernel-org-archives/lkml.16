@@ -1,404 +1,450 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638E9198A2F;
-	Thu, 10 Apr 2025 12:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8026F198A2F;
+	Thu, 10 Apr 2025 12:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744287055; cv=none; b=L6IPO41R44GjuVG76UYQqATZwvBymVHPsAe+JNEDglVH/UsjYBYqoakqu6S/iRFR3pZuBEEiJ+MAMVVgne9jadAJ7nIt8n5iSMQ0hY81erTAMEHHcRTD3rAvv+NIp4i9BYJXlnOYHeLH7zvRiMV1nc9ivvh8leLmYmDav1dhO8w=
+	t=1744287073; cv=none; b=VjU6CNd3o0Xa+tx/YvJ6YbAQWtMCfdiilsmEur0L7jBkNWLTgcEU1rufVO9vv3G4t6kEjp54tE2YtGBsjaK7HN662O9N4IPotl4DbzjTBEzvGC0+RgzFaivXDKL/yMtkh74K88GQIwKJ3HWvKKD2q61tP++Mmi0Ldxf6/Wq+ih4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744287055; c=relaxed/simple;
-	bh=W89uqurvfV2ffvRAadFN8DfjUAHNIlyYLWQuHh7dvds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nhI5NCiAIfDNJH37zkbELyY6aMrC7zxNZDeizqcINfQOEZ7JMvYWF6/LU6XT5y7Q3wUfM+G1/ndmTlgDj7QGC+9Gc2xgMwpbasE064hapfObvIwbiSOGUVHS8IKjPq6LvhbhMvZ/r0RePNFrcVG4r+wQc5QZW3k/RBbi2xZCZg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gAkbzjD3; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744287073; c=relaxed/simple;
+	bh=qXXtGPIhLnvmHrJi1iDGlTg3m4+StgJ+rC0LnOqYp+w=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q4pJt136Hq3Lu3yrRKwwiF1Zsp0/g2+UovKou6573Pt5snjFCoU2Yloyu67gNFLTp9olY7K+bTayHFqvwEDsaey2qbmZPXD42x1YgSYtdajNRnqPGWxExj1W12sDbv9HgpxBUOli0zjoWyBBN3GLpmxWmU3t63/iXO37cQu7syk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=BjWAk+cv; arc=none smtp.client-ip=185.70.43.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAkbzjD3"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2255003f4c6so7100425ad.0;
-        Thu, 10 Apr 2025 05:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744287052; x=1744891852; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=SG1DwgSYKF7Iuy6VY+Yfuv0GEqkxa2LoLkZRsBjQyyI=;
-        b=gAkbzjD3+xKgvbPciC+FiPlgU3eGsw1oJzilhzuuKNbRH27NFKbPSGN7DbjS5qJGFk
-         hfyZtAy1WTaQYV1K/48xNnQmeeGC29CT7qces9b/kZ+rc6grfnmPySRItdbH4FXcEdLH
-         oZralK7L2SqBgR6zcwW4dqRmlqRLsRuAFMV6pX5wySL6C7v6EK22D9kJ/jhyL+XjTsob
-         VgNSAZ4Nl253buSKDrwXC2paXaO3WG2iMdGg+O14LXPyQAiWha0WiaAJXJIWVQCZqzpz
-         frJTvqWQpIYUuCmr6GgtT0fAHusUsrWD1Z4dG2vzmyLREwKS7PAkkbuP1cMaoknXJZkq
-         LjAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744287052; x=1744891852;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SG1DwgSYKF7Iuy6VY+Yfuv0GEqkxa2LoLkZRsBjQyyI=;
-        b=rCCf+ROMVEAVVLkg4FtOhH1WlI67J2VuhcSPJCGyIetPeJ1PQhAoKTUtQP5OLmGes2
-         nb7/ju1pet0TKNDsxAgqmYUM8CVUF4bmljxmrKaHeJV2UHAObM5CmP9ZXceR+UtRKFFs
-         jKi+iZddRyU2FhcujK1uX80P+p63tOgzCu8jY2erEZD0Ot8SFk6C8V/Lln0x6tfOv2tK
-         6G+PBqp1bISGOIKif4wKhN5zJzdVbOTqFhpExz7DZ2CR93vBpjFtZRIoxpW4v8WTT7mH
-         XW0tP/CUcPKWucRpP16z8aGVHOKlNIoIqYVGIkU+j9FJRNiZt8uPAjYdQvPwF+QG855S
-         oLbw==
-X-Forwarded-Encrypted: i=1; AJvYcCU36B5H6kPqyHBdbqunHLod/H7J6srNwLcDdVhJTcP1KgPqoJmXvSVrMIW2LlKnsNHi1bXQFCpG9swA+J17DCg=@vger.kernel.org, AJvYcCUzSLrq9psw6p67g+QFFSDpe9GTGytXJWHzv0yhLOZohJ46TnVq/Btb2Qve5ytvJsEsx9kFnjs64JXPLVU=@vger.kernel.org, AJvYcCVm4HocQE8yh8AagW9LWny4CyK6Evrjvp33cMxvbDLHZFLIETjmbE46MdcGRzcd/Krn2Zjiguj7uHPYIQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBcsp+S9UrARweRrWBNAS59601b1vpFYhEgXgMd93e5WDCVJqK
-	H00mUAxltJKbFy6KN84qiSA/9SW1Yl7v+7JFuXeYQx4FVy8ApW6O
-X-Gm-Gg: ASbGncvMlA3CF+rsrNza99/aAGkbFn+5lzVbeksouH78ijnQqBk453eWBuvxWX6v/iq
-	fAN6/M9rIFtFpATGW9gRbiZRyOmikKViZOMnsbF6uIkMK4ZyPeuGJ+NCaaON//x/EIpSpRt4O/I
-	wPpCgFh/aYvY0ASzuJygfkegNkDBBAY1G5H0XTSUajGdzopOlAEJtoecy9Ba7rQP0P/OIo5KEDX
-	mXUGd4Lh5Ph7O6HsdUvqIyukjkQM6+2jdC/4mTzJpx61hhWXGNjzKuSGmLSa/T8R22knXl9OIVc
-	nj1sxBuF0n59MRkZVyv3w6Cs5C64GHVcG3iwuRU6ApBPsgd68abQxSkoWQNsSRDvw5Z7Dv6p314
-	we//1RVR8tPwXDNzO3bu01RqU
-X-Google-Smtp-Source: AGHT+IHdd2cc/ri+v71rQo8PKP2VgMHOLXyWv4L9s9sDA8hBblMITR/YOkATIOI9o71ngVe84cnBOA==
-X-Received: by 2002:a17:903:1a68:b0:223:517c:bfa1 with SMTP id d9443c01a7336-22b42c28921mr43610385ad.38.1744287052402;
-        Thu, 10 Apr 2025 05:10:52 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2b20esm3074470b3a.2.2025.04.10.05.10.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 05:10:51 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <abe3b3f3-0c9d-4ac2-af1f-59aa186c723c@roeck-us.net>
-Date: Thu, 10 Apr 2025 05:10:50 -0700
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="BjWAk+cv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1744287061; x=1744546261;
+	bh=JsD8W9+QLR1ntZMy9UTTGcBkyMsXm2xr6XK0/nBEimo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=BjWAk+cvngcpO+4xqh4psfOHXe9AMru/1VccZe6LzPdt7fHYBm0JJcMlLA+Eb0qMA
+	 Kr43NdgdQiD6XyQdOPNdrLOkBQ8QF+5BwYwUYWW5MVdEeg32owvP0Mtwa/YiXMLM4r
+	 JUrmQDmVPYMu/XtxY646/419n4vK3eKnzZR4prckCrnKLs4p7bEBagIgSmedkG2Wfd
+	 CIA9Oid1KE6BNKQqSTFVOO3Ss0gkKiGXhjJtz0807ncGOC+XIC2mO34pZKzrP3674q
+	 OgwknawR1RvG8LlKb2GXW9eRrQZ33ObMC+Kze/q0CgEzUyz6kcTXwnXk53Kh3I3Hwi
+	 P+0Pl/H/rihrQ==
+Date: Thu, 10 Apr 2025 12:10:54 +0000
+To: Jonathan Cameron <jic23@kernel.org>
+From: Yassine Oudjana <y.oudjana@protonmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, Sean Nyekjaer <sean@geanix.com>, Javier Carrasco <javier.carrasco.cruz@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>, Ramona Gradinariu <ramona.gradinariu@analog.com>, "Yo-Jung (Leo) Lin" <0xff07@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, =?utf-8?Q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, Danila Tikhonov
+	<danila@jiaxyga.com>, Antoni Pokusinski <apokusinski01@gmail.com>, Vasileios Amoiridis <vassilisamir@gmail.com>, Petar Stoykov <pd.pstoykov@gmail.com>, shuaijie wang <wangshuaijie@awinic.com>, Yasin Lee <yasin.lee.x@gmail.com>, "Borislav Petkov (AMD)" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, Yassine Oudjana <yassine.oudjana@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 1/3] net: qrtr: Turn QRTR into a bus
+Message-ID: <02aeebee-0acc-4a03-a7f1-a920a34fb378@protonmail.com>
+In-Reply-To: <20250406170111.7a11437a@jic23-huawei>
+References: <20250406140706.812425-1-y.oudjana@protonmail.com> <20250406140706.812425-2-y.oudjana@protonmail.com> <20250406170111.7a11437a@jic23-huawei>
+Feedback-ID: 6882736:user:proton
+X-Pm-Message-ID: 66173a85f0a66ef4d3a359cd31132b974dc15473
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: diag288_wdt: Implement module autoload
-To: Heiko Carstens <hca@linux.ibm.com>,
- Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-References: <20250410095036.1525057-1-hca@linux.ibm.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250410095036.1525057-1-hca@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 4/10/25 02:50, Heiko Carstens wrote:
-> The s390 specific diag288_wdt watchdog driver makes use of the virtual
-> watchdog timer, which is available in most machine configurations.
-> If executing the diagnose instruction with subcode 0x288 results in an
-> exception the watchdog timer is not available, otherwise it is available.
-> 
-> In order to allow module autoload of the diag288_wdt module, move the
-> detection of the virtual watchdog timer to early boot code, and provide
-> its availability as a cpu feature.
-> 
-> This allows to make use of module_cpu_feature_match() to automatically load
-> the module iff the virtual watchdog timer is available.
-> 
-> Suggested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-> Tested-by: Mete Durlu <meted@linux.ibm.com>
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+On 06/04/2025 7:01 pm, Jonathan Cameron wrote:
+> On Sun, 06 Apr 2025 14:07:43 +0000
+> Yassine Oudjana <y.oudjana@protonmail.com> wrote:
+>=20
+>> Implement a QRTR bus to allow for creating drivers for individual QRTR
+>> services. With this in place, devices are dynamically registered for QRT=
+R
+>> services as they become available, and drivers for these devices are
+>> matched using service and instance IDs.
+>>
+>> In smd.c, replace all current occurences of qdev with qsdev in order to
+>> distinguish between the newly added QRTR device which represents a QRTR
+>> service with the existing QRTR SMD device which represents the endpoint
+>> through which services are provided.
+>>
+>> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+> Hi Yassine
+>=20
+> Just took a quick look through.
+>=20
+> It might make more sense to do this with an auxiliary_bus rather
+> than defining a new bus.
+>=20
+> I'd also split out the renames as a precursor patch.
+>=20
+> Various other comments inline.
+>=20
+> Jonathan
+>=20
+>> diff --git a/net/qrtr/af_qrtr.c b/net/qrtr/af_qrtr.c
+>> index 00c51cf693f3..e11682fd7960 100644
+>> --- a/net/qrtr/af_qrtr.c
+>> +++ b/net/qrtr/af_qrtr.c
+>> @@ -435,6 +435,7 @@ static void qrtr_node_assign(struct qrtr_node *node,=
+ unsigned int nid)
+>>   int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, siz=
+e_t len)
+>>   {
+>>   =09struct qrtr_node *node =3D ep->node;
+>> +=09const struct qrtr_ctrl_pkt *pkt;
+>>   =09const struct qrtr_hdr_v1 *v1;
+>>   =09const struct qrtr_hdr_v2 *v2;
+>>   =09struct qrtr_sock *ipc;
+>> @@ -443,6 +444,7 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, con=
+st void *data, size_t len)
+>>   =09size_t size;
+>>   =09unsigned int ver;
+>>   =09size_t hdrlen;
+>> +=09int ret =3D 0;
+>>
+>>   =09if (len =3D=3D 0 || len & 3)
+>>   =09=09return -EINVAL;
+>> @@ -516,12 +518,24 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, c=
+onst void *data, size_t len)
+>>
+>>   =09qrtr_node_assign(node, cb->src_node);
+>>
+>> +=09pkt =3D data + hdrlen;
+>> +
+>>   =09if (cb->type =3D=3D QRTR_TYPE_NEW_SERVER) {
+>>   =09=09/* Remote node endpoint can bridge other distant nodes */
+>> -=09=09const struct qrtr_ctrl_pkt *pkt;
+>> -
+>> -=09=09pkt =3D data + hdrlen;
+>>   =09=09qrtr_node_assign(node, le32_to_cpu(pkt->server.node));
+>> +
+>> +=09=09/* Create a QRTR device */
+>> +=09=09ret =3D ep->add_device(ep, le32_to_cpu(pkt->server.node),
+>> +=09=09=09=09=09       le32_to_cpu(pkt->server.port),
+>> +=09=09=09=09=09       le32_to_cpu(pkt->server.service),
+>> +=09=09=09=09=09       le32_to_cpu(pkt->server.instance));
+>> +=09=09if (ret)
+>> +=09=09=09goto err;
+>> +=09} else if (cb->type =3D=3D QRTR_TYPE_DEL_SERVER) {
+>> +=09=09/* Remove QRTR device corresponding to service */
+>> +=09=09ret =3D ep->del_device(ep, le32_to_cpu(pkt->server.port));
+>> +=09=09if (ret)
+>> +=09=09=09goto err;
+>>   =09}
+>>
+>>   =09if (cb->type =3D=3D QRTR_TYPE_RESUME_TX) {
+>> @@ -543,8 +557,7 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, con=
+st void *data, size_t len)
+>>
+>>   err:
+>>   =09kfree_skb(skb);
+>> -=09return -EINVAL;
+>> -
+>> +=09return ret ? ret : -EINVAL;
+> How do we get here with non error value given we couldn't before?
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+We don't, but we may have errors in ret other than -EINVAL returned by=20
+the newly added add_device and del_device which we should propagate.
 
-> ---
->   arch/s390/boot/startup.c           | 17 ++++++++++
->   arch/s390/include/asm/cpufeature.h |  1 +
->   arch/s390/include/asm/diag288.h    | 41 +++++++++++++++++++++++
->   arch/s390/include/asm/machine.h    |  1 +
->   arch/s390/kernel/cpufeature.c      |  5 +++
->   drivers/watchdog/diag288_wdt.c     | 53 ++----------------------------
->   6 files changed, 68 insertions(+), 50 deletions(-)
->   create mode 100644 arch/s390/include/asm/diag288.h
-> 
-> diff --git a/arch/s390/boot/startup.c b/arch/s390/boot/startup.c
-> index 06316fb8e0fa..da8337e63a3e 100644
-> --- a/arch/s390/boot/startup.c
-> +++ b/arch/s390/boot/startup.c
-> @@ -6,6 +6,7 @@
->   #include <asm/boot_data.h>
->   #include <asm/extmem.h>
->   #include <asm/sections.h>
-> +#include <asm/diag288.h>
->   #include <asm/maccess.h>
->   #include <asm/machine.h>
->   #include <asm/sysinfo.h>
-> @@ -71,6 +72,20 @@ static void detect_machine_type(void)
->   		set_machine_feature(MFEATURE_VM);
->   }
->   
-> +static void detect_diag288(void)
-> +{
-> +	/* "BEGIN" in EBCDIC character set */
-> +	static const char cmd[] = "\xc2\xc5\xc7\xc9\xd5";
-> +	unsigned long action, len;
-> +
-> +	action = machine_is_vm() ? (unsigned long)cmd : LPARWDT_RESTART;
-> +	len = machine_is_vm() ? sizeof(cmd) : 0;
-> +	if (__diag288(WDT_FUNC_INIT, MIN_INTERVAL, action, len))
-> +		return;
-> +	__diag288(WDT_FUNC_CANCEL, 0, 0, 0);
-> +	set_machine_feature(MFEATURE_DIAG288);
-> +}
-> +
->   static void detect_diag9c(void)
->   {
->   	unsigned int cpu;
-> @@ -519,6 +534,8 @@ void startup_kernel(void)
->   	detect_facilities();
->   	detect_diag9c();
->   	detect_machine_type();
-> +	/* detect_diag288() needs machine type */
-> +	detect_diag288();
->   	cmma_init();
->   	sanitize_prot_virt_host();
->   	max_physmem_end = detect_max_physmem_end();
-> diff --git a/arch/s390/include/asm/cpufeature.h b/arch/s390/include/asm/cpufeature.h
-> index e08169bd63a5..6c6a99660e78 100644
-> --- a/arch/s390/include/asm/cpufeature.h
-> +++ b/arch/s390/include/asm/cpufeature.h
-> @@ -15,6 +15,7 @@ enum {
->   	S390_CPU_FEATURE_MSA,
->   	S390_CPU_FEATURE_VXRS,
->   	S390_CPU_FEATURE_UV,
-> +	S390_CPU_FEATURE_D288,
->   	MAX_CPU_FEATURES
->   };
->   
-> diff --git a/arch/s390/include/asm/diag288.h b/arch/s390/include/asm/diag288.h
-> new file mode 100644
-> index 000000000000..5e1b43cea9d6
-> --- /dev/null
-> +++ b/arch/s390/include/asm/diag288.h
-> @@ -0,0 +1,41 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef _ASM_S390_DIAG288_H
-> +#define _ASM_S390_DIAG288_H
-> +
-> +#include <asm/asm-extable.h>
-> +#include <asm/types.h>
-> +
-> +#define MIN_INTERVAL 15	    /* Minimal time supported by diag288 */
-> +#define MAX_INTERVAL 3600   /* One hour should be enough - pure estimation */
-> +
-> +#define WDT_DEFAULT_TIMEOUT 30
-> +
-> +/* Function codes - init, change, cancel */
-> +#define WDT_FUNC_INIT 0
-> +#define WDT_FUNC_CHANGE 1
-> +#define WDT_FUNC_CANCEL 2
-> +#define WDT_FUNC_CONCEAL 0x80000000
-> +
-> +/* Action codes for LPAR watchdog */
-> +#define LPARWDT_RESTART 0
-> +
-> +static inline int __diag288(unsigned int func, unsigned int timeout,
-> +			    unsigned long action, unsigned int len)
-> +{
-> +	union register_pair r1 = { .even = func, .odd = timeout, };
-> +	union register_pair r3 = { .even = action, .odd = len, };
-> +	int rc = -EINVAL;
-> +
-> +	asm volatile(
-> +		"	diag	%[r1],%[r3],0x288\n"
-> +		"0:	lhi	%[rc],0\n"
-> +		"1:"
-> +		EX_TABLE(0b, 1b)
-> +		: [rc] "+d" (rc)
-> +		: [r1] "d" (r1.pair), [r3] "d" (r3.pair)
-> +		: "cc", "memory");
-> +	return rc;
-> +}
-> +
-> +#endif /* _ASM_S390_DIAG288_H */
-> diff --git a/arch/s390/include/asm/machine.h b/arch/s390/include/asm/machine.h
-> index 54478caa5237..8abe5afdbfc4 100644
-> --- a/arch/s390/include/asm/machine.h
-> +++ b/arch/s390/include/asm/machine.h
-> @@ -18,6 +18,7 @@
->   #define MFEATURE_VM		7
->   #define MFEATURE_KVM		8
->   #define MFEATURE_LPAR		9
-> +#define MFEATURE_DIAG288	10
->   
->   #ifndef __ASSEMBLY__
->   
-> diff --git a/arch/s390/kernel/cpufeature.c b/arch/s390/kernel/cpufeature.c
-> index 1b2ae42a0c15..76210f001028 100644
-> --- a/arch/s390/kernel/cpufeature.c
-> +++ b/arch/s390/kernel/cpufeature.c
-> @@ -5,11 +5,13 @@
->   
->   #include <linux/cpufeature.h>
->   #include <linux/bug.h>
-> +#include <asm/machine.h>
->   #include <asm/elf.h>
->   
->   enum {
->   	TYPE_HWCAP,
->   	TYPE_FACILITY,
-> +	TYPE_MACHINE,
->   };
->   
->   struct s390_cpu_feature {
-> @@ -21,6 +23,7 @@ static struct s390_cpu_feature s390_cpu_features[MAX_CPU_FEATURES] = {
->   	[S390_CPU_FEATURE_MSA]	= {.type = TYPE_HWCAP, .num = HWCAP_NR_MSA},
->   	[S390_CPU_FEATURE_VXRS]	= {.type = TYPE_HWCAP, .num = HWCAP_NR_VXRS},
->   	[S390_CPU_FEATURE_UV]	= {.type = TYPE_FACILITY, .num = 158},
-> +	[S390_CPU_FEATURE_D288]	= {.type = TYPE_MACHINE, .num = MFEATURE_DIAG288},
->   };
->   
->   /*
-> @@ -38,6 +41,8 @@ int cpu_have_feature(unsigned int num)
->   		return !!(elf_hwcap & BIT(feature->num));
->   	case TYPE_FACILITY:
->   		return test_facility(feature->num);
-> +	case TYPE_MACHINE:
-> +		return test_machine_feature(feature->num);
->   	default:
->   		WARN_ON_ONCE(1);
->   		return 0;
-> diff --git a/drivers/watchdog/diag288_wdt.c b/drivers/watchdog/diag288_wdt.c
-> index 76dffc89c641..887d5a6c155b 100644
-> --- a/drivers/watchdog/diag288_wdt.c
-> +++ b/drivers/watchdog/diag288_wdt.c
-> @@ -29,26 +29,13 @@
->   #include <linux/watchdog.h>
->   #include <asm/machine.h>
->   #include <asm/ebcdic.h>
-> +#include <asm/diag288.h>
->   #include <asm/diag.h>
->   #include <linux/io.h>
->   
->   #define MAX_CMDLEN 240
->   #define DEFAULT_CMD "SYSTEM RESTART"
->   
-> -#define MIN_INTERVAL 15     /* Minimal time supported by diag88 */
-> -#define MAX_INTERVAL 3600   /* One hour should be enough - pure estimation */
-> -
-> -#define WDT_DEFAULT_TIMEOUT 30
-> -
-> -/* Function codes - init, change, cancel */
-> -#define WDT_FUNC_INIT 0
-> -#define WDT_FUNC_CHANGE 1
-> -#define WDT_FUNC_CANCEL 2
-> -#define WDT_FUNC_CONCEAL 0x80000000
-> -
-> -/* Action codes for LPAR watchdog */
-> -#define LPARWDT_RESTART 0
-> -
->   static char wdt_cmd[MAX_CMDLEN] = DEFAULT_CMD;
->   static bool conceal_on;
->   static bool nowayout_info = WATCHDOG_NOWAYOUT;
-> @@ -75,22 +62,8 @@ static char *cmd_buf;
->   static int diag288(unsigned int func, unsigned int timeout,
->   		   unsigned long action, unsigned int len)
->   {
-> -	union register_pair r1 = { .even = func, .odd = timeout, };
-> -	union register_pair r3 = { .even = action, .odd = len, };
-> -	int err;
-> -
->   	diag_stat_inc(DIAG_STAT_X288);
-> -
-> -	err = -EINVAL;
-> -	asm volatile(
-> -		"	diag	%[r1],%[r3],0x288\n"
-> -		"0:	la	%[err],0\n"
-> -		"1:\n"
-> -		EX_TABLE(0b, 1b)
-> -		: [err] "+d" (err)
-> -		: [r1] "d" (r1.pair), [r3] "d" (r3.pair)
-> -		: "cc", "memory");
-> -	return err;
-> +	return __diag288(func, timeout, action, len);
->   }
->   
->   static int diag288_str(unsigned int func, unsigned int timeout, char *cmd)
-> @@ -189,8 +162,6 @@ static struct watchdog_device wdt_dev = {
->   
->   static int __init diag288_init(void)
->   {
-> -	int ret;
-> -
->   	watchdog_set_nowayout(&wdt_dev, nowayout_info);
->   
->   	if (machine_is_vm()) {
-> @@ -199,24 +170,6 @@ static int __init diag288_init(void)
->   			pr_err("The watchdog cannot be initialized\n");
->   			return -ENOMEM;
->   		}
-> -
-> -		ret = diag288_str(WDT_FUNC_INIT, MIN_INTERVAL, "BEGIN");
-> -		if (ret != 0) {
-> -			pr_err("The watchdog cannot be initialized\n");
-> -			kfree(cmd_buf);
-> -			return -EINVAL;
-> -		}
-> -	} else {
-> -		if (diag288(WDT_FUNC_INIT, WDT_DEFAULT_TIMEOUT,
-> -			    LPARWDT_RESTART, 0)) {
-> -			pr_err("The watchdog cannot be initialized\n");
-> -			return -EINVAL;
-> -		}
-> -	}
-> -
-> -	if (diag288(WDT_FUNC_CANCEL, 0, 0, 0)) {
-> -		pr_err("The watchdog cannot be deactivated\n");
-> -		return -EINVAL;
->   	}
->   
->   	return watchdog_register_device(&wdt_dev);
-> @@ -228,5 +181,5 @@ static void __exit diag288_exit(void)
->   	kfree(cmd_buf);
->   }
->   
-> -module_init(diag288_init);
-> +module_cpu_feature_match(S390_CPU_FEATURE_D288, diag288_init);
->   module_exit(diag288_exit);
+>=20
+>=20
+>>   }
+>>   EXPORT_SYMBOL_GPL(qrtr_endpoint_post);
+>>
+>=20
+>> diff --git a/net/qrtr/smd.c b/net/qrtr/smd.c
+>> index c91bf030fbc7..fd5ad6a8d1c3 100644
+>> --- a/net/qrtr/smd.c
+>> +++ b/net/qrtr/smd.c
+>> @@ -7,6 +7,7 @@
+>=20
+>> +
+>> +static int qcom_smd_qrtr_uevent(const struct device *dev, struct kobj_u=
+event_env *env)
+>> +{
+>> +=09const struct qrtr_device *qdev =3D to_qrtr_device(dev);
+>> +
+>> +=09return add_uevent_var(env, "MODALIAS=3D%s%x:%x", QRTR_MODULE_PREFIX,=
+ qdev->service,
+>> +=09=09=09      qdev->instance);
+>> +}
+>=20
+>=20
+>> +void qrtr_driver_unregister(struct qrtr_driver *drv)
+>> +{
+>> +=09driver_unregister(&drv->driver);
+>> +}
+>> +EXPORT_SYMBOL_GPL(qrtr_driver_unregister);
+>=20
+> Given this is a 'new thing' maybe namespace it from the start?
+> EXPORT_SYMBOL_NS_GPL();
+
+Ack.
+
+>=20
+>=20
+>> +
+>> +static int qcom_smd_qrtr_match_device_by_port(struct device *dev, const=
+ void *data)
+>> +{
+>> +=09struct qrtr_device *qdev =3D to_qrtr_device(dev);
+>> +=09unsigned int port =3D *(unsigned int *)data;
+> =09unsinged int *port =3D data;
+>=20
+> =09return qdev->port =3D=3D *port;
+>
+
+Ack.
+
+>> +
+>> +=09return qdev->port =3D=3D port;
+>> +}
+>> +
+>> +static void qcom_smd_qrtr_add_device_worker(struct work_struct *work)
+>> +{
+>> +=09struct qrtr_new_server *new_server =3D container_of(work, struct qrt=
+r_new_server, work);
+>> +=09struct qrtr_smd_dev *qsdev =3D new_server->parent;
+>> +=09struct qrtr_device *qdev;
+>> +=09int ret;
+>> +
+>> +=09qdev =3D kzalloc(sizeof(*qdev), GFP_KERNEL);
+>> +=09if (!qdev)
+>> +=09=09return;
+>> +
+> Maybe
+> =09*qdev =3D (struct qrtr_device *) {
+> =09};
+
+(struct qrtr_device)
+...
+
+> and free new_server after all of these are filled in.
+>=20
+>> +=09qdev->node =3D new_server->node;
+>> +=09qdev->port =3D new_server->port;
+>> +=09qdev->service =3D new_server->service;
+>> +=09qdev->instance =3D new_server->instance;
+>> +
+>> +=09devm_kfree(qsdev->dev, new_server);
+>=20
+> As below.
+
+Ack.
+
+>=20
+>> +
+>> +=09dev_set_name(&qdev->dev, "%d-%d", qdev->node, qdev->port);
+>> +
+>> +=09qdev->dev.bus =3D &qrtr_bus;
+>> +=09qdev->dev.parent =3D qsdev->dev;
+>> +=09qdev->dev.release =3D qcom_smd_qrtr_dev_release;
+>> +=09qdev->dev.driver =3D NULL;
+>=20
+> it's kzalloc'd so no need to set this.
+Ack.
+
+>=20
+>> +
+>> +=09ret =3D device_register(&qdev->dev);
+>> +=09if (ret) {
+>> +=09=09dev_err(qsdev->dev, "Failed to register QRTR device: %pe\n", ERR_=
+PTR(ret));
+>> +=09=09put_device(&qdev->dev);
+>> +=09}
+>> +}
+>> +
+>> +static void qcom_smd_qrtr_del_device_worker(struct work_struct *work)
+>> +{
+>> +=09struct qrtr_del_server *del_server =3D container_of(work, struct qrt=
+r_del_server, work);
+>> +=09struct qrtr_smd_dev *qsdev =3D del_server->parent;
+>> +=09struct device *dev =3D device_find_child(qsdev->dev, &del_server->po=
+rt,
+>> +=09=09=09=09=09       qcom_smd_qrtr_match_device_by_port);
+>> +
+>> +=09devm_kfree(qsdev->dev, del_server);
+> If we are always going to free what was alocated in qcom_smd_qrtr_del_dev=
+ice()
+> why use devm at all?
+
+True, I guess this one is redundant.
+
+>> +
+>> +=09if (dev)
+>> +=09=09device_unregister(dev);
+> If this doesn't match anything I'm guessing it's a bug?   So maybe an err=
+or message?
+
+I don't quite remember the reason I put this check in the first place=20
+but right now it seems to me like it should always be true so I'll just=20
+remove it and see what happens.
+
+>=20
+>> +}
+>> +
+>> +static int qcom_smd_qrtr_add_device(struct qrtr_endpoint *parent, unsig=
+ned int node,
+>> +=09=09=09=09    unsigned int port, u16 service, u16 instance)
+>> +{
+>> +=09struct qrtr_smd_dev *qsdev =3D container_of(parent, struct qrtr_smd_=
+dev, ep);
+>> +=09struct qrtr_new_server *new_server;
+>> +
+>> +=09new_server =3D devm_kzalloc(qsdev->dev, sizeof(struct qrtr_new_serve=
+r), GFP_KERNEL);
+>=20
+> As below. sizeof(*new_server)
+>=20
+>> +=09if (!new_server)
+>> +=09=09return -ENOMEM;
+>> +
+> =09*new_server =3D (struct qtr_new_server) {
+> =09=09.parent =3D qsdev,
+> =09=09.ndoe =3D node,
+> ...
+> =09};
+>=20
+> perhaps a tiny bit easier to read?
+
+Ack.
+
+>=20
+>> +=09new_server->parent =3D qsdev;
+>> +=09new_server->node =3D node;
+>> +=09new_server->port =3D port;
+>> +=09new_server->service =3D service;
+>> +=09new_server->instance =3D instance;
+>> +
+>> +=09INIT_WORK(&new_server->work, qcom_smd_qrtr_add_device_worker);
+>> +=09schedule_work(&new_server->work);
+>> +
+>> +=09return 0;
+>> +}
+>> +
+>> +static int qcom_smd_qrtr_del_device(struct qrtr_endpoint *parent, unsig=
+ned int port)
+>> +{
+>> +=09struct qrtr_smd_dev *qsdev =3D container_of(parent, struct qrtr_smd_=
+dev, ep);
+>> +=09struct qrtr_del_server *del_server;
+>> +
+>> +=09del_server =3D devm_kzalloc(qsdev->dev, sizeof(struct qrtr_del_serve=
+r), GFP_KERNEL);
+>=20
+> sizeof(*del_server)
+> preferred as then no one has to check types match.
+
+Ack.
+
+>=20
+>> +=09if (!del_server)
+>> +=09=09return -ENOMEM;
+>> +
+>> +=09del_server->parent =3D qsdev;
+>> +=09del_server->port =3D port;
+>> +
+>> +=09INIT_WORK(&del_server->work, qcom_smd_qrtr_del_device_worker);
+>> +=09schedule_work(&del_server->work);
+>> +
+>> +=09return 0;
+>> +}
+>> +
+>> +static int qcom_smd_qrtr_device_unregister(struct device *dev, void *da=
+ta)
+>> +{
+>> +=09device_unregister(dev);
+>=20
+> One option that may simplify this is to do the device_unregister() handli=
+ng
+> a devm_action_or_reset() handler that is using the parent device as it's =
+dev
+> but unregistering the children.  That way the unregister is called in the
+> reverse order of setup and you only register a handler for those devices
+> registered (rather walking children).  I did this in the CXL pmu driver
+> for instance.
+
+Will look into it.
+
+>=20
+>> +
+>> +=09return 0;
+>> +}
+>> +
+>=20
+>> @@ -82,9 +276,11 @@ static int qcom_smd_qrtr_probe(struct rpmsg_device *=
+rpdev)
+>>
+>>   static void qcom_smd_qrtr_remove(struct rpmsg_device *rpdev)
+>>   {
+>> -=09struct qrtr_smd_dev *qdev =3D dev_get_drvdata(&rpdev->dev);
+>> +=09struct qrtr_smd_dev *qsdev =3D dev_get_drvdata(&rpdev->dev);
+>=20
+> May be worth doing the rename in a precursor patch to simplify a little w=
+hat is
+> in this one.
+
+Sure.
+
+>=20
+>> +
+>> +=09device_for_each_child(qsdev->dev, NULL, qcom_smd_qrtr_device_unregis=
+ter);
+>>
+>> -=09qrtr_endpoint_unregister(&qdev->ep);
+>> +=09qrtr_endpoint_unregister(&qsdev->ep);
+>>
+>>   =09dev_set_drvdata(&rpdev->dev, NULL);
+>>   }
+>> @@ -104,7 +300,27 @@ static struct rpmsg_driver qcom_smd_qrtr_driver =3D=
+ {
+>>   =09},
+>>   };
+>>
+>> -module_rpmsg_driver(qcom_smd_qrtr_driver);
+>> +static int __init qcom_smd_qrtr_init(void)
+>> +{
+>> +=09int ret;
+>> +
+>> +=09ret =3D bus_register(&qrtr_bus);
+>> +=09if (!ret)
+>> +=09=09ret =3D register_rpmsg_driver(&qcom_smd_qrtr_driver);
+> This style tends to extend badly. Go with more conventional errors
+> out of line style.
+>=20
+> =09if (ret)
+> =09=09return ret;
+>=20
+> =09ret =3D register_rpmsg_driver(&qcom_smd_qrtr_driver);
+> =09if (ret) {
+> =09=09bus_unregister(&qtr_bus);
+> =09=09return ret;
+> =09}
+>=20
+> =09return 0;
+>=20
+
+Ack.
+
+>> +=09else
+>> +=09=09bus_unregister(&qrtr_bus);
+>> +
+>> +=09return ret;
+>> +}
+>> +
+>> +static void __exit qcom_smd_qrtr_exit(void)
+>> +{
+>> +=09bus_unregister(&qrtr_bus);
+>=20
+> Order should be the reverse of what happened in probe so swap these round=
+.
+
+Ack.
+
+>=20
+>> +=09unregister_rpmsg_driver(&qcom_smd_qrtr_driver);
+>> +}
+>> +
+>> +subsys_initcall(qcom_smd_qrtr_init);
+>> +module_exit(qcom_smd_qrtr_exit);
+>>
+>>   MODULE_ALIAS("rpmsg:IPCRTR");
+>>   MODULE_DESCRIPTION("Qualcomm IPC-Router SMD interface driver");
+>>
 
