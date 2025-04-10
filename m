@@ -1,180 +1,73 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2001C20468B
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01D02036E6;
+	Thu, 10 Apr 2025 07:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269068; cv=none; b=B0y+1oD0QanuTTVK01OUQlftIsI84FUtoV3TL/UNPzFjTxmd8zlEpukUZqDaqlr2lNWmdAkWL15mv6Jkz8zY/q0aJp+DZo8uBX3JqHWn4KfipVAtaAIetZRSA7mQDpfO6KqpEFIo4HC2jRx9tPHjSfRbagbjDsknRgAOaiLUkI4=
+	t=1744269097; cv=none; b=JZCm+q4H+Nrkv5QSLAkoFnap6ZwMLRSLF/4bZ9nKHV22gNhIHY7Zn8llmvXuzawLwXS6HrWqdJKwqCJ3lzfWZGwhM0cjRKgPAuLEqR+bZpKQqgd92zrFgn1TI9MhOvK6c7PemB9WowCXTUA8084EK8ZX39q/M1CsrKuV/8oXNXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269068; c=relaxed/simple;
-	bh=dvCmIESeU+0C8gMiKn7xzTjU+gOvecKI17trA15juLg=;
+	s=arc-20240116; t=1744269097; c=relaxed/simple;
+	bh=bPzeZgrP7PD3Md2w9w9dvWl898tFcB9NhFWNXwu0U2c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+55n6xRTOYt2AWH74e5ark6Dn1YlJ+dwluuo96l15iIDvOupSbIwaLWsCNU6sOxcKVGmGdXjxqfLe64iN3BouCV/BKOZt6WjQytLZRAEY9791vvekS4CJ9uBet41usrgbguevDsmA/nG5SZVtND6QT9n2+1uPHteNoaWa5Ne8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tIdOdnh5; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=tFGiba6PWbRmyntCeQSs333BfDNE0Ij3KtTXv7wK5j811C68C4jTs0KXlDqNx45M14WsA8jW7rRlFZ6+hBxkK30ar38xKj5Epc2xHXjl1j80Zw+amo7+vLs8FaQ9M6SEJfbbRa5jwTUh5CrFQuBndoVvuTsQoyTgXapLPYR/R2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NUBxNMQE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tIdOdnh5"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so93861066b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744269064; x=1744873864; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3OcYzRuci4DVDvTV5wL2NFanwr7+BVH3bP+rdckE45M=;
-        b=tIdOdnh5oAZhGDM7uWD7RpFi4PXKOpQH6bh/n6RPVExFaUig3IrrpAlmLffcoAUVEU
-         MX014UXDe4T40u/EftWo4s5x7Tfbl6ddorAyUyFoojwWXHNZPXzCUVvJ0BKuLt2Zln56
-         a9ZaXziLlH5zb79VpOa4J9zfhPBr5SL1YX7Gq/Nb66faCX0wibrTNMCRCeDleyom/yMp
-         MeUi6X82iteHze09A2ldUfnKq+mbSGsEF/6uHwsfp3dBGY+oM0HYZ5aGwa5pOHDHc8Ay
-         CK11lSEjbcHMJzrXDAILKdg1PmRsd1ujsrGNBAswtbvAcRded3p4H/9/qzWLloQS36HJ
-         Kqug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744269064; x=1744873864;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3OcYzRuci4DVDvTV5wL2NFanwr7+BVH3bP+rdckE45M=;
-        b=BtNLQ6yNl2bIExzHi4fLahhz3AFdWJ9+UgkeuQFHMhpT14nHkn4/dwg5lgqTRRlilL
-         xqddgcFRgtr/ALcn50DxBmDnBdutYapLU8GnQgDq8x3F0qHqgqn08magxXMwuWbCk+jD
-         BRNws95kjj5wKWjQ8NhtLoCuAxHH3a4TG79OrGKJClkaJcFIBHV+QEnJENDfNOR0Z7Ci
-         KrYkiqTDcupEOYJAfaphfMIT8yi49V11SgjL9cOpNyVr3krXYQgMtDIAWiz9cFCC7Di2
-         sW+FazJ5AJPnDxmgAyEVp+skp6kjMKE01tTJONORRpjnuAc3mg0qHvZZOYd850H6bNp4
-         7cQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViFC7L8UWMVoHSajcduIH9FfL/V4rZ8Gyutcd8JKhDNl8qprdOmkRJducXc4IGc10kU1b9YotvigVTR3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY91dGQdARVjTcm9y74AF1DImq+jaXFWHsHmRMEL9I6rp2KoBA
-	IwseCwZPdxeHgd2vdJ3C+swciBdZKoytxwINcpDGUdsvzRvrydwFPzoxsqzW384=
-X-Gm-Gg: ASbGncv+doqvTMrCyYGWQC7GS5thN2boV0/6tM/o4Vs7EYhfdxsOmzHo33/gygh02hb
-	+4talXskQ++YboemlS4HjDhRg0z+XU41otLdBZcgQCEeBrfBX3A+TgXaec6reCptWTeDnMebvlL
-	OLc0o+69/Q3gP2DTkt9456vPCpAxM6bDDDnggwEeeoBEE82cMgBZ+LptoUVK0oJ26QfdxixsX0Z
-	DB4ooBtszThnNXjiNjKSWW8oj1t1xPsEds4RfAK3Eb6VsKJ3VHuzVeNZi4kwD4l/idu6epIia2i
-	zYzPK3PTQJIuuxnm/paCrzo0SOjFRWxd6SuoxbhQHPdWIaps2gw=
-X-Google-Smtp-Source: AGHT+IETfspJRi9jQhAHy7G+NAIq/HN8GQhfewV/oWn/J+Tx4X7F7gfIyNI7Jkc9sjEejt3cHqWuJA==
-X-Received: by 2002:a17:907:da0:b0:aca:a1d7:a830 with SMTP id a640c23a62f3a-acabd185e69mr120878666b.13.1744269064280;
-        Thu, 10 Apr 2025 00:11:04 -0700 (PDT)
-Received: from linaro.org ([2a02:2454:ff21:ef30:ae8a:4fb8:9c71:6be])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb3fcdsm219989266b.107.2025.04.10.00.11.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 00:11:03 -0700 (PDT)
-Date: Thu, 10 Apr 2025 09:10:57 +0200
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
-	Conor Dooley <conor@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	UNGLinuxDriver@microchip.com, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-mips@vger.kernel.org, imx@lists.linux.dev,
-	linux-rockchip@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 09/19] arm: dts: qcom: sdx55/sdx65: Fix CPU
- power-domain-names
-Message-ID: <Z_dvAT7LdR7xbH45@linaro.org>
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-9-076be7171a85@kernel.org>
- <03011a33-174b-4027-bdd2-043aa685380b@oss.qualcomm.com>
- <CAPDyKFoZ7NfN+pkCPnusvTOEaxbQhr=1FJqzdDGrLcKAzBpGyQ@mail.gmail.com>
- <66f8d957-f7a5-4aec-b8e7-5bcc7ff7f569@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NUBxNMQE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8EAAC4CEDD;
+	Thu, 10 Apr 2025 07:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744269097;
+	bh=bPzeZgrP7PD3Md2w9w9dvWl898tFcB9NhFWNXwu0U2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NUBxNMQEaQS5a/bjuTtaryrBfraPSR8ULIOyeiTlDT6ymfmBkHo56NS+KeAD2k1fq
+	 bWbW/LhSa3QvBfS4dDQ4CN1yh8vvA89BIUoFYfKuNoxHJzU9UT2ZivgBiK21iJ0rBz
+	 xHnePbCD7Hf44XD717vA1ApB8xsiGaoFrGLSfBzw=
+Date: Thu, 10 Apr 2025 09:10:02 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: joswang <joswang1221@gmail.com>, Benson Leung <bleung@chromium.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jos Wang <joswang@lenovo.com>
+Subject: Re: [PATCH 1/1] usb: typec: displayport: Receive DP Status Update
+ NAK request exit dp altmode
+Message-ID: <2025041054-landside-filtrate-17b0@gregkh>
+References: <20250209071926.69625-1-joswang1221@gmail.com>
+ <Z635BJNnFAiIFXxM@kuha.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <66f8d957-f7a5-4aec-b8e7-5bcc7ff7f569@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z635BJNnFAiIFXxM@kuha.fi.intel.com>
 
-On Wed, Apr 09, 2025 at 08:35:29PM +0200, Konrad Dybcio wrote:
-> On 4/7/25 6:27 PM, Ulf Hansson wrote:
-> > On Fri, 4 Apr 2025 at 22:41, Konrad Dybcio
-> > <konrad.dybcio@oss.qualcomm.com> wrote:
-> >>
-> >> On 4/4/25 4:59 AM, Rob Herring (Arm) wrote:
-> >>> "rpmhpd" is not documented nor used anywhere. As the enable-method is
-> >>> "psci" use "psci" for the power-domain name.
-> >>>
-> >>> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> >>> ---
-> >>
-> >> "psci" is what we want here, but these platforms require some more
-> >> massaging..
+On Thu, Feb 13, 2025 at 03:52:04PM +0200, Heikki Krogerus wrote:
+> On Sun, Feb 09, 2025 at 03:19:26PM +0800, joswang wrote:
+> > From: Jos Wang <joswang@lenovo.com>
 > > 
-> > So this isn't for CPU performance scaling?
+> > Although some Type-C DRD devices that do not support the DP Sink
+> > function (such as Huawei Mate 40Pro), the Source Port initiates
+> > Enter Mode CMD, but the device responds to Enter Mode ACK, the
+> > Source port then initiates DP Status Update CMD, and the device
+> > responds to DP Status Update NAK.
+> > 
+> > As PD2.0 spec ("6.4.4.3.4 Enter Mode Command")，A DR_Swap Message
+> > Shall Not be sent during Modal Operation between the Port Partners.
+> > At this time, the source port initiates DR_Swap message through the
+> > "echo device > /sys/class/typec/port0/data_role" command to switch
+> > the data role from host to device. The device will initiate a Hard
+> > Reset for recovery, resulting in the failure of data role swap.
+> > 
+> > Therefore, when DP Status Update NAK is received, Exit Mode CMD is
+> > initiated to exit the currently entered DP altmode.
+> > 
+> > Signed-off-by: Jos Wang <joswang@lenovo.com>
 > 
-> Nope!
-> 
+> This looks okay to me, but Benson, can you take a look at this?
 
-Huh, this is definitely "perf" (= cpufreq) and not "psci" (= cpuidle).
-If you run blame on this line you get to:
+What ever happened to this patch?
 
-commit 0ec7bde7b590f8efa5823df3b52b32dd373060ff
-Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date:   Thu Apr 8 22:34:45 2021 +0530
-
-    ARM: dts: qcom: sdx55: Add CPUFreq support
-
-    Add CPUFreq support to SDX55 platform using the cpufreq-dt driver.
-    There is no dedicated hardware block available on this platform to
-    carry on the CPUFreq duties. Hence, it is accomplished using the CPU
-    clock and regulators tied together by the operating points table.
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0ec7bde7b590f8efa5823df3b52b32dd373060ff
-
-The OPP table looks like it's supposed to set SDX55_CX performance
-states according to the chosen CPU frequency. MSM8909 has a similar
-setup where the CPU is supplied directly by VDDCX and we describe that
-with "perf" too [1].
-
-What I don't understand is why the name "rpmhpd" does not appear
-in any driver. The MSM8909 setup goes via qcom-cpufreq-nvmem, where
-"perf" is directly assigned for cpufreq scaling. I can only think of two
-possible reasons:
-
- - The power domain is implicitly attached to the OPP table(?), because
-   there is just a single power domain defined on the CPU, or
-
- - This was never working correctly.
-
-For both cases, I think it would be best to change the power domain name
-to "perf" like Uffe suggested.
-
-Thanks,
-Stephan
-
-[1]: https://lore.kernel.org/linux-pm/20231018-msm8909-cpufreq-v2-0-0962df95f654@kernkonzept.com/
