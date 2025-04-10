@@ -1,144 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370651E32D5;
-	Thu, 10 Apr 2025 07:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD0F1E32A3;
+	Thu, 10 Apr 2025 07:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271902; cv=none; b=Z+HwTkFtVxKXvNoMMRsHjbuOPPUTaYwseFj3pVSDrvZ/CDZ56bfkevMFy4AzKE27K/jXdBMV9b0MnU7I6uF7bgugprK9+BnfQDqAeeumrZPMWzV9VxlHVuWNMTUJ5XoAPvRVuJa4lRoxGfW1KgR+rlBwwAGF6Xz6kz6qtwSx+hk=
+	t=1744271927; cv=none; b=cPmajS6yxbfPk9upiPk+FsG8UmMT+QqOY7L4hKT9JTf+e0isS/Lw/S1N2F0dt9C2e4ovEInQw3p6b5lrQXpUaG0cHqWYatVKZSw76G9swCNoDHmN18zjirqmlotjqyqCRQ5cBDDxBBQudJgTjemgpjcf3jlg8QgAAau8wc9cWIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271902; c=relaxed/simple;
-	bh=dTI/GJafdxJX+eMaocpLYLEZHuUOrvVBgaIIFIeZENA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaEMzbvzh+Sdv+rrBm1WmLWctwioWG8pEMepWEMRwRVAVrFH0iz6EK4N1wXm8ARj6nXVnn2IfZSgng3YMVFhIiDdhkjkI7eWh4heCe+sdoIveBOUeXNNxQ2J5QYzTJ5R5PzDVWlM6SDYN0W343G1AQjhB3+umjlGqCqMEbDxEng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGY1RDiz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744271927; c=relaxed/simple;
+	bh=71Rfgf2yRqlfiS9p2925TC7yG6tm0ZpKyipflmSA2d0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RuFsAwjlywZ6jBLzkCLrhNw8W6U0Ot8UANYq/U1n3+e7VChqu/J60pyBVVCMV8yzPU7j4hLUKr0Harw+JGUXQ3FsOADqIMIucTkQBJ0BQLVgJZEv6A9cneXVcsxv39wsjgsMHGbVrMVMbJzL2S5NOvcCWLaenHtADAtz1MOeg3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKl+WEqE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGY1RDiz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4FA8C4CEDD;
-	Thu, 10 Apr 2025 07:58:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKl+WEqE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8835C4CEE9;
+	Thu, 10 Apr 2025 07:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744271901;
-	bh=dTI/GJafdxJX+eMaocpLYLEZHuUOrvVBgaIIFIeZENA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tGY1RDizMH74a20aC0HH4YRTcNFDxjEcutaJQ8EopWeICR7Ztvk/qdDtF+Sg10wEv
-	 bVbB8NbUyzt4EMB26euzSag2uxD8M3U63H3m58kjibUEZoD6/qtgy7Sj2lz5jnlzVn
-	 vsh0lWMzJeYZg75UHucvYBBo9HCQxh+EpmzLlEB+GXtV8v129YvS8dY58Y56aRfSb2
-	 Eb8Hrpu6DIa/EsS+FFbWHaWe+t3niHnrCfDv5KlmVP79Qal60s85Z1vy+UTLF1mUfu
-	 Mkkzomo0qhqMy+iKSq2/dm+ty62v45yxfm1eV0IeLRyNi2SunoQP4kpoCs/58aeAx1
-	 awPjxw6gugH6A==
-Date: Thu, 10 Apr 2025 08:58:17 +0100
-From: Lee Jones <lee@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/14] Support ROHM Scalable PMIC family
-Message-ID: <20250410075817.GN372032@google.com>
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
+	s=k20201202; t=1744271925;
+	bh=71Rfgf2yRqlfiS9p2925TC7yG6tm0ZpKyipflmSA2d0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IKl+WEqEoEOyurj+PuJ0zeklluNjrmMu21SCPdSthnjOPwuYOQxiMC90ApTmjpyaY
+	 hpW411fYLc/wbiD0bDsjjB6AofuCLUR8d+YjmyTwwHCZYAdH9jqt0ZvuCjJvHu5DHe
+	 9MwgqlIhDBQb4UBrfCLK1LNpfn4FVg6Kaot1dbmFly/2xnGbhmKIuzCVoPRRnzmoao
+	 l9aoC+zJ2R1NdrPMih55JDwfdHIu0fUGNkd97riWWUVlgQ7u8XnH3IbmkjEYuxJlDJ
+	 9eJoDsLyBK8/IBwHiQ6NbiLfo2Edi0+sco1KAtDtDfJgNXskPdrnkxndC0MDSsoOR5
+	 5CZL1KdOqOILQ==
+Message-ID: <e369a368-6729-4f67-9bb0-28bfd833356f@kernel.org>
+Date: Thu, 10 Apr 2025 09:58:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1744090658.git.mazziesaccount@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 7/7] rtc: Add Nuvoton NCT6694 RTC support
+To: a0282524688@gmail.com, lee@kernel.org, linus.walleij@linaro.org,
+ brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de,
+ mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com,
+ alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
+References: <20250409082752.3697532-1-tmyu0@nuvoton.com>
+ <20250409082752.3697532-8-tmyu0@nuvoton.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250409082752.3697532-8-tmyu0@nuvoton.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 08 Apr 2025, Matti Vaittinen wrote:
+On 09/04/2025 10:27, a0282524688@gmail.com wrote:
+> +	data->irq = irq;
+> +	data->nct6694 = nct6694;
+> +	data->rtc->ops = &nct6694_rtc_ops;
+> +	data->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
+> +	data->rtc->range_max = RTC_TIMESTAMP_END_2099;
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+> +					nct6694_irq, IRQF_ONESHOT,
+> +					"rtc-nct6694", data);
+> +	if (ret < 0) {
+> +		dev_err_probe(&pdev->dev, ret, "Failed to request irq\n");
+> +		goto dispose_irq;
+> +	}
+> +
+> +	ret = devm_rtc_register_device(data->rtc);
+> +	if (ret)
+> +		goto dispose_irq;
+> +
+> +	device_init_wakeup(&pdev->dev, true);
 
-> Support ROHM BD96802, BD96805 and BD96806 PMICs
-> 
-> The ROHM BD96801 [1] and BD96805 [2] are almost identical PMICs what comes
-> to the digital interface. Main difference is voltage tuning range.
-> Supporting BD96805 with BD96801 drivers is mostly just a matter of being
-> able to differentiate the PMICs (done based on the devicetree
-> compatible) and then providing separate voltage tables.
-> 
-> The ROHM BD96802 [3] is a companion PMIC which is intended to be used to
-> provide more capacity on systems where the BD96801 alone is not
-> sufficient. Startup sequence of these PMICs can be synchronized in
-> hardware level, and there seems to be some mechanisms which allow
-> delivering the companion PMIC (BD96802) status to the main PMIC
-> (BD96801/BD96805). This patch series does treat the companion PMIC(s) as
-> individual PMICs and allows using them from software point of view as a
-> stand alone ICs. From the digital point of view, the BD96802 is a subset
-> of BD96801, providing only buck1 and buck2 regulators. Please see the
-> data sheet
-> 
-> The ROHM BD96806 [4] is similar to the BD96802, except that it does also
-> provide different voltage tuning ranges.
-> 
-> This series adds basic voltage monitoring and control as well as a
-> watchdog support for these PMICs using the BD96801 drivers.
-> 
-> Similarly to the BD96801, these PMICs too have a few configurations
-> which can only be done when the PMIC is in STBY state. Similarly to the
-> BD96801, doing these configurations isn't supported by the driver. The
-> original BD96801 RFC [5] driver should be able to cover those
-> configurations, if modified to support these models.
-> 
-> [1]: ROHM BD96801 data sheet:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96801qxx-c-e.pdf
-> [2]: ROHM BD96805 data sheet:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96805qxx-c-e.pdf
-> [3]: ROHM BD96802 data sheet:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96802qxx-c-e.pdf
-> [4]: ROHM BD96806 data sheet:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96806qxx-c-e.pdf
-> [5]: Original BD96801 RFC:
-> https://lore.kernel.org/all/cover.1712058690.git.mazziesaccount@gmail.com/
-> 
-> Revision history:
-> v2 => v3:
->  - Fix BD96806 voltages
->  - Use defines for voltages to ease spotting (copy-paste) errors in
->    regulator descs
->  - Use lowercase node names in the BD96802 dt-binding
-> v1 => v2: MFD driver changes after review by Lee
->  - Use enum for chip type instead of picking the data directly from the
->    of_match_data.
->  - rename "chip data" variable 'cd' to more widely used 'ddata'.
->  link to v1:
->   https://lore.kernel.org/all/cover.1741864404.git.mazziesaccount@gmail.com/
-> 
-> 
-> Matti Vaittinen (14):
->   dt-bindings: regulator: Add ROHM BD96802 PMIC
->   dt-bindings: mfd: Add ROHM BD96802 PMIC
->   dt-bindings: mfd: bd96801: Add ROHM BD96805
->   dt-bindings: mfd: bd96802: Add ROHM BD96806
->   mfd: rohm-bd96801: Add chip info
->   mfd: bd96801: Drop IC name from the regulator IRQ resources
->   regulator: bd96801: Drop IC name from the IRQ resources
->   mfd: rohm-bd96801: Support ROHM BD96802
->   regulator: bd96801: Support ROHM BD96802
->   mfd: bd96801: Support ROHM BD96805
->   regulator: bd96801: Support ROHM BD96805 PMIC
->   mfd: bd96801: Support ROHM BD96806
->   regulator: bd96801: Support ROHM BD96806 PMIC
->   MAINTAINERS: Add BD96802 specific header
-> 
->  .../bindings/mfd/rohm,bd96801-pmic.yaml       |  10 +-
->  .../bindings/mfd/rohm,bd96802-pmic.yaml       | 101 ++++
->  .../regulator/rohm,bd96802-regulator.yaml     |  44 ++
->  MAINTAINERS                                   |   1 +
->  drivers/mfd/rohm-bd96801.c                    | 565 ++++++++++++++----
->  drivers/regulator/bd96801-regulator.c         | 455 ++++++++++++--
->  include/linux/mfd/rohm-bd96801.h              |   2 +
->  include/linux/mfd/rohm-bd96802.h              |  74 +++
->  include/linux/mfd/rohm-generic.h              |   3 +
->  9 files changed, 1073 insertions(+), 182 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96802-regulator.yaml
->  create mode 100644 include/linux/mfd/rohm-bd96802.h
+devm_device_init_wakeup
 
-This set good to go now?
+Let's save us from one more patch...
 
--- 
-Lee Jones [李琼斯]
+As pointed out in other patch by Bartosz, you have messed cleanups. Use
+only devm, because currently your cleanup looks like this:
+1. dispose mapping
+2. free IRQ
+
+and this should be reversed.
+
+Best regards,
+Krzysztof
