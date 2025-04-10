@@ -1,75 +1,143 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486C51DE3A8
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D09D1B81DC;
+	Thu, 10 Apr 2025 07:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271316; cv=none; b=EZhk3atMkAgoe7/CYSPMLlE4NvicWZuHhZT8L1OPB6+ad64RVulphLWSNEvOEMkeEfp0Du1zo3Xvgrrffm04dQIjcdyb5GxuuLaREqUdpnLx2P3ansaKOsYATwiqC5TLnsRnw0KrP3EfOxgT4u6rpZuRDtgxdITUob+Bv9qoH4c=
+	t=1744271353; cv=none; b=CGJJwfPXGhCPLbic4cp6oNCdHOvqTt8PThexgkK+jjSXDgwS7WchTkYXQpD9fZBFjCOEFIMBadUErDoIZuTj5srSJs+ilYPUBm4j/LYN8pb4k4Vv9LkZPqT87T3XeoEe53/R3ENTxnxCmZE7Rd/EpuUaGLqfOjTI8me8aHWUSho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271316; c=relaxed/simple;
-	bh=LgIAuQP6QdIhxX5yxBAjpHdlroh9SgSI8pbeM2m+PEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NI04Ub8+Ue9BDzqVYy19XXwTxUD3kwNOq/+A6PHrKSwoCQmoP50Pc5h5GGWAaqGyQdSWXvR0KrSAfHDwrDwpq8OyHebw4QQpHseGHNfrljXHWEpHhZ81KCGkIWHRK/3MpejZYOEutHILfquyuqfYflkqN24rvQ8orY7qNZZlkXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sLOiQWtr; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744271353; c=relaxed/simple;
+	bh=ivk3g2xuuWzp02wJHrEL79rm/ijdgS0pYE3iPtcnQ94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RsPzVp9cMri+zCokzLIzxOaifvc11urhcOLkb/rd5hHz65eeVZdAbDLf3Sv2aZz0Oc15tDz0GiUquH2RIdt1oKbVG9oMQFFJ96kT+u311u4hlh5//X6x+qQY/14/CTTfOh/FXzzxeAiU6eAd9fcwphcPwRL1wnrUxvfy4Bub1os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jbx9V4Z6; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sLOiQWtr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=LgIAuQP6QdIhxX5yxBAjpHdlroh9SgSI8pbeM2m+PEY=; b=sLOiQWtrRhrul+oqReZVAIzbwj
-	KoVdRPCQ1lu0UbdYkxolPQ4J1BeczneaE2OcAioyTyxmcJjQEGRGkumdrqmQ7AhaSaHZmo3fSREWC
-	N0ErNSwSoch0Yv2U/v6WkQbVstHs3Y+Zt7vPY+efIxNq31pLc578nOAgI5AUuf8VsW70fNzB6ujkf
-	Kzho6GzKGzXe5thtUpki1QuSTn5AGmbYgnFvRPLoHuQBV7DbCmA0iOZWePD7a6I91GU9tRTJCtAas
-	1KyHeq6jK7dvVweY1kmDdj/0u2RTWlEXf/8dQVlef09AjdkwTijHYCVCJtDjnDeyg2p2cCnwictPg
-	+9bwJknA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2meC-00000002Zrd-3ESr;
-	Thu, 10 Apr 2025 07:48:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 05EF73003C4; Thu, 10 Apr 2025 09:48:29 +0200 (CEST)
-Date: Thu, 10 Apr 2025 09:48:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Xin Li <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-	linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	Dave Hansen <dave.hansen@intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 06/20] x86/msr: Standardize on 'u32' MSR indices in
- <asm/msr.h>
-Message-ID: <20250410074828.GU9833@noisy.programming.kicks-ass.net>
-References: <20250409202907.3419480-1-mingo@kernel.org>
- <20250409202907.3419480-7-mingo@kernel.org>
- <aed43a6a-aca9-4c81-af1a-775f5858ebe3@zytor.com>
- <9c014962-d4cb-4e68-be15-efbe2ea26531@zytor.com>
- <63ab3ea9-c55d-48d2-8344-fb4314baf240@zytor.com>
- <3B57B3E5-47C9-4196-AD2B-44916E18B6D0@zytor.com>
- <3e2a52c5-791a-4e96-a768-8579ec841dd1@zytor.com>
- <e3d8db6a-dfb9-49d5-8c7f-b4a1d2faf575@zytor.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jbx9V4Z6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744271349;
+	bh=ivk3g2xuuWzp02wJHrEL79rm/ijdgS0pYE3iPtcnQ94=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jbx9V4Z6DWUoU2FXPTLYMh8Baz0STBgWnytWTfreUVWvbr0cTFRO4VZYiZ9al2LOI
+	 giTpUXroI3ZQtJur1zlcFZx5s8tBcHfswO1hrY5UjZadLnG9b8c//71sQ4OdNRYjfO
+	 YV5yPWulenhUJJ5FlzZF8J5nOl3xYmVaQPYL2UXW+FqmN3DYK2VOpu8tNg/ODZDfyg
+	 q1QU1nZ+FRiJCbn2gt5w3137KFG8+LgQ7VWHgJFfkOYZ+9M+y9TzR0/A+Cw40euUat
+	 7wDME0UQw4PTNRjrYRfltKx/ixnbDGw3TaCm7oxyQR8QoOP6dmnbBttUUH7onIQpcQ
+	 ncq3vrwIqSg/w==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 92A2417E0402;
+	Thu, 10 Apr 2025 09:49:08 +0200 (CEST)
+Message-ID: <7e77b50c-1808-49fa-a711-956a570ad208@collabora.com>
+Date: Thu, 10 Apr 2025 09:49:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3d8db6a-dfb9-49d5-8c7f-b4a1d2faf575@zytor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/3] dt-bindings: pinctrl: mediatek: Add support for
+ mt8196
+To: Cathy Xu <ot_cathy.xu@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, yong.mao@mediatek.com,
+ Axe.Yang@mediatek.com, Jimin.Wang@mediatek.com, Wenbin.Mei@mediatek.com,
+ Andy-ld.Lu@mediatek.com, Guodong Liu <guodong.liu@mediatek.com>
+References: <20250401054837.1551-1-ot_cathy.xu@mediatek.com>
+ <20250401054837.1551-2-ot_cathy.xu@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250401054837.1551-2-ot_cathy.xu@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 11:14:12PM -0700, H. Peter Anvin wrote:
+Il 01/04/25 07:48, Cathy Xu ha scritto:
+> Add the new binding document for pinctrl on MediaTek mt8196.
+> 
+> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+> Signed-off-by: Cathy Xu <ot_cathy.xu@mediatek.com>
+> ---
+>   .../pinctrl/mediatek,mt8196-pinctrl.yaml      | 220 ++++++++++++++++++
+>   1 file changed, 220 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..cef7e0321722
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
+> @@ -0,0 +1,220 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/mediatek,mt8196-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek MT8196 Pin Controller
+> +
+> +maintainers:
+> +  - Lei Xue <lei.xue@mediatek.com>
+> +  - Cathy Xu <ot_cathy.xu@mediatek.com>
+> +
+> +description:
+> +  The MediaTek's MT8196 Pin controller is used to control SoC pins.
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8196-pinctrl
+> +
+> +  reg:
+> +    items:
+> +      - description: gpio base
+> +      - description: rt group IO
+> +      - description: rm1 group IO
+> +      - description: rm2 group IO
+> +      - description: rb group IO
+> +      - description: bm1 group IO
+> +      - description: bm2 group IO
+> +      - description: bm3 group IO
+> +      - description: lt group IO
+> +      - description: lm1 group IO
+> +      - description: lm2 group IO
+> +      - description: lb1 group IO
+> +      - description: lb2 group IO
+> +      - description: tm1 group IO
+> +      - description: tm2 group IO
+> +      - description: tm3 group IO
+> +
+> +  reg-names:
+> +    items:
+> +      - const: base
+> +      - const: rt
+> +      - const: rm1
+> +      - const: rm2
+> +      - const: rb
+> +      - const: bm1
+> +      - const: bm2
+> +      - const: bm3
+> +      - const: lt
+> +      - const: lm1
+> +      - const: lm2
+> +      - const: lb1
+> +      - const: lb2
+> +      - const: tm1
+> +      - const: tm2
+> +      - const: tm3
 
-> No, and as you know, I'd like to get rid of the native_ and xen_ functions
-> entirely anyway.
+Why is there no EINT iospace?
 
-I have vague memories of locations where we *have* to use native_{rd,wr}msr()
-because the paravirt indirections cause problems.
+Regards,
+Angelo
 
-I don't clearly recall the reasons, but it could be instrumentation
-related. The paravirt muck has tracepoints and other crap included.
 
