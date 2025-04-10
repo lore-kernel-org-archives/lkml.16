@@ -1,211 +1,263 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBB533F6;
-	Thu, 10 Apr 2025 04:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253481FBE9B
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744260682; cv=none; b=Hf1XbFS880by/CfDnxvJYenxImJo0a0u/gLsj1I/Uft0Nz4tRjGmscZTn9o2VLJYeDlqjpnhD2k7k8Ce+G3V3wy3HbLWRu01R4fAEOafd8TpujUqJSeeObqzx2xy2wkHr5XYrJSBe2k/WLdT3u/PjyRldHqixeE1PeKs2Y6jKGs=
+	t=1744260688; cv=none; b=ARjRELNINI5ZTDg4U4NQliIuf0c9Z7r17AhjXxQviQDEyWnZ7wncH5KFSahzZuNJfr3YRWTEGKw6ArJO558Qs4pNX5RfGQAvqHnnJ+SDTBEhqNJKXZBl5nkV0tB4g5gh9KJToVh9bDtctcZ/poOaV3MetIuDgTtmT2T9gYsUnIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744260682; c=relaxed/simple;
-	bh=PC9EXhe8ZVuduQJq69exAB2rYhGl50SGulzgRDZVhME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=I0WE6bJJTrdR0Q4MDk6T5UikEDsjGX8jRVIREcnZx5IXQZJDfYdIdGqSOOxKOmQDDjQJp2b2YX5rFB6fh6giFTpRLnK90TqQzjjJ82vh+dFuNPQ7xqcs6MY3V1ykE6EHU3rPpWHp24a8mXcKn9T2eM/NY9M7XhTqvKH/ltQ2pSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jCaulmfZ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744260688; c=relaxed/simple;
+	bh=SkyDg4HJUDUnF3d2cVrAMUNiCn/1XE84x8N+q+pvyr0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R5U+H5EzbwYtgWoM0f1RK0tNUURVW9bAEfvEM5jAKDHtuFa8USdraSqHzxJUtYccJN0naZVJYyzqBXeYnrtBJoJzBtUCgvduwSmtSw+GY/rXaRPfxjrcP7YqvprW6l4R0c2YTUyMj8zFNrtYIyy5QixTZeOUdGbPh+X0EpeA3tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=T/DkjupQ; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jCaulmfZ"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539MLChb027048;
-	Thu, 10 Apr 2025 04:51:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=njyM77
-	t/t2FHJ/+tup28jrS0jo+WSZKAYYA3LMxt7gs=; b=jCaulmfZfvUhq5xgFcMAnR
-	B7lvZYBJfdbTjXKdzIC9t+U4PDo0T7oJk9zWpBJnsomzZ0DKOS7rcgzi3Z8BkXki
-	6T8pjhWdiiYZd2KJJ2uxUAZZYxPR2G0s+n1zz4+VhWr3yBScNZrXI871Flfl5nnX
-	Kx83yC/QAuimb8XLhvE5yyVKg4eHeb/d7qux7gEyD4ZS57gpdWcELIeJ4L930gGt
-	8xph9JgNcxn8PqABEz+0OefFVMK8KhDZgblXUrgsNysogX9gZYF3eI3X10qeIbHz
-	WnRTBgp0r1VG0lPQeAs2SfhhiiDK8L9hCOPbW6sgJBgK8jUEoAuqF0LEyMSfresw
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wtaq4ffv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 04:51:18 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53A38IUm013932;
-	Thu, 10 Apr 2025 04:51:17 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ufunv0h0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 04:51:17 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53A4pG8419268126
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 04:51:16 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D9F8C58059;
-	Thu, 10 Apr 2025 04:51:15 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 69A8258058;
-	Thu, 10 Apr 2025 04:51:13 +0000 (GMT)
-Received: from [9.61.249.145] (unknown [9.61.249.145])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 10 Apr 2025 04:51:13 +0000 (GMT)
-Message-ID: <d79d19b3-8dc5-4d2c-900e-a273ce317e24@linux.ibm.com>
-Date: Thu, 10 Apr 2025 10:21:12 +0530
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="T/DkjupQ"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-548409cd2a8so496459e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 21:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1744260683; x=1744865483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NCICr8Y1TyleAjVDsOU8scGztgtriadImesn1Q8G2jE=;
+        b=T/DkjupQXhPa2ita2QY1C5S98VeJFCGjw9aaXCVaJTUzKfwQ4qh/p3Ur+3n7a9qZ+X
+         o2ygF1i38C4XM3L2sFSpQHKSRrDJvTwQba5lm/zhBYtvokhOlcngAVEq/j7fZYvU54wI
+         qAdbfTnAarCEBSugc/P1vdNUgeBFpg3C2uDtsViuUp+6zLAgSlSb9yd8QDVJ4+JMmIPl
+         uudDQUuTmp597VhSR+lcBXG+nJv3K2za3HpjBQsQCvzAhQ6BpaGlv+DjHgOExooQ0HfV
+         JAir/RAuUyosr3CK9LhfE+eJhHCoofllb5EZGkR+CtLmhpAAiWLUVFF4Az2MM/3+uR2l
+         PS8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744260683; x=1744865483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NCICr8Y1TyleAjVDsOU8scGztgtriadImesn1Q8G2jE=;
+        b=fFkOBGTYT9KHtfxV9hNF0Z0T8gt+u+u/9fnIgTk97rMbfjl5LXojvkDs9xzwrNWZbY
+         aUhjslx5oHs8Frw9ICS4o0hvi9Da9/WHgede0zlLZOhuO1za+0qQaLG4uDdUxbK3upLe
+         TOtAWHX8bryv0SJxbj2jFIZOHaSlyeGa3UywLMMu7ukobou1oUtS8R8fUBOLZ6Cv6vW8
+         6NyAQrJaUyZXXsPuAqrM8uFJAKPAXP0TAUBTv1adN9ViwEW5kptuWY2v96RD/sGZDiRe
+         PeW0QnIWgr2XIbHUCQoS6vobq2kDUDhVKl5ADQcWOae9+3nnCa/xR4jpmy2Atc8+BLB8
+         3uYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUufbGK+0GguP9gCCZ67V7jtwPrQX4LzqHJFRFbkcYeOCK2piCGS3skR3KZKSTec+dc8EEcotzmDBQG6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx6jbE8PiJjQO7oJsydbTzJPHRnSHkKfUa5UVD61JSijk8VCin
+	9GwZZtvB9Ff/uD2McoRIf6LJGHdJ6Vlo8/8Q1oOb4AuPVdvQfZWK5ba1VA/lZ8iK0SRLU9XaVpQ
+	b0+Bj/qWoiAK98VbVv2nl29zoH61VTUGVyuwmwXygT6jtdkHlYrI=
+X-Gm-Gg: ASbGncsyPsUUSlEvgUzx0nKTT1bX4n0+KBEI3g25QUCGoYbs6RhbM3t2jrZ1leJF4ak
+	UQdiki9pfYkimfa6D/WwotnX8Ng33EN9lNjRoxOS+/6fMtRxc+GzTRPR6F2kO5DaflJMDBb0d7L
+	BOElo1WhL/OfP6C6WSLLCCuyHT8ggo9X56Xus=
+X-Google-Smtp-Source: AGHT+IHVCj2wRJMmbo6RZNbl02DjTtI3TJ70CFKiTUTRR9/3TqJXXoa9siW2YcLob+ml2kZdmIqaw4wvzv4K5mehWjs=
+X-Received: by 2002:a05:6512:3183:b0:54b:104b:dfcd with SMTP id
+ 2adb3069b0e04-54cb68a5549mr357294e87.53.1744260682907; Wed, 09 Apr 2025
+ 21:51:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [mainline]Kernel Warnings at kernel/bpf/syscall.c:3374
-Content-Language: en-GB
-To: bpf <bpf@vger.kernel.org>, Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-next@vger.kernel.org
-References: <c9816983-7162-47e6-8758-2daaa8c8ccc3@linux.ibm.com>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <c9816983-7162-47e6-8758-2daaa8c8ccc3@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 7Y67UAI6k2Km9_zIY-g42CxIXc8_JUKs
-X-Proofpoint-ORIG-GUID: 7Y67UAI6k2Km9_zIY-g42CxIXc8_JUKs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- spamscore=0 malwarescore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2504100032
+References: <cover.1744169302.git.hezhongkun.hzk@bytedance.com>
+ <b3af3747daefa00177b48f4666780da58177f7c0.1744169302.git.hezhongkun.hzk@bytedance.com>
+ <20250409190938.f6befeeb9e86ad72f46503a5@linux-foundation.org>
+In-Reply-To: <20250409190938.f6befeeb9e86ad72f46503a5@linux-foundation.org>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Thu, 10 Apr 2025 12:50:45 +0800
+X-Gm-Features: ATxdqUF6D0bvdq2QF7OAMnQbYJVJY8B87-DpNhIZNZl3NEtn10Kry7mFtqaq8jE
+Message-ID: <CACSyD1N5--8DSaJrf0JB-n+OsUFvuuQNau5kCmkP8eo2wyN4wQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH V3 2/3] mm: add max swappiness arg to
+ lru_gen for anonymous memory only
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: hannes@cmpxchg.org, mhocko@suse.com, yosry.ahmed@linux.dev, 
+	muchun.song@linux.dev, yuzhao@google.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+ LKML, netdev
+On Thu, Apr 10, 2025 at 10:10=E2=80=AFAM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Wed,  9 Apr 2025 15:06:19 +0800 Zhongkun He <hezhongkun.hzk@bytedance.=
+com> wrote:
+>
+> > The MGLRU
+>
+> paging yuzhao?
 
-On 10/04/25 10:17 am, Venkat Rao Bagalkote wrote:
-> Hello!!
+I have cc yuzhao and look forward to the relay.
+
 >
+> > already supports reclaiming only from anonymous memory
+> > via the /sys/kernel/debug/lru_gen interface. Now, memory.reclaim
+> > also supports the swappiness=3Dmax parameter to enable reclaiming
+> > solely from anonymous memory. To unify the semantics of proactive
+> > reclaiming from anonymous folios, the max parameter is introduced.
+> >
+> > Additionally, the use of SWAPPINESS_ANON_ONLY in place of
+> > 'MAX_SWAPPINESS + 1' improves code clarity and makes the intention
+> > more explicit.
+> >
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -2697,8 +2697,11 @@ static bool should_clear_pmd_young(void)
+> >               READ_ONCE((lruvec)->lrugen.min_seq[LRU_GEN_FILE]),      \
+> >       }
+> >
+> > +#define max_evictable_type(swappiness)                                =
+               \
+> > +     ((swappiness) !=3D SWAPPINESS_ANON_ONLY)
+> > +
+> >  #define evictable_min_seq(min_seq, swappiness)                        =
+       \
+> > -     min((min_seq)[!(swappiness)], (min_seq)[(swappiness) <=3D MAX_SWA=
+PPINESS])
+> > +     min((min_seq)[!(swappiness)], (min_seq)[max_evictable_type(swappi=
+ness)])
 >
-> I am observing below kernel warnings on IBM Power9 server, while 
-> running bpf selftest on mainline kernel.
+> Why oh why did we implement these in cpp?
+
+Just want to make the code more clear.  Maybe we should do more like this
+
+/* The range of swappiness is [0,1-200,201], 0 means file type only;
+ * 1-200 anon and file type; 201 anon type only
+ */
+#define max_type(swappiness) ((swappiness) !=3D SWAPPINESS_ANON_ONLY)
+#define min_type(swappiness) !(swappiness)
+
+#define evictable_min_seq(min_seq, swappiness)              \
+    min((min_seq)[min_type(swappiness)], (min_seq)[max_type(swappiness)])
+
+ #define for_each_evictable_type(type, swappiness)                      \
+-       for ((type) =3D !(swappiness); (type) <=3D ((swappiness) <=3D
+MAX_SWAPPINESS); (type)++)
++       for ((type) =3D min_type(swappiness) ; (type) <=3D
+max_type(swappiness); (type)++)
+
 >
-> This issue never seen before good commit[1], and seen intermetently 
-> after bad commit[2], and this is not reproducible everytime.
+> >
+> > @@ -3857,7 +3860,7 @@ static bool inc_min_seq(struct lruvec *lruvec, in=
+t type, int swappiness)
+> >       int hist =3D lru_hist_from_seq(lrugen->min_seq[type]);
+> >       int new_gen, old_gen =3D lru_gen_from_seq(lrugen->min_seq[type]);
+> >
+> > -     if (type ? swappiness > MAX_SWAPPINESS : !swappiness)
+> > +     if (type ? (swappiness =3D=3D SWAPPINESS_ANON_ONLY) : !swappiness=
+)
 >
-> So likely issue got introduced b/w these two commits.
+> This expression makes my brain bleed.
 >
-> [1]GoodCommit: 7f2ff7b6261742ed52aa973ccdf99151b7cc3a50
-> [2]Bad Commit: 08733088b566b58283f0f12fb73f5db6a9a9de30
+>         if (type) {
+>                 if (swappiness =3D=3D SWAPPINESS_ANON_ONLY) {
+>                         /*
+>                          * Nice comment explaining why we're doing this
+>                          */
+>                         goto done;;
+>                 }
+>         } else {
+>                 if (!swappiness) {
+>                         /*
+>                          * Nice comment explaining why we're doing this
+>                          */
+>                         goto done;
+>                 }
+>         }
 >
+> or
 >
-> Traces:
+>         if (type && (swappiness =3D=3D SWAPPINESS_ANON_ONLY)) {
+>                 /*
+>                  * Nice comment explaining why we're doing this
+>                  */
+>                 goto done;
+>         }
 >
+>         if (!type && !swappiness) {
+>                 /*
+>                  * Nice comment explaining why we're doing this
+>                  */
+>                 goto done;
+>         }
 >
-> [34208.591723] ------------[ cut here ]------------
-> [34208.591738] WARNING: CPU: 9 PID: 375502 at 
-> kernel/bpf/syscall.c:3374 bpf_tracing_link_release+0x90/0xa0
-> [34208.591750] Modules linked in: bpf_testmod(OE) 8021q(E) garp(E) 
-> mrp(E) vrf(E) tun(E) rpadlpar_io(E) rpaphp(E) vfat(E) fat(E) isofs(E) 
-> ext4(E) crc16(E) mbcache(E) jbd2(E) nft_masq(E) veth(E) bridge(E) 
-> stp(E) llc(E) overlay(E) bonding(E) nft_fib_inet(E) nft_fib_ipv4(E) 
-> nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E) 
-> nf_reject_ipv6(E) nft_reject(E) nft_ct(E) nft_chain_nat(E) rfkill(E) 
-> ip_set(E) mlx5_ib(E) ib_uverbs(E) ib_core(E) mlx5_core(E) mlxfw(E) 
-> psample(E) tls(E) ibmveth(E) pseries_rng(E) sg(E) vmx_crypto(E) drm(E) 
-> fuse(E) dm_mod(E) drm_panel_orientation_quirks(E) xfs(E) lpfc(E) 
-> nvmet_fc(E) nvmet(E) sr_mod(E) sd_mod(E) cdrom(E) nvme_fc(E) 
-> nvme_fabrics(E) ibmvscsi(E) nvme_core(E) scsi_transport_srp(E) 
-> scsi_transport_fc(E) [last unloaded: bpf_test_modorder_x(OE)]
-> [34208.591838] CPU: 9 UID: 0 PID: 375502 Comm: test_progs-no_a 
-> Tainted: G        W  OE       6.15.0-rc1-ga24588245776 #1 VOLUNTARY
-> [34208.591848] Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-> [34208.591852] Hardware name: IBM,8375-42A POWER9 (architected) 
-> 0x4e0202 0xf000005 of:IBM,FW950.80 (VL950_131) hv:phyp pSeries
-> [34208.591857] NIP:  c00000000049c830 LR: c00000000049c7cc CTR: 
-> 0000000000000070
-> [34208.591863] REGS: c00000000eb07a60 TRAP: 0700   Tainted: G        
-> W  OE        (6.15.0-rc1-ga24588245776)
-> [34208.591869] MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 
-> 84002482  XER: 00000000
-> [34208.591882] CFAR: c00000000049c7d4 IRQMASK: 0
-> [34208.591882] GPR00: c00000000049c7cc c00000000eb07d00 
-> c000000001da8100 fffffffffffffff2
-> [34208.591882] GPR04: 0000000000014ed8 c00000103965d480 
-> c0000003415ca800 c0000000b247c900
-> [34208.591882] GPR08: 0000000000000000 0000000000000000 
-> c0000000b247c900 0000000000002000
-> [34208.591882] GPR12: c00000000eb078a8 c000000017ff5300 
-> 0000000000000000 0000000000000000
-> [34208.591882] GPR16: 0000000000000000 0000000000000000 
-> 0000000000000000 0000000000000000
-> [34208.591882] GPR20: 0000000000000000 0000000000000000 
-> 0000000000000000 0000000000000000
-> [34208.591882] GPR24: 0000000000000000 0000000000000000 
-> 0000000000000000 c0000003893d6780
-> [34208.591882] GPR28: c00000000369a6a0 0000000000000fa4 
-> c00000000135d988 c0000000c224bf00
-> [34208.591945] NIP [c00000000049c830] bpf_tracing_link_release+0x90/0xa0
-> [34208.591953] LR [c00000000049c7cc] bpf_tracing_link_release+0x2c/0xa0
-> [34208.591960] Call Trace:
-> [34208.591963] [c00000000eb07d00] [c00000000049c7cc] 
-> bpf_tracing_link_release+0x2c/0xa0 (unreliable)
-> [34208.591973] [c00000000eb07d30] [c00000000049c614] 
-> bpf_link_free+0x94/0x160
-> [34208.591981] [c00000000eb07d70] [c00000000049c780] 
-> bpf_link_release+0x50/0x70
-> [34208.591989] [c00000000eb07d90] [c0000000006ee75c] __fput+0x11c/0x3c0
-> [34208.591997] [c00000000eb07de0] [c0000000006e46bc] sys_close+0x4c/0xa0
-> [34208.592003] [c00000000eb07e10] [c0000000000325a4] 
-> system_call_exception+0x114/0x300
-> [34208.592012] [c00000000eb07e50] [c00000000000d05c] 
-> system_call_vectored_common+0x15c/0x2ec
-> [34208.592020] --- interrupt: 3000 at 0x7fff9c40d8a4
-> [34208.592030] NIP:  00007fff9c40d8a4 LR: 00007fff9c40d8a4 CTR: 
-> 0000000000000000
-> [34208.592035] REGS: c00000000eb07e80 TRAP: 3000   Tainted: G        
-> W  OE        (6.15.0-rc1-ga24588245776)
-> [34208.592041] MSR:  800000000280f033 
-> <SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 48002886  XER: 00000000
-> [34208.592057] IRQMASK: 0
-> [34208.592057] GPR00: 0000000000000006 00007fffcce2d650 
-> 00007fff9c527100 0000000000000066
-> [34208.592057] GPR04: 0000000000000000 0000000000000007 
-> 0000000000000004 00007fff9ce5efc0
-> [34208.592057] GPR08: 00007fff9ce57908 0000000000000000 
-> 0000000000000000 0000000000000000
-> [34208.592057] GPR12: 0000000000000000 00007fff9ce5efc0 
-> 0000000000000000 0000000000000000
-> [34208.592057] GPR16: 0000000000000000 0000000000000000 
-> 0000000000000000 0000000000000000
-> [34208.592057] GPR20: 0000000000000000 0000000000000000 
-> 0000000000000000 00007fff9ce4f470
-> [34208.592057] GPR24: 0000000010610b6c 00007fff9ce50000 
-> 00007fffcce2e098 0000000000000001
-> [34208.592057] GPR28: 00007fffcce2e250 00007fffcce2e088 
-> 0000000000000000 0000000000000066
-> [34208.592118] NIP [00007fff9c40d8a4] 0x7fff9c40d8a4
-> [34208.592122] LR [00007fff9c40d8a4] 0x7fff9c40d8a4
-> [34208.592127] --- interrupt: 3000
-> [34208.592130] Code: 4bfffc28 60000000 60000000 60000000 38210030 
-> e8010010 ebe1fff8 7c0803a6 4e800020 60000000 60000000 60000000 
-> <0fe00000> 4bffffa4 60000000 60000000
-> [34208.592152] ---[ end trace 0000000000000000 ]---
+> It's much more verbose, but it has the huge advantage that it creates
+> locations where we can add comments which tell readers what's going on.
+> Which is pretty important, no?
 >
+
+Yes, I agree. Will do, thanks.
+
+> >               goto done;
+> >
+> >       /* prevent cold/hot inversion if the type is evictable */
+> > @@ -5523,7 +5526,7 @@ static int run_cmd(char cmd, int memcg_id, int ni=
+d, unsigned long seq,
+> >
+> >       if (swappiness < MIN_SWAPPINESS)
+> >               swappiness =3D get_swappiness(lruvec, sc);
+> > -     else if (swappiness > MAX_SWAPPINESS + 1)
+> > +     else if (swappiness > SWAPPINESS_ANON_ONLY)
+> >               goto done;
+> >
+> >       switch (cmd) {
+> > @@ -5580,7 +5583,7 @@ static ssize_t lru_gen_seq_write(struct file *fil=
+e, const char __user *src,
+> >       while ((cur =3D strsep(&next, ",;\n"))) {
+> >               int n;
+> >               int end;
+> > -             char cmd;
+> > +             char cmd, swap_string[5];
+> >               unsigned int memcg_id;
+> >               unsigned int nid;
+> >               unsigned long seq;
+> > @@ -5591,13 +5594,22 @@ static ssize_t lru_gen_seq_write(struct file *f=
+ile, const char __user *src,
+> >               if (!*cur)
+> >                       continue;
+> >
+> > -             n =3D sscanf(cur, "%c %u %u %lu %n %u %n %lu %n", &cmd, &=
+memcg_id, &nid,
+> > -                        &seq, &end, &swappiness, &end, &opt, &end);
+> > +             n =3D sscanf(cur, "%c %u %u %lu %n %4s %n %lu %n", &cmd, =
+&memcg_id, &nid,
+> > +                        &seq, &end, swap_string, &end, &opt, &end);
 >
-> If you happen to fix this issue, please add below tag.
+> Permits userspace to easily overrun swap_string[].  OK, it's root-only,
+> but still, why permit this?
 >
+
+IICC, the arg in sscanf is %4s meaning the length of the string will
+not be allowed to overrun
+the swap_string, thanks.
+
+> >               if (n < 4 || cur[end]) {
+> >                       err =3D -EINVAL;
+> >                       break;
+> >               }
+> >
+> > +             /* set by userspace for anonymous memory only */
+> > +             if (!strncmp("max", swap_string, sizeof("max"))) {
 >
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Can sscanf() give us a non null-terminated string?
 >
->
-> Regards,
->
-> Venkat.
+
+No, the sscanf will add '\0' to the end, so the maximum number of
+input characters is 4,
+and the length of swap_string is 5, with one character reserved for
+the null terminator '\0'
+for sscanf.
+
+Thanks for your time.
+
+> > +                     swappiness =3D SWAPPINESS_ANON_ONLY;
+> > +             } else {
+> > +                     err =3D kstrtouint(swap_string, 0, &swappiness);
+> > +                     if (err)
+> > +                             break;
+> > +             }
+> > +
+> >               err =3D run_cmd(cmd, memcg_id, nid, seq, &sc, swappiness,=
+ opt);
+> >               if (err)
+> >                       break;
 >
