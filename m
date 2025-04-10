@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77BF189F5C
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F06D1EA7D2
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:23:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744298630; cv=none; b=HGwfjU+Txa8hFwo3h5rrX/ML+g6kNo/o9FH6Fg6HiJxku3o2+o2h6tRw/gliCs29hV6X5AUzao5aU/b9b4c+T3MmuoIBQVUfWCMi+YMVlFBZJnJ4vTlquCE5n9zTZV1RFewz6sgPZQU95fU8+M32db+SI7hNN18asBt7ilPaUG8=
+	t=1744298634; cv=none; b=GF8ozlGaYw8tJD3yxxn7Rv4wvnfQjCuS7zDCd8yA95+dU/BFUdgnK9pPcfkMLOO5UXVfFXmYoni4Ie+1GVAmWEPApeprdwBNg7Iunfpx1+ptV8eV9qKbrZYYskCFv52aemFbRXONhb8plt78MAsZfekRMSwyn1XRIX6ZiFKESSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744298630; c=relaxed/simple;
-	bh=uy0c2oFcabCgEI0cFKHtoYjpr7+77MB0L7hpksyKfHQ=;
+	s=arc-20240116; t=1744298634; c=relaxed/simple;
+	bh=mUaotrL5SLp9Dul2a/IS6zLfFa040Gs6YVO08bgNqSk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FY129U9vcKtit4xaQh00XN3FihaMMsJPT65G1mZ/KFZb9wFaz44mGlxFZEuJVtILZRbkoDHlb2nPAm2OchadOmvrjCEv5RXgjoPqIHUyfzdMO6SX+I4kCEHe+CEthKCo2biJB2Em6e3/bpr2RN+vh+1tDTqSmBUZZyPhhpQuCiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBZB64Tv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JvQXZmHLpqKx+HiFbMd6Md0FfEaFAjOEoCPhZAvDEWAA2KJWb9f7a088UWcMjk1cP7y+y8Y+1Py6Unu9kIJh9gAQ94O8idZE8rDRoxoSAkAHB2/m5l3SmQJH4NUOW0FeMDgtnxCEym16/O/wWrhFit5IGRQO2UD8mgZAjQUcEuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RW9KHCid; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBZB64Tv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 272C5C4CEDD;
-	Thu, 10 Apr 2025 15:23:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RW9KHCid"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09497C4CEDD;
+	Thu, 10 Apr 2025 15:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744298630;
-	bh=uy0c2oFcabCgEI0cFKHtoYjpr7+77MB0L7hpksyKfHQ=;
+	s=k20201202; t=1744298633;
+	bh=mUaotrL5SLp9Dul2a/IS6zLfFa040Gs6YVO08bgNqSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cBZB64TvnjyyfMbQs693eWSSDRKWnwPO1MetMG7eHb3iXXOJZtEfa824H25luTplL
-	 GepSJ+c/iNoAm6Dnc5W5ClEx7Abyoyp19dBkJFK4YXwJh1mgflHpvVwkluUr3NpBAr
-	 9cVqcWIE1c2Iog8Dye5Mt999H4pFNFd7mkknWxblbA80ecio3iXYjHs3erzd5czkJh
-	 A64lYdbYyb/3lv6cN4Pn60IC0KRcOQmo+6JNXZ6s8eLcmUQC45twqa4V4O7zgqEk0g
-	 ekInDXHd4YWoMTGkyxGdhaV2Z4Rpurn9zxmBCO/9fQ0eehosPDGlOZosiWqymcqNXm
-	 uDROZVeA9Lrtw==
+	b=RW9KHCid5MwDdaD5X2IFz/T1e97biRC12D1QXwfyy+s3NSH1Ro05JZ5YD8Q1ZNW1o
+	 0QSePthhlFiAJuzXn/LHvY1akEowaX2Oqsjb4xYhFfMqZDTqwQAUtaSGTZ2SRfCI4h
+	 fILGR7GF0FJzviUX7xNzYfB7XUeroyF5fobplI/6r2NK4LigzCM8fYo7d0eAEnYxS4
+	 UhI6YxhP9u3MNv0jT7iukB/zfpHA4u0QsTaY13s2Z9LW1f3Z5EGRw0ZvSvrPrhJz2A
+	 FUHr1+4q/KXsIwH4j7NZ/S2UP+TflYHDZsct17x9X5U5GZ2tzz2ge/zTyl4RTtRvNv
+	 7DcXOyLdgeM2Q==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Frederic Weisbecker <frederic@kernel.org>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Vlastimil Babka <vbabka@suse.cz>,
 	linux-mm@kvack.org
-Subject: [PATCH 5/6] sched/isolation: Introduce isolated task work
-Date: Thu, 10 Apr 2025 17:23:26 +0200
-Message-ID: <20250410152327.24504-6-frederic@kernel.org>
+Subject: [PATCH 6/6] mm: Drain LRUs upon resume to userspace on nohz_full CPUs
+Date: Thu, 10 Apr 2025 17:23:27 +0200
+Message-ID: <20250410152327.24504-7-frederic@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250410152327.24504-1-frederic@kernel.org>
 References: <20250410152327.24504-1-frederic@kernel.org>
@@ -53,125 +53,154 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some asynchronous kernel work may be pending upon resume to userspace
-and execute later on. On isolated workload this becomes problematic once
-the process is done with preparatory work involving syscalls and wants
-to run in userspace without being interrupted.
+LRU batching can be source of disturbances for isolated workloads
+running in the userspace because it requires kernel worker to handle
+that and that would preempt the said task. The primary source for such
+disruption would be __lru_add_drain_all which could be triggered from
+non-isolated CPUs.
 
-Provide an infrastructure to queue a work to be executed from the current
-isolated task context right before resuming to userspace. This goes with
-the assumption that isolated tasks are pinned to a single nohz_full CPU.
+Why would an isolated CPU have anything on the pcp cache? Many syscalls
+allocate pages that might end there. A typical and unavoidable one would
+be fork/exec leaving pages on the cache behind just waiting for somebody
+to drain.
+
+Address the problem by noting a batch has been added to the cache and
+schedule draining upon return to userspace so the work is done while the
+syscall is still executing and there are no suprises while the task runs
+in the userspace where it doesn't want to be preempted.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- include/linux/sched.h           |  1 +
- include/linux/sched/isolation.h | 17 +++++++++++++++++
- kernel/sched/core.c             |  1 +
- kernel/sched/isolation.c        | 31 +++++++++++++++++++++++++++++++
- kernel/sched/sched.h            |  1 +
- 5 files changed, 51 insertions(+)
+ include/linux/pagevec.h  | 18 ++----------------
+ include/linux/swap.h     |  1 +
+ kernel/sched/isolation.c |  3 +++
+ mm/swap.c                | 30 +++++++++++++++++++++++++++++-
+ 4 files changed, 35 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index b5ce76db6d75..4d764eb96e3e 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1437,6 +1437,7 @@ struct task_struct {
- #endif
- 
- #ifdef CONFIG_NO_HZ_FULL
-+	struct callback_head		nohz_full_work;
- 	atomic_t			tick_dep_mask;
- #endif
- 
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-index d8501f4709b5..74da4324b984 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -77,4 +77,21 @@ static inline bool cpu_is_isolated(int cpu)
- 	       cpuset_cpu_is_isolated(cpu);
+diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
+index 5d3a0cccc6bf..7e647b8df4c7 100644
+--- a/include/linux/pagevec.h
++++ b/include/linux/pagevec.h
+@@ -61,22 +61,8 @@ static inline unsigned int folio_batch_space(struct folio_batch *fbatch)
+ 	return PAGEVEC_SIZE - fbatch->nr;
  }
  
-+#if defined(CONFIG_NO_HZ_FULL)
-+extern int __isolated_task_work_queue(void);
-+
-+static inline int isolated_task_work_queue(void)
-+{
-+	if (!housekeeping_cpu(raw_smp_processor_id(), HK_TYPE_KERNEL_NOISE))
-+		return -ENOTSUPP;
-+
-+	return __isolated_task_work_queue();
-+}
-+
-+extern void isolated_task_work_init(struct task_struct *tsk);
-+#else
-+static inline int isolated_task_work_queue(void) { return -ENOTSUPP; }
-+static inline void isolated_task_work_init(struct task_struct *tsk) { }
-+#endif /* CONFIG_NO_HZ_FULL */
-+
- #endif /* _LINUX_SCHED_ISOLATION_H */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index add41254b6e5..c8b8b61ac3a6 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4524,6 +4524,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	p->migration_pending = NULL;
- #endif
- 	init_sched_mm_cid(p);
-+	isolated_task_work_init(p);
- }
+-/**
+- * folio_batch_add() - Add a folio to a batch.
+- * @fbatch: The folio batch.
+- * @folio: The folio to add.
+- *
+- * The folio is added to the end of the batch.
+- * The batch must have previously been initialised using folio_batch_init().
+- *
+- * Return: The number of slots still available.
+- */
+-static inline unsigned folio_batch_add(struct folio_batch *fbatch,
+-		struct folio *folio)
+-{
+-	fbatch->folios[fbatch->nr++] = folio;
+-	return folio_batch_space(fbatch);
+-}
++unsigned int folio_batch_add(struct folio_batch *fbatch,
++			     struct folio *folio);
  
- DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
+ /**
+  * folio_batch_next - Return the next folio to process.
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index db46b25a65ae..8244475c2efe 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -401,6 +401,7 @@ extern void lru_add_drain(void);
+ extern void lru_add_drain_cpu(int cpu);
+ extern void lru_add_drain_cpu_zone(struct zone *zone);
+ extern void lru_add_drain_all(void);
++extern void lru_add_and_bh_lrus_drain(void);
+ void folio_deactivate(struct folio *folio);
+ void folio_mark_lazyfree(struct folio *folio);
+ extern void swap_setup(void);
 diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 81bc8b329ef1..e246287de9fa 100644
+index e246287de9fa..553889f4e9be 100644
 --- a/kernel/sched/isolation.c
 +++ b/kernel/sched/isolation.c
-@@ -249,3 +249,34 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 	return housekeeping_setup(str, flags);
+@@ -8,6 +8,8 @@
+  *
+  */
+ 
++#include <linux/swap.h>
++
+ enum hk_flags {
+ 	HK_FLAG_DOMAIN		= BIT(HK_TYPE_DOMAIN),
+ 	HK_FLAG_MANAGED_IRQ	= BIT(HK_TYPE_MANAGED_IRQ),
+@@ -253,6 +255,7 @@ __setup("isolcpus=", housekeeping_isolcpus_setup);
+ #if defined(CONFIG_NO_HZ_FULL)
+ static void isolated_task_work(struct callback_head *head)
+ {
++	lru_add_and_bh_lrus_drain();
  }
- __setup("isolcpus=", housekeeping_isolcpus_setup);
-+
-+#if defined(CONFIG_NO_HZ_FULL)
-+static void isolated_task_work(struct callback_head *head)
+ 
+ int __isolated_task_work_queue(void)
+diff --git a/mm/swap.c b/mm/swap.c
+index 77b2d5997873..99a1b7b81e86 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -37,6 +37,7 @@
+ #include <linux/page_idle.h>
+ #include <linux/local_lock.h>
+ #include <linux/buffer_head.h>
++#include <linux/sched/isolation.h>
+ 
+ #include "internal.h"
+ 
+@@ -155,6 +156,29 @@ static void lru_add(struct lruvec *lruvec, struct folio *folio)
+ 	trace_mm_lru_insertion(folio);
+ }
+ 
++/**
++ * folio_batch_add() - Add a folio to a batch.
++ * @fbatch: The folio batch.
++ * @folio: The folio to add.
++ *
++ * The folio is added to the end of the batch.
++ * The batch must have previously been initialised using folio_batch_init().
++ *
++ * Return: The number of slots still available.
++ */
++unsigned int folio_batch_add(struct folio_batch *fbatch,
++			     struct folio *folio)
 +{
-+}
++	unsigned int ret;
 +
-+int __isolated_task_work_queue(void)
-+{
-+	unsigned long flags;
-+	int ret;
++	fbatch->folios[fbatch->nr++] = folio;
++	ret = folio_batch_space(fbatch);
++	isolated_task_work_queue();
 +
-+	if (current->flags & PF_KTHREAD)
-+		return -EINVAL;
-+
-+	local_irq_save(flags);
-+	if (task_work_queued(&current->nohz_full_work)) {
-+		ret = 0;
-+		goto out;
-+	}
-+
-+	ret = task_work_add(current, &current->nohz_full_work, TWA_RESUME);
-+out:
-+	local_irq_restore(flags);
 +	return ret;
 +}
++EXPORT_SYMBOL(folio_batch_add);
 +
-+void isolated_task_work_init(struct task_struct *tsk)
-+{
-+	init_task_work(&tsk->nohz_full_work, isolated_task_work);
-+}
-+#endif /* CONFIG_NO_HZ_FULL */
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 47972f34ea70..e7dc4ae5ccc1 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -60,6 +60,7 @@
- #include <linux/stop_machine.h>
- #include <linux/syscalls_api.h>
- #include <linux/syscalls.h>
-+#include <linux/task_work.h>
- #include <linux/tick.h>
- #include <linux/topology.h>
- #include <linux/types.h>
+ static void folio_batch_move_lru(struct folio_batch *fbatch, move_fn_t move_fn)
+ {
+ 	int i;
+@@ -738,7 +762,7 @@ void lru_add_drain(void)
+  * the same cpu. It shouldn't be a problem in !SMP case since
+  * the core is only one and the locks will disable preemption.
+  */
+-static void lru_add_and_bh_lrus_drain(void)
++void lru_add_and_bh_lrus_drain(void)
+ {
+ 	local_lock(&cpu_fbatches.lock);
+ 	lru_add_drain_cpu(smp_processor_id());
+@@ -864,6 +888,10 @@ static inline void __lru_add_drain_all(bool force_all_cpus)
+ 	for_each_online_cpu(cpu) {
+ 		struct work_struct *work = &per_cpu(lru_add_drain_work, cpu);
+ 
++		/* Isolated CPUs handle their cache upon return to userspace */
++		if (!housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE))
++			continue;
++
+ 		if (cpu_needs_drain(cpu)) {
+ 			INIT_WORK(work, lru_add_drain_per_cpu);
+ 			queue_work_on(cpu, mm_percpu_wq, work);
 -- 
 2.48.1
 
