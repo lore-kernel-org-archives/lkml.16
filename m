@@ -1,137 +1,143 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D684284B30;
-	Thu, 10 Apr 2025 12:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B0F283CBA
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744287748; cv=none; b=GvH59p/VWLBOGkurvhdknr77KQ6zdHv8y9LHmkVbGPt3TRH7eS+CIv12KNIzDiA4Oy1Nt0PWdLewFs4+xsJxkbRkY5fmR+0+j1Y9HHl6CVQdlXy4GvSmpXzUxB3VI8pNS/mByTeFNPuN8ITHVavh+I6JiexYYhFwdkE/G40kO0s=
+	t=1744287803; cv=none; b=rQeTuaU5RgzOkwsKP0DCXkqCOTj0Wp0tStxwR+KHF7X66X2qAmtqyyBUtiM/CXYtwTfgdsX92XbRCqd9FSkhO2VI3O2xDT/FHwGSSfRIiYjhfCIQlK+FuZa8bCNgiBiD5QWYcEKrLYFpkVXHRT09ZdKghjXjdofwhK1i0TbVyB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744287748; c=relaxed/simple;
-	bh=m3T4/LOg6mYcuQRnQtlKLSapjHOQqaJt4bIwTyZHRf0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PkXK/Pcw44OU3182Z4y+7uLb7luU/kb4Y634A08TmJHhyFW/jVgjJfZ80z0AtmJAz0MCuLgdBt94z1V/C10BYRu6xsUwj9DY/2dXOOsQKKIHegTL5VqsZvScCjUQ3enx8zT12KMZIF60h66tJ6pS5TZu1V03ce9Q8z2K0CPh1VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso896881a12.2;
-        Thu, 10 Apr 2025 05:22:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744287744; x=1744892544;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X5UtJ2tlPuNevHqoiIq62Zf5tsaNGNxrKWyoL0OmWnY=;
-        b=Ac331d+RUSBRwfzO2QsS+iiEnFUrrSA+F6cficdPoZlG+oiARKNgMHHszuFf/BYALQ
-         Rx9au60XIrPsLs5X9MAnlZIl9aW7o3DsxbrHL601PvzRljkdN9O3lQ6aXiTqIDhusDqw
-         JrblDKAxu24ie2tk5gULPd6bpvs2+3clm+Eyqr7mVLfs1jKEscZ41dHlQCQPS0rZckk8
-         7mxmzpQw7y+uhawkUaKgxPGciAVjAohkfUHCqElcECq5K9ET3MIJ8leaYMBM7YZafzjs
-         FzwjVueqUyuRtnG3ek5JP+ebHVYH6rHBoYCyXHknT7wuY8kYejkZc2HC1GkCpDiL3KuD
-         fruQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGCEUwlxulxEjW8btb5dqvSxGLDKaxXU5A834U2PNwK70AxtSVT6K2KARQlKkoM9qSMoO23mlNnVOYaJRhJ3krCwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlUvtR6cPuXpObbiSCI5eWWTjH4MiH7KVW9G0Nov1BTpqhDlb8
-	jcRWWPrd6Ys+cB9EIZjAunk9MtEzVwOrv0/PUk8RMyQTDpLvnXspyGmw2w==
-X-Gm-Gg: ASbGncureOb75nALv5h697hD07SHYm+v8wodeHRYH0lhPs4w8gVEFKHQrBg00cYQf07
-	zVdk/Uncrf8I9/j4XlT0PpMtze6SjuRasj/MsAIAgcuFSmUD06kghKolsYTMedJyfN3JolZ8Sau
-	jGMQ8J9NlvLbGbzuoMwMtypF7CFScs5BTlcBJByAKUqaoJHtInpbDrfDoiWWeAAV3vO4Kxw2nK5
-	VR4NTBrQ71rSugrtwBrR/ftNbSj2f/b0PUA5pzD60fzdG7ZGbVRWWA9ZMK7YTZtN+Arss0Vl7+V
-	JdKrJwrgxS51Bv3F7hyKW/siJsaZ
-X-Google-Smtp-Source: AGHT+IFnH+H/ypVsNPfD3gE4vTJKggvKhoU2bgrwMaI4jIVbqoop5MG7+2BV8LE04jhQKBDRfY6qzw==
-X-Received: by 2002:a05:6402:390c:b0:5f0:a6bd:78d3 with SMTP id 4fb4d7f45d1cf-5f32932db0amr2206716a12.34.1744287743936;
-        Thu, 10 Apr 2025 05:22:23 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fec02372sm2019462a12.8.2025.04.10.05.22.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 05:22:23 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 10 Apr 2025 05:22:21 -0700
-Subject: [PATCH] tracing: fprobe: Fix RCU warning message in list traversal
+	s=arc-20240116; t=1744287803; c=relaxed/simple;
+	bh=54Jo4nNo/d5X4X4+SdkkodmO389yWZZDVE1yt4F2jOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hyizU1Bf6zkpYGcCF2dFZvV7kg43RA4HnnJLNUnULvnu4m4r5BGQtc9ntvAn66yDueFgviXHcb6StTswcPNBEO+IWlfDHu1CqRIdql+KHD7Y/cQeX6xGwHydpshcQgkjlMyQtjMjpY0LjbKnhrTuFN7FMwS5o81BIitzFVr9c/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=V+RF54IN; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="V+RF54IN"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A9vh60025345;
+	Thu, 10 Apr 2025 12:23:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=GbJEQgF0XibJOyKxN3cFEfmWdRZals
+	A603n+44EhDeE=; b=V+RF54INkmCq557aKfg17m2/XSDPi98FZUqHKg93hqk5gH
+	sZuNWuJU7d40UaHb9i7DD8eqdCSneQNCpmXTTWzXocdK5ULo8+iLJ4qEe7gggNne
+	GQwCzK4c9WobgJxnqjAkRNH5y6mJdVpsbpCVKzE+BqGyFo4BciRBMnlb9wIlALfQ
+	rRL1ujcUdsraFh7COulA5XT8dimSDYVhu1LXBN3yjGmyzKSYg3Ze+d7uULv8bcy8
+	o4uizdesXNrIW/46AZPCq2MEEns/5Z8RzbERybZhOZBRZCc/GDS7Rc3290/Qzvp5
+	DrUqUTfBbk/KNFU6HhUydpnkLZ7HLn/Mlutx5ERQ==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ww2xdkr4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 12:23:10 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53A93Xmq025510;
+	Thu, 10 Apr 2025 12:23:10 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbm5w4q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 12:23:10 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ACN6FL30868164
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 12:23:06 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4B48F2004D;
+	Thu, 10 Apr 2025 12:23:06 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 68A5D20040;
+	Thu, 10 Apr 2025 12:23:02 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.39.22.212])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 10 Apr 2025 12:23:02 +0000 (GMT)
+Date: Thu, 10 Apr 2025 17:52:59 +0530
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: Gavin Shan <gshan@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Danilo Krummrich <dakr@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Donet Tom <donettom@linux.ibm.com>
+Subject: Re: [REPORT] Softlockups on PowerNV with upstream
+Message-ID: <tm2pvk7ylatmou2gjcctz4dzyw3rudw5hgqsiax3eoxfkvsrmz@vuzh3xuepq6n>
+References: <20250409180344.477916-1-adityag@linux.ibm.com>
+ <Z_dWTU8UsvCHFMpN@localhost.localdomain>
+ <dc4c0d4e-a9a5-4fa5-b39d-4248fba26043@redhat.com>
+ <Z_d_8fyQzGuwzbIv@localhost.localdomain>
+ <675d6580-814f-4fae-9dc5-9470645adc07@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
-X-B4-Tracking: v=1; b=H4sIAPy392cC/x3MTQqAIBAG0KsM3zpBrSi9SrToZ6zZpChEIN096
- B3gVRTOwgWeKjLfUiRe8GQawnYu18FKdniC1bbXndEqpBxXVntgZwY3Bt1uaAgpc5Dnj6b5fT9
- FudLnWAAAAA==
-X-Change-ID: 20250410-fprobe-dfe91798f03c
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1905; i=leitao@debian.org;
- h=from:subject:message-id; bh=m3T4/LOg6mYcuQRnQtlKLSapjHOQqaJt4bIwTyZHRf0=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn97f+oMcon9v5l4QT+NPNxcyQjtiToAHIw2kTM
- M6GeKHuxm+JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/e3/gAKCRA1o5Of/Hh3
- bZpYD/4916gqkWKh1P+bnr3Xk5pA8UV3fnEhW/W3D7KlfRjFSmxOp+SbzCqU/bnw+vI5hqxGzKX
- 2ieSGnqlQu0DugGr4r4hbc1DLer9Vgw3jFuj3muWfXc0hy1sD9XRuiqkbgcAL57vyu7x8GZqmL6
- yyewFXXYtwGOoAiNl3zn3PhF6wHryotW3sO/mF3j6z7eYUE52Q48X/O/vOejDyEcgeGOVRhS/D6
- iQ7TYOHCMMeay4Iq05zmFmqz8SreDC2vJvg7EZxpuOS7wfJTBdcahxgj9wYSHcq624BFqzhVvPk
- JSsl/vycP7iAy+P9wygmW1wjyrnhRmxm6pdRkl+nTpLzzidilYQyrvULjTAFWKFM4BKQFc3T2qt
- CR+Gosza5iHEgy7rmR2UGqbGeU+8BhLm0Ts68XFWt3+U/WVVmBLHYdQOkvKOTvlUcBVukRPrK7T
- GL8fwYDp6Y/HxUmFLHbuZVRmk/gALSa8WZYDA7ztZGisTTDc1K5NCEZrNbj7ILMr2KhH6D74Vy2
- LUnhxlfjMOF+IePxImgn4iwm3Gdtw0PmqFywDGd1JUZkxeLUNrDvfenzcoMXngH/UhC0hyvT6gN
- ZRSkPRytBJ9LJkYyLPB3X/gCoTJMRaNo/jwlmbYzqbQI3kFQrWMxYMjvXzyBKHbewpEJMVPOSuO
- gRBD3mfApREf+GQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <675d6580-814f-4fae-9dc5-9470645adc07@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 72wWsvzQSRwO6SpG7SA_e4rX4N-_0D4U
+X-Proofpoint-ORIG-GUID: 72wWsvzQSRwO6SpG7SA_e4rX4N-_0D4U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_02,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=598 bulkscore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100086
 
-When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
-warning:
+Cc +donet
 
-    WARNING: suspicious RCU usage
-    kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
+On 25/04/10 07:44PM, Gavin Shan wrote:
+> On 4/10/25 6:23 PM, Oscar Salvador wrote:
+> > On Thu, Apr 10, 2025 at 03:35:19PM +1000, Gavin Shan wrote:
+> > > Thanks, Oscar. You're correct that the overhead is introduced by for_each_present_section_nr().
+> > > I already had the fix, working on IBM's Power9 machine, where the issue can be
+> > > reproduced. Please see the attached patch.
+> > > 
+> > > I'm having most tests on ARM64 machine for the fix.
+> > 
+> > Looks good to me.
+> > But we need a comment explaining why block_id is set to ULONG_MAX
+> > at the beginning as this might not be obvious.
+> > 
+> > Also, do we need
+> >   if (block_id != ULONG_MAX && memory_block_id(nr) == block_id) ?
+> > 
+> > Cannot just be
+> > 
+> >   if (memory_block_id(nr) == block_id) ?
+> > 
+> > AFAICS, the first time we loop through 'memory_block_id(nr) == ULONG_MAX'
+> > will evaluate false and and we will set block_id afterwards.
+> > 
+> > Either way looks fine to me.
+> > Another way I guess would be:
+> > 
+> 
+> Yeah, we need to record the last handled block ID by @block_id. For the
+> first time to register the block memory device in the loop, @block_id needs
+> to be invalid (ULONG_MAX), bypassing the check of 'memory_block_id(nr) == block_id'.
+> I will post the fix for review after Aditya confirms it works for him, with extra
+> comment to explain why @block_id is initialized to ULONG_MAX.
+> 
+> Aditya, please have a try when you get a chance, thanks! I verified it on Power9
+> machine where the issue exists and on one of my ARM64 machine.
 
-    other info that might help us debug this:
-	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
+I don't see any softlockups now with your patch as well as Oscar's patch.
 
-    Call Trace:
-	fprobe_module_callback
-	notifier_call_chain
-	blocking_notifier_call_chain
+Tested on PowerNV Power10.
 
-This warning occurs because fprobe_remove_node_in_module() traverses an
-RCU list using RCU primitives without holding an RCU read lock. However,
-the function is only called from fprobe_module_callback(), which holds
-the fprobe_mutex lock that provides sufficient protection for safely
-traversing the list.
+Thanks for the quick replies Gavin.
+- Aditya G
 
-Fix the warning by specifying the locking design to the
-CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
-hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
-provides the required protection.
-
-Fixes: a3dc2983ca7b90 ("tracing: fprobe: Cleanup fprobe hash when module unloading")
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- kernel/trace/fprobe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 95c6e3473a76b..ba7ff14f5339b 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -454,7 +454,8 @@ static void fprobe_remove_node_in_module(struct module *mod, struct hlist_head *
- 	struct fprobe_hlist_node *node;
- 	int ret = 0;
- 
--	hlist_for_each_entry_rcu(node, head, hlist) {
-+	hlist_for_each_entry_rcu(node, head, hlist,
-+				 lockdep_is_held(&fprobe_mutex)) {
- 		if (!within_module(node->addr, mod))
- 			continue;
- 		if (delete_fprobe_node(node))
-
----
-base-commit: 3b07108ada81a8ebcebf1fe61367b4e436c895bd
-change-id: 20250410-fprobe-dfe91798f03c
-
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
-
+> 
+> Thanks,
+> Gavin
+> 
