@@ -1,67 +1,76 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2073.outbound.protection.outlook.com [40.107.247.73])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2082.outbound.protection.outlook.com [40.107.220.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1711D5166;
-	Thu, 10 Apr 2025 14:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC47621CC6A;
+	Thu, 10 Apr 2025 14:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744296570; cv=fail; b=iW7V+NImhFpB7RdeWiyiTMMyh+btRfxDICY1esbtzLjN3p+OoDMQqSnZqY7MGS11cI5nx0mx+Gx+JvR9W1vTTUY5p1FUQWDVnmPWdOhYMiXUEGlpieCxrZDWOBmpQ+tg1nKxa/qy4eNINrI+Z2ThXwh19vNYqAEGUM0nOwnm/uQ=
+	t=1744296584; cv=fail; b=Fu3N3182VqdtypEvxTGE8Ph9tAIBY7o6c3QdNarwgqQCMyDa2n1wmqhG/bg9TFcyn0jYdrobe9ZNZHlOmB6UP22Q+wLCSsJoB4/Q1x/kTuYGI0ng+nYi9igNqbdXnfzjBQo9u8d36cyAf7VFKkvnVpmL8TFf9/7VbvoDfULCQrg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744296570; c=relaxed/simple;
-	bh=k4gLku8JOwbwihoZfbfEiN5CEObhHdnUn52NdyR51I8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tcd91j1F/+HDHOKgbPZY3nCjR53eaJtnlbvEvt6C9V0Cbkb6bRxSoyVD0rAtEuA2s9MAxgAEIULhEIEhrSoUOiYPiB0L95Ti/gFko+sVW0ozlNSQzrHMGD3HaCMVTc9U5Q04QDaA+wuoLeLXUxRcOV/KyjgJJ/fKxnFvzt81pLs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=m6ddbB6w; arc=fail smtp.client-ip=40.107.247.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1744296584; c=relaxed/simple;
+	bh=gcSRO/t9AiA/mcXhTTSdnASm4D43GRzQvssHWWMi5Ms=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RahpQ5dR4guaqbznc4ie93uqfZq+1kRxreZMKrTg+IILV7ZIdnepEmT3cHFeQRGZWcTZ3A44zknbTETn8KLYU2ttVpVaAGxzE6fTycvNWYu45Gvq5Pnj0tJ74EVkN9Ke/4RuOWPXDT89f3c4vl3hGu5PQcfv118rJolCu87zZxQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lS/QJ8gy; arc=fail smtp.client-ip=40.107.220.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="m6ddbB6w"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lS/QJ8gy"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qplqzgkQXy7C1nlR6q2WkjlTPg3S5qw5tfP36+vvicSM5okV77kSPZG3bgUQBxRFeZYEi6XyOqtev25ZD2lOTOIXu9n1RM9Ydz1wlToizgZky9vk/JZmxgsQbo1bXfL0vqXFgZEp/K/n2TGq+vqInRLKT1sZeQgaaigmbkrvlQahPDWYLFXNTiuN8SWf8R4UraaWr0Reaap174VzrrRgZF+Cz5ACf5omO0NTYeiCjRVYbvBjS/1uzEhXc7i0nrwS3HGLn1q5TpRZNeoCW5VqS4psKHqFBN+av9rW+fj3KdmyyeDbkb3tdYgRdwrk46ApG/5h8J1tz7bPcQ+RvfrLjQ==
+ b=yKsAPELXeydCjGtDH7GpAS5CapJjuAU8EWwz7RwPVsTnsiwxTn71nA2K2x13hCl+VBm2aUXmszrtPrb81XN1Us0T7Df3LIQLiXqBdTdFL6V7rwnvpZlNbiMLZTGHNH0UWRpLpBc6H7YALlgBC0HApSpv5AJqlaqJV++3CzG4l6AmHtCcOTIQFrbee3huc+5srTwaKFa1nbh9ve+KQXZ5kHsNz8qtzRoII4JKdf32YpKHAaw2K8dN3MrtBeytYzMy6Cgyc8utL/UAi1L4O9shMm0FfoG0rgu/6H/9j9Q+YzIqzDhOFSAq1aQSGb72LsvCVsG3zvBQ9XaBvh/WLS3KZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/XqWDri4TTaMeD/D+sHa9cY43piPw+4PMJH2wpXQP9c=;
- b=k2HFXvfd5odVsFyGr74sEAqE+ebsIseMcPHVvebk3qabuAkeBfb4T+I4zGgcAZQ2wXgS71H4Du7sxT+6u6SxYoE+qND7dJvHiznAiUcZwDtjiqSrFXZfsyVs5Y99cU+ZZPYcauvaiHURF/h81JUspcEIyoApcfRQ/FMell/s6IyY6IYkTNxTQRm6Gxtagu8e3UZWosV+0BBFRQAnFzke8I7zBRTLg5fvvr8q2QwCpQFIf3fgKvwhpk9FzSHJwMVsjEwJySzRnqUuoj9BBFUy4Xd2l0eGvVwN42Jj5VDDPX/QHhwX8uXI9wA/GV7aocR1zl+71Ggi+/SWoi9dfLcFtQ==
+ bh=PVyjCCUaiAmR57OP1QK+gfU98G4V3ot+88RzjwMdA1o=;
+ b=dTkLqS3HC99dYHbQ3ugJs53y7nX7i+GYpYY3jSGKB8j7mhvTwSajcFrEDcnyAdn0ZEGlywUwEQ/N97LeldTjFbBcJH6PZlUqeFBRyqGkv3Y6rPK6jxaz/AVrnpqgqe7Ymzl3qvrQBYbCs6GwKZ4FwgXHeM+TYIA3w3mXe43fuFIMhvFmujpHOzaGNbnt60Tc8CaHq2XLRZtFa2u9L84EkhW80nUJkIsXvzZ+gfG/e6MOF56x9XhKhiV7X3QO6fqfmW5+H/dzPrS1DXl1Dq884tjRc6Vav+KKPtCKMvfEv/IVgjQA5tCI1/wSARe1N1q6XgDwhcITsUfU5OnRyyoBEw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/XqWDri4TTaMeD/D+sHa9cY43piPw+4PMJH2wpXQP9c=;
- b=m6ddbB6wviegcB3tHVA5+0dOIlziUkcJp0GIvG0L27pczy0hCkN2srGo7NFAyeEmdu6OzumrnCiA2Gx08bj7B8a8evG0DUE/KbiTxFBZMy54/xaT9cLslTgIHGqDhdNfkREISuOPbHzAzeG8PnQmHK42pLaO52ea13AcH715jfAR4EiOzOMzkOb1vWGg1BQZktUiMBZGz2RNfztN1yy+nyZGxBx97lmYYDE4nU5jDc9y+HBuNyU/4i9gpmxbETXyi91CT1oVisTpkqQETg8CScg+BQZ9e7dm7yQOuZDWJe6F+v+iVugz5Gtl0VdfSM18594iq8S5lIHin5bxy2Nzfw==
+ bh=PVyjCCUaiAmR57OP1QK+gfU98G4V3ot+88RzjwMdA1o=;
+ b=lS/QJ8gyWZg5gfPH2dPUoabx+lqrJJWib9+vyY7iSpGf4MeQsSA2BlaAZKIfHVM3mGMtmQWJC5uciPYB3NvULwqh03Fg9HNKRKW0e5JHgxHneUTrXJBd5z22GeQpJsXHg/3frd49Q6zPFSYcGh88rkSLHo/wX9AcOI0nTolX+J0=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI0PR04MB10830.eurprd04.prod.outlook.com (2603:10a6:800:260::21) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SJ2PR12MB9088.namprd12.prod.outlook.com (2603:10b6:a03:565::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.29; Thu, 10 Apr
- 2025 14:49:25 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 14:49:25 +0000
-Date: Thu, 10 Apr 2025 10:49:18 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Primoz Fiser <primoz.fiser@norik.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, upstream@lists.phytec.de
-Subject: Re: [PATCH 03/13] arm64: dts: freescale: imx93-phycore-som: Disable
- LED pull-up
-Message-ID: <Z/fabrdNCCEMnlKQ@lizhi-Precision-Tower-5810>
-References: <20250410090251.1103979-1-primoz.fiser@norik.com>
- <20250410090251.1103979-4-primoz.fiser@norik.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410090251.1103979-4-primoz.fiser@norik.com>
-X-ClientProxiedBy: PH8PR02CA0049.namprd02.prod.outlook.com
- (2603:10b6:510:2da::25) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Thu, 10 Apr
+ 2025 14:49:37 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8606.033; Thu, 10 Apr 2025
+ 14:49:37 +0000
+Message-ID: <04dac478-f734-4fb9-a792-d3f11be79657@amd.com>
+Date: Thu, 10 Apr 2025 09:49:33 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] kernel/resource: Provide mem region release for
+ SOFT RESERVES
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ willy@infradead.org, jack@suse.cz, rafael@kernel.org, len.brown@intel.com,
+ pavel@ucw.cz, ming.li@zohomail.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, huang.ying.caritas@gmail.com,
+ yaoxt.fnst@fujitsu.com, peterz@infradead.org, gregkh@linuxfoundation.org,
+ quic_jjohnson@quicinc.com, ilpo.jarvinen@linux.intel.com,
+ bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
+ mika.westerberg@linux.intel.com, akpm@linux-foundation.org,
+ gourry@gourry.net, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-pm@vger.kernel.org, rrichter@amd.com, benjamin.cheatham@amd.com,
+ PradeepVineshReddy.Kodamati@amd.com, lizhijian@fujitsu.com
+References: <20250403183315.286710-1-terry.bowman@amd.com>
+ <20250403183315.286710-2-terry.bowman@amd.com>
+ <20250404141639.00000f59@huawei.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20250404141639.00000f59@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0096.namprd13.prod.outlook.com
+ (2603:10b6:806:24::11) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,107 +78,209 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI0PR04MB10830:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4915f99-75fe-415e-b990-08dd783ee317
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SJ2PR12MB9088:EE_
+X-MS-Office365-Filtering-Correlation-Id: e31ffe68-5910-4f4e-746e-08dd783eea84
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|52116014|7053199007|38350700014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5YUJ8dn/z2GVCfINtoVx4OuYREnGE9WCUSYKObspvM4Rtgza57mPtRrU2X4G?=
- =?us-ascii?Q?ioWbp1j/6y3xioDa33EdtSa/zkwR63JzD7TxuatkPJbB2Eo6FVMVkG1juhmV?=
- =?us-ascii?Q?1kOzaADmzcdSz5+hPpehwwPmLiAt221GTujL5Oc3gM3eLV22CBkRhkNYsP9V?=
- =?us-ascii?Q?RG9iG7mtrYr8NmJzdgB/59h1NeGvXIXYpTLD3qRuXDE2y4Znay46IPKTtD1u?=
- =?us-ascii?Q?v7R8NKZTFsX01q7W44UtbLg2vX3Ur2GCiu0QC92zpfN1ZPYYMnBYeORHTiCv?=
- =?us-ascii?Q?iQeRcLG0yid34MxNlCBCHCEz42SIkSOQPXuGrW3oOkCk1Z/pzvVKQXvS8YL3?=
- =?us-ascii?Q?MMTseobbU2S7bosbNeq1ovgDZUsrQSqsM2PlwUWeEiqfk+otN+gEvM4mMVHp?=
- =?us-ascii?Q?ZIeJC5FTOVWjDyVvnjfeb+NVTiOD86MBfgKV5T1eYoKNw+ViUbsgNlH7cOP5?=
- =?us-ascii?Q?TXN1kneyiuh9e77ikr8on9m/sDtDas8S+Uzgt0Py9LLVkoXJcEVAZq1DynsG?=
- =?us-ascii?Q?ZqdNIzN8OK6FZJ6VkHbNSeY0r9VHGT/U9IutdXdNs0XnTB5mNyAROqeGBkm+?=
- =?us-ascii?Q?FKHGcW1dhI2XPTBRUmIlRHJ3xffigZaj/6Sz0ScimrvTkaB8Gx4aGOZCuqEg?=
- =?us-ascii?Q?m9wKZAhrYibFIsyaK6HGMi4bWeLqS7mDUCFxODDoq6jNtntO9SMPybkSP3Q9?=
- =?us-ascii?Q?+6pY4xqJIgojJY6STNN7GVH/9RrNeJ2THOInjM9KNfkPn0BhB/PevwCZHGbo?=
- =?us-ascii?Q?cgAI4rsm7AXPQfauaxkWYkeCWz7D8RSoLDYlc6oX0cY+zZ14w7I58+858Er2?=
- =?us-ascii?Q?WVbNDC3lxhU8MaBSeIpV1MNbCzn6oRCIgcCIAg/3BGwSMZ8MeZkA5ZkF/U1Y?=
- =?us-ascii?Q?dAjbAd52tzZfB2ptaY+AH9Cq4bfW/7F9zFlOTklvmnGkK5yABRoc8EyMMI9B?=
- =?us-ascii?Q?8KuFMRdtD0sTCb1yONw4p+35YZCNytw9N8DVUNL9Wxfge8mbGesDYMy36vzN?=
- =?us-ascii?Q?H9KRxTalpD8VvwK0M7zxhC7K++nFcDtGtil4+awKTYtZPIH8ghvJkTFj1N3Q?=
- =?us-ascii?Q?+KP3OLOiNRxTvrV1/NWTGrbc5whvG25lfBzsEPlBHLn/KIww6En/44BEn99v?=
- =?us-ascii?Q?4mWsFdpsKHA7diEV23mzXHewraNzbuAlQwxXBF3v1r1apDCT9IQvllLlYQO3?=
- =?us-ascii?Q?SUAwETKXIZvZ7IppYVN8UIjWXHiKPqLPvtNzKqfVLXPvzh202jC+BC14ldph?=
- =?us-ascii?Q?Ddr0TQEbFU2LCEKMXf0LI+QBRh+4XAGFFMpFITwnrZIqYy/ckMtLjUNB5AiO?=
- =?us-ascii?Q?tyYMirrq8vILDsN2/M+WXkDD/N/bRYgCvvKQqixSdH/Dk6gi2SEcQh4+1PtY?=
- =?us-ascii?Q?28OsZjlz7VqdwfWIwjC4ingIiiNdvBxikukJz5UNIoKXjFzV66XjPL7iokHL?=
- =?us-ascii?Q?VvnUuiU5DkrkiT4t2frRUwNuu9QljqzF8ybE4Xq65fEwrd5B4teW+A=3D=3D?=
+	=?utf-8?B?SHVuUUFKeTB0WUtMRTNPSmlhNDNCMXVRdGFWU2hSOG4zbnlpYTJPencwYXBE?=
+ =?utf-8?B?cHNzcHNhWUdDRDFkakNxVnRtR202cUx4aDRxNkkvdE1LdzVad0FRY2R3Szk5?=
+ =?utf-8?B?M1dQUlpOVTBqZU5FL25YVmlYM1hsa2ZITHJMSDJWWWhCTzhUNm5Vc0U3YkR0?=
+ =?utf-8?B?dlQ5RkxwRHZXbWluOERpN21yZTR1Ryt1b3cxT1U2MEtibE94bTI5bFVPN3BH?=
+ =?utf-8?B?VlgxTGt2UUx6RElpTkE3Kys0dFJ2UTJFYjJnTFJIRjBFZGZYeUhmNDJ1OWhq?=
+ =?utf-8?B?NFVKcnE4NTJVbEg5UGZ0eDVidXJOVVNZR1FyRFlSZDRoZ2JyaXd2SG9KT3Ir?=
+ =?utf-8?B?TzdHWDRDaHc5S0l1ZkpUdEF0YzFTcjFVREI0WDRteFl5N2pKOEYwcnl4amhv?=
+ =?utf-8?B?L3lqdmpQdENNYUg5TndtQVdYWERXTTZzUHFvQlB1WEdKNEFBNTJYaWhFNTVC?=
+ =?utf-8?B?MGFMRUh0RytZSFRrU05RcWNRQVc4amhieE5IaFR3dVE3SkEwYnU3Z1BoNXc5?=
+ =?utf-8?B?clFrR1dGSXB0WGgxcUdrTnlENFg3S244ME9lSGRqaGdNblIyY2treGxnQzQy?=
+ =?utf-8?B?clc5eXJQRk56anIrUVdQd3BqMXZzM2k3bm85Yi9hRUJMZTZvcEU2R1liQ2d4?=
+ =?utf-8?B?TXFjWlZadVNPSUZobFkzOUdVa2ptOTBLWHZuOU1LMWp3UlpHelJRanFkOU9S?=
+ =?utf-8?B?S01yajJSZGpMTmtTb2g1N2NjWXlRM0xjNURYSm5uWWdMZTFaMjRqUXJ5Vmtl?=
+ =?utf-8?B?TC96N3VBdkYvQkFyOGd0YXhUakpQbURqN1NNRjBxenVjbGxSVUREY0hKb1pK?=
+ =?utf-8?B?V2ZEVGpFdVc0aWUyY0ZIK3NoaUpyTWQxOC9jYW9LQTNBMjd2TElhOUJwakpY?=
+ =?utf-8?B?QXhGREg3Y29PYS9ham5OaThkSWdGSXhIdkcvY2hsWnBSUjdpL2tBVFZaRmFE?=
+ =?utf-8?B?ZUU2Ukx6ZXM4QnJMRmxDTDQwNzdINzRaZHV1WFQyVURzeFhjNXdodlI3TXhh?=
+ =?utf-8?B?Q1hmQ1c5U1FvVW9yS2NxeXo1Tmw2WkRJNnB3RElscVIwY3VxV284Rjd3Vmln?=
+ =?utf-8?B?VG80NUhKUDRTNldISVIxclBXWVU0TnQ2ZEtwNDRSeWJ0UnZvVVhYTWhEd1A3?=
+ =?utf-8?B?KzBtS2p2bnpIU09PRGRTeTFKekNGaGRKOXIxRm91ZVMweUxsbm41OC9SK1dD?=
+ =?utf-8?B?eUxYM0JmcXBHUkRoZi9CL0NmSzc0Sk53TWpsWWlWQnFTd2h4c2xpRHN3NGlj?=
+ =?utf-8?B?UzVOWk5vQktGMUtORmRLcDg5SWVKdEV1anN3c2dMcVphRmNlMXZBcWVUSk02?=
+ =?utf-8?B?QWpMNFRFb285ZFkxYmlsbVc1NnZTSGU5cjNBWUtuOVNhSnNhVGtlNnd2ZnY5?=
+ =?utf-8?B?eC8wSm1WaE9Ua21sT3NIR1EyRnVvSzlyWHpyaDNBQmp5andMa1VGWExjNlIr?=
+ =?utf-8?B?NHhJTHJPak9zR1g3S2xyeHlZamZRczRubmdJdW9ycmtyMnVydHJNRTUyU3Qz?=
+ =?utf-8?B?K2dXWDNPMXY0clQ2QTVHNGk0YXJpcm1WdkI5eDlKa0IyK01PNWVzZGp0b045?=
+ =?utf-8?B?d0VlWUtNWThtWml1MGFxYnRpeThnaUU1M2VOWEY5MlNQb3hrcGd5M0l3azUz?=
+ =?utf-8?B?OTcwS0R6VHN1UUFLbmdTcnpDeUpkazZyYVFHT01hdmRhTTEwM3JqazJlVmxu?=
+ =?utf-8?B?K0c1RnRWcDJMTlovdWtheS9naWxSOFdzbVVVU3czRW1lM2lRdmdtUTNvcTVl?=
+ =?utf-8?B?NWNWQk80YzNOOVpSQkFReTlrQ2RkMU9ld2ZSdElORWltb3JkajFTZ2VFekk0?=
+ =?utf-8?B?V2RsL25rQkJpWGZxQmhlRk9FVG41MzJHMHVCejFoYnBudEMzS0hYTmlNNDRh?=
+ =?utf-8?Q?uuOQktnnR+2C5?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(52116014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1ZWyqZOoTizCLNWcV3D5v11TxwpkQGyhgtn59cJNTfR6GeKUSBpS1pLUXqcs?=
- =?us-ascii?Q?SgxVO43kRzVqEHM8n61k9Nj3hgdqkWByQRXowNFjm9tQZE1Ob+EZ3BIWyhz7?=
- =?us-ascii?Q?xPzcM73ZsjPzKf8QP7ZR9e/5LTbFN9gCZwh9CoJYvbnSCR0dpkisjIALUdCt?=
- =?us-ascii?Q?sRS5yBtEE8IvvhxdusuopibOr3Fm5VJL7mLeCWfJFaMdPk3Q7XJMJ2PvHqiJ?=
- =?us-ascii?Q?qQ8TpFgS3gOxKrSU+hTXXHSGnUCAx9LYLSDZb8poUmPg4HNRQcQ47ES51cIh?=
- =?us-ascii?Q?tyrs54QgfTnb7xWNgxzRXOrpZk1NeMZ5LHMtTjCVlp4of1PiPmf83Di4lWTh?=
- =?us-ascii?Q?ZMXYHaASSvXVqDxhUejhvzTuWj03M1Ot/xqdYJ28wWEOvAAEP2gSVTrDqsB/?=
- =?us-ascii?Q?I5WT7GQlNzrktvaNsRRtCPfb6Q5eDHoI9ykhaMl/vu7VmQE4dTmtDK4Rz1wJ?=
- =?us-ascii?Q?81TKxl6LKw1CTZoReHgaHmhWXCqFmdvehdSgmTRZK/vfs0WZf+BJDUe3tpbp?=
- =?us-ascii?Q?8C4s7JTRYANiwEELEZ9gl9ZV5AhoRpj3kUY1Pag+AE6cbLi4QI+Z+ngeFss3?=
- =?us-ascii?Q?CiyF0e7VtWZfanjTzthCYTK1DWDk1aN5iveUil82ljslpt4HU1rHVEfCjNtW?=
- =?us-ascii?Q?RrckxWc6ybqSfl5PJgfrRaVuVm/os5ge5Qzqahyy7XGX8Xt/AtWXpDunp9pI?=
- =?us-ascii?Q?jCoVX11VaIjT8rR6FQtZuzFfW13QFoPlqJmztg2Rbt6RUF0NOq5loQ9KykXr?=
- =?us-ascii?Q?nLztOF15DjoVhoABiMPd2ZnLtdW1ULGqSO8/5RCPcHke+2BzVTthy4GN+LH/?=
- =?us-ascii?Q?Z//P1QYRedzbpKCWnlJMkAadfI7MztD12zxZEZubG22gVxW/l09mNSDifXPR?=
- =?us-ascii?Q?bWUP5mdjVptKsilTSgbX9LnDYFhh7nfi9DfIegEP296pbQuohnE4XP2vOduK?=
- =?us-ascii?Q?0fNn0JKD+o4EVONMzxSehCEViAOj7TcCdkRCJJZZ9y2LDlt+qfmPBhzla0Bs?=
- =?us-ascii?Q?xOHxm2LKfUy/wDhNBD7DeQT6YHFFoW2VZ4T5FQROA9EbZd3DFixPNCguWyfl?=
- =?us-ascii?Q?4pG1JRo8iATIfgrh9hiHqwLNqgVdtcfa2y8ESTGZ5gPlVVXAekwL+ThRCmWp?=
- =?us-ascii?Q?JvOSiKrdl+SN6f3dHOLQASbqZpoWJpLTFIojtxE3eMpatPlZbmyaWzk0qeEG?=
- =?us-ascii?Q?8hDVvCuh5NUvYSOZP53h7FFGEZ4SWFDy+Ae2wmTZ+M89GsScmgFW7DxLAna8?=
- =?us-ascii?Q?KzZrFsOz9jvpyps9Mt+AvkBnLyy9TMcmBYTcEF4S0N7lEyGK+6LbIjEZWGhz?=
- =?us-ascii?Q?pVogiyWCoam9oF/72De3+cnY0yVVuU3AcndLcILiomfa6ia+k6ga8gv89V/y?=
- =?us-ascii?Q?xckHfHcSUR/iBm9OPG3mInMu54EfR2kx/8g7Im1nQcQJQS1uNV1Km4m7Q3A9?=
- =?us-ascii?Q?wTQ7JAAHgnEj/o8e0ouHQiKQp60f+Y3sRjAKtwgBN62T/QiA/eRbQtFvp3gF?=
- =?us-ascii?Q?8CXiZCTNuvS8a2UgeHzXtbxj8WcxvgCuzTlTO3C/fAA7k8uzSnbjWViw6K0+?=
- =?us-ascii?Q?Nd+j0P0u7Q7dZqm/V6nD9rV7Hml3zF/xEVUgVoYs?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4915f99-75fe-415e-b990-08dd783ee317
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+	=?utf-8?B?eHRvOHA5eUVPRitJZE5Yd3JqVEpOaDRqS1JtUlB2WFRhRHZnTk5wYkpHSmUw?=
+ =?utf-8?B?Yk1xZk5PS0JUb3VWckh5ZFlKYzk1YVkvTW9kM2huTEUyK2g1WGttRW9PMkda?=
+ =?utf-8?B?OTJqZ1hlMUJmSUpRenJhRVM2Y2JpKzRDS3UxMUdHakN1bmNrQU5hdzlFM1di?=
+ =?utf-8?B?eDIrVFZzZHQ5NWQ0c2VKUEZDci9wOHVyQW50Q0FKTGZ1enFlQjdzN1hoTDF6?=
+ =?utf-8?B?SWEvcU9iVkNoVmtuZ2xUdGVMcXFXa2ZzcEZFMTlNa0dPOFEzQk9xUklibDIr?=
+ =?utf-8?B?Q0p0cnZKeC81T1FZZzZWa3FJTEFrSUhQUURvZ25JQzhIQ0hGeWFSVndVVGNS?=
+ =?utf-8?B?bXBPZTFiQnRNV2xLcEFFaUpCS1o0NWFmSnNnVEQ3L0VVVUhtM1Bac2NZakpN?=
+ =?utf-8?B?Ymxhc25yWkVKSkd0UXkyQVdDdGU0aWV0MGRQdkl0NmxlZlgzRmo2WC9NUHZI?=
+ =?utf-8?B?SGdUYlFvMFcwOUpMUm1OaVYyQlZvN0w5anBONCtqenl2czR3VnVHbTUzSHJh?=
+ =?utf-8?B?V21wS2phUWJROGNyaEZJeE4zQk4rUUMrakJUaW9tOHRxaURjMDUvbFpXWXMv?=
+ =?utf-8?B?ZWNPQ2hkQVVEWFZVSXoyWDlMZGNpMEZGb3VWVWlZVmhKMnNweTRBb2MyYUM4?=
+ =?utf-8?B?NXY2ckVTRTJOdlRuZXRmbUlVcS96NVd4QWY0RDUwbkJHa1lqN2M2WlAwcXZH?=
+ =?utf-8?B?RDBua1NBL3ZMTXBvem9vUzlHdVlIV09mUmVEQWw0alNpNFpyc3hDK0ExeHBL?=
+ =?utf-8?B?blNDTHc0dUo1MXh4aHpuZ2ZPU3JoMHQ1MkpNa3BKUHRIRk5LZ0NjNEFQeklT?=
+ =?utf-8?B?eDk2SjMvWjl4SEt6dGNWVFZWTWxaOEVvMWlsUUZRUk1HQ041ZnlWZEp4Z1c2?=
+ =?utf-8?B?SThOVlMyamtWU1NFbHdQMTFYanJveUVrU0h3RERCOGZOUThwYjNlQ3FQMFpm?=
+ =?utf-8?B?RE51RFZhelBhaCtLeVRWNi9HMGRyVFc0Z0tXSCt2L1FBRy9VVTREVDd2ZVVB?=
+ =?utf-8?B?b2FDS2d2cDVQeVdLcjRVK25wSXJNOFAydXN5Vmt0akJPc3lXaklqNngrUzF2?=
+ =?utf-8?B?MWJsQVcxbFFlMGNQUWhtZXVuSVVXcWNVbGdwZTNLYnM3WjM4Y3ZxUDBoYW1m?=
+ =?utf-8?B?eHdPSzF6bFZlWi9obmtyTGFjVWYzTTUzWFdwK1N5OWMzZS82S2JteW1aZ3lk?=
+ =?utf-8?B?VlFvNnNqdUhmdEpGRjNsQ3Azem1lUCtrRElsZ0lkWnV3YUE0RU5PSWkwZ1RR?=
+ =?utf-8?B?TnJVdWtxVC80L1VPMVVjVzB2ejMzbmdGRmRmbzlDR1JFSld3YU9mM1RveFNZ?=
+ =?utf-8?B?Z2VZN1lRV2VBYzJvS0Z2cDI3Mkt1dWJTanFnckhJbmpiTGQxVTE3Si9WeHhS?=
+ =?utf-8?B?YWtUVHVqM2J6a0h4Vlc5TlNSMGo5UXc5QVdJTUJDckNxOXdSMU9PTGZyZlB6?=
+ =?utf-8?B?MVQ3ZGtBUnR3MzB4K0p6KzVRbVBFRVJYdVNVZzlVRmcxbCtHeG85UE14UVdM?=
+ =?utf-8?B?MTZaeWNIcU1MNnhDOG4zTG5zM0xtcnRMRndIeUxWc2ppbXJEc013ZkN0dTEx?=
+ =?utf-8?B?V3Q1NnRsR1pBdi9ZUlJkcnhwZlNhcUphTHNUalYyMmZXdHBXNjRUclg1czBr?=
+ =?utf-8?B?bzQxdVh2bjVGV28vSzZhVjNyZlJXOFpPZGNJZ0xCTXlhVkpGU0hsem1RakRp?=
+ =?utf-8?B?MDYxQW0wWTBLUEJxODNYTUw1Tm83YmxzS01EeUNJUkNUREJlekVhb3VraWN1?=
+ =?utf-8?B?YUtRaWRUWWsxNG1teTRvaHJEYVRmL0pjMWZnT1ExL2laTDFhbVFxbGJ1QXdG?=
+ =?utf-8?B?K0lObDdkWHJqTFpXTFV3NFdETHV3VFp5T3cxV3o3SFVIZStsbStDb1gvaHVH?=
+ =?utf-8?B?TGQ3dU9hSFhqS0gzQlhjQ3kzR0pEOTdySVZnWkRMVHB6bkdGa0U4UDI4OFZa?=
+ =?utf-8?B?dUkxaGU4WUo4VFFoS3llRkJSUFlsY3JnWUF3R0x0VEdETkNaYnZ2QllvcWJY?=
+ =?utf-8?B?OGdJZlZJdk9pTWRxTysycHR4QUUxeC92YzROeitONWhUQTNtS3o4b0lXQmlM?=
+ =?utf-8?B?VVhOUkQ3TGsvcTBWeW1Vb3IxQ0oyYk1BQmF2Q2Rkd2ozdG5TbjZlaFh6QVRT?=
+ =?utf-8?Q?145fUIWhdWaQvgmK6Zi6v9mwU?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e31ffe68-5910-4f4e-746e-08dd783eea84
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 14:49:25.1802
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 14:49:37.6849
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XWNNpyWzAQY8rfLIzxs+K7FeGeazMNzTPtXxUEYXnMmQdYEtsU8lAEor+go3CAEIdbcLwH72p9KHxkaBHDXx/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10830
+X-MS-Exchange-CrossTenant-UserPrincipalName: r12E6QZyjcLERhG6eEyAvpS7zQi6KxIGf6S9gpIWWRlSULfeQhWRpBwA3mdTgDPXSfLt7vG6hVRipaPp4LWtWQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9088
 
-On Thu, Apr 10, 2025 at 11:02:41AM +0200, Primoz Fiser wrote:
-> There is already an external pull-down resistor on the LED output line.
-> It makes no sense to have both pull-down and pull-up resistors enabled
-> at the same time. Thus disable the internal pull-down.
->
-> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
-> ---
+On 4/4/2025 8:16 AM, Jonathan Cameron wrote:
+> On Thu, 3 Apr 2025 13:33:12 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+> 
+>> From: Nathan Fontenot <nathan.fontenot@amd.com>
+>>
+>> Add a release_Sam_region_adjustable() interface to allow for
+> 
+> Who is Sam?  (typo)
+> 
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Hi Jonathan,
 
->  arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-> index 442ee067a047..82f680d891c2 100644
-> --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-> @@ -196,7 +196,7 @@ MX93_PAD_ENET2_TD2__ENET1_TX_CLK		0x4000050e
->
->  	pinctrl_leds: ledsgrp {
->  		fsl,pins = <
-> -			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
-> +			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x11e
->  		>;
->  	};
->
-> --
-> 2.34.1
->
+It is a typo. I will fix.
+
+>> removing SOFT RESERVE memory resources. This extracts out the code
+>> to remove a mem region into a common __release_mem_region_adjustable()
+>> routine, this routine takes additional parameters of an IORES
+>> descriptor type to add checks for IORES_DESC_* and a flag to check
+>> for IORESOURCE_BUSY to control it's behavior.
+>>
+>> The existing release_mem_region_adjustable() is a front end to the
+>> common code and a new release_srmem_region_adjustable() is added to
+>> release SOFT RESERVE resources.
+>>
+>> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> ---
+>>  include/linux/ioport.h |  3 +++
+>>  kernel/resource.c      | 55 +++++++++++++++++++++++++++++++++++++++---
+>>  2 files changed, 54 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>> index 5385349f0b8a..718360c9c724 100644
+>> --- a/include/linux/ioport.h
+>> +++ b/include/linux/ioport.h
+>> @@ -357,6 +357,9 @@ extern void __release_region(struct resource *, resource_size_t,
+>>  #ifdef CONFIG_MEMORY_HOTREMOVE
+>>  extern void release_mem_region_adjustable(resource_size_t, resource_size_t);
+>>  #endif
+>> +#ifdef CONFIG_CXL_REGION
+>> +extern void release_srmem_region_adjustable(resource_size_t, resource_size_t);
+> I'm not sure the srmem is obvious enough.  Maybe it's worth the long
+> name to spell it out some more.. e.g. something like
+> 
+
+Yes, I'll update with a re name.
+
+> extern void release_softresv_mem_region_adjustable() ?
+>> +#endif
+>>  #ifdef CONFIG_MEMORY_HOTPLUG
+>>  extern void merge_system_ram_resource(struct resource *res);
+>>  #endif
+>> diff --git a/kernel/resource.c b/kernel/resource.c
+>> index 12004452d999..0195b31064b0 100644
+>> --- a/kernel/resource.c
+>> +++ b/kernel/resource.c
+>> @@ -1387,7 +1387,7 @@ void __release_region(struct resource *parent, resource_size_t start,
+>>  }
+>>  EXPORT_SYMBOL(__release_region);
+>>  
+>> -#ifdef CONFIG_MEMORY_HOTREMOVE
+>> +#if defined(CONFIG_MEMORY_HOTREMOVE) || defined(CONFIG_CXL_REGION)
+>>  /**
+>>   * release_mem_region_adjustable - release a previously reserved memory region
+> 
+> Looks like you left the old docs which I'm guessing is not the intent.
+> 
+
+Correct, this is not intended. Ill remove.
+
+>>   * @start: resource start address
+>> @@ -1407,7 +1407,10 @@ EXPORT_SYMBOL(__release_region);
+>>   *   assumes that all children remain in the lower address entry for
+>>   *   simplicity.  Enhance this logic when necessary.
+>>   */
+>> -void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>> +static void __release_mem_region_adjustable(resource_size_t start,
+>> +					    resource_size_t size,
+>> +					    bool busy_check,
+>> +					    int res_desc)
+>>  {
+>>  	struct resource *parent = &iomem_resource;
+>>  	struct resource *new_res = NULL;
+>> @@ -1446,7 +1449,12 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>>  		if (!(res->flags & IORESOURCE_MEM))
+>>  			break;
+>>  
+>> -		if (!(res->flags & IORESOURCE_BUSY)) {
+>> +		if (busy_check && !(res->flags & IORESOURCE_BUSY)) {
+>> +			p = &res->child;
+>> +			continue;
+>> +		}
+>> +
+>> +		if (res_desc != IORES_DESC_NONE && res->desc != res_desc) {
+>>  			p = &res->child;
+>>  			continue;
+>>  		}
+>> @@ -1496,7 +1504,46 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>>  	write_unlock(&resource_lock);
+>>  	free_resource(new_res);
+>>  }
+>> -#endif	/* CONFIG_MEMORY_HOTREMOVE */
+>> +#endif
+>> +
+>> +#ifdef CONFIG_MEMORY_HOTREMOVE
+>> +/**
+>> + * release_mem_region_adjustable - release a previously reserved memory region
+> As above. I was surprised to see new docs in here for an existing function.
+> I think you forgot to delete the now wrongly placed ones above.
+> 
+> Jonathan
+> 
+Right, I'll remove the now old function comment.
+
+-Terry
