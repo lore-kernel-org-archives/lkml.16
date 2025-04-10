@@ -1,336 +1,115 @@
-Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C48926FA4D;
-	Thu, 10 Apr 2025 10:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8C326F470
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744279576; cv=none; b=haLXtSngHd9yJpeZJzsruQhUXz/b7DL0QWPziadQTeWmqGfqd++/o2guvljwVMbURQGvPw45WIgcjOXenwPMWXxgoAgthI9Op1AON9Cm49CLghA9rDnHg6km+HnbkCbiagLizuOCzzaf1uD29vP/ZkAxuYXklAY+NmY2zuGnqEM=
+	t=1744279605; cv=none; b=VsGBlQf6CuwAv8xRl/9U17+fHG36NO2YJdS4CjYQIRtm5CCZ/OBkfjB1D+1Vv4W/cannWKUSCw56Zuuzyg/j+y07eUm0/30a7n6jwtjGRiq8Z1v1S9FsEWx+EsN+fxfefl+sU1LXtIK8pN3LzexO+3JiotDTMSusvQpm8cLusUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744279576; c=relaxed/simple;
-	bh=zQRq630D+cdbXxy/xhQQqYzzty8W27NaB8MrgAU75F0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=aeRMEOI7f44F4J8SXGeSKt6kws6SpcfxcNbZWr0l38GqtcGcIYJoGMy5omOMF5wDuZCfGW4W2sioT++BnY3TNY+6KaVPOALeiYSHQqZU09gYg1vlA55Y7j6mfjwKl+ZoFyDDunmPyMtfl++4P21ky2tEDDg0sjQv/Ns1bM91TtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=NbseA5xx; arc=none smtp.client-ip=91.207.212.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	s=arc-20240116; t=1744279605; c=relaxed/simple;
+	bh=S+wP/glav5bx+FDG4NQZpxZHuk/Mqp/a/ZhxJMHKm4E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gGVJQ8jchP3XF5/imiCIQtmlXInnhVSUb2I0GdOzdIp82j1opU1x6qCkIB5FkOXyLs1cZFnHnBKtloIKWu7gpCmvx/6Ee5SIiDJLxecknay5Q3OJeBZoUl4qrb3U+uXDw/x9FyJ4PC/Rqoyis5wXLbY0UcIAtUZSYwBL0Kp5efk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Yfl2XllW; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="NbseA5xx"
-Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A62MMH009620;
-	Thu, 10 Apr 2025 10:55:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=w
-	10ku9+QGCxyS3AMeDqcOwgnGjg9TRecUeu2KHERN88=; b=NbseA5xxLP3xHOAYK
-	7f6Tp5wgNvMfDV+SPKHg5XLfxD6OXDNGpdBUmv660He0Iilf51+ZRgzficAIDQCN
-	lDk9LSd/tUamscP/e/6BoTxrz1lAq2HAF65qaMCxxibVRoIZNolxMKAT90PKZ+Z6
-	MYxlIfzNoU553MKDUzoYLGxDcaF9cqiL/4geMwsKn32GrlYHbvurjrdk/oCrqhRq
-	zmbVKspV7IU+D0u4ulYEaDITkgwZy80S3hsgGAHkfuhn0BwZz9nD/6kjx7IozGb2
-	UAMizKFsYTVQ33d+Ls+vlc4RgLv8LCrBYKIzPsTZP20h55TGda7GXzjHIQS9/GMz
-	2Hrdw==
-Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 45ttssbgdy-6
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 10 Apr 2025 10:55:21 +0100 (BST)
-Received: from
- 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
- (172.25.6.134) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 10 Apr 2025 10:55:19 +0100
-From: Matt Coster <matt.coster@imgtec.com>
-Date: Thu, 10 Apr 2025 10:55:04 +0100
-Subject: [PATCH v6 05/18] drm/imagination: Add power domain control
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Yfl2XllW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744279600;
+	bh=S+wP/glav5bx+FDG4NQZpxZHuk/Mqp/a/ZhxJMHKm4E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Yfl2XllWDQ1NgOKKux3x7BqvYS1IRxHPVjUUq/QI4UTseAi9xjxHNtW7WQa9NbMDX
+	 2Mokih5sTAg/jHuctMuFxOLfZ8SrZuwKt3C5gxTjMoudY53KqFZEoy1v8Np0cBY1oy
+	 a62dANRMWkHnpAsm443y5zHNI1lxa/G9O/rN9cdyETurkqNeneYNXAOZIEHXIeAwtL
+	 NOvQqjqNv0s9p7I+PB3xs477Aj+KfLc9hfUyGWgX6DSg6qszYgG9iuajXADTBgAmnE
+	 mGAqJhizK0vTOz29M56pGccUWLb4pWUmdP9PV2IrtJSaFxBe1qmBA6IUVwXmuaR8N2
+	 x3oSVnhWdltGw==
+Received: from [192.168.1.90] (unknown [82.79.138.25])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8956917E010B;
+	Thu, 10 Apr 2025 12:06:40 +0200 (CEST)
+Message-ID: <5e9dd905-6d58-49e5-a45f-2e95c8772d26@collabora.com>
+Date: Thu, 10 Apr 2025 13:06:39 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 06/15] drm/connector: hdmi: Factor out bpc and format
+ computation logic
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
+ <20250326-hdmi-conn-yuv-v3-6-294d3ebbb4b2@collabora.com>
+ <20250409-funny-hopping-condor-cbc50c@houat>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <20250409-funny-hopping-condor-cbc50c@houat>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250410-sets-bxs-4-64-patch-v1-v6-5-eda620c5865f@imgtec.com>
-References: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
-In-Reply-To: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
-To: Frank Binns <frank.binns@imgtec.com>,
-        Matt Coster
-	<matt.coster@imgtec.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter
-	<simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        "Vignesh
- Raghavendra" <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
-        "Michal
- Wilczynski" <m.wilczynski@samsung.com>,
-        Alessio Belle
-	<alessio.belle@imgtec.com>,
-        Alexandru Dadu <alexandru.dadu@imgtec.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7444;
- i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=zQRq630D+cdbXxy/xhQQqYzzty8W27NaB8MrgAU75F0=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaR/n9q4UOrQ8bX7qi2lFSxZ9b9J/5p2/qv0rOTyA1OfW
- Ynvu8Sl0VHKwiDGwSArpsiyY4XlCrU/aloSN34Vw8xhZQIZwsDFKQATyV3MyDDnYZtwSUmb2Qam
- hQIbJthOkmBqDPp9Oybx1GJ/H6fCmosM/+sqPrdPcPKfm/fl/cOp0wxnRi4yDbE7ofZxr+x7nQp
- HL3YA
-X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
- fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-ORIG-GUID: iKNpcMPqa6hFVtqQPSDUAAprQtbbpccu
-X-Authority-Analysis: v=2.4 cv=I7hlRMgg c=1 sm=1 tr=0 ts=67f79589 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=SbYmRvZrNKriMxqfaWcA:9
- a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: iKNpcMPqa6hFVtqQPSDUAAprQtbbpccu
 
-The first supported GPU only used a single power domain so this was
-automatically handled by the device runtime.
+Hi Maxime,
 
-In order to support multiple power domains, they must be enumerated from
-devicetree and linked to both the GPU device and each other to ensure
-correct power sequencing at start time.
+On 4/9/25 6:02 PM, Maxime Ripard wrote:
+> Hi,
+> 
+> On Wed, Mar 26, 2025 at 12:19:55PM +0200, Cristian Ciocaltea wrote:
+>> In preparation to support fallback to an alternative output format, e.g.
+>> YUV420, when RGB cannot be used for any of the available color depths,
+>> move the bpc try loop out of hdmi_compute_config() and, instead, make it
+>> part of hdmi_compute_format_bpc().  Additionally, add a new parameter to
+>> the latter holding the output format to be checked and eventually set.
+>>
+>> This improves code reusability and further extensibility.
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> 
+> I think patch 5 could be squashed into this one.
 
-For all Imagination Rogue GPUs, power domains are named "a", "b", etc. and
-the sequence A->B->... is always valid for startup with the reverse true
-for shutdown. Note this is not always the *only* valid sequence, but it's
-simple and does not require special-casing for different GPU power
-topologies.
+Ack.
 
-Signed-off-by: Matt Coster <matt.coster@imgtec.com>
-Reviewed-by: Frank Binns <frank.binns@imgtec.com>
----
-Changes in v6:
-- Add Frank's Rb
-- Link to v5: https://lore.kernel.org/r/20250326-sets-bxs-4-64-patch-v1-v5-5-e4c46e8280a9@imgtec.com
-Changes in v5:
-- None
-- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-5-d987cf4ca439@imgtec.com
-Changes in v4:
-- None
-- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-5-143b3dbef02f@imgtec.com
-Changes in v3:
-- None
-- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-6-3fd45d9fb0cf@imgtec.com
-Changes in v2:
-- None
-- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-6-4ed30e865892@imgtec.com
----
- drivers/gpu/drm/imagination/pvr_device.h |   8 +++
- drivers/gpu/drm/imagination/pvr_drv.c    |   7 ++
- drivers/gpu/drm/imagination/pvr_power.c  | 114 +++++++++++++++++++++++++++++++
- drivers/gpu/drm/imagination/pvr_power.h  |   3 +
- 4 files changed, 132 insertions(+)
+>> ---
+>>  drivers/gpu/drm/display/drm_hdmi_state_helper.c | 50 ++++++++++++-------------
+>>  1 file changed, 23 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+>> index 160964190d82ac233fdbe34ac54024a007a19872..6de0abb15ecb36fd4eb98725e2a3835e5e0db134 100644
+>> --- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+>> +++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+>> @@ -608,42 +608,19 @@ static int
+>>  hdmi_compute_format_bpc(const struct drm_connector *connector,
+>>  			struct drm_connector_state *conn_state,
+>>  			const struct drm_display_mode *mode,
+>> -			unsigned int bpc)
+>> +			unsigned int max_bpc, enum hdmi_colorspace fmt)
+>>  {
+>>  	struct drm_device *dev = connector->dev;
+>> -
+>> -	/*
+>> -	 * TODO: Add support for YCbCr420 output for HDMI 2.0 capable
+>> -	 * devices, for modes that only support YCbCr420.
+>> -	 */
+> 
+> And we should fix that comment for now.
 
-diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
-index 6d0dfacb677b46a880f37f419dfa7b67c68fe63d..2dd8a8885fe07078896d669d822525fb2b7bab51 100644
---- a/drivers/gpu/drm/imagination/pvr_device.h
-+++ b/drivers/gpu/drm/imagination/pvr_device.h
-@@ -18,6 +18,7 @@
- #include <linux/bits.h>
- #include <linux/compiler_attributes.h>
- #include <linux/compiler_types.h>
-+#include <linux/device.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
-@@ -131,6 +132,13 @@ struct pvr_device {
- 	 */
- 	struct clk *mem_clk;
- 
-+	struct pvr_device_power {
-+		struct device **domain_devs;
-+		struct device_link **domain_links;
-+
-+		u32 domain_count;
-+	} power;
-+
- 	/** @irq: IRQ number. */
- 	int irq;
- 
-diff --git a/drivers/gpu/drm/imagination/pvr_drv.c b/drivers/gpu/drm/imagination/pvr_drv.c
-index 3130193f8fffc185e630a293be53374bdc4b7ce0..ac4f5855c5692f0956862cebdbf76b16d8da9a81 100644
---- a/drivers/gpu/drm/imagination/pvr_drv.c
-+++ b/drivers/gpu/drm/imagination/pvr_drv.c
-@@ -1411,6 +1411,10 @@ pvr_probe(struct platform_device *plat_dev)
- 
- 	platform_set_drvdata(plat_dev, drm_dev);
- 
-+	err = pvr_power_domains_init(pvr_dev);
-+	if (err)
-+		return err;
-+
- 	init_rwsem(&pvr_dev->reset_sem);
- 
- 	pvr_context_device_init(pvr_dev);
-@@ -1450,6 +1454,8 @@ pvr_probe(struct platform_device *plat_dev)
- err_context_fini:
- 	pvr_context_device_fini(pvr_dev);
- 
-+	pvr_power_domains_fini(pvr_dev);
-+
- 	return err;
- }
- 
-@@ -1470,6 +1476,7 @@ static void pvr_remove(struct platform_device *plat_dev)
- 	pvr_watchdog_fini(pvr_dev);
- 	pvr_queue_device_fini(pvr_dev);
- 	pvr_context_device_fini(pvr_dev);
-+	pvr_power_domains_fini(pvr_dev);
- }
- 
- static const struct of_device_id dt_match[] = {
-diff --git a/drivers/gpu/drm/imagination/pvr_power.c b/drivers/gpu/drm/imagination/pvr_power.c
-index ba7816fd28ec77e6ca5ce408302a413ce1afeb6e..19b079b357df78e8bcdecfa377fc9c05b6e8e4b0 100644
---- a/drivers/gpu/drm/imagination/pvr_power.c
-+++ b/drivers/gpu/drm/imagination/pvr_power.c
-@@ -10,10 +10,13 @@
- 
- #include <drm/drm_drv.h>
- #include <drm/drm_managed.h>
-+#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/interrupt.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
- #include <linux/timer.h>
- #include <linux/types.h>
-@@ -431,3 +434,114 @@ pvr_watchdog_fini(struct pvr_device *pvr_dev)
- {
- 	cancel_delayed_work_sync(&pvr_dev->watchdog.work);
- }
-+
-+int pvr_power_domains_init(struct pvr_device *pvr_dev)
-+{
-+	struct device *dev = from_pvr_device(pvr_dev)->dev;
-+
-+	struct device_link **domain_links __free(kfree) = NULL;
-+	struct device **domain_devs __free(kfree) = NULL;
-+	int domain_count;
-+	int link_count;
-+
-+	char dev_name[2] = "a";
-+	int err;
-+	int i;
-+
-+	domain_count = of_count_phandle_with_args(dev->of_node, "power-domains",
-+						  "#power-domain-cells");
-+	if (domain_count < 0)
-+		return domain_count;
-+
-+	if (domain_count <= 1)
-+		return 0;
-+
-+	link_count = domain_count + (domain_count - 1);
-+
-+	domain_devs = kcalloc(domain_count, sizeof(*domain_devs), GFP_KERNEL);
-+	if (!domain_devs)
-+		return -ENOMEM;
-+
-+	domain_links = kcalloc(link_count, sizeof(*domain_links), GFP_KERNEL);
-+	if (!domain_links)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < domain_count; i++) {
-+		struct device *domain_dev;
-+
-+		dev_name[0] = 'a' + i;
-+		domain_dev = dev_pm_domain_attach_by_name(dev, dev_name);
-+		if (IS_ERR_OR_NULL(domain_dev)) {
-+			err = domain_dev ? PTR_ERR(domain_dev) : -ENODEV;
-+			goto err_detach;
-+		}
-+
-+		domain_devs[i] = domain_dev;
-+	}
-+
-+	for (i = 0; i < domain_count; i++) {
-+		struct device_link *link;
-+
-+		link = device_link_add(dev, domain_devs[i], DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
-+		if (!link) {
-+			err = -ENODEV;
-+			goto err_unlink;
-+		}
-+
-+		domain_links[i] = link;
-+	}
-+
-+	for (i = domain_count; i < link_count; i++) {
-+		struct device_link *link;
-+
-+		link = device_link_add(domain_devs[i - domain_count + 1],
-+				       domain_devs[i - domain_count],
-+				       DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
-+		if (!link) {
-+			err = -ENODEV;
-+			goto err_unlink;
-+		}
-+
-+		domain_links[i] = link;
-+	}
-+
-+	pvr_dev->power = (struct pvr_device_power){
-+		.domain_devs = no_free_ptr(domain_devs),
-+		.domain_links = no_free_ptr(domain_links),
-+		.domain_count = domain_count,
-+	};
-+
-+	return 0;
-+
-+err_unlink:
-+	while (--i >= 0)
-+		device_link_del(domain_links[i]);
-+
-+	i = domain_count;
-+
-+err_detach:
-+	while (--i >= 0)
-+		dev_pm_domain_detach(domain_devs[i], true);
-+
-+	return err;
-+}
-+
-+void pvr_power_domains_fini(struct pvr_device *pvr_dev)
-+{
-+	const int domain_count = pvr_dev->power.domain_count;
-+
-+	int i = domain_count + (domain_count - 1);
-+
-+	while (--i >= 0)
-+		device_link_del(pvr_dev->power.domain_links[i]);
-+
-+	i = domain_count;
-+
-+	while (--i >= 0)
-+		dev_pm_domain_detach(pvr_dev->power.domain_devs[i], true);
-+
-+	kfree(pvr_dev->power.domain_links);
-+	kfree(pvr_dev->power.domain_devs);
-+
-+	pvr_dev->power = (struct pvr_device_power){ 0 };
-+}
-diff --git a/drivers/gpu/drm/imagination/pvr_power.h b/drivers/gpu/drm/imagination/pvr_power.h
-index 9a9312dcb2dab7d36ee8ff7f69e69d126c5469a9..ada85674a7ca762dcf92df40424230e1c3910342 100644
---- a/drivers/gpu/drm/imagination/pvr_power.h
-+++ b/drivers/gpu/drm/imagination/pvr_power.h
-@@ -38,4 +38,7 @@ pvr_power_put(struct pvr_device *pvr_dev)
- 	return pm_runtime_put(drm_dev->dev);
- }
- 
-+int pvr_power_domains_init(struct pvr_device *pvr_dev);
-+void pvr_power_domains_fini(struct pvr_device *pvr_dev);
-+
- #endif /* PVR_POWER_H */
+Sorry, I missed to move this hunk to the next patch.
 
--- 
-2.49.0
+> 
+> Once fixed,
+> Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
+Thanks,
+Cristian
