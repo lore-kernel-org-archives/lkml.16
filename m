@@ -1,89 +1,489 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA53F1E32CD;
-	Thu, 10 Apr 2025 02:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17AC18C004;
+	Thu, 10 Apr 2025 02:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744251611; cv=none; b=nElu2ViK3A0WEcBy4HG9EZcE2rvXfg1V1gNlj8nbQhN+WDrAC725Q8CIElmIDf8u6uqgbcH2kXCYG9hCGmce0jipwcdGNcnHbBFxYEONQMyb5gwsFnja8e9gD6PcYn8KzmOdj2aRkmKTQ+QVya4PH7EIBq+jYJ/ws8cDfsElHMg=
+	t=1744251696; cv=none; b=RAJ1OCK9G3UPSnxTJ4Z+0hdQbVGN3HQNWG/AZC3biKcNk6FEOeMFPgvCnVeEgf1SGnu4f5fHegxPdU6eFk1M92NJpQuSk+hgXuSDRN5ev/ouM9RvPze50C72wchpwwHG6BAM6w4EBR4ZPQ1/oT5RhQtz6uIeojFbF63/74lsbmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744251611; c=relaxed/simple;
-	bh=bUkqiLfAP/k+IFyaQBzohFul3Uad4pjwsVFoXvMIUm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=AxKiRsCCIA0fna3aPezJ5p2GNp0Ju4RdlBd9kVPF8m6VeUeFyiXx8bePcUiGEnXNgeua1KcHfFovOgH/j8+pRcgFHx+tErLWqdL7LxhDyfl6/0hGfi7E5YstHMmmQO5C/p1Jk8WXhftwSIoADp2mG90su8RPirUyAO/UwrtvIaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QE00JUtz; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744251696; c=relaxed/simple;
+	bh=wrJ3YJUyBIK8cOHIhf2vdxkAWOY+2F6yP5BowSrkZRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=helbPDPLDQPbjitKVIk950etFu6C2sO+kaWf5xqgNCLoJJwkJ0/aRzeIxCKOLQdXmpSVPjZKiSuJDsIcmpgEuUrdeCNaIdr85yDfmm6cYpQ6rcjpQCdEp9zEeyND9AtTCa9rYqM4B0uplbsreXP25u0Plq94yjWYHrWsD07V+OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GB6AY4dQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QE00JUtz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744251604;
-	bh=EIGh7xVw9mJe7tfwQcjcshSTNY9R4WoIrtEq0zhtpyw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=QE00JUtzwc7pCrVRYXnz3qL0SUGpvba8+G/fLI1FGVzOP6B4VJM26IYfbcrFnFlP3
-	 FUku062M/dtXAWCeIEpnaTz+UQspGmgei4HxYLUwgvOrgzvon1q3CbtNuWWz02ykET
-	 gouKvKt1dZ343BQbZuchZmx6I8GEICHkovOy2iIXIAo+6NJpOiaqzYhOhcRzmQfIE3
-	 qU2qK4jx1IvaUIpDiiFXvVLPaE8ZLnsYI/PVFerMTErbccvb64742GKyx8+kYzVTTA
-	 RCpOoZs65iPUF2aoMCw8r3FHM0mCs/hSaHlejPLst7Etm57JITtixzLVPB2egJTdly
-	 fXB6YSH+a6LaQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZY3S404f4z4x2c;
-	Thu, 10 Apr 2025 12:20:03 +1000 (AEST)
-Date: Thu, 10 Apr 2025 12:20:03 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alasdair G Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>
-Cc: LongPing Wei <weilongping@oppo.com>, Mikulas Patocka
- <mpatocka@redhat.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the device-mapper tree
-Message-ID: <20250410122003.5434159b@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GB6AY4dQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1102C4CEE2;
+	Thu, 10 Apr 2025 02:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744251696;
+	bh=wrJ3YJUyBIK8cOHIhf2vdxkAWOY+2F6yP5BowSrkZRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GB6AY4dQdlaK4h8PSq+U1CcrrimnlReKEA/kc6R6up48CyXv2NnZsCilNaJxP/9S3
+	 VLjwZ1Do01zkIAFEVWmRmRjkH/R4uFhcEI2B7uLxi40bqt9QSsN2DZzFrZJ6gN/tVx
+	 tvfRSVbGJkwcLbmk8G+Ypap44NtIHR1mdfGl7hBy3Y1MtNteIFm89W8rZoqgcTURfa
+	 ehASmFI5Co5Har2yM0dfdoU+srDeX50ajCTS4WLgZAHXAewV2vjKwaozf9/wBTviWi
+	 CJiVwO9qkk0e+7iQq8CtJfZhHG1HQsP14oWBMgpKBDST1yY0evFawyZaCiqltlcbKA
+	 GIePBtoESZF1A==
+Date: Wed, 9 Apr 2025 21:21:33 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH 1/4] soc: qcom: Expose DDR data from SMEM
+Message-ID: <opohwkaqgircxxmnizlxfec6dgba65a6uvdue6dgbhwvkmmyyc@5ia2michtnns>
+References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
+ <20250409-topic-smem_dramc-v1-1-94d505cd5593@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/551n4GLkAtAk0HXFkm7t2tx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409-topic-smem_dramc-v1-1-94d505cd5593@oss.qualcomm.com>
 
---Sig_/551n4GLkAtAk0HXFkm7t2tx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 09, 2025 at 04:47:29PM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> Most modern Qualcomm platforms (>= SM8150) expose information about the
+> DDR memory present on the system via SMEM.
+> 
+> Details from this information is used in various scenarios, such as
+> multimedia drivers configuring the hardware based on the "Highest Bank
+> address Bit" (hbb), or the list of valid frequencies in validation
+> scenarios...
+> 
+> Add support for parsing v3-v5 version of the structs. Unforunately,
+> they are not versioned, so some elbow grease is necessary to determine
+> which one is present. See for reference:
+> 
+> v3: https://git.codelinaro.org/clo/la/abl/tianocore/edk2/-/commit/1d11897d2cfcc7b85f28ff74c445018dbbecac7a
+> v4: https://git.codelinaro.org/clo/la/abl/tianocore/edk2/-/commit/f6e9aa549260bbc0bdcb156c2b05f48dc5963203
+> v5: https://git.codelinaro.org/clo/la/abl/tianocore/edk2/-/blob/uefi.lnx.4.0.r31-rel/QcomModulePkg/Include/Protocol/DDRDetails.h?ref_type=heads
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Hi all,
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-After merging the device-mapper tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+Regards,
+Bjorn
 
-ERROR: modpost: "__blk_flush_plug" [drivers/md/dm-bufio.ko] undefined!
-
-Caused by commit
-
-  713ff5c782f5 ("dm-bufio: improve the performance of __dm_bufio_prefetch")
-
-I have used the device-mapper tree from next-20250409 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/551n4GLkAtAk0HXFkm7t2tx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf3KtMACgkQAVBC80lX
-0Gz8kAgAmXlyLAHb1KrPCiDS46XMuZGwYuYnZaLoFLxJWcroDDEANRP6LKvKDYmp
-gBS6ru/ATiz+CjidNpUG3Gv8ikCC8am3X58QSW+sw+x5Eub/ssjC+iYzIVNtrqvc
-VYfasmv8MvI7hy55n6MAD78aotli2rcpUF/BivXlaWKb92fmQV87owoVdiJO0O4o
-rW6zbpoG6UX7R+FiYqnOVHsU0K6GF/1bVqfLPoOsf+mAIDZNQBReU2vgQGagtgKE
-OuOJya+Oofqg60omWdXe90HBvGmhp4u4L0GwOdonmxxSzQ8YrCiWH7MCo2oYiS4u
-hclG5AtE4NW2aHn25Y2vaI+P/P6geA==
-=8YGT
------END PGP SIGNATURE-----
-
---Sig_/551n4GLkAtAk0HXFkm7t2tx--
+> ---
+>  drivers/soc/qcom/Makefile     |   3 +-
+>  drivers/soc/qcom/smem.c       |  14 ++-
+>  drivers/soc/qcom/smem.h       |   9 ++
+>  drivers/soc/qcom/smem_dramc.c | 287 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/soc/qcom/smem.h |   4 +
+>  5 files changed, 315 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index acbca2ab5cc2a9ab3dce1ff38efd048ba2fab31e..7227f648893d047d7de8819dc159554af6a7b817 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -23,7 +23,8 @@ obj-$(CONFIG_QCOM_RPMH)		+= qcom_rpmh.o
+>  qcom_rpmh-y			+= rpmh-rsc.o
+>  qcom_rpmh-y			+= rpmh.o
+>  obj-$(CONFIG_QCOM_SMD_RPM)	+= rpm-proc.o smd-rpm.o
+> -obj-$(CONFIG_QCOM_SMEM) +=	smem.o
+> +qcom_smem-y			+= smem.o smem_dramc.o
+> +obj-$(CONFIG_QCOM_SMEM) +=	qcom_smem.o
+>  obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
+>  CFLAGS_smp2p.o := -I$(src)
+>  obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
+> diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
+> index 59281970180921b76312fd5020828edced739344..cfd6a9d531d3d2438d7577be0c594d3b960bd003 100644
+> --- a/drivers/soc/qcom/smem.c
+> +++ b/drivers/soc/qcom/smem.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+>   */
+>  
+> +#include <linux/debugfs.h>
+>  #include <linux/hwspinlock.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> @@ -16,6 +17,8 @@
+>  #include <linux/soc/qcom/smem.h>
+>  #include <linux/soc/qcom/socinfo.h>
+>  
+> +#include "smem.h"
+> +
+>  /*
+>   * The Qualcomm shared memory system is a allocate only heap structure that
+>   * consists of one of more memory areas that can be accessed by the processors
+> @@ -284,6 +287,8 @@ struct qcom_smem {
+>  	struct smem_partition global_partition;
+>  	struct smem_partition partitions[SMEM_HOST_COUNT];
+>  
+> +	struct dentry *debugfs_dir;
+> +
+>  	unsigned num_regions;
+>  	struct smem_region regions[] __counted_by(num_regions);
+>  };
+> @@ -1230,17 +1235,24 @@ static int qcom_smem_probe(struct platform_device *pdev)
+>  
+>  	__smem = smem;
+>  
+> +	smem->debugfs_dir = smem_dram_parse(smem->dev);
+> +
+>  	smem->socinfo = platform_device_register_data(&pdev->dev, "qcom-socinfo",
+>  						      PLATFORM_DEVID_NONE, NULL,
+>  						      0);
+> -	if (IS_ERR(smem->socinfo))
+> +	if (IS_ERR(smem->socinfo)) {
+> +		debugfs_remove_recursive(smem->debugfs_dir);
+> +
+>  		dev_dbg(&pdev->dev, "failed to register socinfo device\n");
+> +	}
+>  
+>  	return 0;
+>  }
+>  
+>  static void qcom_smem_remove(struct platform_device *pdev)
+>  {
+> +	debugfs_remove_recursive(__smem->debugfs_dir);
+> +
+>  	platform_device_unregister(__smem->socinfo);
+>  
+>  	hwspin_lock_free(__smem->hwlock);
+> diff --git a/drivers/soc/qcom/smem.h b/drivers/soc/qcom/smem.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..8bf3f606e1ae80b7aa02b9567870f6a2681f8e5a
+> --- /dev/null
+> +++ b/drivers/soc/qcom/smem.h
+> @@ -0,0 +1,9 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __QCOM_SMEM_INTERNAL__
+> +#define __QCOM_SMEM_INTERNAL__
+> +
+> +#include <linux/device.h>
+> +
+> +struct dentry *smem_dram_parse(struct device *dev);
+> +
+> +#endif
+> diff --git a/drivers/soc/qcom/smem_dramc.c b/drivers/soc/qcom/smem_dramc.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..6ded45fd55c2ffa0924492f8042b753ec6c925cf
+> --- /dev/null
+> +++ b/drivers/soc/qcom/smem_dramc.c
+> @@ -0,0 +1,287 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include <linux/debugfs.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/qcom/smem.h>
+> +#include <linux/units.h>
+> +#include <linux/soc/qcom/smem.h>
+> +
+> +#include "smem.h"
+> +
+> +#define SMEM_DDR_INFO_ID		603
+> +
+> +#define MAX_DDR_FREQ_NUM_V3		13
+> +#define MAX_DDR_FREQ_NUM_V5		14
+> +
+> +#define MAX_DDR_REGION_NUM		6
+> +#define MAX_CHAN_NUM			8
+> +#define MAX_RANK_NUM			2
+> +
+> +static struct smem_dram *__dram;
+> +
+> +enum ddr_info_version {
+> +	INFO_UNKNOWN,
+> +	INFO_V3,
+> +	INFO_V3_WITH_14_FREQS,
+> +	INFO_V4,
+> +	INFO_V5,
+> +	INFO_V5_WITH_6_REGIONS,
+> +};
+> +
+> +struct smem_dram {
+> +	unsigned long frequencies[MAX_DDR_FREQ_NUM_V5];
+> +	u32 num_frequencies;
+> +	u8 hbb;
+> +};
+> +
+> +enum ddr_type {
+> +	DDR_TYPE_NODDR = 0,
+> +	DDR_TYPE_LPDDR1 = 1,
+> +	DDR_TYPE_LPDDR2 = 2,
+> +	DDR_TYPE_PCDDR2 = 3,
+> +	DDR_TYPE_PCDDR3 = 4,
+> +	DDR_TYPE_LPDDR3 = 5,
+> +	DDR_TYPE_LPDDR4 = 6,
+> +	DDR_TYPE_LPDDR4X = 7,
+> +	DDR_TYPE_LPDDR5 = 8,
+> +	DDR_TYPE_LPDDR5X = 9,
+> +};
+> +
+> +/* The data structures below are NOT __packed on purpose! */
+> +
+> +/* Structs used across multiple versions */
+> +struct ddr_part_details {
+> +	__le16 revision_id1;
+> +	__le16 revision_id2;
+> +	__le16 width;
+> +	__le16 density;
+> +};
+> +
+> +struct ddr_freq_table {
+> +	u32 freq_khz;
+> +	u8 enabled;
+> +};
+> +
+> +/* V3 */
+> +struct ddr_freq_plan_v3 {
+> +	struct ddr_freq_table ddr_freq[MAX_DDR_FREQ_NUM_V3]; /* NOTE: some have 14 like v5 */
+> +	u8 num_ddr_freqs;
+> +	phys_addr_t clk_period_address;
+> +};
+> +
+> +struct ddr_details_v3 {
+> +	u8 manufacturer_id;
+> +	u8 device_type;
+> +	struct ddr_part_details ddr_params[MAX_CHAN_NUM];
+> +	struct ddr_freq_plan_v3 ddr_freq_tbl;
+> +	u8 num_channels;
+> +};
+> +
+> +/* V4 */
+> +struct ddr_details_v4 {
+> +	u8 manufacturer_id;
+> +	u8 device_type;
+> +	struct ddr_part_details ddr_params[MAX_CHAN_NUM];
+> +	struct ddr_freq_plan_v3 ddr_freq_tbl;
+> +	u8 num_channels;
+> +	u8 num_ranks[MAX_CHAN_NUM];
+> +	u8 highest_bank_addr_bit[MAX_CHAN_NUM][MAX_RANK_NUM];
+> +};
+> +
+> +/* V5 */
+> +struct ddr_freq_plan_v5 {
+> +	struct ddr_freq_table ddr_freq[MAX_DDR_FREQ_NUM_V5];
+> +	u8 num_ddr_freqs;
+> +	phys_addr_t clk_period_address;
+> +	u32 max_nom_ddr_freq;
+> +};
+> +
+> +struct ddr_region_v5 {
+> +	u64 start_address;
+> +	u64 size;
+> +	u64 mem_controller_address;
+> +	u32 granule_size; /* MiB */
+> +	u8  ddr_rank;
+> +#define DDR_RANK_0	BIT(0)
+> +#define DDR_RANK_1	BIT(1)
+> +	u8  segments_start_index;
+> +	u64 segments_start_offset;
+> +};
+> +
+> +struct ddr_regions_v5 {
+> +	u32 ddr_region_num; /* We expect this to always be 4 or 6 */
+> +	u64 ddr_rank0_size;
+> +	u64 ddr_rank1_size;
+> +	u64 ddr_cs0_start_addr;
+> +	u64 ddr_cs1_start_addr;
+> +	u32 highest_bank_addr_bit;
+> +	struct ddr_region_v5 ddr_region[] __counted_by(ddr_region_num);
+> +};
+> +
+> +struct ddr_details_v5 {
+> +	u8 manufacturer_id;
+> +	u8 device_type;
+> +	struct ddr_part_details ddr_params[MAX_CHAN_NUM];
+> +	struct ddr_freq_plan_v5 ddr_freq_tbl;
+> +	u8 num_channels;
+> +	struct ddr_regions_v5 ddr_regions;
+> +};
+> +
+> +/**
+> + * qcom_smem_dram_get_hbb(): Get the Highest bank address bit
+> + *
+> + * Context: Check qcom_smem_is_available() before calling this function.
+> + * Because __dram * is initialized by smem_dram_parse(), which is in turn
+> + * called from * qcom_smem_probe(), __dram will only be NULL if the data
+> + * couldn't have been found/interpreted correctly.
+> + *
+> + * If the function fails, the argument is left unmodified.
+> + *
+> + * Return: 0 on success, -ENODATA on failure.
+> + */
+> +int qcom_smem_dram_get_hbb(void)
+> +{
+> +	return __dram ? __dram->hbb : -ENODATA;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_smem_dram_get_hbb);
+> +
+> +static void smem_dram_parse_v3_data(struct smem_dram *dram, void *data, bool additional_freq_entry)
+> +{
+> +	/* This may be 13 or 14 */
+> +	int num_freq_entries = MAX_DDR_FREQ_NUM_V3;
+> +	struct ddr_details_v3 *details = data;
+> +
+> +	if (additional_freq_entry)
+> +		num_freq_entries++;
+> +
+> +	for (int i = 0; i < num_freq_entries; i++) {
+> +		struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
+> +
+> +		if (freq_entry->freq_khz && freq_entry->enabled)
+> +			dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
+> +	}
+> +}
+> +
+> +static void smem_dram_parse_v4_data(struct smem_dram *dram, void *data)
+> +{
+> +	struct ddr_details_v4 *details = data;
+> +
+> +	/* Rank 0 channel 0 entry holds the correct value */
+> +	dram->hbb = details->highest_bank_addr_bit[0][0];
+> +
+> +	for (int i = 0; i < MAX_DDR_FREQ_NUM_V3; i++) {
+> +		struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
+> +
+> +		if (freq_entry->freq_khz && freq_entry->enabled)
+> +			dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
+> +	}
+> +}
+> +
+> +static void smem_dram_parse_v5_data(struct smem_dram *dram, void *data)
+> +{
+> +	struct ddr_details_v5 *details = data;
+> +	struct ddr_regions_v5 *region = &details->ddr_regions;
+> +
+> +	dram->hbb = region[0].highest_bank_addr_bit;
+> +
+> +	for (int i = 0; i < MAX_DDR_FREQ_NUM_V5; i++) {
+> +		struct ddr_freq_table *freq_entry = &details->ddr_freq_tbl.ddr_freq[i];
+> +
+> +		if (freq_entry->freq_khz && freq_entry->enabled)
+> +			dram->frequencies[dram->num_frequencies++] = 1000 * freq_entry->freq_khz;
+> +	}
+> +}
+> +
+> +/* The structure contains no version field, so we have to perform some guesswork.. */
+> +static int smem_dram_infer_struct_version(size_t size)
+> +{
+> +	/* Some early versions provided less bytes of less useful data */
+> +	if (size < sizeof(struct ddr_details_v3))
+> +		return -EINVAL;
+> +	if (size == sizeof(struct ddr_details_v3))
+> +		return INFO_V3;
+> +	else if (size == sizeof(struct ddr_details_v3) + sizeof(struct ddr_freq_table))
+> +		return INFO_V3_WITH_14_FREQS;
+> +	else if (size == sizeof(struct ddr_details_v4))
+> +		return INFO_V4;
+> +	else if (size == sizeof(struct ddr_details_v5) + 4 * sizeof(struct ddr_region_v5))
+> +		return INFO_V5;
+> +	else if (size == sizeof(struct ddr_details_v5) + 6 * sizeof(struct ddr_region_v5))
+> +		return INFO_V5_WITH_6_REGIONS;
+> +
+> +	return INFO_UNKNOWN;
+> +}
+> +
+> +static int smem_dram_frequencies_show(struct seq_file *s, void *unused)
+> +{
+> +	struct smem_dram *dram = s->private;
+> +
+> +	for (int i = 0; i < dram->num_frequencies; i++)
+> +		seq_printf(s, "%lu\n", dram->frequencies[i]);
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(smem_dram_frequencies);
+> +
+> +struct dentry *smem_dram_parse(struct device *dev)
+> +{
+> +	struct dentry *debugfs_dir;
+> +	enum ddr_info_version ver;
+> +	struct smem_dram *dram;
+> +	size_t actual_size;
+> +	void *data = NULL;
+> +
+> +	/* No need to check qcom_smem_is_available(), this func is called by the SMEM driver */
+> +	data = qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_DDR_INFO_ID, &actual_size);
+> +	if (IS_ERR_OR_NULL(data))
+> +		return ERR_PTR(-ENODATA);
+> +
+> +	ver = smem_dram_infer_struct_version(actual_size);
+> +	if (ver < 0) {
+> +		/* Some SoCs don't provide data that's useful for us */
+> +		return ERR_PTR(-ENODATA);
+> +	} else if (ver == INFO_UNKNOWN) {
+> +		/* In other cases, we may not have added support for a newer struct revision */
+> +		pr_err("Found an unknown type of DRAM info struct (size = %zu)\n", actual_size);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	dram = devm_kzalloc(dev, sizeof(*dram), GFP_KERNEL);
+> +	if (!dram)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	switch (ver) {
+> +	case INFO_V3:
+> +		smem_dram_parse_v3_data(dram, data, false);
+> +		break;
+> +	case INFO_V3_WITH_14_FREQS:
+> +		smem_dram_parse_v3_data(dram, data, true);
+> +		break;
+> +	case INFO_V4:
+> +		smem_dram_parse_v4_data(dram, data);
+> +		break;
+> +	case INFO_V5:
+> +	case INFO_V5_WITH_6_REGIONS:
+> +		smem_dram_parse_v5_data(dram, data);
+> +		break;
+> +	default:
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	/* Both the entry and its parent dir will be cleaned up by debugfs_remove_recursive */
+> +	debugfs_dir = debugfs_create_dir("qcom_smem", NULL);
+> +	debugfs_create_file("dram_frequencies", 0444, debugfs_dir,
+> +			    dram, &smem_dram_frequencies_fops);
+> +
+> +	/* If there was no failure so far, assign the global variable */
+> +	__dram = dram;
+> +
+> +	return debugfs_dir;
+> +}
+> diff --git a/include/linux/soc/qcom/smem.h b/include/linux/soc/qcom/smem.h
+> index f946e3beca215548ac56dbf779138d05479712f5..223cd5090a2a8d0b29be768c6a9cc76c2997bbce 100644
+> --- a/include/linux/soc/qcom/smem.h
+> +++ b/include/linux/soc/qcom/smem.h
+> @@ -2,6 +2,8 @@
+>  #ifndef __QCOM_SMEM_H__
+>  #define __QCOM_SMEM_H__
+>  
+> +#include <linux/platform_device.h>
+> +
+>  #define QCOM_SMEM_HOST_ANY -1
+>  
+>  bool qcom_smem_is_available(void);
+> @@ -17,4 +19,6 @@ int qcom_smem_get_feature_code(u32 *code);
+>  
+>  int qcom_smem_bust_hwspin_lock_by_host(unsigned int host);
+>  
+> +int qcom_smem_dram_get_hbb(void);
+> +
+>  #endif
+> 
+> -- 
+> 2.49.0
+> 
