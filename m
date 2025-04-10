@@ -1,100 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF46326A1D0;
-	Thu, 10 Apr 2025 10:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B654281344
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744282324; cv=none; b=BNJMy7MPbYRylQKh2kiiXKXAntZXQSolqS/SwTsZKLgE6xDlJLPE2XjWbHRL+aXHTnG6K36TQwOBoJVsxHeti6IOk9ZAngybOG9BvKOmuG/jwV4EFN7kDZNu/t+vMOnsG9FRC8viTSqpbKHSkbL5fOHt80ON8G8KBYQ/ENSl4cM=
+	t=1744282341; cv=none; b=r+b/fi5I60n6+UEgyWR4E2T6yJj2UyW5M+hPNdPb42qo59uQglgZ3erJcc+0H7SR26fjk4reMuDMlRxEUm2ZzuJFyqp9RtTHYsM0U6tYxhXfRpnBNr9/6RTGTzCcmbOwBu5bYBjp1dZ0k5fC21a1zpy9eELtqbnBLvCgxzShpRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744282324; c=relaxed/simple;
-	bh=hlovCCmgEdamdT8EztlgaIRBSh8lo89vsjhIHctmVUo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LXAOfjzH4ADEfz/SBde0fLN2dBvb24rklOhYVsZlTnkjk+0QhM27sSBem/7uw1MYn+Szx4DOVnf9FTyez8ZxZRUJGjshf7GwM5ZAKf8hcttZFfBLj9eCThVTe+qN7hR+SVLyASfjp0BouMhDXD11f55LcRNQ8VrZfD2Sv2wCYWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvZlJF5F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744282341; c=relaxed/simple;
+	bh=1jL98FxzSf4s5tHDEZgWQVWhqUhDWULIaZUepIR7WWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lvRdWvF/zwRbgHIFizcTaFxdWrEpELESHOIEnrSE63mpXR+XELio4gXBkJDd3LHcH2W3E/xGeZ/a/XYYGA/3bOJOQ4kxluz4GhRkNkKSVHkjDJmwNK+x1KkW/hoRoyi9UvxhbWdS8G9IdzZLeAFz0NlEFtEEdyYgKoQClYIR5Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CvabugO/; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvZlJF5F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2842DC4CEDD;
-	Thu, 10 Apr 2025 10:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744282324;
-	bh=hlovCCmgEdamdT8EztlgaIRBSh8lo89vsjhIHctmVUo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HvZlJF5FsoBTWQN8RX/rjzTGvuLCmCB9WtTN6b5aR+OSHLP1UUvn6+puJt2Io5a+s
-	 QmfrbvD0eGcJNsuhUtqyKNtt4ofeqLiTu1hvr7RHN7lxB5Ifx23SG499XfND52AAb3
-	 X1ETe8UexSH6l7Sfh4rfHIHIxDnfo74/vIsn7WtfKddvUdnfH5Qp8WOpSF5ywnaSGN
-	 H71D4VA4zbRJH9Eivac8Z90Nu1PvgwSgJ76OR8NM0D3T5wkZMN+k6plK8XCQACnmW+
-	 Ymr0rmZI0/syf6cl+1Q3triaS7KgV72dK98ykoRvHileuHL21SHRg7o2YLR5wOJ6p5
-	 JYFTge5LhpUNg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u2pVp-004Bdn-Ee;
-	Thu, 10 Apr 2025 11:52:01 +0100
-Date: Thu, 10 Apr 2025 11:52:00 +0100
-Message-ID: <86jz7sl25r.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	darren@os.amperecomputing.com
-Subject: Re: [PATCH] KVM: arm64: nv: Forward hvc traps if originated from nested VM
-In-Reply-To: <4d1bdea5-43c3-4ca9-9275-feadf158e86e@os.amperecomputing.com>
-References: <20250410070743.1072583-1-gankulkarni@os.amperecomputing.com>
-	<86mscolc0b.wl-maz@kernel.org>
-	<4d1bdea5-43c3-4ca9-9275-feadf158e86e@os.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvabugO/"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af579e46b5dso514903a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744282339; x=1744887139; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LFjJEsl0KPwTjl343CDDvY9GIcYnXS0XMMT/i0ap3iE=;
+        b=CvabugO/HoviUSL0iwuv4yVi5L1mJdSGCSGBX7L6Cyc9QhI/R5WDXZMSgxhjM4KDHO
+         W3P2dtxRu8J5cRcJH2rzQk1ECl6KVkV1KFnTfcjbqFqSQCYhn0Wljs9eeJncKEopt1Ty
+         yEeIe7ml1lfmY7vp5nlW3LBa4U1/Rgrgk2AVWu0/jzNxFutd+SYSy5iWot6rg86NOkmC
+         8bjN85kABuCl636adgO2AVaiDe1U6I7nybURDWhPrZqOU25AqWPpYFW2RDlHmPzcyXk2
+         hLJdDlCBXglXyQAdpnjV9O1UhoHOFOONiPWJTPdShKy3K9RI9bajWUMqKMdibxUUjKHT
+         t9Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744282339; x=1744887139;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LFjJEsl0KPwTjl343CDDvY9GIcYnXS0XMMT/i0ap3iE=;
+        b=LhjWGhHC/+d8Pg2NKzndZwhfnb2eRr3pEjX/m6oTzuix/6QMa4kFAV6wu8KrBixIgl
+         OkaoCUUrimaDJKPbXUnIM5yB2FwK8xQv3iUMRqF72V+Q7rHLbuqgx4Y0w4tp3QPiMIXo
+         KoZo6Xz7XSFoFwkgyAbUrxv7SURl4VsUt37dIJXmPWaNZgQrZ52vifgkCstcMvURV0i4
+         mf7TBhyblBd8xzhxRTfss47BDNLbEGWEFpjB8r5hEpiybTLj500cJrQvVJk6w1W+Wvp6
+         vBhzYsxA2l//EbrYKFg+bz7GEj7twCVR/h3XHoRL6UrlMhpEYZT0BwgAT2VJLO30aRZz
+         JzOQ==
+X-Gm-Message-State: AOJu0YxcdrBsV7RoyzYwquACanq5iT5D1iMQhLcQf8WvaEnthHDwAJct
+	dpP1Do3nKwRMFqB0mfBbwxs6sdnv+trj1qR3/PKjd5nIMT6MkJQ+vsi5MP1jxgIqoA==
+X-Gm-Gg: ASbGnctVjbmwL6kB8PDkyz98jLEZAVCiqdsjgNpcC7gS+4LnOg2puKkM8nMj1iN1KaG
+	WWhrxdg1FPxsELMIL3uqLsVdQgUVpmNUSzXbRj4FF80lSrvKK/I9f1bycMBq6hgEpze1omlhJNv
+	jhksh7bEQjllh+CGMpvdcshTWHKoX9mNn2pMRa+iNFMkKS7SLfn4MtLFkvW1r5lcyn3Ep4vtcJo
+	92l+HrRsAyk7ZmXqDfw4uId4T9YRGmctQt+8uwQ50Da27zHaqPFseyYL7sWmE9fC7eE+cLigVvh
+	i5bwbTZiWvbT+Y5S+ZtRBfjHTfs3OLSZ075HuoWrup5ACQnEJSdTpidPhjf7PYVTm35K7YgeKds
+	3mwG3Mw==
+X-Google-Smtp-Source: AGHT+IG7zOSlcJqePm3JnMECI3YLLUHsnDD0zhMw+P4vDzQjOkFRq6ETsmdoaORwjWeHynHpZfAkvA==
+X-Received: by 2002:a05:6a21:6d81:b0:1f5:706b:5410 with SMTP id adf61e73a8af0-2016ce19a25mr2571669637.38.1744282338696;
+        Thu, 10 Apr 2025 03:52:18 -0700 (PDT)
+Received: from ubuntu24.. (36-225-108-143.dynamic-ip.hinet.net. [36.225.108.143])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a11d2c1dsm2665568a12.38.2025.04.10.03.52.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 03:52:18 -0700 (PDT)
+From: Cheng-Yang Chou <yphbchou0911@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de,
+	corbet@lwn.net,
+	jserv@ccns.ncku.edu.tw,
+	mingo@elte.hu,
+	peterz@infradead.org,
+	Cheng-Yang Chou <yphbchou0911@gmail.com>
+Subject: [PATCH v2] genirq: Fix typo in IRQ_NOTCONNECTED comment
+Date: Thu, 10 Apr 2025 18:51:43 +0800
+Message-ID: <20250410105144.214849-1-yphbchou0911@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <87bjt4tnjz.ffs@tglx>
+References: <87bjt4tnjz.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, darren@os.amperecomputing.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 10 Apr 2025 11:20:24 +0100,
-Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
-> 
-> 
-> 
-> On 10-04-2025 12:49 pm, Marc Zyngier wrote:
-> > On Thu, 10 Apr 2025 08:07:43 +0100,
-> > Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
-> >> 
-> >> It was discovered while trying selftest(smccc_filter) that the
-> >> hvc trap is getting forwarded to guest hypervisor even if it is
-> >> originated from itself.
-> >> 
-> >> HVC traps from guest hypervisor should be handled by the host
-> >> hypervisor and traps originating from nested VM should be
-> >> forwarded. Adding check to forward only if the hvc is trapped
-> >> from the nested VM.
-> > 
-> > I disagree. HVC from EL2 must be routed to the same EL2. HVC from EL1
-> > must be routed to the EL2 controlling EL1.
-> 
-> Thanks, Understood, In NV case, hvc has to be forwarded to L1
-> irrespective of it origin (L1 or L2). Need to add hvc handler in the
-> smccc_filter.c for the vm (when run as L1), so that it is handled and
-> returns with required args set.
+Fix a minor typo in the comment for IRQ_NOTCONNECTED definition:
+"distingiush" is corrected to "distinguish".
 
-Why? This test checks under which conditions an HVC/SMC gets routed to
-userspace. What does it even mean to test HVC if it doesn't make it
-outside of the guest itself?
+Signed-off-by: Cheng-Yang Chou <yphbchou0911@gmail.com>
+---
+ include/linux/interrupt.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	M.
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index c782a74d2a30..51b6484c0493 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -140,7 +140,7 @@ extern irqreturn_t no_action(int cpl, void *dev_id);
+ /*
+  * If a (PCI) device interrupt is not connected we set dev->irq to
+  * IRQ_NOTCONNECTED. This causes request_irq() to fail with -ENOTCONN, so we
+- * can distingiush that case from other error returns.
++ * can distinguish that case from other error returns.
+  *
+  * 0x80000000 is guaranteed to be outside the available range of interrupts
+  * and easy to distinguish from other possible incorrect values.
 
+base-commit: 92b71befc349587d58fdbbe6cdd68fb67f4933a8
 -- 
-Without deviation from the norm, progress is not possible.
+2.43.0
+
