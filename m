@@ -1,102 +1,117 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF738F80;
-	Thu, 10 Apr 2025 03:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6013638F80
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744255739; cv=none; b=fKa5Kxmh0bPwCdUbF9W5Wgo40uPsm169A1GGarCrL0ZNNgg4XciL7GMTKDe/h6/8+jlSuE4j7zLsxLxyrkMvx7dNakt+9tF5u27QZT+zPIP/zsy/DGSeIjJoaV5DsPJsk7eoG84Y6ODRYbYhTx2/WInBI6qEyhJxbEs8HaDOr20=
+	t=1744255789; cv=none; b=IEPfgfIq4vBg+xQGYeuknckLgwERQBpVvPCWTe3NteiQ2fNpG1CMX/tj+/QRiXB7e5OKdjz7Z1BNaTbYo+zLg9QCIpPPWgtdWksVMVzCbZURweMB3uDEUmsnN937WImA+KJtDPnmulWQIS6RYYO0jLAcMjTsB3JupuPhuLzTnC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744255739; c=relaxed/simple;
-	bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c7hNMKhoF23aIELNjaMt3pGTFwbElweZqLRM1tHefrEuyxK9dh0OqsIOg4+I2KbUvzsvnUwnBhP5s8mdwMiSHJEuKeQmVCho199wk5Sa1MIfaoQMR9EkMpxWtnLq4Ynn9jwjAkY9hbOFlsa9xrra6rik+PJs3x3tFkcV1Ami2zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KBa7mlap; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744255789; c=relaxed/simple;
+	bh=2NpHEaLNdtth1Mi0nS15N5j7cpzBfZETBXNOF/u9uEA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=gsnaZMXRmCr7cDo1xvGhHEDPKW69gmbn26hgID1HvbjgNgIs3MDs6DhjNQeRtfJ61d4jsBXjJchWUdIUYWuwrdyEDEx88rH/C0XtXtdqEDwnsf/vFltCzzVoxoHHd+JdP3gYphVvs1ScYvKXpyjk+WfuhLgzm8gLBQwszVH1r+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=mWF5Vh3T; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBa7mlap"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso1515135e9.3;
-        Wed, 09 Apr 2025 20:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744255736; x=1744860536; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
-        b=KBa7mlapEi+XYZ1G7ob00H/Gj6IZR9kKJIdqFmUo6VVVd8/FQkz1YsC0fu8oaJGJL1
-         tedgv52S8CqvFC516b9w3ulePMJ0kn4VG+OD+bA4UcIQJoYPII4zqpzjJmeE7UWl0s+q
-         rGuJoxeGQ1e4bCemEY51xPtLZvzvMZV6dYSv174XPnIiIOolVA8H4YLMGHms0QFA2bZx
-         XbSHY1MY0O+8pesPoRBY20BP9Zj3qM9vo9QFG4x9UA+FLdP0LUIBe7NER4z7JejZqJzq
-         UN16u9W0C3ggnAusQml0NKGOImlOljkrF2Vu6yUXIFI6t5HOdaU+PQtAv5E0QvXlYTUS
-         e1Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744255736; x=1744860536;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
-        b=RElQqV90WDiuMLP228tLhZE5wnyPZTnM4RQLoXcVFra5vhCp+7pwtBIZDY8a7iwL85
-         759vCzmTpztSe8ke+mqp5mgJGw+yOCwkpZidkA0QqzBA2yH3qzawI4plELcney3mUt7d
-         KvySYtNa0nPJsyudyXPfKh/mqSZ2Rel2eryG1kkIYMabylc7LAwZBdoaVr75+16McZRX
-         B6v0Nhx8F77e6XDckuEGOzQImBwGy6Uag6Ipr3FMiT/PwnBCnYOektrvpC3o72MHAzDo
-         Z2YhQ+pROvkZA8KgVAHYSxEZMvnUtilarsDTwaCrhwNCrdBMLn2p8lEOPTvFCFQMCeRl
-         Gkeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpE0xz8wZgSL0iUodjVorMlb6IcNiLjPJAcZC0im4sztH5UicDqbbqNbhFI46ZGjBA6Qu2czyATnX7oYA5@vger.kernel.org, AJvYcCV2nlneVOcm71IZmDT5YjXfd30mETWCHV8ubZToGvBRtpy/VWMM1uVSnt2UJV3T2VeOwOo=@vger.kernel.org, AJvYcCXL6En3dPo16G21GwAROZt/xFIlhsQEN9UwbBlJIjNYnri1FfQpPZnoIlUb8w9Pn7epTUQwDA/vL904JcJ3ST1fCwjE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa/N9Bm2xWoEQQjVG9VepVyqK9xCygcCUex24iNXfARKaXmxe8
-	1EBR3lcrj2objFf6ofCI2KWWYdA3ZjWT9WveDh6+Hcb/3a3V33TXZhwjSV3ue2leQQa7fxyTAmt
-	EzPrS6DnWJS8X3KQ5D5QqjlM21Ag=
-X-Gm-Gg: ASbGncscjpcKgldVdBUQR4cwzN6wjukgqZV9dPk+sMrab7csXDlM4/9s2KKkFoDk8vV
-	63IVcyzuNvVPPunzBKOJnJb9dDOyG9k1BBQ6+J0DxKJ5UXIBbxOGQgUv4a9akD28WUOc/3YSCX4
-	wmkfGZzdeAyp2e7GBZlYEZEsjtxipPy23bVm1liQ==
-X-Google-Smtp-Source: AGHT+IGaWEojXqplR70DbA9KIqtKUCqO8VdfLfrSloms0d9yOELhm5b7xSv8e9WS2CXXMJ/1dZ+1aka/ieMX4Fqfd8o=
-X-Received: by 2002:a05:600c:1c86:b0:43d:160:cd97 with SMTP id
- 5b1f17b1804b1-43f2ff9afa2mr3886615e9.25.1744255735922; Wed, 09 Apr 2025
- 20:28:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mWF5Vh3T"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53A3TJ593880926
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 9 Apr 2025 20:29:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53A3TJ593880926
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744255760;
+	bh=x91O/a8399AGdLpecJShIVjuwCmnNhTgSTF43PxTOWA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=mWF5Vh3TgHYQXjyZgR5qbKKntu+QiK1rsGXWA4tz8+cxYhnAK6bPznYnd+apTngDB
+	 KQIbUiUOu2+Gq8Q9FR1iIeZV5/Emw1hZTxBz0gvpqpwmxGWNeKyfj+nwohEhla8Z7c
+	 KXVOWtMy2HyJtI+v1z0I1KPkobid9y0NS3VZZOLa++5ChtcY6nR1IG35m7CNYwpC+z
+	 ZjCYgpT94gVfcEQObJWwCdvRSsRrFWGVefvkRqfZmYbTcPPoTcHoDA/Co7+Rzw3tuL
+	 WpgoZ6WwUsOSyZJyTDpek9ogjLZj5uUTVMUjVkJ6Eun0MdzOY7ZdZ+uDZMePXxQmkX
+	 CpE4n+W+KDgOA==
+Date: Wed, 09 Apr 2025 20:29:17 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Xin Li <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org
+CC: Juergen Gross <jgross@suse.com>, Dave Hansen <dave.hansen@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_06/20=5D_x86/msr=3A_Standardiz?=
+ =?US-ASCII?Q?e_on_=27u32=27_MSR_indices_in_=3Casm/msr=2Eh=3E?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <63ab3ea9-c55d-48d2-8344-fb4314baf240@zytor.com>
+References: <20250409202907.3419480-1-mingo@kernel.org> <20250409202907.3419480-7-mingo@kernel.org> <aed43a6a-aca9-4c81-af1a-775f5858ebe3@zytor.com> <9c014962-d4cb-4e68-be15-efbe2ea26531@zytor.com> <63ab3ea9-c55d-48d2-8344-fb4314baf240@zytor.com>
+Message-ID: <3B57B3E5-47C9-4196-AD2B-44916E18B6D0@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408071151.229329-1-yangfeng59949@163.com>
-In-Reply-To: <20250408071151.229329-1-yangfeng59949@163.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 9 Apr 2025 20:28:44 -0700
-X-Gm-Features: ATxdqUECZ8hBo3V-Su9Z4qQwgeWEVH-SqaCOC-Ef80OY_wkuUAeTqwDGyTS9qH8
-Message-ID: <CAADnVQKAUWaiV-D1noBnWvLgvXCr1PNQvby+0arFei+tSwzz1w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2] bpf: Remove duplicate judgments
-To: Feng Yang <yangfeng59949@163.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 8, 2025 at 12:13=E2=80=AFAM Feng Yang <yangfeng59949@163.com> w=
-rote:
+On April 9, 2025 8:18:12 PM PDT, Xin Li <xin@zytor=2Ecom> wrote:
+>On 4/9/2025 6:37 PM, H=2E Peter Anvin wrote:
+>> On 4/9/25 14:55, Xin Li wrote:
+>>>=20
+>>> It looks to me that we don't use the "const" qualifier in the code a
+>>> lot=2E=C2=A0 However since the MSR index is usually not expected to ch=
+ange
+>>> inside the MSR API implementations, would it be nicer to add the "cons=
+t"
+>>> qualifier?
+>>>=20
+>>> The same to the MSR value of MSR write APIs=2E
+>>>=20
+>>=20
+>> "const" on an automatic variable (including function arguments) is usua=
+lly not very meaningful, unless it is manifest as a memory object (see belo=
+w=2E)
+>>=20
+>> Personally I tend to use "const" anyway in more complex functions to ma=
+ke it clear that a variable is not expected to change while in scope (and I=
+ also prefer to reduce the scope of a variable as much as possible), but fo=
+r a simple function like this it is more clutter than anything else=2E
 >
-> From: Feng Yang <yangfeng@kylinos.cn>
+>Good point!
 >
-> Many judgments and bpf_base_func_proto functions are repetitive, remove t=
-hem.
+>A question NOT related to this patch set, the MSR write API prototype
+>defined in struct pv_cpu_ops as:
+>    void (*write_msr)(unsigned int msr, unsigned low, unsigned high);
+>
+>Will it be better to add "const" to its arguments?  I=2Ee=2E,
+>    void (*write_msr)(const u32 msr, const u32 low, const u32 high);
+>
+>> Now, "const" on a *memory object* (pointer target) is a very different =
+thing and should in general be used where ever writing to an object is not =
+going to happen=2E
+>>=20
+>> An automatic variable becomes manifest as a memory object if its addres=
+s is taken anywhere in its scope (using the & operator or an unindexed arra=
+y) and the address of that pointer stored=2E The last part means that the c=
+ompiler (if it is is smart enough) can take a sequence of operations equiva=
+lent to *& and eliminate it=2E
+>>=20
+>> Keep in mind that, for C (not necessarily C++):
+>>=20
+>> 1=2E in *all* cases "foo[x]" is exactly equivalent to "*(foo + x)"
+>> 2=2E *if* "foo" is declared as an array type, then "foo" is exactly equ=
+ivalent to "&foo[0]"=2E
+>>=20
+>> "const" in C a little less strict than you would like; the only way in =
+C before C23 to declare a "true" constant is using enum or a #define macro =
+(which of course pollutes the global namespace)=2E In block scope it usuall=
+y doesn't matter for scalar types and const or static const will work just =
+fine, but it is only in C23 than C imported "constexpr" from C++ (which has=
+ had it since C++11=2E)
+>Nice to know=2E
+>Thanks!
+>    Xin
 
-Judgments?!
-
-"
-A judgment is a court's official ruling that resolves a legal case,
-determining the rights and obligations of the parties involved
-"
-
-Please use AI or human help to make commit log readable.
-
-English is a second language for lots of developers and maintainers,
-but please try harder.
-
-pw-bot: cr
+No, that makes no sense (it would have absolutely no effect=2E)
