@@ -1,158 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B8A205E31
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243C4205E0F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269980; cv=none; b=V1I7G7eAKlCY+2FoHQ/zfKIqWsvyfRaDiGqaD+Bah/Qg3FH4SoYqXqlnU1nbqCOaZJflwRulR7q2RyUejDGcdWTgAtPIV3nPPdzljoZaY4JRdZAk1G6UTP0SlQRWyOY6kO5yCAhhiPx794qtRjnIKYyIRUlNfxsiP2JdrWJYTrs=
+	t=1744270009; cv=none; b=CDuK/HJ56XeDOqbuxBwQ5fQ54g8hBmpktDVFkY+JBpL4YsWnphXYNgb0RQ780v46BRoVg78M13pX32pghyQWlYqAbr330HPIQUyYdTdiGGsuMrduLRXXd5so+YDF1Y4E7qy8GgbitP94ysxNMCkEEASFr5Eev8hkWYKN+iiL6Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269980; c=relaxed/simple;
-	bh=0xlIXYUBUvG3wGtvpTNW3LrzwtVDKeMirqEaW1TlAFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BVFL9LmbgJ7vGO13J3pK3Etb4qyGzSrRppANp9UZztg0TBFlD9m2ziWRhqTFGR9tGHMIZm1YaeFnYl44gd87IVWps6X7bemH5BY3CEnEP3YX5mkpyhvoeU/O79rPpv1/JqUvnT1nM3Zchp7z6ydUZc4r7+LeKJKT2bIre3hU5aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DGviBbw8; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744270009; c=relaxed/simple;
+	bh=TCUH1SBss1gxp10jb4fK1DFVV9YBZD0TZm9QEn0QPW0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=YjKGIQ/0zO2rI6AvmwGjawyUpgrZhTmFicqSS0nUsKZLXNLxjQR3VE2MuhTneTigdSbAD+NaiIN/nUMHkN9vssZRkKrOHS5t8nIls9W6T9k1Ay6zBfp7hm4zGSb/eodlXZg6Dqd2ZO3U+Ad8vj0M1o1Rgua9KEwxuzwVhlm488A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lTx2/JHX; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DGviBbw8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744269978; x=1775805978;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0xlIXYUBUvG3wGtvpTNW3LrzwtVDKeMirqEaW1TlAFo=;
-  b=DGviBbw8sBvw0vceXX0toN+COHKkTEP8j+xrVS7D1lw196oFplaM9E8x
-   7oRC11fJWVIEv31csn5PV/XClOXSqrSpU6B8hFGX2NOf7zsnoGiCTvOjn
-   qQ36NIIRwOrfOaEZKiQ/98VB5R4If+GB0T7CV5X9SkFBSbOWKD2vRHGzz
-   qtDgo69A/qCyFxjvTavb+4lPLqoOFmqI53FZjoloizMaxn0bGWXHeikAW
-   H6HkP2ZjT3MdQPgWjCGTxm4BttPrf/SdDc/hIU1QjT6bedKAis9hxWjE1
-   yXTD70zzJIuUlKqwZdaKvmQOjfAoh4IH4SDxuhWSOxczSoyCcrJLw54eU
-   Q==;
-X-CSE-ConnectionGUID: wvCzcG0YRnG9zbcl8v68Rw==
-X-CSE-MsgGUID: RNwfhaB/TSa7qWNgxR9NHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45866232"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="45866232"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 00:26:18 -0700
-X-CSE-ConnectionGUID: 1/99+IAFTrGcGsjkrZjS/w==
-X-CSE-MsgGUID: r5Dfg6khRFazoUjhz2nKwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="133683537"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 10 Apr 2025 00:26:14 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2mIe-0009lV-2c;
-	Thu, 10 Apr 2025 07:26:12 +0000
-Date: Thu, 10 Apr 2025 15:25:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: yiru zhang <yiru.zhang@mediatek.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: oe-kbuild-all@lists.linux.dev, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	yiru zhang <yiru.zhang@mediatek.com>
-Subject: Re: [PATCH] [Patch v2]Add ETE devarch condition in
- etm4_init_iomem_access
-Message-ID: <202504101502.T3kUYupS-lkp@intel.com>
-References: <20250409032917.7580-1-yiru.zhang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lTx2/JHX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=ikXpna6Wq9I0naSoBwdaKdMbQJYhH4jOYuXaHVnwYbk=; b=lTx2/JHXJInUjHHCqZJavDL3kc
+	Zgf3CNBCcrm5L+rq9CPQjVw/I0DHg7ctNmB9uBeR7Hkz7C7hCCGi7TUVqz5/01bNUtejJSDnLo3wd
+	cC8UN+zNzIPT+YyRsaSCoWr/EYH2aar8gxcHJj6HN92Mx2zJMuOGekX1n/RZfXwSDYIFSJDB4LYkc
+	+yCwLYm3XviLFEd+4iy8IbhV+9wyb4e7vRnvty0FTCkBKJ9Irpd95jEbWARypLpVJRdn6oENN8lvq
+	mwEGXRU9WpTOT9JHUCBSgrWbE3aRTzcv+NUxfB/xb3MeQrYD34aUfAmBzw19LQn5Iymn3OUThIRFn
+	7/9sPELQ==;
+Received: from 144-178-94-38.static.ef-service.nl ([144.178.94.38] helo=[127.0.0.1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2mJ1-00000008lsT-1LAc;
+	Thu, 10 Apr 2025 07:26:35 +0000
+Date: Thu, 10 Apr 2025 09:26:35 +0200
+From: David Woodhouse <dwmw2@infradead.org>
+To: kexec@lists.infradead.org
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ David Woodhouse <dwmw@amazon.co.uk>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
+ linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+ Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ jpoimboe@kernel.org, bsz@amazon.de
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v9_0/4=5D_x86/kexec=3A_Add_ex?=
+ =?US-ASCII?Q?ception_handling_for_relocate=5Fkernel?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250326142404.256980-1-dwmw2@infradead.org>
+References: <20250326142404.256980-1-dwmw2@infradead.org>
+Message-ID: <652D1332-6C06-4F40-B72A-44B20EDC011D@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409032917.7580-1-yiru.zhang@mediatek.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi yiru,
+On 26 March 2025 15:16:00 CET, David Woodhouse <dwmw2@infradead=2Eorg> wrot=
+e:
+>Continuing the drip-feed of the exception handling support, on top of the
+>current tip/x86/asm branch=2E This adds output to the serial port configu=
+red
+>by earlyprintk, reduces the window during which exceptions can't be handl=
+ed
+>during the transition from kernel to relocate_kernel environment, and add=
+s
+>a kselftest for the kexec-jump and exception handling=2E
+>
+>v9:
+> =E2=80=A2 Rebase on top of partial merge into tip/x86/asm (commit 0717b1=
+392dc7)=2E
+> =E2=80=A2 Add kselftest=2E
+> =E2=80=A2 Update to cope with static_call() usage in earlyprintk=2E
+> =E2=80=A2 Drop the attempt at adding CFI support for relocate_kernel()=
+=2E
+>
+>v8: https://lore=2Ekernel=2Eorg/all/20250314173226=2E3062535-1-dwmw2@infr=
+adead=2Eorg/
+> =E2=80=A2 Fix UNRET objtool warning in exc_handler=2E
+> =E2=80=A2 Clean up magic numbers in stack frame for exc_handler=2E
+> =E2=80=A2 Fix i386 build error due to making the debug support unconditi=
+onal=2E
+> =E2=80=A2 The int3 is still a [DO NOT APPLY] hack for later, and I plan =
+to deal
+>   with that with a userspace test case based on
+>   http://david=2Ewoodhou=2Ese/loadret=2Ec which will exercise kexec-jump=
+ at the
+>   same time=2E
+>
+>v7: https://lore=2Ekernel=2Eorg/kexec/20250312144257=2E2348250-1-dwmw2@in=
+fradead=2Eorg/
+> =E2=80=A2 Drop CONFIG_KEXEC_DEBUG and make it all unconditional in order=
+ to
+>   "throw regressions back into the face of whoever manages to introduce
+>   them" (Ingo, https://lore=2Ekernel=2Eorg/kexec/Z7rwA-qVauX7lY8G@gmail=
+=2Ecom/)
+> =E2=80=A2 Move IDT invalidation into relocate_kernel() itself=2E
+>
+>v6: https://lore=2Ekernel=2Eorg/kexec/20250115191423=2E587774-1-dwmw2@inf=
+radead=2Eorg/
+> =E2=80=A2 Rebase onto already-merged fixes in tip/x86/boot=2E
+> =E2=80=A2 Move CONFIG_KEXEC_DEBUG to generic kernel/Kconfig=2Ekexec as B=
+artosz is
+>   working on an Arm64 version=2E
+>
+>v5: https://lore=2Ekernel=2Eorg/kexec/20241205153343=2E3275139-1-dwmw2@in=
+fradead=2Eorg/T/
+> =E2=80=A2 Drop [RFC]=2E
+> =E2=80=A2 Drop _PAGE_NOPTISHADOW fix, which Ingo already took into tip/x=
+86/urgent=2E
+> =E2=80=A2 Add memory-mapped serial port support (32-bit MMIO spacing onl=
+y)=2E
+>
+>v4 (RFC): https://lore=2Ekernel=2Eorg/kexec/20241127190343=2E44916-1-dwmw=
+2@infradead=2Eorg/T/
+> =E2=80=A2 Add _PAGE_NOPTISHADOW fix for the identmap code=2E
+> =E2=80=A2 Drop explicit map of control page, which was masking the ident=
+map bug=2E
+>
+>v3 (RFC): https://lore=2Ekernel=2Eorg/kexec/20241125100815=2E2512-1-dwmw2=
+@infradead=2Eorg/T/
+> =E2=80=A2 Add CONFIG_KEXEC_DEBUG option and use earlyprintk config=2E
+> =E2=80=A2 Allocate PGD separately from control page=2E
+> =E2=80=A2 Explicitly map control page into identmap=2E
+>
+>V2 (RFC): https://lore=2Ekernel=2Eorg/kexec/20241122224715=2E171751-1-dwm=
+w2@infradead=2Eorg/T/
+> =E2=80=A2 Introduce linker script, start to clean up data access=2E
+>
+>V1 (RFC): https://lore=2Ekernel=2Eorg/kexec/20241103054019=2E3795299-1-dw=
+mw2@infradead=2Eorg/T/
+> =E2=80=A2 Initial proof-of-concept hacks=2E
+>
+>
+>David Woodhouse (4):
+>      x86/kexec: Add 8250 serial port output
+>      x86/kexec: Add 8250 MMIO serial port output
+>      x86/kexec: Invalidate GDT/IDT from relocate_kernel() instead of ear=
+lier
+>      selftests/kexec: Add x86_64 selftest for kexec-jump and exception h=
+andling
+>
+> arch/x86/include/asm/kexec=2Eh                     |  2 +
+> arch/x86/kernel/early_printk=2Ec                   |  9 +++
+> arch/x86/kernel/machine_kexec_64=2Ec               | 27 ++++++---
+> arch/x86/kernel/relocate_kernel_64=2ES             | 70 ++++++++++++++++=
+++++---
+> tools/testing/selftests/kexec/Makefile           |  7 +++
+> tools/testing/selftests/kexec/test_kexec_jump=2Ec  | 72 ++++++++++++++++=
+++++++++
+> tools/testing/selftests/kexec/test_kexec_jump=2Esh | 42 ++++++++++++++
+> 7 files changed, 213 insertions(+), 16 deletions(-)
+>
+>
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on soc/for-next]
-[also build test WARNING on linus/master v6.15-rc1 next-20250409]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/yiru-zhang/Add-ETE-devarch-condition-in-etm4_init_iomem_access/20250409-113037
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
-patch link:    https://lore.kernel.org/r/20250409032917.7580-1-yiru.zhang%40mediatek.com
-patch subject: [PATCH] [Patch v2]Add ETE devarch condition in etm4_init_iomem_access
-config: arm64-randconfig-004-20250410 (https://download.01.org/0day-ci/archive/20250410/202504101502.T3kUYupS-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250410/202504101502.T3kUYupS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504101502.T3kUYupS-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from include/asm-generic/bug.h:22,
-                    from arch/arm64/include/asm/bug.h:26,
-                    from include/linux/bug.h:5,
-                    from include/linux/thread_info.h:13,
-                    from arch/arm64/include/asm/preempt.h:6,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/slab.h:16,
-                    from include/linux/resource_ext.h:11,
-                    from include/linux/acpi.h:13,
-                    from drivers/hwtracing/coresight/coresight-etm4x-core.c:6:
-   drivers/hwtracing/coresight/coresight-etm4x-core.c: In function 'etm4_init_iomem_access':
->> include/linux/kern_levels.h:5:18: warning: format '%x' expects argument of type 'unsigned int', but argument 2 has type 'long unsigned int' [-Wformat=]
-    #define KERN_SOH "\001"  /* ASCII Start Of Header */
-                     ^~~~~~
-   include/linux/printk.h:473:11: note: in definition of macro 'printk_index_wrap'
-      _p_func(_fmt, ##__VA_ARGS__);    \
-              ^~~~
-   include/linux/once_lite.h:31:4: note: in expansion of macro 'printk'
-       func(__VA_ARGS__);    \
-       ^~~~
-   include/linux/once_lite.h:11:2: note: in expansion of macro 'DO_ONCE_LITE_IF'
-     DO_ONCE_LITE_IF(true, func, ##__VA_ARGS__)
-     ^~~~~~~~~~~~~~~
-   include/linux/printk.h:640:2: note: in expansion of macro 'DO_ONCE_LITE'
-     DO_ONCE_LITE(printk, fmt, ##__VA_ARGS__)
-     ^~~~~~~~~~~~
-   include/linux/printk.h:659:2: note: in expansion of macro 'printk_once'
-     printk_once(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
-     ^~~~~~~~~~~
-   include/linux/kern_levels.h:12:22: note: in expansion of macro 'KERN_SOH'
-    #define KERN_WARNING KERN_SOH "4" /* warning conditions */
-                         ^~~~~~~~
-   include/linux/printk.h:659:14: note: in expansion of macro 'KERN_WARNING'
-     printk_once(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
-                 ^~~~~~~~~~~~
-   drivers/hwtracing/coresight/coresight-etm4x-core.c:1143:3: note: in expansion of macro 'pr_warn_once'
-      pr_warn_once("Unknown ETM architecture: %x\n",
-      ^~~~~~~~~~~~
-   drivers/hwtracing/coresight/coresight-etm4x-core.c:1143:44: note: format string is defined here
-      pr_warn_once("Unknown ETM architecture: %x\n",
-                                              ~^
-                                              %lx
-
-
-vim +5 include/linux/kern_levels.h
-
-314ba3520e513a Joe Perches 2012-07-30  4  
-04d2c8c83d0e3a Joe Perches 2012-07-30 @5  #define KERN_SOH	"\001"		/* ASCII Start Of Header */
-04d2c8c83d0e3a Joe Perches 2012-07-30  6  #define KERN_SOH_ASCII	'\001'
-04d2c8c83d0e3a Joe Perches 2012-07-30  7  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Ping?
