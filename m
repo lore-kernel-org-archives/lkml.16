@@ -1,118 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA79E21324E;
-	Thu, 10 Apr 2025 16:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628FB1E991C;
+	Thu, 10 Apr 2025 16:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744302387; cv=none; b=iUvbqTHOP8Lv/A9lCHT/7GllzjdoeqKZvHTd2n02/ku+X3AOWOM9wnRU5Srqv5Unjk0/vr9Sf/GISvBr8uQ92M5iMG5Ah6jxFceKaP6DLwdRRwEtnuRSwpBC2TJ4p9p8NFE7ihj1Xzl1zI1sVLCUOb2UvUeoN2w+laQlzHOmG0s=
+	t=1744302528; cv=none; b=LyqMCSrQP9B1gwbyLtL5O5+P4VkCX82SCMc9o0PabisDDaR7RfaencjoXCaaoN8n49pC1xt748lF/Ygf2OCcoQf7ZDEkI36WHTvDErn2NHr24TkTYNHfoINDTAziACAY5PE6iZoSgJr09HW3PGDDaEFQavFq+0fEtv/PfdYnHPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744302387; c=relaxed/simple;
-	bh=4PguwaFAXOUDYKLsldD8hprnRinLS29L76LJbAXk37o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=py/VqoPfX+nxFD9eVk196lOuAd3HYhPm67L13F2718ZRbegXiWEQjNLorur7UTD+uvNzODTYnHxnO6CuK/rEZIYTVQX4NZMCvZS7aQiMsh/KD7lQyD+mSeIl3s9Ann7M8vkErFMWszFO1sMZlbUXsJb3TGE9mrJsCqvO1jlFR2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cli/O/J8; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744302528; c=relaxed/simple;
+	bh=QFVnxkDPScY5o5JjRBfi89ROeQcvbBjrMoM7Sifl43c=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gvWbYLbwtLIcgrm7R6BBb7nd46BN985nUL9wN3BTLjKKxKioK9CkO9kv1l/GZJotR9pbVDv2oxx27S/tRX7xm8PeFonPk0ehSq+xn1sQfAKOSrC109RhnRMkQ6ABnNKrWbAW2rXRWOerf/7qQGBEc/KzB5WNeEPdmH9cpFAifgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kVdYyLTU; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cli/O/J8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744302386; x=1775838386;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4PguwaFAXOUDYKLsldD8hprnRinLS29L76LJbAXk37o=;
-  b=Cli/O/J8xRrtchxD9IVPc1VwxNKuEbcEV88QbhRYNeK8Ogtkc0IfgeTT
-   tiuyOE5Hjs5UcWNCJ/WIQA4Xj+21mUObwZNq6tmyOherEaQaMNAOUK7XO
-   /rQ8LBPTBsVIp9vFLVXgL9hvwwS27yim+NfCHs+7qZTCZHvrlKfsbN1Da
-   qQTa7E48GASl6NPdhr1ZNE8GlWBUWqg72IyMabW4erq+XIQZrt37K7oDC
-   WN+K/9tOQgCwRKQqN3ef2rs3fjLireRkgmsbPvqudeVlUZ01+RHwiN3KD
-   IrpPIQ9j+NJgCvuaOaguRMImAi4AOnFicK+jPWO/yiB+/UwvnQWSHvb5O
-   g==;
-X-CSE-ConnectionGUID: 0ODhkfrPRDOtXK8QvM1toA==
-X-CSE-MsgGUID: 7MI3zzoxQxmpCRXrGbV7SQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45726266"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="45726266"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 09:26:26 -0700
-X-CSE-ConnectionGUID: XcvdZQA0SMCR8Ax4YwbLFw==
-X-CSE-MsgGUID: YRWvO29RT0K9EwoXfOlNIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="166148824"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.92]) ([10.125.108.92])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 09:26:24 -0700
-Message-ID: <4792da6c-f7f7-414b-9725-5cb74e81a6ea@intel.com>
-Date: Thu, 10 Apr 2025 09:26:23 -0700
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kVdYyLTU"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8F2702047C;
+	Thu, 10 Apr 2025 16:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744302518;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iOKdgwDs5ciSws6/j91YCELuK7lTzKV3G/vRI8hyMQg=;
+	b=kVdYyLTUo58RvbTcwCOGmFOSSqCp0v8+Lq4jq8JXYm96/IrYOZnneKbNMTJeZRzEScJa8m
+	C7Li1l9HcoPoHzY8dBeX6hGyyVpBoVAwNDjgjAf+Dpq8DGcGiNiOWoOKnzBqJeLt9q7sE3
+	ct+awerz7t/y2W4qR800zi1BAyBiJpNVbdtjkojw9ZmUdClrvJMpVDX+0eZctSBSPwQNFC
+	1V5J0IiKJ3i31PaEDYTuOvRpnrlYo1mFcm4aUaD+agRC6UGGmMwq5htGzbgXfT1VGRucdR
+	F+r753nO1UXzv2PwfYAFwfsBnyiY/XVMeRflamVcHpDkRTBgtaJjdCxtDt9qsg==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Antonin Godard <antonin.godard@bootlin.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250318-b4-add-nlt-nl13676bc25-03f-v1-0-67e0f8cf2e6f@bootlin.com>
+References: <20250318-b4-add-nlt-nl13676bc25-03f-v1-0-67e0f8cf2e6f@bootlin.com>
+Subject: Re: [PATCH 0/2] Add NLT NL13676BC25-03F panel support
+Message-Id: <174430251636.3714911.2779384413530827919.b4-ty@bootlin.com>
+Date: Thu, 10 Apr 2025 18:28:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl: core/region - ignore interleave granularity when
- ways=1
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
- dan.j.williams@intel.com, vishal.l.verma@intel.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com, ira.weiny@intel.com
-References: <20250402232552.999634-1-gourry@gourry.net>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250402232552.999634-1-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdelfeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejheeiledvkeeigeeluddtleejvdfhleefleffffeitdetvdeltddttddtgfelteenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgdujedvrddujedrtddrudgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrmhesrhgrvhhnsghorhhgrdhorhhgpdhrtghpthhtohepthhhihgvrhhrhidrrhgvughinhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepqhhuihgtpghjvghsshiihhgrn
+ hesqhhuihgtihhntgdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrgh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
 
+On Tue, 18 Mar 2025 08:58:27 +0100, Antonin Godard wrote:
+> The NLT NL13676BC25-03F panel is a 15.6" LCD-TFT LVDS panel. It is a
+> single port display unlike the NLT NL192108AC18-02D. Add a binding and a
+> panel entry under panel-simple.c.
+> 
+> 
 
-On 4/2/25 4:25 PM, Gregory Price wrote:
-> When validating decoder IW/IG when setting up regions, the granularity
-> is irrelevant when iw=1 - all accesses will always route to the only
-> target anyway - so all ig values are "correct". Loosen the requirement
-> that `ig = (parent_iw * parent_ig)` when iw=1.
-> 
-> On some Zen5 platforms, the platform BIOS specifies a 256-byte
-> interleave granularity window for host bridges when there is only
-> one target downstream.  This leads to Linux rejecting the configuration
-> of a region with a x2 root with two x1 hostbridges.
-> 
-> Decoder Programming:
->    root - iw:2 ig:256
->    hb1  - iw:1 ig:256  (Linux expects 512)
->    hb2  - iw:1 ig:256  (Linux expects 512)
->    ep1  - iw:2 ig:256
->    ep2  - iw:2 ig:256
-> 
-> This change allows all decoders downstream of a passthrough decoder to
-> also be configured as passthrough (iw:1 ig:X), but still disallows
-> downstream decoders from applying subsequent interleaves.
-> 
-> e.g. in the above example if there was another decoder south of hb1
-> attempting to interleave 2 endpoints - Linux would enforce hb1.ig=512
-> because the southern decoder would have iw:2 and require ig=pig*piw.
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Applied, thanks!
 
-Applied to cxl/next, with fixup against 6.15-rc1
+[1/2] dt-bindings: display: simple: Add NLT NL13676BC25-03F panel
+      commit: b82f66c76b8e3d9cabc06a68c8e0401e3f96fecf
+[2/2] drm/panel: simple: Add NLT NL13676BC25-03F panel entry
+      commit: c180b00366d99911f4573dca5ac97a8633f2e8f9
 
-> ---
->  drivers/cxl/core/region.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 04bc6cad092c..dec262eadf9a 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1553,7 +1553,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		if (cxld->interleave_ways != iw ||
-> -		    cxld->interleave_granularity != ig ||
-> +		    (iw > 1 && cxld->interleave_granularity != ig) ||
->  		    cxled->spa_range.start != p->res->start ||
->  		    cxled->spa_range.end != p->res->end ||
->  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
+Best regards,
+-- 
+Louis Chauvet <louis.chauvet@bootlin.com>
 
