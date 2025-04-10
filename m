@@ -1,123 +1,110 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37171C174A;
-	Thu, 10 Apr 2025 14:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D08D28136F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294753; cv=none; b=S1QiRYjrnUCCORi3fpqFb/XJ/4Qt1HPcMkuwDcjXLIcOBHzcWRmFu5VAKjXUKMNCBWXcOA9fFdifezM2t6O9rtOImlx3mGNLshbrdTjXU/8sv6gnn+guaNhav983SScG6W+T8MeaSG6K0YFSHT3gFbC7KexRbTIEnTtNQldqLfU=
+	t=1744294807; cv=none; b=YxkVb32bpikFojsZN2boo/PYNC+wrbk2WvMfKcneOS1rlWvE62x6CxjInHPcroALYNrTW6YVckV0zjcn+ctzkyi4Fejk8Iw2yp1cmOrZTR2x/MwI5RSQJsmaS/V7KIenSZLra2mBFDhEDltwyOqF0LYwqONuLK0tc85TfK+ql8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294753; c=relaxed/simple;
-	bh=LL8nbhHsK/lDnT8ira4baVwLu3Ih8EQqYk76ReEqjIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fOGGBSoYzgDEnndUvKfJmvtvDzlPtSXt0YTRcHxUYEzWxzkmSujEHAv1nmNHhB8JE5O6Ituji0dFLSPuNsdx8eI3LT3eckxSxJY93maxQHLXz5ZOAbNPcF97Bn2AKnZFsgT+Lqfby7ls9GCUZpd6m57bR46KGpygUvFhMPFZ9jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AoK0qpbc; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744294807; c=relaxed/simple;
+	bh=VnOYWb6385MBKS5C5EbcoWnAXa7f1VfLxfL6VmciqGM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MhaH/QFfu91EO6UUFnrxRoojHxMYr9CilCudXj+cuSQiwSB+2CGMGz+SdgOgWPapzN+b13ewi5fNpjgzo4gn09uL/RGZG5E6LEgKjU2mqGBUlYG06fx3vf1Y96eEh31r9tl826l//B1oyD6khqlRr6yXXmYuOvnr59JdjaSWyIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=eWjhJmLq; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoK0qpbc"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30384072398so756377a91.0;
-        Thu, 10 Apr 2025 07:19:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="eWjhJmLq"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c2dc6c30c2so228785fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744294751; x=1744899551; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pg20oY4fk1g4YTuTud9xw6LT1kx/bgpyeNN+Nb2KPyM=;
-        b=AoK0qpbce4fQ5tq3QZi5Axeql2qhOWF3L9kE154EI1SX4TX9g67yQQ1JtPAITxBVZs
-         aW7OkXvDzkXWD8PlURBw+PLIgV0T6uWFZcU9l/C55XF/kHcIRrofHfsfDQueCOgeVywx
-         EvA9m0OQUF/+9gz9UPlKK75fL5jHz8fQG3dZvM1gTREze58qxKcvNDOsQezA6k63Luuz
-         a/qkz1R8vtKvugAD0cDuGOju+csi5o9X9LroM2/fApcNwY+zxV5eE5uir6OTnjxJYTC2
-         PFgi7sOq1IXxjO7P1N3l2s5thDlXnBUk3OillQTPkxUsQOcG0eAt35OmUWhdyUzQK8Ml
-         nhrQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744294804; x=1744899604; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cFmetQ0fd8tg9OjN42SYuqaihg5CWxCtulYfskMf/mA=;
+        b=eWjhJmLqNcEO4AQUAqmQj5v0Z0waQQXL5JBGOdL1fRLg8I1QlN/x+9vLj+2k0N1vu7
+         +P8nINHP4A1R0NH3imjOYdvwyIlQLSmjOo0bcU4MSTkO1GEptNOjw5nuYjCJY4dpgc13
+         RuWvBzLtW3zJBn41o0mGkBq/r3JunV+zXyKQtFo398rabzEzrBSWzxcmuwVo1cf1QsEt
+         qb2UYv9fmsnkh1Aqq2FLhuQsjCg/3CaONtRaj0GUGDs+MamUddZPQp/m64pVHYourTqB
+         2ptBaD8pg+E/Ae1ICZuXXtcPlhoStkWRDhBOv/rYkhnwab1UgR9nv1zXAwSt5r6NGUFJ
+         7GHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744294751; x=1744899551;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pg20oY4fk1g4YTuTud9xw6LT1kx/bgpyeNN+Nb2KPyM=;
-        b=maXMyJC12vybVQpiCFT3U2mmuz6yZ98cYXOPKHEpEdaT97/Bedf+f8h5pQnt0oHuvg
-         5ndVEuPGO+BD07Gt+tcXebgEsnlueKfEKyLW2sEPdgw+0rrXnbwSGMx9ykNMsJS+uwTs
-         ZeqdQNjJ9V/dDqWe2eB2LtvN86Pzv67dgGX8ecyNoOOeKC+DC3WKl4s6A+mtAidFTVWE
-         9mATtHh6+xVKlReBjl4U5D16br8kCIj73LS6km3iRSS7kiL90ufcasMx2/jXyBuboBgc
-         934Fc2KwSiNC36EpRom/v31HMqugw0UAfzSWB7wvjHNNRplAr4cj6S6QZnR8qUQgNzqn
-         cn0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUlG/NpiyFE6WjZ3UpcFs0ST30dpSp7AQIcdD1oAy3IRIGgPWt+lLsEo7yS1z5UU64qxxhD1B2FL8WXicGn@vger.kernel.org, AJvYcCX3oCaHd4SgSP8BQYygn8MXevjlDaxjTJKIwmQh8V76KDe4R3FbRgtqUjV4lfxZ22FqojkFJZwB6znRiNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF+Jyus4IxGEaRxwuracn4CC9EBnT2sH/36fCw/V0bdeGfgyeq
-	4EaSD86iPavAqy9TP2nR9yrScBPJHThwb3O9GiFIKL5oeddGVrg1
-X-Gm-Gg: ASbGncvbAEVr1/JPZ/3QYAFAZVgXqcHzZ95RWPzSYC+Khf7rriyhlExHYUva9fKM3W6
-	bQcXPjbQmp+gqR4RYZvsaLQqiRt4itzBj4VAh3a4bKLAyVL/kNayN0rLHkIRDWhjgh2QUdjG5zU
-	Y7CDIj10+P0QCwLZqVoPc1EmyZ+zVoSZ+hmI9sDmJXadr93RDc0911eabMcjIKLcYIqLkowTPQJ
-	NyTsGyalWGGgOgBUYEuy5jzW4cH7utePbGw9HEymmBu5uV3BQG8eULlkpxO7veiqYi3Ld8OQsTO
-	XH+AkebVUJlUEKw+HT/bJdO4FJhILNHeyXAdOT1n7wYYV1IuaRlOmheMWR5I+edFXkRrBDVmBLc
-	aAdm3QuauQFOg8ugFwN5/N1TNPxc47FkCz2cnxg==
-X-Google-Smtp-Source: AGHT+IHGSOe7rLWE6APRJd8oB/Q1p/06cytILMQ3d0nlRQ+N/y5HEXtyxiKwmIZjLfr75eK0oW+JWA==
-X-Received: by 2002:a17:90b:5147:b0:2ee:aed2:c15c with SMTP id 98e67ed59e1d1-3072ba0e83amr4340866a91.28.1744294750880;
-        Thu, 10 Apr 2025 07:19:10 -0700 (PDT)
-Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd11e6c8sm3716464a91.14.2025.04.10.07.19.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 07:19:10 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: pmladek@suse.com
-Cc: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	bigeasy@linutronix.de,
-	conor.dooley@microchip.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	john.ogness@linutronix.de,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	ryotkkr98@gmail.com,
-	samuel.holland@sifive.com,
-	u.kleine-koenig@baylibre.com
-Subject: Re: [PATCH v2] serial: sifive: Switch to nbcon console
-Date: Thu, 10 Apr 2025 23:19:04 +0900
-Message-Id: <20250410141904.4750-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <Z_e5rWcJKUh7eozw@pathway.suse.cz>
-References: <Z_e5rWcJKUh7eozw@pathway.suse.cz>
+        d=1e100.net; s=20230601; t=1744294804; x=1744899604;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cFmetQ0fd8tg9OjN42SYuqaihg5CWxCtulYfskMf/mA=;
+        b=dAeIXNNn6HqN4OqXzqAbxzcje7WCbTdhZ7WOvRdR6CGm8oSFe1AcR0isHNN4noaXad
+         9d5MFJB19HTqw32sBV4el7ZfFWzYRsPLFZ3gD/zm/O3hhdv6QqbnUf8H+NaiRro2iR2a
+         8ee20eGS6UGGt78flIVij1qLw7EF2zeyOqloE9sYSxY0nOXfv3foG1AG356n+h+DWTwe
+         OIRpuih/8XGVLBT/+z/ASCau2/DeTXH4C9QC/q4mxycd2ipCR4aJ3rY/+y21/bBaXOpA
+         27Zoe6KMcfZO8fL0qJ18P2ixMKL/hdUeyCNp9bfwgspANGBDPzch4pnPL1o++lKH+sEq
+         BEpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhJ6INT2F59D0T6tYKo6/aKf6txkrRPQP4Myrbji8Kn27Ol4+YfdRyAH4R8XpCzZ93e2apVIvnk7SBzbc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1lM6yfXHX0SwWS/lsB5G+r5cVtvceehcJ6q5CojnEbXOSRq2T
+	fou1SSX9IAyIueiP/Fc2mfl3uAtrQvmInup56ofw2HWrNi7hNXdVJp332uQknQM=
+X-Gm-Gg: ASbGnctbrlDrds1oeBubgkr+6Z3zuVsCkntGPQcuGOEiTauYUVFZQnjGDy9gsGHrxeS
+	bXRTd3i+OtzK1bJGP5s76UEySXBKTcb8si00FSdhwKGMyzhSDbW7q/PvHRJLMUfSF/eVJ5Ivqxs
+	7NNoIs8GjsecBFHBVMsdi8TEC89aKrLAEDTzy7WAsFOyWCwSPJiXYyxxfSoPXuVcYd2WzURO8Sg
+	2J9lpaMHondiYRdQXK+PogIIvYABRzdlVxLgUj9/eo4ey2ZYEJ6mOtRc3rJ8FFMyF+325TAfoCg
+	Y3CcpcUPFS4RGyCQpkH36XQI0BqrzHNxv19Lxtc35NEN/0rDC2VCVOTS/SHR6/S1RRTYTksA+5M
+	/1A==
+X-Google-Smtp-Source: AGHT+IHmprFnmE2L9dl6TZiZJCp0rXROk32fEiGq63fS0aW94IToqZ2dIpCTynqnYIATWgqEA0PScQ==
+X-Received: by 2002:a05:6870:158d:b0:2c2:56f3:1c84 with SMTP id 586e51a60fabf-2d0b3820255mr1492765fac.25.1744294804016;
+        Thu, 10 Apr 2025 07:20:04 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e4db34sm578067a34.49.2025.04.10.07.20.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 07:20:03 -0700 (PDT)
+Message-ID: <22384798-eddc-460b-87d8-8c13beeefbd7@baylibre.com>
+Date: Thu, 10 Apr 2025 09:20:02 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] iio: adc: stm32: add oversampling support
+To: Olivier Moysan <olivier.moysan@foss.st.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, linux-iio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250410135836.2091238-1-olivier.moysan@foss.st.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250410135836.2091238-1-olivier.moysan@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Petr!
+On 4/10/25 8:58 AM, Olivier Moysan wrote:
+> Add oversampling support for STM32H7, STM32MP15 & STM32MP13.
+> STM32F4 ADC has no oversampling feature.
+> 
+> The current support of the oversampling feature aims at increasing
+> the data SNR, without changing the data resolution.
+> As the oversampling by itself increases data resolution,
+> a right shift is applied to keep initial resolution.
+> Only the oversampling ratio corresponding to a power of two are
+> supported here, to get a direct link between right shift and
+> oversampling ratio. (2exp(n) ratio <=> n right shift)
+> 
+> The oversampling ratio is shared by all channels, whatever channel type.
+> (e.g. single ended or differential).
+> 
+> Oversampling can be configured using IIO ABI:
+> - oversampling_ratio_available
+> - oversampling_ratio
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> 
+> ---
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
-On Thu, 10 Apr 2025 14:29:33 +0200, Petr Mladek wrote:
->On Sat 2025-04-05 23:59:15, Ryo Takakura wrote:
->> Add the necessary callbacks(write_atomic, write_thread, device_lock
->> and device_unlock) and CON_NBCON flag to switch the sifive console
->> driver to perform as nbcon console.
->> 
->> Both ->write_atomic() and ->write_thread() will check for console
->> ownership whenever they are accessing registers.
->> 
->> The ->device_lock()/unlock() will provide the additional serilization
->> necessary for ->write_thread() which is called from dedicated printing
->> thread.
->> 
->> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
->> Reviewed-by: John Ogness <john.ogness@linutronix.de>
->
->I do not have the hardware around so I could not test it.
->But the code looks good. With the added comment (reported
->by the robot):
->
->Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Thanks for reviewing, I appreciate it!
-I'll add your Reviewed-by with the comment for v3.
-
-Sincerely,
-Ryo Takakura
-
->Best Regards,
->Petr
