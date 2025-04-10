@@ -1,151 +1,220 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC68F20B7F1;
-	Thu, 10 Apr 2025 08:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A722C2054F6
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273018; cv=none; b=gsLZIWzxFuaZa5V+myDMqBYTla8XPbijFtWJZ0KSw5ykx377kKMf4WASHY4fbHqo7DtwcoYWIyqPlKCuToG9hHWu+TXkAxvMeRU1yWkMtZne+/v3spiezsDE6zxINrwo0vFe9UtC0xW8bwkPcF3cZlugEZTDi98Mvd3UJfbtrJA=
+	t=1744273046; cv=none; b=KvFYav29ufJs6nlYvYOGLBBxG9sBSx/7pMy5up3Gqcto+wWPXQW4inwgGol3FwFLa0WD4TNDCzEvq9o3GKQpWUO/8aIk0gjgMAgoliEDeor1USRaNomfnz0q8HefeMOHLq3g+G5j9BfqyQxSZSdjFNE2q3szgeSocq9w2VJ+nrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273018; c=relaxed/simple;
-	bh=RZTUHPBAWgXx1IJUnSAS0VY9DQxUo9jpKkYHvxOb8NM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pooNQ3ZY1tVMWVa3xMHxUzD1MmRxXKadU5ZUPTmnJ9II2vIYiF1FCTZ6wVjrlgDWsrvK8vPbErtHgR2HSdRu4RR++mEoef2XSMchX0PU1ysvrlLB/BVaS5Nsu5xu5ADRl7kmW7RkapQly4HaZNuH+deVKLVoSgT7lFAXc9db7LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Wjg+PVCt; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744273046; c=relaxed/simple;
+	bh=ZLcmmENHK9I78N/ZoLIYuu5eIALMt9hcSonTzDWpags=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bi4k9uCTfX40jz3XcEYJ7j6zuKk4xi4ZAL0QQhS129WgjJwopLcVnUZrLyDUVnwJ3nLyFlfaIP4yhu0FGVU7tor2qmv5ITUnyVOTqS70nRFM3YB+LX6OFyo3q8Ck+g/XYtSxeJCtFrXqOlf7bVF1q5Iyoee6eRKC/kZ0yiwljII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XLhY6sF3; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wjg+PVCt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=uB+Z6x+VWnGWGieZgYK9ruFVlK20QbBkiLXO+vDsz2w=; b=Wjg+PVCtrtNOWu7AUd4A4kKRMN
-	X7AvVDzvlWDxtYHCg+MYT4kRUd6r2iTn2US6oojoVMcGh033UfN5FIGcAqYYUqP+NBDE3tDrnS7TF
-	GV7+w43k6VmvfmY1+6cyqopPdH79oktWgRSTQJ4DlWPHTvguEb/+HIMC1S+uKwsyYOXfar3VoqMvw
-	/XMzNCdlye6wHEotel1CYkCZqH7xq/UZcXylgBuU52T2nKLvLUZmnlUb5gqOnHRsatb5ENs37fUYE
-	Mg2RdH/RUY2KrIjBO0Epbebx1Nw6eTo1iSv1bvWXCpfrONOKn5leUL4JR+WJaWfpiQ+YtZqzJznDa
-	XzdpvzRg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2n5V-00000008mN2-1kUp;
-	Thu, 10 Apr 2025 08:16:41 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 00A143003C4; Thu, 10 Apr 2025 10:16:40 +0200 (CEST)
-Date: Thu, 10 Apr 2025 10:16:40 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	kvm-riscv@lists.infradead.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	Waiman Long <longman@redhat.com>, x86@kernel.org,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Anup Patel <anup@brainfault.org>,
-	Albert Ou <aou@eecs.berkeley.edu>, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-	Borislav Petkov <bp@alien8.de>, Alexandre Ghiti <alex@ghiti.fr>,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Sebastian Ott <sebott@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Joey Gouly <joey.gouly@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sean Christopherson <seanjc@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/4] KVM: x86: move
- sev_lock/unlock_vcpus_for_migration to kvm_main.c
-Message-ID: <20250410081640.GX9833@noisy.programming.kicks-ass.net>
-References: <20250409014136.2816971-1-mlevitsk@redhat.com>
- <20250409014136.2816971-3-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLhY6sF3"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523f721bc63so1470763e0c.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:17:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744273042; x=1744877842; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hz2/30ujTnM2RywGQJtfm+6zAc4LPWg0AjzlYlcqIsI=;
+        b=XLhY6sF3of6Mt0uOtcLbcm/oOu7ZQkYkK/ep07Mkt3cHvB88j0ekFaEHpA0xw/vfwL
+         OCU1WmNlzH81NRxGKjJtaG5QisXu2GKYDFvHy8r82uiSjRuVOf6NxcFnr7aDIHRT7NWc
+         q5HKUQSON7NAPWFS5o7k3Z2l1ln6Ua7rQyu+2F5VBOkkXyKTOZuZQEHhi+AfCBo0K+Tm
+         MTeAG43A2QWDKQw/r2DJi/Oqh6QS+zXIf2hRFlBh9NeUr5URVUJiieBHhLTYrEOTe07K
+         eVFBIb6Q3jeTE5qpRzlhr9aIJYTipIb0kZZP4E/vXtH+kTtnbDA+SJjU51ddGWVW9xpB
+         6BCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744273042; x=1744877842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hz2/30ujTnM2RywGQJtfm+6zAc4LPWg0AjzlYlcqIsI=;
+        b=B448VTkcOl3BsiM65p3q4dkIpMdLmNCsFzl6l9z16jQAPwDQhyYGMni2HVelwzqeOH
+         zHrQ8uK1yUffHOxts3aTFcwmwfLXJgFbRb6eTYWQY4N6fvcWHAzteRLfAMIepeOeVN0E
+         y2VXQlCVbc0QzqEl3d1PfAItzSrN0ueXLhSJIrqsiz0xkxCtR2V+G47XAv/K+nsv/06D
+         wRNjbv5RSM+f/SZOW1UkrnUe0qMAsSIMFeVilf4Y3ivn1wmekM4ZA7kpxpVja04vsf5m
+         5Vg3oYQ47JEKYzFY/ZLDupvsViNXnD1Jp3hXfytaqpgMnEaPyALaPyu09vF3XT09z1xu
+         HdrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFjZs2yZ6woac8VERM0j0bN02O+OMyL0NH2bcHMRxNKz/7xnUETYPu7/PmW1HpbIHMduEU9tbr+LDcfKE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQDb0/9jqZVhPStLsZtg2drs0DUwDwvDBBhjUAEXrjkWNSpvIp
+	Y8w04NEeUl8UAY2RQoslIVrH7wD/Og+rnnA7U017z6W8v0m6c1fO0IgIekE1iAwMEEBj3HKfT5G
+	KEfLEu/F5t804B3PjXUoxnn2C1pHXokYMkStpqw==
+X-Gm-Gg: ASbGncuJYIW1XMlrpfpzmYKs3fFO2SKdcr+oZ3v+Bi0MWEg2m29hV69H3LM3ORnav8F
+	twAOXH6SRmqe8HXUVg46yMSVnoabuSVReFzGrSklUR39CKTL7QhCG5OneHH2wqBGY1u6QvAc/lK
+	lDZ782l6bv3UdKF6XfiVApE1b4LOPZq0hh4kJ11B7yVQrK1j32tJJk94E=
+X-Google-Smtp-Source: AGHT+IHPpFYAe6A+1jMMPXw0/yyYAd7u/uou13jq78+PmrhjxYftImbCHegQjV348L5FGWikiPaVIFeeK7u2FWPsIDQ=
+X-Received: by 2002:a05:6122:490c:b0:523:dbd5:4e7f with SMTP id
+ 71dfb90a1353d-527b5e9ff0cmr1050942e0c.3.1744273042466; Thu, 10 Apr 2025
+ 01:17:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409014136.2816971-3-mlevitsk@redhat.com>
+References: <20250409115832.610030955@linuxfoundation.org>
+In-Reply-To: <20250409115832.610030955@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 10 Apr 2025 13:47:10 +0530
+X-Gm-Features: ATxdqUG_owECl_MM0l9MR7VxhK156lg-AbsNKBugatEKoiMadE4h0QstB6tsPA8
+Message-ID: <CA+G9fYsuLSobC2_MAHsr_JQtSwPEzhWJ4CjKavnBkmbn82Wo2w@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/205] 6.1.134-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 09:41:34PM -0400, Maxim Levitsky wrote:
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 69782df3617f..71c0d8c35b4b 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -1368,6 +1368,77 @@ static int kvm_vm_release(struct inode *inode, struct file *filp)
->  	return 0;
->  }
->  
-> +
-> +/*
-> + * Lock all VM vCPUs.
-> + * Can be used nested (to lock vCPUS of two VMs for example)
-> + */
-> +int kvm_lock_all_vcpus_nested(struct kvm *kvm, bool trylock, unsigned int role)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	unsigned long i, j;
-> +
-> +	lockdep_assert_held(&kvm->lock);
-> +
-> +	kvm_for_each_vcpu(i, vcpu, kvm) {
-> +
-> +		if (trylock && !mutex_trylock_nested(&vcpu->mutex, role))
-> +			goto out_unlock;
-> +		else if (!trylock && mutex_lock_killable_nested(&vcpu->mutex, role))
-> +			goto out_unlock;
-> +
-> +#ifdef CONFIG_PROVE_LOCKING
-> +		if (!i)
-> +			/*
-> +			 * Reset the role to one that avoids colliding with
-> +			 * the role used for the first vcpu mutex.
-> +			 */
-> +			role = MAX_LOCK_DEPTH - 1;
-> +		else
-> +			mutex_release(&vcpu->mutex.dep_map, _THIS_IP_);
-> +#endif
-> +	}
+On Wed, 9 Apr 2025 at 17:34, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.1.134 release.
+> There are 205 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 11 Apr 2025 11:58:02 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.1.134-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-This code is all sorts of terrible.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Per the lockdep_assert_held() above, you serialize all these locks by
-holding that lock, this means you can be using the _nest_lock()
-annotation.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Also, the original code didn't have this trylock nonsense, and the
-Changelog doesn't mention this -- in fact the Changelog claims no
-change, which is patently false.
+## Build
+* kernel: 6.1.134-rc2
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: b0bb7355f83e01b7f94937c29b088febc825ec39
+* git describe: v6.1.133-206-gb0bb7355f83e
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.1=
+33-206-gb0bb7355f83e
 
-Anyway, please write like:
+## Test Regressions (compared to v6.1.131-221-g819efe388d47)
 
-	kvm_for_each_vcpu(i, vcpu, kvm) {
-		if (mutex_lock_killable_nest_lock(&vcpu->mutex, &kvm->lock))
-			goto unlock;
-	}
+## Metric Regressions (compared to v6.1.131-221-g819efe388d47)
 
-	return 0;
+## Test Fixes (compared to v6.1.131-221-g819efe388d47)
 
-unlock:
+## Metric Fixes (compared to v6.1.131-221-g819efe388d47)
 
-	kvm_for_each_vcpu(j, vcpu, kvm) {
-		if (j == i)
-			break;
+## Test result summary
+total: 86727, pass: 65519, fail: 4647, skip: 16211, xfail: 350
 
-		mutex_unlock(&vcpu->mutex);
-	}
-	return -EINTR;
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 135 total, 133 passed, 2 failed
+* arm64: 43 total, 42 passed, 1 failed
+* i386: 27 total, 23 passed, 4 failed
+* mips: 26 total, 25 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 32 total, 29 passed, 3 failed
+* riscv: 11 total, 11 passed, 0 failed
+* s390: 14 total, 12 passed, 2 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 7 total, 7 passed, 0 failed
+* x86_64: 35 total, 35 passed, 0 failed
 
-And yes, you'll have to add mutex_lock_killable_nest_lock(), but that
-should be trivial.
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
