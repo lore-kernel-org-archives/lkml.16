@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC48281355
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:24:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7672828135A
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744280684; cv=none; b=pSdtoPCKLnduHvj8BoGOWRsRy7Gc6m7rYum/STlmoSENi9mDUtMIfj9EbjWmDUk3il7NIM8S5ojTViJZJ9WxLZ46Bqq9+FXlKkd55G/8aBbtmE48rdI2BlxSda+usMh5Hw8COCZUXG9z8D9BVZ9J+88RVX4++JLMls3zTrj7dPM=
+	t=1744280685; cv=none; b=AQmSioEsplhm1iarXo+GXCl65CbHPrNGHNOLMZsIv6M15x3uovKKM8b7XVdJ2vD9MSGJ2o2gPrTQ3EQduFivDWINyve/gR0wJXKVZPb7tQY10E7LF0o9t8LQOh5dLfF0/omQMNDShA9JIaAUVoDDvieE+qCvwLf++dTSfmNEqGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744280684; c=relaxed/simple;
-	bh=OCfonBvKN0BbaLPnvNjIOOnkihYh96k9ma6b5AkPwR0=;
+	s=arc-20240116; t=1744280685; c=relaxed/simple;
+	bh=rMJbXWC+jDUOohOA/xD6FAvMOqOrfNDnQE4N55xs420=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gH8egqv2zFWv0loIuTR2M1eZP9vpIunxfe/cyeSQC2+hL6HUwSi0UeJl44rfBQS9kcaJHwrqQbMHAGr8j+mbv1SQS/V9wyqMrvqZWJA1lAVrYGqoh1HNlq3ujtKlUPVpxHCngCp0pJrMS7hQSMbchUFlhz7w343moH61UsIDJyE=
+	 In-Reply-To:To:Cc; b=Ye7jMb9gdYiR/gh+QU65pL6wm8KhhM7lule9U3UsA94svwB4wpp0H5TQeazVyAQc1FUCbLO7zEeGOgn+wnCukDTMDxPH/8whOI33Q3jyoyuF3DoMbdgc3lEeFB0Iwjd9ytVE7SwWbwsmL1RIxqBZK9qQA7ESSkUVY5UVle1r2bQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,21 +18,22 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1u2p5C-0002DL-5h; Thu, 10 Apr 2025 12:24:30 +0200
+	id 1u2p5C-0002DK-5i; Thu, 10 Apr 2025 12:24:30 +0200
 Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1u2p5A-004Fn0-2s;
+	id 1u2p5A-004Fn1-2r;
 	Thu, 10 Apr 2025 12:24:28 +0200
 Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
 	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1u2p5A-002ODU-2P;
+	id 1u2p5A-002ODU-2Q;
 	Thu, 10 Apr 2025 12:24:28 +0200
 From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Thu, 10 Apr 2025 12:24:31 +0200
-Subject: [PATCH wireless-next v6 7/9] wifi: mwifiex: fix indention
+Date: Thu, 10 Apr 2025 12:24:32 +0200
+Subject: [PATCH wireless-next v6 8/9] wifi: mwifiex: make locally used
+ function static
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-mwifiex-cleanup-1-v6-7-a6bbd4ac4d37@pengutronix.de>
+Message-Id: <20250410-mwifiex-cleanup-1-v6-8-a6bbd4ac4d37@pengutronix.de>
 References: <20250410-mwifiex-cleanup-1-v6-0-a6bbd4ac4d37@pengutronix.de>
 In-Reply-To: <20250410-mwifiex-cleanup-1-v6-0-a6bbd4ac4d37@pengutronix.de>
 To: Brian Norris <briannorris@chromium.org>, 
@@ -51,11 +52,11 @@ Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org,
  kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, 
  Francesco Dolcini <francesco.dolcini@toradex.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744280668; l=1301;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744280668; l=1694;
  i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=OCfonBvKN0BbaLPnvNjIOOnkihYh96k9ma6b5AkPwR0=;
- b=wEthxHJD3zHHExEO9voEBXwKpo3A1GxEEq6C693PH/DdJYP2ED08uwBVY10zU6Zl00BhwSqMK
- hiPZQ0ulCGiC2QWVjqEc5j0T8QoF3ngJAJQxLSzwx1L9YJPFAi4IgpW
+ bh=rMJbXWC+jDUOohOA/xD6FAvMOqOrfNDnQE4N55xs420=;
+ b=TIMOuWgT9ecLw6MLv3Fyd+4aIjU5rwweCJ8xQrAwYmjmmHlPNc6P358GRES89oUBFIylM/HlB
+ BEG20jcDc/1CMkmbdsXmwDc/IXoQX4uSTZnqunfu2MEYT/O2Piu4vcA
 X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
  pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -63,39 +64,41 @@ X-SA-Exim-Mail-From: s.hauer@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Align multiline if() under the opening brace.
+mwifiex_is_tdls_off_chan() is only used locally. Make it static.
 
 Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 Acked-by: Brian Norris <briannorris@chromium.org>
 ---
- drivers/net/wireless/marvell/mwifiex/wmm.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/main.h | 1 -
+ drivers/net/wireless/marvell/mwifiex/util.c | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
-index bcb61dab7dc86..1b1222c73728f 100644
---- a/drivers/net/wireless/marvell/mwifiex/wmm.c
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
-@@ -1428,13 +1428,13 @@ mwifiex_dequeue_tx_packet(struct mwifiex_adapter *adapter)
- 	}
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
+index 3efdd53c4b59f..e566470226d8f 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.h
++++ b/drivers/net/wireless/marvell/mwifiex/main.h
+@@ -1598,7 +1598,6 @@ mwifiex_add_sta_entry(struct mwifiex_private *priv, const u8 *mac);
+ struct mwifiex_sta_node *
+ mwifiex_get_sta_entry(struct mwifiex_private *priv, const u8 *mac);
+ u8 mwifiex_is_tdls_chan_switching(struct mwifiex_private *priv);
+-u8 mwifiex_is_tdls_off_chan(struct mwifiex_private *priv);
+ u8 mwifiex_is_send_cmd_allowed(struct mwifiex_private *priv);
+ int mwifiex_send_tdls_data_frame(struct mwifiex_private *priv, const u8 *peer,
+ 				 u8 action_code, u8 dialog_token,
+diff --git a/drivers/net/wireless/marvell/mwifiex/util.c b/drivers/net/wireless/marvell/mwifiex/util.c
+index 1f1f6280a0f25..ea28d604ee69c 100644
+--- a/drivers/net/wireless/marvell/mwifiex/util.c
++++ b/drivers/net/wireless/marvell/mwifiex/util.c
+@@ -663,7 +663,7 @@ u8 mwifiex_is_tdls_chan_switching(struct mwifiex_private *priv)
+ 	return false;
+ }
  
- 	if (!ptr->is_11n_enabled ||
--		ptr->ba_status ||
--		priv->wps.session_enable) {
-+	    ptr->ba_status ||
-+	    priv->wps.session_enable) {
- 		if (ptr->is_11n_enabled &&
--			ptr->ba_status &&
--			ptr->amsdu_in_ampdu &&
--			mwifiex_is_amsdu_allowed(priv, tid) &&
--			mwifiex_is_11n_aggragation_possible(priv, ptr,
-+		    ptr->ba_status &&
-+		    ptr->amsdu_in_ampdu &&
-+		    mwifiex_is_amsdu_allowed(priv, tid) &&
-+		    mwifiex_is_11n_aggragation_possible(priv, ptr,
- 							adapter->tx_buf_size))
- 			mwifiex_11n_aggregate_pkt(priv, ptr, ptr_index);
- 			/* ra_list_spinlock has been freed in
+-u8 mwifiex_is_tdls_off_chan(struct mwifiex_private *priv)
++static u8 mwifiex_is_tdls_off_chan(struct mwifiex_private *priv)
+ {
+ 	struct mwifiex_sta_node *sta_ptr;
+ 
 
 -- 
 2.39.5
