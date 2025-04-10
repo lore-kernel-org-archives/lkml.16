@@ -1,65 +1,81 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E238315B135
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DC114884C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744298332; cv=none; b=YmfulpGPSn+muIawYrAo0a0ZyXOds0d7FF9PiFWyEgQ7XWbSv1SvGeNUxRVngulqUuDfMk67cr1Aj2mSzbZd8aU3k3kgeObvNsQP+34nqorbxdPY2g2kOL8LtUaP8zhISR6DxHdFNAdmgObP4F7xvxsydeKYKi/0TCqA80YXy1M=
+	t=1744298354; cv=none; b=n8jLRme27mO8G9iSXhJB31hJQi+3BWNHEuT+6ZC90y8IO7rHGcOxN0iNaBSGu4DTfsJCkxrwxGW8eKi7hGWsCMJ8tg4y4poDyYZ8kNLNasgC/hUW0f368ledqTw8m4CuvwbZGbiy5slFpTmzHKTeQP+MMduTc132dI3OIpbV2R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744298332; c=relaxed/simple;
-	bh=ZgOQAZvumfUXfeffHx7Q7R93BM4bR5fjCMubsX+S41I=;
+	s=arc-20240116; t=1744298354; c=relaxed/simple;
+	bh=eiDPE9dtrkAuj/AosZO9UE4UdrM28nqCE1asNsofubo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b4DKjdajvfC1ywO3tkmC9z2d4+Ysiwh5n0jcesFGhvNp/wi3y2a8Kt7T5hpm2YbEbNlzJ1/h/Gbpjld69BTHenjL7SdK8QHTpqNrdk4m752D6VEXTPlU9Tr2w7VhskFF0BFYGp8dnHqDT/pDO++8gvW8H1RZjEq9HQZbKBeId1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0PBRvYZl; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=SvkqHbCas4WFqgvJA5GWZaM7VnOwwbXoemqHR1czulsseFW+v3VN48TRYd3cj53BSb32uHnne/U6FHznqHRQlQI59zsejQMupU8leDYjF3QqJ1EvRcaEHG62YXi+7LMmhImtHYQUQJ7iHTCDzL7MnhMAfskFhOYRpOy5tn7Q2/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PiV4a3YK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rwEhiuOC; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PiV4a3YK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rwEhiuOC; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0PBRvYZl"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72c47631b4cso532903a34.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744298329; x=1744903129; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y/MdAZR4KCk5kccToHKoimBc3Y45j9tz7BCn6zhsjAk=;
-        b=0PBRvYZl9CU0sCyicY8d47aA6uQmiTHjp8grG6PCxHfl0FFNOBylNpw6mW93Lf+Dit
-         lf/mb9E/Gp/P4hUvoighxhPVXvjZSaZiwMYu72Qa0iocCcgLgrWZChXvJqWGJBd0VsV/
-         l/NZ7395GcK9+Dyf4CNWdRgJYuXwXneCKKq0HkUDTpyp+mEbErOpqiNd5W+oC9LwSjW0
-         3KDcop9jHtISwWbYGr+8iQg7x/ADMBg6ibwJf+qrQrKFW7vkcCXELwYnY1YnWcRF5AOi
-         RcRhKm1qzEtr4zl6xuIFJy8odFu4nJ58rRrS6+DnqfXvgf0za5ZL3KC3xYHEVL+iYs76
-         5Hrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744298329; x=1744903129;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y/MdAZR4KCk5kccToHKoimBc3Y45j9tz7BCn6zhsjAk=;
-        b=VqJSLeq38lxrNX+IcoRvUTwAryUb3mVDvw37zzbf/O7JioRzJuFA2eylDVcT4CvkT7
-         q6blf9i5Da2e5LNkLxlQTJuy0ESOvJMy8V8/QkYZWUSF7XFZIMaePqzG1r/llClos2/B
-         InjPPQgnhBc62cOKGZH17QMxOm0Pi7JhxyD5xVes5xSDWqNZc19CcdR4bMjtB3jqVfOT
-         W5+jokzB+ODz/ij3cgCdD2X425SOmNIU+hOzJo6YVCbmlsKJMhhWhabil1YdIizn3S+w
-         pFclFyVPCy1pjQELHrK9oXQ4gUGuhbck5z2za9GffCNxG/K24CwYQZdeL3bS3SZjSFLB
-         A/qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJbQ59LOH5hY92qyaO2uNarDvQLcxrCiLdrzrNgepVb2edkrwa8Ui+53hZESH3M5tAY92t+eBvbl0UJes=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzomMjlD3yrpcDjvlrFs+bHq4BZmRrOFLgnEQyHh+gwHA2GtXQZ
-	ei3N6b+Wh0by0K0+t3ZkIcCqsuuvElFwK+ssou/2UzhyrTBuSexsxs9dWG0Kvo8=
-X-Gm-Gg: ASbGncvzxBtK2l/M2UemOxgITB2WkncfuUqLbkdRDl/6FjpQ1lGyy+xh7ZaTZEGQg/C
-	MRe0Yy8NNF151dqpI3ACErK4bNVAnMJxUWpDcCXBEixsY6FF/rFTimpS19sSN18KLU1DNQN/Xl3
-	IRwkCP6dCqAkRvx1ERn6Q3z/uoD8IU5S1F2u7ZV2YLqyVcQKqZHKC1lLEmXI+CSw8P0xZ6pOEQT
-	PcgUpYzwq9soy51KjPzkT5w+XkvTiHep6oekW8W9VcjQK3SyBtLpWarN3RG0IdWuqwkp7zuZs1m
-	6OKcSHu9yftSI/js4Khmak4MODIZ9y98NVxU8swplecK4Bev19IdverP+C7KBSkb9PnELPv7aMc
-	hkw==
-X-Google-Smtp-Source: AGHT+IH6rrDtVsseh9Xvuyf/noenwuLMx9zjDSedC+XBqH+zbZ7Nwdp30096w8lLRgkzXs6H3TqsGA==
-X-Received: by 2002:a05:6830:3506:b0:72a:1494:481e with SMTP id 46e09a7af769-72e7cb8d73amr1644611a34.0.1744298328766;
-        Thu, 10 Apr 2025 08:18:48 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d52b7asm604325a34.13.2025.04.10.08.18.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 08:18:48 -0700 (PDT)
-Message-ID: <3295202e-3f4b-457d-907a-9058a9719f83@baylibre.com>
-Date: Thu, 10 Apr 2025 10:18:47 -0500
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PiV4a3YK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rwEhiuOC";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PiV4a3YK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rwEhiuOC"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 694AC1F444;
+	Thu, 10 Apr 2025 15:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744298350; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qnRe2lXGIvTI/8saZS3JDgYMhiPgHnRNLOQzRSK+CgQ=;
+	b=PiV4a3YKSG5ndTPkYH1NFFNKAtTaFkACl9C9hECkCTenFEVEHYUWJ0H3oTiPbw2ryo2EDV
+	Qt70MSX/OyhnlLtTubMtCNqkfHi2J3p9iKqXkvGA7h8taWHKtfYalIC0NS9GnskQ2F8pJQ
+	e9XjfHox1rkr47j3jb+oJbgce6J92go=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744298350;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qnRe2lXGIvTI/8saZS3JDgYMhiPgHnRNLOQzRSK+CgQ=;
+	b=rwEhiuOCRPlIZc8xBKNKHWvGY9WsyR7GaNVXK6YpOI4dwquFXPqBGpK71n3yE2fSiPutEK
+	LC9CHuxaea/WqHDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=PiV4a3YK;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=rwEhiuOC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744298350; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qnRe2lXGIvTI/8saZS3JDgYMhiPgHnRNLOQzRSK+CgQ=;
+	b=PiV4a3YKSG5ndTPkYH1NFFNKAtTaFkACl9C9hECkCTenFEVEHYUWJ0H3oTiPbw2ryo2EDV
+	Qt70MSX/OyhnlLtTubMtCNqkfHi2J3p9iKqXkvGA7h8taWHKtfYalIC0NS9GnskQ2F8pJQ
+	e9XjfHox1rkr47j3jb+oJbgce6J92go=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744298350;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qnRe2lXGIvTI/8saZS3JDgYMhiPgHnRNLOQzRSK+CgQ=;
+	b=rwEhiuOCRPlIZc8xBKNKHWvGY9WsyR7GaNVXK6YpOI4dwquFXPqBGpK71n3yE2fSiPutEK
+	LC9CHuxaea/WqHDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 55F1513886;
+	Thu, 10 Apr 2025 15:19:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id u7mkFG7h92d7DAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 10 Apr 2025 15:19:10 +0000
+Message-ID: <2025de6c-a25b-42f2-8ff2-da2bad0e0aa0@suse.cz>
+Date: Thu, 10 Apr 2025 17:19:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,25 +83,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: davinci: remove support for da830
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Russell King <linux@armlinux.org.uk>
-Cc: Kevin Hilman <khilman@baylibre.com>, Arnd Bergmann <arnd@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250407-davinci-remove-da830-v1-1-39f803dd5a14@linaro.org>
+Subject: Re: [PATCH 1/5] mm: compaction: push watermark into
+ compaction_suitable() callers
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250407-davinci-remove-da830-v1-1-39f803dd5a14@linaro.org>
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250313210647.1314586-1-hannes@cmpxchg.org>
+ <20250313210647.1314586-2-hannes@cmpxchg.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250313210647.1314586-2-hannes@cmpxchg.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 694AC1F444
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On 4/7/25 2:50 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 3/13/25 22:05, Johannes Weiner wrote:
+> compaction_suitable() hardcodes the min watermark, with a boost to the
+> low watermark for costly orders. However, compaction_ready() requires
+> order-0 at the high watermark. It currently checks the marks twice.
 > 
-> We no longer support any boards with the da830 SoC in mainline linux.
-> Let's remove all bits and pieces related to it.
+> Make the watermark a parameter to compaction_suitable() and have the
+> callers pass in what they require:
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+> - compaction_zonelist_suitable() is used by the direct reclaim path,
+>   so use the min watermark.
+> 
+> - compact_suit_allocation_order() has a watermark in context derived
+>   from cc->alloc_flags.
+> 
+>   The only quirk is that kcompactd doesn't initialize cc->alloc_flags
+>   explicitly. There is a direct check in kcompactd_do_work() that
+>   passes ALLOC_WMARK_MIN, but there is another check downstack in
+>   compact_zone() that ends up passing the unset alloc_flags. Since
+>   they default to 0, and that coincides with ALLOC_WMARK_MIN, it is
+>   correct. But it's subtle. Set cc->alloc_flags explicitly.
+> 
+> - should_continue_reclaim() is direct reclaim, use the min watermark.
+> 
+> - Finally, consolidate the two checks in compaction_ready() to a
+>   single compaction_suitable() call passing the high watermark.
+> 
+>   There is a tiny change in behavior: before, compaction_suitable()
+>   would check order-0 against min or low, depending on costly
+>   order. Then there'd be another high watermark check.
+> 
+>   Now, the high watermark is passed to compaction_suitable(), and the
+>   costly order-boost (low - min) is added on top. This means
+>   compaction_ready() sets a marginally higher target for free pages.
+> 
+>   In a kernelbuild + THP pressure test, though, this didn't show any
+>   measurable negative effects on memory pressure or reclaim rates. As
+>   the comment above the check says, reclaim is usually stopped short
+>   on should_continue_reclaim(), and this just defines the worst-case
+>   reclaim cutoff in case compaction is not making any headway.
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+
+<snip>
+
+> @@ -2513,13 +2516,13 @@ compaction_suit_allocation_order(struct zone *zone, unsigned int order,
+>  	 */
+>  	if (order > PAGE_ALLOC_COSTLY_ORDER && async &&
+>  	    !(alloc_flags & ALLOC_CMA)) {
+> -		watermark = low_wmark_pages(zone) + compact_gap(order);
+> -		if (!__zone_watermark_ok(zone, 0, watermark, highest_zoneidx,
+> -					   0, zone_page_state(zone, NR_FREE_PAGES)))
+> +		if (!__zone_watermark_ok(zone, 0, watermark + compact_gap(order),
+> +					 highest_zoneidx, 0,
+> +					 zone_page_state(zone, NR_FREE_PAGES)))
+>  			return COMPACT_SKIPPED;
+
+The watermark here is no longer recalculated as low_wmark_pages() but the
+value from above based on alloc_flags is reused.
+It's probably ok, maybe it's even more correct, just wasn't mentioned in the
+changelog as another tiny change of behavior so I wanted to point it out.
 
