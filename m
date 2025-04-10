@@ -1,75 +1,69 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3C320C49C
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF99520C477;
+	Thu, 10 Apr 2025 08:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275226; cv=none; b=aZViiz2BFAPMHt+gcsdo4XPaPoAOzAvxiu/OSJfOd38mgIDDi4TCRObwtiPCEFIhUwbtJDPlaiLdK381m1K7HPXWBBbonWrz5/KSMuM6DbNFIKxZVmKd45BcCcEA2Co/Xw1UnkpeEEK2TPvnnouDktzEg6y1S4D8IHvhkN3nImU=
+	t=1744275233; cv=none; b=utRoK4DIRTAwXMSdoXs01zYhMptBHV7v/7zEOxVoWJZ4WOGUA3ly9qvvKpmEQKLXzOUkX8sGOIHFo0bXzdUfL6aUBwRRdPKvMbZL0BzcRGftxlrfb9bQnaw06HJqfLXjqdtLTGcVnSyKHj3rJQToMpb553Y5Li5HOANyoK22BuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275226; c=relaxed/simple;
-	bh=xm5a12pFhLIMry5y++hjuy83iJYSl+3cpW2pF+KSb0U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IpIeoydhlWl12Vw5sV7HL6vhWvS9meT49LQ+DbtcnWnreon4DCFW8I1iKI1zxmpgiemANGSk3mYqgD9GBv0jXY9g0LOfk7o54BcQV/t27lsLFrFCoq1s4A1t6kvTLAOn21pVm6boNcCPV5z3u84MmXPYJiIzNCujspKzmnqZdn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=LMOo6+IC; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1744275233; c=relaxed/simple;
+	bh=aCop2NCYxYQLVZbOYBztIuutt9Q6fjvbcLrSOou4TUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQMonWJTCSYCYujD8ygNr2c5B6okpUQPoszjEqHf/7w6Jb8xuT0guL7pXxEFwMytYlYdYVU9fe5VOBjQf6iSAGD1MDdUhaukQzbCE3PimalzuCA/xZypr/e+5scRzNU4DY60wZpJsT7HcBURKBm8+yahCLJJCCkqC+1trTHUno0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sRWlQV6K; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="LMOo6+IC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=ZXCoP5L2J4BtwaEH2n2GCfyW7YWDh/4SAhqwGfBIa/Q=; b=LMOo6+ICnSo9wd/0x+KdGHWkKq
-	UgRoQTSd6ftNQ2A3885oQ20jGkdFObG4rxEVQtA2/ql8+vxJsCjYsuq5C7VsleaICi/CHRrTgvz0o
-	F/J8eT0tGLFZa/REVQbL/ko/0ScVNyQi7eCydsEc29zJBUGjBuFu/Ou5NN8A2OxEY8/7iwe7oTCP1
-	PwLUH/PUkw/EcOskWbW83yCVv4iGmroK9jbUrFJwquqoY0WXHbWxrNyhDewufFLhy2kuI3C9WXO3a
-	minoMr0ucy2l9tO62kueLB8Yvq82UiDojWW+zajgua6aqtDGaGwPjPCrOX+lqK9+aYc1uCbJBuL0r
-	4YmpVI5A==;
-Received: from i53875b95.versanet.de ([83.135.91.149] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1u2nfH-00036h-1n; Thu, 10 Apr 2025 10:53:39 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Andy Yan <andyshrk@163.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	cristian.ciocaltea@collabora.com,
-	hjc@rock-chips.com,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v2] drm/rockchip: dw_hdmi_qp: Fix io init for dw_hdmi_qp_rockchip_resume
-Date: Thu, 10 Apr 2025 10:53:28 +0200
-Message-ID: <174427520238.842175.9547277934386341429.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250317102757.565679-1-andyshrk@163.com>
-References: <20250317102757.565679-1-andyshrk@163.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sRWlQV6K"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RtxIxoigqQYXde/ahuxYdBARIf+SRXzUFP+gRfTCt0Q=; b=sRWlQV6KPBAfTa2WehVjjg2P/P
+	BdlO2v11GQovoSXdWZ7/I7opo7BHxICY+Fy6ZBxuQ4KOvJvDC55PtmG1q9BnqQVb7t8Rw7NGZyWIX
+	6KbWYQoBs1m6OH6ZIb4cF7w+eLwbnZvqc+Qz1xApMq5Y2p+hH3/rcyxa8PvmkGxqLrM/87jvV7GIl
+	cXRHqJTFbj8WMVUrSJUQVO4jcnxwS11BnIS/77dxDgt+/IQC6TD6i5yqU2FiezVWAkENCQTaP5LRo
+	nMokkXQev0D0sib3QU/VpKcS0arDC7C8APCAqKDdICycHQJKch3l3WhfAEQEshWeYp4DMGMtuKfGD
+	IMtBiXqw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2nfP-00000009pBY-04nj;
+	Thu, 10 Apr 2025 08:53:47 +0000
+Date: Thu, 10 Apr 2025 01:53:46 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	andrew.cooper3@citrix.com, luto@kernel.org, peterz@infradead.org,
+	chao.gao@intel.com, xin3.li@intel.com
+Subject: Re: [PATCH v4 04/19] x86/cea: Export per CPU array
+ 'cea_exception_stacks' for KVM to use
+Message-ID: <Z_eHGjzR33LMqLfL@infradead.org>
+References: <20250328171205.2029296-1-xin@zytor.com>
+ <20250328171205.2029296-5-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328171205.2029296-5-xin@zytor.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+On Fri, Mar 28, 2025 at 10:11:50AM -0700, Xin Li (Intel) wrote:
+> The per CPU array 'cea_exception_stacks' points to per CPU stacks
+> +/*
+> + * FRED introduced new fields in the host-state area of the VMCS for
+> + * stack levels 1->3 (HOST_IA32_FRED_RSP[123]), each respectively
+> + * corresponding to per CPU stacks for #DB, NMI and #DF.  KVM must
+> + * populate these each time a vCPU is loaded onto a CPU.
+> + */
+> +EXPORT_PER_CPU_SYMBOL(cea_exception_stacks);
 
-On Mon, 17 Mar 2025 18:27:53 +0800, Andy Yan wrote:
-> Use cfg->ctrl_ops->io_init callback make it work for all platform.
-> And it's also gets rid of code duplication
-> 
-> 
+Exporting data vs accessors for it is usually a bad idea.  Doing a
+non-_GPl for such a very low level data struture is even worse.
 
-Applied, thanks!
-
-[1/1] drm/rockchip: dw_hdmi_qp: Fix io init for dw_hdmi_qp_rockchip_resume
-      commit: 1d34597a1e23004c7dd0ab5f58ba1ef95fd9ded5
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
