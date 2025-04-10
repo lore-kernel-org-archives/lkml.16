@@ -1,63 +1,231 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31A520AF6C;
-	Thu, 10 Apr 2025 07:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D316C208989;
+	Thu, 10 Apr 2025 07:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269719; cv=none; b=ftLa43k+GLi1A5Hs2EBNm/FrD62Jzvu515dz3EjQDPxOmyk0ejvQNknuLANX5a/dTis39T6AVws+1mIKcC38DRy0d5o9t8pPF4fc4Qv+5ik3xcTDJGaAgFz88lNo9UtRmQ69N0WYiUZFUxp2LOM9mb/H5lWqoxcul+193E2etWI=
+	t=1744269737; cv=none; b=fPYHrLbj4qgeKZYzgJ5y5eiq2CVJ5ODbAWDPLRr34B3LsHtqSnpR5mBj5bbzF15xeOGitGP5LRguKa0fi6OT+2zKb60vKaDR7mCTmgqHVxnot5Pp1+Tz/tfs23MsPQGyLefYjaqt5cxrK4l/srU/n6hqzX2EozePUDo+gpChkvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269719; c=relaxed/simple;
-	bh=dorXJXTWIWIP6/iW2KT5hpaWe+xzufigP/RnUc3Y5bs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t+E5m+9xU+0T2jKYhJ2bDqHKJ3dVLULoUR483oSY8RK99pHggATmstprlsh9FI2Squ9lvcfbjcRIlC+1gaXpOArtKPYfOVNBxjP00dFVYJMG9aiEeebMEjYDitSN2laGiieoLD2vIBkna5K9yEJU+07crakpVJh6OxAw2bYIZow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id BD93D68BFE; Thu, 10 Apr 2025 09:21:50 +0200 (CEST)
-Date: Thu, 10 Apr 2025 09:21:50 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, aleksander.lobakin@intel.com,
-	andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-	catalin.marinas@arm.com, corbet@lwn.net, dakr@kernel.org,
-	dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-	decui@microsoft.com, gregkh@linuxfoundation.org,
-	haiyangz@microsoft.com, hch@lst.de, hpa@zytor.com,
-	James.Bottomley@HansenPartnership.com, Jonathan.Cameron@huawei.com,
-	kys@microsoft.com, leon@kernel.org, lukas@wunner.de,
-	luto@kernel.org, m.szyprowski@samsung.com,
-	martin.petersen@oracle.com, mingo@redhat.com, peterz@infradead.org,
-	quic_zijuhu@quicinc.com, tglx@linutronix.de, wei.liu@kernel.org,
-	will@kernel.org, iommu@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
-	benhill@microsoft.com, bperkins@microsoft.com,
-	sunilmut@microsoft.com, Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct
- bitfield to not bounce-buffer
-Message-ID: <20250410072150.GA32563@lst.de>
-References: <20250409000835.285105-1-romank@linux.microsoft.com> <20250409000835.285105-6-romank@linux.microsoft.com> <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com> <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com>
+	s=arc-20240116; t=1744269737; c=relaxed/simple;
+	bh=YzLZelE6BsJucoUqF3YIzWb+b3HRdn6XVlfFQHzQmbU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e3Enk5fWASbVJILxZrsS3d8xP2rVE8AasR3/oh8wcMb57OQG4dOKJ6zzr6wX/pLRCPZdEj4hPxSE7cbt8YiIqmWb9fjCrMGe/DJWxlPZKHIbDWSYr0+YIDuDvFwoEJaveSGofYvlIWUTMoAPiaLgmcASQLmsARUvbbFotLEkxjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z8qZXiZU; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z8qZXiZU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744269735; x=1775805735;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YzLZelE6BsJucoUqF3YIzWb+b3HRdn6XVlfFQHzQmbU=;
+  b=Z8qZXiZU+Ql2M5BJnNwPl5e4iqj2VHq6sD6YuoEqdg4nJbByYvrcO0RX
+   L7T5mYDVif+7Ik6ulnQlfsD1B7IqCfjoPCweQj3tOWbel3zIQTbaaNtWI
+   EKsHzg7h+PJRYylclwknsEm7UN1xbyltw4LaxwSzhF75cgQph6UmCvrs9
+   9ijoHF3ceJC4nnoj9C2vF56PMC4ImqKJDHTwhsWVyuRCBrU9OyJO5UHX6
+   +zxo5yah6gnrz+wOyxS8214kfN7L6xXuJjMcUpLgID70cXKgmPRSQgKFu
+   DWkfhud6mv71PG85csA3dKjE9JSbnfsmIuFMFrP5LDRiQmL8NO5NAuVgt
+   Q==;
+X-CSE-ConnectionGUID: QwmFwCppT0i2dIAQp6W9EQ==
+X-CSE-MsgGUID: Wk0URf8vQLCBj6lpebqu9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56439269"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="56439269"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 00:22:14 -0700
+X-CSE-ConnectionGUID: vmLrXjDDR+i3GEhl2GhJCA==
+X-CSE-MsgGUID: Nf07GllVRxSqinkQIy5+Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="128778054"
+Received: from spr.sh.intel.com ([10.239.53.19])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 00:22:02 -0700
+From: Chao Gao <chao.gao@intel.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	tglx@linutronix.de,
+	dave.hansen@intel.com,
+	seanjc@google.com,
+	pbonzini@redhat.com
+Cc: peterz@infradead.org,
+	rick.p.edgecombe@intel.com,
+	weijiang.yang@intel.com,
+	john.allen@amd.com,
+	bp@alien8.de,
+	chang.seok.bae@intel.com,
+	xin3.li@intel.com,
+	Chao Gao <chao.gao@intel.com>,
+	Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Eric Biggers <ebiggers@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Stanislav Spassov <stanspas@amazon.de>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Vignesh Balasubramanian <vigbalas@amd.com>,
+	Zhao Liu <zhao1.liu@intel.com>
+Subject: [PATCH v5 0/7] Introduce CET supervisor state support
+Date: Thu, 10 Apr 2025 15:24:40 +0800
+Message-ID: <20250410072605.2358393-1-chao.gao@intel.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 09:44:03AM -0700, Roman Kisel wrote:
-> Do you feel this is shoehorned in `struct device`? I couldn't find an
-> appropriate private (== opaque pointer) part in the structure to store
-> that bit (`struct device_private` wouldn't fit the bill) and looked like
-> adding it to the struct itself would do no harm. However, my read of the
-> room is that folks see that as dubious :)
+Dear maintainers and reviewers,
 
-We'll need per-device information.  But it is much higher level than a
-need bounce buffer flag.
+I would appreciate your feedback on two unresolved issues:
+
+1. Management of guest default features and sizes (patch 3)
+
+The CET supervisor state will be added as a guest-only feature, causing
+guest FPU default features and sizes to diverge from those of non-guest
+FPUs. Calculating guest FPU default features and sizes at runtime based on
+defaults in fpu_kernel/user_cfg is undesirable due to unnecessary runtime
+overhead and the need for calculations in multiple places, such as during
+vCPU fpstate allocation and FPU permission initialization.
+
+The preferred approach is to calculate guest default features and sizes
+at boot time and then cache them.
+
+Versions v3 and earlier used a guest-specific fpu_state_config to hold
+guest defaults, but the other fields in the struct were unused, suggesting
+that fpu_guest_cfg might not be the best fit. In v4, inspired by the
+existing independent_features field, I switched to adding guest defaults to
+fpu_kernel/user_cfg. During the review, Chang suggested a cleaner and more
+structured alternative by introducing a dedicated struct for guest
+defaults. This v5 follows Chang's suggestion.
+
+2. Naming of the guest-only feature mask (patch 6)
+
+Instead of hard-coding the CET supervisor state in various places, we
+establish an infrastructure that introduces a mask to abstract the features
+necessary for guest FPUs, which are not enabled by non-guest FPUs.
+
+The mask was previously named XFEATURE_MASK_KERNEL_DYNAMIC. It was slightly
+preferred because it reflected the XSAVE buffer state (some buffers have
+the features while others do not) rather than being tied to its
+usage - KVM. However, this name led to confusion. In this v5, it has been
+renamed to XFEATURE_MASK_GUEST_SUPERVISOR. Please refer to patch 6 for the
+decision-making process.
+
+Aside from these issues, I believe this series is in good shape. However,
+since most of the patches have not yet received Reviewed-by/Acked-by tags,
+please take a look at them as well.
+
+Also, credit to Chang and Rick for their help with this series.
+
+== Changelog ==
+v4->v5:
+ - Reorder patches to ensure new features come after cleanups and bug fixes
+   (Chang, Dave, Ingo)
+ - Add a dedicated structure for default xfeatures and sizes for guest FPUs
+   (Chang)
+ - Provide a detailed explanation for choosing XFEATURE_MASK_GUEST_SUPERVISOR
+   (Chang)
+ - Summarize the long history of the CET FPU series and the rationale behind
+   the "guest-only" approach in the cover-letter and the last patch
+ - Other minor changes; please see each patch for details. (Chang)
+ - v4: https://lore.kernel.org/kvm/20250318153316.1970147-1-chao.gao@intel.com/
+
+== Background ==
+
+CET defines two register states: CET user, which includes user-mode control
+registers, and CET supervisor, which consists of shadow-stack pointers for
+privilege levels 0-2.
+
+Current kernels disable shadow stacks in kernel mode, making the CET
+supervisor state unused and eliminating the need for context switching.
+
+== Problem ==
+
+To virtualize CET for guests, KVM must accurately emulate hardware
+behavior. A key challenge arises because there is no CPUID flag to indicate
+that shadow stack is supported only in user mode. Therefore, KVM cannot
+assume guests will not enable shadow stacks in kernel mode and must
+preserve the CET supervisor state of vCPUs.
+
+== Solution ==
+
+An initial proposal to manually save and restore CET supervisor states
+using raw RDMSR/WRMSR in KVM was rejected due to performance concerns and
+its impact on KVM's ABI. Instead, leveraging the kernel's FPU
+infrastructure for context switching was favored [1].
+
+The main question then became whether to enable the CET supervisor state
+globally for all processes or restrict it to vCPU processes. This decision
+involves a trade-off between a 24-byte XSTATE buffer waste for all non-vCPU
+processes and approximately 100 lines of code complexity in the kernel [2].
+The agreed approach is to first try this optimal solution [3], i.e.,
+restricting the CET supervisor state to guest FPUs only and eliminating
+unnecessary space waste.
+
+Key changes in this series are:
+
+1) Fix existing issue regarding enabling guest supervisor states support.
+2) Add default features and size for guest FPUs.
+3) Add infrastructure to support guest-only features.
+4) Add CET supervisor state as the first guest-only feature.
+
+With the series in place, guest FPUs have xstate_bv[12] == xcomp_bv[12] == 1
+and CET supervisor state is saved/reloaded when xsaves/xrstors executes on
+guest FPUs. non-guest FPUs have xstate_bv[12] == xcomp_bv[12] == 0, then
+CET supervisor state is not saved/restored.
+
+== Performance ==
+
+We measured context-switching performance with the benchmark [4] in following
+three cases.
+
+case 1: the baseline. i.e., this series isn't applied
+case 2: baseline + this series. CET-S space is allocated for guest fpu only.
+case 3: baseline + allocate CET-S space for all tasks. Hardware init
+        optimization avoids writing out CET-S space on each XSAVES.
+
+The performance differences in the three cases are very small and fall within the
+run-to-run variation.
+
+[1]: https://lore.kernel.org/kvm/ZM1jV3UPL0AMpVDI@google.com/
+[2]: https://lore.kernel.org/kvm/1c2fd06e-2e97-4724-80ab-8695aa4334e7@intel.com/
+[3]: https://lore.kernel.org/kvm/2597a87b-1248-b8ce-ce60-94074bc67ea4@intel.com/
+[4]: https://github.com/antonblanchard/will-it-scale/blob/master/tests/context_switch1.c
+
+Chao Gao (4):
+  x86/fpu: Drop @perm from guest pseudo FPU container
+  x86/fpu/xstate: Differentiate default features for host and guest FPUs
+  x86/fpu: Initialize guest FPU permissions from guest defaults
+  x86/fpu: Initialize guest fpstate and FPU pseudo container from guest
+    defaults
+
+Sean Christopherson (1):
+  x86/fpu/xstate: Always preserve non-user xfeatures/flags in
+    __state_perm
+
+Yang Weijiang (2):
+  x86/fpu/xstate: Introduce "guest-only" supervisor xfeature set
+  x86/fpu/xstate: Add CET supervisor xfeature support as a guest-only
+    feature
+
+ arch/x86/include/asm/fpu/types.h  | 81 +++++++++++++++++++++++++------
+ arch/x86/include/asm/fpu/xstate.h |  9 ++--
+ arch/x86/kernel/fpu/core.c        | 42 ++++++++++------
+ arch/x86/kernel/fpu/xstate.c      | 60 +++++++++++++++++------
+ arch/x86/kernel/fpu/xstate.h      |  5 ++
+ 5 files changed, 149 insertions(+), 48 deletions(-)
+
+
+base-commit: ed91ad084ef9fa49f6c6dfef2cb10c12ce3786a6
+-- 
+2.46.1
 
