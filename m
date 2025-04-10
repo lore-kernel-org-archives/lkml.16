@@ -1,244 +1,250 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0C525E81E;
-	Thu, 10 Apr 2025 09:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278019; cv=none; b=YpQoNE3HfgtKGzYyMuWCNIayc3R+eC7SZ64tHU+WTk1sdZkQljztKKF3R/H5MQqzVJZdxiFdl5cHVarNSwfTS3KVwvSEbTad3FnaX/tzXC0lAewlxYQWY5JXcfakJjQQpfgaQoBbIBNoqwIaKkIwGn4Ma3SCvk5UVrWFsgHQRds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278019; c=relaxed/simple;
-	bh=CbYtk44myoD5BZVO0UzRr8Ax21je9fKshpjG1nkT0jk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=a+g9aTx3VLrwkc5lvu8uGt94/OpnbSjz24oTIv33GOcIpOPbrzli+OpjBS+4JAll2h6YeYzFgrwOphWxNbO3UqS8GtVN/0rLbtaO4VeVRyE5dRklBe6s1DObeQn9n8E7br6+qDb/c/pvCKoEsrLX0kBkF1dzRcYUx1QL+3NHfJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PlgPEVPI; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2CC20D4F9;
+	Thu, 10 Apr 2025 09:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744278142; cv=fail; b=PKgG/Ligm31iszdjJR6e1mevKANNVR0EZAij0CQ1lMyZrI4k8iKs/OjwAKLDQu+kCC2S2NFTxXQtuLvOjS0DpXVHBtyQDMfq+tagBqCrfPYiTSrNxa2caCrIzBR/lEupkVD+7CapXzisyKd5K69j7X7E9ZzSasbqJTq4DiQewlI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744278142; c=relaxed/simple;
+	bh=ER4J4bcSUxayrjsGOW8QySHiym5usE2OmsBKpstQYOg=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rUpQTbAE+iwV/TyzK1V3pqDUy8k8tY1ddZb5uAjFojKW09zGDqdpPi7Sk5WV1wlHjcAXoTL4cn80pLMAlC1AtSyVag33nnE46MfqLdeEIdEN+QucQPKz0OdIv4Ep3GzLRnMnZ1xfFevrhOyXks64v4Z1lyObHkz7jBc3UedNSxU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=acauC2GH; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PlgPEVPI"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39bf44be22fso291794f8f.0;
-        Thu, 10 Apr 2025 02:40:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744278015; x=1744882815; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6ZzHK+u3IhtNYeAtrRxJUvgO65HY7/Y2Xaxu6J22s48=;
-        b=PlgPEVPIkIBCvlejBEMPh2ZNQ3JkORWQnA9prX6FrdrMxujJ9IH31SldUdbZJ1X8iq
-         cXq4NIYRFzQuaP7+7ifkEVGoAoipk9s5P5uQn570TMpbCymHL5iEFVl6rrjnClk49QGi
-         LFZ6jhhipjnk8CwO61SvvgfidWIsUxJVWaiWJL1tAox0iSs5GGilfQef4ZHgACWsL6lj
-         mpwRr3i7+I6HAIDJtr3ItEDsbW0uNRQ4FGELBkDK1lR2lybdnSYuCVYsKM/myKCYP5FL
-         a03dtRK91idJ/t4nJRkcPCJZN08lKn2qX1OhBrjzgsQoW9gyMsrUuqeTyGCzJPBHEYtp
-         2ylA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744278015; x=1744882815;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6ZzHK+u3IhtNYeAtrRxJUvgO65HY7/Y2Xaxu6J22s48=;
-        b=Cf4cdNIjnNgUR05mou0NPDx9LZK6jEgAWF0tYC2bcOB57QOLYtd2nQZtvpshXJWUdl
-         dgdUADcAaZ2f+wZJmFmnIYlGPYKjsTMrKX6b/LYqV8cNBigiLqAFT0DgWwp7jDi5CBJq
-         0Yv3j7jD2IISEclm3hnQo3GUiZBdSgx1ZXV0t4kuWy2SWId+mAbhSGUIy/tNq2h0TqcM
-         yxfcCrBa0+0ZgPbOG4XQXTeYfiuqdnbj/8lhpPnplWVz1/gFqt8f62EXDyQMJuUxuSnR
-         Z4qYYCMze1RsZfHiB5Knx9CeLgCfKHDC8+QqlQsry0dQFT3JQT94046bL46GiaNKwlms
-         HkTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWI9m8tG1R/vLT1E5iWsvA0et0B0ZD68LXbLtwn48Lt5jUap68vZpQKC1rbbJFgfbv15xIEa0r+7muc@vger.kernel.org, AJvYcCX26Cz6Alcsx0OZqhstxkxkKsFCLGWCPsFut1Zswr0i6jq3nqatL21A1ryYOKZQ5uxiOHWPDGO5U5NB@vger.kernel.org, AJvYcCX5IzhMUjlK/P3pHoOJzgrWefbcjSuVVANrqTKhXOXqcMo8Wg+++dFn8Lz3b85x3WXEeeoSv9SGOoanvBjL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0M5EdKVzcr1T1P+PPzyRWz8Y6pyCfMtKd1yi/vPsvRYFosuUq
-	4BpGlRHD5z3gfQ4duolRUV5LYvEERb/P2juM5vTjQIPpCnKKbnQL
-X-Gm-Gg: ASbGncvwK+YTpOPTpZY6pTZR2/FwTIY+xB0B5pDm2ExYntJuew+7RQMYqk1/JWjEs0R
-	PVEZLDF92JBBuSMdJhhtL0142YAPFG7XlQMyVhJFca3afxzE1PyZ7+u+CxweMpq9Qs5YEMFgvWM
-	f7qQAxCkZ/p+qrUmdAXEgwAYKBEFn7fvuCH8czf0NTRrMylNtdgGQQ5beqE9KavZlKzyuAIqkZ8
-	ng92TXkm5XQw846zzpZ8EwSXJNFsaLD2M+4DDS3VhiriLJZ4F+6jzD/Fak6LwL9GI/o96z2uofi
-	ppAEUkug4GO9AR/kA3RG0b1BJb43I7S7hiFrwfcW5TuoHbrEef+xNNE3sXMzgH3vCE/LSQOmH3f
-	HH7lNwgdVDzuH
-X-Google-Smtp-Source: AGHT+IHo+l30usT0vi5GeqmBPEKKMjK/tSE3z/8K18JGQBbnkLhIaa5/jdg4FvLoCv/QnMnDJltr1g==
-X-Received: by 2002:a05:6000:4021:b0:39a:ca0c:fc90 with SMTP id ffacd0b85a97d-39d8f469697mr1840680f8f.14.1744278015282;
-        Thu, 10 Apr 2025 02:40:15 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c8224sm44508825e9.22.2025.04.10.02.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 02:40:14 -0700 (PDT)
-Message-ID: <4ef3b2464691d65a295d0f5669e27f8a5382ea06.camel@gmail.com>
-Subject: Re: [PATCH v1 4/7] iio: adc: ad4170: Add clock provider support
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- robh@kernel.org, 	krzk+dt@kernel.org, conor+dt@kernel.org,
- marcelo.schmitt1@gmail.com
-Date: Thu, 10 Apr 2025 10:40:16 +0100
-In-Reply-To: <65b71e307d37b8e3e26937a1e67398b2af0af399.1744200264.git.marcelo.schmitt@analog.com>
-References: <cover.1744200264.git.marcelo.schmitt@analog.com>
-	 <65b71e307d37b8e3e26937a1e67398b2af0af399.1744200264.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="acauC2GH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744278141; x=1775814141;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=ER4J4bcSUxayrjsGOW8QySHiym5usE2OmsBKpstQYOg=;
+  b=acauC2GHlqasW+6YIPzorQlUCybtTUjtvEHPs+wKXpRTjr2we88RvEn+
+   AYR6Xmob9LmUNhUmSUqB/VDFPu2bU6+QdqrC7CB02YLS/ozpk1YB1ZqR4
+   okAzzZibOVhJjWU6tFS/WnT7Hq4LA0mliNMXgfz1VfCOCGYwLTNuPCaaW
+   9cibbK9LzJXdxGxqgFpG3twf//qSDv8d2OEJlC49rmsdao15nQnX23r9B
+   L++s7927yw/4S6DlwBqOxsvjLmnGoZN+koqDPMrlnKgVEl+xPMTX6lcBc
+   KXoc381oIWPBsHU8xqx8LK57mpRQsbouxM9f6djoKBYyQ6TK8PTp6Nwos
+   w==;
+X-CSE-ConnectionGUID: Rzzb8Z8FSAeVvefXu6WgAQ==
+X-CSE-MsgGUID: 7XC27s6AQQCNvdNZ5ClThQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="48492340"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="48492340"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 02:42:19 -0700
+X-CSE-ConnectionGUID: jLAyvi/xSluSDcX4OcynqA==
+X-CSE-MsgGUID: TJeQkOkNTUOK+0ae+it9Ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="134038040"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 02:42:20 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 10 Apr 2025 02:42:18 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 10 Apr 2025 02:42:18 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 10 Apr 2025 02:42:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KwXAFALuW4gXQtOqRrZg8j1etdyhgQgZGDfELBvQJqe/wuW7f+rmTG0TDxD5c+xQysI0+B2KDwxQhauVCPCewBNNXYQc34qUcEioTX/c+bMaELmJ2E90SQFOIQd8v5I/hiLHgsOiXfGo6OpXXmERyYjkxWYmSG0uJGUpVTTQ4jvEpsMQONAHz3hokaZt54YdG+GHk+1Zg5deaK7eD7Q61CdaJrPKrzshuF27mFkTZeNXS6qfDABhm5V41eEl+wB9+ZgwnhplFHtDkO1b1hSo45TG7Z+fJKRTiny4TdjoWRmZ1SVgv61LeeCju/QvWxcVem6SBLYa9Y3704rdZwSZVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=U5S/3aEWdy7c9wX3cenpEthRf3gkWQP+RhuVSfwe+/0=;
+ b=khd9+Qd5nJwPOebU1fPUzr8nwEU35ZsWkrBR9mV1rYJdfi47pXYWTtHKTWSl+41/SGT/MqvGjwV8IoVVQwOemP8voMxcF2Nm6KDi6Fr95q34irl5dxj/wkAUeifmLOtbWwPs1C3r+galJbUUiH7vPStTu2V328kfMuwZ4cTAW5NBsCX8sH0XwTOVYfe+86ngF7tYzEYgYJsWCFUMR8X5GLeI2oHQWxjuwvL8RV8PLUCeXNtjhfxOSSAYx8w7PpD4ISSQb7QAHq8x5yfcwmYrCFS324zkRf9o13ivPOsUHsEZDja1emaKz/s0z7ckdosq+B7gnDijeQAUIjS+cJvfmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
+ LV3PR11MB8580.namprd11.prod.outlook.com (2603:10b6:408:1ae::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Thu, 10 Apr
+ 2025 09:42:00 +0000
+Received: from DM4PR11MB6020.namprd11.prod.outlook.com
+ ([fe80::4af6:d44e:b6b0:fdce]) by DM4PR11MB6020.namprd11.prod.outlook.com
+ ([fe80::4af6:d44e:b6b0:fdce%7]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 09:42:00 +0000
+Message-ID: <917bb3c8-e084-4790-b0ac-f0433cfca758@intel.com>
+Date: Thu, 10 Apr 2025 17:41:45 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/8] perf sched: Introduce stats tool
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>
+CC: <ravi.bangoria@amd.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
+	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
+	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
+	<sshegde@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>, <peterz@infradead.org>,
+	<acme@kernel.org>, <james.clark@arm.com>, <namhyung@kernel.org>,
+	<irogers@google.com>, <mingo@redhat.com>
+References: <20250311120230.61774-1-swapnil.sapkal@amd.com>
+Content-Language: en-US
+From: "Chen, Yu C" <yu.c.chen@intel.com>
+In-Reply-To: <20250311120230.61774-1-swapnil.sapkal@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR06CA0219.apcprd06.prod.outlook.com
+ (2603:1096:4:68::27) To DM4PR11MB6020.namprd11.prod.outlook.com
+ (2603:10b6:8:61::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|LV3PR11MB8580:EE_
+X-MS-Office365-Filtering-Correlation-Id: a80a855f-928b-4bf1-764c-08dd7813f0df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?NWozdEZ6VkVzMlNoL0cxUFdMTklhSnRJbWM1Ym5pbllSUlRQOE1sYUM3cGRY?=
+ =?utf-8?B?YU9JNnZ0dFMvemxDcHlZSVZKR0JMOEF6Vjg2Yk5sRVEyKzRnRDg0NTVTSGc3?=
+ =?utf-8?B?V1NKQi9RTEFkWUR1N2JaV0lCbDVsRmV2M1BMRytaN1hKOTl1aVdjaForWEM2?=
+ =?utf-8?B?ajAxYnZWTHU1dFI3WXB0YVlsTTJGWm9YYUc5SGFiMk9qUnUxbUxhc2UzdFpC?=
+ =?utf-8?B?elEwNjdlT3E0aE5xdkJOUE5NUzZmbFFPL1BLdWtXRW91UXgyMS9lbURvbW02?=
+ =?utf-8?B?ZGh4OUMyY2twSXg5TzBlUnF1NlFHUkFRVmRjbzFESDlsL2NKeWxyaDRmWURr?=
+ =?utf-8?B?YkZROUJlWU45cFk4azdiSzgxaVorOVIyWnYwV3J4dWs0TkZ2cDkwZmQxVFA1?=
+ =?utf-8?B?anBWMVVTb0ZYVmMvSFlrdkd2bzVTSnZFbzB1ZWRlLzFDQVc1bVI4NFY2YzZa?=
+ =?utf-8?B?QnpTZDVFeDM1OW9QdDJ4enYyNWtEdkhpSTZ3VDNVWXF1dmtqWnZtU0k2OUNi?=
+ =?utf-8?B?a2dyQjIxYURLb1E0UEg0SDFMWW9mT3NGRG1KdENwMGkrRkJZV1Vpa1ZnMjNp?=
+ =?utf-8?B?TTNzVFkvclUxYkRKN051OTRVT0pNM2YyK0puUnJjcVZrNTU0N25vNEY4YUVv?=
+ =?utf-8?B?cUNDU1c3SndiWDJ1N3FhUkJIWkNvcmZPYWkyZnh4WWZoSlFwNHFROGQ3cnZL?=
+ =?utf-8?B?ZmZ2d3JZVEE0K2xUdzFBWXh0c2FRVytvU1MxYnh6a3BJczhEcUt5NGg5SVdN?=
+ =?utf-8?B?ZEVXTzVsQlh5TXNmL3RVTW1PVTF3dHMvNDRkNVQ5bXFHY2pRNy9HOXVoT3Jj?=
+ =?utf-8?B?Y2FlQWg3ZUswMnhiMWZldUdNMXlEcGNiQ0xlZm0yNzBOUUlWV29XK0ZidVNy?=
+ =?utf-8?B?dHFaZEoxRXlFdHc2SUNpVW5jcjBnTTJPOVhaVFRQaU9KOEpMSlhseTFUQXR4?=
+ =?utf-8?B?L082b2Q3L0hGVm5RUUVlS203RG5NeU45N2x3WmcwcWtFZkV2eUFVZW4wb3Rz?=
+ =?utf-8?B?K0huL0xiWXdEUWxhOVBNT29KTk9WaU43Qm81OWdPbS94NllFL0JqS0dUS0kz?=
+ =?utf-8?B?K2k3cUZuSHZ5V1FBelVuQ2RWTmJEVVEwWGtHYTVWNTZDc3dMWHdkcUNOR0JS?=
+ =?utf-8?B?NmpaQmxRdGxOTkZmZE9KckhTY2xRbVQ3TDVjUkNvYkYzN3RhRE1vRnN6SzRy?=
+ =?utf-8?B?K2dLY0FXM2lLZlhhVXZPNDlHQUJvTVR4Ykhma2JvT29ENXpZaVFGOTM3MS80?=
+ =?utf-8?B?SndsYkZQQkRFTzFQRmNJcWI4VUZnYlNFUlFjNjZzVGEwMlR4TDVJZkN1Zmk4?=
+ =?utf-8?B?TGo0bEQrUW5zNUFhNkpqd3Q3Z2N3b3BuMHdGU1JGdm1QZEJKTW9tNzMvdjVE?=
+ =?utf-8?B?alg4S0lycDJYRGpLNXU2MnBuWm9XRlF2MDl4NCtReXNnckhJb0plQU0xZG1E?=
+ =?utf-8?B?WlVmSkg5ZGkzMHdNVXVsMjlIbGo2cytGSjBjS29mZEticUQ1TDhrNnV4Q1Z0?=
+ =?utf-8?B?S0t4MXFlK1E1aDFYYlZQeVM5M3d5VGJjL3hmYjQ0cFVJQ2svWVE1VklWT1pH?=
+ =?utf-8?B?eVFaV3BhaGpXNGdtOUF4bUJUalZZbDM0cUxteld6aGFNYms3MzNHaVpRTFlq?=
+ =?utf-8?B?Wlhub3I1VlMrUGx4RFVDbHQ0bTF1dDNNRWJCRkRBMWNpZDI2SUhjeHk4ZE83?=
+ =?utf-8?B?UWhneTBKZGZiZWlTVVhEa29meFE3c1grTnY5NFIyNm1BTGptUmVmWkJCTFVN?=
+ =?utf-8?B?bjFtV3hwYnR2ZlJuNE9jY213S1E0YzY0dFp4Z2ZJMkcrRXFsTlJSbDdITllS?=
+ =?utf-8?B?U3EwUTlKU250TGdkQzR5RFVaWHAvRTN6RHBVd3BhblVnMnFGaDd4c1ZtY2lu?=
+ =?utf-8?Q?/KQjO5E3YwRhG?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YlRZRDVBWXlVSEJJTFJkU3BMdC9tSlJQWXdyd3ZUSWczTHBTUXFhSjFrYkds?=
+ =?utf-8?B?ZzV0YW80cnRHbS83VnJrN3RZMzd0RUJ0UEFVNnJBdjE0R1I0anNqZm5iaDV5?=
+ =?utf-8?B?eExjUytIMnQxZWs5OVZXVzBuZnkrYXRScnRDYStHd25VSUVKN0FBT2hoNWw0?=
+ =?utf-8?B?Qm16eXp0d1oxRU5TckNoUitqWThuWDYzSHc2THg4eitCNGFjeDRsNGY0OTF2?=
+ =?utf-8?B?NkQ2ZFFVQmhGaTY0cjJkK3RVWXJ6c0ZpK01pQ204Y0ZZNGxSYTNIamdXV3Ji?=
+ =?utf-8?B?UFdRVWhsUGZUd2Q5dDl6SWNtMTVjQ0tsUUowR2lpSkJDeGFvUWtGRTlVSmVF?=
+ =?utf-8?B?SDlHS0ZFUjNZZVJvK2VseXY1WkN1NWw4bVREdmVpWmJtWGRqYklUcm9MZ1VG?=
+ =?utf-8?B?M2F4akdPVEQ4N0V6S0JEU3RKSjNPaEYrSnJZMW1CVXp6cnVBbmlBZGo5SHVO?=
+ =?utf-8?B?dEV4R1JXV3M2MnN0VWVWY2xzelVObjdzcFhwRHJtbXUxVWdTa0xuWkRWVE8z?=
+ =?utf-8?B?YW51dE0xQ3ZNcUoxSHYvNFFRQ1RIZXZXNnpZRzdZOVJSWmNiOUR5UGIxMkQy?=
+ =?utf-8?B?Qm5lcVh2V2pCNGhiYUNJRzlmZ013NGNONWt6dE02T2c2K1J1dWFHSGMvVXdz?=
+ =?utf-8?B?UUdjUUpvZG5iYUVRT004SG1Vc2dMUWNMWTRCNGI4VWZsclJmdXg1aEliYzNF?=
+ =?utf-8?B?TG1UT281VWVhZXdnL1p5NUkzUVBISzZXa3VMbnNIaEZtNmpNNHJUWEFIaG54?=
+ =?utf-8?B?eFYzbGt3WFdWNWVteGU4OUMwbWtYZHFSK2cyZVUxTUdDK0orUnFvMkUwY1NH?=
+ =?utf-8?B?aEY0VmJacVRicmpvRW8vd0h5eTZjL0J5T1AraEdHMlg4NXUyZXZleG1lSkVW?=
+ =?utf-8?B?QUZ1N3FpMGpNR3grN3FCa2RYUW5jdWFXVWpjK3F5Q3pRT2lJcGhLdCtnYlVw?=
+ =?utf-8?B?V29GY2VLTUxQSVdWZ0pPRDd4VVFQOG9keUM4aUhLNGtOUk5WWDR3Y0l1Um5v?=
+ =?utf-8?B?QVdvT1M0QyswamJvRHNtWUo0WlZndTN3TzdZbWh4QzQ5aUM5dExzSGZLc082?=
+ =?utf-8?B?KzZJdjc2ZzFCc0VqTFFHTmpnR2dhRDFvbVZYSTExNDIxWGRxNDZwcXR3RDR6?=
+ =?utf-8?B?a0ZLSkJFS0xyL3ZZQzNRbXB4eVNJMGptcVBFN0p4T1lkZm1uRGlqMnAwMDN6?=
+ =?utf-8?B?aU5UZmtDR0hqSUxvcU1BVzJDUFllM1lpclBXa1VYcVlnWTVSZmtXR1htbmxr?=
+ =?utf-8?B?MmxyZmxKTjZiS0VMVUhwVThCeEVoczVzTkpVUTNQWTVzMVVCaXRSUjF0bVda?=
+ =?utf-8?B?em9UUFFFWDVhbWxkUEE2L0h1TDJaNHRES3hYRDJaQjh1andSZytacHNpWk5E?=
+ =?utf-8?B?MjFQVVMxb0NHM05TUGhIQnVXTklnU3BiWVZaRkgyeWR3R2JmTC9pVlBiZTdC?=
+ =?utf-8?B?K3hTb21EK04rRlZiWUdIMnVNdnZWQWtoOGpCdWRudWRLQksvbVZrT1V3cUVF?=
+ =?utf-8?B?UXJpLzBoODBNbE56WDA1S2huczZUSEtHbjFxSHVELzJkWk9wRGZRYlRnZ0hT?=
+ =?utf-8?B?QVZZYUc1aU5nYXBINFFnQXlHdzBGUzhWTjBVMXpCcS9qVmh4bWV1ck9nN3Zp?=
+ =?utf-8?B?MmtpQnpZQUFhc2hpdlZweGh2VXdXUS92VU9ybnVZaW1xNnpQMWswb2crRTI0?=
+ =?utf-8?B?dXVtcVNNWWNjWjNzZDFUbk9BU2xVeW1zUUpiUkNWY3lzWkJMQzhuTVB0YVgx?=
+ =?utf-8?B?WFMzL2ZmKzlScC9iQ001bGZ3enFyZDY0a1FxNloxUVNHM29KbDlEbHJwaU9l?=
+ =?utf-8?B?cHljQUZqektDR2xUa0h4SUtjSm0yVDkzTXRneWR4SE9aZGZtVlFTNUx3aGlK?=
+ =?utf-8?B?ZzRqL1A3eVRPSmJLcFNoZ2lxMy9RQVlUbnZsNFBpZ1EycUhPWjIva1RLNjUy?=
+ =?utf-8?B?TlFQUXU4TmtqcEhaZm8vYWxlU3NGdFZvL3AxdHRRMFdXUnpvbVlxWXA2a05E?=
+ =?utf-8?B?NEo1bUJTMTRFdFhSNHJWMUJsL1JYTWIyT2htSWNJbmdtZzlvZXZrUGlRcmkv?=
+ =?utf-8?B?ZHFNelBJdGJibG1kT0RmQStERTBjVVFkVlpCbU1WbkxFR2M1c2NLRDI5NWxT?=
+ =?utf-8?Q?OvNNY7CAM+1Svv1ivbNkH101A?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a80a855f-928b-4bf1-764c-08dd7813f0df
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 09:42:00.0573
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hYayWu60By8sS/WDfSGydnN8PJs3xY8wUs5vZkrrjfZ3IMgfLMpjrV215p597feNbPSc1gTTY6pPJcwyAI4vkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8580
+X-OriginatorOrg: intel.com
 
-On Wed, 2025-04-09 at 09:25 -0300, Marcelo Schmitt wrote:
-> The AD4170 chip can use an externally supplied clock at the XTAL2 pin, or
-> an external crystal connected to the XTAL1 and XTAL2 pins. Alternatively,
-> the AD4170 can provide it's 16 MHz internal clock at the XTAL2 pin. Exten=
-d
-> the AD4170 driver so it effectively uses the provided external clock, if
-> any, or supplies it's own clock as a clock provider.
->=20
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
+Hi Swapnil,
 
-Just one minor note, with it:
+On 3/11/2025 8:02 PM, Swapnil Sapkal wrote:
+> MOTIVATION
+> ----------
+> 
+> Existing `perf sched` is quite exhaustive and provides lot of insights
+> into scheduler behavior but it quickly becomes impractical to use for
+> long running or scheduler intensive workload. For ex, `perf sched record`
+> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
+> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
+> generates huge 56G perf.data for which perf takes ~137 mins to prepare
+> and write it to disk [1].
+> 
+> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
+> and generates samples on a tracepoint hit, `perf sched stats record` takes
+> snapshot of the /proc/schedstat file before and after the workload, i.e.
+> there is almost zero interference on workload run. Also, it takes very
+> minimal time to parse /proc/schedstat, convert it into perf samples and
+> save those samples into perf.data file. Result perf.data file is much
+> smaller. So, overall `perf sched stats record` is much more light weight
+> compare to `perf sched record`.
+> 
+> We, internally at AMD, have been using this (a variant of this, known as
+> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
+> of any scheduler code changes[3][4]. Prateek used v2[5] of this patch
+> series to report the analysis[6][7].
+> 
+> Please note that, this is not a replacement of perf sched record/report.
+> The intended users of the new tool are scheduler developers, not regular
+> users.
+> 
+> USAGE
+> -----
+> 
+>    # perf sched stats record
+>    # perf sched stats report
+>    # perf sched stats diff
+> 
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+May I know the status of this patch set? I tested it on a 96 cores 
+system and it works as expected in general.
 
-> =C2=A0drivers/iio/adc/ad4170.c | 135 ++++++++++++++++++++++++++++++++++++=
-++-
-> =C2=A01 file changed, 134 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
-> index 5ffcdedf3e7f..97cf4465038f 100644
-> --- a/drivers/iio/adc/ad4170.c
-> +++ b/drivers/iio/adc/ad4170.c
-> @@ -7,6 +7,8 @@
-> =C2=A0
-> =C2=A0#include <linux/bitfield.h>
-> =C2=A0#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> =C2=A0#include <linux/delay.h>
-> =C2=A0#include <linux/device.h>
-> =C2=A0#include <linux/err.h>
-> @@ -62,6 +64,7 @@
-> =C2=A0#define AD4170_DATA_16B_STATUS_REG			0x1A
-> =C2=A0#define AD4170_DATA_24B_REG				0x1E
-> =C2=A0#define AD4170_PIN_MUXING_REG				0x69
-> +#define AD4170_CLOCK_CTRL_REG				0x6B
-> =C2=A0#define AD4170_ADC_CTRL_REG				0x71
-> =C2=A0#define AD4170_CHAN_EN_REG				0x79
-> =C2=A0#define AD4170_CHAN_SETUP_REG(x)			(0x81 + 4 * (x))
-> @@ -89,6 +92,9 @@
-> =C2=A0#define AD4170_PIN_MUXING_DIG_AUX1_CTRL_MSK		GENMASK(5, 4)
-> =C2=A0#define AD4170_PIN_MUXING_SYNC_CTRL_MSK			GENMASK(3, 2)
-> =C2=A0
-> +/* AD4170_CLOCK_CTRL_REG */
-> +#define AD4170_CLOCK_CTRL_CLOCKSEL_MSK			GENMASK(1, 0)
-> +
-> =C2=A0/* AD4170_ADC_CTRL_REG */
-> =C2=A0#define AD4170_ADC_CTRL_MULTI_DATA_REG_SEL_MSK		BIT(7)
-> =C2=A0#define AD4170_ADC_CTRL_CONT_READ_MSK			GENMASK(5, 4)
-> @@ -121,6 +127,12 @@
-> =C2=A0
-> =C2=A0/* AD4170 register constants */
-> =C2=A0
-> +/* AD4170_CLOCK_CTRL_REG constants */
-> +#define AD4170_CLOCK_CTRL_CLOCKSEL_INT			0x0
-> +#define AD4170_CLOCK_CTRL_CLOCKSEL_INT_OUT		0x1
-> +#define AD4170_CLOCK_CTRL_CLOCKSEL_EXT			0x2
-> +#define AD4170_CLOCK_CTRL_CLOCKSEL_EXT_XTAL		0x3
-> +
-> =C2=A0/* AD4170_CHAN_MAP_REG constants */
-> =C2=A0#define AD4170_CHAN_MAP_AIN0			0
-> =C2=A0#define AD4170_CHAN_MAP_AIN1			1
-> @@ -238,6 +250,10 @@ enum ad4170_regulator {
-> =C2=A0	AD4170_MAX_SUP
-> =C2=A0};
-> =C2=A0
-> +static const char *const ad4170_clk_sel[] =3D {
-> +	"ext-clk", "xtal"
-> +};
-> +
-> =C2=A0enum ad4170_int_pin_sel {
-> =C2=A0	AD4170_INT_PIN_SDO,
-> =C2=A0	AD4170_INT_PIN_DIG_AUX1,
-> @@ -320,6 +336,9 @@ struct ad4170_state {
-> =C2=A0	struct ad4170_chan_info chan_infos[AD4170_MAX_CHANNELS];
-> =C2=A0	struct ad4170_setup_info setup_infos[AD4170_MAX_SETUPS];
-> =C2=A0	u32 mclk_hz;
-> +	unsigned int clock_ctrl;
-> +	struct clk *ext_clk;
-> +	struct clk_hw int_clk_hw;
-> =C2=A0	int pins_fn[AD4170_NUM_ANALOG_PINS];
-> =C2=A0	u32 int_pin_sel;
-> =C2=A0	int
-> sps_tbl[ARRAY_SIZE(ad4170_filt_names)][AD4170_MAX_FS_TBL_SIZE][2];
-> @@ -1693,13 +1712,127 @@ static int ad4170_parse_channels(struct iio_dev
-> *indio_dev)
-> =C2=A0	return 0;
-> =C2=A0}
-> =C2=A0
-> +static struct ad4170_state *clk_hw_to_ad4170(struct clk_hw *hw)
-> +{
-> +	return container_of(hw, struct ad4170_state, int_clk_hw);
-> +}
-> +
-> +static unsigned long ad4170_sel_clk(struct ad4170_state *st,
-> +				=C2=A0=C2=A0=C2=A0 unsigned int clk_sel)
-> +{
-> +	st->clock_ctrl &=3D ~AD4170_CLOCK_CTRL_CLOCKSEL_MSK;
-> +	st->clock_ctrl |=3D FIELD_PREP(AD4170_CLOCK_CTRL_CLOCKSEL_MSK,
-> clk_sel);
-> +	return regmap_write(st->regmap16, AD4170_CLOCK_CTRL_REG, st-
-> >clock_ctrl);
-> +}
-> +
-> +static unsigned long ad4170_clk_recalc_rate(struct clk_hw *hw,
-> +					=C2=A0=C2=A0=C2=A0 unsigned long parent_rate)
-> +{
-> +	return AD4170_INT_CLOCK_16MHZ;
-> +}
-> +
-> +static int ad4170_clk_output_is_enabled(struct clk_hw *hw)
-> +{
-> +	struct ad4170_state *st =3D clk_hw_to_ad4170(hw);
-> +	u32 clk_sel;
-> +
-> +	clk_sel =3D FIELD_GET(AD4170_CLOCK_CTRL_CLOCKSEL_MSK, st->clock_ctrl);
-> +	return clk_sel =3D=3D AD4170_CLOCK_CTRL_CLOCKSEL_INT_OUT;
-> +}
-> +
-> +static int ad4170_clk_output_prepare(struct clk_hw *hw)
-> +{
-> +	struct ad4170_state *st =3D clk_hw_to_ad4170(hw);
-> +
-> +	return ad4170_sel_clk(st, AD4170_CLOCK_CTRL_CLOCKSEL_INT_OUT);
-> +}
-> +
-> +static void ad4170_clk_output_unprepare(struct clk_hw *hw)
-> +{
-> +	struct ad4170_state *st =3D clk_hw_to_ad4170(hw);
-> +
-> +	ad4170_sel_clk(st, AD4170_CLOCK_CTRL_CLOCKSEL_INT);
-> +}
-> +
-> +static const struct clk_ops ad4170_int_clk_ops =3D {
-> +	.recalc_rate =3D ad4170_clk_recalc_rate,
-> +	.is_enabled =3D ad4170_clk_output_is_enabled,
-> +	.prepare =3D ad4170_clk_output_prepare,
-> +	.unprepare =3D ad4170_clk_output_unprepare,
-> +};
-> +
-> +static int ad4170_register_clk_provider(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4170_state *st =3D iio_priv(indio_dev);
-> +	struct device *dev =3D indio_dev->dev.parent;
-> +	struct fwnode_handle *fwnode =3D dev_fwnode(dev);
-> +	struct clk_init_data init =3D {};
-> +	int ret;
-> +
-> +	if (!IS_ENABLED(CONFIG_COMMON_CLK))
-> +		return 0;
-> +
-> +	init.name =3D fwnode_get_name(fwnode);
+One nit question:
+Is perf.data and perf.data.old the default files
+for comparison if no files are provided in
+perf sched stats diff?
 
-Maybe allow for clock-output-names? See:
 
-https://elixir.bootlin.com/linux/v6.13.7/source/drivers/iio/frequency/adf43=
-50.c#L467
+thanks,
+Chenyu
 
-- Nuno S=C3=A1
 
