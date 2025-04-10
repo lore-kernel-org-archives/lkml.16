@@ -1,124 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m15572.qiye.163.com (mail-m15572.qiye.163.com [101.71.155.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0066214234;
-	Thu, 10 Apr 2025 12:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF6C1EB9F7
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744287408; cv=none; b=dAp9Ur5Fy4klO8GUqRJ1hqnRkbHyQs9auMk7YPqYJfZ9PSGsifBSmqGI/CHsI9i1aK6x00JtOiI2pBGYKCjg0nrkH9VqzlDpEAOPdNuYR4k6GJF+yIvKUltYkukwGe5geYItPnkGYb+jtDbLAz/lmya/hb/Fh4Ocfqa7P8Fy2xg=
+	t=1744287483; cv=none; b=Lr/meO9rIGO53RgIP54zz6n1ZsdxqLYqlkVB2QYL0v0WXZww7us1qKrHLswMaljS4vYlxNpp0bSysuhvOpaZEfJ/rIe2aw+Bfk3Mq2Z6KYXMRRD2aa66YBoY4nk3dbtC0OJFo5+QLgl3GE0AGAtbyvvp8hoXndomFo5nmBl4ta0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744287408; c=relaxed/simple;
-	bh=kVly1EE2XeoTRvQPjdFp6oy1mrdHieGAoQT4jHkDYms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uky/uKGLpzYdj/TWF3rnKE4zjkAKDH6cMy1gY6cihE+ComBM/isIf6RMRVrFeV5Z5COhHgUH9TY3NxM1YNqnU2ssVL3j060wxgWgaX1zV9dGguAwXhK/tX3WfQOJAiyY3mD8cekVnjp/SFcBj0AkVM4MMdrFvQSK1SW7XBklwa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdU+r2Vq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdU+r2Vq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF1BDC4CEDD;
-	Thu, 10 Apr 2025 12:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744287407;
-	bh=kVly1EE2XeoTRvQPjdFp6oy1mrdHieGAoQT4jHkDYms=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PdU+r2Vq78gaAheELNKaEXxcKxp0M4hS7kXhKQhdLnQeOD4vkGJSxhDV3YcrbfBpF
-	 LBxAHKn+wdzjpTrDw1wGyUtZkNULCyg8Sr6UJEPOKpc2U4xtvsVP+UKcPbWD+E48IE
-	 wgFfPbImp6Emusduxq9/wtt/C894e9Bu4FPY54wbS9YlncqMkJxC3VYiA+1RczitWb
-	 wjXRKLSwxAYRmSkmtN7x8FuyLRxh0EBJF9lTIlVZoWRRaT0OALLaRo68WaFqp7xH3B
-	 3ZY/a2oTMf+0ZZdd3ENBPfUmRWk56+cTQvpdcuvNjPE6FpIb45hTBEyM4WcHRSbbLl
-	 7oaLiMLjTxKjQ==
-Message-ID: <9cc33c4b-05e6-4203-8762-205eb3d4e9df@kernel.org>
-Date: Thu, 10 Apr 2025 14:16:42 +0200
+	s=arc-20240116; t=1744287483; c=relaxed/simple;
+	bh=kuXOKQ/VWplne7B8veOBQLZHjnvpU6HfINURBHyWPfg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mZ8CcQMEjN3nsqDpoOjBTQJa/ekeOtdf34eHlooWjDBRGD7Eos8HZZciegsldA5+8iqAMfF9xc6aovTivIRN0yY9ApMM/4WaRB47GzkKKlwHMIecvMo6I2b4lN/Hd8xLEur8a1MNklVjIyHuF6e6t3mEhA9EJFCZTym3h5lncaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=101.71.155.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
+Received: from localhost.localdomain (unknown [122.224.147.158])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11665dc50;
+	Thu, 10 Apr 2025 19:42:24 +0800 (GMT+08:00)
+From: Shouping Wang <allen.wang@hj-micro.com>
+To: will@kernel.org
+Cc: robin.murphy@arm.com,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	allen.wang@hj-micro.com,
+	peter.du@hj-micro.com,
+	andy.xu@hj-micro.com
+Subject: [PATCH 0/2] perf:arm-ni: support PMUs to share IRQs
+Date: Thu, 10 Apr 2025 19:42:12 +0800
+Message-ID: <20250410114214.1599777-1-allen.wang@hj-micro.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] interconnect: samsung: Add NULL check in
- exynos_generic_icc_probe
-To: Charles Han <hanchunchao@inspur.com>, s.nawrocki@samsung.com,
- a.swigon@samsung.com, djakov@kernel.org, alim.akhtar@samsung.com,
- cw00.choi@samsung.com
-Cc: linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250410110421.77580-1-hanchunchao@inspur.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250410110421.77580-1-hanchunchao@inspur.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHUxJVhlMGE1MTR5MT0IYSVYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0hVSk
+	tLVUpCS0tZBg++
+X-HM-Tid: 0a961f82225009d9kunm11665dc50
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PU06Ajo4PTJNMDceEEgMTD4U
+	OhVPCy9VSlVKTE9PSUNOSE9OSkNOVTMWGhIXVRoXFx4VVQwaFRw7ExFWFhIYCRRVGBQWRVlXWRIL
+	WUFZSklJVUlJT1VKT0xVSk5DWVdZCAFZQUpLTEw3Bg++
 
-On 10/04/2025 13:04, Charles Han wrote:
-> devm_kasprintf() can return a NULL pointer on failure,but this
-> returned value in exynos_generic_icc_probe() is not checked.
-> Add NULL check in exynos_generic_icc_probe(), to handle kernel NULL
-> pointer dereference error.
-> 
-> Fixes: 2f95b9d5cf0b ("interconnect: Add generic interconnect driver for Exynos SoCs")
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-> ---
->  drivers/interconnect/samsung/exynos.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/interconnect/samsung/exynos.c b/drivers/interconnect/samsung/exynos.c
-> index 9e041365d909..f3568f0d92d1 100644
-> --- a/drivers/interconnect/samsung/exynos.c
-> +++ b/drivers/interconnect/samsung/exynos.c
-> @@ -134,6 +134,11 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
->  	priv->node = icc_node;
->  	icc_node->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn",
->  					bus_dev->of_node);
-> +	if (!icc_node->name) {
-> +		devm_kfree(&pdev->dev, priv);
+This patch mainly supports to share the interrupt on PMUS for different
+clock domains.
 
-Instead of doing some scripting changes you need to look at the code.
-Look at other error paths, how they are doing it.
+Dependency: The second patch depends on first one. It was already
+reviewed by robin.
 
-Otherwise please explain why you need to release a managed resource?
+thanks,
+Shouping
 
-Best regards,
-Krzysztof
+Hongbo Yao (1):
+  perf: arm-ni: Unregister PMUs on probe failure
+
+Shouping Wang (1):
+  perf:arm-ni: support PMUs to share IRQs for different clock domains
+
+ drivers/perf/arm-ni.c | 116 +++++++++++++++++++++++++++---------------
+ 1 file changed, 74 insertions(+), 42 deletions(-)
+
+-- 
+2.43.0
+
