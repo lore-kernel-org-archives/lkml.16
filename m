@@ -1,96 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6291EB1B7;
-	Thu, 10 Apr 2025 09:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CD620C488;
+	Thu, 10 Apr 2025 09:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276427; cv=none; b=G1g6bKQrhe8Dyvd8zQ7y1pLvDpQAl2+UUf0FicuKyV5ipqDb7BVVnsQEdiIWJ951usglWAZEVmPEvSYhTXfsS9FimTMLoAN+JcAgCzSsJr4+mi7P2xVRg5gr1TJswS4EejeBs2YfHJB3uyuZ06biwTcuoP2kb1uaMymBs2j/Rq4=
+	t=1744276452; cv=none; b=M7yXvi9RhR81RTBBf7uxO1iYmrbVywlrL5iEPAvQBPTUWAleN7G/bMbOxUJYv+m46knMdMOHs0n/+NRbQc11JIJwOdY6CIMGZAFFqTeeA0ArqzusM1yTpt4EOHtcs0OfKf6gqsz69jpZzM+8mmHUiJhrqtMAXzN41zY00Prk4Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276427; c=relaxed/simple;
-	bh=681O8sdOuewrF/ZEpCXK9dKabn6LqO1Rw/i41eLk9SE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IBUKUPgtmWXoBIZ9K9VtfSxGTlZwEUowAiRQRY9TOGuuZElGpO7HcozcX8jkKKgaUS46ONKZDndJyOPBtdfrs+3Gi/aVByWaXNHSYmmPKEK5HXnIMeLfPnxvmy+5aiuIcPi5icREx1QPtKbRQ8Jn0RwCJDBaHh5OxXeaypZGmuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OvqQU49W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744276452; c=relaxed/simple;
+	bh=f1bSP3V/wnUtvwthyPhUPn8aQ70wSX7njYSzkv5yYCU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lPCBuA6iTp6DzVWrlkeai2rOj5i/cBBjGojLQWdJnD5LPFIyYl+KqIiZt/AIXAQu58avn4hIiiwtPrmJLBF0PgsZxQJHekH+9tjzs+sv1QuQsSYpCOrszahOr0WZw6QZsQdE4xTHRf1/NrKAwwYyIRqvnFzNk4wq/S6yC/pbBX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oQethw0o; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OvqQU49W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB69C4CEDD;
-	Thu, 10 Apr 2025 09:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744276426;
-	bh=681O8sdOuewrF/ZEpCXK9dKabn6LqO1Rw/i41eLk9SE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OvqQU49WtB9Ol4BwllJdPabwF/KLI/eBMXqot/RA/zx1BHGfUzg+b1OgYPUBe6uF7
-	 IvF0q4J3zQ6CNv9VbGoC+GpdRRz1MKZrsmXPVD+QmFxLLEhZt1TyCqBsGycQQHmiVV
-	 M50NILJLN7G2AIlvmqcdWEKTGIHZSBkJve7DxtrIc72/xnmJf6l572iZ3xJgxOQGC+
-	 sClhQSxHJ3ONh5dn9AjLZYwnseAixz++J7CqrZAY1N22H7XUInbYqZ6SJqMCctmMMP
-	 amlLLExIZC8qgm1doL06cmPryEhiFTj4bers4sB7cU8BFNcyRvRQtiUX+zmHb8haZ/
-	 vr+1jUhpoFZqA==
-Date: Thu, 10 Apr 2025 10:13:40 +0100
-From: Lee Jones <lee@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Markus Elfring <elfring@users.sourceforge.net>,
-	Jakob Riepler <jakob+lkml@paranoidlabs.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org, linux-usb@vger.kernel.org,
-	Daniel Scally <djrscally@gmail.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v1 0/4] leds: Introduce and use
- fwnode_get_child_node_count()
-Message-ID: <20250410091340.GQ372032@google.com>
-References: <20250310150835.3139322-1-andriy.shevchenko@linux.intel.com>
- <20250321110315.GH1750245@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oQethw0o"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A75ev1000699;
+	Thu, 10 Apr 2025 09:14:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hGY4uTpYXd/tDtQK+UKGjzRPs1W7kXS1Z0P2dmPWfy0=; b=oQethw0oeF7fFMd2
+	9KqbCsVJ+sMNhuBQE2ol3DcJYx+kNyWDlGhRgrF+enEVX1/BP9OlQ2R/EA4ZqZ/r
+	Zg2uvwbIGB8gP9U247WyRfNYawqZbGwNmlJGo4WHNylhJATarsox0NvX5AIBdwao
+	5Saigm1U4g/6QwilmQGtWtabP2qBRXOzZAYQumhRduP9PCrhk4EJMvPbZPucvxrQ
+	veDTgm2WDrXVkmMji4u0XLyvUOoTpHPXQu3JvsQ5mgDFNUjkxRq+ed0zT+Q45LTS
+	o9L8qYb72Y0PnYpViR/d7CvUt06GfKSx8fTx91+4aKj/hBNWeJNvCqhATuwJdKVT
+	WKJLcA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2xa9n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 09:14:00 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53A9E0sA024266
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 09:14:00 GMT
+Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
+ 2025 02:13:55 -0700
+Message-ID: <c35c37c9-ff5b-43cc-afdd-fff509415ca6@quicinc.com>
+Date: Thu, 10 Apr 2025 14:43:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 2/6] phy: qcom-qmp-ufs: Refactor phy_power_on and
+ phy_calibrate callbacks
+To: <neil.armstrong@linaro.org>, <vkoul@kernel.org>, <kishon@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>,
+        <James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
+        <konrad.dybcio@oss.qualcomm.com>
+CC: <quic_rdwivedi@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, Can Guo <quic_cang@quicinc.com>
+References: <20250318144944.19749-1-quic_nitirawa@quicinc.com>
+ <20250318144944.19749-3-quic_nitirawa@quicinc.com>
+ <ab3639e0-61bb-46f0-9e54-f1bbd034b939@linaro.org>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <ab3639e0-61bb-46f0-9e54-f1bbd034b939@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250321110315.GH1750245@google.com>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Ia17VMEn0O_RUNO79BLfP3RTUNvzsWg4
+X-Proofpoint-GUID: Ia17VMEn0O_RUNO79BLfP3RTUNvzsWg4
+X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f78bd8 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=RY7zYqXbgaIDV70ltDMA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_01,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100068
 
-On Fri, 21 Mar 2025, Lee Jones wrote:
 
-> On Mon, 10 Mar 2025, Andy Shevchenko wrote:
+
+On 3/18/2025 8:39 PM, neil.armstrong@linaro.org wrote:
+> On 18/03/2025 15:49, Nitin Rawat wrote:
+>> Commit 052553af6a31 ("ufs/phy: qcom: Refactor to use phy_init call")
+>> puts enabling regulators & clks, calibrating UFS PHY, starting serdes
+>> and polling PCS ready status into phy_power_on.
+>>
+>> In Current code regulators enable, clks enable, calibrating UFS PHY,
+>> start_serdes and polling PCS_ready_status are part of phy_power_on.
+>>
+>> UFS PHY registers are retained after power collapse, meaning calibrating
+>> UFS PHY, start_serdes and polling PCS_ready_status can be done only when
+>> hba is powered_on, and not needed every time when phy_power_on is called
+>> during resume. Hence keep the code which enables PHY's regulators & clks
+>> in phy_power_on and move the rest steps into phy_calibrate function.
+>>
+>> Refactor the code to retain PHY regulators & clks in phy_power_on and
+>> move out rest of the code to new phy_calibrate function.
+>>
+>> Co-developed-by: Can Guo <quic_cang@quicinc.com>
+>> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 18 ++----------------
+>>   1 file changed, 2 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/ 
+>> qualcomm/phy-qcom-qmp-ufs.c
+>> index bb836bc0f736..0089ee80f852 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> @@ -1796,7 +1796,7 @@ static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+>>       return 0;
+>>   }
+>>
+>> -static int qmp_ufs_init(struct phy *phy)
+>> +static int qmp_ufs_power_on(struct phy *phy)
+>>   {
+>>       struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>>       const struct qmp_phy_cfg *cfg = qmp->cfg;
+>> @@ -1898,21 +1898,6 @@ static int qmp_ufs_exit(struct phy *phy)
+>>       return 0;
+>>   }
+>>
+>> -static int qmp_ufs_power_on(struct phy *phy)
+>> -{
+>> -    int ret;
+>> -
+>> -    ret = qmp_ufs_init(phy);
+>> -    if (ret)
+>> -        return ret;
+>> -
+>> -    ret = qmp_ufs_phy_calibrate(phy);
+>> -    if (ret)
+>> -        qmp_ufs_exit(phy);
+>> -
+>> -    return ret;
+>> -}
+>> -
+>>   static int qmp_ufs_disable(struct phy *phy)
+>>   {
+>>       int ret;
+>> @@ -1942,6 +1927,7 @@ static int qmp_ufs_set_mode(struct phy *phy, 
+>> enum phy_mode mode, int submode)
+>>   static const struct phy_ops qcom_qmp_ufs_phy_ops = {
+>>       .power_on    = qmp_ufs_power_on,
+>>       .power_off    = qmp_ufs_disable,
+>> +    .calibrate    = qmp_ufs_phy_calibrate,
 > 
-> > This series was inspired during review of "Support ROHM BD79124 ADC" [1].
-> > The three conversion patches are the examples of the new API in use.
-> > 
-> > Since the first two examples of LEDS, in case of posotove response it may
-> > be routed via that tree and immutable branch/tag shared with others, e.g.,
-> > IIO which Matti's series is targeting and might be dependent on. The USB
-> > patch can be applied later separately, up to the respective maintainers.
-> > 
-> > Link: https://lore.kernel.org/r/cover.1741610847.git.mazziesaccount@gmail.com> [1]
-> > 
-> > Andy Shevchenko (4):
-> >   device property: Split fwnode_get_child_node_count()
-> >   leds: pwm-multicolor: Use fwnode_get_child_node_count()
-> >   leds: ncp5623: Use fwnode_get_child_node_count()
-> >   usb: typec: tcpm: Use fwnode_get_child_node_count()
-> > 
-> >  drivers/base/property.c                | 12 ++++++------
-> >  drivers/leds/rgb/leds-ncp5623.c        |  5 ++---
-> >  drivers/leds/rgb/leds-pwm-multicolor.c |  7 +++----
-> >  drivers/usb/typec/tcpm/tcpm.c          |  6 ++----
-> >  include/linux/property.h               |  7 ++++++-
-> >  5 files changed, 19 insertions(+), 18 deletions(-)
+> Ok so this will break the UFS until patch 5 is applied,
+> breaking bisectability.
 > 
-> Note to self: This has everything we need.  Merge it for v6.16.
+> Make sure UFS host driver calls calibrate first, and then
+> do the refactor in the PHY driver.
 
-Submitted for build testing.  Will provide a PR once finished.
+Hi Neil.
 
-Note to self: ib-leds-base-usb-6.16
+Thanks for the review. I have taken care of bisecatablity
+compliance by making UFS host driver calls calibrate first
+in latest patch set.
 
--- 
-Lee Jones [李琼斯]
+Regards,
+Nitin
+
+
+
+> 
+> And either all would go in a single tree or either PHY
+> or SCSI maintainer would need to provide an immutable
+> branch for the final merge.
+> 
+>>       .set_mode    = qmp_ufs_set_mode,
+>>       .owner        = THIS_MODULE,
+>>   };
+>> -- 
+>> 2.48.1
+>>
+>>
+> 
+
