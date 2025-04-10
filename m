@@ -1,54 +1,41 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB697283699;
-	Thu, 10 Apr 2025 21:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE2C1EDA39;
+	Thu, 10 Apr 2025 21:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744319575; cv=none; b=KGoNBhIEBUQyoe+CazbYgeopzU9ywk9FNn4dPW+BRjGRmqrHDoxaa0CI4NM6wDbnsjz3Cz5eoPAOhEbA7L1baThYaO/6IsdLbABn+5S3CDpsAe0OmMtZpNKAD1e2xJfReqVXNgC6fMfpMxwN+7ursjbEkBrUdWLTtI4gcxSWe5k=
+	t=1744319633; cv=none; b=muZ6hmecrqoPvRtLGk4VXFeYlSYl8KRVUeSVMQ86f4IzXye27ebplrP4Cs9SFMwH/bioruzYwFOyteZNdqR++3De4MZHyUIM0eIma/dJkunHm10hearw2DJWp2fYWk7vG0hPfqvv2b9XjPAkJCLoQKGS9lO5uuVr2NC2lH50dvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744319575; c=relaxed/simple;
-	bh=T/P1P+E6uonJ66xjSWFrnWdtSTsghWdTneLNPuBwQ/0=;
+	s=arc-20240116; t=1744319633; c=relaxed/simple;
+	bh=PyZ19Zto2g311Bz6AKEgiRK+kx0zxDHd+b7mqXnsYqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IlowKPHlEOQGLL0Yr1xPrNtkh24OdWPgcFDgWZWBtFY/lycqKECqCMq8TbuqYio6BZ/lzTM0qWVqlNc8DkNXojeQWG54jMFJwKaSXcfb57Xyqy++kii4Nf9WM+qdO4lIpuiznmBcE7U0cPIpvPwvi6ftosPFxyuRh4VMSW/UG1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=b71vFG8V; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=VkMy6iU6dab5uZgD+2A7YDLpLS0yorqDBGKrnx2OsA6j9ZoAocSsojn4cbziCctuJwFp3WrXJarLuvVGUk2cs7kBlYEEuIuc1WkesKKVj720pzU/yaY2MXZrIHLR+GdLWvqUJ2NYMmS0zBx3Gx/8X4YyvHwwF5kFTp+tKVKyONg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W845Ln1b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b71vFG8V"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=rNczozpcMMZxD6eTya8/M09asYvM0i0dZVM4tXgpxfI=; b=b71vFG8VCjoEOC9kmtRiAM4CGT
-	K6kl1UNoulWweks05cqAieZhnfkkcdnD4yFBbpbnd0MBb6iEmajn66P/0Gc78Kc+JwKqukGfJoOB9
-	K32KsGy4iB5xvor3+A4L7xLVRk6UJKBAuuM9MaIHpz6gD5s0cUKqLBpfvfArGlTIbouI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2zCT-008jJx-3t; Thu, 10 Apr 2025 23:12:41 +0200
-Date: Thu, 10 Apr 2025 23:12:41 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Prathosh.Satish@microchip.com, conor@kernel.org, krzk@kernel.org,
-	netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
-	arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
-	kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
-	mschmidt@redhat.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
- Azurite chip family
-Message-ID: <4e331736-36f2-4796-945f-613279329585@lunn.ch>
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-3-ivecera@redhat.com>
- <20250410-skylark-of-silent-symmetry-afdec9@shite>
- <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
- <20250410-puritan-flatbed-00bf339297c0@spud>
- <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
- <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
- <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
- <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W845Ln1b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35013C4CEDD;
+	Thu, 10 Apr 2025 21:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744319632;
+	bh=PyZ19Zto2g311Bz6AKEgiRK+kx0zxDHd+b7mqXnsYqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W845Ln1biz28JtaulDGfkCGt7swIlHSKQhOAAHE6f6JrPj8wMXN8+LsQe0gZDZ/sk
+	 e0n2Y+fVhkzOvc8XEwW7tP95tOsuE9RUchu0w2Am51DAkajHhSIhC5j+wBO8rXRlVp
+	 9WZ1CoYaAi/SnPuRYY9shpT4tyKhU/nzV2CVXbTtK9zcsKWXfLPyXo+DuTfxMbLCuC
+	 eayxwJAbFFb0Y8rgmb9rBpVTH7I2QtbF7ebX8ykMY5zH/E4ma4+8NUewD8MYHHI6mQ
+	 nbF1s2V0DIR2E4UtXnzDJrg5Gi5t2KPRpRX3A56TdQAHoshTeH8V2Ow5zQj6SHIbAE
+	 oaft5tQdtfM0A==
+Date: Thu, 10 Apr 2025 16:13:51 -0500
+From: Rob Herring <robh@kernel.org>
+To: Antoni Pokusinski <apokusinski01@gmail.com>
+Cc: alexandre.belloni@bootlin.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	alexander.stein@ew.tq-group.com, linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] dt-bindings: rtc: add binding for RV8063
+Message-ID: <20250410211351.GA1076944-robh@kernel.org>
+References: <20250407193521.634807-1-apokusinski01@gmail.com>
+ <20250407193521.634807-4-apokusinski01@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,57 +44,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
+In-Reply-To: <20250407193521.634807-4-apokusinski01@gmail.com>
 
-On Thu, Apr 10, 2025 at 08:33:31PM +0200, Ivan Vecera wrote:
+On Mon, Apr 07, 2025 at 09:35:21PM +0200, Antoni Pokusinski wrote:
+> Microcrystal RV8063 is a real-time clock module with SPI interface.
 > 
+> Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
+> ---
+>  .../devicetree/bindings/rtc/nxp,pcf85063.yaml | 33 ++++++++++++++++++-
+>  1 file changed, 32 insertions(+), 1 deletion(-)
+
+Bindings come before users (driver).
+
 > 
-> On 10. 04. 25 7:36 odp., Andrew Lunn wrote:
-> > > Prathosh, could you please bring more light on this?
-> > > 
-> > > > Just to clarify, the original driver was written specifically with 2-channel
-> > > > chips in mind (ZL30732) with 10 input and 20 outputs, which led to some confusion of using zl3073x as compatible.
-> > > > However, the final version of the driver will support the entire ZL3073x family
-> > > > ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc
-> > > > ensuring compatibility across all variants.
-> > 
-> > Hi Prathosh
-> > 
-> > Your email quoting is very odd, i nearly missed this reply.
-> > 
-> > Does the device itself have an ID register? If you know you have
-> > something in the range ZL30731 to ZL30735, you can ask the hardware
-> > what it is, and the driver then does not need any additional
-> > information from DT, it can hard code it all based on the ID in the
-> > register?
-> > 
-> > 	Andrew
-> > 
-> Hi Andrew,
-> yes there is ID register that identifies the ID. But what compatible should
-> be used?
+> diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
+> index 2f892f8640d1..cb31c7619d66 100644
+> --- a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
+> @@ -12,6 +12,7 @@ maintainers:
+>  properties:
+>    compatible:
+>      enum:
+> +      - microcrystal,rv8063
+>        - microcrystal,rv8263
+>        - nxp,pcf85063
+>        - nxp,pcf85063a
+> @@ -44,7 +45,12 @@ properties:
+>  
+>    wakeup-source: true
+>  
+> +  spi-cs-high: true
+> +
+> +  spi-3wire: true
+> +
+>  allOf:
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+>    - $ref: rtc.yaml#
+>    - if:
+>        properties:
+> @@ -52,6 +58,7 @@ allOf:
+>            contains:
+>              enum:
+>                - microcrystal,rv8263
+> +              - microcrystal,rv8063
+>      then:
+>        properties:
+>          quartz-load-femtofarads: false
+> @@ -65,12 +72,23 @@ allOf:
+>        properties:
+>          quartz-load-femtofarads:
+>            const: 7000
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          not:
+> +            contains:
+> +              enum:
+> +                - microcrystal,rv8063
+> +    then:
+> +      properties:
+> +        spi-cs-high: false
+> +        spi-3wire: false
+>  
+>  required:
+>    - compatible
+>    - reg
+>  
+> -additionalProperties: false
+> +unevaluatedProperties: false
+>  
+>  examples:
+>    - |
+> @@ -90,3 +108,16 @@ examples:
+>            };
+>          };
+>        };
+> +
+> +  - |
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        rtc@0 {
+> +          compatible = "microcrystal,rv8063";
+> +          reg = <0>;
+> +          spi-cs-high;
+> +          spi-3wire;
+> +        };
+> +    };
+> -- 
+> 2.25.1
 > 
-> microchip,zl3073x was rejected as wildcard and we should use all
-> compatibles.
-
-You have two choices really:
-
-1) You list each device with its own compatible, because they are in
-fact not compatible. You need to handle each one different, they have
-different DT properties, etc. If you do that, please validate the ID
-register against the compatible and return -ENODEV if they don't
-match.
-
-2) You say the devices are compatible. So the DT compatible just
-indicates the family, enough information for the driver to go find the
-ID register. This does however require the binding is the same for all
-devices. You cannot have one family member listing 10 inputs in its
-binding, and another family member listing 20.
-
-If you say your devices are incompatible, and list lots of
-compatibles, you can then use constraints in the yaml, based on the
-compatible, to limit each family member to what it supports.
-
-My guess is, you are going to take the first route.
-
-	Andrew
