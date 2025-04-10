@@ -1,166 +1,131 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B951F1A3150;
-	Thu, 10 Apr 2025 05:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688CF1A3150;
+	Thu, 10 Apr 2025 05:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744261527; cv=none; b=RmtO9eNeLvzL3fg2ttKIYEXiwIVScda8QzAaVwTpYHx7qHurVsYtbWNqODn6vNtqDVqYMKrGOS9wde11e2XX8EdPNo+74awUQRmnvxLYAAEc29N71Bdddy84LM4CrNTICImhMpYWvOR2/h2y6VDvO/1uCNHWQtMGKyU4QVU7ak0=
+	t=1744261611; cv=none; b=oUG0BR0B5jd9akCz2ukXeK4/x3zkGGneL9THSCK5CtgTHbZe3oPFsPzEMpCc6/rluz0wufeLRp+t2Re6/IBlvdPrAS17lcKn+mlmzStgCYUdnfgNFXtUGKE/9Tntia77hn2uTgYoHbh7HclMG0wme4ID5h9nW8rd+/H1iiGnTJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744261527; c=relaxed/simple;
-	bh=d0SRzgkJEPXktHw5+f25WSWmg8vczFM8sM8a8WNUVLQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LwNbhuhOP1Oma5Nte6dxMkOrnCbVnwLtJeowNaxvxUmLnyWVVmTJkPxcsa5CDetAux9XA14RLrljwSohyxewD8XHvAZxuFyy60f9k0LWB07PNAcj3ov6ReEih0ZR75oPYlZXxL6bbCrmBUA2xmxfsiYxW4R38COgHwmcANYfoTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RNrCv7kh; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744261611; c=relaxed/simple;
+	bh=8rCqixOvDHQ5m3uWKiliryBjCwbDUjuhy/lmzWlucQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EW0Z4TOgyQ8sUDRv+p3Q4QGVmlwUs88ZJQnHIxW/Sthp5M8q52vpYFlYZqWM5UjPQhB1+5/8lnnwL6Vtb5//IofvdW6Wln5gQtNwBP408bZYv6CTKWqmE9nHhVjoPiZEYX1pkH1xObU4jWrVs9gfxvSe/gZhnneadO1+yVHD7Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JmhJZVPx; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RNrCv7kh"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A503Fc008413;
-	Thu, 10 Apr 2025 05:05:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Nn8VvEvF4/BbQTPCcCGrRvvmAwnomHKMg9nJ6YFqGlQ=; b=RNrCv7khH2+lnwEk
-	1Hyo6hYbuZyHSiagxe6xcPMHdcMvtjf/HbuxDf1tIlsFz5xtZCIf3tHaKT5OXgwz
-	9KW0IEnQxs3ibMpt/ui/lRImdIlzAGKwHWfK1kPEAzbngPJboisODjnEKWXfxstT
-	6heFKZkA9o1XlENXlpOhcuBIyeSJ+8jKcnaOl5YGYf5AM0bKG2w+TZu2/K/Q/P5P
-	FtYZdj5t7vBUJw7vJsc5o1Y2yhnS69qH6qh4lyG2xk8MF3iLgXORgYW2j/jr+CPw
-	Ys6i/tKZnIY1Ia66CuELCHhawhRETW5AJsYjzNoDK6Cuu6gYVkTUPY9roT6kETLA
-	UVV/DQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgnrq0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 05:05:01 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53A550gv001919
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 05:05:00 GMT
-Received: from [10.204.66.137] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 9 Apr 2025
- 22:04:52 -0700
-Message-ID: <d6771074-00b9-449d-997e-7eff50f01193@quicinc.com>
-Date: Thu, 10 Apr 2025 10:34:49 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JmhJZVPx"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-736c3e7b390so302468b3a.2;
+        Wed, 09 Apr 2025 22:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744261609; x=1744866409; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d46airT75vHv8EXQAD6iB9DXsZw0o96cfAedDj25Jsg=;
+        b=JmhJZVPxnoTEZWD3g0E8kv+IdVPl6Z7qly8k+c8p8FUHWfpcJOY/ROl6eT9YYC5AWj
+         xpZz/ZXL+PWE6Wwd78sLsFIDd2JspPlWxPWahVUOwvnu/Nw6In5FbrzGUNVdfLdfHBea
+         hambp4sIk6AgvHP1byttMdeMEvb//yKWigAu2TjtyrkfwcTRsgh+GWsXO84Q83bJhlU/
+         xbw1cf1HEbdthA+1wI0RCQJZVAcQNMrnyPwNUeBAkTmMTskDPq2nrMWProsXRkMCzZPT
+         UaFkCAuNdihoyX1EIYai6WF23csnweUdpc99guEOYCwOfOqTe/An11CoZ2MebiwVeh+x
+         +stg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744261609; x=1744866409;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d46airT75vHv8EXQAD6iB9DXsZw0o96cfAedDj25Jsg=;
+        b=EYWuW34fvZW2jQtV4vjvokUbrGROUTBaLHT1ETy5FjUudb8FPNz8sOMA7olxjqJQJt
+         g6QBkErLiY0dg/4xoK3fnpQEHP06rH3pYrhcsatMDuHVMIdFvmf2MGwg741BDSViF7vF
+         YO0BiqkQCKDSaIsTrhKM3kTLdT92fpFmkJqs/M4CtcLoZNRh6zi8pdrqjvuRyFCcuOD2
+         KhRF1Vp/yWc2TMLyurYE9kM2sXT0TfagZUMhDNo/H/nZewjOXJrOsvKWpgc8jjbcPpIE
+         Mx06CQLCOxdzb67ebh1ASfrOOKCyoGjYq2w2G4cMk31Z75488QICb6QL7GXySHvfPZzL
+         sYHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvCSD1CbJC5nNvG3XAJaIWzTLo/QBwuYTU8IoX2JeV+Z4edG66erNKzufzvQcPvZs5M3mPhHr+XAg5EiA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLzKqZeOow8OJPH6TD7IxYkzlWL8q8Xs0XHB1cEFP0Q8DCvAvQ
+	nlY461iP0/UpngKPqJGw+jtkokhVLdIUev1QV1ELNPkZTXP1Nn57
+X-Gm-Gg: ASbGncuVGQy7ga5HIMr1zJtV/7rJ6hf+rTRKaUpeGrJgH6GhqLzko8aWP/57HyxCX5g
+	HNYxiztewJ7qdZ7V8C5HlFfmgsbCIB09Hw0V6DiJUCl1wOPmOhIw2tGNBbJX6E5vtbdCCcvJSyh
+	uOT4gzEGyUfcIXmmaaCjFOuwa7s/GXV5f760m4tCDyV+T2ziKaiD3rWOCPC7wyol6xOCiu8SBNj
+	qvnQ6Z/RQvvKVsrq0L5+jpAKbKU+bc2aScvOQ0gbJsjbum8rjzVFQL2GT8NV5t3Lyxdk5EdmBZV
+	DXw61Tb5++ulVqNNRJJmP7v84JSL7hJauzApr3aCMUYpDxFEGpMLZpSwDmM6
+X-Google-Smtp-Source: AGHT+IEyf/jfRZocce8XbsHKUc43T+JyTF/Sk4rwsW7yZtcHMwpngitvkGrHYV2zaS4TA5tWyxiyjA==
+X-Received: by 2002:a05:6a00:1310:b0:735:d89c:4b9f with SMTP id d2e1a72fcca58-73bc08129b6mr1309744b3a.0.1744261608589;
+        Wed, 09 Apr 2025 22:06:48 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([106.222.231.231])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d6af12sm2320503b3a.80.2025.04.09.22.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 22:06:48 -0700 (PDT)
+From: Siddarth G <siddarthsgml@gmail.com>
+To: slongerbeam@gmail.com,
+	p.zabel@pengutronix.de,
+	mchehab@kernel.org,
+	gregkh@linuxfoundation.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	Siddarth G <siddarthsgml@gmail.com>
+Subject: [PATCH v2] media: imx: Fix NULL pointer dereference
+Date: Thu, 10 Apr 2025 10:35:43 +0530
+Message-ID: <20250410050543.6963-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
- to DP bridge nodes
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robdclark@gmail.com>,
-        <dmitry.baryshkov@linaro.org>, <sean@poorly.run>,
-        <marijn.suijten@somainline.org>, <andersson@kernel.org>,
-        <robh@kernel.org>, <robh+dt@kernel.org>, <krzk+dt@kernel.org>,
-        <konradybcio@kernel.org>, <conor+dt@kernel.org>,
-        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
-        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>
-References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
- <20250404115539.1151201-8-quic_amakhija@quicinc.com>
- <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
-Content-Language: en-US
-From: Ayushi Makhija <quic_amakhija@quicinc.com>
-In-Reply-To: <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f7517d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=0Abo7YVxcx67k3rTUHcA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 9eyw89_tYBSM11787j0PjXzrTwj3gyGB
-X-Proofpoint-GUID: 9eyw89_tYBSM11787j0PjXzrTwj3gyGB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
- impostorscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100037
+Content-Transfer-Encoding: 8bit
 
-On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
-> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
->> Add anx7625 DSI to DP bridge device nodes.
->>
->> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
->>  1 file changed, 207 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> index 175f8b1e3b2d..8e784ccf4138 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> @@ -28,6 +28,13 @@ chosen {
->>  		stdout-path = "serial0:115200n8";
->>  	};
->>  
->> +	vph_pwr: vph-pwr-regulator {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vph_pwr";
->> +		regulator-always-on;
->> +		regulator-boot-on;
->> +	};
->> +
->>  	vreg_conn_1p8: vreg_conn_1p8 {
->>  		compatible = "regulator-fixed";
->>  		regulator-name = "vreg_conn_1p8";
->> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
->>  			};
->>  		};
->>  	};
->> +
->> +	dp-dsi0-connector {
->> +		compatible = "dp-connector";
->> +		label = "DSI0";
->> +		type = "full-size";
->> +
->> +		port {
->> +			dp_dsi0_connector_in: endpoint {
->> +				remote-endpoint = <&dsi2dp_bridge0_out>;
->> +			};
->> +		};
->> +	};
->> +
->> +	dp-dsi1-connector {
->> +		compatible = "dp-connector";
->> +		label = "DSI1";
->> +		type = "full-size";
->> +
->> +		port {
->> +			dp_dsi1_connector_in: endpoint {
->> +				remote-endpoint = <&dsi2dp_bridge1_out>;
->> +			};
->> +		};
->> +	};
->>  };
->>  
->>  &apps_rsc {
->> @@ -517,9 +548,135 @@ &i2c11 {
->>  
->>  &i2c18 {
->>  	clock-frequency = <400000>;
->> -	pinctrl-0 = <&qup_i2c18_default>;
->> +	pinctrl-0 = <&qup_i2c18_default>,
->> +		    <&io_expander_intr_active>,
->> +		    <&io_expander_reset_active>;
-> 
-> These pinctrl entries should go to the IO expander itself.
+Cppcheck warnings:
 
-Will move these pinctrl entries in IO expander in next patchset.
+drivers/staging/media/imx/imx-media-fim.c:79:6:
+error: Null pointer dereference: fi [ctunullpointer]
+  if (fi->denominator == 0) {
 
-Thanks,
-Ayushi
+drivers/staging/media/imx/imx-media-csi.c:795:27:
+note: Calling function imx_media_fim_set_stream, 2nd argument is null
+  imx_media_fim_set_stream(priv->fim, NULL, false);
+
+drivers/staging/media/imx/imx-media-fim.c:388:3:
+note: Calling function update_fim_nominal, 2nd argument is null
+  update_fim_nominal(fim, fi);
+
+drivers/staging/media/imx/imx-media-fim.c:79:6:
+note: Dereferencing argument fi that is null
+  if (fi->denominator == 0) {
+
+To fix the issue, add a check to validate that the 'fi' is not
+null before accessing its members.
+
+Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
+---
+Changes since v1:
+- added "media:" prefix in subject
+
+ drivers/staging/media/imx/imx-media-fim.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/staging/media/imx/imx-media-fim.c b/drivers/staging/media/imx/imx-media-fim.c
+index ccbc0371fba2..25f79d0f87b9 100644
+--- a/drivers/staging/media/imx/imx-media-fim.c
++++ b/drivers/staging/media/imx/imx-media-fim.c
+@@ -76,6 +76,9 @@ static bool icap_enabled(struct imx_media_fim *fim)
+ static void update_fim_nominal(struct imx_media_fim *fim,
+ 			       const struct v4l2_fract *fi)
+ {
++	if (!fi)
++		return;
++
+ 	if (fi->denominator == 0) {
+ 		dev_dbg(fim->sd->dev, "no frame interval, FIM disabled\n");
+ 		fim->enabled = false;
+-- 
+2.43.0
+
