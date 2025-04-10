@@ -1,80 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449EC281532
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809F41DF991;
+	Thu, 10 Apr 2025 11:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744284837; cv=none; b=t48txRp2OZwZe9VKJK6rU0zIkxkoOrOr1zITJtgBInjcE54TpEWn/BMgTi/TMFa15diewte9CxbMnGFxxc90zM0NGorrF8yupM7AyqaK1ujd/EJ0If3Sq5gwp/VWqLUvmkALzCA3+p0RONbm0xxorQLlMPuxqcnCrCYqJdPmJCU=
+	t=1744285002; cv=none; b=VHuYJHCnjUOh81bHK7I2K++rSY/ZLgsMLSiONcdgplwlOOnEnw+0szNKfDdRbji/X50HncuPOQHPQikDKwbdwwgMALPGkfNgQgl589KLrLZXgvXAsoEve8pHHwCPo/KKCKUan1xpFFruanOWhkedeTwpDGZD88g0xBNeUOHzXn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744284837; c=relaxed/simple;
-	bh=qOf+23fX3M4tREIIA6VvcWMilSTEU39Y4UDbtsGf1ys=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fvduenJ2PEge3GJGbk71aqzlkqo0YTFH//000uoSbnAQhv8ZW9KQe8IFFsty14d9YR8x5KudlHmZcR4T9FlJURFZX5UAj+Wlzd609vc4ZGhhf8E9SLIK5uL1j8u1OdeLm59ZO+jfnYG0trApMV+m4jD5UVGET//xP/ZrW4LiXpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7ABC106F;
-	Thu, 10 Apr 2025 04:33:54 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EDF63F6A8;
-	Thu, 10 Apr 2025 04:33:53 -0700 (PDT)
-Message-ID: <9bd6cbaa-3a1f-4cc5-8581-3a99dc6ac2c2@arm.com>
-Date: Thu, 10 Apr 2025 12:33:51 +0100
+	s=arc-20240116; t=1744285002; c=relaxed/simple;
+	bh=eHb/z5NaMzfi8/yCbXSBDQBs4OP5wqvRmitFyoJYM0I=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=abHbqxEmJE5E4fR1aidIPra/fpaVkBXf5ues306DJ31wjaal2cBzOuB6CeR0d9xBuUQQ6gvUrLtLKZNHfa387VwT3ruSiUtTKWpiM2caCAIdgu80BJrTyfwrY/aowT3nurxtndaDlFW4ucsx5e16Gp5dil5wOJUL5lY6z1TBswM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=opHvIk1+; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="opHvIk1+"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0827F44317;
+	Thu, 10 Apr 2025 11:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744284992;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SAuMrXd/Y4l0cy73R/YgMicuHRMArAQfIUMm8p2VFyk=;
+	b=opHvIk1+I05a7jvRdR/BdA1TVdtQN2MR8i5/67/6iika7wbO9a/DFnEbrlCYT7UULIsOhf
+	MgqqjLr4EXD94+qff35JyFvj6ABvRF7wgb0omj7uzXDG8B/8sihwloa5p8mgK5TKqNOOcX
+	l+Hbw9xsx3ZCE5b0pWzm9uFWp6YlyAeRqRaTx0+woFpjpXnTOf+zZmB+8bxmaRd4w/hU7t
+	sLKuT+GOJORnZLZYZzgqyDuI3pXqP+l8vt6P7injqa4bEtmTozdM7FBsfCNq2uVusBTANG
+	R3cCdBQlCuQLSDAKbGn5OocsXCkfAkg9RZUBeYOX+AcIN+MTxchBGpe+qgp1xA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu/vt-d: Remove an unnecessary call set_dma_ops()
-To: Baolu Lu <baolu.lu@linux.intel.com>, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?=
- <petr@tesarici.cz>, iommu@lists.linux.dev
-Cc: Petr Tesarik <ptesarik@suse.com>, David Woodhouse <dwmw2@infradead.org>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Tom Murphy <murphyt7@tcd.ie>, linux-kernel@vger.kernel.org
-References: <20250403165605.278541-1-ptesarik@suse.com>
- <20250409174430.00ff4a09@meshulam.tesarici.cz>
- <5543e3a5-dda5-49b5-aa59-fbc599d24bab@linux.intel.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <5543e3a5-dda5-49b5-aa59-fbc599d24bab@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 10 Apr 2025 13:36:30 +0200
+Message-Id: <D92XFAGJRKJR.2MTADDABV7OMK@bootlin.com>
+Subject: Re: [PATCH v6 11/12] input: misc: Add support for MAX7360 rotary
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-11-7a2535876e39@bootlin.com>
+ <qszbvz7xr4jhpqnae7mqmnqfv6qzppxjpmbavdknhdnjausqtt@rbjjgc2ozbmq>
+In-Reply-To: <qszbvz7xr4jhpqnae7mqmnqfv6qzppxjpmbavdknhdnjausqtt@rbjjgc2ozbmq>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekkeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhor
+ hhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On 10/04/2025 3:59 am, Baolu Lu wrote:
-> On 4/9/25 23:44, Petr Tesařík wrote:
->> On Thu,  3 Apr 2025 18:56:05 +0200
->> Petr Tesarik<ptesarik@suse.com> wrote:
->>
->>> Do not touch per-device DMA ops when the driver has been converted to 
->>> use
->>> the dma-iommu API.
->>>
->>> Fixes: c588072bba6b ("iommu/vt-d: Convert intel iommu driver to the 
->>> iommu ops")
->>> Signed-off-by: Petr Tesarik<ptesarik@suse.com>
->> Does anyone agree? Or see any issues?
+On Wed Apr 9, 2025 at 9:17 PM CEST, Dmitry Torokhov wrote:
+> Hi Mathieu,
+>
+> On Wed, Apr 09, 2025 at 04:55:58PM +0200, Mathieu Dubois-Briand wrote:
+>> Add driver for Maxim Integrated MAX7360 rotary encoder controller,
+>> supporting a single rotary switch.
+>
+> Largely same comments as for the keypad driver: use "int error" for erro
+> variable, selection of the device for logging. Also:
+>
 
-At least it definitely serves no purpose since b5c58b2fdc42 
-("dma-mapping: direct calls for dma-iommu"). FWIW,
+OK
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>> +
+>> +	input =3D devm_input_allocate_device(dev);
+>> +	if (!input)
+>> +		return -ENOMEM;
+>> +
+>> +	max7360_rotary->input =3D input;
+>> +
+>> +	input->id.bustype =3D BUS_I2C;
+>> +	input->name =3D pdev->name;
+>> +	input->dev.parent =3D dev;
+>
+> No need to be setting/overriding this, devm_input_allocate_device()
+> already sets this up.
+>
 
-> This change looks good to me. The iommu driver should not call
-> set_dma_ops() anyway. I will queue this for v6.15-rc.
-> 
-> I ever wondered whether we could clean up dev->dma_iommu when the device
-> is released by the iommu core. But, iommu_release_device() is only
-> called in the device removal path, so keeping dev->dma_iommu set doesn't
-> impose any functional impact AFAICS.
+Ok, thanks!
 
-Funnily enough I've just been looking at that - I'd long held the same 
-assumption, but I'd been forgetting the edge case that's always been 
-there if bus_set_iommu(), and now iommu_device_register(), failed and 
-groups and default domains were torn down for existing devices. So in 
-fact it seems Intel was one of the few drivers/architectures managing to 
-do the right thing before :)
+>> +
+>> +	input_set_capability(input, EV_REL, max7360_rotary->axis);
+>
+> The event type should come from the DT data I believe. Could we use at
+> least parts of the regular rotary encoding bindings?
 
-Cheers,
-Robin.
+Ok, I should be able to add "rotary-encoder,relative-axis" property, as
+for rotary_encoder.c.
+
+>
+> Thanks.
+
+Thanks for your review.
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
