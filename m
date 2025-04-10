@@ -1,280 +1,120 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC07A28CF74;
-	Thu, 10 Apr 2025 13:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF7128F93C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290493; cv=none; b=Hjz0Rlyc88QEnMyIOpgQwg4j92yBmtz4IvYPgZI8w8q1ztj9ve2293EUIAa/rhY8pC31SPQ+3xr/tjQH3FVMl36/TGn56Sv9YMS0BaTmH3D9QAqE2UwdptY78Y9tVieeVZvx4UEo5a/6Z/sxztGQwhVtNCkYLrK08oQkz2yYwy8=
+	t=1744290499; cv=none; b=mMCZqAJdQdLccba010mQSeLQ8Fy3Db9B0fdyc06YGwhn5GkJylYap5pZlaEy85fWyIbLJdRpYC+7d3XkMVG5AJnibB2XzD7A3LMs+C+bj7qccBwpmPPwa2HLw5+9sRMWSserR6UdJjYMCP0CRrfgAlqHppkLkZiupsjN8vyNoME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290493; c=relaxed/simple;
-	bh=G+dZq27aiwwtdcreuJNiIHBLgho5C8OBmZQW2SvK1Tw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GtPS9zLewrIizG6GcD4SyQ24AB/NhKAaaOVMNXIvI8uUyFlp5LMZdK2Ei2HASEAJTeTZmlYZjhm0JH9oKqy9OsKte6Bi4saxAZCZqI3HP339qqJB8+7anptUajxdV26cxT4itFCjJU4m3wGKb0xTrDhilQAgZ3D+s2YoyHVs6Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pqvIv80b; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744290499; c=relaxed/simple;
+	bh=0ZnD44O+6FmvMkohMWjHIti03VRs/h8FNtHRZpD6yYA=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uybepU0QvTlvVjmOUseDmU+D1mwMs2EjOgEu0H0uznD9HDDDO9CT9bhG3RxNG5qskfrDl+CGhpijAAJCeC0AYFaR0PgnASmDD0hXz41YG3Z+34fDSHwTTBl9ktQr3YvfFzUJ+j8O2icpRJ2Ch5c4968mAqw+3SBFZo8JuiCnv+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uNh/HsPp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hjgFDT5d; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pqvIv80b"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A75hRB030632;
-	Thu, 10 Apr 2025 13:08:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0LfaLwsnXXBhp2mj6HthXnYG8KjS0ZIDIXcIX52wzm4=; b=pqvIv80bkarjFHnd
-	eq0nbNSTYdZip8H2GTyhKDS1FkrfWegZai5SUJTnFfaaiQaqgohhN3JCTGNqHRrm
-	3GhuPK9s/Jpil4ZeJadoel6dbwLjJrrcrYC/pCbEftMLVqElwqGs/pjAg1lSgLZz
-	uC4B5aM2O8jHeMxPhzz4063S+msyA3qdP7xL3sPkNWq5iUKxVVV5OULAPYu0DdFz
-	rKb28BuVfJ5RtRe/cY0xpdimpSvyZtpkFl1VOUM3wmOTz9fTcdHOFZHDNdp1AL0W
-	VU3Qs0F6CFtrdZbvzqn0x1p946slLPXvJGOaWHtZXeded2ZuRtvYO7nd2wyNtVFT
-	aJy81w==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftpt4u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 13:08:03 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53AD82sZ000458
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 13:08:02 GMT
-Received: from [10.50.31.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
- 2025 06:07:58 -0700
-Message-ID: <a51e2e8a-bd7b-7d30-8cd6-9438b053ea2c@quicinc.com>
-Date: Thu, 10 Apr 2025 18:37:55 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uNh/HsPp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hjgFDT5d"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744290492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tJFS+kzhID4GwXUUmLhQYQQToOkIgC5Zo1yEi+GUsHU=;
+	b=uNh/HsPpRIHwPn9G0TqnUh7rPF4+VcKWFZ6Ll3cTNnRMfYZ9pjMfTLS3ZbKz9Q80AHtHDx
+	5xtTu8XJZ4pk7ot2yp0lRQu6b2VzGOLkUpqvCUDKm4VMU01BoI2kuBznWCgT/YKaL5tH2P
+	MIK7Ml6EW29YUuNk/Siilpq/E2V6Nv4QRLULDba8hBTaMk+/Jy7SYPN7B9V/Iv5d8aVNEz
+	b+EL9n/oierHQj5uXUGANT+ILhkhy6aasj8i84mI7wiCptdTkGOK/Ar/kno5ORTHZD5Goy
+	2G4HahypRw9Z9fb0ZHJTiO/aW4d1Lz4En14sb6N5NMXuxGg/+j/4oHjXYKwkaA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744290492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tJFS+kzhID4GwXUUmLhQYQQToOkIgC5Zo1yEi+GUsHU=;
+	b=hjgFDT5d5mb+isyuwgV0gmly4oFEC4cy1yyiy2N5tnOYAG7qbaqnubxpQyY8WXWLKP8CJl
+	9diwC8PhwyATtFBA==
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Frederic Weisbecker <frederic@kernel.org>, Waiman Long
+ <longman@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+In-Reply-To: <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
+References: <20250410065446.57304-2-gmonaco@redhat.com>
+ <87ecy0tob1.ffs@tglx>
+ <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
+Date: Thu, 10 Apr 2025 15:08:12 +0200
+Message-ID: <8734egtb9f.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4 6/6] media: platform: qcom/iris: add sm8650 support
-Content-Language: en-US
-To: Vikash Garodia <quic_vgarodia@quicinc.com>, <neil.armstrong@linaro.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Bryan
- O'Donoghue" <bryan.odonoghue@linaro.org>
-References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
- <20250409-topic-sm8x50-iris-v10-v4-6-40e411594285@linaro.org>
- <36e25d6e-36de-fec6-e54d-0683503c7a09@quicinc.com>
- <1550c870-188e-4b41-b17c-2009cda41ffc@linaro.org>
- <8cade183-72ac-eac1-1a57-a9db37657fca@quicinc.com>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <8cade183-72ac-eac1-1a57-a9db37657fca@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f7c2b3 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=lJxrbFA30pwzKi-l1BMA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: GnbwpN4eOcrEtBsttOEFznZx1SQuGQPH
-X-Proofpoint-ORIG-GUID: GnbwpN4eOcrEtBsttOEFznZx1SQuGQPH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_03,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100095
+Content-Type: text/plain
 
+On Thu, Apr 10 2025 at 12:38, Gabriele Monaco wrote:
+> On Thu, 2025-04-10 at 10:26 +0200, Thomas Gleixner wrote:
+>> > + /* Fall back to any online in case all are isolated. */
+>> 
+>> How can that happen? There is always at least _ONE_ housekeeping,
+>> non-isolated, CPU online, no?
+>> 
+>
+> In my understanding it shouldn't, but I'm not sure there's anything
+> preventing the user from isolating everything via cpuset.
+> Anyway that's something no one in their mind should do, so I guess I'd
+> just opt for the cpumask_first (or actually cpumask_any, like before
+> the change).
 
+This should be prevented by the core infrastructure. Isolating _ALL_
+CPUs is broken by definition.
 
-On 4/10/2025 2:43 PM, Vikash Garodia wrote:
-> 
-> On 4/10/2025 2:31 PM, Neil Armstrong wrote:
->> On 09/04/2025 18:57, Vikash Garodia wrote:
->>> Hi Neil,
->>>
->>> On 4/9/2025 8:08 PM, Neil Armstrong wrote:
->>>> Add support for the SM8650 platform by re-using the SM8550
->>>> definitions and using the vpu33 ops.
->>>>
->>>> The SM8650/vpu33 requires more reset lines, but the H.264
->>>> decoder capabilities are identical.
->>>>
->>>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
->>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>> ---
->>>>   .../platform/qcom/iris/iris_platform_common.h      |  1 +
->>>>   .../platform/qcom/iris/iris_platform_sm8550.c      | 64 ++++++++++++++++++++++
->>>>   drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
->>>>   3 files changed, 69 insertions(+)
->>>>
->>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>> b/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>> index
->>>> fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
->>>> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>> @@ -35,6 +35,7 @@ enum pipe_type {
->>>>     extern struct iris_platform_data sm8250_data;
->>>>   extern struct iris_platform_data sm8550_data;
->>>> +extern struct iris_platform_data sm8650_data;
->>>>     enum platform_clk_type {
->>>>       IRIS_AXI_CLK,
->>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>> b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>> index
->>>> 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
->>>> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>> @@ -144,6 +144,10 @@ static const struct icc_info sm8550_icc_table[] = {
->>>>     static const char * const sm8550_clk_reset_table[] = { "bus" };
->>>>   +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
->>>> +
->>>> +static const char * const sm8650_controller_reset_table[] = { "xo" };
->>>> +
->>>>   static const struct bw_info sm8550_bw_table_dec[] = {
->>>>       { ((4096 * 2160) / 256) * 60, 1608000 },
->>>>       { ((4096 * 2160) / 256) * 30,  826000 },
->>>> @@ -264,3 +268,63 @@ struct iris_platform_data sm8550_data = {
->>>>       .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
->>>>       .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
->>>>   };
->>>> +
->>>> +/*
->>>> + * Shares most of SM8550 data except:
->>>> + * - vpu_ops to iris_vpu33_ops
->>>> + * - clk_rst_tbl to sm8650_clk_reset_table
->>>> + * - controller_rst_tbl to sm8650_controller_reset_table
->>>> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
->>>> + */
->>>> +struct iris_platform_data sm8650_data = {
->>>> +    .get_instance = iris_hfi_gen2_get_instance,
->>>> +    .init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
->>>> +    .init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
->>>> +    .vpu_ops = &iris_vpu33_ops,
->>>> +    .set_preset_registers = iris_set_sm8550_preset_registers,
->>>> +    .icc_tbl = sm8550_icc_table,
->>>> +    .icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
->>>> +    .clk_rst_tbl = sm8650_clk_reset_table,
->>>> +    .clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
->>>> +    .controller_rst_tbl = sm8650_controller_reset_table,
->>>> +    .controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
->>>> +    .bw_tbl_dec = sm8550_bw_table_dec,
->>>> +    .bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
->>>> +    .pmdomain_tbl = sm8550_pmdomain_table,
->>>> +    .pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
->>>> +    .opp_pd_tbl = sm8550_opp_pd_table,
->>>> +    .opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
->>>> +    .clk_tbl = sm8550_clk_table,
->>>> +    .clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
->>>> +    /* Upper bound of DMA address range */
->>>> +    .dma_mask = 0xe0000000 - 1,
->>>> +    .fwname = "qcom/vpu/vpu33_p4.mbn",
->>>> +    .pas_id = IRIS_PAS_ID,
->>>> +    .inst_caps = &platform_inst_cap_sm8550,
->>>> +    .inst_fw_caps = inst_fw_cap_sm8550,
->>>> +    .inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
->>>> +    .tz_cp_config_data = &tz_cp_config_sm8550,
->>>> +    .core_arch = VIDEO_ARCH_LX,
->>>> +    .hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
->>>> +    .ubwc_config = &ubwc_config_sm8550,
->>>> +    .num_vpp_pipe = 4,
->>>> +    .max_session_count = 16,
->>>> +    .max_core_mbpf = ((8192 * 4352) / 256) * 2,
->>>> +    .input_config_params =
->>>> +        sm8550_vdec_input_config_params,
->>>> +    .input_config_params_size =
->>>> +        ARRAY_SIZE(sm8550_vdec_input_config_params),
->>>> +    .output_config_params =
->>>> +        sm8550_vdec_output_config_params,
->>>> +    .output_config_params_size =
->>>> +        ARRAY_SIZE(sm8550_vdec_output_config_params),
->>>> +    .dec_input_prop = sm8550_vdec_subscribe_input_properties,
->>>> +    .dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
->>>> +    .dec_output_prop = sm8550_vdec_subscribe_output_properties,
->>>> +    .dec_output_prop_size =
->>>> ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
->>>> +
->>>> +    .dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
->>>> +    .dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
->>>> +    .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
->>>> +    .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
->>>> +};
->>> While i was extending the data for QCS8300 (one another iris-v3 variant), i
->>> realize that this file iris_platform_sm8550.c is getting dumped with all SOC
->>> platform data. It would be a good idea at this point to split it into something
->>> like this
->>> 1. Introduce SOC specific c file and move the respective SOC platform data to
->>> it, for ex, in this case sm8650_data
->>> 2. Move the common structs from iris_platform_sm8550.c to
->>> iris_platform_common.h. This way more SOCs getting added in future, can include
->>> the common header to reuse them, otherwise it would end up using 8550.c for all
->>> future SOC.
->>>
->>> Share your comments if you have any better approach to manage/re-use these
->>> platform data considering more SOCs getting added.
->>
->> Right, yes the architecture is fine, but I don't feel iris_platform_common is
->> the right
->> place, perhaps we could introduce a platform_catalog.c where we could place all
->> the common
->> platform data and reuse them from the platform_<soc>.c files ?
-> Common structs would certainly need to be part of a header which can be
-> included. Where do you plan to keep common struct to be used across SOC specific
-> file in your approach ?
->>
->> I can design prototype on top of this patchset as an RFC.
-> I was thinking that the changes are not that big, and can be done in existing
-> series though.
-> 
-For now, I think you can introduce a platform_sm8650.c as part of this
-series and use the common structure from platform_sm8550.c.
-Shouldn't be a big change.
+>> That brings me to the general design decision here. Your changelog
+>> explains at great length WHAT the change is doing, but completely
+>> fails
+>> to explain the consequences and the rationale why this is the right
+>> thing to do.
+>> 
+>> By excluding the isolated CPUs from migration completely, any
+>> 'global'
+>> timer, which is armed on such a CPU, has to be expired on that
+>> isolated
+>> CPU. That's fundamentaly different from e.g. RCU isolation.
+>> 
+>> It might be the right thing to do and harmless, but without a proper
+>> explanation it's a silent side effect of your changes, which leaves
+>> people scratching their heads.
+>
+> Mmh, essentially the idea is that global timer should not migrate from
+> housekeeping to isolated cores. I assumed the opposite never occurs (as
+> global timers /should/ not even start on isolated cores on a properly
+> isolated system), but you're right, that's not quite true.
+>
+> Thinking about it now, since global timers /can/ start on isolated
+> cores, that makes them quite different from offline ones and probably
+> considering them the same is just not the right thing to do..
+>
+> I'm going to have a deeper thought about this whole approach, perhaps
+> something simpler just preventing migration in that one direction would
+> suffice.
 
-Later you can post a separate patch series to add platform_catalog.c and
-have common struct placed there which can be used across different SOC
-platform files.
+Indeed.
+>> > +int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask)
+>> 
+>> cpumask_var_t is wrong here. 'const struct cpumask *' is what you
+>> want.
+>
+> You mean in the function argument? That's exactly how it is handled in
+> workqueue_unbound_exclude_cpumask. I get cpumask_var_t is not
+> necessarily a pointer, perhaps it's worth changing it there too..
 
-or other way is,
-Post a patch series to introduce platform_catalog.c with common struct and
-then rebase your 8650 series on top of it.
+Correct. cpumask_var_t is the magic macro construct which allows to
+switch from cpumask on stack to allocated ones at compile time, but
+what's handed around is a pointer to struct cpumask.
 
 Thanks,
-Dikshita
-> Thanks,
-> Vikash
->>
->> Neil
->>
->>>
->>> Regards,
->>> Vikash
->>>
->>>> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c
->>>> b/drivers/media/platform/qcom/iris/iris_probe.c
->>>> index
->>>> 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
->>>> --- a/drivers/media/platform/qcom/iris/iris_probe.c
->>>> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
->>>> @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
->>>>               .data = &sm8250_data,
->>>>           },
->>>>   #endif
->>>> +    {
->>>> +        .compatible = "qcom,sm8650-iris",
->>>> +        .data = &sm8650_data,
->>>> +    },
->>>>       { },
->>>>   };
->>>>   MODULE_DEVICE_TABLE(of, iris_dt_match);
->>>>
->>
+
+        tglx
