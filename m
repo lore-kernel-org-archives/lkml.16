@@ -1,106 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B84D1EE004
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:12:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C6A1A3BD7
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:14:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744308733; cv=none; b=de2SibNro3irGi20hU+9tRd/GlEfTn61ciz7e143UBEQOtMgEfDZvaTAxaA7+yDJJwtcd+2F45N7dmFW0Rrt9kKY/kod1+W5rCuy4gmIk+oRCm8xGCQLRZxmo6V3zAd9dwhQ3LAoX75nA3ZGEMmRjWuBJ9MCNbOwTkll7rdLnpI=
+	t=1744308867; cv=none; b=MUjzq7GLbznp2UcbYWO5WSTP2kMX7oj9d3/95rjcWi37p9QW5vTQKPz+DmZM203j/06EnklN68s5BYHUg8fPW8M+sb024hAQGeL90nc7vNHuMZE72xP2hJD6yw2cVqhQcm1N2pY8sVheWU7JkP+i9IBjdVkEjf39tVFGTALzYlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744308733; c=relaxed/simple;
-	bh=5OCXzZ8E7TldpM1RQ3DMguRYZfBFVCCZecIHS29aAy0=;
+	s=arc-20240116; t=1744308867; c=relaxed/simple;
+	bh=wn3mPPR27RYVkuHWJkv09h07bHWGcncI5FZuMl88yoY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ntWLPEx1xFRTitJu1m5d4ywYs9zBFxqQuoXVBcPtmBbSPooRK3f+C0JkvKXpE76281Sp22hUzDFJUdF/KAqQoM9MA6pD8b6v7ezKORFriB4juwHDNziCzPWoWVL6cFTXir0rO0hGxTzaqHT+OOELDnh1C7fd+o5rKB1xeP7Hbks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXBo0KT+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=J+w60d3cHgQ/NM50BdEULCk99wcYMsqZscpDKvwCfnl6DiVYDcepMUYfTzsvftFRxGZ1ti5fwIa41ET+MekoSLBSe/6tQQk+CWLJJT3bOrTRtvI2ts20UPCDPBp223IwqFBN6RPBV4NFfYuuZo5rwFbMdkqNxCEy4V6hee03Oa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEwQefQH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXBo0KT+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA64C4CEE3;
-	Thu, 10 Apr 2025 18:12:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEwQefQH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F7CC4CEDD;
+	Thu, 10 Apr 2025 18:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744308733;
-	bh=5OCXzZ8E7TldpM1RQ3DMguRYZfBFVCCZecIHS29aAy0=;
+	s=k20201202; t=1744308866;
+	bh=wn3mPPR27RYVkuHWJkv09h07bHWGcncI5FZuMl88yoY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JXBo0KT+Xk7ghjslPtjiCZDScQtVCtipAu8PkCtyT5AFgBbFvN9+6TOgsI/efcsav
-	 sNZwisM6jQpcBDZCqaMiUl2bs5m0oVZkYhbpD5ETkCSBjgGo5fYo4PuBqDJNfIlqI4
-	 CNGi+CUMvjVQmcQ2EygIWUZXwfrDuVnQP0EnH/QHhQ9AVLUFnm/7ihU+XI+pmHarYT
-	 llZ6lI/Na/6cJF+uzxpyykJc6SJDOIhHYrIOkJZ+FTDqtjQU1KtJYfLpNSJKb8jjJK
-	 6aLVwB9jGlw4BOi7lEvDfQ/MaZPX8OokuhFBJEDgfIMyE1XU9lHH/nsfZVk0SIen9I
-	 4b0CQEJKk6VXA==
-Date: Thu, 10 Apr 2025 11:12:09 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
-	Brendan Jackman <jackmanb@google.com>, Derek Manwaring <derekmn@amazon.com>
-Subject: Re: [PATCH v4 18/36] cpu: Define attack vectors
-Message-ID: <uhfexplln3n736m4yxdrfqg666x4hs5pokxqw6ycnaktastvko@zi2saqxeoidj>
-References: <20250310164023.779191-1-david.kaplan@amd.com>
- <20250310164023.779191-19-david.kaplan@amd.com>
+	b=KEwQefQHMvoaGAPG5Jq1tyUxVrHdrtUKIqxCAYJU99HmpQSU677N0ZPBiJXv3NIyf
+	 VGb9OtOZXSVbihGsbbvNzX8WPzcPPx36xbK8MWa6P8r25IJzavqyF7efUwnJxi0pRY
+	 H46RO/VR4zQF36e10Juec6x5qb/Cv+lfCOUKG9/0Sj+Cl0kqBGuB9oWXCJ8I29Q0QW
+	 IpCCdbf2X/j1vNCXC4HwCWg54ojPhXBbzE/vsRWtqUEz4jJ7n9HFVi0RCqdlQKWEIG
+	 ibbxP5/bF7AOobnmz1uJiR0J5jQNEQcUuicn8gx5vOLd1Q+K47znTeUUX9/HGfH5Tr
+	 tmSt0AkwI3nvA==
+Date: Thu, 10 Apr 2025 11:14:22 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Dmitry V. Levin" <ldv@strace.io>, Oleg Nesterov <oleg@redhat.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Arnd Bergmann <arnd@arndb.de>, strace-devel@lists.strace.io,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 2/6] syscall.h: add syscall_set_arguments()
+Message-ID: <20250410181422.GA3431770@ax162>
+References: <20250303111910.GA24170@strace.io>
+ <20250303112009.GC24170@strace.io>
+ <20250408213131.GA2872426@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250310164023.779191-19-david.kaplan@amd.com>
+In-Reply-To: <20250408213131.GA2872426@ax162>
 
-On Mon, Mar 10, 2025 at 11:40:05AM -0500, David Kaplan wrote:
-> @@ -3178,8 +3179,38 @@ void __init boot_cpu_hotplug_init(void)
->  
->  #ifdef CONFIG_CPU_MITIGATIONS
->  /*
-> - * These are used for a global "mitigations=" cmdline option for toggling
-> - * optional CPU mitigations.
-> + * All except the cross-thread attack vector are mitigated by default.
-> + * Cross-thread mitigation often requires disabling SMT which is too expensive
-> + * to be enabled by default.
+Hi Andrew,
 
-Cross-thread is *partially* mitigated by default (everything except
-disabling SMT).
+Can you please fold the diff at the end of my message into
+syscallh-add-syscall_set_arguments.patch? It sounds like Palmer will
+apply the same diff to syscall_get_arguments():
+https://lore.kernel.org/mhng-cf999eb1-59c4-4784-8c01-44b1e2482a50@palmer-ri-x1c9a/
 
-> +bool cpu_mitigate_attack_vector(enum cpu_attack_vectors v)
-> +{
-> +	if (v < NR_CPU_ATTACK_VECTORS)
-> +		return attack_vectors[v];
-> +
-> +	WARN_ON_ONCE(v >= NR_CPU_ATTACK_VECTORS);
+Thanks!
+Nathan
 
-This can be a WARN_ONCE(), v is already known to be invalid here.
-
->  static int __init mitigations_parse_cmdline(char *arg)
+On Tue, Apr 08, 2025 at 02:31:31PM -0700, Nathan Chancellor wrote:
+> Hi Dmitry,
+> 
+> [dropping majority of folks since this seems irrelevant to them]
+> 
+> On Mon, Mar 03, 2025 at 01:20:09PM +0200, Dmitry V. Levin wrote:
+> > This function is going to be needed on all HAVE_ARCH_TRACEHOOK
+> > architectures to implement PTRACE_SET_SYSCALL_INFO API.
+> > 
+> > This partially reverts commit 7962c2eddbfe ("arch: remove unused
+> > function syscall_set_arguments()") by reusing some of old
+> > syscall_set_arguments() implementations.
+> > 
+> > Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+> > Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+> > Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+> > Acked-by: Helge Deller <deller@gmx.de> # parisc
+> > Reviewed-by: Maciej W. Rozycki <macro@orcam.me.uk> # mips
+> ...
+> > diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+> > index 121fff429dce..8d389ba995c8 100644
+> > --- a/arch/riscv/include/asm/syscall.h
+> > +++ b/arch/riscv/include/asm/syscall.h
+> > @@ -66,6 +66,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
+> >  	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+> >  }
+> >  
+> > +static inline void syscall_set_arguments(struct task_struct *task,
+> > +					 struct pt_regs *regs,
+> > +					 const unsigned long *args)
+> > +{
+> > +	regs->orig_a0 = args[0];
+> > +	args++;
+> > +	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
+> > +}
+> 
+> This upsets the compiletime fortify checks, as I see a warning after
+> syscall_set_arguments() starts being used in kernel/ptrace.c later in
+> the series.
+> 
+>   $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux- allmodconfig kernel/ptrace.o
+>   In file included from include/linux/string.h:392,
+>                    from include/linux/bitmap.h:13,
+>                    from include/linux/cpumask.h:12,
+>                    from arch/riscv/include/asm/processor.h:55,
+>                    from include/linux/sched.h:13,
+>                    from kernel/ptrace.c:13:
+>   In function 'fortify_memcpy_chk',
+>       inlined from 'syscall_set_arguments.isra' at arch/riscv/include/asm/syscall.h:82:2:
+>   include/linux/fortify-string.h:571:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>     571 |                         __write_overflow_field(p_size_field, size);
+>         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   cc1: all warnings being treated as errors
+> 
+> The compiler knows the size of the destination and the size to be copied
+> so it knows there will be an (intentional) overwrite here.
+> struct_group() would normally work but I think this structure already
+> has a struct_group() around some of the members that would be needed. I
+> build tested eliminating the memcpy() altogether, which would appear to
+> work, but I am not sure if there is a better solution, hence just the
+> report.
+> 
+> Cheers,
+> Nathan
+> 
+> diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+> index a5281cdf2b10..70ec19dc8506 100644
+> --- a/arch/riscv/include/asm/syscall.h
+> +++ b/arch/riscv/include/asm/syscall.h
+> @@ -78,8 +78,11 @@ static inline void syscall_set_arguments(struct task_struct *task,
+>                                          const unsigned long *args)
 >  {
-> -	if (!strcmp(arg, "off"))
-> -		cpu_mitigations = CPU_MITIGATIONS_OFF;
-> -	else if (!strcmp(arg, "auto"))
-> -		cpu_mitigations = CPU_MITIGATIONS_AUTO;
-> -	else if (!strcmp(arg, "auto,nosmt"))
-> -		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
-> -	else
-> -		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
-> -			arg);
-> +	char *s, *p;
-> +	int len;
-> +
-> +	len = mitigations_parse_global_opt(arg);
-> +
-> +	if (cpu_mitigations_off()) {
-> +		memset(attack_vectors, 0, sizeof(attack_vectors));
-> +		smt_mitigations = SMT_MITIGATIONS_OFF;
-> +	} else if (cpu_mitigations_auto_nosmt())
-> +		smt_mitigations = SMT_MITIGATIONS_ON;
-
-Kernel coding style wants consistent braces for if-then-else:
-
-	if (cpu_mitigations_off()) {
-		memset(attack_vectors, 0, sizeof(attack_vectors));
-		smt_mitigations = SMT_MITIGATIONS_OFF;
-	} else if (cpu_mitigations_auto_nosmt()) {
-		smt_mitigations = SMT_MITIGATIONS_ON;
-	}
-
--- 
-Josh
+>         regs->orig_a0 = args[0];
+> -       args++;
+> -       memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
+> +       regs->a1 = args[1];
+> +       regs->a2 = args[2];
+> +       regs->a3 = args[3];
+> +       regs->a4 = args[4];
+> +       regs->a5 = args[5];
+>  }
+> 
+>  static inline int syscall_get_arch(struct task_struct *task)
