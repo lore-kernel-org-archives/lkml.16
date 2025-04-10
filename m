@@ -1,132 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91ACD26A0C2
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E236214A91;
+	Thu, 10 Apr 2025 09:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278306; cv=none; b=WcD9EzoVEiEzHJISykWynRs9gUOVJNjYVSNvoyQ4s+dxzVvyZ2qyUqDhjhnxSR6A+DHpBUuOX9cNClfxW0mcFN4BNf6zlBWv5pRIELUtZHqGZSQm4KUB07qfhu+TO7F4wpegw65n5OUwcAw95voMqzSc9Ie7ZD3a79niKyDatt4=
+	t=1744278328; cv=none; b=TzqeDa75BnSwnjI9D4G+sOTdlnp3Pynl3G9y4vr/Pt7DrOTJr3ws9gXafJdCdoQS5IWKbhr1gPpgRZfH/Vijz/9Idydqr3RSUPGOilktLpafmPDg817NIgvgf0YWyURH3dWZ6sB1X/J7mHOs9S1hyLsH3mhCaHM+z9sNiT1jvMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278306; c=relaxed/simple;
-	bh=rcKmSUgHpsgrV6/iQao/x7bdLFkwJp5qa8+xh1WZKuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VEPv+PfRJHoqH8gIfA+LzB9/6Hx0nulpzKQNA/lNyHEI3cPX3/nAYt3cpe+zERFUWrh/kIqUKItEg1vdTaYIuGx5R+kvXR8EuegTofkcOoEd7PKoYEh+IkHc6sXoyWNSijCSsHJQ9FOZqt70EnDMl6xtlHuB9DVSMBEKJ2ThHY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ePrVvES7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ePrVvES7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744278303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6/PhODJYUOFY/4jZ292xori9GQqlmQfr9vf/eG8mtsE=;
-	b=ePrVvES72xtPuoVnopAvKG3bX5ZVEzLfVkjB7iYSaZBQtdIa7hVcCpDvjYqhDaOlZZ/kLc
-	4tOqlTieuPrzOkyrsUXfsd38YtdKPGUIZadYI5yJ9EAiiAyFRDs4uzIOA8tvnEfc+6cren
-	sSz6+chqpBcAhOZMY0x+3NIUhv0kvuo=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-421-GD1OAWCkMkWRKsGNDs5cZw-1; Thu, 10 Apr 2025 05:45:02 -0400
-X-MC-Unique: GD1OAWCkMkWRKsGNDs5cZw-1
-X-Mimecast-MFC-AGG-ID: GD1OAWCkMkWRKsGNDs5cZw_1744278301
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-af8e645a1d1so518597a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:45:01 -0700 (PDT)
+	s=arc-20240116; t=1744278328; c=relaxed/simple;
+	bh=e5daXCLRVh6mf+AAlTCD0T2AR1+6dAICJsUqcnLpWgs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZHvYg8PJKWnOFcOZkNRc4ABNkx/OYgn0aUR5JhyazpwhDQrNFn7Zjf+LopEhzl6SaSV9h3Gx5+7RGkatlLCc1KVmLE6Zj748QqZw8uJ3MggAhiY5t8iu0E8tIr8oV9Gv7mZu2oIDcsSHTFIGmu0dYDHLAlDFZCSli/JZkop4YN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523eb86b31aso329643e0c.0;
+        Thu, 10 Apr 2025 02:45:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744278301; x=1744883101;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6/PhODJYUOFY/4jZ292xori9GQqlmQfr9vf/eG8mtsE=;
-        b=I9qAGX36etGpR3Kdym9DxQqbKxZ5ny6tLwZszTrTHxy9Zf5+OlHr8Dp97Lz1Cpj5Oo
-         SwP635m/V2eCRSKZPEWLOVqcXspDJXNdg8B3Q07v3X3XZrCp6em/EemJr0kaNXNw+QAR
-         RXfz9kG/AQnjkGaMjCvomR9+r6jdrKuiN5DrAE05P+D5nZjz1RuK/zcGdiYIpX/51SDL
-         E+uCHViqQaCUHPa4E4eEWSPul+GUUxFI1vcfs6vv0iHyMXuUAW93pvjgvrJgbprvmHxe
-         GwvIeETlLPkZqPbDHev2q94nVCyJceAkeMsQRcvn694v0Ih1bKApMEpKa8Ve1VZfdDXz
-         UrOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWv6Rib6KvjbSyiTpEbahpuFbIgQhf5L32LyIQxCQ4SHVvP1S9jAWPtg1CUAxpEFWz0fjDWJPK9EzOkRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNRE+ihNaG2NO/MSZwASkD5FynqstlaqzaaPoSYodhkQaCYGTb
-	PWg+2Z4F+Pt9IoQoaqBdVuezSBaZ5g1EiVjDgvejQzWBgiiCgHRVHZoXaopjjjIlkHEX9IDir7c
-	JxBFPzNfxjQJMElVxcknWR6NGpAVUsnVLN3Pghfs+OE1MqO/Q69s/Wz+GBEA7vg==
-X-Gm-Gg: ASbGncvSz81NC6cq0uzWVrO+8YdoYpgpZZL/PUuGbDWDhYoDFzFv5JXlb2TKM+VNg8M
-	KEnXZnjxT+lxllUPZ/9SZycQKPoGRhRunq/HqDQSHip2WehBMI4X8NjxanXPCGgF1eBshg7iw+z
-	CdJaXzjnDzzjGZ6vBqIW1Z5jreUWd1A7+4MkKWYumMrakG+5uBgU80aHdrt1RiocIpJeWmdsI/v
-	IOodDcBiITYpaZlzkLdD2gW0LpQBsy9bEGVstulbknnnvfsV43uBWHGtV0XLkp/NThtcailfHCo
-	yCVbK8PSbCOh
-X-Received: by 2002:a17:902:f542:b0:224:e0f:4b5 with SMTP id d9443c01a7336-22b2edab992mr22561975ad.7.1744278300865;
-        Thu, 10 Apr 2025 02:45:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFRlBAGOXJTHImC/d9zbZzfMKPBHx1mRPlLAVbrk95GhmWW/h8KqdRrNOXYYBIBbjz/7wTkAw==
-X-Received: by 2002:a17:902:f542:b0:224:e0f:4b5 with SMTP id d9443c01a7336-22b2edab992mr22561775ad.7.1744278300529;
-        Thu, 10 Apr 2025 02:45:00 -0700 (PDT)
-Received: from [192.168.68.55] ([180.233.125.65])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c97298sm26133415ad.138.2025.04.10.02.44.56
+        d=1e100.net; s=20230601; t=1744278324; x=1744883124;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wF3flOwwpTsOVsGjDVbuxPI3IVs9tE7hL82LS5qidH8=;
+        b=KAwkTOPfd2bCdSB9B6jLxrUFaILaZEjaDgIN472N1kDa85fY9qnFaMv5CZnKQBwrCi
+         m5cZI4cJrcKGT/lzrtytR34oClYxXJjKgLgwOT1l29PWVPMCjo+ci82DGMOlIIiTj3w/
+         JwYZIYovRgIiCC/hqE9/E+1+k3yyjxGvwBryGNpGoD7zmAVa86QhhgdLtV/40IyGrKCw
+         5vVstJqqolmX57os2OjUD06ATwmKPxSXrnPDcnLHhLBNhyHYyk3T+Aw5uPG4dA6ctVl5
+         hQpJHGqY9QBCa9LOsPI54agNxd674UQU6p6mDKsgHwqncPoLjN1jNCD1dE9ANEerd5ap
+         lbUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUc6GCMa6S23W8Mx5v2KIq8mvLKtHcqxcwVitQ4CnyrXouZJzE4QDSTnSp7e9eg2RRv/Ey4PARu9jpQABHB2yGAb4M=@vger.kernel.org, AJvYcCW5m27dcgSgNO/gWbl5tghMK+AJp4xUkjNGGCehCOB03tTPa21ePlgAH1OkxbqN//ZIUEme1WXsWYGDAw==@vger.kernel.org, AJvYcCWF7nYBcZ0YXX8ROvX/xfamOHPk2tZR7mzMYeSOQ+ycB6OzaiqjGQHcUZqtLoxzpZVZprWZ5x0c9/7Q@vger.kernel.org, AJvYcCWIbyWSiGI+UpDwoxt48RIWh/bVcSIj+bWHxj3ceBODQc4t2Ba0h3aN2iJhOwqSYBfJ/XInlX0qEcD3hsoF@vger.kernel.org, AJvYcCWrZLXflrBifkwPsUnYtdYKP0YTheN+EGxJRZxjwZDvD+bzYedKv+d11AVpZ7FtiNwsz/3a8KUIDZQk3UbS@vger.kernel.org, AJvYcCXypAlAvkxq47MWmGvQDHcylWAuYA0ktM7PTlhnJM8noAvkT0tRekaogtQSCvWlngvT9erLkUWzf/rU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo20JeGSiPqEjUry+r8MsSAI+/0QXCoAv90lN7wiVV4ezkkJZj
+	8mXDy0ZGxFHaVQ86LGaOv23Vzj0b2UC8QfJZ9jXIaGPrIRFnt+4joYwLIGs5
+X-Gm-Gg: ASbGncuMmsgHV+heQigFNB/FiyqdJXsam4AUnVdlxA3mdlQjKtPFDGlGRFHUIxIpECJ
+	9JagIEPO1170aGzxVT+UvqfEtSnG6pHvVMDEOtWXFqdCY0vXQHxlqQKMLjIz/Yhahc1euOlrrx0
+	DxusgGBcKURCCZBs8ybYbqDcTid9vAx3i+JdNoSxwVNuahcQ+7xh7l0ZHrCiDItiFwL0ZfnRs7A
+	j2Fw5sDn/NHL2empeCZj85eVOCdQxMxLAqcsc9GQr1kIOiOskGI41Pp0BbWgheqOiCmI1uaVRBN
+	V/uUky0uYs/P0HdTM2EWthEhMD8YMReUVehKXjum6MS0R3IlOMMHZnin38wi+dJ8K9swN4NUM//
+	Dc7M=
+X-Google-Smtp-Source: AGHT+IELT+nIcNIHpRd0VURQSfms7/9rnXrvQSKKP8WDZhL+Ping8e5aExYUvTBzzunkWbrk3CQGQg==
+X-Received: by 2002:a05:6122:da1:b0:526:1ddc:6354 with SMTP id 71dfb90a1353d-527b4e40effmr1192778e0c.0.1744278323832;
+        Thu, 10 Apr 2025 02:45:23 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd4eab6sm581548e0c.5.2025.04.10.02.45.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:45:00 -0700 (PDT)
-Message-ID: <675d6580-814f-4fae-9dc5-9470645adc07@redhat.com>
-Date: Thu, 10 Apr 2025 19:44:54 +1000
+        Thu, 10 Apr 2025 02:45:23 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86715793b1fso236154241.0;
+        Thu, 10 Apr 2025 02:45:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV25S5XGwEIkYArn5jTiUl+FS3metWcubaYSgJu46Q2ilojnBO9LP24dv3H4Gbwjn4V9+r/NjYfjlhHhtr8UfEeoLM=@vger.kernel.org, AJvYcCVFDMfY1Gb5LuAdX+BtYBCW/yBkanJgwp0SmX3cIvli3+/5qAKoOVCi0hbNEKxG8ROZJx2CU9tC7845eX61@vger.kernel.org, AJvYcCWPdbxMZwfURuq78FVvO/AxLNzRbixDog9U1roepYIz0Bxw8i1MlC790PPfQN4qUdCcM02RaYiOX1kl@vger.kernel.org, AJvYcCWpPss8C2eMGSzTivS0UMOpcT1Kr0yphMutvLItq3UJ3qY9QT1UiRsrRdz+XxjI9sH1AgiPrcYmkcELsIMV@vger.kernel.org, AJvYcCWsQJ6ocrO6SxP9wgvpDJ7FTOZBcc9cDZeCehaR2J0GtlgTjjASIZH2iTwFW6b9oNr1d1TNtgoC/C93@vger.kernel.org, AJvYcCXtftODtSMjIaA66kIJIsjJKRliW4RqYUw2hi31rSk0/c3dIaBw5t4e42u6vua8lqkTqhNcM/0G8IkrtQ==@vger.kernel.org
+X-Received: by 2002:a05:6102:3309:b0:4ba:971a:41fd with SMTP id
+ ada2fe7eead31-4c9d35c5deamr1124974137.19.1744278323244; Thu, 10 Apr 2025
+ 02:45:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REPORT] Softlockups on PowerNV with upstream
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Aditya Gupta <adityag@linux.ibm.com>, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>, Danilo Krummrich
- <dakr@kernel.org>, David Hildenbrand <david@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Sourabh Jain <sourabhjain@linux.ibm.com>, linux-kernel@vger.kernel.org
-References: <20250409180344.477916-1-adityag@linux.ibm.com>
- <Z_dWTU8UsvCHFMpN@localhost.localdomain>
- <dc4c0d4e-a9a5-4fa5-b39d-4248fba26043@redhat.com>
- <Z_d_8fyQzGuwzbIv@localhost.localdomain>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <Z_d_8fyQzGuwzbIv@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407191628.323613-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 10 Apr 2025 11:45:11 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVMmuUsz7SFKXwgN18tEg1DFa6mYTkN7aLD8zu64Lb11Q@mail.gmail.com>
+X-Gm-Features: ATxdqUFqo0ZMceN1rxkhX4aDFIuAr-nMIpzKU-j05xv-Wz1pn3oTcGBOENSelMY
+Message-ID: <CAMuHMdVMmuUsz7SFKXwgN18tEg1DFa6mYTkN7aLD8zu64Lb11Q@mail.gmail.com>
+Subject: Re: [PATCH v2 06/12] dt-bindings: clock: renesas: Document RZ/V2N SoC CPG
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/10/25 6:23 PM, Oscar Salvador wrote:
-> On Thu, Apr 10, 2025 at 03:35:19PM +1000, Gavin Shan wrote:
->> Thanks, Oscar. You're correct that the overhead is introduced by for_each_present_section_nr().
->> I already had the fix, working on IBM's Power9 machine, where the issue can be
->> reproduced. Please see the attached patch.
->>
->> I'm having most tests on ARM64 machine for the fix.
-> 
-> Looks good to me.
-> But we need a comment explaining why block_id is set to ULONG_MAX
-> at the beginning as this might not be obvious.
-> 
-> Also, do we need
->   if (block_id != ULONG_MAX && memory_block_id(nr) == block_id) ?
-> 
-> Cannot just be
-> 
->   if (memory_block_id(nr) == block_id) ?
-> 
-> AFAICS, the first time we loop through 'memory_block_id(nr) == ULONG_MAX'
-> will evaluate false and and we will set block_id afterwards.
-> 
-> Either way looks fine to me.
-> Another way I guess would be:
-> 
+On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Document the device tree bindings for the Renesas RZ/V2N (R9A09G056)
+> SoC Clock Pulse Generator (CPG).
+>
+> Update `renesas,rzv2h-cpg.yaml` to include the compatible string for
+> RZ/V2N SoC and adjust the title and description accordingly.
+>
+> Additionally, introduce `renesas,r9a09g056-cpg.h` to define core clock
+> constants for the RZ/V2N SoC. Note the existing RZ/V2H(P) family-specific
+> clock driver will be reused for this SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Yeah, we need to record the last handled block ID by @block_id. For the
-first time to register the block memory device in the loop, @block_id needs
-to be invalid (ULONG_MAX), bypassing the check of 'memory_block_id(nr) == block_id'.
-I will post the fix for review after Aditya confirms it works for him, with extra
-comment to explain why @block_id is initialized to ULONG_MAX.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in a branch shared by renesas-clk for v6.16 and
+renesas-devel for v6.16.
 
-Aditya, please have a try when you get a chance, thanks! I verified it on Power9
-machine where the issue exists and on one of my ARM64 machine.
+Gr{oetje,eeting}s,
 
-Thanks,
-Gavin
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
