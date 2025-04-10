@@ -1,218 +1,156 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25AE20C48B
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BA820B801;
+	Thu, 10 Apr 2025 08:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744274531; cv=none; b=PXbri68SnqmhVUU5KpBL/kJMP/P2N6hslgWygoaPN7KQg2zUU777oSIuQcFRNSBWQ/y+3ZCHhVhuqe1obxRftAiGxWAJ8m0eH8bykwLngh4KP/fwBnpTaiZhUPCCZBxLnCY3v6rIQd8A8ZF0yb7KyYlSZhhuubFAPR5XUsK80Gg=
+	t=1744274535; cv=none; b=PMV3UGq+gzk6WvSjYjOWq9qACi7J3gW+eSCJm9MolrHauLAG761ElJ0zzCrgYYhKooS2fPZ0fLhFlPYG00xthDA7nwhVKscKVhVH4s0RKo2jGDU2eHwziugEwI3Ov/0SIMaFFeB7MKR45i+BUdw6V6PKydpzPtYjuobzg8Sv5NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744274531; c=relaxed/simple;
-	bh=XG6NxBHDCU8e6wWhYpT5+1tNDUysPx2K/UBmryuS2Mo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l5lK42bpTIcUMXf49rjpK9VNAxRnLYbP6XFU6v0tMUSUiIb6XNnTWnjiT1Ai610ttwBc24eCK2fhGlBFvcHrKY5YvrWxTLo6Fl37vXC842y5zDvP/9JVOQRYOqbnPuDW0cRjqI+WAFH7MM6BXEtE9zDqeIYFZ9YOx7OVlY/vAg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K04/Cnv6; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744274535; c=relaxed/simple;
+	bh=eaLHh1x7Yl188r+cUHnieuu+ulS+no2KAZSk41ryLSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AcazrKNSc18zUxWbLied5KGovvcHeQFZbcAVd3iHLGT9WicgxDvyx0m0jOflIlsQSCCKw2AeEQGTFqHwNU62mcuxTWkKPA6c8C0mwxeG7E1E28uH5OhnPXWN3/6yCRoCQkJ2JTLMY86Y4+4F8Jal+JNhRrXzC1suis9RtUXa1hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fq4mEubL; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K04/Cnv6"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86feb84877aso208865241.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:42:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fq4mEubL"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22403cbb47fso5263975ad.0;
+        Thu, 10 Apr 2025 01:42:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744274528; x=1744879328; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GyIfJr2KsQTHGuBJx3uboxs4QfrzCXTKIx86BPgvMt4=;
-        b=K04/Cnv66rM0VshZousHPTQtsbYKEbOQRJ+2Qp7awQl9sYpEJqdESDNgs2auz0dSIQ
-         2Ny9g4o2LRdIdVzjI5VrCDXukcBn+Wm0AU+M1mFHwxoI0EUKQ2AChikADyC9z8+wB+8O
-         lDeN7CCc/aXYFuZ+KPILcXIzDELnzEMjA2dbiVeYVXToMJ9tBZUh/9wJjzFCN39t7cPL
-         +l4LZb7OM1Mzm6kWU56oo833hZS8WKwfQT1w/orvooHf5WN0zzpWJUbRljSB5nMUxuYW
-         Cg9AibkKK7qUSEkkJMRF+r0M9qJsX+Jf0LNdBVtgcWlYLV/KNLM2Gw1t8lNE4nDunW2C
-         Xrrg==
+        d=gmail.com; s=20230601; t=1744274533; x=1744879333; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+d4uPjgKpIDnR13P+mL9ZfGYIBtaMP2k/aupNTCMmKQ=;
+        b=fq4mEubLPerqpy4x1d0rsJl4Rh+drQwCemv+kBSJhhSF7chcEGCUWY6JlGxx0mKsKw
+         c2B2Ck+diQM33ayX5+QAQcIa8PLwZD4lz70Iq3gA2QUmpQLeIpoM42FyCDCgZXlqy5t3
+         CaPkPDIEidjDFjn4DeJQ4ygQZdEb17FTxAxBezcEoafkzBfzpcGoZ+YCrIRYuGxsKRoG
+         dA2qH9L+MMborZpImx0c4lmWfvdgS7lhXKR3txx/bxhtyFvHx3CLYO56909jjv9iGKoR
+         kn/KmaKm4RzJ8ByA0jbs2QpG/dhfOhvxlm8acPMW9Mqp7v97dkRNhXEEiyW1WGsIbijD
+         BxyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744274528; x=1744879328;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GyIfJr2KsQTHGuBJx3uboxs4QfrzCXTKIx86BPgvMt4=;
-        b=CRJAu8eGzwernH7BR2kUy6WG0D1ClkrO5MZGg2zu/pAjXvlkTL4viHFJdjqiFykxTC
-         SsrziO8LkCELci6TKu36rzLgrQnVgH8ekiuls3gJUdpWvHT9ykMsvz2X7pPARstjYueR
-         UNbp2ndWQn7xqqalYqUkG56HisCOXbMs4+ZMgFCUxKJPvnTgtIj5j3cGHY1lQvzGJvDh
-         0H1IMcQU4ugTYcaMxP45z0efbUgBYRG+yNXbYPYhkz7CqJthOnd6hogbP9gskBW0bKFS
-         RhxNweXGqf2uLNhP0RDd6JGwN9dNssNCvN82B/3QprpP6y3YiGst6eJ+kHCch/VXvrrO
-         wWFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxqlcC0/HrBx6gPmERhDzhavJDUIhzqC+ztu8b2gKQxy4jnhcSCoyPcDIHga9y2pANYWonNlxJ3Lu6nYc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkcaPsBMNcd9OBq3PFykyu2abvIgVTPFfIfNDpT/Zjx/uR7G6M
-	xTTmGd7GAd5TGUjL+l7lwX/V3V20sgyiASFW7+zcUZMRemhSuBiuv3rGd0odxaYo6hMcWak5LMi
-	wxTyAHpssuR3S7KifeR4vu3459zVHYKuNobs3yg==
-X-Gm-Gg: ASbGncuS/YEjZ+y3K/YqfsVc9l81RN8STr2R8f5Oswd2mvn37oxKasjy1FaRvuui98n
-	jUUbl8Z0onYdK5Wm7QpKVTKG3aYbpIKKoeVEnw5grYZlBxSJezFw2SHecV5uXPKW5tCaG84KdZs
-	JwvBFnPiIx4lFMG82cBhnYH2zigBhhFYslqnOUgyyQEHgNry92ev6FA9A=
-X-Google-Smtp-Source: AGHT+IGEyduE75Oa5qN4VHLm8M3R7hj/JMCUjzegckuIY/DQaVT3G91+oV6FvbCTJnJFb7i4ArsCyl/2lP0i82WbZ9M=
-X-Received: by 2002:a05:6102:3c87:b0:4c1:774b:3f7a with SMTP id
- ada2fe7eead31-4c9d35c57a3mr1052484137.16.1744274528525; Thu, 10 Apr 2025
- 01:42:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744274533; x=1744879333;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+d4uPjgKpIDnR13P+mL9ZfGYIBtaMP2k/aupNTCMmKQ=;
+        b=a15xFVuath13vQY7mmttI8W4kcIYrfPKE9U/A6Gti9PfVPlXCrXJByytF1QIJ8+TXu
+         Oj3R3hnXkk5DAOjB/FjhS0vRlw1YnT+w4JBZoDtMEIyw4zxsXCkAY/uCtPgoqRFy43Ss
+         vriQVu1PV7h1qmh5u9pzyZBavhoewUeGyANrcrp09UUBx7CvK0LpyPIGCI7mnhNiuHxK
+         Ss/MioG+tp1NlG3lRZ1e9xmLRCOeFVtNwU5296nP5SvUYVhw80K/BPi88Vr9auTaAXMx
+         RzJwkyxWKwTbmcdd0PjeUSdJQmoL0sFF+U1uBZGnjPWqH92TRAhAOWPREqXmPBv1z//f
+         3voQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAPol8Jt+nz6w0/qC3/xQvNX2Uy3Ilb5WMBXhnMPtMlM7YjUKGrt9Ymofu6JRP9ai3N69HfCWS8RwSqgdt@vger.kernel.org, AJvYcCW/xo98bq6DLoc3+TGrEwqhM8rvEqlnTqJ7m0IdUC1b1FxRX39p3aCvox1uwvHA1VQNxCj8ndymWvESxVzWPyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ3ADXFIEa06rDMHfBx0nihDXXhV3zBd62j0VtjWf0n/s9JCgN
+	PNEbTAye/+jnkNqtIdt7Wt2fxgbNdin6feLqWweuX1ZnhKbvkdHc
+X-Gm-Gg: ASbGncvkSKManZtvccGhQ+1A5Dt40vhEX5qIM+7RmnBS0EYypLdegR/ABTdTyJXALZX
+	fDBi5To4cOIgsgP1PsTD65w3OtffJRIuGPuCt3vbCYB40TCoEFP0rtD6gmrfAKkSFiQXZngn2Oj
+	wmzqQqk0ryCYRlOx45+eat91HNO26feOiChJQPKQM82T6Akh+T7iX5y0o+TSdRv3E7By1OG35P6
+	5VunCOeZySe9OyAiGozwi0+3uB5fG4y0qKiBEiAoVlLoKDo+NJPTrvOkbh2RDJDanqHjTghTdNv
+	pWfA8+YkTVZpLQ7wNvbjgWt15B9XKYQkQ1eLSQRSbE5joPiTciaa+G75yJzqDRFK/BnYzVHvrkV
+	QD1dP/wOz9oPZMnVtcw==
+X-Google-Smtp-Source: AGHT+IEeYuhxPKJdioM1LCwerEuXFkm58pHCB6lB+BBwDEBibh3mSzv4PkY6k2vRvZujF//8AFFoEA==
+X-Received: by 2002:a17:903:230b:b0:215:acb3:3786 with SMTP id d9443c01a7336-22be02f77fdmr19616235ad.19.1744274532595;
+        Thu, 10 Apr 2025 01:42:12 -0700 (PDT)
+Received: from ?IPV6:2409:4080:204:a537:d266:673b:c35c:83a8? ([2409:4080:204:a537:d266:673b:c35c:83a8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b29esm25111595ad.81.2025.04.10.01.42.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 01:42:12 -0700 (PDT)
+Message-ID: <fab2bb2d-a78e-4130-a5fd-bf07430210c7@gmail.com>
+Date: Thu, 10 Apr 2025 14:12:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409115832.538646489@linuxfoundation.org>
-In-Reply-To: <20250409115832.538646489@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 10 Apr 2025 14:11:57 +0530
-X-Gm-Features: ATxdqUHVxWyVTy2Pevd2zCaKDuF7x7M_hIPZ-bHH-56kzLv0RETgWUsQbJV9hsY
-Message-ID: <CA+G9fYt+bq=20FNgxqTXnEcj0mScu1d20kCnyeoF7NS6LJEi=A@mail.gmail.com>
-Subject: Re: [PATCH 5.15 000/281] 5.15.180-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in
+ read helpers
+To: Stefano Garzarella <sgarzare@redhat.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>
+Cc: peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250409205536.210202-1-purvayeshi550@gmail.com>
+ <Z_dh4tRIa6xxAWQ2@kernel.org>
+ <t2ri7facyvtmt6rx6xwcjos7rgtyiln7cywl2gt4effgukeejc@f3ml4apdh4zs>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <t2ri7facyvtmt6rx6xwcjos7rgtyiln7cywl2gt4effgukeejc@f3ml4apdh4zs>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 9 Apr 2025 at 17:34, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.15.180 release.
-> There are 281 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 11 Apr 2025 11:58:00 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.15.180-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 10/04/25 13:21, Stefano Garzarella wrote:
+> On Thu, Apr 10, 2025 at 09:14:58AM +0300, Jarkko Sakkinen wrote:
+>> On Thu, Apr 10, 2025 at 02:25:36AM +0530, Purva Yeshi wrote:
+>>> Fix Smatch-detected error:
+>>> drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
+>>> uninitialized symbol 'value'.
+>>> drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
+>>> uninitialized symbol 'value'.
+>>> drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
+>>> uninitialized symbol 'value'.
+>>>
+>>> Call tpm_buf_read() to populate value but do not check its return
+>>> status. If the read fails, value remains uninitialized, causing
+>>> undefined behavior when returned or processed.
+>>>
+>>> Initialize value to zero to ensure a defined return even if
+>>> tpm_buf_read() fails, avoiding undefined behavior from using
+>>> an uninitialized variable.
+>>
+>> How does tpm_buf_read() fail?
+> 
+> If TPM_BUF_BOUNDARY_ERROR is set (or we are setting it), we are 
+> effectively returning random stack bytes to the caller.
+> Could this be a problem?
+> 
+> If it is, maybe instead of this patch, we could set `*output` to zero in 
+> the error path of tpm_buf_read(). Or return an error from tpm_buf_read() 
+> so callers can return 0 or whatever they want.
+> 
+> Thanks,
+> Stefano
+> 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Hi Jarkko, Stefano,
+Thank you for the review.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I've revisited the issue and updated the implementation of 
+tpm_buf_read() to zero out the *output buffer in the error paths, 
+instead of initializing the return value in each caller.
 
-## Build
-* kernel: 5.15.180-rc2
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 20340c8f4f00f2248a63d0a83fa118e2894a8439
-* git describe: v5.15.179-282-g20340c8f4f00
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15=
-.179-282-g20340c8f4f00
+static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t 
+count, void *output)
+{
+	off_t next_offset;
 
-## Test Regressions (compared to v5.15.179-280-g0b4857306c61)
+	/* Return silently if overflow has already happened. */
+	if (buf->flags & TPM_BUF_BOUNDARY_ERROR) {
+		memset(output, 0, count);
+		return;
+	}
 
-## Metric Regressions (compared to v5.15.179-280-g0b4857306c61)
+	next_offset = *offset + count;
+	if (next_offset > buf->length) {
+		WARN(1, "tpm_buf: read out of boundary\n");
+		buf->flags |= TPM_BUF_BOUNDARY_ERROR;
+		memset(output, 0, count);
+		return;
+	}
 
-## Test Fixes (compared to v5.15.179-280-g0b4857306c61)
+	memcpy(output, &buf->data[*offset], count);
+	*offset = next_offset;
+}
 
-## Metric Fixes (compared to v5.15.179-280-g0b4857306c61)
+This approach ensures that output is always zeroed when the read fails, 
+which avoids returning uninitialized stack values from the helper 
+functions like tpm_buf_read_u8(), tpm_buf_read_u16(), and 
+tpm_buf_read_u32().
 
-## Test result summary
-total: 51458, pass: 36401, fail: 2669, skip: 11981, xfail: 407
+Does this solution look acceptable for the next version of the patch?
 
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 102 total, 102 passed, 0 failed
-* arm64: 30 total, 30 passed, 0 failed
-* i386: 22 total, 20 passed, 2 failed
-* mips: 22 total, 22 passed, 0 failed
-* parisc: 3 total, 3 passed, 0 failed
-* powerpc: 22 total, 22 passed, 0 failed
-* riscv: 8 total, 8 passed, 0 failed
-* s390: 9 total, 9 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 26 total, 26 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Best regards,
+Purva Yeshi
