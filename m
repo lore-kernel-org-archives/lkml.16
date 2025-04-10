@@ -1,134 +1,145 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884D91E5B62
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35521293472
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744320354; cv=none; b=dRvwHBXAGdA17LwW89KnkHzJ1Q3Sn7eWEydiwgECFgm9TFpZz7tc/bcHNVByiJRoCsfHTFhIxpmWlefiBH89dsw922jJWKbgDL5mXCiPtEh7ceISuS2cYda/ENtoMeytkcklNCy6+DbLosDADPGGX6O0wARsklAnpBAqo6epGy8=
+	t=1744320356; cv=none; b=BNe6kIy2mseZYDI7693MTY1kylrq3140AsHGhhNg0Emq4tNmAHA4hUzG3HPlwKzkaVpVzIUIyFgJSryiKToWk7I0+DiM0tAOgNuSHsjQrxg7yB/2W64XllatTRqv5CE7cKumXpPlDCpq/rElygXwaNLXupxnEFNvY9IYAmr6T/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744320354; c=relaxed/simple;
-	bh=6aymnWMfN6OxWBckI/Vq7AYsk6eDPkRWIr221kL6BzM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XHNNvcHRdAI3u/qHfRXDMOCzUadXiKQcizT8v5OsUp2C/ZDwCR73oj2ZCTcWN2DkwnwM//bQ5Uoqnm72U2DE9hPJ/ZA4LKScuhd8/b6t2O38SuJs7VlwLo19xeQw+cjh/JgvJ7eCVFeZEOP0RoNId4V7Bqt/0CMbXbAaRMwxezs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R22st+ZM; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744320356; c=relaxed/simple;
+	bh=bkjph6SPUsAaWyg1J7Tuay9FdQRu2xyNlV4328o6Mq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fccXP7sjYzU/U1LxneYfowrOL3jBvGdpdZFQO3YYS7CPze7paSMgFPQLLRoNFxeYdaJXX46ZQq14SFFXCOxq5L8DPTYxgqDPRgcbzX6kcCOuaMVVT/yydY9sL7kcWlc3uN2N3KH2fCL5ftWzlHnjazUAIWZ3afK+kf1Zt+ZHbDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MY6qucwM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R22st+ZM"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-52403e39a23so1026182e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:25:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744320351; x=1744925151; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/EiGG8q8Ypx/hjnGEBryYxRlKkl1JEhEiUgVdwoleck=;
-        b=R22st+ZMa7Za4FXGzo+t20N3m76QntBpW0zezFNdoUBJIS91uS8SrSY7DC5xnhpaM9
-         CahNqXeiiOs5P7uvUWUS/iMMc6Vy9g5pQpg1zp/JhO3Pwp/lMK5I01ONrBx+bZJVCXVa
-         sGfMLZhiqx7J2L1/A8MBmPVy+S3f8cEe9K1+1nf07UlbLNmn7RYUCsd/erhvYHT8GSr2
-         k1WyLyV92cAtAkrJswnOhawIjQLnaPVHWSJ7jFGgeeo/HOznsCkkCT70FTQwVzEFUbl9
-         1EIOIvI28WthNGz41Dq/CUqZnQ5f4hvRRk6wA8RFvH/k+pkFFY+yFJWmggiPar4jtQmO
-         QL5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744320351; x=1744925151;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/EiGG8q8Ypx/hjnGEBryYxRlKkl1JEhEiUgVdwoleck=;
-        b=EDOMCG9Ga2dxQW3nihPXTth/F5U8raJKRzI0haKf8SkdT9fL7xSBNwpWTbCpVHNr7W
-         fb2UVZ9eGX5l1l+maZ3A3fS0oHloMuBvxzai797XLq1faIq8YB5QUuRalW59McHUxk3u
-         tRrSOfZhsD1PDIzeUm3MltMRh0Qz7j7MJmHRhOHMmeWLi3uAojkbkk9MFcHnDnixpj5D
-         Dqk8pGmihPYX2HmpGsypIMBUnyxt21LBYCPNQx1OvUK4FOdGZZ7dd+FUIB3qy1FEVaoW
-         zqqLbze2jL1vJJjjyox3qUbPXemlGZ/AGzUCmCCP95UyYVxKtCJJzMFA/+vHs9pY62nX
-         VBng==
-X-Forwarded-Encrypted: i=1; AJvYcCVz0UsWypHCCPd5HT0R4TSmoDdRl8buuEGYzsyW+RNjXL7FaafN8cvhxgQb9+H9gmklvKqfiUEZT77bqEQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxxs7WgGrKfhfNU2sRhZdx4KJ3ZujdMIFMKYzPx5/80zQJJZ0KA
-	4F1JZ/udjGwF4ps/LTcwul05B/kw/Zh+bmroO2Lp+ymZ4g76JiF0UsM82i/S65idPujbGD/kl26
-	+32AXkG7KfbTPEYvVLBWTJaFlASA=
-X-Gm-Gg: ASbGncslpi3lCcTPOK+8ASLI2nZh5tD7jXyrNNb1ALwDQFRTrElhCJ2MiAHKEiO7mE3
-	N0nCywQRW/TU9/26u7e812ut1MChd8evW516sEiUhfcht7iPEI8XbS915s/f+VyOVNEtaHc2Q0O
-	oC3r64zhr84DAC3IMB6XxtPQ==
-X-Google-Smtp-Source: AGHT+IEfzYZgK9rqI0AZQud+O+0HlkwA6VIS/f8C6bC/2AhXMWCcqKze/Dn/RUKa7DKwsgxGidzJ0RV9Q+CYQbY8IUM=
-X-Received: by 2002:a05:6102:5794:b0:4bb:e14a:9451 with SMTP id
- ada2fe7eead31-4c9e4ffeed0mr130766137.20.1744320351320; Thu, 10 Apr 2025
- 14:25:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MY6qucwM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B13E3C4CEDD;
+	Thu, 10 Apr 2025 21:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744320355;
+	bh=bkjph6SPUsAaWyg1J7Tuay9FdQRu2xyNlV4328o6Mq0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=MY6qucwMVZ4iKXN53ag8qwOtzSu3jRI9t7yPHFEvf362geNHLFTyBH+afY3OwQScc
+	 tQlL2ujwtwkV4j+OrvppCu8mee8v9iRKzjpYQYhLtm0bVTziWKUvRTr6CYJTIDy9G0
+	 bQqHi73K2MwT2GbOHHaYR91+hja8NonF9VxB/ziApVA68ryB0LZZXvMTGqbGZ1uXJd
+	 LI2fXne1V2vI/aG8Fio5SE6kJMozhfvCS0IcMf6IrPQnz+5+b6NGqzneY4hIvhCksK
+	 ByuDcSlsQGI3WS/8NE9rMHZ+y5TjS+zdhfxeT5xfXedGWyFEokNw0i1GGj6b9uAqki
+	 LE0THBiM7y/5g==
+Date: Thu, 10 Apr 2025 23:25:51 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [GIT PULL] x86 fixes
+Message-ID: <Z_g3X7JyBQ1HdZTa@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407092243.2207837-1-xavier_qy@163.com>
-In-Reply-To: <20250407092243.2207837-1-xavier_qy@163.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 11 Apr 2025 09:25:39 +1200
-X-Gm-Features: ATxdqUH9N-t9OCDB_pg-Pg6mX6VUE1BGbgJLAvFu-pe7UQ0ejkz_VnYeEs6P1hE
-Message-ID: <CAGsJ_4wsW+urp6gbp+yDG40fZw9Bszny2iJVsV_AzzGqgQy+4g@mail.gmail.com>
-Subject: Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant operations
-To: Xavier <xavier_qy@163.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, akpm@linux-foundation.org, 
-	ryan.roberts@arm.com, ioworker0@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 7, 2025 at 9:23=E2=80=AFPM Xavier <xavier_qy@163.com> wrote:
->
-> This commit optimizes the contpte_ptep_get function by adding early
->  termination logic. It checks if the dirty and young bits of orig_pte
->  are already set and skips redundant bit-setting operations during
->  the loop. This reduces unnecessary iterations and improves performance.
->
-> Signed-off-by: Xavier <xavier_qy@163.com>
-> ---
->  arch/arm64/mm/contpte.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-> index bcac4f55f9c1..ca15d8f52d14 100644
-> --- a/arch/arm64/mm/contpte.c
-> +++ b/arch/arm64/mm/contpte.c
-> @@ -163,17 +163,26 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->
->         pte_t pte;
->         int i;
-> +       bool dirty =3D false;
-> +       bool young =3D false;
->
->         ptep =3D contpte_align_down(ptep);
->
->         for (i =3D 0; i < CONT_PTES; i++, ptep++) {
->                 pte =3D __ptep_get(ptep);
->
-> -               if (pte_dirty(pte))
-> +               if (!dirty && pte_dirty(pte)) {
-> +                       dirty =3D true;
->                         orig_pte =3D pte_mkdirty(orig_pte);
-> +               }
->
-> -               if (pte_young(pte))
-> +               if (!young && pte_young(pte)) {
-> +                       young =3D true;
->                         orig_pte =3D pte_mkyoung(orig_pte);
-> +               }
-> +
-> +               if (dirty && young)
-> +                       break;
+Linus,
 
-This kind of optimization is always tricky. Dev previously tried a similar
-approach to reduce the loop count, but it ended up causing performance
-degradation:
-https://lore.kernel.org/linux-mm/20240913091902.1160520-1-dev.jain@arm.com/
+Please pull the latest x86/urgent Git tree from:
 
-So we may need actual data to validate this idea.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-04-10
 
->         }
->
->         return orig_pte;
-> --
-> 2.34.1
->
+   # HEAD: 1fac13956e9877483ece9d090a62239cdfe9deb7 x86/ibt: Fix hibernate
 
-Thanks
-Barry
+Merge note:
+
+  The RSB fix series includes updates that are technically not 
+  regression fixes, but updates to match the code to CPU vendor best 
+  recommended practices, add documentation, etc. Given that we are 
+  still finding bugs in this code I found it prudent to not fork the 
+  code for v6.16 right after -rc1, but have the entire series in v6.15. 
+  If this is too much for -rc2, will rebase and resend.
+
+Miscellaneous fixes:
+
+ - Fix CPU topology related regression that limited
+   Xen PV guests to a single CPU
+
+ - Fix ancient e820__register_nosave_regions() bugs that
+   were causing problems with kexec's artificial memory
+   maps
+
+ - Fix an S4 hibernation crash caused by two missing ENDBR's that
+   were mistakenly removed in a recent commit
+
+ - Fix a resctrl serialization bug
+
+ - Fix early_printk documentation and comments
+
+ - Fix RSB bugs, combined with preparatory updates to better
+   match the code to vendor recommendations.
+
+ - Add RSB mitigation document
+
+ - Fix/update documentation
+
+ - Fix the erratum_1386_microcode[] table to be NULL terminated
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Andy Shevchenko (1):
+      x86/early_printk: Use 'mmio32' for consistency, fix comments
+
+Borislav Petkov (AMD) (1):
+      Documentation/x86: Zap the subsection letters
+
+Dave Hansen (1):
+      x86/cpu: Avoid running off the end of an AMD erratum table
+
+James Morse (1):
+      x86/resctrl: Fix rdtgroup_mkdir()'s unlocked use of kernfs_node::name
+
+Josh Poimboeuf (6):
+      x86/bugs: Rename entry_ibpb() to write_ibpb()
+      x86/bugs: Use SBPB in write_ibpb() if applicable
+      x86/bugs: Fix RSB clearing in indirect_branch_prediction_barrier()
+      x86/bugs: Don't fill RSB on VMEXIT with eIBRS+retpoline
+      x86/bugs: Don't fill RSB on context switch with eIBRS
+      x86/bugs: Add RSB mitigation document
+
+Myrrh Periwinkle (1):
+      x86/e820: Fix handling of subpage regions when calculating nosave ranges in e820__register_nosave_regions()
+
+Naveen N Rao (AMD) (1):
+      Documentation/x86: Update the naming of CPU features for /proc/cpuinfo
+
+Peter Zijlstra (1):
+      x86/ibt: Fix hibernate
+
+Petr Vaněk (1):
+      x86/acpi: Don't limit CPUs to 1 for Xen PV guests due to disabled ACPI
+
+
+ Documentation/admin-guide/hw-vuln/index.rst     |   1 +
+ Documentation/admin-guide/hw-vuln/rsb.rst       | 268 ++++++++++++++++++++++++
+ Documentation/admin-guide/kernel-parameters.txt |   5 +-
+ Documentation/arch/x86/cpuinfo.rst              |  69 +++---
+ arch/x86/entry/entry.S                          |   9 +-
+ arch/x86/include/asm/nospec-branch.h            |  12 +-
+ arch/x86/kernel/acpi/boot.c                     |  11 +
+ arch/x86/kernel/cpu/amd.c                       |   1 +
+ arch/x86/kernel/cpu/bugs.c                      | 101 +++------
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c          |  48 +++--
+ arch/x86/kernel/e820.c                          |  17 +-
+ arch/x86/kernel/early_printk.c                  |  10 +-
+ arch/x86/mm/tlb.c                               |   6 +-
+ arch/x86/power/hibernate_asm_64.S               |   4 +-
+ 14 files changed, 405 insertions(+), 157 deletions(-)
+ create mode 100644 Documentation/admin-guide/hw-vuln/rsb.rst
