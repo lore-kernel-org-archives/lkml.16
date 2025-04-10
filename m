@@ -1,545 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7B9280CFF;
-	Thu, 10 Apr 2025 12:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744286834; cv=none; b=XH09emUTeHqSggC7FgYdVgbe90bRK1HoDw9tPogpVLwUEwDRfgTLeAjZjoU6s9kay/QB2IwnIyFw/Bgca5nHIUZ+OJ0UTYb8ebvX5dYgfaTceKbBX7r1zGTURfJ3dt6ADNhikZ3JL7jEqCysjaqre099np6RtJM+enMmqaKQ5zQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744286834; c=relaxed/simple;
-	bh=uD7vpzjXm4Ss54FGIIjqAN0sUi+sWJB5KIaidqXZ42I=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pEEy+i6jP9c3aDdkg2WWLghRfzJYP7nGNvMt9ARVyhwI3bdXPra+VvITNrHGNr/oshpvE/cka07AvlQSJ6pnJsUQBgorXFG4xRWjeNGQlPLXW2VZ/XLcrirYJpS/mV1bpB+0shzibRH533WNOXqsVIyOc6smwaC1iQ8rIIbQuTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YEebFxxV; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34F8283C8E;
+	Thu, 10 Apr 2025 12:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744286839; cv=fail; b=u5p+vViBiPHk0+ATBw5qdegqgBYwP9MQBKiXNyjvl9Ajviw4RoPS6bcvtSWaVETJ3IFHvx1FAfhtQe3ADDFO1THYeule9PjVqxJ32+FZwiKot3xiZ4NN50LMVi5EsFG7Ual5r49bXI0fJ3IBMOV7w+It0ao0Yrn6I3ESe2V0fWE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744286839; c=relaxed/simple;
+	bh=G/ukteSjJEOgycxBlYSUJoyGg9CIFMn6w5WhIchOzQY=;
+	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID:Date; b=fq1b/mNyapCmjG/T25M910fhEVpal9heXGsTmC5CPq4Iqvts0HgBFcQvnJwnbrjW82JHgLORrUMVhm2N7fHPjGCLkI5HrUjmdsgXWct51b04HWknqLLT9ZzDtI/i8mv41z8HDAwE0AUzi3LXWFTN6+HcaFFOcO67rKirrKLe3R0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lqRt4y3s; arc=fail smtp.client-ip=40.107.243.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YEebFxxV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744286833; x=1775822833;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=uD7vpzjXm4Ss54FGIIjqAN0sUi+sWJB5KIaidqXZ42I=;
-  b=YEebFxxVCVk7V6TxELBa1UPz253cUJ2SVOPZiS7hW8V7GiJhgVyOWJBT
-   O8BSXYOFwqsyyZPmzGD1B41/DRDIPSjn77k402aP0fX/cO4lMfdrf/sIG
-   Ad+VbqybHi7ZiWKLOrBYfWqX4/eP4I4aF7EfxqLFzYoLTYYxTscNbCJJ4
-   aXOBT3Lfspchk+R52+zx1PS52PCdl25nBc/Zcj7OYCBQOOZdOsY0cGPRX
-   MAj8/DXDOLHyd7rtYeX1JuxvNNs71V/bU7l4DHBwbsKO2rSjjLwLydOGJ
-   4qczAWPSRtKBobMzfmZQ+vyhdCTaHpxpK9zzZnpZNTR3Xa4HwQ+9+hstY
-   A==;
-X-CSE-ConnectionGUID: p7FkAo2jTCKeXCXfWPWiIA==
-X-CSE-MsgGUID: Vwu2+AETQGWdNjUltp+d/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45940129"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="45940129"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 05:07:12 -0700
-X-CSE-ConnectionGUID: 01ao4xaKRouPsvdnArS0fw==
-X-CSE-MsgGUID: tz+MOgVqQ069wHD48Bfojw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="128803760"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.127])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 05:07:08 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 10 Apr 2025 15:07:05 +0300 (EEST)
-To: Yen-Chi Huang <jesse.huang@portwell.com.tw>
-cc: Hans de Goede <hdegoede@redhat.com>, linus.walleij@linaro.org, 
-    brgl@bgdev.pl, wim@linux-watchdog.org, linux@roeck-us.net, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-    jay.chen@canonical.com
-Subject: Re: [PATCH v3] platform/x86: portwell-ec: Add GPIO and WDT driver
- for Portwell EC
-In-Reply-To: <d6b14c26-e70b-4edb-8661-b213e3fed9d4@portwell.com.tw>
-Message-ID: <475693ed-d11c-024a-c9f3-a270ab5b68a3@linux.intel.com>
-References: <d6b14c26-e70b-4edb-8661-b213e3fed9d4@portwell.com.tw>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lqRt4y3s"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a42EDiX870wZbbXtWmMUXgRwTnbAo14raK5JYu8Ie0F5Dmx59ywjdV9uWdVuvl9dNCJH2kinGP104T3aiCsdSyjCn3Yh2mDT/fU9F7WthICKT52Nmp1xoDTCI3lL2vKCNsbyR1Wbav6GsHe7FcbqIkdZEdtNedtKsTXJKrHiju9mKEFOLSFtMe9HMsv27EBEXiy58KMwJakyKsYwlbZXyF0XQES0KczRHYjJ0sVbayjBR7jDrFH4qUo7Q6gvrHGNXuB7bbu0TSMD3UycDzLt2U/rlCwZ6QPPEkDkkhmbzYimH839u/oMobXgr0iiqLI7T28Dq0z/jO1Me55vTb5YlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aGqQ7yQ1zBPWn++5p9V7Gdl48zQP01hZ+niGfD9YhZY=;
+ b=gPAezZmeCPIHuxjVhE1eilUVRBwYja/bdOr6DivO++8U3HteLhZtWvWy+vUZd+2sUDY5ZQCUDZ0r+c8TsYe6Etp6SJo7dGcDktQLgwl+hbnTsQvwM7Oj5hw8v7C0WJe0DFz81jryO+pS3A8xgkAbXvWaA5FivzY7wjjEs7dBzYbaYxqZrlXXPbIN1mDxFKY5IUKd/ZhbB6+KdUs0LWW2UZ71ObtlOnG+OZVsK57LP2QCI2GIeKyCqAtlZAHy+N5pD5o9Sn78WyYSlJHTQBdQTjRx/9etYWcn1MUJ+ltTrbYsZHnRjJNMOa/61cYz2HeLu3BJ0uShM154plmCGDf5RQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aGqQ7yQ1zBPWn++5p9V7Gdl48zQP01hZ+niGfD9YhZY=;
+ b=lqRt4y3sEC1KI5h5OIP/gGSsyGWmmHd/wG5m5WXHInR9grCkH8OZyubwE77GKL+da2BFAusq8YLrsx7nzcG12oaRT3/PVUyCGl91iGukZwPQ1LATMBydF0hBGUCMBQK8Yom3kHopigkXk0+6u1WJgxhnheaCxAziEhlZSCQ6DdI3pIknHOg9OzKQXt5KUa+DejILV0GJiyphydfDLCHLxWIB7HtQPy8UpYbBSOsPiFaJWgB1oDDGjBcXWK+KSiSg9So4bdyuTZF4WA05G/AnnLEieE9r2Q+xusvCECV1HU81+dMUUf/k2NsXaJCmczfjJ3b0UQCd2VQQ/AiMoaTNZA==
+Received: from MW4PR04CA0373.namprd04.prod.outlook.com (2603:10b6:303:81::18)
+ by MN2PR12MB4334.namprd12.prod.outlook.com (2603:10b6:208:1d1::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Thu, 10 Apr
+ 2025 12:07:12 +0000
+Received: from MWH0EPF000971E9.namprd02.prod.outlook.com
+ (2603:10b6:303:81:cafe::46) by MW4PR04CA0373.outlook.office365.com
+ (2603:10b6:303:81::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.23 via Frontend Transport; Thu,
+ 10 Apr 2025 12:07:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ MWH0EPF000971E9.mail.protection.outlook.com (10.167.243.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8632.13 via Frontend Transport; Thu, 10 Apr 2025 12:07:11 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 10 Apr
+ 2025 05:07:01 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 10 Apr 2025 05:07:01 -0700
+Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 10 Apr 2025 05:07:01 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
+	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
+	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.15 000/281] 5.15.180-rc2 review
+In-Reply-To: <20250409115832.538646489@linuxfoundation.org>
+References: <20250409115832.538646489@linuxfoundation.org>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <491886c8-fa89-4118-8d2e-3d202eb93790@drhqmail202.nvidia.com>
+Date: Thu, 10 Apr 2025 05:07:01 -0700
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E9:EE_|MN2PR12MB4334:EE_
+X-MS-Office365-Filtering-Correlation-Id: c8a13a5f-65c0-4fef-aaa9-08dd782839cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RWMwQ0ppb1p6T1JCTnFyMGRuTWk3bDZFbHFFY2JKQUp5SWNnWHFnSVhsaFg5?=
+ =?utf-8?B?TFVCTzdWRUllRVdRWndxSXVjUnRPYXNRVmlWNzRwalhoMDJkWnJsc3R0MEgy?=
+ =?utf-8?B?REMreDVMUENONGZycVFRQ3lSdG01LzA4MlJVSjVJYVgzMFpTMmZ5ZUdkQUxz?=
+ =?utf-8?B?R3RKek02WEhDZVlFbUlwMHVTTXZKck14bnRHWWFDVlBWWHk0aHpjc1NLV2Z4?=
+ =?utf-8?B?NXFvOUEvR0VybEk4dUFsWS8vcWVmZW1NRUN1dGlvWlBQMVJlTEw2QWlEM1lw?=
+ =?utf-8?B?eEpVMmNXbURuTUFNMFBYVEpOVlRPa3ErT3Y0ek5TWlJUdHZGdnp5ZGdObmxB?=
+ =?utf-8?B?eUs2aDdIWmk0cVlMTmdvSFNvZTl3QmcwK25KbjNrWEo4YyswT1ZXOUlQbWNw?=
+ =?utf-8?B?UlkvaUJsVWNhSForV3ZLemJVZUNhZ3pTSmNOYU40VEVuek8xTy9ZWTRsYTMy?=
+ =?utf-8?B?aVRhK01WUFp6aXIySkZLSWZEVlhPNzlSOGhPVkcyakNHTEdWc2dyK3d0V1NM?=
+ =?utf-8?B?amYzRnJ3Nkd4RWlCL0ZFdGFCRVRHVVVmSGZxTDlKWUxHVTltNm5BWDBHYkpL?=
+ =?utf-8?B?bml2RGE0ZjFQbHFTb3FOZUY1MTB3SDdNZkxydzF5NTJjQUF4QS9QMHhMKzBF?=
+ =?utf-8?B?NitZSzNMQ3JLY050QTVGTGtOVlhkdEdmSC85VXpGZDBhaU1ERTZIdy96cUhQ?=
+ =?utf-8?B?c25UT1Bua3VhOXlQSm55VEt1UjlkTkVqSWJiWHZXbmdPd0Y5M3FaRTc0OVUv?=
+ =?utf-8?B?RERHdDROc3phZEluUlhUdUJxT2doeDJEck1OczVqeEt3MUJla3hxMHB3ejdy?=
+ =?utf-8?B?N2xrbzRZTWlIVThOMjlGM3FTR1Y2Z3VwTXdsS1dHNkJDQ1JZUnBWR0VNTjU3?=
+ =?utf-8?B?S095a3N3ZmhMeFdtOS9nTDIvZUNwdm00U1hHM2l2RU1DU3dEOWxiZHVJcEtI?=
+ =?utf-8?B?QUN5M1ZNWGhaWHQyZDU2a1hYeGJFRnBXMEREZDAwajhLcTA1Ly9QcGhHKzJq?=
+ =?utf-8?B?MjdzenhvLzV4cU1pRiswV1lFRU9iYmNWc3ZuREI0RHdDd0ozMHJGRW14RHRt?=
+ =?utf-8?B?YmRBaGNaYVlvdlJQcE5IUVAzTDBVcWtoeHNEbSs1OE1YQmhEbE5kRm9CVGFL?=
+ =?utf-8?B?TXBPVlpTcU0vQkRqZGk5VzZFSythaVM2djJXK3cxSDRuNXJXQTZVOGhJVlY0?=
+ =?utf-8?B?R09zUG9VM1QzRFlYU2RXYkhoSFBqUzNQaEtCWi9Wb0Nndk9tUlNtWlhNRFVP?=
+ =?utf-8?B?dlV1KzEvSU4xZ0VmWklzemEySStjQXNZVWYxVXphVk9JNVN4alhTRStKSjRU?=
+ =?utf-8?B?MTJwenQxU1F5VDdObHJNM25KbUlUK3ZUbmQzODZlU3NXcHN3bmpQcEd0QXdS?=
+ =?utf-8?B?N293R1g2dkJ1NlR4bk9qbDBCdmcyM1RmZzR2aGk1MlVvb2tGKzM4MWxMckNJ?=
+ =?utf-8?B?WGdCbHZCMlcvMVprdmRIQy9yYWU0NVN4VjNmcVZCUk01MVJtZHJ0UVhuRG90?=
+ =?utf-8?B?ajdJYVcvcmFqRzF1RUlOS2YxcHBSMzlFbXhtdk90dklQMjlQM1JGRU1SRk5D?=
+ =?utf-8?B?NDdTamgyVFFmTGdGbjE5WmZPcWo3bUxyRWYzS1BzYzVOQjJNYU9BTFRLL0NB?=
+ =?utf-8?B?ZDI5WXRkaDlncE5mblBoZFhCM1NSNTJ4Q3J5d0xlOElmSFlDNkdid3ZCSDRs?=
+ =?utf-8?B?OUNhNEwzQ0RQSjdzQWlNZmpnNTRDdW1tUXhDSmJyOTdFNVhFb1FYbk90cVlh?=
+ =?utf-8?B?YldlTTRPSFRYVlFQOWsvRXAxQS9GdVgwL25vZTA1OHNPV0M4cjI0NnVQWkFu?=
+ =?utf-8?B?UHZWOXVDMVozWWZyNlgyWC9OUGtQMUFRRlMrNG1lVy9CMmg2K2J4ZE5ac2Ns?=
+ =?utf-8?B?MHRJbW9RMnQ2ZDJncFZDV0xjY2VuT2Q2WUxhYnBCbys4blRsOTRPSWhBWHFD?=
+ =?utf-8?B?NHJHY3BkclYvby9maFhtSU9YdWUxMGlqbmd0N0lxanlSRUQ0ZzlFRjFaY3FZ?=
+ =?utf-8?B?SXRvMGpTbW54TmRzelo0RCtURElqMnc5b3R0c1NudU5LR0tIZy9QeWJ6a1V6?=
+ =?utf-8?B?RFgzME41TEtYMk1xQkowZ3Q1M2V4YUZDaDRtZz09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 12:07:11.9527
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8a13a5f-65c0-4fef-aaa9-08dd782839cb
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000971E9.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4334
 
-On Thu, 10 Apr 2025, Yen-Chi Huang wrote:
-
-> Adds a driver for the ITE Embedded Controller (EC) on Portwell boards.
-> It integrates with the Linux GPIO and watchdog subsystems to provide:
+On Wed, 09 Apr 2025 14:02:21 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.180 release.
+> There are 281 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> - Control/monitoring of up to 8 EC GPIO pins.
-> - Hardware watchdog timer with 1-255 second timeouts.
+> Responses should be made by Fri, 11 Apr 2025 11:58:00 +0000.
+> Anything received after that time might be too late.
 > 
-> The driver communicates with the EC via I/O port 0xe300 and identifies
-> the hardware by the "PWG" firmware signature. This enables enhanced
-> system management for Portwell embedded/industrial platforms.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.180-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
 > 
-> Signed-off-by: Yen-Chi Huang <jesse.huang@portwell.com.tw>
-> ---
-> V2->V3:
->   - Reworked based on review from Bartosz Golaszewski
->   - Changed to use platform_driver and platform_device
->   - Updated GPIO to use .set_rv() instead of .set()
->   - Used devm_ helpers for request_region, GPIO and watchdog registration
+> thanks,
 > 
-> V1->V2:
->   - Addressed review comments from Ilpo Jarvinen
->   - Add DMI system check to avoid running on unsupported platforms
->   - Add 'force' module parameter to override DMI matching
->   - Use request_region() to claim I/O port access
->   - Extend WDT timeout handling to use both minute and second registers
->   - Increase WDT max timeout from 255s to 15300s
->   - Use named defines for WDT enable/disable
->   - Remove dummy pr_info() messages
->   - Fix several coding style issues (comments, alignment, spacing)
-> ---
->  MAINTAINERS                        |   6 +
->  drivers/platform/x86/Kconfig       |  14 ++
->  drivers/platform/x86/Makefile      |   3 +
->  drivers/platform/x86/portwell-ec.c | 292 +++++++++++++++++++++++++++++
->  4 files changed, 315 insertions(+)
->  create mode 100644 drivers/platform/x86/portwell-ec.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d5dfb9186962..c52f819786dc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19132,6 +19132,12 @@ F:	kernel/time/itimer.c
->  F:	kernel/time/posix-*
->  F:	kernel/time/namespace.c
->  
-> +PORTWELL EC DRIVER
-> +M:	Yen-Chi Huang <jesse.huang@portwell.com.tw>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/x86/portwell-ec.c
-> +
->  POWER MANAGEMENT CORE
->  M:	"Rafael J. Wysocki" <rafael@kernel.org>
->  L:	linux-pm@vger.kernel.org
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 43407e76476b..2f26d1bf0a75 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -779,6 +779,20 @@ config PCENGINES_APU2
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pcengines-apuv2.
->  
-> +config PORTWELL_EC
-> +	tristate "Portwell Embedded Controller driver"
-> +	depends on X86 && HAS_IOPORT && WATCHDOG && GPIOLIB
-> +	help
-> +	  This driver provides support for the GPIO pins and watchdog timer
-> +	  embedded in Portwell's EC.
-> +
-> +	  Theoretically, this driver should work on multiple Portwell platforms,
-> +	  but it has only been tested on the Portwell NANO-6064 board.
-> +	  If you encounter any issues on other boards, please report them.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called portwell-ec.
-> +
->  config BARCO_P50_GPIO
->  	tristate "Barco P50 GPIO driver for identify LED/button"
->  	depends on GPIOLIB
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 650dfbebb6c8..83dd82e04457 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -92,6 +92,9 @@ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
->  # PC Engines
->  obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
->  
-> +# Portwell
-> +obj-$(CONFIG_PORTWELL_EC)	+= portwell-ec.o
-> +
->  # Barco
->  obj-$(CONFIG_BARCO_P50_GPIO)	+= barco-p50-gpio.o
->  
-> diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
-> new file mode 100644
-> index 000000000000..7a60ced0c984
-> --- /dev/null
-> +++ b/drivers/platform/x86/portwell-ec.c
-> @@ -0,0 +1,292 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * portwell-ec.c: Portwell embedded controller driver.
-> + *
-> + * Tested on:
-> + *  - Portwell NANO-6064
-> + *
-> + * This driver provides support for GPIO and Watchdog Timer
-> + * functionalities of the Portwell boards with ITE embedded controller (EC).
-> + * The EC is accessed through I/O ports and provides:
-> + *  - 8 GPIO pins for control and monitoring
-> + *  - Hardware watchdog with 1-15300 second timeout range
-> + *
-> + * It integrates with the Linux GPIO and Watchdog subsystems, allowing
-> + * userspace interaction with EC GPIO pins and watchdog control,
-> + * ensuring system stability and configurability.
-> + *
-> + * (C) Copyright 2025 Portwell, Inc.
-> + * Author: Yen-Chi Huang (jesse.huang@portwell.com.tw)
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/dmi.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/string.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define PORTWELL_EC_IOSPACE 0xe300
-> +#define PORTWELL_EC_IOSPACE_LEN 0x100
+> greg k-h
 
-SZ_256 + add #include for it.
+All tests passing for Tegra ...
 
-> +
-> +#define PORTWELL_GPIO_PINS 8
-> +#define PORTWELL_GPIO_DIR_REG 0x2b
-> +#define PORTWELL_GPIO_VAL_REG 0x2c
-> +
-> +#define PORTWELL_WDT_EC_CONFIG_ADDR 0x06
-> +#define PORTWELL_WDT_CONFIG_ENABLE 0x1
-> +#define PORTWELL_WDT_CONFIG_DISABLE 0x0
+Test results for stable-v5.15:
+    10 builds:	10 pass, 0 fail
+    28 boots:	28 pass, 0 fail
+    101 tests:	101 pass, 0 fail
 
-Align values.
+Linux version:	5.15.180-rc2-g20340c8f4f00
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
+                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-> +#define PORTWELL_WDT_EC_COUNT_MIN_ADDR 0x07
-> +#define PORTWELL_WDT_EC_COUNT_SEC_ADDR 0x08
-> +#define PORTWELL_WDT_EC_MAX_COUNT_SECOND 15300 //255*60secs
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-Move the formula from the comment to the define itself. While doing so, 
-you need to add () around it and add spaces around *.
-
-> +
-> +#define PORTWELL_EC_FW_VENDOR_ADDRESS 0x4d
-> +#define PORTWELL_EC_FW_VENDOR_LENGTH 3
-> +#define PORTWELL_EC_FW_VENDOR_NAME "PWG"
-> +
-> +static bool force;
-> +module_param(force, bool, 0444);
-> +MODULE_PARM_DESC(force, "Force loading ec driver without checking DMI boardname");
-
-EC
-
-> +static const struct dmi_system_id pwec_dmi_table[] = {
-> +	{
-> +		.ident = "NANO-6064 series",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "NANO-6064"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(dmi, pwec_dmi_table);
-> +
-> +/* Functions for access EC via IOSPACE*/
-> +
-> +static void pwec_write(u8 index, u8 data)
-> +{
-> +	outb(data, PORTWELL_EC_IOSPACE + index);
-> +}
-> +
-> +static u8 pwec_read(u8 address)
-> +{
-> +	return inb(PORTWELL_EC_IOSPACE + address);
-> +}
-> +
-> +/* GPIO functions*/
-
-Missing space. Please check all your comments as the one above seems to 
-have the same lack of space at the end.
-
-> +
-> +static int pwec_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	return (pwec_read(PORTWELL_GPIO_VAL_REG) & (1 << offset)) ? 1 : 0;
-> +}
-> +
-> +static int pwec_gpio_set_rv(struct gpio_chip *chip, unsigned int offset, int val)
-> +{
-> +	u8 tmp = pwec_read(PORTWELL_GPIO_VAL_REG);
-> +
-> +	if (val)
-> +		tmp |= (1 << offset);
-> +	else
-> +		tmp &= ~(1 << offset);
-> +	pwec_write(PORTWELL_GPIO_VAL_REG, tmp);
-
-Add empty line here.
-
-> +	return 0;
-> +}
-> +
-> +static int pwec_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	u8 direction = pwec_read(PORTWELL_GPIO_DIR_REG) & (1 << offset);
-> +
-> +	if (direction)
-> +		return GPIO_LINE_DIRECTION_IN;
-> +	else
-> +		return GPIO_LINE_DIRECTION_OUT;
-> +}
-> +
-> +/*
-> + * Changing direction causes issues on some boards,
-> + * so direction_input and direction_output are disabled for now.
-> + */
-> +
-> +static int pwec_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int pwec_gpio_direction_output(struct gpio_chip *gc, unsigned int offset, int value)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static struct gpio_chip pwec_gpio_chip = {
-> +	.label = "portwell-ec-gpio",
-> +	.get_direction = pwec_gpio_get_direction,
-> +	.direction_input = pwec_gpio_direction_input,
-> +	.direction_output = pwec_gpio_direction_output,
-> +	.get = pwec_gpio_get,
-> +	.set_rv = pwec_gpio_set_rv,
-> +	.base = -1,
-> +	.ngpio = PORTWELL_GPIO_PINS,
-> +};
-> +
-> +/* Watchdog functions*/
-> +
-> +static int pwec_wdt_trigger(struct watchdog_device *wdd)
-> +{
-> +	int retry = 10;
-> +	u8 min, sec;
-> +	unsigned int timeout;
-> +
-> +	do {
-> +		pwec_write(PORTWELL_WDT_EC_COUNT_MIN_ADDR, wdd->timeout / 60);
-> +		pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout % 60);
-> +		pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, PORTWELL_WDT_CONFIG_ENABLE);
-> +		min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
-> +		sec = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
-> +		timeout = min * 60 + sec;
-
-This readback could reuse pwec_wdt_get_timeleft().
-
-> +		retry--;
-
-Decrementing could be done within the condition that checks it.
-
-> +	} while (timeout != wdd->timeout && retry >= 0);
-
-Is this write until timeout matches the one written typical thing for 
-watchdog drivers, or is there something specific to this HW you should 
-comment + note in the changelog so it is recorded for future readers of 
-this code?
-
-I'd add empty line here.
-
-> +	if (retry < 0) {
-> +		pr_err("watchdog started failed\n");
-> +		return -EIO;
-> +	} else
-
-Unnecessary else.
-
-> +		return 0;
-> +}
-> +
-> +static int pwec_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	return pwec_wdt_trigger(wdd);
-> +}
-> +
-> +static int pwec_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, PORTWELL_WDT_CONFIG_DISABLE);
-> +	return 0;
-> +}
-> +
-> +static int pwec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
-> +{
-> +	if (timeout == 0 || timeout > PORTWELL_WDT_EC_MAX_COUNT_SECOND)
-> +		return -EINVAL;
-
-Add empty line here.
-
-> +	wdd->timeout = timeout;
-> +	pwec_write(PORTWELL_WDT_EC_COUNT_MIN_ADDR, wdd->timeout / 60);
-> +	pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout % 60);
-
-Add empty line hre.
-
-> +	return 0;
-> +}
-> +
-> +static unsigned int pwec_wdt_get_timeleft(struct watchdog_device *wdd)
-> +{
-> +	u8 min, sec;
-> +
-> +	min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
-> +	sec = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
-
-Does the HW "lock" sec value in place after min is read or do you need to 
-consider the possibility of these values getting updated while you're 
-reading them and the driver reading sec after it has wrapped?
-
-Add an empty line here.
-
-> +	return min * 60 + sec;
-> +}
-> +
-> +static const struct watchdog_ops pwec_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = pwec_wdt_start,
-> +	.stop = pwec_wdt_stop,
-> +	.ping = pwec_wdt_trigger,
-> +	.set_timeout = pwec_wdt_set_timeout,
-> +	.get_timeleft = pwec_wdt_get_timeleft,
-> +};
-> +
-> +static struct watchdog_device ec_wdt_dev = {
-> +	.info = &(struct watchdog_info){
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> +	.identity = "Portwell EC Watchdog",
-
-Please indent the inner struct correctly.
-
-> +	},
-> +	.ops = &pwec_wdt_ops,
-> +	.timeout = 60,
-> +	.min_timeout = 1,
-> +	.max_timeout = PORTWELL_WDT_EC_MAX_COUNT_SECOND,
-> +};
-> +
-> +static int pwec_firmware_vendor_check(void)
-> +{
-> +	u8 buf[PORTWELL_EC_FW_VENDOR_LENGTH + 1];
-> +	u8 i;
-> +
-> +	for (i = 0; i < PORTWELL_EC_FW_VENDOR_LENGTH; i++)
-> +		buf[i] = pwec_read(PORTWELL_EC_FW_VENDOR_ADDRESS + i);
-> +	buf[PORTWELL_EC_FW_VENDOR_LENGTH] = '\0';
-> +
-> +	return (strcmp(PORTWELL_EC_FW_VENDOR_NAME, buf) == 0) ? 0 : -ENODEV;
-
-return !strcmp() ? 0 : -ENODEV;
-
-> +}
-> +
-> +static int pwec_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	if (!devm_request_region(&pdev->dev, PORTWELL_EC_IOSPACE,
-> +				PORTWELL_EC_IOSPACE_LEN, dev_name(&pdev->dev))) {
-> +		pr_err("I/O region 0xE300-0xE3FF busy\n");
-
-Use dev_err() instead of pr_err().
-
-I'd use the defines while printing the region's address.
-
-> +		return -EBUSY;
-> +	}
-> +
-> +	ret = pwec_firmware_vendor_check();
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = devm_gpiochip_add_data(&pdev->dev, &pwec_gpio_chip, NULL);
-> +	if (ret < 0) {
-> +		pr_err("failed to register Portwell EC GPIO\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
-> +	if (ret < 0) {
-> +		gpiochip_remove(&pwec_gpio_chip);
-> +		pr_err("failed to register Portwell EC Watchdog\n");
-
-Watchdog -> watchdog ?
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver pwec_driver = {
-> +	.driver = {
-> +		.name = "portwell-ec",
-> +	},
-> +	.probe = pwec_probe
-
-Add comma. In general, the comma is to be left out only from a 
-terminator entry that is used by some types of arrays.
-
-> +};
-> +
-> +static struct platform_device *pwec_dev;
-> +
-> +static int __init pwec_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (!force) {
-> +		if (!dmi_check_system(pwec_dmi_table)) {
-> +			pr_info("unsupported platform\n");
-
-This will be unnecessary noise for most systems.
-
-> +			return -ENODEV;
-> +		}
-> +	}
-
-I think logically you should do it in a slightly different order:
-
-	if (!dmi_check_system(...)) {
-		if (!force)
-			return -ENODEV;
-		pr_warn("...\n");
-	}
-
-> +
-> +	ret = platform_driver_register(&pwec_driver);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pwec_dev = platform_device_register_simple("portwell-ec", -1, NULL, 0);
-
-If this fails, you need to unroll the other register.
-
-> +	return PTR_ERR_OR_ZERO(pwec_dev);
-> +}
-> +
-> +static void __exit pwec_exit(void)
-> +{
-> +	if (pwec_dev)
-> +		platform_device_unregister(pwec_dev);
-> +	platform_driver_unregister(&pwec_driver);
-> +}
-> +
-> +module_init(pwec_init);
-> +module_exit(pwec_exit);
-> +
-> +MODULE_AUTHOR("Yen-Chi Huang <jesse.huang@portwell.com.tw");
-> +MODULE_DESCRIPTION("Portwell EC Driver");
-> +MODULE_LICENSE("GPL");
-> 
-
--- 
- i.
-
+Jon
