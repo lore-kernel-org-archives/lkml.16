@@ -1,156 +1,105 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7BC5CB8
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D57017E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744243336; cv=none; b=X9zHgrnUI3fyk0n4rcsjgMfDEnlaeoq3Asj9IM0evTBKF4cu4IHLKxuD05ZeMWtvsMFaK5LkV3qZLJyv2Fr/IbWXB/e24udsFkHfD8vw5XH7z4Y4LAZSjkQlK9PY5ZZyi7feDCHL1iEiAjvc/XQW6gdR2gNCvj7vVKUyHtXjStY=
+	t=1744243508; cv=none; b=MznFg+RP6AeXYxL6uU3ReEhB1jAEyIlgGuglJOFVTw290qxDNFCUG7XQ4k2bhtYbrUTvLc3SfbWv7FQAxGBymH7cHa+EQgscPqfxeHYkTCSyBzd4oRwjs6IG4gdEpyKWbZcryG6TQ7KDeb2mO56xs1wkLQNTmodARUmtaAf94SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744243336; c=relaxed/simple;
-	bh=rKF1hbfcgw75F2EN5uNgusCOV3BqZbHH4JOjXRGX65w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dgbUN4cqtW44i0OxtpWnAau/ste+Lcf21+BZGvH+X7AVR6HhpZGnBMbyk52FkKo5pRBehqgfW9A4lZz61cum+Dybvobq/zuTAC37TnVu1r/621HbPKT9/vZ2sl1IqwKacpIKU2sD4ovE1WIVwx76BGr9PiILJ9AhvI1iSygCtmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CErOvc4u; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744243508; c=relaxed/simple;
+	bh=MMmY/Hg2SPBpq07GYl0alwEt+JGMdE7/iv5NgVskB5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=myxOVOwd0j6+4X8eV/rGL0Qrvx+RcbOd0RVEP8f5GRu9ounkx8Bilc8Xr46BAzJCgyR9BLeXhK4dJ8AhATMjtrdYd2qcTFNRQ9TGAv6z70cEsAwqXuVoAN7KiRBd5o/GtBf4fCy+VAhRFOOQjy0NqA/iGpckuWs0LsiqyqHmMWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EjmlpJfC; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CErOvc4u"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744243324; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Aoq6JYCaV1p9yraciQnzm7D38594vGRZlTcVPXdUJs8=;
-	b=CErOvc4ukleVfOY+MFBpeEjrFbzWoD0cZXlHnn1TBPkJrRceYDh9pfwcj/LS7KpXkTzdGHSsPgu2I6AWlpoQMWu5+0ryWGeCboWJ6T9LiphyAEtGnEUKBdDjTxJ2FO9IKSSmyhvzsGGlZVDgHPLjq7j0WLMyaaIif/tBgwHd4E0=
-Received: from 30.134.5.237(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WWLx0T9_1744243006 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 10 Apr 2025 07:56:46 +0800
-Message-ID: <7af3e868-04cb-47b1-a81b-651be3756ec5@linux.alibaba.com>
-Date: Thu, 10 Apr 2025 07:56:45 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EjmlpJfC"
+Date: Wed, 9 Apr 2025 20:05:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744243504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/WE0GCsoc/2sLbHf8Sfbw+FhQV6ppZIJBcKSBbwzjqo=;
+	b=EjmlpJfCSvz/brHJMvMtDYxwZdlC1RUhCw991mn28+pr0WvjNgBpWyIwEO/RSO6iStunR/
+	HOtY/ZKtQ39isyG7DHtmm4FnCS6rJBxWJhyY9m/9I0KgjgebGJsihwa1zcSRLNE/nXcChm
+	rNzEQq9pGhSUZnqPTLYomLZi9y2CIQ0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Integral <integral@archlinuxcn.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] bcachefs: indent error messages of invalid compression
+Message-ID: <xi4xo3didwhs35asguon3opf7gfp2o2h5vqb25l354eibomdnw@2af4auvqen7f>
+References: <sd4nbvk24h5aiooqkzczyqfc33t7triwlsrp4neyd6wovmodak@lwvvuurcehbu>
+ <20250408103129.61829-1-integral@archlinuxcn.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] erofs: add __packed annotation to union(__le16..)
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- kernel test robot <lkp@intel.com>
-References: <20250408114448.4040220-1-hsiangkao@linux.alibaba.com>
- <20250409195222.4cadc368@pumpkin>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250409195222.4cadc368@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408103129.61829-1-integral@archlinuxcn.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hi David,
-
-On 2025/4/10 02:52, David Laight wrote:
-> On Tue,  8 Apr 2025 19:44:47 +0800
-> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+On Tue, Apr 08, 2025 at 06:31:29PM +0800, Integral wrote:
+> This patch uses printbuf_indent_add_nextline() to set a consistent
+> indentation level for error messages of invalid compression.
 > 
->> I'm unsure why they aren't 2 bytes in size only in arm-linux-gnueabi.
+> In my previous patch [1], the newline is added by using '\n' in
+> the argument of prt_str(). This patch replaces prt_str() with
+> prt_printf() to make indentation level work correctly.
 > 
-> IIRC one of the arm ABI aligns structures on 32 bit boundaries.
-
-Thanks for your reply, but I'm not sure if it's the issue.
-
+> [1] Link: https://lore.kernel.org/20250406152659.205997-2-integral@archlinuxcn.org
 > 
->>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/r/202504051202.DS7QIknJ-lkp@intel.com
->> Fixes: 61ba89b57905 ("erofs: add 48-bit block addressing on-disk support")
->> Fixes: efb2aef569b3 ("erofs: add encoded extent on-disk definition")
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->>   fs/erofs/erofs_fs.h | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
->> index 61a5ee11f187..94bf636776b0 100644
->> --- a/fs/erofs/erofs_fs.h
->> +++ b/fs/erofs/erofs_fs.h
->> @@ -56,7 +56,7 @@ struct erofs_super_block {
->>   	union {
->>   		__le16 rootnid_2b;	/* nid of root directory */
->>   		__le16 blocks_hi;	/* (48BIT on) blocks count MSB */
->> -	} rb;
->> +	} __packed rb;
->>   	__le64 inos;            /* total valid ino # (== f_files - f_favail) */
->>   	__le64 epoch;		/* base seconds used for compact inodes */
->>   	__le32 fixed_nsec;	/* fixed nanoseconds for compact inodes */
->> @@ -148,7 +148,7 @@ union erofs_inode_i_nb {
->>   	__le16 nlink;		/* if EROFS_I_NLINK_1_BIT is unset */
->>   	__le16 blocks_hi;	/* total blocks count MSB */
->>   	__le16 startblk_hi;	/* starting block number MSB */
->> -};
->> +} __packed;
+> Signed-off-by: Integral <integral@archlinuxcn.org>
+
+Applied
+
+> ---
+>  fs/bcachefs/compress.c | 4 ++--
+>  fs/bcachefs/opts.c     | 1 +
+>  2 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> That shouldn't be necessary and will kill performance on some systems.
-> The 'packed' on the member should be enough to reduce the size.
-
-It cannot be resolved by the following diff:
-
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 94bf636776b0..1f6233dfdcb0 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -148,14 +148,14 @@ union erofs_inode_i_nb {
-         __le16 nlink;           /* if EROFS_I_NLINK_1_BIT is unset */
-         __le16 blocks_hi;       /* total blocks count MSB */
-         __le16 startblk_hi;     /* starting block number MSB */
--} __packed;
-+};
-
-  /* 32-byte reduced form of an ondisk inode */
-  struct erofs_inode_compact {
-         __le16 i_format;        /* inode format hints */
-         __le16 i_xattr_icount;
-         __le16 i_mode;
--       union erofs_inode_i_nb i_nb;
-+       union erofs_inode_i_nb i_nb __packed;
-         __le32 i_size;
-         __le32 i_mtime;
-         union erofs_inode_i_u i_u;
-@@ -171,7 +171,7 @@ struct erofs_inode_extended {
-         __le16 i_format;        /* inode format hints */
-         __le16 i_xattr_icount;
-         __le16 i_mode;
--       union erofs_inode_i_nb i_nb;
-+       union erofs_inode_i_nb i_nb __packed;
-         __le64 i_size;
-         union erofs_inode_i_u i_u;
-
-I doesn't work and will report
-
-In file included from <command-line>:
-In function 'erofs_check_ondisk_layout_definitions',
-     inlined from 'erofs_module_init' at ../fs/erofs/super.c:817:2:
-./../include/linux/compiler_types.h:542:38: error: call to '__compiletime_assert_332' declared with attribute error: BUILD_BUG_ON failed: sizeof(struct erofs_inode_compact) != 32
-   542 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-       |
-
+> diff --git a/fs/bcachefs/compress.c b/fs/bcachefs/compress.c
+> index d68c3c7896a3..1bca61d17092 100644
+> --- a/fs/bcachefs/compress.c
+> +++ b/fs/bcachefs/compress.c
+> @@ -714,7 +714,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
+>  
+>  	ret = match_string(bch2_compression_opts, -1, type_str);
+>  	if (ret < 0 && err)
+> -		prt_str(err, "invalid compression type\n");
+> +		prt_printf(err, "invalid compression type\n");
+>  	if (ret < 0)
+>  		goto err;
+>  
+> @@ -729,7 +729,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
+>  		if (!ret && level > 15)
+>  			ret = -EINVAL;
+>  		if (ret < 0 && err)
+> -			prt_str(err, "invalid compression level\n");
+> +			prt_printf(err, "invalid compression level\n");
+>  		if (ret < 0)
+>  			goto err;
+>  
+> diff --git a/fs/bcachefs/opts.c b/fs/bcachefs/opts.c
+> index cd7b0cd293c7..f35fde896253 100644
+> --- a/fs/bcachefs/opts.c
+> +++ b/fs/bcachefs/opts.c
+> @@ -365,6 +365,7 @@ int bch2_opt_parse(struct bch_fs *c,
+>  		   struct printbuf *err)
+>  {
+>  	ssize_t ret;
+> +	printbuf_indent_add_nextline(err, 2);
+>  
+>  	switch (opt->type) {
+>  	case BCH_OPT_BOOL:
 > 
-> I'd add a compile assert (of some form) on the size of the structure.
-
-you mean
-
-@@ -435,6 +435,7 @@ static inline void erofs_check_ondisk_layout_definitions(void)
-         };
-
-         BUILD_BUG_ON(sizeof(struct erofs_super_block) != 128);
-+       BUILD_BUG_ON(sizeof(union erofs_inode_i_nb) != 2);
-         BUILD_BUG_ON(sizeof(struct erofs_inode_compact) != 32);
-
-?
-
-
-./../include/linux/compiler_types.h:542:38: error: call to '__compiletime_assert_332' declared with attribute error: BUILD_BUG_ON failed: sizeof(union erofs_inode_i_nb) != 2
-   542 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-       |                                      ^
-
-That doesn't work too.
-
-Thanks,
-Gao Xiang
+> base-commit: 4d37602fceff942694069cf33cc55863277bd1c2
+> -- 
+> 2.49.0
+> 
