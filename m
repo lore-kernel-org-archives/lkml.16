@@ -1,122 +1,85 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601BA281529;
-	Thu, 10 Apr 2025 14:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983E3281529;
+	Thu, 10 Apr 2025 14:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294992; cv=none; b=YjpDBFln5Iwy0c9cxknEFRYVlp30unNCyXkkYyBgAD4BHsNRp0rf0E7tm8zB+x0LwWSShmnKYQBnA8WHOPUklXp2WSqUl4OR+1ZKGAOwdPErn51+cmTMr5dhvikVq57Nig55ph9/pnkXYEkneeu7kKGWXwwAZ5zmw0A19sVnWlc=
+	t=1744295014; cv=none; b=eqqlwhXAL8vCqGhZ5nd0YpZWdXi9pK8aNOajCOwdEXbrzRLtwN7pQW+bihXTDfTLi4UjBTq3GiGF1qLVM79LVVZ42dwM3PjKswg1JHevioQdf+GNvlBzKL7rfgcqcg6Z21ZDYsUr5cYvkYhlTrrp8ik+O4J2kGkxD7wDi0zkhFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294992; c=relaxed/simple;
-	bh=Cwh6grY8wxhGhDJNXlFA0QmEG6C//znuti9h9BtRBOA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BXFf4d85YJfxBFwgPBKagU293w5jKG4i8JypB+rhyorcphUFjs8estghMjQETo0vDU3URw5SyKfeOEESddgO4QQt0VD8B5dxRR4nl/hDkArjKZVsSgKhbSjxiE0AkBOhs5NScrdq+YBhmIfxG1zKwmfBudRdfrP2Iom5yFEWjw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UBZQN0EC; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744295014; c=relaxed/simple;
+	bh=F8eq5C2arq6nQ8is5jRPMuJ8H0Gg2faL+GzWh6CxsyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLm+uCdJ8bChxFCnnqVBkP68X3RRBQ2aJxvOenuff3r+LAWu0hP5GJN/mQj6NsLmzO5GZ4oDY/96UF+CkBIjBcXC1lzc3IHaoIQlJNsMB0iyCE1yiHT3tYbxK7Q064Ru8HQCKa+uAmd1Y5cKfaq+/0BUVR/twdlKEjnhQvFRqIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=0CD1m9e0; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBZQN0EC"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7396f13b750so802096b3a.1;
-        Thu, 10 Apr 2025 07:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744294990; x=1744899790; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T1KzVOT+eZwRVkPvH/8cwKh4uQYPRiQGRGZVOEfjMOc=;
-        b=UBZQN0ECSg7/bra/zC8SloCdnRNkOFcmeCVtd2Fw2OJs00PlueO2YN+BT59yycmHwf
-         pA5hH/lfXXcmT0rtsPQq6+i+SPbG29amoTFFUEGA7+X9WVZYPVjrqbQO2tG+2KJadlSE
-         ZsoEvnKKGXn066hn75SnX9oyKaopXrleXkHKM/1YQ5UIPw+S7FiOT4ag+6DF3u6ST0vO
-         XGyK/QHPX6kprCp7N0i5wFnIicNoLOkjLXYDA8QZVV4OuBpd+XnTKv9vkfI0fl75C96m
-         rddP9JUtoqeblei2bTj24zW8p+64xXW88srI9xIAfASHv4PLqS8OcvtZHULGpz41u8ZX
-         eOBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744294990; x=1744899790;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T1KzVOT+eZwRVkPvH/8cwKh4uQYPRiQGRGZVOEfjMOc=;
-        b=Lg0qmAAKWX/q3EnTtZq9Kp1ztl2O185zLYkCKNzuWgl8TM/VinEeNxnIwosPILFGQc
-         Svb1yBOqZMS4sG3jKPwA9pRPqgr1ETzrNr9KpAZGkO1DzhZPyI9bO+yMkG4YVWVyvrL/
-         SKP5bPmuB32G3R6VHwu2vYb2l+H+EP0FqrcI1QrpmDWu2I833yEl8YY0Hq1eDrD9yxGN
-         0J0Ez2doeSodAgElsPHNJUGflg7VkXk420SHJGCjIA2QQZBOo005ptE9b99lBRAQIw2T
-         KZtF2jyQLyF7Ds7UAdM1g5rD+iB9ld8YfdGfw7/EW2ANFUolYu4Reb0U9UpfYJRkdfW8
-         ddYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWSN9ZDvLjfuQz2TP6iKDntOhOHR/zhHHCHHzBwAC8V20d7iJinAvBOZ873UW1+/lx+TMDfe01@vger.kernel.org, AJvYcCWsPaBHgA3G776/YhSG0tCWYRFDAgFSWUKkXZlgWLx8odMTGhyvxkpTWvxsIwFhStvape9uN6L3wcuyCol+@vger.kernel.org, AJvYcCWw2j2cJytXgRd0BXmKsRsKfu8QZAI+MtDSfmMS7kRcMzyTJU8x2I6bSQ/ddoSgImFVEwJyDcyz70VXHs4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqFOj9m9D7A+hQ++rNr4OfM/O1ZpsFTurCLpEKIaIIbyQvvXYF
-	ByRUFghLwW9PPK6O/fr7OKBSK6Qr2LFABztTaxZKLTZLhQ7yyq24
-X-Gm-Gg: ASbGnctxOG/ri/H+hiOvyW7tOI2bUvb5aDjVyGow7BTPEnIomaPLZBN5jtEvRrYyBUc
-	AxrdetVAxDMq4AAmAQkHL3pweV6LyPxUeELbT2RaC1+96GyfNAX/BH5Mcd6gLZPSU7BzRi5Qcqt
-	V4CocyAoaqd4Ej1Q4YsmPebSzpxWom5eZVQHQBq1UW6b7fE0WIvD1mv/xgnGWSWxcbBf8i0hj6Q
-	a3U3yAyTohl3AhFgMWF+UYinWRJp/O/vX+h/EM/Ig6tbJSsabys99x4EownXYR7Z10WJ4NLY0eg
-	e5lapkBCvT2bJfqOiNIKPgggqPPnI+32OuwbGHKEWddxp2r1fOS70KoOGG2H8rDToRdg09Vtb/R
-	tVQ1k6ZAxMbTY0a06ynnSeAmolgJW82iqZhySKg==
-X-Google-Smtp-Source: AGHT+IHYvKz4BNpqFgjqtK4NeKugSkNVTSb75ZAm5QQA7B1M0d8K2TV39Qrya9RbCeBmRX2vLXlgMA==
-X-Received: by 2002:a05:6a21:3298:b0:1f5:709d:e0cb with SMTP id adf61e73a8af0-20169603e52mr4577828637.39.1744294990477;
-        Thu, 10 Apr 2025 07:23:10 -0700 (PDT)
-Received: from DESKTOP-NBGHJ1C.flets-east.jp (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a331b481sm3042268a12.75.2025.04.10.07.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 07:23:10 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: pmladek@suse.com
-Cc: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	bigeasy@linutronix.de,
-	conor.dooley@microchip.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	john.ogness@linutronix.de,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	ryotkkr98@gmail.com,
-	samuel.holland@sifive.com,
-	stable@vger.kernel.org,
-	u.kleine-koenig@baylibre.com
-Subject: Re: [PATCH v2] serial: sifive: lock port in startup()/shutdown() callbacks
-Date: Thu, 10 Apr 2025 23:23:03 +0900
-Message-Id: <20250410142303.5978-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <Z_erp2nLRKzLXuwF@pathway.suse.cz>
-References: <Z_erp2nLRKzLXuwF@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0CD1m9e0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Sje0mXCO8uUiowTlFETq7gVVR2y68OmKN7E7RZiwNSw=; b=0CD1m9e04quHGOpw8NHRSXbjD+
+	ThjnIJYoOyyFvb/yn27LI6/uJ5XxIl13/WyJQVD/xFCBnpt611XkipXZzfH8fnZK36MVkKtg67O5o
+	iQZ38Bj6MOEB/cqasGjSP1WF/wZDPZpkqLoK4eRuT3ejQc4c0EyWcUXD6ZRKm1O7RRqXefFBsT5JB
+	iKRtD3y9PxJqDL2zWSvps5l73BVvL+jIa5drSgn20dKKLIjuQW5RADSR4gBG53XeTd/8BqkCRpS3e
+	ChbqPUvdkLIymD5FRmHm11UlzJkVWBTQwdOOYqK321HEVrS5xhj0P8DgLwnsMt/TbOmnfeaZUsxN6
+	QZQzjGIA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2soP-0000000Apj7-062H;
+	Thu, 10 Apr 2025 14:23:25 +0000
+Date: Thu, 10 Apr 2025 07:23:24 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Shivank Garg <shivankg@amd.com>,
+	seanjc@google.com, david@redhat.com, vbabka@suse.cz,
+	willy@infradead.org, akpm@linux-foundation.org, shuah@kernel.org,
+	pbonzini@redhat.com, paul@paul-moore.com, jmorris@namei.org,
+	serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com,
+	tabba@google.com, vannapurve@google.com, chao.gao@intel.com,
+	bharata@amd.com, nikunj@amd.com, michael.day@amd.com,
+	yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com,
+	thomas.lendacky@amd.com, michael.roth@amd.com, aik@amd.com,
+	jgg@nvidia.com, kalyazin@amazon.com, peterx@redhat.com,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-coco@lists.linux.dev
+Subject: Re: [PATCH RFC v7 5/8] KVM: guest_memfd: Make guest mem use guest
+ mem inodes instead of anonymous inodes
+Message-ID: <Z_fUXKcvbbUTQO1n@infradead.org>
+References: <20250408112402.181574-1-shivankg@amd.com>
+ <20250408112402.181574-6-shivankg@amd.com>
+ <Z_eEfjrkspAt4ACP@infradead.org>
+ <diqz4iyw5dis.fsf@ackerleytng-ctop.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <diqz4iyw5dis.fsf@ackerleytng-ctop.c.googlers.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, 10 Apr 2025 13:29:43 +0200, Petr Mladek wrote:
->On Sat 2025-04-05 23:53:54, Ryo Takakura wrote:
->> startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
->> The register is also accessed from write() callback.
->> 
->> If console were printing and startup()/shutdown() callback
->> gets called, its access to the register could be overwritten.
->> 
->> Add port->lock to startup()/shutdown() callbacks to make sure
->> their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
->> write() callback.
->> 
->> Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
->> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
->> Cc: stable@vger.kernel.org
->
->I do not have the hardware around so I could not test it.
->But the change make sense. It fixes a real race.
->And the code looks reasonable:
->
->Reviewed-by: Petr Mladek <pmladek@suse.com>
+On Thu, Apr 10, 2025 at 06:53:15AM -0700, Ackerley Tng wrote:
+> > So why do other alloc_anon_inode callers not need
+> > security_inode_init_security_anon?
+> 
+> Thanks for this tip!
+> 
+> When I did this refactoring, I was just refactoring
+> anon_inode_create_getfile(), to set up the guest_memfd inode and file in
+> separate stages, and anon_inode_create_getfile() was already using
+> security_inode_init_security_anon().
+> 
+> In the next revision I can remove this call.
+> 
+> Is it too late to remove the call to security_inode_init_security_anon()
+> though? IIUC it is used by LSMs, which means security modules may
+> already be assuming this call?
 
-Thanks for reviewing this one as well!
-I'll send v3 with your Reviewed-by.
-
-Sincerely,
-Ryo Takakura
-
->Best Regards,
->Petr
+I'd really like to here from the security folks if we need it or not,
+both in this case and for other alloc_anon_inode callers.
