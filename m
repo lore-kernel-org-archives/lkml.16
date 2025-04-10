@@ -1,95 +1,131 @@
-Received: from smtp-190d.mail.infomaniak.ch (smtp-190d.mail.infomaniak.ch [185.125.25.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CE91F098E;
-	Thu, 10 Apr 2025 17:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D871EF37B;
+	Thu, 10 Apr 2025 17:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744305316; cv=none; b=q8SpQWrIr8Panl0/du2eSoLj/2AJb71KC195tBnJHvLn4S9jAT4NkPW2xSqKC8Kg7FPN2K5Y20sKqZSgq6QvVCLtiu/VEcAKAjuVYtre9lRz6h66yA1+Y6lypVN1hDNPBomsLVSQEq49KxQbBIuGuWZCo/4hnYevu2VGGZrom+c=
+	t=1744305336; cv=none; b=ck1dy6gS5OlW1oCT8YhELloDiAhDNS+DHt0uAiv4b9mSRkdhhUSN6edaa5zSWgcaD4z3+SbXddaLInIloKI65WqT0vSANhklp9gvB28Hox/QY1FhhysxXXF/GTK6wXTiRhcggBpmXTudxoWxms9rijkDZCS7hDM4DU5++MwV5DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744305316; c=relaxed/simple;
-	bh=5ALi35vEit4jVHRzo8LeambbTx8yrl8l/InF5c4WZFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EJpbnLiBzHeJUlhAf4bnLmUQQIAJ0+zS+Q+yw0BJ1ZXpgl87fjGACQYIckXOFT9DdHOMO5HG4y1SiyqKmm4Y7IG7xePxYUL2jAxZjUUD5Ci1rXSA7V05LFGaBTFhgqnY8PD2IcgLwkm+KmgrgN7pRzC++7y3NF33sRQrqjFFYPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=YhVO7C0V; arc=none smtp.client-ip=185.125.25.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1744305336; c=relaxed/simple;
+	bh=LKLFe3uF7grtVdstcoaCEtsKxdwcCfekK19e6QLhF78=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RyWC9GZrMLTU/4rfojwdZvhnmynq9szo8jgE003X38zLZ/rBQBMUahahzoYm/6arsQ4vwd3Z9cUrEKns5cL1HFEq1bI5IqjM9OG9u8SJg8cgNEq+wgUdcmpgbMEMmAtAOhp+BEVRjLAkCIxTWBIlUDnwnRBLB8jxhhROUBSUxBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kXIGDBj1; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="YhVO7C0V"
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZYR5N2RkVzRrv;
-	Thu, 10 Apr 2025 19:05:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1744304712;
-	bh=99/RXn0MLXP28oZE7oH//4zXPYGjhypiJ2KEDAnW5jY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YhVO7C0VCVvGv88HbYg1tzpR68jC1nUpEH4nZu9RLIEdBnfWuR31wMGRNxygWgat4
-	 521h/Iqu0TWwGaapfFXgJiNZU9W9F+5fTN0LmIcreCktxLw4Za9Ioq/a8kv5C6Owyc
-	 LqfdaNEhYLjB63V/PuQNZzBabLv92RIpOgmvON5k=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZYR5L4hcJz8vc;
-	Thu, 10 Apr 2025 19:05:10 +0200 (CEST)
-Date: Thu, 10 Apr 2025 19:05:09 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack3000@gmail.com>
-Cc: WangYuli <wangyuli@uniontech.com>, gnoack@google.com, 
-	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, kees@kernel.org, 
-	masahiroy@kernel.org, nathan@kernel.org, nicolas@fjasle.eu, 
-	linux-security-module@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [Bug Report] A compilation failure occurs when landlock and
- RANDSTRUCT are combined with GCC 14.2.0.
-Message-ID: <20250410.Ahkoo7ihae8a@digikod.net>
-References: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
- <20250410.926dbc57c00b@gnoack.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXIGDBj1"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-7020d8b110aso9767027b3.1;
+        Thu, 10 Apr 2025 10:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744305334; x=1744910134; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DzsGSfN3zKe9L7HiNcL3vhZCWqusG/ETlw5Q2TYe9Mk=;
+        b=kXIGDBj1+clltsMy74hwWbcXmASY/frqRnI+6jOl8wl8yQBYzqzPIY3Ncu1/3NdqaN
+         tswszRM9TTAgFeP9rQrc7Hu4m50pUTXUmSs6+9MB1RjXBTvgLB1jS2NKyMBp+AaFXKT2
+         YPDYvUlNY3j7TtraqQT+xeEDmXHPi3RmRXzSzGxhUGRvI5eGMabc6I5pi+Mi5DU4GNvh
+         t0DEaHHP04vR6/zSgOEIrCUH/eV9K+ksUJwLc+so/WqGrM6sOPPR7Qt3e23A7ZHj4csO
+         AjcpbWuZAOSF7G03eWAl2Hyqo3Kp9ieRDoQfgNLez0YOd81U622C7wkapXZ5fnXVb5Ry
+         a+tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744305334; x=1744910134;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DzsGSfN3zKe9L7HiNcL3vhZCWqusG/ETlw5Q2TYe9Mk=;
+        b=gBiBEPHG57Pnf/NrFrPyffAw/GaIBSPCFHo7FLOh0z7eQxYp7Z2KgFYNlPFTiHJjWV
+         O/2KIlyvcAws9agA+1NvYByYRk17lpoyot2J9avW+dl4fTBKCD8Nop3EEVapAFG7ZtLp
+         +zaL2U7Hnm+JtMP2LfViJV+1d5VeVmDXe/LwQz96Qik9vlkmNcxyCwJ/jZq3WkffJF46
+         y30oxao8HGffx0T5Ifp3VzID3Fp9ZTcYxhqoNpJaqlAQpLzoQI53yvWfdpagbcgSE5wa
+         db2MmDOdqKONMtyUG3Ga9mQj1KwaBdSkqZL+IbqJdxKK5JCxZvDgXEUg8LDQ2cnv9vyj
+         qYpw==
+X-Forwarded-Encrypted: i=1; AJvYcCWacf5IGaATWiK5n9J65HfUBTINKfkU5GUukkzWH2SvQcsd8ex6AsSffthPs6SInhcDEMKAtJ8Qik8g@vger.kernel.org, AJvYcCWna+jFcgwsTNjrtkZYtppBWXSfUCEWJYM31ZSy0ZEKJtu2oYCgIZamC1O0UDO7nEpFxLL4g8DjGowaHPgt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWae2Zm2pBVcDHOu7qvUnhQ37fg4pzG+/W9TXn9EKOhwhuRMu2
+	qPMcnBQ//V0RAf5h5HN5XyMvNFS12zZLoKUHbXJqqDuBdaqfdjNOT+CO3CnVceM+85+sx4ZNg7k
+	+lqo9hsv0nuUNJV6qW/Xot17AbqQ=
+X-Gm-Gg: ASbGncuoqR+6CnHulpRHcAkSvLymktNyuOPWh0h8EJs4/EjcuZOyuJ2WufffDMaizFd
+	wXjwrgbB381Xle5PirHV93qhsOi9x4HMM7kWkVjde+xRU+1bWo+usGHhyacpYNY3DRPTB0xi6mU
+	sKFoi2ydvZ0Zo87rzNX9VLfxo=
+X-Google-Smtp-Source: AGHT+IE75dOoZN09smDMXY1cC+wHVZjhX1T1PY+rQ44c2yKgN9zJ/mwy/47jExP1TRN/IVjGQE47AEM8UYqhmhfw6Bg=
+X-Received: by 2002:a05:690c:f91:b0:6fd:4849:62ec with SMTP id
+ 00721157ae682-70549e7fbdcmr56554307b3.12.1744305333850; Thu, 10 Apr 2025
+ 10:15:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250410.926dbc57c00b@gnoack.org>
-X-Infomaniak-Routing: alpha
+References: <20250408231823.826163-1-robertcnelson@gmail.com>
+ <20250408231823.826163-2-robertcnelson@gmail.com> <CAOCHtYhFKO=LRN8qp-w+rkTGKJ8t-LnqgqbQW9P6CO3=EeuufA@mail.gmail.com>
+ <20250409130918.d3cyzv3to65oktv2@vision> <CAOCHtYgpkBXZmZEDz6gUCO2x+WGA_paKHFHS-Br=ypo+AFrBmw@mail.gmail.com>
+ <20250410120822.3vsrt42iyfs75h6q@spearhead>
+In-Reply-To: <20250410120822.3vsrt42iyfs75h6q@spearhead>
+From: Robert Nelson <robertcnelson@gmail.com>
+Date: Thu, 10 Apr 2025 12:15:07 -0500
+X-Gm-Features: ATxdqUELa8ezNkTE2O4f0TujIZmAX4NjS-OVoR-6J0hXWh-oJ7Wu0PtUUFD8BoY
+Message-ID: <CAOCHtYh7LWhTBOSsua9_=wxSTNt9HmvUaAFCiVS6a8G6dV4AoA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: ti: Add k3-am62-pocketbeagle2
+To: Nishanth Menon <nm@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Andrew Davis <afd@ti.com>, Roger Quadros <rogerq@kernel.org>, 
+	Siddharth Vadapalli <s-vadapalli@ti.com>, Judith Mendez <jm@ti.com>, Andrei Aldea <a-aldea@ti.com>, 
+	Dhruva Gole <d-gole@ti.com>, Jason Kridner <jkridner@beagleboard.org>, 
+	Deepak Khatri <lorforlinux@beagleboard.org>, Ayush Singh <ayush@beagleboard.org>, kamlesh@ti.com, 
+	praneeth@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 05:33:21PM +0200, Günther Noack wrote:
-> Hello!
-> 
-> On Thu, Apr 10, 2025 at 04:11:15PM +0800, WangYuli wrote:
-> > [ Compilation failure log: ]
-> > 
-> > *** WARNING *** there are active plugins, do not report this as a bug unless
-> > you can reproduce it without enabling an
-> > y plugins.
-> > Event                            | Plugins
-> > PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-> > PLUGIN_FINISH_DECL               | randomize_layout_plugin
-> > PLUGIN_ATTRIBUTES                | latent_entropy_plugin
-> > randomize_layout_plugin
-> > PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-> > PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-> > security/landlock/fs.c:In function ‘hook_file_ioctl_common’:
-> > security/landlock/fs.c:1745:61:internal compiler error: in
-> > count_type_elements, at expr.cc:7075
-> > 1745 |                         .u.op = &(struct lsm_ioctlop_audit) {
-> >      |                                                             ^
-> > 0x7f27fa6bdca7 __libc_start_call_main
-> >        ../sysdeps/nptl/libc_start_call_main.h:58
-> > 0x7f27fa6bdd64 __libc_start_main_impl
-> >        ../csu/libc-start.c:360
-> > Please submit a full bug report, with preprocessed source (by using
-> > -freport-bug).
-> > Please include the complete backtrace with any bug report.
-> > See <file:///usr/share/doc/gcc-14/README.Bugs> for instructions.
-> > make[4]: *** [scripts/Makefile.build:203: security/landlock/fs.o] Error 1
-> > make[3]: *** [scripts/Makefile.build:461: security/landlock] Error 2
-> > make[2]: *** [scripts/Makefile.build:461: security] Error 2
-> 
-> Thank you for the report!
-> 
-> This is in my understanding a duplicate of the discussion in
-> https://lore.kernel.org/all/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/
+On Thu, Apr 10, 2025 at 7:08=E2=80=AFAM Nishanth Menon <nm@ti.com> wrote:
+>
+> On 10:12-20250409, Robert Nelson wrote:
+> [..]
+>
+> > > Any idea why we are crashing?
+> > > https://gist.github.com/RobertCNelson/c68c96a8a1dc6e4d39d8c48fc13ca1c=
+1#file-gistfile1-txt-L311
+> > >
+> > > I don't see the same crash in beagleplay:
+> > > https://gist.github.com/nmenon/5709a8714d3ab31cac5c00b515d04752
+> >
+> > On 6.14.x i have a little more, info...
+> >
+> > I've got all the CRYPTO stuff enabled, pretty sure that comes from
+> > CONFIG_CRYPTO_MANAGER
+> >
+> > CONFIG_CRYPTO_MANAGER=3Dy
+> > CONFIG_CRYPTO_MANAGER2=3Dy
+> > CONFIG_CRYPTO_USER=3Dy
+> > # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+> > # CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is not set
+> >
+> > https://openbeagle.org/RobertCNelson/arm64-multiplatform/-/blob/v6.15.x=
+-arm64-k3/patches/defconfig?ref_type=3Dheads#L9578
+>
+> OK this looks like to be a independent pre-existing bug then and needs
+> to be investigated, but it is probably independent of this patch itself.
+>
+> Could you share a clean defconfig bootlog? I have no existing scheme to
+> test this on my end. In the logs, please also print
+> /sys/kernel/debug/devices_deferred to ensure we have nothing sticking
+> out in our defconfig?
 
-Yes, a new patch has been submitted:
-https://lore.kernel.org/all/20250409151154.work.872-kees@kernel.org/
+Okay stable v6.15-rc1 with arm64 defconfig..
+
+https://gist.github.com/RobertCNelson/666638abac8eee4ed573997996362450
+
+root@am6232-pb2-87:~# ls -lha /sys/kernel/debug/device_component/
+total 0
+drwxr-xr-x  2 root root 0 Dec 31  1969 .
+drwx------ 44 root root 0 Dec 31  1969 ..
+
+Regards,
+
+--=20
+Robert Nelson
+https://rcn-ee.com/
