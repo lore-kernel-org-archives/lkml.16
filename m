@@ -1,47 +1,47 @@
 Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD0E26B2A8;
-	Thu, 10 Apr 2025 09:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A5726A1B4;
+	Thu, 10 Apr 2025 09:56:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278969; cv=none; b=VTpEHXSQYoNDl64Vn9xcTVGLHdoQlu31ykER0ypTJUApoztL3kTLPWZslEnhxLS5EHZI1wBEN/f+RvfeaACpwCdvyO707h5owSofWEwVK71E+8uxF64HuEGapCgHIxVw90l9dk1Has2U0CTqQRe5BLWwDIgDReSDhNAUa1beKjQ=
+	t=1744278983; cv=none; b=bI/sgbwFticsjFXouJK0s6FfYcowERvTgKgWZUwn38M7f+AFt/xC8Stk1blnTyZwlB6sUyC8+cjjP5OUCSnAWFqcjr4O/12TqbFqvMPgx5BqBmK1yyvRUIAsZKsN2+bb2MllPiLpNMei0sk91tGJlYKoSxYh/8562OsJKSE8vlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278969; c=relaxed/simple;
-	bh=jpHwzrjowDkpdHoaZcO1f45rsyO9HISv2/yS1c3RlZ0=;
+	s=arc-20240116; t=1744278983; c=relaxed/simple;
+	bh=jkBIFQIiIemrOBPhFwFWgkp6zzaB4epuVRTlvJBj/AQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=MHjSsSIb7iS1sJI8+M/jIt5pQKAuQcF3NUtLD2Q1nfjQEr3B4F+RGhHm+LIvNvI6+1wUIeKZgughWWyWiH1xpLQh3fdzmJnAEA4Al/2T5SzN5jmA2xEUUHdeXhn4GjUopF+zOLwwso/JqbntS08nANfD959DcwuDe+aUGPxShiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=Ty4LvjWq; arc=none smtp.client-ip=185.132.180.163
+	 In-Reply-To:To:CC; b=Lr/h281J4oacB/tU7dFxQd0pjAI+mJH1xO/Zb0SDAZx5vkv3PyWh8oDny8VJeDBiNz9nQGIrnjL0Lj1ZwYonZQh5Ffm0j9c5PKI9XNt8qKpK7DFUjGElBzMCoVSKqHgxa7IjHsvmaqnDLa9+hs3LkBa7HtVqVy+ltk7KyOAekZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=rh2MUp0U; arc=none smtp.client-ip=185.132.180.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="Ty4LvjWq"
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="rh2MUp0U"
 Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A60F8V032471;
-	Thu, 10 Apr 2025 10:55:28 +0100
+	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A60F8b032471;
+	Thu, 10 Apr 2025 10:55:32 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=4
-	fNZA+lk5C21yXUFwCx6jyNHzAoSsvMZ7ySKgArljjo=; b=Ty4LvjWqlGtJQfMvC
-	g++UB2sTyBxiLMP7jCLcVUXmL9J7skBsypbu20aIdv5wu1HF/yZDlrZq+Lkb4IAW
-	+l6OILshGF3Z2q1n2IVBL5ERsUiCL9Ib+sBVeQL0wzvRJ/+bc4R4fizYjui16c1W
-	pRvxidRS5lhr6EQF7LiMP1DoMWOVQPRXAqNTmecCE7CHd5wakt49G7jcNm7poU2E
-	g9W31g5+Tu6tmNT2GfYMLKrQ6D06VGAOTXmCJZYewZla5sfR6rtse03IwlXMwUKa
-	QiSW5qYeteNVsp8yYncSUh5W7YRt0EmprKdCEFGO/QBl+Lzq7laQ15XsdRV7pTvK
-	YVYLA==
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=U
+	9OVQk9DT+uJdRrpKhtH4fzTXjiVFOdxAOxfPlYrtWw=; b=rh2MUp0UU/3x/EVcz
+	SQ8KI+QSKo2JMeIzQ4UNulbmxYxRZCw9ivLxjgNde5YYa8xTkoYyueVpbMjSoB0b
+	VJw7X95OW5SNpd8bJe1X2TJSVcRTd1DGq6EIm3c9zSHsvmAQdpKcCsQBSQHR8K5b
+	RBYthDwmhfnYbTgm2h12q/apl6bdFJClUnPnYsvW4/nalyA8a4sknJ8mewQ0zI3r
+	Tsls1uUcZL/FsDhc3F0PChkXfWq53LKByE7L3wzmPdujrlTgy/rJCqXK4HxtPPr5
+	nqLYdp38zok6y5eAsaIfCvO08O/JAnNppdummHq4IUofZakPE4zzFrQ8YwkDNIAy
+	gP5AQ==
 Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45w86h1d34-6
+	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45w86h1d34-12
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 10 Apr 2025 10:55:28 +0100 (BST)
+	Thu, 10 Apr 2025 10:55:32 +0100 (BST)
 Received: from
  1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
  (172.25.6.134) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 10 Apr 2025 10:55:25 +0100
+ 15.1.2507.44; Thu, 10 Apr 2025 10:55:29 +0100
 From: Matt Coster <matt.coster@imgtec.com>
-Date: Thu, 10 Apr 2025 10:55:11 +0100
-Subject: [PATCH v6 12/18] drm/imagination: Use callbacks for fw irq
- handling
+Date: Thu, 10 Apr 2025 10:55:16 +0100
+Subject: [PATCH DO NOT MERGE v6 17/18] arm64: dts: ti: k3-am62: New GPU
+ binding details
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250410-sets-bxs-4-64-patch-v1-v6-12-eda620c5865f@imgtec.com>
+Message-ID: <20250410-sets-bxs-4-64-patch-v1-v6-17-eda620c5865f@imgtec.com>
 References: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
 In-Reply-To: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
 To: Frank Binns <frank.binns@imgtec.com>,
@@ -75,220 +75,67 @@ CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
 	<alessio.belle@imgtec.com>,
         Alexandru Dadu <alexandru.dadu@imgtec.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7452;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1832;
  i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=jpHwzrjowDkpdHoaZcO1f45rsyO9HISv2/yS1c3RlZ0=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaR/n9qUEXpULHcdd3TQ0VOKN+1fvzx5ou8u34TIcw7eg
- Vobz5iu6ChlYRDjYJAVU2TZscJyhdofNS2JG7+KYeawMoEMYeDiFICJPLvF8L+Up3umaJ7bCu0P
- bOY/tURbFghvSlFxuMjaO/HIY+sM1sOMDCvk3at1L92rl7tg6Lp1U+odSf4dE2OsmC9rv8k922k
- zkxUA
+ bh=jkBIFQIiIemrOBPhFwFWgkp6zzaB4epuVRTlvJBj/AQ=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaR/n9qscHBFxIpH81cZy0/acVfBVOWh89IlQpI5QSyGB
+ hNyJ3bGdZSyMIhxMMiKKbLsWGG5Qu2PmpbEjV/FMHNYmUCGMHBxCsBErDYwMlzoerm5RfDjWpWr
+ lcyOnHp2citrTwine07cqBgQ5f5R4THDX8l6/T5G469Rm/5/vZVwfsm1fJYLKbs9J+VvlbLa/27
+ NGnYA
 X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
  fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
 X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Authority-Analysis: v=2.4 cv=MLNgmNZl c=1 sm=1 tr=0 ts=67f79590 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=Y33Pwm5EY2qbWUOeHhAA:9
+X-Authority-Analysis: v=2.4 cv=MLNgmNZl c=1 sm=1 tr=0 ts=67f79594 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=OLj8r6_nq0VfqmG8xPEA:9
  a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: LOWUnrvZyHmim4GrOCePZKS6wa-K1QzH
-X-Proofpoint-ORIG-GUID: LOWUnrvZyHmim4GrOCePZKS6wa-K1QzH
+X-Proofpoint-GUID: gAOwkas7aQei4-RUlQSlXXNvti_r3Bxi
+X-Proofpoint-ORIG-GUID: gAOwkas7aQei4-RUlQSlXXNvti_r3Bxi
 
-This allows for more versatility in checking and clearing firmware
-registers used for interrupt handling.
+Use the new compatible string introduced earlier (in "dt-bindings: gpu:
+img: More explicit compatible strings") and add a name to the single power
+domain for this GPU (introduced in "dt-bindings: gpu: img: Power domain
+details").
 
 Signed-off-by: Matt Coster <matt.coster@imgtec.com>
-Reviewed-by: Frank Binns <frank.binns@imgtec.com>
 ---
 Changes in v6:
-- Add Frank's Rb
-- Link to v5: https://lore.kernel.org/r/20250326-sets-bxs-4-64-patch-v1-v5-12-e4c46e8280a9@imgtec.com
+- None
+- Link to v5: https://lore.kernel.org/r/20250326-sets-bxs-4-64-patch-v1-v5-17-e4c46e8280a9@imgtec.com
 Changes in v5:
 - None
-- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-12-d987cf4ca439@imgtec.com
+- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-17-d987cf4ca439@imgtec.com
 Changes in v4:
 - None
-- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-12-143b3dbef02f@imgtec.com
+- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-17-143b3dbef02f@imgtec.com
 Changes in v3:
 - None
-- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-14-3fd45d9fb0cf@imgtec.com
+- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-7-3fd45d9fb0cf@imgtec.com
 Changes in v2:
 - None
-- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-14-4ed30e865892@imgtec.com
+- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-7-4ed30e865892@imgtec.com
 ---
- drivers/gpu/drm/imagination/pvr_device.h  | 18 +++++++++++++
- drivers/gpu/drm/imagination/pvr_fw.h      | 45 +++++++++----------------------
- drivers/gpu/drm/imagination/pvr_fw_meta.c | 22 ++++++++++-----
- drivers/gpu/drm/imagination/pvr_fw_mips.c | 22 ++++++++++-----
- 4 files changed, 63 insertions(+), 44 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
-index 12bf0b9e5bfb48ef9e5ed9faa44e0896b7555f49..eb5da8c7040fc9e9751f433279cb0c92fd4d1336 100644
---- a/drivers/gpu/drm/imagination/pvr_device.h
-+++ b/drivers/gpu/drm/imagination/pvr_device.h
-@@ -739,4 +739,22 @@ pvr_ioctl_union_padding_check(void *instance, size_t union_offset,
- 					      __union_size, __member_size);  \
- 	})
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+index 7d355aa73ea2116723735f70b9351cefcd8bc118..d17b25cae196b08d24adbe7c913ccaba7eed37eb 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+@@ -691,12 +691,14 @@ ospi0: spi@fc40000 {
+ 	};
  
-+/*
-+ * These utility functions should more properly be placed in pvr_fw.h, but that
-+ * would cause a dependency cycle between that header and this one. Since
-+ * they're primarily used in pvr_device.c, let's put them in here for now.
-+ */
-+
-+static __always_inline bool
-+pvr_fw_irq_pending(struct pvr_device *pvr_dev)
-+{
-+	return pvr_dev->fw_dev.defs->irq_pending(pvr_dev);
-+}
-+
-+static __always_inline void
-+pvr_fw_irq_clear(struct pvr_device *pvr_dev)
-+{
-+	pvr_dev->fw_dev.defs->irq_clear(pvr_dev);
-+}
-+
- #endif /* PVR_DEVICE_H */
-diff --git a/drivers/gpu/drm/imagination/pvr_fw.h b/drivers/gpu/drm/imagination/pvr_fw.h
-index 88ad713468ce3a1ee459b04dde5363c24791a4f1..ab69f40a7fbc6304171f16dd16d825a68b0362a5 100644
---- a/drivers/gpu/drm/imagination/pvr_fw.h
-+++ b/drivers/gpu/drm/imagination/pvr_fw.h
-@@ -167,29 +167,22 @@ struct pvr_fw_defs {
- 	int (*wrapper_init)(struct pvr_device *pvr_dev);
+ 	gpu: gpu@fd00000 {
+-		compatible = "ti,am62-gpu", "img,img-axe";
++		compatible = "ti,am62-gpu", "img,img-axe-1-16m", "img,img-axe",
++			     "img,img-rogue";
+ 		reg = <0x00 0x0fd00000 0x00 0x20000>;
+ 		clocks = <&k3_clks 187 0>;
+ 		clock-names = "core";
+ 		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+ 		power-domains = <&k3_pds 187 TI_SCI_PD_EXCLUSIVE>;
++		power-domain-names = "a";
+ 	};
  
- 	/**
--	 * @irq: FW Interrupt information.
-+	 * @irq_pending: Check interrupt status register for pending interrupts.
- 	 *
--	 * Those are processor dependent, and should be initialized by the
--	 * processor backend in pvr_fw_funcs::init().
-+	 * @pvr_dev: Target PowerVR device.
-+	 *
-+	 * This function is mandatory.
- 	 */
--	struct {
--		/** @status_reg: FW interrupt status register. */
--		u32 status_reg;
-+	bool (*irq_pending)(struct pvr_device *pvr_dev);
- 
--		/**
--		 * @clear_reg: FW interrupt clear register.
--		 *
--		 * If @status_reg == @clear_reg, we clear by write a bit to zero,
--		 * otherwise we clear by writing a bit to one.
--		 */
--		u32 clear_reg;
--
--		/** @status_mask: Bitmask of events to listen for in the status_reg. */
--		u32 status_mask;
--
--		/** @clear_mask: Value to write to the clear_reg in order to clear FW IRQs. */
--		u32 clear_mask;
--	} irq;
-+	/**
-+	 * @irq_clear: Clear pending interrupts.
-+	 *
-+	 * @pvr_dev: Target PowerVR device.
-+	 *
-+	 * This function is mandatory.
-+	 */
-+	void (*irq_clear)(struct pvr_device *pvr_dev);
- 
- 	/**
- 	 * @has_fixed_data_addr: Specify whether the firmware fixed data must be loaded at the
-@@ -390,18 +383,6 @@ struct pvr_fw_device {
- 	} fw_objs;
- };
- 
--#define pvr_fw_irq_read_reg(pvr_dev, name) \
--	pvr_cr_read32((pvr_dev), (pvr_dev)->fw_dev.defs->irq.name ## _reg)
--
--#define pvr_fw_irq_write_reg(pvr_dev, name, value) \
--	pvr_cr_write32((pvr_dev), (pvr_dev)->fw_dev.defs->irq.name ## _reg, value)
--
--#define pvr_fw_irq_pending(pvr_dev) \
--	(pvr_fw_irq_read_reg(pvr_dev, status) & (pvr_dev)->fw_dev.defs->irq.status_mask)
--
--#define pvr_fw_irq_clear(pvr_dev) \
--	pvr_fw_irq_write_reg(pvr_dev, clear, (pvr_dev)->fw_dev.defs->irq.clear_mask)
--
- enum pvr_fw_processor_type {
- 	PVR_FW_PROCESSOR_TYPE_META = 0,
- 	PVR_FW_PROCESSOR_TYPE_MIPS,
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_meta.c b/drivers/gpu/drm/imagination/pvr_fw_meta.c
-index 41485769fc7cfb643ce7b0ac814d142fa7e15325..60db3668ad3ca355b797693b000c0b1ac816316e 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_meta.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw_meta.c
-@@ -532,6 +532,20 @@ pvr_meta_vm_unmap(struct pvr_device *pvr_dev, struct pvr_fw_object *fw_obj)
- 			 fw_obj->fw_mm_node.start, fw_obj->fw_mm_node.size);
- }
- 
-+static bool
-+pvr_meta_irq_pending(struct pvr_device *pvr_dev)
-+{
-+	return pvr_cr_read32(pvr_dev, ROGUE_CR_META_SP_MSLVIRQSTATUS) &
-+	       ROGUE_CR_META_SP_MSLVIRQSTATUS_TRIGVECT2_EN;
-+}
-+
-+static void
-+pvr_meta_irq_clear(struct pvr_device *pvr_dev)
-+{
-+	pvr_cr_write32(pvr_dev, ROGUE_CR_META_SP_MSLVIRQSTATUS,
-+		       ROGUE_CR_META_SP_MSLVIRQSTATUS_TRIGVECT2_CLRMSK);
-+}
-+
- const struct pvr_fw_defs pvr_fw_defs_meta = {
- 	.init = pvr_meta_init,
- 	.fw_process = pvr_meta_fw_process,
-@@ -539,11 +553,7 @@ const struct pvr_fw_defs pvr_fw_defs_meta = {
- 	.vm_unmap = pvr_meta_vm_unmap,
- 	.get_fw_addr_with_offset = pvr_meta_get_fw_addr_with_offset,
- 	.wrapper_init = pvr_meta_wrapper_init,
--	.irq = {
--		.status_reg = ROGUE_CR_META_SP_MSLVIRQSTATUS,
--		.clear_reg = ROGUE_CR_META_SP_MSLVIRQSTATUS,
--		.status_mask = ROGUE_CR_META_SP_MSLVIRQSTATUS_TRIGVECT2_EN,
--		.clear_mask = ROGUE_CR_META_SP_MSLVIRQSTATUS_TRIGVECT2_CLRMSK,
--	},
-+	.irq_pending = pvr_meta_irq_pending,
-+	.irq_clear = pvr_meta_irq_clear,
- 	.has_fixed_data_addr = false,
- };
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_mips.c b/drivers/gpu/drm/imagination/pvr_fw_mips.c
-index 5feae0dc85ab51cb3c4e67885bf53cf88d8fa531..7526dddbf5205f3472287f32af8ec7e97ba0fce4 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_mips.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw_mips.c
-@@ -225,6 +225,20 @@ pvr_mips_get_fw_addr_with_offset(struct pvr_fw_object *fw_obj, u32 offset)
- 	       ROGUE_FW_HEAP_MIPS_BASE;
- }
- 
-+static bool
-+pvr_mips_irq_pending(struct pvr_device *pvr_dev)
-+{
-+	return pvr_cr_read32(pvr_dev, ROGUE_CR_MIPS_WRAPPER_IRQ_STATUS) &
-+	       ROGUE_CR_MIPS_WRAPPER_IRQ_STATUS_EVENT_EN;
-+}
-+
-+static void
-+pvr_mips_irq_clear(struct pvr_device *pvr_dev)
-+{
-+	pvr_cr_write32(pvr_dev, ROGUE_CR_MIPS_WRAPPER_IRQ_CLEAR,
-+		       ROGUE_CR_MIPS_WRAPPER_IRQ_CLEAR_EVENT_EN);
-+}
-+
- const struct pvr_fw_defs pvr_fw_defs_mips = {
- 	.init = pvr_mips_init,
- 	.fini = pvr_mips_fini,
-@@ -233,11 +247,7 @@ const struct pvr_fw_defs pvr_fw_defs_mips = {
- 	.vm_unmap = pvr_vm_mips_unmap,
- 	.get_fw_addr_with_offset = pvr_mips_get_fw_addr_with_offset,
- 	.wrapper_init = pvr_mips_wrapper_init,
--	.irq = {
--		.status_reg = ROGUE_CR_MIPS_WRAPPER_IRQ_STATUS,
--		.clear_reg = ROGUE_CR_MIPS_WRAPPER_IRQ_CLEAR,
--		.status_mask = ROGUE_CR_MIPS_WRAPPER_IRQ_STATUS_EVENT_EN,
--		.clear_mask = ROGUE_CR_MIPS_WRAPPER_IRQ_CLEAR_EVENT_EN,
--	},
-+	.irq_pending = pvr_mips_irq_pending,
-+	.irq_clear = pvr_mips_irq_clear,
- 	.has_fixed_data_addr = true,
- };
+ 	cpsw3g: ethernet@8000000 {
 
 -- 
 2.49.0
