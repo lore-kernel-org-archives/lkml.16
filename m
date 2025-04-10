@@ -1,186 +1,108 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368951754B;
-	Thu, 10 Apr 2025 00:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CC4CA4B;
+	Thu, 10 Apr 2025 00:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744245484; cv=none; b=V+bHQYqfwe+gY8g/2T7aii1mI8sWlhaCgtxxjUZX/Xp64suY46L1EIykPxind9IV+25srEmdKhIlWxLYlEk4xtPcgj26S9KPQ4j1ThamhZkV0iyyO/j31WUNlD6iwQSsPa/oBDCHy+tn7nuUA6LUKSXKiIYR3vXb+2q56oUes54=
+	t=1744245574; cv=none; b=nv/ue+f8wNy7ufVu2iKNp8ro5kUo+MhD4So6V4a5JxjkLpvSo5bmlJSVHZ6WH5J3QM+v85lk7F+UOptmhKh52WMzzL1kufO92CRk2PBkKFOxgGWZzT3j9G2SxXdNKEQF35PSUabViG9BM/Ma9IBBnnj5PrJ4LzDgkWBD/KUreGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744245484; c=relaxed/simple;
-	bh=Pib55EvMjvIrTsAVmhgO6uA6SgdnIcsHusx8WQ6efgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GA3o1sEsMQcph4OG/IeTYLy3K6BbYBlO4eg3qWanlip9UYxnMAWQVnkvqG3L+MG2L0JDmVsuSTcymPFDPt7UkZEoG7Yv8MAey6tzLvRtLtme+zT/FaXbPds8cmn40cnjIL7xMy873NfgQkUqI4NEWipaXjNPWttvHeCl6GqjJec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.27.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 12FDC3432CF;
-	Thu, 10 Apr 2025 00:38:00 +0000 (UTC)
-Date: Thu, 10 Apr 2025 00:37:56 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Alex Elder <elder@riscstar.com>
-Cc: Haylen Chu <heylenay@4d2.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haylen Chu <heylenay@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	spacemit@lists.linux.dev, Inochi Amaoto <inochiama@outlook.com>,
-	Chen Wang <unicornxdotw@foxmail.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
-Subject: Re: [PATCH v6 3/6] clk: spacemit: Add clock support for SpacemiT K1
- SoC
-Message-ID: <20250410003756-GYA19359@gentoo>
-References: <20250401172434.6774-1-heylenay@4d2.org>
- <20250401172434.6774-4-heylenay@4d2.org>
- <8fe0aaaa-b8e9-45dd-b792-c32be49cca1a@riscstar.com>
+	s=arc-20240116; t=1744245574; c=relaxed/simple;
+	bh=v1xTqYyQGjrdHdfqnJMCy/GEsGpvzq0zxz4dc1BbO+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uEtblcp4Y8UqpWlPmwucrM9VG219j1ApL2f0Nzp6zFLHM7rdrrvIQTnZfRRHEplbpSfGlJaV6gVH6IZxn1GhiOCl7NQy/ZTRb34mZSE7ptubYiOuYA4HnhKrkoNq9gwP4DjZBHSIbxEVd4hD/ivn+bBbT0rlBBzyRAhF+Rv2fos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=HWYTXuRK; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HWYTXuRK"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so2185505e9.2;
+        Wed, 09 Apr 2025 17:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1744245571; x=1744850371; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WR6EtZhgqa4qIvzL5KBbZ/Tlso86MFa8EDmz2drhxVw=;
+        b=HWYTXuRKit/kI01kJmQa/y4ykVEfcshVG3MWmO+TQYYxq8OxCAfEWZIy85FoXq9S90
+         klV4vB4zIFqaLx0NbQHfU9vI44Uf+WLa9tXgK2cQtRaIuC6dQANa80XEwsc889xwWp3N
+         DLQnifU0yIsxPwe1S8m1/HZ5qak3ZvuVHI9ljEKojjxMtwrwn+hpK3MT1OOh2rUtKV+7
+         /TrwuyCFfI5bvaOr3TdC4xffd6k79180NkUNEZvELH/uyRRhD5e9U0L8gyXDjFXmxOm8
+         xSLJfi3CZtis/31zo2mU93NoX0wrOd+1igUSRNtCGQCqcPWO4Rs1R0H3mCJc8FZoRhFz
+         XuTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744245571; x=1744850371;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WR6EtZhgqa4qIvzL5KBbZ/Tlso86MFa8EDmz2drhxVw=;
+        b=iWvTDcOLKl0/yxN090TWR8gn+GG7sPShUwBbk561UzRsXw1stBH8GW4ntkgvAsTzpM
+         guquWU/OpPPZbyvSweHanyXkvrJ3BjKLJK4dxa1d8txSHAKIVjTGsPdJ2omd+8jVTH2L
+         vJ8QF5wt39RX8z54ElNrNpmE8s3gsspzZvC/1W+bkclyppqCkHSfMrOGA3XIbo1DAu9n
+         HfMRzGcUniR4j/Hhl9lAm6Z35VwpR9r9L75tnBUOexowYTQpuMwkKb0fAKYHerIR6MX1
+         xORw+orXjyds9/vqT3QGWgrnN74n/9oF+zQ5CUkElkUtCmZ/YDkOqY/DSk0ZJd13IDJV
+         dUOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkC2eaABj4gq93/6Hgcl2OuHUmbnvjoz/2+Wm7Yb8FQgDUGtzmEZwJW2RaiohOoKOZAVv3A4r/VUd7Sqc=@vger.kernel.org, AJvYcCXo+EzslSrTkJwh+bvWVEagRWJyek21XpxQvar+XnBMdISCBpMlKvMf9kfRxjkdusBFr03fc2J0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdGQSZ+IgIyAsSLvah8UqGMKjVrKJBnXJnzjxgWm+1HtiXpwjh
+	d0Hy0ak79FT5v8h2MB3PiCP5rIIFabecnunUujs2SKFuxzS2tN4=
+X-Gm-Gg: ASbGnctEuOaASCTnX4EL+QYgwlq23PSAgyxrbHNsPrZgw4Ijvnnn5iNwOIUDnHatA7o
+	8iQzlp5tEmVGN/MG23s0od56Vz8ZJWJdB2eN7uxaaUhqdokMTFX3vmfUy0RLTp135Qk91pynDtG
+	4GAgoTzZsW5LJa9hPl31t4Lh68hAitHD8aApHM2+WR/1Jt8RILadEq+AyZwggI7bK58+orIK2KR
+	W7uGYjZp09L08ABwwyaaa7PqNRkhk/lHo51C93eHS30bdAYoxd/pmZ2d1iMz2gAiHYfTTMOWJCz
+	SVdY79jjxIa8YhGtNczc+THTM2h019eYFojHYXns9kcwUz4BNOUa15CCmI3aSdmkNzzNtYWMod3
+	+4QLi7/TYWs8oyov6dLMTo3uncH0=
+X-Google-Smtp-Source: AGHT+IEGLlOEVjD0cfNCMZEAvQK/rkLT6cKka5phhDaoU/N8I3k1WGhfmz01KwcDGykFj9fymvC63A==
+X-Received: by 2002:a05:600c:3b19:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-43f2fedc137mr2644815e9.9.1744245571303;
+        Wed, 09 Apr 2025 17:39:31 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057855.dip0.t-ipconnect.de. [91.5.120.85])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc6dsm36304595e9.28.2025.04.09.17.39.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 17:39:30 -0700 (PDT)
+Message-ID: <3747935d-8e6c-4971-b7b1-b53ea9dbb6d2@googlemail.com>
+Date: Thu, 10 Apr 2025 02:39:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8fe0aaaa-b8e9-45dd-b792-c32be49cca1a@riscstar.com>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.13 000/502] 6.13.11-rc3 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250409115907.324928010@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250409115907.324928010@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 14:37 Tue 08 Apr     , Alex Elder wrote:
-> On 4/1/25 12:24 PM, Haylen Chu wrote:
-> > The clock tree of K1 SoC contains three main types of clock hardware
-> > (PLL/DDN/MIX) and has control registers split into several multifunction
-> > devices: APBS (PLLs), MPMU, APBC and APMU.
-> > 
-> > All register operations are done through regmap to ensure atomiciy
-> > between concurrent operations of clock driver and reset,
-> > power-domain driver that will be introduced in the future.
-> > 
-> > Signed-off-by: Haylen Chu <heylenay@4d2.org>
-> 
-> I have a few more comments here but I think this is getting very
-> close to ready.  You addressed pretty much everything I mentioned.
-> 
-> > ---
-> >   drivers/clk/Kconfig               |    1 +
-> >   drivers/clk/Makefile              |    1 +
-> >   drivers/clk/spacemit/Kconfig      |   18 +
-> >   drivers/clk/spacemit/Makefile     |    5 +
-> >   drivers/clk/spacemit/apbc_clks    |  100 +++
-> >   drivers/clk/spacemit/ccu-k1.c     | 1316 +++++++++++++++++++++++++++++
-> >   drivers/clk/spacemit/ccu_common.h |   48 ++
-> >   drivers/clk/spacemit/ccu_ddn.c    |   83 ++
-> >   drivers/clk/spacemit/ccu_ddn.h    |   47 ++
-> >   drivers/clk/spacemit/ccu_mix.c    |  268 ++++++
-> >   drivers/clk/spacemit/ccu_mix.h    |  218 +++++
-> >   drivers/clk/spacemit/ccu_pll.c    |  157 ++++
-> >   drivers/clk/spacemit/ccu_pll.h    |   86 ++
-> >   13 files changed, 2348 insertions(+)
-> >   create mode 100644 drivers/clk/spacemit/Kconfig
-> >   create mode 100644 drivers/clk/spacemit/Makefile
-> >   create mode 100644 drivers/clk/spacemit/apbc_clks
-> >   create mode 100644 drivers/clk/spacemit/ccu-k1.c
-> >   create mode 100644 drivers/clk/spacemit/ccu_common.h
-> >   create mode 100644 drivers/clk/spacemit/ccu_ddn.c
-> >   create mode 100644 drivers/clk/spacemit/ccu_ddn.h
-> >   create mode 100644 drivers/clk/spacemit/ccu_mix.c
-> >   create mode 100644 drivers/clk/spacemit/ccu_mix.h
-> >   create mode 100644 drivers/clk/spacemit/ccu_pll.c
-> >   create mode 100644 drivers/clk/spacemit/ccu_pll.h
-> > 
-> > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> > index 713573b6c86c..19c1ed280fd7 100644
-> > --- a/drivers/clk/Kconfig
-> > +++ b/drivers/clk/Kconfig
-> > @@ -517,6 +517,7 @@ source "drivers/clk/samsung/Kconfig"
-> >   source "drivers/clk/sifive/Kconfig"
-> >   source "drivers/clk/socfpga/Kconfig"
-> >   source "drivers/clk/sophgo/Kconfig"
-> > +source "drivers/clk/spacemit/Kconfig"
-> >   source "drivers/clk/sprd/Kconfig"
-> >   source "drivers/clk/starfive/Kconfig"
-> >   source "drivers/clk/sunxi/Kconfig"
-> > diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> > index bf4bd45adc3a..42867cd37c33 100644
-> > --- a/drivers/clk/Makefile
-> > +++ b/drivers/clk/Makefile
-> > @@ -145,6 +145,7 @@ obj-$(CONFIG_COMMON_CLK_SAMSUNG)	+= samsung/
-> >   obj-$(CONFIG_CLK_SIFIVE)		+= sifive/
-> >   obj-y					+= socfpga/
-> >   obj-y					+= sophgo/
-> > +obj-y					+= spacemit/
-> >   obj-$(CONFIG_PLAT_SPEAR)		+= spear/
-> >   obj-y					+= sprd/
-> >   obj-$(CONFIG_ARCH_STI)			+= st/
-> > diff --git a/drivers/clk/spacemit/Kconfig b/drivers/clk/spacemit/Kconfig
-> > new file mode 100644
-> > index 000000000000..4c4df845b3cb
-> > --- /dev/null
-> > +++ b/drivers/clk/spacemit/Kconfig
-> > @@ -0,0 +1,18 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +
-> > +config SPACEMIT_CCU
-> > +	tristate "Clock support for SpacemiT SoCs"
-> 
-> I don't know the answer to this, but...  Should this be a Boolean
-> rather than tristate?  Can a SpacemiT K1 SoC function without the
-> clock driver built in to the kernel?
-> 
-I agree to make it a Boolean, we've already made pinctrl driver Boolean
-and pinctrl depend on clk, besides, the SoC is unlikely functional
-without clock built in as it's such critical..
+Am 09.04.2025 um 14:03 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.13.11 release.
+> There are 502 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-> > +	depends on ARCH_SPACEMIT || COMPILE_TEST
-> > +	select MFD_SYSCON
-> > +	help
-> > +	  Say Y to enable clock controller unit support for SpacemiT SoCs.
-> > +
-> > +if SPACEMIT_CCU
-> > +
-> > +config SPACEMIT_K1_CCU
-> > +	tristate "Support for SpacemiT K1 SoC"
-> 
-> If you decide SPACEMIT_CCU needs to be Boolean, this one should
-> be Boolean too.
-> 
-[...] 
-> > +	CCU_PLL_RATE(1600000000UL, 0x0050cd61, 0x43eaaaab),
-> > +	CCU_PLL_RATE(1800000000UL, 0x0050cd61, 0x4b000000),
-> > +	CCU_PLL_RATE(2000000000UL, 0x0050dd62, 0x2aeaaaab),
-> > +	CCU_PLL_RATE(2457600000UL, 0x0050dd64, 0x330ccccd),
-> > +	CCU_PLL_RATE(3000000000UL, 0x0050dd66, 0x3fe00000),
-> > +	CCU_PLL_RATE(3200000000UL, 0x0050dd67, 0x43eaaaab),
-> > +};
-> > +
-> > +CCU_PLL_DEFINE(pll1, pll1_rate_tbl, APBS_PLL1_SWCR1, APBS_PLL1_SWCR3, MPMU_POSR,
-> > +	       POSR_PLL1_LOCK, CLK_SET_RATE_GATE);
-> > +CCU_PLL_DEFINE(pll2, pll2_rate_tbl, APBS_PLL2_SWCR1, APBS_PLL2_SWCR3, MPMU_POSR,
-> > +	       POSR_PLL2_LOCK, CLK_SET_RATE_GATE);
-> > +CCU_PLL_DEFINE(pll3, pll3_rate_tbl, APBS_PLL3_SWCR1, APBS_PLL3_SWCR3, MPMU_POSR,
-> > +	       POSR_PLL3_LOCK, CLK_SET_RATE_GATE);
-> > +
-> 
-> I suspect Yixun would like you to have lines like the next one be
-> 84 characters wide--slighly wider than the 80 column limit.
-> 
-> I'm not going to ask you to change it (but he might).
-> 
-Yes, I do prefer 100 cloumn.. please check more of this files
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-But anyway, I can bear with it if clk subsystem maintainer have enforced
-80 column policy for the whole clk subsystem, to make consistent
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+
+
+Beste Grüße,
+Peter Schneider
 
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
