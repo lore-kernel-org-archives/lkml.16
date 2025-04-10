@@ -1,285 +1,343 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD51290085;
-	Thu, 10 Apr 2025 17:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406161EF377;
+	Thu, 10 Apr 2025 17:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307077; cv=none; b=psEURWXydCweSANbDwScWbQ80OVTnUFHP51tNDS8LVxdXvVQ6FZ9J88JQWOAA/2knIlNLBIbuVWSoVh3d2zXKtbSdUGzTcTWsY1FA13+etUA2KIg0NkQpFeaIr60Zav34Z+rkjT5pbmxbMnM6SwghAE4fAeZfwb8irTiOL5NvlY=
+	t=1744307098; cv=none; b=bTL9VxYSCh3MIk/rM/VuMN7lLqb8sfXqkZIpYhcmLZw06k7JGvnGtU9Gi5Rz2PRJK1Zx/SgrIpNcXMClsITqtxLNjNe+eRsvzw+ITSaENnjsmV5MzxF9CH4yZmhXxEXv8+4SEOMeey07sXHCvD9DC4vV3EwzAM/VfM/JmHnX1M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307077; c=relaxed/simple;
-	bh=U3zcrDMRNTLqyiysE+pRfSO56yC9CZe65BpKpLcwg48=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jF/AJXPqnf2Pg6fpajQv+1t2tIkeORgsWyx4a2md5Jf8cCZBOgUqGg/EgCWkoMNvwhk0t8O8zL90YC3iOGxRFmlvn/bhxNowpCMImDrHDxUpvRK7v1hygDhTmrEuc2CUBqNDLcm+PZDAlaDIErUToWmDOV+giITpvbCnWG+cXSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkL6gQ/C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744307098; c=relaxed/simple;
+	bh=6uOenMh5S1Og+Ekr+a2C+JZQrM/rXATPBSYrnhNdnzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mdH9Bs823GeeYh8rmFeAdOjpojwCMoJAqPXhYp6g2BdHl2ZQhiH7kGO6wE72qKFXEENIZp8UoFUKvY3UjeOlDEiZQ9bQdHI2RIVHBtRIlkm0JJrcG8PNS+LiwAhrbMiTjMzXG373K9ylRc6PCsIvet8ICfmZdvn8kdqLaByZXaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uQR/Zt5Q; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkL6gQ/C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B1EC4CEDD;
-	Thu, 10 Apr 2025 17:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744307076;
-	bh=U3zcrDMRNTLqyiysE+pRfSO56yC9CZe65BpKpLcwg48=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CkL6gQ/CXEwaMTLfKs352BK3CXvgxsi3tGI7I+tfFnojuDI0EER10CvukR7m98w8a
-	 W+gJ0LJNgjkgG/Erl01c2NMiXcOgi75bKdaC8MgQS2ccGxpWqkENQ+OE1fj+FRgbsX
-	 oQj9A/kd+1jEWn5iYnEbjPUqLLVZD1YZk6zcFgnXcuzbSWZ/qw2ODbyFbafmaLLLBc
-	 mkNG3dvEuXLvm25WYMJJaLERy++ekRidod/03mveSfiZT8hmOhpt9FwMxf6WfPjlr6
-	 JqBMKFPZp11wFXr/A+urEba9fEZqaof60X3PovCVvnH3WeHQyJlPMiubmBUcuj3NpK
-	 mxLi09BSgkrPA==
-From: Kees Cook <kees@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Kees Cook <kees@kernel.org>,
-	Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] slab: Decouple slab_debug and no_hash_pointers
-Date: Thu, 10 Apr 2025 10:44:31 -0700
-Message-Id: <20250410174428.work.488-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uQR/Zt5Q"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53AHikBh1222574
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 12:44:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744307086;
+	bh=94xi9Bo5CmRSgLmyg0d2/0JDQ3NXv/QZQq3M2Xl5Q5w=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=uQR/Zt5Qagj7bzkRdGwqmDOIMa3NguuN2TDKehYotgspt3ahyNw1pXV8yTEARagC6
+	 4dwSeku7Am4zoFYOUvWsxQ2UQ5a8ZrrmXDZAoYlyu+okBS+GNMj+dZo/a1saS8b4rF
+	 vn4r06HjiQjIX128BFguQH47dpFWgotTptc2PiKU=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53AHik3U024406
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 10 Apr 2025 12:44:46 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
+ Apr 2025 12:44:45 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 10 Apr 2025 12:44:45 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53AHijlU017859;
+	Thu, 10 Apr 2025 12:44:45 -0500
+Message-ID: <45e2c2bf-68af-4c78-8f85-e25f4e7ea3fd@ti.com>
+Date: Thu, 10 Apr 2025 12:44:45 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8377; i=kees@kernel.org; h=from:subject:message-id; bh=U3zcrDMRNTLqyiysE+pRfSO56yC9CZe65BpKpLcwg48=; b=owGbwMvMwCVmps19z/KJym7G02pJDOk/mOsna55L9qq9FZHnqH/b8Gs4x7EtF2s/CJeKbWGtu vWiUt66o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCJnmhkZbuhKBYq46qw/URBU zL6p+Nqm+lOVZR7VRyZ77z/4sodtNyPDgkixOdWsH1b8u/51/sllTY97H/y0Pc9U4Ri3ja94UeN MTgA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+To: Beleswar Prasad Padhi <b-padhi@ti.com>,
+        Devarsh Thakkar
+	<devarsht@lewv0571a.ent.ti.com>,
+        Nishanth Menon <nm@ti.com>, Andrew Davis
+	<afd@ti.com>,
+        Hari Nagalla <hnagalla@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Markus
+ Schneider-Pargmann <msp@baylibre.com>
+References: <20250405001518.1315273-1-jm@ti.com>
+ <20250405001518.1315273-7-jm@ti.com>
+ <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
+ <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
+ <f8f1d877-3d13-4ba7-90e1-455923458c11@ti.com>
+ <fe735242-4643-432a-adaf-27e29719948a@ti.com>
+ <bffd8489-1556-425d-b3f9-8fde8a7d34a7@ti.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <bffd8489-1556-425d-b3f9-8fde8a7d34a7@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Some system owners use slab_debug=FPZ (or similar) as a hardening option,
-but do not want to be forced into having kernel addresses exposed due
-to the implicit "no_hash_pointers" boot param setting.[1]
+Hi Beleswar,
 
-Introduce the "hash_pointers" boot param, which defaults to "auto"
-(the current behavior), but also includes "always" (forcing on hashing
-even when "slab_debug=..." is defined), and "never". The existing
-"no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+On 4/10/25 3:55 AM, Beleswar Prasad Padhi wrote:
+> Hi Judith,
+> 
+> On 10/04/25 04:02, Judith Mendez wrote:
+>> Hi Beleswar,
+>>
+>> On 4/7/25 11:00 PM, Beleswar Prasad Padhi wrote:
+>>> Hi Judith, Andrew,
+>>>
+>>> On 07/04/25 19:43, Judith Mendez wrote:
+>>>> Hi Devarsh,
+>>>>
+>>>> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
+>>>>> Hi Judith,
+>>>>>
+>>>>> On 05/04/25 05:45, Judith Mendez wrote:
+>>>>>  > From: Devarsh Thakkar <devarsht@ti.com>
+>>>>>>
+>>>>>
+>>>>> Thanks for the patch.
+>>>>>
+>>>>>> For each remote proc, reserve memory for IPC and bind the mailbox
+>>>>>> assignments. Two memory regions are reserved for each remote 
+>>>>>> processor.
+>>>>>> The first region of 1MB of memory is used for Vring shared buffers
+>>>>>> and the second region is used as external memory to the remote 
+>>>>>> processor
+>>>>>> for the resource table and for tracebuffer allocations.
+>>>>>>
+>>>>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+>>>>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>>>>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>>>>> ---
+>>>>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 
+>>>>>> +++++++++++++++++++++++--
+>>>>>>   1 file changed, 90 insertions(+), 6 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts 
+>>>>>> b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>>> index 1c9d95696c839..7d817b447c1d0 100644
+>>>>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>>> @@ -52,6 +52,42 @@ linux,cma {
+>>>>>>               linux,cma-default;
+>>>>>>           };
+>>>>>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
+>>>>>> +            compatible = "shared-dma-pool";
+>>>>>> +            reg = <0x00 0x99800000 0x00 0x100000>;
+>>>>>> +            no-map;
+>>>>>> +        };
+>>>>>> +
+>>>>>> +        c7x_0_memory_region: c7x-memory@99900000 {
+>>>>>> +            compatible = "shared-dma-pool";
+>>>>>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
+>>>>>> +            no-map;
+>>>>>> +        };
+>>>>>> +
+>>>>>> +        mcu_r5fss0_core0_dma_memory_region: 
+>>>>>> r5f-dma-memory@9b800000 {
+>>>>>> +            compatible = "shared-dma-pool";
+>>>>>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
+>>>>>> +            no-map;
+>>>>>> +        };
+>>>>>> +
+>>>>>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
+>>>>>> +            compatible = "shared-dma-pool";
+>>>>>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
+>>>>>> +            no-map;
+>>>>>> +        };
+>>>>>> +
+>>>>>> +        wkup_r5fss0_core0_dma_memory_region: 
+>>>>>> r5f-dma-memory@9c800000 {
+>>>>>> +            compatible = "shared-dma-pool";
+>>>>>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
+>>>>>> +            no-map;
+>>>>>> +        };
+>>>>>> +
+>>>>>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+>>>>>> +            compatible = "shared-dma-pool";
+>>>>>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
+>>>>>> +            no-map;
+>>>>>> +        };
+>>>>>> +
+>>>>>>           secure_tfa_ddr: tfa@9e780000 {
+>>>>>>               reg = <0x00 0x9e780000 0x00 0x80000>;
+>>>>>>               alignment = <0x1000>;
+>>>>>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
+>>>>>>               alignment = <0x1000>;
+>>>>>>               no-map;
+>>>>>>           };
+>>>>>> -
+>>>>>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+>>>>>> -            compatible = "shared-dma-pool";
+>>>>>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
+>>>>>> -            no-map;
+>>>>>> -        };
+>>>>>>       };
+>>>>>
+>>>>> This is missing the edgeAI specific remote-core carveouts and 
+>>>>> RTOS-to-RTOS IPC memory regions [1] being used by edgeAI firmwares 
+>>>>> which come as pre-packaged in the official SDK release for AM62A.
+>>>>>
+>>>>> There is only one official SDK release for AM62A (which is edgeAI 
+>>>>> based) [2] which packages these edgeAI remoteproc firmwares and in 
+>>>>> my view it is a fair expectation that remote core careveouts in 
+>>>>> device-tree should align with firmwares released in SDK.
+>>>>>
+>>>>> This is because most developers (including me) and vendors download 
+>>>>> this official SDK release and use it with latest upstream kernel 
+>>>>> and modules (right now we are applying required patches locally) 
+>>>>> and this patch won't suffice for this, in-fact it won't work since 
+>>>>> the remoteproc firmwares are already using regions beyond the 
+>>>>> reserved-regions from this patch.
+>>>>
+>>>> I understand your point, currently with this patch remoteproc loading
+>>>> will not work for some cores. However, the goal here is to standardize
+>>>> as much as possible the memory carveout sizes, push the "demo firmware"
+>>>> to request resources the correct way from resource table, 
+>>>
+>>>
+>>> It is indeed more suitable if the memory carveouts are called out in 
+>>> the resource table of the firmware. But you will still need to 
+>>> reserve that memory sections in the Device Tree so that Kernel does 
+>>> not map that memory for anything else. So I am thinking how moving to 
+>>> resource table will help solve this problem?
+>>
+>> The point is that our default FW is doing things incorrectly. We want to
+>> push the existing FW to
+>> 1. Request resources via resource table.
+>> 2. Fix their memory requirements (recent offline discussion proved that
+>> FW is requesting more than it needs)
+>> 3. FW should adapt to Linux not Linux adapt to FW
+> 
+> 
+> Thanks. I also agree with you on all of the above points for a standard 
+> firmware.
+> 
+> However, I was referring to this problem:
+> Can we get rid of static reserved memory carveouts in DT?
+> People using a custom firmware will have to patch the Device Tree to 
+> reserve larger/different memory regions. Is there some way where the 
+> firmware can dictate the "reserved" memory carveouts at runtime? Memory 
+> carveouts can be announced through Resource Table, but there is no 
+> guarantee we will be able to allocate it (it could be mapped by the 
+> Kernel for some other alloc), unless its pre-reserved in DT.
+> 
 
-This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+Since we do not have an IOMMU for remote cores in K3, we cannot get rid
+of the static reserved memory carveouts, is my understanding. The linux
+driver would have programmed the IOMMU virtual and physical addresses
+and it would have been able to do the virtual to physical address
+translation on its own with only the requirement size from the FW
+resource table. Since we do not have this flexibility provided with
+IOMMU, we must have static reserved carveouts so that Linux will not
+touch these memory regions. The firmware virtual address to physical
+adress is atm a one to one mapping. So in summary, we must have these
+static reserved memory carveouts, but we should fix the default FW
+to use the "standardized" sizes and request SRAM via resource table.
 
-Link: https://github.com/KSPP/linux/issues/368 [1]
-Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
-Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Harry Yoo <harry.yoo@oracle.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-mm@kvack.org
----
- .../admin-guide/kernel-parameters.txt         | 34 ++++++++-----
- include/linux/sprintf.h                       |  2 +-
- lib/vsprintf.c                                | 51 +++++++++++++++++--
- mm/slub.c                                     |  5 +-
- 4 files changed, 72 insertions(+), 20 deletions(-)
+~ Judith
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 76e538c77e31..d0fd9c745db9 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1798,6 +1798,27 @@
- 			backtraces on all cpus.
- 			Format: 0 | 1
- 
-+	hash_pointers=
-+			[KNL,EARLY]
-+			By default, when pointers are printed to the console
-+			or buffers via the %p format string, that pointer is
-+			"hashed", i.e. obscured by hashing the pointer value.
-+			This is a security feature that hides actual kernel
-+			addresses from unprivileged users, but it also makes
-+			debugging the kernel more difficult since unequal
-+			pointers can no longer be compared. The choices are:
-+			Format: { auto | always | never }
-+			Default: auto
-+
-+			auto   - Hash pointers unless slab_debug is enabled.
-+			always - Always hash pointers (even if slab_debug is
-+				 enabled).
-+			never  - Never hash pointers. This option should only
-+				 be specified when debugging the kernel. Do
-+				 not use on production kernels. The boot
-+				 param "no_hash_pointers" is an alias for
-+				 this mode.
-+
- 	hashdist=	[KNL,NUMA] Large hashes allocated during boot
- 			are distributed across NUMA nodes.  Defaults on
- 			for 64-bit NUMA, off otherwise.
-@@ -4120,18 +4141,7 @@
- 
- 	no_hash_pointers
- 			[KNL,EARLY]
--			Force pointers printed to the console or buffers to be
--			unhashed.  By default, when a pointer is printed via %p
--			format string, that pointer is "hashed", i.e. obscured
--			by hashing the pointer value.  This is a security feature
--			that hides actual kernel addresses from unprivileged
--			users, but it also makes debugging the kernel more
--			difficult since unequal pointers can no longer be
--			compared.  However, if this command-line option is
--			specified, then all normal pointers will have their true
--			value printed. This option should only be specified when
--			debugging the kernel.  Please do not use on production
--			kernels.
-+			Alias for "hash_pointers=never".
- 
- 	nohibernate	[HIBERNATION] Disable hibernation and resume.
- 
-diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
-index 51cab2def9ec..521bb2cd2648 100644
---- a/include/linux/sprintf.h
-+++ b/include/linux/sprintf.h
-@@ -22,7 +22,7 @@ __scanf(2, 0) int vsscanf(const char *, const char *, va_list);
- 
- /* These are for specific cases, do not use without real need */
- extern bool no_hash_pointers;
--int no_hash_pointers_enable(char *str);
-+void hash_pointers_finalize(bool slub_debug);
- 
- /* Used for Rust formatting ('%pA') */
- char *rust_fmt_argument(char *buf, char *end, const void *ptr);
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 01699852f30c..1762cbbe1f5d 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -60,6 +60,20 @@
- bool no_hash_pointers __ro_after_init;
- EXPORT_SYMBOL_GPL(no_hash_pointers);
- 
-+/*
-+ * Hashed pointers policy selected by "hash_pointers=..." boot param
-+ *
-+ * `auto`   - Hashed pointers enabled unless disabled by slub_debug_enabled=true
-+ * `always` - Hashed pointers enabled unconditionally
-+ * `never`  - Hashed pointers disabled unconditionally
-+ */
-+enum hash_pointers_policy {
-+	HASH_PTR_AUTO = 0,
-+	HASH_PTR_ALWAYS,
-+	HASH_PTR_NEVER
-+};
-+static enum hash_pointers_policy hash_pointers_mode __initdata;
-+
- noinline
- static unsigned long long simple_strntoull(const char *startp, char **endp, unsigned int base, size_t max_chars)
- {
-@@ -2271,12 +2285,13 @@ char *resource_or_range(const char *fmt, char *buf, char *end, void *ptr,
- 	return resource_string(buf, end, ptr, spec, fmt);
- }
- 
--int __init no_hash_pointers_enable(char *str)
-+void __init hash_pointers_finalize(bool slub_debug)
- {
--	if (no_hash_pointers)
--		return 0;
-+	if (hash_pointers_mode == HASH_PTR_AUTO && slub_debug)
-+		no_hash_pointers = true;
- 
--	no_hash_pointers = true;
-+	if (!no_hash_pointers)
-+		return;
- 
- 	pr_warn("**********************************************************\n");
- 	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-@@ -2289,11 +2304,39 @@ int __init no_hash_pointers_enable(char *str)
- 	pr_warn("** the kernel, report this immediately to your system   **\n");
- 	pr_warn("** administrator!                                       **\n");
- 	pr_warn("**                                                      **\n");
-+	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
-+	pr_warn("**                                                      **\n");
- 	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
- 	pr_warn("**********************************************************\n");
-+}
-+
-+static int __init hash_pointers_mode_parse(char *str)
-+{
-+	if (!str) {
-+		pr_warn("Hash pointers mode empty; falling back to auto.\n");
-+		hash_pointers_mode = HASH_PTR_AUTO;
-+	} else if (strncmp(str, "auto", 4) == 0)   {
-+		pr_info("Hash pointers mode set to auto.\n");
-+		hash_pointers_mode = HASH_PTR_AUTO;
-+	} else if (strncmp(str, "never", 5) == 0) {
-+		pr_info("Hash pointers mode set to never.\n");
-+		hash_pointers_mode = HASH_PTR_NEVER;
-+	} else if (strncmp(str, "always", 6) == 0) {
-+		pr_info("Hash pointers mode set to always.\n");
-+		hash_pointers_mode = HASH_PTR_ALWAYS;
-+	} else {
-+		pr_warn("Unknown hash_pointers mode '%s' specified; assuming auto.\n", str);
-+		hash_pointers_mode = HASH_PTR_AUTO;
-+	}
- 
- 	return 0;
- }
-+early_param("hash_pointers", hash_pointers_mode_parse);
-+
-+static int __init no_hash_pointers_enable(char *str)
-+{
-+	return hash_pointers_mode_parse("never");
-+}
- early_param("no_hash_pointers", no_hash_pointers_enable);
- 
- /*
-diff --git a/mm/slub.c b/mm/slub.c
-index b46f87662e71..f3d61b330a76 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -6314,9 +6314,8 @@ void __init kmem_cache_init(void)
- 	if (debug_guardpage_minorder())
- 		slub_max_order = 0;
- 
--	/* Print slub debugging pointers without hashing */
--	if (__slub_debug_enabled())
--		no_hash_pointers_enable(NULL);
-+	/* Inform pointer hashing choice about slub debugging state. */
-+	hash_pointers_finalize(__slub_debug_enabled());
- 
- 	kmem_cache_node = &boot_kmem_cache_node;
- 	kmem_cache = &boot_kmem_cache;
--- 
-2.34.1
+
+> Thanks,
+> Beleswar
+> 
+>>
+>> If not, then then we should try to move to Zephyr firmware or other/
+>> better options.
+>>
+>> Hope I am able to explain myself better this time around.
+>>
+>> ~ Judith
+>>
+>>>
+>>> Thanks,
+>>> Beleswar
+>>>
+>>>> and move away
+>>>> from this dependency and limitations that we have with our firmware. We
+>>>> should soon be able to generate our own firmware using Zephyr, which
+>>>> Andrew is pioneering, so with this firmware we should move to the
+>>>> correct direction upstream. Downstream we are still using the memory
+>>>> carveout sizes that the firmware folk want so desperately to keep, for
+>>>> now..
+>>>>
+>>>> ~ Judith
+>>>>
+>>>>>
+>>>>> [1]: 
+>>>>> https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
+>>>>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
+>>>>>
+>>>>> Regards
+>>>>> Devarsh
+>>>>>
+>>>>>>       opp-table {
+>>>>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
+>>>>>>           };
+>>>>>>       };
+>>>>>>   };
+>>>>>> +
+>>>>>> +&mailbox0_cluster0 {
+>>>>>> +    status = "okay";
+>>>>>> +
+>>>>>> +    mbox_r5_0: mbox-r5-0 {
+>>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>>> +    };
+>>>>>> +};
+>>>>>> +
+>>>>>> +&mailbox0_cluster1 {
+>>>>>> +    status = "okay";
+>>>>>> +
+>>>>>> +    mbox_c7x_0: mbox-c7x-0 {
+>>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>>> +    };
+>>>>>> +};
+>>>>>> +
+>>>>>> +&mailbox0_cluster2 {
+>>>>>> +    status = "okay";
+>>>>>> +
+>>>>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
+>>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>>> +    };
+>>>>>> +};
+>>>>>> +
+>>>>>> +&wkup_r5fss0 {
+>>>>>> +    status = "okay";
+>>>>>> +};
+>>>>>> +
+>>>>>> +&wkup_r5fss0_core0 {
+>>>>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
+>>>>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
+>>>>>> +            <&wkup_r5fss0_core0_memory_region>;
+>>>>>> +};
+>>>>>> +
+>>>>>> +&mcu_r5fss0 {
+>>>>>> +    status = "okay";
+>>>>>> +};
+>>>>>> +
+>>>>>> +&mcu_r5fss0_core0 {
+>>>>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
+>>>>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+>>>>>> +            <&mcu_r5fss0_core0_memory_region>;
+>>>>>> +};
+>>>>>> +
+>>>>>> +&c7x_0 {
+>>>>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
+>>>>>> +    memory-region = <&c7x_0_dma_memory_region>,
+>>>>>> +            <&c7x_0_memory_region>;
+>>>>>> +    status = "okay";
+>>>>>> +};
+>>>>>
+>>>>
+>>
 
