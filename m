@@ -1,49 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA7A204C3C;
-	Thu, 10 Apr 2025 07:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9283B20AF9D;
+	Thu, 10 Apr 2025 07:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269415; cv=none; b=bRESvLya771BwN8UNHvukohxdhTqgxhITtRPYqC8A7CxEOEWJS6cgZPR56yB8guyy2Dy7BnHwoxWm0XfNDKnndHBW/NFpIg2XyMLjjmZpdgoHZH+xr3BdnlVuEF3rSm+lWlAUMIBZHoP5IOGSS2/sBFjkW4DrwuN2H70ghM2miA=
+	t=1744269427; cv=none; b=H906x5ZP5kvgMtE7rUpa8mGeXj4pIrhM7Xd4varJvacNjtVi2a0QAheNc67gob7wrHTDIaaSztVBC4yxvwQSXgd+HzH4CO2Vsrh45T8u+dE5deVx8xXCUiYanjlnVw6tKFgsj/eZQV5XVZQAl/3edLXF8S/+luNgOd/xL1gpzGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269415; c=relaxed/simple;
-	bh=zAbhoNegydtMza1MTmjhtIxxlGmk108gu/bUj1yPPio=;
+	s=arc-20240116; t=1744269427; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W6aZa4I9kaZByBP0Q57ZRoOt6gQQPCLupoJWBdBvSlwHNt8CZSo2y9it1rzefId8kqziNFpXLYYSOvZXA7+lZcSqFiAehX1p4k0tpa+KTuJqQQoL6Z1DqWIEvfuV7CU9mTUxHw+itbQY1Aou3tfrV6GcLTfgiHYlcixJJcostRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q64sysY0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KOr48zjVC0JNmmyN1rJSTnB4K0f45ztLcjKWIFxEIsIlU0k8Nmc+1vCL4X7QKZJ++FcOOeqMd/U7Pb7rJMWFUAR8JRPxP7LGzAhQRuTHjZMv8GQflGtuYIiyJuorT7FgySxFBd4GNLtyg9140GRDAAcwH668RfjPLdXbmARy3IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=0fNMiYgm; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q64sysY0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFD61C4CEDD;
-	Thu, 10 Apr 2025 07:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744269413;
-	bh=zAbhoNegydtMza1MTmjhtIxxlGmk108gu/bUj1yPPio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q64sysY0jJCV8AJ30ycX/Fct5MUGX4cE5zzOnqgO9ZAvRE83rON1bkPpme1Yvrl+j
-	 dYoAppyJEasLAu7ypfN5Gf+pFAROF+E6HSKR/M+EDdo2/g7xAAjf7Ezu3V0auqGYdl
-	 yr0r0CvIfJoc6303l233YJewTdjECN7swxrapB/1CtfFk/c+RTGWa5bq7R/Mm5ggrq
-	 tIF7pE3mhGuhWexWSRHsMIHvm2NMBU+uCcP7/NeD92rzYQ0/+oAM8U1a9eMZF6qq4l
-	 LXUQ5OJTMrBMgqBaiw0KMhb3vNx8rM5MME6/IMkupKzYPtnhTwA1vJOP95YxnoAg1T
-	 4TK/2AcaTJjZw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u2m9g-000000003T3-1Bqx;
-	Thu, 10 Apr 2025 09:16:57 +0200
-Date: Thu, 10 Apr 2025 09:16:56 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-	krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dmitry.baryshkov@linaro.org, johan+linaro@kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v5 2/5] ASoC: q6apm: add q6apm_get_hw_pointer helper
-Message-ID: <Z_dwaEMoavqsGOEw@hovoldconsulting.com>
-References: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
- <20250314174800.10142-3-srinivas.kandagatla@linaro.org>
- <Z_O2RhwYp6iy02cM@hovoldconsulting.com>
- <7222bbbd-51f7-43b6-9755-29808833cf5f@linaro.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0fNMiYgm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=0fNMiYgmM3+V3L0ZZJQFNz7hC0
+	tjCr1K9/wITp1HhOOwUItzPLQO16HptgqkMB1w7KEWSL58Uin1zD89+5OZfEKNuSJGEvyMRKekLUT
+	zKFK+hSPR+n64sEdeDN/Qv5vk8ypvZVEhEL0i64cA4nUDnR0+3gSeZ53UinXAvdeWJxn3C5ugr5nD
+	CRYHifUfQkwEHUeK3i+9oKWQRJpUAjx9z6HbDDb33wzeN4H3Cc1XgwXXf/jhz0zW5g9pM54GbRL5W
+	cy3F/arfVN91uUvSUzo3J4mEQ9JvChcwdv+DH0BSBUiXto32aHtw63fu9YbNp6SIrsaZuj9pXYHsz
+	ry7zYFoQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2m9p-00000009Vgq-0601;
+	Thu, 10 Apr 2025 07:17:05 +0000
+Date: Thu, 10 Apr 2025 00:17:05 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Gou Hao <gouhao@uniontech.com>
+Cc: brauner@kernel.org, djwong@kernel.org, hch@infradead.org,
+	gouhaojake@163.com, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	wangyuli@uniontech.com
+Subject: Re: [PATCH V3] iomap: skip unnecessary ifs_block_is_uptodate check
+Message-ID: <Z_dwcbeIIVMcH533@infradead.org>
+References: <20250408172924.9349-1-gouhao@uniontech.com>
+ <20250410071236.16017-1-gouhao@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,56 +48,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7222bbbd-51f7-43b6-9755-29808833cf5f@linaro.org>
+In-Reply-To: <20250410071236.16017-1-gouhao@uniontech.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Apr 08, 2025 at 09:07:27AM +0100, Srinivas Kandagatla wrote:
-> On 07/04/2025 12:25, Johan Hovold wrote:
-> > On Fri, Mar 14, 2025 at 05:47:57PM +0000, Srinivas Kandagatla wrote:
-> >> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> >>
-> >> Implement an helper function in q6apm to be able to read the current
-> >> hardware pointer for both read and write buffers.
-> >>
-> >> This should help q6apm-dai to get the hardware pointer consistently
-> >> without it doing manual calculation, which could go wrong in some race
-> >> conditions.
+Looks good:
 
-> >> @@ -553,6 +567,8 @@ static int graph_callback(struct gpr_resp_pkt *data, void *priv, int op)
-> >>   		rd_done = data->payload;
-> >>   		phys = graph->tx_data.buf[hdr->token].phys;
-> >>   		mutex_unlock(&graph->lock);
-> >> +		/* token numbering starts at 0 */
-> >> +		atomic_set(&graph->tx_data.hw_ptr, hdr->token + 1);
-> >>   
-> >>   		if (upper_32_bits(phys) == rd_done->buf_addr_msw &&
-> >>   		    lower_32_bits(phys) == rd_done->buf_addr_lsw) {
-> > 
-> > 			graph->result.opcode = hdr->opcode;
-> >                          graph->result.status = rd_done->status;
-> >                          if (graph->cb)
-> >                                  graph->cb(client_event, hdr->token, data->payload, graph->priv);
-> >                  } else {
-> >                          dev_err(dev, "RD BUFF Unexpected addr %08x-%08x\n", rd_done->buf_addr_lsw,
-> >                                  rd_done->buf_addr_msw);
-> >                  }
-> > 
-> > I just hit the following error on the T14s with 6.15-rc1 that I've never
-> > seen before and which looks like it could be related to this series:
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-> Its unlikely, but the timings have changed here.
-> I have not seen it either, but I will try to reproduce this with 6.15-rc1.
-> > 
-> > 	q6apm-dai 6800000.remoteproc:glink-edge:gpr:service@1:dais: RD BUFF Unexpected addr ffe0d200-00000001
-> > 
-> > Any ideas about what may be causing this?
-
-> How easy is this to reproduce?
-
-I've only noticed this error once on the first boot of 6.15-rc1, and it
-does not seem to show up again now.
-
-I did a fair bit of testing with this series on 6.14-rcs, but did not
-check the logs while doing so (and there's nothing in the logs I still
-have).
-
-Johan
