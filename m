@@ -1,351 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C53296179;
-	Thu, 10 Apr 2025 15:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85E51EB5EA;
+	Thu, 10 Apr 2025 15:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744300090; cv=none; b=jTxvYSDPtODN46dHTyHO1m3p5dNJN4mUlgKT7L6yM3Kv814KuX3VIxqxoTRIAxN9mcQbgjQ3G6JiYuaR/Mc5v8ORRka4C/8A1A7qfqyO7l4GlFuynXb+ITp1D9i7blrZP5qEPhKWEfOzYq3PYMfHl3Q9QEipvmHqecX4nFC+aUM=
+	t=1744300168; cv=none; b=VovrbHcPYzGPNN5n4LSK3bljVZb1V7JPCw5Amav+TbMkpy7DuddQzyXfQsJ/DmxU1b/kTSP3Qhm2E2YJKbbWAJSb88CQ4YVL9pqgZ1f7uURXzKgiwlnIUh16k2mH6fuLRsDxgGHpqr/XOFpoki/DRAIMqnCFuDYZrYSFlmWZoMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744300090; c=relaxed/simple;
-	bh=8tfaaNZ4HrH7opoaFMg4/Qd0jHKomOYwuo5NwUKhvx0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=o6OC9b5c/+N5GMTQ5LbJtf7PzJ3I6fzGefSZ8txVUURU1i3yCfOZqYXc2CQFIf4aX4mTVJebpWaVGvzoakCL3pQ3qnBxxlTk1qYVb+C/sz9FS+7xBLFfKdFfJags/qIxcrw1ORGQa/9cfh3H0jKhyYAz8v4lc6ds0F6f/m6pzAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F07Lc4bp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744300168; c=relaxed/simple;
+	bh=TumBwfA3bM/zLR60iDBfPvHTjAo0gUKZX34lLw0gDy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T5nIPrz/2GD9IlrZxd4ywndpLtMgAuWbXRARYDZaMhxHd251bDsFnt+PZiChmxVTYErTvCNue4XYeXkTTNET3RRlqY5TJAfjuV56XA3IzOlZYNx/Hii2N5snqagdaD67g9uKtxc1b+mc87qskuxIAamm5C1bPnovd+fYQRYTLuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S45c1rUj; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F07Lc4bp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FF4C4CEDD;
-	Thu, 10 Apr 2025 15:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744300090;
-	bh=8tfaaNZ4HrH7opoaFMg4/Qd0jHKomOYwuo5NwUKhvx0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=F07Lc4bpt+yN+th4lZJNLUif9Vsbs8jnsVA6h1SEMAAxVrX+FL4/Au5KWenw+1DH9
-	 BH6yiYIZmka6TMCrTmOJ6M1rp46sGn4toqpLPa+fzTNNn8OBVUk5tm+MrmGeLGtp4v
-	 0t08uUIYAhHkGvs4IpQOEZEHXIojnzNcl2f+3yHjgP0JTy6xYRjxiWwtaTjbg95rz7
-	 /uEl+E10tBzh5CvL3m6w6qy/ck4AJQjiwbobS6qZG66/NYkbJ1QRHlGCA8SAlCgNUE
-	 Ud/S2sHTPErUfalr4V9fg1m5v0/lTQklRsHgcL77c5S3/NmmfVOtoujb6pTEDjlGaj
-	 WsGZ5T9YPKZbQ==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Thu, 10 Apr 2025 10:47:38 -0500
-Subject: [PATCH v2 17/17] dt-bindings: cpufreq: Drop redundant Mediatek
- binding
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S45c1rUj"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53ACS4Ht003741;
+	Thu, 10 Apr 2025 15:49:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=yzSzjC
+	iPSU54x5J110sqkDRqoduFVAsQAn5NqJ1YDrY=; b=S45c1rUj+0b1d3udzFSMZ+
+	AT//OUNfYyjZD/ggkJtM3jkqtc/6adZNYyZhiVoP6lAKF6j7fo68Jqs33U4zFjmF
+	YkQ3i1cEYASjh0GKng68UVbAkW3c0E9WC/vqcSSquaS/S6Mty/yepbcZVv1q+NRQ
+	n/XDiQgubR1N2x8pVj3cRS0lSxh5jCYg/TTk+E50GBiS1ZTsMnt3Djz+dt6m/n0M
+	k3F9JFDf7OHHNoT1btnVJ5ZxICKFEI+32+muIvZOG48/yOc/BFN7dyCtWvhYC5C6
+	bg5sAnR/z9myUYMSJrl6UvCwnTsD3a8YcIQo30/V/kPdMaLxf/wlcoFNHV7EpokQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xe13s41c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 15:49:04 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53AFQ5Yq020882;
+	Thu, 10 Apr 2025 15:49:03 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xe13s418-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 15:49:03 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53ADawx0013858;
+	Thu, 10 Apr 2025 15:49:02 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ufunxnwu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 15:49:02 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53AFn0D934144740
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 15:49:00 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2724F20043;
+	Thu, 10 Apr 2025 15:49:00 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 67AD020040;
+	Thu, 10 Apr 2025 15:48:56 +0000 (GMT)
+Received: from [9.124.208.29] (unknown [9.124.208.29])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 10 Apr 2025 15:48:56 +0000 (GMT)
+Message-ID: <7f6028fd-99f4-4f91-a660-cd036712844e@linux.ibm.com>
+Date: Thu, 10 Apr 2025 21:18:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-dt-cpu-schema-v2-17-63d7dc9ddd0a@kernel.org>
-References: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
-In-Reply-To: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Conor Dooley <conor@kernel.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Steen Hegelund <Steen.Hegelund@microchip.com>, 
- Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Andy Gross <agross@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
- Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, imx@lists.linux.dev, 
- linux-rockchip@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-renesas-soc@vger.kernel.org, linux-mips@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>
-X-Mailer: b4 0.15-dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 19/19] futex: Allow to make the private hash
+ immutable.
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?=
+ <andrealmeid@igalia.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+References: <20250407155742.968816-1-bigeasy@linutronix.de>
+ <20250407155742.968816-20-bigeasy@linutronix.de>
+ <ced9c08c-a017-495f-978b-0c4d13992e5e@linux.ibm.com>
+ <20250410152841.KypBTUMq@linutronix.de>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250410152841.KypBTUMq@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: sLO1o9SBXaHS2NqkpNMkjUD7kKMwUt6O
+X-Proofpoint-GUID: cwdYC3Pp8-y04t_1GNsMfz48tD2g1RKt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 priorityscore=1501 spamscore=0 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504100112
 
-The Mediatek CPUFreq binding document just describes properties from
-the CPU node which the driver uses. This is redundant as all the
-properties are described in the arm/cpus.yaml schema.
 
-Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- .../bindings/cpufreq/cpufreq-mediatek.txt          | 250 ---------------------
- 1 file changed, 250 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-deleted file mode 100644
-index e0a4ba599abc..000000000000
---- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-+++ /dev/null
-@@ -1,250 +0,0 @@
--Binding for MediaTek's CPUFreq driver
--=====================================
--
--Required properties:
--- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock names.
--- clock-names: Should contain the following:
--	"cpu"		- The multiplexer for clock input of CPU cluster.
--	"intermediate"	- A parent of "cpu" clock which is used as "intermediate" clock
--			  source (usually MAINPLL) when the original CPU PLL is under
--			  transition and not stable yet.
--	Please refer to Documentation/devicetree/bindings/clock/clock-bindings.txt for
--	generic clock consumer properties.
--- operating-points-v2: Please refer to Documentation/devicetree/bindings/opp/opp-v2.yaml
--	for detail.
--- proc-supply: Regulator for Vproc of CPU cluster.
--
--Optional properties:
--- sram-supply: Regulator for Vsram of CPU cluster. When present, the cpufreq driver
--	       needs to do "voltage tracking" to step by step scale up/down Vproc and
--	       Vsram to fit SoC specific needs. When absent, the voltage scaling
--	       flow is handled by hardware, hence no software "voltage tracking" is
--	       needed.
--- mediatek,cci:
--	Used to confirm the link status between cpufreq and mediatek cci. Because
--	cpufreq and mediatek cci could share the same regulator in some MediaTek SoCs.
--	To prevent the issue of high frequency and low voltage, we need to use this
--	property to make sure mediatek cci is ready.
--	For details of mediatek cci, please refer to
--	Documentation/devicetree/bindings/interconnect/mediatek,cci.yaml
--- #cooling-cells:
--	For details, please refer to
--	Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
--
--Example 1 (MT7623 SoC):
--
--	cpu_opp_table: opp_table {
--		compatible = "operating-points-v2";
--		opp-shared;
--
--		opp-598000000 {
--			opp-hz = /bits/ 64 <598000000>;
--			opp-microvolt = <1050000>;
--		};
--
--		opp-747500000 {
--			opp-hz = /bits/ 64 <747500000>;
--			opp-microvolt = <1050000>;
--		};
--
--		opp-1040000000 {
--			opp-hz = /bits/ 64 <1040000000>;
--			opp-microvolt = <1150000>;
--		};
--
--		opp-1196000000 {
--			opp-hz = /bits/ 64 <1196000000>;
--			opp-microvolt = <1200000>;
--		};
--
--		opp-1300000000 {
--			opp-hz = /bits/ 64 <1300000000>;
--			opp-microvolt = <1300000>;
--		};
--	};
--
--	cpu0: cpu@0 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a7";
--		reg = <0x0>;
--		clocks = <&infracfg CLK_INFRA_CPUSEL>,
--			 <&apmixedsys CLK_APMIXED_MAINPLL>;
--		clock-names = "cpu", "intermediate";
--		operating-points-v2 = <&cpu_opp_table>;
--		#cooling-cells = <2>;
--	};
--	cpu@1 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a7";
--		reg = <0x1>;
--		operating-points-v2 = <&cpu_opp_table>;
--	};
--	cpu@2 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a7";
--		reg = <0x2>;
--		operating-points-v2 = <&cpu_opp_table>;
--	};
--	cpu@3 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a7";
--		reg = <0x3>;
--		operating-points-v2 = <&cpu_opp_table>;
--	};
--
--Example 2 (MT8173 SoC):
--	cpu_opp_table_a: opp_table_a {
--		compatible = "operating-points-v2";
--		opp-shared;
--
--		opp-507000000 {
--			opp-hz = /bits/ 64 <507000000>;
--			opp-microvolt = <859000>;
--		};
--
--		opp-702000000 {
--			opp-hz = /bits/ 64 <702000000>;
--			opp-microvolt = <908000>;
--		};
--
--		opp-1001000000 {
--			opp-hz = /bits/ 64 <1001000000>;
--			opp-microvolt = <983000>;
--		};
--
--		opp-1105000000 {
--			opp-hz = /bits/ 64 <1105000000>;
--			opp-microvolt = <1009000>;
--		};
--
--		opp-1183000000 {
--			opp-hz = /bits/ 64 <1183000000>;
--			opp-microvolt = <1028000>;
--		};
--
--		opp-1404000000 {
--			opp-hz = /bits/ 64 <1404000000>;
--			opp-microvolt = <1083000>;
--		};
--
--		opp-1508000000 {
--			opp-hz = /bits/ 64 <1508000000>;
--			opp-microvolt = <1109000>;
--		};
--
--		opp-1573000000 {
--			opp-hz = /bits/ 64 <1573000000>;
--			opp-microvolt = <1125000>;
--		};
--	};
--
--	cpu_opp_table_b: opp_table_b {
--		compatible = "operating-points-v2";
--		opp-shared;
--
--		opp-507000000 {
--			opp-hz = /bits/ 64 <507000000>;
--			opp-microvolt = <828000>;
--		};
--
--		opp-702000000 {
--			opp-hz = /bits/ 64 <702000000>;
--			opp-microvolt = <867000>;
--		};
--
--		opp-1001000000 {
--			opp-hz = /bits/ 64 <1001000000>;
--			opp-microvolt = <927000>;
--		};
--
--		opp-1209000000 {
--			opp-hz = /bits/ 64 <1209000000>;
--			opp-microvolt = <968000>;
--		};
--
--		opp-1404000000 {
--			opp-hz = /bits/ 64 <1007000000>;
--			opp-microvolt = <1028000>;
--		};
--
--		opp-1612000000 {
--			opp-hz = /bits/ 64 <1612000000>;
--			opp-microvolt = <1049000>;
--		};
--
--		opp-1807000000 {
--			opp-hz = /bits/ 64 <1807000000>;
--			opp-microvolt = <1089000>;
--		};
--
--		opp-1989000000 {
--			opp-hz = /bits/ 64 <1989000000>;
--			opp-microvolt = <1125000>;
--		};
--	};
--
--	cpu0: cpu@0 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a53";
--		reg = <0x000>;
--		enable-method = "psci";
--		cpu-idle-states = <&CPU_SLEEP_0>;
--		clocks = <&infracfg CLK_INFRA_CA53SEL>,
--			 <&apmixedsys CLK_APMIXED_MAINPLL>;
--		clock-names = "cpu", "intermediate";
--		operating-points-v2 = <&cpu_opp_table_a>;
--	};
--
--	cpu1: cpu@1 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a53";
--		reg = <0x001>;
--		enable-method = "psci";
--		cpu-idle-states = <&CPU_SLEEP_0>;
--		clocks = <&infracfg CLK_INFRA_CA53SEL>,
--			 <&apmixedsys CLK_APMIXED_MAINPLL>;
--		clock-names = "cpu", "intermediate";
--		operating-points-v2 = <&cpu_opp_table_a>;
--	};
--
--	cpu2: cpu@100 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a72";
--		reg = <0x100>;
--		enable-method = "psci";
--		cpu-idle-states = <&CPU_SLEEP_0>;
--		clocks = <&infracfg CLK_INFRA_CA72SEL>,
--			 <&apmixedsys CLK_APMIXED_MAINPLL>;
--		clock-names = "cpu", "intermediate";
--		operating-points-v2 = <&cpu_opp_table_b>;
--	};
--
--	cpu3: cpu@101 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a72";
--		reg = <0x101>;
--		enable-method = "psci";
--		cpu-idle-states = <&CPU_SLEEP_0>;
--		clocks = <&infracfg CLK_INFRA_CA72SEL>,
--			 <&apmixedsys CLK_APMIXED_MAINPLL>;
--		clock-names = "cpu", "intermediate";
--		operating-points-v2 = <&cpu_opp_table_b>;
--	};
--
--	&cpu0 {
--		proc-supply = <&mt6397_vpca15_reg>;
--	};
--
--	&cpu1 {
--		proc-supply = <&mt6397_vpca15_reg>;
--	};
--
--	&cpu2 {
--		proc-supply = <&da9211_vcpu_reg>;
--		sram-supply = <&mt6397_vsramca7_reg>;
--	};
--
--	&cpu3 {
--		proc-supply = <&da9211_vcpu_reg>;
--		sram-supply = <&mt6397_vsramca7_reg>;
--	};
+On 4/10/25 20:58, Sebastian Andrzej Siewior wrote:
+> On 2025-04-10 20:22:08 [+0530], Shrikanth Hegde wrote:
+>> Hi Sebastian.
+> Hi Shrikanth,
+> 
+>> It would be good option for the application to decide if it needs this.
+> 
+> You mean to have it as I introduced it here or something else?
+> 
 
--- 
-2.47.2
+as you have introduced it here.
+
+>> Using this option makes the perf regression goes away using previous number of buckets.
+> 
+> Okay, good to know. You test this on on ppc64le?
+
+Yes.
+
+> 
+>> Acked-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+>>
+>> base:
+>> ./perf bench futex hash
+>> Averaged 1556023 operations/sec (+- 0.08%), total secs = 10  <<-- 1.5M
+>>
+>> with series:
+>> ./perf bench futex hash -b32768
+>> Averaged 126499 operations/sec (+- 0.41%), total secs = 10   <<-- .12M
+>>
+>> ./perf bench futex hash -Ib32768
+>> Averaged 1549339 operations/sec (+- 0.08%), total secs = 10  <<-- 1.5M
+> Thank you for testing.
+> …
+>> nit: Does it makes sense to split this patch into futex and perf?
+> 
+> First I wanted to figure if we really do this. I have no idea if this
+> regression would show up in real world use case or just here as part of
+> the micro benchmark.
+> And if we do this, it would probably make sense to have one perf patch
+> which introduces -b & -I.  And then figure out if the additional option
+> to prctl should be part of the resize patch or not. Probably we should
+> enforce 0/1 of arg4 from the beginning so maybe folding this in makes
+> sense.
+>
+
+ok.
+
+> Sebastian
 
