@@ -1,369 +1,156 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D37063B9;
-	Thu, 10 Apr 2025 03:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACA513F434;
+	Thu, 10 Apr 2025 03:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744256776; cv=none; b=i5kQTJpv1VkOoJTjkaLI8M2Tb9dH6xzQdNRhs7z5gZ2NveYG/V56y8YYBi7gD/Y/4sYq+90DVZ7AdtR2XUZ814m3DEm3kjjA2RScmpUuHsTSVEGLck9+mGztjbM8AYH47sGKKFcNOpoPFHMPDs2fYiagbuZ+hHq37bK2pRl+P4g=
+	t=1744256869; cv=none; b=lRnvQ1LtAL1y1AfK8rRrr8wpwy32RJqGnZJqLnifnHJvpuIbJFQ6fxh5CkgekP8OZzwMERB0GqLEMRbsrtXXtHRHcuvfarsDPavC8c5TQqZPt5etYOFwOx7X8vVljq6Kt+xssaYT2QH2aCEqXzHbN3ajxFWN0as9PdE7XVO/6eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744256776; c=relaxed/simple;
-	bh=XkAnvmsFoDxV2cICqM23oG076J05VqxxjGS98fi8Ows=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sYNT0TrAwkKBbJ2sJQxOsB271enmkSlwrtkXkyxt2vXohwa5TVKX7nCwzk9t6v+GKqeepYkUe2dC0tMtkS1FliXczZDEsxjDXeck2vUO53t6340Re8YxZHN2W8fdl14B4/96LWMF08TiSJjOQWUdfnrqHsCNH9N8AJwG71IgvRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EyCnx1Dr; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744256869; c=relaxed/simple;
+	bh=8BXdnXUZJhaBm/iK86CU2W0BqVu6Jkde/ochweChcTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KglYvWpNdieDVjBcOB57fPxPRMG4OABN2xAVxjUIU5knGLZb8EDl3dYdlUF8YO/qgNMxlgAJBiKiTJs2w6nsUtj86zZhJQ42bIW1dlMvVdhIFgsCQ7rs4GgqCiqmZlTuAhU2ggCW5VPWk0poydaae6Me0DF+RapXJVepdNGmPsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ekBLXc1X; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EyCnx1Dr"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539Kcxiq004650;
-	Thu, 10 Apr 2025 03:46:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=qeY40K
-	cfg3vqEaQiu8oLFXPizAYYuMMFOFiNUXOhvUg=; b=EyCnx1DrpK2/C1hlwKbvqH
-	FePHBfY8eo11KVmsgD2ByRrlcWvbdVXwxHIF4BBRciUrwprRLUpB3kHACpzcwe/B
-	qV8ZlQvJP9sk4tjumzQDgo8y5QiKZ9dFGsA/jBrtI9rYB+u4saBYlgw49b0/Pz/d
-	WuJFUWT075i5RVAEBwfo8m6ZbKEy5KD0TY/dn+KYhAHdUUTXRV5BUgo3qs56L/DO
-	MVrpvWxBCd6zjjbYj6KFAmUAcLiWETwnv9mh9yNUw2e+Gf/xMeegtARujkZWsLBV
-	G1rulMva4wN9heV01oss5FUOF2dlCo8VNrogI06ynwN1AVYz9ALXSRlNFcQjOEzQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45x0401yb8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 03:46:01 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53A1B5N3029541;
-	Thu, 10 Apr 2025 03:46:00 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45x1k71k9k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 03:46:00 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53A3jxBl54591892
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 03:45:59 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0771D20043;
-	Thu, 10 Apr 2025 03:45:59 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5536B20040;
-	Thu, 10 Apr 2025 03:45:57 +0000 (GMT)
-Received: from [9.109.204.62] (unknown [9.109.204.62])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 10 Apr 2025 03:45:57 +0000 (GMT)
-Message-ID: <70ef4489-dc7c-49fe-ac8e-fc0fd58e2bab@linux.ibm.com>
-Date: Thu, 10 Apr 2025 09:15:56 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ekBLXc1X"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c5ba363f1aso55886285a.0;
+        Wed, 09 Apr 2025 20:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744256867; x=1744861667; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nl2Sw4bxxEHiJQNxloPaBGado/8eDTdeu7twZOJULCU=;
+        b=ekBLXc1XIkqkuJ4wJje8blmRG0Z8JENjpWP6rDCenCbezc2mD0voMdbZJ2fDHYj4Oz
+         4slCYAVFjgOELNgc9OZ89XiPShdCz8tIrSE53aXRs6nhxOVYtnXu93w3ry3ANI0DjNCI
+         Pcx5SVY4p2sLn9+y4JHNHvgBwI46Eb4a+XdShxStwXqDm5UbEU5KmYYkK/RMv3LuInhA
+         FHE0agfnSiHBJKkKRO2jg25iesllx3IUyL+3p+4Ez5BD0vez6MlXlQqVgNgnrZx7A8rT
+         oWs/2LYCTwB+NiBimDk//gxjWNrV8UuPFuUwouivahejjxquNOJsGXFy1LUpjt9wTlLs
+         /e/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744256867; x=1744861667;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nl2Sw4bxxEHiJQNxloPaBGado/8eDTdeu7twZOJULCU=;
+        b=La4HbMHVViYYx3tqwWYWge3tQrASE1lIo/19eJHufVsAGKLmZdWGpfQBA+MtuzC4lx
+         jCPWvaLKm/ncLFR1HdlhPVlCr0+QDMQX9kpSk+C11rHhfYn/y7XC+tRtoA7aFf6eT4dw
+         7aL05Y3KgN17NG8NOKjeLfDgj87jxLlC4nX5hdXzbUJs5BFDmRPNLFfmJPIurgKziln+
+         7uzpqeFgzYp+tHd7ZTVKIUUklqF5p2P4hAGCWoYMkygQBz32W5l26c1L/paI+TB80W0D
+         pjogMiepHat3Y3JF0xBCLaX1POsgpoDhZ6dgargh2U/r4pIf3yQViZigL2Fvel8czpvN
+         d5zA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7SP1bcAZiCrSlE3XCtzjamJW3Nfwda19Sh7M6qqke9YgO0uorkQciO6+x4UcjWddAIviW6rIabQ/O@vger.kernel.org, AJvYcCV8QzU1EVa4LySvHqgpOEqFR3emvsJ0PBqETE67cS9qpAdM0QF3L36EQP6Zj+7zRROFUI7MPupbgH1JwTB6@vger.kernel.org, AJvYcCXeb/V/K5rk4HXBlgW+WCZNTdxYuv69aG7VB81QV9/w0liaXJEtiIpwPq4CoJbIiRknhd9AnxpMe7rh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCkMsy4CJW6GmkSWZcmS5OnBzhBCsBrqa3r20g/iiC9bK4uCmO
+	SI+Q2kr+U/p2+wnvVpXeqXh+wR1WlvqA0ea/TbsEYiH3Mu2q4MfY
+X-Gm-Gg: ASbGncui8dzi3SauqbOCyogctD4FjMLeF3gX5enAKVlSHDWhPy2czGT1UBCK9C2PVi/
+	aYwe7/f5s3OtZLWG5/GrS9KmeDU9eg6noEhsJqtWUE5oACGTa15XWgxYNntZmTMUMIvoq4E7GXN
+	eqpTjh8WR2jySEI5XXM9jvU9FC/YqBc7qUHbVn+6hf8/L092fz7Pm2Gp0/9lAK5ps9M0y2Pt11V
+	EOhlSNYDe0Sta4+cH73hBHI1KMux1f2xKryqJDUXL91iyItkHNBEacTGBcWiTWWztRj5hGr/nqX
+	59Duqn+jP2DMM9lp
+X-Google-Smtp-Source: AGHT+IHFC2Rk9C/yn6FcOPV21K6GfuBdCrrACTPvQR733CaBYV/6ZYW0J+2NXRDP1n9a2LO4HgQDkg==
+X-Received: by 2002:a05:620a:2943:b0:7c7:a555:4a11 with SMTP id af79cd13be357-7c7a76c22dcmr202020785a.44.1744256867149;
+        Wed, 09 Apr 2025 20:47:47 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a8942eecsm27221785a.17.2025.04.09.20.47.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 20:47:46 -0700 (PDT)
+Date: Thu, 10 Apr 2025 11:47:07 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Yixun Lan <dlan@gentoo.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Alex Elder <elder@riscstar.com>, Haylen Chu <heylenay@4d2.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Haylen Chu <heylenay@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, spacemit@lists.linux.dev, 
+	Inochi Amaoto <inochiama@outlook.com>, Chen Wang <unicornxdotw@foxmail.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
+Subject: Re: [PATCH v6 3/6] clk: spacemit: Add clock support for SpacemiT K1
+ SoC
+Message-ID: <f7cun6vh6lv7q2qdgba4a55wjv3v2pldl22xnrqxnurj3jlyk7@mvafnye3wv7m>
+References: <20250401172434.6774-1-heylenay@4d2.org>
+ <20250401172434.6774-4-heylenay@4d2.org>
+ <8fe0aaaa-b8e9-45dd-b792-c32be49cca1a@riscstar.com>
+ <20250410003756-GYA19359@gentoo>
+ <dm4lwnplwcxj3t3qx3a3bdxtziowjfoqdy4vrd3ahmzkhejrov@fa5rujatatew>
+ <z27ri5eue43ti6b2te2cbxiow66mtgbnyudoo5cs4quabgbx5r@uipzoxvfoysi>
+ <a8e5adca-8eff-4bbb-a7fa-ce4489b63fa5@riscstar.com>
+ <sl752im2sn5sz6yzc23ctprh3rwryuhgtggsaauxixn3b267ag@6sf5fahu6b5i>
+ <20250410015549-GYA19471@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: scomp - Fix null-pointer deref when freeing
- streams
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-crypto@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-References: <3c239727-6c46-45c2-80e7-d6853427f72c@linux.ibm.com>
- <Z_SkEnIWk8E0mLJf@gondor.apana.org.au>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <Z_SkEnIWk8E0mLJf@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: --Jy6UgJDcCTMr0Pz6LpJt1i3n7gWOXT
-X-Proofpoint-GUID: --Jy6UgJDcCTMr0Pz6LpJt1i3n7gWOXT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 clxscore=1015 malwarescore=0 spamscore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504100024
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410015549-GYA19471@gentoo>
 
-Hi Herbert,
+On Thu, Apr 10, 2025 at 01:55:49AM +0000, Yixun Lan wrote:
+> Hi Inochi,
+> 
+> On 09:20 Thu 10 Apr     , Inochi Amaoto wrote:
+> > On Wed, Apr 09, 2025 at 08:10:53PM -0500, Alex Elder wrote:
+> > > On 4/9/25 7:57 PM, Inochi Amaoto wrote:
+> > > > > > > > diff --git a/drivers/clk/spacemit/Kconfig b/drivers/clk/spacemit/Kconfig
+> > > > > > > > new file mode 100644
+> > > > > > > > index 000000000000..4c4df845b3cb
+> > > > > > > > --- /dev/null
+> > > > > > > > +++ b/drivers/clk/spacemit/Kconfig
+> > > > > > > > @@ -0,0 +1,18 @@
+> > > > > > > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > > > > > > +
+> > > > > > > > +config SPACEMIT_CCU
+> > > > > > > > +	tristate "Clock support for SpacemiT SoCs"
+> > > > > > > I don't know the answer to this, but...  Should this be a Boolean
+> > > > > > > rather than tristate?  Can a SpacemiT K1 SoC function without the
+> > > > > > > clock driver built in to the kernel?
+> > > > > > > 
+> > > > > > I agree to make it a Boolean, we've already made pinctrl driver Boolean
+> > > > > > and pinctrl depend on clk, besides, the SoC is unlikely functional
+> > > > > > without clock built in as it's such critical..
+> > > > > > 
+> > > > > I disagree. The kernel is only for spacemit only, and the pinctrl
+> > > > Sorry for a mistake, this first "only" should be "not".
+> > > 
+> > > This is a general problem.  You can't make a bootable
+> > > SpacemiT kernel unless you define this as built-in (at
+> > > least, that's what Yixun is saying). 
+> > 
+> > Why not putting the module in the initramfs? I have tested
+> > this in quite a lot of boards (Allwinner, rockchip, sophgo,
+> > starfive and etc.), all of them work well.
+> > 
+> it works, but not optimal, why delay clk initialzation at modules load stage?
+> IMO, it brings more overhead for using initramfs..
+> 
+> but there is always tradeoff and bikeshedding..
+> 
+> > > But we'd really rather *only* build it in to the kernel
+> > > for SpacemiT builds. You clearly want to minimize what
+> > > must be built in, but what if this is indeed required?
+> > > What goes in defconfig?
+> > > 
+> > 
+> > As defconfig is more like for a minimum example system. It
+> > is OK to put a y in the defconfig. But for a custom system,
+> > you do give a choice for the builder to remove your module
+> > in non spacemit system.
+> 
+> I get your meaning here to remove/disable at run time stage, while
+> we do provide compile time option, if don't want spacemit system
+> just disable CONFIG_ARCH_SPACEMIT I mentioned, clk/pinctrl will be gone
+> 
 
+I think this is not suitable for the most generic case, Especially
+for distribution kernel. They prefer to set almost everything as
+module, and load necessary module in initramfs, but the thing is as
+you said, it is a tradeoff. So I will wait and see whether there
+is any new voice for it.
 
-On 08/04/25 09:50, Herbert Xu wrote:
-> On Mon, Apr 07, 2025 at 11:49:27PM +0530, Sourabh Jain wrote:
->> [   90.892796] NIP [c000000000845eb0] scomp_free_streams+0x6c/0xe8
->> [   90.892803] LR [c000000000845ee0] scomp_free_streams+0x9c/0xe8
-> Looks like I never tested 842 which curiously does not have a
-> self-test.  Please try this patch:
->
-> ---8<---
-> As the scomp streams are freed when an algorithm is unregistered,
-> it is possible that the algorithm has never been used at all (e.g.,
-> an algorithm that does not have a self-test).  So test whether the
-> streams exist before freeing them.
->
-> Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Fixes: 3d72ad46a23a ("crypto: acomp - Move stream management into scomp layer")
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
->
-> diff --git a/crypto/scompress.c b/crypto/scompress.c
-> index d435d4b24469..f67ce38d203d 100644
-> --- a/crypto/scompress.c
-> +++ b/crypto/scompress.c
-> @@ -111,6 +111,9 @@ static void scomp_free_streams(struct scomp_alg *alg)
->   	struct crypto_acomp_stream __percpu *stream = alg->stream;
->   	int i;
->   
-> +	if (!stream)
-> +		return;
-> +
->   	for_each_possible_cpu(i) {
->   		struct crypto_acomp_stream *ps = per_cpu_ptr(stream, i);
-
-
-The above fix doesn't apply cleanly on next-20250409.
-
-Your changes are part of scomp_free_streams function but this function 
-is not
-their in next-20250409.
-
-
-Also the issue reproducible on next-20250409, here is the backtrace:
-
-5.955234] systemd-shutdown[1]: Syncing /dev/dm-1.
-[   36.014414] systemd-shutdown[1]: Not all DM devices detached, 1 left.
-[   36.014521] systemd-shutdown[1]: Detaching DM devices.
-[   36.014789] systemd-shutdown[1]: Not all DM devices detached, 1 left.
-[   36.014798] systemd-shutdown[1]: Cannot finalize remaining DM 
-devices, continuing.
-[   36.348709] systemd-shutdown[1]: Successfully changed into root pivot.
-[   36.348726] systemd-shutdown[1]: Entering exitrd...
-[   36.369754] dracut Warning: Killing all remaining processes
-dracut Warning: Killing all remaining processes
-[48;1R^[[48;213R[   36.389749] XFS (dm-0): Unmounting Filesystem 
-256d3d13-3884-4ddd-a72e-82e0ebbd9475
-[   36.392895] dracut Warning: Unmounted /oldroot.
-dracut Warning: Unmounted /oldroot.
-[   36.407513] dracut: Disassembling device-mapper devices
-[   36.816091] Removing IBM Power 842 compression device
-[   36.816132] ------------[ cut here ]------------
-[   36.816137] WARNING: CPU: 47 PID: 2725 at kernel/workqueue.c:4205 
-__flush_work+0x74/0x590
-[   36.816150] Modules linked in: bonding tls rfkill ibmveth pseries_rng 
-vmx_crypto sg fuse loop nfnetlink vsock_loopback 
-vmw_vsock_virtio_transport_common vsock xfs sd_mod ibmvscsi 
-scsi_transport_srp pseries_wdt dm_mirror dm_region_hash dm_log dm_mod
-[   36.816180] CPU: 47 UID: 0 PID: 2725 Comm: kexec Not tainted 
-6.15.0-rc1-next-20250409kexec-crypto-fix #19 VOLUNTARY
-[   36.816188] Hardware name: IBM,9080-HEX POWER10 (architected) 
-0x800200 0xf000006 of:IBM,FW1060.00 (NH1060_012) hv:phyp pSeries
-[   36.816195] NIP:  c000000000250384 LR: c00000000025035c CTR: 
-0000000000000000
-[   36.816200] REGS: c00000009e7eb5d0 TRAP: 0700   Not tainted 
-(6.15.0-rc1-next-20250409kexec-crypto-fix)
-[   36.816206] MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE> CR: 
-24088280  XER: 2004000a
-[   36.816217] CFAR: c000000000180724 IRQMASK: 0
-[   36.816217] GPR00: 0000000000000001 c00000009e7eb870 c000000001d58100 
-c00000009e7eb890
-[   36.816217] GPR04: 0000000000000000 0000000000000000 c00000009e7eb8d8 
-0000000000000000
-[   36.816217] GPR08: 0000000000000000 0000000000000001 0000000000000000 
-0000000044088282
-[   36.816217] GPR12: c00000000093c840 c0000003fdd81880 0000000000000000 
-0000000000000000
-[   36.816217] GPR16: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[   36.816217] GPR20: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[   36.816217] GPR24: 0000000000000000 0000000000000000 0000000000000000 
-c0000000030365f8
-[   36.816217] GPR28: 0000000000000001 c000000002c06898 c000000002cca628 
-c000000002cca628
-[   36.816266] NIP [c000000000250384] __flush_work+0x74/0x590
-[   36.816272] LR [c00000000025035c] __flush_work+0x4c/0x590
-[   36.816276] Call Trace:
-[   36.816279] [c00000009e7eb870] [c00000000024e694] 
-__cancel_work+0xa4/0x180 (unreliable)
-[   36.816286] [c00000009e7eb910] [c000000000251664] 
-cancel_work_sync+0xa4/0xe0
-[   36.816292] [c00000009e7eb940] [c00000000093af84] 
-crypto_acomp_free_streams+0x44/0x120
-[   36.816300] [c00000009e7eb990] [c00000000093c860] 
-crypto_scomp_destroy+0x20/0x40
-[   36.816306] [c00000009e7eb9b0] [c0000000009284a4] 
-crypto_unregister_alg+0xf4/0x160
-[   36.816314] [c00000009e7eba50] [c00000000093ca10] 
-crypto_unregister_scomp+0x20/0x40
-[   36.816320] [c00000009e7eba70] [c000000000e375b8] nx842_remove+0x8c/0x114
-[   36.816328] [c00000009e7ebaf0] [c0000000001d3db0] 
-vio_bus_remove+0x50/0xc0
-[   36.816334] [c00000009e7ebb20] [c000000000c6bf4c] 
-device_shutdown+0x21c/0x39c
-[   36.816342] [c00000009e7ebbb0] [c0000000002657b0] 
-kernel_restart_prepare+0x50/0x70
-[   36.816349] [c00000009e7ebbd0] [c00000000038bf48] kernel_kexec+0xa8/0x110
-[   36.816358] [c00000009e7ebc40] [c000000000265e44] 
-__do_sys_reboot+0x204/0x2d0
-[   36.816364] [c00000009e7ebda0] [c000000000030be8] 
-system_call_exception+0x138/0x2d0
-[   36.816372] [c00000009e7ebe50] [c00000000000cedc] 
-system_call_vectored_common+0x15c/0x2ec
-[   36.816380] --- interrupt: 3000 at 0x7fffb0c99d70
-[   36.816389] NIP:  00007fffb0c99d70 LR: 00007fffb0c99d70 CTR: 
-0000000000000000
-[   36.816393] REGS: c00000009e7ebe80 TRAP: 3000   Not tainted 
-(6.15.0-rc1-next-20250409kexec-crypto-fix)
-[   36.816398] MSR:  800000000280f033 
-<SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 48022484  XER: 00000000
-[   36.816413] IRQMASK: 0
-[   36.816413] GPR00: 0000000000000058 00007fffe7ba4e50 0000000000100000 
-fffffffffee1dead
-[   36.816413] GPR04: 0000000028121969 0000000045584543 0000000000000000 
-0000000000000003
-[   36.816413] GPR08: 0000000000000004 0000000000000000 0000000000000000 
-0000000000000000
-[   36.816413] GPR12: 0000000000000000 00007fffb0f0b3c0 ffffffffffffffff 
-0000000000000000
-[   36.816413] GPR16: 0000000000000001 0000000000000002 0000000000000001 
-0000000000000001
-[   36.816413] GPR20: 0000000123c8f520 0000000000000000 0000000000000000 
-0000000000000001
-[   36.816413] GPR24: 0000000139a80480 0000000000000003 0000000000000003 
-00007fffe7ba4f20
-[   36.816413] GPR28: 0000000123c6a7b0 0000000123c6a7a8 00007fffb0d818d0 
-0000000139a804a0
-[   36.816460] NIP [00007fffb0c99d70] 0x7fffb0c99d70
-[   36.816464] LR [00007fffb0c99d70] 0x7fffb0c99d70
-[   36.816468] --- interrupt: 3000
-[   36.816471] Code: 39200000 4bf302f1 60000000 3d22010c 8929b344 
-69290001 0b090000 2c090000 408202e0 e95e0018 7d490074 7929d182 
-<0b090000> 2c2a0000 418202c8 fba10088
-[   36.816486] ---[ end trace 0000000000000000 ]---
-[   36.816491] Kernel attempted to read user page (3faee0008) - exploit 
-attempt? (uid: 0)
-[   36.816498] BUG: Unable to handle kernel data access on read at 
-0x3faee0008
-[   36.816503] Faulting instruction address: 0xc00000000093afe0
-[   36.816511] Oops: Kernel access of bad area, sig: 11 [#1]
-[   36.816514] LE PAGE_SIZE=64K MMU=Radix  SMP NR_CPUS=8192 NUMA pSeries
-[   36.816519] Modules linked in: bonding tls rfkill ibmveth pseries_rng 
-vmx_crypto sg fuse loop nfnetlink vsock_loopback 
-vmw_vsock_virtio_transport_common vsock xfs sd_mod ibmvscsi 
-scsi_transport_srp pseries_wdt dm_mirror dm_region_hash dm_log dm_mod
-[   36.816539] CPU: 47 UID: 0 PID: 2725 Comm: kexec Tainted: G        
-W           6.15.0-rc1-next-20250409kexec-crypto-fix #19 VOLUNTARY
-[   36.816546] Tainted: [W]=WARN
-[   36.816549] Hardware name: IBM,9080-HEX POWER10 (architected) 
-0x800200 0xf000006 of:IBM,FW1060.00 (NH1060_012) hv:phyp pSeries
-[   36.816554] NIP:  c00000000093afe0 LR: c00000000093afb4 CTR: 
-0000000000000000
-[   36.816558] REGS: c00000009e7eb6a0 TRAP: 0300   Tainted: G 
-W            (6.15.0-rc1-next-20250409kexec-crypto-fix)
-[   36.816563] MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE> CR: 
-44088280  XER: 2004000a
-[   36.816572] CFAR: c000000000a42b14 DAR: 00000003faee0008 DSISR: 
-40000000 IRQMASK: 0
-[   36.816572] GPR00: c00000000093af84 c00000009e7eb940 c000000001d58100 
-0000000000000000
-[   36.816572] GPR04: 0000000000000080 0000000000000000 0000000000000000 
-ffffffffffffffff
-[   36.816572] GPR08: c0000000017d11d8 00000003faee0000 0000000000000000 
-0000000000008000
-[   36.816572] GPR12: c000000000e37640 c0000003fdd81880 0000000000000000 
-0000000000000000
-[   36.816572] GPR16: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[   36.816572] GPR20: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[   36.816572] GPR24: 0000000000000000 0000000000000000 0000000000000000 
-c0000000017d11d8
-[   36.816572] GPR28: 0000000000000000 c000000000e37640 c000000002d5c0f0 
-0000000000000000
-[   36.816620] NIP [c00000000093afe0] crypto_acomp_free_streams+0xa0/0x120
-[   36.816624] LR [c00000000093afb4] crypto_acomp_free_streams+0x74/0x120
-[   36.816630] Call Trace:
-[   36.816632] [c00000009e7eb940] [c00000000093af84] 
-crypto_acomp_free_streams+0x44/0x120 (unreliable)
-[   36.816638] [c00000009e7eb990] [c00000000093c860] 
-crypto_scomp_destroy+0x20/0x40
-[   36.816644] [c00000009e7eb9b0] [c0000000009284a4] 
-crypto_unregister_alg+0xf4/0x160
-[   36.816650] [c00000009e7eba50] [c00000000093ca10] 
-crypto_unregister_scomp+0x20/0x40
-[   36.816656] [c00000009e7eba70] [c000000000e375b8] nx842_remove+0x8c/0x114
-[   36.816662] [c00000009e7ebaf0] [c0000000001d3db0] 
-vio_bus_remove+0x50/0xc0
-[   36.816667] [c00000009e7ebb20] [c000000000c6bf4c] 
-device_shutdown+0x21c/0x39c
-[   36.816674] [c00000009e7ebbb0] [c0000000002657b0] 
-kernel_restart_prepare+0x50/0x70
-[   36.816680] [c00000009e7ebbd0] [c00000000038bf48] kernel_kexec+0xa8/0x110
-[   36.816685] [c00000009e7ebc40] [c000000000265e44] 
-__do_sys_reboot+0x204/0x2d0
-[   36.816692] [c00000009e7ebda0] [c000000000030be8] 
-system_call_exception+0x138/0x2d0
-[   36.816698] [c00000009e7ebe50] [c00000000000cedc] 
-system_call_vectored_common+0x15c/0x2ec
-[   36.816705] --- interrupt: 3000 at 0x7fffb0c99d70
-[   36.816708] NIP:  00007fffb0c99d70 LR: 00007fffb0c99d70 CTR: 
-0000000000000000
-[   36.816713] REGS: c00000009e7ebe80 TRAP: 3000   Tainted: G 
-W            (6.15.0-rc1-next-20250409kexec-crypto-fix)
-[   36.816719] MSR:  800000000280f033 
-<SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 48022484  XER: 00000000
-[   36.816730] IRQMASK: 0
-[   36.816730] GPR00: 0000000000000058 00007fffe7ba4e50 0000000000100000 
-fffffffffee1dead
-[   36.816730] GPR04: 0000000028121969 0000000045584543 0000000000000000 
-0000000000000003
-[   36.816730] GPR08: 0000000000000004 0000000000000000 0000000000000000 
-0000000000000000
-[   36.816730] GPR12: 0000000000000000 00007fffb0f0b3c0 ffffffffffffffff 
-0000000000000000
-[   36.816730] GPR16: 0000000000000001 0000000000000002 0000000000000001 
-0000000000000001
-[   36.816730] GPR20: 0000000123c8f520 0000000000000000 0000000000000000 
-0000000000000001
-[   36.816730] GPR24: 0000000139a80480 0000000000000003 0000000000000003 
-00007fffe7ba4f20
-[   36.816730] GPR28: 0000000123c6a7b0 0000000123c6a7a8 00007fffb0d818d0 
-0000000139a804a0
-[   36.816776] NIP [00007fffb0c99d70] 0x7fffb0c99d70
-[   36.816780] LR [00007fffb0c99d70] 0x7fffb0c99d70
-[   36.816784] --- interrupt: 3000
-[   36.816786] Code: 48107aa1 60000000 813e0000 7faceb78 7c7f1b78 
-7c6a1ef4 7c091840 4081005c 3d2200ff 39292568 7d29502a 7d29e214 
-<e8690008> 2c230000 41820010 7fa903a6
-[   36.816802] ---[ end trace 0000000000000000 ]---
-[   36.819332] pstore: backend (nvram) writing error (-1)
-[   36.819336]
-[   37.819340] Kernel panic - not syncing: Fatal exce
-
-
-It could be possible that the below commit is causing the conflict:
-
-commit 42d9f6c774790d290c175e8775ce9f1366438098
-Author: Herbert Xu <herbert@gondor.apana.org.au>
-Date:   Wed Mar 19 14:04:52 2025 +0800
-
-     crypto: acomp - Move scomp stream allocation code into acomp
-
-     Move the dynamic stream allocation code into acomp and make it
-     available as a helper for acomp algorithms.
-
-     Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-
-The above commit actually removes the scomp_free_streams function.
-
-Thoughts?
-
-Thanks,
-Sourabh Jain
-
-
-
-
+Regards,
+Inochi
