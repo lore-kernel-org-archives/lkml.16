@@ -1,88 +1,97 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from pv50p00im-ztdg10021201.me.com (pv50p00im-ztdg10021201.me.com [17.58.6.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76F228C5D2
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58F728CF73
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290804; cv=none; b=TfvJcdxDHP/pGfQhKWcYw7nYGcazrkzXZfhPE4xh+hhtENjst2Gd0ZJoyC5stneE8JXjrDmEOYGFRdEuiMmf5EgUMiQMj3cZejo//rIM3GCTtOtleE4rmX0Bgdu4oyphl2Ax4vUVso3jAkQNRjpehyxS8QQ6BT8HiqL2ZhyV5I0=
+	t=1744290809; cv=none; b=oc8cTUGFNIhPSuMz2j76ree/+Pqtj4kn5ooadmFhnHC4QIU4Kjd1YeeuIlzYGaIQZrbG7D7kMonB9UgUBFVVEvsCqby1/10OVkBSxvt7wMhmlu5wzNCo952gJhhF+jbgI1IoRoOiiQDCTJPKgCv3mYa7iJjns8Xduyp0mzP5KTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290804; c=relaxed/simple;
-	bh=sQpFp6z42CdWEfMIAZaPPEwloL/1gzFFXVvDuk7Bii4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QVtb3QFBFqe5J7fVC9pKp5xVZOggojgp86A6DhPM+Zfde93Quh8g+czwL8YKMQKcVk7a+lg/PY60qZCmgpyIqeTUfh4rAasJrOV+YsPUucsLmC0dDt2YxivT3U3bB3AempEoHCC8RapNPGDMrNyFvcZ/sqm0+1O8/7BPhOQyIYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=Z9LUWN6Y; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1744290809; c=relaxed/simple;
+	bh=okLu9SL/4lMTeIKpXctHNzDwBRueDotmZLx2CTvlCYk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=N2OUZahonY1IDoeIhxILbheNjdJLvk8cqXINI0rLXqRdCfGsRm6cYuDghu12yTEBV+sSIJbbTtH31QtJxoIkrgnmQMtAHBMBuWHmQ+e5O+eoCV3kU73JEoVzuzlYIdFtxBTHpE1BIAyxF2UF45uVgVWdXoP2bxjyDiQx1G/lLA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=zp/qk9b+; arc=none smtp.client-ip=17.58.6.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Z9LUWN6Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1744290493;
-	bh=sQpFp6z42CdWEfMIAZaPPEwloL/1gzFFXVvDuk7Bii4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Z9LUWN6YhT48RfpfBUXHDwePN8AJtKEU77s5lNU3VQiOiYj/LvfJQCyFGhWpvyXUx
-	 0Fl4pwqqVSH2rh/LC2Bx/3o2oZ9NRp/3R4F9JhInnJ2D6xk7UVaZHDJ5bfM/6gSb6T
-	 UxyOkhdAE0OcF0Vst6k0PhQmiNvn6dsyr3ul9CJw=
-Received: from localhost.localdomain ([116.148.99.229])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 20B9904D; Thu, 10 Apr 2025 21:08:11 +0800
-X-QQ-mid: xmsmtpt1744290491tq1ifvk0l
-Message-ID: <tencent_4E3BCCDC793A514260932AA16BC5910F400A@qq.com>
-X-QQ-XMAILINFO: OZZSS56D9fAjr6qLxhni7Tm4NW7ja+8BStA3IPchsjk620SZ+EkVmC2c+v4twk
-	 ydL+vji4X0EHr60B6VbWjmX7Fd518Cshy/zeqVle6U7PfPIk0ExOkprebKc8R8Rghi/fH09zF8Ym
-	 94k7yZPYR7W/WcSKwAdxvtAHUNG3CTd1RljmypUV/or3K/GVUjvihI0oNEVBjEVw7UV9REfjQN2/
-	 IFHQdjmtCwfpCNThiwg3vUcCTnfu1Xg3AboPhjT8TcacYAiwNKN7KwyXTBgBVkoeeBGZ/V6kcA6c
-	 KIzQxqMT7pfKMbqJ+sCpaECK6DcrrB0++AIM9ZN4ucewaKK4fWiqpMhrbGe+CYI8wH/cWBMZK01l
-	 yQdgOGtQXmj+/FgqAUvGPCldMpy+9Dpkj2JzKp0hV+gGLLGgjz23nh5E4gNUSzNnedt75a0CU1/u
-	 c68JWRT7fUVLWtTNGqQELZkPaxipkgJAByhDOKXh9L9DT9SzHFZs2C765iEdv6XiQH72t6hAlcWp
-	 X9wAExopLMWyOR/zctVPDc+7svT7oJ6nuvVNCBGg78lo1sIhCbFTb9RGEcg2swGkjcbSyGlZOtlW
-	 XaOnUfjZDQsT3fX0brkG5thNik0R2w7QSQQll7VIXDVZs/EAFnJjxDZx8YiVr5mp3V3z4RJPktoK
-	 BRP2SUjBUc55SD59REEZ67J0sNCG0724Q0Je3mfxd1bjEHPSTu07b7zKptBxyWScHKDnzYKcGm2Y
-	 OibMhO4Zlb6vk728XUtAninYgXUYvypARemgzm5Cs/lCDQTx8ihwNA6r6wOl3N3kl+coT9GjMnnn
-	 gcOCShMe3ZBKWm2Fxmgtq6ckVO75br6TUY9qL9+TMA9D+479RgExd90ZyoRzw0lQQwTitoetZ6qb
-	 Q775ULf9i9OeCTjhu5JxXsPQkcq0MexHNZpLRHyGGbt49JCVcc+jRR8qTaw7qySz/tCr3hzU5L9e
-	 RTJ3bGIH5mjtGBp6oJ557HSeBxKpLf6YQRaOeAi9xuEFr/4vHyrw==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: zhoumin <teczm@foxmail.com>
-To: hirofumi@mail.parknet.co.jp
-Cc: linux-kernel@vger.kernel.org,
-	teczm@foxmail.com
-Subject: Re: [PATCH] fat: Optimized FAT bad char check
-Date: Thu, 10 Apr 2025 21:07:12 +0800
-X-OQ-MSGID: <20250410130716.879542-1-teczm@foxmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <87ecy16ub9.fsf@mail.parknet.co.jp>
-References: <87ecy16ub9.fsf@mail.parknet.co.jp>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="zp/qk9b+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=qfdOmA929ss2VBH4r6vggvOMo5WDgflLngWiJ/B/VDc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=zp/qk9b+gAlI9uglZmYGId+sDOzg7rm0wVQoF8IHXmdb/dA37v5yRRpiwwluXpJ70
+	 6jLoI2Z/cDNDSMFNVF8XceDWwti2XsxK3FBtndVXBtoDz9bEDgFLblG296pMF9FFab
+	 NkHTLO0m44wLRoOq/R++j5wwCzRQ7/sBSXNKobf8KptYj4dnV4Z7JTcoBDXZorD/5d
+	 1KKf4v5rGhY+cpcYPYFd/AEojC++wfKfxuZ6yzf0eAl3WrushcOy/p8AbM4vVVJI+O
+	 7qyLi5GogdR8FR/XPIkdm73gMwnxY5fYkZTYrOWJ73D0ztXc1HlnpZZL8ZWgVAWJNd
+	 pXNK2ssPwP8vg==
+Received: from pv50p00im-ztdg10021201.me.com (pv50p00im-ztdg10021201.me.com [17.58.6.45])
+	by pv50p00im-ztdg10021201.me.com (Postfix) with ESMTPS id D57693118B10;
+	Thu, 10 Apr 2025 13:13:20 +0000 (UTC)
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10021201.me.com (Postfix) with ESMTPSA id DC70131189B2;
+	Thu, 10 Apr 2025 13:12:35 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Thu, 10 Apr 2025 21:12:11 +0800
+Subject: [PATCH 1/2] software node: Add comment for the first ERR_CAST() in
+ fwnode_create_software_node()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250410-fix_swnode-v1-1-081c95cf7cf9@quicinc.com>
+References: <20250410-fix_swnode-v1-0-081c95cf7cf9@quicinc.com>
+In-Reply-To: <20250410-fix_swnode-v1-0-081c95cf7cf9@quicinc.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Daniel Scally <djrscally@gmail.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-acpi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: i4J2DPP0jL0OOZ85ev1LH7eB3JN1ce_G
+X-Proofpoint-ORIG-GUID: i4J2DPP0jL0OOZ85ev1LH7eB3JN1ce_G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_03,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 phishscore=0 clxscore=1015 suspectscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2504100096
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Hi Hirofumi
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-> Why do you need this change?
+ERR_CAST() is normally used to cast an error-valued pointer type to
+another different type, But the first ERR_CAST() is to cast away the
+const in fwnode_create_software_node().
 
-I encountered an issue while working on our own bootloader. The problem
-occurs when short file names start with `0`. In this case, our bootloader
-mistakenly interprets it as the end of the directory entry, causing all
-subsequent files in the directory to become invisible.
+Add comment for this unusual ERR_CAST() usage.
 
-While comparing our bootloader with the kernel, I found this bad char check
-function. Treating the `0x05` deleted flag as a bad character may
-potentially disrupt the parsing chain for subsequent files.
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+ drivers/base/swnode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-In my opinion, adding this judgment aligns with the spec and should not
-introduce any negative side effects, even though I haven’t encountered this
-situation in practice.
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index b1726a3515f6fbe13c2186af1f74479263798e42..67040fff99b02c43999b175c2ba7e6d04322a446 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -933,6 +933,7 @@ fwnode_create_software_node(const struct property_entry *properties,
+ 	struct software_node *node;
+ 	struct swnode *p;
+ 
++	/* Only cast away the const by ERR_CAST() */
+ 	if (IS_ERR(parent))
+ 		return ERR_CAST(parent);
+ 
 
-This is the rationale behind this commit, and I would appreciate hearing
-your feedback on it.
-
-Thanks,
-
-zhoumin
+-- 
+2.34.1
 
