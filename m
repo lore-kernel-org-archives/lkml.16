@@ -1,139 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B203220B819;
-	Thu, 10 Apr 2025 07:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F85205AA5;
+	Thu, 10 Apr 2025 07:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269801; cv=none; b=f6p4GB3b0fwYIFXGhQJYufMccdyLPcOcnmJzeDuiy9/Mq5lBLrDpVcFkp1WrU/901GjCefAGxsXme5qK5+AqIW0+GQ5/OrdLojF8nwjO8/Wi6Q/D6TsP3TToaodr0zQXwFpscY5iQljizuDsQCWBv8w3eHuEk+/LpMztSJGp59s=
+	t=1744269843; cv=none; b=NhHkaeejZwTYTJeBQtZu27BIdkQEdyVs+DLGqd9LLTh/yAcNXFDwLxQ50BgPvJV2pKnsIaffg33ev6hjZWULSM+OsTjrq8KNSul4EhWHoqj5uvY6dIsy5e2mCpt9C7M4NM031wGrxwkYb6gYLhoBhyOU6oGlapQ4Wl0UxSW1aTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269801; c=relaxed/simple;
-	bh=pgPaGfdMAcLGht6GtgzTu7mpWhBpyFIPuLeMl1fltug=;
+	s=arc-20240116; t=1744269843; c=relaxed/simple;
+	bh=7sEd3Ffa5a1RVgJPuCxl22V8hW6GtHda8gxp+9Ug0ag=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tl+5LRamAqRUZrfET9GXi3mxZWD+6bOHoBeGnwCcMVc6wjwRHk10dG+MCmxeQ86GlW+BH+/umzodwTCnW5xYCoU/CSn1IKa7UskWGXz+QskmbmkxxWSUocypvGBlBiYHCC419/g8F3WulmYQ80FgCKrs3Cg2zxczKZcXlgU1sa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHLwIe/8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHLwIe/8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF78C4CEDD;
-	Thu, 10 Apr 2025 07:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744269801;
-	bh=pgPaGfdMAcLGht6GtgzTu7mpWhBpyFIPuLeMl1fltug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EHLwIe/8o7C43t3oFomCRXYTP5PnnDIjMva4j6gHEd4HpvZKZJXBczjkv3nuHmpYS
-	 V5leEjkS7hTyA1/jeRaVpj+oGT/OerV0Z4oZyzz19Bk051vdCDjFX2wcMvCryyg8Df
-	 3M0FHHZbyQCE9nFkbgKwh5cJ9TyHX0me19edDZyM1gduL134vIGesliZoeOSLOHNpX
-	 se2xwQtnhicpnAEsFJ19PCiZ0/nuQRQOLktdxf/kS36rR//1E0Tm1wQP8hI5URclmR
-	 Qm7HyLBNuiWP8GZ6/3/Y57jKoqnmI8tfRYAFe1LlRl4mkP4gVh0yj+fAdvCjQEo85/
-	 89o2nINIlqH8g==
-Date: Thu, 10 Apr 2025 09:23:18 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Antoni Pokusinski <apokusinski01@gmail.com>
-Cc: alexandre.belloni@bootlin.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	robh@kernel.org, alexander.stein@ew.tq-group.com, linux-rtc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: rtc: pcf85063: add binding for RV8063
-Message-ID: <20250410-enchanted-uber-finch-c60afb@shite>
-References: <20250409170916.47224-1-apokusinski01@gmail.com>
- <20250409170916.47224-4-apokusinski01@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fE9WkfmXjm/rX/uOobNndroCgjJzaZgyyJCACxgntUlaqPN1nI0/XVqI4QWu2iG/qpACuH6/yh3UtItQ3yBLK1KBtEkmLTVwfl7H+m5py+ejPYzwTeE9Us8KpbZWiluzMkvIP4kBrj0MWL1LJp3fjmrH+1c5uyLEc0FvEfS+OKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 7F56568C4E; Thu, 10 Apr 2025 09:23:54 +0200 (CEST)
+Date: Thu, 10 Apr 2025 09:23:54 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Roman Kisel <romank@linux.microsoft.com>,
+	Robin Murphy <robin.murphy@arm.com>, aleksander.lobakin@intel.com,
+	andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+	catalin.marinas@arm.com, corbet@lwn.net, dakr@kernel.org,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	gregkh@linuxfoundation.org, haiyangz@microsoft.com, hch@lst.de,
+	hpa@zytor.com, James.Bottomley@hansenpartnership.com,
+	Jonathan.Cameron@huawei.com, kys@microsoft.com, leon@kernel.org,
+	lukas@wunner.de, luto@kernel.org, m.szyprowski@samsung.com,
+	martin.petersen@oracle.com, mingo@redhat.com, peterz@infradead.org,
+	quic_zijuhu@quicinc.com, tglx@linutronix.de, wei.liu@kernel.org,
+	will@kernel.org, iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, bperkins@microsoft.com,
+	sunilmut@microsoft.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
+	linux-coco@lists.linux.dev
+Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct
+ bitfield to not bounce-buffer
+Message-ID: <20250410072354.GB32563@lst.de>
+References: <20250409000835.285105-1-romank@linux.microsoft.com> <20250409000835.285105-6-romank@linux.microsoft.com> <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com> <0ab2849a-5c03-4a8c-891e-3cb89b20b0e4@linux.microsoft.com> <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409170916.47224-4-apokusinski01@gmail.com>
+In-Reply-To: <67f703099f124_71fe2949e@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Apr 09, 2025 at 07:09:16PM GMT, Antoni Pokusinski wrote:
-> Microcrystal RV8063 is a real-time clock module with SPI interface.
+On Wed, Apr 09, 2025 at 04:30:17PM -0700, Dan Williams wrote:
+> > Thanks, I should've highlighted that facet most certainly!
 > 
-> Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
-> ---
->  .../devicetree/bindings/rtc/nxp,pcf85063.yaml | 33 ++++++++++++++++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
-> index 2f892f8640d1..cb31c7619d66 100644
-> --- a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
-> @@ -12,6 +12,7 @@ maintainers:
->  properties:
->    compatible:
->      enum:
-> +      - microcrystal,rv8063
+> One would hope that no one is building a modern device with trusted I/O
+> capability, *and* with a swiotlb addressing dependency. However, I agree
+> that a non-shared swiotlb would be needed in such a scenario.
 
-Bindings are before the users, so this cannot be patch 3/3.
+Hope is never a good idea when dealing with hardware :(  PCIe already
+requires no addressing limitations, and programming interface specs
+like NVMe double down on that.  But at least one big hyperscaler still
+managed to build such a device.
 
->        - microcrystal,rv8263
->        - nxp,pcf85063
->        - nxp,pcf85063a
-> @@ -44,7 +45,12 @@ properties:
->  
->    wakeup-source: true
->  
-> +  spi-cs-high: true
-> +
-> +  spi-3wire: true
-> +
->  allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
->    - $ref: rtc.yaml#
->    - if:
->        properties:
-> @@ -52,6 +58,7 @@ allOf:
->            contains:
->              enum:
->                - microcrystal,rv8263
-> +              - microcrystal,rv8063
-
-Keep the order.
-
->      then:
->        properties:
->          quartz-load-femtofarads: false
-> @@ -65,12 +72,23 @@ allOf:
->        properties:
->          quartz-load-femtofarads:
->            const: 7000
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          not:
-> +            contains:
-> +              enum:
-> +                - microcrystal,rv8063
-> +    then:
-> +      properties:
-> +        spi-cs-high: false
-> +        spi-3wire: false
->  
->  required:
->    - compatible
->    - reg
->  
-> -additionalProperties: false
-> +unevaluatedProperties: false
->  
->  examples:
->    - |
-> @@ -90,3 +108,16 @@ examples:
->            };
->          };
->        };
-> +
-> +  - |
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        rtc@0 {
-> +          compatible = "microcrystal,rv8063";
-
-Messed indentation. Look at rest of the examples here and use the same
-indentation.
-
-Best regards,
-Krzysztof
+Also even if the periphal device is not addressing limited, the root
+port or interconnect might still be, we've seen quite a lot of that.
 
