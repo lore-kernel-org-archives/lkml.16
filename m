@@ -1,140 +1,105 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D379285414;
-	Thu, 10 Apr 2025 12:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33BF1DDC0F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744288598; cv=none; b=FxZT1Hly8M6CdcYH4qKtaWveBsMRS5drywXcn6Bi1ag0ZzTX5lJkCR1A5u0Y7Bn+jwbAplcJYwxX3kHAEQ17dDdCkjAatjtuxzQEd+9Kgg8VX5iRx90aisw1tzM7xmVDEmJrGN8RxEMxfvbDTf+0PwV6YcKOLmzrH4swJSo62e0=
+	t=1744288620; cv=none; b=pC7SNz/O19J3gNjJRX9Bu0cUGT/0VlLYqM3uUb5TBPjXQMH3fDPVfCK0PgefFPD31c4IscZC+GaD+MykHLzAbREwwrs7+VG+u5Hb2gLQV3SYRYOJ2S5Q7b8ZkdiDV+vIvhHJf6HQj7MIIvp/0jS0gV8YyayggRiDQN6qqQGephc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744288598; c=relaxed/simple;
-	bh=Axve0jiGvbbIsMkn4WSCs6R1ZOyKIjneErr6ing8AQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCafNkqpofQehk3LB2N5k06Iar/KnZjNS465N5xmMM9XKLR4wqR9fwooGWnAqu23zRUpagTrjptytnqARri3P2pfsYM7P4XhjL8kAZqgxo/8bl9akPWKpqiWGhZ0nWExXufpWaVMxKvyx8VLLpFOB73WupdsLtB1568nYw4TAbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=wEi6qI4w; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744288620; c=relaxed/simple;
+	bh=eRw8R3KbTCkQg55gW5KaTF5WRDaiRFdjGb3BWucvEJk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=mnguH8qYBcgokLl+nUZZbNahi1eWDkI4vgMCAKgSEru0FMs1LGWPjHy3KClRMeymvbH6/FGCQdYnRK+0lmFpnoARUNAGocFSobmQ+p/uQSka7/WIJeAn4/nbz1T079/rjNW5nHnhqBNmt2nugTQPxleVRKKvByvghG9b+ed8A6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a48u9H9W; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wEi6qI4w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=5oq1WjVLXQxQtBKLB02vbt6Nr9HYhm9Q4TxypjuqpOM=; b=wEi6qI4wn7j/qN+3YBFE6U6Wm5
-	aqKQ/4N7St+Nowbxk6Huipm6SpBcEzxCcGTVfhnZMW0zxtzKSUpgit8BsSmDzDdR/JYFugTwZpBhj
-	u2xNHgTYehH5XbkQzRnBPQRnUQ316oMyXcTg7eGSEWDY0Als90166bWyvCpZP3uicWqE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2r8s-008gA9-Nb; Thu, 10 Apr 2025 14:36:26 +0200
-Date: Thu, 10 Apr 2025 14:36:26 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] net: add debugfs files for showing netns refcount
- tracking info
-Message-ID: <1e717326-8551-419e-b185-5cfb20573b4f@lunn.ch>
-References: <20250408-netns-debugfs-v2-0-ca267f51461e@kernel.org>
- <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a48u9H9W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744288619; x=1775824619;
+  h=date:from:to:cc:subject:message-id;
+  bh=eRw8R3KbTCkQg55gW5KaTF5WRDaiRFdjGb3BWucvEJk=;
+  b=a48u9H9WRz2lQUPfqD9KQ2MSJuA1Crtx6+lPaar+Ex4Ql9GNA2y/ZscX
+   AW8ivZGEUtMJCMJWjtv43IxGwJsIBKwtA9yKBkyC6v7MP4lYm40lnBFIm
+   1zj7tzpOYGIxSV1GEbxf4QiFTIpN13MXn8ziud6+YRChMEIXRq8Lj4IGc
+   jqyfpvJLrjFxWJbs6o7hQPoCOzk8a/htIdXryrweqz8ua4VqGBBxPzzC6
+   BNhaZHOFp8YzdxytsXi/+dZgIXOnd+flVAH7QkQX4WzzpZl/16p/JBgzB
+   Y/Tg44xjEauFV87lnRqcSM8QLMAx3KoQfrb0hTc6dgbiGKRjCdwYzODTp
+   g==;
+X-CSE-ConnectionGUID: BosOShQKQHa63jr1rj02ng==
+X-CSE-MsgGUID: nh2BYLbsTSilQVw4dyT5wQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45694616"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="45694616"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 05:36:58 -0700
+X-CSE-ConnectionGUID: OhDLvryMSPWMewHz+BWn+w==
+X-CSE-MsgGUID: s4q5i8AJQreC7uCXyFZGBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="133865888"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 10 Apr 2025 05:36:57 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u2r9K-000A3j-1Y;
+	Thu, 10 Apr 2025 12:36:54 +0000
+Date: Thu, 10 Apr 2025 20:36:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:perf/core] BUILD SUCCESS
+ 1734d98fbcce343eafba16e18e3a3001b3e94ab5
+Message-ID: <202504102049.zFROWVsJ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
 
-On Tue, Apr 08, 2025 at 09:36:38AM -0400, Jeff Layton wrote:
-> CONFIG_NET_NS_REFCNT_TRACKER currently has no convenient way to display
-> its tracking info. Add a new net_ns directory under the debugfs
-> ref_tracker directory. Create a directory in there for every netns, with
-> refcnt and notrefcnt files that show the currently tracked active and
-> passive references.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+branch HEAD: 1734d98fbcce343eafba16e18e3a3001b3e94ab5  perf/arch: Record sample last_period before updating on the x86 and PowerPC platforms
 
-I think most if not all of this should be moved into the tracker
-sources, there is very little which is netdev specific. 
+elapsed time: 1467m
 
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  net/core/net_namespace.c | 151 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 151 insertions(+)
-> 
-> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-> index 4303f2a4926243e2c0ff0c0387383cd8e0658019..7e9dc487f46d656ee4ae3d6d18d35bb2aba2b176 100644
-> --- a/net/core/net_namespace.c
-> +++ b/net/core/net_namespace.c
-> @@ -1512,3 +1512,154 @@ const struct proc_ns_operations netns_operations = {
->  	.owner		= netns_owner,
->  };
->  #endif
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
-> +
-> +#include <linux/debugfs.h>
-> +
-> +static struct dentry *ns_ref_tracker_dir;
-> +static unsigned int ns_debug_net_id;
-> +
-> +struct ns_debug_net {
-> +	struct dentry *netdir;
-> +	struct dentry *refcnt;
-> +	struct dentry *notrefcnt;
-> +};
-> +
-> +#define MAX_NS_DEBUG_BUFSIZE	(32 * PAGE_SIZE)
-> +
-> +static int
-> +ns_debug_tracker_show(struct seq_file *f, void *v)
-> +{
-> +	struct ref_tracker_dir *tracker = f->private;
-> +	int len, bufsize = PAGE_SIZE;
-> +	char *buf;
-> +
-> +	for (;;) {
-> +		buf = kvmalloc(bufsize, GFP_KERNEL);
-> +		if (!buf)
-> +			return -ENOMEM;
-> +
-> +		len = ref_tracker_dir_snprint(tracker, buf, bufsize);
-> +		if (len < bufsize)
-> +			break;
-> +
-> +		kvfree(buf);
-> +		bufsize *= 2;
-> +		if (bufsize > MAX_NS_DEBUG_BUFSIZE)
-> +			return -ENOBUFS;
+configs tested: 28
+configs skipped: 100
 
-Maybe consider storing bufsize between calls to dump the tracker? I
-guess you then have about the correct size for most calls, and from
-looking at len, you can decide to downsize it if needed.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +static int
-> +ns_debug_init_net(struct net *net)
-> +{
-> +	struct ns_debug_net *dnet = net_generic(net, ns_debug_net_id);
-> +	char name[11]; /* 10 decimal digits + NULL term */
-> +	int len;
-> +
-> +	len = snprintf(name, sizeof(name), "%u", net->ns.inum);
-> +	if (len >= sizeof(name))
-> +		return -EOVERFLOW;
-> +
-> +	dnet->netdir = debugfs_create_dir(name, ns_ref_tracker_dir);
-> +	if (IS_ERR(dnet->netdir))
-> +		return PTR_ERR(dnet->netdir);
+tested configs:
+i386                            allmodconfig    gcc-12
+i386                             allnoconfig    gcc-12
+i386                            allyesconfig    gcc-12
+i386       buildonly-randconfig-001-20250409    gcc-12
+i386       buildonly-randconfig-002-20250409    clang-20
+i386       buildonly-randconfig-003-20250409    gcc-11
+i386       buildonly-randconfig-004-20250409    clang-20
+i386       buildonly-randconfig-005-20250409    gcc-12
+i386       buildonly-randconfig-006-20250409    gcc-12
+i386                               defconfig    clang-20
+powerpc                         allmodconfig    gcc-14.2.0
+powerpc                          allnoconfig    gcc-14.2.0
+powerpc                         allyesconfig    clang-21
+powerpc              randconfig-001-20250409    gcc-6.5.0
+powerpc              randconfig-002-20250409    clang-21
+powerpc              randconfig-003-20250409    clang-21
+powerpc64            randconfig-001-20250409    clang-21
+powerpc64            randconfig-002-20250409    gcc-8.5.0
+powerpc64            randconfig-003-20250409    clang-21
+x86_64                           allnoconfig    clang-20
+x86_64                          allyesconfig    clang-20
+x86_64     buildonly-randconfig-001-20250409    clang-20
+x86_64     buildonly-randconfig-002-20250409    gcc-12
+x86_64     buildonly-randconfig-003-20250409    clang-20
+x86_64     buildonly-randconfig-004-20250409    clang-20
+x86_64     buildonly-randconfig-005-20250409    gcc-12
+x86_64     buildonly-randconfig-006-20250409    gcc-12
+x86_64                             defconfig    gcc-11
 
-As i pointed out before, the tracker already has a name. Is that name
-useless? Not specific enough? Rather than having two names, maybe
-change the name to make it useful. Once it has a usable name, you
-should be able to push more code into the core.
-
-       Andrew
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
