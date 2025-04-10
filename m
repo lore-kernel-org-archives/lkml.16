@@ -1,135 +1,96 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8AA2857E0
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7155926ACB;
+	Thu, 10 Apr 2025 13:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293199; cv=none; b=ti2aOwKRvGlF6jYoLvynDTI6BDCstW1NT/Ufatt6zbb49p1lsvYHByz+dCO9uj9SG17vtynnAAbZRyshfV+5NA46077Tcd50+WkfvPCUj1fojErczJ88OByoe16lVlmDeMkcg/aO69L/o3v1eRpPm0NbliydnWTu1lWLOUcUVBk=
+	t=1744293282; cv=none; b=haUyeclDmkSNyElVTA5kIDN9Z/+p8AuyYEvDYywxNSfNbEEOTK9T/7ONaE00vwPnQOB5qG2Vdm3HMyjaf/lgrVNpRpF3oO62FXLcCkD7YnApZ5y/AyN4n7AjjA8zxlCJM0Et0uySRzdo8C4u+4f0ObrCk0ZuM2LIPQ7bWJgHUwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293199; c=relaxed/simple;
-	bh=6EzNCLAlf1iloxVtrXjGElQcW7269jazRrghVzl9gM8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EsQEXUBhQR/AOFm9681j12kHWKAoV8y/2+FZqLb48PH6WcaBs0e15wayWRuR+5TmoT9EWTjEn0pT35+EOoQWjm2+R6hMKhACyH2zt7bpUuGQucaHkATGRidNF/rRUfJ+tb4jpsX33X85N0pP+txkWxLHTFcwYUvqb088VA7TtLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HDd0cqKH; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1744293282; c=relaxed/simple;
+	bh=0BHiwyArAddm4WmiLsfxlRbh5XvgJyYfVdLc0zk00U4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sg2cF8m864i9zGp+o+jMhK0CvBN7LOs02/Xw5tV79fJoexfkyfTUpbqv/SGBH/Rr5eNK2iUJDvt7tw/VXvcLBAhJQ3nbZfFFzbB7+BIGSGEWRx6W6rudrIe3O0Kjn78z05kN4tf6ZeGYFWQ43xFdq6lpcBFDff3v2zwKlb6J7xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhCWxzkk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDd0cqKH"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8340d547so793406a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744293196; x=1744897996; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4wxcHUnCCezh6nWr6RFH2iv1Y8IeCzojzwMbdNb4Do=;
-        b=HDd0cqKHGtPrIPrD3zaBYMCfjaq0/jDRlkSiDB73JzjB0UBHODNk9a3ToIcIcWqe7W
-         fv0+pYJUjE9TAiXXhDVSySGegZUoKXhfjljrlVuSruuOJc0pq6kffB7El9RfXwtMDP7J
-         gf2MRN5X1xzPMUmrWBNH7tiTsdhbj7wIHRtFnLu9CInE5QZnyAh4z8INRoxpeG+tkMjV
-         QsrMN45AKpwqQazIHPuCshcCx4XBDQ/mmxOdtRRas9iE38FKpeRMGEXel6aFCd/91cMh
-         UU6Yz70trLPM9SMB/Tnr5+AyDoxot2o9cxPh9zdjUXBd5lyBi8XTScMlfCH24mC8ZLiu
-         Kv9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744293196; x=1744897996;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4wxcHUnCCezh6nWr6RFH2iv1Y8IeCzojzwMbdNb4Do=;
-        b=dziRq1SJHciEeDEjPiWUwlhEqnFQIza9lhNbwlVsKHsIolh5N565W7SW7pPMoI9+Ys
-         PvkF6DzpDCNxwSyW0q/YEMgjIsM18q4W5awx2BF6JCz0QnNLXjj2E28kAQUMnKZBFgu+
-         dySBPRVyb+GMZAtVI92lJuqxYefKwUwPbgJPe01jYraf661CoyZ/dUxvrWHTiibXMTjg
-         yuJnhUeZucCPusxn6LHRRjHMB07hau/3IEQoxwDNNrYX69UCWyDfjdvf8LXAAYMkJKHx
-         ZAupnpZXclsKA9yYsM+V37vD95OvmvX2GauzJQSIEajneRMHlznUlCwxpcdUAhtk5TrS
-         9zqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwB2+RyP5aS/9iZCXEcAAZ0Cxbg0DvEXNEDEmPIHHUSEnqD6E1iffSRFAF84Ta7jax2PBLkEtp+ONGY2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUMdDEKplHjsdrEDpDZhzTg4JD+NXwr92ofDXbPoCNZtO/wQeM
-	+ZeAMUkaSX0cxFPa33e10WreQE9G5XLzoniGUlBEn/pc1B64NpO3A1nwQBPmzaSvIptFXHg89xd
-	klkj6hQubMngnnkyqNpAYfA==
-X-Google-Smtp-Source: AGHT+IGEOFVmeMKiNYyGdVgVnjUwRuQMOBh3p67Kck++ZyIayxkYnmKh+TTYDv35m8GZuGIZaSBy6hjI9GDfCfcztg==
-X-Received: from pjbtb11.prod.google.com ([2002:a17:90b:53cb:b0:301:1ea9:63b0])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90a:d2ce:b0:2ee:f440:53ed with SMTP id 98e67ed59e1d1-3072ba1f6e0mr4252531a91.31.1744293196650;
- Thu, 10 Apr 2025 06:53:16 -0700 (PDT)
-Date: Thu, 10 Apr 2025 06:53:15 -0700
-In-Reply-To: <Z_eEfjrkspAt4ACP@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhCWxzkk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7424C4CEDD;
+	Thu, 10 Apr 2025 13:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744293281;
+	bh=0BHiwyArAddm4WmiLsfxlRbh5XvgJyYfVdLc0zk00U4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mhCWxzkkNE3wgzAzo0c/mGLjkRg4fpfhNZb6+tU04MYGHVoXR62NBFI9nPdivRv72
+	 uB+6Uti6vX1klTxXcgEXJnbruKyvwtXAJNP6h5YR9XEgtN/047lyCyqmGh5KP3uz85
+	 lv+FbPJnVg0GvzPfr58MIrwNgM17jOOrkyqOgxUisvLllDzH6xcgZKrq/Fs6BIUmBg
+	 RV48LGZHxV77dU1eQTMqT18MMhuCGYG69qq97IeiNisvUtsdAA+qCD+4YCjNM+OS1q
+	 y08n3PinwYkKKKk8aJNhKSeIj5inube0I5ILcDPMM2G86a91bEYlXHZdzO/slZ4IN0
+	 O01kRlwdTKVCA==
+Date: Thu, 10 Apr 2025 16:54:34 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Konstantin Taranov <kotaranov@microsoft.com>
+Cc: Konstantin Taranov <kotaranov@linux.microsoft.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Long Li <longli@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH rdma-next 1/3] RDMA/mana_ib: Access remote
+ atomic for MRs
+Message-ID: <20250410135434.GT199604@unreal>
+References: <1743777955-2316-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1743777955-2316-2-git-send-email-kotaranov@linux.microsoft.com>
+ <20250409122852.GL199604@unreal>
+ <PA1PR83MB0662535F57D8F09C1C99DDDAB4B72@PA1PR83MB0662.EURPRD83.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250408112402.181574-1-shivankg@amd.com> <20250408112402.181574-6-shivankg@amd.com>
- <Z_eEfjrkspAt4ACP@infradead.org>
-Message-ID: <diqz4iyw5dis.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [PATCH RFC v7 5/8] KVM: guest_memfd: Make guest mem use guest mem
- inodes instead of anonymous inodes
-From: Ackerley Tng <ackerleytng@google.com>
-To: Christoph Hellwig <hch@infradead.org>, Shivank Garg <shivankg@amd.com>
-Cc: seanjc@google.com, david@redhat.com, vbabka@suse.cz, willy@infradead.org, 
-	akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com, 
-	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, 
-	bfoster@redhat.com, tabba@google.com, vannapurve@google.com, 
-	chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com, 
-	yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, 
-	michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com, 
-	peterx@redhat.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PA1PR83MB0662535F57D8F09C1C99DDDAB4B72@PA1PR83MB0662.EURPRD83.prod.outlook.com>
 
-Christoph Hellwig <hch@infradead.org> writes:
+On Thu, Apr 10, 2025 at 01:37:00PM +0000, Konstantin Taranov wrote:
+> > > @@ -24,6 +24,9 @@ mana_ib_verbs_to_gdma_access_flags(int
+> > access_flags)
+> > >  	if (access_flags & IB_ACCESS_REMOTE_READ)
+> > >  		flags |= GDMA_ACCESS_FLAG_REMOTE_READ;
+> > >
+> > > +	if (access_flags & IB_ACCESS_REMOTE_ATOMIC)
+> > > +		flags |= GDMA_ACCESS_FLAG_REMOTE_ATOMIC;
+> > 
+> > Can you enable this flag unconditionally without relation to running RW?
+> 
+> Yes, ATOMIC access does not depend on Remote Read and Remote Write.
 
-> On Tue, Apr 08, 2025 at 11:23:59AM +0000, Shivank Garg wrote:
->> From: Ackerley Tng <ackerleytng@google.com>
->> 
->> Using guest mem inodes allows us to store metadata for the backing
->> memory on the inode. Metadata will be added in a later patch to support
->> HugeTLB pages.
->> 
->> Metadata about backing memory should not be stored on the file, since
->> the file represents a guest_memfd's binding with a struct kvm, and
->> metadata about backing memory is not unique to a specific binding and
->> struct kvm.
->> 
->> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->> Signed-off-by: Fuad Tabba <tabba@google.com>
->> Signed-off-by: Shivank Garg <shivankg@amd.com>
->> ---
->>  include/uapi/linux/magic.h |   1 +
->>  virt/kvm/guest_memfd.c     | 133 +++++++++++++++++++++++++++++++------
->>  2 files changed, 113 insertions(+), 21 deletions(-)
->> 
->> <snip>
->>  
->> +static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->> +						      loff_t size, u64 flags)
->> +{
->> +	const struct qstr qname = QSTR_INIT(name, strlen(name));
->> +	struct inode *inode;
->> +	int err;
->> +
->> +	inode = alloc_anon_inode(kvm_gmem_mnt->mnt_sb);
->> +	if (IS_ERR(inode))
->> +		return inode;
->> +
->> +	err = security_inode_init_security_anon(inode, &qname, NULL);
->> +	if (err) {
->> +		iput(inode);
->> +		return ERR_PTR(err);
->> +	}
->
-> So why do other alloc_anon_inode callers not need
-> security_inode_init_security_anon?
+The question is "do you have FW which doesn't support
+GDMA_ACCESS_FLAG_REMOTE_ATOMIC? and what will happen if such flag used
+for such FW?"
 
-Thanks for this tip!
+> I also do not see any conditions in other drivers.
 
-When I did this refactoring, I was just refactoring
-anon_inode_create_getfile(), to set up the guest_memfd inode and file in
-separate stages, and anon_inode_create_getfile() was already using
-security_inode_init_security_anon().
+At least for mlx5, we are checking FW capability if it is supported.
+See get_unchangeable_access_flags().
 
-In the next revision I can remove this call.
-
-Is it too late to remove the call to security_inode_init_security_anon()
-though? IIUC it is used by LSMs, which means security modules may
-already be assuming this call?
+> 
+> - Konstantin
+> 
+> > 
+> > Thanks
+> > 
+> > > +
+> > >  	return flags;
+> > >  }
+> > >
+> > > --
+> > > 2.43.0
+> > >
