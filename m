@@ -1,232 +1,152 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68ABC20ADFA;
-	Thu, 10 Apr 2025 08:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057FF1E766F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273884; cv=none; b=UxguqX3zTn1pUnVDBXHoIiQ7BjPpFJLfxRMmH15EaTUz/L/g7ltCJXxm7KcK64bf6usSB0tk9TEBFcsKCWHnAY+sWdmsDb0DmiQjgBN9GLMFDKcCQ5MR10GkDE12xfa/i9ptoeutjNTLru/5lmtiutxPOGiz1HbXu9OQ3NAUkGo=
+	t=1744273896; cv=none; b=rVQKXU2bUZOg1xSoz7eL6RhIh9YknkPUbzRCIb2EkBICTTcRBMTZDBodppoXc++L/U5FHflm064tGcADSowJTjoeYSLOIUcDHS4/Tdd6oiHrjHWKb+i3nDCGQBp9NJURfRKmRwU4b2HSGrZnZx5nTorUS/W8GMBG0uApE1+8Kbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273884; c=relaxed/simple;
-	bh=ny08MI6GXAJZbhNBAsXgpdp79SteNccgtW6Om8TnJ0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gF3OOdjJDfRK4HiXGHIQRvoG1K0DcOziO7LUhI2i2Sjazjs3wbentklF7Q+WAeGenKoIOMxCsAJMMgl8uzlXZZ0yGIgG/Ix1G7851iNX7DAH6s+peUWoL2Di2tuDARDnyYG7ZSXYsmEKxRaeLQbZ7qPioUrkkdiwYdI3mgcLkVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZYCcV54RwzHrW8;
-	Thu, 10 Apr 2025 16:27:54 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 82E1A14010D;
-	Thu, 10 Apr 2025 16:31:18 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 10 Apr
- 2025 16:31:17 +0800
-Message-ID: <def11daf-585c-43ac-bc0a-c4e257148107@huawei.com>
-Date: Thu, 10 Apr 2025 16:31:16 +0800
+	s=arc-20240116; t=1744273896; c=relaxed/simple;
+	bh=GaSGS7LWSqdhu+8Q/k1fH0zraYNW3rDoupEHbZFBBV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hJHNJCfkXMqjXLpJR7sjTtjI9RHDD5LZASogi1G/KQt6L8gThQHm9KEaNbFbdP66w2xExlZqtKYKr89gj9fRmYSH2mz4E/e4dCCn1T3KUCIcS5Am5eEqK0RwdZfsMYI1PuHdf6EPTurZHl20RXiRpBFXWiIpI6YS577pekz2n4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Qgmvz8lV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DlqQeChf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Qgmvz8lV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DlqQeChf; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Qgmvz8lV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DlqQeChf";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Qgmvz8lV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DlqQeChf"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 24B8A1F385;
+	Thu, 10 Apr 2025 08:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744273893; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ISUJsnlV3J3KlgZ8H2hwfkjvH7DBQFpDT8OBzEozrD0=;
+	b=Qgmvz8lVBZNj2MFL2rSa/rwhyQiYeQvfcVVyC17sLVv4Dojy0G6WD8h13xdNbX03febapS
+	8zxPOwD1MgK+lmsixDieQLQjypFPpKcO4XlubBR+qNZiCGF0DNk9v0omk1HBw8LMhO+Plt
+	HU23H7GZmpNhapjbIRaQ+0DyN/L9TkM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744273893;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ISUJsnlV3J3KlgZ8H2hwfkjvH7DBQFpDT8OBzEozrD0=;
+	b=DlqQeChfWHi9M3ftMN/PH+pYa/zqbDAZYt4Vwtyr/+f6v0Y+9UD32CFaamCfvv8qX1Ot2t
+	XhCNV2Utxri64uBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744273893; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ISUJsnlV3J3KlgZ8H2hwfkjvH7DBQFpDT8OBzEozrD0=;
+	b=Qgmvz8lVBZNj2MFL2rSa/rwhyQiYeQvfcVVyC17sLVv4Dojy0G6WD8h13xdNbX03febapS
+	8zxPOwD1MgK+lmsixDieQLQjypFPpKcO4XlubBR+qNZiCGF0DNk9v0omk1HBw8LMhO+Plt
+	HU23H7GZmpNhapjbIRaQ+0DyN/L9TkM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744273893;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ISUJsnlV3J3KlgZ8H2hwfkjvH7DBQFpDT8OBzEozrD0=;
+	b=DlqQeChfWHi9M3ftMN/PH+pYa/zqbDAZYt4Vwtyr/+f6v0Y+9UD32CFaamCfvv8qX1Ot2t
+	XhCNV2Utxri64uBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B0DCA13886;
+	Thu, 10 Apr 2025 08:31:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DwDwJ+SB92cdCgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 10 Apr 2025 08:31:32 +0000
+Date: Thu, 10 Apr 2025 10:31:21 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
+	yanjun.zhu@linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] mm/gup: fix wrongly calculated returned value in
+ fault_in_safe_writeable()
+Message-ID: <Z_eB2SHsJUtniMY2@localhost.localdomain>
+References: <20250410035717.473207-1-bhe@redhat.com>
+ <20250410035717.473207-2-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 8/8] ACPI: CPPC: Add three functions related to
- autonomous selection
-To: Mario Limonciello <mario.limonciello@amd.com>, <rafael@kernel.org>,
-	<lenb@kernel.org>, <robert.moore@intel.com>, <viresh.kumar@linaro.org>,
-	<gautham.shenoy@amd.com>, <ray.huang@amd.com>, <perry.yuan@amd.com>,
-	<pierre.gondois@arm.com>
-CC: <acpica-devel@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>,
-	<cenxinghai@h-partners.com>, <hepeng68@huawei.com>
-References: <20250409065703.1461867-1-zhenglifeng1@huawei.com>
- <20250409065703.1461867-9-zhenglifeng1@huawei.com>
- <e5dc4906-2b28-4adc-8e8e-ddd5d7cc985c@amd.com>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <e5dc4906-2b28-4adc-8e8e-ddd5d7cc985c@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410035717.473207-2-bhe@redhat.com>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 2025/4/10 2:59, Mario Limonciello wrote:
-> On 4/9/2025 1:57 AM, Lifeng Zheng wrote:
->> cppc_set_epp - write energy performance preference register value, based on
->> ACPI 6.5, s8.4.6.1.7
->>
->> cppc_get_auto_act_window - read autonomous activity window register value,
->> based on ACPI 6.5, s8.4.6.1.6
->>
->> cppc_set_auto_act_window - write autonomous activity window register value,
->> based on ACPI 6.5, s8.4.6.1.6
->>
->> Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
->> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
->> ---
->>   drivers/acpi/cppc_acpi.c | 80 ++++++++++++++++++++++++++++++++++++++++
->>   include/acpi/cppc_acpi.h | 24 ++++++++++++
->>   2 files changed, 104 insertions(+)
->>
->> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
->> index ef2394c074e3..3d5eace44af5 100644
->> --- a/drivers/acpi/cppc_acpi.c
->> +++ b/drivers/acpi/cppc_acpi.c
->> @@ -1608,6 +1608,86 @@ int cppc_set_epp_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls, bool enable)
->>   }
->>   EXPORT_SYMBOL_GPL(cppc_set_epp_perf);
->>   +/**
->> + * cppc_set_epp() - Write the EPP register.
->> + * @cpu: CPU on which to write register.
->> + * @epp_val: Value to write to the EPP register.
->> + */
->> +int cppc_set_epp(int cpu, u64 epp_val)
+On Thu, Apr 10, 2025 at 11:57:14AM +0800, Baoquan He wrote:
+> Not like fault_in_readable() or fault_in_writeable(), in
+> fault_in_safe_writeable() local variable 'start' is increased page
+> by page to loop till the whole address range is handled. However,
+> it mistakenly calcalates the size of handled range with 'uaddr - start'.
 > 
-> Any reason this is a u64 argument when the biggest value you can support is 0xFF?  Presumably you could drop the the bounds check below if you limited the variable size.
-
-cppc_get_epp_perf() uses u64, so I think it is better to keep the same.
-
+> Fix it here.
 > 
->> +{
->> +    if (epp_val > CPPC_ENERGY_PERF_MAX)
->> +        return -EINVAL;
->> +
->> +    return cppc_set_reg_val(cpu, ENERGY_PERF, epp_val);
->> +}
->> +EXPORT_SYMBOL_GPL(cppc_set_epp);
->> +
->> +/**
->> + * cppc_get_auto_act_window() - Read autonomous activity window register.
->> + * @cpu: CPU from which to read register.
->> + * @auto_act_window: Return address.
->> + *
->> + * According to ACPI 6.5, s8.4.6.1.6, the value read from the autonomous
->> + * activity window register consists of two parts: a 7 bits value indicate
->> + * significand and a 3 bits value indicate exponent.
->> + */
->> +int cppc_get_auto_act_window(int cpu, u64 *auto_act_window)
->> +{
->> +    unsigned int exp;
->> +    u64 val, sig;
->> +    int ret;
->> +
->> +    ret = cppc_get_reg_val(cpu, AUTO_ACT_WINDOW, &val);
->> +    if (ret)
->> +        return ret;
->> +
->> +    sig = val & CPPC_AUTO_ACT_WINDOW_MAX_SIG;
->> +    exp = (val >> CPPC_AUTO_ACT_WINDOW_SIG_BIT_SIZE) & CPPC_AUTO_ACT_WINDOW_MAX_EXP;
->> +    *auto_act_window = sig * int_pow(10, exp);
->> +
->> +    return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(cppc_get_auto_act_window);
-> 
-> Since this is exported code, do you perhaps want a check that auto_act_window is not NULL to avoid a possible accidental NULL pointer dereference?
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Fixes: fe673d3f5bf1 ("mm: gup: make fault_in_safe_writeable() use fixup_user_fault()")
 
-Yes. Make sense. Thanks!
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
+> ---
+>  mm/gup.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->> +
->> +/**
->> + * cppc_set_auto_act_window() - Write autonomous activity window register.
->> + * @cpu: CPU on which to write register.
->> + * @auto_act_window: usec value to write to the autonomous activity window register.
->> + *
->> + * According to ACPI 6.5, s8.4.6.1.6, the value to write to the autonomous
->> + * activity window register consists of two parts: a 7 bits value indicate
->> + * significand and a 3 bits value indicate exponent.
->> + */
->> +int cppc_set_auto_act_window(int cpu, u64 auto_act_window)
->> +{
->> +    /* The max value to stroe is 1270000000 */
-> 
-> store
-
-Thanks!
-
-> 
->> +    u64 max_val = CPPC_AUTO_ACT_WINDOW_MAX_SIG * int_pow(10, CPPC_AUTO_ACT_WINDOW_MAX_EXP);
->> +    int exp = 0;
->> +    u64 val;
->> +
->> +    if (auto_act_window > max_val)
->> +        return -EINVAL;
->> +
->> +    /*
->> +     * The max significand is 127, when auto_act_window is larger than
->> +     * 129, discard the precision of the last digit and increase the
->> +     * exponent by 1.
->> +     */
->> +    while (auto_act_window > CPPC_AUTO_ACT_WINDOW_SIG_CARRY_THRESH) {
->> +        auto_act_window /= 10;
->> +        exp += 1;
->> +    }
->> +
->> +    /* For 128 and 129, cut it to 127. */
->> +    if (auto_act_window > CPPC_AUTO_ACT_WINDOW_MAX_SIG)
->> +        auto_act_window = CPPC_AUTO_ACT_WINDOW_MAX_SIG;
->> +
->> +    val = (exp << CPPC_AUTO_ACT_WINDOW_SIG_BIT_SIZE) + auto_act_window;
->> +
->> +    return cppc_set_reg_val(cpu, AUTO_ACT_WINDOW, val);
->> +}
->> +EXPORT_SYMBOL_GPL(cppc_set_auto_act_window);
->> +
->>   /**
->>    * cppc_get_auto_sel() - Read autonomous selection register.
->>    * @cpu: CPU from which to read register.
->> diff --git a/include/acpi/cppc_acpi.h b/include/acpi/cppc_acpi.h
->> index 31767c65be20..325e9543e08f 100644
->> --- a/include/acpi/cppc_acpi.h
->> +++ b/include/acpi/cppc_acpi.h
->> @@ -32,6 +32,15 @@
->>   #define    CMD_READ 0
->>   #define    CMD_WRITE 1
->>   +#define CPPC_AUTO_ACT_WINDOW_SIG_BIT_SIZE    (7)
->> +#define CPPC_AUTO_ACT_WINDOW_EXP_BIT_SIZE    (3)
->> +#define CPPC_AUTO_ACT_WINDOW_MAX_SIG    ((1 << CPPC_AUTO_ACT_WINDOW_SIG_BIT_SIZE) - 1)
->> +#define CPPC_AUTO_ACT_WINDOW_MAX_EXP    ((1 << CPPC_AUTO_ACT_WINDOW_EXP_BIT_SIZE) - 1)
->> +/* CPPC_AUTO_ACT_WINDOW_MAX_SIG is 127, so 128 and 129 will decay to 127 when writing */
->> +#define CPPC_AUTO_ACT_WINDOW_SIG_CARRY_THRESH 129
->> +
->> +#define CPPC_ENERGY_PERF_MAX    (0xFF)
->> +
->>   /* Each register has the folowing format. */
->>   struct cpc_reg {
->>       u8 descriptor;
->> @@ -159,6 +168,9 @@ extern int cpc_read_ffh(int cpunum, struct cpc_reg *reg, u64 *val);
->>   extern int cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val);
->>   extern int cppc_get_epp_perf(int cpunum, u64 *epp_perf);
->>   extern int cppc_set_epp_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls, bool enable);
->> +extern int cppc_set_epp(int cpu, u64 epp_val);
->> +extern int cppc_get_auto_act_window(int cpu, u64 *auto_act_window);
->> +extern int cppc_set_auto_act_window(int cpu, u64 auto_act_window);
->>   extern int cppc_get_auto_sel(int cpu, bool *enable);
->>   extern int cppc_set_auto_sel(int cpu, bool enable);
->>   extern int amd_get_highest_perf(unsigned int cpu, u32 *highest_perf);
->> @@ -229,6 +241,18 @@ static inline int cppc_get_epp_perf(int cpunum, u64 *epp_perf)
->>   {
->>       return -EOPNOTSUPP;
->>   }
->> +static inline int cppc_set_epp(int cpu, u64 epp_val)
->> +{
->> +    return -EOPNOTSUPP;
->> +}
->> +static inline int cppc_get_auto_act_window(int cpu, u64 *auto_act_window)
->> +{
->> +    return -EOPNOTSUPP;
->> +}
->> +static inline int cppc_set_auto_act_window(int cpu, u64 auto_act_window)
->> +{
->> +    return -EOPNOTSUPP;
->> +}
->>   static inline int cppc_get_auto_sel(int cpu, bool *enable)
->>   {
->>       return -EOPNOTSUPP;
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 92351e2fa876..84461d384ae2 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2207,8 +2207,8 @@ size_t fault_in_safe_writeable(const char __user *uaddr, size_t size)
+>  	} while (start != end);
+>  	mmap_read_unlock(mm);
+>  
+> -	if (size > (unsigned long)uaddr - start)
+> -		return size - ((unsigned long)uaddr - start);
+> +	if (size > start - (unsigned long)uaddr)
+> +		return size - (start - (unsigned long)uaddr);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(fault_in_safe_writeable);
+> -- 
+> 2.41.0
 > 
 
+-- 
+Oscar Salvador
+SUSE Labs
