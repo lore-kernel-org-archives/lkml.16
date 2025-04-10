@@ -1,57 +1,44 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD7C1C3BEB
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA061C3BEB;
+	Thu, 10 Apr 2025 05:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744264408; cv=none; b=UVen7etD21aHhyPNl5KkfSwlTI3nd7+1zHb+usisJjwS8M2uZ9rU6KWu0azoXnpYqUshOR/3wl5seZZiiRcWew5RFv5VYA6Gy25E4tUsLWKyTqm00azwJoIr6nVJO0JyAt3T15WldziXFLS1q/jZyNzC3WjVVD7OZGqr1u/ERbM=
+	t=1744264444; cv=none; b=uhqODlL1FKlElFmUg+pjkAM3QATJGnklBpEzVSmDWepZZPtXG78bCYWa7DK4CeWFTB52VFlKB/s8sLyn2ciaxWWwddzyqgHS6UD/FKd809SC1+/dwm8G2pV47zx2n/rXBNFMN0ZVRSen0U3K72dxaStX94UKcah+mx5I1dgKuBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744264408; c=relaxed/simple;
-	bh=FtkADtqTTAHBwNsbObL8YEun9ehU1SjIakCurok/u3A=;
+	s=arc-20240116; t=1744264444; c=relaxed/simple;
+	bh=PYB+8+fnm6cmA4lHoEcozH2lyckWEcrcsqXiUXyApFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O8yuXKGh1fDv6k6/+c61Cb74atYMFPW7P/s2o43E214NylWYK7my3g8ZigD9eoAOwYql1gJBXtYO/Nh3+8IJj8ykWArxKhaNGk+R3rsr5FBGDDT52XLHyW1QZdJTJNeaBDt0hf4KQ1H9tFxAi7cYlNwrou1JfykHnUq0hXDKwTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zc2l3tXk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9ZcR2y7m; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLSnRfdTGRff44urtW2wrR6fwI6De+okzUYulkDvNtiWn4+DXOIhjygi+98pU5lVqP/jS3e3W7ErfKik9uZQ84uXsiZPOPrIBowEA7go4Ak8vNatlv5byTAoK4IorjKGGdccV4RR7aUduwLaQ+GsWWuPuiXT5G4VO8k5ym5GBFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qDmR1F0s; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zc2l3tXk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9ZcR2y7m"
-Date: Thu, 10 Apr 2025 07:53:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744264404;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FtkADtqTTAHBwNsbObL8YEun9ehU1SjIakCurok/u3A=;
-	b=Zc2l3tXkfoM8O+xad/kva2psLQs5gEY5FqLx1BmssCyPctzjo0YGvk+eEIbY7CKfRVdhoL
-	wVuETyrGnyTEhU/Xnjv40XwhGwSqCpPwTcTqlPjPsHWFGKGhu+GXBBC7gX5rMQPNBSvt9t
-	W8dKIaFw0G0S52YcN5JFKEyev3sK5nkgvonxuX2/+ZQ1gQAxX6YNu3QlFRzTpu3nwMdZ2G
-	f5ZW95rb2dqggEJk8u+LjsuE4dEqSxK9N5BACNhL9V8xuAKieRQrOqXE7mbSbdsVjsrXWT
-	ggV2ZsCHs1xbeHkCONuN9nQ+8bvWn0Y2VSosuhIhP/9XS54Q8wO/2zbZy6CcFQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744264404;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FtkADtqTTAHBwNsbObL8YEun9ehU1SjIakCurok/u3A=;
-	b=9ZcR2y7mo2HDzwYkG5fXkCU1/sRq3qPTXrSFQz2XYldwavFdrFZqx7ZIsNaub9T4hKAR2J
-	BeUeIhmHFP89l0AQ==
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] x86/cacheinfo: Properly parse CPUID(0x80000005)
- L1d/L1i associativity
-Message-ID: <Z_dc0h-EI5RWtIK2@lx-t490>
-References: <20250409122233.1058601-1-darwi@linutronix.de>
- <20250409122233.1058601-2-darwi@linutronix.de>
- <Z_bCA8788lrr-NdB@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qDmR1F0s"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1GqN6CWMLtyKWZmAbAgDJaq97Nojq9X3sYXuPtmxkcU=; b=qDmR1F0sTiDEClQRlXsmzeEzsu
+	uoaedrulUSVJcEPLeWdeM9xBmrryAXmPHio3kvfL4eHT8msf/H3PHeltk9nlE1peSRD0mLAZlxtFX
+	A0zVC0jTlUwwOeaImy8qFyygsK423Zi6chHu7Q9faCyFB+PrdT7oX3OIuKUlX4ZfNe/MRTJTGcrHC
+	jU0Xq4OXLYoXMYWeDGEvAK5hYqTcQsWhOS8QYe4rrxs7n/cBMGKmjpVxXGOCReQOWHMeWYMBMsoe4
+	X0m9QefwsVVoG1bl/l7+LZmVWknrCic1oMvA22tKBBBFnHbLaZGvxNUecsZUzXPgOvK+d74Od2dW9
+	MdLaXuPQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2krR-00000009JLR-3xkI;
+	Thu, 10 Apr 2025 05:54:01 +0000
+Date: Wed, 9 Apr 2025 22:54:01 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Gou Hao <gouhao@uniontech.com>
+Cc: brauner@kernel.org, djwong@kernel.org, gouhaojake@163.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, wangyuli@uniontech.com
+Subject: Re: [PATCH V2] iomap: skip unnecessary ifs_block_is_uptodate check
+Message-ID: <Z_dc-UmJs0F1UWTN@infradead.org>
+References: <20250408172924.9349-1-gouhao@uniontech.com>
+ <20250410054223.3325-1-gouhao@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,25 +47,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_bCA8788lrr-NdB@gmail.com>
+In-Reply-To: <20250410054223.3325-1-gouhao@uniontech.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, 09 Apr 2025, Ingo Molnar wrote:
->
-> Yeah, so a Cc: stable tag is usually reserved for recent regressions,
-> or critical fixes - but this is a bug from 2009, ~16 years old. This
-> bug is old enough to receive a driving license in the US, and can
-> legally buy beer or wine in Germany.
->
+On Thu, Apr 10, 2025 at 01:42:23PM +0800, Gou Hao wrote:
+> prior to the loop, $i is either the first !uptodate block, or
+> it's past $last.  Assuming there's no overflow (there's no combination
+> of huge folios and tiny blksize) then yeah, there's no point in
+> retesting that the same block $i is uptodate since we hold the folio
+> lock so nobody else could have set uptodate.
 
-Haha, noted :)
+Capitalize the first word in the sentence and use up the 73 characters
+available for the commit log:
 
-> So I've removed the tags from the two commits in tip:x86/cpu, but note
-> that the Fixes tag itself will give backporters enough information so
-> they can decide on whether to backport. Greg's -stable process
-> typically processes all Fixes tags for example, once Linus pulls this
-> into v6.16-to-be.
+In iomap_adjust_read_range, i is either the first !uptodate block, or it
+is past last for the second loop looking for trailing uptodate blocks.
+Assuming there's no overflow (there's no combination of huge folios and
+tiny blksize) then yeah, there is no point in retesting that the same
+block pointed to by i is uptodate since we hold the folio lock so nobody
+else could have set it uptodate.
 
-Yup, makes sense.
+>  		/* truncate len if we find any trailing uptodate block(s) */
+> -		for ( ; i <= last; i++) {
+> +		for (i++; i <= last; i++) {
 
-Thanks a lot for all the support!
-Ahmed
+A bit nitpicky, but I find a i++ in the initialization condition of a
+for loop a bit odd.
+
+What about turning this into a:
+
+		while (++i <= last) {
+
+?
+
