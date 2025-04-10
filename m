@@ -1,480 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from enterprise01.smtp.diehl.com (enterprise01.smtp.diehl.com [193.201.238.219])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71571F1932;
-	Thu, 10 Apr 2025 07:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF2A1F1932;
+	Thu, 10 Apr 2025 07:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.201.238.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270982; cv=none; b=Qjs2Cw+iHDeQxjytTa8CgBOvoLIN+5GjwLX0LBQ0zotnoMRsLSSEaj2ztcYXItTEuhl3pwlAolXuhkwJ1+PLx9Z5WowoP26/NQvid0loitf75OeBw40K5sAoEOQbcYheknDkmNJeiiRG7QJOPcdi1iZ860YL8ZG9yAxyioBe7MU=
+	t=1744271028; cv=none; b=enrAm4xipvxIoNYDxJLKFs0B6qn3CHWTOk0yGx9CtPwncaK5B0diQwtM+sVXc7F+tAuVPCpC99+ioUFUdmIFkLaC5noDVs4Eqr8Q7d+NF4yE/1ZXC8/QaCoKoo3fj10NqfJ+5Zl1V+Ft5FAw3AFyigpEPUiA+9aHbmxJbIEg48s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270982; c=relaxed/simple;
-	bh=qEoYekXX5sCrALDE6l7uxfoTVE2rec0BZ6mOu36pRZE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qJl1LqKuO3yjV+rHxNil2rkqmUcCx7Mb0OIVksMijhOXitQ4okyD7FiTGXPWnubjtjpBT2ukKXTY5G8IhCbk3soVhvCzy6qlks5aiZZuGIj889tITATk6mWzn79y8VI2Ptz697ORbaYwGgIlRe0rSNXtAMhsO32QqoHewblum0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcNs4cuB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744271028; c=relaxed/simple;
+	bh=FFPFGCsDywRd0yILMDYfG7W9ALH9OM/dO3pX1qJid64=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZLGlGm+sULFqrPiVEXn6nPvKyWyqEZ2V7fgPh4j4ikWdZSrzqRU+6l8L50mQY2BbmF8KykjqTb1Jk6xbCCWcaHmLba1tTrUOF7N6IfmsYhbgDDQqXiQ8Tq2KxVpSJaMQMogVmTJ3iV0mLjdNFWBAZhL6f37Gkas4Pj2+IN4gRPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=diehl.com; spf=pass smtp.mailfrom=diehl.com; dkim=pass (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b=rX8AJ7id; arc=none smtp.client-ip=193.201.238.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=diehl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=diehl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcNs4cuB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 818EFC4CEDD;
-	Thu, 10 Apr 2025 07:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744270982;
-	bh=qEoYekXX5sCrALDE6l7uxfoTVE2rec0BZ6mOu36pRZE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=TcNs4cuBp/hRZ5//YjZvg7tfj3/7mk+LcgavFyhrFmE1NKHFiVFQP6sB/EDSVnfeU
-	 sJhRuB0eydFOcsOnpXtL6xpC8uHrLs95TDoODn4BLcen6yRXW/JkB9mORIkVZVHAYD
-	 cS+PS8zzmXfiqOsPVviyMNjnxuPVLC/T2OpE45TH9tXP7e81k+hGz8de8uQIA1Ww5w
-	 MLLGiVBiJMAmf/cHgruZb5x7KHpWhtOJNUvub/OPkUSWeXYyiftZtA7vj0B7A++03d
-	 JGok6bnhX8jq0lI6VSML9m+LYs5LomQx+AuX/sxzN/BN+h7d8dXpIQ3cLaTDXRBOEN
-	 LUcm06oo5FZBg==
-From: Mattijs Korpershoek <mkorpershoek@kernel.org>
-To: Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
- Saravana Kannan <saravanak@google.com>, Sumit Semwal
- <sumit.semwal@linaro.org>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>,
- John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>,
- Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Mattijs Korpershoek <mkorpershoek@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v3 2/2] dma-buf: heaps: Introduce a new heap for
- reserved memory
-In-Reply-To: <20250407-dma-buf-ecc-heap-v3-2-97cdd36a5f29@kernel.org>
-References: <20250407-dma-buf-ecc-heap-v3-0-97cdd36a5f29@kernel.org>
- <20250407-dma-buf-ecc-heap-v3-2-97cdd36a5f29@kernel.org>
-Date: Thu, 10 Apr 2025 09:42:58 +0200
-Message-ID: <8734eg1myl.fsf@baylibre.com>
+	dkim=pass (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="rX8AJ7id"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1744271025; x=1775807025;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=FFPFGCsDywRd0yILMDYfG7W9ALH9OM/dO3pX1qJid64=;
+  b=rX8AJ7id8lWDeSXScY9Lil1qTMld7SCn8F1yUJ5Ow03ZmGkFBjtG96Fa
+   x1gO1/+n+fDuABcbNI0SunU2BefMOQAwrZGb0yQDTcz0BWbtDTK/kX1Ev
+   wPLC3YoweMv4dMHUFMm+G/K60C6RY3cOlScrGE0hjpazmb3+cSMC7Sldy
+   s++IRM21z+2DyVaPqLn/9qmD/diGbjBcX4K+RjseGmQGgKAcMg0Z2JQEY
+   f50/ZlWZzqQMxC+Rp9M8UBhftlwHhjmPgp4vsIKpVbx+E0TznP8sqA9Pp
+   4S6krzVdE9LAAigxJL0ZFbFxfeBiPrTZCUJO0ZdN10rtSFhCElGAt6Yjb
+   w==;
+X-CSE-ConnectionGUID: +9SO7BZUSV6/vMC6Ji95qw==
+X-CSE-MsgGUID: YFlFOzb1QPG3IyzQyTVZ4A==
+X-ThreatScanner-Verdict: Negative
+IronPort-Data: A9a23:SvuyzKNo6iIEvYbvrR2dlsFynXyQoLVcMsEvi/4bfWQNrUp21TAAx
+ zNKXTvTb/qMMzenKN8iPovi8UMO75OGnIVqTwZtpSBmQkwRpJueD7x1DKtS0wC6c5efFhI3t
+ 63yTvGacajYm1eF/k/F3oDJ9Cc6jefQAOKhVIYoAwgpLSd8UiAtlBl/rOAwh49skLCRDhiE0
+ T/Ii5S31GSNhXgtbwr414rZ8Eky5Kir4GtB1rADTasjUGH2xiB94K03dfnZw0vQGuF8AuO8T
+ uDf+7C1lkux1wstEN6sjoHgeUQMRLPIVSDW4paBc/H/6vTqjnVaPpcTbJLwW28O49m6t4kZJ
+ OF2iHCFYVxB0psgOggqe0Iw/ylWZcWq8VJcSJS1mZT7I0buKxMAzxjyZa2f0EJxFutfWAlzG
+ fIkxD8lLUG4oL2c8o+AdLcrmOEIcuvqbd4GpSQ1pd3ZJa5OrZHreY7mzpp99RYU3ZkIFvHEf
+ 4wVaDdvaFLLZBgn1lU/Ucp4xbrzwCK5KmYBwL6WjfNfD2z7wAF30aOrN8HJd8aOTMNZtkqZq
+ 2LCuW/+B3n2MfTGkGvdrCz02b+ncSXTaawWOpqq/KdTuHLI530BMQwqa2nniKzs4qK5c5cFQ
+ 6AOwQIht6U990yDStj7Qg22p2OCshcAWt1WVeog52mlw6nM5i6dB24ZXntPb8EguMYqRDssk
+ FiTkLvBAT1pra3QSn+H8LqQhS29NDJTLmIYYyIACwwf7LHLu506hBbCZshsHbTzjdDvHzz0h
+ TeQo0AWiLQUiMMXy6ST8FbBjj+qoJWPRQkwjjg7RUr8tkUgOdXjPMrxsgGzAet8Ebt1h2Kp5
+ BAs8/VyJshVZX1RvERhmNkwIYw=
+IronPort-HdrOrdr: A9a23:gbIVsKqC13bQ2aG5w2ZRpmAaV5rceYIsimQD101hICG9E/bo7P
+ xG+c5xvyMc5wxhIE3I5urwQpVoLUmwyXcN2/hyAV76ZniChILKFvAa0WKB+UyGJ8SkzI5gPM
+ 5bGsBD4bvLYmSS5vyV3ODXKbod6ejC1IiJoM35511NJDsKV4hQqz5cTiKWD0V6TBRPQYA0E5
+ fZ+tZGqlObCBcqh82AdwQ4t2KonaysqLvjaR4CDRgu4gjLlz+u5frnDxiUty1uNw9y/Q==
+X-Talos-CUID: 9a23:R0yqPWP+fz25ne5DG3hc0xE+KP0eTCOa0lL7fW25WDtwV+jA
+X-Talos-MUID: 9a23:GWGtHgq4hwDlYPM6ylUezwBMMOlP8a73MXgiyrQXqfCVCRJCZx7I2Q==
+X-IronPort-AV: E=Sophos;i="6.15,202,1739833200"; 
+   d="scan'208";a="119066078"
+From: Denis OSTERLAND-HEIM <denis.osterland@diehl.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton
+	<akpm@linux-foundation.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, Rodolfo Giometti
+	<giometti@enneenne.com>
+Subject: RE: Re: [PATCH] pps: fix poll support
+Thread-Topic: Re: [PATCH] pps: fix poll support
+Thread-Index: AQHbqeweCj+2JBbDPUmI5sNEW79OWA==
+Date: Thu, 10 Apr 2025 07:42:32 +0000
+Message-ID: <df3dd18b292941a1aaf3bd04f3df6bf3@diehl.com>
+References: <0231dfc22dd34a5aaee09a6a19074de1@diehl.com>
+ <636c5ad9-25ad-44f7-9454-a7787de7a6aa@enneenne.com>
+In-Reply-To: <636c5ad9-25ad-44f7-9454-a7787de7a6aa@enneenne.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-disclaimerprocessed: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-GBS-PROC: xcNMAi9YeeX/adnz0FLyVSyVYzGn28vSropWMneeSlwuMEbjIqunv9HqzR8jmpZj
+X-GBS-PROCJOB: cNZjrC5Zo4hlOQpCCf/DfPVfdRAr9hWv2dEIZN974yGH33b9NYz4C9j51a0L468L
 
-Hi Maxime,
-
-Thank you for the patch.
-
-On lun., avril 07, 2025 at 18:29, Maxime Ripard <mripard@kernel.org> wrote:
-
-> Some reserved memory regions might have particular memory setup or
-> attributes that make them good candidates for heaps.
->
-> Let's provide a heap type that will create a new heap for each reserved
-> memory region flagged as such.
->
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  drivers/dma-buf/heaps/Kconfig         |   8 +
->  drivers/dma-buf/heaps/Makefile        |   1 +
->  drivers/dma-buf/heaps/carveout_heap.c | 360 ++++++++++++++++++++++++++++++++++
->  3 files changed, 369 insertions(+)
->
-> diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-> index a5eef06c422644e8aadaf5aff2bd9a33c49c1ba3..c6981d696733b4d8d0c3f6f5a37d967fd6a1a4a2 100644
-> --- a/drivers/dma-buf/heaps/Kconfig
-> +++ b/drivers/dma-buf/heaps/Kconfig
-> @@ -1,5 +1,13 @@
-> +config DMABUF_HEAPS_CARVEOUT
-> +	bool "Carveout Heaps"
-
-Nitpick: Shouldn't this be: "DMA-BUF Carveout Heaps" ?
-This way, we are consistent with the other entries in this Kconfig.
-
-In my opinion, I don't know enough about dma-buf to do a good review,
-but I've tried my best by comparing this to a downstream heap I'm using from:
-
-https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/drivers/dma-buf/heaps/carveout-heap.c?h=ti-android-linux-6.6.y
-
-Reviewed-by: Mattijs Korpershoek <mkorpershoek@kernel.org>
-
-> +	depends on DMABUF_HEAPS
-> +	help
-> +	  Choose this option to enable the carveout dmabuf heap. The carveout
-> +	  heap is backed by pages from reserved memory regions flagged as
-> +	  exportable. If in doubt, say Y.
-> +
->  config DMABUF_HEAPS_SYSTEM
->  	bool "DMA-BUF System Heap"
->  	depends on DMABUF_HEAPS
->  	help
->  	  Choose this option to enable the system dmabuf heap. The system heap
-> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-> index 974467791032ffb8a7aba17b1407d9a19b3f3b44..b734647ad5c84f449106748160258e372f153df2 100644
-> --- a/drivers/dma-buf/heaps/Makefile
-> +++ b/drivers/dma-buf/heaps/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_DMABUF_HEAPS_CARVEOUT)	+= carveout_heap.o
->  obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
->  obj-$(CONFIG_DMABUF_HEAPS_CMA)		+= cma_heap.o
-> diff --git a/drivers/dma-buf/heaps/carveout_heap.c b/drivers/dma-buf/heaps/carveout_heap.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..f7198b781ea57f4f60e554d917c9277e9a716b16
-> --- /dev/null
-> +++ b/drivers/dma-buf/heaps/carveout_heap.c
-> @@ -0,0 +1,360 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/dma-buf.h>
-> +#include <linux/dma-heap.h>
-> +#include <linux/genalloc.h>
-> +#include <linux/highmem.h>
-> +#include <linux/of_reserved_mem.h>
-> +
-> +struct carveout_heap_priv {
-> +	struct dma_heap *heap;
-> +	struct gen_pool *pool;
-> +};
-> +
-> +struct carveout_heap_buffer_priv {
-> +	struct mutex lock;
-> +	struct list_head attachments;
-> +
-> +	unsigned long num_pages;
-> +	struct carveout_heap_priv *heap;
-> +	dma_addr_t daddr;
-> +	void *vaddr;
-> +	unsigned int vmap_cnt;
-> +};
-> +
-> +struct carveout_heap_attachment {
-> +	struct list_head head;
-> +	struct sg_table table;
-> +
-> +	struct device *dev;
-> +	bool mapped;
-> +};
-> +
-> +static int carveout_heap_attach(struct dma_buf *buf,
-> +				struct dma_buf_attachment *attachment)
-> +{
-> +	struct carveout_heap_buffer_priv *priv = buf->priv;
-> +	struct carveout_heap_attachment *a;
-> +	struct sg_table *sgt;
-> +	unsigned long len = priv->num_pages * PAGE_SIZE;
-> +	int ret;
-> +
-> +	a = kzalloc(sizeof(*a), GFP_KERNEL);
-> +	if (!a)
-> +		return -ENOMEM;
-> +	INIT_LIST_HEAD(&a->head);
-> +	a->dev = attachment->dev;
-> +	attachment->priv = a;
-> +
-> +	sgt = &a->table;
-> +	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-> +	if (ret)
-> +		goto err_cleanup_attach;
-> +
-> +	sg_dma_address(sgt->sgl) = priv->daddr;
-> +	sg_dma_len(sgt->sgl) = len;
-> +
-> +	mutex_lock(&priv->lock);
-> +	list_add(&a->head, &priv->attachments);
-> +	mutex_unlock(&priv->lock);
-> +
-> +	return 0;
-> +
-> +err_cleanup_attach:
-> +	kfree(a);
-> +	return ret;
-> +}
-> +
-> +static void carveout_heap_detach(struct dma_buf *dmabuf,
-> +				 struct dma_buf_attachment *attachment)
-> +{
-> +	struct carveout_heap_buffer_priv *priv = dmabuf->priv;
-> +	struct carveout_heap_attachment *a = attachment->priv;
-> +
-> +	mutex_lock(&priv->lock);
-> +	list_del(&a->head);
-> +	mutex_unlock(&priv->lock);
-> +
-> +	sg_free_table(&a->table);
-> +	kfree(a);
-> +}
-> +
-> +static struct sg_table *
-> +carveout_heap_map_dma_buf(struct dma_buf_attachment *attachment,
-> +			  enum dma_data_direction direction)
-> +{
-> +	struct carveout_heap_attachment *a = attachment->priv;
-> +	struct sg_table *table = &a->table;
-> +	int ret;
-> +
-> +	ret = dma_map_sgtable(a->dev, table, direction, 0);
-> +	if (ret)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	a->mapped = true;
-> +
-> +	return table;
-> +}
-> +
-> +static void carveout_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
-> +					struct sg_table *table,
-> +					enum dma_data_direction direction)
-> +{
-> +	struct carveout_heap_attachment *a = attachment->priv;
-> +
-> +	a->mapped = false;
-> +	dma_unmap_sgtable(a->dev, table, direction, 0);
-> +}
-> +
-> +static int
-> +carveout_heap_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
-> +				       enum dma_data_direction direction)
-> +{
-> +	struct carveout_heap_buffer_priv *priv = dmabuf->priv;
-> +	struct carveout_heap_attachment *a;
-> +	unsigned long len = priv->num_pages * PAGE_SIZE;
-> +
-> +	mutex_lock(&priv->lock);
-> +
-> +	if (priv->vmap_cnt > 0)
-> +		invalidate_kernel_vmap_range(priv->vaddr, len);
-> +
-> +	list_for_each_entry(a, &priv->attachments, head) {
-> +		if (!a->mapped)
-> +			continue;
-> +
-> +		dma_sync_sgtable_for_cpu(a->dev, &a->table, direction);
-> +	}
-> +
-> +	mutex_unlock(&priv->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +carveout_heap_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
-> +				     enum dma_data_direction direction)
-> +{
-> +	struct carveout_heap_buffer_priv *priv = dmabuf->priv;
-> +	struct carveout_heap_attachment *a;
-> +	unsigned long len = priv->num_pages * PAGE_SIZE;
-> +
-> +	mutex_lock(&priv->lock);
-> +
-> +	if (priv->vmap_cnt > 0)
-> +		flush_kernel_vmap_range(priv->vaddr, len);
-> +
-> +	list_for_each_entry(a, &priv->attachments, head) {
-> +		if (!a->mapped)
-> +			continue;
-> +
-> +		dma_sync_sgtable_for_device(a->dev, &a->table, direction);
-> +	}
-> +
-> +	mutex_unlock(&priv->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int carveout_heap_mmap(struct dma_buf *dmabuf,
-> +			      struct vm_area_struct *vma)
-> +{
-> +	struct carveout_heap_buffer_priv *priv = dmabuf->priv;
-> +	unsigned long len = priv->num_pages * PAGE_SIZE;
-> +	struct page *page = virt_to_page(priv->vaddr);
-> +
-> +	return remap_pfn_range(vma, vma->vm_start, page_to_pfn(page),
-> +			       len, vma->vm_page_prot);
-> +}
-> +
-> +static int carveout_heap_vmap(struct dma_buf *dmabuf, struct iosys_map *map)
-> +{
-> +	struct carveout_heap_buffer_priv *priv = dmabuf->priv;
-> +
-> +	mutex_lock(&priv->lock);
-> +
-> +	iosys_map_set_vaddr(map, priv->vaddr);
-> +	priv->vmap_cnt++;
-> +
-> +	mutex_unlock(&priv->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void carveout_heap_vunmap(struct dma_buf *dmabuf, struct iosys_map *map)
-> +{
-> +	struct carveout_heap_buffer_priv *priv = dmabuf->priv;
-> +
-> +	mutex_lock(&priv->lock);
-> +
-> +	priv->vmap_cnt--;
-> +	mutex_unlock(&priv->lock);
-> +
-> +	iosys_map_clear(map);
-> +}
-> +
-> +static void carveout_heap_dma_buf_release(struct dma_buf *buf)
-> +{
-> +	struct carveout_heap_buffer_priv *buffer_priv = buf->priv;
-> +	struct carveout_heap_priv *heap_priv = buffer_priv->heap;
-> +	unsigned long len = buffer_priv->num_pages * PAGE_SIZE;
-> +
-> +	gen_pool_free(heap_priv->pool, (unsigned long)buffer_priv->vaddr, len);
-> +	kfree(buffer_priv);
-> +}
-> +
-> +static const struct dma_buf_ops carveout_heap_buf_ops = {
-> +	.attach		= carveout_heap_attach,
-> +	.detach		= carveout_heap_detach,
-> +	.map_dma_buf	= carveout_heap_map_dma_buf,
-> +	.unmap_dma_buf	= carveout_heap_unmap_dma_buf,
-> +	.begin_cpu_access	= carveout_heap_dma_buf_begin_cpu_access,
-> +	.end_cpu_access	= carveout_heap_dma_buf_end_cpu_access,
-> +	.mmap		= carveout_heap_mmap,
-> +	.vmap		= carveout_heap_vmap,
-> +	.vunmap		= carveout_heap_vunmap,
-> +	.release	= carveout_heap_dma_buf_release,
-> +};
-> +
-> +static struct dma_buf *carveout_heap_allocate(struct dma_heap *heap,
-> +					      unsigned long len,
-> +					      u32 fd_flags,
-> +					      u64 heap_flags)
-> +{
-> +	struct carveout_heap_priv *heap_priv = dma_heap_get_drvdata(heap);
-> +	struct carveout_heap_buffer_priv *buffer_priv;
-> +	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-> +	struct dma_buf *buf;
-> +	dma_addr_t daddr;
-> +	size_t size = PAGE_ALIGN(len);
-> +	void *vaddr;
-> +	int ret;
-> +
-> +	buffer_priv = kzalloc(sizeof(*buffer_priv), GFP_KERNEL);
-> +	if (!buffer_priv)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	INIT_LIST_HEAD(&buffer_priv->attachments);
-> +	mutex_init(&buffer_priv->lock);
-> +
-> +	vaddr = gen_pool_dma_zalloc(heap_priv->pool, size, &daddr);
-> +	if (!vaddr) {
-> +		ret = -ENOMEM;
-> +		goto err_free_buffer_priv;
-> +	}
-> +
-> +	buffer_priv->vaddr = vaddr;
-> +	buffer_priv->daddr = daddr;
-> +	buffer_priv->heap = heap_priv;
-> +	buffer_priv->num_pages = size >> PAGE_SHIFT;
-> +
-> +	/* create the dmabuf */
-> +	exp_info.exp_name = dma_heap_get_name(heap);
-> +	exp_info.ops = &carveout_heap_buf_ops;
-> +	exp_info.size = size;
-> +	exp_info.flags = fd_flags;
-> +	exp_info.priv = buffer_priv;
-> +
-> +	buf = dma_buf_export(&exp_info);
-> +	if (IS_ERR(buf)) {
-> +		ret = PTR_ERR(buf);
-> +		goto err_free_buffer;
-> +	}
-> +
-> +	return buf;
-> +
-> +err_free_buffer:
-> +	gen_pool_free(heap_priv->pool, (unsigned long)vaddr, len);
-> +err_free_buffer_priv:
-> +	kfree(buffer_priv);
-> +
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static const struct dma_heap_ops carveout_heap_ops = {
-> +	.allocate = carveout_heap_allocate,
-> +};
-> +
-> +static int __init carveout_heap_setup(struct device_node *node)
-> +{
-> +	struct dma_heap_export_info exp_info = {};
-> +	const struct reserved_mem *rmem;
-> +	struct carveout_heap_priv *priv;
-> +	struct dma_heap *heap;
-> +	struct gen_pool *pool;
-> +	void *base;
-> +	int ret;
-> +
-> +	rmem = of_reserved_mem_lookup(node);
-> +	if (!rmem)
-> +		return -EINVAL;
-> +
-> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	pool = gen_pool_create(PAGE_SHIFT, NUMA_NO_NODE);
-> +	if (!pool) {
-> +		ret = -ENOMEM;
-> +		goto err_cleanup_heap;
-> +	}
-> +	priv->pool = pool;
-> +
-> +	base = memremap(rmem->base, rmem->size, MEMREMAP_WB);
-> +	if (!base) {
-> +		ret = -ENOMEM;
-> +		goto err_release_mem_region;
-> +	}
-> +
-> +	ret = gen_pool_add_virt(pool, (unsigned long)base, rmem->base,
-> +				rmem->size, NUMA_NO_NODE);
-> +	if (ret)
-> +		goto err_unmap;
-> +
-> +	exp_info.name = node->full_name;
-> +	exp_info.ops = &carveout_heap_ops;
-> +	exp_info.priv = priv;
-> +
-> +	heap = dma_heap_add(&exp_info);
-> +	if (IS_ERR(heap)) {
-> +		ret = PTR_ERR(heap);
-> +		goto err_cleanup_pool_region;
-> +	}
-> +	priv->heap = heap;
-> +
-> +	return 0;
-> +
-> +err_cleanup_pool_region:
-> +	gen_pool_free(pool, (unsigned long)base, rmem->size);
-> +err_unmap:
-> +	memunmap(base);
-> +err_release_mem_region:
-> +	gen_pool_destroy(pool);
-> +err_cleanup_heap:
-> +	kfree(priv);
-> +	return ret;
-> +}
-> +
-> +static int __init carveout_heap_init(void)
-> +{
-> +	struct device_node *rmem_node;
-> +	struct device_node *node;
-> +	int ret;
-> +
-> +	rmem_node = of_find_node_by_path("/reserved-memory");
-> +	if (!rmem_node)
-> +		return 0;
-> +
-> +	for_each_child_of_node(rmem_node, node) {
-> +		if (!of_property_read_bool(node, "export"))
-> +			continue;
-> +
-> +		ret = carveout_heap_setup(node);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +module_init(carveout_heap_init);
->
-> -- 
-> 2.49.0
+SGksDQoNClJvZG9sZm8gdG9sZCBtZSB0aGF0IHlvdSBtYXkgYnJpbmcgdGhpcyBwYXRjaCB0byBt
+YXN0ZXIsIHNvIEkgd291bGQgbGlrZSB0byBhc2sgaWYgdGhlcmUgaXMgYSBjaGFuY2UgZm9yIHRo
+ZSA2LjE2IG1lcmdlIHdpbmRvdz8NCg0KUmVnYXJkcyBEZW5pcw0KDQotLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KRnJvbTogUm9kb2xmbyBHaW9tZXR0aSA8Z2lvbWV0dGlAZW5uZWVubmUuY29t
+Pg0KU2VudDogVGh1cnNkYXksIEFwcmlsIDMsIDIwMjUgOTo0OSBBTQ0KVG86IERlbmlzIE9TVEVS
+TEFORC1IRUlNIDxkZW5pcy5vc3RlcmxhbmRAZGllaGwuY29tPg0KQ2M6IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFtFWFRdIFJl
+OiBbUEFUQ0hdIHBwczogZml4IHBvbGwgc3VwcG9ydA0KDQpbRVhURVJOQUwgRU1BSUxdDQoNCg0K
+T24gMDMvMDQvMjUgMDg6MDYsIERlbmlzIE9TVEVSTEFORC1IRUlNIHdyb3RlOg0KPiBIaSBSb2Rv
+bGZvLA0KPg0KPiBEbyB5b3UgdGhpbmsgdGhhdCB0aGVyZSBpcyBhIGNoYW5jZSB0aGF0IHRoaXMg
+cGF0Y2ggbWFrZSBpdCBpbiB0aGUgY3VycmVudCBtZXJnZSB3aW5kb3c/DQoNCkhvbmVzdGx5LCBJ
+IGRvbid0IGtub3csIGl0J3MgdXAgdG8gR3JlZyBvciBBbmRyZXcgdG8gcHJvY2VlZCBmb3IgaW5j
+bHVzaW9uLg0KDQpDaWFvLA0KDQpSb2RvbGZvDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gRnJvbTogUm9kb2xmbyBHaW9tZXR0aSA8Z2lvbWV0dGlAZW5uZWVubmUuY29tPg0KPiBT
+ZW50OiBNb25kYXksIE1hcmNoIDMsIDIwMjUgMTI6NTQgUE0NCj4gVG86IEdyZWcgS3JvYWgtSGFy
+dG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBBbmRyZXcgTW9ydG9uIDxha3BtQGxp
+bnV4LWZvdW5kYXRpb24ub3JnPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
+RGVuaXMgT1NURVJMQU5ELUhFSU0gPGRlbmlzLm9zdGVybGFuZEBkaWVobC5jb20+OyBzdGFibGVA
+dmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIHBwczogZml4IHBv
+bGwgc3VwcG9ydA0KPg0KPiBbRVhURVJOQUwgRU1BSUxdDQo+DQo+DQo+IE9uIDAzLzAzLzI1IDA5
+OjAyLCBEZW5pcyBPU1RFUkxBTkQtSEVJTSB3cm90ZToNCj4+IFtCVUddDQo+PiBBIHVzZXIgc3Bh
+Y2UgcHJvZ3JhbSB0aGF0IGNhbGxzIHNlbGVjdC9wb2xsIGdldCBhbHdheXMgYW4gaW1tZWRpYXRl
+IGRhdGENCj4+IHJlYWR5LXRvLXJlYWQgcmVzcG9uc2UuIEFzIGEgcmVzdWx0IHRoZSBpbnRlbmRl
+ZCB1c2UgdG8gd2FpdCB1bnRpbCBuZXh0DQo+PiBkYXRhIGJlY29tZXMgcmVhZHkgZG9lcyBub3Qg
+d29yay4NCj4+DQo+PiBVc2VyIHNwYWNlIHNuaXBwZXQ6DQo+Pg0KPj4gICAgICAgc3RydWN0IHBv
+bGxmZCBwb2xsZmQgPSB7DQo+PiAgICAgICAgIC5mZCA9IG9wZW4oIi9kZXYvcHBzMCIsIE9fUkRP
+TkxZKSwNCj4+ICAgICAgICAgLmV2ZW50cyA9IFBPTExJTnxQT0xMRVJSLA0KPj4gICAgICAgICAu
+cmV2ZW50cyA9IDAgfTsNCj4+ICAgICAgIHdoaWxlKDEpIHsNCj4+ICAgICAgICAgcG9sbCgmcG9s
+bGZkLCAxLCAyMDAwLyptcyovKTsgLy8gcmV0dXJucyBpbW1lZGlhdGUsIGJ1dCBzaG91bGQgd2Fp
+dA0KPj4gICAgICAgICBpZihyZXZlbnRzICYgRVBPTExJTikgeyAvLyBhbHdheXMgdHJ1ZQ0KPj4g
+ICAgICAgICAgIHN0cnVjdCBwcHNfZmRhdGEgZmRhdGE7DQo+PiAgICAgICAgICAgbWVtc2V0KCZm
+ZGF0YSwgMCwgc2l6ZW9mKG1lbWRhdGEpKTsNCj4+ICAgICAgICAgICBpb2N0bChQUFNfRkVUQ0gs
+ICZmZGF0YSk7IC8vIGN1cnJlbnRseSBmZXRjaGVzIGRhdGEgYXQgbWF4IHNwZWVkDQo+PiAgICAg
+ICAgIH0NCj4+ICAgICAgIH0NCj4+DQo+PiBbQ0FVU0VdDQo+PiBwcHNfY2Rldl9wb2xsKCkgcmV0
+dXJucyB1bmNvbmRpdGlvbmFsbHkgRVBPTExJTi4NCj4+DQo+PiBbRklYXQ0KPj4gUmVtZW1iZXIg
+dGhlIGxhc3QgZmV0Y2ggZXZlbnQgY291bnRlciBhbmQgY29tcGFyZSB0aGlzIHZhbHVlIGluDQo+
+PiBwcHNfY2Rldl9wb2xsKCkgd2l0aCBtb3N0IHJlY2VudCBldmVudCBjb3VudGVyDQo+PiBhbmQg
+cmV0dXJuIDAgaWYgdGhleSBhcmUgZXF1YWwuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogRGVuaXMg
+T1NURVJMQU5ELUhFSU0gPGRlbmlzLm9zdGVybGFuZEBkaWVobC5jb20+DQo+PiBDby1kZXZlbG9w
+ZWQtYnk6IFJvZG9sZm8gR2lvbWV0dGkgPGdpb21ldHRpQGVubmVlbm5lLmNvbT4NCj4+IFNpZ25l
+ZC1vZmYtYnk6IFJvZG9sZm8gR2lvbWV0dGkgPGdpb21ldHRpQGVubmVlbm5lLmNvbT4NCj4NCj4g
+QWNrZWQtYnk6IFJvZG9sZm8gR2lvbWV0dGkgPGdpb21ldHRpQGVubmVlbm5lLmNvbT4NCj4NCj4g
+SWYgbmVlZGVkLiA6KQ0KPg0KPj4gRml4ZXM6IGVhZTlkMmJhMGNmYyAoIkxpbnV4UFBTOiBjb3Jl
+IHN1cHBvcnQiKQ0KPj4gQ0M6IHN0YWJsZUB2Z2VyLmxpbnV4Lm9yZyAjIDUuNCsNCj4+IC0tLQ0K
+Pj4gICAgZHJpdmVycy9wcHMvcHBzLmMgICAgICAgICAgfCAxMSArKysrKysrKystLQ0KPj4gICAg
+aW5jbHVkZS9saW51eC9wcHNfa2VybmVsLmggfCAgMSArDQo+PiAgICAyIGZpbGVzIGNoYW5nZWQs
+IDEwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvcHBzL3Bwcy5jIGIvZHJpdmVycy9wcHMvcHBzLmMNCj4+IGluZGV4IDZhMDIyNDVlYTM1
+Zi4uOTQ2MzIzMmFmOGQyIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9wcHMvcHBzLmMNCj4+ICsr
+KyBiL2RyaXZlcnMvcHBzL3Bwcy5jDQo+PiBAQCAtNDEsNiArNDEsOSBAQCBzdGF0aWMgX19wb2xs
+X3QgcHBzX2NkZXZfcG9sbChzdHJ1Y3QgZmlsZSAqZmlsZSwgcG9sbF90YWJsZSAqd2FpdCkNCj4+
+DQo+PiAgICBwb2xsX3dhaXQoZmlsZSwgJnBwcy0+cXVldWUsIHdhaXQpOw0KPj4NCj4+ICtpZiAo
+cHBzLT5sYXN0X2ZldGNoZWRfZXYgPT0gcHBzLT5sYXN0X2V2KQ0KPj4gK3JldHVybiAwOw0KPj4g
+Kw0KPj4gICAgcmV0dXJuIEVQT0xMSU4gfCBFUE9MTFJETk9STTsNCj4+ICAgIH0NCj4+DQo+PiBA
+QCAtMTg2LDkgKzE4OSwxMSBAQCBzdGF0aWMgbG9uZyBwcHNfY2Rldl9pb2N0bChzdHJ1Y3QgZmls
+ZSAqZmlsZSwNCj4+ICAgIGlmIChlcnIpDQo+PiAgICByZXR1cm4gZXJyOw0KPj4NCj4+IC0vKiBS
+ZXR1cm4gdGhlIGZldGNoZWQgdGltZXN0YW1wICovDQo+PiArLyogUmV0dXJuIHRoZSBmZXRjaGVk
+IHRpbWVzdGFtcCBhbmQgc2F2ZSBsYXN0IGZldGNoZWQgZXZlbnQgICovDQo+PiAgICBzcGluX2xv
+Y2tfaXJxKCZwcHMtPmxvY2spOw0KPj4NCj4+ICtwcHMtPmxhc3RfZmV0Y2hlZF9ldiA9IHBwcy0+
+bGFzdF9ldjsNCj4+ICsNCj4+ICAgIGZkYXRhLmluZm8uYXNzZXJ0X3NlcXVlbmNlID0gcHBzLT5h
+c3NlcnRfc2VxdWVuY2U7DQo+PiAgICBmZGF0YS5pbmZvLmNsZWFyX3NlcXVlbmNlID0gcHBzLT5j
+bGVhcl9zZXF1ZW5jZTsNCj4+ICAgIGZkYXRhLmluZm8uYXNzZXJ0X3R1ID0gcHBzLT5hc3NlcnRf
+dHU7DQo+PiBAQCAtMjcyLDkgKzI3NywxMSBAQCBzdGF0aWMgbG9uZyBwcHNfY2Rldl9jb21wYXRf
+aW9jdGwoc3RydWN0IGZpbGUgKmZpbGUsDQo+PiAgICBpZiAoZXJyKQ0KPj4gICAgcmV0dXJuIGVy
+cjsNCj4+DQo+PiAtLyogUmV0dXJuIHRoZSBmZXRjaGVkIHRpbWVzdGFtcCAqLw0KPj4gKy8qIFJl
+dHVybiB0aGUgZmV0Y2hlZCB0aW1lc3RhbXAgYW5kIHNhdmUgbGFzdCBmZXRjaGVkIGV2ZW50ICAq
+Lw0KPj4gICAgc3Bpbl9sb2NrX2lycSgmcHBzLT5sb2NrKTsNCj4+DQo+PiArcHBzLT5sYXN0X2Zl
+dGNoZWRfZXYgPSBwcHMtPmxhc3RfZXY7DQo+PiArDQo+PiAgICBjb21wYXQuaW5mby5hc3NlcnRf
+c2VxdWVuY2UgPSBwcHMtPmFzc2VydF9zZXF1ZW5jZTsNCj4+ICAgIGNvbXBhdC5pbmZvLmNsZWFy
+X3NlcXVlbmNlID0gcHBzLT5jbGVhcl9zZXF1ZW5jZTsNCj4+ICAgIGNvbXBhdC5pbmZvLmN1cnJl
+bnRfbW9kZSA9IHBwcy0+Y3VycmVudF9tb2RlOw0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGlu
+dXgvcHBzX2tlcm5lbC5oIGIvaW5jbHVkZS9saW51eC9wcHNfa2VybmVsLmgNCj4+IGluZGV4IGM3
+YWJjZTI4ZWQyOS4uYWFiMGFlYmI1MjllIDEwMDY0NA0KPj4gLS0tIGEvaW5jbHVkZS9saW51eC9w
+cHNfa2VybmVsLmgNCj4+ICsrKyBiL2luY2x1ZGUvbGludXgvcHBzX2tlcm5lbC5oDQo+PiBAQCAt
+NTIsNiArNTIsNyBAQCBzdHJ1Y3QgcHBzX2RldmljZSB7DQo+PiAgICBpbnQgY3VycmVudF9tb2Rl
+Oy8qIFBQUyBtb2RlIGF0IGV2ZW50IHRpbWUgKi8NCj4+DQo+PiAgICB1bnNpZ25lZCBpbnQgbGFz
+dF9ldjsvKiBsYXN0IFBQUyBldmVudCBpZCAqLw0KPj4gK3Vuc2lnbmVkIGludCBsYXN0X2ZldGNo
+ZWRfZXY7LyogbGFzdCBmZXRjaGVkIFBQUyBldmVudCBpZCAqLw0KPj4gICAgd2FpdF9xdWV1ZV9o
+ZWFkX3QgcXVldWU7LyogUFBTIGV2ZW50IHF1ZXVlICovDQo+Pg0KPj4gICAgdW5zaWduZWQgaW50
+IGlkOy8qIFBQUyBzb3VyY2UgdW5pcXVlIElEICovDQo+DQoNCi0tDQpHTlUvTGludXggU29sdXRp
+b25zICAgICAgICAgICAgICAgICAgZS1tYWlsOiBnaW9tZXR0aUBlbm5lZW5uZS5jb20NCkxpbnV4
+IERldmljZSBEcml2ZXIgICAgICAgICAgICAgICAgICAgICAgICAgIGdpb21ldHRpQGxpbnV4Lml0
+DQpFbWJlZGRlZCBTeXN0ZW1zICAgICAgICAgICAgICAgICAgICAgcGhvbmU6ICArMzkgMzQ5IDI0
+MzIxMjcNClVOSVggcHJvZ3JhbW1pbmcNCkRpZWhsIE1ldGVyaW5nIEdtYkgsIERvbmF1c3RyYXNz
+ZSAxMjAsIDkwNDUxIE51ZXJuYmVyZw0KU2l0eiBkZXIgR2VzZWxsc2NoYWZ0OiBBbnNiYWNoLCBS
+ZWdpc3RlcmdlcmljaHQ6IEFuc2JhY2ggSFJCIDY5DQpHZXNjaGFlZnRzZnVlaHJlcjogRHIuIENo
+cmlzdG9mIEJvc2JhY2ggKFNwcmVjaGVyKSwgRGlwbC4tRG9sbS4gQW5uZXR0ZSBHZXV0aGVyLCBE
+aXBsLi1LZm0uIFJlaW5lciBFZGVsLCBKZWFuLUNsYXVkZSBMdXR0cmluZ2VyDQoNCkJpdHRlIGRl
+bmtlbiBTaWUgYW4gZGllIFVtd2VsdCwgYmV2b3IgU2llIGRpZXNlIEUtTWFpbCBkcnVja2VuLiBE
+aWVzZSBFLU1haWwga2FubiB2ZXJ0cmF1bGljaGUgSW5mb3JtYXRpb25lbiBlbnRoYWx0ZW4uIFNv
+bGx0ZW4gZGllIGluIGRpZXNlciBFLU1haWwgZW50aGFsdGVuZW4gSW5mb3JtYXRpb25lbiBuaWNo
+dCBmw7xyIFNpZSBiZXN0aW1tdCBzZWluLCBpbmZvcm1pZXJlbiBTaWUgYml0dGUgdW52ZXJ6dWVn
+bGljaCBkZW4gQWJzZW5kZXIgcGVyIEUtTWFpbCB1bmQgbG9lc2NoZW4gU2llIGRpZXNlIEUtTWFp
+bCBpbiBJaHJlbSBTeXN0ZW0uIEplZGUgdW5iZXJlY2h0aWd0ZSBGb3JtIGRlciBSZXByb2R1a3Rp
+b24sIEJla2FubnRnYWJlLCBBZW5kZXJ1bmcsIFZlcnRlaWx1bmcgdW5kL29kZXIgUHVibGlrYXRp
+b24gZGllc2VyIEUtTWFpbCBpc3Qgc3RyZW5nc3RlbnMgdW50ZXJzYWd0LiBJbmZvcm1hdGlvbmVu
+IHp1bSBEYXRlbnNjaHV0eiBmaW5kZW4gU2llIGF1ZiB1bnNlcmVyIEhvbWVwYWdlPGh0dHBzOi8v
+d3d3LmRpZWhsLmNvbS9tZXRlcmluZy9kZS9pbXByZXNzdW0tdW5kLXJlY2h0bGljaGUtaGlud2Vp
+c2UvPi4NCg0KQmVmb3JlIHByaW50aW5nLCB0aGluayBhYm91dCBlbnZpcm9ubWVudGFsIHJlc3Bv
+bnNpYmlsaXR5LlRoaXMgbWVzc2FnZSBtYXkgY29udGFpbiBjb25maWRlbnRpYWwgaW5mb3JtYXRp
+b24uIElmIHlvdSBhcmUgbm90IGF1dGhvcml6ZWQgdG8gcmVjZWl2ZSB0aGlzIGluZm9ybWF0aW9u
+IHBsZWFzZSBhZHZpc2UgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBieSByZXBseSBlLW1haWwgYW5k
+IGRlbGV0ZSB0aGlzIG1lc3NhZ2Ugd2l0aG91dCBtYWtpbmcgYW55IGNvcGllcy4gQW55IGZvcm0g
+b2YgdW5hdXRob3JpemVkIHVzZSwgcHVibGljYXRpb24sIHJlcHJvZHVjdGlvbiwgY29weWluZyBv
+ciBkaXNjbG9zdXJlIG9mIHRoZSBlLW1haWwgaXMgbm90IHBlcm1pdHRlZC4gSW5mb3JtYXRpb24g
+YWJvdXQgZGF0YSBwcm90ZWN0aW9uIGNhbiBiZSBmb3VuZCBvbiBvdXIgaG9tZXBhZ2U8aHR0cHM6
+Ly93d3cuZGllaGwuY29tL21ldGVyaW5nL2VuL2RhdGEtcHJvdGVjdGlvbi8+Lg0K
