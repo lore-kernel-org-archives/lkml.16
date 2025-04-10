@@ -1,105 +1,106 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F07E26B0A2;
-	Thu, 10 Apr 2025 09:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294162686AB
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278715; cv=none; b=QMDsuzn04ya6bj7KaDO7/AagmDhhvgme8UrXcme7d0D7uQmsDP6u6UfwyjKim2k5U+2iu2eRpZQ5hI1w/SsY2K+5F8NXIwytsdJPMbv/NS7lApyXFIzUR4kbJ12k1dJHuEfvExItzLM00HanvR8exsPfzDxsz7lo1f5oLjExu4M=
+	t=1744278730; cv=none; b=F7e8PdI8pS18JL5TZGCRKOJUWxtcHFZVvgFQCigLSu9uydQiMseeUxj3Ere+1bIbmPZjKyvzrGO54S9gc9FEwFAV6VtVujo/NC7hkqZfE2fbHaUPG5gGtxjo5gqY3iuotJ9zTIAv/cZA3cNQDjM0RMud9tHi/EnLcsJRuzNHUmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278715; c=relaxed/simple;
-	bh=6PJaYm5P/NviqMk6kV3Jh7Ha7oefRv1KzDsI0FZwZBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O/1Xi28unImsCMBXOEVGVlE/h+FUNuXrPJHaK60UVu552qo1tlne0w2HqUaBiBAgLeKwcfnE9gtfIQRP6wWLvuua5uOVUUwjXiwf6PHWGLXbK2as+G1SHd4RijRGVzeVxE6uP6XUWyZ23sk8Kc2WsN2aM8RFr1TAKRaB7DasT6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=uNJTSIAC; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744278730; c=relaxed/simple;
+	bh=MZ84i568MudrbnzkW7eLSSsitN+JayvOPUqqQdoJrFU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BlTfwi3SPVZZt8JElFIdVgN2mxf46Vf3NRl1lz0uzlb5KnGklYQe7cwYO6DrFPqqNqQewJsCJCsNyaA0ziLhJzQjkgrIP89yhBFwLBpeSnN0Emrlskbg6jYr9/L6cwu54f2j1mdd/12OFlbfsA74d7wTrrc0ZzwAE5HQmpUjbHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=qVpx0/9u; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="uNJTSIAC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744278701; x=1744883501; i=markus.elfring@web.de;
-	bh=vSPtDJBBCPKpz5rvbsYOOueaz2bMZDd9bsU+wbrmbcM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=uNJTSIACyASdjTcRckv2AYHUAAfql049+cxwSxa0bnxGRoSkp6C9mSuacBk292GN
-	 jns+fIlNpfhauKawNrKOHfDYH0fQ0liEGgg7TD4kVQYA3cgDwBKZrxOGSF2QpA67C
-	 zaevTXFNYDdN+ML9plVzFADlJYXYjxWgDyUOjoGWNYajIM/T9EpuqsQdb2ilAM1AJ
-	 7pgHztMeD7/mGSMQqiJKjnVEmGl+/XL5HgaGq/+BbbIrAkjOX8pisavOJJ9VunaHL
-	 Evmt2SGmALAiAhKFe1jeiN2+hDxpQlWiRZbUW7Vadwu/hGpsASPN3mJlaJ8CgYm3d
-	 +uKxXTKjEPTxtlOKjQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.83]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MnX1L-1tJKrg2oKL-00aV4K; Thu, 10
- Apr 2025 11:51:41 +0200
-Message-ID: <47681eb7-11b5-4a75-b100-93bc5ccc1c8b@web.de>
-Date: Thu, 10 Apr 2025 11:51:30 +0200
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qVpx0/9u"
+X-UUID: 7417b73c15f111f08eb9c36241bbb6fb-20250410
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=8aFqx7rBqmhAKUDz1EoI12kISFmiMl1zSnR1/LjpxZQ=;
+	b=qVpx0/9ujT4wejx8Eup3Ts1ZQp7vwDUfTULzpdcRX6x/kAulk45sMSqERcQ7l6TUGGY7qv4QS6lGdTl2FAH2FvOQGWs1PfGEemxfynyJe4nC9TnjgwKkcGuOH3KBfgH3NDxQGzjRq23mkGIyJ/vlURAUqlIEtilDe7D8w4sNYDo=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:00d50654-4a71-4607-9e2e-4ab7c4b9cd6e,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:bf2e168b-0afe-4897-949e-8174746b1932,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 7417b73c15f111f08eb9c36241bbb6fb-20250410
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
+	(envelope-from <yiru.zhang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 2146154948; Thu, 10 Apr 2025 17:52:02 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 10 Apr 2025 17:52:01 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Thu, 10 Apr 2025 17:52:01 +0800
+From: yiru zhang <yiru.zhang@mediatek.com>
+To: <yiru.zhang@mediatek.com>
+CC: <alexander.shishkin@linux.intel.com>,
+	<angelogioacchino.delregno@collabora.com>, <coresight@lists.linaro.org>,
+	<james.clark@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+	<matthias.bgg@gmail.com>, <mike.leach@linaro.org>, <suzuki.poulose@arm.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] [Patch v3]Add ETE devarch condition in etm4_init_iomem_access
+Date: Thu, 10 Apr 2025 17:51:58 +0800
+Message-ID: <20250410095158.8966-1-yiru.zhang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250409032917.7580-1-yiru.zhang@mediatek.com>
+References: <20250409032917.7580-1-yiru.zhang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: crypto: sun8i-ce-hash - Refine exception handling in
- sun8i_ce_hash_run()
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
- Andre Przywara <andre.przywara@arm.com>, linux-sunxi@lists.linux.dev,
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>,
- "David S. Miller" <davem@davemloft.net>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Ovidiu Panait <ovidiu.panait.oss@gmail.com>,
- Samuel Holland <samuel@sholland.org>, LKML <linux-kernel@vger.kernel.org>,
- Julia Lawall <julia.lawall@inria.fr>
-References: <3727de04-7993-4b81-80c0-adb40b847307@web.de>
- <20250409133610.59d42bec@donnerap.manchester.arm.com>
- <2774682.mvXUDI8C0e@jernej-laptop>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <2774682.mvXUDI8C0e@jernej-laptop>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:hwJLNn0l4SKDqj00GqpCYLwpSlnmBFbcsAzjdkoHdNAyDzfJjqA
- cVOLLWsODyxVOnyi0U4Xp9SR14AQAiClqqwnvfEpYYplTw/vOLVgNt+GaDsUpmTqwTh5/11
- yLUVrGoaXrE7440Iz+8ts0one8l2XSTFMi7/71GpPnvLiCl5pfyV1AsTDfMqhnJbmsh9JPX
- L0vEEFPgulu/0pt0cwARA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:aPD+U6ytqzM=;3juoI7tli45UC7oVR/Bw81F+FNl
- tIJSaD6SCDLINBFGIXvDu1w50HUXMTh3TiGWYgCk7NCXe2qf7Z7t/ygJQUryl/sTxmtak55md
- CTGghy+uVZBiYKKfWxASqdMU6a1yJXaNX5E8Xvldg8zU02/hzaBuq1viJW0a0qoVCjgbpbTah
- 9/gGwEsx0uaBxMu2Ryxvj87r3q5zyvbB0wfgv3KdrN8viH/vp1MVwmnAP02dfyHW7+MkU4LKN
- kof9akYD1J6t4p4RlhtWtJaRodyDD62KNqvjkR6VaRwV3HznbsAQDHfRdxL1rbjX2Etg1H9HU
- 8QgtRUJAimxbUf4+Vo7RtZAY/eIgw01wF5yaiOiH5w5KNYxUfVaHRdHUDjeSEhsVRTiFWggyv
- agXyaj95ABVJors1a+vKTu/dvBhBAMMbWoUAnzMFBjQ55tTlEiq9TZq2Evc665Un7pTLT0FQA
- WNtC0UahR6uQhe7dXmSeRslGAcWnoLk2+8PIgi/hgQhR7TUknT9LY/XMRvcTpwcCqXOSD9DYh
- FT2C25b9tsAkItS4QNDrOijYtwXtxjQx5RM4wIpq8OmbpyFTkTxf53AvBVxdv1ZRipYSZrzHB
- LoNybxR16nwI1oLQ/of4XN88FffJQA7d6yVPKsVtqp+GYGmERw2jEcSZ5UcaTNvSpWXjXfeox
- 0oXE+l+vejVDNDdiBkYeVULRrVB+qsGTgdJd7ldA1hUvCS+JRArC0Li8+91H2P24bsRVIwSkX
- ef+HYS95Vdfn52nMnU9ZOh1HiXpAeAN7deJPxC29q9lUENRfw76sYc0yW+pj5JPh9LsK+K1CS
- CLNJBJk/1ClRIlO2G2k71iZsxbl7Xp0MCrB0bOUq+ucUZdG3D0kMFNc7Ax6+epzjv63XCYTKQ
- 4BhTPP9eKaSVMd8sYkSdzVBarDhKcB6WEy1eTRA1W2XxxIchY7Se+YlNyi+dtQ6v1Syt7Gpb5
- 6tScQYWIBxm/bLK3UApil8DWBOfhZPrGrUNEFbBZbaTb4EV3+0r6d1Z3Zm4z064Dmun+hTz+Z
- rmSJa7TxHuHiWBt4KO3uiM9iOwhGjoSVsZv7IRGWvH26eMY9TpJbSon6DL0qU+HMeduDX+MAY
- q66HNoBcYYx2iGcV+3ELyCmvtMB6+c2C/REJQQ2MxzjG0tPD+mGXxHF7hWX+Z6yN8uL7FN8a7
- rwMnE8yuO1SMQuIq8V/VKd7QQldWvlBdW57dTCd/78w2eO4sMtlDi1RDxhJU9MAWHfpSiMw0M
- VrrCW7xibXjchciMJdpBtAdDz8/rTdjzL7O6XMC9zukrYdf0H5EqW4dKyCIvGAcT/A2uxq1cl
- 4AVO2Ry7xa2qKKvX8QqUmbX6mSHPaPzIf4Z5jseax91MsGpv5Jca7ptaJJ7pSrDI6Wos+RNe8
- UgjPjvlp9Dm1C8HLBMGilbtB8zXkj9twzLu/1eKatcwdvZzsGioj7FKCR0IRPBlZNFGYq23iM
- hyDrv6cZWetOiSGvZAy5HI9cjjO63DlUNF8j9tQAlUiE9lXBs
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-> I'm not a fan of this patch either. As Andre said, current code is easier to
-> read
+Due to ETE supported, so add ETE devarch condition in etm4_init_iomem_access.
 
-I dare to propose a small source code adjustment according to another
-software design option.
+Signed-off-by: yiru zhang <yiru.zhang@mediatek.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504101759.7Ls0Uy4o-lkp@intel.com/
 
+v1->v2: use switch case way
+v2->v3: clean build warning
+---
+ drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
->      and such optimizations are more for compiler to make than us.
-Do you know any compiler versions which would support the presented
-transformation directly?
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index 2b8f10463840..4002a2823fd0 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -1135,11 +1135,15 @@ static bool etm4_init_iomem_access(struct etmv4_drvdata *drvdata,
+ 	 * with MMIO. But we cannot touch the OSLK until we are
+ 	 * sure this is an ETM. So rely only on the TRCDEVARCH.
+ 	 */
+-	if ((devarch & ETM_DEVARCH_ID_MASK) != ETM_DEVARCH_ETMv4x_ARCH) {
+-		pr_warn_once("TRCDEVARCH doesn't match ETMv4 architecture\n");
++	switch (devarch & ETM_DEVARCH_ID_MASK) {
++	case ETM_DEVARCH_ETMv4x_ARCH:
++	case ETM_DEVARCH_ETE_ARCH:
++		break;
++	default:
++		pr_warn_once("Unknown ETM architecture: 0x%lx\n",
++			     devarch & ETM_DEVARCH_ID_MASK);
+ 		return false;
+ 	}
+-
+ 	drvdata->arch = etm_devarch_to_arch(devarch);
+ 	*csa = CSDEV_ACCESS_IOMEM(drvdata->base);
+ 	return true;
+-- 
+2.46.0
 
-Regards,
-Markus
