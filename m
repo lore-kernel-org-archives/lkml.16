@@ -1,290 +1,244 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAAF290BBA;
-	Thu, 10 Apr 2025 20:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F4E1C6BE
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744317110; cv=none; b=m3Y6Gv4+OX2ALyUD/EMatXdmL9QyNXQkGIL/8wDseZaZ6V0QB9yCFEdKNJAK4dcELv0+pVjaFr16OCqJc0BdnUsPLwIAZNUR3ZAKPPM25nGtotVu6ulYFdhoyimbIuapkearYO9m4bXw7HAbWXXIwDeBopn2wCGqnTPVPoV8kjY=
+	t=1744317212; cv=none; b=IT5gwGy23wh/W6Il2l0DiHZ5NhZOGtcR6UC7jpQqt5V6Clk/Q3A+NnXeSUEQvQ7dseHxlQVEO5lbKfyJd0MMjeErhBP5RBwSsUaIy+rRRlmSU/7o1n+aXEYN/J8YABSB9PWLcJVUXc1g7Mw6tYBmI932chwSr5Mf/v+lUcHUdCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744317110; c=relaxed/simple;
-	bh=clGXEM3uV6arKybRtUtjay21pNyzBA3gbrojC+ubh68=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dXCsQuD7VA8X51ZaMOte8YF2IYwwESfPtFOjtXhau4TSfLuTzvE5COhR3cP0xygr2ej5x6EkMWNfEJ4EWYol46XmSF4mjnMvdarB9XcOn6FEsz82/TGHsn8NNsUwfFjf1gfAGsuMJw+qW1C4rYqO0p/+ilRX9BBeE03hslmSw6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KUOA3jlb; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KUOA3jlb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744317105;
-	bh=clGXEM3uV6arKybRtUtjay21pNyzBA3gbrojC+ubh68=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KUOA3jlbOp2P0xkTTT/RAQPsasqyvXcQA5paDG4e4Db/qxLlSN6SqChJEqcuLBzNl
-	 kJV0tbmus95IVaRLtBJdQNkf/44eIQ7UAqOkinvlk9J6uXPieq6gIFSUtLp3bQx6fP
-	 8yXCrDGaJHIcyCv0l7f/eWYEo0K9xGhpFWK4p+u6FKlLCdXcVWfwYXBX7k2ph9vvyx
-	 0HuhBbjuqPzJRrB8jftF5WZWUMB/O9OCk5OHqQY+p1p/qyDpmot8mxA0wyNecj6ZKf
-	 FMfK9zgKeCowmJToW2FBEnw3TFrvtozm40cHB/64SFWaMQ1mtXcxiExXrXYWKFU5m3
-	 Zv+g8snVhrD9g==
-Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C58B117E017D;
-	Thu, 10 Apr 2025 22:31:43 +0200 (CEST)
-Message-ID: <bb1f8d1581169bdf2e04be67883ee3ae03488680.camel@collabora.com>
-Subject: Re: [PATCH v2 1/5] media: mc: add manual request completion
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin	
- <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, 
- Yunfei Dong <yunfei.dong@mediatek.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	kernel@collabora.com, linux-media@vger.kernel.org, Sebastian Fricke	
- <sebastian.fricke@collabora.com>
-Date: Thu, 10 Apr 2025 16:31:42 -0400
-In-Reply-To: <20250410175010.GF27870@pendragon.ideasonboard.com>
-References: 
-	<20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
-	 <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-1-5b99ec0450e6@collabora.com>
-	 <20250410175010.GF27870@pendragon.ideasonboard.com>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	s=arc-20240116; t=1744317212; c=relaxed/simple;
+	bh=p9D5LVyotfH+P4i+02smV1WqoOe83TtK3Nu2Lithkog=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=l3LIANzF9+VDzcFE/c5MVaWf6nlR637tbSALcROEWvwcsFTQpw58pOwcey9PzzckUcDXMFit2xU6ndEkXbRiTgMpvF0QBFQDnfvEWtLNqi/V/OqbLGrcuw2DWY919tjbs3i2acjN7RmEsnAYc1KED8lY9wtoB6lj7pshoMX5AsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d5da4fd946so26108105ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:33:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744317210; x=1744922010;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hRn5/A+cHyiNQu94a3ZDaKiqG1FYzt+SDZwwlYlSt/I=;
+        b=Ca8SIco+rQFKC06ssM/ddwediDNmu7tGKxdIpaIN0dmmYQok9p70Yn+vn1egDui17L
+         NvLKYdvJHpKJCTMwCccLTDwDjsWgHimL6zw1PzP7/P8q3Zbtq+SOKjCRjpnsp5ydyvKO
+         v/D/hPibSb/VmvcRThEQtGaIbGQ2SeBYhVjyvcalE2pUvv5z7UJE7nAh3m6WvAZL7n7k
+         O4u2O2G+ge8GQ2eDd/Ztihd0oPftyRt0BjOq7d/nK7ZwrotZqn0gg5LlAQxtkElx/atP
+         aLdUtEEDsTy1pQ8UMyo79nSMcxBsEDjQlWDhm8phLftOcIpmpMh9y9yiMcCLCV5seypQ
+         bx9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWtHi+fBsAzxOf9/YzP38bO7uHwdW0CqSU/s68oF792Fr2psYn5fY1+YCtXX9f4ahx3i9Wc003fqhytFJA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/0GAOEODV2l3kgooRc7r5HoEvX3ywdgt/Ux8xux5gF6P+ydKK
+	jPfnauDjo1jUt0Olu6on565TeXh2wesSW7k5PsiduHZi2HSErw4IN4Tt4ncdNNYk0m2WLBp/IQq
+	N2zHpF6SxrLQP2hfyzgen7B62kwa1qbzKsqoHM5t1PwNLsWn0s4Fe62o=
+X-Google-Smtp-Source: AGHT+IHOV1KLw8yy/b30NZDs/IR9I/NkNrH13LzJ48c8JJXdk2aph9j3S4FTY6EftrhmvrRkiOrNA1kX68mJyeNW41cJP/eosfxc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1a6c:b0:3d0:4c9c:965f with SMTP id
+ e9e14a558f8ab-3d7ec2732fdmr3494205ab.20.1744317209752; Thu, 10 Apr 2025
+ 13:33:29 -0700 (PDT)
+Date: Thu, 10 Apr 2025 13:33:29 -0700
+In-Reply-To: <67eba499.050a0220.297a31.0009.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f82b19.050a0220.355867.000f.GAE@google.com>
+Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_iop_getattr
+From: syzbot <syzbot+4bb2305559463e8f6a2a@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Replying on the code comment, sorry for missing some bit earlier ...
+syzbot has found a reproducer for the following issue on:
 
-Le jeudi 10 avril 2025 à 20:50 +0300, Laurent Pinchart a écrit :
-> Hi Nicolas,
-> 
-> Thank you for the patch.
-> 
-> On Thu, Apr 10, 2025 at 11:39:56AM -0400, Nicolas Dufresne wrote:
-> > From: Hans Verkuil <hverkuil@xs4all.nl>
-> > 
-> > By default when the last request object is completed, the whole
-> > request completes as well.
-> > 
-> > But sometimes you want to manually complete a request in a driver,
-> > so add a manual complete mode for this.
-> 
-> I didn't immediately understand this was about delaying completion of
-> the request. It would be nice to make that more explicit in the commit
-> message and in the documentation of
-> media_request_mark_manual_completion(). A sample use case would also
-> help.
-> 
-> > In req_queue the driver marks the request for manual completion by
-> > calling media_request_mark_manual_completion, and when the driver
-> > wants to manually complete the request it calls
-> > media_request_manual_complete().
-> > 
-> > Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> > Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > ---
-> >  drivers/media/mc/mc-request.c | 38 ++++++++++++++++++++++++++++++++++++--
-> >  include/media/media-request.h | 36 +++++++++++++++++++++++++++++++++++-
-> >  2 files changed, 71 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
-> > index 5edfc2791ce7c7485def5db675bbf53ee223d837..398d0806d1d274eb8c454fc5c37b77476abe1e74 100644
-> > --- a/drivers/media/mc/mc-request.c
-> > +++ b/drivers/media/mc/mc-request.c
-> > @@ -54,6 +54,7 @@ static void media_request_clean(struct media_request *req)
-> >  	req->access_count = 0;
-> >  	WARN_ON(req->num_incomplete_objects);
-> >  	req->num_incomplete_objects = 0;
-> > +	req->manual_completion = false;
-> >  	wake_up_interruptible_all(&req->poll_wait);
-> >  }
-> >  
-> > @@ -313,6 +314,7 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
-> >  	req->mdev = mdev;
-> >  	req->state = MEDIA_REQUEST_STATE_IDLE;
-> >  	req->num_incomplete_objects = 0;
-> > +	req->manual_completion = false;
-> >  	kref_init(&req->kref);
-> >  	INIT_LIST_HEAD(&req->objects);
-> >  	spin_lock_init(&req->lock);
-> > @@ -459,7 +461,7 @@ void media_request_object_unbind(struct media_request_object *obj)
-> >  
-> >  	req->num_incomplete_objects--;
-> >  	if (req->state == MEDIA_REQUEST_STATE_QUEUED &&
-> > -	    !req->num_incomplete_objects) {
-> > +	    !req->num_incomplete_objects && !req->manual_completion) {
-> >  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> >  		completed = true;
-> >  		wake_up_interruptible_all(&req->poll_wait);
-> > @@ -488,7 +490,7 @@ void media_request_object_complete(struct media_request_object *obj)
-> >  	    WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
-> >  		goto unlock;
-> >  
-> > -	if (!--req->num_incomplete_objects) {
-> > +	if (!--req->num_incomplete_objects && !req->manual_completion) {
-> >  		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> >  		wake_up_interruptible_all(&req->poll_wait);
-> >  		completed = true;
-> > @@ -499,3 +501,35 @@ void media_request_object_complete(struct media_request_object *obj)
-> >  		media_request_put(req);
-> >  }
-> >  EXPORT_SYMBOL_GPL(media_request_object_complete);
-> > +
-> > +void media_request_manual_complete(struct media_request *req)
-> > +{
-> > +	unsigned long flags;
-> > +	bool completed = false;
-> > +
-> > +	if (WARN_ON(!req))
-> > +		return;
-> > +	if (WARN_ON(!req->manual_completion))
-> > +		return;
-> > +
-> > +	spin_lock_irqsave(&req->lock, flags);
-> > +	if (WARN_ON(req->state != MEDIA_REQUEST_STATE_QUEUED))
-> > +		goto unlock;
-> > +
-> > +	req->manual_completion = false;
-> > +	/*
-> > +	 * It is expected that all other objects in this request are
-> > +	 * completed when this function is called. WARN if that is
-> > +	 * not the case.
-> > +	 */
-> > +	if (!WARN_ON(req->num_incomplete_objects)) {
-> > +		req->state = MEDIA_REQUEST_STATE_COMPLETE;
-> > +		wake_up_interruptible_all(&req->poll_wait);
-> > +		completed = true;
-> > +	}
-> > +unlock:
-> > +	spin_unlock_irqrestore(&req->lock, flags);
-> > +	if (completed)
-> > +		media_request_put(req);
-> > +}
-> > +EXPORT_SYMBOL_GPL(media_request_manual_complete);
-> > diff --git a/include/media/media-request.h b/include/media/media-request.h
-> > index d4ac557678a78372222704400c8c96cf3150b9d9..645d18907be7148ca50dcc9248ff06bd8ccdf953 100644
-> > --- a/include/media/media-request.h
-> > +++ b/include/media/media-request.h
-> > @@ -56,6 +56,10 @@ struct media_request_object;
-> >   * @access_count: count the number of request accesses that are in progress
-> >   * @objects: List of @struct media_request_object request objects
-> >   * @num_incomplete_objects: The number of incomplete objects in the request
-> > + * @manual_completion: if true, then the request won't be marked as completed
-> > + * when @num_incomplete_objects reaches 0. Call media_request_manual_complete()
-> > + * to set this field to false and complete the request
-> 
-> I'd drop "set this field to false and " here.
+HEAD commit:    2eb959eeecc6 Merge tag 'for-linus-6.15a-rc2-tag' of git://..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16fdf23f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4c918722cb7e3d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=4bb2305559463e8f6a2a
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1352b7e4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17499d78580000
 
-I agree, it sounds like an invitation to write it directly, we don't
-really want this. If Hans is fine I'll drop it.
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-2eb959ee.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e48cee99a6e9/vmlinux-2eb959ee.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6087fbb17208/bzImage-2eb959ee.xz
 
-> 
-> > + * if @num_incomplete_objects == 0.
-> 
->  * after @num_incomplete_objects reaches 0.
-> 
-> >   * @poll_wait: Wait queue for poll
-> >   * @lock: Serializes access to this struct
-> >   */
-> > @@ -68,6 +72,7 @@ struct media_request {
-> >  	unsigned int access_count;
-> >  	struct list_head objects;
-> >  	unsigned int num_incomplete_objects;
-> > +	bool manual_completion;
-> >  	wait_queue_head_t poll_wait;
-> >  	spinlock_t lock;
-> >  };
-> > @@ -218,6 +223,35 @@ media_request_get_by_fd(struct media_device *mdev, int request_fd);
-> >  int media_request_alloc(struct media_device *mdev,
-> >  			int *alloc_fd);
-> >  
-> > +/**
-> > + * media_request_mark_manual_completion - Set manual_completion to true
-> > + *
-> > + * @req: The request
-> > + *
-> > + * Mark that the request has to be manually completed by calling
-> > + * media_request_manual_complete().
-> > + *
-> > + * This function should be called in the req_queue callback.
-> 
-> s/should/shall/ unless it's not a hard requirement. Any way to catch
-> incorrect call patterns ?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4bb2305559463e8f6a2a@syzkaller.appspotmail.com
 
-I think we should be more strict, I can edit to shall.
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-rc1-syzkaller-00095-g2eb959eeecc6 #0 Not tainted
+------------------------------------------------------
+syz-executor105/5947 is trying to acquire lock:
+ffff88801c68e9e0 (&root->kernfs_iattr_rwsem){++++}-{4:4}, at: kernfs_iop_getattr+0x9c/0xf0 fs/kernfs/inode.c:191
 
-About ways to check, perhaps I can add a lockdep_assert_held() on the
-mdev->req_queue_mutex along with checking that the state is QUEUED. The
-state check would catch trying to do so in req_validate().
+but task is already holding lock:
+ffff8881070c75a8 (&q->q_usage_counter(io)#26){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
 
-> 
-> > + */
-> > +static inline void
-> > +media_request_mark_manual_completion(struct media_request *req)
-> > +{
-> > +	req->manual_completion = true;
-> > +}
-> > +
-> > +/**
-> > + * media_request_manual_complete - Set manual_completion to false
-> 
-> The main purpose of the function is to complete the request, not setting
-> manual_completion to false.
+which lock already depends on the new lock.
 
-Indeed, that's documenting an implementation detail.
 
-> 
-> > + *
-> > + * @req: The request
-> > + *
-> > + * Set @manual_completion to false, and if @num_incomplete_objects
-> > + * is 0, then mark the request as completed.
-> > + *
-> > + * If there are still incomplete objects in the request, then
-> > + * WARN for that since that suggests a driver error.
-> 
-> If that's an error then I'd document it more explicitly, as the first
-> sentence makes it sound that both cases are valid. Maybe
+the existing dependency chain (in reverse order) is:
 
-Its a programming error, I should rephrase this in the next version.
+-> #3 (&q->q_usage_counter(io)#26){++++}-{0:0}:
+       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
+       blk_mq_alloc_queue+0x179/0x290 block/blk-mq.c:4348
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4395
+       loop_add+0x496/0xb70 drivers/block/loop.c:2067
+       loop_init+0x164/0x270 drivers/block/loop.c:2302
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 
-> 
->  * This function completes a request that was marked for manual completion by an
->  * earlier call to media_request_mark_manual_completion(). The request's
->  * @manual_completion flag is reset to false.
->  *
->  * All objects contained in the request must have been completed previously. It
->  * is an error to call this function otherwise. The request will not be
->  * completed in that case, and the function will WARN.
-> 
-> > + */
-> > +void media_request_manual_complete(struct media_request *req);
-> > +
-> >  #else
-> >  
-> >  static inline void media_request_get(struct media_request *req)
-> > @@ -336,7 +370,7 @@ void media_request_object_init(struct media_request_object *obj);
-> >   * @req: The media request
-> >   * @ops: The object ops for this object
-> >   * @priv: A driver-specific priv pointer associated with this object
-> > - * @is_buffer: Set to true if the object a buffer object.
-> > + * @is_buffer: Set to true if the object is a buffer object.
-> >   * @obj: The object
-> >   *
-> >   * Bind this object to the request and set the ops and priv values of
+-> #2 (fs_reclaim){+.+.}-{0:0}:
+       __fs_reclaim_acquire mm/page_alloc.c:4028 [inline]
+       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:4042
+       might_alloc include/linux/sched/mm.h:318 [inline]
+       slab_pre_alloc_hook mm/slub.c:4102 [inline]
+       slab_alloc_node mm/slub.c:4180 [inline]
+       kmem_cache_alloc_noprof+0x53/0x3b0 mm/slub.c:4207
+       __kernfs_iattrs+0xbc/0x3f0 fs/kernfs/inode.c:37
+       kernfs_iattrs fs/kernfs/inode.c:60 [inline]
+       __kernfs_setattr+0x4d/0x3c0 fs/kernfs/inode.c:73
+       kernfs_iop_setattr+0xda/0x120 fs/kernfs/inode.c:127
+       notify_change+0x6a6/0x1230 fs/attr.c:552
+       do_truncate+0x15b/0x220 fs/open.c:65
+       handle_truncate fs/namei.c:3466 [inline]
+       do_open fs/namei.c:3849 [inline]
+       path_openat+0x2761/0x2d40 fs/namei.c:4004
+       do_filp_open+0x20b/0x470 fs/namei.c:4031
+       do_sys_openat2+0x11b/0x1d0 fs/open.c:1429
+       do_sys_open fs/open.c:1444 [inline]
+       __do_sys_openat fs/open.c:1460 [inline]
+       __se_sys_openat fs/open.c:1455 [inline]
+       __x64_sys_openat+0x174/0x210 fs/open.c:1455
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-thanks a lot for the review,
+-> #1 (iattr_mutex){+.+.}-{4:4}:
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
+       __kernfs_iattrs+0x2b/0x3f0 fs/kernfs/inode.c:32
+       kernfs_iattrs fs/kernfs/inode.c:60 [inline]
+       __kernfs_setattr+0x4d/0x3c0 fs/kernfs/inode.c:73
+       kernfs_iop_setattr+0xda/0x120 fs/kernfs/inode.c:127
+       notify_change+0x6a6/0x1230 fs/attr.c:552
+       do_truncate+0x15b/0x220 fs/open.c:65
+       handle_truncate fs/namei.c:3466 [inline]
+       do_open fs/namei.c:3849 [inline]
+       path_openat+0x2761/0x2d40 fs/namei.c:4004
+       do_filp_open+0x20b/0x470 fs/namei.c:4031
+       do_sys_openat2+0x11b/0x1d0 fs/open.c:1429
+       do_sys_open fs/open.c:1444 [inline]
+       __do_sys_openat fs/open.c:1460 [inline]
+       __se_sys_openat fs/open.c:1455 [inline]
+       __x64_sys_openat+0x174/0x210 fs/open.c:1455
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
--- 
-Nicolas Dufresne
-Principal Engineer at Collabora
+-> #0 (&root->kernfs_iattr_rwsem){++++}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain kernel/locking/lockdep.c:3909 [inline]
+       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+       lock_acquire kernel/locking/lockdep.c:5866 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+       down_read+0x9b/0x480 kernel/locking/rwsem.c:1524
+       kernfs_iop_getattr+0x9c/0xf0 fs/kernfs/inode.c:191
+       vfs_getattr_nosec+0x29a/0x3a0 fs/stat.c:208
+       vfs_getattr+0x4a/0x60 fs/stat.c:246
+       loop_query_min_dio_size.isra.0+0x120/0x260 drivers/block/loop.c:529
+       loop_assign_backing_file drivers/block/loop.c:582 [inline]
+       loop_change_fd drivers/block/loop.c:645 [inline]
+       lo_ioctl+0x1ce0/0x26d0 drivers/block/loop.c:1569
+       blkdev_ioctl+0x274/0x6d0 block/ioctl.c:698
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:906 [inline]
+       __se_sys_ioctl fs/ioctl.c:892 [inline]
+       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &root->kernfs_iattr_rwsem --> fs_reclaim --> &q->q_usage_counter(io)#26
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&q->q_usage_counter(io)#26);
+                               lock(fs_reclaim);
+                               lock(&q->q_usage_counter(io)#26);
+  rlock(&root->kernfs_iattr_rwsem);
+
+ *** DEADLOCK ***
+
+3 locks held by syz-executor105/5947:
+ #0: ffff8880259ff368 (&lo->lo_mutex){+.+.}-{4:4}, at: loop_global_lock_killable drivers/block/loop.c:118 [inline]
+ #0: ffff8880259ff368 (&lo->lo_mutex){+.+.}-{4:4}, at: loop_change_fd drivers/block/loop.c:610 [inline]
+ #0: ffff8880259ff368 (&lo->lo_mutex){+.+.}-{4:4}, at: lo_ioctl+0x2a9/0x26d0 drivers/block/loop.c:1569
+ #1: ffff8881070c75a8 (&q->q_usage_counter(io)#26){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+ #2: ffff8881070c75e0 (&q->q_usage_counter(queue)#20){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+
+stack backtrace:
+CPU: 2 UID: 0 PID: 5947 Comm: syz-executor105 Not tainted 6.15.0-rc1-syzkaller-00095-g2eb959eeecc6 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain kernel/locking/lockdep.c:3909 [inline]
+ __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+ lock_acquire kernel/locking/lockdep.c:5866 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+ down_read+0x9b/0x480 kernel/locking/rwsem.c:1524
+ kernfs_iop_getattr+0x9c/0xf0 fs/kernfs/inode.c:191
+ vfs_getattr_nosec+0x29a/0x3a0 fs/stat.c:208
+ vfs_getattr+0x4a/0x60 fs/stat.c:246
+ loop_query_min_dio_size.isra.0+0x120/0x260 drivers/block/loop.c:529
+ loop_assign_backing_file drivers/block/loop.c:582 [inline]
+ loop_change_fd drivers/block/loop.c:645 [inline]
+ lo_ioctl+0x1ce0/0x26d0 drivers/block/loop.c:1569
+ blkdev_ioctl+0x274/0x6d0 block/ioctl.c:698
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f787e0f8e29
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd0efe9d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f787e0f8e29
+RDX: 0000000000000005 RSI: 0000000000004c06 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f787e142036
+R13: 00007ffd0efe9dc0 R14: 00007ffd0efe9e00 R15: 0000000000000000
+ </TASK>
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
