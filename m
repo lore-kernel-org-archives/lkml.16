@@ -1,72 +1,38 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318FF381A3;
-	Thu, 10 Apr 2025 08:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E2F1E5B65;
+	Thu, 10 Apr 2025 08:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272310; cv=none; b=p9S3Ad2UYxr44JJ3IOOm29TfZimAK9y/fAPxKXcHfiAywVaTS9Ruuh6fqXc6tz+b+Cf4LWMC7VBrLf3c0k9aVNrYleTlio5oxH0sxRV/91ouye/p3oLoUf51QRdudl0MTtzVLYLdqi1zVff721SRq9DpzrQuBmlL7lmCksrKpng=
+	t=1744272331; cv=none; b=DEoxdqDsovtXtfx5R8m0e6YjSfYx/vGozCgdGMK/mEHWsk1xkMtx1LDuhXXW7AHoqRxGS3qYsx3FfZWLC7xHwWeiaoCeOdfnFJ2OQ5flKJIsoTImS9BmCiImIhCE0Qhz9RHAQ5gt40IDzBCWbT39f7YYsu+WqLqAK5pyIYTL+uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272310; c=relaxed/simple;
-	bh=IxulY4YfJFvqSV0YcsQj0eRPgqF4sDaqNqzwMhtD+DE=;
+	s=arc-20240116; t=1744272331; c=relaxed/simple;
+	bh=HACMz5TOu/NPUCoPtSJRRuRpnxSmXN3RFRqhqk0Xhtk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q/lU1qeQE1ZTTjLb+eWi+VV8PWUKyXJ3o71W4V4c66/NO6FLKyFnw3wBv1jO6tFCQu9kV0PeDfLzdhMgnMsPrH0BvEd6w4HWffD6ZfE4PCkg0d3Ctafhou2bJfAT+fH9lWIck5wz87AMCQWrvTdbGHUFlacjgNgQC15UmIgHMFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d4zbEXAZ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcCH99CcjbaQfre/490bv18r0MI03zrylugSyV5Pm/wRuz6NyKhYukYydM0u4aAU2CnTn8WDSOSONJscuuKnGTXM4vEUF4v5RJKWOyngz3ygju5MXnTBBBmX91lB2cXVG4+dYE7DMY1IlsM8DHnb8z6Uf1aZ9I2A8s2lfW5J3Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fVTjOMDJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d4zbEXAZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=IxulY4YfJFvqSV0YcsQj0eRPgqF4sDaqNqzwMhtD+DE=; b=d4zbEXAZ3d/QRC8bB/J3SExnty
-	QEX5mVTXHvr3hTke0gOWXdwujtWBsMo2SO9ZAcp+fejjIioku3evoFzJNDHQFBr8TpZ2Deg8TmOJH
-	HXOgTQv24RyAQs4XcI8iC3uoPRUjvN3nETceXW5QHkxtJORwYrc0f7Y5vGtrH4fSTtdbtdKHBNydq
-	XYY++T3RSc57LMajsKWy++nyiOzLKGxOXHeTTNljJFtjBpZpoaPpGIPJGZwI5qM2RtMooEhlNcCdb
-	AorRjWui1N49jKz1r7D7uzAmJ5m5pTqlT3kO08GCw4jrjexs/Fq4/GpZOnRJoXUnSsSArSx/cwRkt
-	jpwjaypw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2mu6-00000008mGw-3557;
-	Thu, 10 Apr 2025 08:04:55 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 49F433003FF; Thu, 10 Apr 2025 10:04:54 +0200 (CEST)
-Date: Thu, 10 Apr 2025 10:04:54 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	kvm-riscv@lists.infradead.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	Waiman Long <longman@redhat.com>, x86@kernel.org,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Anup Patel <anup@brainfault.org>,
-	Albert Ou <aou@eecs.berkeley.edu>, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-	Borislav Petkov <bp@alien8.de>, Alexandre Ghiti <alex@ghiti.fr>,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Sebastian Ott <sebott@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Joey Gouly <joey.gouly@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sean Christopherson <seanjc@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/4] locking/mutex: implement mutex_trylock_nested
-Message-ID: <20250410080454.GW9833@noisy.programming.kicks-ass.net>
-References: <20250409014136.2816971-1-mlevitsk@redhat.com>
- <20250409014136.2816971-2-mlevitsk@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fVTjOMDJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98006C4AF0B;
+	Thu, 10 Apr 2025 08:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744272331;
+	bh=HACMz5TOu/NPUCoPtSJRRuRpnxSmXN3RFRqhqk0Xhtk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fVTjOMDJ1DumnuYNlupjd14s4hzm5gOyR6L7bkyzHKmockcd/bbmNkZN9G1BpCA6j
+	 DWgJq0OX8c3ectu3P+rRUEWPNwvkl6Dl6ea3rCBsCojB5V1I6gE4qQhaYtHq9LrFdC
+	 otN3VU75R8lrU+syIePdhCJLcJf5fMmjAEGh1ISg=
+Date: Thu, 10 Apr 2025 10:03:56 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Karol Wachowski <karol.wachowski@intel.com>
+Subject: Re: [PATCH] accel/ivpu: Add handling of
+ VPU_JSM_STATUS_MVNCI_CONTEXT_VIOLATION_HW
+Message-ID: <2025041011-borrowing-shrug-781e@gregkh>
+References: <20250408095711.635185-1-jacek.lawrynowicz@linux.intel.com>
+ <8d96c75d-e8fb-446b-a85c-803a2b5212ed@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,18 +41,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409014136.2816971-2-mlevitsk@redhat.com>
+In-Reply-To: <8d96c75d-e8fb-446b-a85c-803a2b5212ed@linux.intel.com>
 
-On Tue, Apr 08, 2025 at 09:41:33PM -0400, Maxim Levitsky wrote:
-> Allow to specify the lockdep subclass in mutex_trylock
-> instead of hardcoding it to 0.
+On Thu, Apr 10, 2025 at 09:49:37AM +0200, Jacek Lawrynowicz wrote:
+> Hi,
+> 
+> This is an important patch for the Intel NPU.
+> Is there anything it is missing to be included in stable?
 
-We disable a whole bunch of checks for trylock, simply because they do
-not wait, therefore they cannot deadlock.
+Patience, you only sent this:
 
-But I can't remember if they disable all the cases required to make
-subclasses completely redundant -- memory suggests they do, but I've not
-verified.
+> On 4/8/2025 11:57 AM, Jacek Lawrynowicz wrote:
 
-Please expand this Changelog to include definite proof that subclasses
-make sense with trylock.
+2 days ago, AFTER the latest of -rc releases was sent out for review,
+and those kernels have NOT even been released yet!
+
+[rant about how you all know this process works deleted as it was
+ just snarky on my side, although quite cathartic, thanks for letting me
+ vent...]
+
+Relax, it will get handled when we can get to it.  To help out, please
+take the time to review pending stable backported patches that have been
+submitted to the mailing list ahead of yours.
+
+greg k-h
