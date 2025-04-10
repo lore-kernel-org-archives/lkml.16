@@ -1,225 +1,164 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8131C9B97
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6253D1CA84;
+	Thu, 10 Apr 2025 06:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267570; cv=none; b=dmYSpyGKamwLgHWQfRlvMMorrVRkdJYounXpvZaQRh9YlMKoQ2AgTkzUdGLQO/X5w5WOIvtddGSr2aDe3Fa/mP4p0WAxJscpbUbPLZea0lo4pkJORw3l0Sa1EJ8Wg3zfliSIuSAVTGrwDZJdgpRK53TJqfoZzOmSz5anH/TUgYY=
+	t=1744267587; cv=none; b=FV2tFBn9ZNtdsUDsAilfy30hch5Ns0gI4Umv1pikfC+KWqqyXQdzP1h3auMYE2O5M7xOAwcwtf2UO8PaE97cLWQ339+VJZQyQNHp0HL9CzbbjsEBi0c9mfRUygw2zkaCMUd47JeXx+Fh/E92vGP3w8Svc2sRSDLO9ivIy5qZI+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267570; c=relaxed/simple;
-	bh=sSr05Z4MTo64Ypvx2bVPKbPWej/18+F2EyIz2qX/qEo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EpeArVz2V5RiuJXvJRhLF5sHzKptySsLtU4pyGJYEr+Y4nU6Hjzki1sWfGz8NqEvMDsGh1OdjJ3W7zUMNUOputgPXS/1dkEQy0VB5Gg1a7Q2LQ5M3T0oHuCTpbQKmDfgeOERRftfXR4R1mZrkbsqXwJrutBLTL7Q3K5MRFuUPOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h5TUqnNu; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744267587; c=relaxed/simple;
+	bh=jGP+XMZtkwaQWFwwojb3ot3KsCcWojSYKFDlKGgxCYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jppzolpu+c1v1WDKqf3N14Hy25ws/ipSez+SYdk5dzq/EJQ4wG7XxkwNwtQTRY1Q/4dD5LffnEarbMkbJkv8tPf8ZJGPp83IiBdUVaNlsj6aDqfoJb2Q6eIpRZv7Yb7LPPvIJrrsKDXmduqtmOZcjBhfecbLNBQYaRrnclYxZ1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Dj7FSe+k; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h5TUqnNu"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5240b014f47so241193e0c.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:46:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744267567; x=1744872367; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HPcT11jaYN5mShNHWtq3zBklcFvlC0Fzq1ASVJmlPp0=;
-        b=h5TUqnNuDJ/7ldiVHNHiDEcsw4R7CfwAoxpVjXlEFM14+yo6ciKdwJwpF0Sn+F9SEH
-         2FkCiOfZu4XDcId/lev1oWe4pMdH4UwXLl1xFeXQDWAPB8H4cyTwkiiZK5NWLc4c9b2L
-         F3lwftE9pJwVQw0I6QVRpjM20ile+qzOHgv4m8J/X6ysHrJVJ7UjGNDeOG03PahNjirY
-         8y/Ny7hhjVFQeGPSmnXZnKuHo4L7sWR9E+3KkuQwrXVO0v3v4UQFQ4yCMy8j0/qD+ghA
-         3XGBZg6FfuAjROG441/tf6Kw3pUMTqRX2lV/RoWaNfXBMVJ7lKBf4Zz95skg8sEis1b9
-         JC1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744267567; x=1744872367;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HPcT11jaYN5mShNHWtq3zBklcFvlC0Fzq1ASVJmlPp0=;
-        b=DmaGFZUnILGiI0lwlkU+8+0DkOKF8nQ+huVAEQT7KKWROlsmUer9mwFbbYY2gFqIpH
-         djWdGXN/hvu3E6mSsoe+ZWjo/mnLZ/NL5vb57DC7ZGb4qo42G9uS8nhB1W3olXrOcFrN
-         I9+GwFW/F8QeSLj7UQlDK5ahWdujhU2Dva0wFsBc3NTW3pyHvHjcA2JFy1jRMXmmygwV
-         oHFUfddd9Worll8qxK/xWnRBth1hiXqO8tveSwGRWknUeVmk21SPX9erBjp/HL70Pg5C
-         5KrWcTsyqEED+vJ6IS5g3Tx96kXHxan4WcIJiln2moapo/zUEAL50Ues1ZlJbXUNeR9N
-         WEgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYlpjZUEO3WxMEdUZBpk5+KPJ/J2rXGUZjKXEQQSEHHJ2bDQN3veIIGVeuNkR5i4nfTxl0HGDUveMlTZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRjSRdnuRajnI+i71LN8r5lLxcafXxuJuybqqYNfBcJu3q1aCZ
-	hfnEAv+t9NDFi4wCfBiCX1FvB/ssf6ThqNfj47fCAVOhql/KYfk99i+4V05Cg/ZQoQbg59urvqs
-	oXk8f4D1V2gEeqjHRLJBF/WGUeizdy//Ag84NDw==
-X-Gm-Gg: ASbGncsnfm/J9pduB+gr4MQi3ZUeFfXodDE3bfzhCNZ09aIsY/4Jy0RlH0ct2UvXv/y
-	D2mH5DeKM/lbWsp/o0OTA2Gj8MLr+sSABglNHeEZq9LUAPW2JGHfoo2IIelSQU+FLuy17CyPFxj
-	F11cAEiWnyNTtB4GX43kV5bF9pcbpyYUIsjqI2tne4xMMAkXuNA3qm0FI=
-X-Google-Smtp-Source: AGHT+IFcF58ptX8rME8i60brMH2Rz0ZUwEDEhM4pTRJ84EhXi3e5CvCfc4pa2+GApvjuzqUGXpEjK1FA2FeBPF3M7dk=
-X-Received: by 2002:a05:6122:c84:b0:520:997d:d0b4 with SMTP id
- 71dfb90a1353d-527b4fc7f4cmr1132792e0c.4.1744267567324; Wed, 09 Apr 2025
- 23:46:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Dj7FSe+k"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CB5D64435C;
+	Thu, 10 Apr 2025 06:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744267582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uHfbW2BwhNKtYp0DwDcnPQM1979WkjuSa3wL4YpUPVA=;
+	b=Dj7FSe+kWXd23IvbZ+MSy+pec7Gjo7DJP4LDzOxce5VjGLvIS6UX7tnz07Fbv2sOsYGiH8
+	LsTB5QxV2U7fToDLGpA7wJFGJhr9oG3kvS4U0YoGuE2eAy+N/1zeJ/rsEVWSv79oZwbG46
+	DATvE87ImDnDaOjkUMUY2HtE36Fua6NoNfADlYSQV+t+UfdDkJJ+FfS3TKtdTNNj95VQzt
+	Pkuy1FlNsUg3hd3j9WRkD70FhN3TMGK0VDfGDFvFsH48rctlSY2SPuTK+ymns7AScMV43T
+	LQvaRoMg9v5qrS1z0EhaWPk7As1QOwqqTANPgzYzRSlI+8QDasNT/QNch3O15g==
+Date: Thu, 10 Apr 2025 08:46:18 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Vladimir Oltean <olteanv@gmail.com>, Srinivas
+ Kandagatla <srinivas.kandagatla@linaro.org>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "Chester A.
+ Unal" <chester.a.unal@arinc9.com>, Daniel Golle <daniel@makrotopia.org>,
+ DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Simon
+ Horman <horms@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, upstream@airoha.com
+Subject: Re: [net-next PATCH v14 07/16] net: mdio: regmap: add support for
+ C45 read/write
+Message-ID: <20250410084618.43edc269@fedora.home>
+In-Reply-To: <67f620a1.050a0220.347fc7.1fee@mx.google.com>
+References: <20250408095139.51659-1-ansuelsmth@gmail.com>
+	<20250408095139.51659-8-ansuelsmth@gmail.com>
+	<20250409090751.6bc42b5b@fedora.home>
+	<67f620a1.050a0220.347fc7.1fee@mx.google.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409115859.721906906@linuxfoundation.org>
-In-Reply-To: <20250409115859.721906906@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 10 Apr 2025 12:15:56 +0530
-X-Gm-Features: ATxdqUGvW4YOWgoXk4KI1NpcPGcMFtvH6xWIlP3CPREnWd0I0rRk9RpueS2FCe4
-Message-ID: <CA+G9fYuB020QpRb2GHex2-0p-=zdhe60s+txw+UZhqSDLP5rHA@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/426] 6.12.23-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekvdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtoheprghnshhuvghlshhmthhhsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkr
+ hiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Wed, 9 Apr 2025 at 17:34, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.12.23 release.
-> There are 426 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 11 Apr 2025 11:58:05 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.12.23-rc3.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, 9 Apr 2025 09:24:13 +0200
+Christian Marangi <ansuelsmth@gmail.com> wrote:
 
+> On Wed, Apr 09, 2025 at 09:07:51AM +0200, Maxime Chevallier wrote:
+> > Hi Christian,
+> > 
+> > On Tue,  8 Apr 2025 11:51:14 +0200
+> > Christian Marangi <ansuelsmth@gmail.com> wrote:
+> >   
+> > > Add support for C45 read/write for mdio regmap. This can be done
+> > > by enabling the support_encoded_addr bool in mdio regmap config and by
+> > > using the new API devm_mdio_regmap_init to init a regmap.
+> > > 
+> > > To support C45, additional info needs to be appended to the regmap
+> > > address passed to regmap OPs.
+> > > 
+> > > The logic applied to the regmap address value:
+> > > - First the regnum value (20, 16)
+> > > - Second the devnum value (25, 21)
+> > > - A bit to signal if it's C45 (26)
+> > > 
+> > > devm_mdio_regmap_init MUST be used to register a regmap for this to
+> > > correctly handle internally the encode/decode of the address.
+> > > 
+> > > Drivers needs to define a mdio_regmap_init_config where an optional regmap
+> > > name can be defined and MUST define C22 OPs (mdio_read/write).
+> > > To support C45 operation also C45 OPs (mdio_read/write_c45).
+> > > 
+> > > The regmap from devm_mdio_regmap_init will internally decode the encoded
+> > > regmap address and extract the various info (addr, devnum if C45 and
+> > > regnum). It will then call the related OP and pass the extracted values to
+> > > the function.
+> > > 
+> > > Example for a C45 read operation:
+> > > - With an encoded address with C45 bit enabled, it will call the
+> > >   .mdio_read_c45 and addr, devnum and regnum will be passed.
+> > >   .mdio_read_c45 will then return the val and val will be stored in the
+> > >   regmap_read pointer and will return 0. If .mdio_read_c45 returns
+> > >   any error, then the regmap_read will return such error.
+> > > 
+> > > With support_encoded_addr enabled, also C22 will encode the address in
+> > > the regmap address and .mdio_read/write will called accordingly similar
+> > > to C45 operation.  
+> > 
+> > This driver's orginal goal is to address the case where we have a
+> > PHY-like device that has the same register layout and behaviour as a
+> > C22 PHY, but where the registers are not accesses through MDIO (MMIO
+> > for example, as in altera-tse or dwmac-socfpga, or potentially SPI even
+> > though  there's no example upstream).
+> > 
+> > What is done here is quite different, I guess it could work if we have
+> > MMIO C45 phys that understand the proposed encoding, but I don't really
+> > understand the dance where C45 accesses are wrapped by this mdio-regmap
+> > driver into regmap accesss, but the regmap itself converts it back to
+> > C45 accesses. Is it just so that it fits well with MFD ?  
+> 
+> The main task of this wrapping is to remove from the dev side having to
+> handle the encode/decode part. regmap address is still a single value
+> but if a phy is mmio mapped is difficult to support c45 since you need 3
+> different values (phy id, mmd and addr)
+> 
+> With this implementation a c45 that is mmio mapped can implement
+> whatever way he wants to configure each parameter for read/write
+> operation.
+> 
+> Example the ecoding might be on different mask and with the additional
+> function it can be reorganized following the specific mask.
+> 
+> > 
+> > I'm not really against that, it still converts mdio access to regmap so
+> > there's that, but is there a way to elaborate or document somewhere why
+> > we need to do go through C45 -> regmap -> C45 instead of just
+> > writing a mii_bus driver in the first place ?  
+> 
+> This was askek to prevent creating additional ""trivial"" mdio driver
+> that would all do the same task. Since mdio-regmap was already in place
+> it could have been extended with a more generic approach.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Ah yes that's the point I was missing, I've browsed more in depth and
+indeed in V11 Vlad suggested to use this.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Any hint on where to better document this?
 
-## Build
-* kernel: 6.12.23-rc3
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 27cbbf9f1b51b34889f65faffc14ab313869b880
-* git describe: v6.12.22-427-g27cbbf9f1b51
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
-.22-427-g27cbbf9f1b51
+Given the simplicity of the driver, I think this commit log is good
+enough then :)
 
-## Test Regressions (compared to v6.12.19-371-g03f13769310a)
+Let's go for it and hopefully this can be reused elsewhere !
 
-## Metric Regressions (compared to v6.12.19-371-g03f13769310a)
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-## Test Fixes (compared to v6.12.19-371-g03f13769310a)
-
-## Metric Fixes (compared to v6.12.19-371-g03f13769310a)
-
-## Test result summary
-total: 121138, pass: 95392, fail: 7426, skip: 17964, xfail: 356
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 139 total, 136 passed, 3 failed
-* arm64: 57 total, 54 passed, 3 failed
-* i386: 18 total, 18 passed, 0 failed
-* mips: 34 total, 33 passed, 1 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 40 total, 35 passed, 5 failed
-* riscv: 25 total, 23 passed, 2 failed
-* s390: 22 total, 17 passed, 5 failed
-* sh: 5 total, 5 passed, 0 failed
-* sparc: 4 total, 3 passed, 1 failed
-* x86_64: 49 total, 48 passed, 1 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-* rt-tests-cyclicdeadline
-* rt-tests-pi-stress
-* rt-tests-pmqtest
-* rt-tests-rt-migrate-test
-* rt-tests-signaltest
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Maxime
