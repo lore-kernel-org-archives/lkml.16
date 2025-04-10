@@ -1,239 +1,150 @@
-Received: from mail.universe-factory.net (osgiliath.universe-factory.net [141.95.161.142])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF87189913;
-	Thu, 10 Apr 2025 15:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.95.161.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98A21C8631;
+	Thu, 10 Apr 2025 15:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299519; cv=none; b=n13reNxml6vH4O7BM/5Jy3tJppF50fWZzxKh0c9VxkpkLIkD+2admsFVcOO7+dtR2TIPwMqP+5HSLWjiSWdfV7hFbJ4b/G7ehhd499iizjXUFJYA10CzPCtiRQpnz45gt2yLY7fS7cxVcSOC9ybBwRKNTbgnQjTNUcr+hKFruWU=
+	t=1744299605; cv=none; b=YYyFhtCfzduQp6HyxmwRT77RPa8UTQYTZ+98qy639IPhIc4mbxQVrOt1tcMSVulXIHF5yaiPmFmmNlTRt8yRUKOUWKcTjNY7TwMfCSn01u8iNoLPxMhlyVdSkTpfw3/8f5AUPbqgIr1G1hnKCikJoDTqRiNXgjoVKM/LjNkUGDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299519; c=relaxed/simple;
-	bh=qZRjEXGAKny5LBHm+0gZDyT2jAe9uIbIhB61DdBPZlM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IEtHXX0yXuH2QghaEYCTdKqQgJiL3t6rPAKPA3JnsLcP87be5P0pOTq+Y0e5ztp+UxoDaUgy3QWiBfchL+fmEhUD05DTpx3NOiCmhdSN6L1n33rKRH5J9407uBnrcA/s7o45Q/7U/4FYXaJ7ueFuZZA60CrVzFL675bTsykZdHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=universe-factory.net; spf=pass smtp.mailfrom=universe-factory.net; dkim=pass (2048-bit key) header.d=universe-factory.net header.i=@universe-factory.net header.b=OxvxGSqN; arc=none smtp.client-ip=141.95.161.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=universe-factory.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=universe-factory.net
+	s=arc-20240116; t=1744299605; c=relaxed/simple;
+	bh=tPergy+7vln1jvxL4YHdDb/GQY/NPfI0GdgYCslJK/k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QMP0lB/9+pVpejoCE46AXWI0cc/mHdcI8i67GftztFeBmE/fsDkBhxq8XuBpsw8TK3z6T55N+BjLBNTQeqorbPQD8gSRteuRnUdD/NLc6fMQBauNsIJJA/Vc9BSQ76HXUr453XnpS1/OCRm9AE71TJkcu+yqWHHzHpz2imCpXU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QhZrEgNc; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=universe-factory.net header.i=@universe-factory.net header.b="OxvxGSqN"
-Message-ID: <94e1ac2c-46f1-4787-ad50-e4a5ab11011a@universe-factory.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=universe-factory.net;
-	s=dkim; t=1744299512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qZRjEXGAKny5LBHm+0gZDyT2jAe9uIbIhB61DdBPZlM=;
-	b=OxvxGSqNEPv9J3+vc8TGXBmMct0cQR0Nt0AorohevYq/vlyHNeJP0S7z+r7kbsoHF1pw8h
-	kM2rvWfdOCa9nBV9PgvWxColMmK3zHu7C5f5JpVsTlns2tN2TMDfKeHlDiZV7iJPPOeb6Q
-	nkTd9pSDOtFlbvwXxv/GkzRbDWGSGpXFdnq5K5WpBPf1ppKY3yoDTMyR4a6emhAJZWRESy
-	HHneQMurS20SCIEtMJrbYhK4uP73GUdrI8giAzPHIFo3N51laGHGQCwTz71J4RgPBEQedf
-	6dL6SisL5iPm8SAc0Kbb5kDgwNT2fvpciZkQ22ezdrE+AWMowYN3226YM7ci2A==
-Authentication-Results: mail.universe-factory.net;
-	auth=pass smtp.mailfrom=mschiffer@universe-factory.net
-Date: Thu, 10 Apr 2025 17:38:30 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QhZrEgNc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744299601;
+	bh=tPergy+7vln1jvxL4YHdDb/GQY/NPfI0GdgYCslJK/k=;
+	h=From:Subject:Date:To:Cc:From;
+	b=QhZrEgNcjDYjrV1DCwmAHSqUfYZ/XvszBg2F0NauJeHOYpmVscW7dcPcq8LyY385r
+	 LfelS4Ax3Ne5siHXzdb4cesGA8IWTAALhutIVtXaXOmJyz6hfRGQ/ikPEroaOa5tEv
+	 9znFNcYbh6VxeYQRwvxofYNOzYE7B2D6CNRakWlWzihgkHyRZwGOuWKY6LjPutGiJI
+	 usqSjAchJscFEs7AbDUdpxyEvFM6eEnksIm+JJnbNxSC6tgMoZZ6szeUCqMB0X/8SZ
+	 D0hlaoXnS0RA8G6Zj3IhgaaY2oHjPasymn3y8RRildjMaSjVyla1D8yqzoxE4oNZ+U
+	 +WIJPoqHUdOAw==
+Received: from [192.168.13.180] (unknown [IPv6:2606:6d00:11:e976::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E092B17E03B6;
+	Thu, 10 Apr 2025 17:39:59 +0200 (CEST)
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Subject: [PATCH v2 0/5] Add manual request completion to the MediaTek
+ VCodec driver
+Date: Thu, 10 Apr 2025 11:39:55 -0400
+Message-Id: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net] batman-adv: fix duplicate MAC address check
-Content-Language: en-US-large
-To: Paolo Abeni <pabeni@redhat.com>, Marek Lindner
- <marek.lindner@mailbox.org>, Simon Wunderlich <sw@simonwunderlich.de>,
- Antonio Quartulli <antonio@mandelbit.com>,
- Sven Eckelmann <sven@narfation.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, b.a.t.m.a.n@lists.open-mesh.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <c775aab5514f25014f778c334235a21ee39708b4.1744129395.git.mschiffer@universe-factory.net>
- <0c288b2e-9747-4a50-a16f-bf4238829ffa@redhat.com>
-From: Matthias Schiffer <mschiffer@universe-factory.net>
-Autocrypt: addr=mschiffer@universe-factory.net; keydata=
- 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
- cQqe8eRmcdNdqWSiJQ8VLoI=
-In-Reply-To: <0c288b2e-9747-4a50-a16f-bf4238829ffa@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------sNPEAjL00dW0Dw07Asv36qEo"
-X-Spamd-Bar: ----
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEvm92cC/62OWw6CMBBFt2L6bQ2Ul/rlPgxphjLIRGixLVVD2
+ LuVxB34eW7uzLkLc2gJHTvvFmYxkCOjI4j9jqke9A05tZGZSESRZKngDhtwnkB3ltQdeVCmRSV
+ H0DMM0uJjRuelMuM0oI/P5JN8L50Hj7GketLIy6wUquqOCaQ5i6bJYkevbcW1jtyT88a+t1Eh/
+ aY/f/4Xf0h5wgsUVQVZW56K5qLMMEBjLBziJavXdf0A871mERoBAAA=
+X-Change-ID: 20250312-sebastianfricke-vcodec_manual_request_completion_with_state_machine-6362c7f80a14
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin <tiffany.lin@mediatek.com>, 
+ Andrew-CT Chen <andrew-ct.chen@mediatek.com>, 
+ Yunfei Dong <yunfei.dong@mediatek.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, kernel@collabora.com, 
+ linux-media@vger.kernel.org, 
+ Sebastian Fricke <sebastian.fricke@collabora.com>, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+X-Mailer: b4 0.14.2
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------sNPEAjL00dW0Dw07Asv36qEo
-Content-Type: multipart/mixed; boundary="------------oBMmu7dtOKxnkbs8AgOfZ2ca";
- protected-headers="v1"
-From: Matthias Schiffer <mschiffer@universe-factory.net>
-To: Paolo Abeni <pabeni@redhat.com>, Marek Lindner
- <marek.lindner@mailbox.org>, Simon Wunderlich <sw@simonwunderlich.de>,
- Antonio Quartulli <antonio@mandelbit.com>,
- Sven Eckelmann <sven@narfation.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, b.a.t.m.a.n@lists.open-mesh.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <94e1ac2c-46f1-4787-ad50-e4a5ab11011a@universe-factory.net>
-Subject: Re: [PATCH net] batman-adv: fix duplicate MAC address check
-References: <c775aab5514f25014f778c334235a21ee39708b4.1744129395.git.mschiffer@universe-factory.net>
- <0c288b2e-9747-4a50-a16f-bf4238829ffa@redhat.com>
-In-Reply-To: <0c288b2e-9747-4a50-a16f-bf4238829ffa@redhat.com>
+This set introduces the manual request completion API by the author Hans
+Verkuil and implements it within the MediaTek VCodec driver.
 
---------------oBMmu7dtOKxnkbs8AgOfZ2ca
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Why is this needed?
 
-T24gMTAvMDQvMjAyNSAxMTozOCwgUGFvbG8gQWJlbmkgd3JvdGU6DQo+IE9uIDQvOC8yNSA2
-OjMwIFBNLCBNYXR0aGlhcyBTY2hpZmZlciB3cm90ZToNCj4+IGJhdGFkdl9jaGVja19rbm93
-bl9tYWNfYWRkcigpIGlzIGJvdGggdG9vIGxlbmllbnQgYW5kIHRvbyBzdHJpY3Q6DQo+Pg0K
-Pj4gLSBJdCBpcyBjYWxsZWQgZnJvbSBiYXRhZHZfaGFyZGlmX2FkZF9pbnRlcmZhY2UoKSwg
-d2hpY2ggbWVhbnMgdGhhdCBpdA0KPj4gICAgY2hlY2tlZCBpbnRlcmZhY2VzIHRoYXQgYXJl
-IG5vdCB1c2VkIGZvciBiYXRtYW4tYWR2IGF0IGFsbC4gTW92ZSBpdA0KPj4gICAgdG8gYmF0
-YWR2X2hhcmRpZl9lbmFibGVfaW50ZXJmYWNlKCkuIEFsc28sIHJlc3RyaWN0IGl0IHRvIGhh
-cmRpZnMgb2YNCj4+ICAgIHRoZSBzYW1lIG1lc2ggaW50ZXJmYWNlOyBkaWZmZXJlbnQgbWVz
-aCBpbnRlcmZhY2VzIHNob3VsZCBub3QgaW50ZXJhY3QNCj4+ICAgIGF0IGFsbC4gVGhlIGJh
-dGFkdl9jaGVja19rbm93bl9tYWNfYWRkcigpIGFyZ3VtZW50IGlzIGNoYW5nZWQgZnJvbQ0K
-Pj4gICAgYHN0cnVjdCBuZXRfZGV2aWNlYCB0byBgc3RydWN0IGJhdGFkdl9oYXJkX2lmYWNl
-YCB0byBhY2hpZXZlIHRoaXMuDQo+PiAtIFRoZSBjaGVjayBvbmx5IGNhcmVzIGFib3V0IGhh
-cmRpZnMgaW4gQkFUQURWX0lGX0FDVElWRSBhbmQNCj4+ICAgIEJBVEFEVl9JRl9UT19CRV9B
-Q1RJVkFURUQgc3RhdGVzLCBidXQgaW50ZXJmYWNlcyBpbiBCQVRBRFZfSUZfSU5BQ1RJVkUN
-Cj4+ICAgIHN0YXRlIHNob3VsZCBiZSBjaGVja2VkIGFzIHdlbGwsIG9yIHRoZSBmb2xsb3dp
-bmcgc3RlcHMgd2lsbCBub3QNCj4+ICAgIHJlc3VsdCBpbiBhIHdhcm5pbmcgdGhlbiB0aGV5
-IHNob3VsZDoNCj4+DQo+PiAgICAtIEFkZCB0d28gaW50ZXJmYWNlcyBvbiBkb3duIHN0YXRl
-IHdpdGggZGlmZmVyZW50IE1BQyBhZGRyZXNzZXMgdG8NCj4+ICAgICAgYSBtZXNoIGFzIGhh
-cmRpZnMNCj4+ICAgIC0gQ2hhbmdlIHRoZSBNQUMgYWRkcmVzc2VzIHNvIHRoZXkgY29uZmxp
-ZWN0DQo+PiAgICAtIFNldCBpbnRlcmZhY2VzIHRvIHVwIHN0YXRlDQo+Pg0KPj4gICAgTm93
-IHRoZXJlIHdpbGwgYmUgdHdvIGFjdGl2ZSBoYXJkaWZzIHdpdGggdGhlIHNhbWUgTUFDIGFk
-ZHJlc3MsIGJ1dCBubw0KPj4gICAgd2FybmluZy4gRml4IGJ5IG9ubHkgaWdub3JpbmcgaGFy
-ZGlmcyBpbiBCQVRBRFZfSUZfTk9UX0lOX1VTRSBzdGF0ZS4NCj4+DQo+PiBUaGUgUkNVIGxv
-Y2sgY2FuIGJlIGRyb3BwZWQsIGFzIHdlJ3JlIGhvbGRpbmcgUlROTCBhbnl3YXlzIHdoZW4g
-dGhlDQo+PiBmdW5jdGlvbiBpcyBjYWxsZWQuDQo+Pg0KPj4gV2hpbGUgd2UncmUgYXQgaXQs
-IGFsc28gc3dpdGNoIGZyb20gcHJfd2FybigpIHRvIG5ldGRldl93YXJuKCkuDQo+Pg0KPj4g
-Rml4ZXM6IGM2YzhmZWEyOTc2OSAoIm5ldDogQWRkIGJhdG1hbi1hZHYgbWVzaGluZyBwcm90
-b2NvbCIpDQo+PiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBTY2hpZmZlciA8bXNjaGlmZmVy
-QHVuaXZlcnNlLWZhY3RvcnkubmV0Pg0KPiANCj4gRXZlbiBpZiBtYXJrZWQgZm9yIG5ldCBJ
-IGFzc3VtZSB0aGlzIHdpbGwgZXZlbnR1YWxseSBnbyBmaXJzdCB2aWEgdGhlDQo+IGJhdG1h
-biB0cmVlLg0KDQpZZXMuIFNob3VsZCBJIGhhdmUgbWFya2VkIHRoaXMgZGlmZmVyZW50bHk/
-DQoNCj4gDQo+PiAtLS0NCj4+DQo+PiBBc2lkZTogYmF0YWR2X2hhcmRpZl9hZGRfaW50ZXJm
-YWNlKCkgYmVpbmcgY2FsbGVkIGZvciBhbGwgZXhpc3RpbmcNCj4+IGludGVyZmFjZXMgYW5k
-IGhhdmluZyBhIGdsb2JhbCBiYXRhZHZfaGFyZGlmX2xpc3QgYXQgYWxsIGlzIGFsc28gbm90
-DQo+PiB2ZXJ5IG5pY2UsIGJ1dCB0aGlzIHdpbGwgYmUgYWRkcmVzc2VkIHNlcGFyYXRlbHks
-IGFzIGNoYW5naW5nIGl0IHdpbGwNCj4+IHJlcXVpcmUgbW9yZSByZWZhY3RvcmluZy4NCj4+
-DQo+PiAgIG5ldC9iYXRtYW4tYWR2L2hhcmQtaW50ZXJmYWNlLmMgfCAzNyArKysrKysrKysr
-KysrKysrKysrKy0tLS0tLS0tLS0tLS0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2Vy
-dGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9uZXQvYmF0
-bWFuLWFkdi9oYXJkLWludGVyZmFjZS5jIGIvbmV0L2JhdG1hbi1hZHYvaGFyZC1pbnRlcmZh
-Y2UuYw0KPj4gaW5kZXggZjE0NWY5NjYyNjUzLi4wN2I0MzY2MjZhZmIgMTAwNjQ0DQo+PiAt
-LS0gYS9uZXQvYmF0bWFuLWFkdi9oYXJkLWludGVyZmFjZS5jDQo+PiArKysgYi9uZXQvYmF0
-bWFuLWFkdi9oYXJkLWludGVyZmFjZS5jDQo+PiBAQCAtNTA2LDI4ICs1MDYsMzQgQEAgYmF0
-YWR2X2hhcmRpZl9pc19pZmFjZV91cChjb25zdCBzdHJ1Y3QgYmF0YWR2X2hhcmRfaWZhY2Ug
-KmhhcmRfaWZhY2UpDQo+PiAgIAlyZXR1cm4gZmFsc2U7DQo+PiAgIH0NCj4+ICAgDQo+PiAt
-c3RhdGljIHZvaWQgYmF0YWR2X2NoZWNrX2tub3duX21hY19hZGRyKGNvbnN0IHN0cnVjdCBu
-ZXRfZGV2aWNlICpuZXRfZGV2KQ0KPj4gK3N0YXRpYyB2b2lkIGJhdGFkdl9jaGVja19rbm93
-bl9tYWNfYWRkcihjb25zdCBzdHJ1Y3QgYmF0YWR2X2hhcmRfaWZhY2UgKmhhcmRfaWZhY2Up
-DQo+PiAgIHsNCj4+IC0JY29uc3Qgc3RydWN0IGJhdGFkdl9oYXJkX2lmYWNlICpoYXJkX2lm
-YWNlOw0KPj4gKwljb25zdCBzdHJ1Y3QgbmV0X2RldmljZSAqbWVzaF9pZmFjZSA9IGhhcmRf
-aWZhY2UtPm1lc2hfaWZhY2U7DQo+PiArCWNvbnN0IHN0cnVjdCBiYXRhZHZfaGFyZF9pZmFj
-ZSAqdG1wX2hhcmRfaWZhY2U7DQo+PiAgIA0KPj4gLQlyY3VfcmVhZF9sb2NrKCk7DQo+PiAt
-CWxpc3RfZm9yX2VhY2hfZW50cnlfcmN1KGhhcmRfaWZhY2UsICZiYXRhZHZfaGFyZGlmX2xp
-c3QsIGxpc3QpIHsNCj4+IC0JCWlmIChoYXJkX2lmYWNlLT5pZl9zdGF0dXMgIT0gQkFUQURW
-X0lGX0FDVElWRSAmJg0KPj4gLQkJICAgIGhhcmRfaWZhY2UtPmlmX3N0YXR1cyAhPSBCQVRB
-RFZfSUZfVE9fQkVfQUNUSVZBVEVEKQ0KPj4gKwlpZiAoIW1lc2hfaWZhY2UpDQo+PiArCQly
-ZXR1cm47DQo+PiArDQo+PiArCWxpc3RfZm9yX2VhY2hfZW50cnkodG1wX2hhcmRfaWZhY2Us
-ICZiYXRhZHZfaGFyZGlmX2xpc3QsIGxpc3QpIHsNCj4+ICsJCWlmICh0bXBfaGFyZF9pZmFj
-ZSA9PSBoYXJkX2lmYWNlKQ0KPj4gKwkJCWNvbnRpbnVlOw0KPj4gKw0KPj4gKwkJaWYgKHRt
-cF9oYXJkX2lmYWNlLT5tZXNoX2lmYWNlICE9IG1lc2hfaWZhY2UpDQo+PiAgIAkJCWNvbnRp
-bnVlOw0KPj4gICANCj4+IC0JCWlmIChoYXJkX2lmYWNlLT5uZXRfZGV2ID09IG5ldF9kZXYp
-DQo+PiArCQlpZiAodG1wX2hhcmRfaWZhY2UtPmlmX3N0YXR1cyA9PSBCQVRBRFZfSUZfTk9U
-X0lOX1VTRSkNCj4+ICAgCQkJY29udGludWU7DQo+PiAgIA0KPj4gLQkJaWYgKCFiYXRhZHZf
-Y29tcGFyZV9ldGgoaGFyZF9pZmFjZS0+bmV0X2Rldi0+ZGV2X2FkZHIsDQo+PiAtCQkJCQlu
-ZXRfZGV2LT5kZXZfYWRkcikpDQo+PiArCQlpZiAoIWJhdGFkdl9jb21wYXJlX2V0aCh0bXBf
-aGFyZF9pZmFjZS0+bmV0X2Rldi0+ZGV2X2FkZHIsDQo+PiArCQkJCQloYXJkX2lmYWNlLT5u
-ZXRfZGV2LT5kZXZfYWRkcikpDQo+PiAgIAkJCWNvbnRpbnVlOw0KPj4gICANCj4+IC0JCXBy
-X3dhcm4oIlRoZSBuZXdseSBhZGRlZCBtYWMgYWRkcmVzcyAoJXBNKSBhbHJlYWR5IGV4aXN0
-cyBvbjogJXNcbiIsDQo+PiAtCQkJbmV0X2Rldi0+ZGV2X2FkZHIsIGhhcmRfaWZhY2UtPm5l
-dF9kZXYtPm5hbWUpOw0KPj4gLQkJcHJfd2FybigiSXQgaXMgc3Ryb25nbHkgcmVjb21tZW5k
-ZWQgdG8ga2VlcCBtYWMgYWRkcmVzc2VzIHVuaXF1ZSB0byBhdm9pZCBwcm9ibGVtcyFcbiIp
-Ow0KPj4gKwkJbmV0ZGV2X3dhcm4oaGFyZF9pZmFjZS0+bmV0X2RldiwNCj4+ICsJCQkgICAg
-IlRoZSBuZXdseSBhZGRlZCBtYWMgYWRkcmVzcyAoJXBNKSBhbHJlYWR5IGV4aXN0cyBvbjog
-JXNcbiIsDQo+PiArCQkJICAgIGhhcmRfaWZhY2UtPm5ldF9kZXYtPmRldl9hZGRyLCB0bXBf
-aGFyZF9pZmFjZS0+bmV0X2Rldi0+bmFtZSk7DQo+PiArCQluZXRkZXZfd2FybihoYXJkX2lm
-YWNlLT5uZXRfZGV2LA0KPj4gKwkJCSAgICAiSXQgaXMgc3Ryb25nbHkgcmVjb21tZW5kZWQg
-dG8ga2VlcCBtYWMgYWRkcmVzc2VzIHVuaXF1ZSB0byBhdm9pZCBwcm9ibGVtcyFcbiIpOw0K
-Pj4gICAJfQ0KPj4gLQlyY3VfcmVhZF91bmxvY2soKTsNCj4+ICAgfQ0KPiANCj4gSSBmZWVs
-IGxpa2UgdGhlIGFib3ZlIGNvZGUgbWl4ZXMgdW5uZWNlc3NhcmlseSBmaXggYW5kIHJlZmFj
-dG9yDQo+ICh2YXJpYWJsZSByZW5hbWUsIGRpZmZlcmVudCBwcmludCBoZWxwZXIgdXNhZ2Up
-Lg0KPiANCj4gSSB0aGluayB0aGUgZml4IHNob3VsZCBiZSBtaW5pbWFsLCB0aGUgcmVmYWN0
-b3Igc2hvdWxkIGxhbmQgaW4gYQ0KPiBkaWZmZXJlbnQgcGF0Y2ggZm9yIG5leHQuDQoNCk9r
-YXkuIEknbGwgcmVtb3ZlIHRoZSBwcmludCBoZWxwZXIgY2hhbmdlIGZvciBub3cuDQoNCkkg
-dGhpbmsgdGhlIHZhcmlhYmxlIHJlbmFtZSBzaG91bGQgYmUga2VwdCwgYXMgd2Ugbm93IGhh
-dmUgdHdvIA0KYmF0YWR2X2hhcmRfaWZhY2UqIHZhcnMsIHNvIHdlIG5lZWQgdG8gaW50cm9k
-dWNlIGEgc2Vjb25kIG5hbWUuIE5hbWluZyB0aGUgDQppbnRlcmZhY2Ugd2UncmUgd29ya2lu
-ZyBvbiBoYXJkX2lmYWNlIGFuZCB1c2luZyB0bXBfaGFyZF9pZmFjZSBmb3IgYSBsb29wIA0K
-dmFyaWFibGUgbWF0Y2hlcyBzaW1pbGFyIGNvZGUgdGhhdCBhbHJlYWR5IGV4aXN0cyBpbiBi
-YXRtYW4tYWR2Lg0KDQpCZXN0LA0KTWF0dGhpYXMNCg==
+The VCodec driver supports a hardware containing two separate cores, the
+CORE and the LAT, these are working in a serial manner without this
+series. This series solves two issues, the first being that the current
+code runs into a problem, that occurs when the last request object is
+unbound from the request, before the v4l2_ctrl_request_complete function
+is called, causing an implicit transition to the COMPLETE state.
+This issues has been found in applications which didn't attach the
+controls for the very first request (which is supposed to enable the
+driver to sniff out the correct formats, etc.).
+The second issue is that the VCodec driver can not utilize the full
+performance of both cores, when the LAT core has to wait for the CORE
+core to finishing processing the decode. Thus by enabling the LAT core
+to process the next bitstream, right after processing the last we can
+increase the performance of the driver.
+With the manual request completion API, we can separate the
+completion of the request objects of a request and from the completion
+of the request itself, which allows to send a new bitstream after the
+LAT core has processed the previous and while the CORE core decodes the
+previous bitstream, so both cores can work in a parallel manner, but
+while keeping the request alive during both steps.
 
---------------oBMmu7dtOKxnkbs8AgOfZ2ca--
+A new state machine for the VCodec driver ensures, that all necessary
+processing steps are handled in the correct order depending on the
+current step in the execution. This state machine has been added to each
+request to ensure that new requests do not alter the state of still
+ongoing requests.
 
---------------sNPEAjL00dW0Dw07Asv36qEo
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Additionally, this series adds a small patch to avoid trying to handle a
+scenario, which is not supported by the hardware and thus runs into a
+timeout.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
+Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+---
+Changes in v2:
+- The implementation patch for V1 was using an outdated version of the
+  "media: vcodec: Implement manual request completion" patch, update it
+  to the most recent one which doesn't use the state machine globally
+  but instead per request, thus having no conflicts between multiple
+  concurrent threads
+- The kernel test robot found an issue because a function which I only
+  use locally was defined without the static keyword
+- Link to v1: https://lore.kernel.org/r/20250314-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v1-0-5e277a3d695b@collabora.com
 
-wsF5BAABCAAjFiEEZmTnvaa2aYgexS51Fu8/ZMsgHZwFAmf35fYFAwAAAAAACgkQFu8/ZMsgHZx9
-0g//dk/nrApTxdGHS/ubqriFFKtDfsRDDgthWuFpsNbrzPsR0jmxvYJpRMRHC+RyJH4504xbQGAB
-OSD2eEj42lVSnnPUM6m4ggNTtQy5XCbqqwmBSyLB4nVetNZhYBdQe3mKMsItbC1UkL4cI2QU7I+p
-o2uKu7gYQQ64oJkQ1oxSCYI2Ir1a3sTb9RjQ3iPy17LbeffaVj70RoQ/fweC7TYHhzpiX61odqN1
-902ZqwdtNZABKFwX/HuLUWkiCjtDuWRjt5kwTcvuhFV8vfup7/eHH1yoVnLSgd2zcTyyA2PXHEUE
-hxlvmTVqfNobrxF8UPnCvHcTGmt/fGHO6Gq5fcEkkdcRDFO0DrcR/bowVK7Kmk0aRMPJD2USsR68
-/xYZefvd85kcUxGntFU/KkJeN7Fr7RZsXDCuv8q5hogy4ykOMAI4Ej8QTvxZJfdwjlfs6cGFAnqw
-470YpMw1Kil+Okmb2JeMDgG7JNXwO3FJkIzKufhv1lFqo+axuQi+dOnr+AyoHRFjMGUq6AGV1uQ4
-57+GI+n2LuA+8zdHi/C11FjlH7h8BrOy7DpHTT0kjzjfNhPym4NQ3SiNPgROOL0tLAHeNAYiq+r0
-1zyaedMPBmvQh+SQ/fMYzBq6+KtvL3tn0WoRwQHRkDrPdlBZoj94UyFIEvgplmk+OWYqJ0ZcrKBU
-79U=
-=S+Dw
------END PGP SIGNATURE-----
+---
+Hans Verkuil (3):
+      media: mc: add manual request completion
+      media: vicodec: add support for manual completion
+      media: mc: add debugfs node to keep track of requests
 
---------------sNPEAjL00dW0Dw07Asv36qEo--
+Nicolas Dufresne (1):
+      media: mtk-vcodec: Don't try to decode 422/444 VP9
+
+Sebastian Fricke (1):
+      media: vcodec: Implement manual request completion
+
+ drivers/media/mc/mc-device.c                       | 30 ++++++++++
+ drivers/media/mc/mc-devnode.c                      |  5 ++
+ drivers/media/mc/mc-request.c                      | 44 +++++++++++++-
+ .../mediatek/vcodec/common/mtk_vcodec_cmn_drv.h    | 13 ++++
+ .../mediatek/vcodec/decoder/mtk_vcodec_dec.c       |  4 +-
+ .../mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c   | 50 ++++++++++++++++
+ .../mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h   | 19 ++++++
+ .../vcodec/decoder/mtk_vcodec_dec_stateless.c      | 69 ++++++++++++++--------
+ drivers/media/test-drivers/vicodec/vicodec-core.c  | 21 +++++--
+ include/media/media-device.h                       |  9 +++
+ include/media/media-devnode.h                      |  4 ++
+ include/media/media-request.h                      | 38 +++++++++++-
+ 12 files changed, 274 insertions(+), 32 deletions(-)
+---
+base-commit: 9ddc3d6c16ea2587898a315f20f7b8fbd791dc1b
+change-id: 20250312-sebastianfricke-vcodec_manual_request_completion_with_state_machine-6362c7f80a14
+
+Best regards,
+-- 
+Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
