@@ -1,65 +1,32 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A2128A401
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89FA728A41B;
+	Thu, 10 Apr 2025 14:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294311; cv=none; b=NQWV4l3qVsMpJAhe4DvixzPftpA8fzhgimV9rthHbA1AhYmCWzk0EvT71z9I0KEIE07CG6fjDVMhhvVRBASmu16lZ8GuPm6fNjBxW6ibE8dDSe1V8o0Y5Ivi6IFDzeP5lgD0qGBJqPrmtF9R2Un04mjgo3hq7s6BnT0LKUUqxrs=
+	t=1744294313; cv=none; b=DxWUZa7A3Wz9xts/kmqxVnfqVFbKdf3OoOJqcapbdQQ3uui92WkbFUKZTpMNZurPC3yoUrYLoe5MMENLkbmCLTAjKsRZ42+D3Hqf06LKVHecV9JYL0YpY5KH+2FAW5wBCWWlXnjTUMUKEszmy296Kgzfyu8Nxg7nN4CbBd5egGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294311; c=relaxed/simple;
-	bh=2bcRLWwxEd6oDhiLEs2/eeHeotbrLRq3xVyuc44V+PE=;
+	s=arc-20240116; t=1744294313; c=relaxed/simple;
+	bh=EvFKfky52vbvM+wEEGE8NveTZMqOTVIS8k3QKbbtTZo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UVRldDd71ne/UJfsQrFW26TmwjihM+zCIJXmEryx8FkMtrRPQzgQjDbvU9qV9Q1Us6O+/5WbVWP2aNktC2IAmXf7Inr0yUnpo5TLmk4/vQditvs+vRtPHMCag63O8wBK2oTYdixpoub+YZ1C9AkvtCL5Naf8H9aR/wySLCTqDWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cKNBjrG6; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=N5gcS9TIpte91+o62/ktLVQjF0ijYk/xKQcVRe3zn4WqNKEOFeZx1pHEo7ae6L33otR1XpY1KbLvBlukUNfheYnWXn1eBpqmiNY+8JOSCOMOoHRreSsL6y0aEPgCDlXiHAUJvoE8dT9tRjF+6IK4lyc3ZtAAGTohO7uj+hTaf9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=STHC8Vd7; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cKNBjrG6"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2c2dc6c30c2so226559fac.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744294308; x=1744899108; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bDU6TnnpydkrEGdtbw7Y1FabP4abTQNmCWlwkK2+gfI=;
-        b=cKNBjrG6iCxOGsWqTs+iEyG3tdvyzuHtWvuwKnVryMGWJtYfwKGOGiNzNrcxsNBv5N
-         hNsa2f+tTP9tDjngk/5eFdzJVoJ7SqfWwpdzh8yRUXE0xPZGCfWh1HKqOsWlt1SK5vJp
-         HLEN/CkmeJi3ZOQGiJKyeRlL3aArpNS61r1SAtM7A7D05DyI4I6no3kZ6r685BtqZ7H9
-         NsVjTH3sm7ZhsXh6N5JiV8zYtgDdKwGe4A4WOTnj9y+vU3QUqcLmn3Vi8OqFP8M1GIJN
-         rCtqqFdHw6tFqG+6zApja4oxlQlSy0NaXjTeQ8GQ7am+S27JHRG7ReyjTMAn+PQzpyCK
-         d8mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744294308; x=1744899108;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bDU6TnnpydkrEGdtbw7Y1FabP4abTQNmCWlwkK2+gfI=;
-        b=gXXu9gjRo4xcFk3EQgRK/SZVP5SdGlcbbHMQY7n4XoIdTV53ht+xoVT1imFsSZhuwE
-         lQ85SDtEGsnE2YM17hKEH0dx6jzSbgaTcjAQbbv3LwiFf0HY7mTd9zTRzSZkW4V5jVKR
-         JbB/ChnFnstDuvG7P5bRopG9oCSnvyjUndKeO2BoJMte3SvcR+jr4rO/FdFkYPZ2HfZ3
-         8bEakm6kkcXIx20GI2cGlAS48mwesDlTEzBH2t0UwGN4ovRcIkqUJO91CDibTiCRErC6
-         MTItAlCqU7shsUEo7u30jJqbXncCZa3UOcvqH27VLMsfJZ5WQ79ovPV4vzZ0+C5ZH3f1
-         /teA==
-X-Forwarded-Encrypted: i=1; AJvYcCXr6TXmcZ61yv2jlh8cOYQkPnYaXFWscPl4OjH1DNvc1/opIoos908c8r/D8pRVkXxCOAyUSH4+HhtR9QU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwhgbreaDUHeSf77BHOoxGkDubuVnd39pazlELPjOg57286OgG
-	2jxW6s6i/YJtMvGtIY16FDD3aKDWKsBWaC29Mq+HJ9jh9JihBMhcK2N+uMdXkAs=
-X-Gm-Gg: ASbGncsI+pYhFSEEzyG52LwH1k9xROeKq0rD5ZCige/uJ9ZrPkp4Ubt7ZMpjMrFX7gc
-	qSjSuIxZJ/V393mFfd/73hDEsfgAsSonncHfJQXgAqiY+ZbDUrR3JJj9d85+SDLopGEBQY2vu8y
-	KKAYlYH2FV9x0lGlbLoVEjsB7Vt50Ul6ZW0qj3xxflhnRttBbKJBPya4FXFznXriFobl7AkuKkv
-	jK7sN9NIWov9Q/x4ViDLNUiHAv6llRyIFWpgQIccUJkrp1LTPLmKoxafW6U/yyBFrnV9suipQhI
-	2ntonTSe3EBiJi8uJ20Gvu57JSsmP16zt6al5TQMOfrL7vcKwbzHMqdvJaShxXxXJo523QAtueN
-	yrfMxfi1ZxE/k
-X-Google-Smtp-Source: AGHT+IF4FJP0GLYWv9/d9TiSPWxCSlvFcNDS8tgAo2NgT2cPnPyU3dINAVQK7QTyDgIRoeywhov6Bw==
-X-Received: by 2002:a05:6871:d109:b0:2c1:4146:c556 with SMTP id 586e51a60fabf-2d0b3821079mr1660879fac.31.1744294308198;
-        Thu, 10 Apr 2025 07:11:48 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d0969b721fsm676463fac.25.2025.04.10.07.11.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 07:11:47 -0700 (PDT)
-Message-ID: <420dbd79-c981-4278-b888-5dd9f5baa4c6@baylibre.com>
-Date: Thu, 10 Apr 2025 09:11:46 -0500
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="STHC8Vd7"
+Received: from [100.70.200.180] (unknown [20.1.194.235])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 08FA62114D81;
+	Thu, 10 Apr 2025 07:11:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 08FA62114D81
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744294310;
+	bh=BWbmMbT74Sn7SqaSDZAyAFKEL0RW1KrKKLxHKERd89Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=STHC8Vd7L34139AsmAyauJpLmZYgvBtIRXy/VamhTZgHJvxW/gIalruqNdVHSTXQB
+	 vQWTNgyRHU8fwPKdVhRWubSzYL4iRWCx2ULcGRFgEimMvmVCqWuATr7BF0eHfuDBa4
+	 c1bqXcyCOYoZ43yTOLlQkqcQJW/sJXQnd/qQpMRQ=
+Message-ID: <1e176b0c-13a2-42bd-8879-b22f459a04de@linux.microsoft.com>
+Date: Thu, 10 Apr 2025 07:11:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,103 +34,187 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-To: "Paller, Kim Seer" <KimSeer.Paller@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- "Hennerich, Michael" <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
- <20250403-togreg-v3-3-d4b06a4af5a9@analog.com>
- <fd2116bd-b0e2-4db4-97ff-1a1e88545413@baylibre.com>
- <PH0PR03MB714159E822B96E7A788A5CD4F9AA2@PH0PR03MB7141.namprd03.prod.outlook.com>
- <a66220e9-f690-4f95-9a14-d2b663d63490@baylibre.com>
- <PH0PR03MB7141587E8AFB2844E52988DAF9B72@PH0PR03MB7141.namprd03.prod.outlook.com>
+Subject: Re: [PATCH v11 3/9] kexec: define functions to map and unmap segments
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250402124725.5601-1-chenste@linux.microsoft.com>
+ <20250402124725.5601-4-chenste@linux.microsoft.com>
+ <Z/STl3Jjt4/gMQHL@MiWiFi-R3L-srv>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <PH0PR03MB7141587E8AFB2844E52988DAF9B72@PH0PR03MB7141.namprd03.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z/STl3Jjt4/gMQHL@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/10/25 3:39 AM, Paller, Kim Seer wrote:
-> 
-> 
->> -----Original Message-----
->> From: David Lechner <dlechner@baylibre.com>
->> Sent: Tuesday, April 8, 2025 10:06 PM
->> To: Paller, Kim Seer <KimSeer.Paller@analog.com>; Jonathan Cameron
->> <jic23@kernel.org>; Lars-Peter Clausen <lars@metafoo.de>; Hennerich,
->> Michael <Michael.Hennerich@analog.com>; Rob Herring <robh@kernel.org>;
->> Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
->> <conor+dt@kernel.org>
->> Cc: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org;
->> devicetree@vger.kernel.org
->> Subject: Re: [PATCH v3 3/3] iio: dac: ad3530r: Add driver for AD3530R and
->> AD3531R
+On 4/7/2025 8:10 PM, Baoquan He wrote:
+> On 04/02/25 at 05:47am, steven chen wrote:
+>> Currently, the kernel behavior during kexec load is to fetch the IMA
+>> measurements logs and store logs in kernel memory. When a kexec reboot is
+>> triggered, these stored logs in the kernel memory are carried over to the
+>> second kernel. However, the time gap between kexec load and kexec reboot
+>> can be very long. During this time window, new events extended into TPM
+>> PCRs miss the chance to be carried over to the second kernel. This results
+>> in a mismatch between TPM PCR quotes and the actual IMA measurements list
+>> after kexec reboot, leading to remote attestation failure.
 >>
->> [External]
+>> To solve this problem, the new design defers reading the IMA measurements
+>> logs into the kexec buffer to the kexec reboot phase, while still allocating
+>> the necessary buffer at kexec load time because it is not appropriate to
+>> allocate memory at the kexec reboot moment.
 >>
->> On 4/7/25 3:01 AM, Paller, Kim Seer wrote:
->>>>> +	for (i = 0; i < chip_info->num_channels; i++)
->>>>> +		st->chan[i].powerdown_mode =
->>>> AD3530R_32KOHM_POWERDOWN_MODE;
->>>>> +
->>>>> +	st->ldac_gpio = devm_gpiod_get_optional(dev, "ldac",
->>>> GPIOD_OUT_HIGH);
->>>>> +	if (IS_ERR(st->ldac_gpio))
->>>>> +		return dev_err_probe(dev, PTR_ERR(st->ldac_gpio),
->>>>> +				     "Failed to get ldac GPIO\n");
->>>>> +
->>>>> +	if (device_property_present(dev, "adi,double-output-range")) {
->>>>
->>>> This is not documented in the DT bindings.
->>>>
->>>> This could instead be implemented by making the out_voltage_scale
->> attribute
->>>> writeable.
->>>>
->>>> If we really do need it in the devicetree because we want to protect against
->>>> someone accidentally setting it too high, then the property should be the
->> actual
->>>> multipler value with an enum specifier of 1, 2 and a default of 1 rather than
->> a
->>>> flag (e.g. adi,output-multipler).
->>>
->>> Thank you for the feedback. This should be adi,range-double, which is already
->>> documented in the DT bindings and is also used as a boolean type in other
->> drivers.
->>> I just forgot to update it here. This is a one-bit configuration that doubles the
->>> output range (multiplier of 2).  Should I proceed with the suggested
->> approach?
->>>
+>> The content of memory segments carried over to the new kernel during the
+>> kexec system call can be changed at the kexec 'execute' stage, but the size
+>> of the memory segments cannot be changed at the kexec 'execute' stage.
 >>
->> I see adi,range-double in
->> Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+>> To copy IMA measurement logs during the kexec operation, IMA allocates
+>> memory at the kexec 'load' stage and map the segments to the kimage
+>> structure. The mapped address will then be used to copy IMA measurements
+>> during the kexec 'execute' stage.
 >>
->> We would need to add the same in the new .yaml file added in this
->> series along with a justification in the commit message of why this
->> needs to be set in the devicetree rather than at runtime.
-> 
-> I can confirm that the adi,range-double property is already present in the adi,ad3530r.yaml
-> file as a boolean type, and consistent with its usage in adi,ad7923.yaml.
+>> Currently, the mechanism to map and unmap segments to the kimage structure
+>> is not available to subsystems outside of kexec.
+> There's no need to describe the plan of the whole series. From my point
+> of view, the first few patches are prepared for later change. We can
+> just mention this, and briefly tell what it's doing if it's complicated.
+> For log of this patch, I would go with:
+>
+> ====
+> Implement kimage_map_segment() to enable IMA to map the measurement log
+> list to the kimage structure during the kexec 'load' stage. This function
+> gathers the source pages within the specified address range, and maps them
+> to a contiguous virtual address range.
+>
+> This is a preparation for later usage.
+> ====
+>
+> Other than this, the code change looks good to me.
 
-Sorry, I don't know why I didn't see it the first 2 times I looked. :-(
-It is there.
+Hi Baoquan,
 
-> 
+Thanks for your comments. Will update in next version.
+
+Steven
+
+>> Implement kimage_map_segment() to enable IMA to map the measurement log
+>> list to the kimage structure during the kexec 'load' stage. This function
+>> takes a kimage pointer, a memory address, and a size, then gathers the
+>> source pages within the specified address range, creates an array of page
+>> pointers, and maps these to a contiguous virtual address range. The
+>> function returns the start virtual address of this range if successful,
+>> or NULL on failure.
 >>
->> Ideally, we would ask the applications engineer for this chip to
->> find out how real users would want to use this feature to make sure
->> setting it in the devicetree aligns with that and is not too
->> restrictive.
-> 
-> The apps engineer for this chip indicated that the boolean type format aligns better with
-> how users are expected to configure this feature, especially for users who may not be
-> familiar with specific range values or enum specifiers.
-> 
+>> Implement kimage_unmap_segment() for unmapping segments using vunmap().
+>>
+>> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Cc: Eric Biederman <ebiederm@xmission.com>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Vivek Goyal <vgoyal@redhat.com>
+>> Cc: Dave Young <dyoung@redhat.com>
+>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>> Acked-by: Baoquan He <bhe@redhat.com>
+>> ---
+>>   include/linux/kexec.h |  6 +++++
+>>   kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 60 insertions(+)
+>>
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index f0e9f8eda7a3..7d6b12f8b8d0 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
+>>   #define kexec_dprintk(fmt, arg...) \
+>>           do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+>>   
+>> +extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+>> +extern void kimage_unmap_segment(void *buffer);
+>>   #else /* !CONFIG_KEXEC_CORE */
+>>   struct pt_regs;
+>>   struct task_struct;
+>> +struct kimage;
+>>   static inline void __crash_kexec(struct pt_regs *regs) { }
+>>   static inline void crash_kexec(struct pt_regs *regs) { }
+>>   static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+>>   static inline int kexec_crash_loaded(void) { return 0; }
+>> +static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+>> +{ return NULL; }
+>> +static inline void kimage_unmap_segment(void *buffer) { }
+>>   #define kexec_in_progress false
+>>   #endif /* CONFIG_KEXEC_CORE */
+>>   
+>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>> index c0bdc1686154..a5e378e1dc7f 100644
+>> --- a/kernel/kexec_core.c
+>> +++ b/kernel/kexec_core.c
+>> @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+>>   	return result;
+>>   }
+>>   
+>> +void *kimage_map_segment(struct kimage *image,
+>> +			 unsigned long addr, unsigned long size)
+>> +{
+>> +	unsigned long src_page_addr, dest_page_addr = 0;
+>> +	unsigned long eaddr = addr + size;
+>> +	kimage_entry_t *ptr, entry;
+>> +	struct page **src_pages;
+>> +	unsigned int npages;
+>> +	void *vaddr = NULL;
+>> +	int i;
+>> +
+>> +	/*
+>> +	 * Collect the source pages and map them in a contiguous VA range.
+>> +	 */
+>> +	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
+>> +	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
+>> +	if (!src_pages) {
+>> +		pr_err("Could not allocate ima pages array.\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	i = 0;
+>> +	for_each_kimage_entry(image, ptr, entry) {
+>> +		if (entry & IND_DESTINATION) {
+>> +			dest_page_addr = entry & PAGE_MASK;
+>> +		} else if (entry & IND_SOURCE) {
+>> +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+>> +				src_page_addr = entry & PAGE_MASK;
+>> +				src_pages[i++] =
+>> +					virt_to_page(__va(src_page_addr));
+>> +				if (i == npages)
+>> +					break;
+>> +				dest_page_addr += PAGE_SIZE;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	/* Sanity check. */
+>> +	WARN_ON(i < npages);
+>> +
+>> +	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
+>> +	kfree(src_pages);
+>> +
+>> +	if (!vaddr)
+>> +		pr_err("Could not map ima buffer.\n");
+>> +
+>> +	return vaddr;
+>> +}
+>> +
+>> +void kimage_unmap_segment(void *segment_buffer)
+>> +{
+>> +	vunmap(segment_buffer);
+>> +}
+>> +
+>>   struct kexec_load_limit {
+>>   	/* Mutex protects the limit count. */
+>>   	struct mutex mutex;
+>> -- 
+>> 2.25.1
+>>
 
-Very good.
