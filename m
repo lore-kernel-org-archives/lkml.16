@@ -1,109 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5EF280CF5;
-	Thu, 10 Apr 2025 10:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EEB276057
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744281801; cv=none; b=O7WcZMPMTasjzJF6d7ZU7p+KXT4cHye7cgF3+lghR5Miusa9SOC/G2FDlEqVFPkaAQvDWD42Ng4Qb6+dP/Qdlr8epDcRpei2UxmWE3qNF1ZU7o1oj7V58Oe1XL1rRKS4hs9xeWXOqG7Zr+9EM+3fWHeCKzICVWxury4LOg2XgHg=
+	t=1744281812; cv=none; b=a2ybw0QGJKiU1m3tnOCN9gGO8LLSi8IyIRUIpiGMT4XkoXUNJzh+5dKXnHPPrQaNgdlv/EjIWEihkTF7YGRdOgnSbAAHZ+23r1W5L0zFVUMdHEQs6hGntdeBGUV4AoQNmeOpGkVRhcc5jADL59Bldzd8JopwKLL8pe99aVSObl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744281801; c=relaxed/simple;
-	bh=fO12BmA5JGZJ0a/09O+FMjxB+Lf4TKa7uC+u44wx1e8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q6SEnHDkOqhTY0/3kxEn/LFdE4HPWETP84TQ8F1gfztHQ9454I6DnpgoXvBKP/qVBKymqH2yrVzRV1f+BVbEQ5grbp1zpwtwLmwb9hN10Fg31RDB+/hcnVmG1CiLKOJ8508hjKY9XXNaLFhz2zoO0woTAKqeAVTYubiN0ggxXh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtdUtN8v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744281812; c=relaxed/simple;
+	bh=pZ5bB8vFUMnyv3cCOmpIUQLd2O2QWg60MWTovyHf87Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j3BBpEmqkRwoAyGarFJXBUJZMHZsP34xGsloi1Oc2yqIuBGT6+VOUjAdVl02bOLB6rDwV/bfOvX2Vt0jJhR8q99vA5mZrBEQcMtECTaZcswng5AyYIAUhOu9A2vtVwGcVUnYpCdI5ETYMJotmADBhPC0ESlg5EaRwMvgyRXub+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KDUKvJO9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtdUtN8v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68DD1C4CEDD;
-	Thu, 10 Apr 2025 10:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744281799;
-	bh=fO12BmA5JGZJ0a/09O+FMjxB+Lf4TKa7uC+u44wx1e8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VtdUtN8vsdalGLWxoa2QelKR/UBek09CdFsGshGvUvuHyoUMCnahrj0xJmIIgj56k
-	 H4CsRkYzdOMe20rq5ADTpaUui9Vg7StqzQe0NKO1pfAGPw6I7m84V5EyMc5sY7IpXm
-	 XAR5gnunwXGL5QvN+VVP98z9q6p+QYzXdaoZF6OgtB9Kryk0tAnMCJqK7WttgKSbCV
-	 sMSLPFgFfh88CSWJ/duJFJGlyyK74CpKeKa9oe9y3y6ADttYkyYhLjj2c6jY6oH2b+
-	 epZj53gwzfo59TuvouxNGJc/jgdNzhQiy6Ccy4epDBO9hrzOl/q4sHj4TsYEk7Ko+g
-	 odY0Kuc4uBVXQ==
-Date: Thu, 10 Apr 2025 12:43:14 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
-	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org, 
-	Peter Ziljstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH] pidfs: ensure consistent ENOENT/ESRCH reporting
-Message-ID: <20250410-barhocker-weinhandel-8ed2f619899b@brauner>
-References: <20250409-sesshaft-absurd-35d97607142c@brauner>
- <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
- <20250409184040.GF32748@redhat.com>
- <20250410101801.GA15280@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDUKvJO9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744281809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=o8NDC37k3QmU+NUsDCirFAdGiwD0pEhO0xSGio8XM74=;
+	b=KDUKvJO9V2F3pHWxnl9FHQjF2fYU7Uxw9qiTJd6lEdjZ7rfTPGcAJihdN0oYY4JTxFxOTo
+	TfrrUDMuLlo2ZWperFICrvwadPX/eMLNJ7ty6o6UecstoqJwoahwDq4qEhV46kC9RLp6mh
+	VgHHmtECdAalslv5ZfeGX4QMYJnGq0g=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-9JMJmrNRMWqRdHVjZpRkig-1; Thu, 10 Apr 2025 06:43:28 -0400
+X-MC-Unique: 9JMJmrNRMWqRdHVjZpRkig-1
+X-Mimecast-MFC-AGG-ID: 9JMJmrNRMWqRdHVjZpRkig_1744281807
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac2db121f95so54381566b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:43:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744281807; x=1744886607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o8NDC37k3QmU+NUsDCirFAdGiwD0pEhO0xSGio8XM74=;
+        b=Df23qIoYjq6/EB2EEQK/m8rkMkN0e6FFaPzY6XyiJQaCjTFrLprAr26x0BgSj7MFcX
+         LcZFtnzt9obNfuA99Wv+lMSU+ve6zPN2jai3ngKIMK18JSeW2t/fhpXfvhSmvWCd7P7L
+         NxJ2kqGaWne8979kPZ8it4p5Pqcb3T4HuMiYdBMcassMeKdJvcyq73GTs45odOYNoaLQ
+         Fy+Tl7pTe52GZb2M8yx6kw27Rei84Icfdjjl+e6qWTZZmAz3n3dzj+RpacJTLlPvgFJT
+         y9xi3448GFl9kuduX8icCUpU+6ATW83HG6pvtE0tFOvtJpwTHGrVoSwht7eDrp7fHhbK
+         a0BQ==
+X-Gm-Message-State: AOJu0Yxt6dcPQWsUcggCRq3BuvY2BcJuYFHTudkvNP9Qu8aZg8edUf0W
+	WYdh6ytHKotf+J/dAZCh6Ac6n3v8utejBetuUTm+4aE5IlMEo8/aNp52+c1vCEvbdZodQcmGt8F
+	zXjHBahpc9Sabxiw809PdwW0HfIKVLQ3aw6Dus84qGQpxE/XWdqj/K8SHgPzVBA==
+X-Gm-Gg: ASbGncv9t6por8rhUSW/fcWZFQJa3dZKbLvgaZjEDbUsp06B+leEWUvL4pdrYIkQ8FW
+	gXbRuNX+aCKloHkz9HjdR8+lVkJKt56OQiDZtJrJJ13c/FaiHJRVauTyHWwbdavyZrqT/JiX6Fk
+	o9kydUhz3J5aFEe0MixUUQd9oWfvYwpLNHq0WspJ+580mwrBfnOlY75FKSB3S2x7kMj9qvwKkhG
+	SoVt8Gf6yFzQQyEjVfu5/3HSpf6JpznYOThH0FAHSTuIVgdt9vdIa901Cf3YqYQJV8x/t1XIeRE
+	vsJGD3Yl
+X-Received: by 2002:a17:907:3e11:b0:ac7:ec6f:a7c with SMTP id a640c23a62f3a-acabd1ddb9amr205751866b.13.1744281807222;
+        Thu, 10 Apr 2025 03:43:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFtZjy9wlPfZmZBnYMu79NO3yotRmZU9d09bLGlKvvf77owRla0L/nGxvLBfyuq+ABs6xAk7w==
+X-Received: by 2002:a17:907:3e11:b0:ac7:ec6f:a7c with SMTP id a640c23a62f3a-acabd1ddb9amr205750266b.13.1744281806835;
+        Thu, 10 Apr 2025 03:43:26 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3df5sm249424366b.26.2025.04.10.03.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 03:43:26 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 4D3D11992280; Thu, 10 Apr 2025 12:43:25 +0200 (CEST)
+From: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org
+Subject: [PATCH net v2] selftests/tc-testing: Add test for echo of big TC filters
+Date: Thu, 10 Apr 2025 12:43:21 +0200
+Message-ID: <20250410104322.214620-1-toke@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250410101801.GA15280@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 10, 2025 at 12:18:01PM +0200, Oleg Nesterov wrote:
-> On 04/09, Oleg Nesterov wrote:
-> >
-> > Christian,
-> >
-> > I will actually read your patch tomorrow, but at first glance
-> >
-> > On 04/09, Christian Brauner wrote:
-> > >
-> > > The seqcounter might be
-> > > useful independent of pidfs.
-> >
-> > Are you sure? ;) to me the new pid->pid_seq needs more justification...
+Add a selftest that checks whether the kernel can successfully echo a
+big tc filter, to test the fix introduced in commit:
 
-Yeah, pretty much. I'd make use of this in other cases where we need to
-detect concurrent changes to struct pid without having to take any
-locks. Multi-threaded exec in de_exec() comes to mind as well.
+369609fc6272 ("tc: Ensure we have enough buffer space when sending filter netlink notifications")
 
-> > Again, can't we use pid->wait_pidfd->lock if we want to avoid the
-> > (minor) problem with the wrong ENOENT?
-> 
-> I mean
-> 
-> 	int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
-> 	{
-> 		int err = 0;
-> 
-> 		spin_lock_irq(&pid->wait_pidfd->lock);
-> 
-> 		if (!pid_has_task(pid, PIDTYPE_PID))
-> 			err = -ESRCH;
-> 		else if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
-> 			err = -ENOENT;
-> 
-> 		spin_lock_irq(&pid->wait_pidfd->lock);
-> 
-> 		return err ?: __pidfd_prepare(pid, flags, ret);
-> 	}
-> 
-> To remind, detach_pid(pid, PIDTYPE_PID) does wake_up_all(&pid->wait_pidfd) and
-> takes pid->wait_pidfd->lock.
-> 
-> So if pid_has_task(PIDTYPE_PID) succeeds, __unhash_process() -> detach_pid(TGID)
-> is not possible until we drop pid->wait_pidfd->lock.
-> 
-> If detach_pid(PIDTYPE_PID) was already called and have passed wake_up_all(),
-> pid_has_task(PIDTYPE_PID) can't succeed.
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+---
+v2:
+- Move to infra/actions.json
 
-I know. I was trying to avoid having to take the lock and just make this
-lockless. But if you think we should use this lock here instead I'm
-willing to do this. I just find the sequence counter more elegant than
-the spin_lock_irq().
+ .../tc-testing/tc-tests/infra/actions.json    | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-And note that it doesn't grow struct pid. There's a 4 byte hole I would
-place it into just before struct dentry *. So there's no downside to
-this imho and it would give pidfds a reliable way to detect relevant
-concurrent changes locklessly without penalizing other critical paths
-(e.g., under tasklist_lock) in the kernel.
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/infra/actions.json b/tools/testing/selftests/tc-testing/tc-tests/infra/actions.json
+index 1ba96c467754..d9fc62ab476c 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/infra/actions.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/infra/actions.json
+@@ -412,5 +412,27 @@
+         "teardown": [
+             "$TC qdisc del dev $DUMMY ingress"
+         ]
++    },
++    {
++        "id": "33f4",
++        "name": "Check echo of big filter command",
++        "category": [
++            "infra",
++            "u32"
++        ],
++        "plugins": {
++            "requires": "nsPlugin"
++        },
++        "setup": [
++            "$TC qdisc add dev $DUMMY parent root handle 10: fq_codel"
++        ],
++        "cmdUnderTest": "bash -c '$TC -echo filter add dev $DUMMY parent 10: u32 match u32 0 0 $(for i in $(seq 32); do echo action pedit munge ip dport set 22; done) | grep \"added filter\"'",
++        "verifyCmd": "",
++        "expExitCode": "0",
++        "matchCount": "0",
++        "matchPattern": "",
++        "teardown": [
++            "$TC qdisc del dev $DUMMY parent root fq_codel"
++        ]
+     }
+ ]
+-- 
+2.49.0
+
