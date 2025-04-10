@@ -1,138 +1,240 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B9326ACB
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E777128A416
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293330; cv=none; b=D7A5I6Wz+53ehtNs1r1rsyqXSHZISss5VDRLtctl4OxfHbfFakpBzvmuWbzJPxXpPJWCVeUL8ccxKFhmhz0SBI1o+IMBiojwIaLaLQWQgIZRG8TZ8da3cuMubjRqNVe4SKdOq142z5N4xvP+NZxORRYJ44FmYdbaDBVeK+GAUnE=
+	t=1744293333; cv=none; b=BwlSnsHGzfWNT5jeODV2k1DlQrPcmJY5CsppuhSrJ6ipH59sNbi0IGxGN17y4h0DL3JVKXANyDWSJWTVUmyExX3Rc7aqutyvugpgU4pHT3vm+ppJPMY3Z88+Ji3kwqPRxdJzIT/4VsqKpn8TwWdhcJM3ukNV6v48M0oC/jTAMdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293330; c=relaxed/simple;
-	bh=HgstBAgpcoyJB79ka6L9MS4wzTkiQ+tdNNgqeJ3yAyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Abz/mlRZx2WVs6PmLI2+8ZON08CfDNtl/ka5x9Lo6LA67WOHwsJXjeRoc0HBNQE0rdvtswcVl4m7pFZiPIPhApIlWJR8KxlnYnX8RZ0/ddsGRdNDy/d9J5jH5GdZDznXKspkHWoSpherlnQlupJ2l2IUuzhnSQMD76XFC8U5l+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sOILeg+2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Z/OXTelw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sOILeg+2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Z/OXTelw; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744293333; c=relaxed/simple;
+	bh=VOpVt+41yrli7ULy6Cv44zxlFXhK+7x2i4JhnJeRJ00=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qnWWoefdqKt2RU5macbzlbAJCVXIz6QTsaczA1AuwdrlmU/hFSXOONxh/X1xwya2nNnEhK1JY5iG5q6b42XEsYH92FSHOsepvYbYJG7VUc6jomjxm+UKK9t7zMOVzM/v7K7RyHmzJYMouCdHA4CqJSLvNIlD7VSJq2qVVnt6YmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h8IOpwpq; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sOILeg+2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Z/OXTelw";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sOILeg+2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Z/OXTelw"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 835A521179;
-	Thu, 10 Apr 2025 13:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744293326; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=slFcpUKngMaxeKh9g43/vSqYK//QRrWjwpIc7hgFzhU=;
-	b=sOILeg+27QLtlJZPA/dGwPoBBD2Clh7qgGAlLmwxmU71MErWsuk6gr8PtJi+CE8YKKWID7
-	4xc9RegdI7O16X9YO85b/+ObEMugpjkK7QW4d9DripqOCeo4/KFnsVv86Wb1GRx6u9ree4
-	HC1nkz9BuEkx1Vsoy60/t64h5CszUiA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744293326;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=slFcpUKngMaxeKh9g43/vSqYK//QRrWjwpIc7hgFzhU=;
-	b=Z/OXTelwM1h4EmZ+Q1heCXvmKQ3KDKAK+ebC7P/MK9RkhmgpedZ2+VuhbIJ/hHlzDyJrTv
-	hTZ2RFa3aeVIUnBQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744293326; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=slFcpUKngMaxeKh9g43/vSqYK//QRrWjwpIc7hgFzhU=;
-	b=sOILeg+27QLtlJZPA/dGwPoBBD2Clh7qgGAlLmwxmU71MErWsuk6gr8PtJi+CE8YKKWID7
-	4xc9RegdI7O16X9YO85b/+ObEMugpjkK7QW4d9DripqOCeo4/KFnsVv86Wb1GRx6u9ree4
-	HC1nkz9BuEkx1Vsoy60/t64h5CszUiA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744293326;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=slFcpUKngMaxeKh9g43/vSqYK//QRrWjwpIc7hgFzhU=;
-	b=Z/OXTelwM1h4EmZ+Q1heCXvmKQ3KDKAK+ebC7P/MK9RkhmgpedZ2+VuhbIJ/hHlzDyJrTv
-	hTZ2RFa3aeVIUnBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D58A0132D8;
-	Thu, 10 Apr 2025 13:55:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id J8ouMM3N92fncAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 10 Apr 2025 13:55:25 +0000
-Date: Thu, 10 Apr 2025 15:55:19 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Gavin Shan <gshan@redhat.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, adityag@linux.ibm.com,
-	donettom@linux.ibm.com, gregkh@linuxfoundation.org,
-	rafael@kernel.org, dakr@kernel.org, akpm@linux-foundation.org,
-	shan.gavin@gmail.com
-Subject: Re: [PATCH] drivers/base/memory: Avoid overhead from
- for_each_present_section_nr()
-Message-ID: <Z_fNx7hTOR8St0SM@localhost.localdomain>
-References: <20250410125110.1232329-1-gshan@redhat.com>
- <9deb3725-8991-43d1-8c3d-56523fabff28@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h8IOpwpq"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf327e9a2so7782605e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:55:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744293329; x=1744898129; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QDFIq8Rc3inYMDqZcvdxiRvCnaWwkWGcb7xaJWd+b3Y=;
+        b=h8IOpwpqE56cXjot7MTRc8AnOdvgoZ2H8MOwQLFpKANonKIAoSdeO+cnBWwpYoPhWz
+         RQt5hQiR1AunUnhuJtReteDZ2VCYmhy+qTWxFzcVJ94J4e3o2cpPWD9jJEW6wv2OeNOl
+         dHgBKZe2eQmarcBzL8KVQDd13biIvnFL8IVGdVwjyq239q2u3RYZqDo+rmpSqoy6WJcQ
+         TOqJ/kK/BYIDgsCXBU/wHfOnalQU6WNtmpuhK+2lpYHxzT3FHKCBqFOLSZefaLU0eXks
+         I+6/Yb0RdvqDHXPK697CNfp5NyzC6okc5+skwayliZXfmAaYxsBlLGpuTGSgVRe1ny3P
+         6WLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744293329; x=1744898129;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QDFIq8Rc3inYMDqZcvdxiRvCnaWwkWGcb7xaJWd+b3Y=;
+        b=QsIGKeEvWaqGdqhdS4vfwl5suNAsJqO+X4GUppZAEgKOQtqTtBeG+3G4kfyXGbixcs
+         2CwTIPn6RAm1f8ZQAsataMsUkCr4xJI3oF8g6ZHvKq4Hqo4GBg+i6JIdLIySmIhMU3OF
+         9SwRuh3K6ZN2ezxDwYqL5Ofkw2aTWNQhN4lcGvhKxZt0hJAemKi21QcRD4BOIVEejEp5
+         BLyrqSl7DDuvmyi9faFXjrQSIRRIp0H5JOOEpD1D7ZDfL20ODRXSAte95nv5fRIaFPjC
+         +TACiXxnkOBFDHif/0weqCf8ebAlzGdbsZXBvUjRwWmjHLcQ5X9vF8QaWAsWdo7IPLzQ
+         9HOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUimTjJvQmoCN2Ye9XhaY9Q7t8uaTDqOAapo+Qb1ZPh7fKtcLS1XZbyjlGL06b5UNzx5VK03TxaoO9ZpBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8dxDJlYegK1qk7nERqI6QWeewEDSFY4KAewvFswwPhXSA4Sqf
+	FW818SK6sqkD+Mmgd2sjTW5xJVZVC8oQNW/WK0KuBXT9xWmeo+BA53oHPfHfRuU1OjpgoAh1Z+2
+	Hs/U0gYX5Ww==
+X-Google-Smtp-Source: AGHT+IF36wK+RgxWudcaKSM179JMydTdTYiZ6lfF38iCsfbydhNnVkj9Jh+6mJ8bFYUC1D8C/FVuSmbhjqfnsA==
+X-Received: from wmbh17.prod.google.com ([2002:a05:600c:a111:b0:43d:1c11:4e5d])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1c8e:b0:43c:f64c:44a4 with SMTP id 5b1f17b1804b1-43f2d7b4ed6mr22820475e9.8.1744293329091;
+ Thu, 10 Apr 2025 06:55:29 -0700 (PDT)
+Date: Thu, 10 Apr 2025 13:55:27 +0000
+In-Reply-To: <20250407180154.63348-2-hannes@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9deb3725-8991-43d1-8c3d-56523fabff28@redhat.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,kvack.org,vger.kernel.org,linux.ibm.com,linuxfoundation.org,kernel.org,linux-foundation.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Mime-Version: 1.0
+References: <20250407180154.63348-1-hannes@cmpxchg.org> <20250407180154.63348-2-hannes@cmpxchg.org>
+X-Mailer: aerc 0.20.1-64-g7cb8e0e7ce24
+Message-ID: <D930DO9PAJR8.SOYZSGRG5Y2O@google.com>
+Subject: Re: [PATCH 2/2] mm: page_alloc: tighten up find_suitable_fallback()
+From: Brendan Jackman <jackmanb@google.com>
+To: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Brendan Jackman <jackmanb@google.com>, 
+	Mel Gorman <mgorman@techsingularity.net>, Carlos Song <carlos.song@nxp.com>, <linux-mm@kvack.org>, 
+	<linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 10, 2025 at 03:18:00PM +0200, David Hildenbrand wrote:
-> Staring at the end result and the particularly long comment, are we now
-> really any better than before 61659efdb35c?
+On Mon Apr 7, 2025 at 6:01 PM UTC, Johannes Weiner wrote:
+> find_suitable_fallback() is not as efficient as it could be, and
+> somewhat difficult to follow.
+>
+> 1. should_try_claim_block() is a loop invariant. There is no point in
+>    checking fallback areas if the caller is interested in claimable
+>    blocks but the order and the migratetype don't allow for that.
+>
+> 2. __rmqueue_steal() doesn't care about claimability, so it shouldn't
+>    have to run those tests.
+>
+> Different callers want different things from this helper:
+>
+> 1. __compact_finished() scans orders up until it finds a claimable block
+> 2. __rmqueue_claim() scans orders down as long as blocks are claimable
+> 3. __rmqueue_steal() doesn't care about claimability at all
+>
+> Move should_try_claim_block() out of the loop. Only test it for the
+> two callers who care in the first place. Distinguish "no blocks" from
+> "order + mt are not claimable" in the return value; __rmqueue_claim()
+> can stop once order becomes unclaimable, __compact_finished() can keep
+> advancing until order becomes claimable.
 
-I think we are.
-I mean, we made it slightly worse with 61659efdb35c because of what I
-explained in the error report, but I think this version is faster than
-the code before 61659efdb35c, as before that the outter loop was
-incremented by 1 any given time, meaning that the section we were passing
-to add_boot_memory_block() could have been already checked in there for
-memory-blocks spanning multiple sections.
+Nice!
 
+My initial thought was: now we can drop the boolean arg and just have
+the callers who care about claimability just call
+should_try_claim_block() themselves. Then we can also get rid of the
+magic -2 return value and find_suitable_fallback() becomes a pretty
+obvious function.
+
+I think it's a win on balance but it does make more verbosity at the
+callsites, and an extra interface between page_alloc.c and compaction.c
+So maybe it's a wash, maybe you already considered it and decided you
+don't prefer it.
+
+So, LGTM either way, I will attempt to attach the optional additional
+patch for your perusal, hopefully without molesting the mail encoding
+this time...
+
+Reviewed-by: Brendan Jackman <jackmanb@google.com>
+
+---
+
+From 25f77012674db95354fb2496bc89954b8f8b4e6c Mon Sep 17 00:00:00 2001
+From: Brendan Jackman <jackmanb@google.com>
+Date: Thu, 10 Apr 2025 13:22:58 +0000
+Subject: [PATCH] mm: page_alloc: Split up find_suitable_fallback()
+
+Now that it's been simplified, it's clear that the bool arg isn't
+needed, callers can just use should_try_claim_block(). Once that logic
+is stripped out, the function becomes very obvious and can get a more
+straightforward name and comment.
+
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+---
+ mm/compaction.c |  3 ++-
+ mm/internal.h   |  5 +++--
+ mm/page_alloc.c | 33 +++++++++++++--------------------
+ 3 files changed, 18 insertions(+), 23 deletions(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 39a4d178dff3c..d735c22e71029 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -2363,7 +2363,8 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+ 		 * Job done if allocation would steal freepages from
+ 		 * other migratetype buddy lists.
+ 		 */
+-		if (find_suitable_fallback(area, order, migratetype, true) >= 0)
++		if (should_try_claim_block(order, migratetype) &&
++		    find_fallback_migratetype(area, order, migratetype) >= 0)
+ 			/*
+ 			 * Movable pages are OK in any pageblock. If we are
+ 			 * stealing for a non-movable allocation, make sure
+diff --git a/mm/internal.h b/mm/internal.h
+index 4e0ea83aaf1c8..93a8be54924f4 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -914,8 +914,9 @@ static inline void init_cma_pageblock(struct page *page)
+ #endif
  
-All in all, I think we are better, and the code is slightly simpler?
+ 
+-int find_suitable_fallback(struct free_area *area, unsigned int order,
+-			   int migratetype, bool claimable);
++int find_fallback_migratetype(struct free_area *area, unsigned int order,
++			   int migratetype);
++bool should_try_claim_block(unsigned int order, int start_mt);
+ 
+ static inline bool free_area_empty(struct free_area *area, int migratetype)
+ {
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 0a1f28bf5255c..604cad16e1b5a 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2034,7 +2034,7 @@ static inline bool boost_watermark(struct zone *zone)
+  * try to claim an entire block to satisfy further allocations, instead of
+  * polluting multiple pageblocks?
+  */
+-static bool should_try_claim_block(unsigned int order, int start_mt)
++bool should_try_claim_block(unsigned int order, int start_mt)
+ {
+ 	/*
+ 	 * Leaving this order check is intended, although there is
+@@ -2076,20 +2076,12 @@ static bool should_try_claim_block(unsigned int order, int start_mt)
+ 	return false;
+ }
+ 
+-/*
+- * Check whether there is a suitable fallback freepage with requested order.
+- * If claimable is true, this function returns fallback_mt only if
+- * we would do this whole-block claiming. This would help to reduce
+- * fragmentation due to mixed migratetype pages in one pageblock.
+- */
+-int find_suitable_fallback(struct free_area *area, unsigned int order,
+-			   int migratetype, bool claimable)
++/* Find a fallback migratetype with at least one page of the given order. */
++int find_fallback_migratetype(struct free_area *area, unsigned int order,
++			      int migratetype)
+ {
+ 	int i;
+ 
+-	if (claimable && !should_try_claim_block(order, migratetype))
+-		return -2;
+-
+ 	if (area->nr_free == 0)
+ 		return -1;
+ 
+@@ -2209,18 +2201,19 @@ __rmqueue_claim(struct zone *zone, int order, int start_migratetype,
+ 	 */
+ 	for (current_order = MAX_PAGE_ORDER; current_order >= min_order;
+ 				--current_order) {
++
++		/* Advanced into orders too low to claim, abort */
++		if (!should_try_claim_block(order, start_migratetype))
++			break;
++
+ 		area = &(zone->free_area[current_order]);
+-		fallback_mt = find_suitable_fallback(area, current_order,
+-						     start_migratetype, true);
++		fallback_mt = find_fallback_migratetype(area, current_order,
++						     start_migratetype);
+ 
+ 		/* No block in that order */
+ 		if (fallback_mt == -1)
+ 			continue;
+ 
+-		/* Advanced into orders too low to claim, abort */
+-		if (fallback_mt == -2)
+-			break;
+-
+ 		page = get_page_from_free_area(area, fallback_mt);
+ 		page = try_to_claim_block(zone, page, current_order, order,
+ 					  start_migratetype, fallback_mt,
+@@ -2249,8 +2242,8 @@ __rmqueue_steal(struct zone *zone, int order, int start_migratetype)
+ 
+ 	for (current_order = order; current_order < NR_PAGE_ORDERS; current_order++) {
+ 		area = &(zone->free_area[current_order]);
+-		fallback_mt = find_suitable_fallback(area, current_order,
+-						     start_migratetype, false);
++		fallback_mt = find_fallback_migratetype(area, current_order,
++							start_migratetype);
+ 		if (fallback_mt == -1)
+ 			continue;
+ 
 
+base-commit: 0e56a6f04d3b06eafe0000d2e3c3d7c2d554366a
 -- 
-Oscar Salvador
-SUSE Labs
+2.49.0.504.g3bcea36a83-goog
+
