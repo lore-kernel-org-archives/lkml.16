@@ -1,303 +1,431 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB78213E61;
-	Thu, 10 Apr 2025 13:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744292134; cv=fail; b=W5OePzFppBZSZPC59rIIvH8F7383anrnG0k5gkRewbKYFTTo3KVxePMFE9xVShzyfnD/E6YkAGH6i0Vvlu1LUks8nWaocKfRdetu6Bs4PuE/y+GxEjwtAMhfRd0LNMReiJldTXXEiDmW+ZNeD3PgeidJLUasYoleF7nGYD5hyy0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744292134; c=relaxed/simple;
-	bh=DGCbKXZZuNND5DXbRRgAcN50XCxCDtwXFXkQHGZcR9Y=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jgStTemrq/UUrkB0OYfxSpdN4wCoINTmOzrZ20nJaRgdNFsPZW/4iYCtlNfLXa4tUX8OcceraOpHHBFemiOWJvG7wwNLTh+cTeGwWLCFaOgKfUfszNtQJMPYWaZE8UHpOIYa/GVaHYBbitjBwHIRRdcjpj4gcUMzgPATl4/+0ag=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z7B34her; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D39028153A
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744292166; cv=none; b=nSbzmTBkzu9KZPOOMh1t1l8Kf2XNnKKZJQ0y+REmKp54+hv0+e8wadaeJh/5kpBXvORmrg4ckZMHgXU+0w+1mK8ktLGo00stzl4Qnrfz5QQEa6gVPVSn3X9r/TiAyiMsuj7/Ff6vB64IGMJnxzkVB2uu+J/eZZHiEktA4klKMRw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744292166; c=relaxed/simple;
+	bh=uUYl05kwlY1SBjUnXgr9Vvp1DOy5cPab4ndqaDEwMwo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fosS+vXqbcYo6d64NL4bTmJaesGtwIW7Bvz1hZARaGWziI/i5aoR/8jnjUsX9Gkgpiz9ciMlNquKu1sDj+P0mhPL0B+dIR9BazC/9vVIYaHJUwrZfCS8FSmd2lhCjqcCeTySgpwRG/jJ3sK9Jpc+LulQTzJTaqA9ybbu4Y1Ey48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QsvfUpRF; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z7B34her"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744292133; x=1775828133;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=DGCbKXZZuNND5DXbRRgAcN50XCxCDtwXFXkQHGZcR9Y=;
-  b=Z7B34herbBORwG8NVVj4rZI5GZXUkuVNlFoxdx41wmrWQOZTrieRKQky
-   PT92vQ+NW5IpW5ecn8JQQpf0MNq945DsS7Lsx2ocr3t1a7XEN72lBcYZG
-   IVkgY/UFnaC/aOEG8GAKgoc5CLokTblaMsnUUVa1sKJntpVvx9aT+aopS
-   VIifDhlI/3zimv3S2TdBK+S1LbLRVmAwD+iegBTMpVAOtbtumopiWFxue
-   advYOmkMDV6B5DjVI3dqZ0/KHzDoLN+o1kkFQSOtAzV0NDllPRc+9N7/1
-   3roEDJwyjCfTiIzJOySL0t43aUF0oyNJOpZgjaun9U/1/xdd7p7NEytpG
-   A==;
-X-CSE-ConnectionGUID: EXhuXnvBRPC7/ye1vRyxWw==
-X-CSE-MsgGUID: O9bEzLrVSrCSUFGJr6WabQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45950235"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="45950235"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 06:35:31 -0700
-X-CSE-ConnectionGUID: Ovc3Hr5hQN+A5MByPyvavQ==
-X-CSE-MsgGUID: fKkI8F7NQH+u3DMntaWYmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="128879457"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 06:35:29 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 10 Apr 2025 06:35:03 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 10 Apr 2025 06:35:03 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 10 Apr 2025 06:34:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VdoxAO40+ii1CZwcPRuk11qVerOlPb7B+UefyuSJhTADdXq7PxusQ88QAo+bVbUuJ5LxO+xmDD63PDgMzyWbYfW6kkUAN7AC4kbVGLRgE3KLS55MY6Vs1nrBwi6mgN2ramoF7A5fFH2peGh+mnqSrXFxFEKHLX9MugfWZnO9Cti7RNN2A3jsr3aQdi5n2dspg3iSVog9mp35oOrMxVtwm1KkQ/b7+LMS+qxEcEFlx7XYSsavb7vBgxoPV3ss2TFUywzkdB8qcUCQGPwoYi8rFtn1rSXzMgtpKbws9DPqt46VDe4UjiDUb7TRteHLjdQ3nWE/cmHXHK/fTWLn+lZTEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mSS8F9Bt7O420R69GdizR9GtTUkHYIPCcRgAGBO/GKM=;
- b=wTMQhOWGws/hevicoElOihk5qKNGtJUHta4qGZTg5jp4Fw4Uinecp/5PHD3+pJBKQNW0yE3kGkqp2DCat6csjxsHYBxpP4YSrX4DVEZy1crret345szyUiw9GcPK+TZmi97rRfPPB/GUjffjOqMdBOJYJ16B35mJGo2NCnIqkUPfcMbF2ayvlu4ABOzZqQpnjN2ejVGYPhiUaV2q4zvldUmhJy0l45tlX/UjzRGkvJ+2KWNZAOfy96v2j+1OaDC4Sx+s3iLkErU3osW+NWlnNf9Syb2DAiJ/KFhtYpTlAdPlxin3ablq1lkEFvfTw6N38yCXU8dkHeR1tEPfom5/FQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by PH7PR11MB8059.namprd11.prod.outlook.com (2603:10b6:510:24e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
- 2025 13:33:50 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808%5]) with mapi id 15.20.8632.017; Thu, 10 Apr 2025
- 13:33:50 +0000
-Message-ID: <7e3f2eb8-b668-4ac5-8b49-43eebff2b3e0@intel.com>
-Date: Thu, 10 Apr 2025 15:33:40 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-next 05/14] libeth: add control queue support
-To: Leon Romanovsky <leon@kernel.org>, Larysa Zaremba
-	<larysa.zaremba@intel.com>
-CC: <intel-wired-lan@lists.osuosl.org>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet
-	<corbet@lwn.net>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, Jiri Pirko
-	<jiri@resnulli.us>, Tatyana Nikolova <tatyana.e.nikolova@intel.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>, Michael Ellerman <mpe@ellerman.id.au>, "Maciej
- Fijalkowski" <maciej.fijalkowski@intel.com>, Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Sridhar Samudrala
-	<sridhar.samudrala@intel.com>, Jacob Keller <jacob.e.keller@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, Mateusz Polchlopek
-	<mateusz.polchlopek@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>,
-	<netdev@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Karlsson, Magnus"
-	<magnus.karlsson@intel.com>, Emil Tantilov <emil.s.tantilov@intel.com>,
-	"Madhu Chittim" <madhu.chittim@intel.com>, Josh Hay <joshua.a.hay@intel.com>,
-	"Milena Olech" <milena.olech@intel.com>, <pavan.kumar.linga@intel.com>,
-	"Singhai, Anjali" <anjali.singhai@intel.com>, Phani R Burra
-	<phani.r.burra@intel.com>
-References: <20250408124816.11584-1-larysa.zaremba@intel.com>
- <20250408124816.11584-6-larysa.zaremba@intel.com>
- <20250410082137.GO199604@unreal>
- <Z_ehEXmlEBREQWQM@soc-5CG4396X81.clients.intel.com>
- <20250410112349.GP199604@unreal>
- <Z_fAdLJ4quuP2lip@soc-5CG4396X81.clients.intel.com>
- <20250410132706.GR199604@unreal>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250410132706.GR199604@unreal>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZR2P278CA0053.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:53::11) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QsvfUpRF"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736c277331eso1826944b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:36:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744292164; x=1744896964; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qa9H55NP8y0lcikIbP/iehZE8InfczV+B4Ob1WcMMVs=;
+        b=QsvfUpRFrO/GSO1hz1R8Xc2SoYIiFIi5jJmM0HfybDOZd7xyi33i6NO+mKOAhWGZrr
+         otO0nRE9F9ofPzzeWFWAauIIbkSxKQpjWs1lTd5/u4aA2439pnJ87S8tG43Ek0dBK5/Q
+         Lw6l0JswL0wows5c29tlwCtZFIYsOfNZ5GMxOv+dBa22lKMiuy5Prv2Rkz+yne3cPbgz
+         BhRHh2/05SHc4GrsOSopVZs7/B6EwY6EV4EvLPMiKfs+vZuCmS8VOr5z2w9X7MY/QqHn
+         S1ogsQijPaFJhqxSMkZpGA/zrzn2Hmr84ZrEm200kZPnxsOx1cCdNp6Yt2F1uNaLHmh/
+         LQeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744292164; x=1744896964;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qa9H55NP8y0lcikIbP/iehZE8InfczV+B4Ob1WcMMVs=;
+        b=kMweTTd2WGUIQ4vX12srvo6v428YHthgUOge4DpZPFv5OzRmrNAaK39QcccP6QZl7u
+         CYqiFOUDwpHbnIMq7umc9bHnTMjrG723g34/F+ds8uEGZwRX6QZPabib4R0OcdsTRGMt
+         Z8Ox+P+8rd52BtcKEsnzIoVN/OEgv4CzeDROhCVI0FlTLf/xpV1L5A2JiT1d3cv/azAV
+         XXfgMMjIBt6ckn8W0QFEmsJtteOwVA49hvvPe38mqQwC/BQAlLU2m8+4QhujPOASsu8l
+         7z8FbBKtWzXByCL2ItuybwQChYZIsimOvyTsRl1AGShmomd+V/Rnax85szIxJ3eJJ7kJ
+         W6aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV11jf2M4EtPJAuCd0dx2afs+Sf97+JLa9va+uwzsulETNpPqhY1agGm2qk1aLPZIWVnSOiZ8RcOsFB8Ic=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9WPVdDBrwvm1yePCNYQGBhTIfy9bUwxwRHaKZOAe/GUOuHVER
+	Gm2mjxQzbROyG7voWB86W3BbWr5ty9jqTdsaAfEie1dQvaToF838vcBRalZ3BQj4fg5hV8wK57m
+	Xg3ofIa99WxEhW808WdIADleoEAEN6eQb0DbdJw==
+X-Gm-Gg: ASbGncsNffIenfTTtds+CYm2J/3re5iEza29M1mAD364+1AUXyHophea6rR5R+LuqVx
+	nGClZiUnIJTPM9TLmoBoskAHgVpaCGOoXZEO3HAFM0nuoJiUH7YcGJCJyvEYMSf0+YBgxKMUips
+	GtvflIZKmgS7WeIhhVIrViOyv0FIcfeVHwcw==
+X-Google-Smtp-Source: AGHT+IEHQtHA1hIyrrZ5K3gF9H81/k+y6X+jg/dj+3RpXa9S79dRt2dUU6xPfC7SZcpmtk9E5MNDMlfRZEPvRixGBSI=
+X-Received: by 2002:a05:6a00:3d0d:b0:732:56a7:a935 with SMTP id
+ d2e1a72fcca58-73bbf6116d1mr4733304b3a.12.1744292163542; Thu, 10 Apr 2025
+ 06:36:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|PH7PR11MB8059:EE_
-X-MS-Office365-Filtering-Correlation-Id: 099892ef-d49c-4d79-25c1-08dd783453cb
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?YzZKYkhJT3R2c1VoaldFd1Zja2JaS1ZwNXdmUVFjOEI5bU5uODkyOFlWeld0?=
- =?utf-8?B?Wkl6V0hsZ2lIZHozd2VyeXhleThRaUE2T296RzFzOXFPcmNpSEcrV1ZqVThz?=
- =?utf-8?B?YTRQdlBpNWtOYisxa0IyM2VqWUIxRExaUURaOWZvSU9zT09CSUV4RWs0Q3Jr?=
- =?utf-8?B?bElrclBxc0pKK3ZheWhReVhjNnEwL2UzZEdlZmdua01SdTErN09WYis5RHM0?=
- =?utf-8?B?Q0g1bksrYS9aUEFCQTZCL2dUR21LbTJXYVM0clppd2dWSktoeXR1Zjc1SHBs?=
- =?utf-8?B?djdEdVk0Mlk2Q2gxMkRQRkNNMDNOeVY1dnV2WmZjYVMvNzdLc0tSYjhTWnJ1?=
- =?utf-8?B?enQveU16d2liRktQWVZrUDhDaGtqVWRWSG1DNVJxcGhkaDRPQmgzN291Z240?=
- =?utf-8?B?L0VmK0ZsdWs4ZTg4SDVPaE9pR3kyUk94MzUrbG12enJsSnNFRkdXRkplemU5?=
- =?utf-8?B?NTRwWG5lMldGTktRZFFkbE1mTU1LMkFEOWpZQ3gxTk9rcjhydmNxcEtFZGdV?=
- =?utf-8?B?WWYyaXJSV2pVTTRtZnlrTHQwSEh0OUFGZXUzc1cxNlRTVlZTWndQUDVtS0Z5?=
- =?utf-8?B?Y0JlSmpBZWZJL29SZnV5YVEzUWpLNDJWYnY4ZWNXbDZmZjMwTFlzZU1kYS9u?=
- =?utf-8?B?ZUgyRUt5cDhsYTQvcVB0ZVhUckNTYjk5Z2NzUmVJbGltYlZvZUJGY0Q4K1hp?=
- =?utf-8?B?Y2g5dFNLK0lRNU9PT3hQK1dUaUMrNFVxKzQwemlCbCs2Rm41b1p1b0ttUHBu?=
- =?utf-8?B?cEV2cFlWYStqMGRMWXdRUENuR1N6RHlheHFuZlpyeUxxTVJFbCszUmtnemdL?=
- =?utf-8?B?b21tU29uVThCK0tiRjdsK1dEam9LSE0wbzlXd0kwZ0IwWXZPdEthYVA3RU1X?=
- =?utf-8?B?TEtoT1czYlJWME1IbUpVakVYNXQ0aFVNNVJHd2o1blFBTnA1UEpHU0JRa05x?=
- =?utf-8?B?eXJMVUhBRVpiMldad2tlQ2lVODVWb2lOblNoaHAwcEJDaUMxVE1nS2M5RU1J?=
- =?utf-8?B?Y0JlTUNVRWF2OWZHYUl4d0tzaWV0ek5sNmdzS25rREVOR2hZdkp0U3pia01q?=
- =?utf-8?B?eDBJL0d3RmIvd1VwZHRaRVp4TVE4KzhBSjJRTWMrdFROMkhXUzFsek5IZVFH?=
- =?utf-8?B?dHNDcWJDZ0Njak9MMkp3YUZTUWNQM3NIRHhVQmlRNS94bGt1YUZ3cUdSUWFT?=
- =?utf-8?B?RS9hYysyL3F0Z1YrN1RvNUJvOVVBY1ZKYVR0WlhTV2pZbURWdUY0YlFsQlhZ?=
- =?utf-8?B?RGdWQ1pZZ2VmSjFQcUxQUjB2WVk3VDFwY056VTQ3RUQrVmI4RkljNE80VlEv?=
- =?utf-8?B?dUNwVzZwMXU0bDluWVZBSk9HMWtCQnFLbkw2M1Blb09sbmttYzI3eXJLRDFL?=
- =?utf-8?B?NFlLU21LREtkM3J4RmNCeitmcmpxb2k0YnFpQTlTdW5BTU9BV3BRUERuOGRL?=
- =?utf-8?B?NlpEQkk3VHRPSnBGenpORVRBeHVVRU16bk1ManlMelM0S0d4YVhTWHBNK2Js?=
- =?utf-8?B?UC9uaG1iWGptOXdLL3ZBS3hRY1Q3VmFUTzg1cFBaWmFaUE91c0VraWN6UlZP?=
- =?utf-8?B?VHRld3FBZFUrWFVIOXNVZTBPNVlPRmg4eVNYMEdSSktxemE1dWVoMU9VSkwv?=
- =?utf-8?B?bDBOQVJnaTdwc1RHTkVPUDROTXYwUTQ3dEN1alJ0WlBiV3ZoNjFkaWlhSFhY?=
- =?utf-8?B?UXBnMDFqQ2ZYTXBpWHF2UlRaRFdXOWNOZVIvZUFpSldtZ2NaOStUUFBYYU1C?=
- =?utf-8?B?QnM4WURHQ1BWdzFYRUdTclpiRnJCWnArOFNiU09VaEFScnV6S3loT1R5T3RO?=
- =?utf-8?B?UGd5M1RHOUpIUERGb2lzUT09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M3ZUcy90dTVoc3JEdE9LMWhhZmhyYi9KMUJ4bzhnRnlZWkFUTFBObndPRVpF?=
- =?utf-8?B?SDMxVWhsWGtTRGhQeE9BQXQ0enZXaHBoY1BMNUlUbzBVbVRtT3Z4WE9BbkZu?=
- =?utf-8?B?MDE0aGJxS0JOYkdtRVpXaDB1RnltRXR4TXNaV045ZVh6dFdFSnZyM0F1NWRr?=
- =?utf-8?B?aFp0eTNuWmZPRkJpZkppa1A3ek05eWhQOExPZ2FENERiWjdUTnpnTFJQSXVa?=
- =?utf-8?B?SnBHOWg1TnVxaXE4WkpxVFNGYTNDN1lzd1VIbnZxRCtVMFZnU09weEU4aXZB?=
- =?utf-8?B?dHoxbE9Sa1JndEhFSm9oNFhPbEZsZ1hBWUhneU9qSUZyMlRBRGgxeEx3ZE1N?=
- =?utf-8?B?UnZ0aUFaWXI3K0RuaEF2T3ZvWnhvVWhxNW1MaUxGUXhtSXVxa3R3THphS3pa?=
- =?utf-8?B?NUxYR1pLa0wvRXc3SCtwVjhIZkhDTlYvcGQ5RSt0QTBnQXRXNkVXVTk5QmxN?=
- =?utf-8?B?RDhCcTJzbSsxLzh4MkU5SkJ1RFJuWW9sa3BEa1d2SzVFUnVYUW93eXZHMkdn?=
- =?utf-8?B?K3lzMkFLTFRBUDE5RS9kVDZWOHg5RWFsaW9rY2xOQktNUEt1NHF4ZS9zd3Bx?=
- =?utf-8?B?bUsrb1RZYlB3K2pWSWJpUkxyclBJSGw3TE1GNVRGdW5CcjJQay9LM3RqR1FQ?=
- =?utf-8?B?am85L3JEaElxUVp5YWpPb1Z0MUxvL09KQjVoUFFpQWNlVDNGQmFRemxzSGZ3?=
- =?utf-8?B?OWJvejdnWWFET2lHRWF6QmNvMFo5RmJ3dlc5Nlp3Z2lDQlBoWjVvdGQvU3VF?=
- =?utf-8?B?Sy9qTExCNU9Hd3J0QVUzNHErKzI0azVLUnhuT1VJTm1SNHBQRm5hSEswYUUv?=
- =?utf-8?B?SVVON0tzSytUUDVScmtvaVVIbURWZU4rY25CaWNZYVkrcU93T25ydWNlL0s5?=
- =?utf-8?B?WkVMdFc4WDZYTGovQWkxMzFXQnlNeDdFU1pweGZWT0tPbnFiN1NSNnMxYWZl?=
- =?utf-8?B?VzdjdVVBNEFqR05aYU5tVEZRV1FRd3hrRmJHOTJwQUlPWXYyL1gvd3REMHFI?=
- =?utf-8?B?cUowbmgyZkNiTVoxTEQ3TXpmKzVEMFdFT25RdXBiVzF1ZU5uZVNDRGVxOVhi?=
- =?utf-8?B?bCtieXM3UVRoWGEwT3dWY2ZnQ0RLcFBvekhGVWlNbW5peFNNbWttTlYwYmE4?=
- =?utf-8?B?bFE3WUdaTklBTFZlR1ZGOWVmODhldWoyMFBYZUxsbFBJN3huTm5vQWZUMG9Z?=
- =?utf-8?B?TXlRTWtDUHpsbmlrMjhJR0I1VXQwUW5hTHo2eUdqRTVuSnFGMXVLdW1QZVdw?=
- =?utf-8?B?QzNNc3gvYjJSYWtRRk05cmxPN3JVZ2dyRjM0SHR3blhieXZZT0pLN1BTMjEv?=
- =?utf-8?B?cHd4ZS9kQkhpeTczYnE2VjBwWVVOOU1vRTNyNWQxWk50SUFoMGszZW1QQzg5?=
- =?utf-8?B?YUtrL1hpNnNlNEFxZDd4WHh5QVhPaHZuOEVRTkFDRzlvalk4L2srMDE0VTY2?=
- =?utf-8?B?R1h4TVp1bDJMZk9hVWNkT29jNkRVcWRTZ2tIWEZpeFpMQlJpQ1ZMRVAwSFFC?=
- =?utf-8?B?WGQ5QllzSERHSld0WlNxVjRCaHA0SU1XM2xJZ211MEFiR0JOOFpscXVNQjh5?=
- =?utf-8?B?cjlXTllaSVhXYU9tQTdNcHNDdW55NFB3QWJ2K2NTNStXaGcxeVVzUkVTUkJZ?=
- =?utf-8?B?aTZIUDN0Z2MxWVJyYy9PeG85M0cralpOZDc0TjF4SGUvTnN3Q21DZWtrTVlT?=
- =?utf-8?B?SE9mMDZWaHVZdjluUnU2eFhsOWt4blVxWWpIUURZUFZyMk4zdjQxdzVjTWw2?=
- =?utf-8?B?OUhzMnZHaFcxeTBvTWJSMmticW5Ba2F2R0YrM2RSUlFobFlZUjJiMzBkVnVs?=
- =?utf-8?B?dnFFRElWVFJvdG8zZVhITWFYdVU1SjROajJyT0hPNHByeThXUmVPcE41dnFF?=
- =?utf-8?B?c2pGaGpoVFRFNkxXMEZJaEIyVDR6OFhCRURBakw1bE1TQ0ZWM3h6M015Ky84?=
- =?utf-8?B?SWx4OXBtTC9MYmpLbk0zWUM3RzdnS1EwZ1JhcnN5S0NCN2dnUGt0ZFNLQThx?=
- =?utf-8?B?VFZnWSsxRlJydUlDSUJlc1hDaDIrL09EZit0cWxRTFFMZWpscU16NzhiV1Yr?=
- =?utf-8?B?clBxdXV1T25BSkhnMlpUQnRFcklyN1U4d1JtcXprM0ZrdzJVMHNPSFhQdERI?=
- =?utf-8?B?eWh1Y0dHcVRiU29ROWUrbHFCa1NQYzIxWHdaM0QweHVxWFFqbWFpTk52YTBS?=
- =?utf-8?B?OXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 099892ef-d49c-4d79-25c1-08dd783453cb
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 13:33:49.8896
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nfZD+FLd1zscJNE6HjTYqKc3dp8cXyz3yV4jXcwDfxagum2vnTTOQGXOvt8xsYhHledeQ4ph9NkbfLX99/rfSxH9E+SQ1HAN7QHvoeLzbKk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8059
-X-OriginatorOrg: intel.com
+References: <20250227092640.2666894-1-quic_songchai@quicinc.com>
+ <20250227092640.2666894-5-quic_songchai@quicinc.com> <CAJ9a7Vj3eaZB_i8B8ke4cu=Mz7PjB5Z8Gt=MWB13YXZ9MDZyFA@mail.gmail.com>
+ <57272ecc-0ebd-4146-8860-a2dd71833d23@quicinc.com>
+In-Reply-To: <57272ecc-0ebd-4146-8860-a2dd71833d23@quicinc.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Thu, 10 Apr 2025 14:35:52 +0100
+X-Gm-Features: ATxdqUHK1Zmf0voZjxm0DFtdMYH3w6c87lqw0rW9vtlLoKYZdl2MEVe4lp0H328
+Message-ID: <CAJ9a7VgksdNNH-3HEoeKd+odgiboskm8fpGBSB-=aPVOG_0KKQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] coresight-tgu: Add TGU decode support
+To: songchai <quic_songchai@quicinc.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, James Clark <james.clark@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <agross@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Leon Romanovsky <leon@kernel.org>
-Date: Thu, 10 Apr 2025 16:27:06 +0300
+Hi,
 
-> On Thu, Apr 10, 2025 at 02:58:28PM +0200, Larysa Zaremba wrote:
->> On Thu, Apr 10, 2025 at 02:23:49PM +0300, Leon Romanovsky wrote:
->>> On Thu, Apr 10, 2025 at 12:44:33PM +0200, Larysa Zaremba wrote:
->>>> On Thu, Apr 10, 2025 at 11:21:37AM +0300, Leon Romanovsky wrote:
->>>>> On Tue, Apr 08, 2025 at 02:47:51PM +0200, Larysa Zaremba wrote:
->>>>>> From: Phani R Burra <phani.r.burra@intel.com>
->>>>>>
->>>>>> Libeth will now support control queue setup and configuration APIs.
->>>>>> These are mainly used for mailbox communication between drivers and
->>>>>> control plane.
->>>>>>
->>>>>> Make use of the page pool support for managing controlq buffers.
->>>>>
->>>>> <...>
->>>>>
->>>>>>  libeth-y			:= rx.o
->>>>>>  
->>>>>> +obj-$(CONFIG_LIBETH_CP)		+= libeth_cp.o
->>>>>> +
->>>>>> +libeth_cp-y			:= controlq.o
->>>>>
->>>>> So why did you create separate module for it?
->>>>> Now you have pci -> libeth -> libeth_cp -> ixd, with the potential races between ixd and libeth, am I right?
->>>>>
->>>>
->>>> I am not sure what kind of races do you mean, all libeth modules themselves are 
->>>> stateless and will stay this way [0], all used data is owned by drivers.
->>>
->>> Somehow such separation doesn't truly work. There are multiple syzkaller
->>> reports per-cycle where module A tries to access module C, which already
->>> doesn't exist because it was proxied through module B.
->>
->> Are there similar reports for libeth and libie modules when iavf is enabled?
-> 
-> To get such report, syzkaller should run on physical iavf, it looks like it doesn't.
-> Did I miss it here?
-> https://syzkaller.appspot.com/upstream/s/net
-> 
->> It is basically the same hierarchy. (iavf uses both libeth and libie, libie 
->> depends on libeth).
->>
->> I am just trying to understand, is this a regular situation or did I just mess 
->> smth up?
-> 
-> My review comment was general one. It is almost impossible to review
-> this newly proposed architecture split for correctness.
-> 
->>
->>>
->>>>
->>>> As for the module separation, I think there is no harm in keeping it modular. 
->>>
->>> Syzkaller reports disagree with you. 
->>>
->>
->> Could you please share them?
-> 
-> It is not an easy question to answer, because all these reports are complaining
-> about some wrong locking order or NULL-pointer access. You will never know if
-> it is because of programming or design error.
-> 
-> As an approximate example, see commits a27c6f46dcec ("RDMA/bnxt_re: Fix an issue in bnxt_re_async_notifier")
-> and f0df225d12fc ("RDMA/bnxt_re: Add sanity checks on rdev validity").
-> At the first glance, they look unrelated to our discussion, however
-> they can serve as an example or races between deinit/disable paths in
-> parent module vs. child.
+On Thu, 10 Apr 2025 at 08:46, songchai <quic_songchai@quicinc.com> wrote:
+>
+>
+> On 3/7/2025 6:58 PM, Mike Leach wrote:
+>
+> Hi,
+>
+> On Thu, 27 Feb 2025 at 09:27, songchai <quic_songchai@quicinc.com> wrote:
+>
+> From: Songwei Chai <quic_songchai@quicinc.com>
+>
+> Decoding is when all the potential pieces for creating a trigger
+> are brought together for a given step. Example - there may be a
+> counter keeping track of some occurrences and a priority-group that
+> is being used to detect a pattern on the sense inputs. These 2
+> inputs to condition_decode must be programmed, for a given step,
+> to establish the condition for the trigger, or movement to another
+> step.
+>
+> Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
+> Signed-off-by: songchai <quic_songchai@quicinc.com>
+> ---
+>  .../testing/sysfs-bus-coresight-devices-tgu   |   7 ++
+>  drivers/hwtracing/coresight/coresight-tgu.c   | 113 ++++++++++++++++--
+>  drivers/hwtracing/coresight/coresight-tgu.h   |  29 ++++-
+>  3 files changed, 136 insertions(+), 13 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
+> index af7332153833..dd6cc1184d52 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
+> +++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
+> @@ -14,3 +14,10 @@ KernelVersion   6.15
+>  Contact:        Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
+>  Description:
+>                  (RW) Set/Get the sensed siganal with specific step and priority for TGU.
+> +
+> +What:           /sys/bus/coresight/devices/<tgu-name>/step[0:7]_condition_decode/reg[0:3]
+> +Date:           February 2025
+> +KernelVersion   6.15
+> +Contact:        Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
+> +Description:
+> +                (RW) Set/Get the decode mode with specific step for TGU.
+> diff --git a/drivers/hwtracing/coresight/coresight-tgu.c b/drivers/hwtracing/coresight/coresight-tgu.c
+> index f28761619ebe..5eebf5eecbbb 100644
+> --- a/drivers/hwtracing/coresight/coresight-tgu.c
+> +++ b/drivers/hwtracing/coresight/coresight-tgu.c
+> @@ -22,9 +22,21 @@ static int calculate_array_location(struct tgu_drvdata *drvdata, int step_index,
+>  {
+>         int ret = -EINVAL;
+>
+> -       ret = operation_index * (drvdata->max_step) *
+> -                     (drvdata->max_reg) + step_index * (drvdata->max_reg)
+> -                               + reg_index;
+> +       switch (operation_index) {
+> +       case TGU_PRIORITY0:
+> +       case TGU_PRIORITY1:
+> +       case TGU_PRIORITY2:
+> +       case TGU_PRIORITY3:
+> +               ret = operation_index * (drvdata->max_step) *
+> +                       (drvdata->max_reg) + step_index * (drvdata->max_reg)
+> +                       + reg_index;
+> +               break;
+> +       case TGU_CONDITION_DECODE:
+> +               ret = step_index * (drvdata->max_condition_decode) + reg_index;
+> +               break;
+> +       default:
+> +               break;
+> +       }
+>
+>         return ret;
+>  }
+> @@ -36,10 +48,23 @@ static ssize_t tgu_dataset_show(struct device *dev,
+>         struct tgu_attribute *tgu_attr =
+>                 container_of(attr, struct tgu_attribute, attr);
+>
+> -       return sysfs_emit(buf, "0x%x\n",
+> -                         drvdata->value_table->priority[calculate_array_location(
+> +       switch (tgu_attr->operation_index) {
+> +       case TGU_PRIORITY0:
+> +       case TGU_PRIORITY1:
+> +       case TGU_PRIORITY2:
+> +       case TGU_PRIORITY3:
+> +               return sysfs_emit(buf, "0x%x\n",
+> +                                 drvdata->value_table->priority[calculate_array_location(
+>
+> calculate_array_location() can return -EINVAL - you could be
+> referencing array value drvdata->value_table->priority[-EINVAL] here.
+> Test the return before referencing the array.
+>
+> Same for all following occurrences.
+>
+> Both tgu_dataset_store/show and calculate_array_location use switch cases to evaluate tgu_attr->operation_index.
+>
+>  Therefore, when a case in tgu_dataset_store/show satisfies tgu_attr->operation_index, calculate_array_location
+>
+>  will not return -EINVAL. This prevents the occurrence of -EINVAL within the array.
 
-Unrelated. At first, you were talking about module dependencies, now
-you're talking about struct device etc dependencies, which is a
-completely different thing.
+If the function can never return -EINVAL, then do not use is at all in
+the function - it is unneeded.
+It does not matter that you believe that the current implementation
+can never produce an incorrect response - if you write a function that
+can return -EINVAL, this must be checked for - do not assume that
+future changes will retain the apparent "safety".
 
-As already said, libeth is stateless, so the latter one can't happen.
-The former one is impossible at all. As long as at least 1 child module
-is loaded, you can't unload the parent. And load/unload is serialized,
-see module core code.
 
-[...]
+Regards
 
->> We did not think this would be a problem, intel has a tradition of calling the 
->> modules pretty ambiguously.
-> 
-> I know and it is worth to be changed.
+Mike
 
-Out of scope of this series.
+>
+>                                   drvdata, tgu_attr->step_index,
+>                                   tgu_attr->operation_index, tgu_attr->reg_num)]);
+> +       case TGU_CONDITION_DECODE:
+> +               return sysfs_emit(buf, "0x%x\n",
+> +                                 drvdata->value_table->condition_decode[calculate_array_location(
+> +                                 drvdata, tgu_attr->step_index, tgu_attr->operation_index,
+> +                                 tgu_attr->reg_num)]);
+> +
+>
+> missing default - did this code compile without warnings?
+>
+> Will correct it in next version.
+>
+> +       }
+> +       return -EINVAL;
+>
+>  }
+>
+> @@ -58,11 +83,25 @@ static ssize_t tgu_dataset_store(struct device *dev,
+>                 return ret;
+>
+>         guard(spinlock)(&tgu_drvdata->spinlock);
+> -       tgu_drvdata->value_table->priority[calculate_array_location(
+> -               tgu_drvdata, tgu_attr->step_index, tgu_attr->operation_index,
+> -               tgu_attr->reg_num)] = val;
+> -       ret = size;
+> -
+> +       switch (tgu_attr->operation_index) {
+> +       case TGU_PRIORITY0:
+> +       case TGU_PRIORITY1:
+> +       case TGU_PRIORITY2:
+> +       case TGU_PRIORITY3:
+> +               tgu_drvdata->value_table->priority[calculate_array_location(
+> +                       tgu_drvdata, tgu_attr->step_index, tgu_attr->operation_index,
+> +                       tgu_attr->reg_num)] = val;
+> +               ret = size;
+> +               break;
+> +       case TGU_CONDITION_DECODE:
+> +               tgu_drvdata->value_table->condition_decode[calculate_array_location(
+> +                       tgu_drvdata, tgu_attr->step_index, tgu_attr->operation_index,
+> +                       tgu_attr->reg_num)] = val;
+> +               ret = size;
+> +               break;
+> +       default:
+> +               break;
+> +       }
+>         return ret;
+>  }
+>
+> @@ -79,8 +118,23 @@ static umode_t tgu_node_visible(struct kobject *kobject, struct attribute *attr,
+>                 container_of(dev_attr, struct tgu_attribute, attr);
+>
+>         if (tgu_attr->step_index < drvdata->max_step) {
+> -               ret = (tgu_attr->reg_num < drvdata->max_reg) ?
+> -                                           attr->mode : 0;
+> +               switch (tgu_attr->operation_index) {
+> +               case TGU_PRIORITY0:
+> +               case TGU_PRIORITY1:
+> +               case TGU_PRIORITY2:
+> +               case TGU_PRIORITY3:
+> +                       ret = (tgu_attr->reg_num < drvdata->max_reg) ?
+> +                                     attr->mode : 0;
+> +                       break;
+> +               case TGU_CONDITION_DECODE:
+> +                       ret = (tgu_attr->reg_num <
+> +                                       drvdata->max_condition_decode) ?
+> +                                               attr->mode : 0;
+> +                       break;
+> +               default:
+> +                       break;
+> +               }
+> +
+>                 return ret;
+>         }
+>         return SYSFS_GROUP_INVISIBLE;
+> @@ -103,6 +157,17 @@ static void tgu_write_all_hw_regs(struct tgu_drvdata *drvdata)
+>                 }
+>         }
+>
+> +       for (i = 0; i < drvdata->max_step; i++) {
+> +               for (j = 0; j < drvdata->max_condition_decode; j++) {
+> +                       tgu_writel(drvdata,
+> +                                  drvdata->value_table
+> +                                          ->condition_decode[calculate_array_location(
+> +                                                  drvdata, i,
+> +                                                  TGU_CONDITION_DECODE, j)],
+> +                                  CONDITION_DECODE_STEP(i, j));
+> +               }
+> +       }
+> +
+>         /* Enable TGU to program the triggers */
+>         tgu_writel(drvdata, 1, TGU_CONTROL);
+>         CS_LOCK(drvdata->base);
+> @@ -245,6 +310,14 @@ static const struct attribute_group *tgu_attr_groups[] = {
+>         PRIORITY_ATTRIBUTE_GROUP_INIT(7, 1),
+>         PRIORITY_ATTRIBUTE_GROUP_INIT(7, 2),
+>         PRIORITY_ATTRIBUTE_GROUP_INIT(7, 3),
+> +       CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(0),
+> +       CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(1),
+> +       CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(2),
+> +       CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(3),
+> +       CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(4),
+> +       CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(5),
+> +       CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(6),
+> +       CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(7),
+>         NULL,
+>  };
+>
+> @@ -289,6 +362,13 @@ static int tgu_probe(struct amba_device *adev, const struct amba_id *id)
+>         if (ret)
+>                 return -EINVAL;
+>
+> +       ret = of_property_read_u32(adev->dev.of_node, "tgu-conditions",
+> +                                  &drvdata->max_condition);
+> +       if (ret)
+> +               return -EINVAL;
+> +
+> +       drvdata->max_condition_decode = drvdata->max_condition;
+> +
+>         drvdata->value_table =
+>                 devm_kzalloc(dev, sizeof(*drvdata->value_table), GFP_KERNEL);
+>         if (!drvdata->value_table)
+> @@ -303,6 +383,15 @@ static int tgu_probe(struct amba_device *adev, const struct amba_id *id)
+>         if (!drvdata->value_table->priority)
+>                 return -ENOMEM;
+>
+> +       drvdata->value_table->condition_decode = devm_kzalloc(
+> +               dev,
+> +               drvdata->max_condition_decode * drvdata->max_step *
+> +                       sizeof(*(drvdata->value_table->condition_decode)),
+> +               GFP_KERNEL);
+> +
+> +       if (!drvdata->value_table->condition_decode)
+> +               return -ENOMEM;
+> +
+>         drvdata->enable = false;
+>         desc.type = CORESIGHT_DEV_TYPE_HELPER;
+>         desc.pdata = adev->dev.platform_data;
+> diff --git a/drivers/hwtracing/coresight/coresight-tgu.h b/drivers/hwtracing/coresight/coresight-tgu.h
+> index 6e5d465117df..c2a9ce38b44f 100644
+> --- a/drivers/hwtracing/coresight/coresight-tgu.h
+> +++ b/drivers/hwtracing/coresight/coresight-tgu.h
+> @@ -46,6 +46,9 @@
+>  #define PRIORITY_REG_STEP(step, priority, reg)\
+>         (0x0074 + 0x60 * priority + 0x4 * reg + 0x1D8 * step)
+>
+> +#define CONDITION_DECODE_STEP(step, decode) \
+> +       (0x0050 + 0x4 * decode + 0x1D8 * step)
+> +
+>
+> use #define constants with explanations of what they are rather than
+> arbitrary magic numbers.
+>
+> Done.
+>
+>  #define tgu_dataset_ro(name, step_index, type, reg_num)     \
+>         (&((struct tgu_attribute[]){ {                      \
+>                 __ATTR(name, 0444, tgu_dataset_show, NULL), \
+> @@ -66,6 +69,9 @@
+>         tgu_dataset_rw(reg##reg_num, step_index, TGU_PRIORITY##priority, \
+>                        reg_num)
+>
+> +#define STEP_DECODE(step_index, reg_num) \
+> +       tgu_dataset_rw(reg##reg_num, step_index, TGU_CONDITION_DECODE, reg_num)
+> +
+>  #define STEP_PRIORITY_LIST(step_index, priority)  \
+>         {STEP_PRIORITY(step_index, 0, priority),  \
+>          STEP_PRIORITY(step_index, 1, priority),  \
+> @@ -88,6 +94,14 @@
+>          NULL                   \
+>         }
+>
+> +#define STEP_DECODE_LIST(n) \
+> +       {STEP_DECODE(n, 0), \
+> +        STEP_DECODE(n, 1), \
+> +        STEP_DECODE(n, 2), \
+> +        STEP_DECODE(n, 3), \
+> +        NULL           \
+> +       }
+> +
+>  #define PRIORITY_ATTRIBUTE_GROUP_INIT(step, priority)\
+>         (&(const struct attribute_group){\
+>                 .attrs = (struct attribute*[])STEP_PRIORITY_LIST(step, priority),\
+> @@ -95,11 +109,19 @@
+>                 .name = "step" #step "_priority" #priority \
+>         })
+>
+> +#define CONDITION_DECODE_ATTRIBUTE_GROUP_INIT(step)\
+> +       (&(const struct attribute_group){\
+> +               .attrs = (struct attribute*[])STEP_DECODE_LIST(step),\
+> +               .is_visible = tgu_node_visible,\
+> +               .name = "step" #step "_condition_decode" \
+> +       })
+> +
+>  enum operation_index {
+>         TGU_PRIORITY0,
+>         TGU_PRIORITY1,
+>         TGU_PRIORITY2,
+> -       TGU_PRIORITY3
+> +       TGU_PRIORITY3,
+> +       TGU_CONDITION_DECODE
+>
+>  };
+>
+> @@ -115,6 +137,7 @@ struct tgu_attribute {
+>
+>  struct value_table {
+>         unsigned int *priority;
+> +       unsigned int *condition_decode;
+>  };
+>
+>  /**
+> @@ -127,6 +150,8 @@ struct value_table {
+>   * @value_table: Store given value based on relevant parameters.
+>   * @max_reg: Maximum number of registers
+>   * @max_step: Maximum step size
+> + * @max_condition: Maximum number of condition
+> + * @max_condition_decode: Maximum number of condition_decode
+>   *
+>   * This structure defines the data associated with a TGU device, including its base
+>   * address, device pointers, clock, spinlock for synchronization, trigger data pointers,
+> @@ -141,6 +166,8 @@ struct tgu_drvdata {
+>         struct value_table *value_table;
+>         int max_reg;
+>         int max_step;
+> +       int max_condition;
+> +       int max_condition_decode;
+>  };
+>
+>  #endif
+>
+> Regards
+>
+> Mike
+>
 
-Thanks,
-Olek
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
