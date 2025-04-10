@@ -1,67 +1,111 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 6ACF8210F53;
-	Thu, 10 Apr 2025 11:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043631DDC0F;
+	Thu, 10 Apr 2025 11:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744283974; cv=none; b=k+ChDi6TkB3wTtKYS6H6IQLLFn3mtbNEtQ61Xmug/6D5hbOz3+rLICBh6IAM4Mfo62TID/X/fIwfZf04M1NB/kFiLiNYz8Uhq+9bX/M2o9blZe12GmHADqe03m6Gwolbp63FOydZNRUW4YxGQYc3F/kR+9ka8hwxQ/aEx4/EOno=
+	t=1744284044; cv=none; b=sy4vMQ7QX5MZZC8nNtC6jXGkHSfiK86oo0iCYehuSAGbewLBYg/WR798v+5UyukILUis/GrG4hEQeuOhENwfW7beQ0WtBK4S3QQ1eQ0fcvrrAyb+5lT5cuJBgeuDLOMvxq3XeHKzcY8TnPP9Mi2FUmV3jDvVZFFAsoa6KADs4IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744283974; c=relaxed/simple;
-	bh=OqmBd5UpR5yv56v4G7LNpC/RAu44u1ax067TpUGFo/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=CgqoLFM9N/lQItbvjSvm5juN2HqNiigxLE32hqCZgwv9DxWsbM868Crld9p0sUSAZb1Xqtu0cL++jhbe0WuGhNHaK9C4keBtEJ2HlfS82YxR5+RA6c9iS1mzRKKmQ5bVru9Bt+59C8s7fWkDHXwygD68+3C6C+YZbMnjrLlyXy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 1E3E8604DE322;
-	Thu, 10 Apr 2025 19:19:18 +0800 (CST)
-Message-ID: <4a967093-97e2-401f-a0ea-9d7447d518c4@nfschina.com>
-Date: Thu, 10 Apr 2025 19:19:17 +0800
+	s=arc-20240116; t=1744284044; c=relaxed/simple;
+	bh=ZqO1NsnyEZ3YKVLWhmhnGFhPqL9CSj9lOsRen8/qGAk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kWwkmqgP+U89ozOAg46Da+nq1Eu5jrHPQqyo2sLbmW7IsfEGbiohxh4CCP9ab640Xcu3Y2ozpQyl5f7RwLF+LzzBU12eN34+fWU33hK7ZNQv7f5MpvIeMGCpqx7o7xj+EAF7Lj61aWbkR5hy7IAAdEepFwWwUsY84+YCJSUKjho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201601.home.langchao.com
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202504101920305716;
+        Thu, 10 Apr 2025 19:20:30 +0800
+Received: from locahost.localdomain.com (10.94.12.92) by
+ jtjnmail201601.home.langchao.com (10.100.2.1) with Microsoft SMTP Server id
+ 15.1.2507.39; Thu, 10 Apr 2025 19:20:29 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <will@kernel.org>, <mark.rutland@arm.com>, <suzuki.poulose@arm.com>,
+	<Ganapatrao.Kulkarni@cavium.com>, <gkulkarni@marvell.com>
+CC: <linux-arm-kernel@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Charles
+ Han <hanchunchao@inspur.com>
+Subject: [PATCH] drivers/perf: Add NULL check in thunderx2_pmu
+Date: Thu, 10 Apr 2025 19:20:27 +0800
+Message-ID: <20250410112027.80131-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "PCI: Fix reference leak in
- pci_register_host_bridge()"
-Content-Language: en-US
-To: Xiangwei Li <liwei728@huawei.com>
-Cc: linux-kernel@vger.kernel.org, make24@iscas.ac.cn, bhelgaas@google.com,
- linux-pci@vger.kernel.org, bobo.shaobowang@huawei.com,
- wangxiongfeng2@huawei.com
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <20250410032842.246396-1-liwei728@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 2025410192030a0f7fa84987e895022f81a4fc1e0c39c
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-On 2025/4/10 11:28, Xiangwei Li wrote:
-> This reverts commit 804443c1f27883926de94c849d91f5b7d7d696e9.
->
-> The newly added logic incorrectly sets bus_registered to true even when
-> device_register returns an error, this is incorrect.
->
-> When device_register fails, there is no need to release the reference count,
-I think you missed some thing about device_register(). This patch is wrong.
+devm_kasprintf() can return a NULL pointer on failure,but this
+returned value in tx2_uncore_pmu_register() and
+tx2_uncore_pmu_init_dev() is not checked.
+Add NULL check in tx2_uncore_pmu_register() and
+tx2_uncore_pmu_init_dev(), to handle kernel NULL
+pointer dereference error.
 
-device_register()
-     -> device_initialize()
-               -> kobject_init()
-                     -> kobject_init_internal()
-                         -> kref_init(&kobj->kref);  //set 
-kref->refcount to 1
-                            ^^^^^^^^^^^^^^^^^^^^^
+Fixes: 69c32972d593 ("drivers/perf: Add Cavium ThunderX2 SoC UNCORE PMU driver")
+Fixes: 5e2c27e833bb ("drivers/perf: Add CCPI2 PMU support in ThunderX2 UNCORE driver.")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
+---
+ drivers/perf/thunderx2_pmu.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-device_register() only  fails when device_add() fails, and 
-kerf->refcount can be 1
-at this time ,  so we need to call put_deivce() to release  memory.
-> and there are no direct error-handling operations following its execution.
->
-> Therefore, this patch is meaningless and should be reverted.
->
-> Fixes: 804443c1f278 ("PCI: Fix reference leak in pci_register_host_bridge()")
-> Signed-off-by: Xiangwei Li <liwei728@huawei.com>
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
+index 6ed4707bd6bb..03dd297ff326 100644
+--- a/drivers/perf/thunderx2_pmu.c
++++ b/drivers/perf/thunderx2_pmu.c
+@@ -738,6 +738,8 @@ static int tx2_uncore_pmu_register(
+ 
+ 	tx2_pmu->pmu.name = devm_kasprintf(dev, GFP_KERNEL,
+ 			"%s", name);
++	if (!tx2_pmu->pmu.name)
++		return -ENOMEM;
+ 
+ 	return perf_pmu_register(&tx2_pmu->pmu, tx2_pmu->pmu.name, -1);
+ }
+@@ -837,6 +839,11 @@ static struct tx2_uncore_pmu *tx2_uncore_pmu_init_dev(struct device *dev,
+ 		tx2_pmu->attr_groups = l3c_pmu_attr_groups;
+ 		tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
+ 				"uncore_l3c_%d", tx2_pmu->node);
++		if (!tx2_pmu->name) {
++			devm_kfree(dev, tx2_pmu);
++			return ERR_PTR(-ENOMEM);
++		}
++
+ 		tx2_pmu->init_cntr_base = init_cntr_base_l3c;
+ 		tx2_pmu->start_event = uncore_start_event_l3c;
+ 		tx2_pmu->stop_event = uncore_stop_event_l3c;
+@@ -852,6 +859,11 @@ static struct tx2_uncore_pmu *tx2_uncore_pmu_init_dev(struct device *dev,
+ 		tx2_pmu->attr_groups = dmc_pmu_attr_groups;
+ 		tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
+ 				"uncore_dmc_%d", tx2_pmu->node);
++		if (!tx2_pmu->name) {
++			devm_kfree(dev, tx2_pmu);
++			return ERR_PTR(-ENOMEM);
++		}
++
+ 		tx2_pmu->init_cntr_base = init_cntr_base_dmc;
+ 		tx2_pmu->start_event = uncore_start_event_dmc;
+ 		tx2_pmu->stop_event = uncore_stop_event_dmc;
+@@ -866,6 +878,11 @@ static struct tx2_uncore_pmu *tx2_uncore_pmu_init_dev(struct device *dev,
+ 		tx2_pmu->attr_groups = ccpi2_pmu_attr_groups;
+ 		tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
+ 				"uncore_ccpi2_%d", tx2_pmu->node);
++		if (!tx2_pmu->name) {
++			devm_kfree(dev, tx2_pmu);
++			return ERR_PTR(-ENOMEM);
++		}
++
+ 		tx2_pmu->init_cntr_base = init_cntr_base_ccpi2;
+ 		tx2_pmu->start_event = uncore_start_event_ccpi2;
+ 		tx2_pmu->stop_event = uncore_stop_event_ccpi2;
+-- 
+2.43.0
+
