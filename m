@@ -1,219 +1,174 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9666A1A9B32
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9B2200132
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744265115; cv=none; b=evG00igdOc+2SztQ7vrdY2QjqYsCyCc4wrjDfGXUd8F4rCvJPp90o2bYMiMqezSy64Y/YaJ3xnzIHL74uZ44WlRWcaj5qCdouryGkMjieVvMLW2AOwizRDnqOvx4Ls5F+b7XIekMiGCUjGnJjilx6YN5Tzl69q84XYoJWYfaGJ8=
+	t=1744265293; cv=none; b=S9bvOEDZIzlgZWO18ywBZcnLuXbUf6y8DQgI6iOv3d5+GcldDrukzA+nRCAYKYROOdsjjoKqpkgu69RgGshrYvSnf5a8xJnovr3dT13tiqYFEdNngscX36UkH4R37lUm3CuQaw0rCUl7PBYQGAL0LmzKsNB7YybKrh9U0WjdZio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744265115; c=relaxed/simple;
-	bh=q/kBApj8o1DODVLckuFXHWT1k9Qcxm273pF1C9ox4ro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cRAKstnQgEvUShBCTRCo6wjoPgsqy9YDbXffwqkjXsy+pGAPRYXoE2nK7sWyLZFVq2KpnsziMF/MB4QX+129j0r6wtToreEfkuWirB40GLdZu0R8Rp+kT/68xsQvHdCeU+Q78xS28dZDmM9t1TmqHTTBpM1hX+hzRnf7v+WLuOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u2l1d-0004XD-C7; Thu, 10 Apr 2025 08:04:33 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u2l1Z-004Dlj-2z;
-	Thu, 10 Apr 2025 08:04:29 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 75A153F4AE6;
-	Thu, 10 Apr 2025 06:04:29 +0000 (UTC)
-Date: Thu, 10 Apr 2025 08:04:26 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v9 4/7] can: Add Nuvoton NCT6694 CANFD support
-Message-ID: <20250410-artichoke-swan-of-abracadabra-33c1dc-mkl@pengutronix.de>
-References: <20250409082752.3697532-1-tmyu0@nuvoton.com>
- <20250409082752.3697532-5-tmyu0@nuvoton.com>
- <20250409-cooperative-elastic-pillbug-672a03-mkl@pengutronix.de>
- <CAOoeyxULns52vAwzsLoXB+BwT+CN+VGBwqrg61pjKJH8bTD5bw@mail.gmail.com>
+	s=arc-20240116; t=1744265293; c=relaxed/simple;
+	bh=rcFPXd+PyG2j8YKXDK5TE8WokieFvBLw4xHGkuYL270=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LlQJxvC2+jnYda5WzrRvE8vY+IgEVwkQe/x1bPOtndW1DlhczS7hU2eAzUfaLDbsypv+o9y20/LR15G4RB9cVWo7YnHT06o+hl5GpNynjE9ywlt7ZhfqFVgfzLlO1B3IgH9LmepHACJzH/LqzcH+pvpwAk7z8uyIVfJCHs1p5R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L0b60taz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L0b60taz"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A5Usrw029403
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:08:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	c65/dq03YDlqT69lZS9YUG+UsJpEZoVLdFL5ZINuezA=; b=L0b60tazFeD6iY8e
+	4HvYZ3rPKlDtfZ1vhQ3PjYoqb5QdO5pZl/rVYtVwLra416K1qW8T6jZErjQZ52SG
+	HxjyDXf4vQnAaIab9A2ErIOtRn7AZQziogDFh4PEQypEY9YQQcey38UJyYb7gp/+
+	kqRK68Ky2Z+DooRtH5dB4j1oujH8ukqQ/MviepQK4QVojRGCHYtfkpmnPzLTL+KX
+	ebPtBzchQtKIUkiBIuY2PCt9iIXbSTQYSWN2wGFuu57abxSt6lujV757rK4ZnZQ9
+	S8ArPYoNd9YjYA2oTaI5UwH7qZgNuEW6ua91jOedfl9fjjU6jSV6AD24uLNMvWi+
+	Dj2AwQ==
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbedvdx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:08:11 +0000 (GMT)
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b00cd79a5e6so535251a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:08:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744265290; x=1744870090;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c65/dq03YDlqT69lZS9YUG+UsJpEZoVLdFL5ZINuezA=;
+        b=NCkZMaMpmytjK79kSHThkmVqenhcWYcKAkCOVk743qDRKfaRmlmkN9djPsM3dW+bf2
+         j/YLFtTkGC2kMnnyCwZvPWiUCPhiUFkKcZkw/5BbMk5fhb5BfBRflJMKQkymxEym8eLk
+         zxwxmSQjgZZHUIk6hs9wOwQNFHqFAPEcvePJzFCEGpE1tHxcNyt9/T0nEy5XLkoOJ/yT
+         OHmM+3IxW8dWe6518eG/wufXEwm+iLz3g6TuDl5J8xXZv12ILC3+9uNjIIT4f+HeKjWo
+         n+pFb66fCX46kr92alYTFXyOBLgBRNijZJZmXMzEwut3aMUQkVYElWPPoPjBh0dMlOAn
+         Cnvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaVuw1TCI9ulNag405mhXRXdZIZ9MtNsgFfreF7EfA9jawOELJcYBC8NRzj0xnYIVvaK9SAmleo0AEt+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrRBjbP4GGua+9mKKkAHL07bK9yVVNr2w3rfDnkcIBCKh1hFDs
+	a7IMJXikQjyFs3MdZghTkDvcqLXI8PwnxBKbGGPlo2pVCtvXRkv0clycy9pTHcRp/7ssaNfuc5N
+	PGdPpcOTGtajV0DPqMdHiNYDQ+S+pAQjnIqGGtrVCyqUhMBCHTBbUlYEEd1zgt9o=
+X-Gm-Gg: ASbGncs94OeV6B0zCqg8b2rg/vU+H2mzz7wy978XsCiXuzB1R4ATS5pV26OBW0ESblG
+	mAS0D0d3wIcWNCFc8VLzNhM7Iss3riQKxKiKKpdWVtri0ABOPEuSYvVRZXp60Lj/Coq+AZPXLI1
+	yqUzoab8jeq4a1dVfUNVHvf+byT98GVouuMfpbeOfZSItnq35/+WhMHgst8XLuzzMjw05rI+kz/
+	iwDuITlie1cn8PAPfb2vbbRYHEuISMRqDtcHAes+Kw/bsGKmOecA7nCZNasMlCqVeKs/A8G2UEI
+	e55fdG3NsTgQulE/VkVF6zTgkhAjoPFVgZxZ
+X-Received: by 2002:a05:6a20:6f06:b0:1f5:8b9b:ab54 with SMTP id adf61e73a8af0-201694cb037mr2907498637.23.1744265290184;
+        Wed, 09 Apr 2025 23:08:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8MricBGPJy7z5KTQxmuVxXADC6pI74ej+8CixhRowybv6WzBxlmKULawmIeaSnOpfeJ/ubQ==
+X-Received: by 2002:a05:6a20:6f06:b0:1f5:8b9b:ab54 with SMTP id adf61e73a8af0-201694cb037mr2907470637.23.1744265289757;
+        Wed, 09 Apr 2025 23:08:09 -0700 (PDT)
+Received: from [192.168.29.15] ([49.37.108.21])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e6972fsm2488523b3a.171.2025.04.09.23.08.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 23:08:09 -0700 (PDT)
+Message-ID: <2cc61d5d-656b-49d6-9d09-98c4368b1fc8@oss.qualcomm.com>
+Date: Thu, 10 Apr 2025 11:38:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6ebpqmmsutfol6xr"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxULns52vAwzsLoXB+BwT+CN+VGBwqrg61pjKJH8bTD5bw@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] usb: gadget: Use get_status callback to set remote
+ wakeup capability
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Bakker <kees@ijzerbout.nl>,
+        William McVicker <willmcvicker@google.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@kernel.org" <stable@kernel.org>
+References: <20250403110805.865311-1-prashanth.k@oss.qualcomm.com>
+ <20250403110805.865311-3-prashanth.k@oss.qualcomm.com>
+ <20250408011758.qfdflgrrmahwmfqi@synopsys.com>
+ <4d68cb04-377f-4ebf-99c7-c63b68aebf60@oss.qualcomm.com>
+ <20250409005524.fbehw2gonv3p7j2v@synopsys.com>
+ <a4cc6d1b-4925-4b57-ae23-fc1e23c5efde@oss.qualcomm.com>
+ <20250409220510.eynefm7fesydagpz@synopsys.com>
+ <20250409221158.n5duanv2gmctrr64@synopsys.com>
+Content-Language: en-US
+From: Prashanth K <prashanth.k@oss.qualcomm.com>
+In-Reply-To: <20250409221158.n5duanv2gmctrr64@synopsys.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: L_ugItQEPDDaoIKXinaWPawgWtyw6jRK
+X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f7604b cx=c_pps a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=cNzNqdwVgqoaoh8yHwe9gA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=JHkCR1Z1QDo9LWSbiEIA:9 a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22
+X-Proofpoint-ORIG-GUID: L_ugItQEPDDaoIKXinaWPawgWtyw6jRK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=881 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100044
 
 
---6ebpqmmsutfol6xr
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v9 4/7] can: Add Nuvoton NCT6694 CANFD support
-MIME-Version: 1.0
 
-On 10.04.2025 10:40:34, Ming Yu wrote:
-> Dear Marc,
->=20
-> Thank you for reviewing.
->=20
-> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B44=E6=9C=889=
-=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:21=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> ...
-> > > +static void nct6694_canfd_handle_state_change(struct net_device *nde=
-v, u8 status)
-> > > +{
-> > > +     struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
-> > > +     enum can_state new_state, rx_state, tx_state;
-> > > +     struct can_berr_counter bec;
-> > > +     struct can_frame *cf;
-> > > +     struct sk_buff *skb;
-> > > +
-> > > +     nct6694_canfd_get_berr_counter(ndev, &bec);
-> > > +     can_state_get_by_berr_counter(ndev, &bec, &tx_state, &rx_state);
-> > > +
-> > > +     new_state =3D max(tx_state, rx_state);
-> > > +
-> > > +     /* state hasn't changed */
-> > > +     if (new_state =3D=3D priv->can.state)
-> > > +             return;
-> > > +
-> > > +     skb =3D alloc_can_err_skb(ndev, &cf);
-> > > +
-> > > +     can_change_state(ndev, cf, tx_state, rx_state);
-> > > +
-> > > +     if (new_state =3D=3D CAN_STATE_BUS_OFF) {
-> > > +             can_bus_off(ndev);
-> >
-> > What does your device do when it goes into bus off? Does it recover its=
-elf?
-> >
->=20
-> No, the device does not support automatic bus-off recovery. It
-> requires an explicit CAN Setting and Initialization(CMD0) command to
-> re-initialize the controller after entering bus-off state.
+On 10-04-25 03:42 am, Thinh Nguyen wrote:
+> On Wed, Apr 09, 2025, Thinh Nguyen wrote:
+>> On Wed, Apr 09, 2025, Prashanth K wrote:
+>>>
+>>>
+>>> On 09-04-25 06:25 am, Thinh Nguyen wrote:
+>>>>
+>>>> Not at the gadget level, I mean to create a configfs attribute common
+>>>> across different functions to allow the user to enable/disable the
+>>>> function wakeup capability via the configfs when you setup the function.
+>>>>
+>>>> What do you think?
+>>>>
+>>>> Thanks,
+>>>> Thinh
+>>>
+>>> Thats a good idea, in fact I had the same thought. But thought of doing
+>>> it later since its beyond the scope of this patch/series.
+>>
+>> The way you have it done now forces a usb3x function driver to implement
+>> f->get_status to be able to respond with function wakeup capable.
+>> Previously, we automatically enable function wakeup capability for all
+>> functions if the USB_CONFIG_ATT_WAKEUP is set.
 
-Ok
+Currently function wakeup is implemented only on f_ecm and others don't
+have the capability, so the expectation is functions should add add the
+get_status callbacks while implementing remote/func wakeup and mark
+itself and RW/FW capable. And if get_status callback is not there, then
+func is not FW capable.
 
-[...]
+Current implementation sets RW/FW capability to all interfaces if
+USB_CONFIG_ATT_WAKEUP is set (which is not right). I have provided an
+example in the commit text where we incorrectly set FW capability.
+>>
+>> Arguably, this can cause a regression for remote capable devices to
+>> operate in usb3 speeds.
+> 
+> Sorry typos: I mean arguably, this can cause a regression for remote
+> wake capable devices to perform remote wakeup in usb3 speed.
+> 
+> BR,
+> Thinh
+> 
+>>
+>>>
+>>> We can add a configfs attribute to enable/disable FUNC_RW_CAP, and
+>>> functions can return get_status() based on the attribute.
+>>>
+>>
+>> That would be great! This would fit this series perfectly. Let me know
+>> if there's an issue.
+>>
+I seriously think we can take it out of this series and do that
+separately. The intention of this series was to fix the wakeup
+operations. And enable/disable func_wakeup from function driver would be
+a new implementation. Ill take it up after this.
 
-> > > +static int nct6694_canfd_start(struct net_device *ndev)
-> > > +{
-> > > +     struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
-> > > +     const struct can_bittiming *d_bt =3D &priv->can.data_bittiming;
-> > > +     const struct can_bittiming *n_bt =3D &priv->can.bittiming;
-> > > +     struct nct6694_canfd_setting *setting __free(kfree) =3D NULL;
-> > > +     const struct nct6694_cmd_header cmd_hd =3D {
-> > > +             .mod =3D NCT6694_CANFD_MOD,
-> > > +             .cmd =3D NCT6694_CANFD_SETTING,
-> > > +             .sel =3D ndev->dev_port,
-> > > +             .len =3D cpu_to_le16(sizeof(*setting))
-> > > +     };
-> > > +     int ret;
-> > > +
-> > > +     setting =3D kzalloc(sizeof(*setting), GFP_KERNEL);
-> > > +     if (!setting)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     setting->nbr =3D cpu_to_le32(n_bt->bitrate);
-> > > +     setting->dbr =3D cpu_to_le32(d_bt->bitrate);
-> > > +
-> > > +     if (priv->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
-> > > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_C=
-TRL1_MON);
-> > > +
-> > > +     if (priv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
-> > > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_C=
-TRL1_NISO);
-> > > +
-> > > +     if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK)
-> > > +             setting->ctrl1 |=3D cpu_to_le16(NCT6694_CANFD_SETTING_C=
-TRL1_LBCK);
-> > > +
-> > > +     setting->nbtp =3D cpu_to_le32(FIELD_PREP(NCT6694_CANFD_SETTING_=
-NBTP_NSJW,
-> > > +                                            n_bt->sjw - 1) |
-> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NB=
-TP_NBRP,
-> > > +                                            n_bt->brp - 1) |
-> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NB=
-TP_NTSEG2,
-> > > +                                            n_bt->phase_seg2 - 1) |
-> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_NB=
-TP_NTSEG1,
-> > > +                                            n_bt->prop_seg + n_bt->p=
-hase_seg1 - 1));
-> > > +
-> > > +     setting->dbtp =3D cpu_to_le32(FIELD_PREP(NCT6694_CANFD_SETTING_=
-DBTP_DSJW,
-> > > +                                            d_bt->sjw - 1) |
-> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DB=
-TP_DBRP,
-> > > +                                            d_bt->brp - 1) |
-> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DB=
-TP_DTSEG2,
-> > > +                                            d_bt->phase_seg2 - 1) |
-> > > +                                 FIELD_PREP(NCT6694_CANFD_SETTING_DB=
-TP_DTSEG1,
-> > > +                                            d_bt->prop_seg + d_bt->p=
-hase_seg1 - 1));
-> >
-> > What does your device do, if you set the bitrates _and_ the bit timing
-> > parameters? They are redundant.
->=20
-> The firmware calculates the default bit timing parameters when it
-> receives the bitrates, and then overwrites them if it later receives
-> explicit bit timing parameters.
->=20
-> To avoid confusion and ensure consistent behavior, I will remove the
-> bitrate setting logic in next patch. Instead, the bit timing will be
-> determined solely based on the provided bit timing parameters.
+Regards,
+Prashanth K
 
-Sounds good.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---6ebpqmmsutfol6xr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmf3X2cACgkQDHRl3/mQ
-kZy+Bwf/cD7PcXTrBFCGsudbvqhERiXg3j4fGxKlZVoNrTxY13w0WWxCpMBfL9lZ
-k+VJ+pxjPqL64WK5QAAem80jd8Pc+BqG+jdZIMEfTfYXvArLqzvnlfC16d6OoKmS
-cZCI+XAbNQMFCkOSLNa3tS6jA5/rwlsy+mV7CMLeOphSUl+sTbW2PlIiPJIQQXzG
-9Y1kcIlI1HLOTj2ilQ/8xgx+cNGh561Erou4H0fnNyoi4nuvlNcglfNm/m4B2DiQ
-oybJYK34/vHSiz361rkyU32z6TNcW5PaR7FwDGM/pMScYdQOnZSgOhuIBrl71etT
-/MLF7/H4MWskq7PZ97+8f+THFvhH2g==
-=67Py
------END PGP SIGNATURE-----
-
---6ebpqmmsutfol6xr--
