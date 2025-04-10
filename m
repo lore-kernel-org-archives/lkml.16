@@ -1,170 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E9071E25E3
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DEF1DDC0F;
+	Thu, 10 Apr 2025 11:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744283695; cv=none; b=ZGJrhh6tkQj95Lkt0KLrS8ZOoKb4raZk9TOqOQjkFkHHYM6/YemPuQFdC4Dtoi1avdFCs765z2MqKdLev9cEtg0eCO/SPmyy6BV2n0PabkH6R8H+Zvhn3vRG3PHA/U0G1iK3eYmxmHMtM2fmf6Ae1ef/ZG8jQr1be3GNl/RTP2A=
+	t=1744283951; cv=none; b=q9BFfgo+MBPqv6hMflawqBFcyTt0+cBRuMMX3z1T63/VFnnNN9GZNWflOUS/cQCSr+Wohj+9AOFD8OLa1h/37aWJ50GDMquBBrBzrlJu2h/fZcMPbg2yTVnroreuw0R94YgT60J53U4zhtmlsUGuSIwhtOmcRhicKEsqk+90zgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744283695; c=relaxed/simple;
-	bh=cy0vXy2j7xjX68N0rV2QUNjvYZIznsKsgNK//n1r64o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ahLAOvYJUpsfYa1x8+LTwv6+Wlq1honegWrfAVHznjTgl3N24zIiazBNOl2g6Iy62cr2L0OILN5UKDv2IN5SdP4yXPikCv9U0madDrv/jVecG0kP+D1vFNX6xxQsaSOk7POboAjkpm6Ou4lCQX2V/ND9opjOufvfn+l+7naxOg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E943E106F;
-	Thu, 10 Apr 2025 04:14:52 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE7B73F6A8;
-	Thu, 10 Apr 2025 04:14:50 -0700 (PDT)
-Message-ID: <2e2ad90b-9e48-4711-a8da-85668493259b@arm.com>
-Date: Thu, 10 Apr 2025 12:14:48 +0100
+	s=arc-20240116; t=1744283951; c=relaxed/simple;
+	bh=gAFvWpcAGBkegBSikm87MrNHJtZam8cHZvJScZa1YO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mukuBIonDJVSDJBU/4zpCM+/dEhXL1sdKSBvn66AOvzucdZA0onWeuLPlKg1pr21uEL6RcfilRWyNy6djl9wJaAsS46gosU8D8VxVr2lH3jdnvBBOQ4oee5IjaEfdDPbb1Rc7bRmtC11BCJWL24rjrLj5lGYPGKb1YVen5hJBdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDJ/YYu1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDJ/YYu1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5194AC4CEE3;
+	Thu, 10 Apr 2025 11:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744283951;
+	bh=gAFvWpcAGBkegBSikm87MrNHJtZam8cHZvJScZa1YO8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nDJ/YYu1BZTH/wCI43Y6qFG2VpBm778RH4Ahe5Lc/hjvbh1mPHOR+bvIjtIPJjYgJ
+	 v76zeBUcAzeaobXpwpPB7F7N0ALkeKNOaFnrhpk6sh66f9Qq5EB3MlOqdwPKagcXVR
+	 qESJGDXIsbKlwIZEcvsjR9TJHMy91PyntBiKbuwosnfvlBOiCpyaX6CEbo+QYYZdQo
+	 989+V2m7iEwdmFqFModMA/SB7YnDKCkRP0j3+pIwbbXK833s0X/Mj41iX3O1OhOXiw
+	 EGkOzcjwYaS1KffEtbBp/kiovBdomvAga1HaEZ7a6AukOUsLLIF4iCovZVhtRDb3i8
+	 Ly1tWWkexHEjQ==
+Date: Thu, 10 Apr 2025 12:19:05 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	manivannan.sadhasivam@linaro.org, absahu@codeaurora.org,
+	bbrezillon@kernel.org, architt@codeaurora.org,
+	quic_srichara@quicinc.com, linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] mtd: rawnand: qcom: Pass 18 bit offset from NANDc
+ base to BAM base
+Message-ID: <79349446-2e87-4f3a-9644-9262a4ccb12a@sirena.org.uk>
+References: <20250410100019.2872271-1-quic_mdalam@quicinc.com>
+ <20250410100019.2872271-2-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] iommu/mediatek: Fix NULL pointer deference in
- mtk_iommu_device_group
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Joerg Roedel <joro@8bytes.org>,
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
- Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- "Rob Herring (Arm)" <robh@kernel.org>, kernel@collabora.com,
- Joerg Roedel <jroedel@suse.de>, Jason Gunthorpe <jgg@ziepe.ca>,
- iommu@lists.linux.dev, linux-mediatek@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250403-fix-mtk-iommu-error-v2-1-fe8b18f8b0a8@collabora.com>
- <CAGXv+5HJpTYmQ2h-GD7GjyeYT7bL9EBCvu0mz5LgpzJZtzfW0w@mail.gmail.com>
- <2792b9df-fc82-4252-af64-cf888a36f561@arm.com>
- <CAGXv+5E=NhFcS0fG_kbLTnF6xfTkBOHQwsNxszHDcgWfn3zFiA@mail.gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAGXv+5E=NhFcS0fG_kbLTnF6xfTkBOHQwsNxszHDcgWfn3zFiA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="BHGlqQ/YgKipM5ku"
+Content-Disposition: inline
+In-Reply-To: <20250410100019.2872271-2-quic_mdalam@quicinc.com>
+X-Cookie: You will be awarded some great honor.
 
-On 08/04/2025 5:46 am, Chen-Yu Tsai wrote:
-> On Mon, Apr 7, 2025 at 8:38 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 2025-04-07 6:17 am, Chen-Yu Tsai wrote:
->>> Hi,
->>>
->>> On Thu, Apr 3, 2025 at 6:24 PM Louis-Alexis Eyraud
->>> <louisalexis.eyraud@collabora.com> wrote:
->>>>
->>>> Currently, mtk_iommu calls during probe iommu_device_register before
->>>> the hw_list from driver data is initialized. Since iommu probing issue
->>>> fix, it leads to NULL pointer dereference in mtk_iommu_device_group when
->>>> hw_list is accessed with list_first_entry (not null safe).
->>>>
->>>> So, change the call order to ensure iommu_device_register is called
->>>> after the driver data are initialized.
->>>>
->>>> Fixes: 9e3a2a643653 ("iommu/mediatek: Adapt sharing and non-sharing pgtable case")
->>>> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
->>>> Reviewed-by: Yong Wu <yong.wu@mediatek.com>
->>>> Tested-by: Chen-Yu Tsai <wenst@chromium.org> # MT8183 Juniper, MT8186 Tentacruel
->>>> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>>> Tested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>>> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
->>>> ---
->>>> This patch fixes a NULL pointer dereference that occurs during the
->>>> mtk_iommu driver probe and observed at least on several Mediatek Genio boards:
->>>> ```
->>>> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
->>>
->>> This is a reminder to please land this and send to Linus ASAP.
->>>
->>> This fixes the v6.15-rc1 kernel on all the MediaTek Chromebook platforms,
->>> except for MT8188, which seems to have another issue in iommu_get_dma_domain()
->>> used from the DRM driver:
->>>
->>>       Disabling lock debugging due to kernel taint
->>>       Unable to handle kernel NULL pointer dereference at virtual
->>> address 0000000000000158
->>
->>   From the offset and the stacktrace code dump, this would appear to be
->> the dereference of dev->iommu_group->default_domain, when
->> dev->iommu_group is NULL (and CONFIG_DEBUG_LOCK_ALLOC makes the mutex
->> really big). Which is a bit weird, as to get into iommu-dma at all in
->> that state would suggest that whatever device this is has been removed
->> and had its group torn down again after iommu_setup_dma_ops() has run...
->> but either way that implies the DRM driver is passing an arbitrary
->> device to the DMA API without making sure it's actualy valid.
->>
->> Trying to trace the provenance of dma_dev from mtk_gem_create() back
->> through the rest of the driver is quite the rabbit-hole, but it seems
->> like in at least one case it can lead back to an
->> of_find_device_by_node() in ovl_adaptor_comp_init(), which definitely
->> looks sufficiently sketchy.
-> 
-> It kind of makes sense since the "display controller" is composed of
-> many individual hardware blocks. The struct device tied to the DRM
-> driver is more or less just a place holder. Only the first block,
-> either the OVL (overlay compositing engine) or RDMA (scanout engine)
-> accesses memory, so I think it makes sense to use that as the dma_dev.
 
-I'm not disputing whether the choice of dma_dev is semantically 
-appropriate, I'm just saying that the method of pulling a struct device 
-reference out of the DT topology shows no *obvious* guarantee that that 
-specific device will have a driver bound and be validly configured 
-before that dma_dev can be used via any other path. Especially when it's 
-all happening off the back of another fake device created by the fake 
-DRM device itself.
+--BHGlqQ/YgKipM5ku
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Maybe there's some hidden magic in all the component stuff which makes 
-it work out fine, I don't know. This was just an observation since I 
-went looking for potential bugs and found something which at first 
-glance *looks* rather fragile, compared to, say, if mtk_mdp_rdma's own 
-probe() or bind() were to directly set itself as the DMA device.
+On Thu, Apr 10, 2025 at 03:30:17PM +0530, Md Sadre Alam wrote:
+> The BAM command descriptor provides only 18 bits to specify the NAND
+> register offset. Additionally, in the BAM command descriptor, the NAND
+> register offset is supposed to be specified as "(NANDc base - BAM base)
+> + reg_off". Since, the BAM controller expecting the value in the form of
+> "NANDc base - BAM base", so that added a new field 'bam_offset' in the NAND
+> properties structure and use it while preparing the command descriptor.
 
-> With some more logs, I did find something else fishy. Here the IOMMU
-> for the second display pipeline fails to probe:
-> 
->      mtk-iommu 1c028000.iommu: error -EINVAL: Failed to register IOMMU
->      mtk-iommu 1c028000.iommu: probe with driver mtk-iommu failed with error -22
-> 
-> Then later on, deferred probe times out, and the display pipeline is
-> brought up regardless:
-> 
->      mediatek-disp-ovl 1c000000.ovl: deferred probe timeout, ignoring dependency
->      mediatek-disp-ovl 1c000000.ovl: Adding to IOMMU failed: -110
->      mediatek-disp-rdma 1c002000.rdma: deferred probe timeout, ignoring
-> dependency
->      mediatek-disp-rdma 1c002000.rdma: Adding to IOMMU failed: -110
->      (repeats for all the individual components of the display pipeline)
->      mediatek-drm mediatek-drm.16.auto: bound 1c000000.ovl (ops
-> mtk_disp_ovl_component_ops)
->      mediatek-drm mediatek-drm.16.auto: bound 1c002000.rdma (ops
-> mtk_disp_rdma_component_ops)
->      (repeats for all the individual components of the display pipeline)
->      mediatek-drm mediatek-drm.16.auto: DMA device is 1c000000.ovl
->      [drm] Initialized mediatek 1.0.0 for mediatek-drm.16.auto on minor 1
-> 
-> And all without a functional IOMMU.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Ah, that I was not expecting, and it does indeed explain how things get 
-into that state.
+--BHGlqQ/YgKipM5ku
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> So I think this brings up two more questions:
-> 
-> 1. Why is the IOMMU failing to probe?
-> 2. Why is the core code still going the IOMMU DMA alloc path if there
->     is no usable IOMMU?
-> 
-> I'll look into the first question first. Insights welcome for the second
-> one.
+-----BEGIN PGP SIGNATURE-----
 
-I had a think about it, and although there's very much a historical mess 
-in this area, I'm inclined to agree that we could do better. Patch sent.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf3qSgACgkQJNaLcl1U
+h9A8LQf/Qdes70/Rw94WVFtMtWkzp5YAtG82yLUA5LOSLIt8DTuvKh/B7Q216lDc
+DeHth7xNLhU0NKwpmVt0ESrPHrcLcMYMdq59924cs3EY5/HN4hk7YStIIX3OJxVM
+qcLdtHyiWGvQBAKptqbjM997MTKHzNMtPSb0ZZWNXjLe/x/rizeTgOQ7loGdgxFv
+bpDvk3Fy4TDZmBQ6ZcolMTFBV+B0S8ZIjv8bDbaN/hbbsuoayf1erKpP0tSW9Wvm
+Ag+/0fS0Lp/aD4ZaRPMLNH9e5ZtgFfDWSSAf88NypR3se0QgelmM9Vi45JEdK0ML
+fiTlbY3OQXlRIFO/WkjvS4GBx2t2sA==
+=JRjg
+-----END PGP SIGNATURE-----
 
-Cheers,
-Robin.
+--BHGlqQ/YgKipM5ku--
