@@ -1,189 +1,97 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED6226B0BC
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D845A280CF0
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744281352; cv=none; b=njrRlC/uzSSSLh5LDHnlINxUYGooGUmvb2u5Hzv559o3uFIvYHj1Wh5HON/0TBV37mwQ32+7ID07gaTJfzwzRUNujEvX1EFfrpHsJzVKyKM2LX8CpY+Yfj5gg4R9kjbkqlzxFumHGsXRzqvKOviPmKiTvB6Gemlac+QnwaMtrZc=
+	t=1744281445; cv=none; b=H53i5FjVKoKak/qIoWjFZK880HMKLod7NByYRVg2aREemoEq7i46Qte+yzHlQo2O7NmzEl73mz+faMiWf1/YtwfB5edC7i2wn4+Nai1HxZ7Iyh25/+Ddf3n0FN6x41r4fyR5Fj202hJwBxt48lgX/4fuP4o+z+8sYXm55cRWHng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744281352; c=relaxed/simple;
-	bh=V6cW/m8XzoIHskbnHAETvNa/9Acy4r8cBggy9Q4N9nU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aNLwnesHHf/tCG3wIiIxZrNIOJrzX/IOZbw7+7t4PQWM2jq8hJBFM8K/Y+mlPAIty2ugxBWzcz7zBikRfeklPDizhrwgn4VCq0gZs9DAKwN/HsyunvFT2tqQ89oFKlIswXN7T7twSkY1zkM3f2ZqJZOsEl41Huxg+k6kqz5k9KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ADdYYWTf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=80ZvvYhz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ADdYYWTf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=80ZvvYhz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744281445; c=relaxed/simple;
+	bh=wSoydyQlm6G68USoMznwRosFCC6xPTjIE05opbWT8Pc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EkGOEhfVo3UQa4petZdQpnlLXMEf2wQ8afjsvBMKRxi8cS/1L0fMez0kJ1O70nvb1sNpjKXwdkIfV+lO0/4O8ZQG1cEz+epffv1XwzLvTo8zixVoyqXnRjz+lafjZvz+GcXtTzaztS8H+JAIZX8Tcm+yWUOu9UridZgo9ld2Lvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tiJglv9F; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ADdYYWTf";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="80ZvvYhz";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ADdYYWTf";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="80ZvvYhz"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B1E5C21168;
-	Thu, 10 Apr 2025 10:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744281347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OIDP4d34DUcpKIsnqGdTzzo0Xvi37BHxdLJbQ2zC+P4=;
-	b=ADdYYWTfVIVTgwD+j75mRlJtHHUBGmZyrrVKc9goigHihcOiKnF0Hi0REnbqx91FGi+tYL
-	Jcz0hasqgrdRm+0iKn1VzWltk4pG1+ELipLnC2M/2vp556b1NqQXfMDXEI+9ucdZbHDca0
-	FlPsjnWA4y9qApWVH0FV5qK4EtlgNj0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744281347;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OIDP4d34DUcpKIsnqGdTzzo0Xvi37BHxdLJbQ2zC+P4=;
-	b=80ZvvYhzW8HUuYOLq3BdNSvOUhLOJcvjF/jS6ovhXflypLEw7MqtmRvNB06kR/ylFPXkRf
-	3Jsq0ADQ5l+z4+Dg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744281347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OIDP4d34DUcpKIsnqGdTzzo0Xvi37BHxdLJbQ2zC+P4=;
-	b=ADdYYWTfVIVTgwD+j75mRlJtHHUBGmZyrrVKc9goigHihcOiKnF0Hi0REnbqx91FGi+tYL
-	Jcz0hasqgrdRm+0iKn1VzWltk4pG1+ELipLnC2M/2vp556b1NqQXfMDXEI+9ucdZbHDca0
-	FlPsjnWA4y9qApWVH0FV5qK4EtlgNj0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744281347;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OIDP4d34DUcpKIsnqGdTzzo0Xvi37BHxdLJbQ2zC+P4=;
-	b=80ZvvYhzW8HUuYOLq3BdNSvOUhLOJcvjF/jS6ovhXflypLEw7MqtmRvNB06kR/ylFPXkRf
-	3Jsq0ADQ5l+z4+Dg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A175613886;
-	Thu, 10 Apr 2025 10:35:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id E0llJwOf92eGMQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 10 Apr 2025 10:35:47 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5E471A0910; Thu, 10 Apr 2025 12:35:47 +0200 (CEST)
-Date: Thu, 10 Apr 2025 12:35:47 +0200
-From: Jan Kara <jack@suse.cz>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: kernel test robot <oliver.sang@intel.com>, Jan Kara <jack@suse.cz>, 
-	oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Asahi Lina <lina@asahilina.net>, Balbir Singh <balbirs@nvidia.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Christoph Hellwig <hch@lst.de>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Dave Chinner <david@fromorbit.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, David Hildenbrand <david@redhat.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Ira Weiny <ira.weiny@intel.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, linmiaohe <linmiaohe@huawei.com>, 
-	Logan Gunthorpe <logang@deltatee.com>, Matthew Wilcow <willy@infradead.org>, 
-	Michael Camp Drill Sergeant Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Peter Xu <peterx@redhat.com>, Sven Schnelle <svens@linux.ibm.com>, Ted Ts'o <tytso@mit.edu>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Vivek Goyal <vgoyal@redhat.com>, WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-xfs@vger.kernel.org
-Subject: Re: [linus:master] [fs/dax]  bde708f1a6:
- WARNING:at_mm/truncate.c:#truncate_folio_batch_exceptionals
-Message-ID: <uiu7rcmtooxgbscaiiim7czqsca52bgrt6aiszsafq7jj4n3e7@ge6mfzcmnorl>
-References: <202504101036.390f29a5-lkp@intel.com>
- <v66t3szdfsfwyl4lw6ns2ykmxrfqecba2nb5wa64l5qqq2kfpb@x7zxzuijty7d>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tiJglv9F"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c13fa05ebso346145f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744281442; x=1744886242; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G9EVV1Ec7k3TH3dY1WUPdLQRnNApCBxvvZldU2uE6sg=;
+        b=tiJglv9F7THb76uazpWl3uy9IqZfUs/vJZ4HN1qtaeKTbk01IVLC4hQcL6+0Zrz00+
+         zVJaUDi5TSVtOTen2pn87JlxbGuNtvvPBef+tMB5TI+giaEzHotN8A9hkxkblN9H/hcI
+         NvQjWyT96KKVr4B+xbqcLoV5nvKbsSkGZxqvZr369yCqbO2I5lniezuFvFR4dzQ3tEOQ
+         gUHakpu13zBK2p/7wVfPK0l2fj525WMmyj0WxdjmSnPHfHjhMAnwcWzUDryFEpgLkaP2
+         tfDchJE04thHonlb3cQ5IjDO/eM1x49wohq43tgGpsFn7h628PFokeBZ+2/QE5IB1xUA
+         L2dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744281442; x=1744886242;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G9EVV1Ec7k3TH3dY1WUPdLQRnNApCBxvvZldU2uE6sg=;
+        b=go+vuRwv1PygD3t3rg2vSv8LX/cVl03NvIPXED8X2j6Exofs54ApaHUv7SjHUC3s8n
+         Fbi+IIZT5WNjsRj7vLPI1G07emU3BAe9Tnu6Lp/fIOQu9USDdgpZXQCV8AY4ld3FMRql
+         WeUm1XefoxGFFJB4O4PHPPRBXQ+gshnAKDU9uxZo04Ca8vo6Q6fzCbfVP6lPRDQ064gS
+         t9K2vZRxgHn6cyVsqibgWm6qiwfIu7kB76GgKscXFuGqCXdm/MSkCMZoBy1qjvw4pXaV
+         mFFp89y49B2z3ZuSZNAbQoOBDyy0tbFlJXGJ+U05dsT+rWe1jkVqGo/ttgJiCQzM9qeF
+         EWhw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9ozePVY0RtIqPaG+7tVQHN9FyNaEX7D6iL+9HvHD81Kj680hiQxZVucboeSkNsJOr31vrbAPri5g2nPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3lm2vMlgW+ETKZPF7O1ASmglHt1+qSheDEE9R797KKzrmv2fO
+	WeX2jmRN+uAozWyr9f1PvHbkaMIQ6h5lPGsrC/uZBhHX9/6icn8E/fwFH7XWHME=
+X-Gm-Gg: ASbGncttVm7eOGbnD/TyB+HSnpW/vL5uqAej//1sH2c0tVUIne5vkQbHmqMkOu6lTfv
+	DUrRlgwqpYatahNhkvH4Gt3x3OtTeJxKmNbbB2FGCxfqQyIl9+XgZsPqv/FzHIo2KMiJQTy0DrR
+	SWrZYPW/3RaZqF/qIS69cC5B70m7h4nOQGzcQtvURAZfaYI73kCAKtEOG7CGWkV4ZGe+GP8yT5D
+	H4JCfBMVl7c+WuCQ9gDAf6lvmuqgeqoVi1XEBgPYgQCfbOsfYYkWgFFCobNPUC+RT1g8WfF4Mk+
+	+eLTOYNetyCT5SQklv7L86sgltjVX5TKmT9obNuJ26ADbDI6Rhe89czl3RFiGQ6IpA==
+X-Google-Smtp-Source: AGHT+IGkeEI4UgKz0JuWqCEhtgjSvbu9U+eFmkqEWX/tS80WE+jSM4C5CfOpaNBujEMwfFmabhy3kQ==
+X-Received: by 2002:a05:6000:381:b0:39c:2665:2ce7 with SMTP id ffacd0b85a97d-39d8f4f3461mr1543583f8f.53.1744281442157;
+        Thu, 10 Apr 2025 03:37:22 -0700 (PDT)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893612dbsm4309388f8f.1.2025.04.10.03.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 03:37:21 -0700 (PDT)
+From: srinivas.kandagatla@linaro.org
+To: broonie@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	srini@kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/2] MAINTAINERS: update my email address
+Date: Thu, 10 Apr 2025 11:37:11 +0100
+Message-Id: <20250410103713.24875-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <v66t3szdfsfwyl4lw6ns2ykmxrfqecba2nb5wa64l5qqq2kfpb@x7zxzuijty7d>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCPT_COUNT_TWELVE(0.00)[45];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[intel.com,suse.cz,lists.linux.dev,vger.kernel.org,linux-foundation.org,linux.ibm.com,asahilina.net,nvidia.com,google.com,arm.com,lst.de,gmail.com,kernel.org,fromorbit.com,linux.intel.com,redhat.com,ziepe.ca,huawei.com,deltatee.com,infradead.org,ellerman.id.au,mit.edu,xen0n.name];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLx3ed8f7q4e9s3nf3mrauhj48)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Score: -2.30
-X-Spam-Flag: NO
+X-Developer-Signature: v=1; a=openpgp-sha256; l=421; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=8qFbEEYlqyqgMAwNvBba8Rd1eK7Pf1l8so2JmRuG/RA=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn959YBmrwcaStKI6QyXZvaW289Ghy10STyn4dB cV7Njm3f4CJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ/efWAAKCRB6of1ZxzRV NzEeB/9AMFa6xheHkfhJH2rJy8dCoPZI3IaOUGU9NaN3c60Me5Et0Ax0iyOwHJ3It3vhc0o8poW hfD7usI/odUC1plQbFinU+pFZHv7NIEHgZ24cN7pW4GgncDug8fXZRvd4OrxsX3AWrqPGqAXq0y FArPY086qlPKJcqkvWcyb/m3dVGIXgdNAttvIuG5MIj4MuqOP+fb4xiPU+FMzaeuGE70CQOm1F7 dy42y95kqNBkiMltXX0/TIsbhv0KtlN7qlE0vMZxO/8mwivwppxpt+J4RiyC0j46MD0nt/NCCzU DWia3qVa8/rNZpWgmwHxTR676iXu2gn9sTVWqVDdJAVeap7W
+X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp; fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
+Content-Transfer-Encoding: 8bit
 
-On Thu 10-04-25 17:01:26, Alistair Popple wrote:
-> On Thu, Apr 10, 2025 at 01:14:42PM +0800, kernel test robot wrote:
-> > 
-> > 
-> > Hello,
-> > 
-> > kernel test robot noticed "WARNING:at_mm/truncate.c:#truncate_folio_batch_exceptionals" on:
-> > 
-> > commit: bde708f1a65d025c45575bfe1e7bf7bdf7e71e87 ("fs/dax: always remove DAX page-cache entries when breaking layouts")
-> 
-> This is warning about hitting the bug that commit 0e2f80afcfa6 ("fs/dax: ensure
-> all pages are idle prior to filesystem unmount") fixes. I couldn't reorder that
-> patch before this one because it relies on the DAX page-cache entries always
-> being removed when breaking layouts.
-> 
-> However I note that this is ext2. Commit 0e2f80afcfa6 doesn't actually update
-> ext2 so the warning will persist. The fix should basically be the same as for
-> ext4:
-> 
-> --- a/fs/ext2/inode.c
-> +++ b/fs/ext2/inode.c
-> @@ -74,6 +74,8 @@ void ext2_evict_inode(struct inode * inode)
->         struct ext2_block_alloc_info *rsv;
->         int want_delete = 0;
->  
-> +        dax_break_layout_final(inode);
-> +
->         if (!inode->i_nlink && !is_bad_inode(inode)) {
->                 want_delete = 1;
->                 dquot_initialize(inode);
-> 
-> What's more troubling though is unlike ext4 there is no ext2_dax_break_layouts()
-> defined, which is how I missed updating it. That means truncate with FS DAX
-> is already pretty broken for ext2, and will need more than just the above fix
-> to ensure DAX pages are idle before truncate. So I think FS DAX on ext2 should
-> probably just be removed or marked broken unless someone with more knowledge of
-> ext2 wants to fix it up?
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Yeah, with a hindsight, implementing fsdax for ext2 was a mistake (although
-it was meant as a replacement for the old execute-in-place feature that
-ext2 had for s390 and which we wanted to remove). At this point when pmem
-didn't lift off and DAX ended up being kind of niche, I think the effort
-to maintain DAX in ext2 is not justified and we should just drop it (and
-direct existing users to use ext4 driver instead for the cases where they
-need it). I'll have a look into it.
+Update .mailmap and MAINTAINERS to point to the @kernel.org instead of
+the @linaro.org. Linaro address will stop working in few days.
 
-								Honza
+Mark or Greg, could you please pick these two patches?
+
+Srinivas Kandagatla (2):
+  MAINTAINERS: use kernel.org alias
+  mailmap: Add entry for Srinivas Kandagatla
+
+ .mailmap    | 2 ++
+ MAINTAINERS | 8 ++++----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.1
+
