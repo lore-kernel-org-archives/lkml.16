@@ -1,129 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866572040AF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B2020C471;
 	Thu, 10 Apr 2025 09:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276361; cv=none; b=DJQKs6sTT/8KEkIGe0VYZUQrNWFGzaY40h4VYw5UTQbrQ6haSTT8qS0RJHwsr/ka8EwwIZpQ/rqrMsPiZtmbRgk8Qx6smxJR/PxcyzFbJop+uDVREsZggKGjGkS4X8M+jaHc6ywDDl+4hOTUgPftyFXTL3ugn8OKQTdjsvekn4M=
+	t=1744276362; cv=none; b=GvVYb9aUoru0N2DlYer42lZ/BKGl52Kywlt6BjIdFLhJD5hA+vIc6nzJtci9nc4OWxPtA22Q8iHX8Dmyx8ad7sPV83+bb/TeVF/pooWNrbUw26pJwdMhJXtwYWm9Zm+9qsLOzU/Wazt6yi057W2dDMTq70rqmqjCOysoPD1PWIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276361; c=relaxed/simple;
-	bh=XEDEb02H7yhnwAJt8kqqDs0YKl82XKBm3AvXBZ9V/ZU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=P7mosucH8hCsy6Zmg3qJTezNNufg0pcYnuyMO5GGsGWNsMUjYO1EZ2f/iCY/7c/gwPu+DQ4f6TGiTRtmlfWQFGyzg+3Shqm1moBGwQmydsy7xoN7DGgO7Sglj2ua2wjZk3bnb9095Ymun8sevvMxXb5MTfXAhwxPKzR9Bk/DV+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I5HiH4zL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=st5ZgiRM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744276362; c=relaxed/simple;
+	bh=tnQ5awqGoh+LT3f7BlATG0XmmrwP46na2dkB3wG7XD8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=m4u7FMh7eVBo07yFR/2Qo5W+O9uqeT7+mUl8ukTt5uXM0kryU4hp/lMvhwNhlZAUW9eICb1dnHQX76Oe66N10rcdVbdqZ/OXGSEoNTA+osdR0lnxbH1nSilVhDqMkyojmdPV2DNCWA6ezqTD7XU99Y0fQAmqYILwiAbswE+/ms8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjR3WPGI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I5HiH4zL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="st5ZgiRM"
-Date: Thu, 10 Apr 2025 09:12:32 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744276357;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MrsOnM766mcJyIVGfiSRe1AzIvxf8uix1V5khQwX5kU=;
-	b=I5HiH4zLE7RyLnxB3JZSnSHD4MX54D0xJ+TtRSXwF3kw2j6a8puwLR3tiPFNH7vBSfIF7z
-	bHiYXokwLUyC+XMywg24WluoAL5VdZRPMPIXQ9qpyNK22UFIo/oI9q/Fm8cHeU2t4NxbMc
-	tM14QnO4G1ZJE5VoALSCtjyz80hR/xIpzEzv5OIvpUZTWEfEbRi2mBTRGu0C4JVnH7GQ8B
-	sDX1V399jt6gYu96qtlCgrg9KvqojGiGo0Sw3cHbea6PTxxzsn6JzlmEKLaXU/kGYt1CCN
-	31p3GN3AMT1vu8hb81ybDljEHKAGt5TW0yiXoDHjN2yIFP/FKJ8ezooavbmPqA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744276357;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MrsOnM766mcJyIVGfiSRe1AzIvxf8uix1V5khQwX5kU=;
-	b=st5ZgiRM8NsnXw3EPAo8zH9FMTQHlOPD7H6OGHy55Mr3je4+6v8fSDHca7OxN0fqAMIPL3
-	zDFszqA6b9rVgPCg==
-From: "tip-bot2 for Peng Jiang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] vdso: Address variable shadowing in macros
-Cc: Peng Jiang <jiang.peng9@zte.com.cn>,
- Shao Mingyin <shao.mingyin@zte.com.cn>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250324191230477zpGtgIRSH4mEHdtxGtgx9@zte.com.cn>
-References: <20250324191230477zpGtgIRSH4mEHdtxGtgx9@zte.com.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjR3WPGI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C13C4CEDD;
+	Thu, 10 Apr 2025 09:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744276359;
+	bh=tnQ5awqGoh+LT3f7BlATG0XmmrwP46na2dkB3wG7XD8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=WjR3WPGIQVwwjQNBadceQTL8QQ6HAykIWJ7WP/b4KEgLK96+l+C4C3RIGFv9fIlEY
+	 tB2i5D4I/xaPEqYXsw4JPlNtb6xSztDmoCBVWAnyAOwEPe7Ik68QRRHciWaUYeotcG
+	 lLN6xQ2VRPLTuzW7vvTLNY9ouyGcjm3ShYM+ubgZqH6kitudTHIs0xQLxWc0TQBf46
+	 TTIxFxMdX2NMPaWZmTM402Bo6slKqNVE5Ay08Tkmmo4OO+6UspZ3fHn7Dyv7lydKyD
+	 G2tb5W6Mmrt8B4nxyzxXJ7CUW+4j7VbC1w7qMyhMz32OJa725yOovzEYRIAiCegEf3
+	 wEEKYhzZtI+Dg==
+From: Lee Jones <lee@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rob Herring (Arm)" <robh@kernel.org>, 
+ Markus Elfring <elfring@users.sourceforge.net>, 
+ Jakob Riepler <jakob+lkml@paranoidlabs.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-acpi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
+ linux-usb@vger.kernel.org, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Daniel Scally <djrscally@gmail.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>, 
+ Jonathan Cameron <jic23@kernel.org>
+In-Reply-To: <20250310150835.3139322-1-andriy.shevchenko@linux.intel.com>
+References: <20250310150835.3139322-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 0/4] leds: Introduce and use
+ fwnode_get_child_node_count()
+Message-Id: <174427635578.1663653.5515524063188895904.b4-ty@kernel.org>
+Date: Thu, 10 Apr 2025 10:12:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174427635228.31282.10735746636221422010.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Mon, 10 Mar 2025 16:54:50 +0200, Andy Shevchenko wrote:
+> This series was inspired during review of "Support ROHM BD79124 ADC" [1].
+> The three conversion patches are the examples of the new API in use.
+> 
+> Since the first two examples of LEDS, in case of posotove response it may
+> be routed via that tree and immutable branch/tag shared with others, e.g.,
+> IIO which Matti's series is targeting and might be dependent on. The USB
+> patch can be applied later separately, up to the respective maintainers.
+> 
+> [...]
 
-Commit-ID:     acea9943271b62905033f2f8ca571cdd52d6ea7b
-Gitweb:        https://git.kernel.org/tip/acea9943271b62905033f2f8ca571cdd52d6ea7b
-Author:        Peng Jiang <jiang.peng9@zte.com.cn>
-AuthorDate:    Mon, 24 Mar 2025 19:12:30 +08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 10 Apr 2025 11:07:10 +02:00
+Applied, thanks!
 
-vdso: Address variable shadowing in macros
+[1/4] device property: Split fwnode_get_child_node_count()
+      commit: 1490cbb9dbfd0eabfe45f9b674097aea7e6760fc
+[2/4] leds: pwm-multicolor: Use fwnode_get_child_node_count()
+      commit: 4623cc4e9a5f1b7ad7e6599dfc2a5a4d9d4f5d72
+[3/4] leds: ncp5623: Use fwnode_get_child_node_count()
+      commit: 53762bb44b0659e79a3e3177372e823ec4afcc8a
+[4/4] usb: typec: tcpm: Use fwnode_get_child_node_count()
+      commit: 08ca89e98620c08d68b7e7aed6c9294698e214e1
 
-Compiling the kernel with gcc12.3 W=2 results in shadowing warnings:
+--
+Lee Jones [李琼斯]
 
-warning: declaration of '__pptr' shadows a previous local [-Wshadow]
-  const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);
-
-note: in definition of macro '__put_unaligned_t'
-  __pptr->x = (val);
-
-note: in expansion of macro '__get_unaligned_t'
-  __put_unaligned_t(type, __get_unaligned_t(type, src), dst);
-
-__get_unaligned_t() and __put_unaligned_t() use a local variable named
-'__pptr', which can lead to variable shadowing when these macros are used in
-the same scope. This results in a -Wshadow warning during compilation.
-
-To address this issue, rename the local variables within the macros to
-ensure uniqueness.
-
-Signed-off-by: Peng Jiang <jiang.peng9@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250324191230477zpGtgIRSH4mEHdtxGtgx9@zte.com.cn
----
- include/vdso/unaligned.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/include/vdso/unaligned.h b/include/vdso/unaligned.h
-index eee3d2a..ff0c06b 100644
---- a/include/vdso/unaligned.h
-+++ b/include/vdso/unaligned.h
-@@ -2,14 +2,14 @@
- #ifndef __VDSO_UNALIGNED_H
- #define __VDSO_UNALIGNED_H
- 
--#define __get_unaligned_t(type, ptr) ({						\
--	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
--	__pptr->x;								\
-+#define __get_unaligned_t(type, ptr) ({							\
-+	const struct { type x; } __packed * __get_pptr = (typeof(__get_pptr))(ptr);	\
-+	__get_pptr->x;									\
- })
- 
--#define __put_unaligned_t(type, val, ptr) do {					\
--	struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);		\
--	__pptr->x = (val);							\
-+#define __put_unaligned_t(type, val, ptr) do {						\
-+	struct { type x; } __packed * __put_pptr = (typeof(__put_pptr))(ptr);		\
-+	__put_pptr->x = (val);								\
- } while (0)
- 
- #endif /* __VDSO_UNALIGNED_H */
