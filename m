@@ -1,63 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0493A1C3BEB;
-	Thu, 10 Apr 2025 05:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903F220126A;
+	Thu, 10 Apr 2025 05:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744264742; cv=none; b=CfeeebpdG/oO4SVcKrlIID+HpmDh0htrl98g51iKOCMyJi8aQE6TeLVYxtghF6B3Y0Bg/iCipZVXhNBrvASHPyyN58vAPALSlGm42OuvS28usA0fCK+9NSCbgbnRc8aZ/xKvBBN4WADZPfMNT/DeoVH07zfijYd04jlsSfN3n/I=
+	t=1744264771; cv=none; b=oVomR4dcMJ0mi/4zPRDJwgYZqDg80QnIyL/j5Z3VBwI2DrDn+wx2Rz5PQPzAkletxDuFZ32jgEJVQummWe3PayuJvRRv9srunGYM4QRcmpK1Gw0gQNMvkPhIfqiO0Xg9maihyzCH1OyvOBbzrAggYseGt1jjyPeNFKJE7p9WAMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744264742; c=relaxed/simple;
-	bh=R82zvc4UByRSYaU6yirttXWHx1OZxM0W1b4gSccb2K4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uK/laiZF5c1FPHk3d2fYH3BCYie7Km4gAA+o4QZ6+d1GMEzuXHIQrAxpWXbD4weFKmRHbfRyIt2Oi/qdap4YK6olxm1FAVQmvG1xY5dbAFE4JXw9ToFIoXYjhSMgwb8STNn9tLzfX+qo9a8PPHxXqvvbcFvn6ETZdWBmWmjlBnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITKeJONK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744264771; c=relaxed/simple;
+	bh=fBAweAqVjz59iGfpmbWx6+zYHadAGxFNwXg3jgeoxGw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AQWoE4IWAfXqF7fYfjJui6ArxeDqB3QxE9HgYdUPEbHrbuDwkQEKN+dpfEwebmE7nNnhp1ggpeWLTnfLwElSzgdxM0cM924lt3PioB1++fPrpnzZvEUQQTl0KJPqI4/HCRIYWtprMcxCxGHWljtfjibHcTP8GI6A4O2CB/KOaVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=kmwJe76v; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITKeJONK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BE9C4CEDD;
-	Thu, 10 Apr 2025 05:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744264741;
-	bh=R82zvc4UByRSYaU6yirttXWHx1OZxM0W1b4gSccb2K4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ITKeJONKRdNaKQB6Uid4gIvO4M4EnSlwh7V6RNH9MquMFXzpOSnTTnbqSsBclc7D/
-	 IYMH7Tynx+X/Hgu8TkAkLEYuv0H5qSZQA+7BWncVo+Knb91kAXFxIMiHIzqBVr8FGB
-	 FCYcUqICQfogpq7xfHIYATgEOua7VhomZ5YnukwSEOLDiPEWG1ZPQllG6FFqeB/8cu
-	 wR7ji/Y8ePNDa+OK9jTHMzNSSXrOqXnLPmhfLGzCNO058j8edct/fLOjONC8KiW7G1
-	 wVXDhYDg4TUKhprJI6bLLj4zj2gtFGk+onWukFbVhYGoP7Ztarc9k7FcNM47PG7vI5
-	 Qb8zd0oo2+k3Q==
-Date: Thu, 10 Apr 2025 07:58:58 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Keguang Zhang <keguang.zhang@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	linux-mips@vger.kernel.org, linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] ASoC: dt-bindings: Add Realtek ALC203 Codec
-Message-ID: <20250410-merciful-hypnotic-lorikeet-ee1e28@shite>
-References: <20250409-loongson1-ac97-v2-0-65d5db96a046@gmail.com>
- <20250409-loongson1-ac97-v2-2-65d5db96a046@gmail.com>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="kmwJe76v"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53A5xMRk92946392, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744264762; bh=fBAweAqVjz59iGfpmbWx6+zYHadAGxFNwXg3jgeoxGw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=kmwJe76vP9gpXKIcAiFKqA0JSpY7i7zv+RUBkaUGA4BbRfHDl7OQfk4aJtfQA0JEU
+	 BFjALVdZbFRhdIZbTTaDhg8wKKF4EumTZdHsBvOw/TRtv0l2be1boTjDfnyEWk+LBh
+	 ZiwV5uLYqf/Yr2TR85MKEd+Idtz/2NzAe8an/ftrs8uJ/PViqR5PdYXLTaT5ZQsi9y
+	 l8D6fjWs6DuK6aLUoZcnfDA6JoSMKJz2GlklHYgQnyVRUgCrm+/BwlbEupTUNkqkeG
+	 SSGQer6RNyFxMMXa3T/qaeK3YC37mHYXO1CL4bGfH0txYpnOPjL7LxYd+8YRa58Pe2
+	 uHhbb7BUq2Muw==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53A5xMRk92946392
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 13:59:22 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 10 Apr 2025 13:59:22 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 10 Apr 2025 13:59:21 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Thu, 10 Apr 2025 13:59:21 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC: Zhen XIN <zhen.xin@nokia-sbell.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [RFC -v2] wifi: rtw88: sdio: Tx status for management frames
+Thread-Topic: [RFC -v2] wifi: rtw88: sdio: Tx status for management frames
+Thread-Index: AQHbqQKFFV8iNo+vskOiprOnyfj2d7OcT5Uw//+SRICAAIcU4A==
+Date: Thu, 10 Apr 2025 05:59:21 +0000
+Message-ID: <f790c63eb68d45478662934410c99bf6@realtek.com>
+References: <20250409034910.1637422-1-zhen.xin@nokia-sbell.com>
+ <7f96b6ee57b44626996b70da969219b5@realtek.com>
+ <CAFBinCBHqwhtSAqE8xCoxsgRgHZ1n-zGC6wXo+emAaX6BBkR1A@mail.gmail.com>
+In-Reply-To: <CAFBinCBHqwhtSAqE8xCoxsgRgHZ1n-zGC6wXo+emAaX6BBkR1A@mail.gmail.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250409-loongson1-ac97-v2-2-65d5db96a046@gmail.com>
 
-On Wed, Apr 09, 2025 at 06:29:32PM GMT, Keguang Zhang wrote:
-> Add devicetree binding document for Realtek ALC203 codec.
-> 
-> Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
-> ---
->  .../devicetree/bindings/sound/realtek,alc203.yaml  | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+TWFydGluIEJsdW1lbnN0aW5nbCA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbT4g
+d3JvdGU6DQo+IEhpIFBpbmctS2UsDQo+IA0KPiBPbiBUaHUsIEFwciAxMCwgMjAyNSBhdCA2OjMw
+4oCvQU0gUGluZy1LZSBTaGloIDxwa3NoaWhAcmVhbHRlay5jb20+IHdyb3RlOg0KPiBbLi4uXQ0K
+PiA+ID4gQEAgLTcxOCwxMCArNzE4LDcgQEAgc3RhdGljIHU4IHJ0d19zZGlvX2dldF90eF9xc2Vs
+KHN0cnVjdCBydHdfZGV2ICpydHdkZXYsIHN0cnVjdCBza19idWZmICpza2IsDQo+ID4gPiAgICAg
+ICAgIGNhc2UgUlRXX1RYX1FVRVVFX0gyQzoNCj4gPiA+ICAgICAgICAgICAgICAgICByZXR1cm4g
+VFhfREVTQ19RU0VMX0gyQzsNCj4gPiA+ICAgICAgICAgY2FzZSBSVFdfVFhfUVVFVUVfTUdNVDoN
+Cj4gPiA+IC0gICAgICAgICAgICAgICBpZiAocnR3X2NoaXBfd2NwdV8xMW4ocnR3ZGV2KSkNCj4g
+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBUWF9ERVNDX1FTRUxfSElHSDsNCj4g
+PiA+IC0gICAgICAgICAgICAgICBlbHNlDQo+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICBy
+ZXR1cm4gVFhfREVTQ19RU0VMX01HTVQ7DQo+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIFRY
+X0RFU0NfUVNFTF9NR01UOw0KPiA+DQo+ID4gRG8geW91IHJlbWVtYmVyIHdoeSB5b3UgZGlkIHRo
+ZSBzcGVjaWFsIGRlYWwgd2l0aCAxMW4gY2hpcHM/DQo+ID4gQW5kIHRoaXMgUkZDIGxvb2tzIGdv
+b2QgdG8gbWUuIChleGNlcHQgdG8gY29tbWl0IG1lc3NhZ2UsIGJ1dCB0aGlzIGlzIFJGQykNCj4g
+SSBkb24ndCByZW1lbWJlciAtIGFuZCBKZXJuZWogc2FpZCB0aGUgc2FtZSB0aGluZy4NCj4gSG93
+ZXZlciwgc2luY2Ugd2UgZ290IHRoZSBmaXJzdCA4MDIuMTFuIGhhcmR3YXJlIGZvciB0ZXN0aW5n
+IGxvbmcNCj4gYWZ0ZXIgdGhpcyBwYXJ0IHdhcyB3cml0dGVuIG15IHN1Z2dlc3Rpb24gaXM6IGxl
+dCdzIHJvbGwgdGhpcyBpbnRvIGENCj4gcHJvcGVyIHBhdGNoLCBDYyBGaW9uYSBLbHV0ZSA8Zmlv
+bmEua2x1dGVAZ214LmRlPiAoYXV0aG9yIG9mIFJUTDg3MjNDUw0KPiBzdXBwb3J0KSBvbiB0aGUg
+cmVzdWx0aW5nIHBhdGNoKGVzKSBhbmQgdGhlbiBhcHBseSB0aGUgcGF0Y2hlcw0KPiAoYXNzdW1p
+bmcgbm9ib2R5IG9ic2VydmVzIGFueSBwcm9ibGVtcykuDQo+IA0KPiBUbyBtYWtlIHRoaXMgYSBu
+b24tUkZDIHBhdGNoIHRoZSBmb2xsb3dpbmcgc3RlcHMgYXJlIG5lZWRlZCAoaW4gbXkgb3Bpbmlv
+bik6DQo+IC0gc3BsaXQgdGhlIGNoYW5nZSBpbnRvIHR3byBwYXRjaGVzIChvbmUgd2hpY2ggdW5j
+b25kaXRpb25hbGx5IGNhbGxzDQo+IHJ0d19zZGlvX2luZGljYXRlX3R4X3N0YXR1cygpKQ0KPiAt
+IGFub3RoZXIgb25lIGZvciB0aGUgVFhfREVTQ19RU0VMX01HTVQgbWFwcGluZw0KPiAtIGVhY2gg
+b2YgdGhlIHBhdGNoZXMgc2hvdWxkIGluY2x1ZGUgdGhlaXIgb3duIGRlc2NyaXB0aW9uDQo+IC0g
+SSBjaGVja2VkIHRoZSBoaXN0b3J5IGFuZCBpdCBzZWVtcyB0aGF0IGJvdGggcHJvYmxlbXMgd2Vy
+ZQ0KPiBpbnRyb2R1Y2VkIHdpdGggdGhlIG9yaWdpbmFsIGNvbW1pdCwgbWVhbmluZyBib3RoIHBh
+dGNoZXMgc2hvdWxkIGdldA0KPiB0aGUgZm9sbG93aW5nIGxpbmUgKGFib3ZlIHRoZSBTaWduZWQt
+b2ZmLWJ5KTogRml4ZXM6IDY1MzcxYTNmMTRlNw0KPiAoIndpZmk6IHJ0dzg4OiBzZGlvOiBBZGQg
+SENJIGltcGxlbWVudGF0aW9uIGZvciBTRElPIGJhc2VkIGNoaXBzZXRzIikNCj4gLSAocGx1cyBh
+bnl0aGluZyBQaW5nLUtlIGhhcyB0byBhZGQgOi0pICkNCg0KVGhhdCdzIHN1cGVyIGNsZWFyLiBO
+byBvdGhlciBvcGluaW9uIGZyb20gbWUuICA6LSkNCg0K
