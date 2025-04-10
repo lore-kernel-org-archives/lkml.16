@@ -1,122 +1,124 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8F2F4FA;
-	Thu, 10 Apr 2025 04:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FCB259C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744259437; cv=none; b=BBjZJSXofQEny1Uo81+69mWLfoCwvBJDcNVVGZBwiifqzdUB3GOFVW8OwFYpaAgtO290KZysVodpTPIqUY48iYInXqGsPawxERAE+5u7k3kYwtnRaakUsDcWa6nXDTl4D0jpnfsB12R9V/aeoGD//36YxIEWKxFFZzi4psjbw0M=
+	t=1744259744; cv=none; b=IxQE7BDDNAC2oDK13u5XJ9RTcCoe1SPA6iS9HJIxoHCbDYMZ8ss6ONHci//V6iSgyeUfucG5x5eQktlLnaGeWgJVVlKQNF53ize9kR3J3ZGa2UnUFQ/S6qXhMBb0FilxlOQ847lNPGX/LDHAMnWyBwrs1oeeYGP1U2SEqPFxGxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744259437; c=relaxed/simple;
-	bh=E440f6fp2htax5yG9/sgd0YfZ1XhZwCiqYvFl+2+VzQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aOKjO9cw+AbAJTYjMe6A3Wl4jIVyy/HIeyc6jmuP4SQlyRSXpySZJ/KcVz8WJ1rukycAC/LOVh4UJ6i8uxR8HUho0tKwpzsMRgfJsYz1wFGBX8eTKU+csAQ/o7j8qpGZU28eC2ozwKylnbbaFvw5kTo98xm39n7PsKz7PpkpHfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=XZo0xgCU; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1744259744; c=relaxed/simple;
+	bh=k3nQtqPxjExMSD8p++9caMxEiFdA6QeqiMG5EJwyU1I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nFnGYAI80ouEVj7DZFNI0yvZ3jnDjqiX9o0xIqfhIi4Y5qiOIhv5WxUSloO3x7HfDO8hgHgRgKzUMsVIPE9K24IhjnHWRVtLUGaJtRNV+Qxdzay9vtmAkyTjuQXv5417LHMGsR84jNtAdqoLILrXaibN2o6XucQwI/+l8Z0JdkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JXAnqZ1D; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="XZo0xgCU"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53A4U17d82807889, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744259401; bh=E440f6fp2htax5yG9/sgd0YfZ1XhZwCiqYvFl+2+VzQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=XZo0xgCUNMRusq59HfcCpAZL3D9QSkdmcfXOI+iCKfFICZIu5XG12i7vyHS5mqyNi
-	 o4knh5xxe/eFWa7/B8E5kK0s6RbgWQTiayEqA1xwv2VMkENq1QsJixRILQ74iq1ngy
-	 BdDEM4Xbtb/jyZWThMnRX1AhSf6VTY1f4/jAARwfbQaIFCWGBpCk6dBMuw26VFEbGq
-	 aYr7BifWIOqLCVMPgaV3unTWJ+12gKQP+rvNBoeL0GZOkdHQD6JVAxfF+zKUdRp+f0
-	 g5X9Vpi8H59swPRkwzBv2n+Bais9aNt1KLZ6ttsFUKj+S7ec7pKOIo/r3hgdwAV714
-	 GTEaKbme0GvWA==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53A4U17d82807889
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 12:30:01 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 10 Apr 2025 12:30:01 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 10 Apr 2025 12:30:01 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Thu, 10 Apr 2025 12:30:01 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Zhen XIN <zhen.xin@nokia-sbell.com>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>,
-        "martin.blumenstingl@googlemail.com"
-	<martin.blumenstingl@googlemail.com>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC -v2] wifi: rtw88: sdio: Tx status for management frames
-Thread-Topic: [RFC -v2] wifi: rtw88: sdio: Tx status for management frames
-Thread-Index: AQHbqQKFFV8iNo+vskOiprOnyfj2d7OcT5Uw
-Date: Thu, 10 Apr 2025 04:30:01 +0000
-Message-ID: <7f96b6ee57b44626996b70da969219b5@realtek.com>
-References: <20250409034910.1637422-1-zhen.xin@nokia-sbell.com>
-In-Reply-To: <20250409034910.1637422-1-zhen.xin@nokia-sbell.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JXAnqZ1D"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A3cAcA025403;
+	Thu, 10 Apr 2025 04:35:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=oNbxox
+	IXFi03G457ixhU0NB/7vZzhAE8wUlETbGwixU=; b=JXAnqZ1Ds6r70rD31Evovm
+	XNKPDMx7LvR/zcx09TEqdQTmW8ZDejMkCeosRT/3AXIHF2HIkkOHzcQhecs0Q6LW
+	iUZr0v/ekUhs7zNgFeggUe38EzBrRMin9JEVqQ61knKvuO9sjInI/MzasLGr6z7H
+	nw8x6tj4vQmvn80QJfyCQGnjnBcoTiQsgWdJ9AYzdhBXUbDnhfYzDRW4UHxWaJhp
+	13keOUmbhTy94YCCLDxdvImvhzhjXZHZpqfpSHoH4+bqgwC7UX06wFxLU5zfsXeY
+	vhEP5+kxxxDgal0RtuWbBZESbPsPTJqsl/4SzHjrGauwS9PLgLdkiW+UldVe6lQA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ww2xb7tw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 04:35:33 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53A4Xd6F022893;
+	Thu, 10 Apr 2025 04:35:32 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ww2xb7ts-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 04:35:32 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53A35AXV025510;
+	Thu, 10 Apr 2025 04:35:32 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbm3we4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 04:35:32 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53A4ZVsZ32244358
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 04:35:31 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 56F8358059;
+	Thu, 10 Apr 2025 04:35:31 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AAC0058057;
+	Thu, 10 Apr 2025 04:35:28 +0000 (GMT)
+Received: from [9.39.22.215] (unknown [9.39.22.215])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 10 Apr 2025 04:35:28 +0000 (GMT)
+Message-ID: <2c311511-e6a0-48b7-bbfb-2c28ffcff031@linux.ibm.com>
+Date: Thu, 10 Apr 2025 10:05:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/memblock: Added a New Memblock Function to Check
+ if the Current Node's Memblock Region Intersects with a Memory Block
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
+        Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>
+References: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
+ <20250409192000.d8a630d2c10e902bcdf80973@linux-foundation.org>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <20250409192000.d8a630d2c10e902bcdf80973@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: C70EJX6oeRsm3rhJXUi5QH8wVL5J1_C7
+X-Proofpoint-ORIG-GUID: HMdx_EfvqKEQzeTddXL5Jeg5fxm35fUy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=871 bulkscore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100032
 
-Hi Martin,
 
-Zhen XIN <zhen.xin@nokia-sbell.com> wrote:
-> Rtw88-sdio is missing the tx status report for management frames
->=20
-> Fix this by mapping mgmt frames to queue TX_DESC_QSEL_MGMT
->=20
-> Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
-> ---
-> v2: have the right queue for mgmt frames as pointed out by Bitterblue Smi=
-th
-> ---
->  drivers/net/wireless/realtek/rtw88/sdio.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wire=
-less/realtek/rtw88/sdio.c
-> index e024061bdbf7..4311eb7cffef 100644
-> --- a/drivers/net/wireless/realtek/rtw88/sdio.c
-> +++ b/drivers/net/wireless/realtek/rtw88/sdio.c
-> @@ -718,10 +718,7 @@ static u8 rtw_sdio_get_tx_qsel(struct rtw_dev *rtwde=
-v, struct sk_buff *skb,
->         case RTW_TX_QUEUE_H2C:
->                 return TX_DESC_QSEL_H2C;
->         case RTW_TX_QUEUE_MGMT:
-> -               if (rtw_chip_wcpu_11n(rtwdev))
-> -                       return TX_DESC_QSEL_HIGH;
-> -               else
-> -                       return TX_DESC_QSEL_MGMT;
-> +               return TX_DESC_QSEL_MGMT;
+On 4/10/25 7:50 AM, Andrew Morton wrote:
+> On Wed,  9 Apr 2025 10:57:56 +0530 Donet Tom <donettom@linux.ibm.com> wrote:
+>
+>> A new function, curr_node_memblock_intersect_memory_block, has been
+> "intersects".
+>
+> Because the name is too short ;)
 
-Do you remember why you did the special deal with 11n chips?=20
-And this RFC looks good to me. (except to commit message, but this is RFC)
+Thanks Andrew,
 
->         case RTW_TX_QUEUE_HI0:
->                 return TX_DESC_QSEL_HIGH;
->         default:
-> @@ -1227,10 +1224,7 @@ static void rtw_sdio_process_tx_queue(struct rtw_d=
-ev *rtwdev,
->                 return;
->         }
->=20
-> -       if (queue <=3D RTW_TX_QUEUE_VO)
-> -               rtw_sdio_indicate_tx_status(rtwdev, skb);
-> -       else
-> -               dev_kfree_skb_any(skb);
-> +       rtw_sdio_indicate_tx_status(rtwdev, skb);
->  }
->=20
->  static void rtw_sdio_tx_handler(struct work_struct *work)
-> --
-> 2.25.1
+I will change the name.
 
+>
+>> With this function, the boot time is reduced.
+>>
+>> Boot time without this function - 32TB RAM
+>> ==========================================
+>> Startup finished in 1min 12.413s (kernel)
+>>
+>> Boot time with this function -  32TB RAM
+>> ========================================
+>> Startup finished in 18.031s (kernel)
+> Impressive.  I'll assume this is rppt material.
+>
+>
