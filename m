@@ -1,39 +1,39 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A05A217709;
-	Thu, 10 Apr 2025 09:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1777B217709;
+	Thu, 10 Apr 2025 09:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275793; cv=none; b=bALx483BWj+q6QhntoTIEupYSIe9X0lSKJlxq8jVTG3caU/ldgXZwBQMF+YA3gNfl0cEynmUWN9Tx/FTZ/PvmcKgpKgMzZOgJSsSnsSX1hK31QC1I3GI/XGL7hvpyoqSn77nrdldXUdkxINimxk/vT+Jax29qRWIutNWBkEcxvk=
+	t=1744275798; cv=none; b=GcD3nKyGJyAmx2pS08M3HkQWmXdU94hHCqQjie9DaqkFJjd/yDt2a8oZJrlN+EGzM3z6H8q4J+s1ag4XzO/IKTy5OCwpu4M1C3vIDOIUsQfLQcQvK2fIgzcstm/C+WQUkvvZY5rIlM1Vbt4M5y6lJYfttzIVMxmxv3ncaFbeGf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275793; c=relaxed/simple;
-	bh=WGcuhW+KAcLLBYOhGyFQSkJmUZPVKbn6gP0aZz5do50=;
+	s=arc-20240116; t=1744275798; c=relaxed/simple;
+	bh=NVTqYMlpL1kHyG6DuHOPSHVcpYDd9UnMAavuPXm4BpE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=doD1Jxg+sEWQVzvNW4VrujJ3fyHTHWJrGY+78utVl6CO203QJVVwH8tyBwYJPL9Rg+SwvJXXgnsz7zI2UMUMMgdgiwEp6o/ZEqmNjalM5ipDal67rd0SEYPmGq1pmIWxLYa/mBvIHHssrZxNewy3HCKvXpui9zXH6lVhZauaUoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=iLAOBNDK; arc=none smtp.client-ip=46.19.9.99
+	 MIME-Version; b=chClZd1qG5ECU3B8dlWBJALkV5eOn9HJ5VKVlzNLKwOrguqNMDJ4xS/UzFBshcf/i8+p4TiT3NuMCVP7+5gt0GeB/jShXrCznSTg+A7aH4ImZJT4WVYSa1y3LuEAg3VH8qVf6By9Bs4oAeh1Zwv+2F/D8KDUQUAMTdbXJSmdy/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=XaFk1VEH; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="iLAOBNDK"
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="XaFk1VEH"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
 	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=nKmaXQ3UFu+nSFWbeJhZzch8svzvXdM2x6AWlzQyZ1s=; b=iLAOBNDKuCAZ4fSOF87pM46hHx
-	AKlMfpAF8YT1TKll0/ZqfRUClyyn6faAxaNk+EakbsPEzxG9C9RXdIds4Uo+xlSq4EYN6Y+yWtlJn
-	ztUG+Ln629m4+0T4zl3ZZ4TK0eCltdIiLMc2BLdfH3AysbTVoUrA6P6EHvfH+NwzU+bW0oIOnjlEI
-	pPR0LPQ46CyY8Oc5TGr44AbErU06VT6oRIOIa05wv/kFfQDbMeYD5uefMB/xsnn440DgGw/F55d+p
-	ebOMKPqdjM6if9EjPxVqjang77xfq5E8u+YbQi0S5Dmaw9BQwqbsA6LuYwnJXGmVpJKn5KFyumROK
-	fKnKtLZA==;
+	bh=hIYy9Ke7Cc+eZXigqwPX9MIqwRpMIX8vQUO7IRRYGPs=; b=XaFk1VEH65U7K4dossMGscb1a7
+	Rq0MkXEnrx1UV+tyN74S1y2Zk6Qb/ff7/WsE/TN6h9VoZMECR0Fz0y2XlhZjdAwfHDrqXGX368GK/
+	Y5Ma9uuAP5TjVZmN+wwSPnUSVx1LIbpaLJgtfyOoJgAE2a9uhZin9GUl1K3IptFM5oV9DvFnd7Nfx
+	ufU/c+h4cTvoISInfuET4H1cXTiYKJ7zQuySVi9nYOyQwDm1uRX98lsr3GKaUWZtD86XxvHQTSW7R
+	kMkQr+faPV1vn4yu+8/U3k9uck0HmtsfMW/Fg1H4RINcTrTbqwTPG/+xUS88xVgIkWh+F611bhPDn
+	tAyr5tgg==;
 Received: from [89.212.21.243] (port=41926 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u2noV-000Djj-2B;
-	Thu, 10 Apr 2025 11:03:10 +0200
+	id 1u2noQ-000Djj-11;
+	Thu, 10 Apr 2025 11:03:05 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -47,9 +47,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH 13/13] arm64: dts: freescale: imx93-phyboard-segin: Add EQOS Ethernet
-Date: Thu, 10 Apr 2025 11:02:51 +0200
-Message-Id: <20250410090251.1103979-14-primoz.fiser@norik.com>
+Subject: [PATCH 12/13] arm64: dts: freescale: imx93-phyboard-segin: Add I2S audio
+Date: Thu, 10 Apr 2025 11:02:50 +0200
+Message-Id: <20250410090251.1103979-13-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250410090251.1103979-1-primoz.fiser@norik.com>
 References: <20250410090251.1103979-1-primoz.fiser@norik.com>
@@ -71,68 +71,129 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-Add support for the carrier-board Micrel KSZ8081 Ethernet PHY. This is a
-10/100Mbit PHY connected to the EQOS interface and shares MDIO bus with
-the Ethernet PHY located on the SoM (FEC interface).
+Add support for I2S audio found on phyBOARD-Segin-i.MX93. Audio codec
+TLV320AIC3007 is connected to SAI1 interface as a DAI master. MCLK is
+provided from the SAI's internal audio PLL (19.2 MHz).
 
 Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 ---
- .../dts/freescale/imx93-phyboard-segin.dts    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ .../dts/freescale/imx93-phyboard-segin.dts    | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-index 08574b146400..92f0cb6eca26 100644
+index faad3c3e627c..08574b146400 100644
 --- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
 +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-@@ -91,6 +91,28 @@ dailink_master: simple-audio-card,codec {
+@@ -37,6 +37,20 @@ reg_flexcan1_en: regulator-flexcan1-en {
+ 		regulator-name = "CAN1_EN";
  	};
+ 
++	reg_sound_1v8: regulator-sound-1v8 {
++		compatible = "regulator-fixed";
++		regulator-max-microvolt = <1800000>;
++		regulator-min-microvolt = <1800000>;
++		regulator-name = "VCC1V8_AUDIO";
++	};
++
++	reg_sound_3v3: regulator-sound-3v3 {
++		compatible = "regulator-fixed";
++		regulator-max-microvolt = <3300000>;
++		regulator-min-microvolt = <3300000>;
++		regulator-name = "VCC3V3_ANALOG";
++	};
++
+ 	reg_usdhc2_vmmc: regulator-usdhc2 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -47,6 +61,34 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-name = "VCC_SD";
+ 	};
++
++	sound: sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "phyBOARD-Segin-TLV320AIC3007";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&dailink_master>;
++		simple-audio-card,frame-master = <&dailink_master>;
++		simple-audio-card,widgets =
++			"Line", "Line In",
++			"Line", "Line Out",
++			"Speaker", "Speaker";
++		simple-audio-card,routing =
++			"Line Out", "LLOUT",
++			"Line Out", "RLOUT",
++			"Speaker", "SPOP",
++			"Speaker", "SPOM",
++			"LINE1L", "Line In",
++			"LINE1R", "Line In";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai1>;
++		};
++
++		dailink_master: simple-audio-card,codec {
++			sound-dai = <&audio_codec>;
++			clocks = <&clk IMX93_CLK_SAI1>;
++		};
++	};
  };
  
-+/* Ethernet */
-+&eqos {
+ /* CAN */
+@@ -64,6 +106,18 @@ &lpi2c2 {
+ 	pinctrl-0 = <&pinctrl_lpi2c2>;
+ 	status = "okay";
+ 
++	/* Codec */
++	audio_codec: audio-codec@18 {
++		compatible = "ti,tlv320aic3007";
++		reg = <0x18>;
++		#sound-dai-cells = <0>;
++
++		AVDD-supply = <&reg_sound_3v3>;
++		IOVDD-supply = <&reg_sound_3v3>;
++		DRVDD-supply = <&reg_sound_3v3>;
++		DVDD-supply = <&reg_sound_1v8>;
++	};
++
+ 	/* RTC */
+ 	i2c_rtc: rtc@68 {
+ 		compatible = "microcrystal,rv4162";
+@@ -82,6 +136,17 @@ &lpuart1 {
+ 	status = "okay";
+ };
+ 
++/* Audio */
++&sai1 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_eqos>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy2>;
-+	assigned-clock-parents = <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>,
-+				 <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>;
-+	assigned-clock-rates = <100000000>, <50000000>;
++	pinctrl-0 = <&pinctrl_sai1>;
++	assigned-clocks = <&clk IMX93_CLK_SAI1>;
++	assigned-clock-parents = <&clk IMX93_CLK_AUDIO_PLL>;
++	assigned-clock-rates = <19200000>;
++	fsl,sai-mclk-direction-output;
 +	status = "okay";
 +};
 +
-+&mdio {
-+	ethphy2: ethernet-phy@2 {
-+		compatible = "ethernet-phy-id0022.1561";
-+		reg = <2>;
-+		clocks = <&clk IMX93_CLK_ENET_REF_PHY>;
-+		clock-names = "rmii-ref";
-+		micrel,led-mode = <1>;
-+	};
-+};
-+
- /* CAN */
- &flexcan1 {
- 	pinctrl-names = "default";
-@@ -176,6 +198,19 @@ &usdhc2 {
- };
+ /* USB  */
+ &usbotg1 {
+ 	disable-over-current;
+@@ -150,6 +215,16 @@ MX93_PAD_ENET2_RD2__GPIO4_IO26		0x31e
+ 		>;
+ 	};
  
- &iomuxc {
-+	pinctrl_eqos: eqosgrp {
++	pinctrl_sai1: sai1grp {
 +		fsl,pins = <
-+			MX93_PAD_ENET1_TD2__CCM_ENET_QOS_CLOCK_GENERATE_REF_CLK	0x4000050e
-+			MX93_PAD_ENET1_RD0__ENET_QOS_RGMII_RD0		0x57e
-+			MX93_PAD_ENET1_RD1__ENET_QOS_RGMII_RD1		0x57e
-+			MX93_PAD_ENET1_TD0__ENET_QOS_RGMII_TD0		0x50e
-+			MX93_PAD_ENET1_TD1__ENET_QOS_RGMII_TD1		0x50e
-+			MX93_PAD_ENET1_RX_CTL__ENET_QOS_RGMII_RX_CTL	0x57e
-+			MX93_PAD_ENET1_TX_CTL__ENET_QOS_RGMII_TX_CTL	0x50e
-+			MX93_PAD_ENET1_RXC__ENET_QOS_RX_ER		0x57e
++			MX93_PAD_UART2_RXD__SAI1_MCLK		0x1202
++			MX93_PAD_SAI1_TXFS__SAI1_TX_SYNC	0x1202
++			MX93_PAD_SAI1_TXC__SAI1_TX_BCLK		0x1202
++			MX93_PAD_SAI1_TXD0__SAI1_TX_DATA00	0x1402
++			MX93_PAD_SAI1_RXD0__SAI1_RX_DATA00	0x1402
 +		>;
 +	};
 +
- 	pinctrl_flexcan1: flexcan1grp {
+ 	pinctrl_usdhc2_cd: usdhc2cdgrp {
  		fsl,pins = <
- 			MX93_PAD_PDM_BIT_STREAM0__CAN1_RX	0x139e
+ 			MX93_PAD_SD2_CD_B__GPIO3_IO00		0x31e
 -- 
 2.34.1
 
