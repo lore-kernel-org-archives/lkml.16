@@ -1,77 +1,122 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A3E1F0E20;
-	Thu, 10 Apr 2025 04:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8F2F4FA;
+	Thu, 10 Apr 2025 04:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744259269; cv=none; b=OndSQ6slcrcMy+JrG5cirFPwvqQaV7NJrlI72LQmOzbpgR0mveexl+qgMt++5//oIrb3UHYgfflylMg9bfAMipZI+4iAPi3A9QxhIBiUchNldF29XII8zRC6rN2VC1cUT0QI0mpJsgUE0VBnbrauj/NVZAT+2ylbWVtPftswSEA=
+	t=1744259437; cv=none; b=BBjZJSXofQEny1Uo81+69mWLfoCwvBJDcNVVGZBwiifqzdUB3GOFVW8OwFYpaAgtO290KZysVodpTPIqUY48iYInXqGsPawxERAE+5u7k3kYwtnRaakUsDcWa6nXDTl4D0jpnfsB12R9V/aeoGD//36YxIEWKxFFZzi4psjbw0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744259269; c=relaxed/simple;
-	bh=vfyyGp+v8jqucGJEOF0XejoiO01V1dhCfxvuBODWvpA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rB7B2S2G0/HgG7tJgbSh4HbM/ZQPZALnituB3ZEOWusz/XqqACGuNFBTSWEn/UqzsooIUuQqAUJqxNideXRaYDgC93qWpqpVy4KP0/e7vMmNtGr2T+tgpPCVJ/4IO7Slk59tAPBHO72cDvP9Hz6pv0wKFw6stOld2m0yeYpFoHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=KIbN5dG4; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744259437; c=relaxed/simple;
+	bh=E440f6fp2htax5yG9/sgd0YfZ1XhZwCiqYvFl+2+VzQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aOKjO9cw+AbAJTYjMe6A3Wl4jIVyy/HIeyc6jmuP4SQlyRSXpySZJ/KcVz8WJ1rukycAC/LOVh4UJ6i8uxR8HUho0tKwpzsMRgfJsYz1wFGBX8eTKU+csAQ/o7j8qpGZU28eC2ozwKylnbbaFvw5kTo98xm39n7PsKz7PpkpHfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=XZo0xgCU; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KIbN5dG4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744259268; x=1775795268;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=51j84NperLAndL5LBmwVhbZdXFBL3eij9J5uxzWxhH8=;
-  b=KIbN5dG4v7Lb1Fqet2upJ2JH/l5uP9K7wjaUlShjr8VRipRu8qJnXwON
-   t3BaPRGEn8oCIgVCVb0V0c1Iv4ORm4dpSw+rUY1X6/TICEFkPrwrjEqaa
-   82LlieURCgZB3cqS6/6j48r7DF2TajVtuiyjzGQ1uI1zgSeUsxOQkeNrm
-   U=;
-X-IronPort-AV: E=Sophos;i="6.15,202,1739836800"; 
-   d="scan'208";a="9142601"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 04:27:42 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:35423]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.62.147:2525] with esmtp (Farcaster)
- id 8594f17e-c979-4a89-84f0-810e3544dc3f; Thu, 10 Apr 2025 04:27:41 +0000 (UTC)
-X-Farcaster-Flow-ID: 8594f17e-c979-4a89-84f0-810e3544dc3f
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 10 Apr 2025 04:27:41 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.41) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 10 Apr 2025 04:27:38 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <jlayton@kernel.org>
-CC: <akpm@linux-foundation.org>, <andrew@lunn.ch>, <davem@davemloft.net>,
-	<edumazet@google.com>, <horms@kernel.org>, <kuba@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, Kuniyuki Iwashima <kuniyu@amazon.com>
-Subject: Re: [PATCH v2 1/2] ref_tracker: add a top level debugfs directory for ref_tracker
-Date: Wed, 9 Apr 2025 21:27:27 -0700
-Message-ID: <20250410042729.28604-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250408-netns-debugfs-v2-1-ca267f51461e@kernel.org>
-References: <20250408-netns-debugfs-v2-1-ca267f51461e@kernel.org>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="XZo0xgCU"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53A4U17d82807889, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744259401; bh=E440f6fp2htax5yG9/sgd0YfZ1XhZwCiqYvFl+2+VzQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=XZo0xgCUNMRusq59HfcCpAZL3D9QSkdmcfXOI+iCKfFICZIu5XG12i7vyHS5mqyNi
+	 o4knh5xxe/eFWa7/B8E5kK0s6RbgWQTiayEqA1xwv2VMkENq1QsJixRILQ74iq1ngy
+	 BdDEM4Xbtb/jyZWThMnRX1AhSf6VTY1f4/jAARwfbQaIFCWGBpCk6dBMuw26VFEbGq
+	 aYr7BifWIOqLCVMPgaV3unTWJ+12gKQP+rvNBoeL0GZOkdHQD6JVAxfF+zKUdRp+f0
+	 g5X9Vpi8H59swPRkwzBv2n+Bais9aNt1KLZ6ttsFUKj+S7ec7pKOIo/r3hgdwAV714
+	 GTEaKbme0GvWA==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53A4U17d82807889
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 12:30:01 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 10 Apr 2025 12:30:01 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 10 Apr 2025 12:30:01 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Thu, 10 Apr 2025 12:30:01 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Zhen XIN <zhen.xin@nokia-sbell.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "martin.blumenstingl@googlemail.com"
+	<martin.blumenstingl@googlemail.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC -v2] wifi: rtw88: sdio: Tx status for management frames
+Thread-Topic: [RFC -v2] wifi: rtw88: sdio: Tx status for management frames
+Thread-Index: AQHbqQKFFV8iNo+vskOiprOnyfj2d7OcT5Uw
+Date: Thu, 10 Apr 2025 04:30:01 +0000
+Message-ID: <7f96b6ee57b44626996b70da969219b5@realtek.com>
+References: <20250409034910.1637422-1-zhen.xin@nokia-sbell.com>
+In-Reply-To: <20250409034910.1637422-1-zhen.xin@nokia-sbell.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWB002.ant.amazon.com (10.13.139.188) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 08 Apr 2025 09:36:37 -0400
-> Add a new "ref_tracker" directory in debugfs. Each individual refcount
-> tracker can add a directory or files under there to display info about
-> currently-held references.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Hi Martin,
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Zhen XIN <zhen.xin@nokia-sbell.com> wrote:
+> Rtw88-sdio is missing the tx status report for management frames
+>=20
+> Fix this by mapping mgmt frames to queue TX_DESC_QSEL_MGMT
+>=20
+> Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
+> ---
+> v2: have the right queue for mgmt frames as pointed out by Bitterblue Smi=
+th
+> ---
+>  drivers/net/wireless/realtek/rtw88/sdio.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wire=
+less/realtek/rtw88/sdio.c
+> index e024061bdbf7..4311eb7cffef 100644
+> --- a/drivers/net/wireless/realtek/rtw88/sdio.c
+> +++ b/drivers/net/wireless/realtek/rtw88/sdio.c
+> @@ -718,10 +718,7 @@ static u8 rtw_sdio_get_tx_qsel(struct rtw_dev *rtwde=
+v, struct sk_buff *skb,
+>         case RTW_TX_QUEUE_H2C:
+>                 return TX_DESC_QSEL_H2C;
+>         case RTW_TX_QUEUE_MGMT:
+> -               if (rtw_chip_wcpu_11n(rtwdev))
+> -                       return TX_DESC_QSEL_HIGH;
+> -               else
+> -                       return TX_DESC_QSEL_MGMT;
+> +               return TX_DESC_QSEL_MGMT;
+
+Do you remember why you did the special deal with 11n chips?=20
+And this RFC looks good to me. (except to commit message, but this is RFC)
+
+>         case RTW_TX_QUEUE_HI0:
+>                 return TX_DESC_QSEL_HIGH;
+>         default:
+> @@ -1227,10 +1224,7 @@ static void rtw_sdio_process_tx_queue(struct rtw_d=
+ev *rtwdev,
+>                 return;
+>         }
+>=20
+> -       if (queue <=3D RTW_TX_QUEUE_VO)
+> -               rtw_sdio_indicate_tx_status(rtwdev, skb);
+> -       else
+> -               dev_kfree_skb_any(skb);
+> +       rtw_sdio_indicate_tx_status(rtwdev, skb);
+>  }
+>=20
+>  static void rtw_sdio_tx_handler(struct work_struct *work)
+> --
+> 2.25.1
 
