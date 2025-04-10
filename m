@@ -1,116 +1,115 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86FB280A5E;
-	Thu, 10 Apr 2025 10:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFE92165E9
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744280455; cv=none; b=igPidyvshw1ftALER4pvDZXrS9yFHlgwqWzo4yU4KoWTNRipv/QPF03in2pmv4CTBp049K6rA356NLH/8Ydl0xy5p7anzxk1+HfgQ+QZ6E+9K3DkSUtXSJAb81lG+4jkAnS8lGOeCPGWCZPMr2t2Fc1qE9gtfk84qKPOcxmpBME=
+	t=1744280511; cv=none; b=ifZ9uupLt7ORDqeoCcmDZsSdB2mDCK3ARUqxKPS/RGQHVG4lZrO0UGa3qlTn0UimZJK6ZP8Isq9JsKKy3VQrmFczfyhAJ2rbjyWzBNTh0p1y9pQoJDjonld302ndu9CRPLH6AnPr9oMf4flr6laovu3fT+dR6OoPeg2lhrbl/xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744280455; c=relaxed/simple;
-	bh=1IKsX9rjaHiAEr7/mQDOAhjFE6YbmjKCSxhS3PGU7jE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GYkZwjXxyH4CWlFkPD8UNilFt4LNq+q1HhNOQaNo3OU3W8ylZbOJqKnCfBbfJxt+nk5nAU36OUwaAh29DCiq1J4zjpGhur6wLhAag87MXH3LGOn3FHa/OV5GPqxQpMqZtSPwb8udfQ/laxuXw/c9sx0vTpoyH1O8PoMm4aqHWTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=BpJeU/3i; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1744280511; c=relaxed/simple;
+	bh=UQ1IvRSCRSbhc1Hlr/Yycuqw9SEYIVv6v4trUn6pPIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L2YVwuAfPDbuZfVW0Z9d0zVTaAruE8G1LymDmh3NTk0sokNyiocaZdtUN7IxRaSuigoGTGqQxmaSWJ6C40E3WdherZU2tkQBi9520TlxJ8NRhkRqXocJrckt8H50js648d48ybssyL/MN5B9iJVAyHDVxttWypf2jpOf3F4a7YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKQj9bsw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="BpJeU/3i"
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 000B68A24E8;
-	Thu, 10 Apr 2025 12:20:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1744280444;
-	bh=1IKsX9rjaHiAEr7/mQDOAhjFE6YbmjKCSxhS3PGU7jE=;
-	h=From:Subject:Date;
-	b=BpJeU/3ivkedSnXS2mXJIdZrp+ogpJ1DFVi1ktrokkQ6KrlatdLx2+zO97GGa//tb
-	 RvTITTs4mrDEGZ7FoZaWVWS9SyThpIpciB2QahttghDut4+il8B2HD5//gtHn14RE4
-	 mXAWPLaPL7k2nm3bH4eFTpFVdOgao1pYdqyCtlwxYK/iY60rzSnZctQfywMNLYJ+Qs
-	 ahtYSyLQQ7Y3hQhhEXmuKGpqBGrfy4pb0rsP6bxLtZmeMTHAd21WqBUIGvB3eiItJ+
-	 K15MPTjdXOwPBFIYH336xhsNKsBQXfHG3GGVIaTF4Ri4B0kwQyDO5pGuOIRWAkvWS9
-	 UtqD2rXShht2w==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Sudeep Holla <sudeep.holla@arm.com>, Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH v1] cpufreq: Drop unused cpufreq_get_policy()
-Date: Thu, 10 Apr 2025 12:20:43 +0200
-Message-ID: <2802770.mvXUDI8C0e@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKQj9bsw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D3EC4CEDD;
+	Thu, 10 Apr 2025 10:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744280510;
+	bh=UQ1IvRSCRSbhc1Hlr/Yycuqw9SEYIVv6v4trUn6pPIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sKQj9bswWywx7TJJoaEBwFw4KXtbt4h2DKmnIeM1Di2oNsLsyHlOSJzoMbrcVxsWQ
+	 SJYjzRFc7FRBfbEeTKPs6cIGiIq68v8ntPgssbzdjujQ+ekt4oyTK5vh0SX6qcID3f
+	 87tIuCNOQD0mz7Jho3a+sUGEkGa1jV6XBiZWlvRWWudj9RiFOU84Z3lPEZc8unBPJ4
+	 slRnRW21p4BO2fZwjz84nTysaOmeWRsDw2d4e4HQxvN0ljewplIapkqDSiUjii4Cym
+	 RBxyPxZPNZ+ZbDYZcjiWZS2n4YoYCmK2mLoWGWpTM05El7ZuHBTMyLz6dh00hAtCC/
+	 JqfsAThVg6/Gg==
+Date: Thu, 10 Apr 2025 11:21:46 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	Djordje Todorovic <Djordje.Todorovic@htecgroup.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Aleksandar Rikalo <arikalo@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dragan Mladjenovic <Dragan.Mladjenovic@syrmia.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] Allow for riscv-clock to pick up mmio address.
+Message-ID: <20250410-squeezing-outcast-f717ff17817c@spud>
+References: <20250409143816.15802-1-aleksa.paunovic@htecgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekieehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrghrihhordhlihhmohh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
-
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-A recent change has introduced a bug into cpufreq_get_policy(), but this
-function is not used, so it's better to drop it altogether.
-
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/cpufreq/cpufreq.c |   25 -------------------------
- include/linux/cpufreq.h   |    1 -
- 2 files changed, 26 deletions(-)
-
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2549,31 +2549,6 @@
-  *                          POLICY INTERFACE                         *
-  *********************************************************************/
- 
--/**
-- * cpufreq_get_policy - get the current cpufreq_policy
-- * @policy: struct cpufreq_policy into which the current cpufreq_policy
-- *	is written
-- * @cpu: CPU to find the policy for
-- *
-- * Reads the current cpufreq policy.
-- */
--int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu)
--{
--	struct cpufreq_policy *cpu_policy __free(put_cpufreq_policy);
--
--	if (!policy)
--		return -EINVAL;
--
--	cpu_policy = cpufreq_cpu_get(cpu);
--	if (!cpu_policy)
--		return -EINVAL;
--
--	memcpy(policy, cpu_policy, sizeof(*policy));
--
--	return 0;
--}
--EXPORT_SYMBOL(cpufreq_get_policy);
--
- DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
- 
- /**
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -241,7 +241,6 @@
- 
- u64 get_cpu_idle_time(unsigned int cpu, u64 *wall, int io_busy);
- 
--int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu);
- void refresh_frequency_limits(struct cpufreq_policy *policy);
- void cpufreq_update_policy(unsigned int cpu);
- void cpufreq_update_limits(unsigned int cpu);
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tFc/ze0LDYRx+0Dl"
+Content-Disposition: inline
+In-Reply-To: <20250409143816.15802-1-aleksa.paunovic@htecgroup.com>
 
 
+--tFc/ze0LDYRx+0Dl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 09, 2025 at 02:38:55PM +0000, Aleksa Paunovic wrote:
+> From: Dragan Mladjenovic <Dragan.Mladjenovic@syrmia.com>
+>=20
+> Allows faster rdtime access via GCR.U mtime shadow register on p8700.
+>=20
+> Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+
+> +#if defined(CONFIG_RISCV_TIME_MMIO)
+> +	gcru =3D of_find_compatible_node(NULL, NULL, "mti,p8700-gcru");
+
+Firstly, this is an undocumented compatible, so you'll need to create a
+binding for it before you can use it. Not much to say on the use of the
+compatible in the driver without more information on what the device
+looks like.
+
+Secondly, the option you have added is generically named and described,
+yet only functions on this p8700 platform. At a minimum, it needs to
+explain the platforms where it is relevant, and probably also should
+depend on the kconfig option that enables building a dt etc for the
+p8700 platform in the first place.
+
+Cheers,
+Conor.
+
+> +	if (gcru) {
+> +		if (!of_property_read_u64_index(gcru, "reg", 0, &mmio_addr)) {
+> +			riscv_time_val =3D ioremap((long)mmio_addr, 8);
+> +			if (riscv_time_val) {
+> +				pr_info("Using mmio time register at 0x%llx\n",
+> +					mmio_addr);
+> +				static_branch_enable(
+> +					&riscv_time_mmio_available);
+> +			} else {
+> +				pr_warn("Unable to use mmio time at 0x%llx\n",
+> +					mmio_addr);
+> +			}
+> +			of_node_put(gcru);
+> +		}
+> +	}
+> +#endif
+
+
+--tFc/ze0LDYRx+0Dl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/ebugAKCRB4tDGHoIJi
+0rl/AQDbGzCkjJQEsHIRMxKSPxfqIETRiNCXHm2seBMv2mCWyAD/cx1SfocGoajP
+MnAzkYvx/SxFsY7Ca6bk0h/1fuXEow0=
+=giwb
+-----END PGP SIGNATURE-----
+
+--tFc/ze0LDYRx+0Dl--
