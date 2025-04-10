@@ -1,69 +1,75 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF99520C477;
-	Thu, 10 Apr 2025 08:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F012040A8
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275233; cv=none; b=utRoK4DIRTAwXMSdoXs01zYhMptBHV7v/7zEOxVoWJZ4WOGUA3ly9qvvKpmEQKLXzOUkX8sGOIHFo0bXzdUfL6aUBwRRdPKvMbZL0BzcRGftxlrfb9bQnaw06HJqfLXjqdtLTGcVnSyKHj3rJQToMpb553Y5Li5HOANyoK22BuM=
+	t=1744275257; cv=none; b=C0TJnB94XhD1/gGv6na+m1fxZEg9gLLWHS7RGPzCO4YHVBN+9LdjtJokvVDCXzBMNeVoZGMxf3ndP9Sy534FQ8UbHFhEH8rp13MuMVTf1UFHLZPOY9ongp3XGvBCGoQx7xVGFlS8ULAXWxOBDWNSSRurUyFwXyZsHBXIXy6z/Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275233; c=relaxed/simple;
-	bh=aCop2NCYxYQLVZbOYBztIuutt9Q6fjvbcLrSOou4TUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oQMonWJTCSYCYujD8ygNr2c5B6okpUQPoszjEqHf/7w6Jb8xuT0guL7pXxEFwMytYlYdYVU9fe5VOBjQf6iSAGD1MDdUhaukQzbCE3PimalzuCA/xZypr/e+5scRzNU4DY60wZpJsT7HcBURKBm8+yahCLJJCCkqC+1trTHUno0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sRWlQV6K; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1744275257; c=relaxed/simple;
+	bh=fh9nXzNqsLZ5itZc2vqN1xWzGeGVcQuav9iNBjzmXCM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=uBehQrQNrXa773QIMvS4Wg5eFmYtDm1eHGQrZ5BJ3K7MAgFkvTs9xwuSn9KqskrFZw/6zV3wrzth0u3RKnqmlcVH8m5/3EObw0E0l17JeRhhQbY0b1BJqPTU/gSIkYiXaPt+qJNGn0xrUMHoC+pHuGwosZJ+NBHVAnqiPJ++wP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZTQ7mYO+; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sRWlQV6K"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RtxIxoigqQYXde/ahuxYdBARIf+SRXzUFP+gRfTCt0Q=; b=sRWlQV6KPBAfTa2WehVjjg2P/P
-	BdlO2v11GQovoSXdWZ7/I7opo7BHxICY+Fy6ZBxuQ4KOvJvDC55PtmG1q9BnqQVb7t8Rw7NGZyWIX
-	6KbWYQoBs1m6OH6ZIb4cF7w+eLwbnZvqc+Qz1xApMq5Y2p+hH3/rcyxa8PvmkGxqLrM/87jvV7GIl
-	cXRHqJTFbj8WMVUrSJUQVO4jcnxwS11BnIS/77dxDgt+/IQC6TD6i5yqU2FiezVWAkENCQTaP5LRo
-	nMokkXQev0D0sib3QU/VpKcS0arDC7C8APCAqKDdICycHQJKch3l3WhfAEQEshWeYp4DMGMtuKfGD
-	IMtBiXqw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2nfP-00000009pBY-04nj;
-	Thu, 10 Apr 2025 08:53:47 +0000
-Date: Thu, 10 Apr 2025 01:53:46 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	andrew.cooper3@citrix.com, luto@kernel.org, peterz@infradead.org,
-	chao.gao@intel.com, xin3.li@intel.com
-Subject: Re: [PATCH v4 04/19] x86/cea: Export per CPU array
- 'cea_exception_stacks' for KVM to use
-Message-ID: <Z_eHGjzR33LMqLfL@infradead.org>
-References: <20250328171205.2029296-1-xin@zytor.com>
- <20250328171205.2029296-5-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZTQ7mYO+"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53A8rePL4008269
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 10 Apr 2025 01:53:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53A8rePL4008269
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744275221;
+	bh=fh9nXzNqsLZ5itZc2vqN1xWzGeGVcQuav9iNBjzmXCM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=ZTQ7mYO+0O9TDHs0ntT67KJlIzbHPxwIEkRtElmitHILYbZ2oeNRbI4JC3PuRWw2y
+	 rjSq3CJbaDQAOhXy6pd+Koi2JTuUEc52dDFVUFN0/8lisAsBG/pYRfa/JbdDIch6NR
+	 Ati4eVgNaILqUqNxwyebNyQvZWM3/xKsdpB5J50icfvaKUJBNnwNhAUSOxcqG1iXxW
+	 rjT8BAs5lkwInf+98lW+NPu4lAsHAKT6/Xm9NatHuArudC63QdRnNdeBszf6UnATFU
+	 7qNPo53HGoVFjhKqajh/1KXZG3LLdyQBsWHi4K6Q7FSVGMQwcmQi2158wF0DWOylXF
+	 igXYmUlANM6aw==
+Date: Thu, 10 Apr 2025 01:53:38 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Xin Li <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_06/20=5D_x86/msr=3A_Standardiz?=
+ =?US-ASCII?Q?e_on_=27u32=27_MSR_indices_in_=3Casm/msr=2Eh=3E?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250410074828.GU9833@noisy.programming.kicks-ass.net>
+References: <20250409202907.3419480-1-mingo@kernel.org> <20250409202907.3419480-7-mingo@kernel.org> <aed43a6a-aca9-4c81-af1a-775f5858ebe3@zytor.com> <9c014962-d4cb-4e68-be15-efbe2ea26531@zytor.com> <63ab3ea9-c55d-48d2-8344-fb4314baf240@zytor.com> <3B57B3E5-47C9-4196-AD2B-44916E18B6D0@zytor.com> <3e2a52c5-791a-4e96-a768-8579ec841dd1@zytor.com> <e3d8db6a-dfb9-49d5-8c7f-b4a1d2faf575@zytor.com> <20250410074828.GU9833@noisy.programming.kicks-ass.net>
+Message-ID: <027114D4-AA7D-43E5-A8A0-E57121177517@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328171205.2029296-5-xin@zytor.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 28, 2025 at 10:11:50AM -0700, Xin Li (Intel) wrote:
-> The per CPU array 'cea_exception_stacks' points to per CPU stacks
-> +/*
-> + * FRED introduced new fields in the host-state area of the VMCS for
-> + * stack levels 1->3 (HOST_IA32_FRED_RSP[123]), each respectively
-> + * corresponding to per CPU stacks for #DB, NMI and #DF.  KVM must
-> + * populate these each time a vCPU is loaded onto a CPU.
-> + */
-> +EXPORT_PER_CPU_SYMBOL(cea_exception_stacks);
+On April 10, 2025 12:48:28 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> =
+wrote:
+>On Wed, Apr 09, 2025 at 11:14:12PM -0700, H=2E Peter Anvin wrote:
+>
+>> No, and as you know, I'd like to get rid of the native_ and xen_ functi=
+ons
+>> entirely anyway=2E
+>
+>I have vague memories of locations where we *have* to use native_{rd,wr}m=
+sr()
+>because the paravirt indirections cause problems=2E
+>
+>I don't clearly recall the reasons, but it could be instrumentation
+>related=2E The paravirt muck has tracepoints and other crap included=2E
+>
 
-Exporting data vs accessors for it is usually a bad idea.  Doing a
-non-_GPl for such a very low level data struture is even worse.
-
+Yes, that's part of what we want to get rid of=2E
