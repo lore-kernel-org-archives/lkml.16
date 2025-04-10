@@ -1,136 +1,94 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2641AAA1E;
-	Thu, 10 Apr 2025 16:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E2D1E9B14
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744303925; cv=none; b=sbydFO1yOEXoiIJBJtRqdFsHI+qd5uAZ3A0LrgH0GpT/8OtjQDka+bIMGB7ZoWh1QSbNtQOKUlO9nluLqJas2CHbzuIN+jXW2EulLWOuSzBW4IBEFRlTSli12bcL7szcUauv2TWP6s4cm0WCCo2c2pC/1k98zPYv0vKLlTq4Vq8=
+	t=1744304086; cv=none; b=M8EhMLLrX7RlBH/gq4pr9XWBM6dLlLIbzgWs7hpNqZj03D1x8+5n+EyAMXJ/uvZnGtY16jTGxh92uhnboRKDJO2Q/YwJxq1lxpNH+gayDjP4X2w8L+9TmdOa+MAQaLt/DIciwFhkkt7kFf03cy6nRi/Mu3M8VtQ6flCT8W0jXx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744303925; c=relaxed/simple;
-	bh=h+pmHy2x2qcqGwPMErMQ2GPwatDQxp3usz35PZILRBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HSWSXFtQ64OBtBMzJScRwvoM1PFQb9C+mLP23hoiCRYRSaMQqLj07NK4vdy4qCYmXZe7hClrtPQWuKH/LysPrJ3WLQfLcQQ1uW4n0pU2fN7rDt52cwtdAeg/5vlSD0u4+HVOiVhnmDmYdqNqmD2LjwgAbJteCLHM++mVuOblFgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RAnFP+sa; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744304086; c=relaxed/simple;
+	bh=Ee6x5tc8BzBexUHOmLSNGiIjzP71Y2j5XgfxbUgo0Io=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mqPpBqW5p2fFkeioi0sYpkXtyxhMQvFsvniIgaT0N+PzAC6E0UbSHuCpUzi6d0RbX7TwcAAvHIqD1BGnE+9Lu43VnjEz7MLUqAuMS02eJpRUJ3ibvyU0AVg8pNSzaw+0oJPMXkkgTCzYRHhNSkLHLSvVC89pbho3n+dXEah7Vmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzFPWhbM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RAnFP+sa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EjNA9E6fQoObQrEF9x/xR2bwcpg2cboOt/4jyue8tog=; b=RAnFP+sa8REHwREQhuJs2YHIWN
-	OrZAs12oMxeWbpncHVB29giNb8cyVPFV3+HdAb/cmklF4kTJD8BRqCv4exsJXSKaiW7dMlbUE2hHr
-	6rgi9NFwGz8ahECnVaFqrUK7nZu6YDFwiK+BHj3w1GQ+CEtykNrITzBxkTj4pqJiUfipuZUkHryYk
-	FcoRDUUy751+rhrtNHwqavdxk62n4fXInDOnrKxh3cYuCP8m6EB01JqmoKvbOfJc3bUcP58GoemOM
-	1W4ZmB951GNXPtbhO0Bcpxn93wdKB00fjmkCjI9efyEMQ5M5eQvjPtqEsh9cRwdCtzr+Y2WqmmMYv
-	c2UMaN8A==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2v83-000000039mo-2MIy;
-	Thu, 10 Apr 2025 16:51:51 +0000
-Date: Thu, 10 Apr 2025 17:51:51 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <ptyadav@amazon.de>,
-	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
-	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
-	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
-	saravanak@google.com, skinsburskii@linux.microsoft.com,
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, will@kernel.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
- preservation
-Message-ID: <Z_f3Jyac_o308ws-@casper.infradead.org>
-References: <Z_KnovvW7F2ZyzhX@kernel.org>
- <20250407141626.GB1557073@nvidia.com>
- <Z_P92UCbNCV0TbiA@kernel.org>
- <20250407170305.GI1557073@nvidia.com>
- <Z_Y4k4rDO-BbMjqs@kernel.org>
- <20250409125630.GI1778492@nvidia.com>
- <Z_Z8-BLWMkiWpaDY@kernel.org>
- <20250409153714.GK1778492@nvidia.com>
- <Z_aeEn7hKqGOG3Cf@kernel.org>
- <20250409162837.GN1778492@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzFPWhbM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 190F4C4CEDD;
+	Thu, 10 Apr 2025 16:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744304085;
+	bh=Ee6x5tc8BzBexUHOmLSNGiIjzP71Y2j5XgfxbUgo0Io=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KzFPWhbMdxds5zk5+2/de3vEtvRyrhvD9DMdf9Hx2DOBbmRqVxqEtjp5yzxiEMHjv
+	 GZhspzhBh7WN0mXZWCZnllLsvFivH6u7oqhiJA8INb6fwqiIaJyr43jrP9s9a7b9mE
+	 ZnOwNsHlxIRbgobgdaukMjfeeLzkOdoOzI1ji0AYc2OsK0Vr7OK6O8ckXAK7V2Ntvc
+	 0yeAKPlRjRv1866eEpkXlvH8Kplep9YXF/vzawNBHD6wAsUZxNF62xTirQkKJz0wOn
+	 sr/SdQTj9VaolhwymTDojiBwciKM5Gzdgxdl725sflcTNvaGfZ0dgJKHZXBVeG2HUo
+	 a0fDfKBJxhzYg==
+From: Borislav Petkov <bp@kernel.org>
+To: X86 ML <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Subject: [PATCH] x86/cpufeatures: Clean up formatting
+Date: Thu, 10 Apr 2025 18:54:34 +0200
+Message-ID: <20250410165434.20648-1-bp@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409162837.GN1778492@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 01:28:37PM -0300, Jason Gunthorpe wrote:
-> On Wed, Apr 09, 2025 at 07:19:30PM +0300, Mike Rapoport wrote:
-> > But we have memdesc today, it's struct page.
-> 
-> No, I don't think it is. struct page seems to be turning into
-> something legacy that indicates the code has not been converted to the
-> new stuff yet.
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-No, struct page will be with us for a while.  Possibly forever.  I have
-started reluctantly talking about a future in which there aren't struct
-pages, but it's really premature at this point.  That's a 2030 kind
-of future.
+It is a special file with special formatting so remove one whitespace
+damage and format newer defines like the rest.
 
-For 2025-2029, we will still have alloc_page(s)().  It's just that
-the size of struct page will be gradually shrinking over that time.
+No functional changes.
 
-> > And when the data structure that memdesc points to will be allocated
-> > separately folios won't make sense for order-0 allocations.
-> 
-> At that point the lowest level allocator function will be allocating
-> the memdesc along with the struct page. Then folio will become
-> restricted to only actual folio memdescs and alot of the type punning
-> should go away. We are not there yet.
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/include/asm/cpufeatures.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-We'll have a few allocator functions.  There'll be a slab_alloc(),
-folio_alloc(), pt_alloc() and so on.  I sketched out how these might
-work last year:
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 6c2c152d8a67..6ff634304fb1 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -477,10 +477,10 @@
+ #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control available */
+ #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabled */
+ #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch history at vmexit using SW loop */
+-#define X86_FEATURE_AMD_FAST_CPPC	(21*32 + 5) /* Fast CPPC */
+-#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
+-#define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
+-#define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers due to downclocking */
++#define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
++#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
++#define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classification */
++#define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
+ 
+ /*
+  * BUG word(s)
+@@ -527,10 +527,10 @@
+ #define X86_BUG_TDX_PW_MCE		X86_BUG(31) /* "tdx_pw_mce" CPU may incur #MC if non-TD software does partial write to TDX private memory */
+ 
+ /* BUG word 2 */
+-#define X86_BUG_SRSO			X86_BUG(1*32 + 0) /* "srso" AMD SRSO bug */
+-#define X86_BUG_DIV0			X86_BUG(1*32 + 1) /* "div0" AMD DIV0 speculation bug */
+-#define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* "rfds" CPU is vulnerable to Register File Data Sampling */
+-#define X86_BUG_BHI			X86_BUG(1*32 + 3) /* "bhi" CPU is affected by Branch History Injection */
+-#define X86_BUG_IBPB_NO_RET	   	X86_BUG(1*32 + 4) /* "ibpb_no_ret" IBPB omits return target predictions */
+-#define X86_BUG_SPECTRE_V2_USER		X86_BUG(1*32 + 5) /* "spectre_v2_user" CPU is affected by Spectre variant 2 attack between user processes */
++#define X86_BUG_SRSO			X86_BUG( 1*32+ 0) /* "srso" AMD SRSO bug */
++#define X86_BUG_DIV0			X86_BUG( 1*32+ 1) /* "div0" AMD DIV0 speculation bug */
++#define X86_BUG_RFDS			X86_BUG( 1*32+ 2) /* "rfds" CPU is vulnerable to Register File Data Sampling */
++#define X86_BUG_BHI			X86_BUG( 1*32+ 3) /* "bhi" CPU is affected by Branch History Injection */
++#define X86_BUG_IBPB_NO_RET		X86_BUG( 1*32+ 4) /* "ibpb_no_ret" IBPB omits return target predictions */
++#define X86_BUG_SPECTRE_V2_USER		X86_BUG( 1*32+ 5) /* "spectre_v2_user" CPU is affected by Spectre variant 2 attack between user processes */
+ #endif /* _ASM_X86_CPUFEATURES_H */
+-- 
+2.43.0
 
-https://kernelnewbies.org/MatthewWilcox/FolioAlloc
-
-> > > The lowest allocator primitive returns folios, which can represent any
-> > > order, and the caller casts to their own memdesc.
-> > 
-> > The lowest allocation primitive returns pages. 
-> 
-> Yes, but as I understand things, we should not be calling that
-> interface in new code because we are trying to make 'struct page' go
-> away.
-> 
-> Instead you should use the folio interfaces and cast to your own
-> memdesc, or use an allocator interface that returns void * (ie slab)
-> and never touch the struct page area.
-> 
-> AFAICT, and I just wrote one of these..
-
-Casting is the best you can do today because I haven't provided a better
-interface yet.
-
-> > And I don't think folio will be a lowest primitive buddy returns anytime
-> > soon if ever.
-> 
-> Maybe not internally, but driver facing, I think it should be true.
-> 
-> Like I just completely purged all struct page from the iommu code:
-> 
-> https://lore.kernel.org/linux-iommu/0-v4-c8663abbb606+3f7-iommu_pages_jgg@nvidia.com/
-> 
-> I don't want some weird KHO interface that doesn't align with using
-> __folio_alloc_node() and folio_put() as the lowest level allocator
-> interface.
-
-I think it's fine to say "the KHO interface doesn't support bare pages;
-you must have a memdesc".  But I'm not sure that's the right approach.
