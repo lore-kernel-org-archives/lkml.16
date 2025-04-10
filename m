@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEF7202981;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D0820E032;
 	Thu, 10 Apr 2025 09:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276410; cv=none; b=JRY14yGQurWP618DDVQBgFarUU05vQ4YzjYFSnQVZOacyWqDrfxAuo+r5AWpyrDHhJfMT6BmGfanzyUDeFThtxATMg51gutKirUdacOUTJKA2juG0EownZTWkxKjPKn5OzUNHKPQHdU4L3CuQcPTjlAw2gfInzIDp+IFvGVYzw4=
+	t=1744276410; cv=none; b=CKW8/fsPeLQw8be/udumxH3hED7OYrIZdnEP4EQoGge+Sx+QCEgIBEzBgIIeqqRmcZxGdM3CUaMtuIQY4T4q+WSQNuzSwN5zbBZLzrxZElRJ3rGQOX0Pa1KaIPFehHsPdy2Pq6AqxSqjM3schRR8vKRiKUZCOqRL3A8o+z2AdJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744276410; c=relaxed/simple;
-	bh=5mbHZUyOkQE+s16djS8lUyMoXLxUdkHs1Z/PpZZRfGI=;
+	bh=WyCopkUlDcDG1qNxKVxDfBYC9H+9p2D6lgc0Nk0spUs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=C/LXzqIbgDkJiu8SUa/U9ttB98cf8CATL6snHl5Kme/p707ryUvcBz731+S+UaiupjoQVV3Z0Swt0GPYHMkoN1qxwUK3chPtRRJjB2G/REjW0vWOsDqBxXLu1DQAiWzIpXUKhkKOnJKIJfVPutVGdV8rWsNRvCWmu+6cv0JXONs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5TDlojg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=eqHnoAOMaHPU60LyHa/p/+5q5hmsolTCbU+h+lzOMkUEIc8EGv1/PVkOtfdaRRJxongm958tqxt/VARv5LxCPPvwElm8XgPBAcRwwQKRmlqgBrDT6h+pnxikU+j5DlniVeiPpu8R44UYx0lJOBTYV8GS9C1G1khp1ZF4AvGuNRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tj9HWA3f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5TDlojg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DBBF7C4CEEA;
-	Thu, 10 Apr 2025 09:13:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tj9HWA3f"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0917FC4CEF1;
+	Thu, 10 Apr 2025 09:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744276409;
-	bh=5mbHZUyOkQE+s16djS8lUyMoXLxUdkHs1Z/PpZZRfGI=;
+	s=k20201202; t=1744276410;
+	bh=WyCopkUlDcDG1qNxKVxDfBYC9H+9p2D6lgc0Nk0spUs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=u5TDlojgsvjfuKCdFtAxw+Du2MuQMuUfCwSjH8ClN1JQX0ooMLrQIxy7zdxG6obLD
-	 YQFuvi/lZNwRkD4Y+7vLN/qguzI8sw9ZrhAyFCVzXEBBPVxnC9rGSovQwOUd1GUsS+
-	 SHP1VW0/XbCzi4uXa/UC6Y1SOrYo6m1WOjY6R5KJ1+39+JLnWQl6BFKtQtpmC28yTE
-	 5QDtoEFa37W+7hcwBWjYNQ5J0gefgG0gKs6dqk6yJYpfkTeUFzxgU2Ngc3GiIFzfn9
-	 nI/yQtgxCiIjoNZnL2cAnu3vfEfe4ezSlC407v04hPi/ehySqlo8wn8Qo1OhzxXNh+
-	 Bua93vXnlW7TQ==
+	b=tj9HWA3fWDwnz1R7lf/diWWKO6vvIXAXWxXOtGvTWe67W5I8+ak3SoJqf6cIRRLjg
+	 6BWm0uLcQb+96nG0Wo4h52ho2dw5uekG8C+qVrDFhjXccs29eLLLPEB5ru2Vz8K7aR
+	 hyfkQo9ivnRKOZAdE5aTu5DH9m7I3V2+xBypCPCQS8OzgKUlgD00i8EbH18f5NnVvC
+	 yPvXCBus2gwHq8lOw9v4n4/rF1GKUFWfl35K3lNePemSOOz4nq4nwMip3Vo6fc3gFz
+	 ObUSpF/W0y2lP60rQof7SNam7CHHSldcv2sMQWCIEbuc0tZuKUcWR+1ME3czp8JT5S
+	 q5cxR4p4qcv8Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F04C369A8;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFCDC369A4;
 	Thu, 10 Apr 2025 09:13:29 +0000 (UTC)
 From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Date: Thu, 10 Apr 2025 11:13:23 +0200
-Subject: [PATCH 2/5] arm64: dts: qcom: x1e80100-hp-x14: remove PS8830
- retimer 1 definitions
+Date: Thu, 10 Apr 2025 11:13:25 +0200
+Subject: [PATCH 4/5] arm64: dts: qcom: x1e80100-hp-x14: amend order of
+ nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-hp-x14-v1-2-b4e5ca253ec9@oldschoolsolutions.biz>
+Message-Id: <20250410-hp-x14-v1-4-b4e5ca253ec9@oldschoolsolutions.biz>
 References: <20250410-hp-x14-v1-0-b4e5ca253ec9@oldschoolsolutions.biz>
 In-Reply-To: <20250410-hp-x14-v1-0-b4e5ca253ec9@oldschoolsolutions.biz>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -52,12 +52,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744276408; l=3986;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744276408; l=1222;
  i=jens.glathe@oldschoolsolutions.biz; s=20240919;
  h=from:subject:message-id;
- bh=gzkzB0oshddyiq7sEJIrmq7aS96/xb63mm0Bd2Jq1ks=;
- b=LgM6wSgQGzahGqvqThwNpZIy0HV+MEAbSQ0R5uSDHZsIetbYGTl0fA6EfFgk1odlYLXO5nUiF
- B2iCQmGIJ42A4VF2AYdie3FpaF/cyHFFDnjIS5n8h/c73Dmsg+lkluZ
+ bh=bnPuoslWPgNZvAQ9/Qrw/txzq3JvrErhTj3TzDMEntY=;
+ b=cendNp8aNTxgK/MVR/XYSiVqTW3wlM9zjBkpfTDKn6+cJ4qfzKaaIaZeLTFWd7SNw9oOW+5q/
+ +iVr2tcss/3AZAjzbcmMLdYrQXoCe7IdSVC42jqQXvys3a0Mtui6hfa
 X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
  pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
 X-Endpoint-Received: by B4 Relay for
@@ -67,179 +67,53 @@ Reply-To: jens.glathe@oldschoolsolutions.biz
 
 From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-Clean-up of regulators, i2c definition, pinctrl
+amend the order of pmk8550_* nodes afte pmc8380_*
 
 Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 ---
- .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 134 ---------------------
- 1 file changed, 134 deletions(-)
+ .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-index 27f6b21589704b1767d45763773da4cf9c43c77b..582d4326d5d527d20f99e716349ea0e9c0d35099 100644
+index 6c0e56168eaf133b9500c32b98821fa1fc3e7a2d..b492901f2d8c610e955c95aea60eb6c3d80d4f65 100644
 --- a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
 +++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-@@ -370,54 +370,6 @@ vreg_rtmr0_3p3: regulator-rtmr0-3p3 {
- 		regulator-boot-on;
- 	};
+@@ -1196,17 +1196,6 @@ edp_bl_reg_en: edp-bl-reg-en-state {
  
--	vreg_rtmr1_1p15: regulator-rtmr1-1p15 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "VREG_RTMR1_1P15";
--		regulator-min-microvolt = <1150000>;
--		regulator-max-microvolt = <1150000>;
--
--		gpio = <&tlmm 188 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-0 = <&usb1_pwr_1p15_reg_en>;
--		pinctrl-names = "default";
--
--		regulator-boot-on;
--	};
--
--	vreg_rtmr1_1p8: regulator-rtmr1-1p8 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "VREG_RTMR1_1P8";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--
--		gpio = <&tlmm 175 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-0 = <&usb1_pwr_1p8_reg_en>;
--		pinctrl-names = "default";
--
--		regulator-boot-on;
--	};
--
--	vreg_rtmr1_3p3: regulator-rtmr1-3p3 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "VREG_RTMR1_3P3";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpio = <&tlmm 186 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--
--		pinctrl-0 = <&usb1_pwr_3p3_reg_en>;
--		pinctrl-names = "default";
--
--		regulator-boot-on;
--	};
--
- 	vreg_vph_pwr: regulator-vph-pwr {
- 		compatible = "regulator-fixed";
- 
-@@ -1046,64 +998,6 @@ eusb3_repeater: redriver@47 {
- 	};
  };
  
--&i2c7 {
--	clock-frequency = <400000>;
--
--	status = "okay";
--
--	typec-mux@8 {
--		compatible = "parade,ps8830";
--		reg = <0x8>;
--
--		clocks = <&rpmhcc RPMH_RF_CLK4>;
--
--		vdd-supply = <&vreg_rtmr1_1p15>;
--		vdd33-supply = <&vreg_rtmr1_3p3>;
--		vdd33-cap-supply = <&vreg_rtmr1_3p3>;
--		vddar-supply = <&vreg_rtmr1_1p15>;
--		vddat-supply = <&vreg_rtmr1_1p15>;
--		vddio-supply = <&vreg_rtmr1_1p8>;
--
--		reset-gpios = <&tlmm 176 GPIO_ACTIVE_LOW>;
--
--		pinctrl-0 = <&rtmr1_default>;
--		pinctrl-names = "default";
--
--		orientation-switch;
--		retimer-switch;
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@0 {
--				reg = <0>;
--
--				retimer_ss1_ss_out: endpoint {
--					remote-endpoint = <&pmic_glink_ss1_ss_in>;
--				};
--			};
--
--			port@1 {
--				reg = <1>;
--
--				retimer_ss1_ss_in: endpoint {
--					remote-endpoint = <&usb_1_ss1_qmpphy_out>;
--				};
--			};
--
--			port@2 {
--				reg = <2>;
--
--				retimer_ss1_con_sbu_out: endpoint {
--					remote-endpoint = <&pmic_glink_ss1_con_sbu_in>;
--				};
--			};
--
--		};
+-&pmk8550_gpios {
+-	edp_bl_pwm: edp-bl-pwm-state {
+-		pins = "gpio5";
+-		function = "func3";
 -	};
 -};
 -
- &i2c8 {
- 	clock-frequency = <400000>;
- 
-@@ -1536,13 +1430,6 @@ wake-n-pins {
- 		};
+-&pmk8550_pwm {
+-	status = "okay";
+-};
+-
+ &pmc8380_5_gpios {
+ 	usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
+ 		pins = "gpio8";
+@@ -1218,6 +1207,17 @@ usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
  	};
+ };
  
--	rtmr1_default: rtmr1-reset-n-active-state {
--		pins = "gpio176";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
- 	tpad_default: tpad-default-state {
- 		pins = "gpio3";
- 		function = "gpio";
-@@ -1564,27 +1451,6 @@ reset-n-pins {
- 		};
- 	};
- 
--	usb1_pwr_1p15_reg_en: usb1-pwr-1p15-reg-en-state {
--		pins = "gpio188";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	usb1_pwr_1p8_reg_en: usb1-pwr-1p8-reg-en-state {
--		pins = "gpio175";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
--	usb1_pwr_3p3_reg_en: usb1-pwr-3p3-reg-en-state {
--		pins = "gpio186";
--		function = "gpio";
--		drive-strength = <2>;
--		bias-disable;
--	};
--
- 	usb_1_ss1_sbu_default: usb-1-ss1-sbu-state {
- 		mode-pins {
- 			pins = "gpio177";
++&pmk8550_gpios {
++	edp_bl_pwm: edp-bl-pwm-state {
++		pins = "gpio5";
++		function = "func3";
++	};
++};
++
++&pmk8550_pwm {
++	status = "okay";
++};
++
+ &qupv3_0 {
+ 	status = "okay";
+ };
 
 -- 
 2.48.1
