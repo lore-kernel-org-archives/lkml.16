@@ -1,172 +1,285 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2080.outbound.protection.outlook.com [40.107.102.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18CA1BC5C;
-	Thu, 10 Apr 2025 14:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293846; cv=none; b=XfgUQa4aCi1DEYJdqmDIUCpawskCM60SmdwQFJ5MCndOZacAxEYjzYMMiXQ9B38P9aldMnZHsL5IkaI1yD1Fo5sipp0ad00HPdNMmbCkbb1fp4aQh8fiYnJISRtuFL/1/7fRHkgNNACaqw3azGcsy4iXZSDyxxlLL7+FZZns6jA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293846; c=relaxed/simple;
-	bh=VZtNoCf3M0bCxDHC8D/FIk+anVcQU6h7SXrw27QGv1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZOED31+fwKtAPTErwO5oiSeL2Icboxvf739rpaPWJqWRph2EwgANE0ESci9oXicngvRwug+y/Cbqf7FOYvqbEqxbjuEUqa90W45D+WGzP+R6+VOuqvqIsj3CvuN51bkzERAft4X4TzL71fhGvZy+/CS5CBIaebn+hDA5KK6QAkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=C+FJ+ww3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e621RUxM; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20BB1C174A
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744293870; cv=fail; b=g+ehp9vLYgVCaR0onyQLnU47EO9X+kdXDnbWDTnwjK7TsigGyWxWAFHlCOjFUVqBYAjCJnm9HLcD65PJbOyGLzPfSkUci8Othv3FiZeVUUa+3LuOhlLL82yaJwSU9jPbkOe8HhFvk8RtGTNWg9HcVDIb9t+swiRsldXmvtwYqKA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744293870; c=relaxed/simple;
+	bh=4tbSh75TFq9SKHhN6ESw0wEz8zyM9bK+9UqIBBQlaQE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tDs+qQvEKOPl24PeG28gXHxSSDOC2MxXtoBIkoGR8q8OSCtQm1dUlZt8YEvRv1hWGW+LSTb9rw9u3cA2Y/2jhNrPyd0f+hFrlJDY0GJTmPGNBCo90Ccn4UvN0B2z1VY4YidJKde+vtpZb1lT+plF55cPO3WU6NIEPm7I+ArgZjA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xoltRwEE; arc=fail smtp.client-ip=40.107.102.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="C+FJ+ww3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e621RUxM"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id A87331380159;
-	Thu, 10 Apr 2025 10:04:01 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Thu, 10 Apr 2025 10:04:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1744293841; x=
-	1744380241; bh=kg+ncTFTY0e1tAlwafnt/dQr4xIAVAaQ5+ezMmfWoiQ=; b=C
-	+FJ+ww3czpNOXdQJJkVedN1q+7cFF9aQbuLmGlfSuxwJRlP5VYPYQwCJyTl36Pvv
-	lpkRSchCSZuovSWSoFJumyw6xfDGHSYyxZ9DhffmW9MkoXU2ileCa3XpIEACtv/F
-	hSeOOncxLogY93AIAu682Li1h7sgGnD5jZtUcyiJk3MzoTzjWFKjlns9/sDw5l0f
-	tEDR3UDHlzvW4+v2QP8bzyYXFb91KPuKvy6loPX0JJINzBdcH3C5J4abhCzZoiTZ
-	XLLSmD4Ev/bWT8icjN6fDk7mGMDSx7NnfYKnPSPfkjrZ+ARHJhaJit/hgcVI01fb
-	2uNKxCtJzBSsDb9E43oYA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744293841; x=1744380241; bh=kg+ncTFTY0e1tAlwafnt/dQr4xIAVAaQ5+e
-	zMmfWoiQ=; b=e621RUxMIlhsFmxMUA002Kk5gJknqmUJKTyg90GG/o6n7NRTQb5
-	eJiWYIUZInraz1nYTOBGFi57GaqJPldTrg8OFhd+GU6I3Z+B3fouIrNBQKvCp2bX
-	LZ86W4b3GLq0Sdxbw3W+mdOKwEii4rLDJqlfFl8/wEZq03ynkRpkkp3fpFEnam/k
-	drt2fSLw7V5+ZXspwcegmvlTAC2BAYkb2YqiBDs01bI8xzwjcCzENa4Qhp8PvJBF
-	yyU5LBhF2dz1P7A5CeKz0s7U40NrECfRiX8Wm2kV+Lh13mbYMQLtPnetYyj0J7ja
-	D0TsOwn7TNoMhNHAg5rtotR43LnhT+/2PWw==
-X-ME-Sender: <xms:0M_3Z48v5qmD2qqc5pp7gNPBjHMEJPlQ104yt7tYvl1M_-rgO2bkjA>
-    <xme:0M_3ZwvWhkcJOLGGhu-O5NQSmnWI2SH5CLcTPmMylEc9oAbY9c4ovkeuN-kuIkFDX
-    s9svrucfPnbPG1RSag>
-X-ME-Received: <xmr:0M_3Z-BcO2xmeRLNQGCC4q538p3aepo6BXzKQP675ZDcMZwOsN_uEFtIXzL9>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeludduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
-    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnheptddvhffhhfdugfegvdejfeetuddt
-    tdejteehfeejvdeugeffkefhgfffheeuudffnecuffhomhgrihhnpehgihhthhhusgdrtg
-    homhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehs
-    ugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgspghrtghpthhtohepudelpdhmohguvg
-    epshhmthhpohhuthdprhgtphhtthhopegrnhhtohhnihhosehophgvnhhvphhnrdhnvght
-    pdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-    dprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghp
-    thhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhihrgiirghnoh
-    hvrdhsrdgrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggv
-    vheslhhunhhnrdgthh
-X-ME-Proxy: <xmx:0M_3Z4c3G44RqWAjiT5kQ7RQfFTjIqT2zyYt0s7JMPJV-UwIOmRogg>
-    <xmx:0M_3Z9OyMXRkISBOi16SLG69oV9HGmw1_tof2MWU-GSSdm9CQOwU9A>
-    <xmx:0M_3ZylSPXWgTLxMLFVbChFBMKc7gzmRrIL_VtqYLWVQ775Cdbsdog>
-    <xmx:0M_3Z_tiVsE1CCKDNm-xcqPE5yLAxlm3K3My5fJPitpA773Mm2oNbw>
-    <xmx:0c_3Z-u76LlzOm866oCqvQpwP7PZK1m2tfZbqX7haTnflbdi8_2SKxzs>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 10 Apr 2025 10:04:00 -0400 (EDT)
-Date: Thu, 10 Apr 2025 16:03:57 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
-	steffen.klassert@secunet.com, antony.antony@secunet.com,
-	willemdebruijn.kernel@gmail.com, David Ahern <dsahern@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH net-next v25 00/23] Introducing OpenVPN Data Channel
- Offload
-Message-ID: <Z_fPzdq3PSw1efTW@krikkit>
-References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xoltRwEE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ce72+8JZGQejZ7PebHT8SvZ537/L3VwEkoZ6RrCqUoO4GfPPdBU2dZX5QCGHgIPeqxgiRjFSnLHiav/UEBHneMD9MDlXu9I3Nln9p6e8EmJdIiXLr0FFwzeTbesOFEdLG3zB2eSE92pFJIOWqvQXtIZyIYiIEjvToGu/TErACTFs9FNEjP2+bWx6HfMmIE+NUcMpWu/YaL6DxKxPR/6m9X/LFIJg4fFIwVc+juf1o+aSCj5RAjaA+mTJFa3qxCkQwRt+1T+78ayOTfatfLkPeGOvgaK5/hxqTZ+UjxjJl2or3bHDEpI8CR3tob4qThd+iFE6i8GYLP5G50UdkYJdlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O/qnZvYmfjemIF1gB8PX5EhUjoV4jYVoZ1eu9eT6nvg=;
+ b=a9G8YU+rQpb4JBmcKim5djU2hjkmfxdRCgMEZ6DAQ31Fb010p8GD/CziQ8aLmji0jnJ5OpGV7uC/ero+w0nha6fIsdkLmZYC4/8AjI0oz+eEl1xSoS5yEJ5bMPo07rLZZFwuIxduHDEa8yFzJk8LByvDVSQvdTyssbITjciNpx0FD0kJb/EIYGIavbFrBsgm8dadP73jgfIbYxsTq3eGyn9WHCBDATClqWKCSQGFvrnf84xg92c+6H4YpL9oxArClViDtZc0irSs5gbDZ1i9pqNnU5PfWpynEXLX4CMEf+WZ5rMml3jdC2U4Hj5DxMnX0FvS36WX6bWCoNArSocAfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O/qnZvYmfjemIF1gB8PX5EhUjoV4jYVoZ1eu9eT6nvg=;
+ b=xoltRwEEUawsDXWIu1KASo8Zpe/XFMXkztVSHoBUUU8O+nqAK+851ibIvLU3T8EIZzE27VVzhUv2Hx2omc59h6mj6woGVax1yF5tAOc+8m5jrSjC+dfvgfbo8FcZdStbJpqbB9MWDPsG4UAto8Jq1ZJDr7CsLuL+htUNgvPEMf4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SJ1PR12MB6099.namprd12.prod.outlook.com (2603:10b6:a03:45e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Thu, 10 Apr
+ 2025 14:04:26 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 14:04:26 +0000
+Message-ID: <0f43ad99-27f6-4c1c-915f-2b7163195f07@amd.com>
+Date: Thu, 10 Apr 2025 16:04:18 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] drm/lima: implement the file flush callback
+To: Qiang Yu <yuq825@gmail.com>
+Cc: Erico Nunes <nunes.erico@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250408154637.1637082-1-nunes.erico@gmail.com>
+ <20250408154637.1637082-2-nunes.erico@gmail.com>
+ <CAKGbVbt-Cfp_D3WH3o1Y=UUQzf-sM0uikZXO1MFRxt2P72gjJg@mail.gmail.com>
+ <e24e5e05-5ffd-440f-b9d9-8a0f792cc7c8@amd.com>
+ <CAKGbVbthUxOxtZ+baT=vrNE1u6fzN48K1G5dtZBqfTBc7jEuYA@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <CAKGbVbthUxOxtZ+baT=vrNE1u6fzN48K1G5dtZBqfTBc7jEuYA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR5P281CA0030.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f1::6) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SJ1PR12MB6099:EE_
+X-MS-Office365-Filtering-Correlation-Id: be82869a-7ef6-47d2-f22b-08dd78389a01
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NHJpWnFJa013SllNSmtJTVJ4a0V2TWZweW1XL1lBaFhCdGZBRVY1YmJ1dFlP?=
+ =?utf-8?B?UWRZeFpGVG9odGdDVlU5KzhMV1dHc2ZTWlVBc3dZdUpHOTlXOW5yZm4xZ2lP?=
+ =?utf-8?B?NDRkYzhYTzdWWFNCeXA0dU1mS3Y3T29lVllCUnAxVG5iM3NBbXFIOUlCRkd5?=
+ =?utf-8?B?SHZZdEpqd2Fna0VueUcwVFZjeUdTS2VEeWVqeHhac0gvbktSRFRaTTladyto?=
+ =?utf-8?B?bHY1aHFldjFQWlZtTElLdDRSNXdtdFdzZzhJSFJVWmgwYTFIalVjeDNTWnNI?=
+ =?utf-8?B?TnZiKzdNTWxjYmdmZ2QzSVhQMC8yNnZNM0FwYk9LRW9sNkhPcmVQd1Qrc3hk?=
+ =?utf-8?B?cUF0QUVjRWhucDE4Wm1zTmQ1eC9vaU94ZlJZakVPRmxBcTZjb2I3YzNPYzBW?=
+ =?utf-8?B?TWpMMXNWWFJpa2VhWWM3SEtZdTlaWk0yb2dVbjN1U0k0Z3I1RE00eXhGUU1T?=
+ =?utf-8?B?ZDJHRm53dXUzNXRwUk9SWVZhdVdjWnJyRDJxSDFRbUprZzBaMUVpTkNPVis4?=
+ =?utf-8?B?YUxuT0M0bjdLVmtJVEFTNUtCKzYxbHZQNHdxZTRyaDdRa2JkQXViQ2ZyWitn?=
+ =?utf-8?B?T1ZqazV1Rm96ZXVNMHR6Q2RTTTAyK05VTi9sUTYxV09Kbm9oMURYZ25vUjBS?=
+ =?utf-8?B?T2tsWVpCa3JpY0xONDJhMWxOMXBHeWh3WWcvOFhDZU1TdWZYOTNmSzE0cDIr?=
+ =?utf-8?B?eHlnYUFvMUM5SjlGNktiZTdMRHk2QzhOME81c1FFK04rU05Zc3NXVWU4SjFi?=
+ =?utf-8?B?RmFkLzJIeFptUG5iaHlvSGxuOUNjejE4SHVNR0ZhNkRUMWdFc1kzSnZJY1hx?=
+ =?utf-8?B?QW1Nb0Z1Q2RXT0paVFhtVzFXY3JESllOYjluN1lIeTFRVm5QbWhnaXRGK2Ru?=
+ =?utf-8?B?RnJtNngrM2lYUUh5T2N1NmE1VnBUUTQ0UzQvRUZ5YnZCK3ZOdko0a29aampM?=
+ =?utf-8?B?MWk3YzZjTDBON201WWx0OVJpbGYwRXpTN1Y1ellLbXI4cWtkKzhKek5VMUNG?=
+ =?utf-8?B?Qk11czJML3JrQ1VFM0IzbzRPSTRucGRPVEttTTl2UWJNTDRsTTFGWk1BS3VF?=
+ =?utf-8?B?bEN6Smc3aEk2SVNkRzFzdXM4aExGNm16dHV3MmZScmp6NVdWV3RkSCtVUFpl?=
+ =?utf-8?B?RU9GRjFseUFPVXpUVU8yTGNWakVpVUxpL1k1NGdhNndkOFgvTE81eFl2TmJM?=
+ =?utf-8?B?MlIwSXgxWkQvUlVGRGxpYkxyQTBybTY1NVNmcFZWNmc3ZHo3aE9LbmhmNTFl?=
+ =?utf-8?B?VDdjajZvcytOQWx4OUJxcnNkemowbWlvQVkwMnVNakt2STlPajg1UzdGQmNE?=
+ =?utf-8?B?dElzV1ZURXErRmxCVkVGWHBBcWxaam9BL0lJZVJlMFpzK2JqZm1mdzZ2UUVz?=
+ =?utf-8?B?QUROZW1OWjAzZm43UGVVeWtMZmZTN1B0SmpGSlFUZ2hFYmVFS3hRNHdIcTM4?=
+ =?utf-8?B?eE43TXE3eTdLOVUrZ09PaGdKMDNlWUhtcGJjVzBoWHN6aUpVU0lHVE5adnI5?=
+ =?utf-8?B?ZDAxNFA1N25COEEyaU1seGdKdFh2cDdXWGJCLzVKRHcyTXFzc2o0ZGpVbmFU?=
+ =?utf-8?B?UEhKYmRiYzFUaXUvTGNHalRWUUpnemNkOGhmZWxSMFJiZmtIcUlNODNMTlh6?=
+ =?utf-8?B?YkNMRUJ4YS9xYjdRTVhnUDFNVGQ5Q0RlNm44bEpET3lNUkRvWHM0NDY2UWd5?=
+ =?utf-8?B?bDROTm1ySksrRFlnbzdpek84Yk9yQXU0a05ZbDFNc0k3R2ljL3RSWi9odmhN?=
+ =?utf-8?B?QVhtcDIxd3BITzVSVFVGbFk4eThGeTArZE0xVk1wYkRVODFkbHFTeUJ1Rm5K?=
+ =?utf-8?B?dldyQmdCalkrbHZtanZBSC94TjhIM3FIRHVyVzhpZDg2Unh0dzdiRjduY3h5?=
+ =?utf-8?Q?mWrSscJRNqfrE?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MEE4MWN0Q2p1ZkN1KzdVcFU5VzVZQWQzUTFvUGZqYzFqRnNobkZ0enBHRXFY?=
+ =?utf-8?B?M0FPMGg2WmFzWVNVVkdzNm9kRkFyOU96VnpUN2ttRGNtbWVMOVlESjg4TDUr?=
+ =?utf-8?B?T2FGL2xJdXNGbFN6V3BYTTVyUGNLckNmUGlRNjlzd0RUdmdKcTZqMVl4UytI?=
+ =?utf-8?B?M2pTa2FaK0hEZU5VWGlKSU9WZHFQWVBLbWZQSFBoSGpCSmFBOWtDRGwvOC9B?=
+ =?utf-8?B?aFBweS9PZDlNZ0tNWmNUaFlNaHdvekVTaEJTaVNPaDNPT2lkNFVqN1loSjlS?=
+ =?utf-8?B?ZFN5aVkvdWk3dDJUNTNweGNmSkltbHVKRTdwdUw4RUVoNUFESDY3TmFpVlNo?=
+ =?utf-8?B?c2tTT1JlazlnR1B3RDZ3Mm5LZUdEdUlCdmRRTEt5V0t5V0ZHQVJLYTFxVEtp?=
+ =?utf-8?B?a1hZcDJqQVYyYWFFWURxZXJCWUpZaml5YWZwa1JYc3I2aWpOS1daVjhjQ2Z4?=
+ =?utf-8?B?UWMwWFFwUzFOTGtpK2hIZUF0U3dvbHgxUUJTMWN5UjZIRjdDZTdjbDdleFJo?=
+ =?utf-8?B?SGtDNmdpczNQZTR2VVpYNDBxcU9rSWJrRHppSEZtUk01Q3IxUnowOGxhRVJh?=
+ =?utf-8?B?TE5kL1ZwZ1BzZWxTeXlVTVNRSCtSMVQ4R09XdmNmT3U5VEdZdGhsMzl1ajBh?=
+ =?utf-8?B?Tm56YWZVdFI0WXB6UzRkbCt0ZHZwb2o1OVZFd01FWnlEZ1ZKYTNVdHc5c2pV?=
+ =?utf-8?B?VE9TaHAzR1hQK2RQMGxKNSt3Z2N1THFJTlhFR2VVNmJBcUNvMzFaSU5rb3R0?=
+ =?utf-8?B?dW1NTjVvZ3VvSXZ5WTgvRVFBZXZRVkYzc0F3aEtubm9vNndidWVTMVQrL0Nq?=
+ =?utf-8?B?eFpIRWhEVlB4Nk5LYmNBNkkwV2k5VTl0enh6aVR0eVU0UVEyRWNKTThkY2pJ?=
+ =?utf-8?B?MUlsZWdoWEc4US9Ka0kzb1daeWtWdDJ1VkZVNmRqYnl0SlpxckFGTjZyU0Ra?=
+ =?utf-8?B?Mk5XaERGNUZvaTFjY3FjaldZZnZxcFNiWVVpU3U3SFY1QnRTcU10VFVpQlhp?=
+ =?utf-8?B?ZmxzclV2QlFNaExyUmw4dnErdUNLaUk4R3IwbnNiZUFjRHRlSCt4Y29Uekw4?=
+ =?utf-8?B?VXJYc0V4MHlzVXNaejBRUlkweUhHeTdCakVXY3B3QXZjNUYxSUpLK0RLekY1?=
+ =?utf-8?B?U3ZBNStESmM2dWk4d2dQS3JsQ0ViMlM2ZnhsWGkwQlkyelg1MEZrcjNvVGxK?=
+ =?utf-8?B?aUorenFOcGxlMWh2NXdHRzd1Q2h6RUJ2MXZ1UWFxNk9WcVdlLzBlMVk5VnlX?=
+ =?utf-8?B?ZWovS2hDakZicWc1VHUvbzR2dTE4a28rNjc0NG0xUVFEakk1VGluNlFxdjFx?=
+ =?utf-8?B?REpBdXhzeG9UZWdmd1plam1NQTZ0eVNFUERpKzFENTVYdGV0UXVQbGRQSTVI?=
+ =?utf-8?B?aUoxcVpJUTd3ZzQxQzVvUGVXTStnYkN5VWJzVGFuaHE0SkVTdVQ3MllVNS9Q?=
+ =?utf-8?B?U1V5VWxzOWQwbmhNVWRIZnRhdzRWNmEydG1BQnZvRmdNRDVvRnRrcWtpTnpl?=
+ =?utf-8?B?M2gwQmVkL0xFb1p6bU1xclpIMDgrd1ZaQjBzZlYxdFNpbHNSai9QWTBDYy9x?=
+ =?utf-8?B?cnBkRjh6RGl1Tzg1Mi9lbzFCQUxDVDlOVTQ0MjhjVmdRQ1Iybld5cXE5Q28z?=
+ =?utf-8?B?UmF5Zm5aUUFibjBzYmgvcndsVG9oT1k5eU50RDF1UktzVUVhVmI2WlFrZFVk?=
+ =?utf-8?B?ZVNzME9NWTBxMEdlK05aMlhzYlFEUDFETUpHRDdLenhvOEh0T0FQN29SNjRN?=
+ =?utf-8?B?eHpnd3MyNEpJSzJMVzUrMmJ0eE93cnNWZDJsK1FJQXd2UExpSUJRODA5YytG?=
+ =?utf-8?B?OUtqM1Naa0g3ZkQrNUVTY2ovM1pmVitQbHJzZ0hCM3V5TktYQmJaNmtWRE5u?=
+ =?utf-8?B?V2VUVlFuS2Rsb0c3aU1hbDdXOXdwcmMrSWlOKzlBZWxUWkZYQ212T2hHRlZM?=
+ =?utf-8?B?dGlWcU1HWDRWcW92cDlSaU9raDFIMGdiTDhITVVUWlhSOFpudnRDOUkrcXdE?=
+ =?utf-8?B?ajlROWJJUVBXRWNaS09UaUloNG11MDVhbVloWUpwU1d0cVJzL3ZjUHhEalhQ?=
+ =?utf-8?B?U25xbUhvb3FxNktETk1hMkllK2FHZXdTek95WTZKeEhaeW5QajVoVGliczUr?=
+ =?utf-8?Q?Ild1hJKMjzqg3ZBmc85fLyksr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be82869a-7ef6-47d2-f22b-08dd78389a01
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 14:04:26.0349
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v8CGDy1sObuWg7nfVJuyBmjLOL2WGQt5UguudFb1b7CkTJ4rLRhUjVfIB5F4SrPp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6099
 
-2025-04-07, 21:46:08 +0200, Antonio Quartulli wrote:
-> Notable changes since v24:
-> * disable TCP disconnections of attached sockets (tcp_disconnect()
->   returns -EBUSY) - similarly to kTLS.
-> * used rcu_replace_pointer instead of rcu_dereference_protected+rcu_assign_pointer
-> * dropped useless skb->ignore_df = 1
-> * dropped unneded EXPORT_SYMBOL_GPL(udpv6_prot)
-> * dropped obsolete comment for ovpn_crypto_key_slots_swap()
-> * dropped calls to kfree() in ovpn_aead_encrypt/decrypt() (release is
->   performed in ovpn_encrypt/decrypt_post())
-> * dropped NULL check before calling kfree() in
->   ovpn_encrypt/decrypt_done()
-> * converted seq_num from atomic64_t to atomic_t (IV exhaustion is now
->   detected in case of wrap around)
-> * call consume_skb() on skb when dropping keepalive message (it is not a
->   failure)
-> * made REMOTE_PORT mandatory when REMOTE_IPV4/6 is specified in
->   peer_new/set call
-> * ensured ovpn_nl_key_swap_notify() is called only once, even when
->   parsing a batch of received packets concurrently
-> 
-> Please note that some patches were already reviewed/tested by a few
-> people. These patches have retained the tags as they have hardly been
-> touched.
-> 
-> The latest code can also be found at:
-> 
-> https://github.com/OpenVPN/ovpn-net-next
-> 
-> Thanks a lot!
-> Best Regards,
-> 
-> Antonio Quartulli
-> OpenVPN Inc.
-> 
-> ---
-> Antonio Quartulli (23):
->       net: introduce OpenVPN Data Channel Offload (ovpn)
->       ovpn: add basic netlink support
->       ovpn: add basic interface creation/destruction/management routines
->       ovpn: keep carrier always on for MP interfaces
->       ovpn: introduce the ovpn_peer object
->       ovpn: introduce the ovpn_socket object
->       ovpn: implement basic TX path (UDP)
->       ovpn: implement basic RX path (UDP)
->       ovpn: implement packet processing
->       ovpn: store tunnel and transport statistics
->       ovpn: implement TCP transport
->       skb: implement skb_send_sock_locked_with_flags()
->       ovpn: add support for MSG_NOSIGNAL in tcp_sendmsg
->       ovpn: implement multi-peer support
->       ovpn: implement peer lookup logic
->       ovpn: implement keepalive mechanism
->       ovpn: add support for updating local or remote UDP endpoint
->       ovpn: implement peer add/get/dump/delete via netlink
->       ovpn: implement key add/get/del/swap via netlink
->       ovpn: kill key and notify userspace in case of IV exhaustion
->       ovpn: notify userspace when a peer is deleted
->       ovpn: add basic ethtool support
->       testing/selftests: add test tool and scripts for ovpn module
+Am 10.04.25 um 15:56 schrieb Qiang Yu:
+> On Thu, Apr 10, 2025 at 8:35 PM Christian König
+> <christian.koenig@amd.com> wrote:
+>> Am 10.04.25 um 11:33 schrieb Qiang Yu:
+>>> On Tue, Apr 8, 2025 at 11:48 PM Erico Nunes <nunes.erico@gmail.com> wrote:
+>>>> With this callback implemented, a terminating application will wait for
+>>>> the sched entity to be flushed out to the hardware and cancel all other
+>>>> pending jobs before destroying its context.
+>>> We do flush when file release in lima_ctx_mgr_fini. Why do we wait here
+>>> in flush? What's the difference?
+>> Waiting for submissions when you release the file descriptor is actually a bad idea since that can prevent SIGKILL from acting immediately. For example the OOM killer absolutely doesn't like that and eventually calls panic().
+>>
+>> Flush is called either manually, on process termination or when you send a SIGTERM. This should then wait for any I/O to complete.
+>>
+>> The idea is now that you can then still send a SIGKILL to abort waiting for the I/O as well and so get pending GPU operations not submitted to the HW.
+>>
+>> The DRM scheduler helps doing that by providing the drm_sched_entity_flush() and drm_sched_entity_fini() functions.
+>>
+>> When there is still pending work when drm_sched_entity_fini() is called a callback to kill it is installed and the job just freed instead of executed.
+>>
+> So the difference is we can always wait in flush, but better not in
+> release when SIGKILL?
 
-For the series:
-Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+Exactly that, yes.
 
-Thanks again for your patience, Antonio.
+>
+>>>> This prevents applications with multiple contexts from running into a
+>>>> race condition between running tasks and context destroy when
+>>>> terminating.
+>>>>
+> If implementing flush callback fix the problem, it must not be when SIGKILL.
 
--- 
-Sabrina
+SIGKILL also calls flush (again eventually), but we can detect that in the scheduler code.
+
+See the code and comment in drm_sched_entity_flush(). We could potentially improve the comment cause it's not 100% correct, but it should work under all cases.
+
+> Could you describe the problem and how this fix solves it? As I don't understand
+> how the above difference could fix a race bug.
+
+That was the point I wasn't sure about either. It should *not* fix any race, it's just gives a nicer SIGKILL experience.
+
+Regards,
+Christian.
+
+>
+>>>> Signed-off-by: Erico Nunes <nunes.erico@gmail.com>
+>>>> ---
+>>>>  drivers/gpu/drm/lima/lima_ctx.c | 18 ++++++++++++++++++
+>>>>  drivers/gpu/drm/lima/lima_ctx.h |  1 +
+>>>>  drivers/gpu/drm/lima/lima_drv.c | 17 ++++++++++++++++-
+>>>>  3 files changed, 35 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/lima/lima_ctx.c b/drivers/gpu/drm/lima/lima_ctx.c
+>>>> index 0e668fc1e0f9..e8fb5788ca69 100644
+>>>> --- a/drivers/gpu/drm/lima/lima_ctx.c
+>>>> +++ b/drivers/gpu/drm/lima/lima_ctx.c
+>>>> @@ -100,3 +100,21 @@ void lima_ctx_mgr_fini(struct lima_ctx_mgr *mgr)
+>>>>         xa_destroy(&mgr->handles);
+>>>>         mutex_destroy(&mgr->lock);
+>>>>  }
+>>>> +
+>>>> +long lima_ctx_mgr_flush(struct lima_ctx_mgr *mgr, long timeout)
+>>>> +{
+>>>> +       struct lima_ctx *ctx;
+>>>> +       unsigned long id;
+>>>> +
+>>>> +       mutex_lock(&mgr->lock);
+>>>> +       xa_for_each(&mgr->handles, id, ctx) {
+>>>> +               for (int i = 0; i < lima_pipe_num; i++) {
+>>>> +                       struct lima_sched_context *context = &ctx->context[i];
+>>>> +                       struct drm_sched_entity *entity = &context->base;
+>>>> +
+>>>> +                       timeout = drm_sched_entity_flush(entity, timeout);
+>>>> +               }
+>>>> +       }
+>>>> +       mutex_unlock(&mgr->lock);
+>>>> +       return timeout;
+>>>> +}
+>>>> diff --git a/drivers/gpu/drm/lima/lima_ctx.h b/drivers/gpu/drm/lima/lima_ctx.h
+>>>> index 5b1063ce968b..ff133db6ae4c 100644
+>>>> --- a/drivers/gpu/drm/lima/lima_ctx.h
+>>>> +++ b/drivers/gpu/drm/lima/lima_ctx.h
+>>>> @@ -30,5 +30,6 @@ struct lima_ctx *lima_ctx_get(struct lima_ctx_mgr *mgr, u32 id);
+>>>>  void lima_ctx_put(struct lima_ctx *ctx);
+>>>>  void lima_ctx_mgr_init(struct lima_ctx_mgr *mgr);
+>>>>  void lima_ctx_mgr_fini(struct lima_ctx_mgr *mgr);
+>>>> +long lima_ctx_mgr_flush(struct lima_ctx_mgr *mgr, long timeout);
+>>>>
+>>>>  #endif
+>>>> diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
+>>>> index 11ace5cebf4c..08169b0d9c28 100644
+>>>> --- a/drivers/gpu/drm/lima/lima_drv.c
+>>>> +++ b/drivers/gpu/drm/lima/lima_drv.c
+>>>> @@ -254,7 +254,22 @@ static const struct drm_ioctl_desc lima_drm_driver_ioctls[] = {
+>>>>         DRM_IOCTL_DEF_DRV(LIMA_CTX_FREE, lima_ioctl_ctx_free, DRM_RENDER_ALLOW),
+>>>>  };
+>>>>
+>>>> -DEFINE_DRM_GEM_FOPS(lima_drm_driver_fops);
+>>>> +static int lima_drm_driver_flush(struct file *filp, fl_owner_t id)
+>>>> +{
+>>>> +       struct drm_file *file = filp->private_data;
+>>>> +       struct lima_drm_priv *priv = file->driver_priv;
+>>>> +       long timeout = MAX_WAIT_SCHED_ENTITY_Q_EMPTY;
+>>>> +
+>>>> +       timeout = lima_ctx_mgr_flush(&priv->ctx_mgr, timeout);
+>>>> +
+>>>> +       return timeout >= 0 ? 0 : timeout;
+>>>> +}
+>>>> +
+>>>> +static const struct file_operations lima_drm_driver_fops = {
+>>>> +       .owner = THIS_MODULE,
+>>>> +       .flush = lima_drm_driver_flush,
+>>>> +       DRM_GEM_FOPS,
+>>>> +};
+>>>>
+>>>>  /*
+>>>>   * Changelog:
+>>>> --
+>>>> 2.49.0
+>>>>
+
