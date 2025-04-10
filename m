@@ -1,91 +1,116 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA8A42AA3;
-	Thu, 10 Apr 2025 13:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE0C42AA3;
+	Thu, 10 Apr 2025 13:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291690; cv=none; b=SDLtcUBMn/Dzr3UD8vWBIls33M0rmKY+v4DRBpFlBOIw0TctATTxX+CfUQZXBnxetthWI/zkN07XbjDYoUEWdlr+UQ+6ce40usjK16Phu/MZTWL0S7Z8+8DqWGeroTIfMsfhyrxY0t/At+rixUGJp2pO3wdi96Rbb23NgLe9A68=
+	t=1744291699; cv=none; b=K/tfb1mKGuzXRkl9ALixePfDAH6XSIAiN4TWX725pZuEhSOrHHrw0uZcFznVgZFwTIaCPlR9nBwSCWt8CX66Q/cTkq5uasZCu+1V2jNIzeVW7M+PSXUOiDmVTD/B2/F4BV1GDHMrH6QjIovwbAsfUDDJV60floKDc2MkQHdinfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291690; c=relaxed/simple;
-	bh=VyvWwwz9p2R1aWMTYFuVexXQPTpwodf6/OAv7haJL2E=;
+	s=arc-20240116; t=1744291699; c=relaxed/simple;
+	bh=25WXp4v8nKiw/QuMnvlfgXLqcjF1eNEhl3pKk7QdpQM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=exwX2DKRaPGrMu8epotaBeUHufKbwhjZTVaukzAxaK6raKMuE0HCZoIcN/uqWTi3IDh6KsjrsHrqr9SWDnqibwjhegu9GMjj/sjNcI8ORs1v/KKqw8XX0VFr1eiFci27nxNsTWZdfAUrK83sSAl+lVrutGdjk0MrKEK4rTa4nJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V2YNvNtW; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=MuA+QuUgh/NTu9bQ80kCVH5R3yPthehWoTwCz+9rMFa5EOgFaVAKxOat2Osnzubu+WCRO4dzwW0k1N/7iBzLM2a88xyHUsTdqd7JkLIWesk0L+6yv3wsxXZ+GbCVHTrRDxqzXIJ++VhQg7+C6u+1y6ug1JnIMcaMWjUPDFh0pMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWiuy6XX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2YNvNtW"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af50aa04e07so93043a12.1;
-        Thu, 10 Apr 2025 06:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744291688; x=1744896488; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VyvWwwz9p2R1aWMTYFuVexXQPTpwodf6/OAv7haJL2E=;
-        b=V2YNvNtWFetx6aRhcxlle2M/3wqxZUI1e4kQdEAwWTDKOBOb6h9claDiogJRH9fgGT
-         nv3rNzprcQp2YYvyuk8f90q8MovdkTlPvoo0NBT/ghLrvet0jA3+ssXYXi9u4jhu1Uwp
-         04slLb4FfAiQLhrNjgi9dC9ZkI5v7c61ZcRpwwCbJqIPhqM2eTfbr986YcGYZdx9JhJb
-         OgxhpMIZYcPgXf7dUH9COMIgodmW8o5z6Fx14tw7/0U7ZtwImB01QgQR1qp5aUBxsTpR
-         D8BRabRDjENXYybKhY8c70R5kxmyyaugxS3PDaKODFv0PLZOrl8HXH6Nula+ub9LcBgP
-         AdFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744291688; x=1744896488;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VyvWwwz9p2R1aWMTYFuVexXQPTpwodf6/OAv7haJL2E=;
-        b=dyI8EIF/41AZQVR6hx/s+bXf4htgnXlvWOYW6Xssh1CCNaUtka3oZgKOL+X7DLZmgM
-         lkod6m8b5VNsQCrAjd3JRqG2n8GjbuH0kyWA4xbIHqVKMI8daiG90mIfOtVinCi47QBe
-         ZxlJPbTXihBrKEqI4lcuT19bTywdmBGYt2q22eEOi6gYKMoglrKaVnYqRJXNGxx8z5e/
-         YZZneWQcVxQmcGKJZCVq7CsDykNwETo5bQfAVghoKmpELKiKMwXKUKucdFEEa9GLOo5X
-         0dGr9E/Wh86pysTjcyL/55uP9RD86LaljE3fiHhYqupc6GR1AM9Un9PNXfWHWV8pBA6f
-         2XbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDaHf/8EaEzCLtLK7ez22V8dTNOXs4bfmHOTH7Ni4E0xBuUJSCVi9bbyy5QcCQf5bfiFTBg+qNmBUYIFEAVkw=@vger.kernel.org, AJvYcCXB5/QXtt7Dgy1NUl4y+0wqZEjb6VQkqAU02g5HrWER6LdFAMUt5+PeRLibxkzId4ysM2w8LvEwP+vicY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFDHsxlxsASK/lN+edn9670t/IOG3vH0asj4Mn5caiyx287Zj4
-	AMFJLwfZUFsS+6jj7fDvLG5nQTE7PZybLPLiqnZ5E/9wPPxhj+h86OYmr7fla3DAYPiax1PlBWx
-	qPnJrD0m3uTsLrtvxEEU1LGx0nbM=
-X-Gm-Gg: ASbGnctxvwON8pOuBByRu4hZ5D4WlN8llnFq37uLw6387v/FNh+RTt0z/BY4BHyK/rV
-	hV8GyGVC7/x+uNdDRlZZIWwqHeLu/3EqheUTXeOcVT4nTP+e+E6UZpI19cemuscyoF4VEwawUay
-	f2i3Jpfuu9osY6Gd5gBaJQPg==
-X-Google-Smtp-Source: AGHT+IEulN5R0q/qQJxK+GObYPtHhBGuK8BJ15EfgDoKv9QcjGyt4jgTghwbk2n/61iu6LVdMMBDRC/lvS2dCKHVedA=
-X-Received: by 2002:a17:90b:4b0f:b0:2ff:4b7a:f0a4 with SMTP id
- 98e67ed59e1d1-306dbc1f301mr3695771a91.3.1744291688048; Thu, 10 Apr 2025
- 06:28:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWiuy6XX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A003BC4AF09;
+	Thu, 10 Apr 2025 13:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744291698;
+	bh=25WXp4v8nKiw/QuMnvlfgXLqcjF1eNEhl3pKk7QdpQM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MWiuy6XXpiI9GK9W38RQoneWdJOq7+9Xzyc5UkBDbpuFb9IJkbttdRkullwEAUtwh
+	 p/uRaNvPcYhyjG6vMCAxZ8Ajf4FSEEz/cy3yc8cVkE76bkrSWQN1Lgv5vnSJc+oKCk
+	 WH89fbcAU1RYXJ2G/z7FsSQAO1FSNM5A0x0OkVbcQ3+CP+975tgkJF8wRF2DVYIfsO
+	 mOH3qUXYx++IUv33KsGZ0NlgQLk/JDMWP9sOvZnwv7MGefvLnNP765qbUpfHmNOEvb
+	 b98HmuhX/82ErOsdLBt9wiapcond4Wv2OFrY6wv2ZSsOIebAJUHaG5JI2BAc3WBDSB
+	 EKphKRGy2lF7g==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-549963b5551so1046665e87.2;
+        Thu, 10 Apr 2025 06:28:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXS1eTVmoEKy19/WlKh7OedrlJXVw7slaLKFdPW+5Q0ImBA7LBrnosqTGlwSEleiM47wwiSHeQ6rznneayG@vger.kernel.org, AJvYcCXi2emXbo1CEl4JYyrLlKd1Usn2pLuFnlCvzP9ExICwhCnKzhZGB2r6FMPAYaZwVHu5IUPfbwliLPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywop2ejQniXNQYFZBZuTMaATdlKJmNDaO6yxn0b0HjC7PzCnJZj
+	mUolrNrM1knumc9jMs2mBX/s5QHrSFzy5BmVAIfMkspxJa6AA4Jg3l7EV8a2ruGajIUvPTcvRfK
+	hQ6MjhmUyhiVWDZCUeUMsqevNt3w=
+X-Google-Smtp-Source: AGHT+IGzjVf5L+3C6B0/XJl+1QrtE9NgY/ESWbLWVaM9p1Yk6xhAdpF757Vf6tvHljn/2Oic3MslWiP2yjhaTb6LPgs=
+X-Received: by 2002:a05:6512:6ce:b0:53e:39e6:a1c1 with SMTP id
+ 2adb3069b0e04-54cb687c283mr987936e87.43.1744291697004; Thu, 10 Apr 2025
+ 06:28:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410115420.366349-1-panikiel@google.com> <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
- <20250410124526.GB9833@noisy.programming.kicks-ass.net> <20250410130944.GA9003@noisy.programming.kicks-ass.net>
- <CANiq72=k+tZ3ACEB5k9qwJ8ZYu-dXkA3=Lisg1b8ze-2D0STog@mail.gmail.com> <20250410132649.GE9833@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250410132649.GE9833@noisy.programming.kicks-ass.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 10 Apr 2025 15:27:55 +0200
-X-Gm-Features: ATxdqUGuOKZzeCw6k9G5-shzqA6AEtAJdA4pITJMCpz_r7tSBJ254lpDC8iR48U
-Message-ID: <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
-Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, 
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
+References: <20250404082921.2767593-5-ardb+git@google.com> <20250404082921.2767593-8-ardb+git@google.com>
+ <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
+ <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
+ <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
+ <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
+ <9f689ba2-add6-cca2-e7b3-fa0393fe2b98@amd.com> <CAMj1kXERL=8Y51RUJSqgLWVMs4PJa9aQK0puvKaCpg6eRu0t8g@mail.gmail.com>
+ <a53b3a3f-9fa1-4939-7885-1c06fe31af23@amd.com>
+In-Reply-To: <a53b3a3f-9fa1-4939-7885-1c06fe31af23@amd.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 10 Apr 2025 15:28:05 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEUAaqyySAbpdPsnNsgi=4sHV4DWDOyqMPJBptk_HiF0w@mail.gmail.com>
+X-Gm-Features: ATxdqUF13IuFEVHeJfqMAidwW---qt2JZhGLS0LE_1PuNrsOj9-gmAv66Dn_HlM
+Message-ID: <CAMj1kXEUAaqyySAbpdPsnNsgi=4sHV4DWDOyqMPJBptk_HiF0w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for SEV-SNP
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>, 
+	Kevin Loughlin <kevinloughlin@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 3:26=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Tue, 8 Apr 2025 at 17:53, Tom Lendacky <thomas.lendacky@amd.com> wrote:
 >
-> New compiler can't build old core?
+> On 4/7/25 14:59, Ard Biesheuvel wrote:
+> > On Mon, 7 Apr 2025 at 20:05, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+> >>
+> >> On 4/7/25 04:25, Kirill A. Shutemov wrote:
+> >>> On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
+> >>>> If the GHCB is available, we should always prefer it.
+> >>>
+> >>> I believe we should consider the cost of code duplication in this
+> >>> situation.
+> >>>
+> >>> If the non-early version is only used in the kexec path, it will not be
+> >>> tested as frequently and could be more easily broken. I think it would be
+> >>> acceptable for kexec to be slightly slower if it results in more
+> >>> maintainable code.
+> >>>
+> >>
+> >> Is accept_memory() in the decompressor or efistub only used in the kexec
+> >> path?
+> >>
+> >
+> > The EFI stub does not call accept_memory(), only the decompressor
+> > does. The only use case for explicit memory acceptance in the EFI stub
+>
+> Since EFI stub never uses accept_memory() I looked at moving enablement
+> of SEV to be before the setup of the accepted memory bitmap, as SEV
+> enablement doesn't need any e820 info. But that didn't work because the
+> real issue is early_setup_ghcb() calls set_page_decrypted() which calls
+> set_clr_page_flags(). The latter function is not meant to work with EFI
+> page tables, so there is an incompatibility.
+>
 
-No, that is not intended to work -- `core` is tied to the compiler.
+I would prefer to go into the other direction, and not enable SEV at
+all in the EFI stub. The core kernel will happily enable SEV anyway,
+right?
 
-Cheers,
-Miguel
+> If we had a way to check for whether we are coming through the EFI stub
+> vs the decompressor, then snp_accept_memory() could decide to skip
+> early_setup_ghcb() when called from the EFI stub and call either
+> __snp_accept_memory() from the decompressor or __page_state_change()
+> from the EFI stub (the latter having to be updated to return a value).
+>
+> I think there are other areas that might need investigating because I
+> noticed that efi_warn() is successful before efi_exit_boot_services()
+> but blows up immediately after (possibly in the EFI #VC handler having
+> to do with addressing the string?).
+>
+
+efi_warn() blows up because the console is gone after
+ExitBootServices(). That is not SEV related.
