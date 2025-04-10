@@ -1,104 +1,147 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903F220126A;
-	Thu, 10 Apr 2025 05:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A33120126A;
+	Thu, 10 Apr 2025 05:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744264771; cv=none; b=oVomR4dcMJ0mi/4zPRDJwgYZqDg80QnIyL/j5Z3VBwI2DrDn+wx2Rz5PQPzAkletxDuFZ32jgEJVQummWe3PayuJvRRv9srunGYM4QRcmpK1Gw0gQNMvkPhIfqiO0Xg9maihyzCH1OyvOBbzrAggYseGt1jjyPeNFKJE7p9WAMA=
+	t=1744264787; cv=none; b=RjBP1riUYkAFgX+0qopbC/2l+pmL2U5EXxGBsifmz1/MkN52VDsiTfjAFPpWEDSflsdK+sY2+L8/0/3yLdwugoH+YgO4WqOJmoqtrfEvlos9DDsIA0E0jtJjmekE4N/I4rjC5/FGjKlEvaXoeKGx/qzwVcwuUJZORIJdybAuaT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744264771; c=relaxed/simple;
-	bh=fBAweAqVjz59iGfpmbWx6+zYHadAGxFNwXg3jgeoxGw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=AQWoE4IWAfXqF7fYfjJui6ArxeDqB3QxE9HgYdUPEbHrbuDwkQEKN+dpfEwebmE7nNnhp1ggpeWLTnfLwElSzgdxM0cM924lt3PioB1++fPrpnzZvEUQQTl0KJPqI4/HCRIYWtprMcxCxGHWljtfjibHcTP8GI6A4O2CB/KOaVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=kmwJe76v; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1744264787; c=relaxed/simple;
+	bh=/P5xSpCRAfOD0XXAHrQxCHG4pKoGVTUDn+djWlkwDig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zs8rGr+UF6i1zd3wp27jzzmzEIkdkWl/Pz3AyixE/4sXx24r2qLVcWXvpSlrfjIqFhtyooINnAr8oSDMcKXLCqFPddTpfxDFppamYp4NxlyRf+8GLPEDjxorh3y0JxO9fXSWFtcBRuDjPRjI5QvMPcCkzbwEjZN2qdSoMNkZvEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CIhmcRQt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="kmwJe76v"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53A5xMRk92946392, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744264762; bh=fBAweAqVjz59iGfpmbWx6+zYHadAGxFNwXg3jgeoxGw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=kmwJe76vP9gpXKIcAiFKqA0JSpY7i7zv+RUBkaUGA4BbRfHDl7OQfk4aJtfQA0JEU
-	 BFjALVdZbFRhdIZbTTaDhg8wKKF4EumTZdHsBvOw/TRtv0l2be1boTjDfnyEWk+LBh
-	 ZiwV5uLYqf/Yr2TR85MKEd+Idtz/2NzAe8an/ftrs8uJ/PViqR5PdYXLTaT5ZQsi9y
-	 l8D6fjWs6DuK6aLUoZcnfDA6JoSMKJz2GlklHYgQnyVRUgCrm+/BwlbEupTUNkqkeG
-	 SSGQer6RNyFxMMXa3T/qaeK3YC37mHYXO1CL4bGfH0txYpnOPjL7LxYd+8YRa58Pe2
-	 uHhbb7BUq2Muw==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53A5xMRk92946392
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 13:59:22 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 10 Apr 2025 13:59:22 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 10 Apr 2025 13:59:21 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Thu, 10 Apr 2025 13:59:21 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC: Zhen XIN <zhen.xin@nokia-sbell.com>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [RFC -v2] wifi: rtw88: sdio: Tx status for management frames
-Thread-Topic: [RFC -v2] wifi: rtw88: sdio: Tx status for management frames
-Thread-Index: AQHbqQKFFV8iNo+vskOiprOnyfj2d7OcT5Uw//+SRICAAIcU4A==
-Date: Thu, 10 Apr 2025 05:59:21 +0000
-Message-ID: <f790c63eb68d45478662934410c99bf6@realtek.com>
-References: <20250409034910.1637422-1-zhen.xin@nokia-sbell.com>
- <7f96b6ee57b44626996b70da969219b5@realtek.com>
- <CAFBinCBHqwhtSAqE8xCoxsgRgHZ1n-zGC6wXo+emAaX6BBkR1A@mail.gmail.com>
-In-Reply-To: <CAFBinCBHqwhtSAqE8xCoxsgRgHZ1n-zGC6wXo+emAaX6BBkR1A@mail.gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CIhmcRQt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4E8AC4CEDD;
+	Thu, 10 Apr 2025 05:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744264786;
+	bh=/P5xSpCRAfOD0XXAHrQxCHG4pKoGVTUDn+djWlkwDig=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CIhmcRQtnWkOrFSUV9uft9yfJqRPBHkJxbMCvbI4zrLHANa3mequ94T9sDjUSFcf9
+	 i6lsqLa4QuyCkmPhP5+kEmYJfAGqFK8CwGy9Etthbju59yllM86ROdUB5qE6T1rEa/
+	 XEmXJ/C9bph/AcY9mVYF2s9wgohXKuwpB3E3Cd2W3RCmkxfBnfrjzvqD8kBq5wE/aX
+	 dqJ6Rk+pvF9luiMNQIz7wCoeWuhZtHP01R6moUR+LtQVOdIojqEVdAXZzFl0ku9hu2
+	 TSdL25o8F/X3d+LSroHNHoa1Vozw7nP8aQ7qXPXqUSyuUVa2PSuPyYQptlwyIxK7EP
+	 GbqdTDevgLVlQ==
+Message-ID: <ae773340-c763-404e-a958-8c1b23c3adce@kernel.org>
+Date: Thu, 10 Apr 2025 07:59:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: thead,th1520: Add clocks
+ and resets
+To: Michal Wilczynski <m.wilczynski@samsung.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org,
+ wefu@redhat.com, ulf.hansson@linaro.org, p.zabel@pengutronix.de,
+ m.szyprowski@samsung.com
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-pm@vger.kernel.org
+References: <20250409093025.2917087-1-m.wilczynski@samsung.com>
+ <CGME20250409093031eucas1p2222e9dc4d354e9b66b7183922c0fb3cf@eucas1p2.samsung.com>
+ <20250409093025.2917087-2-m.wilczynski@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250409093025.2917087-2-m.wilczynski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-TWFydGluIEJsdW1lbnN0aW5nbCA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbT4g
-d3JvdGU6DQo+IEhpIFBpbmctS2UsDQo+IA0KPiBPbiBUaHUsIEFwciAxMCwgMjAyNSBhdCA2OjMw
-4oCvQU0gUGluZy1LZSBTaGloIDxwa3NoaWhAcmVhbHRlay5jb20+IHdyb3RlOg0KPiBbLi4uXQ0K
-PiA+ID4gQEAgLTcxOCwxMCArNzE4LDcgQEAgc3RhdGljIHU4IHJ0d19zZGlvX2dldF90eF9xc2Vs
-KHN0cnVjdCBydHdfZGV2ICpydHdkZXYsIHN0cnVjdCBza19idWZmICpza2IsDQo+ID4gPiAgICAg
-ICAgIGNhc2UgUlRXX1RYX1FVRVVFX0gyQzoNCj4gPiA+ICAgICAgICAgICAgICAgICByZXR1cm4g
-VFhfREVTQ19RU0VMX0gyQzsNCj4gPiA+ICAgICAgICAgY2FzZSBSVFdfVFhfUVVFVUVfTUdNVDoN
-Cj4gPiA+IC0gICAgICAgICAgICAgICBpZiAocnR3X2NoaXBfd2NwdV8xMW4ocnR3ZGV2KSkNCj4g
-PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBUWF9ERVNDX1FTRUxfSElHSDsNCj4g
-PiA+IC0gICAgICAgICAgICAgICBlbHNlDQo+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICBy
-ZXR1cm4gVFhfREVTQ19RU0VMX01HTVQ7DQo+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIFRY
-X0RFU0NfUVNFTF9NR01UOw0KPiA+DQo+ID4gRG8geW91IHJlbWVtYmVyIHdoeSB5b3UgZGlkIHRo
-ZSBzcGVjaWFsIGRlYWwgd2l0aCAxMW4gY2hpcHM/DQo+ID4gQW5kIHRoaXMgUkZDIGxvb2tzIGdv
-b2QgdG8gbWUuIChleGNlcHQgdG8gY29tbWl0IG1lc3NhZ2UsIGJ1dCB0aGlzIGlzIFJGQykNCj4g
-SSBkb24ndCByZW1lbWJlciAtIGFuZCBKZXJuZWogc2FpZCB0aGUgc2FtZSB0aGluZy4NCj4gSG93
-ZXZlciwgc2luY2Ugd2UgZ290IHRoZSBmaXJzdCA4MDIuMTFuIGhhcmR3YXJlIGZvciB0ZXN0aW5n
-IGxvbmcNCj4gYWZ0ZXIgdGhpcyBwYXJ0IHdhcyB3cml0dGVuIG15IHN1Z2dlc3Rpb24gaXM6IGxl
-dCdzIHJvbGwgdGhpcyBpbnRvIGENCj4gcHJvcGVyIHBhdGNoLCBDYyBGaW9uYSBLbHV0ZSA8Zmlv
-bmEua2x1dGVAZ214LmRlPiAoYXV0aG9yIG9mIFJUTDg3MjNDUw0KPiBzdXBwb3J0KSBvbiB0aGUg
-cmVzdWx0aW5nIHBhdGNoKGVzKSBhbmQgdGhlbiBhcHBseSB0aGUgcGF0Y2hlcw0KPiAoYXNzdW1p
-bmcgbm9ib2R5IG9ic2VydmVzIGFueSBwcm9ibGVtcykuDQo+IA0KPiBUbyBtYWtlIHRoaXMgYSBu
-b24tUkZDIHBhdGNoIHRoZSBmb2xsb3dpbmcgc3RlcHMgYXJlIG5lZWRlZCAoaW4gbXkgb3Bpbmlv
-bik6DQo+IC0gc3BsaXQgdGhlIGNoYW5nZSBpbnRvIHR3byBwYXRjaGVzIChvbmUgd2hpY2ggdW5j
-b25kaXRpb25hbGx5IGNhbGxzDQo+IHJ0d19zZGlvX2luZGljYXRlX3R4X3N0YXR1cygpKQ0KPiAt
-IGFub3RoZXIgb25lIGZvciB0aGUgVFhfREVTQ19RU0VMX01HTVQgbWFwcGluZw0KPiAtIGVhY2gg
-b2YgdGhlIHBhdGNoZXMgc2hvdWxkIGluY2x1ZGUgdGhlaXIgb3duIGRlc2NyaXB0aW9uDQo+IC0g
-SSBjaGVja2VkIHRoZSBoaXN0b3J5IGFuZCBpdCBzZWVtcyB0aGF0IGJvdGggcHJvYmxlbXMgd2Vy
-ZQ0KPiBpbnRyb2R1Y2VkIHdpdGggdGhlIG9yaWdpbmFsIGNvbW1pdCwgbWVhbmluZyBib3RoIHBh
-dGNoZXMgc2hvdWxkIGdldA0KPiB0aGUgZm9sbG93aW5nIGxpbmUgKGFib3ZlIHRoZSBTaWduZWQt
-b2ZmLWJ5KTogRml4ZXM6IDY1MzcxYTNmMTRlNw0KPiAoIndpZmk6IHJ0dzg4OiBzZGlvOiBBZGQg
-SENJIGltcGxlbWVudGF0aW9uIGZvciBTRElPIGJhc2VkIGNoaXBzZXRzIikNCj4gLSAocGx1cyBh
-bnl0aGluZyBQaW5nLUtlIGhhcyB0byBhZGQgOi0pICkNCg0KVGhhdCdzIHN1cGVyIGNsZWFyLiBO
-byBvdGhlciBvcGluaW9uIGZyb20gbWUuICA6LSkNCg0K
+On 09/04/2025 11:30, Michal Wilczynski wrote:
+> Prepare for handling GPU clock and reset sequencing through a generic
+> power domain by adding clock and reset properties to the TH1520 AON
+> firmware bindings.
+> 
+> The T-HEAD TH1520 GPU requires coordinated management of two clocks
+> (core and sys) and two resets (GPU and GPU CLKGEN). Due to SoC-specific
+> requirements, the CLKGEN reset must be carefully managed alongside clock
+> enables to ensure proper GPU operation, as discussed on the mailing list
+> [1].
+> 
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
+
+Please kindly resend and include all necessary To/Cc entries.
+</form letter><form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
+
+Please kindly resend and include all necessary To/Cc entries.
+</form letter>
+Best regards,
+Krzysztof
