@@ -1,61 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6323C1EDA29;
-	Thu, 10 Apr 2025 17:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1E34503B
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307395; cv=none; b=ioTcpIqHIqqydZMD2AUrtBteOjYOj6NzVGNQ7pki6ASleWGDZZq3bxKHUfqtqLOPmU2GomjcQn84y5eFcatYefs4W8VzwjEV8Lej40KPBDjavshBfnbxnSH2RRqmaTcnOyLwXFEgk94geLhMHGRksJXdrH+0nM+VRDP80wT+tzU=
+	t=1744307417; cv=none; b=far8KFJ+CoEz/OKYjlVOdNfcbfmfYMicvCdybewpFZkMiqPi59dKmKyM2VC36XswEG/txyPl12PgrKiyaAcStmfb7MyuLcMIMq+F5KCKGOUlwMQ26/ctXpxjmEegTN2w5Q+qZiGXw7m18kA1CUDfy1iikY6SjNmXG/8YPXDM9lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307395; c=relaxed/simple;
-	bh=BSlBou70rdYI1WqIexajKvsgOgYusvRJvdttvr8R6Ww=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XCxj03/rWK7nQhpSNwrhMAMb/fhMboFwZrOX7wRm/NPXnl54WJQRDiSkqU6dMEKCe/Vh1em6Ya/iy92Kvdp/ryh0DpC0JjbTyZlB2oSPms+C+zSZFUFccX504VmH6WN4F1dhAPDqaCQs0gp0hmLZtUVOEK8RjD5PeWL4IT+BmKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AVvUzMUD; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744307417; c=relaxed/simple;
+	bh=lY9Y1px5P/T0puiH7BaGtKHUBDN6WoqTLWKxNXRuM/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XqYIxjcg+IaBiiVtpddmPP7QrmBFUYRumUibdL8Wxf80fskQFbfoLdn20OkJDZiWd3JXQ23cmT2oN2fE3gqirCZF9BxPph7xtX0UXIjqvTwsECsXEXwOXen9zGTYMCgRcTRowGnHsZQBDvjNp6gntPPrKZIZdK/O5o3buv5ot1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kkphNOJk; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AVvUzMUD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744307393; x=1775843393;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=BSlBou70rdYI1WqIexajKvsgOgYusvRJvdttvr8R6Ww=;
-  b=AVvUzMUDKuTZH0rMeX8DH2296p3CT72YaWUmiOD01cUHbnSor27Zb1Ux
-   +Qo0p5seohrKtJ2Z9sijYSXfb9JoT03wnLxrWxgpRZVkGV+BgW4Gk3ix2
-   qN9Uy2faRrZZa+Wq4Mcd3uNQeYHyrD1cTt/yg4bmgYQPAT+yMGpbouCk6
-   8IpYjvuP/C4Z7JbBvkitNZNI4F1quaNMX73H3rQmnhRKcry4VHutNGhpH
-   CMMc5XR0c9B4wufzEJoCsTsXhUGKguQPuuCPgIhjRlytIFNWaQRo5b6mc
-   j+J81k1trfUMs2XeLU9WIxi9cr97in3my70bXXrBujw7aqeojTHvl1Ewk
-   Q==;
-X-CSE-ConnectionGUID: Q2Gkit4/Ty+TfHN7maqbOQ==
-X-CSE-MsgGUID: WGg0Y+1QTd2mpZvYlRinLA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="56024157"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="56024157"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 10:49:52 -0700
-X-CSE-ConnectionGUID: m1Un4WLvSqCJYAUpy7G3EA==
-X-CSE-MsgGUID: 4pja72TtQjScDM94snD2/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="129507250"
-Received: from dstill-mobl.amr.corp.intel.com (HELO desk) ([10.125.145.218])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 10:49:52 -0700
-Date: Thu, 10 Apr 2025 10:49:51 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] x86/bugs/mmio: Rename mmio_stale_data_clear to
- cpu_buf_vm_clear
-Message-ID: <20250410-mmio-rename-v1-1-fd4b2e7fc04e@linux.intel.com>
-X-B4-Tracking: v=1; b=H4sIAE8C+GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDE0MD3dzczHzdotS8xNxU3eQ0i8Tk1OQkUzPjVCWgjoKi1LTMCrBp0bG
- 1tQA9ZqbYXQAAAA==
-X-Change-ID: 20250410-mmio-rename-cf8acecb563e
-X-Mailer: b4 0.14.2
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kkphNOJk"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2295d78b45cso16168225ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744307412; x=1744912212; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZFvKBztlvaO+hpuywxVFq1Ch6C+gHqQXzW5kBxcM2OQ=;
+        b=kkphNOJkIM3PK9y5ytq7EZKAjnuuZlCqbwdk9/HDnmyvn09DKUPpQcmUxPDMxEUQGN
+         VBmZm0I30wEfuWj+teFbNQgf4XaHVXBUykXacx5l3/YJYeQtmxRRt3sMS4j5pgbfBh/1
+         yKsOFqyv1Ga5xG0tfvDT85l9/3kVavlgL2zz0iigz+ZrD7bux/MuOGzsBuXl2RH1yE7g
+         6T193yNm7ynjZUvPVu4N4lJxKHRV4PdA4ULKjpuEfNyTP8Uhu12jOAL/Uis0F64FaAvr
+         t2tPCn/cZlGXtIPX3wGiYNYdpShZ2jMxfoc24CIX7264OCIjXu5KqIdOHsKbxNujCDmI
+         GI0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744307412; x=1744912212;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZFvKBztlvaO+hpuywxVFq1Ch6C+gHqQXzW5kBxcM2OQ=;
+        b=OCBhdP4PnyF+GGMpsvSSXR0fOUAAAVkZ9E9JHpvOkkIbzhVqpDoTGH+O/No7owJ+49
+         WB48lE3YcPceRYYzco+PHyMck2X5a3B2YBT8SZ+bPXZRIfTv/3ENhfDWbXKJqIHDW+cw
+         X4IVleam8ju8gdR9vf15KL3f/R35DCNgc0oibRGFdaJg+IVvLE4/JSn7zTdqyS70ftPq
+         4347NO3WA1ZM8MOJ68ImgPD+ROWc/vGMlfPT4FubOXFM5Jz4P4OqyMyfBer0oF3uidUE
+         qvyB40oJ/fi36EODDKIH0V0CgW5st1iFvwd8O7ET/Na9RJX4V2lW/kRJThWGetJsWfEs
+         2fzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFWLvYpG8g2S7X7NL6JZudYhvqniUwx9Rs2yu5B5bGm5HGbyUMUJmXrz4Oy8YZiLP94S5KiaUFJXICbvQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDbtooZ8SiFrmfKrGP9sno+K3cMWGFD1RjDzMecMCkjnnCINg1
+	J8ociewMDLo2BqbvrRH5BQTTWxSkj7u+bEWIjKHoV+BAleKFA1pjJrdT5oaamDs=
+X-Gm-Gg: ASbGnct4dHA0PM25p516JArnLO/cDt/1KfQVGGT0BqcqRz+DHmfG3czF8hE+eoRLViU
+	TVWluL1lNmP8KLL9mVtpuBPTGhe+UU/R6Z37iPaluKk4tnPiIqfRsc7AhWbvw81X40Q+pLnpVKZ
+	6S9kwUKi2Wy9lEic8c98YaQi3O671aKtlfXlfs4Yu+L/fCuJMahqbGdli2IxcBnUuVHMzF0uPVY
+	HapWofZy79TI4dMci4lStr507bmUXMKM8Det8EK/HF/9H4+570QIMOrKTjipC6fujQcuzjuRcBe
+	/Qey/eoEEWo+NfvQefL1+wZ8v6zBn635EmBqsVhVa6mKTIklWtJLyuEMftefmZSnyd7EoxiK8Cf
+	VtIpWgMWA3go=
+X-Google-Smtp-Source: AGHT+IFQfLjl5b/4pxjR0AKJRtL4njnVrLI7qc5hXSk6wBYhGK6iLJeFS3Z7hjVwQHKFbPW7UQz95Q==
+X-Received: by 2002:a17:902:d50e:b0:223:517a:d2e2 with SMTP id d9443c01a7336-22b42c6e367mr57462235ad.53.1744307411718;
+        Thu, 10 Apr 2025 10:50:11 -0700 (PDT)
+Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8bce5sm33652735ad.90.2025.04.10.10.50.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 10:50:11 -0700 (PDT)
+Date: Thu, 10 Apr 2025 10:49:56 -0700
+From: Sukrut Bellary <sbellary@baylibre.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	Kevin Hilman <khilman@baylibre.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: clock: ti: Convert to yaml
+Message-ID: <Z/gExA95AnQzxYmt@dev-linux>
+References: <20250404014500.2789830-1-sbellary@baylibre.com>
+ <20250404014500.2789830-3-sbellary@baylibre.com>
+ <20250409111002.5b88a127@akair>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,89 +79,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250409111002.5b88a127@akair>
 
-The static key mmio_stale_data_clear controls the KVM-only mitigation for
-MMIO Stale Data vulnerability. Rename it to reflect its purpose.
+On Wed, Apr 09, 2025 at 11:10:02AM +0200, Andreas Kemnade wrote:
+> Am Thu,  3 Apr 2025 18:44:58 -0700
+> schrieb Sukrut Bellary <sbellary@baylibre.com>:
+> 
+> > This binding doesn't define a new clock binding type,
+> > it is used to group the existing clock nodes under the hardware hierarchy.
+> > 
+> > As this is not a provider clock, remove #clock-cells and
+> > clock-output-names properties.
+> > Though few clockdomain nodes in the dts use these properties,
+> > we are not fixing dts here.
+> > Clean up the example to meet the current standards.
+> > 
+> > Add the creator of the original binding as a maintainer.
+> > 
+> > Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
+> > ---
+> >  .../bindings/clock/ti/clockdomain.txt         | 25 ------------
+> >  .../bindings/clock/ti/ti,clockdomain.yaml     | 38 +++++++++++++++++++
+> 
+> I am wondering whether this should just be part of a converted version
+> of Documentation/devicetree/bindings/arm/omap/prcm.txt. I doubt there
+> is any other usage for this compatible.
+> 
 
-No functional change.
+Yes, OK. So, do you want to take this with prcm conversion? If so, I will
+drop this from v2
 
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
----
- arch/x86/include/asm/nospec-branch.h |  2 +-
- arch/x86/kernel/cpu/bugs.c           | 16 ++++++++++------
- arch/x86/kvm/vmx/vmx.c               |  2 +-
- 3 files changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-index 8a5cc8e70439e10aab4eeb5b0f5e116cf635b43d..c0474e2b741737dad129159adf3b5fc056b6097c 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -561,7 +561,7 @@ DECLARE_STATIC_KEY_FALSE(mds_idle_clear);
- 
- DECLARE_STATIC_KEY_FALSE(switch_mm_cond_l1d_flush);
- 
--DECLARE_STATIC_KEY_FALSE(mmio_stale_data_clear);
-+DECLARE_STATIC_KEY_FALSE(cpu_buf_vm_clear);
- 
- extern u16 mds_verw_sel;
- 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 4386aa6c69e12c9a8d66758e9f7cfff816ccbbe3..dcf029fed3beec38a2e8b6292ec7d0660f3ec678 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -128,9 +128,13 @@ EXPORT_SYMBOL_GPL(mds_idle_clear);
-  */
- DEFINE_STATIC_KEY_FALSE(switch_mm_cond_l1d_flush);
- 
--/* Controls CPU Fill buffer clear before KVM guest MMIO accesses */
--DEFINE_STATIC_KEY_FALSE(mmio_stale_data_clear);
--EXPORT_SYMBOL_GPL(mmio_stale_data_clear);
-+/*
-+ * Controls CPU Fill buffer clear before VMenter. This is a subset of
-+ * X86_FEATURE_CLEAR_CPU_BUF, and should only be enabled when KVM-only
-+ * mitigation is required
-+ */
-+DEFINE_STATIC_KEY_FALSE(cpu_buf_vm_clear);
-+EXPORT_SYMBOL_GPL(cpu_buf_vm_clear);
- 
- void __init cpu_select_mitigations(void)
- {
-@@ -450,9 +454,9 @@ static void __init mmio_select_mitigation(void)
- 	 * mitigations, disable KVM-only mitigation in that case.
- 	 */
- 	if (boot_cpu_has(X86_FEATURE_CLEAR_CPU_BUF))
--		static_branch_disable(&mmio_stale_data_clear);
-+		static_branch_disable(&cpu_buf_vm_clear);
- 	else
--		static_branch_enable(&mmio_stale_data_clear);
-+		static_branch_enable(&cpu_buf_vm_clear);
- 
- 	/*
- 	 * If Processor-MMIO-Stale-Data bug is present and Fill Buffer data can
-@@ -572,7 +576,7 @@ static void __init md_clear_update_mitigation(void)
- 		taa_select_mitigation();
- 	}
- 	/*
--	 * MMIO_MITIGATION_OFF is not checked here so that mmio_stale_data_clear
-+	 * MMIO_MITIGATION_OFF is not checked here so that cpu_buf_vm_clear
- 	 * gets updated correctly as per X86_FEATURE_CLEAR_CPU_BUF state.
- 	 */
- 	if (boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA)) {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 5c5766467a61d434ba2baa79a5faba99bcbd9997..c79720aad3df265ec8060dfe754bc816104f8c7b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7361,7 +7361,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
- 	 */
- 	if (static_branch_unlikely(&vmx_l1d_should_flush))
- 		vmx_l1d_flush(vcpu);
--	else if (static_branch_unlikely(&mmio_stale_data_clear) &&
-+	else if (static_branch_unlikely(&cpu_buf_vm_clear) &&
- 		 kvm_arch_has_assigned_device(vcpu->kvm))
- 		mds_clear_cpu_buffers();
- 
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250410-mmio-rename-cf8acecb563e
-
+> Regards,
+> Andreas
+> 
