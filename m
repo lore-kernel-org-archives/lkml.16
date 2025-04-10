@@ -1,136 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D82484039
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D22F84039;
+	Thu, 10 Apr 2025 15:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744297596; cv=none; b=Y42qmX9X43qocFliuKnKrN8zAd0bTlI1jIYjrcdD58ldQe4mQaZ6wI1rZC9/4+B0BrjRc7KHbbd00VFfHULlPy8mgGjO2Tv/QYYeKKOCx/HcPM9vO4k7hnf7P4mH180MHmMDzGeRV0ttdRcsnjPTanHuZhR5KFu573miBPp7ymY=
+	t=1744297643; cv=none; b=e3Ip/wn9+eTdPXx8xjGr8XiJL23okCk/sOS9kluPtavJMYqjvxL6GFAMDPvR1qk++WUJqtRvDxs6pPk1rzBaKudV2AyJhlEvs1oIxaAmUqu6MU0tnIb4urKMRu+dTzRYsg8eGQobFALBTtzkKRDSLrjRTM+LkR6ASpBqzRYPZZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744297596; c=relaxed/simple;
-	bh=vHZm5SOl3X4jMM+xMEuMfIzkZXSBFxMmX8Ur/ZaHl4c=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UURQxXnWY9tfPi2KkSF0IQVAuAphOMjf1SEZnsFVG4ntfH7GTc+5cmmK5S5SWXtvoOS/lsDOOp0jhuH7diRTnSFRVERV41Zl1KzyOglAgLkj0yMniBzHjsqEeIvfGFn0zGvIJc3PFGjJB0RDZM8jjRZzEEu+ZBXrvfRT9D6gCog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chr7qDJU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744297643; c=relaxed/simple;
+	bh=eboaS5c05OyvAb+NBPFm2wN3NGNx/XKe73+3Wz4fRNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gce9G60G8BWWqmbu1gvD6tBJabixUEaOJVKCIMxri5SsHbi46lFRu6ppVWakWuq2IHR4UlbGr6PGOP86k/LRtMpLxVT+xBVHhpBq2KDcGVyG8Yd7dTbgjro2uCcipcNlZfzngGPuNJODQqnVj/eF2PpBsw1YSDRcsHA1+Afosg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4fQScCd; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chr7qDJU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744297594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qIhuXajAbGCms/ziWZp+4wESEH4orURgdhorzcqWv0U=;
-	b=chr7qDJU+oBAe4QRbu7daFJsqT8YYoPuz63s2ylIswEgKS6yPbb46G1r60ClvuThV0JXQU
-	fOBS1TEhXqZnAG8T5soAbxb63HY/Nw/i7LlJvrJrYVbQEgcGNj+CiAyfXAySFpFvEjEneG
-	jXMVkRbC5n+h/NPWEi5BL8OY1eswtWo=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-206-4CyBuwADPqKUknJOClG06Q-1; Thu, 10 Apr 2025 11:06:31 -0400
-X-MC-Unique: 4CyBuwADPqKUknJOClG06Q-1
-X-Mimecast-MFC-AGG-ID: 4CyBuwADPqKUknJOClG06Q_1744297591
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c793d573b2so175429085a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:06:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4fQScCd"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af28bc68846so916266a12.1;
+        Thu, 10 Apr 2025 08:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744297641; x=1744902441; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=brD0jvjX625bzsG6fgbmQ6q3jKQyaVH5CAKGozygZW4=;
+        b=Y4fQScCdBm7TYTc2CO/GK2xHK2xFEykki0+FIk13PeMSfMZSbypl3klPQdjaHfqCNh
+         sdwHCz2ccdYIKyb1TjGx2lz8PaOfEfSJEsQBjzXX9PcIRIz/AGguNDB2R1Je5iOOlvAR
+         FexJxObppUR/dXUUtLT+XKzR5oJfVymXGux/qcz2hqxQFTvQD50axZ3Avtz+xAqWD9Tu
+         AdhDyc0osLPhQ6FSitAIQ7T83Bk+p6EJTgbM3Svuj+Pw3FsWqhr2WhK510mE4MRFybRq
+         7YgMVlzMoW1bCs2INXe7FIRn611na87jiyjZgz4Z+k6d56r+BRCjPgTk0DX/IQItCsOK
+         NSkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744297590; x=1744902390;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qIhuXajAbGCms/ziWZp+4wESEH4orURgdhorzcqWv0U=;
-        b=vx8VS/bDeiOjyxRkRGf4g947OjuGO4LqGDcKOm/HPGszJ2r082rCdc0+CNiy6GoIqj
-         YPF57+kqWycsoe9Jnr8jfdAMHtGKkqrAoc4gSJPiH2el4z2H0p2ni3u1v9qPxIhtks3D
-         iwBuKEbQ+ZLscLPKWA/NPw5Kx7nP2oUek+C/63CSWix7DxMOLQjGk1V2RabXfegEaIvh
-         xn709j4XivEqP/qMbf/iPxo22RxrYv0sVo5nbAk0scGP2dE1D/gaVDyh8DJ4nneFByx2
-         eCsohbGjNqbTcj3VXvmbl/iiVCAnxrBlqSJMux/D1nJvjdyxIBupsmlpp/pE2E6eZ5gp
-         UaEg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8cfij7uA9fQ0Ahjj46XxwoYjNonSFDtOC/CzQTuU9MG3NnAVfKvLqiLAQlLE8wycI5+/3Vi4PuZgEkYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6oeuWCh00gPzHda9HL+CSjmwdPYEGL4iEjaA+UBKTZN7mqh4/
-	EJreTn61RZ8ZFUmj4UxrVhx75RnlzstyXU2m0RKqIWxzRqEaS7KmOCnumYpVOwuZBSabCXdmvnH
-	My/Oi0smdRn93gLjCt/OF+3oNRRC5mINuRT+m9G1TOkHEkMtI0+5VjHr5rf8Q11KcavtMoQ==
-X-Gm-Gg: ASbGncs24p3ew8htKzQOk2gvFQ2BG3lmVWyhmq3b/kcXn82B/gAjtsLNWSEZaP/QaFv
-	SFZtSReqsLAzXLg9Jq68tKS1kHm28TMy6OO1YF0LEDJoSd/mBLJpE7p+awRZsDGFo00MvFs5o9U
-	oKqErUb0eWpSuWZenrgaJv3bb+kD8HXUSJrkVPuxtSfgGoRW0qfXgwSitQO+oydz/1jwiRAQBPr
-	30/0mbc4gmtj0NrDx87cfn2GMSAN3ONzwOBkQEkr7kak8IcjNhEOHHTueOnrJKzEKnlysl1EbHF
-	HpxqYiGqy6Q22gT3itEiN/sNtKmGxwJSe+Ra5JjebT4iujXITbEBuhVYKw==
-X-Received: by 2002:a05:620a:4609:b0:7c7:a356:105d with SMTP id af79cd13be357-7c7a7654feemr406518285a.4.1744297589983;
-        Thu, 10 Apr 2025 08:06:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHTV0chasRZUb90x4YxrDnOrfQQbAHNNJ198zLNZD+JqFVlN+LdY/tKjh70QRgl5irR2mKTBA==
-X-Received: by 2002:a05:620a:4609:b0:7c7:a356:105d with SMTP id af79cd13be357-7c7a7654feemr406512085a.4.1744297589478;
-        Thu, 10 Apr 2025 08:06:29 -0700 (PDT)
-Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8943834sm100590285a.22.2025.04.10.08.06.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 08:06:28 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <8a8b916f-0154-4a65-b7e9-b99fbaa28dd7@redhat.com>
-Date: Thu, 10 Apr 2025 11:06:28 -0400
+        d=1e100.net; s=20230601; t=1744297641; x=1744902441;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=brD0jvjX625bzsG6fgbmQ6q3jKQyaVH5CAKGozygZW4=;
+        b=m61RxGzGY7+4IvBJhEYepWHS1BB3sp4b0uNkGcsf9JWKchkUIpn0ZDdeuZf0ggv8Ji
+         ziO2fgJhR+kzPQw82gnKdh3dWG5/GyUk1tLVpghN7uk72xFdcRxhhsaXHPYjC5ABh3H5
+         +28xZOmU0zXQfVA6/+fBjG4IjsM4R3FvzuueZsOfgJnwGfFepZQoDB1j4NF5NgHLdHkA
+         Rl+v0DF8NR3ct6o607WSmBGI7SYKrHVB73vai8GGvnNc1SfUHPtMsPS+XI5m9hDPsEA3
+         FrE37v34ee9XCs5L5eHxa345EUOB56YMQKnUKm2n9vKSIc9R8l/zo1JTtvFj2eYhb9a4
+         lDQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkake7YC+Cx7FIZVy8aaheNTdbh1BxYIKq59S7C6DI8kKmG7rIFXwWHfroBPWaOQZYB+EIBr2U5EBJ@vger.kernel.org, AJvYcCWOoPTpuowzbexyL11ACVpltt2AHkZKD6WSp6CTWtrn0Q0yE2gLJqd6f8oOS9MK0TXj6/Dr0K1roco=@vger.kernel.org, AJvYcCXquWq+VjRxMtO3cAbC6gZrBs34MxRPNZuMaV64U8e3W5GKqK6lmehzVB0z9yMm0evJOejQnecN1yBcifW3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0RVEu3eY4oflf70ioG3l+DaYESkK5rSS19xeUrdIyH/7ejwyt
+	m8n61z2PKJ16ZTpZHOIANlDd7bzXOxOI4YCXQPlkMKiw+WDBJKjN
+X-Gm-Gg: ASbGncuOUce8+83DGyypqMzVm0ghJKr7dY9d/SuR5KY8hSOtcvRPjzG8vn1atrymToD
+	mtgFJuWHJhHnJyqqPuZi3UfXtnyERTNWeOfBInJsw9YLxu7rmBmtGg/npXnDs69LkO13RZTbXAc
+	aAHQvbgRrbraf7hTEXCVdBWEDI5upWdRT9HCBKehFB5/zy+b9Ri78BtWjuFF5bTHc3Jj797hhmq
+	LlxCtuUW+mBsdz+K4jdrMrkD/h6BwJE2Hp7YBBqIY0Xd0qmVwJ82Jtm8lLe/z/oPW1qOEfyjXjX
+	6BolBf9X2uCrwZNzdK1TGeZ/Qs6ef+rMzVx3lkcRVVxQueCSuA==
+X-Google-Smtp-Source: AGHT+IFipQ50ghFnCXKI8zRF8Bt+A/DpNB00DQaIIZ1RLRoPjkBbjJFwo/iHx851n7lTd+u7pGjTKA==
+X-Received: by 2002:a05:6a21:9214:b0:1f5:8153:9407 with SMTP id adf61e73a8af0-2016cd5ec22mr4138335637.20.1744297641304;
+        Thu, 10 Apr 2025 08:07:21 -0700 (PDT)
+Received: from localhost ([2804:30c:979:8400:d3a1:d5f7:94ea:b576])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bb1d46586sm3471204b3a.64.2025.04.10.08.07.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 08:07:20 -0700 (PDT)
+Date: Thu, 10 Apr 2025 12:08:27 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+	corbet@lwn.net
+Subject: Re: [PATCH v4 1/4] iio: adc: ad4000: Add support for SPI offload
+Message-ID: <Z_fe69bn90oVjPNk@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1743110188.git.marcelo.schmitt@analog.com>
+ <386ce043a0e3fc9e8ff71f17aef8de128ce5869e.1743110188.git.marcelo.schmitt@analog.com>
+ <97d0cc16-cdd4-449c-87f5-f62e0515de97@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
-To: Frederic Weisbecker <frederic@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org
-References: <20250410065446.57304-2-gmonaco@redhat.com> <87ecy0tob1.ffs@tglx>
- <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
- <Z_fBq2AQjzyg8m5w@localhost.localdomain> <87wmbsrwca.ffs@tglx>
- <Z_fHLM4nWP5XVGBU@localhost.localdomain>
- <4fdc6582c828fbcd8c6ad202ed7ab560134d1fc3.camel@redhat.com>
- <Z_fTmzdvLEmrAth6@localhost.localdomain> <87semgrs5t.ffs@tglx>
- <Z_fbimtUBqBiWr16@localhost.localdomain>
-Content-Language: en-US
-In-Reply-To: <Z_fbimtUBqBiWr16@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97d0cc16-cdd4-449c-87f5-f62e0515de97@baylibre.com>
 
-On 4/10/25 10:54 AM, Frederic Weisbecker wrote:
-> Le Thu, Apr 10, 2025 at 04:46:06PM +0200, Thomas Gleixner a écrit :
->> On Thu, Apr 10 2025 at 16:20, Frederic Weisbecker wrote:
->>> Le Thu, Apr 10, 2025 at 03:56:02PM +0200, Gabriele Monaco a écrit :
->>>> On Thu, 2025-04-10 at 15:27 +0200, Frederic Weisbecker wrote:
->>>>> But how do we handle global timers that have been initialized and
->>>>> queued from
->>>>> isolated CPUs?
->>>> I need to sketch a bit more the solution but the rough idea is:
->>>> 1. isolated CPUs don't pull remote timers
->>> That's the "easy" part.
->>>
->>>> 2. isolated CPUs ignore their global timers and let others pull them
->>>>    perhaps with some more logic to avoid it expiring
->>> This will always involve added overhead because you may need to wake up
->>> a CPU upon enqueueing a global timer to make sure it will be handled.
->>> At least when all other CPUs are idle.
->> Which is true for the remote enqueue path too. But you inflict the
->> handling of this muck into the generic enqueue path as you have to turn
->> a 'global' timer into a remote timer right in the hot path.
-> Fair point.
->
->> When you enqueue it in the regular way on the 'global' list, then you
->> can delegate the expiry to a remote CPU on return to user, no?
-> If you're referring to nohz_full, it's not a problem there because
-> it's already considered as an idle CPU.
->
-> But for isolcpus alone that notification is necessary. I'm not sure
-> if return to user is the best place. I hear that some kernel threads
-> can spend a lot of time doing things...
->
-> But to begin with, is this all really necessary for isolcpus users?
->
-In some of the actual customer use cases that I have seen, both 
-"nohz_full" and "isolcpus" are set to the same set of CPUs to achieve 
-maximum isolation. isolcpus have domain and managed_irq that are not 
-covered by nohz_full. As isolcpus=nohz has been extended to be 
-equivalent to nohz_full, users can now just use "isolcpus" to achieve 
-that maximum CPU isolation.
+On 04/09, David Lechner wrote:
+> On 3/27/25 4:24 PM, Marcelo Schmitt wrote:
+> > FPGA HDL projects can include a PWM generator in addition to SPI-Engine.
+> > The PWM IP is used to trigger SPI-Engine offload modules that in turn set
+> > SPI-Engine to execute transfers to poll data from the ADC. That allows data
+> > to be read at the maximum sample rates. Also, it is possible to set a
+> > specific sample rate by setting the proper PWM duty cycle and related state
+> > parameters, thus allowing an adjustable ADC sample rate when a PWM (offload
+> > trigger) is used in combination with SPI-Engine.
+> > 
+> > Add support for SPI offload.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > ---
+> 
+> I think I spotted a bug. With that fixed...
+> 
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
+> 
+> > @@ -690,6 +942,15 @@ static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
+> >  
+> >  	xfers[1].rx_buf = &st->scan.data;
+> >  	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
+> 
+> Now this needs to be:
+> 
+> 	xfer->len = chan->scan_type.realbits > 16 ? 4 : 2;
+> 
+> Otherwise when there is SPI offload, this could read 2 words because
+> storagebits is always == 32.
 
-Cheers,
-Longman
+I've just tested both versions with ADAQ4003 and with AD7687.
+There's no practical difference between the suggestion and what already is in
+IIO testing. I don't mind sending a patch with the change, but don't think it
+fixes anything.
 
+Thanks,
+Marcelo
