@@ -1,50 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7FA28EA5C;
-	Thu, 10 Apr 2025 21:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB697283699;
+	Thu, 10 Apr 2025 21:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744319485; cv=none; b=VS/j449MCyancEVE050MV0Li1Srgf942JfSkA+s9FxNPaxjvngc5kmhkhTJroSmhoE7tgE3W0qmz5SNNgdLtxQU/iwrC2zCeoBqGwF+C3keeJFXmlooDhxNl8sVUJgMsiyk869XCHyTJJYLL9ngedCpcNjVZCAIPHghFLdp2R2Q=
+	t=1744319575; cv=none; b=KGoNBhIEBUQyoe+CazbYgeopzU9ywk9FNn4dPW+BRjGRmqrHDoxaa0CI4NM6wDbnsjz3Cz5eoPAOhEbA7L1baThYaO/6IsdLbABn+5S3CDpsAe0OmMtZpNKAD1e2xJfReqVXNgC6fMfpMxwN+7ursjbEkBrUdWLTtI4gcxSWe5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744319485; c=relaxed/simple;
-	bh=owtnRJWwM8yKkJmYEoQiWQDaxSjXp0C7FQsxarVWC9g=;
+	s=arc-20240116; t=1744319575; c=relaxed/simple;
+	bh=T/P1P+E6uonJ66xjSWFrnWdtSTsghWdTneLNPuBwQ/0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kc3TkVG3I+NpVrfVLYC3LRbHVbIDF5CguXLbKVpCpMXrqyrp0vj2Vxpre9cZ6gQqEifA7Yofxn6SIeU0pHIdfPmR1D7bO550ly/5LmHTwVCOQDb0LkPiyMVj1VzisyUZF+Lfv1VkcgH8p0FYe12fBQQnmiDiS9mUNYmGTFFtaFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkEMYfFO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IlowKPHlEOQGLL0Yr1xPrNtkh24OdWPgcFDgWZWBtFY/lycqKECqCMq8TbuqYio6BZ/lzTM0qWVqlNc8DkNXojeQWG54jMFJwKaSXcfb57Xyqy++kii4Nf9WM+qdO4lIpuiznmBcE7U0cPIpvPwvi6ftosPFxyuRh4VMSW/UG1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=b71vFG8V; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkEMYfFO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF6DC4CEDD;
-	Thu, 10 Apr 2025 21:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744319484;
-	bh=owtnRJWwM8yKkJmYEoQiWQDaxSjXp0C7FQsxarVWC9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rkEMYfFO8PkNupW9d53Fn+Gf8hLHqpXXnFBqrr4YHQ+uXfsfFycXhKSeCia8matlF
-	 zQOaWWBWviVuR6W/FCo6YVIw254fwMVQCtqE+P+/irD5u3rZQI+mZVMybVzLXHD9z9
-	 XGujbwykQyPlGuSVyfocqgCS49KLORfNgbm5G0ZHfF6fl/QuVxX5wFCOf7ikf7EAlX
-	 /1x4xcxwEj6vTw+fhJWYX7qvgMchl9Ni102t6obZMqBa15ZPU0YRXq0nOgABs2AfuW
-	 UDGi+qYxJVRN/ELF3KV4II6z0Fc7EHY8yhIHz8gcbLoMRxUSeWTAj+TEI5gP4wz+m8
-	 Kp3eiepPvvPXA==
-Date: Thu, 10 Apr 2025 16:11:23 -0500
-From: Rob Herring <robh@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	kernel@collabora.com, linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: phy: rockchip,inno-usb2phy: add port
- property
-Message-ID: <20250410211123.GA1071510-robh@kernel.org>
-References: <20250407-rk3576-sige5-usb-v1-0-67eec166f82f@collabora.com>
- <20250407-rk3576-sige5-usb-v1-1-67eec166f82f@collabora.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b71vFG8V"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=rNczozpcMMZxD6eTya8/M09asYvM0i0dZVM4tXgpxfI=; b=b71vFG8VCjoEOC9kmtRiAM4CGT
+	K6kl1UNoulWweks05cqAieZhnfkkcdnD4yFBbpbnd0MBb6iEmajn66P/0Gc78Kc+JwKqukGfJoOB9
+	K32KsGy4iB5xvor3+A4L7xLVRk6UJKBAuuM9MaIHpz6gD5s0cUKqLBpfvfArGlTIbouI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u2zCT-008jJx-3t; Thu, 10 Apr 2025 23:12:41 +0200
+Date: Thu, 10 Apr 2025 23:12:41 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: Prathosh.Satish@microchip.com, conor@kernel.org, krzk@kernel.org,
+	netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
+	arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
+	kees@kernel.org, andy@kernel.org, akpm@linux-foundation.org,
+	mschmidt@redhat.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+Message-ID: <4e331736-36f2-4796-945f-613279329585@lunn.ch>
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-3-ivecera@redhat.com>
+ <20250410-skylark-of-silent-symmetry-afdec9@shite>
+ <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
+ <20250410-puritan-flatbed-00bf339297c0@spud>
+ <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
+ <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
+ <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
+ <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,42 +57,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407-rk3576-sige5-usb-v1-1-67eec166f82f@collabora.com>
+In-Reply-To: <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
 
-On Mon, Apr 07, 2025 at 08:09:14PM +0200, Nicolas Frattaroli wrote:
-> USB connectors like to have OF graph connections to high-speed related
-> nodes to do various things. In the case of the RK3576, we can make use
-> of a port in the usb2 PHY to detect whether the OTG controller is
-> connected to a type C port and apply some special behaviour accordingly.
+On Thu, Apr 10, 2025 at 08:33:31PM +0200, Ivan Vecera wrote:
 > 
-> The usefulness of having different bits of a fully functioning USB stack
-> point to each other is more general though, and not constrained to
-> RK3576 at all, even for this use-case.
 > 
-> Add a port property to the binding.
+> On 10. 04. 25 7:36 odp., Andrew Lunn wrote:
+> > > Prathosh, could you please bring more light on this?
+> > > 
+> > > > Just to clarify, the original driver was written specifically with 2-channel
+> > > > chips in mind (ZL30732) with 10 input and 20 outputs, which led to some confusion of using zl3073x as compatible.
+> > > > However, the final version of the driver will support the entire ZL3073x family
+> > > > ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc
+> > > > ensuring compatibility across all variants.
+> > 
+> > Hi Prathosh
+> > 
+> > Your email quoting is very odd, i nearly missed this reply.
+> > 
+> > Does the device itself have an ID register? If you know you have
+> > something in the range ZL30731 to ZL30735, you can ask the hardware
+> > what it is, and the driver then does not need any additional
+> > information from DT, it can hard code it all based on the ID in the
+> > register?
+> > 
+> > 	Andrew
+> > 
+> Hi Andrew,
+> yes there is ID register that identifies the ID. But what compatible should
+> be used?
 > 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
-> index 6a7ef556414cebad63c10de754778f84fd4486ee..3a662bfc353250a8ad9386ebb5575d1e84c1b5ba 100644
-> --- a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
-> @@ -78,6 +78,11 @@ properties:
->        When set the driver will request its phandle as one companion-grf
->        for some special SoCs (e.g rv1108).
->  
-> +  port:
-> +    $ref: /schemas/graph.yaml#/properties/port
-> +    description:
-> +      A port node to link the PHY to a USB connector's "high-speed" port.
+> microchip,zl3073x was rejected as wildcard and we should use all
+> compatibles.
 
-I don't think this is correct. The HS port of the connector goes to the 
-controller. The controller has the link to the phy.
+You have two choices really:
 
-If the PHY is also what handles USB-C muxing or orientation switching, 
-then it might have ports, but then it needs input and output ports.
+1) You list each device with its own compatible, because they are in
+fact not compatible. You need to handle each one different, they have
+different DT properties, etc. If you do that, please validate the ID
+register against the compatible and return -ENODEV if they don't
+match.
 
-Rob
+2) You say the devices are compatible. So the DT compatible just
+indicates the family, enough information for the driver to go find the
+ID register. This does however require the binding is the same for all
+devices. You cannot have one family member listing 10 inputs in its
+binding, and another family member listing 20.
+
+If you say your devices are incompatible, and list lots of
+compatibles, you can then use constraints in the yaml, based on the
+compatible, to limit each family member to what it supports.
+
+My guess is, you are going to take the first route.
+
+	Andrew
