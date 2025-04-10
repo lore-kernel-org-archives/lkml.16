@@ -1,135 +1,152 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C2C81ACA
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8049A28E0F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744247460; cv=none; b=RSKo8SvNKGoegTBhGbCKtgowtPuTw7QTf9rsMMYgMdF463kNuIeRSzxMKJgbIZZQb7d+NkvHvoDNXBqHEXXK6z9FZJTtJRFxAhwHpM4jtdtpU1QAlMKbO9Zxj9uDxRCPF1vMLyjhnLRGQvxYtGcOoqdWEtvsL4k6CCSFv3swTuU=
+	t=1744247615; cv=none; b=f+F3AVU66ht4QCInp9Hhgayp3e6fCFqe0Tnn8iP3FOl9GaBBgc99CMb6BbK8DXEjpJt/1+kxES7ie10f5HSUmQvO1q9jWrkjP0UFY9sxH4s9mSljlMK4+7wKb2mHtOitrhuE0SHtmaXvNJh5PDCLg+f41Gb2pWOfgWCMgt4hjKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744247460; c=relaxed/simple;
-	bh=4zZXmOT4G5ENrNqVshmx9q3+5vFS9ePvw6JwQw07jlA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZpvuEQb1blnGDH9MvSQ0HvrAz2Sl1oVaVKphxdtzqm8pMjkrgyWi0cIlsIjxnsenAVWStsJWo41kGG4uKNZaqI7HuYZqEdPHM29DGJeYoo9vLkG4FkT1TQdRzncva1bLCTRwBa9cr57280wHb4RdQ91tXInKGYA7svAMSeaxFsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=KHnYo+2N; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1744247615; c=relaxed/simple;
+	bh=YzQiks8GXtr147u0QhDm7ied2ITLaM9fgBAb0ZkvAI8=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lJBkpb2RyjnfFw3G1Gw9zGjS3y1B5TxNOy51hc2xhpwVgxK6DZ2m1V/OS1LB1TCXrcz1+G2PjS7NhtfngJKQtNx8osJcQzAuKS7vDwWWwCGNhv91HV/fpREZv6Om68P15aDuuBbOvJ+phwuTrDXRbIjQqp+Fw/O6yLKRjQKEdaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=FK714v6p; arc=none smtp.client-ip=51.77.79.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="KHnYo+2N"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bbead793dso238906a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 18:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744247456; x=1744852256; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ufe1zC4mIZ9KkFKqcvzjMiU58CZ1PL6NJI/ZAbE/kqA=;
-        b=KHnYo+2Nz1EYxRAiRHemlRHQSqGApk0BlVz9YxVGuvcErtQwTJ4EhhsZ5ycIIRsSem
-         SGmLKUXLfTh+ELcLiX3ut/LZvHVJJ1TbOxiM+9aEVQqdmuFcrufkxG8E9VQjojda2OHP
-         g+Y2dVj27oIf5IABJXYRgIq03nhYwthy+fl9/o6leogap2b/VdrYN3jyJqdzxavGV/AN
-         1jxZYpj3As94XL5U996IV4tM2F99s2WT4YfTcEf5C5IW5v3y/lS8Zr9bRscYEOd6u7i9
-         75aRoIQr0HvoraSE2nEk44f8j8W7/q+ES5Di+x5BnZSvCudTdV8cnqmaJaULNV22BnWT
-         /qPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744247456; x=1744852256;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ufe1zC4mIZ9KkFKqcvzjMiU58CZ1PL6NJI/ZAbE/kqA=;
-        b=KyNfZLgkfmB+3eK2gdPXHo9Rnk6vck/TUZgST7jzaLakO5//0M+DQsmdhNB30RWEhQ
-         eMx1xthCxBMVt/d6/8ACpw5wdc+coWm2jAHOc9N6u1pKPcgVIshCJqmKeHrNVi2xDJHc
-         ZdR+8wPLbKn0MWZUtfx9pQK1GIQ2bwa7fA4m1cUhfYGQYivbvmxSqa2XfmYhC+ySkJ46
-         UMnfjh9UNsztET0MPySsst+Nm/+R5PkTxowHUwZjST7zLKlkCqT2GlfWr6D0MRLAftnE
-         cd/I6fxCrWJQ7NzdBKKAC6RusWLQnXFyecknUu4Cs2j5Ha6pJ0I6we7jbCbKTnS3sSIb
-         mYMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXE6KuE/+vCNBXtXLw9h2C65P20I/fGluDLOaWlAZ+2lkM1/IInGK3M/2ZoZE3Fl6p1yQ4D0lIyckTK278=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEzkjU23D3FEd1Xm+J8EbLwliC73A6aNLnESXaQ5jbRRB+mUbD
-	rF7jqNk4U3/uyvl6XO0Y0GwEdta8g+ya6mG8eFXnh64U5Ul2OJaOB2aCMZfdETc=
-X-Gm-Gg: ASbGncuZhZcOh6hrtv0v5oRUk4ZKMTraOn/avTqDoLv3q5O53GZ6bw+5B3DJwKNPpF3
-	wvFshuCmbafliAcUowsMA/pFH2XJ4fLKnf9VXc7idk7gM8GcTdZ/exsjJxlzaU2qyy8FjANo8XQ
-	7IJg2P+M7bCG7AuF/UxGhno7HXLdgnIeeUpxucOT1iUZDwPcpLklMkHxpVQKliFu52e3SKAiME1
-	Eulueh1cDK7MRl+2XRt9UNgg/6vqLl5gZ1FTcz7AnZeY9MKrMpCwlwUs+0463ZZsUQjnwXuscQu
-	d31khWIOJIyLkL4CtIpaFmwXCXtuqypP5bmroDRl/4ab/VCVoI5KrE4V4oqgyAY72fTPdQW4WtF
-	3ntoz
-X-Google-Smtp-Source: AGHT+IFevsC4sF9gcAaFeEjZSUjvU9SNPUbcIg3nnlkWLdpmBSAknJMYmP8QUt9yMWwVqLYOtLE6Ow==
-X-Received: by 2002:a05:6830:2aa3:b0:72b:940a:a7c9 with SMTP id 46e09a7af769-72e7ce2a553mr338735a34.27.1744247456270;
-        Wed, 09 Apr 2025 18:10:56 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e4d81dsm396029a34.54.2025.04.09.18.10.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 18:10:55 -0700 (PDT)
-Message-ID: <a8e5adca-8eff-4bbb-a7fa-ce4489b63fa5@riscstar.com>
-Date: Wed, 9 Apr 2025 20:10:53 -0500
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="FK714v6p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1744247603; x=1744506803;
+	bh=5IhPW6iSibHV5VNeY2F53/jyEHnH+AF5dzWCrAbv3wU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=FK714v6p6esgjwd64AXKp4Z+TaM4Dszi8BR7ru9JwMJtRrUi2kjRmAKKz8tYLQtAB
+	 0U6EcTzEv5HKlPVeV+euf8sQTQm5n7Dr72vmOtdBiuD8EPYfV3FEuI1cQbsjpIog2U
+	 IgyiAOiAku9KHJ3C2/uMtrYW7RveVBPT8NuxTD4fqy3c6jEIHBBqAon4Woiw/ADpSd
+	 ql0WgTCReJOPe8uTJEZ71qh28blTV6yZOU3G3eGRd6BMOGkzbMdNiEmnhqEH4eDee+
+	 kubeFPob7TJ/vmWs1QwAZtuuNisrMWo+XDZfRnAxj+I/6CM2sv1dLyGiokWLTsuQ8W
+	 juH6y85WdcqJg==
+Date: Thu, 10 Apr 2025 01:13:18 +0000
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Vitaly Kuznetsov <vkuznets@redhat.com>, Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+From: Myrsky Lintu <myrskylintu@proton.me>
+Cc: kvm@vger.kernel.org, rcu@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>, Yan Zhao <yan.y.zhao@intel.com>, Yiwei Zhang <zzyiwei@google.com>, Lai Jiangshan <jiangshanlai@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Josh Triplett <josh@joshtriplett.org>, Gerd Hoffmann <kraxel@redhat.com>
+Subject: Re: [PATCH 5/5] KVM: VMX: Always honor guest PAT on CPUs that support self-snoop
+Message-ID: <0f37f8e5-3cfe-4efb-bec9-b0882d85ead2@proton.me>
+Feedback-ID: 89599038:user:proton
+X-Pm-Message-ID: 463996738ae8f38ea5d8024aed4a838ee2cca8ef
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/6] clk: spacemit: Add clock support for SpacemiT K1
- SoC
-To: Inochi Amaoto <inochiama@gmail.com>, Yixun Lan <dlan@gentoo.org>
-Cc: Haylen Chu <heylenay@4d2.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Haylen Chu <heylenay@outlook.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, spacemit@lists.linux.dev,
- Inochi Amaoto <inochiama@outlook.com>, Chen Wang <unicornxdotw@foxmail.com>,
- Jisheng Zhang <jszhang@kernel.org>,
- Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
-References: <20250401172434.6774-1-heylenay@4d2.org>
- <20250401172434.6774-4-heylenay@4d2.org>
- <8fe0aaaa-b8e9-45dd-b792-c32be49cca1a@riscstar.com>
- <20250410003756-GYA19359@gentoo>
- <dm4lwnplwcxj3t3qx3a3bdxtziowjfoqdy4vrd3ahmzkhejrov@fa5rujatatew>
- <z27ri5eue43ti6b2te2cbxiow66mtgbnyudoo5cs4quabgbx5r@uipzoxvfoysi>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <z27ri5eue43ti6b2te2cbxiow66mtgbnyudoo5cs4quabgbx5r@uipzoxvfoysi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 4/9/25 7:57 PM, Inochi Amaoto wrote:
->>>>> diff --git a/drivers/clk/spacemit/Kconfig b/drivers/clk/spacemit/Kconfig
->>>>> new file mode 100644
->>>>> index 000000000000..4c4df845b3cb
->>>>> --- /dev/null
->>>>> +++ b/drivers/clk/spacemit/Kconfig
->>>>> @@ -0,0 +1,18 @@
->>>>> +# SPDX-License-Identifier: GPL-2.0-only
->>>>> +
->>>>> +config SPACEMIT_CCU
->>>>> +	tristate "Clock support for SpacemiT SoCs"
->>>> I don't know the answer to this, but...  Should this be a Boolean
->>>> rather than tristate?  Can a SpacemiT K1 SoC function without the
->>>> clock driver built in to the kernel?
->>>>
->>> I agree to make it a Boolean, we've already made pinctrl driver Boolean
->>> and pinctrl depend on clk, besides, the SoC is unlikely functional
->>> without clock built in as it's such critical..
->>>
->> I disagree. The kernel is only for spacemit only, and the pinctrl
-> Sorry for a mistake, this first "only" should be "not".
+Hello,
 
-This is a general problem.  You can't make a bootable
-SpacemiT kernel unless you define this as built-in (at
-least, that's what Yixun is saying).  But we'd really
-rather *only* build it in to the kernel for SpacemiT
-builds.  You clearly want to minimize what must be
-built in, but what if this is indeed required?  What
-goes in defconfig?
+I am completely new to and uninformed about kernel development. I was=20
+pointed here from Mesa documentation for Venus (Vulkan encapsulation for=20
+KVM/QEMU): https://docs.mesa3d.org/drivers/venus.html
 
-					-Alex
+Based on my limited understanding of what has happened here, this patch=20
+series was partially reverted due to an issue with the Bochs DRM driver.=20
+A fix for that issue has been merged months ago according to the link=20
+provided in an earlier message. Since then work on this detail of KVM=20
+seems to have stalled.
 
->> should also be a module. It is the builder's right to decide whether
->> the driver is builtin or a module. In this view, you should always
->> allow the driver to be built as a module if possible.
+Is it reasonable to ask here for this patch series to be evaluated and=20
+incorporated again?
+
+My layperson's attempt at applying the series against 6.14.1 source code=20
+failed. In addition to the parts that appear to have already been=20
+incorporated there are some parts of the patch series that are rejected.=20
+I lack the knowledge to correct that.
+
+Distro kernels currently ship without it which limits the usability of=20
+Venus on AMD and NVIDIA GPUs paired with Intel CPUs. Convincing=20
+individual distro maintainers of the necessity of this patch series=20
+without the specialized knowledge required for understanding what it=20
+does and performing that evaluation is quite hard. If upstream (kernel)=20
+would apply it now the distros would ship a kernel including the=20
+required changes to users, including me, without that multiplicated effort.
+
+Thank you for your time. If this request is out of place here please=20
+forgive me for engaging this mailing list without a proper understanding=20
+of the list's scope.
+
+On 2024-10-07 14:04:24, Linux regression tracking (Thorsten Leemhuis) wrote=
+:
+> On 07.10.24 15:38, Vitaly Kuznetsov wrote:
+>> "Linux regression tracking (Thorsten Leemhuis)"
+>> <regressions@leemhuis.info> writes:
 >>
->> Regards,
->> Inochi
+>>> On 30.08.24 11:35, Vitaly Kuznetsov wrote:
+>>>> Sean Christopherson <seanjc@google.com> writes:
+>>>>
+>>>>> Unconditionally honor guest PAT on CPUs that support self-snoop, as
+>>>>> Intel has confirmed that CPUs that support self-snoop always snoop ca=
+ches
+>>>>> and store buffers.  I.e. CPUs with self-snoop maintain cache coherenc=
+y
+>>>>> even in the presence of aliased memtypes, thus there is no need to tr=
+ust
+>>>>> the guest behaves and only honor PAT as a last resort, as KVM does to=
+day.
+>>>>>
+>>>>> Honoring guest PAT is desirable for use cases where the guest has acc=
+ess
+>>>>> to non-coherent DMA _without_ bouncing through VFIO, e.g. when a virt=
+ual
+>>>>> (mediated, for all intents and purposes) GPU is exposed to the guest,=
+ along
+>>>>> with buffers that are consumed directly by the physical GPU, i.e. whi=
+ch
+>>>>> can't be proxied by the host to ensure writes from the guest are perf=
+ormed
+>>>>> with the correct memory type for the GPU.
+>>>>
+>>>> Necroposting!
+>>>>
+>>>> Turns out that this change broke "bochs-display" driver in QEMU even
+>>>> when the guest is modern (don't ask me 'who the hell uses bochs for
+>>>> modern guests', it was basically a configuration error :-). E.g:
+>>>> [...]
+>>>
+>>> This regression made it to the list of tracked regressions. It seems
+>>> this thread stalled a while ago. Was this ever fixed? Does not look lik=
+e
+>>> it, but I might have missed something. Or is this a regression I should
+>>> just ignore for one reason or another?
+>>>
+>>
+>> The regression was addressed in by reverting 377b2f359d1f in 6.11
+>>
+>> commit 9d70f3fec14421e793ffbc0ec2f739b24e534900
+>> Author: Paolo Bonzini <pbonzini@redhat.com>
+>> Date:   Sun Sep 15 02:49:33 2024 -0400
+>>
+>>      Revert "KVM: VMX: Always honor guest PAT on CPUs that support self-=
+snoop"
+>=20
+> Thx. Sorry, missed that, thx for pointing me towards it. I had looked
+> for things like that, but seems I messed up my lore query. Apologies for
+> the noise!
+>=20
+>> Also, there's a (pending) DRM patch fixing it from the guest's side:
+>> https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/9388ccf699252232=
+23c87355a417ba39b13a5e8e
+>=20
+> Great!
+>=20
+> Ciao, Thorsten
+>=20
+> P.S.:
+>=20
+> #regzbot fix: 9d70f3fec14421e793ffbc0ec2f739b24e534900
+>=20
+>=20
+>=20
+
 
