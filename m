@@ -1,79 +1,93 @@
-Received: from out28-73.mail.aliyun.com (out28-73.mail.aliyun.com [115.124.28.73])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2772415E97;
-	Thu, 10 Apr 2025 02:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489E31CA84
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744253413; cv=none; b=DMvs7pF0EW6E0MtYyHPOGW0WTt5EAA85kkDa+CiXB6RgfaBI0oApuAlVSNJH9NFbu+5WfK+Q7/+d9cW/UfEeW0qktB7GiEjYYHgKRWEVoK0bOn31p5To2Wp7o23Vbe+1rv2Vzzv7W3n5njJRytLGyU0jEksjin/niPxwMv1jLLQ=
+	t=1744253549; cv=none; b=fXIkpv3BEXlNm2GEpYqqEO1Z6P1TYcLWY+/TEsy/9pMLCTXMVOlUnvzLTc7sIiE1qQBdZcWaUu1blZE8vStD0VIWcaojCzPFMkejHigULE8V3NjrsATxBcifNfryiO0o8kpKwuHrA1O8K+YdcSYFpPclXPAse4hktKmkyujhJYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744253413; c=relaxed/simple;
-	bh=iq21jYsJeA2Z6RjzDdU7XczZ/ym3oARr48MSedSPnBY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jiaRDiPEjprFzWADwwx1vdp7aRfQxsb8Y0A8CYpjsS18zPerOx5YPpwImNQTn2DpTMtxjRDPD+3/6uqmmIpwdR+NKVSeVVvfimmKCRnDqVIxHqCczHyXG3TvRQWSHEz9hKvG/4mLzsrsdSCqRgYjsCAhLOa719sr2FpNSoavohc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-Received: from ubuntu-VirtualBox..(mailfrom:wangweidong.a@awinic.com fp:SMTPD_---.cIcBc.J_1744253396 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Thu, 10 Apr 2025 10:49:59 +0800
-From: wangweidong.a@awinic.com
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	wangweidong.a@awinic.com,
-	yesanishhere@gmail.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yijiangtao@awinic.com
-Subject: [PATCH V1] ASoC: codecs: Add of_match_table for aw888081 driver
-Date: Thu, 10 Apr 2025 10:49:53 +0800
-Message-ID: <20250410024953.26565-1-wangweidong.a@awinic.com>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1744253549; c=relaxed/simple;
+	bh=3GMKJMyO6XbTppXxJ4t5YNnNmyH44h7Kci21jGO8V5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HOHCyKCPcOwijTIJrpbXzcz2iuaq0LW84pX6Hih6fp9b8D4/ZnaCiKw+wa7IRxFQYDQicrYhzKPMc1ls7G1PqA0gUiOB2rgIg7l/xjvjDzvyzfVn49wxRjcmr6jYNevwtXqeZ6hjPBU1iNUfKnANNIGS866ZhTd6ij2YSC/uINc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZY44h41zSzvX2s;
+	Thu, 10 Apr 2025 10:48:20 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id D3FE6180468;
+	Thu, 10 Apr 2025 10:52:23 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 10 Apr 2025 10:52:23 +0800
+Message-ID: <04f4cff4-be7c-48d8-b24e-535ccc67d908@huawei.com>
+Date: Thu, 10 Apr 2025 10:52:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] alloc_tag: handle incomplete bulk allocations in
+ vm_module_tags_populate
+To: Suren Baghdasaryan <surenb@google.com>, Andrew Morton
+	<akpm@linux-foundation.org>
+CC: "T.J. Mercier" <tjmercier@google.com>, <kent.overstreet@linux.dev>,
+	<janghyuck.kim@samsung.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250409225111.3770347-1-tjmercier@google.com>
+ <20250409171238.494fd49979b4607bff9791b7@linux-foundation.org>
+ <CAJuCfpHaocOVHf673X1nn_R0cpz=GtDZEZ+ceo+5OptRcBUjcw@mail.gmail.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <CAJuCfpHaocOVHf673X1nn_R0cpz=GtDZEZ+ceo+5OptRcBUjcw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-From: Weidong Wang <wangweidong.a@awinic.com>
+On 2025/4/10 9:44, Suren Baghdasaryan wrote:
+> On Thu, Apr 10, 2025 at 12:12 AM Andrew Morton
+> <akpm@linux-foundation.org> wrote:
+>>
+>> On Wed,  9 Apr 2025 22:51:11 +0000 "T.J. Mercier" <tjmercier@google.com> wrote:
+>>
+>>> alloc_pages_bulk_node may partially succeed and allocate fewer than the
+>>> requested nr_pages. There are several conditions under which this can
+>>> occur, but we have encountered the case where CONFIG_PAGE_OWNER is
+>>> enabled causing all bulk allocations to always fallback to single page
+>>> allocations due to commit 187ad460b841 ("mm/page_alloc: avoid page
+>>> allocator recursion with pagesets.lock held").
+>>>
+>>> Currently vm_module_tags_populate immediately fails when
+>>> alloc_pages_bulk_node returns fewer than the requested number of pages.
+>>> When this happens memory allocation profiling gets disabled, for example
+>>>
+>>> [   14.297583] [9:       modprobe:  465] Failed to allocate memory for allocation tags in the module scsc_wlan. Memory allocation profiling is disabled!
+>>> [   14.299339] [9:       modprobe:  465] modprobe: Failed to insmod '/vendor/lib/modules/scsc_wlan.ko' with args '': Out of memory
+>>>
+>>> This patch causes vm_module_tags_populate to retry bulk allocations for
+>>> the remaining memory instead of failing immediately which will avoid the
+>>> disablement of memory allocation profiling.
+>>>
+>>
+>> Thanks.  I'm assuming we want cc:stable on this?
+>>
+>> btw, it looks like the "Clean up and error out" code in
+>> vm_module_tags_populate() could use release_pages().
 
-Add of_match_table for aw88081 driver to make matching
-between dts and driver more flexible
+For the 'Clean up and error out' part:
+next_page[] array might need to be reset to NULL if user is able to
+reenable the memory allocation profiling when the above happens as the
+current page bulk alloc API are only populating NULL elements.
 
-Signed-off-by: Weidong Wang <wangweidong.a@awinic.com>
----
- sound/soc/codecs/aw88081.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/sound/soc/codecs/aw88081.c b/sound/soc/codecs/aw88081.c
-index ad16ab6812cd..3dd8428f08cc 100644
---- a/sound/soc/codecs/aw88081.c
-+++ b/sound/soc/codecs/aw88081.c
-@@ -1295,9 +1295,19 @@ static int aw88081_i2c_probe(struct i2c_client *i2c)
- 			aw88081_dai, ARRAY_SIZE(aw88081_dai));
- }
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id aw88081_of_match[] = {
-+	{ .compatible = "awinic,aw88081" },
-+	{ .compatible = "awinic,aw88083" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, aw88081_of_match);
-+#endif
-+
- static struct i2c_driver aw88081_i2c_driver = {
- 	.driver = {
- 		.name = AW88081_I2C_NAME,
-+		.of_match_table = of_match_ptr(aw88081_of_match),
- 	},
- 	.probe = aw88081_i2c_probe,
- 	.id_table = aw88081_i2c_id,
-
-base-commit: 3b07108ada81a8ebcebf1fe61367b4e436c895bd
--- 
-2.47.0
-
+> 
+> True. I'll add that into my TODO list. Thanks!
+> 
+>>
+> 
