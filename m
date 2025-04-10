@@ -1,121 +1,107 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1E81EB1AA;
-	Thu, 10 Apr 2025 15:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268F07083C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299206; cv=none; b=XP7wD5bX0xDtpMJyPBxi10VWBYANdLKBsJSd0LTEWm7Fxir2xh/+q8McM+0Aq0qmKp6feuR92mPB/qmMdfUd6kjr+tk9f3ATKbPja26VBqbOw3z/0ykEWyYFbS4sYhtP9LXPnQploKoZDjFeRBeXekhIgX/dOKzZ/VvPU6ZYDN4=
+	t=1744299225; cv=none; b=s51D93x9QkUJKKuaDGvzrwW3r/lWxxnKc1LgDf27EGD0ULvxCAX31qrsU7B8NGIDI0YGlFtTrZ9Rwl0o/WmZOGpkbcOhos/kgx2xak5rLqexS7CH1obxIaXzkuC/5AM/ohZzrBEV71YXu4H4HEHgpFZApqY15SqK2Op422yyHUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299206; c=relaxed/simple;
-	bh=rqS2mgSGGMtXh0MDTyHoB5+bCseRAIgyQhVryVg3D+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OUvJOf3KbP2Xq/Bq9i1ryTt2XR2idi8Db8ZndmtKxEtIXN9z2GGvpZ9/Epg9uu46i2b1V3wf6/g6RiMTcodASAM7Ap/zYTIhTVDwDMRFXE9wd603IkQiHQI1ZTpJH1ZKH/mywc38FthUKECnBQkWuCYT92+zEJlUEXt19IjL/YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXsKzcVy; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744299225; c=relaxed/simple;
+	bh=v99tiqhZEPNc+au+zsTlLfO+UL4lnCpGAj55KgcQOyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Epvf6imnzJ9p5YbT/OjU0ZybSSUsvuTNhj7l3UOuOhqiSrmZt6XaUsVE82GIy4sidfda5uMYm/qOId18PEe7p5njDYEmUB3OHKK1tRgR6QX+pLDbX3sx2LCBFjzv3HhnFZjtMYF0fL5yG7lMltgiVg6WQRDTNjxf+KHsuL3XTB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XdvUjbOQ; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXsKzcVy"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so10427125e9.3;
-        Thu, 10 Apr 2025 08:33:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XdvUjbOQ"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d5ebc2b725so3242015ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:33:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744299203; x=1744904003; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mufWQBCfhfh0Dd1cBFQEeIzlzzUVdMj6j6jZsR61Hv0=;
-        b=BXsKzcVyPz5yiV8SQeIFnAxdzZKQqytkvAQHR9yn62Wffw+P8vN2zkKT3EOTQnmN2N
-         ckKfkBdragTyTRoEbTh7vdmfRxjcLfQPey8/V3aMzapMFP3KJ3SvuyBs6zGT+iaDA5tF
-         5B1bifiMPOa5t7djwVStlEKPt8PFDUeYxhL9RlC3gxMYl1pSf3h940ny/BkPBzt7Q72J
-         hIBDPIwFYiQe7L1EsUXhDmyfj1RB4Q/L+/Ko+LwYFok/LcIrmtwdfQZXOa4MoiNP7BbS
-         yNlZtN+c3wU8M36Bxl439KuuwX301AGNil+yChXORjpw4fQ8VZVSO7DgxMSObg+nPGwL
-         cJDQ==
+        d=linuxfoundation.org; s=google; t=1744299222; x=1744904022; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TWuu0TVvkVtEFQtTM518BO6Po0Ztx9T2clp/sbsG4gU=;
+        b=XdvUjbOQSZ2FbCmM7yrk1oQiK0qVCi7pOOZYrF2G7x7xU+6jlqt+TcxVLoN8D5T3PV
+         o87psddCbCZyzCdmbgJCyW1G2gudqolRdqyrB6B8UMlGtq+MjxR52VZBaO55hY27YiSB
+         fdE90Ymu3KKhIJyZomFAaxRtz3/TBxnl+sNt4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744299203; x=1744904003;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1744299222; x=1744904022;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mufWQBCfhfh0Dd1cBFQEeIzlzzUVdMj6j6jZsR61Hv0=;
-        b=UNeJJywidGN07Vh7iDG/W17Bwx7mmlxx+ToktMU3Pbt7JddNjhWgieGYKDoUc8v8D6
-         YnWecMEmTRwc/Rz9sk8k/PmXgQ+sb4CYT5WTbMnn3gzaPuzoUGh6GrkV/LfhPc53VaeL
-         pMPFSRaLvnOg4P5erPNdj57mHuC/4Dv8OwwrJMQn4ze/TcYgF9I/ZmqvKi/iQeWeCMB4
-         Cw7CjEN0tkkc8m7XiVh1w8fXMr9QMG61rC2b7ZQNz0+ctizB806IFD8/F/0CDrw7UftB
-         kQKejIkkHtLegpa9bwkd6hIGky7qdWf/qwIAyEgfFo/xUnNxBMpAqY3+LPJhwYK16gna
-         O+eA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuShI7wDFmjha823aKXFoU9UwBtTEaEZxR609EwEn9xQX7056qTeUiv0Wlsij13JYo43A6sMCdMoui0qIZ@vger.kernel.org, AJvYcCW3MhqI7h3IBZCmTeHsZ9tq3pBAyrTkvboMma8CzMceEpQIu437g55YpxasBzzepOYRdQO+OI1fWYHbACky@vger.kernel.org, AJvYcCWjaJVEoLTTPT7O1sw8KUqFFBTN+Ei75lci7+BMvqI+XucASGWaqzdxEwSaYknKhKWJscDf6NIgF/g9addJLyubA+9aLQec@vger.kernel.org, AJvYcCX1X7weWfKCjElCHOTUiXCU9rP7UA3EU3n4/IeLcQU+iJgEI86MrOKqGkT5gEN6r3ej/gxcuVWDwTCk30sy7R4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2pHfP/dH8CLQPoZ7ekeGwWUv3/r8E4emK5ALZaSY5X4PujJtx
-	Lui2IpiHpo3iUNVrws4peuzvDhcReMohynP+faKC86sYenJqsRCU
-X-Gm-Gg: ASbGncumS1KCYCt26TeDz//Ae/toAjkgEcehklhwhfUGQskTFcLINAyTOS1iQAfcKNB
-	ld3v/LQNTG0XxTEsVjUoj1NCxfXX6i8yNu1fmKPLrcssCR+NyZXEQ18vjYcqrUHPKpRVtRYuvXO
-	TGl9fP2X/2T+PCFp+TxpKk9aWTwP0GsDbkyCi5+HoTv64fUdUVZbCJn2UUQWpVntAmxlRyIDJvW
-	bUxSgkqZUMU+C7QPZvTIR5W2/rq1CH5UAY/XfdgI31teEkaK4rXkAENI34JhI+PglHVOeIPo19K
-	6c5F3r+yTNyoLvt3gjXkeCi2bPRjIdI8U52MfEpPZt5S9n4MTyDjJpNnzwAMXs2QLnI=
-X-Google-Smtp-Source: AGHT+IErpYp47RaPcYNUotAQy19lNREpqUTjnBlbW3tbQQAJj+KKVW6iLFYXKxgBNzOHVVtZNPx5rg==
-X-Received: by 2002:a05:600c:a087:b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-43f2d7ae775mr43635555e9.3.1744299202992;
-        Thu, 10 Apr 2025 08:33:22 -0700 (PDT)
-Received: from localhost (ip87-106-108-193.pbiaas.com. [87.106.108.193])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f2075fc6dsm59209915e9.28.2025.04.10.08.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 08:33:22 -0700 (PDT)
-Date: Thu, 10 Apr 2025 17:33:21 +0200
-From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: mic@digikod.net, gnoack@google.com, paul@paul-moore.com,
-	jmorris@namei.org, serge@hallyn.com, kees@kernel.org,
-	masahiroy@kernel.org, nathan@kernel.org, nicolas@fjasle.eu,
-	linux-security-module@vger.kernel.org,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [Bug Report] A compilation failure occurs when landlock and
- RANDSTRUCT are combined with GCC 14.2.0.
-Message-ID: <20250410.926dbc57c00b@gnoack.org>
-References: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
+        bh=TWuu0TVvkVtEFQtTM518BO6Po0Ztx9T2clp/sbsG4gU=;
+        b=d5Y0g78yPj1CB7ri9J3BSvl+2t19gF5FIBC0ZRS1p2m0suTvevLgnfloejOXjEyNrU
+         Hs7onW/AJk6XcAQhlS3264oSWL5I/CkvuVYopMTx7JYE+7WW5r4DmpQcEau35uyRMBHZ
+         /B/pSk6kRTEkt5IxQd5mSP42HheKp2oIWontDNQumJYL9gDuOAiwnJMpSA8gH7g/JfEp
+         KKIN9Qo8KCnfiXEzd9VlQvVKrWDU5Flb6FtMGUpKWMckHFhcphvdfyYzIyq0W3qAcm7a
+         czLQyUt2GK8J0iQ8MQ6eHzoIicG+ol3oywELljBfOTPgicU5lpnmMhZr7BD4nsu6NS+S
+         RZjw==
+X-Gm-Message-State: AOJu0Yxuvd+mvyEw+OZQ1fW9cxkVPKnNSh4YbsxfKoCXFnn3Bh9V6tKS
+	Uzh8HlU5qZlaUVr2gedDjo8VOiBNAHznq9J+TlRE8N1eMaf5gtiEU+hQI3f1lR0=
+X-Gm-Gg: ASbGncvYvJrsHfCT0knliGNh/azrWrrEe6pORC9zM36oxv1WIQ0NIeRbLnFzHvsEiKI
+	wIpLn2OMUD0xn3fFzxrLUJQGNFDuyUJ9jjwf3Af10FZrL/nUdqK2UyBvc1yYCd9XK1CBpCpp+tD
+	DReImOH2Cp/gkERs8BAGoMhFZRSzw2WLL7S4yRgDruaI/I1WnvFK5RSXvjgL+XyImLgQtSZo4TM
+	0scINmix8EOXrcN2mkyo/hbcpKMdGRReYhYeFtgulSw0RtGgsuDFYeA6+XeSDtvXpd/O5PwgfLp
+	KQtL9Pm6/B43EnGpyjTr+pE0Bb/9oN65NN+hrX8zUsqhTH+gQbk=
+X-Google-Smtp-Source: AGHT+IEMrgXmJRRAoLU7m+PL1i/g4DJ8Gi+/jcEloYQwuzmWrc2QtQdxI25WU5XntnT2B7cItRJfPg==
+X-Received: by 2002:a05:6e02:194c:b0:3d0:21aa:a752 with SMTP id e9e14a558f8ab-3d7e5f50684mr32572795ab.2.1744299222246;
+        Thu, 10 Apr 2025 08:33:42 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dc591f6csm8208425ab.69.2025.04.10.08.33.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 08:33:41 -0700 (PDT)
+Message-ID: <f72fcc0c-b0b5-4131-a5b5-bf1d1320c85c@linuxfoundation.org>
+Date: Thu, 10 Apr 2025 09:33:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/32] selftests: harness: Use C89 comment style
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Shuah Khan <shuah@kernel.org>, Willy Tarreau <w@1wt.eu>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
+ <20250407-nolibc-kselftest-harness-v2-2-f8812f76e930@linutronix.de>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250407-nolibc-kselftest-harness-v2-2-f8812f76e930@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
 
-Hello!
-
-On Thu, Apr 10, 2025 at 04:11:15PM +0800, WangYuli wrote:
-> [ Compilation failure log: ]
+On 4/7/25 00:52, Thomas Weißschuh wrote:
+> All comments in this file use C89 comment style.
+> Except for this one. Change it to get one step closer to C89
+> compatibility.
 > 
-> *** WARNING *** there are active plugins, do not report this as a bug unless
-> you can reproduce it without enabling an
-> y plugins.
-> Event                            | Plugins
-> PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-> PLUGIN_FINISH_DECL               | randomize_layout_plugin
-> PLUGIN_ATTRIBUTES                | latent_entropy_plugin
-> randomize_layout_plugin
-> PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-> PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-> security/landlock/fs.c:In function ‘hook_file_ioctl_common’:
-> security/landlock/fs.c:1745:61:internal compiler error: in
-> count_type_elements, at expr.cc:7075
-> 1745 |                         .u.op = &(struct lsm_ioctlop_audit) {
->      |                                                             ^
-> 0x7f27fa6bdca7 __libc_start_call_main
->        ../sysdeps/nptl/libc_start_call_main.h:58
-> 0x7f27fa6bdd64 __libc_start_main_impl
->        ../csu/libc-start.c:360
-> Please submit a full bug report, with preprocessed source (by using
-> -freport-bug).
-> Please include the complete backtrace with any bug report.
-> See <file:///usr/share/doc/gcc-14/README.Bugs> for instructions.
-> make[4]: *** [scripts/Makefile.build:203: security/landlock/fs.o] Error 1
-> make[3]: *** [scripts/Makefile.build:461: security/landlock] Error 2
-> make[2]: *** [scripts/Makefile.build:461: security] Error 2
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+>   tools/testing/selftests/kselftest_harness.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+> index 666c9fde76da9d25fe6e248a7f2143c113473fe1..bac4327775ea65dbe977e9b22ee548bedcbd33ff 100644
+> --- a/tools/testing/selftests/kselftest_harness.h
+> +++ b/tools/testing/selftests/kselftest_harness.h
+> @@ -983,7 +983,7 @@ static void __timeout_handler(int sig, siginfo_t *info, void *ucontext)
+>   	}
+>   
+>   	t->timed_out = true;
+> -	// signal process group
+> +	/* signal process group */
+>   	kill(-(t->pid), SIGKILL);
+>   }
+>   
+> 
 
-Thank you for the report!
+Looks good to me.
 
-This is in my understanding a duplicate of the discussion in
-https://lore.kernel.org/all/20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org/
-
-–Günther
+thanks,
+-- Shuah
