@@ -1,196 +1,237 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21DA21D587;
-	Thu, 10 Apr 2025 09:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278766; cv=fail; b=KdVe1ZIRdM+tDKHbV1iGAMhtqhMQo4LYNaJ75NA4w7PGsxWGDX4LkGpfym1urdzV8DFmM+7ofGzbG9sAA5yD/M2CYLdEoKelKjPRLlVzsaJdQpuZVIIa0YTKJuJW/MN6Mz+qAcPGYB5yt5JyAOcgVBnOHg3D6aKeOmgTAdmxxuE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278766; c=relaxed/simple;
-	bh=fWwIA9A2VpAwJScbMgsI1aGUB3+Ic/3je3Unnmxonuk=;
-	h=Content-Type:Date:Message-Id:To:Cc:Subject:From:References:
-	 In-Reply-To:MIME-Version; b=BXBrZwRhEVdUUXPHy/q8tf+AisIEDeDHm8QWq9BPWkuWkeoYMYv8K6cfzbTzpnXZydOgEfKRClv8Qlh6ceaawHCWhrs+I2UN+2t0YNQpBai7NryyN108yCNgHJjH6NDJYe2qxjvBGOFMWAVrJhbW815Qf2f1RXNgxx8ECVjD4rM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mVpCgoEL; arc=fail smtp.client-ip=40.107.223.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43860269D0C;
+	Thu, 10 Apr 2025 09:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744278798; cv=none; b=BPHMXTh98YDMC+i/O1ilid2nMrscPSbxEUinumurOH6nJ5vn2VtQ2opE+ap4CNsHZDWtj66MVLgySExGuskiZN+rcBPQxIUJWuko/ZUKUMIWe0OL9Y23wwtQMwor8zkldyF4Hb8aoaTmPb4bgAmu/m1HYbe3ZguAEo93sN6SJEU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744278798; c=relaxed/simple;
+	bh=jfdZoHdvb1PYe6Xj1zXtn7WtPaT6dulwA78Y/DWrCWs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VpTcOW/GuBsRcSvyrxUEj+lvoX8ipfd7BQ0/xHOzKINb28iBWX14WFDfYG5HZvtcIr5BHFgrPakKDMFlgqjXFYmLtgZOeYxxUk+JPMJUTySFc5x2i6Gw7gXEM4g0iLHTTflYNUB+KdeTJOXOipIj5jRWL4Tkfw49ZHod7V+gZ7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=azKE0pTe; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mVpCgoEL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=erW0IIdG2AMN+CuwzHgxAC7qRz64Mx3jFTosI7h4AjvjUHNx4e1WNtxUXb6gnTtjg4atYgf2Ac5+kYmGxEE1k9j9bpmgeSfcXWGUbGumQOEBo3jMw8/PFsx6umYm/tgnExeKm5Kfrp+nPPQR3uhg0bPy99H7asR897YNRVaz40jcIfhXQfHRofra00dsiDEfGfAEsp0KXMLmaGkcRfOO7SVLLqRZchOM15KODMJIuL4fFlJ8OZxaKZs3t+vM9HVMYWM4bThMzShSsq96oHTI39BG8QHRchhpfn0DnadVk/3fGA1Lba2O8glmDS+3Y+qtq4ts+/KFTCzbSNm98vV/WA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HSWs2Xv/Zdt4TFVGU9dE+t3UhdLga/Z+3P4sMzNUkxY=;
- b=rMSfizn+EKSbpZrDqUPevUOeXQaJ0kxJOwosaJ9XStSodHgQeM4/LUMOJXFqiHMTQwXE1rHVBU04UqXxUkJCVY/yIQUd7509BmQxQ251I2vSXkageIB/pCfVVE35dkSz4GpA4LDEpkz6MM217MRcGwZj1jrkPUAraoA6ibVd+3y6TU5faGTmmTC5BQ4GNFWp3KwFSqPB8fzBWuuHrvbpdiQYnLfX4pYfcG0Ef+zGJO14w/lI6O23UJSJeZb+UIO30tWCpA+DLs1gCYMyYUe0rR1qGYh5m+3Vmj8O/W+exP4qXBJXfRkB/H14pFuawrL8UpUuUx52j3ObD8dplYcRIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HSWs2Xv/Zdt4TFVGU9dE+t3UhdLga/Z+3P4sMzNUkxY=;
- b=mVpCgoELtHFwfQljz+RbvVF2klhvZgRgpLxFV0MTrqtgjYw+NgSMhpr6zKsapn/7m7MYJBOfe9WRDnyMgKYX+2SpBFd5a3gqzKr18kAZfMOQkhZuEnwxbJjYMZiq/zNTRQNFAnNXQJ+iFIIE4vPasYqGPoQGqBmmQQSA5dI3uqP6O7od/6/Jd2CYOESnTSPtSXjNLDP/wmz/Oqr6HkwmcLZoJ5ngIpLwiVuU8wJN15bccDrIGp0Bw/g2caW9D0FNKfsHQjtilOpGp74FFsA88/RjqzB4c7XeURg+/ErBv06kONi/J6tRVNcc/p5p/FwkpAgiZxnPl6VefcIMR+7SzQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by BL4PR12MB9534.namprd12.prod.outlook.com (2603:10b6:208:58f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Thu, 10 Apr
- 2025 09:52:42 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 09:52:41 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azKE0pTe"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so11832225e9.1;
+        Thu, 10 Apr 2025 02:53:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744278793; x=1744883593; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LPGXt0g52MME06VHiwLRnezmorxd1sA0KqT649GrFg4=;
+        b=azKE0pTeXGd35ChbsYK+kDnerAL012us9Tntft+919ik903Qi1e3+gqQDw0b0CdnEr
+         vpxiTrkO8hidg7UcLfgwow7omIf1aZDhIw0+KkJvPSfILsRGZcNakLmd1ZWoidW5vpYO
+         5SY75auBDAedmrBgiM9DR0lG56HB2jVUond2qfmw4ujeewXMzoT/JieQvodqVhh+nk4o
+         Ga4G5khxGdFn7B3oMKx8jr2wyUz2/P8eTcG8pr94fUKA3FsxTF+cITxSBEqKi9JmLftj
+         JhgTqmg303jJ/cPgolfIYE4X5gJ/nQX2un0yRvUFOi8KRjRe7jmGjYc0i2KRXES9NR2b
+         ke+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744278793; x=1744883593;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LPGXt0g52MME06VHiwLRnezmorxd1sA0KqT649GrFg4=;
+        b=pjPI52gUiKBf3y0MYnle64n7WWadjzRhnxm31AtlZ8FHgoMibK+mH5IJH9mhaZFmQc
+         Z7Z7VB83diCN+5NnRO+4ce0/w6FamMSoX2xPuuvl+q1nvqmWCbOhWUPelZk06yzazgnn
+         WW7cyob/OtBBGCoJS8gOPKbNilQ4VFZQbt0pdAzM6JRD/uHIYNQe9O+yR4GMKUL3YC1X
+         NGXg1+Q8n/0FiTpIoTQ/4LD/R4aKHWQ+M25svKZxiqAhuvM5qYvsVHSHdjqx5pp+j/fL
+         CJhl4+aSucmqNFHm9wszJZP6rYhFmRqO6HmmMPJhRiiqxdhJRr5x/k+TEg7+6zu2lkbx
+         VsFg==
+X-Forwarded-Encrypted: i=1; AJvYcCU97jabuUFws/C9mf4t+4tZol4qrRQXdmacrhqkDCSksTngn5oCkclMkk8j0s8ddJlwZrD71eDch903dDk4@vger.kernel.org, AJvYcCU9LSCoW7k2Dgl/F8jEXsWyYz0NLoz6wCxdqnvUrJXiPJGOjrG4CmvXTFwPtOwWqcsRMebFBQ2coQzC@vger.kernel.org, AJvYcCWMNHMvKiiaJthXKqdct4sDsKC3Exj5QGOog13oJna38Px1nfZ0pO0vsNiQeeV/I2xXwLSfRBmpvOpZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxELaR38jWTdJoI9pXPPVNwZBaoQIE3c3Q5GsugcRdMeimujRwG
+	+xrBKXViTeafcqBdSVu7yx+jVtpi+hFePWltVtrsqbCXw0P6RaAL
+X-Gm-Gg: ASbGncsI5xSajZG3rzQAenGokAJI4Iz8Hbxsqeg7kaIMJx7Q9VZVBwj0L1NRraWzsed
+	foc5PU2QRiksnUvf7YjrazQrdLrM9BhjaEDxVtYlr65fjc1Mc7Hc5/p1ljMZIXR151aIOMZjpeK
+	MuWaXK/sY2+29VFIx8tgJz8Z98aliEhGe3K/sjKSik2joX/nRClQ0WmwDK1xB4f6VgLOMGt/STP
+	hHQT9qTlnNVNK308+mNZ3SWZsSaKI6HPeg5MR6mVkC3B80QnazABxvMB/8UhOvSYctoFtK87etF
+	m8oaNqC1EwjaCNwPBpw77bS04rtLJV1VRrH81U4DPgOurYWIwXTjze0H5X1KnAxpXKDyayZEmTF
+	LmR/jlaXbK8TVyoK8FAnp2GQ=
+X-Google-Smtp-Source: AGHT+IHDmjbsYU+B1fjfn/G/QUfgle5G1tQDw1CIm/Z+8igoCnblxyBawgAULO7NrWNfMep+0ARwaQ==
+X-Received: by 2002:a05:600c:a012:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-43f2eb50f83mr19991235e9.12.1744278793256;
+        Thu, 10 Apr 2025 02:53:13 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20a303absm34971915e9.1.2025.04.10.02.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 02:53:12 -0700 (PDT)
+Message-ID: <6669da27c78714d76ff21f810cd57045e90d701a.camel@gmail.com>
+Subject: Re: [PATCH v1 5/7] iio: adc: ad4170: Add GPIO controller support
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ robh@kernel.org, 	krzk+dt@kernel.org, conor+dt@kernel.org,
+ marcelo.schmitt1@gmail.com
+Date: Thu, 10 Apr 2025 10:53:14 +0100
+In-Reply-To: <247566f848cdf2a245a8b6da6a84c22e155beeb7.1744200264.git.marcelo.schmitt@analog.com>
+References: <cover.1744200264.git.marcelo.schmitt@analog.com>
+	 <247566f848cdf2a245a8b6da6a84c22e155beeb7.1744200264.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 10 Apr 2025 18:52:34 +0900
-Message-Id: <D92V7PTBE3YP.2RFJGJS619NZN@nvidia.com>
-To: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>, <a.hindborg@kernel.org>,
- <ojeda@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Robin Murphy" <robin.murphy@arm.com>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>, "Alice
- Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "open
- list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]"
- <rust-for-linux@vger.kernel.org>, "Marek Szyprowski"
- <m.szyprowski@samsung.com>, "open list:DMA MAPPING HELPERS"
- <iommu@lists.linux.dev>, "open list" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] rust: dma: add as_slice/write functions for
- CoherentAllocation
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com>
- <20250326201230.3193329-4-abdiel.janulgue@gmail.com>
- <D90XDHJWABTC.1VM2A3KYOT0UL@nvidia.com>
- <4a48338e-64a1-4740-ae1f-7458507a009e@gmail.com>
-In-Reply-To: <4a48338e-64a1-4740-ae1f-7458507a009e@gmail.com>
-X-ClientProxiedBy: TYCPR01CA0115.jpnprd01.prod.outlook.com
- (2603:1096:405:4::31) To MN2PR12MB3997.namprd12.prod.outlook.com
- (2603:10b6:208:161::11)
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|BL4PR12MB9534:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29ab138a-4e99-46a1-a930-08dd78156ed6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZksybUQwZVphaUMrYStZditIZlZ2S2d2ZlV6bmpGYXcvQTE2eWVMd0JPNVFK?=
- =?utf-8?B?SWVoMjgzcnZhRkpXKzRoTi9aaVZkWTBtWmpNTTQ1VEI4YmhON3l2T3ZOeThZ?=
- =?utf-8?B?VzdTNzVPUkJRbEJlQ3pGQzlQRGlpVGlSWGFEYUkxYUNHL3dsbEVncHF1dy92?=
- =?utf-8?B?Z3RwMHN6bEpiNGhEUk1qcWJkWjFCUjRndHA4Uy80cGFTQzdqTTR0eEpoZjV3?=
- =?utf-8?B?SFRYM0lEVm9SNEV4clJpOWF0VTc5T3ZJTDNGOTF2b2w5YU9lZldvQjFHTWhB?=
- =?utf-8?B?NFR6dDZlTHFzb045OWZWYTd3Q2FUL0M4a01DRGp1ZSs2UmxiMHFCN29UOEFr?=
- =?utf-8?B?T2N0WTNZK1FNamFwenFyblBkYTdYeGpmNWtyMGZKT0s0WEVUUTU5cktWUXFV?=
- =?utf-8?B?aUZTV1JFT3pUVjZOQUlGSlZTZDVRc1BlRGt2WHp2NVpYQ0VENkxQZHVXVHFX?=
- =?utf-8?B?THRZc3prT0hUeVJLM1R2V0pWb1JuQmt0dDVWZm43Y2JJWkhhdWJMdGpCWER2?=
- =?utf-8?B?Nmx0bVhnaWFFTTVkazRKbUJCcUZzejRDQkkzMFZmMHNzZ3hoS0p3VE0ycTBu?=
- =?utf-8?B?Vm9mSFN2emluMXBwL29aTXVnR2JOTGhKa2szZFI2eElpVktUVm8zMGlrRnpE?=
- =?utf-8?B?NndESmMzWFI2QjY5TXAvaUNMNWNpZkZxaVBnNEdGZHk2OElqaE5Ib2dvSDQz?=
- =?utf-8?B?akhOakNya2Z1eEhZNWQvL0ZYMDFwcHYzNnF6NWFzRHdyR21Yd0Y3OTcwMytu?=
- =?utf-8?B?bWpxeXRPcUl0VWdiMUhQamFZOFlxK3cyZ1lsamRSakRVZSt3RHh3ZVBHS3px?=
- =?utf-8?B?eFpYQVh6bm9Va28rN3dmZ1NQcm9WRk5KMU5MRjk0QjFVaU1MNmJnV3gycGQz?=
- =?utf-8?B?b2hDK1ZYc2RJb202MEl2TTdtLzdUZjN6RXB4UisxZnljdElSSDgzeWVwWnN3?=
- =?utf-8?B?UXFZS2JKVXo1VWttYWxMSHYveVp5WEZwUVZXRWNDZWNvT05nbEdxWGxYQUhN?=
- =?utf-8?B?dlZHNjhVSU5aZDVrblFyaFhiYk1zdzlYZDkvVitubGVDK3MrNGVjVVBjQVdK?=
- =?utf-8?B?Rmtoc3dEZGRyeFg2bzB2OUJydHNmRmJ4UGljVkllR0JPSUc0dVB2NFU2cWhN?=
- =?utf-8?B?K1ByY1NZYVhMRGJEOGRlNG5oZDc2QWU3cUFiUTBvaTZyelNqOUFmTVpXdjZN?=
- =?utf-8?B?YkJjaXdpTUpoRjhaKzErR2ZON1ZodU9VcVRZVTdPRS9IUDJyUHNsK1R4Rm1K?=
- =?utf-8?B?MDhuVmE2MlgvY3JTdi9DQ2picmZvYjdaNHBmb012SUp1L0FUV2hZRHNxRFZr?=
- =?utf-8?B?Y29laWhQeWVmTWhTdUE2eUFHeEVldTNiVmd5ZDJRVWJvbUpCZDlwdndBV2du?=
- =?utf-8?B?bTgrZFRRUGRnVGh2Z2MrU1dhbFlCaVZhU29wdEVtQU84anBqSFh6dHNmcG11?=
- =?utf-8?B?NE5yK3M1RXBWWWhyTHVlQWR2MWVCMjZjTzZVNlErTWlFOG1QeEhDbTgwMitP?=
- =?utf-8?B?TENrS3pPNHdQNnFRUS8rd2xiU3YwQ000VENEYWlrSk9lWUdDcmtrbnNkOVJp?=
- =?utf-8?B?MXdhSUhORTM0RlBiaTBQaFoyd0htYU1GdmFzZHdtY0VSemFZSjZ3dVJaanBN?=
- =?utf-8?B?ZDlxNFRBajFVZThhcjk0SFh3YnlhWGExRlhDMkp5TEw2MGEyT0FGNFliWVZN?=
- =?utf-8?B?c3FERTZrSG5aV3BKMThVbWxHRmV5b1F2dUJrcnB1V0F2bm4zNi9KUEFNK0hG?=
- =?utf-8?B?djA5TGdyWnVpZC82aWZXRnhXUys5bm5MVzdFMUd6L3VHU0F6MzRSWUpYdkQ0?=
- =?utf-8?B?Vy9lQ1Zlc3dmRUhITkliTnlDK2xnOTNqR0x1OVRjWjJSUFJlSUpJOHBhMnNP?=
- =?utf-8?Q?vciYSzhP1JVpE?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eXFQaDJvdStJVWR1QzMrc3F0djV5YThiMVRjZ1dqUlRhWkUzRzc0R0xmeXYv?=
- =?utf-8?B?ZDFpbHRHVTV2WS81TU5RbkZLdGxiZmxXUEJ6aHl4dFN5WUpMaVNqZlczWW03?=
- =?utf-8?B?bHBkTisyYWxSdER4OC9reERQclRnSm93MkRBWkdYSzZOTkdVekJuSm53elFQ?=
- =?utf-8?B?TWRLWndzYUhhVnhQN1hxQnBqdzE2NU5hbTFwWDFXWlpXOTNuSnZId3hNczh2?=
- =?utf-8?B?VnAzRHNHbXZxSkdWcDBocTVQdUpncWdjc3Y5VVhBSUNNRnJuU01uUmk4L3FN?=
- =?utf-8?B?QUlWdzk0Y29mR3BFS3V0eTJMeFY4cHl0VUNHeWVsYjh3QVlnTVVFVENzOXFh?=
- =?utf-8?B?QnpzQ1BLNWNUakQxTU1kUFVQZG1ORStPMXU3K2xtZGhDWFU4UDhnOVd0MUEx?=
- =?utf-8?B?ZHpnbW5IOVJYM2VDMUxNTHJDdjVONUt0U1JxTytLK3JoUlVpaENRTUlVdmIv?=
- =?utf-8?B?SnhqbUpXSEtCSFlRck90U3VVVTFmMlpSSFNCdjNGMVc3ZTdEQ3N2VW4wNTh4?=
- =?utf-8?B?VXA3dUZqdHJzMkdCOWErcCtIUC9vVVpEVkNBeWRtaEdFQU1ZM0dTWGdHQjhi?=
- =?utf-8?B?NXZXd2txazFEMkRvTlZvSzhpaFhoZWEycE85ZG9ocTZ4aWFPc1NkZG93Vnhr?=
- =?utf-8?B?LzNrOGpSbEQxcStTU1haRERVMWQ5WmRVTjFPcWw3SGhjTUVjYWdUS2phVU5D?=
- =?utf-8?B?YXZWc3VFbjlNd29pdlp4KzN4WmIyWVlvMVo1RU1DSzlpOEV4NEg1VmFnVk9B?=
- =?utf-8?B?WkZaWXhWbldyM0M0NUFqeDZuUnBva3oyKzdDOUVvYTBuWStBMUtESmk4SUly?=
- =?utf-8?B?RmhremhsaUZIdG5OaWs2OWxRbTVSQTkwdGJJdlBXaHc5aW5qb2d6K1R3OE5B?=
- =?utf-8?B?a21YM1MvTVNKRG1TNlo5NzM2azFoYnc0QmhGbURJZFhrKy8va2d4NGlSOExT?=
- =?utf-8?B?blEwY2RTS3JlZmJCUGQ1Z1RqRSs3UmltYUMvL01GdGNheVgzNHcwSVdzc3cy?=
- =?utf-8?B?YWF6aVRuUWhiL2NKeWJ6L1pseG5lWm5LNlZqYmE5QzdCdEdYRVRQWTJyeHMw?=
- =?utf-8?B?aUhqL1dlSzVHaEVFbWNZQStGRmxkeG5VRHJobmtsWVgrRjNlT0I0UXp2ZFBv?=
- =?utf-8?B?d1E5ckJFVGJBcytRcCsweGI4TGhiQVJkQlp4M2hyb0E0aE04Vi9Sem9pckVV?=
- =?utf-8?B?c1NvUm9SdEpoRTZ4RmMxeUJlN00vZkRsR3lqL0NaSUVQam9xMzB6dU42U291?=
- =?utf-8?B?MHdoelFoRy9mNHNPbm9nQ0dDaytOQVZ5TDV4SkZpeXpWK0NaTmVvbjMzNWlu?=
- =?utf-8?B?ckJrOGRlMjdoYXUyKzZSN1dkM0sxckF4T2hwQXU2QUJpeGlkV0dwTHdxKy9r?=
- =?utf-8?B?VFBORmI0Z3NuYUtDVnRHeStDNWIrWDdtY2tFYmJWWC9WNmNTRE5wZmhNcFV6?=
- =?utf-8?B?TlkzMTlhVjdueWpBY0tlL2FuL2p0Y3BoWktXZGhNb2dTdEdrVWE4aXBqdnl1?=
- =?utf-8?B?NWR0R2l6WHRzQjE2R1RvOTN6MmliK2ppYy95ZGNSS2k0REhiZ1AxbW5mRjR2?=
- =?utf-8?B?Ly90RE9XVXZhVWpRb2xHZHZWSjVQbXYrY3dKL3hCWjJwY2ZoVUNCNXE4M2w2?=
- =?utf-8?B?M2piZzdXWFhMZnJOaUlGbE9ibVpzK0tEY25yRHRIcDZzTTFibHNQTzg3dHBp?=
- =?utf-8?B?ZmVzYUxnNHVPRm5xM3hBekVuTWwxTlRJQzE5NWM1WUJ3SU10YnR3TWQ0cHJZ?=
- =?utf-8?B?TUx1MTdaRnN3UXo4SUtvYkIwMFQ5am5hZU41MzFZNm9DaDNreUlGdWxOLzZR?=
- =?utf-8?B?MU5FQWZJWEV5U0ZLaHdBNWtOSm9ReklkNzVCd1lsTkd1R240WmJHM3R4VWhB?=
- =?utf-8?B?d0tOWDQvWXdTWjNmQzlRczhlS1BQZzNsanhiSWlxYXU0c2U3TmgrckpQYk9F?=
- =?utf-8?B?RFd1dmt0LzV3UUZIMTRic24zbWtaRmlweERwQk9JK3RNUkl0WThqREtPYmxJ?=
- =?utf-8?B?d1M3ODZNTmhMZzdSaitIMXZwTEt4UCs3bzBPRmtiMzFSbFhsY3NzNjNrYnJt?=
- =?utf-8?B?UUhONEhIZnBGNERxOFE3SHYrTWJDSUZWTWtvSnhFTzh4Z3JlNW5lNjFVRVdz?=
- =?utf-8?B?Zk5DSWxzcmpScUJsLyt1L1hFTW9JMnFlR0pROFVHR0sxRFhKWUUzeTU2QXQ3?=
- =?utf-8?Q?BqgbuTlwxVy659ROKf6nZ4zt2crhFDruxaJUaFDox/ZO?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29ab138a-4e99-46a1-a930-08dd78156ed6
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3997.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 09:52:41.3625
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CRFt4uKeWIbC6K9gBX60KIrGKMV3arxy5xTwzJGFvQewZKWez8uPGDbC9cJ7Dwa4kf2ChXKdjn8ZTgieafhflA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9534
 
-On Thu Apr 10, 2025 at 6:02 PM JST, Abdiel Janulgue wrote:
-> Hi Alex,
->
-> On 08/04/2025 06:08, Alexandre Courbot wrote:
->>> +        }
->>> +        // SAFETY:
->>> +        // - The pointer is valid due to type invariant on `CoherentAl=
-location`
->>> +        // and we've just checked that the range and index is within b=
-ounds.
->>> +        // - `offset` can't overflow since it is smaller than `self.co=
-unt` and we've checked
->>> +        // that `self.count` won't overflow early in the constructor.
->>> +        unsafe {
->>> +            core::ptr::copy_nonoverlapping(src.as_ptr(), self.cpu_addr=
-.add(offset), src.len())
->>> +        };
->>=20
->> How about leveraging as_slice_mut() so this unsafe block can be removed?
->
-> as_slice_mut is still unsafe, no? So we couldn't remove unsafe block stil=
-l?
+On Wed, 2025-04-09 at 09:25 -0300, Marcelo Schmitt wrote:
+> The AD4170 has four multifunctional pins that can be used as GPIOs. The
+> GPIO functionality can be accessed when the AD4170 chip is not busy
+> performing continuous data capture or handling any other register
+> read/write request. Also, the AD4170 does not provide any interrupt based
+> on GPIO pin states so AD4170 GPIOs can't be used as interrupt sources.
+>=20
+> Implement gpio_chip callbacks so to make AD4170 GPIO pins controllable
+> through the gpiochip interface.
+>=20
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
 
-Ah, that's right. In that case it would at least factorize the bound
-check and make the method a bit shorter, unless I missed something else.
+Just some doubts, see below...
+
+> =C2=A0drivers/iio/adc/ad4170.c | 167 ++++++++++++++++++++++++++++++++++++=
+++-
+> =C2=A01 file changed, 166 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+> index 97cf4465038f..b382e7f3dbe0 100644
+> --- a/drivers/iio/adc/ad4170.c
+> +++ b/drivers/iio/adc/ad4170.c
+> @@ -12,6 +12,7 @@
+> =C2=A0#include <linux/delay.h>
+> =C2=A0#include <linux/device.h>
+> =C2=A0#include <linux/err.h>
+> +#include <linux/gpio/driver.h>
+> =C2=A0#include <linux/iio/buffer.h>
+> =C2=A0#include <linux/iio/iio.h>
+> =C2=A0#include <linux/iio/sysfs.h>
+> @@ -79,6 +80,7 @@
+> =C2=A0#define AD4170_FIR_CTRL					0x141
+> =C2=A0#define AD4170_COEFF_DATA_REG				0x14A
+> =C2=A0#define AD4170_COEFF_ADDR_REG				0x14C
+> +#define AD4170_GPIO_MODE_REG				0x191
+> =C2=A0#define AD4170_GPIO_OUTPUT_REG				0x193
+> =C2=A0#define AD4170_GPIO_INPUT_REG				0x195
+> =C2=A0
+> @@ -189,6 +191,7 @@
+> =C2=A0/* Device properties and auxiliary constants */
+> =C2=A0
+> =C2=A0#define AD4170_NUM_ANALOG_PINS				9
+> +#define AD4170_NUM_GPIO_PINS				4
+> =C2=A0#define AD4170_MAX_CHANNELS				16
+> =C2=A0#define AD4170_MAX_ANALOG_PINS				8
+> =C2=A0#define AD4170_MAX_SETUPS				8
+> @@ -340,6 +343,7 @@ struct ad4170_state {
+> =C2=A0	struct clk *ext_clk;
+> =C2=A0	struct clk_hw int_clk_hw;
+> =C2=A0	int pins_fn[AD4170_NUM_ANALOG_PINS];
+> +	struct gpio_chip gpiochip;
+> =C2=A0	u32 int_pin_sel;
+> =C2=A0	int
+> sps_tbl[ARRAY_SIZE(ad4170_filt_names)][AD4170_MAX_FS_TBL_SIZE][2];
+> =C2=A0	struct completion completion;
+> @@ -1553,6 +1557,156 @@ static int ad4170_soft_reset(struct ad4170_state =
+*st)
+> =C2=A0	return 0;
+> =C2=A0}
+> =C2=A0
+> +static int ad4170_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	struct iio_dev *indio_dev =3D gpiochip_get_data(gc);
+> +	struct ad4170_state *st =3D iio_priv(indio_dev);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (!iio_device_claim_direct(indio_dev))
+> +		return -EBUSY;
+> +
+> +	ret =3D regmap_read(st->regmap16, AD4170_GPIO_MODE_REG, &val);
+> +	if (ret)
+> +		goto err_release;
+> +
+> +	/*
+> +	 * If the GPIO is configured as an input, read the current value from
+> +	 * AD4170_GPIO_INPUT_REG. Otherwise, read the input value from
+> +	 * AD4170_GPIO_OUTPUT_REG.
+> +	 */
+> +	if (val & BIT(offset * 2))
+> +		ret =3D regmap_read(st->regmap16, AD4170_GPIO_INPUT_REG, &val);
+> +	else
+> +		ret =3D regmap_read(st->regmap16, AD4170_GPIO_OUTPUT_REG,
+> &val);
+> +	if (ret)
+> +		goto err_release;
+> +
+> +	ret =3D !!(val & BIT(offset));
+> +err_release:
+> +	iio_device_release_direct(indio_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ad4170_gpio_set(struct gpio_chip *gc, unsigned int offset, in=
+t
+> value)
+> +{
+> +	struct iio_dev *indio_dev =3D gpiochip_get_data(gc);
+> +	struct ad4170_state *st =3D iio_priv(indio_dev);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (!iio_device_claim_direct(indio_dev))
+> +		return -EBUSY;
+> +
+> +	ret =3D regmap_read(st->regmap16, AD4170_GPIO_MODE_REG, &val);
+> +	if (ret)
+> +		goto err_release;
+> +
+> +	if (val & BIT(offset * 2 + 1))
+
+Why do we need this? Are we checking if it's a GPO? If so, we should return
+-EPERM in case we have a GPI?
+=20
+> +		ret =3D regmap_update_bits(st->regmap16,
+> AD4170_GPIO_OUTPUT_REG,
+> +					 BIT(offset), value << offset);
+> +
+> +err_release:
+> +	iio_device_release_direct(indio_dev);
+> +	return ret;
+> +}
+> +
+> +static int ad4170_gpio_get_direction(struct gpio_chip *gc, unsigned int
+> offset)
+> +{
+> +	struct iio_dev *indio_dev =3D gpiochip_get_data(gc);
+> +	struct ad4170_state *st =3D iio_priv(indio_dev);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (!iio_device_claim_direct(indio_dev))
+> +		return -EBUSY;
+> +
+
+This claim_direct() makes me wonder if there's any overlap between the GPIO=
+ func
+and normal readings? Like, imagine a consumer requests a gpio and no buffer=
+ing
+is happening so all is good. However, there's nothing stopping us for enabl=
+ing
+buffering afterwards, right? Wouldn't that be an issue? If there are shared
+pins, I can see this also being an issue even for single shot reading...
+Otherwise, I wonder why we have this iio_device_claim_direct() calls? Is it=
+ just
+for using the internal IIO lock?
+
+At this point, I did not checked the datasheet so I can be completely
+misunderstanding things...
+
+- Nuno S=C3=A1
+
