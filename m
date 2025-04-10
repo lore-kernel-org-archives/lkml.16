@@ -1,183 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C421EEA5D
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF731EF372;
+	Thu, 10 Apr 2025 08:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273634; cv=none; b=KYQBZ1K1ojq2w2lai5zxJw92DjdG7vbFnWXyjkwMDQd/e+aHwSnytu+Zuloro3oBE2HmaETYdsb+GM4j8HjaTH6m45p9KOA8UgQJ0WlEUuQisq9D1VGBZXnWRILWzF4oXD4CtdE+qFULVazya3l+L7z2rwjJAjV9MqczvVqxsyA=
+	t=1744273719; cv=none; b=N9fPsky8eJaiFZ7mQeFn8gEVc2sTO7fAYayV1D1uzuRFIlnPd6cpc41E+Ktrfzxog0569fHgImdrE6Gj9MKUfGzdpYYdQM5XEjboLjFEnK0OpFCgb3YtIyCRJkK322nQOcmy/wlNsdAPDwP/k8XQPKJ0uAV1P9sgNwGDqjyy2mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273634; c=relaxed/simple;
-	bh=7OgjP2r1y+H3C98mILy/OyuBEWsNZ4LMB1R3QgFCf1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sf341PBVyiSXrvq9gxb1Gt45by7xmau6rMJI8Lqnzld+vpw0ynHGrIF+Ynh1wlHdwwh2tQLSwAVm1w593wsPGCiIWC7dPcv4hlA4PKDlSBeq7Wg9rhjn7kpn5SewbazVBqGQw1phbQg2g8ooFIJbRAYSkudkYcYjNgZA8Eso1kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yd6UoVMm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744273719; c=relaxed/simple;
+	bh=1B79+g+n5OqnH6wJzQdfOTNChx1AjswGaK3LeiqvLQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j85mA2L+Hw7OKy9zO/JxIN4V4bTRG49E/dZVC14LCE7nXzAFaygAHnD8h7IXLmIWZxGH+rxL/4rMa5naV/bdOdcV5VIfRzbvD3ey0fvvf3JSbJ+V7eEsBFt963HzdNPHBS4x0uAx4rINhKFzPyEVbtEZLDK6gw/rRx6tlpDYUJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=06gFpt6J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SntfhicX; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yd6UoVMm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744273631;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="06gFpt6J";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SntfhicX"
+Date: Thu, 10 Apr 2025 10:28:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744273715;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OKzMCc0mBOI4figeschKj6q6v2G4wTIIAmTInqn3cTg=;
-	b=Yd6UoVMmOwcJadb73dYwNI9K01Gxk4Xh2UhLBbF9l/zCshuKMFEEqcBmVmL5yYf3dvjFYg
-	jIJkirLwFT1E72ZohXpXAPBY0aBVsIquqwihOIpsffIRm0xfY0ba3JKxLprY1e5hSoaM7u
-	0IYuqc6cSelny1QKv0RZNq5N4CmuWB4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-455-eakRA7OoMYml2AecDjx9QQ-1; Thu,
- 10 Apr 2025 04:27:07 -0400
-X-MC-Unique: eakRA7OoMYml2AecDjx9QQ-1
-X-Mimecast-MFC-AGG-ID: eakRA7OoMYml2AecDjx9QQ_1744273625
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4D9D1800263;
-	Thu, 10 Apr 2025 08:27:04 +0000 (UTC)
-Received: from [10.44.33.222] (unknown [10.44.33.222])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F9583001D0E;
-	Thu, 10 Apr 2025 08:26:59 +0000 (UTC)
-Message-ID: <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
-Date: Thu, 10 Apr 2025 10:26:58 +0200
+	bh=1B79+g+n5OqnH6wJzQdfOTNChx1AjswGaK3LeiqvLQY=;
+	b=06gFpt6JCeNKBmmUCl3E8Vi7uP+z4KE/SgkIrNnaEJGAqZ7WbAqIA+j8rl723TTqLZmwgv
+	66SzeeVCR5C6GThmCVfoZLATJRKioHujGsO75Qc9IlzH7V56c3ILVqFLVRpuyn9zvXDQxg
+	yz8I2AVDuCN005eupBNfE0epuxa2yds0ALZs+3KNidlxxC5WVcsepLSugf3Hn077IjYnXY
+	KAKJpeQT9jeU/1M7P0YeOzJNnqOquyPoFMUbPT6mQ3uF7HKlG5HwSeIEYk9Yg8TP+Yse2L
+	wZ/ADNd2LvvDnt9/VJKcfD8YSJJ4NPMuOf955iOkm8jk2yM13bpxtNAKSnznng==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744273715;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1B79+g+n5OqnH6wJzQdfOTNChx1AjswGaK3LeiqvLQY=;
+	b=SntfhicXKIt86nPTvIMP8OT+uRxE54zpv1Kc9YbR2LAn0uEqgXmCJQqQcsuBnxBNbMj2Ig
+	TJVakXqxYWSskPDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, Eric Chanudet <echanude@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev,
+	Alexander Larsson <alexl@redhat.com>,
+	Lucas Karpinski <lkarpins@redhat.com>
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+Message-ID: <20250410082833.pjvaYuCM@linutronix.de>
+References: <20250408210350.749901-12-echanude@redhat.com>
+ <20250409-egalisieren-halbbitter-23bc252d3a38@brauner>
+ <20250409131444.9K2lwziT@linutronix.de>
+ <4qyflnhrml2gvnvtguj5ee7ewrz3ejhgdb2lfihifzjscc5orh@6ah6qxppgk5n>
+ <20250409142510.PIlMaZhX@linutronix.de>
+ <20250409-beulen-pumpwerk-43fd29a6801e@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-To: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250409-beulen-pumpwerk-43fd29a6801e@brauner>
 
-On 10. 04. 25 9:13 dop., Krzysztof Kozlowski wrote:
-> On 09/04/2025 16:42, Ivan Vecera wrote:
->> Add register definitions for components versions and report them
->> during probe.
->>
->> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->> ---
->>   drivers/mfd/zl3073x-core.c | 36 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 36 insertions(+)
->>
->> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
->> index f0d85f77a7a76..28f28d00da1cc 100644
->> --- a/drivers/mfd/zl3073x-core.c
->> +++ b/drivers/mfd/zl3073x-core.c
->> @@ -1,7 +1,9 @@
->>   // SPDX-License-Identifier: GPL-2.0-only
->>   
->>   #include <linux/array_size.h>
->> +#include <linux/bitfield.h>
->>   #include <linux/bits.h>
->> +#include <linux/cleanup.h>
->>   #include <linux/dev_printk.h>
->>   #include <linux/device.h>
->>   #include <linux/export.h>
->> @@ -13,6 +15,14 @@
->>   #include <net/devlink.h>
->>   #include "zl3073x.h"
->>   
->> +/*
->> + * Register Map Page 0, General
->> + */
->> +ZL3073X_REG16_DEF(id,			0x0001);
->> +ZL3073X_REG16_DEF(revision,		0x0003);
->> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
->> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
->> +
->>   /*
->>    * Regmap ranges
->>    */
->> @@ -196,7 +206,9 @@ static void zl3073x_devlink_unregister(void *ptr)
->>    */
->>   int zl3073x_dev_init(struct zl3073x_dev *zldev)
->>   {
->> +	u16 id, revision, fw_ver;
->>   	struct devlink *devlink;
->> +	u32 cfg_ver;
->>   	int rc;
->>   
->>   	rc = devm_mutex_init(zldev->dev, &zldev->lock);
->> @@ -205,6 +217,30 @@ int zl3073x_dev_init(struct zl3073x_dev *zldev)
->>   		return rc;
->>   	}
->>   
->> +	/* Take device lock */
-> 
-> What is a device lock? Why do you need to comment standard guards/mutexes?
+On 2025-04-09 18:04:21 [+0200], Christian Brauner wrote:
+> On Wed, Apr 09, 2025 at 04:25:10PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2025-04-09 16:02:29 [+0200], Mateusz Guzik wrote:
+> > > On Wed, Apr 09, 2025 at 03:14:44PM +0200, Sebastian Andrzej Siewior w=
+rote:
+> > > > One question: Do we need this lazy/ MNT_DETACH case? Couldn't we ha=
+ndle
+> > > > them all via queue_rcu_work()?
+> > > > If so, couldn't we have make deferred_free_mounts global and have t=
+wo
+> > > > release_list, say release_list and release_list_next_gp? The first =
+one
+> > > > will be used if queue_rcu_work() returns true, otherwise the second.
+> > > > Then once defer_free_mounts() is done and release_list_next_gp not
+> > > > empty, it would move release_list_next_gp -> release_list and invoke
+> > > > queue_rcu_work().
+> > > > This would avoid the kmalloc, synchronize_rcu_expedited() and the
+> > > > special-sauce.
+> > > >=20
+> > >=20
+> > > To my understanding it was preferred for non-lazy unmount consumers to
+> > > wait until the mntput before returning.
+> > >=20
+> > > That aside if I understood your approach it would de facto serialize =
+all
+> > > of these?
+> > >=20
+> > > As in with the posted patches you can have different worker threads
+> > > progress in parallel as they all get a private list to iterate.
+> > >=20
+> > > With your proposal only one can do any work.
+> > >=20
+> > > One has to assume with sufficient mount/unmount traffic this can
+> > > eventually get into trouble.
+> >=20
+> > Right, it would serialize them within the same worker thread. With one
+> > worker for each put you would schedule multiple worker from the RCU
+> > callback. Given the system_wq you will schedule them all on the CPU
+> > which invokes the RCU callback. This kind of serializes it, too.
+> >=20
+> > The mntput() callback uses spinlock_t for locking and then it frees
+> > resources. It does not look like it waits for something nor takes ages.
+> > So it might not be needed to split each put into its own worker on a
+> > different CPU=E2=80=A6 One busy bee might be enough ;)
+>=20
+> Unmounting can trigger very large number of mounts to be unmounted. If
+> you're on a container heavy system or services that all propagate to
+> each other in different mount namespaces mount propagation will generate
+> a ton of umounts. So this cannot be underestimated.
 
-Just to inform code reader, this is a section that accesses device 
-registers that are protected by this zl3073x device lock.
+So you want to have two of these unmounts in two worker so you can split
+them on two CPUs in best case. As of today, in order to get through with
+umounts asap you accelerate the grace period. And after the wake up may
+utilize more than one CPU.
 
->> +	scoped_guard(zl3073x, zldev) {
->> +		rc = zl3073x_read_id(zldev, &id);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_revision(zldev, &revision);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
->> +		if (rc)
->> +			return rc;
->> +	}
-> 
-> Nothing improved here. Andrew comments are still valid and do not send
-> v3 before the discussion is resolved.
+> If a mount tree is wasted without MNT_DETACH it will pass UMOUNT_SYNC to
+> umount_tree(). That'll cause MNT_SYNC_UMOUNT to be raised on all mounts
+> during the unmount.
+>=20
+> If a concurrent path lookup calls legitimize_mnt() on such a mount and
+> sees that MNT_SYNC_UMOUNT is set it will discount as it know that the
+> concurrent unmounter hold the last reference and it __legitimize_mnt()
+> can thus simply drop the reference count. The final mntput() will be
+> done by the umounter.
+>=20
+> The synchronize_rcu() call in namespace_unlock() takes care that the
+> last mntput() doesn't happen until path walking has dropped out of RCU
+> mode.
+>=20
+> Without it it's possible that a non-MNT_DETACH umounter gets a spurious
+> EBUSY error because a concurrent lazy path walk will suddenly put the
+> last reference via mntput().
+>=20
+> I'm unclear how that's handled in whatever it is you're proposing.
 
-I'm accessing device registers here and they are protected by the device 
-lock. I have to take the lock, register access functions expect this by 
-lockdep_assert.
+Okay. So we can't do this for UMOUNT_SYNC callers, thank you for the
+explanation. We could avoid the memory allocation and have one worker to
+take care of them all but you are afraid what this would mean to huge
+container. Understandable. The s/system_wq/system_unbound_wq/ would make
+sense.
 
->> +
->> +	dev_info(zldev->dev, "ChipID(%X), ChipRev(%X), FwVer(%u)\n",
->> +		 id, revision, fw_ver);
->> +	dev_info(zldev->dev, "Custom config version: %lu.%lu.%lu.%lu\n",
->> +		 FIELD_GET(GENMASK(31, 24), cfg_ver),
->> +		 FIELD_GET(GENMASK(23, 16), cfg_ver),
->> +		 FIELD_GET(GENMASK(15, 8), cfg_ver),
->> +		 FIELD_GET(GENMASK(7, 0), cfg_ver));
-> 
-> 
-> Both should be dev_dbg. Your driver should be silent on success.
-
-+1
-will change.
-
->> +
->>   	devlink = priv_to_devlink(zldev);
->>   	devlink_register(devlink);
->>   
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
-
+Sebastian
