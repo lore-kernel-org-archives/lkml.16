@@ -1,119 +1,246 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830701372;
-	Thu, 10 Apr 2025 05:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C831E25F2
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744263596; cv=none; b=jBlVBaYjDU2j9EjDbUCi5vAlY8I0FAH+t5uDwJC6dQzf56G91oTveTMt1leQ6nX9JRZs62oGY1B0ImtoPrcYhwSS+xYNB26wcWpGyDTqLuh5UKo2JHW/9HH24IRYa6WzH3XkO+mplyxsZRUXlE3E+qN6Q2x+DwQvi79dKYe1Xbg=
+	t=1744263597; cv=none; b=EeYpQUaWcExoHvmyrdouB49QM3ld/klEJSmFOAxY6/VEQ+Ru51N7INL/wxutt7JqAscBwYleXdIHeoa2aD+FeM4FTCVaKtF62GGgezYRgrhASjAC+ZLAdRRylzOg0q2+SEYKAEtQCZZcxQMoCl7M8eUHRRtrSYy9obXCORPByqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744263596; c=relaxed/simple;
-	bh=x4lkIIUIDEuAdWkJfhkx8KGb8d40e+13jkCF+F8er2Y=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=bbfMErwrv+q0kFLkjJx5WxesmK/n/ANUn/fWp0ZPou2qQEsvPdRhc7DCQl2PLGGEeU2KDoo6ArLQ4c+tPhPdKW5rdKut1ehzsvBJk8usx01M5fi1ss/OJXF04cEixkvVRWhwHrRYCVK24EHFebU+AYEf+Z5wZeBfTC7PHqRl5j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=IKZXONR3; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1744263597; c=relaxed/simple;
+	bh=fgwbzsingwUfnQ+gsoI2iEA9VoiPlOxSoyEJo7rzwYg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X7Te3w8skYktmry82komORDrVgfZyPWYwTHXJMN2Jpjk3d+O72Gjn/CTWAJnrvGXG28bNHWtLaIVJOyBfb12ls2Unfllvt/0ikBDQA9nnPhKffw09Vnw57Vxlwi6mpuV6+zTQIvsAsJKEeLj2gwbpHBQ84Ii/EFjNrVIkmhf6k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TbaqN8yV; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="IKZXONR3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744263581; bh=KAYunzAnh8IZTAn3POQE3m6686i8Sy0Rg+4ZJW/YE54=;
-	h=From:To:Cc:Subject:Date;
-	b=IKZXONR3REfObL0+SzsmJeV1JybqAtDsRbIR2isltAvaxUdV6nzntotfBU2La32xK
-	 uM7gbu7aidWFYurs/qTvZljhdlLeDa6sIFhaqXfRRJEgVxyWRk2+KW2A/tUNopN4l8
-	 vVkweNxe2J/KEiLHy5cYpY7FLJ1iEv+JufHEkfB8=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id 852A5C45; Thu, 10 Apr 2025 13:33:18 +0800
-X-QQ-mid: xmsmtpt1744263198tgazjg59j
-Message-ID: <tencent_8478BF8F2549630842D323E7394CB6F49D08@qq.com>
-X-QQ-XMAILINFO: M7dxyDFn9MPm8KexzQHLy+mPN014pmGhGhqTGFvLq0cVE5KL4yznIo+9R0/9T9
-	 kOzu/OuwUeAJc6tikPhGzbQDOFu14bVztGwBzIsOEjJBJ8/OT54vniOjEMSsrcNS4neJYsqc5KNk
-	 PvjjbR4kOBWHJsekOvpZJYA+l94auXEf2fZGaJaBCIghXcgTKCl6KVIobjc0kiBUd/5aVUohJ0O6
-	 8Mg+gQWw4ROOJN70/2xdsJSYbZCYwLZJVd+ipoIzjNsZsadJ6vUzxspMF095a1UfnUkISam8AO4j
-	 FWmb7OCyHSSK+vAU8vABqyhWi3bBMvsB1yc1T+2l/WwoexOg0SYl0VNAjeHAc6ITvUh2hkGpf0a6
-	 H8zBb6no811pwIWJTCAZ+2wU5laYQPmRw78v1QEIuDqpWXrJ+SC0tTX8GBCXTqGogplTRZJSXwP5
-	 6KRtWd0GThe3vQMHQwUuvz1Ft/uIy5ujCjq2ErH+3/G5qYCV4GNXdzN7zN+dM5avyXbciW3IXSRA
-	 0fllEcrKMZhsF4Is7Jeu+Y877hrolpCl0sD6KS6a4ZaPPHmEP5gfKz9UfExJXgaZDVvc05oG4TvJ
-	 8pJAHADlY6C69nGOBWr1gitpclvWkqTZ7PL1pnRBwj3/JTJbEgHsRjosiZjMt6cU+aVin38sfepO
-	 m7mntQG4PUQ2wMH7MTggJXntTJPeh2tAjOSlTweAxk3wjuxlVw1h/71LGzDRB9Vn+CN4zi9+qyhy
-	 kIqFw8NkP1t4Oe1UT/gdwI+9BObrMZPD5/6wjzwxB735Fr27+ELChFm0AfCgGh0AZ4Iw3BM2nEam
-	 L1ZhN7yWn3vuuoepY5Pbi/wkFCJDKFRHw6/Vy2gyx9y0FIUzIBqd/6/8mcInhxxVwqGfjsxo+N8H
-	 LDMZpBTmXQXW8V/xgHBfMXOm80frN7FjbgKOTMQ4RYic1o1eWcxXxc9jJWfsYnwcR0sndHWxwnai
-	 pvz11RBjw=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Yaxiong Tian <iambestgod@qq.com>
-To: lukasz.luba@arm.com,
-	rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH] PM: EM: Fix potential division-by-zero error in em_compute_costs()
-Date: Thu, 10 Apr 2025 13:33:17 +0800
-X-OQ-MSGID: <20250410053317.890254-1-iambestgod@qq.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbaqN8yV"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso4426475e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 22:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744263594; x=1744868394; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=c8MydQlA2RiT7SHimC4AoBdSKOF7b77708bmfRvloZ8=;
+        b=TbaqN8yVeWKF+H1GdEYzerLstrbTgPuoU9R7Q62m6PRfIQXfkWs3rotLTOSPLB+wh+
+         Dr3WAjEyfhoAHt/4yI/US3UX1IjnyawbWEzX9AKYHNAPF4NqSs9vvhzreVJdmuJ1ixcQ
+         u9cJ77hIaO7Fo4mtVBmSKpI44C6/4tYXeYEV9W2GAhVXeUL2x0gNrJTmOqEmqjWRRAUv
+         WEyUyYm2iccLbkfucsX9soWPTJA+OuDdh1jYK/Jf0ScSy9WPFqo13gaV9VxtXwGDHNnw
+         KTPGliAd+ynEy23s+pRXdnw0jZj8pPGK44j6Te2cvA6tko19B0EuPLfp9YZVC9UlhJHa
+         /gjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744263594; x=1744868394;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c8MydQlA2RiT7SHimC4AoBdSKOF7b77708bmfRvloZ8=;
+        b=KsYqjdbhhgtuBurPCboBlZ3HqcSrjAcNpmfFMjFJioRQs/2COqlkJp0bXpInpuhnNP
+         A5tltIuzuf3MGyRAsT2Q7cR5qZyJbLRZqM2zCVWrD+j2lFSiktpr1GIAbh6p1pXI2Mua
+         GjlZXNsfyoR2GE6g9xrqIXPt4VSWJ0nQSuoTQ1DdQwbRsOmh3xFqyNrGKcCTWfDy6Qkh
+         RiqqGWu+2awLnb5BC3H2vtPvw4rvgD86NN4f+nVCj9hhkK3xEKQsQiq3IN+eRR/SYjWh
+         cfKFDxQ9IzmbVWQsyOg2/X+3SqWFYXEAKJqbfuDK8DluTTVfYjT0Q+fFIWxlSKeq3qeJ
+         aJkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMGcBnT1GFQA2MRXPPsXChS1RQT3SlB2Mbro+oc9CsPlebIia0rNxHlVmqUmvcnwha7BVovQ05kDEybiQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw3MyheYvVCX68HRyvPfdqBuBcTIszqaRIitH7romz+Xii3iM+
+	2uYK2K9kHL/damEngyPnArXjPvxZ57YmCD1A0Lak0nh9Jsdl8f/j
+X-Gm-Gg: ASbGncsm1ZYHwS/0wOHDopMQbRaqfBkzRsMlvbgzLTgbCzVj6Sy7WPN6AmguU452J7Z
+	sH8I8D99vZY5ZEolasuh075C0R3zyApAglqxXm8hM/VHDYKOa2BJoZ0fwb80fCsYSFPJLFbGIiy
+	WTHXQMJN4wvOzSRidOU4vOetHyO5z3QqkWICop/GdxbVw3cTAAOS1JAqh13V8APVht5pQRMx9jp
+	suWx8VAQCWy7foO6JsWqS9mUy95Jm2DHbMeeRaFuL0d0n3M2hnrc0mIkBRB1VKUtIZJ+T4FC/gX
+	KqI0+WileMz0NnOyJI7HeSyvL6NdfVGNz+oEXaomFtBg17LPWPc=
+X-Google-Smtp-Source: AGHT+IEu7GddxYv7ARpepPfXludN9b52TSG/j4MufAMrgSu7NbiFaPNKVwgFqPz+aOZCBhkP3Qx5zw==
+X-Received: by 2002:a05:600c:c17:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-43f2d6875c7mr15418175e9.0.1744263593886;
+        Wed, 09 Apr 2025 22:39:53 -0700 (PDT)
+Received: from [172.16.8.120] ([197.155.71.138])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f23572b5bsm38513735e9.28.2025.04.09.22.39.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 22:39:52 -0700 (PDT)
+Message-ID: <4dcbf1fc70d565b5845ab7bc823cb1e9a94f6084.camel@gmail.com>
+Subject: Re: [PATCH v2 2/2] staging: rtl8723bs: Initializing variables at
+ declaration
+From: Erick Karanja <karanja99erick@gmail.com>
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
+	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 10 Apr 2025 08:39:47 +0300
+In-Reply-To: <9dce3c-6ac-8b7e-fdbc-75e14f73fcc4@inria.fr>
+References: <cover.1744192642.git.karanja99erick@gmail.com>
+	 <0fb58ca930030af2a4c730b0f5328e64210b795b.1744192642.git.karanja99erick@gmail.com>
+	 <9dce3c-6ac-8b7e-fdbc-75e14f73fcc4@inria.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-
-When the device is of a non-CPU type, table[i].performance won't be
-initialized in the previous em_init_performance(), resulting in division
- by zero when calculating costs in em_compute_costs().
-
-Considering that the performance field in struct em_perf_state is defined
-as "CPU performance (capacity) at a given frequency", the original
-calculation method should be maintained when the device is of a non-CPU
-type.
-
-Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove division")
-
-Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
----
- kernel/power/energy_model.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
-index d9b7e2b38c7a..bbd95573d91e 100644
---- a/kernel/power/energy_model.c
-+++ b/kernel/power/energy_model.c
-@@ -231,9 +231,11 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
- 			    unsigned long flags)
- {
- 	unsigned long prev_cost = ULONG_MAX;
-+	u64 fmax;
- 	int i, ret;
- 
- 	/* Compute the cost of each performance state. */
-+	fmax = (u64) table[nr_states - 1].frequency;
- 	for (i = nr_states - 1; i >= 0; i--) {
- 		unsigned long power_res, cost;
- 
-@@ -245,9 +247,15 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
- 				return -EINVAL;
- 			}
- 		} else {
--			/* increase resolution of 'cost' precision */
--			power_res = table[i].power * 10;
--			cost = power_res / table[i].performance;
-+			if (_is_cpu_device(dev)) {
-+				/* increase resolution of 'cost' precision */
-+				power_res = table[i].power * 10;
-+				cost = power_res / table[i].performance;
-+			} else {
-+				power_res = table[i].power;
-+				cost = div64_u64(fmax * power_res, table[i].frequency);
-+
-+			}
- 		}
- 
- 		table[i].cost = cost;
--- 
-2.25.1
+On Wed, 2025-04-09 at 11:41 -0400, Julia Lawall wrote:
+>=20
+>=20
+> On Wed, 9 Apr 2025, Erick Karanja wrote:
+>=20
+> > Make the code more readable by moving trivial
+> > initializations up with the declarations instead
+> > of wasting a line on that.
+> >=20
+> > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> > ---
+> > =C2=A0.../staging/rtl8723bs/hal/rtl8723bs_xmit.c=C2=A0=C2=A0=C2=A0 | 39=
+ ++++++---------
+> > ----
+> > =C2=A01 file changed, 11 insertions(+), 28 deletions(-)
+> >=20
+> > diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> > b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> > index 5dc1c12fe03e..d134d185bfae 100644
+> > --- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> > +++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> > @@ -120,13 +120,10 @@ static s32 rtl8723_dequeue_writeport(struct
+> > adapter *padapter)
+> > =C2=A0 */
+> > =C2=A0s32 rtl8723bs_xmit_buf_handler(struct adapter *padapter)
+> > =C2=A0{
+> > -	struct xmit_priv *pxmitpriv;
+> > +	struct xmit_priv *pxmitpriv =3D &padapter->xmitpriv;
+> > =C2=A0	u8 queue_empty, queue_pending;
+> > =C2=A0	s32 ret;
+> >=20
+> > -
+> > -	pxmitpriv =3D &padapter->xmitpriv;
+> > -
+> > =C2=A0	if (wait_for_completion_interruptible(&pxmitpriv-
+> > >xmit_comp)) {
+> > =C2=A0		netdev_emerg(padapter->pnetdev,
+> > =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0 "%s: down SdioXmitBufSema fail!\n",
+> > __func__);
+> > @@ -242,8 +239,7 @@ static s32 xmit_xmitframes(struct adapter
+> > *padapter, struct xmit_priv *pxmitpriv
+> > =C2=A0						/* pxmitbuf-
+> > >priv_data will be NULL, and will crash here */
+> > =C2=A0						if (pxmitbuf->len
+> > > 0 &&
+> > =C2=A0						=C2=A0=C2=A0=C2=A0 pxmitbuf-
+> > >priv_data) {
+> > -							struct
+> > xmit_frame *pframe;
+> > -							pframe =3D
+> > (struct xmit_frame *)pxmitbuf->priv_data;
+> > +							struct
+> > xmit_frame *pframe =3D (struct xmit_frame *)pxmitbuf->priv_data;
+>=20
+> I'm not sure that it's worth making this change here given that it
+> makes
+> the line even longer.
+Hello Julia. I will make the necessary changes.
+Thank you.
+>=20
+> > =C2=A0							pframe-
+> > >agg_num =3D k;
+> > =C2=A0							pxmitbuf-
+> > >agg_num =3D k;
+> > =C2=A0							rtl8723b_u
+> > pdate_txdesc(pframe, pframe->buf_addr);
+> > @@ -326,8 +322,7 @@ static s32 xmit_xmitframes(struct adapter
+> > *padapter, struct xmit_priv *pxmitpriv
+> > =C2=A0		/*=C2=A0 dump xmit_buf to hw tx fifo */
+> > =C2=A0		if (pxmitbuf) {
+> > =C2=A0			if (pxmitbuf->len > 0) {
+> > -				struct xmit_frame *pframe;
+> > -				pframe =3D (struct xmit_frame
+> > *)pxmitbuf->priv_data;
+> > +				struct xmit_frame *pframe =3D
+> > (struct xmit_frame *)pxmitbuf->priv_data;
+>=20
+> This also makes a long line.
+>=20
+> > =C2=A0				pframe->agg_num =3D k;
+> > =C2=A0				pxmitbuf->agg_num =3D k;
+> > =C2=A0				rtl8723b_update_txdesc(pframe,
+> > pframe->buf_addr);
+> > @@ -357,12 +352,9 @@ static s32 xmit_xmitframes(struct adapter
+> > *padapter, struct xmit_priv *pxmitpriv
+> > =C2=A0 */
+> > =C2=A0static s32 rtl8723bs_xmit_handler(struct adapter *padapter)
+> > =C2=A0{
+> > -	struct xmit_priv *pxmitpriv;
+> > +	struct xmit_priv *pxmitpriv =3D &padapter->xmitpriv;
+> > =C2=A0	s32 ret;
+> >=20
+> > -
+> > -	pxmitpriv =3D &padapter->xmitpriv;
+> > -
+> > =C2=A0	if (wait_for_completion_interruptible(&pxmitpriv-
+> > >SdioXmitStart)) {
+> > =C2=A0		netdev_emerg(padapter->pnetdev, "%s: SdioXmitStart
+> > fail!\n",
+> > =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0 __func__);
+> > @@ -408,13 +400,9 @@ static s32 rtl8723bs_xmit_handler(struct
+> > adapter *padapter)
+> >=20
+> > =C2=A0int rtl8723bs_xmit_thread(void *context)
+> > =C2=A0{
+> > -	s32 ret;
+> > -	struct adapter *padapter;
+> > -	struct xmit_priv *pxmitpriv;
+> > -
+> > -	ret =3D _SUCCESS;
+> > -	padapter =3D context;
+> > -	pxmitpriv =3D &padapter->xmitpriv;
+> > +	s32 ret =3D _SUCCESS;
+> > +	struct adapter *padapter =3D context;
+> > +	struct xmit_priv *pxmitpriv =3D &padapter->xmitpriv;
+> >=20
+> > =C2=A0	allow_signal(SIGTERM);
+> >=20
+> > @@ -435,16 +423,13 @@ s32 rtl8723bs_mgnt_xmit(
+> > =C2=A0)
+> > =C2=A0{
+> > =C2=A0	s32 ret =3D _SUCCESS;
+> > -	struct pkt_attrib *pattrib;
+> > -	struct xmit_buf *pxmitbuf;
+> > +	struct pkt_attrib *pattrib =3D &pmgntframe->attrib;
+> > +	struct xmit_buf *pxmitbuf =3D pmgntframe->pxmitbuf;
+> > =C2=A0	struct xmit_priv *pxmitpriv =3D &padapter->xmitpriv;
+> > =C2=A0	struct dvobj_priv *pdvobjpriv =3D
+> > adapter_to_dvobj(padapter);
+> > =C2=A0	u8 *pframe =3D (u8 *)(pmgntframe->buf_addr) + TXDESC_OFFSET;
+> > =C2=A0	u8 txdesc_size =3D TXDESC_SIZE;
+> >=20
+> > -	pattrib =3D &pmgntframe->attrib;
+> > -	pxmitbuf =3D pmgntframe->pxmitbuf;
+> > -
+> > =C2=A0	rtl8723b_update_txdesc(pmgntframe, pmgntframe->buf_addr);
+> >=20
+> > =C2=A0	pxmitbuf->len =3D txdesc_size + pattrib->last_txcmdsz;
+> > @@ -557,15 +542,13 @@ s32 rtl8723bs_init_xmit_priv(struct adapter
+> > *padapter)
+> >=20
+> > =C2=A0void rtl8723bs_free_xmit_priv(struct adapter *padapter)
+> > =C2=A0{
+> > -	struct xmit_priv *pxmitpriv;
+> > +	struct xmit_priv *pxmitpriv =3D &padapter->xmitpriv;
+> > =C2=A0	struct xmit_buf *pxmitbuf;
+> > -	struct __queue *pqueue;
+> > +	struct __queue *pqueue =3D &pxmitpriv-
+> > >pending_xmitbuf_queue;
+> > =C2=A0	struct list_head *plist, *phead;
+> > =C2=A0	struct list_head tmplist;
+> >=20
+> >=20
+> > -	pxmitpriv =3D &padapter->xmitpriv;
+> > -	pqueue =3D &pxmitpriv->pending_xmitbuf_queue;
+> > =C2=A0	phead =3D get_list_head(pqueue);
+> > =C2=A0	INIT_LIST_HEAD(&tmplist);
+> >=20
+> > --
+> > 2.43.0
+> >=20
+> >=20
+> >=20
 
