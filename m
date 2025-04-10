@@ -1,107 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E00E26A0DC;
-	Thu, 10 Apr 2025 09:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCE825A323;
+	Thu, 10 Apr 2025 09:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277483; cv=none; b=kpcJmQ/qg8VM5+tnghIcTTYnoHzjAcRGVNc5EpuLRWB4H5E9K06g68dP649XYEbLZzXrvDpKgh1gtvBNUBX9Vi5KLP27uc9L8nCh3NJol+wVDvjxY45uJ2QPG5huIeDIZwHH2oDbQ3mf4r89B+pDs+ixMMG+i5uHgFZDii2HAiM=
+	t=1744277525; cv=none; b=o8bEGUcb08TZsauY77RIFsZhQqmaNvRW5OjVBCBw7qndORRLqGIjaxiuDmui1k2lqUD/piGeRakyMppqME7oQE4eal1qN6ZBdxFnkgRIDgGoNuUrxHg5wfxcITrlgts2XAZDq8vJpRTU4nkltk9uEp/8/R5bzBmQFxQtF9EGBJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277483; c=relaxed/simple;
-	bh=NUQSl8+KNt2Gck3bg5zy+/lvTkACE7uM59VfdQMYJzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+izQEV29kQrPmy6IrAe/wEwNdFM76QCcDotPbvx1bj6ts0B/I85+r8n6rVwrbKCQyoskmCp/XVjhB4oVf21MIGh0hK/iwYq0pxmnTkFZZPguANwx5t+8ycqkUN2Mrz4ueqcJBu1euljHTa5xIQhhfYRE7HbeJck++gFk8YYnx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjL9FtRZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjL9FtRZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F6AC4CEDD;
-	Thu, 10 Apr 2025 09:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744277481;
-	bh=NUQSl8+KNt2Gck3bg5zy+/lvTkACE7uM59VfdQMYJzA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VjL9FtRZYiAIUa//U1cc/2gKUgnwvHeK4bT+9LIGC9mtHU1f4UcjRF0h8D7rOx7pz
-	 iR5HtXzcxamzNeae3/JNe/gPTy7boaa5FX9rOMKNiug9wVM0NIp6ZsP3YrBz8ld8hC
-	 emGVRKGBrQZolj9q3AkTLhoPDH3Cmug/BsiPEJafWnEdVDPuWXvw4oPf7MVZ883aIT
-	 SJ+/eOuPhOaJ8rHhdMAey+nmq2fZo514q3YXzOeVeKf81mzqfrbZtp/H00V0m26P/k
-	 8ejdZ+VOEcTpTcNVTPAcNqpNmuKDVGm/wMQYhjBLxEDHI30rSti3DVMXfe8kASLaYC
-	 blPbZfprIw1cQ==
-Date: Thu, 10 Apr 2025 11:31:19 +0200
-From: Daniel Gomez <da.gomez@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, 
-	willy@infradead.org, linux-mm@kvack.org, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, gost.dev@samsung.com, linux-doc@vger.kernel.org, 
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v3] docs: update THP admin guide about non-tmpfs
- filesystem support
-Message-ID: <bozpegwoihmwakmmtkk2lhkwycv3yv4ovpfthguhcr4vbjgzpm@bjv7aioyg6ql>
-References: <20250404140657.29285-1-kernel@pankajraghav.com>
- <Z-_7fzU02OU1hVOT@bombadil.infradead.org>
- <qy52tvn6atrlt5rhgzbtueyqbs56ik3rfg2b7yopynhhoipvtj@qph743k6m7kg>
- <Z_Aexql5FDVLtuQp@bombadil.infradead.org>
+	s=arc-20240116; t=1744277525; c=relaxed/simple;
+	bh=66it4yH7tDoSfnRmzcG6n3HPRYYxJKXim1LUwnZ/Mko=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p22xa/Hl2nPIZiMK2YVBMlNlI+qNYt7Sf+ACgjnDrAtLDxakjyqZOQTPmB4JivkPomOxvR7A8E01Kb7KKKfzGwk9a/H+Ry5cAcdkfdKSbaG/LL76LoXneDaTSGLFJqjtiY8p+xeIMVx+Y7Wj5i4rOVh2Gt4LYSF8ZZc0PlEQsuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-52410fb2afeso604290e0c.3;
+        Thu, 10 Apr 2025 02:32:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744277520; x=1744882320;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kS7EOvqoYOcajjLsmybsnh3ImYRiKMLnTX10TiwzTFM=;
+        b=UYLuve1tP4kVxtzuU2sjFUP0O4YtUgItgdSCPgg+1sKQIWkLmla51Ar0mtIAyxZfDu
+         wXRKPomGpWm+II6Xt36CKGRSu4aYG19ONkexHLvgvqqiLg8FHzASIFBB2xt1drCKvnf8
+         Y4OLA4ijWpt3Nwn0qbuPK+wzDI/rfAj9ry0lLohbPb/jtn0KKecAUtedWvjqjyTJ3lzh
+         pDsjVCP/JphOK5AaN9T37rWrxYsXXzRKm12nH+Ig1R26zOJ87UVMdvY8azergkMEhqJu
+         Q9bFN9o3v04tjxLo/4WwZf49RXlalwwgjfgAPnofy7jZnS+M4Cj998dJ0VDHbdQ1bHEC
+         e2rA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJNVQquDJJtMIzwYWxNjpd7dEaq+ljwvpMNB2isUHwf1MYNGfWDUDRmHv3cNV/tQEeU38zpgCaeZepLpPJ@vger.kernel.org, AJvYcCUPUPo0fxFlnEAUxgUZTP8L8UOepNyzRQra8MKSh45hhUxOs/+6i0LD2gJKOf/MquVvi1UmzNJMeM3Q@vger.kernel.org, AJvYcCUacpleOkwpfsiXGXGLi9rlsOPTMPTqkpGr2XKYuKMMA2+bH+WiFj7u9eaRWkZTHYPXVt2sTftXiKNdCuMx0IRz4I8=@vger.kernel.org, AJvYcCUs80SyS9+T4mjHRKwVZl8zzqscxgh1IAe9AVvItd8CAOuCDqUAlIm5bNgKe/nCY8GErXn4xowW8BLlsQ==@vger.kernel.org, AJvYcCW7Ws0WvjAw5Hkh+GB4T8HfYh9ebwYOPKxfjG8f2UqzIZ7F0YvkW4FbZZeg85dbl5gPVmbNeu6nfMA4@vger.kernel.org, AJvYcCWM87eRk0F5QDv6yh71EUgH4FUmMR6XA/O7E/6HzddQjFmz+MLEXqzwgwgSFvcKzU6aV0JOtriBLLYkA+BJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPC+R7IEsamzl2w+sYrKY9wcn1O83OxkcjASP0adTmGlx2UhId
+	TTpLlw4E5O7oiJjbDHuI4aJKZFuYy+f+kb250YTa5ZQ8bUlOHq4LzqJCJsWI
+X-Gm-Gg: ASbGncsFdKaBXKFkyMelpKMLRGlgy5XjO0pijVHAwq83UbahdDl30u7fZbUL/BWbHNw
+	48d/4f+vS0PH+rFBVfLYn4wzk3r3WVC3H5Mj0MMiio2zXt71EsRXHNy6e1/CUsh60t5fkvEC9uk
+	/1bWe1RvQfNubF7ncNASUVVkvVgarn2FlpISeSHdmkCjQjOqF+bvYnJPNoVB2gDyQgRUesNF964
+	PuEbxNtUhhFrUlhGL0sqT06JqEVg5Lk5TOstIAN27vXW5ozsz7o56KK8nc6crZVYRH0ITz4sodV
+	3LDQ7jYoSWL0ZorX907SzQpGMEBy0oqqb4W9NYj6o8226HGJ8E370VCmGNWWkp7lwHkf+b1TxdO
+	2lbNDgySqphe6cQ==
+X-Google-Smtp-Source: AGHT+IFh/ByO92CAT0S5umrbl0FafyQulh/UXibGZF9zlvY+uOnYgrOy+RYr5L77zDcY7CntRt/+4Q==
+X-Received: by 2002:a05:6122:2002:b0:523:91e8:324c with SMTP id 71dfb90a1353d-527b77ad3eamr667106e0c.8.1744277520629;
+        Thu, 10 Apr 2025 02:32:00 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd76289sm607282e0c.18.2025.04.10.02.32.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 02:32:00 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86d3ac0fec0so566519241.1;
+        Thu, 10 Apr 2025 02:32:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0XO/XyBHh55N5JAOgQ2smThKqL1c4pXXyPA9yOmleEtuTg8t8aSX/JO4SIOaNZ5/2UYVn3QUl1fwOid7PSOoBBKs=@vger.kernel.org, AJvYcCUGtSvbMzoHK/b0CcVhXKYvHGCOJPJoWy+M0QYKu9RBllXYEjxyPahQjM42ahIEc4AkP/0GibawQstCA4P+@vger.kernel.org, AJvYcCUcc5fuvrYCHmMc0FuUvg27ynH2wgSqPxFE5voShJ3ByGOYvDYqP25QmY/FrvWPquZnmepZrJe4DYaVMGRn@vger.kernel.org, AJvYcCUynedxK/xUPTgS1uXA80Zf1f+R7Snt9jZ9/h1q+YgCYpHe7lZXW7NgV+4kwnozxn2GWW4Kg4PqAu0i@vger.kernel.org, AJvYcCVgXUuGdnJxU1rDQ7PAAr6csQogk/WpkiuSfrGFY0VF0LnIX8AFbotDhMcKfJL13JszaTuirLWYbPKs@vger.kernel.org, AJvYcCWq9E9Bo6jYgIAlBIcXP8sDsps2xH/VnsrnNIq4z0d5uQbWcK3QckKx4IjTp0x6qiIt6HmBo6Yi+xCCXA==@vger.kernel.org
+X-Received: by 2002:a05:6102:158c:b0:4c1:b3a5:9fa with SMTP id
+ ada2fe7eead31-4c9d6359c1fmr517018137.16.1744277519860; Thu, 10 Apr 2025
+ 02:31:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_Aexql5FDVLtuQp@bombadil.infradead.org>
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407191628.323613-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 10 Apr 2025 11:31:48 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVHLcXKk0LTaKJi2h-of3sodBMRd9rDyAgERqjjuKWiWg@mail.gmail.com>
+X-Gm-Features: ATxdqUFmAIbDkaSh-MN1wygg8gK0xbO4usjQZameXLFYKwox8bXJjI978CoYbpA
+Message-ID: <CAMuHMdVHLcXKk0LTaKJi2h-of3sodBMRd9rDyAgERqjjuKWiWg@mail.gmail.com>
+Subject: Re: [PATCH v2 05/12] dt-bindings: serial: renesas: Document RZ/V2N SCIF
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 04, 2025 at 11:02:46AM +0100, Luis Chamberlain wrote:
-> On Fri, Apr 04, 2025 at 06:31:16PM +0200, Pankaj Raghav (Samsung) wrote:
-> > On Fri, Apr 04, 2025 at 08:32:15AM -0700, Luis Chamberlain wrote:
-> > > On Fri, Apr 04, 2025 at 04:06:57PM +0200, Pankaj Raghav (Samsung) wrote:
-> > > > From: Pankaj Raghav <p.raghav@samsung.com>
-> > > > 
-> > > > THP support for non-tmpfs filesystem has been around for some time now.
-> > > > Update the admin guide to reflect it.
-> > > > 
-> > > > While we are at it, move FilePmdMapped to previous paragraph for clarity,
-> > > > and clarify ShmemPmdMapped & ShmemHugePage.
-> > > > 
-> > > > Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> > > > Acked-by: David Hildenbrand <david@redhat.com>
-> > > > ---
-> > > > 
-> > > > Changes since v2:
-> > > > - Address comment from Bagas Sanjaya
-> > > > - Squash commits and Ack from David
-> > > > 
-> > > >  Documentation/admin-guide/mm/transhuge.rst | 22 +++++++++++++++-------
-> > > >  1 file changed, 15 insertions(+), 7 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> > > > index dff8d5985f0f..f8aae64e38d0 100644
-> > > > --- a/Documentation/admin-guide/mm/transhuge.rst
-> > > > +++ b/Documentation/admin-guide/mm/transhuge.rst
-> > > > @@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
-> > > >  that supports the automatic promotion and demotion of page sizes and
-> > > >  without the shortcomings of hugetlbfs.
-> > > >  
-> > > > -Currently THP only works for anonymous memory mappings and tmpfs/shmem.
-> > > > -But in the future it can expand to other filesystems.
-> > > > +Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
-> > > > +filesystems that support large folios.
-> > > 
-> > > That seems to allude that THP can be supported on filesystems
-> > > that suppor large folios. I don't think we want to call that THP
-> > 
-> > But we do allocate a THP in the page cache if we support large folios.
-> > 
-> > See [1] where THP was supported through page cache. From what I
-> > understand, THP support was added first to the page cache and then large
-> > folios (orders in between) support came later.
-> 
-> I see, yes Do we want to clarify this further?
+On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Document SCIF bindings for the Renesas RZ/V2N (a.k.a R9A09G056) SoC.
+> The SCIF interface in Renesas RZ/V2N is identical to the one available
+> in RZ/V2H(P), so `renesas,scif-r9a09g057` will be used as a fallback,
+> allowing reuse of the existing driver without modifications.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-According to this thread [1], large folios currently depends on
-CONFIG_TRANSPARENT_HUGEPAGE, but that will be removed eventually.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-https://lore.kernel.org/all/ZPINmXyTgy2wqLqr@casper.infradead.org/
+Gr{oetje,eeting}s,
 
-I agree this needs to be clarified. THP for anonymous memory and tmpfs/shmem is
-not the same for filesystems that support large folios.
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
