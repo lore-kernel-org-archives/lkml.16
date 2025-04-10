@@ -1,60 +1,40 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7182A130A54;
-	Thu, 10 Apr 2025 07:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 992561E3DCD;
+	Thu, 10 Apr 2025 07:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271606; cv=none; b=ZYFUnWqZzJqPa+rFzFcjF7w9JjQCqw6Ruojtw0A3QwA4JboI+m0NAclUdZ/EFFjfJhLuRY3V0Ltw4J1O7S3r3XXt1fL7YfL5kUcqsijr4xlnen3xgkL1SJydIrKPHSqgyKB3WNj6ielADD0xCb7RLbGQe3IFuOpB/IFY5A8gZDg=
+	t=1744271615; cv=none; b=VMJB+HHjsQbtMHRW/7OH6DT8pqE73Nhem9qXGEGOViv9ygQr0n8UaThc+jnT2qwhd4Q/56xtATKCyE3r5vMtasDDFmnauUisZoDVF8TKnpPsNhUqMHwAheRMPlULhrceHkU9ng4WZDPZ8IZXxDMRyJVzOT+P5MSlX1Ze9zrLjmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271606; c=relaxed/simple;
-	bh=4aM4/WrwSTdQGyJjo2GJ5AOuh9vyMVJsPtf0eP4y7GM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eVYWTeC9vxYwBM0dhwuZLHnaHpIFtP+VaP6KEPlMKNEzwdvjPEpA5AuBKiNE3eKyyvY4E7cn6cTr7CIMUvgn1QoZ0KTPbyCyWqMau3QjmMQLyqrrI5aZwZo3hdlKmZhVbvp4SYmzWySXxYA+HZtvewEDK1bQ8qVy9ysxU/ydxBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=MZhgFVaZ; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MZhgFVaZ"
-X-UUID: de2f5e2e15e011f0aae1fd9735fae912-20250410
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Tvm+drxaFLk25NxNGK6leQFz6UBSeg5ou+cb6osDu1M=;
-	b=MZhgFVaZA4LfxPGca9jXrpLBNGPxDIGUR/fdehXTmMQ8KFzpTSlax7L+ECgI/atLDTR5hQM6s97gVjl0FzNfuq1VvL1lMwIBFZ8Fm6UE1us4Qa0RxQ1gFY9HMTLPJezGY21jRzblIDHhJ/pNmKt6Rh5FY4HcHCbPe1Yp77AcPvs=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:bf93f68f-61e5-492a-ab45-5c351e19b710,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:c7dc708d-f5b8-47d5-8cf3-b68fe7530c9a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: de2f5e2e15e011f0aae1fd9735fae912-20250410
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
-	(envelope-from <axe.yang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 154427312; Thu, 10 Apr 2025 15:53:19 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Thu, 10 Apr 2025 15:53:18 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Thu, 10 Apr 2025 15:53:17 +0800
-From: Axe Yang <axe.yang@mediatek.com>
-To: Chaotian Jing <chaotian.jing@mediatek.com>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<yong.mao@mediatek.com>, <qingliang.li@mediatek.com>,
-	<andy-ld.lu@mediatek.com>, Wenbin Mei <wenbin.mei@mediatek.com>
-CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	Axe Yang <axe.yang@mediatek.com>
-Subject: [PATCH v2] mmc: mtk-sd: Add condition to enable 'single' burst type
-Date: Thu, 10 Apr 2025 15:52:47 +0800
-Message-ID: <20250410075314.6439-1-axe.yang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	s=arc-20240116; t=1744271615; c=relaxed/simple;
+	bh=8xnLrcT6213lqqhInapJaZgknv/4Z4ygoKNwu+iRiDk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kOt9ekSBz/GDKCQ6zgUsqtxNOczUx7XWdU+dRiNzLYi/ZdwkHpyszolyR1SmvJuNMQEQY9vxAgFfHwlJOReYkTSPoUEBiUtg0+uvTwgIrcsAk/rTFrMdpukTUsgBhh4gKO52MsuRgJ9IMkQAx/3Uk7Kjt+jHz2OfAPcBNacQVJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-ca-67f778f0a0f1
+From: Rakie Kim <rakie.kim@sk.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: kernel_team@skhynix.com,
+	gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	Jonathan.Cameron@huawei.com,
+	osalvador@suse.de,
+	yunjeong.mun@sk.com,
+	Honggyu Kim <honggyu.kim@sk.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	akpm@linux-foundation.org
+Subject: Re: [PATCH v7 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
+Date: Thu, 10 Apr 2025 16:53:08 +0900
+Message-ID: <20250410075316.538-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <203ed4e9-4691-483c-bf42-3035b3ad3539@redhat.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,65 +42,138 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnoe7Hiu/pBq9vsVnMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
+	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
+	Uov07RK4Ms5OXsVSsF2lYvqdLewNjBNkuxg5OSQETCReP+hlgrEfb1rC3sXIwcEmoCRxbG8M
+	SFhEQENiU9sG5i5GLg5mgTZmiZvTljODJIQFwiX+/LjJCmKzCKhKHPz+lw3E5hUwlvj5r58V
+	YqamRMOle0wgMzkF7CS6fliBhIUEeCRebdjPCFEuKHFy5hMWEJtZQF6ieetssF0SAr/ZJN5d
+	eQd1m6TEwRU3WCYw8s9C0jMLSc8CRqZVjEKZeWW5iZk5JnoZlXmZFXrJ+bmbGIHhv6z2T/QO
+	xk8Xgg8xCnAwKvHwemR8SxdiTSwrrsw9xCjBwawkwutp+D1diDclsbIqtSg/vqg0J7X4EKM0
+	B4uSOK/Rt/IUIYH0xJLU7NTUgtQimCwTB6dUA2NLfd23x66v7npkxUuuSJx2tXnppgl6Fqpb
+	RAWT8j8cfJ198py2wqosV9OellPmSx11WwziuCOKKgVupXyO3Pz00IlPZ8pzXsUtnl5va+d7
+	3eTRp74X3vdL75w0Cdue4PolZd/Frm/dzo3Pz8a6bdr2x3J34b2l01Nvzqjfau0uGjt9TTxv
+	1yUlluKMREMt5qLiRADfQmYDewIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNS/dDxfd0gxMHTCzmrF/DZjF96gVG
+	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWpyZVmRx
+	6NpzVovVazIsfm9bwebA77Fz1l12j+62y+weLUfesnos3vOSyWPTp0nsHidm/Gbx2PnQ0uP9
+	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDLOTl7FUrBdpWL6nS3sDYwT
+	ZLsYOTkkBEwkHm9awt7FyMHBJqAkcWxvDEhYREBDYlPbBuYuRi4OZoE2Zomb05YzgySEBcIl
+	/vy4yQpiswioShz8/pcNxOYVMJb4+a+fFWKmpkTDpXtMIDM5Bewkun5YgYSFBHgkXm3YzwhR
+	LihxcuYTFhCbWUBeonnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJ
+	ERjyy2r/TNzB+OWy+yFGAQ5GJR5ej4xv6UKsiWXFlbmHGCU4mJVEeD0Nv6cL8aYkVlalFuXH
+	F5XmpBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1MOYv01DhuSh1J1rq8qIJ6bvr
+	7B7WXNnUsmjxGf+t0yZ8leD/JCZd1HRiscCd61/VBC9cm58lYKOnv3V7rZFJ8+PcsKdb0nMW
+	8/ulrbq5fMcSuTTW65dcAot6zDcetikwXq885ejjCNlZGyc2Lp02PY6jzaVy66I5v1fMeb/w
+	WefjVZMjptwubNFRYinOSDTUYi4qTgQABkQtl3UCAAA=
+X-CFilter-Loop: Reflected
 
-This change add a condition for 'single' burst type selection.
+On Wed, 9 Apr 2025 13:52:28 +0200 David Hildenbrand <david@redhat.com> wrote:
+> On 09.04.25 13:39, Honggyu Kim wrote:
+> > Hi David,
+> > 
+> > On 4/9/2025 6:05 PM, David Hildenbrand wrote:
+> >> On 08.04.25 09:32, Rakie Kim wrote:
+> >>> The weighted interleave policy distributes page allocations across multiple
+> >>> NUMA nodes based on their performance weight, thereby improving memory
+> >>> bandwidth utilization. The weight values for each node are configured
+> >>> through sysfs.
+> >>>
+> >>> Previously, sysfs entries for configuring weighted interleave were created
+> >>> for all possible nodes (N_POSSIBLE) at initialization, including nodes that
+> >>> might not have memory. However, not all nodes in N_POSSIBLE are usable at
+> >>> runtime, as some may remain memoryless or offline.
+> >>> This led to sysfs entries being created for unusable nodes, causing
+> >>> potential misconfiguration issues.
+> >>>
+> >>> To address this issue, this patch modifies the sysfs creation logic to:
+> >>> 1) Limit sysfs entries to nodes that are online and have memory, avoiding
+> >>>      the creation of sysfs entries for nodes that cannot be used.
+> >>> 2) Support memory hotplug by dynamically adding and removing sysfs entries
+> >>>      based on whether a node transitions into or out of the N_MEMORY state.
+> >>>
+> >>> Additionally, the patch ensures that sysfs attributes are properly managed
+> >>> when nodes go offline, preventing stale or redundant entries from persisting
+> >>> in the system.
+> >>>
+> >>> By making these changes, the weighted interleave policy now manages its
+> >>> sysfs entries more efficiently, ensuring that only relevant nodes are
+> >>> considered for interleaving, and dynamically adapting to memory hotplug
+> >>> events.
+> >>>
+> >>> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> >>> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> >>> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> >>
+> >>
+> >> Why are the other SOF in there? Are there Co-developed-by missing?
+> > 
+> > I initially found the problem and fixed it with my internal implementation but
+> > Rakie also had his idea so he started working on it.  His initial implementation
+> > has almost been similar to mine.
+> > 
+> > I thought Signed-off-by is a way to express the patch series contains our
+> > contribution, but if you think it's unusual, then I can add this.
+> 
+> Please see Documentation/process/submitting-patches.rst, and note that these
+> are not "patch delivery" SOB.
+> 
+> "
+> The Signed-off-by: tag indicates that the signer was involved in the
+> development of the patch, or that he/she was in the patch's delivery path.
+> "
+> 
+> and
+> 
+> "
+> Co-developed-by: states that the patch was co-created by multiple developers;
+> it is used to give attribution to co-authors (in addition to the author
+> attributed by the From: tag) when several people work on a single patch.  Since
+> Co-developed-by: denotes authorship, every Co-developed-by: must be immediately
+> followed by a Signed-off-by: of the associated co-author.  Standard sign-off
+> procedure applies, i.e. the ordering of Signed-off-by: tags should reflect the
+> chronological history of the patch insofar as possible, regardless of whether
+> the author is attributed via From: or Co-developed-by:.  Notably, the last
+> Signed-off-by: must always be that of the developer submitting the patch.
+> "
+> 
+> The SOB order here is also not correct.
+> 
+> > 
+> >     Co-developed-by: Honggyu Kim <honggyu.kim@sk.com>
+> >     Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> > 
+> > For Yunjeong, the following can be added.
+> > 
+> >     Tested-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> 
+> That is probably the right thing to do if contribution was focused on testing.
+> 
+> > 
+> > However, this patch series is already in Andrew's mm-new so I don't want to
+> > bother him again unless we need to update this patches for other reasons.
+> 
+> mm-new is exactly for these kind of things. We can ask Andrew to fix it up.
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
 
-Read AXI_LEN field from EMMC50_CFG2(AHB2AXI wrapper) register, if the
-value is not 0, it means the HWIP is using AXI as AMBA bus, which do
-not support 'single' burst type.
+Hi David,
 
-Signed-off-by: Axe Yang <axe.yang@mediatek.com>
----
-This change dependents on 'mmc: mtk-sd: Cleanups for register R/W':
+Thank you for reviewing this patch series and providing your Acked-by tag.
+As you pointed out, I agree that the Signed-off-by tags in this patch
+series are not clearly aligned with the actual contributions.
 
-https://patchwork.kernel.org/project/linux-mediatek/cover/20250325110701.52623-1-angelogioacchino.delregno@collabora.com/
----
- drivers/mmc/host/mtk-sd.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+Coincidentally, Dan Williams has requested an additional fix for Patch 1
+in this series. Therefore, I am planning to prepare a new version, v8.
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index ceeae1aeac94..2e4bd5166c17 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -84,6 +84,7 @@
- #define EMMC51_CFG0	 0x204
- #define EMMC50_CFG0      0x208
- #define EMMC50_CFG1      0x20c
-+#define EMMC50_CFG2      0x21c
- #define EMMC50_CFG3      0x220
- #define SDC_FIFO_CFG     0x228
- #define CQHCI_SETTING	 0x7fc
-@@ -306,7 +307,10 @@
- /* EMMC50_CFG1 mask */
- #define EMMC50_CFG1_DS_CFG        BIT(28)  /* RW */
- 
--#define EMMC50_CFG3_OUTS_WR       GENMASK(4, 0)  /* RW */
-+/* EMMC50_CFG2 mask */
-+#define EMMC50_CFG2_AXI_SET_LEN   GENMASK(27, 24) /* RW */
-+
-+#define EMMC50_CFG3_OUTS_WR       GENMASK(4, 0)   /* RW */
- 
- #define SDC_FIFO_CFG_WRVALIDSEL   BIT(24)  /* RW */
- #define SDC_FIFO_CFG_RDVALIDSEL   BIT(25)  /* RW */
-@@ -1917,9 +1921,13 @@ static void msdc_init_hw(struct msdc_host *host)
- 	pb1_val |= FIELD_PREP(MSDC_PATCH_BIT1_CMDTA, 1);
- 	pb1_val |= MSDC_PB1_DDR_CMD_FIX_SEL;
- 
--	/* Set single burst mode, auto sync state clear, block gap stop clk */
--	pb1_val |= MSDC_PB1_SINGLE_BURST | MSDC_PB1_RSVD20 |
--		   MSDC_PB1_AUTO_SYNCST_CLR | MSDC_PB1_MARK_POP_WATER;
-+	/* Support 'single' burst type only when AXI_LEN is 0 */
-+	sdr_get_field(host->base + EMMC50_CFG2, EMMC50_CFG2_AXI_SET_LEN, &val);
-+	if (!val)
-+		pb1_val |= MSDC_PB1_SINGLE_BURST;
-+
-+	/* Set auto sync state clear, block gap stop clk */
-+	pb1_val |= MSDC_PB1_RSVD20 | MSDC_PB1_AUTO_SYNCST_CLR | MSDC_PB1_MARK_POP_WATER;
- 
- 	/* Set low power DCM, use HCLK for GDMA, use MSDC CLK for everything else */
- 	pb1_val |= MSDC_PB1_LP_DCM_EN | MSDC_PB1_RSVD3 |
--- 
-2.46.0
+In that version, I will reorganize the Signed-off-by tags as you suggested
+to accurately reflect the authorship and contributions.
+
+Thank you again for your guidance.
+
+Rakie
 
