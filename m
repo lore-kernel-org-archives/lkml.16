@@ -1,96 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9921D86DC;
-	Thu, 10 Apr 2025 08:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02B71FDE31;
+	Thu, 10 Apr 2025 08:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273306; cv=none; b=F9kb6Nh+HDFkPkr1UI31WzM/MusCnG8tQOA8jC5GUmCJkx/hH+IESuuSqo4LIgIH3/t5K/9kRRxrSikZwfL7EfMy7/TFswxjMqYE2uyGRJ5Gb6Oz2Tr9cf7S7v9QwqrTQylbR3EU+IESq4Z1d7Ku2rwxSEcz/g/XZrdz/x8WbvU=
+	t=1744273325; cv=none; b=sZDKzYtU276etr5Ts0KzsLMpS3ymuwOKdNE6ceFwIKJxFmL+lqFG/KCa2BF9qcRTnmesKzmGR+55wLqIv8EzB8FdqTStW8290sLUhkEUHA1knbEQWsNB/koSmsYjFs4SOC8xqu8Wu48Ag9L4kBYIVPzIt80cdoHl5nD9A7Zv5R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273306; c=relaxed/simple;
-	bh=T6cKF1AH6u5sSEkewMIOmHQeFJzUhjmBmmaZtyPLzhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C55650Esb2JwPJ+sMnK8qlssZHKS5rGVx3PlfaLL3gdQvekScVHEPj3ybJRLQdGiO11cgQ/qerr2vEomx1vvj/AWIXCtRRqDsIkKKvmOUZ4mBIphsxsuCzgqF6Wm7kbU4pOR2X6jp1+wfcA3/kusHBk6puFthn9IPGWqSNPIHfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cx/C44HZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cx/C44HZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E49C4CEDD;
-	Thu, 10 Apr 2025 08:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744273304;
-	bh=T6cKF1AH6u5sSEkewMIOmHQeFJzUhjmBmmaZtyPLzhM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cx/C44HZl16jH12vNnkP451QQg5FzAk7RvBGhK7Tfe3tdRcND7YkpVLx7eVQXIS03
-	 fRsb0Id09N2YUjJxtfvW9ymhqshFCLl/+nkASkq2fBPKj+gNBgAuI+tv35pl4ka26w
-	 UDc00QsDlSCwiJeCFKTFC+JrRpph7hQ+KVmgoVHGerHDsUUk1f0pnwrEUI2ls3IChR
-	 c6dX6lWqSvyAQZ07QtHllKqzulecA6fl3BdFpRwdaC2wxv9FzxYG5OFmFVFIbVXbV9
-	 uBpnLJYoUJVPme7KZqHnZhvqBcvSGHCzrsZLrAZiS6APigrLrMhaepwlfrHxmVTuxJ
-	 Ejz3aooy8rCeg==
-Date: Thu, 10 Apr 2025 11:21:37 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Larysa Zaremba <larysa.zaremba@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Wenjun Wu <wenjun1.wu@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
-	"Singhai, Anjali" <anjali.singhai@intel.com>,
-	Phani R Burra <phani.r.burra@intel.com>
-Subject: Re: [PATCH iwl-next 05/14] libeth: add control queue support
-Message-ID: <20250410082137.GO199604@unreal>
-References: <20250408124816.11584-1-larysa.zaremba@intel.com>
- <20250408124816.11584-6-larysa.zaremba@intel.com>
+	s=arc-20240116; t=1744273325; c=relaxed/simple;
+	bh=QEHUf3cjjUvT3Mem8QZVL3tzuLM/jVQlVCaqrc3lP7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SCRojV775/auOxjXu7V7nnKiHhgpW7R9DjOvvCRCGVPXxSooPa+It1Qte1rV5a0EF2HET9vscUCwOfkaeXrQULC0OW9WVxhWTqsOSek7auMk/L03fy8aIKoX6Ezv+886V8pXXaxJ3fEGiyCrun3KJg19XiWIlh109rzHiHXMCPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZYCP03VHxzvWsm;
+	Thu, 10 Apr 2025 16:17:56 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id D5744180087;
+	Thu, 10 Apr 2025 16:21:59 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 10 Apr
+ 2025 16:21:58 +0800
+Message-ID: <4e67b8db-1bc8-48b7-b3c2-956b717cbf84@huawei.com>
+Date: Thu, 10 Apr 2025 16:21:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408124816.11584-6-larysa.zaremba@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/8] ACPI: CPPC: Add IS_OPTIONAL_CPC_REG macro to judge
+ if a cpc_reg is optional
+To: Mario Limonciello <mario.limonciello@amd.com>, <rafael@kernel.org>,
+	<lenb@kernel.org>, <robert.moore@intel.com>, <viresh.kumar@linaro.org>,
+	<gautham.shenoy@amd.com>, <ray.huang@amd.com>, <perry.yuan@amd.com>,
+	<pierre.gondois@arm.com>
+CC: <acpica-devel@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>,
+	<cenxinghai@h-partners.com>, <hepeng68@huawei.com>
+References: <20250409065703.1461867-1-zhenglifeng1@huawei.com>
+ <20250409065703.1461867-2-zhenglifeng1@huawei.com>
+ <7a3bda35-05a0-49ad-b014-1834a176a906@amd.com>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <7a3bda35-05a0-49ad-b014-1834a176a906@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-On Tue, Apr 08, 2025 at 02:47:51PM +0200, Larysa Zaremba wrote:
-> From: Phani R Burra <phani.r.burra@intel.com>
+On 2025/4/10 2:53, Mario Limonciello wrote:
+> On 4/9/2025 1:56 AM, Lifeng Zheng wrote:
+>> In ACPI 6.5, s8.4.6.1 _CPC (Continuous Performance Control), whether each
+>> of the per-cpu cpc_regs[] is mendatory or optional is defined. Since the
+> mandatory
+
+Thanks！
+
+>> CPC_SUPPORTED() check is only for optional cpc field, another macro to
+>> check if the field is optional is needed.
+>>
+>> Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
+>> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+>> ---
+>>   drivers/acpi/cppc_acpi.c | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+>> index f193e713825a..39f019e265da 100644
+>> --- a/drivers/acpi/cppc_acpi.c
+>> +++ b/drivers/acpi/cppc_acpi.c
+>> @@ -129,6 +129,20 @@ static DEFINE_PER_CPU(struct cpc_desc *, cpc_desc_ptr);
+>>   #define CPC_SUPPORTED(cpc) ((cpc)->type == ACPI_TYPE_INTEGER ?        \
+>>                   !!(cpc)->cpc_entry.int_value :        \
+>>                   !IS_NULL_REG(&(cpc)->cpc_entry.reg))
+>> +
+>> +/*
+>> + * Each bit indicates the optionality of the register in per-cpu
+>> + * cpc_regs[] with the corresponding index. 0 means mandatory and 1
+>> + * means optional.
+>> + */
+>> +#define REG_OPTIONAL (0x1FC7D0)
+>> +
+>> +/*
+>> + * Use the index of the register in per-cpu cpc_regs[] to check if
+>> + * it's an optional one.
+>> + */
+>> +#define IS_OPTIONAL_CPC_REG(reg_idx) (REG_OPTIONAL & (1U << (reg_idx)))
+>> +
+>>   /*
+>>    * Arbitrary Retries in case the remote processor is slow to respond
+>>    * to PCC commands. Keeping it high enough to cover emulators where
 > 
-> Libeth will now support control queue setup and configuration APIs.
-> These are mainly used for mailbox communication between drivers and
-> control plane.
-> 
-> Make use of the page pool support for managing controlq buffers.
 
-<...>
-
->  libeth-y			:= rx.o
->  
-> +obj-$(CONFIG_LIBETH_CP)		+= libeth_cp.o
-> +
-> +libeth_cp-y			:= controlq.o
-
-So why did you create separate module for it?
-Now you have pci -> libeth -> libeth_cp -> ixd, with the potential races between ixd and libeth, am I right?
-
-Thanks
