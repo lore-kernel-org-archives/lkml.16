@@ -1,115 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970531D5CE8;
-	Thu, 10 Apr 2025 16:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7EC1D5CE8
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744302209; cv=none; b=SwkKiyTuskV+dncWhLnCaPPCUHWpocn5rVrpT7q8bngy8imX+EmHZirtu5rZGQGE1MgfbU2TeYe2pidLkUGWuYhIbJbIxMbeqJC+hCBHQdS1b0ngWG420X7m/JDTxwjxPT3GeAGaMSuKgX0UMV5farD4RyegSGAEZlBLGvAoUfg=
+	t=1744302281; cv=none; b=dJiPGwXaOVrFEK+3ePjdgqjN1h3GwgnM+m+BjUvUjs8VxPB0+pRoI/VVMLqP3HJ5yIfihhgqSyKUtJKHIFA2/hWYlcULEjT8BsdyPEg157h2Xo0gPROHfqYKCSqYVP7dyFYv5Jlr4tGtfsPMAisoaxsV4a3tMAEElpB1VkVoRIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744302209; c=relaxed/simple;
-	bh=MIJHmLndng2qHd6AMjG45aj/Tigau0sdbPDDS+LPv04=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oCnNyBT1jcY85h4QpWRijWB3nBso6+DYogCo9xTClriedo4jGMX4aJgSwX7JnQU1mwDmY5d4LIOXLhwpsghFEzsOR4VZRR07nYbPk9riAVGTjryn7+BdgGSnLpdwY/PskYKlDxhotwbfLRzvs5Ub7PWm7vAaxh7wQIf7F4+T2Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9B0xgxT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744302281; c=relaxed/simple;
+	bh=6v4nFtyz0M2gdeLy2tyI20AHjBf1pIklC2ygDx7e3SU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vd5hEDlFkUrPnbfUV+OPZs+2cbPKuMvk3waMlZRXVCu5TavX5u8LjVNj57PiQujQTMY7fqAjSkLpC7XtJYLQHSseJaB9TRHnBK5fSr7jzD6cFxKGcO8Or27FoldgQAvBfi96dAj0fzG33Z/ttHpvSbiROlbDf9ALuhHqc3HmrjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mKj9ahqO; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9B0xgxT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69337C4CEDD;
-	Thu, 10 Apr 2025 16:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744302209;
-	bh=MIJHmLndng2qHd6AMjG45aj/Tigau0sdbPDDS+LPv04=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e9B0xgxTWYrcFHkiVGBGJiHaFYVWKGZTUNNrXkTWimGY9SCcDGUgx9YBRI46PJhSb
-	 AVGgwpR0PxaS6YG0syWk1G7ANdk8a9CDHd8y/osqZYuslTbkMxZqwMAPwepHm0x1MU
-	 B9/MmJb/iZXqun7sge9kx68lNvHQxteIuDAbGGddcChKwKyRRe2LkOTEHztoOK9cCW
-	 zoraxTe36oFVBBaC3qWyauq0pENkJASB5TYyt7IfVAQOSN/JVWFRti9/41q2ErU8ky
-	 k7YE5GNIyRKEVXp5Bh5/JCb+3JO0tCiFD+LzaFs7Rio0EzDqTLY8yjkkx77A8YSEna
-	 8KB0fI+tYqy1g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u2ugZ-004I5l-37;
-	Thu, 10 Apr 2025 17:23:27 +0100
-Date: Thu, 10 Apr 2025 17:23:26 +0100
-Message-ID: <86frigkmtd.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: "Tyler Hicks (Microsoft)" <code@tyhicks.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Vijay Balakrishna <vijayb@linux.microsoft.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
-In-Reply-To: <Z/fV+SP0z+slV9/1@redbud>
-References: <1744241785-20256-1-git-send-email-vijayb@linux.microsoft.com>
-	<1744241785-20256-3-git-send-email-vijayb@linux.microsoft.com>
-	<319b7c65-3e2f-456b-a845-45f7a57ba2c5@kernel.org>
-	<86o6x4lcf9.wl-maz@kernel.org>
-	<Z/fV+SP0z+slV9/1@redbud>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mKj9ahqO"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-47686580529so10612671cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:24:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744302279; x=1744907079; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6v4nFtyz0M2gdeLy2tyI20AHjBf1pIklC2ygDx7e3SU=;
+        b=mKj9ahqOwM7Wd3EoRd0YMrfHo7E7Y9z3BUFM9QdcBKeUAxWwKT/sVRcpTwhKiPVaeR
+         Cq4Rns/OHdf0vQdztpPo0ss4wo7M3NhkKvq+zrMfnz6ShoqDaNzLB5362oH68r3WwWUQ
+         hmIhdeArCma+E7kFA9VkPYUGgg55UtI46SZ45o0UVfNnsri5TA+R8vgOArwS5xAs7RCm
+         x/L1rG/ZufCoupkB3jd0wBo3KQw7WwS2osKnBi+82j+3aORZgGyxgPf7SujnW56insrY
+         tzOJJY5ON2RvwVsFb6gObLn6rqim77fecGcUmZoCzdFpOHsjWiSR/8WZ8U8kSgDk4aqX
+         p1uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744302279; x=1744907079;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6v4nFtyz0M2gdeLy2tyI20AHjBf1pIklC2ygDx7e3SU=;
+        b=h/oducFyam29UGDUAZ1bDQdsMnd3RX3ffMSENK6RvNnuH1Sj6V8w5jHoEk0tgueKiX
+         uPNQElf9B8Wkk9xI1MVw9I9p5nfrOKoV1mKdZJdcLyI1xhwQmxShJLmU2ni/baqbi3we
+         Z/+ta5g/QWTFPlR02IzY9I5yOaX9i6L6SGDVD1VsCc89Q+lZcENyIyv/zRB8OhKxbm6n
+         BQvQ6S4n350ERBXDH49NYm5W6RW+jhyx9byTwBoSalpD18emW476XJ8IgEl6hyeazQhW
+         gzcngIhM+6jsk/ewlL4zJ453C8LzDdp6A6Y/OuFbsfNWNeBNsmwiz4xB6SHBb1FdOn6P
+         zZaw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+2zb55cdL+qhBrEVDsgtuz6fuvqshwx7p0SCv+ZqTfV4sYZKdlOPs8RADb3dLnkeqhlVUDuMW4YibjEw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0W9qm2mnlCZFSMk2O8N4CnlSe4AdinBlcfeSEhW+w6IaFzfkR
+	dJ1heg064T4H5urwb9SwiMemmjItN1DfkAtsxBxV63INP+LEbNKDRezkqCReHU8qQqAQYwVvcR9
+	+7AuAzTXUjBEDPvjMCLOCheGDSXTwyOz+cIbF
+X-Gm-Gg: ASbGnctb4U4jmRyyf4ht0BHp18vO49NW/jv33NPDCepbcmIhXgMVzblz5i2vqwnEBs1
+	Z078QGWTHvodQlehhugzf5EYOEgyAFUYhvhs2D2bJo3pzI49LUKo06KPISYKDDwMpRQG8Nn5QSN
+	3mC3Xd62g7cZBJAIwRguwv5zA=
+X-Google-Smtp-Source: AGHT+IHlJ6gh7u/Utj15awFQ2ygVGE04gXu6kHE36bW0/saInVnGO/KvFIdhEhUEwzFys4KxIRiV+jlvLu2uaF2UkWI=
+X-Received: by 2002:a05:622a:178f:b0:476:9e90:101d with SMTP id
+ d75a77b69052e-4796e362cafmr49091321cf.38.1744302278282; Thu, 10 Apr 2025
+ 09:24:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: code@tyhicks.com, krzk@kernel.org, vijayb@linux.microsoft.com, bp@alien8.de, tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org, rric@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, s.hauer@pengutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250410161619.3581785-1-sdf@fomichev.me>
+In-Reply-To: <20250410161619.3581785-1-sdf@fomichev.me>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 10 Apr 2025 18:24:27 +0200
+X-Gm-Features: ATxdqUGgn3yioNYaYTD9zcVd-LskD61diZl4-BAdgTEt9MIzCHOJfqUIc_ybq_w
+Message-ID: <CANn89iJ_CYgP2YQVtL6iQ845GUTkt9Sc6CWgjPB=bJwDPOZr1g@mail.gmail.com>
+Subject: Re: [PATCH net-next] tcp: drop tcp_v{4,6}_restore_cb
+To: Stanislav Fomichev <sdf@fomichev.me>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org, 
+	pabeni@redhat.com, ncardwell@google.com, kuniyu@amazon.com, horms@kernel.org, 
+	dsahern@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 10 Apr 2025 15:30:17 +0100,
-"Tyler Hicks (Microsoft)" <code@tyhicks.com> wrote:
-> 
-> On 2025-04-10 08:10:18, Marc Zyngier wrote:
-> > On Thu, 10 Apr 2025 07:00:55 +0100,
-> > Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > 
-> > > On 10/04/2025 01:36, Vijay Balakrishna wrote:
-> > > > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > 
-> > > > Some ARM Cortex CPUs like the A53, A57 and A72 have Error Detection And
-> > > > Correction (EDAC) support on their L1 and L2 caches. This is implemented
-> > > > in implementation defined registers, so usage of this functionality is
-> > > > not safe in virtualized environments or when EL3 already uses these
-> > > > registers. This patch adds a edac-enabled flag which can be explicitly
-> > > > set when EDAC can be used.
-> > > 
-> > > Can't hypervisor tell you that?
-> > 
-> > No, it can't. This is not an architecture feature, and KVM will gladly
-> > inject an UNDEF exception if the guest tries to use this.
-> > 
-> > Which is yet another reason why this whole exercise is futile.
-> 
-> Hi Marc - could you clarify why this is futile for baremetal or were you just
-> referring to virtualized environments?
+On Thu, Apr 10, 2025 at 6:16=E2=80=AFPM Stanislav Fomichev <sdf@fomichev.me=
+> wrote:
+>
+> Instead of moving and restoring IP[6]CB, reorder tcp_skb_cb
+> to alias with inet[6]_skb_parm. Add static asserts to make
+> sure tcp_skb_cb fits into skb.cb and that inet[6]_skb_parm is
+> at the proper offset.
 
-This is futile in general. This sort of stuff only makes sense if you
-can take useful action upon detecting an error, such as cache
-scrubbing. Here, this is just telling you "bang, you're dead", without
-any other recourse. You are not even sure you'll be able to actually
-*run* this code. You cannot identify what the blast radius.
+May I ask : why ?
 
-We have some other EDAC implementation for arm64 CPUs (XGene,
-ThunderX), and they are all perfectly useless (I have them in my
-collection of horrors). I know you are familiar enough with the RAS
-architecture to appreciate the difference with a contemporary
-implementation that would actually do the right thing.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+I think you are simply reverting 971f10eca18 ("tcp: better TCP_SKB_CB
+layout to reduce cache line misses")
+without any performance measurements.
