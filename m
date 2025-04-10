@@ -1,274 +1,201 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2058.outbound.protection.outlook.com [40.107.96.58])
+Received: from mail1.bemta40.messagelabs.com (mail1.bemta40.messagelabs.com [67.219.247.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A00420E037;
-	Thu, 10 Apr 2025 22:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCBB78F58
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.219.247.5
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744324185; cv=fail; b=aLl0Cx43JopQVLblxZcFKz6Lc03FhIWC/oAcvAR8wuURgDGUUXsXOB9EKpibva7VyBooHkC3+WpqNWWQ02TjIHnnKAca7vyFbcTGrC4GYyTW6uNvQLjamwqnLyJV0ntqP8u0FsVKdC9c+Wz+oycS1C+sHDBVn71e+6JlKX6hLfY=
+	t=1744324208; cv=fail; b=l24O0bAg6SE7lA5bx6WKekIvMo2nZg4yqrYwOkD31PbQwO/AKyedpadS8BrSnt+CFAwGCXGD7suAlOskoQz0a1Davh0zzTyaKleZ9t2+8GWKVmSFY/z1epyHMMRLQ0uio5G3PduLstswlm20j+bEMF8xJVHxAcIC/qI4FxcyezA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744324185; c=relaxed/simple;
-	bh=fYttwuVaOPIZ4RRdfCfO2MqvhUKUFqnKcexUwNB3lKA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DesK5vFZ+BtsIbHugPKzAxlIWRPabPtgQ3CGqTUhHRpgd9CkjFB3KKjW6u9oC55Gzvc34XKsnxOm+6+s4t9IikFhpCjeaZOmzYA4cMjQfQ2LccHrtA0hXOT1dfJgEWP1GdHJijqE/O7Yu7j3EQbN0AxNqPNXgJjgkJeVWoGG238=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vQ+ksFBs; arc=fail smtp.client-ip=40.107.96.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1744324208; c=relaxed/simple;
+	bh=zCJXxFgjt+Ovtoe0CFFjPZSFGKw4jRHCW05dNtZQVL4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=m9MVn47HpQELLHIfbyNhIvMBU49gQl83+XadUQxHs/mMbBNa/YEBIYe0Iq3V3VWf7pLeaNIPhdv7SEoQ9S/NW/lclh+v8adigHKzg9Yj9O1StaezXXtlxJZaNWaLt7bFs8bHuvfioiZxlNcixI+ZXFlgOcm4Os3rbNFuZsjtuVQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=semtech.com; spf=pass smtp.mailfrom=semtech.com; dkim=pass (2048-bit key) header.d=semtech.com header.i=@semtech.com header.b=RY7np5Fj; dkim=fail (1024-bit key) header.d=SemtechCorp.onmicrosoft.com header.i=@SemtechCorp.onmicrosoft.com header.b=RbYLQfPx reason="signature verification failed"; arc=fail smtp.client-ip=67.219.247.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=semtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=semtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vQ+ksFBs"
+	dkim=pass (2048-bit key) header.d=semtech.com header.i=@semtech.com header.b="RY7np5Fj";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=SemtechCorp.onmicrosoft.com header.i=@SemtechCorp.onmicrosoft.com header.b="RbYLQfPx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=semtech.com; s=k1;
+	t=1744324205; i=@semtech.com;
+	bh=JP15Dsj0DRBpg//l4/31rVfJZYbVHHVGnH5TLog4Yyg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=RY7np5Fj6qXQwh9ejkqwGINtv929aNQVGRKtSjMkkOn8rkGkJrVcC0lXd55jLinPu
+	 mtG/4cAZZl99mVJJWbtZliCNeOVYtnzd4mN6wSi4k9o3GSlRHntgbwlVuMHOdsiR59
+	 mFdhYkf0zvyL06CldYXdkMs0C/UWhTjlEu6Cv4Q8xijpps4i/N9qJZLYwmrUJvGE9P
+	 A+Ewo0f+KtzUCs5snpm5zFRGAGECKUpHVYw0kEdYxkE8nOBVrQF+h+iwHJLUyZNCft
+	 dxePmhz2Q/53qYbAQ8PkHl1UQV1S0LkcZKvCqGGi8PEVHRVyjmZ5PVHmTjoRFnxupS
+	 LP89a9v3Ey/tw==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphk+JIrShJLcpLzFFi42LJ0Hcy0M1x+5F
+  u0HLZ0OLyrjlsDowenzfJBTBGsWbmJeVXJLBmbLu+kr3gM3fF9C032RoYD3N1MXJxMAosY5bY
+  ePwOG4SzmFWie/ENFghnGpPE46azTCAOi8B2ZomJk26ygjhCAguYJOb9PMjYxcgJ5Kxikuhsj
+  AdJSAgcZZS49HkiC0TVWUaJW83/2SGcW4wS35euZINwJjNKzFlzlA2kn01AUaL1y2mwLSIC9x
+  kldh3dwwySYBbQkvj5+CbQEg4OYQEHiWf98iBhFgFViVcHLoLt5hUwk5jz9yILiC0hIC+xeMd
+  yZoi4oMTJmU9YIMbISzRvnc0McausxIoJvWwQ9cES2/70s0LYkhLXbl5gh7BlJY6encMCslZC
+  wFHi5kZjiDESEgdfvGCGKPGVaPu9EKpcTuJU7zkmmBN2brwNdU6IxK+uHSyQYDnFL3Ghu40dw
+  nnGKPFjx1tGiCoZifbLC1gnMGrMQnL3LCR3z0KyfAEj8ypG0+LUorLUIl0jc72kosz0jJLcxM
+  wcvcQq3SS90mLd1MTiEkO99OQCvdTiYr3iytzknBS9vNSSTYzARML1IWLfDsYXE5r1DzFKcjA
+  pifIeE/2RLsSXlJ9SmZFYnBFfVJqTWnyIUYaDQ0mCt9EJKCdYlJqeWpGWmQNMajBpCQ4eJRHe
+  T8pAad7igsTc4sx0iNQpRkUpcd4/IH0CIImM0jy4NlgivcQoKyXMy8jAwCDEU5BalJtZgir/i
+  lGcg1FJmPePM9AUnsy8Erjpr4AWMwEtVpX+BrK4JBEhJdXA1CD5+54eh+bSh4J3us7tnHuAPf
+  dGrsv59+FfngmsXuYf+EhE9oLytVv3NJ2jP4Sof1pXWl2+dGnqT+5NN4WDH35dsWWdiU/3Fq6
+  E3ML+quU9NyYx5lcpRP8u2FbzfLVD1fpsOf2dHTNWWX2PixONCcw48O/7r8tpijXzY6eWnV35
+  sXDdQmYZS+GOl8Iyj0/8CWOK+HgkvCjnQPbBI+tUQ6clpOqY3PwWabGo6uiSsqicWzOOZR54H
+  JX6YOMfsYVpTvfYP/YfbI+fzDljy2/9yy//f3fdYdtZ8M1ZVqJ/wq0tE5Z+nOv8ar5KwOoVxU
+  72StoCfUeW9ucsiXlourr0tIbOzRcvrsYFTDy69s/GfBclluKMREMt5qLiRABqaF/JHwQAAA=
+  =
+X-Env-Sender: zxue@semtech.com
+X-Msg-Ref: server-4.tower-929.messagelabs.com!1744324204!1940691!1
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received:
+X-StarScan-Version: 9.117.2; banners=semtech.com,-,-
+X-VirusChecked: Checked
+Received: (qmail 28021 invoked from network); 10 Apr 2025 22:30:04 -0000
+Received: from mail-mw2nam12lp2048.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) (104.47.66.48)
+  by server-4.tower-929.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 10 Apr 2025 22:30:04 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PxbMfSG0lLGw7ZpvrTnamW1d7kgMGtY8yoXqfVsxS4E/E9vxxTkBDwD/kgwh2Nv+s6CiWLioRx+WS6pUOitM1MZYc1MoWfOSPQuYR44V15Ks1gracUJNOf81liWgxmEQD76gQCQb1MzduayG75wWzuF/Esh4yvM0cPMMGgjToXUUuefJ+vP8RDDS1hkhO7ziDcOcKdkcEh25MIIy7ifs/sBpfzlSxZen3KRD24GbhqIAyKXEEHb3MMnU60DLb7O9KcXe14F+oXVVbWOzoMAOG3f1aK1guZQXPs1OgpvGFws46n+izJfE5UyuUjUZD63D61Q3+csh3+gHGsCsSYbTyQ==
+ b=K4AHyAx3sly3+kQtenRPZjdy4uTdzXVDLawxl2SFHe51yzr9jF850WskNSjY38KC8+9+yO4et1y7mH8rrvyv069uu1mVaSawLZAEaH3fIp4x2DBEG2mlvdSV/N2HPme1VN1uZ0Fv7BFkWSZs0OcpnG/cybLGU04x3oMDBU04aiQiiBxdT3TuCe8MscIMoIPm+a/L6YXB+O7EMpY1CUhAtMJAhf4aWixNEPz1x2WL20iIiSDk3HMaXrQxcpvhBlZgdcy+dLgvu0gvCzUgoLETTX1wfdJFR/SRkTQiRkfda565u2TXcbDT635i0nsRkJkUWDvibzwTweCog42IGCGCnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7GdxbxgCecDSkLOFfxwprJFCjDGG6e1p0pThXTsSrgk=;
- b=y55JHp6LU30ziaujzNgZJVKbYkdGzj7PknPTue1SLAtfXxoO+iLFQ4Vf+BcDbxhn7+NlpGMGxLTkL5V7ft8jbuHX1fgNuVCQFASZgFJtAhB43FQzCfEpTsKBWxRBq6fR5lwTAWJEGe9IrLn4w3Wr3U2jkJf0OZVA5+LrxCl0hbauUpbtHOkqlbUl5lE9Pj9jFyjgf7kGFPsmglYd782zvnXSGt0AIVDZmfVy4hje+n28uid2EqCSErlaDB+uZoEr40iTCTML7oTJ7+zXOKu1hX4OTVGPxe+K+UoboGuVli0/6TWxdL0iDEBCIifxWU3yMO26KARj/WZ1oBF6/xolNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=tZbjA/qhKF+8NcwNpluPai3pmUTkniSEi8Na6LqL1TY=;
+ b=K5m4kTz2zY/teELEeklmxjrnaMSbBlrMJknve4uf6t0JwQxDXBXJlf7J1UKVvWNWQ2J1cz10VMBEIkiNFFyvUlNp+Vn7oyk158ElR82A5uR3+OCb0Xwm7SkNt6j23qTrJIKDrrMmkC5biVMJSgxk1mYkT4bJKGccc38gNXDnyCmzd3jJFPOmNjZWsKMlKCyrnmJ+UlSUwJswUK8vQPXoxrFV/el/mga8bLfPj2EbSeNi9rBFHddS08BTmGZsc/Wc/ZQVIT3VPDrOBVhSCFiL1QJZ4EetVanKMNA8D5Pl0Cplep3CrS2LIVjDk6Q3aiXWnfAenOtPkFV8DKURVkKS/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 38.104.251.66) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=semtech.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none
+ header.from=semtech.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=SemtechCorp.onmicrosoft.com; s=selector1-SemtechCorp-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7GdxbxgCecDSkLOFfxwprJFCjDGG6e1p0pThXTsSrgk=;
- b=vQ+ksFBsMsk61Eahq+1IN64wZgGeoL/U0XxdR29GfDuI8F1lW2A+khFN4tyCqklcIv0p4DG3xQr0/Tpq4B7/EZLDk1TRdWAMEq15CkOvz9TIY9ZGgAGuqaCP1UJebq8I9y402O/+jbI6E5NZOtPzllyPLxHUsRMecz5GrwCDlM8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by BL1PR12MB5948.namprd12.prod.outlook.com (2603:10b6:208:39b::11) with
+ bh=tZbjA/qhKF+8NcwNpluPai3pmUTkniSEi8Na6LqL1TY=;
+ b=RbYLQfPx2aPmE6+Wpvf2AhSzTcRRkbzMDFy2wgP1oSypJpNebZ1/jeqo3Ih+zhuOA1/OGq/wKIwUUL8rIp+7FuL9a4xU0s6XfOkJzCPlZw4gCdYByfF2wbKvryeTDIQq6Okksuhk+c/HjetzFLRIhUnvyXmyXrFvHy5SmcZ4TWc=
+Received: from CH2PR04CA0028.namprd04.prod.outlook.com (2603:10b6:610:52::38)
+ by SJ2PR20MB6633.namprd20.prod.outlook.com (2603:10b6:a03:53c::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
- 2025 22:29:37 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%4]) with mapi id 15.20.8606.033; Thu, 10 Apr 2025
- 22:29:36 +0000
-Message-ID: <15a2cb8d-e9ee-4512-8142-2f9307fdbdf6@amd.com>
-Date: Thu, 10 Apr 2025 17:29:31 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/7] Support L3 Smart Data Cache Injection Allocation
- Enforcement (SDCIAE)
-To: Reinette Chatre <reinette.chatre@intel.com>, babu.moger@amd.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, akpm@linux-foundation.org,
- paulmck@kernel.org, thuth@redhat.com, rostedt@goodmis.org,
- xiongwei.song@windriver.com, pawan.kumar.gupta@linux.intel.com,
- jpoimboe@kernel.org, daniel.sneddon@linux.intel.com,
- thomas.lendacky@amd.com, perry.yuan@amd.com, sandipan.das@amd.com,
- kai.huang@intel.com, seanjc@google.com, xin3.li@intel.com,
- ebiggers@google.com, andrew.cooper3@citrix.com, mario.limonciello@amd.com,
- tan.shaopeng@fujitsu.com, james.morse@arm.com, tony.luck@intel.com,
- peternewman@google.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, eranian@google.com, corbet@lwn.net
-References: <cover.1738272037.git.babu.moger@amd.com>
- <7c135464-d859-459b-b86d-e8c18f106fc4@intel.com>
- <251c8fe1-603f-4993-a822-afb35b49cdfa@amd.com>
- <4a98eccf-4d31-40ac-8112-c89cde7a1c6e@intel.com>
- <46e40771-c73c-4ceb-acc3-812693f98f19@amd.com>
- <5ece1b6b-a225-4fab-be74-b48037986686@intel.com>
- <f16697d8-be6b-4dd2-b0dc-3c628fc4eec6@amd.com>
- <a546a42f-206e-4a0a-9e3b-0d4ac472729f@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <bmoger@amd.com>
-In-Reply-To: <a546a42f-206e-4a0a-9e3b-0d4ac472729f@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0118.namprd04.prod.outlook.com
- (2603:10b6:806:122::33) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Thu, 10 Apr
+ 2025 22:30:00 +0000
+Received: from CH1PEPF0000A349.namprd04.prod.outlook.com
+ (2603:10b6:610:52:cafe::4a) by CH2PR04CA0028.outlook.office365.com
+ (2603:10b6:610:52::38) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Thu,
+ 10 Apr 2025 22:29:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 38.104.251.66)
+ smtp.mailfrom=semtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=semtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of semtech.com designates
+ 38.104.251.66 as permitted sender) receiver=protection.outlook.com;
+ client-ip=38.104.251.66; helo=CA07RELAY1.semtech.com; pr=C
+Received: from CA07RELAY1.semtech.com (38.104.251.66) by
+ CH1PEPF0000A349.mail.protection.outlook.com (10.167.244.9) with Microsoft
+ SMTP Server id 15.20.8632.13 via Frontend Transport; Thu, 10 Apr 2025
+ 22:29:59 +0000
+Received: from ca08gitmail.local ([10.23.50.249]) by CA07RELAY1.semtech.com with Microsoft SMTPSVC(10.0.20348.1);
+	 Thu, 10 Apr 2025 18:29:59 -0400
+From: Adam Xue <zxue@semtech.com>
+To: johan@kernel.org,
+	dnlplm@gmail.com,
+	fabio.porcedda@gmail.com,
+	chester.a.unal@arinc9.com,
+	larsm17@gmail.com,
+	vanillanwang@163.com,
+	mank.wang@netprisma.com,
+	michal.hrusecky@turris.com,
+	linux-kernel@vger.kernel.org
+Cc: zxue@semtech.com,
+	imocanu@semtech.com
+Subject: [PATCH] USB: serial: option: Add Sierra Wireless EM9291
+Date: Thu, 10 Apr 2025 15:28:49 -0700
+Message-ID: <20250410222849.476570-1-zxue@semtech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 10 Apr 2025 22:29:59.0288 (UTC) FILETIME=[17F5FF80:01DBAA68]
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|BL1PR12MB5948:EE_
-X-MS-Office365-Filtering-Correlation-Id: 438bedf2-6944-41b4-fd8e-08dd787f2c96
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A349:EE_|SJ2PR20MB6633:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 6cd8f730-0d07-4831-15ee-08dd787f3a99
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WGlJVkpOVlA3SHZKY29oUUN0emx6U3ZMeVE0ZjBOMmZHMFJIWDVVbDkrbjZ1?=
- =?utf-8?B?K2JzbW1RT2lNQ3M0RzU2ckpZY0IwSml6SHlGL1pvaWRqb1VhQkkrNjZ0c2Rs?=
- =?utf-8?B?OTZXbE5yblZzTGRha2tidnBxdS8wU0ZtaDQ3Rk1ySFJub3BVWWk0U2tHb0xY?=
- =?utf-8?B?NDN1ZlZpZVVYY29pR0NQb1dSZmZSRjVORE1zdnY3NUwxSUNrcVJlSEZsTVZI?=
- =?utf-8?B?ekhlRU5sZ2tVcmhqM3pSYmk0ZytDczV5RGkyeldVNlNwMDd3ZzVDYjQwdXFX?=
- =?utf-8?B?TURHRHpCdklzVEYra25rQjRoQjNuNjZESmR5ZktWc2R1eFBvWC9KZlpZRXRv?=
- =?utf-8?B?ZzFUbC80RWQwTFlWSmhTOXhDSERCMnpwckRaWDFaTmQ1S2Exa2M0cVNJQ0h1?=
- =?utf-8?B?a0xKU2h1QytIY1hLcDlYZWNPRHRmdngwbTUxSkptdUZ6VTAveGFsWXVCUS9K?=
- =?utf-8?B?b0h3bGg5RmFzb0tjNXhzeTZvMzdqd01oUElzMmhHc0VyUG5jcnNxTExlWHRD?=
- =?utf-8?B?THVrejVORFFzcHVmWU51K2U1L3hpcTVpQkFneFVDNDJ2WHJwUllEUGxxZGxZ?=
- =?utf-8?B?MmcwTG43NkErVlA4M0o0SjYyZmdXZjd6YVJCeTZGekVVMDIzVkNsZXBmOE9i?=
- =?utf-8?B?amJNQUpNaTBKUzErWjBQTjB3KzVvT29aaXhVU3lnNlNZenJtbFA4ajI1UFB4?=
- =?utf-8?B?OUxNQ0g5OHZnODBDOFZXT2QwZkxGaVhmcVFVZjZBcHFsQWcwd2Fnd3JnczNa?=
- =?utf-8?B?RXUxWERzOVF4OWhXeHVGSkRhcyt0b1h0NkNNMThvcEdJR2ZvN1krMktvR1dm?=
- =?utf-8?B?VFl4QVRaSzFVdXZkUVR2azJsUU8zcHRqRmhLQXBiblBOSUMza0ZYdmRyd1A2?=
- =?utf-8?B?NEJzTDBQTUxNMXhjSGJRV3FBQXRSa2lNVG1PWlRSTWhnL2VyWmgrTlI2cndh?=
- =?utf-8?B?eTZoa2hUSzZMaGE4ck1vdGMySXFEbzBBMjljZjJMWVNOM0R0OWVsRXlKYkkr?=
- =?utf-8?B?WFBITmR6VUNBOEtDK2dpY3NkcEFOU1cvdlgwa0E5VnFydjdGVml0WFdSN3cz?=
- =?utf-8?B?bEszV0s1Sk9IVDdNakZuMEF3MHlKa3d3bkNiY0dJbGJVeHI5WVlxRUoxc09p?=
- =?utf-8?B?ME0wdjN4cEFOcERTUWlIand6dTBnR2hIeXQrbmRJUDd1OUdLQkhWQkxPZytR?=
- =?utf-8?B?NDVsKzRzUWNoQVFyc1VzYnROSHdNbmgwZWN3bGVFNldlbDNZOGRNSWw0WE1t?=
- =?utf-8?B?dFRPSUM5ZVdvMnFUTndqeEVYdDB4aGVTa0pFd2RYWWkwU205YlFEZ2tkSXpi?=
- =?utf-8?B?TmtNeXZtVG82Z3RUOHlSWCt2Q0hOUnJTT0V5Z09hTmw4bjB0eG1YQ3d5QjFw?=
- =?utf-8?B?b2l5Tm0vckhIbzNPK0IzT1RnaUdLRFVTeHJ2WmhlakNjUWZiUVhIUGhzY1Ji?=
- =?utf-8?B?Z3V0R3RkZjZsU2dlT1hmWDVRWHVsSDI0K3VzS0hFR0hOem14bzhzSlNBTWNx?=
- =?utf-8?B?MmRQTDA5cHptcER5dUpTTk1GR2lGVmdsMGwwb1VNdUtSY3cxU0pTTHdVUDN5?=
- =?utf-8?B?L2t5MUZjNkRvMkVPOVBzcVhuYlBGWmVTdnpRakgxZ3RteExhZG9JQ01uTndN?=
- =?utf-8?B?cDhYZUs1WUFGcnZxdk9heTQ5dUJFeUZoU1BNcXoyVlpEaWsyTmtlUkxCSHov?=
- =?utf-8?B?QTNYSE5CalBKaGhJR3lBZlk5L2xDRy9DQlczT2oxUUFNWE9BUGY2SHNzSHpp?=
- =?utf-8?B?MHI3cjFUV3BmQnhJak9ESHFGQjVpZ1g0MHQ3R0cySVZtem02dGQxZHExR20w?=
- =?utf-8?B?Mzk4V0hKVmFUbjc3cEErZHZEWDdYUG1MeU1iRC9CSzZvQS9rNlV4NzAyN1VI?=
- =?utf-8?Q?1t85hhIZ79eqZ?=
+	=?us-ascii?Q?pNiB1NjUCWgkNuYwxsM3k8MFt49z/jRSYWC1g1K9PzU6xmMXUXPLxQYxblBm?=
+ =?us-ascii?Q?DQrlhSv521Lp4Wmt3JLphafLn3q6whR/4oPwUNTfnFIhYOcyejnrV1hw6bUK?=
+ =?us-ascii?Q?tECZMYu300MRsR8E6uprweztHQ2qYgu7emgkE50uuMomz5zl25Xi1Hs9Kqvb?=
+ =?us-ascii?Q?aBB8m15rGblEQ7fwDmz91qO5XTBDf6aX6eQupRhi4vFFz4uCO91prDusvp3C?=
+ =?us-ascii?Q?nUNSJLJHPO990M18OUcGF8a492U2If9sh/IH8NV6aDbWdYpOMZ6FCUXoNCIO?=
+ =?us-ascii?Q?Fbe5A0Z20RH7Rmfayj+XVzLXE8hYWmjyGsztRN1tsmNPw2NBwFk6oPSMnKF6?=
+ =?us-ascii?Q?unfDuOYK++zCMXX8QrSdvWGcIrJKBqy5HGc9Eo3n0sBIpK05uQmq+q8rU0YW?=
+ =?us-ascii?Q?nB0H5MtN8oFuAK24Vie1bhJ05rGfI7vjaZyfYXX/kGmKuWIbWv/4bMkKj/nR?=
+ =?us-ascii?Q?2Jqa6IcXud6Wyh3qIL/bBeV29DqBRThfruODvJ5y6PqYQzwic2iWBM6Uhaid?=
+ =?us-ascii?Q?lC4uMq5MjpIbDj9e71GwlPrT0KVhjvDA6Lrc5AyJ8m+3ikc+/ixEzYFbeykV?=
+ =?us-ascii?Q?4KS+7eXQ7UUDic8saitolGczj4nPcFXZ90iqqKCMcHlkXfsyDaMafsg3GM25?=
+ =?us-ascii?Q?jDfzzx+ABQjae98IodN9xK6KrfzPiZ0OdGYbCi6KnFjpGT8Ux43vS7h9MZk7?=
+ =?us-ascii?Q?yMDKVUqxJrUWN8Y3Pa/QbFNXtrqMDQs0IfCi1dDmgXV/LjL4dZ0wZkve7pfa?=
+ =?us-ascii?Q?u8MxlrPFySm4Idf6y2vJM1+LX29imymYT+5r1KOSeapGadUhh3zWZBUYQUcZ?=
+ =?us-ascii?Q?yQxWBzcnsBDWJUVHlcW65bcaLyShXH9FdXfxBGj9FKQg0Wrng+Q7VMNVNWhg?=
+ =?us-ascii?Q?U7RC60nYwV+WzeW1le/Rfwbk9+BCRvlgirKxcnNdbDNp/2SiF4XIa7ErpkKE?=
+ =?us-ascii?Q?EVWOoBD8JNsPD+qreQhQpWW5qa3CieEJLgXGR3R743k06nYDb3Q5irR4/Xbq?=
+ =?us-ascii?Q?+q2t6Qj5w/5geeGA+AahUcszEyVCnG95KRAbEYGxJKyC4wJyLgP8idd0+63k?=
+ =?us-ascii?Q?W4ZoLAtqwh1yJC1sct0kh4L21nGmLDrJjO3V0fkLqzdv74u/4UAUbXb9NTbe?=
+ =?us-ascii?Q?7kSImZAJzsFZloALZOsrginkOysIP8nRi4tOUNrYGpN6y2lRRoDQ05k/x56e?=
+ =?us-ascii?Q?aGRonYK+KLxnKE6gukmQou4Knd35UQO4lgZ7IxR8U0IsUQXBh/R/H7iUCbEv?=
+ =?us-ascii?Q?CoioZGpTvyN0NnvfAUZhccOJHrnoqe3e7VIo1sArLOKYSrIxGRb5vF2GVkET?=
+ =?us-ascii?Q?S1Nw7b6RpsWeLRQsM80p8CxjUUJxU6q4UzbjWepUcjnv0l4+e255mbSGA6ZD?=
+ =?us-ascii?Q?rBYeBFr9qLCEUlXvWTA2lFKrlcEPHrBphpqYLhVsbysYUc8mcQDFbdBr/8mB?=
+ =?us-ascii?Q?+aFBGg/6QU82w0Rf7vkwIbmtZzjxr+mh6nM6mGd5EEXqXWhYp2YiihlxsxY7?=
+ =?us-ascii?Q?3NJ0hNiigSoMnYE=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TzRQbFhVR0ZPZkxONE1zSXYyQmhjcGI4bUU4cVpOUm85SWxnUU5tZ2lQcytM?=
- =?utf-8?B?Z2RCeHBmeTQrbjRFUW9tR2NybU9YTk1tVDdwL0NjWlZXREM2YWZxU0tEcHpk?=
- =?utf-8?B?ZnlZeEJBQ1o3QnJjMEJ5TXFORkxTZ1ByMFV2NE12WTVheENvMEVqd1lDcjhP?=
- =?utf-8?B?OWt1TCs0TUUwOFF5TFZ0ME9yMytvck5vOE50OGpkcXpIbVZzRUdyMGxhOEtR?=
- =?utf-8?B?U1MwM0xuUmpMU1NvNW1PZmJuWkpEZDZUN1JMeVQ1VEJzbUc1LzFoUldMVGs0?=
- =?utf-8?B?aGNDL2syUTJuZEc2TThYR1JPdUFJQUVWc0FZWkQxd25UNHRRYTFCWEN4c3F2?=
- =?utf-8?B?TW95NE53Y0NKeGZkMUpXQUVPOXZSQ3ZqSkJ0U2VmUWJNNDdFVjV3ZlNYZ0wv?=
- =?utf-8?B?dWFtV2ZIMkd1dnQwVHZqeU0yVFlmeGNmank4L2toVmJzL1gzU0U0SGUvMVhI?=
- =?utf-8?B?ckpWWjRNeStBcDNnZ1RUQk9HVmNDeVZMZEM1NnlNbVdHSm9rU2tRWUNhcHhU?=
- =?utf-8?B?dU94U0RlRmdFaFhZdkRxUlk0QlNua3pnclFTeVh2cHYvSmttMnUxRStYcnhz?=
- =?utf-8?B?YVhsVDlIaTBRaGY2SWgwbWxCb2xvVm16RFpkaEh2d1BzSkMwN2FHTDZZSENT?=
- =?utf-8?B?KzNwWUNHN0s0MTVrUnZCeVM0NGtoVEJXUFF1SjFwQlVVV1lHMUpvblNqWmtr?=
- =?utf-8?B?Q1NFSVpVZTFaaWl0d0F4Qkthd2tBTFBIOTkvRVZEOFNQTHFiMzVSU0tVeVhD?=
- =?utf-8?B?cnBhVllyVlRqd1EyT21UcGNjSmplVkd1RnMrdFQ4bGtxQWZmMnkvNlljSGxx?=
- =?utf-8?B?NEt4VjgrQ0htaWVwRjJiMUFRU21KQS8wVGVPUVRKR2dTODdjNUdTblhJMVdG?=
- =?utf-8?B?TDNNTEoyZ2tFUDJVQU5ZZjlVWG9BMHp0UTdRbGZxelFiOVhKRk9pcmsvZXB6?=
- =?utf-8?B?U0JmODA5Rit5SkZkVk1ISkhzcGsrR01vd0lYV3NQdDVTVHlFVHNRYjdXcVVF?=
- =?utf-8?B?M1NnRVEyOVBIUHFha3A3d1B1dmlXd04xamM2NkVSN2tkSTR3ejM4R1pESVBn?=
- =?utf-8?B?MUQxRzd0dFhJMUg5Rkx4Q3VzTnJnS1hodUxrYlVQVXlwWTVBTnp3ZWk3S2xr?=
- =?utf-8?B?bVZ6K2czOGttcm9aR3dRdWpZVDF6TndEejlqMTdYV0liTkR5bTlvRzhUc0s1?=
- =?utf-8?B?bjRKVG5CWHZteFJQMjhvVThWQkJhMTlJdUJzSjNiMnVEd1laRFkzWHJ5akxr?=
- =?utf-8?B?bzdJREtIZ3d6em5kc2lQRTRFa1NxMHZLMEo2L1ZpKzZ4R0ltUHp6Qk0yakRL?=
- =?utf-8?B?alVBT05lU3BnbndoWmRXb3NRR2UrS1JpL0Ixc3p1M1czWXVic21IMzR2Umtr?=
- =?utf-8?B?TmpJRVB2V2ZQTkhzZXZ3TG5TNzZtVWlQNmNkUUxOaGZuQU55V0IzRGtOcWkr?=
- =?utf-8?B?YXJ0Y2RNRllma0ZaeXZzQTI2bnd1V2lTcmVWQ3NTQWN2MkJjZENYQXFKZVNh?=
- =?utf-8?B?VnlqeDdoVkdxS0lOQk9VV052eW96RGZXRVBycmNPSDRpZ3dUZXRkWEh2STh5?=
- =?utf-8?B?UmJ6d1VFcy9ORmt2ZHRUU2lNWGV6dDk2ekxxdVU1Q2NOdnpCN2dRMmVnaXd4?=
- =?utf-8?B?blJzaGszU2s0ZzliTkJjSXpGVkMybGV2SnVmR2xmV1l3N3dkL1ZWdENsbDI1?=
- =?utf-8?B?bVVKQTFYMG90ZmhURU45Mk9DdUtla1hwS282Z0Z1RzdqRS9CRUFkZUhReDQz?=
- =?utf-8?B?eVZ3eEt6QWVWSWxObnM3M1NHbXVCcGhreHhuRVluN3JFOEhMU08vUUs1R1J4?=
- =?utf-8?B?WHFPcDlEOHYyazdPVVlXbDVPNjkyb3Q0MjYrZWk1ckh1eEs4aUR5RitWMVJO?=
- =?utf-8?B?bUV6SEZwQVk3Q04wZkc3YXlYSTZCcmcrbWtWUlBmKzNSSmxiWVZzd0xmRXBX?=
- =?utf-8?B?cVJoM3dtZklBRTZCbEFudk11UXZJeGtOWnB0aXZOakdQd2VzTGJIMHVUUEdJ?=
- =?utf-8?B?N2MxR1JXN2VpMnpEUWpYUnlXTDhkR2hlQ2ZBSFFHK0dTZDh2VjNudXVqN2RZ?=
- =?utf-8?B?ajNlVWdXQVozejBqTFdyYVQ4c0JLVnlrY09hd3hVQ2ZTdG1uQ09tblhpWlB2?=
- =?utf-8?Q?o6ZXZQPlTz5Pl13qqxDlNn12D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 438bedf2-6944-41b4-fd8e-08dd787f2c96
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 22:29:36.3950
+	CIP:38.104.251.66;CTRY:CA;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CA07RELAY1.semtech.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: semtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 22:29:59.4988
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YHx7m7++QwuRy0O9g/zVIBc0O+4pWConSvOo1xzOAIAqwLhHrwHptW/CCWt7CmDD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5948
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cd8f730-0d07-4831-15ee-08dd787f3a99
+X-MS-Exchange-CrossTenant-Id: b105310d-dc1a-4d6e-bf0d-b11c10c47b0f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=b105310d-dc1a-4d6e-bf0d-b11c10c47b0f;Ip=[38.104.251.66];Helo=[CA07RELAY1.semtech.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-CH1PEPF0000A349.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR20MB6633
 
-Hi Reinette,
+Add Sierra Wireless EM9291.
 
-On 4/9/2025 10:59 PM, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 4/9/25 5:58 PM, Moger, Babu wrote:
->> Hi Reinette,
->>
->> On 4/8/2025 8:41 PM, Reinette Chatre wrote:
->>> Hi Babu,
->>>
->>> On 4/8/25 5:41 PM, Moger, Babu wrote:
->>>> Hi Reinette,
->>>>
->>>> On 4/8/2025 4:44 PM, Reinette Chatre wrote:
->>>>> Hi Babu,
->>>>>
->>>>> On 4/7/25 1:12 PM, Moger, Babu wrote:
->>>>>> On 3/21/25 17:50, Reinette Chatre wrote:
->>>>>>> On 1/30/25 1:20 PM, Babu Moger wrote:
->>>>>
->>>>>
->>>>>>>>
->>>>>>>
->>>>>>> AMD also supports what is exposed to user space as "shareable_bits". According
->>>>>>> to APM:
->>>>>>>       Depending on the implementation, some portions of the L3 Cache may be
->>>>>>>       shared by other system functions or used for some other purpose not
->>>>>>>       under the control of the PQOS feature set. The L3 Cache Allocation
->>>>>>>       Sharing Mask returned by CPUID Fn0000_0010_EBX_x1[L3ShareAllocMask] is a
->>>>>>>       bitmask that represents portions of the L3 that may be shared by those
->>>>>>>       functions.
->>>>>>
->>>>>> Here is the complete text.
->>>>>>
->>>>>> The L3 Cache allocation sharing mask (L3ShareAllocMask) returned in EBX by
->>>>>> CPUID Fn0000_0010 with ECX=1 is a bit vector which represents portions of
->>>>>> the cache which may be shared with other system entities or used for some
->>>>>> other purpose not under the control of the QOS feature set. When software
->>>>>> sets a bit in one of the L3_MASK_n registers at the same bit positions a
->>>>>> bit in the L3ShareAllocMask, processors executing with the corresponding
->>>>>> COS will competitively share that portion of the cache with the other
->>>>>> function. If this mask is all 0’s, then there is no other entity in the
->>>>>> system competing with the processors for use of the L3 cache.
->>>>>>
->>>>>> The "L3ShareAllocMask" is always reported as 0 on AMD systems.
->>>>>>
->>>>>>> Could you please include what (if any) the relationship is between the CBM
->>>>>>> discoverable via Fn0000_0010_EBX_x1[L3ShareAllocMask] and the CBM of
->>>>>>> "highest-supported L3_MASK_n register" when SDCIAE is enabled?
->>>>>>
->>>>>> No. There is no relationship in here.
->>>>>>
->>>>>>>
->>>>>>> On the resctrl interface side the documentation currently states:
->>>>>>>
->>>>>>>       "shareable_bits":
->>>>>>>           Bitmask of shareable resource with other executing
->>>>>>>           entities (e.g. I/O). User can use this when
->>>>>>>           setting up exclusive cache partitions. Note that
->>>>>>>           some platforms support devices that have their
->>>>>>>           own settings for cache use which can over-ride
->>>>>>>           these bits.
->>>>>>>
->>>>>>> Even though this was originally used to expose the content of
->>>>>>> Fn0000_0010_EBX_x1[L3ShareAllocMask] the intent of the content does
->>>>>>> seem to also apply to the "io_alloc" CBM also.
->>>>>>
->>>>>> It says "shared by other system functions or used for some other purpose
->>>>>> not under the control of the PQOS feature set".
->>>>>
->>>>> This is a quote from the AMD spec, not the resctrl user interface documentation.
->>>>>
->>>>> Please consider this from resctrl user interface perspective.
->>>>>
->>>>>>
->>>>>> "io_alloc" is PQOS feature set. I feel it should not affect "shareable_bits".
->>>>>
->>>>> When I read the resctrl user interface documentation for "shareable_bits" it
->>>>> sounds relevant to io_alloc. The "shareable_bits" contains a bitmask "of
->>>>> shareable resource with other executing entities (e.g. I/O)" ... is this
->>>>> not exactly io_alloc?
->>>>
->>>> I agree the text is pretty generic. Actually, the whole bit mask (0xfffF) is shareable with io_alloc.
->>>
->>> I think the value of "shareable_bits" presented to user space could be the
->>> actual io_alloc_cbm value. Thus, not the "possible IO bitmask" but the actual
->>
->> Confused little bit here. The shareable_bits is resource property.
->> io_alloc_cbm is domain specific value. Not sure how to display it.
-> 
-> ah, right. We should still aim to not let the new "io_alloc" interfaces cause
-> confusion with the existing "shareable_bits" that is already part of interface and
-> used to communicate IO allocation to user space. Perhaps we are just left with
-> needing a modification to the existing documentation surrounding "shareable_bits"?
+Signed-off-by: Adam Xue <zxue@semtech.com>
+---
+ drivers/usb/serial/option.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Yes. Agree. Will add the details. Lets go from there.
-Thanks
-Babu
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 5cd26dac2069..56484a301d73 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -611,6 +611,7 @@ static void option_instat_callback(struct urb *urb);
+ /* Sierra Wireless products */
+ #define SIERRA_VENDOR_ID			0x1199
+ #define SIERRA_PRODUCT_EM9191			0x90d3
++#define SIERRA_PRODUCT_EM9291			0x90e3
+ 
+ /* UNISOC (Spreadtrum) products */
+ #define UNISOC_VENDOR_ID			0x1782
+@@ -2432,6 +2433,9 @@ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0xff, 0x30) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0xff, 0x40) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0, 0) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9291, 0xff, 0xff, 0x30) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9291, 0xff, 0xff, 0x40) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9291, 0xff, 0, 0) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(UNISOC_VENDOR_ID, TOZED_PRODUCT_LT70C, 0xff, 0, 0) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(UNISOC_VENDOR_ID, LUAT_PRODUCT_AIR720U, 0xff, 0, 0) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x1bbb, 0x0530, 0xff),			/* TCL IK512 MBIM */
+-- 
+2.43.0
 
+
+To view our privacy policy, including the types of personal information we collect, process and share, and the rights and options you have in this respect, see www.semtech.com/legal.
