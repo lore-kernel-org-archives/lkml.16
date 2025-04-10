@@ -1,80 +1,68 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5817820C001
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4407D20C03F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744274541; cv=none; b=Er6byYSSCfwLIcjG2kStgWRZgh4jSwDpfrQ6uVs5Tgt5w+WZTHgnUl+zLn4AVDbSyBYAA8uov5LsZ0uKofSo+7QysRU4YHubOT1MVipDNqzb885TigOGZkfAvdByIJUFHIGDie3e+LGYDC4bNpwc8VMdGRPvQ9c+bfgjL+5nYTQ=
+	t=1744274563; cv=none; b=F7oWMUwC5HZ61JBkz0e0jOlX13gw43j7As7MOYPQKbR3Rub1uJIquT50X8IDJEEl9Xzlrxm1VXk5xR4vN0to3f6HzfDVBPZ2dQdPpeHfsLTvrN9Wmg6/BMVfYabn6RmbWqcI/bMRu6dGOLOn5LP1w0QH/9M5rLUvHyMQ9h5jYr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744274541; c=relaxed/simple;
-	bh=AaJjAlAKcDF3tjoRqZMBgaYfkY2JnPMP40VzG3mujEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=myLmipGMCvgQ5VCOi68ZyLaMzi9QAojsRRW+Jx1w6VAwkmb7ZTHqOy/Y1otc1lE7YofGSucdPKnmR0qFEZXxCbywo2qphXTDS6n1mMbeMoiikAuolIYb0ZLhQhcaoVYUaWWwQBWQqi8Cl4bXu2F8T8lINvdyG5X1fHJeUaaH6NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=uVQOKEw4; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1744274563; c=relaxed/simple;
+	bh=4x2pJ/3gR4zTelTEP4JEeBrwQqbjkYq3/RKcwQqzT1U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=d3dRZlrvY+J/ejGreDaa6PbIbwQJ8Xh+6j8WFWNslR0nXe8i0TdkSEyZ4R9ff70bWD5WGYFP2C2fcNndH4/z7tl0HUP7qptNbgwIBg3L1POJBztW5YIz8LwtAKG3czUmCwejieJrCEzgZOgZ6FGbDe9kKguk/pHnr0rzHvLdrN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HP5yuzo9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bMQZSZmh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="uVQOKEw4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=/lGNGBbyMCD75p6dCKO3apkP06sLNCHOySPvGUmT+7M=; b=uVQOKEw4d8WibbYYpCax6pBQvj
-	rwa4ehZAeOcGxnNXZKddKIeD+I5ZOJbNAn2a6pd+TL+sbgMsDujSjG8lLLDstT7Jp12Z6SMWbSp3M
-	LJiLaSzvVHegTRfdDpgV9KR2UbafL+oPuGOdZY7buhPfXPPAw6kng0J+CtFDEYQFAWB8GwTHPu+UU
-	24TDQSw4k1X10YgTrxq/QGK0WAbKan+95jpiJhV+Z1v3obJk1otKgPObPW6JnMSlw/c2DwnanYUUh
-	ThT1+2/BXfpbvv7lNOJ8BbVyeiN8+TAPxxck867kIr1g9w+Mw6xZQOFY6kSppDYOxsM8VxjCbS59I
-	FJ5kVPgw==;
-Received: from i53875b95.versanet.de ([83.135.91.149] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1u2nTv-0002qP-VF; Thu, 10 Apr 2025 10:41:56 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Sandy Huang <hjc@rock-chips.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Konstantin Shabanov <mail@etehtsea.me>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] (drm/rockchip): Consistently use rk3399 registers consts
-Date: Thu, 10 Apr 2025 10:41:44 +0200
-Message-ID: <174427445691.820310.17501284948552457054.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250403064740.4016-1-mail@etehtsea.me>
-References: <20250403064740.4016-1-mail@etehtsea.me>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HP5yuzo9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bMQZSZmh"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744274560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pKXwQikwTKDD20gwM+YQi2ybtx3E1QIf/rOHDJaeUEc=;
+	b=HP5yuzo9xYR7wvfYu2ymXQ2uASFkXNhhx+h6Qzafo/+RZhM6MvrX7cUGVPYQFO84X4f2QH
+	m1CXHJ5ZJ55wVXEmFUm/uCjIAfp21kUJ6VBk44oJ0jF3eLCqo3mOnoWP0oJ9K773USDKV0
+	8Im/waInNus5R3uOk4SUO3kk6kVLbl36UB0Ui+n0RyNHk6f37Shgm5NLfIQWznp7ZvCyw8
+	dHVp9b0REvm2oKDb6lamGVnULvAi3EAXqNtF4B7C99tg4sTG4Xfjym8sP8K/yV70+I4GYJ
+	uzVOunyQSefCFX2Ikg3cCJUKrcGRaroM2CeR/18s39/dfArOpbMyhv4L8/Uz3g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744274560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pKXwQikwTKDD20gwM+YQi2ybtx3E1QIf/rOHDJaeUEc=;
+	b=bMQZSZmhzM4xljp18CB83PujtKtFgJmgzDMOujyIPduAo7ASseG7QjqcHskw8iU16vPdX4
+	ahf4XpgFu//HmZAg==
+To: Cheng-Yang Chou <yphbchou0911@gmail.com>, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, mingo@elte.hu, corbet@lwn.net,
+ jserv@ccns.ncku.edu.tw, Cheng-Yang Chou <yphbchou0911@gmail.com>
+Subject: Re: [PATCH] IRQ_NOTCONNECTED: fix typo in comment
+In-Reply-To: <20250403073902.265838-1-yphbchou0911@gmail.com>
+References: <20250403073902.265838-1-yphbchou0911@gmail.com>
+Date: Thu, 10 Apr 2025 10:42:40 +0200
+Message-ID: <87bjt4tnjz.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+On Thu, Apr 03 2025 at 15:39, Cheng-Yang Chou wrote:
 
-On Thu, 03 Apr 2025 06:47:39 +0000, Konstantin Shabanov wrote:
-> As rk3399 has its own registers definitions, update related structs to
-> use them.
-> There are no changes in behaviour as updated constants values are the
->  for rk3288/rk3368/rk3399 chips.
-> 
-> 
+'IRQ_NOTCONNECTED:' is not a proper subsystem prefix.
 
-Applied, thanks!
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-subject
 
-[1/1] (drm/rockchip): Consistently use rk3399 registers consts
-      commit: d74cc229cfbbc5a96139825c297f34accd670bce
+> Fixes a minor typo in the comment for IRQ_NOTCONNECTED definition:
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+s/Fixes/Fix/
+
+Thanks,
+
+        tglx
