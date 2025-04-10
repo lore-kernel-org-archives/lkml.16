@@ -1,154 +1,91 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941BA2836A2
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7791B28541F;
+	Thu, 10 Apr 2025 12:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744288884; cv=none; b=Cvab3TxWcqmpi+eUCy0h8sOzjFv60gJr9I32bvKD9Qkx4bynQ8QzNd/DxwNliDnVFkezZ7FzxGLS4QDf5aZc78acSmC/RTK1fY8PFFTm3eXFf0ZHWtxQLEP/TLy0b94HBxy/fcqdwStPIFcp8P6qfrnultGaTUnoxlZGckY2Iuw=
+	t=1744288889; cv=none; b=Sv36aTVGYPlzHzR0qY2kjAyAFp3CcU3k43bTU8DWrjx8osZy4EMZMBWR/jmwcLZx6t+Mk2sBPASpCrK8/e3XpXvX0NNbYrpcqJXOWqz1GR5RD/KF3azjVQ1FsqAZNWHhX+HMJPJR7kSUx/6pEE8TYpQmDuiUenJHR/34P1WOvMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744288884; c=relaxed/simple;
-	bh=vXo5SCRGvexplMvukNA1r/KMPn+5HrNJhleiCwCZ4Bc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jaSJOmz1Xz/oQI6ufWEPGu80gNEfO+IZXwRuSVSTjvJNJMEgk3TSGEDkEiY/NyG/MiBpKRbq3uhRPnI42olUartW39/AuorikLBGuQQREnyPlnU4oBeuycnMOp/k/Zqabe1neeaW7PAMEF517CuKNjC4tnRRso+866eZtEVrCfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=jth3yJzn; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1744288889; c=relaxed/simple;
+	bh=FdnbocKbRHhtLFIRneUZ+/1khNFKq2SMICJ8698GBPY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Z6Zey62M722NUZhdV/ctbZEQJs7JQIWTP3f7dP+3PEk3/HMJ3/HPIQ5Xm05r3NDKZgEbL0qxVAMgWJZoiwUOyddU6kEy3EwoCt1BWjZq7QKGg5T+Ue/t35n8B0gW/m6EfXCuwHxEkoVY4tGVqCsXB6LYtpvLoTLcnES3wV2cfOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=knB0CNbS; arc=none smtp.client-ip=209.85.221.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="jth3yJzn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qB4lpthXKMSgJMw0P+6qUIV90NCE2Pz6tBeYRSKcISc=; b=jth3yJzn1/mR6XgSKCon5hJeLL
-	wyOn/x+v+tJw5lqtXGOOU0+af+/e2Q0xN2RCGzZBAg7OnctNRAoj3BMJD69HDgxx//fcrytxxHUaK
-	OC7WE2En/XcXD9KmHH7ZbBQbk6bi/0+KRyJvoGYFcu6GxK0GzMvvD/vIvIlYz3F80QSp3wd7/Zjmk
-	VAg8I2RQxgyXfb44D0zzZa7eHCe1E0izaoeYg1XbYlnfkUhzdGpOGgQeHuUOqAY9jy9+AunpHbvSE
-	sDY2IAc46mmTVKN6pMMyLqE77PY5dGV9z9XlmQi+4NEgEQY9UzuEhjB5gPAjue9fiEsUy5DtpY4j8
-	P5N0lUkw==;
-Received: from [189.7.87.174] (helo=[192.168.0.224])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u2rDO-00EfkZ-Mb; Thu, 10 Apr 2025 14:41:06 +0200
-Message-ID: <efbd7d18-1cd2-4eb9-b504-c4a75370843a@igalia.com>
-Date: Thu, 10 Apr 2025 09:40:45 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knB0CNbS"
+Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso468723f8f.1;
+        Thu, 10 Apr 2025 05:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744288886; x=1744893686; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FdnbocKbRHhtLFIRneUZ+/1khNFKq2SMICJ8698GBPY=;
+        b=knB0CNbSLyrwtTrRfh4BztPMuwF6XuwgMpMDo265lQMxCg6eabs1rMwZ5TwqYxHuek
+         6YeZp70z5Ni2jVxZfEm/HWJkyEzqslEpts2lirzbsLFKWZKcVCvQkiZ3+BGqKxV4oS84
+         Nu4bLpsCCD0xMJ0bsUjzCft+fezPM/cVhkW5KcZ3VlTyYRe3Q1ADAZ3KEUisS3ktMILK
+         C7uIyLELxAuBpwaxAscmXzs1eA4NgjRRhxkUWBI0NFyIQu32/HmZ6iOWuC4AoQr5neTU
+         i3jMZ1QjcyD6IhwZrLt7gGHYRXXHpsk5TjD3oOJC6Sy+TNx5DG5QjPuI+/jXTESpZWAY
+         /pzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744288886; x=1744893686;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FdnbocKbRHhtLFIRneUZ+/1khNFKq2SMICJ8698GBPY=;
+        b=S7lKnlJ9ZnqfBDP4UbKYCh3kWi2dV7FEQE8mvqnqWOaZOO5pKiSoQZ/hlsU21NHn/H
+         ZRFIxbmsUzCXKe7TjB/gM8o1YPdSZXyApRQL9RLLPpio85h+LPuot/ZZC1k23HIxlY0a
+         GJOMhfyQgX+g/9+1XBCKZyzmHFTsjF1VyH5BIINhTHC+UjXucKip+URj34QP5XCZ8iLZ
+         vSW34kRr/dJIWR5/lQhOSbL5V1twT6TL4KCX/bBEeuv8HKmE8xDaqW3h1xwMmTXBHp26
+         3G9+X5yMVnkxGGY3Hxa5k+gvpCn95p9qi2KDex4xjBEwc/EnI+7jCiVQ6K444aa/glzf
+         LFJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUD5EUHlsMvrOs64NG+NzmDtghDYG+mqQ//V2yz9N/EJM4l+/DgEfxxUh/nW4Cd4RVdM9uqapvMghtxaSU@vger.kernel.org, AJvYcCV0gqJolleYMZy+z3GVtInnlwQ3lLNfnc0O06bOIgfeeyTNrvvAFSsEPg52Wdg5P4uuNxg=@vger.kernel.org, AJvYcCXhBxjLnAe1libcCSjZef+faL9+kisMBB3s3Jp+1eQjXw9PbBzeYW+dHKqbx8ys6X3Ic29N1XVy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJmKayxqiqHCOp1TWSIH76GvLOmF/sA84qOrNNbSR12fg9ncrA
+	84Qm7ngn+rHj1U5+hsVGevhhPTQxloAW+AgZZM5Ho+5GNfkYzJXK
+X-Gm-Gg: ASbGncuOhnirKfCLm8Z5rMpvFAowwEis8CkqnQdIbt18z7NAt1htxvapEEN/R3I1xy5
+	AhRC1+sn1LHhDFcsmfirePxu5Z6VJOU4iJCjGNXneP73tsGUK/ZKXqi8qKLirfogSXHp4X1Yp/F
+	KIFz06aKCi0EBLat6zFRn6WLyc/HDsTUfgVa84BmAqCh8UYLUFKRckrhiJa2q7BDzbab9fpRGas
+	F82uNeaHfW5pF9tUoilL+/YF4tf9XepLQOJlQ1E7eTzIKOEDdR31qOxawXllXzUlPMl72TaMCbY
+	BkxGzu46rG0AeSZ1lewSb6zzcYbjAm4=
+X-Google-Smtp-Source: AGHT+IHFnixQ5MsGHZOrRj7wBMlCDreKn1YjUX+wo4a9yoUxFxM74gu0LIHOA4oxH0+d9O3PjuEj5w==
+X-Received: by 2002:a05:6000:1ace:b0:38d:fede:54f8 with SMTP id ffacd0b85a97d-39d8f604e74mr2137274f8f.16.1744288885650;
+        Thu, 10 Apr 2025 05:41:25 -0700 (PDT)
+Received: from localhost ([2a03:2880:31ff:43::])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0cb7sm4722483f8f.75.2025.04.10.05.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 05:41:25 -0700 (PDT)
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+To: syzbot+252bc5c744d0bba917e1@syzkaller.appspotmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	netdev@vger.kernel.org,
+	song@kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	yonghong.song@linux.dev
+Subject: [syzbot] [bpf?] possible deadlock in queue_stack_map_push_elem
+Date: Thu, 10 Apr 2025 05:41:24 -0700
+Message-ID: <20250410124124.1189471-1-memxor@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <000000000000c80abd0616517df9@google.com>
+References: <000000000000c80abd0616517df9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/v3d: client ranges from axi_ids are different
- with V3D 7.1
-To: Jose Maria Casanova Crespo <jmcasanova@igalia.com>,
- Melissa Wen <mwen@igalia.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250409155504.1093400-2-jmcasanova@igalia.com>
- <20250409155504.1093400-3-jmcasanova@igalia.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <20250409155504.1093400-3-jmcasanova@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Chema,
-
-On 09/04/25 12:55, Jose Maria Casanova Crespo wrote:
-> The client mask has been reduced from 8 bits on V3D 4.1 to 7 bits
-> on V3d 7.1, so the ranges for each client are not compatible.
-
-s/V3d/V3D
-
-> 
-> A new CSD client can now report MMU errors on 7.1
-
-How about "On V3D 7.1, the CSD client can also report MMU errors.
-Therefore, add its AXI ID to the IDs list."?
-
-Note that a commit message should use the imperative mood:
-
-"Describe your changes in imperative mood, e.g. “make xyzzy do frotz”
-instead of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to
-do frotz”, as if you are giving orders to the codebase to change its
-behaviour." [1]
-
-I miss such imperative description in this commit message.
-
-Also, you could add a "Fixes:" tag pointing to the commit that
-introduced V3D 7.1. This will allow this commit to go to the stable
-trees.
-
-[1] https://docs.kernel.org/process/submitting-patches.html
-
-> 
-> Signed-off-by: Jose Maria Casanova Crespo <jmcasanova@igalia.com>
-> ---
->   drivers/gpu/drm/v3d/v3d_irq.c | 21 ++++++++++++++++++++-
->   1 file changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
-> index 1810743ea7b8..0cc1c7e5b412 100644
-> --- a/drivers/gpu/drm/v3d/v3d_irq.c
-> +++ b/drivers/gpu/drm/v3d/v3d_irq.c
-> @@ -199,12 +199,31 @@ v3d_hub_irq(int irq, void *arg)
->   			{0xA0, 0xA1, "TFU"},
->   			{0xC0, 0xE0, "MMU"},
->   			{0xE0, 0xE1, "GMP"},
-> +		}, v3d71_axi_ids[] = {
-> +			{0x00, 0x30, "L2T"},
-> +			{0x30, 0x38, "CLE"},
-> +			{0x38, 0x39, "PTB"},
-> +			{0x39, 0x3A, "PSE"},
-> +			{0x3A, 0x3B, "CSD"},
-> +			{0x40, 0x60, "TLB"},
-> +			{0x60, 0x70, "MMU"},
-> +			{0x7C, 0x7E, "TFU"},
-> +			{0x7F, 0x80, "GMP"},
->   		};
->   		const char *client = "?";
->   
->   		V3D_WRITE(V3D_MMU_CTL, V3D_READ(V3D_MMU_CTL));
->   
-> -		if (v3d->ver >= V3D_GEN_41) {
-> +		if (v3d->ver >= V3D_GEN_71) {
-> +			axi_id = axi_id & 0x7F;
-> +			for (size_t i = 0; i < ARRAY_SIZE(v3d71_axi_ids); i++) {
-> +				if (axi_id >= v3d71_axi_ids[i].begin &&
-> +				    axi_id < v3d71_axi_ids[i].end) {
-> +					client = v3d71_axi_ids[i].client;
-> +					break;
-> +				}
-> +			}
-
-What do you think about assigning v3d71_axi_ids or v3d41_axi_ids to an 
-temporary variable and move this loop below? Something like,
-
-if (v3d->ver >= V3D_GEN_71) {
-	axi_id = axi_id & 0x7F;
-	v3d_axi_ids = v3d71_axi_ids;
-} else if ... {
-	...
-}
-
-for (size_t i = 0; i < ARRAY_SIZE(v3d_axi_ids); i++) {
-	if (axi_id >= v3d_axi_ids[i].begin
-	    && axi_id < v3d_axi_ids[i].end) {
-		client = v3d_axi_ids[i].client;
-		break;
-	}
-}
-
-Best Regards,
-- Maíra
-
-> +		} else if (v3d->ver >= V3D_GEN_41) {
->   			axi_id = axi_id & 0xFF;
->   			for (size_t i = 0; i < ARRAY_SIZE(v3d41_axi_ids); i++) {
->   				if (axi_id >= v3d41_axi_ids[i].begin &&
-
+#syz test: https://github.com/kkdwivedi/linux.git res-lock-next
