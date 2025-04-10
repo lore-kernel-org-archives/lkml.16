@@ -1,243 +1,236 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF001EB1B7;
-	Thu, 10 Apr 2025 08:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275566; cv=fail; b=eWjZfoF9vwgZygalAWVinklIMPC92pg4xsB1yhtV0O+bRN2Nf4SuuhH482WD0H98EqhJPU7pRjLNUH9cPQmo5SBUmKSt62uWuPH77yJB/HANJczhMGLCgZj2qNfsd+wApar6S3G4mnEevAiG5sI7cxoZqqW0Djg95E9wb1se9bI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275566; c=relaxed/simple;
-	bh=BOiwRtbs3BPUCL7bvjOLmU8qYPJqrMXMWHLitHJfwY4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qS7IoFRc8+4tMbzMfHsmgILFWLFC4oBQJH6oiqtPEGc+MYqJPKEIwWIZwAMdmaD9lGyJTdLI15yGircckOcgTNkVi6YlRKg/sQCAly++5tnp/h1VU40o4S5ESqJGEh9KJTX4l1YUPrg6A8kBTpEzf62Bo/YFcXU898Oi67zxgpY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dJE3PYWM; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=TJt/JVii; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D8120CCCC;
+	Thu, 10 Apr 2025 08:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744275568; cv=none; b=j8txQl7LXlAqWtg6DqUBoFvBka4KxBdDpyunzzjLBENvPHgCI1Le7J7wdtG4Nh/ZjDg6D/ra1OZ9IIlQb8Y7u8ybOcfuJ9SklO8l5aVHu7VM5roJzb/kwXwXjFvZQU/DlH1KkUzzNIaNtBW7j1b4Fsjl6uuQezn1wqhDD7z12D4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744275568; c=relaxed/simple;
+	bh=ym65ZHl+x7j2UBFJ7WrJbNmKqz9rKOx7DPKi9PWmqfw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hkCmGdCuMK229CJkj2Qcuo06q1g3OjaxpsDDG6BtAQVcPJwgbZiGz9tnbn8om/2yPBaUJW7OtMTYrZE9WCqMoJtLbqVnicnFpFrKt+bORBd6oyZpxt2qUMXNplf1R46ReK1+VfosSaldQRNM5LDmBaputnlE+jwiRjDi7SwZXlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mFdJfWTD; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dJE3PYWM";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="TJt/JVii"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A8Cp9X024950;
-	Thu, 10 Apr 2025 08:59:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=Da2OsozHMAmwn+1QUMML+w00+tuRwYh8zaBMDq37p7A=; b=
-	dJE3PYWMFUB8bO9PRcdABYvRItbcGI1GBnoErdjanIfC3qECa5WoSv7Sl2DHtiwJ
-	cgpxy2XlFFMsZv0dcJMYIbjztw6TebbDH+X5eo4QJfJJfXznCOrCYpnUfsDrMhTg
-	HD+coLJ3hQxp8oi25/hU6XI0Yh3rn1ItUR0Ppqn5YypqESfND12UcmtC9pUc9iuY
-	DqSEsOGljz7YVaDPkB9iabDM0nhPr9fQ4Jbe+oh13PyNejd0AbqoWGt57igmf4cP
-	HyQhyYaB2azzzx6IfNJAbWt9SPXR1swOMC5Xynat/hqhAg0LXZOdV3Y/CpduI9jr
-	7Gk06wNd861Q2DKfD2AY+A==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45xa96033n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 08:59:03 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53A8nEYr001648;
-	Thu, 10 Apr 2025 08:59:02 GMT
-Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azlp17010022.outbound.protection.outlook.com [40.93.12.22])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyby6kq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 08:59:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lhut6KtoIcpZ9nnFDgbhjywCz1fVKjUZq1BFo9zNTGsk1kVcYfSkmC/5cBdR6uqLJ6JmcyTV4nesTiNMyRlUxcZNMkx423NfX5nOuKxdQrofALg9tjdvu0jaAJrr9voFoDd413INKmaNcxv5u97njb7lSqk8X+lu4kAT5R6XMsoRB6ebwve2voRBp5QRWJoNnZ4xm56aZvrcGUdEXWEsvBsH/6lGPGcfXMqx0sFWYISwB6Ryq8sj6d3YdT6Q2EUz4R799/BECK2/qD188UE/0EUJqtoLMcesji5jQGxQPQ9udPONJb9F58jmr47j1r1M9tFGksGwrdJAluhWGwrjew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Da2OsozHMAmwn+1QUMML+w00+tuRwYh8zaBMDq37p7A=;
- b=Pd0NPq7ZoqmiY3GegKQMYNRvtR79BNB95ere8SjNV0i3nMpNSMyu4QI0R4mklfO7sLjYD2DFwyXH+JahgmQeVVoNORpRqs6w1tZBnfafUFFrGTpMX4VI2kL2bgzgcJirXeP2j69/NMQXrV1QAAgIjGKNqGJ3G+u/WbtQAlCS2lYHz1XrTNwGWw5JpPudZvkNkRyktpV8hn1o5bRb9kfwv1weKyVazKLZ6XlgI/Drdivwwc9J1dYmkucVyBFmQRuDt6wHLOHokJKgS8QblkmYiViIgWq2cjiAb5DjKO85Mn3pECY2DGePnFvOH2G6t4e6klkYb3OUtzdHlB/uabYeIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFdJfWTD"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54d3ee30af1so224689e87.0;
+        Thu, 10 Apr 2025 01:59:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Da2OsozHMAmwn+1QUMML+w00+tuRwYh8zaBMDq37p7A=;
- b=TJt/JViiRy/Gn1HpzcDF6Xsxg7Ik8Y6hZ3ML1WZoXy/vIGa24mpVE2cAIzGI7DpX8hfl7vvY5ItY0vSiv/Vpk3p+uS7pCyKvdlf4VSIGrK+hfyxXnJair2IglPnKc99xtHowzFnSwqi59NLMyeEe7Fa0AqV62vFhKX/ZbCR4C+E=
-Received: from DM6SPR01MB0118.namprd10.prod.outlook.com (2603:10b6:5:295::18)
- by PH7PR10MB7783.namprd10.prod.outlook.com (2603:10b6:510:2ff::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Thu, 10 Apr
- 2025 08:58:59 +0000
-Received: from DM6SPR01MB0118.namprd10.prod.outlook.com
- ([fe80::c04c:7e64:6721:98a2]) by DM6SPR01MB0118.namprd10.prod.outlook.com
- ([fe80::c04c:7e64:6721:98a2%4]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 08:58:58 +0000
-Message-ID: <6793c64b-ba1b-4633-9161-6fe4662c4947@oracle.com>
-Date: Thu, 10 Apr 2025 09:58:54 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 11/12] xfs: add xfs_compute_atomic_write_unit_max()
-To: Dave Chinner <david@fromorbit.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, brauner@kernel.org, hch@lst.de,
-        viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-        linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-        martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-        linux-block@vger.kernel.org, catherine.hoang@oracle.com
-References: <20250408104209.1852036-1-john.g.garry@oracle.com>
- <20250408104209.1852036-12-john.g.garry@oracle.com>
- <Z_WnbfRhKR6RQsSA@dread.disaster.area>
- <20250409004156.GL6307@frogsfrogsfrogs>
- <Z_YF9HpdbkJDLeuR@dread.disaster.area>
- <ed53dc33-c811-4c20-8713-8d2d32cb81d7@oracle.com>
- <Z_b5ZK8H0pK0Saga@dread.disaster.area>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <Z_b5ZK8H0pK0Saga@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0115.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:c::31) To DM6SPR01MB0118.namprd10.prod.outlook.com
- (2603:10b6:5:295::18)
+        d=gmail.com; s=20230601; t=1744275565; x=1744880365; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=quYlemSJI/IPbTuyW/ur+mjtFnxkDwGn/F831OhHW4A=;
+        b=mFdJfWTD7Psr4k4JSgFq0c5k2tjuDHOzTiUZ69QBl8mUFZaxhniH+JX0Db0hapCkpc
+         GAFuK4HJuiaBqnJ0teUdAhvYmbXpnVwzGzxkXtUZ0IlkGXqvJR+89axR4uxzj/3cy8aY
+         6ehO6e4gJNafmRQgsF9k+sBiCWlnITWEnnf9lkbDa2vr8KhJCnOK4KlY03qLllGvR+lA
+         xX8hKyoh0Dc0CC0VfM1IppsjIFOxEqBnjKLltEKSG2RfKApEnilQbr1PwIRBkCdufJXx
+         VjQh68nNkv95yortpSwA8N04iBcT3+v7BzZ5v1Zqehsn2SXzeJI7i3q/dNdho2Yt4Tjf
+         kS9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744275565; x=1744880365;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=quYlemSJI/IPbTuyW/ur+mjtFnxkDwGn/F831OhHW4A=;
+        b=kGYoxh3migAUs6+7xZsFlp9iKFEIJDGje1KGIQF17oE5mNR0OlN8xeAr/hJJkukRqU
+         msBL9xGZzkLvmgzcTHydlGBMlmAOs4jPNiaUDHAwESooOXA1ujKQ6xklfq4x9HDn6YCk
+         uXbiJSyKCrcMHo+Q6eik71U2nIG5tcyH06mvcprld0gqN6AyzKVztP9tuCUEQ5aa4b+c
+         M8EBqvKadsP06FjuJk3/2NJOidtfQg2B4xO5amI1ZnKxExwnqkqTEPbe3ASilpkZnVJV
+         PnB9L+jMn3HZhTXa/03CB+aW/XneTkdaU64yEibq+02cLLkySoygterKjOzgyEmU1rgI
+         Q3Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCU1DFqafC5391S6N85KiBACZl2lQLRJK9gNdub5cXr2N+FbtZ7YMCNJJm3DAh4+M/+bMoGO85EQzMWD+VdxGpY=@vger.kernel.org, AJvYcCUjs1P5Xt7oPcD2IOnLIwc7vxCQwkpBsjLEkwgK6GWXiSQjvq64fr/6n6QiYGw6wBRmOMLZCwlda8zvv5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH+nsXpkHBZ1pWar8iNc/lX6niqgXTwrG27ejxTdA0sZegJkj/
+	iAWBmjodQ7wTBrKmSDYf6UCAqx0Ti+mhVO614AFJPlSEKFEt9KL5
+X-Gm-Gg: ASbGnctS0YJD3Q/q41T0wMdU8XnXjqEZoyCYuZ3I31SLr8qDcLsIVQo1dgkkUDtkH7Z
+	sTu6hY3X+Uc+8S8PiYRDYBKVBjizARVPAEP0wE4cjxLZX9ALih2D/ERfIIM8bj+dcCqVmjs0NL2
+	SWk0u13X3JsDYQmbAvd6aCSKFUc58o2Hql9831WRKZqWiJGFfmk40IgOkF+Ps5G4Pct2xCkSRoj
+	r69B8gPGMCoSUqFo1RB8A8W67azkIa1HCxE3hc8TfTpk+NfIVQR3NmdaZRjegZkz04D8TjRTSMt
+	u16msydpPdzD02A/cVsQ8C3HNXsaoYdu6nARw4y58UxHMBIfdibSI+Wql7xV/rq7B0XG9h+F480
+	1lr0as8AITNH7Bc+13w==
+X-Google-Smtp-Source: AGHT+IH3LEFp5SZfJTn9mBfnEMdw55TG3aOnTZaiquCIur+BQEvlh3TkT50lZo8liyX9R/vIcNMUdg==
+X-Received: by 2002:a05:6512:4010:b0:549:4ab7:7221 with SMTP id 2adb3069b0e04-54cb688ae13mr591027e87.50.1744275564501;
+        Thu, 10 Apr 2025 01:59:24 -0700 (PDT)
+Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d50285csm80875e87.110.2025.04.10.01.59.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 01:59:24 -0700 (PDT)
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+To: a.hindborg@kernel.org,
+	benno.lossin@proton.me,
+	rust-for-linux@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Valentin Obst <kernel@valentinobst.de>,
+	linux-kernel@vger.kernel.org (open list),
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	airlied@redhat.com,
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Subject: [PATCH v2 2/3] rust: dma: convert the read/write macros to return Result
+Date: Thu, 10 Apr 2025 11:58:17 +0300
+Message-ID: <20250410085916.546511-3-abdiel.janulgue@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250410085916.546511-1-abdiel.janulgue@gmail.com>
+References: <20250410085916.546511-1-abdiel.janulgue@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6SPR01MB0118:EE_|PH7PR10MB7783:EE_
-X-MS-Office365-Filtering-Correlation-Id: f84e5924-eb80-434f-9c45-08dd780dee5f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YW9EdG1rNEYrL1h2RWJ3ZTJRQlFadkhwS0ZHVC81UTJuY2NPdGtHZXpWZnFx?=
- =?utf-8?B?dm9BTUdEdjQ4bVU2K3Rrb1BwMXpPdzJORjVCMUwzdkdJWTlLV3Q3MmNkSVFW?=
- =?utf-8?B?OE1mWjJyNzFzcytJRlI0eEdBajQzNFhWdHZzcmJBSDYvTVF2ZkFwdDBwKzBR?=
- =?utf-8?B?amZBdHBRUGh6NmgxNlFVVjFoYjhuT1kzUmdJdHNyenBmemkwQzRCbHVkT1cz?=
- =?utf-8?B?U09HVzRYZVVMOHl6dG5yMCtLRkMvclh2VXMrbkNVNFV4ZUd4cE00M3I2cnlE?=
- =?utf-8?B?cElsc0s0dmR5V3hZR0l2T1d5UzdKQ2VaS0pXYVR1czdvTHVRSmlQMktTL1FP?=
- =?utf-8?B?WFdYQ2puWThQbGZTMjlsWDJLNWloMll6eU8wNEY0RVF6MnpQOER5ejlISW5r?=
- =?utf-8?B?WDlTN1I0UzdBc012c0poWkNkbUkxTEJBZWs1QXJQUStnMHlEbFcyNnFYK2No?=
- =?utf-8?B?NmluUUVzc3F0dWpXd09iL3JoMGs2aTk0dmxFc1N5NHNqR3NoUCtEVWJRRXFB?=
- =?utf-8?B?eDdCbTJiTnFjR0NsMTloc2xGa0t6Zi9IV1VET0s0ekVSNFZoR0pqQnZGMUZv?=
- =?utf-8?B?SXZZK1JTcTlxb2RsTlBVYmFGdlJOSVVlUUNHSXhoUVN5cjFrVG1LOVpQSHRa?=
- =?utf-8?B?SFNhZFVISVZLZGdlYTVPQ05wbzlBLzBuc1RvYVVhWCtKVFAxYlo5Mjl6dm9Q?=
- =?utf-8?B?U29wakVSdTBJTGFyV0VIRDJ3NWhXc05VZjJuMXgxZzRmdnVmNW5vV2M1cFNS?=
- =?utf-8?B?TnBzekNrSksxR0F1L3BRRFp4dkNYTGV4dUo4Q1RuV0FwK1NDYVhkQlJ6UEJH?=
- =?utf-8?B?VUxad1Fkc3FQdS80emR2YUhpcWFkdzdhend1ZnhUbFczald3YUxhZWg4Z2Fj?=
- =?utf-8?B?RGNTN2IyQVRWZXdXa3Z2M0NrcFF3c0JoTkRBZDBCelozbkFyVERTaFRoVXBn?=
- =?utf-8?B?djNHbFVxVXB0M1hUMWZzakdkVU8zdWpnL2w3U00raVlwVjBLbEptM1VsY2Ju?=
- =?utf-8?B?QjEwbEV0Mk5MUjBPbG85QkdBR2F5V3oyeWl5RXdYZzlCQmJwUUtMRFlnT1ds?=
- =?utf-8?B?dHl5aDVxNk1yTXRQRk9iYU9lZnRnWGpRdktrbnBiTXVlQmY4cCttaVN5TDd2?=
- =?utf-8?B?Qm15WTRORVBCUWpkOFpvc1IwaDBLRW1sSmxoaTZzTmo1UjVTOVE4YUJ3QzhR?=
- =?utf-8?B?TkRoejlBZzZqckd3bnR2N0FOdkVuOUNsd0dxQVNUOElITWo4eW5Ha29LcktO?=
- =?utf-8?B?UlNBV29nazdUelpHS1ltQmI4VHJuKzcyV2JUWmNaUzR0aitOZnltRmVDU2lt?=
- =?utf-8?B?WWlkS3p4SExES1YwemFWMGFxUTJvcGFMbzBPZ1UzR1Y3WlJsc3VScWNPbmJn?=
- =?utf-8?B?TW5vcU5tTGUxaHJXVEVmcHJDRUszK0MrNERsMXQ5VG4zTkJFOFk3bUNhbDNQ?=
- =?utf-8?B?Q0twbytZV0J4K0RTdmpOdjE5dDFHSk14MWVJSzJmYnh0TXpBQ3FHblBjeVRQ?=
- =?utf-8?B?SFpCT1FVckVnY2VFWWE3NGNNTGk5OWFQMzdaQ0o2YkxGWnFuWW43WVVJUFlB?=
- =?utf-8?B?b3NZczhnQnRMeHFLTHBCelVQUUNmYUhXdVNUQTBEZjdDc0dSMy91ZGJEb2J6?=
- =?utf-8?B?c1hwUUNzY09RMVp6ZEtrY21JS3c1b0o2ZnZEckVzY0w2d3M1VERSWlFUMzdI?=
- =?utf-8?B?MStrakZsMzZOeHd2M1ZGVXI1NWVXT0NJeFJ6U05FSHZYbG9uRXliN2NSVlZr?=
- =?utf-8?B?WnlObzhZZFNEZG5ETVM5T0xiaVErN2pCSk8xbHBoSEJ4NGw3b3BpWXMva2t3?=
- =?utf-8?B?Zk5aOHpyMjM4aWo5c0VQSXNnUEJnNzdSYkRTMHAwdWJpQi9Mb2JUbSsyUTNQ?=
- =?utf-8?B?d3Z5eUk3WjhnM1dqd3YyOW1Jd3pRcGtqYlBKSWh1akFPNDRpNVQyaXMvSzg1?=
- =?utf-8?Q?JiBefYQWEOQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6SPR01MB0118.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YW1YSjNndkNORVgvZUh1ZFhlc3MxaUNxVU9xNVpDYURWWE1lSGlvOENrTSth?=
- =?utf-8?B?MUxoeC96Ukh5QVFrdi9EaW5jMDh2dkdFaWdYMXhjTGpVcUMwWDh2VUZLQm5T?=
- =?utf-8?B?OHRRVWxIT29SeHFCa2pFTzB0NzBRQWExdXRHam9nTmI1QkFDdHFJem9RWFBq?=
- =?utf-8?B?YzlLYWxsTEZCRmlQOWc1K3lNV2JBR2FxRHVpZXlYdWl1M21KNXY0ZmlwY2VO?=
- =?utf-8?B?ZHJTYkMyejFHdkplanhmR1BpU2Z6UGR0Sm9WOHZvZVJGQ29yTUUxUXM4TnpC?=
- =?utf-8?B?RCtmT0RGVlhGaFY1UjR3TWdoSnlUQjNJS01mcjVlZGo2SHZjbHh1cWcwRFlm?=
- =?utf-8?B?a0p6T3JwdXVxT2RLRVhoa3V5Q2hUUHRUaXpXTS9tRktjS0E1TDFWbm9wejgy?=
- =?utf-8?B?Q1ptVFMrV0JnMmdtbVZxVkhzbFkwUmF6N0dPUUhhRE5VYU9vdzFlSEN4V2ZG?=
- =?utf-8?B?ZVhKc2RmMEwva0EwT1BrM001MjNTZHpoVTZpRnowNEs3ZzdvazBYZHdPRjR6?=
- =?utf-8?B?U2l3ZXplNUVDUzZsOXNtdUd5KzBwMHRablhpK2tZZzR4Q2RIdHMvWkl6WTZ0?=
- =?utf-8?B?a21VQTM1QmNEbTFseTMrZFB6d2FoNW0zd3ZFdFczYTlVNjN0VEc2bGZ1NXRx?=
- =?utf-8?B?R1Y3c2VZWlJSSnI2eXhsMjB6c1RIc3R1UFJwWCtyRHhOMVdCVkFENHBYeU1C?=
- =?utf-8?B?SlBSUTNMK1UyTXRHNkpQQWJxS1piT0pvMElYSm1rSHAyZm11RklvNHlZdGY1?=
- =?utf-8?B?S3ppRHJJdzVKVnZZbktyRitzYXdycXNjbENXaGgwU0pUaW1oUWplL25EdG93?=
- =?utf-8?B?Rm4wVU9DQTBTc1I0QU45M3FIcWxpcm9uSmpza1hrV2hheGZWdVNuUmYvRmRP?=
- =?utf-8?B?ZG1Yb3dRRUNyZkgwaWd5SzdxL3RRZndpZG5aV1hPVGQrQ20wUW9hWUF3THpm?=
- =?utf-8?B?V3UrUnAxNzM3WGZ5M1gwMGNXMGZsQ2RPTEtCRUNIRzFuNUxWVGQzaUVBSTVp?=
- =?utf-8?B?TjFlWjAzdmZKNnRzaGZMeDNPZ3VXQUY0Uks0ZmJTdlNvMS9adUl2OUt1Sjlh?=
- =?utf-8?B?VHBxUStmT0dUZVhnUHBXMG02K1FNNEZDUVR4NUYrUmNwZXJKUXVZbFgydWlC?=
- =?utf-8?B?N2ZhbU52YTNheGhteUhqUkF6MnJUN2NXSTdHV3dsSEx1UTdCV2h2NDdFdDdK?=
- =?utf-8?B?dWh1TjhVTVVaM2k3VjVnalZDY3JJdzFEbWEzRDJaQnNKajdLOWp0TEI1RmY5?=
- =?utf-8?B?cGtYZ0x3MkFncURMVGpJcDhGeGptU3JiaTZ0ZDhia2RoelBTMVhId0h6UUQ4?=
- =?utf-8?B?QnU2L0prUVZ5RUExcWZIUlFhTUtoeWxxSHRVL2ZoajE4Q3FZSE9EU2cwU2Vx?=
- =?utf-8?B?ZENsUGtvL2xuUm1FOWJ3MDNlOWRUL1hWNVliUEJBLzNCZUk4blBHekF6Zzgz?=
- =?utf-8?B?SkRIdzkxcGV0R2hwT3o0SjFuamV0V0FNRjRnR1dUSVpsbGlKblJEcUk0eTF3?=
- =?utf-8?B?clVXMkx5emJNaFJ2anU3NFJUdzBrRTF6S3pKSUE2TDJjSVlFY2tGWnJDMkx3?=
- =?utf-8?B?am1BUjI4Sk9XR1huNGZyb1h1ajlyUnNYREpKUm1FRWpReTVqMzdvZVFWU21Q?=
- =?utf-8?B?S04rcnJxdHk2ODBKVjkvWWo1dHZBYUFNbjNNUXZKZFVqNFNTWERZR2psV2Nh?=
- =?utf-8?B?RDErR3h2ekFvejk4RkhsTmlFYnVkZ1phR2U5REUzTmJZTWNLNWRpMVBUOTJi?=
- =?utf-8?B?dlczZkdBYmJ3YjJHdzhLZFNOZ3RyS2Y2VTBBVkRZWENubHRxSHI1YWxvei9q?=
- =?utf-8?B?VXdlQmFORHFPZGdDdDgvb3BRa2NlVnJIeWgwclo4cGJyZ3JvMmtXbWFWbWpk?=
- =?utf-8?B?bTZDWnJROXM1NzFySGNIT29maWpjdHhWaUtpZnMvMHdHbXlpY2pwSkFUdGUr?=
- =?utf-8?B?UGZhYkw3L0pCQXJQY2FTOERubmx6MXVOMlNVc2dEOWg1anZOM2lpVk5KWGEz?=
- =?utf-8?B?bFg2aXYrOXZyYjBUT2V0Wi9OdENBU0tFVThoZTZFUFlJWXRUdERqRVd0N25D?=
- =?utf-8?B?QWd1ZGJQVUVxa2xZNVFOL0Z6dDNmVHFuVnBKeVhjSGdOa1RRcWROSGJJbERD?=
- =?utf-8?B?b0lqZEp6cENua244SmJkdzdwTnF3TEtYSStLK3gzUmZtajhibStPOXJGNjRN?=
- =?utf-8?B?YVE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	N6g+UEJBLfopFF5tuXIvK5uoT+LNakdR4NArvmWjYr6cDepOU6YUa9J89IZeV+M9XX6T2BRbGbP/omsES+P7lFyNNVuUTSRG/EP3LOmQdZz/ysXLDKWSldmIuHwuyFnaacZB/rlSPKRf47Vm1qGZKJwWgm6XNiLSdt9UIpBbDtxEoeI8wJ5awQNflbX5ifkkfdLILaYHUW1gsi0AIGQUOna/NkJBwM6vgeRyPtWvriyj4v+Ug6o9eN/ruNPy5RTD2ucBb5+Fkt9A577OakUAZI6Ac4iVWGGbDko57WGeTGl5UO5Wc+S21eamByJyHQN03lvwifL2aSOCVBDf6xmcWppg9QH8/2fbI9pJC/UPag5CoKq9Yv9OZhndRxS7zee0zRXC1CAZ+gad/dJkCZJg38GAJH9NdZSOlfHVFNQjTRP1LqIQ9k26B3slitqadaRDFb+vgaN7JyiFEfrCENkCUM/r+BKoukMswxgV2nyvUJmDh5c6iCzH4d6HfITCZKsmkfh8gIqnk+GSztnlRFC8XovlzR5JmRRNifI/3Ph+uW38gQIwM2ThM8P5xEL+fchc8W9AsbEW+ec9mgAjRf5yIeOPSC8wlOY7XcctV37ceEg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f84e5924-eb80-434f-9c45-08dd780dee5f
-X-MS-Exchange-CrossTenant-AuthSource: DM6SPR01MB0118.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 08:58:58.6817
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 71y5dAmGrWKvYeg+WrjcHtvjqAR4xnB8+jwd/Ww1StuvBvZa5LQnx94a2dL/V+iuEDh4ElYVHnUK6+iCpJivuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB7783
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_01,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502280000 definitions=main-2504100067
-X-Proofpoint-ORIG-GUID: w_YMExMOSS4dlmPM1CeelSJNuQxut1D_
-X-Proofpoint-GUID: w_YMExMOSS4dlmPM1CeelSJNuQxut1D_
+Content-Transfer-Encoding: 8bit
 
-On 09/04/2025 23:49, Dave Chinner wrote:
->> You did provide a relatively large value in 16MB. When I say relative, I
->> mean relative to what can be achieved with HW offload today.
->>
->> The target user we see for this feature is DBs, and they want to do writes
->> in the 16/32/64KB size range. Indeed, these are the sort of sizes we see
->> supported in terms of disk atomic write support today.
-> The target user I see for RWF_ATOMIC write is applications
-> overwriting files safely (e.g. config files, documents, etc).
-> 
-> This requires an atomic write operation that is large enough to
-> overwrite the file entirely in one go.
-> 
-> i.e. we need to think about how RWF_ATOMIC is applicable to the
-> entire userspace ecosystem, not just a narrow database specific
-> niche. Databases really want atomic writes to avoid the need for
-> WAL, whereas application developers that keep asking us for safe
-> file overwrite without fsync() for arbitrary sized files and IO.
+We could do better here by having the macros return `Result`,
+so that we don't have to wrap these calls in a closure for
+validation which is confusing.
 
-If they want to use this API, then arbitrary-sized files will need to be 
-power-of-2 sized files (if the user is happy to atomic update all of the 
-file).
+Co-developed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+Suggested-by: Andreas Hindborg <a.hindborg@kernel.org>
+Link: https://lore.kernel.org/rust-for-linux/87h63qhz4q.fsf@kernel.org/
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+---
+ rust/kernel/dma.rs       | 54 +++++++++++++++++++++++-----------------
+ samples/rust/rust_dma.rs | 25 ++++++++-----------
+ 2 files changed, 42 insertions(+), 37 deletions(-)
 
-I would have thought that the work Christoph did with O_ATOMIC a few 
-years ago for atomic file updates would be more suited for scenario 
-which you mention.
-
-Anyway, back to the main topic..
-
-What is the method you propose that the admin can use to fix this upper 
-atomic write limit? Is this an mkfs and/or mount option?
-
-I appreciate that I am asking the same question as Darrick did in his 
-follow up mail.
-
-John
+diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+index d3f448868457..a61da5eeb017 100644
+--- a/rust/kernel/dma.rs
++++ b/rust/kernel/dma.rs
+@@ -328,20 +328,22 @@ unsafe impl<T: AsBytes + FromBytes + Send> Send for CoherentAllocation<T> {}
+ #[macro_export]
+ macro_rules! dma_read {
+     ($dma:expr, $idx: expr, $($field:tt)*) => {{
+-        let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
+-        // SAFETY: `item_from_index` ensures that `item` is always a valid pointer and can be
+-        // dereferenced. The compiler also further validates the expression on whether `field`
+-        // is a member of `item` when expanded by the macro.
+-        unsafe {
+-            let ptr_field = ::core::ptr::addr_of!((*item) $($field)*);
+-            $crate::dma::CoherentAllocation::field_read(&$dma, ptr_field)
+-        }
++        (|| -> ::core::result::Result<_, $crate::error::Error> {
++            let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
++            // SAFETY: `item_from_index` ensures that `item` is always a valid pointer and can be
++            // dereferenced. The compiler also further validates the expression on whether `field`
++            // is a member of `item` when expanded by the macro.
++            unsafe {
++                let ptr_field = ::core::ptr::addr_of!((*item) $($field)*);
++                ::core::result::Result::Ok($crate::dma::CoherentAllocation::field_read(&$dma, ptr_field))
++            }
++        })()
+     }};
+     ($dma:ident [ $idx:expr ] $($field:tt)* ) => {
+-        $crate::dma_read!($dma, $idx, $($field)*);
++        $crate::dma_read!($dma, $idx, $($field)*)
+     };
+     ($($dma:ident).* [ $idx:expr ] $($field:tt)* ) => {
+-        $crate::dma_read!($($dma).*, $idx, $($field)*);
++        $crate::dma_read!($($dma).*, $idx, $($field)*)
+     };
+ }
+ 
+@@ -368,24 +370,30 @@ macro_rules! dma_read {
+ #[macro_export]
+ macro_rules! dma_write {
+     ($dma:ident [ $idx:expr ] $($field:tt)*) => {{
+-        $crate::dma_write!($dma, $idx, $($field)*);
++        $crate::dma_write!($dma, $idx, $($field)*)
+     }};
+     ($($dma:ident).* [ $idx:expr ] $($field:tt)* ) => {{
+-        $crate::dma_write!($($dma).*, $idx, $($field)*);
++        $crate::dma_write!($($dma).*, $idx, $($field)*)
+     }};
+     ($dma:expr, $idx: expr, = $val:expr) => {
+-        let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
+-        // SAFETY: `item_from_index` ensures that `item` is always a valid item.
+-        unsafe { $crate::dma::CoherentAllocation::field_write(&$dma, item, $val) }
++        (|| -> ::core::result::Result<_, $crate::error::Error> {
++            let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
++            // SAFETY: `item_from_index` ensures that `item` is always a valid item.
++            unsafe { $crate::dma::CoherentAllocation::field_write(&$dma, item, $val) }
++            ::core::result::Result::Ok(())
++        })()
+     };
+     ($dma:expr, $idx: expr, $(.$field:ident)* = $val:expr) => {
+-        let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
+-        // SAFETY: `item_from_index` ensures that `item` is always a valid pointer and can be
+-        // dereferenced. The compiler also further validates the expression on whether `field`
+-        // is a member of `item` when expanded by the macro.
+-        unsafe {
+-            let ptr_field = ::core::ptr::addr_of_mut!((*item) $(.$field)*);
+-            $crate::dma::CoherentAllocation::field_write(&$dma, ptr_field, $val)
+-        }
++        (|| -> ::core::result::Result<_, $crate::error::Error> {
++            let item = $crate::dma::CoherentAllocation::item_from_index(&$dma, $idx)?;
++            // SAFETY: `item_from_index` ensures that `item` is always a valid pointer and can be
++            // dereferenced. The compiler also further validates the expression on whether `field`
++            // is a member of `item` when expanded by the macro.
++            unsafe {
++                let ptr_field = ::core::ptr::addr_of_mut!((*item) $(.$field)*);
++                $crate::dma::CoherentAllocation::field_write(&$dma, ptr_field, $val)
++            }
++            ::core::result::Result::Ok(())
++        })()
+     };
+ }
+diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
+index 874c2c964afa..1e610545e100 100644
+--- a/samples/rust/rust_dma.rs
++++ b/samples/rust/rust_dma.rs
+@@ -54,13 +54,9 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self
+         let ca: CoherentAllocation<MyStruct> =
+             CoherentAllocation::alloc_coherent(pdev.as_ref(), TEST_VALUES.len(), GFP_KERNEL)?;
+ 
+-        || -> Result {
+-            for (i, value) in TEST_VALUES.into_iter().enumerate() {
+-                kernel::dma_write!(ca[i] = MyStruct::new(value.0, value.1));
+-            }
+-
+-            Ok(())
+-        }()?;
++        for (i, value) in TEST_VALUES.into_iter().enumerate() {
++            kernel::dma_write!(ca[i] = MyStruct::new(value.0, value.1))?;
++        }
+ 
+         let drvdata = KBox::new(
+             Self {
+@@ -78,13 +74,14 @@ impl Drop for DmaSampleDriver {
+     fn drop(&mut self) {
+         dev_info!(self.pdev.as_ref(), "Unload DMA test driver.\n");
+ 
+-        let _ = || -> Result {
+-            for (i, value) in TEST_VALUES.into_iter().enumerate() {
+-                assert_eq!(kernel::dma_read!(self.ca[i].h), value.0);
+-                assert_eq!(kernel::dma_read!(self.ca[i].b), value.1);
+-            }
+-            Ok(())
+-        }();
++        for (i, value) in TEST_VALUES.into_iter().enumerate() {
++            let val0 = kernel::dma_read!(self.ca[i].h);
++            let val1 = kernel::dma_read!(self.ca[i].b);
++            assert!(val0.is_ok());
++            assert!(val1.is_ok());
++            assert_eq!(val0.unwrap(), value.0);
++            assert_eq!(val1.unwrap(), value.1);
++        }
+     }
+ }
+ 
+-- 
+2.43.0
 
