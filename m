@@ -1,215 +1,148 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9206528150E;
-	Thu, 10 Apr 2025 14:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123B628CF46
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294378; cv=none; b=POYsfwi04u46KzAxBO+vrrhNbCSu6CNtVvYXcp8+VksSs/rphcc61gjg+uOag9uVivZOyr+vxx2VhT2PXZqqwcoufVbnek5A8A8o7MLZpoLPAxyeHAVhJix4Y6kyCHrIab523omVOzCwxXuNjaWLMezcGxdLS5xiJfTzX/EZRHU=
+	t=1744294392; cv=none; b=Aaw8hhR70UCshN8eqVWH/2j5RMWgIUY/36M66EO5JlygDmAHQPRka3zhRzRf6oX03SIGwccAyTtxRkTSzTxfPEVQ6kBbniTTgqKqV1G6doLNsKbe+kHDqzVYRkrKIt5g3j08VPPUYF0wdAtWTDTWsCXmn/vbXD9k4VV9q/41QUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294378; c=relaxed/simple;
-	bh=3/bgB5C2BHe4bEP/tG3DFZKcagEkLx6lMc7ChQklokE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q+EQE/iH8edbVyC1doZ7Kve/SKtbkN2LPbtMU0A/a7ghFcfFePw+i0i/n3zJ7TduGwjlXwgD9uugnD44ec+VbW3H+gMWWcna9cMgzrNsG/cVPuI4m8FGPPSAkxnycbxV/6SB2c+SEehd0ju0ckf5doIQrrgvOApmcj7Z/zP3N/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qoOOUASs; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1744294392; c=relaxed/simple;
+	bh=XaPItLZIAiNFJonAW7dS4W5GjuIidEVHMY59hr2oACA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rtjhu/NPg/+H4behks38r4/m6hw+sYch1cbdTEFPWziOhQPpmOu3GCxrmjrFa5AKEdmBJzk2mIP+Ox1Umm+RG79TC4wYl7/vPdzkUgovMIGuZhtdp1GciRTNadi+QvzlFoKVxQcjGnCQlLXozrYyefphVeQAQS6xZqDIVa8Hnx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=inkbw2GZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=F7mwxsTy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=inkbw2GZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=F7mwxsTy; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qoOOUASs"
-Received: from [100.70.200.180] (unknown [172.200.70.13])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 276CB2114DA2;
-	Thu, 10 Apr 2025 07:12:53 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 276CB2114DA2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744294376;
-	bh=C9hmvXOD3mAOoIBtseago9OcifE2EsVmqtEJE9y1I6Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qoOOUASsp0EGHLa9GVXzDMANwEmYLl92l+NSSukqJScuIUzacXicVvHDwlhiYkOcd
-	 5V6lTM92Fu0/s8enFv+HPdVbzF1t6hRBAXtRm4H7CyHvqG9reHZ8ANVjeBdClFxN1G
-	 YYaREpYyh4cKLIYK4CIeu3IxdMjJE/BzpIcQjrCw=
-Message-ID: <7b27f207-15a0-40f0-8238-b363bb887679@linux.microsoft.com>
-Date: Thu, 10 Apr 2025 07:12:52 -0700
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="inkbw2GZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="F7mwxsTy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="inkbw2GZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="F7mwxsTy"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 165FC1F444;
+	Thu, 10 Apr 2025 14:13:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744294389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AL2WDE7+c3ZZTaiHGqzl9biXY7f/SObq+Ng9E0nbdDQ=;
+	b=inkbw2GZcnIuOPbqXOmppbdnUVDD1uiAKH+eq+jb0utaR7AMq+llb1Xpgf6b/SOTD3ymq7
+	k+HnLvzpKgRLAZlNnY4uVyQ4gPZ3HyVMw6OOKuCPG3N5fBx9UCl8Shx+6Zl2Xyp1oC6Hht
+	dlnPKR0Qi5pMEhG6HyFGEdoFWSbHlsI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744294389;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AL2WDE7+c3ZZTaiHGqzl9biXY7f/SObq+Ng9E0nbdDQ=;
+	b=F7mwxsTy2J8hH3xQHNjvBQgbjYlP+kro1kA88zKAq6MAjmnxI7ZAuASW8p/eBCVhse0wHx
+	qnS4ZTsIxbwxS7DA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=inkbw2GZ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=F7mwxsTy
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744294389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AL2WDE7+c3ZZTaiHGqzl9biXY7f/SObq+Ng9E0nbdDQ=;
+	b=inkbw2GZcnIuOPbqXOmppbdnUVDD1uiAKH+eq+jb0utaR7AMq+llb1Xpgf6b/SOTD3ymq7
+	k+HnLvzpKgRLAZlNnY4uVyQ4gPZ3HyVMw6OOKuCPG3N5fBx9UCl8Shx+6Zl2Xyp1oC6Hht
+	dlnPKR0Qi5pMEhG6HyFGEdoFWSbHlsI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744294389;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AL2WDE7+c3ZZTaiHGqzl9biXY7f/SObq+Ng9E0nbdDQ=;
+	b=F7mwxsTy2J8hH3xQHNjvBQgbjYlP+kro1kA88zKAq6MAjmnxI7ZAuASW8p/eBCVhse0wHx
+	qnS4ZTsIxbwxS7DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A6AA132D8;
+	Thu, 10 Apr 2025 14:13:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id v1s6F/TR92dxdgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 10 Apr 2025 14:13:08 +0000
+Date: Thu, 10 Apr 2025 16:12:57 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: Gavin Shan <gshan@redhat.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, adityag@linux.ibm.com,
+	donettom@linux.ibm.com, gregkh@linuxfoundation.org,
+	rafael@kernel.org, dakr@kernel.org, akpm@linux-foundation.org,
+	shan.gavin@gmail.com
+Subject: Re: [PATCH] drivers/base/memory: Avoid overhead from
+ for_each_present_section_nr()
+Message-ID: <Z_fR6c4o1V57ZAXR@localhost.localdomain>
+References: <20250410125110.1232329-1-gshan@redhat.com>
+ <9deb3725-8991-43d1-8c3d-56523fabff28@redhat.com>
+ <Z_fNx7hTOR8St0SM@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 4/9] ima: kexec: skip IMA segment validation after
- kexec soft reboot
-To: Baoquan He <bhe@redhat.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
- nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
- vgoyal@redhat.com, dyoung@redhat.com
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
- <20250402124725.5601-5-chenste@linux.microsoft.com>
- <Z/SVY1j1C7P0rZGI@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <Z/SVY1j1C7P0rZGI@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_fNx7hTOR8St0SM@localhost.localdomain>
+X-Rspamd-Queue-Id: 165FC1F444
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,kvack.org,vger.kernel.org,linux.ibm.com,linuxfoundation.org,kernel.org,linux-foundation.org,gmail.com];
+	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,localhost.localdomain:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On 4/7/2025 8:17 PM, Baoquan He wrote:
-> On 04/02/25 at 05:47am, steven chen wrote:
->> The kexec_calculate_store_digests() function calculates and stores the
->> digest of the segment during the kexec_file_load syscall, where the
->> IMA segment is also allocated.
->>
->> With this series, the IMA segment will be updated with the measurement
->> log at the kexec execute stage when a soft reboot is initiated.
->> Therefore, the digests should be updated for the IMA segment in the
->> normal case.
->>
->> The content of memory segments carried over to the new kernel during the
->> kexec systemcall can be changed at kexec 'execute' stage, but the size
->> and the location of the memory segments cannot be changed at kexec
->> 'execute' stage.
->>
->> However, during the kexec execute stage, if kexec_calculate_store_digests()
->> API is called to update the digest, it does not reuse the same memory
->> segment allocated during the kexec 'load' stage and the new memory segment
->> required cannot be transferred/mapped to the new kernel.
->>
->> As a result, digest verification will fail in verify_sha256_digest()
->> after a kexec soft reboot into the new kernel. Therefore, the digest
->> calculation/verification of the IMA segment needs to be skipped.
->>
->> To address this, skip the calculation and storage of the digest for the
->> IMA segment in kexec_calculate_store_digests() so that it is not added
->> to the purgatory_sha_regions.
->>
->> Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
->> no change is needed in verify_sha256_digest() in this context.
->>
->> With this change, the IMA segment is not included in the digest
->> calculation, storage, and verification.
-> I would write the patch log like:
->
-> ======
-> Currently, the function kexec_calculate_store_digests() calculates and
-> stores the digest of the segment during the kexec_file_load syscall,
-> where the  IMA segment is also allocated.
->
-> Later, the IMA segment will be updated with the measurement log at the
-> kexec execute stage when a kexec reboot is initiated. Therefore, the
-> digests should be updated for the IMA segment in the  normal case. The
-> problem is that the content of memory segments carried over to the new
-> kernel during the kexec systemcall can be changed at kexec 'execute'
-> stage, but the size and the location of the memory segments cannot be
-> changed at kexec 'execute' stage.
->
-> To address this, skip the calculation and storage of the digest for the
-> IMA segment in kexec_calculate_store_digests() so that it is not added
-> to the purgatory_sha_regions.
->
-> With this change, the IMA segment is not included in the digest
-> calculation, storage, and verification.
-> ======
+On Thu, Apr 10, 2025 at 03:55:19PM +0200, Oscar Salvador wrote:
+> All in all, I think we are better, and the code is slightly simpler?
 
-Hi Baoquan,
+One thing to notice is that maybe we could further improve and leap 'nr'
+by the number of sections_per_block, so in those scenarios where
+a memory-block spans multiple sections this could be faster?
 
-I will update it in next version.
+Just a thought, and maybe not worth it.
+In the end, we have payed more than once the price of trying to be too smart
+wrt. sections and boot tricks :-).
 
-Thanks for your comments.
 
-Steven
-
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Cc: Eric Biederman <ebiederm@xmission.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Vivek Goyal <vgoyal@redhat.com>
->> Cc: Dave Young <dyoung@redhat.com>
->> Signed-off-by: steven chen <chenste@linux.microsoft.com>
->> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
->> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
->> Acked-by: Baoquan He <bhe@redhat.com>
->> ---
->>   include/linux/kexec.h              |  3 +++
->>   kernel/kexec_file.c                | 22 ++++++++++++++++++++++
->>   security/integrity/ima/ima_kexec.c |  3 +++
->>   3 files changed, 28 insertions(+)
->>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 7d6b12f8b8d0..107e726f2ef3 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -362,6 +362,9 @@ struct kimage {
->>   
->>   	phys_addr_t ima_buffer_addr;
->>   	size_t ima_buffer_size;
->> +
->> +	unsigned long ima_segment_index;
->> +	bool is_ima_segment_index_set;
->>   #endif
->>   
->>   	/* Core ELF header buffer */
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 3eedb8c226ad..606132253c79 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -38,6 +38,21 @@ void set_kexec_sig_enforced(void)
->>   }
->>   #endif
->>   
->> +#ifdef CONFIG_IMA_KEXEC
->> +static bool check_ima_segment_index(struct kimage *image, int i)
->> +{
->> +	if (image->is_ima_segment_index_set && i == image->ima_segment_index)
->> +		return true;
->> +	else
->> +		return false;
->> +}
->> +#else
->> +static bool check_ima_segment_index(struct kimage *image, int i)
->> +{
->> +	return false;
->> +}
->> +#endif
->> +
->>   static int kexec_calculate_store_digests(struct kimage *image);
->>   
->>   /* Maximum size in bytes for kernel/initrd files. */
->> @@ -764,6 +779,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
->>   		if (ksegment->kbuf == pi->purgatory_buf)
->>   			continue;
->>   
->> +		/*
->> +		 * Skip the segment if ima_segment_index is set and matches
->> +		 * the current index
->> +		 */
->> +		if (check_ima_segment_index(image, i))
->> +			continue;
->> +
->>   		ret = crypto_shash_update(desc, ksegment->kbuf,
->>   					  ksegment->bufsz);
->>   		if (ret)
->> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
->> index b12ac3619b8f..7e0a19c3483f 100644
->> --- a/security/integrity/ima/ima_kexec.c
->> +++ b/security/integrity/ima/ima_kexec.c
->> @@ -145,6 +145,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->>   	kbuf.buffer = kexec_buffer;
->>   	kbuf.bufsz = kexec_buffer_size;
->>   	kbuf.memsz = kexec_segment_size;
->> +	image->is_ima_segment_index_set = false;
->>   	ret = kexec_add_buffer(&kbuf);
->>   	if (ret) {
->>   		pr_err("Error passing over kexec measurement buffer.\n");
->> @@ -155,6 +156,8 @@ void ima_add_kexec_buffer(struct kimage *image)
->>   	image->ima_buffer_addr = kbuf.mem;
->>   	image->ima_buffer_size = kexec_segment_size;
->>   	image->ima_buffer = kexec_buffer;
->> +	image->ima_segment_index = image->nr_segments - 1;
->> +	image->is_ima_segment_index_set = true;
->>   
->>   	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
->>   		      kbuf.mem);
->> -- 
->> 2.25.1
->>
-
+-- 
+Oscar Salvador
+SUSE Labs
