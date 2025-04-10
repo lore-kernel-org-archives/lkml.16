@@ -1,120 +1,136 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606AA26AF3
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1F81F0E34;
+	Thu, 10 Apr 2025 03:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744257120; cv=none; b=T2+H5I103zeH7g5C27Eq8NVVTB+YlQl13tYrMTKNvvFuQEDz9AmehT9QEdKMVoXbpCDQK3AmAL+pLS3WA7cVwe5NFtW1jOmHFK3L6HjVtxeJuqNeoKlBqfS6wZN1+4AplGfLNDuEYEjVpzNU6WbRHJsK/8eEtrMLOChpiw8tJ9k=
+	t=1744257147; cv=none; b=K8th+mNkO3W5wg3SM5YVRhZ9oIJk07VRYbHbxHsfTDYFyYD0Tf2bYFVu4u8ZCp/UoFKH8vibfva/2DRSauTwWYrOQGhgyfeyZOhdMX1N/2cfey5JSIsNB037Um8Gz1pMzCPaQLAARWrn0bLqO3YWra7x3zPzLvn2eTK/rQ3Uowk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744257120; c=relaxed/simple;
-	bh=G40xwuuhEalaAtAG84j+mCKLB9Fl0PM0jvfPEOlJ9G0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y60eDrC3aD8u8/iuXwlPqauyF/qc9gaQWJc807ScPHtAqsYRTSnGsFu2Mc0jIwvKQNVdUa7MjV1EcSSBjjUvy+M3tKtFAwbTl2mZViq2bM2qHNph3GAwsJaMtQ78blv4qdHoBKEj+tM6YBlxgnqiLZ0wZRdXEbS4siK1bHIY4z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YYpSxRfj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YYpSxRfj"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539IGVpo010468
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:51:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=ZIvhTGg/PtZD55HriLCLdOKV
-	idFTqZ52LaSgqOaJPpA=; b=YYpSxRfjdZYDuUzVK+T24pH9t0rIRm/Jh1Nf9ElF
-	fTwLhRVXnOt0bH4Ub8Shil2RRBgkWCCIuuMX6zX+/fEaxcOTb98azuNalY71oDHL
-	dZzwjeItJiCk1BKH2xaW/d1cRJNFhD9mC42PDddVXOWRRb4Q47CoieIekb92D9eo
-	eGIIrdZP4orb1VBcHDDfBw7lsTuntxR9CsuZkqx4vKf5kiteBc2Q0m7/u6kL4qOa
-	dscyT3I34VLfnRyPU8XBWQbI8MPxjPEJ5PPyLAtzBWoz9GtNu1EMAXvKNxAK1q0z
-	G/TI0R6bAIfBS+yp5rGbn1rUKHXLvBYzc7zy7jn5q34FDw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftnbue-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:51:57 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c3c8f8ab79so78632385a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 20:51:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744257116; x=1744861916;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZIvhTGg/PtZD55HriLCLdOKVidFTqZ52LaSgqOaJPpA=;
-        b=i/9mPzufEFnOZs+azSgQUtceCT+mqJYpmXQ3ARxb59R1/icF7CtzknNIIOV8iCTglL
-         +aFWdtfBTDbnuYSxOFJzkCDCkqB2JylrJQvlI10XnwGpiATQ2xs3YD//U2XEqcoDrn6a
-         UzxJjqWDL/+E/XiFlzJXeltvkfrgJcJhsga8HKUdpC/pvWUUzmjny3DOW067vGq378X4
-         Q1iCTjVudEnhYUli6iXNIJYcGdVOnA1jiTeCznn5TuqgUukYncvk6n6acHqSoMZGgCQx
-         plvALm335eYKXE/TM5GvvsYLOswSSsTCrD+YGpZ1dGD45OpkSFL5uQFiAYROgErFTFlm
-         fXuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFBh1LCimK2l+pnd74XWPmpQ3HYGJrdok1VGtTSDRVtWwCGBFKm6Z6UlcgyFJ6geOPAFNjGRaKnobjAEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx4jsrnFJYw5vkDrqUtCGTvU0Db+AwQIoEpWiRCp4f0z9Tz+hp
-	HyU3GIh9at+PWhoy+DMAufTd2X+RPAfXEMNzlj2u8/52wsrdKDUvSNuRwRgUK7ItrceJ21saWX8
-	pOIQQFvktgUNocA8HDCotzxfYMPG7eLsNc4qHGgzdJljvurSqla/9umhu3ONEovU=
-X-Gm-Gg: ASbGncs5W/kma6a5ogDTEx2Sa9u1WzErpBH0SY6FfitEnOoRP9rGxD754AyJgGU0AVY
-	DuwLPxLaD6rUCgM7Mc8GOhr5BwdjTk/l8u324dDvtqClL6+jrWZIQoxFJN8NvP67TyI7Gji1EKU
-	qM500NDR6Za5Ldxka7/QC6vFHI9zjozjUQzSuOLQHqPv0eVQOH3+Qsdz1/dZWXF9iHAAbeb565R
-	K0cRSQGAxaP8NjyNuIXwAkUUKOE75gkQPSaoTuS79j8VyU/8PRa4oPWZ7ssdpYlxYPgLBkBO9ns
-	36JPTKTEnG1xarQm0m7P7JLrBYvNqp3S6kjx/zXZoHa7p83C2poyMZf3O3dXnHFo9SRmPDjHobY
-	=
-X-Received: by 2002:a05:620a:430c:b0:7c5:562d:ccf8 with SMTP id af79cd13be357-7c7a7654791mr194627685a.8.1744257116364;
-        Wed, 09 Apr 2025 20:51:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHjUtZgiODqub0LOS4XW9ZoeqBCnVVTAHVxIcf7QAzzKM2/fq/RcPifjbgDnTwXsLNvS/I/cA==
-X-Received: by 2002:a05:620a:430c:b0:7c5:562d:ccf8 with SMTP id af79cd13be357-7c7a7654791mr194626285a.8.1744257116020;
-        Wed, 09 Apr 2025 20:51:56 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d510b73sm28262e87.185.2025.04.09.20.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 20:51:55 -0700 (PDT)
-Date: Thu, 10 Apr 2025 06:51:53 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Stone Zhang <quic_stonez@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_miaoqing@quicinc.com, quic_zhichen@quicinc.com,
-        quic_yuzha@quicinc.com
-Subject: Re: [PATCH v4 1/2] arm64: dts: qcom: qcs8300: add a PCIe port for
- WLAN
-Message-ID: <47sed4fhrqqtjfa25hp2nenlcw5jn3s5ejcb4mw35agfmpol7y@cncy7tipi323>
-References: <20250325075331.1662306-1-quic_stonez@quicinc.com>
- <20250325075331.1662306-2-quic_stonez@quicinc.com>
+	s=arc-20240116; t=1744257147; c=relaxed/simple;
+	bh=8UR0rCYcem4Ns+qpODAMEUGXyGRLAyiltIyTO13LKmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=at1qXZXy8xHzZG1iZEYddrbZOs95a1Hb6qpgdr0BMp6NfFByYxKsrUpbhlL5S0/oxd+VuiAGsMq5c0M2kwuKZ/9Omu8+1Yak6JDLqeUOx9pP4i0KCcjqB2dzdbCf71kQbjraQq0YgUFzN5qwAMG6erIdszTNDg5F7UVhhEbPDbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZY5V93kgHz4f3jtT;
+	Thu, 10 Apr 2025 11:52:01 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 8AE731A13CE;
+	Thu, 10 Apr 2025 11:52:19 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgD3Wl9xQPdn5yMjJA--.22084S3;
+	Thu, 10 Apr 2025 11:52:19 +0800 (CST)
+Message-ID: <43a34aa8-3f2f-4d86-be53-8a832be8532f@huaweicloud.com>
+Date: Thu, 10 Apr 2025 11:52:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325075331.1662306-2-quic_stonez@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f7405d cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=TBYT5JYlgfXD-NVwRcIA:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 0NjwXKNdkW2vVQIWmWYnXeGUC1SQZpIM
-X-Proofpoint-ORIG-GUID: 0NjwXKNdkW2vVQIWmWYnXeGUC1SQZpIM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=935
- suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100027
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH -next v3 01/10] block: introduce
+ BLK_FEAT_WRITE_ZEROES_UNMAP to queue limits features
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
+ chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, yi.zhang@huawei.com,
+ chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250318073545.3518707-1-yi.zhang@huaweicloud.com>
+ <20250318073545.3518707-2-yi.zhang@huaweicloud.com>
+ <20250409103148.GA4950@lst.de>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250409103148.GA4950@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgD3Wl9xQPdn5yMjJA--.22084S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFWxXw43Jr1DWF47Zw4xZwb_yoW5WFW5p3
+	yfJF1jyrnaqw1fC3Z7Zw48Wr109ws7GF43Gw4aqryjvwnxXF1xKF1S93WYvFWkurs3G3W0
+	qFWjqF9rCw1qvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Tue, Mar 25, 2025 at 03:53:30PM +0800, Stone Zhang wrote:
-> Add an original PCIe port for WLAN. This port will be
-> referenced and supplemented by specific WLAN devices.
+On 2025/4/9 18:31, Christoph Hellwig wrote:
+> On Tue, Mar 18, 2025 at 03:35:36PM +0800, Zhang Yi wrote:
+>> From: Zhang Yi <yi.zhang@huawei.com>
+>>
+>> Currently, disks primarily implement the write zeroes command (aka
+>> REQ_OP_WRITE_ZEROES) through two mechanisms: the first involves
+>> physically writing zeros to the disk media (e.g., HDDs), while the
+>> second performs an unmap operation on the logical blocks, effectively
+>> putting them into a deallocated state (e.g., SSDs). The first method is
+>> generally slow, while the second method is typically very fast.
+>>
+>> For example, on certain NVMe SSDs that support NVME_NS_DEAC, submitting
+>> REQ_OP_WRITE_ZEROES requests with the NVME_WZ_DEAC bit can accelerate
+>> the write zeros operation by placing disk blocks into
 > 
-> Signed-off-by: Stone Zhang <quic_stonez@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs8300.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> Note that this is a can, not a must.  The NVMe definition of Write
+> Zeroes is unfortunately pretty stupid.
 > 
+>> +		[RO] Devices that explicitly support the unmap write zeroes
+>> +		operation in which a single write zeroes request with the unmap
+>> +		bit set to zero out the range of contiguous blocks on storage
+>> +		by freeing blocks, rather than writing physical zeroes to the
+>> +		media.
+> 
+> This is not actually guaranteed for nvme or scsi.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Thank you for your review and comments. However, I'm not sure I fully
+understand your points. Could you please provide more details?
 
--- 
-With best wishes
-Dmitry
+AFAIK, the NVMe protocol has the following description in the latest
+NVM Command Set Specification Figure 82 and Figure 114:
+
+===
+Deallocate (DEAC): If this bit is set to ‘1’, then the host is
+requesting that the controller deallocate the specified logical blocks.
+If this bit is cleared to ‘0’, then the host is not requesting that
+the controller deallocate the specified logical blocks...
+
+DLFEAT:
+Write Zeroes Deallocation Support (WZDS): If this bit is set to ‘1’,
+then the controller supports the Deallocate bit in the Write Zeroes
+command for this namespace...
+Deallocation Read Behavior (DRB): This field indicates the deallocated
+logical block read behavior. For a logical block that is deallocated,
+this field indicates the values read from that deallocated logical block
+and its metadata (excluding protection information)...
+
+  Value  Definition
+  001b   A deallocated logical block returns all bytes cleared to 0h
+===
+
+At the same time, the current kernel determines whether to set the
+unmap bit when submitting the write zeroes command based on the above
+protocol. So I think this rules should be clear now.
+
+Were you saying that what is described in this protocol is not a
+mandatory requirement? Which means the disks that claiming to support
+the UNMAP write zeroes command(WZDS=1,DRB=1), but in fact, they still
+write actual zeroes data to the storage media? Or were you referring
+to some irregular disks that do not obey the protocol and mislead
+users?
+
+Thanks,
+Yi.
+
