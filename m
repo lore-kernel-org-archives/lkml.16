@@ -1,110 +1,160 @@
-Received: from pv50p00im-hyfv10021501.me.com (pv50p00im-hyfv10021501.me.com [17.58.6.48])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DF181ACA
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808D759B71;
+	Thu, 10 Apr 2025 01:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744247888; cv=none; b=rgoBYhmMgG7WTpRo2l+NvhfgcrelbdW4OJ2/J6g/qzblSMOXnkCQQkOMHM782ZaClbUfo+/dHiE+345m9h1UdSPPP/Yzi/fy4OuwsC/mhIz/NYX9GHVvKWvexRyX06z6zPxiPt9a3ZklDyT+f3m9tfNYVwf/3SWru6puXaAmvYg=
+	t=1744247945; cv=none; b=a6bw+1HDo8vkEaAQkn89NWTavjHXoj8dHjAOffzIo0oze4cfWY5xzC3k6HwfvZMU5nnWpy4XhZSHXopqdgkSxOTRRckzP5KGL+62nUOKaJkBK0INJir78OH+GkpGNxPF7hQ6jajZ8AHgIcNzwPNluYF2C9JrGl88gd4RS8xJ3/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744247888; c=relaxed/simple;
-	bh=L0sLWjj/luVXtpTiBCBVPxJ1t4EFPXdlyg8sQAf/k0c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FYgHKPDc7Skld71POaqkb0BXlpM56vNsU6r6LW7JaRJT4VCzRC2irAc62xLAAL2oUeFqVPkfjd77eu8ACKCqJaUFTAud5I8swZ6DxaBXQVDBPFf0uDWVeypZIdhoGr16ONgILQr3LSX+K9c1/NCOk0gfEM3xep4mr/xJrSDPkqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=v09QVbDC; arc=none smtp.client-ip=17.58.6.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744247945; c=relaxed/simple;
+	bh=ft54p6bhTxDj+z0qJTAsmGd30EjVDhq/ynj+X5E4H/g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C9tEA/j5SIqi0GPz9wpL5gTjN2kMgUFYuZfWcHRJRedCkn7hoMwtDb/suOLssmd/JhI+AZqrfhKnwJWhHgAhQFtM7b98nZdvU/iNSuE4kwBkBkJh5duFAZ9FufojCjBW1erF8K0yxBIUje+B07Xp2bCSL1hjQF/pOEEc2Oz4Teo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=GYT7VLYQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VzdpraBe; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="v09QVbDC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=kBEyT3qDEPt8tYTpXkrYGSKfX4WjFrjtoXeB5/GCzVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=v09QVbDCLtVWFhV2mlOSkTWwOjHCbc9U+wux4BLXxw05nbsRVazQyqSp3hH2aMdCI
-	 +GmIcyVcnj9eEhsd85mLjQbtCqvjWzHKkxBtLKSlxdAlhtCuEUYxmzJ6/ZNlZx5fBb
-	 9Fd4ye2XAIrLUMjmyVlnpGGTLGubBE6Of5P1DV4UhcRo3JBU7svlIA/lMLc8vpWqqG
-	 HeFdtA28xVQBy7uESmmNnXPA4du/BN0F3s4xHTguOYfP4wPnHXuUsJBrbubG0uClP4
-	 xMRbyHSLddSf7OP0PGQ4sbQMN19cig81F/9GWhbRil6wKu+WM/VjpmJynx8YmeqOqa
-	 Eph22GTTvSuVw==
-Received: from pv50p00im-hyfv10021501.me.com (pv50p00im-hyfv10021501.me.com [17.58.6.48])
-	by pv50p00im-hyfv10021501.me.com (Postfix) with ESMTPS id 666042C02D7;
-	Thu, 10 Apr 2025 01:18:02 +0000 (UTC)
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-hyfv10021501.me.com (Postfix) with ESMTPSA id DB1E82C0304;
-	Thu, 10 Apr 2025 01:18:00 +0000 (UTC)
-Message-ID: <79206e66-f683-4733-894d-36e197cdde9a@icloud.com>
-Date: Thu, 10 Apr 2025 09:17:57 +0800
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="GYT7VLYQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VzdpraBe"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id 9D08813801DE;
+	Wed,  9 Apr 2025 21:19:02 -0400 (EDT)
+Received: from phl-frontend-02 ([10.202.2.161])
+  by phl-compute-09.internal (MEProxy); Wed, 09 Apr 2025 21:19:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1744247942; x=
+	1744334342; bh=zNG1YKUsmyDP/ojfVRvL6wcBsNKK7C86m9dSyKIqDh8=; b=G
+	YT7VLYQrEkgcvd7ErWD6swkG3DzXD+IJ8RlVU/KQL4F47YXMH9mbiKBUAAzpmfsf
+	xFv7Q/Dm90XbQg+6zz1JaEQMwsjPDQjSBEwz4RcXl7kTQdcZZY5Xp7w7G48dLx29
+	oiyOWsL9+0N+eAXLLXlrrHrT+WgkLDClEj64DJvfNxirCKgUt0LEi2M5xJM4THoK
+	Q+Rw350vPe7fLHrIOlvrvaVeIg921JwPqRN/mGZiHkgWujGOZIZ+dSTbmL15lBuE
+	F8dEs5gOc7ziX990LDct74+ut0ZNHNfNYAOIcaHyhk36rXYF4gvCcSbV9GlTaKDM
+	9vCFyL21r8Gy+UTKO5/dw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm2; t=1744247942; x=1744334342; bh=z
+	NG1YKUsmyDP/ojfVRvL6wcBsNKK7C86m9dSyKIqDh8=; b=VzdpraBeULecAOql4
+	JLZmmktWXvSRiH8gU4/YEoABf63A9fboOq8oqTSa5YgbJrwAYP6dPl/YaUa8fAeB
+	YU8nZkcSWcn4161XoAyQzP81aqhG+r97lOwdNVeqrFSgTK6xF00qJMp/s7N78WoI
+	uijf/MCGPgp4+TuAIFOuRLlZHoPEyanXlNc9MKT/U2Qfmzi+0xMZx7XGGOKckQbp
+	Z8e9bQRs02Q3Lr24fRKmhFKBUBIhQmDtNRQVSzZ0aEywoIGTtdaQrx9I800tvo4a
+	JrdkwzqcBpLcSZ4FrWo+iDilcm7J+bwRVwMzjKd1q9Qkq0mSMxJJy9Zzu+6Knn28
+	4VNJA==
+X-ME-Sender: <xms:hhz3Z_XpJN-a294f7wDw_SuSlBDLFVMYKFrcCzclHiLsThtQuj39nA>
+    <xme:hhz3Z3nXu5g9MqqlBkUTptmvTtdIXQyEZ9FdEM8z7lpE9yOXYV4haX3DNQDmrrQXD
+    PUgtlxVQnfdfchNvBg>
+X-ME-Received: <xmr:hhz3Z7bMfVTC-J55uvwpeulgNGOxfLNIZwLaIqBJfIkpTAJVOvRywkADFVYxc6BefSLuxcrgiBjqjeD6x_K_HsOqO7sUIw8qIWpBJ72PgSc-7p-lfQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdejheehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
+    tdenucfhrhhomheppfhitgholhgrshcurfhithhrvgcuoehnihgtohesfhhluhignhhitg
+    drnhgvtheqnecuggftrfgrthhtvghrnheptdejueeiieehieeuffduvdffleehkeelgeek
+    udekfeffhfduffdugedvteeihfetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepnhhitghosehflhhugihnihgtrdhnvghtpdhnsggprhgtphht
+    thhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnphhithhrvgessggrhi
+    hlihgsrhgvrdgtohhmpdhrtghpthhtohepjhhirhhishhlrggshieskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorh
+    hgpdhrtghpthhtohepuggrvhgvsehmihgvlhhkvgdrtggtpdhrtghpthhtoheplhhinhhu
+    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqshgvrhhirghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:hhz3Z6UZJ9Ci9aDYE3U4UUDweKmi2NzTXxAXSCi4RcY_eUpZq4-Ycg>
+    <xmx:hhz3Z5ntD7gS1v_FZOBt5_Kji2aBMB2IJZxG1cEZCJoQHO07WimZnw>
+    <xmx:hhz3Z3c8MubpSyz_T3gMd5VQEJpm-HV4bj0iuEwY7DF36okZfqRycw>
+    <xmx:hhz3ZzE6CIjRfWR-plpL8mRg9VWq8N9moO_novXpsjt7YcN9qrmKgQ>
+    <xmx:hhz3Z1G62k33MxSNzliwamBQ8gccPAIFZf_aNBlU3Az9i_M5TvVfxLRg>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 9 Apr 2025 21:19:02 -0400 (EDT)
+Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 6A8EF10D8B6E;
+	Wed,  9 Apr 2025 21:19:01 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Cc: Nicolas Pitre <npitre@baylibre.com>,
+	Dave Mielke <Dave@mielke.cc>,
+	linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 01/11] vt: minor cleanup to vc_translate_unicode()
+Date: Wed,  9 Apr 2025 21:13:53 -0400
+Message-ID: <20250410011839.64418-2-nico@fluxnic.net>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250410011839.64418-1-nico@fluxnic.net>
+References: <20250410011839.64418-1-nico@fluxnic.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] configfs: Correct condition for returning -EEXIST in
- configfs_symlink()
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
- Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org
-References: <20250408-fix_configfs-v1-0-5a4c88805df7@quicinc.com>
- <20250408-fix_configfs-v1-4-5a4c88805df7@quicinc.com>
- <Z_Wn978o-kwscN29@google.com>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <Z_Wn978o-kwscN29@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: P540-XJaRz2ioCjGwMVRgiiLj6QpVStw
-X-Proofpoint-GUID: P540-XJaRz2ioCjGwMVRgiiLj6QpVStw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
- suspectscore=0 mlxlogscore=954 mlxscore=0 clxscore=1015 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2504100008
+Content-Transfer-Encoding: 8bit
 
-On 2025/4/9 06:49, Joel Becker wrote:
->> configfs_symlink() returns -EEXIST under condition d_unhashed(), but the
->> condition often means the dentry does not exist.
->>
->> Fix by changing the condition to !d_unhashed().
-> I don't think this is quite right.
-> 
+From: Nicolas Pitre <npitre@baylibre.com>
 
-agree.
+Make it clearer when a sequence is bad.
 
-> viro put this together in 351e5d869e5ac, which was a while ago.  Read
-> his comment on 351e5d869e5ac.  Because I unlock the parent directory to
-> look up the target, we can't trust our symlink dentry hasn't been
-> changed underneath us.
-> 
-> * If there is now dentry->d_inode, some other inode has been put here.
->   -EEXIST.
-> * If the dentry was unhashed, somehow the dentry we are creating was
->   removed from the dcache, and adding things to our dentry will at best
->   go nowhere, and at worst dangle in space.  I'm pretty sure viro
->   returns -EEXIST because if this dentry is unhashed, some *other*
->   dentry has entered the dcache in its place (another file type,
->   perhaps).
-> 
-> If you instead check for !d_unhashed(), you're discovering our candidate
-> dentry is still live in the dcache, which is what we expect and want.
-> 
-> How did you identify this as a problem?  Perhaps we need a more nuanced
+Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+---
+ drivers/tty/vt/vt.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-for current condition to return -EEXIST, if hit d_unhashed(dentry), that
-means that "if ((dentry->d_inode == NULL) && d_unhashed(dentry)) return
--EEXIST" which looks weird and not right as well.
-
-> check than d_unhashed() these days (for example, d_is_positive/negative
-> didn't exist back then).
-> 
-
-any suggestions about how to correct the condition to return -EEXIST ?
-
-> Thanks,
-> Joel
-> 
-> PS: I enjoyed the trip down memory lane to Al reaming me quite
->     thoroughly for this API.
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index f5642b3038..b5f3c8a818 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -2817,7 +2817,7 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
+ 	if ((c & 0xc0) == 0x80) {
+ 		/* Unexpected continuation byte? */
+ 		if (!vc->vc_utf_count)
+-			return 0xfffd;
++			goto bad_sequence;
+ 
+ 		vc->vc_utf_char = (vc->vc_utf_char << 6) | (c & 0x3f);
+ 		vc->vc_npar++;
+@@ -2829,17 +2829,17 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
+ 		/* Reject overlong sequences */
+ 		if (c <= utf8_length_changes[vc->vc_npar - 1] ||
+ 				c > utf8_length_changes[vc->vc_npar])
+-			return 0xfffd;
++			goto bad_sequence;
+ 
+ 		return vc_sanitize_unicode(c);
+ 	}
+ 
+ 	/* Single ASCII byte or first byte of a sequence received */
+ 	if (vc->vc_utf_count) {
+-		/* Continuation byte expected */
++		/* A continuation byte was expected */
+ 		*rescan = true;
+ 		vc->vc_utf_count = 0;
+-		return 0xfffd;
++		goto bad_sequence;
+ 	}
+ 
+ 	/* Nothing to do if an ASCII byte was received */
+@@ -2858,11 +2858,14 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
+ 		vc->vc_utf_count = 3;
+ 		vc->vc_utf_char = (c & 0x07);
+ 	} else {
+-		return 0xfffd;
++		goto bad_sequence;
+ 	}
+ 
+ need_more_bytes:
+ 	return -1;
++
++bad_sequence:
++	return 0xfffd;
+ }
+ 
+ static int vc_translate(struct vc_data *vc, int *c, bool *rescan)
+-- 
+2.49.0
 
