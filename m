@@ -1,108 +1,207 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A344827C850;
-	Thu, 10 Apr 2025 10:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4453827CB0C;
+	Thu, 10 Apr 2025 10:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744279306; cv=none; b=Ps3jTr5dB28eUwdJkdX7son8mSvavpJAnHWa5Drbnx3iC5pYMKRVPZxZ1IrVLJG6XzfAdTzc2cZVi9HNELFE9XUdxcwE9+7S2EZLgZgRJq+6z6sOPYoLkaSZsyWuWlXWzip20PSyYCtN6rsJYCRQnootEbflgPebvY3Jkv10P3c=
+	t=1744279309; cv=none; b=Bi0tp2Y1QbOKMHONxlMh7h7eJN5Y2PDIFDqkV1MNVMlTQGpwOY29uug7H4Hmj7zJIXZOt9e1+I/C6of1SJDJd3MUHcEX97VWYVQVeksYiGOpD8GfjUOn7Ch3Tu6rAy3K7JFMDsINgvxXo3xEHfE4nwYSQckjYxRpsw86FkgCaEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744279306; c=relaxed/simple;
-	bh=9b78sYMlgKV8xbhGsnnU6NEj0KRXsexk+EnRgrPV9zo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZmkpxOIxKWyFDEc8qKKD6WamPfHD927kELy485Z+rbSU/OUoy+rlPYSZG+BDRx30QtJtqyyVT5mwz3JvwCosnjV1ethaQcNkMn2P1iG6FDnml5Gem/rLMU0S7n739+d51fXsB0aPFvmMWwf1svS21z4ovSrCgd0mpMWcEZum7DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f0c8448f99so1273884a12.1;
-        Thu, 10 Apr 2025 03:01:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744279302; x=1744884102;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3F2NKJ9dNLSl3ARkhxIkJK0rOGADequNLd0IXRv1ebs=;
-        b=XDk4WxN0Mx/M+BRmPQUkBRL5qry2AYccEa1FRETBKOrf5s5Dp3S06P1QDvp5eplpMn
-         OEGOFLJv36UHSB7jx1eZXHinrPtocdkKIni9Eb2nn1tWeoX7MBpIJUpbDmU8g0XfPjuW
-         Ngtacz+GpIdJPjKijY/+4XhuUpIYA5BxXxpKK1yVQ3K20PPXeT3kRipu3LHljzBtMoui
-         fX+UmSBafiOsTFIitHwCmzQ+ZgVbZCBDsTnqIgQOLBeQjYLHL0BJNODxlBJCJZIhGcBP
-         Fj7hwHKvKccnAYvx/o/4eBAO4Wy+mzoqgIjaVC4mxMsu84c9uwlbANBPa99raIcLenFQ
-         /ymA==
-X-Forwarded-Encrypted: i=1; AJvYcCVB9JgUrUKn1eOZcGh+DKIOhZtMaey+7+Dx0HRpd97wDlMLtWHmBCEIW9bh6DCkbFUOOc/flYA5HsdgFODu@vger.kernel.org, AJvYcCVBxMV/IIuyJbsd1+eyguA1lPSpjLltLjHVhWZs8lRY1PDQ5a6DSak6AvZ0c1/ozVSLcSAsQwDaD5GMl5Iz@vger.kernel.org, AJvYcCVgmJEH7j4/TAu9Rz6JG4VRgFVdu6dw4N8dY1pl23e62tGWFgNtki6ESSAbH1vznJjQuoM+XmUe1pejcg==@vger.kernel.org, AJvYcCW/xPyQJB6HrVsBhZwt0nKHbPUrkJR6PkacnpmqpWgJnLCIoq29e5Ydz0s0HBmIwfHbwJGX6UuxC6/b@vger.kernel.org, AJvYcCXW82NCKlqUo0pKSvDFq9kzSF8gGNKiY0dpA6EbPn01LLumxxT6IcxaIEMS5989FzMaN6Q7mXvMejeP1Yex9kT4FrM=@vger.kernel.org, AJvYcCXc/Luu+NMR2/jD2qsBaaEtA8QPEReuLUXDOCYKZPP36XuYykbD+qdDOoA8ozVYLu3YcG++5n5Uz2/0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0Fya05jVZxNQHvoMiqxa0wvz6Zzz1OWSHJVBm+WoVFrbSAhvH
-	ppczHXTdXdrOGix4s9hgBeFGqgigJamijmSCRVGEmGrj1q5UfX74Etk11Kdo1Oo=
-X-Gm-Gg: ASbGncuQLdf5D6zme7m0drbMsCApWBdvg4m0x+jXhBVnhZi/Im1JbNe1eQ8jlV6XFDn
-	ORiIQvExRJCvzi/3rexvMJ03kpKOveYRhCVheCN+f1Jg+1Mzg4K9KTHO5H8caB/tUcNFoHNCxmS
-	5PJKiTy85Q9oip7IDlg/E7xiJcQaItO2j55tIrJc865iXRnzCYjL1nkkdv9Z2liAgHGdI+MM5mg
-	w6u8d/hjRB2mt5MwgsKeDBzY0XMrivljrSbXcWfGPkc9Ejkm4yqD9lcvcIlxd0YdfZhR+Fw2GHN
-	VkNH2e1kyl/pAZ0ujRp4ojieRuZpv58oVC1BuP4j/+SBPm6+0rF0u8tE09sgYtENLjIMog3j4ma
-	Ndzw=
-X-Google-Smtp-Source: AGHT+IEFrTLNQPfXz1mp8f92xYtXrhIRRdb7ZcNLyKRlx2dfbTxo8MRLNtb6jNbIjIjkmXRlsSFgPw==
-X-Received: by 2002:a17:906:f585:b0:ac3:9587:f2ac with SMTP id a640c23a62f3a-acabd24cb50mr191576566b.33.1744279301862;
-        Thu, 10 Apr 2025 03:01:41 -0700 (PDT)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3513sm247952966b.11.2025.04.10.03.01.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 03:01:38 -0700 (PDT)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so1034688a12.2;
-        Thu, 10 Apr 2025 03:01:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7mXlDrvRwvyguq0Kk1L8BtiqRpjWLIpd0yV87IuXrxOId1vneyr9IZpNizqN9K/FFg5sOvwnQetka@vger.kernel.org, AJvYcCUEKJIUTfQVW9E/J948HtHeh12sTUc1QAc92rDE4HVMKhHm1SLbVOI/Ti5yAoKDNxQ5c5/WqztLHfYmASjR@vger.kernel.org, AJvYcCUXqdIwdtccZvjpxWGyBdEKuMq1TWbXflCeYJ1lUmw/t1MVnHuS5Gcusr4jvYyhivfnTnh7NuVyYGl8@vger.kernel.org, AJvYcCX3JR4QhTBdydenr3//sbADmFcILTDBkW77wt+OXf2F6dL6fCGE0i+hzEVbr538Ks3ptVhqeJa4D1rurJRFTD3m9fg=@vger.kernel.org, AJvYcCXjLZI35mgOkp8GWeHWUZhRRDVDJnQlx56nEzN9h7tpTklYV5VlXL9PFW9S4A+o4CtZk98TdW+rRk+2BHXu@vger.kernel.org, AJvYcCXjrZm+cDJL0in2mHh1dgn3qsUzuC9dJnIOvPbrsTTSnTYBSR9YSmIoB/Yuci21XVsokHPMB0kVQL6sOQ==@vger.kernel.org
-X-Received: by 2002:a17:907:9692:b0:ac7:ecea:8472 with SMTP id
- a640c23a62f3a-acabd206311mr163848966b.26.1744279297800; Thu, 10 Apr 2025
- 03:01:37 -0700 (PDT)
+	s=arc-20240116; t=1744279309; c=relaxed/simple;
+	bh=ufisdiNDX2kbckBaBkROgsADiMWw7UyDYfdN1lAigv0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qthrf7s6lxw4ISxA3SIdHPGHxRhFMUDYM2Y7v5UTiiJ2H16Bbjznvqu4kjq5g4qjmAPlI9ncw/pqcHlv4SGGlbngLaQjwBk5skD8axNTBS8rl9xgAnpm4qhEoMpLlmtjfyn8QKGA4/BrxnGVtXtxtkUY5WHhMjbFFaWn+8zBcb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LePuoBgL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LePuoBgL"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A75i09008467;
+	Thu, 10 Apr 2025 10:00:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	URnznISBws8uPYFQJhZ98DHW0fVznarurCoz5NYitIk=; b=LePuoBgL8x3OzrII
+	9hIpRzpTTysc/+kV1/ccfiL/tFl0YBrAyKsM4QtVfMCokSDl2k2Cq/Z6MbHvTYGR
+	meoY6R2jxsPmzGys7IOxF3SM9aOOXOaL+7fdYviTKs9erNntIDbz4NY9Z55LIFTz
+	wK65/sslp2HuHkf58dYT9dgctZ5tXH08kN87T2rP1ok6afUxhTToL/NzlZE4LXGt
+	REF3+2Y3M/OcZUgWMzjrjkjK+5YjVKxLlqNipANz3obiMRXEJ2RSNR/X7jvcqSea
+	fx3Gt6IebYsQ0VdNgBnkUejOCgKAoLSUM7FnmGNSjBosxPjULc6XKp/nujlXbs15
+	tMdPyw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd06kax-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 10:00:45 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53AA0ipc004469
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 10:00:44 GMT
+Received: from hu-mdalam-blr.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 10 Apr 2025 03:00:40 -0700
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+To: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <manivannan.sadhasivam@linaro.org>, <broonie@kernel.org>,
+        <absahu@codeaurora.org>, <bbrezillon@kernel.org>,
+        <architt@codeaurora.org>, <quic_srichara@quicinc.com>,
+        <quic_mdalam@quicinc.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>
+Subject: [PATCH v4 1/3] mtd: rawnand: qcom: Pass 18 bit offset from NANDc base to BAM base
+Date: Thu, 10 Apr 2025 15:30:17 +0530
+Message-ID: <20250410100019.2872271-2-quic_mdalam@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250410100019.2872271-1-quic_mdalam@quicinc.com>
+References: <20250410100019.2872271-1-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407191628.323613-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 12:01:21 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXTDMZvVieaTsuPYKjVaK5tFnT_5Pcx7zeRQ6j5vW=C2g@mail.gmail.com>
-X-Gm-Features: ATxdqUFnFS8ru0MA_-DyWlGEfk_lZ9qfaotati6OchDHxwVypNec4oWk2u6TNGc
-Message-ID: <CAMuHMdXTDMZvVieaTsuPYKjVaK5tFnT_5Pcx7zeRQ6j5vW=C2g@mail.gmail.com>
-Subject: Re: [PATCH v2 09/12] dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: P_Bb2ceIJS_dBv6vsRfwO6LiipfVlyXQ
+X-Authority-Analysis: v=2.4 cv=Q4vS452a c=1 sm=1 tr=0 ts=67f796cd cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=r2DdmP78tLIatbETvAUA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: P_Bb2ceIJS_dBv6vsRfwO6LiipfVlyXQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_01,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1011 phishscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100075
 
-On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add documentation for the pin controller found on the Renesas RZ/V2N
-> (R9A09G056) SoC. The RZ/V2N PFC differs slightly from the RZ/G2L family
-> and is almost identical to the RZ/V2H(P) SoC, except that the RZ/V2H(P) SoC
-> has an additional dedicated pin.
->
-> To account for this, a SoC-specific compatible string,
-> 'renesas,r9a09g056-pinctrl', is introduced for the RZ/V2N SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v1->v2:
-> - Dropped `renesas,r9a09g056-pinctrl.h` header file.
+The BAM command descriptor provides only 18 bits to specify the NAND
+register offset. Additionally, in the BAM command descriptor, the NAND
+register offset is supposed to be specified as "(NANDc base - BAM base)
++ reg_off". Since, the BAM controller expecting the value in the form of
+"NANDc base - BAM base", so that added a new field 'bam_offset' in the NAND
+properties structure and use it while preparing the command descriptor.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.16.
+Previously, the driver was specifying the NANDc base address in the BAM
+command descriptor.
 
-Gr{oetje,eeting}s,
+Cc: stable@vger.kernel.org
+Fixes: 8d6b6d7e135e ("mtd: nand: qcom: support for command descriptor formation")
+Tested-by: Lakshmi Sowjanya D <quic_laksd@quicinc.com>
+Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+---
+ drivers/mtd/nand/qpic_common.c       | 8 ++++----
+ drivers/mtd/nand/raw/qcom_nandc.c    | 4 ++++
+ drivers/spi/spi-qpic-snand.c         | 1 +
+ include/linux/mtd/nand-qpic-common.h | 4 +---
+ 4 files changed, 10 insertions(+), 7 deletions(-)
 
-                        Geert
-
+diff --git a/drivers/mtd/nand/qpic_common.c b/drivers/mtd/nand/qpic_common.c
+index e0ed25b5afea..4dc4d65e7d32 100644
+--- a/drivers/mtd/nand/qpic_common.c
++++ b/drivers/mtd/nand/qpic_common.c
+@@ -236,21 +236,21 @@ int qcom_prep_bam_dma_desc_cmd(struct qcom_nand_controller *nandc, bool read,
+ 	int i, ret;
+ 	struct bam_cmd_element *bam_ce_buffer;
+ 	struct bam_transaction *bam_txn = nandc->bam_txn;
++	u32 offset;
+ 
+ 	bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_pos];
+ 
+ 	/* fill the command desc */
+ 	for (i = 0; i < size; i++) {
++		offset = nandc->props->bam_offset + reg_off + 4 * i;
+ 		if (read)
+ 			bam_prep_ce(&bam_ce_buffer[i],
+-				    nandc_reg_phys(nandc, reg_off + 4 * i),
+-				    BAM_READ_COMMAND,
++				    offset, BAM_READ_COMMAND,
+ 				    reg_buf_dma_addr(nandc,
+ 						     (__le32 *)vaddr + i));
+ 		else
+ 			bam_prep_ce_le32(&bam_ce_buffer[i],
+-					 nandc_reg_phys(nandc, reg_off + 4 * i),
+-					 BAM_WRITE_COMMAND,
++					 offset, BAM_WRITE_COMMAND,
+ 					 *((__le32 *)vaddr + i));
+ 	}
+ 
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index 5eaa0be367cd..ef2dd158ca34 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -2360,6 +2360,7 @@ static const struct qcom_nandc_props ipq806x_nandc_props = {
+ 	.supports_bam = false,
+ 	.use_codeword_fixup = true,
+ 	.dev_cmd_reg_start = 0x0,
++	.bam_offset = 0x30000,
+ };
+ 
+ static const struct qcom_nandc_props ipq4019_nandc_props = {
+@@ -2367,6 +2368,7 @@ static const struct qcom_nandc_props ipq4019_nandc_props = {
+ 	.supports_bam = true,
+ 	.nandc_part_of_qpic = true,
+ 	.dev_cmd_reg_start = 0x0,
++	.bam_offset = 0x30000,
+ };
+ 
+ static const struct qcom_nandc_props ipq8074_nandc_props = {
+@@ -2374,6 +2376,7 @@ static const struct qcom_nandc_props ipq8074_nandc_props = {
+ 	.supports_bam = true,
+ 	.nandc_part_of_qpic = true,
+ 	.dev_cmd_reg_start = 0x7000,
++	.bam_offset = 0x30000,
+ };
+ 
+ static const struct qcom_nandc_props sdx55_nandc_props = {
+@@ -2382,6 +2385,7 @@ static const struct qcom_nandc_props sdx55_nandc_props = {
+ 	.nandc_part_of_qpic = true,
+ 	.qpic_version2 = true,
+ 	.dev_cmd_reg_start = 0x7000,
++	.bam_offset = 0x30000,
+ };
+ 
+ /*
+diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
+index a2af731049d4..89c774bf85a6 100644
+--- a/drivers/spi/spi-qpic-snand.c
++++ b/drivers/spi/spi-qpic-snand.c
+@@ -1605,6 +1605,7 @@ static void qcom_spi_remove(struct platform_device *pdev)
+ 
+ static const struct qcom_nandc_props ipq9574_snandc_props = {
+ 	.dev_cmd_reg_start = 0x7000,
++	.bam_offset = 0x30000,
+ 	.supports_bam = true,
+ };
+ 
+diff --git a/include/linux/mtd/nand-qpic-common.h b/include/linux/mtd/nand-qpic-common.h
+index cd7172e6c1bb..e8462deda6db 100644
+--- a/include/linux/mtd/nand-qpic-common.h
++++ b/include/linux/mtd/nand-qpic-common.h
+@@ -199,9 +199,6 @@
+  */
+ #define dev_cmd_reg_addr(nandc, reg) ((nandc)->props->dev_cmd_reg_start + (reg))
+ 
+-/* Returns the NAND register physical address */
+-#define nandc_reg_phys(chip, offset) ((chip)->base_phys + (offset))
+-
+ /* Returns the dma address for reg read buffer */
+ #define reg_buf_dma_addr(chip, vaddr) \
+ 	((chip)->reg_read_dma + \
+@@ -454,6 +451,7 @@ struct qcom_nand_controller {
+ struct qcom_nandc_props {
+ 	u32 ecc_modes;
+ 	u32 dev_cmd_reg_start;
++	u32 bam_offset;
+ 	bool supports_bam;
+ 	bool nandc_part_of_qpic;
+ 	bool qpic_version2;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
