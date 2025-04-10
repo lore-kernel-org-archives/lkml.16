@@ -1,120 +1,169 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15711AA786;
-	Thu, 10 Apr 2025 19:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B7E1EE7D3
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 19:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744314554; cv=none; b=T3Na76UAkEWogyfGvqdO4LceZfxJmzUN0d3pQ19Ud00AdFhl5CRBtyI+b9xZfnJizBazxTuhvk4EbU4EJeke+iGbjHiBhnP09PB1NxlGEM02YD4c4l1RJodGNXp7SswEAzzc2XJ5iBFTpc12tqstuWGMhpAhd5D1eIu+QdhtMS8=
+	t=1744314581; cv=none; b=WPvoIdRk/B5npP0J1oOWh+8Z8HzdEoSF2o5r79hkK0nsG69nNT2HqxOGrl8xTEOg05Q4nElxLZC35XlmQSDGr8gFKOt1rCHNJ4B1N4jCgnYwXBJ+vRpn/9zhfNsMSqAligxYY0CgPNcuPkPmojIG2T+P+RcfDxsAPCCII/KXiJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744314554; c=relaxed/simple;
-	bh=0+WlZOuqbF0bXm7t3MBcReXYYpFdLnP3mku1ztHJfEY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VJEH70TpRfL5gu8U7yCoJTw7u0HSYsROFyoEC4fFrkCwDfQz58027ETzH3eijisg1OFsz2h8WTR63IAYuX3cej7gcUwYncEwuFV4NDymY7zQ5I3+u+RoaJndGuzZc1ABCD+WSzBw/DrUUn1/xUzxtXgniaw2p1j83wkQwqHFcvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=moVhvSd1; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744314581; c=relaxed/simple;
+	bh=CVUILzI3yY+5c0lQSYrQru/mE0icI42pipOKpURmQeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SltTtBf5e8gzoereU+kDBqXE5LdjChlBXt37pdYLNpfP59vRShQj4tHkV4QGGJoJgeyxtb9AfBGb8mRwqCmldttr3FmDwjow8JuWJeiKPQe/p9A99hFMwARDc1a5Ujq8vGeCjYEg4C86jdP81lfLtzzFYw1BYAeBQ9du4FehR6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZpC/npS2; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moVhvSd1"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224341bbc1dso12200875ad.3;
-        Thu, 10 Apr 2025 12:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744314552; x=1744919352; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PKY2YNNJabaBgf6w79AisfgBJwnfIvkP7se+XQ8iOTw=;
-        b=moVhvSd1SYqEuQh4XWD5Prgz1QoP78TaJedgMmkHinT82WdOcP4EPp2qMAFjWNq8Ts
-         lU0Z0yJRELvOz/etobyDlFYCYyODQZzuX6ZFd+uFHfhIrdOi5uDxx0SzozjxvozuQ/08
-         zW6Na4YSf1MNyGQXbtcfd/kmTzjtklzcfA9HFCqq49D8JbevH3p4Mrtq2k/5ygw1tzOD
-         UUVVrnfShfx6f/mHhqP+YZicrXAYyOOWEZzcIB67ZKBnqNZgfDBvj9YChP0oAdwBFpQp
-         ADPDtuReUZi/8BN8O3Yz3abHfgbT22W+A4xcDYeKXwriuFdB8koFZJcKEGXgIPZiXZ/L
-         QiUA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZpC/npS2"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AFsSUd030613
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 19:49:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=aNhuwxgEqLQlGdQ0sOZNsXWl
+	JqoDDoZqwpr4m2bgAv8=; b=ZpC/npS2kfZgcSJsiieah2iW9S2n+3kFAJli3xUZ
+	whp5TGslpUiPVsr4vIPkzojf5GmDVamfBFj3b/bnJPSF3DRtwYckKtsl4ZLMSs+b
+	jHLQx8rl+XchJtVaBA0gw5NEptWFXndkXcWSeggoGmpWBKLG022/bqS2deXhiRGN
+	z2v6m1Vl8ape1N5ibjcx4H5W4llmhrqbXbPL1JD9uFTgpEZwfXStfBeN2+fIBPJd
+	SnLMj+oXQSQMdRNEx1BnQ3S0rDL6g2DB+0cQSwlNAFf/gd3UGYg8yLwC+ACv8kEt
+	NGeJEc26PIAVNF/63o2zoUWkIAJEST1sOkqGIvyXb5KSVA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftqy2e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 19:49:39 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c791987cf6so261273085a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:49:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744314552; x=1744919352;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PKY2YNNJabaBgf6w79AisfgBJwnfIvkP7se+XQ8iOTw=;
-        b=dLtgWCDf14+1S1eu5wvQio8KkpjK+ruiyEeiPntinw28g/d9r6pGaMMYPh+X69+5U6
-         h+6bnpeOa60Q3Nz9tK1m6t6ST8fFXPjuRYD6PtYclK67bQ6HwE5zBxzXKVUdglwkfxss
-         Z2Xi0fTle+g3L6f5z6g/qh1R3X1f9F4wFGJGYgBQLmkcrQ4jRHwS3Xt11qyn4CK87ZqK
-         jZI2Xm53Y3o+3Q1rYYtq6az4bbTJzhUuAjH5V1ENqypA+SodHWhfKqHQFAax+7GP4DVB
-         UggEijgDZadE3VzvVyC+hZjIWT0tHLEHG0y0PuYp282XAYWo6RinYAwXZVGpaHHZonzY
-         SENw==
-X-Forwarded-Encrypted: i=1; AJvYcCXeMe/FtBqNAI0fA+rz63PbS5X5R8WCwSOS46VokwaznEYU0eDLvTPwiOXHtP/BOaR8hXghCdydFD3ctlc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwKQ/JF4H2VQSzgKzd/AvWlcTxSWx9xgtzPRBxNzof3wySvq8a
-	wW0xC8TT5JgLpc/Sy8mOJ+mGB8PYM0fluSdclpqZPuvyWTQrmWcf
-X-Gm-Gg: ASbGncuiLTrv5L5eQcBMlhYbwDS3r8gR4U1aC1Jlp2m4wKivP9PvHw5oEFKIkQZUWgL
-	9TzJ5pDvYRUVdMaaAaFegJLUhrUtDmrFiZ5LZPoo4mBaBeHMxPq7x3X9ycmZZitB3Oh0M75BlSC
-	tEC/6JrKh3jZQThG9kjTB26odtflpzzTcM76YVJcrF7cVsGtM+eZ5qWmwWqoyx3qM11dFgw/Im5
-	XwqLDAE76JkYPQY99DnDgfBeolD3pGupaE7gZCbXtNbSoiBVR4snDbrm6xk1gQiqD/wrynduf47
-	jRYmd54Omf9o44fUoFN+vriDJlME0CrrOwdEBCXJv9w/2iVKMS/WwRVJPYH0iOdn5L5eahb3giU
-	UbnJgT4Ggpg==
-X-Google-Smtp-Source: AGHT+IEaSY6FBwE2JNJQ6fyN19fcenuhr13rJxJqIq6oVj1MXtuR2q8ugxop0ZMJ5+LofNYQQpen6A==
-X-Received: by 2002:a17:903:41c3:b0:220:ea90:191e with SMTP id d9443c01a7336-22bea4956c8mr1427545ad.4.1744314551862;
-        Thu, 10 Apr 2025 12:49:11 -0700 (PDT)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:204:a537:70f5:9c3d:61d0:62b9])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb68e5sm34933235ad.206.2025.04.10.12.49.08
+        d=1e100.net; s=20230601; t=1744314578; x=1744919378;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aNhuwxgEqLQlGdQ0sOZNsXWlJqoDDoZqwpr4m2bgAv8=;
+        b=Y7dZOz4vWwNzawBWFeNr+bQPrxSWadnQX4kTxxnrAy5jxe24N3rNp9JQtaukrWcPHJ
+         Bfv2tp9JYDd/rldCyk7xVlt+2SvhuoLmFCjJi4xD76AyyRyogZMn0Yu8NjXMj1+vtuBm
+         2wyQg70N/DfwaXvNgq7VNHp6CekEM171wT7mocFPHdnkxIwQy0L/uq9F53ati7rIAyxC
+         MBNvIL5l6YlcNN3MlN6LyTPaQX63hTiJuVG22fAAmrk1TYLgKypvor5FL6fCfZ4G98+r
+         KAzjeeC7YW9e/TM7BcKerugUBIyIeDYQKgUiyl2fPXcryuNrqY7VAoEw5XJHHPeRkS1m
+         Q/YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXzApP6AC0AeeMV7gV32FQQ4+tMroXec2PDiFUyCeOOWY87N1IZsUoY5qpxncv0a6KFQdpJY9jIEOXiIbo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwULpYPec1JnQtyLvVLh+ST8ChKY5hDYUeJDSH22fp2h82vLfHy
+	TWVhAbgF1m+iwsTKRBmuSjxXXQ6e397XyUQn/N9nhii+xaFU2bf+NrbngaM491zKiv6CZJr1gB0
+	yozIG2ReTpxjT3OuEgaZ7axJv698Pa/NwIEbbgAcgB1IzVzaHy7dJhb4sHK1S//4=
+X-Gm-Gg: ASbGncuIJndCgIk1P8voKWC38n0BXpoJzCUoiNrv0djjqQHExl6Pf4bauJBcezm1bec
+	70y8IwBXD1W087DaYOllafsu2NmksJAvq12NAD2NGUgT/fX/bQ7ziQHA0BUJLo6K3r61foEnVRU
+	xUszPo6GmFP42NbINthsupqslDzPmyCCp3Q5rM73BrYf3tyxEIM4xymmlcw54oAjN/ihRNZIgn6
+	V97CoV8subj4OWqJbm0nVc3orl2m1k7FbyKzhDD/w9LjDcfrP16FjGs+mZvjXSaMslQxg34K5Oj
+	LIiU3FHHELvmM0scjQ/JclrSPU2HwJ4YtX6qvxYcMqEnIxWaIiDYTmYfOzKtlFOwsqe/JXKMDaw
+	=
+X-Received: by 2002:a05:620a:2941:b0:7c5:4711:dc51 with SMTP id af79cd13be357-7c7af0f8841mr36836585a.2.1744314577839;
+        Thu, 10 Apr 2025 12:49:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFsp+mbswefuSskvfP4MGPlMZhuL5PnvXrRuwIIXDia3tt/3yJFdDa3tlw5fgy10G42iTdrsg==
+X-Received: by 2002:a05:620a:2941:b0:7c5:4711:dc51 with SMTP id af79cd13be357-7c7af0f8841mr36833885a.2.1744314577477;
+        Thu, 10 Apr 2025 12:49:37 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f4649d86esm5793871fa.14.2025.04.10.12.49.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 12:49:11 -0700 (PDT)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH] hwmon: max31827: Fix uninitialized variable lsb_idx in max31827_init_client
-Date: Fri, 11 Apr 2025 01:18:33 +0530
-Message-Id: <20250410194833.21366-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Thu, 10 Apr 2025 12:49:36 -0700 (PDT)
+Date: Thu, 10 Apr 2025 22:49:34 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 0/4] Retrieve information about DDR from SMEM
+Message-ID: <iebl74rolk2t6xyoedy5p2e7clssh4dvxtpzerykyivrhkao4g@dbmnpia3xtxv>
+References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f820d3 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=OxrDjszf_QBMMd4ylzMA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: 31VMxkPoajRqtZPKdspqjKiureG8eloU
+X-Proofpoint-ORIG-GUID: 31VMxkPoajRqtZPKdspqjKiureG8eloU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_06,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=769
+ suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100143
 
-Fix Smatch-detected issue:
-drivers/hwmon/max31827.c:564 max31827_init_client() error:
-uninitialized symbol 'lsb_idx'.
+On Thu, Apr 10, 2025 at 07:43:43PM +0200, Konrad Dybcio wrote:
+> SMEM allows the OS to retrieve information about the DDR memory.
+> Among that information, is a semi-magic value called 'HBB', or Highest
+> Bank address Bit, which multimedia drivers (for hardware like Adreno
+> and MDSS) must retrieve in order to program the IP blocks correctly.
+> 
+> This series introduces an API to retrieve that value, uses it in the
+> aforementioned programming sequences and exposes available DDR
+> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
+> information can be exposed in the future, as needed.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+> Changes in v2:
+> - Avoid checking for < 0 on unsigned types
+> - Overwrite Adreno UBWC data to keep the data shared with userspace
+>   coherent with what's programmed into the hardware
+> - Call get_hbb() in msm_mdss_enable() instead of all UBWC setup
+>   branches separately
+> - Pick up Bjorn's rb on patch 1
+> - Link to v1: https://lore.kernel.org/r/20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com
+> 
+> ---
+> Konrad Dybcio (4):
+>       soc: qcom: Expose DDR data from SMEM
+>       drm/msm/a5xx: Get HBB dynamically, if available
+>       drm/msm/a6xx: Get HBB dynamically, if available
+>       drm/msm/mdss: Get HBB dynamically, if available
+> 
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c |  12 +-
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c |  15 +-
+>  drivers/gpu/drm/msm/msm_mdss.c        |  30 ++--
 
-​In the max31827_init_client() function, the variable lsb_idx is assigned
-a value only when data has exactly one bit set (hweight32(data) == 1).
-If this condition isn't met, lsb_idx remains uninitialized, leading to
-undefined behavior when it's subsequently used.
+This misses the dpu_hw_sspp.c, which uses ubwc_config from msm_mdss.c
+(but the config isn't being updated with the acquired HBB value).
 
-Ensure that data is non-zero and has exactly one bit set before
-calling __ffs(data) to determine lsb_idx. Additionally, verify that
-lsb_idx does not exceed 4. This approach prevents the use of an
-uninitialized lsb_idx and resolves the Smatch warning.
+I'd suggest behaving it slightly differntly: can we please have a helper
+module (in drivers/soc/qcom) which would return UBWC configuration data.
+We can start with HBB values, migrating the rest of UBWC-related flags
+one by one.
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
----
- drivers/hwmon/max31827.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Also, were you able to solve the issue of the platforms where GPU and
+MDSS disagreed upon HBB data?
 
-diff --git a/drivers/hwmon/max31827.c b/drivers/hwmon/max31827.c
-index 48e8f8ba4d05..c62eaf186d9d 100644
---- a/drivers/hwmon/max31827.c
-+++ b/drivers/hwmon/max31827.c
-@@ -558,10 +558,13 @@ static int max31827_init_client(struct max31827_state *st,
- 		/*
- 		 * Convert the desired fault queue into register bits.
- 		 */
--		if (data != 0)
--			lsb_idx = __ffs(data);
-+		if (data == 0 || hweight32(data) != 1) {
-+			dev_err(dev, "Invalid data in adi,fault-q\n");
-+			return -EINVAL;
-+		}
- 
--		if (hweight32(data) != 1 || lsb_idx > 4) {
-+		lsb_idx = __ffs(data);
-+		if (lsb_idx > 4) {
- 			dev_err(dev, "Invalid data in adi,fault-q\n");
- 			return -EINVAL;
- 		}
+>  drivers/soc/qcom/Makefile             |   3 +-
+>  drivers/soc/qcom/smem.c               |  14 +-
+>  drivers/soc/qcom/smem.h               |   9 ++
+>  drivers/soc/qcom/smem_dramc.c         | 287 ++++++++++++++++++++++++++++++++++
+>  include/linux/soc/qcom/smem.h         |   4 +
+>  8 files changed, 360 insertions(+), 14 deletions(-)
+> ---
+> base-commit: 46086739de22d72319e37c37a134d32db52e1c5c
+> change-id: 20250409-topic-smem_dramc-6467187ac865
+> 
+> Best regards,
+> -- 
+> Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+
 -- 
-2.34.1
-
+With best wishes
+Dmitry
