@@ -1,111 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC591F0E4E
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DC01BF37;
+	Thu, 10 Apr 2025 06:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267187; cv=none; b=NHLUbVs9wswyEs/mUzA7N11eOG41CTYFmWPOE0DKUddDIs8guiH/pL+QnolbpRlpb+VjfP9c7cNbawpVxwcDp/g1Ka7OB4tgM5WqENnrfvF4k17TEhUL6u5rwCATx8JTrnfSDHQMQZoaRBEOSbqjE/S/Py4AKT63zYCzrYq7bK8=
+	t=1744267197; cv=none; b=IN/43E9iDI17ymAz1ZkoFDD6GzE9qJgcmklKuuiVRA9btX8F7ZLIMb06rrrmJxL5UBDSm3qX0NDSUlCwVTn7LHytbcxvPrnL7086nIrvQonD9Is6nkHNcercIV58jHN/jEVPCDVOSASTgpAI0aSDVWH9pmT9ZTe+qy/ewtTJ1/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267187; c=relaxed/simple;
-	bh=MsfltxneL+5yruKscAZpEJiC7VEYXqwxIKgoWm8CCoc=;
+	s=arc-20240116; t=1744267197; c=relaxed/simple;
+	bh=qIxq6rm05hndLmxdtwm+Juf9aChyLKD49TOqyEtT0AA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HwpGUv58rz8uu7IJQj51tupA+uyna0fnF5vW0LITjkTLEqffsBpf5KsoBir2t+zS1FNpCjuKw0dgjycXBE+dweDcqEI9suoWxItKFVIweZTGAM+qObKEGYai8TlRcb8M0Mq8G5Rn8fDbypS/uaAvFRgkQQSLkiPwTM+rj8pebiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnYidDhw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lv+vocmMurTN5ych92LhFaZ6NoGS23lAUjK2VZb/nRiE6F5GlMV7aotKlx1YvmVyRBkVjeuZcswxHHRABfqrYKBBlt0HHcfraZ87zmW9Aj85h7BL5gchTuNZKXYepSCfpqjN46ngi02e7eTLneiABauZ1Qs/ZDNuatae1pkjj7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2Ao9rgO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnYidDhw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C2FC4CEDD;
-	Thu, 10 Apr 2025 06:39:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2Ao9rgO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 564BDC4CEDD;
+	Thu, 10 Apr 2025 06:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744267185;
-	bh=MsfltxneL+5yruKscAZpEJiC7VEYXqwxIKgoWm8CCoc=;
+	s=k20201202; t=1744267196;
+	bh=qIxq6rm05hndLmxdtwm+Juf9aChyLKD49TOqyEtT0AA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EnYidDhwUsu3yXMYTynmB0hNEHW8uxB6U69Qs0x6qlN1w9rj0h9Xm/h+dTyIIe1i+
-	 FBND0HUOUu7XKU3qzhP1t2tKAErLFfZ6/Ldmf5l6LpmLCC9minGSUTMWCYuppqKgpy
-	 d7PoYWZPqtJQIIgfOaW1nSHNjOou5oIiTzyQJTLMsGC33tLMxzOwIg6FIB8ehcNfJu
-	 K+9wBVWuoDRI5e+m1yNjBIuKZXtXKjnaNySdgIBwOsTvVfpj50BLCTppsAQ5tPv5IL
-	 J+CiFBSFgs89/Lp2lpWfR4namqthSxmHpmsq6SqSRs5UfCRIN4xU0xMjZqHLZhokhc
-	 1UKpvIH1vsVqA==
-Date: Thu, 10 Apr 2025 08:39:41 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Xin Li <xin@zytor.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Juergen Gross <jgross@suse.com>,
-	Dave Hansen <dave.hansen@intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 06/20] x86/msr: Standardize on 'u32' MSR indices in
- <asm/msr.h>
-Message-ID: <Z_dnraUGp0Vbzk6k@gmail.com>
-References: <20250409202907.3419480-1-mingo@kernel.org>
- <20250409202907.3419480-7-mingo@kernel.org>
- <aed43a6a-aca9-4c81-af1a-775f5858ebe3@zytor.com>
- <9c014962-d4cb-4e68-be15-efbe2ea26531@zytor.com>
- <63ab3ea9-c55d-48d2-8344-fb4314baf240@zytor.com>
- <3B57B3E5-47C9-4196-AD2B-44916E18B6D0@zytor.com>
- <3e2a52c5-791a-4e96-a768-8579ec841dd1@zytor.com>
+	b=m2Ao9rgOsYNPb8Y95yxbhe2W68oV3pEjBBTB9tPTAxCjARjQ6MEskgNwtqxD3UMji
+	 e00nFQc40dFUn2VWNXCLc0nOkt61LjcHseDXQnIT7TJloTiTidNJzNWPdKOUF5JzC9
+	 UNIT/vXrecs37PLOH6ncJDREtCFfP2MpIixRRKFy82q2lnlCXyWrffLTRkao8GJvwR
+	 sZ0pDYyZ19dI0S8qpost5vtxwxabVZU2q9d2kQpQDx7R3Qwgfi3/KBiUCjtKG5pDsN
+	 AiI3S3nwFIeBdFCPmdby8MxSYWkKVaP2zipAbLkdm60lpY55VAlC2dzbfF/MTXuFHW
+	 XqHB1dE4rw9tw==
+Date: Thu, 10 Apr 2025 08:39:54 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: "kyrie.wu" <kyrie.wu@mediatek.com>
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, kyrie wu <kyrie.wu@mediatek.corp-partner.google.com>, 
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 01/12] dt-bindings: mediatek: Add mediatek,
+ mt8196-jpgdec compatible
+Message-ID: <20250410-wandering-righteous-hound-ac5edd@shite>
+References: <20250410063006.5313-1-kyrie.wu@mediatek.com>
+ <20250410063006.5313-2-kyrie.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3e2a52c5-791a-4e96-a768-8579ec841dd1@zytor.com>
+In-Reply-To: <20250410063006.5313-2-kyrie.wu@mediatek.com>
 
-
-* Xin Li <xin@zytor.com> wrote:
-
-> On 4/9/2025 8:29 PM, H. Peter Anvin wrote:
-> > On April 9, 2025 8:18:12 PM PDT, Xin Li <xin@zytor.com> wrote:
-> > > A question NOT related to this patch set, the MSR write API prototype
-> > > defined in struct pv_cpu_ops as:
-> > >     void (*write_msr)(unsigned int msr, unsigned low, unsigned high);
-> > > 
-> > > Will it be better to add "const" to its arguments?  I.e.,
-> > >     void (*write_msr)(const u32 msr, const u32 low, const u32 high);
-> > > 
-> > 
-> > No, that makes no sense (it would have absolutely no effect.)
-> > 
+On Thu, Apr 10, 2025 at 02:29:54PM GMT, kyrie.wu wrote:
+> Add mediatek,mt8196-jpgdec compatible to binding document.
 > 
-> For the API definition, yes, it has no effect.
+> Signed-off-by: kyrie.wu <kyrie.wu@mediatek.com>
+
+Usual mediatek comment - looks like copy paste of username. Please reach
+to your colleagues how to fix it.
+
+> ---
+>  .../bindings/media/mediatek,mt8195-jpegdec.yaml           | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> While it makes the API definition more explicit, and its implementations
-> for native and Xen would be:
-> 
-> void {native,xen}_write_msr(const u32 msr, const u32 low, const u32 high)
-> {
->     ....
-> }
-> 
-> not worth it at all?
+> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8195-jpegdec.yaml b/Documentation/devicetree/bindings/media/mediatek,mt8195-jpegdec.yaml
+> index e5448c60e3eb..28a9a9bfdbf8 100644
+> --- a/Documentation/devicetree/bindings/media/mediatek,mt8195-jpegdec.yaml
+> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8195-jpegdec.yaml
+> @@ -14,7 +14,9 @@ description:
+>  
+>  properties:
+>    compatible:
+> -    const: mediatek,mt8195-jpgdec
+> +    enum:
+> +      - mediatek,mt8195-jpgdec
+> +      - mediatek,mt8196-jpgdec
 
-No:
+And devices are not compatible?
 
- - Using 'const' for input parameter pointers makes sense because it's 
-   easy to have a bug like this in a utility function:
+Best regards,
+Krzysztof
 
-	obj_ptr->val = foo;
-
-   this has a side effect on the calling context, spreading the local 
-   rot, so to speak, corrupting the object not owned by this function.
-
- - Using 'const' for non-pointer input parameters makes little sense, 
-   because the worst a function can do is to corrupt it locally:
-
-	val_high = foo;
-
-   ... but this bug won't be able to spread via corrupting objects 
-   through a pointer, any bug will be limited to that function.
-
-So neither the kernel, nor any of the major libraries such as glibc 
-will typically use const for non-pointer function parameters, outside 
-of very specific exceptions that strengthen the rule.
-
-Thanks,
-
-	Ingo
