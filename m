@@ -1,69 +1,106 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A7E1EE004;
-	Thu, 10 Apr 2025 18:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B84D1EE004
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744308692; cv=none; b=WBL0iXqH/sD0h7kalzoUPAf1OAim4QMOtuVrb0DKQ20moOBEnfupeTF4BunRQ23SSDZgHyBmSTvaGvW6x5bHbrpMf9n6kYviYBukHIXSvB185I/P3v2tJyVBfMsdFo0o6hAhERxv8wKZ9TQLtLm4Qf/hBMNUSMTbquL4KRunAS4=
+	t=1744308733; cv=none; b=de2SibNro3irGi20hU+9tRd/GlEfTn61ciz7e143UBEQOtMgEfDZvaTAxaA7+yDJJwtcd+2F45N7dmFW0Rrt9kKY/kod1+W5rCuy4gmIk+oRCm8xGCQLRZxmo6V3zAd9dwhQ3LAoX75nA3ZGEMmRjWuBJ9MCNbOwTkll7rdLnpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744308692; c=relaxed/simple;
-	bh=XaELMhMPffpadeqwtJNrzE0tHmrKYF5+77sC/YzWm7s=;
+	s=arc-20240116; t=1744308733; c=relaxed/simple;
+	bh=5OCXzZ8E7TldpM1RQ3DMguRYZfBFVCCZecIHS29aAy0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u2K7Yh3wS5+JBpTiM+IvkPO7W0kj8pMS/Ea/Ia9kmtEYshVYSMT/OFYXsv4ErFNAh/jf7fI4L5fCZ5oPxDmO/QdCRFdEO0g7BJqxx149bdv0Mi5OEDl+TTwdGgWpvCcurGfearaqf+qX6Spm3rJRIeggeH3zSSjFR/kbVkhiA8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RKe35nLl; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ntWLPEx1xFRTitJu1m5d4ywYs9zBFxqQuoXVBcPtmBbSPooRK3f+C0JkvKXpE76281Sp22hUzDFJUdF/KAqQoM9MA6pD8b6v7ezKORFriB4juwHDNziCzPWoWVL6cFTXir0rO0hGxTzaqHT+OOELDnh1C7fd+o5rKB1xeP7Hbks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXBo0KT+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RKe35nLl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yyuMpWN1TzmvBH3elyBl05iozN5VhyzZZE5A2u1FTkI=; b=RKe35nLld+M1O+UUdR42XC0y9h
-	E0/JYpSjH4ruxAAQqlFDX8GG83afIQumInqD4LOKIYSyXjemx1WXUqvmtujL6xHW0GWDyuTUfvNgd
-	BmBUpwQuRd1EcLsRuUK2336CNMhcWAk+en4DK2L/mH4oej5b4sBhyNrjf3skJIVoSnsojKJ37Cefe
-	8owOATtmm4QxN6EvvY7Mm1mL+34MwQTc+j809hDrfgoytJy87W2CxuXNdqEtN6sg24QJMkU5bU069
-	SlLmWMtp33c9seSGf33gnRCRM5ioI9zBA/pfNQTLWFo251a4sijHZXNV1leCFqLaq/3Ac51zVGSwW
-	ldi/O7Qg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2wN1-00000003ERs-3FBV;
-	Thu, 10 Apr 2025 18:11:23 +0000
-Date: Thu, 10 Apr 2025 19:11:23 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: nifan.cxl@gmail.com
-Cc: mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
-	akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, will@kernel.org,
-	aneesh.kumar@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
-	linux-s390@vger.kernel.org, ziy@nvidia.com,
-	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH] mm: Introduce free_folio_and_swap_cache() to replace
- free_page_and_swap_cache()
-Message-ID: <Z_gJy1h-IoRP0JDO@casper.infradead.org>
-References: <20250410180254.164118-1-nifan.cxl@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXBo0KT+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA64C4CEE3;
+	Thu, 10 Apr 2025 18:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744308733;
+	bh=5OCXzZ8E7TldpM1RQ3DMguRYZfBFVCCZecIHS29aAy0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JXBo0KT+Xk7ghjslPtjiCZDScQtVCtipAu8PkCtyT5AFgBbFvN9+6TOgsI/efcsav
+	 sNZwisM6jQpcBDZCqaMiUl2bs5m0oVZkYhbpD5ETkCSBjgGo5fYo4PuBqDJNfIlqI4
+	 CNGi+CUMvjVQmcQ2EygIWUZXwfrDuVnQP0EnH/QHhQ9AVLUFnm/7ihU+XI+pmHarYT
+	 llZ6lI/Na/6cJF+uzxpyykJc6SJDOIhHYrIOkJZ+FTDqtjQU1KtJYfLpNSJKb8jjJK
+	 6aLVwB9jGlw4BOi7lEvDfQ/MaZPX8OokuhFBJEDgfIMyE1XU9lHH/nsfZVk0SIen9I
+	 4b0CQEJKk6VXA==
+Date: Thu, 10 Apr 2025 11:12:09 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
+	Brendan Jackman <jackmanb@google.com>, Derek Manwaring <derekmn@amazon.com>
+Subject: Re: [PATCH v4 18/36] cpu: Define attack vectors
+Message-ID: <uhfexplln3n736m4yxdrfqg666x4hs5pokxqw6ycnaktastvko@zi2saqxeoidj>
+References: <20250310164023.779191-1-david.kaplan@amd.com>
+ <20250310164023.779191-19-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250410180254.164118-1-nifan.cxl@gmail.com>
+In-Reply-To: <20250310164023.779191-19-david.kaplan@amd.com>
 
-On Thu, Apr 10, 2025 at 11:00:31AM -0700, nifan.cxl@gmail.com wrote:
-> @@ -522,8 +522,12 @@ static inline void put_swap_device(struct swap_info_struct *si)
->  	do { (val)->freeswap = (val)->totalswap = 0; } while (0)
->  /* only sparc can not include linux/pagemap.h in this file
->   * so leave put_page and release_pages undeclared... */
-> -#define free_page_and_swap_cache(page) \
-> -	put_page(page)
-> +#define free_folio_and_swap_cache(folio)	\
-> +	do {					\
-> +		if (!folio_test_slab(folio))	\
-> +			folio_put(folio);	\
-> +	} while (0)
+On Mon, Mar 10, 2025 at 11:40:05AM -0500, David Kaplan wrote:
+> @@ -3178,8 +3179,38 @@ void __init boot_cpu_hotplug_init(void)
+>  
+>  #ifdef CONFIG_CPU_MITIGATIONS
+>  /*
+> - * These are used for a global "mitigations=" cmdline option for toggling
+> - * optional CPU mitigations.
+> + * All except the cross-thread attack vector are mitigated by default.
+> + * Cross-thread mitigation often requires disabling SMT which is too expensive
+> + * to be enabled by default.
 
-We don't need to test for slab.  Unlike put_page(), we know that slab
-cannot be passed this way.
+Cross-thread is *partially* mitigated by default (everything except
+disabling SMT).
+
+> +bool cpu_mitigate_attack_vector(enum cpu_attack_vectors v)
+> +{
+> +	if (v < NR_CPU_ATTACK_VECTORS)
+> +		return attack_vectors[v];
+> +
+> +	WARN_ON_ONCE(v >= NR_CPU_ATTACK_VECTORS);
+
+This can be a WARN_ONCE(), v is already known to be invalid here.
+
+>  static int __init mitigations_parse_cmdline(char *arg)
+>  {
+> -	if (!strcmp(arg, "off"))
+> -		cpu_mitigations = CPU_MITIGATIONS_OFF;
+> -	else if (!strcmp(arg, "auto"))
+> -		cpu_mitigations = CPU_MITIGATIONS_AUTO;
+> -	else if (!strcmp(arg, "auto,nosmt"))
+> -		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
+> -	else
+> -		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
+> -			arg);
+> +	char *s, *p;
+> +	int len;
+> +
+> +	len = mitigations_parse_global_opt(arg);
+> +
+> +	if (cpu_mitigations_off()) {
+> +		memset(attack_vectors, 0, sizeof(attack_vectors));
+> +		smt_mitigations = SMT_MITIGATIONS_OFF;
+> +	} else if (cpu_mitigations_auto_nosmt())
+> +		smt_mitigations = SMT_MITIGATIONS_ON;
+
+Kernel coding style wants consistent braces for if-then-else:
+
+	if (cpu_mitigations_off()) {
+		memset(attack_vectors, 0, sizeof(attack_vectors));
+		smt_mitigations = SMT_MITIGATIONS_OFF;
+	} else if (cpu_mitigations_auto_nosmt()) {
+		smt_mitigations = SMT_MITIGATIONS_ON;
+	}
+
+-- 
+Josh
