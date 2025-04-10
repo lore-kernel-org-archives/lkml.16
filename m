@@ -1,44 +1,55 @@
-Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBFE2857C9;
-	Thu, 10 Apr 2025 12:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE4A20C49F;
+	Thu, 10 Apr 2025 12:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744289081; cv=none; b=ro1cOIVl/OE9xlgIh+hj3BbwKYkdmMVema/Yy3gkCtpeLoQjyfNIr8m6/B1FsP/xVTPCamqpnzm56D6zQ9qCdWKJabqISrDffZxfot/vi1yhFPY88Q9+W8dVw2mkcU+p6do8PMreUkF9UvW2L703r9k97gvtw77iJ9CdUsbPXvo=
+	t=1744289134; cv=none; b=eMHxvSGvhdXGislrSVoCBE36EiDfK+sR+H085J5thd6mh6LiDTzarvqzMqpg7rJnsyfUGQ/FA41GqpSY1bY0o3QNdzmCb5+Ge2Hi5rOqZAHhpOTjGmxU65auYeVgdjQvrf3x/dN29bBlsoaE0KS7A8KsBk5EgRREbHchPumlrZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744289081; c=relaxed/simple;
-	bh=DPa6Bkrl+u4okhY+O9K40WNylA/T7aJp7MY9fU7MGdo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PUEdpM/cnr3tw0fdhfZcTRb4rd4aXsHdlRA9D3q+0UH5XGG2MTvoh5cOuDd7FPJghhkWJVqXoK2PXQ4tS/JOO9M0B09aaRkSERmxsaaSh5kbhRf3YjpVvqmX8NjKws9Fabrfi0hCSxbkyijpWObi+07yrL7puNncKErwXQbKvkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=LrENnOxJ; arc=none smtp.client-ip=185.70.43.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1744289134; c=relaxed/simple;
+	bh=+ubAzKL0BpcL/x74wPV2MpTnHZxtSWz04X0j2dsVLpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D7S43C5xM5YonRwxBCBZO4bH/aNfdCivFr3ZLORwtP+v+T2t2KvFdqJ11XwhZY1J4GEFaZTLwXv8fEn8vM+Iul51C6NWBxIBt0gw3dzdxHNItn50AB1jZOszb2Sn2EF0W1HoSBg9N5RtOTotWDWQY3y+21SvvCJY9i36s+JUQPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bDz/uEae; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="LrENnOxJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1744289070; x=1744548270;
-	bh=OmPyznTy1ji4uVfyzZ9cX07HVh6awgAfe3dadPDHDEA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=LrENnOxJH0BzNnNuDRuikaSCBc56zDMzHSL8a8Ess+rDx7gdBJGL/OKZI0cY53gxk
-	 mNfTCybqL2+hfm03Ch7p7KOLdgKv/0QXw33yiVcB6ggMXTIhlRr3XPfJTq4CRUEAkC
-	 RDC0zJrHCbGd+oE5tMQ3UGifhAJmlTtbsyRjfHvyNQEYV6ookP1fOkZxYHCrTeUXa9
-	 NmwuhCvfHPGPkebITAU5YrhaKgLcdRTfJI/Z8PonvXUjVzXNcHKmki7Ku0PjHm0Wrb
-	 zf7rEzMv/35k9LYmSdoaxwg2Sxa5kUlWxDSMcB7DGu/g1sgAhypWkdflWIF540oeBB
-	 QNMOc4RBrWFgA==
-Date: Thu, 10 Apr 2025 12:44:25 +0000
-To: Jonathan Cameron <jic23@kernel.org>
-From: Yassine Oudjana <y.oudjana@protonmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, Sean Nyekjaer <sean@geanix.com>, Javier Carrasco <javier.carrasco.cruz@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>, Ramona Gradinariu <ramona.gradinariu@analog.com>, "Yo-Jung (Leo) Lin" <0xff07@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, =?utf-8?Q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, Danila Tikhonov
-	<danila@jiaxyga.com>, Antoni Pokusinski <apokusinski01@gmail.com>, Vasileios Amoiridis <vassilisamir@gmail.com>, Petar Stoykov <pd.pstoykov@gmail.com>, shuaijie wang <wangshuaijie@awinic.com>, Yasin Lee <yasin.lee.x@gmail.com>, "Borislav Petkov (AMD)" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, Yassine Oudjana <yassine.oudjana@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 1/3] net: qrtr: Turn QRTR into a bus
-Message-ID: <373f4699-4b3d-4fa4-8a75-9e71b9dccc5c@protonmail.com>
-In-Reply-To: <20250406170111.7a11437a@jic23-huawei>
-References: <20250406140706.812425-1-y.oudjana@protonmail.com> <20250406140706.812425-2-y.oudjana@protonmail.com> <20250406170111.7a11437a@jic23-huawei>
-Feedback-ID: 6882736:user:proton
-X-Pm-Message-ID: 647f174cf082fb65ce85fc9c15b866e78ba2ed8a
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bDz/uEae"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=HXuUolP4ywVDaSS4pl7IP74YI+IqinQOGv+/zJjBlCM=; b=bDz/uEaeVpgUF9n9rm7fI1Qchl
+	HKth3IOfKalepllve7IEXF7qQyqVuO0zK77JwRhgw9iysq56hD0JHQTEGqa+RQPK2muA38D3NxD9l
+	F5XPuoksJwooLoub/5eRiQemNsHgFesG+NK8i7Qn6zBruna5DX0gHL05bY0i7m12bGMdYO/HLYzjl
+	pBWMjtIQ1CC3J5DqjlSIjWPIYV1vJFwGJr3+CLkrTI5kJ7fJaGqMciuYaS+R5b2Xu30h56ldTtm5Y
+	rBTu8//HF/ZxatfMiPKiZCYkB+QtvbrST6PVD1FCv83ygrESai/8V/hHQdhmqTpSiLBu6eryWpyru
+	0LopetZA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2rHZ-00000002tSI-3PuB;
+	Thu, 10 Apr 2025 12:45:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1BDAC3003FA; Thu, 10 Apr 2025 14:45:26 +0200 (CEST)
+Date: Thu, 10 Apr 2025 14:45:26 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: =?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
+Message-ID: <20250410124526.GB9833@noisy.programming.kicks-ass.net>
+References: <20250410115420.366349-1-panikiel@google.com>
+ <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,370 +57,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
 
-Missed one comment so sending a second reply.
+On Thu, Apr 10, 2025 at 02:36:02PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 10, 2025 at 11:54:20AM +0000, Paweł Anikiel wrote:
+> > Calling core::fmt::write() from rust code while FineIBT is enabled
+> > results in a kernel panic:
+> > 
+> > [ 4614.199779] kernel BUG at arch/x86/kernel/cet.c:132!
+> > [ 4614.205343] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+> > [ 4614.211781] CPU: 2 UID: 0 PID: 6057 Comm: dmabuf_dump Tainted: G     U     O       6.12.17-android16-0-g6ab38c534a43 #1 9da040f27673ec3945e23b998a0f8bd64c846599
+> > [ 4614.227832] Tainted: [U]=USER, [O]=OOT_MODULE
+> > [ 4614.241247] RIP: 0010:do_kernel_cp_fault+0xea/0xf0
+> > [ 4614.246621] Code: c6 15 8d ad ac 48 0f 44 f1 48 8d 04 80 48 8d 14 45 d0 37 42 ac 48 c7 c7 22 99 bb ac e8 9f 7a 05 00 0f 0b eb 9a 67 0f b9 40 12 <0f> 0b cc cc cc cc 66 0f 1f 00 41 81 ea 00 00 00 00 74 03 0f 0b 90
+> > [ 4614.267606] RSP: 0018:ffffb95acfa4b978 EFLAGS: 00010097
+> > [ 4614.273464] RAX: 0000000000000057 RBX: ffffb95acfa4b9b8 RCX: 3ff1c813cb576300
+> > [ 4614.281426] RDX: ffff9a50b792b8d0 RSI: ffff9a50b791d548 RDI: ffff9a50b791d548
+> > [ 4614.289408] RBP: ffffb95acfa4b980 R08: 0000000000000d7c R09: ffffffffad45d500
+> > [ 4614.297399] R10: 0000000000002874 R11: 0000000000000004 R12: 0000000000000000
+> > [ 4614.305369] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000003
+> > [ 4614.313345] FS:  000076fa106dcfe8(0000) GS:ffff9a50b7900000(0000) knlGS:0000000000000000
+> > [ 4614.322386] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [ 4614.328806] CR2: 000076f8fc207bd0 CR3: 0000000227242000 CR4: 0000000000f52eb0
+> > [ 4614.336777] PKRU: 55555554
+> > [ 4614.339786] Call Trace:
+> > [ 4614.342524]  <TASK>
+> > [ 4614.344867]  ? __die_body+0x69/0xb0
+> > [ 4614.348786]  ? die+0xa9/0xd0
+> > [ 4614.352000]  ? do_trap+0x89/0x160
+> > [ 4614.355721]  ? do_kernel_cp_fault+0xea/0xf0
+> > [ 4614.360413]  ? handle_invalid_op+0x69/0x90
+> > [ 4614.364985]  ? do_kernel_cp_fault+0xea/0xf0
+> > [ 4614.369654]  ? exc_invalid_op+0x36/0x60
+> > [ 4614.373959]  ? asm_exc_invalid_op+0x1f/0x30
+> > [ 4614.378643]  ? do_kernel_cp_fault+0xea/0xf0
+> > [ 4614.383335]  ? do_kernel_cp_fault+0x31/0xf0
+> > [ 4614.388005]  exc_control_protection+0x49/0x70
+> > [ 4614.392871]  asm_exc_control_protection+0x2b/0x60
+> > [ 4614.398144] RIP: 0010:_RNvXs5_NtNtNtCs3o2tGsuHyou_4core3fmt3num3impyNtB9_7Display3fmt+0x0/0x20
+> > [ 4614.407792] Code: 48 f7 df 48 0f 48 f9 48 89 f2 89 c6 5d e9 18 fd ff ff 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 41 81 ea 14 61 af 2c 74 03 0f 0b 90 <66> 0f 1f 00 55 48 89 e5 48 89 f2 48 8b 3f be 01 00 00 00 5d e9 e7
+> > [ 4614.428775] RSP: 0018:ffffb95acfa4ba68 EFLAGS: 00010246
+> > [ 4614.434609] RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000000
+> > [ 4614.442587] RDX: 0000000000000007 RSI: ffffb95acfa4ba70 RDI: ffffb95acfa4bc88
+> > [ 4614.450557] RBP: ffffb95acfa4bae0 R08: ffff0a00ffffff05 R09: 0000000000000070
+> > [ 4614.458527] R10: 0000000000000000 R11: ffffffffab67eaf0 R12: ffffb95acfa4bcc8
+> > [ 4614.466493] R13: ffffffffac5d50f0 R14: 0000000000000000 R15: 0000000000000000
+> > [ 4614.474473]  ? __cfi__RNvXs5_NtNtNtCs3o2tGsuHyou_4core3fmt3num3impyNtB9_7Display3fmt+0x10/0x10
+> > [ 4614.484118]  ? _RNvNtCs3o2tGsuHyou_4core3fmt5write+0x1d2/0x250
+> > 
+> > This happens because core::fmt::write() calls
+> > core::fmt::rt::Argument::fmt(), which currently has CFI disabled:
+> > 
+> > library/core/src/fmt/rt.rs:
+> > 171     // FIXME: Transmuting formatter in new and indirectly branching to/calling
+> > 172     // it here is an explicit CFI violation.
+> > 173     #[allow(inline_no_sanitize)]
+> > 174     #[no_sanitize(cfi, kcfi)]
+> > 175     #[inline]
+> > 176     pub(super) unsafe fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+> > 
+> > This causes a Control Protection exception, because FineIBT has sealed
+> > off the original function's endbr64.
+> > 
+> > This makes rust currently incompatible with FineIBT. Add a Kconfig
+> > dependency that prevents FineIBT from getting turned on by default
+> > if rust is enabled.
+> 
+> Why ?!, what's wrong with removing that no_sanitize() instead?
+> 
+> How is it still compatible with kCFI and not with FineIBT?
 
-On 06/04/2025 7:01 pm, Jonathan Cameron wrote:
-> On Sun, 06 Apr 2025 14:07:43 +0000
-> Yassine Oudjana <y.oudjana@protonmail.com> wrote:
->=20
->> Implement a QRTR bus to allow for creating drivers for individual QRTR
->> services. With this in place, devices are dynamically registered for QRT=
-R
->> services as they become available, and drivers for these devices are
->> matched using service and instance IDs.
->>
->> In smd.c, replace all current occurences of qdev with qsdev in order to
->> distinguish between the newly added QRTR device which represents a QRTR
->> service with the existing QRTR SMD device which represents the endpoint
->> through which services are provided.
->>
->> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
-> Hi Yassine
->=20
-> Just took a quick look through.
->=20
-> It might make more sense to do this with an auxiliary_bus rather
-> than defining a new bus.
-
-I'm not familiar with auxiliary bus, but reading the documentation it=20
-seems to me like it's used like MFD where there is a device that has=20
-multiple functions, just without the subdevices having physical=20
-addresses. QRTR is not really a device but more closely resembles=20
-something like PCI or I2C as a communication interface.
-
->=20
-> I'd also split out the renames as a precursor patch.
->=20
-> Various other comments inline.
->=20
-> Jonathan
->=20
->> diff --git a/net/qrtr/af_qrtr.c b/net/qrtr/af_qrtr.c
->> index 00c51cf693f3..e11682fd7960 100644
->> --- a/net/qrtr/af_qrtr.c
->> +++ b/net/qrtr/af_qrtr.c
->> @@ -435,6 +435,7 @@ static void qrtr_node_assign(struct qrtr_node *node,=
- unsigned int nid)
->>   int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, siz=
-e_t len)
->>   {
->>   =09struct qrtr_node *node =3D ep->node;
->> +=09const struct qrtr_ctrl_pkt *pkt;
->>   =09const struct qrtr_hdr_v1 *v1;
->>   =09const struct qrtr_hdr_v2 *v2;
->>   =09struct qrtr_sock *ipc;
->> @@ -443,6 +444,7 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, con=
-st void *data, size_t len)
->>   =09size_t size;
->>   =09unsigned int ver;
->>   =09size_t hdrlen;
->> +=09int ret =3D 0;
->>
->>   =09if (len =3D=3D 0 || len & 3)
->>   =09=09return -EINVAL;
->> @@ -516,12 +518,24 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, c=
-onst void *data, size_t len)
->>
->>   =09qrtr_node_assign(node, cb->src_node);
->>
->> +=09pkt =3D data + hdrlen;
->> +
->>   =09if (cb->type =3D=3D QRTR_TYPE_NEW_SERVER) {
->>   =09=09/* Remote node endpoint can bridge other distant nodes */
->> -=09=09const struct qrtr_ctrl_pkt *pkt;
->> -
->> -=09=09pkt =3D data + hdrlen;
->>   =09=09qrtr_node_assign(node, le32_to_cpu(pkt->server.node));
->> +
->> +=09=09/* Create a QRTR device */
->> +=09=09ret =3D ep->add_device(ep, le32_to_cpu(pkt->server.node),
->> +=09=09=09=09=09       le32_to_cpu(pkt->server.port),
->> +=09=09=09=09=09       le32_to_cpu(pkt->server.service),
->> +=09=09=09=09=09       le32_to_cpu(pkt->server.instance));
->> +=09=09if (ret)
->> +=09=09=09goto err;
->> +=09} else if (cb->type =3D=3D QRTR_TYPE_DEL_SERVER) {
->> +=09=09/* Remove QRTR device corresponding to service */
->> +=09=09ret =3D ep->del_device(ep, le32_to_cpu(pkt->server.port));
->> +=09=09if (ret)
->> +=09=09=09goto err;
->>   =09}
->>
->>   =09if (cb->type =3D=3D QRTR_TYPE_RESUME_TX) {
->> @@ -543,8 +557,7 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, con=
-st void *data, size_t len)
->>
->>   err:
->>   =09kfree_skb(skb);
->> -=09return -EINVAL;
->> -
->> +=09return ret ? ret : -EINVAL;
-> How do we get here with non error value given we couldn't before?
->=20
->=20
->>   }
->>   EXPORT_SYMBOL_GPL(qrtr_endpoint_post);
->>
->=20
->> diff --git a/net/qrtr/smd.c b/net/qrtr/smd.c
->> index c91bf030fbc7..fd5ad6a8d1c3 100644
->> --- a/net/qrtr/smd.c
->> +++ b/net/qrtr/smd.c
->> @@ -7,6 +7,7 @@
->=20
->> +
->> +static int qcom_smd_qrtr_uevent(const struct device *dev, struct kobj_u=
-event_env *env)
->> +{
->> +=09const struct qrtr_device *qdev =3D to_qrtr_device(dev);
->> +
->> +=09return add_uevent_var(env, "MODALIAS=3D%s%x:%x", QRTR_MODULE_PREFIX,=
- qdev->service,
->> +=09=09=09      qdev->instance);
->> +}
->=20
->=20
->> +void qrtr_driver_unregister(struct qrtr_driver *drv)
->> +{
->> +=09driver_unregister(&drv->driver);
->> +}
->> +EXPORT_SYMBOL_GPL(qrtr_driver_unregister);
->=20
-> Given this is a 'new thing' maybe namespace it from the start?
-> EXPORT_SYMBOL_NS_GPL();
->=20
->=20
->> +
->> +static int qcom_smd_qrtr_match_device_by_port(struct device *dev, const=
- void *data)
->> +{
->> +=09struct qrtr_device *qdev =3D to_qrtr_device(dev);
->> +=09unsigned int port =3D *(unsigned int *)data;
-> =09unsinged int *port =3D data;
->=20
-> =09return qdev->port =3D=3D *port;
->=20
->> +
->> +=09return qdev->port =3D=3D port;
->> +}
->> +
->> +static void qcom_smd_qrtr_add_device_worker(struct work_struct *work)
->> +{
->> +=09struct qrtr_new_server *new_server =3D container_of(work, struct qrt=
-r_new_server, work);
->> +=09struct qrtr_smd_dev *qsdev =3D new_server->parent;
->> +=09struct qrtr_device *qdev;
->> +=09int ret;
->> +
->> +=09qdev =3D kzalloc(sizeof(*qdev), GFP_KERNEL);
->> +=09if (!qdev)
->> +=09=09return;
->> +
-> Maybe
-> =09*qdev =3D (struct qrtr_device *) {
-> =09};
-> and free new_server after all of these are filled in.
->=20
->> +=09qdev->node =3D new_server->node;
->> +=09qdev->port =3D new_server->port;
->> +=09qdev->service =3D new_server->service;
->> +=09qdev->instance =3D new_server->instance;
->> +
->> +=09devm_kfree(qsdev->dev, new_server);
->=20
-> As below.
->=20
->> +
->> +=09dev_set_name(&qdev->dev, "%d-%d", qdev->node, qdev->port);
->> +
->> +=09qdev->dev.bus =3D &qrtr_bus;
->> +=09qdev->dev.parent =3D qsdev->dev;
->> +=09qdev->dev.release =3D qcom_smd_qrtr_dev_release;
->> +=09qdev->dev.driver =3D NULL;
->=20
-> it's kzalloc'd so no need to set this.
->=20
->> +
->> +=09ret =3D device_register(&qdev->dev);
->> +=09if (ret) {
->> +=09=09dev_err(qsdev->dev, "Failed to register QRTR device: %pe\n", ERR_=
-PTR(ret));
->> +=09=09put_device(&qdev->dev);
->> +=09}
->> +}
->> +
->> +static void qcom_smd_qrtr_del_device_worker(struct work_struct *work)
->> +{
->> +=09struct qrtr_del_server *del_server =3D container_of(work, struct qrt=
-r_del_server, work);
->> +=09struct qrtr_smd_dev *qsdev =3D del_server->parent;
->> +=09struct device *dev =3D device_find_child(qsdev->dev, &del_server->po=
-rt,
->> +=09=09=09=09=09       qcom_smd_qrtr_match_device_by_port);
->> +
->> +=09devm_kfree(qsdev->dev, del_server);
-> If we are always going to free what was alocated in qcom_smd_qrtr_del_dev=
-ice()
-> why use devm at all?
->> +
->> +=09if (dev)
->> +=09=09device_unregister(dev);
-> If this doesn't match anything I'm guessing it's a bug?   So maybe an err=
-or message?
->=20
->> +}
->> +
->> +static int qcom_smd_qrtr_add_device(struct qrtr_endpoint *parent, unsig=
-ned int node,
->> +=09=09=09=09    unsigned int port, u16 service, u16 instance)
->> +{
->> +=09struct qrtr_smd_dev *qsdev =3D container_of(parent, struct qrtr_smd_=
-dev, ep);
->> +=09struct qrtr_new_server *new_server;
->> +
->> +=09new_server =3D devm_kzalloc(qsdev->dev, sizeof(struct qrtr_new_serve=
-r), GFP_KERNEL);
->=20
-> As below. sizeof(*new_server)
->=20
->> +=09if (!new_server)
->> +=09=09return -ENOMEM;
->> +
-> =09*new_server =3D (struct qtr_new_server) {
-> =09=09.parent =3D qsdev,
-> =09=09.ndoe =3D node,
-> ...
-> =09};
->=20
-> perhaps a tiny bit easier to read?
->=20
->> +=09new_server->parent =3D qsdev;
->> +=09new_server->node =3D node;
->> +=09new_server->port =3D port;
->> +=09new_server->service =3D service;
->> +=09new_server->instance =3D instance;
->> +
->> +=09INIT_WORK(&new_server->work, qcom_smd_qrtr_add_device_worker);
->> +=09schedule_work(&new_server->work);
->> +
->> +=09return 0;
->> +}
->> +
->> +static int qcom_smd_qrtr_del_device(struct qrtr_endpoint *parent, unsig=
-ned int port)
->> +{
->> +=09struct qrtr_smd_dev *qsdev =3D container_of(parent, struct qrtr_smd_=
-dev, ep);
->> +=09struct qrtr_del_server *del_server;
->> +
->> +=09del_server =3D devm_kzalloc(qsdev->dev, sizeof(struct qrtr_del_serve=
-r), GFP_KERNEL);
->=20
-> sizeof(*del_server)
-> preferred as then no one has to check types match.
->=20
->> +=09if (!del_server)
->> +=09=09return -ENOMEM;
->> +
->> +=09del_server->parent =3D qsdev;
->> +=09del_server->port =3D port;
->> +
->> +=09INIT_WORK(&del_server->work, qcom_smd_qrtr_del_device_worker);
->> +=09schedule_work(&del_server->work);
->> +
->> +=09return 0;
->> +}
->> +
->> +static int qcom_smd_qrtr_device_unregister(struct device *dev, void *da=
-ta)
->> +{
->> +=09device_unregister(dev);
->=20
-> One option that may simplify this is to do the device_unregister() handli=
-ng
-> a devm_action_or_reset() handler that is using the parent device as it's =
-dev
-> but unregistering the children.  That way the unregister is called in the
-> reverse order of setup and you only register a handler for those devices
-> registered (rather walking children).  I did this in the CXL pmu driver
-> for instance.
->=20
->> +
->> +=09return 0;
->> +}
->> +
->=20
->> @@ -82,9 +276,11 @@ static int qcom_smd_qrtr_probe(struct rpmsg_device *=
-rpdev)
->>
->>   static void qcom_smd_qrtr_remove(struct rpmsg_device *rpdev)
->>   {
->> -=09struct qrtr_smd_dev *qdev =3D dev_get_drvdata(&rpdev->dev);
->> +=09struct qrtr_smd_dev *qsdev =3D dev_get_drvdata(&rpdev->dev);
->=20
-> May be worth doing the rename in a precursor patch to simplify a little w=
-hat is
-> in this one.
->=20
->> +
->> +=09device_for_each_child(qsdev->dev, NULL, qcom_smd_qrtr_device_unregis=
-ter);
->>
->> -=09qrtr_endpoint_unregister(&qdev->ep);
->> +=09qrtr_endpoint_unregister(&qsdev->ep);
->>
->>   =09dev_set_drvdata(&rpdev->dev, NULL);
->>   }
->> @@ -104,7 +300,27 @@ static struct rpmsg_driver qcom_smd_qrtr_driver =3D=
- {
->>   =09},
->>   };
->>
->> -module_rpmsg_driver(qcom_smd_qrtr_driver);
->> +static int __init qcom_smd_qrtr_init(void)
->> +{
->> +=09int ret;
->> +
->> +=09ret =3D bus_register(&qrtr_bus);
->> +=09if (!ret)
->> +=09=09ret =3D register_rpmsg_driver(&qcom_smd_qrtr_driver);
-> This style tends to extend badly. Go with more conventional errors
-> out of line style.
->=20
-> =09if (ret)
-> =09=09return ret;
->=20
-> =09ret =3D register_rpmsg_driver(&qcom_smd_qrtr_driver);
-> =09if (ret) {
-> =09=09bus_unregister(&qtr_bus);
-> =09=09return ret;
-> =09}
->=20
-> =09return 0;
->=20
->> +=09else
->> +=09=09bus_unregister(&qrtr_bus);
->> +
->> +=09return ret;
->> +}
->> +
->> +static void __exit qcom_smd_qrtr_exit(void)
->> +{
->> +=09bus_unregister(&qrtr_bus);
->=20
-> Order should be the reverse of what happened in probe so swap these round=
-.
->=20
->> +=09unregister_rpmsg_driver(&qcom_smd_qrtr_driver);
->> +}
->> +
->> +subsys_initcall(qcom_smd_qrtr_init);
->> +module_exit(qcom_smd_qrtr_exit);
->>
->>   MODULE_ALIAS("rpmsg:IPCRTR");
->>   MODULE_DESCRIPTION("Qualcomm IPC-Router SMD interface driver");
->>
-
+FWIW, CFI violations of any kind are a no-no. They're not accepted in C
+and they're not accepted in Rust. This is clearly a Rust bug that needs
+to be fixed ASAP. Disabling CFI is not an option.
 
