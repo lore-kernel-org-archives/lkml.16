@@ -1,117 +1,240 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E102857E2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE94284B3D
 	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294733; cv=none; b=QOUWes/wroeuKQgjMmjRi6Z7smSbF9cDgfZO2vUiyR2ezLrb236HCBlWuZXrvcGb2XPwcBcZtWgDstVR+8qtl2AQBSTJZbAluFNTfrZPZV2qVbObfQ/5QftDkstmqfzcUr/Bz2TAIunTd3Gxw+fY80nV+rfmorDDZis/jlNKf1Q=
+	t=1744294732; cv=none; b=O1NvkZ28TSMrSrAd6xwlOo9z55Y7BIWK91Z98xQRDdLu0ehNHudW6x1DqCmZf2FuSclcNo4ZQRcMcP1s7gbry+fDVEaafAYPp+WZ4e+JAhhQYm/TSxXQNgQZZiE3iEXgk0oGmHGcIjMkYTxQDGuOa9+HJqxr6CflJroYz9DyQiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294733; c=relaxed/simple;
-	bh=SWQ+PO07d5UqSiUZlr//Fs/ME3IAMb/DOUimXTj0cyQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qb5UrktFOdGm9tVYFxL/1WJSLrInRLjZg+bzCZPIWvnXxPe5aR+WI3mPqCU6tSunEJfIvxkH5USEZDL5no9v9hY+igvHxLZXR2nLd7fF9NlAF8kC82cCXRPqqqpiNO7RSPpUSQ5DEAn10PAwXYlpG10sz0S5kVjV+eLnA1YGg2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaecf50578eso154695066b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:18:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744294727; x=1744899527;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GdSoTiFrBKyNtxOX3muUasy2YSOI6Sn7jCp2NmeOuXM=;
-        b=NGLtVvbGgKA6KDzCxXM8sJ2h1lGRdxAHf4NcdDd96FUEXax8E4fpqt2TDcwpw+ZKye
-         yJD1o/61bjcnvxKWFMDAiTnm6rIDjzkRSUw8TW52jMhZeuqo4VNgtpXh2IvJA8Cv+Gnx
-         ldIkeaaxBdcida8K1IaPoGiqGVUXnbtPHr6vBNjmXFI1BU3YqSwNn1Yf8DnMyFx482Nu
-         JLWhXg1i3Q/Wu/SqAzeWUH2pckT3CegeJYebXM+pGTTrvIBj6SzIMCaQiIK5Fky1rfVi
-         6MQH49LCAVV+57WOw9GJC+K/sVZQuvEY5tVrguuiWZpJifC6iFEuFvaiU1ws8Vznj6QH
-         mhDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTo7Gn9RVaiNhshrSQr/5xaFsCc3IOO0BOPm1UHXwVOYq8Rtw/+uVKVoQ71nTUNsaBLZRm7NPAzd/NbyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr68lvOn9DCf514AKI7LyCRlrB3yOn2BHmaDPBFqZCUBtVKgAv
-	fusPyUpiL40mR47J0J5ZgdCef0TLh38DIr9mNrwOdSJKttG3TPHlEmZ9PJLBjeE=
-X-Gm-Gg: ASbGnctYHtMFL17bl3osW933QvCrRXNNXHk7yPOTyn2hZGYebv1TwFSIFEIzYEvwRW7
-	CJKKraaK3Vzym6ypiLm6gSGL7sDPY25m2e1Ebf/SR+UlOr5vmpHUUuOx1T3+90IlPnGFVAibuW9
-	BLhOxOYiUgLAt+zBOuwwCwCuFJcNs7OWswMMPZxuqOmwfZuY8O1kFcgxFhY+qi+kPVM30PZ9Hgk
-	1N6F+o7RDWNyAVHwrBiB78BdRMySDbm8Sry/aezz2bB6IXKERFGgLrHROPjScR6RxlPY2Zzclg2
-	OiYwsBeZz+k6rjsSAPXQMks05ftVfWzkJmYSSvKbPPcpAEZJ10nhk/xLoZhmUzfeAMXryUDV6fV
-	aou5CTPNwZGgWvA==
-X-Google-Smtp-Source: AGHT+IHvIXoWOEJAFV3lyqgBCQOJHcXtSBhnnOdBt6HMvtpC+Tt/kkwfHs6YQPcxgJ3cj6OF3TBQUA==
-X-Received: by 2002:a17:907:1b0d:b0:aca:a161:f113 with SMTP id a640c23a62f3a-acabd20d1b6mr291567366b.33.1744294726336;
-        Thu, 10 Apr 2025 07:18:46 -0700 (PDT)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce711fsm278311266b.169.2025.04.10.07.18.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 07:18:44 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so156302566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:18:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUqPS8JGrYoYqZUItuuAdOiq9l5eEHoQYtg3K3ebyraQs90j3Qbk7pQl0PeBI7RoEj/WXh17IzF5oKuSFU=@vger.kernel.org
-X-Received: by 2002:a17:907:7f0d:b0:ac7:3323:cfdc with SMTP id
- a640c23a62f3a-acabd123a89mr274752666b.10.1744294724513; Thu, 10 Apr 2025
- 07:18:44 -0700 (PDT)
+	s=arc-20240116; t=1744294732; c=relaxed/simple;
+	bh=w73Z+SWToipvwY0ppQE3GKDc1Wy8J1qem7rYPsqoNEg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lEyxVEbNQ5INpXSw4GoBas6lIuP/LsomWEvtNEqtZRW/wiMLoV37m6tb1UN2VSSAJOWDfYTcptndSucE8efROWyDGsYW70AfEnLJeG8oin+a60qX67o3i2cuuKCileHEQ3rH0sdl/8KNX7tkT7w79BWtrgWnFUHZoVTIRMjVzzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CZW/ZaMG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CZW/ZaMG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744294729;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y7asJtLNtRy2Pycw2tJgzfoU3bLUAEvPjbye8iIV0Ho=;
+	b=CZW/ZaMGlSuYMEO8b+aR0RGvZPtCHzZWoSnq3pTL7F4MzvPpksa+d7Gb9Ymz2/TpIqWllw
+	AiMSUs9VBVQ+i+J5DwY536IZHhvame1wUhMFgT8j1+3M8TUWVAbrWq9epFAFoFjZ5T0e6Y
+	0//UaqDXaT7wQ8x2OwnR1cDNI/VtB9s=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-316-KVd3xlw3Mi6xop4H04o7hA-1; Thu,
+ 10 Apr 2025 10:18:45 -0400
+X-MC-Unique: KVd3xlw3Mi6xop4H04o7hA-1
+X-Mimecast-MFC-AGG-ID: KVd3xlw3Mi6xop4H04o7hA_1744294724
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6359619560B3;
+	Thu, 10 Apr 2025 14:18:44 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.190])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6CFEA1801A6D;
+	Thu, 10 Apr 2025 14:18:42 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: kuba@kernel.org,
+	davem@davemloft.net,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Networking for v6.15-rc2
+Date: Thu, 10 Apr 2025 16:18:31 +0200
+Message-ID: <20250410141831.46694-1-pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409153650.84433-2-ajones@ventanamicro.com>
-In-Reply-To: <20250409153650.84433-2-ajones@ventanamicro.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 16:18:28 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVjxWais7O32zO-aX3tzVKA=aWUfttADn9OD+dxFp7HoA@mail.gmail.com>
-X-Gm-Features: ATxdqUF2BhrEGJtMhKie_nWpHtZyJHSNFLWdzfe8DuYkkq82db_rzyPZQc5ZMYc
-Message-ID: <CAMuHMdVjxWais7O32zO-aX3tzVKA=aWUfttADn9OD+dxFp7HoA@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Fix unaligned access info messages
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, cleger@rivosinc.com, 
-	alexghiti@rivosinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi Andrew,
+Hi Linus!
 
-On Wed, 9 Apr 2025 at 17:36, Andrew Jones <ajones@ventanamicro.com> wrote:
-> Ensure we only print messages about command line parameters when
-> the parameters are actually in use. Also complain about the use
-> of the vector parameter when vector support isn't available.
->
-> Fixes: aecb09e091dc ("riscv: Add parameter for skipping access speed tests")
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Closes: https://lore.kernel.org/all/CAMuHMdVEp2_ho51gkpLLJG2HimqZ1gZ0fa=JA4uNNZjFFqaPMg@mail.gmail.com/
-> Closes: https://lore.kernel.org/all/CAMuHMdWVMP0MYCLFq+b7H_uz-2omdFiDDUZq0t_gw0L9rrJtkQ@mail.gmail.com/
-> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+The following changes since commit 61f96e684edd28ca40555ec49ea1555df31ba619:
 
-Thanks, this gets rid of the bogus messages!
+  Merge tag 'net-6.15-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-04-04 09:15:35 -0700)
 
-Impact on SiPEED MAiX BiT:
+are available in the Git repository at:
 
-    -scalar unaligned access speed set to '(null)' by command line
-    -vector unaligned access speed set to 'unsupported' by command line
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.15-rc2
 
-BeagleV Beta Starlight:
+for you to fetch changes up to eaa517b77e63442260640d875f824d1111ca6569:
 
-    -vector unaligned access speed set to 'unsupported' by command line
+  ethtool: cmis_cdb: Fix incorrect read / write length extension (2025-04-10 14:32:43 +0200)
 
-Renesas RZ/Five:
+----------------------------------------------------------------
+Including fixes from netfilter.
 
-    -vector unaligned access speed set to 'unsupported' by command line
+Current release - regressions:
 
-MPFS Icicle:
+  - core: hold instance lock during NETDEV_CHANGE
 
-    -vector unaligned access speed set to 'unsupported' by command line
+  - rtnetlink: fix bad unlock balance in do_setlink().
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+  - ipv6:
+    - fix null-ptr-deref in addrconf_add_ifaddr().
+    - align behavior across nexthops during path selection
 
-Gr{oetje,eeting}s,
+Previous releases - regressions:
 
-                        Geert
+  - sctp: prevent transport UaF in sendmsg
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+  - mptcp: only inc MPJoinAckHMacFailure for HMAC failures
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Previous releases - always broken:
+
+  - sched:
+    - make ->qlen_notify() idempotent
+    - ensure sufficient space when sending filter netlink notifications
+    - sch_sfq: really don't allow 1 packet limit
+
+  - netfilter: fix incorrect avx2 match of 5th field octet
+
+  - tls: explicitly disallow disconnect
+
+  - eth: octeontx2-pf: fix VF root node parent queue priority
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+
+----------------------------------------------------------------
+Arnaud Lecomte (1):
+      net: ppp: Add bound checking for skb data on ppp_sync_txmung
+
+Chenyuan Yang (1):
+      net: libwx: handle page_pool_dev_alloc_pages error
+
+Cong Wang (11):
+      sch_htb: make htb_qlen_notify() idempotent
+      sch_drr: make drr_qlen_notify() idempotent
+      sch_hfsc: make hfsc_qlen_notify() idempotent
+      sch_qfq: make qfq_qlen_notify() idempotent
+      sch_ets: make est_qlen_notify() idempotent
+      codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()
+      selftests/tc-testing: Add a test case for FQ_CODEL with HTB parent
+      selftests/tc-testing: Add a test case for FQ_CODEL with QFQ parent
+      selftests/tc-testing: Add a test case for FQ_CODEL with HFSC parent
+      selftests/tc-testing: Add a test case for FQ_CODEL with DRR parent
+      selftests/tc-testing: Add a test case for FQ_CODEL with ETS parent
+
+David S. Miller (1):
+      Merge branch 'sch_sfq-derived-limit'
+
+Florian Westphal (2):
+      nft_set_pipapo: fix incorrect avx2 match of 5th field octet
+      selftests: netfilter: add test case for recent mismatch bug
+
+Hariprasad Kelam (1):
+      octeontx2-pf: qos: fix VF root node parent queue index
+
+Ido Schimmel (2):
+      ipv6: Align behavior across nexthops during path selection
+      ethtool: cmis_cdb: Fix incorrect read / write length extension
+
+Jakub Kicinski (4):
+      Merge branch 'fix-wrong-hds-thresh-value-setting'
+      net: tls: explicitly disallow disconnect
+      selftests: tls: check that disconnect does nothing
+      Merge branch 'mptcp-only-inc-mpjoinackhmacfailure-for-hmac-failures'
+
+Jiawen Wu (1):
+      net: libwx: Fix the wrong Rx descriptor field
+
+Kuniyuki Iwashima (3):
+      ipv6: Fix null-ptr-deref in addrconf_add_ifaddr().
+      rtnetlink: Fix bad unlock balance in do_setlink().
+      net: Fix null-ptr-deref by sock_lock_init_class_and_name() and rmmod.
+
+Matthieu Baerts (NGI0) (2):
+      mptcp: only inc MPJoinAckHMacFailure for HMAC failures
+      selftests: mptcp: validate MPJoin HMacFailure counters
+
+Maxime Chevallier (1):
+      net: ethtool: Don't call .cleanup_data when prepare_data fails
+
+Octavian Purdila (3):
+      net_sched: sch_sfq: use a temporary work area for validating configuration
+      net_sched: sch_sfq: move the limit validation
+      selftests/tc-testing: sfq: check that a derived limit of 1 is rejected
+
+Paolo Abeni (2):
+      Merge branch 'net_sched-make-qlen_notify-idempotent'
+      Merge tag 'nf-25-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf
+
+Ricardo Cañuelo Navarro (1):
+      sctp: detect and prevent references to a freed transport in sendmsg
+
+Stanislav Fomichev (1):
+      net: hold instance lock during NETDEV_CHANGE
+
+Taehee Yoo (2):
+      net: ethtool: fix ethtool_ringparam_get_cfg() returns a hds_thresh value always as 0.
+      selftests: drv-net: test random value for hds-thresh
+
+Toke Høiland-Jørgensen (1):
+      tc: Ensure we have enough buffer space when sending filter netlink notifications
+
+Tung Nguyen (1):
+      tipc: fix memory leak in tipc_link_xmit
+
+Vladimir Oltean (2):
+      net: phy: move phy_link_change() prior to mdio_bus_phy_may_suspend()
+      net: phy: allow MDIO bus PM ops to start/stop state machine for phylink-controlled PHY
+
+ Documentation/networking/netdevices.rst            |  10 +-
+ drivers/net/ethernet/marvell/octeontx2/nic/qos.c   |   5 +
+ drivers/net/ethernet/wangxun/libwx/wx_lib.c        |   6 +-
+ drivers/net/ethernet/wangxun/libwx/wx_type.h       |   3 +-
+ drivers/net/phy/phy_device.c                       |  57 ++++++--
+ drivers/net/ppp/ppp_synctty.c                      |   5 +
+ include/linux/netdevice.h                          |   2 +
+ include/linux/rtnetlink.h                          |   2 +-
+ include/net/sctp/structs.h                         |   3 +-
+ include/net/sock.h                                 |  40 +++++-
+ net/core/dev.c                                     |  11 +-
+ net/core/dev_api.c                                 |  16 +++
+ net/core/link_watch.c                              |  28 +++-
+ net/core/lock_debug.c                              |   2 +-
+ net/core/rtnetlink.c                               |  17 ++-
+ net/core/sock.c                                    |   5 +
+ net/ethtool/cmis.h                                 |   1 -
+ net/ethtool/cmis_cdb.c                             |  18 +--
+ net/ethtool/common.c                               |   1 +
+ net/ethtool/ioctl.c                                |   2 +-
+ net/ethtool/netlink.c                              |   8 +-
+ net/hsr/hsr_device.c                               |   6 +-
+ net/ipv6/addrconf.c                                |   9 +-
+ net/ipv6/route.c                                   |   8 +-
+ net/mptcp/subflow.c                                |   8 +-
+ net/netfilter/nft_set_pipapo_avx2.c                |   3 +-
+ net/sched/cls_api.c                                |  66 ++++++---
+ net/sched/sch_codel.c                              |   5 +-
+ net/sched/sch_drr.c                                |   7 +-
+ net/sched/sch_ets.c                                |   8 +-
+ net/sched/sch_fq_codel.c                           |   6 +-
+ net/sched/sch_hfsc.c                               |   8 +-
+ net/sched/sch_htb.c                                |   2 +
+ net/sched/sch_qfq.c                                |   7 +-
+ net/sched/sch_sfq.c                                |  66 ++++++---
+ net/sctp/socket.c                                  |  22 +--
+ net/sctp/transport.c                               |   2 +
+ net/tipc/link.c                                    |   1 +
+ net/tls/tls_main.c                                 |   6 +
+ tools/testing/selftests/drivers/net/hds.py         |  33 ++++-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    |  18 +++
+ .../selftests/net/netfilter/nft_concat_range.sh    |  39 +++++-
+ tools/testing/selftests/net/tls.c                  |  36 +++++
+ .../tc-testing/tc-tests/infra/qdiscs.json          | 155 +++++++++++++++++++++
+ .../selftests/tc-testing/tc-tests/qdiscs/sfq.json  |  36 +++++
+ 45 files changed, 649 insertions(+), 150 deletions(-)
+
