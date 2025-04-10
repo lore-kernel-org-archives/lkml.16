@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB85204086;
-	Thu, 10 Apr 2025 06:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED03204086
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:40:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267231; cv=none; b=oHNbFegFakdv5ptz2hjNQpZb3IeUm4BlvTv/cRZBEoPrTWYtoSpjH3WBZ4gi9H8yqwXzhfyjmCSdo2ZlykSx4sbE1uIO4ZUfY4Hhzjcwfr5hHCzrtduaCNy7L2U+3JTUoo3CRO8y7Qu8RirBEzX3McPVPMQpY0SQHm2M0rd8yn8=
+	t=1744267239; cv=none; b=uPTOuMoNZIh3iYyG5m+D8T2nPuOrGiTC3EpBgJ7gHq5sj8flG+l9HGFBcsou/aD8P+O6cIsmJxNdpV+mKMkFwH8qM4LV5gQPlvms0a+0nStVY94eAb2vFNSFpEmiwJN/OAH9Pn1FREiDWuUnxi0E4xHJc41hFPax6RDd94n4pxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267231; c=relaxed/simple;
-	bh=hIrIzISFokOzyuHO5ayNIza6AlGr5DkwM1e92dAAE2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ld6nYBA1yBM/ruCxxJb6npDbup3AwP72yJytW5Lww5CqwFfMf4MDmYgqJiUWTUFkEfztAvWsF7fXT16AcCJWh/K1aHqkINJy+/KOEEOorcyd6hHpWj1/ZmyTsLckTQQ+QyIAAF75RqeFIPBn7VMTAo3+Lw/JMs4TbO2vw2ImtgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ej1Zai1Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744267239; c=relaxed/simple;
+	bh=hRdqL+1LC2dQsAas1joXReQ92Tt1faK5vyWCOwb5DZs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=f/8tdOHcMAHtnQlRGk/SmVr5zYzRFef2yEfjRGmmaZhAfBczJR/ywGmsY1/Zl4SRHh9CXdGZoiZsgjBq9tWvONN1KoZbEJpTV9PoKKae3IWdhIMjr0et6tATNnF3lciQUzEL3otALr+WaSHSV3p4/d5S5a8e8+Gmf2Xud6TQlFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAgMKsqc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ej1Zai1Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F84BC4CEDD;
-	Thu, 10 Apr 2025 06:40:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAgMKsqc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74181C4CEDD;
+	Thu, 10 Apr 2025 06:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744267230;
-	bh=hIrIzISFokOzyuHO5ayNIza6AlGr5DkwM1e92dAAE2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ej1Zai1YttQ06yOc6v3zdnUZYvEFWXJrVClrHT1ZQummIb2GUBXGA1wB9ELRMN6Lz
-	 mGRfCbth9VDTacPbP4RDiTG1wZQGu/gSVxdxS8mIgWLrGW08OF5yz3LHdUZcPzx+BE
-	 6ye/x9HxOplyiqeQLEOY7Vml2MSxYqiJGJmCcDBrCHqaOo25kVuH7vrZAdobNwAQIl
-	 oemdhfF5sN8erOUFTxwOvzMtPLz8GWy6/IwmclwIwftQUQieFj9P51c3crthoRV3nj
-	 2nUwxZ5pFrhWA50A/bGumIiQ6Cg2DO75nC5agKObJGIOUAw0Su3poPac9pY12BHSgY
-	 Gi4HfPwL/DsUA==
-Date: Thu, 10 Apr 2025 08:40:28 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: "kyrie.wu" <kyrie.wu@mediatek.com>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, kyrie wu <kyrie.wu@mediatek.corp-partner.google.com>, 
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 02/12] dt-bindings: mediatek: Add mediatek,
- mt8196-jpgenc compatible
-Message-ID: <20250410-new-zippy-elephant-54bbcb@shite>
-References: <20250410063006.5313-1-kyrie.wu@mediatek.com>
- <20250410063006.5313-3-kyrie.wu@mediatek.com>
+	s=k20201202; t=1744267238;
+	bh=hRdqL+1LC2dQsAas1joXReQ92Tt1faK5vyWCOwb5DZs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=cAgMKsqcbBCzRDS9LSQv4BiryjBBDuDFcbfaiirtafO14PbN2nw85d1n/FS4+7dTY
+	 Wi86b8nkNiu32D4sKO/fSGOQ59tXWBBgUGOEXdX0f/1HcC0LIs1P/1G1uAEN8ZpLGy
+	 kQkI2bQVzIKSavdGlHeiPC4BwMXYKVNOEXLsALUKpeLHaTZ/OxDdXeWF/c2CUub5/q
+	 m7lGXL9+TNpT+4I4Qk/TyNNNc6yIgR1FpvqIjH/r0fwJgHCQTqMtd2iopPDtWXoFDp
+	 9k2f888VKl55vNgUvCqGnuJ6kEmPH0J+VBykn9G3RPNsqIR45p9o5SvK3wXSuqVbtb
+	 t4TUouETH+s1w==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: yunhui cui <cuiyunhui@bytedance.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, Song Shuai
+ <songshuaishuai@tinylab.org>, linux-riscv@lists.infradead.org, Nick
+ Kossifidis <mick@ics.forth.gr>, linux-kernel@vger.kernel.org,
+ =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>
+Subject: Re: [External] [PATCH v3 2/2] riscv: kexec_file: Support loading
+ Image binary file
+In-Reply-To: <CAEEQ3wmb37Y6gOn0cC53DMJgQopcD4pf38c83AexFv+Pj7Er3w@mail.gmail.com>
+References: <20250409193004.643839-1-bjorn@kernel.org>
+ <20250409193004.643839-3-bjorn@kernel.org>
+ <CAEEQ3wmb37Y6gOn0cC53DMJgQopcD4pf38c83AexFv+Pj7Er3w@mail.gmail.com>
+Date: Thu, 10 Apr 2025 08:40:35 +0200
+Message-ID: <87jz7s4izg.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,24 +49,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250410063006.5313-3-kyrie.wu@mediatek.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 02:29:55PM GMT, kyrie.wu wrote:
-> Add mediatek,mt8196-jpgenc compatible to binding document.
-> 
-> Signed-off-by: kyrie.wu <kyrie.wu@mediatek.com>
+Hey Yunhui!
 
-Same comments.
+yunhui cui <cuiyunhui@bytedance.com> writes:
 
-Also: missing media prefix in subject.
+> Hi Bj=C3=B6rn,
+>
+> On Thu, Apr 10, 2025 at 3:31=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kern=
+el.org> wrote:
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with 'git log --oneline -- DIRECTORY_OR_FILE' on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+...
 
-Best regards,
-Krzysztof
+>> +       kbuf.buffer =3D kernel;
+>> +       kbuf.bufsz =3D kernel_len;
+>> +       kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
+>> +       kbuf.memsz =3D le64_to_cpu(h->image_size);
+>> +       kbuf.buf_align =3D le64_to_cpu(h->text_offset);
+>
+> It is necessary to ensure that the kernel entry is aligned to
+> PMD_SIZE; otherwise, BUG_ON() in setup_vm() will be triggered.
+
+Indeed, and text_offset is that [1]. FWIW, the text_offset name in the
+Image has always weird/confusing to me.
+
+
+Bj=C3=B6rn
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/arch/riscv/kernel/head.S#n47
 
