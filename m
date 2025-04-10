@@ -1,216 +1,121 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2745E204C3E
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A45204C17;
+	Thu, 10 Apr 2025 06:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267793; cv=none; b=QFxO5fCWMJpOIsItdenkBWi5JHgO71hz/l9vjJq/H8CcmBwroS8X2chAsAiiBb5Hc6wiT99mf/viRIOPUqHct76ohX3/ZNmRC2RZnR74raRwh75tt2aAqyf4WJ+n8yV/vFP1EIZKxUIJqdeIOleCv09aOt7gvLIHp/QRRqUeCzk=
+	t=1744267795; cv=none; b=tmVdem4xzTk3dZlGHcYphB9nJGvuyT+3FVPTMGtDl54o/aIgz3XcZiX5PcXLxk3iYVGoBpkQ4Gr1L4ujkx0EKI/DumhOWajk0usEqBJzVx/D/gGnoR7Quf3jTahVvYVKaOpKj//L3aCizqrv/VXbsKX3k7L8L7NQImbhwKBEOmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267793; c=relaxed/simple;
-	bh=qKsDk9EZ2dacQJ71qnkeU1d5QGUNiU0xLXDxuP55mBQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qyrtslNFuo0ITvbe83c/SoQ7ciTdX+ZQ6bDN3OP/GQhqtdDaS6cKE0pb6Z05MtGdjefDgoOu8dYNX8bYKIMUjbWgs4sibHqPZ/m/UC/XXCgqY2I9l34LDpMYZBraZYf7Qsf284+6ACppYjvRDev3ehWEXnNNsdZSRdAGJkgNDZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YdTw5jaV; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744267795; c=relaxed/simple;
+	bh=4MJSk39sy9UrQBNk5KWmQcjTHvyHa4DM84YIW+K0a9w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YV1m1OxWtEsmCN7fQqKfpvqWA7h+1fSWPUMS4NOlFeLTEU+0Rwtw21cEVAMFFJNYuy+7uTMqVI8ntUbajd0k52YJtMguBN+dtKoioWVLkYKPt0RsPeVC09PHd8N55OH/flM+mtvMue3B7rfCXrCysySfK7Ze6eLdDkgAxEzPVx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=MLjz7XME; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YdTw5jaV"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2d0a742df27so441280fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:49:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744267791; x=1744872591; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FpF7wEE+1cJWx9zAtKf9QlygCmnNGJM9CNsxuBDedRk=;
-        b=YdTw5jaVbVvFDS+IIkiX5jXkIPFo9OSWKYMWyeu6FGDMlZO3wR/C3EkZmLkGpI4sAF
-         cMaONnpmZiqZzp+v6Ck+pFBivMkJX3+gr5/x+0oLtyl6F2nKAmU+QKdPUqNWo8WQOwm+
-         FBB0C8hMTOMdQz1lKqlnz0sethzBRjW1TBKI65ydbdTEtH9/le2M0iHBX2Ft6OrnsKHo
-         L+Rc2C4OkaVaYiAa8b6qMNPvV2CLT/iuGjBv5u+Mb2ea2REKDLFFdmh8kWAd5p0Nov7f
-         ZP3/Tk/6WiNifD16eKQM3qfkHJtL00CFl1OdWaViDMKzlx7rI4uumbPHFCoxwAx8mA4D
-         U6kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744267791; x=1744872591;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FpF7wEE+1cJWx9zAtKf9QlygCmnNGJM9CNsxuBDedRk=;
-        b=lOA5fHm+RTEmCEGlexuktUjH/eOGpZCadRVpuGFI6Qn7Gwv8LoBjZf+rpcPBwc4yEH
-         6WaZ8vlRhZvq/m+uOq2oiH6ga35t8tHysYfvwyMHPFLOL2H4h1kdmAiJamotJZDc0exg
-         G8/Ka9xwWmvt2UOu1xZT0H28EiVKZOtifAdDo4PjqG97/LRC+/+pzDyMi1IWzT8JtUEv
-         46VpXEAxIvRbyXMo/vfUi4tTI0r2sI0AQuS/His1+8Dl9aR5MQcP49GywVafnLH4awAI
-         aQv3Q1JWPerJzBgAip3rPzBbw1BLUc06eZ5LEAQnnnR3w6+YEEubbMasrQ/f4P1lZxAF
-         8J8Q==
-X-Gm-Message-State: AOJu0YwEfgHh4o2vPlf0Bl4+FJwBe24MrUntYnS6Bewq55VppTPCmxAo
-	pGjg/8V8Frz6jJsaBsxX6qyOUz0Ldl3feC28xt3180OcgGD1vkjCQKwS/eiEpmHVvmbtNBC2f9l
-	p60NJ9c9ikDmo9FIo3zjVVyXki3mkDp0apEF2WA==
-X-Gm-Gg: ASbGncvW7ZTpP2VsqYPaAdH1pFc/XI/YVa1btCPbhfVXQmLSsOf1VIJ/BbGwbJoY2ys
-	dBxavvr0W2hV3M/P9mkCe7Q8pFTTAHHeGPim4yrbIZAt5eSeOlfMyKxtSFWVzb3CN2OdZGKkSp8
-	DYVJipFPcP0uDfvsc539DHBp4=
-X-Google-Smtp-Source: AGHT+IHI4FgOoH6eOg0ztL2Lx7hiXdosqXiiUD+d8J9IOEiCubchzZoLqMtVD0Mmvo3sJz+QQ7r84CVnm0uFw++DJDA=
-X-Received: by 2002:a05:6871:4009:b0:2c4:1b1c:42c3 with SMTP id
- 586e51a60fabf-2d0b3a2a298mr929589fac.9.1744267791101; Wed, 09 Apr 2025
- 23:49:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MLjz7XME"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:389d:1fcb:c0f8:ff7c:208d])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCE24EE4;
+	Thu, 10 Apr 2025 08:47:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744267674;
+	bh=4MJSk39sy9UrQBNk5KWmQcjTHvyHa4DM84YIW+K0a9w=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MLjz7XMEEMsQ43axbfJu8EMOKH8a82VRBNtsvieoLwx5oyvUuli3mZSNOgd/MDWdo
+	 IE9kCLfOdsPFauS93FzE58KEQIxtPZtt2h1zY/w5cuGA9uklxhERuo3lB6aiMnJgag
+	 qK2BlzBiVV/ojrV/uNKZJR+Feug8KN5nrP2f/Dn8=
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+Date: Thu, 10 Apr 2025 12:19:01 +0530
+Subject: [PATCH v2 3/6] media: ti: j721e-csi2rx: Fix source subdev link
+ creation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
- <20250305130634.1850178-6-jens.wiklander@linaro.org> <Z-JOPgcWlpTlskgd@sumit-X1>
- <CAHUa44GjpHT5Nqo+Ar5jNYNPV-YJQYpLTCf=7oJ1o0VjP-t0nA@mail.gmail.com>
- <Z-ucuPzwz4IqVTgb@sumit-X1> <CAHUa44FpsCVrbwj1=nsJVJFVJSF1kzKdWAkAMXRu6EdLrLvh8g@mail.gmail.com>
- <Z_To9V-JOKZ7ChhE@sumit-X1> <CAHUa44EGWuVPjoxpG-S66he=6dkvkwzxNewaGKVKXUxrO41ztg@mail.gmail.com>
- <Z_ZtDQQY4eouqBh8@sumit-X1>
-In-Reply-To: <Z_ZtDQQY4eouqBh8@sumit-X1>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Thu, 10 Apr 2025 08:49:39 +0200
-X-Gm-Features: ATxdqUEvXiuy3pdj5yJylN_i-qNjZAR_HHoPy2N2W57yI_8PinKhMCxfS6kRFGI
-Message-ID: <CAHUa44GFzG8dr1Kbapbjy77c-wJb4gQVVom24eLLueOK=gCq=A@mail.gmail.com>
-Subject: Re: [PATCH v6 05/10] tee: implement restricted DMA-heap
-To: Sumit Garg <sumit.garg@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250410-probe_fixes-v2-3-801bc6eebdea@ideasonboard.com>
+References: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
+In-Reply-To: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>
+Cc: Devarsh Thakkar <devarsht@ti.com>, 
+ Rishikesh Donadkar <r-donadkar@ti.com>, Vaishnav Achath <vaishnav.a@ti.com>, 
+ Changhuang Liang <changhuang.liang@starfivetech.com>, 
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jai Luthra <jai.luthra@ideasonboard.com>, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1962;
+ i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
+ bh=4MJSk39sy9UrQBNk5KWmQcjTHvyHa4DM84YIW+K0a9w=;
+ b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBn92n3zvxxTycjjaPdDsUjo15N3YY4sZsMUtUWQ
+ SvLj/g5ib6JAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ/dp9wAKCRBD3pH5JJpx
+ RTLwD/9n+E3J4ejn7WDOa55/9mtuSlcMLtbtLAUPeNTLFlDHhX05WxElNTFMRX2SWIVs2yzzajB
+ XOacNBHTUuXUk0Aqjcl1x/BUMIcgpJrkoSetolyEspEZNaFQHf4EywLIl5DCSWmbPVBLT1XcMe+
+ YEOcQPz7OJMcd7d9xEKr5I+MuC/UGMFJa2ajz9bHHEyhxfHmQUcE3Y6AkxShyu/XhaAU5b8/DON
+ yXkwbMnvMbgt5LfGGlpUrG6LS/SOtdmju5AtT00Ubu0SSyoNFbsU5Z1sqPh7Vyz9HxnEPtWo0ll
+ P3nx9Ff1VLlMSpHsYMKljfTbbw9rdf9wQhG13VurjtFeXvNeapjTDKy53AU7THDji2wGiT3Eccz
+ OcPFRpKCKdUS9NlZofLwpWvzUvaejKgz2XBrTKWIxJnFDGH6HY5rPBLSH4ciRhDRD8KPAUhsVen
+ FoBDF/K5D3EAFzimXxQhplWeKYSojhw2lEVZEne/X80doNzj2OLRMKY3CIwgBYdxlBT/wvOAuVx
+ w9azpPeQlKgwj5QQTJWtYpWic2OnAJkje+IfFrFbH1LohTHQsVNS9NteNshtgYQnauNr1Q3xL3S
+ dk4MnifEMOIbyfxGUkkVtlsKfoA8+4vL6mvYZknRkjBTTmdnPYKC+VUGJv3v8zbe+Oke3yo7tHG
+ QKDo9Nq59HrJkbA==
+X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
+ fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
 
-On Wed, Apr 9, 2025 at 2:50=E2=80=AFPM Sumit Garg <sumit.garg@kernel.org> w=
-rote:
->
-> On Tue, Apr 08, 2025 at 03:28:45PM +0200, Jens Wiklander wrote:
-> > On Tue, Apr 8, 2025 at 11:14=E2=80=AFAM Sumit Garg <sumit.garg@kernel.o=
-rg> wrote:
-> > >
-> > > On Tue, Apr 01, 2025 at 10:33:04AM +0200, Jens Wiklander wrote:
-> > > > On Tue, Apr 1, 2025 at 9:58=E2=80=AFAM Sumit Garg <sumit.garg@kerne=
-l.org> wrote:
-> > > > >
-> > > > > On Tue, Mar 25, 2025 at 11:55:46AM +0100, Jens Wiklander wrote:
-> > > > > > Hi Sumit,
-> > > > > >
-> > > > >
-> > > > > <snip>
-> > > > >
-> > > > > >
-> > > > > > >
-> > > > > > > > +
-> > > > > > > > +#include "tee_private.h"
-> > > > > > > > +
-> > > > > > > > +struct tee_dma_heap {
-> > > > > > > > +     struct dma_heap *heap;
-> > > > > > > > +     enum tee_dma_heap_id id;
-> > > > > > > > +     struct tee_rstmem_pool *pool;
-> > > > > > > > +     struct tee_device *teedev;
-> > > > > > > > +     /* Protects pool and teedev above */
-> > > > > > > > +     struct mutex mu;
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +struct tee_heap_buffer {
-> > > > > > > > +     struct tee_rstmem_pool *pool;
-> > > > > > > > +     struct tee_device *teedev;
-> > > > > > > > +     size_t size;
-> > > > > > > > +     size_t offs;
-> > > > > > > > +     struct sg_table table;
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +struct tee_heap_attachment {
-> > > > > > > > +     struct sg_table table;
-> > > > > > > > +     struct device *dev;
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +struct tee_rstmem_static_pool {
-> > > > > > > > +     struct tee_rstmem_pool pool;
-> > > > > > > > +     struct gen_pool *gen_pool;
-> > > > > > > > +     phys_addr_t pa_base;
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_DMABUF_HEA=
-PS)
-> > > > > > >
-> > > > > > > Can this dependency rather be better managed via Kconfig?
-> > > > > >
-> > > > > > This was the easiest yet somewhat flexible solution I could fin=
-d. If
-> > > > > > you have something better, let's use that instead.
-> > > > > >
-> > > > >
-> > > > > --- a/drivers/tee/optee/Kconfig
-> > > > > +++ b/drivers/tee/optee/Kconfig
-> > > > > @@ -5,6 +5,7 @@ config OPTEE
-> > > > >         depends on HAVE_ARM_SMCCC
-> > > > >         depends on MMU
-> > > > >         depends on RPMB || !RPMB
-> > > > > +       select DMABUF_HEAPS
-> > > > >         help
-> > > > >           This implements the OP-TEE Trusted Execution Environmen=
-t (TEE)
-> > > > >           driver.
-> > > >
-> > > > I wanted to avoid that since there are plenty of use cases where
-> > > > DMABUF_HEAPS aren't needed.
-> > >
-> > > Yeah, but how the users will figure out the dependency to enable DMA
-> > > heaps with TEE subsystem.
-> >
-> > I hope, without too much difficulty. They are after all looking for a
-> > way to allocate memory from a DMA heap.
-> >
-> > > So it's better we provide a generic kernel
-> > > Kconfig which enables all the default features.
-> >
-> > I disagree, it should be possible to configure without DMABUF_HEAPS if =
-desired.
->
-> It's hard to see a use-case for that additional compile time option. If
-> you are worried about kernel size then those can be built as modules. On
-> the other hand the benifit is that we avoid ifdefery and providing sane
-> TEE defaults where features can be detected and enabled at runtime
-> instead.
+We don't use OF ports and remote-endpoints to connect the CSI2RX bridge
+and this device in the device tree, thus it is wrong to use
+v4l2_create_fwnode_links_to_pad() to create the media graph link between
+the two.
 
-My primary concern isn't kernel size, even if it shouldn't be
-irrelevant. It doesn't seem right to enable features that are not
-asked for casually. In this case, it's not unreasonable or unexpected
-that DMABUF_HEAPS must be explicitly enabled in the config if a heap
-interface is needed. It's the same as before this patch set.
+It works out on accident, as neither the source nor the sink implement
+the .get_fwnode_pad() callback, and the framework helper falls back on
+using the first source and sink pads to create the link between them.
 
->
-> >
-> > >
-> > > > This seems to do the job:
-> > > > +config TEE_DMABUF_HEAP
-> > > > + bool
-> > > > + depends on TEE =3D y && DMABUF_HEAPS
-> > > >
-> > > > We can only use DMABUF_HEAPS if the TEE subsystem is compiled into =
-the kernel.
-> > >
-> > > Ah, I see. So we aren't exporting the DMA heaps APIs for TEE subsyste=
-m
-> > > to use. We should do that such that there isn't a hard dependency to
-> > > compile them into the kernel.
-> >
-> > I was saving that for a later patch set as a later problem. We may
-> > save some time by not doing it now.
-> >
->
-> But I think it's not a correct way to just reuse internal APIs from DMA
-> heaps subsystem without exporting them. It can be seen as a inter
-> subsystem API contract breach. I hope it won't be an issue with DMA heap
-> maintainers regarding export of those APIs.
+Instead, manually create the media link from the first source pad of the
+bridge to the first sink pad of the J721E CSI2RX.
 
-Fair enough. I'll add a patch in the next patch set for that. I guess
-the same goes for CMA.
+Fixes: b4a3d877dc92 ("media: ti: Add CSI2RX support for J721E")
+Cc: stable@vger.kernel.org
+Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
+Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+---
+ drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Cheers,
-Jens
+diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+index 6d406925e092660cb67c04cc2a7e1e10c14e295e..ad51d033b6725426550578bdac1bae8443458f13 100644
+--- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
++++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+@@ -53,6 +53,8 @@
+ #define DRAIN_TIMEOUT_MS		50
+ #define DRAIN_BUFFER_SIZE		SZ_32K
+ 
++#define CSI2RX_BRIDGE_SOURCE_PAD	1
++
+ struct ti_csi2rx_fmt {
+ 	u32				fourcc;	/* Four character code. */
+ 	u32				code;	/* Mbus code. */
+@@ -427,8 +429,9 @@ static int csi_async_notifier_complete(struct v4l2_async_notifier *notifier)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = v4l2_create_fwnode_links_to_pad(csi->source, &csi->pad,
+-					      MEDIA_LNK_FL_IMMUTABLE | MEDIA_LNK_FL_ENABLED);
++	ret = media_create_pad_link(&csi->source->entity, CSI2RX_BRIDGE_SOURCE_PAD,
++				    &vdev->entity, csi->pad.index,
++				    MEDIA_LNK_FL_IMMUTABLE | MEDIA_LNK_FL_ENABLED);
+ 
+ 	if (ret) {
+ 		video_unregister_device(vdev);
+
+-- 
+2.49.0
+
