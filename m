@@ -1,222 +1,121 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2069.outbound.protection.outlook.com [40.107.21.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB5D283CAF;
-	Thu, 10 Apr 2025 14:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744296676; cv=fail; b=YVA6ZfMrxSbp4/68yaOHy4rP9ztPhlgfjVconeIisNgexMiuVbepjtAPGfqVKR/xGtgg73/zXNrlnXfsosDyimvY5eUt8XUQ4z55bjPPUGy5+HBRvugi/2o5D18Ph3UCgIw+D5W6p8I9YqLkCGKBejRj7/FaBjXc8bR1N8l1OEE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744296676; c=relaxed/simple;
-	bh=tMM9YBF3S7iefeNAkt4gRGF+YAi+Su0esCO/YLtL2tI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UV+g2PORWptf+vlOQImE87DvXgh5tkXidG0rew1udGzTe70mSYdsHX+OA8Sh61SgMfBhM1y68sFAa4sEPp8m6kH/xSh3aTM0I2fPlYm8Dx4uzABe5xcT6L9Cy/M8KXVrLJaBS7GdCUt8pnRdnp22eqbuZexhmqVjwE4Ob2K1fGU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=H1BlZ+Ha; arc=fail smtp.client-ip=40.107.21.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7567A1DDC1D
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744296724; cv=none; b=ufTvbOjNdIJwXs+qAVtW6Q3C39X1zieGTkiwin11QfAB/fl7aUIhJ5oXu3x67qlcHpFsdmmoNBmmv+6iYKI01cvDb/gOyLC+y5PH98sRbY1KSd03bzosVH4KGXZowr5FrAqPbbJwQJDlAZqsKo/e5NKoqwuzLlXKBWRyACtbkCo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744296724; c=relaxed/simple;
+	bh=eBi8FrMYdAv96WqoDBdECWOvbUZG2lDDGziG85MEw5U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hnm7qdzfscFkB1IbqRbYprGLv4VmUt7tSM9QvtvC7LOHafuUf3bmcGLDphBI3OF5/5v4C5nTveAxICUo/xMS76Q40ErJ+Cl9UPc07mQz9WbNTT4UA95wlnA+WZw1KdH90rn94puPPmx3VShTRWctnQg8qhdoMbb5iiMt3LOaIac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CcX2t6FD; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="H1BlZ+Ha"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bqxPWXhZbSa9otXHxEUV3NPoi4XcgpHroKkUEgywUlmCplrX4Y6KVaRh3q7IeIJlh9GelMsfI6orhCvoRPzu3s48AuASRg1Dbqv5piYAebB1N1b7PLUusrAcCQAxIxajG5zTRyND8QXSDUaF1SDzfGd1M+VxyNwn3ET9iuMUdbpTX+BWqcvaXKDST9KauRMrG1pIub9wDFnX9isK37e62elz1BSwcJm0/4+XvIE3ehdFm88xIfyTGmMNRC8pk4guImBcDB82WeglKn5s9yChKCJau86xWh8OjBuG/wtSOAONrAZ5pg+rgNnmP22VVdJUmOLBFiwQBLPM02CJLjJq+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tBcOcZq6nvwAUFOhGPFgTVMrk2YbR1K0/NVCkSNcEmg=;
- b=KmNsQxGmkErDbp3mkzb/vd2276NLCKUCYJ4iROt5jL0Fi/OcWfYWI+Xn29Hgz/HfLn3evNWffYHRRgnJ4/q5goRvy/zvwDCBhOaygzagibgaQ5Dhl9atGBDdYDwPpYJ1eLNPoglIF/B1yyMntV2jqME1PrnM4KmPNlxtyCEDUxMhUPFiYxETkcGpSP+XGj9a5wSQJnIMwRsSM+QXtYPmTE2l4isRszD1FZjw3iLZ/SQDHBi8MqMTUOVO5emXsuDxNbmb/dZpJ7WyGmweFNdG2UAV3wOiiRJLQa2I+m8qcC0xre6SaMnlnijiGYyjAxj/qd4LSzsN93vODDroNypdQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tBcOcZq6nvwAUFOhGPFgTVMrk2YbR1K0/NVCkSNcEmg=;
- b=H1BlZ+HaLqWiZggq99wZbkHbZo+23IgZCrhgqREZ/+9S1r49H0fuSjoQNk0XRyYd94LrFhEjobUhg1d34qpn9G+lByBjCu14L5TEbDoVqigpazq0HGwXA14PR6jjRpT0eWo/Bo+jz+n8/fFopkf/rx/gnTAjNVaBt7p/WCwUa0oy1r2FL13fbGMq1HXo4nvzklfUB8Mkh/s4JRP+k26mfqxmrt0BiwMOwaVD1t2cUTDPsG9kRH79dtUZVy8RKfbDG8x0RJwLyYiCU3S4o/BM6+V59IMsazNuPtcOXr3HypltG/xn5eGGdBaaSGQk6n8hgpBFroBjOf022yMZV/bxlA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU0PR04MB9251.eurprd04.prod.outlook.com (2603:10a6:10:352::15)
- by GV1PR04MB10752.eurprd04.prod.outlook.com (2603:10a6:150:203::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
- 2025 14:51:10 +0000
-Received: from DU0PR04MB9251.eurprd04.prod.outlook.com
- ([fe80::708f:69ee:15df:6ebd]) by DU0PR04MB9251.eurprd04.prod.outlook.com
- ([fe80::708f:69ee:15df:6ebd%4]) with mapi id 15.20.8606.033; Thu, 10 Apr 2025
- 14:51:10 +0000
-Message-ID: <652aa23b-ba12-42c3-94b7-8d0bbe548aec@oss.nxp.com>
-Date: Thu, 10 Apr 2025 17:51:06 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: rtc: nxp,pcf85063: add 'no-battery'
- property
-To: Frank Li <Frank.li@nxp.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, s32@nxp.com, imx@lists.linux.dev,
- Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
- Enric Balletbo <eballetb@redhat.com>, Eric Chanudet <echanude@redhat.com>,
- Larisa Grigore <larisa.grigore@nxp.com>
-References: <20250410082548.3821228-1-ciprianmarian.costea@oss.nxp.com>
- <20250410082548.3821228-2-ciprianmarian.costea@oss.nxp.com>
- <Z/fZww9TDLhm66O3@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-In-Reply-To: <Z/fZww9TDLhm66O3@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4P190CA0022.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d0::14) To DU0PR04MB9251.eurprd04.prod.outlook.com
- (2603:10a6:10:352::15)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CcX2t6FD"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-601ff283d70so256978eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744296720; x=1744901520; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2gOno/gJ7gBboQpb02wlzMcv67wZeVwPKwITP1UuvCY=;
+        b=CcX2t6FDAT3zaHCpVPUAKdb+3fQrfnbsxHYaR9nWt8/Zj8DySNDbG4YEdxI1RRiGyQ
+         YDaRZh7wj+KMqBsY1q7rUfL0fXJkv0Dyk5/VxYKHJTIVLpw7IpCO4H2roKi57mVMNI9c
+         dQ6iHr3QIB+nD1TokGB2lQrdFzX+rCpvN7GoS+iy5/+1YTdQxS11333qG2jphgbwr2Of
+         ENRF4zJLCeZ0dgwjzLdCTTrgSUZqkufMQ1qK1cs9uharIzmJikNB/7jnVYnt+ZjsBPvG
+         wh+MdU+xTf4m+9gRZZm9apaDqUL6veM0uQGcdVyGTdx/Uh+GjuI6UgHs+BaeFV9xaM5s
+         tC0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744296720; x=1744901520;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2gOno/gJ7gBboQpb02wlzMcv67wZeVwPKwITP1UuvCY=;
+        b=a4a4ke7nxMrurrapICdOhEuQTY1sBK5xTvqSQ3rnjUmWX8VfJBZjiwj7opYtBu0/vJ
+         g8cPPA+2cdjwKSXsWBS6JbMiZzSzdBKFK8ew9bDqKhtWbBgjm9pqZAj2MQkXomyX/Br+
+         St9mT9YkUTFSElRDRTvwYHCbP9gxVbV8hQTHNfvV9bQPeODAfabX4sVhXRuxhXrGilqr
+         OH3VGF+itof6RLe39xbBXRTYjlAHQfvlF8ttBKfwT8SccOnEBDMAMlux3C2aVG5Ox3A9
+         KTdn1NJ/U2f1D2RlTWD6cp8pBjqqzLHIwfSbJ7eiDVucGlLwJ5nAs3rcWVt2H5LoFEsQ
+         O2yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiVTeEodAAyE3UKGpi2GmMMpeWjEc6KvPiUON1VfF2uA5T2sDz4SvtGXXqIxt5X7gddSrZvyryBU+woVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNc98Tw/k2ciYFAjoY2dVbuiVjsCBZt96yRPpfYq3H3G+W0nGV
+	iOrzsrI1qJ3O0Mm7X0sCpeIVWNAydZOlmI7r9HkaqH0X7gzYs0NDw03Wp8LVRQpnawys5vXzQz9
+	SiJM=
+X-Gm-Gg: ASbGncsI9jqJuA3IZd8V2Z6rJ1/l6cobUU6lWhXGAjn64JkksVDrYrhianUIP2CJuWT
+	1mr3zqw+uTYpAdwL44MCva58NtbO/FRmM+xHNPc0bH/TI2gDindXPDy8ZLu7AawMEnRE+ylPrIg
+	B5Fuzk26dyglcWsfTLwI7zw689xCBhj1q8sgGsD+oHRwCjyVUk3y8vdVJHEXWnvMCfK34CwyLXJ
+	MXbQzDH7LPOjwrYDuF98MkTdzaB9+LpBFRtu/0RKAXcZlgpa42VASRIc2im58+PtPiWBbTpBBmn
+	4ZFQIS77zz6winCuR6M0nrPTRCf9hwjjzniUSVoGanVtUzTI+/4xQlqppYwg0qMU2rvShbiRiPo
+	7gg==
+X-Google-Smtp-Source: AGHT+IFUJXtIwbiWLX/m7VjN4bLSRvII3p6HjstMTq0XFlrXhNxKjwC2cdba/PqsU5xVZ2Oqe4rO3Q==
+X-Received: by 2002:a05:6820:2d04:b0:604:2ac:840a with SMTP id 006d021491bc7-60466c47874mr1397703eaf.6.1744296720499;
+        Thu, 10 Apr 2025 07:52:00 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6045f523066sm557756eaf.14.2025.04.10.07.51.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 07:51:59 -0700 (PDT)
+Message-ID: <1254dfd7-e872-4c65-bd17-8015e1b2eba4@baylibre.com>
+Date: Thu, 10 Apr 2025 09:51:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9251:EE_|GV1PR04MB10752:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a9dac1b-683d-46eb-f13b-08dd783f21a9
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?S1QzRWNQd003cjI4SlViZmNqRytQVDJxUTF5Q1JUdnpVbFpIc3o3emRtVzZU?=
- =?utf-8?B?S3FkYm5GRllqQjVYQzFtVE9vRnNiNmxqNENKQlZGV1M0cFZqc0gxKzRTL3Ir?=
- =?utf-8?B?MHZUcTVzNGs2alNmeDRHV21rM3lFRkFRUE9YNlM2K2RLS2FkU09ZWHhaRUZG?=
- =?utf-8?B?aE9vQWtsS2liWnVVVlVIT3hsZ2FwN1Y5bXM2QThqblVkalBzSmpmQlpyQ0Yz?=
- =?utf-8?B?TzR1bzhocXphUGpuTDlRUk1UN0FCMmxsNDVIQWRGcDhhNDcyVWViUEdTS3dr?=
- =?utf-8?B?ZytLaVc1ZjBYd3pIZk1BL1h4blVTL0FZbmhEcVFINHBvR3kzTlZDMGVpMkV3?=
- =?utf-8?B?bmg5OUhFbkNWUnVXVTRQVUQ5Y0RkUGlWT08va2UyWXZkc3FRN2ZhL1RYM1BR?=
- =?utf-8?B?S1FYMENXR2I0eGlmUGNTdjJoU2txaVY0STJpanJuemcvREFKV2paT3lGcTU0?=
- =?utf-8?B?bWFRM0F1VWY0MHo0OCt2Zm0yKzdvVVl0dGdIZzEzSTNyOW5xR1I4Um1uQXE1?=
- =?utf-8?B?aGRBcU9wV0taVldqVjhqWDFnSnZSak8yckI5M2dOUTVZTEN3MVo5dnNDRnY2?=
- =?utf-8?B?RW5WK01HQnhXRmFiYVFlNVdBYXFWRHY3bWozQnBmVWpQUU9sQnZHQWhaR0p5?=
- =?utf-8?B?djdRYkNzVm43RHI5cm52T0NpZkRFanI3OWhQbHZkWlRZNlhISW85dnAxWnVE?=
- =?utf-8?B?a0ZVQVIwckk4bm02TmxONE81RFpWaHFtcmYwVXQ5cVBQdklMa3EyWHNYWTd1?=
- =?utf-8?B?QVlhbHpockNBZHJvamlxSm1tQk85SFFBeWRoMkdxamRvRWpzNnBmU2ZGeW1Z?=
- =?utf-8?B?b1BVUVBPMGFVQ2xHTVZxZ0ZBNUpJUGI1VE5yNEtGd0JON3N3NG5VeDFrc0hx?=
- =?utf-8?B?UXd2cmJLdDBSYVptZ0RoZ2grNE0xcnV4Tzc0REZRL293dWw0eVFuUHV2Mm9T?=
- =?utf-8?B?aTNkMmRhU1d4cnhHeCtyLzZHNEpWREhrMW8vSkNJbWNnTkkwVW5KN1BOYXZj?=
- =?utf-8?B?T3dkdU1TY29rYzZRRG9CQ0tldlAza250d2JtTUZtQmJpdzdlTGQyZFRzUnZ0?=
- =?utf-8?B?ZmNqT21Ubm5kOW84dnQrcjY4SVJpM1FDMjBhem9mWk9FRUFnOEhIV25zNDBZ?=
- =?utf-8?B?Q1JmLy9rY3FNUlRoU1B5ZnF2ODF5UktZUnZzQS85akhUdi9tYWlIZWgwZ3hO?=
- =?utf-8?B?cFBUMmJoV0s2emxROGc1QXlJT1hOcU5KNVFDTVl5a09KMnBqcWlmZU9uYlZB?=
- =?utf-8?B?aENpQVBGTm9HMGZ5ZDI2RDhYWTZNNEdsZUNxNzlrQ2M3NS9OYXRUaHk1MnFW?=
- =?utf-8?B?am12ZnZTNWdNdVI4UkZ3b3JPcnhVRS9HaUxpcThyODU0bEdqZFh2dkdZcFdm?=
- =?utf-8?B?R09IM2dKRklNQTh1S2FpWVdDVUdoNlppQXRsdjdGOXNrZC9MMnJrbWs3SS9U?=
- =?utf-8?B?aTJ0QURhLzlBcG1RczBPbU4rRUswOHNtQktaNURTQ0JiUVhEUUpZU0RkTXU2?=
- =?utf-8?B?Q25rRUx6VlhCR1ZXUDZFeDJNaVF6Y1NMZjN0UndHY3J2TkllWlo4QncycUd1?=
- =?utf-8?B?QWZzQlMzZUhUTkNqNTBJR0Y3cDdBdXZCSDBheTBsaHVqbkVib0dKaS9jeHJU?=
- =?utf-8?B?T2tSMkY2dEE1QVRHazlwbVlCRnVqZnRoMXc1c2RBQ0NiMkcwdG91ZEVnVlRu?=
- =?utf-8?B?RnNRSm5XRVFsaVVxcUFhd1JFeVNra3RnM2s2b04rWUZTWlRKZnB6VDhjUzc5?=
- =?utf-8?B?M0dMZVd1L2d3Tjl1MzQvUWxNcXJDWTJBeDNJQmRsaXQzVldzbGl1RlV1Tjk1?=
- =?utf-8?B?Um5MQmdyQXRWWUVIS3hYS2daYzlGUzhiWkROT2JQZXoxOUJPZ3hqY01jVllh?=
- =?utf-8?Q?hdHFORhwHh5p0?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9251.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YmhWUDlxNTF0T0FUOXQ5aThuQjdnVGMySEpVMERVdmd5dTZXV0g4by9QYk0w?=
- =?utf-8?B?WmZ1bit3QmlMeEFvSU4wZnVEb2hLajZVZmlSNU96Mm1XNkg0dXFWY2VoUzhx?=
- =?utf-8?B?UmZacWsrYUYyRU5EcTYrZ0ZNL0lVb3BTTXFMeGF2MmFRc3RHYnZESnhFc2M5?=
- =?utf-8?B?ZTFqL3hNdVJ3dThObEpBaUEzZWdRUGRsU3BpdDlyWDZUbFgxUXJHdHBTMVVD?=
- =?utf-8?B?TXczcW4xUFpqOXJUV244V3RkZStWZVNnemNiZTFyN2o0S1N6dHlzd0IwdTZL?=
- =?utf-8?B?aWNHc3NmUlBkTGNXUnluUWpkK0FBT1IrK1lCQ2pFU0U2bmlTY1RTTkZ2Vngz?=
- =?utf-8?B?amlkUGpZemlYdUxqbGxtUm1INGRVbnd2aDFvaG0xQzMzWjJ3a3huMHVnOXhS?=
- =?utf-8?B?S2lHL3dqODgvR3Q0cFRrMXFmUEFrTlIra1FVNUI1emJvRDVFR2VRS3M0SC9S?=
- =?utf-8?B?SjB5TjV0MnA0MUVueHlBWGV4dzdaQk9kTGhFYm1VSDhKRmVOMkVxZjNVVndC?=
- =?utf-8?B?TXFwZk9EdUtLRFlWNXNQV2h3aXJhK0xsb2tSZzdBdlRLUFExMDhEdWxSaWhy?=
- =?utf-8?B?Y3RYQVY4MlhSSVp0OG9GU2ZCNnRVL2FXbVh1SjFUS0dneitaKzBDUjhMdldl?=
- =?utf-8?B?aS92cHZHNUZWanNQWFg5bk1zNmt1VzN1bm5wTlkyUVdyVEVaa1NnZk5iT041?=
- =?utf-8?B?Qjg3UzZHNkp5aG9YUVpQbzJBci9LZXdUaHEvV1ZWemlnM2U5aWZXKzYzb0k2?=
- =?utf-8?B?YnU4bHV5bE0rd3BhdzhVNDE3RjJFRjJ4MmZCNmxTQzJ3OE9jaDJ3TDdHVHBu?=
- =?utf-8?B?UVJEd0ZpK0lJdm56UVp5L3VTWWtHUllwQ0hzbEZ5SWs2b0x0cmZiaE1jZDdR?=
- =?utf-8?B?ZHFIKzBnYUhGM2pmeDJCdW9XZi9VUWhObDluaFBmY2ZXRlp6RG5TWWFmVlR6?=
- =?utf-8?B?QzFpNWhxQklpZEErNDYraytNVHcveDdzR1lnUFppR2I2U25LRDhaMkE5TzJ0?=
- =?utf-8?B?UHROdzZZTkE1eG11Qnp2akFQRmVPUEJFeVEzSWNhdWl1Y3VQNm5GZjZuWmhM?=
- =?utf-8?B?eS90dng3NVU3SDdhRk10SGhxRXpIUlpCeUdSaFdodkNKTFRBWnVEQW1mSTkx?=
- =?utf-8?B?SjBEb2hvek5ZZjFXdis1bUNZcnVwcU1pSTNYdnJSTEw3UmxrTm1JOFFFZDZi?=
- =?utf-8?B?ekp1cU1NenBzSG5uU0VPaStmMUNaUmlqVTVaYTVkM3NkK2NyblBaRTFPUHJB?=
- =?utf-8?B?a1lGc2lTN0lLYUtWd1VrU093V2JLeTcydUV5L0ZUYU5XTlVlS29MSTVSUTBi?=
- =?utf-8?B?MDhOT3pSNmh0UVFrbnhtYWVYU1IrZGwxQ2lRQjZFNm91T0ZzdWlMdllGNlE0?=
- =?utf-8?B?WFJGejg5SjVvSDRQQU5wNWdHenZHYUZKM2RIQ0gvMFNLQVRZM3RJQlNGakRj?=
- =?utf-8?B?cmhaZkVTMW16amJ6eDhQZTVPRllqbjFvZmxwcFpLZkhOcHdSelBUOEJJbi9x?=
- =?utf-8?B?aUg1LzQ5Tis4TFZuMjZzWXRvdmhLTUFqSkg0Ym9hU3pGbFdVbW00YW45R0NV?=
- =?utf-8?B?Q0RYcVlJcGNYc082Yk14ME4yci9iOTJlS3lBMFNrcjdmcVpndmJOYlFmWUlu?=
- =?utf-8?B?SWxzWnRUQWUrRXAySlYrVHBxejZ1K0o0YXNaS1FrVTFkVE1pd0E5ZDJiajdY?=
- =?utf-8?B?RWVVN3FlVnlQSng1U3FpSmhNeUFidFJPTGY1d1d2bVN3Rnl4SlBrUEVjMmNr?=
- =?utf-8?B?aTBWMmV0cHdNaE9JaHlZN3lPNmdxbWthSDA0RFVGeTNDd0tKUEROcXl1WVBS?=
- =?utf-8?B?Ujh5S0VUckRDRHNLYlpXZzFQREE5a0RycFRyeGVCSUNsN3NzUDFvR05mMGoy?=
- =?utf-8?B?bmVGOXlzU0tYWU1QQ3RRc015ZHg4TU4wdmpXTHF3VXkySEhaYUhsSklBZUZC?=
- =?utf-8?B?bFlVMVRQUS9DMjhnSnVFeGk4U2cyaVUxYUpVZ1g0WXJlV1ZJK0grRGx5Um1H?=
- =?utf-8?B?SEZZcm1rcWxITDhaSlhjY2FGWW84L2dhNHI5ejQ5MStFdWxQN1NLNmZwaHlo?=
- =?utf-8?B?YUdXOGJtZlF2amM2ekw5eFB3THV2N1lEWkR3by9pT1hRTmNBL00yZXQ3bnQr?=
- =?utf-8?B?WFc3ZnlNVG5wTjlaUzl0QUN6K2swUEtFbmZFZ09ZVSs1eEhtblNXR2QyeXhW?=
- =?utf-8?Q?dRBmkNj366uJmAb2qdsfcnc=3D?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a9dac1b-683d-46eb-f13b-08dd783f21a9
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9251.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 14:51:10.1237
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gGZ0HLP1geVBumMddaEXUe1uEiNlXaV1uxOTGl8YQmD5QxkPNPawuhsQFYaOW6O2R1/ToG03raziuQKyRZFDYZiD5BUJfLY5clMOA6LBGdM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10752
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: addac: ad74115: Fix use of uninitialized variable
+ rate
+To: Purva Yeshi <purvayeshi550@gmail.com>, cosmin.tanislav@analog.com,
+ lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409202945.205088-1-purvayeshi550@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250409202945.205088-1-purvayeshi550@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 4/10/2025 5:46 PM, Frank Li wrote:
-> On Thu, Apr 10, 2025 at 11:25:47AM +0300, Ciprian Costea wrote:
->> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
->>
->> In case the RTC is not linked to any battery, the oscillator will
->> be stopped at startup, triggering a SW reset command for the PCF85063 RTC.
->> For this setup, introduce 'no-battery' property which can be used to
->> manually start the oscillator.
->>
->> Co-developed-by: Larisa Grigore <larisa.grigore@nxp.com>
->> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
->> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
->> ---
->>   Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
->> index 2f892f8640d1..b342eb13fb2e 100644
->> --- a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
->> +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
->> @@ -36,6 +36,11 @@ properties:
->>       enum: [7000, 12500]
->>       default: 7000
->>
->> +  no-battery:
->> +    description: Used in case the RTC is not linked to any battery so the
->> +      oscillator is stopped at startup.
->> +    type: boolean
+On 4/9/25 3:29 PM, Purva Yeshi wrote:
+> Fix Smatch-detected error:
+> drivers/iio/addac/ad74115.c:823 _ad74115_get_adc_code() error:
+> uninitialized symbol 'rate'.
 > 
-> Can you use optional regulator such as, vbat-supply?
+> The variable rate was declared but not given any value before being used
+> in a division. If the code reached that point without setting rate, it
+> would cause unpredictable behavior.
 > 
-> Frank
+> Declare and initialize 'rate' to zero inside the 'else' block where it is
+> used. This ensures 'rate' is always initialized before being passed to
+> DIV_ROUND_CLOSEST.
 > 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+>  drivers/iio/addac/ad74115.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
+> index a7e480f2472d..26770c68e5fa 100644
+> --- a/drivers/iio/addac/ad74115.c
+> +++ b/drivers/iio/addac/ad74115.c
+> @@ -814,7 +814,7 @@ static int _ad74115_get_adc_code(struct ad74115_state *st,
+>  			return -ETIMEDOUT;
+>  	} else {
+>  		unsigned int regval, wait_time;
+> -		int rate;
+> +		int rate = 0;
+>  
+>  		ret = ad74115_get_adc_rate(st, channel, &rate);
+>  		if (ret < 0)
 
-Hello Frank,
+I don't see how rate could be used uninitialized since we are
+returning the error if ad74115_get_adc_rate() fails.
 
-Please disregard this patchset, as stated in the next patch review [1]
+Also, initializing to 0 would then cause a divide by 0 error
+if that value was actually used later in the code.
 
-[1] 
-https://lore.kernel.org/all/e64083ee-3374-4bdf-92a3-ce91e1402b13@oss.nxp.com/
-
-Regards,
-Ciprian
-
->> +
->>     clock:
->>       $ref: /schemas/clock/fixed-clock.yaml
->>       description:
->> --
->> 2.45.2
->>
 
