@@ -1,122 +1,205 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82E628FFCD
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B276128F959;
+	Thu, 10 Apr 2025 20:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744315541; cv=none; b=Xd66WLAedBbqdYJ2BZn8O1o1mfdSJ5/sLpVp0lcf83lVYlFpGqv70lViUKxLgkv1HzrDb1hjOUR6aZomywl3tb/8LtSqD7xMDZT62TgiPIvwiMoW0ZbBeTyga9ehVQVDx1zxXqOxFOxfof/9NN2gxcLfuMI9CuUokotPcuyIETU=
+	t=1744315563; cv=none; b=pA0/DJR5MQFURFs3j7ZTt9BOTC7zGymoS8ue/NHR4VPONO/AgLricp5PRMk/b25PbFkn+FO2unimf7B5epfn9g0sSWIP3HeDD5Biel4aJEUphHzhK1LeRp/45uR+qQK4/xW0oNH0KBoKE9Tl0R5JacmwgTnGtR3jCATNXe7VpN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744315541; c=relaxed/simple;
-	bh=kE0juyTpiJRFvY3bhCkubK6oqwgvbhtJEpj29J8UYsk=;
+	s=arc-20240116; t=1744315563; c=relaxed/simple;
+	bh=GhVrty9HJfGQuDS5fHu0ISRwINFnzYA1bc6t08RhMyU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EBdF/jA7n3va9f4Vy2TsRUIPHbu/Gn/BVEWHyC/gw1y55Gz0UjhuB4jRPuaaC7b8WWtenJZGW53jmHy/sWh+tkEwJR42zlv9WeurHLiXNGNFHKq+qoyTTpMv583ApEDa7fhORiekUS4mvONLrjfFSEwSdhTrE415lAvcjD2Wh8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IAvcKzSW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6ZHox5JjDuS/a4nvSsKu9dUSEhSW1L93hh398w/wWXl+wbHDDDHoCuoNlHuDo7ANd6mmIEAzbiAXMVE+vEXCTWyq9IQi5tjTWnjX2BQnHEvnCLeWKbMjxpu9CJi5it1HbtXW/nTY14TW0uW55sdynormLihASNh2yBkXsSL8hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNKYRqlD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IAvcKzSW"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AGWxj3014128
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:05:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=TXfF9vM+BoIBd/qesq5gNZSO
-	9HgKKIqscZ8pGO8kuqM=; b=IAvcKzSWfZBOeARWfvOqiUotdPXWOaEavfq48bcu
-	swGb2WHJy0XVTswakGO7TB8Y5YurgV5MqfYNZWaKeO2bHSXB61bGxbZAWFJwKSni
-	12xSCl9zI8WAs6X3dfXoB2LTJyRQAECKchgOtghHzMu6a3sd2pfbIh4jkoRrwaRO
-	mI2yFmw1TUikbGaNo+8SDHD1CisIXAy3RA5hs3rXL0XFHrV/kTDcwOZ2V0PglAFh
-	nM1MH3X8TChqnMWmCne+6B/JUYWeGqiiIyhIiYMaYnQ//9Mzlkt9tOcwBJWoCbq9
-	dHCgm8fGQxgZev94yn45I0mTzHSCKmMftZyp2fhKY+3dTA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbeg8q2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:05:38 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c760637fe5so250092285a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:05:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744315531; x=1744920331;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TXfF9vM+BoIBd/qesq5gNZSO9HgKKIqscZ8pGO8kuqM=;
-        b=GU4mfJW1ZWQIa7FocASRcMZYVIZNYXmqj9bEKJQAStvnmh8glW3uUDWsbR4jShCgLE
-         AOiCilQvtQLYq+3xkVnFospSSWizCzkzn7/q1tT4WnfvsZbfVka9TSIWykcKdjoaA1Oe
-         V0VD4xRNLlga3xQnUS6HZDsY+h4f8p2PgWpsMdZoWuViAac+5AOHYZkKo94Pzu+qmHql
-         AWwnGjjhtUk/xaAUR5LGjhZlDZcgjUEx6SptdbfA+MXDN0sSJKFgdheNqhuH33uaLyud
-         9kfF1bGZNvIg5sytR9ic/vrPTY58XQ4BWgHajSnFar7+KUZf+nt7ipcyqM93gIxQoW47
-         kRdw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7+9b/hDU6EQminFOS0ssuw5me+txKsmiuLJUxy6p74gRh3yhPP2cBqP9fxfHrfhkLva2IVURFHwAsQzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcgXXtj1s/guVK072rxKXR76fa2EwPSvsX6q7cQuJmRjNS8kip
-	vxtGMI9wEi0ysv0/mSor0NRryeNw+eufHblCnhDWzMm4zrRj2rShUbYMb7nlkxMLBhM0HOfnuf3
-	4O5pOw6f63D7UwrKYvh/s0+0Ipjc/GhVGinaaGKae0f6FQwGSayiIjjYMurrx934=
-X-Gm-Gg: ASbGncsK+TLPHoBhEu2EfXsEZChvzDgasM7RB1KATbMH00XC813GXso44CGsaXm74+1
-	kkZy77Ij2/DsZe92azOooMhEjr+0a+vFf6NRIh8ZuSaCY3Z9WIeqpLB8MOTm7f1QBi65pKGdWuD
-	SfcwQPcxIMqnREd5Wg5VynnO1pa62LcjvTH6OT9ktdhELgbSe3wKrdMRZ8XMm6l8q79UoOtGnru
-	H/aoX/5Y4zrVkhXSR6y245NTzkZq+mQaN4ED05oMsCMzQxFnOQybW7rt8SGGbXUU285BzYCmiTd
-	KIiMaZL8nPhClLFRA3T/Jh0wX0I74eiyVi+lG3NJvSTtKWbfAd3+C2o6vF1fTnccXdYVW1zSJOs
-	=
-X-Received: by 2002:a05:620a:19a9:b0:7c5:53ab:a74f with SMTP id af79cd13be357-7c7af1f32famr39462485a.39.1744315531620;
-        Thu, 10 Apr 2025 13:05:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNwwRD5+XOsvvXwA7FK0l1NN+2EkzlXU5C/nqu3FRHnxldNXsWpsj4tAqkeWZh4iuNHA2zcg==
-X-Received: by 2002:a05:620a:19a9:b0:7c5:53ab:a74f with SMTP id af79cd13be357-7c7af1f32famr39457385a.39.1744315531220;
-        Thu, 10 Apr 2025 13:05:31 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d52084fsm232846e87.255.2025.04.10.13.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 13:05:30 -0700 (PDT)
-Date: Thu, 10 Apr 2025 23:05:28 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
-        James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-        bvanassche@acm.org, bjorande@quicinc.com, neil.armstrong@linaro.org,
-        konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V3 2/9] phy: qcom-qmp-ufs: Rename qmp_ufs_enable and
- qmp_ufs_power_on
-Message-ID: <2hysso6n4f5tnyknmgne2r4wpy72j2taqwuncqdcwqqztr4g7y@a3scnple4tew>
-References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
- <20250410090102.20781-3-quic_nitirawa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNKYRqlD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CFFFC4CEDD;
+	Thu, 10 Apr 2025 20:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744315563;
+	bh=GhVrty9HJfGQuDS5fHu0ISRwINFnzYA1bc6t08RhMyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eNKYRqlDTAWKEHKtdq0pEqu38no2VewQOXZRNnql3Ss6qYIFdB6rOEXxGwUV8BpoA
+	 suTTXnChGt+8Or3OfDPjF3seQx2q/epTffhLeBH8JhwEdPOoh2j0rJbhT4ESytVaO9
+	 QrXHeBnHU71AvBmzR93JXveEqWAbrzkwNHnE02cX0od4Wyq9n9MFwoAGj3vZHJ0D6X
+	 DxJD9ErvumYOdiwsH+iKnRP37cUlAdx1o9ObYYEhT9NswR3DTz+2yrvuYlZtX0hV75
+	 V6+zOAiIGOMD8duJGjNmSwcaFWSpUek8Weobr6zAkhFiLhAY5+Q9cbLSPVLx9QJiko
+	 d07v03gCtDGwQ==
+Date: Thu, 10 Apr 2025 22:05:58 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
+	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org, 
+	Peter Ziljstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH] pidfs: ensure consistent ENOENT/ESRCH reporting
+Message-ID: <20250410-inklusive-kehren-e817ba060a34@brauner>
+References: <20250409-sesshaft-absurd-35d97607142c@brauner>
+ <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
+ <20250409184040.GF32748@redhat.com>
+ <20250410101801.GA15280@redhat.com>
+ <20250410-barhocker-weinhandel-8ed2f619899b@brauner>
+ <20250410131008.GB15280@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250410090102.20781-3-quic_nitirawa@quicinc.com>
-X-Proofpoint-GUID: jQV-l8TXIN9aBJ2fZO0Zrderl_V5grxV
-X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f82492 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=hpSo_X1Mu2B5NIsQaEEA:9 a=CjuIK1q_8ugA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: jQV-l8TXIN9aBJ2fZO0Zrderl_V5grxV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_06,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=738 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100146
+In-Reply-To: <20250410131008.GB15280@redhat.com>
 
-On Thu, Apr 10, 2025 at 02:30:55PM +0530, Nitin Rawat wrote:
-> Rename qmp_ufs_enable to qmp_ufs_power_on and qmp_ufs_power_on to
-> qmp_ufs_phy_calibrate to better reflect their functionality. Also
-> update function calls and structure assignments accordingly.
+On Thu, Apr 10, 2025 at 03:10:09PM +0200, Oleg Nesterov wrote:
+> On 04/10, Christian Brauner wrote:
+> >
+> > On Thu, Apr 10, 2025 at 12:18:01PM +0200, Oleg Nesterov wrote:
+> > > On 04/09, Oleg Nesterov wrote:
+> > > >
+> > > > On 04/09, Christian Brauner wrote:
+> > > > >
+> > > > > The seqcounter might be
+> > > > > useful independent of pidfs.
+> > > >
+> > > > Are you sure? ;) to me the new pid->pid_seq needs more justification...
+> >
+> > Yeah, pretty much. I'd make use of this in other cases where we need to
+> > detect concurrent changes to struct pid without having to take any
+> > locks. Multi-threaded exec in de_exec() comes to mind as well.
 > 
-> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Perhaps you are right, but so far I am still not sure it makes sense.
+> And we can always add it later if we have another (more convincing)
+> use-case.
 > 
+> > > To remind, detach_pid(pid, PIDTYPE_PID) does wake_up_all(&pid->wait_pidfd) and
+> > > takes pid->wait_pidfd->lock.
+> > >
+> > > So if pid_has_task(PIDTYPE_PID) succeeds, __unhash_process() -> detach_pid(TGID)
+> > > is not possible until we drop pid->wait_pidfd->lock.
+> > >
+> > > If detach_pid(PIDTYPE_PID) was already called and have passed wake_up_all(),
+> > > pid_has_task(PIDTYPE_PID) can't succeed.
+> >
+> > I know. I was trying to avoid having to take the lock and just make this
+> > lockless. But if you think we should use this lock here instead I'm
+> > willing to do this. I just find the sequence counter more elegant than
+> > the spin_lock_irq().
+> 
+> This is subjective, and quite possibly I am wrong. But yes, I'd prefer
+> to (ab)use pid->wait_pidfd->lock in pidfd_prepare() for now and not
+> penalize __unhash_process(). Simply because this is simpler.
+> 
+> If you really dislike taking wait_pidfd->lock, we can add mb() into
+> __unhash_process() or even smp_mb__after_spinlock() into __change_pid(),
+> but this will need a lengthy comment...
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+No, I don't think we should do that.
 
--- 
-With best wishes
-Dmitry
+> As for your patch... it doesn't apply on top of 3/4, but I guess it
+> is clear what does it do, and (unfortunately ;) it looks correct, so
+> I won't insist too much. See a couple of nits below.
+> 
+> > this imho and it would give pidfds a reliable way to detect relevant
+> > concurrent changes locklessly without penalizing other critical paths
+> > (e.g., under tasklist_lock) in the kernel.
+> 
+> Can't resist... Note that raw_seqcount_begin() in pidfd_prepare() will
+> take/drop tasklist_lock if it races with __unhash_process() on PREEMPT_RT.
+
+Eeeeew,
+
+        if (!IS_ENABLED(CONFIG_PREEMPT_RT))                             \
+                return seq;                                             \
+                                                                        \
+        if (preemptible && unlikely(seq & 1)) {                         \
+                __SEQ_LOCK(lockbase##_lock(s->lock));                   \
+                __SEQ_LOCK(lockbase##_unlock(s->lock));                 \
+
+priority inversion fix, I take it. That's equally ugly as what we had to
+do for mnt_get_write_access()...
+
+I actually think what you just pointed out is rather problematic. It's
+absolutely wild that raw_seqcount_begin() suddenly implies locking.
+
+How isn't that a huge landmine? On non-rt I can happily do:
+
+acquire_associated_lock()
+raw_seqcount_begin()
+drop_associated_lock()
+
+But this will immediately turn into a deadlock on preempt-rt, no?
+
+> Yes, this is unlikely case, but still...
+> 
+> Now. Unless I misread your patch, pidfd_prepare() does "err = 0" only
+> once before the main loop. And this is correct. But this means that
+> we do not need the do/while loop.
+
+Yes, I know. I simply used the common idiom.
+
+> 
+> If read_seqcount_retry() returns true, we can safely return -ESRCH. So
+> we can do
+> 
+> 	seq = raw_seqcount_begin(&pid->pid_seq);
+> 
+> 	if (!PIDFD_THREAD && !pid_has_task(PIDTYPE_TGID))
+> 		err = -ENOENT;
+> 
+> 	if (!pid_has_task(PIDTYPE_PID))
+> 		err = -ESRCH;
+> 
+> 	if (read_seqcount_retry(pid->pid_seq, seq))
+> 		err = -ESRCH;
+> 
+> In fact we don't even need raw_seqcount_begin(), we could use
+> raw_seqcount_try_begin().
+> 
+> And why seqcount_rwlock_t? A plain seqcount_t can equally work.
+
+Yes, but this way its dependence on tasklist_lock is natively integrated
+with lockdep afaict:
+
+ * typedef seqcount_LOCKNAME_t - sequence counter with LOCKNAME associated
+ * @seqcount:   The real sequence counter
+ * @lock:       Pointer to the associated lock
+ *
+ * A plain sequence counter with external writer synchronization by
+ * LOCKNAME @lock. The lock is associated to the sequence counter in the
+ * static initializer or init function. This enables lockdep to validate
+ * that the write side critical section is properly serialized.
+ *
+ * LOCKNAME:    raw_spinlock, spinlock, rwlock or mutex
+ */
+
+/*
+ * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
+ * @s:          Pointer to the seqcount_LOCKNAME_t instance
+ * @lock:       Pointer to the associated lock
+ */
+
+#define seqcount_LOCKNAME_init(s, _lock, lockname)                      \
+        do {                                                            \
+                seqcount_##lockname##_t *____s = (s);                   \
+                seqcount_init(&____s->seqcount);                        \
+                __SEQ_LOCK(____s->lock = (_lock));                      \
+        } while (0)
+
+#define seqcount_raw_spinlock_init(s, lock)     seqcount_LOCKNAME_init(s, lock, raw_spinlock)
+#define seqcount_spinlock_init(s, lock)         seqcount_LOCKNAME_init(s, lock, spinlock)
+#define seqcount_rwlock_init(s, lock)           seqcount_LOCKNAME_init(s, lock, rwlock)
+#define seqcount_mutex_init(s, lock)            seqcount_LOCKNAME_init(s, lock, mutex)
+
+> And, if we use seqcount_rwlock_t,
+> 
+> 	lockdep_assert_held_write(&tasklist_lock);
+> 	...
+> 	raw_write_seqcount_begin(pid->pid_seq);
+> 
+> in __unhash_process() looks a bit strange. I'd suggest to use
+> write_seqcount_begin() which does seqprop_assert() and kill
+> lockdep_assert_held_write().
+> 
+> Oleg.
+> 
