@@ -1,115 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A944281343
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7F13596F;
+	Thu, 10 Apr 2025 10:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744280328; cv=none; b=Mhm2TzZ+q1qTFsA1ABKHlLvC5cBpVwpo3QHJicpNN/RSw9IWXWpZIXLkbWNxzASY4HfzD8gmeNJlIBIobT46iWjijdBiHpwfyY8z41WIQZNaLgxH4Pgak8H38taFKwDIyYr9SyT9pdK+UdclnBSteSmtQpepkKeVv7c8JpqF928=
+	t=1744280415; cv=none; b=T1yeB80ZVJUPTO2ByXzH+Xgst3JyTF0xOlNvyc+ld8aQqCZAdvhdGs9GeJsWscyfrIyLrHHCTH81vGyRscGDtuZIJvKFY7BWpRR3Snirv+1WJtipx5/6fHojpnMcV4o/NKL/67QzVKfFYufcvRXg1hXnwN+G8wgZcF0xj8uGC3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744280328; c=relaxed/simple;
-	bh=jndh+/z2HYP9QEo+udB/3zkY+16/NOtoIm2dOXwTGYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HEdpkoUxw0P/LhdTg3WSR7gE5YG/nc/zZxmJRDzoG0I6a1T3cKMrg6Z+fEsqckjGmaKti4MstgMqelj2YB7prVpiMsXTlQwBvcAHbWEtltRMqyq4ue1iciAMVN/4j/6GwYkfTkBZgEXNyqcIdWcHYVxf4Mt8wQXg2mLiwX0jLII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2LVBxa9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2LVBxa9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744280326;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zvld6hg6NLmUVocdtsPZa6n4aYUdhPwJV0lCT2PJ1AY=;
-	b=A2LVBxa918ocMN19C6l6a/7wPLM4sjsDvHhsN7omtpYP9Q8cB094X40CB89KJIijzRLlvc
-	y9l2PlGKEpCcyC1xIOOOs/3ns8TkvH36YAXVXNaTUlaeAnPkB66xl/2Tx5BrlMv4ywDrJh
-	WK5CITubCgKWPM/NjHXeJNETdIILb9o=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-646-__dLQ8UxNYOK4UjUaC858w-1; Thu,
- 10 Apr 2025 06:18:42 -0400
-X-MC-Unique: __dLQ8UxNYOK4UjUaC858w-1
-X-Mimecast-MFC-AGG-ID: __dLQ8UxNYOK4UjUaC858w_1744280321
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17790180034D;
-	Thu, 10 Apr 2025 10:18:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.54])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DE0881808882;
-	Thu, 10 Apr 2025 10:18:37 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 10 Apr 2025 12:18:06 +0200 (CEST)
-Date: Thu, 10 Apr 2025 12:18:01 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org,
-	Peter Ziljstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH] pidfs: ensure consistent ENOENT/ESRCH reporting
-Message-ID: <20250410101801.GA15280@redhat.com>
-References: <20250409-sesshaft-absurd-35d97607142c@brauner>
- <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
- <20250409184040.GF32748@redhat.com>
+	s=arc-20240116; t=1744280415; c=relaxed/simple;
+	bh=STXnym/Nr2t8Lenz1RUY5A2v+n8iUqtKTitbeFBx2W4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QcEXfI/u2WZZ/GHpt+t125XvRfUYvruKQKOw6VyI91d+GfL1E1F7j5LGfoPFKiXxXZyFjU5YihgJoYfXmH5kFDNduElwyRumTKpyReug7Vitu7c15Lij/zT3PC1sfEX1r67OHTYK2ZYTJApPgabe3tWAN7PR9LeLWjCYFdDyon0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-525b44b7720so321049e0c.0;
+        Thu, 10 Apr 2025 03:20:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744280411; x=1744885211;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ODWzl5U+kYhA+n5JAsKOo52bKLUN4i9fElnwM1XhI38=;
+        b=YCREBFisHBkEK1tCrpLenxse1MzacjCJcEWj5tuYzM6fRcbBxGL+brteqvoj+xdHt0
+         xT18VYsHMasbyUPMhGQiFJUax4m6w5oyD8fLN0gS+0+NlqMs7sXjUG7Ee6VnKoDsiwgk
+         cCm0HA50x9ItrFPSVqtqH0OpBN/Dr0r0yf/98P8M48UOxtiF82cDyP7xhfHK7/1MexS/
+         QQx6e+D70RFhON3vYnyYnv6uzqIBeuA2TkVnJ84VVs9U3QFWNT/CQObUQrF//updUSmp
+         mtctc7j/2LslEdEnAzS1prze4qDGnLwPNh4RsZ026oa0va0W4qZ6AoR0uN/MX0agQNef
+         9mpg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/MQ1a+PR8BPLtCU7xLT1fSYQAhrp/oXRgA2S++j5BVDgTp8z3+2E+U3rgFS0Sq6vRHXM1pwjJng2H1j9r@vger.kernel.org, AJvYcCVNi20Tb0VFzr7qbR9lVsblHeFxugTlppjn8XL7aV4Qb9SWOzXYVcqITtnEW1oftRgMAbfzBrN+uRI1oMsx@vger.kernel.org, AJvYcCWRbBwLfmfX7DMEEhgLm1xBjk5XUgmDchf7BMaZG5c+Kn4/cdzUXTLAHl0r3CaO1+uV+4kdE7CLIUx5EA==@vger.kernel.org, AJvYcCXBAgNB/RkHkYDzlEYzJ6JRjFrFYjga4Bru/UYx/YI1Pa34k6vuP0ZjqsqTe6GYA5r0t5KNHqfsnRRFZZl1xEVM4U8=@vger.kernel.org, AJvYcCXjjWFgJ/G0oDNNj3xdGUIbk0s1/TErzm4VhlccI8ZL25co5qBfon970bgDb2Iz4zLQCQmq3ln1aDp4@vger.kernel.org, AJvYcCXw7yAqJ+RQIZPk9BvmEh2arJskelTyDG8i9wO3UVyglxJvaiRaR/Xpq1Rk3ycHkhC0jsN5H2/LLxeH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk6zohWV35bBgJnW/opL2TJ5A+Mk99X44CW71RG+8bEXZCgRXI
+	9G47JFhy/4t3z8z0Jttd1AVf9cy7nhAog2O0Y8cYn0PjfP/HXViFIVAGv8LSuEw=
+X-Gm-Gg: ASbGnctZGGyuw/JPmlxCfxO66Hex2RC1Jpg8j4t7KsaVcQj0pI8mR0OzQZBADBnABdV
+	840/kro23WzB5U3W1LWPSTdwqCl/4p48pBERQz7MCSy+qz2TVtvvqxkNI1S7abeiL1M5dV4LsC/
+	41tlsT7psNQncJh2S5xp7BMVvYGaqjHVHP8Y7ahaBTMZn/Pm2GM4efxJd7MUwPYZP8mrpyTaeTs
+	/USCuP9ueAsxgWQ6RVV588fBY8Bx4Bh9K0M0nciTXcWWI6fQ9JlFOBKr9CG/TJd6q+OUF9w7vft
+	pDobOOImLmfkkx6xIT5GdaXfQNebA3KFCn4elLd7EZtK4XPWiOXIQDp+zbmCKR4YKAtT9/lSn8U
+	NREU=
+X-Google-Smtp-Source: AGHT+IGDnrwd/pRhxXcBRW34jqcXglHIXgKQjOJdxR/uZPSFVzKz648FxnkB/QXrtYn+PgefePQdUw==
+X-Received: by 2002:a05:6122:168d:b0:526:483:95fd with SMTP id 71dfb90a1353d-527b50f5076mr1237693e0c.10.1744280411375;
+        Thu, 10 Apr 2025 03:20:11 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd4e8fdsm585458e0c.2.2025.04.10.03.20.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 03:20:10 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-86d3805a551so275105241.3;
+        Thu, 10 Apr 2025 03:20:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUfknW/C2QFw37QL4sTz1/kD3gMVukMgg5XeTO0u5rDU2iV+kd6Sgx1IbLbVcuIvFYwlQQEaVmbRCXZoYBtaKwjRoE=@vger.kernel.org, AJvYcCUk9jHNC3IoJcgpJrgkzDOZMaj0Rfv/mIh2zf9Wdw7JyH9ynjB9NGIf7v1SGTWO8xwQM04814cqqQj5@vger.kernel.org, AJvYcCVyr7p4jM1+7lWuu6Zfw1hV0vw90zOQs9Gejg5Pr+rcIS37XvGStfglrBl+KuPi4JjPeYGNERFKpHydEA==@vger.kernel.org, AJvYcCXU5pZpe7tC48VfA2BKf36gfjPeARnrziEfGZwM4VIhE3VdHdRQqhlaaAmLDP06LtRCgs+gxClAHVJcGq2X@vger.kernel.org, AJvYcCXpFnUxpwcjxX+wym6wHXh+xKV8vH6gO1AxwbYoS0kC+dwTpvZDdmwEFbGMCKgiHl3T6ycFBMEb0OwxVHL4@vger.kernel.org, AJvYcCXr0Xv0BQ+IR27Y7DJoX2rE9olMjVRTstT3CZtfgN8u/PN/6CNdi4zP9KOSKtF1ttT1WQjdukM0fCT7@vger.kernel.org
+X-Received: by 2002:a05:6102:3e8a:b0:4c1:86bc:f959 with SMTP id
+ ada2fe7eead31-4c9d34b2b55mr1523924137.8.1744280410407; Thu, 10 Apr 2025
+ 03:20:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409184040.GF32748@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407191628.323613-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 10 Apr 2025 12:19:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWRokrL3EPKQbhHhCL84h1fZ7L3LjM0gFw96iqv36EiVA@mail.gmail.com>
+X-Gm-Features: ATxdqUGjvQ5S18MOWEQVYhe-LHAQ30tmHpWeWOmzudY-_jg54YISF-DWnbivz3c
+Message-ID: <CAMuHMdWRokrL3EPKQbhHhCL84h1fZ7L3LjM0gFw96iqv36EiVA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/12] pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 04/09, Oleg Nesterov wrote:
+Hi Prabhakar,
+
+On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Christian,
+> Add pinctrl support for the Renesas RZ/V2N SoC by reusing the existing
+> RZ/V2H(P) pin configuration data. The PFC block is nearly identical, with
+> the only difference being the absence of `PCIE1_RSTOUTB` on RZ/V2N.
 >
-> I will actually read your patch tomorrow, but at first glance
+> To accommodate this, move the `PCIE1_RSTOUTB` entry to the end of the
+> `rzv2h_dedicated_pins` array and set `.n_dedicated_pins` to
+> `ARRAY_SIZE(rzv2h_dedicated_pins) - 1` in the RZ/V2N OF data.
 >
-> On 04/09, Christian Brauner wrote:
-> >
-> > The seqcounter might be
-> > useful independent of pidfs.
->
-> Are you sure? ;) to me the new pid->pid_seq needs more justification...
->
-> Again, can't we use pid->wait_pidfd->lock if we want to avoid the
-> (minor) problem with the wrong ENOENT?
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-I mean
+Thanks for your patch!
 
-	int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
-	{
-		int err = 0;
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-		spin_lock_irq(&pid->wait_pidfd->lock);
+Suggestion for improvement below.
 
-		if (!pid_has_task(pid, PIDTYPE_PID))
-			err = -ESRCH;
-		else if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
-			err = -ENOENT;
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -2304,7 +2304,6 @@ static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
+>         { "SD1DAT3", RZG2L_SINGLE_PIN_PACK(0xc, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+>                                                     PIN_CFG_IEN | PIN_CFG_PUPD)) },
+>         { "PCIE0_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
+> -       { "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
+>         { "ET0_MDIO", RZG2L_SINGLE_PIN_PACK(0xf, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+>                                                      PIN_CFG_IEN | PIN_CFG_PUPD)) },
+>         { "ET0_MDC", RZG2L_SINGLE_PIN_PACK(0xf, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+> @@ -2359,6 +2358,14 @@ static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
+>         { "ET1_RXD1", RZG2L_SINGLE_PIN_PACK(0x14, 5, (PIN_CFG_PUPD)) },
+>         { "ET1_RXD2", RZG2L_SINGLE_PIN_PACK(0x14, 6, (PIN_CFG_PUPD)) },
+>         { "ET1_RXD3", RZG2L_SINGLE_PIN_PACK(0x14, 7, (PIN_CFG_PUPD)) },
+> +
+> +       /*
+> +        * This pin is only available on the RZ/V2H(P) SoC and not on the RZ/V2N.
+> +        * Since this array is shared with the RZ/V2N SoC, this entry should be placed
+> +        * at the end. This ensures that on the RZ/V2N, we can set
+> +        * `.n_dedicated_pins = ARRAY_SIZE(rzv2h_dedicated_pins) - 1,`.
+> +        */
+> +       { "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
+>  };
 
-		spin_lock_irq(&pid->wait_pidfd->lock);
+Alternatively, you can replace the single array by a structure
+containing two arrays, one for common pins, and a second
+for V2H-only pins, like the common and automotive arrays in
+e.g. drivers/pinctrl/renesas/pfc-r8a7791.c.  That would get rid of
+the literal "- 1" (and the need for a comment ;-), and would protect
+against future mistakes.
 
-		return err ?: __pidfd_prepare(pid, flags, ret);
-	}
+Gr{oetje,eeting}s,
 
-To remind, detach_pid(pid, PIDTYPE_PID) does wake_up_all(&pid->wait_pidfd) and
-takes pid->wait_pidfd->lock.
+                        Geert
 
-So if pid_has_task(PIDTYPE_PID) succeeds, __unhash_process() -> detach_pid(TGID)
-is not possible until we drop pid->wait_pidfd->lock.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-If detach_pid(PIDTYPE_PID) was already called and have passed wake_up_all(),
-pid_has_task(PIDTYPE_PID) can't succeed.
-
-Oleg.
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
