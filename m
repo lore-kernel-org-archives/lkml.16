@@ -1,135 +1,223 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6049F1DFDE
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D54202C26;
+	Thu, 10 Apr 2025 07:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268732; cv=none; b=aMWEgwr40tuEeIzeo21O9aJ2TxeHYAJ9j67nl0avchQ7QnUb8ojD+5EvIK+kImg5vROknI6se4EahT+dUMBE+r9OHA3Tencdxd2cbVMAQr6H9HeURumXNKChEHdwIw4TYVLeFXcXjueOIdDXY8QtVu/6veDP4vlvKugR9tDrfRw=
+	t=1744268732; cv=none; b=FnAV4oOw4eqvCt0IYBFacVB+Ghqu+5cWa7yMrJ6J23VAzbsJz9oGSLE/i6VKHnhmDjQlo0J25asAO0xuWGHGYlPSARJSbdIse7qfEB+3urLF5W6+o5QHY4kBkSXrdB8BuZgrfwsRqw0d/NXTagUXHdbpqghAtOsXKqHUFToi5eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744268732; c=relaxed/simple;
-	bh=7hWJQdoCyi+3cNpW78Iin5tlyn8Ip64fOzSIxgSjWBk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VB0Wzmaa1ZjU3+jYJUOulZf2R8KCXRCmNnxAWJLG6xIYHr9yxlgOoDyEQdTQfo1+XmIJMErlZHaCDUmHwCugDPID/BlttczXz3tYpage8xQaLj6VbwzSUzufOBt4P55sCL0GhgOI4nmqgtUZ3vIpf6hOHQ7TZRkBD6uWdFqBsVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=fnXw6QHj; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+	bh=QJLmLJtRLDLbgdHLnpjmlHW2HiSNjA+XBSi5dv+F25Q=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Fk95ppDP6PpyJ1PlnMYR1+OGX9xoiOi/gn3fcSjsZ8YexnyKCXTkDgmDSwZ8J5ndxqC2Qe9UnGLpw36ZnLMnwUld+AczeyTlUHrFqtVV4rdYRtL0j5Y21+ISmkEqa81bjVHcBPP6ZEGX6jpWEPETzeuE2MpXSzP7osJiirvV46U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=US7F0PhH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yMMfquHO; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="fnXw6QHj"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3f68460865aso354546b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:05:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1744268728; x=1744873528; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r4B+r76KGyj9PQoVMZG+CNBPOS4MHHbIZygRDgwNdE0=;
-        b=fnXw6QHj2u8KQdkPlho7uMqT5bA2Gg54xWmGhCUumYXrBSwIEFxh/onxWcdkYWauHK
-         I2L+2edTObvFyts0V84FIq1J0CqMt43zO8tPD0UlAAgIMa73LuC8NMOV48JhUPE4rzBh
-         CksgZPPcyhXhy3T5I1fRyRJd4lckONrBRh9/nlf6GkFQksRp/ZJazwZWS51qn4zwRZNI
-         MRw2f/yksJ1HiSNPJLwa8cZO/7eDVaZIfBxA+BZRls6q60kEPfbHQG94yO9Cf/Ba9BkT
-         NUbZLwhdnG1gMDwsAV5jW18WI5KZT+BzaJnI9/GezO4xnYu0WvHJRJgOtORhQjj3Xh7w
-         NQww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744268728; x=1744873528;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r4B+r76KGyj9PQoVMZG+CNBPOS4MHHbIZygRDgwNdE0=;
-        b=JQiGzAoJKIYU2sJavvFOZemt7GTrdv5AN87qzX2ve7lphuVrTV9+u7u6d43Ai1ISrM
-         kg3TmylTkb0P9Zfx93GncRmrZKIvvViip5bHkHZFVeDxrtm4p/3rjQ3a98J6h9WNSSjt
-         46Z1eim5tZbiaEQ7VeayWRsNvgEDH6BnvOX1bDjXh/ksk3yXbIS3ZDB2iA5qRlJYlzT6
-         TZwzq5qf6Sx46gc1Bq60v2bmZ8rd9FCTyKHHpqo2nphYbIyLAL/2Wv5zcHa+u1EG3gIq
-         6cOvch3aTwtc++AI3RvEeRx27jb31rxx58piaSyFDr+9wYVfRaqRD/lQ25i7IEtmOPWg
-         GHfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhCOLBTwNsDIpDf5QdU8gw6LC5hPHPc4+H4EK0DhdOv9tqw16GiCLsnvNH0tJqGf6/zt4NC244PxTXYNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY2zCkSQUMgxeHQn7w8QLwFQF2mqp6gTl66GjaC8Ur2nh+oRhy
-	80ZV0RxctbeBDUjXmTNjGDMjJt1ccfmgjou+c+cR6ec/MxcG2m42KMcPmgy+3g==
-X-Gm-Gg: ASbGncsT5RLXUHtc5Sc7Ym8SviifsxoCz1eRk/9ASZwcELNbKBWbzCs6529cxvGQ+bF
-	KIH8EdNp8E3wg5vuu2qW8DEM18A9QJmGCZtwk1AAijScoFkJ+SUn66y36U1rDeJG12PIeisioaS
-	/AOW0jFEI3pMhZKqwBDBbpJLasx/GjJgwI3Lt01rCvI0Lswq0xwh21NyraBBfG3GqEk6QVCjlaS
-	Y0uNeS/PDYHZ8ydNxDlWXSKSqGoGVT5KyeyGqdZAx6wWZvN8+dhgWbLZV0bPtnipFZMA0nXk5Vh
-	BGcCopz9bPQ6cqng14Gl/WysSLa4tl9sr+O7hPT3sJEryR91ylICQnwFLtY=
-X-Google-Smtp-Source: AGHT+IE0G4eyDdJwnFSAO15PM4AGl0rNOflCYe5zhewyGprP1/yMke440QYr7XRmFAHXObEZEqUpLQ==
-X-Received: by 2002:a05:6808:170f:b0:3f8:acb4:8d8e with SMTP id 5614622812f47-4007bd5fb16mr847250b6e.39.1744268728298;
-        Thu, 10 Apr 2025 00:05:28 -0700 (PDT)
-Received: from aus-ird.tenstorrent.com ([38.104.49.66])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40076282ce8sm461369b6e.9.2025.04.10.00.05.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 00:05:27 -0700 (PDT)
-From: Cyril Bur <cyrilbur@tenstorrent.com>
-To: palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	paul.walmsley@sifive.com,
-	charlie@rivosinc.com,
-	jrtc27@jrtc27.com,
-	ben.dooks@codethink.co.uk,
-	alex@ghiti.fr
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	jszhang@kernel.org
-Subject: [PATCH v6 0/5] riscv: uaccess: optimisations
-Date: Thu, 10 Apr 2025 07:05:21 +0000
-Message-Id: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="US7F0PhH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yMMfquHO"
+Date: Thu, 10 Apr 2025 07:05:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744268728;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ax53kxwqMjFEtwiakcKVbHBR11PkxdEppVH9Bx1IDzk=;
+	b=US7F0PhHbuFVbt7bACLzDt8X6QedNby3V+WWQd7QJE/97PA3Qmwlxu6q6GIFLWSOCN4WQM
+	zO0uINhU7L/5D9kHZC6hgTgeVgFO0nc6glz1QAQhF0lA9kBlrrL0/7vZNIEp0b2Yengud6
+	HHXX7PAp2/oPsJXXy5uG3y11mzCRkjYuxhStXWHxjs3oOkFpY6QXyDi3pqbxkNfeACSp3r
+	3aaQ/pINefq9xIW/okQQvQZ/Vj2rZffeGKo9Ekf4YOdSXwIoKegGPpElXnwKvp4ZFaUv4i
+	m/eU5RMu2DirXXr+WjxCe3rmX6vCyX7Vekh+aGCtKZxVmzRlzJWU59/KP0iumA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744268728;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ax53kxwqMjFEtwiakcKVbHBR11PkxdEppVH9Bx1IDzk=;
+	b=yMMfquHO+eKcUb7YN7DxnYcxERbquNLrFh0YLQzg0j2ohLLNFH8wLNRBX117SB90Q+hOn4
+	b+x27xVcEVr72EAw==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86: Remove __FORCE_ORDER workaround
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Juergen Gross <jgross@suse.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Kees Cook <keescook@chromium.org>, Peter Zijlstra <peterz@infradead.org>,
+ Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250407112316.378347-1-ubizjak@gmail.com>
+References: <20250407112316.378347-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174426872208.31282.12151608220831424422.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-This series tries to optimize riscv uaccess by allowing the use of
-user_access_begin() and user_access_end() which permits grouping user accesses
-and avoiding the CSR write penalty for each access.
+The following commit has been merged into the x86/asm branch of tip:
 
-The error path can also be optimised using asm goto which patches 3 and 4
-achieve. This will speed up jumping to labels by avoiding the need of an
-intermediary error type variable within the uaccess macros
+Commit-ID:     a23be6ccd8b966ae2483bfc873720b2868ad63c3
+Gitweb:        https://git.kernel.org/tip/a23be6ccd8b966ae2483bfc873720b2868ad63c3
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Mon, 07 Apr 2025 13:23:01 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 10 Apr 2025 08:42:26 +02:00
 
-I did read the discussion this series generated. It isn't clear to me
-which direction to take the patches, if any.
+x86: Remove __FORCE_ORDER workaround
 
-V2:
-I've taken on this series as there isn't any response from Jisheng. No
-significant changes other than build fixes.
-- Fixes build breakage in patch 3 to do with not having used 'goto' keyword.
-- Fixes build breakage in patch 4 on 32bit not having declared __ptr in the
-  macro.
+GCC PR82602 that caused invalid scheduling of volatile asms:
 
-V3:
-Significant commit message rewrites.
- - Corrected the justification for patch 2
- - Better explained/justified patches 3 and 4
-Minor code changes for legibility and more comments
+  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82602
 
-V4:
-Fixed checkpatch errors
-Added a unsafe_copy_from_user()
-Added patch from Ben Dooks to save SR_SUM bit on switch
+was fixed for gcc-8.1.0, the current minimum version of the
+compiler required to compile the kernel.
 
-V5:
-Fixed mistakes in adding unsafe_copy_from_user()
- - Sorry about the noise
+Remove workaround that prevented invalid scheduling for
+compilers, affected by PR82602.
 
-V6:
-Reworded patch 1 commit message
-Patch 1 no longer clears SR_SUM, just saves/restores
+There were no differences between old and new kernel object file
+when compiled for x86_64 defconfig with gcc-8.1.0.
 
-Ben Dooks (1):
-  riscv: save the SR_SUM status over switches
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lore.kernel.org/r/20250407112316.378347-1-ubizjak@gmail.com
+---
+ arch/x86/include/asm/debugreg.h      | 12 ++++++------
+ arch/x86/include/asm/special_insns.h | 21 +++++----------------
+ 2 files changed, 11 insertions(+), 22 deletions(-)
 
-Jisheng Zhang (4):
-  riscv: implement user_access_begin() and families
-  riscv: uaccess: use input constraints for ptr of __put_user()
-  riscv: uaccess: use 'asm goto' for put_user()
-  riscv: uaccess: use 'asm_goto_output' for get_user()
-
- arch/riscv/include/asm/processor.h |   1 +
- arch/riscv/include/asm/uaccess.h   | 218 ++++++++++++++++++++++-------
- arch/riscv/kernel/asm-offsets.c    |   5 +
- arch/riscv/kernel/entry.S          |   8 ++
- 4 files changed, 179 insertions(+), 53 deletions(-)
-
--- 
-2.34.1
-
+diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+index fdbbbfe..719d95f 100644
+--- a/arch/x86/include/asm/debugreg.h
++++ b/arch/x86/include/asm/debugreg.h
+@@ -23,7 +23,7 @@ DECLARE_PER_CPU(unsigned long, cpu_dr7);
+ 
+ static __always_inline unsigned long native_get_debugreg(int regno)
+ {
+-	unsigned long val = 0;	/* Damn you, gcc! */
++	unsigned long val;
+ 
+ 	switch (regno) {
+ 	case 0:
+@@ -43,7 +43,7 @@ static __always_inline unsigned long native_get_debugreg(int regno)
+ 		break;
+ 	case 7:
+ 		/*
+-		 * Apply __FORCE_ORDER to DR7 reads to forbid re-ordering them
++		 * Use "asm volatile" for DR7 reads to forbid re-ordering them
+ 		 * with other code.
+ 		 *
+ 		 * This is needed because a DR7 access can cause a #VC exception
+@@ -55,7 +55,7 @@ static __always_inline unsigned long native_get_debugreg(int regno)
+ 		 * re-ordered to happen before the call to sev_es_ist_enter(),
+ 		 * causing stack recursion.
+ 		 */
+-		asm volatile("mov %%db7, %0" : "=r" (val) : __FORCE_ORDER);
++		asm volatile("mov %%db7, %0" : "=r" (val));
+ 		break;
+ 	default:
+ 		BUG();
+@@ -83,15 +83,15 @@ static __always_inline void native_set_debugreg(int regno, unsigned long value)
+ 		break;
+ 	case 7:
+ 		/*
+-		 * Apply __FORCE_ORDER to DR7 writes to forbid re-ordering them
++		 * Use "asm volatile" for DR7 writes to forbid re-ordering them
+ 		 * with other code.
+ 		 *
+ 		 * While is didn't happen with a DR7 write (see the DR7 read
+ 		 * comment above which explains where it happened), add the
+-		 * __FORCE_ORDER here too to avoid similar problems in the
++		 * "asm volatile" here too to avoid similar problems in the
+ 		 * future.
+ 		 */
+-		asm volatile("mov %0, %%db7"	::"r" (value), __FORCE_ORDER);
++		asm volatile("mov %0, %%db7"	::"r" (value));
+ 		break;
+ 	default:
+ 		BUG();
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 6266d6b..ecda17e 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -10,30 +10,19 @@
+ #include <linux/irqflags.h>
+ #include <linux/jump_label.h>
+ 
+-/*
+- * The compiler should not reorder volatile asm statements with respect to each
+- * other: they should execute in program order. However GCC 4.9.x and 5.x have
+- * a bug (which was fixed in 8.1, 7.3 and 6.5) where they might reorder
+- * volatile asm. The write functions are not affected since they have memory
+- * clobbers preventing reordering. To prevent reads from being reordered with
+- * respect to writes, use a dummy memory operand.
+- */
+-
+-#define __FORCE_ORDER "m"(*(unsigned int *)0x1000UL)
+-
+ void native_write_cr0(unsigned long val);
+ 
+ static inline unsigned long native_read_cr0(void)
+ {
+ 	unsigned long val;
+-	asm volatile("mov %%cr0,%0\n\t" : "=r" (val) : __FORCE_ORDER);
++	asm volatile("mov %%cr0,%0" : "=r" (val));
+ 	return val;
+ }
+ 
+ static __always_inline unsigned long native_read_cr2(void)
+ {
+ 	unsigned long val;
+-	asm volatile("mov %%cr2,%0\n\t" : "=r" (val) : __FORCE_ORDER);
++	asm volatile("mov %%cr2,%0" : "=r" (val));
+ 	return val;
+ }
+ 
+@@ -45,7 +34,7 @@ static __always_inline void native_write_cr2(unsigned long val)
+ static __always_inline unsigned long __native_read_cr3(void)
+ {
+ 	unsigned long val;
+-	asm volatile("mov %%cr3,%0\n\t" : "=r" (val) : __FORCE_ORDER);
++	asm volatile("mov %%cr3,%0" : "=r" (val));
+ 	return val;
+ }
+ 
+@@ -66,10 +55,10 @@ static inline unsigned long native_read_cr4(void)
+ 	asm volatile("1: mov %%cr4, %0\n"
+ 		     "2:\n"
+ 		     _ASM_EXTABLE(1b, 2b)
+-		     : "=r" (val) : "0" (0), __FORCE_ORDER);
++		     : "=r" (val) : "0" (0));
+ #else
+ 	/* CR4 always exists on x86_64. */
+-	asm volatile("mov %%cr4,%0\n\t" : "=r" (val) : __FORCE_ORDER);
++	asm volatile("mov %%cr4,%0" : "=r" (val));
+ #endif
+ 	return val;
+ }
