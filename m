@@ -1,81 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9536A2E62A7
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC306FB9
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744321138; cv=none; b=JSOrW3apuJkIQaL3HqOY7Sgv4OE2PAsv+R9SqJz8GH/AJHwE3T4Sm3EVaXwgCLLX7rSJk+MSfKIwzcN5FLDoPqL3GKPslZI8472XhkFd5iyiU9sY2D+N5CwoxDYZtA3cztTVjHyt1aP/vY644CYE9L8nWDO0ScWpdVEkzf40MmI=
+	t=1744321603; cv=none; b=YJD8IuhuYor0IIH3xZvSKPN/uLXYr5YiLwHpYoCxVZilVa8Jaz8YuhfKpdDoxPe6rhA2uMGu52JJTbOEixJp7nTPEQX6fKh8pFmxsQfn7wOgdHwReany+90hgPSwgVkwSqT7AmoOxKMCtnfMV8scPMdg/3GYPwiZ8dsTk9e6ag8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744321138; c=relaxed/simple;
-	bh=hrFcOVHTz7MnZUr3P6FUraxOAKvS571WZnT24JSMHfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=T4f/66UoQ3G2ecJaJpv7/P9cAOJGYka6ERK0q8aNBuvt03HczbR6TYK9RYFVvcY8goJ7Vz5vNsolO5L9gnjLKZ7cB4oCoN/AoyPrs2JJ9PHKSI0nkzsnvYtLQ3BWB4E9AoyceRDiEJSj5yD6efPEswrDrlLx1Ip9E1LIPbJVEDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKpMTKL8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744321603; c=relaxed/simple;
+	bh=zOgV6cFWWME+6OMyPM6xZIj8Q5wf1bgIP4T5JxozyVU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=b0+ux7FpQ88pj7NsE48n/17VqNuzLsLLQJrCelBSc1YW4+iRz0zP9t2Voxyv/893P7HDrGhzuqWA5Y8C6z6swcsQ7oqwxRkQPgV1gRp6Xf8Ehgl2j6KJ5tTzedgccHk/bzlihl8lZ4FFksElRkaBpYK7f4WZ9JRJ1GbpJc+o60g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZXM0QZ82; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKpMTKL8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76921C4CEDD;
-	Thu, 10 Apr 2025 21:38:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744321138;
-	bh=hrFcOVHTz7MnZUr3P6FUraxOAKvS571WZnT24JSMHfE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cKpMTKL8qJPF2UlJm9A+/2YPcUS3XT0pcegTOZ7eLqGV6tbY6KA82cidgfCkWftTp
-	 lgXM5yEV+HFaljX4V/dzR1paTMo76jPaGVZo2v8wzw/AWOrBHGxU5NsOudT7hpGm1b
-	 52DoWkQ67VTPtyZYKwEQLlExqqUsgpkzgKffQKpolgBaOIOsNImFq4Z899svvsDXeD
-	 bnIkr4uiVlCsRpcQNOVc8gB+1iktvumYvZLaoqhR77eeiYdq+VA7fRBLKNFf1Csho7
-	 plKoE/+9M+ByBZnGG6ZhmMDOX+q7UoL71WlLDQl9ubzmhoVIVL7bpJekL10vdkUtmU
-	 kwkpstGz9saPQ==
-Date: Thu, 10 Apr 2025 23:38:53 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>
-Subject: [GIT PULL] IRQ fixes
-Message-ID: <Z_g6bUBRCqegcA86@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZXM0QZ82"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af91ea9e885so1224524a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744321601; x=1744926401; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bePW1gPXhpZiNQfmRfdXBMgDPxsflce7ce13WuBvjOk=;
+        b=ZXM0QZ82CbYlOMBpZYdTmwawg4jfRc0bsm3rmw1cbV5qmxz1rtVqAU8JJiaxroZXoH
+         cbtkTiiiaHh8Uk8IPNY5Ad+wn3V7DX8Pj0Z2Sb+/Vm97xBuxDX/m9JSh2eUhw+SfOtgF
+         2LeUmTJKGc9Xn3y1itUrAG0nWi/0Jz+5TP+4CvQfbgG8OmK1HRPEdaVPLRKZYAEm2+HE
+         gJ9Wb15Wpu9Moe21ufsgYB7u4L13L4Mpv9EpwGJ7OAWuTtiEwg+r+FfcjgMq3GwFxX4I
+         b2OzPkJk1NUoIfE8gfJKbJ5+fpt/3YJw6V+10KOim8JV5Hmn9w8diCCgpN5YF7htN58u
+         3nvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744321601; x=1744926401;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bePW1gPXhpZiNQfmRfdXBMgDPxsflce7ce13WuBvjOk=;
+        b=c5Tr6dRcc9ndH6yMpUL42wIogp1o5hTFdQP/aqyMqv5lNwaRq1y/i6n1YNtot6UGJB
+         fAuG49u7nqfvsY0M2PXW06iUXbbtE2sQREy13MEpuCE++zTB9pwSWrAJVxv4YwrHZImN
+         YIpVbZYem6v0TDGjaJpt9OKreaun4W34CVkcR+YzfWFzYBexlG3B65Pajzq133NOfoyA
+         aNsYA/br7VooyaPx/4Q3Qi0RCtdW0MLZSUXg3RAc8/Hm6l3YlUPbbJgLiDK1YDvJS98e
+         CcRtXtjGPFguKCV47j4JWAbt/OO9fw4PGfjlImbxX7VK/AkLvODjUoSYtBizbhuhvn/+
+         xXOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQDRO9t6J6x8mAXWN04Nt+KZq5GDEJ+ApRDG2U017FeLZK9uIn2zjYTGsbgOUPuYcDPAct8K71k0pbp8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIzSevngfRWPApC3AVPodhFU6rI1X40xz1e5rCNYhkCBVk1sUr
+	sqaM0xw1TgkG3U4V9OqTXRRY8z2wURPwk53y9VX5ayhTpWAjAeDSmjOvXPVP9vD/Wuk4Ha+2FJb
+	BYA==
+X-Google-Smtp-Source: AGHT+IGWt+83fSC3c/N6JQbwOG/2CXc24wmCtoeKQKr6bofBcQejdMxPHdo+4k7C01b/9gYVsUy3Mw36Jn0=
+X-Received: from pfbhu1.prod.google.com ([2002:a05:6a00:6981:b0:737:30c9:fe46])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:cf82:b0:1f5:9431:46e7
+ with SMTP id adf61e73a8af0-201799984fcmr644100637.42.1744321601003; Thu, 10
+ Apr 2025 14:46:41 -0700 (PDT)
+Date: Thu, 10 Apr 2025 14:46:39 -0700
+In-Reply-To: <20250324160617.15379-1-bp@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <20250324160617.15379-1-bp@kernel.org>
+Message-ID: <Z_g8Py8Ow85Uj6RT@google.com>
+Subject: Re: [PATCH] KVM: x86: Sort CPUID_8000_0021_EAX leaf bits properly
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, X86 ML <x86@kernel.org>, KVM <kvm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, "Borislav Petkov (AMD)" <bp@alien8.de>
+Content-Type: text/plain; charset="us-ascii"
 
-Linus,
+On Mon, Mar 24, 2025, Borislav Petkov wrote:
+> From: "Borislav Petkov (AMD)" <bp@alien8.de>
+> 
+> WRMSR_XX_BASE_NS is bit 1 so put it there, add some new bits as
+> comments only.
+> 
+> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+> ---
+>  arch/x86/kvm/cpuid.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 121edf1f2a79..e98ab18f784b 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -1160,6 +1160,7 @@ void kvm_set_cpu_caps(void)
+>  
+>  	kvm_cpu_cap_init(CPUID_8000_0021_EAX,
+>  		F(NO_NESTED_DATA_BP),
+> +		F(WRMSR_XX_BASE_NS),
+>  		/*
+>  		 * Synthesize "LFENCE is serializing" into the AMD-defined entry
+>  		 * in KVM's supported CPUID, i.e. if the feature is reported as
+> @@ -1173,10 +1174,14 @@ void kvm_set_cpu_caps(void)
+>  		SYNTHESIZED_F(LFENCE_RDTSC),
+>  		/* SmmPgCfgLock */
+>  		F(NULL_SEL_CLR_BASE),
+> +		/* UpperAddressIgnore */
+>  		F(AUTOIBRS),
+>  		EMULATED_F(NO_SMM_CTL_MSR),
+> +		/* FSRS */
+> +		/* FSRC */
 
-Please pull the latest irq/urgent Git tree from:
+I'm going to skip these, as they aren't yet publicly documented, and there are
+patches proposed to add actual support.  I wouldn't care all that much if these
+didn't collide with Intel's version (the proposed patches name them AMD_FSxx).
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2025-04-10
+https://lore.kernel.org/all/20241204134345.189041-2-davydov-max@yandex-team.ru
 
-   # HEAD: f35508b93a2fc127a8d185da2e5beade2f789977 irqchip/irq-bcm2712-mip: Set EOI/ACK flags in msi_parent_ops
+>  		/* PrefetchCtlMsr */
+> -		F(WRMSR_XX_BASE_NS),
+> +		/* GpOnUserCpuid */
+> +		/* EPSF */
 
-Miscellaneous irqchip fixes:
+FWIW, this one's also not in the APM (though the only APM I can find is a year old),
+though it's in tools/x86/kcpuid.
 
- - Fix NULL pointer dereference crashes due to missing .chip_flags
-   setup in the sg2042-msi and irq-bcm2712-mip irqchip drivers
-
- - Remove the davinci aintc irqchip driver's leftover header too
-
- Thanks,
-
-	Ingo
-
------------------->
-Bartosz Golaszewski (1):
-      irqchip/davinci: Remove leftover header
-
-Inochi Amaoto (1):
-      irqchip/sg2042-msi: Add missing chip flags
-
-Stanimir Varbanov (1):
-      irqchip/irq-bcm2712-mip: Set EOI/ACK flags in msi_parent_ops
-
-
- drivers/irqchip/irq-bcm2712-mip.c         |  1 +
- drivers/irqchip/irq-sg2042-msi.c          |  1 +
- include/linux/irqchip/irq-davinci-aintc.h | 27 ---------------------------
- 3 files changed, 2 insertions(+), 27 deletions(-)
- delete mode 100644 include/linux/irqchip/irq-davinci-aintc.h
+>  		SYNTHESIZED_F(SBPB),
+>  		SYNTHESIZED_F(IBPB_BRTYPE),
+>  		SYNTHESIZED_F(SRSO_NO),
+> -- 
+> 2.43.0
+> 
