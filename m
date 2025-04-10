@@ -1,47 +1,47 @@
 Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFC826B089;
-	Thu, 10 Apr 2025 09:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD0E26B2A8;
+	Thu, 10 Apr 2025 09:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278969; cv=none; b=euJ/M1TFpUdZF4KsiQwiiU/xQVott+4ldaOr9KXs+7lFzm+W2/ydGy3KYolnwCXP7l73yvutdc+W9kFjVfnSYhOgFm4mMDuSA4FuTf2QHSYC+TWGkNy2fCG50c6/UfrQgWfIT5EDTPW9uoOimAejX8vt4jB/q+07gKJzYiwcaKg=
+	t=1744278969; cv=none; b=VTpEHXSQYoNDl64Vn9xcTVGLHdoQlu31ykER0ypTJUApoztL3kTLPWZslEnhxLS5EHZI1wBEN/f+RvfeaACpwCdvyO707h5owSofWEwVK71E+8uxF64HuEGapCgHIxVw90l9dk1Has2U0CTqQRe5BLWwDIgDReSDhNAUa1beKjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744278969; c=relaxed/simple;
-	bh=oXgKG7puAsM6iPgFGgfa6QIBdh7qPncOh3LUqY7AuMg=;
+	bh=jpHwzrjowDkpdHoaZcO1f45rsyO9HISv2/yS1c3RlZ0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=LJlOHdys5nMpt+alVIW+uI5l4wwK69W7ckAQ/ShaNVgQE6lEJHZUpadMzUVHqiaxp6/cSf8N+qcYrP5URFzo9e4uvDAFWC8j1Z/TQxrqWPbQO3pp0L1o4QCy7Ju2GMyMgVxoDStSyF9mhG7A4E+WVTeWv2Oz7oLiPw/ONSpTbD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=nmt5ASDn; arc=none smtp.client-ip=185.132.180.163
+	 In-Reply-To:To:CC; b=MHjSsSIb7iS1sJI8+M/jIt5pQKAuQcF3NUtLD2Q1nfjQEr3B4F+RGhHm+LIvNvI6+1wUIeKZgughWWyWiH1xpLQh3fdzmJnAEA4Al/2T5SzN5jmA2xEUUHdeXhn4GjUopF+zOLwwso/JqbntS08nANfD959DcwuDe+aUGPxShiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=Ty4LvjWq; arc=none smtp.client-ip=185.132.180.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="nmt5ASDn"
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="Ty4LvjWq"
 Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A60F8Z032471;
-	Thu, 10 Apr 2025 10:55:31 +0100
+	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A60F8V032471;
+	Thu, 10 Apr 2025 10:55:28 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=O
-	PCc5bsUkhOjxSkKC0VEJsPaUv6CLcVy4YCCUXYPk5w=; b=nmt5ASDn9Cx8lIoML
-	Zsgf0DP213vnpN+Rrpo+C/SD9NYkGFeyvbtDvfNnhBYXz5lfNgRO6JV+AH2svy3D
-	bu4DnsZFnMuHBms7kiu6Sl7meFCQwyELj8bXLEN0GH9vL7qV+6BatVqhqSyTUADI
-	6HY0GSxy2QygBkOW9z8OFGBjqaHrQhUsO9mnNL966woicAF9WnR/N3oaGM2FhzD1
-	smW0F+BPq4o7ZqSv/dE31X/6c0mwJpX+UwO44GTVEYIVc5zuubl7a/Ri6V4N9f+E
-	iUG6sNaVCwHfwdlfMYXmuntpVmPQMII1Etc9XGxOYgUL3GslX6D24eQ8L2XU8Evz
-	JVjEw==
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=4
+	fNZA+lk5C21yXUFwCx6jyNHzAoSsvMZ7ySKgArljjo=; b=Ty4LvjWqlGtJQfMvC
+	g++UB2sTyBxiLMP7jCLcVUXmL9J7skBsypbu20aIdv5wu1HF/yZDlrZq+Lkb4IAW
+	+l6OILshGF3Z2q1n2IVBL5ERsUiCL9Ib+sBVeQL0wzvRJ/+bc4R4fizYjui16c1W
+	pRvxidRS5lhr6EQF7LiMP1DoMWOVQPRXAqNTmecCE7CHd5wakt49G7jcNm7poU2E
+	g9W31g5+Tu6tmNT2GfYMLKrQ6D06VGAOTXmCJZYewZla5sfR6rtse03IwlXMwUKa
+	QiSW5qYeteNVsp8yYncSUh5W7YRt0EmprKdCEFGO/QBl+Lzq7laQ15XsdRV7pTvK
+	YVYLA==
 Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45w86h1d34-10
+	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45w86h1d34-6
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 10 Apr 2025 10:55:31 +0100 (BST)
+	Thu, 10 Apr 2025 10:55:28 +0100 (BST)
 Received: from
  1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
  (172.25.6.134) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 10 Apr 2025 10:55:28 +0100
+ 15.1.2507.44; Thu, 10 Apr 2025 10:55:25 +0100
 From: Matt Coster <matt.coster@imgtec.com>
-Date: Thu, 10 Apr 2025 10:55:14 +0100
-Subject: [PATCH v6 15/18] drm/imagination: Use cached memory with
- dma_coherent
+Date: Thu, 10 Apr 2025 10:55:11 +0100
+Subject: [PATCH v6 12/18] drm/imagination: Use callbacks for fw irq
+ handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250410-sets-bxs-4-64-patch-v1-v6-15-eda620c5865f@imgtec.com>
+Message-ID: <20250410-sets-bxs-4-64-patch-v1-v6-12-eda620c5865f@imgtec.com>
 References: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
 In-Reply-To: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
 To: Frank Binns <frank.binns@imgtec.com>,
@@ -75,147 +75,220 @@ CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
 	<alessio.belle@imgtec.com>,
         Alexandru Dadu <alexandru.dadu@imgtec.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5416;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7452;
  i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=oXgKG7puAsM6iPgFGgfa6QIBdh7qPncOh3LUqY7AuMg=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaR/n9o0wWM6p+r8yeVmTiuFefvDjRpm1t0O8G/XP/trX
- oGULHN+RykLgxgHg6yYIsuOFZYr1P6oaUnc+FUMM4eVCWQIAxenAEykbx3D/2ibiGU/g80uTN51
- 6xTnPOGNtkvDZq9o5W2Qa2f0Fd1rw8bwh3v/xmj9Qxe5d9Rp7at9csz+4DHnjS0BB/bOOi216PI
- fETYA
+ bh=jpHwzrjowDkpdHoaZcO1f45rsyO9HISv2/yS1c3RlZ0=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaR/n9qUEXpULHcdd3TQ0VOKN+1fvzx5ou8u34TIcw7eg
+ Vobz5iu6ChlYRDjYJAVU2TZscJyhdofNS2JG7+KYeawMoEMYeDiFICJPLvF8L+Up3umaJ7bCu0P
+ bOY/tURbFghvSlFxuMjaO/HIY+sM1sOMDCvk3at1L92rl7tg6Lp1U+odSf4dE2OsmC9rv8k922k
+ zkxUA
 X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
  fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
 X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Authority-Analysis: v=2.4 cv=MLNgmNZl c=1 sm=1 tr=0 ts=67f79593 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=DhOxMJxG4ji0TGcJNekA:9
+X-Authority-Analysis: v=2.4 cv=MLNgmNZl c=1 sm=1 tr=0 ts=67f79590 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=Y33Pwm5EY2qbWUOeHhAA:9
  a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: lBKgYrHROR18R_-NbROR0Tg9GX12cm1b
-X-Proofpoint-ORIG-GUID: lBKgYrHROR18R_-NbROR0Tg9GX12cm1b
+X-Proofpoint-GUID: LOWUnrvZyHmim4GrOCePZKS6wa-K1QzH
+X-Proofpoint-ORIG-GUID: LOWUnrvZyHmim4GrOCePZKS6wa-K1QzH
 
-The TI k3-j721s2 platform does not allow us to use uncached memory
-(which is what the driver currently does) without disabling cache snooping
-on the AXI ACE-Lite interface, which would be too much of a performance
-hit.
-
-Given the platform is dma-coherent, we can simply force all
-device-accessible memory allocations through the CPU cache. In fact, this
-can be done whenever the dma_coherent attribute is present.
+This allows for more versatility in checking and clearing firmware
+registers used for interrupt handling.
 
 Signed-off-by: Matt Coster <matt.coster@imgtec.com>
 Reviewed-by: Frank Binns <frank.binns@imgtec.com>
 ---
 Changes in v6:
 - Add Frank's Rb
-- Link to v5: https://lore.kernel.org/r/20250326-sets-bxs-4-64-patch-v1-v5-15-e4c46e8280a9@imgtec.com
+- Link to v5: https://lore.kernel.org/r/20250326-sets-bxs-4-64-patch-v1-v5-12-e4c46e8280a9@imgtec.com
 Changes in v5:
 - None
-- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-15-d987cf4ca439@imgtec.com
+- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-12-d987cf4ca439@imgtec.com
 Changes in v4:
 - None
-- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-15-143b3dbef02f@imgtec.com
+- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-12-143b3dbef02f@imgtec.com
 Changes in v3:
-- Change from a workaround to a regular codepath
-- Add missing <linux/property.h> include
-- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-19-3fd45d9fb0cf@imgtec.com
+- None
+- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-14-3fd45d9fb0cf@imgtec.com
 Changes in v2:
 - None
-- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-19-4ed30e865892@imgtec.com
+- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-14-4ed30e865892@imgtec.com
 ---
- drivers/gpu/drm/imagination/pvr_gem.c | 10 +++++++---
- drivers/gpu/drm/imagination/pvr_gem.h |  6 ++++--
- drivers/gpu/drm/imagination/pvr_mmu.c |  8 +++++++-
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/imagination/pvr_device.h  | 18 +++++++++++++
+ drivers/gpu/drm/imagination/pvr_fw.h      | 45 +++++++++----------------------
+ drivers/gpu/drm/imagination/pvr_fw_meta.c | 22 ++++++++++-----
+ drivers/gpu/drm/imagination/pvr_fw_mips.c | 22 ++++++++++-----
+ 4 files changed, 63 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/gpu/drm/imagination/pvr_gem.c b/drivers/gpu/drm/imagination/pvr_gem.c
-index f692a41875507232ee6e844ccb1f980425f2e9b7..a66cf082af2445044beb286c2d5350849512adb1 100644
---- a/drivers/gpu/drm/imagination/pvr_gem.c
-+++ b/drivers/gpu/drm/imagination/pvr_gem.c
-@@ -19,6 +19,7 @@
- #include <linux/log2.h>
- #include <linux/mutex.h>
- #include <linux/pagemap.h>
-+#include <linux/property.h>
- #include <linux/refcount.h>
- #include <linux/scatterlist.h>
+diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
+index 12bf0b9e5bfb48ef9e5ed9faa44e0896b7555f49..eb5da8c7040fc9e9751f433279cb0c92fd4d1336 100644
+--- a/drivers/gpu/drm/imagination/pvr_device.h
++++ b/drivers/gpu/drm/imagination/pvr_device.h
+@@ -739,4 +739,22 @@ pvr_ioctl_union_padding_check(void *instance, size_t union_offset,
+ 					      __union_size, __member_size);  \
+ 	})
  
-@@ -334,6 +335,7 @@ struct drm_gem_object *pvr_gem_create_object(struct drm_device *drm_dev, size_t
- struct pvr_gem_object *
- pvr_gem_object_create(struct pvr_device *pvr_dev, size_t size, u64 flags)
- {
-+	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
- 	struct drm_gem_shmem_object *shmem_obj;
- 	struct pvr_gem_object *pvr_obj;
- 	struct sg_table *sgt;
-@@ -343,7 +345,10 @@ pvr_gem_object_create(struct pvr_device *pvr_dev, size_t size, u64 flags)
- 	if (size == 0 || !pvr_gem_object_flags_validate(flags))
- 		return ERR_PTR(-EINVAL);
- 
--	shmem_obj = drm_gem_shmem_create(from_pvr_device(pvr_dev), size);
-+	if (device_get_dma_attr(drm_dev->dev) == DEV_DMA_COHERENT)
-+		flags |= PVR_BO_CPU_CACHED;
++/*
++ * These utility functions should more properly be placed in pvr_fw.h, but that
++ * would cause a dependency cycle between that header and this one. Since
++ * they're primarily used in pvr_device.c, let's put them in here for now.
++ */
 +
-+	shmem_obj = drm_gem_shmem_create(drm_dev, size);
- 	if (IS_ERR(shmem_obj))
- 		return ERR_CAST(shmem_obj);
- 
-@@ -358,8 +363,7 @@ pvr_gem_object_create(struct pvr_device *pvr_dev, size_t size, u64 flags)
- 		goto err_shmem_object_free;
- 	}
- 
--	dma_sync_sgtable_for_device(shmem_obj->base.dev->dev, sgt,
--				    DMA_BIDIRECTIONAL);
-+	dma_sync_sgtable_for_device(drm_dev->dev, sgt, DMA_BIDIRECTIONAL);
- 
- 	/*
- 	 * Do this last because pvr_gem_object_zero() requires a fully
-diff --git a/drivers/gpu/drm/imagination/pvr_gem.h b/drivers/gpu/drm/imagination/pvr_gem.h
-index e0e5ea509a2e88a437b8d241ea13c7bab2220f56..c99f30cc62088c030bd8a806df79b738b62a968f 100644
---- a/drivers/gpu/drm/imagination/pvr_gem.h
-+++ b/drivers/gpu/drm/imagination/pvr_gem.h
-@@ -44,8 +44,10 @@ struct pvr_file;
-  * Bits not defined anywhere are "undefined".
-  *
-  * CPU mapping options
-- *    :PVR_BO_CPU_CACHED: By default, all GEM objects are mapped write-combined on the CPU. Set this
-- *       flag to override this behaviour and map the object cached.
-+ *    :PVR_BO_CPU_CACHED: By default, all GEM objects are mapped write-combined on the CPU. Set
-+ *       this flag to override this behaviour and map the object cached. If the dma_coherent
-+ *       property is present in devicetree, all allocations will be mapped as if this flag was set.
-+ *       This does not require any additional consideration at allocation time.
-  *
-  * Firmware options
-  *    :PVR_BO_FW_NO_CLEAR_ON_RESET: By default, all FW objects are cleared and reinitialised on hard
-diff --git a/drivers/gpu/drm/imagination/pvr_mmu.c b/drivers/gpu/drm/imagination/pvr_mmu.c
-index 4fe70610ed94cf707e631f8148af081a94f97327..450d476d183f0173d0ef03f0d8897fbeb04831a2 100644
---- a/drivers/gpu/drm/imagination/pvr_mmu.c
-+++ b/drivers/gpu/drm/imagination/pvr_mmu.c
-@@ -17,6 +17,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/kmemleak.h>
- #include <linux/minmax.h>
-+#include <linux/property.h>
- #include <linux/sizes.h>
- 
- #define PVR_SHIFT_FROM_SIZE(size_) (__builtin_ctzll(size_))
-@@ -259,6 +260,7 @@ pvr_mmu_backing_page_init(struct pvr_mmu_backing_page *page,
- 	struct device *dev = from_pvr_device(pvr_dev)->dev;
- 
- 	struct page *raw_page;
-+	pgprot_t prot;
- 	int err;
- 
- 	dma_addr_t dma_addr;
-@@ -268,7 +270,11 @@ pvr_mmu_backing_page_init(struct pvr_mmu_backing_page *page,
- 	if (!raw_page)
- 		return -ENOMEM;
- 
--	host_ptr = vmap(&raw_page, 1, VM_MAP, pgprot_writecombine(PAGE_KERNEL));
-+	prot = PAGE_KERNEL;
-+	if (device_get_dma_attr(dev) != DEV_DMA_COHERENT)
-+		prot = pgprot_writecombine(prot);
++static __always_inline bool
++pvr_fw_irq_pending(struct pvr_device *pvr_dev)
++{
++	return pvr_dev->fw_dev.defs->irq_pending(pvr_dev);
++}
 +
-+	host_ptr = vmap(&raw_page, 1, VM_MAP, prot);
- 	if (!host_ptr) {
- 		err = -ENOMEM;
- 		goto err_free_page;
++static __always_inline void
++pvr_fw_irq_clear(struct pvr_device *pvr_dev)
++{
++	pvr_dev->fw_dev.defs->irq_clear(pvr_dev);
++}
++
+ #endif /* PVR_DEVICE_H */
+diff --git a/drivers/gpu/drm/imagination/pvr_fw.h b/drivers/gpu/drm/imagination/pvr_fw.h
+index 88ad713468ce3a1ee459b04dde5363c24791a4f1..ab69f40a7fbc6304171f16dd16d825a68b0362a5 100644
+--- a/drivers/gpu/drm/imagination/pvr_fw.h
++++ b/drivers/gpu/drm/imagination/pvr_fw.h
+@@ -167,29 +167,22 @@ struct pvr_fw_defs {
+ 	int (*wrapper_init)(struct pvr_device *pvr_dev);
+ 
+ 	/**
+-	 * @irq: FW Interrupt information.
++	 * @irq_pending: Check interrupt status register for pending interrupts.
+ 	 *
+-	 * Those are processor dependent, and should be initialized by the
+-	 * processor backend in pvr_fw_funcs::init().
++	 * @pvr_dev: Target PowerVR device.
++	 *
++	 * This function is mandatory.
+ 	 */
+-	struct {
+-		/** @status_reg: FW interrupt status register. */
+-		u32 status_reg;
++	bool (*irq_pending)(struct pvr_device *pvr_dev);
+ 
+-		/**
+-		 * @clear_reg: FW interrupt clear register.
+-		 *
+-		 * If @status_reg == @clear_reg, we clear by write a bit to zero,
+-		 * otherwise we clear by writing a bit to one.
+-		 */
+-		u32 clear_reg;
+-
+-		/** @status_mask: Bitmask of events to listen for in the status_reg. */
+-		u32 status_mask;
+-
+-		/** @clear_mask: Value to write to the clear_reg in order to clear FW IRQs. */
+-		u32 clear_mask;
+-	} irq;
++	/**
++	 * @irq_clear: Clear pending interrupts.
++	 *
++	 * @pvr_dev: Target PowerVR device.
++	 *
++	 * This function is mandatory.
++	 */
++	void (*irq_clear)(struct pvr_device *pvr_dev);
+ 
+ 	/**
+ 	 * @has_fixed_data_addr: Specify whether the firmware fixed data must be loaded at the
+@@ -390,18 +383,6 @@ struct pvr_fw_device {
+ 	} fw_objs;
+ };
+ 
+-#define pvr_fw_irq_read_reg(pvr_dev, name) \
+-	pvr_cr_read32((pvr_dev), (pvr_dev)->fw_dev.defs->irq.name ## _reg)
+-
+-#define pvr_fw_irq_write_reg(pvr_dev, name, value) \
+-	pvr_cr_write32((pvr_dev), (pvr_dev)->fw_dev.defs->irq.name ## _reg, value)
+-
+-#define pvr_fw_irq_pending(pvr_dev) \
+-	(pvr_fw_irq_read_reg(pvr_dev, status) & (pvr_dev)->fw_dev.defs->irq.status_mask)
+-
+-#define pvr_fw_irq_clear(pvr_dev) \
+-	pvr_fw_irq_write_reg(pvr_dev, clear, (pvr_dev)->fw_dev.defs->irq.clear_mask)
+-
+ enum pvr_fw_processor_type {
+ 	PVR_FW_PROCESSOR_TYPE_META = 0,
+ 	PVR_FW_PROCESSOR_TYPE_MIPS,
+diff --git a/drivers/gpu/drm/imagination/pvr_fw_meta.c b/drivers/gpu/drm/imagination/pvr_fw_meta.c
+index 41485769fc7cfb643ce7b0ac814d142fa7e15325..60db3668ad3ca355b797693b000c0b1ac816316e 100644
+--- a/drivers/gpu/drm/imagination/pvr_fw_meta.c
++++ b/drivers/gpu/drm/imagination/pvr_fw_meta.c
+@@ -532,6 +532,20 @@ pvr_meta_vm_unmap(struct pvr_device *pvr_dev, struct pvr_fw_object *fw_obj)
+ 			 fw_obj->fw_mm_node.start, fw_obj->fw_mm_node.size);
+ }
+ 
++static bool
++pvr_meta_irq_pending(struct pvr_device *pvr_dev)
++{
++	return pvr_cr_read32(pvr_dev, ROGUE_CR_META_SP_MSLVIRQSTATUS) &
++	       ROGUE_CR_META_SP_MSLVIRQSTATUS_TRIGVECT2_EN;
++}
++
++static void
++pvr_meta_irq_clear(struct pvr_device *pvr_dev)
++{
++	pvr_cr_write32(pvr_dev, ROGUE_CR_META_SP_MSLVIRQSTATUS,
++		       ROGUE_CR_META_SP_MSLVIRQSTATUS_TRIGVECT2_CLRMSK);
++}
++
+ const struct pvr_fw_defs pvr_fw_defs_meta = {
+ 	.init = pvr_meta_init,
+ 	.fw_process = pvr_meta_fw_process,
+@@ -539,11 +553,7 @@ const struct pvr_fw_defs pvr_fw_defs_meta = {
+ 	.vm_unmap = pvr_meta_vm_unmap,
+ 	.get_fw_addr_with_offset = pvr_meta_get_fw_addr_with_offset,
+ 	.wrapper_init = pvr_meta_wrapper_init,
+-	.irq = {
+-		.status_reg = ROGUE_CR_META_SP_MSLVIRQSTATUS,
+-		.clear_reg = ROGUE_CR_META_SP_MSLVIRQSTATUS,
+-		.status_mask = ROGUE_CR_META_SP_MSLVIRQSTATUS_TRIGVECT2_EN,
+-		.clear_mask = ROGUE_CR_META_SP_MSLVIRQSTATUS_TRIGVECT2_CLRMSK,
+-	},
++	.irq_pending = pvr_meta_irq_pending,
++	.irq_clear = pvr_meta_irq_clear,
+ 	.has_fixed_data_addr = false,
+ };
+diff --git a/drivers/gpu/drm/imagination/pvr_fw_mips.c b/drivers/gpu/drm/imagination/pvr_fw_mips.c
+index 5feae0dc85ab51cb3c4e67885bf53cf88d8fa531..7526dddbf5205f3472287f32af8ec7e97ba0fce4 100644
+--- a/drivers/gpu/drm/imagination/pvr_fw_mips.c
++++ b/drivers/gpu/drm/imagination/pvr_fw_mips.c
+@@ -225,6 +225,20 @@ pvr_mips_get_fw_addr_with_offset(struct pvr_fw_object *fw_obj, u32 offset)
+ 	       ROGUE_FW_HEAP_MIPS_BASE;
+ }
+ 
++static bool
++pvr_mips_irq_pending(struct pvr_device *pvr_dev)
++{
++	return pvr_cr_read32(pvr_dev, ROGUE_CR_MIPS_WRAPPER_IRQ_STATUS) &
++	       ROGUE_CR_MIPS_WRAPPER_IRQ_STATUS_EVENT_EN;
++}
++
++static void
++pvr_mips_irq_clear(struct pvr_device *pvr_dev)
++{
++	pvr_cr_write32(pvr_dev, ROGUE_CR_MIPS_WRAPPER_IRQ_CLEAR,
++		       ROGUE_CR_MIPS_WRAPPER_IRQ_CLEAR_EVENT_EN);
++}
++
+ const struct pvr_fw_defs pvr_fw_defs_mips = {
+ 	.init = pvr_mips_init,
+ 	.fini = pvr_mips_fini,
+@@ -233,11 +247,7 @@ const struct pvr_fw_defs pvr_fw_defs_mips = {
+ 	.vm_unmap = pvr_vm_mips_unmap,
+ 	.get_fw_addr_with_offset = pvr_mips_get_fw_addr_with_offset,
+ 	.wrapper_init = pvr_mips_wrapper_init,
+-	.irq = {
+-		.status_reg = ROGUE_CR_MIPS_WRAPPER_IRQ_STATUS,
+-		.clear_reg = ROGUE_CR_MIPS_WRAPPER_IRQ_CLEAR,
+-		.status_mask = ROGUE_CR_MIPS_WRAPPER_IRQ_STATUS_EVENT_EN,
+-		.clear_mask = ROGUE_CR_MIPS_WRAPPER_IRQ_CLEAR_EVENT_EN,
+-	},
++	.irq_pending = pvr_mips_irq_pending,
++	.irq_clear = pvr_mips_irq_clear,
+ 	.has_fixed_data_addr = true,
+ };
 
 -- 
 2.49.0
