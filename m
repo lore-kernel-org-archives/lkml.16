@@ -1,199 +1,130 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9EF2853E5;
-	Thu, 10 Apr 2025 12:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655CF284B4B;
+	Thu, 10 Apr 2025 12:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744288767; cv=none; b=cxbD0A6j3xULqVbRAytajtnpwrks7a9d6UI8YgHFkrCo9pOIvQRQlvx7BW6aIpZcKxSii7Y/BXyiCqincM02GVvq2JKI4lYZr8Auun+JLq9E20C6N19/fgda3Jy8GZsyjUSwN9LQuG1gE/BEu0mNlknVmzDexsAcd5Q6L9H1V/s=
+	t=1744288869; cv=none; b=eHoJCLW5GPAFjzNrxQa/4v/lSlgLc1qJ9+F0n3uFIIFV2Z6vDGbsdNFtlVkuzcXshmWHDVwOXNeD3/xOiHSoDoV4dhsV55TJDe7siMUm5Ds0ddPdB65ubl/gbvJaNDZAjWHBywYoUYipDc0WJv4c4dJYiHdZHi4r/9IPv0bxLJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744288767; c=relaxed/simple;
-	bh=/eNrs1XYBAEtkRLVC7n9Um+XZ0niyf8go02McgTE+cs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dO0WoVC1DwSK8CudRvE9WsPrJaqQZKa5aHwstUIVeHyD7IBYeQjRonj2jsef8WhwzHMKBmRziQ940ayGHGAWEn8etBDN7N8sxKkZ2O/wnxcsQtUxlIv7mQXapiHWcFs3FreSuEm/JvqSqI0kgmblA0zNleM1KDldbp2/UaXdRtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dxNqze0v; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744288869; c=relaxed/simple;
+	bh=6kR3UnoHJX32Feeb+IIZW6yY378hwVxWM9UoyJsdsQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QVsKkPWWmh523hbZ3Zfoh0oss69o5Z/sHoXSPZUmLfr36KmzJ17Li1bccEWfJPgST1dFyumEPWh2hqDNSOEnBZOYN7foSG//7PydtcLkSwdJhN2GzhQXpkRWh/uSzbcbfsT4640lWFI0EyShNv7XssL8hI2pCcJQLN+/Ia4oB/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Yh+DoUCY; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dxNqze0v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744288763;
-	bh=/eNrs1XYBAEtkRLVC7n9Um+XZ0niyf8go02McgTE+cs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=dxNqze0vhbx4/g/IgvWvfCjjZKpGBxlJ3Me6+CtgtZbVSUtxLLYODrZ+i16CXu2uW
-	 lMRVpwKGBC2xn+BFhiKRBkFz29leFB6+mlCUGmry9F76rNJ0p3fPqhIL9r5jNRf2XY
-	 kaqnDZJC+4iH+Wqw2izF3gj89ZDVd3N7ipPu+LdJ2egyFUvmGOAzbX+trniyGcx7TK
-	 EURJPj1bq0XBkeerJ0QMlabOwe5vXcSiv6Cb8URI7rFjjwugIB0/sT5St9LXUREBCx
-	 UN+wP6bK8I+mdtPKE1/WwrRVeZDA6tdR45oGsomlKVQMMi1fnQOBdPmIGDxFk4tH0L
-	 ifSd9r5arOwmw==
-Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1118717E017D;
-	Thu, 10 Apr 2025 14:39:21 +0200 (CEST)
-Message-ID: <cb2266a3ff0cf9d57bdfdf3e88dc82c211d18e83.camel@collabora.com>
-Subject: Re: [RESEND PATCH v1 0/7] Performance improvement of decoder
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: "Jackson.lee" <jackson.lee@chipsnmedia.com>, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, sebastian.fricke@collabora.com, 
-	bob.beckett@collabora.com, dafna.hirschfeld@collabora.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lafley.kim@chipsnmedia.com, b-brnich@ti.com, hverkuil@xs4all.nl, 
-	nas.chung@chipsnmedia.com
-Date: Thu, 10 Apr 2025 08:39:20 -0400
-In-Reply-To: <20250410034002.88-1-jackson.lee@chipsnmedia.com>
-References: <20250410034002.88-1-jackson.lee@chipsnmedia.com>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yh+DoUCY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=MAhRo0vfZyG5mWuwbaXdNpC34PBmmVSfGE392I46BCA=; b=Yh+DoUCYzJ4igA6Kycnyvv2+g7
+	ZoMLHe176T5PjJLBpaB7trpJ/cTj3Pa9l4aNpRfU85hHCX/+vCE7ouQ3n5aqvJAbyL+r8LGoJCQV+
+	h5pvSi48sAIvv7VQbX9dyMndf1AynYVuvWl9NJOk7j/TsvKZnG4NmqPUfFO1Dxf65NGpVjaR5NN4h
+	IosG+pHrvxxXYzGSBur6aAFVxxxLho0tKNUCfph4vcO3T2jB33K/EEpMkNAFPrYh+C74GdeF8eZtN
+	uBnaZniX0KR64b4kIfiX/20DHfKTkOo6d6IkWakuUFivDPvcFPhiNEO3eOLa/wMfGAFM1HK2j6lHU
+	eqGGfr2w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2rDH-00000002tCY-33G5;
+	Thu, 10 Apr 2025 12:41:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E6E963003FA; Thu, 10 Apr 2025 14:40:59 +0200 (CEST)
+Date: Thu, 10 Apr 2025 14:40:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
+	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>, lclaudio00@gmail.com
+Subject: Re: [PATCH v3] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <20250410124059.GA9833@noisy.programming.kicks-ass.net>
+References: <Z_e0uh36Ezz6isYo@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_e0uh36Ezz6isYo@uudg.org>
 
-Hi,
+On Thu, Apr 10, 2025 at 09:10:12AM -0300, Luis Claudio R. Goncalves wrote:
+> With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
+> from rt_mutex_adjust_prio_chain() could happen in preemptible context and
+> with a mutex enqueued. That could lead to this sequence:
+> 
+> 	rt_mutex_adjust_prio_chain()
+> 	  put_task_struct()
+> 	    __put_task_struct()
+> 	      sched_ext_free()
+> 	        spin_lock_irqsave()
+> 	          rtlock_lock() --->  TRIGGERS
+> 	                              lockdep_assert(!current->pi_blocked_on);
+> 
+> Fix that by unconditionally resorting to the deferred call to
+> __put_task_struct().
+> 
+> v2: (Rostedt) remove the #ifdef from put_task_struct() and create
+>     tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
+> 
+> v3: (Sebastian and PeterZ) always call the RCU deferred __put_task_struct().
 
-Le jeudi 10 avril 2025 à 12:39 +0900, Jackson.lee a écrit :
-> From: Jackson Lee <jackson.lee@chipsnmedia.com>
-> 
-> v4l2-compliance results:
-> ========================
+Changelog goes below the --- line.
 
-What there reason for a resend within 3h ?
+> Suggested-by: Crystal Wood <crwood@redhat.com>
+> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> ---
+>  include/linux/sched/task.h |   20 +++++---------------
+>  1 file changed, 5 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index 0f2aeb37bbb04..49847efe5559e 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -134,22 +134,12 @@ static inline void put_task_struct(struct task_struct *t)
+>  		return;
+>  
+>  	/*
+> -	 * In !RT, it is always safe to call __put_task_struct().
+> -	 * Under RT, we can only call it in preemptible context.
+> -	 */
+> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
+> -		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
+> -
+> -		lock_map_acquire_try(&put_task_map);
+> -		__put_task_struct(t);
+> -		lock_map_release(&put_task_map);
+> -		return;
+> -	}
 
-Nicolas
+I don't think you've substantiated why the !PREEMPT_RT case needs to go.
 
+> -
+> -	/*
+> -	 * under PREEMPT_RT, we can't call put_task_struct
+> +	 * In !RT, it is always safe to call __put_task_struct(),
+> +	 * but under PREEMPT_RT, we can't call put_task_struct
+>  	 * in atomic context because it will indirectly
+> -	 * acquire sleeping locks.
+> +	 * acquire sleeping locks. The same is true if the
+> +	 * current process has a mutex enqueued (blocked on
+> +	 * a PI chain).
+>  	 *
+>  	 * call_rcu() will schedule delayed_put_task_struct_rcu()
+>  	 * to be called in process context.
+> -- 
+> 2.49.0
 > 
-> v4l2-compliance 1.28.1-5233, 64 bits, 64-bit time_t
-> 
-> Buffer ioctls:
->                 warn: v4l2-test-buffers.cpp(693): VIDIOC_CREATE_BUFS
-> not supported
->                 warn: v4l2-test-buffers.cpp(693): VIDIOC_CREATE_BUFS
-> not supported
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->         test CREATE_BUFS maximum buffers: OK
->         test VIDIOC_EXPBUF: OK
->         test Requests: OK (Not Supported)
-> 
-> Total for wave5-dec device /dev/video0: 46, Succeeded: 46, Failed: 0,
-> Warnings: 2
-> Total for wave5-enc device /dev/video1: 46, Succeeded: 46, Failed: 0,
-> Warnings: 0
-> 
-> Fluster test results:
-> =====================
-> 
-> Running test suite JCT-VC-HEVC_V1 with decoder GStreamer-H.265-V4L2-
-> Gst1.0
-> Using 3 parallel job(s)
-> Ran 133/147 tests successfully               in 41.629 secs
-> 
-> (1 test fails because of not supporting to parse multi frames, 1 test
-> fails because of a missing frame and slight corruption,
->  2 tests fail because of sizes which are incompatible with the IP, 11
-> tests fail because of unsupported 10 bit format)
-> 
-> 
-> Running test suite JVT-AVC_V1 with decoder GStreamer-H.264-V4L2-
-> Gst1.0
-> Using 3 parallel job(s)
-> Ran 78/135 tests successfully               in 44.578 secs
-> 
-> (57 fail because the hardware is unable to decode  MBAFF / FMO /
-> Field / Extended profile streams.)
-> 
-> Seek test
-> =====================
-> 1. gst-play-1.0 seek.264
-> 2. this will use waylandsink since gst-play-1.0 uses playbin.
->    if you don't want to hook up display,
->    you can run gst-play-1.0 seek.264 --videosink=fakevideosink
-> instead
-> 3. Let pipeline run for 2-3 seconds
-> 4. press SPACE key to pause
-> 5. press 0 to reset
-> press SPACE to start again
-> 
-> gst-play-1.0 seek.264 --videosink=fakevideosink
-> Press 'k' to see a list of keyboard shortcuts.
-> Now playing /root/seek.264
-> Redistribute latency...
-> Redistribute latency...
-> Redistribute latency...
-> Redistribute latency...
-> Redistribute latency...aused
-> 0:00:09.9 / 0:00:09.7
-> Reached end of play list.
-> 
-> Sequence Change test
-> =====================
-> gst-launch-1.0 filesrc location=./switch_1080p_720p_240frames.h264 !
-> h264parse ! v4l2h264dec ! filesink location=./h264_output_420.yuv
-> Setting pipeline to PAUSED ...
-> Pipeline is PREROLLING ...
-> Redistribute latency...
-> Redistribute latency...
-> Pipeline is PREROLLED ...
-> Setting pipeline to PLAYING ...
-> Redistribute latency...
-> New clock: GstSystemClock
-> Got EOS from element "pipeline0".
-> Execution ended after 0:00:05.772414400
-> Setting pipeline to NULL ...
-> Freeing pipeline ...
-> 
-> Change since v0:
-> ===================
-> * For [PATCH v1 2/7] media: chips-media: wave5: Improve performance
-> of decoder
->  - separates the previous patch to a few patches
-> 
-> * For [PATCH v1 3/7] media: chips-media: wave5: Fix not to be closed
->  - separated from the previous patch of performance improvement of
->    decoder
-> 
-> * For [PATCH v1 4/7] media: chips-media: wave5: Use spinlock whenever
-> state is changed
->  - separated from the previous patch of performance improvement of
->    decoder
-> 
-> * For [PATCH v1 5/7] media: chips-media: wave5: Fix not to free
-> resources normally when
->     instance was destroyed
->  - separated from the previous patch of performance improvement of
->    decoder
-> 
-> * For [PATCH v1 7/7] media: chips-media: wave5: Fix SError of kernel
-> panic when closed
->  - separated from the previous patch of performance improvement of
->    decoder
-> 
-> Jackson Lee (7):
->   media: chips-media: wave5: Fix Null reference while testing fluster
->   media: chips-media: wave5: Improve performance of decoder
->   media: chips-media: wave5: Fix not to be closed
->   media: chips-media: wave5: Use spinlock whenever state is changed
->   media: chips-media: wave5: Fix not to free resources normally when
->     instance was destroyed
->   media: chips-media: wave5: Reduce high CPU load
->   media: chips-media: wave5: Fix SError of kernel panic when closed
-> 
->  .../platform/chips-media/wave5/wave5-helper.c |  10 +-
->  .../chips-media/wave5/wave5-vpu-dec.c         | 116 +++++++++++-----
-> --
->  .../chips-media/wave5/wave5-vpu-enc.c         |   8 +-
->  .../platform/chips-media/wave5/wave5-vpu.c    |  70 +++++++++--
->  .../platform/chips-media/wave5/wave5-vpuapi.c |  36 +++---
->  .../platform/chips-media/wave5/wave5-vpuapi.h |  10 ++
->  .../chips-media/wave5/wave5-vpuconfig.h       |   1 +
->  7 files changed, 179 insertions(+), 72 deletions(-)
-
--- 
-Nicolas Dufresne
-Principal Engineer at Collabora
