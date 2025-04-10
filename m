@@ -1,217 +1,161 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75EE28F935;
-	Thu, 10 Apr 2025 19:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0EA1E0E15
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 19:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744313188; cv=none; b=dn42ws4ywSjiJ61vouRSgnwwuDVDefT914swtXBZN201G2x96M8D1C+gogRZzru/OB26RJmjwG0NTe/Bq49dwLx/DtAkkqMpc4Yfxxm0XWm5nn6vMkOH0D3BWMdL/v1jsHs3v6oYepqnu5QFDJEKQz5O1AUmR7iOZXqcv/9FdkQ=
+	t=1744313248; cv=none; b=c+XX6I/rJnyQGcoGpa2ulMs8V5JFSV972QiK0yvCfjSziquP4yLjrx3f/rK5AUrJ5NGDk3genVchMPXZ1VRzo+KAAMvqNnjph4Zl/4WyYXa1g73tl7+7aZepTXH8fgfBlJUGsCqzTvNcQvgyUHv811atHwoBNWgjeWIuxllI+tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744313188; c=relaxed/simple;
-	bh=WcolyHHWLRHRWuZRJTI/3OSHs7abBfLi4BT8QsbhgAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gmqQKHF2MIBzPODjj893iawsGl7I5vPIO1wRKss3bcnLGyd8EK9pd+KReCGvz1L1F8U15qi/EnPvgvSzMXTwDzcClUsr18W8Jc9paarfcMTkeDuTBXPwwWf5RoBeDFrk0/CbiDd90RSpKR4bYkdUrT5aqii8lp8m0vWGd0e/sn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2240b4de12bso16804425ad.2;
-        Thu, 10 Apr 2025 12:26:26 -0700 (PDT)
+	s=arc-20240116; t=1744313248; c=relaxed/simple;
+	bh=YQ4nkvKpRuTZrCGPqBDsfJdbG1p2IYURAYsSu5WUCBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VN1oAXf/qfc88shsmxH6gENtjjCsVhl1CrOKTeTU66ZLVwplHZVYwvsJ+8mlArsOdA7oVmzxIjQ9JAfPcvJQ5gzri579evdO9tFTg2jln8mnFynd3Kh/H3Q9EROcHVc0E4MVTJEnec6bh8v3rdRqPEz6JrtYkFRlLEVYoJlGKvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=beycj7EQ; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="beycj7EQ"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf848528aso9265085e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744313243; x=1744918043; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P5bSl8e7o8CwEQkSt7I/ZxblQGIKY/++dgN9t2+FjKE=;
+        b=beycj7EQNglY6qaahaxPr6kyouIHk7YLPL8wYsHu6Mh30drC9fndSIzDTvUWVypkPU
+         jUmtt6ZugqoTw8O1ifkatzgbT6eoxxRxDBiCvlgsI4AIuf9+XWOj9jqG/1EaHZvn/L/h
+         aPxQY7MJHmQXGAMNiYUeVGmlqTz9c4WthrOfv4AJIRgXSW46dZMXkNJN1vRvyYbaMAk1
+         rItiACQlaXMhyWhKd+l/lFG/dkQ7BZBBE7/Bno43D1E/GAdM28v4N3abB7SfTqNEQ8Ej
+         CyQ46I0Tf41B2QOp5n47fp6Jl73UYM8wnbaCeXKOeCnsRAUSaaKKL24po9fajq6JPxOr
+         agow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744313186; x=1744917986;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1744313243; x=1744918043;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yWD/IFLs9J7mtfPAH3Pos16ipUjDet53kUJ8hQIRX0g=;
-        b=w80T+Ak35gQewzHISxGYuTr0mVw30qOIQi8/12lTfd9n5Fh7KBnyyziqV1wOLVlJMt
-         lGwutdv09bXMH9NFsxH0NGh0t6wsuRx8o2SSSzVBa8I2+kqeswpOgOSH1LQ1C6z5guH8
-         xmGTFwyJHHhd5OpbjStCAH3R5Lk9UM4W7N21ELk9xRV7rqJmw+NpbjovZ5atgrf+E7DC
-         nqGnTBsNNNqvPYxH5s51Je6mAUJdIqugFxLNirrf5ir/mhRpPokDf8mrPkWH4oBLR7l8
-         AIpy+jEYuE8HivgzJvzmIo0Snp8EvwhbEsM9fy9ErQDrh3fmNQHk+Xydw0gEfDKGmKcV
-         WjGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXE4Sd4YjYeDKk6rcE1YND5xMOwSDGTggHG87EA/h7eQiS666SSDz9k9RFVIPT1o36pxnl7G3vmhjcH94=@vger.kernel.org, AJvYcCXggpr9YLEBtH1AQNCWvQhLlg/YaJ9GSpDtSiRsdd10RrNspAwN0wnG3jcCxcnhPiRke1k3Y+HfrtA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWRmtVqR/pRVpfd7Gn0P7As5ERGbigFuYUKAVIwZsENGD2N7m8
-	bc/TnI2hEBpjtefZbCDIViJ3gwz0yAB/C0HrIOvhL0rUK0WEWHF6
-X-Gm-Gg: ASbGncuz3LsuyqkJTKZyI1ZRWQ+Bpc5hVIseFutRKRpGR7xasDKI8BLzJHy3sAmOTKl
-	K4dtrEpvFuwkXyLosDDgxYSQnw7SpouksLMcGQDAbIwpG/vFxuqwJcc0Fcel7LPT+q6Q3JCEyDs
-	TAoi1fvaa3guo2msVh/NlkwBYUnIwFkPAC3ECLpS0PCLCmzgu35MBuSk9afK9Ka0z+7iqPwyWo0
-	dWKBH6YFbTbeYfYpGTUHRBltch203osx0qw+jPieCwzzzfMBmRP4YPflV62/KQG191NKahjORgh
-	mnLW3bH11Nj+bjoL8TLCpSH1LsUCCgfXRn/eTS7qypEKaPCaulOZNxN1MVM=
-X-Google-Smtp-Source: AGHT+IGzagBZX4K0SpPFtHSrrkXACoqK/o8hAsfw3bOFS+taLIjxIC8CSn6OwqHp0IUgdlAFMQFgGA==
-X-Received: by 2002:a17:903:1a2b:b0:21f:c67:a68a with SMTP id d9443c01a7336-22bea4c6c69mr241725ad.31.1744313185901;
-        Thu, 10 Apr 2025 12:26:25 -0700 (PDT)
-Received: from sultan-box.localdomain ([142.147.89.201])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccb574sm34519065ad.227.2025.04.10.12.26.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 12:26:25 -0700 (PDT)
-Date: Thu, 10 Apr 2025 12:26:21 -0700
-From: Sultan Alsawaf <sultan@kerneltoast.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Christian Loehle <christian.loehle@arm.com>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: schedutil: Don't ignore limit changes when util
- is unchanged
-Message-ID: <Z_gbXSeo6kjOXhwE@sultan-box.localdomain>
-References: <20250410024439.20859-1-sultan@kerneltoast.com>
- <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com>
- <Z_fru1i1OpAQ-hJq@sultan-box.localdomain>
- <CAJZ5v0iu_hMud6FRg6FiUVQ1cY6oYqrEmwpwPTeYJh5Yzh5Q8A@mail.gmail.com>
+        bh=P5bSl8e7o8CwEQkSt7I/ZxblQGIKY/++dgN9t2+FjKE=;
+        b=hFOFQDrZsdr4AKwKf4KhK0OD1MFtGYehI1zUZ3vn/kOwYxcEdYrMcBCnWZzXQfTUbw
+         47N49eJzsZfwqXI3OEwQu2XAEY1SF9mycI10XgFr6tWOfdJON4IVk1he+SV84as2aU2U
+         TBTT5jej4INyq8PNOKCnCgsv4RnDoNYL8ZnGYA5+K2TTjevrqdzyGSmbhXHtouQepE9+
+         qQm9L9+wHI0woflhX+HR8Htwespqvq8JAo0qZ74AJjExF5B4LdcO+fUQrvjSd1gIq3wv
+         SXtECoHgTlYGoxj/TbuSqkBI8GXkdI10wmdhihyidrkpaPTsKzsUzey0BFdfJXtqQs5Q
+         Drsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRAZIKtdCsF9LfBktjElMQkXYSDz2KSwe76CdNv7aMpYwBXbsL+TDpSJyfDiBpBXOZU2cQi7XLh5ZYfwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF+O+Y+wgsAYsVH1MlkaAwlPLRsxKDc55EX+re1exk9hESJ390
+	J4+WOAjt6GUZz00A2mXNiSvP1wyqSmN5NJlV4dUH6O1Rne2wvlQfivMxxO7cbkE=
+X-Gm-Gg: ASbGncsqe1i3gztP7ChRLcJly1vYecioj0h4ARIMds+BFKAWYQIbPvTY4fjwb9JwZ+i
+	FMqqWFa9qddIVP1+M/E7ZLgytXg2XYU7VbeQvKOQy1jGYuuphHRzTL6gpH0Brb9PlhPZhCKJySc
+	MClTnoOzrsuBnbcmHsXLBUwK2A11iSJ/rGlQe6tZ+SDpbsc/qMVMiAMa0hEaY9+2CCCECVwWGq2
+	HCDBQUtTx3xev/kLKGB1Baf6UI8OzOlUXl0sViGMXmynMbuPzpnvrg3o72JMxnG4n1GVRmVha9J
+	yWfzGTPrZHbTV3crsvo6Xnyw/iWlrDXHhH3nY0rCRH2Heg==
+X-Google-Smtp-Source: AGHT+IEdVe2mD+cwO4qCB3YFgTnoYH0uwytzAg/jIFK4xqldbmRS8WVHtkNc5j1+SnW32WvdtqridA==
+X-Received: by 2002:a05:600c:511c:b0:43c:fa24:873e with SMTP id 5b1f17b1804b1-43f2d7b88d3mr44317825e9.13.1744313243547;
+        Thu, 10 Apr 2025 12:27:23 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.133.214])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a2f08sm61061875e9.12.2025.04.10.12.27.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 12:27:23 -0700 (PDT)
+Message-ID: <e11e9b17-a9e0-4f3d-964f-c8b656403f65@suse.com>
+Date: Thu, 10 Apr 2025 22:27:21 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] x86/sev: Disallow userspace access to BIOS region for
+ SEV-SNP guests
+To: Dan Williams <dan.j.williams@intel.com>, Kees Cook <kees@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, Naveen N Rao <naveen@kernel.org>,
+ linux-kernel@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev,
+ Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>,
+ Vishal Annapurve <vannapurve@google.com>,
+ Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+ Kevin Loughlin <kevinloughlin@google.com>, Michal Hocko <mhocko@suse.com>
+References: <67eedc35be77d_464ec29462@dwillia2-xfh.jf.intel.com.notmuch>
+ <l34f6nqq3up23cvrgmebbufztqkvfil5eahecukw5bnqekccpj@6nbciquhwxxc>
+ <1bc4c506-57ad-38aa-d56d-ed058f54708e@amd.com>
+ <fd683daa-d953-48ca-8c5d-6f4688ad442c@intel.com>
+ <67f5b75c37143_71fe2949b@dwillia2-xfh.jf.intel.com.notmuch>
+ <202504091038.5D9B68A@keescook>
+ <67f6bee647aa5_1302d294f5@dwillia2-xfh.jf.intel.com.notmuch>
+ <e2933f6e-4bda-40ee-b69c-d7222082fcfd@suse.com>
+ <202504100931.DEC3D3B79@keescook>
+ <e67bbcf2-02f4-4ce1-8ad0-b1f1381c65fb@suse.com>
+ <67f819faa4e0b_71fe294e1@dwillia2-xfh.jf.intel.com.notmuch>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+In-Reply-To: <67f819faa4e0b_71fe294e1@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0iu_hMud6FRg6FiUVQ1cY6oYqrEmwpwPTeYJh5Yzh5Q8A@mail.gmail.com>
 
-On Thu, Apr 10, 2025 at 08:47:38PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Apr 10, 2025 at 6:03 PM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> >
-> > On Thu, Apr 10, 2025 at 05:34:39PM +0200, Rafael J. Wysocki wrote:
-> > > On Thu, Apr 10, 2025 at 4:45 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> > > >
-> > > > From: Sultan Alsawaf <sultan@kerneltoast.com>
-> > > >
-> > > > When utilization is unchanged, a policy limits update is ignored unless
-> > > > CPUFREQ_NEED_UPDATE_LIMITS is set. This occurs because limits_changed
-> > > > depends on the old broken behavior of need_freq_update to trigger a call
-> > > > into cpufreq_driver_resolve_freq() to evaluate the changed policy limits.
-> > > >
-> > > > After fixing need_freq_update, limit changes are ignored without
-> > > > CPUFREQ_NEED_UPDATE_LIMITS, at least until utilization changes enough to
-> > > > make map_util_freq() return something different.
-> > > >
-> > > > Fix the ignored limit changes by preserving the value of limits_changed
-> > > > until get_next_freq() is called, so limits_changed can trigger a call to
-> > > > cpufreq_driver_resolve_freq().
-> > > >
-> > > > Reported-and-tested-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> > > > Link: https://lore.kernel.org/lkml/Z_Tlc6Qs-tYpxWYb@linaro.org
-> > > > Fixes: 8e461a1cb43d6 ("cpufreq: schedutil: Fix superfluous updates caused by need_freq_update")
-> > > > Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
-> > > > ---
-> > > >  kernel/sched/cpufreq_schedutil.c | 5 +++--
-> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > > > index 1a19d69b91ed3..f37b999854d52 100644
-> > > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > > @@ -82,7 +82,6 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
-> > > >                 return false;
-> > > >
-> > > >         if (unlikely(sg_policy->limits_changed)) {
-> > > > -               sg_policy->limits_changed = false;
-> > > >                 sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > >                 return true;
-> > > >         }
-> > > > @@ -171,9 +170,11 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
-> > > >         freq = get_capacity_ref_freq(policy);
-> > > >         freq = map_util_freq(util, freq, max);
-> > > >
-> > > > -       if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
-> > > > +       if (freq == sg_policy->cached_raw_freq && !sg_policy->limits_changed &&
-> > > > +           !sg_policy->need_freq_update)
-> > > >                 return sg_policy->next_freq;
-> > > >
-> > > > +       sg_policy->limits_changed = false;
-> > >
-> > > AFAICS, after this code modification, a limit change may be missed due
-> > > to a possible race with sugov_limits() which cannot happen if
-> > > sg_policy->limits_changed is only cleared when it is set before
-> > > updating sg_policy->need_freq_update.
-> >
-> > I don't think that's the case because sg_policy->limits_changed is cleared
-> > before the new policy limits are evaluated in cpufreq_driver_resolve_freq().
+
+
+On 10.04.25 г. 22:20 ч., Dan Williams wrote:
+> Nikolay Borisov wrote:
+> [..]
+>>>> Can't we simply treat return value of 2 for range_is_allowed the same way as
+>>>> if 0 was returned in mmap_mem and simply fail the call with -EPERM?
+>>>
+>>> The historical concern was that EPERM would break old tools. I don't
+>>> have any current evidence either way, though.
+>>
+>> Right, but we are only about to return 2 in a TVM context, so chances of
+>> running old tools are slim to none. Also it's perfectly valid to have
+>> mmap fail for a number of reasons, so old tools should be equipped with
+>> handling it returning -EPERM, no ?
 > 
-> sugov_limits() may be triggered by a scaling_max_freq update, for
-> instance, so it is asynchronous with respect to the usual governor
-> flow.  It updates sg_policy->limits_changed and assumes that next time
-> the governor runs, it will call into the driver, for example via
-> cpufreq_driver_fast_switch(), so the new limits take effect.  This is
-> not about cpufreq_driver_resolve_freq().
-
-OK, though I think there's still a race in cpufreq_driver_resolve_freq().
-
-> sugov_limits() runs after the driver's ->verify() callback has
-> returned and it is conditional on that callback's return value, so the
-> driver already knows the new limits when sugov_limits() runs, but it
-> may still need to tell the hardware what the new limits are and that's
-> why cpufreq_driver_fast_switch() may need to run.
-
-Which is why CPUFREQ_NEED_UPDATE_LIMITS exists, right.
-
-> Now, if sugov_should_update_freq() sees sg_policy->limits_changed set,
-> it will set sg_policy->need_freq_update which (for drivers with
-> CPUFREQ_NEED_UPDATE_LIMITS set) guarantees that the driver will be
-> invoked and so sg_policy->limits_changed can be cleared.
+> In practice that is yet another return code since the caller does not
+> know why the "2" is being returned and it is not clear how safe it is to
+> now start denying mmap in the !TVM case. So, perhaps something like this:
 > 
-> If a new instance of sugov_limits() runs at this point, there are two
-> possibilities.  Either it completes before the
-> sg_policy->limits_changed update in sugov_should_update_freq(), in
-> which case the driver already knows the new limits as per the above
-> and so the subsequent invocation of cpufreq_driver_fast_switch() will
-> pick them up, or it sets sg_policy->limits_changed again and the
-> governor will see it set next time it runs.  In both cases the new
-> limits will be picked up unless they are changed again in the
-> meantime.
+
+What I meant by "returning 2" is returning 2 from the call to 
+range_is_allowed in mmap_mem and handling this value inside mmap_mem, 
+not returning 2 to user space :) In essence something along the lines of:
+
+
+
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 169eed162a7f..8273066b6637 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -359,7 +359,8 @@ static int mmap_mem(struct file *file, struct 
+vm_area_struct *vma)
+         if (!private_mapping_ok(vma))
+                 return -ENOSYS;
+
+-       if (!range_is_allowed(vma->vm_pgoff, size))
++       int ret = range_is_allowed(vma->vm_pgoff, size);
++       if (!ret || ret == 2)
+                 return -EPERM;
+
+         if (!phys_mem_access_prot_allowed(file, vma->vm_pgoff, size,
+
+
+> enum devmem_policy {
+> 	DEVMEM_DENY,
+> 	DEVMEM_ALLOW,
+> 	DEVMEM_ZERO_RW, /* XXX: fix mmap_mem to install zeroes? */
+> 	DEVMEM_ZERO_RW_DENY_MMAP,
+> };
 > 
-> After the above change, sg_policy->limits_changed may be cleared even
-> if it has not been set before and that's problematic.  Namely, say it
-> is unset when sugov_should_update_freq() runs, after being called by
-> sugov_update_single_freq() via sugov_update_single_common(), and
-> returns 'true' without setting sg_policy->need_freq_update.  Next,
-> sugov_update_single_common() returns 'true' and get_next_freq() is
-> called.  It sees that freq != sg_policy->cached_raw_freq, so it clears
-> sg_policy->limits_changed.  If sugov_limits() runs on a different CPU
-> between the check and the sg_policy->limits_changed update in
-> get_next_freq(), it may be missed and it is still not guaranteed that
-> cpufreq_driver_fast_switch() will run because
-> sg_policy->need_freq_update is unset and sugov_hold_freq() may return
-> 'true'.
+> The hope is that legacy tools are either fine with open() failures due
+> to the prevalance of lockdown, fine with read/write of zeroes to BIOS
+> data due to the prevalance of CONFIG_STRICT_DEVMEM, or otherwise would
+> not notice / break when mmap() starts failing for BIOS data in the TVM
+> case. The !TVM case continues with the current gap for mmap.
 > 
-> For this to work, sg_policy->limits_changed needs to be cleared only
-> when it is set and sg_policy->need_freq_update needs to be updated
-> when sg_policy->limits_changed is cleared.
-
-Ah I see, thank you for the detailed explanation. So if I am understanding it
-correctly: the problem with my patch is that CPUFREQ_NEED_UPDATE_LIMITS might
-not be honored after a limits change, because CPUFREQ_NEED_UPDATE_LIMITS is only
-honored when sg_policy->limits_changed is set. So there is the following race:
-
-           CPU-A                    CPU-B
-  sugov_should_update_freq()                    // sg_policy->limits_changed == false, sg_policy->need_freq_update == false
-                                sugov_limits()  // sg_policy->limits_changed == true,  sg_policy->need_freq_update == false
-  get_next_freq()                               // sg_policy->limits_changed == false, sg_policy->need_freq_update == false
-
-  // cpufreq driver won't be invoked for the limits change if:
-  // next_f == sg_policy->next_freq || (sugov_hold_freq() == true && next_f < sg_policy->next_freq)
-
-Does that look right?
-
-> It looks like you really want to set sg_policy->need_freq_update to
-> 'true' in sugov_should_update_freq() when sg_policy->limits_changed is
-> set, but that would render CPUFREQ_NEED_UPDATE_LIMITS unnecessary.
+> Or, rip the bandaid and do this to see who screams:
 > 
-> > Granted, if we wanted to be really certain of this, we'd need release semantics.
+> enum devmem_policy {
+> 	DEVMEM_DENY,
+> 	DEVMEM_ALLOW,
+> 	DEVMEM_ZERO_RW_DENY_MMAP,
+> };
 > 
-> I don't think so, but feel free to prove me wrong.
 
-Well, it appears that there really is synchronization missing between
-cpufreq_set_policy() and schedutil, since cpufreq_set_policy() changes the live
-policy->min and policy->max, and schedutil may observe either the old values in
-there or garbage values due to load/store tearing.
-
-Sultan
