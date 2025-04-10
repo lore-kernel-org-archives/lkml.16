@@ -1,157 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB06202F62
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6F4202C53
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272470; cv=none; b=rNvrT86OX59+EopopLwiVmXH64aW8E9cAStkN6r7UcgOKkwwJ7A1z2PE9+9EzIkUgQmPre6iOKuaPmwNksFqOaoRcgsTu1UC7+p4K3phJN2NNQyzqmYxY/2+lyoUvZBQT7uPU+F0T99akM8kUYSeTPPN92P8HPUWbv1Qp1wzfPM=
+	t=1744272472; cv=none; b=rkVChGANyN5m3/Lc5m7ICWg1mXC1oZVreZ3dW+ZbMS8zJZlEwJyXhrW3Dx0AvBaYvVl6hytmbhG41ziuj1bgqAxcfadc3ZBdesCZyt3B+cbQyL08y39+NvyJQbDXvtQq7/lGkURwmKG5Lng3GfxXELnCQJjGbzwCFxVk9HBKUEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272470; c=relaxed/simple;
-	bh=H7Rr6CifLf6QgJhumDAIt1E3qwzpwA0TrV+uAgCK1VU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QQkIq9ww9McYQyxCosIyelPBBGTxrYcjVlrMl6KkFm6hRulnPf8FU4Rl3d52J+Q1oiDiIbK1TdisrhdvVqdvwYR/f25UjlVPYxGE9A8ODEXNVp9fdNOYoSdo/mU0xszdC8yBwD8CxxkGfYTxZtQSlge6lp4AjcJRR33IXNMxIEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCMZi2RI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744272472; c=relaxed/simple;
+	bh=l8rq0lp+35FdD9JCbp/mek9kn6GH0HJjdxWV1XHPBMA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GkcpEEuDN5GfmBwJKOMcFYLaxfpfSyrMDFcS4/cFM+wUla4RhK6waaaDKS9gK8woZNAGyhypi4b2prl+JBOak5LGqEHkNUBIGWcKDRQ7amHiF0hiVKK6WJTj+9seP6DbwSe6Jy343FuvJTtfbjGG/M8Ec3huHAdqXGgpMSfGMXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=UEyBQiwq; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCMZi2RI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37BD0C4CEEB;
-	Thu, 10 Apr 2025 08:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744272470;
-	bh=H7Rr6CifLf6QgJhumDAIt1E3qwzpwA0TrV+uAgCK1VU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sCMZi2RIQ6T607JQU0kvnz/SfZhePCZ9j3K2fWu174vju//7Xvbw1VryurqK2fWMY
-	 1FPAHjmV/L7SvqNqp5XPe+CNdpsUlN1T2srtBX+kkJTg3Bmhpc4pX7pTCjgERo8Nyg
-	 Ajjsu9rYwr+Nlm3k5nV61nMHVxtx1YrjjahCRyZSAKkIEdFzECRCHYpX4t8BSZhp53
-	 YCLDYaugP8YIUkWwFrjPX/6EodDuyNyEBBZlrJgB25MPmeOMKzyWUC6/WATI3enia/
-	 WcfWcZorvfnUYQBaOxhfD5wCsNmgcMLAgLIy1JLFHYKhT1Wgp5VAEHFsVhzH4Y4Y2s
-	 da4qpnUgk2m3A==
-Date: Thu, 10 Apr 2025 11:07:43 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH 2/2] base/node: Use
- curr_node_memblock_intersect_memory_block to Get Memory Block NID if
- CONFIG_DEFERRED_STRUCT_PAGE_INIT is Set
-Message-ID: <Z_d8T3QtnZVeH3HF@kernel.org>
-References: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
- <d10d1a9f11e9f8752c7ec5ff5bb262b3f6c6bb85.1744175097.git.donettom@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UEyBQiwq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744272467;
+	bh=l8rq0lp+35FdD9JCbp/mek9kn6GH0HJjdxWV1XHPBMA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UEyBQiwqWSS4QcmTYcfYnUIyeYJ4ElAVGzcm8LMEdf/ZmpOzSnvCRTGPVoOhY0lHQ
+	 rnlf9ek7vTF18dVRDZuexJV6xLVkGf/qDYcvP5ME83ZiK6p87yJw2dIZ0izRvuCyyE
+	 9kjxRbguqf0dNabCVvroSfctBnV+eYckY7ex/qL0zDUSqtBupmek8MpUEmzNhDNFYW
+	 lqho1lVLsUemfU0d26BtW8tO06vldDtevTpYz/nii0gUyPDVVdPVUDEuOAv4mlFBKw
+	 uk0v1g5+24rzyEOON460qIZvh2argeoiV6uqflnWIUPTdFpmFaqYEy1fVPe5ViEBrn
+	 4FrqtwRn836TA==
+Received: from [192.168.50.250] (unknown [171.76.83.191])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id DEA6917E078A;
+	Thu, 10 Apr 2025 10:07:44 +0200 (CEST)
+Message-ID: <a16c70e0-9078-4a21-9fa1-ca9d33823ff2@collabora.com>
+Date: Thu, 10 Apr 2025 13:37:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d10d1a9f11e9f8752c7ec5ff5bb262b3f6c6bb85.1744175097.git.donettom@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] drm/ci: Add devicetree validation and KUnit tests
+To: Helen Koike <koike@igalia.com>, dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com, daniel@fooishbar.org, helen.fornazier@gmail.com,
+ airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com,
+ guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
+ valentine.burley@collabora.com, lumag@kernel.org, quic_abhinavk@quicinc.com,
+ mripard@kernel.org, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+ linux-kernel@vger.kernel.org
+References: <20250409061543.311184-1-vignesh.raman@collabora.com>
+ <ef5b7030-c38a-44b9-b0bd-28ea6adb17c2@igalia.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <ef5b7030-c38a-44b9-b0bd-28ea6adb17c2@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 10:57:57AM +0530, Donet Tom wrote:
-> In the current implementation, when CONFIG_DEFERRED_STRUCT_PAGE_INIT is
-> set, we iterate over all PFNs in the memory block and use
-> early_pfn_to_nid to find the NID until a match is found.
+Hi Helen,
+
+On 09/04/25 23:53, Helen Koike wrote:
+> Hi Vignesh,
 > 
-> This patch we are using curr_node_memblock_intersect_memory_block() to
-> check if the current node's memblock intersects with the memory block
-> passed when CONFIG_DEFERRED_STRUCT_PAGE_INIT is set. If an intersection
-> is found, the memory block is added to the current node.
+> Thank you for your patch.
 > 
-> If CONFIG_DEFERRED_STRUCT_PAGE_INIT is not set, the existing mechanism
-> for finding the NID will continue to be used.
-
-I don't think we really need different mechanisms for different settings of
-CONFIG_DEFERRED_STRUCT_PAGE_INIT. 
-
-node_dev_init() runs after all struct pages are already initialized and can
-always use pfn_to_nid().
-
-kernel_init_freeable() ->
-	page_alloc_init_late(); /* completes initialization of deferred pages */
-	...
-	do_basic_setup() ->
-		driver_init() ->
-			node_dev_init();
-
-The next step could be refactoring register_mem_block_under_node_early() to
-loop over memblock regions rather than over pfns.
- 
-> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
-> ---
->  drivers/base/node.c | 37 +++++++++++++++++++++++++++++--------
->  1 file changed, 29 insertions(+), 8 deletions(-)
+> On 09/04/2025 03:15, Vignesh Raman wrote:
+>> Add jobs to validate devicetrees and run KUnit tests.
+>>
+>> Pipeline link,
+>> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1400550
 > 
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index cd13ef287011..5c5dd02b8bdd 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -20,6 +20,8 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/swap.h>
->  #include <linux/slab.h>
-> +#include <linux/memblock.h>
-> +
->  
->  static const struct bus_type node_subsys = {
->  	.name = "node",
-> @@ -782,16 +784,19 @@ static void do_register_memory_block_under_node(int nid,
->  				    ret);
->  }
->  
-> -/* register memory section under specified node if it spans that node */
-> -static int register_mem_block_under_node_early(struct memory_block *mem_blk,
-> -					       void *arg)
-> +static int register_mem_block_early_if_dfer_page_init(struct memory_block *mem_blk,
-> +				unsigned long start_pfn, unsigned long end_pfn, int nid)
->  {
-> -	unsigned long memory_block_pfns = memory_block_size_bytes() / PAGE_SIZE;
-> -	unsigned long start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
-> -	unsigned long end_pfn = start_pfn + memory_block_pfns - 1;
-> -	int nid = *(int *)arg;
-> -	unsigned long pfn;
->  
-> +	if (curr_node_memblock_intersect_memory_block(start_pfn, end_pfn, nid))
-> +		do_register_memory_block_under_node(nid, mem_blk, MEMINIT_EARLY);
-> +	return 0;
-> +}
-> +
-> +static int register_mem_block_early__normal(struct memory_block *mem_blk,
-> +				unsigned long start_pfn, unsigned long end_pfn, int nid)
-> +{
-> +	unsigned long pfn;
->  	for (pfn = start_pfn; pfn <= end_pfn; pfn++) {
->  		int page_nid;
->  
-> @@ -821,6 +826,22 @@ static int register_mem_block_under_node_early(struct memory_block *mem_blk,
->  	/* mem section does not span the specified node */
->  	return 0;
->  }
-> +/* register memory section under specified node if it spans that node */
-> +static int register_mem_block_under_node_early(struct memory_block *mem_blk,
-> +					       void *arg)
-> +{
-> +	unsigned long memory_block_pfns = memory_block_size_bytes() / PAGE_SIZE;
-> +	unsigned long start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
-> +	unsigned long end_pfn = start_pfn + memory_block_pfns - 1;
-> +	int nid = *(int *)arg;
-> +
-> +#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
-> +	if (system_state < SYSTEM_RUNNING)
-> +		return register_mem_block_early_if_dfer_page_init(mem_blk, start_pfn, end_pfn, nid);
-> +#endif
-> +	return register_mem_block_early__normal(mem_blk, start_pfn, end_pfn, nid);
-> +
-> +}
->  
->  /*
->   * During hotplug we know that all pages in the memory block belong to the same
-> -- 
-> 2.48.1
+> I see the checks are in the same stage as build, does it make sense to 
+> create another stage? Similar to what was proposed on kci-gitlab?
+> 
+> Also, I don't think it make sense for kunit to be in the build stage. 
+> Maybe in software-driver? Since kunit runs on a qemu.
+
+We can add a `test` stage for kunit and a `static-checks` stage for 
+devicetree validation and check patch. What do you think?
+
+Regards,
+Vignesh
+
+> 
+> Helen
+> 
+>>
+>> Link to v1,
+>> https://lore.kernel.org/all/20250327160117.945165-1- 
+>> vignesh.raman@collabora.com/
+>>
+>> Vignesh Raman (2):
+>>    drm/ci: Add jobs to validate devicetrees
+>>    drm/ci: Add jobs to run KUnit tests
+>>
+>>   drivers/gpu/drm/ci/check-devicetrees.yml | 43 ++++++++++++++++++++++++
+>>   drivers/gpu/drm/ci/dt-binding-check.sh   | 16 +++++++++
+>>   drivers/gpu/drm/ci/dtbs-check.sh         | 19 +++++++++++
+>>   drivers/gpu/drm/ci/gitlab-ci.yml         |  2 ++
+>>   drivers/gpu/drm/ci/kunit.sh              | 11 ++++++
+>>   drivers/gpu/drm/ci/kunit.yml             | 32 ++++++++++++++++++
+>>   6 files changed, 123 insertions(+)
+>>   create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
+>>   create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
+>>   create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
+>>   create mode 100755 drivers/gpu/drm/ci/kunit.sh
+>>   create mode 100644 drivers/gpu/drm/ci/kunit.yml
+>>
 > 
 
--- 
-Sincerely yours,
-Mike.
