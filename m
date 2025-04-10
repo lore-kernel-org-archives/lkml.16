@@ -1,127 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA212857FA;
-	Thu, 10 Apr 2025 13:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDBD19004A
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744292691; cv=none; b=gsXWqdWBDD1u+QDa/7UwbC+LZq6oj9Jf/PifRpubRfgIBzx0Uub7OeeURi+4EnVXcir/yHwS+JUDIGMXJq9jsdSZ+fh2r7tXdtWOHSMM2KzfAAHzp4Cuk1cXS71iwvuOPGCO451grG0QvdPlEVGNgmOf/Tio9rfeHJf1gD07xy8=
+	t=1744292721; cv=none; b=EnmZM1XQHuhgIjPHsUDa4+MjRzJmbRgzN6GnXzxqKPo8w5ZXvDoWxpirCGuuYVIohxVXJTESNEsdMV9u/TXl0LHhxK8Z9JYPh1MbtHSVkGbLsyQifY0NtgEfa8Qn9C9to2eqgdrH/ZUZkJwPUDSRBCguIUCQqGfpzDY+BtR8t7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744292691; c=relaxed/simple;
-	bh=zIuv99jR6/DvhIj/ezFd7gDXDCcqNb+1BR6FZTmkWrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaLPSk4WfSpZ4yvNBThlrE3Md7vZH1X3QchXS4mvpbSwS8riXxEfvO7JnI3yCsUBFbvIbBIcP/GBNU5Upqh5PBMC4CVwqcBS5mD54ye60mX4Pjz+CDsV2ZJEV5xpV8seVHuElfaJhjf6jFp73qZ4pjIQ5QobEPJ5uthTXIvTWu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWFnvSEr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744292721; c=relaxed/simple;
+	bh=Qy4A44c/RUvu7fFmy6yUlwQUkMFAn0x5PmE7E9huMpk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t6XUg3jAnSIYhxShfC1pVwETpaZ84LQShxUoUqxJnQ3Hqpy5BGIpRVXXHjpQ3UgmPqnk8jraMff283xrHAPLG/zKmPn6ItiAL720x/qrkRsNb3m9b+61gdr/W1dbojZxh8dl2shCwEOuh+FYhOqutA+fS4B/HWVeCBN2iJ7myM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wSOXgyJL; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWFnvSEr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C278C4CEE9;
-	Thu, 10 Apr 2025 13:44:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744292690;
-	bh=zIuv99jR6/DvhIj/ezFd7gDXDCcqNb+1BR6FZTmkWrc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WWFnvSErJGHoAFL49fO2hww9SHO0/RHs5AH/HqVziawMjh9vkYSNexmYM9V1qao//
-	 Uh5m0IBGBkSMOyIl6LkSlHlAzZ8YKtLENE/p8M8TUsEKyGyM9YU4yx4VNGvR+vZpeJ
-	 myK2knY44CdZhmM1cF4cFbU8prSB9k9gCLko941gW1mDLOBdONOpcnJXQkkw0Nuzng
-	 SOBwpUziCkn/UNnqzHR0tQdkzSkfGkkBfztnfEcXBSOrSxMfFsR97hoDLizOpcrsJY
-	 nBHLyuWvuLHh2P7ENrjNiNabOB/jqF0W7PDRh3p6iblYP0qF5q//7SvENLREFz9+8M
-	 sxOCOcCxwnQcQ==
-Date: Thu, 10 Apr 2025 16:44:43 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
-	"Singhai, Anjali" <anjali.singhai@intel.com>,
-	Phani R Burra <phani.r.burra@intel.com>
-Subject: Re: [PATCH iwl-next 05/14] libeth: add control queue support
-Message-ID: <20250410134443.GS199604@unreal>
-References: <20250408124816.11584-1-larysa.zaremba@intel.com>
- <20250408124816.11584-6-larysa.zaremba@intel.com>
- <20250410082137.GO199604@unreal>
- <Z_ehEXmlEBREQWQM@soc-5CG4396X81.clients.intel.com>
- <20250410112349.GP199604@unreal>
- <c1ff0342-4fe9-44ec-a212-9f547e333a5e@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wSOXgyJL"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6f768e9be1aso21711567b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744292718; x=1744897518; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K+ML5+lZkclfARYXwoJaLLimWYhbRg0TFmxZrKOY/4A=;
+        b=wSOXgyJLD8DeFcpCJ7O/GkemrQ+ymByDbF0VdSsbQZlp+9syoogW/RsK16pGhgEh+q
+         l4WShOVOzWbR2abM0Tb51RjyYMdyQ6Juzt/NC5/ttuI/M56NgjWbie6WGG/IuklQqBE0
+         iavP6pQQS32zKtCRo1GSdbmHGN2v/YPksjilIKsLRyHxxA7agcIfOilq7LLSyWw6DhL7
+         IJvcMOLgpHqHWl2IeSSGrnbscKzeOmwq4/43+5qc1Dq1kbGpgj5870KMK+mbMQEOMRnM
+         pbSRKZDaonO6gxQCGIfhH9ZzpNT53eii3CtIZBIKDl8ajcLQ/a+TAZdCtO73e/fA8ZHV
+         LGEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744292718; x=1744897518;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K+ML5+lZkclfARYXwoJaLLimWYhbRg0TFmxZrKOY/4A=;
+        b=sySX4m6E1x8eacOxHtL3MNEUOQq9e9gNwc1O24Ipi7eVqYPkaEh/X+lD1JuCaTRgp9
+         Dy9IuI0Si10Fo06fOetUMSNOnUbnLE7FzUGARPsbmxdgOW60XTWfwun6lLLe9ycdX6cC
+         TpG0tqj2DhGyhJwnaf9bVR0Ti3cW7JiY4OfXabg5wsY5gdsSTNPSQxCSDK85aQnYYziz
+         gKntdOBZdEiMrLFzfdn9+Ulnn6zdc5SqbTKMcnvwGrWnoFGUiSKMe1sJ9vwWnoD/06mQ
+         TnDJZrhbbXmA4Dvp5kT67TsKyhz7WvWW66NzH/ErQlDm30QWTTCDJY+iHXEXIBudi377
+         OPGQ==
+X-Gm-Message-State: AOJu0YyYYDpFf2ZBCnYMP4yznQpnHE8kCik4XG5dlhv4/0/MkdadzDUQ
+	3Ob0RWvE3Bfq2GK0q3j5RLozU33ZdkbAShf7l3m+MxjVSB3xYorkWxhA5y/pZ071KooTBdi1Qwh
+	tVrRKXyKRhw0JIueyiJeYB39nrzKPRhtUMOZeYw==
+X-Gm-Gg: ASbGncsxHJre5HvFZwTHTbKeNCL+mEt8HZP6ndleIPJNSep5n+Y4WgzF70yCTRDjt5e
+	mc2gpSVQZgBjz0NhsrdPNpuzQUsDCjB871Jr171Ts0TApy6BUFiFZHiCx5miVnEa9GPz1LsXBv8
+	QTfECopSinJML915yilyPHoGo=
+X-Google-Smtp-Source: AGHT+IE2qGO+aWnlhjPQiT/O43/hZDTamK5QL+DvU9HYVV80mmAiaWCo3u69VnRe4rEoCDGKj9VAlvn74x4/vc9IqS0=
+X-Received: by 2002:a05:690c:7485:b0:702:66cd:10be with SMTP id
+ 00721157ae682-7054a13ca7dmr46930657b3.14.1744292718557; Thu, 10 Apr 2025
+ 06:45:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1ff0342-4fe9-44ec-a212-9f547e333a5e@intel.com>
+References: <20250401025123.895307-1-ricky_wu@realtek.com> <CAPDyKFpn5xB50eTomNM=4LbFDX4r154iY2Qk8GBiYb+vor0kbA@mail.gmail.com>
+ <1fde0217fa544560888c3e6f4f5963f9@realtek.com>
+In-Reply-To: <1fde0217fa544560888c3e6f4f5963f9@realtek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 10 Apr 2025 15:44:42 +0200
+X-Gm-Features: ATxdqUF1Zp1od8RzcSBLFqjvlDhawwyc1n6aNdWRiQDIFPeeRIziDeAyT0ztL2c
+Message-ID: <CAPDyKFogPwixHGdmUy_z_udrUpU36mi_9cqdo1bPdM88OL1Erw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: rtsx: usb add 74 clocks in poweron flow
+To: Ricky WU <ricky_wu@realtek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, 
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 10, 2025 at 03:05:19PM +0200, Alexander Lobakin wrote:
-> From: Leon Romanovsky <leon@kernel.org>
-> Date: Thu, 10 Apr 2025 14:23:49 +0300
-> 
-> > On Thu, Apr 10, 2025 at 12:44:33PM +0200, Larysa Zaremba wrote:
-> >> On Thu, Apr 10, 2025 at 11:21:37AM +0300, Leon Romanovsky wrote:
-> >>> On Tue, Apr 08, 2025 at 02:47:51PM +0200, Larysa Zaremba wrote:
-> >>>> From: Phani R Burra <phani.r.burra@intel.com>
-> >>>>
-> >>>> Libeth will now support control queue setup and configuration APIs.
-> >>>> These are mainly used for mailbox communication between drivers and
-> >>>> control plane.
-> >>>>
-> >>>> Make use of the page pool support for managing controlq buffers.
+On Thu, 10 Apr 2025 at 08:37, Ricky WU <ricky_wu@realtek.com> wrote:
+>
+> > >
+> > > SD spec definition:
+> > > "Host provides at least 74 Clocks before issuing first command"
+> > > After 1ms for the voltage stable then start issuing the Clock signals
+> > >
+> > > add if statement to issue/stop the clock signal to card:
+> > > The power state from POWER_OFF to POWER_UP issue the signal to card,
+> > > POWER_UP to POWER_ON stop the signal
+> > >
+> > > add 100ms delay in power_on to make sure the power cycle complete
+> >
+> > Why 100ms? That sounds a lot to me?
+> >
+> Hi Ulf,
+>
+> This 100ms delay is to ensure the voltage is below 0.5V before power on during a power cycle,
+> The delays in the mmc core is not sufficient for the rtsx usb device.
+> Because during the card recognition process, the card power will be toggled once in 1ms.
+> If the card power is not fully discharged within that 1ms before being turned on again,
+> It may affect the card recognition
 
-<...>
+Okay, I see. So 1ms isn't sufficient for your case.
 
-> >> Module dependencies are as follows:
-> >>
-> >> libeth_rx and libeth_pci do not depend on other modules.
-> >> libeth_cp depends on both libeth_rx and libeth_pci.
-> >> idpf directly uses libeth_pci, libeth_rx and libeth_cp.
-> >> ixd directly uses libeth_cp and libeth_pci.
-> > 
-> > You can do whatever module architecture for netdev devices, but if you
-> > plan to expose it to RDMA devices, I will vote against any deep layered
-> > module architecture for the drivers.
-> 
-> No plans for RDMA there.
-> 
-> Maybe link the whole kernel to one vmlinux then?
+Is there a regulator described somewhere? Could this delay be part of
+the regulator enable/disable instead?
 
-It seems that you didn't understand at all about what we are talking
-here. Please use the opportunity that you are working for the same
-company with Larysa and ask her offline. She understood perfectly about
-which modules we are talking.
+>
+> > Is this fixing a real problem or is just trying to better follow the spec?
+> >
+>
+> We found some cards not be recognized if not issue this 74 clocks
 
-> 
-> > 
-> > BTW, please add some Intel prefix to the modules names, they shouldn't
-> > be called in generic names like libeth, e.t.c
-> 
-> Two modules with the same name can't exist within the kernel. libeth was
-> available and I haven't seen anyone wanting to take it. It's not common
-> at all to name a module starting with "lib".
+That still doesn't explain why you picked exactly 100ms as the delay.
+Assuming we are running at lowest initialization frequency for SD/eMMC
+at 100kHz, then 74 clocks are:
 
-Again, please talk with Larysa. ETH part is problematic in libeth name
-and not LIB.
+74/100000 = 0,00074s.
 
-Thanks
+Kind regards
+Uffe
+
+>
+> > >
+> > > Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+> > > ---
+> > >  drivers/mmc/host/rtsx_usb_sdmmc.c | 28
+> > +++++++++++++++++++++++++---
+> > >  1 file changed, 25 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/mmc/host/rtsx_usb_sdmmc.c
+> > > b/drivers/mmc/host/rtsx_usb_sdmmc.c
+> > > index d229c2b83ea9..e5820b2bb380 100644
+> > > --- a/drivers/mmc/host/rtsx_usb_sdmmc.c
+> > > +++ b/drivers/mmc/host/rtsx_usb_sdmmc.c
+> > > @@ -48,7 +48,7 @@ struct rtsx_usb_sdmmc {
+> > >         bool                    ddr_mode;
+> > >
+> > >         unsigned char           power_mode;
+> > > -
+> > > +       unsigned char           prev_power_mode;
+> > >  #ifdef RTSX_USB_USE_LEDS_CLASS
+> > >         struct led_classdev     led;
+> > >         char                    led_name[32];
+> > > @@ -952,6 +952,8 @@ static int sd_power_on(struct rtsx_usb_sdmmc
+> > *host)
+> > >         struct rtsx_ucr *ucr = host->ucr;
+> > >         int err;
+> > >
+> > > +       msleep(100);
+> > > +
+> > >         dev_dbg(sdmmc_dev(host), "%s\n", __func__);
+> > >         rtsx_usb_init_cmd(ucr);
+> > >         rtsx_usb_add_cmd(ucr, WRITE_REG_CMD, CARD_SELECT, 0x07,
+> > > SD_MOD_SEL); @@ -1014,6 +1016,16 @@ static int
+> > sd_set_power_mode(struct rtsx_usb_sdmmc *host,
+> > >                 unsigned char power_mode)  {
+> > >         int err;
+> > > +       int power_mode_temp;
+> > > +       struct rtsx_ucr *ucr = host->ucr;
+> > > +
+> > > +       power_mode_temp = power_mode;
+> > > +
+> > > +       if ((power_mode == MMC_POWER_ON) && (host->power_mode
+> > == MMC_POWER_ON) &&
+> > > +                       (host->prev_power_mode ==
+> > MMC_POWER_UP)) {
+> > > +               host->prev_power_mode = MMC_POWER_ON;
+> > > +               rtsx_usb_write_register(ucr, SD_BUS_STAT,
+> > SD_CLK_TOGGLE_EN, 0x00);
+> > > +       }
+> > >
+> > >         if (power_mode != MMC_POWER_OFF)
+> > >                 power_mode = MMC_POWER_ON; @@ -1029,9
+> > +1041,18 @@
+> > > static int sd_set_power_mode(struct rtsx_usb_sdmmc *host,
+> > >                 err = sd_power_on(host);
+> > >         }
+> > >
+> > > -       if (!err)
+> > > -               host->power_mode = power_mode;
+> > > +       if (!err) {
+> > > +               if ((power_mode_temp == MMC_POWER_UP) &&
+> > (host->power_mode == MMC_POWER_OFF)) {
+> > > +                       host->prev_power_mode = MMC_POWER_UP;
+> > > +                       rtsx_usb_write_register(ucr, SD_BUS_STAT,
+> > SD_CLK_TOGGLE_EN,
+> > > +                                       SD_CLK_TOGGLE_EN);
+> > > +               }
+> > > +
+> > > +               if ((power_mode_temp == MMC_POWER_OFF) &&
+> > (host->power_mode == MMC_POWER_ON))
+> > > +                       host->prev_power_mode = MMC_POWER_OFF;
+> > >
+> > > +               host->power_mode = power_mode;
+> > > +       }
+> > >         return err;
+> > >  }
+> > >
+> > > @@ -1316,6 +1337,7 @@ static void rtsx_usb_init_host(struct
+> > rtsx_usb_sdmmc *host)
+> > >         mmc->max_req_size = 524288;
+> > >
+> > >         host->power_mode = MMC_POWER_OFF;
+> > > +       host->prev_power_mode = MMC_POWER_OFF;
+> > >  }
+> > >
+> > >  static int rtsx_usb_sdmmc_drv_probe(struct platform_device *pdev)
+> > > --
+> > > 2.25.1
+> > >
+> >
+> > Kind regards
+> > Uffe
