@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F151F1DF965;
-	Thu, 10 Apr 2025 20:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0500290097;
+	Thu, 10 Apr 2025 20:13:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744316013; cv=none; b=Hj/8S35r9lamOYwiJhoucVFKA9HJJaVv20TxckIdqN+nehpgeJt9pmInhKP7SMWv0MhoRaGLVV6C7D9ZAc/r0olfCw5/3HmZGWok9SOPlWWNrz4L8qPmw4XoaBlpjO4452kaX+B1ubNj5LRa/WJ2fzeFtDR4n1mU0P2vLcQFngI=
+	t=1744316015; cv=none; b=gjGD7ObRNBLUdDRgruG5xB+d3w0NqbYmqk34vMDeRoXVnkHprkCzw0sMlu3WGep/oceeoUJN/7V6uAt2k01eX9G6ObCQXN2kYmqa7lImXwSSkwBovQ+kjLhd9An51XilC0Jb1bucRO351R9GX57tRhcdpkAAoOtlWmvmm8vil6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744316013; c=relaxed/simple;
-	bh=xEhwAu3xgUU6Amb1UWoZGEieAQxg5xwmELZOlHI/s3A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hZ12LtfdKzOqn+wmq35jc8C+dajplGnbZXstN+fRJa/AqPqPJuLkPF/2CavS3C2BZl6M9EfR7ysEZRS39h2bRJkGWoI8Thb8pAqyLcRIdjULKdZ/Lqb1wADNJGNDd1Q6x4P32yMAW0OV86xihMQw7/Z90xbDgU0xpCuqdk8Eqwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ewfTJCvY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744316015; c=relaxed/simple;
+	bh=GQ4zHuoKiT6zvG2cAO/4sT+VU9Lu8wKigAx85jxf5uc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ge78WAB5APSih1hXe4S1cXkeNeJdgi91i1GB97YSoiD4werDkdV8hoAhInXAqxWUsHfnaWy67kIa5UiDyCrTc8Py+rR6yhOXzZxzXJ6BMW9jcnyoSBXAdUkTUSh6bOMUF15PeXq5OYAdFqqVywcqU6oI7Zk6aJ2QK/JNt8dpzm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bO8pX7T0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ewfTJCvY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2701BC4CEDD;
-	Thu, 10 Apr 2025 20:13:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bO8pX7T0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC21C4CEDD;
+	Thu, 10 Apr 2025 20:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744316012;
-	bh=xEhwAu3xgUU6Amb1UWoZGEieAQxg5xwmELZOlHI/s3A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ewfTJCvYanYdjM+nFu+OJtK3cQ8yKjegiqAu+GsVEPtTWWU5729dsgTcpL64TQRLm
-	 jKE20+Yote16/j4bzaNMWZa2m0FpZibSrweiW31f59MHRXpZto0QoKWLbnMQ0Gh6Jk
-	 Q1Fa90HuV9FL7T/VcaMLIMLotv8mxOcTJoH7gKyHL3QZobGXaAgBL5MHH+nzNPPU0+
-	 /OImbeR9rj3pEDnpZD34oNa3eRBjfm7WASFGp+MAj2m6dyNJ24+yfecufCiHZLieN1
-	 L5FLaXoJDL7l/lCRe1bq9g2sFU5ZTmd3YRfgFIqwmmahnO25qSQy1F5YSGGWDcZt3S
-	 0r2QOGuyTpwLg==
+	s=k20201202; t=1744316014;
+	bh=GQ4zHuoKiT6zvG2cAO/4sT+VU9Lu8wKigAx85jxf5uc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bO8pX7T06FpODXvjM1UuaGSk9y8gHMS96GfkQ6TOVVpQSrtwy/50jz10LS550bDiv
+	 agdwbADdS8SciIuWA5YLInOxwJvQAqvOOG+Eka2H1TVsyeiUX3+p2IY+13nzQw2lyi
+	 ldP7d/7dqTKTNwNXYdal3hxMGVxCYliBZbwwWqqUyXujLzJbbmCP5EMysnvPJe1buQ
+	 bAP5zHfMESVlWCySZXnh0XVnboWKTXBngE4irU7QwqwsYpif9urA1+k3+0w4fTtscq
+	 Jom/8I4gpXN2NdN591I/J1JB3Bdypodwd04L8A+8eFFeSipovdpsdO0zQ1i/udLZ2n
+	 BszFoSTj8gmDQ==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
@@ -36,10 +37,12 @@ To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 Cc: devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 1/2] dt-bindings: Remove obsolete cpu-topology.txt
-Date: Thu, 10 Apr 2025 15:13:22 -0500
-Message-ID: <20250410201325.962203-1-robh@kernel.org>
+Subject: [PATCH 2/2] dt-bindings: Remove obsolete numa.txt
+Date: Thu, 10 Apr 2025 15:13:23 -0500
+Message-ID: <20250410201325.962203-2-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250410201325.962203-1-robh@kernel.org>
+References: <20250410201325.962203-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,574 +51,341 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The cpu topology binding is now covered by the dtschema cpu-map.yaml
-schema with all the relevant descriptions moved to it.
+The NUMA binding is now covered by the dtschema
+numa-distance-map-v1.yaml and CPU and memory node schemas with all
+the relevant descriptions moved to them.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../devicetree/bindings/cpu/cpu-topology.txt  | 553 ------------------
- 1 file changed, 553 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/cpu/cpu-topology.txt
+ Documentation/devicetree/bindings/numa.txt | 319 ---------------------
+ 1 file changed, 319 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/numa.txt
 
-diff --git a/Documentation/devicetree/bindings/cpu/cpu-topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
 deleted file mode 100644
-index 9bd530a35d14..000000000000
---- a/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+index 42f282c2f3cc..000000000000
+--- a/Documentation/devicetree/bindings/numa.txt
 +++ /dev/null
-@@ -1,553 +0,0 @@
--===========================================
--CPU topology binding description
--===========================================
+@@ -1,319 +0,0 @@
+-==============================================================================
+-NUMA binding description.
+-==============================================================================
 -
--===========================================
+-==============================================================================
 -1 - Introduction
--===========================================
--
--In a SMP system, the hierarchy of CPUs is defined through three entities that
--are used to describe the layout of physical CPUs in the system:
--
--- socket
--- cluster
--- core
--- thread
--
--The bottom hierarchy level sits at core or thread level depending on whether
--symmetric multi-threading (SMT) is supported or not.
--
--For instance in a system where CPUs support SMT, "cpu" nodes represent all
--threads existing in the system and map to the hierarchy level "thread" above.
--In systems where SMT is not supported "cpu" nodes represent all cores present
--in the system and map to the hierarchy level "core" above.
--
--CPU topology bindings allow one to associate cpu nodes with hierarchical groups
--corresponding to the system hierarchy; syntactically they are defined as device
--tree nodes.
--
--Currently, only ARM/RISC-V intend to use this cpu topology binding but it may be
--used for any other architecture as well.
--
--The cpu nodes, as per bindings defined in [4], represent the devices that
--correspond to physical CPUs and are to be mapped to the hierarchy levels.
--
--A topology description containing phandles to cpu nodes that are not compliant
--with bindings standardized in [4] is therefore considered invalid.
--
--===========================================
--2 - cpu-map node
--===========================================
--
--The ARM/RISC-V CPU topology is defined within the cpu-map node, which is a direct
--child of the cpus node and provides a container where the actual topology
--nodes are listed.
--
--- cpu-map node
--
--	Usage: Optional - On SMP systems provide CPUs topology to the OS.
--			  Uniprocessor systems do not require a topology
--			  description and therefore should not define a
--			  cpu-map node.
--
--	Description: The cpu-map node is just a container node where its
--		     subnodes describe the CPU topology.
--
--	Node name must be "cpu-map".
--
--	The cpu-map node's parent node must be the cpus node.
--
--	The cpu-map node's child nodes can be:
--
--	- one or more cluster nodes or
--	- one or more socket nodes in a multi-socket system
--
--	Any other configuration is considered invalid.
--
--The cpu-map node can only contain 4 types of child nodes:
--
--- socket node
--- cluster node
--- core node
--- thread node
--
--whose bindings are described in paragraph 3.
--
--The nodes describing the CPU topology (socket/cluster/core/thread) can
--only be defined within the cpu-map node and every core/thread in the
--system must be defined within the topology.  Any other configuration is
--invalid and therefore must be ignored.
--
--===========================================
--2.1 - cpu-map child nodes naming convention
--===========================================
--
--cpu-map child nodes must follow a naming convention where the node name
--must be "socketN", "clusterN", "coreN", "threadN" depending on the node type
--(ie socket/cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes
--which are siblings within a single common parent node must be given a unique and
--sequential N value, starting from 0).
--cpu-map child nodes which do not share a common parent node can have the same
--name (ie same number N as other cpu-map child nodes at different device tree
--levels) since name uniqueness will be guaranteed by the device tree hierarchy.
--
--===========================================
--3 - socket/cluster/core/thread node bindings
--===========================================
--
--Bindings for socket/cluster/cpu/thread nodes are defined as follows:
--
--- socket node
--
--	 Description: must be declared within a cpu-map node, one node
--		      per physical socket in the system. A system can
--		      contain single or multiple physical socket.
--		      The association of sockets and NUMA nodes is beyond
--		      the scope of this bindings, please refer [2] for
--		      NUMA bindings.
--
--	This node is optional for a single socket system.
--
--	The socket node name must be "socketN" as described in 2.1 above.
--	A socket node can not be a leaf node.
--
--	A socket node's child nodes must be one or more cluster nodes.
--
--	Any other configuration is considered invalid.
--
--- cluster node
--
--	 Description: must be declared within a cpu-map node, one node
--		      per cluster. A system can contain several layers of
--		      clustering within a single physical socket and cluster
--		      nodes can be contained in parent cluster nodes.
--
--	The cluster node name must be "clusterN" as described in 2.1 above.
--	A cluster node can not be a leaf node.
--
--	A cluster node's child nodes must be:
--
--	- one or more cluster nodes; or
--	- one or more core nodes
--
--	Any other configuration is considered invalid.
--
--- core node
--
--	Description: must be declared in a cluster node, one node per core in
--		     the cluster. If the system does not support SMT, core
--		     nodes are leaf nodes, otherwise they become containers of
--		     thread nodes.
--
--	The core node name must be "coreN" as described in 2.1 above.
--
--	A core node must be a leaf node if SMT is not supported.
--
--	Properties for core nodes that are leaf nodes:
--
--	- cpu
--		Usage: required
--		Value type: <phandle>
--		Definition: a phandle to the cpu node that corresponds to the
--			    core node.
--
--	If a core node is not a leaf node (CPUs supporting SMT) a core node's
--	child nodes can be:
--
--	- one or more thread nodes
--
--	Any other configuration is considered invalid.
--
--- thread node
--
--	Description: must be declared in a core node, one node per thread
--		     in the core if the system supports SMT. Thread nodes are
--		     always leaf nodes in the device tree.
--
--	The thread node name must be "threadN" as described in 2.1 above.
--
--	A thread node must be a leaf node.
--
--	A thread node must contain the following property:
--
--	- cpu
--		Usage: required
--		Value type: <phandle>
--		Definition: a phandle to the cpu node that corresponds to
--			    the thread node.
--
--===========================================
--4 - Example dts
--===========================================
--
--Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
--physical socket):
--
--cpus {
--	#size-cells = <0>;
--	#address-cells = <2>;
--
--	cpu-map {
--		socket0 {
--			cluster0 {
--				cluster0 {
--					core0 {
--						thread0 {
--							cpu = <&CPU0>;
--						};
--						thread1 {
--							cpu = <&CPU1>;
--						};
--					};
--
--					core1 {
--						thread0 {
--							cpu = <&CPU2>;
--						};
--						thread1 {
--							cpu = <&CPU3>;
--						};
--					};
--				};
--
--				cluster1 {
--					core0 {
--						thread0 {
--							cpu = <&CPU4>;
--						};
--						thread1 {
--							cpu = <&CPU5>;
--						};
--					};
--
--					core1 {
--						thread0 {
--							cpu = <&CPU6>;
--						};
--						thread1 {
--							cpu = <&CPU7>;
--						};
--					};
--				};
--			};
--
--			cluster1 {
--				cluster0 {
--					core0 {
--						thread0 {
--							cpu = <&CPU8>;
--						};
--						thread1 {
--							cpu = <&CPU9>;
--						};
--					};
--					core1 {
--						thread0 {
--							cpu = <&CPU10>;
--						};
--						thread1 {
--							cpu = <&CPU11>;
--						};
--					};
--				};
--
--				cluster1 {
--					core0 {
--						thread0 {
--							cpu = <&CPU12>;
--						};
--						thread1 {
--							cpu = <&CPU13>;
--						};
--					};
--					core1 {
--						thread0 {
--							cpu = <&CPU14>;
--						};
--						thread1 {
--							cpu = <&CPU15>;
--						};
--					};
--				};
--			};
--		};
--	};
--
--	CPU0: cpu@0 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x0 0x0>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU1: cpu@1 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x0 0x1>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU2: cpu@100 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x0 0x100>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU3: cpu@101 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x0 0x101>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU4: cpu@10000 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x0 0x10000>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU5: cpu@10001 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x0 0x10001>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU6: cpu@10100 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x0 0x10100>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU7: cpu@10101 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x0 0x10101>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU8: cpu@100000000 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x1 0x0>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU9: cpu@100000001 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x1 0x1>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU10: cpu@100000100 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x1 0x100>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU11: cpu@100000101 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x1 0x101>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU12: cpu@100010000 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x1 0x10000>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU13: cpu@100010001 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x1 0x10001>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU14: cpu@100010100 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x1 0x10100>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--
--	CPU15: cpu@100010101 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a57";
--		reg = <0x1 0x10101>;
--		enable-method = "spin-table";
--		cpu-release-addr = <0 0x20000000>;
--	};
--};
--
--Example 2 (ARM 32-bit, dual-cluster, 8-cpu system, no SMT):
--
--cpus {
--	#size-cells = <0>;
--	#address-cells = <1>;
--
--	cpu-map {
--		cluster0 {
--			core0 {
--				cpu = <&CPU0>;
--			};
--			core1 {
--				cpu = <&CPU1>;
--			};
--			core2 {
--				cpu = <&CPU2>;
--			};
--			core3 {
--				cpu = <&CPU3>;
--			};
+-==============================================================================
+-
+-Systems employing a Non Uniform Memory Access (NUMA) architecture contain
+-collections of hardware resources including processors, memory, and I/O buses,
+-that comprise what is commonly known as a NUMA node.
+-Processor accesses to memory within the local NUMA node is generally faster
+-than processor accesses to memory outside of the local NUMA node.
+-DT defines interfaces that allow the platform to convey NUMA node
+-topology information to OS.
+-
+-==============================================================================
+-2 - numa-node-id
+-==============================================================================
+-
+-For the purpose of identification, each NUMA node is associated with a unique
+-token known as a node id. For the purpose of this binding
+-a node id is a 32-bit integer.
+-
+-A device node is associated with a NUMA node by the presence of a
+-numa-node-id property which contains the node id of the device.
+-
+-Example:
+-	/* numa node 0 */
+-	numa-node-id = <0>;
+-
+-	/* numa node 1 */
+-	numa-node-id = <1>;
+-
+-==============================================================================
+-3 - distance-map
+-==============================================================================
+-
+-The optional device tree node distance-map describes the relative
+-distance (memory latency) between all numa nodes.
+-
+-- compatible : Should at least contain "numa-distance-map-v1".
+-
+-- distance-matrix
+-  This property defines a matrix to describe the relative distances
+-  between all numa nodes.
+-  It is represented as a list of node pairs and their relative distance.
+-
+-  Note:
+-	1. Each entry represents distance from first node to second node.
+-	The distances are equal in either direction.
+-	2. The distance from a node to self (local distance) is represented
+-	with value 10 and all internode distance should be represented with
+-	a value greater than 10.
+-	3. distance-matrix should have entries in lexicographical ascending
+-	order of nodes.
+-	4. There must be only one device node distance-map which must
+-	reside in the root node.
+-	5. If the distance-map node is not present, a default
+-	distance-matrix is used.
+-
+-Example:
+-	4 nodes connected in mesh/ring topology as below,
+-
+-		0_______20______1
+-		|               |
+-		|               |
+-		20             20
+-		|               |
+-		|               |
+-		|_______________|
+-		3       20      2
+-
+-	if relative distance for each hop is 20,
+-	then internode distance would be,
+-	      0 -> 1 = 20
+-	      1 -> 2 = 20
+-	      2 -> 3 = 20
+-	      3 -> 0 = 20
+-	      0 -> 2 = 40
+-	      1 -> 3 = 40
+-
+-     and dt presentation for this distance matrix is,
+-
+-		distance-map {
+-			 compatible = "numa-distance-map-v1";
+-			 distance-matrix = <0 0  10>,
+-					   <0 1  20>,
+-					   <0 2  40>,
+-					   <0 3  20>,
+-					   <1 0  20>,
+-					   <1 1  10>,
+-					   <1 2  20>,
+-					   <1 3  40>,
+-					   <2 0  40>,
+-					   <2 1  20>,
+-					   <2 2  10>,
+-					   <2 3  20>,
+-					   <3 0  20>,
+-					   <3 1  40>,
+-					   <3 2  20>,
+-					   <3 3  10>;
 -		};
 -
--		cluster1 {
--			core0 {
--				cpu = <&CPU4>;
--			};
--			core1 {
--				cpu = <&CPU5>;
--			};
--			core2 {
--				cpu = <&CPU6>;
--			};
--			core3 {
--				cpu = <&CPU7>;
--			};
--		};
+-==============================================================================
+-4 - Empty memory nodes
+-==============================================================================
+-
+-Empty memory nodes, which no memory resides in, are allowed. There are no
+-device nodes for these empty memory nodes. However, the NUMA node IDs and
+-distance maps are still valid and memory may be added into them through
+-hotplug afterwards.
+-
+-Example:
+-
+-	memory@0 {
+-		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x80000000>;
+-		numa-node-id = <0>;
 -	};
 -
--	CPU0: cpu@0 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a15";
--		reg = <0x0>;
+-	memory@80000000 {
+-		device_type = "memory";
+-		reg = <0x0 0x80000000 0x0 0x80000000>;
+-		numa-node-id = <1>;
 -	};
 -
--	CPU1: cpu@1 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a15";
--		reg = <0x1>;
+-	/* Empty memory node 2 and 3 */
+-	distance-map {
+-		compatible = "numa-distance-map-v1";
+-		distance-matrix = <0 0  10>,
+-				  <0 1  20>,
+-				  <0 2  40>,
+-				  <0 3  20>,
+-				  <1 0  20>,
+-				  <1 1  10>,
+-				  <1 2  20>,
+-				  <1 3  40>,
+-				  <2 0  40>,
+-				  <2 1  20>,
+-				  <2 2  10>,
+-				  <2 3  20>,
+-				  <3 0  20>,
+-				  <3 1  40>,
+-				  <3 2  20>,
+-				  <3 3  10>;
 -	};
 -
--	CPU2: cpu@2 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a15";
--		reg = <0x2>;
+-==============================================================================
+-5 - Example dts
+-==============================================================================
+-
+-Dual socket system consists of 2 boards connected through ccn bus and
+-each board having one socket/soc of 8 cpus, memory and pci bus.
+-
+-	memory@c00000 {
+-		device_type = "memory";
+-		reg = <0x0 0xc00000 0x0 0x80000000>;
+-		/* node 0 */
+-		numa-node-id = <0>;
 -	};
 -
--	CPU3: cpu@3 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a15";
--		reg = <0x3>;
+-	memory@10000000000 {
+-		device_type = "memory";
+-		reg = <0x100 0x0 0x0 0x80000000>;
+-		/* node 1 */
+-		numa-node-id = <1>;
 -	};
 -
--	CPU4: cpu@100 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a7";
--		reg = <0x100>;
--	};
--
--	CPU5: cpu@101 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a7";
--		reg = <0x101>;
--	};
--
--	CPU6: cpu@102 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a7";
--		reg = <0x102>;
--	};
--
--	CPU7: cpu@103 {
--		device_type = "cpu";
--		compatible = "arm,cortex-a7";
--		reg = <0x103>;
--	};
--};
--
--Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
--
--{
--	#address-cells = <2>;
--	#size-cells = <2>;
--	compatible = "sifive,fu540g", "sifive,fu500";
--	model = "sifive,hifive-unleashed-a00";
--
--	...
 -	cpus {
--		#address-cells = <1>;
+-		#address-cells = <2>;
 -		#size-cells = <0>;
--		cpu-map {
--			socket0 {
--				cluster0 {
--					core0 {
--						cpu = <&CPU1>;
--					};
--					core1 {
--						cpu = <&CPU2>;
--					};
--					core2 {
--						cpu0 = <&CPU2>;
--					};
--					core3 {
--						cpu0 = <&CPU3>;
--					};
--				};
--			};
+-
+-		cpu@0 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x0>;
+-			enable-method = "psci";
+-			/* node 0 */
+-			numa-node-id = <0>;
 -		};
+-		cpu@1 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x1>;
+-			enable-method = "psci";
+-			numa-node-id = <0>;
+-		};
+-		cpu@2 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x2>;
+-			enable-method = "psci";
+-			numa-node-id = <0>;
+-		};
+-		cpu@3 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x3>;
+-			enable-method = "psci";
+-			numa-node-id = <0>;
+-		};
+-		cpu@4 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x4>;
+-			enable-method = "psci";
+-			numa-node-id = <0>;
+-		};
+-		cpu@5 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x5>;
+-			enable-method = "psci";
+-			numa-node-id = <0>;
+-		};
+-		cpu@6 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x6>;
+-			enable-method = "psci";
+-			numa-node-id = <0>;
+-		};
+-		cpu@7 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x7>;
+-			enable-method = "psci";
+-			numa-node-id = <0>;
+-		};
+-		cpu@8 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x8>;
+-			enable-method = "psci";
+-			/* node 1 */
+-			numa-node-id = <1>;
+-		};
+-		cpu@9 {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0x9>;
+-			enable-method = "psci";
+-			numa-node-id = <1>;
+-		};
+-		cpu@a {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0xa>;
+-			enable-method = "psci";
+-			numa-node-id = <1>;
+-		};
+-		cpu@b {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0xb>;
+-			enable-method = "psci";
+-			numa-node-id = <1>;
+-		};
+-		cpu@c {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0xc>;
+-			enable-method = "psci";
+-			numa-node-id = <1>;
+-		};
+-		cpu@d {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0xd>;
+-			enable-method = "psci";
+-			numa-node-id = <1>;
+-		};
+-		cpu@e {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0xe>;
+-			enable-method = "psci";
+-			numa-node-id = <1>;
+-		};
+-		cpu@f {
+-			device_type = "cpu";
+-			compatible =  "arm,armv8";
+-			reg = <0x0 0xf>;
+-			enable-method = "psci";
+-			numa-node-id = <1>;
+-		};
+-	};
 -
--		CPU1: cpu@1 {
--			device_type = "cpu";
--			compatible = "sifive,rocket0", "riscv";
--			reg = <0x1>;
--		}
+-	pcie0: pcie0@848000000000 {
+-		compatible = "arm,armv8";
+-		device_type = "pci";
+-		bus-range = <0 255>;
+-		#size-cells = <2>;
+-		#address-cells = <3>;
+-		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
+-		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>;
+-		/* node 0 */
+-		numa-node-id = <0>;
+-        };
 -
--		CPU2: cpu@2 {
--			device_type = "cpu";
--			compatible = "sifive,rocket0", "riscv";
--			reg = <0x2>;
--		}
--		CPU3: cpu@3 {
--			device_type = "cpu";
--			compatible = "sifive,rocket0", "riscv";
--			reg = <0x3>;
--		}
--		CPU4: cpu@4 {
--			device_type = "cpu";
--			compatible = "sifive,rocket0", "riscv";
--			reg = <0x4>;
--		}
--	}
--};
--===============================================================================
--[1] ARM Linux kernel documentation
--    Documentation/devicetree/bindings/arm/cpus.yaml
--[2] Devicetree NUMA binding description
--    Documentation/devicetree/bindings/numa.txt
--[3] RISC-V Linux kernel documentation
--    Documentation/devicetree/bindings/riscv/cpus.yaml
--[4] https://www.devicetree.org/specifications/
+-	pcie1: pcie1@948000000000 {
+-		compatible = "arm,armv8";
+-		device_type = "pci";
+-		bus-range = <0 255>;
+-		#size-cells = <2>;
+-		#address-cells = <3>;
+-		reg = <0x9480 0x00000000 0 0x10000000>;  /* Configuration space */
+-		ranges = <0x03000000 0x9010 0x00000000 0x9010 0x00000000 0x70 0x00000000>;
+-		/* node 1 */
+-		numa-node-id = <1>;
+-        };
+-
+-	distance-map {
+-		compatible = "numa-distance-map-v1";
+-		distance-matrix = <0 0 10>,
+-				  <0 1 20>,
+-				  <1 1 10>;
+-	};
 -- 
 2.47.2
 
