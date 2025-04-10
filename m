@@ -1,204 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F0128CF66;
-	Thu, 10 Apr 2025 19:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E0B19E96D;
+	Thu, 10 Apr 2025 19:16:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744312576; cv=none; b=qWrCd3EyRGZI8TvG8CGkSoC4juUpdiH1QYkjVZ8wisqhB/tjzNoGkAsbO6vc7QmeIe7qQDphDHL0FMHT/DpGE9sGHmfIFCG2eT2qN6de5kW6AGTmGMD2H6E9PAyqSEmop06V9BXFTNj6vMNsNpBrldC6FeLgC3eparCKEj5CIlk=
+	t=1744312594; cv=none; b=nzel3z/IXuRLyQhPLSaecJOPbyImsYcyiLBXDYCKvMMpn4AK/GrTuV74H0LdkOMExL0ncYQNvXYFnA3KwmBTjvl7eQkBjoEbgyKXbOqUVboCiW2MnlPTNvP4BA4GFONtKOY5GqxkES+s/v8hik/7Cc6trkMFeQb13gsGVtt7c3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744312576; c=relaxed/simple;
-	bh=eXB0gLYXMhzpCiJzyoTjnpTxga6WGoXYi9P2stnOHRM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nGXU4GHF+JYeSOyxPnFss64a2aDUEmvhoTZv1BWl0yRh55hv2+XKEvaP4TSA4i1/TN0ZkD8kzflc5ezPI1taWvUEyKtzQTNPBPM2DamZYdp8rbXg1ZBMNlqpssl2Pu3FzyY4C8SPXtfAPIJ2Raeoytk03Iww6RkzQ8b1g8Kb4Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcKCuong; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744312594; c=relaxed/simple;
+	bh=23ClUrzhbCi4gYhBVTmCi/jHYyZPt0hjBpo3q9JPJVg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mExLQy0XJ60YlnipoAgBVPHMmRwnKkZtEhpKNKTqpAptwv+E9QdCZ5T55XHe2pgOVGkgTSeGfGpV2SNNHM8EMkLTQIMuRW3ki7ImHBKJQtd9APlfSWA4GGJilVzLXXTnO4zmBWWz7UAX7KJpDQVd4Fqeug0M6brkvASzFRvqZXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoPA6CJL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcKCuong"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E1BC4CEED;
-	Thu, 10 Apr 2025 19:16:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoPA6CJL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2174C4CEDD;
+	Thu, 10 Apr 2025 19:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744312576;
-	bh=eXB0gLYXMhzpCiJzyoTjnpTxga6WGoXYi9P2stnOHRM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mcKCuongpHbNiI8syLFB9uMZiSar+ZdqKrxtoTrx4ook4nqmhNVvJYHhLXqwHn256
-	 /6gapHfTqjiYAF1kNNNcOQtGtcsySfQYghBSNbtDeeD8EzjAi98jX0ynHoh8avm982
-	 MnLYzkyPyAqmY7OSWJwG8tcadmL1FyeNx4qVh5C2iptEDHktubEl5i+X/9CG6cnu8c
-	 eAwGs2tkn5plVXy1ExhxYivpfZ/DnfRMu0gcnY0EkfmvpUHKZ5eS97kuXnd3vLpThy
-	 TXrwXSjjMifzM9ocmCyP8v0tFeGhwDdEHF/5Vywej37tlE2DsKyDJOPZQS9+HRckYE
-	 PPlbV/1cOdYOQ==
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72c1818c394so693995a34.2;
-        Thu, 10 Apr 2025 12:16:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQckeCCq16xD9kT4b96nXTsxzoO6SQiSRoHb/yPAiMbQG9SvzVLUSCgsYPaGmedAXdvEmOjkHoF4k=@vger.kernel.org, AJvYcCXeDjNHV6xjxA8lkmvA3/AIA9/lIIStEqw1hRvLJXzyjo4BwkFFtpm210FIcI9gRxPouBC28IsOHGcKD0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY4rzYTEf7Mbc5Vy1zhoRKfx51F/euh9WVq4iH2oXaD3wxAuCP
-	cRYknXnSuW0xyaRGUMshqBFSAqbBgg1nQAWEbX+854zLnaQ6Lnr+XrsQ9qKfiDx6vm1czYd2CBT
-	2/J8h5yVO3MP6kqmiNNJP/f2wUJE=
-X-Google-Smtp-Source: AGHT+IFUGe4N+sckYuOfB96euN95iBjAjrgVAHROSXlPfyXbt8wqWK2y3y6miD1mX2A3h2eX04f3VagKPlGBaG3tlUE=
-X-Received: by 2002:a05:6830:6713:b0:72b:9bb3:67cd with SMTP id
- 46e09a7af769-72e863da72emr94412a34.12.1744312575370; Thu, 10 Apr 2025
- 12:16:15 -0700 (PDT)
+	s=k20201202; t=1744312593;
+	bh=23ClUrzhbCi4gYhBVTmCi/jHYyZPt0hjBpo3q9JPJVg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=DoPA6CJLe24LjnQ4VO1y5gtxmff7qldVKgUX9XBs0dZfK/MQf55yoZggcznsFxHKN
+	 R6SBEISillGf2teWkqZJKoX3pHNZezTx+PiFUV5ZSJc2CMIUiC9KKcwU1mqAzqNJCE
+	 aS7NZmUPcnLVmCoPDUT5w066dpY3GWpQWCyQ4fPS0OQ772EIh3WJjcVIX7Lg1x5hm+
+	 Rggr4nLlod7aDfwr8jguSjfebrwqwYhjd7VFEgqhoKXv1YRlUU1sDE0GB2qPEo4ScK
+	 34LqwU3ZMmATvayI+mVlKfSpcdzqMGbqX4+O9kaLDEj5buQZkBR97685mhzvxwcYo4
+	 ZWnPZTFg47Tyg==
+From: Mark Brown <broonie@kernel.org>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ patches@opensource.cirrus.com, kunit-dev@googlegroups.com, 
+ linux-kselftest@vger.kernel.org
+In-Reply-To: <20250410132129.1312541-1-rf@opensource.cirrus.com>
+References: <20250410132129.1312541-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH] firmware: cs_dsp: test_bin_error: Fix uninitialized
+ data used as fw version
+Message-Id: <174431259161.501489.5379480875112527733.b4-ty@kernel.org>
+Date: Thu, 10 Apr 2025 20:16:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212015734.41241-1-sultan@kerneltoast.com>
- <20241212015734.41241-2-sultan@kerneltoast.com> <Z_Tlc6Qs-tYpxWYb@linaro.org>
-In-Reply-To: <Z_Tlc6Qs-tYpxWYb@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 10 Apr 2025 21:16:03 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hR_ekOYE_bJz=U66G2puVYBubMNd+BBQoZJZ8sxg4SxQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFpp7ZGLllfNdShA6ZAPjqNccThuQ5ynRrZX5_AdnNDXYKm7UihM-H0OmQ
-Message-ID: <CAJZ5v0hR_ekOYE_bJz=U66G2puVYBubMNd+BBQoZJZ8sxg4SxQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused by need_freq_update
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Sultan Alsawaf <sultan@kerneltoast.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-Hi,
+On Thu, 10 Apr 2025 14:21:29 +0100, Richard Fitzgerald wrote:
+> Call cs_dsp_mock_xm_header_get_fw_version() to get the firmware version
+> from the dummy XM header data in cs_dsp_bin_err_test_common_init().
+> 
+> Make the same change to cs_dsp_bin_test_common_init() and remove the
+> cs_dsp_mock_xm_header_get_fw_version_from_regmap() function.
+> 
+> The code in cs_dsp_test_bin.c was correctly calling
+> cs_dsp_mock_xm_header_get_fw_version_from_regmap() to fetch the fw version
+> from a dummy header it wrote to XM registers. However in
+> cs_dsp_test_bin_error.c the test doesn't stuff a dummy header into XM, it
+> populates it the normal way using a wmfw file. It should have called
+> cs_dsp_mock_xm_header_get_fw_version() to get the data from its blob
+> buffer, but was calling cs_dsp_mock_xm_header_get_fw_version_from_regmap().
+> As nothing had been written to the registers this returned the value of
+> uninitialized data.
+> 
+> [...]
 
-Sorry for kind of a retroactive response.
+Applied to
 
-On Tue, Apr 8, 2025 at 10:59=E2=80=AFAM Stephan Gerhold
-<stephan.gerhold@linaro.org> wrote:
->
-> Hi,
->
-> On Wed, Dec 11, 2024 at 05:57:32PM -0800, Sultan Alsawaf wrote:
-> > From: "Sultan Alsawaf (unemployed)" <sultan@kerneltoast.com>
-> >
-> > A redundant frequency update is only truly needed when there is a polic=
-y
-> > limits change with a driver that specifies CPUFREQ_NEED_UPDATE_LIMITS.
-> >
-> > In spite of that, drivers specifying CPUFREQ_NEED_UPDATE_LIMITS receive=
- a
-> > frequency update _all the time_, not just for a policy limits change,
-> > because need_freq_update is never cleared.
-> >
-> > Furthermore, ignore_dl_rate_limit()'s usage of need_freq_update also le=
-ads
-> > to a redundant frequency update, regardless of whether or not the drive=
-r
-> > specifies CPUFREQ_NEED_UPDATE_LIMITS, when the next chosen frequency is=
- the
-> > same as the current one.
-> >
-> > Fix the superfluous updates by only honoring CPUFREQ_NEED_UPDATE_LIMITS
-> > when there's a policy limits change, and clearing need_freq_update when=
- a
-> > requisite redundant update occurs.
-> >
-> > This is neatly achieved by moving up the CPUFREQ_NEED_UPDATE_LIMITS tes=
-t
-> > and instead setting need_freq_update to false in sugov_update_next_freq=
-().
-> >
-> > Signed-off-by: Sultan Alsawaf (unemployed) <sultan@kerneltoast.com>
-> > ---
-> >  kernel/sched/cpufreq_schedutil.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_sc=
-hedutil.c
-> > index 28c77904ea74..e51d5ce730be 100644
-> > --- a/kernel/sched/cpufreq_schedutil.c
-> > +++ b/kernel/sched/cpufreq_schedutil.c
-> > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct sugov_pol=
-icy *sg_policy, u64 time)
-> >
-> >       if (unlikely(sg_policy->limits_changed)) {
-> >               sg_policy->limits_changed =3D false;
-> > -             sg_policy->need_freq_update =3D true;
-> > +             sg_policy->need_freq_update =3D cpufreq_driver_test_flags=
-(CPUFREQ_NEED_UPDATE_LIMITS);
-> >               return true;
-> >       }
-> >
-> > @@ -96,7 +96,7 @@ static bool sugov_update_next_freq(struct sugov_polic=
-y *sg_policy, u64 time,
-> >                                  unsigned int next_freq)
-> >  {
-> >       if (sg_policy->need_freq_update)
-> > -             sg_policy->need_freq_update =3D cpufreq_driver_test_flags=
-(CPUFREQ_NEED_UPDATE_LIMITS);
-> > +             sg_policy->need_freq_update =3D false;
-> >       else if (sg_policy->next_freq =3D=3D next_freq)
-> >               return false;
-> >
->
-> This patch breaks cpufreq throttling (e.g. for thermal cooling) for
-> cpufreq drivers that:
->
->  - Have policy->fast_switch_enabled/fast_switch_possible set, but
->  - Do not have CPUFREQ_NEED_UPDATE_LIMITS flag set
->
-> There are several examples for this in the tree (search for
-> "fast_switch_possible"). Of all those drivers, only intel-pstate and
-> amd-pstate (sometimes) set CPUFREQ_NEED_UPDATE_LIMITS.
->
-> I can reliably reproduce this with scmi-cpufreq on a Qualcomm X1E
-> laptop:
->
->  1. I added some low temperature trip points in the device tree,
->     together with passive cpufreq cooling.
->  2. I run a CPU stress test on all CPUs and monitor the temperatures
->     and CPU frequencies.
->
-> When using "performance" governor instead of "schedutil", the CPU
-> frequencies are being throttled as expected, as soon as the temperature
-> trip points are reached.
->
-> When using "schedutil", the CPU frequencies stay at maximum as long as
-> the stress test is running. No throttling happens, so the device heats
-> up far beyond the defined temperature trip points. Throttling is applied
-> only after stopping the stress test, since this forces schedutil to
-> re-evaluate the CPU frequency.
->
-> Reverting this commit fixes the problem.
->
-> Looking at the code, I think the problem is that:
->  - sg_policy->limits_changed does not result in
->    sg->policy->need_freq_update without CPUFREQ_NEED_UPDATE_LIMITS
->    anymore, and
->  - Without sg->policy->need_freq_update, get_next_freq() skips calling
->    cpufreq_driver_resolve_freq(), which would normally apply the policy
->    min/max constraints.
->
-> Do we need to set CPUFREQ_NEED_UPDATE_LIMITS for all cpufreq drivers
-> that set policy->fast_switch_possible?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-I think that it is generally needed for ->fast_switch() because the
-new limits don't take effect without running ->fast_switch().
+Thanks!
 
-But if that is the case, the behavior can just be made conditional on
-policy->fast_switch_enabled.
+[1/1] firmware: cs_dsp: test_bin_error: Fix uninitialized data used as fw version
+      commit: 285b2c74cf9982e873ef82a2cb1328d9e9406f65
 
-> If I'm reading the documentation
-> comment correctly, that flag is just supposed to enable notifications if
-> the policy min/max changes, but the resolved target frequency is still
-> the same.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-If the policy min/max change and the resolved target frequency is
-beyond the new limits. it needs to be changed.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-The flag effectively says "Call my ->fast_switch() if the policy
-limits have changed regardless of whether or not there is another
-reason to call it."
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> This is not the case here, the target frequency needs to be
-> throttled, but schedutil isn't applying the new limits.
->
-> Any suggestions how to fix this? I'm happy to test patches with my setup.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Replace cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS) in
-sugov_should_update_freq() with sg_policy->policy->fast_switch_enabled
-and (if this works), CPUFREQ_NEED_UPDATE_LIMITS can be deleted.
+Thanks,
+Mark
+
