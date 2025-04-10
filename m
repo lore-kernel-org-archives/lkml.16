@@ -1,269 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B32220E33F;
-	Thu, 10 Apr 2025 22:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CF42905
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744324342; cv=none; b=hVR4SwXzWRnHMNxQwEO8mE5v2PQWypSvrIMlaHfZhxcMSTspNZPl2xb0mjY7h5zZq193RAUqNgtDWFv2y8ci6P1WHl8KVqmvy488Suc92OLU/znU4ATksaaO0lxUih1V8+VD1svu2CQ+9ecQTXDwuRbVQFYdOEpTqRixnqxhIdw=
+	t=1744324482; cv=none; b=aLVJhrmJfh6EJX/Obc6fiBnqzZ/LwHug8m6YkNneLzmk/WHGhZmEI3shcW0L8Z5/fTc0AQ/mrnrZ8IZILfgUKo5oOvaISmEdUWMnTt4EWVlDPE2nsXh7wBysnmP20VlB5lPmIOfWAYZCH0n7TxmXObdv+k4/QnrL5HEzRf7s4CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744324342; c=relaxed/simple;
-	bh=1j1mdJXfx0wueebPZ05boLFylytFBjvR89Q6vMiokl0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i0bwOyWdwJAEUO2X6uvJpIT2YbT3rVbeGd9qo142Kd9UxFvDW1e2YJ0Ox3+IclUDJhDH1Ri46sxI4mJ2zyslS4LgnGDLvVUQGOUuZYWUGyykkBnY332CCuWxPFeabYLiL/zQ3lk4+DYb5mFv8BYpTnOTQ5RN2XiebqC3DbSUJHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L5DPWtMx; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744324482; c=relaxed/simple;
+	bh=Wxm965eZNAy9BW5/MykKmQUsmb3umX7nRNXwA9XN5e4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LUtk62oTj6Ibe3Htubcov8zsAOVSwnoWbwUFAx/xzd9BoCsiv9+PJXxGcwVoWDAMYm0WmWVYv7STjerjFbVFKk8qukzM4neauWc+ZmJEmlwpZjxWO+ztdGxojTgINjSySGGevA1Q1h+9vU13w7ajJDv+Xp5wdmy80/d1Mo65biM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jYqxCwHd; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L5DPWtMx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744324341; x=1775860341;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1j1mdJXfx0wueebPZ05boLFylytFBjvR89Q6vMiokl0=;
-  b=L5DPWtMxWwG0ar+Ad5RTBeyDKGUyLeJRIY2nb6o7Q9h3tNLmAKa+xMQd
-   bHGxpHat2G7XKGMl8QlXCMmokG6WomkFxloEGCjqr28LUumWBAXOI92Jk
-   JFk1Y0VT2FPPVMAPKv9b5o48Zd9coSNvF1bWQJQj74kxPv2aN69Eniryu
-   WgSWuasdSbG7Eyba/i0JCu2uTgF7lRtCDp0XHB8W09H5z/jsfzIuQpfar
-   nMmwORC5dE+uGhzOv+m//oVz6vmj7vFbiQAPX3VT/FY80o5XUUYnIxQbx
-   h+Mm7E2qRyMapKF08b48oL8/dNP8LPR7lOG9n14dh7JM4WwLf7kTnmhak
-   A==;
-X-CSE-ConnectionGUID: v5BX23BnQKqmVPpC6KCbRg==
-X-CSE-MsgGUID: 1ze1pCtFScu7NnHyt8pajg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="56845635"
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="56845635"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 15:32:17 -0700
-X-CSE-ConnectionGUID: 99VlDKOnTD2C3YIi54+vrw==
-X-CSE-MsgGUID: 5JmEZIZ1TV+kEiAbNkvQ2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="128988756"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 15:32:17 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: rafael.j.wysocki@intel.com
-Cc: lenb@kernel.org,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3 3/4] ACPI/MRRM: Add /sys files to describe memory ranges
-Date: Thu, 10 Apr 2025 15:32:06 -0700
-Message-ID: <20250410223207.257722-4-tony.luck@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250410223207.257722-1-tony.luck@intel.com>
-References: <20250410223207.257722-1-tony.luck@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jYqxCwHd"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so12725731fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744324477; x=1744929277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wxm965eZNAy9BW5/MykKmQUsmb3umX7nRNXwA9XN5e4=;
+        b=jYqxCwHdHnnqKhroxew6oXqaqFEI2JsfqqI/rdYg3v6VU/L85Hg337AbxJy3m4qhRp
+         JP+wPeyXYM2I9lK2hFZvsKRpGH8GlBv2K6zubBKnAMzJTx+IWUm8zcFRUV4HsMAyeAj5
+         qd28iTFS/qCksMWxft3xpUEyKfTLdY8hfHDKo0rpG+okX9pK2N1cIienzfwKARr/cbAn
+         J1s/Mo7Eez1JAF8Dffr5p0ELBkyHDOjNk8USgmyW1DHCauh53C+zFNY+breMxKq2uzPQ
+         SgTiOP8+wxzzsCF7lvGqkfk5kBCOzYxNEE3A698K04LX/d0ZTq9HnLwcfR6YVpDjdjzZ
+         H7PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744324477; x=1744929277;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wxm965eZNAy9BW5/MykKmQUsmb3umX7nRNXwA9XN5e4=;
+        b=wzDRpyyYC+JFYktKo82POWYDKlnm8LlNG3ZsQqxrelBFT7Fw/TD4DQiSjKAPOtQQKQ
+         H793IJaddxPNXu7TTvuRNuuDbwg3E3O9lPSoeog0b5jXWANBFKrcMKChsb0AUYsyl3ft
+         +A4i9sHrgURw3d/paAXCbad/Z9idl5DD8ZWcLk6Cca5TtaatsiiNiGgYi4sUzvLlvd9D
+         a6cnH7SuiRGTsAZqgoyZJ3Jhw0/7fRTNTMuIEio40407kJB/+389K/Kwfo7i9Bx4Ccxj
+         gG4ZPNhbXtraekshqvmA+P05dIGXM1dhZL2fiG3nAMYDK7OAOrULsqOdayFQjsrlfnFz
+         Vi0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVrvi5lttrHG/HBTUUcL6pC9tZrZEfNseOcUAPdzHiKNHasu9FN2a8ttTpDfb6bDry165/ij5jqPo8get0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCDhBqpTKG6VKpfIdaTZZA3AEMKcw9ehyD612ewHtkT+ze5tCr
+	nPKGXwctX9HAD4gcLZGy1qVgfzgkM51KkaU5Nxd9Zg2TuWi2LM1YsqqsqlrWrhObTFTdKKDt9gY
+	F0A/2+Sa4hDRNCrQEP06r2yXPreLVqmgjNqcQbw==
+X-Gm-Gg: ASbGncvBKgDU5Nhbh66Z8MDjzW1EGog/2/v0k7kwK3M4K7BNJmf7C+MsLFlHwdkje81
+	DtQGgkCUprM5zYPJElhlGIpBU8uenfvo2+fRg8JE5nNXWoeJyRldhSg2h9NQ1YQ1ziITnNiBLus
+	bZwT7qvYQpvK6mwKmVxB4=
+X-Google-Smtp-Source: AGHT+IFQ5X/At+JSFNbUE1xnp5LyBwwxt4xHNs/nHrO41KOgi6pNuGUXCpYt2H8bLi1d5Neb0s+pA/F8NRLAxfh8kDo=
+X-Received: by 2002:a2e:ad92:0:b0:30b:d63c:ad20 with SMTP id
+ 38308e7fff4ca-31049a25e74mr1251291fa.24.1744324477293; Thu, 10 Apr 2025
+ 15:34:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250318030717.781-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250318030717.781-1-vulab@iscas.ac.cn>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 11 Apr 2025 00:34:26 +0200
+X-Gm-Features: ATxdqUFAOAmsanh_qMDDdICzYFdtcgmjMNVzfkr1X-a4RyLKP9cm2UhbygtlpGw
+Message-ID: <CACRpkdZ+VTCXudLC8L0zK6+Pwd+_NpFDfnR7nf16BXgEnXExeQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: at91: Add error handling for pinctrl_utils_add_map_mux()
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: ludovic.desroches@microchip.com, nicolas.ferre@microchip.com, 
+	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Perf and resctrl users need an enumeration of which memory addresses
-are bound to which "region" tag.
+On Tue, Mar 18, 2025 at 4:07=E2=80=AFAM Wentao Liang <vulab@iscas.ac.cn> wr=
+ote:
 
-Parse the ACPI MRRM table and add /sys entries for each memory range
-describing base address, length, NUMA node, and which region tags apply
-for same-socket and cross-socket access.
+> In atmel_pctl_dt_subnode_to_map(), the return value of
+> pinctrl_utils_add_map_mux() needs to be checked, for the function
+> will fail to associate group when the group map is full. Add error
+> handling for pinctrl_utils_add_map_mux() to return immediately and
+> propagate the error code to caller function when the function fails.
+>
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- drivers/acpi/acpi_mrrm.c | 145 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 144 insertions(+), 1 deletion(-)
+Patch applied.
 
-diff --git a/drivers/acpi/acpi_mrrm.c b/drivers/acpi/acpi_mrrm.c
-index ab8022e58da5..9d8d332d383e 100644
---- a/drivers/acpi/acpi_mrrm.c
-+++ b/drivers/acpi/acpi_mrrm.c
-@@ -3,12 +3,16 @@
-  * Copyright (c) 2025, Intel Corporation.
-  *
-  * Memory Range and Region Mapping (MRRM) structure
-+ *
-+ * Parse and report the platform's MRRM table in /sys.
-  */
- 
- #define pr_fmt(fmt) "acpi/mrrm: " fmt
- 
- #include <linux/acpi.h>
- #include <linux/init.h>
-+#include <linux/string.h>
-+#include <linux/sysfs.h>
- 
- static int max_mem_region = -ENOENT;
- 
-@@ -18,25 +22,164 @@ int acpi_mrrm_max_mem_region(void)
- 	return max_mem_region;
- }
- 
-+struct mrrm_mem_range_entry {
-+	u64 base;
-+	u64 length;
-+	int node;
-+	u8  local_region_id;
-+	u8  remote_region_id;
-+};
-+
-+static struct mrrm_mem_range_entry *mrrm_mem_range_entry;
-+static u32 mrrm_mem_entry_num;
-+
-+static int get_node_num(struct mrrm_mem_range_entry *e)
-+{
-+#ifdef CONFIG_NUMA
-+	unsigned int nid;
-+
-+	for_each_online_node(nid) {
-+		for (int z = 0; z < MAX_NR_ZONES; z++) {
-+			struct zone *zone = NODE_DATA(nid)->node_zones + z;
-+
-+			if (!populated_zone(zone))
-+				continue;
-+			if (zone_intersects(zone, PHYS_PFN(e->base), PHYS_PFN(e->length)))
-+				return zone->node;
-+		}
-+	}
-+#endif
-+
-+	return -ENOENT;
-+}
-+
- static __init int acpi_parse_mrrm(struct acpi_table_header *table)
- {
-+	struct acpi_mrrm_mem_range_entry *mre_entry;
- 	struct acpi_table_mrrm *mrrm;
-+	void *mre, *mrrm_end;
-+	int mre_count = 0;
- 
- 	mrrm = (struct acpi_table_mrrm *)table;
- 	if (!mrrm)
- 		return -ENODEV;
- 
-+	if (mrrm->flags & ACPI_MRRM_FLAGS_REGION_ASSIGNMENT_OS)
-+		return -EOPNOTSUPP;
-+
-+	mrrm_end = (void *)mrrm + mrrm->header.length - 1;
-+	mre = (void *)mrrm + sizeof(struct acpi_table_mrrm);
-+	while (mre < mrrm_end) {
-+		mre_entry = mre;
-+		mre_count++;
-+		mre += mre_entry->header.length;
-+	}
-+	if (!mre_count) {
-+		pr_info(FW_BUG "No ranges listed in MRRM table\n");
-+		return -EINVAL;
-+	}
-+
-+	mrrm_mem_range_entry = kmalloc_array(mre_count, sizeof(*mrrm_mem_range_entry),
-+					     GFP_KERNEL | __GFP_ZERO);
-+	if (!mrrm_mem_range_entry)
-+		return -ENOMEM;
-+
-+	mre = (void *)mrrm + sizeof(struct acpi_table_mrrm);
-+	while (mre < mrrm_end) {
-+		struct mrrm_mem_range_entry *e;
-+
-+		mre_entry = mre;
-+		e = mrrm_mem_range_entry + mrrm_mem_entry_num;
-+
-+		e->base = mre_entry->addr_base;
-+		e->length = mre_entry->addr_len;
-+		e->node = get_node_num(e);
-+
-+		if (mre_entry->region_id_flags & ACPI_MRRM_VALID_REGION_ID_FLAGS_LOCAL)
-+			e->local_region_id = mre_entry->local_region_id;
-+		else
-+			e->local_region_id = -1;
-+		if (mre_entry->region_id_flags & ACPI_MRRM_VALID_REGION_ID_FLAGS_REMOTE)
-+			e->remote_region_id = mre_entry->remote_region_id;
-+		else
-+			e->remote_region_id = -1;
-+
-+		mrrm_mem_entry_num++;
-+		mre += mre_entry->header.length;
-+	}
-+
- 	max_mem_region = mrrm->max_mem_region;
- 
- 	return 0;
- }
- 
-+#define RANGE_ATTR(name, fmt)						\
-+static ssize_t name##_show(struct kobject *kobj,			\
-+			  struct kobj_attribute *attr, char *buf)	\
-+{									\
-+	struct mrrm_mem_range_entry *mre;				\
-+	const char *kname = kobject_name(kobj);				\
-+	int n, ret;							\
-+									\
-+	ret = kstrtoint(kname + 5, 10, &n);				\
-+	if (ret)							\
-+		return ret;						\
-+									\
-+	mre = mrrm_mem_range_entry + n;					\
-+									\
-+	return sysfs_emit(buf, fmt, mre->name);				\
-+}									\
-+static struct kobj_attribute name##_attr = __ATTR_RO(name)
-+
-+RANGE_ATTR(base, "0x%llx\n");
-+RANGE_ATTR(length, "0x%llx\n");
-+RANGE_ATTR(node, "%d\n");
-+RANGE_ATTR(local_region_id, "%d\n");
-+RANGE_ATTR(remote_region_id, "%d\n");
-+
-+static struct attribute *memory_range_attrs[] = {
-+	&base_attr.attr,
-+	&length_attr.attr,
-+	&node_attr.attr,
-+	&local_region_id_attr.attr,
-+	&remote_region_id_attr.attr,
-+	NULL
-+};
-+
-+ATTRIBUTE_GROUPS(memory_range);
-+
-+static __init int add_boot_memory_ranges(void)
-+{
-+	struct kobject *pkobj, *kobj;
-+	int ret = -EINVAL;
-+	char *name;
-+
-+	pkobj = kobject_create_and_add("memory_ranges", acpi_kobj);
-+
-+	for (int i = 0; i < mrrm_mem_entry_num; i++) {
-+		name = kasprintf(GFP_KERNEL, "range%d", i);
-+		if (!name)
-+			break;
-+
-+		kobj = kobject_create_and_add(name, pkobj);
-+
-+		ret = sysfs_create_groups(kobj, memory_range_groups);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
- static __init int mrrm_init(void)
- {
- 	int ret;
- 
- 	ret = acpi_table_parse(ACPI_SIG_MRRM, acpi_parse_mrrm);
- 
--	return ret;
-+	if (ret < 0)
-+		return ret;
-+
-+	return add_boot_memory_ranges();
- }
- device_initcall(mrrm_init);
--- 
-2.48.1
-
+Yours,
+Linus Walleij
