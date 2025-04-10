@@ -1,149 +1,165 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605FC28FFCD
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDD61F873E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744295328; cv=none; b=CY6WglzEobjnwSX8KL+urtGu+TDtlE7eBQ44UMHJ9IL3UwmGv3zfxjPOIxZdhow1SS/Dy4BiYiGkxH3tYv+RmiJ48q4Fxw7laIdMzftr23MIIHXcJlPQUM3EjFw0hgeuOqV0RjeXXFLfygd5NTZvjksv6GPKswYUmzs9AuT7qe8=
+	t=1744295397; cv=none; b=JpC/2omf4hAcKd773HNKWc9keXmsTKtQo3n831RDiDupGF5xa8cT23mKG9hpbB9ltichsqyw39wkLd/WmCtubVz5Ysfir1+zAbRVetNptMmI/qo4ayAa5a6Nzt9YF/Jr/mUwSw/EC7pirHnhKf01kT+6wOeduzyh88+PGwLH2Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744295328; c=relaxed/simple;
-	bh=fZnaZ5GHZcfS9p6y2BQGcaUFH6wu1bBVJJP31QU4XV0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BUnsRvWe3qR5iu7wDa+WV87Afq3ePe04Soya9GA9ZqA7vAb/90kTsVEc3NhQGj7LVjmoPikBJyIxdgwbkcXyd/sQyYDnurxeDHCR22JftTXzGhp9qvxcmAnNj0C6ouIEIEwlUc4nkHuLeeakEDtejvdX1p3l9LC5SvEy12QG6vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ffhWo1AD; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1744295397; c=relaxed/simple;
+	bh=dK3IFcM6t2xKK6tgOUAjhKcaHEIUWTzfJ7k6D3zJ1Zw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V+2qq+QBNucnR/Oil4IXSCQZJZtiWbj4h8qUh1nZkFPGu1dNEXGhIYTQdB1dcSLJjKSWq/KkYrPWQog9AM789BqsvlxmLqaQSNP5AWRccHRgyFJ6N8rLDd0yX5z0788TkTKSnvlUCI0+e+Wt0tQAbDP1umRPEcvlNU63DyHQd90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=jP361cUF; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ffhWo1AD"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e8fd49b85eso13034366d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1744295325; x=1744900125; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QU7b8p5X6+ipaTqnZzEvjAMW+m1ukjkOluS/etWvC10=;
-        b=ffhWo1ADPW+NpqceS3kDUHHgVgtfHUB3cKz7WnCAE8Sc6FGPHThLY4tnERR9IeGf1T
-         DWdDJN6PRSFQB4+5wYRgMpqcKKjzVkD78B5xpVVOBOa1s+trAkCrqD37xj3Ll610+wss
-         wyGO9cFTVKB11PEldMFpnH7nZjLOlez0oP4bQsfpJqG3kW3tCLxhXEBtUlBJFaIVy7Dj
-         xvtbbl0EremF1QhFyL/DTjh+4h9NJZxdzJ7TrDtHsY6Blq+fA51b/w1tFQEHID9yQZKd
-         IJfDPcB8W0V2DfyRG9WB9fge6SuzntbbnBYxf9X+cMVE6V3Anrq6oaWTUyBGlDGtqBXE
-         k2Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744295325; x=1744900125;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QU7b8p5X6+ipaTqnZzEvjAMW+m1ukjkOluS/etWvC10=;
-        b=Ln0RyfT9GO3mXzilreCicBFoI0inXjo/IsHKGGZlufZLUO+nxYtoZEGDw7pBU88YKa
-         VtqKHQp1VLYPWXlrLBeXi0Km0IdkHOOaG4HdGCy1pSxXKMN5FYo+ZGIPWZec+UGGhnDw
-         chSr5QRbJRpBc9U4cZlKqTPwJjWXJGwUrbhdzdkKvmSqL63RwkpX9Mc+WHXDHUuVuEbr
-         4mVPm2t9O1xYsJ9aFTwld4lqLZUzCcDQuuTA+xIYZpAS/3HJBaYjhYCFlXQNnuOyRevW
-         PbBE5xAUcPdwI8yAiXhFFmuHiq6pYW8ZOMy0/aIM2PYWS4ibTGc7AOdfB61PRJUklzRp
-         2HJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJmBemZeaY31Im/C6eJZXQoiujXVoQIY1t1I1TvHVVw+XUHZStpdLbHD4BD/aFuNmrkb76RSpxmLp3CMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOoS63zwEOLT5wKEKM3VOx1XOvlT4IPmaM08zYZjoxK8PFNzPw
-	PI8mwDVai9kJ5bXG3Fd4DryOGtJKPWWY/HHomyV/wzzHh9/MFQQrpu0NPhSsUL0=
-X-Gm-Gg: ASbGncvjrmiOJwJ8FWJFzRVhBBglY3VN9dr6HMaOzpciI34io9Z6tOb7JXMdrPH/eRy
-	MN/IiGPUSjs4mcRmU6Eqe9x6b6c1SAVHaiYFZtbTBSeaJNBdT8xkY2CJSsuxr2yGb1rJitMSWoW
-	u1A4fzGiCgt/WCEtBoGcvum4hYbyG0l0Nftsg9JzKudgjDn320rLIRG0/oBQPzvdOv1GruFCAEz
-	iaIDQkkksFc8GW+r8fZddtsfyHpSznDOTyCNave/ZWaCN+cuGfPhlIfU7rAQ9L3EIHBK6eBh56K
-	M3oO/+PtlnICGaLxE53tVUItNRDTxOzhinTa/MnW+V2xHWnZqMPC9hrg4rnVlXgqHWVGiFCdT3X
-	aCoyfGrczZV4SLabry2kgWg==
-X-Google-Smtp-Source: AGHT+IGMVGeMyBaUbWMD2SRNc0LtssAH5A8ndxEkZnyBQsRRtZK83f0qG5vpcQnY38UUX/EqwX1CKA==
-X-Received: by 2002:a05:6214:c2a:b0:6e8:fee2:aae4 with SMTP id 6a1803df08f44-6f0e5bd7058mr50446596d6.28.1744295325172;
-        Thu, 10 Apr 2025 07:28:45 -0700 (PDT)
-Received: from localhost.localdomain (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de95f8besm21567896d6.10.2025.04.10.07.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 07:28:44 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	dan.j.williams@intel.com,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	David Hildenbrand <david@redhat.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v3] DAX: warn when kmem regions are truncated for memory block alignment.
-Date: Thu, 10 Apr 2025 10:28:31 -0400
-Message-ID: <20250410142831.217887-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="jP361cUF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744295360;
+	bh=dK3IFcM6t2xKK6tgOUAjhKcaHEIUWTzfJ7k6D3zJ1Zw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=jP361cUFTnrPq+bTxkyOWnU9F2McOo6msgtWrhI2QiH3hn00UzEGTGOiyw9GAWy92
+	 dbB8DdHj8sKiK8jX6dbDwb3/Icv7mV048QEhJqYfoNbtFyhb+bdUX23wHV9rmH/cDz
+	 516r1Hu+h8fu17emWBold6pzofMaB6H5AT6kJsNY=
+X-QQ-mid: bizesmtpip3t1744295322tada884
+X-QQ-Originating-IP: 6tbrAQ8nmEdhQDr+rciEGdO+mQqzAxSxZ7hWRdv0Pmc=
+Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 10 Apr 2025 22:28:40 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 6705139162891013110
+EX-QQ-RecipientCnt: 14
+Message-ID: <3A22DFCBC7B91F71+320f58c6-0fc6-4dc4-9fb0-ab0d55be697a@uniontech.com>
+Date: Thu, 10 Apr 2025 22:28:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] riscv: KGDB: Do not inline arch_kgdb_breakpoint()
+To: Alexandre Ghiti <alex@ghiti.fr>, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc: chenhuacai@kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, vincent.chen@sifive.com,
+ palmerdabbelt@google.com, samuel.holland@sifive.com, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, guanwentao@uniontech.com,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <C5DCACA951B6211D+20250408095454.67390-1-wangyuli@uniontech.com>
+ <ccc97669-a4dc-459f-a26f-1fdad8b4a334@ghiti.fr>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <ccc97669-a4dc-459f-a26f-1fdad8b4a334@ghiti.fr>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------S8JDWGDWHbIEBDkKimBFqtY5"
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N6g2F2FiE7U+b2+sICsiPaoNjglZcleh9kBUgmt/1NS6UBYrpjx+dgkS
+	2XRwjQ6iHyVDy/XkSD2vGTElrcrmrpIEvw5v3SqKgKLVNiDrGIQY8AV3LZ5WL4czF2rwONF
+	x98akeAKIC12Wke672rTQG+s/hB9T7ghQeD97MTGCOt9lX9AmD5KAb4CKAsvNylAl+NOqU/
+	uInXhysQlmPxSNFZdzSermLjgKBekjjuHzIXBxaXm9iS8mWVZeskksxpcJxo399H1pdO1IX
+	o8xw7KH2MkjPEFxsU4s7bwu/tFxzIR/s+44YKskxy4adXA8oVbWPa5gN32Kw9YVi3bjwXJm
+	Ah9Wct1svdwXKdBIvInK79bUnl0nUstW4LU8PlvSLAseaQ5YoeVsBJrZFmw/v3wCqIewJw9
+	oul5Z3J2raJv7W/LnAGPK4wST6H7a3h6BQI4FNw1I7Hk98zJTYkciXiunnEUmeTSf1UCp+D
+	/zma4qcntizEJ9p51G2sfwhQE2Ug0VuD3HPzZlT8zoA6r4HKaPrPuOYTEw9T0WHyRad51zQ
+	KidmVjmu+b1IMyxbO8o/RwfFnAKGQw12317VjnKEBA+TmC4yzPZpZ+9n3YmWRBZcKAWXZIS
+	dcUpyGM2VjpMyyknPfFleyyocDSQ87DtbiuGXcSx7zRm031OLWUsj1oegEbGrHpgaYuw6/1
+	jjFr+CVJNxeBCZkRtIqCRyoESYcAn1KHQ3JINPT0UrUzlZOyQ9MzHHJC28XArRFXSZWhwJe
+	r6H17vSdxg4j0/hn4O1N5XIWX6EWXJDbRWbcdlb1BmCh77+UXyNn3BEXYte77NWSvMNJR1Y
+	QNtG0tLDl+HSXd24ub12iuk3fh9u7RxWV7nSo/+t64ZkF3h9/t5OLMruja1Ce5+aceIhJdw
+	jmB+SU8KZTuDNe84Gkbe9UUKc74Vw6vOaFNiKtkeX2UhDfA7M8xawe/Du8r+PePWDpJKEct
+	I7jzqb/k1w6CtbHmCq3l8s+6BqckKrRwkam8aVgGXio1L2dWz/4Aja9eQ/+kv9aUh4gO39G
+	IVwJzBHnZD2+zQYq01xEXeMExDXimc7Y/yBAQGWc4ATDBas7BpgQGtWFRobADRzmrarEps3
+	R5XaIFgrtEBhTv4wmfY4fFVCdC/R5VhHIWV3cf+6Rmn
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-Device capacity intended for use as system ram should be aligned to the
-architecture-defined memory block size or that capacity will be silently
-truncated and capacity stranded.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------S8JDWGDWHbIEBDkKimBFqtY5
+Content-Type: multipart/mixed; boundary="------------GZrFkP1m02835N825iTtcfFp";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: Alexandre Ghiti <alex@ghiti.fr>, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc: chenhuacai@kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, vincent.chen@sifive.com,
+ palmerdabbelt@google.com, samuel.holland@sifive.com, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, guanwentao@uniontech.com,
+ Huacai Chen <chenhuacai@loongson.cn>
+Message-ID: <320f58c6-0fc6-4dc4-9fb0-ab0d55be697a@uniontech.com>
+Subject: Re: [PATCH v3] riscv: KGDB: Do not inline arch_kgdb_breakpoint()
+References: <C5DCACA951B6211D+20250408095454.67390-1-wangyuli@uniontech.com>
+ <ccc97669-a4dc-459f-a26f-1fdad8b4a334@ghiti.fr>
+In-Reply-To: <ccc97669-a4dc-459f-a26f-1fdad8b4a334@ghiti.fr>
 
-As hotplug dax memory becomes more prevelant, the memory block size
-alignment becomes more important for platform and device vendors to
-pay attention to - so this truncation should not be silent.
+--------------GZrFkP1m02835N825iTtcfFp
+Content-Type: multipart/mixed; boundary="------------AAARt9CDF6qOlbhSthz4SPYx"
 
-This issue is particularly relevant for CXL Dynamic Capacity devices,
-whose capacity may arrive in spec-aligned but block-misaligned chunks.
+--------------AAARt9CDF6qOlbhSthz4SPYx
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Suggested-by: David Hildenbrand <david@redhat.com>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Tested-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- drivers/dax/kmem.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+SGkgQWxleA0KDQpPbiAyMDI1LzQvMTAgMjE6NDIsIEFsZXhhbmRyZSBHaGl0aSB3cm90ZToN
+Cj4gSGkgV2FuZ1l1bGksDQo+DQo+DQo+IFlvdSBmb3Jnb3QgdG8gcmVwbGFjZSBrZ2RiX2Jy
+ZWFraW5zdCBpbnRvIGtnZGJfY29tcGlsZWRfYnJlYWsuDQoNCk9LLCBJJ2xsIGZpeCBpdC4N
+Cg0KVGhhbmtzLA0KDQo+DQo+IFlvdSBhcmUgZml4aW5nIDIgdGhpbmdzIGhlcmUsIHlvdSBu
+ZWVkIHRvIHNwbGl0IHRoaXMgcGF0Y2ggaW50byAyLiANCk9LLA0KPiBBbmQgYXMgbm90ZWQg
+YnkgUGFsbWVyLCB3ZSBhY3R1YWxseSBkb24ndCBuZWVkIG5vcnZjIGhlcmUsIHNvIHlvdSBj
+YW4gDQo+IHJlbW92ZSBpdCBpbnN0ZWFkLg0KDQpJIGhhdmUgc29tZSBxdWVzdGlvbnMgcmVn
+YXJkaW5nIHRoaXMuDQoNCklmIC5vcHRpb24gbm9ydmMgaXMgdW5uZWNlc3NhcnksIHdoYXQg
+aXMgdGhlIHNpZ25pZmljYW5jZSBvZiAub3B0aW9uIA0KcHVzaC8ub3B0aW9uIHBvcD8NCg0K
+U2hvdWxkIHRoZXkgYWxzbyBiZSByZW1vdmVkIGFzIHdlbGw/DQoNCkhvd2V2ZXIsIHdpbGwg
+dGhpcyBzdGlsbCBmdW5jdGlvbiBwcm9wZXJseSB3aGVuIHRoZSBSSVNDLVYgQyBleHRlbnNp
+b24gDQppcyBhY3RpdmU/DQoNCg0KVGhhbmtzLA0KDQotLSANCldhbmdZdWxpDQo=
+--------------AAARt9CDF6qOlbhSthz4SPYx
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index e97d47f42ee2..584c70a34b52 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -13,6 +13,7 @@
- #include <linux/mman.h>
- #include <linux/memory-tiers.h>
- #include <linux/memory_hotplug.h>
-+#include <linux/string_helpers.h>
- #include "dax-private.h"
- #include "bus.h"
- 
-@@ -68,7 +69,7 @@ static void kmem_put_memory_types(void)
- static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- {
- 	struct device *dev = &dev_dax->dev;
--	unsigned long total_len = 0;
-+	unsigned long total_len = 0, orig_len = 0;
- 	struct dax_kmem_data *data;
- 	struct memory_dev_type *mtype;
- 	int i, rc, mapped = 0;
-@@ -97,6 +98,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- 	for (i = 0; i < dev_dax->nr_range; i++) {
- 		struct range range;
- 
-+		orig_len += range_len(&dev_dax->ranges[i].range);
- 		rc = dax_kmem_range(dev_dax, i, &range);
- 		if (rc) {
- 			dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
-@@ -109,6 +111,12 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- 	if (!total_len) {
- 		dev_warn(dev, "rejecting DAX region without any memory after alignment\n");
- 		return -EINVAL;
-+	} else if (total_len != orig_len) {
-+		char buf[16];
-+
-+		string_get_size(orig_len - total_len, 1, STRING_UNITS_2,
-+				buf, sizeof(buf));
-+		dev_warn(dev, "DAX region truncated by %s due to alignment\n", buf);
- 	}
- 
- 	init_node_memory_type(numa_node, mtype);
--- 
-2.49.0
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------AAARt9CDF6qOlbhSthz4SPYx--
+
+--------------GZrFkP1m02835N825iTtcfFp--
+
+--------------S8JDWGDWHbIEBDkKimBFqtY5
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/fVmAUDAAAAAAAKCRDF2h8wRvQL7vAN
+AP9ZXkyUlyPteWqXNYNbevQBuHewVnNCVFEP3Xxc82UKsgD+NVYB0kwhtpeDGhFXmHN7qLW6PAe0
+bKpMwIJMipD2aAI=
+=L7I4
+-----END PGP SIGNATURE-----
+
+--------------S8JDWGDWHbIEBDkKimBFqtY5--
