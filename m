@@ -1,160 +1,221 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7CB1E98E0;
-	Thu, 10 Apr 2025 16:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB737189F5C;
+	Thu, 10 Apr 2025 16:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744300815; cv=none; b=TU1JlWctBIKmTUkDXc7EHGf7Oa7EQop6l8qBogiUWuFvm408Js7it35I8h5v4cgMVTFU3p6cyBC/MCZvyR8a02fNUrlE4EPaJRGmMiTJgHfGP29EJwFa8rXbX/yHInqIMOoYlCxGaLmyltFP6p7CrXvQTHh7oAsVnew8hInIi6I=
+	t=1744300937; cv=none; b=ur5KTuUrKcJOYa4ygy5KyK7LjCin/RdpL+NkiQgQvvzQtHbGsrXZWIAQo3898WmWJMmJz0ity1SvgL/rY15s5eyA32RQZGtB/xxhix7WBNmpNuPkNVr2I8u/u7Tn4Wxe/djK1XMTmDa6WyeAZk8uPnVVEFj20t9lLHukR4T7vn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744300815; c=relaxed/simple;
-	bh=pl9dJD0Qx8fdr7PO+1lN8nE809JuwSMSpc4t1wsrh24=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dazoVUfjpBjcalI7nqAArrVwWR5wy8niJNly/ZWkA5shO+qqbJe4O7L/X3Gz/FUKxMnHfTqcszbRBsxEVS3ZVyZ8uCENT+5mX5MC6/dvZqQsg61B+7GPo2kkFMVK030EcizHW+VtaWdT6TWkF1++LCdFzU+c8TVXpkpBLPtlFgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jk4L0VD2; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744300937; c=relaxed/simple;
+	bh=D3r1imQhIqhuLnALHMnDOhpLM6osMmH+dNnVd3Iu1mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EYvOhUb+GYWel9scWw5O8fng2kTIzRo8x0zACyBDt/bzt1os2YFUSnZKVw49VYpC1h892SNfXGbmYhPzUHtEq1kWkAKGHjWoEd3Kg4Mb/lzx6Cln62MIc42V+Fa9MDIFo+lzq7Bpz3Ym7BV05xoYzB+8M91OukqbbJGBDGcDH7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lYjEnBBp; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jk4L0VD2"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224341bbc1dso9681085ad.3;
-        Thu, 10 Apr 2025 09:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744300813; x=1744905613; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qo3jtmdiLQ30YVjIBcjlK7lG5+Fo4/D/zRq2VtRejDA=;
-        b=jk4L0VD23zV1rd7SZg0tE0ezcJx/mew4fyO8ro2DgN0/w9SZypHr5HdrfoFAcQYOY7
-         GduPlAPXjAkV5q4CMtl2mlj+R/cEwJ2Wy2BWpkLHXAcFWNMe4c+f9qdmqFwbDKcMVQl4
-         0qcbKFyX9fi7DiDOuc99noaFuk+emeLPEACdJDMb18dCc0pc5oB9EAeS2hwQ6pGSjNPn
-         bJ/bloVifbWahp/81d3B11INgth92UPH0H+n5I6/Wwo2Nlyko+mR4nst2ucC3ROZnOzx
-         6CfqU/nGw8HJKbLPEYXBZkiG05gmEfk1XcpkgyMWxslG3UA73WFpdkomyvXBcwfeDpYw
-         L2Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744300813; x=1744905613;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qo3jtmdiLQ30YVjIBcjlK7lG5+Fo4/D/zRq2VtRejDA=;
-        b=m9vG4lLGXBH7JKSWxEf8geOEc4lQ1c55KUgIhAqHQOWqcnp5QSKrjyQkvSXPL2/2mR
-         19V8jrQbbLpB444uSGIFJ3JWf2A2NSEM2EfMUDdBisrNcZK8jh3urf0M2QY3pvdSnKx7
-         woGL9/i6VIC8RgTVUN+1ckiGpAhtpFuhIXQzH2deW/siPHC6a8wJm51AjuAxF4BJPjIC
-         FF9qdJiXpI+mJ42STrE2gTYEbQsv0iJ/ewedIQfKyn6SeirzlRrbvkIfIsn7HR8LIBQL
-         LBH8XoXZl9YYYOjElbf614BP+FxTTb6hhY+VYaIDPNSYlLCAD5da+Thnai8AQb5Bgfda
-         5VxA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+W0A7c4t1YvHvqSSHj/3hUGtRiBOLAB0zg6+gT2bkDEI+7NDeUWm7C14mDC20hYtKne8unWuSPwM=@vger.kernel.org, AJvYcCUi5vN3tM1958cSgB8ZsQ6+LT0tscNiQpIHvmAyHEeMQ6wyhAeQKkoueTjtBFfTMrigjJCBaNISm2wJem/4@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXtUF++8JJlp6fbYdNhKPR2R5TjrT95gd/IFbO0ksfjLlqNUVO
-	eP4O3t0c4N2C+SCBY4cXra3w699zku8eOvULQnO2Jpw9mnBc7q3T
-X-Gm-Gg: ASbGncv0zudFTAlZjAWvi7emnx8Ce4fPk43P+FuVMZMXiURzYZBftXNmrgP+3BGQoQ8
-	vjD5WRvtAOtS5Kz2Wk4sxnDCjXpKoj5DIh+pCWeJGcnlzwll8vxUYnFhnWDnnAoMUbEVqXQ/6eZ
-	oyGcZtoDQ4u7u9oN2uVXqbBkul8Yt8g+dOHYBJUQOiGAdGBXsNWSSD4/+vb/cvesSAxKRwEuznm
-	zRU8hEvffDK7orMEAFVLAixwXwLnPJv7OtoGGb4rqx2OBMKqWpD73wvUQbbbkmy9or6wtEjDOD7
-	s1mXIwJQf/BpGJITEdQOdx5tlhMx057OoxPuq1HYvcFuuZMsRxeerX4Vst/LTA==
-X-Google-Smtp-Source: AGHT+IGnJBJQib59YV2tKOPvVx8bjO1Oi1ZxGy4LlEUbUkj4ifQE6YltT6IlIPhorHZiQqXMnN4f1g==
-X-Received: by 2002:a17:903:2446:b0:224:249f:9723 with SMTP id d9443c01a7336-22b42c2e74fmr47652475ad.51.1744300812602;
-        Thu, 10 Apr 2025 09:00:12 -0700 (PDT)
-Received: from localhost.localdomain ([2409:40f2:1181:ecab:2ac2:19c7:32de:1c4d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cd1sm32179355ad.150.2025.04.10.09.00.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 09:00:12 -0700 (PDT)
-From: saivishnu725@gmail.com
-To: mchehab@kernel.org
-Cc: corbet@lwn.net,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	saivishnu725 <saivishnu725@gmail.com>
-Subject: [PATCH] Add --interactive option to prompt for dependency installation if missing
-Date: Thu, 10 Apr 2025 21:24:15 +0530
-Message-Id: <20250410155414.47114-1-saivishnu725@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lYjEnBBp"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2318C44536;
+	Thu, 10 Apr 2025 16:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744300927;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zynQ21FxEu/wyvbjhcfMThiWf9gT/Ox0I1AHhTYa89I=;
+	b=lYjEnBBpJoeEUvpfKfB1oqLwVZij5oN4gHWsH5hs3aO8Nk4kNswWdpAHsfxHU1wAwrJzVH
+	grb0W3lECk2UmND4OAo4C95Wat0lWXavWLK8rAtd1qRTYrueFvtkOOoMqlAfHE89st4G+C
+	KNwr3cpX9wuH3RS9IuMEaQRcFPOjLPuJvJe9QLCjEklElqRE2Fe7m73UxCDjSkjcM3kS27
+	acOVnkgzBzJIK4qLPTEXDDYUcYpkxi8MrLmXrd7K2F/G6nHCU8bwleRDTif3E6AXhe2MqI
+	9Dxj61G1vnpv3lrpb+MB/3kL5Edt7ypRzK0IzPff+Y7UJNe6aTI4f4m7TRh3gg==
+Date: Thu, 10 Apr 2025 18:02:05 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+ Richard Cochran <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
+Message-ID: <20250410180205.455d8488@kmaincent-XPS-13-7390>
+In-Reply-To: <Z_fmkuPhqMqWBL2M@shell.armlinux.org.uk>
+References: <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
+	<Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
+	<20250409104858.2758e68e@kmaincent-XPS-13-7390>
+	<Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
+	<20250409143820.51078d31@kmaincent-XPS-13-7390>
+	<Z_Z3lchknUpZS1UP@shell.armlinux.org.uk>
+	<20250409180414.19e535e5@kmaincent-XPS-13-7390>
+	<Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
+	<Z/b2yKMXNwjqTKy4@shell.armlinux.org.uk>
+	<20250410111754.136a5ad1@kmaincent-XPS-13-7390>
+	<Z_fmkuPhqMqWBL2M@shell.armlinux.org.uk>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdelfeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghms
+ egurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-From: saivishnu725 <saivishnu725@gmail.com>
+On Thu, 10 Apr 2025 16:41:06 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Introduce the --interactive flag to enable user prompts before running commands to install missing dependencies.
-Asks if the user would like to run the distro appropriate commands if any dependency is not available.
+> On Thu, Apr 10, 2025 at 11:17:54AM +0200, Kory Maincent wrote:
+> > On Wed, 9 Apr 2025 23:38:00 +0100
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote: =20
+> > > On Wed, Apr 09, 2025 at 06:34:35PM +0100, Russell King (Oracle) wrote=
+: =20
 
-Signed-off-by: saivishnu725 <saivishnu725@gmail.com>
----
- scripts/sphinx-pre-install | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+> > >=20
+> > > With that fixed, ptp4l's output looks very similar to that with mvpp2=
+ -
+> > > which doesn't inspire much confidence that the ptp stack is operating
+> > > properly with the offset and frequency varying all over the place, and
+> > > the "delay timeout" messages spamming frequently. I'm also getting
+> > > ptp4l going into fault mode - so PHY PTP is proving to be way more
+> > > unreliable than mvpp2 PTP. :( =20
+> >=20
+> > That's really weird. On my board the Marvell PHY PTP is more reliable t=
+han
+> > MACB. Even by disabling the interrupt.
+> > What is the state of the driver you are using?  =20
+>=20
+> Right, it seems that some of the problems were using linuxptp v3.0
+> rather than v4.4, which seems to work better (in that it doesn't
+> seem to time out and drop into fault mode.)
+>=20
+> With v4.4, if I try:
+>=20
+> # ./ptp4l -i eth2 -m -s -2
+> ptp4l[322.396]: selected /dev/ptp0 as PTP clock
+> ptp4l[322.453]: port 1 (eth2): INITIALIZING to LISTENING on INIT_COMPLETE
+> ptp4l[322.454]: port 0 (/var/run/ptp4l): INITIALIZING to LISTENING on
+> INIT_COMPLETE ptp4l[322.455]: port 0 (/var/run/ptp4lro): INITIALIZING to
+> LISTENING on INIT_COMPLETE ptp4l[328.797]: selected local clock
+> 005182.fffe.113302 as best master
+>=20
+> that's all I see. If I drop the -2, then:
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index ad9945ccb0cf..581d694eb0fd 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -42,6 +42,7 @@ my $latest_avail_ver;
- my $pdf = 1;
- my $virtualenv = 1;
- my $version_check = 0;
-+my $interactive = 0;
- 
- #
- # List of required texlive packages on Fedora and OpenSuse
-@@ -338,6 +339,21 @@ sub which($)
- 	return undef;
- }
- 
-+sub run_if_interactive($)
-+{
-+	my $command = shift;
-+
-+	if ($interactive) {
-+		printf("Do you want to run the command now [Y/n]: ");
-+		my $user_input = <STDIN>;
-+		chomp $user_input;
-+		if ($user_input =~ /Y|y/) {
-+			printf("\$ $command\n");
-+			system($command);
-+		}
-+	}
-+}
-+
- #
- # Subroutines that check distro-specific hints
- #
-@@ -374,7 +390,9 @@ sub give_debian_hints()
- 
- 	return if (!$need && !$optional);
- 	printf("You should run:\n") if ($verbose_warn_install);
--	printf("\n\tsudo apt-get install $install\n");
-+	my $command = "sudo apt-get install $install";
-+	printf("\n\t$command\n");
-+	run_if_interactive($command);
- }
- 
- sub give_redhat_hints()
-@@ -1002,12 +1020,15 @@ while (@ARGV) {
- 		$pdf = 0;
- 	} elsif ($arg eq "--version-check"){
- 		$version_check = 1;
-+	} elsif ($arg eq "--interactive") {
-+		$interactive = 1;
- 	} else {
--		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check>\n\n";
-+		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check> <--interactive>\n\n";
- 		print "Where:\n";
- 		print "\t--no-virtualenv\t- Recommend installing Sphinx instead of using a virtualenv\n";
- 		print "\t--version-check\t- if version is compatible, don't check for missing dependencies\n";
--		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n\n";
-+		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n";
-+		print "\t--interactive\t- Ask to install missing dependencies\n\n";
- 		exit -1;
- 	}
- }
--- 
+It seems you are still using your Marvell PHY drivers without my change.
+PTP L2 was broken on your first patch and I fixed it.
+I have the same result without the -2 which mean ptp4l uses UDP IPV4.
+=20
+> and from that you can see that the offset and frequency are very much
+> all over the place, not what you would expect from something that is
+> supposed to be _hardware_ timestamped - which is why I say that NTP
+> seems to be superior to PTP at least here.
+>=20
+> With mvpp2, it's a very similar story:
 
-This is not the complete patch - I'm sending this to get early feedback before I go further. If this looks good, I plan to follow up with additional patches that will:
-1. use the run_if_interactive on the hints for every distro
-2. add more quality-to-life features to make the script more useful
+> ptp4l[628.834]: master offset      38211 s2 freq  -29874 path delay     6=
+2949
+> ptp4l[629.834]: master offset     -41111 s2 freq  -97733 path delay     6=
+6289
+> ptp4l[630.834]: master offset      33131 s2 freq  -35824 path delay     6=
+3864
+> ptp4l[631.834]: master offset     -55578 s2 freq -114594 path delay     6=
+3864
+> ptp4l[632.833]: master offset      34110 s2 freq  -41579 path delay     5=
+7582
+> ptp4l[633.834]: master offset     -13137 s2 freq  -78593 path delay     6=
+0047
+> ptp4l[634.834]: master offset      55063 s2 freq  -14334 path delay     4=
+9425
+> ptp4l[635.834]: master offset     -41302 s2 freq  -94180 path delay     4=
+9425
 
-Any form of feedback would be helpful! If there is a reason why none of the scripts are interactable, please let me know why.
+I can't tell about mvpp2 as I don't have board with this MAC but these valu=
+es
+seem really high and vary a lot. As this behavior is similar between the Ma=
+rvell
+PHY or the mvpp2 MAC maybe the issue comes indeed from your link partner.=20
 
-Sai Vishnu
+> Again, offset all over the place, frequency also showing that it doesn't
+> stabilise.
+>=20
+> This _could_ be because of the master clock being random - but then it's
+> using the FEC PTP implementation with PTPD v2 - maybe either the FEC
+> implementation is buggy or maybe it's PTPD v2 causing this. I have no
+> idea how I can debug this - and I'm not going to invest in a "grand
+> master" PTP clock on a whim just to find out that isn't the problem.
+>=20
+> I thought... maybe I can use the PTP implementation in a Marvell
+> switch as the network master, but the 88E6176 doesn't support PTP.
+>=20
+> Maybe I can use an x86 platform... nope:
+>=20
+> # ethtool -T enp0s25
+> Time stamping parameters for enp0s25:
+> Capabilities:
+>         software-transmit
+>         software-receive
+>         software-system-clock
 
-2.34.1
+Still you could try with timestamping from software on the link partner.
+On my side I am using a STM32MP157-DK as link partner.
 
+If I set the DK board as PTP master and tell it to use software PTP (-S
+parameter) it is still more reliable than yours.
+ptp4l[4419.134]: master offset        136 s2 freq   -1984 path delay    118=
+390
+ptp4l[4420.134]: master offset       1757 s2 freq    -322 path delay    115=
+888
+ptp4l[4421.134]: master offset      -1154 s2 freq   -2706 path delay    115=
+888
+ptp4l[4422.134]: master offset      -1652 s2 freq   -3551 path delay    115=
+888
+ptp4l[4423.134]: master offset      -1199 s2 freq   -3593 path delay    115=
+252
+
+> PTP Hardware Clock: none
+> Hardware Transmit Timestamp Modes: none
+> Hardware Receive Filter Modes: none
+>=20
+> Anyway, let's try taking a tcpdump on the x86 machine of the sync
+> packets and compare the deviation of the software timestamp to that
+> of the hardware timestamp (all deviations relative to the first
+> packet part seconds):
+>=20
+> 16:30:30.577298 - originTimeStamp : 1744299061 seconds, 762464622 nanosec=
+onds
+> 16:30:31.577270 - originTimeStamp : 1744299062 seconds, 762363987 nanosec=
+onds
+>    -28us						-100.635us
+> 16:30:32.577303 - originTimeStamp : 1744299063 seconds, 762429696 nanosec=
+onds
+>    +85us						-34.926us
+> 16:30:33.577236 - originTimeStamp : 1744299064 seconds, 762328728 nanosec=
+onds
+>    -62us						-135.894us
+> 16:30:34.577280 - originTimeStamp : 1744299065 seconds, 762398770 nanosec=
+onds
+>    -18us						-65.852us
+>=20
+> We can see here that the timestamp from the software receive is far
+> more regular than the origin timestamp in the packets, which, in
+> combination with the randomness of both mvpp2 and the 88e151x PTP
+> trying to sync with it, makes me question whether there is something
+> fundamentally wrong with the FEC PTP implementation / PTPDv2.
+
+So we come to the same conclusion, the issue comes from your link partner! =
+;)
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
