@@ -1,612 +1,123 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06F71FBCAA
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA6C1C3C1D
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744260355; cv=none; b=LTppyLJRIHfkH3tUXBzajE6P6fG5T2mF8C4sLptQm/TUmTANLrG0UP/ULAyLCjAXG4sbwU85V9yH2ISqH48ZDwsPdh2vtP+BSlIsg5709m0HtnSzMip4fo4JY6lCvJHjkbsMk492cd5RmwXHd1WF2POFXyopFuL9GH28NyyBNqA=
+	t=1744260595; cv=none; b=goLmJC/8X/Q6x/ZUnscMwUCjWYHP8oGf+Fe7QobSWSPcZy4itQ22ffBlPIX4KMZtCsA5/Ueno2psiComfd6oULuXp3MxyP/tIx4sBL8VaoXrF+w//NFoh+LApp/udxM6XWZSu/N+FQn7Gsl24NQBeCYFoV/Xr/H3J6OKBtCTv6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744260355; c=relaxed/simple;
-	bh=Aivw7EsXRxA9inZFP3SFHTkCN6KMulBbPpz5+2ZgC50=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=KCmf9xlBPFWxJKU+uIaPsibuH7O4lR0vLf61JjYSboebeviht4YsYNgcnUEclzq8DYhfEbm8xwHokpHiMjiW54eI3wsvg1x4VQ3vPo/bRNdDYPAslWcOjirBlq0wUQuvon4aV/IlOOt/Fc5t7anASrbmWetTxX0WaYdpQCsHoO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=asxX/32v; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1744260595; c=relaxed/simple;
+	bh=HJubsNTysXTSg4uK/7vFlSsmHsU1JS438LmRfIfFBYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K7HeJbxR/aByhav6/SVewpE7KG7QtXcjt3RwB8WjuNe39+C3btEpRHoIx/SYu7wJzAMpcUR/1FjwNZEfQxfym1M5T2/PTDXsYFb7bei0MpAqWOA1O+ECfrV5YwNIO4h1BX4sLsJ80HzdewCMvs8YXb84Gyd9NLTQ7nu5SoHaSm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aIBANVCA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="asxX/32v"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af5329791f1so1102685a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 21:45:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744260352; x=1744865152; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xCHjrVgp9LQqMelwYL3MStJ4KvMiGkqr5mdBSE1Ktac=;
-        b=asxX/32vijEObpwZQirF/vd3FxZixqLuOgt4E9qPx97D7eaE/j1kYa0py0V6Eexa9o
-         oDq+i4EqQa4wWSqI8LJE5F+F3fiJrWp4o5dF6PhMEcx5gTJgz9Kp6WYPElPA6PJh6On/
-         7CCT9OLCKi52zsG19Xk8S7QRMI1VZuWktZK1SISVbDTsSzC30wr95VMQcl1Woc5sFr+o
-         ggFGCOQr26BNoZd4S8+mx3ybJgRXIF5O/NXohC5nH6Wzqz/dTeXFg38XIOmL25oe7Ra7
-         Zg5FzVk4vk+dpmz7HyKU7Nkpd9ZsGTMnqaH9+IcWsKL1VaLX18FBeQsLmaqCNiRKa/om
-         Hqzg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aIBANVCA"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539H0JSI006744
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:49:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=EBe4h+OgQF6wvfsXVl90BUY1
+	oHsbYsSIiyiB+HhoGsQ=; b=aIBANVCA2GR+yE21Gs/xRp5QKXTryJ9pEofLPOzE
+	BKPKb0IC0+u5SlPqHWRg+dc97HSIqFMsvwgI5/EgHX63qd1csdaDl252/hiNlWCk
+	4cMODLt7/XFmCyWSRMFf7zU9PUy0d5LNBXHUTpjtYUJEl0pJb6DdqwlqYScLQFPp
+	kZdvaQ3xydV8lV2WvRJAaRaxTixgmmklesbZlfepoiR9g53aYZsutxaX8WHv+lko
+	Y/kIl8NCz6zNlzc8L4zT/6x9IJQb/0C/W63HU2lHv2I+pKBuO6aXpGkEyqtUWWto
+	Wp+9gwov5mql+hFOhuDcry0DzPXwXCdk2rzYbNrRhfNuxg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3nkmm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:49:52 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c09f73873fso69740785a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 21:49:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744260352; x=1744865152;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xCHjrVgp9LQqMelwYL3MStJ4KvMiGkqr5mdBSE1Ktac=;
-        b=ZjvDgrSeGIaT8LE+qFTrMbtsOpFZwHukJ8Gnxm3AJpLkCVX9CnhY11sjfYlYnx8Sch
-         Jr1/ZtW7qNaHiFtmV2Q/LhYrSSOJP93u26zAndWqZMuVDelYf819VTiTVwCvfqr7RdEu
-         uLY+9HsimJsgu8ETzArbrV/V+64gnIfb38i1PtiSldkBHHgMzjkL5fJj9d+kPMYuZph4
-         QZ8/YZ342hinnP7FUnjXnIdTBBFWxFLctw/OyR105oMsm818apCqxQ3Dz0JZV536Vgor
-         7cOlO/lpOerzA+SGNmhBoCfSEkgF2RddGoxPSb80s3/2lho5zsSGL4I51Gr2qCkDu/Mu
-         DIQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXob7ftVcIRXX+HgJHoST0Lr4iB8LYtWRQG7Zt97ZjEy9B1YMAWk27+q2D/g02YiV9BHaOcCMfFo6hMdgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7+NV31Kj3yJnT9KeY5f9e/Yp++Ee/jCl4OvYfoGqTuTZfxYlw
-	XqmiJHn7jMqbmMbxpnaF3V3sraCvKfSLvvltm+3kxvJXEioAH8ImKA+brhSkuxxzNgOIddFKEt9
-	v+GZuTg==
-X-Google-Smtp-Source: AGHT+IFoKovCjtIEa4S72PmsR+Xf2MJkMt515AdfNWXf3VBdBa9aa3t2puceXYwKbWSGqfWR1KmWelAXkZ9m
-X-Received: from pjzz7.prod.google.com ([2002:a17:90b:58e7:b0:2ff:8471:8e53])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ccce:b0:221:1497:7b08
- with SMTP id d9443c01a7336-22b7f91d901mr22454325ad.23.1744260352161; Wed, 09
- Apr 2025 21:45:52 -0700 (PDT)
-Date: Wed,  9 Apr 2025 21:45:32 -0700
-In-Reply-To: <20250410044532.52017-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1744260591; x=1744865391;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EBe4h+OgQF6wvfsXVl90BUY1oHsbYsSIiyiB+HhoGsQ=;
+        b=GXw0VbbUJKxBNXE3NTaM6rbqRnEHlDI6XVLUP1QZCusU1vSVMygSqYpCGlrLv8BPQF
+         ziqkEotXEmrb2O8IiKOyttagNXEPW2zxQIR6pOADO0h+ihcfkiTAFO4gsHFhFiNVmfeC
+         kgfIeD0u+zwGPZQzzPkdlMjL4m56gdLB1lxpcT7E1a4dEv+x8Fx78JiCkbFZfT0XnE/m
+         l0offhfl/5gmqxMmQQfYQ01UH1NWQXOb2cFMt8M3p+ttrJS3wVt0kBwfQ02b7C6dEv8h
+         iNMmGIZGrraK50upwkuszejseWU3pL3nk3CdrS0tDNxAPlSwj/vLyFPg/aZ1MKncHIHB
+         SNvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHokvmQjjrc4mh3nyYmft50FWUh11WLZIrSN3vh2MW1/54PXimKnp/zvqTnzAEq0f4LphuMxZKDIzNp3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm4YD5nh5ai1NrHS/869tI8pja1xQZJ2ETQx2E2tQ3jHl2WUd+
+	lMnshTzmSvR0vxCIPvpZQY8Akaq2RpDx/Zmm/o/lLBsrKR97WMdRV3A3XPbpg9RUpI7PZ5+nvj6
+	Us9bpXfsYkPel6KnBcLOpaiDkvNBWVTnRJVGr9OSxZwzWnffLY1jlzkXCdeUQpaU=
+X-Gm-Gg: ASbGncvJ5DXH26JbyJiOCy95if95imUoeoijS5DGlXYP0AepYIjCsnPxTVrA+yBAyb9
+	2YSnv+HXRXc9WZ83zIcfd9SkZz13x/t6WFen7uJ+VKu4A+Yq1CLKPrzSXEzRWvMNt8l3QKLi+4V
+	y8OUYZJeQyRmXWuVpGWi6b10y8Nsp7hnB3q4P3TDTdXVKPi6MyoskEitA7LiE+mtY6qO8Fe5yzp
+	yLXZDScPbj9MdT/pPKBrrlTpviT4M0cfuSxfdbMJ3CUFSntLkhPBvk8IQ1bRoFTI+7LWOSHTgkI
+	iv9FK+u6IdO+Ce4BC5xdFHrXBXPN4TrHo0S6EJESPRrGG1JtLFOiVqGhPoSUKRbcvEOSBUnF1KU
+	=
+X-Received: by 2002:a05:620a:394f:b0:7c7:a5e1:f204 with SMTP id af79cd13be357-7c7a76d0513mr192039785a.56.1744260591135;
+        Wed, 09 Apr 2025 21:49:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFck7/LVrUqvTqOk8GDKtlJNoq9VvB11DSq0iOs78rjGlby6/VccIdHdBwARgqpjy/7DrynVQ==
+X-Received: by 2002:a05:620a:394f:b0:7c7:a5e1:f204 with SMTP id af79cd13be357-7c7a76d0513mr192038085a.56.1744260590818;
+        Wed, 09 Apr 2025 21:49:50 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d51051dsm38905e87.182.2025.04.09.21.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 21:49:49 -0700 (PDT)
+Date: Thu, 10 Apr 2025 07:49:46 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-hp-x14: Fix up BT pinctrl
+ node name
+Message-ID: <dyfj4b74at2hr5xftohn6byfa3tzsr233y7wmgf4aums3hjnax@2lgotcdl37x6>
+References: <20250409-topic-x14s_bt_tlmm-v1-1-b159395b7922@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250410044532.52017-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250410044532.52017-4-irogers@google.com>
-Subject: [PATCH v1 3/3] perf metricgroup: Binary search when resolving
- referred to metrics
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409-topic-x14s_bt_tlmm-v1-1-b159395b7922@oss.qualcomm.com>
+X-Proofpoint-GUID: 6R39rKIcm11oXTJzYRNIGj_ZEGT7sy6k
+X-Proofpoint-ORIG-GUID: 6R39rKIcm11oXTJzYRNIGj_ZEGT7sy6k
+X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f74df0 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=9F8HMpmrTCUkXK7qiZgA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=697 lowpriorityscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100034
 
-Unlike with events, metrics can be matched by name or a list of metric
-groups. However, when a metric refers to another metric it isn't
-referring to a group but the singular metric in question. Prior to
-this change every "id" in a metric expression is checked to see if it
-is a metric by scanning all the metrics in the metrics table. As the
-table is sorted my metric name we can speed the search in the
-resolution case by binary searching for the metric.
+On Wed, Apr 09, 2025 at 05:00:00PM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> The schema expects all TLMM subnodes to end in -state.
+> Fix it up.
+> 
+> Fixes: 6f18b8d4142c ("arm64: dts: qcom: x1e80100-hp-x14: dt for HP Omnibook X Laptop 14")
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Rename some of the metricgroup functions to make it clearer whether
-they match a metric by name or by both name and group.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> 
 
-Before:
-```
-$ time perf test -v 10
- 10: PMU JSON event tests                                            :
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
- 10.3: Parsing of PMU event table metrics                            : Ok
- 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
- 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-
-real    0m15.551s
-user    0m15.092s
-sys     0m3.009s
-```
-
-After:
-```
-$ time perf test -v 10
- 10: PMU JSON event tests                                            :
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
- 10.3: Parsing of PMU event table metrics                            : Ok
- 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
- 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-
-real    0m2.338s
-user    0m1.797s
-sys     0m2.186s
-```
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-stat.c                |   6 +-
- tools/perf/pmu-events/empty-pmu-events.c |  66 ++++++++++++++-
- tools/perf/pmu-events/jevents.py         |  66 ++++++++++++++-
- tools/perf/pmu-events/pmu-events.h       |  23 +++--
- tools/perf/util/metricgroup.c            | 102 +++++++++--------------
- tools/perf/util/metricgroup.h            |   2 +-
- 6 files changed, 192 insertions(+), 73 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 68ea7589c143..67e6efaabe27 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1856,7 +1856,7 @@ static int add_default_events(void)
- 		 * will use this approach. To determine transaction support
- 		 * on an architecture test for such a metric name.
- 		 */
--		if (!metricgroup__has_metric(pmu, "transaction")) {
-+		if (!metricgroup__has_metric_or_groups(pmu, "transaction")) {
- 			pr_err("Missing transaction metrics\n");
- 			ret = -1;
- 			goto out;
-@@ -1890,7 +1890,7 @@ static int add_default_events(void)
- 			smi_reset = true;
- 		}
- 
--		if (!metricgroup__has_metric(pmu, "smi")) {
-+		if (!metricgroup__has_metric_or_groups(pmu, "smi")) {
- 			pr_err("Missing smi metrics\n");
- 			ret = -1;
- 			goto out;
-@@ -1980,7 +1980,7 @@ static int add_default_events(void)
- 		 * Add TopdownL1 metrics if they exist. To minimize
- 		 * multiplexing, don't request threshold computation.
- 		 */
--		if (metricgroup__has_metric(pmu, "Default")) {
-+		if (metricgroup__has_metric_or_groups(pmu, "Default")) {
- 			struct evlist *metric_evlist = evlist__new();
- 
- 			if (!metric_evlist) {
-diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-index 0cb7ba7912e8..5cdf7e68e331 100644
---- a/tools/perf/pmu-events/empty-pmu-events.c
-+++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -443,7 +443,7 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
-                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
-                 int ret;
- 
--                if (!perf_pmu__name_wildcard_match(pmu, pmu_name))
-+                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
-                         continue;
- 
-                 ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
-@@ -489,6 +489,49 @@ static int pmu_metrics_table__for_each_metric_pmu(const struct pmu_metrics_table
-         return 0;
- }
- 
-+static int pmu_metrics_table__find_metric_pmu(const struct pmu_metrics_table *table,
-+                                            const struct pmu_table_entry *pmu,
-+                                            const char *metric,
-+                                            pmu_metric_iter_fn fn,
-+                                            void *data)
-+{
-+        struct pmu_metric pm = {
-+                .pmu = &big_c_string[pmu->pmu_name.offset],
-+        };
-+        int low = 0, high = pmu->num_entries - 1;
-+
-+        while (low <= high) {
-+                int cmp, mid = (low + high) / 2;
-+
-+                decompress_metric(pmu->entries[mid].offset, &pm);
-+
-+                if (!pm.metric_name && !metric)
-+                        goto do_call;
-+
-+                if (!pm.metric_name && metric) {
-+                        low = mid + 1;
-+                        continue;
-+                }
-+                if (pm.metric_name && !metric) {
-+                        high = mid - 1;
-+                        continue;
-+                }
-+
-+                cmp = strcmp(pm.metric_name, metric);
-+                if (cmp < 0) {
-+                        low = mid + 1;
-+                        continue;
-+                }
-+                if (cmp > 0) {
-+                        high = mid - 1;
-+                        continue;
-+                }
-+  do_call:
-+                return fn ? fn(&pm, table, data) : 0;
-+        }
-+        return PMU_METRICS__NOT_FOUND;
-+}
-+
- int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-                                      pmu_metric_iter_fn fn,
-                                      void *data)
-@@ -503,6 +546,27 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-         return 0;
- }
- 
-+int pmu_metrics_table__find_metric(const struct pmu_metrics_table *table,
-+                                 struct perf_pmu *pmu,
-+                                 const char *metric,
-+                                 pmu_metric_iter_fn fn,
-+                                 void *data)
-+{
-+        for (size_t i = 0; i < table->num_pmus; i++) {
-+                const struct pmu_table_entry *table_pmu = &table->pmus[i];
-+                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
-+                int ret;
-+
-+                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
-+                        continue;
-+
-+                ret = pmu_metrics_table__find_metric_pmu(table, table_pmu, metric, fn, data);
-+                if (ret != PMU_METRICS__NOT_FOUND)
-+                        return ret;
-+        }
-+        return PMU_METRICS__NOT_FOUND;
-+}
-+
- static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
- {
-         static struct {
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 7499a35bfadd..ec10d767fb49 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -966,7 +966,7 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
-                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
-                 int ret;
- 
--                if (!perf_pmu__name_wildcard_match(pmu, pmu_name))
-+                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
-                         continue;
- 
-                 ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
-@@ -1012,6 +1012,49 @@ static int pmu_metrics_table__for_each_metric_pmu(const struct pmu_metrics_table
-         return 0;
- }
- 
-+static int pmu_metrics_table__find_metric_pmu(const struct pmu_metrics_table *table,
-+                                            const struct pmu_table_entry *pmu,
-+                                            const char *metric,
-+                                            pmu_metric_iter_fn fn,
-+                                            void *data)
-+{
-+        struct pmu_metric pm = {
-+                .pmu = &big_c_string[pmu->pmu_name.offset],
-+        };
-+        int low = 0, high = pmu->num_entries - 1;
-+
-+        while (low <= high) {
-+                int cmp, mid = (low + high) / 2;
-+
-+                decompress_metric(pmu->entries[mid].offset, &pm);
-+
-+                if (!pm.metric_name && !metric)
-+                        goto do_call;
-+
-+                if (!pm.metric_name && metric) {
-+                        low = mid + 1;
-+                        continue;
-+                }
-+                if (pm.metric_name && !metric) {
-+                        high = mid - 1;
-+                        continue;
-+                }
-+
-+                cmp = strcmp(pm.metric_name, metric);
-+                if (cmp < 0) {
-+                        low = mid + 1;
-+                        continue;
-+                }
-+                if (cmp > 0) {
-+                        high = mid - 1;
-+                        continue;
-+                }
-+  do_call:
-+                return fn ? fn(&pm, table, data) : 0;
-+        }
-+        return PMU_METRICS__NOT_FOUND;
-+}
-+
- int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-                                      pmu_metric_iter_fn fn,
-                                      void *data)
-@@ -1026,6 +1069,27 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-         return 0;
- }
- 
-+int pmu_metrics_table__find_metric(const struct pmu_metrics_table *table,
-+                                 struct perf_pmu *pmu,
-+                                 const char *metric,
-+                                 pmu_metric_iter_fn fn,
-+                                 void *data)
-+{
-+        for (size_t i = 0; i < table->num_pmus; i++) {
-+                const struct pmu_table_entry *table_pmu = &table->pmus[i];
-+                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
-+                int ret;
-+
-+                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
-+                        continue;
-+
-+                ret = pmu_metrics_table__find_metric_pmu(table, table_pmu, metric, fn, data);
-+                if (ret != PMU_METRICS__NOT_FOUND)
-+                        return ret;
-+        }
-+        return PMU_METRICS__NOT_FOUND;
-+}
-+
- static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
- {
-         static struct {
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index 675562e6f770..8048ca0b2fb3 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -71,6 +71,7 @@ struct pmu_events_table;
- struct pmu_metrics_table;
- 
- #define PMU_EVENTS__NOT_FOUND -1000
-+#define PMU_METRICS__NOT_FOUND -1000
- 
- typedef int (*pmu_event_iter_fn)(const struct pmu_event *pe,
- 				 const struct pmu_events_table *table,
-@@ -85,11 +86,11 @@ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
- 				    pmu_event_iter_fn fn,
- 				    void *data);
- /*
-- * Search for table and entry matching with pmu__name_match. Each matching event
-- * has fn called on it. 0 implies to success/continue the search while non-zero
-- * means to terminate. The special value PMU_EVENTS__NOT_FOUND is used to
-- * indicate no event was found in one of the tables which doesn't terminate the
-- * search of all tables.
-+ * Search for a table and entry matching with pmu__name_wildcard_match or any
-+ * tables if pmu is NULL. Each matching event has fn called on it. 0 implies to
-+ * success/continue the search while non-zero means to terminate. The special
-+ * value PMU_EVENTS__NOT_FOUND is used to indicate no event was found in one of
-+ * the tables which doesn't terminate the search of all tables.
-  */
- int pmu_events_table__find_event(const struct pmu_events_table *table,
-                                  struct perf_pmu *pmu,
-@@ -101,6 +102,18 @@ size_t pmu_events_table__num_events(const struct pmu_events_table *table,
- 
- int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
- 				     void *data);
-+/*
-+ * Search for a table and entry matching with pmu__name_wildcard_match or any
-+ * tables if pmu is NULL. Each matching metric has fn called on it. 0 implies to
-+ * success/continue the search while non-zero means to terminate. The special
-+ * value PMU_METRICS__NOT_FOUND is used to indicate no metric was found in one
-+ * of the tables which doesn't terminate the search of all tables.
-+ */
-+int pmu_metrics_table__find_metric(const struct pmu_metrics_table *table,
-+				   struct perf_pmu *pmu,
-+				   const char *metric,
-+				   pmu_metric_iter_fn fn,
-+				   void *data);
- 
- const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu);
- const struct pmu_metrics_table *pmu_metrics_table__find(void);
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 46920ebadfd1..126a631686b0 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -353,7 +353,7 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 	return 0;
- }
- 
--static bool match_metric(const char *metric_or_groups, const char *sought)
-+static bool match_metric_or_groups(const char *metric_or_groups, const char *sought)
- {
- 	int len;
- 	char *m;
-@@ -369,18 +369,19 @@ static bool match_metric(const char *metric_or_groups, const char *sought)
- 	    (metric_or_groups[len] == 0 || metric_or_groups[len] == ';'))
- 		return true;
- 	m = strchr(metric_or_groups, ';');
--	return m && match_metric(m + 1, sought);
-+	return m && match_metric_or_groups(m + 1, sought);
- }
- 
--static bool match_pm_metric(const struct pmu_metric *pm, const char *pmu, const char *metric)
-+static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *pmu,
-+				      const char *metric_or_groups)
- {
- 	const char *pm_pmu = pm->pmu ?: "cpu";
- 
- 	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
- 		return false;
- 
--	return match_metric(pm->metric_group, metric) ||
--	       match_metric(pm->metric_name, metric);
-+	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
-+	       match_metric_or_groups(pm->metric_name, metric_or_groups);
- }
- 
- /** struct mep - RB-tree node for building printing information. */
-@@ -802,11 +803,6 @@ struct metricgroup_add_iter_data {
- 	const struct pmu_metrics_table *table;
- };
- 
--static bool metricgroup__find_metric(const char *pmu,
--				     const char *metric,
--				     const struct pmu_metrics_table *table,
--				     struct pmu_metric *pm);
--
- static int add_metric(struct list_head *metric_list,
- 		      const struct pmu_metric *pm,
- 		      const char *modifier,
-@@ -818,6 +814,16 @@ static int add_metric(struct list_head *metric_list,
- 		      const struct visited_metric *visited,
- 		      const struct pmu_metrics_table *table);
- 
-+static int metricgroup__find_metric_callback(const struct pmu_metric *pm,
-+					     const struct pmu_metrics_table *table  __maybe_unused,
-+					     void *vdata)
-+{
-+	struct pmu_metric *copied_pm = vdata;
-+
-+	memcpy(copied_pm, pm, sizeof(*pm));
-+	return 0;
-+}
-+
- /**
-  * resolve_metric - Locate metrics within the root metric and recursively add
-  *                    references to them.
-@@ -838,7 +844,7 @@ static int add_metric(struct list_head *metric_list,
-  *       architecture perf is running upon.
-  */
- static int resolve_metric(struct list_head *metric_list,
--			  const char *pmu,
-+			  struct perf_pmu *pmu,
- 			  const char *modifier,
- 			  bool metric_no_group,
- 			  bool metric_no_threshold,
-@@ -868,7 +874,9 @@ static int resolve_metric(struct list_head *metric_list,
- 	hashmap__for_each_entry(root_metric->pctx->ids, cur, bkt) {
- 		struct pmu_metric pm;
- 
--		if (metricgroup__find_metric(pmu, cur->pkey, table, &pm)) {
-+		if (pmu_metrics_table__find_metric(table, pmu, cur->pkey,
-+						   metricgroup__find_metric_callback,
-+						   &pm) != PMU_METRICS__NOT_FOUND) {
- 			pending = realloc(pending,
- 					(pending_cnt + 1) * sizeof(struct to_resolve));
- 			if (!pending)
-@@ -1019,7 +1027,12 @@ static int __add_metric(struct list_head *metric_list,
- 	}
- 	if (!ret) {
- 		/* Resolve referenced metrics. */
--		const char *pmu = pm->pmu ?: "cpu";
-+		struct perf_pmu *pmu;
-+
-+		if (pm->pmu && pm->pmu[0] != '\0')
-+			pmu = perf_pmus__find(pm->pmu);
-+		else
-+			pmu = perf_pmus__scan_core(/*pmu=*/ NULL);
- 
- 		ret = resolve_metric(metric_list, pmu, modifier, metric_no_group,
- 				     metric_no_threshold, user_requested_cpu_list,
-@@ -1036,44 +1049,6 @@ static int __add_metric(struct list_head *metric_list,
- 	return ret;
- }
- 
--struct metricgroup__find_metric_data {
--	const char *pmu;
--	const char *metric;
--	struct pmu_metric *pm;
--};
--
--static int metricgroup__find_metric_callback(const struct pmu_metric *pm,
--					     const struct pmu_metrics_table *table  __maybe_unused,
--					     void *vdata)
--{
--	struct metricgroup__find_metric_data *data = vdata;
--	const char *pm_pmu = pm->pmu ?: "cpu";
--
--	if (strcmp(data->pmu, "all") && strcmp(pm_pmu, data->pmu))
--		return 0;
--
--	if (!match_metric(pm->metric_name, data->metric))
--		return 0;
--
--	memcpy(data->pm, pm, sizeof(*pm));
--	return 1;
--}
--
--static bool metricgroup__find_metric(const char *pmu,
--				     const char *metric,
--				     const struct pmu_metrics_table *table,
--				     struct pmu_metric *pm)
--{
--	struct metricgroup__find_metric_data data = {
--		.pmu = pmu,
--		.metric = metric,
--		.pm = pm,
--	};
--
--	return pmu_metrics_table__for_each_metric(table, metricgroup__find_metric_callback, &data)
--		? true : false;
--}
--
- static int add_metric(struct list_head *metric_list,
- 		      const struct pmu_metric *pm,
- 		      const char *modifier,
-@@ -1119,7 +1094,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
- 	struct metricgroup_add_iter_data *d = data;
- 	int ret;
- 
--	if (!match_pm_metric(pm, d->pmu, d->metric_name))
-+	if (!match_pm_metric_or_groups(pm, d->pmu, d->metric_name))
- 		return 0;
- 
- 	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
-@@ -1200,9 +1175,9 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
- 	struct metricgroup__add_metric_data *data = vdata;
- 	int ret = 0;
- 
--	if (pm->metric_expr && match_pm_metric(pm, data->pmu, data->metric_name)) {
-+	if (pm->metric_expr && match_pm_metric_or_groups(pm, data->pmu, data->metric_name)) {
- 		bool metric_no_group = data->metric_no_group ||
--			match_metric(pm->metricgroup_no_group, data->metric_name);
-+			match_metric_or_groups(pm->metricgroup_no_group, data->metric_name);
- 
- 		data->has_match = true;
- 		ret = add_metric(data->list, pm, data->modifier, metric_no_group,
-@@ -1723,29 +1698,32 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 
- struct metricgroup__has_metric_data {
- 	const char *pmu;
--	const char *metric;
-+	const char *metric_or_groups;
- };
--static int metricgroup__has_metric_callback(const struct pmu_metric *pm,
--					    const struct pmu_metrics_table *table __maybe_unused,
--					    void *vdata)
-+static int metricgroup__has_metric_or_groups_callback(const struct pmu_metric *pm,
-+						      const struct pmu_metrics_table *table
-+							__maybe_unused,
-+						      void *vdata)
- {
- 	struct metricgroup__has_metric_data *data = vdata;
- 
--	return match_pm_metric(pm, data->pmu, data->metric) ? 1 : 0;
-+	return match_pm_metric_or_groups(pm, data->pmu, data->metric_or_groups) ? 1 : 0;
- }
- 
--bool metricgroup__has_metric(const char *pmu, const char *metric)
-+bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_groups)
- {
- 	const struct pmu_metrics_table *table = pmu_metrics_table__find();
- 	struct metricgroup__has_metric_data data = {
- 		.pmu = pmu,
--		.metric = metric,
-+		.metric_or_groups = metric_or_groups,
- 	};
- 
- 	if (!table)
- 		return false;
- 
--	return pmu_metrics_table__for_each_metric(table, metricgroup__has_metric_callback, &data)
-+	return pmu_metrics_table__for_each_metric(table,
-+						  metricgroup__has_metric_or_groups_callback,
-+						  &data)
- 		? true : false;
- }
- 
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 779f6ede1b51..a04ac1afa6cc 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -85,7 +85,7 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 				   struct rblist *metric_events);
- 
- void metricgroup__print(const struct print_callbacks *print_cb, void *print_state);
--bool metricgroup__has_metric(const char *pmu, const char *metric);
-+bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_groups);
- unsigned int metricgroups__topdown_max_level(void);
- int arch_get_runtimeparam(const struct pmu_metric *pm);
- void metricgroup__rblist_exit(struct rblist *metric_events);
 -- 
-2.49.0.504.g3bcea36a83-goog
-
+With best wishes
+Dmitry
