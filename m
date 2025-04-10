@@ -1,77 +1,134 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C11D1DA62E
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBF01EB5FD;
+	Thu, 10 Apr 2025 16:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744301406; cv=none; b=GQK5Nwa0fRTt0BoUth6tFEjPm6BD2OVvW52n3Ec+69n/XzkU/3YlgSMlAizYsovmY2X1NJzQd3ZRpXECWmke0vzhLGWfwHiTQomGphI4jLGcJLT/fu5ukLgwBGGARH55vt3Bnn5DW9U5Q3+ang7FnvJzcHvHlvsAXWNwJTkpWmY=
+	t=1744301483; cv=none; b=NFIqKx/G0J6aUnke1VUUoJWYvDCPgXT+N/im4xyK/m3qrCO7y5IZ/dAaktX7PE0T6/weXRfMZtPm/lVA8dpQVtG8RdvV+MkFAS9sR0zoCjrgZTgHmp7OqrraxkIJPbdQ8RZp6YRJdHWHOUHrM57d2roG9rTM3gok4/LvnCUff8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744301406; c=relaxed/simple;
-	bh=uLCUDYBiKGmNNahQ8ulWRPQAlAHtkv26eGrpFarofys=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=XV93WiT38p0mCAnjvZWRRAL4JyT4AbvTItK8koM7eT0IDQrVWKRuFOVpfCsvU1qR+9ZuB6s60gdeZlj9XXMJiVxVy0MUL3ieaIWB2gtaqUAfAfclLGekhNK1vLo96URkU1HEXFNx31Ww6476CKqtMUyA6FViYak2RC7D35vgERY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d4578fbaf4so20766895ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:10:04 -0700 (PDT)
+	s=arc-20240116; t=1744301483; c=relaxed/simple;
+	bh=eoLFo4St2bRVAWzDrRnDkbVxFTPTOLrZe/jve9RJ6iM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uM1uRh2oNe/v8z3Zgz1UXSpaHHucC4Fx9oM4CAOR89Bk+ksV+dpMGw/pBJcQa2GbTWdbhe+4puNtSqhQIXkaiioTRGSK2qZDM5ONs34UlUvUZzYFAeDFxYP4yalzxilEw9nt2rgcrUiItBfgHj2TvLDDC+KaTqvhvaj80H4PaZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7376dd56f60so726226b3a.3;
+        Thu, 10 Apr 2025 09:11:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744301403; x=1744906203;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JYNaIvH1kPvnW+M8OBqXOeFieDfcqbCw9nZalfSL0ro=;
-        b=vI73CqG3uvsaqyFWYodElCzTPz2BV3Clr+TQTVLhKOjgVsBODIN8LultvVVuVPrQ8m
-         0bdCmbIBr04hg/BNxD5BiGWUVAPdbixI2FChyTx28cF92lwO5EbWrg231E4vy41MhzEj
-         3ul9WORVF+vlsgUlwhz7wVWNErUH5q8qKi9ZnKcvJTbkETA4X6MDsZXqQfVrJsA2Wo4h
-         f2HBjNAfRD+u4GxB6zZjo3RAkV58qOVLYyXO3DJLZEUQvEVgl9zezMYGd02wjQY7S0bI
-         3aCkoMUY5pi2Wt2HqLm8fnIVjfvx870g0aHicn4cUAHWBBFqaJjB6UhhOABXqVof22DG
-         wHfA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPxU5rPTkMsdSgZDYXbeAevBMrL7KkFTUwQfUE+OuQ3kfjZ4BxoLwLkK5kWxQmx1EsBpHs5xxD48WCkEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm/EXDqsjT/LH+HxXgFgw2Zp+s84vNTdo78RPCqiU3fO6sDzSF
-	Gg75gkLL5E3F6Qx4/ZJcaRcTvz2ScycL74qYPRPSGlrZFKIoHgaptNWvIVFT/yK0pwBU+ye3vup
-	ut76Td/hu+gzgj3Pp+He48bbD39E0mYSFu3cwYnEGfCGvtVv8u8EfYck=
-X-Google-Smtp-Source: AGHT+IGxPINkI9sv+/7WMAqe4TkBJydLJlvsPCmCOtDcmdkoNbAAzmlrLUfhGBZJIdTaW1ZiCdXy/nGHmdGLZPfustLZQVWAXQ9L
+        d=1e100.net; s=20230601; t=1744301479; x=1744906279;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5O2Jn034guzAl2Fd5lC5sxo3WJiV73Esjg9KWHNnQZ4=;
+        b=f/o40NfWVT+S7XkCX/x3zC4iMM98VtHFCu8RvnPG5/uKRWM5TbkYHePogL5EXTjBvn
+         XZsTvC99Xt8GFkpAaGkjUgx0h/15SMElNm4y9CG+4eEz/WZ/BWWQzJ9kUAbHqZEM1H/O
+         0rhPfw8MB/wn17Y7aa+rSgtcGSunk/Jsx8slkhPj2h+O1pTK0qiTXCkjV1enlwRLLHeu
+         Utcwm/shNbjkO/NbgXlI+a8MyhCKzWZf5CpqHVemi+gpy0n7ZTFz/2sUhQgrTtTOiiwO
+         2u5/677k9yKOVcxNYYbUBqePhjR7DTE7775pMiFXQiI2S1MA8WzX1s329mp+gYMKl55P
+         g4Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUMnALjFBeXCZrgpdtqa6ONpowBLFFX3hSYa5yl8lnBV7T7BbrtVo57HGLcHVI2NYfUVCYB4ZM3yKPB5sU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcP7zYEd/LtdGR/7LIvdz6XEWQNukQ+GuHZEKQJ//b36Y5GV+l
+	Kpj7EusR31S5+/Kdii2ZLJYp5TOimfrHiLK2zODI4lUJxO8GuYLLw7wiRFE=
+X-Gm-Gg: ASbGncsYA7q79BHFPaAemrrKAeFMy+4S4jDMcU3bKXISicQRvMphvxJsulLFRlYKvHg
+	ncEyfTKM0EZP1TOsytKvpojDlSWREF5MC/xpLXP7Y+YIaKSQ/4OCoPx1bYjAZdG5/ejLVSxhSwv
+	/Sc/d/hFrDhTn3UuI5YmlIRWpome7UqM9zNR/bnCbVZh/Q3lDRODiC+YyHZYvUdXvgS1O0braBQ
+	5uyOpyJDVPsmfPRW/ZsAUWjTAqhXYYTeXg2BszWIsJno39LMvQ+I379WM+oc9ZFbfLaoZClBExG
+	Jgpl8wqmMdw6mFCkG8/6iyn1+J6xDB8gAXvqrqvl
+X-Google-Smtp-Source: AGHT+IHLz9mJ8ATkWmHe5s3iZ/5LWaxRzO7DIGXyfWGoOW6eG9uo1VajnZaOuk52QXWZtGmtPfovjQ==
+X-Received: by 2002:a05:6a20:6f90:b0:1f5:535c:82d6 with SMTP id adf61e73a8af0-2016ce189b2mr4646742637.35.1744301479179;
+        Thu, 10 Apr 2025 09:11:19 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bb1d2b3c2sm3454818b3a.26.2025.04.10.09.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 09:11:18 -0700 (PDT)
+From: Stanislav Fomichev <sdf@fomichev.me>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	jv@jvosburgh.net,
+	andrew+netdev@lunn.ch,
+	sdf@fomichev.me,
+	linux-kernel@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>,
+	syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+Subject: [PATCH net v2] bonding: hold ops lock around get_link
+Date: Thu, 10 Apr 2025 09:11:17 -0700
+Message-ID: <20250410161117.3519250-1-sdf@fomichev.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1908:b0:3d1:92fc:fb45 with SMTP id
- e9e14a558f8ab-3d7e5f4f5d3mr26036345ab.5.1744301403717; Thu, 10 Apr 2025
- 09:10:03 -0700 (PDT)
-Date: Thu, 10 Apr 2025 09:10:03 -0700
-In-Reply-To: <674083af.050a0220.3c9d61.0190.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f7ed5b.050a0220.355867.0006.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] kernel BUG in qlist_free_all
-From: syzbot <syzbot+86b24455266617775c21@syzkaller.appspotmail.com>
-To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com, 
-	mmpgouride@gmail.com, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
-	tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot suspects this issue was fixed by commit:
+syzbot reports a case of ethtool_ops->get_link being called without
+ops lock:
 
-commit 3a04334d6282d08fbdd6201e374db17d31927ba3
-Author: Alan Huang <mmpgouride@gmail.com>
-Date:   Fri Mar 7 16:58:27 2025 +0000
+ ethtool_op_get_link+0x15/0x60 net/ethtool/ioctl.c:63
+ bond_check_dev_link+0x1fb/0x4b0 drivers/net/bonding/bond_main.c:864
+ bond_miimon_inspect drivers/net/bonding/bond_main.c:2734 [inline]
+ bond_mii_monitor+0x49d/0x3170 drivers/net/bonding/bond_main.c:2956
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+ worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+ kthread+0x7b7/0x940 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 
-    bcachefs: Fix b->written overflow
+Commit 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
+changed to lockless __linkwatch_sync_dev in ethtool_op_get_link.
+All paths except bonding are coming via locked ioctl. Add necessary
+locking to bonding.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=102a9d78580000
-start commit:   69b8923f5003 Merge tag 'for-linus-6.14-ofs4' of git://git...
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57ab43c279fa614d
-dashboard link: https://syzkaller.appspot.com/bug?extid=86b24455266617775c21
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14034b24580000
+Reviewed-by: Hangbin Liu <liuhangbin@gmail.com>
+Reported-by: syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086
+Fixes: 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
+Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+---
+v2:
+- move 'BMSR_LSTATUS : 0' part out (Jakub)
+---
+ drivers/net/bonding/bond_main.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-If the result looks correct, please mark the issue as fixed by replying with:
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 950d8e4d86f8..8ea183da8d53 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -850,8 +850,9 @@ static int bond_check_dev_link(struct bonding *bond,
+ 			       struct net_device *slave_dev, int reporting)
+ {
+ 	const struct net_device_ops *slave_ops = slave_dev->netdev_ops;
+-	struct ifreq ifr;
+ 	struct mii_ioctl_data *mii;
++	struct ifreq ifr;
++	int ret;
+ 
+ 	if (!reporting && !netif_running(slave_dev))
+ 		return 0;
+@@ -860,9 +861,13 @@ static int bond_check_dev_link(struct bonding *bond,
+ 		return netif_carrier_ok(slave_dev) ? BMSR_LSTATUS : 0;
+ 
+ 	/* Try to get link status using Ethtool first. */
+-	if (slave_dev->ethtool_ops->get_link)
+-		return slave_dev->ethtool_ops->get_link(slave_dev) ?
+-			BMSR_LSTATUS : 0;
++	if (slave_dev->ethtool_ops->get_link) {
++		netdev_lock_ops(slave_dev);
++		ret = slave_dev->ethtool_ops->get_link(slave_dev);
++		netdev_unlock_ops(slave_dev);
++
++		return ret ? BMSR_LSTATUS : 0;
++	}
+ 
+ 	/* Ethtool can't be used, fallback to MII ioctls. */
+ 	if (slave_ops->ndo_eth_ioctl) {
+-- 
+2.49.0
 
-#syz fix: bcachefs: Fix b->written overflow
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
