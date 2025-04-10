@@ -1,296 +1,220 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A7419DF99;
-	Thu, 10 Apr 2025 20:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744315677; cv=fail; b=k2hZv5GHB3OkKnrof+AB3lfbZvXjAzq6MedaJzCdGOkYYt96vL2L5b2eQYY5NDnTX7Cr1PjeaWh8fsvsVDJgfcp9jrAkrao42B/ourAa4JGhXNqFbQQhEqxR1TFnDtwPnusB4N+R2ayBSdGKsjqGT+fRoerKoIu2j8lYQ+cx8t0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744315677; c=relaxed/simple;
-	bh=eInXo+mhmy/3Y8xZBjKsnyHtfea13N0A4o5qFRLHc0c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=REGrM0gHzFGHqzZr9veeqnoIitWfcvzQG8hlu02cFLv3l/jk/DV9sRbZYqHcSgmfqk6uLRIwA1c9zKgA4//8NMe0jXiUonDvZWt3LzqgYeRqDF0bZ0GX8XFxX9x1SNNy6i+nmkxkfsni8W3nvW4nNXD+F137YcZ5d0vyISS29mo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=z6EepDQN; arc=fail smtp.client-ip=40.107.220.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5751F1510
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744315711; cv=none; b=kQfPncUx2vSnSfH0rO9vhmtPxICxej5nWo1RHsNVGRcsdVh+hXBOwzo+P60RypbFm+mI1Q7N/Lv016jyDsqly8iaRwNI6K6a9GWGc9+O0RA867OsNQeEyLFzvVTY3bN4RFT0i74QqkhOhXVlCWh+aXRyRNfh4qv+jYvp3y5ZqSU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744315711; c=relaxed/simple;
+	bh=z+2H0fLYSNNQx5CwPDTUTE2xlFfXKUpOhR5z/ZpzANM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JaRMrmYcTUhfDhWxxoCvf39hK2vQeOpKvc3ToeJfT4+tZjCMmeqNN8YYm7UX0mh20YpB4L7z1d68oRAkZkWuQLYsNIDICJWqaMqG9pDGQqT2zZ7+K8DUe1xe0fGJ1WM1ZwXoPyITk9OIQ2CAigE8XuGNRkH+ABqZrkgkFx7hHpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HDQ17p6d; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="z6EepDQN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pD/j8hqfQUi+VJLq6B5kI0yRmj2/N7JywsINQioeaxq9zDu6nRb36uSvU0serL9FIITIvhu7hpOZqiBqx0ubv0Q+RpQX1u7BRZ7SUO4NYoeWk1xqqgF5J/I+DUNU8pSFSq441Ups7Uv+bOSElisjBCqyZXtaalKrfzapeK269PTQRiUEby7S0XvYutaR7xdS8wvnsyRDy6f8W03KfRUi91zRgUN+NUf88ZWKaZJ+IXBeuTwa02YzCSYODuSQCEj2mNNo7eRc4Hg5ArU2ISAcHgEwoXKwPon3QvsgxRquSwrnYjx798eNxVZefArbdOid5+zvwGzJKOQyfa05bLV9RQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UoC/3AOVulL7tw3l66r8kjWw6rH0wxKv1rjxnKnhZWk=;
- b=rMd26D2irqFXJxY82bV+VX9MpCsb33SmWjlHNM/IhyTPJTJtOf7FjnJSt3P4nugb6mVcTNz64UZiBFl8480jM6/CsH2vrmfYV3L6ZYyUPDLA30qPMj7QYc7BANAr/vejUJh0WMSwioga3EYWsPlfKdIonYjtfMyMLbM7/xHtLc7KVtIcDZWQ2qH6+ZN9n4ey4/JaIk0AAXVfBNxgJX1oC3WnP21cNkBO0lugNyxLQ0eK1LQdPhJm20l38/1V43PQT4p67nCMK7zZahlsee4hgPPuMvixt3VN0HYsxn53hbx8wOaiy7W/AbROmjAIKJzigYlu2BFEhdaCf/h0yP9LDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UoC/3AOVulL7tw3l66r8kjWw6rH0wxKv1rjxnKnhZWk=;
- b=z6EepDQNWuCGkUWftZSQsmOcm2umK9Nqj3oUs4N4dtJ6mKBkP81A6rGr+oqwJpgkvFpgXlIRohqs06IPTbwCtP2ONDM7ftpr7Ppx/8QFCfj4zPt5OLzmQnz/5Q8zWpubs/taTkp7QD//g1JDa3fxQOXru+taeStJwSNmA4rMxBI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH7PR12MB6466.namprd12.prod.outlook.com (2603:10b6:510:1f6::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Thu, 10 Apr
- 2025 20:07:52 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8606.033; Thu, 10 Apr 2025
- 20:07:52 +0000
-Message-ID: <95a4640b-6141-4a14-9804-a2a4c21e50cf@amd.com>
-Date: Thu, 10 Apr 2025 15:07:50 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq/amd-pstate: Enable ITMT support after
- initializing core rankings
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
- Huang Rui <ray.huang@amd.com>, Perry Yuan <perry.yuan@amd.com>,
- Meng Li <li.meng@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250409030004.23008-1-kprateek.nayak@amd.com>
- <483e9fc0-28bb-4531-88bb-738cd9ce9eb3@amd.com>
- <f62e5ac5-313b-4668-a6ab-a683e5ddfcda@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <f62e5ac5-313b-4668-a6ab-a683e5ddfcda@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR03CA0021.namprd03.prod.outlook.com
- (2603:10b6:806:20::26) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HDQ17p6d"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AGM1D0017273
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:08:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=rnGlStlfXd8+F8N9n11TDxWz
+	pGUxxvJfzZwKuHYkqC4=; b=HDQ17p6dPh+RGUJog5z2ezlPMw3e6dQX/ufTuDhK
+	iT6eM+mz/c3wtHRFZmR8nOw0F7oz7BivV5y5fQRcafPQvh14/rbilU03x/4o+l6s
+	1UTGV3Tz3kzJeHCkv2vfcLKDVh4K2EQtaV2aLIkzkXUOqoRY32ebJZ2jZofIvDW3
+	7BiqYlyXFHqPbjYluTH8rZkV/xgQGdgKYmGihFef3nwGWM+RQY3KheXsmlsImXmj
+	53GEvqKUCwQISMtW5sthrqgLU2A3SI42IoKVidXRy8E6fJwh1QarQv4z1czP/xRe
+	MNLbPLAvIxlpNL6oD5YBLXc/Om0Txl5rw+onAWqg3+f5lQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1r1gs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:08:28 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c760637fe5so250736085a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:08:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744315708; x=1744920508;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rnGlStlfXd8+F8N9n11TDxWzpGUxxvJfzZwKuHYkqC4=;
+        b=FtPNul+Apu/ZAc/YsqSM12FS1wZ/PosiGXiRtPfRGt0myMYAQk9XUNIN09AggMJGGw
+         EuT9/Jze7FR2Vy3uL4PQ4vhYP7MylufrnoYtkhZo+i0TwP83BS/U1Ek5r/LgqR9vtOJ4
+         CIOYQMwukNbfWTCCgqGQ60hn/kjS3gmoXIqOrH5OB1sdT7pjBMJclWvwycQS4D6yL3wy
+         7FXJefE7yA2mUSwMrH11rL7G3T8Dk4QA2Py4OIdJsdZTahtIhWBEG03/tEI7epavj6BL
+         eIIHRBtdrh4f6HAvXEBVK3PjzQ4B3yK3cMTQ9qMosmkLryCZUdkeatmkhNU+qrVoYS6N
+         10jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXuH2pIPrK+SKuLwntkq8a4WhicXeW3A+NgtfyVwqIvPrzwC9MEK+r92GEzBrGLxbsjIRbTCy0MUlSLv3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoWE/7BKCr583PwdojthzEiMPr86tlcQoO6zpOKgadhixmMbDw
+	PM8gDh1py69SbeAkzhwz3vp57ZpyJh8A/iV548T+mmwOqBlVhSYdhzZ9w0eYFel5pMZsArnj/zb
+	LAVFpxf9BekcsyXEziLNTyJvk9yqv7lhl/mo4cXKvNUe+fRsjO2vJuKHSFf+6kAc=
+X-Gm-Gg: ASbGncsvNMDQZ6o/xJ+KvRMsS9D0nJd9ikac7SUGiooB2+pTmKKhsroZvyk4/O2+BLG
+	Pixo2Zu9PMnbhSJChHaHdfk4XBTDmsSWhvRT/4e1l1WtLlML7+pb9xQaTxt8XciOi4YLyUz5Q6e
+	48jJXlZ/WZaPxlECLNOWgOQ8YdpmqsW6o16VjTaL8k+D4rH/KNhdwx5V5sTl3DcToGby0JXLoSf
+	IYvlz9wDo9LRypi0pnRuI8G8i05rerG6RpjMaW4YWbZbrxGoFOVzOj0bsQdZfdU2Per7XjwcHJh
+	TybBn1c1IuE6euf39ShTomIRSA6TI7HUjqB/4GOC3JghvW+I0zEMLezkTU2ESTO4oHAqIe7+HPI
+	=
+X-Received: by 2002:a05:620a:f15:b0:7c5:a5e9:63ee with SMTP id af79cd13be357-7c7af14de9bmr41797085a.31.1744315708169;
+        Thu, 10 Apr 2025 13:08:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEogGejWVoedJ9yFHidpv0nMlyCBe0gS1l1J0WLSKR9V4AItbcj45d1D87AUWKvzSSlKxT6fg==
+X-Received: by 2002:a05:620a:f15:b0:7c5:a5e9:63ee with SMTP id af79cd13be357-7c7af14de9bmr41794385a.31.1744315707854;
+        Thu, 10 Apr 2025 13:08:27 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d239866sm234239e87.83.2025.04.10.13.08.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 13:08:27 -0700 (PDT)
+Date: Thu, 10 Apr 2025 23:08:24 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
+        James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+        bvanassche@acm.org, bjorande@quicinc.com, neil.armstrong@linaro.org,
+        konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH V3 4/9] phy: qcom-qmp-ufs: Refactor UFS PHY reset
+Message-ID: <pur4y63xhfmqlyymg4pehk37ry4gg22h24zceoqjbsxp3hj4yf@4kptase3c4qp>
+References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
+ <20250410090102.20781-5-quic_nitirawa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH7PR12MB6466:EE_
-X-MS-Office365-Filtering-Correlation-Id: a3b5910a-5e7d-4c6b-961e-08dd786b600a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SzdhZy9TZ2laUDF1MUFuMG85ZG1iMUFKRUtDYm1ocjRjU1pselIvaTZnbFBk?=
- =?utf-8?B?YmZVK1FDaUNzZmpyeFhOUkZuT0VyN1NpN3NKSE9HMmoxN2tIS0RHb0s4a2Er?=
- =?utf-8?B?a1lyMDA2UEV0TnVuLzFCNElxWEhqV1R3OEc2YWVCeHNtMEEwTW5sYWI2TFl3?=
- =?utf-8?B?WURsVVJSUXVMNzh1bUl5YitvdWl6d0lqWWRXVjVBL3ZldjJCK0hIam9KWGdB?=
- =?utf-8?B?SzRLbnZYK1crZ0JFMGQvaDBPSE5RbllyeDVmNDVLUFdYNSsxUWV3bHdEaC9Y?=
- =?utf-8?B?S0paaHg0RUpIZGRGQlhYNXQ1K0IyaGlYVTF3WE5pd0h3WFpQWDFGRlNMVXk0?=
- =?utf-8?B?bUV6Vjc3cThmY0M4Q1Z6ank3RkNvZHRqYVVvdEU3MUZhR0wyUndlcXErNGtZ?=
- =?utf-8?B?empZUjBZL2h5bzZjcWo0dTFEMldlbFpjbklJTWZtTzhOcnJNZjY4VUcvWFFp?=
- =?utf-8?B?MnNXV2NlMEJnaVZCZGMxRUNneHJUMmdGTzl2VUs5ODRpTUZhYzFWcEtYVGY2?=
- =?utf-8?B?bTN5aTZtVTBxdHcrQkNjYUg3N2VNTm43NldtYmg2bHY1R2RFVndLckZvSngy?=
- =?utf-8?B?aWl1ajR2dGNSQnc1T2kyMnJib3FuT090bFc1eUh1dFdISTR2T1B2cUd4YzVD?=
- =?utf-8?B?cGlqa1o0ekI2LytlT0Q1OW1lazBpSzhGUnM2TnlrajM1ZW4wekRNZ2JTM1VO?=
- =?utf-8?B?UG9CUForaENKYnNsY0JVL2JrMjZDWmV2LytMbGdpTFlpd1RpTG1MQUliZzVC?=
- =?utf-8?B?T1EyV0hNb1RHOUpNY3JKcEJEQTA0ZHRienBDVmhXdGpJeDkrcHZTL2ZtMDMx?=
- =?utf-8?B?VEZDRE9GWEc1R2JkNXR6Y2NHK253NXB6MW0ySVZrQzBNWmRKM1hxeUxrNkg5?=
- =?utf-8?B?a2JiOW9leGN2OGhHVTNxUEdFbWRTSHhFZWF0VDJVNzJFcStFMzhTUmRqNmY4?=
- =?utf-8?B?ZG1xUDRlTU50YXlWVWl0dHJBUGlEdzgzaUZ6dTExRkJsSFYzaFhZMWdXanBz?=
- =?utf-8?B?SEI5UVN3Z3pRU2JWcVo3ZS8wY0xGclRTWndWYWN2SHhra3VBMEhIRXUwWmoy?=
- =?utf-8?B?bzdEQ1Vqc1k5M2R4SEE2a2RiQUdITzg1c0hycFlnc0NwaS9lak0vaS95dlA4?=
- =?utf-8?B?OTRuUkR6dWxSS2VkbHdlMGVTVVpON1FGTlljdWRIVnlzYnBJMEFGUVExQWN5?=
- =?utf-8?B?Q0ptcEZvbHQ4b0M2VDJyOTZWNVNETENEdW10enFOb1krclNtSmtqdk0rczk1?=
- =?utf-8?B?ZkU4N3RNOVpiaFgweDg4a3JnTDZDNXkrQ3dWQWJBdmhmRDFDQ0JBd3BNRG4x?=
- =?utf-8?B?WkxlUnVqZWJkS1BSWWg2Q3lIN2xXZTNBaHl3S0ZzY2dqQVBtblNIYlFFaDVQ?=
- =?utf-8?B?d3lrbjlmbk14T01wWkxvb0Jwais5MUNQSjkwS2FJNkllcFE1TWdMS24vTmNY?=
- =?utf-8?B?ajJFQTF0cGF2clA3cThKbVVtaisrRlFxRTdpSnQxd1MxYXdUQnlEM1dHRU5Q?=
- =?utf-8?B?SkpBbzB4SzBPbVlhUVE4ZlBoRXZ6ZEYzMVBDbFZodHRrbmFMNUJ0b0cyaktx?=
- =?utf-8?B?UXZiQXRkTldTcWlURFdnVnRnRnVHNjhRQWNpanhHOTJhTFROY1Vod3N3eC9v?=
- =?utf-8?B?V3ZuUmljeWU0aTVlQ05LVUZod2tlVFBpSDNlU0JXNFVLRkhjaXpCZnAyYkFW?=
- =?utf-8?B?VnBlUmg4SGlnOFNlQWVPVkRGc1FYeVZQZVBGZTZNM3FDeUpxMnZVeVZPUDRa?=
- =?utf-8?B?alEzbGJFZE1sNTAzSmVBd1ZTR2ZNWlBQREk0Q250WE5ZQldpV0dyMFA1Y28v?=
- =?utf-8?B?Z1JkVzZ4ZWJqU0JqK2MrQjlxRXcxdE9uU3E5ejFMV0lzcDU1T2xBZFlqRkla?=
- =?utf-8?B?YXUzV2FrYzN6UXkvM1M5Z1B6eGhLYWxYaWR0eUR5VVptMklTdGNhUDdkbHNv?=
- =?utf-8?Q?0Xsa8BzDbZg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MUc1SWk3YzFHMlY5L0VJUmlMMGZ0SWl2UkhWWUdwTkg5ZUt1Y0ZXcG1qKzR3?=
- =?utf-8?B?cGZKbGxEazB6RVpnenptNC9DVVRaczBsZVlwSTlhMlRXeTZ6b2Q1SElIRmtt?=
- =?utf-8?B?SEJYOHlMdTNZQjRBTytlMUs2Tkd5OERVclE1eEJjcWVSNnE5ZVlvNCtXMjNu?=
- =?utf-8?B?SThMV2gyK2p1WkhvbHpCZmdQd1ZHQTBSem1yc2thdnlTakVlZEFDZnhma2RC?=
- =?utf-8?B?M0s5VTc0aGRjZ2hSNXV0NlhBNnZVVTFvcnVpRk9WOVEySTc1ZkxvcUwzaCtH?=
- =?utf-8?B?VTFXYXJmcEYvWk0vakM3eTRMS2RpNFlsdUVOVmJtcnhwRmRES2tXa1ZxU2p5?=
- =?utf-8?B?cVBPcE9lalpHY1VWZG5ySDVNYm4xdVJhY1lMMnlKQ3pUVUdVSWExeU1yOGsy?=
- =?utf-8?B?bjA5U1RzY1Y5ZVlVNjZ5MC9tVjVSQysyRzNWWDdzQk1iQkZsVU1ENVpDY1Fo?=
- =?utf-8?B?dEovMG9hdy9DVDMyTzF3OEdmS1hOOFcyYkNYUW9nZm5PSnFQRzJzdnhzaHFi?=
- =?utf-8?B?enU2S0ZQVktZeUo5WmVCb0FXckhhVTJMQm9CNzRnYlJQQUtrQ3VWY1laRElJ?=
- =?utf-8?B?Q25KdUlPckNtWFh4aitMR2tqbkhnY1J2Y3c4SVdzZTBwcEJqTnBxTlE2cFhE?=
- =?utf-8?B?eEJsWjdwSmJEMExzeVFPN295OE84cnBoMmprUVdFUThoejQzaHpTKzREN3JF?=
- =?utf-8?B?K0pFMlcycEZtNmRMT3B3enhXNFRvNmNmUlMvRm1Bb1dPL2gwaWJXQkN4eGxo?=
- =?utf-8?B?cHBVZ3huZEN4TDdzczNtYkJuM08xdVJEdW55MnlWdWhaSkRrZFVtWWJqaWx2?=
- =?utf-8?B?eElONnY3TTRrQmt1Q0JUKyt5TmNzRzQ5SXR6VStOTWJKems3TkJBOGoxakFj?=
- =?utf-8?B?aVV2eXI1TGlpc2Y0T2F2UFVUSDRkWFAzWlA1a2VyWUdpaktQUXZ3UDV2THhI?=
- =?utf-8?B?dEVTNVpjWTM5b2NEcE5aeG5ERkxRbUxxb1QwSlI5bXRDdGlTR3dPR0V1dWdh?=
- =?utf-8?B?Z2VjZ0Q3MzB4cVpYK1lGYVJEYXE5S1BiZnc5WVZiaWdReUZGU2R1OCsxZTlL?=
- =?utf-8?B?VjlYa2R5ZDZ3TW9vRW5nSExxbENrL1E0ZUlrUzNKNUxDK1gzV1lOK0laR2Vk?=
- =?utf-8?B?US8wT1JpTWFzUi96ZTE0K085RGYreGxoRkxlYTM5Y2FabVdRSlB0YVNFOXNk?=
- =?utf-8?B?cTZzd0JPaWpneUVaaElpRTRTQ1hsRlc3SytyNFEzMFNibmhCNktIV25rd0lm?=
- =?utf-8?B?TGVwM2NMZ28wa0lmNUh6WTdKMHNUZU1PUkRLVnliOGxXR3ZOOUMrT1lVTHpv?=
- =?utf-8?B?V0ttQWlodFNwZWZialZVNVVwRm1rMytUYXQ5U3JkcmVod3BTK0NEWXBnbEtE?=
- =?utf-8?B?WW9uMUhRakNlWXpBZVFkNU56ZkY3WEpaK0dUcU9UaGpnLzFFQklnWnNpUnNT?=
- =?utf-8?B?YXNyeGJtODArK3N1QVJlaFJNRGxteE1WSS9JN3ZKbGtkMVd1VTBwOVlqY2hQ?=
- =?utf-8?B?N2dUT2UxWTJ0dys0R0ZqdXBDUldtektnRWE1WDQ5MU9IbzlPRWVuU2JwKzM3?=
- =?utf-8?B?V3c1K3VCYWJyVldkQ0dnSG5VWXF2eHFDd3VpZ2ZvS3M2UUljYXJpcW9sbEc5?=
- =?utf-8?B?T0ZTTUFPd0ZHM21aTGhpdXU4SWpEOC90WWJXSzJ2RVdtY2dCVnRzRjdZZFdY?=
- =?utf-8?B?dWV3bnVHVVpoaWV4aW9BajZsajV1SDMyNGNWeHQwK09GZG42a0g1ZStleDZ1?=
- =?utf-8?B?eUtVcDdvV3dqVWNNcFRBNXRRU2FnaWNKYjM2Smc3bS9GbHh4aVUvUWI1YlJw?=
- =?utf-8?B?ekNSdVExKzFFa1NobitFUzZXZWxJTmFMMzZMbnRiZTJMdVBDRjRnYjlLZ2NQ?=
- =?utf-8?B?SWVCYU5TT1lLTTllZmJhaXlpbWhKRXdhUmNrZHJoZ0lMVFhLNGltNnEvRTRR?=
- =?utf-8?B?TjdOYVIzNzVhd3k3V2orVTg4eUdXRVc3VjdEdEUyVC9qd28wNEJBUzE0Slk5?=
- =?utf-8?B?Rzd5N1dhZGJLTlJWZk15OTFPQXZJOFVZc3dGQlV6eGNrVkJ6aTlTZDFUQ05v?=
- =?utf-8?B?N1RyNitKYy9QZ0dpUS9wRUhvelFiVFdDaURTUTJCYkZLTWtFTG5UU2orRitE?=
- =?utf-8?Q?Ox81RrdCpLZf2fs47BjOjKYFG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3b5910a-5e7d-4c6b-961e-08dd786b600a
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 20:07:52.6249
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UapYT5xyUVI0iITPtGhOrE00/Lcx7ZuxQLrBbGbVroUd+av82TTQghajn12OCWgY/dRddlvc3YSg02CeXGNwrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6466
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410090102.20781-5-quic_nitirawa@quicinc.com>
+X-Proofpoint-ORIG-GUID: MPXDiazOiFlcregGr-PTuhHXIrVVp9hD
+X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f8253c cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=Y7cAtwDMOKh--fb0GM0A:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: MPXDiazOiFlcregGr-PTuhHXIrVVp9hD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_06,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100146
 
-On 4/9/2025 11:41 PM, K Prateek Nayak wrote:
-> Hello Mario,
+On Thu, Apr 10, 2025 at 02:30:57PM +0530, Nitin Rawat wrote:
+> Refactor the UFS PHY reset handling to parse the reset logic only once
+> during probe, instead of every resume.
 > 
-> On 4/10/2025 2:28 AM, Mario Limonciello wrote:
+> Move the UFS PHY reset parsing logic from qmp_phy_power_on to
+> qmp_ufs_probe to avoid unnecessary parsing during resume.
+
+How did you solve the circular dependency issue being noted below?
+
 > 
-> [..snip..]
+> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 61 +++++++++++++------------
+>  1 file changed, 33 insertions(+), 28 deletions(-)
 > 
->>>   #define CPPC_MAX_PERF    U8_MAX
->>> -static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
->>> +static void amd_pstate_init_asym_prio(struct amd_cpudata *cpudata)
->>
->> I think the previous function name was fine.
->>
->> 1) It still does set cpudata->hw_prefcore afterall and
->> 2) We still have an amd_detect_prefcore() that is used to determine 
->> whether amd_pstate_prefcore is set.
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> index 636dc3dc3ea8..12dad28cc1bd 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> @@ -1799,38 +1799,11 @@ static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+>  static int qmp_ufs_power_on(struct phy *phy)
+>  {
+>  	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+> -	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>  	int ret;
+>  	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
 > 
-> Ack. I'll change it back in v2.
-> 
->>
->>>   {
->>>       /* user disabled or not detected */
->>>       if (!amd_pstate_prefcore)
->>> @@ -814,14 +804,8 @@ static void amd_pstate_init_prefcore(struct 
->>> amd_cpudata *cpudata)
->>>       cpudata->hw_prefcore = true;
->>> -    /*
->>> -     * The priorities can be set regardless of whether or not
->>> -     * sched_set_itmt_support(true) has been called and it is valid to
->>> -     * update them at any time after it has been called.
->>> -     */
->>> +    /* The priorities must be initialized before ITMT support can be 
->>> toggled on. */
->>>       sched_set_itmt_core_prio((int)READ_ONCE(cpudata- 
->>> >prefcore_ranking), cpudata->cpu);
->>> -
->>> -    schedule_work(&sched_prefcore_work);
->>>   }
->>>   static void amd_pstate_update_limits(unsigned int cpu)
->>> @@ -974,7 +958,7 @@ static int amd_pstate_cpu_init(struct 
->>> cpufreq_policy *policy)
->>>       if (ret)
->>>           goto free_cpudata1;
->>> -    amd_pstate_init_prefcore(cpudata);
->>> +    amd_pstate_init_asym_prio(cpudata);
->>>       ret = amd_pstate_init_freq(cpudata);
->>>       if (ret)
->>> @@ -1450,7 +1434,7 @@ static int amd_pstate_epp_cpu_init(struct 
->>> cpufreq_policy *policy)
->>>       if (ret)
->>>           goto free_cpudata1;
->>> -    amd_pstate_init_prefcore(cpudata);
->>> +    amd_pstate_init_asym_prio(cpudata);
->>>       ret = amd_pstate_init_freq(cpudata);
->>>       if (ret)
->>> @@ -1780,6 +1764,10 @@ static int __init amd_pstate_init(void)
->>>           }
->>>       }
->>> +    /* Enable ITMT support once all CPUs have initialized their asym 
->>> priorities. */
->>> +    if (amd_pstate_prefcore)
->>> +        sched_set_itmt_support();
->>> +
->>
->> Hmm, by moving it after the first registration that has the side 
->> effect that if you changed driver modes from active to passive (for 
->> example) ITMT priorities stay identical and aren't updated.
->> I guess that makes sense since the rankings /shouldn't/ change.
-> 
-> Currently, when amd-pstate unregisters during mode switch, ITMT remains
-> enabled and if the rankings change before the new driver is registered,
-> update_limits() is never called and that too can cause issues.
-> 
-> Based on discussion with Dhananjay, and the fact that one can mode
-> switch to disable amd-pstate completely, What are your thoughts on this
-> addition diff:
-> 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 40d908188b78..320b9551947e 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -1177,6 +1177,9 @@ static ssize_t show_energy_performance_preference(
-> 
->   static void amd_pstate_driver_cleanup(void)
->   {
-> +    if (amd_pstate_prefcore)
-> +        sched_clear_itmt_support();
-> +
->       cppc_state = AMD_PSTATE_DISABLE;
->       current_pstate_driver = NULL;
->   }
-> @@ -1219,6 +1222,10 @@ static int amd_pstate_register_driver(int mode)
->           return ret;
->       }
-> 
-> +    /* Enable ITMT support once all CPUs have initialized their asym 
-> priorities. */
-> +    if (amd_pstate_prefcore)
-> +        sched_set_itmt_support();
-> +
->       return 0;
->   }
-> 
-> @@ -1761,10 +1768,6 @@ static int __init amd_pstate_init(void)
->           }
->       }
-> 
-> -    /* Enable ITMT support once all CPUs have initialized their asym 
-> priorities. */
-> -    if (amd_pstate_prefcore)
-> -        sched_set_itmt_support();
+> -	if (cfg->no_pcs_sw_reset) {
+> -		/*
+> -		 * Get UFS reset, which is delayed until now to avoid a
+> -		 * circular dependency where UFS needs its PHY, but the PHY
+> -		 * needs this UFS reset.
+> -		 */
+> -		if (!qmp->ufs_reset) {
+> -			qmp->ufs_reset =
+> -				devm_reset_control_get_exclusive(qmp->dev,
+> -								 "ufsphy");
 > -
->       return ret;
+> -			if (IS_ERR(qmp->ufs_reset)) {
+> -				ret = PTR_ERR(qmp->ufs_reset);
+> -				dev_err(qmp->dev,
+> -					"failed to get UFS reset: %d\n",
+> -					ret);
+> -
+> -				qmp->ufs_reset = NULL;
+> -				return ret;
+> -			}
+> -		}
+> -	}
+> -
+>  	ret = qmp_ufs_com_init(qmp);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return 0;
+> +	return ret;
+>  }
 > 
->   global_attr_free:
-> -- 
+>  static int qmp_ufs_phy_calibrate(struct phy *phy)
+> @@ -2088,6 +2061,34 @@ static int qmp_ufs_parse_dt(struct qmp_ufs *qmp)
+>  	return 0;
+>  }
 > 
-> This way, when the new driver registers, it can repopulate the rankings
-> and then the sched domain rebuild will get everything right. 
+> +static int qmp_ufs_get_phy_reset(struct qmp_ufs *qmp)
+> +{
+> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> +	int ret;
+> +
+> +	if (!cfg->no_pcs_sw_reset)
+> +		return 0;
+> +
+> +	/*
+> +	 * Get UFS reset, which is delayed until now to avoid a
+> +	 * circular dependency where UFS needs its PHY, but the PHY
+> +	 * needs this UFS reset.
+> +	 */
+> +	if (!qmp->ufs_reset) {
+> +		qmp->ufs_reset =
+> +		devm_reset_control_get_exclusive(qmp->dev, "ufsphy");
 
-Yes; that's *exactly* what I was thinking is needed when I made my comment.
+Strange indentation.
 
-> The only
-> concern is that disabling ITMT support during mode switch will cause the
-> sched domains to be rebuilt twice but I'm assuming mode switch is a rare
-> operation.
+> +
+> +		if (IS_ERR(qmp->ufs_reset)) {
+> +			ret = PTR_ERR(qmp->ufs_reset);
+> +			dev_err(qmp->dev, "failed to get PHY reset: %d\n", ret);
+> +			qmp->ufs_reset = NULL;
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int qmp_ufs_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -2114,6 +2115,10 @@ static int qmp_ufs_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+> 
+> +	ret = qmp_ufs_get_phy_reset(qmp);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Check for legacy binding with child node. */
+>  	np = of_get_next_available_child(dev->of_node, NULL);
+>  	if (np) {
+> --
+> 2.48.1
+> 
 
-Yes; it's not something we expect people to be doing frequently. We 
-expect most people like one mode for $REASONS and stick to it and tune 
-the knobs 'in the mode' at runtime as they see fit.
-
-So yeah roll that diff into v2 and we should be good.
+-- 
+With best wishes
+Dmitry
