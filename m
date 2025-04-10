@@ -1,245 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8065728CF5B;
-	Thu, 10 Apr 2025 14:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605FC28FFCD
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744295304; cv=none; b=bEPgTOQWoZyv61oUOEKenAh/jXyLEIXIMyHLfbpExjMcCs4jjtBce/zDmcjTuteU4bLOyantQX89kIUN9mFl4Q8IRDF7wwAVB0NXsC9UvVCFK0BYBXR8ZeZjpuHMGLFHx5idW3Rt+gkZBO7IdE5VR4wGs1LOwDtsCFqnzFYpV6U=
+	t=1744295328; cv=none; b=CY6WglzEobjnwSX8KL+urtGu+TDtlE7eBQ44UMHJ9IL3UwmGv3zfxjPOIxZdhow1SS/Dy4BiYiGkxH3tYv+RmiJ48q4Fxw7laIdMzftr23MIIHXcJlPQUM3EjFw0hgeuOqV0RjeXXFLfygd5NTZvjksv6GPKswYUmzs9AuT7qe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744295304; c=relaxed/simple;
-	bh=1m5MrCMQZzlU0LN1R3HC+JwbXbXfHGmK5U8Hi2uUEyQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CkhioTTr0oxyHRsvj0aBT/aWgGwV8r58QLBsK/aQ1K7e+gDnupq7h0xo6L7ZJqh3tb7hPa0GbLAWBqxi+rzdQtsshKriSruxgdsBqIfI84BoqkFiodbY09Kfsh6Ey8LysVripdwXMSK31DVp3ToAWpVoQ3myVR0q1jj5juNSV9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gji7fY8D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744295328; c=relaxed/simple;
+	bh=fZnaZ5GHZcfS9p6y2BQGcaUFH6wu1bBVJJP31QU4XV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BUnsRvWe3qR5iu7wDa+WV87Afq3ePe04Soya9GA9ZqA7vAb/90kTsVEc3NhQGj7LVjmoPikBJyIxdgwbkcXyd/sQyYDnurxeDHCR22JftTXzGhp9qvxcmAnNj0C6ouIEIEwlUc4nkHuLeeakEDtejvdX1p3l9LC5SvEy12QG6vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ffhWo1AD; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gji7fY8D"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0BF91C4CEED;
-	Thu, 10 Apr 2025 14:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744295304;
-	bh=1m5MrCMQZzlU0LN1R3HC+JwbXbXfHGmK5U8Hi2uUEyQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gji7fY8DFeP004b5Iejv6FALlhgzP7dYKkZCpsLielfBcGg7x0arY9RcS5Bv7BKbP
-	 PKOUiX55IJhS81lGgm7HUAhDzwlgfb35f84dSDeTBdYd7JcM03OpxeA/4qCHr5ijOb
-	 yZZfLcr1sxcJJGV1C2+zdz1tTW8MeJn3W5Amoy+Sn+IqlSLQLue5whQ44Gt4/IECQ9
-	 asgb2RxNc1/GpY+Ep13C9MbtEDy+8RTE6eW/fGJx6ehINkCbctpiCzqPURSE/9lMUh
-	 Wzx8G8YzRa2J+QFvH57QQjhTixX+A/74Ergciphqk8espJvWtHow5MB35r3uKPeZ8U
-	 p+IWVrLjxvfJw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01800C369A9;
-	Thu, 10 Apr 2025 14:28:24 +0000 (UTC)
-From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
-Date: Thu, 10 Apr 2025 16:28:25 +0200
-Subject: [PATCH v5 7/7] Input: synaptics-rmi4 - support fallback values for
- PDT descriptor bytes
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ffhWo1AD"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e8fd49b85eso13034366d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:28:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1744295325; x=1744900125; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QU7b8p5X6+ipaTqnZzEvjAMW+m1ukjkOluS/etWvC10=;
+        b=ffhWo1ADPW+NpqceS3kDUHHgVgtfHUB3cKz7WnCAE8Sc6FGPHThLY4tnERR9IeGf1T
+         DWdDJN6PRSFQB4+5wYRgMpqcKKjzVkD78B5xpVVOBOa1s+trAkCrqD37xj3Ll610+wss
+         wyGO9cFTVKB11PEldMFpnH7nZjLOlez0oP4bQsfpJqG3kW3tCLxhXEBtUlBJFaIVy7Dj
+         xvtbbl0EremF1QhFyL/DTjh+4h9NJZxdzJ7TrDtHsY6Blq+fA51b/w1tFQEHID9yQZKd
+         IJfDPcB8W0V2DfyRG9WB9fge6SuzntbbnBYxf9X+cMVE6V3Anrq6oaWTUyBGlDGtqBXE
+         k2Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744295325; x=1744900125;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QU7b8p5X6+ipaTqnZzEvjAMW+m1ukjkOluS/etWvC10=;
+        b=Ln0RyfT9GO3mXzilreCicBFoI0inXjo/IsHKGGZlufZLUO+nxYtoZEGDw7pBU88YKa
+         VtqKHQp1VLYPWXlrLBeXi0Km0IdkHOOaG4HdGCy1pSxXKMN5FYo+ZGIPWZec+UGGhnDw
+         chSr5QRbJRpBc9U4cZlKqTPwJjWXJGwUrbhdzdkKvmSqL63RwkpX9Mc+WHXDHUuVuEbr
+         4mVPm2t9O1xYsJ9aFTwld4lqLZUzCcDQuuTA+xIYZpAS/3HJBaYjhYCFlXQNnuOyRevW
+         PbBE5xAUcPdwI8yAiXhFFmuHiq6pYW8ZOMy0/aIM2PYWS4ibTGc7AOdfB61PRJUklzRp
+         2HJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJmBemZeaY31Im/C6eJZXQoiujXVoQIY1t1I1TvHVVw+XUHZStpdLbHD4BD/aFuNmrkb76RSpxmLp3CMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOoS63zwEOLT5wKEKM3VOx1XOvlT4IPmaM08zYZjoxK8PFNzPw
+	PI8mwDVai9kJ5bXG3Fd4DryOGtJKPWWY/HHomyV/wzzHh9/MFQQrpu0NPhSsUL0=
+X-Gm-Gg: ASbGncvjrmiOJwJ8FWJFzRVhBBglY3VN9dr6HMaOzpciI34io9Z6tOb7JXMdrPH/eRy
+	MN/IiGPUSjs4mcRmU6Eqe9x6b6c1SAVHaiYFZtbTBSeaJNBdT8xkY2CJSsuxr2yGb1rJitMSWoW
+	u1A4fzGiCgt/WCEtBoGcvum4hYbyG0l0Nftsg9JzKudgjDn320rLIRG0/oBQPzvdOv1GruFCAEz
+	iaIDQkkksFc8GW+r8fZddtsfyHpSznDOTyCNave/ZWaCN+cuGfPhlIfU7rAQ9L3EIHBK6eBh56K
+	M3oO/+PtlnICGaLxE53tVUItNRDTxOzhinTa/MnW+V2xHWnZqMPC9hrg4rnVlXgqHWVGiFCdT3X
+	aCoyfGrczZV4SLabry2kgWg==
+X-Google-Smtp-Source: AGHT+IGMVGeMyBaUbWMD2SRNc0LtssAH5A8ndxEkZnyBQsRRtZK83f0qG5vpcQnY38UUX/EqwX1CKA==
+X-Received: by 2002:a05:6214:c2a:b0:6e8:fee2:aae4 with SMTP id 6a1803df08f44-6f0e5bd7058mr50446596d6.28.1744295325172;
+        Thu, 10 Apr 2025 07:28:45 -0700 (PDT)
+Received: from localhost.localdomain (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de95f8besm21567896d6.10.2025.04.10.07.28.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 07:28:44 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	dan.j.williams@intel.com,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	David Hildenbrand <david@redhat.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v3] DAX: warn when kmem regions are truncated for memory block alignment.
+Date: Thu, 10 Apr 2025 10:28:31 -0400
+Message-ID: <20250410142831.217887-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-synaptics-rmi4-v5-7-b41bb90f78b9@ixit.cz>
-References: <20250410-synaptics-rmi4-v5-0-b41bb90f78b9@ixit.cz>
-In-Reply-To: <20250410-synaptics-rmi4-v5-0-b41bb90f78b9@ixit.cz>
-To: Kaustabh Chakraborty <kauschluss@disroot.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
- Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, 
- Vincent Huang <vincent.huang@tw.synaptics.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Caleb Connolly <caleb.connolly@linaro.org>, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- David Heidelberg <david@ixit.cz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5812; i=david@ixit.cz;
- h=from:subject:message-id;
- bh=DYMCSRx4MYk/eiJZRVIbkMrJs+fsXN/6sXerZ8espFs=;
- b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn99WFILMWTotJJzfqkt07UciWHWfwLLcdraefK
- +eWaJEz1eGJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ/fVhQAKCRBgAj/E00kg
- cg6eD/4pEfQGtsusYNhAuIKQiEbi7zyY13QPhez7C1VHAsIblmK4vWf/K4vNcSdkTORNrEUqZxy
- MKz/eKGbDMEBRCWo4WwnmP4G3eq2pNy5VRjSNhVObQm/n9P0Zyt9M08gh76CZHPLhvsktHbzzKg
- uHQ4u2aYhH6jUlUS/8yi2i4Wek4piscVmFpqCnCQw28rTf8gb5xGxC1gLTKN4AcDpbyw6NmSjWD
- /AyAkVvNKWuSbZP/GiCWQmERhbtr1uK7aVH4RpEdRZrYdaKMDNw0aIB0tIiXTfy2i0mFfFWfDdK
- W060UQJVrLFE4cAlEIRG50lihHVk3dOEeTvnSpXpXgpeli6w48ZcvRxW9TmYpd8JW2MqnHj7Hz3
- 2RByGzUo3KoRDoK8AlFdl+CUmrJEO2E3oDXlsB1drjF6jMCDefVxnnxbcIrya/jQu8f8QpGzrxr
- hZVNh+5VOBiq0p/uY930OVlyyX1u8oxwhbE1NVkL/sBr0WiXmuTpRV/Af+GeckA8hzovcPrQt+n
- jRyHe11grMay0VD0wmhwmS+FgmmYXjx0K73lbCuQ8KelxNjYTUmPugXSxPybZMtc4TnDb8oVLVD
- sJagrXW+21t/ze7qW4JCRezbm7MHUbHi9KjEBKuTraYEcL1VBbQie9ko7I40xu3hRBVWXlswr/1
- spMdD6yCS4HJvfA==
-X-Developer-Key: i=david@ixit.cz; a=openpgp;
- fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
-X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
-X-Original-From: David Heidelberg <david@ixit.cz>
-Reply-To: david@ixit.cz
+Content-Transfer-Encoding: 8bit
 
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Device capacity intended for use as system ram should be aligned to the
+architecture-defined memory block size or that capacity will be silently
+truncated and capacity stranded.
 
-Some replacement displays include third-party touch ICs which do not
-expose the function number and the interrupt status in its PDT entries.
+As hotplug dax memory becomes more prevelant, the memory block size
+alignment becomes more important for platform and device vendors to
+pay attention to - so this truncation should not be silent.
 
-OnePlus 6 (original touch IC)
-  rmi4_i2c 12-0020: read 6 bytes at 0x00e3: 0 (2b 22 0d 06 01 01)
+This issue is particularly relevant for CXL Dynamic Capacity devices,
+whose capacity may arrive in spec-aligned but block-misaligned chunks.
 
-OnePlus 6 (aftermarket touch IC)
-  rmi4_i2c 12-0020: read 6 bytes at 0x00e3: 0 (2c 23 0d 06 00 00)
-
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-[codeflow adjustments, checkpatch fixes, wording]
-Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
-Co-developed-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: David Heidelberg <david@ixit.cz>
+Suggested-by: David Hildenbrand <david@redhat.com>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Tested-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/input/rmi4/rmi_driver.c | 62 +++++++++++++++++++++++++++++++++++------
- drivers/input/rmi4/rmi_driver.h |  2 ++
- include/linux/rmi.h             |  3 ++
- 3 files changed, 59 insertions(+), 8 deletions(-)
+ drivers/dax/kmem.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index f977541d8913525d53a59e1d53c33897f1c93901..e736e90c071466cc61a441bcb3061564e039bfc8 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -461,9 +461,10 @@ static int rmi_driver_reset_handler(struct rmi_device *rmi_dev)
- 	return 0;
- }
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index e97d47f42ee2..584c70a34b52 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -13,6 +13,7 @@
+ #include <linux/mman.h>
+ #include <linux/memory-tiers.h>
+ #include <linux/memory_hotplug.h>
++#include <linux/string_helpers.h>
+ #include "dax-private.h"
+ #include "bus.h"
  
--static int rmi_read_pdt_entry(struct rmi_device *rmi_dev,
--			      struct pdt_entry *entry, u16 pdt_address)
-+static int rmi_read_pdt_entry(struct rmi_device *rmi_dev, struct pdt_entry *entry,
-+			      struct pdt_scan_state *state, u16 pdt_address)
+@@ -68,7 +69,7 @@ static void kmem_put_memory_types(void)
+ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
  {
-+	const struct rmi_device_platform_data *pdata = rmi_get_platform_data(rmi_dev);
- 	u8 buf[RMI_PDT_ENTRY_SIZE];
- 	int error;
+ 	struct device *dev = &dev_dax->dev;
+-	unsigned long total_len = 0;
++	unsigned long total_len = 0, orig_len = 0;
+ 	struct dax_kmem_data *data;
+ 	struct memory_dev_type *mtype;
+ 	int i, rc, mapped = 0;
+@@ -97,6 +98,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	for (i = 0; i < dev_dax->nr_range; i++) {
+ 		struct range range;
  
-@@ -474,6 +475,21 @@ static int rmi_read_pdt_entry(struct rmi_device *rmi_dev,
- 		return error;
++		orig_len += range_len(&dev_dax->ranges[i].range);
+ 		rc = dax_kmem_range(dev_dax, i, &range);
+ 		if (rc) {
+ 			dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
+@@ -109,6 +111,12 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	if (!total_len) {
+ 		dev_warn(dev, "rejecting DAX region without any memory after alignment\n");
+ 		return -EINVAL;
++	} else if (total_len != orig_len) {
++		char buf[16];
++
++		string_get_size(orig_len - total_len, 1, STRING_UNITS_2,
++				buf, sizeof(buf));
++		dev_warn(dev, "DAX region truncated by %s due to alignment\n", buf);
  	}
  
-+	if (pdata->pdt_fallback_size > state->pdt_count * RMI_OF_PDT_DESC_CELLS + 1) {
-+		/* Use the description bytes from the driver */
-+		buf[5] = pdata->pdt_fallback_desc[state->pdt_count * RMI_OF_PDT_DESC_CELLS];
-+		buf[4] = pdata->pdt_fallback_desc[state->pdt_count * RMI_OF_PDT_DESC_CELLS + 1];
-+
-+		error = rmi_read_block(rmi_dev, pdt_address, buf,
-+				RMI_PDT_ENTRY_SIZE - 2);
-+		if (error) {
-+			dev_err(&rmi_dev->dev,
-+					"Read PDT entry at %#06x failed, code: %d.\n",
-+					pdt_address, error);
-+			return error;
-+		}
-+	}
-+
- 	entry->page_start = pdt_address & RMI4_PAGE_MASK;
- 	entry->query_base_addr = buf[0];
- 	entry->command_base_addr = buf[1];
-@@ -546,7 +562,7 @@ static int rmi_scan_pdt_page(struct rmi_device *rmi_dev,
- 	int retval;
- 
- 	for (addr = pdt_start; addr >= pdt_end; addr -= RMI_PDT_ENTRY_SIZE) {
--		error = rmi_read_pdt_entry(rmi_dev, &pdt_entry, addr);
-+		error = rmi_read_pdt_entry(rmi_dev, &pdt_entry, state, addr);
- 		if (error)
- 			return error;
- 
-@@ -1023,9 +1039,13 @@ static int rmi_driver_remove(struct device *dev)
- }
- 
- #ifdef CONFIG_OF
--static int rmi_driver_of_probe(struct device *dev,
--				struct rmi_device_platform_data *pdata)
-+static const u8 rmi_s3706_fallback_pdt[] = {34, 41, 01, 01, 12, 01};
-+
-+static int rmi_driver_of_probe(struct rmi_device *rmi_dev,
-+			       struct rmi_device_platform_data *pdata)
- {
-+	struct device *dev = rmi_dev->xport->dev;
-+	u8 buf[RMI_PDT_ENTRY_SIZE];
- 	int retval;
- 
- 	retval = rmi_of_property_read_u32(dev, &pdata->reset_delay_ms,
-@@ -1033,11 +1053,37 @@ static int rmi_driver_of_probe(struct device *dev,
- 	if (retval)
- 		return retval;
- 
-+	/*
-+	 * In some aftermerket touch ICs, the first PDT entry is empty and
-+	 * the function number register is 0. If so, the driver
-+	 * may have provide backup PDT entries.
-+	 */
-+
-+	retval = rmi_read_block(rmi_dev, PDT_START_SCAN_LOCATION,
-+			buf, RMI_PDT_ENTRY_SIZE);
-+	if (retval) {
-+		dev_err(dev, "Read PDT entry at %#06x failed, code: %d.\n",
-+			PDT_START_SCAN_LOCATION, retval);
-+		return retval;
-+	}
-+
-+	if (!RMI4_END_OF_PDT(buf[5]))
-+		return 0;
-+
-+	/* List of known PDT entries per compatible. */
-+	if (of_device_is_compatible(dev->of_node, "syna,rmi4-s3706b")) {
-+		pdata->pdt_fallback_desc = rmi_s3706_fallback_pdt;
-+		pdata->pdt_fallback_size = ARRAY_SIZE(rmi_s3706_fallback_pdt);
-+	} else {
-+		dev_err(dev, "First PDT entry is empty and no backup values provided.\n");
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- #else
--static inline int rmi_driver_of_probe(struct device *dev,
--					struct rmi_device_platform_data *pdata)
-+static inline int rmi_driver_of_probe(struct rmi_device *rmi_dev,
-+				      struct rmi_device_platform_data *pdata)
- {
- 	return -ENODEV;
- }
-@@ -1158,7 +1204,7 @@ static int rmi_driver_probe(struct device *dev)
- 	pdata = rmi_get_platform_data(rmi_dev);
- 
- 	if (rmi_dev->xport->dev->of_node) {
--		retval = rmi_driver_of_probe(rmi_dev->xport->dev, pdata);
-+		retval = rmi_driver_of_probe(rmi_dev, pdata);
- 		if (retval)
- 			return retval;
- 	}
-diff --git a/drivers/input/rmi4/rmi_driver.h b/drivers/input/rmi4/rmi_driver.h
-index cb1cacd013a3f39db96935f705f18018bf15adff..3b87d177db59591691a56ce7ac03dd2e8671421d 100644
---- a/drivers/input/rmi4/rmi_driver.h
-+++ b/drivers/input/rmi4/rmi_driver.h
-@@ -31,6 +31,8 @@
- #define RMI_PDT_FUNCTION_VERSION_MASK   0x60
- #define RMI_PDT_INT_SOURCE_COUNT_MASK   0x07
- 
-+#define RMI_OF_PDT_DESC_CELLS 2
-+
- #define PDT_START_SCAN_LOCATION 0x00e9
- #define PDT_END_SCAN_LOCATION	0x0005
- #define RMI4_END_OF_PDT(id) ((id) == 0x00 || (id) == 0xff)
-diff --git a/include/linux/rmi.h b/include/linux/rmi.h
-index ab7eea01ab4274bfc9efcefcdb0cced6ec34966f..4ba2cefac85583a4ba65c70dca418a2c7c65362a 100644
---- a/include/linux/rmi.h
-+++ b/include/linux/rmi.h
-@@ -214,6 +214,9 @@ struct rmi_device_platform_data {
- 	int reset_delay_ms;
- 	int irq;
- 
-+	unsigned int pdt_fallback_size;
-+	const u8 *pdt_fallback_desc;
-+
- 	struct rmi_device_platform_data_spi spi_data;
- 
- 	/* function handler pdata */
-
+ 	init_node_memory_type(numa_node, mtype);
 -- 
 2.49.0
-
 
