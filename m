@@ -1,136 +1,245 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE873A8C1;
-	Thu, 10 Apr 2025 12:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744288973; cv=pass; b=MTYp/d0iftcmGtLa0goRMhTzyXu2iHMp9FSzQ1xqQTTXxMIKh/rkSydmowzSiZOYQDDRw9PLIR1X9pqOlKmwHFJLy5Eds+1KCUu0qeaPH3mSTyVNk/hyjouBUbqxyDrQFpHoI1zvXvg5UrPD1AEkbcOVQDA9ggapMPOriSQAzdY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744288973; c=relaxed/simple;
-	bh=sU//kxtjEYkB64O4MOhyUdqB3Mlw7wY6kPsELShGyvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p04TmiPYnksivGruAZrskLY9zZuqRxUPMNhEdKuTYSUxwCw3Ss3DeNRAQ8FGmWr7KcuYMW8lrk5S4V1DANisLdtCFxuDrh9trkSK8ihJvbfzMgt6R/lfmnNqL/hIq12BeM7jXG1gjfk0yG7Eal630iyh61+ujadhrNRhFHwauvk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=Tf/s1+X8; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="Tf/s1+X8"
-ARC-Seal: i=1; a=rsa-sha256; t=1744288948; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dfhjdATU8F1Etf7PJl7wcbRgZisHzpzsl1zZUGvehI7rbOLqvqZtYtB8iNfpq6bYY3UXPB9I8QU2JPdcM8578gM/Q7Q0VqctSSePnMHjd5nl/k7DhqBVpLKbbDMKDIJR+s6HSjyd1pOoxkxrfC0hqoQsqLHJxt1Tg/15CT+J8Xk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744288948; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=qZZP4FNK+HyNHl3VBHbY4FLuHj2CdEKhTPJZ5V5EDJI=; 
-	b=RGa+omEExAXwm3HTIRr3CGaUv94lNhWmha+bTKQPBLQZdDt9nDL58F+85vdtZxg+ZqMiNzSOo4m58cZVWf+k9XQ35IrQtCL/jq3ufgNPOFnrcZYAHC09Qs4/RRZzNt8RqLdpyvT4fRpXqWKTRqhw3VsKXjq6+ofnC5H4qrxY89g=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
-	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744288947;
-	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=qZZP4FNK+HyNHl3VBHbY4FLuHj2CdEKhTPJZ5V5EDJI=;
-	b=Tf/s1+X82HlQOSpdb3XknS+1ycW8/ZXBTdpG1AcXIa62D43egli5r/bOXuYYGx3q
-	o/wDu9gwN0+JFsMXh3YuM98zUuNCmtiMCumsL4zsMJkbjCjHGgKyIEhnewFjb26ehiM
-	3XnA6YhxbTm2YvJa1ayGawiOL7i0UzKOf7E0+224=
-Received: by mx.zohomail.com with SMTPS id 174428894677713.690566553537792;
-	Thu, 10 Apr 2025 05:42:26 -0700 (PDT)
-Message-ID: <c4dc7564-f985-40cd-9d37-4df4ee6e126d@collabora.com>
-Date: Thu, 10 Apr 2025 14:42:23 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDC63A8C1
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744288981; cv=none; b=COtzZSGR/ZETUqktTPEShgsO/Y+sNqOct0nIUS5AXq7uPHWLRBSVU17lE3C3xbU0uid/soU51HLaZ7Q1dl1H0LuZ+5uqPWCncX1SkBYpx2qRI51X5Vh21Z3UTgRlrAAfAmmZGebKpPL53K+Va0pLOlBCiiDOPH55tcBEYYKijOo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744288981; c=relaxed/simple;
+	bh=ZOFQluFBG0zSOKV/1pDE1DUCuPZB1OY8kz2hDAclls8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=AlfzZpbtJoUnCH4UOiN7nC8x52JqavFNOIzF4L+eQAD2VNjpA5FffFZggn5uMxYCAEIBUDa/aemX7c7clYxMAuUj5xEHhnqdE+Ks2rI12l/lcJkHTkG9w0uA1H1wq4inv9ZDusa8nG/4YvTeomOUb/wj3DO3w8qc0zYvWTHCBug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u2rF5-0006jB-3x; Thu, 10 Apr 2025 14:42:51 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u2rF4-004GuW-1V;
+	Thu, 10 Apr 2025 14:42:50 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u2rF4-00BRpe-1F;
+	Thu, 10 Apr 2025 14:42:50 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+Subject: [PATCH net-next v1 1/1] net: dsa: microchip: add ETS scheduler support for KSZ88x3 switches
+Date: Thu, 10 Apr 2025 14:42:49 +0200
+Message-Id: <20250410124249.2728568-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: verisilicono: Enable NV15 support for Rockchip
- VDPU981
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kernel@collabora.com
-References: <20250409-b4-hantro-nv15-support-v1-1-7e11e47fd0c9@collabora.com>
-Content-Language: en-US
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <20250409-b4-hantro-nv15-support-v1-1-7e11e47fd0c9@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Implement Enhanced Transmission Selection scheduler (ETS) support for
+KSZ88x3 devices, which support two fixed egress scheduling modes:
+Strict Priority and Weighted Fair Queuing (WFQ).
 
-Le 09/04/2025 à 21:30, Nicolas Dufresne a écrit :
-> This is a "customer" format, though on Rockchip RK3588 it has been
-> verified to be NV15 format, which matches what the GPU and display
-> handles has 10bit pixel formats.
->
-> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Since the switch does not allow remapping priorities to queues or
+adjusting weights, this implementation only supports enabling
+strict priority mode. If strict mode is not explicitly requested,
+the switch falls back to its default WFQ mode.
 
-Reviewed-by Benjamin Gaignard <benjamin.gaignard@collabora.com>
+This patch introduces KSZ88x3-specific handlers for ETS add and
+delete operations and uses TXQ Split Control registers to toggle
+the WFQ enable bit per queue. Corresponding macros are also added
+for register access.
 
-> ---
->   drivers/media/platform/verisilicon/hantro_v4l2.c           |  1 +
->   .../platform/verisilicon/rockchip_vpu981_hw_av1_dec.c      |  4 ++++
->   drivers/media/platform/verisilicon/rockchip_vpu_hw.c       | 14 ++++++++++++++
->   3 files changed, 19 insertions(+)
->
-> diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
-> index 2bce940a58227c2bfef2bc3343992e4588ab36a4..7c3515cf7d64a090adfb8d8aff368f9a617f8c8a 100644
-> --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
-> +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
-> @@ -77,6 +77,7 @@ int hantro_get_format_depth(u32 fourcc)
->   	switch (fourcc) {
->   	case V4L2_PIX_FMT_P010:
->   	case V4L2_PIX_FMT_P010_4L4:
-> +	case V4L2_PIX_FMT_NV15:
->   	case V4L2_PIX_FMT_NV15_4L4:
->   		return 10;
->   	default:
-> diff --git a/drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c b/drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c
-> index 69b5d9e12926fb408c08f8ba2139d05ba44389b7..e4703bb6be7c175a89c0b8868cf2eafb84a872ed 100644
-> --- a/drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c
-> +++ b/drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c
-> @@ -2202,6 +2202,10 @@ static void rockchip_vpu981_postproc_enable(struct hantro_ctx *ctx)
->   	case V4L2_PIX_FMT_NV12:
->   		hantro_reg_write(vpu, &av1_pp_out_format, 3);
->   		break;
-> +	case V4L2_PIX_FMT_NV15:
-> +		/* this mapping is RK specific */
-> +		hantro_reg_write(vpu, &av1_pp_out_format, 10);
-> +		break;
->   	default:
->   		hantro_reg_write(vpu, &av1_pp_out_format, 0);
->   	}
-> diff --git a/drivers/media/platform/verisilicon/rockchip_vpu_hw.c b/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-> index 964122e7c355934cd80eb442219f6ba51bba8b71..f7c4a176167b40fe79ec5a6759dff8a77e849ae3 100644
-> --- a/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-> +++ b/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-> @@ -92,6 +92,20 @@ static const struct hantro_fmt rockchip_vpu981_postproc_fmts[] = {
->   			.step_height = MB_DIM,
->   		},
->   	},
-> +	{
-> +		.fourcc = V4L2_PIX_FMT_NV15,
-> +		.codec_mode = HANTRO_MODE_NONE,
-> +		.match_depth = true,
-> +		.postprocessed = true,
-> +		.frmsize = {
-> +			.min_width = ROCKCHIP_VPU981_MIN_SIZE,
-> +			.max_width = FMT_4K_WIDTH,
-> +			.step_width = MB_DIM,
-> +			.min_height = ROCKCHIP_VPU981_MIN_SIZE,
-> +			.max_height = FMT_4K_HEIGHT,
-> +			.step_height = MB_DIM,
-> +		},
-> +	},
->   	{
->   		.fourcc = V4L2_PIX_FMT_P010,
->   		.codec_mode = HANTRO_MODE_NONE,
->
-> ---
-> base-commit: 9ddc3d6c16ea2587898a315f20f7b8fbd791dc1b
-> change-id: 20250403-b4-hantro-nv15-support-07def4e7a537
->
-> Best regards,
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/dsa/microchip/ksz_common.c | 97 +++++++++++++++++++++++++-
+ drivers/net/dsa/microchip/ksz_common.h | 19 +++++
+ 2 files changed, 113 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index 89f0796894af..b45052497f8a 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -3999,6 +3999,89 @@ static int ksz_ets_band_to_queue(struct tc_ets_qopt_offload_replace_params *p,
+ 	return p->bands - 1 - band;
+ }
+
++/**
++ * ksz88x3_tc_ets_add - Configure ETS (Enhanced Transmission Selection)
++ *                      for a port on KSZ88x3 switch
++ * @dev: Pointer to the KSZ switch device structure
++ * @port: Port number to configure
++ * @p: Pointer to offload replace parameters describing ETS bands and mapping
++ *
++ * The KSZ88x3 supports two scheduling modes: Strict Priority and
++ * Weighted Fair Queuing (WFQ). Both modes have fixed behavior:
++ *   - No configurable queue-to-priority mapping
++ *   - No weight adjustment in WFQ mode
++ *
++ * This function configures the switch to use strict priority mode by
++ * clearing the WFQ enable bit for all queues associated with ETS bands.
++ * If strict priority is not explicitly requested, the switch will default
++ * to WFQ mode.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++static int ksz88x3_tc_ets_add(struct ksz_device *dev, int port,
++			      struct tc_ets_qopt_offload_replace_params *p)
++{
++	int ret, band;
++
++	/* Only strict priority mode is supported for now.
++	 * WFQ is implicitly enabled when strict mode is disabled.
++	 */
++	for (band = 0; band < p->bands; band++) {
++		int queue = ksz_ets_band_to_queue(p, band);
++		u8 reg;
++
++		/* Calculate TXQ Split Control register address for this
++		 * port/queue
++		 */
++		reg = KSZ8873_TXQ_SPLIT_CTRL_REG(port, queue);
++
++		/* Clear WFQ enable bit to select strict priority scheduling */
++		ret = ksz_rmw8(dev, reg, KSZ8873_TXQ_WFQ_ENABLE, 0);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++/**
++ * ksz88x3_tc_ets_del - Reset ETS (Enhanced Transmission Selection) config
++ *                      for a port on KSZ88x3 switch
++ * @dev: Pointer to the KSZ switch device structure
++ * @port: Port number to reset
++ *
++ * The KSZ88x3 supports only fixed scheduling modes: Strict Priority or
++ * Weighted Fair Queuing (WFQ), with no reconfiguration of weights or
++ * queue mapping. This function resets the port’s scheduling mode to
++ * the default, which is WFQ, by enabling the WFQ bit for all queues.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++static int ksz88x3_tc_ets_del(struct ksz_device *dev, int port)
++{
++	int ret, queue;
++
++	/* Iterate over all transmit queues for this port */
++	for (queue = 0; queue < dev->info->num_tx_queues; queue++) {
++		u8 reg;
++
++		/* Calculate TXQ Split Control register address for this
++		 * port/queue
++		 */
++		reg = KSZ8873_TXQ_SPLIT_CTRL_REG(port, queue);
++
++		/* Set WFQ enable bit to revert back to default scheduling
++		 * mode
++		 */
++		ret = ksz_rmw8(dev, reg, KSZ8873_TXQ_WFQ_ENABLE,
++			       KSZ8873_TXQ_WFQ_ENABLE);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static int ksz_queue_set_strict(struct ksz_device *dev, int port, int queue)
+ {
+ 	int ret;
+@@ -4080,6 +4163,7 @@ static int ksz_tc_ets_del(struct ksz_device *dev, int port)
+ 	for (queue = 0; queue < dev->info->num_tx_queues; queue++) {
+ 		ret = ksz_queue_set_wrr(dev, port, queue,
+ 					KSZ9477_DEFAULT_WRR_WEIGHT);
++
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -4132,7 +4216,7 @@ static int ksz_tc_setup_qdisc_ets(struct dsa_switch *ds, int port,
+ 	struct ksz_device *dev = ds->priv;
+ 	int ret;
+
+-	if (is_ksz8(dev))
++	if (is_ksz8(dev) && !ksz_is_ksz88x3(dev))
+ 		return -EOPNOTSUPP;
+
+ 	if (qopt->parent != TC_H_ROOT) {
+@@ -4146,9 +4230,16 @@ static int ksz_tc_setup_qdisc_ets(struct dsa_switch *ds, int port,
+ 		if (ret)
+ 			return ret;
+
+-		return ksz_tc_ets_add(dev, port, &qopt->replace_params);
++		if (ksz_is_ksz88x3(dev))
++			return ksz88x3_tc_ets_add(dev, port,
++						  &qopt->replace_params);
++		else
++			return ksz_tc_ets_add(dev, port, &qopt->replace_params);
+ 	case TC_ETS_DESTROY:
+-		return ksz_tc_ets_del(dev, port);
++		if (ksz_is_ksz88x3(dev))
++			return ksz88x3_tc_ets_del(dev, port);
++		else
++			return ksz_tc_ets_del(dev, port);
+ 	case TC_ETS_STATS:
+ 	case TC_ETS_GRAFT:
+ 		return -EOPNOTSUPP;
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index af17a9c030d4..dd5429ff16ee 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -836,6 +836,25 @@ static inline bool is_lan937x_tx_phy(struct ksz_device *dev, int port)
+ #define SW_HI_SPEED_DRIVE_STRENGTH_S	4
+ #define SW_LO_SPEED_DRIVE_STRENGTH_S	0
+
++/* TXQ Split Control Register for per-port, per-queue configuration.
++ * Register 0xAF is TXQ Split for Q3 on Port 1.
++ * Register offset formula: 0xAF + (port * 4) + (3 - queue)
++ *   where: port = 0..2, queue = 0..3
++ */
++#define KSZ8873_TXQ_SPLIT_CTRL_REG(port, queue) \
++	(0xAF + ((port) * 4) + (3 - (queue)))
++
++/* Bit 7 selects between:
++ *   0 = Strict priority mode (highest-priority queue first)
++ *   1 = Weighted Fair Queuing (WFQ) mode:
++ *       Queue weights: Q3:Q2:Q1:Q0 = 8:4:2:1
++ *       If any queues are empty, weight is redistributed.
++ *
++ * Note: This is referred to as "Weighted Fair Queuing" (WFQ) in KSZ8863/8873
++ * documentation, and as "Weighted Round Robin" (WRR) in KSZ9477 family docs.
++ */
++#define KSZ8873_TXQ_WFQ_ENABLE		BIT(7)
++
+ #define KSZ9477_REG_PORT_OUT_RATE_0	0x0420
+ #define KSZ9477_OUT_RATE_NO_LIMIT	0
+
+--
+2.39.5
+
