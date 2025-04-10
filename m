@@ -1,127 +1,144 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C7F2857FF
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CCB1519A1;
+	Thu, 10 Apr 2025 13:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744292833; cv=none; b=YDiIDeO2cYPv0yb+Z/sT1WDCTxr/nunKaDp1uzo8vbD7w0N0jJKmdmk5NP8uDwJ4ZWZFdNP3gfnF5vjZHVVC+uvSsmhm3jhEIRSZ0s3nvl9PW879wyQaZg+u1kK1wNBQSTH/YAwRJaedjuWSJ3mj6ngw7aB6qO1I0mJNl3kxd+Y=
+	t=1744292865; cv=none; b=LdTv5KEQcrLd4QnDZAG0PSkUDMNXwO2ikglNGhUYebtaYSPzNv7ivT+E8w77X9ea+r5h0AXfIxdlhr/3pQP96QlOUE3H+cY9DbI5o7QDgdCkuq9wElKjKqZAvfk2KuDOW0KSW7mOey7NPOQqJ5sZIXc0YFuwpeaL4Hk66SmYaCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744292833; c=relaxed/simple;
-	bh=4b9272PBm8zs6TURGhpg1ANgpmpR6PaBZxZkWeDeEHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YYYpVVgLKTVRH54RuJT8t3nI20SkTvZ4Kd/ANmsSuv2IzS83efcAlNa4GtYvR7EGB0EDZHy/cmrT5uqFnfplBgRzcfstbosbeEjveoiQjzmPfntAZPOvteIyaLMIo3yLurSBOa12zod0TBSAUUfmS1XnUKGn/NWQuzDbAMGEAIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Mk9oC8Ci; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744292865; c=relaxed/simple;
+	bh=B8eP9Hns9fzoseZHZS5omu5nHeDHk+QA/EBW6wjSZbQ=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=peubC6fhfob1QGKk+LF+jvO/+MyvYNge2cgP1R6CZz5eG+e2mVTtXzt0v1ElWsidtRh25Mv2AHxLi2XXPzzUYBjZmFoHMGGGa/JR0qPmkdsSROu5dVBQ6dXmbsuTN28NsRXOdMmVWuTlcM+7PUAAHGGG/9ctbk/Zf6lAuGGr21s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oo4loiUu; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Mk9oC8Ci"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so6861665e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:47:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oo4loiUu"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-306b78ae2d1so786727a91.3;
+        Thu, 10 Apr 2025 06:47:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744292829; x=1744897629; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z+9TWPr4cIFFLNnl4cBBmSOXCekcTbC/DxVvbdg+OgM=;
-        b=Mk9oC8Ciseix0Lc9kzOm7O/CrVcBc8ogo8t3nGu2efGsUpin5FPC/2BkM1D4lVl7gq
-         sbwpnxZTMlFNLdhnVwadktRsdl3q/mJkxZxr1OBBM2i6tlU4v0ppICZrrODtzKUg6kwr
-         y/PmrXN6Fip2HnGhrYMTxkuOu07dGHLyayrXn8jYLUMAFINTbZYSgNYVFfA8CWhtqe4O
-         tqwDtAIjtX0WLOoGP8aIwDCN66oTszueE6qNelX61SQTpWLsaiyqcoQYwx9QkDfuxgjz
-         yCsHSK4kZeU2HSI5yo7pZ8W+YqZGvufXIJHxix8nGUBSxdSVf3WgraVDTfcrCRG1/5RK
-         0iIg==
+        d=gmail.com; s=20230601; t=1744292862; x=1744897662; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wTWNdzXB6EXtES+qhh3ul9FC9I/MOcomdwM+IhVWquA=;
+        b=Oo4loiUuUCYnnfuwfnc7BCPVNU0Svf+cC8buLd/NRhqSVrmsb5sBFJZYGNFoB9Lphr
+         c7R5xVtTBxtSXBGwA/wp31Pg369QAI+udT4Mwet8aYxTTOyui211vFo2ZsAaa+dj4aW5
+         pq2GOaUoFTXQ6kw1UhZEEwgVxZwOBjClJG73dkhECZTaKUZ9/+vwRCNWZZcS1dC6my0a
+         Z4srG5P7CLuEdRA23htoU52iAp1IMlGyyqUmFSwjhfWymM8jSngesVRdSe4+rNsMZOZv
+         k5ueVccSqTMF3kk9v9+GuZPy+l48f2zb7BoDSPURANkrV3T0FOXyO0jVmtWvTwLp3kY2
+         GjDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744292829; x=1744897629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z+9TWPr4cIFFLNnl4cBBmSOXCekcTbC/DxVvbdg+OgM=;
-        b=mR6luFdhVPqQILyFYjcqCo30xlcI43xaRo7LbDAoRnk5SXDhOuhl8U1WtVykqO2xT5
-         /jBy+zhq/I0vWo5J9j6gCLGh6oWR4eA9zH7tCAtstnCAl2eYuMcGRtVMBX2L1sr6GVlR
-         kyywf1MThFUKJHME6EVRXw8Hz/YYWnVIezTrN3mwy1TnPjI36zw5zRwE7ndYwyQwK4f9
-         dN5aX7bEHVrOhtta5XXKHgIDwE2jLEErBqrj1FZb5PO9p4mBaqxY0Ajy0YYM6ISGFUrg
-         OwgyRi5e4relZ66fEy5nwucC0VLqoCHsOQiyQbkhWLJp41XS3rquFZG1mK5t+aHRZXfL
-         RhWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6MGbARKpEn4zO5Duv2V3xP26mjiun16VunrM7RbH1IqVx49+vM200M2atcXgeCty9af0B9XrHLUETrMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6avP069S5AmTNRuGZ3qpz8HDU5caQJsPQAGXTYRFesDPNrC1T
-	8BkfMFyQPQQPdH7hFL1/5NwqSq4a7lij4GOTok2a8AKG1UZgIJf7VgVkM88da4s=
-X-Gm-Gg: ASbGnctiH1lOvn9gWsvnwNhSEBiQIgnDy4e1w6xTzY2X+/Be9Ep8KYH2kcS+/Cie2yC
-	sDWWHjrILoHNwa5YnKKjbOJbkqtJBOJwgUWGY3n8g/XwTGEJtYJV20Vr3XlbfKpfLOcXrr9aOrp
-	znvdF7dNbn5R+hMlVlFDEHnzb2sOQ5YMWIQaZ8zs9tYGtaMqosVKtXvcxvfSCKHJVUYN1FpJoLM
-	EqjiZ2os5wO9q/FP92FdCkG7FlUErb3urjh32+sBYf74EjcIvSX0hw6PmOtH+32UaAz9FDL0iOm
-	8cvcRMHPOUiPtsmP/llNBeY9HOXICscSz74eJ+nj6dw=
-X-Google-Smtp-Source: AGHT+IGJpePNvVyjgvmav5Kd5AqQY4lDiNg+UquOUe0N4IN23Wm6xkWaUOUyn4V50aiJmmCXeU8IOg==
-X-Received: by 2002:a05:600c:5248:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-43f2d7bc45bmr27374935e9.14.1744292829089;
-        Thu, 10 Apr 2025 06:47:09 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2066d004sm57414615e9.18.2025.04.10.06.47.08
+        d=1e100.net; s=20230601; t=1744292862; x=1744897662;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wTWNdzXB6EXtES+qhh3ul9FC9I/MOcomdwM+IhVWquA=;
+        b=KtaKWzmTWWrYD05JUGpMtDK8gcifAOj7hYvWBOjmdAceJbT4E+uAx6GXgXJCdBpm8N
+         scLH02KoZTjoUjGI2s5R0iaY2NynJ17tnD1q/QTaQrbaYKTeILaAS26fu+5CIazRAsoY
+         b0zPt+TyndiruewZo9SgWUhTDXklde44DY/QUa6mLeAcZSTnk1GtlCEd8Gv/yLidZj+0
+         377v+jrN6eX6ViII08iecEt/9/dRr8xEyRtspQJInjKRGiP6MjjVBwd3pizHTvg0umXc
+         HImoAzkz1GZ80DUI7dbT6ereVV8gIuSSRMsdOZmoj3EVfucZEWEgWPFNtamKQNiIymiX
+         Vhwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAshz5xQWsb1neDrWgmc0l417MGy8J4SzpVj4nzoQH75eY3SzeicZCbX5apogInP68qhhl7EI1lWNGgaY5vgQ=@vger.kernel.org, AJvYcCUogRJXzSkVds1nd5uoUwqNVrd5IJ+I9sU3RA9x4SN+A76uW9nhRd/rzqCO2BrGEOUW/YE/16ckAJUmmyA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoeWj8fi758J/VCtSPBT3H31YhBkLwomkgHREM46/3zLW9B6nW
+	ExTWkE0TqfUAsLPuBs+5LEh8CTlBz4fyiQackf8MQZ/F1hsIpG8b
+X-Gm-Gg: ASbGncsbHb87D6UAdWmu2eQLmQPEy0q6EU+Oxe+HcQ8zADLtNgfqEYig5+4zyGt30dE
+	oy/o3u2vD683+CM1A3woPXFXTjyAVn5E+l94InlNLl5Gl+k4kSt7RqO5JwWp9RqVb7R4PQwdJr8
+	sCA0HgHpfbk81s017TMJyh6MpQ0pemJT9Bo31RET9wvDVIsPEC1Rdj/Gb/5PFVaRUzOUouB6zSm
+	z9oWdP4L99Q403MNoPZxNyq/HNC9PgF6KDND8wskDZED7bhnJ7+el8LCtLjYI9zXJiH0d3BxBqp
+	MowlBXJdzSeGAyIUWk1NzoWZ7CjPP2w2d7lEoumsG2NeIl49PTgIsWYijlntmIurgc7shkfXUP+
+	k575Pj6p6LdrzcuuAj42vPuM=
+X-Google-Smtp-Source: AGHT+IGSeOa7k+Tn7DNVUea9Xi4b+WqhH4fDjHADHuQUu23dS+AjkhYJjO3wHWxruQi+IrKs2vIxtw==
+X-Received: by 2002:a17:90a:c105:b0:2ee:aa28:79aa with SMTP id 98e67ed59e1d1-30718b67f03mr4218603a91.6.1744292861612;
+        Thu, 10 Apr 2025 06:47:41 -0700 (PDT)
+Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df2fae27sm3478281a91.31.2025.04.10.06.47.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 06:47:08 -0700 (PDT)
-Date: Thu, 10 Apr 2025 15:47:06 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Vishal Chourasia <vishalc@linux.ibm.com>
-Cc: tj@kernel.org, hannes@cmpxchg.org, corbet@lwn.net, 
-	cgroups@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc,cgroup-v2: memory.max is reported in multiples of
- page size
-Message-ID: <la6q2koug4ohzcfc5eqguod7x6fdwhndqkhzfrttsfnjo5fbb3@xzxodtpjl6ww>
-References: <20250410133439.4028817-2-vishalc@linux.ibm.com>
+        Thu, 10 Apr 2025 06:47:41 -0700 (PDT)
+Date: Thu, 10 Apr 2025 22:47:24 +0900 (JST)
+Message-Id: <20250410.224724.1795885541320306236.fujita.tomonori@gmail.com>
+To: aliceryhl@google.com
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, boqun.feng@gmail.com, ojeda@kernel.org,
+ alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, a.hindborg@samsung.com, tmgross@umich.edu,
+ dakr@kernel.org, mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com
+Subject: Re: [PATCH v1 2/2] rust: task: add Rust version of might_sleep()
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <Z_Y1IBcp_NNnks8R@google.com>
+References: <20250406110718.126146-1-fujita.tomonori@gmail.com>
+	<20250406110718.126146-3-fujita.tomonori@gmail.com>
+	<Z_Y1IBcp_NNnks8R@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cbkayfgiworvjsdj"
-Content-Disposition: inline
-In-Reply-To: <20250410133439.4028817-2-vishalc@linux.ibm.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
+On Wed, 9 Apr 2025 08:51:44 +0000
+Alice Ryhl <aliceryhl@google.com> wrote:
 
---cbkayfgiworvjsdj
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] doc,cgroup-v2: memory.max is reported in multiples of
- page size
-MIME-Version: 1.0
+>> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+>> index 9e6f6854948d..1f0156b38ab5 100644
+>> --- a/rust/kernel/task.rs
+>> +++ b/rust/kernel/task.rs
+>> @@ -380,3 +380,29 @@ fn eq(&self, other: &Kuid) -> bool {
+>>  }
+>>  
+>>  impl Eq for Kuid {}
+>> +
+>> +/// Annotation for functions that can sleep.
+>> +///
+>> +/// Equivalent to the C side [`might_sleep()`], this function serves as
+>> +/// a debugging aid and a potential scheduling point.
+>> +///
+>> +/// This function can only be used in a nonatomic context.
+>> +#[track_caller]
+>> +#[inline]
+>> +pub fn might_sleep() {
+>> +    #[cfg(CONFIG_DEBUG_ATOMIC_SLEEP)]
+>> +    {
+>> +        let loc = core::panic::Location::caller();
+>> +        // SAFETY: FFI call.
+> 
+> Overall this looks okay to me, but this safety comment could be
+> improved. This being an FFI call is not the reason *why* it is safe to
+> make this call.
 
-Hello.
+Undertood.
 
-On Thu, Apr 10, 2025 at 07:04:40PM +0530, Vishal Chourasia <vishalc@linux.i=
-bm.com> wrote:
-> Update documentation for memory.max to clarify that the reported value
-> is in multiples of the system page_size. The following example
-> demonstrates this behavior:
+> // SAFETY: `file.as_ptr()` is valid for reading for `file.len()` bytes.
+> 
+> And I might separate the file into a separate variable for clarity:
+> let loc = core::panic::Location::caller();
+> let file = loc.file();
 
-This applies to any of page_counter-based attribute, not only
-memory.max.
+Fixed.
 
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -1316,6 +1316,9 @@ PAGE_SIZE multiple when read back.
->  	Caller could retry them differently, return into userspace
->  	as -ENOMEM or silently ignore in cases like disk readahead.
-> =20
-> +        Note that the value set for memory.max is reported in units
-> +        corresponding to the system's page size.
-> +
+>> +        unsafe {
+>> +            crate::bindings::__might_sleep_precision(
+>> +                loc.file().as_ptr().cast(),
+>> +                loc.file().len() as i32,
+>> +                loc.line() as i32,
+>> +            )
+>> +        }
+>> +    }
+>> +
+>> +    // SAFETY: FFI call.
+>> +    unsafe { crate::bindings::might_resched() }
+> 
+> And here you can say
+> // SAFETY: Always safe to call.
 
-There seems to be mismatch in whitespace to surrounding text.
+Fixed.
 
-Also the wording would be more precise if it referred to 'multiples',
-not 'units' (units are simply bytes).
-
-Michal
-
---cbkayfgiworvjsdj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/fL2AAKCRAt3Wney77B
-SRSNAP0bnJApWLajoXwxzl1ghVWKw5zQVjK3WrLIJrECXtDDewEAugoDnnl7QTvl
-4H/JYvFk91gyh5my4GuIExOBCwcMQQs=
-=2s8B
------END PGP SIGNATURE-----
-
---cbkayfgiworvjsdj--
+Thanks a lot!
