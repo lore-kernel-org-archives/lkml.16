@@ -1,167 +1,211 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2AD1DF25C
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110201C1F13
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744303530; cv=none; b=bhX9xqRBMxSSMnYwZnoPns8lga0xvMl0+vCi2VTdmUSNiG/1lnAfuwyNRv1CioJUjwd+3p6LxNo3Ais3+WYRWGhwiTbTwRQ8U3IxiFY24H0+JUbR5AhHSmPephDSIbRx22BX0rz6DHNvkXPFjjj7/d/k4rGwZVk+ouSWJ3Wekqs=
+	t=1744303607; cv=none; b=sE5or8NXzukbKQvxXhCj5WigE8MrAxqpAODnL2p0Sw4+bpCW8sCmB+MrimRv3xoQCSZyAKyANySnV0afC3dxtHga6LDxnaV7A6RS/Q8iYV8xkDDvyJ22GMsqzd8TQCtO1hrSUumxslS7G9vykRlQbwN3JuGL2aI/kyGoxdCiM3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744303530; c=relaxed/simple;
-	bh=toVJxsCZs0mg/KzWrt+p1Cfv80tQV9ZwpAdwDsA5bFI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c4eSxUKS/5bESQgelFbQ3MY+D4BSrkxMt4yjfCVB/9t/nnISDMnRtOBjU6hXLlL2Rzg9z7kiFOXuHGHT9HRBSildUqSYKX69n6Rz0Vq9xyop1LJT29j1aYj2ljf9w1D+dcS0/IN9Y5hof67ThaimRfwTraQ/pUGHc+D5u3GdK90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aQ89n3SC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744303607; c=relaxed/simple;
+	bh=os3eA1rdpLTtGlt4e1jQ+npyqcfj+4+i56DwxkAdBY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=maVwfCK+/NQ7DPFTGXueY7Ou2es30weTkKwJZzray4ZOID65zQI4jINkL5h+/D7hRDwJzooCPsk8BVD55xlhWcPX2nG34N/92E/xIQGK1pKJ0Fvm8EhMTSaYWRBcuAKPHdU5eeG81oLQNeiS8M1G44rZrIPNNkqISXNqburCzVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jR8NY4gI; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aQ89n3SC"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AGDm08000644
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:45:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ph/TwOTsuOoy4t0qHG6t8cyk/gjzDnjqER/+zz16TPY=; b=aQ89n3SCYgvc+r/h
-	oLxkgC0o36UAmeopbqy1nwC49N/O1E4NRAE/AsKsNhu+3kZCZ/le3ecT9VeIZTFc
-	TqeaWumIopb7jfWlIVyBi4loalb472U5Xjjaopx0ldL+FfDZINUa6fl6FozNQZT/
-	AjjruQCpNKyTfXio7OEL4sssUUutJ8ICOgi4th++XHwJjzqmACGysNGWszQhkd9S
-	UCeqs0b+rYNtoaPMj5qmEQgQ0SzqZb22PwX7XhItOU/71zZ7gJMIJmbgb98KIVoT
-	SzkuySueXEZ9VouVtGIInrvN0psSkvy6lUokFb3hYmlQGHsB9P+j1XwvUvIY5ydr
-	t3SpOA==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2yk1d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:45:27 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-47708fd6446so1623861cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:45:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744303526; x=1744908326;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ph/TwOTsuOoy4t0qHG6t8cyk/gjzDnjqER/+zz16TPY=;
-        b=cma7AdroFUlGzEgimnc45FmifejRbdgfVvu6B7CIz1qwapMpsbiHOAxhrpdnobdpa7
-         MAQug0T0q/6gTw9m3FZ7C0WrDMtrdQoxEv8PZYciYVv7cMAaIPlB6mkpw5ZbfwTZ8K8m
-         SeDz78p6Q5sPXfAjrUefFKcMNupi2hpcHxM1i55aO5+jf0f07/aItfGqsrPWzJx3Nrlg
-         D5rNDCRTXE5VvU+OSkVAuJiacf6l6UdnKlfu3jkglkkXM0o4yJQBpKpvSTcpmDnOgIvb
-         QiTMcSFGGfFicPcICD1lZD9gMtjrEBZNxJq0quUPj4n47aJ+74xja8f1HRy8WpgXzR7z
-         WBfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEocT4m/0jh3Md+XQnMJbpY/hXhpDzrkXD7OPvnbozfheYDJRylXI9XauhmM+MTB+KEvVXPKL2zzX77m0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFdZrSeImCH+4A0EOFyJQ6RN2c0O9EFzGW623Q8BHu3W3baerZ
-	ZL3/ii+VQFO1PjhIQq9C8pqakbqD6c8AjxJnQZ0ZfsB/vM7OpIA7bZ2qp9v3l1ojqi3webIvl7v
-	3R9GnE11I17lWWLZwTDHIgkmBSBsLpGO189CN8vfzIdbWj6HYoBZo+W2PfrdjW34=
-X-Gm-Gg: ASbGnctlkybJEzgi08LOZSVnK/x1dapJTQo/TlUFNpHU9yCz50d+ou4KIiJVK7r3Pw2
-	cPKA+yfLfxeUplcjBxuKFdEMShGXmu3an/DORiymj58MeqlxgcOgiy2FViXaNxhphVFphMowORI
-	R/AhGHy7R6r/9TNUQ9jbfC6BUfETiAXBErbmF5G4ULUrCQc55wRLyX3vsOjhR2pO3kPB59bFl7k
-	1/knsuWPUOxyjtN3WwWyBl2P5SMlGPQjQ/WuHRv4t1M3Sp2XcI7z8bXliinP0OkUaE0ULn/MfUV
-	qXq+oYLDoLVLs6u0x+DR4PZqSInGeTt8rso7kTPysl5PzkznWLxP0eWFQQhw1XGkXA==
-X-Received: by 2002:ac8:5f83:0:b0:472:1573:fa9f with SMTP id d75a77b69052e-4795f342813mr44890961cf.10.1744303526238;
-        Thu, 10 Apr 2025 09:45:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHMOsdJr8nkMh+4BrEppKUlcMKOoa1a/rNq4t2HypiDG27rcGHFnEkG3dzZlHVO8pov7a+rqg==
-X-Received: by 2002:ac8:5f83:0:b0:472:1573:fa9f with SMTP id d75a77b69052e-4795f342813mr44890711cf.10.1744303525896;
-        Thu, 10 Apr 2025 09:45:25 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbc0673dsm2618728a12.19.2025.04.10.09.45.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 09:45:25 -0700 (PDT)
-Message-ID: <e87220f1-bf8e-4014-834f-ae99c0b032ca@oss.qualcomm.com>
-Date: Thu, 10 Apr 2025 18:45:23 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jR8NY4gI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744303602;
+	bh=os3eA1rdpLTtGlt4e1jQ+npyqcfj+4+i56DwxkAdBY8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jR8NY4gI5gKRNkXL6NzYj7OB1qsGxKu+LONUwrRqsN3SuygAaUX6DyHSPUkRaIL/P
+	 eSPEd3uCHGNAMs50CntCF+mBuR3jVdwbup69uStD4HprqcUcWDspbOyot9a6mXaSS/
+	 ugO69TqgS7uYmS6YfEqWP6wG/9xxkipE+iAzmfGL5Y0/bUTxCh2S5iHExiAp+ARyQq
+	 2npjcPVLXGcok502vwfV/CSaAIDfM8jPKrnfsGVPva2qnE6/MA9GhQfuZ3WU7CylHE
+	 VO3fUPEUvdNlCyqyspCGaJxOEuDFD4j4AiaXQbNLvTLKyDV4P6oOl18nn0joTKlA80
+	 6mVG91e9LQhgg==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9399A17E03B6;
+	Thu, 10 Apr 2025 18:46:41 +0200 (CEST)
+Date: Thu, 10 Apr 2025 18:46:37 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Karunika Choo <karunika.choo@arm.com>
+Cc: dri-devel@lists.freedesktop.org, nd@arm.com, Steven Price
+ <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/panthor: Add 64-bit and poll register accessors
+Message-ID: <20250410184637.5e0613d2@collabora.com>
+In-Reply-To: <20250410163546.919749-1-karunika.choo@arm.com>
+References: <20250410163546.919749-1-karunika.choo@arm.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: msm8953: Add uart_5
-To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
-        phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Felix Kaechele <felix@kaechele.ca>
-References: <20250406-msm8953-uart_5-v1-1-7e4841674137@lucaweiss.eu>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250406-msm8953-uart_5-v1-1-7e4841674137@lucaweiss.eu>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 68hl_0ricpGU2a8MoxUanzzGSyfBVVVq
-X-Proofpoint-GUID: 68hl_0ricpGU2a8MoxUanzzGSyfBVVVq
-X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f7f5a7 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=TyM6OeZ_AAAA:8 a=dlmhaOwlAAAA:8 a=EUspDBNiAAAA:8 a=Zn5KjoL0Do0GK0u-booA:9
- a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22 a=RxdkCTCKa-xTImXFM8fo:22 a=y4cfut4LVr_MrANMpYTh:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100122
 
-On 4/6/25 3:52 PM, Luca Weiss wrote:
-> From: Felix Kaechele <felix@kaechele.ca>
+On Thu, 10 Apr 2025 17:35:46 +0100
+Karunika Choo <karunika.choo@arm.com> wrote:
+
+> This patch adds 64-bit register accessors to simplify register access in
+> Panthor. It also adds 32-bit and 64-bit variants for read_poll_timeout.
 > 
-> Add the node and pinctrl for uart_5 found on the MSM8953 SoC.
+> This patch also updates Panthor to use the new 64-bit accessors and poll
+> functions.
 > 
-> Signed-off-by: Felix Kaechele <felix@kaechele.ca>
-> [luca: Prepare patch for upstream submission]
-> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+> Signed-off-by: Karunika Choo <karunika.choo@arm.com>
 > ---
->  arch/arm64/boot/dts/qcom/msm8953.dtsi | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  drivers/gpu/drm/panthor/panthor_device.h |  71 ++++++++++++
+>  drivers/gpu/drm/panthor/panthor_fw.c     |   9 +-
+>  drivers/gpu/drm/panthor/panthor_gpu.c    | 142 ++++++-----------------
+>  drivers/gpu/drm/panthor/panthor_mmu.c    |  34 ++----
+>  drivers/gpu/drm/panthor/panthor_regs.h   |   6 -
+>  5 files changed, 124 insertions(+), 138 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8953.dtsi b/arch/arm64/boot/dts/qcom/msm8953.dtsi
-> index af4c341e2533ef2cca593e0dc97003334d3fd6b7..3d6ab83cbce4696a8eb54b16fdb429e191f44637 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8953.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8953.dtsi
-> @@ -767,6 +767,20 @@ spi_6_sleep: spi-6-sleep-state {
->  				bias-disable;
->  			};
+> diff --git a/drivers/gpu/drm/panthor/panthor_device.h b/drivers/gpu/drm/panthor/panthor_device.h
+> index da6574021664..5028e25f5e0d 100644
+> --- a/drivers/gpu/drm/panthor/panthor_device.h
+> +++ b/drivers/gpu/drm/panthor/panthor_device.h
+> @@ -428,4 +428,75 @@ static int panthor_request_ ## __name ## _irq(struct panthor_device *ptdev,			\
 >  
-> +			uart_5_default: uart-5-default-state {
-> +				pins = "gpio16", "gpio17", "gpio18", "gpio19";
-> +				function = "blsp_uart5";
-> +				drive-strength = <16>;
-
-This guy's strongly biased! But it looks like that's on purpose for
-these older SoCs..
-
-> +				bias-disable;
-> +			};
+>  extern struct workqueue_struct *panthor_cleanup_wq;
+>  
+> +static inline void gpu_write(struct panthor_device *ptdev, u32 reg, u32 data)
+> +{
+> +	writel(data, ptdev->iomem + reg);
+> +}
 > +
-> +			uart_5_sleep: uart-5-sleep-state {
-> +				pins = "gpio16", "gpio17", "gpio18", "gpio19";
-> +				function = "gpio";
-> +				drive-strength = <2>;
-> +				bias-disable;
-> +			};
+> +static inline u32 gpu_read(struct panthor_device *ptdev, u32 reg)
+> +{
+> +	return readl(ptdev->iomem + reg);
+> +}
 > +
->  			wcnss_pin_a: wcnss-active-state {
+> +static inline u32 gpu_read_relaxed(struct panthor_device *ptdev, u32 reg)
+> +{
+> +	return readl_relaxed(ptdev->iomem + reg);
+> +}
+> +
+> +static inline void gpu_write64(struct panthor_device *ptdev, u32 reg, u64 data)
+> +{
+> +	gpu_write(ptdev, reg, lower_32_bits(data));
+> +	gpu_write(ptdev, reg + 4, upper_32_bits(data));
+> +}
+> +
+> +static inline u64 gpu_read64(struct panthor_device *ptdev, u32 reg)
+> +{
+> +	return (gpu_read(ptdev, reg) | ((u64)gpu_read(ptdev, reg + 4) << 32));
+> +}
+> +
+> +static inline u64 gpu_read64_relaxed(struct panthor_device *ptdev, u32 reg)
+> +{
+> +	return (gpu_read_relaxed(ptdev, reg) |
+> +		((u64)gpu_read_relaxed(ptdev, reg + 4) << 32));
+> +}
+> +
+> +static inline u64 gpu_read64_counter(struct panthor_device *ptdev, u32 reg)
+> +{
+> +	u32 lo, hi1, hi2;
+> +	do {
+> +		hi1 = gpu_read(ptdev, reg + 4);
+> +		lo = gpu_read(ptdev, reg);
+> +		hi2 = gpu_read(ptdev, reg + 4);
+> +	} while (hi1 != hi2);
+> +	return lo | ((u64)hi2 << 32);
+> +}
+> +
+> +#define gpu_read_poll_timeout(dev, reg, val, cond, delay_us, timeout_us)    \
+> +	read_poll_timeout(gpu_read, val, cond, delay_us, timeout_us, false, \
+> +			  dev, reg)
+
+nit: can use use tabs to pad till the '\' at the end of the line so we
+can have a consistent formatting across these definitions?
+
+> +
+> +#define gpu_read_poll_timeout_atomic(dev, reg, val, cond, delay_us,         \
+> +				     timeout_us)                            \
+> +	read_poll_timeout_atomic(gpu_read, val, cond, delay_us, timeout_us, \
+> +				 false, dev, reg)
+> +
+> +#define gpu_read64_poll_timeout(dev, reg, val, cond, delay_us, timeout_us)    \
+> +	read_poll_timeout(gpu_read64, val, cond, delay_us, timeout_us, false, \
+> +			  dev, reg)
+> +
+> +#define gpu_read64_poll_timeout_atomic(dev, reg, val, cond, delay_us,         \
+> +				       timeout_us)                            \
+> +	read_poll_timeout_atomic(gpu_read64, val, cond, delay_us, timeout_us, \
+> +				 false, dev, reg)
+> +
+> +#define gpu_read_relaxed_poll_timeout_atomic(dev, reg, val, cond, delay_us, \
+> +					     timeout_us)                    \
+> +	read_poll_timeout_atomic(gpu_read_relaxed, val, cond, delay_us,     \
+> +				 timeout_us, false, dev, reg)
+> +
+> +#define gpu_read64_relaxed_poll_timeout(dev, reg, val, cond, delay_us,         \
+> +					timeout_us)                            \
+> +	read_poll_timeout(gpu_read64_relaxed, val, cond, delay_us, timeout_us, \
+> +			  false, dev, reg)
+> +
+>  #endif
+> diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panthor/panthor_fw.c
+> index 0f52766a3120..ecfbe0456f89 100644
+> --- a/drivers/gpu/drm/panthor/panthor_fw.c
+> +++ b/drivers/gpu/drm/panthor/panthor_fw.c
+> @@ -1059,8 +1059,8 @@ static void panthor_fw_stop(struct panthor_device *ptdev)
+>  	u32 status;
 >  
->  				wcss-wlan2-pins {
-> @@ -1592,6 +1606,24 @@ blsp2_dma: dma-controller@7ac4000 {
->  			qcom,controlled-remotely;
->  		};
+>  	gpu_write(ptdev, MCU_CONTROL, MCU_CONTROL_DISABLE);
+> -	if (readl_poll_timeout(ptdev->iomem + MCU_STATUS, status,
+> -			       status == MCU_STATUS_DISABLED, 10, 100000))
+> +	if (gpu_read_poll_timeout(ptdev, MCU_STATUS, status,
+> +				  status == MCU_STATUS_DISABLED, 10, 100000))
+>  		drm_err(&ptdev->base, "Failed to stop MCU");
+>  }
 >  
-> +		uart_5: serial@7aef000 {
-> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-> +			reg = <0x07aef000 0x200>;
-> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&gcc GCC_BLSP2_UART1_APPS_CLK>,
-> +				 <&gcc GCC_BLSP2_AHB_CLK>;
-> +			clock-names = "core",
-> +				      "iface";
-> +			dmas = <&blsp2_dma 0>, <&blsp2_dma 1>;
-> +			dma-names = "tx", "rx";
+> @@ -1085,8 +1085,9 @@ void panthor_fw_pre_reset(struct panthor_device *ptdev, bool on_hang)
+>  
+>  		panthor_fw_update_reqs(glb_iface, req, GLB_HALT, GLB_HALT);
+>  		gpu_write(ptdev, CSF_DOORBELL(CSF_GLB_DOORBELL_ID), 1);
+> -		if (!readl_poll_timeout(ptdev->iomem + MCU_STATUS, status,
+> -					status == MCU_STATUS_HALT, 10, 100000)) {
+> +		if (!gpu_read_poll_timeout(ptdev, MCU_STATUS, status,
+> +					   status == MCU_STATUS_HALT, 10,
+> +					   100000)) {
+>  			ptdev->reset.fast = true;
+>  		} else {
+>  			drm_warn(&ptdev->base, "Failed to cleanly suspend MCU");
+> diff --git a/drivers/gpu/drm/panthor/panthor_gpu.c b/drivers/gpu/drm/panthor/panthor_gpu.c
+> index 671049020afa..fd09f0928019 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gpu.c
+> +++ b/drivers/gpu/drm/panthor/panthor_gpu.c
+> @@ -108,14 +108,9 @@ static void panthor_gpu_init_info(struct panthor_device *ptdev)
+>  
+>  	ptdev->gpu_info.as_present = gpu_read(ptdev, GPU_AS_PRESENT);
+>  
+> -	ptdev->gpu_info.shader_present = gpu_read(ptdev, GPU_SHADER_PRESENT_LO);
+> -	ptdev->gpu_info.shader_present |= (u64)gpu_read(ptdev, GPU_SHADER_PRESENT_HI) << 32;
+> -
+> -	ptdev->gpu_info.tiler_present = gpu_read(ptdev, GPU_TILER_PRESENT_LO);
+> -	ptdev->gpu_info.tiler_present |= (u64)gpu_read(ptdev, GPU_TILER_PRESENT_HI) << 32;
+> -
+> -	ptdev->gpu_info.l2_present = gpu_read(ptdev, GPU_L2_PRESENT_LO);
+> -	ptdev->gpu_info.l2_present |= (u64)gpu_read(ptdev, GPU_L2_PRESENT_HI) << 32;
+> +	ptdev->gpu_info.shader_present = gpu_read64(ptdev, GPU_SHADER_PRESENT_LO);
+> +	ptdev->gpu_info.tiler_present = gpu_read64(ptdev, GPU_TILER_PRESENT_LO);
+> +	ptdev->gpu_info.l2_present = gpu_read64(ptdev, GPU_L2_PRESENT_LO);
 
-Matches what the computer says
-
-It's more usual to send these together with a user, but I don't mind
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
+Now that we have proper 64-bit accessors, I think I would drop the
+_LO/_HI definitions and just go a single def per register that replaces
+the _LO one.
