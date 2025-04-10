@@ -1,134 +1,259 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA50D1372
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291313; cv=none; b=i52y6/PbWr+nhL/FpqTvD9lb26h1Z4/ExyvbpG2yPfZcxq1yb/Wvwd6iPjZEhoVA4Lp4B47q2gamuO/S3vnXgtSZ5nNREgT8qQDmtmUPYDK/L0hp2GIUHBZpfUlItixthZHICtT01gY0/t4hOoiLEkojRY5Q1599WT/N76h1PSI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291313; c=relaxed/simple;
-	bh=ogTvjHX1p157xvYG9ocJpAirXQE+XgMwDKIwl3lLYks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EhdpzaJnJ1O7xofwAgBdyIl7efZlIezmuBK8dBxJj5WEq/qFgrQd8xi3swzyy3b2l0WHEEaCnKAfLwbw7oBjkNXWZi7YZKfQOGBi+UEKzc9VFl5LzGB15cK3RqJ8bgjWpfJtO6oHL262Wb6A9l6/swEKIwqh0/+9BRqglodz97c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qSMQ3goO; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59782857F4;
+	Thu, 10 Apr 2025 13:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744291317; cv=fail; b=r+n52xWskWaLfGHr0NqBPZXg2frGAtDZe95x8czj46w+6ZVaT8nXgO4Mh/fuFh12zLwv74ZnmqCgGaBMNizK+k9hVzlfPBqW1IHfTFe76zh0hiZrQ3cPo2q1Cu1cRwc0LJQY5SWXRyiCpafw2OrrF/estsbiF2zEl+eQ/7Mp0e4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744291317; c=relaxed/simple;
+	bh=csdlxqAWeWk/Cu56CCyA7J+Mfthl8b40MZqy7N4mqJg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kboklBIXfJhtHJnZ64MDa1x7bP1JzT1fm0KnOWiQM6/Y/l/h8PvGdm8rjSgYD8/eMwA5hbArMXLddOirTtAwY3Cg1cAaG7zwqRd42ffvEaEKW/cF6M2nx+y7gPTMXa334E8t3+LnxEzyIlcxfu9+1e6TUzTXyJW2km1Bnc5Ez18=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=qORvIrA3; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=muP45aCa; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qSMQ3goO"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7370a2d1981so555971b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:21:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="qORvIrA3";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="muP45aCa"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A82DSO001301;
+	Thu, 10 Apr 2025 08:21:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=4HAesXU10CaKm+f8
+	Sbl1hA/DhDYaB5XlC2RR/lYMMhk=; b=qORvIrA3S7nA5Mh085sPBTJ5LOf+mLO0
+	s1i6YA0fWlm6ODDz5nBuzlwclYWh1Ubmw/nEy1EppjNX480ogmwPz/+W0eht3625
+	ShoqR6L/cy9lixwJBrUGiMnJFOUnEIKs73alMMoPIrUvaWQgcIMUTYQWxuZDusDk
+	ccPcS4kpbthatWGPioaIc6AW2EnZ5QK4ZtWM5csME+AFxgMIV19s7u2a07qQMrDa
+	z9Yk3y199AOa5/ATCtBR8krw1lkXQSm8gZ1JCsB/sVhSkXqWqn4bonJseTwkdICa
+	SSJ/TrVvPN63nGaioEzqokccKVHF3ZiCfYwysf/a8jLDaaVdwz46Rg==
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2049.outbound.protection.outlook.com [104.47.66.49])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 45xa4bgbcv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 08:21:37 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ro9NEdLcBWCnI16OJ/luiOYzq/CwzmjZn/n5IgLclCjkOdhd2ENpGNqdBL/AxjMINKszoBSeYyWgzg5U4XBXqL+NigWK3nWE27B1jEipyWAAdU41EqRhcFnKygWfiBLPggObd38QC4k59LrE/GTBiYeFkb23F2HncbEGX8aB2iBXpwFJnrWokOuRH5CcakIcM/f7HXl33UKixer4EgGK632bbCyaATSgoKIRjCi/9ffvYXK1WQfyWiGzCRDAfFaPlgn7CxZCyYGIPGR8s1wd80Szv8EdgM5Em+ZU8WNp+u6nBjgcGsS8hbaTEomgSbPh7hV6EzKEsKfBBLMKJ0+B0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4HAesXU10CaKm+f8Sbl1hA/DhDYaB5XlC2RR/lYMMhk=;
+ b=vGIW3u/qtCEQAuXVE+1qq/FCyaQ6KhE7eDj+7ncJsmzBp5rVBAJhfsy4TLBgyjulC6Srh3Z6SMAHp89C0nTATy+3/u2zlZQ2aSo5WYX+Daom23rRceFMdTfvdwvS1jLwApbQAUoyOb8cRjbrCtkl9ihxqy4d326uF8SxPr0MQDmJzqQJIqfR8BtVKiQxo70ZZBAZdLmqcMxDj6+/ROPlL3LgtJME5t35tyKjOEWukUP/plnGu9IZ3zwovgfuxqkGQYW5gOUSg8SBtluuTtSu/Y9/fsi6rLu7g3ZCpjsmn9EYBXYSnZA1gshHXnWgF9BsIpZqoM/AF3AXdHS9jnvYQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744291310; x=1744896110; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wMQZClxt/r11IMD+9AiWAlz3lBENpTb7OT4Ug6+9SZk=;
-        b=qSMQ3goOp7JzS4TECw9V0iq98Xy2uEKj9uSA5vdxcpdm9O3RuygoRpY6r61t8Y4v3O
-         iVDa4BJg7MvEvaM1SwuIOkk0qUNacCIYp7lXl+VRipAgts93+h7KLggkhwSjBPckb1X1
-         Qx5znPLGIFHMqWZOHQpdw3Z58LWdEX40LwZ9rqiHVHaxutcOedh/2N0EwnM98ktuCHD3
-         CUBvPqx8PsQj2KluAWyFTWLsassXw/oBNYK1xorRzd9Umw0PIE6Mg25KUV0cElc1RAGq
-         bYqQ74DX+AAPNYje0j/3qTLRdcUtUpvcGgh8lM8VQ5d6QPKTfNau2R8qBy2GaY/R7Rtm
-         Jpfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744291310; x=1744896110;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wMQZClxt/r11IMD+9AiWAlz3lBENpTb7OT4Ug6+9SZk=;
-        b=XI5FWcyscsVdvmGsntHk+Q/76wxRBPjROo0w5LCMy6xsfZweykwj3PO4L54RkfEitD
-         fcNdPDkW8mAIVAsUC5SJ49vI++Mx3JqzJP/+suAK5l3KPzMIVRfaVeK/tuikPTdNZNuU
-         l/8uAJ5/gm5vRa4BaRtFCgBQ2z2jl6+hZa5vsPvqWDLtv4ospetFkjFw2t4xe52knwBr
-         9ml4r2P4V3lVYRF+n6o6fQv+At+WAd+QS7BorucK1EYQHh1GP9TBa84BFMfpek5Ph2PQ
-         g/8z3bRmkEoRHavK45nebnYFKFYzPkuuL0uwGICRd5Ws+9SUhONDYCaynAHYAvAIqepN
-         LOtA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6jjeS4ow+ib9adb+5V9++YQYKZmU425B+/VXc5/PaY+gHAXxooM9+PBL7kLSdQDN2o8m2fiWBKAHPJaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRrpxL0Ce0oQzFBnPd6iwQiO7U0hPSr6KlS7soaA0oBx7JVJC/
-	5Ap0XXNPIFxPj7/oVgzpSf0sCAqAeMikaE64mLwLvNewmW4JSzdrO16LMvPk7N63wH8e/6KSMqW
-	3DImufJR050EyMtlJHEs4Xn6H8ADyoa2YlXeE/g==
-X-Gm-Gg: ASbGnctNTRnBaAQ1ckUR3Mk718tBPXMEMOWoNKf+OlJVugeuxZpX2xSdm/Kg1DD+SLO
-	UyKTLfOGdgxzO8/mwE898iUjov0S1EG3uve16j9cTA0G4WzgF6XvlYWaa1VR4qewhMtwerNcayw
-	3Y0NrsIOKJEu82gmrT+UpYD08=
-X-Google-Smtp-Source: AGHT+IEL3aq17l9YVyu03lvnUk5C6k7qYVWUuIutjM7+77MtfedWhhLez/73fsO+lOMiT2oK1ZOolvmazkYHCs2MYjA=
-X-Received: by 2002:a05:6a20:d48d:b0:1fe:90c5:7ceb with SMTP id
- adf61e73a8af0-201695d9c45mr5523489637.40.1744291310083; Thu, 10 Apr 2025
- 06:21:50 -0700 (PDT)
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4HAesXU10CaKm+f8Sbl1hA/DhDYaB5XlC2RR/lYMMhk=;
+ b=muP45aCa2jYtU+wKaNsIePimL1uWqQ9LpUeEdt0LoseBtExLbRqOkRmIF+h+nF2kXqamM22ntcTHYJICUfUNHq98l6ADI7pjFENzOkbIVdF1wO4cvLhw0manlroXnaB+aOTSqgqa1MYFdUEmLQNUUJU5B/CXCil3oKX/XpHeIfg=
+Received: from CH5P223CA0012.NAMP223.PROD.OUTLOOK.COM (2603:10b6:610:1f3::26)
+ by CH3PR19MB8212.namprd19.prod.outlook.com (2603:10b6:610:198::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
+ 2025 13:21:30 +0000
+Received: from CH1PEPF0000A34C.namprd04.prod.outlook.com
+ (2603:10b6:610:1f3:cafe::14) by CH5P223CA0012.outlook.office365.com
+ (2603:10b6:610:1f3::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.24 via Frontend Transport; Thu,
+ 10 Apr 2025 13:21:30 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
+ designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
+ client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ CH1PEPF0000A34C.mail.protection.outlook.com (10.167.244.6) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.13
+ via Frontend Transport; Thu, 10 Apr 2025 13:21:30 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 20109406540;
+	Thu, 10 Apr 2025 13:21:29 +0000 (UTC)
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.23])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 11DD3820259;
+	Thu, 10 Apr 2025 13:21:29 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: broonie@kernel.org
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com, kunit-dev@googlegroups.com,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH] firmware: cs_dsp: test_bin_error: Fix uninitialized data used as fw version
+Date: Thu, 10 Apr 2025 14:21:29 +0100
+Message-Id: <20250410132129.1312541-1-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409032917.7580-1-yiru.zhang@mediatek.com> <20250410095158.8966-1-yiru.zhang@mediatek.com>
-In-Reply-To: <20250410095158.8966-1-yiru.zhang@mediatek.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Thu, 10 Apr 2025 14:21:39 +0100
-X-Gm-Features: ATxdqUF3Uhi02-Atot1ZYsCo3BPZFPm0ByTzdzbrh7QkbsgdDvRRnbSTXsdXDf4
-Message-ID: <CAJ9a7Vjr+O7wueNc1kmFt-Up2qzFXcSabgoBeb5e+rW8Z3_3Qw@mail.gmail.com>
-Subject: Re: [PATCH] [Patch v3]Add ETE devarch condition in etm4_init_iomem_access
-To: yiru zhang <yiru.zhang@mediatek.com>
-Cc: alexander.shishkin@linux.intel.com, 
-	angelogioacchino.delregno@collabora.com, coresight@lists.linaro.org, 
-	james.clark@linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	matthias.bgg@gmail.com, suzuki.poulose@arm.com, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34C:EE_|CH3PR19MB8212:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 4c3eab07-4545-453d-67fe-08dd78329b3f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|61400799027|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vZkEJhMrlRElgzdczaMmvRa+m5Pc2smImmOj2NYyMmrJNgJh3ZeSBJ2EAdza?=
+ =?us-ascii?Q?NEJ3zSS3czIDLZ+RxoG6vzfu2aTGIdh2zT6zPvgRNl/MXZHrPE+cXvI0prG1?=
+ =?us-ascii?Q?zwTT2FStmLAmRPpu8AWsuwMll+Ygm6+BvlSdh1io1yHEx03KWD/o4ZcVvoqV?=
+ =?us-ascii?Q?CHDcxwJT2DUJmkxg86uvE86Sv/POJqdyw1nJ+5gHES0C4SsOB3l+gF/mzYrn?=
+ =?us-ascii?Q?6Oo/mNy2AfefRy/KaKK7TWQp2Ry9JdroqoNRGeFpb6ees6lFRJIMyAyWI6BX?=
+ =?us-ascii?Q?2czOsJxbA8trxy08sINAzlY6SJTZHHTm7r2Ps2n3OwsQbERsMJYYIbfUU9Pa?=
+ =?us-ascii?Q?9FSXOqGd371teJYS/A4RvXhDf29oramdRl7KSJoxflneUi9vaFS6YKFEUS5O?=
+ =?us-ascii?Q?VE1Ii1KlWc05/J3iN3cgtv5MorySn5GZ1dXFv7Bx0K9eHLQ8dF31Ehowri99?=
+ =?us-ascii?Q?edyH/x/ZIUfQSNe1/Tqi6dH0rJ1Hx20pVY8MUHQoVWS0/RpKo40maFHr+s20?=
+ =?us-ascii?Q?I/+BXUzW7NJuytRAc4R2C+ZZUAi5szL8E3F6ns5jqDuUG3x+L0rkJvTA7pEZ?=
+ =?us-ascii?Q?SWjbvvDJow6LuobLAGYNZYDilyGDs0VM9rm9TCY0blvNAnuPNxD+0NjSw1ny?=
+ =?us-ascii?Q?xxmxY0mlC/G7QIm5JIs5/lPUGXdNewdZZYFsUAM/HQkedzNqr2V5vziiOvLp?=
+ =?us-ascii?Q?PYkQ0tq+Lc8EcEwdd46J4e4oaRsO3qimORjetG7tNPG1ZLPie6z7WNht1NiQ?=
+ =?us-ascii?Q?jYiuZURyQfyJAaLRySMVDCM8neK421xNym6VfLI5Wj+gIhCD6UQDKUi4iznM?=
+ =?us-ascii?Q?3r+CFQwyT7UjbmvFPsMhp+5bie9wzbXQBtf514QcacuMSSp6aVMBqiB2DoA+?=
+ =?us-ascii?Q?Q2p7EUkKkEmnT722a2l2Yrm+y4OxiaVRTsXVozreTNkBkD0Uq9CB7DGxsLu6?=
+ =?us-ascii?Q?TlU6MyLLvmI+L9FCs28t56IpfJqi5g94fR1zfBtpBRa2OLVu6QZAIat3TfpM?=
+ =?us-ascii?Q?Xv5dM4bqaPRm+6It5fBJ4UedPwSKzvAzwgscGmv8hOi0wE3/uE39sbpgc05x?=
+ =?us-ascii?Q?xGNJitv5wVCetp9Qxs4v7NE6JUz7vUFJhXXxHN9eYPPSRKzIBU6p0j9N5j08?=
+ =?us-ascii?Q?TQScUPDp2WSmy2mCdXpuSJRFp8FcUbdzdWx3XhlzKlLSOqLhtEJUeXqFWDRd?=
+ =?us-ascii?Q?pRpV0nT3IVINPQZe+2JtyUfY6jyAKBzKdYpEZKL968K7SGBu1jkJ/Kuq+6cg?=
+ =?us-ascii?Q?iCwThhzMupOr6zC5Mn/8rl6RkMlSeEeD6qXbo+dA3+b18G+03dbxcLAzxfwt?=
+ =?us-ascii?Q?BBlgT/75BXE7VQoWW13ZsVClLgkXnxm56oyRuJJMCJ5NQzLoPjNLcXctQxYl?=
+ =?us-ascii?Q?jBkOhLkzuYCTSS3J2ChCvyA3tuiQxpL/CgGrAOgCrT04pCeyaUGCNQM3WrsK?=
+ =?us-ascii?Q?yLgy+cVVPLDlctEYZkoWwi89Um1GkHIbQlYg+ArMa5rNzbdKAF899g=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(61400799027)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 13:21:30.2456
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c3eab07-4545-453d-67fe-08dd78329b3f
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A34C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR19MB8212
+X-Proofpoint-ORIG-GUID: HIEUtyBORDqGN_Tfx6fxHC5Z9gTa-KwT
+X-Proofpoint-GUID: HIEUtyBORDqGN_Tfx6fxHC5Z9gTa-KwT
+X-Authority-Analysis: v=2.4 cv=B6W50PtM c=1 sm=1 tr=0 ts=67f7c5e2 cx=c_pps a=F7QtyTBSWJEVkVFduP+sHw==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=XR8D0OoHHMoA:10 a=s63m1ICgrNkA:10
+ a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=6ixNexTgZF7qXEE2jtgA:9 a=BGLuxUZjE2igh1l4FkT-:22
+X-Proofpoint-Spam-Reason: safe
 
-Hi,
+Call cs_dsp_mock_xm_header_get_fw_version() to get the firmware version
+from the dummy XM header data in cs_dsp_bin_err_test_common_init().
 
-Please stop using the unusual title format of [PATCH}[Patch v3] - use
-the git command line options to ensure the format is e.g. [PATCH v3]
+Make the same change to cs_dsp_bin_test_common_init() and remove the
+cs_dsp_mock_xm_header_get_fw_version_from_regmap() function.
 
-What is the reason that your device cannot use the system instructions
-to access the ETE? Using a memory interface, if implemented, is only
-recommended for external debuggers, or on systems where the
-implementation of system register access is not working.
+The code in cs_dsp_test_bin.c was correctly calling
+cs_dsp_mock_xm_header_get_fw_version_from_regmap() to fetch the fw version
+from a dummy header it wrote to XM registers. However in
+cs_dsp_test_bin_error.c the test doesn't stuff a dummy header into XM, it
+populates it the normal way using a wmfw file. It should have called
+cs_dsp_mock_xm_header_get_fw_version() to get the data from its blob
+buffer, but was calling cs_dsp_mock_xm_header_get_fw_version_from_regmap().
+As nothing had been written to the registers this returned the value of
+uninitialized data.
 
-On Thu, 10 Apr 2025 at 10:52, yiru zhang <yiru.zhang@mediatek.com> wrote:
->
-> Due to ETE supported, so add ETE devarch condition in etm4_init_iomem_access.
->
-> Signed-off-by: yiru zhang <yiru.zhang@mediatek.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202504101759.7Ls0Uy4o-lkp@intel.com/
->
-> v1->v2: use switch case way
-> v2->v3: clean build warning
-> ---
->  drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index 2b8f10463840..4002a2823fd0 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -1135,11 +1135,15 @@ static bool etm4_init_iomem_access(struct etmv4_drvdata *drvdata,
->          * with MMIO. But we cannot touch the OSLK until we are
->          * sure this is an ETM. So rely only on the TRCDEVARCH.
->          */
-> -       if ((devarch & ETM_DEVARCH_ID_MASK) != ETM_DEVARCH_ETMv4x_ARCH) {
-> -               pr_warn_once("TRCDEVARCH doesn't match ETMv4 architecture\n");
-> +       switch (devarch & ETM_DEVARCH_ID_MASK) {
-> +       case ETM_DEVARCH_ETMv4x_ARCH:
-> +       case ETM_DEVARCH_ETE_ARCH:
-> +               break;
-> +       default:
-> +               pr_warn_once("Unknown ETM architecture: 0x%lx\n",
-> +                            devarch & ETM_DEVARCH_ID_MASK);
->                 return false;
->         }
-> -
->         drvdata->arch = etm_devarch_to_arch(devarch);
->         *csa = CSDEV_ACCESS_IOMEM(drvdata->base);
->         return true;
-> --
-> 2.46.0
->
+The only other use of cs_dsp_mock_xm_header_get_fw_version_from_regmap()
+was cs_dsp_test_bin.c, but it doesn't need to use it. It already has a
+blob buffer containing the dummy XM header so it can use
+cs_dsp_mock_xm_header_get_fw_version() to read from that.
 
-Otherwise -
+Fixes: cd8c058499b6 ("firmware: cs_dsp: Add KUnit testing of bin error cases")
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+---
+ .../cirrus/test/cs_dsp_mock_mem_maps.c        | 30 -------------------
+ .../firmware/cirrus/test/cs_dsp_test_bin.c    |  2 +-
+ .../cirrus/test/cs_dsp_test_bin_error.c       |  2 +-
+ .../linux/firmware/cirrus/cs_dsp_test_utils.h |  1 -
+ 4 files changed, 2 insertions(+), 33 deletions(-)
 
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+diff --git a/drivers/firmware/cirrus/test/cs_dsp_mock_mem_maps.c b/drivers/firmware/cirrus/test/cs_dsp_mock_mem_maps.c
+index 161272e47bda..73412bcef50c 100644
+--- a/drivers/firmware/cirrus/test/cs_dsp_mock_mem_maps.c
++++ b/drivers/firmware/cirrus/test/cs_dsp_mock_mem_maps.c
+@@ -461,36 +461,6 @@ unsigned int cs_dsp_mock_xm_header_get_alg_base_in_words(struct cs_dsp_test *pri
+ }
+ EXPORT_SYMBOL_NS_GPL(cs_dsp_mock_xm_header_get_alg_base_in_words, "FW_CS_DSP_KUNIT_TEST_UTILS");
+ 
+-/**
+- * cs_dsp_mock_xm_header_get_fw_version_from_regmap() - Firmware version.
+- *
+- * @priv:	Pointer to struct cs_dsp_test.
+- *
+- * Return: Firmware version word value.
+- */
+-unsigned int cs_dsp_mock_xm_header_get_fw_version_from_regmap(struct cs_dsp_test *priv)
+-{
+-	unsigned int xm = cs_dsp_mock_base_addr_for_mem(priv, WMFW_ADSP2_XM);
+-	union {
+-		struct wmfw_id_hdr adsp2;
+-		struct wmfw_v3_id_hdr halo;
+-	} hdr;
+-
+-	switch (priv->dsp->type) {
+-	case WMFW_ADSP2:
+-		regmap_raw_read(priv->dsp->regmap, xm, &hdr.adsp2, sizeof(hdr.adsp2));
+-		return be32_to_cpu(hdr.adsp2.ver);
+-	case WMFW_HALO:
+-		regmap_raw_read(priv->dsp->regmap, xm, &hdr.halo, sizeof(hdr.halo));
+-		return be32_to_cpu(hdr.halo.ver);
+-	default:
+-		KUNIT_FAIL(priv->test, NULL);
+-		return 0;
+-	}
+-}
+-EXPORT_SYMBOL_NS_GPL(cs_dsp_mock_xm_header_get_fw_version_from_regmap,
+-		     "FW_CS_DSP_KUNIT_TEST_UTILS");
+-
+ /**
+  * cs_dsp_mock_xm_header_get_fw_version() - Firmware version.
+  *
+diff --git a/drivers/firmware/cirrus/test/cs_dsp_test_bin.c b/drivers/firmware/cirrus/test/cs_dsp_test_bin.c
+index 1e161bbc5b4a..163b7faecff4 100644
+--- a/drivers/firmware/cirrus/test/cs_dsp_test_bin.c
++++ b/drivers/firmware/cirrus/test/cs_dsp_test_bin.c
+@@ -2198,7 +2198,7 @@ static int cs_dsp_bin_test_common_init(struct kunit *test, struct cs_dsp *dsp)
+ 
+ 	priv->local->bin_builder =
+ 		cs_dsp_mock_bin_init(priv, 1,
+-				     cs_dsp_mock_xm_header_get_fw_version_from_regmap(priv));
++				     cs_dsp_mock_xm_header_get_fw_version(xm_hdr));
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv->local->bin_builder);
+ 
+ 	/* We must provide a dummy wmfw to load */
+diff --git a/drivers/firmware/cirrus/test/cs_dsp_test_bin_error.c b/drivers/firmware/cirrus/test/cs_dsp_test_bin_error.c
+index 8748874f0552..a7ec956d2724 100644
+--- a/drivers/firmware/cirrus/test/cs_dsp_test_bin_error.c
++++ b/drivers/firmware/cirrus/test/cs_dsp_test_bin_error.c
+@@ -451,7 +451,7 @@ static int cs_dsp_bin_err_test_common_init(struct kunit *test, struct cs_dsp *ds
+ 
+ 	local->bin_builder =
+ 		cs_dsp_mock_bin_init(priv, 1,
+-				     cs_dsp_mock_xm_header_get_fw_version_from_regmap(priv));
++				     cs_dsp_mock_xm_header_get_fw_version(local->xm_header));
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, local->bin_builder);
+ 
+ 	/* Init cs_dsp */
+diff --git a/include/linux/firmware/cirrus/cs_dsp_test_utils.h b/include/linux/firmware/cirrus/cs_dsp_test_utils.h
+index 4f87a908ab4f..ecd821ed8064 100644
+--- a/include/linux/firmware/cirrus/cs_dsp_test_utils.h
++++ b/include/linux/firmware/cirrus/cs_dsp_test_utils.h
+@@ -104,7 +104,6 @@ unsigned int cs_dsp_mock_num_dsp_words_to_num_packed_regs(unsigned int num_dsp_w
+ unsigned int cs_dsp_mock_xm_header_get_alg_base_in_words(struct cs_dsp_test *priv,
+ 							 unsigned int alg_id,
+ 							 int mem_type);
+-unsigned int cs_dsp_mock_xm_header_get_fw_version_from_regmap(struct cs_dsp_test *priv);
+ unsigned int cs_dsp_mock_xm_header_get_fw_version(struct cs_dsp_mock_xm_header *header);
+ void cs_dsp_mock_xm_header_drop_from_regmap_cache(struct cs_dsp_test *priv);
+ int cs_dsp_mock_xm_header_write_to_regmap(struct cs_dsp_mock_xm_header *header);
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.39.5
+
