@@ -1,208 +1,151 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAC31EF371
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC68F20B7F1;
+	Thu, 10 Apr 2025 08:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273011; cv=none; b=LLsu7gwMoRgsX8M2sowwUT0rqjN25xrGKa84GI9oMzSnvdEb+aKKxoktDp/grbxhadyVKHpKJTAb1l3OjhQoHOsG1PxCEfiuzamLKokMIHmC+ZMuvPsBiRVTqa6x+OO1eU+fYNR3NleLaZuiP1Zk+RVGnNyeG4ii1loTeY6U2vY=
+	t=1744273018; cv=none; b=gsLZIWzxFuaZa5V+myDMqBYTla8XPbijFtWJZ0KSw5ykx377kKMf4WASHY4fbHqo7DtwcoYWIyqPlKCuToG9hHWu+TXkAxvMeRU1yWkMtZne+/v3spiezsDE6zxINrwo0vFe9UtC0xW8bwkPcF3cZlugEZTDi98Mvd3UJfbtrJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273011; c=relaxed/simple;
-	bh=onvVqvfxWWw9bTMyAQ2MWRqkSh8vFba5v4X2ve4LnDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZRqMjFDrURXPW3ptckd2PqLd2KRQQ7lPUtkStP6J8b3NtYMHB9z8h/E/HgbYJuY50FSbDAv7/YviLLNLv1cRw0jsu4Pj+yeM0udxdVYeEDmB00rUAWOXrSVN878dXIdJYxW0p9Z+LrTbBl/JuEuM3/mpqI8+YSviFBj0S45raa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UsXoFCUJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AiYQtma9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UsXoFCUJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AiYQtma9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744273018; c=relaxed/simple;
+	bh=RZTUHPBAWgXx1IJUnSAS0VY9DQxUo9jpKkYHvxOb8NM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pooNQ3ZY1tVMWVa3xMHxUzD1MmRxXKadU5ZUPTmnJ9II2vIYiF1FCTZ6wVjrlgDWsrvK8vPbErtHgR2HSdRu4RR++mEoef2XSMchX0PU1ysvrlLB/BVaS5Nsu5xu5ADRl7kmW7RkapQly4HaZNuH+deVKLVoSgT7lFAXc9db7LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Wjg+PVCt; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UsXoFCUJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AiYQtma9";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UsXoFCUJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AiYQtma9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0DE0B211B8;
-	Thu, 10 Apr 2025 08:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744273007; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BeO8trQ+ylG1pNIV4/iVJDVcKDxWDQzcb2h2bPQiHN0=;
-	b=UsXoFCUJdEBgJe9iqNIpBEPaj8Wfl1EZV6rZowH6EuovmucVhEijKv17hjsgQgBr0fzNdH
-	XfRt7qLL+6YJoiJdqn4FoktzquN4TDbmw8O/rgy/RIvzfvFgF/O/8sFVxFV8on+KDy3sMS
-	i8x1uYQVfMyVAXrKKz+yt3q/FfA0hww=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744273007;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BeO8trQ+ylG1pNIV4/iVJDVcKDxWDQzcb2h2bPQiHN0=;
-	b=AiYQtma9bQGr4MpMUQco6qvKp3RDiDCKYI/n0Om0gt5uAWEZk81x/I7xWpE3cbP+6oS+ci
-	f8+GKUTUMJfMILDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UsXoFCUJ;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=AiYQtma9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744273007; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BeO8trQ+ylG1pNIV4/iVJDVcKDxWDQzcb2h2bPQiHN0=;
-	b=UsXoFCUJdEBgJe9iqNIpBEPaj8Wfl1EZV6rZowH6EuovmucVhEijKv17hjsgQgBr0fzNdH
-	XfRt7qLL+6YJoiJdqn4FoktzquN4TDbmw8O/rgy/RIvzfvFgF/O/8sFVxFV8on+KDy3sMS
-	i8x1uYQVfMyVAXrKKz+yt3q/FfA0hww=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744273007;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BeO8trQ+ylG1pNIV4/iVJDVcKDxWDQzcb2h2bPQiHN0=;
-	b=AiYQtma9bQGr4MpMUQco6qvKp3RDiDCKYI/n0Om0gt5uAWEZk81x/I7xWpE3cbP+6oS+ci
-	f8+GKUTUMJfMILDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ECC68132D8;
-	Thu, 10 Apr 2025 08:16:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id N1NmOW5+92elBgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 10 Apr 2025 08:16:46 +0000
-Message-ID: <e8404cc5-b731-43ae-ab3d-d4e4e862dd9f@suse.cz>
-Date: Thu, 10 Apr 2025 10:16:38 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wjg+PVCt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=uB+Z6x+VWnGWGieZgYK9ruFVlK20QbBkiLXO+vDsz2w=; b=Wjg+PVCtrtNOWu7AUd4A4kKRMN
+	X7AvVDzvlWDxtYHCg+MYT4kRUd6r2iTn2US6oojoVMcGh033UfN5FIGcAqYYUqP+NBDE3tDrnS7TF
+	GV7+w43k6VmvfmY1+6cyqopPdH79oktWgRSTQJ4DlWPHTvguEb/+HIMC1S+uKwsyYOXfar3VoqMvw
+	/XMzNCdlye6wHEotel1CYkCZqH7xq/UZcXylgBuU52T2nKLvLUZmnlUb5gqOnHRsatb5ENs37fUYE
+	Mg2RdH/RUY2KrIjBO0Epbebx1Nw6eTo1iSv1bvWXCpfrONOKn5leUL4JR+WJaWfpiQ+YtZqzJznDa
+	XzdpvzRg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2n5V-00000008mN2-1kUp;
+	Thu, 10 Apr 2025 08:16:41 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 00A143003C4; Thu, 10 Apr 2025 10:16:40 +0200 (CEST)
+Date: Thu, 10 Apr 2025 10:16:40 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, Alexander Potapenko <glider@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	kvm-riscv@lists.infradead.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Jing Zhang <jingzhangos@google.com>,
+	Waiman Long <longman@redhat.com>, x86@kernel.org,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Anup Patel <anup@brainfault.org>,
+	Albert Ou <aou@eecs.berkeley.edu>, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+	Borislav Petkov <bp@alien8.de>, Alexandre Ghiti <alex@ghiti.fr>,
+	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Sebastian Ott <sebott@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Joey Gouly <joey.gouly@arm.com>, Ingo Molnar <mingo@redhat.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sean Christopherson <seanjc@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/4] KVM: x86: move
+ sev_lock/unlock_vcpus_for_migration to kvm_main.c
+Message-ID: <20250410081640.GX9833@noisy.programming.kicks-ass.net>
+References: <20250409014136.2816971-1-mlevitsk@redhat.com>
+ <20250409014136.2816971-3-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm: page_alloc: speed up fallbacks in rmqueue_bulk()
-Content-Language: en-US
-To: Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Mel Gorman <mgorman@techsingularity.net>, Carlos Song <carlos.song@nxp.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kernel test robot <oliver.sang@intel.com>, stable@vger.kernel.org
-References: <20250407180154.63348-1-hannes@cmpxchg.org>
- <D91FIQHR9GEK.3VMV7CAKW1BFO@google.com> <20250408185009.GF816@cmpxchg.org>
- <D92AC0P9594X.3BML64MUKTF8Z@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <D92AC0P9594X.3BML64MUKTF8Z@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 0DE0B211B8
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409014136.2816971-3-mlevitsk@redhat.com>
 
-On 4/9/25 19:30, Brendan Jackman wrote:
-> 
-> From 8ff20dbb52770d082e182482d2b47e521de028d1 Mon Sep 17 00:00:00 2001                                                                                                                                                                                                                    
-> From: Brendan Jackman <jackmanb@google.com>
-> Date: Wed, 9 Apr 2025 17:22:14 +000
-> Subject: [PATCH] page_alloc: speed up fallbacks in rmqueue_bulk() - comment updates
-> 
-> Tidy up some terminology and redistribute commentary.                                                                                                                                                                                                                                                                                            
-> Signed-off-by: Brendan Jackman <jackmanb@google.com>
-
-LGTM (assuming folding)
-
-> ---
->  mm/page_alloc.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index dfb2b3f508af4..220bd0bcc38c3 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -2183,21 +2183,13 @@ try_to_claim_block(struct zone *zone, struct page *page,
+On Tue, Apr 08, 2025 at 09:41:34PM -0400, Maxim Levitsky wrote:
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 69782df3617f..71c0d8c35b4b 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1368,6 +1368,77 @@ static int kvm_vm_release(struct inode *inode, struct file *filp)
+>  	return 0;
 >  }
->   
->  /*
-> - * Try finding a free buddy page on the fallback list.
-> - *
-> - * This will attempt to claim a whole pageblock for the requested type
-> - * to ensure grouping of such requests in the future.
-> - *
-> - * If a whole block cannot be claimed, steal an individual page, regressing to
-> - * __rmqueue_smallest() logic to at least break up as little contiguity as
-> - * possible.
-> + * Try to allocate from some fallback migratetype by claiming the entire block,
-> + * i.e. converting it to the allocation's start migratetype.
->   *
->   * The use of signed ints for order and current_order is a deliberate 
->   * deviation from the rest of this file, to make the for loop
->   * condition simpler.
->   */
-> -
-> -/* Try to claim a whole foreign block, take a page, expand the remainder */
->  static __always_inline struct page *
->  __rmqueue_claim(struct zone *zone, int order, int start_migratetype,
->                                                 unsigned int alloc_flags)
-> @@ -2247,7 +2239,10 @@ __rmqueue_claim(struct zone *zone, int order, int start_migratetype,
->         return NULL;
->  }
->   
-> -/* Try to steal a single page from a foreign block */
+>  
+> +
 > +/*
-> + * Try to steal a single page from some fallback migratetype. Leave the rest of
-> + * the block as its current migratetype, potentially causing fragmentation.
+> + * Lock all VM vCPUs.
+> + * Can be used nested (to lock vCPUS of two VMs for example)
 > + */
->  static __always_inline struct page *
->  __rmqueue_steal(struct zone *zone, int order, int start_migratetype)
->  {
-> @@ -2307,7 +2302,8 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
->         }
->   
->         /*
-> -        * Try the different freelists, native then foreign.
-> +        * First try the freelists of the requested migratetype, then try
-> +        * fallbacks modes with increasing levels of fragmentation risk.
->          *
->          * The fallback logic is expensive and rmqueue_bulk() calls in
->          * a loop with the zone->lock held, meaning the freelists are
-> @@ -2332,7 +2328,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
->         case RMQUEUE_CLAIM:
->                 page = __rmqueue_claim(zone, order, migratetype, alloc_flags);
->                 if (page) {
-> -                       /* Replenished native freelist, back to normal mode */
-> +                       /* Replenished preferred freelist, back to normal mode. */
->                         *mode = RMQUEUE_NORMAL;
->                         return page;
->                 }
-> 
-> base-commit: aa42382db4e2a4ed1f4ba97ffc50e2ce45accb0c
+> +int kvm_lock_all_vcpus_nested(struct kvm *kvm, bool trylock, unsigned int role)
+> +{
+> +	struct kvm_vcpu *vcpu;
+> +	unsigned long i, j;
+> +
+> +	lockdep_assert_held(&kvm->lock);
+> +
+> +	kvm_for_each_vcpu(i, vcpu, kvm) {
+> +
+> +		if (trylock && !mutex_trylock_nested(&vcpu->mutex, role))
+> +			goto out_unlock;
+> +		else if (!trylock && mutex_lock_killable_nested(&vcpu->mutex, role))
+> +			goto out_unlock;
+> +
+> +#ifdef CONFIG_PROVE_LOCKING
+> +		if (!i)
+> +			/*
+> +			 * Reset the role to one that avoids colliding with
+> +			 * the role used for the first vcpu mutex.
+> +			 */
+> +			role = MAX_LOCK_DEPTH - 1;
+> +		else
+> +			mutex_release(&vcpu->mutex.dep_map, _THIS_IP_);
+> +#endif
+> +	}
 
+This code is all sorts of terrible.
+
+Per the lockdep_assert_held() above, you serialize all these locks by
+holding that lock, this means you can be using the _nest_lock()
+annotation.
+
+Also, the original code didn't have this trylock nonsense, and the
+Changelog doesn't mention this -- in fact the Changelog claims no
+change, which is patently false.
+
+Anyway, please write like:
+
+	kvm_for_each_vcpu(i, vcpu, kvm) {
+		if (mutex_lock_killable_nest_lock(&vcpu->mutex, &kvm->lock))
+			goto unlock;
+	}
+
+	return 0;
+
+unlock:
+
+	kvm_for_each_vcpu(j, vcpu, kvm) {
+		if (j == i)
+			break;
+
+		mutex_unlock(&vcpu->mutex);
+	}
+	return -EINTR;
+
+And yes, you'll have to add mutex_lock_killable_nest_lock(), but that
+should be trivial.
