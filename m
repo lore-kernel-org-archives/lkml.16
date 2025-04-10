@@ -1,76 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763E628D84D
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351B928EA5C;
+	Thu, 10 Apr 2025 14:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744296232; cv=none; b=BAJL8aqgiY7h+X9NgcKHQhqp60FYp7s/O2di0bdVsaeTN7uWlD0AVOsj+pynu9NacY4E21K/aIrHGKtheBRNY0w4CPMxkBjFVk397HDGSwdHw57OWxtug2kqduMe/vWr5aRP4+NxVD7q45dabnojZT9IEXmyjZ7jIEvfhPd+y4c=
+	t=1744296247; cv=none; b=S9VrZ/qSkBOHpe1/Ihvq2l+/czvEMz0d0/Q+cdNAtTW1T4EUYfTn2X1BR6pe7hiUJAzWzd1WXXmDQ7LMsw+N4fb1HkoXHdpoJzG53+SU6Y1tEgestFeQG+WdREImS929L54sL1PEEE+h3r0ZIXPPlG0TIlb/BzVpXtIKvWatPck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744296232; c=relaxed/simple;
-	bh=xAuiSTkrkcSKLugsuwfGK1c08uM4VX03pD0uOicYexM=;
+	s=arc-20240116; t=1744296247; c=relaxed/simple;
+	bh=7NA7IGx3px2lpOhipDVT0MQpDVEshcCBzuvv5Sl1hlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5Kb7fuhqXPgBeDpj7pQ6i6kFhBB2w0i8tadHcJkUIYnj4yCkp5ncxzEhfLCGHsrcxzaEDYdfbR6A8pZqjL/bI9C+trV9LAdgojdIJT5OJ89lgRG6EvU6pfJYU7wbzS6WirYbJQDIENC4eui8YtZqN390IPwBurect/AhzsR2D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKYwo7gX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rt5UZ0yUgnx8bxAV2Qgu7p9UxLp4/0na4pQyq7yDjZIRjAnzH05hkGnTB0ELdmMOd0p68Keewq0+8wzFHRG8d50xWmT1Pi/6jpf2KN/r4+C9w15FE/tVC84GEB7Xta1mDC5eR9b5vTYvd9lDYpFZTtN44ITqW7tk0yioxsfXtWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=e4ZyCHPC; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKYwo7gX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83D5C4CEE8;
-	Thu, 10 Apr 2025 14:43:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744296232;
-	bh=xAuiSTkrkcSKLugsuwfGK1c08uM4VX03pD0uOicYexM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TKYwo7gXgoy2zEs/AJFN2YufvqNd9Lo0y8zN9OUuNmYu5xsOOhGRdE8HkhsqCsMnM
-	 bTOQjMEIc2PjhBP8abrHHF4HZpyppkSPlxSO/evkbAvcDQdQP9C34o0jthwUR5eW8T
-	 CIVdoIc5bsChCUJyIF7+8Kq8Uw2deYQyHgC2KtWUsWnSdDhEGrNTnujiMmhENea7hS
-	 f4lyLijI/WAvWUhBDvt+G7X531U5j2uzoTWxxIzfldjxiXz+G1U2PtmeyCJ2qVigD0
-	 aQiw/WmglLtqX/TPzEt5GHo+KsXSKSIyuy1z9aYKEmJQf8ZAa6iOyg3PWJM31Ruo9G
-	 vWnXQ+yxuYh3A==
-Date: Thu, 10 Apr 2025 16:43:49 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Waiman Long <llong@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
-Message-ID: <Z_fZJfgwzpz_ccny@localhost.localdomain>
-References: <20250410065446.57304-2-gmonaco@redhat.com>
- <87ecy0tob1.ffs@tglx>
- <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
- <Z_fBq2AQjzyg8m5w@localhost.localdomain>
- <77988036-7550-4ee2-a738-9f9bd4417001@redhat.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="e4ZyCHPC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=CmP5rnVgOFbK3FaMkFul90NMSZkbXqvY+iGtx4H41h0=; b=e4ZyCHPC5onj6x7WOAwSiwT+dY
+	pAtfK+20WpMJ9guxwIrL8g1DCGIjQt4ZvL+WNbTtWCXOAHMBoV8C1t3407tnXrZ3ze/XhvLR5mv71
+	47zDwd2QhsBc6tMuIj+XnHLQCOUn9eRScXZE/mNAPV3uCMelesUXMLAIZUsK4Zsh0LXY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u2t8E-008gyh-Dj; Thu, 10 Apr 2025 16:43:54 +0200
+Date: Thu, 10 Apr 2025 16:43:54 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Fiona Klute <fiona.klute@gmx.de>
+Cc: netdev@vger.kernel.org,
+	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+	Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-list@raspberrypi.com, stable@vger.kernel.org
+Subject: Re: [PATCH] net: usb: lan78xx: Enforce a minimum interrupt polling
+ period
+Message-ID: <0901d90d-3f20-4a10-b680-9c978e04ddda@lunn.ch>
+References: <20250310165932.1201702-1-fiona.klute@gmx.de>
+ <11f5be1d-9250-4aba-8f51-f231b09d3992@lunn.ch>
+ <4577e7d7-cadc-41c6-b93f-eca7d5a8eb46@gmx.de>
+ <42b5d49b-caf8-492d-8dba-b5292279478a@lunn.ch>
+ <dc8ef510-8f7d-4c96-9fd8-76b67a22aaf9@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <77988036-7550-4ee2-a738-9f9bd4417001@redhat.com>
+In-Reply-To: <dc8ef510-8f7d-4c96-9fd8-76b67a22aaf9@gmx.de>
 
-Le Thu, Apr 10, 2025 at 10:35:55AM -0400, Waiman Long a écrit :
-> On 4/10/25 9:03 AM, Frederic Weisbecker wrote:
-> > Le Thu, Apr 10, 2025 at 12:38:25PM +0200, Gabriele Monaco a écrit :
-> > > On Thu, 2025-04-10 at 10:26 +0200, Thomas Gleixner wrote:
-> > > > How can that happen? There is always at least _ONE_ housekeeping,
-> > > > non-isolated, CPU online, no?
-> > > > 
-> > > In my understanding it shouldn't, but I'm not sure there's anything
-> > > preventing the user from isolating everything via cpuset.
-> > > Anyway that's something no one in their mind should do, so I guess I'd
-> > > just opt for the cpumask_first (or actually cpumask_any, like before
-> > > the change).
-> > With "nohz_full=..." or "isolcpus=nohz,..." there is always at least one
-> > housekeeping CPU. But with isolcpus=[domain] or cpusets equivalents
-> > (v1 cpuset.sched_load_balance, v2 isolated partion) there is nothing that
-> > prevents all CPUs from being isolated.
+> > Ah, O.K. This tells me the PHY is a lan88xx. And there is a workaround
+> > involved for an issue in this PHY. Often PHYs are driven by polling
+> > for status changes once per second. Not all PHYs/boards support
+> > interrupts. It could be this workaround has only been tested with
+> > polling, not interrupts, and so is broken when interrupts are used.
+> > 
+> > As a quick hack test, in lan78xx_phy_init()
+> > 
+> > 	/* if phyirq is not set, use polling mode in phylib */
+> > 	if (dev->domain_data.phyirq > 0)
+> > 		phydev->irq = dev->domain_data.phyirq;
+> > 	else
+> > 		phydev->irq = PHY_POLL;
+> > 
+> > Hard code phydev->irq to PHY_POLL, so interrupts are not used.
+> > 
+> > See if you can reproduce the issue when interrupts are not used.
+> It took a while, but I'm fairly confident now that the workaround works,
+> I've had over 1000 boots on the hardware in question and didn't see the
+> bug. Someone going by upsampled reported the same in the issue on Github
+> [1], and pointed out that people working with some Nvidia board and a
+> LAN7800 USB device came to the same conclusion a while ago [2].
 > 
-> Actually v2 won't allow users to isolate all the CPUs. Users can probably do
-> that with v1's cpuset.sched_load_balance.
+> That leaves me with the question, what does that mean going forward?
+> Would it make sense to add a quirk to unconditionally force polling on
+> lan88xx, at least until/unless the interrupt handling can be fixed?
 
-Perhaps, and I think isolcpus= can too.
+I don't think you need a quirk:
 
--- 
-Frederic Weisbecker
-SUSE Labs
+static struct phy_driver microchip_phy_driver[] = {
+{
+        .phy_id         = 0x0007c132,
+        /* This mask (0xfffffff2) is to differentiate from
+         * LAN8742 (phy_id 0x0007c130 and 0x0007c131)
+         * and allows future phy_id revisions.
+         */
+        .phy_id_mask    = 0xfffffff2,
+        .name           = "Microchip LAN88xx",
+
+        /* PHY_GBIT_FEATURES */
+
+        .probe          = lan88xx_probe,
+        .remove         = lan88xx_remove,
+
+        .config_init    = lan88xx_config_init,
+        .config_aneg    = lan88xx_config_aneg,
+        .link_change_notify = lan88xx_link_change_notify,
+
+        .config_intr    = lan88xx_phy_config_intr,
+        .handle_interrupt = lan88xx_handle_interrupt,
+
+Just remove .config_intr and .handle_interrupt. If these are not
+provided, phylib will poll, even if an interrupt number has been
+passed. And since these functions are not shared with any other PHY,
+you can remove them.
+
+Please write a good commit message, we want it clear why they where
+removed, to try to prevent somebody putting them back again.
+
+And please aim this for net, not net-next:
+
+https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+
+The change will then get back ported to stable kernels.
+
+	Andrew
