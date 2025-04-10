@@ -1,306 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2052836A5
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9135285416
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744289291; cv=none; b=MJDUBoYiIho+vN0VoxIRYTS0gpgR7DMfyw9OrpKsBtLYW9pL1MAVOUCbfHqaOaXck8Tea00jQ6mpaadpM38wE7MSUAYGlJ5WkyPc3TT8eWJKOfYBRNR93sObYtW4/529OsYDKVubyHJM2UvwWV/g7D9zFIss8tRA38t/KndYyys=
+	t=1744289295; cv=none; b=uEg2iZfcx0eJUWwBxpnug0h6aVS94FSMrgjaKCyyM/SDgkvjCVtR7BEWVINRTDenW4/vD2q1mHaOHs/HnoY2/duQ3/biRzCYj/rnJcMVtqXDrf2tYVom2nILk4ZyGv2Io9V2cKSIEl7STW0aIOQwyO85AInEr4bamrgFAvkzKWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744289291; c=relaxed/simple;
-	bh=hXGlsTKRxB53Bpe1ZcVA4iPJH3T/cem5nHLfJXX/MHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hOkNDkPB3YJcWGLukM60ehid9LrZ35BQwyyLo+k+W3Cqs1g01c11GiLlJ+UpBZoSpEq9XmERUYNItEFn/e+cS72WV/pnKfbpHUV8LNxmnD0iPk/xkaGFsevphE8ChusO/S/LUGoNKrL1jLiCLyTexJ9plg5m9eQ8VnG/Pp+1i+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OHFWqZnQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OHFWqZnQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744289288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l98s6QqD7zHrlFU0KG1tosPS4LSX8VFnUl7P65DJDEA=;
-	b=OHFWqZnQsLP1lm+H6/CP6+ly+BFkmEOuTqyaFhMS8Cfg14PPWyqXAp2XbIaLQBT5hRUzCX
-	UOJ3vm1q4rtBHfqgkHPU+weCYHlx3hGBu4AuDdyVsvwbeAtKyh7bm9sjZdJAchzjwVHg3f
-	yCN++YKegPrKADIw02vlYW7bEBzHNds=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-192-onwp5ITzN2SYXu6NlHtpGA-1; Thu, 10 Apr 2025 08:48:07 -0400
-X-MC-Unique: onwp5ITzN2SYXu6NlHtpGA-1
-X-Mimecast-MFC-AGG-ID: onwp5ITzN2SYXu6NlHtpGA_1744289286
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3912539665cso1047227f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:48:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744289286; x=1744894086;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l98s6QqD7zHrlFU0KG1tosPS4LSX8VFnUl7P65DJDEA=;
-        b=DIWcw8JoWaxXkTnV7WYJulHuRq7s0va+syZKcGj0b/nn3K0nXjz2DvzIu2xZen+Vcz
-         12KlMrHwoq0pFG6oVput7ezOmU6GQHT5r9+yqLOLNxXw/x7Ca+itjQA9TUHp6TGUBm4/
-         cPJI1QY1N/mYsKs6Q+sEdS1uW93xH/L69kkbBxnampgTSKujtG0FU1HCWp8xahyvRCq1
-         KT22Cv/im4BIVlLUhn5/SkDKcbWGAlAFMZzdvXnscuax2Rq/kQywW729fmJp1KqAmAXF
-         0qwo1YA1kOcMJwJCIUkePskbmMeuYcG+Ih2nzS4RjJx0Vd+g6kZDjdy2sGkZHQqNJ317
-         Kv6g==
-X-Gm-Message-State: AOJu0YzT0W6GVwjpIwT4qKb7mEMTEDSFiVDxELhikAoSH/sY6zAtrqOO
-	2aNvpatVgen4U9XKwTlVk0fD13s7/GMHu1w4F8hvssyWTNTT5X2d/ZV1VA9+2hHCKjI1kxjS+4d
-	Fu6agDaLpC/w43jkbehRenW/qEcr/J+mEIOtkoLr5c1E1WIU0FBjdZLtfH4/Q6g==
-X-Gm-Gg: ASbGnctSqW4qBiwY2RmKGXiIVIJ3ukPZr4TG2RP1g+JSzNNuRN0+Im5c3N5xVbhqSKN
-	+mP8VVSsfs5c2obkJeKlxfmR7ahC8nghUyZ4qzZjRM6R0Ceu7LEFHyJix406sx14E04DzYcL+3U
-	zeDkihWDoxMDEe68l+Jfy9Zx1da+OA8+y11tcDmjB60dpC1it61BquXpZ9Mb2SCXWDDptvDzM9S
-	KyRQAcx88V55U9xc/OR9wkdv6I4BS3odaBaQUYNTj4I9fQAbq/ZwSB3tcyRyDBhCDa27yEb1X1W
-	ZtjcnA==
-X-Received: by 2002:a05:6000:220c:b0:39b:fa24:9523 with SMTP id ffacd0b85a97d-39d8f2760e1mr2436904f8f.7.1744289285564;
-        Thu, 10 Apr 2025 05:48:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFEUpTQzHvExnZxUh2LQzCXi5GkbKhjp13lXaxzyhjG+8V85oTAhOhbzKf81R2vBts5x29AEA==
-X-Received: by 2002:a05:6000:220c:b0:39b:fa24:9523 with SMTP id ffacd0b85a97d-39d8f2760e1mr2436880f8f.7.1744289285166;
-        Thu, 10 Apr 2025 05:48:05 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0b09sm4838263f8f.63.2025.04.10.05.48.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 05:48:04 -0700 (PDT)
-Date: Thu, 10 Apr 2025 08:48:01 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Simona Vetter <simona@ffwll.ch>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
-	Eric Auger <eauger@redhat.com>
-Subject: Re: [PATCH RFC] virtgpu: don't reset on shutdown
-Message-ID: <20250410084651-mutt-send-email-mst@kernel.org>
-References: <0d24e539766c9220b2380839472d1dc8739b5322.1744268995.git.mst@redhat.com>
- <07b30329-b4f0-4655-87fb-3ac52f9c64ff@redhat.com>
+	s=arc-20240116; t=1744289295; c=relaxed/simple;
+	bh=XWRyqZQPWdogCOVY7DJKLUH14Wag6FL0hExrw8wiAhg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LaFqUxB5UzE1cY43AnK2ITD+PU8TIyXwJIIpc+CKtzKCQ+bPCIraKxQM8guAO647k43YjSrxdQN3flnJ5nsDG1NjDsgOQLHTfEPJ4LpYqmY4b7Xuyf4+d/D6KymGgBGZ4n/YBx/26NAyRPyTLxw8XCJFN19p30p/rC9cd56vdtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u2rKC-00081a-9j; Thu, 10 Apr 2025 14:48:08 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u2rKB-004Guz-1D;
+	Thu, 10 Apr 2025 14:48:07 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u2rKB-00093a-0z;
+	Thu, 10 Apr 2025 14:48:07 +0200
+Message-ID: <2bb410e34babc4c66895e8e74cf014f89127914d.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] spi: stm32-ospi: Make usage of
+ reset_control_acquire/release() API
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Patrice Chotard <patrice.chotard@foss.st.com>, Mark Brown
+ <broonie@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+Date: Thu, 10 Apr 2025 14:48:07 +0200
+In-Reply-To: <20250410-b4-upstream_ospi_reset_update-v1-2-74126a8ceb9c@foss.st.com>
+References: 
+	<20250410-b4-upstream_ospi_reset_update-v1-0-74126a8ceb9c@foss.st.com>
+	 <20250410-b4-upstream_ospi_reset_update-v1-2-74126a8ceb9c@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07b30329-b4f0-4655-87fb-3ac52f9c64ff@redhat.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Apr 10, 2025 at 02:33:26PM +0200, Jocelyn Falempe wrote:
-> On 10/04/2025 09:16, Michael S. Tsirkin wrote:
-> > It looks like GPUs are used by panic after shutdown is invoked.
-> > Thus, breaking virtio gpu in the shutdown callback is not a good idea -
-> > guest hangs attempting to flush out the panics, with this warnings:
-> 
-> I don't think drm_panic is involved. In your backtrace, the warning
-> comes from virtio_gpu_queue_ctrl_sgs(), which is called by fbcon, using drm
-> fbdev emulation to draw the console.
-> 
-> In case of drm_panic, it is the panic variant,
-> virtio_gpu_panic_queue_ctrl_sgs() which is called.
-> 
-> Also the line number is for the centos-stream-9 kernel, which don't have the
-> "panic" variant of this function yet.
-> 
-> > 
-> > [   20.504464] WARNING: CPU: 0 PID: 568 at drivers/gpu/drm/virtio/virtgpu_vq.c:358 virtio_gpu_queue_ctrl_sgs+0x236/0x290 [virtio_gpu]
-> > [   20.505685] Modules linked in: nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 rfkill ip_set nf_tables nfnetlink vfat fat intel_rapl_msr intel_rapl_common intel_uncore_frequency_common nfit libnvdimm kvm_intel kvm rapl iTCO_wdt iTCO_vendor_support virtio_gpu virtio_dma_buf pcspkr drm_shmem_helper i2c_i801 drm_kms_helper lpc_ich i2c_smbus virtio_balloon joydev drm fuse xfs libcrc32c ahci libahci crct10dif_pclmul crc32_pclmul crc32c_intel libata virtio_net ghash_clmulni_intel net_failover virtio_blk failover serio_raw dm_mirror dm_region_hash dm_log dm_mod
-> > [   20.511847] CPU: 0 PID: 568 Comm: kworker/0:3 Kdump: loaded Tainted: G        W         -------  ---  5.14.0-578.6675_1757216455.el9.x86_64 #1
-> > [   20.513157] Hardware name: Red Hat KVM/RHEL, BIOS edk2-20241117-3.el9 11/17/2024
-> > [   20.513918] Workqueue: events drm_fb_helper_damage_work [drm_kms_helper]
-> > [   20.514626] RIP: 0010:virtio_gpu_queue_ctrl_sgs+0x236/0x290 [virtio_gpu]
-> > [   20.515332] Code: 00 00 48 85 c0 74 0c 48 8b 78 08 48 89 ee e8 51 50 00 00 65 ff 0d 42 e3 74 3f 0f 85 69 ff ff ff 0f 1f 44 00 00 e9 5f ff ff ff <0f> 0b e9 3f ff ff ff 48 83 3c 24 00 74 0e 49 8b 7f 40 48 85 ff 74
-> > [   20.517272] RSP: 0018:ff34f0a8c0787ad8 EFLAGS: 00010282
-> > [   20.517820] RAX: 00000000fffffffb RBX: 0000000000000000 RCX: 0000000000000820
-> > [   20.518565] RDX: 0000000000000000 RSI: ff34f0a8c0787be0 RDI: ff218bef03a26300
-> > [   20.519308] RBP: ff218bef03a26300 R08: 0000000000000001 R09: ff218bef07224360
-> > [   20.520059] R10: 0000000000008dc0 R11: 0000000000000002 R12: ff218bef02630028
-> > [   20.520806] R13: ff218bef0263fb48 R14: ff218bef00cb8000 R15: ff218bef07224360
-> > [   20.521555] FS:  0000000000000000(0000) GS:ff218bef7ba00000(0000) knlGS:0000000000000000
-> > [   20.522397] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [   20.522996] CR2: 000055ac4f7871c0 CR3: 000000010b9f2002 CR4: 0000000000771ef0
-> > [   20.523740] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > [   20.524477] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-> > [   20.525223] PKRU: 55555554
-> > [   20.525515] Call Trace:
-> > [   20.525777]  <TASK>
-> > [   20.526003]  ? show_trace_log_lvl+0x1c4/0x2df
-> > [   20.526464]  ? show_trace_log_lvl+0x1c4/0x2df
-> > [   20.526925]  ? virtio_gpu_queue_fenced_ctrl_buffer+0x82/0x2c0 [virtio_gpu]
-> > [   20.527643]  ? virtio_gpu_queue_ctrl_sgs+0x236/0x290 [virtio_gpu]
-> > [   20.528282]  ? __warn+0x7e/0xd0
-> > [   20.528621]  ? virtio_gpu_queue_ctrl_sgs+0x236/0x290 [virtio_gpu]
-> > [   20.529256]  ? report_bug+0x100/0x140
-> > [   20.529643]  ? handle_bug+0x3c/0x70
-> > [   20.530010]  ? exc_invalid_op+0x14/0x70
-> > [   20.530421]  ? asm_exc_invalid_op+0x16/0x20
-> > [   20.530862]  ? virtio_gpu_queue_ctrl_sgs+0x236/0x290 [virtio_gpu]
-> > [   20.531506]  ? virtio_gpu_queue_ctrl_sgs+0x174/0x290 [virtio_gpu]
-> > [   20.532148]  virtio_gpu_queue_fenced_ctrl_buffer+0x82/0x2c0 [virtio_gpu]
-> > [   20.532843]  virtio_gpu_primary_plane_update+0x3e2/0x460 [virtio_gpu]
-> > [   20.533520]  drm_atomic_helper_commit_planes+0x108/0x320 [drm_kms_helper]
-> > [   20.534233]  drm_atomic_helper_commit_tail+0x45/0x80 [drm_kms_helper]
-> > [   20.534914]  commit_tail+0xd2/0x130 [drm_kms_helper]
-> > [   20.535446]  drm_atomic_helper_commit+0x11b/0x140 [drm_kms_helper]
-> > [   20.536097]  drm_atomic_commit+0xa4/0xe0 [drm]
-> > [   20.536588]  ? __pfx___drm_printfn_info+0x10/0x10 [drm]
-> > [   20.537162]  drm_atomic_helper_dirtyfb+0x192/0x270 [drm_kms_helper]
-> > [   20.537823]  drm_fbdev_shmem_helper_fb_dirty+0x43/0xa0 [drm_shmem_helper]
-> > [   20.538536]  drm_fb_helper_damage_work+0x87/0x160 [drm_kms_helper]
-> > [   20.539188]  process_one_work+0x194/0x380
-> > [   20.539612]  worker_thread+0x2fe/0x410
-> > [   20.540007]  ? __pfx_worker_thread+0x10/0x10
-> > [   20.540456]  kthread+0xdd/0x100
-> > [   20.540791]  ? __pfx_kthread+0x10/0x10
-> > [   20.541190]  ret_from_fork+0x29/0x50
-> > [   20.541566]  </TASK>
-> > [   20.541802] ---[ end trace 0000000000000000 ]---
-> > 
-> > The warning is from here:
-> 
-> No, it comes from
-> 
-> static int virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
-> 				     struct virtio_gpu_vbuffer *vbuf,
-> 				     struct virtio_gpu_fence *fence,
-> 				     int elemcnt,
-> 				     struct scatterlist **sgs,
-> 				     int outcnt,
-> 				     int incnt)
-> > 
-> > /* For drm_panic */
-> > static int virtio_gpu_panic_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
-> >                                             struct virtio_gpu_vbuffer *vbuf,
-> >                                             int elemcnt,
-> >                                             struct scatterlist **sgs,
-> >                                             int outcnt,
-> >                                             int incnt)
-> > {
-> >          struct virtqueue *vq = vgdev->ctrlq.vq;
-> >          int ret;
-> > 
-> >          if (vgdev->has_indirect)
-> >                  elemcnt = 1;
-> > 
-> >          if (vq->num_free < elemcnt)
-> >                  return -ENOMEM;
-> > 
-> >          ret = virtqueue_add_sgs(vq, sgs, outcnt, incnt, vbuf, GFP_ATOMIC);
-> >          WARN_ON(ret);
-> > 
-> >          vbuf->seqno = ++vgdev->ctrlq.seqno;
-> >          trace_virtio_gpu_cmd_queue(vq, virtio_gpu_vbuf_ctrl_hdr(vbuf), vbuf->seqno);
-> > 
-> >          atomic_inc(&vgdev->pending_commands);
-> > 
-> >          return 0;
-> > }
-> > 
-> > 
-> > Add an option for drivers to bypass the common break+reset handling.
-> > As DRM is careful to flush/synchronize outstanding buffers, it looks like
-> > GPU can just have a NOP there.
-> 
-> So it looks like the shutdown is called in the middle of console drawing, so
-> either wait for it to finish, or let drm handle the shutdown, like your
-> patch does.
-> 
-> > 
-> > Fixes: 8bd2fa086a04 ("virtio: break and reset virtio devices on device_shutdown()")
-> > Cc: Eric Auger <eauger@redhat.com>
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> > 
-> > Can someone who knows more about DRM and shutdown please tell me if this
-> > is a good idea?  Posting for testing and early feedback, completely
-> > untested.
-> > 
-> > 
-> > 
-> >   drivers/gpu/drm/virtio/virtgpu_drv.c | 9 +++++++++
-> >   drivers/virtio/virtio.c              | 6 ++++++
-> >   include/linux/virtio.h               | 3 +++
-> >   3 files changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > index 2d88e390feb4..210464146a9c 100644
-> > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > @@ -128,6 +128,14 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
-> >   	drm_dev_put(dev);
-> >   }
-> > +static void virtio_gpu_shutdown(struct virtio_device *vdev)
-> > +{
-> > +	/*
-> > +	 * GPU is used by drm panic after shutdown.
-> 
-> Hopefully, there are no panic on shutdown.
+On Do, 2025-04-10 at 14:23 +0200, Patrice Chotard wrote:
+> As ospi reset is consumed by both OMM and OSPI drivers, use the reset
+> acquire/release mechanism which ensure exclusive reset usage.
+>=20
+> This avoid to call reset_control_get/put() in OMM driver each time
+> we need to reset OSPI children and guarantee the reset line stays
+> deasserted.
+>=20
+> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+> ---
+>  drivers/spi/spi-stm32-ospi.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+> index 668022098b1eac3628f0677e6d786e5a267346be..96fa362432f13c19e4dde63d9=
+64a0db64c8ade95 100644
+> --- a/drivers/spi/spi-stm32-ospi.c
+> +++ b/drivers/spi/spi-stm32-ospi.c
+> @@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_d=
+evice *pdev)
+>  		return ret;
+>  	}
+> =20
+> -	ospi->rstc =3D devm_reset_control_array_get_optional_exclusive(dev);
+> +	ospi->rstc =3D devm_reset_control_array_get_exclusive_released(dev);
 
+Why does this drop _optional?
 
+Also, since _acquire() is right below in the same function, I see no
+benefit in requesting the reset control in released state.
 
-OK looks like you agree with the patch, but the comments and the
-commit log need to be fixed up?
+>  	if (IS_ERR(ospi->rstc))
+>  		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
+>  				     "Can't get reset\n");
+> @@ -937,9 +937,11 @@ static int stm32_ospi_probe(struct platform_device *=
+pdev)
+>  		goto err_pm_enable;
+> =20
+>  	if (ospi->rstc) {
 
+This check only makes sense if the reset control (array) is optional,
+otherwise ospi->rstc can never be NULL.
 
-> > +	 * Do nothing here, opt out of device reset.
-> > +	 */
-> > +}
-> > +
-> >   static void virtio_gpu_config_changed(struct virtio_device *vdev)
-> >   {
-> >   	struct drm_device *dev = vdev->priv;
-> > @@ -162,6 +170,7 @@ static struct virtio_driver virtio_gpu_driver = {
-> >   	.id_table = id_table,
-> >   	.probe = virtio_gpu_probe,
-> >   	.remove = virtio_gpu_remove,
-> > +	.shutdown = virtio_gpu_shutdown,
-> >   	.config_changed = virtio_gpu_config_changed
-> >   };
-> > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> > index 150753c3b578..95d5d7993e5b 100644
-> > --- a/drivers/virtio/virtio.c
-> > +++ b/drivers/virtio/virtio.c
-> > @@ -407,6 +407,12 @@ static void virtio_dev_shutdown(struct device *_d)
-> >   	if (!drv)
-> >   		return;
-> > +	/* If the driver has its own shutdown method, use that. */
-> > +	if (drv->shutdown) {
-> > +		drv->shutdown(dev);
-> > +		return;
-> > +	}
-> > +
-> >   	/*
-> >   	 * Some devices get wedged if you kick them after they are
-> >   	 * reset. Mark all vqs as broken to make sure we don't.
-> > diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-> > index 4d16c13d0df5..64cb4b04be7a 100644
-> > --- a/include/linux/virtio.h
-> > +++ b/include/linux/virtio.h
-> > @@ -220,6 +220,8 @@ size_t virtio_max_dma_size(const struct virtio_device *vdev);
-> >    *    occurs.
-> >    * @reset_done: optional function to call after transport specific reset
-> >    *    operation has finished.
-> > + * @shutdown: synchronize with the device on shutdown. If provided, replaces
-> > + *    the virtio core implementation.
-> >    */
-> >   struct virtio_driver {
-> >   	struct device_driver driver;
-> > @@ -237,6 +239,7 @@ struct virtio_driver {
-> >   	int (*restore)(struct virtio_device *dev);
-> >   	int (*reset_prepare)(struct virtio_device *dev);
-> >   	int (*reset_done)(struct virtio_device *dev);
-> > +	void (*shutdown)(struct virtio_device *dev);
-> >   };
-> >   #define drv_to_virtio(__drv)	container_of_const(__drv, struct virtio_driver, driver)
-> 
-> Best regards,
-> 
-> -- 
-> 
-> Jocelyn
+> +		reset_control_acquire(ospi->rstc);
+
+This is missing error handling. Alternatively, you could just use the
+normal request function to get an already-acquired reset control.
+
+>  		reset_control_assert(ospi->rstc);
+>  		udelay(2);
+>  		reset_control_deassert(ospi->rstc);
+> +		reset_control_release(ospi->rstc);
+>  	}
+> =20
+>  	ret =3D spi_register_controller(ctrl);
+
+regards
+Philipp
 
