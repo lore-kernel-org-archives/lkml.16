@@ -1,108 +1,91 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791BC1E5201
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E5F1EB5D0;
+	Thu, 10 Apr 2025 15:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744300282; cv=none; b=j8fUEywFOIbgCg5ZHaCxBUDR/T/RxbQO9GFHr8XXHyFB7mugaYRwUjvYJgSrP9hQkgwT7rg6FPAMx1tyKarEpknivigwNEh3LzURJUHgBtLSxV5W/f7Ld5i169IU3+emgOWBYQbvAD9FVJKgi6zzDohDULOvCMqIQ9cdR3frvqY=
+	t=1744300309; cv=none; b=t1/y25AACGRS0Lgd6rZ2JAKKo2kVKB7p+OyINDmwnG0xHwOHVlaW1zGp/wekbGPwunHi9LBOikUBAfxAM2Ldth2/ugxbYXSJtXKRBlD+IuEYzqp3cEFKpP86yV1yNlkCuDroHzILUTVuEmYRy5MDEy9mRDmtVrpnGgnzGvxHJDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744300282; c=relaxed/simple;
-	bh=I1HL4EhttE881MicAtF32b66FddNBn0rz1b+bJ5vSpI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ihXIq+mnf5XHXpsuohSku5tUK8KqUPlzpJcTdObEyBKbzJPaLMQG1rRS2xQxsnlVeRrclLjTHSNLB50pcwny56AjXwGsXZPXPF19xiWnDihbxuZj8Xt9xVk+iy7dslru2S5Hppv8vwaNI63oIXzC6mF7e59+MEGXz5fQs26IJsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IkZFaSgD; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744300309; c=relaxed/simple;
+	bh=S8/1bc+SSt/Lx/Up/59n5c8Pu6woNGwVv1gsX+uXOMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jr2eYLrCgvZaMb8oAFeDKTMx9P31d0tFbiKT0GQjRAoc9XY7jL7D81I9ydx33C87be+1VOfYe3BdX09XJ5rQmJI4jY1GfX7mG3Q1xylOCWfbtWAtzlItENEqPIA5D9NMD/vU8uSppiBoxzrRdruyX+m81futt90SVCFaa4+65N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=VoeivUXQ; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IkZFaSgD"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22403329f9eso8455005ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744300280; x=1744905080; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WI+w75MsGfdj1Z+7uV4Y8gvQFBHXDpFpnvwgAEL/2AQ=;
-        b=IkZFaSgDMxVLDJYiztqhLWeJ9BKaBmCbT7F4CFXTzXGHk78dhVZw31jouCnNDop6qG
-         LyvJ2AGGW9B/NjGJES68OuKAKaLBwFvD2KGUWdvUlsG1f0aD8K6C+rGbK5ysE6vJ1dDv
-         +K+JpZcy29v0dUf1sfGwTYaAYrUFfG7GrYAzIQi7CH+jkldW1WG3aBanwL1UNOUAXBRV
-         bHMPWtECNA0qzJQhzQzy4ceyGFHvF2uUxZwwYnkpxqCNMe6h/tq8OFE5STxYBiSEa0NU
-         lfHoRRzZvrm0R3beELu0HF0TwdJm5QdJx8sDTJg7rPPsfd5OuFieaYBGI8NvdpPXr494
-         9s4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744300280; x=1744905080;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WI+w75MsGfdj1Z+7uV4Y8gvQFBHXDpFpnvwgAEL/2AQ=;
-        b=O5EUaq0xP51CYQOno/603tw8Nf9UbA9FLRx1RUqJiolwLHJoVtaS3dANKVijeeGP/s
-         Z5DIVg0F1Y7wYgnuiEa69eT90gEPn/mGAy8jYhCsz2BfJn45+wpe/tHcJkOuqhh+Znba
-         eSCQio6g6FZuKtQ6UTCFsdYNqLLgiV26hCT2Quio5SWKEvTOwBtVs4gW1mJPXz9LQjq3
-         y5D62Mwf+mWczE1vXnUmI8Ur5a6AHsWmDkjRuK2lHbRk0RxOtdjOy9qQ+nV8+ulVPuLG
-         zwq65Nkv2R/GRwNHva0OM7+dg4uCtqQvqAQAXsqPY9fkdvPlyivkqW+IIWRuZlbcQeQK
-         U/LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUe/wva8iRfOCcZ2SqaO9mTkE2mOhN72WUveEUkJwSXUZlErjZT0CTcGJznkgowmU7WwkVw1h8vGcJ8i84=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8w2RcrGJSy7JBzWetb5PggyBxsrcsad0e0WwPNJQHIcQevWPj
-	BGuoJ3D2vn3PJADe/G/GDa9FrfqBvtV6VsaIiPg2sOSdGVB1jF8s79Mo5EWC2VJ3LUEKj0lMFoK
-	CMw==
-X-Google-Smtp-Source: AGHT+IHHdPvjX46b6rya58AVmth99Sr4qyG2wQ8QULk3PUwKRfJK74c4z91IfDSthvFsL0y+9dnZ4azBoYg=
-X-Received: from plsb7.prod.google.com ([2002:a17:902:b607:b0:229:2f8a:d4ba])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4cf:b0:220:d601:a704
- with SMTP id d9443c01a7336-22be0302063mr29493945ad.18.1744300279479; Thu, 10
- Apr 2025 08:51:19 -0700 (PDT)
-Date: Thu, 10 Apr 2025 08:51:18 -0700
-In-Reply-To: <BN9PR11MB5276385B4F4DB1919D4908CF8CB72@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="VoeivUXQ"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZYPSc0mxGz9shl;
+	Thu, 10 Apr 2025 17:51:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1744300304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S8/1bc+SSt/Lx/Up/59n5c8Pu6woNGwVv1gsX+uXOMw=;
+	b=VoeivUXQ7HdrLMa0PepurFK2LL+UJ3EIaqVSNiZtIopDYhg6x7+mRpAL/TJI4Ez0qU7pac
+	jfDAGctGweLk4yFrby03iwcyMX4g+s4Wl+K4gfbm3WCsiUkT86ZXOOQBD2S4ZV06VkF2wu
+	2ejAm8cihlNu+t5SO4oVxuz9T6N0iHOBh78P3qPUO6J6X+a9/n0Ui8VXho2NhR2ua+g2Ff
+	ObKc5TqgDtJyhjKDRbfcI5IB5g8nRvQJgZvdlPFgQUwFA9ivuhwMP1f3J0ASGHjTujI0jw
+	pGeRciSKR9W3ZB7Bncr9wPMZgGAG1a9/U+so/kw+v5ora64PUu5DXkDAcnuW7w==
+Date: Thu, 10 Apr 2025 17:51:38 +0200
+From: Anthony Ruhier <aruhier@mailbox.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>, 
+	Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Maya Matuszczyk <maccraft123mc@gmail.com>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] Support for GPU ACD feature on Adreno X1-85
+Message-ID: <dmzoooujjb4zojjlgovjt6lccxilnnc3yr4j24vj4hwpzf5ouf@e6qkdlekcsnm>
+References: <20250109-gpu-acd-v4-0-08a5efaf4a23@quicinc.com>
+ <dj256lrkc4s5ylqkqdrak6a6p3v62ckkd3orsg7ykz2w6ugllg@rbfkojacklvx>
+ <0d1aaba8-7736-497e-8424-84489c637914@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404211449.1443336-1-seanjc@google.com> <20250404211449.1443336-4-seanjc@google.com>
- <BN9PR11MB5276385B4F4DB1919D4908CF8CB72@BN9PR11MB5276.namprd11.prod.outlook.com>
-Message-ID: <Z_fo9hPpSfpwi5Jn@google.com>
-Subject: Re: [PATCH 3/7] irqbypass: Take ownership of producer/consumer token tracking
-From: Sean Christopherson <seanjc@google.com>
-To: Kevin Tian <kevin.tian@intel.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	David Matlack <dmatlack@google.com>, Like Xu <like.xu.linux@gmail.com>, 
-	Yong He <alexyonghe@tencent.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d1aaba8-7736-497e-8424-84489c637914@oss.qualcomm.com>
+X-MBO-RS-META: hnpqbkrht6pxthkfq3htpiw4uki4eng8
+X-MBO-RS-ID: 74da413a3d37fd97626
 
-On Thu, Apr 10, 2025, Kevin Tian wrote:
-> > From: Sean Christopherson <seanjc@google.com>
-> > +int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer,
-> > +				 struct eventfd_ctx *eventfd)
-> >  {
-> >  	struct irq_bypass_consumer *tmp;
-> >  	struct irq_bypass_producer *producer;
-> >  	int ret;
-> > 
-> > -	if (!consumer->token ||
-> > -	    !consumer->add_producer || !consumer->del_producer)
-> > +	if (WARN_ON_ONCE(consumer->token))
-> > +		return -EINVAL;
-> > +
-> > +	if (!consumer->add_producer || !consumer->del_producer)
-> >  		return -EINVAL;
-> > 
-> >  	mutex_lock(&lock);
-> > 
-> >  	list_for_each_entry(tmp, &consumers, node) {
-> > -		if (tmp->token == consumer->token || tmp == consumer) {
-> > +		if (tmp->token == eventfd || tmp == consumer) {
-> >  			ret = -EBUSY;
-> >  			goto out_err;
-> >  		}
-> >  	}
-> 
-> the 2nd check 'tmp == consumer' is redundant. If they are equal 
-> consumer->token is not NULL then the earlier WARN_ON will be
-> triggered already.
+Hi,
 
-Oh, nice.  Good catch!  That check subtly gets dropped on the conversion to
-xarray, so it definitely makes sense to remove it in this patch.
+Sorry I should have gave an update on this: I don't think the lockups are
+related to this patch series, the same problem happens without applying these
+patches. It seems to increase by a lot the chances that a GPU lockup happens at
+start, however, so I could use that to debug the real problem.
+
+> What firmware files are you using? ZAP surely comes from the Windows
+> package, but what about GMU and SQE? Linux-firmware?
+>
+> Specifically, please provide the GMU version which is printed to dmesg
+> on first GPU open
+
+I'm using the firmwares imported from Windows, the Yoga Slim 7x is not in
+linux-firmware. I understood that the firmware files used by the Slim 7x are
+quite old, maybe it could be the problem.
+
+The GMU version:
+
+> [drm] Loaded GMU firmware v4.3.17
+
+Thanks
+
+--
+Anthony Ruhier
