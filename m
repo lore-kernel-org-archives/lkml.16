@@ -1,134 +1,137 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62BB2147E7;
-	Thu, 10 Apr 2025 21:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3170A2E62A7;
+	Thu, 10 Apr 2025 21:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744320625; cv=none; b=pOebqKVbBxo3ijjcYzRgRm4l3pjfl8fBAZA+rXJc9c8njSj5vhYnOoNUEpkrJ2nQWCP4V7lMl72HYOLnVtq2ZXMQ/cnE80npGdehemOsLx4Guef6OZh0u/U2kPU6DDH5x5H1qNqA9XKyROySlYGFcXaxz3GpBtSiSmbdCuAA8iY=
+	t=1744320780; cv=none; b=l8Sxs7oBVI2VICRO99jVY+yXskmxD3qFkyF1pNzrLRi/cAUXTcFfs2j2aKVy2ysv9qJxfb2xA6dF6q9jj986MrBMXkQGHkfCZHlPs1TgDr7hITSA9RQwpLur6lFidSTZSfY5px46retZsmMh6wBaY3HtkhXnNVD11gtb6l+GKzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744320625; c=relaxed/simple;
-	bh=DtW9p7sIFn3Lr0thD0opZfYZCvln0+vg+bFmQmtjCb4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=FCueeINnJ5Sjn+bm2goGt2y2Vx3JAolTerNEVhTZgQa8iPOd6p7Nht8yPGB09XYTQR0p/wuOMQFPw7wZW7KGZ+RUd7O5MMTNpKzamwYFZXHHbiko/FpmPW3HAs9svjxTMiCpmklnj0E65x3wpEgIfU78yTY441t1R8usCeMTLmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PDrEk+uM; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744320780; c=relaxed/simple;
+	bh=H82et+KA7C3DoiZGph7TePsvX5xQzLKVxnnSZAKjOgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b+otHb9BYihQ4kK2B3FMGgMXMqJjg/93EXqMXEEvO0zN1hzMl4MnFZvH/UK6TUd/ZcGiVLOM5UpqE4zSmA+8ZbaPlZ5B9qFLiIKv9h9AQOyEKmzUcqveNINMc83EqgSHkP5MJSAqvEJ7FnDm6H84qepXjz6AQ6LW9IiRbTMDwzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7LTVUtv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDrEk+uM"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3965c995151so552431f8f.1;
-        Thu, 10 Apr 2025 14:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744320622; x=1744925422; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9+8olWxBi1dycgdk6iFY3F5FhW2cFaD8o5hGv/hrFiY=;
-        b=PDrEk+uMjbUVKNW5pHkpAm++I23st681lkf6NgNjn6NR8rvSQNaDwVfhzwpsM0prS1
-         RsrTWF6LKVDC8KN9nchZdJ3LvzBewJwjKzGa1h0DgoWgk1uStMY4+DPv0KXpItn7cmAR
-         kkD84duTC64WHOM/vZJiIJ7yfAfL/tpcTX//CzBNKa9wZzS30SJFaOeluLvF55D1YaYs
-         Vt/3iIucpG45apJ15yPP2W47XvWBKHqxsZDJkt5TE+phrN2je4eGuZ/9ZhZyYsAyzuwJ
-         JiaRhR3lNjfaNHbBjauezgo836wqd35s5XfgdzUf1EpjGRyRfkVuMmBU0oNK2mkCqcP1
-         AEmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744320622; x=1744925422;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9+8olWxBi1dycgdk6iFY3F5FhW2cFaD8o5hGv/hrFiY=;
-        b=IVu0p9xJAhGtu+PF+677Zv3OTOxHcCj+t/KEQUUmeEzFoda5WWXOIQ2y6fq5Wtb+79
-         ws8CvB39bOvrOGGbQesX+6rXVQ8t1AmrQkEvvVxO6Haz5FpQGoP/P7zLpCU2NBKpLL4h
-         rK9Kz0XHTTmPvwfrtQexBAonpowv/fCzsRf26Qge8awRaWZQAM9X9Kk4BikeLgiIyaY0
-         Ax+P4hRu7oq+Qgw7aBt04q/9Sf6me36+qEzWbmw4vOYOUHg/hkTpdFw4P2Toj0avRP3Q
-         EvMSNp+n7evw33kYuqqeeoEEygphNk6e4hOXu8Ku34yord+/lgZWXgRl3L1ONlrI5Qeo
-         y5uw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4T62xC/6Wf9nwm8RZAaKOaJnZISdec0loS9e45in+BPD1ZDcTmAY3X1DyO4lF2QfFj8NAwz/GASkA0LvjGsZ/ReJJ7A==@vger.kernel.org, AJvYcCXr0B+Dq5wuyCBPct7ITGyNZ7HGC3ZKTjyUyb85kqlnelZA+fMZR/ko2Sxpje5aFOeKOTsM1u5YOaDqcZ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4I5jNhW/kOELHrGkfBfmRVXPkIOSVbkGvwQ0xyn9vu7cKWI/d
-	Z3TfHpf0uf7qVLWF0txFSvaEg6khblbHAb+EJKSEJuj9p0RbZPvbrRpxXGtT
-X-Gm-Gg: ASbGncvIKvznEX21/Nw+4TrY24As5XWaYUr5k1wZoVhW16j1IxskEmEAktDHKNUS89F
-	wnEgwRTGNbo8LFORqokIhoVZ1pGlRXEO5z1cIZHwASRi98c8L5RBYhxkxfo7c2A0Ymp5+gDGaSs
-	sCyoAGnCVe1KxGnPnQV+P1jjX3l9zLP0lMBRtmGHVJWvpDwKu8RFJKvlUjO9RZ9nyThFwCDEyjC
-	3PUiRHUPDEl98ZwzCGBdxrTLOWEAZ+IbN0EGg/73HKs8eAfxdMI35NhD6gSpn/WTPtMzseGiaDI
-	2MguZjTY2I0EwfIDFFjJ0IO7Ps1hkU2yhPJpiG4J
-X-Google-Smtp-Source: AGHT+IE/OfbhcCVIY7M4P66jXSL3xeNy/e8xh8ge17vikhHw0wTpNIhrbAIBPsc+O+7o+ejDQzJ2Sg==
-X-Received: by 2002:a05:6000:2ab:b0:39c:2688:4ebf with SMTP id ffacd0b85a97d-39ea51d10b6mr164862f8f.6.1744320621812;
-        Thu, 10 Apr 2025 14:30:21 -0700 (PDT)
-Received: from pop-os.. ([2a00:ee2:303:6800:a6b5:368:e9d2:f033])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5b08sm65446475e9.33.2025.04.10.14.30.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 14:30:21 -0700 (PDT)
-From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-To: ikepanhc@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-Subject: [PATCHv4] platform/x86: ideapad-laptop: added support for some new buttons
-Date: Thu, 10 Apr 2025 23:29:37 +0200
-Message-Id: <20250410212937.28772-1-gasper.nemgar@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7LTVUtv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E57C4CEDD;
+	Thu, 10 Apr 2025 21:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744320779;
+	bh=H82et+KA7C3DoiZGph7TePsvX5xQzLKVxnnSZAKjOgM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=e7LTVUtvjihcK7lT9wD4tMt6GjrDMunK2qVeaUq6ymA0/khWcPaD1Qf9+wctrdnGL
+	 Nicjq2hPYpBRSqCsjM62ROmW+sU5eprFYbgbBU7AOc1VoBSiKVx9WrgzUWgPtOb8aR
+	 ain5+hSVpI8OmHYBbxuCve+ymhEPE74SpODo70/2JCpXfuyqaBhS3RgD04WxQwe8AA
+	 TJl81FLPjqWyNoSwQwDuu58QwhMJiKht8SDorfIYOgMmcRaKIz4AJa35NTKERsqCVr
+	 5W7r9rscmmNlPSJeSOpxU58zssUATjdG0gcHPLhv7X3rR5gODViYMHISnO3WKD5D9F
+	 A1VJ2pnaXRM/w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 26167CE08E3; Thu, 10 Apr 2025 14:32:59 -0700 (PDT)
+Date: Thu, 10 Apr 2025 14:32:59 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: jgg@nvidia.com, kernel test robot <lkp@intel.com>,
+	linux-kernel@vger.kernel.org, dave.jiang@intel.com,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v3] fwctl/cxl: Fix uuid_t usage in uapi
+Message-ID: <bbf61d5e-5141-46d3-be3f-f7221de08ca4@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <174430820360.604341.2116516906072729788.stgit@dwillia2-xfh.jf.intel.com>
+ <174430961702.617339.13963021112051029933.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <174430961702.617339.13963021112051029933.stgit@dwillia2-xfh.jf.intel.com>
 
-Added entries to unsuported wmi codes in ideapad_keymap[]
-and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+On Thu, Apr 10, 2025 at 11:27:40AM -0700, Dan Williams wrote:
+> The uuid_t type is kernel internal, and Paul reports the following build
+> error when it is used in a uapi header:
+> 
+>     usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
+> 
+> Create a uuid type (__uapi_uuid_t) compatible with the longstanding
+> definition uuid/uuid.h for userspace builds, and use uuid_t directly for
+> kernel builds.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+> Closes: http://lore.kernel.org/f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202504050434.Eb4vugh5-lkp@intel.com/
+> Fixes: 9b8e73cdb141 ("cxl: Move cxl feature command structs to user header")
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
----
-Changes in v4:
- - Changed performace button to KE_IGNORE
-Changes in v3:
- - Minor changes
-Changes in v2:
- - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
- - Added performence toggle in wmi_notify()
-Changes in v1:
- - Added codes for buttons on laptop(performance, star, ...)
----
- drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Nice, thank you!!!
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 17a09b778..72d3306ef 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
- 	/* Specific to some newer models */
- 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
- 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-+	/* Star- (User Asignable Key) */
-+	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
-+	/* Eye */
-+	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
-+	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
-+	{ KE_IGNORE,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
-+	/* shift + prtsc */
-+	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-+	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
- 
- 	{ KE_END },
- };
-@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
- 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
- 			data->integer.value);
- 
-+		/* performance button triggered by 0x3d  */
-+		if (data->integer.value == 0x3d) {
-+			if (priv->dytc) {
-+				platform_profile_cycle();
-+				break;
-+			}
-+		}
-+
- 		/* 0x02 FnLock, 0x03 Esc */
- 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
- 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
--- 
-2.34.1
+Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
+> ---
+> Changes since v2:
+> * Drop the tinkering with __align_of__ and just document the safety
+>   rules (Jason)
+> 
+>  include/uapi/cxl/features.h |   21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
+> index d6db8984889f..490606d7694b 100644
+> --- a/include/uapi/cxl/features.h
+> +++ b/include/uapi/cxl/features.h
+> @@ -8,10 +8,19 @@
+>  #define _UAPI_CXL_FEATURES_H_
+>  
+>  #include <linux/types.h>
+> -#ifndef __KERNEL__
+> -#include <uuid/uuid.h>
+> -#else
+> +
+> +typedef unsigned char __uapi_uuid_t[16];
+> +
+> +#ifdef __KERNEL__
+>  #include <linux/uuid.h>
+> +/*
+> + * Note, __uapi_uuid_t is 1-byte aligned on modern compilers and 4-byte
+> + * aligned on others. Ensure that __uapi_uuid_t in a struct is placed at
+> + * a 4-byte aligned offset, or the structure is packed, to ensure
+> + * consistent padding.
+> + */
+> +static_assert(sizeof(__uapi_uuid_t) == sizeof(uuid_t));
+> +#define __uapi_uuid_t uuid_t
+>  #endif
+>  
+>  /*
+> @@ -60,7 +69,7 @@ struct cxl_mbox_get_sup_feats_in {
+>   * Get Supported Features Supported Feature Entry
+>   */
+>  struct cxl_feat_entry {
+> -	uuid_t uuid;
+> +	__uapi_uuid_t uuid;
+>  	__le16 id;
+>  	__le16 get_feat_size;
+>  	__le16 set_feat_size;
+> @@ -110,7 +119,7 @@ struct cxl_mbox_get_sup_feats_out {
+>   * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
+>   */
+>  struct cxl_mbox_get_feat_in {
+> -	uuid_t uuid;
+> +	__uapi_uuid_t uuid;
+>  	__le16 offset;
+>  	__le16 count;
+>  	__u8 selection;
+> @@ -143,7 +152,7 @@ enum cxl_get_feat_selection {
+>   */
+>  struct cxl_mbox_set_feat_in {
+>  	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
+> -		uuid_t uuid;
+> +		__uapi_uuid_t uuid;
+>  		__le32 flags;
+>  		__le16 offset;
+>  		__u8 version;
+> 
