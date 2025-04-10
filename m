@@ -1,181 +1,127 @@
-Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551E6284B21;
-	Thu, 10 Apr 2025 14:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.200.0.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFF41C174A
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293906; cv=none; b=hi0o/wAD+KFYeWpunboys49Lx+imsx2PXWBQEOrfoMTXCoG65s/KSgFUHpXrtZ/GHsS9yrNHUCJKRPgSqpmgzpiEsB/aAvO7kuB04bKPiMG/mV9Dgy9c92HVQxM1nyJA/QVb8dQfb8qwvBzIGsaPonwm/jJAqvZjdnRVhfhE5Ok=
+	t=1744293908; cv=none; b=QjPL30XeyGEhMZvSyBGhAjzDej9Yn/OFW455WUWqXmGP6PPVYtJOSWUl/eMKlAtl08ZOLPJBFwm8ilNBCAQdIcjXtyA8/r1bEjf0P6H9GQmfO1DpInEuXIUANwtXuFz6QlDiTnqc7D7+I/pbr2cbi2xt3CNoN0nPhEyysO/gxYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293906; c=relaxed/simple;
-	bh=/vVrlLgTBAnnRIWHpzc5T0Ee0v/HyVPxPh8/LZjzGis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LWiEcBtgnMP3BuAq/Rz4BtC27ZpYjCPFH8EqCwXmjLFMiavcgFbsSLKvtIrmUlJLMouJn16uCrpqVuw2V5xHLTztaAza2qYIYzAMa3wbiLWK87dbIFPM5vJ7AvfwKaotvlIrIbxW0Wqo9UsTw2FbBr64BiicJOXoaFqERO+mQO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=fail smtp.mailfrom=themaw.net; arc=none smtp.client-ip=121.200.0.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=themaw.net
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp01.aussiebb.com.au (Postfix) with ESMTP id 2475410084D;
-	Thu, 10 Apr 2025 23:58:21 +1000 (AEST)
-X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
-Received: from smtp01.aussiebb.com.au ([127.0.0.1])
-	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id ye5TYnGA5GiS; Thu, 10 Apr 2025 23:58:21 +1000 (AEST)
-Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
-	id 07C18100265; Thu, 10 Apr 2025 23:58:20 +1000 (AEST)
-X-Spam-Level: 
-Received: from [192.168.0.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	s=arc-20240116; t=1744293908; c=relaxed/simple;
+	bh=CnS2wbMMvP8BEycfQLoHnUik/B+c8egOMyHqz7ykxn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g/wI0PfAt7T14c3O+CVQ9GtMgGVFb0fAxlrKa+NYbSc9tOmKwD5bRE/2f/+2tCyJxlTWYNSB8RIyWosJd0FATLa6hiZ+6i71dg2tDQ2P0jgTMsMXXx5gMH6OB7SYWvyRDOH7a7cVQ9IYR5n0mZlXZWPrK7iaRg23gEKZOsAlblE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NDq0+EIz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NDq0+EIz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744293905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RsDQWTi2kQhu4s44bLJq1hHm6XUCRBgm1wmvO56Uxos=;
+	b=NDq0+EIzVQxOIxC6e1STbS58Uqt9/3FKW6J0eJSGu3gAsGRyLTIMbVDoj13/bvMUi7Ah5Q
+	0+AIgAuwxcr9KoZO1tgTfqxqjz1Ku+LDF/9jT1ATLAG4HyOG6QABHiGWGq7Y7Pi6qdHaF2
+	FZnatda9NSlWCOC+bFkMbOqUwQLJskE=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-wMlA-w90P2GQarsq0k7C1g-1; Thu,
+ 10 Apr 2025 10:05:00 -0400
+X-MC-Unique: wMlA-w90P2GQarsq0k7C1g-1
+X-Mimecast-MFC-AGG-ID: wMlA-w90P2GQarsq0k7C1g_1744293892
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: ian146@aussiebb.com.au)
-	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id 84608100265;
-	Thu, 10 Apr 2025 23:58:17 +1000 (AEST)
-Message-ID: <64fb3c80-96f9-4156-a085-516cbaa28376@themaw.net>
-Date: Thu, 10 Apr 2025 21:58:16 +0800
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 286E21955DC6;
+	Thu, 10 Apr 2025 14:04:51 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.222])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 50EFB180174E;
+	Thu, 10 Apr 2025 14:04:44 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 10 Apr 2025 16:04:15 +0200 (CEST)
+Date: Thu, 10 Apr 2025 16:04:08 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	Andy Lutomirski <luto@amacapital.net>, Dave Hansen <dave@sr71.net>,
+	Brian Gerst <brgerst@gmail.com>, Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Chang S . Bae" <chang.seok.bae@intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH 4/8] x86/fpu: Remove the thread::fpu pointer
+Message-ID: <20250410140407.GC15280@redhat.com>
+References: <20250409211127.3544993-1-mingo@kernel.org>
+ <20250409211127.3544993-5-mingo@kernel.org>
+ <20250410073948.GT9833@noisy.programming.kicks-ass.net>
+ <Z_eZMN4PcOwFnskB@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-To: Christian Brauner <brauner@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, Eric Chanudet <echanude@redhat.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>
-References: <20250408210350.749901-12-echanude@redhat.com>
- <20250409-egalisieren-halbbitter-23bc252d3a38@brauner>
- <20250409131444.9K2lwziT@linutronix.de>
- <4qyflnhrml2gvnvtguj5ee7ewrz3ejhgdb2lfihifzjscc5orh@6ah6qxppgk5n>
- <20250409142510.PIlMaZhX@linutronix.de>
- <20250409-beulen-pumpwerk-43fd29a6801e@brauner>
-Content-Language: en-US
-From: Ian Kent <raven@themaw.net>
-Autocrypt: addr=raven@themaw.net; keydata=
- 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
-In-Reply-To: <20250409-beulen-pumpwerk-43fd29a6801e@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_eZMN4PcOwFnskB@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-
-On 10/4/25 00:04, Christian Brauner wrote:
-> On Wed, Apr 09, 2025 at 04:25:10PM +0200, Sebastian Andrzej Siewior wrote:
->> On 2025-04-09 16:02:29 [+0200], Mateusz Guzik wrote:
->>> On Wed, Apr 09, 2025 at 03:14:44PM +0200, Sebastian Andrzej Siewior wrote:
->>>> One question: Do we need this lazy/ MNT_DETACH case? Couldn't we handle
->>>> them all via queue_rcu_work()?
->>>> If so, couldn't we have make deferred_free_mounts global and have two
->>>> release_list, say release_list and release_list_next_gp? The first one
->>>> will be used if queue_rcu_work() returns true, otherwise the second.
->>>> Then once defer_free_mounts() is done and release_list_next_gp not
->>>> empty, it would move release_list_next_gp -> release_list and invoke
->>>> queue_rcu_work().
->>>> This would avoid the kmalloc, synchronize_rcu_expedited() and the
->>>> special-sauce.
->>>>
->>> To my understanding it was preferred for non-lazy unmount consumers to
->>> wait until the mntput before returning.
->>>
->>> That aside if I understood your approach it would de facto serialize all
->>> of these?
->>>
->>> As in with the posted patches you can have different worker threads
->>> progress in parallel as they all get a private list to iterate.
->>>
->>> With your proposal only one can do any work.
->>>
->>> One has to assume with sufficient mount/unmount traffic this can
->>> eventually get into trouble.
->> Right, it would serialize them within the same worker thread. With one
->> worker for each put you would schedule multiple worker from the RCU
->> callback. Given the system_wq you will schedule them all on the CPU
->> which invokes the RCU callback. This kind of serializes it, too.
->>
->> The mntput() callback uses spinlock_t for locking and then it frees
->> resources. It does not look like it waits for something nor takes ages.
->> So it might not be needed to split each put into its own worker on a
->> different CPU… One busy bee might be enough ;)
-> Unmounting can trigger very large number of mounts to be unmounted. If
-> you're on a container heavy system or services that all propagate to
-> each other in different mount namespaces mount propagation will generate
-> a ton of umounts. So this cannot be underestimated.
+On 04/10, Ingo Molnar wrote:
 >
-> If a mount tree is wasted without MNT_DETACH it will pass UMOUNT_SYNC to
-> umount_tree(). That'll cause MNT_SYNC_UMOUNT to be raised on all mounts
-> during the unmount.
+> * Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> If a concurrent path lookup calls legitimize_mnt() on such a mount and
-> sees that MNT_SYNC_UMOUNT is set it will discount as it know that the
-> concurrent unmounter hold the last reference and it __legitimize_mnt()
-> can thus simply drop the reference count. The final mntput() will be
-> done by the umounter.
-
-In umount_tree() it looks like the unmounted mount remains hashed (ie.
-
-disconnect_mount() returns false) so can't it still race with an rcu-walk
-
-regardless of the sybcronsize_rcu().
-
-
-Surely I'm missing something ...
-
-
-Ian
-
+> > On Wed, Apr 09, 2025 at 11:11:23PM +0200, Ingo Molnar wrote:
+> >
+> > > -#define x86_task_fpu(task) ((task)->thread.fpu)
+> > > +#define x86_task_fpu(task)	((struct fpu *)((void *)(task) + sizeof(*(task))))
+> >
+> > Doesn't our FPU state need to be cacheline aligned?
 >
-> The synchronize_rcu() call in namespace_unlock() takes care that the
-> last mntput() doesn't happen until path walking has dropped out of RCU
-> mode.
+> Yeah, and we do have a check for that:
 >
-> Without it it's possible that a non-MNT_DETACH umounter gets a spurious
-> EBUSY error because a concurrent lazy path walk will suddenly put the
-> last reference via mntput().
+> +       BUILD_BUG_ON(sizeof(*dst) % SMP_CACHE_BYTES != 0);
 >
-> I'm unclear how that's handled in whatever it is you're proposing.
+> And task_struct is allocated cache-aligned, which means when we do this
+> in fpu_clone():
 >
+> +       struct fpu *dst_fpu = (void *)dst + sizeof(*dst);
+>
+> the FPU pointer is guaranteed to be cacheline aligned as well.
+>
+> 'dst' in that context is the new task_struct.
+>
+> BTW., Oleg suggested in a previous discussion for us to replace the
+> task->thread.fpu pointer with a build-time calculation - but I'm still
+> not sure it's a good idea.
+
+To be honest, I forgot everything we discussed before ;)
+
+But I have found this email,
+https://lore.kernel.org/all/20240616105550.GA18292@redhat.com/
+Perhaps
+
+	#define X86_TASK_SIZE	\
+		ALIGN(sizeof(struct task_struct), __alignof__(union fpregs_state))
+
+and
+	#define x86_task_fpu(task)	\
+		((struct fpu *)((void *)(task) + X86_TASK_SIZE))
+
+plus a bit more similar changes make more sense than
+__attribute__ ((aligned (64))) for struct task_struct?
+
+OK, even if yes, we can do this later on top of this series.
+
+I'll try to read it tomorrow.
+
+Oleg.
+
