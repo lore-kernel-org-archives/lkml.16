@@ -1,119 +1,78 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BE3204F80;
-	Thu, 10 Apr 2025 12:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B216D281505
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744286517; cv=none; b=RslGfJIw8MKCbfS/NWNY1BCIdIlVHqgu6l6pRDCzHSq01wc0jAb4FOyjmxm7IqPwgG7r0/nI6A+Y21WqhgcvvCf2/sTWYmP22XXj8+sQRzYNtRilQzsMsqesfyR7K/8VkVmp5Q5ulS0KtdEvsxEwVs34qQk0hane+arbY0kh/Bs=
+	t=1744286586; cv=none; b=cuSmxq32gwxDB+68HyHgEfXZ6K9dRnONzlLQ2l8L3LfFUa09L7r1zKgDU6kDxpOmMKTggfnKt9nxPfJT53ZPJb0wa9DgTscfq0dyx/Ts0OWBE63195sGeh9a/My7g8NMOVXr7ibLuJa33eZts7DV5wBsrdohXhUq0g+SOFC1MR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744286517; c=relaxed/simple;
-	bh=gl9oaGaRIsYt/WyBdN7UO9fsD1iIFpw+hRE7Ip3gDTM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=lC32WcmvF6gnoFOm6SyYpfmdJG+efXWksk34eNmb2SqsZzcUZ3AxCWv287z10elZokkeR3nSgjgOdwvdFPO9IRt/Ymq49JYvjxggbu37WeQJT7oiPZNMUZhX1kbHKPvFcyjgYzAw0y2DNA+sAHMjLojTHz6IhD1olHsdkhL1yOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=dfg+YRcn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=r8Zp9VEO; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="dfg+YRcn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r8Zp9VEO"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 8903511400E8;
-	Thu, 10 Apr 2025 08:01:53 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Thu, 10 Apr 2025 08:01:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744286513;
-	 x=1744372913; bh=gl9oaGaRIsYt/WyBdN7UO9fsD1iIFpw+hRE7Ip3gDTM=; b=
-	dfg+YRcn27ujd2Kv89PNH28iSsx/7J18F2jg5wmmBRf8pCwvQaPjV1o7P8x/kROs
-	vvkaEZGKh4Yqj/RLXvclFPtu4fPBMK93Enw9GPRzzd22JO5qVvYm0yiIY2OM+VUY
-	LDtnq75Oz7w9eYYD91Bign6GT4zSA/4zm6MROyaMlWAFiKWre29U84VLxU2FSPkE
-	NT8uPtszkU/yY7WEuAAw1X0JSKFJVmEtqK9qOtv7PpM0LtNOCaMPhVbAQg2Wt2kj
-	ehPfW65hcdqzweofIQJwcG/YCyhN2fBlCluT87167OUV386sVeQu/JcMKerWhegc
-	iyUPtZcAywhDc6RVXB7nUg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744286513; x=
-	1744372913; bh=gl9oaGaRIsYt/WyBdN7UO9fsD1iIFpw+hRE7Ip3gDTM=; b=r
-	8Zp9VEODKfutsmRAEbgUnrmBP3s0vdxVjQ8hpakmL3zjajt6qqTpVw916454vjfD
-	MYCRUzOEQP66c9+jX4v3aRjSpzYdR3Pn2o6ABlec/Jb5b5J0FuSN3zDzgEJncxJG
-	mr3wzL6l/A6SV4p+IF4pP1V3cyE2ZJRzIm2kkXP9GowfJB2Gkb15nmC3EMZTHmhu
-	EvaIZiuyGZoiFUksZ6ewc3NIgmf17tWIdAfOXtj2hf/Yh/2erVvJqYsgVmYyw70p
-	WL9b1Dpt3dH/1I6j59XUt7MntbL0AAiWiX/QrDcuw9gI8Sh+Gq2BMb8rn81QmirA
-	MEVWkzxStZrSeZgYJBRtA==
-X-ME-Sender: <xms:MLP3Z3ZzkHrptGtQOUk4WRvDyC57tPhsZw9eTxDP4-DVo3giJ-5fBg>
-    <xme:MLP3Z2ZJ-wOZhDIeQ-61FKaOu6linY8MUS3ia6cJ4zjA8_UAANbvmqWCqELvg8xO-
-    G4GclEPSZT2KHJX96Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekkeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    udelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinh
-    hugidrohhrghdruhhkpdhrtghpthhtoheprghnghgvlhhoghhiohgrtggthhhinhhordgu
-    vghlrhgvghhnohestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopegurghvvghmse
-    gurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnshhuvghlshhmthhhsehgmhgr
-    ihhlrdgtohhmpdhrtghpthhtohepughqfhgvgihtsehgmhgrihhlrdgtohhmpdhrtghpth
-    htohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrthht
-    hhhirghsrdgsghhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtse
-    hgohhoghhlvgdrtghomhdprhgtphhtthhopehrughunhhlrghpsehinhhfrhgruggvrggu
-    rdhorhhg
-X-ME-Proxy: <xmx:MLP3Z588WIt1trNXStRldSHp7GGw67WcEJeidMURVp7sO9bDhwqc0Q>
-    <xmx:MLP3Z9oVgKRh86jQsy2Z2YvyqQrLhGfsSpuomX5U0Ip0M10L_vEhqg>
-    <xmx:MLP3ZyruZoteQa0f9aj6BpwIy6D1WAEC9Mg7V3M4simfzGzh1FZ-wA>
-    <xmx:MLP3ZzTAa1BWV4e7XYPfF-qLN-dK0NxTmJItaIgjsgO8qeTPamDZjw>
-    <xmx:MbP3Z_j0t2xgFRutTCp2TfvmslhP_6FnsCjYr9_pkLwdxVg5p1L3TQFr>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2B1352220073; Thu, 10 Apr 2025 08:01:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1744286586; c=relaxed/simple;
+	bh=2HJEpfvBQlz7dQT60A81j7d32Y9ZWDLfKF+1y5GeKIg=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=GJA8HQ2vy3iNy5j8XuzGjW3oDi+0NH8HrtkxvQgPdqtfslLwJ4OVJrxH45AoE0hIrj9lC/Na7tdUbDjlHemPxGpgG3B018jKqJRlAJzKZKkgT0ksEv3N7Z8Mw125yZNOiBgNdovuR0620TzgA+aFiOTqmB9y5DI5Ey4Bqi6HDfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w011.hihonor.com (unknown [10.68.20.122])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4ZYJN20YBlzYl25P;
+	Thu, 10 Apr 2025 20:02:26 +0800 (CST)
+Received: from a003.hihonor.com (10.68.18.8) by w011.hihonor.com
+ (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 10 Apr
+ 2025 20:03:00 +0800
+Received: from a007.hihonor.com (10.68.22.31) by a003.hihonor.com (10.68.18.8)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 10 Apr
+ 2025 20:03:00 +0800
+Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
+ a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
+ 15.02.1544.011; Thu, 10 Apr 2025 20:03:00 +0800
+From: gaoxu <gaoxu2@honor.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: Mike Rapoport <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>,
+	Barry Song <21cnbao@gmail.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yipengxiang
+	<yipengxiang@honor.com>
+Subject: [PATCH] mm: simplify zone_idx()
+Thread-Topic: [PATCH] mm: simplify zone_idx()
+Thread-Index: AduqEEHvK6kd7fhKS8Kk+tRXk/ygUQ==
+Date: Thu, 10 Apr 2025 12:03:00 +0000
+Message-ID: <2d42decac5194c2c8d897b0424f0dcf3@honor.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T2340d8c52bdbc82d
-Date: Thu, 10 Apr 2025 14:01:31 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christian Marangi" <ansuelsmth@gmail.com>
-Cc: "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit" <hkallweit1@gmail.com>,
- "Russell King" <linux@armlinux.org.uk>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Daniel Golle" <daniel@makrotopia.org>,
- "Qingfang Deng" <dqfext@gmail.com>,
- "SkyLake Huang" <SkyLake.Huang@mediatek.com>,
- "Matthias Brugger" <matthias.bgg@gmail.com>,
- "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- "Randy Dunlap" <rdunlap@infradead.org>, "Simon Horman" <horms@kernel.org>,
- Netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Message-Id: <0b5c6443-f50f-47a1-b5f5-900d70b69e06@app.fastmail.com>
-In-Reply-To: <67f7a119.050a0220.b15d0.3df3@mx.google.com>
-References: <20250410100410.348-1-ansuelsmth@gmail.com>
- <c108aee9-f668-4cd7-b276-d5e0a266eaa4@app.fastmail.com>
- <67f7a015.df0a0220.287b40.53b2@mx.google.com>
- <67f7a119.050a0220.b15d0.3df3@mx.google.com>
-Subject: Re: [net-next PATCH v2 1/2] net: phy: mediatek: permit to compile test GE SOC
- PHY driver
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 10, 2025, at 12:44, Christian Marangi wrote:
-> On Thu, Apr 10, 2025 at 12:40:15PM +0200, Christian Marangi wrote:
->
-> Also 99% I could be wrong but from what I can see in NVMEM kconfig,
-> NVMEM is not tristate but only bool? So NVMEM=m is not a thing?
-
-Ah, I missed that. In this case your patches are both fine.
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+c3RvcmUgem9uZV9pZHggZGlyZWN0bHkgaW4gc3RydWN0IHpvbmUgdG8gc2ltcGxpZnkgYW5kIG9w
+dGltaXplIHpvbmVfaWR4KCkNCg0KU2lnbmVkLW9mZi1ieTogZ2FvIHh1IDxnYW94dTJAaG9ub3Iu
+Y29tPg0KLS0tDQogaW5jbHVkZS9saW51eC9tbXpvbmUuaCB8IDMgKystDQogbW0vbW1faW5pdC5j
+ICAgICAgICAgICB8IDEgKw0KIDIgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRl
+bGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21tem9uZS5oIGIvaW5jbHVk
+ZS9saW51eC9tbXpvbmUuaA0KaW5kZXggNGM5NWZjYzllLi43YjE0ZjU3N2QgMTAwNjQ0DQotLS0g
+YS9pbmNsdWRlL2xpbnV4L21tem9uZS5oDQorKysgYi9pbmNsdWRlL2xpbnV4L21tem9uZS5oDQpA
+QCAtOTQxLDYgKzk0MSw3IEBAIHN0cnVjdCB6b25lIHsNCiAjZW5kaWYNCiANCiAJY29uc3QgY2hh
+cgkJKm5hbWU7DQorCWVudW0gem9uZV90eXBlCXpvbmVfaWR4Ow0KIA0KICNpZmRlZiBDT05GSUdf
+TUVNT1JZX0lTT0xBVElPTg0KIAkvKg0KQEAgLTE1MzYsNyArMTUzNyw3IEBAIHN0YXRpYyBpbmxp
+bmUgaW50IGxvY2FsX21lbW9yeV9ub2RlKGludCBub2RlX2lkKSB7IHJldHVybiBub2RlX2lkOyB9
+Ow0KIC8qDQogICogem9uZV9pZHgoKSByZXR1cm5zIDAgZm9yIHRoZSBaT05FX0RNQSB6b25lLCAx
+IGZvciB0aGUgWk9ORV9OT1JNQUwgem9uZSwgZXRjLg0KICAqLw0KLSNkZWZpbmUgem9uZV9pZHgo
+em9uZSkJCSgoem9uZSkgLSAoem9uZSktPnpvbmVfcGdkYXQtPm5vZGVfem9uZXMpDQorI2RlZmlu
+ZSB6b25lX2lkeCh6b25lKQkJKCh6b25lKS0+em9uZV9pZHgpDQogDQogI2lmZGVmIENPTkZJR19a
+T05FX0RFVklDRQ0KIHN0YXRpYyBpbmxpbmUgYm9vbCB6b25lX2lzX3pvbmVfZGV2aWNlKHN0cnVj
+dCB6b25lICp6b25lKQ0KZGlmZiAtLWdpdCBhL21tL21tX2luaXQuYyBiL21tL21tX2luaXQuYw0K
+aW5kZXggOTY1OTY4OWI4Li5hN2Y3MjY0ZjEgMTAwNjQ0DQotLS0gYS9tbS9tbV9pbml0LmMNCisr
+KyBiL21tL21tX2luaXQuYw0KQEAgLTE0MjUsNiArMTQyNSw3IEBAIHN0YXRpYyB2b2lkIF9fbWVt
+aW5pdCB6b25lX2luaXRfaW50ZXJuYWxzKHN0cnVjdCB6b25lICp6b25lLCBlbnVtIHpvbmVfdHlw
+ZSBpZHgsDQogCWF0b21pY19sb25nX3NldCgmem9uZS0+bWFuYWdlZF9wYWdlcywgcmVtYWluaW5n
+X3BhZ2VzKTsNCiAJem9uZV9zZXRfbmlkKHpvbmUsIG5pZCk7DQogCXpvbmUtPm5hbWUgPSB6b25l
+X25hbWVzW2lkeF07DQorCXpvbmUtPnpvbmVfaWR4ID0gaWR4Ow0KIAl6b25lLT56b25lX3BnZGF0
+ID0gTk9ERV9EQVRBKG5pZCk7DQogCXNwaW5fbG9ja19pbml0KCZ6b25lLT5sb2NrKTsNCiAJem9u
+ZV9zZXFsb2NrX2luaXQoem9uZSk7DQotLSANCjIuMTcuMQ0K
