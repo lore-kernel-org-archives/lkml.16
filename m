@@ -1,126 +1,109 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418DF1DFE8;
-	Thu, 10 Apr 2025 06:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E926F1DFE8
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267439; cv=none; b=mZpw3G932DjevNMKKrLy6rGBLyFQfDXuLwMAaA6D9epAoMPEt07NMojVAgsZGkhPcbXzx/Cbw8zD5130Gm09jE4XUSY0oWZqNhHWm652Komkw+K4WFsjey9KQ1PUHUUTcsDJtNYjgSoeblAdlzUfCmkju5fS82d/5A7dZNJnAFM=
+	t=1744267447; cv=none; b=bE56TA41Ig7ixcAsojtqVFBq3d6KyFCaQDc+kR7btBVCU4OAcbcsjuML/eE2Otf0rJN8tgm6u6LSm+OsykMn2vYYPhVDFHSt4IF0lJpDHcET8UiGI0GkqUWudT80+3vh2GFfrMIK9bugWbkWnD1wsidF/W9dg1QzCqHIs3oEitk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267439; c=relaxed/simple;
-	bh=YV128qhGuAyvX2XLDTOXX2NTQVmvho5pgSBUUl0uM3I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ah04Gh5axr6Uwg8BAuppn8MUMB+iTKqIA8S8P4M+ZVIEw8YTFsXsdscG8Q5Mpe3/y0LIYaraLc5VVDhdB5tLJYS5blLwfYrUIqH8kM+CDrLNAfZXCTulhGp54TJmt+NXzMORtykOpywDMxvvCoch/Qf0eNN8YzoS+l1BXBw+x0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mzw1lRdP; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mzw1lRdP"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d0618746bso3004395e9.2;
-        Wed, 09 Apr 2025 23:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744267437; x=1744872237; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YV128qhGuAyvX2XLDTOXX2NTQVmvho5pgSBUUl0uM3I=;
-        b=Mzw1lRdPo02QVuh9s+UZh5mH9ugApObNp6FmDb9HaL2JEjYeCFo66Yr8OX4+lhXoNd
-         k0UO0ajbnvt1fpiS+YCzfw/U5YVZmImdNfzv+5LkLMQ6JAkFWllw3iGVMsRpwqOBgjs4
-         EGJSttMp2nbIhyrfQtCm9u7lFRMasSF0y8d1zBUD3U1PJImgeZQ9YgqKm8ySec8a1l0h
-         9Ggy6X5S1SlkodS0cntTiutBVT3tzA6UPXXSeRR5sHuKfwOS3LVOELfLN7eFjjblXYK9
-         SMfp8+V6OUES6T0R8SBOLwKmY05iMzv3jW8jaY75uPh9GLPs893BBsjlkHeEiddlzz90
-         Vdog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744267437; x=1744872237;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YV128qhGuAyvX2XLDTOXX2NTQVmvho5pgSBUUl0uM3I=;
-        b=YfJTBGTGEy7Q7v8tc4GnHGRigZ5Nj9PR8cwD0ezpl1PQPNr8TjNBrhf1Lpoq7Y1IyG
-         l7gMnhfTDPKJx1SzdysKcmsmL1zqBl1Qkmehrc57WExJ1540w8Y3QPQcnG6YN0Gy3/I7
-         yOgLxdscsAZYmpWIlr9C2N4EzbwOvmO9O0jKSJr7U+nf9HoGgARzXu9UUtmkB8GAQxkG
-         7KNl7PEkLqAEz4BuEjIn9DkduKm0FqR2kOmLyANEC4Nbufmqh1StDPeaxt98HatimpDt
-         bZyfKC5iyefuP8/+JxCybPr1nRHqmD0rJcZ960fs2zcBtIQjnpkZchIXLz+x2SynyUkk
-         DZkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgp8WkJTzE3nSLB7T6f7atAZ4Wbzco962VGypLUqQfE4oepLhe0PHOogUorncZRbtwKE8fDovkbuQb29B80UGHpAU=@vger.kernel.org, AJvYcCUoVbMYjuLYCP6ocZ3Xw99kgZ0ib4HcscbWAPp883SZlBIS6165vV7i8OtSXVVF4lHySJB8rZKme9N88NMo@vger.kernel.org, AJvYcCV1IwHCAx60aqa32kXYNxIcJsVHZU8LuGbuWLRa0zUeOORxSdUqC/Rib9Rc0/y3VDAb0idY29QTk8c7CC1m@vger.kernel.org, AJvYcCW8D9vJNrD0JHqk73lhxiGG9WIvj7h/akezFPbDcPmA6iWOkgqQgxJwLX+LVSx4GR4zJftAPBU9G4c=@vger.kernel.org, AJvYcCWDZuKnzwYV4cKXQJGtgECIJpQxmTK8zGZ5eRceKQh2JSKnA6NiIB3xlY2h6iDEsI32Y+11REjRnr5Dqg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMgZlRw3i5Kl6Jg1lFiEKISzRhrAeZmIl8MclK7da2q1RHIG0i
-	nsAaew9FpQoEzzM/D+vt5NVamvL3eJQDZqgxLxwXPyxMh6IQyTLY
-X-Gm-Gg: ASbGnctjZtwyMlrII+VGRNGcQjICGgm+HknT40zVYsbeBYSunMpjWWWIyo/kC+uCvVj
-	MgBjeB70k+kNM/V3vXqTU8DJ0IZrcNtjn4pNIXa3OXkOLnz7TVj34hwxq6xPifP+rQFtkRrP5EC
-	YpBjZMwwHuyP6wkIqPhpXF9I2sB6JlKNKS0w2bgqZIOTBHipxUOplAnTKDVTVw2E7as4EQTuHDP
-	Qd/JfL9qY6/4RDyUWLeYCsucKTlMw0PjdafoJ3x9J9D7ysqUUHEtcxxs8SpMBhIZVV2CGu4DmPo
-	xdaQz8h6o2vXjgxMRoGYw2Am3a5pgNjY4+KcDcNmNGAczwSnojstgO9e6BsnGwX9gg44qu5i7A4
-	d602CB6ox9LGu4pqL
-X-Google-Smtp-Source: AGHT+IEL1gPJzOAzRp7flPkyN4Ef+Ndtjxrjlvobznu4GMFiYPht20jH1k+dVvg8c3EBb+I0DiJViw==
-X-Received: by 2002:a05:600c:3512:b0:43c:f689:dd with SMTP id 5b1f17b1804b1-43f2d7e9229mr11997625e9.19.1744267436516;
-        Wed, 09 Apr 2025 23:43:56 -0700 (PDT)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f207cb692sm46662105e9.40.2025.04.09.23.43.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 23:43:56 -0700 (PDT)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Samuel Holland <samuel@sholland.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
- Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
- Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Steen Hegelund <Steen.Hegelund@microchip.com>,
- Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org,
- imx@lists.linux.dev, linux-rockchip@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Subject:
- Re: [PATCH 01/19] arm64: dts: allwinner: h5/h6: Drop spurious
- 'clock-latency-ns' properties
-Date: Thu, 10 Apr 2025 08:43:52 +0200
-Message-ID: <4999502.31r3eYUQgx@jernej-laptop>
-In-Reply-To: <20250403-dt-cpu-schema-v1-1-076be7171a85@kernel.org>
-References:
- <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-1-076be7171a85@kernel.org>
+	s=arc-20240116; t=1744267447; c=relaxed/simple;
+	bh=wbzkXPD/R+tgnsKwTEsbJMaPcAYrERCAQ4MoG45enLo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SlmKK4b/SkDhoSAF3con6QuKGGAn2D0/kvhg8z8gZls2KiPKbTax27AFOqmToQcDX2w5j6boZed/i7k3YDyu//qexraPRVOEa65KrFC/JnRgTcNo7+YFlnQRExtFBYg79YEEthr3raKeLjgFrT97L0+DiJ8bFEg+mpEcz2jOXlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZY9J91DhXz4f3jXm
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:43:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A3F671A058E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:44:00 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCV6vaPdnHe0uJA--.32790S2;
+	Thu, 10 Apr 2025 14:44:00 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: akpm@linux-foundation.org
+Cc: bhe@redhat.com,
+	sj@kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [patch] mm: swap: add __maybe_unused attribute for swap_is_last_ref() and update it's comment
+Date: Thu, 10 Apr 2025 23:39:08 +0800
+Message-Id: <20250410153908.612984-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnCV6vaPdnHe0uJA--.32790S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF1Utw4DZFy3AF4fGrW7Jwb_yoW8CrWfpF
+	Z5Was8KFWxJry7ta9rZ3ZIyryFg3yfK34UZFyDK34fZ3ZxX3yS9Fyv93y5KFyUAr92vFyj
+	vFsFgw17GF4jvaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E
+	3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
+	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
+	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0E
+	n4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU0A9N3UUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Dne petek, 4. april 2025 ob 04:59:22 Srednjeevropski poletni =C4=8Das je Ro=
-b Herring (Arm) napisal(a):
-> 'clock-latency-ns' is not a valid property for CPU nodes. It belongs in
-> OPP table (which has it). Drop them from the CPU nodes.
->=20
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Add __maybe_unused attribute for swap_is_last_ref ()to fix following
+building warning:
+mm/swapfile.c:1517:20: warning: function 'swap_is_last_ref' is not needed and will not be emitted [-Wunneeded-internal-declaration]
+    1517 | static inline bool swap_is_last_ref(unsigned char count)
+         |                    ^~~~~~~~~~~~~~~~
+   1 warning generated.
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Besides, original comment for swap_entries_free() is placed before
+swap_is_last_ref() which may introduce confusion. Update comment to
+address this.
 
-Best regards,
-Jernej
+Fixes: 6bb001b6b64ec ("mm: swap: enable swap_entry_range_free() to drop any kind of last ref")
+Suggested-by: Baoquan He <bhe@redhat.com>
+Tested-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+---
+ mm/swapfile.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index c46b56d636af..4b5fc0c33a85 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1537,15 +1537,19 @@ static bool swap_entries_put_map_nr(struct swap_info_struct *si,
+ }
+ 
+ /*
+- * Drop the last ref(1, SWAP_HAS_CACHE or SWAP_MAP_SHMEM) of swap entries,
+- * caller have to ensure all entries belong to the same cgroup and cluster.
++ * Check if it's the last ref of swap entry in the freeing path.
++ * Qualified vlaue includes 1, SWAP_HAS_CACHE or SWAP_MAP_SHMEM.
+  */
+-static inline bool swap_is_last_ref(unsigned char count)
++static inline bool __maybe_unused swap_is_last_ref(unsigned char count)
+ {
+ 	return (count == SWAP_HAS_CACHE) || (count == 1) ||
+ 	       (count == SWAP_MAP_SHMEM);
+ }
+ 
++/*
++ * Drop the last ref of swap entries, caller have to ensure all entries
++ * belong to the same cgroup and cluster.
++ */
+ static void swap_entries_free(struct swap_info_struct *si,
+ 			      struct swap_cluster_info *ci,
+ 			      swp_entry_t entry, unsigned int nr_pages)
+-- 
+2.30.0
 
