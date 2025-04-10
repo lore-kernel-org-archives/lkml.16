@@ -1,69 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9B61E1E00;
-	Thu, 10 Apr 2025 10:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BC11E1E00
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744280549; cv=none; b=chYzo1Wn7iC+K2TZGEfz+mgEWigyCgBtchFlsmJTkUZVT3ARRsEG540B3LYm57M/bDTPcaFa/5Xl/p+L62kztUwYrTfO8aiKY7or/EWjXWUv4I1/Pnggw5+j3FPI5j8rG6Db0YpkuPZkopRwwLrWYlY7CZtGGx2NqiBrIEN49q4=
+	t=1744280627; cv=none; b=UfNoKA+iEMWNzmHu0g6B8TKov5jAXg8l7SHfg2eTe+TQtVBIgtE3obLUP/4tTZX8wZW6zEVc506Tte3ucB8gtJJMm6QWpg1Q28ejlUwuNzKdPWgC0gQKlDdlgCh/jNnJw1NaZsE4JM3W0035FG+OVDUGmK4eoveaZZeszvoH8so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744280549; c=relaxed/simple;
-	bh=8Ce156ePCB6yuaGjuvc6lemKLyv0wBCBVdwWIgaIHv0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jp09m1Y7qPnnNAwOjpnwpFxJZHTT5+vMjQOK983MMz9VqlgeWrQ50xGjZ2RS62Tj2GgEJCHrFDvmgxqMZnHekzXQwkdGz+d4l8s07z2sPmOQWh8ESa9bare9/6Fv6EzlX8zp7fyTneV/rhTL6+i2VQSpcGwqGAUEKPYCXjbEwWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUrDZSzU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744280627; c=relaxed/simple;
+	bh=OfuCOFKjvMskfnz1F4XFE/u3fByc20wvO3rC2eyS2l8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tdAB0H5ftB6fjoJ+QulY/h93pNA26okxbIZG9Meg323nFh7O89dFFHGxASKTPfOUcLFQlOqIGU7H4Hrb86rvYbwJEnRHt0te6hGxTWttZKhKK1lHWq+AgYgi6A3oiY0tSjLUB/VppqEmZsCm3gZlje17v44bheVds5smFZRBV+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LNJOCEez; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUrDZSzU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 982D3C4CEDD;
-	Thu, 10 Apr 2025 10:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744280548;
-	bh=8Ce156ePCB6yuaGjuvc6lemKLyv0wBCBVdwWIgaIHv0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=OUrDZSzUZhHSAg7NyaQNylOb22pwCtSXF74808Vys0QyHqlK2WDSS1nQgsmvXRh8f
-	 +9VAnQ9oRVDQrweoYy+6CygkLE3ZgChnG+vrnfjv2eX6fBRxxgkMOtvrEnuL3aXeB8
-	 mDHfwywj5UamKR/6incKBUfWcO8zN06FTYcJBiPUMx2y2BW5kLo4xK4i9QITxu7yO0
-	 I2Gu/vb1/r470Tpm+XrWP9f+GzdGb2rayGXLcVMfFQTfUHBp2lOBYsAQ0KSbbib4pt
-	 4we4S3vurONEQ5ngI/VHnRJEM22I+CICBcXh6x8vHOS1V9WmCUSR758hK0dvHHZvi/
-	 PaZBOdncCrqbA==
-From: Lee Jones <lee@kernel.org>
-To: Eddie James <eajames@linux.ibm.com>, Lee Jones <lee@kernel.org>, 
- linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Pavel Machek <pavel@kernel.org>
-In-Reply-To: <20250407151441.706378-1-andriy.shevchenko@linux.intel.com>
-References: <20250407151441.706378-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: (subset) [PATCH v3 1/1] leds: pca955x: Avoid potential
- overflow when filling default_label
-Message-Id: <174428054735.1712257.6284971422979346985.b4-ty@kernel.org>
-Date: Thu, 10 Apr 2025 11:22:27 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LNJOCEez"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744280624;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OfuCOFKjvMskfnz1F4XFE/u3fByc20wvO3rC2eyS2l8=;
+	b=LNJOCEezNXPLIHVGgBo3jzS5/MEgDnHHfCMarbzwLI0XldBQ4rj/Bdl3aATEZzXHIoIZ89
+	pb8BHk2bUV1kSJ7iFobyakc3IbVmfW5aRNaKNYLMTIo4LFgRW3t8/pSupvXO2Np1krgsoT
+	ywPERax/Axk73A8WbnGYKY8JY/T6Pnk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-49-HsYIMb8QMWKatUqcykx9-Q-1; Thu, 10 Apr 2025 06:23:43 -0400
+X-MC-Unique: HsYIMb8QMWKatUqcykx9-Q-1
+X-Mimecast-MFC-AGG-ID: HsYIMb8QMWKatUqcykx9-Q_1744280622
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39c2da64df9so331872f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:23:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744280622; x=1744885422;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OfuCOFKjvMskfnz1F4XFE/u3fByc20wvO3rC2eyS2l8=;
+        b=jN5q9w2wPzEsN7nFgNwjgiMNs0iVSb6paTJbIsnzb74/+D3OtMUxhXCL7A8Aff+ttP
+         FYskkPx01rRk3uriQDeVMo3OvcnezASejZSAfxGTv3tWIgg7FUKfcLClCiNyjD3mMk2A
+         QpVprsDjukEZY0d2S4ufyihDaf7NLIISot63m3XM5F5XVdMcPoAl8bl+UBHny0ywQ9eN
+         jjlzBbMNbGVjSGv15+GCbW4HmDmKjrYs1wofM0cuG3y+TWVG/HR6A+xxwFvGiGIGcY5X
+         WDYBSMtVFWTAEmnu7vCVg2poifgxgnmhz0on1KW2zz45UQOsP/Wq3Tdu4ohiALAG1IVp
+         +t/w==
+X-Gm-Message-State: AOJu0Yx6QbBwVEVkSH0TVSl4bzQHYyuuSciCoxdSI0A1nLI3o+DTeyMB
+	A/ePREv/bgXWTmbWu6rjgwzlcC2oPo0Qk3qg2+ruTWo+d2JP69cr5aDPOZ2PJJ8UpNpQ3Y6G9o3
+	t125zn3BzVTiugUx7gEq7sbV34TOZyx8rQyPZzSZZ+cgUYZjiG6ANXV+K5a40pg==
+X-Gm-Gg: ASbGncvGt6M+SfuoiBAr3kTt9h8xXIINxp5bsILF4SfZFCaXUhuXdjjpkF6FIjUoo7M
+	pGtVHPhSngCZ2IkPFBFEna5Ujefbs/l70MmwsUzehO/aaLzFHj/ZW+LFCN9WgHQKmgju4LYXmey
+	V+rnCBRfwFj0Ye5EUD5QLZKZf5w55eGCsbr+KF2BjgCSLYJGDDatzREgtHk/zxcGdOVgfUqgUBg
+	wdmjV5+AWd7cgpIZYgVbBEpJyRYhD57GhRc0/5BAudHN4q5HZQrjO7XwzrfAShfdNKzEY4jFUlg
+	PL1Zwsi7QuZ0Ae2mD5TcahnLGtuaU32majtjAsg=
+X-Received: by 2002:a5d:59a4:0:b0:399:6dd9:9f40 with SMTP id ffacd0b85a97d-39d8f271ff3mr1349577f8f.9.1744280622406;
+        Thu, 10 Apr 2025 03:23:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHlGK+RDA8sZsXCeD/oZHDHITnRrGJZDpmPkdubQYhIgKQAR+h2AH1WJpCXG8zaPEaVZ56PZA==
+X-Received: by 2002:a5d:59a4:0:b0:399:6dd9:9f40 with SMTP id ffacd0b85a97d-39d8f271ff3mr1349564f8f.9.1744280622098;
+        Thu, 10 Apr 2025 03:23:42 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-84-24.dyn.eolo.it. [146.241.84.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a2c46sm46370505e9.13.2025.04.10.03.23.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 03:23:41 -0700 (PDT)
+Message-ID: <2c779583-bac7-43fe-80db-0dc0bca2e0d2@redhat.com>
+Date: Thu, 10 Apr 2025 12:23:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-510f9
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] ptp: ocp: add irig and dcf NULL-check in
+ __handle_signal functions
+To: Sagi Maimon <maimon.sagi@gmail.com>, jonathan.lemon@gmail.com,
+ vadim.fedorenko@linux.dev, richardcochran@gmail.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20250409092446.64202-1-maimon.sagi@gmail.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250409092446.64202-1-maimon.sagi@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 07 Apr 2025 18:13:26 +0300, Andy Shevchenko wrote:
-> GCC compiler (Debian 14.2.0-17) is not happy about printing
-> into a too short buffer (when build with `make W=1`):
-> 
->   drivers/leds/leds-pca955x.c:554:33: note: ‘snprintf’ output between 2 and 12 bytes into a destination of size 8
-> 
-> Indeed, the buffer size is chosen based on some assumptions,
-> while in general the assigned value might not fit (GCC can't
-> prove it does).
-> 
-> [...]
+On 4/9/25 11:24 AM, Sagi Maimon wrote:
+> In __handle_signal_outputs and __handle_signal_inputs add
+> irig and dcf NULL-check
 
-Applied, thanks!
+You need to expand a little the commit message. Is the NULL ptr
+dereference actually possible? How? or this is just defensive programming?
 
-[1/1] leds: pca955x: Avoid potential overflow when filling default_label
-      commit: 1463b1c5bb231a8d46dc9db1773a31167614f84b
+If there is a real NULL ptr dereference this need a suitable Fixes tag.
 
---
-Lee Jones [李琼斯]
+And you should specify the target tree in the subj prefix.
+
+You can retain the collected ack when resubmitting.
+
+Thanks,
+
+Paolo
 
