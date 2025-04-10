@@ -1,114 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54AF28EA5C;
-	Thu, 10 Apr 2025 21:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D986EB79
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744319425; cv=none; b=pu29E3fhZUvG/oMikZXviObj2ZqfsLr4FKNTZ8QyCRc6nrcfOK5zApYOhbgHc1l/wrVxMnINqkk4WjaQ9RgBoPCcHM1JQlLyzdqVdmNOvn1w/x/+KyXXxKPvXLUed91XheCxZvag7m0xJ9etEGEMpI9iRKF5OtlXz08KNqopo4M=
+	t=1744319433; cv=none; b=fp4VWMT/ceaNZ+OuPxmJ0feqG0fQ8YX0fvZ1o6k7wM2kx2yOG3kZd+MWbZuzIhO8UC9our6Q/SJsu1gdaURXQ02udwANg7+6Pscj2hh40A3z5l8VUr4MzWM2CFIUMxfETHNKOKVgO9X2y9ZmdexgNb+T3wN1+xCXMSEWUDkT50I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744319425; c=relaxed/simple;
-	bh=nQlZdTU+lS/Y/JHfgCk5WHjlwHAdkn/xnnQCVl6khHM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KBLb5kgZyhTudAIphSdy0Q7gpOGF9MSclK2wuemFIBKnlRWwW0Y3U9XMNpf3cixXznk/VQ/SkrMS+drbURmeG9apXwNnvH+TrKvYuS1dDVqnyqmMXA2zRV22ucnoi3ek7iEsnsfO5C1jgHAvxDF+7JDU3T7hqiMuA0JQjfcFut4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0t5e1Qh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744319433; c=relaxed/simple;
+	bh=nX/XY/7M0evAeESRUbCYSex7ErwkxlGQcKzihfIyV7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mchMLFo0eUepOQzkIVh+k9CkFCRq0gEe20COwIagfRSssrgai4oF605ZdOiw6VjoljVMO9AOHt7uR1Il/p3XUW7Iva7Plp7i+sJNx4O/gYOC4OnvUGkCsP/zB6VSuHG9ZiDQrNuMW4qLiwIvcjdP5zW9iSObX6JTMIMwjGlBFFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGEbs+ix; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0t5e1Qh"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 32426C4CEEA;
-	Thu, 10 Apr 2025 21:10:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGEbs+ix"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4180EC4CEDD;
+	Thu, 10 Apr 2025 21:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744319425;
-	bh=nQlZdTU+lS/Y/JHfgCk5WHjlwHAdkn/xnnQCVl6khHM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=W0t5e1QhLQu/pFuBZ3cngf7c3cuqKpcQ9FABlAuzqwrJnWZ/f9fbElrMgD0O0SRTW
-	 7YAkeXAhf0Z7/TfLX03tSuiQLkwoRJKH/NzdlkrO7rF13iwo4FFLfYXruULuG9qokw
-	 QMLm38S/jYCJL08i6Eq7VLc9fQ7hKiTw5gAwwfAmflS1KnODHbTBhzKb8pGPcEmFVN
-	 01tHx/gwz20jrws9i6e0l77ag0ZuvB3ZVly8qn7Fobr74aSCsq5UPzvKCtcE2TI1rQ
-	 CpKThSDd10+oJvObwfO17XhvTXdnEYhg7dkZVdF0v/b9FAglZRNxJVq+vxyu53EeET
-	 +LD/ccLhYjewg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0E4C369AA;
-	Thu, 10 Apr 2025 21:10:24 +0000 (UTC)
-From: Michael Riesch via B4 Relay <devnull+michael.riesch.collabora.com@kernel.org>
-Date: Thu, 10 Apr 2025 22:58:54 +0200
-Subject: [PATCH v2 2/2] clang-format: align consecutive macros
+	s=k20201202; t=1744319432;
+	bh=nX/XY/7M0evAeESRUbCYSex7ErwkxlGQcKzihfIyV7o=;
+	h=Date:From:To:Cc:Subject:From;
+	b=oGEbs+ixXOgTh1S3TJZ4jaf6yu0vmk/XtFtF4fvaZFLo9yv26TMdLhS7vVK3sb67x
+	 btj3CJ+k1KPU6NXW5XkE/lZt/ijC/6cCWWkqNRrTLjTna3fpQL+OpKnn6rlilnLrPA
+	 DHryg6TlJT25GZ2Q9ihA+zKKOK62LjKVLBwKrhGlmHRpbhQDjZ4rnG9LB8zTxZcQRG
+	 K4fFrQ8+aYm2D0HRgUW7U3QCOW+Inp+xzaSLtyyZcDnDzTYKwFLP64JhoMhqO1+Jox
+	 Z+igy+KneYUFzXEyFNLXNN6RuOXh3Kd64MOhxg6fKFxQKe1rR1BAluYyrVp6EciRky
+	 0Fq5zTNU16blA==
+Date: Thu, 10 Apr 2025 23:10:27 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [GIT PULL] perf events fixes
+Message-ID: <Z_gzw9spHIqTdVG0@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-clang-format-fixes-v2-2-37894413bbee@collabora.com>
-References: <20250210-clang-format-fixes-v2-0-37894413bbee@collabora.com>
-In-Reply-To: <20250210-clang-format-fixes-v2-0-37894413bbee@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: Collabora Kernel Team <kernel@collabora.com>, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- Michael Riesch <michael.riesch@wolfvision.net>, 
- Michael Riesch <michael.riesch@collabora.com>
-X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744318740; l=1371;
- i=michael.riesch@collabora.com; s=20250410; h=from:subject:message-id;
- bh=GCAcQLFrMA5v4a8RQ+v4hX/83CyGkOIzdbZt9W/iAMo=;
- b=eQYqQ3YfPADGuVnklkfGZ8zn5fc1Ke7BHBl6FyFpdefybbJRw2NKRRgfdiT6BGn/jlXU6U0L/
- 32RqDjGfhLxDmqi61M2ZhSnT4keDU3L/iW3teyy6fMOiOL7q/ex73wB
-X-Developer-Key: i=michael.riesch@collabora.com; a=ed25519;
- pk=+MWX1fffLFZtTPG/I6XdYm/+OSvpRE8D9evQaWbiN04=
-X-Endpoint-Received: by B4 Relay for michael.riesch@collabora.com/20250410
- with auth_id=371
-X-Original-From: Michael Riesch <michael.riesch@collabora.com>
-Reply-To: michael.riesch@collabora.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Michael Riesch <michael.riesch@wolfvision.net>
+Linus,
 
-clang-format 9 introduced the option "AlignConsecutiveMacros".
-Set it to "AcrossEmptyLinesAndComments" in order to avoid macro
-definitions of the form:
+Please pull the latest perf/urgent Git tree from:
 
-    #define MAGIC_REGISTER_1 0x42
-    #define MAGIC_REGISTER_BIT_FLIP BIT(2)
-    /* important comment */
-    #define MAGIC_REGISTER_BIT_ENABLE BIT(12)
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2025-04-10
 
-    #define MAGIC_REGISTER_2 0x43
+   # HEAD: 56799bc035658738f362acec3e7647bb84e68933 perf: Fix hang while freeing sigtrap event
 
-With the option set to "AcrossEmptyLinesAndComments", they will
-be converted to
+Miscellaneous perf events fixes:
 
-    #define MAGIC_REGISTER_1	      0x42
-    #define MAGIC_REGISTER_BIT_FLIP   BIT(2)
-    /* important comment */
-    #define MAGIC_REGISTER_BIT_ENABLE BIT(12)
+ - Fix __free_event() corner case splat
 
-    #define MAGIC_REGISTER_2	      0x43
+ - Fix false-positive uprobes related lockdep
+   splat on CONFIG_PREEMPT_RT=y kernels
 
-which seems to be the convention in the kernel code base.
+ - Fix a complicated perf sigtrap race that may
+   result in hangs
 
-Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
----
- .clang-format | 1 +
- 1 file changed, 1 insertion(+)
+ Thanks,
 
-diff --git a/.clang-format b/.clang-format
-index 8040b516185b..30d09cb88170 100644
---- a/.clang-format
-+++ b/.clang-format
-@@ -13,6 +13,7 @@ AccessModifierOffset: -4
- AlignAfterOpenBracket: Align
- AlignConsecutiveAssignments: false
- AlignConsecutiveDeclarations: false
-+AlignConsecutiveMacros: AcrossEmptyLinesAndComments
- AlignEscapedNewlines: Left
- AlignOperands: true
- AlignTrailingComments: false
+	Ingo
 
--- 
-2.39.5
+------------------>
+Andrii Nakryiko (1):
+      uprobes: Avoid false-positive lockdep splat on CONFIG_PREEMPT_RT=y in the ri_timer() uprobe timer callback, use raw_write_seqcount_*()
+
+Frederic Weisbecker (1):
+      perf: Fix hang while freeing sigtrap event
+
+Gabriel Shahrouzi (1):
+      perf/core: Fix WARN_ON(!ctx) in __free_event() for partial init
 
 
+ include/linux/perf_event.h |  1 -
+ kernel/events/core.c       | 70 ++++++++++++++--------------------------------
+ kernel/events/uprobes.c    | 15 ++++++++--
+ 3 files changed, 34 insertions(+), 52 deletions(-)
