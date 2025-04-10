@@ -1,230 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998C220C476
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B65189B84;
+	Thu, 10 Apr 2025 09:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276229; cv=none; b=L7CamUTr3eku0HG74oQo58gIFg9mVBvmGPE9OOtTNRmXlE3Ui+HyATYc6w4qlGMi9/8aH4qoQWPA1pjzZC2kvjZTsrU+wHYwDuKLRoQCk5gjgtwlEhtXaYaE6+Kk39bN7CLvZ3yBn39UPGk+ZYSId+4TWpbkLnaQC4Jr6T5VZl0=
+	t=1744276303; cv=none; b=OIXo4PADaGpsE7t3rxI9t7wZkUa9KdmMuTdkUds0pUS3Az8aE6PBYpR9mt3WaZw5SpbgR5j4H8wBtWuOcm29Jif/BoFVF2UO+BMZP9BLT6bke3n3NuwMv1s8oSL6/rcL7nlAfLhYOP7UZb5WqGK8gXhgCX5sVOkLBWePGuGEArA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276229; c=relaxed/simple;
-	bh=S4gD+3ui7K1tm6lBvIKO/M5DULRUHhtuzWDJL/fuqYo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bWJUCF4b+co0FNgQn0qElhXwTzzsAEApPPSlmZPyjRp3GymtVip0Z9ETbs7DlqmQMEySj5eGZECmU4A1Vo51/RjkFw3xJOcrY16LZvaqAYhh7AgHwsxwb6aJlhx1HJhnmCF8b0D0OMqunFSR18sT7arLASZzLAd+sWZM7UI7Rag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WlYb1Vd6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744276303; c=relaxed/simple;
+	bh=aTPVMYbW6F0IqppqC40Mcn7dIv8KOa0Pnw0g2LzJ5rY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GmA6oLhwpvCttwjPjUV+gmRJfe4iefWLfbk1N81vgPEdfiiIZdUHPfeU61vpL2Wfzy6H/D1jddojAfuph66nIkwMJXDdpu0jpwC71D1nR8fPmE9TecKVf3Wg1NbVhRAoisB3bvM4FW/iq1KUiUi2DmdV32/4NPBDTq93h4vVEtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=k64BKgH2; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WlYb1Vd6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744276226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=27eNNzuEQxbmkvmFUCfr+IytzedlUHGjPUYmckfSXUM=;
-	b=WlYb1Vd66OuwxAfn+GCndWD0WkrQmfbuf/EfA/cuj8Enz3z6yQIGqrBQmpZS1Bc3SdJ3Dp
-	lx0mDVqd52zIQY0CXaf41c0SUwYwyE5vN2QuwemAacMTzuSeqQfmmRE1fpxC4bm/w2fEuS
-	KP4L8cSzL5zQUeD6MHQFGP5eTv6K7zo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-14-dsDwJFRhN3W5f3usRjMV0w-1; Thu, 10 Apr 2025 05:10:24 -0400
-X-MC-Unique: dsDwJFRhN3W5f3usRjMV0w-1
-X-Mimecast-MFC-AGG-ID: dsDwJFRhN3W5f3usRjMV0w_1744276224
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf327e9a2so5205595e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:10:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744276224; x=1744881024;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=27eNNzuEQxbmkvmFUCfr+IytzedlUHGjPUYmckfSXUM=;
-        b=HTfhltfSKPSz25fI+J3Z12yce9b+HNKESe4k23X3169DTMilS1SqreauUC1D+Jzc1h
-         Ih+REzjIs50BtFavsDwptN4MvNqMGMPN2OD9VYTgm1yLlIOm7hGMU1afQjuKJA2krLpt
-         qfP/GZ/k7TDpy44atLECa9GtdB+u8QQ9x3BLUd/f3CUo8dUK1pqipNlrKRQrbDXd3sCh
-         UV/+eBqq5zDhofhy/ubXphNV3+1mJXPeN9Kk+ZWQzGUWyz+0D35PJEfHrwr/5tiYc3KC
-         EkqiGFMXUCY3ZWNN6NeTN6M7LVBdrnHe5q5J6zY0XgakfSJaIMjuLNNo2nNfJGIrRaR1
-         WtDQ==
-X-Gm-Message-State: AOJu0Yx5aZ6gQ3XsBIvJRXak1XaeyMHAB3cpReJqrOT/3yi1ZUdgUs3Q
-	ATMbCLdX8mcjVabSxbCNywEhFCrggtfeIYVipLk4Ld39YM0F43JGZ+dwfkrTTylRSSj6/WdFCKY
-	L/aS8TZkaTSm/FOFluXTDCEfhiWoySUFTGkbxGXRDfiZJCAzLCZdHzvQnGOa6dVpClkDVO2eQqn
-	6nKCnSKbROsl69Qf1XVxJNT7tnm62gbh12Mk6feSpKGQ==
-X-Gm-Gg: ASbGnctzb6G3Hz885LNC4QhZAoIksQRVxO/TGAqOeIFYALpT5XtjD0QVA3a/get5FzD
-	c/9GaXSa8gyHKUQLc5A0uXiM3j6aoMZBbp2xAxq2W/3P0C/hr6ie1tZniKtoO6ybbfDJIGJVs2n
-	UevdopBebBRI/kIiDC/6GsVPAWR3xqujsu+R9ENz8zknMsE5BTWRpkziQUOOFhhg1x70POV8boK
-	HDl01J8v1UDOP9gdVAiq0lyy9bYP1WrP1P0665/SdWHOc5qq5NkezpEl0FDXUUCUCZyouyNmcgP
-	6uxseObfD4qMrKFhRs+ASZdlc4VUJvE8bPjtpia1Wr7L8dkcGZYojxgK2I44rSeTwOJI7l1+
-X-Received: by 2002:a5d:59ad:0:b0:39c:13fa:3eb with SMTP id ffacd0b85a97d-39d8f4e43c0mr1524439f8f.39.1744276223592;
-        Thu, 10 Apr 2025 02:10:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9o//1YdnfQaWfNqnIWzI/WV2dN54LX94NnfwgJ3jSA+I3+tbjCeuQrP5snslAD47XW4PEGg==
-X-Received: by 2002:a5d:59ad:0:b0:39c:13fa:3eb with SMTP id ffacd0b85a97d-39d8f4e43c0mr1524393f8f.39.1744276222986;
-        Thu, 10 Apr 2025 02:10:22 -0700 (PDT)
-Received: from localhost (p200300cbc71a5900d1064706528a7cd5.dip0.t-ipconnect.de. [2003:cb:c71a:5900:d106:4706:528a:7cd5])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d893773a0sm4135334f8f.25.2025.04.10.02.10.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:10:22 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	David Hildenbrand <david@redhat.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v1] fs/dax: fix folio splitting issue by resetting old folio order + _nr_pages
-Date: Thu, 10 Apr 2025 11:10:20 +0200
-Message-ID: <20250410091020.119116-1-david@redhat.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="k64BKgH2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Q7XeSNwUSyKsnPHjzguFYMm/+HQnjTgqG1Z3ie3pBlE=; b=k64BKgH2UFkjxG4Hthfdq7uVRP
+	bYAoS6CUmGYx7xXgn1+VVf3RjjrbUYW5fNq+bxp1uO7DMOzVLjhD6FYaPk0YxTdx70jFgt/FdbjKx
+	hn+5ant+gddH2+aUdKnm/V2OuA5//nbVyiCAZGhWVaDgDRxuKvHMunrDItSeCYABqoFSYjgBKqiDx
+	KEp5DEIJP6uv7jCnxMb5tpp7y42m/3Ku4sT7kHOIUuUyWXrv3XILCQlQerunqrS8gyXNIA0Wcuzv/
+	OQBi7bQ/coxWxu1xfcqFezqhP/Tn1hNpUvr9oGhQjrg4MUFP8aOICuFzyJINEXKWfT3vHcL6l3+16
+	fwff5YEw==;
+Received: from i53875b95.versanet.de ([83.135.91.149] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1u2nwY-0003XO-TF; Thu, 10 Apr 2025 11:11:30 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Frank Wang <frank.wang@rock-chips.com>,
+ Zhang Yubing <yubing.zhang@rock-chips.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v2] dt-bindings: phy: rockchip: Add missing "phy-supply" property
+Date: Thu, 10 Apr 2025 11:11:30 +0200
+Message-ID: <4668554.cEBGB3zze1@diego>
+In-Reply-To: <20250407165607.2937088-1-robh@kernel.org>
+References: <20250407165607.2937088-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Alison reports an issue with fsdax when large extends end up using
-large ZONE_DEVICE folios:
+Am Montag, 7. April 2025, 18:56:06 Mitteleurop=C3=A4ische Sommerzeit schrie=
+b Rob Herring (Arm):
+> Several Rockchip PHYs use the "phy-supply" property, but don't
+> document it. Add it to the current known users.
+>=20
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-[  417.796271] BUG: kernel NULL pointer dereference, address: 0000000000000b00
-[  417.796982] #PF: supervisor read access in kernel mode
-[  417.797540] #PF: error_code(0x0000) - not-present page
-[  417.798123] PGD 2a5c5067 P4D 2a5c5067 PUD 2a5c6067 PMD 0
-[  417.798690] Oops: Oops: 0000 [#1] SMP NOPTI
-[  417.799178] CPU: 5 UID: 0 PID: 1515 Comm: mmap Tainted: ...
-[  417.800150] Tainted: [O]=OOT_MODULE
-[  417.800583] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[  417.801358] RIP: 0010:__lruvec_stat_mod_folio+0x7e/0x250
-[  417.801948] Code: ...
-[  417.803662] RSP: 0000:ffffc90002be3a08 EFLAGS: 00010206
-[  417.804234] RAX: 0000000000000000 RBX: 0000000000000200 RCX: 0000000000000002
-[  417.804984] RDX: ffffffff815652d7 RSI: 0000000000000000 RDI: ffffffff82a2beae
-[  417.805689] RBP: ffffc90002be3a28 R08: 0000000000000000 R09: 0000000000000000
-[  417.806384] R10: ffffea0007000040 R11: ffff888376ffe000 R12: 0000000000000001
-[  417.807099] R13: 0000000000000012 R14: ffff88807fe4ab40 R15: ffff888029210580
-[  417.807801] FS:  00007f339fa7a740(0000) GS:ffff8881fa9b9000(0000) knlGS:0000000000000000
-[  417.808570] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  417.809193] CR2: 0000000000000b00 CR3: 000000002a4f0004 CR4: 0000000000370ef0
-[  417.809925] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  417.810622] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  417.811353] Call Trace:
-[  417.811709]  <TASK>
-[  417.812038]  folio_add_file_rmap_ptes+0x143/0x230
-[  417.812566]  insert_page_into_pte_locked+0x1ee/0x3c0
-[  417.813132]  insert_page+0x78/0xf0
-[  417.813558]  vmf_insert_page_mkwrite+0x55/0xa0
-[  417.814088]  dax_fault_iter+0x484/0x7b0
-[  417.814542]  dax_iomap_pte_fault+0x1ca/0x620
-[  417.815055]  dax_iomap_fault+0x39/0x40
-[  417.815499]  __xfs_write_fault+0x139/0x380
-[  417.815995]  ? __handle_mm_fault+0x5e5/0x1a60
-[  417.816483]  xfs_write_fault+0x41/0x50
-[  417.816966]  xfs_filemap_fault+0x3b/0xe0
-[  417.817424]  __do_fault+0x31/0x180
-[  417.817859]  __handle_mm_fault+0xee1/0x1a60
-[  417.818325]  ? debug_smp_processor_id+0x17/0x20
-[  417.818844]  handle_mm_fault+0xe1/0x2b0
-[...]
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-The issue is that when we split a large ZONE_DEVICE folio to order-0
-ones, we don't reset the order/_nr_pages. As folio->_nr_pages overlays
-page[1]->memcg_data, once page[1] is a folio, it suddenly looks like it
-has folio->memcg_data set. And we never manually initialize
-folio->memcg_data in fsdax code, because we never expect it to be set at
-all.
 
-When __lruvec_stat_mod_folio() then stumbles over such a folio, it tries to
-use folio->memcg_data (because it's non-NULL) but it does not actually
-point at a memcg, resulting in the problem.
+> ---
+> v2:
+>  - Drop maxItems
+> ---
+>  .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml   | 3 +++
+>  Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yaml  | 3 +++
+>  Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml  | 3 +++
+>  3 files changed, 9 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-co=
+mbphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-comb=
+phy.yaml
+> index 888e6b2aac5a..3e101c3c5ea9 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.y=
+aml
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.y=
+aml
+> @@ -42,6 +42,9 @@ properties:
+>        - const: phy
+>        - const: apb
+> =20
+> +  phy-supply:
+> +    description: Single PHY regulator
+> +
+>    rockchip,enable-ssc:
+>      type: boolean
+>      description:
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yam=
+l b/Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yaml
+> index b42f1272903d..8b7059d5b182 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yaml
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-usbdp.yaml
+> @@ -47,6 +47,9 @@ properties:
+>        - const: pcs_apb
+>        - const: pma_apb
+> =20
+> +  phy-supply:
+> +    description: Single PHY regulator
+> +
+>    rockchip,dp-lane-mux:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+>      minItems: 2
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yam=
+l b/Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml
+> index ba67dca5a446..d7de8b527c5c 100644
+> --- a/Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml
+> @@ -46,6 +46,9 @@ properties:
+>    reset-names:
+>      const: phy
+> =20
+> +  phy-supply:
+> +    description: Single PHY regulator
+> +
+>    rockchip,phy-grf:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+>      description: phandle to the syscon managing the phy "general registe=
+r files"
+>=20
 
-Alison also observed that these folios sometimes have "locked"
-set, which is rather concerning (folios locked from the beginning ...).
-The reason is that the order for large folios is stored in page[1]->flags,
-which become the folio->flags of a new small folio.
 
-Let's fix it by adding a folio helper to clear order/_nr_pages for
-splitting purposes.
 
-Maybe we should reinitialize other large folio flags / folio members as
-well when splitting, because they might similarly cause harm once
-page[1] becomes a folio? At least other flags in PAGE_FLAGS_SECOND should
-not be set for fsdax, so at least page[1]->flags might be as expected with
-this fix.
-
-From a quick glimpse, initializing ->mapping, ->pgmap and ->share should
-re-initialize most things from a previous page[1] used by large folios
-that fsdax cares about. For example folio->private might not get
-reinitialized, but maybe that's not relevant -- no traces of it's use in
-fsdax code. Needs a closer look.
-
-Another thing that should be considered in the future is performing similar
-checks as we perform in free_tail_page_prepare() -- checking pincount etc.
--- when freeing a large fsdax folio.
-
-Fixes: 4996fc547f5b ("mm: let _folio_nr_pages overlay memcg_data in first tail page")
-Fixes: 38607c62b34b ("fs/dax: properly refcount fs dax pages")
-Reported-by: Alison Schofield <alison.schofield@intel.com>
-Closes: https://lkml.kernel.org/r/Z_W9Oeg-D9FhImf3@aschofie-mobl2.lan
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alistair Popple <apopple@nvidia.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- fs/dax.c           |  1 +
- include/linux/mm.h | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
-
-diff --git a/fs/dax.c b/fs/dax.c
-index af5045b0f476e..676303419e9e8 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -396,6 +396,7 @@ static inline unsigned long dax_folio_put(struct folio *folio)
- 	order = folio_order(folio);
- 	if (!order)
- 		return 0;
-+	folio_reset_order(folio);
- 
- 	for (i = 0; i < (1UL << order); i++) {
- 		struct dev_pagemap *pgmap = page_pgmap(&folio->page);
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index b7f13f087954b..bf55206935c46 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1218,6 +1218,23 @@ static inline unsigned int folio_order(const struct folio *folio)
- 	return folio_large_order(folio);
- }
- 
-+/**
-+ * folio_reset_order - Reset the folio order and derived _nr_pages
-+ * @folio: The folio.
-+ *
-+ * Reset the order and derived _nr_pages to 0. Must only be used in the
-+ * process of splitting large folios.
-+ */
-+static inline void folio_reset_order(struct folio *folio)
-+{
-+	if (WARN_ON_ONCE(!folio_test_large(folio)))
-+		return;
-+	folio->_flags_1 &= ~0xffUL;
-+#ifdef NR_PAGES_IN_LARGE_FOLIO
-+	folio->_nr_pages = 0;
-+#endif
-+}
-+
- #include <linux/huge_mm.h>
- 
- /*
--- 
-2.48.1
 
