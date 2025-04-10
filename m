@@ -1,318 +1,299 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1111E991C
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9111EE017;
+	Thu, 10 Apr 2025 15:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299608; cv=none; b=qEgeRO5N0GtsdidUw1eieTakLM6cyz12WSCI/m/FcVK8kW3Lr1glagRQXEhXCKpfTOeac3X7oY+RLnaoMlG9TnYyg1V1PqBNbnCKxHBPDpcFxt0yEou7CFJ/QubJtUU+zUeWwycpCUctV5xzzF3XqgS9Bx1qKOJIUiKe3hm1eYM=
+	t=1744299613; cv=none; b=YfYMzdi5exx/qeot74IyX1L60D4NLh0xDn7oq97S/bn13OafyrEW7M/9A3NcALlaX4T7JsYAyi5b2kU2HngOJZnW+s/FfQGaLW73homb3NsHSJ1PNL9BIK9ZhIW7RQPucWAbEajWOuMd8zSJsytklmSKSdEZ+3ppWj0e1U5WXbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299608; c=relaxed/simple;
-	bh=Z55o0rne8axzQgHW6ecSFjbLEbpusaWBm2vwobr6nbg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=k35jT908T97NlF41MRYo9tDKTjbCCR79d9PzJqozKLY5JJl5tkTxkeJT3ZNjBjyiAiOa7it/khcvX2iz+F2TNTgGZcTqxu2eCvl0TWRJK2Lymu69BzznCJuGtP29upI65XfRNwTfCK2Zc1xmV3PiwSP0+50fw6tDepKf5n9A8PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AuyUFm5l; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744299613; c=relaxed/simple;
+	bh=svcXHG7mzYxuKH0nfv7UTBJY7tAWrQCK9JOpQwcqVZM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LRA0M1nBe4rae+Rhul6qRmIgKnnKNcFzWnvdKZT7cDPQYcc6JuUtaSKRbO90DblqlAqDFIeebCwZ7aQbe7YbnGraKmAOqqkpKwsSSSWIe5LW871BQ3zgjinCnPURF1KwMs6JWAoOY1xvseVRKRivH70wGn64pPHaoL4DIlCZw1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Azi4mOcK; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AuyUFm5l"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so10738265e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:40:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744299604; x=1744904404; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iSoeCWgcJpladKwtIWObxdWBjaN5grc8+8WD7ddJDzc=;
-        b=AuyUFm5loTsxVLjseAujdCWz3XGXKVRIgFxTEaO+PJmWbMDBb+JocXcbFVRxY+NJA+
-         aa4aZKX/v9ZDgGeuVarRt7n1pOqZw84K+eU+uzLQse5JWZcMz3jZQc8i846BDSsoxT30
-         t+faX2bDNODp6hgINDivUc3yn5sfWnlqcJI0q2rjLCcpWZlsVO0IoUkOecH/y4NTFfvp
-         N6XhZbEsea+zqRvyLeezDVQz4ZUpusB/gBtznCOmwoxXqS5+fndaYx05izh6BUCzOUKw
-         0FGJMfbu9SAQ4DcME3GgoEkIme9dcco2mpJx25H1/ujkhezkWbtHQVsLUpaW4RPikriV
-         6CQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744299604; x=1744904404;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iSoeCWgcJpladKwtIWObxdWBjaN5grc8+8WD7ddJDzc=;
-        b=VHYd07rS0YYSJjkonaOaTa3Ryphd6PY2LmkdubALoMeeYlOJUbx+YjsOgKuQZa/gDn
-         342Mbo+KcYeLtyr8VsItFu1rhiwiGOeqOKeyh6YaPgSSHNi17a++na/M0N4iI8mo6X4x
-         LuvVq/xusYgMGoM+5YN9ZvSgLUHuWvOWDxlXx+PpkZIfVpq7d7KKD72R33em91f4P/Zq
-         e47qRP5ADVkAnwP50ONhtcYQnWPgfKmBHRueLd83KfKATxT7ELgG8A4W98YknCgd2MHe
-         rglm72SsAyige+jxNlB+pkmIzJYq1LBwcQPs9HZkw46JterAfMad48MLoTQ4z1rKcpQ1
-         wL6A==
-X-Forwarded-Encrypted: i=1; AJvYcCW/B6Y83ztf0nK639tSTSKU/uPvEGP9awc+Dq8ISay/gFP7hCkBW4JtF5WVKh0FU47oM8w8LpA9WK2Q40c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySSSYoMd/vsHOde3wvSfuP7Vty9pjbtU1wXyz4DPwKTM4kFXEB
-	gHXyvHBQXXi1cYWFxqjlY6wkJ40kYavd1+ixEwvAKI7nMfqi0UtKjRnAjrm+nww=
-X-Gm-Gg: ASbGncvPyr/sGMT0fEdKMPZhhiqt/0FjChnSuq45SVFegifBIR4KfwJMpR54bUiWEag
-	7ZelzFrHhu/vZU4eQkNa8+rp093HbOD2raZwhAv0oYbtkHl/OfgZct7EAzn2Mt5Qgzp4FjTSFFa
-	5t4rtEUT0/C89N/KVe4OfnJY6pIor1d2V26fAvgTRp3318hIKrhddzmHtFwG1LAS9GvrfPWgUUy
-	0gs7eijpIBna7Fsyf846SX1XVMC4w1dsTPZ52cdvM3o6vlTpKRex6OAqQxPzDEleOEzw8QqVgjh
-	cZxk5IyA6gsEX31VUbnCgtIEEtpLV+Aiur9hfFPtQi6cFoHVsYJB3AsYg6ksXpv4Dv3o4ws16Sj
-	H/YfhNdieeseXAgLOCA==
-X-Google-Smtp-Source: AGHT+IHzktVyTtnVqxfx/+kj3bzZ5qY/sD0SWRuPS+LK30+zI4iA3/ZzK8/Vq3RvpLcd2A++QPuzsg==
-X-Received: by 2002:a05:600c:46cb:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-43f2ffa090dmr36269045e9.31.1744299603990;
-        Thu, 10 Apr 2025 08:40:03 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:1a13:cd5d:5261:ebfe? ([2a01:e0a:3d9:2080:1a13:cd5d:5261:ebfe])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338d7cdsm58661395e9.8.2025.04.10.08.40.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 08:40:03 -0700 (PDT)
-Message-ID: <fb5cfe3a-36bf-4722-be7a-20e7f0c803bd@linaro.org>
-Date: Thu, 10 Apr 2025 17:40:02 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Azi4mOcK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744299608;
+	bh=svcXHG7mzYxuKH0nfv7UTBJY7tAWrQCK9JOpQwcqVZM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Azi4mOcKV374rBoLegYSIIbRXVNuTunQkhMXhb9M92MwiWus0okEq0aHVDqngxL56
+	 tJdysGrou8KUtSdhfdVaNYEflXb80UguvF2KxzGY4TVh3AeUlgH8MKJgi4z86RJbf3
+	 hr7o+VU5LZHGo8vPKAZfqxSHog51V42ZEj759o0QPi2+yuBGsgrZWmoftaU1KMs3tQ
+	 /YILBdAoYpPlDjyUn5lk/I57owmv/IWD+/fbYrXDQfsI0t0HOFgQV97EO6qB6pZ+L1
+	 f71J1pxHAOmOyl4wszMC3lB9QdYmiGosw+Rf+y0Y/QYDwVILvysAQwhcsTIrUeDkaU
+	 yjYhdQ+HJS6qg==
+Received: from [192.168.13.180] (unknown [IPv6:2606:6d00:11:e976::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3786117E1072;
+	Thu, 10 Apr 2025 17:40:06 +0200 (CEST)
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date: Thu, 10 Apr 2025 11:39:58 -0400
+Subject: [PATCH v2 3/5] media: mc: add debugfs node to keep track of
+ requests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v4 6/6] media: platform: qcom/iris: add sm8650 support
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
- <20250409-topic-sm8x50-iris-v10-v4-6-40e411594285@linaro.org>
- <36e25d6e-36de-fec6-e54d-0683503c7a09@quicinc.com>
- <1550c870-188e-4b41-b17c-2009cda41ffc@linaro.org>
- <8cade183-72ac-eac1-1a57-a9db37657fca@quicinc.com>
- <a51e2e8a-bd7b-7d30-8cd6-9438b053ea2c@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <a51e2e8a-bd7b-7d30-8cd6-9438b053ea2c@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-3-5b99ec0450e6@collabora.com>
+References: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
+In-Reply-To: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin <tiffany.lin@mediatek.com>, 
+ Andrew-CT Chen <andrew-ct.chen@mediatek.com>, 
+ Yunfei Dong <yunfei.dong@mediatek.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, kernel@collabora.com, 
+ linux-media@vger.kernel.org, 
+ Sebastian Fricke <sebastian.fricke@collabora.com>, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+X-Mailer: b4 0.14.2
 
-On 10/04/2025 15:07, Dikshita Agarwal wrote:
-> 
-> 
-> On 4/10/2025 2:43 PM, Vikash Garodia wrote:
->>
->> On 4/10/2025 2:31 PM, Neil Armstrong wrote:
->>> On 09/04/2025 18:57, Vikash Garodia wrote:
->>>> Hi Neil,
->>>>
->>>> On 4/9/2025 8:08 PM, Neil Armstrong wrote:
->>>>> Add support for the SM8650 platform by re-using the SM8550
->>>>> definitions and using the vpu33 ops.
->>>>>
->>>>> The SM8650/vpu33 requires more reset lines, but the H.264
->>>>> decoder capabilities are identical.
->>>>>
->>>>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
->>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>>> ---
->>>>>    .../platform/qcom/iris/iris_platform_common.h      |  1 +
->>>>>    .../platform/qcom/iris/iris_platform_sm8550.c      | 64 ++++++++++++++++++++++
->>>>>    drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
->>>>>    3 files changed, 69 insertions(+)
->>>>>
->>>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>>> b/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>>> index
->>>>> fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
->>>>> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>>> @@ -35,6 +35,7 @@ enum pipe_type {
->>>>>      extern struct iris_platform_data sm8250_data;
->>>>>    extern struct iris_platform_data sm8550_data;
->>>>> +extern struct iris_platform_data sm8650_data;
->>>>>      enum platform_clk_type {
->>>>>        IRIS_AXI_CLK,
->>>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>>> b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>>> index
->>>>> 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
->>>>> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>>> @@ -144,6 +144,10 @@ static const struct icc_info sm8550_icc_table[] = {
->>>>>      static const char * const sm8550_clk_reset_table[] = { "bus" };
->>>>>    +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
->>>>> +
->>>>> +static const char * const sm8650_controller_reset_table[] = { "xo" };
->>>>> +
->>>>>    static const struct bw_info sm8550_bw_table_dec[] = {
->>>>>        { ((4096 * 2160) / 256) * 60, 1608000 },
->>>>>        { ((4096 * 2160) / 256) * 30,  826000 },
->>>>> @@ -264,3 +268,63 @@ struct iris_platform_data sm8550_data = {
->>>>>        .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
->>>>>        .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
->>>>>    };
->>>>> +
->>>>> +/*
->>>>> + * Shares most of SM8550 data except:
->>>>> + * - vpu_ops to iris_vpu33_ops
->>>>> + * - clk_rst_tbl to sm8650_clk_reset_table
->>>>> + * - controller_rst_tbl to sm8650_controller_reset_table
->>>>> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
->>>>> + */
->>>>> +struct iris_platform_data sm8650_data = {
->>>>> +    .get_instance = iris_hfi_gen2_get_instance,
->>>>> +    .init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
->>>>> +    .init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
->>>>> +    .vpu_ops = &iris_vpu33_ops,
->>>>> +    .set_preset_registers = iris_set_sm8550_preset_registers,
->>>>> +    .icc_tbl = sm8550_icc_table,
->>>>> +    .icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
->>>>> +    .clk_rst_tbl = sm8650_clk_reset_table,
->>>>> +    .clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
->>>>> +    .controller_rst_tbl = sm8650_controller_reset_table,
->>>>> +    .controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
->>>>> +    .bw_tbl_dec = sm8550_bw_table_dec,
->>>>> +    .bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
->>>>> +    .pmdomain_tbl = sm8550_pmdomain_table,
->>>>> +    .pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
->>>>> +    .opp_pd_tbl = sm8550_opp_pd_table,
->>>>> +    .opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
->>>>> +    .clk_tbl = sm8550_clk_table,
->>>>> +    .clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
->>>>> +    /* Upper bound of DMA address range */
->>>>> +    .dma_mask = 0xe0000000 - 1,
->>>>> +    .fwname = "qcom/vpu/vpu33_p4.mbn",
->>>>> +    .pas_id = IRIS_PAS_ID,
->>>>> +    .inst_caps = &platform_inst_cap_sm8550,
->>>>> +    .inst_fw_caps = inst_fw_cap_sm8550,
->>>>> +    .inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
->>>>> +    .tz_cp_config_data = &tz_cp_config_sm8550,
->>>>> +    .core_arch = VIDEO_ARCH_LX,
->>>>> +    .hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
->>>>> +    .ubwc_config = &ubwc_config_sm8550,
->>>>> +    .num_vpp_pipe = 4,
->>>>> +    .max_session_count = 16,
->>>>> +    .max_core_mbpf = ((8192 * 4352) / 256) * 2,
->>>>> +    .input_config_params =
->>>>> +        sm8550_vdec_input_config_params,
->>>>> +    .input_config_params_size =
->>>>> +        ARRAY_SIZE(sm8550_vdec_input_config_params),
->>>>> +    .output_config_params =
->>>>> +        sm8550_vdec_output_config_params,
->>>>> +    .output_config_params_size =
->>>>> +        ARRAY_SIZE(sm8550_vdec_output_config_params),
->>>>> +    .dec_input_prop = sm8550_vdec_subscribe_input_properties,
->>>>> +    .dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
->>>>> +    .dec_output_prop = sm8550_vdec_subscribe_output_properties,
->>>>> +    .dec_output_prop_size =
->>>>> ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
->>>>> +
->>>>> +    .dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
->>>>> +    .dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
->>>>> +    .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
->>>>> +    .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
->>>>> +};
->>>> While i was extending the data for QCS8300 (one another iris-v3 variant), i
->>>> realize that this file iris_platform_sm8550.c is getting dumped with all SOC
->>>> platform data. It would be a good idea at this point to split it into something
->>>> like this
->>>> 1. Introduce SOC specific c file and move the respective SOC platform data to
->>>> it, for ex, in this case sm8650_data
->>>> 2. Move the common structs from iris_platform_sm8550.c to
->>>> iris_platform_common.h. This way more SOCs getting added in future, can include
->>>> the common header to reuse them, otherwise it would end up using 8550.c for all
->>>> future SOC.
->>>>
->>>> Share your comments if you have any better approach to manage/re-use these
->>>> platform data considering more SOCs getting added.
->>>
->>> Right, yes the architecture is fine, but I don't feel iris_platform_common is
->>> the right
->>> place, perhaps we could introduce a platform_catalog.c where we could place all
->>> the common
->>> platform data and reuse them from the platform_<soc>.c files ?
->> Common structs would certainly need to be part of a header which can be
->> included. Where do you plan to keep common struct to be used across SOC specific
->> file in your approach ?
->>>
->>> I can design prototype on top of this patchset as an RFC.
->> I was thinking that the changes are not that big, and can be done in existing
->> series though.
->>
-> For now, I think you can introduce a platform_sm8650.c as part of this
-> series and use the common structure from platform_sm8550.c.
-> Shouldn't be a big change.
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-I tried but I don't how to solve this, you need a build-time ARRAY_SIZE for
-the arrays, so they need to be in the same .c file to allow a build-time
-evaluation of ARRAY_SIZE. If he common tables are moved into a header
-they will be duplicated into both platform_sm8650 & platform_sm8550 objects
-which is not what we want.
+Keep track of the number of requests and request objects of a media
+device. Helps to verify that all request-related memory is freed.
 
-The solution would be to write all the platform tables & iris_platform_data
-into headers, with common headers, then include those into a platform_catalog.c
-like is done for the drm/msm/dpu1 catalog.
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+---
+ drivers/media/mc/mc-device.c  | 30 ++++++++++++++++++++++++++++++
+ drivers/media/mc/mc-devnode.c |  5 +++++
+ drivers/media/mc/mc-request.c |  6 ++++++
+ include/media/media-device.h  |  9 +++++++++
+ include/media/media-devnode.h |  4 ++++
+ include/media/media-request.h |  2 ++
+ 6 files changed, 56 insertions(+)
 
-Neil
+diff --git a/drivers/media/mc/mc-device.c b/drivers/media/mc/mc-device.c
+index c0dd4ae5722725f1744bc6fd6282d5c765438059..5a458160200afb540d8014fed42d8bf2dab9c8c3 100644
+--- a/drivers/media/mc/mc-device.c
++++ b/drivers/media/mc/mc-device.c
+@@ -679,6 +679,23 @@ void media_device_unregister_entity(struct media_entity *entity)
+ }
+ EXPORT_SYMBOL_GPL(media_device_unregister_entity);
+ 
++#ifdef CONFIG_DEBUG_FS
++/*
++ * Log the state of media requests.
++ * Very useful for debugging.
++ */
++static int media_device_requests(struct seq_file *file, void *priv)
++{
++	struct media_device *dev = dev_get_drvdata(file->private);
++
++	seq_printf(file, "number of requests: %d\n",
++		   atomic_read(&dev->num_requests));
++	seq_printf(file, "number of request objects: %d\n",
++		   atomic_read(&dev->num_request_objects));
++	return 0;
++}
++#endif
++
+ void media_device_init(struct media_device *mdev)
+ {
+ 	INIT_LIST_HEAD(&mdev->entities);
+@@ -697,6 +714,9 @@ void media_device_init(struct media_device *mdev)
+ 		media_set_bus_info(mdev->bus_info, sizeof(mdev->bus_info),
+ 				   mdev->dev);
+ 
++	atomic_set(&mdev->num_requests, 0);
++	atomic_set(&mdev->num_request_objects, 0);
++
+ 	dev_dbg(mdev->dev, "Media device initialized\n");
+ }
+ EXPORT_SYMBOL_GPL(media_device_init);
+@@ -748,6 +768,15 @@ int __must_check __media_device_register(struct media_device *mdev,
+ 
+ 	dev_dbg(mdev->dev, "Media device registered\n");
+ 
++#ifdef CONFIG_DEBUG_FS
++	if (!media_debugfs_root)
++		media_debugfs_root = debugfs_create_dir("media", NULL);
++	mdev->media_dir = debugfs_create_dir(dev_name(&devnode->dev),
++					     media_debugfs_root);
++	debugfs_create_devm_seqfile(&devnode->dev, "requests",
++				    mdev->media_dir, media_device_requests);
++#endif
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(__media_device_register);
+@@ -824,6 +853,7 @@ void media_device_unregister(struct media_device *mdev)
+ 
+ 	dev_dbg(mdev->dev, "Media device unregistered\n");
+ 
++	debugfs_remove_recursive(mdev->media_dir);
+ 	device_remove_file(&mdev->devnode->dev, &dev_attr_model);
+ 	media_devnode_unregister(mdev->devnode);
+ 	/* devnode free is handled in media_devnode_*() */
+diff --git a/drivers/media/mc/mc-devnode.c b/drivers/media/mc/mc-devnode.c
+index 56444edaf13651874331e7c04e86b0a585067d38..d0a8bcc11dd6350fdbc04add70f62de2c5f01178 100644
+--- a/drivers/media/mc/mc-devnode.c
++++ b/drivers/media/mc/mc-devnode.c
+@@ -45,6 +45,9 @@ static dev_t media_dev_t;
+ static DEFINE_MUTEX(media_devnode_lock);
+ static DECLARE_BITMAP(media_devnode_nums, MEDIA_NUM_DEVICES);
+ 
++/* debugfs */
++struct dentry *media_debugfs_root;
++
+ /* Called when the last user of the media device exits. */
+ static void media_devnode_release(struct device *cd)
+ {
+@@ -236,6 +239,7 @@ int __must_check media_devnode_register(struct media_device *mdev,
+ 	if (devnode->parent)
+ 		devnode->dev.parent = devnode->parent;
+ 	dev_set_name(&devnode->dev, "media%d", devnode->minor);
++	dev_set_drvdata(&devnode->dev, mdev);
+ 	device_initialize(&devnode->dev);
+ 
+ 	/* Part 2: Initialize the character device */
+@@ -313,6 +317,7 @@ static int __init media_devnode_init(void)
+ 
+ static void __exit media_devnode_exit(void)
+ {
++	debugfs_remove_recursive(media_debugfs_root);
+ 	bus_unregister(&media_bus_type);
+ 	unregister_chrdev_region(media_dev_t, MEDIA_NUM_DEVICES);
+ }
+diff --git a/drivers/media/mc/mc-request.c b/drivers/media/mc/mc-request.c
+index 398d0806d1d274eb8c454fc5c37b77476abe1e74..829e35a5d56d41c52cc583cdea1c959bcb4fce60 100644
+--- a/drivers/media/mc/mc-request.c
++++ b/drivers/media/mc/mc-request.c
+@@ -75,6 +75,7 @@ static void media_request_release(struct kref *kref)
+ 		mdev->ops->req_free(req);
+ 	else
+ 		kfree(req);
++	atomic_dec(&mdev->num_requests);
+ }
+ 
+ void media_request_put(struct media_request *req)
+@@ -326,6 +327,7 @@ int media_request_alloc(struct media_device *mdev, int *alloc_fd)
+ 
+ 	snprintf(req->debug_str, sizeof(req->debug_str), "%u:%d",
+ 		 atomic_inc_return(&mdev->request_id), fd);
++	atomic_inc(&mdev->num_requests);
+ 	dev_dbg(mdev->dev, "request: allocated %s\n", req->debug_str);
+ 
+ 	fd_install(fd, filp);
+@@ -349,10 +351,12 @@ static void media_request_object_release(struct kref *kref)
+ 	struct media_request_object *obj =
+ 		container_of(kref, struct media_request_object, kref);
+ 	struct media_request *req = obj->req;
++	struct media_device *mdev = obj->mdev;
+ 
+ 	if (WARN_ON(req))
+ 		media_request_object_unbind(obj);
+ 	obj->ops->release(obj);
++	atomic_dec(&mdev->num_request_objects);
+ }
+ 
+ struct media_request_object *
+@@ -417,6 +421,7 @@ int media_request_object_bind(struct media_request *req,
+ 	obj->req = req;
+ 	obj->ops = ops;
+ 	obj->priv = priv;
++	obj->mdev = req->mdev;
+ 
+ 	if (is_buffer)
+ 		list_add_tail(&obj->list, &req->objects);
+@@ -424,6 +429,7 @@ int media_request_object_bind(struct media_request *req,
+ 		list_add(&obj->list, &req->objects);
+ 	req->num_incomplete_objects++;
+ 	ret = 0;
++	atomic_inc(&obj->mdev->num_request_objects);
+ 
+ unlock:
+ 	spin_unlock_irqrestore(&req->lock, flags);
+diff --git a/include/media/media-device.h b/include/media/media-device.h
+index 53d2a16a70b0d9d6e5cc28fe1fc5d5ef384410d5..749c327e3c582c3c583e0394468321ccd6160da5 100644
+--- a/include/media/media-device.h
++++ b/include/media/media-device.h
+@@ -11,6 +11,7 @@
+ #ifndef _MEDIA_DEVICE_H
+ #define _MEDIA_DEVICE_H
+ 
++#include <linux/atomic.h>
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
+@@ -106,6 +107,9 @@ struct media_device_ops {
+  * @ops:	Operation handler callbacks
+  * @req_queue_mutex: Serialise the MEDIA_REQUEST_IOC_QUEUE ioctl w.r.t.
+  *		     other operations that stop or start streaming.
++ * @num_requests: number of associated requests
++ * @num_request_objects: number of associated request objects
++ * @media_dir:	DebugFS media directory
+  * @request_id: Used to generate unique request IDs
+  *
+  * This structure represents an abstract high-level media device. It allows easy
+@@ -179,6 +183,11 @@ struct media_device {
+ 	const struct media_device_ops *ops;
+ 
+ 	struct mutex req_queue_mutex;
++	atomic_t num_requests;
++	atomic_t num_request_objects;
++
++	/* debugfs */
++	struct dentry *media_dir;
+ 	atomic_t request_id;
+ };
+ 
+diff --git a/include/media/media-devnode.h b/include/media/media-devnode.h
+index d27c1c646c2805171be3997d72210dd4d1a38e32..dbcabeffcb572ae707f5fe1f51ff719d451c6784 100644
+--- a/include/media/media-devnode.h
++++ b/include/media/media-devnode.h
+@@ -20,9 +20,13 @@
+ #include <linux/fs.h>
+ #include <linux/device.h>
+ #include <linux/cdev.h>
++#include <linux/debugfs.h>
+ 
+ struct media_device;
+ 
++/* debugfs top-level media directory */
++extern struct dentry *media_debugfs_root;
++
+ /*
+  * Flag to mark the media_devnode struct as registered. Drivers must not touch
+  * this flag directly, it will be set and cleared by media_devnode_register and
+diff --git a/include/media/media-request.h b/include/media/media-request.h
+index 645d18907be7148ca50dcc9248ff06bd8ccdf953..c8dad380c40767f192f30dcf1c69b9ad1310f449 100644
+--- a/include/media/media-request.h
++++ b/include/media/media-request.h
+@@ -290,6 +290,7 @@ struct media_request_object_ops {
+  * struct media_request_object - An opaque object that belongs to a media
+  *				 request
+  *
++ * @mdev: Media device this object belongs to
+  * @ops: object's operations
+  * @priv: object's priv pointer
+  * @req: the request this object belongs to (can be NULL)
+@@ -301,6 +302,7 @@ struct media_request_object_ops {
+  * another struct that contains the actual data for this request object.
+  */
+ struct media_request_object {
++	struct media_device *mdev;
+ 	const struct media_request_object_ops *ops;
+ 	void *priv;
+ 	struct media_request *req;
 
-> 
-> Later you can post a separate patch series to add platform_catalog.c and
-> have common struct placed there which can be used across different SOC
-> platform files.
-> 
-> or other way is,
-> Post a patch series to introduce platform_catalog.c with common struct and
-> then rebase your 8650 series on top of it.
-> 
-> Thanks,
-> Dikshita
->> Thanks,
->> Vikash
->>>
->>> Neil
->>>
->>>>
->>>> Regards,
->>>> Vikash
->>>>
->>>>> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c
->>>>> b/drivers/media/platform/qcom/iris/iris_probe.c
->>>>> index
->>>>> 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
->>>>> --- a/drivers/media/platform/qcom/iris/iris_probe.c
->>>>> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
->>>>> @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
->>>>>                .data = &sm8250_data,
->>>>>            },
->>>>>    #endif
->>>>> +    {
->>>>> +        .compatible = "qcom,sm8650-iris",
->>>>> +        .data = &sm8650_data,
->>>>> +    },
->>>>>        { },
->>>>>    };
->>>>>    MODULE_DEVICE_TABLE(of, iris_dt_match);
->>>>>
->>>
+-- 
+2.49.0
 
