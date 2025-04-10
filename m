@@ -1,55 +1,55 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C49290BAB
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16275290BC3
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744306622; cv=none; b=JekCMZ+VceCebjwuHx2EcF59np3vFZdl6aU2k9Gfmsqfb2hu8ZZMUdgFr9/8C25pj20DHfAAhQRvYkCIEEe3elK4eY+XqBjXuNXMKeTqV7ZkHzg5Px4VgMXKN3ZdSdsrZlJgxHwKo65RoBQcZNgtPkjzT26WDYhE+slc5g2mp40=
+	t=1744306623; cv=none; b=qZMMpkQQepa2StCDiGLlg9uc2TNIZA3nmyMBoMtVDxABtKvL/VgDq+hyKvYQSuGxR5aojd8YNJghhKj1fWNlKhwBrtKSQHrtBITnp1nB996ZMhv/WiK+dBl8hEkyVblhsqEbpREvuulP7/lnj8LPzKMKHhavczMzG0GFjOCkYzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744306622; c=relaxed/simple;
-	bh=s5GHscAETkUAKivN7aAi7TLoUIfwAcyInliqpu10XeA=;
+	s=arc-20240116; t=1744306623; c=relaxed/simple;
+	bh=pwnF8n7mqD7yk9oNBMquJdU4/lh8MdFnDzv/GA7kVio=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=bq0M9B0gZCLEmRgzLchtIoPKQjoKB5HU40xi7uTweVzqKuGxyMvE4EBPfvtoIMKibK6o7d/hdd9BQcYSBvcBJBB+/LS+x3LWllU9EqAJJRSQx1eCevfSmlSZ2TCgGVeBWtOVEPK1dtapUSimCOBCGZqYJp4w5/mnCxio+Ho18I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IZODvNjD; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=e6G0X6EVKQ/GODO2108HDrKdPixe7vmAH/X/pbfU04jWFNmNkHpSLjFGbOb96v2R0cNPRZfZ9FYC68eXK6mkUKH8IA/qh99BQGlAHoviUT/Svm2Rkcz2J0JPZlOmhciAYe5qFcB1ug/VDUtJQJDm2rh4MtBHrwbPTD6dCArwq3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h3fKEn+P; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IZODvNjD"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2254bdd4982so14759445ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:36:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h3fKEn+P"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-225107fbdc7so9605705ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744306619; x=1744911419; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744306621; x=1744911421; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZpYG+riLDNowuBXALSOK3FRVNiACEEuoxpGzRk7BH3E=;
-        b=IZODvNjDHhp0hVT1YiiOpynOIh0lai1bmUA25aAwSe2DiF8tmSDoMXP+6IA6TfJe7C
-         alnO7R1SeMQzjnn0HlRsMCKP73WXdV6cgSXQjUgXLLRXx5nGSR6MB8AT1sfWlQRuv8Dj
-         n/vN7pZAamWmH0eGWnQhZXedti7u1FWP+CncjYUf7CIzdFEnu89O/efi02OBzBYhEmGX
-         vVnyKcsEDULqUM/IeuGouj8GXqvNqAjwy9/PtYS2kBoFVWFDvz+2eNzT+MqfOSWwuKVK
-         iLKBK2qGw0JJNe+3FacBkw9AJiI1SSntNucpFhum3zS5fgckYb0QYoaKZ6DeaFWEgtA6
-         3h8Q==
+        bh=XpiUUvwlwp9tVCnJZ3TZUgEjsv1IVM8EEnnesVuXazs=;
+        b=h3fKEn+Pz6OSFVCpDOszljZHfQXr0dLfzJkdBcKvgw+KCKrIsC8oXNEnmAsSqd9rEf
+         JsmxFNiaOJRHgiYwgxRXodaSSnIs1hr5cDAri1SxncQ/BpUsvBqXNtW3IrExpseTdSz3
+         QmNbeiQ+bw2+aRuD1TAt/k4m89qeFxvhZLSHgrzKwq6zPlOEMzPHk68PBwMjpPjTmoO9
+         Mek7uXnINWAXZspY8ey7YOW+xQtODVaeCKzoEe07KFsCU2XTCuX7Nl8/gFGGCmDcRGpR
+         T8HgJiYrvAlRIfhKkvcoqm4N3JLm7jiQbv1O7jENLfE7pvjmp/BhVIFiBT+RJ3PbpnAj
+         wg2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744306619; x=1744911419;
+        d=1e100.net; s=20230601; t=1744306621; x=1744911421;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZpYG+riLDNowuBXALSOK3FRVNiACEEuoxpGzRk7BH3E=;
-        b=a2hz0p8TAnPBY/P8yvhFWT0UY8FXBe31lGPPessjNwaikQYcS/RTC5xwTrh5TTlA4B
-         Fa89GinKqKiZpqAki8lx8Gp70tc1QngW33rUkHlqg7uN/Vx3v0QQkpCM+RUbg/qMcIcy
-         m7Q938+fsKLWB6vftZT9LytSnm7BilHnLZeqB21l76N0nW4eUqwfsUqOAhx9KbwFgQCC
-         WASqL/e1VkWfMWHiJ6otDdouSMUiD5TW/2ovVVLbywYL51jv0LmG5bAkfIqomU8BOfMd
-         8y8mVMosHvBr1FT1FggYpVU9XR+TgacJIsWLFVd/YN/qIFpww3TkI+cFu+WRNlNHcqkP
-         hIew==
-X-Forwarded-Encrypted: i=1; AJvYcCW0xR1YtDhGj7PXgEyzPv1xlgIq19wpqxoruukanhA8KkhLU2z0ofmRGzYMtu6ZcQzwxr7Q3XZYL8lcmxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZVACFgyZ+/xACoUq7YvoUxS1ih0XhzUTbrQIF3yJwGtaRwSXc
-	4lE3yPt0AZpOd9Om4KOm5IEE/np2QIDcOFK5OfMjC9Z0qDBOEzsGP6G4YiSW4Ek197G0nOYoCSk
-	7P/Q0pQ==
-X-Google-Smtp-Source: AGHT+IGzIUP6D1cwLaSTj/gUi3pDoC4nLxOcZuHx9s7cibZ6nls36gURzWSfZGyGYDQBNmN1hxObG/FtTqx1
-X-Received: from plge17.prod.google.com ([2002:a17:902:cf51:b0:223:242b:480a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:948:b0:224:10a2:cad5
- with SMTP id d9443c01a7336-22b2eda468bmr66678385ad.10.1744306619427; Thu, 10
- Apr 2025 10:36:59 -0700 (PDT)
-Date: Thu, 10 Apr 2025 10:36:27 -0700
+        bh=XpiUUvwlwp9tVCnJZ3TZUgEjsv1IVM8EEnnesVuXazs=;
+        b=p96swArIuufV57kteHhaG7jGHs2kCL+8bqbXZOwzC5E4WK1jTr3/HVQn1fpi+kOr0W
+         ZkTncK/TfqXBMuwDhwAeI8/1AOl2w94P8NfS1eEP46oP8QE+u7jo/23KzoMHhtEJ54/r
+         iSazgj5th3sVtrvOsKxmONZsKJGNntPaudrgeGTuFNpqQkMPx7Kn1LLzjgdkASPVVPB9
+         CG2IVuvjKoD/UjtOzDcF1Tdj/UIE9Xte35VDnZkEKL+d2IobAYYMkbOV5rjMtdyaNALl
+         cAXoslxA5Nu+wuGQ3NlQ74enrDzdCMyALPwNn9NXW/utqhqO0RBtC1n8N1CjA8AuI2A5
+         dm7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW2Wpb3EcFVoZSjmeP8orqe9HlfsTb7sJsnVTqki5Wki5mvYele4cSRsmGjO15vQVSVSbmUf4aPYbMcQNc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBciAWc2LVqVfR6GeNBXVLrXMj5+Xl6KRh/eYGvOC206Dp4LnD
+	POKDVJgAE37/gmc8gQyGSTQWl80iI3SKGiU1WzUqWIL4Qv921ulMvCcpUM4OXwkVU2hAMII6ekH
+	RWEe2rQ==
+X-Google-Smtp-Source: AGHT+IFwaCb2cDgkGC1n4/9Wz8pIMyxoLX83dVD19SJR7ZPEQ36S8XM3cNeUAEqdxlEjEYtd+dxtn/hNSjdL
+X-Received: from plbml15.prod.google.com ([2002:a17:903:34cf:b0:227:b826:af9e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:120a:b0:216:2bd7:1c2f
+ with SMTP id d9443c01a7336-22be02f73bamr41067965ad.18.1744306621413; Thu, 10
+ Apr 2025 10:37:01 -0700 (PDT)
+Date: Thu, 10 Apr 2025 10:36:28 -0700
 In-Reply-To: <20250410173631.1713627-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250410173631.1713627-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250410173631.1713627-9-irogers@google.com>
-Subject: [PATCH v2 08/12] perf top: Switch user option to use BPF filter
+Message-ID: <20250410173631.1713627-10-irogers@google.com>
+Subject: [PATCH v2 09/12] perf trace: Switch user option to use BPF filter
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -79,91 +79,72 @@ Content-Type: text/plain; charset="UTF-8"
 
 Finding user processes by scanning /proc is inherently racy and
 results in perf_event_open failures. Use a BPF filter to drop samples
-where the uid doesn't match.
+where the uid doesn't match. Ensure adding the BPF filter forces
+system-wide.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-top.c | 22 ++++++++++++----------
- tools/perf/util/top.c    |  4 ++--
- tools/perf/util/top.h    |  1 +
- 3 files changed, 15 insertions(+), 12 deletions(-)
+ tools/perf/builtin-trace.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 1061f4eebc3f..9a7af69b7c73 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -642,7 +642,7 @@ static void *display_thread_tui(void *arg)
- 	 */
- 	evlist__for_each_entry(top->evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
--		hists->uid_filter_str = top->record_opts.target.uid_str;
-+		hists->uid_filter_str = top->uid_str;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 6ac51925ea42..1f7d2b3d8b3d 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -240,6 +240,7 @@ struct trace {
+ 		struct ordered_events	data;
+ 		u64			last;
+ 	} oe;
++	const char		*uid_str;
+ };
+ 
+ static void trace__load_vmlinux_btf(struct trace *trace __maybe_unused)
+@@ -4401,8 +4402,8 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		evlist__add(evlist, pgfault_min);
  	}
  
- 	ret = evlist__tui_browse_hists(top->evlist, help, &hbt, top->min_percent,
-@@ -1566,7 +1566,7 @@ int cmd_top(int argc, const char **argv)
- 		    "Add prefix to source file path names in programs (with --prefix-strip)"),
- 	OPT_STRING(0, "prefix-strip", &annotate_opts.prefix_strip, "N",
- 		    "Strip first N entries of source file path name in programs (with --prefix)"),
--	OPT_STRING('u', "uid", &target->uid_str, "user", "user to profile"),
-+	OPT_STRING('u', "uid", &top.uid_str, "user", "user to profile"),
- 	OPT_CALLBACK(0, "percent-limit", &top, "percent",
- 		     "Don't show entries under that percent", parse_percent_limit),
- 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
-@@ -1757,15 +1757,17 @@ int cmd_top(int argc, const char **argv)
- 		ui__warning("%s\n", errbuf);
+-	/* Enable ignoring missing threads when -u/-p option is defined. */
+-	trace->opts.ignore_missing_thread = trace->opts.target.uid != UINT_MAX || trace->opts.target.pid;
++	/* Enable ignoring missing threads when -p option is defined. */
++	trace->opts.ignore_missing_thread = trace->opts.target.pid;
+ 
+ 	if (trace->sched &&
+ 	    evlist__add_newtp(evlist, "sched", "sched_stat_runtime", trace__sched_stat_runtime))
+@@ -5420,8 +5421,7 @@ int cmd_trace(int argc, const char **argv)
+ 		    "child tasks do not inherit counters"),
+ 	OPT_CALLBACK('m', "mmap-pages", &trace.opts.mmap_pages, "pages",
+ 		     "number of mmap data pages", evlist__parse_mmap_pages),
+-	OPT_STRING('u', "uid", &trace.opts.target.uid_str, "user",
+-		   "user to profile"),
++	OPT_STRING('u', "uid", &trace.uid_str, "user", "user to profile"),
+ 	OPT_CALLBACK(0, "duration", &trace, "float",
+ 		     "show only events with duration > N.M ms",
+ 		     trace__set_duration),
+@@ -5762,11 +5762,19 @@ int cmd_trace(int argc, const char **argv)
+ 		goto out_close;
  	}
  
--	status = target__parse_uid(target);
--	if (status) {
--		int saved_errno = errno;
--
--		target__strerror(target, status, errbuf, BUFSIZ);
--		ui__error("%s\n", errbuf);
-+	if (top.uid_str) {
-+		uid_t uid = parse_uid(top.uid_str);
- 
--		status = -saved_errno;
--		goto out_delete_evlist;
+-	err = target__parse_uid(&trace.opts.target);
+-	if (err) {
+-		target__strerror(&trace.opts.target, err, bf, sizeof(bf));
+-		fprintf(trace.output, "%s", bf);
+-		goto out_close;
++	if (trace.uid_str) {
++		uid_t uid = parse_uid(trace.uid_str);
++
 +		if (uid == UINT_MAX) {
-+			ui__error("Invalid User: %s", top.uid_str);
-+			status = -EINVAL;
-+			goto out_delete_evlist;
++			ui__error("Invalid User: %s", trace.uid_str);
++			err = -EINVAL;
++			goto out_close;
 +		}
-+		status = parse_uid_filter(top.evlist, uid);
-+		if (status)
-+			goto out_delete_evlist;
++		err = parse_uid_filter(trace.evlist, uid);
++		if (err)
++			goto out_close;
++
++		trace.opts.target.system_wide = true;
  	}
  
- 	if (target__none(target))
-diff --git a/tools/perf/util/top.c b/tools/perf/util/top.c
-index 4db3d1bd686c..b06e10a116bb 100644
---- a/tools/perf/util/top.c
-+++ b/tools/perf/util/top.c
-@@ -88,9 +88,9 @@ size_t perf_top__header_snprintf(struct perf_top *top, char *bf, size_t size)
- 	else if (target->tid)
- 		ret += SNPRINTF(bf + ret, size - ret, " (target_tid: %s",
- 				target->tid);
--	else if (target->uid_str != NULL)
-+	else if (top->uid_str != NULL)
- 		ret += SNPRINTF(bf + ret, size - ret, " (uid: %s",
--				target->uid_str);
-+				top->uid_str);
- 	else
- 		ret += SNPRINTF(bf + ret, size - ret, " (all");
- 
-diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
-index 4c5588dbb131..04ff926846be 100644
---- a/tools/perf/util/top.h
-+++ b/tools/perf/util/top.h
-@@ -48,6 +48,7 @@ struct perf_top {
- 	const char	   *sym_filter;
- 	float		   min_percent;
- 	unsigned int	   nr_threads_synthesize;
-+	const char	   *uid_str;
- 
- 	struct {
- 		struct ordered_events	*in;
+ 	if (!argc && target__none(&trace.opts.target))
 -- 
 2.49.0.604.gff1f9ca942-goog
 
