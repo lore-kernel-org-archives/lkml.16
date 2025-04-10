@@ -1,265 +1,78 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC4E4685
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2139D2CCDB
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744252527; cv=none; b=BTazXSKVv6uEWRPfxz18UK4fGMr3KRBwt90uOGAo4o3MtoOkJAFgkAQyoTwiEMa+L2wdXaLashUSv738pfFBEDCwqBs3AFELqoLIfS7sTvbO0KVmK/V5kGy2LpskeF9e++YC0qqcwCLHsVYeHjGjSLLnjK0FFR78EvJTgCGTROg=
+	t=1744252637; cv=none; b=pL6c8VIkdWJPtV4MNT2QPJh9/vr7tu8ocSvFN8K4kbzU00aHb+hD76HChTAbN1TnjM9MQiEVuRpLivb17g/KIXqFr7nn8kRsaXNJ8Rkb8lrkLtphlkczxXHQVHSHd10p7x3FRxRW449idwnZrHX0me3wb77d0JS4n7rzOMOZkg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744252527; c=relaxed/simple;
-	bh=hfzSRZYZmIEbDflOrEzA7qkKhQ5vb71z5d6SFB4i4Aw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=YUq7zCnUVQ1B2haBOrSNH7pgzIc4+v+xlvnDPsim37fSvM36h4ns0fJSWfq2zHcbR5T97XusdW6Zr6i0XBz2MIMe5jznONyOw4xwozeMV7nayPFjRSdSmhwKNImXogva8fNDnO3qldJqC+oE9YqlSt6oZeAh1OEMr12umzwKsVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d458e61faaso4035745ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 19:35:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744252525; x=1744857325;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=seNAskAAqbiE6X+p0D7OjDytS2wTZOQSFjJ1rVdcR0I=;
-        b=hXKtro9jYuxuZR03tGc3cGI8oajr11tb4cYEXmJd7wjS1orFr5+SnZxnBgt8jyQOdc
-         ZVepBYGKSmRSDFLxO1yeAWK6uEtzgIytQgNAglGDWQkLor80KYUyMsoNFXLeM6C3Pj9j
-         RebRxTWDQcQ7EwPcIWLNX2a944wt3UAn0D6kSfzEMPMODSJlLEJj7zIGH/m5RD1otYJz
-         yEEfZC3O9f6MamxW3psFm0BjDqbA7/hE+qSw6bPB2ivY4QJHXsgv9mz7DasKs7yN3g6n
-         xzuivuPfTIs9DajZzV1A2LmtGpYyH5CRm7EQ8cUP+YXkzgADSqbmDgtXHKH0eu7QbRoe
-         Yt8A==
-X-Forwarded-Encrypted: i=1; AJvYcCV9K876wfFQ082mOHKDAQA5+pgLpaI8bF0nuFMZptXlf/AIJXsHtC/2qXfqqlIlW/CwtJqzJ0HmjGdCUTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwinKDD3tcchMC3AOTGFMX0mJOYw03Zc+81hZ+rskgBkUdm8vbq
-	1aUy15SKCIbaLga/Q8qt8dJ4uvF6051Py3yaTRf7AKeysyC2uZ0mc0TCXykTmlHhccrQZgbfJAt
-	O7t7gPo+Bvlz6FpGkJlbgFnHxXLkEYcLwADCkJnfqPqSMGADerZbJOhQ=
-X-Google-Smtp-Source: AGHT+IFSzO3OEKc2bnJIX8X3oITkSpdHQTsTC6PQ+mvhzXZeWU8tITDuicmTJ29i/+kBaJzA7tuOSmZIMtn763m4vnYjBITaUI0X
+	s=arc-20240116; t=1744252637; c=relaxed/simple;
+	bh=OPdf6KaWZ8dVNNMgR32vZMXO1XsPCJORRyySdRKY5zc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rImkGTG4ES/APR6Jvp8Go6BqptgfhSkcd+HUK21YpZ/CJl7ocVPvrB1hFOvq9VY0VFxZfPtIBOq/F1bznozWamcDss/zw/+nc0y17OKVF6E7bUyRpx9zwJQetWJd/MPc0byxF96NgXaQv3RMeL4pcJ+wvqeFpvh1qdbPTEgjqP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201601.home.langchao.com
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202504101036571611;
+        Thu, 10 Apr 2025 10:36:57 +0800
+Received: from locahost.localdomain.com (10.94.12.92) by
+ jtjnmail201601.home.langchao.com (10.100.2.1) with Microsoft SMTP Server id
+ 15.1.2507.39; Thu, 10 Apr 2025 10:36:56 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <linux@armlinux.org.uk>, <rmk+kernel@armlinux.org.uk>,
+	<linus.walleij@linaro.org>, <ardb@kernel.org>, <arnd@arndb.de>,
+	<iuyuntao12@huawei.com>, <ruanjinjie@huawei.com>, <ebiggers@google.com>,
+	<david@redhat.com>, <masahiroy@kernel.org>, <dave@vasilevsky.ca>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH] ARM: Remove the repeated word "the" in Kconfig.
+Date: Thu, 10 Apr 2025 10:36:52 +0800
+Message-ID: <20250410023652.8266-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b84:b0:3d0:26a5:b2c with SMTP id
- e9e14a558f8ab-3d7e4deec38mr8501395ab.8.1744252525351; Wed, 09 Apr 2025
- 19:35:25 -0700 (PDT)
-Date: Wed, 09 Apr 2025 19:35:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f72e6d.050a0220.258fea.0027.GAE@google.com>
-Subject: [syzbot] [bpf?] [net?] possible deadlock in xsk_bind
-From: syzbot <syzbot+46043677477d6064a1a0@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bjorn@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, 
-	horms@kernel.org, jonathan.lemon@gmail.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, maciej.fijalkowski@intel.com, 
-	magnus.karlsson@intel.com, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 20254101036575d9741c2b0f18886574ac4cb902e34fd
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-Hello,
+Fix "The the" typo in the description.
 
-syzbot found the following issue on:
-
-HEAD commit:    61f96e684edd Merge tag 'net-6.15-rc1' of git://git.kernel...
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=1635523f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
-dashboard link: https://syzkaller.appspot.com/bug?extid=46043677477d6064a1a0
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a3119b4324e8/disk-61f96e68.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ee1ca254d083/vmlinux-61f96e68.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ed04807ee582/bzImage-61f96e68.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+46043677477d6064a1a0@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-syzkaller-13305-g61f96e684edd #0 Not tainted
-------------------------------------------------------
-syz.0.1422/11074 is trying to acquire lock:
-ffff888035a5cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
-ffff888035a5cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-ffff888035a5cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: xsk_bind+0x2fd/0xfb0 net/xdp/xsk.c:1188
-
-but task is already holding lock:
-ffff88805421d6f0 (&xs->mutex){+.+.}-{4:4}, at: xsk_bind+0x166/0xfb0 net/xdp/xsk.c:1176
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (&xs->mutex){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       xsk_notifier+0xcf/0x230 net/xdp/xsk.c:1648
-       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
-       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
-       call_netdevice_notifiers net/core/dev.c:2235 [inline]
-       unregister_netdevice_many_notify+0x1572/0x2510 net/core/dev.c:11980
-       unregister_netdevice_many net/core/dev.c:12044 [inline]
-       unregister_netdevice_queue+0x383/0x400 net/core/dev.c:11896
-       unregister_netdevice include/linux/netdevice.h:3374 [inline]
-       ip6_tnl_siocdevprivate+0x552/0x1570 net/ipv6/ip6_tunnel.c:1717
-       dev_siocdevprivate net/core/dev_ioctl.c:521 [inline]
-       dev_ifsioc+0xc04/0x1010 net/core/dev_ioctl.c:631
-       dev_ioctl+0x8c3/0x1380 net/core/dev_ioctl.c:848
-       sock_ioctl+0x819/0x900 net/socket.c:1236
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (&net->xdp.lock){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       xsk_notifier+0x8b/0x230 net/xdp/xsk.c:1644
-       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
-       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
-       call_netdevice_notifiers net/core/dev.c:2235 [inline]
-       unregister_netdevice_many_notify+0x1572/0x2510 net/core/dev.c:11980
-       unregister_netdevice_many net/core/dev.c:12044 [inline]
-       unregister_netdevice_queue+0x383/0x400 net/core/dev.c:11896
-       unregister_netdevice include/linux/netdevice.h:3374 [inline]
-       _cfg80211_unregister_wdev+0x163/0x590 net/wireless/core.c:1256
-       ieee80211_remove_interfaces+0x4f1/0x700 net/mac80211/iface.c:2316
-       ieee80211_unregister_hw+0x5d/0x2c0 net/mac80211/main.c:1681
-       mac80211_hwsim_del_radio+0x2c6/0x4c0 drivers/net/wireless/virtual/mac80211_hwsim.c:5665
-       hwsim_exit_net+0x5c3/0x670 drivers/net/wireless/virtual/mac80211_hwsim.c:6545
-       ops_exit_list net/core/net_namespace.c:172 [inline]
-       cleanup_net+0x814/0xd60 net/core/net_namespace.c:654
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
-       worker_thread+0x870/0xd50 kernel/workqueue.c:3400
-       kthread+0x7b7/0x940 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #1 (&rdev->wiphy.mtx){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       class_wiphy_constructor include/net/cfg80211.h:6092 [inline]
-       cfg80211_netdev_notifier_call+0x1b3/0x1430 net/wireless/core.c:1547
-       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
-       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
-       call_netdevice_notifiers net/core/dev.c:2235 [inline]
-       __dev_close_many+0x15d/0x760 net/core/dev.c:1680
-       dev_close_many+0x250/0x4c0 net/core/dev.c:1734
-       unregister_netdevice_many_notify+0x628/0x2510 net/core/dev.c:11949
-       unregister_netdevice_many net/core/dev.c:12044 [inline]
-       default_device_exit_batch+0x7ff/0x880 net/core/dev.c:12536
-       ops_exit_list net/core/net_namespace.c:177 [inline]
-       cleanup_net+0x8af/0xd60 net/core/net_namespace.c:654
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
-       worker_thread+0x870/0xd50 kernel/workqueue.c:3400
-       kthread+0x7b7/0x940 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #0 (&dev_instance_lock_key#3){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       netdev_lock include/linux/netdevice.h:2751 [inline]
-       netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-       xsk_bind+0x2fd/0xfb0 net/xdp/xsk.c:1188
-       __sys_bind_socket net/socket.c:1810 [inline]
-       __sys_bind+0x1de/0x290 net/socket.c:1841
-       __do_sys_bind net/socket.c:1846 [inline]
-       __se_sys_bind net/socket.c:1844 [inline]
-       __x64_sys_bind+0x7a/0x90 net/socket.c:1844
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &dev_instance_lock_key#3 --> &net->xdp.lock --> &xs->mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&xs->mutex);
-                               lock(&net->xdp.lock);
-                               lock(&xs->mutex);
-  lock(&dev_instance_lock_key#3);
-
- *** DEADLOCK ***
-
-2 locks held by syz.0.1422/11074:
- #0: ffffffff900fc9c8 (rtnl_mutex){+.+.}-{4:4}, at: xsk_bind+0x153/0xfb0 net/xdp/xsk.c:1175
- #1: ffff88805421d6f0 (&xs->mutex){+.+.}-{4:4}, at: xsk_bind+0x166/0xfb0 net/xdp/xsk.c:1176
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 11074 Comm: syz.0.1422 Not tainted 6.14.0-syzkaller-13305-g61f96e684edd #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x2e1/0x300 kernel/locking/lockdep.c:2079
- check_noncircular+0x142/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
- __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
- lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
- netdev_lock include/linux/netdevice.h:2751 [inline]
- netdev_lock_ops include/net/netdev_lock.h:42 [inline]
- xsk_bind+0x2fd/0xfb0 net/xdp/xsk.c:1188
- __sys_bind_socket net/socket.c:1810 [inline]
- __sys_bind+0x1de/0x290 net/socket.c:1841
- __do_sys_bind net/socket.c:1846 [inline]
- __se_sys_bind net/socket.c:1844 [inline]
- __x64_sys_bind+0x7a/0x90 net/socket.c:1844
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd38178d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fd37f5f6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 00007fd3819a5fa0 RCX: 00007fd38178d169
-RDX: 0000000000000010 RSI: 0000200000000180 RDI: 0000000000000003
-RBP: 00007fd38180e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fd3819a5fa0 R15: 00007ffc59db1d08
- </TASK>
-
-
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/arm/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 25ed6f1a7c7a..31004f33dc14 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1505,7 +1505,7 @@ config ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEND
+ 	bool "Extend with bootloader kernel arguments"
+ 	help
+ 	  The command-line arguments provided by the boot loader will be
+-	  appended to the the device tree bootargs property.
++	  appended to the device tree bootargs property.
+ 
+ endchoice
+ 
+@@ -1647,7 +1647,7 @@ config DMI
+ 	  continue to boot on existing non-UEFI platforms.
+ 
+ 	  NOTE: This does *NOT* enable or encourage the use of DMI quirks,
+-	  i.e., the the practice of identifying the platform via DMI to
++	  i.e., the practice of identifying the platform via DMI to
+ 	  decide whether certain workarounds for buggy hardware and/or
+ 	  firmware need to be enabled. This would require the DMI subsystem
+ 	  to be enabled much earlier than we do on ARM, which is non-trivial.
+-- 
+2.43.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
