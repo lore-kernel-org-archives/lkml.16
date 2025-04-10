@@ -1,203 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazolkn19010013.outbound.protection.outlook.com [52.103.13.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60F128135E;
-	Thu, 10 Apr 2025 19:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744312897; cv=none; b=keOUR/SKgJ7QKZgIXhzKUGnrsgLG36Fj5rWiFP+YQ6sI+jheJP43oTYLohhzk7Cr1WbEH1QFnift7DFjdCRUbO749rLq4KdfW+1q3vihsD3Dyo9Wbgm/E8Q5Ivxvn3Z1Iez2CPX15OHmHazq9p323NbeAvHSDoDsLGOd2JVR8oc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744312897; c=relaxed/simple;
-	bh=KRHWqWj0VYYRRkw1qnA+nzxXeVN5/P5pQMCdQnOWd5A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q9V9/WOK6MnyKI9ZXMuSHHd8Re5Zf8miB2DDIpKTOqMtCfUbGMgccXSaka6RcHgAKRoeFp1VrJNxjAKTHV0DgyzL63vUdBvlM2OuHCKV3zxNUjXlV9vBiQc+i4KB93snzku/LTcPw7JJel9SBKSuWSh0f46JcQylYMCogNX6R2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8jPz1cL; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C882853EF;
+	Thu, 10 Apr 2025 19:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.13.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744312967; cv=fail; b=foKK4NBV6AEIdQqqFYTHFzfjHjBWXWhv1V25haNLOP/mo8xWTfHOJIdY1OTm9wz9Jm7ZGWb1f/3wR7eyCiJ/s+NMVpsdh84kh1MocmqFgRUKV0+bFxfaxV5Qj8R8sGFMcKDQW0un5TDycLwnqx3j/A5DNuPcRgobrKOzfwuP+Ng=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744312967; c=relaxed/simple;
+	bh=/bEa5fxT5nth+aOEJSxpkT4brgwWyB28zbj/VlvoTkk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=d+3RuKEBw7IoYVgFwTfleLE254I2xI0hgM/PRcGxjemjiBTA6KpiOcOxwp5qAaXEZiGKd88mctO5OZTFvbqLMkAlRYL05E9ZMlP7qZ3fyuQ/Hw227tC/W++DdRBU0yXQhH+G4u5Gi3PNu2WV35W5b7Hoo2pD26VXzAVFH/mAp+Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=WHzYBZza; arc=fail smtp.client-ip=52.103.13.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8jPz1cL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578B3C4CEEE;
-	Thu, 10 Apr 2025 19:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744312897;
-	bh=KRHWqWj0VYYRRkw1qnA+nzxXeVN5/P5pQMCdQnOWd5A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M8jPz1cL76p/7xV1C8QrwF9a91BD2t/FA/8At/Ibvs/MMcc3aMZ6GMKPDBOGroEbZ
-	 FWetuVWw8czSZuHeD0l3FnC62RyCZkiAsDC7ul9Cg4RjAPdVg4AekNyKNoLvRM+ovz
-	 tsdT9UXDl0xnI9Vmfnh2/DLja/NUgyyT+GjxSyOigzFhA+qhNyHz7gi0FXqJ2bBtKW
-	 dIEvcp629e3kNGFLRbBOBrweAE6t6IHmgJcujPdtOzLiNbfpskoA2cRFesfLBEE1Mq
-	 FYL0rwW0qXqqyBCPjTNu7lpFremRSzY5nXl9V3RTApSmEXeEbS+ZWSKfhLFzIRBUEk
-	 FCgF/wA1YnceQ==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2c7b2c14455so706733fac.2;
-        Thu, 10 Apr 2025 12:21:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVQtrsUIDW24PuAZMu8HDhnCzurB/f6D4UmuPL9I/rxkLSO7h+++kr3hOVZUJcn7gSyj2GxHGdSDfxp03Y=@vger.kernel.org, AJvYcCWju5tve4c59/qAft5y2tXaRAHOchwYK0t+D5oDPZNXb/+PKgeidbiDCXihFU+SC4lRvNAsXrt+4fE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDokL87UP3yjCfuB1HFywJShoDiYAh47HZljTuRMwF2Xu8LtC4
-	yHR3zXpKe9GlJBZrhg6nQk5GpxgD45h36Hg6GUp/p0Q5tScfZwPwbq/NEUtvYVXYyrhlPfTnxNT
-	d0VcuiVBUrLROT1TCvvaL5b/xDzI=
-X-Google-Smtp-Source: AGHT+IFEvMSzCJ6nLppcIaehR59mdXvT74IZeptmQp4HBuyHBH8SozcCZja9z7HdyvQKBHYYXFta7Su4MWXNm/7eOU8=
-X-Received: by 2002:a05:6871:a10f:b0:297:2719:deb6 with SMTP id
- 586e51a60fabf-2d0b35743aemr2252758fac.1.1744312896565; Thu, 10 Apr 2025
- 12:21:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="WHzYBZza"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BQs04IYzuBBEUIgEU/KJAeKGslipJfj3o2s+39siloJFsbg0kNF3T25BRs57GeH+ml+hpoHWgKYMdkpxDZjhdgmtyejz8ahtmlQu9ooT8uYaLuqtdlGKQkrrZ3+BFBFeBNt/6DSVvbrui6KeUOTBOqx0ZQKtbUKS1AOb1KPBK2c0b7lOeJLAtGRgLkCR4pB6Y2HUSxU+hpfF/9afNRzlNPCQLeJBWuY2D7K/60wPT0gdQZY7XeeJrolXJudEn7a1TGC1sQSZ0pw6OH/ZxS18xAl+qyJy977DC9tuEtTHbU+q8Pmnb0LxMo8uQ8KnyQwYzI9QVqynsmoYk22oeNFuCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/bEa5fxT5nth+aOEJSxpkT4brgwWyB28zbj/VlvoTkk=;
+ b=OzHmsL+noBL2R7BoOeyU7jOmAqUyHJcPxQN0wRoES7tqp4tCsDumpScPaASmM7Lldzu11seimRejOblsYpjDAaNy1xrfUGIqK88W/JtsP70160cUCDQMcR9yneUG2LMSH0Qb6yAuP9nAEX1jP8JdzAwwSuObLQ7YM+B7giQ0f/AiwbUfuReg+OnNG8CrmOKbMRbk0tDmRU35i/e28cAfHNktuCF87WcfhdiaaXJSOK2SKkQlM0gUtOo0AXt8vzVe2gTKDnP3pGIpd84OfOI223eJ0pzyUQgDG+Rx//Ov7t+mcRLTOnlI6djxgris0k9Eysl9DiOOepcSj47fSYZlxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/bEa5fxT5nth+aOEJSxpkT4brgwWyB28zbj/VlvoTkk=;
+ b=WHzYBZza3bXcLqgBWMG5QqGGJ8E2IryM2K9XsWzTMnd1IfPBQ+3idxdl7GOYPPUlrUOGgYcaKzAZeOTrzQfmNHKHM9JEGQ7SndU5xzqrZjHdctSewTZpwCxCYHZW7LcXndBSyTM3PrBK58+6CFJwCQahgR++CBZF8eXa/5rcwku6JdLtOQEjr1Ga7ZSb5Bve3OpNNh7Vga5uNAiHT3VbAp04SxAhkvj7l+iFjmEkYCjbN6FRjx/+d01blYbrYXZADiiUZVesQD6/8Fm8ueRQCdqev9IfyDgkMtZEeLRV3B+VCQgKo1uQ4dCi+ezAwa2COT/S7Qu0ODhZrBpcNzbFsQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by MW4PR02MB7474.namprd02.prod.outlook.com (2603:10b6:303:75::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
+ 2025 19:22:42 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 19:22:42 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: He Zhe <zhe.he@windriver.com>, "rick.p.edgecombe@intel.com"
+	<rick.p.edgecombe@intel.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+Subject: RE: vmbus CVE-2024-36912 CVE-2024-36913
+Thread-Topic: vmbus CVE-2024-36912 CVE-2024-36913
+Thread-Index: AQHbqeBE1oL0kNw5skqLnwrnBYdwgrOdRv2w
+Date: Thu, 10 Apr 2025 19:22:42 +0000
+Message-ID:
+ <SN6PR02MB415791F29F01716CCB1A23FAD4B72@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <ecaa2736-1e5d-48aa-b06c-df78547a721c@windriver.com>
+In-Reply-To: <ecaa2736-1e5d-48aa-b06c-df78547a721c@windriver.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MW4PR02MB7474:EE_
+x-ms-office365-filtering-correlation-id: 3bf128d0-5435-4e79-9094-08dd786510a4
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599003|461199028|15080799006|8060799006|19110799003|10035399004|3412199025|440099028|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?8U5cSfu8p/ELqweOt586L7Chf7xGQ2Fpi5jazSmIFzUMkg+ZWREmot5j12N5?=
+ =?us-ascii?Q?xZIEnSbtmExnpqnHDr25DwaxnJCpYVKtgRGDAdWaQoLNH9McaC5L6n5p7huo?=
+ =?us-ascii?Q?QuUPNtvwUH4xrlPvvN0W06NcWKY7zp3fJzXHhFCBtAwA10TiitB/SGM6wV5p?=
+ =?us-ascii?Q?+WnjtQrdqbVB+ShlcEUm30EQ8jSQWqbEUzoOwG3tS4Ues7mFtvR0Co0dJSBk?=
+ =?us-ascii?Q?TRsFfAdPhWUdOsOGKndlnWABQAWAXUsBvUzfa5BPv2dRfHGH/oOI6CyGgIIJ?=
+ =?us-ascii?Q?yYmiwrwQLLtx/BCS2t8u90uHtFZtKkaKb1o+5ZRflGV9aU6+4bz8rcw1aA1k?=
+ =?us-ascii?Q?3f1HlRJg1FaMyTamHrd4rfePi6FrtkcZFPMF0yW8N/L+WtAVhaZ0HONsA65/?=
+ =?us-ascii?Q?+3I1wvtpCAGlLQBYvrcWmbkibIM+R7VkhQ93HsP8tAaiqn36CT5MS05Sdgdc?=
+ =?us-ascii?Q?+VFTQ7D2zHhSiEdle09vsaozIwLYIrcyIrj5xqxkpXPllVk8SQmV+tC7JAZS?=
+ =?us-ascii?Q?8SNErkHz6LlRWb3WLH6zRhFpGIdm1hbBtvJXwRl973nHYzJXPnRw9Jr5AI04?=
+ =?us-ascii?Q?fkDSjm+cEbHuI8suQ0IHTxDQv1W02d1CfOlxH21WashPzFQbwV/G39Amn22U?=
+ =?us-ascii?Q?/CDTnRnAPRjC+IbFN/TYgFjUQrUsCuUVTmiUj7r13wRnUQJEk1aX7uzrCXX5?=
+ =?us-ascii?Q?xh5aapsvjS0WRLIra8UI/RhXRdiIFX6qj7Z4GgmU3GyXSc097/9AGozUy4TB?=
+ =?us-ascii?Q?v3FeR1BUg7hH82s6D++17wxZmbWKwMiwHseO5cDFVG6irwFbnxMLzIAYSWBI?=
+ =?us-ascii?Q?au0MidJ8cAmC4URFrz7iNXh6i9/EiKAKVXaoCXbJ6/m6lIaDV2kXlkg7LtaW?=
+ =?us-ascii?Q?eojBJtNSpq/PPXilwO1slEsKrpjfGuvSF0UOQ2pO9X8Dr4BkC8JDLzKFhbof?=
+ =?us-ascii?Q?M+ZNcqDEOvGq4LYBksLvrEwfmcrZ43LcxYm9L/xE/UeA2LRLv0p1JWYKWIEy?=
+ =?us-ascii?Q?WQdvp/sJyyTyu1wXulk7ewpdhXLSW6SgKZN3+wr4V+3nreZ+cTijZ3nKA8xF?=
+ =?us-ascii?Q?k1xiNJMhmOLanaoxT23z9eF6OyORkQsVbqLrjSg96Ji3k8aOWQVQTsiRplLl?=
+ =?us-ascii?Q?8Fzwl4USpcfkMmtcKMW74zWwZAXQZ3P1Jw=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?N5gz3VVqT0fklYqDTCw+cC9zhkA4eNhXnpZjuQSZIYkT97vuMlnl4PwkSwW0?=
+ =?us-ascii?Q?1BWsjbf7MqUpJ1naQSipUa/Qt+3ULR7Rp1ErfaQ1gdszTPIhFHoNMMZ2BVmz?=
+ =?us-ascii?Q?4z6Star3xlv7dz2+m/3NObqUcFsMztrG4AyB1ygaHWMYgolU/FQGaFwIXDY7?=
+ =?us-ascii?Q?rraQ2Sz+nDaKDc+95CJkb/cWby4Y+/1YiG2n92xRPIp4J5bvOJ/DAkxvq4yd?=
+ =?us-ascii?Q?u1vYGDVTNrYcudPt6FkzC2Wxf86McIMtqAEkNqPQkrdT/K8gJpEBzL+YJJ7U?=
+ =?us-ascii?Q?Wj/epJnChT8UvScgsQRrTVrFdFImwtc4jrN+SEhR9uOdmSwomhYutgCLTsr9?=
+ =?us-ascii?Q?CgoKSf1FkyJEv+rymhkMZ+kd7qOAyS0EZHF6LerHokeZTqwXcDh0sDDEptK3?=
+ =?us-ascii?Q?K4ITrH95ktKy0V4n+G1IzOM7NWUmBciRuWeGM0U3LxUK54L4qUKW2RW2ZFt9?=
+ =?us-ascii?Q?DmupzRSfrgTSjbqLbDH5jkxkkj38UXQJhkY9j0eNCgbTO1fhQ4I0pfGdw3+q?=
+ =?us-ascii?Q?7/GnLj+iFCOygBURh0x2fpSbZYYysXU+2Vpf/aa0qF9ka/1yMcirGPP1iA1n?=
+ =?us-ascii?Q?ka1njpWWU5ogKfuCu04LW/bRW1wtVpijoCjLro+pwb9vZVC5IB8UkWa/WMra?=
+ =?us-ascii?Q?996PLoXQkxMorCODKFhF73LU1MA3XFogIUCp8Xek3toFXnD6lbd0h120RY5A?=
+ =?us-ascii?Q?oJI4y60QQIGxa/rZZ3NN+SWOFb2PNUHr6sbeHYGpwSHtrszXv2Uy0OWQGq1z?=
+ =?us-ascii?Q?YIeOlzkiZ37md0HaUQtwgoA3E9SJ6rc0v88bKTxlmYmQcC06RFBfQMur51Xb?=
+ =?us-ascii?Q?o4SoiIH948ugClmSfYSJw3wtWYWqBO7IF1vA1ZRPowl4zsEC54jJJDIqEf54?=
+ =?us-ascii?Q?vAf68DwZG/G2v4S+faoTsuMZWGjxWiQJw+wXNnMBprOKhjleMAwJIa8vogJE?=
+ =?us-ascii?Q?3HJ32BLHRBvDuJBZ5n8LnAfque2/FM5CqHWEPUa0Gjwf0/i4a6PcG4N75UNC?=
+ =?us-ascii?Q?bqsUbHVuC1pFnfnnUuQvA+X9UO9IVvbnppIqNz2Dr/htpZVNulqKjxJjQ+nS?=
+ =?us-ascii?Q?stKe722TiJkfxsF1nZbfMmtmHwEtgb44um8vahyA5wTXpGdkWF7SRgxlkibN?=
+ =?us-ascii?Q?lsS6yX/coj7qLwrZ49I52Vn5vDMhYG/+oJQrMcfQB7QWPJleL6CVGtBPtu2G?=
+ =?us-ascii?Q?i5GHGFxqC0Lm0+OzNC9lqQUqfLWXpE4Nt+xjCiIJ8r1C3DtAJsRmH8PkYHs?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410024439.20859-1-sultan@kerneltoast.com>
- <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com>
- <Z_fru1i1OpAQ-hJq@sultan-box.localdomain> <CAJZ5v0iu_hMud6FRg6FiUVQ1cY6oYqrEmwpwPTeYJh5Yzh5Q8A@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iu_hMud6FRg6FiUVQ1cY6oYqrEmwpwPTeYJh5Yzh5Q8A@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 10 Apr 2025 21:21:25 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hOFjsS1KPZ=0KkCEuA58ken4qTfhnn5n5mcC5LkCCzRA@mail.gmail.com>
-X-Gm-Features: ATxdqUGCPyDzsEJNEcRzZK-Ows8WeMV2BPKnu9MgtdiUDJ74X0ZZex3GkAujyBE
-Message-ID: <CAJZ5v0hOFjsS1KPZ=0KkCEuA58ken4qTfhnn5n5mcC5LkCCzRA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: schedutil: Don't ignore limit changes when util
- is unchanged
-To: Sultan Alsawaf <sultan@kerneltoast.com>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bf128d0-5435-4e79-9094-08dd786510a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2025 19:22:42.2361
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR02MB7474
 
-On Thu, Apr 10, 2025 at 8:47=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Thu, Apr 10, 2025 at 6:03=E2=80=AFPM Sultan Alsawaf <sultan@kerneltoas=
-t.com> wrote:
-> >
-> > On Thu, Apr 10, 2025 at 05:34:39PM +0200, Rafael J. Wysocki wrote:
-> > > On Thu, Apr 10, 2025 at 4:45=E2=80=AFAM Sultan Alsawaf <sultan@kernel=
-toast.com> wrote:
-> > > >
-> > > > From: Sultan Alsawaf <sultan@kerneltoast.com>
-> > > >
-> > > > When utilization is unchanged, a policy limits update is ignored un=
-less
-> > > > CPUFREQ_NEED_UPDATE_LIMITS is set. This occurs because limits_chang=
-ed
-> > > > depends on the old broken behavior of need_freq_update to trigger a=
- call
-> > > > into cpufreq_driver_resolve_freq() to evaluate the changed policy l=
-imits.
-> > > >
-> > > > After fixing need_freq_update, limit changes are ignored without
-> > > > CPUFREQ_NEED_UPDATE_LIMITS, at least until utilization changes enou=
-gh to
-> > > > make map_util_freq() return something different.
-> > > >
-> > > > Fix the ignored limit changes by preserving the value of limits_cha=
-nged
-> > > > until get_next_freq() is called, so limits_changed can trigger a ca=
-ll to
-> > > > cpufreq_driver_resolve_freq().
-> > > >
-> > > > Reported-and-tested-by: Stephan Gerhold <stephan.gerhold@linaro.org=
->
-> > > > Link: https://lore.kernel.org/lkml/Z_Tlc6Qs-tYpxWYb@linaro.org
-> > > > Fixes: 8e461a1cb43d6 ("cpufreq: schedutil: Fix superfluous updates =
-caused by need_freq_update")
-> > > > Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
-> > > > ---
-> > > >  kernel/sched/cpufreq_schedutil.c | 5 +++--
-> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufre=
-q_schedutil.c
-> > > > index 1a19d69b91ed3..f37b999854d52 100644
-> > > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > > @@ -82,7 +82,6 @@ static bool sugov_should_update_freq(struct sugov=
-_policy *sg_policy, u64 time)
-> > > >                 return false;
-> > > >
-> > > >         if (unlikely(sg_policy->limits_changed)) {
-> > > > -               sg_policy->limits_changed =3D false;
-> > > >                 sg_policy->need_freq_update =3D cpufreq_driver_test=
-_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > >                 return true;
-> > > >         }
-> > > > @@ -171,9 +170,11 @@ static unsigned int get_next_freq(struct sugov=
-_policy *sg_policy,
-> > > >         freq =3D get_capacity_ref_freq(policy);
-> > > >         freq =3D map_util_freq(util, freq, max);
-> > > >
-> > > > -       if (freq =3D=3D sg_policy->cached_raw_freq && !sg_policy->n=
-eed_freq_update)
-> > > > +       if (freq =3D=3D sg_policy->cached_raw_freq && !sg_policy->l=
-imits_changed &&
-> > > > +           !sg_policy->need_freq_update)
-> > > >                 return sg_policy->next_freq;
-> > > >
-> > > > +       sg_policy->limits_changed =3D false;
-> > >
-> > > AFAICS, after this code modification, a limit change may be missed du=
-e
-> > > to a possible race with sugov_limits() which cannot happen if
-> > > sg_policy->limits_changed is only cleared when it is set before
-> > > updating sg_policy->need_freq_update.
-> >
-> > I don't think that's the case because sg_policy->limits_changed is clea=
-red
-> > before the new policy limits are evaluated in cpufreq_driver_resolve_fr=
-eq().
->
-> sugov_limits() may be triggered by a scaling_max_freq update, for
-> instance, so it is asynchronous with respect to the usual governor
-> flow.  It updates sg_policy->limits_changed and assumes that next time
-> the governor runs, it will call into the driver, for example via
-> cpufreq_driver_fast_switch(), so the new limits take effect.  This is
-> not about cpufreq_driver_resolve_freq().
->
-> sugov_limits() runs after the driver's ->verify() callback has
-> returned and it is conditional on that callback's return value, so the
-> driver already knows the new limits when sugov_limits() runs, but it
-> may still need to tell the hardware what the new limits are and that's
-> why cpufreq_driver_fast_switch() may need to run.
->
-> Now, if sugov_should_update_freq() sees sg_policy->limits_changed set,
-> it will set sg_policy->need_freq_update which (for drivers with
-> CPUFREQ_NEED_UPDATE_LIMITS set) guarantees that the driver will be
-> invoked and so sg_policy->limits_changed can be cleared.
->
-> If a new instance of sugov_limits() runs at this point, there are two
-> possibilities.  Either it completes before the
-> sg_policy->limits_changed update in sugov_should_update_freq(), in
-> which case the driver already knows the new limits as per the above
-> and so the subsequent invocation of cpufreq_driver_fast_switch() will
-> pick them up, or it sets sg_policy->limits_changed again and the
-> governor will see it set next time it runs.  In both cases the new
-> limits will be picked up unless they are changed again in the
-> meantime.
->
-> After the above change, sg_policy->limits_changed may be cleared even
-> if it has not been set before and that's problematic.  Namely, say it
-> is unset when sugov_should_update_freq() runs, after being called by
-> sugov_update_single_freq() via sugov_update_single_common(), and
-> returns 'true' without setting sg_policy->need_freq_update.  Next,
-> sugov_update_single_common() returns 'true' and get_next_freq() is
-> called.  It sees that freq !=3D sg_policy->cached_raw_freq, so it clears
-> sg_policy->limits_changed.  If sugov_limits() runs on a different CPU
-> between the check and the sg_policy->limits_changed update in
-> get_next_freq(), it may be missed and it is still not guaranteed that
-> cpufreq_driver_fast_switch() will run because
-> sg_policy->need_freq_update is unset and sugov_hold_freq() may return
-> 'true'.
->
-> For this to work, sg_policy->limits_changed needs to be cleared only
-> when it is set and sg_policy->need_freq_update needs to be updated
-> when sg_policy->limits_changed is cleared.
->
-> It looks like you really want to set sg_policy->need_freq_update to
-> 'true' in sugov_should_update_freq() when sg_policy->limits_changed is
-> set, but that would render CPUFREQ_NEED_UPDATE_LIMITS unnecessary.
+From: He Zhe <zhe.he@windriver.com> Sent: Wednesday, April 9, 2025 11:15 PM
+>=20
+> Hello,
+>=20
+> I'm investigating if v5.15 and early versions are vulnerable to the follo=
+wing CVEs. Could
+> you please help confirm the following cases?
+>=20
+> For CVE-2024-36912, the suggested fix is 211f514ebf1e ("Drivers: hv: vmbu=
+s: Track
+> decrypted status in vmbus_gpadl") according to https://www.cve.org/CVERec=
+ord?id=3DCVE-2024-36912=20
+> It seems 211f514ebf1e is based on d4dccf353db8 ("Drivers: hv: vmbus: Mark=
+ vmbus
+> ring buffer visible to host in Isolation VM") which was introduced since =
+v5.16. For v5.15
+> and early versions, vmbus ring buffer hadn't been made visible to host, s=
+o there's no
+> need to backport 211f514ebf1e to those versions, right?
+>=20
+> For CVE-2024-36913, the suggested fix is 03f5a999adba ("Drivers: hv: vmbu=
+s: Leak
+> pages if set_memory_encrypted() fails") according to https://www.cve.org/=
+CVERecord?id=3DCVE-2024-36913
+> It seems 03f5a999adba is based on f2f136c05fb6 ("Drivers: hv: vmbus: Add =
+SNP
+> support for VMbus channel initiate message") which was introduced since v=
+5.16. For
+> v5.15 and early verions, monitor pages hadn't been made visible to host, =
+so there's no
+> need to backport 03f5a999adba to those versions, right?
+>=20
 
-As I've just said in the original patch thread, it looks like using
-sg_policy->policy->fast_switch_enabled instead of
-cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS) in
-sugov_should_update_freq() should do the trick and then (if this
-works), CPUFREQ_NEED_UPDATE_LIMITS can be dropped.
+I agree with your conclusions. The two CVE's you list are for Confidential =
+Computing
+virtual machines. Support for CoCo VMs (called "Isolation VMs" in commits
+d4dccf353db8 and f2f136c05fb6) on Hyper-V was first added in Linux kernel
+version 5.16. So the fixes for the CVEs don't need to be backported to any
+versions earlier than 5.16.
+
+Michael Kelley
+
