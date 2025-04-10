@@ -1,100 +1,125 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02B71FDE31;
-	Thu, 10 Apr 2025 08:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572F31EBA03;
+	Thu, 10 Apr 2025 08:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273325; cv=none; b=sZDKzYtU276etr5Ts0KzsLMpS3ymuwOKdNE6ceFwIKJxFmL+lqFG/KCa2BF9qcRTnmesKzmGR+55wLqIv8EzB8FdqTStW8290sLUhkEUHA1knbEQWsNB/koSmsYjFs4SOC8xqu8Wu48Ag9L4kBYIVPzIt80cdoHl5nD9A7Zv5R0=
+	t=1744273369; cv=none; b=u83lKdk83wHR0qjWbPdepVlxF1CMwua5a+KDUT/qcp9TaixQHS0/ykLXSNIJN5KdCPRBvFV6qMojsJLe/nKvXebgCDxns8qM/IvG/em7B9rCT1FsPttLTUOFmxUTeVFe89OYeBOtpoam3Z4BmZmFpA8ItpB6GxEl+j9EiQ0iVFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273325; c=relaxed/simple;
-	bh=QEHUf3cjjUvT3Mem8QZVL3tzuLM/jVQlVCaqrc3lP7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SCRojV775/auOxjXu7V7nnKiHhgpW7R9DjOvvCRCGVPXxSooPa+It1Qte1rV5a0EF2HET9vscUCwOfkaeXrQULC0OW9WVxhWTqsOSek7auMk/L03fy8aIKoX6Ezv+886V8pXXaxJ3fEGiyCrun3KJg19XiWIlh109rzHiHXMCPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZYCP03VHxzvWsm;
-	Thu, 10 Apr 2025 16:17:56 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id D5744180087;
-	Thu, 10 Apr 2025 16:21:59 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 10 Apr
- 2025 16:21:58 +0800
-Message-ID: <4e67b8db-1bc8-48b7-b3c2-956b717cbf84@huawei.com>
-Date: Thu, 10 Apr 2025 16:21:58 +0800
+	s=arc-20240116; t=1744273369; c=relaxed/simple;
+	bh=J2Xwb0BAaI+5Ws9mo7EriiJABVLHC5+GCzzr03j5I70=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=IVa3j1UhbW8Vwkmonyv2zxDVLq4I8351HXi3qMvXbQZnjjGISxiMEkaAuVEPKuqXMSzUH5wxeRMdjyeqO758loUyz9gnRzDmqTG5AXo125UZYWCRfGnzW9NL01RXtql64Kiu9zDceaOStWkRukhO1JgMub8bcEJ8VIgXkK8qkyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KXHzFxW5; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KXHzFxW5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 14CF643158;
+	Thu, 10 Apr 2025 08:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744273364;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ue/3HBgf+//oq0TTM6uv2vmPqBX5UWYBBw5+A+yFldY=;
+	b=KXHzFxW5lkXV6FcZBimiz9eUYQUWZ33xPZFFtIa/93VDIcBP1fl/D4DZzt8juXE1ZcvNeQ
+	KUuCPbZxJTgsFVjuyJ4Rwg15o8YAG7zfIBpPQUEQkdto2CnjNVgcocWhxiHyW4mjrsPphf
+	rQAAWR+YNOwXAUM7IpgbYJP1Ph0cGMYchSAkb4j/Vu5/VLioVWgGwC50FbZ9Bci+TOWJ5s
+	EHl/2UF3kAe/ph/ekMxEqQbQu3MnJpQbkyfsj0z9v4rNPj57i8/n8Xb935DbXHOSjB67wg
+	TEafQNJ2hBQTWuixtEyeMFlJF3OhuuenlVSRMRsZ3NgZ3YOYj8ffSux+CGHbtQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/8] ACPI: CPPC: Add IS_OPTIONAL_CPC_REG macro to judge
- if a cpc_reg is optional
-To: Mario Limonciello <mario.limonciello@amd.com>, <rafael@kernel.org>,
-	<lenb@kernel.org>, <robert.moore@intel.com>, <viresh.kumar@linaro.org>,
-	<gautham.shenoy@amd.com>, <ray.huang@amd.com>, <perry.yuan@amd.com>,
-	<pierre.gondois@arm.com>
-CC: <acpica-devel@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>,
-	<cenxinghai@h-partners.com>, <hepeng68@huawei.com>
-References: <20250409065703.1461867-1-zhenglifeng1@huawei.com>
- <20250409065703.1461867-2-zhenglifeng1@huawei.com>
- <7a3bda35-05a0-49ad-b014-1834a176a906@amd.com>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <7a3bda35-05a0-49ad-b014-1834a176a906@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 10 Apr 2025 10:22:42 +0200
+Message-Id: <D92TAWMKKM8Z.7E4MKWHTXVMS@bootlin.com>
+Subject: Re: [PATCH v6 01/12] dt-bindings: mfd: gpio: Add MAX7360
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+ <triuq2rqofk4psfauemu6uikizvphnqg7om5x4b6sjc3tjg2a4@5fvv5l4kollo>
+In-Reply-To: <triuq2rqofk4psfauemu6uikizvphnqg7om5x4b6sjc3tjg2a4@5fvv5l4kollo>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekgeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhefhhfelhfekjeeugedtudelueetffejfffhkeeivedvveelgfetfeelveetvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehlv
+ ggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On 2025/4/10 2:53, Mario Limonciello wrote:
-> On 4/9/2025 1:56 AM, Lifeng Zheng wrote:
->> In ACPI 6.5, s8.4.6.1 _CPC (Continuous Performance Control), whether each
->> of the per-cpu cpc_regs[] is mendatory or optional is defined. Since the
-> mandatory
+On Wed Apr 9, 2025 at 10:58 PM CEST, Dmitry Torokhov wrote:
+> Hi Mathieu,
 
-Thanks！
+Hi Dmitry,
 
->> CPC_SUPPORTED() check is only for optional cpc field, another macro to
->> check if the field is optional is needed.
->>
->> Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
->> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
->> ---
->>   drivers/acpi/cppc_acpi.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
->> index f193e713825a..39f019e265da 100644
->> --- a/drivers/acpi/cppc_acpi.c
->> +++ b/drivers/acpi/cppc_acpi.c
->> @@ -129,6 +129,20 @@ static DEFINE_PER_CPU(struct cpc_desc *, cpc_desc_ptr);
->>   #define CPC_SUPPORTED(cpc) ((cpc)->type == ACPI_TYPE_INTEGER ?        \
->>                   !!(cpc)->cpc_entry.int_value :        \
->>                   !IS_NULL_REG(&(cpc)->cpc_entry.reg))
+>
+> On Wed, Apr 09, 2025 at 04:55:48PM +0200, Mathieu Dubois-Briand wrote:
+>> Add device tree bindings for Maxim Integrated MAX7360 device with
+>> support for keypad, rotary, gpios and pwm functionalities.
+>>=20
 >> +
->> +/*
->> + * Each bit indicates the optionality of the register in per-cpu
->> + * cpc_regs[] with the corresponding index. 0 means mandatory and 1
->> + * means optional.
->> + */
->> +#define REG_OPTIONAL (0x1FC7D0)
+>> +    i2c {
+>> +      #address-cells =3D <1>;
+>> +      #size-cells =3D <0>;
 >> +
->> +/*
->> + * Use the index of the register in per-cpu cpc_regs[] to check if
->> + * it's an optional one.
->> + */
->> +#define IS_OPTIONAL_CPC_REG(reg_idx) (REG_OPTIONAL & (1U << (reg_idx)))
+>> +      io-expander@38 {
+>> +        compatible =3D "maxim,max7360";
+>> +        reg =3D <0x38>;
 >> +
->>   /*
->>    * Arbitrary Retries in case the remote processor is slow to respond
->>    * to PCC commands. Keeping it high enough to cover emulators where
-> 
+>> +        interrupt-parent =3D <&gpio1>;
+>> +        interrupts =3D <23 IRQ_TYPE_LEVEL_LOW>,
+>> +                     <24 IRQ_TYPE_LEVEL_LOW>;
+>> +        interrupt-names =3D "inti", "intk";
+>> +
+>> +        keypad,num-rows =3D <8>;
+>> +        keypad,num-columns =3D <4>;
+>> +        linux,keymap =3D <
+>> +          MATRIX_KEY(0x00, 0x00, KEY_F5)
+>> +          MATRIX_KEY(0x01, 0x00, KEY_F4)
+>> +          MATRIX_KEY(0x02, 0x01, KEY_F6)
+>> +          >;
+>> +        keypad-debounce-delay-ms =3D <10>;
+>> +        autorepeat;
+>> +
+>> +        rotary-debounce-delay-ms =3D <2>;
+>> +        linux,axis =3D <0>; /* REL_X */
+>
+> Probably this has been already discussed, but shouldn't keyboard and
+> rotary encoder be represented as sub-nodes here, similar to how GPIO
+> block is represented?
+>
+> Thanks.
+
+Yes, this has been discussed on v1 and I was asked to remove most of the
+subnodes.
+
+https://lore.kernel.org/lkml/58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel.or=
+g/
+
+Thanks for your review.
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
