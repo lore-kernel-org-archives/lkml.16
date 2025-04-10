@@ -1,109 +1,155 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E236214A91;
-	Thu, 10 Apr 2025 09:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB92214A91;
+	Thu, 10 Apr 2025 09:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278328; cv=none; b=TzqeDa75BnSwnjI9D4G+sOTdlnp3Pynl3G9y4vr/Pt7DrOTJr3ws9gXafJdCdoQS5IWKbhr1gPpgRZfH/Vijz/9Idydqr3RSUPGOilktLpafmPDg817NIgvgf0YWyURH3dWZ6sB1X/J7mHOs9S1hyLsH3mhCaHM+z9sNiT1jvMg=
+	t=1744278352; cv=none; b=V0v/nlBiyQu4YE7dALngGMwHM7jWHMyEWbzxggQRncL15OZbV+uqejFDIqHtcpNbsFUqGI3dSEGlFL27BMLzhFpjep8CUR0pxPOCg6Fj9F9HuUXEhxunwCsAkg1zL2yvhm0h5RNAAwdx42P9N2Gd7SexBHhFsGlNkI0hm/EHdhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278328; c=relaxed/simple;
-	bh=e5daXCLRVh6mf+AAlTCD0T2AR1+6dAICJsUqcnLpWgs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZHvYg8PJKWnOFcOZkNRc4ABNkx/OYgn0aUR5JhyazpwhDQrNFn7Zjf+LopEhzl6SaSV9h3Gx5+7RGkatlLCc1KVmLE6Zj748QqZw8uJ3MggAhiY5t8iu0E8tIr8oV9Gv7mZu2oIDcsSHTFIGmu0dYDHLAlDFZCSli/JZkop4YN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523eb86b31aso329643e0c.0;
-        Thu, 10 Apr 2025 02:45:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744278324; x=1744883124;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wF3flOwwpTsOVsGjDVbuxPI3IVs9tE7hL82LS5qidH8=;
-        b=KAwkTOPfd2bCdSB9B6jLxrUFaILaZEjaDgIN472N1kDa85fY9qnFaMv5CZnKQBwrCi
-         m5cZI4cJrcKGT/lzrtytR34oClYxXJjKgLgwOT1l29PWVPMCjo+ci82DGMOlIIiTj3w/
-         JwYZIYovRgIiCC/hqE9/E+1+k3yyjxGvwBryGNpGoD7zmAVa86QhhgdLtV/40IyGrKCw
-         5vVstJqqolmX57os2OjUD06ATwmKPxSXrnPDcnLHhLBNhyHYyk3T+Aw5uPG4dA6ctVl5
-         hQpJHGqY9QBCa9LOsPI54agNxd674UQU6p6mDKsgHwqncPoLjN1jNCD1dE9ANEerd5ap
-         lbUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUc6GCMa6S23W8Mx5v2KIq8mvLKtHcqxcwVitQ4CnyrXouZJzE4QDSTnSp7e9eg2RRv/Ey4PARu9jpQABHB2yGAb4M=@vger.kernel.org, AJvYcCW5m27dcgSgNO/gWbl5tghMK+AJp4xUkjNGGCehCOB03tTPa21ePlgAH1OkxbqN//ZIUEme1WXsWYGDAw==@vger.kernel.org, AJvYcCWF7nYBcZ0YXX8ROvX/xfamOHPk2tZR7mzMYeSOQ+ycB6OzaiqjGQHcUZqtLoxzpZVZprWZ5x0c9/7Q@vger.kernel.org, AJvYcCWIbyWSiGI+UpDwoxt48RIWh/bVcSIj+bWHxj3ceBODQc4t2Ba0h3aN2iJhOwqSYBfJ/XInlX0qEcD3hsoF@vger.kernel.org, AJvYcCWrZLXflrBifkwPsUnYtdYKP0YTheN+EGxJRZxjwZDvD+bzYedKv+d11AVpZ7FtiNwsz/3a8KUIDZQk3UbS@vger.kernel.org, AJvYcCXypAlAvkxq47MWmGvQDHcylWAuYA0ktM7PTlhnJM8noAvkT0tRekaogtQSCvWlngvT9erLkUWzf/rU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo20JeGSiPqEjUry+r8MsSAI+/0QXCoAv90lN7wiVV4ezkkJZj
-	8mXDy0ZGxFHaVQ86LGaOv23Vzj0b2UC8QfJZ9jXIaGPrIRFnt+4joYwLIGs5
-X-Gm-Gg: ASbGncuMmsgHV+heQigFNB/FiyqdJXsam4AUnVdlxA3mdlQjKtPFDGlGRFHUIxIpECJ
-	9JagIEPO1170aGzxVT+UvqfEtSnG6pHvVMDEOtWXFqdCY0vXQHxlqQKMLjIz/Yhahc1euOlrrx0
-	DxusgGBcKURCCZBs8ybYbqDcTid9vAx3i+JdNoSxwVNuahcQ+7xh7l0ZHrCiDItiFwL0ZfnRs7A
-	j2Fw5sDn/NHL2empeCZj85eVOCdQxMxLAqcsc9GQr1kIOiOskGI41Pp0BbWgheqOiCmI1uaVRBN
-	V/uUky0uYs/P0HdTM2EWthEhMD8YMReUVehKXjum6MS0R3IlOMMHZnin38wi+dJ8K9swN4NUM//
-	Dc7M=
-X-Google-Smtp-Source: AGHT+IELT+nIcNIHpRd0VURQSfms7/9rnXrvQSKKP8WDZhL+Ping8e5aExYUvTBzzunkWbrk3CQGQg==
-X-Received: by 2002:a05:6122:da1:b0:526:1ddc:6354 with SMTP id 71dfb90a1353d-527b4e40effmr1192778e0c.0.1744278323832;
-        Thu, 10 Apr 2025 02:45:23 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd4eab6sm581548e0c.5.2025.04.10.02.45.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:45:23 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86715793b1fso236154241.0;
-        Thu, 10 Apr 2025 02:45:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV25S5XGwEIkYArn5jTiUl+FS3metWcubaYSgJu46Q2ilojnBO9LP24dv3H4Gbwjn4V9+r/NjYfjlhHhtr8UfEeoLM=@vger.kernel.org, AJvYcCVFDMfY1Gb5LuAdX+BtYBCW/yBkanJgwp0SmX3cIvli3+/5qAKoOVCi0hbNEKxG8ROZJx2CU9tC7845eX61@vger.kernel.org, AJvYcCWPdbxMZwfURuq78FVvO/AxLNzRbixDog9U1roepYIz0Bxw8i1MlC790PPfQN4qUdCcM02RaYiOX1kl@vger.kernel.org, AJvYcCWpPss8C2eMGSzTivS0UMOpcT1Kr0yphMutvLItq3UJ3qY9QT1UiRsrRdz+XxjI9sH1AgiPrcYmkcELsIMV@vger.kernel.org, AJvYcCWsQJ6ocrO6SxP9wgvpDJ7FTOZBcc9cDZeCehaR2J0GtlgTjjASIZH2iTwFW6b9oNr1d1TNtgoC/C93@vger.kernel.org, AJvYcCXtftODtSMjIaA66kIJIsjJKRliW4RqYUw2hi31rSk0/c3dIaBw5t4e42u6vua8lqkTqhNcM/0G8IkrtQ==@vger.kernel.org
-X-Received: by 2002:a05:6102:3309:b0:4ba:971a:41fd with SMTP id
- ada2fe7eead31-4c9d35c5deamr1124974137.19.1744278323244; Thu, 10 Apr 2025
- 02:45:23 -0700 (PDT)
+	s=arc-20240116; t=1744278352; c=relaxed/simple;
+	bh=0kIzi7TbTQFS8VlZNGMFkRNquA5kSYKBBDNZ76ejBk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GIhEYMvvN0ZxYH3Eiie2dYUaUP/7/2HjP87eESlz1FKyVl7dktnS2HytLX4svhRNmMLy1D4i/oD0jErbyAJ8ovOJcTS+O7/nYCU+X4jNWLGszmiB8HUB7xNufJw4HlNzMblZ6ZnhxVvjG/xwlt75zY5iCzc/EyrjhL3A9dB3Vuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfILl1rY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfILl1rY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17380C4CEDD;
+	Thu, 10 Apr 2025 09:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744278352;
+	bh=0kIzi7TbTQFS8VlZNGMFkRNquA5kSYKBBDNZ76ejBk4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XfILl1rYnxJVxtNk1Mui9WiG5xWY8QYfVAaY4Bn68POkWSJDSsylxP3hyLiM/SCfA
+	 Sy4bZkgDrP73HTpnWwr9TJU+p7uGBeXJ1TJt3bdVqK2nU8KOuI/RNhy5mbszYPuxIm
+	 KoGJirY1w0i6fw10QNFwJ87FYSmyL1GTd8bRK4go3X5YL4wIEYS991XKNoSO0ow7WV
+	 4xwmF5qHtLypkW2IP/gZMYEhS2xM8fozDc9BFq5/NLRJN7vUm0NvsdAcrDmR5EtC9h
+	 XYDQcJOXUYb5LMhIf55kgHFIkGL3vorIBOu9bKEVOE5G658CoFiwJw7I7YC9JmnxE0
+	 W5Vg06wS8wX8w==
+Date: Thu, 10 Apr 2025 11:45:49 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>, x86@kernel.org
+Subject: Re: [tip: perf/core] perf: Simplify perf_event_free_task() wait
+Message-ID: <Z_eTTf6RBeHQ8bmT@localhost.localdomain>
+References: <20250307193723.044499344@infradead.org>
+ <174413910413.31282.5179470093314736126.tip-bot2@tip-bot2>
+ <Z_ZvmEhjkAhplCBE@localhost.localdomain>
+ <20250410093456.GA17321@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407191628.323613-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 11:45:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVMmuUsz7SFKXwgN18tEg1DFa6mYTkN7aLD8zu64Lb11Q@mail.gmail.com>
-X-Gm-Features: ATxdqUFqo0ZMceN1rxkhX4aDFIuAr-nMIpzKU-j05xv-Wz1pn3oTcGBOENSelMY
-Message-ID: <CAMuHMdVMmuUsz7SFKXwgN18tEg1DFa6mYTkN7aLD8zu64Lb11Q@mail.gmail.com>
-Subject: Re: [PATCH v2 06/12] dt-bindings: clock: renesas: Document RZ/V2N SoC CPG
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250410093456.GA17321@noisy.programming.kicks-ass.net>
 
-On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Document the device tree bindings for the Renesas RZ/V2N (R9A09G056)
-> SoC Clock Pulse Generator (CPG).
->
-> Update `renesas,rzv2h-cpg.yaml` to include the compatible string for
-> RZ/V2N SoC and adjust the title and description accordingly.
->
-> Additionally, introduce `renesas,r9a09g056-cpg.h` to define core clock
-> constants for the RZ/V2N SoC. Note the existing RZ/V2H(P) family-specific
-> clock driver will be reused for this SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Le Thu, Apr 10, 2025 at 11:34:56AM +0200, Peter Zijlstra a écrit :
+> On Wed, Apr 09, 2025 at 03:01:12PM +0200, Frederic Weisbecker wrote:
+> 
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index 3c92b75..fa6dab0 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -1270,6 +1270,9 @@ static void put_ctx(struct perf_event_context *ctx)
+> > >  		if (ctx->task && ctx->task != TASK_TOMBSTONE)
+> > >  			put_task_struct(ctx->task);
+> > >  		call_rcu(&ctx->rcu_head, free_ctx);
+> > > +	} else if (ctx->task == TASK_TOMBSTONE) {
+> > > +		smp_mb(); /* pairs with wait_var_event() */
+> > > +		wake_up_var(&ctx->refcount);
+> > 
+> > So there are three situations:
+> > 
+> > * If perf_event_free_task() has removed all the children from the parent list
+> >   before perf_event_release_kernel() got a chance to even iterate them, then
+> >   it's all good as there is no get_ctx() pending.
+> > 
+> > * If perf_event_release_kernel() iterates a child event, but it gets freed
+> >   meanwhile by perf_event_free_task() while the mutexes are temporarily
+> >   unlocked, it's all good because while locking again the ctx mutex,
+> >   perf_event_release_kernel() observes TASK_TOMBSTONE.
+> > 
+> > * But if perf_event_release_kernel() frees the child event before
+> >   perf_event_free_task() got a chance, we may face this scenario:
+> > 
+> >     perf_event_release_kernel()                                  perf_event_free_task()
+> >     --------------------------                                   ------------------------
+> >     mutex_lock(&event->child_mutex)
+> >     get_ctx(child->ctx)
+> >     mutex_unlock(&event->child_mutex)
+> > 
+> >     mutex_lock(ctx->mutex)
+> >     mutex_lock(&event->child_mutex)
+> >     perf_remove_from_context(child)
+> >     mutex_unlock(&event->child_mutex)
+> >     mutex_unlock(ctx->mutex)
+> > 
+> >                                                                  // This lock acquires ctx->refcount == 2
+> >                                                                  // visibility
+> >                                                                  mutex_lock(ctx->mutex)
+> >                                                                  ctx->task = TASK_TOMBSTONE
+> >                                                                  mutex_unlock(ctx->mutex)
+> >                                                                  
+> >                                                                  wait_var_event()
+> >                                                                      // enters prepare_to_wait() since
+> >                                                                      // ctx->refcount == 2
+> >                                                                      // is guaranteed to be seen
+> >                                                                      set_current_state(TASK_INTERRUPTIBLE)
+> >                                                                      smp_mb()
+> >                                                                      if (ctx->refcount != 1)
+> >                                                                          schedule()
+> >     put_ctx()
+> >        // NOT fully ordered! Only RELEASE semantics
+> >        refcount_dec_and_test()
+> >            atomic_fetch_sub_release()
+> >        // So TASK_TOMBSTONE is not guaranteed to be seen
+> >        if (ctx->task == TASK_TOMBSTONE)
+> >            wake_up_var()
+> > 
+> > Basically it's a broken store buffer:
+> > 
+> >     perf_event_release_kernel()                                  perf_event_free_task()
+> >     --------------------------                                   ------------------------
+> >     ctx->task = TASK_TOMBSTONE                                   smp_store_release(&ctx->refcount, ctx->refcount - 1)
+> >     smp_mb()
+> >     READ_ONCE(ctx->refcount)                                     READ_ONCE(ctx->task)
+> > 
+> > 
+> > So you need this:
+> > 
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index fa6dab08be47..c4fbbe25361a 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -1270,9 +1270,10 @@ static void put_ctx(struct perf_event_context *ctx)
+> >  		if (ctx->task && ctx->task != TASK_TOMBSTONE)
+> >  			put_task_struct(ctx->task);
+> >  		call_rcu(&ctx->rcu_head, free_ctx);
+> > -	} else if (ctx->task == TASK_TOMBSTONE) {
+> > +	} else {
+> >  		smp_mb(); /* pairs with wait_var_event() */
+> > -		wake_up_var(&ctx->refcount);
+> > +		if (ctx->task == TASK_TOMBSTONE)
+> > +			wake_up_var(&ctx->refcount);
+> >  	}
+> >  }
+> 
+> Very good, thanks!
+> 
+> I'll make that smp_mb__after_atomic() instead, but yes, this barrier
+> needs to move before the loading of ctx->task.
+> 
+> I'll transform this into a patch and stuff on top.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in a branch shared by renesas-clk for v6.16 and
-renesas-devel for v6.16.
+Sure! Or feel free to fold it, though that imply a rebase...
 
-Gr{oetje,eeting}s,
-
-                        Geert
+Thanks.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Frederic Weisbecker
+SUSE Labs
