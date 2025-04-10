@@ -1,63 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1353728C5A3;
-	Thu, 10 Apr 2025 14:09:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7E928A404;
+	Thu, 10 Apr 2025 14:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294160; cv=none; b=DL5w7kLuxOp9QO+CiQJOZ4FzEDWDB51qtA/WcmqVRbwpJM0hxNkQjwbPDmZgtOTzF15t5k84/anUaNoR78qmm2Y28ZHwd0KwP/4XmANpHs44yVyfIIv+9TCNWRx1QuZwseHd0CjTts6X34S4l/p4HJO9IzB07PzaEqB6Luq/rfw=
+	t=1744294173; cv=none; b=Qwa1F00bAXdy33dYZ/EbuGTZhUvXVweZQO9vyL+kQZPHiQaQDvpkcFXsYrqABgseYNgmUCNlvbTfw555ULjJ77eYOCKUgno3tuRM8YKclc39RpCyOP1ja/rZWzy1EoP/v/6x3LBeBFLLn+2hGX8mF7Pi07qpHBtaBOGG99RJTow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294160; c=relaxed/simple;
-	bh=VgL34d8FerKCLRzAjKb8JZJmDSf6u8OvMDoh7DW3wto=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dgLPVIlx8Sp0gclK0d2xpwmWS0C+4iYcts6H5gCK3/3Hj5SG6kONjGptiJNnlWFZlzg41lFJao3HC+ffA/SsDhmJZ+zn+0Y95xdKBf6w6H20HkI5Y2y1FaRJRdbdrvE/6TMlvDR3xChZKIzJnO5vKBdz+TFIFMbHBgF+rvE6c5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2jQIWSC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744294173; c=relaxed/simple;
+	bh=DpSjE5BAz8kF66zp70q0y2bFTSB7iHjZZeJN5OuVsKY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WhPrRW5rh0YJtGKPy91VQdhR4Iv9C9i1XpZP97mkyFj4QVxMJg0Ro6me57GKCrzNTwMM3WYnWCggevOfZ+TIF5L10kh1GgysKwsGjWTiArS5jDFxRr8XvL4kF2ZPly6VXxrBnKCRpKNZhNct33EO4o2Dd5Epnh7W+KHJV/ZjAgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqaubKMc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2jQIWSC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7A70C4CEDD;
-	Thu, 10 Apr 2025 14:09:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqaubKMc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20CC0C4CEDD;
+	Thu, 10 Apr 2025 14:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744294160;
-	bh=VgL34d8FerKCLRzAjKb8JZJmDSf6u8OvMDoh7DW3wto=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=c2jQIWSCaS99fP0eNfRGDi6QB2P7SrWXL83uMtX//zHjXgCaxT9rKCMdl4WMf88ll
-	 xx/EL4lkh9KfHVhLo4BKiJuIp3R1C89G02ESsJvJY62GZoWjnMm7M8BNDQQ0GhuuMj
-	 umtbUcs5Bd71cPh+32Z+nFPXu8ibmYhoza/xdM61+VFGjPIjSlrh2PtvszENK5UDB8
-	 r2cAgFDq1eXbVAtlJlEDEJLzydStdbah4BGtqTR/AN6EUHeewjaD9p36J6OMAFgsk1
-	 5sVYGBbZc4pW7ckq0sXTnIJ2nP0y7bP/AYpBk5fonvJaLBxBSUhXVcwn5usGVKlMqL
-	 iJc831G9np9Yw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD3D380CEF4;
-	Thu, 10 Apr 2025 14:09:58 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio fixes for v6.15-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250410094605.38665-1-brgl@bgdev.pl>
-References: <20250410094605.38665-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250410094605.38665-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.15-rc2
-X-PR-Tracked-Commit-Id: b8c7a1ac884cc267d1031f8de07f1a689a69fbab
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8f43640c9109bd82bcf37def6adfe1b8b09e7b61
-Message-Id: <174429419734.3685623.7226943117689045378.pr-tracker-bot@kernel.org>
-Date: Thu, 10 Apr 2025 14:09:57 +0000
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	s=k20201202; t=1744294173;
+	bh=DpSjE5BAz8kF66zp70q0y2bFTSB7iHjZZeJN5OuVsKY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VqaubKMc5kARpMjjWo1wDPI9VjxMOBQUAhNCaQP+CR8mp9GLF2PS4yclHoikGneRT
+	 2G4WdRdQ1Gm9r5L5GMrphcctR0FMWJJ0OPdRFnfNdlkd9UNArITduEj0Db7IMGUtCF
+	 DZn7AqK0DOL+swc54mWskPcRsL0qPJGBmrgju98dE8605WTShXo7SojVtKLY5GIeSj
+	 7diWgGieg53v7f1t+HNZ5WyeNLNfNmZ0EMp4Af64BF0YaHlOSEsEfKGGYNrnvwPfOn
+	 98s0BlPQZ22AtNtKwh6tCcA/YBVESjWjFkrgJ3QZN5pmeCoaADhuRe+tQ1qc9arZJ2
+	 J713FGcAf4llg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Luke Wang <ziniu.wang_1@nxp.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>,
+	Josua Mayer <josua@solid-run.com>,
+	imx@lists.linux.dev,
+	linux-mmc@vger.kernel.org,
+	s32@nxp.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: esdhc-imx: convert to modern PM_OPS
+Date: Thu, 10 Apr 2025 16:09:07 +0200
+Message-Id: <20250410140921.849213-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Thu, 10 Apr 2025 11:46:05 +0200:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.15-rc2
+Two newly added functions are unused in configurations without
+power management support:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8f43640c9109bd82bcf37def6adfe1b8b09e7b61
+drivers/mmc/host/sdhci-esdhc-imx.c:1586:13: error: unused function 'sdhc_esdhc_tuning_save' [-Werror,-Wunused-function]
+ 1586 | static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+drivers/mmc/host/sdhci-esdhc-imx.c:1608:13: error: unused function 'sdhc_esdhc_tuning_restore' [-Werror,-Wunused-function]
+ 1608 | static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~
 
-Thank you!
+Remove the #ifdef checks and instead use the better macros that
+silently drop the unused functions when PM is disabled.
 
+Fixes: 3d1eea493894 ("mmc: sdhci-esdhc-imx: Save tuning value when card stays powered in suspend")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/mmc/host/sdhci-esdhc-imx.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+index 7e8addaed697..8742622da55a 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -1942,7 +1942,6 @@ static void sdhci_esdhc_imx_remove(struct platform_device *pdev)
+ 	sdhci_pltfm_free(pdev);
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+ static int sdhci_esdhc_suspend(struct device *dev)
+ {
+ 	struct sdhci_host *host = dev_get_drvdata(dev);
+@@ -2021,9 +2020,7 @@ static int sdhci_esdhc_resume(struct device *dev)
+ 
+ 	return ret;
+ }
+-#endif
+ 
+-#ifdef CONFIG_PM
+ static int sdhci_esdhc_runtime_suspend(struct device *dev)
+ {
+ 	struct sdhci_host *host = dev_get_drvdata(dev);
+@@ -2103,11 +2100,10 @@ static int sdhci_esdhc_runtime_resume(struct device *dev)
+ 		cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
+ 	return err;
+ }
+-#endif
+ 
+ static const struct dev_pm_ops sdhci_esdhc_pmops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(sdhci_esdhc_suspend, sdhci_esdhc_resume)
+-	SET_RUNTIME_PM_OPS(sdhci_esdhc_runtime_suspend,
++	SYSTEM_SLEEP_PM_OPS(sdhci_esdhc_suspend, sdhci_esdhc_resume)
++	RUNTIME_PM_OPS(sdhci_esdhc_runtime_suspend,
+ 				sdhci_esdhc_runtime_resume, NULL)
+ };
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.39.5
+
