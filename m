@@ -1,125 +1,91 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245D814884C;
-	Thu, 10 Apr 2025 15:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E238315B135
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744298330; cv=none; b=mK/0qBw8l3w9Gfq/JdP4rZwQ7XhuD2jMLWq1EssXme46xhyl7OS5TKlqFbxbqvHGKM9oJRInI4s81Fg2AjGB6egm1wDw+ripOo7kr1DeIDHVR3ROHGxc9vrh4rveG+gBKS2fvO8bP4PSdBxL535TlG9YWRqqGePNiHFH5qmUGvw=
+	t=1744298332; cv=none; b=YmfulpGPSn+muIawYrAo0a0ZyXOds0d7FF9PiFWyEgQ7XWbSv1SvGeNUxRVngulqUuDfMk67cr1Aj2mSzbZd8aU3k3kgeObvNsQP+34nqorbxdPY2g2kOL8LtUaP8zhISR6DxHdFNAdmgObP4F7xvxsydeKYKi/0TCqA80YXy1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744298330; c=relaxed/simple;
-	bh=BHUmZm69r5j2K7ow+EsgVCkS0ANYBEDNLgcak+FRnqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JOcmSRr1Zzs+x8FtgWxDah7EyuSqLlob2ChGmF875s2qoyQzJcQHXmTyjSmsZMG3MDdyqA7GQ4feP7S7VRHeweXPHROvwhh8n9YX66vFQUTTxgxz3Tx/FAB5p5cCB2+c8rGvYxS/Jz5Odv7cgQvspSI2ht1tTrolNAmJxNQ3O9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XFA2NdY/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744298332; c=relaxed/simple;
+	bh=ZgOQAZvumfUXfeffHx7Q7R93BM4bR5fjCMubsX+S41I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b4DKjdajvfC1ywO3tkmC9z2d4+Ysiwh5n0jcesFGhvNp/wi3y2a8Kt7T5hpm2YbEbNlzJ1/h/Gbpjld69BTHenjL7SdK8QHTpqNrdk4m752D6VEXTPlU9Tr2w7VhskFF0BFYGp8dnHqDT/pDO++8gvW8H1RZjEq9HQZbKBeId1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0PBRvYZl; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XFA2NdY/"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AEK7vi022679;
-	Thu, 10 Apr 2025 15:18:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=8yZK2G8CEMH6GwaqesHa1lpHB+Zat5
-	CGXDOr1+EXSC4=; b=XFA2NdY/+9mY/FXZshAh96j80DyvTbKTueTNVZhU0+yxab
-	LQAS6lEJM05MHO0qcxITWU3AUuUwWhbR+rH5gkM+i5KY2ZDS+KKPgm1w0TTco7lI
-	1ejRJgDisSwZgBF3F7/68V/hVDGKZc5EEq9Xbxm5cvuOYh4E30FthuwpbSU11IR+
-	iDHdgVm8V9yC0zoCKXcaGa8GjQj57F15LDzr//DrGKBhJwZitM11zufCoRjeljn7
-	kao0b+0vHjeDd5MF+VPhYDC+2gDDWrc+hl5DxvXUunM3PNAcgrnztpsj+jwiIr5G
-	heQFmmMTR5ltMcYN1TVWdpLd/G4AaU/rogD2SyZg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45x02qdg47-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 15:18:25 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53AF8TYT001916;
-	Thu, 10 Apr 2025 15:18:24 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45x02qdg44-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 15:18:24 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53AD96gI025537;
-	Thu, 10 Apr 2025 15:18:24 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbm6hc3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 15:18:23 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53AFIMnK41025908
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 15:18:22 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E809920043;
-	Thu, 10 Apr 2025 15:18:21 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 95A3620040;
-	Thu, 10 Apr 2025 15:18:21 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 10 Apr 2025 15:18:21 +0000 (GMT)
-Date: Thu, 10 Apr 2025 17:18:20 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc: Hugh Dickins <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
-        Jeremy Fitzhardinge <jeremy@goop.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] kasan: Avoid sleepable page allocation from
- atomic context
-Message-ID: <Z/fhPL5bH2A2Cs97@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <cover.1744128123.git.agordeev@linux.ibm.com>
- <2d9f4ac4528701b59d511a379a60107fa608ad30.1744128123.git.agordeev@linux.ibm.com>
- <3e245617-81a5-4ea3-843f-b86261cf8599@gmail.com>
- <Z/aDckdBFPfg2h/P@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <02d570de-001b-4622-b4c4-cfedf1b599a1@gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0PBRvYZl"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72c47631b4cso532903a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744298329; x=1744903129; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y/MdAZR4KCk5kccToHKoimBc3Y45j9tz7BCn6zhsjAk=;
+        b=0PBRvYZl9CU0sCyicY8d47aA6uQmiTHjp8grG6PCxHfl0FFNOBylNpw6mW93Lf+Dit
+         lf/mb9E/Gp/P4hUvoighxhPVXvjZSaZiwMYu72Qa0iocCcgLgrWZChXvJqWGJBd0VsV/
+         l/NZ7395GcK9+Dyf4CNWdRgJYuXwXneCKKq0HkUDTpyp+mEbErOpqiNd5W+oC9LwSjW0
+         3KDcop9jHtISwWbYGr+8iQg7x/ADMBg6ibwJf+qrQrKFW7vkcCXELwYnY1YnWcRF5AOi
+         RcRhKm1qzEtr4zl6xuIFJy8odFu4nJ58rRrS6+DnqfXvgf0za5ZL3KC3xYHEVL+iYs76
+         5Hrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744298329; x=1744903129;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y/MdAZR4KCk5kccToHKoimBc3Y45j9tz7BCn6zhsjAk=;
+        b=VqJSLeq38lxrNX+IcoRvUTwAryUb3mVDvw37zzbf/O7JioRzJuFA2eylDVcT4CvkT7
+         q6blf9i5Da2e5LNkLxlQTJuy0ESOvJMy8V8/QkYZWUSF7XFZIMaePqzG1r/llClos2/B
+         InjPPQgnhBc62cOKGZH17QMxOm0Pi7JhxyD5xVes5xSDWqNZc19CcdR4bMjtB3jqVfOT
+         W5+jokzB+ODz/ij3cgCdD2X425SOmNIU+hOzJo6YVCbmlsKJMhhWhabil1YdIizn3S+w
+         pFclFyVPCy1pjQELHrK9oXQ4gUGuhbck5z2za9GffCNxG/K24CwYQZdeL3bS3SZjSFLB
+         A/qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJbQ59LOH5hY92qyaO2uNarDvQLcxrCiLdrzrNgepVb2edkrwa8Ui+53hZESH3M5tAY92t+eBvbl0UJes=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzomMjlD3yrpcDjvlrFs+bHq4BZmRrOFLgnEQyHh+gwHA2GtXQZ
+	ei3N6b+Wh0by0K0+t3ZkIcCqsuuvElFwK+ssou/2UzhyrTBuSexsxs9dWG0Kvo8=
+X-Gm-Gg: ASbGncvzxBtK2l/M2UemOxgITB2WkncfuUqLbkdRDl/6FjpQ1lGyy+xh7ZaTZEGQg/C
+	MRe0Yy8NNF151dqpI3ACErK4bNVAnMJxUWpDcCXBEixsY6FF/rFTimpS19sSN18KLU1DNQN/Xl3
+	IRwkCP6dCqAkRvx1ERn6Q3z/uoD8IU5S1F2u7ZV2YLqyVcQKqZHKC1lLEmXI+CSw8P0xZ6pOEQT
+	PcgUpYzwq9soy51KjPzkT5w+XkvTiHep6oekW8W9VcjQK3SyBtLpWarN3RG0IdWuqwkp7zuZs1m
+	6OKcSHu9yftSI/js4Khmak4MODIZ9y98NVxU8swplecK4Bev19IdverP+C7KBSkb9PnELPv7aMc
+	hkw==
+X-Google-Smtp-Source: AGHT+IH6rrDtVsseh9Xvuyf/noenwuLMx9zjDSedC+XBqH+zbZ7Nwdp30096w8lLRgkzXs6H3TqsGA==
+X-Received: by 2002:a05:6830:3506:b0:72a:1494:481e with SMTP id 46e09a7af769-72e7cb8d73amr1644611a34.0.1744298328766;
+        Thu, 10 Apr 2025 08:18:48 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d52b7asm604325a34.13.2025.04.10.08.18.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 08:18:48 -0700 (PDT)
+Message-ID: <3295202e-3f4b-457d-907a-9058a9719f83@baylibre.com>
+Date: Thu, 10 Apr 2025 10:18:47 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02d570de-001b-4622-b4c4-cfedf1b599a1@gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: jHtw6lgVB7srP7G4ujZD7xCcxXdTfHSC
-X-Proofpoint-ORIG-GUID: fFGj102REu_S4ew0_ixvtgn6rzege4GH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=961 lowpriorityscore=0 spamscore=0
- clxscore=1015 suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504100109
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ARM: davinci: remove support for da830
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Russell King <linux@armlinux.org.uk>
+Cc: Kevin Hilman <khilman@baylibre.com>, Arnd Bergmann <arnd@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-davinci-remove-da830-v1-1-39f803dd5a14@linaro.org>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250407-davinci-remove-da830-v1-1-39f803dd5a14@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 04:56:29PM +0200, Andrey Ryabinin wrote:
-
-Hi Andrey,
-
-...
-> >>> -	page = __get_free_page(GFP_KERNEL);
-> >>> +	page = __get_free_page(GFP_ATOMIC);
-> >>>  	if (!page)
-> >> I think a better way to fix this would be moving out allocation from atomic context. Allocate page prior
-> >> to apply_to_page_range() call and pass it down to kasan_populate_vmalloc_pte().
-> > I think the page address could be passed as the parameter to kasan_populate_vmalloc_pte().
+On 4/7/25 2:50 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> We'll need to pass it as 'struct page **page' or maybe as pointer to some struct, e.g.:
-> struct page_data {
->  struct page *page;
-> };
-...
+> We no longer support any boards with the da830 SoC in mainline linux.
+> Let's remove all bits and pieces related to it.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
-Thanks for the hint! I will try to implement that, but will likely start
-in two weeks, after I am back from vacation.
-
-Not sure wether this version needs to be dropped.
-
-Thanks!
