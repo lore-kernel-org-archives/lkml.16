@@ -1,322 +1,167 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896D61DF97F;
-	Thu, 10 Apr 2025 08:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692E120C472;
+	Thu, 10 Apr 2025 08:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275343; cv=none; b=WRphNGPFEHx3M8BgjpZ0+CDTPkkCBtYlXVEvfFJFm4FF/AxE3AbiY0zBJfBk2B0ql8UW2YE9DCR60HqwNlAxUAJIoAv8qZS5V2cNSpwUPxDwa3cWik+84SSwyPZtDTRt6ZxHVo0cfksdHbM9M9rhy3Qtkz57IXqLkpe5ls4ZN4o=
+	t=1744275347; cv=none; b=vD4cbUYY3J4KT4T+0qUUp+0JgbeVugpabpjvOKL3IQDv1/eBvIVhAq3q5g7pNuv49AFggsVpH7x2/jNuJrq7AE0wDFTG+wPIxRj6tcu/0z8qtJ4lgS2/PfQg79AwohAH8bFTv6JsgU+pZWOQ7lrqhoH6i7UzXay3WjUDCbVbRUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275343; c=relaxed/simple;
-	bh=yhLl8D3v/nq4zfk5ROJ/DUs2sFXF7p14RQG5H0dVGc8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=u1eqkJ4j3hR4DE2t2MohuM18OV1S+jvAiERumUqDYxE7V4ltSLF/wFt6uyaU1nhg+6mzLgJlPRqye20nK1SGC0mCQXDpwE+QG3Fo4MeIIY0jRkosA2fQsH122lJ8FCrZUA1iq8eB1kZachKcCKTD64EAXXRmiHvnKZSylcYZvLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Zdw7plvf; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744275347; c=relaxed/simple;
+	bh=Z1lx0c1DKy5mQNqT6KE2lwDMPc9LmjPkKs+Fx0auDmA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AYIl5TI/59VABBjiwxKgNuCHNioKQmEb3EhY9xLmj4JRVmyBY+gQ511qT0sVKaWZVZb//hNepa8ONiH2GdxzYMrK4MyyShtrShaUULwkKQa2ZBfAVfZG9mWvL/yupLWuoxH35qK6MouKIUAeZ52D3W7moPxAq03R9hnFBqsZNBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FTZOJgzl; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zdw7plvf"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53A8tUgW1730723
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 03:55:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744275331;
-	bh=TaYHBYkYF9d5kfQvdo7UQfclT2jdMh7cMl2H2/ca+5E=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Zdw7plvfv3DwLaJZYhCusFN7TYQ8XXPjt9aOcdv6KdcBRR9fPX1Ny9yTB+kjZcd2a
-	 6wpusSBbwOfspWIaqDK5yzA7pmm/OYRIsv5H2o2YdFVmPkgd2l8E5137IhKlQVgWxK
-	 X5BqrLFLaJ1/z3xvHkjUgCWf7R78J6I8Nh1OqX60=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53A8tUcJ039829
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 10 Apr 2025 03:55:30 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
- Apr 2025 03:55:30 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 10 Apr 2025 03:55:30 -0500
-Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53A8tQC7034414;
-	Thu, 10 Apr 2025 03:55:26 -0500
-Message-ID: <bffd8489-1556-425d-b3f9-8fde8a7d34a7@ti.com>
-Date: Thu, 10 Apr 2025 14:25:25 +0530
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FTZOJgzl"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A6Ym42026369;
+	Thu, 10 Apr 2025 08:55:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=ftmgQ0hy9b7VESd2ry5NzRU/B9QR7Vu65vxMfgkf2
+	OY=; b=FTZOJgzlezNhMcLEvQ4BX6guds4aD2QOcUSS5irDnwoVs0MjJb2fz92S4
+	JddtjS7jynWmJBS4CV5EgXui47WRqvEBfP0Jt79ZwhsYUbVEM6FAxTIxTTAXFaVO
+	e5J66gamk8DI20jX7PeXXkNtcHB2m9qA3urcM39ipFWriB3iRcEsN55q2e6uBoaz
+	hLIvIUL2iw+aFWEtLGddkMx5euYNa+dsOiSDnxfmACQIlr3OJzhmnMVqjwPyc2AB
+	yNE3KeM1dO9woTOaSeSxrZDdRDdIClG7l/ymLgWybFKgIRDXZwVHNkfslykQCZOh
+	amiCRe9jZh1URT2iiK018LEqN7/Fw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wtaq5wd0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 08:55:41 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53A8jvPL023330;
+	Thu, 10 Apr 2025 08:55:40 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wtaq5wcv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 08:55:40 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53A69S3L025522;
+	Thu, 10 Apr 2025 08:55:39 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbm56nr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 08:55:39 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53A8tZUA60490180
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 08:55:35 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B9DCE2004D;
+	Thu, 10 Apr 2025 08:55:35 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53C7A2004E;
+	Thu, 10 Apr 2025 08:55:35 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 10 Apr 2025 08:55:35 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        ctshao@google.com, rogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Ian Rogers <irogers@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v3] perf test: Allow tolerance for leader sampling test
+Date: Thu, 10 Apr 2025 10:55:22 +0200
+Message-ID: <20250410085522.465401-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-To: Judith Mendez <jm@ti.com>,
-        Devarsh Thakkar
-	<devarsht@lewv0571a.ent.ti.com>,
-        Nishanth Menon <nm@ti.com>, Andrew Davis
-	<afd@ti.com>,
-        Hari Nagalla <hnagalla@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Markus
- Schneider-Pargmann <msp@baylibre.com>
-References: <20250405001518.1315273-1-jm@ti.com>
- <20250405001518.1315273-7-jm@ti.com>
- <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
- <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
- <f8f1d877-3d13-4ba7-90e1-455923458c11@ti.com>
- <fe735242-4643-432a-adaf-27e29719948a@ti.com>
-Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <fe735242-4643-432a-adaf-27e29719948a@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: vB2vORDWAwoH2u11gdTtliCe-PftC9hp
+X-Proofpoint-ORIG-GUID: Vrr_n4BZyw4iIP_S5CFYMsxTJDhxQbT4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_01,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=886 bulkscore=0 adultscore=0
+ spamscore=0 malwarescore=0 impostorscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504100062
 
-Hi Judith,
+V3: Added check for missing samples as suggested by Chun-Tse.
+V2: Changed bc invocation to return 0 on success and 1 on error.
 
-On 10/04/25 04:02, Judith Mendez wrote:
-> Hi Beleswar,
->
-> On 4/7/25 11:00 PM, Beleswar Prasad Padhi wrote:
->> Hi Judith, Andrew,
->>
->> On 07/04/25 19:43, Judith Mendez wrote:
->>> Hi Devarsh,
->>>
->>> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
->>>> Hi Judith,
->>>>
->>>> On 05/04/25 05:45, Judith Mendez wrote:
->>>>  > From: Devarsh Thakkar <devarsht@ti.com>
->>>>>
->>>>
->>>> Thanks for the patch.
->>>>
->>>>> For each remote proc, reserve memory for IPC and bind the mailbox
->>>>> assignments. Two memory regions are reserved for each remote 
->>>>> processor.
->>>>> The first region of 1MB of memory is used for Vring shared buffers
->>>>> and the second region is used as external memory to the remote 
->>>>> processor
->>>>> for the resource table and for tracebuffer allocations.
->>>>>
->>>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->>>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->>>>> Signed-off-by: Judith Mendez <jm@ti.com>
->>>>> ---
->>>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 
->>>>> +++++++++++++++++++++++--
->>>>>   1 file changed, 90 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts 
->>>>> b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>>> index 1c9d95696c839..7d817b447c1d0 100644
->>>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>>> @@ -52,6 +52,42 @@ linux,cma {
->>>>>               linux,cma-default;
->>>>>           };
->>>>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
->>>>> +            compatible = "shared-dma-pool";
->>>>> +            reg = <0x00 0x99800000 0x00 0x100000>;
->>>>> +            no-map;
->>>>> +        };
->>>>> +
->>>>> +        c7x_0_memory_region: c7x-memory@99900000 {
->>>>> +            compatible = "shared-dma-pool";
->>>>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
->>>>> +            no-map;
->>>>> +        };
->>>>> +
->>>>> +        mcu_r5fss0_core0_dma_memory_region: 
->>>>> r5f-dma-memory@9b800000 {
->>>>> +            compatible = "shared-dma-pool";
->>>>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
->>>>> +            no-map;
->>>>> +        };
->>>>> +
->>>>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
->>>>> +            compatible = "shared-dma-pool";
->>>>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
->>>>> +            no-map;
->>>>> +        };
->>>>> +
->>>>> +        wkup_r5fss0_core0_dma_memory_region: 
->>>>> r5f-dma-memory@9c800000 {
->>>>> +            compatible = "shared-dma-pool";
->>>>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
->>>>> +            no-map;
->>>>> +        };
->>>>> +
->>>>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>>>> +            compatible = "shared-dma-pool";
->>>>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
->>>>> +            no-map;
->>>>> +        };
->>>>> +
->>>>>           secure_tfa_ddr: tfa@9e780000 {
->>>>>               reg = <0x00 0x9e780000 0x00 0x80000>;
->>>>>               alignment = <0x1000>;
->>>>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
->>>>>               alignment = <0x1000>;
->>>>>               no-map;
->>>>>           };
->>>>> -
->>>>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>>>> -            compatible = "shared-dma-pool";
->>>>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
->>>>> -            no-map;
->>>>> -        };
->>>>>       };
->>>>
->>>> This is missing the edgeAI specific remote-core carveouts and 
->>>> RTOS-to-RTOS IPC memory regions [1] being used by edgeAI firmwares 
->>>> which come as pre-packaged in the official SDK release for AM62A.
->>>>
->>>> There is only one official SDK release for AM62A (which is edgeAI 
->>>> based) [2] which packages these edgeAI remoteproc firmwares and in 
->>>> my view it is a fair expectation that remote core careveouts in 
->>>> device-tree should align with firmwares released in SDK.
->>>>
->>>> This is because most developers (including me) and vendors download 
->>>> this official SDK release and use it with latest upstream kernel 
->>>> and modules (right now we are applying required patches locally) 
->>>> and this patch won't suffice for this, in-fact it won't work since 
->>>> the remoteproc firmwares are already using regions beyond the 
->>>> reserved-regions from this patch.
->>>
->>> I understand your point, currently with this patch remoteproc loading
->>> will not work for some cores. However, the goal here is to standardize
->>> as much as possible the memory carveout sizes, push the "demo firmware"
->>> to request resources the correct way from resource table, 
->>
->>
->> It is indeed more suitable if the memory carveouts are called out in 
->> the resource table of the firmware. But you will still need to 
->> reserve that memory sections in the Device Tree so that Kernel does 
->> not map that memory for anything else. So I am thinking how moving to 
->> resource table will help solve this problem?
->
-> The point is that our default FW is doing things incorrectly. We want to
-> push the existing FW to
-> 1. Request resources via resource table.
-> 2. Fix their memory requirements (recent offline discussion proved that
-> FW is requesting more than it needs)
-> 3. FW should adapt to Linux not Linux adapt to FW
+There is a known issue that the leader sampling is inconsistent, since
+throttle only affect leader, not the slave. The detail is in [1]. To
+maintain test coverage, this patch sets a tolerance rate of 80% to
+accommodate the throttled samples and prevent test failures due to
+throttling.
 
+[1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
 
-Thanks. I also agree with you on all of the above points for a standard 
-firmware.
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Suggested-by: Ian Rogers <irogers@google.com>
+Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-However, I was referring to this problem:
-Can we get rid of static reserved memory carveouts in DT?
-People using a custom firmware will have to patch the Device Tree to 
-reserve larger/different memory regions. Is there some way where the 
-firmware can dictate the "reserved" memory carveouts at runtime? Memory 
-carveouts can be announced through Resource Table, but there is no 
-guarantee we will be able to allocate it (it could be mapped by the 
-Kernel for some other alloc), unless its pre-reserved in DT.
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index ba8d873d3ca7..0075ffe783ad 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -238,22 +238,43 @@ test_leader_sampling() {
+     err=1
+     return
+   fi
++  perf script -i "${perfdata}" | grep brstack > $script_output
++  # Check if the two instruction counts are equal in each record.
++  # However, the throttling code doesn't consider event grouping. During throttling, only the
++  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
++  # let's set the tolerance rate to 80%.
++  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+   index=0
+-  perf script -i "${perfdata}" > $script_output
++  valid_counts=0
++  invalid_counts=0
++  tolerance_rate=0.8
+   while IFS= read -r line
+   do
+-    # Check if the two instruction counts are equal in each record
+     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+     if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+     then
+-      echo "Leader sampling [Failed inconsistent cycles count]"
+-      err=1
+-      return
++      invalid_counts=$(($invalid_counts+1))
++    else
++      valid_counts=$(($valid_counts+1))
+     fi
+     index=$(($index+1))
+     prev_cycles=$cycles
+   done < $script_output
+-  echo "Basic leader sampling test [Success]"
++  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
++  if (( $(bc <<< "$total_counts <= 0") ))
++  then
++    echo "Leader sampling [No sample generated]"
++    err=1
++    return
++  fi
++  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
++  if [ $isok -eq 1 ]
++  then
++     echo "Leader sampling [Failed inconsistent cycles count]"
++     err=1
++  else
++    echo "Basic leader sampling test [Success]"
++  fi
+ }
+ 
+ test_topdown_leader_sampling() {
+-- 
+2.49.0
 
-Thanks,
-Beleswar
-
->
-> If not, then then we should try to move to Zephyr firmware or other/
-> better options.
->
-> Hope I am able to explain myself better this time around.
->
-> ~ Judith
->
->>
->> Thanks,
->> Beleswar
->>
->>> and move away
->>> from this dependency and limitations that we have with our firmware. We
->>> should soon be able to generate our own firmware using Zephyr, which
->>> Andrew is pioneering, so with this firmware we should move to the
->>> correct direction upstream. Downstream we are still using the memory
->>> carveout sizes that the firmware folk want so desperately to keep, for
->>> now..
->>>
->>> ~ Judith
->>>
->>>>
->>>> [1]: 
->>>> https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
->>>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
->>>>
->>>> Regards
->>>> Devarsh
->>>>
->>>>>       opp-table {
->>>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
->>>>>           };
->>>>>       };
->>>>>   };
->>>>> +
->>>>> +&mailbox0_cluster0 {
->>>>> +    status = "okay";
->>>>> +
->>>>> +    mbox_r5_0: mbox-r5-0 {
->>>>> +        ti,mbox-rx = <0 0 0>;
->>>>> +        ti,mbox-tx = <1 0 0>;
->>>>> +    };
->>>>> +};
->>>>> +
->>>>> +&mailbox0_cluster1 {
->>>>> +    status = "okay";
->>>>> +
->>>>> +    mbox_c7x_0: mbox-c7x-0 {
->>>>> +        ti,mbox-rx = <0 0 0>;
->>>>> +        ti,mbox-tx = <1 0 0>;
->>>>> +    };
->>>>> +};
->>>>> +
->>>>> +&mailbox0_cluster2 {
->>>>> +    status = "okay";
->>>>> +
->>>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
->>>>> +        ti,mbox-rx = <0 0 0>;
->>>>> +        ti,mbox-tx = <1 0 0>;
->>>>> +    };
->>>>> +};
->>>>> +
->>>>> +&wkup_r5fss0 {
->>>>> +    status = "okay";
->>>>> +};
->>>>> +
->>>>> +&wkup_r5fss0_core0 {
->>>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
->>>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
->>>>> +            <&wkup_r5fss0_core0_memory_region>;
->>>>> +};
->>>>> +
->>>>> +&mcu_r5fss0 {
->>>>> +    status = "okay";
->>>>> +};
->>>>> +
->>>>> +&mcu_r5fss0_core0 {
->>>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
->>>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
->>>>> +            <&mcu_r5fss0_core0_memory_region>;
->>>>> +};
->>>>> +
->>>>> +&c7x_0 {
->>>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
->>>>> +    memory-region = <&c7x_0_dma_memory_region>,
->>>>> +            <&c7x_0_memory_region>;
->>>>> +    status = "okay";
->>>>> +};
->>>>
->>>
->
