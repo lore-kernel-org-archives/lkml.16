@@ -1,83 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42D1215F7F
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8E02571C4;
+	Thu, 10 Apr 2025 09:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277087; cv=none; b=FanSwNNLSKJvb1+MgV+NZYTJvb9aO7u7MeE61DYioooV8duZeuTOrPJwYW182Zzp2eSKTqoSOeHHsnY/GahAaxWpkagQGRQ3EuqaxCl7rAa6zdf8P5C3CYg6RmdigkdbKS5nw/Oiyx2X78XSVjyKDUHD2e8BtgkfA3GPd2gYhLc=
+	t=1744277090; cv=none; b=NHpgym3B+nS36uFYsxeym2pkbicx7oE8oamQgeKKLJGus0B3CraRnBBIGe8v2fsWcYMOQ4oVuho5N4J88TB3X1io9HGJOoKItCDUUew925Hqf38sr0SangEY4IEpw7xx4eUiOhszzepVfUrXtmz7iA7RDuI8f0Z7/0jTtdH+t/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277087; c=relaxed/simple;
-	bh=PbDhGkzquJrqYI/6wUXbKMcD1qZhasVialAXVfJ/YPg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UkusR9zjcX9mgHTHOM1LbJEbAmHRf5EDFt65JTRJHu05eeVSw6RADkZJ4nfo2isbKNBfTSC0OlVnZmWYUtiXefT2YytuPqA0o8q8Qc1LUqyqJoCDRtaOlk/FoIAgZfQsNtXyNb5LIOp290JH4Y/CPxsRdFxcbftNhOdIj9vhgxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FEflj/nA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744277090; c=relaxed/simple;
+	bh=Fau/kAiTbyGwGpO+NIYPda5JvoXJAT5WKGkFJ0250vI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=li5pOPtZmKHwqferkeeamTLwF74w63GSIuRa0KxlKUFCc3TKu3TvP6E8ztzmHwwFgc8wiVipOQMh/QlkgBFmKAI7r4r+IPPUmTfuq3LChGzyEpFt1QF2oB3bv91jW2lcqo5gv+cpHxAcaoNjI5wybIxxVzUqLYqQcCOWjy49EaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ss6Y/uvn; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FEflj/nA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49627C4CEE3;
-	Thu, 10 Apr 2025 09:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744277087;
-	bh=PbDhGkzquJrqYI/6wUXbKMcD1qZhasVialAXVfJ/YPg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FEflj/nAewXKCN/6QKq0FnGfuTI/Ruy3/WKcI3nV31yyN2I/9TXQ7MMXbtAa5MnSx
-	 MyR6tIWEeNpfMzZE8ofsrLsRkOURP+YF2NRRhizwpWRq/3n7KjxFm82+ZcDm2W8dx8
-	 DuT1ln7H3L6ThtNVc8pT1W1RMQxBhZwhA76NyCov+/PwjP36oTp2+OI/4beRzFohkA
-	 eNtWOh6EXlV8XjUVymtOfVrZZthqxcntVIwzXD/ZPjiNdw2Hx2JvGfZuTqjBU+oJdM
-	 CSTJ+IPH/r3j6tavU20XBuWuOwAvSgjHwQ+n2nPwB/XH7PqW4RIkSyTazgQpoPFsme
-	 MgaA+LdPQDsFQ==
-From: alexs@kernel.org
-To: 
-Cc: linux-kernel@vger.kernel.org,
-	Alex Shi <alexs@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH 2/4] sched/isolation: clean up housekeeping_cpu
-Date: Thu, 10 Apr 2025 17:24:17 +0800
-Message-ID: <20250410092423.9831-2-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250410092423.9831-1-alexs@kernel.org>
-References: <20250410092423.9831-1-alexs@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ss6Y/uvn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YCyam3MeYKSW2wRMpKixBoxFry3Jmba2LiJsdJTIL88=; b=Ss6Y/uvnSSk45Oqy0FCg60u+cc
+	ea8FD+2dhy0s23DRtx7Gp/YI+CKHmAqVb62kS4N0arOUHu94fI6yrpDyR3tPyGWqdaV5dTSi1wRTk
+	GidBobISVOtDOmtNShNptY9TMS0Fc0qGhgzrd5/5JZm155SVWuSky/AXSLPnlHXrMNF5+eFOtB/o4
+	1trfjOAl7SpM3JNHo0ZfgxfiibYl+5kqiCpreWpAqRmKI7vPvHBk3oWLYmrTrUkmo0fmyHEF+A3SL
+	2GORQuDKRrtIw0oe7+k48hc4X90eduJkK/OjZ3KziEp1Fa9nj1lT1o9pZQG8ogVkhZItgSrfc9K+F
+	ONIQpL/w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2o9P-00000009vm9-45pJ;
+	Thu, 10 Apr 2025 09:24:47 +0000
+Date: Thu, 10 Apr 2025 02:24:47 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ublk: skip blk_mq_tag_to_rq() bounds check
+Message-ID: <Z_eOX-8QHxsq21Rz@infradead.org>
+References: <20250409024955.3626275-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409024955.3626275-1-csander@purestorage.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Alex Shi <alexs@kernel.org>
+On Tue, Apr 08, 2025 at 08:49:54PM -0600, Caleb Sander Mateos wrote:
+> The ublk driver calls blk_mq_tag_to_rq() in several places.
+> blk_mq_tag_to_rq() tolerates an invalid tag for the tagset, checking it
+> against the number of tags and returning NULL if it is out of bounds.
+> But all the calls from the ublk driver have already verified the tag
+> against the ublk queue's queue depth. In ublk_commit_completion(),
+> ublk_handle_need_get_data(), and case UBLK_IO_COMMIT_AND_FETCH_REQ, the
+> tag has already been checked in __ublk_ch_uring_cmd(). In
+> ublk_abort_queue(), the loop bounds the tag by the queue depth. In
+> __ublk_check_and_get_req(), the tag has already been checked in
+> __ublk_ch_uring_cmd(), in the case of ublk_register_io_buf(), or in
+> ublk_check_and_get_req().
+> 
+> So just index the tagset's rqs array directly in the ublk driver.
+> Convert the tags to unsigned, as blk_mq_tag_to_rq() does.
 
-housekeeping_test_cpu will check 'housekeeping_overridden' again in
-itself so we don't need do it again outside. just call
-housekeeping_test_cpu is fine.
-
-Signed-off-by: Alex Shi <alexs@kernel.org>
-Cc: Peter Zijlstra  <peterz@infradead.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>
----
- include/linux/sched/isolation.h | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-index d8501f4709b5..231bc5766f76 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -63,11 +63,7 @@ static inline void housekeeping_init(void) { }
- 
- static inline bool housekeeping_cpu(int cpu, enum hk_type type)
- {
--#ifdef CONFIG_CPU_ISOLATION
--	if (static_branch_unlikely(&housekeeping_overridden))
--		return housekeeping_test_cpu(cpu, type);
--#endif
--	return true;
-+	return housekeeping_test_cpu(cpu, type);
- }
- 
- static inline bool cpu_is_isolated(int cpu)
--- 
-2.47.1
+Poking directly into block layer internals feels like a really bad
+idea.  If this is important enough we'll need a non-checking helper
+in the core code, but as with all these kinds of micro-optimizations
+it better have a really good justification.
 
