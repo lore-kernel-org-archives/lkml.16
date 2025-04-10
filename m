@@ -1,186 +1,140 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E5320AF88;
-	Thu, 10 Apr 2025 08:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177891E5B84;
+	Thu, 10 Apr 2025 08:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744273166; cv=none; b=PNxpRtbSJR9kVls/Smj6TMClW70brGbw+K1pm6ef9yvplhMDnfM5wwp3OzXojzYY1qWZqxpKabGvhhfy+Igqea7SA1kO8AGSBm6MCiCyWohoBLJ++Y+FUJ9vskfyjgYHYOgrP3vV/K13SHuDml9FS+CkZ809Q5X9YVDcYafyfF8=
+	t=1744273186; cv=none; b=Hrw1vrp5HQKJHpcqUUWuEVPOJMdfCDKMOi13FOuRhgNEfg4fLBklbtAmcS1BMUCUuvxQhXIEh5BZkAFTw/qKNciQdXymj9Zv4a6q0z9+kJfHmsLNSzt6njg7qAwwVtbN+KJGppligi2p2FLE+MfIXFPixptGRSYU0+F8KHO2KMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744273166; c=relaxed/simple;
-	bh=vj7HOfbc0VUjF+W4DznIGCuy9zZnueeCps54a42o/9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aKctJYHNBZpi8TNxIR8/HBU7Y1Vue6VJ0jzizB3jNm2xTs+o8hhJXnoxCCUeiMBzdJixeH0bmCOtua66vRWB1HHS5x+h1MhjWNMx4xNZV67EzevGdf43vJP+d6sOvdrtstxY2yPxgUkZIYN1beuoLq1E2LEJqFeBOgMM3q7WiOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLlOoNiE; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744273186; c=relaxed/simple;
+	bh=JH0ysD7QlUmh3YZt2NcU9owTunnHQH6W/wNghS58NQI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=TwvqH5k0WxOJyrTf334vRYkKKI04Sb2ZVYJLraTUeN8KXKm1P7lkuLZc9dt001t0bDyzb8vJGhsn2+EZZSYpNr4fJ04IGF1yICRA1o0Tpt/zDbkzJwhalmD6BhqouwsnOmCnvorCO3VwzkFKqGhwrLxRdCzf97dZoRIl4Q/2cf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NIXQOVlI; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLlOoNiE"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22548a28d0cso7416535ad.3;
-        Thu, 10 Apr 2025 01:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744273164; x=1744877964; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hHyb6lhohF2wzP2TRq2BN9NjbPL3ptwOR5h1WfQqLIY=;
-        b=RLlOoNiEwwoXR5dQCEOEJkOGNZgrVuK0RaK5ZH7+A5kNn2ZuHZoV8UaZzpTkqoF2+b
-         9Bcoj+84/6d+cCtrV23A03jYEhjBM6xRDwW6RTVAqkiRlY2ovTe1bVVjlfpokxVQYwlD
-         IjZRboHxneMuZ53+MUEyt8SaQ1piNul7bqCpqAx96HYAuNUyRupGsVHudnBgpmyykjdZ
-         mdFSJm+Ae2ujAWoZApZpF+OFVZo+5KVtwtquBbWPTihBtvO7NIpJhmBUMaaa9Bn1jnYh
-         Um54Xlx+6eV/jfKH0Y8bQJOgoUOLHdpZ2AyywZPtMsfQblhjcfmecHtoCsBboJOlgDVb
-         qXoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744273164; x=1744877964;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hHyb6lhohF2wzP2TRq2BN9NjbPL3ptwOR5h1WfQqLIY=;
-        b=ZRjVhIvwo/08QCgUH3RvDSuPxKmQGQxy6FHQTvK5zJURxK7csYC6rWY2AyzpqlJhQU
-         g4JOsfeDhROGunA6IOYckSDOrUl7gfo1oPFhZMfLCyhDWrezlPtORMmILJ3F9DXEADLT
-         tVuYOdqTw0SsVk7thLh9L8WJkYMIh4+bqNoGEtdZE5Vu6gOyFobURlrp4e1tjlbziZjY
-         YdDmSD4vs154gkdt0KxYi/X1LBJRzaiwBiA35g2EoCPuNP8IhOqF1XFbjSUcTiutGZIP
-         GzHYyJSC7OM+oSbEnp2Oz00utw+3c3upanrtd92D9Sx9hn9gpxRu74ApUhlvETrhXE4i
-         QbXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPM3Ws3TSWdwzUoMEPPD5mYve/VmkJ0W4oYPnFwrsGtmp1T3eMbAXuawmCDOxmNPCqQIWjzpbALtnc47Ir@vger.kernel.org, AJvYcCVMxWOYF08N0BfhKPu7oSR8cZI7wc8zeloD/GxFqgVzXc7SHWsFlYKlYBvik0uJZOrpv5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzau/8GC6wcSXVlO+Oy2RQLW4hPA5+OCkDfjKYW14LPmGcTg0Yq
-	67h4M/mMgasfGW4BGcAXPRAp7zMT5+N4+ZDPnha5V6Pxr4pczJz1
-X-Gm-Gg: ASbGnctvYBfbvKHazObSDBt7sgqkS/sB2/dP50TDeySRV+myr+piFROXGN9ASCAVtMR
-	oVtOSGpkyI02dI6NHSNVFwdWXmyC4TN5P4fDO7EBHC6QNSPUiAlsYtcxAQ+oh0z/5QzeShMVNsT
-	+mBgA4dFnF7xZBTvYinYbZxB3FhxMw3FN+06m1ryhFo4BZiDkL5UEnQO0BmB/mO3991jq7evFBo
-	y1+95rTDZ/D5+Wf4GjkiVBS4Ja4UaUE1+9bQxcG+nz9hDLVr/p57LHVggaN11eDn148sKbbelJ/
-	sXHeMzRjE/BYM2uL3WnO9+4BiZa9by2OSQ==
-X-Google-Smtp-Source: AGHT+IH17ATIoN+yDWaOFwQRSqTSShuXuEFiLJbcGJtyBxMLgeMII6OtBGNiFxLsRBJFPmmRKIiE9A==
-X-Received: by 2002:a17:903:22c5:b0:224:24d5:f20a with SMTP id d9443c01a7336-22be03f19cbmr22298095ad.48.1744273164355;
-        Thu, 10 Apr 2025 01:19:24 -0700 (PDT)
-Received: from localhost ([144.24.43.60])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2afa9sm2669045b3a.22.2025.04.10.01.19.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 01:19:24 -0700 (PDT)
-Date: Thu, 10 Apr 2025 16:19:12 +0800
-From: Furong Xu <0x1207@gmail.com>
-To: Boon Khai Ng <boon.khai.ng@altera.com>
-Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S .
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Russell King <linux@armlinux.org.uk>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, Matthew Gerlach
- <matthew.gerlach@altera.com>, Tien Sung Ang <tien.sung.ang@altera.com>, Mun
- Yew Tham <mun.yew.tham@altera.com>, G Thomas Rohan
- <rohan.g.thomas@altera.com>
-Subject: Re: [PATCH net-next v3 1/2] net: stmmac: Refactor VLAN
- implementation
-Message-ID: <20250410161912.0000168a@gmail.com>
-In-Reply-To: <20250408081354.25881-2-boon.khai.ng@altera.com>
-References: <20250408081354.25881-1-boon.khai.ng@altera.com>
-	<20250408081354.25881-2-boon.khai.ng@altera.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NIXQOVlI"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D63034327A;
+	Thu, 10 Apr 2025 08:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744273181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/Y5h+5OSRWIwQZiitm22COKTZGTsAm6UEQXwd9f9Grk=;
+	b=NIXQOVlIrym6KHvZ8zKy+qyJJYRaB6rzZvV1l2dctN9BM7O9xMfH4KCGwQoUewtNavGD9l
+	UBub7ZB9EJXHeHkffmFMFZpKwduUBxFGmEmMbN9qUQzSzkj4n7OzJerLwlfXCb1+tkw32Y
+	Aa6lBxB574wk2kfDRXLmAgKci/NcV4jEznQXBH7Dex4YJQUHCYxjHgCvOqSrnOM4Fy9mGX
+	9I1/jses8ZD8ieH1QsKASBBG8m9TpkWw1LG0Ew2teQhH+cufhYIvyoMCuB2uFVFVVO01m0
+	LI6UNdBkzBHpDr7SqGszCBdIQ/Q4nVcla9E9kqu/AoSxP0nqVg7P3Uk1l6ZnNw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 10 Apr 2025 10:19:39 +0200
+Message-Id: <D92T8KH7F8Q1.3MYEC6SZEEGNB@bootlin.com>
+To: "ALOK TIWARI" <alok.a.tiwari@oracle.com>, "Lee Jones" <lee@kernel.org>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>
+Subject: Re: [External] : [PATCH v6 01/12] dt-bindings: mfd: gpio: Add
+ MAX7360
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+ <a9d8ca30-3836-49b3-898c-c351b2c44a76@oracle.com>
+In-Reply-To: <a9d8ca30-3836-49b3-898c-c351b2c44a76@oracle.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekgedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvffuvefhofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvffdugeeiudevjedtteettefftefhvdeileekhffgleeiteeufeejvedvledtffenucffohhmrghinhepuhhrlhguvghfvghnshgvrdgtohhmpdguvghvihgtvghtrhgvvgdrohhrghdprghnrghlohhgrdgtohhmpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtoheprghlohhkr
+ dgrrdhtihifrghrihesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Tue,  8 Apr 2025 16:13:53 +0800, Boon Khai Ng <boon.khai.ng@altera.com> wrote:
+On Wed Apr 9, 2025 at 5:22 PM CEST, ALOK TIWARI wrote:
+>
+>
+> On 09-04-2025 20:25, Mathieu Dubois-Briand wrote:
+>> Add device tree bindings for Maxim Integrated MAX7360 device with
+>> support for keypad, rotary, gpios and pwm functionalities.
+>>=20
+>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> ---
+>>   .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++++++
+>>   .../devicetree/bindings/mfd/maxim,max7360.yaml     | 171 +++++++++++++=
+++++++++
+>>   2 files changed, 254 insertions(+)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.y=
+aml b/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
+>> new file mode 100644
+>> index 000000000000..21d603d9504c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
+>> @@ -0,0 +1,83 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: https://urldefense.com/v3/__http://devicetree.org/schemas/gpio/max=
+im,max7360-gpio.yaml*__;Iw!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp2=
+4O0wAwuujlnN1Zh9-xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvakCad_v0$
+>> +$schema: https://urldefense.com/v3/__http://devicetree.org/meta-schemas=
+/core.yaml*__;Iw!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp24O0wAwuujl=
+nN1Zh9-xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvacsB3d9k$
+>> +
+>> +title: Maxim MAX7360 GPIO controller
+>> +
+>> +maintainers:
+>> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> +
+>> +description: |
+>> +  Maxim MAX7360 GPIO controller, in MAX7360 chipset
+>> +  https://urldefense.com/v3/__https://www.analog.com/en/products/max736=
+0.html__;!!ACWV5N9M2RV99hQ!LySDuQZdU3DANTEmkRlntMCbFm69zp24O0wAwuujlnN1Zh9-=
+xPEHZu7fj5d_O7vIxUHn9b6gqg9MHtd9ntPvXQvavZnHZJk$
+>> +
+>> +  The device provide two series of GPIOs, referred here as GPIOs and GP=
+Os.
+> typo: The device provides two series of GPIOs,
+>> +
+>> +  PORT0 to PORT7 pins can be used as GPIOs, with support for interrupts=
+ and
+>> +  constant-current mode. These pins will also be used by the torary enc=
+oder and
+> typo: ie rotary encoder ?
+>> +  PWM functionalities.
+>> +
+>> +  COL2 to COL7 pins can be used as GPOs, there is no input capability. =
+COL pins
+>> +  will be partitionned, with the first pins being affected to the keypa=
+d
+>> +  functionality and the last ones as GPOs.
+>> +
+> typo: partitionned -> partitioned
 
-> Refactor VLAN implementation by moving common code for DWMAC4 and
-> DWXGMAC IPs into a separate VLAN module. VLAN implementation for
-> DWMAC4 and DWXGMAC differs only for CSR base address, the descriptor
-> for the VLAN ID and VLAN VALID bit field.
-> 
-> Signed-off-by: Boon Khai Ng <boon.khai.ng@altera.com>
-> Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +-
->  drivers/net/ethernet/stmicro/stmmac/common.h  |   1 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  40 ---
->  .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 295 +-----------------
->  .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  13 -
->  .../ethernet/stmicro/stmmac/dwxgmac2_core.c   |  87 ------
->  drivers/net/ethernet/stmicro/stmmac/hwif.c    |   8 +
->  drivers/net/ethernet/stmicro/stmmac/hwif.h    |  61 ++--
->  .../net/ethernet/stmicro/stmmac/stmmac_vlan.c | 294 +++++++++++++++++
->  .../net/ethernet/stmicro/stmmac/stmmac_vlan.h |  63 ++++
->  10 files changed, 401 insertions(+), 463 deletions(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_vlan.c
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_vlan.h
-> 
-[...]
-> +static void vlan_update_hash(struct mac_device_info *hw, u32 hash,
-> +			     __le16 perfect_match, bool is_double)
-> +{
-> +	void __iomem *ioaddr = hw->pcsr;
-> +	u32 value;
-> +
-> +	writel(hash, ioaddr + VLAN_HASH_TABLE);
-> +
-> +	value = readl(ioaddr + VLAN_TAG);
-> +
-> +	if (hash) {
-> +		value |= VLAN_VTHM | VLAN_ETV;
-> +		if (is_double) {
-> +			value |= VLAN_EDVLP;
-> +			value |= VLAN_ESVL;
-> +			value |= VLAN_DOVLTC;
+Thanks for your review, I fixed all 3 typos.
 
-I can confirm that 802.1ad (QinQ) has been broken on stmmac for years,
-and it will be so nice if this refactoring includes some fixes for QinQ
-
-> +		}
-> +
-> +		writel(value, ioaddr + VLAN_TAG);
-> +	} else if (perfect_match) {
-> +		u32 value = VLAN_ETV;
-> +
-> +		if (is_double) {
-> +			value |= VLAN_EDVLP;
-> +			value |= VLAN_ESVL;
-> +			value |= VLAN_DOVLTC;
-> +		}
-> +
-> +		writel(value | perfect_match, ioaddr + VLAN_TAG);
-> +	} else {
-> +		value &= ~(VLAN_VTHM | VLAN_ETV);
-> +		value &= ~(VLAN_EDVLP | VLAN_ESVL);
-> +		value &= ~VLAN_DOVLTC;
-> +		value &= ~VLAN_VID;
-> +
-> +		writel(value, ioaddr + VLAN_TAG);
-> +	}
-> +}
-> +
-> +static void vlan_enable(struct mac_device_info *hw, u32 type)
-> +{
-> +	void __iomem *ioaddr = hw->pcsr;
-> +	u32 value;
-> +
-> +	value = readl(ioaddr + VLAN_INCL);
-> +	value |= VLAN_VLTI;
-> +	value |= VLAN_CSVL; /* Only use SVLAN */
-> +	value &= ~VLAN_VLC;
-> +	value |= (type << VLAN_VLC_SHIFT) & VLAN_VLC;
-> +	writel(value, ioaddr + VLAN_INCL);
-> +}
-> +
-> +static void vlan_rx_hw(struct mac_device_info *hw,
-> +		       struct dma_desc *rx_desc, struct sk_buff *skb)
-> +{
-> +	if (hw->desc->get_rx_vlan_valid(rx_desc)) {
-> +		u16 vid = hw->desc->get_rx_vlan_tci(rx_desc);
-> +
-> +		__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vid);
-
-So, as the comment above, ETH_P_8021AD or ETH_P_8021Q shall be set selectively
-depend on the frame type.
-
-> +	}
-> +}
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
