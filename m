@@ -1,92 +1,114 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF952857DA
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FDB284B48
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291248; cv=none; b=iDwa9EeNE/03K3KTG2NRqPBMkm0sMoN8zTUAkcufBGb+Nyp6p428YsWyqxcu2524m3RtElmB+NQYgiLqWSn+nstDox+DHNU+/4iYB8RhSiU4/OpIrvXduPWjOz3T0LGZAO2k5T0QxvApb1VkUQxyyu48xreMkOs0o5ds6HNNUQ4=
+	t=1744291265; cv=none; b=bSGjltGA/0s1EG1jvPcbq73LIh36yp6RpWDqSqk1lGGoOO4CiRbj2h7Ck0nYub+PTWS3PGyPcID9OihiElzF9VCNSHyQfG+8ILsrfLw3i/YjtyT7PPTxxt2klvKtcDkFK2hr+WawcjczZyKn0xD/wo9mXpX4zp2ltlByAg8WXZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291248; c=relaxed/simple;
-	bh=eF3229Ut/7oMgOC0TKNVSpPRDMuApGGwnqq+oOTJ5no=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GxPcoKYyXcpPaBN1SUQ9JBtV8vTuj1ltCupwwjm8E/0qADF6RTTgvVMjQY807BQu8WxaEzO3B8lFqqtZ+zmSgiLFMI6rCvXECIVQrGpBmKbtdIzoMricxHMM2iTJHNLVmn5hI5uC1WzInxbCor9j5pA7t3FAlBxRuGGR+W/EMqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=PZcf8lqq; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1744291265; c=relaxed/simple;
+	bh=FmFhlnhjy0ybwe7HPXrLM1v6xm2IB55H407HZ1JdXSk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OX8S962OBNj+OAH6DPDT+oEqTV6e435d6Nr55LYelSABy/MgYJcFiF4srK30FGH4YYHknGpbGBBshD2WPp8nm0vB1FNYaEf5UutEC/5C5hJ8AvAiYsZBMODULQj+cmv8nRTcKk0H3fpALZaXLxWOm2v2u2q/8btMSgWfzckvZR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X/N97gH8; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="PZcf8lqq"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f0cfbe2042so8740996d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:20:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X/N97gH8"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso9024565e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:21:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744291245; x=1744896045; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uvjpkhdO+uAITJ9R+WF0zbYBfmINwYKjsiOVdhMgoeI=;
-        b=PZcf8lqqvrAaY63sOOmDIug7PYxfoffDKqKMQVQY5oEgTOIO0BCAcG3K0RZRqeOQ6c
-         sSuSUgyV2tauswe0jv7/OfAq24zp08/l0zJ7EW1AQIkN7SvIpcs6mHKi+fFCAhacMYcA
-         I4nBImutB5sKbuAkrqF2QHFLMBqwJifzsMf5+U4MHm456Eil0cwv7bEYReSFPQ3FL0Nv
-         N+cjQACbSe72Z/5V0mENkhwKaduIXIsSFfF9qey61jB3/IDMZ5UxJuKuvz8a59e4iN/7
-         fBuERL0bQ/V4hm6ZUYowH8njgXe76JmaH5u6u+TQ9BF+jSN3ZY5wUwXuqlKmAZ6wZhYZ
-         qIiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744291245; x=1744896045;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1744291262; x=1744896062; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uvjpkhdO+uAITJ9R+WF0zbYBfmINwYKjsiOVdhMgoeI=;
-        b=BeAbVyENsbYpTi7jNFUqlgmQxfRopP4EORpjRNf9KVa8qhwXgQfakAXeWhmNHmqOx8
-         gvT6a66eqXx1lKY/rpz7mPEsh7/D0RqmxJX7Jo2GC0EzUDw1jPCWTgnYGmHU7GEQ93eV
-         tZDzM8ZveFF6Xw6/qMic2DKoFxHreETODYDzRguebJ9xOw3KMoqSJdmkPm8oHf8LLVxL
-         zi3rv6COtOyeKeE1zUFDWt7JK/dq5gzyFxAoos+kn91ncppHuarhtz+XkTemqU5EQ4sh
-         p4yplQ6A2B6+JnZzFcuH0MNDWzBSnj+RglYxpXuf318/81MXeTfUxcm2ngCE2Ki4aDIc
-         HD8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWeWZqsp8UiNhrfQoxWBGI397MIsWhXaflfu7S6dPylPUgXbpSlGJFbdy9GvWcdt50iqsmd+kQLJ2nflII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKMJMZ6vlZPNVq2YFHVWHbmMgyKe8ZNfHc9AYBj/9eR5VTaYdr
-	fZzpNQ+sRhTZ6iGd+yd6yIeAOyrCQYd08yjTFqjysR6lYtLTssozA7QE4LReh88=
-X-Gm-Gg: ASbGncv70ZjCNB+AbvQqF6ZUS5ZKvmrZE4gdcPk1qdjtX/DGkPu9BOiQUCvFnW9u9XU
-	If3U7MmXK9wrct6edFLULErkR1xSx6BIeCVfXq9V+dkFNjrl7XVlYITKbnae/q/JFGo3aiP0kfL
-	MyNX92COKKRHmCNNEh2fnSLQGFVBH6STOhQufLA090FiJmJ4YL64q1sSGPuNziQmsUX6REsg5B3
-	J9XvQt3FXw1ZmnmTNGP0IpKRGUVFPGcil1dkN96KxgqpMyE8MfCGlgRV7f4ajci1HwVSXyVYvp3
-	lPrj81vmNfaVHrbJ7mI1AUeFLY7YFzede2rDgvs=
-X-Google-Smtp-Source: AGHT+IF1TEpqq1y88DdCFclWrDEHt9sZ1im+VnXq/99xnonpkDH+Mjh4Wk8ppzfG3wbI3GnFX974wA==
-X-Received: by 2002:a05:6214:2129:b0:6ea:d604:9e4f with SMTP id 6a1803df08f44-6f0e61be51fmr45231716d6.19.1744291244756;
-        Thu, 10 Apr 2025 06:20:44 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0de95f774sm20638926d6.16.2025.04.10.06.20.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 06:20:43 -0700 (PDT)
-Date: Thu, 10 Apr 2025 09:20:39 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] mm: memcontrol: fix swap counter leak from offline cgroup
-Message-ID: <20250410132039.GB102987@cmpxchg.org>
-References: <20250410081812.10073-1-songmuchun@bytedance.com>
+        bh=dsD5P8r+lPMzFGkPu3i84ubxQLn+d2TlLf3MXEjgVbQ=;
+        b=X/N97gH82wok/HHm5z+eub3goWM4NYMgO5uITWOnzijvMJQ14l6hTC1WFILyXt18wy
+         1BSEdCk0hpTK60TcFjJBE4zGrvi2owKMKQF/E5kKSFA2OKElWjv1tdtNhJYBkqGTdG6/
+         K47YpV/8ZMZXgJefivifDYbl+9TS0j/iVx9KgMTkEcRTnb0hoOV3r/XhvzUjAgROvo4f
+         wEC0xe2BozzS3HYpa4z7QbFLDVqMgYJJkDZHEiCXYBATks5xTx+3ry9rjvCr4k0XeegF
+         Aa4TH/5wEhRlP73MWay10hmvYvUT2mvh98X0GlnkkzjE2MkLCo+K+qTIpvPYqaXMeNoH
+         9Cig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744291262; x=1744896062;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dsD5P8r+lPMzFGkPu3i84ubxQLn+d2TlLf3MXEjgVbQ=;
+        b=C45mwo2h+cG4B44Yifhk+x0KeT39GhGh21DGeW5dC3JyQx2jzk7Q9FJPglzTf3fUeT
+         3pPlg89phdjRccoulcDUX1tr2wdIMsRFXi+Hha7qSV8jKzx0xOAKbaJlL6HB7Pc4p5n5
+         yyS5O3a+r3zedts7fgDfSQqSe0cFgKyXfRZE4eqIv0hkmhSVfAtRktKZHZmMQ64XvESX
+         6e3/JwtXbAZMVZwznrwtDSB+wdd5W8oox7AHzYJVYR9RHJH2+w0tk7yxVIEyiztAgx12
+         Bls6H9gC5Ml4j1+SVgbsW8hvXOUks3DYL2U9ovqvvKvnyUxUso2sFnwyX2QSveX1MqIS
+         Ra9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWj33SxYZaYBddrSTklMnA/ANKlvCuOnvHRPigIaBn7PxfT4FfUbtwOg8hrO6ytDRGfV0lbLxZFsMuW4Ac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZLEbWbMqDz0Yzb+UTDCPPrxigZNPpykyLc3Pi8r8XZxGjW7LZ
+	MMuyzZgf2da5P3HudNRMWJCXMjMpX5dVwd1dMmBLwHw2Pp7zBUmCQfLIQXSa/LkkUiOBpsM5xqk
+	J+45mNCZpsmbsovlFlD+6Wm1MyK4k6a4jDYzE
+X-Gm-Gg: ASbGnctPxYMdg2oXJ49Ejr4J5q98sq2og1mb1SXE2pEzfENRo4Vu6zx1yfvYaNvnZIJ
+	8Ukm0Ty6TMWgKRrlieGRTyqCjKiynv7eP1WHJjUsF8fzC/fJfzQFPAR9UxqxwVPubvQs62mYuWH
+	ngUMy4mPD1YlZzl4buoASCAlIXck984DUPqXGx2WxLXga5ClMUbK+l
+X-Google-Smtp-Source: AGHT+IEvwXGGoLrKfaD4cZUMR7FFCKgvIc80Fy0ZI9aj31BxGTCUM185T9xzoJ417PB1Ae+UpN3CMc53DtUrA4R9z/8=
+X-Received: by 2002:a05:6000:2504:b0:39c:cc7:3db6 with SMTP id
+ ffacd0b85a97d-39d8fd46a4bmr1920569f8f.19.1744291261665; Thu, 10 Apr 2025
+ 06:21:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410081812.10073-1-songmuchun@bytedance.com>
+References: <20250410115420.366349-1-panikiel@google.com> <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
+ <20250410124526.GB9833@noisy.programming.kicks-ass.net> <20250410130944.GA9003@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250410130944.GA9003@noisy.programming.kicks-ass.net>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 10 Apr 2025 15:20:49 +0200
+X-Gm-Features: ATxdqUGeyXh0K-mA8y1HlcR7KFZ7uqQhVhQFznaq0Z4ozbkUrNqiuMB3Kau5K7w
+Message-ID: <CAH5fLggMoo8SNetgm1cC5u6ZabbhA5o8L3U2x5p4NP2n37F7xw@mail.gmail.com>
+Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 04:18:12PM +0800, Muchun Song wrote:
-> The commit 73f839b6d2ed addressed an issue regarding the swap
-> counter leak that occurred from an offline cgroup. However, the
-> commit 89ce924f0bd4 modified the parameter from @swap_memcg to
-> @memcg (presumably this alteration was introduced while resolving
-> conflicts). Fix this problem by reverting this minor change.
-> 
-> Fixes: 89ce924f0bd4 ("mm: memcontrol: move memsw charge callbacks to v1")
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+On Thu, Apr 10, 2025 at 3:09=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Thu, Apr 10, 2025 at 02:45:26PM +0200, Peter Zijlstra wrote:
+> > On Thu, Apr 10, 2025 at 02:36:02PM +0200, Peter Zijlstra wrote:
+> > > On Thu, Apr 10, 2025 at 11:54:20AM +0000, Pawe=C5=82 Anikiel wrote:
+> > > > Calling core::fmt::write() from rust code while FineIBT is enabled
+> > > > results in a kernel panic:
+>
+> > > > This happens because core::fmt::write() calls
+> > > > core::fmt::rt::Argument::fmt(), which currently has CFI disabled:
+> > > >
+> > > > library/core/src/fmt/rt.rs:
+> > > > 171     // FIXME: Transmuting formatter in new and indirectly branc=
+hing to/calling
+> > > > 172     // it here is an explicit CFI violation.
+> > > > 173     #[allow(inline_no_sanitize)]
+> > > > 174     #[no_sanitize(cfi, kcfi)]
+> > > > 175     #[inline]
+> > > > 176     pub(super) unsafe fn fmt(&self, f: &mut Formatter<'_>) -> R=
+esult {
+> > > >
+>
+> Miguel, I cannot find this code in the kernel tree. Is this again
+> because Rust is not free-standing and relies on external code?
+>
+> Can you please fix that. Building against external code that is not
+> under our control is a problem.
 
-Ah, those patches got reordered because yours was a fix and mine a
-cleanup. Good catch.
+It's from the core standard library, which is shipped together with
+the compiler.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Alice
