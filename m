@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CB220E030;
-	Thu, 10 Apr 2025 09:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4214920C49F;
+	Thu, 10 Apr 2025 09:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276410; cv=none; b=geLDDfAVtI38jS2dnoiKDBtlCvz9LAonPhnN7n9F/LSQ5xy4uDEN0uXLSWHkLf62Vuu1bfBVvQVlSm7sM/udx+hK0HAnzJXOhByhcQ7NISCr1J2EQUeqc3xVrK8wgAstOAEY+DcbWkYr8ap2Y99AjXYlOeKm88463xbwsBYsixQ=
+	t=1744276410; cv=none; b=mAgsKZBS/79v0bWz3w6HUGREmJK/peD0SinW4ozRhzy0wBl8w7tRK1Xg/AxFNFJhf4Ld6bBCTCjzBS5YIOso0de6+ko7PXhaWW4eQT+DevQ6vvxkAwVvlpiq3Eg2ZpS0xCQAhaV+ri20GHil/5rOV0boraGyEiFRiPZwCuys8O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744276410; c=relaxed/simple;
-	bh=gOous5YkM9MLgavnUT+mJixUtzV8Aox9a8MbOzaNjCw=;
+	bh=Cn8/X5Kk2VhUl1FJ/QxiVphTBP9hc4tIAcuKU72Xb+0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R8ekCrOauslKDQ1wWWh26aYZCfaWHGfBKaza4THLHWSzOCcotiOFkbAUhuwNHkxdOs/Yp6g1kyM1M6zuyjdRf+Bi2Z94MXMLdhBaBg5doxyHK71zLuZf4vgc4ORhVaxqKb4vQMfvmp5i8g9ZenzFhxXPBPIBNW8ZkFi0OBVR7uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwVQtz2u; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FO2pKCY2FoPwywPoPjezlhgict5kmv1QTsr/k8oc27KmBDtuKpgUtcTPo4JKg7KXTUPnDbk/aANoUIbs+JSDpfgM5lYjOuIYQKy0BoZYxO7DgPSJtHGWD3bB2tohnQTRS7HmwTeAuyrmQ9exSMd/5GsYbBkIYO1RBrm/EMnOE8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPJac4hB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwVQtz2u"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 169CDC4CEEC;
-	Thu, 10 Apr 2025 09:13:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPJac4hB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C0934C4CEE9;
+	Thu, 10 Apr 2025 09:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744276410;
-	bh=gOous5YkM9MLgavnUT+mJixUtzV8Aox9a8MbOzaNjCw=;
+	s=k20201202; t=1744276409;
+	bh=Cn8/X5Kk2VhUl1FJ/QxiVphTBP9hc4tIAcuKU72Xb+0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fwVQtz2umHuQU/+FG7g9CAPp3BEaVNphLOtCaxXK8PFYnT5hHGVq3R/Q8DGZ7UyiI
-	 w8LTyANEpePf4DxAPVWR4oWGQIB3w9L5pEeDWYNPjrEzMIAhGhNaqtq+gjc2kF9nOl
-	 z7+dhYaToUEYc2GWG8RSsOFLDvy5NZBOYTOmcxVKJtBunVEcdQhFaPMSJ7AcJNRA8X
-	 T7XGtenI98C1LeFGkZjTI4/mfsfKTl+DaSff3K2OJC9xtjZ9iMXyulpZ9sNv8K97hF
-	 KmXqaYuvv36a8elb9o/D8s3VDtiBdjGaCru4SkHKcMGHg/zyQzsuHCRZkkpQ7zlNJ+
-	 Zv8AkS0pWdu9g==
+	b=gPJac4hB0yClk4rmGAGurO+5GHrt+I0QnOU5Dus2fY2UvuAW3Ixn9mmZghtz02KBK
+	 sRx1MSIojNFqqSa23hzyGAtXLImJd5oc1+YmypWtuMTS6UEMYmGIyiDavrSCRazOF7
+	 ULFAZXN8oZzKfMpmHk/UN+lgyPp4yQ1YmexsTrPYdxBgtBgs+99v323qgZ6rjXiqFx
+	 Nqu26RS1wnmRhAqnXLqVt27t4cviNLIUFnbQShToF9t0Lw2gS2IbQuTxUjWhlkwPYr
+	 UenepOPLfWH44hEqAk70caBfu/0KoSu3LuMOVNPCSnQB+jjTSk+bYTdDtRSvuxU2JR
+	 /Dv7qc4qPwImw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6E3C369A6;
-	Thu, 10 Apr 2025 09:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1444C369A4;
+	Thu, 10 Apr 2025 09:13:29 +0000 (UTC)
 From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Date: Thu, 10 Apr 2025 11:13:26 +0200
-Subject: [PATCH 5/5] arm64: dts: qcom: x1e80100-hp-x14: explicitly enable
- smb2360 eUSB2 repeaters
+Date: Thu, 10 Apr 2025 11:13:22 +0200
+Subject: [PATCH 1/5] arm64: dts: qcom: x1e80100-hp-x14: add
+ usb-1-ss1-sbu-mux
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-hp-x14-v1-5-b4e5ca253ec9@oldschoolsolutions.biz>
+Message-Id: <20250410-hp-x14-v1-1-b4e5ca253ec9@oldschoolsolutions.biz>
 References: <20250410-hp-x14-v1-0-b4e5ca253ec9@oldschoolsolutions.biz>
 In-Reply-To: <20250410-hp-x14-v1-0-b4e5ca253ec9@oldschoolsolutions.biz>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -52,12 +52,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744276408; l=1115;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744276408; l=2656;
  i=jens.glathe@oldschoolsolutions.biz; s=20240919;
  h=from:subject:message-id;
- bh=TIwCHukIRJYo2xuPlQJ/tZhR+AjnxQb+ZE4KDUe3o4g=;
- b=IVBI0MP84S4Whm+OungZEcqVU6tyqIQy4d1m5lXVjgg3xL1A0KePVuJLrqrAQLiOSe0ONhZmR
- nnog3JsiX6lB4stpKGVEEgc8hqqsBxMUDarvWzHctOJYMSjp0zDvXpC
+ bh=1QuOk+qTOtwsagXmtC6sIpF6WI7ROIm97jqPlTthzyc=;
+ b=6VjqoGKCDfw0IceKLdkNtaey1WlqNP57HxkOCP/MtpZtg1W+QU4Z3YCtMYiIY+KpiwSXkRCPQ
+ TrgWuzhMXVRAsESzRng+BelDxflHT9zQvj5IIzshueTwJOD8LexXPRk
 X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
  pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
 X-Endpoint-Received: by B4 Relay for
@@ -67,48 +67,108 @@ Reply-To: jens.glathe@oldschoolsolutions.biz
 
 From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-The smb2360 eUSB2 repeaters that are in use need to be explicitly enabled
-after a change in x1e80100-pmics.dtsi.
+The usb_1_1 port doesn't have the PS8830 repeater, but apparently some
+MUX for DP altmode control. After a suggestion from sgerhold on
+'#aarch64-laptops' I added gpio-sbu-mux nodes from the x1e80100-QCP
+tree, and this appears to work well. It is still guesswork, but
+working guesswork.
+
+Added and rewired for usb_1_1
 
 Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 ---
- arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 51 ++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-index b492901f2d8c610e955c95aea60eb6c3d80d4f65..df24c5e7d3f8d7cfe44bb165a058fb0cfe6f1d74 100644
+index 28298021cc367c279eebc08be6165fc1af9f2033..27f6b21589704b1767d45763773da4cf9c43c77b 100644
 --- a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
 +++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-@@ -1244,17 +1244,29 @@ &remoteproc_cdsp {
- 	status = "okay";
- };
+@@ -150,15 +150,15 @@ port@1 {
+ 					reg = <1>;
  
-+&smb2360_0 {
-+	status = "okay";
-+};
+ 					pmic_glink_ss1_ss_in: endpoint {
+-						remote-endpoint = <&retimer_ss1_ss_out>;
++						remote-endpoint = <&usb_1_ss1_qmpphy_out>;
+ 					};
+ 				};
+ 
+ 				port@2 {
+ 					reg = <2>;
+ 
+-					pmic_glink_ss1_con_sbu_in: endpoint {
+-						remote-endpoint = <&retimer_ss1_con_sbu_out>;
++					pmic_glink_ss1_sbu: endpoint {
++						remote-endpoint = <&usb_1_ss1_sbu_mux>;
+ 					};
+ 				};
+ 			};
+@@ -533,6 +533,25 @@ vreg_pmu_rfa_1p7: ldo9 {
+ 			};
+ 		};
+ 	};
 +
- &smb2360_0_eusb2_repeater {
- 	vdd18-supply = <&vreg_l3d_1p8>;
- 	vdd3-supply = <&vreg_l2b_3p0>;
-+};
- 
-+&smb2360_1 {
-+	status = "okay";
-+};
++	usb-1-ss1-sbu-mux {
++		compatible = "onnn,fsusb42", "gpio-sbu-mux";
 +
-+&smb2360_0 {
- 	status = "okay";
++		enable-gpios = <&tlmm 179 GPIO_ACTIVE_LOW>;
++		select-gpios = <&tlmm 178 GPIO_ACTIVE_HIGH>;
++
++		pinctrl-0 = <&usb_1_ss1_sbu_default>;
++		pinctrl-names = "default";
++
++		mode-switch;
++		orientation-switch;
++
++		port {
++			usb_1_ss1_sbu_mux: endpoint {
++				remote-endpoint = <&pmic_glink_ss1_sbu>;
++			};
++		};
++	};
  };
  
- &smb2360_1_eusb2_repeater {
- 	vdd18-supply = <&vreg_l3d_1p8>;
- 	vdd3-supply = <&vreg_l14b_3p0>;
-+};
+ &apps_rsc {
+@@ -1566,6 +1585,30 @@ usb1_pwr_3p3_reg_en: usb1-pwr-3p3-reg-en-state {
+ 		bias-disable;
+ 	};
  
-+&smb2360_1 {
- 	status = "okay";
++	usb_1_ss1_sbu_default: usb-1-ss1-sbu-state {
++		mode-pins {
++			pins = "gpio177";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++			output-high;
++		};
++
++		oe-n-pins {
++			pins = "gpio179";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++
++		sel-pins {
++			pins = "gpio178";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++	};
++
+ 	wcd_default: wcd-reset-n-active-state {
+ 		pins = "gpio191";
+ 		function = "gpio";
+@@ -1668,7 +1711,7 @@ &usb_1_ss1_dwc3_hs {
  };
  
+ &usb_1_ss1_qmpphy_out {
+-	remote-endpoint = <&retimer_ss1_ss_in>;
++	remote-endpoint = <&pmic_glink_ss1_ss_in>;
+ };
+ 
+ &usb_mp {
 
 -- 
 2.48.1
