@@ -1,116 +1,81 @@
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B193647;
-	Thu, 10 Apr 2025 01:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F393C13B;
+	Thu, 10 Apr 2025 01:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744247230; cv=none; b=m1F7DJi3ZKyZzAoVKcGXBes7gYhQzxGARrYJ/tPCOQnUD+VktYvDAplumE3/cLVbl82wRmZdPaO+XhM27KsxA8i4DvRcptuVTo7Berh+zgpiByduFox3at4xli8F+2NuCpDL+h7dQwFv8LyGmoEMxhYrY/TlJWbIjdAjavH7P5Q=
+	t=1744247257; cv=none; b=ugBydd+g5QVSnat+y/4VIgLT2xIW6KFAjH+QXlcljn0Re4Z8bbSdreE6z+pnHyzqPY6G/Ju4TmlrJAU72jrCm78rIM78jYhq4MXXp+rBJ0rNT2n5Hvs4toJvsJo0sicBEMVOT8Lj7u4cpNOS2PQMjAva5A5u6Vp/Bol5U2tq6BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744247230; c=relaxed/simple;
-	bh=wRuMIIt25a8E6s46DgwKPIQAs72RHwhTOGUxithp+Nk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dz0rBeyIvW9aG3zMFXZC04VX9sl2CCS0bOGkIqujpbW18WMRiISBG1PbprnvlJyGLZQTGri8By/N0fI4yJYBz3GoiHS008/R9trxNLvR+TJdl1AZ6uBPUWp4NN+fk6vE7r1X2mHkL31FgPdO76ftzwmIWzjl7Lo5zf8uT/eVoiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=OYZdooKj; arc=none smtp.client-ip=68.232.139.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="OYZdooKj"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1744247228; x=1775783228;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wRuMIIt25a8E6s46DgwKPIQAs72RHwhTOGUxithp+Nk=;
-  b=OYZdooKjz+2ZS6dKvbgXaO2dBBwScSyxwFV8l/4TFGvwkU+M/Sg1oRBr
-   CH8hoxu5ww9Lrg7pzaOkliGQcwhnZk5JuREwegLrSXc7SVAImMQhPj6ff
-   Vm1eVe4JuodjkYPXZQsx/v9SjfUmfBenh2/oRpqtMF9dq1ckzLYfVYh4L
-   jbP76fmbTBaWouiNSg8u5AYxXWiFki6KjgfP5si6RubM0lmPy98JD7tX4
-   vuNE7KANFcHCHPxlRxji4jnUgw6bQZu2iVxWU/b+HyTln1FfOJifTn5FB
-   i7xFSaUh4r3yVzY/ZefeUMsw+kVLH1mEPLyXLrV72K2GdMp3LSBdhBYr0
-   g==;
-X-CSE-ConnectionGUID: HcFNwuIVQgSOsOR0u80EBg==
-X-CSE-MsgGUID: zH4p1MYYQNq5LrFyv8KmZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="196306701"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739804400"; 
-   d="scan'208";a="196306701"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 10:05:56 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 39019C2267;
-	Thu, 10 Apr 2025 10:05:54 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id EC19BBF4B8;
-	Thu, 10 Apr 2025 10:05:53 +0900 (JST)
-Received: from iaas-rpma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id B6E7A1A0078;
-	Thu, 10 Apr 2025 09:05:52 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-cxl@vger.kernel.org
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>,
-	Gregory Price <gourry@gourry.net>
-Subject: [PATCH v3] cxl/acpi: Verify CHBS length for CXL2.0
-Date: Thu, 10 Apr 2025 09:05:45 +0800
-Message-Id: <20250410010545.99590-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1744247257; c=relaxed/simple;
+	bh=7UkjdxUMmusq4YhAnPcj2YeRtLktLoMfSHH2RWgoajM=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Jjl9Yx/VAeQ5eEZz0y70sqRM6L+Vx9t05TmT6NmOpg5gOsoyIr/P5e3sA3ycMWgx632wPPllJdhWSn8fRV85Z+R0gM2Bjoru1TY4luOOZ7P8OuG4l68JqAelQW/iMXjzHzAmFvRof3roy8THJVuyMTyeecClCgxHLa1ReFDJVSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZY1kW4cZSz2TS60;
+	Thu, 10 Apr 2025 09:02:27 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id A84BF1A0188;
+	Thu, 10 Apr 2025 09:07:25 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 10 Apr 2025 09:07:24 +0800
+Message-ID: <7ff44c86-6366-4362-be9a-bde195aa671e@huawei.com>
+Date: Thu, 10 Apr 2025 09:07:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>,
+	<shenjian15@huawei.com>, <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
+	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net v2 6/7] net: hibmcge: fix not restore rx pause mac
+ addr after reset issue
+To: Jakub Kicinski <kuba@kernel.org>
+References: <20250403135311.545633-1-shaojijie@huawei.com>
+ <20250403135311.545633-7-shaojijie@huawei.com>
+ <20250404075804.42ccf6f0@kernel.org>
+ <b3aafd85-cb58-4046-88df-2b3566e2497d@huawei.com>
+ <20250407101129.48048623@kernel.org>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <20250407101129.48048623@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-Per CXL Spec r3.1 Table 9-21, both CXL1.1 and CXL2.0 have defined their
-own length, verify it to avoid an invalid CHBS.
 
-Additionally, this patch also removes the redundant macro CXL_RCRB_SIZE,
-favoring the use of `ACPI_CEDT_CHBS_LENGTH_CXL11`, which offers clearer
-semantic meaning.
+on 2025/4/8 1:11, Jakub Kicinski wrote:
+> On Mon, 7 Apr 2025 09:06:42 +0800 Jijie Shao wrote:
+>> on 2025/4/4 22:58, Jakub Kicinski wrote:
+>>> On Thu, 3 Apr 2025 21:53:10 +0800 Jijie Shao wrote:
+>>>> In normal cases, the driver must ensure that the value
+>>>> of rx pause mac addr is the same as the MAC address of
+>>>> the network port. This ensures that the driver can
+>>>> receive pause frames whose destination address is
+>>>> the MAC address of the network port.
+>>> I thought "in normal cases" pause frames use 01:80:C2:00:00:01
+>>> as the destination address!?
+>> No, the address set in .ndo_set_mac_address() is used.
+>> 01:80:C2:00:00:01 is supported by default. No additional configuration is required.
+> Are you talking about source or destination?
+> How does the sender learn the receiver's address? Via LLDP?
+> You need to explain all this much better in the commit message.
+> It is not "normal" for a switched Ethernet network.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-V3:
- - say more words in removing CXL_RCRB_SIZE # Alison
- - Collected Reviewed-by
-V2: don't factor out, just validate # Dan
----
- drivers/cxl/acpi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index cb14829bb9be..2e63e50b2c40 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -11,8 +11,6 @@
- #include "cxlpci.h"
- #include "cxl.h"
- 
--#define CXL_RCRB_SIZE	SZ_8K
--
- struct cxl_cxims_data {
- 	int nr_maps;
- 	u64 xormaps[] __counted_by(nr_maps);
-@@ -478,8 +476,10 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
- 
- 	chbs = (struct acpi_cedt_chbs *) header;
- 
--	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
--	    chbs->length != CXL_RCRB_SIZE)
-+	if ((chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
-+	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL11) ||
-+	   (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20 &&
-+	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL20))
- 		return 0;
- 
- 	if (!chbs->base)
--- 
-2.47.0
+ok,
+
+Thanks
+Jijie Shao
 
