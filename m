@@ -1,47 +1,47 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554B81EF377;
-	Thu, 10 Apr 2025 16:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD98204849;
+	Thu, 10 Apr 2025 16:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744304123; cv=none; b=EQlvxF6sPn/Mly2yu+sR7oggX+SytFtNHIzJY0EyfwMgL9gwWRjAQspMmi4cBtVuxbIXJmspgBHeEpF/LcpU0ubv0doGYmTIhb1hmaYcuYKYEz8JCaN3F/vGomI6XMWF5DSBtVrq2UztiAHk9/zpFbu1NBL8WbLuUpD2JYBEuhE=
+	t=1744304127; cv=none; b=GV7X+ouBNkUD9WNXoeCneO14jVGFg/UTmjJSnDSvfLIPUvBN7wQyxH4qX1pHtq7DS7AUF0VxxizgWv2ghBvb4Vl7d/YX9wheAyoyg3JMNUa5UVgIUo8P/MaQSPa9Gxazuht6QeHHw1neMsh7xjngaW9Z9ylfb59aIBdrJ8JY9MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744304123; c=relaxed/simple;
-	bh=xsU3OjZ5S/Y7/wwCLNnCVbvl34RZpnj9Lr4K4nYehI4=;
+	s=arc-20240116; t=1744304127; c=relaxed/simple;
+	bh=k5NAHRWJFGg2wPpNG8JKE3ddyudxpH7x8YRItmLNQwo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L9O8LV8bDC1MiwCNOj+9FSxLxhfjhd/T4Hq4jtAfuoKoaaTz9x8ieWZrE0TJxsD5oPeqHPrY6O2QmvFYL0fhzEN0e0NaGknJo1zPMID77XAz0xkiXDCn+ILgh/23nolC2M2WVuFsf/B1gIb6v+IGosedgwRrm4lduwiWEVBEEIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=jo/uUxGl; arc=none smtp.client-ip=212.227.17.20
+	 MIME-Version; b=JSuA4xxbdM/6BItcy8YKjge5002g+/3o2XZ7GGfPnMNFAR1q1ezzlKdpCjoSTTLKWRE5r7yzY6j4noAquQsINI14JaHzjpMQbcnI4FdC+QeQlG9Crw7hVMc7omghNQb+fDdhSdfbQMnlbDcHP7/o8xCCo+k4z+uz6g/SzJ3PiVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=hqUYci7p; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jo/uUxGl"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="hqUYci7p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744304110; x=1744908910; i=w_armin@gmx.de;
-	bh=hFtvrUbB7pUzP2DPjOAYhU87qTsmV6Q5Nu3Zk4jonQc=;
+	s=s31663417; t=1744304114; x=1744908914; i=w_armin@gmx.de;
+	bh=2Z23hwRksRh4jNXp7ShpIARtlgUhtN5TEW1vLukI378=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=jo/uUxGlFrH6G4BIhJPRtuiuL3JV1j9zOamsD3J0bXcBSATS59OHLY7W3/lQJDp1
-	 2+WXHMXkOTAPGeYIkSUSUQ+Sk2GejTAOb8+FMMUyOlHBlaorKdX7B6kMQ7era8vpv
-	 Vp1oHKPhojhIC8vS9BNruE5iAw4tVgD1VmLGoeSKsDcI6REqmWzW+iGxWsYxcXuOV
-	 Ws7FvOnoDv+cXSPCVi05Ks8zOdeENuRegl7QN/w3CvZcl58cPY5hLlb8hhhAejjFx
-	 QGjeFgJ3cZA8cdp5tL+oUtJVU93fV4qSFnbYILjUbTdwQdQwY+HJHD4cOGdKQFGdJ
-	 8cRj0kw5i90EMZL1kw==
+	b=hqUYci7pbL6DtmEcSyumtELhCbWfClA7MC7CwiMzsa3i6UeWpgRUHNGpUXVxvfZL
+	 TK7uHHpHxWwWA1YdytDSUNtsnKi49I2qEvTPAZeoJxFs9YA1PWj0Pc8w2jaU/uWMk
+	 2U9+7hLLzONNejM6HniO1KWNOuMcp2zIT5nKYZhf4M2VQ15SzrNqXVCaitdsR1Kpn
+	 X9EliKkDaO/g6h/5PBwkZIxx4PQyThoHO6EbH4cblJRYZ/BOvonVZOpwQM4gN+T27
+	 TtngG0/MEtynVBWBf1JQH8HxU0oNY+ZaqL+TzJpGJiceCIVCOEE7TBai1L+P6behF
+	 WbC5ha4pqSFv3MAqOg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
  (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N4hvb-1t19RK2pwV-013x46; Thu, 10 Apr 2025 18:55:09 +0200
+ 1M4b1y-1u1GUO1VIs-003tgq; Thu, 10 Apr 2025 18:55:14 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: rafael@kernel.org,
 	rui.zhang@intel.com
 Cc: lenb@kernel.org,
 	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] ACPI: OSI: Stop advertising support for "3.0 _SCP Extensions"
-Date: Thu, 10 Apr 2025 18:54:54 +0200
-Message-Id: <20250410165456.4173-2-W_Armin@gmx.de>
+Subject: [PATCH 3/3] ACPI: thermal: Allow userspace applications to change the cooling mode
+Date: Thu, 10 Apr 2025 18:54:56 +0200
+Message-Id: <20250410165456.4173-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250410165456.4173-1-W_Armin@gmx.de>
 References: <20250410165456.4173-1-W_Armin@gmx.de>
@@ -52,86 +52,369 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8k0heseikQh0Zxv21NBAEGdk08f15zhx32AsD6gXflp23Bg5i7K
- 1ndoLgvNy1+0idv5ezRRhY6oZnhT6P/eP0SaO/3iIE97QWV11U4q1oxb7eo1MdcRyTvZwLb
- XZwGjrkDf3h/5y1VhbQxUZ8Gu43f/lap6wngailr84Tmkeo+zd5P39JN/VbDEhCn8+o07Kg
- xVUy024PNwzCFGvThGHEQ==
+X-Provags-ID: V03:K1:rpxCG6tethH5HoHA36GFmyJ57pywK57TN0LXpiTs5lcKXmxUihc
+ /ar16DvsIkzufBqPbdb7pMi4W2RT9i+jydTOYWk8kdoE4cX/h7RgTeggD75ufkneDS/3uoW
+ LTx0BkW4feuM7apxvYvSj8lshWzER1c7wjMVBwvPCrJAW8OXC1/Xx5ReAUTsMoO3Q194O/y
+ rd2pjMCEqI/IaoaxVDcgw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:XIEXK2VH3Fw=;scxhgpL/5qPD+YtQji78+2D83H4
- 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
+UI-OutboundReport: notjunk:1;M01:P0:cL4DNgSJCTA=;7k0R8NpWTZST8b28beA3JQkzG/H
+ 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
+ hASjuNYmdLyYaVy43FTOcDPntcZ2au6yik
 
-As specified in section 5.7.2 of the ACPI specification the feature
-group string "3.0 _SCP Extensions" implies that the operating system
-evaluates the _SCP control method with additional parameters.
+Users might want to signal the ACPI firmware whether active or passive
+cooling is preferred. This is already possible under Windows using the
+Windows power settings.
 
-However the ACPI thermal driver evaluates the _SCP control method
-without those additional parameters, conflicting with the above
-feature group string advertised to the firmware thru _OSI.
+Add a new "cooling_mode" sysfs attribute which can be used by users to
+change the cooling mode of a given thermal zone. Only thermal zones
+supporting the _SCP control method will expose this new attribute.
 
-Stop advertising support for this feature string to avoid confusing
-the ACPI firmware.
-
-Fixes: e5f660ebef68 ("ACPI / osi: Collect _OSI handling into one single fi=
-le")
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/acpi/osi.c | 1 -
- 1 file changed, 1 deletion(-)
+ .../ABI/testing/sysfs-driver-thermal          |  14 ++
+ MAINTAINERS                                   |   1 +
+ drivers/acpi/thermal.c                        | 129 ++++++++++++++++--
+ 3 files changed, 132 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-thermal
 
-diff --git a/drivers/acpi/osi.c b/drivers/acpi/osi.c
-index df9328c850bd..f2c943b934be 100644
-=2D-- a/drivers/acpi/osi.c
-+++ b/drivers/acpi/osi.c
-@@ -42,7 +42,6 @@ static struct acpi_osi_entry
- osi_setup_entries[OSI_STRING_ENTRIES_MAX] __initdata =3D {
- 	{"Module Device", true},
- 	{"Processor Device", true},
--	{"3.0 _SCP Extensions", true},
- 	{"Processor Aggregator Device", true},
+diff --git a/Documentation/ABI/testing/sysfs-driver-thermal b/Documentatio=
+n/ABI/testing/sysfs-driver-thermal
+new file mode 100644
+index 000000000000..bf2349f31863
+=2D-- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-thermal
+@@ -0,0 +1,14 @@
++What:		/sys/bus/acpi/devices/LNXTHERM:*/cooling_mode
++Date:		April 2025
++KernelVersion:	6.16
++Contact:	Armin Wolf <W_Armin@gmx.de>
++Description:
++		A string representing the preferred cooling mode of the
++		associated ACPI thermal zone:
++
++		- "active" for preferring active cooling
++
++		- "passive" for preferring passive cooling
++
++		The exact characteristics of both cooling modes depend
++		on the underlying ACPI firmware implementation.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b827049501..fd3102723518 100644
+=2D-- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -382,6 +382,7 @@ R:	Zhang Rui <rui.zhang@intel.com>
+ L:	linux-acpi@vger.kernel.org
+ S:	Supported
+ B:	https://bugzilla.kernel.org
++F:	Documentation/ABI/testing/sysfs-driver-thermal
+ F:	drivers/acpi/*thermal*
+
+ ACPI VIOT DRIVER
+diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+index 5c2defe55898..52d0c777a93a 100644
+=2D-- a/drivers/acpi/thermal.c
++++ b/drivers/acpi/thermal.c
+@@ -15,11 +15,14 @@
+
+ #define pr_fmt(fmt) "ACPI: thermal: " fmt
+
++#include <linux/cleanup.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/dmi.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/sysfs.h>
+ #include <linux/types.h>
+ #include <linux/jiffies.h>
+ #include <linux/kmod.h>
+@@ -40,7 +43,6 @@
+ #define ACPI_THERMAL_NOTIFY_DEVICES	0x82
+ #define ACPI_THERMAL_NOTIFY_CRITICAL	0xF0
+ #define ACPI_THERMAL_NOTIFY_HOT		0xF1
+-#define ACPI_THERMAL_MODE_ACTIVE	0x00
+
+ #define ACPI_THERMAL_MAX_ACTIVE		10
+ #define ACPI_THERMAL_MAX_LIMIT_STR_LEN	65
+@@ -85,6 +87,16 @@ MODULE_PARM_DESC(psv, "Disable or override all passive =
+trip points.");
+
+ static struct workqueue_struct *acpi_thermal_pm_queue;
+
++enum acpi_thermal_cooling_mode {
++	ACPI_THERMAL_MODE_ACTIVE	=3D 0x00,
++	ACPI_THERMAL_MODE_PASSIVE	=3D 0x01,
++};
++
++static const char * const acpi_thermal_cooling_mode_strings[] =3D {
++	[ACPI_THERMAL_MODE_ACTIVE]	=3D "active",
++	[ACPI_THERMAL_MODE_PASSIVE]	=3D "passive",
++};
++
+ struct acpi_thermal_trip {
+ 	unsigned long temp_dk;
+ 	struct acpi_handle_list devices;
+@@ -119,6 +131,9 @@ struct acpi_thermal {
+ 	struct work_struct thermal_check_work;
+ 	struct mutex thermal_check_lock;
+ 	refcount_t thermal_check_count;
++	bool supports_cooling_mode;
++	struct mutex cooling_mode_lock;       /* Protects cooling mode updates *=
+/
++	enum acpi_thermal_cooling_mode cooling_mode;
  };
 
+ /* ----------------------------------------------------------------------=
+----
+@@ -328,7 +343,6 @@ static void acpi_queue_thermal_check(struct acpi_therm=
+al *tz)
+ static void acpi_thermal_trips_update(struct acpi_thermal *tz, u32 event)
+ {
+ 	struct adjust_trip_data atd =3D { .tz =3D tz, .event =3D event };
+-	struct acpi_device *adev =3D tz->device;
+
+ 	/*
+ 	 * Use thermal_zone_for_each_trip() to carry out the trip points
+@@ -340,8 +354,6 @@ static void acpi_thermal_trips_update(struct acpi_ther=
+mal *tz, u32 event)
+ 	thermal_zone_for_each_trip(tz->thermal_zone,
+ 				   acpi_thermal_adjust_trip, &atd);
+ 	acpi_queue_thermal_check(tz);
+-	acpi_bus_generate_netlink_event(adev->pnp.device_class,
+-					dev_name(&adev->dev), event, 0);
+ }
+
+ static int acpi_thermal_get_critical_trip(struct acpi_thermal *tz)
+@@ -473,6 +485,18 @@ static void acpi_thermal_get_trip_points(struct acpi_=
+thermal *tz)
+ 		tz->trips.active[i].trip.temp_dk =3D THERMAL_TEMP_INVALID;
+ }
+
++static int acpi_thermal_set_cooling_mode(struct acpi_thermal *tz,
++					 enum acpi_thermal_cooling_mode mode)
++{
++	acpi_status status;
++
++	status =3D acpi_execute_simple_method(tz->device->handle, "_SCP", mode);
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
++	return 0;
++}
++
+ /* sys I/F for generic thermal sysfs support */
+
+ static int thermal_get_temp(struct thermal_zone_device *thermal, int *tem=
+p)
+@@ -683,6 +707,8 @@ static void acpi_thermal_notify(acpi_handle handle, u3=
+2 event, void *data)
+ 	case ACPI_THERMAL_NOTIFY_THRESHOLDS:
+ 	case ACPI_THERMAL_NOTIFY_DEVICES:
+ 		acpi_thermal_trips_update(tz, event);
++		acpi_bus_generate_netlink_event(device->pnp.device_class, dev_name(&dev=
+ice->dev),
++						event, 0);
+ 		break;
+ 	default:
+ 		acpi_handle_debug(device->handle, "Unsupported event [0x%x]\n",
+@@ -777,6 +803,65 @@ static void acpi_thermal_free_thermal_zone(struct acp=
+i_thermal *tz)
+ 	kfree(tz);
+ }
+
++static ssize_t cooling_mode_show(struct device *dev, struct device_attrib=
+ute *attr, char *buf)
++{
++	struct acpi_thermal *tz =3D acpi_driver_data(to_acpi_device(dev));
++
++	guard(mutex)(&tz->cooling_mode_lock);
++
++	return sysfs_emit(buf, "%s\n", acpi_thermal_cooling_mode_strings[tz->coo=
+ling_mode]);
++}
++
++static ssize_t cooling_mode_store(struct device *dev, struct device_attri=
+bute *attr,
++				  const char *buf, size_t count)
++{
++	struct acpi_thermal *tz =3D acpi_driver_data(to_acpi_device(dev));
++	int ret, mode;
++
++	mode =3D sysfs_match_string(acpi_thermal_cooling_mode_strings, buf);
++	if (mode < 0)
++		return mode;
++
++	guard(mutex)(&tz->cooling_mode_lock);
++
++	ret =3D acpi_thermal_set_cooling_mode(tz, mode);
++	if (ret < 0)
++		return ret;
++
++	tz->cooling_mode =3D mode;
++	acpi_thermal_trips_update(tz, ACPI_THERMAL_NOTIFY_THRESHOLDS);
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(cooling_mode);
++
++static struct attribute *acpi_thermal_attrs[] =3D {
++	&dev_attr_cooling_mode.attr,
++	NULL
++};
++
++static umode_t acpi_thermal_group_is_visible(struct kobject *kobj, struct=
+ attribute *attr, int idx)
++{
++	struct device *dev =3D kobj_to_dev(kobj);
++	struct acpi_thermal *tz =3D acpi_driver_data(to_acpi_device(dev));
++
++	if (tz->supports_cooling_mode)
++		return attr->mode;
++
++	return 0;
++}
++
++static const struct attribute_group acpi_thermal_group =3D {
++	.is_visible =3D acpi_thermal_group_is_visible,
++	.attrs =3D acpi_thermal_attrs,
++};
++
++static const struct attribute_group *acpi_thermal_groups[] =3D {
++	&acpi_thermal_group,
++	NULL
++};
++
+ static int acpi_thermal_add(struct acpi_device *device)
+ {
+ 	struct thermal_trip trip_table[ACPI_THERMAL_MAX_NR_TRIPS] =3D { 0 };
+@@ -786,7 +871,7 @@ static int acpi_thermal_add(struct acpi_device *device=
+)
+ 	int crit_temp, hot_temp;
+ 	int passive_delay =3D 0;
+ 	int result;
+-	int i;
++	int ret, i;
+
+ 	if (!device)
+ 		return -EINVAL;
+@@ -795,6 +880,10 @@ static int acpi_thermal_add(struct acpi_device *devic=
+e)
+ 	if (!tz)
+ 		return -ENOMEM;
+
++	ret =3D devm_mutex_init(&device->dev, &tz->cooling_mode_lock);
++	if (ret < 0)
++		return ret;
++
+ 	tz->device =3D device;
+ 	strscpy(tz->name, device->pnp.bus_id);
+ 	strscpy(acpi_device_name(device), ACPI_THERMAL_DEVICE_NAME);
+@@ -803,11 +892,18 @@ static int acpi_thermal_add(struct acpi_device *devi=
+ce)
+
+ 	acpi_thermal_aml_dependency_fix(tz);
+
+-	/*
+-	 * Set the cooling mode [_SCP] to active cooling. This needs to happen b=
+efore
+-	 * we retrieve the trip point values.
+-	 */
+-	acpi_execute_simple_method(tz->device->handle, "_SCP", ACPI_THERMAL_MODE=
+_ACTIVE);
++	tz->supports_cooling_mode =3D acpi_has_method(tz->device->handle, "_SCP"=
+);
++	if (tz->supports_cooling_mode) {
++		/*
++		 * Set the initial cooling mode to active cooling. This needs to happen
++		 * before we retrieve the trip point values.
++		 */
++		ret =3D acpi_thermal_set_cooling_mode(tz, ACPI_THERMAL_MODE_ACTIVE);
++		if (ret < 0)
++			dev_err(&tz->device->dev, "Failed to set initial cooling mode\n");
++
++		tz->cooling_mode =3D ACPI_THERMAL_MODE_ACTIVE;
++	}
+
+ 	/* Get trip points [_ACi, _PSV, etc.] (required). */
+ 	acpi_thermal_get_trip_points(tz);
+@@ -924,7 +1020,7 @@ static int acpi_thermal_suspend(struct device *dev)
+ static int acpi_thermal_resume(struct device *dev)
+ {
+ 	struct acpi_thermal *tz;
+-	int i, j, power_state;
++	int ret, i, j, power_state;
+
+ 	if (!dev)
+ 		return -EINVAL;
+@@ -933,6 +1029,12 @@ static int acpi_thermal_resume(struct device *dev)
+ 	if (!tz)
+ 		return -EINVAL;
+
++	if (tz->supports_cooling_mode) {
++		ret =3D acpi_thermal_set_cooling_mode(tz, tz->cooling_mode);
++		if (ret < 0)
++			dev_err(&tz->device->dev, "Failed to restore cooling mode\n");
++	}
++
+ 	for (i =3D 0; i < ACPI_THERMAL_MAX_ACTIVE; i++) {
+ 		struct acpi_thermal_trip *acpi_trip =3D &tz->trips.active[i].trip;
+
+@@ -969,7 +1071,10 @@ static struct acpi_driver acpi_thermal_driver =3D {
+ 		.add =3D acpi_thermal_add,
+ 		.remove =3D acpi_thermal_remove,
+ 		},
+-	.drv.pm =3D &acpi_thermal_pm,
++	.drv =3D {
++		.dev_groups =3D acpi_thermal_groups,
++		.pm =3D &acpi_thermal_pm,
++	},
+ };
+
+ static int thermal_act(const struct dmi_system_id *d)
 =2D-
 2.39.5
 
