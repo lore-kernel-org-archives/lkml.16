@@ -1,145 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35521293472
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDB728F938
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 21:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744320356; cv=none; b=BNe6kIy2mseZYDI7693MTY1kylrq3140AsHGhhNg0Emq4tNmAHA4hUzG3HPlwKzkaVpVzIUIyFgJSryiKToWk7I0+DiM0tAOgNuSHsjQrxg7yB/2W64XllatTRqv5CE7cKumXpPlDCpq/rElygXwaNLXupxnEFNvY9IYAmr6T/U=
+	t=1744320537; cv=none; b=ePuMA6wuVSIEIRqTWbMdR0V6+4oYWyjjxV8Z0fkPpYe8Bt1yU4/qIJRosu00wmPR4eCWZl/9uVNIUEpRdr5Tm0mL+wCbhaEyf45B8o/er+YnbtaqXd9c3HXw0EAhFmtRZCYrwh/8wH/NB2iBoA6rs7z86wgGdAmX/n9bidRCZuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744320356; c=relaxed/simple;
-	bh=bkjph6SPUsAaWyg1J7Tuay9FdQRu2xyNlV4328o6Mq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fccXP7sjYzU/U1LxneYfowrOL3jBvGdpdZFQO3YYS7CPze7paSMgFPQLLRoNFxeYdaJXX46ZQq14SFFXCOxq5L8DPTYxgqDPRgcbzX6kcCOuaMVVT/yydY9sL7kcWlc3uN2N3KH2fCL5ftWzlHnjazUAIWZ3afK+kf1Zt+ZHbDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MY6qucwM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744320537; c=relaxed/simple;
+	bh=PQyLMk4yD/KMsB1XsXeHfOQCgylwKZk+b6OaxBJWI7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FZzoZuswvPQdxVSeBfIa/GUaI6VuNmjhDOV6KKfMPnXMecPU94r++kURyHrNb7+TilmLeRuFRrbVSOEtIZDc+7n19UureRnvdZ3BDGytxoytbKCMQ2HOmEAMxdK6AhdwCE3Er+LjhBAJk9fhkZNC9nWbu/unNkTU388f0/i6isk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D7bUe9P+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MY6qucwM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B13E3C4CEDD;
-	Thu, 10 Apr 2025 21:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744320355;
-	bh=bkjph6SPUsAaWyg1J7Tuay9FdQRu2xyNlV4328o6Mq0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MY6qucwMVZ4iKXN53ag8qwOtzSu3jRI9t7yPHFEvf362geNHLFTyBH+afY3OwQScc
-	 tQlL2ujwtwkV4j+OrvppCu8mee8v9iRKzjpYQYhLtm0bVTziWKUvRTr6CYJTIDy9G0
-	 bQqHi73K2MwT2GbOHHaYR91+hja8NonF9VxB/ziApVA68ryB0LZZXvMTGqbGZ1uXJd
-	 LI2fXne1V2vI/aG8Fio5SE6kJMozhfvCS0IcMf6IrPQnz+5+b6NGqzneY4hIvhCksK
-	 ByuDcSlsQGI3WS/8NE9rMHZ+y5TjS+zdhfxeT5xfXedGWyFEokNw0i1GGj6b9uAqki
-	 LE0THBiM7y/5g==
-Date: Thu, 10 Apr 2025 23:25:51 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: [GIT PULL] x86 fixes
-Message-ID: <Z_g3X7JyBQ1HdZTa@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D7bUe9P+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744320534;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7wUygALbmEVMFAt4v+g0d0hTcs9oRhp7Sgk/twG05FU=;
+	b=D7bUe9P+uuUCgkLxwrATaynkYI5/P8/yiHNHAko2bw3hpNsT7mPtu6SPDan+7ID8mYoeFO
+	zYrLSjGYJV+9uxUi3s6IjxoWsOwjwCsWi6JvHEKTcyjm+0LSCkRggc2VE6wyOTp+Puh3bn
+	qXB6ua7QrkBwNrLja8VVWPwGl/gUXuQ=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-474-T-lfF_p8Mz6RRrGgKYpHOQ-1; Thu, 10 Apr 2025 17:28:53 -0400
+X-MC-Unique: T-lfF_p8Mz6RRrGgKYpHOQ-1
+X-Mimecast-MFC-AGG-ID: T-lfF_p8Mz6RRrGgKYpHOQ_1744320532
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85da07ce5cbso13175339f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:28:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744320532; x=1744925332;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7wUygALbmEVMFAt4v+g0d0hTcs9oRhp7Sgk/twG05FU=;
+        b=gchXPHPCVATkmFIXgpbABVDFjXKJZZs/s/TSCQYvggACNllSady5IsII+8ZWLuYrBH
+         W9sfU9dO1Kec8s+IBKgfQt1vzY7YoRL4U2LA5d2QcFzDtnLxdmqiG0MZc7f69MGoSd6C
+         Yc3qsPb7gojDy3GwFhk+3yTVpsIqXpViJcuFU2vXoHI9XxVCIQvKue5dJRaFH14cUVTw
+         vBGwyUStbFgNWOK08pMmZ6B9ofjJ2zytg8IoctTE9mH02ylzSqURMJ7CgzAyIu7/n3MS
+         W+zTaF/NV1WCv6M8b2gahh6qoM7hXR020iPS6kg/EzBhQFwc2TfGegqhuiGVLSeQmWKx
+         Ucqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJrtUWOZd4O6ytx37hgh5rI+w2JMA9aITk6R+hOD9u+9XgQJ55WklFQt3A3EPfJl0y1/fmO+3nk88aygc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjShDl6RG/RvfOzvw7sqLjcrCB7ApJqVxgro7Z9hU99JlM+OIh
+	BgAbhfXXKt6rDElXQgIUr6osj3T8i3Ld0hlpCiEEoPWV2e0qgST/uU5m9K2y8kdFSV4derYgs5g
+	bAVsrBkJoBo+g0XhLTbiRPArW4OtF4g5u8VJgJqFz2dYK30P2L1Ls2gRupWuVnw==
+X-Gm-Gg: ASbGncso9Z3AW3r2OlaSwL4wXRQ1/UEt7xBiIsiUIV45OKtLzX9UataPcoRZ6wRzXVE
+	iS7A+sWuOkeco05Byj+Bpzg27Lypy1JQs9no8ufjsGKN6zoGd//ONdbVpi2KiDkq20GgXZ5lcZn
+	1EsOHlqlbTEMD6j6sp7XgGiSTdbS6tAJW1SBLwbVZ8aM8LE905JflAtdgZyPtw1rWgSnVWAUF1O
+	IxQ5QIsT5WZJRg0BxA+ZgFA+VtM7BG55UUfqASBn7/NDYwN7g2JLIdbA1j9TCdgEdEynaZLeOgq
+	1f1pmndqpJtSpWI=
+X-Received: by 2002:a05:6602:6019:b0:85e:5cbc:115 with SMTP id ca18e2360f4ac-8617cb5482dmr14195439f.1.1744320532152;
+        Thu, 10 Apr 2025 14:28:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGObbSU7MqLRum1IP35oPdq16S0/HCvuDlUPSjApwT5xtjRxU2hDxipatt8y3sRp60U+ll1fA==
+X-Received: by 2002:a05:6602:6019:b0:85e:5cbc:115 with SMTP id ca18e2360f4ac-8617cb5482dmr14194539f.1.1744320531830;
+        Thu, 10 Apr 2025 14:28:51 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505d1873bsm923375173.48.2025.04.10.14.28.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 14:28:49 -0700 (PDT)
+Date: Thu, 10 Apr 2025 15:28:46 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, David
+ Matlack <dmatlack@google.com>, Like Xu <like.xu.linux@gmail.com>, Yong He
+ <alexyonghe@tencent.com>
+Subject: Re: [PATCH 3/7] irqbypass: Take ownership of producer/consumer
+ token tracking
+Message-ID: <20250410152846.184e174f.alex.williamson@redhat.com>
+In-Reply-To: <20250404211449.1443336-4-seanjc@google.com>
+References: <20250404211449.1443336-1-seanjc@google.com>
+	<20250404211449.1443336-4-seanjc@google.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Linus,
+On Fri,  4 Apr 2025 14:14:45 -0700
+Sean Christopherson <seanjc@google.com> wrote:
+> diff --git a/include/linux/irqbypass.h b/include/linux/irqbypass.h
+> index 9bdb2a781841..379725b9a003 100644
+> --- a/include/linux/irqbypass.h
+> +++ b/include/linux/irqbypass.h
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/list.h>
+>  
+> +struct eventfd_ctx;
+>  struct irq_bypass_consumer;
+>  
+>  /*
+> @@ -18,20 +19,20 @@ struct irq_bypass_consumer;
+>   * The IRQ bypass manager is a simple set of lists and callbacks that allows
+>   * IRQ producers (ex. physical interrupt sources) to be matched to IRQ
+>   * consumers (ex. virtualization hardware that allows IRQ bypass or offload)
+> - * via a shared token (ex. eventfd_ctx).  Producers and consumers register
+> - * independently.  When a token match is found, the optional @stop callback
+> - * will be called for each participant.  The pair will then be connected via
+> - * the @add_* callbacks, and finally the optional @start callback will allow
+> - * any final coordination.  When either participant is unregistered, the
+> - * process is repeated using the @del_* callbacks in place of the @add_*
+> - * callbacks.  Match tokens must be unique per producer/consumer, 1:N pairings
+> - * are not supported.
+> + * via a shared eventfd_ctx).  Producers and consumers register independently.
+> + * When a producer and consumer are paired, i.e. a token match is found, the
+> + * optional @stop callback will be called for each participant.  The pair will
+> + * then be connected via the @add_* callbacks, and finally the optional @start
+> + * callback will allow any final coordination.  When either participant is
+> + * unregistered, the process is repeated using the @del_* callbacks in place of
+> + * the @add_* callbacks.  Match tokens must be unique per producer/consumer,
+> + * 1:N pairings are not supported.
+>   */
+>  
+>  /**
+>   * struct irq_bypass_producer - IRQ bypass producer definition
+>   * @node: IRQ bypass manager private list management
+> - * @token: opaque token to match between producer and consumer (non-NULL)
+> + * @token: IRQ bypass manage private token to match producers and consumers
 
-Please pull the latest x86/urgent Git tree from:
+The "token" terminology seems a little out of place after all is said
+and done in this series.  Should it just be an "index" in anticipation
+of the usage with xarray and changed to an unsigned long?  Or at least
+s/token/eventfd/ and changed to an eventfd_ctx pointer?  Thanks,
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-04-10
+Alex
 
-   # HEAD: 1fac13956e9877483ece9d090a62239cdfe9deb7 x86/ibt: Fix hibernate
-
-Merge note:
-
-  The RSB fix series includes updates that are technically not 
-  regression fixes, but updates to match the code to CPU vendor best 
-  recommended practices, add documentation, etc. Given that we are 
-  still finding bugs in this code I found it prudent to not fork the 
-  code for v6.16 right after -rc1, but have the entire series in v6.15. 
-  If this is too much for -rc2, will rebase and resend.
-
-Miscellaneous fixes:
-
- - Fix CPU topology related regression that limited
-   Xen PV guests to a single CPU
-
- - Fix ancient e820__register_nosave_regions() bugs that
-   were causing problems with kexec's artificial memory
-   maps
-
- - Fix an S4 hibernation crash caused by two missing ENDBR's that
-   were mistakenly removed in a recent commit
-
- - Fix a resctrl serialization bug
-
- - Fix early_printk documentation and comments
-
- - Fix RSB bugs, combined with preparatory updates to better
-   match the code to vendor recommendations.
-
- - Add RSB mitigation document
-
- - Fix/update documentation
-
- - Fix the erratum_1386_microcode[] table to be NULL terminated
-
- Thanks,
-
-	Ingo
-
------------------->
-Andy Shevchenko (1):
-      x86/early_printk: Use 'mmio32' for consistency, fix comments
-
-Borislav Petkov (AMD) (1):
-      Documentation/x86: Zap the subsection letters
-
-Dave Hansen (1):
-      x86/cpu: Avoid running off the end of an AMD erratum table
-
-James Morse (1):
-      x86/resctrl: Fix rdtgroup_mkdir()'s unlocked use of kernfs_node::name
-
-Josh Poimboeuf (6):
-      x86/bugs: Rename entry_ibpb() to write_ibpb()
-      x86/bugs: Use SBPB in write_ibpb() if applicable
-      x86/bugs: Fix RSB clearing in indirect_branch_prediction_barrier()
-      x86/bugs: Don't fill RSB on VMEXIT with eIBRS+retpoline
-      x86/bugs: Don't fill RSB on context switch with eIBRS
-      x86/bugs: Add RSB mitigation document
-
-Myrrh Periwinkle (1):
-      x86/e820: Fix handling of subpage regions when calculating nosave ranges in e820__register_nosave_regions()
-
-Naveen N Rao (AMD) (1):
-      Documentation/x86: Update the naming of CPU features for /proc/cpuinfo
-
-Peter Zijlstra (1):
-      x86/ibt: Fix hibernate
-
-Petr Vaněk (1):
-      x86/acpi: Don't limit CPUs to 1 for Xen PV guests due to disabled ACPI
-
-
- Documentation/admin-guide/hw-vuln/index.rst     |   1 +
- Documentation/admin-guide/hw-vuln/rsb.rst       | 268 ++++++++++++++++++++++++
- Documentation/admin-guide/kernel-parameters.txt |   5 +-
- Documentation/arch/x86/cpuinfo.rst              |  69 +++---
- arch/x86/entry/entry.S                          |   9 +-
- arch/x86/include/asm/nospec-branch.h            |  12 +-
- arch/x86/kernel/acpi/boot.c                     |  11 +
- arch/x86/kernel/cpu/amd.c                       |   1 +
- arch/x86/kernel/cpu/bugs.c                      | 101 +++------
- arch/x86/kernel/cpu/resctrl/rdtgroup.c          |  48 +++--
- arch/x86/kernel/e820.c                          |  17 +-
- arch/x86/kernel/early_printk.c                  |  10 +-
- arch/x86/mm/tlb.c                               |   6 +-
- arch/x86/power/hibernate_asm_64.S               |   4 +-
- 14 files changed, 405 insertions(+), 157 deletions(-)
- create mode 100644 Documentation/admin-guide/hw-vuln/rsb.rst
