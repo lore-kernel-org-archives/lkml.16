@@ -1,119 +1,110 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EB920C486;
-	Thu, 10 Apr 2025 09:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3FD20F070
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276564; cv=none; b=MjSEo9OuqZ/E71taEbxkusB3r10mgZMAoNpkpyl3l2RcRn+O6u25TUhTCKdcqDrrkCvlFJ7CQGxx/Fwd1NMKzPxrrF+SmLhPu8PrZJA1BXI1mgpdXNV7DP342Mm3bH/T06Jqqu1sISReRYBW454LvYZFnVt1A51dhNuVLXo/Pxg=
+	t=1744276608; cv=none; b=tWfOSuD1z/agrVfW1UahC5S0dy9K8uYOXjYuIbuds/DLcPKxUtlAcIcglgsMVx2SEID3IK25TT8cs65LQQhVkaYDtYBToERnFStMUTvNDnwTK9yTNZtJZ7ySsqeYR1LfP7k7HKfjztBxa39ucg7S9Xuk6jFtFJYEcljSxFQl6dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276564; c=relaxed/simple;
-	bh=NuaiFWf/MGmb/slPvCMgGIM4CudTdEL+DN/zBMIEYWY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TFvcuT3X0vWsGhnokBrDYjlgGCzJCd7hMmBfNI0eNoWm06pV/gh+7I5Zilypq+rGo2cXu2L80L0CZTY/MqGVjeUP5PHjY8H51LIPCK42ITbuNVVzFyAjpv12MVRhSrfVi/Ey1ueqo64Stjj7Q1/lSUHcHxGCbDW3NXgBCNC/u00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZYDgT20LXz4f3m7N;
-	Thu, 10 Apr 2025 17:15:33 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 47F631A058E;
-	Thu, 10 Apr 2025 17:15:58 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgB32l5LjPdnfjI5JA--.26910S3;
-	Thu, 10 Apr 2025 17:15:57 +0800 (CST)
-Message-ID: <1131e6ec-9b78-4758-9250-02bde792e6b3@huaweicloud.com>
-Date: Thu, 10 Apr 2025 17:15:55 +0800
+	s=arc-20240116; t=1744276608; c=relaxed/simple;
+	bh=itSqP8ogBAobjCYHP+CFBbneh9aJwPMtMma1ImNEw+8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=an625QLA9ay9J0oW8vZGxB0XVizRYTpXX4oi9kDBCCid3dS2dk3HRLcn0OtizsglpCXDpPhffweOXXlNY8ltaq0TKHTjcA2AXtu/uJbBHlZE9olQbxUUru9+EUgdC6NBdY+DIQpoi6Zd/YhAj7mMEDHaxbvvS5qpNCw3B8NkdyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DL7EBaC5; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DL7EBaC5"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so4807325e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744276605; x=1744881405; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfvJMVFhf1+kAn7tCoC+aB8KULrWlIykltXkyJsg4r8=;
+        b=DL7EBaC5qkUVQcgyCv48Uo45zC7QclPvd+uf6LNgwtPRBOmezx8ek7ej9KTPM4aC91
+         fdXQDcggXpCQnYJT4wtoRnfmFWNb6gl6BV9dc9tK4vSG0x4j//bIDhYiT3W2HyBK+h9v
+         XksFJpUdf4oPIdRLYNB9WUbPurSh0nl8eAUKDAFIlEyARYHR/gpSZDKNE8DUoypJ8txI
+         YvPsxvocDazwe56b5RHpYiAzTi1iuYDpNPgmH1tek+wR1n7MM4GpdtvyeGTmRwPSstz6
+         upKN55JcTLG2he0PLvB01PmAr4JQ9W/+JsqENYHGf9KmnqkmlOtWy5CQyb9A2N/qzWMe
+         jVPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744276605; x=1744881405;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfvJMVFhf1+kAn7tCoC+aB8KULrWlIykltXkyJsg4r8=;
+        b=P0LmMZiwPWQSJGauKNofaiH7VUqjfbOo5ptJnJ0VPzY1cxxJqR5bobdppyhKm6gk05
+         8O7mGigu12TrL/vhHXPt0PYRTIpNesILjHgVmu5i6Jjwcf1s29+HJxq4xqIsNqCmwynB
+         M3pkqSQYTBDjOyffhH3r0M3cuHKcH8pCpeNAK+zoo/uE0a5ZOzYsqUdIcGyARdeLQR8o
+         6hydp2TiewgyqiefNHYomuICfoYFMq0VeAhmMXqsgpk2L7HUlm/Cs3ZeovTObc+o/ELc
+         kEoDKCKjiNgbeQ6qTm0f6usBKIHFe9Z6B8klfSD5WI2D3DUtmIuobgbqzQBdCncNalhf
+         gNHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSGiTuECPGDhnHub8J/C6elAn0ztJnaA1WBqmK1a2uWqqzwWdaTwNvDKmp3YuI7sPeD6LgIrTHZgjfAu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyohSP6tsGcbuS+Fh+1IRPAeq0ehzx9gHs4l76Bvr1/cBsA1+GN
+	pX4pQSOx/xWME8JdLqDXTYsXqMatyw9ZKJ1v6MHNBI5WKBaDSS64nkfI23CVFG53Cw5UEGRBZgo
+	gMO5H5l4SBiqTEw==
+X-Google-Smtp-Source: AGHT+IETeoAaNtvfDFEMNKBYDouZZNCtt3iqFBqsbj3dZ6TE/CPvQOWwMIom6SUQsR7LhOwbohGA98ZZqIG3vlE=
+X-Received: from wmrn9.prod.google.com ([2002:a05:600c:5009:b0:43c:f8ae:4d6c])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4e51:b0:43d:209:21fd with SMTP id 5b1f17b1804b1-43f2d98b578mr24536995e9.30.1744276605380;
+ Thu, 10 Apr 2025 02:16:45 -0700 (PDT)
+Date: Thu, 10 Apr 2025 09:16:43 +0000
+In-Reply-To: <20250409-no-offset-v2-2-dda8e141a909@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH -next v3 01/10] block: introduce
- BLK_FEAT_WRITE_ZEROES_UNMAP to queue limits features
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
- chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, yi.zhang@huawei.com,
- chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250318073545.3518707-1-yi.zhang@huaweicloud.com>
- <20250318073545.3518707-2-yi.zhang@huaweicloud.com>
- <20250409103148.GA4950@lst.de>
- <43a34aa8-3f2f-4d86-be53-8a832be8532f@huaweicloud.com>
- <20250410071559.GA32420@lst.de>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250410071559.GA32420@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB32l5LjPdnfjI5JA--.26910S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr45Jr48uF17tw1fXr13Arb_yoW8ZryDpF
-	W3KFs2yFn3tr4Ikwn2gw10gFyF9wn7AF45GanavryjywnxWFWIgF1IgF10vFyDurn7Wr4Y
-	vF4Uta4xurn0vaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Mime-Version: 1.0
+References: <20250409-no-offset-v2-0-dda8e141a909@gmail.com> <20250409-no-offset-v2-2-dda8e141a909@gmail.com>
+Message-ID: <Z_eMe7y0ixrBrHaz@google.com>
+Subject: Re: [PATCH v2 2/2] rust: workqueue: remove HasWork::OFFSET
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On 2025/4/10 15:15, Christoph Hellwig wrote:
-> On Thu, Apr 10, 2025 at 11:52:17AM +0800, Zhang Yi wrote:
->>
->> Thank you for your review and comments. However, I'm not sure I fully
->> understand your points. Could you please provide more details?
->>
->> AFAIK, the NVMe protocol has the following description in the latest
->> NVM Command Set Specification Figure 82 and Figure 114:
->>
->> ===
->> Deallocate (DEAC): If this bit is set to ‘1’, then the host is
->> requesting that the controller deallocate the specified logical blocks.
->> If this bit is cleared to ‘0’, then the host is not requesting that
->> the controller deallocate the specified logical blocks...
->>
->> DLFEAT:
->> Write Zeroes Deallocation Support (WZDS): If this bit is set to ‘1’,
->> then the controller supports the Deallocate bit in the Write Zeroes
->> command for this namespace...
+On Wed, Apr 09, 2025 at 06:03:22AM -0400, Tamir Duberstein wrote:
+> Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+> the interface of `HasWork` and replacing pointer arithmetic with
+> `container_of!`. Remove the provided implementation of
+> `HasWork::get_work_offset` without replacement; an implementation is
+> already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
+> `HasWork::work_container_of` which was apparently necessary to access
+> `OFFSET` as `OFFSET` no longer exists.
 > 
-> Yes.  The host is requesting, not the controller shall.  It's not
-> guaranteed behavior and the controller might as well actually write
-> zeroes to the media.  That is rather stupid, but still.
-
-IIUC, the DEAC is requested by the host, but the WZDS and DRB bits in
-DLFEAT is returned by the controller(no?). The host will only initiate
-a DEAC request when both WZDS and DRB are satisfied. So I think that
-if the disk controller returns WZDS=1 and DRB=1, the kernel can only
-trust it according to the protocol and then set
-BLK_FEAT_WRITE_ZEROES_UNMAP flag, the kernel can't and also do not
-need to identify those irregular disks.
-
+> A similar API change was discussed on the hrtimer series[1].
 > 
-> Also note that some write zeroes implementations in consumer devices
-> are really slow even when deallocation is requested so that we had
-> to blacklist them.
+> Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org/ [1]
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Tested-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  rust/kernel/workqueue.rs | 45 ++++++++++++---------------------------------
+>  1 file changed, 12 insertions(+), 33 deletions(-)
+> 
+> diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+> index f98bd02b838f..1d640dbdc6ad 100644
+> --- a/rust/kernel/workqueue.rs
+> +++ b/rust/kernel/workqueue.rs
+> @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut bindings::work_struct {
+>  ///
+>  /// # Safety
+>  ///
+> -/// The [`OFFSET`] constant must be the offset of a field in `Self` of type [`Work<T, ID>`]. The
+> -/// methods on this trait must have exactly the behavior that the definitions given below have.
+> +/// The methods on this trait must have exactly the behavior that the definitions given below have.
 
-Yes, indeed. For now, the kernel can only detect through protocol
-specifications, and there seems to be no better way to distinguish
-the specific behavior of the disk. Perhaps we should emphasize that
-this write_zeroes_unmap tag is not equivalent to disk support for
-'fast' write zeros in the DOC.
+This wording probably needs to be rephrased. You got rid of the
+definitions that sentence refers to.
 
-Thanks.
-Yi.
-
+Alice
