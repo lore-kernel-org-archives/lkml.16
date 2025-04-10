@@ -1,79 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1621E1E5206;
-	Thu, 10 Apr 2025 01:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA531BFE00
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744249797; cv=none; b=idg2/jsn6PcsjKV81Jk+ab35GT4fOemyY7ott1FwDjl7BCt2ZGWaOpYdClgG3HUKx+niq2y+y1cTCTaBw0d6FYhB1ygnNRvoMhNRHaNzDPxYDOngx8T8va1whY7zBs9MNOYFfbsLT9eiMVjVxnI4TVO1CEYlm1Pduk6dVT741HA=
+	t=1744249809; cv=none; b=O5R2DOm4C7Gur1kMUCLDMc66f47WKIgr5Y4+Z25dmAbZ29oBaKSDgHM4ZgTxrE54Bt4O2lmmeoF3nquUDVL7bATruNmBn+v3c0eJJc7L/j4MW3I8zlMW55Dnh6JGYC/wsLRgGMcjgfiIouFP0qCqrSMEdKj2KRcmE030e4P/eJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744249797; c=relaxed/simple;
-	bh=28QeQ+g/6s+unKHjdyhHxXCM855jBormeJnVBEvE+sA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ZZ6NBjx3Kc4rhajJ0zkuYJ7HSoAcwmw1UD2qTN8q3pN4VodJ/ruMSgbM/V8R15KO+4yCZv7BRGUwbgdVEVpv2pGqIucAIjDmyTU3bY2ouBX7DJrLU1AL7SFUJxx0b0cAx1isZZ0pZOfk0EZJB8b0yjIDrs3IrM3dZVvmbA82v/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RArMMLnN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744249809; c=relaxed/simple;
+	bh=+tEHy5lttbAc8Ylpd9LWtWPiqQ0eSE9GUg3aIRG8uR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VxhAxAA/kJD1jk1xj83eCW1PF2bSvemwdoH4MfmZYXTm7b/EgcEqgg4MJCQBPppjNQbqBZb0a6wCL2BV56HxAtqDK8n/WWUv4q6cwO7hI6ZRIuESfkNd5YqsGWcGatYbRFYAmynmjZqsm5B0EuwGI5+bYJ1uK3wEjzqdBbD6Myo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jRHpHQ8N; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RArMMLnN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E422C4CEE7;
-	Thu, 10 Apr 2025 01:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744249796;
-	bh=28QeQ+g/6s+unKHjdyhHxXCM855jBormeJnVBEvE+sA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=RArMMLnNtk6NQIr3KqsV0lYvpwon5tXxtY1ghmVZi2FQtm/fNL3FCgD7oVTNSlNkW
-	 NRVjbujWBX/Yqm47GaeulmDfCN5S2hZznI+l3wLsFns1GxRjcj7W+6lhQ0VGT1It5H
-	 eLQBH/9sD86YAB95E22A1kdAK3DkHCurARnT2MPyWIdWlPRwjXo9H07mxy5pH8bdMM
-	 XZXaF00YoAHPlk1lGPdZPska5I/LttpOiqaOAzJ9T4Skbiz5WNIQWbxFzfWcmqvuBR
-	 IfotRH5UmrXRFrsrfCdpwadVGek/QcqeUfzXMhR85w0T/iFVtUP0dR+JYhnLYsDAF7
-	 903dfyTkTPLcA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34AC838111DC;
-	Thu, 10 Apr 2025 01:50:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jRHpHQ8N"
+Date: Wed, 9 Apr 2025 18:49:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744249794;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l5MFaTOZFaoro0+UqXxVA4jEbrcDys049VFW8hr5/UU=;
+	b=jRHpHQ8Nvyqhw228VoAb1Jqlkz69cF7OtyvG+mUI4omFTbebjZeXChIB1IsXdvYvCocOVZ
+	33H8/sGCOVdvl1rnT1HsHsbE/QdcNASkfkYOChaRCIbU4jFZ8sMqGiHJgXKJrQFC0w2PZx
+	2dj5Lx6YuWCiUX56oOWQK94E5RgLnhw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Waiman Long <llong@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: optimize memcg_rstat_updated
+Message-ID: <z2uigo5ku5qihgdbsopodj6rblghjhg2d7q3qv2vjwsjtsar5n@6tlsyphswauq>
+References: <20250409234908.940121-1-shakeel.butt@linux.dev>
+ <2f9d478d-3359-40c8-8607-be906eaeea04@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4] octeontx2-pf: Add error log
- forcn10k_map_unmap_rq_policer()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174424983374.3109521.6947734922803594004.git-patchwork-notify@kernel.org>
-Date: Thu, 10 Apr 2025 01:50:33 +0000
-References: <20250408032602.2909-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250408032602.2909-1-vulab@iscas.ac.cn>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
- hkelam@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f9d478d-3359-40c8-8607-be906eaeea04@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue,  8 Apr 2025 11:26:02 +0800 you wrote:
-> The cn10k_free_matchall_ipolicer() calls the cn10k_map_unmap_rq_policer()
-> for each queue in a for loop without checking for any errors.
+On Wed, Apr 09, 2025 at 09:20:34PM -0400, Waiman Long wrote:
+> On 4/9/25 7:49 PM, Shakeel Butt wrote:
+> > Currently the kernel maintains the stats updates per-memcg which is
+> > needed to implement stats flushing threshold. On the update side, the
+> > update is added to the per-cpu per-memcg update of the given memcg and
+> > all of its ancestors. However when the given memcg has passed the
+> > flushing threshold, all of its ancestors should have passed the
+> > threshold as well. There is no need to traverse up the memcg tree to
+> > maintain the stats updates.
+> > 
+> > Perf profile collected from our fleet shows that memcg_rstat_updated is
+> > one of the most expensive memcg function i.e. a lot of cumulative CPU
+> > is being spent on it. So, even small micro optimizations matter a lot.
+> > 
+> > Signed-off-by: Shakeel Butt<shakeel.butt@linux.dev>
+> > ---
+> >   mm/memcontrol.c | 16 +++++++++-------
+> >   1 file changed, 9 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 421740f1bcdc..ea3e40e589df 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -585,18 +585,20 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val)
+> >   	cgroup_rstat_updated(memcg->css.cgroup, cpu);
+> >   	statc = this_cpu_ptr(memcg->vmstats_percpu);
+> >   	for (; statc; statc = statc->parent) {
+> > +		/*
+> > +		 * If @memcg is already flushable then all its ancestors are
+> > +		 * flushable as well and also there is no need to increase
+> > +		 * stats_updates.
+> > +		 */
+> > +		if (!memcg_vmstats_needs_flush(statc->vmstats))
+> > +			break;
+> > +
 > 
-> Check the return value of the cn10k_map_unmap_rq_policer() function during
-> each loop, and report a warning if the function fails.
+> Do you mean "if (memcg_vmstats_needs_flush(statc->vmstats))"?
 > 
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> 
-> [...]
 
-Here is the summary with links:
-  - [v4] octeontx2-pf: Add error log forcn10k_map_unmap_rq_policer()
-    https://git.kernel.org/netdev/net-next/c/9c056ec6dd16
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Yup you are right, thanks for catching this. I will send a v2.
