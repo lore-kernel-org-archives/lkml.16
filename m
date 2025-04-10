@@ -1,178 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4028D2AD21
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A99136327;
+	Thu, 10 Apr 2025 02:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744250981; cv=none; b=jPxDYm/xoiQC41Bm2XTXheWymlPUhKtjafyO4NBhSMZa6SHecPOZ5/8RAULF+spOxk/d4J1LQQ3FffXhMJzChvm5J+gvZOcLrkr4l+yFhFSecE/XIDbki5qnLwMFP7VeBmsqY4H7ZNj4POe8iw4Npg9IV/944clYY+0Qt36C/8I=
+	t=1744251017; cv=none; b=YTzZMePRfk15z6oap+l6H8qeHcYjak1bqxTzDrgPxCEA3dyOfYMGcZXBvYxw1o6IpGHBIx3j4OHtY1vRxNHxyGeSIKYHNLvm4qoZwvKg1EDxuUnI4HlpS5fG972bbZrTxpBCmsYj6EB8NRceeZnyQ5EwjHTHgDCHXxIQ16fgD0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744250981; c=relaxed/simple;
-	bh=5WAZIPN/EyEP4Yvj8qfVcq+vQ3y8dvMh/Wpf8md2JD8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=MZraJKEKkWKatubz74gv9shCwa6OIpwHUC7qviids7JyMyjdFHdLxkT5Ne1LSBwXQBTHAFI6QdngL7VGvesU3CywfnKFXA87xKRJ9BZAcmoCD8QN6MM0fZl5fyxxMT6uLRNPOrt5zfVJ8TjEea8u8FE/31iRJM1wuVZHJsFTHKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=f/bxq3xo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="f/bxq3xo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75E0BC4CEE2;
-	Thu, 10 Apr 2025 02:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744250979;
-	bh=5WAZIPN/EyEP4Yvj8qfVcq+vQ3y8dvMh/Wpf8md2JD8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f/bxq3xooKH2KD17rgbjqplyz2lCOlegYIHe9RY2N2BGCV7XFuLEzpe3+FfCcX3OQ
-	 xRlzKOGOFCozENPuywXyNF2Ra+MXFezgzsV43XoYUD9+N2mZVRfJQPs4D+7gOEMcC+
-	 9LQbbsX98fjRqRNus5xL5k3zNkrvMqYifdr7WT64=
-Date: Wed, 9 Apr 2025 19:09:38 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: hannes@cmpxchg.org, mhocko@suse.com, yosry.ahmed@linux.dev,
- muchun.song@linux.dev, yuzhao@google.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 2/3] mm: add max swappiness arg to lru_gen for
- anonymous memory only
-Message-Id: <20250409190938.f6befeeb9e86ad72f46503a5@linux-foundation.org>
-In-Reply-To: <b3af3747daefa00177b48f4666780da58177f7c0.1744169302.git.hezhongkun.hzk@bytedance.com>
-References: <cover.1744169302.git.hezhongkun.hzk@bytedance.com>
-	<b3af3747daefa00177b48f4666780da58177f7c0.1744169302.git.hezhongkun.hzk@bytedance.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744251017; c=relaxed/simple;
+	bh=rusP4e8kCFAczgQY3Sdj8q9TkHCZznQjrAV+7N+Q6mc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QwU8C2Jkz1ytGKswz2UNhtQyzBJaI9H37Q2kh8HeBCatna6Ih9EAFY/0baoQaTTPOsGdm6s56VEjPYFZgsZyItgQzDFVPA1YCD2u06Drd3/qJV9cQ6B3SAzsgcMPA+uWyIE4z4TDSKsUQsNevr9iAeF8LLFiDQ33XFVTa/6kOGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [198.18.0.1] (gy-adaptive-ssl-proxy-1-entmail-virt204.gy.ntes [27.18.106.237])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 114dfc3d8;
+	Thu, 10 Apr 2025 09:34:38 +0800 (GMT+08:00)
+Message-ID: <d500b879-a4fe-4f29-a9d0-c29826d21e31@whut.edu.cn>
+Date: Thu, 10 Apr 2025 09:34:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] usb: dwc3: add spacemit dwc3 glue layer driver
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>,
+ "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "spacemit@lists.linux.dev" <spacemit@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+References: <20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn>
+ <20250407-b4-k1-usb3-v3-2-v1-6-bf0bcc41c9ba@whut.edu.cn>
+ <20250409223452.svwckotac4dbze6v@synopsys.com>
+Content-Language: en-US
+From: Ze Huang <huangze@whut.edu.cn>
+In-Reply-To: <20250409223452.svwckotac4dbze6v@synopsys.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGUNPVh9LTkoYTBpKQk4fTlYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VKS01VSUhMWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxPVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a961d55b85703a1kunm114dfc3d8
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ogg6OTo4MTJNDjJKEiIDSwwp
+	LjQwCh5VSlVKTE9PSU9DQ0NOTUNIVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VKS01VSUhMWVdZCAFZQU5KQ0w3Bg++
 
-On Wed,  9 Apr 2025 15:06:19 +0800 Zhongkun He <hezhongkun.hzk@bytedance.com> wrote:
+On 4/10/25 6:34 AM, Thinh Nguyen wrote:
+> On Mon, Apr 07, 2025, Ze Huang wrote:
+>> Add SpacemiT glue logic to support dwc3 HC on K1 SoC. The driver manages
+>> clock, reset and interrupt resource.
+>>
+>> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+>> ---
+>>   drivers/usb/dwc3/Kconfig         |   7 +++
+>>   drivers/usb/dwc3/Makefile        |   1 +
+>>   drivers/usb/dwc3/dwc3-spacemit.c | 127 +++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 135 insertions(+)
+>>
+>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>> index 310d182e10b50b253d7e5a51674806e6ec442a2a..3c30680fa4f83565fc03c6800e867c6ced0fe101 100644
+>> --- a/drivers/usb/dwc3/Kconfig
+>> +++ b/drivers/usb/dwc3/Kconfig
+>> @@ -189,4 +189,11 @@ config USB_DWC3_RTK
+>>   	  or dual-role mode.
+>>   	  Say 'Y' or 'M' if you have such device.
+>>   
+>> +config USB_DWC3_SPACEMIT
+>> +	tristate "Spacemit Platforms"
+> Does this depend on other configs like OF and COMMON_CLK?
 
-> The MGLRU
+Yes, depends on them, will fix Kconfig entries in next version
 
-paging yuzhao?
+>
+>> +	default USB_DWC3
+>> +	help
+>> +	  Support SPACEMIT platforms with DesignWare Core USB3 IP.
+>> +	  Say 'Y' or 'M' here if you have one such device
+>> +
+>>   endif
+>> diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+>> index 124eda2522d9c1f4caab222ec9770d0deaf655fc..61a87765c0c591e0a53c33b5a6544db056166f96 100644
+>> --- a/drivers/usb/dwc3/Makefile
+>> +++ b/drivers/usb/dwc3/Makefile
+>> @@ -56,3 +56,4 @@ obj-$(CONFIG_USB_DWC3_IMX8MP)		+= dwc3-imx8mp.o
+>>   obj-$(CONFIG_USB_DWC3_XILINX)		+= dwc3-xilinx.o
+>>   obj-$(CONFIG_USB_DWC3_OCTEON)		+= dwc3-octeon.o
+>>   obj-$(CONFIG_USB_DWC3_RTK)		+= dwc3-rtk.o
+>> +obj-$(CONFIG_USB_DWC3_SPACEMIT)		+= dwc3-spacemit.o
+...
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int dwc3_spacemit_suspend(struct device *dev)
+>> +{
+>> +	struct dwc3_spacemit *spacemit = dev_get_drvdata(dev);
+>> +
+>> +	clk_disable_unprepare(spacemit->clk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int dwc3_spacemit_resume(struct device *dev)
+>> +{
+>> +	struct dwc3_spacemit *spacemit = dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	ret = clk_prepare_enable(spacemit->clk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct dev_pm_ops dwc3_spacemit_dev_pm_ops = {
+>> +	SET_SYSTEM_SLEEP_PM_OPS(dwc3_spacemit_suspend, dwc3_spacemit_resume)
+>> +};
+>> +#endif /* CONFIG_PM_SLEEP */
+>> +
+> Use DEFINE_SIMPLE_DEV_PM_OPS to remove the CONFIG_PM_SLEEP guards.
 
-> already supports reclaiming only from anonymous memory
-> via the /sys/kernel/debug/lru_gen interface. Now, memory.reclaim
-> also supports the swappiness=max parameter to enable reclaiming
-> solely from anonymous memory. To unify the semantics of proactive
-> reclaiming from anonymous folios, the max parameter is introduced.
-> 
-> Additionally, the use of SWAPPINESS_ANON_ONLY in place of
-> 'MAX_SWAPPINESS + 1' improves code clarity and makes the intention
-> more explicit.
-> 
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2697,8 +2697,11 @@ static bool should_clear_pmd_young(void)
->  		READ_ONCE((lruvec)->lrugen.min_seq[LRU_GEN_FILE]),	\
->  	}
->  
-> +#define max_evictable_type(swappiness)						\
-> +	((swappiness) != SWAPPINESS_ANON_ONLY)
-> +
->  #define evictable_min_seq(min_seq, swappiness)				\
-> -	min((min_seq)[!(swappiness)], (min_seq)[(swappiness) <= MAX_SWAPPINESS])
-> +	min((min_seq)[!(swappiness)], (min_seq)[max_evictable_type(swappiness)])
+thanks
 
-Why oh why did we implement these in cpp?
+>
+>> +static struct platform_driver dwc3_spacemit_driver = {
+>> +	.probe		= dwc3_spacemit_probe,
+>> +	.remove		= dwc3_spacemit_remove,
+>> +	.driver		= {
+>> +		.name	= "spacemit-dwc3",
+>> +		.of_match_table = spacemit_dwc3_match,
+>> +#ifdef CONFIG_PM_SLEEP
+>> +		.pm	= &dwc3_spacemit_dev_pm_ops,
+>> +#endif /* CONFIG_PM_SLEEP */
+>> +	},
+>> +};
+>> +module_platform_driver(dwc3_spacemit_driver);
+>> +
+>> +MODULE_AUTHOR("Wilson <long.wan@spacemit.com>");
+> The author is different than the commiter? Also, is there a last name?
 
->  
-> @@ -3857,7 +3860,7 @@ static bool inc_min_seq(struct lruvec *lruvec, int type, int swappiness)
->  	int hist = lru_hist_from_seq(lrugen->min_seq[type]);
->  	int new_gen, old_gen = lru_gen_from_seq(lrugen->min_seq[type]);
->  
-> -	if (type ? swappiness > MAX_SWAPPINESS : !swappiness)
-> +	if (type ? (swappiness == SWAPPINESS_ANON_ONLY) : !swappiness)
+You're right, I missed Signed-off-by tag for Wilson in commit message
 
-This expression makes my brain bleed.
+>
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_DESCRIPTION("DesignWare USB3 Spacemit Glue Layer");
+>>
+>> -- 
+>> 2.49.0
+>>
+> The logic in this glue driver looks quite simple. Can this platform work
+> as dwc3-of-simple?
 
-	if (type) {
-		if (swappiness == SWAPPINESS_ANON_ONLY) {
-			/*
-			 * Nice comment explaining why we're doing this
-			 */
-			goto done;;
-		}
-	} else {
-		if (!swappiness) {
-			/*
-			 * Nice comment explaining why we're doing this
-			 */
-			goto done;
-		}
-	}
+Yes, indeed simple.
+As Krzysztof mentioned, creating glue nodes is not ideal for DWC USB. I
+would drop the glue driver and use dwc3/core.c as fallback, similar to
+what Rockchip did[1].
 
-or
+[1] 
+https://www.kernel.org/doc/Documentation/devicetree/bindings/usb/rockchip%2Cdwc3.yaml
 
-	if (type && (swappiness == SWAPPINESS_ANON_ONLY)) {
-		/*
-		 * Nice comment explaining why we're doing this
-		 */
-		goto done;
-	}
-
-	if (!type && !swappiness) {
-		/*
-		 * Nice comment explaining why we're doing this
-		 */
-		goto done;
-	}
-
-It's much more verbose, but it has the huge advantage that it creates
-locations where we can add comments which tell readers what's going on.
-Which is pretty important, no?
-	
->  		goto done;
->  
->  	/* prevent cold/hot inversion if the type is evictable */
-> @@ -5523,7 +5526,7 @@ static int run_cmd(char cmd, int memcg_id, int nid, unsigned long seq,
->  
->  	if (swappiness < MIN_SWAPPINESS)
->  		swappiness = get_swappiness(lruvec, sc);
-> -	else if (swappiness > MAX_SWAPPINESS + 1)
-> +	else if (swappiness > SWAPPINESS_ANON_ONLY)
->  		goto done;
->  
->  	switch (cmd) {
-> @@ -5580,7 +5583,7 @@ static ssize_t lru_gen_seq_write(struct file *file, const char __user *src,
->  	while ((cur = strsep(&next, ",;\n"))) {
->  		int n;
->  		int end;
-> -		char cmd;
-> +		char cmd, swap_string[5];
->  		unsigned int memcg_id;
->  		unsigned int nid;
->  		unsigned long seq;
-> @@ -5591,13 +5594,22 @@ static ssize_t lru_gen_seq_write(struct file *file, const char __user *src,
->  		if (!*cur)
->  			continue;
->  
-> -		n = sscanf(cur, "%c %u %u %lu %n %u %n %lu %n", &cmd, &memcg_id, &nid,
-> -			   &seq, &end, &swappiness, &end, &opt, &end);
-> +		n = sscanf(cur, "%c %u %u %lu %n %4s %n %lu %n", &cmd, &memcg_id, &nid,
-> +			   &seq, &end, swap_string, &end, &opt, &end);
-
-Permits userspace to easily overrun swap_string[].  OK, it's root-only,
-but still, why permit this?
-
->  		if (n < 4 || cur[end]) {
->  			err = -EINVAL;
->  			break;
->  		}
->  
-> +		/* set by userspace for anonymous memory only */
-> +		if (!strncmp("max", swap_string, sizeof("max"))) {
-
-Can sscanf() give us a non null-terminated string?
-
-> +			swappiness = SWAPPINESS_ANON_ONLY;
-> +		} else {
-> +			err = kstrtouint(swap_string, 0, &swappiness);
-> +			if (err)
-> +				break;
-> +		}
-> +
->  		err = run_cmd(cmd, memcg_id, nid, seq, &sc, swappiness, opt);
->  		if (err)
->  			break;
+>
+> Thanks,
+> Thinh
 
