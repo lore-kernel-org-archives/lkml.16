@@ -1,105 +1,97 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8CE281351;
-	Thu, 10 Apr 2025 10:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D185A280CCD
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744280637; cv=none; b=ss3CBHt/8uAT6EnECJac1ASis2MSnSUXlhnJdKvdu/lGZW2+Ejjmk3so1ZuKqQenaRgAinDoY7EtlzYubGYzHQitl9qmJg44VgRxqc8pukMOf2UNqbZHntThofAFFzmdPnD98JVXE0BucxJY49Fke4kvdIfgzzbGN+FL3sWaemA=
+	t=1744280678; cv=none; b=D67cutGFKZiyE+PZnNcJPDnYytHdQ0D2Cf1eB4Bzdl9OX2qSTwEEK8pGLvYVau2VpBDMEjs7Gkw1l72MHL3CK3cYvZXBo5yP3pJh+4OzAhJnDa+ZuYvieuKuxOuIl5xpL02Sdv500QylyG8ZOKRg0viPsWDpusFyjlsDAgdEF9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744280637; c=relaxed/simple;
-	bh=lH8sNp8HpBJeRN7YlG0k90bwTE4mkEU6hE3Rl7ug34Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qKm/jS0i10LLyEg4V3e3R1hDsMuf1q8EUUu8Olg3+SVT67sNYsut9bmJlr/8T7Bz71IInWbE9W9MTYkI2t27I9UEzXyfij3uk06oxC1p52rBFY5G4tlonuBgWMRSQ/c4W7br+hBJh9SdVWPdHvz90QWZDwRzYcUfiQUOFogM4Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86dc3482b3dso1723606241.0;
-        Thu, 10 Apr 2025 03:23:54 -0700 (PDT)
+	s=arc-20240116; t=1744280678; c=relaxed/simple;
+	bh=4XYqEvw3pO3aeYAiEFs0J+jvt5iPOecIwEe31S/Ndpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V4AwdvaRI2jWSIu49CD42N9NJAA8zjLM7CqFsEsN2eT81gKaK/oQLCHp67VmSJuFNAqZSoErluD5mqpcNeI7Csh6QmgMXnG7TZU3FLrvMqE+/LYVKh6zMnel2JgFk6f0VK9AG8UA08Ka0wgiABAr0JfUN5uMGh0/zwEkQu6EoCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z0PPNX7o; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z0PPNX7o"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-730517040a9so682236b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:24:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744280676; x=1744885476; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GX68swA9HrxO+eJnfk16Z9K7ND9yYGB3bnUXxmarCAA=;
+        b=Z0PPNX7o9993BtdNkIE1oujzCdBR6E2UFw9tovVN9RzM9QP6EzvuA2jcOFUVOhcx1Y
+         gTP5N7UW+bBbcBw26uY45aldIgyTsgCr3AYeSgAW/mXUUSc/AcyTHYRmTU16oQaBvgVg
+         6zdrDxXc9ohVksYgN01HhKfzoljdUuGDEln2iImsjnMoBreoRlkmak5Mu2hFJaKa1sMQ
+         PUZM3Uy1HgVvxRSKYdPMebiGQngIfkTg5s/xLBd/sNL5ClcMfhU37kmNbkkw+xh3953G
+         geWz1wskxJRZpuUY6AQruUky6iFzkOGueByiWBaVwPt/f5p7mwQ0OylI2Q1wu7xb2u2u
+         n+Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744280632; x=1744885432;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=du50G3lIjNxLx6W3pkF9CbKUDTzcKCdeCv4Naa5/YUs=;
-        b=L2PCkRfuor4x+GVHlN0w1mObi9q2wTwtjfHMn5lM4mU4FZ73uWFzQbIpD95QVuWcgf
-         Pu3lmvX7FpAdTrWebvH54S92LmeoLk7T3i1NoVT/OahkdCK2gOAb82gfGNrTSZQs6reN
-         RFBwsYOpc/vCOiMxk+WQlFxYk+rcUKFT238+d9Ts3S1qm8OCu4zvlyNtLy/tXJo5Cbqo
-         zcycqXEY3I6LhJ/ufU1SG103PaYFL2vdUoh0eOwuf+HQuCULHfS7tRmHsZSXJ5S4ZTZU
-         wR8++DGo4IeHZZzITXNiRlz7zBZw+94eEwJoMNdEo6PEKzLYtIEBLXOOwF4pmFOjPstZ
-         Wl2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU8ucHSV8BOqldm3hX/a7E/cr2slOJu4Dc260g0f0Vr+2YQMs1FN8KYPsNglhrjZf6nqqZFJd6kz8UYxpzu@vger.kernel.org, AJvYcCVP9rYzeBdhdxA2Og2O7TzIg82N64nPM9H9GN6VfP861EKdbfdxfvltXuJkDcvQsOyvHhbmU+4E1nPG@vger.kernel.org, AJvYcCWLRLLkMzc1gYomipsbSbe0w/FBE2O646p7AvgdrW7tPR4bIan2VSbQzV1HoFlb4TBWtkqHg+KkQb0P@vger.kernel.org, AJvYcCWPf2lRUPKq+OBN4LdZVTlvesp3lM0HoJHu/RSFVgr0elMWEuoNG3nKpQIAVaJn2A09rKqo4kbYGNLw/KnB@vger.kernel.org, AJvYcCWVYLKwyfhh9dIAv3YRJAgK1aZhZNU6667sLjtgsW4THQUsyfoLqEaqQi5yjx9wQUAwG9ufw8pLRVwX@vger.kernel.org, AJvYcCWxMRZaff0OHry2uxmvJwp6fyR0sYfNhu6SReQg2jbpT7E7WAYixhT2ViDH2HNn7dA9b3rBGDTQV2VI9EfZ10+N3V8=@vger.kernel.org, AJvYcCX7bx+iAZMssGRJdwkr2pw8jrfcTKPDPqN0YBPzsCAYtfmuxjy66lKPf2/k/hKeKzA3333fc4+TQwfpAw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoUJyImApm+49KfSWLKMxs23biSVvWuOlzBm+OIsDmzNEucjoS
-	eSStcRTf3IulZmzhzIgxV/28+DFSGBsXffZEphr3Pebh6pI4oKSxKrQh2IP2oac=
-X-Gm-Gg: ASbGncvIHo8/jifl2J4NZMNCLFxNcrih+XzohdjZQvvQSRjFxeQFw5ocfR/UpGX0BCq
-	saZaebU3iiWie/bEP492dHA0scYKbqGTJ6w8bbOqjUGwczrEhgxN1MgoeIaFRQdG4glP8sZJTxB
-	lIYciKPUaBCvUYCfUeurE/Z20NX0BBukueaCMn/H5t6LLKQR0KgoGSP2e6iEGahcIl+fEZYYJqf
-	ycUxlS411f9mmZXvftFGa2j9QxB4vH9DFBncVErvhD6CrrNe6+x10ejHXx4wfvoU/3F0Qwb2S9U
-	+3KqY3G15HK2hDCzvOAbHdRc9QwWz8rlun/TuoFdFH+w/t8EzsO6O8lWnOXaq76dSDlCay3G92w
-	sY0dJYDQ=
-X-Google-Smtp-Source: AGHT+IFlmPNBgH/fbxo94LAfY524vLnHQycXUDhBB6glwqW9iCYstTqjhHghkEq5EG0qo/OULlE5TA==
-X-Received: by 2002:a05:6102:4601:b0:4c5:2e31:8818 with SMTP id ada2fe7eead31-4c9d3eac9c3mr843625137.4.1744280632375;
-        Thu, 10 Apr 2025 03:23:52 -0700 (PDT)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-875572b6989sm592393241.32.2025.04.10.03.23.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 03:23:52 -0700 (PDT)
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5240a432462so640467e0c.1;
-        Thu, 10 Apr 2025 03:23:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUCMRmmihY7bYe2KXEN2DtLBZb7K7se1c27EVrf4xVe4ApumzbcT41jMt0qdC8YCN5Hv4e7S+X7w9XmHQ==@vger.kernel.org, AJvYcCURpxtUYbL1DoV8qoJqJ1fJFi/tuOmeaNm6yG1+1Kkf0mb24+lmOvdoAipIojs8cxXFfgJS2GhO3irhqayh@vger.kernel.org, AJvYcCUrUKGqO0DeGPEeAusGggfuyZiUFcMJGHAi4g3RmKrVmzJa4AU00goOuzgHJE/KsDGqF+MG0lzKq73C@vger.kernel.org, AJvYcCV4eIiTk5SB16M7Yb04TdA2Ee/qvK9qCabYcKODskBuqbVpaw1Z88MlizWVYZVnFESQL8haxLd36G6Gqy/Y@vger.kernel.org, AJvYcCW8HCsbA9wTI7e6nab++yuY+6Sj9iQv+pRv87Z1L4lrpzJruNysK6bEVeVr+75M6KjCnIGTLcEfTleD@vger.kernel.org, AJvYcCXeRqPLA6OjvNmZXrByUF0hIfCffE+ulrBXoCPaoMd8dVxRY6rEx51cQmzbJXm3KS1MSg9RS54D9WPG7GlEZ2wf9OM=@vger.kernel.org, AJvYcCXfbos4qdgzSf5hxXRNQpEnPKjDTPKOqzeMKQIWhDmnl8wglOeASndPys7pDvwHWrb9A52ZDSRG9gBC@vger.kernel.org
-X-Received: by 2002:a05:6122:2202:b0:524:2fe0:3898 with SMTP id
- 71dfb90a1353d-527b5ecab7cmr1028303e0c.5.1744280631864; Thu, 10 Apr 2025
- 03:23:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744280676; x=1744885476;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GX68swA9HrxO+eJnfk16Z9K7ND9yYGB3bnUXxmarCAA=;
+        b=SjsAqpwoFaCgVBY9mGrgx3s+/bogwwPRdoEE2jso1qiRFSkmKQ93DBxdq7zCoS+Mxc
+         kosBldXpiWA14sERETOX4DC8v9ixxlrbwG09cg5OPcPc2eF5UNpJ+ukjVUAavyYZ8j5/
+         C4U9y0ZOka3CE+opeMxViezW3r+Suw4AOjHN4XPmKzhMgy6u3Ukiktry3N1WaaBW0899
+         1V1kD8+6pWChtvrLvPqnla8tVoHwJGvDYZ+cX1diwwU2odVa0gCkDspyu8N5eOIX8X15
+         bkEUGqilxPFgLb3AIOXkg4h+SDund/2TwQ8MRZm7XWBB3D1ZXInYxq6v0gBpHt3qM7lH
+         GOqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAht6WSR6ULyB6+Dmn81z9glhXoyYusLI0J/iEfZZ7s8/9uUFLUxfd9SvK2nzJRrWkDMjQH9sM1BGoQvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzpW9My9ZdYpqsp5Ftc5RaoibIEn2gfLmd6u+HWp42kD/DcUjh
+	5N0nV6Bagh9G/bnM4EQGyCX2mOZ//S4afo2n6eBD4z3PfVvt/8Gn4gy0ey04KnY=
+X-Gm-Gg: ASbGncseyPNpRDuATNjeyuvWpHq+jqQoi+kog30BWcALkFvc4sKGNMEmjumUOVCFrau
+	Eqg9VOAXwbZqJI8lQAKWqTPYSBjEnbdZeekmVEzNPBIc8heWaJBiG2xNrbQbGgkB49tyv/LRM9Z
+	lmgSfrylm4i6e3nGOzeIszi4gY8koHj3thAm9KrGU2TqebI/Wc4pDP2s1OcUeu/OfC05BsaHq8+
+	fq+zvdqYkkhMFMWE7T9T4DusdFcT5byRbc941r2gDlks6VlWP/HwMQh6ct8Y9ahIX4arQGXftJP
+	GpUk9Y53iSkuhlard4qBQAleTNfgqdo+dPBetro6pw==
+X-Google-Smtp-Source: AGHT+IG2sLEZsm/PLhGsSjVJrT/g86UCeqGu2+t3DsfzOYJpMkwBlq4ZwTimT+XjrTeI9HudHDhEDg==
+X-Received: by 2002:a05:6a21:329b:b0:1f5:7eb5:72dc with SMTP id adf61e73a8af0-2016944d22cmr3592752637.3.1744280675957;
+        Thu, 10 Apr 2025 03:24:35 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2b256sm2984539b3a.14.2025.04.10.03.24.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 03:24:35 -0700 (PDT)
+Date: Thu, 10 Apr 2025 15:54:33 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH v1] cpufreq: Drop unused cpufreq_get_policy()
+Message-ID: <20250410102433.fro7cwxri2kitwck@vireshk-i7>
+References: <2802770.mvXUDI8C0e@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250326143945.82142-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250326143945.82142-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 12:23:40 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWG5gPs0u-E+Q0ipigU-qXwNLt3jGE3bLP0AiYU4Po-Yg@mail.gmail.com>
-X-Gm-Features: ATxdqUHYP0k90KOlJEk8_KKWCI_v7YKprTDnlrpYy60dvQGy6IKe5uQi4lW1XhI
-Message-ID: <CAMuHMdWG5gPs0u-E+Q0ipigU-qXwNLt3jGE3bLP0AiYU4Po-Yg@mail.gmail.com>
-Subject: Re: [PATCH 07/15] dt-bindings: mmc: renesas,sdhi: Document RZ/V2N support
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2802770.mvXUDI8C0e@rjwysocki.net>
 
-On Wed, 26 Mar 2025 at 15:40, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add SDHI bindings for the Renesas RZ/V2N (a.k.a R9A09G056) SoC. Use
-> `renesas,sdhi-r9a09g057` as a fallback since the SD/MMC block on
-> RZ/V2N is identical to the one on RZ/V2H(P), allowing reuse of the
-> existing driver without modifications.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 10-04-25, 12:20, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> A recent change has introduced a bug into cpufreq_get_policy(), but this
+> function is not used, so it's better to drop it altogether.
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/cpufreq/cpufreq.c |   25 -------------------------
+>  include/linux/cpufreq.h   |    1 -
+>  2 files changed, 26 deletions(-)
 
-JFTR
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+viresh
