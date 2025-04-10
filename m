@@ -1,41 +1,38 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3601EE7DD;
-	Thu, 10 Apr 2025 15:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397951E9B38;
+	Thu, 10 Apr 2025 15:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299614; cv=none; b=JJwdnya1+euOXPje2H8j5h7/ae0WDmemHs0bFJ6yGlJrfF2tTgTpXjeoAWnfMdkNxPgvmsObG/0Gkzh6+xyiN4RWp8koQyY4mPFQK4oVUj8XGUIkQaKw+g8tkKTCftzV/w3j0yFIevlvrqxoSEVF2UXiZ1NzWlBFzjbs+wD2oUw=
+	t=1744299635; cv=none; b=McPuRwZ7A+PqylgXrtqVKv7bCAHJwg7NKWgF8hQbfFK1fyqiZCajZiezJMi3NJJVCBEUWzckSXHo8ewXVa/ogOaqODOHTPtCtG7LwDZQLa9eYL+5X1iYnraXg4KOYeKAqS09mzZi2X6+Y0r1NCWOX0WTiUyIymm9WokFlUCdlUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299614; c=relaxed/simple;
-	bh=/kh71vXyWS1J4QBnTfnSoyZtnqhp5VeJWuGXoLT4hqg=;
+	s=arc-20240116; t=1744299635; c=relaxed/simple;
+	bh=LHD9QFwvKUiXG2YJUaMmShdPpGyFLI06YGbLcTszTrI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XnfJfae6QSuWuvKdLD4Jn9+Y2QV5pouRmogHZfjbcwmah6w/CovJG9Lg7F+Q3FY7t/fxej/BkdWFQxtyq8e9d5KhJbe40VFoNSFtHNqCp0NHUvYd6hXsHhxpNtTevTKuY8snboEt3cqGiYfe571whwyTlH49Amq/3Gtx9jikfqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fDZbgc4g; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:To:Cc; b=WivChigQseFSFvAwDfUf78iV5mrIsdh6rlz8dew4OXHJqCmjIK3fULip0+4nuROCFfB4+U35tm0MwVtGuugNOzai6NRPkupTwffSzkSyoNNZg5KogAin4h/8nXUF2qfa/0++0sFlASzxGcl6r9gsEN7nk9oukI3D8aP4brfgaYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vOB/YXrT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fDZbgc4g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744299610;
-	bh=/kh71vXyWS1J4QBnTfnSoyZtnqhp5VeJWuGXoLT4hqg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fDZbgc4ggGltYh02kVVNfE5HuYL4uHHRU74GRIim79FctgJNotvgMd/+uyf8yw2eK
-	 mKHaxBSP9M/Mg68PQZ6vMPlasw+rv/R5HjzjS/+kXUOQArZSRUWB8nvXw2HzpzwWjZ
-	 ioNyMbaLOxOYRJC10wRVQvl7FEiFXiIudKBMgy/wCEyqa3zavL3E5wex2JNbH1Hepn
-	 bR156Coc7SXu30BLzJdMSuIvlqrZKFUV0uuWDWeinzt+U9vZRxEXZ2jmq1FYyo57FN
-	 jLyf+A5s/AzV21NL5oXNfubYTgd69P5Jaic2QScTtsg4Vgs1vCuL+jIXfGMlJrDRJ6
-	 hvwFFFfp4l4Ew==
-Received: from [192.168.13.180] (unknown [IPv6:2606:6d00:11:e976::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9630B17E03B6;
-	Thu, 10 Apr 2025 17:40:08 +0200 (CEST)
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Date: Thu, 10 Apr 2025 11:39:59 -0400
-Subject: [PATCH v2 4/5] media: vcodec: Implement manual request completion
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vOB/YXrT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AF838C4CEE9;
+	Thu, 10 Apr 2025 15:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744299634;
+	bh=LHD9QFwvKUiXG2YJUaMmShdPpGyFLI06YGbLcTszTrI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=vOB/YXrT5csHe46SsE1d5mK9QmyheLUuzPPSCMnfX4EF72h771+80bpYlG/BjLgL4
+	 ulwgmctj6R0BtQ4Klf6q9qrgrkPJqTzgS6MmskihuSH8qL6i7BJdWj2kU7N9i04S4X
+	 BBNGUv+bqsNCEbt5OmRcZEDc/4lEi9RMJhDKLs9EQF+IF5f57OPmZ6Ej1hOCWgWfjb
+	 CpFcxamNa5TQD/uCcyGqZWIongCpSFOnLO3Xf1j38qOoo8yxY+kjy0hzDy3copIPxO
+	 zC67DOziVSBwio3+0FDpPC7m5XUMVSTk3f7NjsLT9uEssQ0ty63JgovxJVGPaPLKvK
+	 H+aFhJvVht3iA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C52C369A9;
+	Thu, 10 Apr 2025 15:40:34 +0000 (UTC)
+From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
+Date: Thu, 10 Apr 2025 17:39:40 +0200
+Subject: [PATCH v4 1/2] dt-bindings: iio: imu: icm42600: add interrupt
+ naming support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,315 +41,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-4-5b99ec0450e6@collabora.com>
-References: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
-In-Reply-To: <20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin <tiffany.lin@mediatek.com>, 
- Andrew-CT Chen <andrew-ct.chen@mediatek.com>, 
- Yunfei Dong <yunfei.dong@mediatek.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, kernel@collabora.com, 
- linux-media@vger.kernel.org, 
- Sebastian Fricke <sebastian.fricke@collabora.com>, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Message-Id: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-1-19e4e2f8f7eb@tdk.com>
+References: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
+In-Reply-To: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744299633; l=1667;
+ i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
+ bh=VSawZ1o/QxRqL4fWVfjdTFoB12VpEf7tP4qn663WfY4=;
+ b=gUvwd/ULfhOmpGyt3CLCntXqU0MwammUU8dArCBjf2oGClGJdG0UkKE91jcnvQCFuNMA+oEJL
+ g+3L8Ye1gzzCR9FBmWseJTNowQooT6CXGFVVQwKujx36Ze02YmmyqMx
+X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
+ pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
+X-Endpoint-Received: by B4 Relay for
+ jean-baptiste.maneyrol@tdk.com/20240923 with auth_id=218
+X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+Reply-To: jean-baptiste.maneyrol@tdk.com
 
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
+From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 
-Rework how requests are completed in the MediaTek VCodec driver, by
-implementing the new manual request completion feature, which allows to
-keep a request open while allowing to add new bitstream data.
-This is useful in this case, because the hardware has a LAT and a core
-decode work, after the LAT decode the bitstream isn't required anymore
-so the source buffer can be set done and the request stays open until
-the core decode work finishes.
+Add interrupt-names field for specifying interrupt pin configured.
 
-Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
-Co-developed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Chips are supporting up to 2 interrupt pins with configurable interrupt
+sources. Change interrupt to support 1 or 2 entries.
+
+Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 ---
- .../mediatek/vcodec/common/mtk_vcodec_cmn_drv.h    | 13 +++++
- .../mediatek/vcodec/decoder/mtk_vcodec_dec.c       |  4 +-
- .../mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c   | 50 +++++++++++++++++
- .../mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h   | 19 +++++++
- .../vcodec/decoder/mtk_vcodec_dec_stateless.c      | 63 +++++++++++++---------
- 5 files changed, 124 insertions(+), 25 deletions(-)
+ .../devicetree/bindings/iio/imu/invensense,icm42600.yaml    | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_cmn_drv.h b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_cmn_drv.h
-index 6087e27bd604d24e5d37b48de5bb37eab86fc1ab..c5fd37cb60ca0cc5fd09c9243b36fbc716c56454 100644
---- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_cmn_drv.h
-+++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_cmn_drv.h
-@@ -105,6 +105,19 @@ enum mtk_instance_state {
- 	MTK_STATE_ABORT = 4,
- };
+diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+index 7e4492bbd0278a336587dc5ac04da7153453da29..d4d4e5c3d8562523872a737864610c26c8fccd82 100644
+--- a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
++++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+@@ -39,7 +39,16 @@ properties:
+     maxItems: 1
  
-+/**
-+ * enum mtk_request_state - Stages of processing a request
-+ * @MTK_REQUEST_RECEIVED: Hardware prepared for the LAT decode
-+ * @MTK_REQUEST_LAT_DONE: LAT decode finished, the bitstream is not
-+ *		      needed anymore
-+ * @MTK_REQUEST_CORE_DONE: CORE decode finished
-+ */
-+enum mtk_request_state {
-+	MTK_REQUEST_RECEIVED = 0,
-+	MTK_REQUEST_LAT_DONE = 1,
-+	MTK_REQUEST_CORE_DONE = 2,
-+};
+   interrupts:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 2
 +
- enum mtk_fmt_type {
- 	MTK_FMT_DEC = 0,
- 	MTK_FMT_ENC = 1,
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-index 98838217b97d45ed2b5431fdf87c94e0ff79fc57..036ad191a9c3e644fe99b4ce25d6a089292f1e57 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-@@ -889,8 +889,10 @@ void vb2ops_vdec_stop_streaming(struct vb2_queue *q)
- 					src_buf->vb2_buf.req_obj.req;
- 				v4l2_m2m_buf_done(src_buf,
- 						VB2_BUF_STATE_ERROR);
--				if (req)
-+				if (req) {
- 					v4l2_ctrl_request_complete(req, &ctx->ctrl_hdl);
-+					media_request_manual_complete(req);
-+				}
- 			}
- 		}
- 		return;
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c
-index 9247d92d431d8570609423156b989878f7901f1c..c80c1db509eaadd449bfd183c5eb9db0a1fc22bd 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c
-@@ -26,6 +26,56 @@
- #include "mtk_vcodec_dec_pm.h"
- #include "../common/mtk_vcodec_intr.h"
++  interrupt-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      enum:
++        - INT1
++        - INT2
  
-+static const char *state_to_str(enum mtk_request_state state)
-+{
-+	switch (state) {
-+	case MTK_REQUEST_RECEIVED:
-+		return "RECEIVED";
-+	case MTK_REQUEST_LAT_DONE:
-+		return "LAT_DONE";
-+	case MTK_REQUEST_CORE_DONE:
-+		return "CORE_DONE";
-+	default:
-+		return "UNKNOWN";
-+	}
-+}
-+
-+void mtk_request_complete(struct mtk_vcodec_dec_ctx *ctx, enum mtk_request_state state,
-+			  enum vb2_buffer_state buffer_state, struct media_request *src_buf_req)
-+{
-+	struct mtk_request *req = req_to_mtk_req(src_buf_req);
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
-+
-+	mutex_lock(&ctx->lock);
-+
-+	if (req->req_state >= state) {
-+		mutex_unlock(&ctx->lock);
-+		return;
-+	}
-+
-+	switch (req->req_state) {
-+	case MTK_REQUEST_RECEIVED:
-+		v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-+		src_buf = v4l2_m2m_src_buf_remove(ctx->m2m_ctx);
-+		v4l2_m2m_buf_done(src_buf, buffer_state);
-+		if (state == MTK_REQUEST_LAT_DONE)
-+			break;
-+		fallthrough;
-+	case MTK_REQUEST_LAT_DONE:
-+		dst_buf = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx);
-+		v4l2_m2m_buf_done(dst_buf, buffer_state);
-+		media_request_manual_complete(src_buf_req);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	mtk_v4l2_vdec_dbg(3, ctx, "Switch state from %s to %s.\n",
-+			  state_to_str(req->req_state), state_to_str(state));
-+	req->req_state = state;
-+	mutex_unlock(&ctx->lock);
-+}
-+
- static int mtk_vcodec_get_hw_count(struct mtk_vcodec_dec_ctx *ctx, struct mtk_vcodec_dec_dev *dev)
- {
- 	switch (dev->vdec_pdata->hw_arch) {
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-index ac568ed14fa257d25b533b6fd6b3cd341227ecc2..cd61bf46de6918c27ed39ba64162e5f2637f93b2 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-@@ -126,6 +126,17 @@ struct mtk_vcodec_dec_pdata {
- 	bool uses_stateless_api;
- };
- 
-+/**
-+ * struct mtk_request - Media request private data.
-+ *
-+ * @req_state: Request completion state
-+ * @req: Media Request structure
-+ */
-+struct mtk_request {
-+	enum mtk_request_state req_state;
-+	struct media_request req;
-+};
-+
- /**
-  * struct mtk_vcodec_dec_ctx - Context (instance) private data.
-  *
-@@ -317,6 +328,11 @@ static inline struct mtk_vcodec_dec_ctx *ctrl_to_dec_ctx(struct v4l2_ctrl *ctrl)
- 	return container_of(ctrl->handler, struct mtk_vcodec_dec_ctx, ctrl_hdl);
- }
- 
-+static inline struct mtk_request *req_to_mtk_req(struct media_request *req)
-+{
-+	return container_of(req, struct mtk_request, req);
-+}
-+
- /* Wake up context wait_queue */
- static inline void
- wake_up_dec_ctx(struct mtk_vcodec_dec_ctx *ctx, unsigned int reason, unsigned int hw_id)
-@@ -326,6 +342,9 @@ wake_up_dec_ctx(struct mtk_vcodec_dec_ctx *ctx, unsigned int reason, unsigned in
- 	wake_up_interruptible(&ctx->queue[hw_id]);
- }
- 
-+void mtk_request_complete(struct mtk_vcodec_dec_ctx *ctx, enum mtk_request_state state,
-+			  enum vb2_buffer_state buffer_state, struct media_request *src_buf_req);
-+
- #define mtk_vdec_err(ctx, fmt, args...)                               \
- 	mtk_vcodec_err((ctx)->id, (ctx)->dev->plat_dev, fmt, ##args)
- 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-index afa224da0f4165cf5701d6861f1f787c6317bfe4..1b08f95ba04ee137b46d61d866b030857f439429 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-@@ -247,7 +247,6 @@ static const struct v4l2_frmsize_stepwise stepwise_fhd = {
- static void mtk_vdec_stateless_cap_to_disp(struct mtk_vcodec_dec_ctx *ctx, int error,
- 					   struct media_request *src_buf_req)
- {
--	struct vb2_v4l2_buffer *vb2_dst;
- 	enum vb2_buffer_state state;
- 
- 	if (error)
-@@ -255,17 +254,7 @@ static void mtk_vdec_stateless_cap_to_disp(struct mtk_vcodec_dec_ctx *ctx, int e
- 	else
- 		state = VB2_BUF_STATE_DONE;
- 
--	vb2_dst = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx);
--	if (vb2_dst) {
--		v4l2_m2m_buf_done(vb2_dst, state);
--		mtk_v4l2_vdec_dbg(2, ctx, "free frame buffer id:%d to done list",
--				  vb2_dst->vb2_buf.index);
--	} else {
--		mtk_v4l2_vdec_err(ctx, "dst buffer is NULL");
--	}
--
--	if (src_buf_req)
--		v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-+	mtk_request_complete(ctx, MTK_REQUEST_CORE_DONE, state, src_buf_req);
- }
- 
- static struct vdec_fb *vdec_get_cap_buffer(struct mtk_vcodec_dec_ctx *ctx)
-@@ -308,6 +297,7 @@ static void vb2ops_vdec_buf_request_complete(struct vb2_buffer *vb)
- 	struct mtk_vcodec_dec_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
- 
- 	v4l2_ctrl_request_complete(vb->req_obj.req, &ctx->ctrl_hdl);
-+	media_request_manual_complete(vb->req_obj.req);
- }
- 
- static void mtk_vdec_worker(struct work_struct *work)
-@@ -359,11 +349,12 @@ static void mtk_vdec_worker(struct work_struct *work)
- 		mtk_v4l2_vdec_err(ctx, "vb2 buffer media request is NULL");
- 
- 	ret = vdec_if_decode(ctx, bs_src, NULL, &res_chg);
-+
- 	if (ret && ret != -EAGAIN) {
- 		mtk_v4l2_vdec_err(ctx,
--				  "[%d] decode src_buf[%d] sz=0x%zx pts=%llu ret=%d res_chg=%d",
-+				  "[%d] decode src_buf[%d] sz=0x%zx pts=%llu res_chg=%d ret=%d",
- 				  ctx->id, vb2_src->index, bs_src->size,
--				  vb2_src->timestamp, ret, res_chg);
-+				  vb2_src->timestamp, res_chg, ret);
- 		if (ret == -EIO) {
- 			mutex_lock(&ctx->lock);
- 			dec_buf_src->error = true;
-@@ -372,18 +363,15 @@ static void mtk_vdec_worker(struct work_struct *work)
- 	}
- 
- 	state = ret ? VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE;
-+	if (ret != -EAGAIN)
-+		mtk_request_complete(ctx, MTK_REQUEST_LAT_DONE, state, src_buf_req);
-+
- 	if (!IS_VDEC_LAT_ARCH(dev->vdec_pdata->hw_arch) ||
- 	    ctx->current_codec == V4L2_PIX_FMT_VP8_FRAME) {
--		v4l2_m2m_buf_done_and_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx, state);
--		if (src_buf_req)
--			v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
--	} else {
--		if (ret != -EAGAIN) {
--			v4l2_m2m_src_buf_remove(ctx->m2m_ctx);
--			v4l2_m2m_buf_done(vb2_v4l2_src, state);
--		}
--		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
-+		mtk_request_complete(ctx, MTK_REQUEST_CORE_DONE, state, src_buf_req);
- 	}
-+
-+	v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
- }
- 
- static void vb2ops_vdec_stateless_buf_queue(struct vb2_buffer *vb)
-@@ -711,6 +699,22 @@ static int mtk_vcodec_dec_ctrls_setup(struct mtk_vcodec_dec_ctx *ctx)
- 	return 0;
- }
- 
-+static struct media_request *fops_media_request_alloc(struct media_device *mdev)
-+{
-+	struct mtk_request *req;
-+
-+	req = kzalloc(sizeof(*req), GFP_KERNEL);
-+
-+	return &req->req;
-+}
-+
-+static void fops_media_request_free(struct media_request *mreq)
-+{
-+	struct mtk_request *req = req_to_mtk_req(mreq);
-+
-+	kfree(req);
-+}
-+
- static int fops_media_request_validate(struct media_request *mreq)
- {
- 	const unsigned int buffer_cnt = vb2_request_buffer_cnt(mreq);
-@@ -731,9 +735,20 @@ static int fops_media_request_validate(struct media_request *mreq)
- 	return vb2_request_validate(mreq);
- }
- 
-+static void fops_media_request_queue(struct media_request *mreq)
-+{
-+	struct mtk_request *req = req_to_mtk_req(mreq);
-+
-+	media_request_mark_manual_completion(mreq);
-+	req->req_state = MTK_REQUEST_RECEIVED;
-+	v4l2_m2m_request_queue(mreq);
-+}
-+
- const struct media_device_ops mtk_vcodec_media_ops = {
-+	.req_alloc      = fops_media_request_alloc,
-+	.req_free      = fops_media_request_free,
- 	.req_validate	= fops_media_request_validate,
--	.req_queue	= v4l2_m2m_request_queue,
-+	.req_queue	= fops_media_request_queue,
- };
- 
- static void mtk_vcodec_add_formats(unsigned int fourcc,
+   drive-open-drain:
+     type: boolean
+@@ -76,6 +85,7 @@ examples:
+             reg = <0x68>;
+             interrupt-parent = <&gpio2>;
+             interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
++            interrupt-names = "INT1";
+             vdd-supply = <&vdd>;
+             vddio-supply = <&vddio>;
+         };
+@@ -95,6 +105,7 @@ examples:
+             spi-cpol;
+             interrupt-parent = <&gpio1>;
+             interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++            interrupt-names = "INT1";
+             vdd-supply = <&vdd>;
+             vddio-supply = <&vddio>;
+         };
 
 -- 
 2.49.0
+
 
