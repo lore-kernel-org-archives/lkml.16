@@ -1,243 +1,186 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7ED204698;
-	Thu, 10 Apr 2025 11:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898C21D89FD;
+	Thu, 10 Apr 2025 11:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744284444; cv=none; b=qxeke9yWFvcaNp5tDCwahRrk+aYS3ugTeJbMJBzixnruY6kF5nUqKVYVhMADudpg+kJRt41n50KwmjVWBFblan3S7ByaPvJnVCGQFcj+dibyKXaalKRZVqn0wXMcVdBc5lShPV/wlwcSI22Uza13YR6Dx+SsTGoYkpfsBAoAfYE=
+	t=1744284587; cv=none; b=RoCPKguPi3AcTIQlNlpzZ6buzL+ifm92jOJM75Q2rJ7T4n6H8E9Ou1IANVyVbIt/yke547H6UY5eYMmLFClH3lEytsbijU8WnVHnzzq+cYVN/LNJMOT/FFG+wYEtao/MVbHYci4NPocTknxl6vVazOa00wbEHK2WO+qsWdyci6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744284444; c=relaxed/simple;
-	bh=iOeJThSjXIAklXajxtW/y29/5B/VxQB3sVa22C4RCYg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kjJKt0bfU3x2LOeXwzZYqKAjMjvfrmex+dnILfxrDQg+4vl4x0tcXSo3ijidAIS0bwc7/kqpvlw4hFE+xkAazmJOdtL/Htect0bcGuDCt6KzfTu5TRyiRlpOUJVdKZigHl+9lu4D1G4MhAaBZB8NMuzff5qdSz4y427IcJ45rjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQXjg1JA; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744284587; c=relaxed/simple;
+	bh=HZES9pXg4cmaTiSlbNcW6mQ3TVO6SVmHNL0ZJvT71B8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=rQ4aomPXz0KW6OT9nIhZ73fHqpWRe+DNB848J+XLx+e+OGL78VRLPuvGAbwSxznOgqS97GE0O63rBAJVvwkPG0jPJ1wrZJKdfIP29t6hccXZoSejd8LFNk8KwvstMQl2tiIqwVaIoU+1ZvQ2RXE4LI2jMvg8xVaZ4XhQ4cUjz5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c3Dq2l3r; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQXjg1JA"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5fc447b03f2so174370eaf.0;
-        Thu, 10 Apr 2025 04:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744284442; x=1744889242; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4R7kyZbwY0FogE8ujQh6vXsrt4cQhQyP2ou66tXdFPE=;
-        b=JQXjg1JAM/2BMV3xmurYWN8iqKCLoBinxcd++JJZP6YoWRcBPv1mgi22helUbtzHvR
-         mA0B+6buy2u8BTVtvN19zHb0/fb7RUVUIUOH+mrcI9HQr/adPiNiOyM3kLnZRQBW02dZ
-         UYKeMU0o1RogtZG8WCn/iViP/0QVt2g3fV/DXAIwKdcG7FUpqDL60XdBU2UFUgrJI6qv
-         5ngoFR+1g25/2pKRgcQnvUlfQKRldahKdBroYs/AB4eC8YdAau4O4kyQ1PiWwOQMEtEy
-         RgNd1MdFRzxreFQaNnasWjW5GsRoTzT8mYd9Im4NLQwTNibqZFQk5KPTAyo8mdzxQApD
-         Serg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744284442; x=1744889242;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4R7kyZbwY0FogE8ujQh6vXsrt4cQhQyP2ou66tXdFPE=;
-        b=EfkJlNueVBsfqn75f853NwxSdUo1Ram2WpuO0tVpvibc4Y2r6+R/oorto812M95GG6
-         pvOnfCzuQuv9NdWXhR+EjtLVKPOTxf8LS0keBykpQhpbMoN5cJzDntLUmQTk7AU9MYcZ
-         TMjAiDST/gbfnjqx6WVMrWpGNv/LVjNRRQYPNkZ0RJGdIOE3XE8tilz+4IEQPNACfwA+
-         ubAgzgvscckLlaYl6ei2yH0udSZoERWz/oJ2Y8lWJdZqn9nCKqoVeoiBGjs/QSkAyOQU
-         6JRA7zDukEwWuhbPUB9ZEJCqaQTqqgoH3ZOtQPtcY2LKN1bKtkI0ARLHgMImu1lcqjXZ
-         zmsg==
-X-Forwarded-Encrypted: i=1; AJvYcCX40l3uLh2hRr9v8ud1cmiPa68nZhGzL02aivnCVCfUT4BNnyGmEcWYwm2mcg3gNx6zODE=@vger.kernel.org, AJvYcCXwPIL+qaOUFIvSGeDPApwVhJFMsbgNjx3urwj5EJ24ck9zqBbAYEoKsz6NC86eSznGplXTMqK5zltF0Kox@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWnslnaQAh83GlEjcK+PQIyGRTC7T9sEMNHWouM9MwjbLw9Up1
-	w313e46yi6C++n05/HsKp7g64HLAj1xbNZ4ciY57LQJBTHMANCqIY0PnFHidsmoF6ZIOXUVzYoW
-	djQZpotV/n0cmkAasIIbBfc6ptWA=
-X-Gm-Gg: ASbGncvDVr6K4pMQXEojWKv8G9hXvoj0uvVcOvUan0CEt1u7hMpmE/V3JGJGFhOc8uc
-	ry7+bMDMNrS7/7qYyV464dc20lRJhiklu7YTrx13K9UOup0rEWnrdZIH+pLO/4L13qgUvJc2ugg
-	x/+HDYE54sYi5/BG9IGLO1XA==
-X-Google-Smtp-Source: AGHT+IFN9HBVuVjTv+AO8TZYcDtenFvOQqDAD2RAKHjlcxxhkpamDj/iELdpATIlUT5Nl+xNBTranPBbprWDpEt+L7E=
-X-Received: by 2002:a05:6820:220e:b0:603:fada:ac53 with SMTP id
- 006d021491bc7-604659361d5mr999274eaf.2.1744284442124; Thu, 10 Apr 2025
- 04:27:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c3Dq2l3r"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 946C842E7E;
+	Thu, 10 Apr 2025 11:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744284576;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WPYbX6fgpQKH4gxTLPqiuRTln0p2CLo5Xpglajm7yQ4=;
+	b=c3Dq2l3rV3r4VCBO5MdlBSCaimsTsADpHW1jyVn1NurkDOUKRhbehdmhwyZmJmn0wyBOBs
+	BnEeLFYXW9fFdHbyovxfw/W7BJy4zAQujjXSitqCDb7RhQ2eU60RT9Suu4NzTxQbxCgq8g
+	0gWIZs3CeuAra2uQ3m/UPqnLAIrix/S68CqhLJcYvt38/DNP32hWAyRMHqH3wNdFhTtCRJ
+	azb88G7zUS2fmB+F3S2WKsQdMy9W4kvmjDGnCD0tgwr9pdfnGRAnKtk/ggK+16f7dsCT1E
+	aJU9K2zkXzL03y4UllN74cgTARb3lp/Y+GSrklq2fLL801lTg2tgHbdohHYrfg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250410052712.206785-1-yangfeng59949@163.com>
-In-Reply-To: <20250410052712.206785-1-yangfeng59949@163.com>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 10 Apr 2025 19:27:10 +0800
-X-Gm-Features: ATxdqUG5Q_jAuMEYxEvrGgTJqNW0HF_XXUEMjmmG-cQdg63biMTSW8a0TxtCF_s
-Message-ID: <CAEyhmHRZWB-ba_mFhAHQbho9geMHMswiY---dMsGCuE1uDSkwA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] libbpf: Fix event name too long error
-To: Feng Yang <yangfeng59949@163.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 10 Apr 2025 13:29:35 +0200
+Message-Id: <D92X9ZK07SIK.124N9HG8W7QEI@bootlin.com>
+Subject: Re: [PATCH v6 10/12] input: keyboard: Add support for MAX7360
+ keypad
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-10-7a2535876e39@bootlin.com>
+ <chhnkepvlbiv6xvgh5zso526xsp4zk7tgzsqzoqe7b5jmvdyrw@afio6lmx55zv>
+In-Reply-To: <chhnkepvlbiv6xvgh5zso526xsp4zk7tgzsqzoqe7b5jmvdyrw@afio6lmx55zv>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhor
+ hhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Hi Feng,
-
-On Thu, Apr 10, 2025 at 1:30=E2=80=AFPM Feng Yang <yangfeng59949@163.com> w=
-rote:
+On Wed Apr 9, 2025 at 8:40 PM CEST, Dmitry Torokhov wrote:
+> Hi Mathieu,
 >
-> From: Feng Yang <yangfeng@kylinos.cn>
+> On Wed, Apr 09, 2025 at 04:55:57PM +0200, Mathieu Dubois-Briand wrote:
+> ...
+>> +static irqreturn_t max7360_keypad_irq(int irq, void *data)
+>> +{
+>> +	struct max7360_keypad *max7360_keypad =3D data;
+>> +	unsigned int val;
+>> +	unsigned int row, col;
+>> +	unsigned int release;
+>> +	unsigned int code;
+>> +	int ret;
 >
-> If the event name is too long, it will cause an EINVAL error.
->
-> The kernel error path is
-> probes_write
->     trace_parse_run_command
->         create_or_delete_trace_uprobe
->             trace_uprobe_create
->                 trace_probe_create
->                     __trace_uprobe_create
->                         traceprobe_parse_event_name
->                             else if (len >=3D MAX_EVENT_NAME_LEN)
-> Requires less than 64 bytes.
->
-
-Please don't submit patch in a hurry.
-This patch does NOT fix the issue.
-
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> ---
->  tools/lib/bpf/libbpf.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index b2591f5cab65..8e48ba99f06c 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -12227,6 +12227,16 @@ bpf_program__attach_uprobe_multi(const struct bp=
-f_program *prog,
->         return libbpf_err_ptr(err);
->  }
->
-> +static const char *get_last_part(const char *path)
-> +{
-> +       const char *last_slash =3D strrchr(path, '/');
-> +
-> +       if (last_slash !=3D NULL)
-> +               return last_slash + 1;
-> +       else
-> +               return path;
-> +}
-> +
-
-Use basename(3) instead.
-
->  LIBBPF_API struct bpf_link *
->  bpf_program__attach_uprobe_opts(const struct bpf_program *prog, pid_t pi=
-d,
->                                 const char *binary_path, size_t func_offs=
-et,
-> @@ -12241,7 +12251,7 @@ bpf_program__attach_uprobe_opts(const struct bpf_=
-program *prog, pid_t pid,
->         size_t ref_ctr_off;
->         int pfd, err;
->         bool retprobe, legacy;
-> -       const char *func_name;
-> +       const char *func_name, *binary_name;
->
->         if (!OPTS_VALID(opts, bpf_uprobe_opts))
->                 return libbpf_err_ptr(-EINVAL);
-> @@ -12254,6 +12264,7 @@ bpf_program__attach_uprobe_opts(const struct bpf_=
-program *prog, pid_t pid,
->         if (!binary_path)
->                 return libbpf_err_ptr(-EINVAL);
->
-> +       binary_name =3D get_last_part(binary_path);
-
-What if len(binary_name) >=3D MAX_EVENT_NAME_LEN ?
-
->         /* Check if "binary_path" refers to an archive. */
->         archive_sep =3D strstr(binary_path, "!/");
->         if (archive_sep) {
-> @@ -12318,7 +12329,7 @@ bpf_program__attach_uprobe_opts(const struct bpf_=
-program *prog, pid_t pid,
->                         return libbpf_err_ptr(-EINVAL);
->
->                 gen_uprobe_legacy_event_name(probe_name, sizeof(probe_nam=
-e),
-> -                                            binary_path, func_offset);
-> +                                            binary_name, func_offset);
->
->                 legacy_probe =3D strdup(probe_name);
->                 if (!legacy_probe)
-> --
-> 2.43.0
->
+> int error;
 >
 
-FYI, when I mentioned this issue in ([0]), I tested with the following diff=
-:
-  [0]: https://github.com/iovisor/bcc/pull/5271
+Ok using error on all similar cases.
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index b2591f5cab65..4087fc3ae62f 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -11142,10 +11142,10 @@ static void
-gen_kprobe_legacy_event_name(char *buf, size_t buf_sz,
-  static int index =3D 0;
-  int i;
+>> +
+>> +	do {
+>> +		ret =3D regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val=
+);
+>> +		if (ret) {
+>> +			dev_err(&max7360_keypad->input->dev, "Failed to read max7360 FIFO");
+>
+> This will return name pf the input device, whereas logging name of the
+> platform device (representing the hardware device) would be much more
+> interesting. You can either use max7360_keypad->input->dev.parent, or,
+> better yet, add *dev pointer to struct max7360_keypad.
+>
 
-- snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx_%d", getpid(), kfunc_name, offs=
-et,
-+ snprintf(buf, buf_sz, "libbpf_%u_%.32s_0x%zx_%d", getpid(),
-kfunc_name, offset,
-  __sync_fetch_and_add(&index, 1));
+Makes sense, thanks.
 
-- /* sanitize binary_path in the probe name */
-+ /* sanitize kfunc_name in the probe name */
-  for (i =3D 0; buf[i]; i++) {
-  if (!isalnum(buf[i]))
-  buf[i] =3D '_';
-@@ -11270,7 +11270,7 @@ int probe_kern_syscall_wrapper(int token_fd)
+> ...
+>
+>> +static int max7360_keypad_build_keymap(struct max7360_keypad *max7360_k=
+eypad)
+>> +{
+>> +	struct input_dev *input_dev =3D max7360_keypad->input;
+>> +	struct device *dev =3D input_dev->dev.parent->parent;
+>> +	struct matrix_keymap_data keymap_data;
+>> +	const char *propname =3D "linux,keymap";
+>> +	unsigned int max_keys;
+>> +	int size;
+>> +	int ret;
+>> +
+>> +	size =3D device_property_count_u32(dev, propname);
+>> +	if (size <=3D 0) {
+>> +		dev_err(dev, "missing or malformed property %s: %d\n", propname, size=
+);
+>> +		return size < 0 ? size : -EINVAL;
+>> +	}
+>> +
+>> +	max_keys =3D max7360_keypad->cols * max7360_keypad->rows;
+>> +	if (size > max_keys) {
+>> +		dev_err(dev, "%s size overflow (%d vs max %u)\n", propname, size, max=
+_keys);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	u32 *keys __free(kfree) =3D kmalloc_array(size, sizeof(*keys), GFP_KER=
+NEL);
+>> +	if (!keys)
+>> +		return -ENOMEM;
+>> +
+>> +	ret =3D device_property_read_u32_array(dev, propname, keys, size);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to read %s property: %d\n", propname, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	keymap_data.keymap =3D keys;
+>> +	keymap_data.keymap_size =3D size;
+>> +	ret =3D matrix_keypad_build_keymap(&keymap_data, NULL, max7360_keypad-=
+>rows, max7360_keypad->cols,
+>> +					 max7360_keypad->keycodes, max7360_keypad->input);
+>
+> What if it fails? Error handling please.
 
-  return pfd >=3D 0 ? 1 : 0;
-  } else { /* legacy mode */
-- char probe_name[128];
-+ char probe_name[64];
+Yes, forgot to return ret just below. Not adding logs as in most cases
+matrix_keypad_build_keymap() will already print some logs. OK with that?
 
-  gen_kprobe_legacy_event_name(probe_name, sizeof(probe_name), syscall_name=
-, 0);
-  if (add_kprobe_event_legacy(probe_name, false, syscall_name, 0) < 0)
-@@ -11328,7 +11328,7 @@ bpf_program__attach_kprobe_opts(const struct
-bpf_program *prog,
-      func_name, offset,
-      -1 /* pid */, 0 /* ref_ctr_off */);
-  } else {
-- char probe_name[256];
-+ char probe_name[64];
+>
+> Also, it looks like you are repeating what matrix_keypad_build_keymap()
+> is already doing. If you pass NULL as keymap data, won't it do the right
+> thing?
+>
 
-  gen_kprobe_legacy_event_name(probe_name, sizeof(probe_name),
-       func_name, offset);
-@@ -11880,7 +11880,8 @@ static void gen_uprobe_legacy_event_name(char
-*buf, size_t buf_sz,
- {
-  int i;
+No, because matrix_keypad_parse_keymap() is using input_dev->dev.parent
+and this device will not have any associated device tree node. It should
+use input_dev->dev.parent->parent to get correct values.
 
-- snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx", getpid(), binary_path,
-(size_t)offset);
-+ snprintf(buf, buf_sz, "libbpf_%u_%.32s_0x%zx",
-+ getpid(), basename((void *)binary_path), (size_t)offset);
+There is a discussion ongoing about using device_set_of_node_from_dev(),
+so the MFD child device reuse the node of the parent. But I tried to
+avoid using it here, as I was able to come with another solution.
+Discussion is in the thread of the pinctrl driver (patch #3).
 
-  /* sanitize binary_path in the probe name */
-  for (i =3D 0; buf[i]; i++) {
-@@ -12312,7 +12313,7 @@ bpf_program__attach_uprobe_opts(const struct
-bpf_program *prog, pid_t pid,
-  pfd =3D perf_event_open_probe(true /* uprobe */, retprobe, binary_path,
-      func_offset, pid, ref_ctr_off);
-  } else {
-- char probe_name[PATH_MAX + 64];
-+ char probe_name[64];
+Another solution would be to modify matrix_keypad_parse_keymap(),
+allowing to pass a custom device. But again, I tried to avoid doing this
+modification just for my own need.
 
-  if (ref_ctr_off)
-  return libbpf_err_ptr(-EINVAL);
+> ...
+>
+> Thanks.
+
+Ok with all other comments.
+
+Thanks for your review.
+Mathieu
+
 --=20
-2.43.0
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Cheers,
----
-Hengqi
