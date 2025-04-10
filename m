@@ -1,146 +1,92 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E7F2853E1;
-	Thu, 10 Apr 2025 13:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF952857DA
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291238; cv=none; b=PaO8jyv94N++kZhp4xikd5uPjf59ZJXhcTSDr/2sKt9U6DYIUsUlG9t32DXmQen5+mYosFxGhD4dsY7uuudnpwxE1hI2LqcWS7ynq3XhNqVD53xTF4MfTAMxfATVpFO/vSzucOBGEBIdT1oyLdCos171YtYm4waLffjNZqkTi0Y=
+	t=1744291248; cv=none; b=iDwa9EeNE/03K3KTG2NRqPBMkm0sMoN8zTUAkcufBGb+Nyp6p428YsWyqxcu2524m3RtElmB+NQYgiLqWSn+nstDox+DHNU+/4iYB8RhSiU4/OpIrvXduPWjOz3T0LGZAO2k5T0QxvApb1VkUQxyyu48xreMkOs0o5ds6HNNUQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291238; c=relaxed/simple;
-	bh=UtA5gEjIdlbSvKgOUXHBQThchBGfso4/X0OKyeayV/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sDZEHbPJXyn+pH0t7/PIgSbNAkuX5G6EajjB+vrXveXFeWhldPHxM6ZQuCQCOZc7jdC3pIy4wu6DpAw1B8z2kX/1cRmmgGvJXxlK/YgpzL7uqvwyvCiLEXoYAp6GvWR33EGXHheaPQDG+iXMirpCzUyIjOHRfyIiYxQ2BYSvNLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OuKGFnMM; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744291248; c=relaxed/simple;
+	bh=eF3229Ut/7oMgOC0TKNVSpPRDMuApGGwnqq+oOTJ5no=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxPcoKYyXcpPaBN1SUQ9JBtV8vTuj1ltCupwwjm8E/0qADF6RTTgvVMjQY807BQu8WxaEzO3B8lFqqtZ+zmSgiLFMI6rCvXECIVQrGpBmKbtdIzoMricxHMM2iTJHNLVmn5hI5uC1WzInxbCor9j5pA7t3FAlBxRuGGR+W/EMqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=PZcf8lqq; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OuKGFnMM"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53ADKRQo1297586
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 08:20:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744291227;
-	bh=UtA5gEjIdlbSvKgOUXHBQThchBGfso4/X0OKyeayV/w=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=OuKGFnMMx+MGvEHE8CmdC489iJJG7mN1JssoJ3A6Ftsa1C46guZVqrplScEry3sZ+
-	 WV6gHSc4YDhfyhpYR4RMQv1vHqnLs4/PpxH2vWGi+iZ/P6opqIhfbJVofEKKnFdW91
-	 67pce3rXPZgG3jXXfI+1U4MLYMck6OvLWw2VU/WY=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53ADKRAK029560
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 10 Apr 2025 08:20:27 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
- Apr 2025 08:20:26 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 10 Apr 2025 08:20:26 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53ADKMAE056004;
-	Thu, 10 Apr 2025 08:20:23 -0500
-Message-ID: <acd087a1-c10d-43dd-8900-d05591b0c4b0@ti.com>
-Date: Thu, 10 Apr 2025 18:50:22 +0530
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="PZcf8lqq"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f0cfbe2042so8740996d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744291245; x=1744896045; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uvjpkhdO+uAITJ9R+WF0zbYBfmINwYKjsiOVdhMgoeI=;
+        b=PZcf8lqqvrAaY63sOOmDIug7PYxfoffDKqKMQVQY5oEgTOIO0BCAcG3K0RZRqeOQ6c
+         sSuSUgyV2tauswe0jv7/OfAq24zp08/l0zJ7EW1AQIkN7SvIpcs6mHKi+fFCAhacMYcA
+         I4nBImutB5sKbuAkrqF2QHFLMBqwJifzsMf5+U4MHm456Eil0cwv7bEYReSFPQ3FL0Nv
+         N+cjQACbSe72Z/5V0mENkhwKaduIXIsSFfF9qey61jB3/IDMZ5UxJuKuvz8a59e4iN/7
+         fBuERL0bQ/V4hm6ZUYowH8njgXe76JmaH5u6u+TQ9BF+jSN3ZY5wUwXuqlKmAZ6wZhYZ
+         qIiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744291245; x=1744896045;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uvjpkhdO+uAITJ9R+WF0zbYBfmINwYKjsiOVdhMgoeI=;
+        b=BeAbVyENsbYpTi7jNFUqlgmQxfRopP4EORpjRNf9KVa8qhwXgQfakAXeWhmNHmqOx8
+         gvT6a66eqXx1lKY/rpz7mPEsh7/D0RqmxJX7Jo2GC0EzUDw1jPCWTgnYGmHU7GEQ93eV
+         tZDzM8ZveFF6Xw6/qMic2DKoFxHreETODYDzRguebJ9xOw3KMoqSJdmkPm8oHf8LLVxL
+         zi3rv6COtOyeKeE1zUFDWt7JK/dq5gzyFxAoos+kn91ncppHuarhtz+XkTemqU5EQ4sh
+         p4yplQ6A2B6+JnZzFcuH0MNDWzBSnj+RglYxpXuf318/81MXeTfUxcm2ngCE2Ki4aDIc
+         HD8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWeWZqsp8UiNhrfQoxWBGI397MIsWhXaflfu7S6dPylPUgXbpSlGJFbdy9GvWcdt50iqsmd+kQLJ2nflII=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKMJMZ6vlZPNVq2YFHVWHbmMgyKe8ZNfHc9AYBj/9eR5VTaYdr
+	fZzpNQ+sRhTZ6iGd+yd6yIeAOyrCQYd08yjTFqjysR6lYtLTssozA7QE4LReh88=
+X-Gm-Gg: ASbGncv70ZjCNB+AbvQqF6ZUS5ZKvmrZE4gdcPk1qdjtX/DGkPu9BOiQUCvFnW9u9XU
+	If3U7MmXK9wrct6edFLULErkR1xSx6BIeCVfXq9V+dkFNjrl7XVlYITKbnae/q/JFGo3aiP0kfL
+	MyNX92COKKRHmCNNEh2fnSLQGFVBH6STOhQufLA090FiJmJ4YL64q1sSGPuNziQmsUX6REsg5B3
+	J9XvQt3FXw1ZmnmTNGP0IpKRGUVFPGcil1dkN96KxgqpMyE8MfCGlgRV7f4ajci1HwVSXyVYvp3
+	lPrj81vmNfaVHrbJ7mI1AUeFLY7YFzede2rDgvs=
+X-Google-Smtp-Source: AGHT+IF1TEpqq1y88DdCFclWrDEHt9sZ1im+VnXq/99xnonpkDH+Mjh4Wk8ppzfG3wbI3GnFX974wA==
+X-Received: by 2002:a05:6214:2129:b0:6ea:d604:9e4f with SMTP id 6a1803df08f44-6f0e61be51fmr45231716d6.19.1744291244756;
+        Thu, 10 Apr 2025 06:20:44 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0de95f774sm20638926d6.16.2025.04.10.06.20.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 06:20:43 -0700 (PDT)
+Date: Thu, 10 Apr 2025 09:20:39 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Muchun Song <songmuchun@bytedance.com>
+Cc: mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	muchun.song@linux.dev, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] mm: memcontrol: fix swap counter leak from offline cgroup
+Message-ID: <20250410132039.GB102987@cmpxchg.org>
+References: <20250410081812.10073-1-songmuchun@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-j722s: add rng node
-To: Michael Walle <mwalle@kernel.org>, Manorit Chawdhry <m-chawdhry@ti.com>
-CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250313144155.2382316-1-mwalle@kernel.org>
- <837cba5f-f49e-4cbf-9cbe-2b25f7c9d4b8@ti.com>
- <D8UECOJ2NMCU.3ALYIKSODJ479@kernel.org>
- <1ad2d8c2-6a0d-419d-984d-4974adb0e1f0@ti.com>
- <D8V323NBB32P.3P8H103L83HZK@kernel.org>
- <e2a37e72-d9c8-4329-8a5a-f2c9865cdb5d@ti.com>
- <ea82dc29e93d53b659916f2fed10982b@kernel.org>
- <20250409103303.dkrrvp7mdctx32pd@uda0497581-HP>
- <D92X7T33NU3T.VSZM5K7U602S@kernel.org>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <D92X7T33NU3T.VSZM5K7U602S@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410081812.10073-1-songmuchun@bytedance.com>
 
-Hi Michael,
+On Thu, Apr 10, 2025 at 04:18:12PM +0800, Muchun Song wrote:
+> The commit 73f839b6d2ed addressed an issue regarding the swap
+> counter leak that occurred from an offline cgroup. However, the
+> commit 89ce924f0bd4 modified the parameter from @swap_memcg to
+> @memcg (presumably this alteration was introduced while resolving
+> conflicts). Fix this problem by reverting this minor change.
+> 
+> Fixes: 89ce924f0bd4 ("mm: memcontrol: move memsw charge callbacks to v1")
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 
-On 4/10/2025 4:56 PM, Michael Walle wrote:
-> Hi Manorit,
->
->>>>>>>>> --- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
->>>>>>>>> [..]
->>>>>>>> For completeness , this is ok to add this node but
->>>>>>>> should be kept disabled
->>>>>>> Shouldn't it be "reserved" then, see [1].
->>>>>> yes, should be reserved.
->>>>>>
->>>>>> With marking status as reserved.
->>>>>>
->>>>>> Please use Reviewed-by: Udit Kumar <u-kumar1@ti.com>
->>>>> Thanks.
->>>>>
->>>>>>>> similar to
->>>>>>>>
->>>>>>>> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi#L662
->>>>>>> j784s4, j721e and j721s2 have them enabled. What is the rule here?
->>>>>> J784s4, j721e and j721s2 SOCs has two TRNG blocks,
->>>>>>
->>>>>> example for j721e, one is used by kernel [0] and another by
->>>>>> optee [1].
->>>>>>
->>>>>>
->>>>>>> You also disable the hwrng in optee in your evm according to [2]:
->>>>>>> CFG_WITH_SOFTWARE_PRNG=y
->>>>>> We are planning to use this hardware block by secure firmware.
->>>>>>
->>>>>> Therefore request not to use by optee as well
->>>>> How will you be able to access the RNG from linux and u-boot? I'm
->>>>> asking because I'll need it in u-boot for the lwip stack and the
->>>>> HTTPS protocol.
->>>> For now,  If you need TRNG then I can suggest to use optee TRNG (ie
->>>> build
->>>> optee with HW TRNG).
->>> I'll be using an uboot TRNG driver. But how will that work in
->>> the future if the RNG is used by the secure firmware?
->> Wondering if this would be of interest to you [0]. I think since this
->> device only has one TRNG, there has to be a master around and we can
->> mitigate that from OP-TEE as of now, incase anything changes in future
->> then the communication channel between OP-TEE and the secure firmware
->> can be established but currently it's still at work. I think the best
->> way to go forward is to get the numbers from OP-TEE atm IMHO.
-> I saw the optee rng. But as of now, the instructions are to use a
-> software PRNG for optee. Thus, if someone compiles optee by
-> following the instructions, it's unlikely to work.
->
-> Would TI willing to agree to change the building docs and enable the
-> TRNG in optee and then work on moving the TRNG into the secure
-> firmware and build a channel between optee and that firmware? Right
-> now, the TRNG seems pretty useless as we cannot use it neither from
-> u-boot or linux (and being future proof).
+Ah, those patches got reordered because yours was a fix and mine a
+cleanup. Good catch.
 
-Thanks for note,
-
-I agree to update doc two times
-
-1) with current state ie use optee based trng
-
-2) When fw based trng is available,
-
-
->
-> -michael
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
