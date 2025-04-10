@@ -1,332 +1,126 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AEA1EB1AB
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E49189F5C;
+	Thu, 10 Apr 2025 16:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744301187; cv=none; b=QtN0xeSnWkByu1ZIIajZ79rUbUiSiVJX30y4Y0j6sObVqQsLrvAw8CcrdXZteLaE744c3QXirfk/nuZ9O4QomzuOg6M+j4HNs6VxdkKyC9D2Mfs3y2n/IimOWKjjcrtssj9KqogzmL/PCUUXE2s1Qh6/T1UK9pda+eFqZ32P8g8=
+	t=1744301244; cv=none; b=rTsfQ1OTP+AxGIkXGcLtIr3rFMwkEnbYorAVYJMlvYUlXg9kpuTsMePtoNzAl86YdtuufSq/+QB7P2rx3vWh5Yg3c9Uvhsuummvo5LEooAX8YJnqoQ28nhg8U0HIrMwd/4Ib7CriEPe4i4F48bcjQBzU7b0eZG31zdCtCl3CxuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744301187; c=relaxed/simple;
-	bh=Z/+pIx183ZqhC6dbLA2bEzx8LGs6zCrtEsOL1W2vNFY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XsxbErtqTI/aX+O65wa4r4GhBkZOIUuPJorm29y2NL2DGbN19Q2AVnpO7yZCKIM2McbYO6/p56JaBmBwBWcS8Zig8Wyg9tTuxMKKntzfBZcveXZwOthkHRAKLfGOBA7P3J+Du7MPUgJ3b11DxigN6d7mm6HXp6xbw72TL4B19rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kv6hALmQ; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744301244; c=relaxed/simple;
+	bh=vKTeQFFCmt46JdP7DyCiIVywztk+IaK0aYIzzD8T+Jo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GDJkt3IKZxi5IvjrUHe2M+2YSLJWQS6H8/vuswbVkUbi1/IIIMLqbdlaGS56yIUV9hHR3cwm/Vm0wC7k4YlPN6GAvbLsR3K+yGHaDdQz2oxiS/QljdgIfmROF5mP1H3zFFKF5JEU7MrcfYPTx30essFAn4sZekS74fbyh32eEcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iMPR7vgG; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kv6hALmQ"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso536555f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744301183; x=1744905983; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uNANuCdKbQEweCi3G2Fd19BgtgZsZ5dY4zsAI5oU5dU=;
-        b=kv6hALmQxCX7EFJDN0mG5xSNkeiDKHunqCgdTk6DgCosMSe4B/S56SkQab7q5HbKQ5
-         lt0abLvahoMtgSDxxjmfvSsj/F1/boTDZTYgnO5kNIwbg4fgv9eR/0x2MREhXJg/M6sS
-         xvseAf0PeUJxxFEInbRVoOB5dztlDAnLk9ejmnLD86xoJeO2VQyNCwdg/XajCIJn/NIY
-         NwlUUo/C6g/QEsZ/FgrbHkLwFzlyZ0OrSUh06tON/ESdN6C3LfLcTXGkkbAWZB6azf8I
-         UMksSjWtsGhi2rh5fh4QgdNAnTCuXQoawIMPViH5Jgy0nqsP+UK2KpVtuF626iD4tjbw
-         s/5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744301183; x=1744905983;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uNANuCdKbQEweCi3G2Fd19BgtgZsZ5dY4zsAI5oU5dU=;
-        b=uwqlytUYfvjf20cAvIoFz8HuXORc6RV5FVZXOJk+zAXjpRQ0zu/WifMsSw1/JlgThW
-         klwtmQLI5rcjZ1Rby+bBMfVg/aT1VCq6Aa9AwpiTzf15kXsnpWTCe0SDXYwx7GHSlib8
-         TPBIwCGfrRl6uBPnqusM5+vX04b4UZxbGAznmXhli7aLJ4joktRIA2bp+UWPDO8maukd
-         a3e/6MsuTy4VKzZrlhEHE/QSgcrFmaVSIsHM4nB+CmXEp0gRNzQIYIXXmuAkNmsB7W+A
-         Jrw+5yc6unLbw/efPFl2pnxhmeQX4wIsm+NytVid3k1jkwiIR5D2YLfPcE3+cO/TLUnx
-         jsOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi3u2jG6/uVF0xfDalKy52C++KjQSdFX76N9eLSYQpABJCAG6QRaox5WkYcmB5Dz0sxpkcapsTJuTPzWo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywug+Y0OHHp7HTHu0vSnGMgwT5V7W2XM3x+v9OD34cOGWcSltNB
-	764lONJzYRo8uVsY7TV8hX5sxVclM/JCh6KCe/BSmVOdrv5vaxgp049rzD5W7Hg=
-X-Gm-Gg: ASbGnctgKflVGU1gZnCtHUCQh5H7G2ZhU9TnlXMHrRqOFqfDi1CBziXwxtOyjz42X76
-	t/0tECwXJdGCGwTvb0YdykDTRDTXaefcNEZSkhiVwGiWagAO7WDxcrWxZJtaHCkhyAsbPt676RI
-	JYR08Q9SJ0xD4FcCxPELz1gsTn9huO/e5gxG59+kP6ckVVPGs/94Z5Lk7t5qZqEpzkdQz0QBJSr
-	uPkgbPFVsMJ0lfVEICg319Vi2xYZTiu6V3gkr9uy69u3Ztr240QynuPwFlrtUaKqLwyvHBmQq4s
-	Pf99ymILINxkHTMKqVbKMVoA80bJj9ebizBkTktdF+3aHkagSD8ocJWYzp7iDxEYy9iwhiELID5
-	A30kPxQ==
-X-Google-Smtp-Source: AGHT+IFEQAlBtsd3c3WM20Ox494H4GnJiH3quGOuq3BsVzf5gTiqvKwfAHkZTbHznDN+fyFizN/S6A==
-X-Received: by 2002:a05:6000:4313:b0:391:3207:2e6f with SMTP id ffacd0b85a97d-39d8fd8c3b9mr3053897f8f.42.1744301183470;
-        Thu, 10 Apr 2025 09:06:23 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075a593sm59722495e9.25.2025.04.10.09.06.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 09:06:22 -0700 (PDT)
-Message-ID: <e6dca8e2-d550-4819-9833-ecbbd1a8f376@linaro.org>
-Date: Thu, 10 Apr 2025 17:06:21 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iMPR7vgG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744301243; x=1775837243;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vKTeQFFCmt46JdP7DyCiIVywztk+IaK0aYIzzD8T+Jo=;
+  b=iMPR7vgGHmnvT/E+2eypgXdahpO/smz7LhCF6ghXnxbQyEO4WFRU7u4d
+   9vNCxetzNYi7IMQN1HYttYyw1fuIIe8UR1xSOYZ0bOOjYf19T4VM17IZi
+   BlBMkUhqG9t8AI3utO4NuCQloK2+Ei/VVohzq7bUM00YL9RnqjfY/2n10
+   SAy/Wg2nAaoQ7/PWrIhWsrjeOzfFsJVZpPDBMPrl4Xu5cmjovlg1PQG7/
+   s0bEkN8pDwxMhD9fm3d0SN20glZuvYWB4bH1epju2Lmpzj3yKHdXBdaP/
+   lTBXHpfdux+OEfjoE31ynxQ08MYs7Q/e4uEClyU+BZ4u6XQOmgYgs8rIA
+   g==;
+X-CSE-ConnectionGUID: 9tqa/V1TQ9imIIMe7DvoYA==
+X-CSE-MsgGUID: GvQq0lM0Rgye050lXhAHBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="68321257"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="68321257"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 09:07:22 -0700
+X-CSE-ConnectionGUID: G2NMB3yxTr6Jlw4dDbGdvQ==
+X-CSE-MsgGUID: hjUqUviBT8C0/8Ovewh4ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="129286470"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 09:07:15 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 349EB11F74E;
+	Thu, 10 Apr 2025 19:07:12 +0300 (EEST)
+Date: Thu, 10 Apr 2025 16:07:12 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, Nuno Sa <nuno.sa@analog.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Guillaume Stols <gstols@baylibre.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Matteo Martelli <matteomartelli3@gmail.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v10 2/8] property: Add functions to iterate named child
+Message-ID: <Z_fssEg3QZXyaTzx@kekkonen.localdomain>
+References: <cover.1742560649.git.mazziesaccount@gmail.com>
+ <2767173b7b18e974c0bac244688214bd3863ff06.1742560649.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/6] media: platform: qcom/iris: add sm8650 support
-To: neil.armstrong@linaro.org, Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
- <20250409-topic-sm8x50-iris-v10-v4-6-40e411594285@linaro.org>
- <36e25d6e-36de-fec6-e54d-0683503c7a09@quicinc.com>
- <1550c870-188e-4b41-b17c-2009cda41ffc@linaro.org>
- <8cade183-72ac-eac1-1a57-a9db37657fca@quicinc.com>
- <a51e2e8a-bd7b-7d30-8cd6-9438b053ea2c@quicinc.com>
- <fb5cfe3a-36bf-4722-be7a-20e7f0c803bd@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <fb5cfe3a-36bf-4722-be7a-20e7f0c803bd@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2767173b7b18e974c0bac244688214bd3863ff06.1742560649.git.mazziesaccount@gmail.com>
 
-On 10/04/2025 16:40, neil.armstrong@linaro.org wrote:
-> On 10/04/2025 15:07, Dikshita Agarwal wrote:
->>
->>
->> On 4/10/2025 2:43 PM, Vikash Garodia wrote:
->>>
->>> On 4/10/2025 2:31 PM, Neil Armstrong wrote:
->>>> On 09/04/2025 18:57, Vikash Garodia wrote:
->>>>> Hi Neil,
->>>>>
->>>>> On 4/9/2025 8:08 PM, Neil Armstrong wrote:
->>>>>> Add support for the SM8650 platform by re-using the SM8550
->>>>>> definitions and using the vpu33 ops.
->>>>>>
->>>>>> The SM8650/vpu33 requires more reset lines, but the H.264
->>>>>> decoder capabilities are identical.
->>>>>>
->>>>>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
->>>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>>>> ---
->>>>>>    .../platform/qcom/iris/iris_platform_common.h      |  1 +
->>>>>>    .../platform/qcom/iris/iris_platform_sm8550.c      | 64 +++++++ 
->>>>>> +++++++++++++++
->>>>>>    drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
->>>>>>    3 files changed, 69 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>>>> b/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>>>> index
->>>>>> fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
->>>>>> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
->>>>>> @@ -35,6 +35,7 @@ enum pipe_type {
->>>>>>      extern struct iris_platform_data sm8250_data;
->>>>>>    extern struct iris_platform_data sm8550_data;
->>>>>> +extern struct iris_platform_data sm8650_data;
->>>>>>      enum platform_clk_type {
->>>>>>        IRIS_AXI_CLK,
->>>>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>>>> b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>>>> index
->>>>>> 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
->>>>>> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->>>>>> @@ -144,6 +144,10 @@ static const struct icc_info 
->>>>>> sm8550_icc_table[] = {
->>>>>>      static const char * const sm8550_clk_reset_table[] = { "bus" };
->>>>>>    +static const char * const sm8650_clk_reset_table[] = { "bus", 
->>>>>> "core" };
->>>>>> +
->>>>>> +static const char * const sm8650_controller_reset_table[] = 
->>>>>> { "xo" };
->>>>>> +
->>>>>>    static const struct bw_info sm8550_bw_table_dec[] = {
->>>>>>        { ((4096 * 2160) / 256) * 60, 1608000 },
->>>>>>        { ((4096 * 2160) / 256) * 30,  826000 },
->>>>>> @@ -264,3 +268,63 @@ struct iris_platform_data sm8550_data = {
->>>>>>        .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
->>>>>>        .dec_op_int_buf_tbl_size = 
->>>>>> ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
->>>>>>    };
->>>>>> +
->>>>>> +/*
->>>>>> + * Shares most of SM8550 data except:
->>>>>> + * - vpu_ops to iris_vpu33_ops
->>>>>> + * - clk_rst_tbl to sm8650_clk_reset_table
->>>>>> + * - controller_rst_tbl to sm8650_controller_reset_table
->>>>>> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
->>>>>> + */
->>>>>> +struct iris_platform_data sm8650_data = {
->>>>>> +    .get_instance = iris_hfi_gen2_get_instance,
->>>>>> +    .init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
->>>>>> +    .init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
->>>>>> +    .vpu_ops = &iris_vpu33_ops,
->>>>>> +    .set_preset_registers = iris_set_sm8550_preset_registers,
->>>>>> +    .icc_tbl = sm8550_icc_table,
->>>>>> +    .icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
->>>>>> +    .clk_rst_tbl = sm8650_clk_reset_table,
->>>>>> +    .clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
->>>>>> +    .controller_rst_tbl = sm8650_controller_reset_table,
->>>>>> +    .controller_rst_tbl_size = 
->>>>>> ARRAY_SIZE(sm8650_controller_reset_table),
->>>>>> +    .bw_tbl_dec = sm8550_bw_table_dec,
->>>>>> +    .bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
->>>>>> +    .pmdomain_tbl = sm8550_pmdomain_table,
->>>>>> +    .pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
->>>>>> +    .opp_pd_tbl = sm8550_opp_pd_table,
->>>>>> +    .opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
->>>>>> +    .clk_tbl = sm8550_clk_table,
->>>>>> +    .clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
->>>>>> +    /* Upper bound of DMA address range */
->>>>>> +    .dma_mask = 0xe0000000 - 1,
->>>>>> +    .fwname = "qcom/vpu/vpu33_p4.mbn",
->>>>>> +    .pas_id = IRIS_PAS_ID,
->>>>>> +    .inst_caps = &platform_inst_cap_sm8550,
->>>>>> +    .inst_fw_caps = inst_fw_cap_sm8550,
->>>>>> +    .inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
->>>>>> +    .tz_cp_config_data = &tz_cp_config_sm8550,
->>>>>> +    .core_arch = VIDEO_ARCH_LX,
->>>>>> +    .hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
->>>>>> +    .ubwc_config = &ubwc_config_sm8550,
->>>>>> +    .num_vpp_pipe = 4,
->>>>>> +    .max_session_count = 16,
->>>>>> +    .max_core_mbpf = ((8192 * 4352) / 256) * 2,
->>>>>> +    .input_config_params =
->>>>>> +        sm8550_vdec_input_config_params,
->>>>>> +    .input_config_params_size =
->>>>>> +        ARRAY_SIZE(sm8550_vdec_input_config_params),
->>>>>> +    .output_config_params =
->>>>>> +        sm8550_vdec_output_config_params,
->>>>>> +    .output_config_params_size =
->>>>>> +        ARRAY_SIZE(sm8550_vdec_output_config_params),
->>>>>> +    .dec_input_prop = sm8550_vdec_subscribe_input_properties,
->>>>>> +    .dec_input_prop_size = 
->>>>>> ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
->>>>>> +    .dec_output_prop = sm8550_vdec_subscribe_output_properties,
->>>>>> +    .dec_output_prop_size =
->>>>>> ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
->>>>>> +
->>>>>> +    .dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
->>>>>> +    .dec_ip_int_buf_tbl_size = 
->>>>>> ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
->>>>>> +    .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
->>>>>> +    .dec_op_int_buf_tbl_size = 
->>>>>> ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
->>>>>> +};
->>>>> While i was extending the data for QCS8300 (one another iris-v3 
->>>>> variant), i
->>>>> realize that this file iris_platform_sm8550.c is getting dumped 
->>>>> with all SOC
->>>>> platform data. It would be a good idea at this point to split it 
->>>>> into something
->>>>> like this
->>>>> 1. Introduce SOC specific c file and move the respective SOC 
->>>>> platform data to
->>>>> it, for ex, in this case sm8650_data
->>>>> 2. Move the common structs from iris_platform_sm8550.c to
->>>>> iris_platform_common.h. This way more SOCs getting added in future, 
->>>>> can include
->>>>> the common header to reuse them, otherwise it would end up using 
->>>>> 8550.c for all
->>>>> future SOC.
->>>>>
->>>>> Share your comments if you have any better approach to manage/re- 
->>>>> use these
->>>>> platform data considering more SOCs getting added.
->>>>
->>>> Right, yes the architecture is fine, but I don't feel 
->>>> iris_platform_common is
->>>> the right
->>>> place, perhaps we could introduce a platform_catalog.c where we 
->>>> could place all
->>>> the common
->>>> platform data and reuse them from the platform_<soc>.c files ?
->>> Common structs would certainly need to be part of a header which can be
->>> included. Where do you plan to keep common struct to be used across 
->>> SOC specific
->>> file in your approach ?
->>>>
->>>> I can design prototype on top of this patchset as an RFC.
->>> I was thinking that the changes are not that big, and can be done in 
->>> existing
->>> series though.
->>>
->> For now, I think you can introduce a platform_sm8650.c as part of this
->> series and use the common structure from platform_sm8550.c.
->> Shouldn't be a big change.
+On Mon, Mar 24, 2025 at 09:12:50AM +0200, Matti Vaittinen wrote:
+> There are a few use-cases where child nodes with a specific name need to
+> be parsed. Code like:
 > 
-> I tried but I don't how to solve this, you need a build-time ARRAY_SIZE for
-> the arrays, so they need to be in the same .c file to allow a build-time
-> evaluation of ARRAY_SIZE. If he common tables are moved into a header
-> they will be duplicated into both platform_sm8650 & platform_sm8550 objects
-> which is not what we want.
+> fwnode_for_each_child_node()
+> 	if (fwnode_name_eq())
+> 		...
 > 
-> The solution would be to write all the platform tables & iris_platform_data
-> into headers, with common headers, then include those into a 
-> platform_catalog.c
-> like is done for the drm/msm/dpu1 catalog.
+> can be found from a various drivers/subsystems. Adding a macro for this
+> can simplify things a bit.
 > 
-> Neil
+> In a few cases the data from the found nodes is later added to an array,
+> which is allocated based on the number of found nodes. One example of
+> such use is the IIO subsystem's ADC channel nodes, where the relevant
+> nodes are named as channel[@N].
 > 
->>
->> Later you can post a separate patch series to add platform_catalog.c and
->> have common struct placed there which can be used across different SOC
->> platform files.
->>
->> or other way is,
->> Post a patch series to introduce platform_catalog.c with common struct 
->> and
->> then rebase your 8650 series on top of it.
->>
->> Thanks,
->> Dikshita
->>> Thanks,
->>> Vikash
->>>>
->>>> Neil
->>>>
->>>>>
->>>>> Regards,
->>>>> Vikash
->>>>>
->>>>>> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c
->>>>>> b/drivers/media/platform/qcom/iris/iris_probe.c
->>>>>> index
->>>>>> 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
->>>>>> --- a/drivers/media/platform/qcom/iris/iris_probe.c
->>>>>> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
->>>>>> @@ -345,6 +345,10 @@ static const struct of_device_id 
->>>>>> iris_dt_match[] = {
->>>>>>                .data = &sm8250_data,
->>>>>>            },
->>>>>>    #endif
->>>>>> +    {
->>>>>> +        .compatible = "qcom,sm8650-iris",
->>>>>> +        .data = &sm8650_data,
->>>>>> +    },
->>>>>>        { },
->>>>>>    };
->>>>>>    MODULE_DEVICE_TABLE(of, iris_dt_match);
->>>>>>
->>>>
+> Add helpers for iterating and counting device's sub-nodes with certain
+> name instead of open-coding this in every user.
 > 
+> Suggested-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 
-Eh as I read the suggestion about putting the structs - instantiating 
-the structs in the header, I wondered if that would link but anyway.
+Kiitos!
 
-One way to solve this without going the dpu1 route right now is to 
-rename the platform files
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-iris_platform_sm8250.c -> iris_platform_common_hfi_gen1.c
-iris_platform_sm8550.c -> iris_platform_common_hfi_gen2.c
-
-The differentiation around HFI into "generations" instead of 
-incrementing the already existing HFIXXX version is unfortunate.
-
-At least this way we have a repository of common HFI code located in 
-each file, in expectation of HFI GEN3 whenever.
-
----
-bod
+-- 
+Sakari Ailus
