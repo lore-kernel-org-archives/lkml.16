@@ -1,137 +1,489 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8841E572F;
-	Thu, 10 Apr 2025 20:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B282B28EA7F
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744316668; cv=none; b=e/OwjxZO8Vi8XDV5szv36OFhww/JROD/AZocFtFNnIAVFJza/N4xTURfqZ8K6yH/SgdjAYCyRlSpFEWdeFz0w59eJI7WsNL31046cOx9HME93tct8aXX2OohheBACy2o0tmxVsfGH3dNortAiYm+g+183W6x0PU0C+qOk2fgrB4=
+	t=1744316685; cv=none; b=afvZql6lcQ3asChinGh01bshllf8fVHNVQNBM6HzFAswY2ujdGry7c+W5vgrwXu38tnEGwp9gt0ondkFiafN96JAvYzmCBQItq4iRNchvUr9UY6mNHkz5ME6/IRWU+zq5adfViS06CjiOQrAq0wzsXBVwBs9cI3UY2Rlmh7tQ2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744316668; c=relaxed/simple;
-	bh=1mDwEovVKKM/u+OaIa4/q+5QqidtchBzXzC3jBMYQ7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MaVwMb4ASItcSGr0GzGwhp0edEjjF7PmONn8nxhssP3zgyH7ioi06ElYr/GcPK3ZFWW8dsFW6fFjVZOeXL7AvXtjpsbHFfL4hj63BHah5x2dppT6aMEksBPgfMDwCyo6H/QWIR7f/G7/8GLNTXaxDTV0M5sNYxRjoxE/CThcqOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuos2pOD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744316685; c=relaxed/simple;
+	bh=ZEv9ki2d30CQw9NfNFVAubSyeE1IGDlDYBFLsIAzEac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lL/k4CX/ZtU1vM8k/gO9wWC/+vjPsgqd87mZHUUmQuMeF4YMB6hB7Ea5HKXXuBF/u81L1pX/QpzKizE05CujHUGq+71UcU4lfgexh/j/vtpRiQZI8Kg1BMPevAcYZLRUo2TxMLxl0HzauLnDb+xltwsdP9gtd1ZORLmix7N+IH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0Zgz6YIp; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuos2pOD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38241C4CEDD;
-	Thu, 10 Apr 2025 20:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744316667;
-	bh=1mDwEovVKKM/u+OaIa4/q+5QqidtchBzXzC3jBMYQ7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tuos2pODt7ndB3uGIKBBn07blkZnFjh+IUQ72tojoXJjOnpXHP2zmgjC/YEjXUKZd
-	 hbE3DDjxZIIStACWoXY6hemrp3KOyyN3jlRY7CAseLHp5beebvhJmPffj0XARuuxdG
-	 DUCc/Hencz/LavS3KabLFXhhXOaNtwRoDDspvsGnhuUqNapN6+/3l40gZ8xz1o48kb
-	 Hz/BKCIhW8i09QoWMyf+rwJwg9qBkJEN1oYLN6S5cbRt8xiwQu7YzzFcMhDvOQGwM0
-	 8aKbRnzYmgJrr8hfgiArjIxc+YSafaUq9QBULTdBw+0xPrfmOruDawnhNqRg/epxGY
-	 xXyaOoUxPLwMQ==
-Date: Thu, 10 Apr 2025 22:24:22 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
-	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org, 
-	Peter Ziljstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH] pidfs: ensure consistent ENOENT/ESRCH reporting
-Message-ID: <20250410-akademie-skaten-75bd4686ad6b@brauner>
-References: <20250409-sesshaft-absurd-35d97607142c@brauner>
- <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
- <20250409184040.GF32748@redhat.com>
- <20250410101801.GA15280@redhat.com>
- <20250410-barhocker-weinhandel-8ed2f619899b@brauner>
- <20250410131008.GB15280@redhat.com>
- <20250410-inklusive-kehren-e817ba060a34@brauner>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0Zgz6YIp"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4769e30af66so19301cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:24:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744316681; x=1744921481; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=19mHqIThm1zf5l4Ua+g+ONu7h+sC9EUDgVJ28stINlg=;
+        b=0Zgz6YIpo5QidncvfLIWLwO56ZFjJl8YTuortdb2bOZD06eK6C9kvuTR+a9vwiJN86
+         ylLGMhXH37HBClFP1g2P81SynNHEt2afSVLBn5kMpNXFogqvlmAKf5lRaduQ+m+4j/Ma
+         sbUGiAVzu3xxtN1lEuJgjCAtdcu7prh69vG573CBRLktz9gArr5oB1v3ljIQI5jPYBw8
+         z4Nwo765rAoK3l3swjVce4jpxozk9hZVcax1dzVeshinQ5ikT7BihONlM/NZJHLCiNqU
+         uhefGU2ZWwBozDzf+7FXsnaXA0QFnwZkeGNvxUjhQjklYDID4aiKdK4MQRspkaFwffOR
+         W+LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744316681; x=1744921481;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=19mHqIThm1zf5l4Ua+g+ONu7h+sC9EUDgVJ28stINlg=;
+        b=w6/fk3RvVJ4YYQMWXjjDdLBsGjTrb5c9D6ZWWEtSS51G8IQClGdZmUCntkiwywJ/6M
+         NUeoGbKACusS78XHWEyEd6sDDbAR1t1SHkAEyaBIC5opUOVW81vnXfkm4rJKo6nxpyR6
+         /mJ8XLyIR6TszjjNoaf1ksMDo9XpVcr+yb1YapopPUkHDbbNYySyGgaMRFcrZe1sx5iN
+         /CbmK6o+bW2uG8X4yhE2ONDuQyxIyit4KKSuE5WTwHKc76i9VJL1H0zd1HCQmTyKkS6w
+         wHUIb7olj3/tkFHUKK8UJhq4uP+f84GDdsyDRstfsi2/f4ajgbSxYov0wx1jAf/mbAIS
+         7X5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUuuOAeZ+2RtMyonSEebkA3wrQ1kbiucoMzJFJSJ55btaRXpf0vxzmT2pnn/CfxXq9hHICGCNCgkob+DCw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxyd3TMiK//MUizwY6N6TSiY+JTQkD+emzfTA5zEmoHohVU1YnZ
+	RlUxRSQyrZEvQ8t+a4ksahOQ2RMoj+bfnKSjuc+9EnEJOUJyz1xWJd75Hh2YPt7cm6QA67Vq0Yh
+	1wbQL5mrV4ODfJtwHSJHJiz23CY+CMsFZiybp
+X-Gm-Gg: ASbGncsIEqaOgKQARwOk/sKxqVoP27PJeLVf5K61li7jyfh4Vw37xfswptANEhnhfBV
+	kdHYNrtYD00DvmqCpelrJd78Ns4xBTZj0CZOCv5pKUqjzohfOJg6tgY43MPhru76thi7kCUSSMz
+	SY50njDG5pEmAEPK48CGIYB//Y8VS5/MKIJhntMvDfWuy+amzeYPea/N3XntZvRgQ=
+X-Google-Smtp-Source: AGHT+IHEW6Mbhn8c4rWa0Dx1TYjImixeItfJ87VXSD4PD7Xfg9JMqxMigqQjfBAP3d/DgG2q4j3E01sOTCc0j8GnQNk=
+X-Received: by 2002:a05:622a:649:b0:472:915:a200 with SMTP id
+ d75a77b69052e-479766a6b4cmr1010801cf.28.1744316681212; Thu, 10 Apr 2025
+ 13:24:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250410-inklusive-kehren-e817ba060a34@brauner>
+References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz> <20250317-slub-percpu-caches-v3-3-9d9884d8b643@suse.cz>
+In-Reply-To: <20250317-slub-percpu-caches-v3-3-9d9884d8b643@suse.cz>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 10 Apr 2025 13:24:30 -0700
+X-Gm-Features: ATxdqUHCb6eoYuvkJ03BDipnAyKU-wq4ygZ83CBhGZ7b5h8WgLIG_oQhdERjvMw
+Message-ID: <CAJuCfpGOcrTM3PCbdPpEjX--4BkQO=ErHJW_026osqex+LBSxg@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 3/8] slab: add sheaf support for batching
+ kfree_rcu() operations
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Harry Yoo <harry.yoo@oracle.com>, Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
+	maple-tree@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 10:05:58PM +0200, Christian Brauner wrote:
-> On Thu, Apr 10, 2025 at 03:10:09PM +0200, Oleg Nesterov wrote:
-> > On 04/10, Christian Brauner wrote:
-> > >
-> > > On Thu, Apr 10, 2025 at 12:18:01PM +0200, Oleg Nesterov wrote:
-> > > > On 04/09, Oleg Nesterov wrote:
-> > > > >
-> > > > > On 04/09, Christian Brauner wrote:
-> > > > > >
-> > > > > > The seqcounter might be
-> > > > > > useful independent of pidfs.
-> > > > >
-> > > > > Are you sure? ;) to me the new pid->pid_seq needs more justification...
-> > >
-> > > Yeah, pretty much. I'd make use of this in other cases where we need to
-> > > detect concurrent changes to struct pid without having to take any
-> > > locks. Multi-threaded exec in de_exec() comes to mind as well.
-> > 
-> > Perhaps you are right, but so far I am still not sure it makes sense.
-> > And we can always add it later if we have another (more convincing)
-> > use-case.
-> > 
-> > > > To remind, detach_pid(pid, PIDTYPE_PID) does wake_up_all(&pid->wait_pidfd) and
-> > > > takes pid->wait_pidfd->lock.
-> > > >
-> > > > So if pid_has_task(PIDTYPE_PID) succeeds, __unhash_process() -> detach_pid(TGID)
-> > > > is not possible until we drop pid->wait_pidfd->lock.
-> > > >
-> > > > If detach_pid(PIDTYPE_PID) was already called and have passed wake_up_all(),
-> > > > pid_has_task(PIDTYPE_PID) can't succeed.
-> > >
-> > > I know. I was trying to avoid having to take the lock and just make this
-> > > lockless. But if you think we should use this lock here instead I'm
-> > > willing to do this. I just find the sequence counter more elegant than
-> > > the spin_lock_irq().
-> > 
-> > This is subjective, and quite possibly I am wrong. But yes, I'd prefer
-> > to (ab)use pid->wait_pidfd->lock in pidfd_prepare() for now and not
-> > penalize __unhash_process(). Simply because this is simpler.
+On Mon, Mar 17, 2025 at 7:33=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+> Extend the sheaf infrastructure for more efficient kfree_rcu() handling.
+> For caches with sheaves, on each cpu maintain a rcu_free sheaf in
+> addition to main and spare sheaves.
+>
+> kfree_rcu() operations will try to put objects on this sheaf. Once full,
+> the sheaf is detached and submitted to call_rcu() with a handler that
+> will try to put it in the barn, or flush to slab pages using bulk free,
+> when the barn is full. Then a new empty sheaf must be obtained to put
+> more objects there.
+>
+> It's possible that no free sheaves are available to use for a new
+> rcu_free sheaf, and the allocation in kfree_rcu() context can only use
+> GFP_NOWAIT and thus may fail. In that case, fall back to the existing
+> kfree_rcu() machinery.
+>
+> Expected advantages:
+> - batching the kfree_rcu() operations, that could eventually replace the
+>   existing batching
+> - sheaves can be reused for allocations via barn instead of being
+>   flushed to slabs, which is more efficient
+>   - this includes cases where only some cpus are allowed to process rcu
+>     callbacks (Android)
+>
+> Possible disadvantage:
+> - objects might be waiting for more than their grace period (it is
+>   determined by the last object freed into the sheaf), increasing memory
+>   usage - but the existing batching does that too?
+>
+> Only implement this for CONFIG_KVFREE_RCU_BATCHED as the tiny
+> implementation favors smaller memory footprint over performance.
+>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  mm/slab.h        |   2 +
+>  mm/slab_common.c |  24 ++++++++
+>  mm/slub.c        | 165 +++++++++++++++++++++++++++++++++++++++++++++++++=
++++++-
+>  3 files changed, 189 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 8daaec53b6ecfc44171191d421adb12e5cba2c58..94e9959e1aefa350d3d74e3f5=
+309fde7a5cf2ec8 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -459,6 +459,8 @@ static inline bool is_kmalloc_normal(struct kmem_cach=
+e *s)
+>         return !(s->flags & (SLAB_CACHE_DMA|SLAB_ACCOUNT|SLAB_RECLAIM_ACC=
+OUNT));
+>  }
+>
+> +bool __kfree_rcu_sheaf(struct kmem_cache *s, void *obj);
+> +
+>  /* Legal flag mask for kmem_cache_create(), for various configurations *=
+/
+>  #define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
+>                          SLAB_CACHE_DMA32 | SLAB_PANIC | \
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index ceeefb287899a82f30ad79b403556001c1860311..9496176770ed47491e01ed78e=
+060a74771d5541e 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1613,6 +1613,27 @@ static void kfree_rcu_work(struct work_struct *wor=
+k)
+>                 kvfree_rcu_list(head);
+>  }
+>
+> +static bool kfree_rcu_sheaf(void *obj)
+> +{
+> +       struct kmem_cache *s;
+> +       struct folio *folio;
+> +       struct slab *slab;
+> +
+> +       if (is_vmalloc_addr(obj))
+> +               return false;
+> +
+> +       folio =3D virt_to_folio(obj);
+> +       if (unlikely(!folio_test_slab(folio)))
+> +               return false;
+> +
+> +       slab =3D folio_slab(folio);
+> +       s =3D slab->slab_cache;
+> +       if (s->cpu_sheaves)
+> +               return __kfree_rcu_sheaf(s, obj);
+> +
+> +       return false;
+> +}
+> +
+>  static bool
+>  need_offload_krc(struct kfree_rcu_cpu *krcp)
+>  {
+> @@ -1957,6 +1978,9 @@ void kvfree_call_rcu(struct rcu_head *head, void *p=
+tr)
+>         if (!head)
+>                 might_sleep();
+>
+> +       if (kfree_rcu_sheaf(ptr))
+> +               return;
+> +
+>         // Queue the object but don't yet schedule the batch.
+>         if (debug_rcu_head_queue(ptr)) {
+>                 // Probable double kfree_rcu(), just leak.
+> diff --git a/mm/slub.c b/mm/slub.c
+> index fa3a6329713a9f45b189f27d4b1b334b54589c38..83f4395267dccfbc144920baa=
+7d0a85a27fbb1b4 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -350,6 +350,8 @@ enum stat_item {
+>         ALLOC_FASTPATH,         /* Allocation from cpu slab */
+>         ALLOC_SLOWPATH,         /* Allocation by getting a new cpu slab *=
+/
+>         FREE_PCS,               /* Free to percpu sheaf */
+> +       FREE_RCU_SHEAF,         /* Free to rcu_free sheaf */
+> +       FREE_RCU_SHEAF_FAIL,    /* Failed to free to a rcu_free sheaf */
+>         FREE_FASTPATH,          /* Free to cpu slab */
+>         FREE_SLOWPATH,          /* Freeing not to cpu slab */
+>         FREE_FROZEN,            /* Freeing to frozen slab */
+> @@ -442,6 +444,7 @@ struct slab_sheaf {
+>                 struct rcu_head rcu_head;
+>                 struct list_head barn_list;
+>         };
+> +       struct kmem_cache *cache;
+>         unsigned int size;
+>         void *objects[];
+>  };
+> @@ -450,6 +453,7 @@ struct slub_percpu_sheaves {
+>         localtry_lock_t lock;
+>         struct slab_sheaf *main; /* never NULL when unlocked */
+>         struct slab_sheaf *spare; /* empty or full, may be NULL */
+> +       struct slab_sheaf *rcu_free; /* for batching kfree_rcu() */
+>         struct node_barn *barn;
+>  };
+>
+> @@ -2461,6 +2465,8 @@ static struct slab_sheaf *alloc_empty_sheaf(struct =
+kmem_cache *s, gfp_t gfp)
+>         if (unlikely(!sheaf))
+>                 return NULL;
+>
+> +       sheaf->cache =3D s;
+> +
+>         stat(s, SHEAF_ALLOC);
+>
+>         return sheaf;
+> @@ -2585,6 +2591,24 @@ static void sheaf_flush_unused(struct kmem_cache *=
+s, struct slab_sheaf *sheaf)
+>         sheaf->size =3D 0;
+>  }
+>
+> +static void __rcu_free_sheaf_prepare(struct kmem_cache *s,
+> +                                    struct slab_sheaf *sheaf);
+> +
+> +static void rcu_free_sheaf_nobarn(struct rcu_head *head)
+> +{
+> +       struct slab_sheaf *sheaf;
+> +       struct kmem_cache *s;
+> +
+> +       sheaf =3D container_of(head, struct slab_sheaf, rcu_head);
+> +       s =3D sheaf->cache;
+> +
+> +       __rcu_free_sheaf_prepare(s, sheaf);
+> +
+> +       sheaf_flush_unused(s, sheaf);
+> +
+> +       free_empty_sheaf(s, sheaf);
+> +}
+> +
+>  /*
+>   * Caller needs to make sure migration is disabled in order to fully flu=
+sh
+>   * single cpu's sheaves
+> @@ -2597,7 +2621,7 @@ static void sheaf_flush_unused(struct kmem_cache *s=
+, struct slab_sheaf *sheaf)
+>  static void pcs_flush_all(struct kmem_cache *s)
+>  {
+>         struct slub_percpu_sheaves *pcs;
+> -       struct slab_sheaf *spare;
+> +       struct slab_sheaf *spare, *rcu_free;
+>
+>         localtry_lock(&s->cpu_sheaves->lock);
+>         pcs =3D this_cpu_ptr(s->cpu_sheaves);
+> @@ -2605,6 +2629,9 @@ static void pcs_flush_all(struct kmem_cache *s)
+>         spare =3D pcs->spare;
+>         pcs->spare =3D NULL;
+>
+> +       rcu_free =3D pcs->rcu_free;
+> +       pcs->rcu_free =3D NULL;
+> +
+>         localtry_unlock(&s->cpu_sheaves->lock);
+>
+>         if (spare) {
+> @@ -2612,6 +2639,9 @@ static void pcs_flush_all(struct kmem_cache *s)
+>                 free_empty_sheaf(s, spare);
+>         }
+>
+> +       if (rcu_free)
+> +               call_rcu(&rcu_free->rcu_head, rcu_free_sheaf_nobarn);
+> +
+>         sheaf_flush_main(s);
+>  }
+>
+> @@ -2628,6 +2658,11 @@ static void __pcs_flush_all_cpu(struct kmem_cache =
+*s, unsigned int cpu)
+>                 free_empty_sheaf(s, pcs->spare);
+>                 pcs->spare =3D NULL;
+>         }
+> +
+> +       if (pcs->rcu_free) {
+> +               call_rcu(&pcs->rcu_free->rcu_head, rcu_free_sheaf_nobarn)=
+;
+> +               pcs->rcu_free =3D NULL;
+> +       }
+>  }
+>
+>  static void pcs_destroy(struct kmem_cache *s)
+> @@ -2644,6 +2679,7 @@ static void pcs_destroy(struct kmem_cache *s)
+>                         continue;
+>
+>                 WARN_ON(pcs->spare);
+> +               WARN_ON(pcs->rcu_free);
+>
+>                 if (!WARN_ON(pcs->main->size)) {
+>                         free_empty_sheaf(s, pcs->main);
+> @@ -3707,7 +3743,7 @@ static bool has_pcs_used(int cpu, struct kmem_cache=
+ *s)
+>
+>         pcs =3D per_cpu_ptr(s->cpu_sheaves, cpu);
+>
+> -       return (pcs->spare || pcs->main->size);
+> +       return (pcs->spare || pcs->rcu_free || pcs->main->size);
+>  }
+>
+>  static void pcs_flush_all(struct kmem_cache *s);
+> @@ -5240,6 +5276,122 @@ bool free_to_pcs(struct kmem_cache *s, void *obje=
+ct)
+>         return true;
+>  }
+>
+> +static void __rcu_free_sheaf_prepare(struct kmem_cache *s,
+> +                                    struct slab_sheaf *sheaf)
+> +{
+> +       bool init =3D slab_want_init_on_free(s);
+> +       void **p =3D &sheaf->objects[0];
+> +       unsigned int i =3D 0;
+> +
+> +       while (i < sheaf->size) {
+> +               struct slab *slab =3D virt_to_slab(p[i]);
+> +
+> +               memcg_slab_free_hook(s, slab, p + i, 1);
+> +               alloc_tagging_slab_free_hook(s, slab, p + i, 1);
+> +
+> +               if (unlikely(!slab_free_hook(s, p[i], init, false))) {
+> +                       p[i] =3D p[--sheaf->size];
+> +                       continue;
+> +               }
+> +
+> +               i++;
+> +       }
+> +}
+> +
+> +static void rcu_free_sheaf(struct rcu_head *head)
+> +{
+> +       struct slab_sheaf *sheaf;
+> +       struct node_barn *barn;
+> +       struct kmem_cache *s;
+> +
+> +       sheaf =3D container_of(head, struct slab_sheaf, rcu_head);
+> +
+> +       s =3D sheaf->cache;
+> +
+> +       __rcu_free_sheaf_prepare(s, sheaf);
+> +
+> +       barn =3D get_node(s, numa_mem_id())->barn;
+> +
+> +       /* due to slab_free_hook() */
+> +       if (unlikely(sheaf->size =3D=3D 0))
+> +               goto empty;
+> +
+> +       if (!barn_put_full_sheaf(barn, sheaf, false))
+> +               return;
+> +
+> +       sheaf_flush_unused(s, sheaf);
+> +
+> +empty:
+> +       if (!barn_put_empty_sheaf(barn, sheaf, false))
+> +               return;
+> +
+> +       free_empty_sheaf(s, sheaf);
+> +}
+> +
+> +bool __kfree_rcu_sheaf(struct kmem_cache *s, void *obj)
+> +{
+> +       struct slub_percpu_sheaves *pcs;
+> +       struct slab_sheaf *rcu_sheaf;
+> +
+> +       if (!localtry_trylock(&s->cpu_sheaves->lock))
+> +               goto fail;
+> +
+> +       pcs =3D this_cpu_ptr(s->cpu_sheaves);
+> +
+> +       if (unlikely(!pcs->rcu_free)) {
+> +
+> +               struct slab_sheaf *empty;
+> +
+> +               empty =3D barn_get_empty_sheaf(pcs->barn);
+> +
+> +               if (empty) {
+> +                       pcs->rcu_free =3D empty;
+> +                       goto do_free;
+> +               }
+> +
+> +               localtry_unlock(&s->cpu_sheaves->lock);
+> +
+> +               empty =3D alloc_empty_sheaf(s, GFP_NOWAIT);
+> +
+> +               if (!empty)
+> +                       goto fail;
+> +
+> +               if (!localtry_trylock(&s->cpu_sheaves->lock))
+> +                       goto fail;
+> +
+> +               pcs =3D this_cpu_ptr(s->cpu_sheaves);
+> +
+> +               if (unlikely(pcs->rcu_free))
+> +                       barn_put_empty_sheaf(pcs->barn, empty, true);
+> +               else
+> +                       pcs->rcu_free =3D empty;
+> +       }
+> +
+> +do_free:
+> +
+> +       rcu_sheaf =3D pcs->rcu_free;
+> +
+> +       rcu_sheaf->objects[rcu_sheaf->size++] =3D obj;
+> +
+> +       if (likely(rcu_sheaf->size < s->sheaf_capacity)) {
+> +               localtry_unlock(&s->cpu_sheaves->lock);
+> +               stat(s, FREE_RCU_SHEAF);
+> +               return true;
+> +       }
+> +
+> +       pcs->rcu_free =3D NULL;
+> +       localtry_unlock(&s->cpu_sheaves->lock);
+> +
+> +       call_rcu(&rcu_sheaf->rcu_head, rcu_free_sheaf);
+> +
+> +       stat(s, FREE_RCU_SHEAF);
+> +       return true;
 
-Looking close at this. Why is:
+nit: I think the above code could be simplified to:
 
-        if (type == PIDTYPE_PID) {
-                WARN_ON_ONCE(pid_has_task(pid, PIDTYPE_PID));
-                wake_up_all(&pid->wait_pidfd);
-        }
+do_free:
+        rcu_sheaf =3D pcs->rcu_free;
+        rcu_sheaf->objects[rcu_sheaf->size++] =3D obj;
+        if (likely(rcu_sheaf->size < s->sheaf_capacity))
+                rcu_sheaf =3D NULL;
+        else
+                pcs->rcu_free =3D NULL;
 
-located in __change_pid()? The only valid call to __change_pid() with a NULL
-argument and PIDTYPE_PID is from __unhash_process(), no?
+        localtry_unlock(&s->cpu_sheaves->lock);
+        stat(s, FREE_RCU_SHEAF);
+        if (rcu_sheaf)
+                call_rcu(&rcu_sheaf->rcu_head, rcu_free_sheaf);
 
-So why isn't this in __unhash_process() where it's immediately obvious
-that it's the only valid place this can currently be called from?
+        return true;
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 1b51dc099f1e..d92e8bee0ab7 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -135,6 +135,7 @@ static void __unhash_process(struct release_task_post *post, struct task_struct
- {
-        nr_threads--;
-        detach_pid(post->pids, p, PIDTYPE_PID);
-+       wake_up_all(&post->pids[PIDTYPE_PID]->wait_pidfd);
-        if (group_dead) {
-                detach_pid(post->pids, p, PIDTYPE_TGID);
-                detach_pid(post->pids, p, PIDTYPE_PGID);
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 4ac2ce46817f..26f1e136f017 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -359,11 +359,6 @@ static void __change_pid(struct pid **pids, struct task_struct *task,
-        hlist_del_rcu(&task->pid_links[type]);
-        *pid_ptr = new;
-
--       if (type == PIDTYPE_PID) {
--               WARN_ON_ONCE(pid_has_task(pid, PIDTYPE_PID));
--               wake_up_all(&pid->wait_pidfd);
--       }
--
-        for (tmp = PIDTYPE_MAX; --tmp >= 0; )
-                if (pid_has_task(pid, tmp))
-                        return;
-
-I'm probably missing something obvious.
+> +
+> +fail:
+> +       stat(s, FREE_RCU_SHEAF_FAIL);
+> +       return false;
+> +}
+> +
+>  /*
+>   * Bulk free objects to the percpu sheaves.
+>   * Unlike free_to_pcs() this includes the calls to all necessary hooks
+> @@ -6569,6 +6721,11 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
+>         struct kmem_cache_node *n;
+>
+>         flush_all_cpus_locked(s);
+> +
+> +       /* we might have rcu sheaves in flight */
+> +       if (s->cpu_sheaves)
+> +               rcu_barrier();
+> +
+>         /* Attempt to free all objects */
+>         for_each_kmem_cache_node(s, node, n) {
+>                 if (n->barn)
+> @@ -7974,6 +8131,8 @@ STAT_ATTR(ALLOC_PCS, alloc_cpu_sheaf);
+>  STAT_ATTR(ALLOC_FASTPATH, alloc_fastpath);
+>  STAT_ATTR(ALLOC_SLOWPATH, alloc_slowpath);
+>  STAT_ATTR(FREE_PCS, free_cpu_sheaf);
+> +STAT_ATTR(FREE_RCU_SHEAF, free_rcu_sheaf);
+> +STAT_ATTR(FREE_RCU_SHEAF_FAIL, free_rcu_sheaf_fail);
+>  STAT_ATTR(FREE_FASTPATH, free_fastpath);
+>  STAT_ATTR(FREE_SLOWPATH, free_slowpath);
+>  STAT_ATTR(FREE_FROZEN, free_frozen);
+> @@ -8069,6 +8228,8 @@ static struct attribute *slab_attrs[] =3D {
+>         &alloc_fastpath_attr.attr,
+>         &alloc_slowpath_attr.attr,
+>         &free_cpu_sheaf_attr.attr,
+> +       &free_rcu_sheaf_attr.attr,
+> +       &free_rcu_sheaf_fail_attr.attr,
+>         &free_fastpath_attr.attr,
+>         &free_slowpath_attr.attr,
+>         &free_frozen_attr.attr,
+>
+> --
+> 2.48.1
+>
