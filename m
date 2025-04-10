@@ -1,551 +1,378 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2099.outbound.protection.outlook.com [40.107.255.99])
+Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DA6267F7E;
-	Thu, 10 Apr 2025 11:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421E1281504
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=91.207.212.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744284162; cv=fail; b=rkR5ZGi7pTlm4wLDSCf3YigS3QrqGx293n5nUxpamVPsoSDSwAQF24QHsttfB8IbpJRFWE8ZnAYRnBfUQIs582LUfrs4LSfSpKdEJeViEVCx31toVo+kJ0HkEb6mti08xfe/gLvzMNT2YG4mTZFA1A3NCbAQKiFv6nIZd/LmEoY=
+	t=1744284163; cv=fail; b=HY7A4wLt7ZFBkkSvW6gW54UHFzJY5ogxyeP+YGQ/pNaQnGheQ+TpBxKr1IX+tB1C6vVtr07YkPsTfyB3RFRU+w/B+xqiM6misCBcXWUvgo0LqXKA1ghGzzKoQPdgd0FySHdaUuoRKp5Ya61CTK4okE56zNGjZGJy4tcTJDML0PU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744284162; c=relaxed/simple;
-	bh=MjPH7HxrPC93YYGROrhy0HxBdewCJSDE4Hxx2jG4x74=;
-	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=D0qqKVTAj1SsrDfX+lg9jSUmHKsuy3aL+Vh4jUvQ1LxJnNQxMf3FrDvbUUh79g4ZPHZpIuk/sKXgHDW4ohJXeXFVrGPhP/g/N3xMk6k/HeiT1yLZ/Ke8Zcmuygx0UNfK8/PgeXX59xCFOGq+dQz+1zZwpTOoOSCsZNS9LdzRWkU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw; spf=pass smtp.mailfrom=portwell.com.tw; dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b=ZDQ5juyW; arc=fail smtp.client-ip=40.107.255.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=portwell.com.tw
+	s=arc-20240116; t=1744284163; c=relaxed/simple;
+	bh=ncKHRHKbzmetJqRNmgukUWawms17Pxf/eRJHSVBaUhA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Uxdbg3JGmltOrdTwijDzO9vOZloRO/VPgl5L9xjiALi+6z0AoyjRfixgO1/NpZskkm7WnwLrcX3zxTSbPKcsl6lYn7tgVKMLExJcNvBnWRrgHmEfuFaCSbFtzTewIp40Hn2bq6ZR6Z3ip863iaMpf8hxvligahajIryRQHWFDaE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=QEKa7Wh1; dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b=odwRKPte; arc=fail smtp.client-ip=91.207.212.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b="ZDQ5juyW"
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="QEKa7Wh1";
+	dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b="odwRKPte"
+Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
+	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A7kAnE013951;
+	Thu, 10 Apr 2025 12:22:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=dk201812; bh=jAPM5UhFtsem25o1I/xE1oOnb
+	twULlHMhlJ2//z8E8Q=; b=QEKa7Wh1OXKcwBHP0QuD96CV6dihTPMtOOaEbOtU6
+	gTR8f+HjvlteMVbZgqX9FgUttK00geNbZLId5btzqcd3BtWWnVq0wMSbpyyHrGGf
+	FcqOk8NKkCJ8oKtBymVLwOcMXpUnCFVsC6kpCg8qJ+UjG2AW0U2UKRtDXQfCq2zD
+	EDsm9dxjxwB1e2mUkMxwmCF4u1sMttS5vy6bLHEEDDOHcrS+QjyQuPbiMQCKGkSa
+	RpVgE+9hwNe9iqESm8Z6+5W4f6xHXCx2QVCpRM2F7YIzg9Cbgn8azRSxatMs8r4e
+	lMz9fIa5mgFBmIqEoqRrtySuTura7fYWkqoWufX8ARspw==
+Received: from lo0p265cu003.outbound.protection.outlook.com (mail-uksouthazlp17012052.outbound.protection.outlook.com [40.93.67.52])
+	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 45ttssbj9p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 12:22:07 +0100 (BST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ik2GXEnXSC7dalAdBA1pinDOFj/Cq37e0Ht2xJ0X/EgqcsY+YiBVBbhDjf34P/3qJPdpyXFYpQVgNMNFXz0Q9SK93fr8yLVUmQHDYS4Dx56RVcVxkDTEv9TDwGYLepl7j5H4T5G53woT4s5o3e8blAgu+nGRltVouvs6PoD3ALOJWSRfx8qnAxh6nJG6LAoYlbYRw8rFoBO4GCywkYYbLjOk8dEzKm8Yp977SnLQNKGKYvpxEHtaGbANVAAvUXJWXVM+GIpaOgkYDS9I1fgc01sJb/mpTca6MA8I8/DeQm6ZUmdskW0bVczg1h3UOsY0EjQE/Cu+smv8Db3tMhsyEQ==
+ b=wsiyOC4SFtgkAG+41+ze3tVK8Ow3+/NuugH44ZSYmcAfz4IP0WKt+YMmFCf483/c/IR16uRNFg9iwrOXJqg+frUjQUrANEmTIGWMjSvphHcTdV4dLLxJ0XE8ptqOSYqX/mG3URYs4Ub4P1F6LIzETBquTBVVQU/Sq/qqHzFEi4wlLp16JxOWRoQpg7MXGIzjlWb9G05FLN5cmEi8BX6azAEXVW+1+EgK21kh9UnH0fobuslAG/sVS4HmHmthtMM7iEP5KWssfK961PVtj9Wfw3ApqdFIMDoaI91Jpdc/qnxIORKj+ZzVg4ZwXwi3bZ0dKixhWpJq2Cl2/8FUz8AbBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p6ndgXYC826J5OhMFsSmKE37SNCh3HrFk17MRwaJBlk=;
- b=IYW1g1T0NHaHP4GiJ6yQxuV3oZ79up+TUXW+1FiAuPT6vrrCAfce/or1kHBIrQG0qExK+4oHmW1TQZkVRw7WgmvZq/OpIkXHBMZ4NdBRq+GwcV8paKwoKuHx7r0YJwDH6guCDchhyirU/UNdBvwzw3uKAZSK3lPbT0doMeOlRNmizIzJO5jXBkdxCEslzV75ylBF0gzZa3plilua4kNGxyOCp2Z8sNkhE3HhPvN1Upff0iMYacnOIhzZgtw00eIMUtAFJPzMoMoLr54mXDxMsO3I6+dynNeBFCu8JxWQGFqBzbLSanf1U0+XzSHs/LAXTp23E0XhJL3CPRY30nmRdw==
+ bh=jAPM5UhFtsem25o1I/xE1oOnbtwULlHMhlJ2//z8E8Q=;
+ b=SObxewNu0pR/DAbyqCJpqaB1si0XU3NYro9iBnUbvyV5gtPEbPDpK0M/JBksq2AYk1eCPi/qxdAkLjJeyr1Zpe/rX6byGNiLUUJI/tQc8GKcAbJ87EZGQd+3bI4GqiRwfYvPYol6UbNJkk82ZFwY9N60MxFv2xsB73PlDjPECcblK0C7LuO8hgbXXI/MmxeqSvGfMkaXfT0GRbJRErTZCis852O91tkKXPKL6dOee2Nw3LP9hiLeq+VlbqP2mL0GBX08qruj/NWKrSx9EzWNWOaEx/wdCQmGRagOt39GHSieHQycuflVv1X5K5LKvbcQXTmRWZPMfnJDYG2fEtKpPw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=portwell.com.tw; dmarc=pass action=none
- header.from=portwell.com.tw; dkim=pass header.d=portwell.com.tw; arc=none
+ smtp.mailfrom=imgtec.com; dmarc=pass action=none header.from=imgtec.com;
+ dkim=pass header.d=imgtec.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fetCA905017.onmicrosoft.com; s=selector1-fetCA905017-onmicrosoft-com;
+ d=IMGTecCRM.onmicrosoft.com; s=selector2-IMGTecCRM-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p6ndgXYC826J5OhMFsSmKE37SNCh3HrFk17MRwaJBlk=;
- b=ZDQ5juyW1+fLzMnSPA88OcXeOp5z50t3EkgMglEH15JSIXcJ7G/DAKFrKE4WatPy3KxmSchDxq1eupGtvlejB7TleXOwOT011NfxMwaBdvjtkoSwLkRtd/Tta+8Xf02Vg4LSrqEzTgq4xYWLnblUo5X6hQ9rtlNWigBu8aBqb9DSlfcyn7/gYUY5a8aiwEzWtRUpsvuUcICe8acCloE+JBnJVmm98/g8yXOcHd8RFfLqAVTq0BzQxxRN0Pu6K+ALJKWNDMldp4fIUu+7HC6T+HSdGlGcQKtRNBjiVuSL+PF9zCIKLMONYHvi8uXspBStkDdRoRXSSeXtUDCqyiExVA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=portwell.com.tw;
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
- by TYZPR06MB5735.apcprd06.prod.outlook.com (2603:1096:400:280::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Thu, 10 Apr
- 2025 11:22:33 +0000
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224]) by KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224%5]) with mapi id 15.20.8606.029; Thu, 10 Apr 2025
- 11:22:32 +0000
-Message-ID: <d6b14c26-e70b-4edb-8661-b213e3fed9d4@portwell.com.tw>
-Date: Thu, 10 Apr 2025 19:22:30 +0800
-User-Agent: Mozilla Thunderbird
-From: Yen-Chi Huang <jesse.huang@portwell.com.tw>
-Subject: [PATCH v3] platform/x86: portwell-ec: Add GPIO and WDT driver for
- Portwell EC
-To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, wim@linux-watchdog.org,
- linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
- jay.chen@canonical.com, jesse.huang@portwell.com.tw
+ bh=jAPM5UhFtsem25o1I/xE1oOnbtwULlHMhlJ2//z8E8Q=;
+ b=odwRKPtec3xyuN6b8ItCnAgHMs9R8n1Fzye12xtIC7yqlbUb4mZ6xnlqXfTtnDgKvCk56qiKAp1em63KegDl97LLjyU5T9zXDdD3EQ3m99n9AIkCy8tDuz2ETL78wY4X5S0+8Jj0Lz984tqdSmFo0Qac1irrcKN3O4Ute1we/Gs=
+Received: from CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:e7::8) by
+ CWLP265MB2722.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:a4::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.9; Thu, 10 Apr 2025 11:22:05 +0000
+Received: from CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::8e9d:6b2f:9881:1e15]) by CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::8e9d:6b2f:9881:1e15%4]) with mapi id 15.20.8655.010; Thu, 10 Apr 2025
+ 11:22:05 +0000
+From: Matt Coster <Matt.Coster@imgtec.com>
+To: Arnd Bergmann <arnd@kernel.org>
+CC: Frank Binns <Frank.Binns@imgtec.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrzej
+ Hajda <andrzej.hajda@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Alex
+ Deucher <alexander.deucher@amd.com>,
+        Alessio Belle
+	<Alessio.Belle@imgtec.com>,
+        "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] drm/imagination: avoid unused-const-variable
+ warning
+Thread-Topic: [PATCH 01/10] drm/imagination: avoid unused-const-variable
+ warning
+Thread-Index: AQHbqUo2T639E3x4dkeZqiAhvvg4tbOcwv4A
+Date: Thu, 10 Apr 2025 11:22:05 +0000
+Message-ID: <7ae4be5c-b115-405e-aa57-caeaa206775b@imgtec.com>
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <20250409122314.2848028-1-arnd@kernel.org>
+In-Reply-To: <20250409122314.2848028-1-arnd@kernel.org>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TPYP295CA0031.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:7::9)
- To KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CWXP265MB3397:EE_|CWLP265MB2722:EE_
+x-ms-office365-filtering-correlation-id: afade1f3-a2cd-4749-2227-08dd7821ec8a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018|4053099003;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?eWhKbWZ4elZYQ29hMzBuRDZHQWE3SlpLRER5cmNsTTNzcTlQb1dKbkxaZlRC?=
+ =?utf-8?B?eHhDNitvcmxVeUJWV0JGZ2FWWEhRblpUSWNBekw1emQ2N1p0RldlR1pnekdR?=
+ =?utf-8?B?d2NmZWtLSUVDR1MzQUdpRm9LSjZ4TmphMzErUGNCMXlwZEdMdE1tU1lNKzF6?=
+ =?utf-8?B?LzFRbkllWU5QSmRRVUJydW12a21JZnl5MlNGMm0rMTNDQmJXOVNzS2hVOHRv?=
+ =?utf-8?B?emdzc3drc1QwNjFGdVlBekRzUlo1NmFoV0pqclM5V09DWDJRUHpuQjkyaW0r?=
+ =?utf-8?B?STBFS00wbGNwSXRtRnBqNDVrcXpDTFNneXZPQ3N1Tk9iUFlDcVhvK0NYN21s?=
+ =?utf-8?B?Y3BGNUV1MEM4WHRwc05CY21aNC9ySVVodnBUQU9XUmhrM3Q3T3F3WHVsbkxN?=
+ =?utf-8?B?TlFVSndqbEQrd25EdzBxSFpoUUs1cTBVSnFjT0xZdXVHN2grRFZ3S1Brd0ll?=
+ =?utf-8?B?UEVuVnEyVlh3WnZlM2VSYm12MWRaallaczA2U0VpWk5sV29jcnBua1ZrZE1J?=
+ =?utf-8?B?NjcxVHVkQkZ2TERVbHB2Y3dZbWsvK3E3WTlxVkNCcHlvTzZWVXMxQTQyQmVP?=
+ =?utf-8?B?ckRiajVheVp6aXdGcEYxUEYzcjk4SUNhNDcySDZGV29PUWJUNCtLNk5CTUhz?=
+ =?utf-8?B?VWk2YWMzb2RGa0FHK3ZCODlycFhQeDk3cFhhc29tTzVkcHRraFFVdi9tdHpq?=
+ =?utf-8?B?NEhta0U4MTJWTy9XN0lPdmhlUHo3Z3hyZ2E2YVlKelgrWERkTWtDYi9PbHVP?=
+ =?utf-8?B?VG5ZWFVBK2k2UzFacDg4clZteUZRYisyUHhLa3lhNjlKaUdwb2xyeVc3MHJI?=
+ =?utf-8?B?L2xUd3YwZ2UrMnpVQVRvR2lTNm1OZkVZTis0dFZ1ZjNHYmphWTJZN24xUFNC?=
+ =?utf-8?B?d3p2elY2U2JCMXFYc1VwT2YzejdicTRTeVk0bURKYnpDaUNVbmduNjhMc2hz?=
+ =?utf-8?B?Y2pzN3Yva1BpMzlvbGh3SkxNWFluZlVvZXJRK1FkT2hlclZTa1hQcXBpeEFt?=
+ =?utf-8?B?QXpVU0pBaUlzQXhTcVQ2S2JDa2ZnZnFXd0VqWVpQV0tSSEVhM3NTVlcrLzJN?=
+ =?utf-8?B?K0haa3hQaVlKZ0pFQktGcEdHY2E0TUZMTndlUk8zQzMzSG40MVdaTk9nRU01?=
+ =?utf-8?B?Rndwblo2dTRoZU56RU50VVk1eHQ4ektweVFvZVdWVWFzTzIyeVZhVkpPcGsx?=
+ =?utf-8?B?N1VHcXFsWlN3ZHVCVzcxODdvc3Y1TzlnTnJuUkhpUk1KQnhmVVVZZ2lGd2Jt?=
+ =?utf-8?B?eUE2eTBQSnBGR3BWTmlJRFhVdkpTM2oxajdhdzk0NG0zK3JnalMzbUZwQzFt?=
+ =?utf-8?B?Q3N3SUxzRXlYUTJ5amtucHhndmdiZ2FoYmtmbjhSUVVwS25TcFRoeVFqSWMr?=
+ =?utf-8?B?SFlPYzdVWEZZaS9lTlZYa0JaMzdkaFU2UlRKNkVWMHBSbFhTeEZyUlZnN1Zl?=
+ =?utf-8?B?QlhhSlRtT09qaXkyK1Jxc3RWdDdoemJyaCtaOFIzRkptbVJXcW8reGdvRENE?=
+ =?utf-8?B?RFhjN1RqVHBTcWYrL1FFdEtsQngza0JUQkxPTDZjdlZ4Snp5RTFsV0xIZ3RC?=
+ =?utf-8?B?NHFUd0dxczVhOUU4dHFPMFNyUnMxRE9PN0d6T1lvQkJDMW0reTFIUlBqSXNy?=
+ =?utf-8?B?eVZkNTlqKzFscnA3M21yNUQ0QTNabjNOKzRjaThTbGNyZlh4dlgweUFJVjJ1?=
+ =?utf-8?B?KzFTSjhrYmpnbFZYeGhuTHBtZVR2cTV5ZWkwOFlmZFMxT2crdWpMOTUybWpp?=
+ =?utf-8?B?SzJ4MXB4OHlMOXc3QU1pNDNvNGVrankxa1NCZCtWY0Ura0FvbCt4d3RXSHJO?=
+ =?utf-8?B?QjZ1VDBCK0UvdFFpK2k2Y3VpbEVzY3UvaWlqRkt4d0Q3S2FPQitTczBDRUl1?=
+ =?utf-8?B?ZnRaUlE3dEdDRnlxckMzRmw4eVRpd0hjM1M2dFdLR1poa2diYVhLQXpTS2RW?=
+ =?utf-8?Q?D4NQsXbjtE9ixZplFs6mykL/U/clGff0?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018)(4053099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?MXFlTWkxb1UyVlhQNkw1anBLMlYzdWo1dWRSQlBGTTluQmFDdEFFWHJHMjFn?=
+ =?utf-8?B?a3JWRUNuQ1YyZ0M1M1lmc3hXQlVoVHFPalp6VjQzbXF2VGNZa1poSlpCdUxS?=
+ =?utf-8?B?Qkd0ODZwS0ZHVWdlYjh3V2xmdzVPZkRUYXB6ZExxZVhCdkVvVEdKQlhRYmpM?=
+ =?utf-8?B?bG5EYVhWZE1qZ2NmMWxyYlE0Q1FHMFVkdU9SL25lbVU3WmNNRE5wc1NnRkRJ?=
+ =?utf-8?B?ckFLUlFKRjEyOG9pbFVNbkxjZWtJRVord2NLa0owelpTSG1nM3FBSWx2aE90?=
+ =?utf-8?B?eFJqZ2t1cnQyOXdSay91K3FSMDVmTGxQUkVlM1VWVzZYa2JnVW1BZmM3YW54?=
+ =?utf-8?B?bTR4SnRZQkZmYXo1R3lZRlBRK1JqcitSUUllZStnV04vNlpSSVp3bXA0b1V0?=
+ =?utf-8?B?YUF4YlJCVVVVN0EyUys2UTdTeHBNK3RqNVNSNWRoTmcwdGRwNUhqWGZpRHpr?=
+ =?utf-8?B?SE54S1VzSXJPU1l4NTV1WEdIMkF1ek0xU1FQSjFSLzlxQUMveWp0Z1I2MDJv?=
+ =?utf-8?B?eHIvcTZ1bXJjMXJPdEpySHJBWFRma1VRQVovMzR2TjNMNjRaazBFaEVYU2Z2?=
+ =?utf-8?B?ZHMzTjdQU0dCT2tIOENRcFVYaFRFalZKRnpscXBucVRFMDNuM2NEREZmUDZR?=
+ =?utf-8?B?ZW9KUjNJdVU0d1NtOFRldkdtZUNJUkdsa3pJRDhURDlyNk11N0VnRnpZenFw?=
+ =?utf-8?B?dnRtN2thRGh3VjNFa2pBSEhNUkpoc3g3NWVYMjNqdXE2TTJ6YVFLWWxTR3Vq?=
+ =?utf-8?B?MXhxdHBiMUhGR05iL1QxRm5vZmV6OHBMNkJReVBwNnJ3TW9KbDIzYk9UVFhO?=
+ =?utf-8?B?QWw4Y041SU9VVTV4QjdraGM1elBoMktsaC8zakVScjlXQXF2TEU5Rm1HbVlm?=
+ =?utf-8?B?U0szZDZUcHQ0QVVvZmhDTjBCeVF0VmxtWS9XSTBLSHJ3RlloaEgzV0V3RzdP?=
+ =?utf-8?B?ZENsdmFtcUo4L2ZBWUE4Y0NscEJZemxHYk43UWRlQjRhdmx2SVpMQmlCUjdm?=
+ =?utf-8?B?c3VwTnovbU82dkRMdGpnZ2k0ZXpSNnhGV0g2aGFRV0pTUWFVR0k2VmIwREoy?=
+ =?utf-8?B?dVBPNTFST2dPeWg0bGhmazhGN1VPcks5T3k5aFcxUjhxRXVGSklQbUJmWG0x?=
+ =?utf-8?B?bXJndVYxZ0NsaFp0RUVLZkh1ZGw3NE03ZTFhOFJDTHZiM2dTMXN2RG96YUFj?=
+ =?utf-8?B?ZlNVNmRxYzVWMlB3dzVFa0pJL3FrY015bFdJa0hBclpOaTl2citKeFU0dWdj?=
+ =?utf-8?B?L01BamJDQ2xrMWd1eXVzV1VoZXNTZDlzNHFCSWlOaTVvdnNqcnRkZ0VVY3Fy?=
+ =?utf-8?B?Mi80Mm8zNGlUVHBlclNzcTZnaTZCcG1CSlpIRWdPR3RLMERmU2x2NGFFbUsw?=
+ =?utf-8?B?eE51dXBDcnh6SjIyMFU5WGxxTXo2aFk2cFAzN0l1eDFFbHlZY3hIMS9ybExJ?=
+ =?utf-8?B?bDJsSVdsTit3SHJ1Q05SWlMyK3Q3SGJweC80OFIvY1dQQ1VzeUF2OEtWRW1z?=
+ =?utf-8?B?Y3ZFY3ZTNFhRTHBrRFUvejA1YWcxdHhkQXl1VFF3U3pjVHNtZnBvZVZsbGlx?=
+ =?utf-8?B?MVRUdFVHQitUSitQMGZXQVdSZVlCYW5PV0QzT2NrWmVrdnNkT0EvWXE5M2pt?=
+ =?utf-8?B?dk1Oc01xQStHWFA2Yjd4YUorNDlpOUJScFpneXFHMGlLVHFzdkZvVmpuTlBF?=
+ =?utf-8?B?cFVpUjRLNDRxd09LWStJazNFMDJIaXZmN1ZGWktCOHB3U3djVVoyN0VjaTg1?=
+ =?utf-8?B?b1FxbXBBcGc1VWJVU1k1NmtxUHp1RSthelEwVkw0RGNORVZ3akhNbWEvSEE0?=
+ =?utf-8?B?cGx3R1l1QVZodFQwZnNiMU5Bd1hkSTVsWHA0ZEF3RUUwL1Vyb2NHQ0pOTEcy?=
+ =?utf-8?B?QVFEYVIvdSsvOXBRMXBlSzEvbEJRYm5WSlF0SDNEcU94bms4NitYZGFhNmZH?=
+ =?utf-8?B?eXdlV3lLbWFiOU5JMk1MWE9pN0QwWWRZOUNRejJRSmZuYkljNlZYcjcxZGNX?=
+ =?utf-8?B?QVRySFF4TVJxT1phNEVjRXpXVFpkNEFxY1hEMlMwS3RiRmxzMjdjRW9BdWgv?=
+ =?utf-8?B?aW1QRXBOTkpDa204WnlGQ05SdEg0TzBtU090L0NTMUlHTC9vbW5LczFDeXlJ?=
+ =?utf-8?B?UUdFUG9EM2FOTFU3ZW92eDlNWVl3TmkvenEwNUpuOVJnaFZPSWx1UGFxc1pF?=
+ =?utf-8?B?S1E9PQ==?=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="------------NgzDPtq4Yj5mWYFovEtLtMMW"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR06MB6395:EE_|TYZPR06MB5735:EE_
-X-MS-Office365-Filtering-Correlation-Id: 936cb190-c91d-4ea9-8193-08dd7821fc4a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MVNVNnJXRUJGSVM4ZlYzR0xDM2NmVkZTMDBvTS9IQzZvK05SREhiRitlcDRz?=
- =?utf-8?B?WkNWR2YwUm1yQVFzVTd1U2VuUjg0VXdxMnUybzR0NXhXNjRKZnN3K05QdGVB?=
- =?utf-8?B?NWp1K095UnJqNjZ4T1BpeVBkMDJDVlQ0QXpxaisrejFWOWVRY2hkMG1OMEJa?=
- =?utf-8?B?WnJodzcrUHNXMUVSbzJlemI3OEM1OVoxWTRObzlpR3RZbnJPYkVrbnNuZWhB?=
- =?utf-8?B?YTlFcXNOYjlxazJuV2FqR3BjWkgyWng5ZzNhYjdMZ21DV21GY3IycHdmaXBz?=
- =?utf-8?B?N0NFVWg0WGpUbkpOMnZycFNhV1hxU0ZzQnhjTXBNUXZ1MDJsWFN0R1pqeUsz?=
- =?utf-8?B?NEVJTTVONm5iWWRodjBTTHlyaWRNWlFNeHBJWEgvKzVGcU51ZndJWTduVndE?=
- =?utf-8?B?ZjRRTVRoWTNsSVpDY3owRUJ0dW9URTZhRmg0cW1HK3BSWUlPMEppQXlCdEZz?=
- =?utf-8?B?TzNtV1k5YjlYRzZZaHhwOFdISHNMN2pJZjRHR28rcXB4dmVhd01ZTEYyMmIw?=
- =?utf-8?B?VU9rbWd0dGlDQVRDQVRPaFJtMGdzeU0yaTFXQTAwbk5vTkpzNVh4RFhTNHZT?=
- =?utf-8?B?U1owaFJ0OHI4cFRva0NEeS81MGV5T0EvOFlBQldXSE1aYlVOR0lNK3k5aEtF?=
- =?utf-8?B?OFpIUnMvWE5BbW9wWndGNUNsbUtVK05vU0hLeTdqeHo4TXBOQ3hNRU1Fd3FF?=
- =?utf-8?B?WW1QcThSTm9MQkpVSEszZU80YW0xcW5WTCthaGludndYVVRtKzBIZ0N5ZHRJ?=
- =?utf-8?B?dzlCTk9GeUpNMkhLcFdSeWNFdkRlL2JMRHFRQWM4UXpkSzZSdXFTVVRPNDZB?=
- =?utf-8?B?eUJYREpIc3lOVDJWNmcwUWxCb3NVMGkwa01wdWoxeWtDNFRxSWtMS2VaL3B1?=
- =?utf-8?B?QW95aEcxMDRzUzl4VmxhNGpRaDI2SzBKNUtVNWpMK2h4OU5jQjJpNkFpcjhO?=
- =?utf-8?B?b0JpNit3VGhPcDB4bHBWMGJnZTBWNmtyQzh4L24vckZTbW1tN1pERmpHMENP?=
- =?utf-8?B?ckhzTXJrZVRpYUh5cU9ld3N3M3BIN21xNGUyeUQwb01zc2xUMEVsSEdIcnEw?=
- =?utf-8?B?YklmUUt3cndEL1ZtS0htcHVtemVwWmdjeWxjY1F1QWl6VklNQmxxV1lDMy90?=
- =?utf-8?B?bTBmUHNyUmY2VE80cFVqU2EwK1liS0M1ZEh2NUlHOFFaRWk2cmkwa0pRbkY4?=
- =?utf-8?B?cERMMDFDa3N2aGFOYjhLM0FSQjRMSGRTNnB4RFNxQTM2NVlYam9USjVqT1Q5?=
- =?utf-8?B?ampYa2xWdWx1WjR5OVpWbkd6eGEvNWpqaG9TVFllSFZEb0plUS9VYVU3RDdt?=
- =?utf-8?B?Q1RuRThtTEd1MStGRk42Z1JNS2UvZnJJUUxyU09LSmYvSUFiZHdhSlhGb2ZJ?=
- =?utf-8?B?MWU3QVhBQVZtREJuanpBMkc0M2Jaa1MyejBWMTFrMGYxRFBmek92cGhaWGpT?=
- =?utf-8?B?RzdINHZSd0ZsdG1IekF4SGYzeGlNcnBKMHdpVmlSWndXUU8rKzJDQnVXMkFx?=
- =?utf-8?B?ajVHTUdoV25ac25Rcm9FWG5jZG9jRG5kVHVEako1dkRqQzZ1dlB0ZHpVY2ph?=
- =?utf-8?B?NXk0QU5tWmVtWWtFZjdMcFBKT003bVJIUVpKTFI4RWszd3dVYWFnRDdNWThz?=
- =?utf-8?B?MzNmL3hpNWFxNHIyazVMRUQwb0N2dzZEb2s0bVoxem9Ya2wrTFo0R09wRFpy?=
- =?utf-8?B?emZ6NjBkMlRaYlZYbkxsdWFKc2hFYk53WU96NFk1bUlFcXdmZXVXUmtGWGhC?=
- =?utf-8?B?RWZMU1BIemQzeWRra05idjRpK2ZEQi9vUTlxSE9sem9VNm1pdVFXeE94M3ND?=
- =?utf-8?B?SjNBK1ljc3JDY2tTeVRWTWFTMnJ6cllhUjhtUDd0MTJiUW1TWjJydmNHY3hY?=
- =?utf-8?Q?tLf1SKGGRnYa0?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6395.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U0w4VmtGdGFrZnMrTFgxek10V1pJQW9CNTFSRlFnNVp6U0JqUkhBeDlZNFFN?=
- =?utf-8?B?M2U2amxiRHlrVFJSSml6N2x0NHhyMC9TMmJPR2VyRXRvVkhaRldaNnNPSnQx?=
- =?utf-8?B?MkJBcVNSTDJLZHFxQ1Vvb0dwYkNGYzAxcFMzZE5GaE83QWFFNHhVSTRuMWVi?=
- =?utf-8?B?S3NNRFh1b2t0b0huazFsWkFtditYYytvT3k4dHV6L0VqR3V1Ujh0Yzg4QlVa?=
- =?utf-8?B?cmZrTDBYZnVjL09aZlVQcm51NEF4SU5hRElXMStSTlAwMzRwais1ZkhQRmsy?=
- =?utf-8?B?c1lhclpiNTFXNWdRVWlzQXM0dWlYRGxxRnhXVU5NT29Da1VIZkhQdmlvT3FV?=
- =?utf-8?B?eUJFNHNMS2NaU01BMHB2OHRpUFFkZlJxMlB3ZWNyYngxcEhvY0J1UXVDV1dq?=
- =?utf-8?B?Zm9WaFJWQzE5eVZreEczSzQwN3pHYzFMbU5PUFB1SEM5aGVWUHpyalpuNldy?=
- =?utf-8?B?NjdKcEU1MnlxVHgvZnUvTForUjBxa2Y4bitEWEs4RGhSNFZabkZhbU5KbmRm?=
- =?utf-8?B?VXljVGxjeEhxSitGTUhPdjh2UVo1STdHSEp2S3JpZllGanB1bWhXZ3VLN0VT?=
- =?utf-8?B?Y0cydEN2WnJzNGRWSTFVSUh6bEloMGpCVzFoemJHcTBVVVBoU3o0T2hTY2RP?=
- =?utf-8?B?NG1ZaW9lVkFrMGVKSUFhNnBoSHZHamhaTldOSEpSdkVqK3JIelFDOFBIS2lI?=
- =?utf-8?B?RVF1LyswdkJtUjN6KzNlVHcvOUZFeG5MMitlUS84MlpwVm1QN0Q4ZGluMis3?=
- =?utf-8?B?bzZpRHJsQytCa2JjOHM2S0p0VXFyK3lNVFdHSmtEb3A1S1UvbDhEQ3Z1N25z?=
- =?utf-8?B?SHFETVdIdURvZkRZNFNadEtpVGhEb0Nsd2RkbmZqckZqdXgya0g2UkUwS1cr?=
- =?utf-8?B?VVpXZEZyV2c5T3IrVWZDbExKc1F2ZnYxTXllcU1yWDBLVHJxK2p5VTNFaXJv?=
- =?utf-8?B?YTdoVE9lRWxodDdTS1dRTWIwUitQS2ljbmtRaktlQjJzdS9ieldKODR2Ujla?=
- =?utf-8?B?YWJEZGlFOWNWaUV4ZWZuYU1Nbm9mZndNL1hoL2hLcjFJMTZSZHlMZGp0Y0lJ?=
- =?utf-8?B?M0V0cEN6VmVGdFNhMWxYd2srYnlzNjNvUW5vV25xOXQ0NEYwdW9oSm9UczhY?=
- =?utf-8?B?dXd2azQzQ2NDblhSRW9zT0Zud3dsZ3pDVExwMFZOU3dCQkdKWHRiNUUwbmJl?=
- =?utf-8?B?d1FhNURodnpXeW9mK21wSk9JcWdxRW5kRDBiaHJDZmFWcG1iRElMMlo1Nzd6?=
- =?utf-8?B?clIrRVhCWFQyUU5WT25aK3RqM3pJM2NORGVRYTBBNXBmRGhQcytCSi9VdTd6?=
- =?utf-8?B?THZncEJMc2ZWd2ova3Y2dlM0cUUzdlE2aDF1T2ltakhFdklZWUVBMndOVmti?=
- =?utf-8?B?T0JncDBTL0RJc2pBN3pPUDVnUi9rSTJQUWx1emgzc0hvemc0dFhhdmRwdTkr?=
- =?utf-8?B?YS8xeGtocXhLQVBqb0dTMVRqWnhJREo4NHQ3SnFDbkRLQ3dlUldXTnpaVkdq?=
- =?utf-8?B?bHAveW9qa2F2TmpUYzNDSzVWczJLUXVwY3BONUNyTUVGQlhZS2ViYTR6bnox?=
- =?utf-8?B?VFovbHcyMElmcWhtejdrRTFPUVRtSzRaUFFQUXRONnlNRG55a01LMXdCWEEy?=
- =?utf-8?B?aWw2SkhISEIxL3N4U3piVDdvTkFCb3NQaXN2UVpLdDVaNi9Hb21FOWZtbVpI?=
- =?utf-8?B?eDNnWUVQOUdJVDNlaUpvQWQ2cnJrbzlubU5VOTRFRzZMREhVY2J5L2R1NmE3?=
- =?utf-8?B?SWw0SytuKzRmbmwyaVg3SFo3cXozTDVtOVkwV0E2Vy9xQVFlK2lyL1AzTnhr?=
- =?utf-8?B?cDNlSHVCL3FmcGJUN1laZUVmOEhmNmFpalg1dDBVbVFBVWFIR0JMeVhzNXFP?=
- =?utf-8?B?V3JCUElwcHBiL1FDb0puQjUrRFlZTlRKbFpRSWExbUtXMFM3USt1SnhzVHk5?=
- =?utf-8?B?b0xCUGRYUjNiSWthYm05L09mdTA2M0NtQ1UvbXFiRnY2TzVCcmpDdFZlTHh1?=
- =?utf-8?B?WGRoQmlISlZiQk94RXJHdUVFdHFEbVU1UEpCNnNKbVR0RHFLZ0pjb3hQd2dt?=
- =?utf-8?B?UUovOEtFajhtSCs5Y21XL2E5bmZxN2M3QkFWdE5VOVQ1VStmTW1PMkRmR2JH?=
- =?utf-8?B?TDdUZnA1cTNEK1VQaHIzZS93RkhXckZKSU83elR5U2hmMHVZRjRrOHR6aWo4?=
- =?utf-8?B?SXc9PQ==?=
-X-OriginatorOrg: portwell.com.tw
-X-MS-Exchange-CrossTenant-Network-Message-Id: 936cb190-c91d-4ea9-8193-08dd7821fc4a
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6395.apcprd06.prod.outlook.com
+X-OriginatorOrg: imgtec.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 11:22:32.1712
+X-MS-Exchange-CrossTenant-AuthSource: CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: afade1f3-a2cd-4749-2227-08dd7821ec8a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2025 11:22:05.3937
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e309f7e-c3ee-443b-8668-97701d998b2c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9x0/Nw1DVaZUDbg0xC3IYxG6wVUjfhhAAVPyKgJJ+elNfxcF8/ixJKJCRsITFR/CrgybvK4pd1oDV2alO7bB9KRx/X4NjNBNwY8YC40G+Es=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5735
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d5fd8bb-e8c2-4e0a-8dd5-2c264f7140fe
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 82jVDTzO6DDdjqKc9r8XIww8fBeTBg4/rFig6sZ6wCXimMDtMSCV1bTeL8HYeOUuv+8kH8NLftERqBk8qY52jA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP265MB2722
+X-Proofpoint-ORIG-GUID: i65TpXtH0PavaBo0PqoYs0tjvuvBsAcl
+X-Authority-Analysis: v=2.4 cv=I7hlRMgg c=1 sm=1 tr=0 ts=67f7a9e0 cx=c_pps a=+8G7KV7MoNjfk4g9SO/OOg==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=XR8D0OoHHMoA:10
+ a=NgoYpvdbvlAA:10 a=r_1tXGB3AAAA:8 a=EwWf3kosYhxdagVo86AA:9 a=QEXdDO2ut3YA:10 a=v9SVIVwZWqaKqeZQp84A:9 a=FfaGCDsud1wA:10 a=t8nPyN_e6usw4ciXM-Pk:22
+X-Proofpoint-GUID: i65TpXtH0PavaBo0PqoYs0tjvuvBsAcl
 
-Adds a driver for the ITE Embedded Controller (EC) on Portwell boards.
-It integrates with the Linux GPIO and watchdog subsystems to provide:
+--------------NgzDPtq4Yj5mWYFovEtLtMMW
+Content-Type: multipart/mixed; boundary="------------QAaQGMesRq5LYzReAO94KwQA";
+ protected-headers="v1"
+From: Matt Coster <matt.coster@imgtec.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Frank Binns <frank.binns@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Arnd Bergmann <arnd@arndb.de>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Jani Nikula <jani.nikula@intel.com>, Alex Deucher
+ <alexander.deucher@amd.com>, Alessio Belle <alessio.belle@imgtec.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Message-ID: <7ae4be5c-b115-405e-aa57-caeaa206775b@imgtec.com>
+Subject: Re: [PATCH 01/10] drm/imagination: avoid unused-const-variable
+ warning
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <20250409122314.2848028-1-arnd@kernel.org>
+In-Reply-To: <20250409122314.2848028-1-arnd@kernel.org>
 
-- Control/monitoring of up to 8 EC GPIO pins.
-- Hardware watchdog timer with 1-255 second timeouts.
+--------------QAaQGMesRq5LYzReAO94KwQA
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The driver communicates with the EC via I/O port 0xe300 and identifies
-the hardware by the "PWG" firmware signature. This enables enhanced
-system management for Portwell embedded/industrial platforms.
+On 09/04/2025 13:22, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> When CONFIG_DEBUG_FS is disabled, the stid_fmts[] array is not referenc=
+ed
+> anywhere, causing a W=3D1 warning with gcc:
+>=20
+> In file included from drivers/gpu/drm/imagination/pvr_fw_trace.c:7:
+> drivers/gpu/drm/imagination/pvr_rogue_fwif_sf.h:75:39: error: 'stid_fmt=
+s' defined but not used [-Werror=3Dunused-const-variable=3D]
+>    75 | static const struct rogue_km_stid_fmt stid_fmts[] =3D {
+>       |                                       ^~~~~~~~~
 
-Signed-off-by: Yen-Chi Huang <jesse.huang@portwell.com.tw>
----
-V2->V3:
-  - Reworked based on review from Bartosz Golaszewski
-  - Changed to use platform_driver and platform_device
-  - Updated GPIO to use .set_rv() instead of .set()
-  - Used devm_ helpers for request_region, GPIO and watchdog registration
+Hi Arnd,
 
-V1->V2:
-  - Addressed review comments from Ilpo Jarvinen
-  - Add DMI system check to avoid running on unsupported platforms
-  - Add 'force' module parameter to override DMI matching
-  - Use request_region() to claim I/O port access
-  - Extend WDT timeout handling to use both minute and second registers
-  - Increase WDT max timeout from 255s to 15300s
-  - Use named defines for WDT enable/disable
-  - Remove dummy pr_info() messages
-  - Fix several coding style issues (comments, alignment, spacing)
----
- MAINTAINERS                        |   6 +
- drivers/platform/x86/Kconfig       |  14 ++
- drivers/platform/x86/Makefile      |   3 +
- drivers/platform/x86/portwell-ec.c | 292 +++++++++++++++++++++++++++++
- 4 files changed, 315 insertions(+)
- create mode 100644 drivers/platform/x86/portwell-ec.c
+Thanks for catching this! My dev environment permanently has DEBUG_FS
+enabled, we should probably look into a wider variety of testing
+configs.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d5dfb9186962..c52f819786dc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19132,6 +19132,12 @@ F:	kernel/time/itimer.c
- F:	kernel/time/posix-*
- F:	kernel/time/namespace.c
- 
-+PORTWELL EC DRIVER
-+M:	Yen-Chi Huang <jesse.huang@portwell.com.tw>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/portwell-ec.c
-+
- POWER MANAGEMENT CORE
- M:	"Rafael J. Wysocki" <rafael@kernel.org>
- L:	linux-pm@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 43407e76476b..2f26d1bf0a75 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -779,6 +779,20 @@ config PCENGINES_APU2
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pcengines-apuv2.
- 
-+config PORTWELL_EC
-+	tristate "Portwell Embedded Controller driver"
-+	depends on X86 && HAS_IOPORT && WATCHDOG && GPIOLIB
-+	help
-+	  This driver provides support for the GPIO pins and watchdog timer
-+	  embedded in Portwell's EC.
-+
-+	  Theoretically, this driver should work on multiple Portwell platforms,
-+	  but it has only been tested on the Portwell NANO-6064 board.
-+	  If you encounter any issues on other boards, please report them.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called portwell-ec.
-+
- config BARCO_P50_GPIO
- 	tristate "Barco P50 GPIO driver for identify LED/button"
- 	depends on GPIOLIB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 650dfbebb6c8..83dd82e04457 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -92,6 +92,9 @@ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
- # PC Engines
- obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
- 
-+# Portwell
-+obj-$(CONFIG_PORTWELL_EC)	+= portwell-ec.o
-+
- # Barco
- obj-$(CONFIG_BARCO_P50_GPIO)	+= barco-p50-gpio.o
- 
-diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
-new file mode 100644
-index 000000000000..7a60ced0c984
---- /dev/null
-+++ b/drivers/platform/x86/portwell-ec.c
-@@ -0,0 +1,292 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * portwell-ec.c: Portwell embedded controller driver.
-+ *
-+ * Tested on:
-+ *  - Portwell NANO-6064
-+ *
-+ * This driver provides support for GPIO and Watchdog Timer
-+ * functionalities of the Portwell boards with ITE embedded controller (EC).
-+ * The EC is accessed through I/O ports and provides:
-+ *  - 8 GPIO pins for control and monitoring
-+ *  - Hardware watchdog with 1-15300 second timeout range
-+ *
-+ * It integrates with the Linux GPIO and Watchdog subsystems, allowing
-+ * userspace interaction with EC GPIO pins and watchdog control,
-+ * ensuring system stability and configurability.
-+ *
-+ * (C) Copyright 2025 Portwell, Inc.
-+ * Author: Yen-Chi Huang (jesse.huang@portwell.com.tw)
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/dmi.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/string.h>
-+#include <linux/watchdog.h>
-+
-+#define PORTWELL_EC_IOSPACE 0xe300
-+#define PORTWELL_EC_IOSPACE_LEN 0x100
-+
-+#define PORTWELL_GPIO_PINS 8
-+#define PORTWELL_GPIO_DIR_REG 0x2b
-+#define PORTWELL_GPIO_VAL_REG 0x2c
-+
-+#define PORTWELL_WDT_EC_CONFIG_ADDR 0x06
-+#define PORTWELL_WDT_CONFIG_ENABLE 0x1
-+#define PORTWELL_WDT_CONFIG_DISABLE 0x0
-+#define PORTWELL_WDT_EC_COUNT_MIN_ADDR 0x07
-+#define PORTWELL_WDT_EC_COUNT_SEC_ADDR 0x08
-+#define PORTWELL_WDT_EC_MAX_COUNT_SECOND 15300 //255*60secs
-+
-+#define PORTWELL_EC_FW_VENDOR_ADDRESS 0x4d
-+#define PORTWELL_EC_FW_VENDOR_LENGTH 3
-+#define PORTWELL_EC_FW_VENDOR_NAME "PWG"
-+
-+static bool force;
-+module_param(force, bool, 0444);
-+MODULE_PARM_DESC(force, "Force loading ec driver without checking DMI boardname");
-+
-+static const struct dmi_system_id pwec_dmi_table[] = {
-+	{
-+		.ident = "NANO-6064 series",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "NANO-6064"),
-+		},
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(dmi, pwec_dmi_table);
-+
-+/* Functions for access EC via IOSPACE*/
-+
-+static void pwec_write(u8 index, u8 data)
-+{
-+	outb(data, PORTWELL_EC_IOSPACE + index);
-+}
-+
-+static u8 pwec_read(u8 address)
-+{
-+	return inb(PORTWELL_EC_IOSPACE + address);
-+}
-+
-+/* GPIO functions*/
-+
-+static int pwec_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	return (pwec_read(PORTWELL_GPIO_VAL_REG) & (1 << offset)) ? 1 : 0;
-+}
-+
-+static int pwec_gpio_set_rv(struct gpio_chip *chip, unsigned int offset, int val)
-+{
-+	u8 tmp = pwec_read(PORTWELL_GPIO_VAL_REG);
-+
-+	if (val)
-+		tmp |= (1 << offset);
-+	else
-+		tmp &= ~(1 << offset);
-+	pwec_write(PORTWELL_GPIO_VAL_REG, tmp);
-+	return 0;
-+}
-+
-+static int pwec_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	u8 direction = pwec_read(PORTWELL_GPIO_DIR_REG) & (1 << offset);
-+
-+	if (direction)
-+		return GPIO_LINE_DIRECTION_IN;
-+	else
-+		return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+/*
-+ * Changing direction causes issues on some boards,
-+ * so direction_input and direction_output are disabled for now.
-+ */
-+
-+static int pwec_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int pwec_gpio_direction_output(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static struct gpio_chip pwec_gpio_chip = {
-+	.label = "portwell-ec-gpio",
-+	.get_direction = pwec_gpio_get_direction,
-+	.direction_input = pwec_gpio_direction_input,
-+	.direction_output = pwec_gpio_direction_output,
-+	.get = pwec_gpio_get,
-+	.set_rv = pwec_gpio_set_rv,
-+	.base = -1,
-+	.ngpio = PORTWELL_GPIO_PINS,
-+};
-+
-+/* Watchdog functions*/
-+
-+static int pwec_wdt_trigger(struct watchdog_device *wdd)
-+{
-+	int retry = 10;
-+	u8 min, sec;
-+	unsigned int timeout;
-+
-+	do {
-+		pwec_write(PORTWELL_WDT_EC_COUNT_MIN_ADDR, wdd->timeout / 60);
-+		pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout % 60);
-+		pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, PORTWELL_WDT_CONFIG_ENABLE);
-+		min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
-+		sec = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
-+		timeout = min * 60 + sec;
-+		retry--;
-+	} while (timeout != wdd->timeout && retry >= 0);
-+	if (retry < 0) {
-+		pr_err("watchdog started failed\n");
-+		return -EIO;
-+	} else
-+		return 0;
-+}
-+
-+static int pwec_wdt_start(struct watchdog_device *wdd)
-+{
-+	return pwec_wdt_trigger(wdd);
-+}
-+
-+static int pwec_wdt_stop(struct watchdog_device *wdd)
-+{
-+	pwec_write(PORTWELL_WDT_EC_CONFIG_ADDR, PORTWELL_WDT_CONFIG_DISABLE);
-+	return 0;
-+}
-+
-+static int pwec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
-+{
-+	if (timeout == 0 || timeout > PORTWELL_WDT_EC_MAX_COUNT_SECOND)
-+		return -EINVAL;
-+	wdd->timeout = timeout;
-+	pwec_write(PORTWELL_WDT_EC_COUNT_MIN_ADDR, wdd->timeout / 60);
-+	pwec_write(PORTWELL_WDT_EC_COUNT_SEC_ADDR, wdd->timeout % 60);
-+	return 0;
-+}
-+
-+static unsigned int pwec_wdt_get_timeleft(struct watchdog_device *wdd)
-+{
-+	u8 min, sec;
-+
-+	min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
-+	sec = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
-+	return min * 60 + sec;
-+}
-+
-+static const struct watchdog_ops pwec_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = pwec_wdt_start,
-+	.stop = pwec_wdt_stop,
-+	.ping = pwec_wdt_trigger,
-+	.set_timeout = pwec_wdt_set_timeout,
-+	.get_timeleft = pwec_wdt_get_timeleft,
-+};
-+
-+static struct watchdog_device ec_wdt_dev = {
-+	.info = &(struct watchdog_info){
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.identity = "Portwell EC Watchdog",
-+	},
-+	.ops = &pwec_wdt_ops,
-+	.timeout = 60,
-+	.min_timeout = 1,
-+	.max_timeout = PORTWELL_WDT_EC_MAX_COUNT_SECOND,
-+};
-+
-+static int pwec_firmware_vendor_check(void)
-+{
-+	u8 buf[PORTWELL_EC_FW_VENDOR_LENGTH + 1];
-+	u8 i;
-+
-+	for (i = 0; i < PORTWELL_EC_FW_VENDOR_LENGTH; i++)
-+		buf[i] = pwec_read(PORTWELL_EC_FW_VENDOR_ADDRESS + i);
-+	buf[PORTWELL_EC_FW_VENDOR_LENGTH] = '\0';
-+
-+	return (strcmp(PORTWELL_EC_FW_VENDOR_NAME, buf) == 0) ? 0 : -ENODEV;
-+}
-+
-+static int pwec_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	if (!devm_request_region(&pdev->dev, PORTWELL_EC_IOSPACE,
-+				PORTWELL_EC_IOSPACE_LEN, dev_name(&pdev->dev))) {
-+		pr_err("I/O region 0xE300-0xE3FF busy\n");
-+		return -EBUSY;
-+	}
-+
-+	ret = pwec_firmware_vendor_check();
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = devm_gpiochip_add_data(&pdev->dev, &pwec_gpio_chip, NULL);
-+	if (ret < 0) {
-+		pr_err("failed to register Portwell EC GPIO\n");
-+		return ret;
-+	}
-+
-+	ret = devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
-+	if (ret < 0) {
-+		gpiochip_remove(&pwec_gpio_chip);
-+		pr_err("failed to register Portwell EC Watchdog\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver pwec_driver = {
-+	.driver = {
-+		.name = "portwell-ec",
-+	},
-+	.probe = pwec_probe
-+};
-+
-+static struct platform_device *pwec_dev;
-+
-+static int __init pwec_init(void)
-+{
-+	int ret;
-+
-+	if (!force) {
-+		if (!dmi_check_system(pwec_dmi_table)) {
-+			pr_info("unsupported platform\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	ret = platform_driver_register(&pwec_driver);
-+	if (ret)
-+		return ret;
-+
-+	pwec_dev = platform_device_register_simple("portwell-ec", -1, NULL, 0);
-+	return PTR_ERR_OR_ZERO(pwec_dev);
-+}
-+
-+static void __exit pwec_exit(void)
-+{
-+	if (pwec_dev)
-+		platform_device_unregister(pwec_dev);
-+	platform_driver_unregister(&pwec_driver);
-+}
-+
-+module_init(pwec_init);
-+module_exit(pwec_exit);
-+
-+MODULE_AUTHOR("Yen-Chi Huang <jesse.huang@portwell.com.tw");
-+MODULE_DESCRIPTION("Portwell EC Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+>=20
+> Rather than adding more #ifdef blocks, address this by changing the
+> existing #ifdef into equivalent IS_ENABLED() checks so gcc can see
+> where the symbol is used but still eliminate it from the object file.
 
+Possibly a silly question, but wouldn't adding __maybe_unused to
+stid_fmts be a simpler change here? Or is there a strong preference to
+avoid #ifdef CONFIG_* and let the compiler figure out what to elide?
+
+The contents of the pvr_rogue_fwif*.h headers is essentially normative
+outside of company-internal documentation. With types, there's generally
+no warnings emitted when they're not used, but I believe this is the
+only instance of actual data being stored in these headers.
+
+I suppose technically it should even be moved to an associated *.c file,
+but that would (I assume) further confound the compiler's ability to
+decide when it's needed in the final binary (or I guess the linker if
+it's in a separate object).
+
+>=20
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpu/drm/imagination/pvr_fw_trace.c | 8 ++++----
+>  drivers/gpu/drm/imagination/pvr_fw_trace.h | 2 --
+>  2 files changed, 4 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/imagination/pvr_fw_trace.c b/drivers/gpu/d=
+rm/imagination/pvr_fw_trace.c
+> index 5dbb636d7d4f..93269299d6a4 100644
+> --- a/drivers/gpu/drm/imagination/pvr_fw_trace.c
+> +++ b/drivers/gpu/drm/imagination/pvr_fw_trace.c
+> @@ -122,8 +122,6 @@ void pvr_fw_trace_fini(struct pvr_device *pvr_dev)
+>  	pvr_fw_object_unmap_and_destroy(fw_trace->tracebuf_ctrl_obj);
+>  }
+> =20
+> -#if defined(CONFIG_DEBUG_FS)
+> -
+>  /**
+>   * update_logtype() - Send KCCB command to trigger FW to update logtyp=
+e
+>   * @pvr_dev: Target PowerVR device
+> @@ -447,7 +445,7 @@ static const struct file_operations pvr_fw_trace_fo=
+ps =3D {
+>  void
+>  pvr_fw_trace_mask_update(struct pvr_device *pvr_dev, u32 old_mask, u32=
+ new_mask)
+>  {
+> -	if (old_mask !=3D new_mask)
+> +	if (IS_ENABLED(CONFIG_DEBUG_FS) && old_mask !=3D new_mask)
+
+Logically, there's no reason to add the condition here. This function
+was only gated behind CONFIG_DEBUG_FS because that was the only
+mechanism provided to invoke update_logtype() but since we're relying on
+the compiler to figure out when this function is required, we can skip
+the IS_ENABLED() check.
+
+>  		update_logtype(pvr_dev, new_mask);
+>  }
+> =20
+> @@ -457,6 +455,9 @@ pvr_fw_trace_debugfs_init(struct pvr_device *pvr_de=
+v, struct dentry *dir)
+>  	struct pvr_fw_trace *fw_trace =3D &pvr_dev->fw_dev.fw_trace;
+>  	u32 thread_nr;
+> =20
+> +	if (!IS_ENABLED(CONFIG_DEBUG_FS))
+> +		return;
+> +
+>  	static_assert(ARRAY_SIZE(fw_trace->buffers) <=3D 10,
+>  		      "The filename buffer is only large enough for a single-digit t=
+hread count");
+> =20
+> @@ -469,4 +470,3 @@ pvr_fw_trace_debugfs_init(struct pvr_device *pvr_de=
+v, struct dentry *dir)
+>  				    &pvr_fw_trace_fops);
+>  	}
+>  }
+> -#endif
+> diff --git a/drivers/gpu/drm/imagination/pvr_fw_trace.h b/drivers/gpu/d=
+rm/imagination/pvr_fw_trace.h
+> index 0074d2b18da0..1d0ef937427a 100644
+> --- a/drivers/gpu/drm/imagination/pvr_fw_trace.h
+> +++ b/drivers/gpu/drm/imagination/pvr_fw_trace.h
+> @@ -65,7 +65,6 @@ struct pvr_fw_trace {
+>  int pvr_fw_trace_init(struct pvr_device *pvr_dev);
+>  void pvr_fw_trace_fini(struct pvr_device *pvr_dev);
+> =20
+> -#if defined(CONFIG_DEBUG_FS)
+>  /* Forward declaration from <linux/dcache.h>. */
+>  struct dentry;
+
+With the #ifdef removed, there's no reason to keep this forward
+declaration down here. Can you move it up to the top of the file with
+the others?
+
+> =20
+> @@ -73,6 +72,5 @@ void pvr_fw_trace_mask_update(struct pvr_device *pvr_=
+dev, u32 old_mask,
+>  			      u32 new_mask);
+> =20
+>  void pvr_fw_trace_debugfs_init(struct pvr_device *pvr_dev, struct dent=
+ry *dir);
+> -#endif /* defined(CONFIG_DEBUG_FS) */
+
+Having said that, surely it makes sense to keep at least
+*_debugfs_init() gated behind CONFIG_DEBUG_FS?
+
+> =20
+>  #endif /* PVR_FW_TRACE_H */
+
+
+--=20
+Matt Coster
+E: matt.coster@imgtec.com
+
+--------------QAaQGMesRq5LYzReAO94KwQA--
+
+--------------NgzDPtq4Yj5mWYFovEtLtMMW
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQS4qDmoJvwmKhjY+nN5vBnz2d5qsAUCZ/ep3AUDAAAAAAAKCRB5vBnz2d5qsEkV
+AP9ECzBIMkaJSoZ5nNL8ehs4R4l/6/X5/GzlRKBdr8XpWgD+INOphwX6xt2bP8+MH28+Vpy785t+
+LlR1uvZSt978igg=
+=oj75
+-----END PGP SIGNATURE-----
+
+--------------NgzDPtq4Yj5mWYFovEtLtMMW--
