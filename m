@@ -1,161 +1,88 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93181215F7F;
-	Thu, 10 Apr 2025 09:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB8C20C012
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277041; cv=none; b=U4ggbGw0a0/KCFpm86skTsAk9cRX/jJ2DuiO2UQ5glgcWxQTCpRw2gmcPWiaiVJ9bKiAD0QjYhtIO3suIhYq0h2G+QkAzoS8LOeusaO8A6aGZ7r4hmYYlVALH4kxC1qzipJqCaFUSQhBjOD//L0ZBIeIy/lnV83B0sZTjubTNcI=
+	t=1744277083; cv=none; b=TzoOf39xfdnyejP37PexA5bPexRb2nkeeRi4eOI/qZAWr6tO76PsNwnLtgBE8CK9W5MfENGuL5VyaR8pUOUH1ySRD1L3EkVQrx358SAins570X71pRET/8H7i19FpixrGqlLFj2TJP5BbOvHAQd7b2Bj7elOt92CSh++9aUSkSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277041; c=relaxed/simple;
-	bh=cr1XqsGW0Is9QsImdjqJUZfHSWRAI+91hWhEgPxCyMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZKznoyHXyjydrDoBvB8up3xwj9+ACrAZ55xC8xEvDXRAUnAoo8r5ewTQTyz4JXiFd7ckn3trh3U00amG5/Mb5WBM4hAuaGHXjtRFfS2lQBHz+jcc+IvowT96cYLAmCzGw+hLVvylGxC5WCGlDrNbN0Kr67FYGU/xaSzMmg82cFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=CI4cOCBP; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1744277083; c=relaxed/simple;
+	bh=1rME6v6gtNb/UyD8b6NnpJlZDiSJcu7bGJOqqZsY4ss=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RG7qnO9i9Bqxr7q5zjTp9hfIcfporVnnuuT8fI4BBzAz3AdkhrMwhGWIuuGA9F1+/BbqUoYyuxIVPAVJ0sW1h+8czEE9kZxHur0TiODKQ4rFtM8hVoJ4myygdF4HPD5HfNvO1eOA2CEz9OLKtj4q87l0Jwji6SvT3ozI3zjcvyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EenVMZ7c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="CI4cOCBP"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0309A1034EAEC;
-	Thu, 10 Apr 2025 11:23:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1744277036; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=azBeY/ABdzLCK2gCU3irIQ43T5ERKSG6fIfSiV5Z92s=;
-	b=CI4cOCBPBMLylFiXGeRD7c3jrqxluWRjSNAlIVxYBRtfkxu65x+EH4XLY/RWNVQLhZosUf
-	SNRanfj363p0NmPSjDBbtK4Aa0/DGdWK1QYocBqQRsROGf+9BoyW+6BUpmDG3PEKT72AzW
-	Kt0PPuHmbSfEeymFfHcUdhia9ba74M+Bizo3HQVmUWtKhZT/AhaMEzY9AJ4/fJLJUAXNpY
-	4VbjZzMTsHkVRJjxPHOrMpaKk7G7pLhyYiuIE6wCsNy8CwGb2UNE/d5gH5CO/Bw5ahhDaN
-	a64VEcfrTUvWWIGW92YyCAn0cDiUW4xAL3k3/Y/X8EwEnICsbdvfcnGQmm3EIQ==
-Date: Thu, 10 Apr 2025 11:23:50 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Stefan Wahren <wahrenst@gmx.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [net-next v4 5/5] ARM: mxs_defconfig: Enable
- CONFIG_FEC_MTIP_L2SW to support MTIP L2 switch
-Message-ID: <20250410112350.7dbb299c@wsk>
-In-Reply-To: <ea8cc94c-b212-4ae2-8c5b-7697e9b358aa@kernel.org>
-References: <20250407145157.3626463-1-lukma@denx.de>
-	<20250407145157.3626463-6-lukma@denx.de>
-	<c67ad9fa-6255-48e8-9537-2fceb0510127@gmx.net>
-	<20250410090122.0e4cadef@wsk>
-	<ea8cc94c-b212-4ae2-8c5b-7697e9b358aa@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EenVMZ7c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BC24C4CEDD;
+	Thu, 10 Apr 2025 09:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744277082;
+	bh=1rME6v6gtNb/UyD8b6NnpJlZDiSJcu7bGJOqqZsY4ss=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EenVMZ7cR3M/EW8OKmstJ/KtKHKTuSzyU8rF71gbQ29mLNmcCI6zwNzq7mbmlevNx
+	 J6kDyFq4IKeE7m7ZSzmksPX8/9G3BhJNDWPRSWSmTQ6I+BpHf69CCq7cvf0LMc7bqT
+	 tnaW5Cw4tPoayATZYcVEqwad0aC2Gk98yq96EzlbHT5u1vsrXz7WYgyQWqxyd5/E0J
+	 tnlPZyV/nfcN352XcG4dyVeaNV1Nn9rLYyHZyZgNszswXdlRGXzMWZ5sP9xuJzwNmL
+	 BQDzDCl54CR2p2W48WjaYH/x1IRWakI1xfkaoNZ6l55UdRHTex9CRcTCN2hn5ZaaQi
+	 2DWLT5eHCtwMQ==
+From: alexs@kernel.org
+To: 
+Cc: linux-kernel@vger.kernel.org,
+	Alex Shi <alexs@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: [PATCH 1/4] tick/nohz: remove function tick_nohz_full_add_cpus_to
+Date: Thu, 10 Apr 2025 17:24:16 +0800
+Message-ID: <20250410092423.9831-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/r5tjFsU34eWBYPJ.iEWYDwo";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
---Sig_/r5tjFsU34eWBYPJ.iEWYDwo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Alex Shi <alexs@kernel.org>
 
-Hi Krzysztof,
+This function isn't used by anyone. Remove it.
 
-> On 10/04/2025 09:01, Lukasz Majewski wrote:
-> > Hi Stefan,
-> >  =20
-> >> Hi Lukasz,
-> >>
-> >> Am 07.04.25 um 16:51 schrieb Lukasz Majewski: =20
-> >>> This patch enables support for More Than IP switch available on
-> >>> some imx28[7] devices.
-> >>>
-> >>> Signed-off-by: Lukasz Majewski <lukma@denx.de>   =20
-> >> thanks adding the driver to mxs_defconfig. Unfortunately it's not
-> >> possible for reviewers to identify the relevant changes, =20
-> >=20
-> > Could you be more specific here?
-> > As fair as I see - there is only 14 LOCs changed for review. =20
->=20
-> Really, the comment was very specific. You make multiple independent,
-> looking irrelevant changes to the file.
->=20
-> >=20
-> > Please also be aware that MTIP L2 switch driver has some
-> > dependencies - on e.g. SWITCHDEV and BRIDGE, which had to be
-> > enabled to allow the former one to be active.
-> >  =20
-> >> also the
-> >> commit messages doesn't provide further information.
-> >> =20
-> >=20
-> > What kind of extra information shall I provide? IMHO the patch is
-> > self-explaining. =20
->=20
-> For example explain why do you think GPIO_SYSFS should be dropped.
->=20
-> >  =20
-> >> In general there are two approaches to solves this:
-> >> 1) prepend an additional patch which synchronizes mxs_defconfig
-> >> with current mainline
-> >> 2) manually create the relevant changes against mxs_defconfig
-> >>
-> >> The decision about the approaches is up to the maintainer. =20
-> >=20
-> > I took the linux-next's (or net-next) mxs defconfig (cp it to be
-> > .config)
-> >=20
-> > Then run CROSS_COMPILE=3D ... make ARCH=3Darm menuconfig
-> > Enabled all the relevant Kconfig options and run
-> >=20
-> > CROSS_COMPILE=3D ... make ARCH=3Darm savedefconfig
-> > and copy defconfig to mxs_defconfig.
-> > Then I used git to prepare the patch.
-> >=20
-> > Isn't the above procedure correct? =20
->=20
-> No, it is not correct. Do not make any changes in the "Enabled all the
-> relevant Kconfig options and run" step and check the result. Do you
-> see difference in result file? If yes, then why such difference
-> should be part of this commit?
+Signed-off-by: Alex Shi <alexs@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
+---
+ include/linux/tick.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
-Ok, I get your point. Then I shall prepare a separate, pre-patch.
-Thanks for info.
+diff --git a/include/linux/tick.h b/include/linux/tick.h
+index b8ddc8e631a3..ac76ae9fa36d 100644
+--- a/include/linux/tick.h
++++ b/include/linux/tick.h
+@@ -195,12 +195,6 @@ static inline bool tick_nohz_full_enabled(void)
+ 	__ret;								\
+ })
+ 
+-static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask)
+-{
+-	if (tick_nohz_full_enabled())
+-		cpumask_or(mask, mask, tick_nohz_full_mask);
+-}
+-
+ extern void tick_nohz_dep_set(enum tick_dep_bits bit);
+ extern void tick_nohz_dep_clear(enum tick_dep_bits bit);
+ extern void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit);
+@@ -281,7 +275,6 @@ extern void __init tick_nohz_full_setup(cpumask_var_t cpumask);
+ #else
+ static inline bool tick_nohz_full_enabled(void) { return false; }
+ static inline bool tick_nohz_full_cpu(int cpu) { return false; }
+-static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask) { }
+ 
+ static inline void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit) { }
+ static inline void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit) { }
+-- 
+2.47.1
 
->=20
-> Best regards,
-> Krzysztof
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/r5tjFsU34eWBYPJ.iEWYDwo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmf3jiYACgkQAR8vZIA0
-zr2DEgf+KE3yYGEwlrYyU8JplEso25aCWU0x5ENkFsHPsIds+J9TLbxooFsu53fP
-6Y2JsJPakI0iBlKqW55uuZWh20wPWTFpIoqAk77FautHOO3BcML3lov3upWRH273
-RGVQEJHRGURV/Q2w2jGM6fNH7JjWZjNHRS6WqNZnRm4WedNh5o3MJobE60k/yNOn
-0RFMSqPOegpWpEJQnSmcip2s66i50dy2ou8kqmUwpDX6OMwJP8sELshq2eJDgH2G
-z/p9pXjh5tfkJw3KO/LUktGgHfCdsjhP4pK3WNaLpSIHEMd1kDEnrrbhaQwMyVwt
-qfkJipgw2GEVOxmgaUF5g4GIJ92exQ==
-=Cxw1
------END PGP SIGNATURE-----
-
---Sig_/r5tjFsU34eWBYPJ.iEWYDwo--
