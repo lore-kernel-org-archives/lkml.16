@@ -1,65 +1,84 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from pv50p00im-ztdg10021201.me.com (pv50p00im-ztdg10021201.me.com [17.58.6.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F2628A3FB
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1FD26A1B9
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290729; cv=none; b=OWkKh6wTRreL1gIgkBELEyulGCpIQXoBFNvyS13VmK36/zuzFKQpTRj6ugg5cqwIqYR1uohVxskjmA2niyFDbYmJLeawDJFzcQDdvVlMHZXZtRZp5gt6Z8B6DGjm1bYSQguivx6TJdYA9MwgEYcVQNfMWb2ecNvvzLRDhn4A9Uo=
+	t=1744290761; cv=none; b=hwDM22ZQF0QuVsNhsuhFkG+rz6xmchn+Lgc0SXlCDS2XlotbQ7VUdYn3Noyq+TKHOQilSt+2JemZJvTydHMAPU9nLUuIg+a/c9fmXT+jDacm/jFR4i+TLZIli0bbRAcmAEDHDXpxGro5kbGbl+SK1s2CZBUj8Ff6Gp6/3ubddac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290729; c=relaxed/simple;
-	bh=VnOjS1BcrM1dFbNaXGuQroXEGwjJQpp0qm5mchxF+So=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=b2Yqt/5VfHDKdmxBZSpucv2snh+oq1NGMJnOWMJwTCLDPJgptrLehbulhMOrQmib4Y2dL90unvl5lyPO9wGWT/ErFte/TDIGpbVY2KxNRc8Ow5l6APIIkoKRlHYGvbXunpkc17Jy3IWG0ZfJGndd9f/cFaieZwH1kTHQp15EAvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=korCSXfN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KRRNXEV/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744290761; c=relaxed/simple;
+	bh=NA5G4ydnWAWqc3QEFJTbXFnSVWsn4IihhOrceoILLlU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qHhP5yWMdxgbahatbH8dMoOg0hMQStdjkJn5LPwfaN5Bkle958LgfMTIR+k7/BKfS2QmiY5R3D1jk2PwVDHIR9ND8W1GlhxS4FazDgxRh2UmtNlmREKWoEStmiuePqxJ+qYSyoQaRlQiVrsZwtirgcCIvXKBkbHPUBa3508/uN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=dgtkAHbX; arc=none smtp.client-ip=17.58.6.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="korCSXfN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KRRNXEV/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744290725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VnOjS1BcrM1dFbNaXGuQroXEGwjJQpp0qm5mchxF+So=;
-	b=korCSXfNG0xHCsMh/vELr+HMOkFPWnvB/oEFfGx2i4Nf1mqvFipW7qvZOFwEmJwBFwptfJ
-	i9pkjDCDgPKrWCMUyH8E4Co07Olq1uLSGRU/waQ2vPnJQo7v0rT+ICAbaE6Ee7U3uWEdSr
-	edUIrYSSnYYW9avx0tHuoWC/uTdh/rnja328XdmFdFwAuILz/Y48Ot1nPbFbbCQpMGqbw8
-	4haYS3iQHFfum3bI+66t7hj0LxA6E1mRqJBUPEYzncYK8UYz/TVbPZriXYbF005HxpDNtt
-	vBp1VKucDpOwFB5F51CHI4wxr7Wtxj8ifDRB/Awu+8MoHYirNFJy350jAnnctw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744290725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VnOjS1BcrM1dFbNaXGuQroXEGwjJQpp0qm5mchxF+So=;
-	b=KRRNXEV/p/KrPPw2HesUg5wRvt1D1wiq2tWuA/K9/WHFNopkwWPWplRhvpOmi2JTGO/OM9
-	QwuSGbulFfZ8fNAQ==
-To: Ingo Molnar <mingo@kernel.org>, Fernando Fernandez Mancera
- <ffmancera@riseup.net>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk,
- mhkelley@outlook.com
-Subject: Re: [PATCH -v4] x86/i8253: Call clockevent_i8253_disable() with
- interrupts disabled
-In-Reply-To: <Z-uwd4Bnn7FcCShX@gmail.com>
-References: <20250327234357.3383-1-ffmancera@riseup.net>
- <Z-uwd4Bnn7FcCShX@gmail.com>
-Date: Thu, 10 Apr 2025 15:12:04 +0200
-Message-ID: <87zfgorwij.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="dgtkAHbX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=3GZWjv30uaC5+ExIu1t4hgMEc2szLbjnqqNMWecvZMc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme;
+	b=dgtkAHbXO3Pa+1iOIronGEAlLQHGl+Fjtn4erHlmF70h8xiNA3Tin6jVxydqeKldo
+	 hMNQOjt0qjj4oYHC26N40yXbQLdoyZfjR4REHWxXpFCn2Lej4li9kX0hlrdjPPvYLC
+	 OqWdfZJcPC5kT8qeQsusmFy3noxhvXJ9owZoJlmoX0t+63A4vGi1MUGHcg4wPfsV4m
+	 uPmy8xhkzh/jzfk5Im05F0ifaP+shHmOmq2kWXLSTd5F8raF9oZN2EDv14aDyQcXd8
+	 yXKMCRSLX0oRykcPEy4+62aJ/HJMDR998ruKKn/35WTeXB0eg2CytMFbnq7a3S6RcU
+	 WgWKDsoJ0WkoQ==
+Received: from pv50p00im-ztdg10021201.me.com (pv50p00im-ztdg10021201.me.com [17.58.6.45])
+	by pv50p00im-ztdg10021201.me.com (Postfix) with ESMTPS id 78BF531189D0;
+	Thu, 10 Apr 2025 13:12:36 +0000 (UTC)
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10021201.me.com (Postfix) with ESMTPSA id 019CE31188DA;
+	Thu, 10 Apr 2025 13:12:32 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH 0/2] software node: bug fixes
+Date: Thu, 10 Apr 2025 21:12:10 +0800
+Message-Id: <20250410-fix_swnode-v1-0-081c95cf7cf9@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKrD92cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0MD3bTMivji8rz8lFRdE0sLs7Q0wyRjU2MTJaCGgqJUoCzYsOjY2lo
+ ALEV0flwAAAA=
+X-Change-ID: 20250410-fix_swnode-4986ff1b3534
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Daniel Scally <djrscally@gmail.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-acpi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: Uwh1wSVS1TFfNgXuATiLwO0rAJhu-Xpd
+X-Proofpoint-GUID: Uwh1wSVS1TFfNgXuATiLwO0rAJhu-Xpd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_03,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=719
+ bulkscore=0 clxscore=1015 spamscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2411120000 definitions=main-2504100095
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-On Tue, Apr 01 2025 at 11:23, Ingo Molnar wrote:
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Zijun Hu (2):
+      software node: Add comment for the first ERR_CAST() in fwnode_create_software_node()
+      software node: Correct a OOB check in software_node_get_reference_args()
 
-> I've cleaned up and simplified the changelog, see the patch below.
->
-> Thomas, does this look good to you too?
+ drivers/base/swnode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250410-fix_swnode-4986ff1b3534
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
+
