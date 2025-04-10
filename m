@@ -1,106 +1,125 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE24B202981
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA956205AA5;
+	Thu, 10 Apr 2025 09:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275918; cv=none; b=j7EPszWWJhLyq0g7YgbhcVA7nnAW2wVWc1frTtUR17NENUmnOerQ/jcOKLQ78FxUNKJgDQBqIO09kwW0U8KJQzmc63VXU2ZOCSOp16R/JwH4PNkF9ZPb0hFBAB+3uryksilIrB5B9t7KJcDPNuzEc9CeoGzVMROXvepwFRKIsf8=
+	t=1744275954; cv=none; b=J7VWHCsiK+00p2SAVzTkw4HojpH2zUXZOOCcKBhOeaM+zR9vH9MP0bH380QVfYZj3xPcvl20CTG5CEkeTuuA+a3cUOVh6/r5ZmN9ss5HtOFrNcRif8WRGRW0EcErveLq2h+IdIstnHYmQbeKAyN/WsnukwItkwu2YD1ziVXssQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275918; c=relaxed/simple;
-	bh=HxRBfPeGHnl9Dd78NQtATATjsDxxdDinfbLyKf4QK0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cn39YA9Uq6pG6g5qLQO0mPdZVEtoAYK5NiH6Cdh5fr4nN8jyMb5QbXwriNNmt1XOYPvfeI0Ehhqk2wE/89G4CTFPytXXxI1gmhbYPeL0o+BHvzBzLC9oaNrg814jiIN6niQGYzSN/icgE+IlmubryjBiwUPeKyD4mlaQpDQAClA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ENroYdrr; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744275954; c=relaxed/simple;
+	bh=SyNgFYqShoX8sG1EvElMpp2wgQICe5/LIovg4bPhTLM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SYFrk8RRSUqmxnL+2deceAomsyq/YWlrDMbqI1bKOKwcMhW/uZB69iI7OA3UcaAcz/m3qq4kRgvMQWwEt0xTpe61TUYCB+ffhg+eDi+84x+ZKgkSlw6t0fJ2r2H/SO7PZDsWKR+9g2wAYKrZZnIocWr8P5nS3yQ1F82Y4hAMc5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lXw/zGFs; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ENroYdrr"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744275906; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=PFk+KrYiLK5TPKtYUz6wWoaE4cbubrT8jUHqRNUo/jE=;
-	b=ENroYdrrBGGPiWaT6yLkunNpfkDq/hvXO04OvN32jLsO6Y5jc3UdYxKjXbdwlienX7yR0pwaRXpYhlmLgzY01az5BTdjTB9OcNt7YBzlB/9dce7eEpSjLShIotlZSYfxP1/AfM02nwp0VE+jOZzcJSqg1DU0WXWoJhWZwRLf0bc=
-Received: from 30.74.144.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WWOJ9H4_1744275905 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 10 Apr 2025 17:05:05 +0800
-Message-ID: <5c52b67a-8e7e-4dd7-9127-96944715d883@linux.alibaba.com>
-Date: Thu, 10 Apr 2025 17:05:05 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lXw/zGFs"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53A95OH71769035
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 04:05:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744275924;
+	bh=SD7cOLHPNPRn+FrhFL4jj5FK1/KNQWomyZ99DtlTZeo=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=lXw/zGFsunICye/4+h6fJgF860Fh84ljOwinYE5ODgpWsnA7QcvEKWuxpcVnVddle
+	 rTMdN6bbQFVP/3oIwr9QgvX3r9VeqqkQdDJJ8B9ZJx58SlMz3onu+Kqsb96dywsKSS
+	 WAkMgmYnwZxWC0f9FiEzjsdlCPK8SSxyifS9vBxo=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53A95Out047438
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 10 Apr 2025 04:05:24 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
+ Apr 2025 04:05:23 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 10 Apr 2025 04:05:23 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53A95MPQ048842;
+	Thu, 10 Apr 2025 04:05:22 -0500
+Date: Thu, 10 Apr 2025 14:35:21 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Frank Li <Frank.Li@nxp.com>
+CC: <s-vadapalli@ti.com>, <bhelgaas@google.com>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <krzk+dt@kernel.org>, <kw@linux.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <lpieralisi@kernel.org>, <manivannan.sadhasivam@linaro.org>,
+        <robh@kernel.org>, <tony@atomide.com>, <vigneshr@ti.com>
+Subject: Re: [PATCH 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
+Message-ID: <9bd626d5-8fcd-4076-af52-deea6cf2dedc@ti.com>
+References: <20250409153518.3068176-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm: huge_memory: add folio_mark_accessed() when
- zapping file THP
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, david@redhat.com,
- ryan.roberts@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <34bab7a60930472377afbfeefe05b980d0512aa4.1744118089.git.baolin.wang@linux.alibaba.com>
- <CAGsJ_4wnvWmOz-FNvYzkqEW1kz0UCfzythbeJSbSyWy_=ib5MA@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAGsJ_4wnvWmOz-FNvYzkqEW1kz0UCfzythbeJSbSyWy_=ib5MA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250409153518.3068176-1-Frank.Li@nxp.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+On Wed, Apr 09, 2025 at 11:35:18AM -0400, Frank Li wrote:
 
+Hello Frank,
 
-On 2025/4/10 16:14, Barry Song wrote:
-> On Wed, Apr 9, 2025 at 1:16 AM Baolin Wang
-> <baolin.wang@linux.alibaba.com> wrote:
->>
->> When investigating performance issues during file folio unmap, I noticed some
->> behavioral differences in handling non-PMD-sized folios and PMD-sized folios.
->> For non-PMD-sized file folios, it will call folio_mark_accessed() to mark the
->> folio as having seen activity, but this is not done for PMD-sized folios.
->>
->> This might not cause obvious issues, but a potential problem could be that,
->> it might lead to more frequent refaults of PMD-sized file folios under memory
->> pressure. Therefore, I am unsure whether the folio_mark_accessed() should be
->> added for PMD-sized file folios?
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> ---
->>   mm/huge_memory.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 6ac6d468af0d..b3ade7ac5bbf 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -2262,6 +2262,10 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
->>                                  zap_deposited_table(tlb->mm, pmd);
->>                          add_mm_counter(tlb->mm, mm_counter_file(folio),
->>                                         -HPAGE_PMD_NR);
->> +
->> +                       if (flush_needed && pmd_young(orig_pmd) &&
->> +                           likely(vma_has_recency(vma)))
->> +                               folio_mark_accessed(folio);
+> This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
 > 
-> Acked-by: Barry Song <baohua@kernel.org>
+> The previous device tree correctly reflects the hardware behavior.
+> The reverted commit introduced a fake address translation at pcie's parent
+> bus node.
 
-Thanks.
+More details are required in the commit message. The commit being
+reverted states:
 
-> I also came across an interesting observation: on a memory-limited system,
-> demoting unmapped file folios in the LRU—specifically when their mapcount
-> drops from 1 to 0—can actually improve performance.
+"The range for 0 is typically used for child devices as the offset from the
+module base. In the following patches, we will update pcie to probe with
+ti-sysc, and the patches become a bit confusing to read compared to other
+similar modules unless we update the ranges first. So let's just use the
+full addresses for ranges for the 0x20000000 and 0x30000000 ranges."
 
-These file folios are used only once? Can folio_set_dropbehind() be used 
-to optimize it, which can avoid the LRU activity movement in 
-folio_mark_accessed()?
+The commit message in this patch should probably indicate something
+along the lines of:
+The commit being reverted updated the "ranges" property for the sake of
+readability but that is no longer required because <your reason here>.
 
-> If others have observed the same behavior, we might not need to mark them
-> as accessed in that scenario.
+Tony Lindgren is the author of the commit being reverted. Tony could
+clarify if the purpose of the commit was more than just improving
+readability.
+
 > 
->>                  }
->>
->>                  spin_unlock(ptl);
->> --
->> 2.43.5
->>
+> Reverting this change prepares for the cleanup of the driver's
+> cpu_addr_fixup() hook.
 > 
-> Thanks
-> barry
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Previous disscusion at
+> https://lore.kernel.org/linux-pci/20250314064642.fyf3jqylmc6meft7@uda0492258/
+> ---
+>  arch/arm/boot/dts/ti/omap/dra7.dtsi | 29 +++++++++++------------------
+>  1 file changed, 11 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> index b709703f6c0d4..711ce4c31bb1f 100644
+> --- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> +++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> @@ -195,24 +195,22 @@ axi0: target-module@51000000 {
+>  			clock-names = "fck", "phy-clk", "phy-clk-div";
+>  			#size-cells = <1>;
+>  			#address-cells = <1>;
+> -			ranges = <0x51000000 0x51000000 0x3000>,
+> -				 <0x20000000 0x20000000 0x10000000>;
+> +			ranges = <0x51000000 0x51000000 0x3000
+> +				  0x0	     0x20000000 0x10000000>;
+>  			dma-ranges;
+
+[...]
+
+Regards,
+Siddharth.
