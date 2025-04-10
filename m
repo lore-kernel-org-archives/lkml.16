@@ -1,217 +1,621 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6F71F1510;
-	Thu, 10 Apr 2025 20:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744315788; cv=fail; b=YgQO4aREgyf7yit1yts9glcy5QQcDqnTGLn/eTcqqYsaqBEb5gRuAkp0Ja1cZXOj/rkkk0eNApF20rwnejIIjISGZMkxSjodKFM4/FlA+3VV6hos/Vcojy27lFQmHUGudYFzG5yZphtggbyqd5OuXbdHdTgrNevu6SLc0ckVu0Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744315788; c=relaxed/simple;
-	bh=+e8LSR/2LqJWLl31u4Gr4EqOuYbka5431Qcls8qvR58=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kFljoukM5LZ+bAjuaVsbtApYNGVOlq3shka71f8hBq3NCgtd3izEcf1sQFvHrHrDuzzmuxDiOC6Tb1ZmYKewjQ8EaQjSsM3TAgWdtwwGVANs3xdG9WYUznNkqpFhRI9zhmB7sqNmIwYOV8xcRVxdGAaw5fM/b50YH4rg8qpjRO8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DX2ekmdd; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=fZqbHPU+; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F151F1DF965;
+	Thu, 10 Apr 2025 20:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744316013; cv=none; b=Hj/8S35r9lamOYwiJhoucVFKA9HJJaVv20TxckIdqN+nehpgeJt9pmInhKP7SMWv0MhoRaGLVV6C7D9ZAc/r0olfCw5/3HmZGWok9SOPlWWNrz4L8qPmw4XoaBlpjO4452kaX+B1ubNj5LRa/WJ2fzeFtDR4n1mU0P2vLcQFngI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744316013; c=relaxed/simple;
+	bh=xEhwAu3xgUU6Amb1UWoZGEieAQxg5xwmELZOlHI/s3A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hZ12LtfdKzOqn+wmq35jc8C+dajplGnbZXstN+fRJa/AqPqPJuLkPF/2CavS3C2BZl6M9EfR7ysEZRS39h2bRJkGWoI8Thb8pAqyLcRIdjULKdZ/Lqb1wADNJGNDd1Q6x4P32yMAW0OV86xihMQw7/Z90xbDgU0xpCuqdk8Eqwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ewfTJCvY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DX2ekmdd";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="fZqbHPU+"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AJlqfP019707;
-	Thu, 10 Apr 2025 20:09:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=LOHkY4RUVsYWmJMhbswUMjtGGP98J7jseP2pspI8CFo=; b=
-	DX2ekmdd9cf2dFk4lnnMIOacBFRZsgFjxr+k1sfocP8/1B7pr4CEPdH1WnbE2hYT
-	xCpNpmPgmoyrTIBXPyFs9zqHvDkqlTDpI8VkR5foZh9qOXhdB55UiIEm0VgYTnaV
-	O0hvskE3Imfi6Or0gwFW+PPzv6c8OS9occRuLhEgdm2g2XOYCuLByXi4zIai/XtE
-	pPKZ+ufCTtxCWWI9+SCYVpyZB/r+fuvPMhXuJQjnMW+DBE6GFAtxYG5gu5y20hyO
-	MmZr6Cqr/FvKmmPKXgwmUXSvWVLPCovZDBzohKfHjwlP3v5MyDjdrf8ipVPxkx/3
-	nfz09KqSKQwwccYA474Skw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45xmf3r1t3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 20:09:24 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53AIpAir023922;
-	Thu, 10 Apr 2025 20:09:23 GMT
-Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010004.outbound.protection.outlook.com [40.93.11.4])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyk3ey0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 20:09:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uWJ7aDonO2hX+mNF2L+uAq834a2f1GKhc1R9lAd5wrYcHcfwSRmBLBbGpHiM/UPri577/TMHp4/75+DqLXCfxiH+PhLfehL1gPfrNbVAEjN3SeXtJZmmfSsOIQ3L3cu1N1nRavp2L8mXjVaKKx7R+KqHneybJcyenSxXdmtCaI0La8S3PHd9xrn6hZYTqMvk0rtpo2fHSFCgpDsBN5Qs8Uncwkn0ewHxjYjqGOA7BkOtOsobrwR4FMBXHLbvVg96SptGOGvhDQFhn3lB/Xm2nHYdit1ofrCfq/u0uPItaOOM0rq9w+4XL8TDJUGUM1tluvfg3QIASNxAvP2leM1brA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LOHkY4RUVsYWmJMhbswUMjtGGP98J7jseP2pspI8CFo=;
- b=l7VVrTkjEDPh1uNEtARrQ8pXokEWajvl21Rv4Tq4lLG8Viy+o2DvO0yl8O/9TQcQ7DOKPT5EPyZTL21PQUOIV8zKtbA12FXga923RNmba8F/45edfNPBUI2IeRPPHN1Bw5ILrPIuloDkV9LhP797K091FAD9cDe1P8PMTOM62pfjgt+W9vgbUXrxUVR+wOn7JX8z/bLNiYDwiWfP6lAfZ7FUo9DA22KOBafun9781xuztR/XPoo95qQaRwmazl67ooUakrBfN23ulrWRIwhZKqbCdX8KPxk/rsxj8qBayfkUK8oZSQxZ0MYZzY1S/W0ajoeOZSf7wB6tnZAThMKSfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LOHkY4RUVsYWmJMhbswUMjtGGP98J7jseP2pspI8CFo=;
- b=fZqbHPU+9CK7D+xFiZ5M9Ek2D+vEpeU3E7eiXvPeQnGHF/KrY4ScoVV800NCEWVAkyikHL6ZU2Ns5vUIBr0IZKmLfXSZgrB5sKwf6K9XKx5VvL9Fa0hlFM2+pSHyPoCHLJ7L1L9I6wMky0uT3RRxUd/w7uNT4REUFZAsntF45YE=
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
- by CH0PR10MB5004.namprd10.prod.outlook.com (2603:10b6:610:de::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Thu, 10 Apr
- 2025 20:09:14 +0000
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c%6]) with mapi id 15.20.8632.017; Thu, 10 Apr 2025
- 20:09:14 +0000
-Message-ID: <8a0f6f24-3344-4842-a9fc-e138860ad954@oracle.com>
-Date: Fri, 11 Apr 2025 01:39:06 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/7] PCI: imx6: Skip one dw_pcie_wait_for_link() in
- workaround link training
-To: Richard Zhu <hongxing.zhu@nxp.com>, frank.li@nxp.com,
-        l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com,
-        manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250408025930.1863551-1-hongxing.zhu@nxp.com>
- <20250408025930.1863551-3-hongxing.zhu@nxp.com>
-Content-Language: en-US
-From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-In-Reply-To: <20250408025930.1863551-3-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR02CA0032.apcprd02.prod.outlook.com
- (2603:1096:4:195::12) To DS7PR10MB5328.namprd10.prod.outlook.com
- (2603:10b6:5:3a6::12)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ewfTJCvY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2701BC4CEDD;
+	Thu, 10 Apr 2025 20:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744316012;
+	bh=xEhwAu3xgUU6Amb1UWoZGEieAQxg5xwmELZOlHI/s3A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ewfTJCvYanYdjM+nFu+OJtK3cQ8yKjegiqAu+GsVEPtTWWU5729dsgTcpL64TQRLm
+	 jKE20+Yote16/j4bzaNMWZa2m0FpZibSrweiW31f59MHRXpZto0QoKWLbnMQ0Gh6Jk
+	 Q1Fa90HuV9FL7T/VcaMLIMLotv8mxOcTJoH7gKyHL3QZobGXaAgBL5MHH+nzNPPU0+
+	 /OImbeR9rj3pEDnpZD34oNa3eRBjfm7WASFGp+MAj2m6dyNJ24+yfecufCiHZLieN1
+	 L5FLaXoJDL7l/lCRe1bq9g2sFU5ZTmd3YRfgFIqwmmahnO25qSQy1F5YSGGWDcZt3S
+	 0r2QOGuyTpwLg==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Samuel Holland <samuel.holland@sifive.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 1/2] dt-bindings: Remove obsolete cpu-topology.txt
+Date: Thu, 10 Apr 2025 15:13:22 -0500
+Message-ID: <20250410201325.962203-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|CH0PR10MB5004:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90836d8d-baf6-4696-70df-08dd786b906d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WGFZWTI5TTd2Y0Ixa3UyZWwwQUhzWVZzcUpzY1o5S3cvKzJCa3BwWHNiSmw1?=
- =?utf-8?B?MGlFNUthUGFQV3BrWU56TVRVUWtjNUlpeE95U1FsQlZHS0xUMUhUMGdwQTZy?=
- =?utf-8?B?QzBldmE2elBlUVZmWlBvNXZabFdPVjhJTlcvRjhjUGQ3ZXdFSjdxYkJwakdK?=
- =?utf-8?B?WGlMU2d2eGxVODlhMEMydzEzOWtRYW5ET3pMQkdpd29CRFNpR2dVc25hb25z?=
- =?utf-8?B?SVV1YnZ6cXl6OENNRDQ2SUtmeXQvT0YyYUVZSExlOVc0TzgvM1lBSmdYbXAz?=
- =?utf-8?B?RzE2K1pSOHNDclJiYXhrT2dTZWFmNXJCR2VQWUtnQVd4Z20yRUJvYzd1Ly9i?=
- =?utf-8?B?cFkzSGxUK3JNcGpMOXUwZXMwdUtMMVVKMlRueXdaZ0h4OWZENEc0U3RWK3RM?=
- =?utf-8?B?NE9YSFdQclBiWCtkK2ZLRE5KaGExQ1FKazgvZVJTdUNPUVZNVU4rbEdWQ1Yz?=
- =?utf-8?B?bDA4MVBmeWM4c0RleEpJVVJENkxTOHRJVWxzS1c3a2ZvcG5JUDJ2aFdydUxC?=
- =?utf-8?B?ZnhJOVhTamhzNkhPTkJhQkxkcGtwOGh3RW9NVkJlK0FLa2pYUTd2R2RVRThv?=
- =?utf-8?B?cXV1MFo5em01bTE3bUwrdEl2bTM2bG5pRm95MllHNkdhTGxWcUZ4Y3hHVzB3?=
- =?utf-8?B?RDFWaFl1MHJYWG9wVDg0WDJGVGw5NnV5MC84dkluWEViN1FJWVhsQjZ0c0tK?=
- =?utf-8?B?dFBibUJEZ1F6UVJoS2NCbzZPQ3FLdEc5UDZZVm5Gc0FiY1YzUURyQmFMY3ln?=
- =?utf-8?B?MDNhNnhYVlBoZWxRRnkvL1B4UkJEVEh4ck0wbzNrWlVlVEg1SkZ1b2xPWUZJ?=
- =?utf-8?B?NUFuOVo4UGNjZFM5SHJwUzNtYXZ2ZmRWTXdNbVoweVZZSzBVK1k1TVhBa3hM?=
- =?utf-8?B?cnVlaHVpbDUrVVJreWhxM1BaQUtXUTNPK0tLcXlvUmJ6eXIxaUFJeWxQd3lq?=
- =?utf-8?B?Y1o5VTE1ZGM5K2xqL3Y5RHQ5WHYrRlhuZ242WHMvL3Jub1NCTTMvVE5vV2pH?=
- =?utf-8?B?VFVKQmU5VXAzOUg1VkUwRDRZUGZ6OEhHTnhjK1hEK2h6bnM3VHNhV0RWTXlZ?=
- =?utf-8?B?aXVWL28rRGxZcEFmMDJSTDNwc1hDQXdINnV4ZTRGUW9lcWJaZ283b2xHYTM2?=
- =?utf-8?B?OExYSjZDQ3cydVZqMU94eHZjcGxoY25iNHlGSXBQbVR5NzB3WGZieWR6QUJY?=
- =?utf-8?B?QkVDMWlrYzNGU1EwTXp2czBZWUJBNkNNVjlKNUZaYzdZNlJhSmFtRUMzQytz?=
- =?utf-8?B?TUJZL2NCbzQxakVXWTB1ZFI2ZmQ0WUdHVFBiejRMdDMwbTlZazFPSnk1allu?=
- =?utf-8?B?cHFPQXpZY2pWY0JQdkxudWJUU3RqaXFPaUFCNFM3dzFrV040b1l0dW1wa205?=
- =?utf-8?B?bGhZZjR3YzdTZkZZR0JPOGpYRExVNG9CWlJ2YmlhR05IMEFpbjNEMTI5N0c1?=
- =?utf-8?B?WFpwWGpjcXRyUnZBUllqcnRqTjdxck9MY0MzN1lDU0tnMzBOa3dWZzN4L0lu?=
- =?utf-8?B?ZzAwSVFPMG1wYmppOCtiU1NZN0dWVjByK3NHb0pkTEJEK1dWZnkvb0xGaExE?=
- =?utf-8?B?OW5PTFRFY3ZDMVFRRncyTmdlcWpGMWdVTExLak9FTnhxOVJXZmsrNHBUQXk5?=
- =?utf-8?B?ZFVVMUZSMGJxYytNdE90ZHhvdXQxT3NGdFNNdTBlUTZwSWwwa1ZSdEVtVVM0?=
- =?utf-8?B?OVo5bkxvY1ZrNjdBZ0VHMGI2cHpYcVUwOWxDSWwrMi9QaVNlU0dsUHpmeCtM?=
- =?utf-8?B?UVNuMkxmQXV5akpzcTRUNVlFRlJlbU95d1JTSlgvaW9jbnl0bDB2c3lRUXNl?=
- =?utf-8?B?ZUVqTXN1M2xpcnRxa2g5R1dpUVExbTdKT0JVdEJDc213UUp6OHZkNWk4NFo2?=
- =?utf-8?B?NDYvQ2hYa2dZMFQ1bHFWVlFBZWk3c3J6cVNXdC92T1AzV2hseG5TVVlKTDRh?=
- =?utf-8?B?ek1ETjdCTVJoTWg1ODR6ejFub3hZbURLYlYzMFJaQ1VmM21UclJWa000Z2tL?=
- =?utf-8?B?YXZ4bnQwMnlRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cVFVYVYzUEpueUhzNm42QkdQejI2SDcvOHpZODFtb1RUS2xEcG5obi9XWGpy?=
- =?utf-8?B?ZXRPNG10R3NFRFVTVmhkb0UxL0NuQVRQR0tTT3E0dTBiaHdQa0prck5JZkVQ?=
- =?utf-8?B?RGM3c3MrL2pjTEFub0RSQ0EvWWtrMXMvdkZzWDRESC9paTdJMjBQS0kwRVA0?=
- =?utf-8?B?T2tPMDY5ZVRNS1U3aXZxeWlwaVdyTm1uZnN6QjZvN3o5clNBWkwrM044T1Vk?=
- =?utf-8?B?UmxXMW82RzZ2aVl6L3V6aEVqeTZtVnhzYldaZWwvK2c2d1RDODdTaUszc2ZS?=
- =?utf-8?B?MHJyQW5rdU9nZElLRHRESTNXeFRrU21OVmRTNG5rcTBMUHpyNzhCL20xN2Qx?=
- =?utf-8?B?MVlxK1A1UDMxU1E3TldUK09jalYrSnliQTJQSlJPQW0yRG9ORGdzNXQ0L1Az?=
- =?utf-8?B?NGJiaFNWdytTV0VrUnFNYUg3SkxpZDdLb2FMdHdEcjRHUEZCU2I4dkJhQUVt?=
- =?utf-8?B?enh1bnh0aE1Xc0ZNWXFYZVoxcTcrWnBpL1c3bG5tdXBMU3djeFFuODBMQVcz?=
- =?utf-8?B?Sklic3FkcGViVkRLZnFPV084eWlJVkF3Zk92eTNXcmpGNlkwSjFyQ3htbmwx?=
- =?utf-8?B?TWg5L285YXJTKzdiWnMzdm5VVWFPT2NCd1FORUc3dVpQekJLakVSR1JuMWlq?=
- =?utf-8?B?RXlPU3JlMUpHckVCc0VFRVlGS1h5ZXVCZ1RDcVJkaW9NWkhCVzQ3U0FLSVAy?=
- =?utf-8?B?VDl5cjFGdTYxaVRETUZYTWpQRDV4ZEUzdnRDNU1BYnNoSm5qYmNTUFkzTkRj?=
- =?utf-8?B?anVEZllyNEVwQkNveTdOUG1NQTdncUt2MWs4ekVoN1FKdkd2UGl6akQvV3NE?=
- =?utf-8?B?RWRhSGlPUy85RXBjcXdEb21JK3B1NWZEanJaczVWekhSbWd2bkVLMk9ZSGhz?=
- =?utf-8?B?Q1pkS2JIcytsbzVpS21EWC9yQVRHUjM4ZUZQNGRwUm1xeFJUSk04djFRN0Ft?=
- =?utf-8?B?aysyOVFXUlhaMCtDVzl2QkRraVVoZzFsc001YUZPNHN0ZDA1SElURkVmNExm?=
- =?utf-8?B?bWpFQ2FWbWJMUUFhbWtIcnNLZkNodXlQMXNvRTQyWkhiNXgzV3dSK3pHSEJt?=
- =?utf-8?B?UzNRdWNlR3JOT0gvVkRBOW45VndqTFhuWGUxNUZud01nQVRhd29QbUY2dEZD?=
- =?utf-8?B?MEtlcFRVOWs4S0pjdTdETVVXTDFxd2xqOTYveG1QaU5EdnFWaHhBemg5YkRp?=
- =?utf-8?B?YWNsdzY1ODdFcHgvZlE2aFlKdWRjalgrSUxyL1B1RFhmR3FZWUk4TzZKdzJR?=
- =?utf-8?B?dW1MUGxiWWxGVWQ5aTlzWDFMNTlrRXFiYjl5RjRGanBjbVVQTWpvT3Jrc1hY?=
- =?utf-8?B?cXZnaEVCb2cyTkpLN0ZtNWhsaHJVeTZua0FwMmk1czR0MmxGVjk1TGRyWlp1?=
- =?utf-8?B?TEt2YjZFNFViRURvL3gvNTNKNEljdjM1d2FnOERYckh1VllEWTh4TXBvWisw?=
- =?utf-8?B?RGFxL25jaUV5NEk1Y1VUU0ZEUm1UL2ltMUFjbSsyaGVLT0oyU2w0WFBmOE1M?=
- =?utf-8?B?NDRwOTVEMmRrTUIzN1NPa3c2NzY2R1dGUi96SklqMU5VVkFTR3czeFZRKzBU?=
- =?utf-8?B?YVkvdUFSUFBvVDZDaDlZdWU1RUdHSzJoZlRlYTVkYlhtS3dWQllrakR4Mmlz?=
- =?utf-8?B?aVdNS0NuNGpOS2tJbzlBS0ROR1k0K1hNd1RUaVc1anBoVjc4YmFVNjU0SDhZ?=
- =?utf-8?B?V0ZkZG9XVDR0TVBuMHVubGF6QzlPRk1rN1dnTGkzK0pIelg5dVppUi9IdFho?=
- =?utf-8?B?YnVkdWFOQW9xNjROejRtQkNmeHptQmlPZkkwUTdGYTJST1NQZHVVV3hBNkpj?=
- =?utf-8?B?V0FuV094ZnVIQ3NxVHBKTnBmaGc1d3JoOUZjQWhzRnpYdm5NZGw2RElPYjFK?=
- =?utf-8?B?cE9jS1E3UnFxVVJZbXRMNzNLRjhFNW1oc21weE44WTlVdmxNbXRrRVRWOXdv?=
- =?utf-8?B?MkJ6cXVKbnNMMXRLOThiS3hVMFRyckhVUjF0aThxNHA4bmd3VlhqWUwwT1Mz?=
- =?utf-8?B?cTRlNzRPdExTMnBFc2xQTUFuVDhGZ2Nla3FxalR2K1lCQWpCZjV5K2JjMDJj?=
- =?utf-8?B?Vk1BbXR4bVkvTWIxOEUyME51MVQ3N3pqZDRXOXpoOEdaT1kwMVpaVU9mV3Z2?=
- =?utf-8?B?OUc0TDU5aVRGdHpSMmpmYklTaFdUSElxRkJnSENISmcxaTBSd0R6NzhHZWtj?=
- =?utf-8?B?QWc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	fEBPuLs6igY/io2kJvIzOX8CtqoyQ+19Rwc/0RpyEjJCCxPrU5gmbpPCuyNu8JJY/5eGm7QzMbJk3nTrI7SvNgiz6QTAgggiFygWECAcapnSExjxa0OO6d23WwgfOALEWPezFBrT1XEniy5VzYJhP01kJcT1WeLxkhbMXfBcgGTGFubrBOeat8SLy2xIWfFBneh0V2ch8JR0y3/ZqR9W5jLE7d2DEHwzlftgAnNwumJeirt8LxLmKV/iRi/wun0EbwG0GVoT9gFkkr/X2iO7HXoDl59PG6Rqti75hOWQ2+WC7HXN9eRgirVZEvgPQZxZBcwAU5aF+cxf27b0aAVrArG/G/2DEaq8C5GvwsJkBlWq5ip9wUwbMok3xC4VvxUoqE/tC0VpG8Xjsh62Szb3nrLFcpQLCJYzQPduTVCmoBl70dRhRwQfVSxQuEFzVdlI3hC+CNGFGsoRkvu3u0Pk5RS4SUtwYWlGzeA/txAKNNsRR4Rspb3SC6MZgXbf1kcH3M9uhL0jyyVwhC8F/nintizgm4PfykWyRZvc7ixHoGPuU4bCHYcQeicsl7/CuOfOrWuu/xY8ChCycWNIVz6E1OA7/hj7TzQWLOaRxrfbIl0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90836d8d-baf6-4696-70df-08dd786b906d
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 20:09:14.0220
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VAmajSOSl69msBCaapzjTliqunsied+wfG1LdZUmq5J2vB3RrcK0CprAs/TnEjEys/YA9OdgTGP9FcT8IP5+VLFOW8cs+sJ1qA8LEZ+m5r8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5004
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_06,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504100146
-X-Proofpoint-ORIG-GUID: cVmVefgPhCfL5Ff0eiffcEPCVkZr4JGV
-X-Proofpoint-GUID: cVmVefgPhCfL5Ff0eiffcEPCVkZr4JGV
+Content-Transfer-Encoding: 8bit
 
+The cpu topology binding is now covered by the dtschema cpu-map.yaml
+schema with all the relevant descriptions moved to it.
 
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../devicetree/bindings/cpu/cpu-topology.txt  | 553 ------------------
+ 1 file changed, 553 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/cpu/cpu-topology.txt
 
-On 08-04-2025 08:29, Richard Zhu wrote:
-> Remove one reduntant dw_pcie_wait_for_link() in link traning workaround
-> because common framework already do that.
-> 
+diff --git a/Documentation/devicetree/bindings/cpu/cpu-topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+deleted file mode 100644
+index 9bd530a35d14..000000000000
+--- a/Documentation/devicetree/bindings/cpu/cpu-topology.txt
++++ /dev/null
+@@ -1,553 +0,0 @@
+-===========================================
+-CPU topology binding description
+-===========================================
+-
+-===========================================
+-1 - Introduction
+-===========================================
+-
+-In a SMP system, the hierarchy of CPUs is defined through three entities that
+-are used to describe the layout of physical CPUs in the system:
+-
+-- socket
+-- cluster
+-- core
+-- thread
+-
+-The bottom hierarchy level sits at core or thread level depending on whether
+-symmetric multi-threading (SMT) is supported or not.
+-
+-For instance in a system where CPUs support SMT, "cpu" nodes represent all
+-threads existing in the system and map to the hierarchy level "thread" above.
+-In systems where SMT is not supported "cpu" nodes represent all cores present
+-in the system and map to the hierarchy level "core" above.
+-
+-CPU topology bindings allow one to associate cpu nodes with hierarchical groups
+-corresponding to the system hierarchy; syntactically they are defined as device
+-tree nodes.
+-
+-Currently, only ARM/RISC-V intend to use this cpu topology binding but it may be
+-used for any other architecture as well.
+-
+-The cpu nodes, as per bindings defined in [4], represent the devices that
+-correspond to physical CPUs and are to be mapped to the hierarchy levels.
+-
+-A topology description containing phandles to cpu nodes that are not compliant
+-with bindings standardized in [4] is therefore considered invalid.
+-
+-===========================================
+-2 - cpu-map node
+-===========================================
+-
+-The ARM/RISC-V CPU topology is defined within the cpu-map node, which is a direct
+-child of the cpus node and provides a container where the actual topology
+-nodes are listed.
+-
+-- cpu-map node
+-
+-	Usage: Optional - On SMP systems provide CPUs topology to the OS.
+-			  Uniprocessor systems do not require a topology
+-			  description and therefore should not define a
+-			  cpu-map node.
+-
+-	Description: The cpu-map node is just a container node where its
+-		     subnodes describe the CPU topology.
+-
+-	Node name must be "cpu-map".
+-
+-	The cpu-map node's parent node must be the cpus node.
+-
+-	The cpu-map node's child nodes can be:
+-
+-	- one or more cluster nodes or
+-	- one or more socket nodes in a multi-socket system
+-
+-	Any other configuration is considered invalid.
+-
+-The cpu-map node can only contain 4 types of child nodes:
+-
+-- socket node
+-- cluster node
+-- core node
+-- thread node
+-
+-whose bindings are described in paragraph 3.
+-
+-The nodes describing the CPU topology (socket/cluster/core/thread) can
+-only be defined within the cpu-map node and every core/thread in the
+-system must be defined within the topology.  Any other configuration is
+-invalid and therefore must be ignored.
+-
+-===========================================
+-2.1 - cpu-map child nodes naming convention
+-===========================================
+-
+-cpu-map child nodes must follow a naming convention where the node name
+-must be "socketN", "clusterN", "coreN", "threadN" depending on the node type
+-(ie socket/cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes
+-which are siblings within a single common parent node must be given a unique and
+-sequential N value, starting from 0).
+-cpu-map child nodes which do not share a common parent node can have the same
+-name (ie same number N as other cpu-map child nodes at different device tree
+-levels) since name uniqueness will be guaranteed by the device tree hierarchy.
+-
+-===========================================
+-3 - socket/cluster/core/thread node bindings
+-===========================================
+-
+-Bindings for socket/cluster/cpu/thread nodes are defined as follows:
+-
+-- socket node
+-
+-	 Description: must be declared within a cpu-map node, one node
+-		      per physical socket in the system. A system can
+-		      contain single or multiple physical socket.
+-		      The association of sockets and NUMA nodes is beyond
+-		      the scope of this bindings, please refer [2] for
+-		      NUMA bindings.
+-
+-	This node is optional for a single socket system.
+-
+-	The socket node name must be "socketN" as described in 2.1 above.
+-	A socket node can not be a leaf node.
+-
+-	A socket node's child nodes must be one or more cluster nodes.
+-
+-	Any other configuration is considered invalid.
+-
+-- cluster node
+-
+-	 Description: must be declared within a cpu-map node, one node
+-		      per cluster. A system can contain several layers of
+-		      clustering within a single physical socket and cluster
+-		      nodes can be contained in parent cluster nodes.
+-
+-	The cluster node name must be "clusterN" as described in 2.1 above.
+-	A cluster node can not be a leaf node.
+-
+-	A cluster node's child nodes must be:
+-
+-	- one or more cluster nodes; or
+-	- one or more core nodes
+-
+-	Any other configuration is considered invalid.
+-
+-- core node
+-
+-	Description: must be declared in a cluster node, one node per core in
+-		     the cluster. If the system does not support SMT, core
+-		     nodes are leaf nodes, otherwise they become containers of
+-		     thread nodes.
+-
+-	The core node name must be "coreN" as described in 2.1 above.
+-
+-	A core node must be a leaf node if SMT is not supported.
+-
+-	Properties for core nodes that are leaf nodes:
+-
+-	- cpu
+-		Usage: required
+-		Value type: <phandle>
+-		Definition: a phandle to the cpu node that corresponds to the
+-			    core node.
+-
+-	If a core node is not a leaf node (CPUs supporting SMT) a core node's
+-	child nodes can be:
+-
+-	- one or more thread nodes
+-
+-	Any other configuration is considered invalid.
+-
+-- thread node
+-
+-	Description: must be declared in a core node, one node per thread
+-		     in the core if the system supports SMT. Thread nodes are
+-		     always leaf nodes in the device tree.
+-
+-	The thread node name must be "threadN" as described in 2.1 above.
+-
+-	A thread node must be a leaf node.
+-
+-	A thread node must contain the following property:
+-
+-	- cpu
+-		Usage: required
+-		Value type: <phandle>
+-		Definition: a phandle to the cpu node that corresponds to
+-			    the thread node.
+-
+-===========================================
+-4 - Example dts
+-===========================================
+-
+-Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
+-physical socket):
+-
+-cpus {
+-	#size-cells = <0>;
+-	#address-cells = <2>;
+-
+-	cpu-map {
+-		socket0 {
+-			cluster0 {
+-				cluster0 {
+-					core0 {
+-						thread0 {
+-							cpu = <&CPU0>;
+-						};
+-						thread1 {
+-							cpu = <&CPU1>;
+-						};
+-					};
+-
+-					core1 {
+-						thread0 {
+-							cpu = <&CPU2>;
+-						};
+-						thread1 {
+-							cpu = <&CPU3>;
+-						};
+-					};
+-				};
+-
+-				cluster1 {
+-					core0 {
+-						thread0 {
+-							cpu = <&CPU4>;
+-						};
+-						thread1 {
+-							cpu = <&CPU5>;
+-						};
+-					};
+-
+-					core1 {
+-						thread0 {
+-							cpu = <&CPU6>;
+-						};
+-						thread1 {
+-							cpu = <&CPU7>;
+-						};
+-					};
+-				};
+-			};
+-
+-			cluster1 {
+-				cluster0 {
+-					core0 {
+-						thread0 {
+-							cpu = <&CPU8>;
+-						};
+-						thread1 {
+-							cpu = <&CPU9>;
+-						};
+-					};
+-					core1 {
+-						thread0 {
+-							cpu = <&CPU10>;
+-						};
+-						thread1 {
+-							cpu = <&CPU11>;
+-						};
+-					};
+-				};
+-
+-				cluster1 {
+-					core0 {
+-						thread0 {
+-							cpu = <&CPU12>;
+-						};
+-						thread1 {
+-							cpu = <&CPU13>;
+-						};
+-					};
+-					core1 {
+-						thread0 {
+-							cpu = <&CPU14>;
+-						};
+-						thread1 {
+-							cpu = <&CPU15>;
+-						};
+-					};
+-				};
+-			};
+-		};
+-	};
+-
+-	CPU0: cpu@0 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x0 0x0>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU1: cpu@1 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x0 0x1>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU2: cpu@100 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x0 0x100>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU3: cpu@101 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x0 0x101>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU4: cpu@10000 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x0 0x10000>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU5: cpu@10001 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x0 0x10001>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU6: cpu@10100 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x0 0x10100>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU7: cpu@10101 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x0 0x10101>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU8: cpu@100000000 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x1 0x0>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU9: cpu@100000001 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x1 0x1>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU10: cpu@100000100 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x1 0x100>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU11: cpu@100000101 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x1 0x101>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU12: cpu@100010000 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x1 0x10000>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU13: cpu@100010001 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x1 0x10001>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU14: cpu@100010100 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x1 0x10100>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-
+-	CPU15: cpu@100010101 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a57";
+-		reg = <0x1 0x10101>;
+-		enable-method = "spin-table";
+-		cpu-release-addr = <0 0x20000000>;
+-	};
+-};
+-
+-Example 2 (ARM 32-bit, dual-cluster, 8-cpu system, no SMT):
+-
+-cpus {
+-	#size-cells = <0>;
+-	#address-cells = <1>;
+-
+-	cpu-map {
+-		cluster0 {
+-			core0 {
+-				cpu = <&CPU0>;
+-			};
+-			core1 {
+-				cpu = <&CPU1>;
+-			};
+-			core2 {
+-				cpu = <&CPU2>;
+-			};
+-			core3 {
+-				cpu = <&CPU3>;
+-			};
+-		};
+-
+-		cluster1 {
+-			core0 {
+-				cpu = <&CPU4>;
+-			};
+-			core1 {
+-				cpu = <&CPU5>;
+-			};
+-			core2 {
+-				cpu = <&CPU6>;
+-			};
+-			core3 {
+-				cpu = <&CPU7>;
+-			};
+-		};
+-	};
+-
+-	CPU0: cpu@0 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a15";
+-		reg = <0x0>;
+-	};
+-
+-	CPU1: cpu@1 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a15";
+-		reg = <0x1>;
+-	};
+-
+-	CPU2: cpu@2 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a15";
+-		reg = <0x2>;
+-	};
+-
+-	CPU3: cpu@3 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a15";
+-		reg = <0x3>;
+-	};
+-
+-	CPU4: cpu@100 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a7";
+-		reg = <0x100>;
+-	};
+-
+-	CPU5: cpu@101 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a7";
+-		reg = <0x101>;
+-	};
+-
+-	CPU6: cpu@102 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a7";
+-		reg = <0x102>;
+-	};
+-
+-	CPU7: cpu@103 {
+-		device_type = "cpu";
+-		compatible = "arm,cortex-a7";
+-		reg = <0x103>;
+-	};
+-};
+-
+-Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
+-
+-{
+-	#address-cells = <2>;
+-	#size-cells = <2>;
+-	compatible = "sifive,fu540g", "sifive,fu500";
+-	model = "sifive,hifive-unleashed-a00";
+-
+-	...
+-	cpus {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		cpu-map {
+-			socket0 {
+-				cluster0 {
+-					core0 {
+-						cpu = <&CPU1>;
+-					};
+-					core1 {
+-						cpu = <&CPU2>;
+-					};
+-					core2 {
+-						cpu0 = <&CPU2>;
+-					};
+-					core3 {
+-						cpu0 = <&CPU3>;
+-					};
+-				};
+-			};
+-		};
+-
+-		CPU1: cpu@1 {
+-			device_type = "cpu";
+-			compatible = "sifive,rocket0", "riscv";
+-			reg = <0x1>;
+-		}
+-
+-		CPU2: cpu@2 {
+-			device_type = "cpu";
+-			compatible = "sifive,rocket0", "riscv";
+-			reg = <0x2>;
+-		}
+-		CPU3: cpu@3 {
+-			device_type = "cpu";
+-			compatible = "sifive,rocket0", "riscv";
+-			reg = <0x3>;
+-		}
+-		CPU4: cpu@4 {
+-			device_type = "cpu";
+-			compatible = "sifive,rocket0", "riscv";
+-			reg = <0x4>;
+-		}
+-	}
+-};
+-===============================================================================
+-[1] ARM Linux kernel documentation
+-    Documentation/devicetree/bindings/arm/cpus.yaml
+-[2] Devicetree NUMA binding description
+-    Documentation/devicetree/bindings/numa.txt
+-[3] RISC-V Linux kernel documentation
+-    Documentation/devicetree/bindings/riscv/cpus.yaml
+-[4] https://www.devicetree.org/specifications/
+-- 
+2.47.2
 
-typo: reduntant -> redundant ,traning ->training
-
-> Suggested-by: Manivannan Sadhasivam<manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Richard Zhu<hongxing.zhu@nxp.com>
-> Reviewed-by: Frank Li<Frank.Li@nxp.com>
-
-Thanks,
-Alok
