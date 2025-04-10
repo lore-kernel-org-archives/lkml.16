@@ -1,221 +1,139 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB737189F5C;
-	Thu, 10 Apr 2025 16:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6EB1D5AD4;
+	Thu, 10 Apr 2025 16:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744300937; cv=none; b=ur5KTuUrKcJOYa4ygy5KyK7LjCin/RdpL+NkiQgQvvzQtHbGsrXZWIAQo3898WmWJMmJz0ity1SvgL/rY15s5eyA32RQZGtB/xxhix7WBNmpNuPkNVr2I8u/u7Tn4Wxe/djK1XMTmDa6WyeAZk8uPnVVEFj20t9lLHukR4T7vn0=
+	t=1744300995; cv=none; b=sgdJyG4adaMKt0GrFJrDqUKomgW+PrRiV1Md0cOQtHHYbOW1mbTW4KTLsV3C0gm6WzaSXpzU8Dt3HhepI2Hvcrmp36s/Vnu5t24e0KE9Pc+gbHEJy8+7dVC2ISdLcXJzQj1RY4cOFK2DFGt5flNkri7nFTUbVjZKy7nBdxLf8w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744300937; c=relaxed/simple;
-	bh=D3r1imQhIqhuLnALHMnDOhpLM6osMmH+dNnVd3Iu1mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EYvOhUb+GYWel9scWw5O8fng2kTIzRo8x0zACyBDt/bzt1os2YFUSnZKVw49VYpC1h892SNfXGbmYhPzUHtEq1kWkAKGHjWoEd3Kg4Mb/lzx6Cln62MIc42V+Fa9MDIFo+lzq7Bpz3Ym7BV05xoYzB+8M91OukqbbJGBDGcDH7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lYjEnBBp; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lYjEnBBp"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2318C44536;
-	Thu, 10 Apr 2025 16:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744300927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zynQ21FxEu/wyvbjhcfMThiWf9gT/Ox0I1AHhTYa89I=;
-	b=lYjEnBBpJoeEUvpfKfB1oqLwVZij5oN4gHWsH5hs3aO8Nk4kNswWdpAHsfxHU1wAwrJzVH
-	grb0W3lECk2UmND4OAo4C95Wat0lWXavWLK8rAtd1qRTYrueFvtkOOoMqlAfHE89st4G+C
-	KNwr3cpX9wuH3RS9IuMEaQRcFPOjLPuJvJe9QLCjEklElqRE2Fe7m73UxCDjSkjcM3kS27
-	acOVnkgzBzJIK4qLPTEXDDYUcYpkxi8MrLmXrd7K2F/G6nHCU8bwleRDTif3E6AXhe2MqI
-	9Dxj61G1vnpv3lrpb+MB/3kL5Edt7ypRzK0IzPff+Y7UJNe6aTI4f4m7TRh3gg==
-Date: Thu, 10 Apr 2025 18:02:05 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiner
- Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
-Message-ID: <20250410180205.455d8488@kmaincent-XPS-13-7390>
-In-Reply-To: <Z_fmkuPhqMqWBL2M@shell.armlinux.org.uk>
-References: <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
-	<Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
-	<20250409104858.2758e68e@kmaincent-XPS-13-7390>
-	<Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
-	<20250409143820.51078d31@kmaincent-XPS-13-7390>
-	<Z_Z3lchknUpZS1UP@shell.armlinux.org.uk>
-	<20250409180414.19e535e5@kmaincent-XPS-13-7390>
-	<Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
-	<Z/b2yKMXNwjqTKy4@shell.armlinux.org.uk>
-	<20250410111754.136a5ad1@kmaincent-XPS-13-7390>
-	<Z_fmkuPhqMqWBL2M@shell.armlinux.org.uk>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744300995; c=relaxed/simple;
+	bh=/oTDpAu7OrD2QLuiv4BkYLDBdd7znkvA2V5FJSnC4Mw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TXAmUVn7zvV4NZmnRDC20ItO4Q4+C12/s1OZdCLUftuFjNomSW86rKsu3XZQOPL7pnWNI17qETVaKCNCenLIiRFU7X/dsC0XqoeOQXa0T++rPN/DcZelB8Cf9Lj3vjEUF8AZSg9/Noc0wgElwCIgsw0M84WhK0Sks2xpZGwDQnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22401f4d35aso12579645ad.2;
+        Thu, 10 Apr 2025 09:03:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744300992; x=1744905792;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YyULdQ2xbd0MfyWk0JJOZlIlL3Zu2lJHTx06r7dn5CA=;
+        b=oT7tYMjyGRkXvIobefxB7243bkoPNrFB2dMf+oT0CpFgZ69ezmYJtFtSxpIDBlppei
+         FlboECnXGjtHlFpi7l9Bb79l6nA0yPl4dhxGsnE8tprN/nTuM0YVJZU3TEZ/rKgGhYpT
+         FkhFsJfe0wg6zvr7O7rU91zyAQ4X251C8lGRq9IcVgIxzkMiBk3xGjtrB3bq8JruH8Hc
+         AG6lx1Q8E7Ng094J92vo7kzXIJQDiEsScUcLYlFKsoHO2NILLezkUu0b2oM3C8WXSUkw
+         fuJFgaw5IsRNwPMIQIwOYrZs074MRop5XiIKGId5+sy4EV3be9pYzAXplgqwfQ6h9T5A
+         caeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVri40dBDFSLQlUrEoe43gdbm9ZeJ8NY2HnFNuFtLads71w9Dx8H42mC5eYgV7oDZukzlN6aOJC5KxbWY=@vger.kernel.org, AJvYcCXwsiBMEsEn6yZ0rlGjalPo1CAcb6P8ue0VDbqjDp5FWhKkq+mq26JoIkWY93bHyg6WkTwssPR84fk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQFuzUGtnDGbmeib8Yc8pqxskFlqlxI/M5JYtDAQV9O0bPSzYa
+	jk0ppyB72ud8FS2i/KLHeVyYmHTreJfVOKdYsxuQW7uv7pKn5XPh
+X-Gm-Gg: ASbGncuL64+pz0UBw7T6O8gZStLwdlMhiWyZaeRFMTxAaV1CplruAdghitPRe+X8wJr
+	RleazjYFSAonK4hvjdotSJolanjfbjlQ/nxbgbrm5YrF7Jv2/aviw9sZqZnyLlvKySvOcJYQDtZ
+	o5KOpaUCzEwzqfDgNjlbzVBjlh1teqXmRqWphUeEc/6lZdALNim9RR5wEcIuzM/fc2cVEeEsDv7
+	1J3OZIzhmdWq1lHuk6ereRdtSF4XjpRJWWG2R+TWH7+xf+TGoZSsfWEqVxN3SMPl40HFYndiPYX
+	mf6MzNum4AVgjR2FAqWzRyeDrxh0BeU/AFaXNHKyxH0Q9taggBi9bmrSn/nRToJSdpfGgg==
+X-Google-Smtp-Source: AGHT+IFeC7Gwe6Y4Y3eXlv1Xmgv943loMBAjrYsh3ubashC2+WryPC2L6Z3XTDFLlEKEEqdrQETCzQ==
+X-Received: by 2002:a17:902:f686:b0:224:376:7a07 with SMTP id d9443c01a7336-22b2edca7e3mr38991655ad.13.1744300991731;
+        Thu, 10 Apr 2025 09:03:11 -0700 (PDT)
+Received: from sultan-box.localdomain ([142.147.89.201])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8ae95sm32378625ad.61.2025.04.10.09.03.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 09:03:11 -0700 (PDT)
+Date: Thu, 10 Apr 2025 09:03:07 -0700
+From: Sultan Alsawaf <sultan@kerneltoast.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Christian Loehle <christian.loehle@arm.com>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: schedutil: Don't ignore limit changes when util
+ is unchanged
+Message-ID: <Z_fru1i1OpAQ-hJq@sultan-box.localdomain>
+References: <20250410024439.20859-1-sultan@kerneltoast.com>
+ <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdelfeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghms
- egurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com>
 
-On Thu, 10 Apr 2025 16:41:06 +0100
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+On Thu, Apr 10, 2025 at 05:34:39PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Apr 10, 2025 at 4:45 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
+> >
+> > From: Sultan Alsawaf <sultan@kerneltoast.com>
+> >
+> > When utilization is unchanged, a policy limits update is ignored unless
+> > CPUFREQ_NEED_UPDATE_LIMITS is set. This occurs because limits_changed
+> > depends on the old broken behavior of need_freq_update to trigger a call
+> > into cpufreq_driver_resolve_freq() to evaluate the changed policy limits.
+> >
+> > After fixing need_freq_update, limit changes are ignored without
+> > CPUFREQ_NEED_UPDATE_LIMITS, at least until utilization changes enough to
+> > make map_util_freq() return something different.
+> >
+> > Fix the ignored limit changes by preserving the value of limits_changed
+> > until get_next_freq() is called, so limits_changed can trigger a call to
+> > cpufreq_driver_resolve_freq().
+> >
+> > Reported-and-tested-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> > Link: https://lore.kernel.org/lkml/Z_Tlc6Qs-tYpxWYb@linaro.org
+> > Fixes: 8e461a1cb43d6 ("cpufreq: schedutil: Fix superfluous updates caused by need_freq_update")
+> > Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+> > ---
+> >  kernel/sched/cpufreq_schedutil.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > index 1a19d69b91ed3..f37b999854d52 100644
+> > --- a/kernel/sched/cpufreq_schedutil.c
+> > +++ b/kernel/sched/cpufreq_schedutil.c
+> > @@ -82,7 +82,6 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+> >                 return false;
+> >
+> >         if (unlikely(sg_policy->limits_changed)) {
+> > -               sg_policy->limits_changed = false;
+> >                 sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
+> >                 return true;
+> >         }
+> > @@ -171,9 +170,11 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
+> >         freq = get_capacity_ref_freq(policy);
+> >         freq = map_util_freq(util, freq, max);
+> >
+> > -       if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
+> > +       if (freq == sg_policy->cached_raw_freq && !sg_policy->limits_changed &&
+> > +           !sg_policy->need_freq_update)
+> >                 return sg_policy->next_freq;
+> >
+> > +       sg_policy->limits_changed = false;
+> 
+> AFAICS, after this code modification, a limit change may be missed due
+> to a possible race with sugov_limits() which cannot happen if
+> sg_policy->limits_changed is only cleared when it is set before
+> updating sg_policy->need_freq_update.
 
-> On Thu, Apr 10, 2025 at 11:17:54AM +0200, Kory Maincent wrote:
-> > On Wed, 9 Apr 2025 23:38:00 +0100
-> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote: =20
-> > > On Wed, Apr 09, 2025 at 06:34:35PM +0100, Russell King (Oracle) wrote=
-: =20
+I don't think that's the case because sg_policy->limits_changed is cleared
+before the new policy limits are evaluated in cpufreq_driver_resolve_freq().
+Granted, if we wanted to be really certain of this, we'd need release semantics.
 
-> > >=20
-> > > With that fixed, ptp4l's output looks very similar to that with mvpp2=
- -
-> > > which doesn't inspire much confidence that the ptp stack is operating
-> > > properly with the offset and frequency varying all over the place, and
-> > > the "delay timeout" messages spamming frequently. I'm also getting
-> > > ptp4l going into fault mode - so PHY PTP is proving to be way more
-> > > unreliable than mvpp2 PTP. :( =20
-> >=20
-> > That's really weird. On my board the Marvell PHY PTP is more reliable t=
-han
-> > MACB. Even by disabling the interrupt.
-> > What is the state of the driver you are using?  =20
->=20
-> Right, it seems that some of the problems were using linuxptp v3.0
-> rather than v4.4, which seems to work better (in that it doesn't
-> seem to time out and drop into fault mode.)
->=20
-> With v4.4, if I try:
->=20
-> # ./ptp4l -i eth2 -m -s -2
-> ptp4l[322.396]: selected /dev/ptp0 as PTP clock
-> ptp4l[322.453]: port 1 (eth2): INITIALIZING to LISTENING on INIT_COMPLETE
-> ptp4l[322.454]: port 0 (/var/run/ptp4l): INITIALIZING to LISTENING on
-> INIT_COMPLETE ptp4l[322.455]: port 0 (/var/run/ptp4lro): INITIALIZING to
-> LISTENING on INIT_COMPLETE ptp4l[328.797]: selected local clock
-> 005182.fffe.113302 as best master
->=20
-> that's all I see. If I drop the -2, then:
+Looking closer at cpufreq.c actually, isn't there already a race on the updated
+policy limits (policy->min and policy->max) since they can be updated again
+while schedutil reads them via cpufreq_driver_resolve_freq()?
 
-It seems you are still using your Marvell PHY drivers without my change.
-PTP L2 was broken on your first patch and I fixed it.
-I have the same result without the -2 which mean ptp4l uses UDP IPV4.
-=20
-> and from that you can see that the offset and frequency are very much
-> all over the place, not what you would expect from something that is
-> supposed to be _hardware_ timestamped - which is why I say that NTP
-> seems to be superior to PTP at least here.
->=20
-> With mvpp2, it's a very similar story:
-
-> ptp4l[628.834]: master offset      38211 s2 freq  -29874 path delay     6=
-2949
-> ptp4l[629.834]: master offset     -41111 s2 freq  -97733 path delay     6=
-6289
-> ptp4l[630.834]: master offset      33131 s2 freq  -35824 path delay     6=
-3864
-> ptp4l[631.834]: master offset     -55578 s2 freq -114594 path delay     6=
-3864
-> ptp4l[632.833]: master offset      34110 s2 freq  -41579 path delay     5=
-7582
-> ptp4l[633.834]: master offset     -13137 s2 freq  -78593 path delay     6=
-0047
-> ptp4l[634.834]: master offset      55063 s2 freq  -14334 path delay     4=
-9425
-> ptp4l[635.834]: master offset     -41302 s2 freq  -94180 path delay     4=
-9425
-
-I can't tell about mvpp2 as I don't have board with this MAC but these valu=
-es
-seem really high and vary a lot. As this behavior is similar between the Ma=
-rvell
-PHY or the mvpp2 MAC maybe the issue comes indeed from your link partner.=20
-
-> Again, offset all over the place, frequency also showing that it doesn't
-> stabilise.
->=20
-> This _could_ be because of the master clock being random - but then it's
-> using the FEC PTP implementation with PTPD v2 - maybe either the FEC
-> implementation is buggy or maybe it's PTPD v2 causing this. I have no
-> idea how I can debug this - and I'm not going to invest in a "grand
-> master" PTP clock on a whim just to find out that isn't the problem.
->=20
-> I thought... maybe I can use the PTP implementation in a Marvell
-> switch as the network master, but the 88E6176 doesn't support PTP.
->=20
-> Maybe I can use an x86 platform... nope:
->=20
-> # ethtool -T enp0s25
-> Time stamping parameters for enp0s25:
-> Capabilities:
->         software-transmit
->         software-receive
->         software-system-clock
-
-Still you could try with timestamping from software on the link partner.
-On my side I am using a STM32MP157-DK as link partner.
-
-If I set the DK board as PTP master and tell it to use software PTP (-S
-parameter) it is still more reliable than yours.
-ptp4l[4419.134]: master offset        136 s2 freq   -1984 path delay    118=
-390
-ptp4l[4420.134]: master offset       1757 s2 freq    -322 path delay    115=
-888
-ptp4l[4421.134]: master offset      -1154 s2 freq   -2706 path delay    115=
-888
-ptp4l[4422.134]: master offset      -1652 s2 freq   -3551 path delay    115=
-888
-ptp4l[4423.134]: master offset      -1199 s2 freq   -3593 path delay    115=
-252
-
-> PTP Hardware Clock: none
-> Hardware Transmit Timestamp Modes: none
-> Hardware Receive Filter Modes: none
->=20
-> Anyway, let's try taking a tcpdump on the x86 machine of the sync
-> packets and compare the deviation of the software timestamp to that
-> of the hardware timestamp (all deviations relative to the first
-> packet part seconds):
->=20
-> 16:30:30.577298 - originTimeStamp : 1744299061 seconds, 762464622 nanosec=
-onds
-> 16:30:31.577270 - originTimeStamp : 1744299062 seconds, 762363987 nanosec=
-onds
->    -28us						-100.635us
-> 16:30:32.577303 - originTimeStamp : 1744299063 seconds, 762429696 nanosec=
-onds
->    +85us						-34.926us
-> 16:30:33.577236 - originTimeStamp : 1744299064 seconds, 762328728 nanosec=
-onds
->    -62us						-135.894us
-> 16:30:34.577280 - originTimeStamp : 1744299065 seconds, 762398770 nanosec=
-onds
->    -18us						-65.852us
->=20
-> We can see here that the timestamp from the software receive is far
-> more regular than the origin timestamp in the packets, which, in
-> combination with the randomness of both mvpp2 and the 88e151x PTP
-> trying to sync with it, makes me question whether there is something
-> fundamentally wrong with the FEC PTP implementation / PTPDv2.
-
-So we come to the same conclusion, the issue comes from your link partner! =
-;)
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Sultan
