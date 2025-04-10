@@ -1,309 +1,277 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CEF28A408;
-	Thu, 10 Apr 2025 13:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290387; cv=fail; b=et5pHliA+6iRdM5oeXquomkLXMq2jws1W6VVq46oABWRFNRlIs6RmxNedTCO366c93vQcEeYv+hhddczixRoi7nLMwDJq/f0KT0cg53iTfNjcpTJz9KoiCtWyq+K/UvI7IO5yHJFkfRm89XP0blPpVXdT8+qBeTodrM2i3whNkM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290387; c=relaxed/simple;
-	bh=u3ZLje6ThfTkBRLLQYowS7iXG0lbQ7/cuY5NoM5llJA=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=raCzMHHkoY5wxZNp32oePG1AboDugAFNtY1kf8Y1IcXN3PtbuGaitkhT+vrxWgNTAjVyXplWGj7HJraQd9O/ncEqcLzuKXmUZ9cjJQQlnx9aLapfqefDqkjgkpBcYZrL1UDHA6wgOkesS6bymKPwOGLv2vtXZ01sYejQvtjrG2w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0HEeiO4; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D10328D83A
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744290390; cv=none; b=OqSU2xAAxH/1by+3N+Y3xxCj7drBek1Ubh7yo6qZWjQArAjqrglgt94xs8TE8mGcr+OKl5yH6C43Yh1QWs/UxAquU1OklQ6LRtS8xgIYerHuwTS2QYAsxqyHB/xbJKuucinnTikRYPRjhlTWBbehe4T8IJvGdQtq3sPe4Sf4Ewo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744290390; c=relaxed/simple;
+	bh=cnOuUiTe3Ho5T4fYaHsNPW7c89nIldGijKaXdVhE6n4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NNK4av/tEfoMER3DYBwtLRgcMP/4VITLw/PgCnOtnR4tr8kgUQv1BvLrJELSUBRb46agq/zVHeP2GFGEBEFvpcU+MKfosVDE4dC9DspMr7y6frnNxJ+D+Sl9E0GNPDm/LV6u/kE4+lyYY7j7aqBWbO9do/GWrWL03dfYjKRvqQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQoBHaao; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0HEeiO4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744290384; x=1775826384;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=u3ZLje6ThfTkBRLLQYowS7iXG0lbQ7/cuY5NoM5llJA=;
-  b=X0HEeiO4U09DMoLuor/tvECRtbA01WaULZLYlQVhOujdbXMs/VDlvZfh
-   MohAiYDIVbU19UM4VNZtiTnKNlU+pa5vW+HwEHoHPk7JyLu8Cfh6nGT9i
-   OYwk3uFLMY/9+Q3ygzzKR2oGfx0wHfdtgRJAsVabJXKGqVAgxk+G8KgC6
-   aIoLMv8j10K07CnUZw6snQhrC4Q6FgqAQO4d6m1E1/U6yDiUfkzSvdllA
-   Q0h34moOWtQrXskk5eQb7Xvhpglz+jB3GcWKUK2XIedDxh4Yq5VhSJtMU
-   0x96N3Yf8fZC6AHQGxsUAjz9044c+TzDZVqzyuj+plksEiak4v9LfhmW/
-   Q==;
-X-CSE-ConnectionGUID: VlMGgUlqSXS08Ey+dUQEew==
-X-CSE-MsgGUID: 0/cuukU6TXuX4so/wguo2Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="63352586"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="63352586"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 06:06:09 -0700
-X-CSE-ConnectionGUID: IpQaao8CQzCAn5HGW+enBQ==
-X-CSE-MsgGUID: EqLrTjGdQKqsZgMQm00Mvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="129744731"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 06:06:02 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 10 Apr 2025 06:06:01 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 10 Apr 2025 06:06:01 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 10 Apr 2025 06:05:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZuhkvXr2odbJW81QXxWLQ2Cjnn4XD982+3/TRWc+zdDru1GPBn3YAP+usqjbj2/RSWbLFDSsCf/lOUccU4s0c33cWQ/sxLpiVcsEYE8H5mKEieVq7dzuUeXWNlvUfl1oBmJdqhzj85q/R9rb1BN1oSEp9FzaNhRIzvBgkg2xRXcYLRpU90ahwdDzO0ggq3eNdiJGjB2lhtzxaMwfRlmCCqdyw8toiumzNwvTKQ4yAA+EyVKX9sasXeHdvqRXfjnC3azftp8KRDo6zjPUWitxtVTBxsMae/ET+T9wZeNAu94yA0B1VjZNyAyGUX/DxVA/iSV3xpcbVUcvtSq4Srl5ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fc66596yFrw6quDUlXTsHorM/6cF/GHNvHbJ8O7aMe4=;
- b=hKiROgaY175cn7gRD9hp5f1+ax1bKaIr32r0Z1ojxYmnz7lVmgku6Ue4INb8WLbsRRQA+cb7z9mn+MQ61cFg4YMq1i38vz3twu0DQT4wa/5CrHykRi5uC2qhhOTVu/ZDy1YnbmmewLXhuIqKEVMEaWw16C0hi4snKfXCACL+2YiKseLvE5kSK8PouPVKqyO+doZZ7qshHLYAQRLTL8KZiCjgTviIDK49/cwGSHXnnvP0dD+d5rIQdXx7Zep+b2nRaP3Phnnx5n21rRXr0V3+/r2aJtBqNMC+uB2DZUMueXE9BBte4ViwgDCfxgJkUCq5wTbZns/Peqhhz9kg8bwFMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by PH0PR11MB5207.namprd11.prod.outlook.com (2603:10b6:510:32::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Thu, 10 Apr
- 2025 13:05:28 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808%5]) with mapi id 15.20.8632.017; Thu, 10 Apr 2025
- 13:05:28 +0000
-Message-ID: <c1ff0342-4fe9-44ec-a212-9f547e333a5e@intel.com>
-Date: Thu, 10 Apr 2025 15:05:19 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-next 05/14] libeth: add control queue support
-To: Leon Romanovsky <leon@kernel.org>, Larysa Zaremba
-	<larysa.zaremba@intel.com>
-CC: <intel-wired-lan@lists.osuosl.org>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet
-	<corbet@lwn.net>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, Jiri Pirko
-	<jiri@resnulli.us>, Tatyana Nikolova <tatyana.e.nikolova@intel.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>, Michael Ellerman <mpe@ellerman.id.au>, "Maciej
- Fijalkowski" <maciej.fijalkowski@intel.com>, Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Sridhar Samudrala
-	<sridhar.samudrala@intel.com>, Jacob Keller <jacob.e.keller@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, Mateusz Polchlopek
-	<mateusz.polchlopek@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>,
-	<netdev@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Karlsson, Magnus"
-	<magnus.karlsson@intel.com>, Emil Tantilov <emil.s.tantilov@intel.com>,
-	"Madhu Chittim" <madhu.chittim@intel.com>, Josh Hay <joshua.a.hay@intel.com>,
-	"Milena Olech" <milena.olech@intel.com>, <pavan.kumar.linga@intel.com>,
-	"Singhai, Anjali" <anjali.singhai@intel.com>, Phani R Burra
-	<phani.r.burra@intel.com>
-References: <20250408124816.11584-1-larysa.zaremba@intel.com>
- <20250408124816.11584-6-larysa.zaremba@intel.com>
- <20250410082137.GO199604@unreal>
- <Z_ehEXmlEBREQWQM@soc-5CG4396X81.clients.intel.com>
- <20250410112349.GP199604@unreal>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250410112349.GP199604@unreal>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZRAP278CA0014.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:10::24) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQoBHaao"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso6015585e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744290386; x=1744895186; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3KpF9SfZWwknZK9NjJkeKkgsOEETiClwbvQ0kGUScvk=;
+        b=mQoBHaaod9CbDYChlghlnu0pZpqmrayNpITKewTXioVNp9AaNWV2LjZqCkg7YYTT0w
+         2sYj4ytT9+BnntwQ/F84dcXjWVWHu9EFb3FmYi63Hypt4yqkhQg7vBTe52v49We5BQF1
+         4uvwJ5PluLQF6Cbidudd23Ax+xRljutWXfcgpTvr+sr904Q2bBkCDe80JEfkKWU2lvt8
+         2ir1fWrYa3/npLvNQrZLhQZrEKT1xw1F1JjqBkWgTp69b1M+UTh3FUaJX5ZEM1zN7Nv2
+         fN6atcc3XOUVs+H0SHxXmG9OH+6afi/07amz9TMMMc8uO5/dYzTro6JJQQruPHoxQOFw
+         uvOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744290386; x=1744895186;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3KpF9SfZWwknZK9NjJkeKkgsOEETiClwbvQ0kGUScvk=;
+        b=EWfVcmHB9Qi6Dwsw4wWFsV4NqbD7ieQdRbv3SHmp9oS5cKqOObDS+zmJkl0o4EUWJH
+         xv4jDGuYwhl6qrYnQ8kijkQgp+vwT5KDw49ddVgSgmnuoOugLrp4QooGQLizjnViFVEB
+         XWYQ9QxtSYGxjuzqNnXllyzwDqYKuxmq+gm3xaJdZOgJVDuhoctjsPPcb6cfPjr/aPR/
+         z7Vy69xZ/HLc6wxfXlLu0zrx26bmi3XnA84mPTfA9Rzfb/zZDsUdm3AaJ5mp6cC95uz5
+         eNOdkb1Ch8IlM69MecG29K+r8DoKcfaldrr53mPFcCCTKTf5UGyNxvGl16C+kcaGRytF
+         lEeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxzJr/WmZ0yuYr0Zx3UfooATCSOan50HwU10ZvOz9f1PHmfsLfVvpQJ0/QYD6+UlN1MJ65KC1MuJzqS2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYqginXsThibs26rF/GvZuyJ0FijgJUJHfNgTguRC2VE3pJNUG
+	icLYkqcUdg40Ipl6s2ktHNQyOp5rpUY9rbRe6h7pSWusBw8nkZk7
+X-Gm-Gg: ASbGncul1vvGijqcASTD1qfs+tcjQYbnoDlsiCm+BpK3vdsC4uh7liqWDWnlyU+jtUW
+	Ik70jTrBRdg3grRREfbAmSw3qip3Or47tjbximcyRtVwv1QLx+LqKo5BXUg2M9d/AnCVFGiZIuK
+	jPTQpKPJK8CSA6kx+nZJ4sy0uZcrXP0WL6wtAUyiKz0qCd9FA3A5mfMSiQUfsf+8W88UIYFDBeb
+	SHH6kF7g/t9a15V7RlvQcBALU1bYbO+Ys6uSkCNoW4RoCIENGrkfrNyYUAWoEJOwHKzmU7Rsr3c
+	B6u0s2ObI+UVOI+/5hOdetPOdtyzPtBbVLmbRw==
+X-Google-Smtp-Source: AGHT+IEXxWXeDdUFKg0JMdVhDar9E3Hqv/jvd/iAbcSOtIAVNlERHeywklQ8I5H/mrccs+8fJdXc+w==
+X-Received: by 2002:a05:600c:4e14:b0:43d:db5:7af8 with SMTP id 5b1f17b1804b1-43f2ff9af48mr18725805e9.21.1744290386034;
+        Thu, 10 Apr 2025 06:06:26 -0700 (PDT)
+Received: from pc.. ([197.155.71.138])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc6dsm55013045e9.28.2025.04.10.06.06.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 06:06:25 -0700 (PDT)
+From: Erick Karanja <karanja99erick@gmail.com>
+To: gregkh@linuxfoundation.org,
+	outreachy@lists.linux.dev
+Cc: karanja99erick@gmail.com,
+	philipp.g.hortmann@gmail.com,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] staging: rtl8723bs: Improve code readability in sdio_ops.c
+Date: Thu, 10 Apr 2025 16:06:06 +0300
+Message-ID: <9c8473662caa96a8d312415e9006f74f48098f98.1744285781.git.karanja99erick@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1744285781.git.karanja99erick@gmail.com>
+References: <cover.1744285781.git.karanja99erick@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|PH0PR11MB5207:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7f36188c-4e61-4579-d12d-08dd78305d63
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Sk91b1hHcGdBMysyOE1YVERhWTd5QVlHT1graGM5eHlZY0hqQ3dvdURyU3FW?=
- =?utf-8?B?SHY5Y05iVFdRU3NWYUxUSHljNW91ZUhtNTZ0aHFGTDJhclRHRUlWcXlNV0Fu?=
- =?utf-8?B?NWtMY09hODNHU2dtOS8yYjdBK3FNWkUzLy81TlVQUXE0Qzg5UTFDQW9EeEhK?=
- =?utf-8?B?MG4vMkpOZUtWS0ZtS2MxbUJzYjdDWk1PUDQ3UVFhWW1qVVBFVWNGMFVnMHd3?=
- =?utf-8?B?V3BmV3JNWFJ2R2Z4SDh6ZUtmcjhNdG1iV29qVVRISG5aQVRLRFBaRWE3Q1lW?=
- =?utf-8?B?eWIxNzY2aDA2NVpoRDR1WXFpa3UxMmxpQytqVHQ0U1loL0JJM0xxcnpKeXNE?=
- =?utf-8?B?c29NNGNTWWd2UDc1MzRNSmY4dGt4Q3gyU3E5UFJSQmxDR01rOUsrR3hLbzRh?=
- =?utf-8?B?MkNxekxYRFo2ZUJ2R2dUZDlXWmpsOVZ2ZUx1MlB1RnpHNVpDREV3UXFwN1BM?=
- =?utf-8?B?ZHk1aHFER1ZvTTJoMTFtQnhuQnZyeU5PU2YyYXllZVFUc1BHYTNhaEJLamVj?=
- =?utf-8?B?M1I5QmxtSVF6bzNwOVdkeVRjQXZDamtjaS93YXoybUJpR293aGJTRUJsMy91?=
- =?utf-8?B?QXB4YjV3bjFCc3REeHN0QjVtNEVxeUh0cmRLTlZ5NzhiTUFGdjZ5YU92akQy?=
- =?utf-8?B?L2FOR3VQMFFYZ3d5VEY2eVFlSzl6THFybG41aUNYVkpUUzBwNHp6QVhVclYy?=
- =?utf-8?B?dnFoRnM5SnBvOGhCRmdGU3VnaXRENW5IckszakR3V2Rmc3IrTUsrQmlDUWdp?=
- =?utf-8?B?czkrZjVCSFBNaWRzWTN6ZnMxUHp1SFZrb2E2Q21Mb0dWR0JBcVpzeGt3c1c1?=
- =?utf-8?B?a0lGcTlLYUFmc0tlc1NPODRzdE45WGQrcFBuRXV4UHBPeWY5NkdMSTVWT1gz?=
- =?utf-8?B?SmJyNWJIcUhYK0lrRkUzM0dGeHBFeWd0WjJ3ME1tanZFZmlaVEdxRTEwTUww?=
- =?utf-8?B?WmtNd0FqMmdSNkJqNkxUU3h2aWxQcXNqV0h0aGxpd1UrNWtQNFdyVXNFSFFl?=
- =?utf-8?B?VVhGcGtOK2hpNmU5azJ5cW1aQmxOZTZoYk5GL1Nrd2RoeDFPZkFxZXdrR1hQ?=
- =?utf-8?B?eWZyNDR5VnFZUHVMUXFab2xJdU8rSTl0ZlpzU0FIN0JRRWt1Z1d3SlN5UjV6?=
- =?utf-8?B?TE45TWphL2FaUXMranJhNDgzVkhsRFVmQUp6YnA2QXlOMHJlSjFML3VUc0k3?=
- =?utf-8?B?Qnl5VFRFRUNyekhkSzhhaTJBQzFGb1NWci9kUFBZRUt2ZWY4endwam92Ni8x?=
- =?utf-8?B?MndYUno3Q2pEL25ZSWJFR3FmUlZsLzJRa2hsRlBKTWU2TXZzcG9CcldlakQ3?=
- =?utf-8?B?UnVMZUNIbUhtWTZvWGk3Z0lIZUVhS1JKQS9ZMm93RGc5WHhqWm5nbVFlUEI2?=
- =?utf-8?B?SEw1Zmt5R0NKeXVDZmh0WmJzRXlTY3hUc1pGdit6R3pOYVBtazF2ZUFkcE82?=
- =?utf-8?B?Wk82WlgxUlI3SVpzdGkwNmlJUTk1MUE1VUN4TWpYMHBOdWhUWmYvWUVLMGRp?=
- =?utf-8?B?RGk1blVyZlA0VGpyWkpQOVN2NWVHeUN2VmNISWd5ZHFLazA5ZSszdW9oSkcz?=
- =?utf-8?B?SnZyVENLZFAveWhNaTkrZjJXcmVHQ3pTajBEYkE2d2tTU05qV241Mk9sRDBU?=
- =?utf-8?B?U1k4VjFPWlhUZDRlODBTQU5KTW1iM2YwU2RSVTF6SGsvelJuUUMwNUswbHVx?=
- =?utf-8?B?RW1LUnNLUlp0WVFVQmF2VmYwMkt3YTBVdWdKZnFGTGdEOXFjSEFWbjBwTllm?=
- =?utf-8?B?VnRvc05RdzM0YitDeFI3azlCRnhCUVdGNE1PYjFKMTFqNmdGVXplSkFVRVc5?=
- =?utf-8?B?clliTk03cm5iYi8vRHNlcWNuUDZvdlNlQ0pqRVlxaDhGK0xlbURRNkhZbHpZ?=
- =?utf-8?Q?bLpy/XMGDh8tI?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Zk11NUhQRzFlaThrdEtMWityYk9wYXFKb1FhRU5pVjU0N1gwaVFhaWE2ejNO?=
- =?utf-8?B?QVpCejBlUzUwb0d3NlpYZThIbUYvYVhqT3dYamtSM1VhbjNUN2J0TGQyR2Ja?=
- =?utf-8?B?b2p2cHN2a3BMbFpTRUk5YlByZ2VMeGpnNlpCK2tWRmhPR3daZmdVYUpHeVJP?=
- =?utf-8?B?biszSUxENUs4N3ExNXJoVzlEdnlIY2NqazI2bE9sS0QzYUJ6WW1xY0ZBOGpa?=
- =?utf-8?B?S0ZmOTFWdzRTYS9mVUxDMDlLV01JUU4wam13Q3FHbjBwcGJnSEdzZFk3TVp4?=
- =?utf-8?B?Q3dMSm9FelpVQko3YnROaFoxUEl2WmJVdjRJZWVUV05HampuNjdHbWZ2dGpP?=
- =?utf-8?B?LzVkYjh4MDhnNTg3VWdMVjVzd1VaTE5zVmhmdDUzY1QzOXE0RWgyaEt0ZEt0?=
- =?utf-8?B?bjR6M0J0S1lZZGJPVWRjR3FxaWpnQ01WWkxBUzg3cEhEajJNTU5SMXBFSnc0?=
- =?utf-8?B?UUJCZGpVcVJKdUxJWlRoY2hZMnduUFI1NUgzQWMwMWhJUlJCWDdOZEFRdmdU?=
- =?utf-8?B?UTg0MFUvMTdqUlFoZXVCVGtnT2h4aTI5RU5pY2hpZVJNRWlNU2dZdXVsL3Vh?=
- =?utf-8?B?QTEzNUhnNTNMZDlFSjdzU3JEaFJkV1IxTUd6b1NUMk9pcWZrTWlJTGNvMFdE?=
- =?utf-8?B?a1pDZE0zNDB1emh5a3cvSW1IUU5FbCsrbWNYMldSOVphd0JJeVcxT0NjSnhU?=
- =?utf-8?B?K1ErYWUwenFqdGkwdDhvSkhYdWRCVVhDT3JiYXVqd2V0K2FXTUhBek5heHJL?=
- =?utf-8?B?dGVJMUozY2RiU2ZpaUVnQnBoSjUyM0tmMlhza3JDWFlQL3Mya1ZCWkdSRlUy?=
- =?utf-8?B?ME9uNGI1RDVLOHh3TlZFQ1lFMzlSZVd4NUlzTWxraXVEa2ZNQmUzUW8xWnRH?=
- =?utf-8?B?K3UrbnN6V21YNDYxZjBrQVV6OHl5cWF2c1dNVGxJc25ramFNRlhxVTVEWnc3?=
- =?utf-8?B?UnBlN25TMlhpNXdHRzFIQ3lsZnRXUnRKYk4yTnVDNCsrN2w1QVBhQmY0VkJE?=
- =?utf-8?B?bFA1VThqRHcyMXVqMnF5Ry9wUXBkb3FvOFpTVlZDKzlXQUVwaXV2amJqaVJq?=
- =?utf-8?B?Z2hjaVBzRE00R0NPYjY1eXY0QURsU3ZhYUVvUTNMNmg0NDhaSFdLMWplTXBv?=
- =?utf-8?B?eXNxQUJDKzc1OURkRzlUTlh4U09nNy82bTU3TlF6cTlEc3lxdGdRSU04TUlY?=
- =?utf-8?B?aURzWEZ0K09xUUdpWDREbXJxYlovSmxmK0lpZ256cDl0N011SnYwdnFvRDF1?=
- =?utf-8?B?bHh2N29xZ05TM2VDWWszSzI3VUVnWlU3TjUrU0x5R2hrNlFsU2J1ekFLangz?=
- =?utf-8?B?dWZEWTJzOFFjNjhtTFM5OFBpNnpXcXlQWFE4enkzWTBmaVhHTUtxdVZ4dXMy?=
- =?utf-8?B?WHFmcGVzb1RHQW5wZlc1WURyZnAzcFVDTnZvV0crWXZZVUFXenQzL0lGZERY?=
- =?utf-8?B?dzZnOUs2cFkrblg1NkpEdTgxN3Y5OS95OU15MmJCNzFpelBOYlN2Z1BaOTgr?=
- =?utf-8?B?eFlvdjBEYUhwSEM0SVFhUnBPSVRYemJnZXNBNVhrWXc4Q3QzRndBenJRbUdM?=
- =?utf-8?B?VDNoL0pTR0JOVkZnbGh1a0hDWkFKb3ZRVStiZXJacmRJSVJtRURjUXlMaFE0?=
- =?utf-8?B?UEttbVdpRENJN1NJRVBDWUtqQStxVEs2bmpwSUpIbnVVV0Jad3B2dklUUzZj?=
- =?utf-8?B?NUNlNVJNSEtsOHFaYklhaDhQQ0xBbmp1aGFycUpDNTdTYWViME96L0RoZkto?=
- =?utf-8?B?K1NnYk04NkZ4cU1vcEFhaFM5SjVJL1hXNXhzcVA1VnlFOVhSUUZMQ0pUd1Q2?=
- =?utf-8?B?bCs1UnR0TzVNYkgzdjVqQm92aWcrei9UZ3M2cThYRDREbFBrWGtWOHJuS0Z4?=
- =?utf-8?B?ektDUTJEWUJGeUVUNnlmbGN5alJyZWUySUc5enZ0YkFpWjE5eVdJS3J3WEJn?=
- =?utf-8?B?MmpoelJTK3RQMVRXc0FGNWdnSzVZMjFBZitjT0QzVFhLNFJ0a0lBb3pSZjlI?=
- =?utf-8?B?R0Y5SEQ1dEo5OEo0Yzl5TEVPUGNZd3d5akk5eTRvVjE3NDMrVVlvbEtKSFBQ?=
- =?utf-8?B?RW9IaUZ4ek44akpka3RYNmlKa0sxZWhyc1BJMUU1Qm82dUdCQUhLTjQ1VmRz?=
- =?utf-8?B?dWtEZzZNS3QwTFpzUEgyRUpBN1JVbHFhOWNZWlhqbmxlS2hjTkFSdWZsZTg3?=
- =?utf-8?B?WVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f36188c-4e61-4579-d12d-08dd78305d63
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 13:05:27.9886
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MEN81KI/dLI2cPbNO2vvlVJ0cLCg5VuaKQfqUl/mjXTWoeHjHB2pDcousKFs3aWSZRzcDCWAqRLsCTL6BGzdWIIqF7wi59PCoyCGs3KGjFM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5207
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-From: Leon Romanovsky <leon@kernel.org>
-Date: Thu, 10 Apr 2025 14:23:49 +0300
+Make the code more readable by moving trivial
+initializations up with the declarations instead
+of wasting a line on that.
 
-> On Thu, Apr 10, 2025 at 12:44:33PM +0200, Larysa Zaremba wrote:
->> On Thu, Apr 10, 2025 at 11:21:37AM +0300, Leon Romanovsky wrote:
->>> On Tue, Apr 08, 2025 at 02:47:51PM +0200, Larysa Zaremba wrote:
->>>> From: Phani R Burra <phani.r.burra@intel.com>
->>>>
->>>> Libeth will now support control queue setup and configuration APIs.
->>>> These are mainly used for mailbox communication between drivers and
->>>> control plane.
->>>>
->>>> Make use of the page pool support for managing controlq buffers.
->>>
->>> <...>
->>>
->>>>  libeth-y			:= rx.o
->>>>  
->>>> +obj-$(CONFIG_LIBETH_CP)		+= libeth_cp.o
->>>> +
->>>> +libeth_cp-y			:= controlq.o
->>>
->>> So why did you create separate module for it?
->>> Now you have pci -> libeth -> libeth_cp -> ixd, with the potential races between ixd and libeth, am I right?
->>>
->>
->> I am not sure what kind of races do you mean, all libeth modules themselves are 
->> stateless and will stay this way [0], all used data is owned by drivers.
-> 
-> Somehow such separation doesn't truly work. There are multiple syzkaller
-> reports per-cycle where module A tries to access module C, which already
-> doesn't exist because it was proxied through module B.
-> 
->>
->> As for the module separation, I think there is no harm in keeping it modular. 
-> 
-> Syzkaller reports disagree with you. 
+Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/sdio_ops.c | 59 +++++++-----------------
+ 1 file changed, 17 insertions(+), 42 deletions(-)
 
-Zero proofs.
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
+index 8736c124f857..1e03413e242c 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
+@@ -53,9 +53,8 @@ static void hal_sdio_get_cmd_addr_8723b(
+ static u8 get_deviceid(u32 addr)
+ {
+ 	u8 devide_id;
+-	u16 pseudo_id;
++	u16 pseudo_id = (u16)(addr >> 16);
+ 
+-	pseudo_id = (u16)(addr >> 16);
+ 	switch (pseudo_id) {
+ 	case 0x1025:
+ 		devide_id = SDIO_LOCAL_DEVICE_ID;
+@@ -150,7 +149,7 @@ static u16 sdio_read16(struct intf_hdl *intfhdl, u32 addr)
+ 
+ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
+ {
+-	struct adapter *adapter;
++	struct adapter *adapter = intfhdl->padapter;
+ 	u8 mac_pwr_ctrl_on;
+ 	u8 device_id;
+ 	u16 offset;
+@@ -160,7 +159,6 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
+ 	s32 __maybe_unused err;
+ 	__le32 le_tmp;
+ 
+-	adapter = intfhdl->padapter;
+ 	ftaddr = _cvrt2ftaddr(addr, &device_id, &offset);
+ 
+ 	rtw_hal_get_hwreg(adapter, HW_VAR_APFM_ON_MAC, &mac_pwr_ctrl_on);
+@@ -196,16 +194,13 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
+ 
+ static s32 sdio_readN(struct intf_hdl *intfhdl, u32 addr, u32 cnt, u8 *buf)
+ {
+-	struct adapter *adapter;
++	struct adapter *adapter = intfhdl->padapter;
+ 	u8 mac_pwr_ctrl_on;
+ 	u8 device_id;
+ 	u16 offset;
+ 	u32 ftaddr;
+ 	u8 shift;
+-	s32 err;
+-
+-	adapter = intfhdl->padapter;
+-	err = 0;
++	s32 err = 0;
+ 
+ 	ftaddr = _cvrt2ftaddr(addr, &device_id, &offset);
+ 
+@@ -262,18 +257,15 @@ static s32 sdio_write16(struct intf_hdl *intfhdl, u32 addr, u16 val)
+ 
+ static s32 sdio_write32(struct intf_hdl *intfhdl, u32 addr, u32 val)
+ {
+-	struct adapter *adapter;
++	struct adapter *adapter = intfhdl->padapter;
+ 	u8 mac_pwr_ctrl_on;
+ 	u8 device_id;
+ 	u16 offset;
+ 	u32 ftaddr;
+ 	u8 shift;
+-	s32 err;
++	s32 err = 0;
+ 	__le32 le_tmp;
+ 
+-	adapter = intfhdl->padapter;
+-	err = 0;
+-
+ 	ftaddr = _cvrt2ftaddr(addr, &device_id, &offset);
+ 
+ 	rtw_hal_get_hwreg(adapter, HW_VAR_APFM_ON_MAC, &mac_pwr_ctrl_on);
+@@ -300,16 +292,13 @@ static s32 sdio_write32(struct intf_hdl *intfhdl, u32 addr, u32 val)
+ 
+ static s32 sdio_writeN(struct intf_hdl *intfhdl, u32 addr, u32 cnt, u8 *buf)
+ {
+-	struct adapter *adapter;
++	struct adapter *adapter = intfhdl->padapter;
+ 	u8 mac_pwr_ctrl_on;
+ 	u8 device_id;
+ 	u16 offset;
+ 	u32 ftaddr;
+ 	u8 shift;
+-	s32 err;
+-
+-	adapter = intfhdl->padapter;
+-	err = 0;
++	s32 err = 0;
+ 
+ 	ftaddr = _cvrt2ftaddr(addr, &device_id, &offset);
+ 
+@@ -388,13 +377,11 @@ static u32 sdio_read_port(
+ 	u8 *mem
+ )
+ {
+-	struct adapter *adapter;
+-	struct sdio_data *psdio;
++	struct adapter *adapter = intfhdl->padapter;
++	struct sdio_data *psdio = &adapter_to_dvobj(adapter)->intf_data;
+ 	struct hal_com_data *hal;
+ 	s32 err;
+ 
+-	adapter = intfhdl->padapter;
+-	psdio = &adapter_to_dvobj(adapter)->intf_data;
+ 	hal = GET_HAL_DATA(adapter);
+ 
+ 	hal_sdio_get_cmd_addr_8723b(adapter, addr, hal->SdioRxFIFOCnt++, &addr);
+@@ -432,14 +419,11 @@ static u32 sdio_write_port(
+ 	u8 *mem
+ )
+ {
+-	struct adapter *adapter;
+-	struct sdio_data *psdio;
++	struct adapter *adapter = intfhdl->padapter;
++	struct sdio_data *psdio = &adapter_to_dvobj(adapter)->intf_data;
+ 	s32 err;
+ 	struct xmit_buf *xmitbuf = (struct xmit_buf *)mem;
+ 
+-	adapter = intfhdl->padapter;
+-	psdio = &adapter_to_dvobj(adapter)->intf_data;
+-
+ 	if (!adapter->hw_init_completed)
+ 		return _FAIL;
+ 
+@@ -487,14 +471,12 @@ static s32 _sdio_local_read(
+ 	u8 *buf
+ )
+ {
+-	struct intf_hdl *intfhdl;
++	struct intf_hdl *intfhdl = &adapter->iopriv.intf;
+ 	u8 mac_pwr_ctrl_on;
+ 	s32 err;
+ 	u8 *tmpbuf;
+ 	u32 n;
+ 
+-	intfhdl = &adapter->iopriv.intf;
+-
+ 	hal_sdio_get_cmd_addr_8723b(adapter, SDIO_LOCAL_DEVICE_ID, addr, &addr);
+ 
+ 	rtw_hal_get_hwreg(adapter, HW_VAR_APFM_ON_MAC, &mac_pwr_ctrl_on);
+@@ -525,14 +507,12 @@ s32 sdio_local_read(
+ 	u8 *buf
+ )
+ {
+-	struct intf_hdl *intfhdl;
++	struct intf_hdl *intfhdl = &adapter->iopriv.intf;
+ 	u8 mac_pwr_ctrl_on;
+ 	s32 err;
+ 	u8 *tmpbuf;
+ 	u32 n;
+ 
+-	intfhdl = &adapter->iopriv.intf;
+-
+ 	hal_sdio_get_cmd_addr_8723b(adapter, SDIO_LOCAL_DEVICE_ID, addr, &addr);
+ 
+ 	rtw_hal_get_hwreg(adapter, HW_VAR_APFM_ON_MAC, &mac_pwr_ctrl_on);
+@@ -566,13 +546,11 @@ s32 sdio_local_write(
+ 	u8 *buf
+ )
+ {
+-	struct intf_hdl *intfhdl;
++	struct intf_hdl *intfhdl = &adapter->iopriv.intf;
+ 	u8 mac_pwr_ctrl_on;
+ 	s32 err;
+ 	u8 *tmpbuf;
+ 
+-	intfhdl = &adapter->iopriv.intf;
+-
+ 	hal_sdio_get_cmd_addr_8723b(adapter, SDIO_LOCAL_DEVICE_ID, addr, &addr);
+ 
+ 	rtw_hal_get_hwreg(adapter, HW_VAR_APFM_ON_MAC, &mac_pwr_ctrl_on);
+@@ -839,11 +817,8 @@ static struct recv_buf *sd_recv_rxfifo(struct adapter *adapter, u32 size)
+ 
+ static void sd_rxhandler(struct adapter *adapter, struct recv_buf *recvbuf)
+ {
+-	struct recv_priv *recv_priv;
+-	struct __queue *pending_queue;
+-
+-	recv_priv = &adapter->recvpriv;
+-	pending_queue = &recv_priv->recv_buf_pending_queue;
++	struct recv_priv *recv_priv = &adapter->recvpriv;
++	struct __queue *pending_queue = &recv_priv->recv_buf_pending_queue;
+ 
+ 	/* 3 1. enqueue recvbuf */
+ 	rtw_enqueue_recvbuf(recvbuf, pending_queue);
+-- 
+2.43.0
 
-Kernel loads modules under mutex, patches relocs etc. Circular deps are
-not supported. I've no idea how that possible what you describe.
-
-> 
->> We intend to use basic libeth (libeth_rx) in drivers that for sure have no use 
->> for libeth_cp. libeth_pci and libeth_cp separation is more arbitral, as we have 
->> no plans for now to use them separately.
-> 
-> So let's not over-engineer it.
-
-Let's not over-engineer Netfilter then and compile it into one module?
-
-I don't want to load _pci/_cp when I load something different than idpf
-or ixd, it makes no sense.
-Moreover, libeth and libeth_xdp are still generic and can be reused by
-any vendor. _pci/_cp are not and won't ever be, they are in the same
-folder as generic libeth only to not create more folders. I don't want
-to link everything together.
-
-> 
->>
->> Module dependencies are as follows:
->>
->> libeth_rx and libeth_pci do not depend on other modules.
->> libeth_cp depends on both libeth_rx and libeth_pci.
->> idpf directly uses libeth_pci, libeth_rx and libeth_cp.
->> ixd directly uses libeth_cp and libeth_pci.
-> 
-> You can do whatever module architecture for netdev devices, but if you
-> plan to expose it to RDMA devices, I will vote against any deep layered
-> module architecture for the drivers.
-
-No plans for RDMA there.
-
-Maybe link the whole kernel to one vmlinux then?
-
-> 
-> BTW, please add some Intel prefix to the modules names, they shouldn't
-> be called in generic names like libeth, e.t.c
-
-Two modules with the same name can't exist within the kernel. libeth was
-available and I haven't seen anyone wanting to take it. It's not common
-at all to name a module starting with "lib".
-
-I don't want to send huge patches which would only change the prefixes.
-Nobody disagreed I can take this name back when libeth was taken.
-
-+ above, anyone can reuse the lib, it's pretty generic, except for ixd
-stuff which is isolated. What if someone takes it tomorrow, send one
-more big patch which will revert the suffixes?
-
-+ no offense, but I noted several times during reviews of mlx5 stuff
-that lots of functions within the module are not prefixed anyhow and may
-conflict anytime with some generic symbol.
-
-Thanks,
-Olek
