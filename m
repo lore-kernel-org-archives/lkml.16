@@ -1,249 +1,214 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3275428A3EA
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31D8283C98
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744292439; cv=none; b=AhQkAM6QIk4/CM8TkWW0emslqtbV0Om9cmRt3eK68BWHac7PAHIXCVHXwbdhlk5ZhU2hPztq0FUes6VTyoQqDE2GDqtGQPprEtzj6t4ZwMi9klVc/hJfpwl0SIC2lbJjwpE5srKmxa2uhzrHYInmMvrgl+MgkxHBQiIMWnaR7lg=
+	t=1744292477; cv=none; b=nWD03esa/UpzcRr67d5PaqwWZhcuz67vr8rK6DIZFXngxOODa0nfG/rCiMCYM3sEE4ceT3KePM2gn1Qp2ZKLhMZfO6jBuH0zJis9nt0iJNxfzwKOlfEEX9DYewZlgEFuQcNJSQZGJ2p6wnBA6YtYU4pz05wq2fcPx+4DzAX1NQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744292439; c=relaxed/simple;
-	bh=RyXiF/jkRIj400dJ7AmDNhGbCH7VL8l8ltE6ndzB2ag=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KSyjMd8qCaTuH6Ktti/rGqLDeK94TynOwSCF/8Vz3gfQNG6IrHuJyjkCyt3g6PAzy84D2oGQH6pmf5OElnbzGK/cZHNnGUexj/ueC5uNAZxJG4+aJLaeLjPXFOwse7UX6dpcBuzNMElL+1Eek5Mn7zuiv5WWv9TsZJZr5cBgCuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B9ETxxgc; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1744292477; c=relaxed/simple;
+	bh=k7HZ3J6Sdznt73jGRL/V1rXRjiNjVKh9Rezm6vCsJlQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o8s+tbD2S6JhbYOWNrvdo5XsTeh5hpi2CGM5IFeyzkZmWhHOdMpm4Y9LFq2IhsjwcDfSDY6ZvR1tJ5Opdjfj+pL0BoWp3Rt2sD/0ZQXSQT4JK985eFjiGXAPcEJ+oEP25UGuMilSG073RQZcSq8KW/bzhgDkXUhPBYtbKzoTyaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mwzxzi8q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B9ETxxgc"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736abba8c5cso1072735b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744292436; x=1744897236; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NAdkgo+26TLCNZdpvTsQI8wpHzhqkKGWGAXIQv7DOuE=;
-        b=B9ETxxgcpob74poHujyQ6niCcx87Bg925/BVqnEMQ15WZIXIdaywXzbPrhK77jEHo7
-         mAL0pAB7fXO01+v0aY+q+61QbzkPMDau0h2zqnQai15oynUogkauwlgID+wUHYjHiDMU
-         q7CMVskcTB6FYdZ8v6uoPehyBidXTn7AqEdt8Gh9T7WB3xn/ux824PwpkMPRb1YlDr++
-         rOasQmFgnJWaWvZQZE2k93SSZPuBM1D7h4fBiKi5hu8lvT3yquZEtfLp6/NjqFm26VOS
-         tVu8LHdHZsqUaE3cQszQMjPXcrjZpTexiTQhxYISVv4b2jsuKeS/KE5vUMZk6Dt/QLBe
-         Z9Zw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mwzxzi8q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744292474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=VtKjRccRoZwfHOkp6JnSpQLVWKCEwxlpsURyTo3+C1M=;
+	b=Mwzxzi8qOwFF9VNzk23BZYYx1DJc1lwQAWGcyWfVrKfumnI3i01IQVXGd8EArU3PQY7pPv
+	1eZSSNviLy978QGc3Mg85BXk1/Oe11zpQB6aO5akcfccr8sPIOGr2tPWGsXknP8Imx2Nsi
+	2wDZvxjFHCVpg7XqZ7+NDeNHElUYvN0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-32-1D_e0WhHN42X8UnTdt-TVg-1; Thu, 10 Apr 2025 09:41:13 -0400
+X-MC-Unique: 1D_e0WhHN42X8UnTdt-TVg-1
+X-Mimecast-MFC-AGG-ID: 1D_e0WhHN42X8UnTdt-TVg_1744292472
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39abdadb0f0so429190f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:41:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744292436; x=1744897236;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NAdkgo+26TLCNZdpvTsQI8wpHzhqkKGWGAXIQv7DOuE=;
-        b=lAUi2gLG4q/Chwz/qQ/KG1Nk97P5Aknjg4XHd/GsmXfVyzJm+V+OupbjEJGAs8EJd/
-         dKWX/iDcF//COzHYvk0G/rwppVYUVvjXsUTnElOny4aboi+9kcxRgnS7scU/2wS6+Prn
-         SENk6nZ3VtQmpcbR7ficNwHhc4ItV+UW6uhRbPHvX9BwhNGJ4S/clNsWOKiCqjrIDq7c
-         PFU0QVSVMB0Pwm9FwvDbl3SSQ8zDrgbC3uAuBAfDH1yvk/Psa1781bMSnVBjnBvbqkzq
-         LpxExwH3btNMTvtaT3sna0Jw/shwyiwlvREcNArON0ChaiSZEer8fPRiZZ2CIQhFjewe
-         zRHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeI63TdBGtlV8xXFruri+dS6r8l0mUvZ12rg/dNTickNlKsTMb3XGxUz7sa2B1SMtPlCwTqC/QYQfqLmo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyewmKNIZ2e0uBXh0/SVrK9y2n9cUTKmo89Xeo+LMu1soWrhayT
-	F42L+Z/ULsuFILLfFFUhsWzJ+7epAjpjc9lpRDHhnDUGKNMumjMifUftrKAbE8+iJj0yXg+ohul
-	2c68uhTVpFiUDdTUrZlRZOA==
-X-Google-Smtp-Source: AGHT+IHA1HgsCl6z98FoXuuYkPI1df6L0N/s2mcX4Y5/lnvzb/BxqximvQNI8RQed9Y9suGb1/1qvHayYMY3eco6Ww==
-X-Received: from pfbgj26.prod.google.com ([2002:a05:6a00:841a:b0:736:3d80:7076])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:244c:b0:732:a24:7354 with SMTP id d2e1a72fcca58-73bc09faeb8mr2766392b3a.4.1744292436406;
- Thu, 10 Apr 2025 06:40:36 -0700 (PDT)
-Date: Thu, 10 Apr 2025 06:40:34 -0700
-In-Reply-To: <20250408112402.181574-8-shivankg@amd.com>
+        d=1e100.net; s=20230601; t=1744292472; x=1744897272;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VtKjRccRoZwfHOkp6JnSpQLVWKCEwxlpsURyTo3+C1M=;
+        b=B40t1CFiBH543ZSGQyqqr4UlVxG8KR4VnZaQUfHA1YTY9X0/R2Hz3MNRmwi0S8kVxd
+         0kXP7QNim0GlEMaI8MjH3oXQD942pDH/f1WVWp1TVyZPjNZSIKpoK37grPycNA4EuxTL
+         fw0BWk3uZN4yr6D5qfhZx58QbcklxInPVqfRqyK1tn0qWwC4hycTafdsj6QKiSY3oVhd
+         YYI2ZVBU5OaGisnpTAdvLFQZhTmcCdE7M7CP/f8LeQRQdaI5jAcwzN/wZnfATz0dIvdK
+         XLoLDaYHtC82psACKGqsHoA8BjIXm5Jk1jE6C5xyqY5t0CZKwXF5FEJXPxYungVnwD7/
+         q5Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJWe1yIQ2w6vBSnAIZhHunejzhgqYvfM4a1HzGaYugeO1BThaxVieFufD2k4P3WJf/E0FcrO7B/DuFtZU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywejw2aV+vPiWL4OCzmAvvhZ3+XFiKcms4ObDpd6Pg825nLlCNq
+	97bKVLvMonx9RoEuXPd/3EHY3kl+4v0kHAYAPUoQg78Z0K0Au6Rx5jZZWrbOnfSJ/ji3TiwcC6z
+	cUk3/k4KOhu0noBErbVxeJFU3pz3zKjSwX25SOwdwZxcAd5cXjPQrEkhieTWkmQ==
+X-Gm-Gg: ASbGncuEb3jANPJpZmc4UESG+CZhXq215bGG9tYEkSP76PTEjVF7PMfA7NPkw8dRbyu
+	jZVLT/bNyB8nY3poR5XLppRDUp92jSx8MPGMPLVVXyOa5BCQO1DqqreBr5ocJP6TkqORLiq3GHo
+	/wS0Uk7qYKUq7okJZYPXotWY0VR7EgJr/pXbRcROldSj+XTolLWSYsR5zvvOzCjxGnkJf2oHVJk
+	jk6qjAXMnDf7l8om+8DjBrtZOdAJmxil14cxOmMjtAzVbL9dEDkggK04m7E/9+OElolxBg7FZim
+	UfVIpDfDwLK9SML5KAcmXVWWCZTiZZqLLjnhpxKcteseCJ88Qs8R4IJSsDxKA0DAbnSrNe8fVlH
+	K6ZdLkbtc28l6zZoy5vINA2Rabx5fk66AtBuobHQ=
+X-Received: by 2002:a05:6000:4287:b0:39b:ede7:8906 with SMTP id ffacd0b85a97d-39d8f46d4a8mr2098072f8f.19.1744292472120;
+        Thu, 10 Apr 2025 06:41:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0jqojO5GuXCmEsovcLJk3mS+EZg4SREWFZQBmCngBxQV0Ac/y+yZfGPR3I7oxkT/akTCJmQ==
+X-Received: by 2002:a05:6000:4287:b0:39b:ede7:8906 with SMTP id ffacd0b85a97d-39d8f46d4a8mr2098046f8f.19.1744292471789;
+        Thu, 10 Apr 2025 06:41:11 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c71a:5900:d106:4706:528a:7cd5? (p200300cbc71a5900d1064706528a7cd5.dip0.t-ipconnect.de. [2003:cb:c71a:5900:d106:4706:528a:7cd5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5e9dsm53785615e9.36.2025.04.10.06.41.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 06:41:11 -0700 (PDT)
+Message-ID: <3270dbbb-0bd3-4217-90f5-441210fef87b@redhat.com>
+Date: Thu, 10 Apr 2025 15:41:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250408112402.181574-1-shivankg@amd.com> <20250408112402.181574-8-shivankg@amd.com>
-Message-ID: <diqz7c3s5e3x.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [PATCH RFC v7 7/8] KVM: guest_memfd: Enforce NUMA mempolicy using
- shared policy
-From: Ackerley Tng <ackerleytng@google.com>
-To: Shivank Garg <shivankg@amd.com>, seanjc@google.com, david@redhat.com, vbabka@suse.cz, 
-	willy@infradead.org, akpm@linux-foundation.org, shuah@kernel.org, 
-	pbonzini@redhat.com
-Cc: paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, 
-	bfoster@redhat.com, tabba@google.com, vannapurve@google.com, 
-	chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com, 
-	yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, 
-	michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com, 
-	peterx@redhat.com, shivankg@amd.com, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/3] mm/mempolicy: Support memory hotplug in weighted
+ interleave
+To: Honggyu Kim <honggyu.kim@sk.com>, Rakie Kim <rakie.kim@sk.com>,
+ akpm@linux-foundation.org
+Cc: kernel_team@skhynix.com, gourry@gourry.net, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+ ying.huang@linux.alibaba.com, Jonathan.Cameron@huawei.com,
+ osalvador@suse.de, yunjeong.mun@sk.com
+References: <20250408073243.488-1-rakie.kim@sk.com>
+ <20250408073243.488-4-rakie.kim@sk.com>
+ <19562f7e-38ce-41fc-8dfc-bfd6b1259291@redhat.com>
+ <b58f2dd6-d978-487a-b420-badfb4847c00@sk.com>
+ <203ed4e9-4691-483c-bf42-3035b3ad3539@redhat.com>
+ <755ad3ff-17d5-4610-94ce-2f2d775b518d@sk.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <755ad3ff-17d5-4610-94ce-2f2d775b518d@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Shivank Garg <shivankg@amd.com> writes:
+On 10.04.25 15:25, Honggyu Kim wrote:
+> Hi David,
+> 
+> On 4/9/2025 8:52 PM, David Hildenbrand wrote:
+>> On 09.04.25 13:39, Honggyu Kim wrote:
+>>> Hi David,
+>>>
+>>> On 4/9/2025 6:05 PM, David Hildenbrand wrote:
+>>>> On 08.04.25 09:32, Rakie Kim wrote:
+> [...snip...]
+>>>>> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+>>>>> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+>>>>> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+>>>>
+>>>> Why are the other SOF in there? Are there Co-developed-by missing?
+>>>
+>>> I initially found the problem and fixed it with my internal implementation but
+>>> Rakie also had his idea so he started working on it.  His initial implementation
+>>> has almost been similar to mine.
+>>>
+>>> I thought Signed-off-by is a way to express the patch series contains our
+>>> contribution, but if you think it's unusual, then I can add this.
+>>
+>> Please see Documentation/process/submitting-patches.rst,
+> 
+> Thanks for the info.
+> 
+>> and note that these are not "patch delivery" SOB.
+>>
+>> "
+>> The Signed-off-by: tag indicates that the signer was involved in the
+>> development of the patch, or that he/she was in the patch's delivery path.
+> 
+> Yunjeong and I have been involved in finding the problem and also concluded this
+> issue is related to hotplug together with our initial implementations before
+> this patch.  So I guess it is the former case.
 
-> Previously, guest-memfd allocations followed local NUMA node id in absence
-> of process mempolicy, resulting in arbitrary memory allocation.
-> Moreover, mbind() couldn't be used since memory wasn't mapped to userspace
-> in the VMM.
->
-> Enable NUMA policy support by implementing vm_ops for guest-memfd mmap
-> operation. This allows the VMM to map the memory and use mbind() to set the
-> desired NUMA policy. The policy is stored in the inode structure via
-> kvm_gmem_inode_info, as memory policy is a property of the memory (struct
-> inode) itself. The policy is then retrieved via mpol_shared_policy_lookup()
-> and passed to filemap_grab_folio_mpol() to ensure that allocations follow
-> the specified memory policy.
->
-> This enables the VMM to control guest memory NUMA placement by calling
-> mbind() on the mapped memory regions, providing fine-grained control over
-> guest memory allocation across NUMA nodes.
->
-> The policy change only affect future allocations and does not migrate
-> existing memory. This matches mbind(2)'s default behavior which affects
-> only new allocations unless overridden with MPOL_MF_MOVE/MPOL_MF_MOVE_ALL
-> flags, which are not supported for guest_memfd as it is unmovable.
->
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> ---
->  virt/kvm/guest_memfd.c | 75 ++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 73 insertions(+), 2 deletions(-)
->
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 0ccbb152483a..233d3fd5781c 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -4,6 +4,7 @@
->  #include <linux/backing-dev.h>
->  #include <linux/falloc.h>
->  #include <linux/kvm_host.h>
-> +#include <linux/mempolicy.h>
->  #include <linux/pseudo_fs.h>
->  #include <linux/pagemap.h>
->  #include <linux/anon_inodes.h>
-> @@ -19,6 +20,7 @@ struct kvm_gmem {
->  };
->  
->  struct kvm_gmem_inode_info {
-> +	struct shared_policy policy;
->  	struct inode vfs_inode;
->  };
+IIRC, usually we use Co-developed-by + SOB only if there are actual code 
+contributions: when you would consider someone a "co-author".
 
-What are the pros and cons that you see of storing struct shared_policy
-in a containing struct kvm_gmem_inode_info, as opposed to storing it in
-inode->i_private?
+"Co-developed-by: denotes authorship"
 
-I've just been using inode->i_private for sharability and hugetlb
-metadata and didn't consider this option.
+For suggestions we use Suggested-by, and for things that popped up 
+during a review, it's usually a good idea that reviewers supply a 
+Reviewed-by at the end.
 
-Could one reason be that struct shared_policy is a requirement for all
-inodes (not a CONFIG flag) but sharability and hugetlb metadata are both
-configurable, possibly at runtime?
 
->  
-> @@ -27,6 +29,9 @@ static inline struct kvm_gmem_inode_info *KVM_GMEM_I(struct inode *inode)
->  	return container_of(inode, struct kvm_gmem_inode_info, vfs_inode);
->  }
->  
-> +static struct mempolicy *kvm_gmem_get_pgoff_policy(struct kvm_gmem_inode_info *info,
-> +						   pgoff_t index);
-> +
->  /**
->   * folio_file_pfn - like folio_file_page, but return a pfn.
->   * @folio: The folio which contains this index.
-> @@ -113,7 +118,24 @@ static int kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
->  static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
->  {
->  	/* TODO: Support huge pages. */
-> -	return filemap_grab_folio(inode->i_mapping, index);
-> +	struct mempolicy *policy;
-> +	struct folio *folio;
-> +
-> +	/*
-> +	 * Fast-path: See if folio is already present in mapping to avoid
-> +	 * policy_lookup.
-> +	 */
-> +	folio = __filemap_get_folio(inode->i_mapping, index,
-> +				    FGP_LOCK | FGP_ACCESSED, 0);
-> +	if (!IS_ERR(folio))
-> +		return folio;
-> +
-> +	policy = kvm_gmem_get_pgoff_policy(KVM_GMEM_I(inode), index);
-> +	folio = filemap_grab_folio_mpol(inode->i_mapping, index, policy,
-> +					NO_INTERLEAVE_INDEX);
-> +	mpol_cond_put(policy);
-> +
-> +	return folio;
->  }
->  
->  static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
-> @@ -336,12 +358,14 @@ static struct inode *kvm_gmem_alloc_inode(struct super_block *sb)
->  	if (!info)
->  		return NULL;
->  
-> +	mpol_shared_policy_init(&info->policy, NULL);
-> +
->  	return &info->vfs_inode;
->  }
->  
->  static void kvm_gmem_destroy_inode(struct inode *inode)
->  {
-> -
-> +	mpol_free_shared_policy(&KVM_GMEM_I(inode)->policy);
->  }
->  
->  static void kvm_gmem_free_inode(struct inode *inode)
-> @@ -384,7 +408,54 @@ static void kvm_gmem_init_mount(void)
->  	kvm_gmem_mnt->mnt_flags |= MNT_NOEXEC;
->  }
->  
-> +#ifdef CONFIG_NUMA
-> +static int kvm_gmem_set_policy(struct vm_area_struct *vma, struct mempolicy *mpol)
-> +{
-> +	struct inode *inode = file_inode(vma->vm_file);
-> +
-> +	return mpol_set_shared_policy(&KVM_GMEM_I(inode)->policy, vma, mpol);
-> +}
-> +
-> +static struct mempolicy *kvm_gmem_get_policy(struct vm_area_struct *vma,
-> +					     unsigned long addr, pgoff_t *pgoff)
-> +{
-> +	struct inode *inode = file_inode(vma->vm_file);
-> +
-> +	*pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
-> +	return mpol_shared_policy_lookup(&KVM_GMEM_I(inode)->policy, *pgoff);
-> +}
-> +
-> +static struct mempolicy *kvm_gmem_get_pgoff_policy(struct kvm_gmem_inode_info *info,
-> +						   pgoff_t index)
-> +{
-> +	struct mempolicy *mpol;
-> +
-> +	mpol = mpol_shared_policy_lookup(&info->policy, index);
-> +	return mpol ? mpol : get_task_policy(current);
-> +}
-> +#else
-> +static struct mempolicy *kvm_gmem_get_pgoff_policy(struct kvm_gmem_inode_info *info,
-> +						   pgoff_t index)
-> +{
-> +	return NULL;
-> +}
-> +#endif /* CONFIG_NUMA */
-> +
-> +static const struct vm_operations_struct kvm_gmem_vm_ops = {
-> +#ifdef CONFIG_NUMA
-> +	.get_policy	= kvm_gmem_get_policy,
-> +	.set_policy	= kvm_gmem_set_policy,
-> +#endif
-> +};
-> +
-> +static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	vma->vm_ops = &kvm_gmem_vm_ops;
-> +	return 0;
-> +}
-> +
->  static struct file_operations kvm_gmem_fops = {
-> +	.mmap		= kvm_gmem_mmap,
->  	.open		= generic_file_open,
->  	.release	= kvm_gmem_release,
->  	.fallocate	= kvm_gmem_fallocate,
-> -- 
-> 2.34.1
+So I guess Co-developed-by + SOB is appropriate if people consider 
+themselves co-authors, in addition  to the main author.
+
+> 
+>> "
+>>
+>> and
+>>
+>> "
+>> Co-developed-by: states that the patch was co-created by multiple developers;
+>> it is used to give attribution to co-authors (in addition to the author
+>> attributed by the From: tag) when several people work on a single patch.  Since
+>> Co-developed-by: denotes authorship, every Co-developed-by: must be immediately
+>> followed by a Signed-off-by: of the associated co-author.  Standard sign-off
+> 
+> So the Co-developed-by comes before Signed-off-by.
+
+Yes.
+
+-- 
+Cheers,
+
+David / dhildenb
+
