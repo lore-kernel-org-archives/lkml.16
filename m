@@ -1,209 +1,208 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADA7146A68;
-	Thu, 10 Apr 2025 06:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267934; cv=none; b=I2rJy46rej3vFPAALHXtLmfi229m+EUZ1sfyscBrj8FjtRNtjQzvE6akU556bCEiA5nhuKunMoDCBZAsKUva6icjAjb1h59Q5tIysgK8UaG7Tr/R4RYOUEsVIR+n2otHkJhU/QnQ+N+EYUBEZHDpnL6tfRryV4NMGLgyJ7EgYJE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267934; c=relaxed/simple;
-	bh=MuTsvFLFhKn1lUgsMMjG5XGYH4nPdoJNyRfWny+Ilmc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=D7jRgy/kD+Xsg6uCBhKc0DcqDBdRmexOKoWTFjW28o7J/nFjhW38Ua31YzyUcwKatHtuDRcQOXA9IM8VVN3i2tD0SUVUEGLaGRln3lcmlpvVD1Higek6gDDWL6fC7/4n9czPNy9ZithmNwr5C+Ko8OdVWyqtyKvcublH/8TH6Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af743.dynamic.kabel-deutschland.de [95.90.247.67])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 95B1B61E64783;
-	Thu, 10 Apr 2025 08:51:49 +0200 (CEST)
-Message-ID: <9a9e1287-d84f-4019-8948-5e00c44e1183@molgen.mpg.de>
-Date: Thu, 10 Apr 2025 08:51:49 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FD3202C26;
+	Thu, 10 Apr 2025 06:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744267991; cv=fail; b=Ii/iQ5K9AhRqWc/04Va3irDsbxktKobZsQ5+dEQ5mcGFVjXW+s3i5zhle5VUT0UnsVq2SXjGGDuiPCRLqiDGzsqjOewJ9kuQUfE4CFJeVkL2ckAD6ZWi6OAwh1ATGUhUO7bPb2mFJ5fffADbh7MCDHGhegFAsdkPrmt0DmLP2Tc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744267991; c=relaxed/simple;
+	bh=DryWBRHk3+RKraEyp8NoJ2aAeajppFCQFSZXAfzJvv4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=VnsD05vRqgm0DnUIx8qw8gaC/XGCAUL+LjZXfctXMHQG5P6ElY6PqxAyrojK3q5xLxul9iotS0zt/vWkZXU30L2nM1Wmh2zilkeeLDD37GbuUCMUXoGsvgkXfvqPSnzrwaXJa7Y1BTyApg2lajls6XvxstplY3mEAkv3nhwiAdQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eng.windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eng.windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A5JE4P018232;
+	Thu, 10 Apr 2025 06:52:34 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2170.outbound.protection.outlook.com [104.47.58.170])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tug8pgm3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 06:52:34 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yKA/7FlmSEGfa8OaOxi55FXhH851fXnhFPw+6yC0NiuatgecCR8pluupoy6fO5UgPyXCf17WO0jaY4zUq59l5ELj7RTHLE2RGBrqfBHMsC8sSB5xB+gbsX2eYM+Rc4sZr2A8DlQTreC83OEp2PHESQ/LV0OiOibKe2V/MK0Xqwn7zcFHFOyZCZ3RgcgKwey+jMFv+Fw923qx45ncby+b70QU1kphlKjqpTkHkCe0fDm2vUeQh+wApy/fe6DuhS4ppuxnTvndflKCj7u/rvn0RzZdjuIvIV7oD/fDRW9rpIpTH5liH8thCuT0uh5ncuVj08P7d4KUGsGkfH7DIuB3Iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bPgz8AwzZCzTLku5OKLLwSi1UVCeY8qSYO1r4LH4ew0=;
+ b=gkPgL7tX7bqOVQHLrF9Sjrj+BLX4ErRTFnePAWXS42GwQZdyg2UiTuAnanvv+Fq+i2GeeeHsNNOM4uT85iXAXwHsPu80wtU4IddZF5N2bFBMctP2vPFGex8nlqvy3M0x6uz827QFU911guJVWHA68FZlzJG8EvyEaHP/07GBu1C7hSEjB/SNX5i3dtR5BnkiD5zks5zEzYwq5LZs0/EDOcmbg27hUMa/rHw1GHB0mpDyaBTiNby6TzSA+ZS35oCIZoCxLtqGNF+lDj7ZDoSkwHtMFDfvjVTmeY3QcWo2b6A/8+ToNgi7sL3SfMiyXa/eKoBsCrJK/CUkyek/Va951w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=eng.windriver.com; dkim=pass header.d=eng.windriver.com; arc=none
+Received: from DM6PR11MB3324.namprd11.prod.outlook.com (2603:10b6:5:59::15) by
+ IA0PR11MB7863.namprd11.prod.outlook.com (2603:10b6:208:40c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Thu, 10 Apr
+ 2025 06:52:27 +0000
+Received: from DM6PR11MB3324.namprd11.prod.outlook.com
+ ([fe80::fd0:4a9d:56d7:c039]) by DM6PR11MB3324.namprd11.prod.outlook.com
+ ([fe80::fd0:4a9d:56d7:c039%4]) with mapi id 15.20.8606.028; Thu, 10 Apr 2025
+ 06:52:27 +0000
+From: Zhi Yang <Zhi.Yang@eng.windriver.com>
+To: stable@vger.kernel.org, srinivasan.shanmugam@amd.com
+Cc: zhe.he@windriver.com, xiangyu.chen@windriver.com, harry.wentland@amd.com,
+        sunpeng.li@amd.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@linux.ie,
+        daniel@ffwll.ch, sashal@kernel.org, wayne.lin@amd.com,
+        wenjing.liu@amd.com, hanghong.ma@amd.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 5.15.y] drm/amd/display: Add null checks for 'stream' and 'plane' before dereferencing
+Date: Thu, 10 Apr 2025 14:52:08 +0800
+Message-Id: <20250410065208.848340-1-Zhi.Yang@eng.windriver.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGBP274CA0021.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::33)
+ To DM6PR11MB3324.namprd11.prod.outlook.com (2603:10b6:5:59::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: Kernel WARNING (RCU) with btnxpuart on TI AM62 platform
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>,
- Amitkumar Karwar <amitkumar.karwar@nxp.com>,
- Neeraj Kale <neeraj.sanjaykale@nxp.com>, Nishanth Menon <nm@ti.com>,
- Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-serial@vger.kernel.org
-References: <20250408083512.GA26035@francesco-nb>
- <24b28bda-e294-4680-bed5-c44efcb6c455@ti.com>
- <20250410062006.GA7506@francesco-nb>
- <4107dda8-25fe-4f30-a0e6-906441f9b4c9@molgen.mpg.de>
-Content-Language: en-US
-In-Reply-To: <4107dda8-25fe-4f30-a0e6-906441f9b4c9@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3324:EE_|IA0PR11MB7863:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe7dc89a-1ac8-4299-5c33-08dd77fc4151
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|7416014|1800799024|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ScC6Ox+W26WxJ/FdgahAIlTPcR63+BP0oXY6VF3btWC5j5uAf6/JcYkl1p3o?=
+ =?us-ascii?Q?PNmjNf5UZ9M6ty+WbslyfJyOOIt0HBp0qut0PvYt2o+szx8tBhPgzLwkoMlI?=
+ =?us-ascii?Q?4P8Z3famcc99zhrgPf5+W3HpvGyjG8TKC+wTRSWRaXi8tBIwx2CSOyIESone?=
+ =?us-ascii?Q?NayOzZXEHIbZ6Gw9QZp7shMkmsQgKGBt/cGszT9810l0oQd/TJLDAn/02i1e?=
+ =?us-ascii?Q?32UccH4AyAv/ghcrd5kTFFO1tm8d2VT8KDt34JPAfvWVM5bzaDIn4Gw59Mj4?=
+ =?us-ascii?Q?04foHHzlXsADE/PEXyLUtAYzI8kCZxc4/XlzLdib0R4NKNMpmSQodg37ehdB?=
+ =?us-ascii?Q?08OnVFD0LGv+YMHKuquKwqszzIA0Uh7IlHSgeHNsDTkjQBq7ioGcK0R0dL08?=
+ =?us-ascii?Q?i45jAuYOESXyrca0mZeLVLioQH/2drSFKuBu1LZdddqhNrquMCrJIBAPpx9m?=
+ =?us-ascii?Q?yavzapWFgV+6MRWLuH2UOVnKSPeSbdkgjA9SmpFf2DYR1vOm6MiyrrAfSmZ9?=
+ =?us-ascii?Q?eE60vVzuwV71mzk1RzZwZGFMKBP5R+jGgbJlSqJxkHbGq7dYE7r+JsuudDmA?=
+ =?us-ascii?Q?Xn5SUk5i2g1fK4MM7+85D3g6Ne96wk7HWmDmnWjmYynKiUlwZIFBLqO5OM8C?=
+ =?us-ascii?Q?cyeGoYx0HeJRW3OWOfdqcLh9QqXEZLIVojy/7MzV1qFfjG2Gw7iXnl4JTzyB?=
+ =?us-ascii?Q?m3fXpeTBiRF83Vmr1EFt1v0MgidL6C/sgM9qmF2ihd0quOv2LohXl5zyd1dT?=
+ =?us-ascii?Q?98ExAfR2fEu9XO94g3PKxusn7cTyM4TF0N8YxM6Kfd3niP8l0UUKgscN8xlu?=
+ =?us-ascii?Q?fpKeCbJfdW+O09R9ab+ZFuUBAg/+vjuBqqLmpYeCMiCp5ea2ZKQJ0nkZoleP?=
+ =?us-ascii?Q?joL0ysjUKeIvZoU2xyj//HMlugoSe63xusNUTPijOxeETQaINVMOWMGRZaoF?=
+ =?us-ascii?Q?W64IVr/gIObZEBvOi72BWhenOhkMWsZ8vLSrPDlTYIoNaO5qMVBHOsLySDHZ?=
+ =?us-ascii?Q?HISQLnq/iHLgxZz2VcHGjQn0wQBwGveeLebqFf4wZ/DYc4GHno/ws4mFK27p?=
+ =?us-ascii?Q?dNyt2CJljsN8WVS3+i9hvM9zGicn/acJWdttW06iySFAhafsy+01FEmrecLa?=
+ =?us-ascii?Q?zBK99deg63w/ICCdiruQFSs9KwYT0qnUBV/zxv3VUv5wkTmqVaa4JaFAE1J+?=
+ =?us-ascii?Q?BWy/PoFOKkvYsARDmQstOWEDteyCj1uVw7lBSEQH3rWSY8EY9iiVL7YkL88R?=
+ =?us-ascii?Q?OVh4u6ekFXgvvNFa19LoMFFQg+ZHLtfvzK1ktlQuN8lMJ5yQHCaE8qeG8FtB?=
+ =?us-ascii?Q?zWLVLpHF9L/cCcf9pyGEj1dGvxAefaFVI+bSttoReTo55cG6vbuN+9ItpWOs?=
+ =?us-ascii?Q?x3/IZ7U/wdpjMcsksog1+JOouDdnt4DzHbuj2I4d8BlGr8iKYq8fFEep4vdL?=
+ =?us-ascii?Q?+hc5yZUia9ECV4f1RGmLgXaH+bEMmJc/?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3324.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?iecCqHWyUV/YVHGmaC7jfAl7xBj7C2aqDGJHOMdGl61qtkUWbK0iq8PHPDIC?=
+ =?us-ascii?Q?cxRRX/unZHlkstXlZjwLyYhF0lRGolSRlzDO77smWxd+XxMpe9BpfMV9DHtB?=
+ =?us-ascii?Q?O965mAFwknVEB/nW1va0WXeTxj9IV9v7/JY1q8/QwdZmxU1Ojg17bC5Vqgf0?=
+ =?us-ascii?Q?aLfeMjjJMAaQ5xqSt/QiXSxFFH55U+NtlaorHvz2AsicMxUiayElBqX8ozv2?=
+ =?us-ascii?Q?omb7XQM6ndT2I5GoLhWPlXNFirYeG7aoNXluwdcVthfO8h8dItFIyb90ql/j?=
+ =?us-ascii?Q?ps5OUUbwPv9pmqs1ROKUOZPHtXinyJxiH2z3YWJBwM79LzQKFfjKu1Qcetir?=
+ =?us-ascii?Q?t+/rIyj7VQFUoRcrqUNDdWx4q10TiBbveh/mGiFinDOWVrORlwbd7XBIPL/O?=
+ =?us-ascii?Q?4fOeZo8GH0OhfPBqaGnNOcy3oKYJI7640G9on/O22cS7+bMijijiSFFWsTwU?=
+ =?us-ascii?Q?xB4ATIU11znCYpvIgi8AMxYSbWbeQqC5lks2+eKG0TIvXUGnwBUr8ujoOSQg?=
+ =?us-ascii?Q?8w7IMUrs5ysgJRwA2sJ3zfopJtLHbNdrr9JazZlHC1FVNwYusDGMx4jXl3CA?=
+ =?us-ascii?Q?zfpLc5fhJcwEVp9IK2sUONkvs6/0loU0q8EG9zS7xuCDEZoBoOPwLXTugk1a?=
+ =?us-ascii?Q?uVbgn4Sktnj7c/SPt8/h4fthg9HLHsb22qplfzcClk3VcIUKuzBFmZh09f+a?=
+ =?us-ascii?Q?Mks27TVBv4XH8EzyRPAERT5bvqCljKB0oFBFlZg+f5T8l8yxp0UUg4BGnO7R?=
+ =?us-ascii?Q?sBsVoUVS26KJCT4grh4l8RQ5/Gtbq/8XFADPqAvmSGLh07imwG5BLQUz1d2j?=
+ =?us-ascii?Q?lE2VSSSiqD+PRjiIOhPeE0MI50DSJKCtyu7tJUJPZ5/bOby7CM/hCU5uf6y5?=
+ =?us-ascii?Q?sjd8iVgMH9JXfkvRDmARDKCl0aj4n3YR1LGZJLFDVVzVgWKi3z+3BGnkluaO?=
+ =?us-ascii?Q?hotxDMcGJaHt7eJ/uqaaXQ4g0djMB5xq3DniPZJ0oNRcri/EhSGiPHon4DA2?=
+ =?us-ascii?Q?vmHBna9M7vIwc6/jrDMh5qEGAT7hCvwGqY2ytBKhL8gkArbiPbMppTaP1sOa?=
+ =?us-ascii?Q?qyiCc/xg/5bT3QOUSMbMq3TBbkVHY6JXzMGTa2dBJVH3wiqJtORVPtF7cIQ/?=
+ =?us-ascii?Q?3I1OJnoIsebvYGfbgQR9GRO+mjn6M4ARxS70KaVU0KefRVmYcKZa1sjdv022?=
+ =?us-ascii?Q?IqIBew8B55uO9j47n048APmkkfRCBNdyNm1x3Bz7lBhA4NxqIBwiKDCR8OVp?=
+ =?us-ascii?Q?DJhshF9SN8O5ko13S0PWGJ3sEv2svzrSuNURv/aPC3itguZyNzPwU522F1ZB?=
+ =?us-ascii?Q?OY+srnkRXiLx0QgXBvBXzJHJp94VTz+gQ+JFejGS31CXLUe6TWKqEqfrVMQt?=
+ =?us-ascii?Q?s0yaPsalpZFXpbfYZU+V1JMNiz3BKlQ+30bHB5BRiEPbQcBLBwlAmx5FzrsM?=
+ =?us-ascii?Q?Fb6jbrrIN+g041bniS1rEU/vNO1rYHG4phNkiMpB+5sKZiqQmWcDy2J+oVLI?=
+ =?us-ascii?Q?7uLH6CrwX280AKTGtSHfHAW9uCyXsyJhojvUyaxEia6SYG5qvxAB8ir0PC70?=
+ =?us-ascii?Q?wZCbsWEUiuSVHwIdVI0BoWn/dAwYBzmZ3bVv29Hs?=
+X-OriginatorOrg: eng.windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe7dc89a-1ac8-4299-5c33-08dd77fc4151
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3324.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 06:52:27.0044
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vlLIYHwIRAsrylueHwtce4kLygz1JADG/JtFHX5cYRhCsPP2a8Bspta4Ob9eq/Cj69bzRjzoJw9lmXFdBYZL8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7863
+X-Proofpoint-GUID: on4DC2W6eu5omi1nB6LfpV1R2wK6pP6n
+X-Authority-Analysis: v=2.4 cv=YJefyQGx c=1 sm=1 tr=0 ts=67f76ab2 cx=c_pps a=sGbpJkUcFVeWJOR+0qTsNQ==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=XR8D0OoHHMoA:10
+ a=zd2uoN0lAAAA:8 a=t7CeM3EgAAAA:8 a=fmkVBTeLr2XkT1_ESlIA:9 a=FdTzh2GWekK77mhwV6Dw:22 a=Omh45SbU8xzqK50xPoZQ:22
+X-Proofpoint-ORIG-GUID: on4DC2W6eu5omi1nB6LfpV1R2wK6pP6n
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1011 impostorscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504100050
 
-Am 10.04.25 um 08:34 schrieb Paul Menzel:
-> [Cc: +Marcel]
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-[Remove, as email is not valid anymore. (Now really.)]
+commit 15c2990e0f0108b9c3752d7072a97d45d4283aea upstream.
 
-> Dear Francesco,
-> 
-> 
-> Am 10.04.25 um 08:20 schrieb Francesco Dolcini:
-> 
->> On Tue, Apr 08, 2025 at 09:15:26PM +0530, Vignesh Raghavendra wrote:
->>> On 08/04/25 14:05, Francesco Dolcini wrote:
->>>> I do have the following kernel warning with 6.15-rc1, on a TI AM62
->>>> platform (arm64), single CPU core, using btnxpuart driver, any idea?
->>>> PREEMPT_RT is enabled, if it matters.
->>>>
->>>> Either the issue is not systematic, or multi cores SoCs are not 
->>>> affected
->>>> (no error on the exact same image on a dual nor on quad core TI AM62).
->>>>
->>>> [   23.139080] Voluntary context switch within RCU read-side critical section!
->>>> [   23.139119] WARNING: CPU: 0 PID: 61 at /kernel/rcu/tree_plugin.h:332 rcu_note_context_switch+0x3c4/0x430
->>>> [   23.139172] Modules linked in: uas onboard_usb_dev optee_rng dwc3 evdev btnxpuart spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card snd_soc_simple_card_utils optee spi_cadence_quadspi tee gpio_keys usb_conn_gpio display_connector roles dwc3_am62 mwifiex_sdio k3_j72xx_bandgap mwifiex rtc_ti_k3 cfg80211 tidss sa2ul sha512_generic snd_soc_davinci_mcasp authenc drm_display_helper snd_soc_ti_udma crypto_null snd_soc_ti_edma sha1_generic snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx snd_soc_wm8904 ti_ads1015 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c tps65219_pwrbutton crc_ccitt tpm_tis_core tpm rng_core tc358768 m_can_platform pwm_tiehrpwm m_can spi_omap2_mcspi can_dev bluetooth ecdh_generic ecc rfkill libaes loop fuse ipv6 autofs4
->>>> [   23.139459] CPU: 0 UID: 0 PID: 61 Comm: kworker/u5:0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT_RT
->>>> [   23.139471] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
->>>> [   23.139478] Workqueue: hci0 hci_power_off [bluetooth]
->>>> [   23.139615] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->>>> [   23.139625] pc : rcu_note_context_switch+0x3c4/0x430
->>>> [   23.139647] lr : rcu_note_context_switch+0x3c4/0x430
->>>> [   23.139658] sp : ffff8000819fb740
->>>> [   23.139661] x29: ffff8000819fb740 x28: 0000000000000000 x27: ffff0000079d2010
->>>> [   23.139673] x26: ffff0000011e7810 x25: ffff000001c2c200 x24: 0000000000000000
->>>> [   23.139688] x23: 0000000000000000 x22: ffff000001c2c200 x21: ffff000001c2c200
->>>> [   23.139700] x20: ffff800081083ec0 x19: ffff00001da9fec0 x18: fffffffffffe7e78
->>>> [   23.139712] x17: ffff7fff9ca1c000 x16: ffff800080000000 x15: ffff00001da9f8c0
->>>> [   23.139726] x14: fffffffffffc7e77 x13: 216e6f6974636573 x12: 206c616369746972
->>>> [   23.139738] x11: 6320656469732d64 x10: 6165722055435220 x9 : 206e696874697720
->>>> [   23.139750] x8 : ffff80008113f040 x7 : ffff8000819fb4e0 x6 : 000000000000000c
->>>> [   23.139761] x5 : ffff00001da95888 x4 : 0000000000000000 x3 : 0000000000000027
->>>> [   23.139775] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000001c2c200
->>>> [   23.139788] Call trace:
->>>> [   23.139793]  rcu_note_context_switch+0x3c4/0x430 (P)
->>>> [   23.139813]  __schedule+0xa0/0x7dc
->>>> [   23.139830]  schedule+0x34/0x11c
->>>> [   23.139841]  schedule_timeout+0x8c/0x110
->>>> [   23.139861]  wait_for_completion_timeout+0x78/0x14c
->>>> [   23.139873]  ti_sci_set_device_state+0x120/0x1fc
->>>> [   23.139886]  ti_sci_cmd_get_device_exclusive+0x18/0x30
->>>> [   23.139899]  ti_sci_pd_power_on+0x28/0x54
->>>> [   23.139916]  _genpd_power_on+0x98/0x188
->>>> [   23.139927]  genpd_power_on+0xa8/0x168
->>>> [   23.139940]  genpd_runtime_resume+0xc0/0x298
->>>> [   23.139957]  __rpm_callback+0x48/0x1a4
->>>> [   23.139974]  rpm_callback+0x74/0x80
->>>> [   23.139987]  rpm_resume+0x3b0/0x698
->>>> [   23.140000]  __pm_runtime_resume+0x48/0x88
->>>> [   23.140012]  omap8250_set_mctrl+0x2c/0xbc
->>>> [   23.140030]  serial8250_set_mctrl+0x20/0x40
->>>> [   23.140046]  uart_update_mctrl+0x80/0x110
->>>
->>> I think issue is that uart_update_mctrl() holds a spinlock:
->>>
->>>     uart_port_lock_irqsave(port, &flags);
->>>
->>> and then omap8250_set_mctrl() calls pm_runtime APIs which on K3 SoC
->>> needs to talk to a Firmware to enable pd. This IPC call is a sleeping
->>> call leading to scheduling with IRQs disabled.
->>>
->>> I guess this is what RT linux is complaining? I dont have a solution
->>> though, maybe serdev delays pm_runtime_put till the port is closed?
->>
->> Our CI reproduced what looks like the same issue also on current
->> torvalds/master (6.15-rc1+) branch, without PREEMPT_RT.
->>
->> The call trace seems just the same, but attaching it here for
->> completeness.
->>
->>
->> [   20.931923] BUG: scheduling while atomic: kworker/u5:0/42/0x00000002
->> [   20.938429] Modules linked in: sd_mod uas onboard_usb_dev btnxpuart optee_rng dwc3 evdev spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card 
->> snd_soc_simple_card_utils mwifiex_sdio mwifiex display_connector spi_cadence_quadspi optee usb_conn_gpio tee gpio_keys roles k3_j72xx_bandgap cfg80211 rtc_ti_k3 dwc3_am62 bluetooth ecdh_generic ecc sa2ul sha512_generic rfkill authenc tidss crypto_null libaes snd_soc_davinci_mcasp sha1_generic drm_display_helper snd_soc_ti_udma snd_soc_ti_edma snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx ti_ads1015 snd_soc_wm8904 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c crc_ccitt tps65219_pwrbutton tpm_tis_core tpm m_can_platform m_can rng_core tc358768 can_dev pwm_tiehrpwm spi_omap2_mcspi loop fuse ipv6 autofs4
->> [   20.938865] CPU: 0 UID: 0 PID: 42 Comm: kworker/u5:0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT
->> [   20.938878] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
->> [   20.938895] Workqueue: hci0 hci_power_off [bluetooth]
->> [   20.939032] Call trace:
->> [   20.939037]  show_stack+0x2c/0x84 (C)
->> [   20.939063]  dump_stack_lvl+0x60/0x80
->> [   20.939084]  dump_stack+0x18/0x24
->> [   20.939096]  __schedule_bug+0x54/0x70
->> [   20.939116]  __schedule+0x628/0x7dc
->> [   20.939129]  schedule+0x34/0x11c
->> [   20.939138]  rpm_resume+0x17c/0x6a0
->> [   20.939155]  __pm_runtime_resume+0x50/0x9c
->> [   20.939168]  omap8250_set_mctrl+0x2c/0xc0
->> [   20.939183]  serial8250_set_mctrl+0x20/0x40
->> [   20.939193]  uart_update_mctrl+0x88/0x11c
->> [   20.939215]  uart_dtr_rts+0x104/0x120
->> [   20.939226]  tty_port_shutdown+0xd4/0xdc
->> [   20.939236]  tty_port_close+0x40/0xc0
->> [   20.939248]  uart_close+0x34/0x9c
->> [   20.939259]  ttyport_close+0x50/0xa0
->> [   20.939272]  serdev_device_close+0x40/0x5c
->> [   20.939283]  btnxpuart_close+0x1c/0xa0 [btnxpuart]
->> [   20.939309]  hci_dev_close_sync+0x304/0x7cc [bluetooth]
->> [   20.939376]  hci_dev_do_close+0x2c/0x70 [bluetooth]
->> [   20.939441]  hci_power_off+0x20/0x64 [bluetooth]
->> [   20.939508]  process_one_work+0x148/0x290
->> [   20.939528]  worker_thread+0x2c8/0x3e4
->> [   20.939541]  kthread+0x12c/0x204
->> [   20.939554]  ret_from_fork+0x10/0x20
->> [   20.943567] BUG: scheduling while atomic: kworker/u5:0/42/0x00000000
->> [   20.950126] Modules linked in: sd_mod uas onboard_usb_dev btnxpuart optee_rng dwc3 evdev spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card 
->> snd_soc_simple_card_utils mwifiex_sdio mwifiex display_connector spi_cadence_quadspi optee usb_conn_gpio tee gpio_keys roles k3_j72xx_bandgap cfg80211 rtc_ti_k3 dwc3_am62 bluetooth ecdh_generic ecc sa2ul sha512_generic rfkill authenc tidss crypto_null libaes snd_soc_davinci_mcasp sha1_generic drm_display_helper snd_soc_ti_udma snd_soc_ti_edma snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx ti_ads1015 snd_soc_wm8904 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c crc_ccitt tps65219_pwrbutton tpm_tis_core tpm m_can_platform m_can rng_core tc358768 can_dev pwm_tiehrpwm spi_omap2_mcspi loop fuse ipv6 autofs4
->> [   20.950550] CPU: 0 UID: 0 PID: 42 Comm: kworker/u5:0 Tainted: G        W           6.15.0-rc1-0.0.0-devel #1 PREEMPT
->> [   20.950566] Tainted: [W]=WARN
->> [   20.950570] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
->> [   20.950584] Workqueue: hci0 hci_power_off [bluetooth]
->> [   20.950721] Call trace:
->> [   20.950726]  show_stack+0x2c/0x84 (C)
->> [   20.950747]  dump_stack_lvl+0x60/0x80
->> [   20.950771]  dump_stack+0x18/0x24
->> [   20.950783]  __schedule_bug+0x54/0x70
->> [   20.950798]  __schedule+0x628/0x7dc
->> [   20.950815]  schedule+0x34/0x11c
->> [   20.950824]  schedule_timeout+0xd4/0x110
->> [   20.950838]  wait_for_completion+0x78/0x140
->> [   20.950853]  __flush_work+0x250/0x340
->> [   20.950868]  flush_work+0x14/0x20
->> [   20.950879]  omap_8250_shutdown+0x2c/0x1a4
->> [   20.950903]  serial8250_shutdown+0x18/0x40
->> [   20.950913]  uart_port_shutdown+0x40/0x58
->> [   20.950926]  uart_tty_port_shutdown+0x5c/0x178
->> [   20.950940]  tty_port_shutdown+0x84/0xdc
->> [   20.950950]  tty_port_close+0x40/0xc0
->> [   20.950958]  uart_close+0x34/0x9c
->> [   20.950969]  ttyport_close+0x50/0xa0
->> [   20.950990]  serdev_device_close+0x40/0x5c
->> [   20.951001]  btnxpuart_close+0x1c/0xa0 [btnxpuart]
->> [   20.951017]  hci_dev_close_sync+0x304/0x7cc [bluetooth]
->> [   20.951082]  hci_dev_do_close+0x2c/0x70 [bluetooth]
->> [   20.951149]  hci_power_off+0x20/0x64 [bluetooth]
->> [   20.951214]  process_one_work+0x148/0x290
->> [   20.951227]  worker_thread+0x2c8/0x3e4
->> [   20.951242]  kthread+0x12c/0x204
->> [   20.951258]  ret_from_fork+0x10/0x20
-> 
-> CVE-2024-26959 [1] has the same trace, and supposedly was fixed by 
-> Marcel’s commit 664130c0b030 (Bluetooth: btnxpuart: Fix btnxpuart_close) 
-> present since v6.9-rc1, that is also signed off by you.
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> [1]: https://nvd.nist.gov/vuln/detail/cve-2024-26959
-> [2]: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=664130c0b0309b360bc5bdd40a30604a9387bde8
+This commit adds null checks for the 'stream' and 'plane' variables in
+the dcn30_apply_idle_power_optimizations function. These variables were
+previously assumed to be null at line 922, but they were used later in
+the code without checking if they were null. This could potentially lead
+to a null pointer dereference, which would cause a crash.
+
+The null checks ensure that 'stream' and 'plane' are not null before
+they are used, preventing potential crashes.
+
+Fixes the below static smatch checker:
+drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn30/dcn30_hwseq.c:938 dcn30_apply_idle_power_optimizations() error: we previously assumed 'stream' could be null (see line 922)
+drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn30/dcn30_hwseq.c:940 dcn30_apply_idle_power_optimizations() error: we previously assumed 'plane' could be null (see line 922)
+
+Cc: Tom Chung <chiahsuan.chung@amd.com>
+Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Cc: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Roman Li <roman.li@amd.com>
+Cc: Hersen Wu <hersenxs.wu@amd.com>
+Cc: Alex Hung <alex.hung@amd.com>
+Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Reviewed-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Zhi Yang <Zhi.Yang@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Build test passed.
+---
+ drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+index 81547178a934..30716b88136c 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c
+@@ -784,6 +784,9 @@ bool dcn30_apply_idle_power_optimizations(struct dc *dc, bool enable)
+ 			stream = dc->current_state->streams[0];
+ 			plane = (stream ? dc->current_state->stream_status[0].plane_states[0] : NULL);
+ 
++			if (!stream || !plane)
++				return false;
++
+ 			if (stream && plane) {
+ 				cursor_cache_enable = stream->cursor_position.enable &&
+ 						plane->address.grph.cursor_cache_addr.quad_part;
+-- 
+2.34.1
+
