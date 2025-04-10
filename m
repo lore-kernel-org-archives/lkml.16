@@ -1,238 +1,280 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBABA28A3F3;
-	Thu, 10 Apr 2025 13:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC07A28CF74;
+	Thu, 10 Apr 2025 13:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290485; cv=none; b=q78GnftyPTsEMMIb3AqKNIMNuIP9avx0IbXjGyYiBOmDUctTVPZC6cl2dWMerXkjDHTBnZLws3hV9dAyj6YiYIARbx5MFmB4CPUIz7iVGgOVwSK6rPWwAPw1SWEWxNJM+Kh+KwacZQdUsy1Q6zdvXXvQC+O5i9gwLJM8st4sF/Q=
+	t=1744290493; cv=none; b=Hjz0Rlyc88QEnMyIOpgQwg4j92yBmtz4IvYPgZI8w8q1ztj9ve2293EUIAa/rhY8pC31SPQ+3xr/tjQH3FVMl36/TGn56Sv9YMS0BaTmH3D9QAqE2UwdptY78Y9tVieeVZvx4UEo5a/6Z/sxztGQwhVtNCkYLrK08oQkz2yYwy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290485; c=relaxed/simple;
-	bh=e6f1iOApfDGrKvCN5ntQooMxdjd9ucImghEkU3zlR8k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MwNn0T3LGxL3uTLSIsF5KxWQQxS/voKmSk7GwS4JG6bnGhv1j0pChQY0OxiYOJ8J7LnVeAcLuvQ2eYlEGf3Uvr3DOuFqzr9+z1UShAobfADkU2mgBi5i5HPpVHDS6kq8INOyEv+9bhakl7kp2yVJJcal/FL1hHx7Y/IEpo4+v74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H0YkXFUJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744290493; c=relaxed/simple;
+	bh=G+dZq27aiwwtdcreuJNiIHBLgho5C8OBmZQW2SvK1Tw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GtPS9zLewrIizG6GcD4SyQ24AB/NhKAaaOVMNXIvI8uUyFlp5LMZdK2Ei2HASEAJTeTZmlYZjhm0JH9oKqy9OsKte6Bi4saxAZCZqI3HP339qqJB8+7anptUajxdV26cxT4itFCjJU4m3wGKb0xTrDhilQAgZ3D+s2YoyHVs6Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pqvIv80b; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H0YkXFUJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D51BC4CEDD;
-	Thu, 10 Apr 2025 13:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744290485;
-	bh=e6f1iOApfDGrKvCN5ntQooMxdjd9ucImghEkU3zlR8k=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=H0YkXFUJQNHLD+gQPMffK2jhwSNvxIZ5/tXKP3FtkO7EnSA2KR4iXG8WW7W5tiys6
-	 1HPlMA7aBAfZ4GvjCgGQJ5ELuJGoCAdEBQLArvp9R7tpYlJZsWXu+gUYKeymWQEAfG
-	 9SB5sQy8Z/wcCvD0fm6/UzF0wDe3A3iULhEkgCeajYoW1wr9qDFMdiFoa+AXY2Xzo5
-	 UBo8jvPHCzDLz6ZjOo72L35uKf0hVZoPoTOv/F7Yki9uXsiIAZslVs8tfsjAB5qJLm
-	 0gyHgmjB1Xzt//Zg/Pc9Oi2pQEckJ0ivNCWqWASDd4tQJ+Ik2Yn4HFMb4A3MS3ClFc
-	 ldTLSO8MNcHAA==
-Message-ID: <91d6d3c60ef5d4ed90418f8a06228767be8a5b1b.camel@kernel.org>
-Subject: Re: [PATCH v2 2/2] net: add debugfs files for showing netns
- refcount tracking info
-From: Jeff Layton <jlayton@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski	 <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, 	netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Thu, 10 Apr 2025 09:08:03 -0400
-In-Reply-To: <1e717326-8551-419e-b185-5cfb20573b4f@lunn.ch>
-References: <20250408-netns-debugfs-v2-0-ca267f51461e@kernel.org>
-	 <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
-	 <1e717326-8551-419e-b185-5cfb20573b4f@lunn.ch>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pqvIv80b"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A75hRB030632;
+	Thu, 10 Apr 2025 13:08:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0LfaLwsnXXBhp2mj6HthXnYG8KjS0ZIDIXcIX52wzm4=; b=pqvIv80bkarjFHnd
+	eq0nbNSTYdZip8H2GTyhKDS1FkrfWegZai5SUJTnFfaaiQaqgohhN3JCTGNqHRrm
+	3GhuPK9s/Jpil4ZeJadoel6dbwLjJrrcrYC/pCbEftMLVqElwqGs/pjAg1lSgLZz
+	uC4B5aM2O8jHeMxPhzz4063S+msyA3qdP7xL3sPkNWq5iUKxVVV5OULAPYu0DdFz
+	rKb28BuVfJ5RtRe/cY0xpdimpSvyZtpkFl1VOUM3wmOTz9fTcdHOFZHDNdp1AL0W
+	VU3Qs0F6CFtrdZbvzqn0x1p946slLPXvJGOaWHtZXeded2ZuRtvYO7nd2wyNtVFT
+	aJy81w==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftpt4u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 13:08:03 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53AD82sZ000458
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 13:08:02 GMT
+Received: from [10.50.31.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
+ 2025 06:07:58 -0700
+Message-ID: <a51e2e8a-bd7b-7d30-8cd6-9438b053ea2c@quicinc.com>
+Date: Thu, 10 Apr 2025 18:37:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4 6/6] media: platform: qcom/iris: add sm8650 support
+Content-Language: en-US
+To: Vikash Garodia <quic_vgarodia@quicinc.com>, <neil.armstrong@linaro.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>
+References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
+ <20250409-topic-sm8x50-iris-v10-v4-6-40e411594285@linaro.org>
+ <36e25d6e-36de-fec6-e54d-0683503c7a09@quicinc.com>
+ <1550c870-188e-4b41-b17c-2009cda41ffc@linaro.org>
+ <8cade183-72ac-eac1-1a57-a9db37657fca@quicinc.com>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <8cade183-72ac-eac1-1a57-a9db37657fca@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f7c2b3 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=lJxrbFA30pwzKi-l1BMA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: GnbwpN4eOcrEtBsttOEFznZx1SQuGQPH
+X-Proofpoint-ORIG-GUID: GnbwpN4eOcrEtBsttOEFznZx1SQuGQPH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_03,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100095
 
-On Thu, 2025-04-10 at 14:36 +0200, Andrew Lunn wrote:
-> On Tue, Apr 08, 2025 at 09:36:38AM -0400, Jeff Layton wrote:
-> > CONFIG_NET_NS_REFCNT_TRACKER currently has no convenient way to display
-> > its tracking info. Add a new net_ns directory under the debugfs
-> > ref_tracker directory. Create a directory in there for every netns, wit=
-h
-> > refcnt and notrefcnt files that show the currently tracked active and
-> > passive references.
->=20
-> I think most if not all of this should be moved into the tracker
-> sources, there is very little which is netdev specific.=20
->=20
 
-Fair enough. I can move most of this into helpers in ref_tracker.c.
 
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  net/core/net_namespace.c | 151 +++++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  1 file changed, 151 insertions(+)
-> >=20
-> > diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-> > index 4303f2a4926243e2c0ff0c0387383cd8e0658019..7e9dc487f46d656ee4ae3d6=
-d18d35bb2aba2b176 100644
-> > --- a/net/core/net_namespace.c
-> > +++ b/net/core/net_namespace.c
-> > @@ -1512,3 +1512,154 @@ const struct proc_ns_operations netns_operation=
-s =3D {
-> >  	.owner		=3D netns_owner,
-> >  };
-> >  #endif
-> > +
-> > +#ifdef CONFIG_DEBUG_FS
-> > +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
-> > +
-> > +#include <linux/debugfs.h>
-> > +
-> > +static struct dentry *ns_ref_tracker_dir;
-> > +static unsigned int ns_debug_net_id;
-> > +
-> > +struct ns_debug_net {
-> > +	struct dentry *netdir;
-> > +	struct dentry *refcnt;
-> > +	struct dentry *notrefcnt;
-> > +};
-> > +
-> > +#define MAX_NS_DEBUG_BUFSIZE	(32 * PAGE_SIZE)
-> > +
-> > +static int
-> > +ns_debug_tracker_show(struct seq_file *f, void *v)
-> > +{
-> > +	struct ref_tracker_dir *tracker =3D f->private;
-> > +	int len, bufsize =3D PAGE_SIZE;
-> > +	char *buf;
-> > +
-> > +	for (;;) {
-> > +		buf =3D kvmalloc(bufsize, GFP_KERNEL);
-> > +		if (!buf)
-> > +			return -ENOMEM;
-> > +
-> > +		len =3D ref_tracker_dir_snprint(tracker, buf, bufsize);
-> > +		if (len < bufsize)
-> > +			break;
-> > +
-> > +		kvfree(buf);
-> > +		bufsize *=3D 2;
-> > +		if (bufsize > MAX_NS_DEBUG_BUFSIZE)
-> > +			return -ENOBUFS;
->=20
-> Maybe consider storing bufsize between calls to dump the tracker? I
-> guess you then have about the correct size for most calls, and from
-> looking at len, you can decide to downsize it if needed.
->=20
+On 4/10/2025 2:43 PM, Vikash Garodia wrote:
+> 
+> On 4/10/2025 2:31 PM, Neil Armstrong wrote:
+>> On 09/04/2025 18:57, Vikash Garodia wrote:
+>>> Hi Neil,
+>>>
+>>> On 4/9/2025 8:08 PM, Neil Armstrong wrote:
+>>>> Add support for the SM8650 platform by re-using the SM8550
+>>>> definitions and using the vpu33 ops.
+>>>>
+>>>> The SM8650/vpu33 requires more reset lines, but the H.264
+>>>> decoder capabilities are identical.
+>>>>
+>>>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>>> ---
+>>>>   .../platform/qcom/iris/iris_platform_common.h      |  1 +
+>>>>   .../platform/qcom/iris/iris_platform_sm8550.c      | 64 ++++++++++++++++++++++
+>>>>   drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
+>>>>   3 files changed, 69 insertions(+)
+>>>>
+>>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h
+>>>> b/drivers/media/platform/qcom/iris/iris_platform_common.h
+>>>> index
+>>>> fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
+>>>> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+>>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+>>>> @@ -35,6 +35,7 @@ enum pipe_type {
+>>>>     extern struct iris_platform_data sm8250_data;
+>>>>   extern struct iris_platform_data sm8550_data;
+>>>> +extern struct iris_platform_data sm8650_data;
+>>>>     enum platform_clk_type {
+>>>>       IRIS_AXI_CLK,
+>>>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+>>>> b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+>>>> index
+>>>> 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
+>>>> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+>>>> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+>>>> @@ -144,6 +144,10 @@ static const struct icc_info sm8550_icc_table[] = {
+>>>>     static const char * const sm8550_clk_reset_table[] = { "bus" };
+>>>>   +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
+>>>> +
+>>>> +static const char * const sm8650_controller_reset_table[] = { "xo" };
+>>>> +
+>>>>   static const struct bw_info sm8550_bw_table_dec[] = {
+>>>>       { ((4096 * 2160) / 256) * 60, 1608000 },
+>>>>       { ((4096 * 2160) / 256) * 30,  826000 },
+>>>> @@ -264,3 +268,63 @@ struct iris_platform_data sm8550_data = {
+>>>>       .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>>>>       .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>>>>   };
+>>>> +
+>>>> +/*
+>>>> + * Shares most of SM8550 data except:
+>>>> + * - vpu_ops to iris_vpu33_ops
+>>>> + * - clk_rst_tbl to sm8650_clk_reset_table
+>>>> + * - controller_rst_tbl to sm8650_controller_reset_table
+>>>> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
+>>>> + */
+>>>> +struct iris_platform_data sm8650_data = {
+>>>> +    .get_instance = iris_hfi_gen2_get_instance,
+>>>> +    .init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
+>>>> +    .init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
+>>>> +    .vpu_ops = &iris_vpu33_ops,
+>>>> +    .set_preset_registers = iris_set_sm8550_preset_registers,
+>>>> +    .icc_tbl = sm8550_icc_table,
+>>>> +    .icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
+>>>> +    .clk_rst_tbl = sm8650_clk_reset_table,
+>>>> +    .clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
+>>>> +    .controller_rst_tbl = sm8650_controller_reset_table,
+>>>> +    .controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
+>>>> +    .bw_tbl_dec = sm8550_bw_table_dec,
+>>>> +    .bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
+>>>> +    .pmdomain_tbl = sm8550_pmdomain_table,
+>>>> +    .pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
+>>>> +    .opp_pd_tbl = sm8550_opp_pd_table,
+>>>> +    .opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
+>>>> +    .clk_tbl = sm8550_clk_table,
+>>>> +    .clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
+>>>> +    /* Upper bound of DMA address range */
+>>>> +    .dma_mask = 0xe0000000 - 1,
+>>>> +    .fwname = "qcom/vpu/vpu33_p4.mbn",
+>>>> +    .pas_id = IRIS_PAS_ID,
+>>>> +    .inst_caps = &platform_inst_cap_sm8550,
+>>>> +    .inst_fw_caps = inst_fw_cap_sm8550,
+>>>> +    .inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
+>>>> +    .tz_cp_config_data = &tz_cp_config_sm8550,
+>>>> +    .core_arch = VIDEO_ARCH_LX,
+>>>> +    .hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
+>>>> +    .ubwc_config = &ubwc_config_sm8550,
+>>>> +    .num_vpp_pipe = 4,
+>>>> +    .max_session_count = 16,
+>>>> +    .max_core_mbpf = ((8192 * 4352) / 256) * 2,
+>>>> +    .input_config_params =
+>>>> +        sm8550_vdec_input_config_params,
+>>>> +    .input_config_params_size =
+>>>> +        ARRAY_SIZE(sm8550_vdec_input_config_params),
+>>>> +    .output_config_params =
+>>>> +        sm8550_vdec_output_config_params,
+>>>> +    .output_config_params_size =
+>>>> +        ARRAY_SIZE(sm8550_vdec_output_config_params),
+>>>> +    .dec_input_prop = sm8550_vdec_subscribe_input_properties,
+>>>> +    .dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
+>>>> +    .dec_output_prop = sm8550_vdec_subscribe_output_properties,
+>>>> +    .dec_output_prop_size =
+>>>> ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+>>>> +
+>>>> +    .dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
+>>>> +    .dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
+>>>> +    .dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>>>> +    .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>>>> +};
+>>> While i was extending the data for QCS8300 (one another iris-v3 variant), i
+>>> realize that this file iris_platform_sm8550.c is getting dumped with all SOC
+>>> platform data. It would be a good idea at this point to split it into something
+>>> like this
+>>> 1. Introduce SOC specific c file and move the respective SOC platform data to
+>>> it, for ex, in this case sm8650_data
+>>> 2. Move the common structs from iris_platform_sm8550.c to
+>>> iris_platform_common.h. This way more SOCs getting added in future, can include
+>>> the common header to reuse them, otherwise it would end up using 8550.c for all
+>>> future SOC.
+>>>
+>>> Share your comments if you have any better approach to manage/re-use these
+>>> platform data considering more SOCs getting added.
+>>
+>> Right, yes the architecture is fine, but I don't feel iris_platform_common is
+>> the right
+>> place, perhaps we could introduce a platform_catalog.c where we could place all
+>> the common
+>> platform data and reuse them from the platform_<soc>.c files ?
+> Common structs would certainly need to be part of a header which can be
+> included. Where do you plan to keep common struct to be used across SOC specific
+> file in your approach ?
+>>
+>> I can design prototype on top of this patchset as an RFC.
+> I was thinking that the changes are not that big, and can be done in existing
+> series though.
+> 
+For now, I think you can introduce a platform_sm8650.c as part of this
+series and use the common structure from platform_sm8550.c.
+Shouldn't be a big change.
 
-Eric had a proposed change to make ref_tracker_dir_snprint() not sit
-with hard IRQs disabled for so long. That involved passing back a
-needed size, so I might rather integrate this into that change.
+Later you can post a separate patch series to add platform_catalog.c and
+have common struct placed there which can be used across different SOC
+platform files.
 
-> > +static int
-> > +ns_debug_init_net(struct net *net)
-> > +{
-> > +	struct ns_debug_net *dnet =3D net_generic(net, ns_debug_net_id);
-> > +	char name[11]; /* 10 decimal digits + NULL term */
-> > +	int len;
-> > +
-> > +	len =3D snprintf(name, sizeof(name), "%u", net->ns.inum);
-> > +	if (len >=3D sizeof(name))
-> > +		return -EOVERFLOW;
-> > +
-> > +	dnet->netdir =3D debugfs_create_dir(name, ns_ref_tracker_dir);
-> > +	if (IS_ERR(dnet->netdir))
-> > +		return PTR_ERR(dnet->netdir);
->=20
-> As i pointed out before, the tracker already has a name. Is that name
-> useless? Not specific enough? Rather than having two names, maybe
-> change the name to make it useful. Once it has a usable name, you
-> should be able to push more code into the core.
->=20
+or other way is,
+Post a patch series to introduce platform_catalog.c with common struct and
+then rebase your 8650 series on top of it.
 
-I don't understand which name you mean.
-
-This patch creates a ref_tracker/net_ns dir and then creates
-directories under that that have names that match the net namespace
-inode numbers as displayed in /proc/<pid>/ns/net symlink. Those
-directories hold two files "refcnt" and "notrefcnt" that display the
-different trackers.
-
-It's not clear to me what you'd like to see changed in that scheme.
---=20
-Jeff Layton <jlayton@kernel.org>
+Thanks,
+Dikshita
+> Thanks,
+> Vikash
+>>
+>> Neil
+>>
+>>>
+>>> Regards,
+>>> Vikash
+>>>
+>>>> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c
+>>>> b/drivers/media/platform/qcom/iris/iris_probe.c
+>>>> index
+>>>> 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
+>>>> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+>>>> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+>>>> @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
+>>>>               .data = &sm8250_data,
+>>>>           },
+>>>>   #endif
+>>>> +    {
+>>>> +        .compatible = "qcom,sm8650-iris",
+>>>> +        .data = &sm8650_data,
+>>>> +    },
+>>>>       { },
+>>>>   };
+>>>>   MODULE_DEVICE_TABLE(of, iris_dt_match);
+>>>>
+>>
