@@ -1,99 +1,127 @@
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3965C156677
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA212857FA;
+	Thu, 10 Apr 2025 13:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744292689; cv=none; b=P8hksXjHmhGnhpV++jApTPkPIbFcYM7KEzTjA3NmT+vhX8uOH3K5YeM6hc6d9BpFDc/J4f1Bk4wMc9Y9lxDZ+MdK04P6ep2MPqVM9ujuklVVdPNGdfuDExNVyE/FW4bGv9Wt37K+6R3SVjeoB10fL5XrBQrDcOLfOGAgLACqpRE=
+	t=1744292691; cv=none; b=gsXWqdWBDD1u+QDa/7UwbC+LZq6oj9Jf/PifRpubRfgIBzx0Uub7OeeURi+4EnVXcir/yHwS+JUDIGMXJq9jsdSZ+fh2r7tXdtWOHSMM2KzfAAHzp4Cuk1cXS71iwvuOPGCO451grG0QvdPlEVGNgmOf/Tio9rfeHJf1gD07xy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744292689; c=relaxed/simple;
-	bh=0o32D+mJgEwqn7CLnCXF76Z69iTOivOpf3nyI9ee4LU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PJZyv130m71JRtGrdSmk4JIIXFuNUSu0HiUHvrOvaPp/mA7qdl8Xl75yahcL5KHdSe/hYS8EsVTu/Whuy9VEbZQvT2xd5fFA/mY+1pQbDHXL1SXv07bpZMN7lHjCaC7QYO9/NKvE9qoKwtGpERFi2yEtQyEFUfrLfAKDNFW6awI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=6LaYvP1i; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=2hgdRPvs; arc=none smtp.client-ip=210.171.160.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
+	s=arc-20240116; t=1744292691; c=relaxed/simple;
+	bh=zIuv99jR6/DvhIj/ezFd7gDXDCcqNb+1BR6FZTmkWrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VaLPSk4WfSpZ4yvNBThlrE3Md7vZH1X3QchXS4mvpbSwS8riXxEfvO7JnI3yCsUBFbvIbBIcP/GBNU5Upqh5PBMC4CVwqcBS5mD54ye60mX4Pjz+CDsV2ZJEV5xpV8seVHuElfaJhjf6jFp73qZ4pjIQ5QobEPJ5uthTXIvTWu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWFnvSEr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="6LaYvP1i";
-	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="2hgdRPvs"
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id CE4C120A0179;
-	Thu, 10 Apr 2025 22:44:42 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114; t=1744292683;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7bpeTNNt9TO4DEeF8FNsRjjxlVf0cuSk9NjS8Ny8n8s=;
-	b=6LaYvP1iKdIM6h/7cu80lTKzoWsvsgG0wsfHGpxrtFv8AbdIRoJ6WG9IVZZHejenhhl2HM
-	euwDGzhCEzu5Qyiu7e0hLalSHpeCkFk4szR1R9YjLTe49A8ptJU0Q+YiLu7ABjUb9SRV6B
-	RKI1ZEsN8g4F26Ym/77w96DiXw/b6wMC4ORhYJWSjpwKrPM+O8Ef2VC9CuRKhpvR63CzGX
-	x0OyXEPOuMG3Py3NkrJCrTnlasMMz4t1JmNzGZMIulexdo6NEKT5DOPSMmkU6WnVguCRJC
-	LaADuM5GeMSOrnhCLafp0XgeCac4abpV3PcrUKi8QILevWq9QLwcU33tPP0/Mg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114-ed25519; t=1744292683;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7bpeTNNt9TO4DEeF8FNsRjjxlVf0cuSk9NjS8Ny8n8s=;
-	b=2hgdRPvssMzswKC3qI6ss6Hrb1k03ofA9Lw5l0oV+iJ3KMO7/YV4EvkLXQTKipAmgs/hBa
-	Vvk0KdtRijtU7aBA==
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 53ADifKf568463
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 22:44:42 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 53ADif4b1480534
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 22:44:41 +0900
-Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 53ADifuw1480533;
-	Thu, 10 Apr 2025 22:44:41 +0900
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To: zhoumin <teczm@foxmail.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fat: Optimized FAT bad char check
-In-Reply-To: <tencent_4E3BCCDC793A514260932AA16BC5910F400A@qq.com>
-References: <87ecy16ub9.fsf@mail.parknet.co.jp>
-	<tencent_4E3BCCDC793A514260932AA16BC5910F400A@qq.com>
-Date: Thu, 10 Apr 2025 22:44:41 +0900
-Message-ID: <874iyw6shi.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWFnvSEr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C278C4CEE9;
+	Thu, 10 Apr 2025 13:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744292690;
+	bh=zIuv99jR6/DvhIj/ezFd7gDXDCcqNb+1BR6FZTmkWrc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WWFnvSErJGHoAFL49fO2hww9SHO0/RHs5AH/HqVziawMjh9vkYSNexmYM9V1qao//
+	 Uh5m0IBGBkSMOyIl6LkSlHlAzZ8YKtLENE/p8M8TUsEKyGyM9YU4yx4VNGvR+vZpeJ
+	 myK2knY44CdZhmM1cF4cFbU8prSB9k9gCLko941gW1mDLOBdONOpcnJXQkkw0Nuzng
+	 SOBwpUziCkn/UNnqzHR0tQdkzSkfGkkBfztnfEcXBSOrSxMfFsR97hoDLizOpcrsJY
+	 nBHLyuWvuLHh2P7ENrjNiNabOB/jqF0W7PDRh3p6iblYP0qF5q//7SvENLREFz9+8M
+	 sxOCOcCxwnQcQ==
+Date: Thu, 10 Apr 2025 16:44:43 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>,
+	Phani R Burra <phani.r.burra@intel.com>
+Subject: Re: [PATCH iwl-next 05/14] libeth: add control queue support
+Message-ID: <20250410134443.GS199604@unreal>
+References: <20250408124816.11584-1-larysa.zaremba@intel.com>
+ <20250408124816.11584-6-larysa.zaremba@intel.com>
+ <20250410082137.GO199604@unreal>
+ <Z_ehEXmlEBREQWQM@soc-5CG4396X81.clients.intel.com>
+ <20250410112349.GP199604@unreal>
+ <c1ff0342-4fe9-44ec-a212-9f547e333a5e@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-2022-jp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1ff0342-4fe9-44ec-a212-9f547e333a5e@intel.com>
 
-zhoumin <teczm@foxmail.com> writes:
+On Thu, Apr 10, 2025 at 03:05:19PM +0200, Alexander Lobakin wrote:
+> From: Leon Romanovsky <leon@kernel.org>
+> Date: Thu, 10 Apr 2025 14:23:49 +0300
+> 
+> > On Thu, Apr 10, 2025 at 12:44:33PM +0200, Larysa Zaremba wrote:
+> >> On Thu, Apr 10, 2025 at 11:21:37AM +0300, Leon Romanovsky wrote:
+> >>> On Tue, Apr 08, 2025 at 02:47:51PM +0200, Larysa Zaremba wrote:
+> >>>> From: Phani R Burra <phani.r.burra@intel.com>
+> >>>>
+> >>>> Libeth will now support control queue setup and configuration APIs.
+> >>>> These are mainly used for mailbox communication between drivers and
+> >>>> control plane.
+> >>>>
+> >>>> Make use of the page pool support for managing controlq buffers.
 
-> Hi Hirofumi
->
->> Why do you need this change?
->
-> I encountered an issue while working on our own bootloader. The problem
-> occurs when short file names start with `0`. In this case, our bootloader
-> mistakenly interprets it as the end of the directory entry, causing all
-> subsequent files in the directory to become invisible.
+<...>
 
-It is normal behavior of Windows.
+> >> Module dependencies are as follows:
+> >>
+> >> libeth_rx and libeth_pci do not depend on other modules.
+> >> libeth_cp depends on both libeth_rx and libeth_pci.
+> >> idpf directly uses libeth_pci, libeth_rx and libeth_cp.
+> >> ixd directly uses libeth_cp and libeth_pci.
+> > 
+> > You can do whatever module architecture for netdev devices, but if you
+> > plan to expose it to RDMA devices, I will vote against any deep layered
+> > module architecture for the drivers.
+> 
+> No plans for RDMA there.
+> 
+> Maybe link the whole kernel to one vmlinux then?
 
-> While comparing our bootloader with the kernel, I found this bad char check
-> function. Treating the `0x05` deleted flag as a bad character may
-> potentially disrupt the parsing chain for subsequent files.
->
-> In my opinion, adding this judgment aligns with the spec and should not
-> introduce any negative side effects, even though I haven’t encountered this
-> situation in practice.
+It seems that you didn't understand at all about what we are talking
+here. Please use the opportunity that you are working for the same
+company with Larysa and ask her offline. She understood perfectly about
+which modules we are talking.
 
-What specific case are you saying?  This path is checking the user
-input, isn't it? Why do you allow to create that filename includes 0 or 5?
+> 
+> > 
+> > BTW, please add some Intel prefix to the modules names, they shouldn't
+> > be called in generic names like libeth, e.t.c
+> 
+> Two modules with the same name can't exist within the kernel. libeth was
+> available and I haven't seen anyone wanting to take it. It's not common
+> at all to name a module starting with "lib".
 
-Looks like you are overlooking something.
+Again, please talk with Larysa. ETH part is problematic in libeth name
+and not LIB.
 
-Thanks.
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Thanks
