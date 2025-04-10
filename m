@@ -1,144 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03F71DF991;
-	Thu, 10 Apr 2025 11:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C986C21ABDD;
+	Thu, 10 Apr 2025 11:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744283227; cv=none; b=cF2b56UlpNURpkny8yEVaAnlq34cLP/3YlWXxNtPh+avgBTMmfw0Cosll/nhOpOss9drUTVlY8pqME2qblki+7ZjcerwxBhSQFfgQ8MOWzP/raC338OnK9tooZZv2hBgj3+AOoXKTWUeLxt/YcORFS7VKIBLrkouLFKa6ALH7fA=
+	t=1744283395; cv=none; b=mxf4YC1jUjjZ1yzjiDQeRejHKYq9ozaydZw8cwTnp2DTTWmZ5R2zv06SdVQnClJAsVcIK465+rHn8jFdIreNcEFLc0Li+GyBr/prpgyFVBGYDDYKceWkXNyQ4+vsIMnaujL7tHbM4Ou3ZIUnZNqMRngWma2XUz6Qh2g+SFikloc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744283227; c=relaxed/simple;
-	bh=o2o+6a4xQL07Dgpaqul/mMfczU2V+raqlFx4x3NQwp8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tIHWcYsoHfLWBrUGpTAjLJx+7t/7EvV1sVQ/23LoV4kbn1aix4KtG2Z3Xg751yKT/SKisyoKm4P9HTUZN+2xG3osagIesOWjqxHufnWX/LZag1wXGH+Zg4bC/SiveBvPJ8XtWzJ4jJdVd4JxRWx2wGZuP22jcsBfBVlY/YV0r4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EC60106F;
-	Thu, 10 Apr 2025 04:07:04 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DB0023F6A8;
-	Thu, 10 Apr 2025 04:07:02 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: peterhuewe@gmx.de,
-	jarkko@kernel.org,
-	jgg@ziepe.ca,
-	sudeep.holla@arm.com,
-	stuart.yoder@arm.com
-Cc: linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH] tpm_ffa_crb: access tpm service over FF-A direct message request v2
-Date: Thu, 10 Apr 2025 12:07:01 +0100
-Message-Id: <20250410110701.1244965-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744283395; c=relaxed/simple;
+	bh=MpBqDValHr2CSUHutlF5cCsPOXNMQ+yA0JfuD3qn/8U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OpgYFnD+XyJcnBdphntye15L2EzFG2tY8pL/IAta8zt80vmP6+XmvZRlh5B4VTV8uQDEsQpyPeMhz9MP7Btu2Uuz4p8ReQ3op18BUHbvmcLydQggqYqh05VJvcEc8zQWCm2i6Ph96nmU+T6XiRJ2nc7NiCVPLHhtq7TZF3Bkliw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7QQRRW+; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7QQRRW+"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so5736365e9.1;
+        Thu, 10 Apr 2025 04:09:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744283392; x=1744888192; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MbDe+EbLr5OyfnaFcs8M7gYax2PYGkoxb0x00OKFLW0=;
+        b=G7QQRRW+ImIdh3TtrUpUKSXBkj07guDRnGLVr292FyGVMx8GKdZvi6FUA6SxsUDhYP
+         iDlM19QiPc5mGmtgjdEaoqzOFwlDCP+RY6xkQo+3Qvld+bSuitNXsMdHFSLcQJ3IJ3u9
+         7AA1cVpiBqJog3yS26bFkXHoXlIeTR55RUyhYd97iLW9REnQ/8x2EBAUBsop9GM7ok3P
+         H/BYXkBmWBYsvILa3lMpeQft12p3FdtXvohe5K6s9jn5XjGV/6pXmPPMgcSSsD6f+lvv
+         kkhjcW2G+Ul45vd1sUwEtaxGK5nv+W9kXhPwKba2IAXpdhEucPp634sTf2weJW+yAqWZ
+         fDwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744283392; x=1744888192;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MbDe+EbLr5OyfnaFcs8M7gYax2PYGkoxb0x00OKFLW0=;
+        b=f9ObU+/CqTlylMQ/NUnYcGRbd44Y7gTXpGJl5nkeLnIOTHXjiwSets4aHI/tVo4q4Y
+         bprh/620l5XToHPAS/uIaLCZnr87X+MSlEVWNTg4pPIAKN4zr48jPVWjp/k+IU5ZuhFK
+         wenasp+orFjtEj8SZBz+TaoKwi7EEC/wKOjScSwRWm47EhR/SQH+Q1VAykPRveWzw0wh
+         jABnAT3I0/wnjD+39d0BiK85kMOG1oLRomnHzOrRV0LlTA3VRKWPccEwuQRQwRemK7Iu
+         e8eWddnVWGlVZVwlLJHnSD44k0XU8+5StnKD/6VE8qeHYWTrfGbG0cMoJhscAOW5suc2
+         NpjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/0/0B+l1IlFl8sTEOAcKPGiKJM158XkhkkDV7srf7UjMvnwopLewP10ZSrF6TB6qF4Ev222+TNcRLjno=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6eMOknQXdS3HSwKUDsCcHK0glMmuu7zKpwivBzJXXGc4onCYi
+	dqdoPIedVLz/WPndyc+o18e1e2VIdTgqjU0eRvrlWhGzn3QXZo1W
+X-Gm-Gg: ASbGnctaH9kYN0Mo8DZgrlb0UXpiXGyvfk4sXigMjFsPQtne97fZiC0sXMwUA1ReB1j
+	XWHHv98mvAjvfXbwphwYv+qfwUM8lRgu3Py1runZxPFnCAt3VAo0fdrJxfSyS75TNMtF0IHz82H
+	zNsX4GWli75iEwOJD1uo6RJ7QWod/nuIA2DPMjVcguWj1VVv4JP4JDeJ/MEC9KVYIJHJ87RCBzM
+	XjBfZ4PvvyN0Xl/1WoJlQsWcgFC/3tExALtG7dY+TBpffRxAo+qJrA58/GUtk+598gwcMR/e0fe
+	NiDeq9efu89qXh0AsYVIN25Sjp9shwWmOcuCo4c8mN88U6qP1JC4I0trpxgHDWRLXFGGvH0b89B
+	/hPr5hfsPKp38LGWrIzMc/Us=
+X-Google-Smtp-Source: AGHT+IGXicWffcw8M39J49w3jd7iIxYiNcKX82U0HLXCO9NcqiFD4gVIG+kJvxdz3XZqhzVhtvmJlg==
+X-Received: by 2002:a5d:5f47:0:b0:391:253b:405d with SMTP id ffacd0b85a97d-39d8fd8c45dmr1957609f8f.41.1744283391864;
+        Thu, 10 Apr 2025 04:09:51 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20626c19sm52998355e9.15.2025.04.10.04.09.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 04:09:51 -0700 (PDT)
+Message-ID: <3ed7564cf2749ee207da8ddc5ef06b54d8aea881.camel@gmail.com>
+Subject: Re: [PATCH] iio: adc: ad_sigma_delta: Fix use of uninitialized
+ variable status_pos
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Purva Yeshi <purvayeshi550@gmail.com>, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 10 Apr 2025 12:09:53 +0100
+In-Reply-To: <20250409200151.201327-1-purvayeshi550@gmail.com>
+References: <20250409200151.201327-1-purvayeshi550@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-For secure partition with multi service, tpm_ffa_crb can access tpm
-service with direct message request v2 interface according to chapter 3.3,
-TPM Service Command Response Buffer Interface Over FF-A specification [0].
+Hi Purva,
 
-This patch reflects this spec to access tpm service over
-FF-A direct message request v2 ABI.
+Thanks for your patch... See below
+On Thu, 2025-04-10 at 01:31 +0530, Purva Yeshi wrote:
+> Fix Smatch-detected error:
+> drivers/iio/adc/ad_sigma_delta.c:604 ad_sd_trigger_handler() error:
+> uninitialized symbol 'status_pos'.
+>=20
+> The variable `status_pos` was only initialized in specific switch cases
+> (1, 2, 3, 4), which could leave it uninitialized if `reg_size` had an
+> unexpected value.
+>=20
+> Fix by validating `reg_size` before the switch block. If it=E2=80=99s not
+> one of the expected values, return early and log an error. This ensures
+> `status_pos` is always initialized before use and prevents undefined
+> behavior.
+>=20
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+> =C2=A0drivers/iio/adc/ad_sigma_delta.c | 5 +++++
+> =C2=A01 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/iio/adc/ad_sigma_delta.c
+> b/drivers/iio/adc/ad_sigma_delta.c
+> index 6c37f8e21120..d3b59d90b728 100644
+> --- a/drivers/iio/adc/ad_sigma_delta.c
+> +++ b/drivers/iio/adc/ad_sigma_delta.c
+> @@ -568,6 +568,11 @@ static irqreturn_t ad_sd_trigger_handler(int irq, vo=
+id
+> *p)
+> =C2=A0	else
+> =C2=A0		transfer_size =3D reg_size;
+> =C2=A0
+> +	if (reg_size !=3D 1 && reg_size !=3D 2 && reg_size !=3D 3 && reg_size !=
+=3D 4)
+> {
+> +		dev_err(&indio_dev->dev, "Unsupported reg_size: %u\n",
+> reg_size);
+> +		return IRQ_HANDLED;
+> +	}
+> +
 
-Link: https://developer.arm.com/documentation/den0138/latest/ [0]
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
- drivers/char/tpm/tpm_crb_ffa.c | 55 ++++++++++++++++++++++++----------
- 1 file changed, 40 insertions(+), 15 deletions(-)
+Use the switch case for this. Add a default branch for the invalid case. Yo=
+u
+should also use dev_err_ratelimited() and instead of 'return IRQ_HANDLED', =
+do
+'goto irq_handled'.
 
-diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-index 3169a87a56b6..0716c88e0281 100644
---- a/drivers/char/tpm/tpm_crb_ffa.c
-+++ b/drivers/char/tpm/tpm_crb_ffa.c
-@@ -105,7 +105,10 @@ struct tpm_crb_ffa {
- 	u16 minor_version;
- 	/* lock to protect sending of FF-A messages: */
- 	struct mutex msg_data_lock;
--	struct ffa_send_direct_data direct_msg_data;
-+	union {
-+		struct ffa_send_direct_data direct_msg_data;
-+		struct ffa_send_direct_data2 direct_msg_data2;
-+	};
- };
+Thx!
+- Nuno S=C3=A1
 
- static struct tpm_crb_ffa *tpm_crb_ffa;
-@@ -185,18 +188,34 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
-
- 	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
-
--	memset(&tpm_crb_ffa->direct_msg_data, 0x00,
--	       sizeof(struct ffa_send_direct_data));
--
--	tpm_crb_ffa->direct_msg_data.data1 = func_id;
--	tpm_crb_ffa->direct_msg_data.data2 = a0;
--	tpm_crb_ffa->direct_msg_data.data3 = a1;
--	tpm_crb_ffa->direct_msg_data.data4 = a2;
-+	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-+		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
-+		       sizeof(struct ffa_send_direct_data2));
-+
-+		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-+		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-+		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-+		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
-+
-+		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
-+				&tpm_crb_ffa->direct_msg_data2);
-+		if (!ret)
-+			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
-+	} else {
-+		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-+		       sizeof(struct ffa_send_direct_data));
-+
-+		tpm_crb_ffa->direct_msg_data.data1 = func_id;
-+		tpm_crb_ffa->direct_msg_data.data2 = a0;
-+		tpm_crb_ffa->direct_msg_data.data3 = a1;
-+		tpm_crb_ffa->direct_msg_data.data4 = a2;
-+
-+		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-+				&tpm_crb_ffa->direct_msg_data);
-+		if (!ret)
-+			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-+	}
-
--	ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
--			&tpm_crb_ffa->direct_msg_data);
--	if (!ret)
--		ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-
- 	return ret;
- }
-@@ -231,8 +250,13 @@ int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
-
- 	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
- 	if (!rc) {
--		*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
--		*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-+			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
-+			*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
-+		} else {
-+			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+			*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+		}
- 	}
-
- 	return rc;
-@@ -277,7 +301,8 @@ static int tpm_crb_ffa_probe(struct ffa_device *ffa_dev)
-
- 	tpm_crb_ffa = ERR_PTR(-ENODEV); // set tpm_crb_ffa so we can detect probe failure
-
--	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
-+	if (!ffa_partition_supports_direct_recv(ffa_dev) &&
-+			!ffa_partition_supports_direct_req2_recv(ffa_dev)) {
- 		pr_err("TPM partition doesn't support direct message receive.\n");
- 		return -EINVAL;
- 	}
---
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-
+> =C2=A0	switch (reg_size) {
+> =C2=A0	case 4:
+> =C2=A0	case 2:
