@@ -1,39 +1,39 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4007426FA79;
-	Thu, 10 Apr 2025 10:00:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F2A2144B7;
+	Thu, 10 Apr 2025 10:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744279241; cv=none; b=dT9TOS9pT3R1d7slVCweuetWdOWguT23Q9u1rt9r40dLZ13scbNZ1OpM4pZWKcOamN8S+hPvn6/7rXwM/ddtImqR064hh/9Ddf6aJP4axvYPojgHtHLJZNs3UhF1V9oNAH8zTw9mHUcUvWpSk5QvXGWeFcv29Gy6cuIsjcOVxf0=
+	t=1744279266; cv=none; b=NpS4XnsO4xs7IjOoQbLDfDKgnUrcMt40KzYM6SMbwXvgsABZoyE8oMaNaDY6F1H3K5IoPicYYCmXPJYHQSqbqu7Qna+ensCqwSVZ0ILiqHge5GOSuaqXK2trOQg5kavWXxcudMiN1SgtT9yzyhXtkLY+gqJ3wBqwUC2eyWD5bPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744279241; c=relaxed/simple;
-	bh=mDdACf44e33XI0dpstXAdFq9gqILwvmm5QcVgDIZMgQ=;
+	s=arc-20240116; t=1744279266; c=relaxed/simple;
+	bh=CuzwSRjIjB++UW1NXXcwKxjTcrmJ81BeSSs8ect0bII=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rbJNAwlAbVriUuLHLuKKFrbZ++nVeLUF1btGzN56JaMiKPw/Q1Zwxh5gT19PDc37riNs4QbKz1OM0rBihsA0zEjD2Lxxu9FM7E/f0YFUn0gNbPbi77pTKB2AkUHtIUXG+wY8hQBiscM4ik7hb2fQs8/iK1hPKZton5EMKy9C0V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=NY+vFVyQ; arc=none smtp.client-ip=46.19.9.99
+	 MIME-Version; b=ZCFAo8CSACR4m8FwSOVHLhgnAIgVtefLGGfwMTOMOmupkZRrv1VvV2765mhQQx5Id/CwdzKWyQTw4X8oFN0U8B1kGCGzbhmPuRGKFJmjPCDVx1OUYMEHGYcaJ5OZWKdRHPbPs+MCCpLnW+RUdP9EPc5Mhd9YPDnd7j8hnmCBYck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=PW5/4B8F; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="NY+vFVyQ"
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="PW5/4B8F"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
 	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=caYvtvJqNEqdShPosNv6lO8f+Vtj++Kp5DISf3ZYdDA=; b=NY+vFVyQU7mS7bW90afhYAskNO
-	18+jk1PZNwbpDNhTYinjfjYj54qksCZkDPjEKpSGL0gxKTOZ1dxcVR0++ccpu7faKCzzLqwdE040Y
-	7G+SEm7UjWtle0rhGx5nsHO4tPq7jAd6deSLrwNW+Bj6CzZEDEPgsKCyMXVOfdQHHN/26gjvZQV2C
-	J8DFEoiKA2nV7Jzsh5SjtN1/7MOX8Y2d/+H4JDWXtn2cKaDnaUrKZzDe/bYLXTA1cD1cdZWZkIKlK
-	4mRmObxQgr1eYDg+NGX0rMMNMuAHmm8Wc/+xY2SgRxgB6YN9adRDc+6IYnydGpSATwy9/8k+Rr6iD
-	N8yJZRjA==;
+	bh=KcfXboWvRClaopQK1Ywk6QojNldDv/qICGsRE6ZbcuI=; b=PW5/4B8FmgYCrfJDfOC32JoDkG
+	bwrjRQRtDsuOQBCUe2WSVVcXtKWrPf76CSoRhd0SGPfe2Twl5Ncm0m9juNCqR3Ib4jhujJEL8ZN19
+	tSG0n3/P8myntkd+aNC4Ikz4soxUpbJ426GCNAXa3HBphD7l2TQmWPkiAmK0m1VKTRN9ieHpCjpqc
+	qBBI8HeVqztFuEYjtgHlrgSOJfPnQO3C1XeCMIGCCtObygMaot3I4JkocBx6115TtqS+V2B2ZOWv3
+	F+YPONWJ2K91JQru2eq4ZVROU39M3tdQhFSISoOORYFPi3DvB+6EmDSnIK2QI8LVVgXl6nTCwT8tR
+	oQ8erJng==;
 Received: from [89.212.21.243] (port=41926 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u2noK-000Djj-27;
-	Thu, 10 Apr 2025 11:02:59 +0200
+	id 1u2noF-000Djj-0j;
+	Thu, 10 Apr 2025 11:02:54 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -47,9 +47,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH 07/13] arm64: dts: freescale: imx93-phyboard-segin: Disable SD-card write-protect
-Date: Thu, 10 Apr 2025 11:02:45 +0200
-Message-Id: <20250410090251.1103979-8-primoz.fiser@norik.com>
+Subject: [PATCH 03/13] arm64: dts: freescale: imx93-phycore-som: Disable LED pull-up
+Date: Thu, 10 Apr 2025 11:02:41 +0200
+Message-Id: <20250410090251.1103979-4-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250410090251.1103979-1-primoz.fiser@norik.com>
 References: <20250410090251.1103979-1-primoz.fiser@norik.com>
@@ -71,31 +71,28 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-Add disable-wp flag (write-protect) to usdhc2 node (SD-card) to get rid
-of the following kernel boot warning:
-
-  host does not support reading read-only switch, assuming write-enable
-
-Micro SD cards can't be physically write-protected like full-sized
-cards. Thus disable this feature.
+There is already an external pull-down resistor on the LED output line.
+It makes no sense to have both pull-down and pull-up resistors enabled
+at the same time. Thus disable the internal pull-down.
 
 Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 ---
- arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-index 902b523fc92c..3d5cd0561362 100644
---- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-+++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-@@ -48,6 +48,7 @@ &usdhc2 {
- 	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_cd>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-+	disable-wp;
- 	no-mmc;
- 	no-sdio;
- 	vmmc-supply = <&reg_usdhc2_vmmc>;
+diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+index 442ee067a047..82f680d891c2 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+@@ -196,7 +196,7 @@ MX93_PAD_ENET2_TD2__ENET1_TX_CLK		0x4000050e
+ 
+ 	pinctrl_leds: ledsgrp {
+ 		fsl,pins = <
+-			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
++			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x11e
+ 		>;
+ 	};
+ 
 -- 
 2.34.1
 
