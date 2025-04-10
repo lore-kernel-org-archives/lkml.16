@@ -1,178 +1,493 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010022.outbound.protection.outlook.com [52.101.228.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221FE284B5D
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744286083; cv=none; b=D5b51yPPgfOJww4R8B11lQyXfs18dPRI+90z/pEa/XVYf1Irek13ZHLAqXPH/Xf5/+bf+LCbbyc7ySpS+CWmZafx9E0qD7RrcpwsN2ABrSJ7srEIaylg22hlTwxzht6Tj3pVG0/uP41h0Q4/9mGiGX5C3RiD5cCEfyV920C5G+c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744286083; c=relaxed/simple;
-	bh=TFYBx64XSyamvuQktj18G68Lcx2Ey15niLB/ox1YCPo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=U4RUtF5LPzrDwBdCOgeR/aH41F7Zrpo+sFv8fVLw+2w7XN/v9kAbkJ93lmz4ddfXBQd9Q/1xzNyEmXb83fUMgFIoBl3Lmufs61Wu1dRudZjEbB/OyVQ1xX9B8XsWaKz+ltsgnApWIa+HYifrlTnwpXX54gtarqUFrfcWpXYeaf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uvmuJwmj; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F56285418;
+	Thu, 10 Apr 2025 11:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744286094; cv=fail; b=c6QTQEtLDSSG4VTKPDioo4eOcFWQFY2Ufu5N0pAPemTBmnkMUbgnww4GDEbkQkNOGNYEiJilbx/x7r7W6R+RJioSMI1KAtLNHZdlHRbyY7it5uGpyoN9BGpwes8MxPFB46cVKMsQIhnWkTTdlwJ+GpkYY6jUJ0Ko55FAVlxn5BY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744286094; c=relaxed/simple;
+	bh=eBU78YFNuQQdWhN29RGijb3DVZIh8d4e7mtX6Nmqjzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WU4mCoyuWcjd7igG5WvmsSzP2sMsb2TREKZYGBqK6Wp7xTEGOUa66aImcvHnwAv1+bsCaUy0O91EuW7FXu8eF9Eg9UFn4XuS7Mzu/1VNbI+RqG78dW9xGRp6+Jqep5lB9P9NpXFZg0Lb3Tun86RcNDB6U+tgdCvR9Wdbgo1JG9M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=AjFLg7sn; arc=fail smtp.client-ip=52.101.228.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uvmuJwmj"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-39130f02631so280758f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744286079; x=1744890879; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YB5SBjpT96ncrBxuWBve8p8aanr7Ka+pbjknFnvYN0E=;
-        b=uvmuJwmjtjLXgCs2PzuS/FGeF7AcjpZXBvZCRR+dGLthNzXw7YfJx+UTyNBgEhUhqe
-         wKVtd8fDTbuZCna2E6YfLo7SmzzRntMnhaMGDGeTYmSNttXp6IGgp8GtVnucZKxsWxzD
-         S+KZIVa+joU35+6jzgzxHQC0MYnqvHUfFaNvz7ggg6uk5lnUDKAqjIMXEwaMCcWZlwWC
-         mt3O6CNEvmf+C/YmsZnXZLi2xSbHCRPfWx3eU9/rq9estSTW1YRLlFTn8MuhiVa7PHbJ
-         6un2Il5EbaqNenF3IX6vT5yXNV3e+Bw9WWjqNL0mBZzd3ayZiwu5E9Jl8inyAWNPdWd+
-         Fgyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744286079; x=1744890879;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YB5SBjpT96ncrBxuWBve8p8aanr7Ka+pbjknFnvYN0E=;
-        b=HSHh3X/LyXEKFe3mu8YlUNnQK39PYqUKRZxAZPAf9aAo/QIMYqyzOTJ3Make7JG/3r
-         DJdR04ZeSzSLMXEWuJ+qLdwvQN1cZPZrFZgl5fRuYeNWE+Gx0nHngPtlvlv78dynyNSE
-         yh3amww2WOpj5ivldM0MhIt4U4wezhNXuofY/4So8JyBju8D0qwnNUUyN9pBy24UDOSD
-         tWejw1LCY94RFT9ZhTSfeRZ5UFcs0X0MsqfjoKEBFm/tSixq9Qipaziga1B5rQE/CT1k
-         oaJTFLBS3ISKHo7vw87949fxK5s6QqJRB31NFt6BMNyUJJZtpdW+rX9JQISuPrRGKUeX
-         HqSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+KDoPXqW8sAKvwcv6IXJDBgNonByhfMG+ECxv4avG1svLUlOlfjQBVNjzwMmoJwkNEdbyt4mAwSTEB3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2at8ScmaoPwiLePOlfkvNjEklixA0k8yR+ltJDCTCWbtKvjFS
-	FuXUpy1YXyBTsOP9ENjxnZxw7uZJ74sW0fQDBOqOTXoF7BHR/HZZr5A3Tutm6ew1FLWPwyB0rM4
-	mFR9fT5WSig==
-X-Google-Smtp-Source: AGHT+IFzn3mn0oI9Ck71yb9277+/GcvT1W8LjrbC1butNihUTnplW9tQ6uv6YUMVhQUf1tJTleJ/ca2PeC6biw==
-X-Received: from wmco15.prod.google.com ([2002:a05:600c:a30f:b0:43c:ef1f:48d3])
- (user=panikiel job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2a8:b0:391:48d4:bcf2 with SMTP id ffacd0b85a97d-39d8f276117mr2011463f8f.12.1744286079487;
- Thu, 10 Apr 2025 04:54:39 -0700 (PDT)
-Date: Thu, 10 Apr 2025 11:54:20 +0000
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="AjFLg7sn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=slFejnNn+DqW8CIx3MYMYWZWaoEmNNM3qFHt3EGDlGP5zo86qYKvvwX5ug5P/pp/+xMBRN9z44Yr0Ojc8K9IFBv+sRA8BR95jmt0VDks6IuNCr694H11vlGJ0V8vMYWZsRTwur30I94rqoohzU4aF0gMNoo6mHMYSQjHOvqzizrZ2fwl1kcy/u6qIn7GgeSx3+oN71422nDuvp2hm4FWDGwTkR7Qt1FZQH1Jz8gzUVodS7zW40Q1a9DUHfpcfiAK8eN4eKtxoLNdFCs182wCZippxpVXd8DP0HZmT6OEe8T09JzSVyzgl13suiCjX4OOq0sTW3YVj2TQxD61WxuHCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AdrS1eclmd8AGvkSUiXwy+TYEENbod13WOU1HqwKxns=;
+ b=c63wfoqgZcXuXe2SJebIzbO5FSXMJO8oNuLWQp2Up8xlmYaIWiE8A34PH/R8YLjoEoNyMId3Go0Pqz5Hn/G6qBO3vRleVDutQl92miRbJaOYBJY7VlKmk+T+JQVC8XOYHkXmPBJ2z9QIHCob0XSBLHfdLcrNrey3I0UqqVBV/yanzUvLsY9l2D62hbGrmuwU5FsJQZxRaK57CLxxaICEgKIsnBa6gePFP0IgXDnwpfNAecFYYA8rQdT5BCBVRxLDS1JqbFwXxJUF9BIPJ9OIptxnvj+sKJfIjuqM1shAcdw70rUhNqks7W1FqoGlwMEodxPbXMeISqSvZSjLrKy7ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AdrS1eclmd8AGvkSUiXwy+TYEENbod13WOU1HqwKxns=;
+ b=AjFLg7snXvJXhjMjayTUyeyly7e3ThZYizWQJhRdKpNLiZ3Y2Zov9YK/Ql6sCh7hiwU2fO8gxIlfAG7BD/8lA/pwtA7nDt5/qRw3F8RMNhLx3rRTdB8GiuldlmfIjSAF2niexLBW+uxcFCeRfCZtOeUDlclVW2YDgOtRYMNmqwU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
+ by TYCPR01MB10993.jpnprd01.prod.outlook.com (2603:1096:400:3a6::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Thu, 10 Apr
+ 2025 11:54:43 +0000
+Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
+ ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
+ ([fe80::244d:8815:7064:a9f3%4]) with mapi id 15.20.8606.029; Thu, 10 Apr 2025
+ 11:54:43 +0000
+Date: Thu, 10 Apr 2025 13:54:26 +0200
+From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org,
+	linux-media@vger.kernel.org, biju.das.jz@bp.renesas.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 11/17] media: rzg2l-cru: Add register mapping support
+Message-ID: <Z_exclFsFse2z3Mr@tom-desktop>
+References: <20250410081300.3133959-1-tommaso.merciai.xr@bp.renesas.com>
+ <20250410081300.3133959-12-tommaso.merciai.xr@bp.renesas.com>
+ <20250410113625.GB27797@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410113625.GB27797@pendragon.ideasonboard.com>
+X-ClientProxiedBy: FR3P281CA0201.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a5::13) To OS9PR01MB13950.jpnprd01.prod.outlook.com
+ (2603:1096:604:35e::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250410115420.366349-1-panikiel@google.com>
-Subject: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
-From: "=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Kees Cook <kees@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, 
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, 
-	"=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|TYCPR01MB10993:EE_
+X-MS-Office365-Filtering-Correlation-Id: d5bb111e-f525-4208-e484-08dd78267bb9
+X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|7416014|376014|52116014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?bYEBCupDdYeeuJAW8+OoBknpkgoKhW2eMNhxqrW4NgKsNlDFWB+ivXBiPa0r?=
+ =?us-ascii?Q?Thbfp0G28l9luDyJFc8NOv63af9cNNyO2FIcwGpSzl7kq/6O/ROkWLehfEGm?=
+ =?us-ascii?Q?3fHtGL+U9V4KNdlnYAbRXKKYEWF6yJSUjq/ADuWAXvXqrG0cibM+Kf+ZMIEK?=
+ =?us-ascii?Q?5wY7cgZc5KXbJ3Rqh5LUQONfLzaIRFSEfP2exGsaKoulAf5sjmEVcwdmCWLv?=
+ =?us-ascii?Q?f40M6PrzK648YUVYmmbe5edVgbeVC5qvsYcIidpQEM8fv+GarcOFca4Ib0kU?=
+ =?us-ascii?Q?qxkTmAvqQTr3o9IDuvwQmyFj666XyMwc+TwjdWSrV2LPfsGGkZXCLmzyCsLQ?=
+ =?us-ascii?Q?pjuG5DrO/9d+Kj8qjqFjuAHE2+NxFO/7wRy8YL98uWIczH4dxo7gAhag8/0e?=
+ =?us-ascii?Q?FzMy9UHnrbUk+7FXZDIRaXSuZfU+Z1NyvtVG9/MAEX5B8a6w+JOAZnQ5igOK?=
+ =?us-ascii?Q?nbE0J16rbo29PDddbz6EDp7v7JztmoVs0fwmq1j4H5FJG1aa6O5ONUeT9ryX?=
+ =?us-ascii?Q?yN5/qeymUb66rU+Px51XbCki/ceh/KBTnfm/QMAk3ixyPDdKtBVQjg9gNq1s?=
+ =?us-ascii?Q?c45CqmTfMzLKn18Jn7oIQQRbKB4sO11b4cxTHR8TmdRrHQ1FUC6ZY+pA9KZV?=
+ =?us-ascii?Q?I9oOEBiiYHhO4jbVepEhxmX/vTlChUnyoTSILlpiNZ7JLxG7xde16hQJelfv?=
+ =?us-ascii?Q?WxvPn3PXUkDRSsb8qUYPb8kJv2Zt5iFkyN0juVyZhMeq9AT/PiKoHjZoEk3O?=
+ =?us-ascii?Q?2vE687rfBXQmwverYRaMEaY268iqSdn7cDeYSzzc3PzN7WPMGL0RFdf/cdrv?=
+ =?us-ascii?Q?RqZvJ0O6Xvjdq3YPtAWjtTYohmEHuJDXMrcpfpC0hF7kKFaIH/BQvMLVdLZ7?=
+ =?us-ascii?Q?81tTmUQpoFB9K2Quw95jEa6O4jHiErX5YKil/c4V8QSaTYLw18kTwr1zC5Nx?=
+ =?us-ascii?Q?V/vBxAWUZSeBwYg6Z+7O3dUDrPzILVz+crzgeGN0BYE2bx+D+YwUr77ucmJ3?=
+ =?us-ascii?Q?8dDcmgO2QJ2jgJowQsFbckZ5mxvcXQ6iNv09smtueTPA0Ge+IaBSY6bfGWW7?=
+ =?us-ascii?Q?HgMS9q1/mjIP0kwSxdnJpXj0nj65CC+/p3aPx2VQn8TmthvjBdhrxanXHF+E?=
+ =?us-ascii?Q?OAMTtFkij5adGFcUC7PIiid0oxQOU70dKAaKw0s+rOF5rJK2FCDwf1GZXWo3?=
+ =?us-ascii?Q?8/WriXiiqVmvDQlm3Xe1NXgndfNP61PLFMLWsQ/uYnLmJOSFURdlrFj2BtsR?=
+ =?us-ascii?Q?EQRhCtebLWxYVw2XIcyNbuyn5LAEdw1oUtAlVl+MO+2MdDWOTFeuMauboS9s?=
+ =?us-ascii?Q?BjXtFcB3RC8i7SGl9pN8+XX1XqxBJxSvxR8TYObmWegu0yvghVKKycFU7fRp?=
+ =?us-ascii?Q?6ZMA0owEkd6rzTx9a5jT9rFIpovalYnVQygV1jnDj7s8/dG8sjhsutoCxC38?=
+ =?us-ascii?Q?bYJQ6HTqyjclcX3MIO/HXpR1136kouL6?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?HCD3UPTFg7AbW9PZKKE8n67I8MJUdD1zY1Xtlk8A10b0Z95YQNH9bNJv6meb?=
+ =?us-ascii?Q?XcC7h9wSww+2iwJREjUXL7zoXYJrEIw77Ib9gVLfPSFHSb7VidvSggBIQ9w4?=
+ =?us-ascii?Q?E+9ywwKDLXPrF/+HVz6bRp4qhISXQ4b8U3z+XcJHPvt1rUmAIE1FMS4IgNoY?=
+ =?us-ascii?Q?a+lRZj2TfmFhdhZhAjpqBhR77C/MuB1Yz0PXJWJEi2t1cOwIybuzzkBX8bCO?=
+ =?us-ascii?Q?9lFqf1RQdkLtA9FnVtBGQgTrvOmAO6tcDqMeBrpAQndj+iC8Xim1ST6l91NL?=
+ =?us-ascii?Q?mIBh9jaZqV3rNYJo4ZlbZnjDv3ukXvD3glDU1K+Ndpl//JE5qisuQChN0lJq?=
+ =?us-ascii?Q?Dnbtf0n4USmwhyqn0x7uq1INzpduuNB6Ira+hSztomVnHq8PJS/4ptK4VcTO?=
+ =?us-ascii?Q?vElEuM9nfhxwL4khntxkQL4G1fKaLK/EL6v+l6UJASVi7RvRlmkmvk580I0/?=
+ =?us-ascii?Q?V0dHmLbLdx6EezRNZm6cvrI5erI4z7RLDWMbuBPhgDM6V1gh83yBuRIMPgaE?=
+ =?us-ascii?Q?zjNZML9esQovRX0RybAhx2ueefMQPzCqq0z7sAi+q7hBJn4PA9682zj4io8f?=
+ =?us-ascii?Q?6KC2QAAhR6/dp4BfwsKJBOmnqdRE7u9EMSCUNYENgp3H4KAUDKPf5oFwobeD?=
+ =?us-ascii?Q?Le0s7qT+j08+rGXBDYjFiroCRBjzL2FLwyWqaxmGwNWsOeE8LLzkJemgNJL4?=
+ =?us-ascii?Q?N3hm9Mw8EmbjGe9LDZxZa5tCrNctCgJW6huwscrYRTulrmns52Mj3okrADOt?=
+ =?us-ascii?Q?Jl3tXF8ugxPy8POkDXuvuFIHOXT1jK3zwjNU9kNszSLlq9fDrnaB4wIjsv7p?=
+ =?us-ascii?Q?Cf840QMzjM7etxZ/dVB/ApyyDnCAHnXbehnEH5CGWZOo5VEacHI2RHnyxdHE?=
+ =?us-ascii?Q?lc7CDnOCO/CLr82G3q8LaIhlFA7Y28/4Sn1Gt2Ur1vpTzuCkDfbFDOHFMa3w?=
+ =?us-ascii?Q?Tb8ayQeYbBXQzlqYvU15tVuRZ+gGnu4cClVzZodik5gkDpYe58NBmdFg18Vx?=
+ =?us-ascii?Q?UuVyjbbSiMkVKqxLYWEgfbRHl/26iLIRURK6jF0zyX3zEef2LABH53JR+wQH?=
+ =?us-ascii?Q?8r/oFBij2LANNX5ocR9RxOi/Y0mHKZ/tgpbvJlL02fK5z2iEgDBa+r5IgRDA?=
+ =?us-ascii?Q?i/Ix8Gk9hI72jcHlVMjXqxVHD0cm8GAyu2L59PgFzGZ2YSm1OAjuJJ9Mb7vp?=
+ =?us-ascii?Q?6DfJcqwXEn7zgD+ARjCxBoHyu3BWMiwAK5CovF11iXRs0Y/h7Wr7n1nLkucu?=
+ =?us-ascii?Q?CjLtGZq32OvyRiIFMUxc1wi0p4G2Klwd0k4sFAeP8v4BrG0zc3N6wtyyxHDr?=
+ =?us-ascii?Q?Cua+wFr00nMMuyySjqOZowGzgzWOUUysDqhRiiGToLJLKA5/KgYcTjZcbZib?=
+ =?us-ascii?Q?fQb/+HMyDW64Ga8+rkdP8bNHGTW4AQy1Eza5sG1PPTIZNZ7GsNY4UfsVovKn?=
+ =?us-ascii?Q?rZWk7Ci3czxgx/13xOWB1QVwknSCOwPGQetK/5URAU1zYXBmWXeOUiRzTnzW?=
+ =?us-ascii?Q?BGtQO+4Rttc0j5eUYVh5qaql9rhT8LkNb1vou8uxk9mfrXtWY4hJ+ZOVx40D?=
+ =?us-ascii?Q?dtgqo8nGD1Kz8bIwnDzdXxPGtvVfVNvJOAI+xgF3VWj4qtyD1TWY9JtpmME/?=
+ =?us-ascii?Q?nTV4sKlcxer/Ecxkx86c3sk=3D?=
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5bb111e-f525-4208-e484-08dd78267bb9
+X-MS-Exchange-CrossTenant-AuthSource: OS9PR01MB13950.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 11:54:43.8240
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xect7N3qGZljHaI2SncAyWmLCnYm6CCVUM508t5G8X9nT2YQ0RB9ubP7FfAUJPqLzyA1nO2xd7Ngp+CJZuG3W6LXtkIVtpmeRwTKxB2Dd4R68otBy0DB0uuCup6dyiRe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB10993
 
-Calling core::fmt::write() from rust code while FineIBT is enabled
-results in a kernel panic:
+Hi Laurent,
 
-[ 4614.199779] kernel BUG at arch/x86/kernel/cet.c:132!
-[ 4614.205343] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-[ 4614.211781] CPU: 2 UID: 0 PID: 6057 Comm: dmabuf_dump Tainted: G     U  =
-   O       6.12.17-android16-0-g6ab38c534a43 #1 9da040f27673ec3945e23b998a0=
-f8bd64c846599
-[ 4614.227832] Tainted: [U]=3DUSER, [O]=3DOOT_MODULE
-[ 4614.241247] RIP: 0010:do_kernel_cp_fault+0xea/0xf0
-[ 4614.246621] Code: c6 15 8d ad ac 48 0f 44 f1 48 8d 04 80 48 8d 14 45 d0 =
-37 42 ac 48 c7 c7 22 99 bb ac e8 9f 7a 05 00 0f 0b eb 9a 67 0f b9 40 12 <0f=
-> 0b cc cc cc cc 66 0f 1f 00 41 81 ea 00 00 00 00 74 03 0f 0b 90
-[ 4614.267606] RSP: 0018:ffffb95acfa4b978 EFLAGS: 00010097
-[ 4614.273464] RAX: 0000000000000057 RBX: ffffb95acfa4b9b8 RCX: 3ff1c813cb5=
-76300
-[ 4614.281426] RDX: ffff9a50b792b8d0 RSI: ffff9a50b791d548 RDI: ffff9a50b79=
-1d548
-[ 4614.289408] RBP: ffffb95acfa4b980 R08: 0000000000000d7c R09: ffffffffad4=
-5d500
-[ 4614.297399] R10: 0000000000002874 R11: 0000000000000004 R12: 00000000000=
-00000
-[ 4614.305369] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000=
-00003
-[ 4614.313345] FS:  000076fa106dcfe8(0000) GS:ffff9a50b7900000(0000) knlGS:=
-0000000000000000
-[ 4614.322386] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4614.328806] CR2: 000076f8fc207bd0 CR3: 0000000227242000 CR4: 0000000000f=
-52eb0
-[ 4614.336777] PKRU: 55555554
-[ 4614.339786] Call Trace:
-[ 4614.342524]  <TASK>
-[ 4614.344867]  ? __die_body+0x69/0xb0
-[ 4614.348786]  ? die+0xa9/0xd0
-[ 4614.352000]  ? do_trap+0x89/0x160
-[ 4614.355721]  ? do_kernel_cp_fault+0xea/0xf0
-[ 4614.360413]  ? handle_invalid_op+0x69/0x90
-[ 4614.364985]  ? do_kernel_cp_fault+0xea/0xf0
-[ 4614.369654]  ? exc_invalid_op+0x36/0x60
-[ 4614.373959]  ? asm_exc_invalid_op+0x1f/0x30
-[ 4614.378643]  ? do_kernel_cp_fault+0xea/0xf0
-[ 4614.383335]  ? do_kernel_cp_fault+0x31/0xf0
-[ 4614.388005]  exc_control_protection+0x49/0x70
-[ 4614.392871]  asm_exc_control_protection+0x2b/0x60
-[ 4614.398144] RIP: 0010:_RNvXs5_NtNtNtCs3o2tGsuHyou_4core3fmt3num3impyNtB9=
-_7Display3fmt+0x0/0x20
-[ 4614.407792] Code: 48 f7 df 48 0f 48 f9 48 89 f2 89 c6 5d e9 18 fd ff ff =
-0f 1f 84 00 00 00 00 00 f3 0f 1e fa 41 81 ea 14 61 af 2c 74 03 0f 0b 90 <66=
-> 0f 1f 00 55 48 89 e5 48 89 f2 48 8b 3f be 01 00 00 00 5d e9 e7
-[ 4614.428775] RSP: 0018:ffffb95acfa4ba68 EFLAGS: 00010246
-[ 4614.434609] RAX: 0000000000000000 RBX: 0000000000000010 RCX: 00000000000=
-00000
-[ 4614.442587] RDX: 0000000000000007 RSI: ffffb95acfa4ba70 RDI: ffffb95acfa=
-4bc88
-[ 4614.450557] RBP: ffffb95acfa4bae0 R08: ffff0a00ffffff05 R09: 00000000000=
-00070
-[ 4614.458527] R10: 0000000000000000 R11: ffffffffab67eaf0 R12: ffffb95acfa=
-4bcc8
-[ 4614.466493] R13: ffffffffac5d50f0 R14: 0000000000000000 R15: 00000000000=
-00000
-[ 4614.474473]  ? __cfi__RNvXs5_NtNtNtCs3o2tGsuHyou_4core3fmt3num3impyNtB9_=
-7Display3fmt+0x10/0x10
-[ 4614.484118]  ? _RNvNtCs3o2tGsuHyou_4core3fmt5write+0x1d2/0x250
+Thank you for the review.
 
-This happens because core::fmt::write() calls
-core::fmt::rt::Argument::fmt(), which currently has CFI disabled:
+On Thu, Apr 10, 2025 at 02:36:25PM +0300, Laurent Pinchart wrote:
+> Hi Tommaso,
+> 
+> Thank you for the patch.
+> 
+> On Thu, Apr 10, 2025 at 10:12:15AM +0200, Tommaso Merciai wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > 
+> > Prepare for adding support for RZ/G3E and RZ/V2HP SoCs, which have a
+> > CRU-IP that is mostly identical to RZ/G2L but with different register
+> > offsets and additional registers. Introduce a flexible register mapping
+> > mechanism to handle these variations.
+> > 
+> > Define the `rzg2l_cru_info` structure to store register mappings and
+> > pass it as part of the OF match data. Update the read/write functions
+> > to check out-of-bound accesses and use indexed register offsets from
+> > `rzg2l_cru_info`, ensuring compatibility across different SoC variants.
+> > 
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> > ---
+> > Changes since v2:
+> >  - Implemented new rzg2l_cru_write/read() that now are checking out-of-bound
+> >    accesses as suggested by LPinchart.
+> >  - Fixed AMnMBxADDRL() and AMnMBxADDRH() as suggested by LPinchart.
+> >  - Update commit body
+> > 
+> > Changes since v4:
+> >  - Mark __rzg2l_cru_write_constant/__rzg2l_cru_read_constant
+> >    as __always_inline
+> > 
+> >  .../platform/renesas/rzg2l-cru/rzg2l-core.c   | 46 ++++++++++++-
+> >  .../renesas/rzg2l-cru/rzg2l-cru-regs.h        | 66 ++++++++++---------
+> >  .../platform/renesas/rzg2l-cru/rzg2l-cru.h    |  4 ++
+> >  .../platform/renesas/rzg2l-cru/rzg2l-video.c  | 58 ++++++++++++++--
+> >  4 files changed, 139 insertions(+), 35 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+> > index eed9d2bd08414..abc2a979833aa 100644
+> > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+> > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+> > @@ -22,6 +22,7 @@
+> >  #include <media/v4l2-mc.h>
+> >  
+> >  #include "rzg2l-cru.h"
+> > +#include "rzg2l-cru-regs.h"
+> >  
+> >  static inline struct rzg2l_cru_dev *notifier_to_cru(struct v4l2_async_notifier *n)
+> >  {
+> > @@ -269,6 +270,9 @@ static int rzg2l_cru_probe(struct platform_device *pdev)
+> >  
+> >  	cru->dev = dev;
+> >  	cru->info = of_device_get_match_data(dev);
+> > +	if (!cru->info)
+> > +		return dev_err_probe(dev, -EINVAL,
+> > +				     "Failed to get OF match data\n");
+> 
+> Can this happen ?
 
-library/core/src/fmt/rt.rs:
-171     // FIXME: Transmuting formatter in new and indirectly branching to/=
-calling
-172     // it here is an explicit CFI violation.
-173     #[allow(inline_no_sanitize)]
-174     #[no_sanitize(cfi, kcfi)]
-175     #[inline]
-176     pub(super) unsafe fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+Well, in theory no.
+Good catch.
 
-This causes a Control Protection exception, because FineIBT has sealed
-off the original function's endbr64.
+Will drop the if (!cru->info) check in v7.
+Meanwhile I will add your tag.
 
-This makes rust currently incompatible with FineIBT. Add a Kconfig
-dependency that prevents FineIBT from getting turned on by default
-if rust is enabled.
+Thanks!
 
-Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
----
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 4b9f378e05f6..b31811a92286 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2367,7 +2367,7 @@ config STRICT_SIGALTSTACK_SIZE
-=20
- config CFI_AUTO_DEFAULT
- 	bool "Attempt to use FineIBT by default at boot time"
--	depends on FINEIBT
-+	depends on FINEIBT && !RUST
- 	default y
- 	help
- 	  Attempt to use FineIBT by default at boot time. If enabled,
---=20
-2.49.0.504.g3bcea36a83-goog
+Regards,
+Tommaso
 
+> 
+> >  
+> >  	irq = platform_get_irq(pdev, 0);
+> >  	if (irq < 0)
+> > @@ -317,8 +321,48 @@ static void rzg2l_cru_remove(struct platform_device *pdev)
+> >  	rzg2l_cru_dma_unregister(cru);
+> >  }
+> >  
+> > +static const u16 rzg2l_cru_regs[] = {
+> > +	[CRUnCTRL] = 0x0,
+> > +	[CRUnIE] = 0x4,
+> > +	[CRUnINTS] = 0x8,
+> > +	[CRUnRST] = 0xc,
+> > +	[AMnMB1ADDRL] = 0x100,
+> > +	[AMnMB1ADDRH] = 0x104,
+> > +	[AMnMB2ADDRL] = 0x108,
+> > +	[AMnMB2ADDRH] = 0x10c,
+> > +	[AMnMB3ADDRL] = 0x110,
+> > +	[AMnMB3ADDRH] = 0x114,
+> > +	[AMnMB4ADDRL] = 0x118,
+> > +	[AMnMB4ADDRH] = 0x11c,
+> > +	[AMnMB5ADDRL] = 0x120,
+> > +	[AMnMB5ADDRH] = 0x124,
+> > +	[AMnMB6ADDRL] = 0x128,
+> > +	[AMnMB6ADDRH] = 0x12c,
+> > +	[AMnMB7ADDRL] = 0x130,
+> > +	[AMnMB7ADDRH] = 0x134,
+> > +	[AMnMB8ADDRL] = 0x138,
+> > +	[AMnMB8ADDRH] = 0x13c,
+> > +	[AMnMBVALID] = 0x148,
+> > +	[AMnMBS] = 0x14c,
+> > +	[AMnAXIATTR] = 0x158,
+> > +	[AMnFIFOPNTR] = 0x168,
+> > +	[AMnAXISTP] = 0x174,
+> > +	[AMnAXISTPACK] = 0x178,
+> > +	[ICnEN] = 0x200,
+> > +	[ICnMC] = 0x208,
+> > +	[ICnMS] = 0x254,
+> > +	[ICnDMR] = 0x26c,
+> > +};
+> > +
+> > +static const struct rzg2l_cru_info rzgl2_cru_info = {
+> > +	.regs = rzg2l_cru_regs,
+> > +};
+> > +
+> >  static const struct of_device_id rzg2l_cru_of_id_table[] = {
+> > -	{ .compatible = "renesas,rzg2l-cru", },
+> > +	{
+> > +		.compatible = "renesas,rzg2l-cru",
+> > +		.data = &rzgl2_cru_info,
+> > +	},
+> >  	{ /* sentinel */ }
+> >  };
+> >  MODULE_DEVICE_TABLE(of, rzg2l_cru_of_id_table);
+> > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
+> > index 1c9f22118a5d9..86c3202862465 100644
+> > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
+> > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
+> > @@ -10,71 +10,77 @@
+> >  
+> >  /* HW CRU Registers Definition */
+> >  
+> > -/* CRU Control Register */
+> > -#define CRUnCTRL			0x0
+> >  #define CRUnCTRL_VINSEL(x)		((x) << 0)
+> >  
+> > -/* CRU Interrupt Enable Register */
+> > -#define CRUnIE				0x4
+> >  #define CRUnIE_EFE			BIT(17)
+> >  
+> > -/* CRU Interrupt Status Register */
+> > -#define CRUnINTS			0x8
+> >  #define CRUnINTS_SFS			BIT(16)
+> >  
+> > -/* CRU Reset Register */
+> > -#define CRUnRST				0xc
+> >  #define CRUnRST_VRESETN			BIT(0)
+> >  
+> >  /* Memory Bank Base Address (Lower) Register for CRU Image Data */
+> > -#define AMnMBxADDRL(x)			(0x100 + ((x) * 8))
+> > +#define AMnMBxADDRL(x)			(AMnMB1ADDRL + (x) * 2)
+> >  
+> >  /* Memory Bank Base Address (Higher) Register for CRU Image Data */
+> > -#define AMnMBxADDRH(x)			(0x104 + ((x) * 8))
+> > +#define AMnMBxADDRH(x)			(AMnMB1ADDRH + (x) * 2)
+> >  
+> > -/* Memory Bank Enable Register for CRU Image Data */
+> > -#define AMnMBVALID			0x148
+> >  #define AMnMBVALID_MBVALID(x)		GENMASK(x, 0)
+> >  
+> > -/* Memory Bank Status Register for CRU Image Data */
+> > -#define AMnMBS				0x14c
+> >  #define AMnMBS_MBSTS			0x7
+> >  
+> > -/* AXI Master Transfer Setting Register for CRU Image Data */
+> > -#define AMnAXIATTR			0x158
+> >  #define AMnAXIATTR_AXILEN_MASK		GENMASK(3, 0)
+> >  #define AMnAXIATTR_AXILEN		(0xf)
+> >  
+> > -/* AXI Master FIFO Pointer Register for CRU Image Data */
+> > -#define AMnFIFOPNTR			0x168
+> >  #define AMnFIFOPNTR_FIFOWPNTR		GENMASK(7, 0)
+> >  #define AMnFIFOPNTR_FIFORPNTR_Y		GENMASK(23, 16)
+> >  
+> > -/* AXI Master Transfer Stop Register for CRU Image Data */
+> > -#define AMnAXISTP			0x174
+> >  #define AMnAXISTP_AXI_STOP		BIT(0)
+> >  
+> > -/* AXI Master Transfer Stop Status Register for CRU Image Data */
+> > -#define AMnAXISTPACK			0x178
+> >  #define AMnAXISTPACK_AXI_STOP_ACK	BIT(0)
+> >  
+> > -/* CRU Image Processing Enable Register */
+> > -#define ICnEN				0x200
+> >  #define ICnEN_ICEN			BIT(0)
+> >  
+> > -/* CRU Image Processing Main Control Register */
+> > -#define ICnMC				0x208
+> >  #define ICnMC_CSCTHR			BIT(5)
+> >  #define ICnMC_INF(x)			((x) << 16)
+> >  #define ICnMC_VCSEL(x)			((x) << 22)
+> >  #define ICnMC_INF_MASK			GENMASK(21, 16)
+> >  
+> > -/* CRU Module Status Register */
+> > -#define ICnMS				0x254
+> >  #define ICnMS_IA			BIT(2)
+> >  
+> > -/* CRU Data Output Mode Register */
+> > -#define ICnDMR				0x26c
+> >  #define ICnDMR_YCMODE_UYVY		(1 << 4)
+> >  
+> > +enum rzg2l_cru_common_regs {
+> > +	CRUnCTRL,	/* CRU Control */
+> > +	CRUnIE,		/* CRU Interrupt Enable */
+> > +	CRUnINTS,	/* CRU Interrupt Status */
+> > +	CRUnRST, 	/* CRU Reset */
+> > +	AMnMB1ADDRL,	/* Bank 1 Address (Lower) for CRU Image Data */
+> > +	AMnMB1ADDRH,	/* Bank 1 Address (Higher) for CRU Image Data */
+> > +	AMnMB2ADDRL,    /* Bank 2 Address (Lower) for CRU Image Data */
+> > +	AMnMB2ADDRH,    /* Bank 2 Address (Higher) for CRU Image Data */
+> > +	AMnMB3ADDRL,    /* Bank 3 Address (Lower) for CRU Image Data */
+> > +	AMnMB3ADDRH,    /* Bank 3 Address (Higher) for CRU Image Data */
+> > +	AMnMB4ADDRL,    /* Bank 4 Address (Lower) for CRU Image Data */
+> > +	AMnMB4ADDRH,    /* Bank 4 Address (Higher) for CRU Image Data */
+> > +	AMnMB5ADDRL,    /* Bank 5 Address (Lower) for CRU Image Data */
+> > +	AMnMB5ADDRH,    /* Bank 5 Address (Higher) for CRU Image Data */
+> > +	AMnMB6ADDRL,    /* Bank 6 Address (Lower) for CRU Image Data */
+> > +	AMnMB6ADDRH,    /* Bank 6 Address (Higher) for CRU Image Data */
+> > +	AMnMB7ADDRL,    /* Bank 7 Address (Lower) for CRU Image Data */
+> > +	AMnMB7ADDRH,    /* Bank 7 Address (Higher) for CRU Image Data */
+> > +	AMnMB8ADDRL,    /* Bank 8 Address (Lower) for CRU Image Data */
+> > +	AMnMB8ADDRH,    /* Bank 8 Address (Higher) for CRU Image Data */
+> > +	AMnMBVALID,	/* Memory Bank Enable for CRU Image Data */
+> > +	AMnMBS,		/* Memory Bank Status for CRU Image Data */
+> > +	AMnAXIATTR,	/* AXI Master Transfer Setting Register for CRU Image Data */
+> > +	AMnFIFOPNTR,	/* AXI Master FIFO Pointer for CRU Image Data */
+> > +	AMnAXISTP,	/* AXI Master Transfer Stop for CRU Image Data */
+> > +	AMnAXISTPACK,	/* AXI Master Transfer Stop Status for CRU Image Data */
+> > +	ICnEN,		/* CRU Image Processing Enable */
+> > +	ICnMC,		/* CRU Image Processing Main Control */
+> > +	ICnMS,		/* CRU Module Status */
+> > +	ICnDMR,		/* CRU Data Output Mode */
+> > +	RZG2L_CRU_MAX_REG,
+> > +};
+> > +
+> >  #endif /* __RZG2L_CRU_REGS_H__ */
+> > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
+> > index 8b898ce05b847..00c3f7458e20a 100644
+> > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
+> > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
+> > @@ -80,6 +80,10 @@ struct rzg2l_cru_ip_format {
+> >  	bool yuv;
+> >  };
+> >  
+> > +struct rzg2l_cru_info {
+> > +	const u16 *regs;
+> > +};
+> > +
+> >  /**
+> >   * struct rzg2l_cru_dev - Renesas CRU device structure
+> >   * @dev:		(OF) device
+> > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > index cd69c8a686d35..c82db80c33552 100644
+> > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > @@ -42,16 +42,66 @@ struct rzg2l_cru_buffer {
+> >  /* -----------------------------------------------------------------------------
+> >   * DMA operations
+> >   */
+> > -static void rzg2l_cru_write(struct rzg2l_cru_dev *cru, u32 offset, u32 value)
+> > +static void __rzg2l_cru_write(struct rzg2l_cru_dev *cru, u32 offset, u32 value)
+> >  {
+> > -	iowrite32(value, cru->base + offset);
+> > +	const u16 *regs = cru->info->regs;
+> > +
+> > +	/*
+> > +	 * CRUnCTRL is a first register on all CRU supported SoCs so validate
+> > +	 * rest of the registers have valid offset being set in cru->info->regs.
+> > +	 */
+> > +	if (WARN_ON(offset >= RZG2L_CRU_MAX_REG) ||
+> > +	    WARN_ON(offset != CRUnCTRL && regs[offset] == 0))
+> > +		return;
+> > +
+> > +	iowrite32(value, cru->base + regs[offset]);
+> > +}
+> > +
+> > +static u32 __rzg2l_cru_read(struct rzg2l_cru_dev *cru, u32 offset)
+> > +{
+> > +	const u16 *regs = cru->info->regs;
+> > +
+> > +	/*
+> > +	 * CRUnCTRL is a first register on all CRU supported SoCs so validate
+> > +	 * rest of the registers have valid offset being set in cru->info->regs.
+> > +	 */
+> > +	if (WARN_ON(offset >= RZG2L_CRU_MAX_REG) ||
+> > +	    WARN_ON(offset != CRUnCTRL && regs[offset] == 0))
+> > +		return 0;
+> > +
+> > +	return ioread32(cru->base + regs[offset]);
+> >  }
+> >  
+> > -static u32 rzg2l_cru_read(struct rzg2l_cru_dev *cru, u32 offset)
+> > +static __always_inline void
+> > +__rzg2l_cru_write_constant(struct rzg2l_cru_dev *cru, u32 offset, u32 value)
+> >  {
+> > -	return ioread32(cru->base + offset);
+> > +	const u16 *regs = cru->info->regs;
+> > +
+> > +	BUILD_BUG_ON(offset >= RZG2L_CRU_MAX_REG);
+> > +
+> > +	iowrite32(value, cru->base + regs[offset]);
+> >  }
+> >  
+> > +static __always_inline u32
+> > +__rzg2l_cru_read_constant(struct rzg2l_cru_dev *cru, u32 offset)
+> > +{
+> > +	const u16 *regs = cru->info->regs;
+> > +
+> > +	BUILD_BUG_ON(offset >= RZG2L_CRU_MAX_REG);
+> > +
+> > +	return ioread32(cru->base + regs[offset]);
+> > +}
+> > +
+> > +#define rzg2l_cru_write(cru, offset, value) \
+> > +	(__builtin_constant_p(offset) ? \
+> > +	 __rzg2l_cru_write_constant(cru, offset, value) : \
+> > +	 __rzg2l_cru_write(cru, offset, value))
+> > +
+> > +#define rzg2l_cru_read(cru, offset) \
+> > +	(__builtin_constant_p(offset) ? \
+> > +	 __rzg2l_cru_read_constant(cru, offset) : \
+> > +	 __rzg2l_cru_read(cru, offset))
+> > +
+> >  /* Need to hold qlock before calling */
+> >  static void return_unused_buffers(struct rzg2l_cru_dev *cru,
+> >  				  enum vb2_buffer_state state)
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
