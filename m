@@ -1,250 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2CC20D4F9;
-	Thu, 10 Apr 2025 09:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C638267B7C;
+	Thu, 10 Apr 2025 09:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278142; cv=fail; b=PKgG/Ligm31iszdjJR6e1mevKANNVR0EZAij0CQ1lMyZrI4k8iKs/OjwAKLDQu+kCC2S2NFTxXQtuLvOjS0DpXVHBtyQDMfq+tagBqCrfPYiTSrNxa2caCrIzBR/lEupkVD+7CapXzisyKd5K69j7X7E9ZzSasbqJTq4DiQewlI=
+	t=1744278147; cv=fail; b=gGEFNut6uvUfdEMP1H8b6/kpW7+Vao54xiLEIMY3i+oTIkBVc3c7501I/SWmPdRVV1VPNJT8+zEo2vhKBC16WfRpnQ9pbRBvZnt5MEYg3Fj9/v06KWV5bRS0AP6Q1YjkV6wb8xS5t42b5UPEbhJ6Lf5BrOG4S8SzzAiqSqreqYQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278142; c=relaxed/simple;
-	bh=ER4J4bcSUxayrjsGOW8QySHiym5usE2OmsBKpstQYOg=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rUpQTbAE+iwV/TyzK1V3pqDUy8k8tY1ddZb5uAjFojKW09zGDqdpPi7Sk5WV1wlHjcAXoTL4cn80pLMAlC1AtSyVag33nnE46MfqLdeEIdEN+QucQPKz0OdIv4Ep3GzLRnMnZ1xfFevrhOyXks64v4Z1lyObHkz7jBc3UedNSxU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=acauC2GH; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744278147; c=relaxed/simple;
+	bh=UGhljcDLmbfVr+xIb+A8Zq5mH+53yZocM1XVk9XKZCI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jFOJw1JeM3o8udvmjlQ0S5evxcbSUrYzOHmY1mgZBMXi8Q+5TJIvnpFlwGoJgx5i3ompcIfwADzkznQU9Px7IWcIBoDdTP0kOAK6Zd3craxe4KBILZyO15dymGlK843Ef3Xtn9mHlbL1tpqikh6DVbweEs47TQ44qDVRKG4xeUQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=M7jXcM7r; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=SKM8QirJ; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="acauC2GH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744278141; x=1775814141;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ER4J4bcSUxayrjsGOW8QySHiym5usE2OmsBKpstQYOg=;
-  b=acauC2GHlqasW+6YIPzorQlUCybtTUjtvEHPs+wKXpRTjr2we88RvEn+
-   AYR6Xmob9LmUNhUmSUqB/VDFPu2bU6+QdqrC7CB02YLS/ozpk1YB1ZqR4
-   okAzzZibOVhJjWU6tFS/WnT7Hq4LA0mliNMXgfz1VfCOCGYwLTNuPCaaW
-   9cibbK9LzJXdxGxqgFpG3twf//qSDv8d2OEJlC49rmsdao15nQnX23r9B
-   L++s7927yw/4S6DlwBqOxsvjLmnGoZN+koqDPMrlnKgVEl+xPMTX6lcBc
-   KXoc381oIWPBsHU8xqx8LK57mpRQsbouxM9f6djoKBYyQ6TK8PTp6Nwos
-   w==;
-X-CSE-ConnectionGUID: Rzzb8Z8FSAeVvefXu6WgAQ==
-X-CSE-MsgGUID: 7XC27s6AQQCNvdNZ5ClThQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="48492340"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="48492340"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 02:42:19 -0700
-X-CSE-ConnectionGUID: jLAyvi/xSluSDcX4OcynqA==
-X-CSE-MsgGUID: TJeQkOkNTUOK+0ae+it9Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="134038040"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 02:42:20 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 10 Apr 2025 02:42:18 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 10 Apr 2025 02:42:18 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 10 Apr 2025 02:42:18 -0700
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="M7jXcM7r";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="SKM8QirJ"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A82DHB001301;
+	Thu, 10 Apr 2025 04:42:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=N1RPv15ZtntXIN67
+	wtAVZtf7e4We1SLUIbwRnCSXHZQ=; b=M7jXcM7rErOPC+rNrbEwjkdgC1C+S7IQ
+	1mfJp8V39sRM65by6B5OTCQpsM0stRTAbKxLAlR9YkihplEvyqWvVyY+qnh6bWAX
+	XIyZ10rxEB40AfPdqQf1SNemoyyQ90nXBLaRM0g5Un4HhvxwMKvJ9Foglgw6n6tC
+	h1AQuSvhr/FkFROrJjkU9KYHnSVunBV3L6mH/ddL+IFvCkSyNme4gCgIFi3n3g3X
+	K6b98xrzRSJHZlL4C5B9aUkGNh//3pqP2GHh4atv9pNWNBAUnLh+Hxg7M7eHKvP2
+	cfGIIgoubD7akmoBvDKlAvr6sAtK8d7xhUYy5kX+RVjPOxsHCm0I6g==
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2040.outbound.protection.outlook.com [104.47.70.40])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 45xa4bg41m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 04:42:21 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KwXAFALuW4gXQtOqRrZg8j1etdyhgQgZGDfELBvQJqe/wuW7f+rmTG0TDxD5c+xQysI0+B2KDwxQhauVCPCewBNNXYQc34qUcEioTX/c+bMaELmJ2E90SQFOIQd8v5I/hiLHgsOiXfGo6OpXXmERyYjkxWYmSG0uJGUpVTTQ4jvEpsMQONAHz3hokaZt54YdG+GHk+1Zg5deaK7eD7Q61CdaJrPKrzshuF27mFkTZeNXS6qfDABhm5V41eEl+wB9+ZgwnhplFHtDkO1b1hSo45TG7Z+fJKRTiny4TdjoWRmZ1SVgv61LeeCju/QvWxcVem6SBLYa9Y3704rdZwSZVw==
+ b=ZmI3nVxnb1c0uITT/33Ywss4yXCFLwN0nZxtZwcvM3aL0UnMRVZe1qiJpvvCikyjqLFJNePeYuW3pLZs2vxStn/+Rn8nlyrFX6YRQL5POMmk6575URf0PbKc1Y/z5ECAc1TKGblWOIxhvho79Mro6CiR0nEtqE/wswllEx38/+UtTaT1tLR2Cro6LdRkuAPWc6Rbldj/Sf6rAml7cnf0yB7iXnymriFb/ckG+C7x1LixPLlRLOd6N+cxsB8O3UBCJWxOVCwcUuE+YcRATJ5tsC3twO2zZiBjDgD+bHUE1m8EmoFZZIvyzjVfXvMbenAPlJ0DrlI2vItivmSp51pLDQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U5S/3aEWdy7c9wX3cenpEthRf3gkWQP+RhuVSfwe+/0=;
- b=khd9+Qd5nJwPOebU1fPUzr8nwEU35ZsWkrBR9mV1rYJdfi47pXYWTtHKTWSl+41/SGT/MqvGjwV8IoVVQwOemP8voMxcF2Nm6KDi6Fr95q34irl5dxj/wkAUeifmLOtbWwPs1C3r+galJbUUiH7vPStTu2V328kfMuwZ4cTAW5NBsCX8sH0XwTOVYfe+86ngF7tYzEYgYJsWCFUMR8X5GLeI2oHQWxjuwvL8RV8PLUCeXNtjhfxOSSAYx8w7PpD4ISSQb7QAHq8x5yfcwmYrCFS324zkRf9o13ivPOsUHsEZDja1emaKz/s0z7ckdosq+B7gnDijeQAUIjS+cJvfmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
- LV3PR11MB8580.namprd11.prod.outlook.com (2603:10b6:408:1ae::17) with
+ bh=N1RPv15ZtntXIN67wtAVZtf7e4We1SLUIbwRnCSXHZQ=;
+ b=URDFFVO/0faoi1n5xOR5mJE5SFR99RrkiF4nmk1KczrTx6zd5QR+f/79TzRpLBCB7nEntMhwCi/uuFZJlxcrtDUre1zn3e9Ryq7PDGx/9bL3ElvRAOiK96nt+zbEyni2+eavM/oCAj9LJeEj+cFXr3ak/cuB+2K+ezwtzcVrgpgXdZ1tRH2yaYa0ZwbGfVtUlppt49kIvWixd8zzNAIMY7IlKrILnI2+Qn393aJYy8KwhW4KLsognubojPsGHWSUtprK5hVQF7T3ZheDJYJUsu8tp3XwsK6+eh5Di61aK8mJNuYyf5d6+WCrOpK/SF84Q80rb2galY9aDLopQ/WbLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N1RPv15ZtntXIN67wtAVZtf7e4We1SLUIbwRnCSXHZQ=;
+ b=SKM8QirJpQDmZuVPEZ4G0q73uNDaatLxXi6JLbuRV7OS4X71Jaf9b3sHxL3OkUivbSMbRJrlivbwjXBkthFTTN46GFNnxOi7DP4RiAgOB0NOtrlrjKnoC+Mz36rou7Nz1Rc0gdCQIlOnnxTjsfOjQc8jx4zVIhI+GRmf0hcOl0w=
+Received: from BL0PR01CA0013.prod.exchangelabs.com (2603:10b6:208:71::26) by
+ PH7PR19MB5581.namprd19.prod.outlook.com (2603:10b6:510:134::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Thu, 10 Apr
- 2025 09:42:00 +0000
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::4af6:d44e:b6b0:fdce]) by DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::4af6:d44e:b6b0:fdce%7]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 09:42:00 +0000
-Message-ID: <917bb3c8-e084-4790-b0ac-f0433cfca758@intel.com>
-Date: Thu, 10 Apr 2025 17:41:45 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/8] perf sched: Introduce stats tool
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>
-CC: <ravi.bangoria@amd.com>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
-	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
-	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
-	<sshegde@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
-	<ananth.narayan@amd.com>, <sandipan.das@amd.com>, <peterz@infradead.org>,
-	<acme@kernel.org>, <james.clark@arm.com>, <namhyung@kernel.org>,
-	<irogers@google.com>, <mingo@redhat.com>
-References: <20250311120230.61774-1-swapnil.sapkal@amd.com>
-Content-Language: en-US
-From: "Chen, Yu C" <yu.c.chen@intel.com>
-In-Reply-To: <20250311120230.61774-1-swapnil.sapkal@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR06CA0219.apcprd06.prod.outlook.com
- (2603:1096:4:68::27) To DM4PR11MB6020.namprd11.prod.outlook.com
- (2603:10b6:8:61::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Thu, 10 Apr
+ 2025 09:42:14 +0000
+Received: from BN3PEPF0000B077.namprd04.prod.outlook.com
+ (2603:10b6:208:71:cafe::97) by BL0PR01CA0013.outlook.office365.com
+ (2603:10b6:208:71::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.23 via Frontend Transport; Thu,
+ 10 Apr 2025 09:42:07 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
+ designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
+ client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ BN3PEPF0000B077.mail.protection.outlook.com (10.167.243.122) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.13
+ via Frontend Transport; Thu, 10 Apr 2025 09:42:13 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 52D49406540;
+	Thu, 10 Apr 2025 09:42:12 +0000 (UTC)
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.23])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 4123E820259;
+	Thu, 10 Apr 2025 09:42:12 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: [PATCH v2 0/2]  ASoC: Add codec driver for Cirrus Logic CS48L32 DSP
+Date: Thu, 10 Apr 2025 10:42:10 +0100
+Message-Id: <20250410094212.1155529-1-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|LV3PR11MB8580:EE_
-X-MS-Office365-Filtering-Correlation-Id: a80a855f-928b-4bf1-764c-08dd7813f0df
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B077:EE_|PH7PR19MB5581:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 856dc3df-2980-490b-0cfb-08dd7813f945
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NWozdEZ6VkVzMlNoL0cxUFdMTklhSnRJbWM1Ym5pbllSUlRQOE1sYUM3cGRY?=
- =?utf-8?B?YU9JNnZ0dFMvemxDcHlZSVZKR0JMOEF6Vjg2Yk5sRVEyKzRnRDg0NTVTSGc3?=
- =?utf-8?B?V1NKQi9RTEFkWUR1N2JaV0lCbDVsRmV2M1BMRytaN1hKOTl1aVdjaForWEM2?=
- =?utf-8?B?ajAxYnZWTHU1dFI3WXB0YVlsTTJGWm9YYUc5SGFiMk9qUnUxbUxhc2UzdFpC?=
- =?utf-8?B?elEwNjdlT3E0aE5xdkJOUE5NUzZmbFFPL1BLdWtXRW91UXgyMS9lbURvbW02?=
- =?utf-8?B?ZGh4OUMyY2twSXg5TzBlUnF1NlFHUkFRVmRjbzFESDlsL2NKeWxyaDRmWURr?=
- =?utf-8?B?YkZROUJlWU45cFk4azdiSzgxaVorOVIyWnYwV3J4dWs0TkZ2cDkwZmQxVFA1?=
- =?utf-8?B?anBWMVVTb0ZYVmMvSFlrdkd2bzVTSnZFbzB1ZWRlLzFDQVc1bVI4NFY2YzZa?=
- =?utf-8?B?QnpTZDVFeDM1OW9QdDJ4enYyNWtEdkhpSTZ3VDNVWXF1dmtqWnZtU0k2OUNi?=
- =?utf-8?B?a2dyQjIxYURLb1E0UEg0SDFMWW9mT3NGRG1KdENwMGkrRkJZV1Vpa1ZnMjNp?=
- =?utf-8?B?TTNzVFkvclUxYkRKN051OTRVT0pNM2YyK0puUnJjcVZrNTU0N25vNEY4YUVv?=
- =?utf-8?B?cUNDU1c3SndiWDJ1N3FhUkJIWkNvcmZPYWkyZnh4WWZoSlFwNHFROGQ3cnZL?=
- =?utf-8?B?ZmZ2d3JZVEE0K2xUdzFBWXh0c2FRVytvU1MxYnh6a3BJczhEcUt5NGg5SVdN?=
- =?utf-8?B?ZEVXTzVsQlh5TXNmL3RVTW1PVTF3dHMvNDRkNVQ5bXFHY2pRNy9HOXVoT3Jj?=
- =?utf-8?B?Y2FlQWg3ZUswMnhiMWZldUdNMXlEcGNiQ0xlZm0yNzBOUUlWV29XK0ZidVNy?=
- =?utf-8?B?dHFaZEoxRXlFdHc2SUNpVW5jcjBnTTJPOVhaVFRQaU9KOEpMSlhseTFUQXR4?=
- =?utf-8?B?L082b2Q3L0hGVm5RUUVlS203RG5NeU45N2x3WmcwcWtFZkV2eUFVZW4wb3Rz?=
- =?utf-8?B?K0huL0xiWXdEUWxhOVBNT29KTk9WaU43Qm81OWdPbS94NllFL0JqS0dUS0kz?=
- =?utf-8?B?K2k3cUZuSHZ5V1FBelVuQ2RWTmJEVVEwWGtHYTVWNTZDc3dMWHdkcUNOR0JS?=
- =?utf-8?B?NmpaQmxRdGxOTkZmZE9KckhTY2xRbVQ3TDVjUkNvYkYzN3RhRE1vRnN6SzRy?=
- =?utf-8?B?K2dLY0FXM2lLZlhhVXZPNDlHQUJvTVR4Ykhma2JvT29ENXpZaVFGOTM3MS80?=
- =?utf-8?B?SndsYkZQQkRFTzFQRmNJcWI4VUZnYlNFUlFjNjZzVGEwMlR4TDVJZkN1Zmk4?=
- =?utf-8?B?TGo0bEQrUW5zNUFhNkpqd3Q3Z2N3b3BuMHdGU1JGdm1QZEJKTW9tNzMvdjVE?=
- =?utf-8?B?alg4S0lycDJYRGpLNXU2MnBuWm9XRlF2MDl4NCtReXNnckhJb0plQU0xZG1E?=
- =?utf-8?B?WlVmSkg5ZGkzMHdNVXVsMjlIbGo2cytGSjBjS29mZEticUQ1TDhrNnV4Q1Z0?=
- =?utf-8?B?S0t4MXFlK1E1aDFYYlZQeVM5M3d5VGJjL3hmYjQ0cFVJQ2svWVE1VklWT1pH?=
- =?utf-8?B?eVFaV3BhaGpXNGdtOUF4bUJUalZZbDM0cUxteld6aGFNYms3MzNHaVpRTFlq?=
- =?utf-8?B?Wlhub3I1VlMrUGx4RFVDbHQ0bTF1dDNNRWJCRkRBMWNpZDI2SUhjeHk4ZE83?=
- =?utf-8?B?UWhneTBKZGZiZWlTVVhEa29meFE3c1grTnY5NFIyNm1BTGptUmVmWkJCTFVN?=
- =?utf-8?B?bjFtV3hwYnR2ZlJuNE9jY213S1E0YzY0dFp4Z2ZJMkcrRXFsTlJSbDdITllS?=
- =?utf-8?B?U3EwUTlKU250TGdkQzR5RFVaWHAvRTN6RHBVd3BhblVnMnFGaDd4c1ZtY2lu?=
- =?utf-8?Q?/KQjO5E3YwRhG?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YlRZRDVBWXlVSEJJTFJkU3BMdC9tSlJQWXdyd3ZUSWczTHBTUXFhSjFrYkds?=
- =?utf-8?B?ZzV0YW80cnRHbS83VnJrN3RZMzd0RUJ0UEFVNnJBdjE0R1I0anNqZm5iaDV5?=
- =?utf-8?B?eExjUytIMnQxZWs5OVZXVzBuZnkrYXRScnRDYStHd25VSUVKN0FBT2hoNWw0?=
- =?utf-8?B?Qm16eXp0d1oxRU5TckNoUitqWThuWDYzSHc2THg4eitCNGFjeDRsNGY0OTF2?=
- =?utf-8?B?NkQ2ZFFVQmhGaTY0cjJkK3RVWXJ6c0ZpK01pQ204Y0ZZNGxSYTNIamdXV3Ji?=
- =?utf-8?B?UFdRVWhsUGZUd2Q5dDl6SWNtMTVjQ0tsUUowR2lpSkJDeGFvUWtGRTlVSmVF?=
- =?utf-8?B?SDlHS0ZFUjNZZVJvK2VseXY1WkN1NWw4bVREdmVpWmJtWGRqYklUcm9MZ1VG?=
- =?utf-8?B?M2F4akdPVEQ4N0V6S0JEU3RKSjNPaEYrSnJZMW1CVXp6cnVBbmlBZGo5SHVO?=
- =?utf-8?B?dEV4R1JXV3M2MnN0VWVWY2xzelVObjdzcFhwRHJtbXUxVWdTa0xuWkRWVE8z?=
- =?utf-8?B?YW51dE0xQ3ZNcUoxSHYvNFFRQ1RIZXZXNnpZRzdZOVJSWmNiOUR5UGIxMkQy?=
- =?utf-8?B?Qm5lcVh2V2pCNGhiYUNJRzlmZ013NGNONWt6dE02T2c2K1J1dWFHSGMvVXdz?=
- =?utf-8?B?UUdjUUpvZG5iYUVRT004SG1Vc2dMUWNMWTRCNGI4VWZsclJmdXg1aEliYzNF?=
- =?utf-8?B?TG1UT281VWVhZXdnL1p5NUkzUVBISzZXa3VMbnNIaEZtNmpNNHJUWEFIaG54?=
- =?utf-8?B?eFYzbGt3WFdWNWVteGU4OUMwbWtYZHFSK2cyZVUxTUdDK0orUnFvMkUwY1NH?=
- =?utf-8?B?aEY0VmJacVRicmpvRW8vd0h5eTZjL0J5T1AraEdHMlg4NXUyZXZleG1lSkVW?=
- =?utf-8?B?QUZ1N3FpMGpNR3grN3FCa2RYUW5jdWFXVWpjK3F5Q3pRT2lJcGhLdCtnYlVw?=
- =?utf-8?B?V29GY2VLTUxQSVdWZ0pPRDd4VVFQOG9keUM4aUhLNGtOUk5WWDR3Y0l1Um5v?=
- =?utf-8?B?QVdvT1M0QyswamJvRHNtWUo0WlZndTN3TzdZbWh4QzQ5aUM5dExzSGZLc082?=
- =?utf-8?B?KzZJdjc2ZzFCc0VqTFFHTmpnR2dhRDFvbVZYSTExNDIxWGRxNDZwcXR3RDR6?=
- =?utf-8?B?a0ZLSkJFS0xyL3ZZQzNRbXB4eVNJMGptcVBFN0p4T1lkZm1uRGlqMnAwMDN6?=
- =?utf-8?B?aU5UZmtDR0hqSUxvcU1BVzJDUFllM1lpclBXa1VYcVlnWTVSZmtXR1htbmxr?=
- =?utf-8?B?MmxyZmxKTjZiS0VMVUhwVThCeEVoczVzTkpVUTNQWTVzMVVCaXRSUjF0bVda?=
- =?utf-8?B?em9UUFFFWDVhbWxkUEE2L0h1TDJaNHRES3hYRDJaQjh1andSZytacHNpWk5E?=
- =?utf-8?B?MjFQVVMxb0NHM05TUGhIQnVXTklnU3BiWVZaRkgyeWR3R2JmTC9pVlBiZTdC?=
- =?utf-8?B?K3hTb21EK04rRlZiWUdIMnVNdnZWQWtoOGpCdWRudWRLQksvbVZrT1V3cUVF?=
- =?utf-8?B?UXJpLzBoODBNbE56WDA1S2huczZUSEtHbjFxSHVELzJkWk9wRGZRYlRnZ0hT?=
- =?utf-8?B?QVZZYUc1aU5nYXBINFFnQXlHdzBGUzhWTjBVMXpCcS9qVmh4bWV1ck9nN3Zp?=
- =?utf-8?B?MmtpQnpZQUFhc2hpdlZweGh2VXdXUS92VU9ybnVZaW1xNnpQMWswb2crRTI0?=
- =?utf-8?B?dXVtcVNNWWNjWjNzZDFUbk9BU2xVeW1zUUpiUkNWY3lzWkJMQzhuTVB0YVgx?=
- =?utf-8?B?WFMzL2ZmKzlScC9iQ001bGZ3enFyZDY0a1FxNloxUVNHM29KbDlEbHJwaU9l?=
- =?utf-8?B?cHljQUZqektDR2xUa0h4SUtjSm0yVDkzTXRneWR4SE9aZGZtVlFTNUx3aGlK?=
- =?utf-8?B?ZzRqL1A3eVRPSmJLcFNoZ2lxMy9RQVlUbnZsNFBpZ1EycUhPWjIva1RLNjUy?=
- =?utf-8?B?TlFQUXU4TmtqcEhaZm8vYWxlU3NGdFZvL3AxdHRRMFdXUnpvbVlxWXA2a05E?=
- =?utf-8?B?NEo1bUJTMTRFdFhSNHJWMUJsL1JYTWIyT2htSWNJbmdtZzlvZXZrUGlRcmkv?=
- =?utf-8?B?ZHFNelBJdGJibG1kT0RmQStERTBjVVFkVlpCbU1WbkxFR2M1c2NLRDI5NWxT?=
- =?utf-8?Q?OvNNY7CAM+1Svv1ivbNkH101A?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a80a855f-928b-4bf1-764c-08dd7813f0df
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 09:42:00.0573
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|61400799027|36860700013|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?noChtx8OsPxWv1zXqheFMwe05XBOQps4aWmxaQu1gA8kJ4lyQakbztv2PN/I?=
+ =?us-ascii?Q?xpeNsnk5QLqgpVnfnk4XVxDtJ6W0hFizajNqSJCEeI5lpmJrh8W3V6jFnRAQ?=
+ =?us-ascii?Q?G1IUtr+oVxsP//GgM86b5sPBfuqzaNUeffDVIoc8k49LwjSSX2lT+CHss0DT?=
+ =?us-ascii?Q?22yuUUzgLJTUwUpfC3ZJq90YJ8PAtsYt45dGhxkzly6L7ShZNF2clTUcsDxB?=
+ =?us-ascii?Q?F2b8dseczdHejZ3HoGgDTT6hr+9XfvcFAe3Uk9WXMCoICAy8MTN/pI6VkJmg?=
+ =?us-ascii?Q?c9swq08aeG+gn1+dIrYJ5UkcFVJP6GJ2wNmNadT6fwQ41Vguj31BRaX6M5xT?=
+ =?us-ascii?Q?U5IybEujABI5VF8WHdkzylA6+b2GQTiYBQGxEAcaSYzy9aLGJ4/BpMzO5mfx?=
+ =?us-ascii?Q?Lgyd8dT2uK5BaYMV3ID0JaDjM1dpHzfF0GpqPh+5QQk3srhD1v2/Bk3zcHlu?=
+ =?us-ascii?Q?hQ7uaUN2xq/01AU6Ff6+LSQLeHYEtdoPyfqzlZ5TmP/dKBSuJy714/ahQqOP?=
+ =?us-ascii?Q?Nw6nNohKaGTulqY0oOO2KmxTSJkH1ZtBlSNtxhXVOrjfAlzx0CUYy5HhGRU1?=
+ =?us-ascii?Q?T2Hj/ad7xkBItmjCr9ttBMbSpDgd+J+srbEYjFo1zRY0puuCBvAzFqQHRy6f?=
+ =?us-ascii?Q?zcMIg2u4Dfi08DfS22Rt8wKmO5ZpgOPQIjIx9FTpAwd4mgPvykGwxQ+OhsSk?=
+ =?us-ascii?Q?ALDLahlZLvVYpxrjIShwfWd/5yoLgQSLVfLZ/wGIZzT5OMIF+4wKM1sOjpfm?=
+ =?us-ascii?Q?X4t/jnnAXy5829id8o3p7QgZd0sn23ongx1UJB8SuftOY1Nip3T42QW14iUZ?=
+ =?us-ascii?Q?cuFyEiBBijagcbCJ4z4cJo/CHUp+D7YWK+4S7cOkZoP/YUEVgPGJH6OCvnZQ?=
+ =?us-ascii?Q?zinmhUUQTb/pu6O5p5pF0QDfzLTlgPpdcBTP0RbDiZonfVttLLwcHgrWQP+m?=
+ =?us-ascii?Q?21jprBYidI226wRY25nsNRhg6xVWkA6HIWR1mSg4LFZ3Pl66lBwplg8k9DKG?=
+ =?us-ascii?Q?HcNhgoCGyvHBU497MrO52s5xVHXjX4eapaT3p9MnvS9nkxTqOLP8uOj/Y8CE?=
+ =?us-ascii?Q?lXzBozjhpNTBwGFJKcEu+8XXYeMfWz11jys76hIdNk+KqqELhH/FiFUKPeNn?=
+ =?us-ascii?Q?HeW5Y+a0tkcfrPXtmvjeLe9JE0cZAyum/8aHEKL00MYJqg2+oeO7TOTu0WWD?=
+ =?us-ascii?Q?y6EDjIa/H8zPDLojQYTjjtYJIZbQsfT9bJHGj8nrNeOOWI+yT2Od+GmE+DGf?=
+ =?us-ascii?Q?WC5PYpwXU4eAqVIBTBoU6mYviEHGBKFhZvJpsytnxNdRFyg5IlrjpSPK9aPM?=
+ =?us-ascii?Q?vUoGMXobT+7aMdkMIi1pSVLBlAbOQGCBB2IJ4MeDFLGpS39yXy1OHbPP6UX8?=
+ =?us-ascii?Q?OrbQs7kmgr1/3FoAk164oE0OKpj1Cdq+hqiRJDoM/HKJnFzm8xPdxO4UiEO5?=
+ =?us-ascii?Q?mjbDL1Cel5kQavVZMbVvekRtD3SGauqSgnmi1Pl4jwPvsHQu+ITOmANayVGA?=
+ =?us-ascii?Q?m/tnn81tEg7ssKQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(61400799027)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 09:42:13.6054
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hYayWu60By8sS/WDfSGydnN8PJs3xY8wUs5vZkrrjfZ3IMgfLMpjrV215p597feNbPSc1gTTY6pPJcwyAI4vkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8580
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 856dc3df-2980-490b-0cfb-08dd7813f945
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B077.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR19MB5581
+X-Proofpoint-ORIG-GUID: Fy2cGqM2c2z-eZlubshtPR5ZLS-pehYt
+X-Proofpoint-GUID: Fy2cGqM2c2z-eZlubshtPR5ZLS-pehYt
+X-Authority-Analysis: v=2.4 cv=B6W50PtM c=1 sm=1 tr=0 ts=67f7927d cx=c_pps a=bqH6H/OQt14Rv/FmpY1ebg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=XR8D0OoHHMoA:10 a=s63m1ICgrNkA:10
+ a=RWc_ulEos4gA:10 a=TDA31o14s-3B4xYcogsA:9 a=BGLuxUZjE2igh1l4FkT-:22
+X-Proofpoint-Spam-Reason: safe
 
-Hi Swapnil,
+The CS48L32 is a high-performance low-power audio DSP with analog and
+PDM digital inputs and support for low-power always-on voice-trigger
+functionality.
 
-On 3/11/2025 8:02 PM, Swapnil Sapkal wrote:
-> MOTIVATION
-> ----------
-> 
-> Existing `perf sched` is quite exhaustive and provides lot of insights
-> into scheduler behavior but it quickly becomes impractical to use for
-> long running or scheduler intensive workload. For ex, `perf sched record`
-> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
-> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
-> generates huge 56G perf.data for which perf takes ~137 mins to prepare
-> and write it to disk [1].
-> 
-> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
-> and generates samples on a tracepoint hit, `perf sched stats record` takes
-> snapshot of the /proc/schedstat file before and after the workload, i.e.
-> there is almost zero interference on workload run. Also, it takes very
-> minimal time to parse /proc/schedstat, convert it into perf samples and
-> save those samples into perf.data file. Result perf.data file is much
-> smaller. So, overall `perf sched stats record` is much more light weight
-> compare to `perf sched record`.
-> 
-> We, internally at AMD, have been using this (a variant of this, known as
-> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
-> of any scheduler code changes[3][4]. Prateek used v2[5] of this patch
-> series to report the analysis[6][7].
-> 
-> Please note that, this is not a replacement of perf sched record/report.
-> The intended users of the new tool are scheduler developers, not regular
-> users.
-> 
-> USAGE
-> -----
-> 
->    # perf sched stats record
->    # perf sched stats report
->    # perf sched stats diff
-> 
+This series adds the devicetree bindings and the ASoC codec driver.
 
-May I know the status of this patch set? I tested it on a 96 cores 
-system and it works as expected in general.
+Changes since V1:
+- Remove bogus use of 'i' local variable in dev_dbg() statement in
+  cs48l32_init_inputs()
 
-One nit question:
-Is perf.data and perf.data.old the default files
-for comparison if no files are provided in
-perf sched stats diff?
+Richard Fitzgerald (2):
+  ASoC: dt-bindings: Add Cirrus Logic CS48L32 audio DSP
+  ASoC: cs48l32: Add driver for Cirrus Logic CS48L32 audio DSP
 
+ .../bindings/sound/cirrus,cs48l32.yaml        |  196 +
+ MAINTAINERS                                   |    3 +
+ include/dt-bindings/sound/cs48l32.h           |   20 +
+ include/sound/cs48l32.h                       |   47 +
+ include/sound/cs48l32_registers.h             |  530 +++
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/cs48l32-tables.c             |  540 +++
+ sound/soc/codecs/cs48l32.c                    | 4073 +++++++++++++++++
+ sound/soc/codecs/cs48l32.h                    |  403 ++
+ 10 files changed, 5824 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs48l32.yaml
+ create mode 100644 include/dt-bindings/sound/cs48l32.h
+ create mode 100644 include/sound/cs48l32.h
+ create mode 100644 include/sound/cs48l32_registers.h
+ create mode 100644 sound/soc/codecs/cs48l32-tables.c
+ create mode 100644 sound/soc/codecs/cs48l32.c
+ create mode 100644 sound/soc/codecs/cs48l32.h
 
-thanks,
-Chenyu
-
+-- 
+2.39.5
 
