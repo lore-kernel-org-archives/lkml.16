@@ -1,102 +1,205 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward102a.mail.yandex.net (forward102a.mail.yandex.net [178.154.239.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCE825A323;
-	Thu, 10 Apr 2025 09:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC34F25DD02;
+	Thu, 10 Apr 2025 09:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277525; cv=none; b=o8bEGUcb08TZsauY77RIFsZhQqmaNvRW5OjVBCBw7qndORRLqGIjaxiuDmui1k2lqUD/piGeRakyMppqME7oQE4eal1qN6ZBdxFnkgRIDgGoNuUrxHg5wfxcITrlgts2XAZDq8vJpRTU4nkltk9uEp/8/R5bzBmQFxQtF9EGBJQ=
+	t=1744277537; cv=none; b=Wpw00+pA7tru89fkQK+8UoPv2Xpp9Xo3021Q4o1ubX7IuJnA45gWh+INo8kOxslly2t4RVCgmRys3fkshFjomfJZemfqYm0FpBQl4rneXHNVc3q37Af5/RoLYgZQryDMyLattY0iDWB+4JqEspZpS0l3KYGk/6EOZrPAaebjbfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277525; c=relaxed/simple;
-	bh=66it4yH7tDoSfnRmzcG6n3HPRYYxJKXim1LUwnZ/Mko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p22xa/Hl2nPIZiMK2YVBMlNlI+qNYt7Sf+ACgjnDrAtLDxakjyqZOQTPmB4JivkPomOxvR7A8E01Kb7KKKfzGwk9a/H+Ry5cAcdkfdKSbaG/LL76LoXneDaTSGLFJqjtiY8p+xeIMVx+Y7Wj5i4rOVh2Gt4LYSF8ZZc0PlEQsuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-52410fb2afeso604290e0c.3;
-        Thu, 10 Apr 2025 02:32:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744277520; x=1744882320;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kS7EOvqoYOcajjLsmybsnh3ImYRiKMLnTX10TiwzTFM=;
-        b=UYLuve1tP4kVxtzuU2sjFUP0O4YtUgItgdSCPgg+1sKQIWkLmla51Ar0mtIAyxZfDu
-         wXRKPomGpWm+II6Xt36CKGRSu4aYG19ONkexHLvgvqqiLg8FHzASIFBB2xt1drCKvnf8
-         Y4OLA4ijWpt3Nwn0qbuPK+wzDI/rfAj9ry0lLohbPb/jtn0KKecAUtedWvjqjyTJ3lzh
-         pDsjVCP/JphOK5AaN9T37rWrxYsXXzRKm12nH+Ig1R26zOJ87UVMdvY8azergkMEhqJu
-         Q9bFN9o3v04tjxLo/4WwZf49RXlalwwgjfgAPnofy7jZnS+M4Cj998dJ0VDHbdQ1bHEC
-         e2rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJNVQquDJJtMIzwYWxNjpd7dEaq+ljwvpMNB2isUHwf1MYNGfWDUDRmHv3cNV/tQEeU38zpgCaeZepLpPJ@vger.kernel.org, AJvYcCUPUPo0fxFlnEAUxgUZTP8L8UOepNyzRQra8MKSh45hhUxOs/+6i0LD2gJKOf/MquVvi1UmzNJMeM3Q@vger.kernel.org, AJvYcCUacpleOkwpfsiXGXGLi9rlsOPTMPTqkpGr2XKYuKMMA2+bH+WiFj7u9eaRWkZTHYPXVt2sTftXiKNdCuMx0IRz4I8=@vger.kernel.org, AJvYcCUs80SyS9+T4mjHRKwVZl8zzqscxgh1IAe9AVvItd8CAOuCDqUAlIm5bNgKe/nCY8GErXn4xowW8BLlsQ==@vger.kernel.org, AJvYcCW7Ws0WvjAw5Hkh+GB4T8HfYh9ebwYOPKxfjG8f2UqzIZ7F0YvkW4FbZZeg85dbl5gPVmbNeu6nfMA4@vger.kernel.org, AJvYcCWM87eRk0F5QDv6yh71EUgH4FUmMR6XA/O7E/6HzddQjFmz+MLEXqzwgwgSFvcKzU6aV0JOtriBLLYkA+BJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPC+R7IEsamzl2w+sYrKY9wcn1O83OxkcjASP0adTmGlx2UhId
-	TTpLlw4E5O7oiJjbDHuI4aJKZFuYy+f+kb250YTa5ZQ8bUlOHq4LzqJCJsWI
-X-Gm-Gg: ASbGncsFdKaBXKFkyMelpKMLRGlgy5XjO0pijVHAwq83UbahdDl30u7fZbUL/BWbHNw
-	48d/4f+vS0PH+rFBVfLYn4wzk3r3WVC3H5Mj0MMiio2zXt71EsRXHNy6e1/CUsh60t5fkvEC9uk
-	/1bWe1RvQfNubF7ncNASUVVkvVgarn2FlpISeSHdmkCjQjOqF+bvYnJPNoVB2gDyQgRUesNF964
-	PuEbxNtUhhFrUlhGL0sqT06JqEVg5Lk5TOstIAN27vXW5ozsz7o56KK8nc6crZVYRH0ITz4sodV
-	3LDQ7jYoSWL0ZorX907SzQpGMEBy0oqqb4W9NYj6o8226HGJ8E370VCmGNWWkp7lwHkf+b1TxdO
-	2lbNDgySqphe6cQ==
-X-Google-Smtp-Source: AGHT+IFh/ByO92CAT0S5umrbl0FafyQulh/UXibGZF9zlvY+uOnYgrOy+RYr5L77zDcY7CntRt/+4Q==
-X-Received: by 2002:a05:6122:2002:b0:523:91e8:324c with SMTP id 71dfb90a1353d-527b77ad3eamr667106e0c.8.1744277520629;
-        Thu, 10 Apr 2025 02:32:00 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd76289sm607282e0c.18.2025.04.10.02.32.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:32:00 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86d3ac0fec0so566519241.1;
-        Thu, 10 Apr 2025 02:32:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0XO/XyBHh55N5JAOgQ2smThKqL1c4pXXyPA9yOmleEtuTg8t8aSX/JO4SIOaNZ5/2UYVn3QUl1fwOid7PSOoBBKs=@vger.kernel.org, AJvYcCUGtSvbMzoHK/b0CcVhXKYvHGCOJPJoWy+M0QYKu9RBllXYEjxyPahQjM42ahIEc4AkP/0GibawQstCA4P+@vger.kernel.org, AJvYcCUcc5fuvrYCHmMc0FuUvg27ynH2wgSqPxFE5voShJ3ByGOYvDYqP25QmY/FrvWPquZnmepZrJe4DYaVMGRn@vger.kernel.org, AJvYcCUynedxK/xUPTgS1uXA80Zf1f+R7Snt9jZ9/h1q+YgCYpHe7lZXW7NgV+4kwnozxn2GWW4Kg4PqAu0i@vger.kernel.org, AJvYcCVgXUuGdnJxU1rDQ7PAAr6csQogk/WpkiuSfrGFY0VF0LnIX8AFbotDhMcKfJL13JszaTuirLWYbPKs@vger.kernel.org, AJvYcCWq9E9Bo6jYgIAlBIcXP8sDsps2xH/VnsrnNIq4z0d5uQbWcK3QckKx4IjTp0x6qiIt6HmBo6Yi+xCCXA==@vger.kernel.org
-X-Received: by 2002:a05:6102:158c:b0:4c1:b3a5:9fa with SMTP id
- ada2fe7eead31-4c9d6359c1fmr517018137.16.1744277519860; Thu, 10 Apr 2025
- 02:31:59 -0700 (PDT)
+	s=arc-20240116; t=1744277537; c=relaxed/simple;
+	bh=TCCRl9jIueVVg17Z3PWc+XwXDqaxSqlrioRauCJF9HE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VWG+m/PA/6lSngorRBohp1m1CGxRkOM8dsiI+XjAQ9aWyXf1cUmDa7GsBDe/FTDas4pwJ2q0YdX4UTKCk8UwP4fUlZ35Xb0e+HaI0lt4jLQQug4ZrpHreDjXOHMVc7ZzYYasNBmmfF+JSdh/xyhJdvBiXGYCdNwm5YFN19sGQpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=Wdmv1d8k; arc=none smtp.client-ip=178.154.239.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Wdmv1d8k"
+Received: from mail-nwsmtp-smtp-production-main-60.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-60.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1d:5b1c:0:640:ee42:0])
+	by forward102a.mail.yandex.net (Yandex) with ESMTPS id D672A60E4E;
+	Thu, 10 Apr 2025 12:32:05 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-60.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id tVbEbTALfqM0-lAk6mWQF;
+	Thu, 10 Apr 2025 12:32:05 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1744277525; bh=nK1yvymzih+AilMriCVCTOysmngjzRVZTXXMphFhjoY=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=Wdmv1d8kjqtDiBFp1kyCJyLsChS1/tpDM4kymVaTkWd4IM7vsdt/47chcEMQbUbic
+	 ZCZbPEVkGNXb9ubIeRLJxwzeqCVN8y9BcAheXroGeytVfGITLAnKHv9P0tQRMDiC/q
+	 hqumxhWSTxP1nV6qD8M6mBaCWN/53PxMuDCE1iFY=
+Authentication-Results: mail-nwsmtp-smtp-production-main-60.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Andrey Tsygunka <aitsygunka@yandex.ru>
+To: Matthieu CASTET <castet.matthieu@free.fr>,
+	Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Andrey Tsygunka <aitsygunka@yandex.ru>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH 1/1] usb: ueagle-atm: wait for a firmware upload to complete
+Date: Thu, 10 Apr 2025 12:31:46 +0300
+Message-Id: <20250410093146.3776801-2-aitsygunka@yandex.ru>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250410093146.3776801-1-aitsygunka@yandex.ru>
+References: <20250410093146.3776801-1-aitsygunka@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407191628.323613-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 11:31:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVHLcXKk0LTaKJi2h-of3sodBMRd9rDyAgERqjjuKWiWg@mail.gmail.com>
-X-Gm-Features: ATxdqUFmAIbDkaSh-MN1wygg8gK0xbO4usjQZameXLFYKwox8bXJjI978CoYbpA
-Message-ID: <CAMuHMdVHLcXKk0LTaKJi2h-of3sodBMRd9rDyAgERqjjuKWiWg@mail.gmail.com>
-Subject: Re: [PATCH v2 05/12] dt-bindings: serial: renesas: Document RZ/V2N SCIF
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Document SCIF bindings for the Renesas RZ/V2N (a.k.a R9A09G056) SoC.
-> The SCIF interface in Renesas RZ/V2N is identical to the one available
-> in RZ/V2H(P), so `renesas,scif-r9a09g057` will be used as a fallback,
-> allowing reuse of the existing driver without modifications.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Syzkaller reported:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+sysfs group 'power' not found for kobject 'ueagle-atm!adi930.fw'
+WARNING: CPU: 1 PID: 6804 at fs/sysfs/group.c:278 sysfs_remove_group+0x120/0x170 fs/sysfs/group.c:278
+Modules linked in:
+CPU: 1 PID: 6804 Comm: kworker/1:5 Not tainted 6.1.128 #1
+Hardware name: linux,dummy-virt (DT)
+Workqueue: events request_firmware_work_func
+Call trace:
+ sysfs_remove_group+0x120/0x170 fs/sysfs/group.c:278
+ dpm_sysfs_remove+0x9c/0xc0 drivers/base/power/sysfs.c:837
+ device_del+0x1e0/0xb30 drivers/base/core.c:3861
+ fw_load_sysfs_fallback drivers/base/firmware_loader/fallback.c:120 [inline]
+ fw_load_from_user_helper drivers/base/firmware_loader/fallback.c:158 [inline]
+ firmware_fallback_sysfs+0x880/0xa30 drivers/base/firmware_loader/fallback.c:234
+ _request_firmware+0xcc0/0x1030 drivers/base/firmware_loader/main.c:884
+ request_firmware_work_func+0xf0/0x240 drivers/base/firmware_loader/main.c:1135
+ process_one_work+0x878/0x1770 kernel/workqueue.c:2292
+ worker_thread+0x48c/0xe40 kernel/workqueue.c:2439
+ kthread+0x274/0x2e0 kernel/kthread.c:376
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:864
 
-Gr{oetje,eeting}s,
+When calling the usb-device probe() method, request_firmware_nowait()
+is called, an async task is created that creates a child device
+to load the firmware and waits (fw_sysfs_wait_timeout()) for the
+firmware to be ready. If an async disconnect event occurs for
+usb-device while waiting, we may get a WARN() when calling
+firmware_fallback_sysfs() about "no sysfs group 'power' found
+for kobject" because it was removed by usb_disconnect().
 
-                        Geert
+To avoid this, add a routine to wait for the firmware loading process
+to complete to prevent premature device disconnection.
 
+Fixes: b72458a80c75 ("[PATCH] USB: Eagle and ADI 930 usb adsl modem driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrey Tsygunka <aitsygunka@yandex.ru>
+---
+ drivers/usb/atm/ueagle-atm.c | 40 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 35 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/usb/atm/ueagle-atm.c b/drivers/usb/atm/ueagle-atm.c
+index cd0f7b4bd82a..eaa5ad316d89 100644
+--- a/drivers/usb/atm/ueagle-atm.c
++++ b/drivers/usb/atm/ueagle-atm.c
+@@ -570,6 +570,12 @@ MODULE_PARM_DESC(annex,
+ #define LOAD_INTERNAL     0xA0
+ #define F8051_USBCS       0x7f92
+ 
++struct uea_interface_data {
++	struct completion fw_upload_complete;
++	struct usb_device *usb;
++	struct usb_interface *intf;
++};
++
+ /*
+  * uea_send_modem_cmd - Send a command for pre-firmware devices.
+  */
+@@ -599,7 +605,8 @@ static int uea_send_modem_cmd(struct usb_device *usb,
+ static void uea_upload_pre_firmware(const struct firmware *fw_entry,
+ 								void *context)
+ {
+-	struct usb_device *usb = context;
++	struct uea_interface_data *uea_intf_data = context;
++	struct usb_device *usb = uea_intf_data->usb;
+ 	const u8 *pfw;
+ 	u8 value;
+ 	u32 crc = 0;
+@@ -669,15 +676,17 @@ static void uea_upload_pre_firmware(const struct firmware *fw_entry,
+ 	uea_err(usb, "firmware is corrupted\n");
+ err:
+ 	release_firmware(fw_entry);
++	complete(&uea_intf_data->fw_upload_complete);
+ 	uea_leaves(usb);
+ }
+ 
+ /*
+  * uea_load_firmware - Load usb firmware for pre-firmware devices.
+  */
+-static int uea_load_firmware(struct usb_device *usb, unsigned int ver)
++static int uea_load_firmware(struct uea_interface_data *uea_intf_data, unsigned int ver)
+ {
+ 	int ret;
++	struct usb_device *usb = uea_intf_data->usb;
+ 	char *fw_name = EAGLE_FIRMWARE;
+ 
+ 	uea_enters(usb);
+@@ -702,7 +711,7 @@ static int uea_load_firmware(struct usb_device *usb, unsigned int ver)
+ 	}
+ 
+ 	ret = request_firmware_nowait(THIS_MODULE, 1, fw_name, &usb->dev,
+-					GFP_KERNEL, usb,
++					GFP_KERNEL, uea_intf_data,
+ 					uea_upload_pre_firmware);
+ 	if (ret)
+ 		uea_err(usb, "firmware %s is not available\n", fw_name);
+@@ -2586,6 +2595,7 @@ static struct usbatm_driver uea_usbatm_driver = {
+ static int uea_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ {
+ 	struct usb_device *usb = interface_to_usbdev(intf);
++	struct uea_interface_data *uea_intf_data;
+ 	int ret;
+ 
+ 	uea_enters(usb);
+@@ -2597,8 +2607,23 @@ static int uea_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ 
+ 	usb_reset_device(usb);
+ 
+-	if (UEA_IS_PREFIRM(id))
+-		return uea_load_firmware(usb, UEA_CHIP_VERSION(id));
++	if (UEA_IS_PREFIRM(id)) {
++		uea_intf_data = devm_kzalloc(&usb->dev, sizeof(*uea_intf_data), GFP_KERNEL);
++		if (!uea_intf_data)
++			return -ENOMEM;
++
++		init_completion(&uea_intf_data->fw_upload_complete);
++		uea_intf_data->usb = usb;
++		uea_intf_data->intf = intf;
++
++		usb_set_intfdata(intf, uea_intf_data);
++
++		ret = uea_load_firmware(uea_intf_data, UEA_CHIP_VERSION(id));
++		if (ret)
++			complete(&uea_intf_data->fw_upload_complete);
++
++		return ret;
++	}
+ 
+ 	ret = usbatm_usb_probe(intf, id, &uea_usbatm_driver);
+ 	if (ret == 0) {
+@@ -2618,6 +2643,7 @@ static int uea_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ static void uea_disconnect(struct usb_interface *intf)
+ {
+ 	struct usb_device *usb = interface_to_usbdev(intf);
++	struct uea_interface_data *uea_intf_data;
+ 	int ifnum = intf->altsetting->desc.bInterfaceNumber;
+ 	uea_enters(usb);
+ 
+@@ -2629,6 +2655,10 @@ static void uea_disconnect(struct usb_interface *intf)
+ 		usbatm_usb_disconnect(intf);
+ 		mutex_unlock(&uea_mutex);
+ 		uea_info(usb, "ADSL device removed\n");
++	} else {
++		uea_intf_data = usb_get_intfdata(intf);
++		uea_info(usb, "wait for completion uploading firmware\n");
++		wait_for_completion(&uea_intf_data->fw_upload_complete);
+ 	}
+ 
+ 	uea_leaves(usb);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
