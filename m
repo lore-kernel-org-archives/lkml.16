@@ -1,163 +1,108 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85E51EB5EA;
-	Thu, 10 Apr 2025 15:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791BC1E5201
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744300168; cv=none; b=VovrbHcPYzGPNN5n4LSK3bljVZb1V7JPCw5Amav+TbMkpy7DuddQzyXfQsJ/DmxU1b/kTSP3Qhm2E2YJKbbWAJSb88CQ4YVL9pqgZ1f7uURXzKgiwlnIUh16k2mH6fuLRsDxgGHpqr/XOFpoki/DRAIMqnCFuDYZrYSFlmWZoMw=
+	t=1744300282; cv=none; b=j8fUEywFOIbgCg5ZHaCxBUDR/T/RxbQO9GFHr8XXHyFB7mugaYRwUjvYJgSrP9hQkgwT7rg6FPAMx1tyKarEpknivigwNEh3LzURJUHgBtLSxV5W/f7Ld5i169IU3+emgOWBYQbvAD9FVJKgi6zzDohDULOvCMqIQ9cdR3frvqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744300168; c=relaxed/simple;
-	bh=TumBwfA3bM/zLR60iDBfPvHTjAo0gUKZX34lLw0gDy4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T5nIPrz/2GD9IlrZxd4ywndpLtMgAuWbXRARYDZaMhxHd251bDsFnt+PZiChmxVTYErTvCNue4XYeXkTTNET3RRlqY5TJAfjuV56XA3IzOlZYNx/Hii2N5snqagdaD67g9uKtxc1b+mc87qskuxIAamm5C1bPnovd+fYQRYTLuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S45c1rUj; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744300282; c=relaxed/simple;
+	bh=I1HL4EhttE881MicAtF32b66FddNBn0rz1b+bJ5vSpI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ihXIq+mnf5XHXpsuohSku5tUK8KqUPlzpJcTdObEyBKbzJPaLMQG1rRS2xQxsnlVeRrclLjTHSNLB50pcwny56AjXwGsXZPXPF19xiWnDihbxuZj8Xt9xVk+iy7dslru2S5Hppv8vwaNI63oIXzC6mF7e59+MEGXz5fQs26IJsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IkZFaSgD; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S45c1rUj"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53ACS4Ht003741;
-	Thu, 10 Apr 2025 15:49:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=yzSzjC
-	iPSU54x5J110sqkDRqoduFVAsQAn5NqJ1YDrY=; b=S45c1rUj+0b1d3udzFSMZ+
-	AT//OUNfYyjZD/ggkJtM3jkqtc/6adZNYyZhiVoP6lAKF6j7fo68Jqs33U4zFjmF
-	YkQ3i1cEYASjh0GKng68UVbAkW3c0E9WC/vqcSSquaS/S6Mty/yepbcZVv1q+NRQ
-	n/XDiQgubR1N2x8pVj3cRS0lSxh5jCYg/TTk+E50GBiS1ZTsMnt3Djz+dt6m/n0M
-	k3F9JFDf7OHHNoT1btnVJ5ZxICKFEI+32+muIvZOG48/yOc/BFN7dyCtWvhYC5C6
-	bg5sAnR/z9myUYMSJrl6UvCwnTsD3a8YcIQo30/V/kPdMaLxf/wlcoFNHV7EpokQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xe13s41c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 15:49:04 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53AFQ5Yq020882;
-	Thu, 10 Apr 2025 15:49:03 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xe13s418-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 15:49:03 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53ADawx0013858;
-	Thu, 10 Apr 2025 15:49:02 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ufunxnwu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 15:49:02 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53AFn0D934144740
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 15:49:00 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2724F20043;
-	Thu, 10 Apr 2025 15:49:00 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 67AD020040;
-	Thu, 10 Apr 2025 15:48:56 +0000 (GMT)
-Received: from [9.124.208.29] (unknown [9.124.208.29])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 10 Apr 2025 15:48:56 +0000 (GMT)
-Message-ID: <7f6028fd-99f4-4f91-a660-cd036712844e@linux.ibm.com>
-Date: Thu, 10 Apr 2025 21:18:55 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IkZFaSgD"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22403329f9eso8455005ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744300280; x=1744905080; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WI+w75MsGfdj1Z+7uV4Y8gvQFBHXDpFpnvwgAEL/2AQ=;
+        b=IkZFaSgDMxVLDJYiztqhLWeJ9BKaBmCbT7F4CFXTzXGHk78dhVZw31jouCnNDop6qG
+         LyvJ2AGGW9B/NjGJES68OuKAKaLBwFvD2KGUWdvUlsG1f0aD8K6C+rGbK5ysE6vJ1dDv
+         +K+JpZcy29v0dUf1sfGwTYaAYrUFfG7GrYAzIQi7CH+jkldW1WG3aBanwL1UNOUAXBRV
+         bHMPWtECNA0qzJQhzQzy4ceyGFHvF2uUxZwwYnkpxqCNMe6h/tq8OFE5STxYBiSEa0NU
+         lfHoRRzZvrm0R3beELu0HF0TwdJm5QdJx8sDTJg7rPPsfd5OuFieaYBGI8NvdpPXr494
+         9s4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744300280; x=1744905080;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WI+w75MsGfdj1Z+7uV4Y8gvQFBHXDpFpnvwgAEL/2AQ=;
+        b=O5EUaq0xP51CYQOno/603tw8Nf9UbA9FLRx1RUqJiolwLHJoVtaS3dANKVijeeGP/s
+         Z5DIVg0F1Y7wYgnuiEa69eT90gEPn/mGAy8jYhCsz2BfJn45+wpe/tHcJkOuqhh+Znba
+         eSCQio6g6FZuKtQ6UTCFsdYNqLLgiV26hCT2Quio5SWKEvTOwBtVs4gW1mJPXz9LQjq3
+         y5D62Mwf+mWczE1vXnUmI8Ur5a6AHsWmDkjRuK2lHbRk0RxOtdjOy9qQ+nV8+ulVPuLG
+         zwq65Nkv2R/GRwNHva0OM7+dg4uCtqQvqAQAXsqPY9fkdvPlyivkqW+IIWRuZlbcQeQK
+         U/LA==
+X-Forwarded-Encrypted: i=1; AJvYcCUe/wva8iRfOCcZ2SqaO9mTkE2mOhN72WUveEUkJwSXUZlErjZT0CTcGJznkgowmU7WwkVw1h8vGcJ8i84=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8w2RcrGJSy7JBzWetb5PggyBxsrcsad0e0WwPNJQHIcQevWPj
+	BGuoJ3D2vn3PJADe/G/GDa9FrfqBvtV6VsaIiPg2sOSdGVB1jF8s79Mo5EWC2VJ3LUEKj0lMFoK
+	CMw==
+X-Google-Smtp-Source: AGHT+IHHdPvjX46b6rya58AVmth99Sr4qyG2wQ8QULk3PUwKRfJK74c4z91IfDSthvFsL0y+9dnZ4azBoYg=
+X-Received: from plsb7.prod.google.com ([2002:a17:902:b607:b0:229:2f8a:d4ba])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4cf:b0:220:d601:a704
+ with SMTP id d9443c01a7336-22be0302063mr29493945ad.18.1744300279479; Thu, 10
+ Apr 2025 08:51:19 -0700 (PDT)
+Date: Thu, 10 Apr 2025 08:51:18 -0700
+In-Reply-To: <BN9PR11MB5276385B4F4DB1919D4908CF8CB72@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 19/19] futex: Allow to make the private hash
- immutable.
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?=
- <andrealmeid@igalia.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
-References: <20250407155742.968816-1-bigeasy@linutronix.de>
- <20250407155742.968816-20-bigeasy@linutronix.de>
- <ced9c08c-a017-495f-978b-0c4d13992e5e@linux.ibm.com>
- <20250410152841.KypBTUMq@linutronix.de>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250410152841.KypBTUMq@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: sLO1o9SBXaHS2NqkpNMkjUD7kKMwUt6O
-X-Proofpoint-GUID: cwdYC3Pp8-y04t_1GNsMfz48tD2g1RKt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 adultscore=0
- suspectscore=0 priorityscore=1501 spamscore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504100112
+Mime-Version: 1.0
+References: <20250404211449.1443336-1-seanjc@google.com> <20250404211449.1443336-4-seanjc@google.com>
+ <BN9PR11MB5276385B4F4DB1919D4908CF8CB72@BN9PR11MB5276.namprd11.prod.outlook.com>
+Message-ID: <Z_fo9hPpSfpwi5Jn@google.com>
+Subject: Re: [PATCH 3/7] irqbypass: Take ownership of producer/consumer token tracking
+From: Sean Christopherson <seanjc@google.com>
+To: Kevin Tian <kevin.tian@intel.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	David Matlack <dmatlack@google.com>, Like Xu <like.xu.linux@gmail.com>, 
+	Yong He <alexyonghe@tencent.com>
+Content-Type: text/plain; charset="us-ascii"
 
-
-
-On 4/10/25 20:58, Sebastian Andrzej Siewior wrote:
-> On 2025-04-10 20:22:08 [+0530], Shrikanth Hegde wrote:
->> Hi Sebastian.
-> Hi Shrikanth,
+On Thu, Apr 10, 2025, Kevin Tian wrote:
+> > From: Sean Christopherson <seanjc@google.com>
+> > +int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer,
+> > +				 struct eventfd_ctx *eventfd)
+> >  {
+> >  	struct irq_bypass_consumer *tmp;
+> >  	struct irq_bypass_producer *producer;
+> >  	int ret;
+> > 
+> > -	if (!consumer->token ||
+> > -	    !consumer->add_producer || !consumer->del_producer)
+> > +	if (WARN_ON_ONCE(consumer->token))
+> > +		return -EINVAL;
+> > +
+> > +	if (!consumer->add_producer || !consumer->del_producer)
+> >  		return -EINVAL;
+> > 
+> >  	mutex_lock(&lock);
+> > 
+> >  	list_for_each_entry(tmp, &consumers, node) {
+> > -		if (tmp->token == consumer->token || tmp == consumer) {
+> > +		if (tmp->token == eventfd || tmp == consumer) {
+> >  			ret = -EBUSY;
+> >  			goto out_err;
+> >  		}
+> >  	}
 > 
->> It would be good option for the application to decide if it needs this.
-> 
-> You mean to have it as I introduced it here or something else?
-> 
+> the 2nd check 'tmp == consumer' is redundant. If they are equal 
+> consumer->token is not NULL then the earlier WARN_ON will be
+> triggered already.
 
-as you have introduced it here.
-
->> Using this option makes the perf regression goes away using previous number of buckets.
-> 
-> Okay, good to know. You test this on on ppc64le?
-
-Yes.
-
-> 
->> Acked-by: Shrikanth Hegde <sshegde@linux.ibm.com>
->>
->> base:
->> ./perf bench futex hash
->> Averaged 1556023 operations/sec (+- 0.08%), total secs = 10  <<-- 1.5M
->>
->> with series:
->> ./perf bench futex hash -b32768
->> Averaged 126499 operations/sec (+- 0.41%), total secs = 10   <<-- .12M
->>
->> ./perf bench futex hash -Ib32768
->> Averaged 1549339 operations/sec (+- 0.08%), total secs = 10  <<-- 1.5M
-> Thank you for testing.
-> …
->> nit: Does it makes sense to split this patch into futex and perf?
-> 
-> First I wanted to figure if we really do this. I have no idea if this
-> regression would show up in real world use case or just here as part of
-> the micro benchmark.
-> And if we do this, it would probably make sense to have one perf patch
-> which introduces -b & -I.  And then figure out if the additional option
-> to prctl should be part of the resize patch or not. Probably we should
-> enforce 0/1 of arg4 from the beginning so maybe folding this in makes
-> sense.
->
-
-ok.
-
-> Sebastian
-
+Oh, nice.  Good catch!  That check subtly gets dropped on the conversion to
+xarray, so it definitely makes sense to remove it in this patch.
