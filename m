@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014212836A6
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:41:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9063A284B47
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744285279; cv=none; b=nCLl7Hd/vDoqrIOs1UMLBg30KAAIrzQXrI80leet1EVzXLaRJPfro344kjs9toSIVcja9IBtkhx2x2k9AZf4ktoeuyh58ltPMS/qP0Dtijk4Jpw40rUr7aVJVOzaz+qLH/NKLGEARzMhZn25Oi69hu+/kOmVd3QOprmwSUlpeDM=
+	t=1744285281; cv=none; b=RUxXuvLspv+Zcu18s3nxWjDEXJPUNBzhM8+y+somjHix3agEFEH7ga+xBZaIoewvjG/ANk6nvvtWsj80GfqLkayy0bImB91RMrH3IGWHfkT6+FN1GpApuWUKSY2eQkTqX2fpEjxD9Q59Zq0Z8ZPDw7IWHAHU1/QSYtLetWlj8bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744285279; c=relaxed/simple;
-	bh=Xe+d02CG83R08Gc8sX/2gu0ycajhZ1Rrr/zsZ5RfWWA=;
+	s=arc-20240116; t=1744285281; c=relaxed/simple;
+	bh=F6amLIDQUFRoq7o9H5ZznvD/2tad4/3TkumHpgROHvE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZS3PBhiQU3BVqyUs8Q4dWsYtOapvRFTrXnOROcphCbyd+JqfR2V37aNgqubkN2hYSS6XEevWTHi47vZ0cwFmQzRnUJQK/CwEjDBbVzSvtnYvuLHiwPE/W3clgUn9hYoxE+cFuheARnfzhi6O0Ap968+swjXV/4Uq/HF7BHQNoTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BEKmiB0q; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=CaboLLYFbG6ITdzAnGwAnGQDTSGbvEsZTO4W1/274GDc1bu2gGr/fpnj+tQwxIWeti0zGsViSafUiNMwl2QbqJKwZhHeo0hc1jwKRTzlrERjwC1cgpWxv13o14Lic1EFt5L5fEq9yG0XDvCXi+WJTc19q4PxVzcD9uio5ICU1ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b3GnRhVH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BEKmiB0q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3318BC4CEDD;
-	Thu, 10 Apr 2025 11:41:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b3GnRhVH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE7B0C4CEEE;
+	Thu, 10 Apr 2025 11:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744285278;
-	bh=Xe+d02CG83R08Gc8sX/2gu0ycajhZ1Rrr/zsZ5RfWWA=;
+	s=k20201202; t=1744285281;
+	bh=F6amLIDQUFRoq7o9H5ZznvD/2tad4/3TkumHpgROHvE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=BEKmiB0qDeXrnAlF9JeulniDcVleD+VAadq+5N5Ky03i1q5spabCXmIu+xwAa3kcE
-	 mqA8SkBKiGBAQm6yrJTBzE4B0jyBsBD+QCcE7hKSQ2N/3dA+RcTCIVlcov7O/yXjhv
-	 6Wk7OCXDB90OGqdC0LEsrtvkcnLQ654glqbPdAXPYkQimgjHzEPhWcafiawIqZFjPP
-	 bTYCk1o87Nz/ekWrYF4vHmOGDz9fsRzomTEi9pymG6v0iXkoUjef5i3YAz64UmM4+W
-	 nRuWU2t+k41oYOgYwqnYmX5ywAbEG4Wubr7tJGp8sMC1EqEmfTzB5sxjwl4TDbb2g2
-	 x0NEAF0LaA6Hg==
+	b=b3GnRhVHYh8qPegXoQx+EUNzTsbNdojx6k+vSBid2yX7Ct82EOddOc3Hv/NYbc1Ee
+	 S/7pzWJieRWVzaUbW52uQ5Z/cX3JojW070pPccBLe6PVYauxmCIEjHdgb00eZF0CtN
+	 t9resfh9eVAfj8FIlRbGyvXHPqBQ4R6KdyzjIxKD4AXQB9ht1WooYRvcMwSF1CKyYU
+	 t+Ha0/+J5IcDYvuii8mLSaT0TW7069aJN63WwqzjFHfR35TyUGoVoHruRnXFlpstix
+	 aEJXtCVR7JeE0f59PdBZ8Vtabe0rnw3Sk6PM7VB9ueILyIWzrgfPULCrF1xygyc0hq
+	 25WnzfEPJDB3w==
 From: Daniel Wagner <wagi@kernel.org>
-Date: Thu, 10 Apr 2025 13:41:06 +0200
-Subject: [PATCH v4 03/14] nvmet-fcloop: refactor fcloop_nport_alloc and
- track lport
+Date: Thu, 10 Apr 2025 13:41:07 +0200
+Subject: [PATCH v4 04/14] nvmet-fcloop: refactor fcloop_delete_local_port
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-nvmet-fcloop-v4-3-7e5c42b7b2cb@kernel.org>
+Message-Id: <20250410-nvmet-fcloop-v4-4-7e5c42b7b2cb@kernel.org>
 References: <20250410-nvmet-fcloop-v4-0-7e5c42b7b2cb@kernel.org>
 In-Reply-To: <20250410-nvmet-fcloop-v4-0-7e5c42b7b2cb@kernel.org>
 To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
@@ -48,185 +47,66 @@ Cc: Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>,
  Daniel Wagner <wagi@kernel.org>
 X-Mailer: b4 0.14.2
 
-The checks for a valid input values are mixed with the logic to insert a
-newly allocated nport. Refactor the function so that first the checks
-are done.
-
-This allows to untangle the setup steps into a more linear form which
-reduces the complexity of the functions.
-
-Also start tracking lport when a lport is assigned to a nport. This
-ensures, that the lport is not going away as long it is still referenced
-by a nport.
+Use the newly introduced fcloop_lport_lookup instead
+of the open coded version.
 
 Signed-off-by: Daniel Wagner <wagi@kernel.org>
 ---
- drivers/nvme/target/fcloop.c | 107 ++++++++++++++++++++++++++-----------------
- 1 file changed, 64 insertions(+), 43 deletions(-)
+ drivers/nvme/target/fcloop.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
-index 2cce7649af276528360395b6d58f03183c11da20..a8134127ad8087190d674251a88545da3f8800d7 100644
+index a8134127ad8087190d674251a88545da3f8800d7..1a8ae33c1699be3b7a2a7170dff77e324c127ebb 100644
 --- a/drivers/nvme/target/fcloop.c
 +++ b/drivers/nvme/target/fcloop.c
-@@ -1028,6 +1028,9 @@ fcloop_nport_put(struct fcloop_nport *nport)
- 	list_del(&nport->nport_list);
- 	spin_unlock_irqrestore(&fcloop_lock, flags);
- 
-+	if (nport->lport)
-+		fcloop_lport_put(nport->lport);
-+
- 	kfree(nport);
- }
- 
-@@ -1234,6 +1237,25 @@ fcloop_nport_lookup(u64 node_name, u64 port_name)
- 	return nport;
+@@ -1256,32 +1256,32 @@ __fcloop_lport_lookup(u64 node_name, u64 port_name)
+ 	return NULL;
  }
  
 +static struct fcloop_lport *
-+__fcloop_lport_lookup(u64 node_name, u64 port_name)
++fcloop_lport_lookup(u64 node_name, u64 port_name)
 +{
 +	struct fcloop_lport *lport;
++	unsigned long flags;
 +
-+	list_for_each_entry(lport, &fcloop_lports, lport_list) {
-+		if (lport->localport->node_name != node_name ||
-+		    lport->localport->port_name != port_name)
-+			continue;
++	spin_lock_irqsave(&fcloop_lock, flags);
++	lport = __fcloop_lport_lookup(node_name, port_name);
++	spin_unlock_irqrestore(&fcloop_lock, flags);
 +
-+		if (fcloop_lport_get(lport))
-+			return lport;
-+
-+		break;
-+	}
-+
-+	return NULL;
++	return lport;
 +}
 +
  static ssize_t
  fcloop_delete_local_port(struct device *dev, struct device_attribute *attr,
  		const char *buf, size_t count)
-@@ -1272,8 +1294,8 @@ fcloop_delete_local_port(struct device *dev, struct device_attribute *attr,
- static struct fcloop_nport *
- fcloop_alloc_nport(const char *buf, size_t count, bool remoteport)
  {
--	struct fcloop_nport *newnport, *nport = NULL;
--	struct fcloop_lport *tmplport, *lport = NULL;
-+	struct fcloop_nport *newnport, *nport;
+-	struct fcloop_lport *tlport, *lport = NULL;
 +	struct fcloop_lport *lport;
- 	struct fcloop_ctrl_options *opts;
- 	unsigned long flags;
- 	u32 opts_mask = (remoteport) ? RPORT_OPTS : TGTPORT_OPTS;
-@@ -1288,10 +1310,8 @@ fcloop_alloc_nport(const char *buf, size_t count, bool remoteport)
- 		goto out_free_opts;
+ 	u64 nodename, portname;
+-	unsigned long flags;
+ 	int ret;
  
- 	/* everything there ? */
--	if ((opts->mask & opts_mask) != opts_mask) {
--		ret = -EINVAL;
-+	if ((opts->mask & opts_mask) != opts_mask)
- 		goto out_free_opts;
+ 	ret = fcloop_parse_nm_options(dev, &nodename, &portname, buf);
+ 	if (ret)
+ 		return ret;
+ 
+-	spin_lock_irqsave(&fcloop_lock, flags);
+-
+-	list_for_each_entry(tlport, &fcloop_lports, lport_list) {
+-		if (tlport->localport->node_name == nodename &&
+-		    tlport->localport->port_name == portname) {
+-			if (!fcloop_lport_get(tlport))
+-				break;
+-			lport = tlport;
+-			break;
+-		}
 -	}
- 
- 	newnport = kzalloc(sizeof(*newnport), GFP_KERNEL);
- 	if (!newnport)
-@@ -1307,60 +1327,61 @@ fcloop_alloc_nport(const char *buf, size_t count, bool remoteport)
- 	refcount_set(&newnport->ref, 1);
- 
- 	spin_lock_irqsave(&fcloop_lock, flags);
--
--	list_for_each_entry(tmplport, &fcloop_lports, lport_list) {
--		if (tmplport->localport->node_name == opts->wwnn &&
--		    tmplport->localport->port_name == opts->wwpn)
--			goto out_invalid_opts;
--
--		if (tmplport->localport->node_name == opts->lpwwnn &&
--		    tmplport->localport->port_name == opts->lpwwpn)
--			lport = tmplport;
-+	lport = __fcloop_lport_lookup(opts->wwnn, opts->wwpn);
-+	if (lport) {
-+		/* invalid configuration */
-+		fcloop_lport_put(lport);
-+		goto out_free_newnport;
- 	}
- 
- 	if (remoteport) {
--		if (!lport)
--			goto out_invalid_opts;
--		newnport->lport = lport;
--	}
--
--	list_for_each_entry(nport, &fcloop_nports, nport_list) {
--		if (nport->node_name == opts->wwnn &&
--		    nport->port_name == opts->wwpn) {
--			if ((remoteport && nport->rport) ||
--			    (!remoteport && nport->tport)) {
--				nport = NULL;
--				goto out_invalid_opts;
--			}
--
--			fcloop_nport_get(nport);
--
--			spin_unlock_irqrestore(&fcloop_lock, flags);
--
--			if (remoteport)
--				nport->lport = lport;
--			if (opts->mask & NVMF_OPT_ROLES)
--				nport->port_role = opts->roles;
--			if (opts->mask & NVMF_OPT_FCADDR)
--				nport->port_id = opts->fcaddr;
-+		lport = __fcloop_lport_lookup(opts->lpwwnn, opts->lpwwpn);
-+		if (!lport) {
-+			/* invalid configuration */
- 			goto out_free_newnport;
- 		}
- 	}
- 
--	list_add_tail(&newnport->nport_list, &fcloop_nports);
-+	nport = __fcloop_nport_lookup(opts->wwnn, opts->wwpn);
-+	if (nport) {
-+		if ((remoteport && nport->rport) ||
-+		    (!remoteport && nport->tport)) {
-+			/* invalid configuration */
-+			goto out_put_nport;
-+		}
- 
-+		/* found existing nport, discard the new nport */
-+		kfree(newnport);
-+	} else {
-+		list_add_tail(&newnport->nport_list, &fcloop_nports);
-+		nport = newnport;
-+	}
-+
-+	if (opts->mask & NVMF_OPT_ROLES)
-+		nport->port_role = opts->roles;
-+	if (opts->mask & NVMF_OPT_FCADDR)
-+		nport->port_id = opts->fcaddr;
-+	if (lport) {
-+		if (!nport->lport)
-+			nport->lport = lport;
-+		else
-+			fcloop_lport_put(lport);
-+	}
- 	spin_unlock_irqrestore(&fcloop_lock, flags);
- 
- 	kfree(opts);
--	return newnport;
-+	return nport;
- 
--out_invalid_opts:
 -	spin_unlock_irqrestore(&fcloop_lock, flags);
-+out_put_nport:
-+	if (lport)
-+		fcloop_lport_put(lport);
-+	fcloop_nport_put(nport);
- out_free_newnport:
-+	spin_unlock_irqrestore(&fcloop_lock, flags);
- 	kfree(newnport);
- out_free_opts:
- 	kfree(opts);
--	return nport;
-+	return NULL;
- }
+-
++	lport = fcloop_lport_lookup(nodename, portname);
+ 	if (!lport)
+ 		return -ENOENT;
  
- static ssize_t
 
 -- 
 2.49.0
