@@ -1,167 +1,101 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9DC26A0D4;
-	Thu, 10 Apr 2025 09:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9C726A0FF;
+	Thu, 10 Apr 2025 09:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278370; cv=none; b=s9hcc5rDHAo6ig8X1hYWLup6b18z9+h0ful/8s7ph0Jihi8YxkQ9OEIQSXxlvRjIYOQNcY0JD/dzjrzahpC4JibyuIoJHnKKHOYE/alnxEftW+WcnzLHc3LdPYLBUcTIcJv5owILUJAoVdbEQE5roaua6lFc2gB3DM5Emrb5i8s=
+	t=1744278372; cv=none; b=fiGnHJ1QyUsnGpgGYSEGHE+AT0Nej34qlsz01jcGQozGxhLYuTVeaFP9wOstosaa7kyv45RLD6ILwqsnD/DyXsjXw/KhSIanqBiV5ecUyIhwWaiBjaxXLazjG1WuyARTFMSnWbVwQc/PnZSKP6oQ6CC5e2vEzO+AgH1PwmGkh+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278370; c=relaxed/simple;
-	bh=4s3ZacDmF0acLH/4llQMYAZNHTv/D6yaEavN2T8m6+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uwZL2D8oNozCQUL03n0b1nhKGgnURl1WFZUL4v0EH0qS5UwjSyR1H3YUj2d/rWUF7nPH4WtsR4gkea+o/AuVKlzH6AggkvOavhgRqTaKsrOo5rI8sHv2wnyIvYtDTfS3kb3DR60BYUjoXKru4a8/RuJ71gZVcWqVjN0QqShIFh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OT6SR8K5; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1744278372; c=relaxed/simple;
+	bh=cngY2/urcvZ0wt9wEGOapP2KnXYfjkIGmayk8KPO/Tg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E3wI+GtazAgAX1KmvQDUyHpDLCI2c/znSp1Km/5eS+PgQvPGP7VZmXzFLjw8byvXozXXIq1XvlPxvRqhF82sbPxVYbDeNeSM9CH/PS2I1ogh9qn2+ADX66bbjzCGEkqFCWz2C4lgj/kLljdgZcZdqUIFiGczwM67vA9hbfwl3RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OT6SR8K5"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7376dd56f60so369154b3a.3;
-        Thu, 10 Apr 2025 02:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744278368; x=1744883168; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X/OI6E9F737xY7P25JwnmZaPm/Y8Wf+gvRZpSuTpy6E=;
-        b=OT6SR8K5twmenZmiGPtc5rp2i3q1k8aoQYIWf5Y9dHPXp3txA3BWCqOCLssQ3/br7Q
-         s8Jn7ZqN8/7kAd05XGpH/hUF4c1m3hl/GDtMlXb8c6Dejm47rGr5nDne1F5Bc7k3GeTW
-         K054+A6/fZ9c5V0+L3EmiXWIlkUUi7MjkRccKJMB+FbX2nauiWpqb1HhLOLGyafU3nl4
-         CTJ1lb+6oTBwTtZemZdkgjz+2dTRre0SwqudTs4UNArAMxc9e9hPztEPwDhQMdXmJgz6
-         thGFTGomyJG8HGd15dVgNydquU6LSEyME6A2GqzpHBHzVozFcLIdm8VcJYTrtBatUvzC
-         J/Xg==
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso240234241.1;
+        Thu, 10 Apr 2025 02:46:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744278368; x=1744883168;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X/OI6E9F737xY7P25JwnmZaPm/Y8Wf+gvRZpSuTpy6E=;
-        b=fVZmtHvy3SWgf9N/ogq5A8t1UBrLQPzAg6EYs5U7KQ4a9pPu2JZO0lmy1HCI8BvWsQ
-         aT/KR8DoMBMYpdKYN9anSX/+NWLgzZAu2bP/aztzNk2OgwCYheqR8bVkscdQu3GGB7/K
-         HLBKdhzSmgnafMF2Y0vH8HF+CpxJz89PBgwZFSWX0EuLdy5t9z5msEH6UBjdHTYliMMC
-         RKTAZF20irjrB+IVoGTUOhr80ApohKlHHG65z+ZVblcqmIkmI9VGEJCU5hqQxFCWXrZK
-         wVDmWh3wXGOw3ctO94AshIplxF0omhWviWfSTXo9pEQqNLw+IOMFSzsEguvc13xnt+re
-         qQeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCzsqaO+wXlZ5btUXgo+FdrnT88VlEbfibW8w8NxqIaObnUAvfCOeg+bAr83yq3u6I/mr1T5pN18D0NhCY@vger.kernel.org, AJvYcCW53aNvCgNKYxxCj+riRABWw1h2HXqJe4IfRyurHB/cMXKP6SIlc9Y6sn1xQnD6fGgJuP+hhXQeaJw3pWu+t78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMPYGNpIzcR38MFfBeWPClKwfCSGhF44dp3xlgTjEUv13xGGUP
-	cWN+WXJkdNyeDxx5ZuEKdLRn3jjPMZPOcdgZOzC0Fb/i1hEU+mlw
-X-Gm-Gg: ASbGncu4zER2uwxJNXMiogBwvxcQVxEPD/WyYE1R2Z9oanRzZRbnF2Tt5IL9/aoeXi/
-	Gw3QOeyz300stqWhj6TQfDTGEtTU9np92OKpNTzzEy/FNyDt+gk8uytWEfHesKp64UPoIMd5qjA
-	e3kCpOdd3eLtYN40o52b7RA0dEgcSGM7cyivxBQa2opTdI00N87k2laR/axR/+yHHHbFB3J2myC
-	WpdZmbZwbR9EPQdMQ/ssuSd+NSnocfAPLVOL1iZt0kz6/ikrVabu3hI0o8bRd8PZw7Ophs3iuov
-	DdZd1jTwWTggCqVw4JyDVtLiO9n5Eol58haZIl7Cpg3MdhuWyulqVVFf1nnpsv4Pw78VmDWkjsm
-	7fgiViZNf9BXmNww=
-X-Google-Smtp-Source: AGHT+IGxbykd1xi8RysmDEKp0xcBu26rSmEn29jOu9EKsE75TvAMZ2b+c2vZBXR06+5s39q7XPlTqg==
-X-Received: by 2002:a05:6a00:170b:b0:736:4110:5579 with SMTP id d2e1a72fcca58-73bc0a074eamr2649067b3a.2.1744278368431;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PxDHlscx+bggMtz8CWXRU6QwUOr08l3Z7PZVHbtMipk=;
+        b=C+BpGK1EfOm4Vu9Jm9xJAqJWMzx4M4K7/GJbpyheqxhjF4ryyTaehB0FbaRlgk1DLf
+         qdRFSjPGY0tB3vfXomGbjBrOYgsrAtbyo6ofpLKXVuLLk7NUl7mmnsKLaxu4YQbRx7Cx
+         uSxDCXQTfQIsWbL3keoDhakusOfVeylFkgmSFvf04Lpf2rY+PZllB5E/gV1F88JBxiQN
+         5nBBZIJEIMXjmqwCpegSPuBt/Cb+mO5PDf64/Pq2qham0xcJKtfAD9oa2GdyU29NtLbM
+         LUjiJSSao8NxSoX/1SfWwGYu1UlrCtxCLlK0i7zKGztDUtJ7dyQFlrv61Cdv2ciVaU0t
+         XdbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYaZsou/2ntW7MTtp6uyZj/qBXXHUjtSf1A7t20QGn1DvDdwIq/I4QKjU4y2eZP7Rv3UByXj+zefYC@vger.kernel.org, AJvYcCUaQjsb9toRDVnf6O4O6qCES0OFRECHO+q7ig3Dg+egtrBbLRpsSly6gnDPIFxDMxbTlGEI6MPPGeKxrAd8y2GlHBY=@vger.kernel.org, AJvYcCVEjq6WvVDyA8oaFvsQWMfjqo276V7KvQwdvM9vlVCDwl5kzbRqgkvpCiMmpBrUkTTocpyClE+lokha@vger.kernel.org, AJvYcCVv9wfDZoluYLqwSSa0HkvFKS9E4wdJXGJkcUwK21hA6s9cPsHocppddta7J6scIMeLer9ZDGlSX3k/fdwh@vger.kernel.org, AJvYcCW8kVAZafqRxOZWa92nTaCbu+OTPGWYGXwPYGAHFk/IejW0bF2G+DkMd5rK506Z0FKTABjLWgk8OwlnKQ==@vger.kernel.org, AJvYcCXsSjJ8F/zU6o1QmYrqlZnab8ghB8V3kUFd0Ay35YLR56za7HeB3pUEhwLjIzrfq3AhJMh1+cjYuAJQPcdk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/F1bnle22o2LS4raV4LoNSwZJe5Nqol3CQGXmBXbeZRfw9bYZ
+	m5pfSdccc/yMZQhoKHbPu767ybC1lcQgdnG1tLTtHRvEGEYFDjYKUgkpQcF6
+X-Gm-Gg: ASbGncsBx/zWIeRT6Gy/XPiw9XEpnRx5HoeH+5pZFY5h8psu4yZzimBWAjIS5gHVgV3
+	PaeN9TH2jfGUivuKFqPKhHgRUKxXIJRXvefEbSRU6eGKzx76hdwstyfV0yHzUCaIcdn3DZd/Ltc
+	ZR8wU1U1PiVoO9MI97AfYgaX5Mvf/2QLBp+OlCiS/cTBi46SO/FAvJpdpPsrDhEuHN9fVC4iJZp
+	0vW53aEs9Dz7iG3EN3YCyI3kLdwDHJw3Tpo1Et/65Qu2gTPGZEUXSHj3UbZ78/6Et9XInHrUbX5
+	hbs+V88s71tLj+PSFIABHlnRu+GQyqzT9AZeL4kkP6WZLzl1td1ujqRc4wLPrFKvbwaXEebmzzK
+	MN+8=
+X-Google-Smtp-Source: AGHT+IFYjJ6UO4xqCEEQYg8LgSZ5axEngXXZ3ZKkwJBhDVsF97WE/H1sOAZSizKpt3UZMI4O+b6B3w==
+X-Received: by 2002:a05:6102:3f48:b0:4c4:e414:b4eb with SMTP id ada2fe7eead31-4c9d34d094bmr1431658137.12.1744278368429;
         Thu, 10 Apr 2025 02:46:08 -0700 (PDT)
-Received: from ?IPV6:2409:4080:204:a537:5da0:ac0c:6934:f07? ([2409:4080:204:a537:5da0:ac0c:6934:f07])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2b34dsm2816398b3a.4.2025.04.10.02.46.05
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c98edc91sm519434137.29.2025.04.10.02.46.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:46:07 -0700 (PDT)
-Message-ID: <70de56d3-1cdd-466b-b2b9-a4f69981d696@gmail.com>
-Date: Thu, 10 Apr 2025 15:16:03 +0530
+        Thu, 10 Apr 2025 02:46:08 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86d3805a551so262385241.3;
+        Thu, 10 Apr 2025 02:46:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSOujFEfpUUbY77+rBpK+PuSNylD46MvCV4ccQKTNo8I3BcNKiiXtkr0qOK/f+fm1H2myICvAkYbrA@vger.kernel.org, AJvYcCVXGk9W6/3i4mcJ10Udnr/N56kQ7YeICjHYtLDCoXJQcy/jfliay6H6YPcxWykMByWW4TvpjkH0chyG@vger.kernel.org, AJvYcCW5xbHLu6Rb6ZVvQVfFPyhQ/aSwifMi7N0h018SnYozML63eUtO2tDq4HtFPni8+FqybXIQ0JY1iH8ong==@vger.kernel.org, AJvYcCWlsQjkSy+L8a0yHPCIjxchjO7CkAkzcaUtdhdGUQRAJQdVeX7EhIapoSkrlHJKt3cisZfnK/XC/H5e5Hnp@vger.kernel.org, AJvYcCXGBkK5IIhmBvkHJI/18BzlkW1tLt73/y0EJZ5N7PxBjAnTfeXz/fNFaJ3CsW8G5JXyUdwcBf3CtslaDiuoRQRNY7I=@vger.kernel.org, AJvYcCXZGCiLYXJRcrJQJ6vZEp1oFfZou7567tpZxMKRDlv9Fi4jd5Uwpz5QGmT8a9DXVWJnzNn6KfLVVWqur2+k@vger.kernel.org
+X-Received: by 2002:a05:6102:50a2:b0:4bb:c4ff:5cb9 with SMTP id
+ ada2fe7eead31-4c9d34d7aabmr1176571137.15.1744278367820; Thu, 10 Apr 2025
+ 02:46:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in
- read helpers
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Stefano Garzarella <sgarzare@redhat.com>, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250409205536.210202-1-purvayeshi550@gmail.com>
- <Z_dh4tRIa6xxAWQ2@kernel.org>
- <t2ri7facyvtmt6rx6xwcjos7rgtyiln7cywl2gt4effgukeejc@f3ml4apdh4zs>
- <fab2bb2d-a78e-4130-a5fd-bf07430210c7@gmail.com>
- <Z_eHei1jT0YoPgki@kernel.org>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <Z_eHei1jT0YoPgki@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407191628.323613-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 10 Apr 2025 11:45:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXqKga_tUS6HHovnxBNCqHQx_tkMNt=WJvAO2z+743LRg@mail.gmail.com>
+X-Gm-Features: ATxdqUHWB9OPOI4UpxDtPd26THswkWl9HKWMeZllh96mN7-b7XJ6OGyeEYXngtk
+Message-ID: <CAMuHMdXqKga_tUS6HHovnxBNCqHQx_tkMNt=WJvAO2z+743LRg@mail.gmail.com>
+Subject: Re: [PATCH v2 07/12] clk: renesas: rzv2h-cpg: Sort compatible list
+ based on SoC part number
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/04/25 14:25, Jarkko Sakkinen wrote:
-> On Thu, Apr 10, 2025 at 02:12:07PM +0530, Purva Yeshi wrote:
->> On 10/04/25 13:21, Stefano Garzarella wrote:
->>> On Thu, Apr 10, 2025 at 09:14:58AM +0300, Jarkko Sakkinen wrote:
->>>> On Thu, Apr 10, 2025 at 02:25:36AM +0530, Purva Yeshi wrote:
->>>>> Fix Smatch-detected error:
->>>>> drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
->>>>> uninitialized symbol 'value'.
->>>>> drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
->>>>> uninitialized symbol 'value'.
->>>>> drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
->>>>> uninitialized symbol 'value'.
->>>>>
->>>>> Call tpm_buf_read() to populate value but do not check its return
->>>>> status. If the read fails, value remains uninitialized, causing
->>>>> undefined behavior when returned or processed.
->>>>>
->>>>> Initialize value to zero to ensure a defined return even if
->>>>> tpm_buf_read() fails, avoiding undefined behavior from using
->>>>> an uninitialized variable.
->>>>
->>>> How does tpm_buf_read() fail?
->>>
->>> If TPM_BUF_BOUNDARY_ERROR is set (or we are setting it), we are
->>> effectively returning random stack bytes to the caller.
->>> Could this be a problem?
->>>
->>> If it is, maybe instead of this patch, we could set `*output` to zero in
->>> the error path of tpm_buf_read(). Or return an error from tpm_buf_read()
->>> so callers can return 0 or whatever they want.
->>>
->>> Thanks,
->>> Stefano
->>>
->>
->> Hi Jarkko, Stefano,
->> Thank you for the review.
->>
->> I've revisited the issue and updated the implementation of tpm_buf_read() to
->> zero out the *output buffer in the error paths, instead of initializing the
->> return value in each caller.
->>
->> static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t count,
->> void *output)
->> {
->> 	off_t next_offset;
->>
->> 	/* Return silently if overflow has already happened. */
->> 	if (buf->flags & TPM_BUF_BOUNDARY_ERROR) {
->> 		memset(output, 0, count);
->> 		return;
->> 	}
->>
->> 	next_offset = *offset + count;
->> 	if (next_offset > buf->length) {
->> 		WARN(1, "tpm_buf: read out of boundary\n");
->> 		buf->flags |= TPM_BUF_BOUNDARY_ERROR;
->> 		memset(output, 0, count);
->> 		return;
->> 	}
->>
->> 	memcpy(output, &buf->data[*offset], count);
->> 	*offset = next_offset;
->> }
-> 
-> Please don't touch this.
+On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reorder the compatible entries in `rzv2h_cpg_match[]` to follow a
+> numerical sequence based on the SoC part numbers.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Got it, thanks!
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.16.
 
-> 
->>
->> This approach ensures that output is always zeroed when the read fails,
->> which avoids returning uninitialized stack values from the helper functions
->> like tpm_buf_read_u8(), tpm_buf_read_u16(), and tpm_buf_read_u32().
->>
->> Does this solution look acceptable for the next version of the patch?
->>
->> Best regards,
->> Purva Yeshi
-> 
-> BR, Jarkko
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
