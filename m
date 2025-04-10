@@ -1,56 +1,144 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7580A1DF991;
-	Thu, 10 Apr 2025 11:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03F71DF991;
+	Thu, 10 Apr 2025 11:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744283181; cv=none; b=mD+6iqTVT9uyvUFuAmOQrbFTYp45kLgTJ8NXkuFBfPXY0l8YRBbMfBW7nTxKHk7ET/NkfycEiPLPCmzN/vguvMVe8DRinONFj21VIiKvbh40YStrq8pMh9R0BAVVnP1lB7/N+8G/7OnGL3nfjtBgtSLMm2+RIx+NDY8oyve5Ay4=
+	t=1744283227; cv=none; b=cF2b56UlpNURpkny8yEVaAnlq34cLP/3YlWXxNtPh+avgBTMmfw0Cosll/nhOpOss9drUTVlY8pqME2qblki+7ZjcerwxBhSQFfgQ8MOWzP/raC338OnK9tooZZv2hBgj3+AOoXKTWUeLxt/YcORFS7VKIBLrkouLFKa6ALH7fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744283181; c=relaxed/simple;
-	bh=AwuYDhxevKB+JgmDNskH6m+IaqfRvSBXWyZej42Fs/k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=noGgQO36tl40ZVtmGM4Ey54ViHfBgzubwXJp2bkZP3fhGSOaXSM8VpOJCLINz+UVgwfOeYWdSpA3H/1HrraPb+IfzvxXPRHmaX/5Gi34CjuH9AapNpygVRSce0f3Cyv8fdjsLsKVm1uW/nbKxPU51kNqTrXZ/J2a07LkzItpmxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=MoW5F/pN; arc=none smtp.client-ip=45.145.95.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="MoW5F/pN"
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1744283165; bh=AwuYDhxevKB+JgmDNskH6m+IaqfRvSBXWyZej42Fs/k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=MoW5F/pNORr0VSzalNiRIh57Vzyn2rXf6oLbcBLryLS0Kjd7k5zVgJW6U1MGAcEdW
-	 LaleM5OmbYJBWtiGZELMKH+osEVMdSNr++HDLjKH0GF69sQSNUNHoRHkW/+ZsuZiJv
-	 8maAoU1HzOCdn2u4zlMG3uqq/X0XKqlu+0YQChXUfGduzQ4QMEW4J45KodE7xRwkHH
-	 xjR3SW+J3oetlt2wdZFLJNJ6EF7wm24nYo1dgYvi1kyXOQlM97rxdEFXD2ct0c6fzA
-	 JdNwjJ+MUpxw5e2R105zS6cCgUI/mRmleUK98UMu5u9fn8wIZAJqiyZwb49V3s4shI
-	 PQkSdTTJWxhzg==
-To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
-Cc: open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] wifi: ath9k: use devm for irq and ioremap
- resource
-In-Reply-To: <20250410004130.49620-1-rosenp@gmail.com>
-References: <20250410004130.49620-1-rosenp@gmail.com>
-Date: Thu, 10 Apr 2025 13:06:05 +0200
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87plhktgwy.fsf@toke.dk>
+	s=arc-20240116; t=1744283227; c=relaxed/simple;
+	bh=o2o+6a4xQL07Dgpaqul/mMfczU2V+raqlFx4x3NQwp8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tIHWcYsoHfLWBrUGpTAjLJx+7t/7EvV1sVQ/23LoV4kbn1aix4KtG2Z3Xg751yKT/SKisyoKm4P9HTUZN+2xG3osagIesOWjqxHufnWX/LZag1wXGH+Zg4bC/SiveBvPJ8XtWzJ4jJdVd4JxRWx2wGZuP22jcsBfBVlY/YV0r4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EC60106F;
+	Thu, 10 Apr 2025 04:07:04 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DB0023F6A8;
+	Thu, 10 Apr 2025 04:07:02 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: peterhuewe@gmx.de,
+	jarkko@kernel.org,
+	jgg@ziepe.ca,
+	sudeep.holla@arm.com,
+	stuart.yoder@arm.com
+Cc: linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH] tpm_ffa_crb: access tpm service over FF-A direct message request v2
+Date: Thu, 10 Apr 2025 12:07:01 +0100
+Message-Id: <20250410110701.1244965-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Rosen Penev <rosenp@gmail.com> writes:
+For secure partition with multi service, tpm_ffa_crb can access tpm
+service with direct message request v2 interface according to chapter 3.3,
+TPM Service Command Response Buffer Interface Over FF-A specification [0].
 
-> Avoids having to manually free. Both of these get called and removed in
-> probe only and are safe to convert.
+This patch reflects this spec to access tpm service over
+FF-A direct message request v2 ABI.
 
-Erm, huh? The request_irq() change in ath_ahb_probe() is literally the
-same change that you sent once and that we had to revert. Not taking any
-more of these, sorry.
+Link: https://developer.arm.com/documentation/den0138/latest/ [0]
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+---
+ drivers/char/tpm/tpm_crb_ffa.c | 55 ++++++++++++++++++++++++----------
+ 1 file changed, 40 insertions(+), 15 deletions(-)
 
-Nacked-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk>
+diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+index 3169a87a56b6..0716c88e0281 100644
+--- a/drivers/char/tpm/tpm_crb_ffa.c
++++ b/drivers/char/tpm/tpm_crb_ffa.c
+@@ -105,7 +105,10 @@ struct tpm_crb_ffa {
+ 	u16 minor_version;
+ 	/* lock to protect sending of FF-A messages: */
+ 	struct mutex msg_data_lock;
+-	struct ffa_send_direct_data direct_msg_data;
++	union {
++		struct ffa_send_direct_data direct_msg_data;
++		struct ffa_send_direct_data2 direct_msg_data2;
++	};
+ };
+
+ static struct tpm_crb_ffa *tpm_crb_ffa;
+@@ -185,18 +188,34 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
+
+ 	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
+
+-	memset(&tpm_crb_ffa->direct_msg_data, 0x00,
+-	       sizeof(struct ffa_send_direct_data));
+-
+-	tpm_crb_ffa->direct_msg_data.data1 = func_id;
+-	tpm_crb_ffa->direct_msg_data.data2 = a0;
+-	tpm_crb_ffa->direct_msg_data.data3 = a1;
+-	tpm_crb_ffa->direct_msg_data.data4 = a2;
++	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
++		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
++		       sizeof(struct ffa_send_direct_data2));
++
++		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
++		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
++		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
++		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
++
++		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
++				&tpm_crb_ffa->direct_msg_data2);
++		if (!ret)
++			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
++	} else {
++		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
++		       sizeof(struct ffa_send_direct_data));
++
++		tpm_crb_ffa->direct_msg_data.data1 = func_id;
++		tpm_crb_ffa->direct_msg_data.data2 = a0;
++		tpm_crb_ffa->direct_msg_data.data3 = a1;
++		tpm_crb_ffa->direct_msg_data.data4 = a2;
++
++		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
++				&tpm_crb_ffa->direct_msg_data);
++		if (!ret)
++			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
++	}
+
+-	ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
+-			&tpm_crb_ffa->direct_msg_data);
+-	if (!ret)
+-		ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
+
+ 	return ret;
+ }
+@@ -231,8 +250,13 @@ int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
+
+ 	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
+ 	if (!rc) {
+-		*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
+-		*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
++		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
++			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
++			*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
++		} else {
++			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
++			*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
++		}
+ 	}
+
+ 	return rc;
+@@ -277,7 +301,8 @@ static int tpm_crb_ffa_probe(struct ffa_device *ffa_dev)
+
+ 	tpm_crb_ffa = ERR_PTR(-ENODEV); // set tpm_crb_ffa so we can detect probe failure
+
+-	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
++	if (!ffa_partition_supports_direct_recv(ffa_dev) &&
++			!ffa_partition_supports_direct_req2_recv(ffa_dev)) {
+ 		pr_err("TPM partition doesn't support direct message receive.\n");
+ 		return -EINVAL;
+ 	}
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
