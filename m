@@ -1,144 +1,123 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4954690;
-	Thu, 10 Apr 2025 10:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4F4204698;
+	Thu, 10 Apr 2025 11:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744282769; cv=none; b=bU+FGqZ7SUJWe38PLzBAKxX/83iVdGZjDC1LVyDKpUMIMgwsT8CClGJmaUQ3QXLMYJPBULONCuKODxAh0uGSoQjRd8k+CrAQBXRrlkVdBYgn7oU/JQmMgvJLhbyvlZ3PIrwiMcG9u6HAUSZd4Uydpq2ceqO9Kf6Ve6IlDaWypvQ=
+	t=1744282978; cv=none; b=fp8GsXKuiMpa2Wud6qLmMT9I/rit+rOBrXaD/mGuP3Udq2b9N8KaUvIiOQs+fSfoL58I0R5Og8H4vIM5vjjmYUOyt4Mau51FNQU0SgjtVY1MYXj/GYDjqmiJXX4hvYCnKdGTGQz8hHJ/aj9pGVAarRElhTOm85+oN5oEzmMcnys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744282769; c=relaxed/simple;
-	bh=zr+gZPWfQgf9sQUWbDC4AE/8d8aQHyfIi8D/4ZYfxmo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s1rz6FbwgyZs80JFhcJIO2XfAHRq/739kVcxvoYVNFvIIo9Rx/pqgz1GXHZw7zDROqk7a8aGMvZy2hOKfe6z8hnkdEH7I5tEXyWyP7XdhOcVPwQmwhuumSLFHAIyMHgqP5vY6igJeMHuL3qHQS22WbWmJH2HNtBT/V4h3rB9eV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=UgOVXCHs; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1744282978; c=relaxed/simple;
+	bh=UA3DSo1t0OoUhTnRebLiPKD5Mi59RzdGtxeZEI6WkZY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s1yULAXabD9zl3fwBJA9tXGTkfYZSqINqGJz/eO1GDV9Mpu6+H99oGuYQdK4qpcasTvdIIPvgyikZeOIvPWLJb+ClnSd/e09UNW21h5/1vRctT4dLfz9MRzCOp0fpS9+MR8eeyNiSR+e4RUtHx74llW1KPd9CkVQMF7Psb13O8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dbsuFixN; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="UgOVXCHs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bUZ/qP5Z1nX/hu4ZiJ8AHNPNWvhZKEJ6v9fY4owmbCg=; b=UgOVXCHsjLPsKxIne8N3YP7ilU
-	v6gemtUNpRKPZ/ezkQ5DmNouMpHkEzFLJuuNzboVZyJlcqyIn9YXlGX6y6KPQ2IA5cJFVemH8Cxsp
-	mHSnkP/wZwHm/vR/VcZrVQRM5K7CHeDqNHherlh6Ou04ucxyVOOPYT9qxMfI1am1lJGd0eFwEl8kM
-	OjoZ50ACGmg9+3urzgx7q5zjBKvHPnAYANX7juXoLf/rzvUFwS1p+VfLwCfHEV8Cv5qG5B7Pr4a4x
-	95wH4GcQIkQGtGATR2qOJaFwTuNVL8zr9x/7MMbUIeoxr7HpwfIFM1dStlSE1LQ2JCabnuwpvr20y
-	HrCSe4Kg==;
-Received: from [189.7.87.174] (helo=[192.168.0.224])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u2pcu-00Ecci-2i; Thu, 10 Apr 2025 12:59:20 +0200
-Message-ID: <37df9bc3-c9d1-406a-b7bb-63f67cb60c8b@igalia.com>
-Date: Thu, 10 Apr 2025 07:59:13 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbsuFixN"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227cf12df27so5333975ad.0;
+        Thu, 10 Apr 2025 04:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744282975; x=1744887775; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q8//Q+ZwGqeGDbai/09eGtdmF0g+HDkosJAckzGqILE=;
+        b=dbsuFixNNYJG2nD2b141HZFxKlY4kYEtOtqg4u8AlFJFtbwaKIQQ27O8/p44wjAWvd
+         3pjmDuXjLHpe5HJ3ABbAsS/2dD63iFhr86KUO7ouKSWop64I1TeWvOqQp1Wn7dyeCp+f
+         7o8M4vZmMEDRkXWCBh79REFg6SdpuUVL8a52nvOuJehMooGblp8+Vww7YJEmToEx7Qlb
+         /jHyEIPQ1AKrlcSlL3sxr8CwnaDEkEYJglhX1b8t2JDjluiOgoemyEONEkwkyo7eqKE4
+         y/peABIX9J8BBq0o3Ktpv7rSPwQP84C1q8l2CPqYyZFBDdUN0botbZwH8/c/NMaF90Yf
+         cCKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744282975; x=1744887775;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q8//Q+ZwGqeGDbai/09eGtdmF0g+HDkosJAckzGqILE=;
+        b=ePB58XzqbsEhqyMLabtqBHo9ZJK5KNN5UAQFKvP2MtRetdi3hmkpTfOKeilPwIyj6V
+         LKeOmuiFEBg4eWkKabKKwNFFqG7gBC89KSIT3YQpHpRoE3o7R8LqyovLzhjZaSkYDHiy
+         n9He7yO2fRxmIGwRahAYFQLFgrT9sWfBb//QvoaKAl8aHPi6R8dPowWlKxUs+5XiwGK1
+         O3rNLbb7hkrRaIgBBHy91JzdnT5kKcO+Ba2cFgaOL/3cbsIkjWLQioxxtk2eGWvG/C9s
+         Wg7LrJNan5P+m7+RT9JWW7uMogArMDq37NB5Lz5LwR65EhaHpwjXEY5G2M+XYF/QR5KQ
+         cqig==
+X-Forwarded-Encrypted: i=1; AJvYcCXZiIQ5/KTj39zjcg/5JTIIp8I52X4Y6gzgfOls/eTDaINCbkUSnAY78Wu39bqZWCnZOp8UHRhoMww7RFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzrkUSrBR7BLsHddHt1UGNuyP2s7aGhNqv2BWAufivNvod6yJD
+	zScT2zRRZbjW7xA625YdMvGYxOa5sZInImSl0eXLH0ikNsHylm2Vj8n+JpkI
+X-Gm-Gg: ASbGncveDBMcSvuflpFYuaajRKc3G3vU7XnaIJx9pXaw8t1faVNXttXWQgP7JK7u006
+	+Kvz9lMcAViPFUIBkqtfwxUYhRyuqT7AZ/mp2bOCklt1Uw09fCvAPz/RQ3Qh0tPlja/z9aIfLKr
+	YPgjrIFPW7ncqjy7gwOmrgPWT33/gQTXofI+Es2ZFATXrjPpu9wQ0dlGl7AQ+OQiAKSAZdlHn7P
+	DtkgOUlYeiptx0KzdDlTvM4TK9eYwX0LPglGO5of30oUfhTPy7v4McSngX+Tt5Nj7c0vMorROKV
+	re8OkcO43QxWjQuILsRJ0q2ok3W86O/X4Lk4OzAQYVH6x5GNKXNb2+1kQ2kDrAQA3pjKZ6l5WA=
+	=
+X-Google-Smtp-Source: AGHT+IGQVX1ZDwzDAhrKBcKIcXXaW38B3BULFX+faGVidZeMEJOUVtVfROvzvWQFL7k/PH7bKu6iIQ==
+X-Received: by 2002:a17:903:1ab0:b0:224:3610:bef4 with SMTP id d9443c01a7336-22b7f9221a9mr38526515ad.25.1744282974589;
+        Thu, 10 Apr 2025 04:02:54 -0700 (PDT)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:204:a537:5da0:ac0c:6934:f07])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62bb1sm27672835ad.33.2025.04.10.04.02.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 04:02:54 -0700 (PDT)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: vinicius.gomes@intel.com,
+	dave.jiang@intel.com,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH] dma: idxd: cdev: Fix uninitialized use of sva in idxd_cdev_open
+Date: Thu, 10 Apr 2025 16:32:16 +0530
+Message-Id: <20250410110216.21592-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: drivers/gpu/drm/vc4/vc4_gem.c:604 vc4_lock_bo_reservations()
- error: uninitialized symbol 'ret'.
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild@lists.linux.dev, lkp@intel.com, oe-kbuild-all@lists.linux.dev,
- linux-kernel@vger.kernel.org, Melissa Wen <mwen@igalia.com>
-References: <f5dd7fb6-6a99-407f-846f-0de2d0abe177@stanley.mountain>
- <b402252a-91de-4983-abc1-65f78e7e6ae7@igalia.com>
- <95ed4d91-85b6-4514-9d94-8324f4fcceb4@amd.com>
- <6ddfc908-22a0-4ed6-b5a4-6df9be85ff4e@stanley.mountain>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <6ddfc908-22a0-4ed6-b5a4-6df9be85ff4e@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+Fix Smatch-detected issue:
+drivers/dma/idxd/cdev.c:321 idxd_cdev_open() error:
+uninitialized symbol 'sva'.
 
-On 10/04/25 06:57, Dan Carpenter wrote:
-> On Thu, Apr 10, 2025 at 11:27:43AM +0200, Christian König wrote:
->> Hi Maira,
->>
->> Am 09.04.25 um 21:49 schrieb Maíra Canal:
->>> + König
->>>
->>> Hi Dan,
->>>
->>> On 02/04/25 05:43, Dan Carpenter wrote:
->>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>>> head:   acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
->>>> commit: 04630796c437a9285643097825cbd3cd06603f47 drm/vc4: Use DRM Execution Contexts
->>>> date:   2 months ago
->>>> config: arm64-randconfig-r073-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021500.3AM1hKKS-lkp@intel.com/config)
->>>> compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
->>>>
->>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>>> the same patch/commit), kindly add following tags
->>>> | Reported-by: kernel test robot <lkp@intel.com>
->>>> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->>>> | Closes: https://lore.kernel.org/r/202504021500.3AM1hKKS-lkp@intel.com/
->>>>
->>>> smatch warnings:
->>>> drivers/gpu/drm/vc4/vc4_gem.c:604 vc4_lock_bo_reservations() error: uninitialized symbol 'ret'.
->>>>
->>>> vim +/ret +604 drivers/gpu/drm/vc4/vc4_gem.c
->>>>
->>>> cdec4d3613230f Eric Anholt 2017-04-12  589  static int
->>>> 04630796c437a9 Maíra Canal 2024-12-20  590  vc4_lock_bo_reservations(struct vc4_exec_info *exec,
->>>> 04630796c437a9 Maíra Canal 2024-12-20  591               struct drm_exec *exec_ctx)
->>>> cdec4d3613230f Eric Anholt 2017-04-12  592  {
->>>> 04630796c437a9 Maíra Canal 2024-12-20  593      int ret;
->>>> cdec4d3613230f Eric Anholt 2017-04-12  594
->>>> cdec4d3613230f Eric Anholt 2017-04-12  595      /* Reserve space for our shared (read-only) fence references,
->>>> cdec4d3613230f Eric Anholt 2017-04-12  596       * before we commit the CL to the hardware.
->>>> cdec4d3613230f Eric Anholt 2017-04-12  597       */
->>>> 04630796c437a9 Maíra Canal 2024-12-20  598      drm_exec_init(exec_ctx, DRM_EXEC_INTERRUPTIBLE_WAIT, exec->bo_count);
->>>> 04630796c437a9 Maíra Canal 2024-12-20  599      drm_exec_until_all_locked(exec_ctx) {
->>>> 04630796c437a9 Maíra Canal 2024-12-20  600          ret = drm_exec_prepare_array(exec_ctx, exec->bo,
->>>> 04630796c437a9 Maíra Canal 2024-12-20  601                           exec->bo_count, 1);
->>>>
->>>> This is a false positive in Smatch.  I can silence the warning on my
->>>> end easily enough to say that we always enter the drm_exec_until_all_locked()
->>>> loop.  But the question is why do we only test the last "ret" instead of
->>>> testing all of them?
->>>
->>> AFAIU `drm_exec_until_all_locked` will loop until all GEM objects are
->>> locked and no more contention exists. As we have a single operation
->>> inside the loop, we don't need to check "ret" for every iteration.
->>>
->>> I believe Christian will possibly give you a more precise answer as he
->>> designed the API.
->>
->> Yeah that explanation is absolutely correct.
->>
->> The drm_exec_until_all_locked() helper loops until all contention is resolved and all buffer locked.
->>
->> You could avoid the snatch warning if you move the error handling into the loop, e.g. something like this here:
->>
->> drm_exec_until_all_locked(exec_ctx) {
->>      ret = drm_exec_prepare_array(exec_ctx, exec->bo, exec->bo_count, 1);
->>      drm_exec_continue_on_contention(exec_ctx);
->>      if (ret) {
->>          drm_exec_fini(exec_ctx);
->>          return ret;
->>      }
->> }
->>
-> 
-> Don't worry about silencing it.  I already silenced it in Smatch a couple
-> days ago.
+'sva' pointer may be used uninitialized in error handling paths.
+Specifically, if PASID support is enabled and iommu_sva_bind_device()
+returns an error, the code jumps to the cleanup label and attempts to
+call iommu_sva_unbind_device(sva) without ensuring that sva was
+successfully assigned. This triggers a Smatch warning about an
+uninitialized symbol.
 
-Thanks for silencing the warning!
+Initialize sva to NULL at declaration and add a check using
+IS_ERR_OR_NULL() before unbinding the device. This ensures the
+function does not use an invalid or uninitialized pointer during
+cleanup.
 
-Best Regards,
-- Maíra
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+---
+ drivers/dma/idxd/cdev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> regards,
-> dan carpenter
-> 
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index ff94ee892339..7bd031a60894 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -222,7 +222,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 	struct idxd_wq *wq;
+ 	struct device *dev, *fdev;
+ 	int rc = 0;
+-	struct iommu_sva *sva;
++	struct iommu_sva *sva = NULL;
+ 	unsigned int pasid;
+ 	struct idxd_cdev *idxd_cdev;
+ 
+@@ -317,7 +317,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 	if (device_user_pasid_enabled(idxd))
+ 		idxd_xa_pasid_remove(ctx);
+ failed_get_pasid:
+-	if (device_user_pasid_enabled(idxd))
++	if (device_user_pasid_enabled(idxd) && !IS_ERR_OR_NULL(sva))
+ 		iommu_sva_unbind_device(sva);
+ failed:
+ 	mutex_unlock(&wq->wq_lock);
+-- 
+2.34.1
 
