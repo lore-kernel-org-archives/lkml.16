@@ -1,232 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53456293453;
-	Thu, 10 Apr 2025 20:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573FC28F921;
+	Thu, 10 Apr 2025 20:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744315348; cv=none; b=lvh8DitAbAUfoi7XFrMIecLoAeJizi0S/1c3zsbTWObzUcRzwB1HktG81TDm/6mvHFjl7RPh+HrmqPUs2gpPCHnW0daIH/vMIEUaOp9XV4ThebIzj8mia+FHM4cItCR38wNTGre2vvbzL+FKy93AzBI1gnRt4T2Ykr22o6CuxnY=
+	t=1744315408; cv=none; b=N90LNTjx0ADqvAdvSu1sNVvqRVNnyOFuyH2O6m7JvUo/AdyF6+7aOmmqJSQDIqBsszt5NfnJATzrvKACcV4KqhEF7lwzJofrLOY9b60YP0Jrp30ekML+6MrnyLz2Plps2LNz2ZpUd5yydnn1Do85q5tVotYPcQjndnIiAq1xwjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744315348; c=relaxed/simple;
-	bh=HKokz0uKDHtOCWF8mVU98Ua+9d+BqiXJ5Xr3OER4avA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cKtS+lbp2TqrYkPkAXl2BBD7A8uOTPqMbqnejLeyidz9LLHP+THbbLoKwzcwUn6u+CANd29X8R99LADZ8BHJEZW7sqbj2CKayONiL3Gl7Kl3rqFglzVR6a09cBvgxXuxvfapVLcij35lKa8hBGPi1S8HBoD50w9/dYhgt7JcEJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHnCNir2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744315408; c=relaxed/simple;
+	bh=6I2wEvgWN/nAwS9ia0rQUktsJxdypgPlQaQpr2sul5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b+/FT9Ccj3jH40p6c7l8KqtC3vL+bZ8QxCT8+tt2YcO0NCmpX60Q7MiE+NcjnCi5d4FBqceoCVycEmvoEYR/zKHCxEig+xlTN7/z500EG+0dsr9+ThcBmvxtT6HpztWzBnQMb1H7RpKqMGNr59UvESKN6OpRDdg+1uypfqcko8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U09W/XO+; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHnCNir2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF2CC4CEEB;
-	Thu, 10 Apr 2025 20:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744315346;
-	bh=HKokz0uKDHtOCWF8mVU98Ua+9d+BqiXJ5Xr3OER4avA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UHnCNir2w/qC/TUDrEZF6CUuXnAq7z4ttCiWJ7Zl6E4G4rJEXXpWt+vq2GKISyhsO
-	 IqItkZJyoRyEZuzecc8VL4x0QTWnbFALNEcjHwd9EvC1iyAysslm7SQsCE9dL4z6d9
-	 0FE58oRWLowJTRzzppEA4JDmElzf1Y3GjsDbrl9ZK038s4lWkpAxmFhx86oPAjhjdU
-	 vmRUwPMkNKwJ3Fpen4X3sUgqAuK5ZXaymtAWbKUnwN8+/xDOFjQUoHuJ4XJEg3Uf7G
-	 YVbGSupTFtRkeDWSzIJg9wQucb/eEEEcLvcLB8qDASxtfXed2IQOngDwYPDTzxkP5O
-	 5jmb6uFdZEsOw==
-From: Mario Limonciello <superm1@kernel.org>
-To: Borislav Petkov <bp@alien8.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-kernel@vger.kernel.org (open list),
-	linux-i2c@vger.kernel.org (open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC),
-	platform-driver-x86@vger.kernel.org (open list:AMD PMC DRIVER)
-Subject: [PATCH v3 4/4] x86/CPU/AMD: Print the reason for the last reset
-Date: Thu, 10 Apr 2025 15:02:02 -0500
-Message-ID: <20250410200202.2974062-5-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250410200202.2974062-1-superm1@kernel.org>
-References: <20250410200202.2974062-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U09W/XO+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744315403; x=1775851403;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6I2wEvgWN/nAwS9ia0rQUktsJxdypgPlQaQpr2sul5A=;
+  b=U09W/XO+ZW378Qa4NlspOPGw1j3zAWRS2/roR6q9oS0lLxMhL8RUVmcA
+   YZZ6Fu9s4ZzIlUbIVkGGgSHTTqb3Msf5oQqJ4QDiRWXgEoP5o7Yj30b8m
+   XZe8ZxoRjxRiEXvUpsLR8DhU/3yERsktr5A6aQOd9f5dbOYhejoRKoXmb
+   GYNKhgMUKAyUSseh/VofkEDnzsRdmiF8aavimeLSATrpjn3gujcDInfmp
+   IRGbmAGS2AzOwBSyZP/LnxZLTaKrshvXM9JNwhhZYJmu+WoMPFwEATaH/
+   PTQGYgqKzU3lGTgfFmT9Z3KP8FVzbYq5fJ452ZZdomzsNttI+9t2MjDDO
+   w==;
+X-CSE-ConnectionGUID: PWqKmMDcRA+1812yz+mnhw==
+X-CSE-MsgGUID: fbkoZQIETOOxqYK6b1CRzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="46022073"
+X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
+   d="scan'208";a="46022073"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 13:03:22 -0700
+X-CSE-ConnectionGUID: WA0qHErlTRWGto6Q+T1OJg==
+X-CSE-MsgGUID: 11P1ptEpTVC6HOIFk2+NKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
+   d="scan'208";a="128866525"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.92]) ([10.125.108.92])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 13:03:21 -0700
+Message-ID: <2814b3c2-47fc-447c-a6ab-dcb84cffe46b@intel.com>
+Date: Thu, 10 Apr 2025 13:03:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] fwctl/cxl: Fix uuid_t usage in uapi
+To: Dan Williams <dan.j.williams@intel.com>, jgg@nvidia.com
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, kernel test robot
+ <lkp@intel.com>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <174430820360.604341.2116516906072729788.stgit@dwillia2-xfh.jf.intel.com>
+ <174430961702.617339.13963021112051029933.stgit@dwillia2-xfh.jf.intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <174430961702.617339.13963021112051029933.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-The following register contains bits that indicate the cause for the
-previous reset.
 
-        PMx000000C0 (FCH::PM::S5_RESET_STATUS)
+On 4/10/25 11:27 AM, Dan Williams wrote:
+> The uuid_t type is kernel internal, and Paul reports the following build
+> error when it is used in a uapi header:
+> 
+>     usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
+> 
+> Create a uuid type (__uapi_uuid_t) compatible with the longstanding
+> definition uuid/uuid.h for userspace builds, and use uuid_t directly for
+> kernel builds.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+> Closes: http://lore.kernel.org/f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202504050434.Eb4vugh5-lkp@intel.com/
+> Fixes: 9b8e73cdb141 ("cxl: Move cxl feature command structs to user header")
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-This is useful for debug. The reasons for reset are broken into 6 high
-level categories. Decode it by category and print during boot.
-
-Specifics within a category are split off into debugging documentation.
-
-The register is accessed indirectly through a "PM" port in the FCH. Use
-MMIO access in order to avoid restrictions with legacy port access.
-
-Use a late_initcall() to ensure that MMIO has been set up before trying
-to access the register.
-
-This register was introduced with AMD Family 17h, so avoid access on
-older families. There is no CPUID feature bit for this register.
-
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v3:
- * Align strings in the CSV and code.
- * Switch to an array of strings
- * Switch to looking up bit of first value
- * Re-order message to have number first (makes grepping easier)
- * Add x86/amd prefix to message
-v2:
- * Add string for each reason, but still include value in case multiple
-   values are set.
----
- Documentation/admin-guide/amd/index.rst | 42 ++++++++++++++++++++
- arch/x86/include/asm/amd_node.h         |  1 +
- arch/x86/kernel/cpu/amd.c               | 51 +++++++++++++++++++++++++
- 3 files changed, 94 insertions(+)
-
-diff --git a/Documentation/admin-guide/amd/index.rst b/Documentation/admin-guide/amd/index.rst
-index 5a721ab4fe013..c888b192365c5 100644
---- a/Documentation/admin-guide/amd/index.rst
-+++ b/Documentation/admin-guide/amd/index.rst
-@@ -268,3 +268,45 @@ EPP Policy
- The ``energy_performance_preference`` sysfs file can be used to set a bias
- of efficiency or performance for a CPU.  This has a direct relationship on
- the battery life when more heavily biased towards performance.
-+
-+Random reboot issues
-+====================
-+When a random reboot occurs, the high-level reason for the reboot is stored
-+in a register that will persist onto the next boot.
-+
-+There are 6 classes of reasons for the reboot:
-+ * Software induced
-+ * Power state transition
-+ * Pin induced
-+ * Hardware induced
-+ * Remote reset
-+ * Internal CPU event
-+
-+.. csv-table::
-+   :header: "Bit", "Type", "Reason"
-+   :align: left
-+
-+   "0",  "Pin",      "thermal pin BP_THERMTRIP_L was tripped"
-+   "1",  "Pin",      "power button was pressed for 4 seconds"
-+   "2",  "Pin",      "shutdown pin was shorted"
-+   "4",  "Remote",   "remote ASF power off command was received"
-+   "9",  "Internal", "internal CPU thermal limit was tripped"
-+   "16", "Pin",      "system reset pin BP_SYS_RST_L was tripped"
-+   "17", "Software", "software issued PCI reset"
-+   "18", "Software", "software wrote 0x4 to reset control register 0xCF9"
-+   "19", "Software", "software wrote 0x6 to reset control register 0xCF9"
-+   "20", "Software", "software wrote 0xE to reset control register 0xCF9"
-+   "21", "Sleep",    "ACPI power state transition occurred"
-+   "22", "Pin",      "keyboard reset pin KB_RST_L was asserted"
-+   "23", "Internal", "internal CPU shutdown event occurred"
-+   "24", "Hardware", "system failed to boot before failed boot timer expired"
-+   "25", "Hardware", "hardware watchdog timer expired"
-+   "26", "Remote",   "remote ASF reset command was received"
-+   "27", "Internal", "an uncorrected error caused a data fabric sync flood event"
-+   "29", "Internal", "FCH and MP1 failed warm reset handshake"
-+   "30", "Internal", "a parity error occurred"
-+   "31", "Internal", "a software sync flood event occurred"
-+
-+This information is read by the kernel at bootup and is saved into the
-+kernel ring buffer. When a random reboot occurs this message can be helpful
-+to determine the next component to debug such an issue.
-diff --git a/arch/x86/include/asm/amd_node.h b/arch/x86/include/asm/amd_node.h
-index f4993201834ea..a945d146f1a77 100644
---- a/arch/x86/include/asm/amd_node.h
-+++ b/arch/x86/include/asm/amd_node.h
-@@ -20,6 +20,7 @@
- #include <linux/pci.h>
- 
- #define FCH_PM_BASE		0xFED80300
-+#define FCH_PM_S5_RESET_STATUS	0xC0
- 
- #define MAX_AMD_NUM_NODES	8
- #define AMD_NODE0_PCI_SLOT	0x18
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 79569f72b8ee5..ddb17f0ad580e 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -9,6 +9,7 @@
- #include <linux/sched/clock.h>
- #include <linux/random.h>
- #include <linux/topology.h>
-+#include <asm/amd_node.h>
- #include <asm/processor.h>
- #include <asm/apic.h>
- #include <asm/cacheinfo.h>
-@@ -1231,3 +1232,53 @@ void amd_check_microcode(void)
- 	if (cpu_feature_enabled(X86_FEATURE_ZEN2))
- 		on_each_cpu(zenbleed_check_cpu, NULL, 1);
- }
-+
-+static const char * const s5_reset_reason_txt[] = {
-+	[0] = "thermal pin BP_THERMTRIP_L was tripped",
-+	[1] = "power button was pressed for 4 seconds",
-+	[2] = "shutdown pin was shorted",
-+	[4] = "remote ASF power off command was received",
-+	[9] = "internal CPU thermal limit was tripped",
-+	[16] = "system reset pin BP_SYS_RST_L was tripped",
-+	[17] = "software issued PCI reset",
-+	[18] = "software wrote 0x4 to reset control register 0xCF9",
-+	[19] = "software wrote 0x6 to reset control register 0xCF9",
-+	[20] = "software wrote 0xE to reset control register 0xCF9",
-+	[21] = "ACPI power state transition occurred",
-+	[22] = "keyboard reset pin KB_RST_L was asserted",
-+	[23] = "internal CPU shutdown event occurred",
-+	[24] = "system failed to boot before failed boot timer expired",
-+	[25] = "hardware watchdog timer expired",
-+	[26] = "remote ASF reset command was received",
-+	[27] = "an uncorrected error caused a data fabric sync flood event",
-+	[29] = "FCH and MP1 failed warm reset handshake",
-+	[30] = "a parity error occurred",
-+	[31] = "a software sync flood event occurred",
-+	[32] = "unknown",
-+};
-+
-+static __init int print_s5_reset_status_mmio(void)
-+{
-+	void __iomem *addr;
-+	unsigned long value;
-+	int bit = -1;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_ZEN))
-+		return 0;
-+
-+	addr = ioremap(FCH_PM_BASE + FCH_PM_S5_RESET_STATUS, sizeof(value));
-+	if (!addr)
-+		return 0;
-+	value = ioread32(addr);
-+	iounmap(addr);
-+
-+	do {
-+		bit = find_next_bit(&value, BITS_PER_LONG, bit + 1);
-+	} while (!s5_reset_reason_txt[bit]);
-+
-+	pr_info("x86/amd: Previous system reset reason [0x%08lx]: %s\n",
-+		value, s5_reset_reason_txt[bit]);
-+
-+	return 0;
-+}
-+late_initcall(print_s5_reset_status_mmio);
--- 
-2.43.0
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> Changes since v2:
+> * Drop the tinkering with __align_of__ and just document the safety
+>   rules (Jason)
+> 
+>  include/uapi/cxl/features.h |   21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
+> index d6db8984889f..490606d7694b 100644
+> --- a/include/uapi/cxl/features.h
+> +++ b/include/uapi/cxl/features.h
+> @@ -8,10 +8,19 @@
+>  #define _UAPI_CXL_FEATURES_H_
+>  
+>  #include <linux/types.h>
+> -#ifndef __KERNEL__
+> -#include <uuid/uuid.h>
+> -#else
+> +
+> +typedef unsigned char __uapi_uuid_t[16];
+> +
+> +#ifdef __KERNEL__
+>  #include <linux/uuid.h>
+> +/*
+> + * Note, __uapi_uuid_t is 1-byte aligned on modern compilers and 4-byte
+> + * aligned on others. Ensure that __uapi_uuid_t in a struct is placed at
+> + * a 4-byte aligned offset, or the structure is packed, to ensure
+> + * consistent padding.
+> + */
+> +static_assert(sizeof(__uapi_uuid_t) == sizeof(uuid_t));
+> +#define __uapi_uuid_t uuid_t
+>  #endif
+>  
+>  /*
+> @@ -60,7 +69,7 @@ struct cxl_mbox_get_sup_feats_in {
+>   * Get Supported Features Supported Feature Entry
+>   */
+>  struct cxl_feat_entry {
+> -	uuid_t uuid;
+> +	__uapi_uuid_t uuid;
+>  	__le16 id;
+>  	__le16 get_feat_size;
+>  	__le16 set_feat_size;
+> @@ -110,7 +119,7 @@ struct cxl_mbox_get_sup_feats_out {
+>   * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
+>   */
+>  struct cxl_mbox_get_feat_in {
+> -	uuid_t uuid;
+> +	__uapi_uuid_t uuid;
+>  	__le16 offset;
+>  	__le16 count;
+>  	__u8 selection;
+> @@ -143,7 +152,7 @@ enum cxl_get_feat_selection {
+>   */
+>  struct cxl_mbox_set_feat_in {
+>  	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
+> -		uuid_t uuid;
+> +		__uapi_uuid_t uuid;
+>  		__le32 flags;
+>  		__le16 offset;
+>  		__u8 version;
+> 
 
