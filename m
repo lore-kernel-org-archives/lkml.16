@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AD91F0E39
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692D21F0E39
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744285902; cv=none; b=QHcbl297JVagtu8nobhYOm/sB62u5WTrnCg5P9RiITKVm06QvNVESEWdNTMz4YVbg4UrUBQ4dhFvxMBAlkVoVNQ1mZzyn6gRB0nnYQC+rcToeUaALoo8Oo1zU5L4zdnP0udPk/Q56kNceGUXTMrVbt5rCxDWWgi5nDbpwh1rJMw=
+	t=1744285911; cv=none; b=TWwG0dk6NdVHNGPbyBWFM5ycsZ2VBjVQKzHxjIYv0oknUiEXVXal7AL0jNIxNwbkKaNzjaJ0fRYgc+cee/rzvmcB6vSi8D/khvNqzbZ/BSU4+lUff+ONVAC2qvBlqV2hpCoval8iZxtflO6bZYFpD/thxcRvVXcoKxmGH0QiGa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744285902; c=relaxed/simple;
-	bh=TFdyn+2Q4CrMW9IPz1Lpwi47mtufgHesFnoPsrosV+s=;
+	s=arc-20240116; t=1744285911; c=relaxed/simple;
+	bh=9fnYVyJmiHU1RU3MCP32Uuu1TPM9x54U015iQwykPqw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CIypxzxCdqm4mnpBVFpQZJLSa4oHLHj8Td8ECgaXhPGQwsUyk6weLNFF1Tbr2/VZWgY6JLU98q/hXoTAbpOGCwb+mrNwxNTKE/MNlxHnC54oXGHxzGmRB7o7W1KxEurSW90xaZuKtAuzua/EoFAK5XNE8VteFYLDrR31I80Bwe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BPzfYau8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fuKs9rpmUqC5o2CUKTJgD9xkC9J+88QRrskmU9gPxZ+4zhK0UjLzsF9ciHChRNsH5+gSFcBInQSUcn9HGdmxj4pSZ0VEKy1unt/WUnbnwVjqD+une6mz23D/1wFncDX3P9BUkrPr4e/Z0pJPyRapR/Gjku9jlkj4Y6N3H1ooAUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ks+oHZOQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BPzfYau8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144CEC4CEDD;
-	Thu, 10 Apr 2025 11:51:40 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ks+oHZOQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A52C4CEDD;
+	Thu, 10 Apr 2025 11:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744285901;
-	bh=TFdyn+2Q4CrMW9IPz1Lpwi47mtufgHesFnoPsrosV+s=;
+	s=korg; t=1744285910;
+	bh=9fnYVyJmiHU1RU3MCP32Uuu1TPM9x54U015iQwykPqw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BPzfYau8yZr1TdLKn/g34Y1HmzGG0MjkQh0gtpS4iR6TKM5rZC4hqhiRn/9Wf1ELx
-	 m5maSe5lNG4/z0qUbxtMVILCs6emyTMiry2nEjaMqEAxJwoSDZeaPg09JgxSjICxC5
-	 q8NZSrjR5X6+agZPe5mwCYJ1Ufy1hH0LSCWBDgmc=
-Date: Thu, 10 Apr 2025 13:50:06 +0200
+	b=Ks+oHZOQVvgOzCyFX9aETvfopadMGvxAZ5BWwxEB5+qa0IVkakDfdBn6XbGpv2GNL
+	 IiOBAvOy/u0Wifx/mNaDZhxEXwEf5BILnyz/2FnQweJAMO5IDytIctTugnXIQGuhBz
+	 SOB4PdeVuc4kUon80Lxfyjo/3ADuw1donjhjV8JY=
+Date: Thu, 10 Apr 2025 13:50:15 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Charles Han <hanchunchao@inspur.com>
 Cc: arnd@arndb.de, jpanis@baylibre.com, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] misc: tps6594-pfsm: Add NULL check in tps6594_pfsm_probe
-Message-ID: <2025041049-pushing-paced-3a3e@gregkh>
+Message-ID: <2025041008-frying-widely-d542@gregkh>
 References: <20250410105256.70310-1-hanchunchao@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,9 +64,40 @@ On Thu, Apr 10, 2025 at 06:52:53PM +0800, Charles Han wrote:
 > +		devm_kfree(dev, pfsm);
 > +		return -ENOMEM;
 > +	}
+> +
+>  	pfsm->miscdev.fops = &tps6594_pfsm_fops;
+>  	pfsm->miscdev.parent = dev->parent;
+>  	pfsm->chip_id = tps->chip_id;
+> -- 
+> 2.43.0
+> 
 
-How was this found and tested?
+Hi,
+
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
 thanks,
 
-greg k-h
+greg k-h's patch email bot
