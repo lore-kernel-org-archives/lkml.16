@@ -1,49 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C044028F946
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D092857E3
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:36:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744310185; cv=none; b=d0kYz3S6I7xTgq2yNaDICe/YzxrK6Oo4CXt5tpWd+k5BKn2ghkfyWVth7WQ6dD1Vu+9XqnS0II0KyV9l9e+ZEvqX4nVi7FUncGTLk9AlRod6QT0j3GHhE4ux/mO1/v0V/Z/bq+tHMrX6xRujpOFi9Y1AMoOeXDWCKHXUZrgxYHo=
+	t=1744310202; cv=none; b=JUAc6eecT8um0YGY5FMbidoDB04xnpljVFGRMwOOanPHPh7wo0vwymHa45X3/mbEmrvUinvnM/GFuvMaFXnGKtmtqksbLhm+G/jhcNQ9JFQL9mKh0s40GB00ODvD3w5nvEJ5PDHaLTWOWbNHWiB4zJvmPEjbCNcUvzmoKGFyhcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744310185; c=relaxed/simple;
-	bh=gsiyVW1Yfc9WfkHC1jIRHBJ57fHkbOis5KzpQmYh00Y=;
+	s=arc-20240116; t=1744310202; c=relaxed/simple;
+	bh=gTNXq37akgqk6z+58rhQWAsjkG2V+MCF+5rA1Q6dX5U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HmvRvJPym2SuPATFG+TqJm7o9i1pxT16tGCmCm9r9uh2RQ48kENavxFZihXkmqksnfSVjI+sZbzdT57z3t5EHhXxstdj2HKOXjv+cNGYD6OEu4JzY4FZLP+FCjIr24pnc8xCmZXHs0UfjE8zQQtoAR63f5ez32T/j+qfoadOs1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BxIzZsXf; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=gG4q9sAxeMChdzECzk/UDCFxNcfdmFmmZ+1EaT88UQ9BRNeAHzq6OhY4VqM4uF07o+S0OWbqeKubxy4nsxgqYNNcc+gT3dXUZg1kgcYar2YZMQqxi0msZYgkoF58/wAtfTfORa/5TQNwX/UKwQt1psLb2RJokn+a7d3aHRJQZJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dd/JwoEH; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxIzZsXf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dd/JwoEH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744310182;
+	s=mimecast20190719; t=1744310199;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+HsepqT10Fw1azidHuJqn95zBBJbAVhEbnOFVc3njv4=;
-	b=BxIzZsXf041vy3zvwbRvyq4OVJz+JbFRnJam4jskoKJBtFj7McZ1ccIgsD47bDQUqMU9oh
-	KwCutl5y7LxhNHd+HvitX+pEqj8jn0sfzQuSQXUFuR372zmbSHb0Id9y8AjrchWP9dp7uP
-	q6VjFuCr7gECK3V20osSDIVAD4H//QA=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-57-3vOrbziwNDO9tpTboEmlrQ-1; Thu,
- 10 Apr 2025 14:36:19 -0400
-X-MC-Unique: 3vOrbziwNDO9tpTboEmlrQ-1
-X-Mimecast-MFC-AGG-ID: 3vOrbziwNDO9tpTboEmlrQ_1744310173
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E39C1955D57;
-	Thu, 10 Apr 2025 18:36:13 +0000 (UTC)
-Received: from [10.45.225.124] (unknown [10.45.225.124])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6AA0B1955BCB;
-	Thu, 10 Apr 2025 18:36:08 +0000 (UTC)
-Message-ID: <f6078f2b-4c40-4ede-8325-37a2f3e27565@redhat.com>
-Date: Thu, 10 Apr 2025 20:36:07 +0200
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=zr+Ng4jJFOHIi/H/AZxmASCM4Qn5ASJYm7koFScbolg=;
+	b=Dd/JwoEHuR+EIcvaDoyFPJinGUVSJ10H3d2ZAB2i8/iEUZrzKy2GYXZ7JSb8V2Gm0K6Op+
+	braEldHURCzc7zcLBEGQtxx2A5Li7dGWoxCMCIQoFRfN8Xe7MUzPqIkhzodxHlSOPxhZxr
+	MfNkjCIQx1vbH8EHYky7zmHk6XjY6pQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-245-DZPlCJC0Py2PlRnDY5jJ7g-1; Thu, 10 Apr 2025 14:36:38 -0400
+X-MC-Unique: DZPlCJC0Py2PlRnDY5jJ7g-1
+X-Mimecast-MFC-AGG-ID: DZPlCJC0Py2PlRnDY5jJ7g_1744310197
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39d917b105bso575687f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:36:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744310196; x=1744914996;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zr+Ng4jJFOHIi/H/AZxmASCM4Qn5ASJYm7koFScbolg=;
+        b=YyuFKtUcxiVlMkZaiZ3Y9HC1XEEjnTm0DsiDnSmgXaWl/L//Bic9SM/y61r20hVdUr
+         FuYkWLcy3LQV5PPhSruzVQ4QaZgFE4MQ0/lz9zCBpDL900JAwhRqSOc4xSd05obbUWni
+         +5vzdgeiXz8/ELYoUdL0IBjBywbRAZLAwLWPb9OLKw4OsOQ2EmEvvpNZCJ57W8wrC7Pf
+         Tor3DaZHS6JCIZviPqgEy/GYxZjP5lvjhZ9Ag1HT6dfSUe1+4+WtmpuWfklzQ4BAzUIJ
+         yWcogqjAf16EdTyHyuY2ZBP94h9+4Hij8Mbfok0X4GmZA0cGCTL0uKuoWu3T6M0aMnhU
+         C+sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6DP2l+Br9t+nbt1RC3P+id8OCkKlYoP054yRuURGBcUhEBUfXJjBuMeZR3V7znqYKFC51Zji/xlFYG+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNSyRMzpn6kwtC23qCPHJcjNSqHtO7RI0K+2LlJ9vmcctZ55UH
+	5lLPo4/7+6n+7xaBhdEsVhrpK0f0E4tx/6p+U2Q3oJR/G0Ki+UeHvNwXntLchR9DVeu7rOAQPgp
+	vMno4ktVigPSKdq7k0NPrT0mxsoPNFLUBuVPSoXefg4RI7oqtfa/27cAyc27DFQ==
+X-Gm-Gg: ASbGnctRnT7OHVaD+CAQVYP0x4dtzczgwZBYp3KwEJ27fAftTM2mLktb0QZh9ag3pJT
+	F/kSFWcYK+Vj2amjEzZ1GdcCygrnQ2IxnB4nxJbwT5SvyNHvPGuHOHi6sOSifXfHjhDiJW8rtQD
+	XCEuf9C5W823qVDdBGrD7XS2v4MLBcW4KXbBppC7mFh2fmg42lCUovL5a6c+EjSDAZKU0RUZoqx
+	lklmuVpjZk8SlNtDKGufxWGPdmQUsqUdwl54lo4Yr+gntB4RfvD2T69YjBBr73TeK4RyRNUZfaK
+	/dW0P1LQxjcA1+EdMWEk3+Ro8frcPc1WtNhiUs/8QA==
+X-Received: by 2002:a05:6000:40c7:b0:391:487f:27e7 with SMTP id ffacd0b85a97d-39d8f4ea82amr3475365f8f.55.1744310196633;
+        Thu, 10 Apr 2025 11:36:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEVaFm+41IJ7zizfBFTSY/K1PgcFhHzilk0IMx8IpDGRbcrJzSKoZ7cYNY7rCyvPExpXJUHnA==
+X-Received: by 2002:a05:6000:40c7:b0:391:487f:27e7 with SMTP id ffacd0b85a97d-39d8f4ea82amr3475347f8f.55.1744310196268;
+        Thu, 10 Apr 2025 11:36:36 -0700 (PDT)
+Received: from [192.168.3.141] (p4ff232c1.dip0.t-ipconnect.de. [79.242.50.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89362fcbsm5439717f8f.5.2025.04.10.11.36.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 11:36:35 -0700 (PDT)
+Message-ID: <83e8b1b3-fc73-4a49-9f6c-36489c3f39d6@redhat.com>
+Date: Thu, 10 Apr 2025 20:36:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,83 +74,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/14] mfd: Add Microchip ZL3073x support
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-4-ivecera@redhat.com>
- <Z_aVlIiT07ZDE2Kf@smile.fi.intel.com>
- <eecfb843-e9cd-4d07-bb72-15cf84a25706@kernel.org>
- <e760caeb-5c7b-4014-810c-c2a97b3bda28@redhat.com>
- <2b877823-a3d9-42bb-9b37-afc45180c404@lunn.ch>
+Subject: Re: [PATCH] mm: Introduce free_folio_and_swap_cache() to replace
+ free_page_and_swap_cache()
+To: Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>
+Cc: nifan.cxl@gmail.com, mcgrof@kernel.org, a.manzanares@samsung.com,
+ dave@stgolabs.net, akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, aneesh.kumar@kernel.org,
+ hca@linux.ibm.com, gor@linux.ibm.com, linux-s390@vger.kernel.org,
+ Fan Ni <fan.ni@samsung.com>
+References: <20250410180254.164118-1-nifan.cxl@gmail.com>
+ <C40778F7-6A22-4A0E-9566-9D3ACC697EA7@nvidia.com>
+ <Z_gNBRY_1UVe2-ax@casper.infradead.org>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <2b877823-a3d9-42bb-9b37-afc45180c404@lunn.ch>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z_gNBRY_1UVe2-ax@casper.infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-
-
-On 10. 04. 25 7:50 odp., Andrew Lunn wrote:
-> On Thu, Apr 10, 2025 at 09:52:39AM +0200, Ivan Vecera wrote:
+On 10.04.25 20:25, Matthew Wilcox wrote:
+> On Thu, Apr 10, 2025 at 02:16:09PM -0400, Zi Yan wrote:
+>>> @@ -49,7 +49,7 @@ static inline bool __tlb_remove_page_size(struct mmu_gather *tlb,
+>>>   {
+>>>   	VM_WARN_ON_ONCE(delay_rmap);
+>>>
+>>> -	free_page_and_swap_cache(page);
+>>> +	free_folio_and_swap_cache(page_folio(page));
+>>>   	return false;
+>>>   }
 >>
->>
->> On 10. 04. 25 9:19 dop., Krzysztof Kozlowski wrote:
->>> On 09/04/2025 17:43, Andy Shevchenko wrote:
->>>>> +/*
->>>>> + * Regmap range configuration
->>>>> + *
->>>>> + * The device uses 7-bit addressing and has 16 register pages with
->>>>> + * range 0x00-0x7f. The register 0x7f in each page acts as page
->>>>> + * selector where bits 0-3 contains currently selected page.
->>>>> + */
->>>>> +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
->>>>> +	{
->>>>> +		.range_min	= 0,
->>>>
->>>> This still has the same issue, you haven't given a chance to me to reply
->>>> in v1 thread. I'm not going to review this as it's not settled down yet.
->>>> Let's first discuss the questions you have in v1.
->>>>
->>
->> Sorry for that but I don't understand where the issue is... Many drivers
->> uses this the same way.
->> E.g.
->> drivers/leds/leds-aw200xx.c
->> drivers/mfd/rsmu_i2c.c
->> sound/soc/codecs/tas2562.c
->> ...and many others
->>
->> All of them uses selector register that is present on all pages, wide range
->> for register access <0, num_pages*window_size> and window <0, window_size>
->>
->> Do they also do incorrectly or am I missing something?
+>> __tlb_remove_page_size() is ruining the fun of the conversion. But it will be
+>> converted to use folio eventually.
 > 
-> The bigger point is, you should of asked this as part of the
-> discussion on the previous version. You should not post a new version
-> until all discussion has come to an end, you understand all the
-> comments, or you have persuaded the commentor that the code is in fact
-> correct.
+> Well, hm, I'm not sure.  I haven't looked into this in detail.
+> We have a __tlb_remove_folio_pages() which removes N pages but they must
+> all be within the same folio:
 > 
-> Posting more versions without having that discussion just wastes
-> reviewers/Maintainers time, and that is not what you want to do if you
-> want to get your patch merged.
+>          VM_WARN_ON_ONCE(page_folio(page) != page_folio(page + nr_pages - 1));
 > 
-> 	Andrew
+> but would we be better off just passing in the folio which contains the
+> page and always flush all pages in the folio? 
 
-Yeah, excuse me.
+The delay_rmap needs the precise pages, so we cannot easily switch to 
+folio + nr_refs.
 
-I'm very sorry for this impatience.
+Once the per-page mapcounts are gone for good, we might no longer need 
+page+nr_pages but folio+nr_refs would work.
 
-I.
+-- 
+Cheers,
+
+David / dhildenb
 
