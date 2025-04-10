@@ -1,62 +1,62 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0AA2045B0
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D2F204C39
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268734; cv=none; b=iDlro8wLyJoc9WzA5WVWlKBFn8M1XUNahlh/cBlwYlF1fGzMKlo2UbQnSKgyDYpqdPR7X78SBKJRsp9QH4Q0FCTbe0fvA/WlSQ5YaCfAF4IL929FlYXvxa8vaYUzVqel7dobMZt3v6asMsoVZhX3TT52MfUdxM7lDx4KC+bpbAI=
+	t=1744268735; cv=none; b=hAoEVhVvjgrrbhDJT0LXQB33r0PDroAZj/9G+0Fo8ZWMzjUPqMjbFK5YEw7jhPRBPZCnpFyLP0I738PRXQs5P9hFjqnnhZcq9l5tzQb1eNF3/raebDJS9tdhgVjr7JNIuVdCcdnR3UR7TZNE14J54/Mx5820uwYC5sSepi/09jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744268734; c=relaxed/simple;
-	bh=p7gn8HCoRfmei461kdKTMrhmaoZ+R8QG+5SxtGUWr5I=;
+	s=arc-20240116; t=1744268735; c=relaxed/simple;
+	bh=HKMnBVdHsElfI+VU/kTaLpcWor2d4s9BxLReognxMNg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dcmiOGoJtUrhckOjmnPUUBYLVGFrRqQKO33/xHKwu68VfypcNrdL5Ewifu2pAEfwQRrvZQZkPxUt/JRQ4tyrCWoS99GLlh2hSQzU1XveiG+jbdtBE9oLQqzrQv3uUJH91o9U83jUFJz7cNcpKX7t5ZsO8F8K+/liHaheklXJfYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=G3BKhYOz; arc=none smtp.client-ip=209.85.167.177
+	 MIME-Version; b=jAyMmILhG4mkkgHPDWXE6YNmAWuSELykPxOuuLLIwF0eEUO4fQ6BBhlmnKRJxggmTR901gzNs2og8v0YMNy7vqlUCAzdSpAqiIpdYPoKGiBRWrBB40QCFFLoPflUX+5KvydKy6gqUBk2CTfXc9TO/iabRX5eAO/2muzP/Pnc550=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=HaELGWEq; arc=none smtp.client-ip=209.85.167.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="G3BKhYOz"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3f6a92f2328so292896b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:05:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="HaELGWEq"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3f6a92f2328so292914b6e.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:05:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1744268731; x=1744873531; darn=vger.kernel.org;
+        d=tenstorrent.com; s=google; t=1744268732; x=1744873532; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vvw7nYWiLBIqfTSpurYIsb0A2VRmihRadD2HqJzvOMM=;
-        b=G3BKhYOzZP4xxuWMSgqCgVjAEzHrd5QEyCSOvh8myjhiGNoF6xkDuZtW1aJOt5sppM
-         9Q67xiSs7O2+McVoyKWUeTbdPgwoojZYVqkluaENJQsw9Yor0ORZ1y6MlymFJ9C2z05p
-         DAVCrTgO5E1nb66UyWSUw1scLkdl8QKD58UiDjd+2N4bGD+3JS4UXwd7cayFfL6kYoRy
-         N9XLJd5hSeRQG5F/SvSQ5RHVSAbK1Ap7tRnVTAV1UslG1j/InDhTZOhpoDDSFhOyW8xG
-         m8Q28j/JscHUp+PMIgUFqSyvJzZLwnscgLHmIHvjwdkG5eE6MXoa95dF9eV4Fvvxyg+p
-         Z7Vg==
+        bh=mh8UBXGzUbnvdsif2sw+KTYhRC1BSjBoml8SqEobyIk=;
+        b=HaELGWEqy2aRo7uxRbyFlOX3yMS8h5N7OZRrCaLqZwIyTd6yKPxz+p9OPoqt1JEWNf
+         F9zSBPFF0pSTioJ275CYOWte3oKZ+LhyvV4XAhwgIYUByMUZSWnokzqqtLhBW3BxSmxM
+         TPS+T9TP7eiCPRtdulqNtRgCc1p6bwgdHSxDybh/nr5UeX70wR9pAD/KIHdhUp7a6gmq
+         F8ZSKIhVKoBOepeya+KhFB18n+rMs1z+kGD/QQ9/70nY869CDzu28BQHjkHc1AujJ6k6
+         ysmAQljMZQ2lCt3FfFkcQycREVe9esLuUaLhIIcqM9+ftvhyXQHiChQvYz9SslzoXnNe
+         vS9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744268731; x=1744873531;
+        d=1e100.net; s=20230601; t=1744268732; x=1744873532;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Vvw7nYWiLBIqfTSpurYIsb0A2VRmihRadD2HqJzvOMM=;
-        b=I5VAJJTNxG8iQGlRafUHMEOmSB6CbPa/CfrFV0nFfqFZFx+oma5Vveru88/4BC1WgY
-         fZa53SfRDoXgcRkRulLXJV9rA+OQrBXT/qOcODUss+bccAbu48A3/NMuavTu6F8Kh7el
-         OcOrB7M+vgbdQAfugWArsIXBoGZ1y+oBIZmp3aTH4IPczXz7n5z1dOx3p1YOvv/kNiO0
-         COP8mdDjgVBNxREoC2XqQ0gXeye/+H3rgwG4bZ/Jl4OccmfWZ1x+7bKKOqSMlP4RzGOr
-         o+wVJKphrPn2r8By1k9aAf0iwQfj/JmCqR5oNjp5HjEjcAVTuea8G1kqAkMIztIfG+ZZ
-         t61w==
-X-Forwarded-Encrypted: i=1; AJvYcCXUjbtnRL6dGA10kPGfUSHGnBz+PmUAh01eFhelUHaFKycoiuV9yL1YqofopzW56B2j/DBGDUcroWr7hoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpNQGFWqHePXbekTKQa/ZHbJGxqYgFdDa0creA9tBfClncI8t7
-	fgM7A+nxZQzuk+x/8MddGUrt8M3t6Phn0Z3cykP2ev0PLqumD9UhhqZVSVUHTA==
-X-Gm-Gg: ASbGncsDB57xx/dW1NqNUroS9ClzWMAzw/J2NHDzgc1XbiM2COi+5FRIZYjxo6phh2r
-	DtaQxXBKaBNRt0hl683fRPzWEGTYpfcwwcgB2b2W/uLMxrCjG9VQbfXBTPGWueNaV5fpGna390B
-	wtVM1W/d9zILvU9avtTLapmOm0H1Fz49ifvd3IM95yrR7ga/eVmEYaoAIXktmGXN+werukvzxRt
-	cNhVJKcgGj7aqZn0FMnRHAwf2EorCEShY4w9pzUdIXhAOsUvM0IiLsTNCfArkJoPnB5A+ODNWz2
-	MT7G/Gs4U75lhPncw5gPUbyjoZTthnj/2+dYYj8bT39v7d7SAFOr0aTUbUKYot8ng33xAw==
-X-Google-Smtp-Source: AGHT+IF/4Hhe3gfMVMHnBMPKqqrqs5V8qr1hvivIjhC40n+SJ1Uz45EXIUL/JoOL6so0taxy89Y6cQ==
-X-Received: by 2002:a05:6808:11c1:b0:3f9:aeb6:6e92 with SMTP id 5614622812f47-4007bfe2744mr915328b6e.9.1744268730964;
-        Thu, 10 Apr 2025 00:05:30 -0700 (PDT)
+        bh=mh8UBXGzUbnvdsif2sw+KTYhRC1BSjBoml8SqEobyIk=;
+        b=b0HmITRHUdKKvaccpjaoa+FGkQrGiUEImubtib9U4flBbDmYrNwEOEqun7xEPOvwtm
+         lN/0lurYC/yPIAF8vqriQEzn0QgxPFDfNhY9ZBby4GmCMxy3JyqkBej42RSqZRkt5qbG
+         bziAFVUMI03rxWNbdaH13P4aij9sSA9VxPNH6zOqQ1IzK5rnVGxDTLgfcXv8ouS6RheX
+         pc/+jjBiOiFYxJpBmF9Fzc6ILZRx0L1btQBRJLjk/meqpMcCa3SEVcdMcAggncnpJhKX
+         HrrXGD7kYNLIrguEY69rdXQemr1ww5iMiEfFgW1b92j55rkAOI8q509VRJng4HJ1HbvC
+         6qFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0ukKzXq8m+md6MvlVMMv/n71+MnSD7RbSzALN02TO9OOtmoE1TG3wICeVWnmlklovHatNd+hwVtkKlQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY+rEv5rBus/+bSoiheCTekYRAftle9zCDEkNTCs28sv8l9Fo7
+	G+4kgKNM/6K+tnypFv3Pq91jXs/Sizampuxo3CqJwRmbQJ5Khv27dDd17ucVpA==
+X-Gm-Gg: ASbGncsIIaQSpFCvsKgYLQQJbFZ9bjLZFnFK4TdlDwRnplFMp9Dvknjhn7Co3i2E8rp
+	bNzIi1SqeKibv0tMd4phQklYJCEky1C+hgcp46kqyyccTt7xo6ZlMxtl3HyTvPBKajQ2N02PoAY
+	Huvx54t4nOZlHEILN4zj4iQ/9ojPA2qZq+lDs0t4/Wq/I99E7tUtGl0vQ+vWatcxk/N6hMAUVYW
+	ccYDD8ecUZpfyWH4MHv6wXt9K1JB/L/qeP0hPd6rooNNaOQQswS6JoBURgzb7YCiAxgxO3TKRAz
+	Ct13pnws9WNwVNR9ek2s/d01Y7fN5mubr8iRGYCL2TuSoXrR7NtabZJJv7F6O0LBAm5GWQ==
+X-Google-Smtp-Source: AGHT+IE/XTUu6u5msxN+Qw7e3Ta4Mxkm8pI5BxCJg/oExJOAteicyPdgbu1SRM4uzbVEJeCFnx0ZuA==
+X-Received: by 2002:a05:6808:2f13:b0:3f6:7677:5bef with SMTP id 5614622812f47-4007bfa52femr977035b6e.2.1744268732358;
+        Thu, 10 Apr 2025 00:05:32 -0700 (PDT)
 Received: from aus-ird.tenstorrent.com ([38.104.49.66])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40076282ce8sm461369b6e.9.2025.04.10.00.05.29
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40076282ce8sm461369b6e.9.2025.04.10.00.05.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 00:05:30 -0700 (PDT)
+        Thu, 10 Apr 2025 00:05:31 -0700 (PDT)
 From: Cyril Bur <cyrilbur@tenstorrent.com>
 To: palmer@dabbelt.com,
 	aou@eecs.berkeley.edu,
@@ -68,9 +68,9 @@ To: palmer@dabbelt.com,
 Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	jszhang@kernel.org
-Subject: [PATCH v6 2/5] riscv: implement user_access_begin() and families
-Date: Thu, 10 Apr 2025 07:05:23 +0000
-Message-Id: <20250410070526.3160847-3-cyrilbur@tenstorrent.com>
+Subject: [PATCH v6 3/5] riscv: uaccess: use input constraints for ptr of __put_user()
+Date: Thu, 10 Apr 2025 07:05:24 +0000
+Message-Id: <20250410070526.3160847-4-cyrilbur@tenstorrent.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
 References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
@@ -84,115 +84,66 @@ Content-Transfer-Encoding: 8bit
 
 From: Jisheng Zhang <jszhang@kernel.org>
 
-Currently, when a function like strncpy_from_user() is called,
-the userspace access protection is disabled and enabled
-for every word read.
+Putting ptr in the inputs as opposed to output may seem incorrect but
+this is done for a few reasons:
+- Not having it in the output permits the use of asm goto in a
+  subsequent patch. There are bugs in gcc [1] which would otherwise
+  prevent it.
+- Since the output memory is userspace there isn't any real benefit from
+  telling the compiler about the memory clobber.
+- x86, arm and powerpc all use this technique.
 
-By implementing user_access_begin() and families, the protection
-is disabled at the beginning of the copy and enabled at the end.
-
-The __inttype macro is borrowed from x86 implementation.
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921 # 1
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+[Cyril Bur: Rewritten commit message]
 Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
 ---
- arch/riscv/include/asm/uaccess.h | 76 ++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ arch/riscv/include/asm/uaccess.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-index fee56b0c8058..c9a461467bf4 100644
+index c9a461467bf4..da36057847f0 100644
 --- a/arch/riscv/include/asm/uaccess.h
 +++ b/arch/riscv/include/asm/uaccess.h
-@@ -61,6 +61,19 @@ static inline unsigned long __untagged_addr_remote(struct mm_struct *mm, unsigne
- #define __disable_user_access()							\
- 	__asm__ __volatile__ ("csrc sstatus, %0" : : "r" (SR_SUM) : "memory")
- 
-+/*
-+ * This is the smallest unsigned integer type that can fit a value
-+ * (up to 'long long')
-+ */
-+#define __inttype(x) __typeof__(		\
-+	__typefits(x, char,			\
-+	  __typefits(x, short,			\
-+	    __typefits(x, int,			\
-+	      __typefits(x, long, 0ULL)))))
-+
-+#define __typefits(x, type, not) \
-+	__builtin_choose_expr(sizeof(x) <= sizeof(type), (unsigned type)0, not)
-+
- /*
-  * The exception table consists of pairs of addresses: the first is the
-  * address of an instruction that is allowed to fault, and the second is
-@@ -368,6 +381,69 @@ do {									\
- 		goto err_label;						\
+@@ -219,11 +219,11 @@ do {								\
+ 	__typeof__(*(ptr)) __x = x;				\
+ 	__asm__ __volatile__ (					\
+ 		"1:\n"						\
+-		"	" insn " %z2, %1\n"			\
++		"	" insn " %z1, %2\n"			\
+ 		"2:\n"						\
+ 		_ASM_EXTABLE_UACCESS_ERR(1b, 2b, %0)		\
+-		: "+r" (err), "=m" (*(ptr))			\
+-		: "rJ" (__x));					\
++		: "+r" (err)					\
++		: "rJ" (__x), "m"(*(ptr)));			\
  } while (0)
  
-+static __must_check __always_inline bool user_access_begin(const void __user *ptr, size_t len)
-+{
-+	if (unlikely(!access_ok(ptr, len)))
-+		return 0;
-+	__enable_user_access();
-+	return 1;
-+}
-+#define user_access_begin user_access_begin
-+#define user_access_end __disable_user_access
-+
-+static inline unsigned long user_access_save(void) { return 0UL; }
-+static inline void user_access_restore(unsigned long enabled) { }
-+
-+/*
-+ * We want the unsafe accessors to always be inlined and use
-+ * the error labels - thus the macro games.
-+ */
-+#define unsafe_put_user(x, ptr, label)	do {				\
-+	long __err = 0;							\
-+	__put_user_nocheck(x, (ptr), __err);				\
-+	if (__err)							\
-+		goto label;						\
-+} while (0)
-+
-+#define unsafe_get_user(x, ptr, label)	do {				\
-+	long __err = 0;							\
-+	__inttype(*(ptr)) __gu_val;					\
-+	__get_user_nocheck(__gu_val, (ptr), __err);			\
-+	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-+	if (__err)							\
-+		goto label;						\
-+} while (0)
-+
-+#define unsafe_copy_loop(dst, src, len, type, op, label)		\
-+	while (len >= sizeof(type)) {					\
-+		op(*(type *)(src), (type __user *)(dst), label);	\
-+		dst += sizeof(type);					\
-+		src += sizeof(type);					\
-+		len -= sizeof(type);					\
-+	}
-+
-+#define unsafe_copy_to_user(_dst, _src, _len, label)			\
-+do {									\
-+	char __user *__ucu_dst = (_dst);				\
-+	const char *__ucu_src = (_src);					\
-+	size_t __ucu_len = (_len);					\
-+	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u64, unsafe_put_user, label);	\
-+	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u32, unsafe_put_user, label);	\
-+	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u16, unsafe_put_user, label);	\
-+	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u8, unsafe_put_user, label);	\
-+} while (0)
-+
-+#define unsafe_copy_from_user(_dst, _src, _len, label)			\
-+do {									\
-+	char *__ucu_dst = (_dst);					\
-+	const char __user *__ucu_src = (_src);				\
-+	size_t __ucu_len = (_len);					\
-+	unsafe_copy_loop(__ucu_src, __ucu_dst, __ucu_len, u64, unsafe_get_user, label);	\
-+	unsafe_copy_loop(__ucu_src, __ucu_dst, __ucu_len, u32, unsafe_get_user, label);	\
-+	unsafe_copy_loop(__ucu_src, __ucu_dst, __ucu_len, u16, unsafe_get_user, label);	\
-+	unsafe_copy_loop(__ucu_src, __ucu_dst, __ucu_len, u8, unsafe_get_user, label);	\
-+} while (0)
-+
- #else /* CONFIG_MMU */
- #include <asm-generic/uaccess.h>
- #endif /* CONFIG_MMU */
+ #ifdef CONFIG_64BIT
+@@ -236,16 +236,16 @@ do {								\
+ 	u64 __x = (__typeof__((x)-(x)))(x);			\
+ 	__asm__ __volatile__ (					\
+ 		"1:\n"						\
+-		"	sw %z3, %1\n"				\
++		"	sw %z1, %3\n"				\
+ 		"2:\n"						\
+-		"	sw %z4, %2\n"				\
++		"	sw %z2, %4\n"				\
+ 		"3:\n"						\
+ 		_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %0)		\
+ 		_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %0)		\
+-		: "+r" (err),					\
+-			"=m" (__ptr[__LSW]),			\
+-			"=m" (__ptr[__MSW])			\
+-		: "rJ" (__x), "rJ" (__x >> 32));		\
++		: "+r" (err)					\
++		: "rJ" (__x), "rJ" (__x >> 32),			\
++			"m" (__ptr[__LSW]),			\
++			"m" (__ptr[__MSW]));			\
+ } while (0)
+ #endif /* CONFIG_64BIT */
+ 
 -- 
 2.34.1
 
