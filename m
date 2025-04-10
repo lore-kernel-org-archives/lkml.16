@@ -1,208 +1,486 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00CC280A2C;
-	Thu, 10 Apr 2025 10:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744280306; cv=fail; b=S514/miSRW8LD4UlzsepMVZU61xONhdRcl9ooDNO1vf/ORRPFc1XBGAKMSR660BthffWUSLL8GCvKcwLWb6HN7oUviWmjbV7iawTt4iGBk5RU9UmcDtdzFUpqDIgvQGW0WeCGJ9HddYpivHSgT+WjijZa7NkyUCmH5xF3cM+HV0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744280306; c=relaxed/simple;
-	bh=WISWL1jsm+OpKXfkC+2wYzTVwZYUnkglRBSfuO1x7C8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=c3Sq8KN+Aa6Zn3+4PcPBg/4hosdqahDyDBg3RfmYwLGSxMAZQ6CV0ck94pjdEUxsqG/5Hnl7nFMoVTqKvv8GISfaR+FYMkRriD8qbm0vGWtyGg2t3bvR/CcKgC6Az2gI2kDqOIJV3kUs/leOfr+uzYbsU0NXbGknWDlNlnQt+BQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=JdUSoFCR; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=Ym8gN3Zp; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB88A1E1E00;
+	Thu, 10 Apr 2025 10:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744280315; cv=none; b=uua9gc69t4GE2PcN5CJ8bs9tdelaxtQa9wjJmNPbKYwsiXiMSrOR/bLeyjVdIm8zHzBxM2X9y1DYTOx7MtGAewBnKOhtlV8C4qP6ETdBJHaYeuBvh7gT6O4G/FZwt20k22WhdogCSnmZ0zfePgqOKMD+fySVd0/MJ5YS+0YW/lU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744280315; c=relaxed/simple;
+	bh=dsVWrf0xzWyYwyghGB7xrazS0Xxr4ZxY8zXtzb8k0qA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iluFd9J0ZjM75pzNYPRvu9j3gFhmtpuZ8f8OuTu1ZZ9D7DQIEprG9DAaDRgv/4lEaWyD+wmSfEO4akYA0o9aPjf+ZzAdLDSWeMhyRw1Pxx3i82qMffZXTefoQ5r6hZQrsf/n3PKC1TohVqLJMUeYMoBys6rQMlhcDVgt0WtYjvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=T455zsZk; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="JdUSoFCR";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="Ym8gN3Zp"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A81sqD001182;
-	Thu, 10 Apr 2025 05:18:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=EBXvXtH7UFlwJYJ4
-	vwcryComv+iuz1e5zm5Jwl6qjhA=; b=JdUSoFCRfuF4HUmEZECImadt6QakHipo
-	mCS3eWI1nzniHkg0iB8ek8uBS/JzBWIQxd1Cfp7DG0hS+jgBTCgLNPMbazeEgDwv
-	E/IJTvfAXevMLaX59OFsc0w7EjuwWydHJB4S3NVzJtBQvyS9XA6X35uy/AgJVmGt
-	fSYW5hv1g4x7Evxz13ryW5JioNoXl5PfJ1KT3Kel3LRzmfpaA3FCGJxEqg3Zn80y
-	2uuZywUOGxGaRJK2TahVUfNDU2NY+gNI5KcX4387eJYG3P92/tSx/6JqSpBM7IKy
-	lUnrY/6iPNeTPSaShpnzB6kUwq2wSAqWT9OT7CXaWSXwZ6Fs8DkjYw==
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2170.outbound.protection.outlook.com [104.47.56.170])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 45xa4bg555-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 05:18:21 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y07jLI/ZAxW60jhW2pxmvifej4vSWvH3s27qDnnT3Q/HGTiQnQ2jsYatJ5HC/GwuncdWzqz3m7OtS80YLxLfb7X95Z0f5Jes82+Vw/ltyeJFr76069uR3iYK5ObT4uES41RyvwEcMfbFoNwctfuBF95yJOYQjvClCpjcm1N94klRVcNEZIgo/MF3ejB1oBnd/w7U6HhdqLVFy/H5wAhf0Ee5QUcNrpx4MuhFm/LnSgjQyxcyaxAssCVOhksypTYfalE6eZCy56JQW2MvfNAOV+woW7oLeIQdZw0UIArJ2phnia72H6QumdbttkcCKTJEA25Bvv1M0E2gHRO4I/Ga8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EBXvXtH7UFlwJYJ4vwcryComv+iuz1e5zm5Jwl6qjhA=;
- b=YyqFopHpWMw094yErhfjJs4WWx4hefVlq6UuUk4dQi373mBQdeR1onHrdva8l1KnYZqjC0Enhfwf2U03PYb8KDU8+2iX7DE9S3fdjgTwMiij6MC6CUo+Mwrpfl71FRjH6kA3wCo5kdUXmFG9pOcdn/hmprPKyMg9bdJMzSbaFulQ1RAnh1NA8qu+osV4hWhpv4dPbFElBFkM1xHI97qgLOlOzWApsUqm/in2yVMiEkjx5nSVpbMPpHOlzMIX3bjRLoULEp27GJ1aL2UDLXV4gHnlAJYWYt82T/3Gil73PBxQ1rcSovFFDEAP0sujdVGOlvqyvVY5lgWHzy+kHv1ggA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EBXvXtH7UFlwJYJ4vwcryComv+iuz1e5zm5Jwl6qjhA=;
- b=Ym8gN3Zp/phA4vSjJpUS517Dt/LOBUBK+8Sn1bKOQaubz7q7Yeocv8y99IprHRYVTo7nN79zLKxbCB3jS3uh4coqO1prwzbueDzHpvmWoncYloPKBQUKdNaO9+7ZNAzaZRNlSIr8MHmURsf84aGx2u5F1cQxg+qzgVtx1W0RaWA=
-Received: from DM6PR02CA0050.namprd02.prod.outlook.com (2603:10b6:5:177::27)
- by PH7PR19MB8505.namprd19.prod.outlook.com (2603:10b6:510:2fb::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Thu, 10 Apr
- 2025 10:18:14 +0000
-Received: from DS3PEPF000099D7.namprd04.prod.outlook.com
- (2603:10b6:5:177:cafe::1) by DM6PR02CA0050.outlook.office365.com
- (2603:10b6:5:177::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.23 via Frontend Transport; Thu,
- 10 Apr 2025 10:18:14 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
- designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
- client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- DS3PEPF000099D7.mail.protection.outlook.com (10.167.17.8) with Microsoft SMTP
- Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.13 via
- Frontend Transport; Thu, 10 Apr 2025 10:18:13 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 206D3406540;
-	Thu, 10 Apr 2025 10:18:12 +0000 (UTC)
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.23])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 104D9820259;
-	Thu, 10 Apr 2025 10:18:12 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: broonie@kernel.org
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: [PATCH] ASoC: wm_adsp: Use vmemdup_user() instead of open-coding
-Date: Thu, 10 Apr 2025 11:18:12 +0100
-Message-Id: <20250410101812.1180539-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="T455zsZk"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:389d:1fcb:c0f8:ff7c:208d])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 45F8F352;
+	Thu, 10 Apr 2025 12:16:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744280191;
+	bh=dsVWrf0xzWyYwyghGB7xrazS0Xxr4ZxY8zXtzb8k0qA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T455zsZkqCtAYV7CEXOaCyxkmPXL6S7RjI6CqzMR5E6/1PRJQkRyadBCB5M/4UzZN
+	 iNwrbvCy1TIzOtyH/VopN+vkScWsWjLBQ3+fD3ukqSjFBti/AXPTYIyHax2HdMVWFq
+	 VrPL4r7Dyd27jjlHzRou0C/HSSCmBwy6LgPzcxFM=
+Date: Thu, 10 Apr 2025 15:48:25 +0530
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+To: Devarsh Thakkar <devarsht@ti.com>
+Cc: Andrew Davis <afd@ti.com>, Judith Mendez <jm@ti.com>, 
+	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>, Nishanth Menon <nm@ti.com>, Hari Nagalla <hnagalla@ti.com>, 
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Beleswar Padhi <b-padhi@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Markus Schneider-Pargmann <msp@baylibre.com>, praneeth@ti.com, "Khasim, Syed Mohammed" <khasim@ti.com>, 
+	tomi.valkeinen@ideasonboard.com, v-krishnamoorthy@ti.com, s-tripathy@ti.com, s-tripathi1@ti.com, 
+	c-shilwant@ti.com
+Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+Message-ID: <czmir7yvss3oreveesyrjqfdcawyn2axtstomsj3yx5sntqwo2@r3udnsyrxvkp>
+References: <20250405001518.1315273-1-jm@ti.com>
+ <20250405001518.1315273-7-jm@ti.com>
+ <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
+ <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
+ <e131298f-3713-482a-a740-ff89709270b4@ti.com>
+ <091c0869-525b-4b40-b5fe-a5c1907ec606@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D7:EE_|PH7PR19MB8505:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 842a6c17-fdc0-4544-8083-08dd781900aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|61400799027|82310400026|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nzJ9CfmIm5BLCp31wM23XLU2xdv2/D1KHhQLqey2d6tTU2uls/kKB9Ou8yrj?=
- =?us-ascii?Q?0p+jLZv4c+adHThCQ2ySGB+vsPyCkb6EiRi7xvybx76kr9jf4vMXpodtnCjE?=
- =?us-ascii?Q?sqBG2crj+lV2nRohhxL68KzUU6HYgs4k15x3okc6sceyAoBhu02YCILZIJzb?=
- =?us-ascii?Q?IXligPYyQoNpglpPwHhvH8Wb0uBXe4ixddmLXRg97QmmC8ji80aUc8ybTQR4?=
- =?us-ascii?Q?/iJoY2d0KDP+5wwQeqSc2fJlAXNMMcjr3/EdXoXpqnO7qDDPSzE3migbPtHM?=
- =?us-ascii?Q?gssO7SDiNbUdcCGNzLiBNi/+Hn1uy/N1zVz0tY1f/Qd0xKR6DWCh0pgT5kLK?=
- =?us-ascii?Q?yz2Hiegk7Wuu6AGAw/BvXiHDwXSYrNciIKH0Ev6frEtiBoKDqYinBylBgkjs?=
- =?us-ascii?Q?ns4R1/NcKLQlgIMVUWaxxtWSyy6i2ts6Gdo2I2G7ZytiT+tU9s0c2+BP59Ap?=
- =?us-ascii?Q?daileWSSKqKISvmGogHfQxAWAKaeMw2646ENVOsQvO18ettvOG1pWhIkVAYr?=
- =?us-ascii?Q?gvquT84Xq1eyigFBwC+SgvlMt6M8zSvvTzQJmuqa34A4avF1GJCqNwsvSQwR?=
- =?us-ascii?Q?0CX6JgTn6n5V5jgt3VDE/Ey5QqQ67c48tHA1ufoPo/6Tv4ZsHxdaiynn7WXF?=
- =?us-ascii?Q?ufrweWwmEJzNjzJ9w3B4WGavZw1m9Y47TkOQnTSDT4KCXPKiod8D+eIlibnE?=
- =?us-ascii?Q?MRtWjw6FlTq+lm2wNsAd4J5PiPXChqF8CZQV963FWD/7KGR96fsbXIwWq6y4?=
- =?us-ascii?Q?nSPgV0ZuL85rmXkM8hk0TzcH4xw5UzrUsjxmbgSsoRuI7AP5kOqM3PaU57ov?=
- =?us-ascii?Q?RRegqoRGlwUlWP8GZ1vkIZEixwleYtkfTy5XH8P5keXaypEN2eixhkJw3Evl?=
- =?us-ascii?Q?IPc2mw5mXv4Pv9pTieVv6o8EI1cLoi7EU7Qgcmo9oUc+uXSIqi1PblCkLSqT?=
- =?us-ascii?Q?bo5mEqk2b1OkFrY8VOrRvVwNaSkwm9NMKQzLH6lY4P2tSB8FAywim9cFLvWt?=
- =?us-ascii?Q?ks6iCFvDOr2+b3QF5OTZzqv2j67P0FQsW0Rg2WA1izHW98csWqKO6cEZUX0M?=
- =?us-ascii?Q?472ZoqHSaulfGXl8vqPw90vmAsPs3JOlIpOPNFWPUkPS04i2UYL/NR0ElFkL?=
- =?us-ascii?Q?YOb66T0k2wNfdjBJHlHDbS5qAiPlmfwpk7+Gm76J8ElDtcB9yEcVlV+SATqp?=
- =?us-ascii?Q?+2ljuitZWJJ1LGJIR0/+IF5/97g9qdaucY8vSl4tCfrkFyICvolZ06QrqSed?=
- =?us-ascii?Q?kKPluzYiUaQOau5gRcvLRDtz8pUIPLPgBWf9mGNqlyCs9WrIZO49g7lyNbuC?=
- =?us-ascii?Q?6SnC0mB47MtaSKh86f1z3Cx6KmgNgPf9KhAuudFiL8LMtEjTftgSunP/Lh91?=
- =?us-ascii?Q?tmflJSnCV8GQczE4DdpvrxdCySxpTlKKI/iGJz4RE6OJKdlvhg1MCnKA+rYw?=
- =?us-ascii?Q?+GiUlQcReiJHqavOWtXNRGKwH94EXDVljnmbRnHaCy0Vh0Fe42KoEXFlQWOO?=
- =?us-ascii?Q?7PisMMUpbRQlhkOvUDO/Q6XtwsDoYs2QVP/C?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(61400799027)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 10:18:13.4355
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 842a6c17-fdc0-4544-8083-08dd781900aa
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D7.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR19MB8505
-X-Proofpoint-ORIG-GUID: ca8aIrNjMz6BGd5l6lRh1TlH-nK862Q_
-X-Proofpoint-GUID: ca8aIrNjMz6BGd5l6lRh1TlH-nK862Q_
-X-Authority-Analysis: v=2.4 cv=B6W50PtM c=1 sm=1 tr=0 ts=67f79aed cx=c_pps a=o9WQ8H7iXVZ6wSn1fOU0uA==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=XR8D0OoHHMoA:10 a=s63m1ICgrNkA:10
- a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=s30H-A08ZOQPxGI4yEgA:9 a=BGLuxUZjE2igh1l4FkT-:22
-X-Proofpoint-Spam-Reason: safe
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="e3db444jyk2gutly"
+Content-Disposition: inline
+In-Reply-To: <091c0869-525b-4b40-b5fe-a5c1907ec606@ti.com>
 
-Use vmemdup_user() to get a copy of the user buffer in wm_coeff_tlv_put().
 
-Apart from simplifying the code and avoiding open-coding, it means we
-also automatically benefit from any security enhancements in the code
-behind vmemdup_user().
+--e3db444jyk2gutly
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+MIME-Version: 1.0
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
----
- sound/soc/codecs/wm_adsp.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+Hi Devarsh,
 
-diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
-index ffd826f30e15..a2e9f32209cf 100644
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <linux/array_size.h>
-+#include <linux/cleanup.h>
- #include <linux/ctype.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-@@ -19,7 +20,7 @@
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
--#include <linux/vmalloc.h>
-+#include <linux/string.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
- #include <sound/core.h>
-@@ -415,21 +416,12 @@ static int wm_coeff_tlv_put(struct snd_kcontrol *kctl,
- 		(struct soc_bytes_ext *)kctl->private_value;
- 	struct wm_coeff_ctl *ctl = bytes_ext_to_ctl(bytes_ext);
- 	struct cs_dsp_coeff_ctl *cs_ctl = ctl->cs_ctl;
--	void *scratch;
--	int ret = 0;
-+	void *scratch __free(kvfree) = vmemdup_user(bytes, size);
- 
--	scratch = vmalloc(size);
--	if (!scratch)
--		return -ENOMEM;
-+	if (IS_ERR(scratch))
-+		return PTR_ERR(no_free_ptr(scratch));
- 
--	if (copy_from_user(scratch, bytes, size))
--		ret = -EFAULT;
--	else
--		ret = cs_dsp_coeff_lock_and_write_ctrl(cs_ctl, 0, scratch, size);
--
--	vfree(scratch);
--
--	return ret;
-+	return cs_dsp_coeff_lock_and_write_ctrl(cs_ctl, 0, scratch, size);
- }
- 
- static int wm_coeff_put_acked(struct snd_kcontrol *kctl,
--- 
-2.39.5
+Thanks for the cc here.
 
+On Apr 10, 2025 at 14:30:59 +0530, Devarsh Thakkar wrote:
+> Hi Andrew, Judith,
+>=20
+> Thanks for the quick revert.
+>=20
+> On 07/04/25 21:28, Andrew Davis wrote:
+> > On 4/7/25 9:13 AM, Judith Mendez wrote:
+> > > Hi Devarsh,
+> > >=20
+> > > On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
+> > > > Hi Judith,
+> > > >=20
+> > > > On 05/04/25 05:45, Judith Mendez wrote:
+> > > > =C2=A0> From: Devarsh Thakkar <devarsht@ti.com>
+> > > > >=20
+> > > >=20
+> > > > Thanks for the patch.
+> > > >=20
+> > > > > For each remote proc, reserve memory for IPC and bind the mailbox
+> > > > > assignments. Two memory regions are reserved for each remote proc=
+essor.
+> > > > > The first region of 1MB of memory is used for Vring shared buffers
+> > > > > and the second region is used as external memory to the
+> > > > > remote processor
+> > > > > for the resource table and for tracebuffer allocations.
+> > > > >=20
+> > > > > Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> > > > > Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> > > > > Signed-off-by: Judith Mendez <jm@ti.com>
+> > > > > ---
+> > > > > =C2=A0 arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96
+> > > > > +++++++++++++++++++++ ++--
+> > > > > =C2=A0 1 file changed, 90 insertions(+), 6 deletions(-)
+> > > > >=20
+> > > > > diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> > > > > b/arch/arm64/ boot/dts/ti/k3-am62a7-sk.dts
+> > > > > index 1c9d95696c839..7d817b447c1d0 100644
+> > > > > --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> > > > > +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> > > > > @@ -52,6 +52,42 @@ linux,cma {
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 linux,cma-default;
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 c7x_0_dma_memory_regi=
+on: c7x-dma-memory@99800000 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 compatible =3D "shared-dma-pool";
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 reg =3D <0x00 0x99800000 0x00 0x100000>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 no-map;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > +
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 c7x_0_memory_region: =
+c7x-memory@99900000 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 compatible =3D "shared-dma-pool";
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 reg =3D <0x00 0x99900000 0x00 0xf00000>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 no-map;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > +
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mcu_r5fss0_core0_dma_=
+memory_region: r5f-dma-memory@9b800000 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 compatible =3D "shared-dma-pool";
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 reg =3D <0x00 0x9b800000 0x00 0x100000>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 no-map;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > +
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mcu_r5fss0_core0_memo=
+ry_region: r5f-dma-memory@9b900000 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 compatible =3D "shared-dma-pool";
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 reg =3D <0x00 0x9b900000 0x00 0xf00000>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 no-map;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > +
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wkup_r5fss0_core0_dma=
+_memory_region: r5f-dma-memory@9c800000 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 compatible =3D "shared-dma-pool";
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 reg =3D <0x00 0x9c800000 0x00 0x100000>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 no-map;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > +
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wkup_r5fss0_core0_mem=
+ory_region: r5f-dma-memory@9c900000 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 compatible =3D "shared-dma-pool";
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 reg =3D <0x00 0x9c900000 0x00 0xf00000>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 no-map;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > +
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 secure_tfa=
+_ddr: tfa@9e780000 {
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 reg =3D <0x00 0x9e780000 0x00 0x80000>;
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 alignment =3D <0x1000>;
+> > > > > @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 alignment =3D <0x1000>;
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 no-map;
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > -
+> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wkup_r5fss0_core0_mem=
+ory_region: r5f-dma-memory@9c900000 {
+> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 compatible =3D "shared-dma-pool";
+> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 reg =3D <0x00 0x9c900000 0x00 0x01e00000>;
+> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 no-map;
+> > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > >=20
+> > > > This is missing the edgeAI specific remote-core carveouts and
+> > > > RTOS- to-RTOS IPC memory regions [1] being used by edgeAI
+> > > > firmwares which come as pre-packaged in the official SDK release
+> > > > for AM62A.
+> > > >=20
+> > > > There is only one official SDK release for AM62A (which is
+> > > > edgeAI based) [2] which packages these edgeAI remoteproc
+> > > > firmwares and in my view it is a fair expectation that remote
+> > > > core careveouts in device- tree should align with firmwares
+> > > > released in SDK.
+> > > >=20
+> >=20
+> > Why should Linux upstream care about what we do in our current evil
+> > vendor SDKs?
+>=20
+> These carveouts are specific to remote-cores and so have to match with
+> firmwares running in these remote-cores. The debate is on which firmwares=
+ it
+> should match to. The firmwares being packaged in SDK are the most used-on=
+es
+> and so in my view it is safe to account them as the official ones, unless
+> of-course there is a major overhaul and re-architecture planned and accep=
+ted
+> for these firmwares in which case we should wait for it.
+>=20
+> > We change things around every cycle, and do all kinds of hacky things to
+> > just
+> > "make it work" for the current SDK release.
+> >=20
+>=20
+> I don't see any changes done in memory map for last set of releases, but
+> agreed if there is big architecture change planned for these firmwares th=
+en
+> we should rather wait for updated firmwares then adding bloated carve-out=
+s.
+>=20
+> > > > This is because most developers (including me) and vendors
+> > > > download this official SDK release and use it with latest
+> > > > upstream kernel and modules (right now we are applying required
+> > > > patches locally) and this patch won't suffice for this, in-fact
+> > > > it won't work since the remoteproc firmwares are already using
+> > > > regions beyond the reserved- regions from this patch.
+> >=20
+> > Then that firmware team should fix their firmware, Linux should not
+> > do things just because some builds of a firmware did the wrong thing.
+>=20
+> Maybe some optimizations would be missing, but carve-outs for lot of thin=
+gs
+> which these firm-wares do out-of-box (and not even related fully to AI) a=
+re
+> missing. For e.g. there is RTOS-to-RTOS IPC test which runs on startup and
+> there is no reserved region for same, this would lead to tricky failures.
+> The DM R5 remote core also controls ISP, but all required regions for same
+> are also not present either.
+>=20
+> >=20
+> > Just a random example from the top of my mind here, a while back
+> > someone on the codec firmware team decided to take the standard RPMSG
+> > name service structure and modify it to suit some specific usecase
+> > they had, suddenly all the firmware we made for AM57x devices stopped
+> > working on upstream kernels. Instead of fixing the firmware we just
+> > carried a hack for the same in our vendor kernel trees. Now customers
+> > have no path to use this old firmware on newer kernels as adding the
+> > hack to upstream Linux (rightly) failed [0].
+> >=20
+> > Let's not do that again, if we have firmware that doesn't follow
+> > upstream, then let's fix the firmware, not hack around it upstream.
+> >=20
+> > The edgeAI firmware folks have no issue ignoring existing upstream
+> > IPC carveouts and simply replacing them all with their own custom
+> > ones in their SDK[1], I see no reason they cannot continue doing that
+> > if they don't want to fix their firmware.
+> >=20
+>=20
+> There is no apples-to-apples comparison with TDA4VM, unlike AM62A7 it off=
+ers
+> SDK for both edgeAI and generic Linux [1], so if someone just uses latest
+> upstream kernel and device-tree with this generic linux SDK, that would
+> still work without any overlays applied or carveouts added. Same is not t=
+rue
+> for AM62A, as AM62A offers only edgeAI SDK with firmwares packaged for AI
+> use-cases. So if someone, just replaces latest upstream kernel and
+> device-tree with the patches from this series in edgeAI wic image, it won=
+'t
+> work cleanly due to missing carve-outs.
+>=20
+> Also even if we keep aside edgeAI, basic camera+ISP use-case won't work
+> without the carveouts and we would prefer not to clone another layer to g=
+rab
+> the overlay and apply it every-time we want to test run camera+ISP (and e=
+ven
+> the edgeAI use-case) on AM62A which would be a pain.
+>=20
+
+On the basic camera + ISP usecase, afaiu the downstream edgeAI SDK uses=20
+custom gstreamer elements that make calls to the aforementioned R5 core=20
+that controls the ISP. On top of that there are additional gstreamer=20
+patches that are not yet posted upstream for review from the community,=20
+so the userspace design isn't really set in stone, or upstream-friendly=20
+yet.=20
+
+IMO if that architecture is still under discussion, it might be better=20
+to keep the edgeAI specific carveouts out of the upstream DTs.. just in=20
+case the carevouts have to go away, or change significantly.
+
+If you are sure that the regions and firmware architecture is set in=20
+stone and won't be updated even if there is a complete redesign of the=20
+userspace/application level stack for accessing the ISP (let's say using=20
+libcamera), only then it makes sense to add the carveouts right now.
+
+> > >=20
+> > > I understand your point, currently with this patch remoteproc loading
+> > > will not work for some cores. However, the goal here is to standardize
+> > > as much as possible the memory carveout sizes, push the "demo firmwar=
+e"
+> > > to request resources the correct way from resource table, and move aw=
+ay
+> > > from this dependency and limitations that we have with our firmware.
+>=20
+> I understand this, but my view is that w.r.t firmware only goal should not
+> just be tp demonstrate correct way of requesting resources from
+> resource-tables, optimize the carve-outs etc but also to demonstrate the
+> primary use-cases (camera+ISP+edgeAI) which the device is capable of.
+>=20
+> > > should soon be able to generate our own firmware using Zephyr,=C2=A0 =
+which
+> > > Andrew is pioneering, so with this firmware we should move to the
+> > > correct direction upstream. Downstream we are still using the memory
+> > > carveout sizes that the firmware folk want so desperately to keep, for
+> > > now..
+> > >=20
+> >=20
+> > +1
+> >=20
+> > I have this Zephyr based firmware for AM62A working and it uses the
+> > standard IPC regions as specified in this patch. I'll be posting the PR
+> > for it in Zephyr upstream by the end of week.
+> >=20
+>=20
+> I understand this, but will this zephyr based firmware support vision +
+> edgeAI analytics ? Does it demonstrate all the unique capabilities of AM6=
+2A
+> SoC ? If not, then what would be utility of such firmware on AM62A where
+> these are the primary use-cases w.r.t AM62A ?
+>=20
+> Why should upstream device-tree use carve-outs which match to this demo
+> zephyr based firmware (which apparently not many are using and is not goi=
+ng
+> into any official SDK release) instead of official firmwares going into S=
+DK
+> ? SDK released firmwares are being used by so many customers and SDK
+> documentation maps to it, but zephyr firmware that is being pitched here,
+> who would be the potential users and what would be it's utility ?
+>=20
+> [1]: https://www.ti.com/tool/PROCESSOR-SDK-J721E
+>=20
+> Regards
+> Devarsh
+>=20
+> > For this patch as it is:
+> >=20
+> > Acked-by: Andrew Davis <afd@ti.com>
+> >=20
+>=20
+>=20
+> > Andrew
+> >=20
+> > [0] https://lore.kernel.org/lkml/20241011123922.23135-1-richard@nod.at/
+> > [1] https://git.ti.com/cgit/edgeai/meta-edgeai/tree/recipes-kernel/
+> > linux/linux-ti-staging/j721e-evm/0001-arm64-dts-ti-Add-DTB-overlays-for-
+> > vision-apps-and-ed.patch?h=3Dkirkstone
+> >=20
+> > > ~ Judith
+> > >=20
+> > > >=20
+> > > > [1]:
+> > > > https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/
+> > > > arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=3Dti-linux-6.6.y-cicd#n103
+> > > > [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
+> > > >=20
+> > > > Regards
+> > > > Devarsh
+> > > >=20
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 opp-table {
+> > > > > @@ -741,3 +771,57 @@ dpi1_out: endpoint {
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+> > > > > =C2=A0 };
+> > > > > +
+> > > > > +&mailbox0_cluster0 {
+> > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+> > > > > +
+> > > > > +=C2=A0=C2=A0=C2=A0 mbox_r5_0: mbox-r5-0 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-rx =3D <0 0 0=
+>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-tx =3D <1 0 0=
+>;
+> > > > > +=C2=A0=C2=A0=C2=A0 };
+> > > > > +};
+> > > > > +
+> > > > > +&mailbox0_cluster1 {
+> > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+> > > > > +
+> > > > > +=C2=A0=C2=A0=C2=A0 mbox_c7x_0: mbox-c7x-0 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-rx =3D <0 0 0=
+>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-tx =3D <1 0 0=
+>;
+> > > > > +=C2=A0=C2=A0=C2=A0 };
+> > > > > +};
+> > > > > +
+> > > > > +&mailbox0_cluster2 {
+> > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+> > > > > +
+> > > > > +=C2=A0=C2=A0=C2=A0 mbox_mcu_r5_0: mbox-mcu-r5-0 {
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-rx =3D <0 0 0=
+>;
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-tx =3D <1 0 0=
+>;
+> > > > > +=C2=A0=C2=A0=C2=A0 };
+> > > > > +};
+> > > > > +
+> > > > > +&wkup_r5fss0 {
+> > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+> > > > > +};
+> > > > > +
+> > > > > +&wkup_r5fss0_core0 {
+> > > > > +=C2=A0=C2=A0=C2=A0 mboxes =3D <&mailbox0_cluster0>, <&mbox_r5_0>;
+> > > > > +=C2=A0=C2=A0=C2=A0 memory-region =3D <&wkup_r5fss0_core0_dma_mem=
+ory_region>,
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 <&wkup_r5fss0_core0_memory_region>;
+> > > > > +};
+> > > > > +
+> > > > > +&mcu_r5fss0 {
+> > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+> > > > > +};
+> > > > > +
+> > > > > +&mcu_r5fss0_core0 {
+> > > > > +=C2=A0=C2=A0=C2=A0 mboxes =3D <&mailbox0_cluster2>, <&mbox_mcu_r=
+5_0>;
+> > > > > +=C2=A0=C2=A0=C2=A0 memory-region =3D <&mcu_r5fss0_core0_dma_memo=
+ry_region>,
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 <&mcu_r5fss0_core0_memory_region>;
+> > > > > +};
+> > > > > +
+> > > > > +&c7x_0 {
+> > > > > +=C2=A0=C2=A0=C2=A0 mboxes =3D <&mailbox0_cluster1>, <&mbox_c7x_0=
+>;
+> > > > > +=C2=A0=C2=A0=C2=A0 memory-region =3D <&c7x_0_dma_memory_region>,
+> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 <&c7x_0_memory_region>;
+> > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
+> > > > > +};
+> > > >=20
+> > >=20
+> >=20
+>=20
+>=20
+
+--=20
+Thanks,
+Jai
+
+--e3db444jyk2gutly
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmf3mvEACgkQQ96R+SSa
+cUWkGhAAzCCnr4vaiqwl+eFE71335Drwwdm32P7PapSrveFwTaWYyVaAHV6ua/Cm
+sbvbJuHPgh9LIy2zNEq2EnsjfA513NovuM4yoGA5x1LBb2q/OtfhS8xDlxza0aJ4
+wN/jkJmTZJ7R+Oc3nvZBtLMLzlfhNFZFV92ob472rFGE9gS8V5KjcEJ5GAMAQqfd
+KMCdN3nqza9bVLnMDg8jTPJVR2K5ktonx3CyuIg44Q0Zgrxqj9otqm/QcF2Gt3gj
+jDQKMU9Ryowcm4SLoE/xlKOWQj1hwtY9HsegR4A7dzGDm//XIBo3iXCWsAMbWD1f
++enRtwycF96a1A/tei1yfNGj2yFVxamiUCtVA27i8XHr2Sfewl4zSSIhDYGJMU5o
+UxwjpKy4DGaPZuIH1h9TF1jFFouQgs9XZJBxk/IE6yzU1eU/W8eVgT6oBQCpVRL8
+FwAk4mUYNKiy4axTD1H5Xb8Z5JwpycuqZcp8j0GJPYDty2iYIxEZv55C7LciPfgA
+jL2Y/g7sx4rCPXTUGlKy4QnfJDm3pdxp6QbLnqsvgdjFA/6UGQyhGRolZCgoOkJy
+BANT1OM2ZN4B8OnIrcwrRcnecYsaTKqAU/ecEf1N/Zr6NQZNQbNbbC/KEoGrNH3G
+pRViFRX9b2Washmr6+9sy3XfKsFqbzz1p8OMsdQDLJSZnJaJW5s=
+=3GrP
+-----END PGP SIGNATURE-----
+
+--e3db444jyk2gutly--
