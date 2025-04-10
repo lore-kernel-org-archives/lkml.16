@@ -1,110 +1,97 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E091D5143;
-	Thu, 10 Apr 2025 06:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D71E1D5143
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267700; cv=none; b=hFZTa/11fbXZqL3QFkUf69uy7rL7JUtCNL4Ct5JfaYvH37kQ9ewgFEZG8S982sYrrE53X3iracGqHJTZa/NcTau1eL1dHLfTbmodoenjfLjR9VOjucIO7audFXAgRX9pu8Pau/A1C3+rqywu4csddqiNUDHo9CdKiBclDqeZN2E=
+	t=1744267716; cv=none; b=adq9sA7eT/mZYE5B1G97GH+WER87BjblNvYFOxhI1SQ86C7UC835rO+9WzbOFxPcIwI6A2Zif2Q0hbXiufsvuzLEkGV5zNUnPEZcoZwdcLUvi3BfMWhKKIRl/3QS0UZlY1uOnJGHSiqU03B/Wc4/K5OZq+TJuz3qHeP0/QPAifU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267700; c=relaxed/simple;
-	bh=C5ec5lNyuqtEj/fcsCGEIrivAFsHAGSQ3zeL0mFILag=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GxjtAqlMAAn5MOfDQGZPcaYT1i2wQ2HFh0ncDhgfr64NFi4Wt5pzdaUQLD/l3xsUGm91LxbSgsMFyvDkGXlryyrO5MbgHe8Uuw46uVz8vZdP/kCNmTpSemZakJ8CZhJVziLiFmhEEA47vMeP6rf6PdU5CPDfTzdSKazaWSSOP/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Mwkv66tx; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744267716; c=relaxed/simple;
+	bh=8T4++6YQL5JmtQQI9b2c0kc3G6Laew+mDIrGJSUBrfA=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=fkuk+X0tC7ipgKnIEWI4nh94zV2AAg0vyDUG5CneXBFxdyNsYnWW4UyAN0uMyF52UjxkOBLc0xT9jHBpMsN5fCIdTJQYEjJksIPcNO+4DdqNzl22ICPQX4p4UoFpYji4WbW3ssNGZ1FIxf6mSuzfM1HV2L5OcqG1w5h6L738A4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SkjSpAcp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Mwkv66tx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B5F4433F1;
-	Thu, 10 Apr 2025 06:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744267694;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SkjSpAcp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744267714;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cb7IK28fqEaigcH00aeaSLMccq7nNJere64F79CGyO8=;
-	b=Mwkv66txch40E6HcDevxLYZTrvLuTp8ktqfEwmvtNg/7fATJe9Enq5Pl4FboeK0VzIrNA3
-	42gz3ZOndZbTsKbnCSq9uIQNaf0wt0lEtOkGJWkO2fqBLqrFyxDvS5GD2FBLfCZxj0URQD
-	gZ1QyODj5QmRHH1WQ/OwA+1UyCoY/MWGdd/wsd3BLh5Lobmsbs58f3VQJD1YnOtJGrhnvB
-	pqQC/Y6BGqq4QwCrX1TEUNCgimIX/wdjzqN4xOcBC+NWqijh5yLav3QVqI8VrZCYAJFaxu
-	bCUFbybtq2gwlHLAz0eU1h7vuZ+O3zuLe8GkHZMakPNnWzfnozRO/3gROFUD8w==
-Date: Thu, 10 Apr 2025 08:48:09 +0200
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
- support SFPs
-Message-ID: <20250410084809.1829dc65@windsurf>
-In-Reply-To: <c6257afe-36bb-46d8-8c22-da3b85028105@lunn.ch>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
-	<20250407145546.270683-16-herve.codina@bootlin.com>
-	<19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
-	<20250408162603.02d6c3a1@bootlin.com>
-	<D91CSNC07NYM.3KC467K0OZ4GG@bootlin.com>
-	<c14dd5c6-2dae-4398-89a9-342e7a25bb30@lunn.ch>
-	<D91XV1I4CY37.20T12FMZ5QLQ5@bootlin.com>
-	<b1b33000-4c10-43cd-bcf4-d24fc73902b1@lunn.ch>
-	<20250409161444.6158d388@windsurf>
-	<c6257afe-36bb-46d8-8c22-da3b85028105@lunn.ch>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	bh=KqCcO5Qa9K7yRkLmQkxKWOtEKDtWsuadSUO7zSi/SPs=;
+	b=SkjSpAcpz8JtAxjEAWcLEr6fRARsvFvWYIFyju1QY6QXUO1DL0xvO4kLKFWOzGwFXL7GJY
+	8RjvbD6tdcF+0KqoZm5Vv6zQHcI4H+RHifFEp86PDyzoiPiOnY1kOJ50xKZMbQFkgzXU5O
+	8IUJcVdMFkGtCkFrRMg88064XjX3ZZ0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-94-I2zikjSkMAWHiZe8tpJ4Ng-1; Thu,
+ 10 Apr 2025 02:48:30 -0400
+X-MC-Unique: I2zikjSkMAWHiZe8tpJ4Ng-1
+X-Mimecast-MFC-AGG-ID: I2zikjSkMAWHiZe8tpJ4Ng_1744267709
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E22F5180025A;
+	Thu, 10 Apr 2025 06:48:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 04DF218009BC;
+	Thu, 10 Apr 2025 06:48:25 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250409190601.2e47f43b@kernel.org>
+References: <20250409190601.2e47f43b@kernel.org> <20250407161130.1349147-1-dhowells@redhat.com> <20250407161130.1349147-4-dhowells@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: dhowells@redhat.com, netdev@vger.kernel.org,
+    Marc Dionne <marc.dionne@auristor.com>,
+    "David S.
+ Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+    Simon Horman <horms@kernel.org>,
+    Christian Brauner <brauner@kernel.org>,
+    Chuck Lever <chuck.lever@oracle.com>, linux-afs@lists.infradead.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 03/13] rxrpc: Allow CHALLENGEs to the passed to the app for a RESPONSE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekvdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefvhhhomhgrshcurfgvthgriiiiohhnihcuoehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepledtgedvjeehgeetgfeufffglefhkedvfeduveeiieelteeliedtfefguefggffhnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopeifihhnughsuhhrfhdpmhgrihhlfhhrohhmpehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedupdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
- egurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
-X-GND-Sasl: thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2099006.1744267704.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 10 Apr 2025 07:48:25 +0100
+Message-ID: <2099007.1744267705@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Wed, 9 Apr 2025 17:03:45 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-> So it only supports a single .dtbo. In its current form it does not
-> scale to multiple .dtso files for multiple different boards built
-> around the PCIe chip.
-> 
-> At the moment, that is not really an issue, but when the second board
-> comes along, some refactoring will be needed.
+> > +	__releases(&rx->sk.sk_lock.slock)
+> =
 
-Indeed, but that's really an implementation detail. It doesn't change
-anything to the overall approach. The only thing that would have to
-change is how the driver gets the .dtbo. We could bundle several .dtbos
-in the driver, we could fall back to request_firmware(), etc.
+> sparse still complains (or maybe in fact it complains because it sees
+> the annotation?):
+> =
 
-Best regards,
+> net/rxrpc/oob.c:173:12: warning: context imbalance in 'rxrpc_respond_to_=
+oob' - wrong count at exit
+> net/rxrpc/oob.c:223:5: warning: context imbalance in 'rxrpc_sendmsg_oob'=
+ - wrong count at exit
+> =
 
-Thomas
--- 
-Thomas Petazzoni, co-owner and CEO, Bootlin
-Embedded Linux and Kernel engineering and training
-https://bootlin.com
+> Not a deal breaker, just wanted to mention it.
+
+Yeah.  I'm pretty sure I have the releases in all the right place.  The
+problem might be that *release_sock()* lacks the annotation.
+
+David
+
