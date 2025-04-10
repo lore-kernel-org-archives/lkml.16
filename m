@@ -1,172 +1,81 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC361E3DED;
-	Thu, 10 Apr 2025 07:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB0C1E3DED;
+	Thu, 10 Apr 2025 07:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744270934; cv=none; b=JDwJeGEHrdQolSS04/FEQCLqTX4Ruav2wg1HC++yoHsBWvcgixeNAsJNuKBJCoy8G/A3hY/2fegzYn41e8sGAuzmkHbF/kLdq6VoacmlWd5Tf0OWd6aHY0pVOM0FIudPBdJp++v92+SL5j9uwsAXi/I42YMmiGd2SZUB5rR2Hmc=
+	t=1744270955; cv=none; b=Iv1FoNEMjsCmwlo2ahdtz0MfekrTLU7jrxN7BBdqew7nzgM99jKCIIiZ/9vKYNsFpBBbEzDpIF66qKso4exJjIZOO5deZZv1myyT3Gm/4rNPz1h3ZyGgTkW/4A9Hf3J/fhdye3B9uAWx1ogdCjkBgI9uAtVR9v75bii/5A3Cmto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744270934; c=relaxed/simple;
-	bh=LL98xKCN6BbyHGkK69YR/3hlThS2vvREo71YnuLBImA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D3kaG95KJHkNs3K9YTgoMp7+id5jIgVki1jS7laYAQz8vxepPGAvPbu+5eiko4MFCub9da51a2u7AQA279xpBO72pX3o6tp0Ta+toGBy/rdPHmgKKspnvX2wpLuwR7ROmUZO8z6hIx+FU5eXFnx0WGL0zVoi1ngRhRgafFGU4ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZYBZm4WwCz1d1K3;
-	Thu, 10 Apr 2025 15:41:20 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 87307180473;
-	Thu, 10 Apr 2025 15:42:02 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemg500010.china.huawei.com
- (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 10 Apr
- 2025 15:42:01 +0800
-From: Wang Zhaolong <wangzhaolong1@huawei.com>
-To: <trondmy@kernel.org>, <anna@kernel.org>, <rdunlap@infradead.org>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<chengzhihao1@huawei.com>, <wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>
-Subject: [PATCH RFC] nfs: Fix shift-out-of-bounds UBSAN warning with negative retrans
-Date: Thu, 10 Apr 2025 15:35:25 +0800
-Message-ID: <20250410073525.1982010-1-wangzhaolong1@huawei.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1744270955; c=relaxed/simple;
+	bh=85QpR9oFRrRsEnFw64qHfKu5TEkleorKdhp2VUyvkYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IakfVveOTAWScM44giqyf69nrpyrdBN3hbiszSplaVpYnWwJ4kQfQWs8JYVL2LohcqPc6R94wGXJxZCugZ5V93cvdz/SBsq8lbvPj2lRKNyxYXuD/q1qJJbst3Yx68zYn/nv8Afn2DNYFSyHByhGjX8Gco/HQq7zPO4yjU37Blc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id EE92D68B05; Thu, 10 Apr 2025 09:42:28 +0200 (CEST)
+Date: Thu, 10 Apr 2025 09:42:28 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Christoph Hellwig <hch@lst.de>,
+	"jayalk@intworks.biz" <jayalk@intworks.biz>,
+	"simona@ffwll.ch" <simona@ffwll.ch>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"weh@microsoft.com" <weh@microsoft.com>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/3] mm: Export vmf_insert_mixed_mkwrite()
+Message-ID: <20250410074228.GA680@lst.de>
+References: <20250408183646.1410-1-mhklinux@outlook.com> <20250408183646.1410-2-mhklinux@outlook.com> <20250409104942.GA5572@lst.de> <BN7PR02MB4148597D0495C631F6E3F8C0D4B42@BN7PR02MB4148.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500010.china.huawei.com (7.202.181.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN7PR02MB4148597D0495C631F6E3F8C0D4B42@BN7PR02MB4148.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-The previous commit c09f11ef3595 ("NFS: fs_context: validate UDP retrans
-to prevent shift out-of-bounds") attempted to address UBSAN warnings by
-validating retrans values, but had two key limitations[1]:
+On Wed, Apr 09, 2025 at 02:10:26PM +0000, Michael Kelley wrote:
+> Hmmm. What's the reference to "as told last time"? I don't think I've had
+> this conversation before.
 
-1. It only handled binary mount options, not validating string options
-2. It failed to account for negative retrans values, which bypass the
-   check `data->retrans >= 64` but then get converted to large positive
-   numbers when assigned to unsigned context->retrans
+Hmm, there was a conversation about deferred I/O, and I remember the
+drm folks even defending their abuse of vmalloc_to_page on dma coherent
+memory against the documentation in the most silly way.  Maybe that was
+a different discussion of the same thing.
 
-When these large numbers are later used as shift amounts in
-xprt_calc_majortimeo(), they trigger the UBSAN shift-out-of-bounds
-warning. This issue has existed since early kernel versions (2.6.x series)
-as the code historically lacks proper validation of retrans values from
-userspace.
+> 
+> For the hyperv_fb driver, the memory in question is allocated with a direct call
+> to alloc_pages(), not via dma_alloc_coherent(). There's no DMA in this scenario.
+> The memory is shared with the Hyper-V host and designated as the memory
+> for the virtual framebuffer device. It is then mapped into user space using the
+> mmap() system call against /dev/fb0. User space writes to the memory are
+> eventually (and I omit the details) picked up by the Hyper-V host and displayed.
 
-As the NFS maintainer has previously indicated that fixes to
-xprt_calc_majortimeo() wouldn't be accepted for this issue, this patch
-takes the approach of properly validating input parameters instead:
+Oh, great.
 
-This patch:
-- Adds a proper validation check in nfs_validate_transport_protocol(),
-  which is a common code path for all mount methods (binary or string)
-- Defines a reasonable upper limit (15) that is still generous for
-  real-world requirements while preventing undefined behavior
-- Provides a clearer error message to users when rejecting values
-- Removes the incomplete check from the binary mount path
+> Is your point that memory dma_alloc_coherent() memory must be treated as
+> a black box, and can't be deconstructed into individual pages? If so, that makes
+> sense to me.
 
-By validating the retrans parameter in a common code path, we ensure
-all mount operations have consistent behavior regardless of how the
-mount options are provided to the kernel.
+Yes.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=219988
-[2] https://lore.kernel.org/all/5850f8a65c59436b607c9d1ac088402d14873577.camel@hammerspace.com/#t
+> But must the same treatment be applied to memory from
+> alloc_pages()? This is where I need some education.
 
-Fixes: c09f11ef3595 ("NFS: fs_context: validate UDP retrans to prevent shift out-of-bounds")
-Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
----
- fs/nfs/fs_context.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
-
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 13f71ca8c974..cb3683d5d37f 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -33,10 +33,11 @@
- #else
- #define NFS_DEFAULT_VERSION 2
- #endif
- 
- #define NFS_MAX_CONNECTIONS 16
-+#define NFS_MAX_UDP_RETRANS 15
- 
- enum nfs_param {
- 	Opt_ac,
- 	Opt_acdirmax,
- 	Opt_acdirmin,
-@@ -358,10 +359,19 @@ static int nfs_validate_transport_protocol(struct fs_context *fc,
- {
- 	switch (ctx->nfs_server.protocol) {
- 	case XPRT_TRANSPORT_UDP:
- 		if (nfs_server_transport_udp_invalid(ctx))
- 			goto out_invalid_transport_udp;
-+		/*
-+		 * For UDP transport, retrans is used as a shift value in
-+		 * xprt_calc_majortimeo(). To prevent shift-out-of-bounds
-+		 * and overflow, limit it to 15 bits which is a reasonable
-+		 * upper limit for any real-world scenario (typical values
-+		 * are 3-5).
-+		 */
-+		if (ctx->retrans > NFS_MAX_UDP_RETRANS)
-+			goto out_invalid_udp_retrans;
- 		break;
- 	case XPRT_TRANSPORT_TCP:
- 	case XPRT_TRANSPORT_RDMA:
- 		break;
- 	default:
-@@ -378,10 +388,13 @@ static int nfs_validate_transport_protocol(struct fs_context *fc,
- 	}
- 
- 	return 0;
- out_invalid_transport_udp:
- 	return nfs_invalf(fc, "NFS: Unsupported transport protocol udp");
-+out_invalid_udp_retrans:
-+	return nfs_invalf(fc, "NFS: UDP protocol requires retrans <= %d (got %d)",
-+			  NFS_MAX_UDP_RETRANS, ctx->retrans);
- out_invalid_xprtsec_policy:
- 	return nfs_invalf(fc, "NFS: Transport does not support xprtsec");
- }
- 
- /*
-@@ -1155,19 +1168,10 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
- 		memcpy(mntfh->data, data->root.data, mntfh->size);
- 		if (mntfh->size < sizeof(mntfh->data))
- 			memset(mntfh->data + mntfh->size, 0,
- 			       sizeof(mntfh->data) - mntfh->size);
- 
--		/*
--		 * for proto == XPRT_TRANSPORT_UDP, which is what uses
--		 * to_exponential, implying shift: limit the shift value
--		 * to BITS_PER_LONG (majortimeo is unsigned long)
--		 */
--		if (!(data->flags & NFS_MOUNT_TCP)) /* this will be UDP */
--			if (data->retrans >= 64) /* shift value is too large */
--				goto out_invalid_data;
--
- 		/*
- 		 * Translate to nfs_fs_context, which nfs_fill_super
- 		 * can deal with.
- 		 */
- 		ctx->flags	= data->flags & NFS_MOUNT_FLAGMASK;
-@@ -1270,13 +1274,10 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
- out_no_address:
- 	return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
- 
- out_invalid_fh:
- 	return nfs_invalf(fc, "NFS: invalid root filehandle");
--
--out_invalid_data:
--	return nfs_invalf(fc, "NFS: invalid binary mount data");
- }
- 
- #if IS_ENABLED(CONFIG_NFS_V4)
- struct compat_nfs_string {
- 	compat_uint_t len;
--- 
-2.39.2
+No, that's just fine.
 
