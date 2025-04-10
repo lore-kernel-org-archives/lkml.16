@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E479C28EA41
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49CF28EA73
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744306612; cv=none; b=rL6aO8TjOxqi7ZbRn/QQjgHP5Fp4Wd+fzvbJX+vfEHlbzo9vmX1OD1OULgO930jB+zAh/FUYnWwyvYsysKvSdPV0EgCnUTebWhUQjfcb/d0miQCJSy6pCcvJsAqDgIl/ec+I0dIuVtgR8EIPzqyZHvd2bNddcknG/++sRPfAtdY=
+	t=1744306614; cv=none; b=TmrKHUtXbkSXREjJBcJ2o89ViE0bYoDY+qr1BvVzGbWn4VJew9KSrp3lLOU37gXKp3yHhf6Y8jE6/Fo9ofEWerrF67560wEKCNF9hqHT8Xg+lEzrJGgDrVSpu7QyxKW5nHPNQOKGOhYnHuDhQyxNICmxvU7HN6vzrt102OJM3Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744306612; c=relaxed/simple;
-	bh=X1Vcc+qhXCvLi9/obxnmkB3AaP6EATpW0kQwymqqBMY=;
+	s=arc-20240116; t=1744306614; c=relaxed/simple;
+	bh=gTyDhZCTno1IXSRzvLwzt6dqW5aQfNugAfWRkxe3950=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=fJXHznOuH+cbAEW8bf1lRFp/OxYLjpSN8vZLHe0bpLFl9ZyxST9M8D+E9ohKl/6dV/L3TKjFErqFbSKNcfG+6U065HQ7Ppjg8iQTgjkMFLy06+dJuWrfRKCU1EneI21A3QSOg3HSJuZTFlLP+OAuNL8hfsvQBG25ZQZB6YyoGto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H48Jm23n; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=haV4t+tiDTv/tkGUTZNqfcTZSwyjGZAZOI+1zRmhBH0ODi908WD07YjqA0HwN3F+ZIIh2ZWomZqtvGxD6zk2EXelYW2AyVu/IAUHSFEByaSsop50tfqdA5aVbg+pd8B1+d3VvsS9uK8eNd6zmmZcTaIz1/DPS9BfXyevtjveJ3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wrfCGtSk; arc=none smtp.client-ip=209.85.210.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H48Jm23n"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-306b51e31c7so873934a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:36:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wrfCGtSk"
+Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-72b881599f6so947008a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:36:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744306610; x=1744911410; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744306611; x=1744911411; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4ozcx3/NEBUmkXi0QyyKv5MD92Ay8My7ba9iOvtFuV0=;
-        b=H48Jm23neCtCAc4RWQtkGTwQCUP3gJ3Ej3+tuTTfSaGJNJgmPLYsAfcimzR0IAcYxQ
-         /P+hg5kHPJtZ4gaNOn1dOHaqAcSr6jr/0jejCMPlZ7zV0NYj0sOEr2bxTqRLAVVNUOG4
-         fgfDNcpxr5Nyg4Pvmo1D91r0itfdoRVkGaVgL0usUHdeC0vA3CEAkI8n6LuG2AXuZSKf
-         08xYSV9coscZQpOugaGUfXOOdinPKPSz4H0RNwuiIX5HbpLOe/GMT71LKVodm2spDVh4
-         z7Y4hQ54snq/2YevMM+h8kWYbQ/IKrdPGDCPKaEdfwEIiuiikXmjsPM0MwSFlta2N2Gm
-         ZQew==
+        bh=mcWxwltoH9XL7Cxrn6JcmLq/7/2rEiSHhwmo34ZV4XA=;
+        b=wrfCGtSkpVXOCy9LNU5qJnoqOFo76dEsZoCYSSsgBpC1dpfneeR5z4pE7K+KPhh3ll
+         MHZ8J7nyVjYBBeMiWxDRuufnzYag4msPZ7RYrFzXL+90eJl+LO0ZBwKlwilcBbCoY9eh
+         GzXcdZ4ALVxMXjaMrOv9zgFb7l9ZUMyqcshqG310188/fXC/CVQpJBntZUm7+fFLpE3c
+         FMoSlICKFsPUfBlxqlTmfRCfQ6FLBfbDJliw42YwMFWABRU7VrQTivAJKoFmYBw/0pk3
+         dYxi5BdFk9KjKhteBmsErcxyRYt4Vw9tprgcJhIldvtLjalWtNB5Ba/DpnAfKej5E9lu
+         eWrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744306610; x=1744911410;
+        d=1e100.net; s=20230601; t=1744306611; x=1744911411;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ozcx3/NEBUmkXi0QyyKv5MD92Ay8My7ba9iOvtFuV0=;
-        b=W9eT8EnjYmtbpxzRoj+LwbppT7dL5H2DAwtzfsBfMTFpVnhmFc3MbevlXhghJC5CbL
-         aAMZ4MUIuYKiBajNxBGczECmsNUyXoWa1QWFK4GSz7hK3FqiOGUjsFucLxOhdwrNoZ5L
-         2FxAtRal5g8qGVxANXD/8f39JllpAoeLZGpAevsnC8ezQYZRJ8zqPptP70/5rvpdCOX+
-         FxoctqO5XGM1lQvbjnqOnHo88FJAaZJWzpFCP/3GHjqJSnZ4LdUbw2TGAETRwFWTEfq5
-         AbTQ34Llff0GbZOXStMgbMP5eqfl9A+1XHkXunWDO32oDjeQHOxTkfnYvqlDyKraRgIq
-         TamA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXq2O/9S86FUpJFl4njUKHighZxme/L3egZWQhfAzMmzpwFqz6JWKoct4FNkxIu0nSKzAWIZUt4sYMQLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/Z20Oy+zfowOerbYpUZjyC84n5bp3XdLQ3RxHqwsR626VJDC1
-	Uo+Wcz58k8uEJeqs0XjtkbkBECO+XO2uH20qDT4G/P7TZNtA56I2RIH93rQk9qegV5YIt0WZ0/l
-	9+YKfkg==
-X-Google-Smtp-Source: AGHT+IHdgEuNsiGXTbMC46t9gyRQdDCOonL+w+/N7Gojul8jN+3BYg75AGrbFGU24EeEJ5jxduYta8cOlPQ2
-X-Received: from pjx7.prod.google.com ([2002:a17:90b:5687:b0:2ea:9d23:79a0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:582f:b0:305:2d68:8d39
- with SMTP id 98e67ed59e1d1-30718b6f388mr6668076a91.12.1744306610002; Thu, 10
- Apr 2025 10:36:50 -0700 (PDT)
-Date: Thu, 10 Apr 2025 10:36:22 -0700
+        bh=mcWxwltoH9XL7Cxrn6JcmLq/7/2rEiSHhwmo34ZV4XA=;
+        b=kejYsRcGTndkk03zDhaB6pt8/viAHnjye5A+NMZvTW1+mX/R9JRnYheMCWVWuogsnS
+         O8fUh4Hb6RdDFc9byJM882H2+N1vUThjVDmxGBWPos2bSlV2W2knaMhiC02zRCGD1GrZ
+         vVyO/aFOIVWmYH/tgru4bS4hHakjahK4oXbGIhRqLPND73ywhcFostL2J+i5tIMtGFoa
+         kab2VXK0TRHZACll8fYJmt2COLNheTMclHiMg8Zxtt0l+OPAgPlvY7r6IXyaGQdsTcJk
+         H74OJzxOykF4di0SOtdWsrw1BiL75/UgM99uPELNjgAlbmByBhB1rvabxYTX1K10gLNh
+         mLqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUE8aC3jFjbKVhUlI//Qc2ARhtOx9ZCw79/AZIKbZfyeVb/PMX6lpE920TkmsJZKeY48+2r2afFwI9YuMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpSDC4PgteZA1Lub/hexJlwRxD/jSwDZPK9lyW80mAw66ta5jh
+	bDNJswKuiOJPE1Tl82/SCu3avdh5NMkR9H5BoqbfVM0DcaKEV1DS525N9sFnheteAoHG5EMYLNB
+	7WqRJUA==
+X-Google-Smtp-Source: AGHT+IHulExf+Mv/Q1ZS+sBiHCCJIKDXZ9ldVCWeUBFQHANG4wq6xirGW1Tq6sYLc1Mhwf3q7i7XpglcaFSp
+X-Received: from oabfl6.prod.google.com ([2002:a05:6870:4946:b0:2bc:6ad3:5671])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6830:25c3:b0:727:3e60:b44b
+ with SMTP id 46e09a7af769-72e7bae6f1bmr2044467a34.14.1744306611665; Thu, 10
+ Apr 2025 10:36:51 -0700 (PDT)
+Date: Thu, 10 Apr 2025 10:36:23 -0700
 In-Reply-To: <20250410173631.1713627-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250410173631.1713627-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250410173631.1713627-4-irogers@google.com>
-Subject: [PATCH v2 03/12] perf parse-events filter: Use evsel__find_pmu
+Message-ID: <20250410173631.1713627-5-irogers@google.com>
+Subject: [PATCH v2 04/12] perf target: Separate parse_uid into its own function
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,49 +77,100 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rather than manually scanning PMUs, use evsel__find_pmu that can use
-the PMU set during event parsing.
+Allow parse_uid to be called without a struct target. Rather than have
+two errors, remove TARGET_ERRNO__USER_NOT_FOUND and use
+TARGET_ERRNO__INVALID_UID as the handling is identical.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ tools/perf/util/target.c | 22 ++++++++++++----------
+ tools/perf/util/target.h |  3 ++-
+ 2 files changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5152fd5a6ead..ad5b40843b18 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2459,9 +2459,8 @@ foreach_evsel_in_last_glob(struct evlist *evlist,
- static int set_filter(struct evsel *evsel, const void *arg)
- {
- 	const char *str = arg;
--	bool found = false;
- 	int nr_addr_filters = 0;
--	struct perf_pmu *pmu = NULL;
-+	struct perf_pmu *pmu;
+diff --git a/tools/perf/util/target.c b/tools/perf/util/target.c
+index 0f383418e3df..f3ad59ccfa99 100644
+--- a/tools/perf/util/target.c
++++ b/tools/perf/util/target.c
+@@ -94,15 +94,13 @@ enum target_errno target__validate(struct target *target)
+ 	return ret;
+ }
  
- 	if (evsel == NULL) {
- 		fprintf(stderr,
-@@ -2479,16 +2478,11 @@ static int set_filter(struct evsel *evsel, const void *arg)
- 		return 0;
+-enum target_errno target__parse_uid(struct target *target)
++uid_t parse_uid(const char *str)
+ {
+ 	struct passwd pwd, *result;
+ 	char buf[1024];
+-	const char *str = target->uid_str;
+ 
+-	target->uid = UINT_MAX;
+ 	if (str == NULL)
+-		return TARGET_ERRNO__SUCCESS;
++		return UINT_MAX;
+ 
+ 	/* Try user name first */
+ 	getpwnam_r(str, &pwd, buf, sizeof(buf), &result);
+@@ -115,16 +113,22 @@ enum target_errno target__parse_uid(struct target *target)
+ 		int uid = strtol(str, &endptr, 10);
+ 
+ 		if (*endptr != '\0')
+-			return TARGET_ERRNO__INVALID_UID;
++			return UINT_MAX;
+ 
+ 		getpwuid_r(uid, &pwd, buf, sizeof(buf), &result);
+ 
+ 		if (result == NULL)
+-			return TARGET_ERRNO__USER_NOT_FOUND;
++			return UINT_MAX;
  	}
  
--	while ((pmu = perf_pmus__scan(pmu)) != NULL)
--		if (pmu->type == evsel->core.attr.type) {
--			found = true;
--			break;
--		}
--
--	if (found)
-+	pmu = evsel__find_pmu(evsel);
-+	if (pmu) {
- 		perf_pmu__scan_file(pmu, "nr_addr_filters",
- 				    "%d", &nr_addr_filters);
--
-+	}
- 	if (!nr_addr_filters)
- 		return perf_bpf_filter__parse(&evsel->bpf_filters, str);
+-	target->uid = result->pw_uid;
+-	return TARGET_ERRNO__SUCCESS;
++	return result->pw_uid;
++}
++
++enum target_errno target__parse_uid(struct target *target)
++{
++	target->uid = parse_uid(target->uid_str);
++
++	return target->uid != UINT_MAX ? TARGET_ERRNO__SUCCESS : TARGET_ERRNO__INVALID_UID;
+ }
  
+ /*
+@@ -142,7 +146,6 @@ static const char *target__error_str[] = {
+ 	"BPF switch overriding UID",
+ 	"BPF switch overriding THREAD",
+ 	"Invalid User: %s",
+-	"Problems obtaining information for user %s",
+ };
+ 
+ int target__strerror(struct target *target, int errnum,
+@@ -171,7 +174,6 @@ int target__strerror(struct target *target, int errnum,
+ 		break;
+ 
+ 	case TARGET_ERRNO__INVALID_UID:
+-	case TARGET_ERRNO__USER_NOT_FOUND:
+ 		snprintf(buf, buflen, msg, target->uid_str);
+ 		break;
+ 
+diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
+index 2ee2cc30340f..e082bda990fb 100644
+--- a/tools/perf/util/target.h
++++ b/tools/perf/util/target.h
+@@ -48,12 +48,13 @@ enum target_errno {
+ 
+ 	/* for target__parse_uid() */
+ 	TARGET_ERRNO__INVALID_UID,
+-	TARGET_ERRNO__USER_NOT_FOUND,
+ 
+ 	__TARGET_ERRNO__END,
+ };
+ 
+ enum target_errno target__validate(struct target *target);
++
++uid_t parse_uid(const char *str);
+ enum target_errno target__parse_uid(struct target *target);
+ 
+ int target__strerror(struct target *target, int errnum, char *buf, size_t buflen);
 -- 
 2.49.0.604.gff1f9ca942-goog
 
