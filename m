@@ -1,136 +1,178 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFE519DF99;
-	Thu, 10 Apr 2025 20:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63302836AA
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744315272; cv=none; b=kGRz9AGcbYwsol9AuQgfWNA9BPVWVMMyk/vBFDYAe8poElyAyu03g0tgRe8FAUTBx9XKbutkp9+5agSqvegOrsZRAk2qnv4JOH1BudWU/j8I9G8Potxl4UfqSmVn03ZSfC17wqEgxb2VMQekkD4Y5MuwsjbxbjjeSfylpjFncKw=
+	t=1744315302; cv=none; b=dtuQdOpHsZt1XYpGyIBndpP6KvBtMv4/2Ns6SlWMQbb3k5G2CPohnBODhX0CxeYZvc/b8uVZFmWF8eRUDtQVecINdWV0mudLuweTjyMs0EUsiRBYhveXXNudP5Zdlj/18EL0uQX5LYBhHhAMUQVw6G62T/bJZDDzUREVKhXnZgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744315272; c=relaxed/simple;
-	bh=EqMPlsiz6ELDNfT2CaECmHob3xlyd+QRtzPxAhzTX7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7xWOI3oCM5VUhXl+UVnmrUGBtlP0eu9LaQYt0mVkZTR++KTb+gJI0EGINztZKrrsodmAYusVqCaWk5Uv9bNW71+NDfwnjNJN08H6qImqHqAA6jIFWF1spq7irQ3w6YpIIXNTEVkzfWcyo3pswrA061L5b5fY9h+EJI5a1wiyy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQdDmaiE; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744315302; c=relaxed/simple;
+	bh=Ms/oOeKSEMXS64ZazNDVvDxHOh6Vnicgt8yf3H6sLTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KCkX4Fjuz4AyAo5w5nvjnorDF9YONXvey0OOmaJrQ1h8VL8owKCpLWELluWRS0UyXJzRmNZojJKE9et//dqRH7O2Vtj3GVckkampSjNhhTDmATgMVgI6vwmVtzayn2kF0oPLpsOhQ9vbmZ4PX93nznkhxFDYhKQsbktZcS2TMio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DdmOoAWr; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQdDmaiE"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so1216803b3a.0;
-        Thu, 10 Apr 2025 13:01:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DdmOoAWr"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85e73562577so120226639f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:01:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744315270; x=1744920070; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+        d=linuxfoundation.org; s=google; t=1744315299; x=1744920099; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zYvHi6bKQVzjYUMCVSzuCNYURE2WOZKhLEo4wbN8zNA=;
-        b=IQdDmaiE5wMzMfXiN/lAsjph3uTXEXnOPc+OI3E1rw+oX2xdVCEryt/I3oO6rc2C3b
-         9dj8HtYcWvIa18TdsQa/FNZx1j/KWQIoDdChDBfPq3Um/huItpuCtDZA5fL/VKB61NcG
-         Rap5SEuZKg2/8UBxMI96skKatOXGRB9wa4FJ2WAGouAAZ+N0421D3w6R5bodgHpih5oy
-         YZYj6WASkurHUrop+IURuz7ikQI2F/VXtJ5Tt5A2PPVUBc4E6iTamqMvYdDWnGfdO8U6
-         ddZc/QobIWsKiUQWTWlJPwut1RxZPwnU957Jzbhl14bs5CIZ7VsPQQy3Pa6L2e9JrYkx
-         Rd9A==
+        bh=JTExV2/x6J7An5Mf72xYq5DzHVrycRROkLdZFeM6opQ=;
+        b=DdmOoAWrcSZXGgiu+F3R4fDg6yz4wsWW4FB6JQrVhVTgO5fwKXzRyMLnsgk0uAOyJN
+         0O+Ih4jQL3MmnEuu6iQYkQ5aD3JSOXGrfKyBJaOC1nS1LGJ1zOww4KhYi8+kHmlG/qoX
+         2n5BbYA5r2ReXhQ5wymjPYoLhNYod81gP+pJU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744315270; x=1744920070;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+        d=1e100.net; s=20230601; t=1744315299; x=1744920099;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zYvHi6bKQVzjYUMCVSzuCNYURE2WOZKhLEo4wbN8zNA=;
-        b=cDHQnmR55IK64N/GJbqBENBA24KAxvl/Cy/AtUMCj3FdE6wX48XNMgC6LqTXfe0bW1
-         XP0qfhR97ZkN/UBcimK5uHPLgVRREAGJAcKaCQRabPB7nN1bqFGxDol3s6y3d2QRerbJ
-         FxqkYS+4G7oqaJN8nHvxK53HVM6v/fpDtlcHww+3wfVDhMIrYGzWmTPYsC2rFmq2nt3k
-         JalCJViNIMArTVxZGRE+yyVN3NGWJy+6fpU/gLD5DCT+YM2Q+S+fU17mNRuPhGarYhJm
-         zVWn3t9B3+YRu6zGgZ2WYhloTzGY2NtDt0Oo3T4XS/nES/sSFK33jxINzRgbQAxfPZos
-         l4CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqFrB5NsG0ISmpO6ShM4E3SvRZxDlEBIG9sOr8otS+365qwqFsZirPNgZnR40qoDi6PwbchEi1LEFE6Q==@vger.kernel.org, AJvYcCXsqgv/K1MuoMH8xmdIIIh6rc/FEpTlEkPM2yNV0aXghw4/cssetqH8tVHNtKovZH/I1TF3xmTGkra5WgrQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyiHr9WNkp1pjEXTtDpmwAOPf77QxpHAv/ILlRTRkgKK7B0Dj9
-	XbMPhe3UmrzafsOQ+LL/6as7dyNT5v9YxeRkuu3sVOoRf0ftnnys
-X-Gm-Gg: ASbGncudRuXQYO5heOhg2JCvv7tSYyU66iGeD/R+Qyvee8Lo7NfXNmBXnFwT9+Gyxv6
-	XDXGd3xxTgRHdEa2kq+h39Cxu5qqeKTxwnZ1MV8xuia2JV7ZTgVqEVAzi6T/fXkG6e7wN7tK2iq
-	NaNuzcVOhJESUVc+cku/2DpQBaKpE2YKLJXiBjyfz/8gKZDnfW/8zGyw4ttZSrBcJ6w8ccA6IcN
-	f4MyOXvWA2E77qTae7K1Pye/8rjTwNsqVDpM1bqsR+P4efKVj/nEMOfzzPx7bM/wN0q4kykZXjW
-	YA2GgpEMY79YiSsC/lu7DO+8CiKsWQStxm6hP3JF9bo9vAHACtT9ow==
-X-Google-Smtp-Source: AGHT+IEaUiK0yxhoAmXkw6Go5RaDXLwBAhdiQ2rXCg+r12sLcvUlESwj+HbZqwlKAjWSDAdquLV2xQ==
-X-Received: by 2002:a05:6a00:2188:b0:736:5dae:6b0d with SMTP id d2e1a72fcca58-73bd11e60d1mr204932b3a.10.1744315269940;
-        Thu, 10 Apr 2025 13:01:09 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d6ae67sm3709461b3a.84.2025.04.10.13.01.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 13:01:09 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 10 Apr 2025 13:01:08 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Purva Yeshi <purvayeshi550@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: max31827: Fix uninitialized variable lsb_idx in
- max31827_init_client
-Message-ID: <f0ad5113-eab9-4e71-8363-1b7a005189c4@roeck-us.net>
-References: <20250410194833.21366-1-purvayeshi550@gmail.com>
+        bh=JTExV2/x6J7An5Mf72xYq5DzHVrycRROkLdZFeM6opQ=;
+        b=K+6UsEim2okjp0kth/CXj8vXWaHbWgTNBk6lTyDqPISNO1Tb0iTsRbN8CQ8Y0+BbkB
+         /zNDQK5Sib0nh1duc65H6DHOv8rIi7akNfRKmnEaZ0QxsIxau8FhOTJ/tMiyE6K5EFpu
+         GhoABnCMq/XdTYC4sTiErHTh/5ISxCU31FQjo+E/0hxb6ooMKXL4eetmesBTHVCkp6xZ
+         n27nBp2i2XUE7JMjLJoDsjuLoMqQlSAzbtiH8m5XpkifcgQ6imDkIvdQ0h8+4Dqyby6e
+         OFyUNwR/kueGmzQQVGxc+mE3gH2eyTNQaK2/et7RVptV4DMNoMj3UvGEtBky0QN0q730
+         qtlQ==
+X-Gm-Message-State: AOJu0YyQkJx0chh6euUuDKvngV9sgnEKHXlh7VJx0oHh3lvZyJV2UtSV
+	km/eFWWsV9plR0PGwWHWGzuP7GkSOCo5CCT2BD2a9SLGV2riu1tnFlCyX8xegz0=
+X-Gm-Gg: ASbGncusswbxuM6qiYYJo6RzFTCQ1zhwvg5NlMzcpgRh1VeaNcE553UX0IScx4Uva9t
+	fzj5dlS7Gh5cO8xx21vcc9GnJpOl0YP1mQVEWbyYRTmB2r/JmOYJAKNV+g1ZlVpj2aI+QeJsBGm
+	HLL2s0TRddlW1tL8bce81gOF9zRKx1bW5ePrvi/17Btim+cSQuVsHFPTe/lFk2IkXTI8bU6iXXT
+	81vqlyl71/afwslrN3udbQJQrVTsSe11GZ7eH3MgcEj9m81CRQSFxV5gn+o3f+l+Av67a0FEHQN
+	hs6n9pukcT2eH1juEGSYKCtdInOA40swuHx24iuGDej2GwVjaB4=
+X-Google-Smtp-Source: AGHT+IEamSjMZo51Y/WT0FkpK3Y3HQ6M3NFrIP9orG53L5IoXNqmvwloYy4Vaei+SdIQbSb9eK1H3g==
+X-Received: by 2002:a05:6e02:1806:b0:3d1:9999:4f62 with SMTP id e9e14a558f8ab-3d7ec1dc817mr2203095ab.2.1744315298542;
+        Thu, 10 Apr 2025 13:01:38 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e2ecebsm889447173.128.2025.04.10.13.01.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 13:01:38 -0700 (PDT)
+Message-ID: <58b846c8-ce58-44b3-b93e-828fbe98b42d@linuxfoundation.org>
+Date: Thu, 10 Apr 2025 14:01:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/32] kselftest harness and nolibc compatibility
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Shuah Khan <shuah@kernel.org>, Willy Tarreau <w@1wt.eu>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
+ <04bf6bbc-d813-488d-9117-def19717b8b5@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <04bf6bbc-d813-488d-9117-def19717b8b5@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250410194833.21366-1-purvayeshi550@gmail.com>
 
-On Fri, Apr 11, 2025 at 01:18:33AM +0530, Purva Yeshi wrote:
-> Fix Smatch-detected issue:
-> drivers/hwmon/max31827.c:564 max31827_init_client() error:
-> uninitialized symbol 'lsb_idx'.
+On 4/10/25 09:19, Shuah Khan wrote:
+> On 4/7/25 00:52, Thomas Weißschuh wrote:
+>> Nolibc is useful for selftests as the test programs can be very small,
+>> and compiled with just a kernel crosscompiler, without userspace support.
+>> Currently nolibc is only usable with kselftest.h, not the more
+>> convenient to use kselftest_harness.h
+>> This series provides this compatibility by adding new features to nolibc
+>> and removing the usage of problematic features from the harness.
+>>
+>> The first half of the series are changes to the harness, the second one
+>> are for nolibc. Both parts are very independent and should go through
+>> different trees.
+>> The last patch is not meant to be applied and serves as test that
+>> everything works together correctly.
+>>
+>> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+>> ---
+>> Changes in v2:
+>> - Rebase unto v6.15-rc1
+>> - Rename internal nolibc symbols
+>> - Handle edge case of waitpid(INT_MIN) == ESRCH
+>> - Fix arm configurations for final testing patch
+>> - Clean up global getopt.h variable declarations
+>> - Add Acks from Willy
+>> - Link to v1: https://lore.kernel.org/r/20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de
 > 
-> ​In the max31827_init_client() function, the variable lsb_idx is assigned
-> a value only when data has exactly one bit set (hweight32(data) == 1).
-> If this condition isn't met, lsb_idx remains uninitialized, leading to
-> undefined behavior when it's subsequently used.
-
-That is not correct.
-
+> Thank you. I am going to start reviewing the series. It could take
+> me a few days to get through all 32 patches. :)
 > 
-> Ensure that data is non-zero and has exactly one bit set before
-> calling __ffs(data) to determine lsb_idx. Additionally, verify that
-> lsb_idx does not exceed 4. This approach prevents the use of an
-> uninitialized lsb_idx and resolves the Smatch warning.
+>>
+>> ---
+>> Thomas Weißschuh (32):
+>>        selftests: harness: Add harness selftest
+>>        selftests: harness: Use C89 comment style
+>>        selftests: harness: Ignore unused variant argument warning
+>>        selftests: harness: Mark functions without prototypes static
+>>        selftests: harness: Remove inline qualifier for wrappers
+>>        selftests: harness: Remove dependency on libatomic
+>>        selftests: harness: Implement test timeouts through pidfd
+>>        selftests: harness: Don't set setup_completed for fixtureless tests
+>>        selftests: harness: Always provide "self" and "variant"
+>>        selftests: harness: Move teardown conditional into test metadata
+>>        selftests: harness: Add teardown callback to test metadata
+>>        selftests: harness: Stop using setjmp()/longjmp()
+>>        selftests: harness: Guard includes on nolibc
+>>        tools/nolibc: handle intmax_t/uintmax_t in printf
+>>        tools/nolibc: use intmax definitions from compiler
+>>        tools/nolibc: use pselect6_time64 if available
+>>        tools/nolibc: use ppoll_time64 if available
+>>        tools/nolibc: add tolower() and toupper()
+>>        tools/nolibc: add _exit()
+>>        tools/nolibc: add setpgrp()
+>>        tools/nolibc: implement waitpid() in terms of waitid()
+>>        Revert "selftests/nolibc: use waitid() over waitpid()"
+>>        tools/nolibc: add dprintf() and vdprintf()
+>>        tools/nolibc: add getopt()
+>>        tools/nolibc: allow different write callbacks in printf
+>>        tools/nolibc: allow limiting of printf destination size
+>>        tools/nolibc: add snprintf() and friends
+>>        selftests/nolibc: use snprintf() for printf tests
+>>        selftests/nolibc: rename vfprintf test suite
+>>        selftests/nolibc: add test for snprintf() truncation
+>>        tools/nolibc: implement width padding in printf()
+>>        HACK: selftests/nolibc: demonstrate usage of the kselftest harness
+>>
+>>   tools/include/nolibc/Makefile                      |    1 +
+>>   tools/include/nolibc/getopt.h                      |  101 ++
+>>   tools/include/nolibc/nolibc.h                      |    1 +
+>>   tools/include/nolibc/stdint.h                      |    4 +-
+>>   tools/include/nolibc/stdio.h                       |  127 +-
+>>   tools/include/nolibc/string.h                      |   17 +
+>>   tools/include/nolibc/sys.h                         |  105 +-
+>>   tools/testing/selftests/Makefile                   |    1 +
+>>   tools/testing/selftests/kselftest/.gitignore       |    1 +
+>>   tools/testing/selftests/kselftest/Makefile         |    6 +
+>>   .../testing/selftests/kselftest/harness-selftest.c |  129 ++
+
+One more thing. You are missing kselftest_harness maintainers.
+Please send v3 with the changes I requested for test name and
+directory, and make cleanup?
+
+The fixes to existing kselftest_harness compile warnings and such
+can go in an upcoming rc and the others can go into the next release.
+
+>>   .../selftests/kselftest/harness-selftest.expected  |   62 +
+>>   .../selftests/kselftest/harness-selftest.sh        |   14 +
+>>   tools/testing/selftests/kselftest_harness.h        |  181 +-
+>>   tools/testing/selftests/nolibc/Makefile            |   13 +-
+>>   tools/testing/selftests/nolibc/harness-selftest.c  |    1 +
+>>   tools/testing/selftests/nolibc/nolibc-test.c       | 1729 +-------------------
+>>   tools/testing/selftests/nolibc/run-tests.sh        |    2 +-
+>>   18 files changed, 635 insertions(+), 1860 deletions(-)
+>> ---
+>> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+>> change-id: 20250130-nolibc-kselftest-harness-8b2c8cac43bf
+>>
 > 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
->  drivers/hwmon/max31827.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/max31827.c b/drivers/hwmon/max31827.c
-> index 48e8f8ba4d05..c62eaf186d9d 100644
-> --- a/drivers/hwmon/max31827.c
-> +++ b/drivers/hwmon/max31827.c
-> @@ -558,10 +558,13 @@ static int max31827_init_client(struct max31827_state *st,
->  		/*
->  		 * Convert the desired fault queue into register bits.
->  		 */
-> -		if (data != 0)
-> -			lsb_idx = __ffs(data);
 
-lsb_idx is assigned if data != 0, not if hweight32(data) == 1 ...
-
-> +		if (data == 0 || hweight32(data) != 1) {
-> +			dev_err(dev, "Invalid data in adi,fault-q\n");
-> +			return -EINVAL;
-> +		}
->  
-> -		if (hweight32(data) != 1 || lsb_idx > 4) {
-
-... and if hweight32(data) != 1, it bails out here before using lsb_idx.
-The problem you describe does not exist.
-
-Guenter
-
-> +		lsb_idx = __ffs(data);
-> +		if (lsb_idx > 4) {
->  			dev_err(dev, "Invalid data in adi,fault-q\n");
->  			return -EINVAL;
->  		}
-> -- 
-> 2.34.1
-> 
+thanks,
+-- Shuah
