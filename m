@@ -1,174 +1,165 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8872528A40B;
-	Thu, 10 Apr 2025 16:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CB0293B61;
+	Thu, 10 Apr 2025 16:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744302664; cv=none; b=Kk4vMOg+/wc62Hv3bjMMQd86GeWdxCzQ6Lz68MzcxadDeIjNYB8DIatdQYpScCd5grWHyRnanl3A4HDnnvgbn3bCvAClksYgP1wSNFWaIeSzB2d0492STOwNejpyevrApHp1Oawh2w+gfvC7GXU0+LnB7Nxc+fcjFkKnLi5BSto=
+	t=1744302666; cv=none; b=q0x9yQYkFixUFsdTWNwwp0M1zMdTZL7jdpy9mbMJJTb5+t7W/B/bOz1lFOmsU90ffh1IaT9VgSPNR80V7PMZwd+7T5f57f3dcF16w0GQvvPfxNQxFoI4Wlzr0OMy+iMuRVauGJalwh89+FSs0yO96g0o0TU128FQxaEfzwpPH7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744302664; c=relaxed/simple;
-	bh=2mhDXsxikwdUiQFj8YGNVaw/ULeunUERVOgejNDyv/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YlCJIOmLWPRr9E9hqgo3Obx64OKAmR5gHjalSQiuZ2hqjevGoGMnVjYZtlfPddYIhGGTQHuN5YhkFUt6Vyu3guZiDHAahzmy5sn2WPwPnWN9y8WzmVkMYlcCv74pZbCouUPJcfo2nTgUoEDSlAMIC+YzAE7/BFHJlzWOG7Zf+H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XkFxFJtc; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744302666; c=relaxed/simple;
+	bh=/6J5a/388DLFHMqzPccT2y2Pj4UzDqFXCQ23zqugdow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S2EDIYIohmR2YH9Aypbk689pOhOvMZYGsomed/uaf0ex4cL4DelfI3laGqOq6C1Xbqfz01rAmMkOyHOvzM5aTpgxPkHCFreTAQM6Pc/4bB/60cTykKYzAihcG/cjhkUtT7X3N8XyCUuptXmPfAHkjQ5km5I5QzCynpDQZSCzFlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+y20LhU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkFxFJtc"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3914a5def6bso582144f8f.1;
-        Thu, 10 Apr 2025 09:31:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744302661; x=1744907461; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8xP5HKMU4Cr0Wg2B5uZWRhwyFTU2Cp05IOS2+VcVHgI=;
-        b=XkFxFJtcMQ6XTK9mSSp2NlC76LualfgUBy+wFZUvquKcf8RHL9ckE7+mp7W2zJxpP2
-         v1E4zgN2ymYbU9PXhALLyM2fO86apxm2d9At8agnaEHf39xISCFbktc+vBO0g1Gg8wNI
-         NqJ2B5k/FVcqw15Z23TQslGnhso8oA0YV+pi2dlNXURqRfzHoEOlqkYSiR5kQ1BSacmo
-         MLdWfT98wo7xVNBJQ1JMjaaMYJpr6g/ttFPJVMOd0z6+L4BOIh0D9+sbs4syPYb7kqUC
-         eeHnRg0IfLEsumyi5zjCue4IWywwMlHL3GDVBM7BVDaqnKwIdspFp35+La8weK8Ou/Ic
-         V4EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744302661; x=1744907461;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8xP5HKMU4Cr0Wg2B5uZWRhwyFTU2Cp05IOS2+VcVHgI=;
-        b=QgMx4lavSkv/nuAOfSkrWyy4n937KmDo5j/P+lHHWPF5XdOCEQ5wsymu9JUXQ0Dnsp
-         N/0viT0c+PKJaFQScBmoVqBsmNbEpXjU4L0BS49yHp5tozAUCsXrkw2cKiMEuTgZYsDv
-         YFQUl11gozKnp2iQOrkRMjF+lCDhzhH8zlY3i/l4rYlIJR7mfyK6mr/QGvS0Q+KouFu9
-         PTJBFND/9P5IREwD/6Ioe3MHTeUQSzmPqP3vu0+AZXk0/ZPbBBBcvv+WsGULDubngcbX
-         iWWwkQIM+bAUnJra0QFmk+9p1fYiiVWHdoYtXPHT2l6Jde7/fJRkUJgdaDRlslatKGZi
-         MavA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOdPdeoaLuEoSBljXu+ZER01sajNMMu28ER6d7y5QD7P/vYfNTJYfTvcBBgTFYgpcVv5lg4Hu9lED06P8=@vger.kernel.org, AJvYcCUXej6b+C+pCbhEBgXHw5Mi+gGo70CwavV1XUXhUlfqbFmmvRsUvIm+noSRIuOTDlL3D9NSGuTu@vger.kernel.org
-X-Gm-Message-State: AOJu0YwViEKhWXhX4DIXhB/6R7uZXiRnp57eFnVFGSIonp6RT5QYLuOh
-	IuwHPWApjmiTEHR6JFL/syKvcmEdoub6VzvyXm0M1EKps0UqBppP
-X-Gm-Gg: ASbGnctN+7njR+x645GsjThlEnIAfIJiOIGDiPMBPRoU3fxW2Uc2XObF9WX6gFX2fUJ
-	AafLb/zWj+Qvnhze/f8IFzKHNpZLamLmYxvbd55IsGYb7v9Vtue2zZBRvxs7J+Y1Bep3+JuSeAJ
-	zUrJ3NRQ6OursAX/47U+gWtrMIqXlY8Tr8rRxBqLGFLPFz5cvuCrJen8LcWmtdQ1AgTQ82B/vAV
-	1cxi3+OwDSFu1BW3F7I+TRcSgM5jC5k935yRC8oizXexO4Rxu8O+fpF+C0mAmbtZTNCu/BtV86a
-	baOjoD6irUYRgQAlKLqBc6ohPfMYOiugDnCV1OWr2k1vMywXRegDFP6o8EHQX28z2yvp3dFyg03
-	zQOehu39lag==
-X-Google-Smtp-Source: AGHT+IFLZORQGygpuGXuuMnpMFaA0HiTdtnbUlTXBQlP9aBu0HOw17B9WhsebA8iQM8vk0MLY/KEUg==
-X-Received: by 2002:a05:6000:248a:b0:39d:724f:a8cd with SMTP id ffacd0b85a97d-39d8f4993d5mr3238673f8f.35.1744302660529;
-        Thu, 10 Apr 2025 09:31:00 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39d893f0a75sm5374033f8f.62.2025.04.10.09.30.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 09:31:00 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "Chester A. Unal" <chester.a.unal@arinc9.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [net-next PATCH 6/6] net: dsa: mt7530: implement .get_stats64
-Date: Thu, 10 Apr 2025 18:30:14 +0200
-Message-ID: <20250410163022.3695-7-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250410163022.3695-1-ansuelsmth@gmail.com>
-References: <20250410163022.3695-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+y20LhU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DD46C4CEEA;
+	Thu, 10 Apr 2025 16:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744302665;
+	bh=/6J5a/388DLFHMqzPccT2y2Pj4UzDqFXCQ23zqugdow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V+y20LhUQL07cdE3bmS+dP6Tncub7K/a2+Im2bp+Fx7cr5FIj5BGZwOtfAIRJ0TqJ
+	 FCTis6aT+cWGyoSn706uL+nj6H15Ju9DDRvhLGdkAN3fbz+ZGnikDY3OjYoLkHrAgo
+	 I50zG5FugyR/5dYEraqMDkICxuIK+S/xfHMYu4rRzU6Gnb3BrlnRDZpIr+VJyaTHyO
+	 1nG0E8nqi1Qz1E9cJTN5wr54chtB9nE5zya7SsVSeVeG1CTDAViKJfss/Z9muk7Qqy
+	 VEknqYR8NPL4/FeY1/vXfq64FAc3vAPCVD1gcbXqR1EEBOqbcjPNwh1kwYwPjbvIhs
+	 gWy7G50YyRoBA==
+Date: Thu, 10 Apr 2025 09:31:02 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH] perf tools: Remove evsel__handle_error_quirks()
+Message-ID: <Z_fyRpjnXjXukLwM@google.com>
+References: <20250410010252.402221-1-namhyung@kernel.org>
+ <CAJpZYjWTN09uXcArncRVXRRDcCH042MeN4UC1FAokoUNzsuG6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJpZYjWTN09uXcArncRVXRRDcCH042MeN4UC1FAokoUNzsuG6A@mail.gmail.com>
 
-It was reported that the internally calculated counter might differ from
-the real one from the Switch MIB. This can happen if the switch directly
-forward packets between the ports or offload small packets like ARP
-request. In such case, the kernel counter will desync compared to the
-real one transmitted and received by the Switch.
+Hello,
 
-To correctly provide the real info to the kernel, implement .get_stats64
-that will directly read the current MIB counter from the switch
-register.
+On Wed, Apr 09, 2025 at 08:26:07PM -0700, Chun-Tse Shao wrote:
+> On Wed, Apr 9, 2025 at 6:02 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The evsel__handle_error_quirks() is to fixup invalid event attributes on
+> > some architecture based on the error code.  Currently it's only used for
+> > AMD to disable precise_ip not to use IBS which has more restrictions.
+> >
+> > But the commit c33aea446bf555ab changed call evsel__precise_ip_fallback
+> > for any errors so there's no difference with the above function.  To
+> > make matter worse, it caused a problem with branch stack on Zen3.
+> >
+> > The IBS doesn't support branch stack so it should use a regular core
+> > PMU event.  The default event is set precise_max and it starts with 3.
+> > And evsel__precise_ip_fallback() tries with it and reduces the level one
+> > by one.  At last it tries with 0 but it also failed on Zen3 since the
+> > branch stack is not supported for the cycles event.
+> >
+> > At this point, evsel__precise_ip_fallback() restores the original
+> > precise_ip value (3) in the hope that it can succeed with other modifier
+> > (like exclude_kernel).  Then evsel__handle_error_quirks() see it has
+> > precise_ip != 0 and make it retry with 0.  This created an infinite
+> > loop.
+> >
+> > Before:
+> >
+> >   $ perf record -b -vv |& grep removing
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   removing precise_ip on AMD
+> >   ...
+> >
+> > After:
+> >
+> >   $ perf record -b true
+> >   Error:
+> >   Failure to open event 'cycles:P' on PMU 'cpu' which will be removed.
+> >   Invalid event (cycles:P) in per-thread mode, enable system wide with '-a'.
+> >   Error:
+> >   Failure to open any events for recording.
+> >
+> > Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
+> > Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> Tested-by: Chun-Tse Shao <ctshao@google.com>
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/net/dsa/mt7530.c | 46 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+Thanks for the test.
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index fdceefb2083c..0a33ca1dd7ca 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -906,6 +906,51 @@ static void mt7530_get_rmon_stats(struct dsa_switch *ds, int port,
- 	*ranges = mt7530_rmon_ranges;
- }
- 
-+static void mt7530_get_stats64(struct dsa_switch *ds, int port,
-+			       struct rtnl_link_stats64 *storage)
-+{
-+	struct mt7530_priv *priv = ds->priv;
-+	uint64_t data;
-+
-+	/* MIB counter doesn't provide a FramesTransmittedOK but instead
-+	 * provide stats for Unicast, Broadcast and Multicast frames separately.
-+	 * To simulate a global frame counter, read Unicast and addition Multicast
-+	 * and Broadcast later
-+	 */
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_RX_UNICAST, 1,
-+			       &storage->rx_packets);
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_RX_MULTICAST, 1,
-+			       &storage->multicast);
-+	storage->rx_packets += storage->multicast;
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_RX_BROADCAST, 1,
-+			       &data);
-+	storage->rx_packets += data;
-+
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_TX_UNICAST, 1,
-+			       &storage->tx_packets);
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_TX_MULTICAST, 1,
-+			       &data);
-+	storage->tx_packets += data;
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_TX_BROADCAST, 1,
-+			       &data);
-+	storage->tx_packets += data;
-+
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_RX_BYTES, 2,
-+			       &storage->rx_bytes);
-+
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_TX_BYTES, 2,
-+			       &storage->tx_bytes);
-+
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_RX_DROP, 1,
-+			       &storage->rx_dropped);
-+
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_TX_DROP, 1,
-+			       &storage->tx_dropped);
-+
-+	mt7530_read_port_stats(priv, port, MT7530_PORT_MIB_RX_CRC_ERR, 1,
-+			       &storage->rx_crc_errors);
-+}
-+
- static void mt7530_get_eth_ctrl_stats(struct dsa_switch *ds, int port,
- 				      struct ethtool_eth_ctrl_stats *ctrl_stats)
- {
-@@ -3207,6 +3252,7 @@ const struct dsa_switch_ops mt7530_switch_ops = {
- 	.get_eth_mac_stats	= mt7530_get_eth_mac_stats,
- 	.get_rmon_stats		= mt7530_get_rmon_stats,
- 	.get_eth_ctrl_stats	= mt7530_get_eth_ctrl_stats,
-+	.get_stats64		= mt7530_get_stats64,
- 	.set_ageing_time	= mt7530_set_ageing_time,
- 	.port_enable		= mt7530_port_enable,
- 	.port_disable		= mt7530_port_disable,
--- 
-2.48.1
+Arnaldo, I think we can have this in the perf-tools tree.
 
+Thanks,
+Namhyung
+
+
+> > ---
+> >  tools/perf/util/evsel.c | 22 ----------------------
+> >  1 file changed, 22 deletions(-)
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 1974395492d7da5e..3c030da2e477c707 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -2566,25 +2566,6 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
+> >         return false;
+> >  }
+> >
+> > -static bool evsel__handle_error_quirks(struct evsel *evsel, int error)
+> > -{
+> > -       /*
+> > -        * AMD core PMU tries to forward events with precise_ip to IBS PMU
+> > -        * implicitly.  But IBS PMU has more restrictions so it can fail with
+> > -        * supported event attributes.  Let's forward it back to the core PMU
+> > -        * by clearing precise_ip only if it's from precise_max (:P).
+> > -        */
+> > -       if ((error == -EINVAL || error == -ENOENT) && x86__is_amd_cpu() &&
+> > -           evsel->core.attr.precise_ip && evsel->precise_max) {
+> > -               evsel->core.attr.precise_ip = 0;
+> > -               pr_debug2_peo("removing precise_ip on AMD\n");
+> > -               display_attr(&evsel->core.attr);
+> > -               return true;
+> > -       }
+> > -
+> > -       return false;
+> > -}
+> > -
+> >  static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+> >                 struct perf_thread_map *threads,
+> >                 int start_cpu_map_idx, int end_cpu_map_idx)
+> > @@ -2730,9 +2711,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+> >         if (evsel__precise_ip_fallback(evsel))
+> >                 goto retry_open;
+> >
+> > -       if (evsel__handle_error_quirks(evsel, err))
+> > -               goto retry_open;
+> > -
+> >  out_close:
+> >         if (err)
+> >                 threads->err_thread = thread;
+> > --
+> > 2.49.0.504.g3bcea36a83-goog
+> >
