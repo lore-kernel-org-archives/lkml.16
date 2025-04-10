@@ -1,209 +1,171 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B90E51DFDE;
-	Thu, 10 Apr 2025 07:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73EB2036FB
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268628; cv=none; b=Rf3n5j25zTZWVar0KZ7Dzctw86ls8OHq8bSSIr58VLOJhgFC53ocYcj2OWHzlY5SJ/OTTL2jDnB5pKiGU4gIl2eiAktfrexHSzDVcN4GCBYtRQcmSQgEhxz/vkxLotQJjm/ZJ39HadbpyPo/59RY+oydSwEEW2fJ+hLmUd5Vhh4=
+	t=1744268658; cv=none; b=HRWIxNq1UW/NFRmH+KXuJNhfaZ4t4iSXvstgO7Rz181HBwMaJDU4UGX2u2rSvVfrr56rgmHGl8CIzMgojHYt2438Atl2aH8g+RXVK5gUzrrprrvnwqRHbL5JzdBHFbGeSBUZFYgpFpHKDxgBYMwL0Su4UyMAqjyWpdNSTFOME/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744268628; c=relaxed/simple;
-	bh=bZLY15UrVGK7p97LG2OmtwjcZajPk3Fv1tuBhvNIjMg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QkuSt4iwjVmdbLnWVpHywQkFks8Am0XmioKGvVbebAJebf1+4NindtuLH3iB5IBgEh3MhaBVxt1/U4mI1YS6f29vP1Tuk4/udUR6vRUq53gz9m7pww0Yl0OrE68wSqOPx7CxvC2+3VegD01C0yB3I6TtM/z0bhg4Mxa34VXJQjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=V1clprFc; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744268658; c=relaxed/simple;
+	bh=a+gKW0Py71TalASop7ZxdQ6rsdM207Gm+oHvKtY/2NU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Urcysv7EI7Ylf3V50SyVI+BRWWf3Mk1U1mAIUu6hpAdBgCCMKzc1O3XjuN1AwxG14bejmJnhfXPPtA9Jyip4ZTZ8qHVDNrqwDiFT9+YnRLktW2YHkVMS6okABr4iCdKU3J++kqvXHAlulGQtXzP4Adyz26NZIOIqj24Vv3FzS2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yo8iUjkk; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="V1clprFc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=CnPiI
-	i+40Nq8IcPg6K0qCX4b4qsQqX8RZrW3I0ARU+w=; b=V1clprFcSYL5hj6EdrKA/
-	ZvKFdBpjr6yT9+dg7+1YdX+thh8ahiBMaJT4MVUdw/U7dpVGGafHBkkfCB3VWhvf
-	iTo3Ic8iK1g6yaC1qQOTeF+l84ndxcoEIZ2HkP/wu6O1RH2sJdkjRqj/O4IrCCS/
-	xio5MB4R5GF2TMerhFUzJE=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3f7EibfdnHOEjFg--.20679S2;
-	Thu, 10 Apr 2025 15:02:59 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v3] bpf: Remove redundant checks
-Date: Thu, 10 Apr 2025 15:02:58 +0800
-Message-Id: <20250410070258.276759-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yo8iUjkk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744268657; x=1775804657;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=a+gKW0Py71TalASop7ZxdQ6rsdM207Gm+oHvKtY/2NU=;
+  b=Yo8iUjkk5vA9po4GQJe8cpZJefkrfPnPL2rrxg5kA42Di70U21oyuIdD
+   EfWjZO/Ei15rdVyXQMHyhmH9PdQtD52meDiSn4vB6oce7L+KDF94gc9ce
+   eanMVuK13HhorfwPgsoRqTczwbBSKdky+VEtp9U/M/lzSc74x2/DbMJxn
+   vydCNMBPNW06zQ7BvU7qTMqVlJjDTkl2UKX/Fzm08VEZU08EvXnPcqi9G
+   80wKPdgv/GUzGhA6XdwGTQJ2P9OjOjDdeCpI0RLt9SUxnUuupztzZr83H
+   UOll2DfZifHMUJBql5vjVgfhlJjG4dxPZHdBTGkxnhdOntDHDJRg6j1TS
+   w==;
+X-CSE-ConnectionGUID: yNfx2+tMSfCsMLKTDObrpQ==
+X-CSE-MsgGUID: JkP0fYh/TtWh7f1gWTFT2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="57148363"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="57148363"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 00:04:16 -0700
+X-CSE-ConnectionGUID: QW5AF7cFTy6leIoI2btU1Q==
+X-CSE-MsgGUID: k29QXuKITxe/4SVEciXV2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="133677191"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 10 Apr 2025 00:04:13 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u2lxK-0009jx-22;
+	Thu, 10 Apr 2025 07:04:10 +0000
+Date: Thu, 10 Apr 2025 15:03:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Donet Tom <donettom@linux.ibm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	Donet Tom <donettom@linux.ibm.com>
+Subject: Re: [PATCH 1/2] mm/memblock: Added a New Memblock Function to Check
+ if the Current Node's Memblock Region Intersects with a Memory Block
+Message-ID: <202504101459.iFHlVGBA-lkp@intel.com>
+References: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3f7EibfdnHOEjFg--.20679S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKr4kJFy8XF15Zr1rWw13twb_yoW7tF1rpF
-	sxtrZxCrs2vw42qFy7Jr1fZa4Yy3srX3y5WaykKw18ur4UZr47tF12kF42gF1rAr98G347
-	u3yvvFZ0kFyI93JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jerWrUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwgMreGf3aJu3wAAAsG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
 
-From: Feng Yang <yangfeng@kylinos.cn>
+Hi Donet,
 
-Many conditional checks in switch-case are redundant
-with bpf_base_func_proto and should be removed.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-Acked-by: Song Liu <song@kernel.org>
----
-Changes in v3:
-- Only modify patch description information.
-- Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfeng59949@163.com/
+[auto build test ERROR on akpm-mm/mm-everything]
 
-Changes in v2:
-- Only modify patch description information.
-- Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfeng59949@163.com/
----
- kernel/trace/bpf_trace.c | 72 ----------------------------------------
- 1 file changed, 72 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Donet-Tom/base-node-Use-curr_node_memblock_intersect_memory_block-to-Get-Memory-Block-NID-if-CONFIG_DEFERRED_STRUCT_PAGE_INIT-is-S/20250409-132924
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom%40linux.ibm.com
+patch subject: [PATCH 1/2] mm/memblock: Added a New Memblock Function to Check if the Current Node's Memblock Region Intersects with a Memory Block
+config: csky-randconfig-001-20250410 (https://download.01.org/0day-ci/archive/20250410/202504101459.iFHlVGBA-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250410/202504101459.iFHlVGBA-lkp@intel.com/reproduce)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 6b07fa7081d9..c89b25344422 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1443,56 +1443,14 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	const struct bpf_func_proto *func_proto;
- 
- 	switch (func_id) {
--	case BPF_FUNC_map_lookup_elem:
--		return &bpf_map_lookup_elem_proto;
--	case BPF_FUNC_map_update_elem:
--		return &bpf_map_update_elem_proto;
--	case BPF_FUNC_map_delete_elem:
--		return &bpf_map_delete_elem_proto;
--	case BPF_FUNC_map_push_elem:
--		return &bpf_map_push_elem_proto;
--	case BPF_FUNC_map_pop_elem:
--		return &bpf_map_pop_elem_proto;
--	case BPF_FUNC_map_peek_elem:
--		return &bpf_map_peek_elem_proto;
--	case BPF_FUNC_map_lookup_percpu_elem:
--		return &bpf_map_lookup_percpu_elem_proto;
--	case BPF_FUNC_ktime_get_ns:
--		return &bpf_ktime_get_ns_proto;
--	case BPF_FUNC_ktime_get_boot_ns:
--		return &bpf_ktime_get_boot_ns_proto;
--	case BPF_FUNC_tail_call:
--		return &bpf_tail_call_proto;
--	case BPF_FUNC_get_current_task:
--		return &bpf_get_current_task_proto;
--	case BPF_FUNC_get_current_task_btf:
--		return &bpf_get_current_task_btf_proto;
--	case BPF_FUNC_task_pt_regs:
--		return &bpf_task_pt_regs_proto;
- 	case BPF_FUNC_get_current_uid_gid:
- 		return &bpf_get_current_uid_gid_proto;
- 	case BPF_FUNC_get_current_comm:
- 		return &bpf_get_current_comm_proto;
--	case BPF_FUNC_trace_printk:
--		return bpf_get_trace_printk_proto();
- 	case BPF_FUNC_get_smp_processor_id:
- 		return &bpf_get_smp_processor_id_proto;
--	case BPF_FUNC_get_numa_node_id:
--		return &bpf_get_numa_node_id_proto;
- 	case BPF_FUNC_perf_event_read:
- 		return &bpf_perf_event_read_proto;
--	case BPF_FUNC_get_prandom_u32:
--		return &bpf_get_prandom_u32_proto;
--	case BPF_FUNC_probe_read_user:
--		return &bpf_probe_read_user_proto;
--	case BPF_FUNC_probe_read_kernel:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_proto;
--	case BPF_FUNC_probe_read_user_str:
--		return &bpf_probe_read_user_str_proto;
--	case BPF_FUNC_probe_read_kernel_str:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_str_proto;
- #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	case BPF_FUNC_probe_read:
- 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
-@@ -1502,10 +1460,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		       NULL : &bpf_probe_read_compat_str_proto;
- #endif
- #ifdef CONFIG_CGROUPS
--	case BPF_FUNC_cgrp_storage_get:
--		return &bpf_cgrp_storage_get_proto;
--	case BPF_FUNC_cgrp_storage_delete:
--		return &bpf_cgrp_storage_delete_proto;
- 	case BPF_FUNC_current_task_under_cgroup:
- 		return &bpf_current_task_under_cgroup_proto;
- #endif
-@@ -1513,20 +1467,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_send_signal_proto;
- 	case BPF_FUNC_send_signal_thread:
- 		return &bpf_send_signal_thread_proto;
--	case BPF_FUNC_perf_event_read_value:
--		return &bpf_perf_event_read_value_proto;
--	case BPF_FUNC_ringbuf_output:
--		return &bpf_ringbuf_output_proto;
--	case BPF_FUNC_ringbuf_reserve:
--		return &bpf_ringbuf_reserve_proto;
--	case BPF_FUNC_ringbuf_submit:
--		return &bpf_ringbuf_submit_proto;
--	case BPF_FUNC_ringbuf_discard:
--		return &bpf_ringbuf_discard_proto;
--	case BPF_FUNC_ringbuf_query:
--		return &bpf_ringbuf_query_proto;
--	case BPF_FUNC_jiffies64:
--		return &bpf_jiffies64_proto;
- 	case BPF_FUNC_get_task_stack:
- 		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
- 				       : &bpf_get_task_stack_proto;
-@@ -1534,12 +1474,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_copy_from_user_proto;
- 	case BPF_FUNC_copy_from_user_task:
- 		return &bpf_copy_from_user_task_proto;
--	case BPF_FUNC_snprintf_btf:
--		return &bpf_snprintf_btf_proto;
--	case BPF_FUNC_per_cpu_ptr:
--		return &bpf_per_cpu_ptr_proto;
--	case BPF_FUNC_this_cpu_ptr:
--		return &bpf_this_cpu_ptr_proto;
- 	case BPF_FUNC_task_storage_get:
- 		if (bpf_prog_check_recur(prog))
- 			return &bpf_task_storage_get_recur_proto;
-@@ -1548,18 +1482,12 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		if (bpf_prog_check_recur(prog))
- 			return &bpf_task_storage_delete_recur_proto;
- 		return &bpf_task_storage_delete_proto;
--	case BPF_FUNC_for_each_map_elem:
--		return &bpf_for_each_map_elem_proto;
--	case BPF_FUNC_snprintf:
--		return &bpf_snprintf_proto;
- 	case BPF_FUNC_get_func_ip:
- 		return &bpf_get_func_ip_proto_tracing;
- 	case BPF_FUNC_get_branch_snapshot:
- 		return &bpf_get_branch_snapshot_proto;
- 	case BPF_FUNC_find_vma:
- 		return &bpf_find_vma_proto;
--	case BPF_FUNC_trace_vprintk:
--		return bpf_get_trace_vprintk_proto();
- 	default:
- 		break;
- 	}
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504101459.iFHlVGBA-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   mm/memblock.c: In function 'curr_node_memblock_intersect_memory_block':
+>> mm/memblock.c:1943:22: error: 'struct memblock_region' has no member named 'nid'
+    1943 |                 if (r->nid == curr_nid) {
+         |                      ^~
+
+
+vim +1943 mm/memblock.c
+
+  1913	
+  1914	/**
+  1915	 * curr_node_memblock_intersect_memory_block:  checks if the current node's memblock
+  1916	 * region intersects with the memory block.
+  1917	 * @start_pfn: memory block start pfn
+  1918	 * @end_pfn: memory block end_pfn
+  1919	 * @curr_nid: Current node
+  1920	 *
+  1921	 * This function takes the start and end PFN of a memory block, as well as the node ID
+  1922	 * that is being registered. It then finds the memblock region of the current node and
+  1923	 * checks if the passed memory block intersects with the memblock. If there is an
+  1924	 * intersection, the function returns true; otherwise, it returns false.
+  1925	 *
+  1926	 * Return:
+  1927	 * If the current node's memblock region intersects with the memory block, it returns
+  1928	 * true; otherwise, it returns false.
+  1929	 */
+  1930	bool __init_memblock curr_node_memblock_intersect_memory_block(unsigned long start_pfn,
+  1931							unsigned long end_pfn, int curr_nid)
+  1932	{
+  1933		struct memblock_region *r;
+  1934		unsigned long r_start, r_end;
+  1935		unsigned long size = end_pfn - start_pfn;
+  1936		unsigned long r_size = 0;
+  1937	
+  1938		for_each_mem_region(r) {
+  1939			r_start = PFN_DOWN(r->base);
+  1940			r_end = PFN_DOWN(r->base + r->size);
+  1941			r_size = r_end - r_start;
+  1942	
+> 1943			if (r->nid == curr_nid) {
+  1944				if (size > r_size) {
+  1945					/*
+  1946					 * The memory block size is greater than the memblock
+  1947					 * region size, meaning multiple memblocks can be present
+  1948					 * within a single memory block. If the memblock's start
+  1949					 * or end is within the memory block's start and end, It
+  1950					 * indicates that the memblock is part of this memory block.
+  1951					 * Therefore, the memory block can be added to the node
+  1952					 * where the memblock resides.
+  1953					 */
+  1954					if (in_range(r_start, start_pfn, size) ||
+  1955							in_range(r_end, start_pfn, size))
+  1956						return true;
+  1957				} else {
+  1958					/*
+  1959					 * The memory block size is less than or equal to the
+  1960					 * memblock size, meaning multiple memory blocks can
+  1961					 * be part of a single memblock region. If the memory
+  1962					 * block's start or end is within the memblock's start
+  1963					 * and end, it indicates that the memory block is part of
+  1964					 * the memblock. Therefore, the memory block can be added
+  1965					 * to the node where the memblock resides.
+  1966					 */
+  1967					if (in_range(start_pfn, r_start, r_size) ||
+  1968							in_range(end_pfn, r_start, r_size))
+  1969						return true;
+  1970				}
+  1971			}
+  1972		}
+  1973		return false;
+  1974	}
+  1975	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
