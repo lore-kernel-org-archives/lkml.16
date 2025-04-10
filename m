@@ -1,106 +1,99 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB901EB1B7;
-	Thu, 10 Apr 2025 09:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783E71EB1B7
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276093; cv=none; b=rCyZjWcVxbftOr9CMtTT6D8CiOm1HbYpvNr4Av/OHv4EtWGz3+FXs3/akAQDrQ/dhPvjevNqs4kuixh+Qtg1B/gfKhGiTlT/iqrXjpUhMSMFZgJTK0U8qbQtSX/+TSepRiDf4zmBdGalkpoE4imoZLP7XXTSu/mWJ7B3ir4OEGo=
+	t=1744276107; cv=none; b=DNa1TuIcHbQz2lg/oZ5GiibH6PUhng3pGVeslZOIEWnnJd6bqAa935pM2Esl4/LS1ccmBHUU5qBHgYqFTUXuciIrO2HLEwO0skn/zX3P59ihvKdo+dJW0Wegz5dwyOLaTSQLVkqLkfWRnQaHBu5Mk236r3COdiCDGeiEBQDNKFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276093; c=relaxed/simple;
-	bh=TfarEfTOCkxqzbClFMk+tCAmwP/yvSQ85D7ruEjqh2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h8imWcSqqZzg+QhFixHp4n3WIJXuRoPh3EvR2FJn+nOCwMxd6x4pBbSK4WGW5nzBvWBR5in2fYI7RBqvSvwTzRfm5qB7kdHoXiARw3BroqjfJ5+oacBx+F6oARta9ZmowQzCd8GDzw8HWZ7w+O9RQWUMGNa11C+NAMIPYv7SasU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-523f1b31cf8so251167e0c.0;
-        Thu, 10 Apr 2025 02:08:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744276089; x=1744880889;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AuwVRPvMl3wdfk0qtDISjiniiWptCa7pFN3JEVE/WmA=;
-        b=ZFQo7HoZRyIN+thz7y+IqPmT8T64tkJlGbKaThIAahg4msYXWvSHnKpPZcfcOtBz3Y
-         5t+Ch2r6q4ztxa6TcuLzCjGnpx5meUlgyIpbHLh/CxnZi5bID2KeiwURCSkYgXO9RNph
-         78Q6tnKCxaejKWxvGX/7tTizkieImFvcxlRbROcvDQ0lCJLTMAUBxwSMN8aU4a6U8o0D
-         MOvoRteXfkO5ScuiWbF/XFX0lEcS2zWz9F0lxdCYWv0hzwrRbWRUaU2o+DdFz1lxA+e6
-         HCw4AfBj637cA33aAe2PCdc/NLpwn38aNfGPzk+gWV2n/LbZAz2wn+6Qb6uGk2JnL4r+
-         0uSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXovfPwQE0y5l9IDlrF5vgNQsEHge4/z95mAvSl0deqnEj6iu6WO6deck+Kfcc5WFKnBwG2ohRkq+w@vger.kernel.org, AJvYcCUeGqiH8pFjrIbzvKNfnl+qyabxd8WX4QJ7p5+3wJOqzrMFeP8Gv+qLT/4hEjgHHf1OA0ksFQm+WDkNmGC0@vger.kernel.org, AJvYcCUy9R09NGMl6OppqQoHo1vSOfdsawfWkyYKjCZ+rMRpkK6KUDBKR7q9YsluASES4dtwIFOJnbYPTJxBzTon@vger.kernel.org, AJvYcCV60dgeH25tzzsBxnOmOWbOK2ysslBCzSqtMit9aeAZ40UIoRuP/jmjkwVi1sBuMEIIyeb39CYODRRu@vger.kernel.org, AJvYcCWzD1CBtJvA2UaYjsmaoUUdwjL8HtGjLxFwbXX/RzlUuxRvlz4bjtc4pt+70ykx7/pe4Ktp2RwnevpBGg==@vger.kernel.org, AJvYcCXxDmbPk5jTcwMQ5VncQVOG5iQbk1aafOkoO+vNJb6GLx2piVxLqH1XCeY6r55cmfqqSmH9duCB/LE2UBrsUda8dqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydrY0Pcxzy1dCl+acmwPkD+ndWjwiUZXN7RINZDGpKru64ZiFD
-	91IW+oUeJmSl65FyB04J1wb+jIF1/77/2p88dWWAlgHmMS6tWAg81Djn3BNc
-X-Gm-Gg: ASbGnctvfGusODGlzpbI/Re3sOuxG2UQG7OZW+lmnhsFhZCUzliyYdsaelu8GYsUHlU
-	E/C/r9Ps39y5HqFIoD/Ke0ANN+wAvbEJZTYzOMcbtugFI55AzkN36kC1rGzdQ+0pB39GXe0PucZ
-	3B+rLk0gbrLeC+2j139uDwoV/bpzAd9EqlLBedHhSyDtcl5MNwdz/G2yBl39ZTvuqXF/s9UOoJl
-	2vhvFrZpkJeZDn7SvTG1kvvOUEVA3CnKr1JmylHFQiyHBEUB7F1XCiH3SWyJjzWZrGSyEgFBrZN
-	rawUpRzOUbFww5oCzmhdrNtFL95f9fAW2VUPx6rCc8f9n/rTXi7hT5PoeL9QH/H76zsIb/es6HM
-	R5kc=
-X-Google-Smtp-Source: AGHT+IFeR7IwJ+vn9uwBsf9eWqAUT7O3w0eaF59Bqst38A2EIw55JnXmGVV5zrTi3/+tVGDytw+zsg==
-X-Received: by 2002:a05:6102:8083:b0:4c1:a448:ac7d with SMTP id ada2fe7eead31-4c9d34a9ffamr1338865137.10.1744276089152;
-        Thu, 10 Apr 2025 02:08:09 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c979cfa2sm515634137.13.2025.04.10.02.08.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:08:08 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86dddba7e0eso233740241.1;
-        Thu, 10 Apr 2025 02:08:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUYJfMY7Q6E+dfnXPn8mOejHrWz2TjkX0iAcHyF/IrXp6TcpBBxcSp/jn2XPc/lyJblXTg967plSULgXcWIJSu+7GA=@vger.kernel.org, AJvYcCXFtTHFvO1bOdJ9UMCNt2J7yb9+wIcaqex8DXA29/cpgo5w+3nWdRxPP+0IpAWK2DqK82mjYFEfPwAr/puN@vger.kernel.org, AJvYcCXJY4NpVQOEfz3iqzrsFtcxmFgdq+wj1vl5mMsgwXFSaBpZrB4iwg2JT9AahjcSjLqwUVwqln2OJiYreQ==@vger.kernel.org, AJvYcCXc6XSatoKPFgcPS7e6FJ3/ClUExiz6E/QVT/BIQfI0Ir4VLgMlIM3BuTFk2fXjYb3uQH8ZXEKEo6hV@vger.kernel.org, AJvYcCXnh7/DoDVEwbBcLZH+sumRa7WwTkYBqJngqP+1Ju3AUoU1Oh7DmmUyQ86Daxqg7FhA3YwPXXxe8RZ8jX4G@vger.kernel.org, AJvYcCXwLV4iT1x4P/O3DKIwYlCy72BGoMwtG65P3MlMZfnT9lpjLx1cfXxIHzVGLfiBC7jYRW7s0Spg9vKx@vger.kernel.org
-X-Received: by 2002:a05:6102:38ca:b0:4bb:c490:7d6c with SMTP id
- ada2fe7eead31-4c9d34ad613mr1283191137.9.1744276088614; Thu, 10 Apr 2025
- 02:08:08 -0700 (PDT)
+	s=arc-20240116; t=1744276107; c=relaxed/simple;
+	bh=yMv4SY0fnld2VBgAtUr1s5+LhOrGDoyQMSowsDCxdSc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NI0MUSguvb5uRmRoRpWc2JKUqEpHC/K6rHwwOR5suiLHmtRIxuAwgNsE0ehoalZINlr7WStALKZPqueuCCGsiQfj+tDkhfC4AksuCh0sF3Z4GaDpnxUe4AHKZsUJxM4ga8V7Uwi0sQg3bjz7Xoa6IE3WLfFnHVS83Bh6KR+yLg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZYDPQ6wWxz1j5wP;
+	Thu, 10 Apr 2025 17:03:22 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3F0921A016C;
+	Thu, 10 Apr 2025 17:08:21 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Thu, 10 Apr 2025 17:08:20 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <will@kernel.org>, <mark.rutland@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <hejunhao3@huawei.com>, <jonathan.cameron@huawei.com>,
+	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>,
+	<yangyicong@hisilicon.com>, <wangyushan12@huawei.com>
+Subject: [PATCH v3 0/8] General updates and two new drivers for HiSilicon Uncore PMU
+Date: Thu, 10 Apr 2025 17:08:17 +0800
+Message-ID: <20250410090825.13214-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407191628.323613-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 11:07:56 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUYsx2XS=q85oDVEk_=PJwkjBEXxLyUDO+UhEP2_G1kTg@mail.gmail.com>
-X-Gm-Features: ATxdqUEwpUxcOFGKhCUVVlG88vheZ8eu-I4T6lSe7ekmYJ7bu86LizYCbC6vt9A
-Message-ID: <CAMuHMdUYsx2XS=q85oDVEk_=PJwkjBEXxLyUDO+UhEP2_G1kTg@mail.gmail.com>
-Subject: Re: [PATCH v2 02/12] soc: renesas: Add config option for RZ/V2N
- (R9A09G056) SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add a new Kconfig option, ARCH_R9A09G056, to enable ARM64 platform support
-> for the Renesas RZ/V2N SoC. Default this option to "y" when ARCH_RENESAS is
-> enabled, ensuring that support for the RZ/V2N SoC is automatically included.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v1-v2:
-> - Selected the SoC by default when ARCH_RENESAS is enabled.
-> - Updated the commit message
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.16.
+Support new version of DDRC/SLLC PMU identified with updated ACPI HID and
+register definition. In order to support this, we do a preliminary refactor
+to initialize device of each version by using driver data of each HID
+rather than checking the version. This will also make the driver easier to
+maintain and extend, since only the HID specific information along
+with the new HID will be added to support the new version without touching
+the common logic.
 
-Gr{oetje,eeting}s,
+Two new Uncore PMU drivers is also added to support the monitoring the
+events of the system bus (by NoC PMU) and the DVM operations (by MN PMU).
 
-                        Geert
+Change since v2:
+- Rebase on 6.15-rc1, add Jonathan's tag.
+Link: https://lore.kernel.org/linux-arm-kernel/20250321073846.23507-1-yangyicong@huawei.com/
+
+Change since v1:
+- Fold patch which extending the struct hisi_pmu_dev_info into its user
+- Use bit shift rather than bit mask for SLLC PMU registers configuration
+- Address other comments by Jonathan, thanks
+Link: https://lore.kernel.org/linux-arm-kernel/20250218092000.41641-1-yangyicong@huawei.com/
+
+Junhao He (6):
+  drivers/perf: hisi: Simplify the probe process for each DDRC version
+  drivers/perf: hisi: Add support for HiSilicon DDRC v3 PMU driver
+  drivers/perf: hisi: Use ACPI driver_data to retrieve SLLC PMU
+    information
+  drivers/perf: hisi: Add support for HiSilicon SLLC v3 PMU driver
+  drivers/perf: hisi: Relax the event number check of v2 PMUs
+  drivers/perf: hisi: Add support for HiSilicon MN PMU driver
+
+Yicong Yang (2):
+  drivers/perf: hisi: Support PMUs with no interrupt
+  drivers/perf: hisi: Add support for HiSilicon NoC PMU
+
+ Documentation/admin-guide/perf/hisi-pmu.rst   |  11 +
+ drivers/perf/hisilicon/Makefile               |   3 +-
+ drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c | 354 ++++++++--------
+ drivers/perf/hisilicon/hisi_uncore_hha_pmu.c  |   6 +-
+ drivers/perf/hisilicon/hisi_uncore_mn_pmu.c   | 355 ++++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_noc_pmu.c  | 392 ++++++++++++++++++
+ drivers/perf/hisilicon/hisi_uncore_pa_pmu.c   |   2 +-
+ drivers/perf/hisilicon/hisi_uncore_pmu.c      |  11 +-
+ drivers/perf/hisilicon/hisi_uncore_pmu.h      |   2 +
+ drivers/perf/hisilicon/hisi_uncore_sllc_pmu.c | 220 +++++++---
+ 10 files changed, 1098 insertions(+), 258 deletions(-)
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_mn_pmu.c
+ create mode 100644 drivers/perf/hisilicon/hisi_uncore_noc_pmu.c
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.24.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
