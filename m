@@ -1,92 +1,92 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9D91E47BA
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318FF381A3;
+	Thu, 10 Apr 2025 08:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272298; cv=none; b=Nv7IjwN8HaVzEG0DhNnzHA8ZL8g7fCpwWMOuGjkGa1d/SHtJk/vLGOpDbp3QSTbT9amF2a5rtbELkNoBOfZpXcq9U+MmmjE2DHVsp9qCpr56F2CzspvbAtFyP1OSOXC4Y4RVCRfMc89B9LOH/1gzhIHMmjrGpL1ZltnJLHQ9w0M=
+	t=1744272310; cv=none; b=p9S3Ad2UYxr44JJ3IOOm29TfZimAK9y/fAPxKXcHfiAywVaTS9Ruuh6fqXc6tz+b+Cf4LWMC7VBrLf3c0k9aVNrYleTlio5oxH0sxRV/91ouye/p3oLoUf51QRdudl0MTtzVLYLdqi1zVff721SRq9DpzrQuBmlL7lmCksrKpng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272298; c=relaxed/simple;
-	bh=meSSP8a70ro5KR6XsGtVh/XPLlTjZJaf5Hv6He5tEls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ur+OxTY5TOwNTk6VH44ad6IZFruNhBE90iTMkc+k+/lgqSuvhnbbSwLM4zEeJdou/Nz72/CznqET2XXDodhn+0qm18C4sX+r9cFW5IVrDxkIPjzuWhy1w94czYhfe1WNr/E9iW2m6HMqK/VO2pWh8SNgpnLgLWgtOqvSfhxQAaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XRtgeq4R; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744272310; c=relaxed/simple;
+	bh=IxulY4YfJFvqSV0YcsQj0eRPgqF4sDaqNqzwMhtD+DE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/lU1qeQE1ZTTjLb+eWi+VV8PWUKyXJ3o71W4V4c66/NO6FLKyFnw3wBv1jO6tFCQu9kV0PeDfLzdhMgnMsPrH0BvEd6w4HWffD6ZfE4PCkg0d3Ctafhou2bJfAT+fH9lWIck5wz87AMCQWrvTdbGHUFlacjgNgQC15UmIgHMFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d4zbEXAZ; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XRtgeq4R"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c54f67db99so162760485a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744272296; x=1744877096; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=meSSP8a70ro5KR6XsGtVh/XPLlTjZJaf5Hv6He5tEls=;
-        b=XRtgeq4RKH4LV9kVH3sSEl0m3vMEKdt2NbToZyyJ3JpgxQEXtaqIVFA82M0ZZYX1zs
-         M77fOwOk1pjIuqk3K/ZRViC2/j/Hb7eZb0nppfuL71yqkn+E+wCqpxH1dPjWWheRlYyg
-         b95V7H/7LWkG6IoyCgcGx83+soWgdEuhed8gKN0P3FTCgMyanHMujREll+dAg/AfjbAY
-         J1epYTQjFtrF3KFYTDNvWzTLNlcWu9NT+O6RP2FM2HZuqjkGGARnzkinWRDbWVPEtIq0
-         BQE0RhOcU2MqYQOPdwRoipWvxm8ESudZH8zkNZyYdD7PVNFuobiifV7j2MTsZWVFEluY
-         FX5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744272296; x=1744877096;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=meSSP8a70ro5KR6XsGtVh/XPLlTjZJaf5Hv6He5tEls=;
-        b=LVTbu4l5Nd+VVxzN++bq5eIm3boXRCx/Uh2MamTrbhUrmNVU+UnPs15Jt3Jw7emtDo
-         u/NY77MiHt7RDixbch6/WpUUcveaxMgh2pZNbx1O1rwdJlsnj91teT1FumUPB7ao7NFQ
-         T1kWM2fgIO4u27VytljsS9Y97fjTKauJ4IYmPg4raQv9TvidRJnTQEMqL3GhL3j6+uNU
-         2QiWckpUH2hHW9Li3o2OKiBUUSJbPovhaDj1am7JILs8CT8sBxgJClyfVTYtqBNiI2nF
-         6LliUL4C5ySOX91jYHgarhRweS04eopk9yb6ifBxPdiDhpsS5cWXxMRcAvKqmo4htRg9
-         mBvg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7mo5lUldwBeH4HVzAOyvya99g2Rbp0zkKMZWOfzNXZI8jI2apmfRjgj2bhiMF1zFRkDevcJGPNgVjhCw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4MeZKXNaqdUuLbExguO0fTRA8oEYuT2Zb89FJjCBwS1RD5nkJ
-	8j/AUhVVfs7nkY1sVPAi2XPj04HlxNq6vK6MMCXLfYtUJseuzloBIrminBtwLvcG7FrW6yo4gNb
-	R/bycc8SsI1thXlRn8NZmmAZ2PYo5HV8hsuoB
-X-Gm-Gg: ASbGnctbd6WLm/uwjLD59Xfwor6Y7mbeBuoNPMos1YYBT6M4oLkPbndILo03Qkbdcac
-	HjQgZgC/ns/O3coHuzMH4ZuRvxJ8OV85euE2h1HmgDuRXbrfwR0CUWlMt7n8WrcBLlUkIHjSTR9
-	OSZ7H5s976xkCFixl3j70ywg==
-X-Google-Smtp-Source: AGHT+IHnRoD7AjtOsJpc2K3JrlbTQWZaQjx3IprtXz+uXHZfGGRJtSOFutrwzuUQicc+jUPnlbCkJ5k6h2a3aQNQnsw=
-X-Received: by 2002:a05:620a:4094:b0:7b6:cb3c:cb81 with SMTP id
- af79cd13be357-7c7a76b9749mr250640485a.18.1744272295691; Thu, 10 Apr 2025
- 01:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d4zbEXAZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=IxulY4YfJFvqSV0YcsQj0eRPgqF4sDaqNqzwMhtD+DE=; b=d4zbEXAZ3d/QRC8bB/J3SExnty
+	QEX5mVTXHvr3hTke0gOWXdwujtWBsMo2SO9ZAcp+fejjIioku3evoFzJNDHQFBr8TpZ2Deg8TmOJH
+	HXOgTQv24RyAQs4XcI8iC3uoPRUjvN3nETceXW5QHkxtJORwYrc0f7Y5vGtrH4fSTtdbtdKHBNydq
+	XYY++T3RSc57LMajsKWy++nyiOzLKGxOXHeTTNljJFtjBpZpoaPpGIPJGZwI5qM2RtMooEhlNcCdb
+	AorRjWui1N49jKz1r7D7uzAmJ5m5pTqlT3kO08GCw4jrjexs/Fq4/GpZOnRJoXUnSsSArSx/cwRkt
+	jpwjaypw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2mu6-00000008mGw-3557;
+	Thu, 10 Apr 2025 08:04:55 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 49F433003FF; Thu, 10 Apr 2025 10:04:54 +0200 (CEST)
+Date: Thu, 10 Apr 2025 10:04:54 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, Alexander Potapenko <glider@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	kvm-riscv@lists.infradead.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Jing Zhang <jingzhangos@google.com>,
+	Waiman Long <longman@redhat.com>, x86@kernel.org,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Anup Patel <anup@brainfault.org>,
+	Albert Ou <aou@eecs.berkeley.edu>, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+	Borislav Petkov <bp@alien8.de>, Alexandre Ghiti <alex@ghiti.fr>,
+	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Sebastian Ott <sebott@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Joey Gouly <joey.gouly@arm.com>, Ingo Molnar <mingo@redhat.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sean Christopherson <seanjc@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/4] locking/mutex: implement mutex_trylock_nested
+Message-ID: <20250410080454.GW9833@noisy.programming.kicks-ass.net>
+References: <20250409014136.2816971-1-mlevitsk@redhat.com>
+ <20250409014136.2816971-2-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410-fix_net-v2-1-d69e7c5739a4@quicinc.com> <20250410035328.23034-1-kuniyu@amazon.com>
-In-Reply-To: <20250410035328.23034-1-kuniyu@amazon.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 10 Apr 2025 10:04:44 +0200
-X-Gm-Features: ATxdqUGT0OfB2mWkqNiahR6P-89QRZDY9kNVpov5Ci1k3NZwNDvCbVoDxpoCgdU
-Message-ID: <CANn89i+-V5G7XTDEd01gH_+efCDMGA4hdF7uRjYv6bsEqkoQOw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] sock: Correct error checking condition for (assign|release)_proto_idx()
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: zijun_hu@icloud.com, dada1@cosmosbay.com, davem@davemloft.net, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, quic_zijuhu@quicinc.com, 
-	willemb@google.com, xemul@openvz.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409014136.2816971-2-mlevitsk@redhat.com>
 
-On Thu, Apr 10, 2025 at 5:53=E2=80=AFAM Kuniyuki Iwashima <kuniyu@amazon.co=
-m> wrote:
->
-> > [PATCH net-next v2] sock: Correct error checking condition for (assign|=
-release)_proto_idx()
->
-> Maybe net instead of net-next ?
->
+On Tue, Apr 08, 2025 at 09:41:33PM -0400, Maxim Levitsky wrote:
+> Allow to specify the lockdep subclass in mutex_trylock
+> instead of hardcoding it to 0.
 
-I think this is a minor change, I would not add a Fixes: tag and risk
-another CVE for such a case that is never reached.
+We disable a whole bunch of checks for trylock, simply because they do
+not wait, therefore they cannot deadlock.
 
-We do not have 63 protocols, getting to 64 limit is moot.
+But I can't remember if they disable all the cases required to make
+subclasses completely redundant -- memory suggests they do, but I've not
+verified.
 
-As a matter of fact, release_proto_idx(struct proto *prot) should
-never hit the condition.
+Please expand this Changelog to include definite proof that subclasses
+make sense with trylock.
