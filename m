@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808121F0E3C
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F024D1FE45A
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:10:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744258200; cv=none; b=pxqcsU0E5zcI9P0JBQZPGHtT00dzLIYlpf7Wo8yA9QqAQQ/IdwvnV9zMgATJ3tM3OJlsTPg2vYFRdswcbldDtKHP9OuebS7WCQX0j60XlbXu053TkjwMvX3gRcGowLNVNYGR2gar6PR2aIK6peV+yHCnhg9WcDY505yamu1DA5E=
+	t=1744258202; cv=none; b=IQZrk5gb8lDH3C7E7ypQvNjiVR9DaPHSaok5C454jx45mIvXB7rXPbuyOgipi75IsGzkVBIpoH5Hu7rPOOtjKzcSOyVK7T3L/HIsuPZEXvzl9asCh9+FxX6YoCt+Cq6XFxKHaBYtORY+be25JDcK9hRrX2XjuexxtrbLS8NEwCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744258200; c=relaxed/simple;
-	bh=T+U+qmU+ht71n/z0NiUcLMkLIvyNxHhppQD+pF/QSVo=;
+	s=arc-20240116; t=1744258202; c=relaxed/simple;
+	bh=3D0KxFdT7AaX3IlEJQU4ODQ06zsDhm92FFBCaoIfeG0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=BLwM4QpfSZqn4J4SirlTfHT9o8IqDn13YQ1kTH1JlZn/9cgY9F5wbDXPrvbuDzatgIfyUmnRgZ60JGqxGLHSuzHS+Yp0/pJZSQcSd8jWHfX4KuJeggOYDJbrklQOEKwJHY+iG13uxTseJWdEk+nzTJnhbwZVeD2gCn7s0w0jjeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/BG67wm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=KYB+W7ewVFp5t5iHV4IRA4SK/0ARnCSwHwv2HXNhDjXlqfJ45TTb8x4tJbInRXrtg1AZanYqCXsCINBRtR+xFLEaMqB+qHphkgvuM0mQuJ4MbmxNCGkNPtG5akIGWNljU+X0n0hGRa6PM3Kjr5KMfPoWfNRSy5aLGQBovgzi5SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQdToegW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/BG67wm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0375BC4AF0B;
-	Thu, 10 Apr 2025 04:09:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQdToegW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DE83C4CEE7;
+	Thu, 10 Apr 2025 04:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744258200;
-	bh=T+U+qmU+ht71n/z0NiUcLMkLIvyNxHhppQD+pF/QSVo=;
+	s=k20201202; t=1744258201;
+	bh=3D0KxFdT7AaX3IlEJQU4ODQ06zsDhm92FFBCaoIfeG0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=k/BG67wmdggqTbf4xJ4EiTiDWcTqjazHgrXRmqPzf/U1ct1DrCUiUYJwVgygxB9S9
-	 xxSLG7SJKOzTWm6UkZEWQSkG7jnJY5VzhpJd5k+H00fRbGG7I+ySzjzm4wcYDDIC8C
-	 KztsSZA9LmhTkzO0EOqDKL0D2Wa2qC5tA3KsqNGw61efdeOcG26RqC+wEa3DIWgHlM
-	 23Kjum0TBm66gkfu7qSLcRkqqu9gBQsjuZIpEDSBZSVraGbIPIpt+b3hyg95NXmhck
-	 CI1b5o9iou7Jbagwptc7eF/sLVZmLa3ITG+JIJP9eTNLN4F10kQOVLY9Ag94P2pBjU
-	 AuzWnxoS0WzjQ==
+	b=pQdToegWpr7tOtIQL8BNqnnlcFNI0/LV5zIcgRxVR9lXOGZGg+TMU1ubuAP+W4q7e
+	 8Mc2A22Mj5yRHzL7UoCf3UNadtD1zkg2Opk5shiKTZEtUb43oSzPCVPO1cbljPTC2O
+	 yRkpcTMAJPNV/vxVM2PTwv0KMb9/X6gFJO39F1d/fmNz/WpMzaOD3z+/2pXYeoZ0+i
+	 amepeZETQBKkorGzKzptELKeIV8U3ns2DciOFHd6NsIFe9tJya47egOsuEQoyiwowE
+	 X9crj2mIXV/BGsXikaFOutpes7tLaseAnxJ/TTS9MUqXu890e121y6bWP4FbDzWzme
+	 EohSGnfnw8MRg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE0A380CEF9;
-	Thu, 10 Apr 2025 04:10:38 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D61380CEF9;
+	Thu, 10 Apr 2025 04:10:40 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,39 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add a fast path in
- finish_preallocate_blocks()
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to set atomic write status more clear
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <174425823723.3146257.13694783010566710853.git-patchwork-notify@kernel.org>
-Date: Thu, 10 Apr 2025 04:10:37 +0000
-References: <20250325081321.3296714-1-chao@kernel.org>
-In-Reply-To: <20250325081321.3296714-1-chao@kernel.org>
+ <174425823876.3146257.767452728339565870.git-patchwork-notify@kernel.org>
+Date: Thu, 10 Apr 2025 04:10:38 +0000
+References: <20250327055607.3829954-1-chao@kernel.org>
+In-Reply-To: <20250327055607.3829954-1-chao@kernel.org>
 To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+Cc: jaegeuk@kernel.org, zhiguo.niu@unisoc.com, daehojeong@google.com,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
 
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Tue, 25 Mar 2025 16:13:21 +0800 you wrote:
-> This patch uses i_sem to protect access/update on f2fs_inode_info.flag
-> in finish_preallocate_blocks(), it avoids grabbing inode_lock() in
-> each open().
+On Thu, 27 Mar 2025 13:56:06 +0800 you wrote:
+> 1. After we start atomic write in a database file, before committing
+> all data, we'd better not set inode w/ vfs dirty status to avoid
+> redundant updates, instead, we only set inode w/ atomic dirty status.
 > 
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
-> v2:
-> - get rid of read lock during querying FI_OPENED_FILE once we held
-> inode lock.
->  fs/f2fs/file.c | 37 ++++++++++++++++++++-----------------
->  1 file changed, 20 insertions(+), 17 deletions(-)
+> 2. After we commit all data, before committing metadata, we need to
+> clear atomic dirty status, and set vfs dirty status to allow vfs flush
+> dirty inode.
+> 
+> [...]
 
 Here is the summary with links:
-  - [f2fs-dev,v2] f2fs: add a fast path in finish_preallocate_blocks()
-    https://git.kernel.org/jaegeuk/f2fs/c/ecf68ffee7be
+  - [f2fs-dev] f2fs: fix to set atomic write status more clear
+    https://git.kernel.org/jaegeuk/f2fs/c/db03c20c0850
 
 You are awesome, thank you!
 -- 
