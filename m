@@ -1,201 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A31281509
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BE3204F80;
+	Thu, 10 Apr 2025 12:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744286489; cv=none; b=rGC39YhT/a6U7ssUcEeGp4MP+PKdlyhjXRaTBNjhYbqwUFwfPpQGx85vA2PSD0rLYYB4pbVNn3VXbxJs1c5ClL275XUv59YAMm0HT5A2yY67XjYEYOX4TKqaUYKdKjvl+pRMHctqY6Xv+GRZnH1EjfAVAKvYfBN04QfMnfSvQ+s=
+	t=1744286517; cv=none; b=RslGfJIw8MKCbfS/NWNY1BCIdIlVHqgu6l6pRDCzHSq01wc0jAb4FOyjmxm7IqPwgG7r0/nI6A+Y21WqhgcvvCf2/sTWYmP22XXj8+sQRzYNtRilQzsMsqesfyR7K/8VkVmp5Q5ulS0KtdEvsxEwVs34qQk0hane+arbY0kh/Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744286489; c=relaxed/simple;
-	bh=8aKH3DYFXObiPNEfF4VluDyh0rfCmk2SNK5Buc2hyeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SwPE4Vg7b8L6GMbSYOf2K5KKpjUJLeHCdiL8z8JZRspKYfX41kDnfxxNeyA9YNtaQAukNs7zz26xJUBUWquTAjgwwfwnst+B7bleVlSOP9yde2Lfx53z6slCiqpzkM05hWxyR6RVx88xkWYpLVee1es/iXpvw1BqKLJX5TF/SoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iL7nbcUu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744286517; c=relaxed/simple;
+	bh=gl9oaGaRIsYt/WyBdN7UO9fsD1iIFpw+hRE7Ip3gDTM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=lC32WcmvF6gnoFOm6SyYpfmdJG+efXWksk34eNmb2SqsZzcUZ3AxCWv287z10elZokkeR3nSgjgOdwvdFPO9IRt/Ymq49JYvjxggbu37WeQJT7oiPZNMUZhX1kbHKPvFcyjgYzAw0y2DNA+sAHMjLojTHz6IhD1olHsdkhL1yOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=dfg+YRcn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=r8Zp9VEO; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iL7nbcUu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744286486;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w9wD4CHs9nQd9+31B+aaGfzekonlDYHicg/bIUqSeTk=;
-	b=iL7nbcUuVSgi/mYCCNcAu+Vaqnv4NJ7xbMnLW7IDnk/XIMNnotJ3tvnkt55xhcsMCr3XAg
-	73YVNPOqPTH5aCEsZ0iah/iO7vELAYLPN0b1ExMpxe+dvCCP09LcjwSI3tGnzfeg3eAq8L
-	IksKQbp8NKfJvJRCAegenCO4ZA/ElAw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-319-aX7JGYKDM--MYmheBJ358Q-1; Thu,
- 10 Apr 2025 08:01:20 -0400
-X-MC-Unique: aX7JGYKDM--MYmheBJ358Q-1
-X-Mimecast-MFC-AGG-ID: aX7JGYKDM--MYmheBJ358Q_1744286478
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9A33180034D;
-	Thu, 10 Apr 2025 12:01:17 +0000 (UTC)
-Received: from [10.44.33.222] (unknown [10.44.33.222])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E45883001D0E;
-	Thu, 10 Apr 2025 12:01:12 +0000 (UTC)
-Message-ID: <6facfb1d-eafa-432c-9896-321ea9cd9a88@redhat.com>
-Date: Thu, 10 Apr 2025 14:01:11 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="dfg+YRcn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r8Zp9VEO"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 8903511400E8;
+	Thu, 10 Apr 2025 08:01:53 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Thu, 10 Apr 2025 08:01:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744286513;
+	 x=1744372913; bh=gl9oaGaRIsYt/WyBdN7UO9fsD1iIFpw+hRE7Ip3gDTM=; b=
+	dfg+YRcn27ujd2Kv89PNH28iSsx/7J18F2jg5wmmBRf8pCwvQaPjV1o7P8x/kROs
+	vvkaEZGKh4Yqj/RLXvclFPtu4fPBMK93Enw9GPRzzd22JO5qVvYm0yiIY2OM+VUY
+	LDtnq75Oz7w9eYYD91Bign6GT4zSA/4zm6MROyaMlWAFiKWre29U84VLxU2FSPkE
+	NT8uPtszkU/yY7WEuAAw1X0JSKFJVmEtqK9qOtv7PpM0LtNOCaMPhVbAQg2Wt2kj
+	ehPfW65hcdqzweofIQJwcG/YCyhN2fBlCluT87167OUV386sVeQu/JcMKerWhegc
+	iyUPtZcAywhDc6RVXB7nUg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744286513; x=
+	1744372913; bh=gl9oaGaRIsYt/WyBdN7UO9fsD1iIFpw+hRE7Ip3gDTM=; b=r
+	8Zp9VEODKfutsmRAEbgUnrmBP3s0vdxVjQ8hpakmL3zjajt6qqTpVw916454vjfD
+	MYCRUzOEQP66c9+jX4v3aRjSpzYdR3Pn2o6ABlec/Jb5b5J0FuSN3zDzgEJncxJG
+	mr3wzL6l/A6SV4p+IF4pP1V3cyE2ZJRzIm2kkXP9GowfJB2Gkb15nmC3EMZTHmhu
+	EvaIZiuyGZoiFUksZ6ewc3NIgmf17tWIdAfOXtj2hf/Yh/2erVvJqYsgVmYyw70p
+	WL9b1Dpt3dH/1I6j59XUt7MntbL0AAiWiX/QrDcuw9gI8Sh+Gq2BMb8rn81QmirA
+	MEVWkzxStZrSeZgYJBRtA==
+X-ME-Sender: <xms:MLP3Z3ZzkHrptGtQOUk4WRvDyC57tPhsZw9eTxDP4-DVo3giJ-5fBg>
+    <xme:MLP3Z2ZJ-wOZhDIeQ-61FKaOu6linY8MUS3ia6cJ4zjA8_UAANbvmqWCqELvg8xO-
+    G4GclEPSZT2KHJX96Y>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekkeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    udelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinh
+    hugidrohhrghdruhhkpdhrtghpthhtoheprghnghgvlhhoghhiohgrtggthhhinhhordgu
+    vghlrhgvghhnohestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopegurghvvghmse
+    gurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnshhuvghlshhmthhhsehgmhgr
+    ihhlrdgtohhmpdhrtghpthhtohepughqfhgvgihtsehgmhgrihhlrdgtohhmpdhrtghpth
+    htohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrthht
+    hhhirghsrdgsghhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtse
+    hgohhoghhlvgdrtghomhdprhgtphhtthhopehrughunhhlrghpsehinhhfrhgruggvrggu
+    rdhorhhg
+X-ME-Proxy: <xmx:MLP3Z588WIt1trNXStRldSHp7GGw67WcEJeidMURVp7sO9bDhwqc0Q>
+    <xmx:MLP3Z9oVgKRh86jQsy2Z2YvyqQrLhGfsSpuomX5U0Ip0M10L_vEhqg>
+    <xmx:MLP3ZyruZoteQa0f9aj6BpwIy6D1WAEC9Mg7V3M4simfzGzh1FZ-wA>
+    <xmx:MLP3ZzTAa1BWV4e7XYPfF-qLN-dK0NxTmJItaIgjsgO8qeTPamDZjw>
+    <xmx:MbP3Z_j0t2xgFRutTCp2TfvmslhP_6FnsCjYr9_pkLwdxVg5p1L3TQFr>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2B1352220073; Thu, 10 Apr 2025 08:01:52 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/28] mfd: zl3073x: Add components versions register defs
-To: Krzysztof Kozlowski <krzk@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407172836.1009461-6-ivecera@redhat.com>
- <a5d2e1eb-7b98-4909-9505-ec93fe0c3aac@lunn.ch>
- <22b9f197-2f98-43c7-9cc9-c748e80078b0@redhat.com>
- <5af77349-5a76-4557-839b-d9ac643f5368@kernel.org>
- <40239de9-7552-41d1-9ee4-152ece6f33bc@redhat.com>
- <138d0e3c-ccab-48e2-b437-aec063d1d2dc@kernel.org>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <138d0e3c-ccab-48e2-b437-aec063d1d2dc@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: T2340d8c52bdbc82d
+Date: Thu, 10 Apr 2025 14:01:31 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Christian Marangi" <ansuelsmth@gmail.com>
+Cc: "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit" <hkallweit1@gmail.com>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Daniel Golle" <daniel@makrotopia.org>,
+ "Qingfang Deng" <dqfext@gmail.com>,
+ "SkyLake Huang" <SkyLake.Huang@mediatek.com>,
+ "Matthias Brugger" <matthias.bgg@gmail.com>,
+ "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
+ "Randy Dunlap" <rdunlap@infradead.org>, "Simon Horman" <horms@kernel.org>,
+ Netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Message-Id: <0b5c6443-f50f-47a1-b5f5-900d70b69e06@app.fastmail.com>
+In-Reply-To: <67f7a119.050a0220.b15d0.3df3@mx.google.com>
+References: <20250410100410.348-1-ansuelsmth@gmail.com>
+ <c108aee9-f668-4cd7-b276-d5e0a266eaa4@app.fastmail.com>
+ <67f7a015.df0a0220.287b40.53b2@mx.google.com>
+ <67f7a119.050a0220.b15d0.3df3@mx.google.com>
+Subject: Re: [net-next PATCH v2 1/2] net: phy: mediatek: permit to compile test GE SOC
+ PHY driver
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
+On Thu, Apr 10, 2025, at 12:44, Christian Marangi wrote:
+> On Thu, Apr 10, 2025 at 12:40:15PM +0200, Christian Marangi wrote:
+>
+> Also 99% I could be wrong but from what I can see in NVMEM kconfig,
+> NVMEM is not tristate but only bool? So NVMEM=m is not a thing?
 
+Ah, I missed that. In this case your patches are both fine.
 
-On 10. 04. 25 12:42 odp., Krzysztof Kozlowski wrote:
-> On 10/04/2025 12:23, Ivan Vecera wrote:
->>
->>
->> On 10. 04. 25 9:11 dop., Krzysztof Kozlowski wrote:
->>> On 09/04/2025 08:44, Ivan Vecera wrote:
->>>> On 07. 04. 25 11:09 odp., Andrew Lunn wrote:
->>>>> On Mon, Apr 07, 2025 at 07:28:32PM +0200, Ivan Vecera wrote:
->>>>>> Add register definitions for components versions and report them
->>>>>> during probe.
->>>>>>
->>>>>> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
->>>>>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->>>>>> ---
->>>>>>     drivers/mfd/zl3073x-core.c | 35 +++++++++++++++++++++++++++++++++++
->>>>>>     1 file changed, 35 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
->>>>>> index 39d4c8608a740..b3091b00cffa8 100644
->>>>>> --- a/drivers/mfd/zl3073x-core.c
->>>>>> +++ b/drivers/mfd/zl3073x-core.c
->>>>>> @@ -1,10 +1,19 @@
->>>>>>     // SPDX-License-Identifier: GPL-2.0-only
->>>>>>     
->>>>>> +#include <linux/bitfield.h>
->>>>>>     #include <linux/module.h>
->>>>>>     #include <linux/unaligned.h>
->>>>>>     #include <net/devlink.h>
->>>>>>     #include "zl3073x.h"
->>>>>>     
->>>>>> +/*
->>>>>> + * Register Map Page 0, General
->>>>>> + */
->>>>>> +ZL3073X_REG16_DEF(id,			0x0001);
->>>>>> +ZL3073X_REG16_DEF(revision,		0x0003);
->>>>>> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
->>>>>> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
->>>>>> +
->>>>>>     /*
->>>>>>      * Regmap ranges
->>>>>>      */
->>>>>> @@ -159,10 +168,36 @@ EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
->>>>>>     
->>>>>>     int zl3073x_dev_init(struct zl3073x_dev *zldev)
->>>>>>     {
->>>>>> +	u16 id, revision, fw_ver;
->>>>>>     	struct devlink *devlink;
->>>>>> +	u32 cfg_ver;
->>>>>> +	int rc;
->>>>>>     
->>>>>>     	devm_mutex_init(zldev->dev, &zldev->lock);
->>>>>>     
->>>>>> +	scoped_guard(zl3073x, zldev) {
->>>>>
->>>>> Why the scoped_guard? The locking scheme you have seems very opaque.
->>>>
->>>> We are read the HW registers in this block and the access is protected
->>>> by this device lock. Regmap locking will be disabled in v2 as this is
->>>
->>> Reading ID must be protected by mutex? Why and how?
->>
->> Yes, the ID is read from the hardware register and HW access functions
->> are protected by zl3073x_dev->lock. The access is not protected by
-> 
-> Please do not keep repeating the same. You again describe the code. We
-> ask why do you implement that way?
-> 
->> regmap locking schema. Set of registers are indirect and are accessed by
->> mailboxes where multiple register accesses need to be done atomically.
-> 
-> regmap handles that, but anyway, how multiple register access to ID
-> registers happen? From what module? Which code does it? So they write
-> here something in the middle and reading would be unsynced?
-
-OK, I'm going to try to explain in detail...
-
-The device have 16 register pages where each of them has 128 registers 
-and register 0x7f on each page is a page selector.
-
-Pages 0..9 contain direct registers that can be arbitrary read or 
-written in any order. For these registers implicit regmap locking is 
-sufficient.
-
-Pages 10..16 contain indirect registers and these pages are called 
-mailboxes. Each mailbox cover specific part of hardware (synth, DPLL 
-channel, input ref, output...) and each of them contain mailbox_mask 
-register and mailbox_sem register. The rest of registers in the 
-particular page (mailbox) are latch registers.
-
-Read operation (described in patch 8 in this v1 series):
-E.g. driver needs to read frequency of input pin 4:
-1) it set value of mailbox_mask (in input mailbox/page) to 4
-2) it set mailbox_sem register (--"--) to read operation
-3) it polls mailbox_sem to be cleared (firmware fills latch registers)
-4) it reads frequency latch register (--"--) filled by FW
-
-Write is similar but opposite:
-1) it writes frequency to freq latch register (in input mb)
-2) it set value of mailbox_mask
-3) it set mailbox_sem to write operation
-4) it polls mailbox_sem to be cleared (write was finished)
-
-Steps 1-4 for both cases have to be done atomically - other reader 
-cannot modify mailbox_sem prior step 4 is finished and other writer 
-cannot touch latch registers prior step 4 is finished.
-
-The module dpll_zl3073x (later in this series) and ptp_zl3073x (will be 
-posted later) use this intensively from multiple contexts (DPLL core 
-callbacks and monitoring threads).
-
-So I have decided to use the custom locking scheme for accessing 
-registers instead of regmap locking that cannot guarantee this atomicity.
-
-Would it be better to leave implicit regmap locking scheme for direct 
-registers and to have extra locking for mailboxes? If so, single mutex 
-for all mailboxes or separate mutex for each mailbox type?
-
-Thanks,
-Ivan
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
