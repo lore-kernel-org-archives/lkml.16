@@ -1,65 +1,71 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCA62673B7;
-	Thu, 10 Apr 2025 09:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91ACD26A0C2
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278283; cv=none; b=dLUJdYh7b9gEr+vs+Gvgc8Cq1gjZ/cKqovDPU5rwy0SZgBzd9z8FZoErsRzSJKkDX2SSlbbDfCZSgkaChLhsSyIxMubthwgFR6AJ1KEk8kfqVt3dHdxffNJpb/TZfG0avrPJfEqr7aUkTlXqGVAcBougH+vABaq1USy41fLiIMA=
+	t=1744278306; cv=none; b=WcD9EzoVEiEzHJISykWynRs9gUOVJNjYVSNvoyQ4s+dxzVvyZ2qyUqDhjhnxSR6A+DHpBUuOX9cNClfxW0mcFN4BNf6zlBWv5pRIELUtZHqGZSQm4KUB07qfhu+TO7F4wpegw65n5OUwcAw95voMqzSc9Ie7ZD3a79niKyDatt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278283; c=relaxed/simple;
-	bh=5o9nHRExWJmeBFaGYhQUWukdK7X5GSVjn4x/hNXJ0SY=;
+	s=arc-20240116; t=1744278306; c=relaxed/simple;
+	bh=rcKmSUgHpsgrV6/iQao/x7bdLFkwJp5qa8+xh1WZKuM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DyXGw1ihGpxh7x67ytWncR8CAyzzzPndZY1FQCG2cPw2WJJId69UJVzn99qq6SmWKtkJqAt8qxy9/a5WNb3AFBdxh0/Tlvwu43e87wP+xWuAgAGNpilaGp9zoZ0GY/7JO+fLi2wl8jMmYdcjuH5oX65qEdS1IeFa3O54FRxnXak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6nSgXlR; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=VEPv+PfRJHoqH8gIfA+LzB9/6Hx0nulpzKQNA/lNyHEI3cPX3/nAYt3cpe+zERFUWrh/kIqUKItEg1vdTaYIuGx5R+kvXR8EuegTofkcOoEd7PKoYEh+IkHc6sXoyWNSijCSsHJQ9FOZqt70EnDMl6xtlHuB9DVSMBEKJ2ThHY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ePrVvES7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6nSgXlR"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff615a114bso1532446a91.0;
-        Thu, 10 Apr 2025 02:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744278281; x=1744883081; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IomupBb5aaDCRXzpego0G4BJnUddV6XmS2v4epMW8M8=;
-        b=D6nSgXlRnAwR3SpvI+XaKBO0mLD3nHLdPNlZsZ3mUwgO+BJ6C4jjLEXqHgYgYgtJ6q
-         Lur4cjqmS4nCNRE/vJEDLgb+F+SE2O4C4ozX1uQy4tp4O9W5wPbQxmIrppx+jOGUquOe
-         9zzb3I90DV68e5wC1DaSdF4H+d7j4n1cRYk6RmLIDxJ3ZIHZYngmOywqLTpjN9O8+XCk
-         OlJyrfi1cOVrg4fpf6GTT96MCUoYzahDlqk6Xjo5HNc/Mkq8v+wd6HAgK34HzZirydLp
-         gR3LskigXc5BrbSMTf+5Ay6vpY6J1MCM/ZfcUj9kgVTjOTYPfvAFCcd/Hhc54MlxzNE5
-         uIAQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ePrVvES7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744278303;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6/PhODJYUOFY/4jZ292xori9GQqlmQfr9vf/eG8mtsE=;
+	b=ePrVvES72xtPuoVnopAvKG3bX5ZVEzLfVkjB7iYSaZBQtdIa7hVcCpDvjYqhDaOlZZ/kLc
+	4tOqlTieuPrzOkyrsUXfsd38YtdKPGUIZadYI5yJ9EAiiAyFRDs4uzIOA8tvnEfc+6cren
+	sSz6+chqpBcAhOZMY0x+3NIUhv0kvuo=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-GD1OAWCkMkWRKsGNDs5cZw-1; Thu, 10 Apr 2025 05:45:02 -0400
+X-MC-Unique: GD1OAWCkMkWRKsGNDs5cZw-1
+X-Mimecast-MFC-AGG-ID: GD1OAWCkMkWRKsGNDs5cZw_1744278301
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-af8e645a1d1so518597a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:45:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744278281; x=1744883081;
+        d=1e100.net; s=20230601; t=1744278301; x=1744883101;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IomupBb5aaDCRXzpego0G4BJnUddV6XmS2v4epMW8M8=;
-        b=QnlR/NPekRmHsREN+L0ORql+5rrfSSOXiUjQOTyAn1IsArnAFOFKvDBDLVVAaVscBm
-         UX7ZvTvw1ByLCI/S1ItkAdq8iR1XDyBSjAGpDOjSPk/GYLMukoCMO0TPKmajzc9SDV8e
-         +9GFP6X0rLjTyf3P2H4tlnaAbOYiqz77rA6iwlMGKJ6upcL8/8qXOse6wAQfXMPP//f5
-         RJdDI5CPWOlNjAbal01YEuaxi//FQh5Au6XP0dLVYpYEY9spGeqApGhE+6dAXAD2Ddu2
-         Tq70M0UNCZLweHFhMbem0+Fq9X2joi+ugI64sITkjkk9WT/wNjqXIn7oqR5cx3r1ZZE/
-         bPuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVh5zeupelfY04Sw9ixVr7shdNjYA3Cd8PAy7CVEw50ood+zI+vtzD40yLwYtFkEqjByCLYsKh82DzPmD5FH0Y=@vger.kernel.org, AJvYcCWxI+aBsP+wP+eSuz35sD6GhGXPWvC7iD7UqA+fPXCCmj+bno/ELWHb+e0pTjg5K5c0zSylBoqQ7ywq3wI3@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDoZ+qLIK0+XzUfV29gU+BgyKq2SwFuCsxqYfPbQUwQgYKTgyM
-	By5/vooh5fI8a6HzO5yYh9/CNXVuD7xqoYrIOTxiGVVTyhr51NXY6jG3zncu
-X-Gm-Gg: ASbGncsKLhhJZPCOe7PZQXEqoY3RTqHxsc7KuJ1O7/9rqKHmKEPXa/HnuppZuH6leWF
-	/F4cdWmTkO/R+Zl6EA614X1gg9jRBt8dcjo+GqTmnPBK7K+kVMaocy/cnv51dVY/SB5nNTKv9RQ
-	yvXwA16B9NWsVcOh7hp3bxP39+8AsC1+Md8x7a2szDaH7CEJzo6dvK/Nt6Vfx0428sSY4PMrFol
-	EwHbAkRpBKbr05sVk0aUcb91/ur8hSPAI6LyPnAE+Ht9eAaaxI4n7Ngr+w7JkHLwdv8XMC5ANAf
-	molnZN2ZtJU7UCROIf+J9J17+F787P+uc/YPWMhqJQ2Hy1j1/0I1C+QOwf59Neo5p/7c4fEwG/S
-	ihu35nd2gF18jVfSMFufeEXN9pw==
-X-Google-Smtp-Source: AGHT+IHl+das/+EcyS+modqbfMqm7jXFRcastaWUw/vi2hna16zCG4lKtzeSE09FW2i7Rv5VNgM/JQ==
-X-Received: by 2002:a17:90b:2748:b0:2ee:c30f:33c9 with SMTP id 98e67ed59e1d1-307986accecmr3457713a91.14.1744278280997;
-        Thu, 10 Apr 2025 02:44:40 -0700 (PDT)
-Received: from ?IPV6:2409:4080:204:a537:5da0:ac0c:6934:f07? ([2409:4080:204:a537:5da0:ac0c:6934:f07])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd10c3dasm3202830a91.4.2025.04.10.02.44.37
+        bh=6/PhODJYUOFY/4jZ292xori9GQqlmQfr9vf/eG8mtsE=;
+        b=I9qAGX36etGpR3Kdym9DxQqbKxZ5ny6tLwZszTrTHxy9Zf5+OlHr8Dp97Lz1Cpj5Oo
+         SwP635m/V2eCRSKZPEWLOVqcXspDJXNdg8B3Q07v3X3XZrCp6em/EemJr0kaNXNw+QAR
+         RXfz9kG/AQnjkGaMjCvomR9+r6jdrKuiN5DrAE05P+D5nZjz1RuK/zcGdiYIpX/51SDL
+         E+uCHViqQaCUHPa4E4eEWSPul+GUUxFI1vcfs6vv0iHyMXuUAW93pvjgvrJgbprvmHxe
+         GwvIeETlLPkZqPbDHev2q94nVCyJceAkeMsQRcvn694v0Ih1bKApMEpKa8Ve1VZfdDXz
+         UrOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWv6Rib6KvjbSyiTpEbahpuFbIgQhf5L32LyIQxCQ4SHVvP1S9jAWPtg1CUAxpEFWz0fjDWJPK9EzOkRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNRE+ihNaG2NO/MSZwASkD5FynqstlaqzaaPoSYodhkQaCYGTb
+	PWg+2Z4F+Pt9IoQoaqBdVuezSBaZ5g1EiVjDgvejQzWBgiiCgHRVHZoXaopjjjIlkHEX9IDir7c
+	JxBFPzNfxjQJMElVxcknWR6NGpAVUsnVLN3Pghfs+OE1MqO/Q69s/Wz+GBEA7vg==
+X-Gm-Gg: ASbGncvSz81NC6cq0uzWVrO+8YdoYpgpZZL/PUuGbDWDhYoDFzFv5JXlb2TKM+VNg8M
+	KEnXZnjxT+lxllUPZ/9SZycQKPoGRhRunq/HqDQSHip2WehBMI4X8NjxanXPCGgF1eBshg7iw+z
+	CdJaXzjnDzzjGZ6vBqIW1Z5jreUWd1A7+4MkKWYumMrakG+5uBgU80aHdrt1RiocIpJeWmdsI/v
+	IOodDcBiITYpaZlzkLdD2gW0LpQBsy9bEGVstulbknnnvfsV43uBWHGtV0XLkp/NThtcailfHCo
+	yCVbK8PSbCOh
+X-Received: by 2002:a17:902:f542:b0:224:e0f:4b5 with SMTP id d9443c01a7336-22b2edab992mr22561975ad.7.1744278300865;
+        Thu, 10 Apr 2025 02:45:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRlBAGOXJTHImC/d9zbZzfMKPBHx1mRPlLAVbrk95GhmWW/h8KqdRrNOXYYBIBbjz/7wTkAw==
+X-Received: by 2002:a17:902:f542:b0:224:e0f:4b5 with SMTP id d9443c01a7336-22b2edab992mr22561775ad.7.1744278300529;
+        Thu, 10 Apr 2025 02:45:00 -0700 (PDT)
+Received: from [192.168.68.55] ([180.233.125.65])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c97298sm26133415ad.138.2025.04.10.02.44.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:44:40 -0700 (PDT)
-Message-ID: <1bceb239-4f18-41c9-b6c7-acd4ce08ba8d@gmail.com>
-Date: Thu, 10 Apr 2025 15:14:34 +0530
+        Thu, 10 Apr 2025 02:45:00 -0700 (PDT)
+Message-ID: <675d6580-814f-4fae-9dc5-9470645adc07@redhat.com>
+Date: Thu, 10 Apr 2025 19:44:54 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,73 +73,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in
- read helpers
-To: Jarkko Sakkinen <jarkko@kernel.org>,
- Stefano Garzarella <sgarzare@redhat.com>
-Cc: peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250409205536.210202-1-purvayeshi550@gmail.com>
- <Z_dh4tRIa6xxAWQ2@kernel.org>
- <t2ri7facyvtmt6rx6xwcjos7rgtyiln7cywl2gt4effgukeejc@f3ml4apdh4zs>
- <Z_eHWkSdhfOHxiNe@kernel.org>
+Subject: Re: [REPORT] Softlockups on PowerNV with upstream
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Aditya Gupta <adityag@linux.ibm.com>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>, Danilo Krummrich
+ <dakr@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Sourabh Jain <sourabhjain@linux.ibm.com>, linux-kernel@vger.kernel.org
+References: <20250409180344.477916-1-adityag@linux.ibm.com>
+ <Z_dWTU8UsvCHFMpN@localhost.localdomain>
+ <dc4c0d4e-a9a5-4fa5-b39d-4248fba26043@redhat.com>
+ <Z_d_8fyQzGuwzbIv@localhost.localdomain>
 Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <Z_eHWkSdhfOHxiNe@kernel.org>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <Z_d_8fyQzGuwzbIv@localhost.localdomain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 10/04/25 14:24, Jarkko Sakkinen wrote:
-> On Thu, Apr 10, 2025 at 09:51:09AM +0200, Stefano Garzarella wrote:
->> On Thu, Apr 10, 2025 at 09:14:58AM +0300, Jarkko Sakkinen wrote:
->>> On Thu, Apr 10, 2025 at 02:25:36AM +0530, Purva Yeshi wrote:
->>>> Fix Smatch-detected error:
-> 
-> Empty line and s/error/issue/.
-> 
->>>> drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
->>>> uninitialized symbol 'value'.
->>>> drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
->>>> uninitialized symbol 'value'.
->>>> drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
->>>> uninitialized symbol 'value'.
->>>>
->>>> Call tpm_buf_read() to populate value but do not check its return
->>>> status. If the read fails, value remains uninitialized, causing
->>>> undefined behavior when returned or processed.
->>>>
->>>> Initialize value to zero to ensure a defined return even if
->>>> tpm_buf_read() fails, avoiding undefined behavior from using
->>>> an uninitialized variable.
->>>
->>> How does tpm_buf_read() fail?
+On 4/10/25 6:23 PM, Oscar Salvador wrote:
+> On Thu, Apr 10, 2025 at 03:35:19PM +1000, Gavin Shan wrote:
+>> Thanks, Oscar. You're correct that the overhead is introduced by for_each_present_section_nr().
+>> I already had the fix, working on IBM's Power9 machine, where the issue can be
+>> reproduced. Please see the attached patch.
 >>
->> If TPM_BUF_BOUNDARY_ERROR is set (or we are setting it), we are effectively
->> returning random stack bytes to the caller.
->> Could this be a problem?
+>> I'm having most tests on ARM64 machine for the fix.
 > 
-> It should never happen, if the kernel is working correctly. The commit
-> message implies a legit failure scenario, which would imply that the
-> patch is a bug fix, which it actually is not.
+> Looks good to me.
+> But we need a comment explaining why block_id is set to ULONG_MAX
+> at the beginning as this might not be obvious.
 > 
-> "Add a sanity check for boundary overflow, and zero out the value,
-> if the unexpected happens" is what this patch actually does. I.e.,
-> code change acceptable, commit message is all wrong.
+> Also, do we need
+>   if (block_id != ULONG_MAX && memory_block_id(nr) == block_id) ?
+> 
+> Cannot just be
+> 
+>   if (memory_block_id(nr) == block_id) ?
+> 
+> AFAICS, the first time we loop through 'memory_block_id(nr) == ULONG_MAX'
+> will evaluate false and and we will set block_id afterwards.
+> 
+> Either way looks fine to me.
+> Another way I guess would be:
+> 
 
-Understood now. I’ll update the commit message to clearly state this is 
-a sanity check for unexpected boundary overflows. Thanks for the 
-clarification!
+Yeah, we need to record the last handled block ID by @block_id. For the
+first time to register the block memory device in the loop, @block_id needs
+to be invalid (ULONG_MAX), bypassing the check of 'memory_block_id(nr) == block_id'.
+I will post the fix for review after Aditya confirms it works for him, with extra
+comment to explain why @block_id is initialized to ULONG_MAX.
 
-> 
->>
->> If it is, maybe instead of this patch, we could set `*output` to zero in the
->> error path of tpm_buf_read(). Or return an error from tpm_buf_read() so
->> callers can return 0 or whatever they want.
->>
->> Thanks,
->> Stefano
->>
->>
-> 
-> BR, Jarkko
+Aditya, please have a try when you get a chance, thanks! I verified it on Power9
+machine where the issue exists and on one of my ARM64 machine.
+
+Thanks,
+Gavin
 
