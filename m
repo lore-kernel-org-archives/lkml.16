@@ -1,118 +1,139 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC3E28369E;
-	Thu, 10 Apr 2025 11:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B75284B55
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744286055; cv=none; b=ZCslaHzLtbc6dWWaWiE8Xbaoxc5Smx7Xoo8EibzJTvMDCsBJABPcDA58FQxUpPqHxuR/lw84Boj+vh6wKlCVrvZuROM0KMM0z3/40pqYrhDnU1zl/RHlZrt4yYgm5XD2mpvQCawTUSsU+6pvx+XE1+tXvaol4M74UtUzk5/DWrA=
+	t=1744286075; cv=none; b=RRbg85dq0Cb2SLvVxyjkk+Ei0uuuQW2VzV9KqBDeXqwbnRJCfwIY6QU2YHVkBgOwZwGY+fBQL/kNXEWGw1FOHrVhg9I8iKFjKMdOXpnulHwh8CUrErUSLL891TMHOi0FxiL8FmflajukoyXXbGuhjJORjszh7gWs01Qnhz0iOqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744286055; c=relaxed/simple;
-	bh=VkpzxQnPv4g7qVNaOY8DVOUzppBCuz8wvrpaObOsARI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dsj4gooKXhcdAwiiu5gu1QCLIyPjpN9rhnkN0xn8Pi6OX28pxDdObct3YJEBD6Us7OlOnNn0ImFTEi/ip7YgpW+vzRuD7jKhCY0HTlwPsLzvfsf5zdjnNnHGMmyWClwETmB/lKC61H5gWoQkwnnObB8uCRAJc9xUoiWEEfsaWCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eHJpZCRO; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744286075; c=relaxed/simple;
+	bh=CzZmPeBc1WaePCOkdHE+T7Dnl1T2xzNm3sJ4FxltIlE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DC1sipNMCGRRVaUj5nkAIXf1h+P3dRecWOByX59Rr1qzFPR0U6wFEB1UOW6wiCGVtUkO+kYHTt6svWcBItOK3Roj+Cik4pUEiXZXhPFheze8tlqfgu4pnwCMXu6B7aIiu735otiLVQlweAApVvZqnlUrRYnk7Cf8nJdftzjJfP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=bUgL77Uq; arc=none smtp.client-ip=198.252.153.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eHJpZCRO"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A6F5sh003312;
-	Thu, 10 Apr 2025 11:54:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=4uB5xgE1U7uP+X5kkwtxU25Vq8f/Iq
-	ONtcpyD31Pry8=; b=eHJpZCRO2V6XkwmDESkCCQKjMNmqbkOfJStYMmqS3igcWV
-	eqTvHYCuSebd9mcY9FSMaSaI71CCEpZ1SHwg0tKix+EjnVPOT9xqpHpH2aVfX3dP
-	91Q27a6y/jV3u4J+TDCz4X/8SB3B5PA8PsnXTkd6Gm18ajkFtk28InAyIs+4LXW9
-	xe4k0tjW1XyqCxLF91Vego5vQNMyDwk9Mecg/Niy2I8jfMqIYYb0dGUOSkOS7FdE
-	anjO25XcA3PIWobilncNCY5aarM8AlP4NE2XkDvbp5BYk/JU+Bd8kQQP8meoPTWp
-	BPr1oL9jpvT8JTZQ7fb9mxxfh9lLlOdhsKCAtgRw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45x0404dg6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 11:54:12 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53ABmTkb015775;
-	Thu, 10 Apr 2025 11:54:11 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45x0404dg3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 11:54:11 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53ABO46L024651;
-	Thu, 10 Apr 2025 11:54:10 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ueutp23q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 11:54:10 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ABs61t47579552
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 11:54:07 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CB1462004E;
-	Thu, 10 Apr 2025 11:54:06 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B00F20040;
-	Thu, 10 Apr 2025 11:54:06 +0000 (GMT)
-Received: from osiris (unknown [9.171.50.250])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 10 Apr 2025 11:54:06 +0000 (GMT)
-Date: Thu, 10 Apr 2025 13:54:04 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-Cc: gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org
-Subject: Re: [PATCH] Removing deprecated strncpy()
-Message-ID: <20250410115404.8774F32-hca@linux.ibm.com>
-References: <20250410113230.28116-1-kevinpaul468@gmail.com>
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="bUgL77Uq"
+Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx0.riseup.net (Postfix) with ESMTPS id 4ZYJBq0VQPz9s8s;
+	Thu, 10 Apr 2025 11:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1744286067; bh=CzZmPeBc1WaePCOkdHE+T7Dnl1T2xzNm3sJ4FxltIlE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bUgL77UqUaxh9PgUkqB1TrRBKiwJArt3Y2f3EXMSUryn2pnes0SRD6UAj+4T2JivO
+	 mrFK6PxF/vAIm5vzwxxHOPsPQMjEWGMDle6E+HkwGDZDbUbq7Cv9HQ3K9P258x2xRJ
+	 rSsiloBqMve2smphvHW8yOs3LxWxuK40Tp9mFKew=
+X-Riseup-User-ID: 96F09E97E326B1C7E79261F01462ECA5DF0D15A6911EBA13188A0766900E0430
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4ZYJBm3MYnzFvby;
+	Thu, 10 Apr 2025 11:54:24 +0000 (UTC)
+Message-ID: <f457186f-2abf-4a23-8285-da876c83b7c6@riseup.net>
+Date: Thu, 10 Apr 2025 13:54:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410113230.28116-1-kevinpaul468@gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: LhB3sn-1zY53nSnUUIU3aprwMcHou5uU
-X-Proofpoint-GUID: Ml1u4_wJ4OQpFUIhIk6rfwnBBTWIB-Fq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_02,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 clxscore=1015 malwarescore=0 spamscore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=707
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504100086
+Subject: Re: [PATCH -v4] x86/i8253: Call clockevent_i8253_disable() with
+ interrupts disabled
+To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk,
+ mhkelley@outlook.com
+References: <20250327234357.3383-1-ffmancera@riseup.net>
+ <Z-uwd4Bnn7FcCShX@gmail.com>
+Content-Language: en-US
+From: "Fernando F. Mancera" <ffmancera@riseup.net>
+In-Reply-To: <Z-uwd4Bnn7FcCShX@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 10, 2025 at 05:02:30PM +0530, Kevin Paul Reddy Janagari wrote:
-> This patch suggests the replacement of strncpy with strscpy
-> as per the Documentation/process/deprecated
-> the strncpy() fails to guarntee NULL termination
-> since the function adds zero pads, this isn't really convenient
-> for short strings as it may cause performce issues
+
+
+On 01/04/2025 11:23, Ingo Molnar wrote:
 > 
-> strscpy() is a preffered replacement because
-> it overcomes the limitations of strncpy as mentioned above
+> I've cleaned up and simplified the changelog, see the patch below.
 > 
-> Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+
+Thank you. To me it looks good. Should I repost it?
+
+Thanks,
+Fernando.
+
+> Thomas, does this look good to you too?
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
+> =========================>
+> From: Fernando Fernandez Mancera <ffmancera@riseup.net>
+> Date: Fri, 28 Mar 2025 00:43:57 +0100
+> Subject: [PATCH] x86/i8253: Call clockevent_i8253_disable() with interrupts disabled
+> 
+> There's a lockdep false positive warning related to i8253_lock:
+> 
+>    WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
+>    ...
+>    systemd-sleep/3324 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+>    ffffffffb2c23398 (i8253_lock){+.+.}-{2:2}, at: pcspkr_event+0x3f/0xe0 [pcspkr]
+> 
+>    ...
+>    ... which became HARDIRQ-irq-unsafe at:
+>    ...
+>      lock_acquire+0xd0/0x2f0
+>      _raw_spin_lock+0x30/0x40
+>      clockevent_i8253_disable+0x1c/0x60
+>      pit_timer_init+0x25/0x50
+>      hpet_time_init+0x46/0x50
+>      x86_late_time_init+0x1b/0x40
+>      start_kernel+0x962/0xa00
+>      x86_64_start_reservations+0x24/0x30
+>      x86_64_start_kernel+0xed/0xf0
+>      common_startup_64+0x13e/0x141
+>    ...
+> 
+> Lockdep complains due pit_timer_init() using the lock in an IRQ-unsafe
+> fashion, but it's a false positive, because there is no deadlock
+> possible at that point due to init ordering: at the point where
+> pit_timer_init() is called there is no other possible usage of
+> i8253_lock because the system is still in the very early boot stage
+> with no interrupts.
+> 
+> But in any case, pit_timer_init() should disable interrupts before
+> calling clockevent_i8253_disable() out of general principle, and to
+> keep lockdep working even in this scenario.
+> 
+> Use scoped_guard() for that, as suggested by Thomas Gleixner.
+> 
+> [ mingo: Cleaned up the changelog. ]
+> 
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Link: https://lore.kernel.org/r/20250327234357.3383-1-ffmancera@riseup.net
 > ---
->  arch/s390/boot/printk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   arch/x86/kernel/i8253.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/s390/boot/printk.c b/arch/s390/boot/printk.c
-> index 8cf6331bc060..8f3b2244ef1b 100644
-> --- a/arch/s390/boot/printk.c
-> +++ b/arch/s390/boot/printk.c
-> @@ -158,7 +158,7 @@ static noinline char *strsym(char *buf, void *ip)
->  
->  	p = findsym((unsigned long)ip, &off, &len);
->  	if (p) {
-> -		strncpy(buf, p, MAX_SYMLEN);
-> +		strscpy(buf, p, MAX_SYMLEN);
+> diff --git a/arch/x86/kernel/i8253.c b/arch/x86/kernel/i8253.c
+> index 80e262bb627f..cb9852ad6098 100644
+> --- a/arch/x86/kernel/i8253.c
+> +++ b/arch/x86/kernel/i8253.c
+> @@ -46,7 +46,8 @@ bool __init pit_timer_init(void)
+>   		 * VMMs otherwise steal CPU time just to pointlessly waggle
+>   		 * the (masked) IRQ.
+>   		 */
+> -		clockevent_i8253_disable();
+> +		scoped_guard(irq)
+> +			clockevent_i8253_disable();
+>   		return false;
+>   	}
+>   	clockevent_i8253_init(true);
 
-This won't even compile. Please compile test before sending any patches.
