@@ -1,114 +1,115 @@
-Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8C120F065;
-	Thu, 10 Apr 2025 22:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81C420FA9C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 23:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744325906; cv=none; b=kEhqnl+Fn/O2r+sZ4QoVeVjeylk48lFEhuavpq+ch5j9kslQkaabjtVB2rdkcKh7o83mq76l4SEfaXlmfgKN4/trBG4J8BrbxMz/8jpZo1SFV8R5dtri+PGgmeUQQwdrcznF3Z4efCyTfwIhH4gPfEdEcf5fxSi09IxLZKiKe3U=
+	t=1744326858; cv=none; b=ZFqlyw04czg79taEIvk07uGAFfuPpcpO0KphMm3DLEWyA4f0FwlbztZzrEcdNVYQCsxzvqruntpNPOa5fp4IK7d7T2NQxrXwVwcnZtQZ2+9PJKzWfZqhXBuygn8eC3wOQieSD3kHw+Jv9u2tryipHOvKW94O849YqkpgQTDBZGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744325906; c=relaxed/simple;
-	bh=eJDePrXnvgmVbjmFO96M87uFRNhkD3osTi43nmcKyvU=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=C97kGK5osyR5151z/S+qwykawiJPxiVj0RJqdGKQjidOgfezwGIi+DLT54kvw6SEfTVXFUsYmqso5y3DOkGIix5q7DopEWOw3gJSWoJ8EOFrhvj054DYeK2cx2B343ODNpaN6BwY0/UmAvfDqTiCc6FT262qsTBALOWjSnIppp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=SIpFpe33; arc=none smtp.client-ip=79.135.106.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744326858; c=relaxed/simple;
+	bh=qkSaapK883t5uoz1lvxJW+LFO8V1ykXIfUoWpx6uTiU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NL8IlC4sitf49ipxJ7eKZN2i6jGDgAlLGqbEtIKfJUvwMt+jW2Q6m0yFuOKn4WyKNLZNWcoSoKGgsUTNqkT7LSlAD82qs0K/iAkDzjzmDKQ0PcnFucWhq2XAAojsIAgECK8nQ5dRtFJKilrAWrscemOaEZMSqu1jsNMJFde1AQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3w9VnE1a; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="SIpFpe33"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=72zapty4afh5laqrlf5uzfjjwq.protonmail; t=1744325895; x=1744585095;
-	bh=814kMpO+RWBsIlWCQsGZxLfyE/xbPT2Ntf7DX7UNcqw=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=SIpFpe33BKWL+P8+bP69S6dbYlPiUCadu0lQ1V+jHLt+a7Dpuls7GuBxQcu80iPnV
-	 dUhqnQwciyzo9R6Y+OelczaZFcVWWuhTFmnCwo76qO1uTSOLno0jpaxTcMPzL7ZOPk
-	 /JCZFFo3Wh00syQ4T9wsaUHHMWSz+z5idR0k5Xap0Gfe6zD0uCbGlodtN8WZKSRsH0
-	 tMasxTMety6X6fIj/iSnLeP92VP6iNhU3kE8PYE9thK1CAK5KKxiynGx365tOeel2R
-	 KZy8zJ0AZTR6nkfkx6018ecakKdbGUQ6dRnUAiNUdZ/CgtqVV9qW6o65boWv+5qFky
-	 OmwDN4lOqE7xQ==
-Date: Thu, 10 Apr 2025 22:58:10 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>, a.hindborg@kernel.org, rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>, open list <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com, "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v2 2/3] rust: dma: convert the read/write macros to return Result
-Message-ID: <D93BX5NEOSC8.3NOVI9GMDJEXD@proton.me>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: aab41a993ca3e1cb50eda5ca6500bb0663194c61
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3w9VnE1a"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af91ea9e885so1280749a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744326855; x=1744931655; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J1vAriw4t6psV6Mnw805zp91Lfa95WMa8Ue+6gI9hvg=;
+        b=3w9VnE1aLIydknwqbGBT+0NCitc1mzWD6fOzCTrjSMNZ6A7TrdFZCc5+DiNymslvSX
+         w5be8lmc4kuPy/3m3MB1U3vghMJlCUXDKv+wv89HGP5NPSQ9pSHAJ6SvDxSOacPwoYhq
+         9mc9KVQNW1qr5PQl7xb1NyDt0mQZXOYWBxnPvVS4jnkIUA7d90U5XU96Hu23psLQPjig
+         EYuAFXVNqN4urtjPP6XIoJp3865xn82fu6KwY+aMfPsO3GPAZBVAaEsW1ZdPNHheYvyV
+         17n4SPD5r9egNyaLp5I5IrLWImNDZ32Yst4NRvj79kcnqC6wdyXnKbA5u1qkYu5OuLZQ
+         f0RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744326855; x=1744931655;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J1vAriw4t6psV6Mnw805zp91Lfa95WMa8Ue+6gI9hvg=;
+        b=hJg2rZ4SnJVRfLjcfomMoirYxSNXBbM0BOHruEybwnXfQf/GzWrPWohHRlIdSTP9Ts
+         +a29ggzubh6qhEjWSapuQwRQyiqJ5mm6BGCq2C/FXlUAJzT1xS6M4kq1DLeyqd+/Ewfc
+         7ni+nInwsz9zaAspNuytiHbiTBGLlFCKmg2scPx+qrzvOXB9NZdVs/KGz5Dtpb18cadm
+         ZQ9XdDKvtTY/bx181ZrbynBQSmh+PdlioBJqH0dKjMrBG/w24/yA1bmQBsDLAwQApEGh
+         F+NFQ99LxGmd4IiUlhHbQnodaFwG9xVgWecGaqVhMK1XFm5fDQpRYYw14OT0hZfBr9bx
+         rmLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFc0sfmwcrHFz0y+Sw9sG0SRjmcTWUk6PJYXPDEOOZ9AQAmN1DPYNikD8fo1MN22H/FVL4wJn79r8SyYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXZARBnV+vnHT497mKM1Be1hzsZw1ej1OUclSgr8yBjk6kgpf1
+	0Djx2ohfRMAgF1KHGdzS0EI/4VCsDG/fYdJzEiUv1Rbv8xlQmmDHpWoki+dGQrvv/vizr0F70DT
+	vZg==
+X-Google-Smtp-Source: AGHT+IFg0gbNaQKaAA8ABHV+MYR/T02bvHSkVwnlDKV72fFVsEdr+va1slPpwXWKPkQkEaGi6W/80WLhdxE=
+X-Received: from pleg18.prod.google.com ([2002:a17:902:e392:b0:223:f59e:ae50])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:19cc:b0:224:1074:638e
+ with SMTP id d9443c01a7336-22bea4ffa37mr8206525ad.52.1744326854888; Thu, 10
+ Apr 2025 16:14:14 -0700 (PDT)
+Date: Thu, 10 Apr 2025 16:14:13 -0700
+In-Reply-To: <a06ed3bf-b8ac-15b7-4d46-306c48b897ca@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <cover.1742477213.git.thomas.lendacky@amd.com> <ea3b852c295b6f4b200925ed6b6e2c90d9475e71.1742477213.git.thomas.lendacky@amd.com>
+ <a06ed3bf-b8ac-15b7-4d46-306c48b897ca@amd.com>
+Message-ID: <Z_hQxXtLaB_OTJFh@google.com>
+Subject: Re: [PATCH 1/5] KVM: SVM: Decrypt SEV VMSA in dump_vmcb() if
+ debugging is enabled
+From: Sean Christopherson <seanjc@google.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu Apr 10, 2025 at 5:34 PM CEST, Danilo Krummrich wrote:
-> On Thu, Apr 10, 2025 at 03:11:01PM +0000, Benno Lossin wrote:
->> On Thu Apr 10, 2025 at 1:54 PM CEST, Danilo Krummrich wrote:
->> > On Thu, Apr 10, 2025 at 11:58:17AM +0300, Abdiel Janulgue wrote:
->> >> @@ -78,13 +74,14 @@ impl Drop for DmaSampleDriver {
->> >>      fn drop(&mut self) {
->> >>          dev_info!(self.pdev.as_ref(), "Unload DMA test driver.\n");
->> >> =20
->> >> -        let _ =3D || -> Result {
->> >> -            for (i, value) in TEST_VALUES.into_iter().enumerate() {
->> >> -                assert_eq!(kernel::dma_read!(self.ca[i].h), value.0)=
-;
->> >> -                assert_eq!(kernel::dma_read!(self.ca[i].b), value.1)=
-;
->> >> -            }
->> >> -            Ok(())
->> >> -        }();
->> >> +        for (i, value) in TEST_VALUES.into_iter().enumerate() {
->> >> +            let val0 =3D kernel::dma_read!(self.ca[i].h);
->> >> +            let val1 =3D kernel::dma_read!(self.ca[i].b);
->> >> +            assert!(val0.is_ok());
->> >> +            assert!(val1.is_ok());
->> >> +            assert_eq!(val0.unwrap(), value.0);
->> >> +            assert_eq!(val1.unwrap(), value.1);
->> >
->> > Maybe use if-let to avoid the unwrap?
->> >
->> > =09if let Ok(val0) =3D val0 {
->> > =09   assert_eq!(val0, value.0);
->> > =09}
->> >
->> > I know it's a bit pointless, since we know it must be ok, but the educ=
-ational
->> > message of the example should be to check and not to unwrap, so maybe =
-that's
->> > better.
->>=20
->> The if-let will silently ignore any errors, so I don't think that it's
->> fit for example code either.
->
-> Yes, but we still have the assert!() before, so the full sequence would b=
-e:
->
-> =09assert!(val0.is_ok());
->
-> =09if let Ok(val0) =3D val0 {
-> =09   assert_eq!(val0, value.0);
-> =09}
+On Mon, Mar 24, 2025, Tom Lendacky wrote:
+> On 3/20/25 08:26, Tom Lendacky wrote:
+> > An SEV-ES/SEV-SNP VM save area (VMSA) can be decrypted if the guest
+> > policy allows debugging. Update the dump_vmcb() routine to output
+> > some of the SEV VMSA contents if possible. This can be useful for
+> > debug purposes.
+> > 
+> > Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > ---
+> >  arch/x86/kvm/svm/sev.c | 98 ++++++++++++++++++++++++++++++++++++++++++
+> >  arch/x86/kvm/svm/svm.c | 13 ++++++
+> >  arch/x86/kvm/svm/svm.h | 11 +++++
+> >  3 files changed, 122 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> > index 661108d65ee7..6e3f5042d9ce 100644
+> > --- a/arch/x86/kvm/svm/sev.c
+> > +++ b/arch/x86/kvm/svm/sev.c
+> 
+> > +
+> > +	if (sev_snp_guest(vcpu->kvm)) {
+> > +		struct sev_data_snp_dbg dbg = {0};
+> > +
+> > +		vmsa = snp_alloc_firmware_page(__GFP_ZERO);
+> > +		if (!vmsa)
+> > +			return NULL;
+> > +
+> > +		dbg.gctx_paddr = __psp_pa(sev->snp_context);
+> > +		dbg.src_addr = svm->vmcb->control.vmsa_pa;
+> > +		dbg.dst_addr = __psp_pa(vmsa);
+> > +
+> > +		ret = sev_issue_cmd(vcpu->kvm, SEV_CMD_SNP_DBG_DECRYPT, &dbg, &error);
+> 
+> This can also be sev_do_cmd() where the file descriptor isn't checked.
+> Since it isn't really a user initiated call, that might be desirable since
+> this could also be useful for debugging during guest destruction (when the
+> file descriptor has already been closed) for VMSAs that haven't exited
+> with an INVALID exit code.
+> 
+> Just an FYI, I can change this call and the one below to sev_do_cmd() if
+> agreed upon.
 
-Ah right, missed that.
-
-> The intention would be to avoid patterns that shouldn't be used in "real"=
- code;
-> assert!() should be obvious not to use for real code.
-
-Yeah, I'm not sure if this is that valuable. I think having "real code"
-is better, but I don't have any idea what to do in this case.
-
-Why does this sample do the validation in the `drop` method in the first
-place? I guess the same code on the C side would do this in `remove` or
-whatever the equivalent thing is there, but would there be the option to
-report an error? Or is `remove` an infallible operation? In that case
-`assert!` probably is still the best option.
-
----
-Cheers,
-Benno
-
+Works for me.  Want to provide a delta patch?  I can fixup when applying.
