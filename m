@@ -1,221 +1,120 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AAF204594
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181D920468C;
+	Thu, 10 Apr 2025 06:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268263; cv=none; b=UXjDeXSLpoEMJicnPGQQWQh3lxAV/E8g32zdxE950HuEhUrPfmoLtR4OrOBN+qjw+MJxICAqV929PrunNKnaNFLBiHpj96/vhuuQWaA0e3G3Q5p0A4R+Xx085rhSIm7NMmIK4YppaVMAU3BdD50inFWsOc5ZhJ55n7l8PAh9skE=
+	t=1744268265; cv=none; b=WXpMJsJNJg9mjaVIu+ami/sSTWJGhZgpIWmD4W5CyvvVrhF8Y2BofaNPyNTGh2TMA/856XJN3tezGZnYvnvI9zyMsX8lmtOp6Oi+w4+1Hvy0mntpCI9G9pGOPT/YHIw6eQa7tZjVTJDtozp9Er4/uwPpDkeKPybzag1LhVPV0Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744268263; c=relaxed/simple;
-	bh=sTwsAjGY0cGXvK0SH9dMyP6DZMtS36qt5mtZ3fR9MlA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EntM51motdO9U3HIKbe8OnMBy0RTfgtY6jF9fIszXFndqYakaqwYhZ0OM0lqH1yjIO8IFXxGFfRGXGHM1r0yOLCB3h1q1FbMcrpAW2CThQNRDyiBuyOvEAae5gGMd+oAUV+iZQ6vQVQiI/TkEaLzqGl5Rv+UT+jAbsshAIByNCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WegCxNm6; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744268265; c=relaxed/simple;
+	bh=oyIr5iTfb5YM9mIuiyQYpeUKyglx6GScjq9LoFWefQE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EFGNuCfgh8UU5oCamFCpEdFKPt6I14XjUBrQkQGSlEppdb30KLH321ZDTUicdslSfjTTX6RFJRfHKiv5e7TyLRBOECJ9vpT9rAShwm2Mv/siIpj0Q1SckaXqLDUwjgnHK1ZsOs4mM+kn9bzGiF4hEg4hwWjmfPKxbf2SvvBAH5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=L6VhcyBo; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WegCxNm6"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d42f08219so185632241.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744268260; x=1744873060; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ARRmXRJ2mCRgXoILVP1SStKYj4zjnHUfBxpKz5KWgHA=;
-        b=WegCxNm6ACIpSo0rXU6oya50pl06wvga08zSKecB9dQoq+OTKuFDPN5VZEKykgZUsQ
-         flzC2lZPQnJw9OhsDkKYxcrbKQxd/kpmkX4qCMIDYHNmp/4qLUCwY+E6vvK8wkayBJm/
-         kIeVuyZkmD6VDNYefo4wkAYAblgUINR2oUbM1QmXgAJBfXjNVX6RHf0rI5D57AGn4V27
-         wEGXP0VxT3uGIs9umt1EfqBCozGXmp8wvaNsbnHK88UwG9DNIZCZ1ixILv8jdh/fbQna
-         xAxQVCEY3Zfme5nQ7oDfdsdCczb0/KI7vMpkxtCKW7qy+sS2TiiLVzDo4NUXgnNbt3L8
-         0B3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744268260; x=1744873060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ARRmXRJ2mCRgXoILVP1SStKYj4zjnHUfBxpKz5KWgHA=;
-        b=JUluJnztXNZiVL3aU7gCft3q+tdt5jusH0aCtb9BOkwEFvvKsx5PwcwSpcuK17DgA/
-         s8BzBDG7rXCP2lp9CzmZosn+iHWbwKQBE6MOdNs2TLF3QS+ICgGKMBlXpkC4jKtdfyL1
-         2BkK/7ObFhcURYPajFp+SKWYaVHR/CMkH3pcSP2sqTVI9kj2/h31AdPLNI/PF9DFIXBD
-         9bT6i3DGaeOYz6AMnavcwwy7Ml2lCHMMgycTLNHzJRdPcxkQ141y1WylHuTL+k/1IwUU
-         AdVUXvkq4ZF6xdqN8ObrQ910WmeNF9W1nxZBKID2tLh5Eh+phz/yNh++n5R+JBhevc88
-         unQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeHth3ryA80s/gzardIVhSeQskTPRmXXZM/G6flJTKgTE6w1K8dwXuLEXXyyg0Iyh/M25xleYQEuedxO0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9V4aQ3/7AJTfmmEDPTFBg/atJk/BHV3JsxQiEfblfOr36EvBh
-	XoDcew6V7b/id0hP39wF9+tXzy0/wot6HY2EkFYOkJxBSV+Ntq9Znv/PJnSUUIM8aCYHPm49Bbi
-	HO2k2Vrg/VZJaWp9vR54rACGl//iMr5ndOwZNTQ==
-X-Gm-Gg: ASbGncuh5UI9+ZbxTO9+41jwUrkDON5dESr99ZRrYxLIxg5f+FKBtMRntg9JZ9zJDlu
-	vSKSbrh3iwaPDisAP0bPBjlA6abfM2sinSiHpr0c3r54DTbBgHgcPsZzTlD+ZhlWVpAGoF5hZ4U
-	BFZptG/VoL93WxYAWx5NCXmsEX+w+UqQAR1l12VMTIx+taiRqfDX5ga/0=
-X-Google-Smtp-Source: AGHT+IHnUcAdtPw/Bu+bfLYER0We+JE2unYWgD9+ylsXtm+yAmF1+/a2MICvq/3Z6LjMbkZydv/6M4WXUoGm3z69jlw=
-X-Received: by 2002:a05:6102:5714:b0:4c1:9e65:f90b with SMTP id
- ada2fe7eead31-4c9d35c5826mr1056195137.17.1744268260583; Wed, 09 Apr 2025
- 23:57:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="L6VhcyBo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=37p8BZ/65Jkyek9wSY796hP1q62D7VjD6me8lvqHT1s=;
+	b=L6VhcyBoKkGDBvZcAGTYPoDplpksaObP0Jt7OPZVGnj3eh+AnwOeNUizpjW4/n
+	esKJAcTqIWFm1y+LrkNNZ/mZOVYKVoIIf5tRzpKx7TJ75+ka+oponZ93k8K8P6R1
+	PjiVpaVatP/dM8HCdrTME/cb6FZO73fy32ysRt2XGms+k=
+Received: from [192.168.142.52] (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnVwmwa_dnW6O2FQ--.53411S2;
+	Thu, 10 Apr 2025 14:56:49 +0800 (CST)
+Message-ID: <085d0e48-436d-46af-8bdf-8477169e8939@163.com>
+Date: Thu, 10 Apr 2025 14:56:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409115840.028123334@linuxfoundation.org>
-In-Reply-To: <20250409115840.028123334@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 10 Apr 2025 12:27:27 +0530
-X-Gm-Features: ATxdqUFpdOs38enhPpqvgs50sZwp2PaSSnIi3QTcWZBE0JZMUFx3jvgJXa9Sb2k
-Message-ID: <CA+G9fYvgMbV0LK=zHsCO4EGLdKKPPaOwJZ7UzgePNP_9O6Ag_A@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/269] 6.6.87-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 9 Apr 2025 at 17:34, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.87 release.
-> There are 269 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 11 Apr 2025 11:58:04 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.87-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 4/6] PCI: dwc: Use common PCI host bridge APIs for
+ finding the capabilities
+To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
+ bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409034156.92686-5-18255117159@163.com>
+ <202504101228.CX8tAgfW-lkp@intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <202504101228.CX8tAgfW-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDnVwmwa_dnW6O2FQ--.53411S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17tF17ur17Xr4fWrW3Wrg_yoW5tFy7pr
+	W7Jr1DAFyrGFn0gws7ZFy2vw17JFsrGw13AF4rW34fCFW7uryqk34F9Fy5GrnrCF1ak3W5
+	urWDtas5tw4xZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UQYFAUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgwro2f3WO-kyAABs0
 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+On 2025/4/10 14:02, kernel test robot wrote:
+> Hi Hans,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on a24588245776dafc227243a01bfbeb8a59bafba9]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Introduce-generic-bus-config-read-helper-function/20250409-115839
+> base:   a24588245776dafc227243a01bfbeb8a59bafba9
+> patch link:    https://lore.kernel.org/r/20250409034156.92686-5-18255117159%40163.com
+> patch subject: [PATCH v9 4/6] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+> config: arc-randconfig-001-20250410 (https://download.01.org/0day-ci/archive/20250410/202504101228.CX8tAgfW-lkp@intel.com/config)
+> compiler: arc-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250410/202504101228.CX8tAgfW-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202504101228.CX8tAgfW-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     drivers/pci/controller/dwc/pcie-designware.c: In function '__dw_pcie_find_vsec_capability':
+>>> drivers/pci/controller/dwc/pcie-designware.c:239:24: error: implicit declaration of function 'dw_pcie_find_next_ext_capability'; did you mean 'pci_find_next_ext_capability'? [-Wimplicit-function-declaration]
+>       239 |         while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
+>           |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>           |                        pci_find_next_ext_capability
+> 
+> 
+> vim +239 drivers/pci/controller/dwc/pcie-designware.c
+> 
+> 5b0841fa653f6c Vidya Sagar  2019-08-13  229
+> efaf16de43f599 Shradha Todi 2025-02-21  230  static u16 __dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id,
+> efaf16de43f599 Shradha Todi 2025-02-21  231  					  u16 vsec_id)
+> efaf16de43f599 Shradha Todi 2025-02-21  232  {
+> efaf16de43f599 Shradha Todi 2025-02-21  233  	u16 vsec = 0;
+> efaf16de43f599 Shradha Todi 2025-02-21  234  	u32 header;
+> efaf16de43f599 Shradha Todi 2025-02-21  235
+> efaf16de43f599 Shradha Todi 2025-02-21  236  	if (vendor_id != dw_pcie_readw_dbi(pci, PCI_VENDOR_ID))
+> efaf16de43f599 Shradha Todi 2025-02-21  237  		return 0;
+> efaf16de43f599 Shradha Todi 2025-02-21  238
+> efaf16de43f599 Shradha Todi 2025-02-21 @239  	while ((vsec = dw_pcie_find_next_ext_capability(pci, vsec,
+> efaf16de43f599 Shradha Todi 2025-02-21  240  						       PCI_EXT_CAP_ID_VNDR))) {
+> efaf16de43f599 Shradha Todi 2025-02-21  241  		header = dw_pcie_readl_dbi(pci, vsec + PCI_VNDR_HEADER);
+> efaf16de43f599 Shradha Todi 2025-02-21  242  		if (PCI_VNDR_HEADER_ID(header) == vsec_id)
+> efaf16de43f599 Shradha Todi 2025-02-21  243  			return vsec;
+> efaf16de43f599 Shradha Todi 2025-02-21  244  	}
+> efaf16de43f599 Shradha Todi 2025-02-21  245
+> efaf16de43f599 Shradha Todi 2025-02-21  246  	return 0;
+> efaf16de43f599 Shradha Todi 2025-02-21  247  }
+> efaf16de43f599 Shradha Todi 2025-02-21  248
+> 
+I'm terribly sorry. The latest 6.15 rc1 merge 
+__dw_pcie_find_vsec_capability, which uses 
+dw_pcie_find_next_ext_capability. This should be replaced with 
+PCI_FIND_NEXT_CAP_TTL.
 
-## Build
-* kernel: 6.6.87-rc2
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 327efcc6dcd0abb5f5c298eacd01af487dc297eb
-* git describe: v6.6.86-270-g327efcc6dcd0
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.8=
-6-270-g327efcc6dcd0
+This will be changed in the next version.
 
-## Test Regressions (compared to v6.6.83-270-g0d015475ca4d)
+Best regards,
+Hans
 
-## Metric Regressions (compared to v6.6.83-270-g0d015475ca4d)
-
-## Test Fixes (compared to v6.6.83-270-g0d015475ca4d)
-
-## Metric Fixes (compared to v6.6.83-270-g0d015475ca4d)
-
-## Test result summary
-total: 109721, pass: 87807, fail: 4013, skip: 17422, xfail: 479
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 129 total, 128 passed, 1 failed
-* arm64: 44 total, 42 passed, 2 failed
-* i386: 27 total, 23 passed, 4 failed
-* mips: 26 total, 25 passed, 1 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 32 total, 29 passed, 3 failed
-* riscv: 20 total, 20 passed, 0 failed
-* s390: 14 total, 12 passed, 2 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 7 total, 7 passed, 0 failed
-* x86_64: 37 total, 36 passed, 1 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
