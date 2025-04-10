@@ -1,127 +1,109 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFDA293444
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E3028EA7C;
+	Thu, 10 Apr 2025 14:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744296061; cv=none; b=t8PPanyFki25f7fHM3Kn3+/S6mFHL3mS9Sm0wbBF7uiYAfczfxlqe0FYLWZuO6B+Ktn4xI3xhuCwyTcQObmw2w5QkZ7qi4IWvqzx+yhCPxi1yvRdTEeYctMT+THP6Xt4gRrQY80u2CtdQtOvhPn7tjN1ZpzaCcalRTnUthw3QjE=
+	t=1744296077; cv=none; b=XXKuK5SFu2eqb36NP9aCTROo31GTsMKN4nBy0b/zN6vuei5A1av4ocQHExaT5xbJwF2ksTkRWq0ee6VlZd3IE+DI29Cxt3dSZG/156RuThuqVAIGI7oQGu6nnZUm83xq6UmHLqUbe8xbWEX/L56ykh3CkU+K84kYsMOlGhIqQi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744296061; c=relaxed/simple;
-	bh=5fL0rgnSzGs1CAG0aabGzOX1kCW1JlrnGcwxY3Sn6z0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LJfsU0i4WUSPxO74H/ABhNtsMGtmxTIcB6X222j1ifUFVQAS+qOVo6R32m3HOh/HpARwN0l7Y5JSZb7jVVPRJN6eqr6tha8udIJIjUAqWo0CCcxX1RiU+LjqDqii1qWgEZ6pf5Dog6bnmblbx0rUhC7UryS3VSJQznrm8/0zrf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=fAW0k68Y; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="fAW0k68Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=TD9gJDoeIYWoLN39DzPWwvY2Y5ci8qPdXqVd0lqAifM=; b=fAW0k68YRp9bnpjKIBpwOdu8Fm
-	RJr3T6YT+xnmzH+wH+8d3vLrDPSAhX2EcAoIVZ0VHhmZxODYmQUpsosCHVeZGDQHtdiauroSNCchU
-	urMJeBlSY7BfJBQAzDCMXCju7dvOw6JnS/gZBQtknXzjT7X07sOSbniln07z52ox7oXhgaYSionkA
-	rF4yRvU3d92FTci5d2o8Gmlxm+RSPjdnzwdV+BBHXjj8Dhv4lWkumfJBazYfgxXfq9p8g9vbGI+9F
-	uxAfVh3Vnn/CXoQP72FHS9yGwEDhCmzrYzpKkp/atlWqv9FW6ByKk7jb4TTnI4UtOs/uYigVhD2ZL
-	1oR6d3GQ==;
-Received: from [177.134.103.112] (helo=[192.168.68.130])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u2t55-00EiHQ-KJ; Thu, 10 Apr 2025 16:40:39 +0200
-Message-ID: <2266002e-372d-434c-a2f5-282166e28c70@igalia.com>
-Date: Thu, 10 Apr 2025 11:40:32 -0300
+	s=arc-20240116; t=1744296077; c=relaxed/simple;
+	bh=7C0dSwhhH0Uym7Hv45NFMdC2KoQRv1e/nEQ7pjCJr7Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HFTiIXeyeuiISFZahCN+BWJmTgQ4gaFaUP8DGLlk1LfNQsp7VzjkUVUD+lHj/Sag3V8A1AbUfpFppHNi3xut1DqwUqsHvA5mBGyv86e2qNpjwgc8oqyt2J7RlUz6ujXSJCnnNmo3W1/PcCQAtPzoCS3Fwc5KuTBRoMGWGEds0gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86b9b1def28so779512241.3;
+        Thu, 10 Apr 2025 07:41:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744296072; x=1744900872;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qFiu9zt8X9KIFbJmQ2flKV3tGXtpJjP4Y1fqbPOxvLg=;
+        b=ldHOkDOZWynG0DeC/tvm1+P8qe4T1PWrOWC7brtemy59jm82bOZatsXYNfGI6OrYo2
+         30hma0i2WpMCx9iNSO+dCWMRzKPUstVaBIQr7G0WnS1LDo0hyMXul2AD13LU/En+TBV+
+         vlDNaEozuodIctUMO+XseW1BqxS2x6BKAmXZ14poTSliYBwLg2Lz/00BRLztAm8DXfqZ
+         ZzlA9p9QTCzPzX3hoAGUgVY4I843iNWZnZ9QuvuwOQg4abapL0BqjbZ5Mmg3rFy5Nqy2
+         QH0Irgq1I/hpKuhE44hKybYUhM8PW0AI/CBxKZlhacmC2xUAWqZkcDDNV6JVnL7ZlkQK
+         wG1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVUh1mKo13/XdMZag/lOlUtCM6TVfC+hFz8AA5gt2b7XxN36VLn6DYbauioMiz3mIv6DaxPPCbhrCnfwA==@vger.kernel.org, AJvYcCXCB/L15/1SRMXbX5OIlotkQGaj7VBZB9KMttaxgjZIYzwjc3r/Skf+HYUOuBrNODx4w3f/azQyacWJvPRg@vger.kernel.org
+X-Gm-Message-State: AOJu0YynI8Pa8j66yFnX1pUw0Uege1LiHEa17T+0vfdFErojy+/msNnc
+	qGfubVlo3z8BMyRi1AgbrUriXBw/DveVpRhpuqRZu8BtoNwBhXZhJdREDlO67uY=
+X-Gm-Gg: ASbGncsj7JXQPh5CwAJetKbq3Wp3M+nep9iqrjAvrUuRmXV078iw+WJulCPXvFZd9Qt
+	5ZmjHxRoSJvOzgMfSQcewsnRtFBoxP9rcu33eJUwc2ETof3fmnCW6We4L3B5Te2y8XynADWjYru
+	3XYmEDwsyeHQTNqzRx7hpacypqQI584i3rKBTdw714+H+bpNIPRAygBq1sEtr1+7LaRzJIcQHdG
+	zTbXaQWaXxgmYbmgdAJC10Dr3BiJyzm92RQKjKUhbHwV+vPa6+/NSlvja+KXpTdR17SZEY25fEb
+	BI80bjmj9FYehPO055B7GoYEHhxn5MBgAuJqDr4wh9qDkuPwMAkfDCy59WhPOumHJUbj+dxp5E/
+	yWo4=
+X-Google-Smtp-Source: AGHT+IEZuVUC4wluVyYeodVc6nUemC/rvYgm/RU3ugH0bi5jiVeLJTL98XoJDKg6hnoEsa3VpSYSMA==
+X-Received: by 2002:a05:6102:1496:b0:4c1:9b88:5c30 with SMTP id ada2fe7eead31-4c9d35ce04emr2900914137.19.1744296072340;
+        Thu, 10 Apr 2025 07:41:12 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87557136a61sm669130241.8.2025.04.10.07.41.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 07:41:11 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86b9b1def28so779475241.3;
+        Thu, 10 Apr 2025 07:41:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVOYGnolFi2xl2xiqPofQjdkr310xyU/2uXaPnpT9iMG2bJid6CoK7K4gNRVgZoAUL7jodahU693CJdfw==@vger.kernel.org, AJvYcCVfrsUZz0+zvGK8CYf1txQed5wkhb5jygsMTrMfJyOOn+yAbNrRFw2tWTho5WTB3AOQc/hurNZKiwuB9Wi2@vger.kernel.org
+X-Received: by 2002:a05:6102:3f48:b0:4c1:b2c2:61a with SMTP id
+ ada2fe7eead31-4c9d362a2f9mr2675278137.25.1744296071578; Thu, 10 Apr 2025
+ 07:41:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] drm/ci: Add devicetree validation and KUnit tests
-To: Vignesh Raman <vignesh.raman@collabora.com>,
- dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com, daniel@fooishbar.org, helen.fornazier@gmail.com,
- airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com,
- guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
- valentine.burley@collabora.com, lumag@kernel.org, quic_abhinavk@quicinc.com,
- mripard@kernel.org, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
- linux-kernel@vger.kernel.org
-References: <20250409061543.311184-1-vignesh.raman@collabora.com>
- <ef5b7030-c38a-44b9-b0bd-28ea6adb17c2@igalia.com>
- <a16c70e0-9078-4a21-9fa1-ca9d33823ff2@collabora.com>
-Content-Language: en-US
-From: Helen Koike <koike@igalia.com>
-In-Reply-To: <a16c70e0-9078-4a21-9fa1-ca9d33823ff2@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <cover.1744273511.git.geert+renesas@glider.be> <8fb6c5995f0e72482bad6367d89d9ee5312dd409.1744273511.git.geert+renesas@glider.be>
+ <PN3PR01MB9597160EE7E131BCC171FA39B8B72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <PN3PR01MB9597160EE7E131BCC171FA39B8B72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 10 Apr 2025 16:40:59 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVYVpgS9fSMbB=S0cF=1QLyVQ993q9-JizBS2N6azSicA@mail.gmail.com>
+X-Gm-Features: ATxdqUHJXc0uihZtU6vWRVhvAIyc63b2XuhYkoattHbmPcm5Q-Zm9WRSRerjQbc
+Message-ID: <CAMuHMdVYVpgS9fSMbB=S0cF=1QLyVQ993q9-JizBS2N6azSicA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] HID: HID_APPLETB_KBD should depend on X86
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+	Kerem Karabay <kekrby@gmail.com>, 
+	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Aditya,
 
+On Thu, 10 Apr 2025 at 10:52, Aditya Garg <gargaditya08@live.com> wrote:
+> > On 10 Apr 2025, at 2:01=E2=80=AFPM, Geert Uytterhoeven <geert+renesas@g=
+lider.be> wrote:
+> > =EF=BB=BFThe Apple Touch Bar is only present on x86 MacBook Pros.  Henc=
+e add a
+> > dependency on X86, to prevent asking the user about this driver when
+> > configuring a kernel for a different architecture.
+>
+> There are a lot of spaces before Hence.
 
-On 10/04/2025 05:07, Vignesh Raman wrote:
-> Hi Helen,
-> 
-> On 09/04/25 23:53, Helen Koike wrote:
->> Hi Vignesh,
->>
->> Thank you for your patch.
->>
->> On 09/04/2025 03:15, Vignesh Raman wrote:
->>> Add jobs to validate devicetrees and run KUnit tests.
->>>
->>> Pipeline link,
->>> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1400550
->>
->> I see the checks are in the same stage as build, does it make sense to 
->> create another stage? Similar to what was proposed on kci-gitlab?
->>
->> Also, I don't think it make sense for kunit to be in the build stage. 
->> Maybe in software-driver? Since kunit runs on a qemu.
-> 
-> We can add a `test` stage for kunit and a `static-checks` stage for 
-> devicetree validation and check patch. What do you think?
+That is intentional: double space between sentences.
 
-Ack on static-checks stage.
+> Also, Apple Touch Bar is present on some Arm MacBooks as well, so probabl=
+y mention that this driver is only for touchbars on x86 Macs and there is a=
+ separate driver for the Arm Macs.
 
-`test` stage confuses me, because all the other stages with driver names 
-are also tests, this is why I suggested to move to `software-driver`.
+Why is there a separate driver for Arm Macs?
+Which driver is that?
 
-Or maybe we could just have a kunit stage for now.
+Gr{oetje,eeting}s,
 
-Helen
+                        Geert
 
-> 
-> Regards,
-> Vignesh
-> 
->>
->> Helen
->>
->>>
->>> Link to v1,
->>> https://lore.kernel.org/all/20250327160117.945165-1- 
->>> vignesh.raman@collabora.com/
->>>
->>> Vignesh Raman (2):
->>>    drm/ci: Add jobs to validate devicetrees
->>>    drm/ci: Add jobs to run KUnit tests
->>>
->>>   drivers/gpu/drm/ci/check-devicetrees.yml | 43 ++++++++++++++++++++++++
->>>   drivers/gpu/drm/ci/dt-binding-check.sh   | 16 +++++++++
->>>   drivers/gpu/drm/ci/dtbs-check.sh         | 19 +++++++++++
->>>   drivers/gpu/drm/ci/gitlab-ci.yml         |  2 ++
->>>   drivers/gpu/drm/ci/kunit.sh              | 11 ++++++
->>>   drivers/gpu/drm/ci/kunit.yml             | 32 ++++++++++++++++++
->>>   6 files changed, 123 insertions(+)
->>>   create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
->>>   create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
->>>   create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
->>>   create mode 100755 drivers/gpu/drm/ci/kunit.sh
->>>   create mode 100644 drivers/gpu/drm/ci/kunit.yml
->>>
->>
-> 
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
