@@ -1,109 +1,153 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7C11E9B38;
-	Thu, 10 Apr 2025 17:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D7B1EB18E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307672; cv=none; b=TgE0Ybt8VB3BwycCKdR9d1k3TOKF5VXOy6WqreCLEPgXKrODnA3zcBFZSHMBuXP+jWapLGL7bsQvs1Dl9wIXfRgfLmaAlqOMhv4uKbVmH3tKbh4EuupZQP6ynar6EpOPRkdrelIB82FD/ypPVNU0TNXWVLgcTNX6L9hgJRQ+m+Y=
+	t=1744307717; cv=none; b=ZRSep9lbIgL1/bUv8z9mzl891uUziD1l97iA5BbJEdML/och1PiuBXxjDlLTHsDEZF+5uxej613THw4zGZ7tLU+ynCHZtBliK5qgXVi1lKvGeFZpB/mdsZp9G5gDVmyMzwDbCZ+VbZsZlwSSPNYj8MFsai2v4Yd10vA5n0J15+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307672; c=relaxed/simple;
-	bh=Pw/dJ+4Y5FkoPfIBpwwqEtEWe8AU90hgV2bIMaMLP00=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CATnG6Fg72M/EmYZOs6HCrWd9d88/o6AZFwovx2R5viq4Ee0XLYdSmty/JN56Z6Vj0P3sBko4fe6fZQkJ/OOKfXMAl70yxb7PoYZkHzmRy3gVjVXxOuq+cV6gw3rDI9IoC28wuWa2fSCvB6+vBQ+lYCroHIbEhxJr3V1VEfbO9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F466lyYW; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744307717; c=relaxed/simple;
+	bh=onVm9yz4kkQZKREFFYmq+0gcjgF/q8YWrg7pod93OEE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RKekMqssdq5ABjKJwdWjZuSEhtKqamgm0VNKu60FvkNRT7oFJX0n3JwbSmKr8VvyRY6eGPHU9yUC4EkmqZkEBJLiBHrHRFX1TDwqed2q/OzbR4nXzHxLjk4U+nIAXpmahsD7PlXu6oHnrDbBwQaZ0/lHhjbzkAW2N9uggAsnV9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=03/q/ban; arc=none smtp.client-ip=84.16.66.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F466lyYW"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso208007066b.1;
-        Thu, 10 Apr 2025 10:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744307669; x=1744912469; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Q5k58HJPb9pkGfYBHMl8erz1pohoAN5Zh0An/lVPHk=;
-        b=F466lyYWBPmzIRgHdzUs2+IKV5uab5E8lPSvjwqz70mCGZt2FOm9ShMGzJJ6gZhmYd
-         TsmM/1p68/wY+KO2IDteEKOwS1IEF1B2ejqJqswkjtdFxCYdPfhZsASyyaXVIQg4gK8Y
-         fWGjH9IA8N29Gi3N/ofyTlKF4jQO5oesPmePzsF19u0+B18ng+J8rIFft8ZLRhIWoxMD
-         y0NziFOLHbJ1yArpOoZffcW67kInKimpC6TMwsk477K8KrN3aTCyGlqmm6XS4NbIxwJb
-         wd8M92jPcA6XMC7eMRkA/kMkYlgeMjlXzH+0XZYbpl4cpBK9t6sqI3KbnfLYTcIWz4ZU
-         mzUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744307669; x=1744912469;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Q5k58HJPb9pkGfYBHMl8erz1pohoAN5Zh0An/lVPHk=;
-        b=aphzToihHDmn8SLvmiOArAy6u/9as78KeJWKBajc2fuTIwBquRsGmN4AcCUfMEqJ3b
-         PrK/CO258MYbFqtFlXGU+J+9QRzYnxUJylDEpQPHAH/HjZuwYHacQxVVM3qEEWuUJLWa
-         hM0TwzaENucc8WX/cvYHw4mOvJKsESvCsWI1zE/htBzlSLDfa89R/snxsoloaUFsA8FO
-         Tth0uqaHCIrY/ZRDpQIBin8u1gikAYGAh7Pfw+Z2HJeUzyFq2Rn3C8wwHmT6ovj9qLvl
-         YBLu1SzA5G/jByMDtmv1+bch9weQCk/MSRLrAsWjd4vXeq80xTXxKXpmP6eNrVl6o1o2
-         BaHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVByLFNCXFbPuaqPn6beRy7tk5/Na5SMjor6a/0f8dn+QR0PSMwO9MjurrKbHG5BikvdI0Zz9SK@vger.kernel.org, AJvYcCWrON+/17lpkoCk7h0n+3HL2ObQYcPyVMI2c+XF3ckhuiL5suywsWsQhwfyrqJoKu/tn5WGUGebRh/Y@vger.kernel.org, AJvYcCX6D/i7g+1BXF6VWzJbxtDTConvl4E6yUusePfK1J0r0y7eZ1w8f/KAWyL9mtkF+xr7Z1vyOP4pibqeaaHW@vger.kernel.org, AJvYcCXmvoFyK468r//piqFDus8d8Ud5qNDT/AxhlT58ydK3buGd/zVdRnfH1sQBHug9vPgYU0z6bPEtL+/Q4t8JMezw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxSOV4Z8rPo7IFpkSrC4z6ppRz3VxH/EjDt0EJfrKlIvuMdhYa
-	SbkZkfF0zSSbLgKiMeGnFFr4XwrYzFpXjfYf/88QQxjcZnCPKi6EoX5omXmhtkwNEXvkH+CdVTS
-	NdiNaM3KsS/EYrinuVQpRu9N9J0Y=
-X-Gm-Gg: ASbGncuwd+hgtah1yVb11YQwD+HJgwg2XvCiGieQMtWAVvduepJxB7RDXB06ueSzRLt
-	Qho5ZZF+4TCEvE80q5RHnF5eSmD3gtKUJx6IapiaC+QOjKHjXyFywWWFwbVb1a0x07UCuAC20F8
-	KP7IcmlQLb80KIEeC3ObI+1w==
-X-Google-Smtp-Source: AGHT+IFk57BaGI8RexVkNm+rOx5JzRlSl388aEL8hPkRZ3mtB/W+jjolkJ5nyPy44lQVI1rq5r2tU030TeCa7PM2WVs=
-X-Received: by 2002:a17:906:c156:b0:ac6:f4c1:b797 with SMTP id
- a640c23a62f3a-acabd195902mr425726166b.19.1744307669164; Thu, 10 Apr 2025
- 10:54:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="03/q/ban"
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZYRMj6DSmzVZg;
+	Thu, 10 Apr 2025 19:17:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1744305457;
+	bh=RMZ4bOXPFc2DoXl+R1z/0s8d433W+UChpwRNcCV/Mxs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=03/q/banW/8XwCrB9Xdc1Mjwk0LyYA808GSuPwZRsNea1iqspVX53dbkYL5rKH0U2
+	 9Wbr24szgrPqluQ5IKAJzqpKgyTMdaSyPe1b+hklvRkIO3mlZdKccincj/Z5wp8OEP
+	 4ut14ICbeiKcTVtc6dXzIBNwtiCibCMJ2cYmkETI=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZYRMj38dYzHBb;
+	Thu, 10 Apr 2025 19:17:37 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 2/3] selftests/landlock: Factor out audit fixture in audit_test
+Date: Thu, 10 Apr 2025 19:17:22 +0200
+Message-ID: <20250410171725.1265860-2-mic@digikod.net>
+In-Reply-To: <20250410171725.1265860-1-mic@digikod.net>
+References: <20250410171725.1265860-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409144250.206590-1-ivecera@redhat.com> <20250409144250.206590-7-ivecera@redhat.com>
- <3e12b213-db36-4a76-9a58-c62dc8b1b2ce@kernel.org> <b73e1103-a670-43da-8f1a-b9c99cd1a90d@redhat.com>
-In-Reply-To: <b73e1103-a670-43da-8f1a-b9c99cd1a90d@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 10 Apr 2025 20:53:51 +0300
-X-Gm-Features: ATxdqUEHCMWU8odrtfeCV4-CCxyAM1De6Fsa0no8YCkrp_fO_UC5x5S5KURglVQ
-Message-ID: <CAHp75VfR_6gQdcBU6YDTvtX0A2NDjto4LXyjTteGLmp-u1t2qA@mail.gmail.com>
-Subject: Re: [PATCH v2 06/14] mfd: zl3073x: Add macros for device registers access
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org, 
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Thu, Apr 10, 2025 at 11:21=E2=80=AFAM Ivan Vecera <ivecera@redhat.com> w=
-rote:
-> On 10. 04. 25 9:17 dop., Krzysztof Kozlowski wrote:
-> > On 09/04/2025 16:42, Ivan Vecera wrote:
+The audit fixture needlessly stores and manages domain_stack.  Move it
+to the audit.layers tests.  This will be useful to reuse the audit
+fixture with the next patch.
 
-...
+Cc: Günther Noack <gnoack@google.com>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+---
+ tools/testing/selftests/landlock/audit_test.c | 27 +++++++++----------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
-> >> +    WARN_ON(idx >=3D (_num));                                        =
- \
-> >
-> > No need to cause panic reboots. Either review your code so this does no=
-t
-> > happen or properly handle.
->
-> Ack, will replace by
->
-> if (idx >=3D (_num))
->         return -EINVAL
+diff --git a/tools/testing/selftests/landlock/audit_test.c b/tools/testing/selftests/landlock/audit_test.c
+index a0643070c403..815c0f03e1fb 100644
+--- a/tools/testing/selftests/landlock/audit_test.c
++++ b/tools/testing/selftests/landlock/audit_test.c
+@@ -40,7 +40,6 @@ FIXTURE(audit)
+ {
+ 	struct audit_filter audit_filter;
+ 	int audit_fd;
+-	__u64(*domain_stack)[16];
+ };
+ 
+ FIXTURE_SETUP(audit)
+@@ -60,18 +59,10 @@ FIXTURE_SETUP(audit)
+ 		TH_LOG("Failed to initialize audit: %s", error_msg);
+ 	}
+ 	clear_cap(_metadata, CAP_AUDIT_CONTROL);
+-
+-	self->domain_stack = mmap(NULL, sizeof(*self->domain_stack),
+-				  PROT_READ | PROT_WRITE,
+-				  MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+-	ASSERT_NE(MAP_FAILED, self->domain_stack);
+-	memset(self->domain_stack, 0, sizeof(*self->domain_stack));
+ }
+ 
+ FIXTURE_TEARDOWN(audit)
+ {
+-	EXPECT_EQ(0, munmap(self->domain_stack, sizeof(*self->domain_stack)));
+-
+ 	set_cap(_metadata, CAP_AUDIT_CONTROL);
+ 	EXPECT_EQ(0, audit_cleanup(self->audit_fd, &self->audit_filter));
+ 	clear_cap(_metadata, CAP_AUDIT_CONTROL);
+@@ -83,9 +74,15 @@ TEST_F(audit, layers)
+ 		.scoped = LANDLOCK_SCOPE_SIGNAL,
+ 	};
+ 	int status, ruleset_fd, i;
++	__u64(*domain_stack)[16];
+ 	__u64 prev_dom = 3;
+ 	pid_t child;
+ 
++	domain_stack = mmap(NULL, sizeof(*domain_stack), PROT_READ | PROT_WRITE,
++			    MAP_SHARED | MAP_ANONYMOUS, -1, 0);
++	ASSERT_NE(MAP_FAILED, domain_stack);
++	memset(domain_stack, 0, sizeof(*domain_stack));
++
+ 	ruleset_fd =
+ 		landlock_create_ruleset(&ruleset_attr, sizeof(ruleset_attr), 0);
+ 	ASSERT_LE(0, ruleset_fd);
+@@ -94,7 +91,7 @@ TEST_F(audit, layers)
+ 	child = fork();
+ 	ASSERT_LE(0, child);
+ 	if (child == 0) {
+-		for (i = 0; i < ARRAY_SIZE(*self->domain_stack); i++) {
++		for (i = 0; i < ARRAY_SIZE(*domain_stack); i++) {
+ 			__u64 denial_dom = 1;
+ 			__u64 allocated_dom = 2;
+ 
+@@ -115,7 +112,7 @@ TEST_F(audit, layers)
+ 			/* Checks that the new domain is younger than the previous one. */
+ 			EXPECT_GT(allocated_dom, prev_dom);
+ 			prev_dom = allocated_dom;
+-			(*self->domain_stack)[i] = allocated_dom;
++			(*domain_stack)[i] = allocated_dom;
+ 		}
+ 
+ 		/* Checks that we reached the maximum number of layers. */
+@@ -142,20 +139,20 @@ TEST_F(audit, layers)
+ 	/* Purges log from deallocated domains. */
+ 	EXPECT_EQ(0, setsockopt(self->audit_fd, SOL_SOCKET, SO_RCVTIMEO,
+ 				&audit_tv_dom_drop, sizeof(audit_tv_dom_drop)));
+-	for (i = ARRAY_SIZE(*self->domain_stack) - 1; i >= 0; i--) {
++	for (i = ARRAY_SIZE(*domain_stack) - 1; i >= 0; i--) {
+ 		__u64 deallocated_dom = 2;
+ 
+ 		EXPECT_EQ(0, matches_log_domain_deallocated(self->audit_fd, 1,
+ 							    &deallocated_dom));
+-		EXPECT_EQ((*self->domain_stack)[i], deallocated_dom)
++		EXPECT_EQ((*domain_stack)[i], deallocated_dom)
+ 		{
+ 			TH_LOG("Failed to match domain %llx (#%d)",
+-			       (*self->domain_stack)[i], i);
++			       (*domain_stack)[i], i);
+ 		}
+ 	}
++	EXPECT_EQ(0, munmap(domain_stack, sizeof(*domain_stack)));
+ 	EXPECT_EQ(0, setsockopt(self->audit_fd, SOL_SOCKET, SO_RCVTIMEO,
+ 				&audit_tv_default, sizeof(audit_tv_default)));
+-
+ 	EXPECT_EQ(0, close(ruleset_fd));
+ }
+ 
+-- 
+2.49.0
 
-If these functions are called under regmap_read() / regmap_write() the
-above is a dead code. Otherwise you need to configure regmap correctly
-(in accordance with the HW registers layout and their abilities to be
-written or read or reserved or special combinations).
-
---=20
-With Best Regards,
-Andy Shevchenko
