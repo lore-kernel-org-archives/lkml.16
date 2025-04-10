@@ -1,72 +1,34 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4F4204698;
-	Thu, 10 Apr 2025 11:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFD61DF991;
+	Thu, 10 Apr 2025 11:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744282978; cv=none; b=fp8GsXKuiMpa2Wud6qLmMT9I/rit+rOBrXaD/mGuP3Udq2b9N8KaUvIiOQs+fSfoL58I0R5Og8H4vIM5vjjmYUOyt4Mau51FNQU0SgjtVY1MYXj/GYDjqmiJXX4hvYCnKdGTGQz8hHJ/aj9pGVAarRElhTOm85+oN5oEzmMcnys=
+	t=1744283076; cv=none; b=ecyykA/2xzIKqXohM+BOBDyfJqaQUUXiGsrS0uheM8poDrVqpjjeF5K1qBjm3RWEAsccQFWE8BTXDT1zr351QCoBWQtAcarkOmeyYZVVSBXavM/vJmE74L/k9Ajhxt6OiL0CeEsmhEJPqUhmMitHtUMqPN00YBW9dZN5IkOvBic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744282978; c=relaxed/simple;
-	bh=UA3DSo1t0OoUhTnRebLiPKD5Mi59RzdGtxeZEI6WkZY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s1yULAXabD9zl3fwBJA9tXGTkfYZSqINqGJz/eO1GDV9Mpu6+H99oGuYQdK4qpcasTvdIIPvgyikZeOIvPWLJb+ClnSd/e09UNW21h5/1vRctT4dLfz9MRzCOp0fpS9+MR8eeyNiSR+e4RUtHx74llW1KPd9CkVQMF7Psb13O8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dbsuFixN; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbsuFixN"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227cf12df27so5333975ad.0;
-        Thu, 10 Apr 2025 04:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744282975; x=1744887775; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=q8//Q+ZwGqeGDbai/09eGtdmF0g+HDkosJAckzGqILE=;
-        b=dbsuFixNNYJG2nD2b141HZFxKlY4kYEtOtqg4u8AlFJFtbwaKIQQ27O8/p44wjAWvd
-         3pjmDuXjLHpe5HJ3ABbAsS/2dD63iFhr86KUO7ouKSWop64I1TeWvOqQp1Wn7dyeCp+f
-         7o8M4vZmMEDRkXWCBh79REFg6SdpuUVL8a52nvOuJehMooGblp8+Vww7YJEmToEx7Qlb
-         /jHyEIPQ1AKrlcSlL3sxr8CwnaDEkEYJglhX1b8t2JDjluiOgoemyEONEkwkyo7eqKE4
-         y/peABIX9J8BBq0o3Ktpv7rSPwQP84C1q8l2CPqYyZFBDdUN0botbZwH8/c/NMaF90Yf
-         cCKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744282975; x=1744887775;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q8//Q+ZwGqeGDbai/09eGtdmF0g+HDkosJAckzGqILE=;
-        b=ePB58XzqbsEhqyMLabtqBHo9ZJK5KNN5UAQFKvP2MtRetdi3hmkpTfOKeilPwIyj6V
-         LKeOmuiFEBg4eWkKabKKwNFFqG7gBC89KSIT3YQpHpRoE3o7R8LqyovLzhjZaSkYDHiy
-         n9He7yO2fRxmIGwRahAYFQLFgrT9sWfBb//QvoaKAl8aHPi6R8dPowWlKxUs+5XiwGK1
-         O3rNLbb7hkrRaIgBBHy91JzdnT5kKcO+Ba2cFgaOL/3cbsIkjWLQioxxtk2eGWvG/C9s
-         Wg7LrJNan5P+m7+RT9JWW7uMogArMDq37NB5Lz5LwR65EhaHpwjXEY5G2M+XYF/QR5KQ
-         cqig==
-X-Forwarded-Encrypted: i=1; AJvYcCXZiIQ5/KTj39zjcg/5JTIIp8I52X4Y6gzgfOls/eTDaINCbkUSnAY78Wu39bqZWCnZOp8UHRhoMww7RFk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzrkUSrBR7BLsHddHt1UGNuyP2s7aGhNqv2BWAufivNvod6yJD
-	zScT2zRRZbjW7xA625YdMvGYxOa5sZInImSl0eXLH0ikNsHylm2Vj8n+JpkI
-X-Gm-Gg: ASbGncveDBMcSvuflpFYuaajRKc3G3vU7XnaIJx9pXaw8t1faVNXttXWQgP7JK7u006
-	+Kvz9lMcAViPFUIBkqtfwxUYhRyuqT7AZ/mp2bOCklt1Uw09fCvAPz/RQ3Qh0tPlja/z9aIfLKr
-	YPgjrIFPW7ncqjy7gwOmrgPWT33/gQTXofI+Es2ZFATXrjPpu9wQ0dlGl7AQ+OQiAKSAZdlHn7P
-	DtkgOUlYeiptx0KzdDlTvM4TK9eYwX0LPglGO5of30oUfhTPy7v4McSngX+Tt5Nj7c0vMorROKV
-	re8OkcO43QxWjQuILsRJ0q2ok3W86O/X4Lk4OzAQYVH6x5GNKXNb2+1kQ2kDrAQA3pjKZ6l5WA=
-	=
-X-Google-Smtp-Source: AGHT+IGQVX1ZDwzDAhrKBcKIcXXaW38B3BULFX+faGVidZeMEJOUVtVfROvzvWQFL7k/PH7bKu6iIQ==
-X-Received: by 2002:a17:903:1ab0:b0:224:3610:bef4 with SMTP id d9443c01a7336-22b7f9221a9mr38526515ad.25.1744282974589;
-        Thu, 10 Apr 2025 04:02:54 -0700 (PDT)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:204:a537:5da0:ac0c:6934:f07])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62bb1sm27672835ad.33.2025.04.10.04.02.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 04:02:54 -0700 (PDT)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: vinicius.gomes@intel.com,
-	dave.jiang@intel.com,
-	vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH] dma: idxd: cdev: Fix uninitialized use of sva in idxd_cdev_open
-Date: Thu, 10 Apr 2025 16:32:16 +0530
-Message-Id: <20250410110216.21592-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744283076; c=relaxed/simple;
+	bh=0Y1XnrQEe3NOjFlcNK2ehU36OMVowYRQh6cyPGFkes0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n24lwq1IH8NgdpxK5ZLfACD5cvilev1FZ6zfycI82Yg1aongtXWHYOx07TMNTb1MAloEgMxNXN8nUnCWLmsQv+Zum/qrP2JEupyBLnL3F/v7rQs53ZXuZaAZN5HRgCZlV33KQYYz/4kFCjDA5LUciu03wAED06ikhlEEWFkvmi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201601.home.langchao.com
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202504101904235318;
+        Thu, 10 Apr 2025 19:04:23 +0800
+Received: from locahost.localdomain.com (10.94.12.92) by
+ jtjnmail201601.home.langchao.com (10.100.2.1) with Microsoft SMTP Server id
+ 15.1.2507.39; Thu, 10 Apr 2025 19:04:24 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <s.nawrocki@samsung.com>, <a.swigon@samsung.com>, <djakov@kernel.org>,
+	<krzk@kernel.org>, <alim.akhtar@samsung.com>, <cw00.choi@samsung.com>
+CC: <linux-pm@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH] interconnect: samsung: Add NULL check in exynos_generic_icc_probe
+Date: Thu, 10 Apr 2025 19:04:20 +0800
+Message-ID: <20250410110421.77580-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,50 +36,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 2025410190423d4e3250a732bb1a33e9b6b03863240d7
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-Fix Smatch-detected issue:
-drivers/dma/idxd/cdev.c:321 idxd_cdev_open() error:
-uninitialized symbol 'sva'.
+devm_kasprintf() can return a NULL pointer on failure,but this
+returned value in exynos_generic_icc_probe() is not checked.
+Add NULL check in exynos_generic_icc_probe(), to handle kernel NULL
+pointer dereference error.
 
-'sva' pointer may be used uninitialized in error handling paths.
-Specifically, if PASID support is enabled and iommu_sva_bind_device()
-returns an error, the code jumps to the cleanup label and attempts to
-call iommu_sva_unbind_device(sva) without ensuring that sva was
-successfully assigned. This triggers a Smatch warning about an
-uninitialized symbol.
-
-Initialize sva to NULL at declaration and add a check using
-IS_ERR_OR_NULL() before unbinding the device. This ensures the
-function does not use an invalid or uninitialized pointer during
-cleanup.
-
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+Fixes: 2f95b9d5cf0b ("interconnect: Add generic interconnect driver for Exynos SoCs")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
 ---
- drivers/dma/idxd/cdev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/interconnect/samsung/exynos.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index ff94ee892339..7bd031a60894 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -222,7 +222,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 	struct idxd_wq *wq;
- 	struct device *dev, *fdev;
- 	int rc = 0;
--	struct iommu_sva *sva;
-+	struct iommu_sva *sva = NULL;
- 	unsigned int pasid;
- 	struct idxd_cdev *idxd_cdev;
- 
-@@ -317,7 +317,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 	if (device_user_pasid_enabled(idxd))
- 		idxd_xa_pasid_remove(ctx);
- failed_get_pasid:
--	if (device_user_pasid_enabled(idxd))
-+	if (device_user_pasid_enabled(idxd) && !IS_ERR_OR_NULL(sva))
- 		iommu_sva_unbind_device(sva);
- failed:
- 	mutex_unlock(&wq->wq_lock);
+diff --git a/drivers/interconnect/samsung/exynos.c b/drivers/interconnect/samsung/exynos.c
+index 9e041365d909..f3568f0d92d1 100644
+--- a/drivers/interconnect/samsung/exynos.c
++++ b/drivers/interconnect/samsung/exynos.c
+@@ -134,6 +134,11 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
+ 	priv->node = icc_node;
+ 	icc_node->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn",
+ 					bus_dev->of_node);
++	if (!icc_node->name) {
++		devm_kfree(&pdev->dev, priv);
++		return -ENOMEM;
++	}
++
+ 	if (of_property_read_u32(bus_dev->of_node, "samsung,data-clock-ratio",
+ 				 &priv->bus_clk_ratio))
+ 		priv->bus_clk_ratio = EXYNOS_ICC_DEFAULT_BUS_CLK_RATIO;
 -- 
-2.34.1
+2.43.0
 
