@@ -1,212 +1,265 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11020142.outbound.protection.outlook.com [52.101.51.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE3948CFC
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.51.142
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291382; cv=fail; b=hqTvd7PvlffJLaMaFgpO6sTj+GDvp/A9fh4FVGk/OpxDqlM3kVLCZmRIyQc3pHWxIX3je/0K0KCG8B1mGAJvzOfV4WrjHyErX3Xqx2WHRaJ0gQs60UmSsNpRc/Wqu08MLkwyn6FYHKNJdeqcXTQq3W5aqaLl0hdJHPKXZKuEBrI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291382; c=relaxed/simple;
-	bh=CXm03aaRjByfvg4KpYUEDgs2ZqlyXFhMaSjj59tdL48=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tDg1FnIlte9ieqvLOHmGjBAetDkHir2Rb488+ZzvJzMZRZmcEYEPhgPtFbv4/6L5SHPAlKwVD64bDBJj8B3XJt7j7SLfkRIbm+wMRn1K7nAizWu2sb6gajtpU223o7FneiHSkkMFhWc7OhQhn3M1TjRuhcmu+7wmgs5yLYHGK/o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=iAfLYpDS; arc=fail smtp.client-ip=52.101.51.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46891EB5F7;
+	Thu, 10 Apr 2025 13:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744291436; cv=none; b=DzQtkL9D12BH+w1mDWUe9ys9pWiYhdnh/gmW8rFeNw2nkoMLd/FYEMpSPsu4hZc7uRYUfpGnH1it7livQTHBj6Q/Du012J9Fe6FgdG3fCQRmx0Kxfxb7xnUN+kx0KMKinJV6sn3hcEXgiOkyMKd1N63CnQD4JB3nexZua2GH+AM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744291436; c=relaxed/simple;
+	bh=35bowL8nZeAUEMUkTdGIDht/faXw5WqatgtW/CTRsXg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ic9Q2ZUl05f7559YdorxM0lw7GoJJxMvISyqp5FMS0Q1QIq0TF8igc60dTxkpphWT/pOnqA4sMaA1qiJYgymSv88I4F/3/gkTGMUD9SVS8nKvvSygW/AAOMyYNifjdkIGvtfuXPKKKEhHpUqyT4W2g6ZDMLLZKZbJYLpVN1E6UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRxghqiG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="iAfLYpDS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eogUi1M2uZmkOj09acLg/mz8u7/XUdgKc7Z6wcDFihvF2xYmoj/kjRGDAECDb+HePMi3JjbJYeytSQIQUSuo3uBUe7rwFEsOQPjbGYjpT3v7mz1q0eGv1OpjYrv0nJg6CNJ+dOEsqWzo+7ACrUYZXakHkkRx7qZ0WKrAzwBFTbhNUWm23u3jBIg7pb6v4sTbVufWOKYKojy1oRL6vptxAbvqEQsYrceWAP/NKVDfm6g6wAuBwEsHayEjH5VRbjgRebfCqICnrPPgJSkZtsWFfngQKcUoAF/ux780siwkyxdcDqFAWpSETQcsZRyKOk/zqoLaRjrVDafc/euZUI8ilQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hw6qWiOQz7qnL3QPfL/pX0Wf6VztGnHKDpSJiDKfQIE=;
- b=jWJJyK/X+UiiMq3uO0DvbB21WdXrmw5TFRFJkQ+RXW6WHqnJtgQ3cNAzxI70owMFUXPFs9yib6II2LP9N6zZQ+Je3y5yqkkBEq9HwcJVkC/1D78C9jBrfrh0pw8Ob2FUluaSTywAo/ocE0KGwXgnUkGhbZyyrFwZie8HgdJHHEu5/RpYNHIC+8Ja4UJyJ4JIUvWvF72IUhbQf+DmT8Bqe0+Bja/atfrQ8KhiMBTnkwyIPK/FtJW26uwwzNnXFfFGCraph6zqjeJYHpcWp31g4b7ouMbbuuLleI/XqrbTApgOB3N3BCYjlDJ7Htb+us88GiOUydlWP9/U8GuMaUgLdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hw6qWiOQz7qnL3QPfL/pX0Wf6VztGnHKDpSJiDKfQIE=;
- b=iAfLYpDSgNe0gsOUeBsToSE/IgdxmTn24U31pR2LP71dZG5eBWIUVbys0HPsikhzb6B2RalBdFl+zoNZjexq0ZKzYkSLOwtzWzk0fonR6IWzoKZoylm1+bY29YUcd7/r1xG8aRLCoPxXmoaP/tTfitO5uW1MDGnPjnLi6fevBqM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from SJ2PR01MB8101.prod.exchangelabs.com (2603:10b6:a03:4f6::10) by
- BL3PR01MB7073.prod.exchangelabs.com (2603:10b6:208:35c::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.23; Thu, 10 Apr 2025 13:22:54 +0000
-Received: from SJ2PR01MB8101.prod.exchangelabs.com
- ([fe80::292:6d9c:eb9a:95c9]) by SJ2PR01MB8101.prod.exchangelabs.com
- ([fe80::292:6d9c:eb9a:95c9%3]) with mapi id 15.20.8632.024; Thu, 10 Apr 2025
- 13:22:52 +0000
-Message-ID: <91339d4d-38d7-4512-9fda-339bb4c2a3f4@os.amperecomputing.com>
-Date: Thu, 10 Apr 2025 18:52:45 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: arm64: nv: Forward hvc traps if originated from
- nested VM
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
- suzuki.poulose@arm.com, yuzenghui@huawei.com, darren@os.amperecomputing.com
-References: <20250410070743.1072583-1-gankulkarni@os.amperecomputing.com>
- <86mscolc0b.wl-maz@kernel.org>
- <4d1bdea5-43c3-4ca9-9275-feadf158e86e@os.amperecomputing.com>
- <86jz7sl25r.wl-maz@kernel.org>
-Content-Language: en-US
-From: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-In-Reply-To: <86jz7sl25r.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI1PR02CA0010.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::17) To SJ2PR01MB8101.prod.exchangelabs.com
- (2603:10b6:a03:4f6::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRxghqiG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96923C4CEE8;
+	Thu, 10 Apr 2025 13:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744291434;
+	bh=35bowL8nZeAUEMUkTdGIDht/faXw5WqatgtW/CTRsXg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=rRxghqiGdl1XAF4NVWbknHnG5h9cvz3NGkhgXsD2JgppigdbzqAkBLipqN0oiagEQ
+	 D6JWwn1p9M3kfz/GJtFp2c6T7LrsjuVKMFwylsDXn+oB2nBFYZXR2Y0Sl84mdHM4LG
+	 NBj3A0stiagGhOyQ1IK8WzyWqNKeDrmrjv/JgM9Qz/v98dM0xdJV6Apcv+BxCgeK18
+	 G7cLIRoDWQprKHby3OWBXtvhfPtUhXz2N8qP2GMlpZ/XbXectqVw73LPgBuXvOZ6cc
+	 rToSWkv3Cq6M6DPa7YBsBIIYLjgdVq9/U2djrmt9Pnw5TbqFy27phjxPULZL7LRml0
+	 AWMhr6E4Ev0xQ==
+Message-ID: <ff2b7cfb7657a185469747d930b834dbdfdf6eac.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] net: add debugfs files for showing netns
+ refcount tracking info
+From: Jeff Layton <jlayton@kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski	 <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, 	netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Thu, 10 Apr 2025 09:23:52 -0400
+In-Reply-To: <91d6d3c60ef5d4ed90418f8a06228767be8a5b1b.camel@kernel.org>
+References: <20250408-netns-debugfs-v2-0-ca267f51461e@kernel.org>
+		 <20250408-netns-debugfs-v2-2-ca267f51461e@kernel.org>
+		 <1e717326-8551-419e-b185-5cfb20573b4f@lunn.ch>
+	 <91d6d3c60ef5d4ed90418f8a06228767be8a5b1b.camel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR01MB8101:EE_|BL3PR01MB7073:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad574ee4-e8a0-4753-30d7-08dd7832cbd7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bDZkQVZHMUQ0ZXZKRVJ6NG9XSnUyNkJpSERFd2ZZemcvbzZGQlpSNFkxQlUw?=
- =?utf-8?B?UStvYmlCcXBrNUpTcWFNbGlhcVlzYU1XUXJLaWd0ajRxSjNIeEdWeUowUVh0?=
- =?utf-8?B?UEFxbjJrMmRWM2drN1lrSzFnRGt0OUt3YVRjRWw1U3Q0M1ByS2ZVZS9NMGw3?=
- =?utf-8?B?aWMvUFR3ZXFERFVDWlplK2RRTUJIODlDeVFPVUlPR09PcWgwVTNLVlJ4Wk1n?=
- =?utf-8?B?YjVod2daNW1nWG1wZlFOcDZqaTY4bE5PcllSTFF5TE9VVHZlQnZrbCt6b242?=
- =?utf-8?B?M3ZxbldmWjRqZkFvYU1PWnVQZEwwQ2UzeXUrdGJNUHV2OUZEejhoUjZjdE9P?=
- =?utf-8?B?eHRDSW1aSWhGcm1ZcnpuL2VJM21RVDZJYnk1YnRtK09IOHcrY2I2UVVzYmVt?=
- =?utf-8?B?RzBuSE12ejNOVHN3N2RvR3ZESGpLcWRFVU5pOWs0S0pwVWduQmJTZVJFaWhH?=
- =?utf-8?B?dG5WVjZZSDMzc3NQTEVybENOSXlYWWhvQjBpYmhLZmpTbGNEMmZPSE1XNi8y?=
- =?utf-8?B?ZXg5ZG5XdHVKL1dpRDU4WDdXVi9HdFROdEgwa1p4VXphV3BVZWdGWVVKRmlR?=
- =?utf-8?B?akhrSDdmN3QzeC8xcnhBcGpsYm95d21jUHNZaXVUZDZvZEh0dTg2Q0I4bitp?=
- =?utf-8?B?N2NIdGNxL2VGczJmR3V5clpPYTdOcFBTbURVRkN0bnV3SW0vYTVYaVFsS2da?=
- =?utf-8?B?Tm04ZnlDdG9vVGJQT2dNUThURUFHRy9DVFZHdkdWOWt0U084MmpFS2R0dVlq?=
- =?utf-8?B?UW1vY2N6aURSbXYwTS85bWNvK2xhTDZ0aStORjZxQ051RUZyamZaNmlsK0ZL?=
- =?utf-8?B?blI0YTdPTDJqVEM4QzVRamIvVmhsMDVzY1Vlc3JjQUFkTkFwa2M0NVNQV3J4?=
- =?utf-8?B?eUN0Nmhyb3VWYzk3Rlprd0pNQWxHWERKWWxNZVBTbGZlUHdEVDU1a0JydjRI?=
- =?utf-8?B?a1BPZWk5VjllRVU2bDNONjFSNzc1N0ZGZFhaMWE1S0NhKzJlNGJRV0ttb1E2?=
- =?utf-8?B?NVJGR1JoakZFb3RUa2xYQThVaTNtSnd3MnYzai9vZjZBTmUwSWQxdWY0bEZr?=
- =?utf-8?B?MHBnN1BJYVJYWUEvNm5CT0dLR0Z2eGNSZW84YlRUZ2lRK3pMclZxM1FOdVlW?=
- =?utf-8?B?SkphOFdYSFQ4aGd2bmRYVzloMVBSMG1qRVl0cGcvOGRFOFB4M01qSXZSOGdM?=
- =?utf-8?B?ek9ZaUc4MzhRMVFKYXJsU3lpcC9DeTdOblo3R1NSU09jZUo0QlpTUWtJREVR?=
- =?utf-8?B?bFRrOFpXUXNlR2xodmFzbmczbTRhVE43Ti83OGd1N2k2SG5MbmQ2TWlYZjBv?=
- =?utf-8?B?RFgwWHZrSm5OakJ2MXV4N0dMOE1DVnd0L3RnNHhHM1J1cTZld3k0enEzWHRp?=
- =?utf-8?B?WlVia1ZTbzFkRVVyWm56MFdFR0R1WXQ1ejFxU0dNR1RiZ0RHWnZwRURScTVs?=
- =?utf-8?B?RUFpOFpHWFp2U3VsemRrd1ZIc1lXSmI1Mi9wRGJPRmdOeGdXajI5RmFId0d2?=
- =?utf-8?B?VXNLV2Y0Ty9YdmxaZFpmUjV3QlV6aUFQUlFUdHdNTzJPRXJSK1ZrWkFkbklY?=
- =?utf-8?B?cnRxcm1PWE1pdGE1b1o0SStaUjZKZTA2K1lWZFJydmxQb2lodUlPa2s2SUhq?=
- =?utf-8?B?dE9DN1dkMnJETUphbTZ3VDkzYmdUd1lOUHMyMnZRc1ZXYWZTam1IYUcxbUFZ?=
- =?utf-8?B?bUxMRUVqcjFBZkU5OElwUGlEODUrZzhETVFtVTN3aGxjUStaK21VTEt1MFJG?=
- =?utf-8?B?L2pSSEpOQ3U5TVo2djdzSWNpYkdYbkJnek5rWldiTlBhQnBDeXIyUWN4bGht?=
- =?utf-8?B?blJENVFiMU1PVGJBMHFheGJOWGVXWENkOFN2cEJHWjVOQi9Xc2llRHBsb1hQ?=
- =?utf-8?Q?NnqF8+x0QVt0w?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR01MB8101.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NVZjeE9sUzVicWJOR3FidUVCWWRwUXRYZGhDQ2JsZlAzM2tKaVNMb3Y1dVN4?=
- =?utf-8?B?THZRU1ErNWdxVTBUQkRUV0JXeEF2ZFBYR3htbW5iYlh3L1c2QUhaUThXeTht?=
- =?utf-8?B?cmkvbStaNUdHZ1dkU3lDL29yeWJ4bGMva01xYkVZMXVLZmsxOG9DSkxvY1Nh?=
- =?utf-8?B?cEh1dWYzYmxPQUFPTjBvRDBkczRQTjg3WWZTZ0VUcFArRVNvUGRQNVJwdU15?=
- =?utf-8?B?Rzk4YUEvbnQvQ0U4YTEwQ1IrM3RNQUxHZ2NyVlAvWlhyc0pNbnlYMTRRTHZl?=
- =?utf-8?B?NDJyakdEenlOZTk5bzczT04rYjA1eFJUUlpBbnpNVDNKejBxdENYR1ZQa0lH?=
- =?utf-8?B?VjRLSno4cnJqMnRqelFHWjFCM0VnT08rR0RIcW4zU2pFUGVxQU50eE5JdFdv?=
- =?utf-8?B?ZlRFTW5Kc2E4ZDdBRi9MQldWWUUyRDN2MlZJQTE0SlZhdml5ODMvRFhZQ0hj?=
- =?utf-8?B?S3QyYzN6MjRrN3pEWjFoVnZpZlNNLzR6dW9NamZ4UU1oUXV4SEpKeitsMVY3?=
- =?utf-8?B?eGxWQ2NXcGo2NXA5bDRGTWhJUUU4NHRiVG5LTy8zbDhtQ0pmaGQxdUVSTVlP?=
- =?utf-8?B?NDliM1F0dm1aazNPN05mbFlFdGNWSFpiZzR1NWQwUmpMV05WMnA4dGtVM3R6?=
- =?utf-8?B?d09GempITlpiVk5JTFB2VU16dzVXVzN5di91WGpuclhvd3FTdWdXVmZabWRh?=
- =?utf-8?B?UUt0aGI0cVdxWk1SanVxMjNrZE5OcE80TWpnQXkyQW5oNlZ6cEt3NWY5a1JY?=
- =?utf-8?B?T2l3NXhHOWxCeTMvRk8vRnpFUm1uSVZydE0yWVpMN0tzV2hrWi84d0tFZ1hC?=
- =?utf-8?B?L1hjUSs1ZTI3NlJJdk5kT3B4ait4aEE3aDlxTHFBNmNjdU5sUTRrMDg0QmhI?=
- =?utf-8?B?K01xT0MyKy9YNFhHdHNyMzZ5cHAwbld6bW45Y0pCcWY2WUE4eUlaYlBVemlZ?=
- =?utf-8?B?N2Q1eUNKK2g0L0VDNzlQU0xIeUZEejV5dU5YYldPOFlDNy9ZS3ZpcjNiRlox?=
- =?utf-8?B?UVQ4WVJVZjJnaUdwZjN2U2ZGMjhrV1pGM3JEYkdGelVERmtyaG5QZzMzVzZr?=
- =?utf-8?B?LzBveCt0SUxQZWR1T0RnN0UzMWQyZXFrOU1vYkdpOFV1WnpwaVRyLzRXeXJt?=
- =?utf-8?B?MmxCY0dpOVcvaWdHMkVBbkNGUE9TMFJVdHRJREpZTTEvVjFZOXNLWlpoYkVB?=
- =?utf-8?B?c2I0cGxIekxOaSsvdyszckUyMEV6YjgzWkZTeitqTFdtNUtZMjlFZ0VUL09S?=
- =?utf-8?B?SnVpNWpOa0p3a01rZVRnUDVuM0VMQ3F6WkdhalpaK1hLMTN3MlFzWnBXM3h4?=
- =?utf-8?B?ZzNEOGNZSmhuaVJyUkxwNHAzV1BXejZiSG5oRnNWaTVaNmREVUVTRkhkUVYv?=
- =?utf-8?B?Q3ZhaGZBNEhUTUhRSTZrYmlQTHcrMUltV3JldWd0ZFdTOHU1YVBqQjFoa1dD?=
- =?utf-8?B?S0ZDZlVVRW8wUENmbXlKVnpNK1hXRjVjMWVvTHRTMUdmVUpHQzhDK2NoU1gx?=
- =?utf-8?B?YXdUWnFqZVZlNXg0K0xwTXJUMmYxQi82Q1dyQk5KWTdqQUk4NEtTQTJaYW1B?=
- =?utf-8?B?dVJrejNocnhnZFNBbDJBK3YwRGkwc1RhQ21YVkpOanhSK2p3SDVDNUhRWlVJ?=
- =?utf-8?B?d0Fsckl3SjJPV055ejdVRy83UFEyNGE5RCswUEIzUldaRWozNDcxZTZCRXIv?=
- =?utf-8?B?Y0NyZDMyakpyQnV0V1lycXFJWWorMzFlL244a1FQYllrVFRsbVZ5UGhhck5a?=
- =?utf-8?B?S2wrdmV1Q1RySmZqRklTSFFkTmJWL3ZQN3JUN1doYUl2ZmRHcVhsdU5uTUx6?=
- =?utf-8?B?QytEVmp0SDdFQkZpYkU2eWc1RUluZmVaWlBMbGVkQ2JJbzdFQnNZMzlzeWh6?=
- =?utf-8?B?Vm9NV3Zta3BYK09YMUREUEN2QW03bXZNSGI4YUxzK1cxbEJGdjJjRldzeEtZ?=
- =?utf-8?B?Q1NtTmVERVBYV29zMm9PUllzUGxwclptQXU2SjJzUkFFOUZHUnYzd2dWYmxL?=
- =?utf-8?B?R0ZTaVRNYkM5Z1FGWTVwS2h2ek92clIrR1pydCs3MjZHQUxRS2dJOWpBWWdz?=
- =?utf-8?B?Z0tVbG1YUzJLWE9aRHdWa0k2enlQdVplQWZUd2hNNzRPeTQ2K1VwaFg0ckJY?=
- =?utf-8?B?UWFZOWdhUk96aTB4dEJGbFdHK1M2YStqajRseno0V2xodS9xNUJmamhnaVE1?=
- =?utf-8?Q?HD10yIz6WPuLhN+cTM+jH+E=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad574ee4-e8a0-4753-30d7-08dd7832cbd7
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR01MB8101.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 13:22:52.3084
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3kDUzgbkQI/02XbIzaAaZA8Nafko9joDY1h4hpjNXtHmMWFp4n9y94hxLNhua3RDvqCC5DxKtaItPYafPUNnl6YQkGVx/KdhHEGZ240ZnazrPnXXC8mrTh0/q1C+AIUF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR01MB7073
 
+On Thu, 2025-04-10 at 09:08 -0400, Jeff Layton wrote:
+> On Thu, 2025-04-10 at 14:36 +0200, Andrew Lunn wrote:
+> > On Tue, Apr 08, 2025 at 09:36:38AM -0400, Jeff Layton wrote:
+> > > CONFIG_NET_NS_REFCNT_TRACKER currently has no convenient way to displ=
+ay
+> > > its tracking info. Add a new net_ns directory under the debugfs
+> > > ref_tracker directory. Create a directory in there for every netns, w=
+ith
+> > > refcnt and notrefcnt files that show the currently tracked active and
+> > > passive references.
+> >=20
+> > I think most if not all of this should be moved into the tracker
+> > sources, there is very little which is netdev specific.=20
+> >=20
+>=20
+> Fair enough. I can move most of this into helpers in ref_tracker.c.
+>=20
+> > >=20
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > >  net/core/net_namespace.c | 151 +++++++++++++++++++++++++++++++++++++=
+++++++++++
+> > >  1 file changed, 151 insertions(+)
+> > >=20
+> > > diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> > > index 4303f2a4926243e2c0ff0c0387383cd8e0658019..7e9dc487f46d656ee4ae3=
+d6d18d35bb2aba2b176 100644
+> > > --- a/net/core/net_namespace.c
+> > > +++ b/net/core/net_namespace.c
+> > > @@ -1512,3 +1512,154 @@ const struct proc_ns_operations netns_operati=
+ons =3D {
+> > >  	.owner		=3D netns_owner,
+> > >  };
+> > >  #endif
+> > > +
+> > > +#ifdef CONFIG_DEBUG_FS
+> > > +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
+> > > +
+> > > +#include <linux/debugfs.h>
+> > > +
+> > > +static struct dentry *ns_ref_tracker_dir;
+> > > +static unsigned int ns_debug_net_id;
+> > > +
+> > > +struct ns_debug_net {
+> > > +	struct dentry *netdir;
+> > > +	struct dentry *refcnt;
+> > > +	struct dentry *notrefcnt;
+> > > +};
+> > > +
+> > > +#define MAX_NS_DEBUG_BUFSIZE	(32 * PAGE_SIZE)
+> > > +
+> > > +static int
+> > > +ns_debug_tracker_show(struct seq_file *f, void *v)
+> > > +{
+> > > +	struct ref_tracker_dir *tracker =3D f->private;
+> > > +	int len, bufsize =3D PAGE_SIZE;
+> > > +	char *buf;
+> > > +
+> > > +	for (;;) {
+> > > +		buf =3D kvmalloc(bufsize, GFP_KERNEL);
+> > > +		if (!buf)
+> > > +			return -ENOMEM;
+> > > +
+> > > +		len =3D ref_tracker_dir_snprint(tracker, buf, bufsize);
+> > > +		if (len < bufsize)
+> > > +			break;
+> > > +
+> > > +		kvfree(buf);
+> > > +		bufsize *=3D 2;
+> > > +		if (bufsize > MAX_NS_DEBUG_BUFSIZE)
+> > > +			return -ENOBUFS;
+> >=20
+> > Maybe consider storing bufsize between calls to dump the tracker? I
+> > guess you then have about the correct size for most calls, and from
+> > looking at len, you can decide to downsize it if needed.
+> >=20
+>=20
+> Eric had a proposed change to make ref_tracker_dir_snprint() not sit
+> with hard IRQs disabled for so long. That involved passing back a
+> needed size, so I might rather integrate this into that change.
+>=20
+> > > +static int
+> > > +ns_debug_init_net(struct net *net)
+> > > +{
+> > > +	struct ns_debug_net *dnet =3D net_generic(net, ns_debug_net_id);
+> > > +	char name[11]; /* 10 decimal digits + NULL term */
+> > > +	int len;
+> > > +
+> > > +	len =3D snprintf(name, sizeof(name), "%u", net->ns.inum);
+> > > +	if (len >=3D sizeof(name))
+> > > +		return -EOVERFLOW;
+> > > +
+> > > +	dnet->netdir =3D debugfs_create_dir(name, ns_ref_tracker_dir);
+> > > +	if (IS_ERR(dnet->netdir))
+> > > +		return PTR_ERR(dnet->netdir);
+> >=20
+> > As i pointed out before, the tracker already has a name. Is that name
+> > useless? Not specific enough? Rather than having two names, maybe
+> > change the name to make it useful. Once it has a usable name, you
+> > should be able to push more code into the core.
+> >=20
+>=20
+> I don't understand which name you mean.
+>=20
+> This patch creates a ref_tracker/net_ns dir and then creates
+> directories under that that have names that match the net namespace
+> inode numbers as displayed in /proc/<pid>/ns/net symlink. Those
+> directories hold two files "refcnt" and "notrefcnt" that display the
+> different trackers.
+>=20
+> It's not clear to me what you'd like to see changed in that scheme.
 
+Oh, ok. I guess you mean these names?
 
-On 10-04-2025 04:22 pm, Marc Zyngier wrote:
-> On Thu, 10 Apr 2025 11:20:24 +0100,
-> Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
->>
->>
->>
->> On 10-04-2025 12:49 pm, Marc Zyngier wrote:
->>> On Thu, 10 Apr 2025 08:07:43 +0100,
->>> Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
->>>>
->>>> It was discovered while trying selftest(smccc_filter) that the
->>>> hvc trap is getting forwarded to guest hypervisor even if it is
->>>> originated from itself.
->>>>
->>>> HVC traps from guest hypervisor should be handled by the host
->>>> hypervisor and traps originating from nested VM should be
->>>> forwarded. Adding check to forward only if the hvc is trapped
->>>> from the nested VM.
->>>
->>> I disagree. HVC from EL2 must be routed to the same EL2. HVC from EL1
->>> must be routed to the EL2 controlling EL1.
->>
->> Thanks, Understood, In NV case, hvc has to be forwarded to L1
->> irrespective of it origin (L1 or L2). Need to add hvc handler in the
->> smccc_filter.c for the vm (when run as L1), so that it is handled and
->> returns with required args set.
-> 
-> Why? This test checks under which conditions an HVC/SMC gets routed to
-> userspace. What does it even mean to test HVC if it doesn't make it
-> outside of the guest itself?
+        ref_tracker_dir_init(&net->refcnt_tracker, 128, "net refcnt");
+        ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net notrefcnt")=
+;
 
-smccc_filter.c has 2 tests (test_filter_denied and 
-test_filter_fwd_to_user), which runs the vm(guest_code).
+Two problems there:
 
-I was trying to modify test_filter_denied to run in vEL2, which led to 
-this patch/discussion. I agree, it does not makes sense to run this test 
-for vEL2.
+1/ they have an embedded space in the name which is just painful. Maybe we =
+can replace those with underscores?
+2/ they aren't named in a per-net namespace way
 
-test_filter_fwd_to_user is not feasible to run in vEL2.
-Thanks for the feedback.
+I guess we could do something like these nested dirs:
 
-BTW, I could add hvc handler and run test_filter_denied in vEL2.
+debug
+    ref_tracker
+	net_refcnt
+	net_notrefcnt
 
--- 
-Thanks,
-Ganapat/GK
-
+...and then create files under the net_* directories that match the
+netns ID's. That's what I was trying to ask when I asked about the
+directory structure in the last set. How do you want the directory
+structure laid out?
+--=20
+Jeff Layton <jlayton@kernel.org>
