@@ -1,108 +1,172 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3DD202F71
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63039EAD0
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744266442; cv=none; b=GWuR8kOgxp6hZnMMTW34LdLuV02p2KD++4gEaH9tIBAd6Kpv+XUFi6fVBK500GL86uaJslEWMbLGHyDM70lT2C8bo3H6cEfNB2J1l+n85KeWCxJ1L7ApZV8Uoen/otTTj34q+j6aM1Xx5DELxEfw5wgDzIqUuKZXFujEY6zBtsg=
+	t=1744266511; cv=none; b=rnc2EhT+7LZ+A/flfM7GujVCn3qErXwIVoASAeCvCd4cC4RgvV1oYWwcuu6G0wv+t6s+CGLSMrVa/bV4tSpS6aeB8a6HiwsOIhIIR3m8oRw0kttXrLzkeGFv2CCsqR8Rg0IV9sfZ6OaOfR8ggsubauulHT4WOMQ4Jh4DIm3ldI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744266442; c=relaxed/simple;
-	bh=DbAUYbu5Va2xJQiy7VvKkV4e/4jPiHlqCkXhEFbYoL0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GjqmV9vTb/UbrH7+BExcoCJTS1+OCaUEhMxAbK31bFuvPebsfazWCLEJ+E0+DvMxJnEyBHL98+vtwHAnU28upDof4NIhMAXND3PHVzLiQF/3NMCEFV1nW7aGwtMZrr5qJS1B9xwWQNqFZJbylmz0cifnx3b6PngW3rHplYlnr9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=diOq5bPQ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="diOq5bPQ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43e9ccaa1ebso490205e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:27:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744266438; x=1744871238; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VvT2Gppf3uxd/yxNywWCnYiGlORidfrwioHAQ0OTxgU=;
-        b=diOq5bPQ41tWsiC7hQG9OTkhh5pHHEMaAnADGSF/ewK7twX/K/8M4iV+MSyqXKM7fd
-         UESkRuyOxvcKWybN6KtU9tR309fUL53knl4hJ5oDUrpdKr8JWPLqIj3iSL/ChhbV13Xl
-         vFoFpj4m+sut8p8h6HmV+EYnnS5nDvuSp+iRZpHPUog0pooI/ZJdfgcwW4HCud+y5q6x
-         Vv0/3Iz6/gZoO87oUhU1eUd14DfdSRcEup/Sj67qpeEDbI8B/W599isJosvoAgul0wqm
-         ksRfFe9iNLvGKGUg3pYFCJoLqws7QFpIjz0bFfqT7Q2vyYtKv66Qgz1CvfozWqHYL5WF
-         V3vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744266438; x=1744871238;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VvT2Gppf3uxd/yxNywWCnYiGlORidfrwioHAQ0OTxgU=;
-        b=m+WBhfj4X9U0jOh3wdLSehbvKqmCNeav/fh9n6obCIGHxPs2N+sgZT2sWjWSvwlBlT
-         yIVwFqJPIGNJhBgpJ1cT6rNfOYJybe2+sUZLGw4LwQPk9cD0Qynu2BXvridFkJyjZtCT
-         KYWDmLuMMgSz4w0ioWxR2u/cujyew6DDAnpduDyLU+ZXFni1CLHsSUrSEAWuJtyaP+Gm
-         9lp2Yb+x3W/hBHxIahs0/u18O50k4CE/nulQuagn6JzH12cO9ykKfDSLzbZzgsR8Tmdq
-         jGBC9JHw+W9+D1anmztt/Ub0Ye8cX7Lv6F6JkZPBz5ZaPEXgzs7b6N6LmJglBYIepyHK
-         jMew==
-X-Forwarded-Encrypted: i=1; AJvYcCWZhSY5RX3nzs+KzogxRBL7EZVEUiuTQeF+StuPTy6Ph5qgDO8lddspgbi6LKjvrciVPCY/db9rya12My0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/g2y6SWPdSIqTKIZkVsWNKqTjbLTBoBfy/WrB5nO13hhmPlwJ
-	Qu9ift1Pr75PAO/Pizl0FxEstOF5M5LYzwRyRrEwYgLdIMNqskzx6BlxqNlr6Tg=
-X-Gm-Gg: ASbGncuWmanJN7n/p+7ldB16g5rdFBaiMxQ7MDyDyAJgSzNxQaRSBL/Ijb18mabT0N0
-	Sri7vKFLHk2hQZz0e+m9HXuZ2TdzW1dNkX1tHLf4yUbkn4vVpDd//tZHJKqAbGNW3w0O5f0LI2j
-	bWsHBmYsWuK/OAe6//0/QmgpohvQo8kGibCxYoLzuy4WstVH+YfJnKyGTIA60haTHpnv9ZSBzaF
-	o57341O8Qb+Ul23rvaZch3uC46nU+p9VE0+biZGW11UTM9WVf7zohu/n3/DZZJsvMAzvNGh3WEb
-	J87jX2EcdkaV1zotTGJDlwl1fbOCRRMR95D9zp0VnoTxTNrR7zrKl/7XjMg=
-X-Google-Smtp-Source: AGHT+IFVRI+eHYzRePN86bPROJmtppmFeI/4qAEBjgxUHImff0Q+A3BjR9d8MWHmWJZEinQXV/yX6g==
-X-Received: by 2002:a05:600c:c87:b0:439:94f8:fc7b with SMTP id 5b1f17b1804b1-43f1eae40f4mr18061085e9.0.1744266437939;
-        Wed, 09 Apr 2025 23:27:17 -0700 (PDT)
-Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c8219sm39520695e9.21.2025.04.09.23.27.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 23:27:17 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-In-Reply-To: <20250409-s2mpg10-v4-3-d66d5f39b6bf@linaro.org>
-References: <20250409-s2mpg10-v4-0-d66d5f39b6bf@linaro.org>
- <20250409-s2mpg10-v4-3-d66d5f39b6bf@linaro.org>
-Subject: Re: (subset) [PATCH v4 03/32] dt-bindings: firmware:
- google,gs101-acpm-ipc: add PMIC child node
-Message-Id: <174426643614.15856.3555538804191184531.b4-ty@linaro.org>
-Date: Thu, 10 Apr 2025 08:27:16 +0200
+	s=arc-20240116; t=1744266511; c=relaxed/simple;
+	bh=wu/5OuYPREY9BZRVqMZP9wpH3SajxVHHMxqej2cdKfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qI/wJmIz5x2waFa3Cc4UhDkRc/AGrgya5D95dnyoID0qC/cD3EMq+YH6OcHvVj3tmleFknz88m1HXtXq6vSqAnjij60RGosJIpYTpq7RtJ/wWGMJVHIt8le0Kyrlr2bUzAKWkvHRd2n7Avo1KkbWa9hmWua0lQnu/4grEet1esU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZY8rt4Mr8z1f1vX;
+	Thu, 10 Apr 2025 14:23:26 +0800 (CST)
+Received: from kwepemg500008.china.huawei.com (unknown [7.202.181.45])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7F9E5140109;
+	Thu, 10 Apr 2025 14:28:25 +0800 (CST)
+Received: from [10.174.177.186] (10.174.177.186) by
+ kwepemg500008.china.huawei.com (7.202.181.45) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 10 Apr 2025 14:28:24 +0800
+Message-ID: <75e5f32d-a824-44de-b9b0-a2d58dc2c45b@huawei.com>
+Date: Thu, 10 Apr 2025 14:28:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm/damon: add full LPAE support for memory monitoring
+ above 4GB
+To: SeongJae Park <sj@kernel.org>
+CC: <akpm@linux-foundation.org>, <damon@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<wangkefeng.wang@huawei.com>
+References: <20250409173639.52133-1-sj@kernel.org>
+From: zuoze <zuoze1@huawei.com>
+In-Reply-To: <20250409173639.52133-1-sj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.14.2
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg500008.china.huawei.com (7.202.181.45)
 
 
-On Wed, 09 Apr 2025 21:37:24 +0100, André Draszik wrote:
-> The PMIC is supposed to be a child of ACPM, add it here to describe the
-> connection.
+
+在 2025/4/10 1:36, SeongJae Park 写道:
+> On Wed, 9 Apr 2025 15:01:39 +0800 zuoze <zuoze1@huawei.com> wrote:
+> 
+>>
+>>
+>> 在 2025/4/9 10:50, SeongJae Park 写道:
+>>> Hi Ze,
+>>>
+>>> On Tue, 8 Apr 2025 15:55:53 +0800 Ze Zuo <zuoze1@huawei.com> wrote:
+>>>
+>>>> Previously, DAMON's physical address space monitoring only supported
+>>>> memory ranges below 4GB on LPAE-enabled systems. This was due to
+>>>> the use of 'unsigned long' in 'struct damon_addr_range', which is
+>>>> 32-bit on ARM32 even with LPAE enabled.
+>>>
+>>> Nice finding!
+>>
+>> Thank you for the kind words!
+>>
+>>>
+>>>>
+>>>> This patch modifies the data types to properly support >4GB physical
+>>>> address spaces:
+>>>> 1. Changes 'start' and 'end' in 'struct damon_addr_range' from
+>>>>      'unsigned long' to 'unsigned long long' (u64)
+>>>> 2. Updates all related arithmetic operations and comparisons
+>>>> 3. Adjusts print formats from %lu to %llu where needed
+>>>> 4. Maintains backward compatibility for non-LPAE systems
+> [...]
+>>>
+>>> But, this doesn't seem like a very small and simple change.  I think we can
+>>> find the best approach together, by understanding impact of this change for
+>>> short term and long term.  For that, could you please also share how prevalent
+>>> 32-bit ARM machines with LPAE are, and what would be your expected usage of
+>>> physical address space monitoring on such machines, in both short term and long
+>>> term?
+>>>
+>>
+>> Thank you for your feedback. I agree this isn’t a simple change, and
+>> the current approach might not be optimal. Let’s work together to find
+>> the best solution.
+>>
+>> As for the prevalence of 32-bit ARM machines with LPAE, these devices
+>> are still widely used in our product application. The main goal for
+>> enabling DAMON on these devices is to optimize memory usage. During
+>> usage, we identified this optimization point, as well as overflow issues
+>> with bytes* and other reclaim statistics interfaces.
+>>
+>> These devices are still in frequent use, and given their large installed
+>> base, they are unlikely to be replaced in the short term.
+> 
+> Thank you for kindly sharing these!  And I agree the devices could still be
+> actively used and wouldn't be replaced in the short term.  I believe making
+> DAMON supports those devices is really important.
+>
+> DAMON aims to support multiple address spaces that not limited to only virtual
+> address spaces and physical address space but any imaginable case.  I hence
+> prefer keeping DAMON core layer independent of the underlying hardware as much
+> as possible.  I therefore still hope to continue using 'unsigned long'.
+> 
+> Of course, 'unsigned long' wouldn't fit all cases.  32-bit ARM with LPAE is a
+> great real example, and there might be crazy future use case.  In other words,
+> this could be identified as an issue of the operations set layer, which
+> directly deals with the given address space.
+> 
+> I think another approach for this issue is adding a DAMON parameter, say,
+> address_unit.  It will represent the factor value that need to be multiplied to
+> DAMON-address to get real address on the given address space.  For example, if
+> address_unit is 10 and the user sets DAMON monitoring target address range as
+> 200-300, it means user wants DAMON to monitor address range 2000-3000 of the
+> given address space.  The default value of the parameter would be 1, so that
+> old users show no change.  32bit ARM with LPAE users would need to explicitly
+> set the parameter but I believe that shouldn't be a big issue?
+
+Regarding the address_unit approach, I have some concerns after checking
+the code:
+
+1. Scaling Factor Limitations - While the scaling factor resolves the
+damon_addr_range storage issue, actual physical addresses (PAs) would
+still require unsigned long long temporaries in many cases.  Different
+system with varying iomem regions may require different scaling
+factors, making deployment harder than a fixed maximum range.
+
+2. Significant Code Impact & Overhead - Implementing this would require
+significant changes with every PA traversal needing rescaling, which
+introduces computational overhead. That said, there remains a necessity
+to use unsigned long long to store certain variables in structures, such
+as sampling_addr in the damon_region structure and sz_tried in the
+damos_stat structure.
+
+If I'm misunderstanding any points, please correct me, and feel free to
+add any additional concerns.
+
+As an alternative, we could adopt a pattern similar to other subsystems
+(e.g., memblock, CMA, resource), which define their own address types.
+For example:
+
+  #ifdef CONFIG_PHYS_ADDR_T_64BIT
+	typedef unsigned long long damon_addr_t;
+  #else
+	typedef unsigned long damon_addr_t;
+  #endif
+
+This approach would avoid scaling complexity while maintaining
+consistency with existing mm code.
+
+What do you think? SJ, I'm happy to help test any approach or discuss
+further.
+
+> 
+> What do you think about the rough idea, Ze?  If you don't mind, I could
+> implement the idea on my own and get your review/tests, or help you
+> implementing it on your own.  I don't care who implements it but eagerly want
+> to make DAMON supports the real use case well.
 > 
 > 
-
-Applied, thanks!
-
-[03/32] dt-bindings: firmware: google,gs101-acpm-ipc: add PMIC child node
-        https://git.kernel.org/krzk/linux/c/935e5bd95df2c79404630a691caf42c3d7bc3a93
-
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+> Thanks,
+> SJ
+> 
+> [...]
+> 
