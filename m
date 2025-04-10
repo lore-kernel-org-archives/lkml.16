@@ -1,93 +1,168 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489E31CA84
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 178E98BEA
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744253549; cv=none; b=fXIkpv3BEXlNm2GEpYqqEO1Z6P1TYcLWY+/TEsy/9pMLCTXMVOlUnvzLTc7sIiE1qQBdZcWaUu1blZE8vStD0VIWcaojCzPFMkejHigULE8V3NjrsATxBcifNfryiO0o8kpKwuHrA1O8K+YdcSYFpPclXPAse4hktKmkyujhJYU=
+	t=1744253668; cv=none; b=NZ1cx/KBRpv3hdO3ERFoUPKsfKv6zmPQvhzet8L8WNXbpmIURTMcIGwtE7CYAwBPBnkn9R34ONA4BOCJh30BAIGpijfe8pJ55qoPm+nnuUry0VdZ/5R6CD05Lr3vo3toPxEOoT6zxomKI1GXPQW37JJnTJKWHQPbiLAyZriLOc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744253549; c=relaxed/simple;
-	bh=3GMKJMyO6XbTppXxJ4t5YNnNmyH44h7Kci21jGO8V5g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HOHCyKCPcOwijTIJrpbXzcz2iuaq0LW84pX6Hih6fp9b8D4/ZnaCiKw+wa7IRxFQYDQicrYhzKPMc1ls7G1PqA0gUiOB2rgIg7l/xjvjDzvyzfVn49wxRjcmr6jYNevwtXqeZ6hjPBU1iNUfKnANNIGS866ZhTd6ij2YSC/uINc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZY44h41zSzvX2s;
-	Thu, 10 Apr 2025 10:48:20 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id D3FE6180468;
-	Thu, 10 Apr 2025 10:52:23 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 10 Apr 2025 10:52:23 +0800
-Message-ID: <04f4cff4-be7c-48d8-b24e-535ccc67d908@huawei.com>
-Date: Thu, 10 Apr 2025 10:52:23 +0800
+	s=arc-20240116; t=1744253668; c=relaxed/simple;
+	bh=biN0C+2l0VExJ+f1rTo8OpzH4p0QGSr9IQnzoATN/V8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=uIjEtNhDRHNK8KowBasWwhUkuq4sFOzDtc3biuA3lJbshY2o9F3K8Bi6T+orJhatd6CpJmHSFlE8X40wQIKYiwfOdt9cpLVtaBqJ4aVCHiiyB+Fz/XxP+qoxCexYFy57kyB8tfeCpo8vnwprQ89WBzuGWNl+YvZM5sT15ZJ8Afk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=Qunpbgu2 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="Qunpbgu2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=n+sXWRdGVa/aunyd3iOIXwsdKekXlRAP45jc8f8GDGY=; b=Q
+	unpbgu2nQGtzs6rzh3Vjh/aQtRT1JT/FwHTaAEM13D1R3oTQaHAgaJ0ZcPaZcQHU
+	8GcXPuytmxPBqOxXoqZjtakpGvTaNu6H4v1YrHHs+TWugpYLNFz3/Hq7cq9auk5W
+	0MVxd8aKFHa/ljByRJASa4no5lpMyOQp+q4F5llyKM=
+Received: from xavier_qy$163.com ( [120.133.229.44] ) by
+ ajax-webmail-wmsvr-40-116 (Coremail) ; Thu, 10 Apr 2025 10:53:51 +0800
+ (CST)
+Date: Thu, 10 Apr 2025 10:53:51 +0800 (CST)
+From: Xavier  <xavier_qy@163.com>
+To: "Gavin Shan" <gshan@redhat.com>
+Cc: dev.jain@arm.com, akpm@linux-foundation.org, baohua@kernel.org,
+	ryan.roberts@arm.com, catalin.marinas@arm.com, ioworker0@gmail.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org
+Subject: Re:Re: [PATCH v2 1/1] mm/contpte: Optimize loop to reduce redundant
+ operations
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <3a9c1db1-7598-4f71-be62-f6005e3fec72@redhat.com>
+References: <027cc666-a562-46fa-bca5-1122ea00ec0e@arm.com>
+ <20250408085809.2217618-1-xavier_qy@163.com>
+ <20250408085809.2217618-2-xavier_qy@163.com>
+ <34a4bf01-6324-482b-a011-32974d68e02f@redhat.com>
+ <711cf430.b25d.1961b1a1b0e.Coremail.xavier_qy@163.com>
+ <3a9c1db1-7598-4f71-be62-f6005e3fec72@redhat.com>
+X-NTES-SC: AL_Qu2fBv6evE4o5yafY+kfmkgWgus/WcW2u/Qj3IRSO5FwjD3pxhEtZHZKGHf23t2KMjKhvRGebzZx4P9Fe6BbQrsL1PXGYfqJnrbq9uve5E21kw==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] alloc_tag: handle incomplete bulk allocations in
- vm_module_tags_populate
-To: Suren Baghdasaryan <surenb@google.com>, Andrew Morton
-	<akpm@linux-foundation.org>
-CC: "T.J. Mercier" <tjmercier@google.com>, <kent.overstreet@linux.dev>,
-	<janghyuck.kim@samsung.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250409225111.3770347-1-tjmercier@google.com>
- <20250409171238.494fd49979b4607bff9791b7@linux-foundation.org>
- <CAJuCfpHaocOVHf673X1nn_R0cpz=GtDZEZ+ceo+5OptRcBUjcw@mail.gmail.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <CAJuCfpHaocOVHf673X1nn_R0cpz=GtDZEZ+ceo+5OptRcBUjcw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+Message-ID: <32828be7.3220.1961d9e3cc3.Coremail.xavier_qy@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:dCgvCgAHTh6_MvdnMjySAA--.26160W
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiwg8rEGf3FaRR7gACsq
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On 2025/4/10 9:44, Suren Baghdasaryan wrote:
-> On Thu, Apr 10, 2025 at 12:12 AM Andrew Morton
-> <akpm@linux-foundation.org> wrote:
->>
->> On Wed,  9 Apr 2025 22:51:11 +0000 "T.J. Mercier" <tjmercier@google.com> wrote:
->>
->>> alloc_pages_bulk_node may partially succeed and allocate fewer than the
->>> requested nr_pages. There are several conditions under which this can
->>> occur, but we have encountered the case where CONFIG_PAGE_OWNER is
->>> enabled causing all bulk allocations to always fallback to single page
->>> allocations due to commit 187ad460b841 ("mm/page_alloc: avoid page
->>> allocator recursion with pagesets.lock held").
->>>
->>> Currently vm_module_tags_populate immediately fails when
->>> alloc_pages_bulk_node returns fewer than the requested number of pages.
->>> When this happens memory allocation profiling gets disabled, for example
->>>
->>> [   14.297583] [9:       modprobe:  465] Failed to allocate memory for allocation tags in the module scsc_wlan. Memory allocation profiling is disabled!
->>> [   14.299339] [9:       modprobe:  465] modprobe: Failed to insmod '/vendor/lib/modules/scsc_wlan.ko' with args '': Out of memory
->>>
->>> This patch causes vm_module_tags_populate to retry bulk allocations for
->>> the remaining memory instead of failing immediately which will avoid the
->>> disablement of memory allocation profiling.
->>>
->>
->> Thanks.  I'm assuming we want cc:stable on this?
->>
->> btw, it looks like the "Clean up and error out" code in
->> vm_module_tags_populate() could use release_pages().
-
-For the 'Clean up and error out' part:
-next_page[] array might need to be reset to NULL if user is able to
-reenable the memory allocation profiling when the above happens as the
-current page bulk alloc API are only populating NULL elements.
-
-> 
-> True. I'll add that into my TODO list. Thanks!
-> 
->>
-> 
+CgpIaSBHYXZpbiwKCgpBdCAyMDI1LTA0LTEwIDA4OjU4OjQ2LCAiR2F2aW4gU2hhbiIgPGdzaGFu
+QHJlZGhhdC5jb20+IHdyb3RlOgo+SGkgWGF2aWVyLAo+Cj5PbiA0LzEwLzI1IDE6MTAgQU0sIFhh
+dmllciB3cm90ZToKPj4gCj4+IFRoYW5rIHlvdSBmb3IgY2FyZWZ1bGx5IHJldmlld2luZyB0aGlz
+IHBhdGNoIGFuZCByYWlzaW5nIHlvdXIgcXVlc3Rpb25zLgo+PiBJJ2xsIHRyeSB0byBleHBsYWlu
+IGFuZCBhbnN3ZXIgdGhlbSBiZWxvdy4KPj4gCj4KPk5vdCBhIHByb2JsZW0gOikKPgo+PiAKPj4g
+QXQgMjAyNS0wNC0wOSAxMjowOTo0OCwgIkdhdmluIFNoYW4iIDxnc2hhbkByZWRoYXQuY29tPiB3
+cm90ZToKPj4+IEhpIFhhdmllciwKPj4+Cj4+PiBPbiA0LzgvMjUgNjo1OCBQTSwgWGF2aWVyIHdy
+b3RlOgo+Pj4+IFRoaXMgY29tbWl0IG9wdGltaXplcyB0aGUgY29udHB0ZV9wdGVwX2dldCBmdW5j
+dGlvbiBieSBhZGRpbmcgZWFybHkKPj4+PiAgICB0ZXJtaW5hdGlvbiBsb2dpYy4gSXQgY2hlY2tz
+IGlmIHRoZSBkaXJ0eSBhbmQgeW91bmcgYml0cyBvZiBvcmlnX3B0ZQo+Pj4+ICAgIGFyZSBhbHJl
+YWR5IHNldCBhbmQgc2tpcHMgcmVkdW5kYW50IGJpdC1zZXR0aW5nIG9wZXJhdGlvbnMgZHVyaW5n
+Cj4+Pj4gICAgdGhlIGxvb3AuIFRoaXMgcmVkdWNlcyB1bm5lY2Vzc2FyeSBpdGVyYXRpb25zIGFu
+ZCBpbXByb3ZlcyBwZXJmb3JtYW5jZS4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IFhhdmllciA8
+eGF2aWVyX3F5QDE2My5jb20+Cj4+Pj4gLS0tCj4+Pj4gICAgYXJjaC9hcm02NC9tbS9jb250cHRl
+LmMgfCAyMiArKysrKysrKysrKysrKysrKysrKy0tCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDIw
+IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm02NC9tbS9jb250cHRlLmMgYi9hcmNoL2FybTY0L21tL2NvbnRwdGUuYwo+Pj4+IGluZGV4
+IGJjYWM0ZjU1ZjljMS4uMDM0ZDE1M2Q3ZDE5IDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gvYXJtNjQv
+bW0vY29udHB0ZS5jCj4+Pj4gKysrIGIvYXJjaC9hcm02NC9tbS9jb250cHRlLmMKPj4+PiBAQCAt
+MTUyLDYgKzE1MiwxOCBAQCB2b2lkIF9fY29udHB0ZV90cnlfdW5mb2xkKHN0cnVjdCBtbV9zdHJ1
+Y3QgKm1tLCB1bnNpZ25lZCBsb25nIGFkZHIsCj4+Pj4gICAgfQo+Pj4+ICAgIEVYUE9SVF9TWU1C
+T0xfR1BMKF9fY29udHB0ZV90cnlfdW5mb2xkKTsKPj4+PiAgICAKPj4+Cj4+PiBJJ20gd2FuZGVy
+aW5nIGhvdyBpdCBjYW4gd29yay4gTW9yZSBkZXRhaWxzIGFyZSBnaXZlbiBiZWxvdy4KPj4+Cj4+
+Pj4gKyNkZWZpbmUgQ0hFQ0tfQ09OVFBURV9GTEFHKHN0YXJ0LCBwdGVwLCBvcmlnX3B0ZSwgZmxh
+ZykgXAo+Pj4+ICsJZG8geyBcCj4+Pj4gKwkJaW50IF9zdGFydCA9IHN0YXJ0OyBcCj4+Pj4gKwkJ
+cHRlX3QgKl9wdGVwID0gcHRlcDsgXAo+Pj4+ICsJCXdoaWxlIChfc3RhcnQrKyA8IENPTlRfUFRF
+UykgeyBcCj4+Pj4gKwkJCWlmIChwdGVfIyNmbGFnKF9fcHRlcF9nZXQoX3B0ZXArKykpKSB7IFwK
+Pj4+PiArCQkJCW9yaWdfcHRlID0gcHRlX21rIyNmbGFnKG9yaWdfcHRlKTsgXAo+Pj4+ICsJCQkJ
+YnJlYWs7IFwKPj4+PiArCQkJfSBcCj4+Pj4gKwkJfSBcCj4+Pj4gKwl9IHdoaWxlICgwKQo+Pj4+
+ICsKPgo+bml0OiB0aGUgdmFyaWFibGUgX3N0YXJ0IGFuZCBfcHRlcCBjYW4gYmUgZHJvcHBlZCBz
+aW5jZSB0aGUgY2FsbGVyIGlzIGdvaW5nIHRvCj5iYWlsIGFmdGVyIENIRUNLX0NPTlRQVEVfRkxB
+RygpLiBIb3dldmVyLCBJJ20gd2FuZGVyaW5nIGl0J3MgZ29pbmcgdG8gaW50cm9kdWNlCj5idXJk
+ZW4gdG8gY29udHB0ZV9wdGVwX2dldCgpIGZvciBpdHMgcmVhZGFiaWxpdHksIG11Y2ggbW9yZSBj
+b21wbGV4IHRoYW4gSQo+dGhvdWdodC4KCk5vdCBhZGRpbmcgdGhlc2UgdHdvIHZhcmlhYmxlcyBp
+biB0aGUgY3VycmVudCBjb2RlIGhhcyBubyBpbXBhY3QuIFRoZSBtYWluIHB1cnBvc2UKb2YgYWRk
+aW5nIHRoZW0gaXMgdG8gaW1wcm92ZSBtYWludGFpbmFiaWxpdHkgYW5kIHByZXZlbnQgdGhlIGV4
+dGVybmFsIGNvZGUgZnJvbQpjb250aW51aW5nIG9wZXJhdGlvbnMgdW5rbm93aW5nbHkgYWZ0ZXIg
+dGhlIG1hY3JvIGhhcyBtb2RpZmllZCB0aGUgdmFyaWFibGVzLgoKPgo+Pj4KPj4+IENPTlRfUFRF
+UyBpcyAxNiB3aXRoIHRoZSBhc3N1bXB0aW9uIG9mIDRLQiBiYXNlIHBhZ2Ugc2l6ZS4gQ0hFQ0tf
+Q09OVFBURV9GTEFHKCkKPj4+IGNvbGxlY3RzIHRoZSBmbGFnIGZvciBwdGVwW3N0YXJ0LCBDT05U
+X1BURVNdLgo+Pj4KPj4+PiAgICBwdGVfdCBjb250cHRlX3B0ZXBfZ2V0KHB0ZV90ICpwdGVwLCBw
+dGVfdCBvcmlnX3B0ZSkKPj4+PiAgICB7Cj4+Pj4gICAgCS8qCj4+Pj4gQEAgLTE2OSwxMSArMTgx
+LDE3IEBAIHB0ZV90IGNvbnRwdGVfcHRlcF9nZXQocHRlX3QgKnB0ZXAsIHB0ZV90IG9yaWdfcHRl
+KQo+Pj4+ICAgIAlmb3IgKGkgPSAwOyBpIDwgQ09OVF9QVEVTOyBpKyssIHB0ZXArKykgewo+Pj4+
+ICAgIAkJcHRlID0gX19wdGVwX2dldChwdGVwKTsKPj4+PiAgICAKPj4+PiAtCQlpZiAocHRlX2Rp
+cnR5KHB0ZSkpCj4+Pj4gKwkJaWYgKHB0ZV9kaXJ0eShwdGUpKSB7Cj4+Pj4gICAgCQkJb3JpZ19w
+dGUgPSBwdGVfbWtkaXJ0eShvcmlnX3B0ZSk7Cj4+Pj4gKwkJCUNIRUNLX0NPTlRQVEVfRkxBRyhp
+LCBwdGVwLCBvcmlnX3B0ZSwgeW91bmcpOwo+Pj4+ICsJCQlicmVhazsKPj4+PiArCQl9Cj4+Pj4g
+ICAgCj4+Pj4gLQkJaWYgKHB0ZV95b3VuZyhwdGUpKQo+Pj4+ICsJCWlmIChwdGVfeW91bmcocHRl
+KSkgewo+Pj4+ICAgIAkJCW9yaWdfcHRlID0gcHRlX21reW91bmcob3JpZ19wdGUpOwo+Pj4+ICsJ
+CQlDSEVDS19DT05UUFRFX0ZMQUcoaSwgcHRlcCwgb3JpZ19wdGUsIGRpcnR5KTsKPj4+PiArCQkJ
+YnJlYWs7Cj4+Pj4gKwkJfQo+Pj4+ICAgIAl9Cj4+Pj4gICAgCj4+Pj4gICAgCXJldHVybiBvcmln
+X3B0ZTsKPj4+Cj4+PiBUaGVyZSBhcmUgdHdvIGlzc3VlcyBhcyBJIGNhbiBzZWU6ICgxKSBUaGUg
+bG9vcCBzdG9wcyBvbiBhbnkgZGlydHkgb3IgeW91bmcgZmxhZy4gQW5vdGhlcgo+Pj4gZmxhZyBj
+YW4gYmUgbWlzc2VkIHdoZW4gb25lIGZsYWcgaXMgc2Vlbi4gRm9yIGV4YW1wbGUsIHdoZW4gcHRl
+cFswXSBoYXMgYm90aCBkaXJ0eS95b3VuZwo+Pj4gZmxhZywgb25seSB0aGUgZGlydHkgZmxhZyBp
+cyBjb2xsZWN0ZWQuICgyKSBDSEVDS19DT05UUFRFX0ZMQUcoKSBpdGVyYXRlcyBwdGVwW2ksIENP
+TlRfUFRFU10sCj4+PiBjb25mbGljdGluZyB0byB0aGUgb3V0ZXIgbG9vcCwgd2hpY2ggaXRlcmF0
+ZXMgcHRlcFswLCBDT05UX1BURVNdLgo+PiAKPj4gTm8gZmxhZ3Mgd2lsbCBiZSBtaXNzZWQuIFRo
+ZSBvdXRlciBsb29wIGlzIHVzZWQgdG8gY2hlY2sgZm9yIHRoZSBmaXJzdCBmbGFnLAo+PiB3aGlj
+aCBjb3VsZCBiZSBlaXRoZXIgdGhlIGRpcnR5IG9yIHlvdW5nIGZsYWcuCj4+IE9uY2UgdGhpcyBm
+bGFnIChsZXQncyBhc3N1bWUgaXQncyB0aGUgZGlydHkgZmxhZykgaXMgZm91bmQgaW4gdGhlIGkt
+dGggUFRFLAo+PiB0aGUgZGlydHkgZmxhZyBvZiBvcmlnX3B0ZSB3aWxsIGJlIHNldCwgYW5kIHRo
+ZSBjb2RlIHdpbGwgaW1tZWRpYXRlbHkgZW50ZXIKPj4gdGhlIGlubmVyIGxvb3AsIG5hbWVseSBD
+SEVDS19DT05UUFRFX0ZMQUcuIFRoaXMgaW5uZXIgbG9vcCB3aWxsIGNvbnRpbnVlCj4+IHRvIGNo
+ZWNrIG9ubHkgZm9yIHRoZSB5b3VuZyBmbGFnIHN0YXJ0aW5nIGZyb20gdGhlIGktdGggcG9zaXRp
+b24sIGFuZCB3ZSBuZWVkbid0Cj4+IGNvbmNlcm4gYWJvdXQgdGhlIGRpcnR5IGZsYWcgYW55bW9y
+ZS4KPj4gSWYgQ0hFQ0tfQ09OVFBURV9GTEFHIGZpbmRzIHRoZSB5b3VuZyBmbGFnIGluIHRoZSBq
+LXRoIFBURSwgdGhlIHlvdW5nIGZsYWcKPj4gb2Ygb3JpZ19wdGUgd2lsbCBiZSBzZXQuIEF0IHRo
+aXMgcG9pbnQsIGJvdGggdGhlIHlvdW5nIGFuZCBkaXJ0eSBmbGFncyBvZgo+PiBvcmlnX3B0ZSBo
+YXZlIGJlZW4gc2V0LCBhbmQgdGhlcmUncyBubyBuZWVkIGZvciBmdXJ0aGVyIGxvb3AganVkZ21l
+bnRzLCBzbwo+PiB0aGUgYm90aCB0aGUgaW5uZXIgYW5kIG91dGVyIGxvb3BzIGNhbiBiZSBleGl0
+ZWQgZGlyZWN0bHkuIFRoaXMgYXBwcm9hY2gKPj4gcmVkdWNlcyB1bm5lY2Vzc2FyeSByZXBlYXRl
+ZCB0cmF2ZXJzYWxzIGFuZCBqdWRnbWVudHMuCj4+IAo+Cj5UaGFua3MgZm9yIHRoZSBleHBsYW5h
+dGlvbi4gSSBtaXNzZWQgdGhhdCB0aGUgc3Vic2VxdWVudCB5b3VuZyBiaXQgaXMgY29sbGVjdGVk
+Cj5vbiBwdGVfZGlydHkoKS4gU2ltaWxhcmx5LCB0aGUgc3Vic2VxdWVudCBkaXJ0eSBiaXQgaXMg
+Y29sbGVjdGVkIG9uIHB0ZV95b3VuZygpLgo+Tm93IEkgY2FuIHNlZSBhbGwgKGRpcnR5IHwgeW91
+bmcpIGJpdHMgYXJlIGNvbGxlY3RlZCB3aXRoIGEgbG9zdC4KPgo+Pj4KPj4+IEJlc2lkZXMsIEkg
+YWxzbyBkb3VidCBob3cgbXVjaCBwZXJmb3JtYW5jZSBjYW4gYmUgZ2FpbmVkIGJ5IGJhaWxpbmcg
+ZWFybHkgb24gKGRpcnR5IHwgeW91bmcpLgo+Pj4gSG93ZXZlciwgaXQncyBhdm9pZGVkIHRvIGNy
+b3NzIHRoZSBMMUQgY2FjaGUgbGluZSBib3VuZGFyeSBpZiBwb3NzaWJsZS4gV2l0aCA0S0IgYmFz
+ZSBwYWdlCj4+PiBzaXplLCAxMjggYnl0ZXMgYXJlIG5lZWRlZCBmb3IgcHRlcFtDT05UX1BURVNd
+LCBlcXVhbCB0byB0d28gY2FjaGUgbGluZXMuIElmIHdlIGNhbiBiYWlsCj4+PiBlYXJseSB3aXRo
+IGx1Y2ssIHdlIGRvbid0IGhhdmUgdG8gc3RlcCBpbnRvIGFub3RoZXIgY2FjaGUgbGluZS4gTm90
+ZSB0aGF0IGV4dHJhIGNoZWNrcyBuZWVkcwo+Pj4gbW9yZSBDUFUgY3ljbGVzLgo+PiAKPj4gQ29t
+cGFyZWQgdG8gdGhlIHByZXZpb3VzIGZ1bmN0aW9uLCB0aGlzIGNvZGUgZG9lc24ndCBhZGQgYW55
+IGV4dHJhIGNoZWNrcy4KPj4gRXZlbiBpbiB0aGUgd29yc3QtY2FzZSBzY2VuYXJpbywgd2hlcmUg
+bmVpdGhlciBhIGRpcnR5IG5vciBhIHlvdW5nIGZsYWcgaXMKPj4gZm91bmQgYW1vbmcgdGhlIDE2
+IFBURXMsIHRoZSBudW1iZXIgb2YgY2hlY2tzIGlzIHRoZSBzYW1lIGFzIGluIHRoZSBvcmlnaW5h
+bAo+PiBmdW5jdGlvbi4gSWYgYW55IGZsYWcgaXMgZm91bmQgZWFybGllciwgdGhlIG9wdGltaXpl
+ZCBwYXRjaCB3aWxsIHJlZHVjZSB0aGUKPj4gbnVtYmVyIG9mIHN1YnNlcXVlbnQgY2hlY2tzIGZv
+ciB0aGF0IGZsYWcgY29tcGFyZWQgdG8gdGhlIG9yaWdpbmFsIGNvZGUuCj4+IAo+Cj5UaGVyZSBh
+cmUgMzIgY2hlY2tzIGluIHRoZSBvcmlnaW5hbCBjb2RlIChhc3N1bWluZyB3ZSBoYXZlIDRrYiBi
+YXNlIHBhZ2Ugc2l6ZQo+YW5kIENPTlRfUFRFUyA9PSAxNikgYW5kIHRoZSBudW1iZXIgb2YgY2hl
+Y2tzIGlzIGZpeGVkLiBXaXRoIHlvdXIgcGF0Y2ggYXBwbGllZCwKPnRoZSBudW1iZXIgYmVjb21l
+cyAzMiArIChudW1iZXIgZnJvbSBDSEVDS19DT05UUFRFX0ZMQUcpIGlmIGFsbCBQVEVzIGhhdmUK
+PnB0ZV9kaXJ0eSgpIGFuZCBub25lIG9mIHRoZW0gaGFzIHB0ZV95b3VuZygpLCBpZiBJIGRvbid0
+IG1pc3MgYW55dGhpbmcgaGVyZS4KPgoKSWYgYWxsIFBURXMgYXJlIGRpcnR5IGFuZCBub25lIGFy
+ZSB5b3VuZywgdGhlIGNvZGUgd2lsbCBlbnRlciBDSEVDS19DT05UUFRFX0ZMQUcKd2hlbiBpdCBl
+bmNvdW50ZXJzIHRoZSBmaXJzdCBkaXJ0eSBQVEUuIEluc2lkZSBDSEVDS19DT05UUFRFX0ZMQUcs
+IGl0IG9ubHkgY2hlY2tzCmZvciB0aGUgeW91bmcgYml0ICgxNiAtIDApIHRpbWVzIGFuZCB0aGVu
+IGV4aXRzIGFsbCBsb29wcy4gSW4gdGhpcyBjYXNlLCB0aGUgdG90YWwgbnVtYmVyCm9mIGNoZWNr
+cyBpcyAxICsgMTYsIHdoaWNoIGlzIGxlc3MgdGhhbiB0aGUgb3JpZ2luYWwgMzIuCgo+Cj4+IEkn
+bSBub3Qgc3VyZSBpZiBteSBleHBsYW5hdGlvbiBpcyBjbGVhci4gSWYgeW91IGhhdmUgYW55IGZ1
+cnRoZXIgcXVlc3Rpb25zLAo+PiBmZWVsIGZyZWUgdG8gY29tbXVuaWNhdGUgd2l0aCBtZSBhZ2Fp
+bi4KPj4gCj4KPlRoYW5rcyBmb3IgdGhlIGV4cGxhbmF0aW9uLCBoZWxwZWQgbWUgdG8gdW5kZXJz
+dGFuZCBob3cgYWxsIChkaXJ0eXx5b3VuZykgYml0cwo+YXJlIGNvbGxlY3RlZCB3aXRob3V0IGEg
+bG9zdC4KPgoKSWYgeW91IHN0aWxsIGhhdmUgYW55IHF1ZXN0aW9ucywgZmVlbCBmcmVlIHRvIGRp
+c2N1c3MuCgotLQpUaGFua3MsClhhdmllcgo=
