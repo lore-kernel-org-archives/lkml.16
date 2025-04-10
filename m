@@ -1,78 +1,70 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A0E1EB1AB;
-	Thu, 10 Apr 2025 16:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7CB1E98E0;
+	Thu, 10 Apr 2025 16:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744300814; cv=none; b=ldwiNrqXVQPxJafDJYlp7yNJqB9o/l1hGsudWZSzCBysaikR0qSP4LU8f/Q+ZK2os4lif566q2Y+RgZwscePDQ2juhDg0Xmy/izKBZ51roKXBlDrhv2AcATj59vczAgqYhOnzsJDxyNaU3tIooYebmKXzolATjx7jDoISwNH8rA=
+	t=1744300815; cv=none; b=TU1JlWctBIKmTUkDXc7EHGf7Oa7EQop6l8qBogiUWuFvm408Js7it35I8h5v4cgMVTFU3p6cyBC/MCZvyR8a02fNUrlE4EPaJRGmMiTJgHfGP29EJwFa8rXbX/yHInqIMOoYlCxGaLmyltFP6p7CrXvQTHh7oAsVnew8hInIi6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744300814; c=relaxed/simple;
-	bh=TH+d9hezgrqAFx9vO1PjGm3lSkgDKjlYKtHHy1XWlO0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Iv6MrileTZEenYj3JaSMLHWfvoE9kscoZqRxFqWN6WX9Em62o9MGPyhbng19whWfTpLPZrXlmQwA8cBQI6/59h5bBXiAqOh/3oQI5hESLDXprqCZGBqfCOJt3wvstQPsWt+5NRxn0ZZrR1PddQwZOyJ5PUqnclIC27k8rKHcrsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lJkB9OOh; arc=none smtp.client-ip=209.85.216.53
+	s=arc-20240116; t=1744300815; c=relaxed/simple;
+	bh=pl9dJD0Qx8fdr7PO+1lN8nE809JuwSMSpc4t1wsrh24=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dazoVUfjpBjcalI7nqAArrVwWR5wy8niJNly/ZWkA5shO+qqbJe4O7L/X3Gz/FUKxMnHfTqcszbRBsxEVS3ZVyZ8uCENT+5mX5MC6/dvZqQsg61B+7GPo2kkFMVK030EcizHW+VtaWdT6TWkF1++LCdFzU+c8TVXpkpBLPtlFgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jk4L0VD2; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJkB9OOh"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301c4850194so839807a91.2;
-        Thu, 10 Apr 2025 09:00:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jk4L0VD2"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224341bbc1dso9681085ad.3;
+        Thu, 10 Apr 2025 09:00:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744300812; x=1744905612; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0ZZ9LtkWLqgoGZShzAWjYQkJAaC5SlTy4iIUDO3ICyo=;
-        b=lJkB9OOhQ+wHBpJERvEgNTNu5WzuudCQlCJD3diVYkdvAxqwHw6uBf03AFfFzH6H1l
-         lzm/8F6b2ZdovPYWahZ21Raryp4MczB9H72tmbNT6M91zgiL0gOlkUp9iAo3zzjHTRW0
-         DlPIHmsfxLIIUAtbDgXMj/B66aDFZA/c8FJYN4aDFy1fgY39/csT9VN+p3BwI1x9VK3N
-         wVz0J8pvPwvlYwbaISujgqGdtFzTdr0M+vN8iKbtRqA1JviWFbhGNPlrookk1BQGxHYR
-         ylAj0AU7Qn5SBINdLFrO2vkZOY2tBt+ddJ0ZXMB3hquDAlDSPzv6Mo1GNJlk/ze3BGaG
-         lwVg==
+        d=gmail.com; s=20230601; t=1744300813; x=1744905613; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qo3jtmdiLQ30YVjIBcjlK7lG5+Fo4/D/zRq2VtRejDA=;
+        b=jk4L0VD23zV1rd7SZg0tE0ezcJx/mew4fyO8ro2DgN0/w9SZypHr5HdrfoFAcQYOY7
+         GduPlAPXjAkV5q4CMtl2mlj+R/cEwJ2Wy2BWpkLHXAcFWNMe4c+f9qdmqFwbDKcMVQl4
+         0qcbKFyX9fi7DiDOuc99noaFuk+emeLPEACdJDMb18dCc0pc5oB9EAeS2hwQ6pGSjNPn
+         bJ/bloVifbWahp/81d3B11INgth92UPH0H+n5I6/Wwo2Nlyko+mR4nst2ucC3ROZnOzx
+         6CfqU/nGw8HJKbLPEYXBZkiG05gmEfk1XcpkgyMWxslG3UA73WFpdkomyvXBcwfeDpYw
+         L2Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744300812; x=1744905612;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0ZZ9LtkWLqgoGZShzAWjYQkJAaC5SlTy4iIUDO3ICyo=;
-        b=CtOqu2KieDQdzZaV9XMnS/wG+dFif1AuxHyrYB1MtsBooYgnez01j6TJwEuZ5ev6ag
-         KtTlLTc3sZKmAos0jrylEbUGcZqHFDkYtY30EOsbnBAraLaMNSjp4es4k8CzaQ9+rroO
-         VtCjK9k1gpYNbl+7cl08ZQknYCGIrL1RYnyoj+QuS6eSULIfBdX2zQ4kZabfTY1fRK8y
-         KSa2ZHvqhFfGBEsk7NjhSmk4YrNC99ulgauXHbVJ6fPxKqdA3XGB9PE5mxLlAA9oB7ue
-         jOSX+0KXgI3Ntl71L320q9kAjMlwc91ZwSjDOakIgHEjERIIUfeUgsa3hqdT05IhZbch
-         nkzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUtdkZ9L2Kmn/lSLQ9ya5OzNtUb0W0eQMkFECwFf07pIjGrMqVF7oB000suyZUGxCM2wvBnwIW8HGTMT/3@vger.kernel.org, AJvYcCWkbsxT1tkxuP9gzkm4O2hbRayuKBks8019UGfZb2d0LCm1KFnjg7Updn0qiWaetc5Mdkip7a1Wu1ae@vger.kernel.org, AJvYcCX93WgwWZAsOxMHtSgeSAH7hPsa7kE6wF43tDD/10mBXpbZsCewXx7AR5xMaWmQxCJ4PpwdjESTib6DBg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXf864DbsxmzOzqlzQ1L0jvwgZ6RgVP/8rSyL1e8cGXQdAK3xq
-	ocJw+T51jYQIp9mB4yuVcoa2NgP7uKl5EoUN0aDRGcricsxOA3RXu+7jm2aw
-X-Gm-Gg: ASbGncvmDlHPpBYcFAZRAtjBhQDM61nQPXNVaHkEyGldT1vqK1OBRRBrOCr15Um+V+u
-	r1edVxvhKY07WMkOaoUjffpkGI3kdifSNKy2IElG2/ZpnSDfruXP3n0dgg+pky0GgFRbXQzT8bi
-	lFldA+KPbl4gpvmxAVZWZchx8wpKsfPWAf3UH4WPjRpQ3uvM37rUZdZglOgtdmu5DGA1KmDXMom
-	Tr3c0eHZzjrLt4x3v9Gxhp1BhvJltAP95pnuBd/VTBV2l0uIYHjKhCBaa2pslBMo2cfl+F+uGzi
-	lxbuxILnm0nOHm8jAwrXBAhRkm2YDUY3Zd8k3KRNWQie1qqqKvdTGw==
-X-Google-Smtp-Source: AGHT+IErKLgYkZk8hYVyWgWlBgksOmyT8lnwolamcvoiGnEIZEcDUfV7ekNqqnjyb/6MMLmruop1Fg==
-X-Received: by 2002:a17:90a:c105:b0:2ee:aa28:79aa with SMTP id 98e67ed59e1d1-30718b67f03mr4861727a91.6.1744300811898;
-        Thu, 10 Apr 2025 09:00:11 -0700 (PDT)
-Received: from localhost.localdomain ([123.16.133.44])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7badb19sm32281255ad.106.2025.04.10.09.00.08
+        d=1e100.net; s=20230601; t=1744300813; x=1744905613;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qo3jtmdiLQ30YVjIBcjlK7lG5+Fo4/D/zRq2VtRejDA=;
+        b=m9vG4lLGXBH7JKSWxEf8geOEc4lQ1c55KUgIhAqHQOWqcnp5QSKrjyQkvSXPL2/2mR
+         19V8jrQbbLpB444uSGIFJ3JWf2A2NSEM2EfMUDdBisrNcZK8jh3urf0M2QY3pvdSnKx7
+         woGL9/i6VIC8RgTVUN+1ckiGpAhtpFuhIXQzH2deW/siPHC6a8wJm51AjuAxF4BJPjIC
+         FF9qdJiXpI+mJ42STrE2gTYEbQsv0iJ/ewedIQfKyn6SeirzlRrbvkIfIsn7HR8LIBQL
+         LBH8XoXZl9YYYOjElbf614BP+FxTTb6hhY+VYaIDPNSYlLCAD5da+Thnai8AQb5Bgfda
+         5VxA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+W0A7c4t1YvHvqSSHj/3hUGtRiBOLAB0zg6+gT2bkDEI+7NDeUWm7C14mDC20hYtKne8unWuSPwM=@vger.kernel.org, AJvYcCUi5vN3tM1958cSgB8ZsQ6+LT0tscNiQpIHvmAyHEeMQ6wyhAeQKkoueTjtBFfTMrigjJCBaNISm2wJem/4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXtUF++8JJlp6fbYdNhKPR2R5TjrT95gd/IFbO0ksfjLlqNUVO
+	eP4O3t0c4N2C+SCBY4cXra3w699zku8eOvULQnO2Jpw9mnBc7q3T
+X-Gm-Gg: ASbGncv0zudFTAlZjAWvi7emnx8Ce4fPk43P+FuVMZMXiURzYZBftXNmrgP+3BGQoQ8
+	vjD5WRvtAOtS5Kz2Wk4sxnDCjXpKoj5DIh+pCWeJGcnlzwll8vxUYnFhnWDnnAoMUbEVqXQ/6eZ
+	oyGcZtoDQ4u7u9oN2uVXqbBkul8Yt8g+dOHYBJUQOiGAdGBXsNWSSD4/+vb/cvesSAxKRwEuznm
+	zRU8hEvffDK7orMEAFVLAixwXwLnPJv7OtoGGb4rqx2OBMKqWpD73wvUQbbbkmy9or6wtEjDOD7
+	s1mXIwJQf/BpGJITEdQOdx5tlhMx057OoxPuq1HYvcFuuZMsRxeerX4Vst/LTA==
+X-Google-Smtp-Source: AGHT+IGnJBJQib59YV2tKOPvVx8bjO1Oi1ZxGy4LlEUbUkj4ifQE6YltT6IlIPhorHZiQqXMnN4f1g==
+X-Received: by 2002:a17:903:2446:b0:224:249f:9723 with SMTP id d9443c01a7336-22b42c2e74fmr47652475ad.51.1744300812602;
+        Thu, 10 Apr 2025 09:00:12 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40f2:1181:ecab:2ac2:19c7:32de:1c4d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cd1sm32179355ad.150.2025.04.10.09.00.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 09:00:11 -0700 (PDT)
-From: Nam Tran <trannamatk@gmail.com>
-To: krzk+dt@kernel.org
-Cc: pavel@kernel.org,
-	lee@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	corbet@lwn.net,
-	devicetree@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
-Date: Thu, 10 Apr 2025 22:59:46 +0700
-Message-Id: <20250410155946.5326-1-trannamatk@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <eac877d0-2fd3-44cf-8917-910042cdcec9@kernel.org>
-References: <eac877d0-2fd3-44cf-8917-910042cdcec9@kernel.org>
+        Thu, 10 Apr 2025 09:00:12 -0700 (PDT)
+From: saivishnu725@gmail.com
+To: mchehab@kernel.org
+Cc: corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	saivishnu725 <saivishnu725@gmail.com>
+Subject: [PATCH] Add --interactive option to prompt for dependency installation if missing
+Date: Thu, 10 Apr 2025 21:24:15 +0530
+Message-Id: <20250410155414.47114-1-saivishnu725@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,95 +73,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Sun, 6 Apr 2025, Krzysztof Kozlowski wrote:
+From: saivishnu725 <saivishnu725@gmail.com>
 
-> On 05/04/2025 20:32, Nam Tran wrote:
-> > +properties:
-> > +  compatible:
-> > +    const: ti,lp5812
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description:
-> > +      I2C slave address
-> > +      lp5812/12- 0x1b
-> 
-> Drop description, redundant.
+Introduce the --interactive flag to enable user prompts before running commands to install missing dependencies.
+Asks if the user would like to run the distro appropriate commands if any dependency is not available.
 
-I will drop it.
+Signed-off-by: saivishnu725 <saivishnu725@gmail.com>
+---
+ scripts/sphinx-pre-install | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> > +
-> > +patternProperties:
-> > +  "^led@[0-9a-b]$":
-> > +    type: object
-> > +    $ref: common.yaml#
-> > +    unevaluatedProperties: false
-> > +
-> > +    properties:
-> > +      reg:
-> > +        minimum: 0
-> > +        maximum: 0xb
-> > +
-> > +      chan-name:
-> > +        $ref: /schemas/types.yaml#/definitions/string
-> > +        description: LED channel name
-> 
-> Isn't this existing label property? Or node name? You don't need this
-> and instead whatever currently LED subsystem is expecting (label got
-> discouraged so maybe there is something else now).
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index ad9945ccb0cf..581d694eb0fd 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -42,6 +42,7 @@ my $latest_avail_ver;
+ my $pdf = 1;
+ my $virtualenv = 1;
+ my $version_check = 0;
++my $interactive = 0;
+ 
+ #
+ # List of required texlive packages on Fedora and OpenSuse
+@@ -338,6 +339,21 @@ sub which($)
+ 	return undef;
+ }
+ 
++sub run_if_interactive($)
++{
++	my $command = shift;
++
++	if ($interactive) {
++		printf("Do you want to run the command now [Y/n]: ");
++		my $user_input = <STDIN>;
++		chomp $user_input;
++		if ($user_input =~ /Y|y/) {
++			printf("\$ $command\n");
++			system($command);
++		}
++	}
++}
++
+ #
+ # Subroutines that check distro-specific hints
+ #
+@@ -374,7 +390,9 @@ sub give_debian_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo apt-get install $install\n");
++	my $command = "sudo apt-get install $install";
++	printf("\n\t$command\n");
++	run_if_interactive($command);
+ }
+ 
+ sub give_redhat_hints()
+@@ -1002,12 +1020,15 @@ while (@ARGV) {
+ 		$pdf = 0;
+ 	} elsif ($arg eq "--version-check"){
+ 		$version_check = 1;
++	} elsif ($arg eq "--interactive") {
++		$interactive = 1;
+ 	} else {
+-		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check>\n\n";
++		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check> <--interactive>\n\n";
+ 		print "Where:\n";
+ 		print "\t--no-virtualenv\t- Recommend installing Sphinx instead of using a virtualenv\n";
+ 		print "\t--version-check\t- if version is compatible, don't check for missing dependencies\n";
+-		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n\n";
++		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n";
++		print "\t--interactive\t- Ask to install missing dependencies\n\n";
+ 		exit -1;
+ 	}
+ }
+-- 
 
-It isn't common led and multi-led. LP5812 is new 4x3 matrix leds on mainline.
-Therefore, it isn't same as existing led driver common.
+This is not the complete patch - I'm sending this to get early feedback before I go further. If this looks good, I plan to follow up with additional patches that will:
+1. use the run_if_interactive on the hints for every distro
+2. add more quality-to-life features to make the script more useful
 
-> There is no multi-led support in the device? Datasheet this can work as
-> matrix and as direct drive of 4 LEDs, so binding looks incomplete. Not
-> sure what you exactly miss here - check other recent devices with
-> similar features.
+Any form of feedback would be helpful! If there is a reason why none of the scripts are interactable, please let me know why.
 
-My device doesn't support multi-led. Leds are controlled by the control register index directly.
-I will list more D0 - D3 leds. However, the maximum of leds are 12 LEDS.
-It depends on the operation mode that the end user selects.
+Sai Vishnu
 
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/leds/common.h>
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        led-controller@1b {
-> > +            compatible = "ti,lp5812";
-> > +            reg = <0x1b>;
-> > +            #address-cells = <1>;
-> > +            #size-cells = <0>;
-> > +
-> > +            led@0 {
-> > +                    reg = <0x0>;
-> > +                    chan-name = "a0";
-> 
-> Mixed up indentation.
+2.34.1
 
-I will fix the indentation.
-
-Thanks for your detailed review.
-Appreciate your time and feedback!
-
-Best regards,
-Nam Tran
