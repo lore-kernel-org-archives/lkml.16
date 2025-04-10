@@ -1,68 +1,64 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910941A2C3A;
-	Thu, 10 Apr 2025 18:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B774685
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 18:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744309025; cv=none; b=KY6wDX/kXw22bP5x4Pyt42DJEW53mD95fOxPQudKGIFZniBAFpl4nlgqjO0gpnSjBUt3BXK6kj9QPJPVF7Fvdqs6oH8F75X1GoaDfiqVwCsHRZDEF+xnDgmnGaQsGpoxp2mDuRHxzmRDpJYh037ze6/GiJJARyt8/dZoLbtigDs=
+	t=1744309180; cv=none; b=Uajd8uLOIu0se9sIrddcDQBKlke2LA2ZqeqAgDFcYWh3WbE4PP1hqV0cFCJ58U2Y+Auq3mcKQvhhdK+mt14sSoGmWjlOeP2AYyusK3HNU9wGIU9zfju4pgmAda2j4xZORjHYUnd9cRcaDA9uIfg9kEFOKLMhUG1CRIQLsu0gKhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744309025; c=relaxed/simple;
-	bh=9SByiyaYxXpZokL6k39yR9LfBSwxLqEDNTv8k59bHI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IC+khvHBPduaF3ZMq65Li/6euQ5kSxUCwJtyhl3lWAb2t3boX1nrBKhQ9QFPj9BFsguZTqRxTUEUoxQNn5ALfNoe5ebRqTNNGsrjxCZZWyoKhsKxQCDd5ex0IwIJv7RdhXfHnWBzR9Jj2uWu5jsALPmj5+PhuXxpdPSRD5h2Y30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pIx3VK+e; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744309180; c=relaxed/simple;
+	bh=s+F3+gJeDcN4Do9GKJ/A/hDDYvWv2weoYn6og/5mDn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=If+8E5ahfegPimsPUkWOEj7xPqWgPjGrSnln7sH9V8O6JmFdKm1+x3h/sg5KLGeE7w9RJ6TpchvWI+MGcpE4MMn6DJpksmuRSomK/lH6VVHnYQEl4pxz9f4+2TkQRoRRUTZoSbzXi1P+EXzji7NW2A6oOWQ8n26sTx72KreSIcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NfEV3obp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pIx3VK+e"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=G6ruIFczxachWDr7+JzOQRvYE6FMWu+QlZPZ9ThvFAc=; b=pIx3VK+e+SowejgxO12A3Jz1I+
-	p1unV5g1g56T4GHDw0zTiOOH5BUfHWqATRNuzPUxofQ6eGYptmCoULOV3Okj3WORNPs9siL6FPwqn
-	6GUkos07oR1fDzU0o2GoqGlKpuCqMxA2sLaCyY1dMYveDjCpF1wnNEgqcOwbPXXymaarmisMafZxE
-	or+hQ4Kf5hn505i/r2lYO1QYH9q/tEgTlO7Cy378Vziq5DktICOOwdBRCk1LLHXqi1psNGGs1lh+H
-	rbwpyasg7UanEcqSjGVoQ6D3bVOoRK9MmuaWyph/Qo9ZNgmRgJS8Fu0/aAIzwE1z2goO/ipAiKJKr
-	w4zZA1ZQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49084)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2wSI-0002Ib-2r;
-	Thu, 10 Apr 2025 19:16:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2wSF-0003nJ-13;
-	Thu, 10 Apr 2025 19:16:47 +0100
-Date: Thu, 10 Apr 2025 19:16:47 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
-Message-ID: <Z_gLD8XFlyG32D6L@shell.armlinux.org.uk>
-References: <20250409104858.2758e68e@kmaincent-XPS-13-7390>
- <Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
- <20250409143820.51078d31@kmaincent-XPS-13-7390>
- <Z_Z3lchknUpZS1UP@shell.armlinux.org.uk>
- <20250409180414.19e535e5@kmaincent-XPS-13-7390>
- <Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
- <Z/b2yKMXNwjqTKy4@shell.armlinux.org.uk>
- <20250410111754.136a5ad1@kmaincent-XPS-13-7390>
- <Z_fmkuPhqMqWBL2M@shell.armlinux.org.uk>
- <20250410180205.455d8488@kmaincent-XPS-13-7390>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NfEV3obp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744309177;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=5rtW4XsvaRDkSh6S8IuU20KYiNOWOKf3cWAbzVoT8Bk=;
+	b=NfEV3obpuSEFfS8Fbfs/K65+GWC4eT7H4/DqoySf+h6aGL/DKQU7f71Xqy/vQLUq+Fg6oO
+	7Pl2DwxKADUzWVBAEzo3OMhVKVje3gupZd5VrxF+Gz/odhJlEY/I7RhdaanRLCVi0pYDm6
+	fzrfElyjBWSJ8hlgfTXc8pBQVt7UmB8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-683-E68ecc-jOJiJZ7TVv3_8bg-1; Thu,
+ 10 Apr 2025 14:19:34 -0400
+X-MC-Unique: E68ecc-jOJiJZ7TVv3_8bg-1
+X-Mimecast-MFC-AGG-ID: E68ecc-jOJiJZ7TVv3_8bg_1744309172
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 82BA219560B1;
+	Thu, 10 Apr 2025 18:19:31 +0000 (UTC)
+Received: from localhost (unknown [10.22.88.250])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 33C9A19560AD;
+	Thu, 10 Apr 2025 18:19:29 +0000 (UTC)
+Date: Thu, 10 Apr 2025 15:19:28 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
+	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: lclaudio00@gmail.com
+Subject: [PATCH v4] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <Z_gLsK6rOjV3KElO@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,78 +67,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250410180205.455d8488@kmaincent-XPS-13-7390>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Thu, Apr 10, 2025 at 06:02:05PM +0200, Kory Maincent wrote:
-> On Thu, 10 Apr 2025 16:41:06 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> 
-> > On Thu, Apr 10, 2025 at 11:17:54AM +0200, Kory Maincent wrote:
-> > > On Wed, 9 Apr 2025 23:38:00 +0100
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:  
-> > > > On Wed, Apr 09, 2025 at 06:34:35PM +0100, Russell King (Oracle) wrote:  
-> 
-> > > > 
-> > > > With that fixed, ptp4l's output looks very similar to that with mvpp2 -
-> > > > which doesn't inspire much confidence that the ptp stack is operating
-> > > > properly with the offset and frequency varying all over the place, and
-> > > > the "delay timeout" messages spamming frequently. I'm also getting
-> > > > ptp4l going into fault mode - so PHY PTP is proving to be way more
-> > > > unreliable than mvpp2 PTP. :(  
-> > > 
-> > > That's really weird. On my board the Marvell PHY PTP is more reliable than
-> > > MACB. Even by disabling the interrupt.
-> > > What is the state of the driver you are using?   
-> > 
-> > Right, it seems that some of the problems were using linuxptp v3.0
-> > rather than v4.4, which seems to work better (in that it doesn't
-> > seem to time out and drop into fault mode.)
-> > 
-> > With v4.4, if I try:
-> > 
-> > # ./ptp4l -i eth2 -m -s -2
-> > ptp4l[322.396]: selected /dev/ptp0 as PTP clock
-> > ptp4l[322.453]: port 1 (eth2): INITIALIZING to LISTENING on INIT_COMPLETE
-> > ptp4l[322.454]: port 0 (/var/run/ptp4l): INITIALIZING to LISTENING on
-> > INIT_COMPLETE ptp4l[322.455]: port 0 (/var/run/ptp4lro): INITIALIZING to
-> > LISTENING on INIT_COMPLETE ptp4l[328.797]: selected local clock
-> > 005182.fffe.113302 as best master
-> > 
-> > that's all I see. If I drop the -2, then:
-> 
-> It seems you are still using your Marvell PHY drivers without my change.
-> PTP L2 was broken on your first patch and I fixed it.
-> I have the same result without the -2 which mean ptp4l uses UDP IPV4.
+With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
+from rt_mutex_adjust_prio_chain() could happen in preemptible context and
+with a mutex enqueued. That could lead to this sequence:
 
-I'm not sure what you're referring to.
+        rt_mutex_adjust_prio_chain()
+          put_task_struct()
+            __put_task_struct()
+              sched_ext_free()
+                spin_lock_irqsave()
+                  rtlock_lock() --->  TRIGGERS
+                                      lockdep_assert(!current->pi_blocked_on);
 
-There isn't any change for the packet offsets in your patch in
-https://termbin.com/gzei
+Fix that by unconditionally resorting to the deferred call to
+__put_task_struct() if PREEMPT_RT is enabled.
 
-You added configuration of the PTP global config 1 register, which
-is already in my patches - I was writing ~0 to that, you were writing
-3. This only changes which PTP MSGID values get timestamped. I've been
-trying your value of 3 here just in case it was significant.
+Suggested-by: Crystal Wood <crwood@redhat.com>
+Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+---
 
-You changed to use ptp_parse_header() (which didn't exist at the time
-you took my patch) and I had already updated my patches to use when
-this new helper was introduced.
+v2: (Rostedt) remove the #ifdef from put_task_struct() and create
+    tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
+v3: (Sebastian, PeterZ) always call the deferred __put_task_struct() on RT.
+v4: Fix the implementation of what was requested on v3.
 
-The overflow_ns change you made in https://termbin.com/6a18 doesn't
-apply to my code, because my code became:
+ include/linux/sched/task.h |   17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-        overflow_ns = BIT_ULL(32) * param->cc_mult;
-        overflow_ns >>= param->cc_shift;
-        tai->half_overflow_period = nsecs_to_jiffies64(overflow_ns / 2);
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 0f2aeb37bbb04..51678a541477a 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -134,11 +134,8 @@ static inline void put_task_struct(struct task_struct *t)
+ 	if (!refcount_dec_and_test(&t->usage))
+ 		return;
+ 
+-	/*
+-	 * In !RT, it is always safe to call __put_task_struct().
+-	 * Under RT, we can only call it in preemptible context.
+-	 */
+-	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
++	/* In !RT, it is always safe to call __put_task_struct(). */
++	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
+ 		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
+ 
+ 		lock_map_acquire_try(&put_task_map);
+@@ -148,11 +145,13 @@ static inline void put_task_struct(struct task_struct *t)
+ 	}
+ 
+ 	/*
+-	 * under PREEMPT_RT, we can't call put_task_struct
++	 * Under PREEMPT_RT, we can't call __put_task_struct
+ 	 * in atomic context because it will indirectly
+-	 * acquire sleeping locks.
++	 * acquire sleeping locks. The same is true if the
++	 * current process has a mutex enqueued (blocked on
++	 * a PI chain).
+ 	 *
+-	 * call_rcu() will schedule delayed_put_task_struct_rcu()
++	 * call_rcu() will schedule __put_task_struct_rcu_cb()
+ 	 * to be called in process context.
+ 	 *
+ 	 * __put_task_struct() is called when
+@@ -165,7 +164,7 @@ static inline void put_task_struct(struct task_struct *t)
+ 	 *
+ 	 * delayed_free_task() also uses ->rcu, but it is only called
+ 	 * when it fails to fork a process. Therefore, there is no
+-	 * way it can conflict with put_task_struct().
++	 * way it can conflict with __put_task_struct().
+ 	 */
+ 	call_rcu(&t->rcu, __put_task_struct_rcu_cb);
+ }
 
-with overflow_ns being a u64.
-
-I think that covers everything that has a functional change in terms
-of packet parsing either by the driver or by the hardware, so I'm not
-sure what problem you are referring to, or what your fix for it is -
-maybe it's not in either of these two patches?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
