@@ -1,49 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0940A146585
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8AE35946;
+	Fri, 11 Apr 2025 13:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377460; cv=none; b=YvEGwTQfeuS6zZDDoyJRWZxlR+ZL9KlMcJfgphqJnDfE6zDd/4IfgoKlymRWk8J7Ul1YOsPpc9AdsoFLz1O+9IwjrBjFcrOutbdhvYmMR5Xxxjc+6iOzXfvidLDIfKO2N3cEHODxN/BWTtea6TmF36RBE4HP6P7sAJDgD1BsZYo=
+	t=1744377503; cv=none; b=dnPcmPRft3yOZBaPzCGrqGDHtr8TEf0AzoDkvNUX61ESGrNzPAs6Lu2MCM5q6LqOPG7oym6qyX85KJvpYjPuINaA9co5ivy7oxN43VTY4ohB/edPEkVzcxn62lUrq8bUX4qxLCb5aYslZEuCxm1eyrJujNzV5tmyHTjOrKtfwcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377460; c=relaxed/simple;
-	bh=0vAlQXUS7Qy2jeHeUT8fAxf4F02U5tCBQQ3d2Vwre84=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=aT2ycLPJyBmkCO6SqXhUm7Es0JZUNLCrKruATc7dNlroA/4PUXZZ6c74RBAnYyclvnNVCDYjas7FUjnJyAg2SKbNIL3kpOambgjwyo5RON+3fxdLK1PzeX6YoL/k4hDmmkcutTzF/u8+Ke8CGLvY7Vv3ZR+HGxf4amW8kptZ9lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y8SudLgQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744377503; c=relaxed/simple;
+	bh=IeI3eSeAL/MoeRlrl2yOI3hGBvGPXUPVq1OPhKbWqkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZgiU9o2qkcVsRBkbP2E+jJm/VHkiLg86JyQHrhlPTb3FX3CeXucT4ghIHGxMLIXkbQR5DiWpuZqalXqk2J4jVv2TIwCNdDmBl5ttPHwaArq3JkAmwvB3YB2QFO8TChKyj4D4RJz9Sw0DCkRpldbTKsQQOvSQmi2IvwjkaUB0Cos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j8hcrf6t; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y8SudLgQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744377457;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aAPMnr15UUC2IJaasw8kvWmrIDi+EshqBG8kRRliicc=;
-	b=Y8SudLgQqJx28Z6N1NWd6qO7QY1ImfArSQLV/HbTaiqD7H0sjMTeaarj4793AW1qgFWJeS
-	/D53CJl7zDXZDOvVTCK2sHttzeFvgpLWiY9uojoyYlY8gz0ZAqowrsBtDl2vEFJTkNXdMz
-	6GKKPjuyJsqoOBqd2CU0DlbjmK7OlPY=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-104-xSJHeetwPd2MxncaHr6QqA-1; Fri,
- 11 Apr 2025 09:17:32 -0400
-X-MC-Unique: xSJHeetwPd2MxncaHr6QqA-1
-X-Mimecast-MFC-AGG-ID: xSJHeetwPd2MxncaHr6QqA_1744377442
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 863C81800EC5;
-	Fri, 11 Apr 2025 13:17:21 +0000 (UTC)
-Received: from [10.45.225.124] (unknown [10.45.225.124])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 55E621828ABC;
-	Fri, 11 Apr 2025 13:17:16 +0000 (UTC)
-Message-ID: <46ff3480-caca-4e2c-9382-2897c611758a@redhat.com>
-Date: Fri, 11 Apr 2025 15:17:14 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8hcrf6t"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-739be717eddso1483942b3a.2;
+        Fri, 11 Apr 2025 06:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744377501; x=1744982301; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5MA5L9R0Nf5HUBvu/X2l/N9S6FUK2IdgYTVoNXD7ORo=;
+        b=j8hcrf6t/XlVFpkYBdtHvdm08nzBLdpYw5RBOU8YJxOG9rsAZGrtUDBfvPQp4XJ9gq
+         L6FZuUI9vJ5eCLY6pFyaCrjNt8eOhQcUt46u8M/VM0Suz3q6izMKUEZnjZmNapGKxTsg
+         HlGSq2Zy/wZk1uWUZtNLIYMJis5rS99d61COPs95SGklYW2RdJ8W/bhvNi62etJ9DBA8
+         8d53AMKVAbyh6e2t5QGV7WBueeSYCbWx5UqTDy4OGrUFNZfzgFmaXU+3f1QgG50WzgH7
+         63SUEp14f8VSqrcbzRuVyV7Y7c1tcc/TRureTNV4tQGr+urg4p9V7dTM2XjZVhMlTjAs
+         CiiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744377501; x=1744982301;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5MA5L9R0Nf5HUBvu/X2l/N9S6FUK2IdgYTVoNXD7ORo=;
+        b=DgjfBj8TJZTxyXLvrg1PlcV/gkyaeSu+BpdROITGY5qYQeslw+BFZu/f+fPgISQwJm
+         O17IPoVO29Xt+F858rRfC3nBA2mwADNyJUi1pqj8vlI8jV1CRyyE71LbGbbDiNPIW5CZ
+         /kaSywrXqaqeehjUASaiqRoREz58iFySImaiuWC3uJZg/755iFb8Up/H1TOdM+VRsbwo
+         JjV+i631eySiRuQwPjx+xX4qGNSUaUQ8OwRVWpq3bp+tcVtoUOPTRnCVWfB2B0psvAGM
+         homC/0z7UtKrl/FU03NKuXHWd7G9QlA4xGbKmtR8y/lA1Jtepz29fhwqbeXAnIcze2FD
+         hTXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqtpVXbrO+Xztgugt/ilSFDCXabxzt7MxUonlAoqF5+NjAkYHF8e+Nf50Qx/2f6vdTDujY+KCh/KxGqqc=@vger.kernel.org, AJvYcCVP1VaCDFNyeM3+jvLG8FH8QykpYY0tOTIEOca3zlOvXH35/n1UvjsDJ7hYuMsJznMd5F/tkNARqXvlFTSu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/hQZc1Ah4N8nQu0gZ7l5ec1SbBwbAYCZxoKKnlnvInLT6Q2qa
+	EWbhxGNcqOeZ+UCk8j4bwTTEkGrLojBqP1hFTBjitNsrMd1lxyDM
+X-Gm-Gg: ASbGnctaIFBOhRNvlm/gTRwSqiLsWhhZycBjgDy+2mvmrdSNDKYIIDCfoLBtEsUne2o
+	bUbHxdhE6lfY/Ibmjvmi6I089WTGDlX08Jo7YKyVaHwdz8Sfmd9+/5mzQIyplEJlE3f20chMbKf
+	zTo2asnvuoqpmbfR/prI20XsSGfnhVpFS0Tr3EST7EmGIa2c1LK9+s6MTp3fm4f2aBF++xX8ah6
+	ucRJZHNLh2RmYQS1UWfGKS7C2wPPYuTckIIvt2G7Pc0yCoiWAAhDGkCBOBUzG5KwZc8BKpynxLY
+	J9lLWyBwGErfAVfw8yrR0XkxmgJ444uEnZ5mJ56sXwvIEg45BQ==
+X-Google-Smtp-Source: AGHT+IHh9ALpWW2aR602qeuewomF8oAjCqp7iPCudPX2N9HrVhUM+2LF030dKHxB43SWhnuH7ccwfg==
+X-Received: by 2002:a05:6a20:ce44:b0:1f5:8754:324d with SMTP id adf61e73a8af0-2017978a754mr4840372637.9.1744377500682;
+        Fri, 11 Apr 2025 06:18:20 -0700 (PDT)
+Received: from [192.168.0.161] ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a11d2bbfsm4705583a12.41.2025.04.11.06.18.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 06:18:20 -0700 (PDT)
+Message-ID: <641cb805-b279-48af-a3a9-492a8738c841@gmail.com>
+Date: Fri, 11 Apr 2025 18:48:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,65 +66,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-From: Ivan Vecera <ivecera@redhat.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <CAHp75Ve4LO5rB3HLDV5XXMd4SihOQbPZBEZC8i1VY_Nz0E9tig@mail.gmail.com>
- <b7e223bd-d43b-4cdd-9d48-4a1f80a482e8@redhat.com>
+Subject: Re: [PATCH] tty: vt: keyboard: Fix uninitialized variables in
+ vt_do_kdgkb_ioctl
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: jirislaby@kernel.org, tglx@linutronix.de, hdegoede@redhat.com,
+ mingo@kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20250411111548.31399-1-purvayeshi550@gmail.com>
+ <2025041107-postbox-bonanza-2049@gregkh>
 Content-Language: en-US
-In-Reply-To: <b7e223bd-d43b-4cdd-9d48-4a1f80a482e8@redhat.com>
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <2025041107-postbox-bonanza-2049@gregkh>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: 7bit
 
-On 11. 04. 25 1:19 odp., Ivan Vecera wrote:
-> The range for regmap 1: (registers 0x000-0x4FF)
-> regmap_range_cfg {
->      .range_min = 0,
->      .range_max = 10 * 128 - 1, /* 10 pages, 128 registers each */
->      .selector_reg = 0x7f,      /* page selector at each page */
->      .selector_shift = 0,       /* no shift in page selector */
->      .selector_mask = GENMASK(3, 0),    /* 4 bits for page sel */
->      .window_start = 0,         /* 128 regs from 0x00-0x7f */
->      .window_len = 128,
-> };
+On 11/04/25 16:58, Greg KH wrote:
+> On Fri, Apr 11, 2025 at 04:45:48PM +0530, Purva Yeshi wrote:
+>> Fix Smatch-detected issue:
+>>
+>> drivers/tty/vt/keyboard.c:2106 vt_do_kdgkb_ioctl() error:
+>> uninitialized symbol 'kbs'.
+>> drivers/tty/vt/keyboard.c:2108 vt_do_kdgkb_ioctl() error:
+>> uninitialized symbol 'ret'.
+>>
+>> Fix uninitialized variable warnings reported by Smatch in
+>> vt_do_kdgkb_ioctl(). The variables kbs and ret were used in the kfree
+>> and return statements without guaranteed initialization paths, leading to
+>> potential undefined behavior or false positives during static analysis.
+>>
+>> Initialize char *kbs to NULL and int ret to -EINVAL at declaration.
+>> This ensures safe use of kfree(kbs) and return ret regardless of control
+>> flow. Also add a default case in the switch to preserve fallback behavior.
 > 
-> The range for regmap 2: (registers 0x500-0x77F)
-> regmap_range_cfg {
->      .range_min = 10 * 128,
->      .range_max = 15 * 128 - 1, /* 5 pages, 128 registers each */
->      .selector_reg = 0x7f,      /* page selector at each page */
->      .selector_shift = 0,       /* no shift in page selector */
->      .selector_mask = GENMASK(3, 0),    /* 4 bits for page sel */
->      .window_start = 0,         /* 128 regs from 0x00-0x7f */
->      .window_len = 128,
-> };
+> When you say "also" in a patch, that is a HUGE flag that this should be
+> split up into a separate change.  Please do that here, don't mix changes
+> that have nothing to do with each other together into one.
 > 
-> Is it now OK?
+> Also, why isn't the compilers noticing that these are uninitialized
+> variables?  Are you sure the warning is correct?
+> 
+> thanks,
+> 
+> greg k-h
 
-No this is not good... I cannot use 2 ranges.
+Hi Greg,
 
-This is not safe... if the caller use regmap 2 to read/write something 
-below 0x500 (by mistake), no mapping is applied and value is directly 
-used as register number that's wrong :-(.
+Thank you for the feedback.
 
-Should I use rather single mapping range to cover all pages and ensure 
-at driver level that regmap 2 is not used for regs < 0x500?
--or-
-what would be the best approach?
+Got it. I will remove the default case from this patch and resend it 
+with only the fix for the uninitialized variables.
 
-I.
+Yes, Smatch reports uninitialized variable warnings for kbs and ret 
+because, in the function vt_do_kdgkb_ioctl(), both variables are used 
+outside the switch block but are only initialized conditionally within 
+certain case branches. If the cmd value passed to the function does not 
+match any of the explicitly handled cases (KDGKBSENT or KDSKBSENT), then 
+the switch body is skipped entirely. In such a scenario, kbs remains 
+uninitialized, yet kfree(kbs) is still called, which could result in 
+undefined behavior.
 
+Similarly, ret is returned at the end of the function even though it may 
+not have been assigned a value, leading to unpredictable results.
+
+Best regards,
+Purva
