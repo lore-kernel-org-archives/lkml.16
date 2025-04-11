@@ -1,165 +1,106 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55361204840
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57B3204840
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744367318; cv=none; b=piPPn4eBpDf8EShWqumYteTBiVk2lmJp58ekDTBglmtYa/1N7y0/Qvpzpx+EBe+00Ym4rTZEpkevGe1ahSjrBOczJCc+yKtD1F/SH/c/JPI1ZaMLnICnMceVJuvC/y8bhENBZUlDZQ4gWhOsSm5UEd5qEATf1YZy+PCWib/0lEs=
+	t=1744367328; cv=none; b=FX8eT0nSTHm4pqI2WilwN5Z/WsidseUWsXm4HUazmL8R08F7nxzy4NOEmZzMbZycmaqiz3w6zZ8f/ERYsH8X7pdGVQJnS1P3jW7lZNh5O2oI6kuvwONaYBrHS2J+QWIo86y+7ADff91e72vzXEF9+pZ2+odSwh/XWNG/PuFdNxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744367318; c=relaxed/simple;
-	bh=rtNvKOHo+CDWwX6v8e8oLDBWT5FTySvzXMltZLlA9ME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nk1m6xZTPZzQ45xqI875b5FAMMPSmsBGbKUFH1l4YyNuwazm04Lgut9jRD25SEFEOcPtJGRmtwP+UoUsPbWhMnHUvTR1qGXdb229Qc6uydS3NCTFoWJZwJF6LKVFoLFLBPcfJGtck3NYL7n+dkLWUgK9lWDZAuveOuO1lJAgZ18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5A86844195;
-	Fri, 11 Apr 2025 10:28:32 +0000 (UTC)
-Message-ID: <bbdfe17e-a58a-4a14-9e74-8794b08fdda6@ghiti.fr>
-Date: Fri, 11 Apr 2025 12:28:31 +0200
+	s=arc-20240116; t=1744367328; c=relaxed/simple;
+	bh=ZDCwX/VIIX2cwjTORa/viaElRwz8HH8NWVCcOJobQOI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G9aPkeqmhun3b/H6NEKo4r4EikdoQhcI9T9mzqMuekqC1hzkLFABE2tZdGeKm7T8g8mNUUZt7aEbMOSBdhZ1Wxi4eS5dQTKm/Xo/PxU82Iop5r+U+O65QU194FBKNlvXueEuF6DFgU0wQkPKBEzPcpeo2/pkU/+ZO0lirk5lCqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=AMB1+Gay; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="AMB1+Gay"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744367220;
+	bh=Qvl4cj8ljBGCVeGDelcgbiIaxF0858Xn7bz1tzcyE/c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=AMB1+GayCZ2msOfMu4sw9l2YodfAa4F7Smo6rdQngCRhumO5VY4iI3ApjIDVBlUGV
+	 /Lyc9fzWfm2Ys46pO14Ffa31pwepkx1O+l7gleLtpKl9XY7A4VChWo6C7HS02fV/mK
+	 F6b7tnYbcIxcmBxOC8wlVvk67vZCTDTGjOYoK5l4=
+X-QQ-mid: zesmtpip3t1744367176t06a84176
+X-QQ-Originating-IP: T6GmBeruXCFtkICI5bUi36KWkx/42EidU75gg0SRHd8=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 11 Apr 2025 18:26:13 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11810010522310925225
+EX-QQ-RecipientCnt: 15
+From: WangYuli <wangyuli@uniontech.com>
+To: mark@fasheh.com,
+	jlbec@evilplan.org,
+	joseph.qi@linux.alibaba.com
+Cc: akpm@linux-foundation.org,
+	kuba@kernel.org,
+	dmantipov@yandex.ru,
+	mingo@kernel.org,
+	axboe@kernel.dk,
+	wangyuli@uniontech.com,
+	tglx@linutronix.de,
+	ocfs2-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com
+Subject: [PATCH] ocfs2: o2net_idle_timer: Rename del_timer_sync in comment
+Date: Fri, 11 Apr 2025 18:26:10 +0800
+Message-ID: <BDDB1E4E2876C36C+20250411102610.165946-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH fixes] riscv: Properly export reserved regions in
- /proc/iomem
-Content-Language: en-US
-To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Nick Kossifidis <mick@ics.forth.gr>,
- linux-riscv@lists.infradead.org
-Cc: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
- linux-kernel@vger.kernel.org
-References: <20250409182129.634415-1-bjorn@kernel.org>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250409182129.634415-1-bjorn@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduheejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedtgeeuhffhveeujeetveevieekleekvdffudefleevgefgieekkefggefhtddtveenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeejpdhrtghpthhtohepsghjohhrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtohepmhhitghksehitghsrdhfohhrthhhrdhgrhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepsghjohhrnhesrhhivhhoshhin
- hgtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NWaY/LEHNR/FznKEMis7KFA3cuZI6LvpOtEWDSfif2oJYzutp3G2Bhmw
+	p50Mlqe9LYhzY6J03qqnB0RwZP38Qyfav7dFWw4RnO8C4Pw1Nl+//Oq0OD5FKohz5Rv30Ms
+	YN479BzXUwe8mphEPA1tzN5RubvWdXgle+O44UWWQcFn6NSX0AqZTuKUc+5pQOQzZwlC7yl
+	94tJPy7WWXkCzhc393TVwGbgklsppbxrcAnz8yBGk4CYJ73CxkCPw1VZufrWopNoskFhWVo
+	2XrVG5UL1hbYoyVgcesumwYL/xs+aqIzmGrdo7JOBBm98/B/GApoRReZsI23g0r392c0Smg
+	+K2DjfJ2+s6yDXobuH0qleO2lQomQ1uxOjUNSUCNPZVZy/nPpsqHoI3UZ3HDbXHimptCc+Q
+	Z9OrdeixAn9pGHXaxGH1iGVrboiONDGBfegArvtryts04ctv4r9hbuLrbKyXTQz9Os3wDCP
+	FgXr35nwV/FL73mbJLobJz6gVlb+OerHRl89P2DsSOlO/vLXXvAIRLVtExmlFeh1z78Q+8p
+	4dgQrYVe/4E8Md6GfXAtw4yK6zdSSVBLcTmPsct+1XV+2myqpW3ufuiEnPkYYmSvRvA1Zgt
+	Jm13116uM7xSCogc0/Q4NqtJyczZCW2Yxkb0MfUatX/3tdjE423OoljgJYgcRI2ggpKttOX
+	Y5kEqQyBugbyvXl21o9/DVNKFWdjDOPp+Y0fv2Rg4Y2X3SPiXxNU9u9AqQeOmJxA/ymZ7/F
+	n1fPmQIqKk6uHsRruIZsbJbb+BftKL3x8KT3yKaXYijXuUkdCp4U35Wwjr9dpsc3UYH1dY0
+	bBqYgMz4atLJOkm5wFGKc8cUyz0SW5yp0n9n97TNiHDSIuLCuhkluEMXraZxHyFgOPnQOzc
+	gXRUGs78XbPd/G5KLmYklDLToFYp1hNG/mFhwJBwZuc9bwym9Ff2otbNG7SRn/WQAo1ErHc
+	WYRkR1HTxlTsXf0TX1EgdZ7AMb9iESDAMoC3YqEfYW/dUBX88A+fqoleBXlwk0zuoxiMZ+1
+	lekEBAHw==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-Hi Bjorn,
+Commit 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
+switched del_timer_sync to timer_delete_sync, but did not modify the
+comment for o2net_idle_timer(). Now fix it.
 
-On 09/04/2025 20:21, Björn Töpel wrote:
-> From: Björn Töpel <bjorn@rivosinc.com>
->
-> The /proc/iomem represents the kernel's memory map. Regions marked
-> with "Reserved" tells the user that the range should not be tampered
-> with. Kexec-tools, when using the older kexec_load syscall relies on
-> the "Reserved" regions to build the memory segments, that will be the
-> target of the new kexec'd kernel.
->
-> The RISC-V port tries to expose all reserved regions to userland, but
-> some regions were not properly exposed: Regions that resided in both
-> the "regular" and reserved memory block, e.g. the EFI Memory Map. A
-> missing entry could result in reserved memory being overwritten.
->
-> It turns out, that arm64, and loongarch had a similar issue a while
-> back:
->
->    commit d91680e687f4 ("arm64: Fix /proc/iomem for reserved but not memory regions")
->    commit 50d7ba36b916 ("arm64: export memblock_reserve()d regions via /proc/iomem")
->
-> Similar to the other ports, resolve the issue by splitting the regions
-> in an arch initcall, since we need a working allocator.
->
-> Fixes: ffe0e5261268 ("RISC-V: Improve init_resources()")
-> Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
-> ---
->   arch/riscv/kernel/setup.c | 36 +++++++++++++++++++++++++++++++++++-
->   1 file changed, 35 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index c174544eefc8..f7c9a1caa83e 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -66,6 +66,9 @@ static struct resource bss_res = { .name = "Kernel bss", };
->   static struct resource elfcorehdr_res = { .name = "ELF Core hdr", };
->   #endif
->   
-> +static int num_standard_resources;
-> +static struct resource *standard_resources;
-> +
->   static int __init add_resource(struct resource *parent,
->   				struct resource *res)
->   {
-> @@ -139,7 +142,7 @@ static void __init init_resources(void)
->   	struct resource *res = NULL;
->   	struct resource *mem_res = NULL;
->   	size_t mem_res_sz = 0;
-> -	int num_resources = 0, res_idx = 0;
-> +	int num_resources = 0, res_idx = 0, non_resv_res = 0;
->   	int ret = 0;
->   
->   	/* + 1 as memblock_alloc() might increase memblock.reserved.cnt */
-> @@ -193,6 +196,7 @@ static void __init init_resources(void)
->   	/* Add /memory regions to the resource tree */
->   	for_each_mem_region(region) {
->   		res = &mem_res[res_idx--];
-> +		non_resv_res++;
->   
->   		if (unlikely(memblock_is_nomap(region))) {
->   			res->name = "Reserved";
-> @@ -210,6 +214,9 @@ static void __init init_resources(void)
->   			goto error;
->   	}
->   
-> +	num_standard_resources = non_resv_res;
-> +	standard_resources = &mem_res[res_idx + 1];
-> +
->   	/* Clean-up any unused pre-allocated resources */
->   	if (res_idx >= 0)
->   		memblock_free(mem_res, (res_idx + 1) * sizeof(*mem_res));
-> @@ -221,6 +228,33 @@ static void __init init_resources(void)
->   	memblock_free(mem_res, mem_res_sz);
->   }
->   
-> +static int __init reserve_memblock_reserved_regions(void)
-> +{
-> +	u64 i, j;
-> +
-> +	for (i = 0; i < num_standard_resources; i++) {
-> +		struct resource *mem = &standard_resources[i];
-> +		phys_addr_t r_start, r_end, mem_size = resource_size(mem);
-> +
-> +		if (!memblock_is_region_reserved(mem->start, mem_size))
-> +			continue;
-> +
-> +		for_each_reserved_mem_range(j, &r_start, &r_end) {
-> +			resource_size_t start, end;
-> +
-> +			start = max(PFN_PHYS(PFN_DOWN(r_start)), mem->start);
-> +			end = min(PFN_PHYS(PFN_UP(r_end)) - 1, mem->end);
-> +
-> +			if (start > mem->end || end < mem->start)
-> +				continue;
-> +
-> +			reserve_region_with_split(mem, start, end, "Reserved");
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +arch_initcall(reserve_memblock_reserved_regions);
->   
->   static void __init parse_dtb(void)
->   {
->
-> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ fs/ocfs2/cluster/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-It will be merged with other fixes in the next rc-ish!
-
-Thanks,
-
-Alex
+diff --git a/fs/ocfs2/cluster/tcp.c b/fs/ocfs2/cluster/tcp.c
+index fce9beb214f0..43e652a2adaf 100644
+--- a/fs/ocfs2/cluster/tcp.c
++++ b/fs/ocfs2/cluster/tcp.c
+@@ -1483,7 +1483,7 @@ static void o2net_sc_send_keep_req(struct work_struct *work)
+ 	sc_put(sc);
+ }
+ 
+-/* socket shutdown does a del_timer_sync against this as it tears down.
++/* socket shutdown does a timer_delete_sync against this as it tears down.
+  * we can't start this timer until we've got to the point in sc buildup
+  * where shutdown is going to be involved */
+ static void o2net_idle_timer(struct timer_list *t)
+-- 
+2.49.0
 
