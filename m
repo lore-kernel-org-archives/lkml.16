@@ -1,110 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B22191F79;
-	Fri, 11 Apr 2025 19:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9597718C011
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 19:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744398064; cv=none; b=mnEeJccNjpa80jzjenGepPYWU2XyEzcdRKlhFGh93kA32YwXoC72/tH6XhHh9DqTJM2MOSnu09nOnwI7fzbVgGzg+E3K4VRl2/SASYZF9DF1HtT5QDy83Op8X1/hRoDjwKYVIgBy/3QIePuEGKRt3gxdJCoS390yPPpmr5tEaQs=
+	t=1744398184; cv=none; b=WMUlNQPkEtCrhDMjh2yUrYv1x1zqh10JGd2G7CymTWm/iWY75vEqi99B7J5nqSfGjteNZRShn9I/WWXloB7wlJsiYawOODCyPovMaJgWGzm6Eow5hBBIXwNdU74O0i8c6KA8RzNmr7LNJXVymHU3zkvdC7pz6NSoHpK6ulCUvJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744398064; c=relaxed/simple;
-	bh=bA/5WEimXXiOEnOaGbvLbtwN7B1q9uAdOIOO11zIg+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b4Tygf4WsbhuZiY1ZOncjecMGRxwwotXiM0xrqZYUJCuM/gwt9ToDgvnaQP9P63GGJVGFHfTF6+MFkGHXD7ne/TPf659/vttksqCp+DAZOdPxOF3iRCOfo97jwSgB5U+uUaknXfTYW6HJ0K5b3QJ90GxEH/DEde4D7ppcs72K+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o5oU6vI2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744398184; c=relaxed/simple;
+	bh=UQQ6vcoB3VC6bc7iYzqFYWKGCwZsMEpWBdA9VyKUiSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mtEjBNemwF3B0MPgvQbaiN834lHd9ERoSl+qdzc9NUxjaBMekRp+VC9cot2u7PSF4GGfMxrGw0mJ3k2R9EOulf12fay6k1T3xhj2ckpDdLlwBvUug4ITmuE/OJW2QN18UM+tkdpeLOmr9dauRQ434DLqK1JCbcJsg2UoLo4hkCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GfWF6Bqk; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o5oU6vI2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B67C4CEE8;
-	Fri, 11 Apr 2025 19:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744398064;
-	bh=bA/5WEimXXiOEnOaGbvLbtwN7B1q9uAdOIOO11zIg+g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=o5oU6vI2CU4Avy7kOSP81GaXT2299B0OY2Qc9I/AdjT/17RA7zTRqks6CV62SkHoW
-	 ITy/lyp/pdLPQBtESBtj1WfSh/3dvsnKiK2lppsRHgQqiAcWPBAmZFxNe7EU2KckYC
-	 2JA253XjoNXdA5ip/OQc4utI4+qAfHOfeOL3namcFnJeryJNStXHuO0q8c5CNAsuet
-	 YEBM/RyxLUoXJGn+39TzcqzR/hLIqDRZrhDdbx98u4luR0CnbnphOnA+82kewy3odJ
-	 7+Cag3eoexQd51XgIjwlG3CdHdQhjV+Xqa/AV4GBnUFBdT5YKYZneNLIOT9VOvWW6g
-	 fwTI9//uC8TcQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54954fa61c9so2932721e87.1;
-        Fri, 11 Apr 2025 12:01:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQr1JkeocG1aw14PKLp0x7sCD7opHIutXqw/3lhGybyaPfc7m2xqlD7zLnudy6MmAScQpU4m39BgT0D4Tl@vger.kernel.org, AJvYcCX5jnSQNXWWR2CpCBlEF456Xf52N0uw7PbrhEevljksLJkJlA8nSlQWqgOuMd0tV4gu6atnfd2IQME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrhF68MRdzG8q6uZh7tHHyn+kxo2v4NkEU5MaupWXY0smK0zC3
-	0B0gzpTD4pA1cNdOavCPxJikiyWEFkItg6zE34rYdJBcHUcQgE8ejOQliWxqed35+Ab347FcrO2
-	uCTrdQ4tOcBYjZOC873OoAtMBsH8=
-X-Google-Smtp-Source: AGHT+IEHsyq+bbG/5UAaR/57DsRaAfwOrpsrneGZs1xAL1OhptlCEMpu+Ug0gD3uTWxdFKyGZvOAMotnuxyDkn7kIqc=
-X-Received: by 2002:a05:6512:308e:b0:545:2fa9:8cf5 with SMTP id
- 2adb3069b0e04-54d452d5446mr1162079e87.49.1744398062721; Fri, 11 Apr 2025
- 12:01:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GfWF6Bqk"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BFGfLN013884
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 19:02:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1vaF2aDcuvUPgXupZj1sVSgz/YB0ZGf0jSIIiOXLx5w=; b=GfWF6BqkdJKMNOU7
+	ciBjWgxx4T3PldJrt9Va+elrIY1nOz3yefv2U6MYeUy80liCMngrW8AfWg8JaBvP
+	q8WIRIKWWhggJ0QzyvUnMuKCnnQMA5X6c66XsUdFiHiQQQiWv6eoJ2ATXvo9ocfn
+	Xpc5Ge6dSaOcQcjw0szgF4/9hZDNkJma4GR1eaaIEuK8lqzpXW6inbZl632b13/3
+	sIkHTN9k3COw2YcsdlAIZ8E5whIcAJ/GDmnAB8TwMmcYLw8nfBQDAaBRRoHAzewv
+	C4mF2aRse1qPJL8gSBVKMZYHqoqJ/JyLXvQd8JUxJ3RfZdTzZbB6j8+QqMpVJKd4
+	zKIptQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbekfv3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 19:02:55 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5530c2e01so35629985a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:02:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744398174; x=1745002974;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1vaF2aDcuvUPgXupZj1sVSgz/YB0ZGf0jSIIiOXLx5w=;
+        b=iNt8il6o9hOQztHnG24hfPJ2ypC+acbznABcv1d5svfMetlDP6N/nkrd71NGto0JyG
+         4vMghCiP37W5pZX3LvUWEFE1MuChUfKXGBOjFGSy31Dct1vUCPR7ol+ysTvh1dNviRPp
+         hyNYFbzsifxoT3TVk5QHg32UtD2mdXqH5kznmwRra6z0BdI7zX0r0E6cBnxDfIbG47fP
+         7BOQBppTvZHvP/WnxQubhFfCHndzmgCyIMPC8aA+IHjStNdCrqew+xRFcKrzl7puq4Sf
+         FIVImg8uLYJp3h+3O4dEgDxzKqULs2liTInh/qd7nUYxQWyOeABeZS6nP1FFiRIBrPtX
+         ROGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZA8fgf+ax7fNb06uvS9LpKW3dZauLqZUGlTZPrNe8kP4zNIpJfpgRVusyKfpbnVr7MaIv0P9dVdfuQF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfKj/57HlKze4b8uWx0Z2SO9BtmRys+fba4BoH/t3iNJGArFWb
+	idakkX+X0Eplx1p3PrfQPHO1AoUbv2JRNLURxfMZQPoHFU01criE/aNxYXVdzVAbh4nbp+nZVKy
+	F413Tnuwwj85g0H/1Bb4y7OnecXmi5FAOviKNLMUvBlBgrsq6EU+um/84kHSKUQk=
+X-Gm-Gg: ASbGnctnvRKsDpJqxLzBbk7SXaXk7WX8DgfXyaTFb3nZLXqBsT+3RgiltAUFVffz1Xc
+	Vqotu/5PqfQYoXcb+JVdF0T1ApDQkTLyMZ/Sj7B7BJ4RFDsnE0yiOelXz1MrWOhAKTo80/A4RM/
+	lvdM1F3nCmnWEsILKElawuqkw7JjvCRz0Hb9ACkL3FEW+H3nsC8XQXgFJf5YWl6XfEtJAVkdar7
+	TwjOOa0bQFlHB6iBs9TOgJoLveqLIvXjqwNfEPd99odP2FmT4y3efyy+aalbKppUJqRXC+XDXRO
+	RZSffotAJCq0+1UNDaYH+lVvbGTPtJcPF9O0UzzhKiuU0C6L6RVxPRwp9cDkavbJxQ==
+X-Received: by 2002:a05:620a:2805:b0:7c3:d266:3342 with SMTP id af79cd13be357-7c7af0d6f78mr233681585a.5.1744398174181;
+        Fri, 11 Apr 2025 12:02:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHUNrZb30hikn84frYT3M8TQ5a40xIqc08XkhLasXRgrcJZ3bIfcGeUhPq/L8esoHi8gTSMDQ==
+X-Received: by 2002:a05:620a:2805:b0:7c3:d266:3342 with SMTP id af79cd13be357-7c7af0d6f78mr233680085a.5.1744398173807;
+        Fri, 11 Apr 2025 12:02:53 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb424fsm477367166b.120.2025.04.11.12.02.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 12:02:52 -0700 (PDT)
+Message-ID: <9295b681-fcd1-4e8a-bfa9-5e7ee80c8fa1@oss.qualcomm.com>
+Date: Fri, 11 Apr 2025 21:02:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410132850.3708703-2-ardb+git@google.com> <20250411184113.GBZ_liSYllx10eT-l1@renoirsky.local>
-In-Reply-To: <20250411184113.GBZ_liSYllx10eT-l1@renoirsky.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 11 Apr 2025 21:00:51 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
-X-Gm-Features: ATxdqUF-Svulb1Ys9eutZeJMowuBftp7WxY3FOYeIKtyx48grGphQUWINjGEMCI
-Message-ID: <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/boot/sev: Avoid shared GHCB page for early memory acceptance
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, x86@kernel.org, 
-	mingo@kernel.org, linux-kernel@vger.kernel.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] soc: qcom: socinfo: Add support for new fields in
+ revision 22
+To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250411095025.4067964-1-mukesh.ojha@oss.qualcomm.com>
+ <20250411095025.4067964-3-mukesh.ojha@oss.qualcomm.com>
+ <a730e112-b3c8-46a1-a9d7-186d22a2479f@oss.qualcomm.com>
+ <Z/lKDZFtJEQEYbWd@hu-mojha-hyd.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <Z/lKDZFtJEQEYbWd@hu-mojha-hyd.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: YLmHOjNACpzROsaV4GnDxZlJpwNG960G
+X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f9675f cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=8k34yVbjjd5OpHI9aoMA:9 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-ORIG-GUID: YLmHOjNACpzROsaV4GnDxZlJpwNG960G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_07,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110122
 
-On Fri, 11 Apr 2025 at 20:40, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Thu, Apr 10, 2025 at 03:28:51PM +0200, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Communicating with the hypervisor using the shared GHCB page requires
-> > clearing the C bit in the mapping of that page. When executing in the
-> > context of the EFI boot services, the page tables are owned by the
-> > firmware, and this manipulation is not possible.
-> >
-> > So switch to a different API for accepting memory in SEV-SNP guests, one
->
-> That being the GHCB MSR protocol, it seems.
->
+On 4/11/25 6:57 PM, Mukesh Ojha wrote:
+> On Fri, Apr 11, 2025 at 12:01:48PM +0200, Konrad Dybcio wrote:
+>> On 4/11/25 11:50 AM, Mukesh Ojha wrote:
+>>> Add the ncluster_cores_array_offset field with socinfo structure
+>>> revision 22 which specifies no of cores present in each cluster.
+>>>
+>>> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+>>> ---
+>>
+>> So with all three of your patches, you neither introduce a user for them,
+>> nor even expose them in debugfs.
+>>
+>> Please definitely add the latter, and let's talk about the former.
+> 
+> These all revision is added as part of latest boot firmware's socinfo
+> struct version and that also necessitates updating Linux socinfo struct
+> version.
+> 
+> I don't have a problem in adding debugfs entry for all of them however, I
+> don't feel the need unless there is already some user or kernel space code
+> using it.
+> 
+> If you still feel like we should add it, let me know, will do it.
 
-Yes.
+Yeah please do, debugfs is precisely for the cases where *someone* may want
+to get a read out, but it's not especially useful in general, plus most (all?)
+other values that this driver retrieves are already exposed there.
 
-> And since Tom co-developed, I guess we wanna do that.
->
-> But then how much slower do we become?
->
+>> What's 'subpart feture'?
+> 
+> Ah, my bad I did not explain that field in the patch.
+> 
+> Subpart_feat_offset, it is subpart like camera, display, etc., internal
+> feature available on a bin. 
+> 
+> 
+>> How should we interpret the value added in patch 1? Does it expose the
+>> higher temperature threshold in degrees, or do we need to add some hardcoded
+>> variants for each platform separately?
+> 
+> As the name feature suggest some of thermal policy could change based on
+> this value and currently, this will contain only 0 or 1 and 1 means
+> its heat dissipation is better and more relaxed thermal scheme can be
+> put in place.
 
-Non-EFI stub boot will become slower if the memory that is used to
-decompress the kernel has not been accepted yet. But given how heavily
-SEV-SNP depends on EFI boot, this typically only happens on kexec, as
-that is the only boot path that goes through the traditional
-decompressor.
+Please add some comments in both cases
 
-> And nothing in here talks about why that GHCB method worked or didn't
-> work before and that it is ok or not ok why we're axing that off.
->
-
----%<---
-The GHCB shared page method never worked for accepting memory from the
-EFI stub, but this is rarely needed in practice: when using the higher
-level page allocation APIs, the firmware will make sure that memory is
-accepted before it is returned. The only use case for explicit memory
-acceptance by the EFI stub is when populating the 'unaccepted memory'
-bitmap, which tracks unaccepted memory at a 2MB granularity, and so
-chunks of unaccepted memory that are misaligned wrt that are accepted
-without being allocated or used.
----%<---
-
-> I'm somehow missing that aspect of why that change is warranted...
->
-
-This never worked correctly for SEV-SNP, we're just lucky the firmware
-appears to accept memory in 2+ MB batches and so these misaligned
-chunks are rare in practice. Tom did manage to trigger it IIUC by
-giving a VM an amount of memory that is not a multiple of 2M.
+Konrad
