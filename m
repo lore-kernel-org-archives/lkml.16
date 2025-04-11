@@ -1,98 +1,86 @@
-Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA9D1F03EF
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0555623E35D
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744405931; cv=none; b=dRg0H6DFYaQUsae1nGbIVJokcYr/QfugOda8WFfFk3wosxlecE5AN7iHEcnzWvOCzpbXNzpuJ+Inz+NS9MpCB/VJURmFx3OgeKrQdpOVy5DrVCfxLcJ25svZqwaokIBhBXe5tVivrpXg5fnTiWkPv7RZBsNzIp5S8dYhzWaF3nQ=
+	t=1744405961; cv=none; b=XgX+lsvo7qz+JDUrCWka3x7NuVfxpdVelIE387JWdIRw2fO/ReiKZz1d8EdCEMp48EVJ9oD+5FQIeW06e8tjze20UIjUSeNo1lFApA7Ua0bPgpgep0j/Ga4w6cSepvG4rO6EhOZw6Sti5Xcja2qJ1gxKKl56+v8Yu1b35vLrWPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744405931; c=relaxed/simple;
-	bh=z7ossravAl02wsKG1jGXEHvAup5mV/7gmJYOwpAwUj0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZSVotDJdbTIP0HMns8CoogNNeENXCI8x3AuWdZqG1/TSx52eOA31eQUralSjYCQIUcK9C+/Tqy6GtEQAn8bPl42PiJEa5oAsIUbVj5+0GZ5ZhzuHHt4/n6jMX4+USIqa/xPTMMtXfvj5wXl8hA2wT0U+d7TzaQEH6/pP7BD1EqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=EdoQzLwt; arc=none smtp.client-ip=79.135.106.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744405961; c=relaxed/simple;
+	bh=HIoeRzZ4XL/sqMS6l6dsp3lLVoJy7wnMtD2NyOs3WuM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jv3YBja79YY0Ai4p77z8v0E1XFbyS/hthjDWvFx6Ub99yYkNMjs7PYJGMH3o4+yLBxFS/ajVS6Rv6buLUN6soH8HhLb4FUBG3pBvRpm4nMZrmBufzLKlahNrCTSQs7tIwWuHH2SvM8FCT/QxjEdgNfjX4MzULFqaNcz1CR1mKPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lyYEmkt+; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="EdoQzLwt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744405926; x=1744665126;
-	bh=IE2p6mZjml/IXoHIZjvaX+O6luNGGdfOBUl5xiXhoUc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=EdoQzLwtYiykqSHi8gYRiUDh1x7R3sUMgkrAaNDmFADCAzH1qkH67Q9Y7o+1VPh2Y
-	 cSVnI9UwN/3hMb0F++MEs+lBJ83bvi2EzgX2XM+LCWkoJQ+JMKS//ONF1XTuleM+Sa
-	 Eww6Izr/3dzrcVWOeQjoVcUN9LkrrmYGrUa5pCpmbBPgxCDrPZtnmLhUbDc0F9sfMv
-	 G/sZ/RjTJqkN5KF7owQaJmEvMYhBmtyY5WqaWEYLB+uuKkuBI46LCvwb5Wl2WBxya6
-	 BcH2aF/mQhRNsH4M1wtf09ZXUcLCV1StRYdmKta2tXeQBD9mvtPo+pB8c+my+h7eMW
-	 vDdn3I+1yn7ig==
-Date: Fri, 11 Apr 2025 21:11:59 +0000
-To: Tamir Duberstein <tamird@gmail.com>, Alice Ryhl <aliceryhl@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: check type of `$ptr` in `container_of!`
-Message-ID: <D944ADIR8SAC.1CRNV5FJ99TFD@proton.me>
-In-Reply-To: <CAJ-ks9ngPKeoR86WX=qcuS8LtMafZuRXQt7+J9YRv+NVoSgr-A@mail.gmail.com>
-References: <20250411-b4-container-of-type-check-v1-1-08262ef67c95@gmail.com> <CAH5fLgioEPTrh0vYt5zdmj8POCMyDdV+Bd=j_M3PZ-EdKLZtTQ@mail.gmail.com> <CAJ-ks9ngPKeoR86WX=qcuS8LtMafZuRXQt7+J9YRv+NVoSgr-A@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 31cfac6718c54d9d2dc0286b06b479b403baf261
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lyYEmkt+"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30364fc706fso2096357a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744405959; x=1745010759; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fTerkmabK1RPmin6YSGz3yw/UPXy21WADjby6VaDxu0=;
+        b=lyYEmkt+4W/qmYTbqLfgcKWygcpTCT+AcNxQPJV4qwTs3wfz/+CvHP/PqFpPfgL09i
+         rcopAT+whi4UWNcTSg/HVJeSGrj0CA7gBa5NcQ6FyN8uBirYoUYvwN6XuxZUeCPIFFrN
+         lGdqvfm+/X9XO2lbFwqd8SlNNNyaukBAURqDTv3xyPDYmqcWdAKAbyu2aou2gZRCpscc
+         hRPihAiiaeGODqPuibtDr2NjQsJwvkyJdrduBduRFKMZERwp4Kpp0ouTEVYMS0XpY7Du
+         SWLjrZkqUJoQMBIDI45oqQJADgO9Q4T/feG3mimLQsZrBdkgn3b+SfKOzMG6xROfsmGp
+         tx4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744405959; x=1745010759;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fTerkmabK1RPmin6YSGz3yw/UPXy21WADjby6VaDxu0=;
+        b=HD0ClpiC0rQVkbBGDek9hK5cWYcm0ekANku39AnB8/YvxXpz34uCCGNvd31trFZTYW
+         mVxcLmvDHSDBQlVBBo/whtk0Ha8D2Se5IoRH5iFHKV+x+AIGVMAUVBo/S3pMtEy/Jjni
+         R1iavForBecFkAZ4PSfC0ObRb7DEORiHcXAo92bL/5WELlR+Q8w3+flNdn41zhkjPgrS
+         mOxTE2FmbSLj5Gsw7WeJyuW06xigzCdxHEh/6oiftFD9LGfpHebehhM9Ks/o3Jqk1d/q
+         N8ne/5im6ReKvKLcVChnJgNwrl4NEb/f/647BHVHqylYKUrKEH47hCalkxBYNR2SOrKA
+         h8TA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhhLjS4/Jfu3tCRcOIgcpQph0NGWdQGpYFglUzZEUmj9mHv5gPaz/fhNMC+bpMEwwDKhf7pzQMqSCkl2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze98kbc3qMGFejAMZJrCPiEIDqHbTufQiZh3Sz5FRa+7DZJKOo
+	eS04K9j0gA9naZ2h0gsPNuVaF7E/EHJrXFqtQJ4OsIqMJCvkBnsOf5kHMiSeviTzoPhrRHGNPvq
+	IkQ==
+X-Google-Smtp-Source: AGHT+IHCwmlsejUy/39yMP4wbG3Y4o+uj+/0NvNbE4QYI/YW+78TKNJvJdox+x120ZMs4bTF49FtEDiDTlU=
+X-Received: from pjtu11.prod.google.com ([2002:a17:90a:c88b:b0:305:2d2a:dfaa])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5403:b0:301:9f62:a944
+ with SMTP id 98e67ed59e1d1-308237cde17mr7424213a91.33.1744405959367; Fri, 11
+ Apr 2025 14:12:39 -0700 (PDT)
+Date: Fri, 11 Apr 2025 14:12:38 -0700
+In-Reply-To: <20250331213025.3602082-2-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250331213025.3602082-1-jthoughton@google.com> <20250331213025.3602082-2-jthoughton@google.com>
+Message-ID: <Z_mFxiXcWKcxRo8g@google.com>
+Subject: Re: [PATCH v2 1/5] KVM: selftests: Extract guts of THP accessor to
+ standalone sysfs helpers
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: kvm@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Yu Zhao <yuzhao@google.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri Apr 11, 2025 at 5:41 PM CEST, Tamir Duberstein wrote:
-> On Fri, Apr 11, 2025 at 10:36=E2=80=AFAM Alice Ryhl <aliceryhl@google.com=
-> wrote:
->>
->> On Fri, Apr 11, 2025 at 4:31=E2=80=AFPM Tamir Duberstein <tamird@gmail.c=
-om> wrote:
->> >
->> > Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*=
-`.
->> >
->> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
->> > Link: https://lore.kernel.org/all/CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP=
-5wBuGPYh9ZTAiww@mail.gmail.com/
->> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
->> > ---
->> >  rust/kernel/lib.rs | 5 ++++-
->> >  1 file changed, 4 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
->> > index 1df11156302a..da9e36aa7967 100644
->> > --- a/rust/kernel/lib.rs
->> > +++ b/rust/kernel/lib.rs
->> > @@ -200,7 +200,10 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! =
-{
->> >  macro_rules! container_of {
->> >      ($ptr:expr, $type:ty, $($f:tt)*) =3D> {{
->> >          let offset: usize =3D ::core::mem::offset_of!($type, $($f)*);
->> > -        $ptr.byte_sub(offset).cast::<$type>()
->> > +        let container =3D $ptr.byte_sub(offset).cast::<$type>();
->> > +        fn assert_same_type<T>(_: T, _: T) {}
->> > +        assert_same_type($ptr, ::core::mem::addr_of!((*container).$($=
-f)*).cast_mut());
->
-> I noticed I accidentally sent `::core::mem::addr_of` instead of
-> `::core::ptr::addr_of`; will fix once we agree below.
->
->> Perhaps it would be better to wrap the type check in an `if false` to
->> avoid evaluating the expressions at runtime?
->
-> It's optimized out at O1: https://godbolt.org/z/44Go5xnWr. Is it worth it=
-?
+On Mon, Mar 31, 2025, James Houghton wrote:
+> From: Sean Christopherson <seanjc@google.com>
+> 
+> Extract the guts of thp_configured() and get_trans_hugepagesz() to
+> standalone helpers so that the core logic can be reused for other sysfs
+> files, e.g. to query numa_balancing.
+> 
+> Opportunistically assert that the initial fscanf() read at least one byte,
+> and add a comment explaining the second call to fscanf().
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 
-Wrapping in `if false` definitely doesn't hurt, since we get better
-debug perf.
-
----
-Cheers,
-Benno
-
+Needs your SoB.  It's a bit absurd for this particular patch, but please provide
+it anyway, if only so that I can get a giggle out of the resulting chain of SoBs :-)
