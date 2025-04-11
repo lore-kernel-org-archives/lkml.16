@@ -1,153 +1,120 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7AC21C198
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B691096F;
+	Fri, 11 Apr 2025 16:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388185; cv=none; b=pQ+C7RwLO5+t6vkWhxAsCMCzuxtZOk9TBmrU2Gs676nDNR2kBTflFdMhkYBq+Mj8qjYMlLEwEP1WZqB3XqQhukWAzlvzaULiwWmeEBPknrvR6/3VRMpbp4+wMLDAP4liqFJWju5dt9YIiFOl+IbpCqMjiNNajdzHg/xEOQngx8E=
+	t=1744388264; cv=none; b=noGIsue0T8Yhe8sgXwqIJchtS/pDtuxvl2BqEkqNGcye/simVZ6w6n8E2YCQXYrpikZJ+R35CX7ew88Oz0R9n6JRgGdwa/5PhY7iDTVi4EHUPvKZCTlRAlRhp/2jPlu6IRPHsbnLbFVrCKHf2IjRyexvPzp5Tf8K7OeA2RfUWD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388185; c=relaxed/simple;
-	bh=ofG/bh88nXyGpqlK5TshtTQr9cd49SO+uJzCwBw3KLk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IopiBqeYPKyzWSYBgsTYyzSc0ZmYFIjv9IgqVWXx/tqyYswGmIpp5ZkxwLpxWRLd17sz1oOzMVwrhcONg3UJesaN210p5JasJQZ26D+0QiVWjawbg+9NCGwv+3o4m8VLCYH4mKZGhyufaFUYPM5GB+M0T9jHSxA9VESsLvPErGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b41b906b3so229624739f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:16:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744388183; x=1744992983;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UQQgQ7UyS3LAdQoJwwRUwxPug3+VYmSPMHNWzlZpu7g=;
-        b=shkDps5ODEQShXQLq0sYmhn3tIEnXNO2tTLG74U1xQmlvTZogvXhrM+AySPrQXpIEJ
-         pg8GoFKUKqffJ8d02ju7a97DjCbqMCFzXPP3iuRXa10ylTu7anIhMEopVzqA8PSmy34b
-         sjpEzjnXDD44B9rLF3Wsyxn2O+iJzDGzUlMEoOJaZ96+vEZc9PkSfQdqPM7wBUdSxI4m
-         0zlYtV+DRMqbcEYqCXeijc2/1PTWi6arKaWioBZe7HwOqPXznu9unwtFhUZJBUL9db4/
-         AOp9NnKmAd6/Q36rmwA1XDEKGvPOmSkDkBn3Ic7gYYZWm6OvDTKwwIhibDpL10GP8GNq
-         YdBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUYozBqM65Q2tGUHB1fmxlXpa3vrikNodGohVaYu5Ag1t8zV1d0lfo+dWHf/BQf/ih9DeXWUt7Lgxg2V0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC4HCGKFDirXIZk4d8AVCy5POx3GO8lmysgQRLyXki9Rz+fEsd
-	1VIna0dHzRoGVHyjMtjel2MskJ1X7BWxR5Vt4ZlG+mwB3rtwRq+NfbIzonfXokyOqGE5PVZl3OT
-	6Sj6WVu/P4POdoiarrj+76hHNzo2LYo03ivSDHXbI7+H8m3iwKYXGDS4=
-X-Google-Smtp-Source: AGHT+IEe4DwMfsWGIOsRrmluePkQd1t+HY4zIFS0USg703O/1roEm3f4y8+Ckg8Q0QViO6JDMSw+MTbDD8BrjyKQPKMWtQc7aaBe
+	s=arc-20240116; t=1744388264; c=relaxed/simple;
+	bh=ofn7XasYbL6HV6msHMWQ5/n1EDKYsh7K8ld9N4uLdI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bWHtig6NQ5BczjMWyTGQQuMiumOF9DOTg4nbW5hBSLdn5Ke5Ci5sQAzjsYtaD7D1zKYMLUsbx0QJZxSQDOpOr9OpUWi4jfCVj0zD2U+KC2u4OMm9utQC38G8gMkLfl3t9RNBIYoCp/6Do+s8+1Yb5nc6NoIb5qKxkfTdBPQq1W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hFr0NUvD; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hFr0NUvD"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53BGGYuW556229
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 11 Apr 2025 09:16:35 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53BGGYuW556229
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744388197;
+	bh=Je4jjtqDg1lupTlCqhCqlBHURcIemD1LKF6L79eZeQ4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hFr0NUvDO0KxnqHVd5tvh9wlEpPLoXj5+Fk6VRp98Oufm46awXFQUGmxV/fTfgMrx
+	 GzKsVKrNaQ4GKWIS49y82WqrPyQZdWjzvwEUzzMeF18SIrRIxD7pRirRv3yvheYKEE
+	 qAUhHwHGouynqmSNswzUfCwMzXOIh7q1kaCMyUTDJJTa9yd+hAnd6McuU1bc7BfoPc
+	 eQneZepAltsYPsjYuY/TJFnv79plc+f+g/zZNkbo0sIfICoW48HmlTCXZhE1q5HFkw
+	 m3fln8o2KWtLCxcgstTZDEqws5rEYsoFSuQi9X+5Dtycrj6nld6wkvj3/RmP2kBtIf
+	 z2Gw0Sp7D9H9w==
+Message-ID: <c1481083-ee0d-4d58-aa07-01e43fec7c9f@zytor.com>
+Date: Fri, 11 Apr 2025 09:16:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3804:b0:3d6:cb9b:cbd6 with SMTP id
- e9e14a558f8ab-3d7ec227bf0mr32050795ab.13.1744388183354; Fri, 11 Apr 2025
- 09:16:23 -0700 (PDT)
-Date: Fri, 11 Apr 2025 09:16:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f94057.050a0220.2c5fcf.0001.GAE@google.com>
-Subject: [syzbot] [ext4?] kernel BUG in ext4_ext_insert_extent (2)
-From: syzbot <syzbot+ad86dcdffd6785f56e03@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/19] x86/cea: Export per CPU array
+ 'cea_exception_stacks' for KVM to use
+To: Dave Hansen <dave.hansen@intel.com>, Christoph Hellwig <hch@infradead.org>
+Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        andrew.cooper3@citrix.com, luto@kernel.org, peterz@infradead.org,
+        chao.gao@intel.com, xin3.li@intel.com
+References: <20250328171205.2029296-1-xin@zytor.com>
+ <20250328171205.2029296-5-xin@zytor.com> <Z_eHGjzR33LMqLfL@infradead.org>
+ <e88be442-1163-4163-8f2f-06a37d1e595a@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <e88be442-1163-4163-8f2f-06a37d1e595a@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 4/10/2025 7:18 AM, Dave Hansen wrote:
+> On 4/10/25 01:53, Christoph Hellwig wrote:
+>> On Fri, Mar 28, 2025 at 10:11:50AM -0700, Xin Li (Intel) wrote:
+>>> The per CPU array 'cea_exception_stacks' points to per CPU stacks
+>>> +/*
+>>> + * FRED introduced new fields in the host-state area of the VMCS for
+>>> + * stack levels 1->3 (HOST_IA32_FRED_RSP[123]), each respectively
+>>> + * corresponding to per CPU stacks for #DB, NMI and #DF.  KVM must
+>>> + * populate these each time a vCPU is loaded onto a CPU.
+>>> + */
+>>> +EXPORT_PER_CPU_SYMBOL(cea_exception_stacks);
+>> Exporting data vs accessors for it is usually a bad idea.  Doing a
+>> non-_GPl for such a very low level data struture is even worse.
+> 
+> Big ack on this.
+> 
+> I don't even see a single caller of __this_cpu_ist_top_va() that's
+> remotely performance sensitive or that needs to be inline.
+> 
+> Just make the __this_cpu_ist_top/bottom_va() macros into real functions
+> and export __this_cpu_ist_top_va(). It's going to be a pretty tiny
+> function but I think that's tolerable.
+> 
 
-syzbot found the following issue on:
-
-HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17198c04580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f175b153b655dbb3
-dashboard link: https://syzkaller.appspot.com/bug?extid=ad86dcdffd6785f56e03
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f1d71d1bf77d/disk-0af2f6be.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7f1638f065da/vmlinux-0af2f6be.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9b3e49834705/bzImage-0af2f6be.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ad86dcdffd6785f56e03@syzkaller.appspotmail.com
-
-EXT4-fs error (device loop3): mb_free_blocks:1945: group 0, inode 19: block 289:freeing already freed block (bit 18); block bitmap corrupt.
-------------[ cut here ]------------
-kernel BUG at fs/ext4/extents.c:2151!
-Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 6611 Comm: syz.3.178 Not tainted 6.15.0-rc1-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:ext4_ext_insert_extent+0x317c/0x4610 fs/ext4/extents.c:2151
-Code: 8b 74 24 60 e8 c5 ab ff ff 48 89 04 24 e9 2c da ff ff e8 97 40 4c ff 41 8d 9c 1c 00 80 ff ff e9 be ee ff ff e8 85 40 4c ff 90 <0f> 0b e8 7d 40 4c ff 44 01 e3 e9 1f f1 ff ff e8 70 40 4c ff 01 dd
-RSP: 0018:ffffc900049ff0f0 EFLAGS: 00010287
-RAX: 000000000004b428 RBX: ffff88807e54ec30 RCX: ffffc9000c50b000
-RDX: 0000000000080000 RSI: ffffffff826efc8b RDI: 0000000000000004
-RBP: ffff88804d74c418 R08: 0000000000000004 R09: 0000000000000028
-R10: 0000000000000028 R11: 0000000000000000 R12: 0000000000000028
-R13: 0000000000000028 R14: 0000000000000054 R15: ffff888053f4dc18
-FS:  00007fe2885d66c0(0000) GS:ffff8881249b9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b3080cff8 CR3: 000000005ea0a000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- ext4_ext_map_blocks+0x205b/0x5d60 fs/ext4/extents.c:4400
- ext4_map_create_blocks fs/ext4/inode.c:519 [inline]
- ext4_map_blocks+0x45b/0x1390 fs/ext4/inode.c:705
- _ext4_get_block+0x24e/0x5a0 fs/ext4/inode.c:784
- ext4_get_block_unwritten+0x29/0x110 fs/ext4/inode.c:817
- ext4_block_write_begin+0x3fb/0xf40 fs/ext4/inode.c:1066
- ext4_write_begin+0x670/0x11f0 fs/ext4/inode.c:1221
- ext4_da_write_begin+0x29d/0x990 fs/ext4/inode.c:2931
- generic_perform_write+0x3d0/0x930 mm/filemap.c:4102
- ext4_buffered_write_iter+0x119/0x440 fs/ext4/file.c:299
- ext4_file_write_iter+0xa4c/0x1d10 fs/ext4/file.c:718
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0x5bd/0x1180 fs/read_write.c:684
- ksys_write+0x12a/0x240 fs/read_write.c:736
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe28778d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe2885d6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007fe2879a5fa0 RCX: 00007fe28778d169
-RDX: 000000000000fcb8 RSI: 0000200000000140 RDI: 0000000000000007
-RBP: 00007fe28780e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fe2879a5fa0 R15: 00007ffee8100088
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:ext4_ext_insert_extent+0x317c/0x4610 fs/ext4/extents.c:2151
-Code: 8b 74 24 60 e8 c5 ab ff ff 48 89 04 24 e9 2c da ff ff e8 97 40 4c ff 41 8d 9c 1c 00 80 ff ff e9 be ee ff ff e8 85 40 4c ff 90 <0f> 0b e8 7d 40 4c ff 44 01 e3 e9 1f f1 ff ff e8 70 40 4c ff 01 dd
-RSP: 0018:ffffc900049ff0f0 EFLAGS: 00010287
-RAX: 000000000004b428 RBX: ffff88807e54ec30 RCX: ffffc9000c50b000
-RDX: 0000000000080000 RSI: ffffffff826efc8b RDI: 0000000000000004
-RBP: ffff88804d74c418 R08: 0000000000000004 R09: 0000000000000028
-R10: 0000000000000028 R11: 0000000000000000 R12: 0000000000000028
-R13: 0000000000000028 R14: 0000000000000054 R15: ffff888053f4dc18
-FS:  00007fe2885d66c0(0000) GS:ffff8881249b9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb70b406378 CR3: 000000005ea0a000 CR4: 0000000000350ef0
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Right, that does make sense to me.
