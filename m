@@ -1,65 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567336F30F;
-	Fri, 11 Apr 2025 14:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3A215A848;
+	Fri, 11 Apr 2025 14:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380508; cv=none; b=hCEvyKvkujyqSqCaXef+JIQDturYBLPhwVPygFtY1h7LPX/NAjYqCaN//juL599zI2LEW3l9XDtqI9MlExCkUUrINtASA01l3yAsM+9kBpvzNlJ0i9xh5dQUarlykkHm1dQkmED5PFpN90KsqNIHZ6yz+QkKTGf6MEAc+s+HzyQ=
+	t=1744380517; cv=none; b=nV/j/N764MsN6G2Bqhc6QA0WLSTof6z5AQhPNo32ELg6yB4YMv8+TWEdkiNvEqg2g0Wa4rqNjyNf3s0T3xFUMyZ6B5GyCBhnCYfEHj+JD5mv0Trh4UD+OVus/IvZ0FPoR/7oxQMAKQ1xV5ifGbwvSwP56xb8FwaEzOusJFuxLHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380508; c=relaxed/simple;
-	bh=nX4DIF7APuUGgpi+dZMGrR759kRdWLm5IwHTBTnZ7RU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMG9SwHQ9zS4VQLAsYpe0CcnRPp0mzyWqaBBQaCTJTe66q4I/5DAV/Egt9b/Epr0owkzKK20d6pWfO4IPj9lIawApT3i205DIS3IUt6ALQawa398cbGj6/yjfW5zizIvw7Os/x3cFUq7rTvWW53M2ROD++jdmguAqrp53flwIzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBQ+xdRx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744380517; c=relaxed/simple;
+	bh=+6ZoGuxO7lMvb7tocC279TGiDtafYckzm6Ockln5kAY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CFWrvMfzpg3HfPpOVJGcUWrtQeRkOgWK7lX9XuW38fYrhvb9Ug1K2nIG8DUlJUFekn+FBqZVfIpnsGon1xd5rOliydPm2s4WxLRfckUbM6lkRChAEgZ8CDSezkGj5zXSXXtzw3AMeVjbG7p47+FFrnG75msMu3Qz8orJ+9Gd0o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3P8xhnw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBQ+xdRx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFFCC4CEE2;
-	Fri, 11 Apr 2025 14:08:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3P8xhnw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 201F9C4CEE2;
+	Fri, 11 Apr 2025 14:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744380507;
-	bh=nX4DIF7APuUGgpi+dZMGrR759kRdWLm5IwHTBTnZ7RU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KBQ+xdRxaUn4XSDExJwykf3BFFD6Qlfpa3CFVwRdFM6TTnqPMuea3fZE0FmT7AYfi
-	 bGkZy0iJCwbJ6JVJRq6ibhfYCvfghtDe+1D6zH0UyPTya1i7Z8Dd2MesZuo5lm47G5
-	 JpbojT0p392yV/vLSfM154vKVdz+ztKAVRP/qwreaGwftZzj8A9w96vGpBduPRBr5P
-	 zeTUiJAWiTFq0tzSH+ZeWt9WGTG4MpAdrwmDLEPntO1Bu7uapknv4KlArPY51j4Mmf
-	 at5QSa9W6okkRTHJFK/NFUTBHIDUdxOz6IRZGVbmy8xcyXwmU1OzswkprUAjjsM7kz
-	 hCDYkWFq7a0kg==
-Date: Fri, 11 Apr 2025 09:08:26 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: arm: samsung: document g0s board
- binding
-Message-ID: <174438050588.3113760.16761182166000834243.robh@kernel.org>
-References: <20250321145556.1436201-1-ivo.ivanov.ivanov1@gmail.com>
- <20250321145556.1436201-2-ivo.ivanov.ivanov1@gmail.com>
+	s=k20201202; t=1744380516;
+	bh=+6ZoGuxO7lMvb7tocC279TGiDtafYckzm6Ockln5kAY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=B3P8xhnwvhV5G5jcYQH2Gj4QQfQj9XgSJVmE0DmCAH7orRPQjHgHLyOVSdjNbcN9l
+	 LeXaBSvzWQHz0pIG8pRQwHQU6VF6K067DIjB/Z7EYAMh91GlQvil1YGu1+g+vvF5lb
+	 AQEcc1rvZMOfiytqqTx2WidR0Ezr6rCXrLosM5dCaHTbX+buCrcIrbWgfDXSP5Lt0B
+	 4EdSxBj1L0AZjB5OhD+sYQJRLMIiSKM6MOtHUBA13Vw6y79e13fpugXZlxM1QhqPO2
+	 edDt5PajQlGOKn8DqsY4UN5E8yPHBuf7LsolkJaXzVgtYES0OHNUJsnooT/rKLnwEy
+	 6yVSwxCAALN0A==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org,
+	Jan Stancek <jstancek@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: use namespace_{lock,unlock} in dissolve_on_fput()
+Date: Fri, 11 Apr 2025 16:08:30 +0200
+Message-ID: <20250411-computer-wandschmuck-97a26d943a7b@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
+References: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321145556.1436201-2-ivo.ivanov.ivanov1@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1993; i=brauner@kernel.org; h=from:subject:message-id; bh=+6ZoGuxO7lMvb7tocC279TGiDtafYckzm6Ockln5kAY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/VIrXtvW+tkvM8FLfraYbFzXn+rRtv+JeqPiwwM2BP 2vLTuPkjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIl0yjEyrOufUMFb/EeSZduc ZayWn+7PiFmz5+QlMaYWrweCCd38Jxn+isSaVIVN47xyZnp4qvR8iyh/aZPm22KeZ521ghpZftZ yAgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-
-On Fri, 21 Mar 2025 16:55:53 +0200, Ivaylo Ivanov wrote:
-> Add binding for the Samsung Galaxy S22+ (SM-S906B) board, codenamed G0S,
-> which is based on the Samsung Exynos2200 SoC.
+On Thu, 10 Apr 2025 17:05:42 +0200, Jan Stancek wrote:
+> In commit b73ec10a4587 ("fs: add fastpath for dissolve_on_fput()"),
+> the namespace_{lock,unlock} has been replaced with scoped_guard
+> using the namespace_sem. This however now also skips processing of
+> 'unmounted' list in namespace_unlock(), and mount is not (immediately)
+> cleaned up.
 > 
-> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> ---
->  .../devicetree/bindings/arm/samsung/samsung-boards.yaml     | 6 ++++++
->  1 file changed, 6 insertions(+)
+> For example, this causes LTP move_mount02 fail:
+>     ...
+>     move_mount02.c:80: TPASS: invalid-from-fd: move_mount() failed as expected: EBADF (9)
+>     move_mount02.c:80: TPASS: invalid-from-path: move_mount() failed as expected: ENOENT (2)
+>     move_mount02.c:80: TPASS: invalid-to-fd: move_mount() failed as expected: EBADF (9)
+>     move_mount02.c:80: TPASS: invalid-to-path: move_mount() failed as expected: ENOENT (2)
+>     move_mount02.c:80: TPASS: invalid-flags: move_mount() failed as expected: EINVAL (22)
+>     tst_test.c:1833: TINFO: === Testing on ext3 ===
+>     tst_test.c:1170: TINFO: Formatting /dev/loop0 with ext3 opts='' extra opts=''
+>     mke2fs 1.47.2 (1-Jan-2025)
+>     /dev/loop0 is apparently in use by the system; will not make a filesystem here!
+>     tst_test.c:1170: TBROK: mkfs.ext3 failed with exit code 1
 > 
+> [...]
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] fs: use namespace_{lock,unlock} in dissolve_on_fput()
+      https://git.kernel.org/vfs/vfs/c/47a742fd977a
