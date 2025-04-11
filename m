@@ -1,69 +1,175 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10321E7C0E;
-	Fri, 11 Apr 2025 07:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070E1347C7
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358308; cv=none; b=ETGRw07/NU0qy+O5B5DetomwX22eUViRx7lpLTP6BTCUmVGVbCDDcs96lF160eDL6+EDpqh4qyDQ1jm01+mCQ5H6jENyusWsFkNbj66V9FfMnJtvrL3G5t8oZexBnb5Ie0BPfnLjX7p1bKjMOJG93gGZVgWVzH6jHFjwzsoUmuI=
+	t=1744358487; cv=none; b=DQMawl6JjXRMVycl5HgXGBao0QJ0q6fvOy4usqRlrGcyFOwO+vTQpLiG/BS2Zer4z7K20Z06/ZjSvDSZ+n17DXbWXlur2MmEIaPjj9GJQheJJdpK+/dcoFRs76qc16pkLRDcbYXZGXgxulXVj+AZsfSL3xH67ajXcebIT8yll5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358308; c=relaxed/simple;
-	bh=RPYcAqD4y+hgyeMW2NJKkGGQDPPJG1ewfZv3Mzh/woc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gm29BKxSenwRG1XvoOrimDgfwDm+ZQ833IaWxxo3iB8lm3+wgC83erTtGW1yQmmdM1N/pM+BiJ1eKA8vd+CeLgjSp0ZIh23QVbguzoGQtCTQRAvmCAfbpLWeuMRIGnUHV80VCLATXF7e7I7gunHIA7mve7bvFPKYGWjdnUjPvCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Pg3+w1Tk; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1744358487; c=relaxed/simple;
+	bh=7HpYJ2qu2P7Z6iGhZXhWC2kKKmcV6NItufe2Jaqo0zk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d019gKV5uDAgAIHf5F0DKb8sy6ENMsHxKr2vjoK2k4I2uOg0eNHxw3fSqTN/brM2QGyBUGzHku+AOXGQke7KfKifJZH6nb5E0TZAXlodhcJ/+9T1nCnBIrX2RKxprI2qVLdFklkUphRzzUBAxy/Gzty+BCkc8fvJ0k3r2ZgPehQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LRn8qTJA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Pg3+w1Tk"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 31B1F1F95D;
-	Fri, 11 Apr 2025 09:58:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744358302;
-	bh=jhFLKSiuMEHIVF1fYtgFDkjX7z90xWK4KoI2jpP6mFQ=; h=From:To:Subject;
-	b=Pg3+w1TkdRCZg2QZGbZQGRD7HO7IKsprBmVvuMDem+CGtF4FKPugDC3PWt6kc/UpQ
-	 ZIUiGHZQoVil7td6XlFXUMOK5SqiMuJWBUzLSPfHqCsAWYyjX+UQH7zql9jsahxBxV
-	 dk6YSV0+8hkrq+h7B8z/zh+sgm2NQ95peP4wxcfweqInP8kTstnsyWdc6pFj0hpxTq
-	 QsuKtlt4wQElvlTrvePVq+kQKqv08wzSO5yNxtP+RnPDSgce1z4TrbdHirgldKNUCv
-	 VTDcvGgQjw9T4RIOha+GtE/u23ohjDjeSXt4xmLovcrvwqUsgnBZDagEcMaHhQm51O
-	 OfTxXUSsaoqsA==
-Date: Fri, 11 Apr 2025 09:58:20 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 2/4] wifi: mwifiex: let mwifiex_init_fw() return 0 for
- success
-Message-ID: <20250411075820.GB12707@francesco-nb>
-References: <20250410-mwifiex-drop-asynchronous-init-v1-0-6a212fa9185e@pengutronix.de>
- <20250410-mwifiex-drop-asynchronous-init-v1-2-6a212fa9185e@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LRn8qTJA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744358484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kuoOwVeCLC2BNxuJu8PYjCz8x0OZU31drELGm05wlM4=;
+	b=LRn8qTJABWRun3AOM6Cigfzt3rqUV0PzUAesIGJ60tIdLnY9q+0lq76zR/kDlXcGAP58YZ
+	We2fR7KrnwtLIsrKa75bMvRHTG/zXyMu5U3MPIiw4V7vj/+wESqjamB1iKUuoxbDIJRnDb
+	OBgF34BzdCVwjDMeF4Dz0KyTz62Ukog=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-133-MKaejLBYOtiCJIwWsZx4Dw-1; Fri,
+ 11 Apr 2025 04:01:20 -0400
+X-MC-Unique: MKaejLBYOtiCJIwWsZx4Dw-1
+X-Mimecast-MFC-AGG-ID: MKaejLBYOtiCJIwWsZx4Dw_1744358478
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 79C7A195606B;
+	Fri, 11 Apr 2025 08:01:18 +0000 (UTC)
+Received: from [10.45.225.124] (unknown [10.45.225.124])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9668E1809BF5;
+	Fri, 11 Apr 2025 08:01:13 +0000 (UTC)
+Message-ID: <c68dd22d-f9e3-43d0-8090-e7f53265ef89@redhat.com>
+Date: Fri, 11 Apr 2025 10:01:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410-mwifiex-drop-asynchronous-init-v1-2-6a212fa9185e@pengutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
+To: Lee Jones <lee@kernel.org>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250411072616.GU372032@google.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250411072616.GU372032@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, Apr 10, 2025 at 12:28:44PM +0200, Sascha Hauer wrote:
-> mwifiex_sta_init_cmd() returns -EINPROGRESS as sucess indication when
-> the init param is true. Likewise mwifiex_init_fw() returns -EINPROGRESS
-> as success indication: It will either return -EINPROGRESS directly when
-> in mfg_mode or the return value of mwifiex_sta_init_cmd() when in normal
-> mode.
+On 11. 04. 25 9:26 dop., Lee Jones wrote:
+> On Wed, 09 Apr 2025, Ivan Vecera wrote:
 > 
-> -EINPROGRESS is a leftover from times when the initialization commands
-> were sent asynchronously. Since 7bff9c974e1a ("mwifiex: send firmware
-> initialization commands synchronously") the return value has become
-> meaningless, so change mwifiex_sta_init_cmd() and mwifiex_init_fw()
-> to return 0 for success.
+>> Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+>> provides DPLL and PTP functionality. This series bring first part
+>> that adds the common MFD driver that provides an access to the bus
+>> that can be either I2C or SPI.
+>>
+>> The next series will bring the DPLL driver that will covers DPLL
+>> functionality. And another ones will bring PTP driver and flashing
+>> capability via devlink.
+>>
+>> Testing was done by myself and by Prathosh Satish on Microchip EDS2
+>> development board with ZL30732 DPLL chip connected over I2C bus.
+>>
+>> Patch breakdown
+>> ===============
+>> Patch 1 - Common DT schema for DPLL device and pin
+>> Patch 3 - Basic support for I2C, SPI and regmap
+>> Patch 4 - Devlink registration
+>> Patches 5-6 - Helpers for accessing device registers
+>> Patches 7-8 - Component versions reporting via devlink dev info
+>> Patches 9-10 - Helpers for accessing register mailboxes
+>> Patch 11 - Clock ID generation for DPLL driver
+>> Patch 12 - Export strnchrnul function for modules
+>>             (used by next patch)
+>> Patch 13 - Support for MFG config initialization file
+>> Patch 14 - Fetch invariant register values used by DPLL and later by
+>>             PTP driver
+>>
+>> Ivan Vecera (14):
+>>    dt-bindings: dpll: Add device tree bindings for DPLL device and pin
+>>    dt-bindings: dpll: Add support for Microchip Azurite chip family
+>>    mfd: Add Microchip ZL3073x support
+>>    mfd: zl3073x: Register itself as devlink device
+>>    mfd: zl3073x: Add register access helpers
+>>    mfd: zl3073x: Add macros for device registers access
+>>    mfd: zl3073x: Add components versions register defs
+>>    mfd: zl3073x: Implement devlink device info
+>>    mfd: zl3073x: Add macro to wait for register value bits to be cleared
+>>    mfd: zl3073x: Add functions to work with register mailboxes
+>>    mfd: zl3073x: Add clock_id field
+>>    lib: Allow modules to use strnchrnul
+>>    mfd: zl3073x: Load mfg file into HW if it is present
+>>    mfd: zl3073x: Fetch invariants during probe
+>>
+>>   .../devicetree/bindings/dpll/dpll-device.yaml |  76 ++
+>>   .../devicetree/bindings/dpll/dpll-pin.yaml    |  44 +
+>>   .../bindings/dpll/microchip,zl3073x-i2c.yaml  |  74 ++
+>>   .../bindings/dpll/microchip,zl3073x-spi.yaml  |  77 ++
+>>   MAINTAINERS                                   |  11 +
+>>   drivers/mfd/Kconfig                           |  32 +
+>>   drivers/mfd/Makefile                          |   5 +
+>>   drivers/mfd/zl3073x-core.c                    | 883 ++++++++++++++++++
+>>   drivers/mfd/zl3073x-i2c.c                     |  59 ++
+>>   drivers/mfd/zl3073x-spi.c                     |  59 ++
+>>   drivers/mfd/zl3073x.h                         |  14 +
+>>   include/linux/mfd/zl3073x.h                   | 363 +++++++
+>>   lib/string.c                                  |   1 +
+>>   13 files changed, 1698 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
+>>   create mode 100644 drivers/mfd/zl3073x-core.c
+>>   create mode 100644 drivers/mfd/zl3073x-i2c.c
+>>   create mode 100644 drivers/mfd/zl3073x-spi.c
+>>   create mode 100644 drivers/mfd/zl3073x.h
+>>   create mode 100644 include/linux/mfd/zl3073x.h
 > 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Not only are all of the added abstractions and ugly MACROs hard to read
+> and troublesome to maintain, they're also completely unnecessary at this
+> (driver) level.  Nicely authored, easy to read / maintain code wins over
+> clever code 95% of the time.  Exporting functions to pass around
+> pointers to private structures is also a non-starter.
 
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+If you mean regmap_config exported to zl3073x-i2c/spi modules then these 
+three modules could be squashed together into single module.
+
+> After looking at the code, there doesn't appear to be any inclusion of
+> the MFD core header.  How can this be an MFD if you do not use the MFD
+> API?  MFD is not a dumping area for common code and call-backs.  It's a
+> subsystem used to neatly separate out and share resources between
+> functionality that just happens to share the same hardware chip.
+
+You are right, the v2 series was spliced into 2 separate series as the 
+bot warns about too big (>15 commits) series. The real MFD API usage is 
+present in the second one (or in patch 14 of the v1 patch-set) when MFD 
+cells are created for DPLL functional blocks.
+
+And yes, I chose the MFD for the common part because DPLL and PTP 
+functions share the same registers concurrently. And MFD could be the 
+right place for exposing these shared resources and providing 
+synchronized access to them. The device has also GPIO functionality that 
+could be potentially covered in the future.
+
+Or would you prefer to implement all these functional block in one 
+monolithic driver? Would it be better for maintenance?
+
+Thanks,
+Ivan
 
