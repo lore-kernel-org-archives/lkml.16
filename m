@@ -1,152 +1,169 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A247413D53B;
-	Fri, 11 Apr 2025 13:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220C61624D5;
+	Fri, 11 Apr 2025 13:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744378717; cv=none; b=OJ21zv5bib7Fn8be1KjdKlUQPzQgEG+WfUwlZWfcWpcqrbQvsq0hm8yfJ0iiubMbvmrN4bB4SKvQrewgr4XcBk0VwrgJ9IwQBR46c34TzlNRvtg+ItxXz7f1XSTZxFTGVIEeEDxqRFm/bZRKFpBITSda4CHNvNK/qiXKOe/T/T0=
+	t=1744378725; cv=none; b=hLzzCIzUaDaXHzkoDjgEECTtsTk0Lh7yPcke5LJECssTSKthzo54b4rCkr/WnJnRiye2OXCsa8JlHUchMEiwmBkUoZrajTSi/qNM1lBTXSwumpRm3pQ3urFY9M3EFiXDmk3wCvDrlvE7eSw12xNBt+ECW+ov11eP1t88ue17Gw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744378717; c=relaxed/simple;
-	bh=FaixQ3OKBn1K5yTLDByMA1GZMZCSbDr4R3TfWKUtEnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MpKzGRrkXTQ/8QCF68O0lSZtH2lSO7dhK6e17vL8PfyB/vaCrIOfqDq7lv2oJwyfYN8S48Wqb/uVZS5ndS2/RCBJ7S5zTv1z/UgvvOo8PHY9JmGU4U4ZxShRGFpV3UKJk9Ox3X//5WZ9eFiFxQ1aLRNTl948CewH3PPfRLx4T9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ahzxC4vl; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744378725; c=relaxed/simple;
+	bh=9nOXjdvRPnZ2BF4Sz2SL+rND/MjoCbT+d+bZEAd8Qrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnfOr4sYCVBtIt5YgWeibvMr4eU6WUWGhDr5XJe9HJEUwAjfGBKNAp8o0PvNTnBQ+kTcYoV1nas9jBRp4p9mlRsTTejIiTSnvLrIbNYD1d5Icq7sjgJwvEpzHt/VxSYviJaasOrpHYJXhcKuuKaoyfktDYsfVg/K5PpV6is5XOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iWU8Dx/J; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ahzxC4vl"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDcPjX2086911
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 08:38:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744378705;
-	bh=z5Mp5PjDazBwJKD9kj/i3cvmnBHjj8MU6FFvSOWimtU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=ahzxC4vlWCrURiNSqahg/NcY/wlhdcOKJTRl+MxTp8D183C/b7u+NaSHo6BKRccMx
-	 ATswupEEkzRFcZIoyTqKVP4Kh1WhMLeNgRbvU/4hU5c2JWxlJtfTVMBvrfb0e+vnQu
-	 qKWy+Lir84OaBh+sFi3cwNBlMqTXP5E2VHizUbmc=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDcPUX081979
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 08:38:25 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 08:38:24 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 08:38:24 -0500
-Received: from [10.249.136.157] ([10.249.136.157])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDcJf0098684;
-	Fri, 11 Apr 2025 08:38:20 -0500
-Message-ID: <16713a1b-1e74-4b08-bd4c-12dc0a9d32df@ti.com>
-Date: Fri, 11 Apr 2025 19:08:18 +0530
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iWU8Dx/J"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A709143837;
+	Fri, 11 Apr 2025 13:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744378721;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Se307jMf8bJRrVTshEHtUk2COFPI+eANTJd1fN8fBls=;
+	b=iWU8Dx/JYqm/sFQgZoR26vjC41ZWuxjgOZhVY1/LATuPozDi8aQWRB4v9yfoH/bgxG53C9
+	f+X37mqdvqCDQAb7yrUuNmi3ZqDim/Hgq34MfFfSMaEOhdTQAWxq/cqwZLHvRbyz7wY5Ub
+	Ziu8XpfvAbftJkqqaiV/hVB+AFjnzn+ambnyplYjxxcz/scTZo3wvmgGdga209+onQY9IR
+	EwnENl2XV+Kkn10eSYTxDf3J90fCf+NwYjVvwuL6+HT349VivHuiQ28SzOTB1JccXcpWCi
+	3SUy8iWvfKTcAWxFdGbeGUJMSxHOitp5FqTX0odc1wUDrEz8bbzH1J8F47jAtA==
+Date: Fri, 11 Apr 2025 15:38:40 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Alexandre Mergnat <amergnat@baylibre.com>
+Cc: Eddie Huang <eddie.huang@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] rtc: Fix the RTC time comparison issues adding
+ cast
+Message-ID: <202504111338408af44d7b@mail.local>
+References: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
+ <20250109-enable-rtc-v3-3-f003e8144419@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/7] arm64: dts: ti: k3-j721e-sk: Add requiried voltage
- supplies for IMX219
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, <stable@vger.kernel.org>
-References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
- <20250409134128.2098195-5-y-abhilashchandra@ti.com>
-Content-Language: en-US
-From: "Francis, Neha" <n-francis@ti.com>
-In-Reply-To: <20250409134128.2098195-5-y-abhilashchandra@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250109-enable-rtc-v3-3-f003e8144419@baylibre.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduleehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeiudeuteehhfekgeejveefhfeiudejuefhgfeljefgjeegkeeujeeugfehgefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheprghmvghrghhnrghtsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopegvugguihgvrdhhuhgrnhhgsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhop
+ ehsvggrnhdrfigrnhhgsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehmrghtthhhihgrshdrsghgghesghhmrghilhdrtghomhdprhgtphhtthhopegrnhhgvghlohhgihhorggttghhihhnohdruggvlhhrvghgnhhosegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
-> The device tree overlay for the IMX219 sensor requires three voltage
-> supplies to be defined: VANA (analog), VDIG (digital core), and VDDL
-> (digital I/O). Add the corresponding voltage supply definitions to avoid
-> dtbs_check warnings.
+On 11/04/2025 14:35:56+0200, Alexandre Mergnat wrote:
+> The RTC subsystem was experiencing comparison issues between signed and
+> unsigned time values. When comparing time64_t variables (signed) with
+> potentially unsigned range values, incorrect results could occur leading
+> to runtime errors.
 > 
-> Fixes: f767eb918096 ("arm64: dts: ti: k3-j721e-sk: Add overlay for IMX219")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+> Adds explicit type casts to time64_t for critical RTC time comparisons
+> in both class.c and interface.c files. The changes ensure proper
+> handling of negative time values during range validation and offset
+> calculations, particularly when dealing with timestamps before 1970.
+> 
+> The previous implementation might incorrectly interpret negative values
+> as extremely large positive values, causing unexpected behavior in the
+> RTC hardware abstraction logic.
+> 
+
+range_max is explicitly unsigned, casting it to a signed value will
+break drivers.
+
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 > ---
->  .../dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
+>  drivers/rtc/class.c     | 6 +++---
+>  drivers/rtc/interface.c | 8 ++++----
+>  2 files changed, 7 insertions(+), 7 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
-> index 4a395d1209c8..4eb3cffab032 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
-
-The link to the schematics seems to need updation, would like to see where these
-regulators are mentioned, can't find them in [0] which I assume is the latest link.
-
-> @@ -19,6 +19,33 @@ clk_imx219_fixed: imx219-xclk {
->  		#clock-cells = <0>;
->  		clock-frequency = <24000000>;
->  	};
-> +
-> +	reg_2p8v: regulator-2p8v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "2P8V";
-> +		regulator-min-microvolt = <2800000>;
-> +		regulator-max-microvolt = <2800000>;
-> +		vin-supply = <&vdd_sd_dv>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_1p8v: regulator-1p8v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "1P8V";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		vin-supply = <&vdd_sd_dv>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_1p2v: regulator-1p2v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "1P2V";
-> +		regulator-min-microvolt = <1200000>;
-> +		regulator-max-microvolt = <1200000>;
-> +		vin-supply = <&vdd_sd_dv>;
-> +		regulator-always-on;
-> +	};
->  };
+> diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
+> index e31fa0ad127e9..1ee3f609f92ea 100644
+> --- a/drivers/rtc/class.c
+> +++ b/drivers/rtc/class.c
+> @@ -282,7 +282,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
+>  	 * then we can not expand the RTC range by adding or subtracting one
+>  	 * offset.
+>  	 */
+> -	if (rtc->range_min == rtc->range_max)
+> +	if (rtc->range_min == (time64_t)rtc->range_max)
+>  		return;
 >  
->  &csi_mux {
-> @@ -34,6 +61,9 @@ imx219_0: imx219-0@10 {
->  		reg = <0x10>;
+>  	ret = device_property_read_u32(rtc->dev.parent, "start-year",
+> @@ -299,7 +299,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
+>  	if (!rtc->set_start_time)
+>  		return;
 >  
->  		clocks = <&clk_imx219_fixed>;
-> +		VANA-supply = <&reg_2p8v>;
-> +		VDIG-supply = <&reg_1p8v>;
-> +		VDDL-supply = <&reg_1p2v>;
+> -	range_secs = rtc->range_max - rtc->range_min + 1;
+> +	range_secs = (time64_t)rtc->range_max - rtc->range_min + 1;
 >  
->  		port {
->  			csi2_cam0: endpoint {
-> @@ -55,6 +85,9 @@ imx219_1: imx219-1@10 {
->  		reg = <0x10>;
+>  	/*
+>  	 * If the start_secs is larger than the maximum seconds (rtc->range_max)
+> @@ -327,7 +327,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
+>  	 *
+>  	 * Otherwise the offset seconds should be 0.
+>  	 */
+> -	if (rtc->start_secs > rtc->range_max ||
+> +	if (rtc->start_secs > (time64_t)rtc->range_max ||
+>  	    rtc->start_secs + range_secs - 1 < rtc->range_min)
+>  		rtc->offset_secs = rtc->start_secs - rtc->range_min;
+>  	else if (rtc->start_secs > rtc->range_min)
+> diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+> index aaf76406cd7d7..93bdf06807f23 100644
+> --- a/drivers/rtc/interface.c
+> +++ b/drivers/rtc/interface.c
+> @@ -37,7 +37,7 @@ static void rtc_add_offset(struct rtc_device *rtc, struct rtc_time *tm)
+>  	 */
+>  	if ((rtc->start_secs > rtc->range_min && secs >= rtc->start_secs) ||
+>  	    (rtc->start_secs < rtc->range_min &&
+> -	     secs <= (rtc->start_secs + rtc->range_max - rtc->range_min)))
+> +	     secs <= (time64_t)(rtc->start_secs + rtc->range_max - rtc->range_min)))
+>  		return;
 >  
->  		clocks = <&clk_imx219_fixed>;
-> +		VANA-supply = <&reg_2p8v>;
-> +		VDIG-supply = <&reg_1p8v>;
-> +		VDDL-supply = <&reg_1p2v>;
+>  	rtc_time64_to_tm(secs + rtc->offset_secs, tm);
+> @@ -58,7 +58,7 @@ static void rtc_subtract_offset(struct rtc_device *rtc, struct rtc_time *tm)
+>  	 * device. Otherwise we need to subtract the offset to make the time
+>  	 * values are valid for RTC hardware device.
+>  	 */
+> -	if (secs >= rtc->range_min && secs <= rtc->range_max)
+> +	if (secs >= rtc->range_min && secs <= (time64_t)rtc->range_max)
+>  		return;
 >  
->  		port {
->  			csi2_cam1: endpoint {
-[0] https://datasheets.raspberrypi.com/camera/camera-module-2-schematics.pdf
+>  	rtc_time64_to_tm(secs - rtc->offset_secs, tm);
+> @@ -66,7 +66,7 @@ static void rtc_subtract_offset(struct rtc_device *rtc, struct rtc_time *tm)
+>  
+>  static int rtc_valid_range(struct rtc_device *rtc, struct rtc_time *tm)
+>  {
+> -	if (rtc->range_min != rtc->range_max) {
+> +	if (rtc->range_min != (time64_t)rtc->range_max) {
+>  		time64_t time = rtc_tm_to_time64(tm);
+>  		time64_t range_min = rtc->set_start_time ? rtc->start_secs :
+>  			rtc->range_min;
+> @@ -74,7 +74,7 @@ static int rtc_valid_range(struct rtc_device *rtc, struct rtc_time *tm)
+>  			(rtc->start_secs + rtc->range_max - rtc->range_min) :
+>  			rtc->range_max;
+>  
+> -		if (time < range_min || time > range_max)
+> +		if (time < range_min || time > (time64_t)range_max)
+>  			return -ERANGE;
+>  	}
+>  
+> 
+> -- 
+> 2.25.1
+> 
 
 -- 
-Thanking You
-Neha Malcom Francis
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
