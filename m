@@ -1,75 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B72E8635A;
-	Fri, 11 Apr 2025 14:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1924F1925AB
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380070; cv=none; b=WKfis/zmujnmev6THdCAJ5VRk5UKfa2Uq2L35RQ/dKFDdHJTk+UAOghOrDYgsmceJh7QykBISFl/xtUBlqzf++kTdnXnlYRSZigC+tb60kvzJUPnvq5lNdId0wuoquhTr844n+3maY09Cs4CeUwdpbdYZ2ZBG33wkehMli/oodk=
+	t=1744380094; cv=none; b=KlVcirfVp1JZSbBzOoG5IUOh+lJeA9UaxQMYpUBR7w0sK/JvwyhtNc59v04jylGkXHD1pk3BlVvTOVTDUObyI7PWzW/kVDLu3qE1Ma8qBmhx2kq8IYUFbI0KT8ESLNscPj5NHd0Qpy0seSrekcRUCLA3Dj5Gj77AyZGPH7iKlm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380070; c=relaxed/simple;
-	bh=urk+8jTLaaBxcIVbtmSiUKTuFqpND3ByFDUrvvWBptA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pslW2WOsAkwt5CzyOqeiyFoBA7HBEdnJ4lVOnGY1pL/EzUXnJX/RRe33sK49BdCMBBs4NkK4L9S33Au6BelyXM/dY6Uv1Oo2R+c4JwYtOVMXY6KlJVyoq91RW7JrU+rnAXFJajsNpbD15VyTnk1ZNzJatbnJQ+ucBkLzsaaD+x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SjS/HrlG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744380094; c=relaxed/simple;
+	bh=pDyKbO56Ddz2WZ550CfuDnQcBTRpV4zOKeY8l0cY+wQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Zr+6OBt4SpqkX4j9wt8Yf3bJvPS1Vmh/kmBoz83TsOqYUAeftPrBKV+jPqrWGihNTZsoIVs2d6S/gEhZOKuIUhqBpSIVO+PVqHvVon95N8Sl/OG9CdztdOrad4QgbYOP5QjwinBMaTc03aNgEO04AvWHxDj9iVZFgXgD+Zivhqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1hFC9UUb; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SjS/HrlG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 544DEC4CEE2;
-	Fri, 11 Apr 2025 14:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744380069;
-	bh=urk+8jTLaaBxcIVbtmSiUKTuFqpND3ByFDUrvvWBptA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SjS/HrlGe16mxal+he+02+l3Ekup3GwClH0gQ08+SQKhvrYQJxZHUEQ9koO5a5LsK
-	 80W0fEvNWZGvK1t7s8AcI5gC572uM1iVzbmKdUbFvZhl3ds8LVHtQoj8+n70t3jpqa
-	 Hgm94kCqz+B6PUDhnzcF/fjbhLBDn+oyTxYp8Sa8=
-Date: Fri, 11 Apr 2025 16:01:06 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Guan-Yu Lin <guanyulin@google.com>
-Cc: mathias.nyman@intel.com, stern@rowland.harvard.edu,
-	gargaditya08@live.com, kekrby@gmail.com,
-	jeff.johnson@oss.qualcomm.com, elder@kernel.org,
-	quic_zijuhu@quicinc.com, ben@decadent.org.uk,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 2/4] usb: add apis for offload usage tracking
-Message-ID: <2025041107-guru-epilogue-a4b6@gregkh>
-References: <20250408035833.844821-1-guanyulin@google.com>
- <20250408035833.844821-3-guanyulin@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1hFC9UUb"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7398d70abbfso2618262b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744380092; x=1744984892; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XcPVK4CSR1aU1haxpBUR9PW1y+UHdkqysUSf0PjchSg=;
+        b=1hFC9UUbFhsEd/V37F87mXNsMykMQLD+SY5/oFINRk5kwxEq7wv5tk6rF0YRcCyaLQ
+         yNuyh2x4Q5XsBQPCWOMxVAXMa9RPGW259lWgIgDFmBR4OYmb9QNUX/Lvs7E5EXyIwaA7
+         xjxxtq+zSOgYW4QIKHpjZI1nvC9kPFl1Ti5ZD1PHeucuxEf1a/7CzIhVnOEh1yX/FrO2
+         yyUwnkYJuXRRgN+BvLEqNDMx0NVpeb68cG/l4EguvT5AobKYDfm64gDeKvsYfZkxywJO
+         jvMa3dx8er8ew0lybor8E9nk/Go0fKf9UDwwyV7B1x5cXObmU8cN1Ni9SdfG12cMTx/K
+         i9IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744380092; x=1744984892;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XcPVK4CSR1aU1haxpBUR9PW1y+UHdkqysUSf0PjchSg=;
+        b=kQM8Zyzy8mrw9/gRd93hYcHAUa/6CcfK9zTqavcR8gtFv9jYWKs18wHkW0+U9W3Sd/
+         AJ+h/Y0m6ZhvbPjhFqP+jArCK6Yun8r7kPSanHZH/HS/aP0ZGOOZPRcZYb4rXi0kmtE3
+         hXozXpic+0V6WW3bwTo3mi6Q+Yox1at3lSaAxqTjVUvWYAZbX3VsDclUt/o8Vf5mQZIB
+         D6q+OMH+2PXIraziKwWF3v30QMOY1sp+j10s7/aSK6y7tAEI5r08e7EXX6aYuEBTdKbx
+         6CaUCVNQRIk5woRsFc5YS0HhVBprjGdG6v3TCtj7uXJJxQQWZ02Rl6TogtQmXuMM1XBZ
+         zq1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXpa3cXOLUkh6y6gn7MDVTkmO4gv9ZHmQSmlqI1RfwjTept7V7ZVB9WSppSjMcXW5kygE57jeryoa/eAWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0YUGHIrCK71GyW+vzH1qP6cY1Mk0bJMDz1RzbOUpy052DcOdn
+	OOw1O8EpQ+d5Mr+N5eBc8YDcfdT6Oe/o9xLx0PAgqmdbC9qr5UVKJylOoikw+LNMSTo73cyeC/f
+	Lxg==
+X-Google-Smtp-Source: AGHT+IGZRfCJBvkjvkPw1lUwltol4QErnPiBwQVl7jFbl+mdLZpKnJ7rCvLlx42UvY0fGa+iXwvt2U/eiSs=
+X-Received: from pfbln21.prod.google.com ([2002:a05:6a00:3cd5:b0:730:743a:f2b0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3cc2:b0:736:bfc4:ef2c
+ with SMTP id d2e1a72fcca58-73bd0e8f5b1mr3705655b3a.0.1744380090507; Fri, 11
+ Apr 2025 07:01:30 -0700 (PDT)
+Date: Fri, 11 Apr 2025 07:01:29 -0700
+In-Reply-To: <6f76183f-a903-47fd-8c84-0d9892632fca@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408035833.844821-3-guanyulin@google.com>
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-9-seanjc@google.com>
+ <6f76183f-a903-47fd-8c84-0d9892632fca@amd.com>
+Message-ID: <Z_kgbna7grb833Fy@google.com>
+Subject: Re: [PATCH 08/67] KVM: x86: Pass new routing entries and irqfd when
+ updating IRTEs
+From: Sean Christopherson <seanjc@google.com>
+To: Sairaj Arun Kodilkar <sarunkod@amd.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	David Matlack <dmatlack@google.com>, Naveen N Rao <naveen.rao@amd.com>, 
+	Vasant Hegde <vasant.hegde@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Apr 08, 2025 at 03:57:22AM +0000, Guan-Yu Lin wrote:
-> --- a/include/linux/usb.h
-> +++ b/include/linux/usb.h
-> @@ -647,6 +647,7 @@ struct usb3_lpm_parameters {
->   *	parent->hub_delay + wHubDelay + tTPTransmissionDelay (40ns)
->   *	Will be used as wValue for SetIsochDelay requests.
->   * @use_generic_driver: ask driver core to reprobe using the generic driver.
-> + * @offload_usage: number of offload activities happening on this usb device.
->   *
->   * Notes:
->   * Usbcore drivers should not set usbdev->state directly.  Instead use
-> @@ -733,6 +734,8 @@ struct usb_device {
->  
->  	u16 hub_delay;
->  	unsigned use_generic_driver:1;
-> +
-> +	refcount_t offload_usage;
+On Fri, Apr 11, 2025, Arun Kodilkar, Sairaj wrote:
+> On 4/5/2025 1:08 AM, Sean Christopherson wrote:
+> > +int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+> > +			unsigned int host_irq, uint32_t guest_irq,
+> > +			struct kvm_kernel_irq_routing_entry *new)
+> >   {
+> >   	struct kvm_kernel_irq_routing_entry *e;
+> >   	struct kvm_irq_routing_table *irq_rt;
+> >   	bool enable_remapped_mode = true;
+> > +	bool set = !!new;
+> >   	int idx, ret = 0;
+> >   	if (!kvm_arch_has_assigned_device(kvm) || !kvm_arch_has_irq_bypass())
+> > @@ -925,6 +919,8 @@ int avic_pi_update_irte(struct kvm *kvm, unsigned int host_irq,
+> >   		if (e->type != KVM_IRQ_ROUTING_MSI)
+> >   			continue;
+> > +		WARN_ON_ONCE(new && memcmp(e, new, sizeof(*new)));
+> > +
+> > 
+> 
+> Hi Sean,
+> 
+> In kvm_irq_routing_update() function, its possible that there are
+> multiple entries in the `kvm_irq_routing_table`,
 
-You now have 2 different "refcounts" for the same structure, which of
-course is crazy and will do nothing but cause massive problems.
+Not if one of them is an MSI.  In setup_routing_entry():
 
-I know this isn't going to be used to "reference count" the structure,
-and surely you don't need/want the atomic properties of a "real"
-reference count, so why isn't this a simple integer?
+	/*
+	 * Do not allow GSI to be mapped to the same irqchip more than once.
+	 * Allow only one to one mapping between GSI and non-irqchip routing.
+	 */
+	hlist_for_each_entry(ei, &rt->map[gsi], link)
+		if (ei->type != KVM_IRQ_ROUTING_IRQCHIP ||
+		    ue->type != KVM_IRQ_ROUTING_IRQCHIP ||
+		    ue->u.irqchip.irqchip == ei->irqchip.irqchip)
+			return -EINVAL;
 
-thanks,
+> and `irqfd_update()` ends up setting up the new entry type to 0 instead of
+> copying the entry.
+> 
+> if (n_entries == 1)
+>     irqfd->irq_entry = *e;
+> else
+>     irqfd->irq_entry.type = 0;
+> 
+> Since irqfd_update() did not copy the entry to irqfd->entries, the "new"
+> will not match entry "e" obtained from irq_rt, which can trigger a false
+> WARN_ON.
 
-greg k-h
+And since there can only be one MSI, if there are multiple routing entries, then
+the WARN won't be reached thanks to the continue that's just above:
+
+		if (e->type != KVM_IRQ_ROUTING_MSI)
+			continue;
