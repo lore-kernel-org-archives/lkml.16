@@ -1,112 +1,165 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC88D1EE014;
-	Fri, 11 Apr 2025 06:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6961EB19E;
+	Fri, 11 Apr 2025 06:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744353992; cv=none; b=ujDAa6MwidzJYWMHhhV+InzYvNX18nlphvKnFbTqQVQVjLk3espXj/6Xwtsbtcvh9TkARCosBRIaX5QtOVFxOAGHuB5TF5AKdP5Ps/V/357CJUZCh3saK8ZrVOUFgmJVjvn9cGi6V3gxa4QmYHeSGsZ7w/o7zqOqvfl+3cmYXnI=
+	t=1744354027; cv=none; b=OjeUoZ4YiQPAx5MHh7OY5rfHoIiCqaJFuFhy7Y2WV1DNIxBnHSGGDB8vTVGlbnStj4SRvO63hpSRB6C5KN66wNP+jVusyztETCxc998x6dRfQmaXpBOzQGQmfb7pbwzkzDlDJ4jCUqFkIzOaN4YtwTKr/RDMsbXYKotlDZj96ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744353992; c=relaxed/simple;
-	bh=X99zMb8EHsqKwuNsevCCfb1/FfYIhdYUZap6fWSWkXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/oX+WObM7mEZSmGyj1k7MRY6NYlvKOkfUisKcOIhk6MeUD1vQgdkKimiGFzvvhgReWWlrkPkYjF7nbef7UDoamXiKBsf7+b6v38y+treXFPgAakD2JL8N8GW51PG6LRmeF4eoX0epw6P2windtRB7d/smxwSHS7nzL4Modk2as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BpzxXODS; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744354027; c=relaxed/simple;
+	bh=Z2zMUvb3ZrB/25ixTzFARoTMwKuioIJhsJ24S3PQ+jY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=bB6b2V4P0XhSXTUR6p4Y4JX/3zmeVqloTOfOkC8ioqp/5tztcRHaCaqcoSpXFh8+9TX4eGNqdgWHXP0AZnxIQIcc1DlWQFDehyFkXQuh40JKuAmdQIkQ+vefDfDb3ky8cgpPGuM8SuJ2V9BAqQ2X2ag52ZPjDIwzdstkmQ0wVrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dyiXUwpu; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BpzxXODS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0nJo3BILZ4XgRosm/WTpceSuJ2fcE75v1DMC4YJQMT0=; b=BpzxXODSBiDPAgXFqLpvH4PbT6
-	gWUGafMd1O+KMTLbgNpJqH6XTI2SjXI/BrfbFj/iZnybY4PqC1hyfenTKsSuCltkH34GAv8+AD3IJ
-	4VkhX4sxJMDBVakYnQlk0lqMnarBka3nZldATxyTgln/Zwr5qQoE/EtLDALML0KgC2kt/FAAc6qLb
-	WoPtVqn+3JvJC3hgYp1DTiTEAwa9Td3YrZ0rhgPpVIPbEZjar8vO7jP0+Z3ARFYSWvxTkf/h8HY63
-	umQ21fTmG4LUJacSHG7IIIZiooJ9JY19bUPFmCDbadXyR/3APeEvpcDfYzCTE1yIPfIlE3aXWgE0e
-	y9rC2CpQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u389g-00000008x8q-11ie;
-	Fri, 11 Apr 2025 06:46:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CF6F33003C4; Fri, 11 Apr 2025 08:46:23 +0200 (CEST)
-Date: Fri, 11 Apr 2025 08:46:23 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: =?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Kees Cook <kees@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] objtool: Detect __nocfi calls
-Message-ID: <20250411064623.GL9833@noisy.programming.kicks-ass.net>
-References: <20250410115420.366349-1-panikiel@google.com>
- <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
- <20250410124526.GB9833@noisy.programming.kicks-ass.net>
- <CAM5zL5okN67bsTs6ZodcJd45zQ_BP+ruUwOkPMY97Snma0ugzQ@mail.gmail.com>
- <20250410132522.GD9833@noisy.programming.kicks-ass.net>
- <20250410154556.GB9003@noisy.programming.kicks-ass.net>
- <x5ltxw6z45gty6hylw2flde5w7qnmztg5mzaq7ffh4tl5ssm6r@h2xnxzqvnljb>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyiXUwpu"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-223f4c06e9fso16728975ad.1;
+        Thu, 10 Apr 2025 23:47:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744354025; x=1744958825; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BlT93k3tsOOzLmAYutjlNjX6BFvDuWnFmTQ9IJuMKl4=;
+        b=dyiXUwpupfEQc4Iip3IrNNg7EttE60fJkExgb02M4xcJkJ1RcRAHrtF4mdS9XCErTZ
+         to7OXxFX8C40t1BgGfahaxgf7K2gsix/MsSZtGPQxOVUXypbcUboD0VcrTS51j5qkJZ/
+         r647lDVdreKyUWCViFCMuEbOBR1qurX+79ZYO6OSQPfVsmxBq2yDlotqcBjdgHQE6kNS
+         Sm3xhrGeiQD6FZo7blopJOH9Zyfov1PdOctNjDT25przGuwGBlhGqi7OX/S+8Z0MUBbp
+         TlxKYjbDG5eGGhJpTJ6to1JRUdC7nLvINkaco8Eo3SXGnJ5NqL+Q0ayl3os5kByeqlQS
+         VU3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744354025; x=1744958825;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BlT93k3tsOOzLmAYutjlNjX6BFvDuWnFmTQ9IJuMKl4=;
+        b=LS4zbnUsGOswh08aBFzrLVdNf7zoU19xreTsHPlf7khcESgXSICLSMUNU5yJxjNIuV
+         Y/HyIoktpKDhNSrvWu7IdkBWyJRczi68Av3lHcS95U8BAJ0hLYo4y4ZE4Cm9yyVeX13v
+         1cmTlrrqte4AhTkFtPXSvO3ZQkjWzfkFfYmVkLPozmkY8S/1NQ+gUgfSIr/zKkZvn+q/
+         zqrtglv9wBgiifsDN9rsELwl9OAXhQ7+z6DqA0kDhTZTbbzXWWYLQNy8iSNcT1nLFciR
+         UoL08bPDPRYvWcrxyWBWpf5xqF3IxKyOxuTPAbqXM6m0vhXHFrPb6D3SFnlwqYqA9tJw
+         F7Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSuMtRE6jKhTc2Fh1sddx13FONLwJwanzv2Yt9KWaJRKEJHYaXqIkJuRZY+vJY+qjX1Iw7EkLFay1tcM8=@vger.kernel.org, AJvYcCXEw+JeqdFTQLl5CzYkKKrIkFxdhD+KGDXuX71Qc937+uLkHYbFxA5+8eJBJysk1X4zhD6pOVGGbxH5WQ==@vger.kernel.org, AJvYcCXU1upOOcMAZ7Xuf7Xy5XVkDNYx9Fh5Cfms7bQ11qwcoMCNmmgG+i328XwuNAZJAPENipcB+NuuoI6urw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YznM3JlZADFvVoU/CyHRsN4sSj2ENdSsJ46bt+MPak2pULXgBxp
+	fa71ynCjF8vh1gXlJ/o4jfSsRi1gEnSETqiJtpYGhoz+MLTgi6gE
+X-Gm-Gg: ASbGncvZmI0GOt/lthLb3M6R3rNxBEEBQIZmehzyH6SaIb7YuaVSjdRig+vJmR3zv3B
+	zMIjAf1xO1nfez7Gs34Xy7AMpDNQClhHVsHgNcRnnbwc6/Sr3ksjLoueSclkb/Pi/dccN/GqC3R
+	eAOLN4IxTctz7uUQfmWypJRLJT0DJnRzrSDnWq0KdA8SUxeLCHrQARTtYQ8DsMkfv/v+STy67bw
+	G2ofM3BLlrn7KoLXnV0pkSZZC16zuyEM5qATnptyUGz68PcCyENTfwtuaIBznCMp5gh6JETMCRU
+	vjCGCjbJsAw643k/6hv524+NvfBylhfMyw==
+X-Google-Smtp-Source: AGHT+IEaCH7pfyseCsY0ABQGUFfCNsdZ0JepyMppPzef2Ij2uLIjrUD7lNR1McifQnqxw6aLmm43tw==
+X-Received: by 2002:a17:902:d489:b0:215:58be:3349 with SMTP id d9443c01a7336-22bea05e17fmr25293145ad.14.1744354025413;
+        Thu, 10 Apr 2025 23:47:05 -0700 (PDT)
+Received: from localhost ([220.253.99.94])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b2c1sm41872295ad.59.2025.04.10.23.47.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 23:47:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <x5ltxw6z45gty6hylw2flde5w7qnmztg5mzaq7ffh4tl5ssm6r@h2xnxzqvnljb>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 11 Apr 2025 16:46:58 +1000
+Message-Id: <D93LW58FLXOS.2U8X0CO2H9H5S@gmail.com>
+Subject: Re: [PATCH v1 2/4] mm: Cleanup apply_to_pte_range() routine
+From: "Nicholas Piggin" <npiggin@gmail.com>
+To: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>
+Cc: "Hugh Dickins" <hughd@google.com>, "Guenter Roeck" <linux@roeck-us.net>,
+ "Juergen Gross" <jgross@suse.com>, "Jeremy Fitzhardinge" <jeremy@goop.org>,
+ <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+ <kasan-dev@googlegroups.com>, <sparclinux@vger.kernel.org>,
+ <xen-devel@lists.xenproject.org>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-s390@vger.kernel.org>
+X-Mailer: aerc 0.19.0
+References: <cover.1744037648.git.agordeev@linux.ibm.com>
+ <93102722541b1daf541fce9fb316a1a2614d8c86.1744037648.git.agordeev@linux.ibm.com>
+In-Reply-To: <93102722541b1daf541fce9fb316a1a2614d8c86.1744037648.git.agordeev@linux.ibm.com>
 
-On Thu, Apr 10, 2025 at 12:09:02PM -0700, Josh Poimboeuf wrote:
-> On Thu, Apr 10, 2025 at 05:45:56PM +0200, Peter Zijlstra wrote:
-> > On Thu, Apr 10, 2025 at 03:25:22PM +0200, Peter Zijlstra wrote:
-> > 
-> > > I should get objtool to warn about those. They undermine the point of
-> > > CFI.
-> > 
-> > ---
-> > Subject: objtool: Detect __nocfi calls
-> 
-> "Warn on indirect calls in __nocfi functions" ?
+On Tue Apr 8, 2025 at 1:11 AM AEST, Alexander Gordeev wrote:
+> Reverse 'create' vs 'mm =3D=3D &init_mm' conditions and move
+> page table mask modification out of the atomic context.
+>
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  mm/memory.c | 28 +++++++++++++++++-----------
+>  1 file changed, 17 insertions(+), 11 deletions(-)
+>
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 2d8c265fc7d6..f0201c8ec1ce 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2915,24 +2915,28 @@ static int apply_to_pte_range(struct mm_struct *m=
+m, pmd_t *pmd,
+>  				     pte_fn_t fn, void *data, bool create,
+>  				     pgtbl_mod_mask *mask)
+>  {
+> +	int err =3D create ? -ENOMEM : -EINVAL;
 
-Yeah, I suppose that's more accurate.
+Could you make this a new variable instead of reusing
+existing err? 'const int pte_err' or something?
 
-> >  static int add_retpoline_call(struct objtool_file *file, struct instruction *insn)
-> >  {
-> > +	struct symbol *sym = insn->sym;
-> > +
-> > +	/*
-> > +	 * kCFI call sites look like:
-> > +	 *
-> > +	 *     movl $(-0x12345678), %r10d
-> > +	 *     addl -4(%r11), %r10d
-> > +	 *     jz 1f
-> > +	 *     ud2
-> > +	 *  1: cs call __x86_indirect_thunk_r11
-> > +	 *
-> > +	 * Verify all indirect calls are kCFI adorned by checking for the UD2.
-> > +	 * Notably, doing __nocfi calls to regular (cfi) functions is broken.
-> > +	 */
-> > +	if (opts.cfi && sym && sym->type == STT_FUNC && !sym->nocfi) {
-> > +		struct instruction *prev = prev_insn_same_sym(file, insn);
-> > +		if (!prev || prev->type != INSN_BUG)
-> > +			WARN_INSN(insn, "no-cfi indirect call!");
-> 
-> Since this can break things pretty badly at runtime, this should
-> actually fail the build on CONFIG_OBJTOOL_WERROR.
+>  	pte_t *pte, *mapped_pte;
+> -	int err =3D 0;
+>  	spinlock_t *ptl;
+> =20
+> -	if (create) {
+> -		mapped_pte =3D pte =3D (mm =3D=3D &init_mm) ?
+> -			pte_alloc_kernel_track(pmd, addr, mask) :
+> -			pte_alloc_map_lock(mm, pmd, addr, &ptl);
+> +	if (mm =3D=3D &init_mm) {
+> +		if (create)
+> +			pte =3D pte_alloc_kernel_track(pmd, addr, mask);
+> +		else
+> +			pte =3D pte_offset_kernel(pmd, addr);
+>  		if (!pte)
+> -			return -ENOMEM;
+> +			return err;
+>  	} else {
+> -		mapped_pte =3D pte =3D (mm =3D=3D &init_mm) ?
+> -			pte_offset_kernel(pmd, addr) :
+> -			pte_offset_map_lock(mm, pmd, addr, &ptl);
+> +		if (create)
+> +			pte =3D pte_alloc_map_lock(mm, pmd, addr, &ptl);
+> +		else
+> +			pte =3D pte_offset_map_lock(mm, pmd, addr, &ptl);
+>  		if (!pte)
+> -			return -EINVAL;
+> +			return err;
+> +		mapped_pte =3D pte;
+>  	}
+> =20
+> +	err =3D 0;
+>  	arch_enter_lazy_mmu_mode();
+> =20
+>  	if (fn) {
+> @@ -2944,12 +2948,14 @@ static int apply_to_pte_range(struct mm_struct *m=
+m, pmd_t *pmd,
+>  			}
+>  		} while (addr +=3D PAGE_SIZE, addr !=3D end);
+>  	}
+> -	*mask |=3D PGTBL_PTE_MODIFIED;
+> =20
+>  	arch_leave_lazy_mmu_mode();
+> =20
+>  	if (mm !=3D &init_mm)
+>  		pte_unmap_unlock(mapped_pte, ptl);
+> +
+> +	*mask |=3D PGTBL_PTE_MODIFIED;
 
-Oh right, I still got to adjust to the new world order here :-)
+This is done just because we might as well? Less work in critical
+section?
 
-> The warning counts aren't plumbed in this early, so can this check be
-> done later?  validate_retpoline() or validate_call()?
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 
-Hmm, let me have a poke around, see what can be done.
+> +
+>  	return err;
+>  }
+> =20
+
