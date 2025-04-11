@@ -1,89 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489D81F3BA2
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0974110A1E;
+	Fri, 11 Apr 2025 15:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385363; cv=none; b=sSyPUal3OKcMOGFBTpn/kgn6BJO89N1YKT/paWT+DGEtnFFrtKECKVqg20/cnZmlwp9l5fiq16LIk27c73IO0DLaNqv2yfnDZJIstdGzAReTow9lXblxjHO7u19vVXGndohZcoOpAYF/MDVFES6CCkHJS/Cx+y9jKeSSOSh4M04=
+	t=1744385401; cv=none; b=deF8XyBuFnmv48uNUlMC/WO/1mujwRRPkLyNuzNHOD3sQ2WnHpQjADMs7LecFZy4qbYf4JQuirr2tsF5TuDN+ReK4jU9aOfjd3mnqnesAjONWfVPHnEQo2R7VEIFDAt03gm2nHiO9c9udgv8d49Y6J1qPnsc7MkTESg6nZ6fmqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385363; c=relaxed/simple;
-	bh=NWh+5kFMwIQhs4haSoY9IHySqsyuRvNEbunlh2Uijz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V6ddXkSjJSf3zZXul91Y5kinqgQ+Rt3vCfoCWvPJnBHoe+nKdVbw4mKx5eZdP4ieBDNsw1CDFrNBm3PX6JZDkCghe6prym+ZRZLQUymEDQ5rUQEkgvH7HYvP2jd7i5Fe8fAE/dFd1U564EPJElpGjovD+08Juc3lallBQkTiWJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RHY6+QEn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744385401; c=relaxed/simple;
+	bh=Ni01iCRZ8nltP16X0YSAVPMxsOMEUvSfhhji3sfGVc4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LLVCdP1Ond0G26f0RF5ly0MasYs/vPf7OJ6JtgWfQQBp5Vh5D8QwOkeGEg0cZSGtQug6OhCgBE4NTR4jNrFWQElDpOJsn3gDwg5e9XydQ/TcwOWq/FsPiKdwcRSB+B2wfpcKjIyajFOkonju/0dHQ+NcU+AirT3ZwesQzhb245Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6Qsf86w; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RHY6+QEn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744385361;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7OYBZ/8Fkv5a3piJDs/OfzkdA9Ewm+WAOBd9/8eYM8k=;
-	b=RHY6+QEn4JZm9FBoJAPiALGcaQoUAYw98w2/+uMn5snVObNQOvipbIQbqbL5CkV5Eb+Lh5
-	czRKHgPHiUveEMot7MpZ0A+BDt988CkGMekRnC5OkOjLlp/WsmHZj+geuUwi84KfQrhxF6
-	XLa1/QhOuPAM5LwCQIVeDKclGDVZfI8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-397-27kGs9ojPB6lXtK3F3ooaw-1; Fri,
- 11 Apr 2025 11:29:14 -0400
-X-MC-Unique: 27kGs9ojPB6lXtK3F3ooaw-1
-X-Mimecast-MFC-AGG-ID: 27kGs9ojPB6lXtK3F3ooaw_1744385353
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7ED76180AF66;
-	Fri, 11 Apr 2025 15:29:12 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.222])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2AA751956094;
-	Fri, 11 Apr 2025 15:29:08 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 11 Apr 2025 17:28:36 +0200 (CEST)
-Date: Fri, 11 Apr 2025 17:28:32 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org,
-	Peter Ziljstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 2/2] pidfs: ensure consistent ENOENT/ESRCH reporting
-Message-ID: <20250411152831.GH5322@redhat.com>
-References: <20250411-work-pidfs-enoent-v2-0-60b2d3bb545f@kernel.org>
- <20250411-work-pidfs-enoent-v2-2-60b2d3bb545f@kernel.org>
- <20250411135445.GF5322@redhat.com>
- <20250411-abbitten-caravan-ec53428b33e0@brauner>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6Qsf86w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744385400; x=1775921400;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Ni01iCRZ8nltP16X0YSAVPMxsOMEUvSfhhji3sfGVc4=;
+  b=m6Qsf86wQ6sp2b3GqEO4Z48v/r/Pggt3rYvtgRTZNR/rUpYkUCWIkGii
+   x52oAuxh0puRM3piS+bdMuRIaqvRFRce0x+E1/lbxr9yDn8l5JoxPwSzL
+   fcQUSQSuzx73GGZ/vDHs0j01CzJLLFvWxinYKdueyedgX6gzA/OZfaBTl
+   zYbPw1bG4H0LIYZNNJSY8FMMjYXaYHrOQnoHeLP+6pYrscPaAVaNWt8gN
+   TsAgD5cDkxzW5PJlOAjQ5pC7xwkN4GLMbt9Kvt7wMQn3hGTBm3GVvNe7V
+   RcaNzv818fvM8pDjsK8yDK4N4tmgXLb9mjUw5B6eMRDekdauF+9lop+Ap
+   A==;
+X-CSE-ConnectionGUID: LG8J9pzPSNuMscEaczHNQw==
+X-CSE-MsgGUID: ZJVyuXbUThmEC20MWP1+cA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="56925622"
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="56925622"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:30:00 -0700
+X-CSE-ConnectionGUID: wlTLVgh6SIqLNL30w0XJhQ==
+X-CSE-MsgGUID: iQWqCUW2TwybVGAkJ+8ypg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="166414846"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:29:53 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 11 Apr 2025 18:29:50 +0300 (EEST)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
+    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
+    Jonathan Corbet <corbet@lwn.net>, 
+    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
+    Derek J Clark <derekjohn.clark@gmail.com>, 
+    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
+    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
+    Eileen <eileen@one-netbook.com>, LKML <linux-kernel@vger.kernel.org>, 
+    sre@kernel.org, linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>, 
+    mario.limonciello@amd.com
+Subject: Re: [PATCH v8 02/14] hwmon: (oxp-sensors) Add all OneXFly variants
+In-Reply-To: <20250322103606.680401-3-lkml@antheas.dev>
+Message-ID: <8bff32cf-8659-f1e7-d187-1399fcca1207@linux.intel.com>
+References: <20250322103606.680401-1-lkml@antheas.dev> <20250322103606.680401-3-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411-abbitten-caravan-ec53428b33e0@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: multipart/mixed; boundary="8323328-2107733643-1744385390=:944"
 
-On 04/11, Christian Brauner wrote:
->
-> I'm verbose. I hope you can live with it:
->
->         /*
->          * While holding the pidfd waitqueue lock removing the task
->          * linkage for the thread-group leader pid (PIDTYPE_TGID) isn't
->          * possible. Thus, if there's still task linkage for PIDTYPE_PID
->          * not having thread-group leader linkage for the pid means it
->          * wasn't a thread-group leader in the first place.
->          */
->
-> :)
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-LGTM ;)
+--8323328-2107733643-1744385390=:944
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Oleg.
+On Sat, 22 Mar 2025, Antheas Kapenekakis wrote:
 
+> Currently, the driver only has the F1 OneXFly variant, which was based
+> on the 7000 AMD platform. Add its special editions: F1 EVA-01, F1 OLED.
+> F1 OLED might have been a dev unit, but it is supported by OneXConsole
+> with the same features so add it. Then add the F1L variant which is
+> based on the 8000 AMD platform and the F1Pro and its special edition
+> EVA-02.
+>=20
+> One might ask why not just fuzzy match. Well, EVA-02 is a variant of
+> F1Pro which is a Strix Point handheld, but does not have F1Pro in its
+> name. This makes it risky to fuzzy match, as special variants in the
+> future from different platforms might not have the same feature set
+> or registers.
+>=20
+> By happenstance, all current devices use the same registers. For the
+> charge limitting feature on this series, only F1Pro/X1 (AMD) were
+> released with it, but OneXPlayer is providing bios updates for F1, F1L,
+> X1 Mini units that use the same register, so treat all of them the same.
+>=20
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>  drivers/hwmon/oxp-sensors.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>=20
+> diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
+> index 5a4230ad3757e..f7a64fbc8f33e 100644
+> --- a/drivers/hwmon/oxp-sensors.c
+> +++ b/drivers/hwmon/oxp-sensors.c
+> @@ -188,6 +188,41 @@ static const struct dmi_system_id dmi_table[] =3D {
+>  =09=09},
+>  =09=09.driver_data =3D (void *)oxp_fly,
+>  =09},
+> +=09{
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 EVA-01"),
+> +=09=09},
+> +=09=09.driver_data =3D (void *)oxp_fly,
+> +=09},
+> +=09{
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 OLED"),
+> +=09=09},
+> +=09=09.driver_data =3D (void *)oxp_fly,
+> +=09},
+> +=09{
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1L"),
+> +=09=09},
+> +=09=09.driver_data =3D (void *)oxp_fly,
+> +=09},
+> +=09{
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1Pro"),
+> +=09=09},
+> +=09=09.driver_data =3D (void *)oxp_fly,
+> +=09},
+> +=09{
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 EVA-02"),
+> +=09=09},
+> +=09=09.driver_data =3D (void *)oxp_fly,
+> +=09},
+>  =09{
+>  =09=09.matches =3D {
+>  =09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+>=20
+
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+
+--=20
+ i.
+
+--8323328-2107733643-1744385390=:944--
