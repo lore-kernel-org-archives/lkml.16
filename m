@@ -1,101 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3B82367B7
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DA31917F0;
+	Fri, 11 Apr 2025 13:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379732; cv=none; b=jl6VjpxiVNke/1Mm4FQmupqs03FtZGGNZqMAgLYmc69RoFbD9wNNh+eisVR495dK/MaUZay7ewBNGDbjtrpXboiB+McK/75fO93gYBARei7tkl8NgUHJuT6FPgUhHXb0MQzmLzp27OPmhOp3RPvIUoBHzb6rjUYgIDspvrRZe7I=
+	t=1744379759; cv=none; b=R73kP2Vxc+w43aSOxC3rer+wvYLPOJvD+JZG2qTsYoIWCyeVLcZHSWT6cJSUSpPvzELgRkFeVMuErDj7GrN1CI0M3XSfSf7JQ+AXX7zTMRgz5/TZ2YdtGXLCIYQy/zViTs45u22QYoZDOS/z8wUN3UgpSkamp6dKYv+qj1DQy14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379732; c=relaxed/simple;
-	bh=tvYsWN1Ccz9X5YB0seXvg96UOPF0B6mWBhsZMMZHyT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZY4fYo9Q74KRKCvuJnSUbZj/vfx7May5QjaFo5S3wcjhopKIFI5zBWsyZGEHoq8IRjvOYfCtapRDX1nmt3DGLvioGgQfvGfI7qfMsnASaFKYDEvVSJ9fD5OJ799qNZsj7iKVJYnSrHdc3W9hlnonUzUS+MWL/2y55lWoqRabzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZLwHnRC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744379759; c=relaxed/simple;
+	bh=Hksio+SBng2Ph0jL+AW8Cf2YcpKo99uTiSN2rqmAQVM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gNv7ohczrIhpkDs0XRoUHHV5Kf6dN+waZV6i+WaGP6yElxmI+EbuBzQHO15tfNrY6+PYjJ1InNwJIu/QW8eQJ04w61U5ad5q8NZMJY0Jvi5VxuQnXQwDFOOg1ElDGuONtT+0Izhv63UzXL/5pYI4tSliRV3Yv+313lv2RxUQNIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9CeYtAJ; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZLwHnRC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744379729;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KAQndSrC2ld3R5xSxtSooLszqBAKBxmB0lRGSpURGww=;
-	b=GZLwHnRCQ3sJRps/+/GC82Ra0PSG+xF5AClJxjgfwusaO7mlhixzaDJJsr/+UM84CtIEjV
-	yRhIGcwc6ndq0aFXmHWnyNxI5KnEe2UuS9tmgBVHxVhhHUiTIbaZGcO94pqEvdVjzzrudM
-	aYRj6mBHUFn+36C0dboyr6mXb53d3Yk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-408-RULT92WCP5aUWSV-5m2ewg-1; Fri,
- 11 Apr 2025 09:55:27 -0400
-X-MC-Unique: RULT92WCP5aUWSV-5m2ewg-1
-X-Mimecast-MFC-AGG-ID: RULT92WCP5aUWSV-5m2ewg_1744379726
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A77CA19560B1;
-	Fri, 11 Apr 2025 13:55:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.222])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5E7B31828AAA;
-	Fri, 11 Apr 2025 13:55:22 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 11 Apr 2025 15:54:50 +0200 (CEST)
-Date: Fri, 11 Apr 2025 15:54:45 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org,
-	Peter Ziljstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 2/2] pidfs: ensure consistent ENOENT/ESRCH reporting
-Message-ID: <20250411135445.GF5322@redhat.com>
-References: <20250411-work-pidfs-enoent-v2-0-60b2d3bb545f@kernel.org>
- <20250411-work-pidfs-enoent-v2-2-60b2d3bb545f@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9CeYtAJ"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736bfa487c3so1787839b3a.1;
+        Fri, 11 Apr 2025 06:55:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744379758; x=1744984558; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9fgT+aB/ObOAloX5DH3cQKl+POiKYMAsP7NDiSj4mfE=;
+        b=E9CeYtAJ0F0gllu6JtrNqgSzGZFGFoGPVvZBzrn6hCkDyLWvvLDRDcEpy68z8atTox
+         0cuDtLNxE5foj+flOnskYmns+I7R953AMBRppciRSyVAYLcCDkBpJDMP1hQpOwIdjKgS
+         ijHcpy/H7DwIUdlK4qEiSgxnnRbIJ/wmMA1/xW02DVjGOn9D9CH0xxlbca3I6ugMZ1Tt
+         GuWBhBfWg0hNAsyxlAJ8LWXPIsfw5o1uI/jl/i+jH2W30PrgEUPO3BMP4Mvue8OMkulb
+         7e7WCZs7RltEJg3jtTvy282eyo9vfW2dhu2dwujMOk1Hh1tGKqooSrECh2ShLaz2HR2A
+         OcLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744379758; x=1744984558;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9fgT+aB/ObOAloX5DH3cQKl+POiKYMAsP7NDiSj4mfE=;
+        b=pRz+5HKmkEBgXrghOwQrAzHYVrT+CgyhweSBy8s/2nbWEa/cISlTzYq53QgUZe1p0I
+         iH9PKjrGpCG2Q2mhrbfJNT7ZBmDiPXl792/kil5+Bzcnehb6zc2Sa5TLatpDwH1Sa6n6
+         HOhtAWH2NQwjmKSGNkGzCC+EutE5BKSP8hRWEXa/GbeQAQT8SADzdo0HD5avOvz4QI6c
+         fKEm9JTsqdkHNh4W2U6raM5nvKpONquHA6gWYIlfXFKfmjmqGgkRyQxabCYbE5qb4wVb
+         priZ+jec82pQYywU3Qyr0u6RHA663+B9+tQ4sDfoKRFkF5xsc1PdQZx5qYCdyzjoYFeR
+         yq1w==
+X-Forwarded-Encrypted: i=1; AJvYcCU3ZQxkEJrqH6GoN81AyJroxN+V7gDqEgiarei+vrnaRNsGFcJaOpE3oxmyoBNyisNF0ksKT8sOtg+0j0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLVz24fV8rjTvGF1LuNgkZA2AT2HXNSDc2tMQJlRvEz3uCKovU
+	gd6fSNzgGminsEfGrg9M+7LRf97h5BlnEEWvgTRIVrXCh32EQPoq
+X-Gm-Gg: ASbGncuuLUmlMadp18tl6mu/uREYk2smufNPInnujrXR7AVYBLdB0cgjQE95Nq1bEYY
+	xkCRZRz23Zd899Lv+mxLXhb81Z9yfVP68Rpbq7d6a6EUIiMvsV2/W+8j8hVSogXNhpER/C663Jp
+	TtbKRmHeweJBlQfYw471awSp3Trd7pfgNnLmmwDA2gkD5PJ2tkZpc4sMDJuM1TkF7gmXhyQl9yq
+	Fw0qLwKGHeJ7uSC7VbU21PmQvhYf+lnW4lXajHI49EBmYVLxV0Tqqx+qHT9tL4EI1LlJ/Mqiobs
+	3JYZ0gNoO05gzIjxvG1tj3sqS/MPGxp2D+JlKjnmwj6pq+npVSeP/or2rQ0=
+X-Google-Smtp-Source: AGHT+IF57uOoN1+g2NXZ4dw98X52Co0XdPWGzDqnOvXOt7h2udRQqPwsNmdyGbrkTlaIXPVHPNA03w==
+X-Received: by 2002:a05:6a00:843:b0:730:d5ca:aee with SMTP id d2e1a72fcca58-73bd12cdb7emr3902525b3a.23.1744379757687;
+        Fri, 11 Apr 2025 06:55:57 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c408:a0b5:6154:df3d:5cdc:6ad])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2333859sm1485740b3a.158.2025.04.11.06.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 06:55:56 -0700 (PDT)
+From: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+To: shuah@kernel.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kevinpaul468@gmail.com
+Subject: [PATCH] selftests: Removing deprecated strncpy()
+Date: Fri, 11 Apr 2025 19:25:35 +0530
+Message-Id: <20250411135535.41423-1-kevinpaul468@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411-work-pidfs-enoent-v2-2-60b2d3bb545f@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: 8bit
 
-For both patches:
+This patch suggests the replacement of strncpy with strscpy
+as per Documentation/process/deprecated.
+The strncpy() fails to guarantee NULL termination,
+The function adds zero pads which isn't really convenient for short strings
+as it may cause performance issues.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+strscpy() is a preferred replacement because
+it overcomes the limitations of strncpy mentioned above.
 
-a minor nit below...
+Compile Tested
 
-On 04/11, Christian Brauner wrote:
->
->  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
->  {
-> -	int err = 0;
-> -
-> -	if (!(flags & PIDFD_THREAD)) {
-> +	scoped_guard(spinlock_irq, &pid->wait_pidfd.lock) {
-> +		/*
-> +		 * If this wasn't a thread-group leader struct pid or
-> +		 * the task already been reaped report ESRCH to
-> +		 * userspace.
-> +		 */
-> +		if (!pid_has_task(pid, PIDTYPE_PID))
-> +			return -ESRCH;
+Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+---
+ tools/testing/selftests/sync/sync.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The "If this wasn't a thread-group leader struct pid" part of the
-comment looks a bit confusing to me, as if pid_has_task(PIDTYPE_PID)
-should return false in this case.
-
-OTOH, perhaps it makes sense to explain scoped_guard(wait_pidfd.lock)?
-Something like "see unhash_process -> wake_up_all(), detach_pid(TGID)
-isn't possible if pid_has_task(PID) succeeds".
-
-Oleg.
+diff --git a/tools/testing/selftests/sync/sync.c b/tools/testing/selftests/sync/sync.c
+index 7741c0518d18..4b284f517433 100644
+--- a/tools/testing/selftests/sync/sync.c
++++ b/tools/testing/selftests/sync/sync.c
+@@ -29,8 +29,8 @@
+ #include <malloc.h>
+ #include <poll.h>
+ #include <stdint.h>
+-#include <string.h>
+ #include <unistd.h>
++#include <linux/string.h>
+ 
+ #include <sys/ioctl.h>
+ #include <sys/stat.h>
+@@ -71,7 +71,7 @@ int sync_merge(const char *name, int fd1, int fd2)
+ 	int err;
+ 
+ 	data.fd2 = fd2;
+-	strncpy(data.name, name, sizeof(data.name) - 1);
++	strscpy(data.name, name, sizeof(data.name) - 1);
+ 	data.name[sizeof(data.name) - 1] = '\0';
+ 
+ 	err = ioctl(fd1, SYNC_IOC_MERGE, &data);
+@@ -198,7 +198,7 @@ int sw_sync_fence_create(int fd, const char *name, unsigned int value)
+ 	int err;
+ 
+ 	data.value = value;
+-	strncpy(data.name, name, sizeof(data.name) - 1);
++	strscpy(data.name, name, sizeof(data.name) - 1);
+ 	data.name[sizeof(data.name) - 1] = '\0';
+ 
+ 	err = ioctl(fd, SW_SYNC_IOC_CREATE_FENCE, &data);
+-- 
+2.39.5
 
