@@ -1,83 +1,90 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074F0221273;
-	Fri, 11 Apr 2025 11:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF76278E71
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744370464; cv=none; b=MekIrgUrallZoBsdU/SbMRDosP5VD0zBXJOTapZFaQrhrynB3wH1h7D+0ZW599QLtG7z8HHqBrWYp6t9GZRXJp0FazBmM8N+e7P+C1h+uJ/EBTarrlxhF791Xh7/3mnx2WUGc86ZfxrJrRda9AHukSsrIGXKLhjg0cRKO/xLt6Y=
+	t=1744370503; cv=none; b=A9L86OogvYtI9JgGsVrb+Xjm1Qe0cI7IokLF9GxDGa2Y7//4UzVJk+EsXv734qe2XQSpXh0rr+XlnJZnMGMC3g1AWWhZsOKC7iX4RNaTwWbx9gTTJfVi4OyNWY9OrwsfW1mn2RtI/Kp6S1pLjXIoLuGs+840ZdfB1yNd1lyGr4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744370464; c=relaxed/simple;
-	bh=PwV9zQTrQqnxG9/+5FgGDOQr+XR+yENQoW8QhxNjTEQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TbKEO1j4a2WH5aFh0aogmdFyCECGkoOqXlZzvvvQFTfWNjFpHgWaL7jlQBN4wO+FrGxLpy+8NxXVKqfxhg2TtqGiJYHdYuw7EDprBSGVmB2fpH3q1qArSuw1KxoJuiE3c99P1uRVTIRfrSliXx3v1NgQBfdj+X08LrNpr31Il/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nCIySuVh; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nCIySuVh"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BBKvjS2059419
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 06:20:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744370457;
-	bh=SRFwU9Lb1WfEpspcwACoRGomPCvtegLX9PptHfh7xPw=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=nCIySuVhusyy5uTdh6Dp+buSgfKGWx7NTaEWLINAqD6IiUODjDBjwmdf9nOImJIL4
-	 ejMkpwIrJzNiOL4cZb4t21y6Dforu5uEcQrh7VAwDL7eFZrck5mdxy8eO4qSpVOCu2
-	 a0E7kc/pEryfQDIYRE1HIoaON4ecZCohT67VvavU=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BBKvrI028722
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 06:20:57 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 06:20:57 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 06:20:57 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BBKuw3065396;
-	Fri, 11 Apr 2025 06:20:56 -0500
-Date: Fri, 11 Apr 2025 16:50:55 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Jayesh Choudhary <j-choudhary@ti.com>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <s-vadapalli@ti.com>,
-        <linux-kernel@vger.kernel.org>, <kristo@kernel.org>,
-        <rogerq@kernel.org>, <kishon@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 5/5] arm64: dts: ti: k3-am64: Add PCIe ctrl node to
- main_conf region
-Message-ID: <37527a6f-6573-4e2e-bc79-09c067870d90@ti.com>
-References: <20250402113201.151195-1-j-choudhary@ti.com>
- <20250402113201.151195-6-j-choudhary@ti.com>
+	s=arc-20240116; t=1744370503; c=relaxed/simple;
+	bh=JDAbwElWq9f31bGZZEoXwFZyQww6129ByhyJOsPDbdk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BtkfGrVMHwBR544vSqMpjYmUKkD0IFtmrcwNBtTwm2MtssOI+dTrmYn+OvFBZii/jjWeAJZu1uZAeoELRDGB4r5kXDuF3ms9Ie6oZiJuOrvdcXyiiwFoW0OHKhSxkyHZDj+/XKepgWOCudC//pFMHPq56ZP92EWtKEpbg7dOn0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9A5BA442BD;
+	Fri, 11 Apr 2025 11:21:36 +0000 (UTC)
+Message-ID: <fb65fc45-b1f1-47ef-b700-e90c6ef84957@ghiti.fr>
+Date: Fri, 11 Apr 2025 13:21:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250402113201.151195-6-j-choudhary@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] riscv: module: Fix out-of-bounds relocation access
+Content-Language: en-US
+To: Samuel Holland <samuel.holland@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org
+Cc: Andrew Jones <ajones@ventanamicro.com>,
+ Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+ Pritesh Patel <pritesh.patel@einfochips.com>,
+ Darshan Prajapati <darshan.prajapati@einfochips.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Amma Lee <lixiaoyun@binary-semi.com>,
+ Charlie Jenkins <charlie@rivosinc.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
+ <cleger@rivosinc.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Maxim Kochetkov <fido_max@inbox.ru>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org
+References: <20250409171526.862481-1-samuel.holland@sifive.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250409171526.862481-1-samuel.holland@sifive.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduieekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedujedprhgtphhtthhopehsrghmuhgvlhdrhhholhhlrghnugesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegrjhhonhgvshesvhgvnhhtrghnrghmihgtrhhordgtohhmpdhrtghpthhtohepphhinhhkvghshhdrvhgrghhhvghlrgesvghinhhfohgthhhiphhsrdgto
+ hhmpdhrtghpthhtohepphhrihhtvghshhdrphgrthgvlhesvghinhhfohgthhhiphhsrdgtohhmpdhrtghpthhtohepuggrrhhshhgrnhdrphhrrghjrghprghtihesvghinhhfohgthhhiphhsrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuh
+X-GND-Sasl: alex@ghiti.fr
 
-On Wed, Apr 02, 2025 at 05:02:01PM +0530, Jayesh Choudhary wrote:
-> From: Andrew Davis <afd@ti.com>
-> 
-> This region is used for controlling the function of the PCIe IP. It is
-> compatible with "ti,j784s4-pcie-ctrl", add this here and use it with
-> the PCIe node.
-> 
-> Signed-off-by: Andrew Davis <afd@ti.com>
-> [j-choudhary@ti.com: Add changes to k3-am642-evm-pcie0-ep.dtso]
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+Hi Samuel,
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On 09/04/2025 19:14, Samuel Holland wrote:
+> The current code allows rel[j] to access one element past the end of the
+> relocation section. Simplify to num_relocations which is equivalent to
+> the existing size expression.
+>
+> Fixes: 080c4324fa5e ("riscv: optimize ELF relocation function in riscv")
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> ---
+>
+> Changes in v2:
+>   - New patch for v2
+>
+>   arch/riscv/kernel/module.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+> index 47d0ebeec93c..060f576cc988 100644
+> --- a/arch/riscv/kernel/module.c
+> +++ b/arch/riscv/kernel/module.c
+> @@ -859,7 +859,7 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+>   				}
+>   
+>   				j++;
+> -				if (j > sechdrs[relsec].sh_size / sizeof(*rel))
+> +				if (j == num_relocations)
+>   					j = 0;
+>   
+>   			} while (j_idx != j);
 
-Regards,
-Siddharth.
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
