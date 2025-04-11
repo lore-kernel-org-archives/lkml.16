@@ -1,57 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2266126C13;
-	Fri, 11 Apr 2025 16:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E78126C13;
+	Fri, 11 Apr 2025 16:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388834; cv=none; b=Op1iUrBv9RT1Rf+YMRrjjsbEaeoOxIjkyCYj6vug5Lz73sSXxQgD8D4xMHxUUlLELNiynbxuk8Y7jSoDfSWKFkAjNcVMjojawJe5cjNujuhuv0tzgl/pqPi9s0Xq3QKLFttZF/55vlNhBx1g8uNKe/1PSZFQ3f2Gkd5le8Elid0=
+	t=1744388849; cv=none; b=RPG8Jk/Azs7wRK/XnevCZs0U+/Sz674jViJ4HtDZO5tgcXXf4GjdDrRCRhsVuFmg/FoNiev7EEauT5Ebu2W/o/hhu7w4wSHGIMS8ldOfLvSaXaZzXpVR7TmHpzoa4wqjVaU6dFW2BtY1OwMa03h+68bhWc64B8UD5dwBksuTJAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388834; c=relaxed/simple;
-	bh=DzmZ98UHOcBa/uDcZVOeIvJFc1PO8euYkm5Q5FQwIOc=;
+	s=arc-20240116; t=1744388849; c=relaxed/simple;
+	bh=K9YklQV3sZeGkvQCnk8vyo8gH21v85wMrdiKe2oanQY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K4hjX/VVFRjmya02P7wd7iE/SOsWLAAdhcyuMHcfZY/sT2ruYBoIJInRl7+7HNQCxMAFVBfCTR/Siy6NHcfaiCvVWM3ANQGIADMfVkN/D9d4dJf2azDseYAGdwpMwcbkq7wKciJPKV+nkbNodDE1qU+BZOaoj7nLLI+SCxo8gSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjurHYzZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=k1E7wZVLhcmFdSR8BRuIkuXxnQcrV+MDOihmp0w1hJsSvjlYRRfHC7/ANhFXwVjSl9hZfj/Q1SAlWUQhWDLHCjGhXn2rR4AZfVZtLTKk4krp6Vl7tqt65qKzyWvFB3MMqXuotNPNLj7vDoGqnmFoyyLrgct7i/vAEf5+mfoH7bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oG6lQwmT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjurHYzZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B78C4CEE8;
-	Fri, 11 Apr 2025 16:27:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oG6lQwmT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B64AC4CEE2;
+	Fri, 11 Apr 2025 16:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744388834;
-	bh=DzmZ98UHOcBa/uDcZVOeIvJFc1PO8euYkm5Q5FQwIOc=;
+	s=k20201202; t=1744388848;
+	bh=K9YklQV3sZeGkvQCnk8vyo8gH21v85wMrdiKe2oanQY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PjurHYzZOQN4uXaLNZNK8RjGupHq3dHjtJ+hzR3/aZ4DOEn7KHKOeXl+L2Lbotkwr
-	 9TXYlia3Fy88adO9DQCwSa5bIEoon7tKKpAihh6MVe/jYjsd9mk5aufUgb0bTY9MuG
-	 2W3njw3FD2CMrJG16WcPZOdbYddag5vUVNsFwWn6SLY1wKT+93K5kZ+J7OxSUelHsf
-	 4odvMCcQ5WXabNegXRZDJuu53hCQAIKnJJ6k4sQ4JWSe5UvuIokMtZedbzM5NV3xJ6
-	 nqmd0n9mBEyeM+NqvYR6IuadjG5/s+A0oCPoKCpWVTn5z9G8FijAsMelN6MMHCr6Fo
-	 ACNVIagXKA95g==
-Date: Fri, 11 Apr 2025 17:27:08 +0100
-From: Simon Horman <horms@kernel.org>
-To: Furong Xu <0x1207@gmail.com>
-Cc: Boon Khai Ng <boon.khai.ng@altera.com>, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Matthew Gerlach <matthew.gerlach@altera.com>,
-	Tien Sung Ang <tien.sung.ang@altera.com>,
-	Mun Yew Tham <mun.yew.tham@altera.com>,
-	G Thomas Rohan <rohan.g.thomas@altera.com>
-Subject: Re: [PATCH net-next v3 1/2] net: stmmac: Refactor VLAN implementation
-Message-ID: <20250411162708.GL395307@horms.kernel.org>
-References: <20250408081354.25881-1-boon.khai.ng@altera.com>
- <20250408081354.25881-2-boon.khai.ng@altera.com>
- <20250410161912.0000168a@gmail.com>
+	b=oG6lQwmTKOS0X8RlZW4NpeBewH2Z3zY4J3O+uNJE71aMgHOPlyy8T+NbACbfGQ9RT
+	 B83PdMO3CgG7zSVLA0lHYzDcxb5vE/yBL52EYjnJ4wE8y5jjjTAZlagUMlJdf+N8qu
+	 UjHv9gponRKctbffQcVc4eYB6FLgSrWh/qe63vNzD6dFTlkWLbh7toMI/3JSyN0DAd
+	 aCqcFcJZ0WW5sLMTk/i/S8LiclyoZsTJwLISvjfvRfCds3Lrvp1M87QnyjacCJlmtN
+	 FMdGfgOKsjDAqGrfbmmDhTfAc1h1ohT76R8FuqOjNIHN9JVUAvnKUMl+gGn2KeBVHE
+	 Qz9hzTXmMcalg==
+Date: Fri, 11 Apr 2025 11:27:27 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-watchdog@vger.kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, alexandru-catalin.ionita@nxp.com,
+	linux@roeck-us.net, krzk+dt@kernel.org, ghennadi.procopciuc@nxp.com,
+	S32@nxp.com, linux-kernel@vger.kernel.org,
+	thomas.fossati@linaro.org, wim@linux-watchdog.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+Message-ID: <174438884676.3345035.7521977412397143761.robh@kernel.org>
+References: <20250410082616.1855860-1-daniel.lezcano@linaro.org>
+ <20250410082616.1855860-2-daniel.lezcano@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,52 +47,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250410161912.0000168a@gmail.com>
+In-Reply-To: <20250410082616.1855860-2-daniel.lezcano@linaro.org>
 
-On Thu, Apr 10, 2025 at 04:19:12PM +0800, Furong Xu wrote:
-> On Tue,  8 Apr 2025 16:13:53 +0800, Boon Khai Ng <boon.khai.ng@altera.com> wrote:
-> 
-> > Refactor VLAN implementation by moving common code for DWMAC4 and
-> > DWXGMAC IPs into a separate VLAN module. VLAN implementation for
-> > DWMAC4 and DWXGMAC differs only for CSR base address, the descriptor
-> > for the VLAN ID and VLAN VALID bit field.
-> > 
-> > Signed-off-by: Boon Khai Ng <boon.khai.ng@altera.com>
-> > Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
-> > ---
-> >  drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +-
-> >  drivers/net/ethernet/stmicro/stmmac/common.h  |   1 +
-> >  drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  40 ---
-> >  .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 295 +-----------------
-> >  .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  13 -
-> >  .../ethernet/stmicro/stmmac/dwxgmac2_core.c   |  87 ------
-> >  drivers/net/ethernet/stmicro/stmmac/hwif.c    |   8 +
-> >  drivers/net/ethernet/stmicro/stmmac/hwif.h    |  61 ++--
-> >  .../net/ethernet/stmicro/stmmac/stmmac_vlan.c | 294 +++++++++++++++++
-> >  .../net/ethernet/stmicro/stmmac/stmmac_vlan.h |  63 ++++
-> >  10 files changed, 401 insertions(+), 463 deletions(-)
-> >  create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_vlan.c
-> >  create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_vlan.h
-> > 
-> [...]
-> > +static void vlan_update_hash(struct mac_device_info *hw, u32 hash,
-> > +			     __le16 perfect_match, bool is_double)
-> > +{
-> > +	void __iomem *ioaddr = hw->pcsr;
-> > +	u32 value;
-> > +
-> > +	writel(hash, ioaddr + VLAN_HASH_TABLE);
-> > +
-> > +	value = readl(ioaddr + VLAN_TAG);
-> > +
-> > +	if (hash) {
-> > +		value |= VLAN_VTHM | VLAN_ETV;
-> > +		if (is_double) {
-> > +			value |= VLAN_EDVLP;
-> > +			value |= VLAN_ESVL;
-> > +			value |= VLAN_DOVLTC;
-> 
-> I can confirm that 802.1ad (QinQ) has been broken on stmmac for years,
-> and it will be so nice if this refactoring includes some fixes for QinQ
 
-FWIIW, please be sure that fixes are separate patches from refactoring.
+On Thu, 10 Apr 2025 10:26:13 +0200, Daniel Lezcano wrote:
+> Describe the Software Watchdog Timer available on the S32G platforms.
+> 
+> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  .../bindings/watchdog/nxp,s32g2-swt.yaml      | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml
+> 
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
