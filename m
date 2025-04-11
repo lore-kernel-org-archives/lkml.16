@@ -1,158 +1,61 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DBB41DDC04;
-	Fri, 11 Apr 2025 08:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA971DDC04;
+	Fri, 11 Apr 2025 08:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358793; cv=none; b=Pl+txfD5o/mS5Fpp9oIaEXa4TMU4k5tMO+urjuMC9q0h2vYdqr6FRbkz8xqhnAN3sgVojCC7VIB23yW1a7xSLeOzlibZVOgKKXSXHzUokBN8qlXO+a+f7ntMgcnQZQKftZkAMBXC8pHvZh6T4YDEpDJwRvhxqJoNv1l9m/kqGBA=
+	t=1744358884; cv=none; b=PvTTBobm/ObYQllmYWqIiZGAIxykR0gF8umSVjctpCs4kv4If8WTKH7QTGd/zYsYRs6QjA5k0+d/XLlBzF8KiW4JmOWhAILX/WxfrIjoB6YWEZir1VIRFf5MMm30XvwTNvH5QlJWjIl7IbRA1Hc3Z1iT5xdc9UDHd/uZHXhESnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358793; c=relaxed/simple;
-	bh=aZHzk9mHUHuKkgLKuqiBfClbxLb+SK7ytOYvOtjiLf0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mv1ymbOJXEra/+dP/8kyW1XKUjiPd+SW1Bv/9xYibPE2mwWOjiv7/Z7tGQZVhw8oeYW1NwS3RR8lmoogOTLcfLiSIqjRgrDINtSVUoYSKTFrzuka0Bi1EoxU/xn2p+3sDXwTjQf/ODrZ/t9CXTlyCg+wCunr7J2c+eWnraRwh+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SnvHmIab; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744358884; c=relaxed/simple;
+	bh=RKpuRM9HPlFVDOBUnsmTmzF4uMGBZHYlkGWTm8FKOx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NpfZguvNGtkwfmO9NZaqoNqddpeWpJeoklNsFXf7b0PySnBWGPafefSMnAdiq6OciC4dtH8elGVDrAbi0Ks4VEJVegz5hr1Yhx/cG5dkIeBeKaYTKPkMeNdjJfkyWu5bcEVF4DD3nmSt0GhpKYu7f71BWoI/zssgQ/rjhUd28LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pIfCmXGf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SnvHmIab"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=k59//
-	27XfCXLpT5e958gSQ/VKTUfEmYdEQyopnj+B54=; b=SnvHmIab6pNEVafcatzk2
-	ZibxD6yxP2GlhMEtMENj/4S89JeO/sgIZYOejBhb0hDGnKi2lucgRgl1j0RT73sd
-	8cH2MX6RjfBiisuDfuUDQJMeFHp9jrVGf//dmWDn8ocN+CF3gZTLTPyqk/avaiYE
-	pPi5auaRouYooz5+ZtHTCA=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3n7Bazfhn_vEoFw--.59222S2;
-	Fri, 11 Apr 2025 16:05:47 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	hengqi.chen@gmail.com
-Cc: bpf@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pIfCmXGf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38EACC4CEE2;
+	Fri, 11 Apr 2025 08:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744358883;
+	bh=RKpuRM9HPlFVDOBUnsmTmzF4uMGBZHYlkGWTm8FKOx4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pIfCmXGfeja4+ERryJFQPCn88YlH6CwXcffCvKSC/JMhmrasR9OjmpkmBiyazQsor
+	 HJ2OO10nYvGZ9RcomaoADUJt0/IVZSrz1I/dvTdIzjQ6fUmhEdDgXBu8AO0QtiU3b7
+	 keqyTic7MGruWLtyz2mgPYzYE3latfq1tIi70MGIEj0ujGsCA+IzZpmQQId2IFJ1HK
+	 GJhbk63+9B3/HEhnHQt0mL5Te8WE+RQzGmon7qvilsFpAm/xQSJMrIlUb5wCrVE4c6
+	 EcloCO7gctyBRrnpHc6ANrVTTbo+9VYTmPQ05MmQHdUnDV/hRNx60EYA96uCJtj9kM
+	 qkFDNfUsgTgDg==
+Date: Fri, 11 Apr 2025 11:07:58 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: peterhuewe@gmx.de, jgg@ziepe.ca, sudeep.holla@arm.com,
+	stuart.yoder@arm.com, linux-integrity@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2] libbpf: Fix event name too long error
-Date: Fri, 11 Apr 2025 16:05:45 +0800
-Message-Id: <20250411080545.319865-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH] tpm_ffa_crb: access tpm service over FF-A direct message
+ request v2
+Message-ID: <Z_jN3pRlv1PuwHGn@kernel.org>
+References: <20250410110701.1244965-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3n7Bazfhn_vEoFw--.59222S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCF1DCr4rur45tw15tFW5Wrg_yoWrWFy3pF
-	s8Ar1YyF4ftr42qF95Jr18ZryFvw4kJr1UJr1DArsxAF4xWF4UX3W2kF45Gr15XrnFv345
-	Xa1UGry7Jry7JrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jjuWLUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTQ4seGf4y1RSBwAAsC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410110701.1244965-1-yeoreum.yun@arm.com>
 
-From: Feng Yang <yangfeng@kylinos.cn>
+On Thu, Apr 10, 2025 at 12:07:01PM +0100, Yeoreum Yun wrote:
+> @@ -277,7 +301,8 @@ static int tpm_crb_ffa_probe(struct ffa_device *ffa_dev)
+> 
+>  	tpm_crb_ffa = ERR_PTR(-ENODEV); // set tpm_crb_ffa so we can detect probe failure
+> 
+> -	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
+> +	if (!ffa_partition_supports_direct_recv(ffa_dev) &&
+> +			!ffa_partition_supports_direct_req2_recv(ffa_dev)) {
 
-When the binary path is excessively long, the generated probe_name in libbpf
-exceeds the kernel's MAX_EVENT_NAME_LEN limit (64 bytes).
-This causes legacy uprobe event attachment to fail with error code -22.
+	if (!ffa_partition_supports_direct_recv(ffa_dev) &&
+	    !ffa_partition_supports_direct_req2_recv(ffa_dev)) {
 
-Use basename() to extract the base filename from the full binary path, removing directory prefixes.
-Example: /root/loooooooooooooooooooooooooooooooooooong_name -> loooooooooooooooooooooooooooooooooooong_name.
-
-String Length Limitation: Apply %.32s in snprintf to truncate the base filename to 32 characters.
-Example: loooooooooooooooooooooooooooooooooooong_name -> looooooooooooooooooooooooooooooo.
-
-Before Fix:
-	libbpf: binary_path: /root/loooooooooooooooooooooooooooooooooooong_name
-	libbpf: probe_name: libbpf_32296__root_loooooooooooooooooooooooooooooooooooong_name_0x1106
-	libbpf: failed to add legacy uprobe event for /root/loooooooooooooooooooooooooooooooooooong_name:0x1106: -22
-
-After Fix:
-	libbpf: binary_path: /root/loooooooooooooooooooooooooooooooooooong_name
-	libbpf: probe_name: libbpf_36178_looooooooooooooooooooooooooooooo_0x1106
-
-Fixes: 46ed5fc33db9 ("libbpf: Refactor and simplify legacy kprobe code")
-Fixes: cc10623c6810 ("libbpf: Add legacy uprobe attaching support")
-Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
-Changes in v2:
-- Use basename() and %.32s to fix. Thanks, Hengqi Chen!
-- Link to v1: https://lore.kernel.org/all/20250410052712.206785-1-yangfeng59949@163.com/
----
- tools/lib/bpf/libbpf.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index b2591f5cab65..7e10c7c66819 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -60,6 +60,8 @@
- #define BPF_FS_MAGIC		0xcafe4a11
- #endif
- 
-+#define MAX_EVENT_NAME_LEN	64
-+
- #define BPF_FS_DEFAULT_PATH "/sys/fs/bpf"
- 
- #define BPF_INSN_SZ (sizeof(struct bpf_insn))
-@@ -11142,10 +11144,10 @@ static void gen_kprobe_legacy_event_name(char *buf, size_t buf_sz,
- 	static int index = 0;
- 	int i;
- 
--	snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx_%d", getpid(), kfunc_name, offset,
--		 __sync_fetch_and_add(&index, 1));
-+	snprintf(buf, buf_sz, "libbpf_%u_%.32s_0x%zx_%d", getpid(), kfunc_name,
-+		 offset, __sync_fetch_and_add(&index, 1));
- 
--	/* sanitize binary_path in the probe name */
-+	/* sanitize kfunc_name in the probe name */
- 	for (i = 0; buf[i]; i++) {
- 		if (!isalnum(buf[i]))
- 			buf[i] = '_';
-@@ -11270,7 +11272,7 @@ int probe_kern_syscall_wrapper(int token_fd)
- 
- 		return pfd >= 0 ? 1 : 0;
- 	} else { /* legacy mode */
--		char probe_name[128];
-+		char probe_name[MAX_EVENT_NAME_LEN];
- 
- 		gen_kprobe_legacy_event_name(probe_name, sizeof(probe_name), syscall_name, 0);
- 		if (add_kprobe_event_legacy(probe_name, false, syscall_name, 0) < 0)
-@@ -11328,7 +11330,7 @@ bpf_program__attach_kprobe_opts(const struct bpf_program *prog,
- 					    func_name, offset,
- 					    -1 /* pid */, 0 /* ref_ctr_off */);
- 	} else {
--		char probe_name[256];
-+		char probe_name[MAX_EVENT_NAME_LEN];
- 
- 		gen_kprobe_legacy_event_name(probe_name, sizeof(probe_name),
- 					     func_name, offset);
-@@ -11880,7 +11882,8 @@ static void gen_uprobe_legacy_event_name(char *buf, size_t buf_sz,
- {
- 	int i;
- 
--	snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx", getpid(), binary_path, (size_t)offset);
-+	snprintf(buf, buf_sz, "libbpf_%u_%.32s_0x%zx", getpid(),
-+		 basename((void *)binary_path), (size_t)offset);
- 
- 	/* sanitize binary_path in the probe name */
- 	for (i = 0; buf[i]; i++) {
-@@ -12312,7 +12315,7 @@ bpf_program__attach_uprobe_opts(const struct bpf_program *prog, pid_t pid,
- 		pfd = perf_event_open_probe(true /* uprobe */, retprobe, binary_path,
- 					    func_offset, pid, ref_ctr_off);
- 	} else {
--		char probe_name[PATH_MAX + 64];
-+		char probe_name[MAX_EVENT_NAME_LEN];
- 
- 		if (ref_ctr_off)
- 			return libbpf_err_ptr(-EINVAL);
--- 
-2.43.0
-
+BR, Jarkko
