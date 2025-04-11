@@ -1,124 +1,214 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4C2258CE8
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA2E2367DC;
+	Fri, 11 Apr 2025 18:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744395264; cv=none; b=YQI9dxuoJ2nmfp6430iztFwRbbRl+3IfIo+Fq4bD88cb8/H0Kz7Jl/nwLdRTinRclA3hBtBa9zdbR+/jEaQhekf+o2LXkD/papsLxEhBrAdL8pmtUccyvjOoRD1nVTB+bNQnpZmcWfNccXeJ0LABFYDwr+oNrmqqU3TRHaMFlmI=
+	t=1744395363; cv=none; b=KswkwXV7Vemo8MD7LcZPUrJyL2uHouzbA79eBcNbqt1KHdYzJV6d8MpZoUQXlhgxgaT4UCmYcKIA3Fi24vi9aCvnzSxiXcqSTylwPsNuwamgT8EWAZ+TPdAj9zIMYMA+SuK556fNZH2ibS7b0hmWDQ43NUaArQd/KiOvtjHeSUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744395264; c=relaxed/simple;
-	bh=vY9f4r3cDFd7jHvFFQfWrOifGUvOJEYGZayNf2ssz0A=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=SKw6E23G2QJzztfZiwL1yF0ONkrEM7NMjjzfcrvEPkxxoQExxQ9HUpVSfIfr2t20KRKcNj/086BKpd6ILOmdf3PkkMFA0id8nZEytTCSWXjg2RkOJsF/8bCu14iQSeZt3yL0gasps84wklXJPH9XMa6c5MMsa690VfEKw9RLaWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ZimrOtKQ; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1744395363; c=relaxed/simple;
+	bh=dyUHYy7uA2zYq4DX3dwXYPvpZrduLWaoUC38taKSDAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SK5fRzT+iNMYO5g8zTjZicOO++if3tA/3SN8BMNw1/SPbFB2Dw1vWXRrcvzGzkxrL0ci63LNeuuBcNHKAslZ5DXZywcA/Dq40RkAhztCh8cK9Oezr2MiAg4YkhFGfYNRD92YF3CPWEnmNzy78F1KJzrthCZ2Rg0UbGEaKCmM1GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YgAw9tB1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ZimrOtKQ"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c53b9d66fdso301463385a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:14:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1744395261; x=1745000061; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jV3A2FFsRjYecUjGnpxB7VVu0ug7im1apcSVtwUE9WM=;
-        b=ZimrOtKQaURawXF07OELJeksndLNqBm2V4Dn8vSTPJjXEokuBOwvl0/i627lefZzoh
-         KO7Yd3KonTdhCI9Kij+0UX6toTeXFuFEH932QBAbTZ96KqSG0tO6atT5sXqJKfnCIMjC
-         AhhFRhVyUaV1angFOkS3KlHlZKcHXAUXxIbV6YsYiHvyJOvUrSYARU3CppEp9MQP4zuH
-         1wywV2GvQxRAmK4GEPhgcwcN2uwkUQYa+2sFexG2W29b1+Tat1/lLqmRLd4xecqv6dJn
-         b19jpCptBkVS58dGBGAfIbh5vl4bDTC4KdjVdSf7kgbEkEXR+0q3U1BW0kUh1a+e14/K
-         vz4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744395261; x=1745000061;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jV3A2FFsRjYecUjGnpxB7VVu0ug7im1apcSVtwUE9WM=;
-        b=iS/J6fqtdiy4VwqJJNnBwPEkw43LmAYFmvtC/1+EIdYk7H5TVl4NpZznQEfaqxztzU
-         JcXpoDllKOq8u0ccKTapMmGQRs0YPJKEVqydwVyk3XGzIBGtvOqzALo0swrMEPY20IAa
-         XOvf79GKY3yybtwKUgirKLpmoxGNU+rQq6EmCea4AFXrw6+UdriMmJpdl5p3kBXrIO99
-         SY1IJW6Fzv+YEeRKvpWbsAPDBaPzo2bJLo+FKmwFBs3UaLlL0FMeXEtQQuFn00+uBC3T
-         E6IbWy6iEWdbAx3Qbqmlzn3vWMwA2a3FpXw3PTcL4lP82bhvY/2o8zXCcYoEt4JkWbco
-         lWjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSpm72YzsWCxjnZYKsKOjqsMtK75peRvSFWZoGK7OC5+5mLfL2uSg9D3HRT+bvO8WkPcutjG/topP0hbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGM4MTCuGVcKUk5tFnqLTQpQIYfdLv8agWBfjsbzc9dXjn6kH7
-	DnLEx2oBDXpdI3m7/zXgHGnfe+MmPEyQLthGbxEIN1Uu1hPF5W1meupLgRHqiCIUqfF+Ihu/i6Y
-	=
-X-Gm-Gg: ASbGncu0XFb+kXTqtdLX17Rh/rIYzn7mi674sm84u+uvXZxJTeXyh9hOdh7WjtImqeI
-	p5whSz+mTxHsaFI5QghmeAkoGUJfE8si4XRgdBOnNPeQ0GMyTi6DPwJlxmRQwVMp0l1HbzI0InW
-	SpCzUrjNb+Lh8ur63cTYhDqJ0pv2Zd0VdrJwIBxnGz856e8BbKwnYK0Qi01FDCxoiPFCJVUqC+9
-	XudWgYNL7vANrnlxq28AjxU+41Yu8jmOaYqeXBqkFa88AmrY9ls9K9FLU25GSR1eX9MIFlRfoAn
-	/1L+A9v7VzwWayjSVBJzzIpW3P8l0ryi4vMkWyxd0CT3IwVbnp1/enud+3cMGTT03uv+V/2bJ1C
-	NVW+XpAm4TQ==
-X-Google-Smtp-Source: AGHT+IEsqHKJznBTfLH+wkhI97bKZraZjSQVcHcEj/HWL1HRD7kYNCXyQIZNuApWR29/gaG09j4C2A==
-X-Received: by 2002:a05:620a:25cf:b0:7c5:4be5:b0b3 with SMTP id af79cd13be357-7c7af1f4977mr580390785a.48.1744395261418;
-        Fri, 11 Apr 2025 11:14:21 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a8951803sm294878985a.36.2025.04.11.11.14.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 11:14:21 -0700 (PDT)
-Date: Fri, 11 Apr 2025 14:14:20 -0400
-Message-ID: <6ab93e8c449191e0a65668cf37602bd2@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YgAw9tB1"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BFBKvF018740;
+	Fri, 11 Apr 2025 18:15:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Z3WYEGHjhVBiH0fk/qwPhN94rw6DRAu9oRxXveAoAAw=; b=YgAw9tB1oFNXcH7C
+	H1WUnW1biTBR0Hix+yYpH5y4z6YhctvW7RV681op+sRyVeZn673ErOdtwojm4Z1q
+	w7zbn46AN8UC0pDCoAMh6bAi+Blq7FNehXXIr1sA/fUVPhR+jx8yc9B7M9gl/2XB
+	JvuY3OsOAKt5o7jNMOk0mjX6Bdy+AWMjIY2DIgK7ZJhLZfFEx5Bggy9eXb/jhAEw
+	7J8FV1FIT5qYO/ZAMSdV00krHbwm1BMqDc1RQUE1lk86w0qPjb2DtMAUQkFChTMd
+	UwRB+Ber+vbLG6P/lWBuipcq99W+u1cpbEwQeFZQoXrJ4lS2mDzjZYFldSvq0ldH
+	UebAmg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdguewh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 18:15:37 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53BIFaVv005437
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 18:15:36 GMT
+Received: from [10.216.49.215] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 11 Apr
+ 2025 11:15:30 -0700
+Message-ID: <c4ae42cc-872d-41ea-95ad-9dc294f1a5a1@quicinc.com>
+Date: Fri, 11 Apr 2025 23:45:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250411_1406/pstg-lib:20250410_1510/pstg-pwork:20250411_1406
-From: Paul Moore <paul@paul-moore.com>
-To: Richard Guy Briggs <rgb@redhat.com>, Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>, LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, Linux Kernel Audit Mailing List <audit@vger.kernel.org>
-Cc: Eric Paris <eparis@parisplace.org>, Steve Grubb <sgrubb@redhat.com>, Richard Guy Briggs <rgb@redhat.com>, Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>
-Subject: Re: [PATCH v1 2/2] audit: record AUDIT_ANOM_* events regardless of  presence of rules
-References: <0b569667efde7c91992bf3ea35b40c3a8f10e384.1741210251.git.rgb@redhat.com>
-In-Reply-To: <0b569667efde7c91992bf3ea35b40c3a8f10e384.1741210251.git.rgb@redhat.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/9] dt-bindings: serial: describe SA8255p
+To: Rob Herring <robh@kernel.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Konrad Dybcio" <konradybcio@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, "Nishanth Menon" <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J.
+ Wysocki" <rafael@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <psodagud@quicinc.com>,
+        <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>,
+        Nikunj Kela
+	<quic_nkela@quicinc.com>
+References: <20250410174010.31588-1-quic_ptalari@quicinc.com>
+ <20250410174010.31588-3-quic_ptalari@quicinc.com>
+ <20250411175730.GA3642862-robh@kernel.org>
+Content-Language: en-US
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <20250411175730.GA3642862-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f95c5a cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=_YL1DZwizIQu3P7nRPwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: Fh9pCnJHT4bNCV0ULywHERNNYgfEWTZ8
+X-Proofpoint-GUID: Fh9pCnJHT4bNCV0ULywHERNNYgfEWTZ8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_07,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110116
 
-On Mar  5, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
-> 
-> When no audit rules are in place, AUDIT_ANOM_{LINK,CREAT} events
-> reported in audit_log_path_denied() are unconditionally dropped due to
-> an explicit check for the existence of any audit rules.  Given this is a
-> report of a security violation, allow it to be recorded regardless of
-> the existence of any audit rules.
-> 
-> To test,
-> 	mkdir -p /root/tmp
-> 	chmod 1777 /root/tmp
-> 	touch /root/tmp/test.txt
-> 	useradd test
-> 	chown test /root/tmp/test.txt
-> 	{echo C0644 12 test.txt; printf 'hello\ntest1\n'; printf \\000;} | \
-> 		scp -t /root/tmp
-> Check with
-> 	ausearch -m ANOM_CREAT -ts recent
-> 
-> Link: https://issues.redhat.com/browse/RHEL-9065
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  kernel/audit.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi
 
-Looks okay to me, merged into audit/dev, thanks!
+On 4/11/2025 11:27 PM, Rob Herring wrote:
+> On Thu, Apr 10, 2025 at 11:10:03PM +0530, Praveen Talari wrote:
+>> From: Nikunj Kela <quic_nkela@quicinc.com>
+>>
+>> SA8255p platform abstracts resources such as clocks, interconnect and
+>> GPIO pins configuration in Firmware. SCMI power and perf protocols are
+>> used to send request for resource configurations.
+>>
+>> Add DT bindings for the QUP GENI UART controller on sa8255p platform.
+>>
+>> Co-developed-by: Praveen Talari <quic_ptalari@quicinc.com>
+>> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+> Your tags go last because you touched this last (I assume). The order
+> here would be correct if you were the original author, but Nikunj made
+> significant enough changes to change the author and also sent the
+> patches. The sender always has the last S-o-b (until the maintainer
+> adds their's when applying).
+Do you mean like below
+Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+Co-developed-by: Praveen Talari <quic_ptalari@quicinc.com>
 
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 53e3bddcc327..0cf2827882fc 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -2285,7 +2285,7 @@ void audit_log_path_denied(int type, const char *operation)
->  {
->  	struct audit_buffer *ab;
->  
-> -	if (!audit_enabled || audit_dummy_context())
-> +	if (!audit_enabled)
->  		return;
->  
->  	/* Generate log with subject, operation, outcome. */
-> -- 
-> 2.43.5
+Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
 
---
-paul-moore.com
+Are Co-developed-by and Signed-off-by both needed or can i keep s-o-b?
+
+>
+>> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+>> ---
+>>   .../serial/qcom,sa8255p-geni-uart.yaml        | 59 +++++++++++++++++++
+>>   1 file changed, 59 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
+>> new file mode 100644
+>> index 000000000000..0dbfbfa1d504
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
+>> @@ -0,0 +1,59 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/serial/qcom,sa8255p-geni-uart.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Geni based QUP UART interface
+>> +
+>> +maintainers:
+>> +  - Praveen Talari <quic_ptalari@quicinc.com>
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/serial/serial.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,sa8255p-geni-uart
+>> +      - qcom,sa8255p-geni-debug-uart
+>> +
+>> +  interrupts:
+>> +    minItems: 1
+>> +    items:
+>> +      - description: UART core irq
+>> +      - description: Wakeup irq (RX GPIO)
+> If this is a wakeup source, then you should have interrupt-names with
+> 'wakeup' for the 2nd irq.
+
+We have taken reference of below existing yaml file
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/serial/qcom,serial-geni-qcom.yaml
+
+>
+>> +
+>> +  power-domains:
+>> +    minItems: 2
+>> +    maxItems: 2
+>> +
+>> +  power-domain-names:
+>> +    items:
+>> +      - const: power
+>> +      - const: perf
+>> +
+>> +  reg:
+>> +    maxItems: 1
+> 'reg' goes after compatible.
+We have taken reference of 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/serial/qcom,serial-geni-qcom.yaml
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - interrupts
+>> +  - reg
+>> +  - power-domains
+>> +  - power-domain-names
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +    serial@990000 {
+>> +        compatible = "qcom,sa8255p-geni-uart";
+>> +        reg = <0x990000 0x4000>;
+>> +        interrupts = <GIC_SPI 531 IRQ_TYPE_LEVEL_HIGH>;
+>> +        power-domains = <&scmi0_pd 0>, <&scmi0_dvfs 0>;
+>> +        power-domain-names = "power", "perf";
+>> +    };
+>> +...
+>> -- 
+>> 2.17.1
+>>
