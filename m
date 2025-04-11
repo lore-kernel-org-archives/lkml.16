@@ -1,144 +1,212 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5571B27D76A;
-	Fri, 11 Apr 2025 06:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E641372;
+	Fri, 11 Apr 2025 07:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744354760; cv=none; b=GS8wDTLg6euxIRUs2Cx4XLUQullPDn+5ji1i6BEoGF2jvBcf4jzCBOM8N3YgKL105uJzt1Ikd+igsDL7chyxM2oRdKFYzF5vt33EdnD+0/O+aaVeQps4t7wtC6i5v0GY4ApWvGS8aucA50mcPmE0SnffcJgjmvV+rCDmkHJ7TnY=
+	t=1744354934; cv=none; b=USRjGLMFsgfOwiqThPXGhZfZcSz2djMyhERm4PJOETWpONFpVzlzQ++xa+HaWMlm5d83Dn1bUhZoGhSy+h2irpWyTQXRE66SYM/R7xspRCijgOTnyFkpIdiVpT6k6r7R7u59EyOoLqPa7G2VxbQN5e8AMz3JVF2gMlyxFe/BTJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744354760; c=relaxed/simple;
-	bh=6F4HUAFfF7EtSOMyUi8mc0ZMpUtoK7zVy9sayApOEpA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WA3PGa4CS8+OoUL6ZVEZ9fu2qxT3cMbh61nloCuDjcbbdaj3QD6SIDOfgOBJrnFMGtcL+sI3KtPDZB2z+n3WfofYBVdtBtYN2koAL6aaSdWCcsuyspHvIw3c4mR4SsV95bvYVLcOMfTPgkw2qMOrmnJVtuaiZNW17e09AUBaiik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hg7tz7m6; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1744354934; c=relaxed/simple;
+	bh=AGFFGmB9vBy6TsRyCyNlIMC/OHTiQ9NPOBxnBxibdTI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RuMmBx7FY8Y9hs8s9pftl2QBuNlZp0Naa0frfLPyF03xy27BpZh5Iyj+4glfU2782IwqjzdSVC+3dy4+vlEmvuI2fZ6VFboAVCfRK4KeghGL0GnxYpws2VM7+088ZCykJMHp+ONyWbzYmiZ5piISrpOe7gdqccXTFG/n+bbBCqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0XaucI9; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hg7tz7m6"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so2183694a91.3;
-        Thu, 10 Apr 2025 23:59:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0XaucI9"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913d129c1aso1130656f8f.0;
+        Fri, 11 Apr 2025 00:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744354758; x=1744959558; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+qJFhQZDSWw7uMFXVtdsGZR2IE2c3S88vf7fwMBNJsM=;
-        b=Hg7tz7m6BQli0DsO9R+JlkPwVKdQWFkUoGMv+6BvbFVyZ+Y+tuyC8ffN09LyVJ4o5L
-         dPrTMfZb43R8d2pz5wf8UjsaAVCMfbfnusIcacMRNiuB8gLUs+hFlc3r2rjzsLRq5h6O
-         xeJzzRELegFKA9edzYcGhMyPESTlDd6VXXFmruWJRaSzF8OPFMpqAemr/GNaweYg78M1
-         whNjNvoLrMGbLomrZ8cz1cfKAKcZPSHytIJwsEXyaoBF8x7LT1P9wr++qIniDReFCySq
-         D39jnvu1YaSXfsN9/dj4I2QMzoGXdQsxS4rpuvK89Hh5XNzXf0MeRKATVTf6TJpJ3LxT
-         W+0A==
+        d=gmail.com; s=20230601; t=1744354931; x=1744959731; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e0fB4A0zqHMl0E93R7yWp+6DKpBbr/GksX5p6qlRsg4=;
+        b=h0XaucI9JSWi9mmV+9WVlTKy3o4qX9Hn4sM3+be157u0lzr9ZsgAA/Ak8Db3PeZ31g
+         puGXxdRfZGTZi+d4mW9iPgcy6WCTc+yJH3845O50IWOxp6xHh+WNXmIXBCK4hou1sPx9
+         HVgSoeWNsvPo5utDK7jsvsJsn8nfofOYO3kp0K2lNT6oZdmkaouT1fwIbSK7l0RH+Tgf
+         1mbFMb7ho5SwtCkBokbjhHtBkPXL8GmOmuFAg/2IfOa9up5g5syhgI/fqbnk9McuX687
+         n8c8WgYXvA2c31gRJbA5YSwvefP3IVDjypbTYtn17NJVnn4QMxI8cs3bQ/TAOhWNiYd9
+         jvZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744354758; x=1744959558;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+qJFhQZDSWw7uMFXVtdsGZR2IE2c3S88vf7fwMBNJsM=;
-        b=oS72fil2u/Hc6b6rOxXDk6XGZSHka+FBYQt4JfBPkn63lNNIgAOYQitJNC6fW84KZb
-         4W68hv+/787hPMNlDA1T/jXRCrLByXAT+ViPHXZoy3BT6ezMEfZ2pcOAxlJaGRMN0GQB
-         BMLhfS1qI3a9ZA6FwLYZZatP47B0zKz2FV3LatDtP/j/Bg2ARO4XK1PhWKPZ3omRmhjM
-         PJ4sGWm33k6Z7vpByyryH/BrzaxrdMqkO7mYakRfp6YAi9JDs3dwudDCAnkQpGMyuxm4
-         usBN9ya6najFtYrL3AFPcClJpnIvjL8bxUbiGMXIYVRKjYKFozqJq2dg55px3Kt3m9XY
-         ESXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULIBSTQbmyUm2AbxgnisHyWqjVDFyWUJWU+uIOqqtZcS5biwPYEwbzgVY0vgPoCPu1Hvc5aQg5oFJHW5A9@vger.kernel.org, AJvYcCX0ZwYNc0lCqm3zeZXVYp8wdjC6KAMyQ7ZH/6biZl7YXoarq5RbY4IbZgWyLmuQJv+kwW+6OFEJI1v+6Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC+TKgs4Bvjv1Q7Z/VBKFxcJUFRJMPuEgV59kmpQ36dZrxMdUD
-	6WgZZkJUt7Uejks8WrosnQwBVQJgM8tWGIiyQRaQIs/6DNorjRvY
-X-Gm-Gg: ASbGncuEbjY6iPxkx85y1bChqQOxY/X0PNN3FcNq9Hy1pOkxMBvDdWSdj2+ibKF6YSU
-	/eAtGqrnvY2YKExYFiYX6yfxosm7B6p1BCawqJcXjjs6k+DHOjfatQGkkY4yiX0mM0G2dEz/1vD
-	Rd6a7EEkLHVV7EXyFjrMq2hBLLNyOddhMK/vJZ+D6yQTUL+B1si8SvuhbFH4laO/OetnkOoHVWT
-	MAZP1oWZ9eOWB2AYC1z6fn/nxke5I0SWAKjqbW4JHnMgY6n1YKJUNmRu3eeOx6Ayd5trLNP+qPG
-	0D727d4v+mkXHTl7YhAGjHAttKJAz0WIKvY0SGbv4lKDPXDpFppEQvFIziyB
-X-Google-Smtp-Source: AGHT+IEm345yRqrIPVOO3GmovNac5+SpLcJAHRcaWnKAQDIYNPWD6od4fbgDprWNQntPFm+8BrWw0A==
-X-Received: by 2002:a17:90b:2d87:b0:2fe:b8b9:5aa6 with SMTP id 98e67ed59e1d1-3082367ef21mr2675905a91.31.1744354758518;
-        Thu, 10 Apr 2025 23:59:18 -0700 (PDT)
-Received: from [192.168.0.161] ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a735sm4777636a91.3.2025.04.10.23.59.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 23:59:18 -0700 (PDT)
-Message-ID: <0a1ea318-20e3-44b8-9d5e-f603c5341087@gmail.com>
-Date: Fri, 11 Apr 2025 12:29:14 +0530
+        d=1e100.net; s=20230601; t=1744354931; x=1744959731;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e0fB4A0zqHMl0E93R7yWp+6DKpBbr/GksX5p6qlRsg4=;
+        b=rqIgymRH15pr+lmmLOb+Vlu1CneU2UoTT2zx5RTLKj5tanmh8gj9PLadsO0YHcsM7s
+         LJV0fVsv2qW088SyvkeC5lx/+UXOviNWdaZEv9jvNcnjPYTumAf23FMmg14dAKyjnVrj
+         VbQI7ADl2ovj27w7a60kjR2t+yeUYibaDg2XrywmLtWyYCpnb9ln38TaFYmiCyjNglTH
+         iB/pXYq3ZXbuDmGGcSL3I6CknfzYiopibyG3tdKFelS7c5zuW1idMQ4PLiOI7k85aZ1a
+         XprnAUR2XTRaKcjkAn622uM1tQ0vMz3jP7a1yBPD9cO3JLFUVh1WxTUmHw5m4OBm0fSQ
+         oZ0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVJhbmZNhHTpI44mqMfKbfyIcLcptnZvaxvw8IQ/xJJew8bd7vQwaB/HynJhdKnNOvjddxY0MrevKMN5hMO@vger.kernel.org, AJvYcCW78yqyCrzfTTnSh9jWHCUUdCNzsjjlwy+M9SeH9cFFXBhfnJoiHwi7GqzRpeShBko6VJt56jgDc3p6TYc=@vger.kernel.org, AJvYcCXES5ECVLNEFAQnwHbRdKNEfDkl6ss2Tz31e/dkL3CGEplHrRpgKHYR6rmSdPTNQZdVimlxSY/R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfw8swseu86HoPgllh70qREBdsvUIES9gkc/xLqAXsVqdD1gDv
+	ab4h4AOd+hPoECiy02rskQ0frg34whBMjkN6GJyiwq/SYBmOMVly
+X-Gm-Gg: ASbGnctpFaKgzozCq7iE4wOj0ttq0ISxEypAnoAJ2wzl708nAHMZ+kTkfZvztdF5J5B
+	br4LrTVZwyQppjzFNL4gsq5A1RFDNAhGqh6LaZRIElMEGjZNk5iQ9y+2pah0RwwMNj4sZr8BpKP
+	T6oOBbFJ3wWwqjm7GkHM0gdacj3oge4SfZ+7Wj6xKg0QA6Bo4Pre0vT4SFJM9iQSUqeSngndYjN
+	6YDtWVmNDkAgdJfxYejSZ+7wq6LgR9/65v3WgtLVgNmEqU41Zf9CJsM8c3F4A6n7o4f00IkxkMo
+	Ln1nzdWRYSJUNgULS06XWOOHscrmJP0nhF3g2jUEMAe4f5IrtWaQ3g0SYyU41bPlw08=
+X-Google-Smtp-Source: AGHT+IH8LCzHUSZqtfBQFlJkR7MqXFEh62hFWVQl5PF1/8RaLCtx+2Lw6/EeRGjCvjbReYcDJv6wgQ==
+X-Received: by 2002:a05:6000:1887:b0:38a:4184:14ec with SMTP id ffacd0b85a97d-39e6e45d52fmr1187829f8f.1.1744354930629;
+        Fri, 11 Apr 2025 00:02:10 -0700 (PDT)
+Received: from localhost (ip87-106-108-193.pbiaas.com. [87.106.108.193])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae964073sm1109117f8f.9.2025.04.11.00.02.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 00:02:10 -0700 (PDT)
+From: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack3000@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack3000@gmail.com>,
+	Jared Finder <jared@finder.org>,
+	Jann Horn <jannh@google.com>,
+	=?UTF-8?q?Hanno=20B=C3=B6ck?= <hanno@hboeck.de>,
+	Kees Cook <kees@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] tty: Require CAP_SYS_ADMIN for all usages of TIOCL_SELMOUSEREPORT
+Date: Fri, 11 Apr 2025 09:01:45 +0200
+Message-ID: <20250411070144.3959-2-gnoack3000@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] hwmon: asus_atk0110: NULL buf.pointer after free
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Luca Tettamanti <kronos.it@gmail.com>, Jean Delvare <jdelvare@suse.com>,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250410183450.15514-1-purvayeshi550@gmail.com>
- <bba9ff87-90de-4eae-99d1-647ee413d480@roeck-us.net>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <bba9ff87-90de-4eae-99d1-647ee413d480@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 11/04/25 01:34, Guenter Roeck wrote:
-> On Fri, Apr 11, 2025 at 12:04:50AM +0530, Purva Yeshi wrote:
->> Fix Smatch-detected issue:
->> drivers/hwmon/asus_atk0110.c:987 atk_enumerate_old_hwmon() error:
->> double free of 'buf.pointer' (line 966)
->> drivers/hwmon/asus_atk0110.c:1008 atk_enumerate_old_hwmon() error:
->> double free of 'buf.pointer' (line 987)
->>
->> Smatch warns about double free of 'buf.pointer'.
->> This happens because the same buffer struct is reused multiple times
->> without resetting the pointer after free. Set buf.pointer = NULL
->> after each ACPI_FREE to prevent possible use-after-free bugs.
->>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
->> ---
->>   drivers/hwmon/asus_atk0110.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/hwmon/asus_atk0110.c b/drivers/hwmon/asus_atk0110.c
->> index c80350e499e9..83ee7f25bb8e 100644
->> --- a/drivers/hwmon/asus_atk0110.c
->> +++ b/drivers/hwmon/asus_atk0110.c
->> @@ -964,6 +964,7 @@ static int atk_enumerate_old_hwmon(struct atk_data *data)
->>   			count++;
->>   	}
->>   	ACPI_FREE(buf.pointer);
->> +	buf.pointer = NULL;
->>   
->>   	/* Temperatures */
->>   	buf.length = ACPI_ALLOCATE_BUFFER;
->> @@ -985,6 +986,7 @@ static int atk_enumerate_old_hwmon(struct atk_data *data)
->>   			count++;
->>   	}
->>   	ACPI_FREE(buf.pointer);
->> +	buf.pointer = NULL;
->>   
->>   	/* Fans */
->>   	buf.length = ACPI_ALLOCATE_BUFFER;
-> 
-> buf.length is set to ACPI_ALLOCATE_BUFFER to trigger buffer
-> allocation in acpi_evaluate_object_typed(). The old content of
-> buf.pointer is irrelevant (and not initialized to start with
-> in the first call). The problem you describe does not exist.
-> 
-> Guenter
+This requirement was overeagerly loosened in commit 2f83e38a095f
+("tty: Permit some TIOCL_SETSEL modes without CAP_SYS_ADMIN"), but as
+it turns out,
 
-Thank you for the clarification, Guenter. I appreciate your review.
+  (1) the logic I implemented there was inconsistent (apologies!),
 
-> 
->> @@ -1006,6 +1008,7 @@ static int atk_enumerate_old_hwmon(struct atk_data *data)
->>   			count++;
->>   	}
->>   	ACPI_FREE(buf.pointer);
->> +	buf.pointer = NULL;
->>   
->>   	return count;
->>   }
->> -- 
->> 2.34.1
->>
->>
+  (2) TIOCL_SELMOUSEREPORT might actually be a small security risk
+      after all, and
 
-Best regards,
-Purva
+  (3) TIOCL_SELMOUSEREPORT is only meant to be used by the mouse
+      daemon (GPM or Consolation), which runs as CAP_SYS_ADMIN
+      already.
+
+In more detail:
+
+1. The previous patch has inconsistent logic:
+
+   In commit 2f83e38a095f ("tty: Permit some TIOCL_SETSEL modes
+   without CAP_SYS_ADMIN"), we checked for sel_mode ==
+   TIOCL_SELMOUSEREPORT, but overlooked that the lower four bits of
+   this "mode" parameter were actually used as an additional way to
+   pass an argument.  So the patch did actually still require
+   CAP_SYS_ADMIN, if any of the mouse button bits are set, but did not
+   require it if none of the mouse buttons bits are set.
+
+   This logic is inconsistent and was not intentional.  We should have
+   the same policies for using TIOCL_SELMOUSEREPORT independent of the
+   value of the "hidden" mouse button argument.
+
+   I sent a separate documentation patch to the man page list with
+   more details on TIOCL_SELMOUSEREPORT:
+   https://lore.kernel.org/all/20250223091342.35523-2-gnoack3000@gmail.com/
+
+2. TIOCL_SELMOUSEREPORT is indeed a potential security risk which can
+   let an attacker simulate "keyboard" input to command line
+   applications on the same terminal, like TIOCSTI and some other
+   TIOCLINUX "selection mode" IOCTLs.
+
+   By enabling mouse reporting on a terminal and then injecting mouse
+   reports through TIOCL_SELMOUSEREPORT, an attacker can simulate
+   mouse movements on the same terminal, similar to the TIOCSTI
+   keystroke injection attacks that were previously possible with
+   TIOCSTI and other TIOCL_SETSEL selection modes.
+
+   Many programs (including libreadline/bash) are then prone to
+   misinterpret these mouse reports as normal keyboard input because
+   they do not expect input in the X11 mouse protocol form.  The
+   attacker does not have complete control over the escape sequence,
+   but they can at least control the values of two consecutive bytes
+   in the binary mouse reporting escape sequence.
+
+   I went into more detail on that in the discussion at
+   https://lore.kernel.org/all/20250221.0a947528d8f3@gnoack.org/
+
+   It is not equally trivial to simulate arbitrary keystrokes as it
+   was with TIOCSTI (commit 83efeeeb3d04 ("tty: Allow TIOCSTI to be
+   disabled")), but the general mechanism is there, and together with
+   the small number of existing legit use cases (see below), it would
+   be better to revert back to requiring CAP_SYS_ADMIN for
+   TIOCL_SELMOUSEREPORT, as it was already the case before
+   commit 2f83e38a095f ("tty: Permit some TIOCL_SETSEL modes without
+   CAP_SYS_ADMIN").
+
+3. TIOCL_SELMOUSEREPORT is only used by the mouse daemons (GPM or
+   Consolation), and they are the only legit use case:
+
+   To quote console_codes(4):
+
+     The mouse tracking facility is intended to return
+     xterm(1)-compatible mouse status reports.  Because the console
+     driver has no way to know the device or type of the mouse, these
+     reports are returned in the console input stream only when the
+     virtual terminal driver receives a mouse update ioctl.  These
+     ioctls must be generated by a mouse-aware user-mode application
+     such as the gpm(8) daemon.
+
+   Jared Finder has also confirmed in
+   https://lore.kernel.org/all/491f3df9de6593df8e70dbe77614b026@finder.org/
+   that Emacs does not call TIOCL_SELMOUSEREPORT directly, and it
+   would be difficult to find good reasons for doing that, given that
+   it would interfere with the reports that GPM is sending.
+
+   More information on the interaction between GPM, terminals and the
+   kernel with additional pointers is also available in this patch:
+   https://lore.kernel.org/all/a773e48920aa104a65073671effbdee665c105fc.1603963593.git.tammo.block@gmail.com/
+
+   For background on who else uses TIOCL_SELMOUSEREPORT: Debian Code
+   search finds one page of results, the only two known callers are
+   the two mouse daemons GPM and Consolation.  (GPM does not show up
+   in the search results because it uses literal numbers to refer to
+   TIOCLINUX-related enums.  I looked through GPM by hand instead.
+   TIOCL_SELMOUSEREPORT is also not used from libgpm.)
+   https://codesearch.debian.net/search?q=TIOCL_SELMOUSEREPORT
+
+Cc: Jared Finder <jared@finder.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Hanno Böck <hanno@hboeck.de>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: Kees Cook <kees@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 2f83e38a095f ("tty: Permit some TIOCL_SETSEL modes without CAP_SYS_ADMIN")
+Signed-off-by: Günther Noack <gnoack3000@gmail.com>
+---
+ drivers/tty/vt/selection.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
+index 0bd6544e30a6b..791e2f1f7c0b6 100644
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -193,13 +193,12 @@ int set_selection_user(const struct tiocl_selection __user *sel,
+ 		return -EFAULT;
+ 
+ 	/*
+-	 * TIOCL_SELCLEAR, TIOCL_SELPOINTER and TIOCL_SELMOUSEREPORT are OK to
+-	 * use without CAP_SYS_ADMIN as they do not modify the selection.
++	 * TIOCL_SELCLEAR and TIOCL_SELPOINTER are OK to use without
++	 * CAP_SYS_ADMIN as they do not modify the selection.
+ 	 */
+ 	switch (v.sel_mode) {
+ 	case TIOCL_SELCLEAR:
+ 	case TIOCL_SELPOINTER:
+-	case TIOCL_SELMOUSEREPORT:
+ 		break;
+ 	default:
+ 		if (!capable(CAP_SYS_ADMIN))
+
+base-commit: 27102b38b8ca7ffb1622f27bcb41475d121fb67f
+-- 
+2.48.1
+
