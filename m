@@ -1,194 +1,196 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27AF1DFE8
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F04A20E01F
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385743; cv=none; b=DrAuUjmWfRgATX78A1BmCgQDqjG55WjpybHQ4eDBFk8hh/Z5D6y/3tUO8NBOIHYTfoXYNfOzITKgx8AIgZXnd4tHaYfVfLHUpkU7fFbT79zWn+WH0JFXYKTE8BEZjj0zm1uFTYtcVEDJ+3g1WVOHpxvqEjlvtiMjKesztrOZGF4=
+	t=1744385756; cv=none; b=KJ6C+CdMm/xBk3ZCtjELCMbtiFhkOea4twKn2XKb9Y05BLbffZx4XJiko74tyawYWfJZx13YeMHsv3WaphCbSMZpR6EHIfMCSi0oXcGz/I8Nq4wHAjCkWPtwmO3ABeV5pXAh6EWErx5McWAk2hg6MlRad0NaUkFkBHvQ+Du59aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385743; c=relaxed/simple;
-	bh=pnjuot0PRjHdDOdm8RowAL3yao/N9rw2tuNoMgHgtBw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=G1Wo3ddsDsfBst2T+DfhO+f41oBa8/dNFEC+Yp44qzZAOMSWJnaQAMKtTv7/+8HKVii/10xHb61VCQlpd5T2qJLHKsuB4GUZks7vw9cCry0N0gJX62gv/hI5bXAwZ/I+ceLaXRnMmuLSvj4l4jVdiuFpR1rzh/oGkySQSl6/fEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=TNk5r+gr; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1744385756; c=relaxed/simple;
+	bh=6LB6UCvlvFB88/s52rhCdovokxut7cMvdT7ZY8sl8No=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hgSo+QXWXdEtoDWcijNkPg4wUg4mtibnwXJ+7tT7QDiKDQaLDgZaBfZ4DfqCbRH6cHe8iyzb6sFo1qwdx53yA3ad4nyzvwvnKMVO8yGOCD3vV9yFdhsBUT1XUqTz/D6AvJYkamdyvXcZJDLazai+UMZ2HEdQbQpyThfi43HG8JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ELid6Wuq; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="TNk5r+gr"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 48F62240101
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:35:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1744385733; bh=pnjuot0PRjHdDOdm8RowAL3yao/N9rw2tuNoMgHgtBw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 From;
-	b=TNk5r+gr9DCPWTCDCU9kShxTmn/AEc+aZaRQQPyiaGbbXQmg3bQ4ezhwTsqc2cCg9
-	 DFBDr2qSR75eCCX79qopNsPrwKzDsswP77GyBUOeSPDPU7pl7mG0R+p+EfEHT46PYi
-	 E5YEEnLyNF6Mt0QHOFsYynwBxBCDpDb1eCCWcRBefgWMyQR8AZGrNJEr5MsOVs5+Rs
-	 ZeBYAQsCePlNSSRzjzImy4ft1bCUqWXUYyaXDqf2wurvvLRO3QMzu6KMp34fIP2QK0
-	 rRiImwmXhrC9fHPGSNiQCsSEKqeZErl0udV6bRAb7OhGeU1qrQl8QRYJEwxflqmyUp
-	 FGN3JoeOXyvOQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZZ13M1M9zz6tw1;
-	Fri, 11 Apr 2025 17:35:27 +0200 (CEST)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-To: syzbot <syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com>
-Cc: kent.overstreet@linux.dev,  linux-bcachefs@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bcachefs?] general protection fault in
- bch2_snapshot_tree_oldest_subvol
-In-Reply-To: <67eef48d.050a0220.9040b.0262.GAE@google.com> (syzbot's message
-	of "Thu, 03 Apr 2025 13:50:21 -0700")
-References: <67eef48d.050a0220.9040b.0262.GAE@google.com>
-Date: Fri, 11 Apr 2025 15:35:26 +0000
-Message-ID: <m2o6x2r9s1.fsf@posteo.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ELid6Wuq"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso21804755e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744385752; x=1744990552; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lKaim36rDlvvtzFLUyngfIkva1VGFiay+NKjck/e1UY=;
+        b=ELid6WuqVpzoSmdTe8TeCuUfLCwqeyaPVjOGUrqXrtuMISuJ3gVcmeVVpZf6CVEwRX
+         PdS75Y6cfGDgsbm4KUPG/AIlvsekxZx34vvziUJLItkVZNoHEWyszbx4mGWaWq1n9cKx
+         hh5TeFytuitcrlkTgTIOv084nX1w63EOhkuhGU2i9c2kZ7ZR4RL5sZ/2BxHmztWcZAGA
+         PJAmWEpaH6fdjX2TZ3k42hMAnf5lRcUIZKNuJhrFQgpXmRa1QYizSkVWddp92++dDmSu
+         lZjwmnkIx5YxxYFyxDBObemY+kAiyCiX0j/av3zeAbIxy3Y1Q3GuEyAb7QgNJD0Y9LaK
+         Th5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744385752; x=1744990552;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lKaim36rDlvvtzFLUyngfIkva1VGFiay+NKjck/e1UY=;
+        b=fYAk9j75qevvZRPQw8/yzl/7b6wew8o50WZV7cmWWcjJn/Xdq62r7k8Ox48tgpApAi
+         dCgWFc1yBq7zRenn3j3JLJueCcejyke/NcIe1Jx6+ei5HZECFGoA0NWisz4GDnJplG0I
+         BPY2fCzACESWZcnSkO/IQ2FvLnLLTDY0ZNK2XR2aj4gfQSBk9MLzcxhXJdP7s63E/z+W
+         2VOYBfoQIFra+FaeYPdYwJB6TxhjG3LaZ5Iyvq9+n611frp+0hVfKjhH3UeLVw0kyFdd
+         8zXZInlFrg/G3oTZRM8Qvyv2vsgXoDOqcUGNVVDyEhl9PME6vnWpYe3kBZ3QCnlxelfg
+         S+yA==
+X-Gm-Message-State: AOJu0YwmwqeTkvpHLgs1Dru24DnxJSYolLGPgepovY2JyKEpoZdVLsWu
+	rr4SM4anIIic7+qP2HNi++iOupp5FpjrO1yttmiqW/oaWNr3NCn1iqgGaEcG1hE=
+X-Gm-Gg: ASbGnctRZSPjRaJdINLwCQT02tujBgx+UeuJb2uQjFMO3e16C8GlINSwJY33iFPWRRC
+	JU8X4sti7Wys5Iqb6KOHYAus3y2YTex9n1mV4A6vZyASUUVqHjbNKS798EYrYivDf5GnnSYtiZM
+	E60vTzi2+CG2Stq3fFbY/BmRYrtGcHzoccIwnOmNByH0Jy6uXFwuPBtzFMp63MR+FEydovlDfJp
+	bEYABVIC7T3vq5q/DNS+FXGakcRuB2s4Dsy3TeE5rrRTmopfUi2RDwqbL4WFp44H9W2uavVik1j
+	Lkgsd3nzEe7PlQ0VF3E5QCBLvkVp8dWz4XD1u3684EeVzdftpb7nyNyR8OGxp8zhkfRaKzxppP8
+	2TuS3Qw==
+X-Google-Smtp-Source: AGHT+IHmLcfEt77kvPXMcWI46glOKuB81jeyuxsGo88GhaNrmPMx+9rHhUkY2slNl4+xQtTbU1h8iQ==
+X-Received: by 2002:a05:600c:83c6:b0:439:643a:c8d5 with SMTP id 5b1f17b1804b1-43f3a7db13dmr34023905e9.0.1744385752462;
+        Fri, 11 Apr 2025 08:35:52 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338d757sm87044235e9.5.2025.04.11.08.35.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 08:35:52 -0700 (PDT)
+Message-ID: <c1be38a9-1e3b-4e26-be4b-f4fde93468c5@linaro.org>
+Date: Fri, 11 Apr 2025 16:35:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v5 0/8] media: qcom: iris: re-organize catalog & add
+ support for SM8650
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+References: <sSGjuqPKGTjE9al-J0RHMuA3Rk7hIh9x9RMWNefg93pJOOacQodM38LE11xl4vmO1I0OgSZFYR2sblISUxkPeg==@protonmail.internalid>
+ <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
+ <X6Bg8c3Qrw5uxgOgENJL1NcyPhC6JJ-KaiGVeEk_iuzjE0TFgp4ZREnObm2n9DVQGANSurRREkp0AiqERQgU4g==@protonmail.internalid>
+ <fa6ab24d-80ea-42f0-b764-b8596e6b724d@linaro.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <fa6ab24d-80ea-42f0-b764-b8596e6b724d@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-syzbot <syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com> writes:
+On 11/04/2025 12:55, Bryan O'Donoghue wrote:
+> On 10/04/2025 17:29, Neil Armstrong wrote:
+>> Re-organize the platform support core into a gen1 catalog C file
+>> declaring common platform structure and include platform headers
+>> containing platform specific entries and iris_platform_data
+>> structure.
+>>
+>> The goal is to share most of the structure while having
+>> clear and separate per-SoC catalog files.
+>>
+>> The organization is based on the curent drm/msm dpu1 catalog
+>> entries.
+>>
+>> Add support for the IRIS accelerator for the SM8650
+>> platform, which uses the iris33 hardware.
+>>
+>> The vpu33 requires a different reset & poweroff sequence
+>> in order to properly get out of runtime suspend.
+>>
+>> Follow-up of [1]:
+>> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org/
+>>
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>> Changes in v4:
+>> - Reorganized into catalog, rebased sm8650 support on top
+>> - Link to v4: https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org
+>>
+>> Changes in v4:
+>> - collected tags
+>> - un-split power_off in vpu3x
+>> - removed useless function defines
+>> - added back vpu3x disappeared rename commit
+>> - Link to v3: https://lore.kernel.org/r/20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org
+>>
+>> Changes in v3:
+>> - Collected review tags
+>> - Removed bulky reset_controller ops
+>> - Removed iris_vpu_power_off_controller split
+>> - Link to v2: https://lore.kernel.org/r/20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org
+>>
+>> Changes in v2:
+>> - Collected bindings review
+>> - Reworked rest handling by adding a secondary optional table to be used by controller poweroff
+>> - Reworked power_off_controller to be reused and extended by vpu33 support
+>> - Removed useless and unneeded vpu33 init
+>> - Moved vpu33 into vpu3x files to reuse code from vpu3
+>> - Moved sm8650 data table into sm8550
+>> - Link to v1: https://lore.kernel.org/r/20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org
+>>
+>> ---
+>> Neil Armstrong (8):
+>>         media: qcom: iris: move sm8250 to gen1 catalog
+>>         media: qcom: iris: move sm8550 to gen2 catalog
+>>         dt-bindings: media: qcom,sm8550-iris: document SM8650 IRIS accelerator
+>>         media: platform: qcom/iris: add power_off_controller to vpu_ops
+>>         media: platform: qcom/iris: introduce optional controller_rst_tbl
+>>         media: platform: qcom/iris: rename iris_vpu3 to iris_vpu3x
+>>         media: platform: qcom/iris: add support for vpu33
+>>         media: platform: qcom/iris: add sm8650 support
+>>
+>>    .../bindings/media/qcom,sm8550-iris.yaml           |  33 ++-
+>>    drivers/media/platform/qcom/iris/Makefile          |   6 +-
+>>    .../media/platform/qcom/iris/iris_catalog_gen1.c   |  83 +++++++
+>>    ...{iris_platform_sm8550.c => iris_catalog_gen2.c} |  85 +------
+>>    ...ris_platform_sm8250.c => iris_catalog_sm8250.h} |  80 +-----
+>>    .../media/platform/qcom/iris/iris_catalog_sm8550.h |  91 +++++++
+>>    .../media/platform/qcom/iris/iris_catalog_sm8650.h |  68 +++++
+>>    drivers/media/platform/qcom/iris/iris_core.h       |   1 +
+>>    .../platform/qcom/iris/iris_platform_common.h      |   3 +
+>>    drivers/media/platform/qcom/iris/iris_probe.c      |  43 +++-
+>>    drivers/media/platform/qcom/iris/iris_vpu2.c       |   1 +
+>>    drivers/media/platform/qcom/iris/iris_vpu3.c       | 122 ---------
+>>    drivers/media/platform/qcom/iris/iris_vpu3x.c      | 275 +++++++++++++++++++++
+>>    drivers/media/platform/qcom/iris/iris_vpu_common.c |   4 +-
+>>    drivers/media/platform/qcom/iris/iris_vpu_common.h |   3 +
+>>    15 files changed, 598 insertions(+), 300 deletions(-)
+>> ---
+>> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+>> change-id: 20250410-topic-sm8x50-upstream-iris-catalog-3e2e4a033d6f
+>>
+>> Best regards,
+>> --
+>> Neil Armstrong <neil.armstrong@linaro.org>
+>>
+>>
+> 
+> Please fixup this
+> 
+> 0007-media-platform-qcom-iris-add-support-for-vpu33.patch has no obvious
+> style problems and is ready for submission.
+> 0007-media-platform-qcom-iris-add-support-for-vpu33.patch:7: slighly ==>
+> slightly
+> 
+> also accounting for my comments in patches #1 and #2 you can add for the
+> series
+> 
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> 
 
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12482fb0580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6fe3b5e6a2cb1cc2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=baee8591f336cab0958b
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10530be4580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d6d404580000
->
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a2cc6ff5.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/c58c1555aab7/vmlinux-a2cc6ff5.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/61fb9d013359/bzImage-a2cc6ff5.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/86cf46d3a5d9/mount_0.gz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com
->
->  done
-> bcachefs (loop0): accounting_read... done
-> bcachefs (loop0): alloc_read... done
-> bcachefs (loop0): snapshots_read... done
-> bcachefs (loop0): check_allocations...
-> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN NOPTI
-> KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-> CPU: 0 UID: 0 PID: 5318 Comm: syz-executor394 Not tainted 6.14.0-syzkaller-12966-ga2cc6ff5ec8f #0 PREEMPT(full) 
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> RIP: 0010:bch2_snapshot_tree_oldest_subvol+0x1d3/0x6a0 fs/bcachefs/snapshot.c:400
-> Code: e6 e8 81 dd 36 fd 4c 39 e5 0f 86 c9 03 00 00 e8 13 db 36 fd 49 6b c4 38 49 01 c6 49 83 c6 18 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 c6 03 00 00 41 8b 2e 31 ff 89 ee e8 24
-> RSP: 0018:ffffc9000d46e020 EFLAGS: 00010202
-> RAX: 0000000000000004 RBX: 0000000000000001 RCX: ffff888000f98000
-> RDX: 0000000000000000 RSI: 00000000ffeb487f RDI: 0000000000000001
-> RBP: 0000000000000001 R08: ffffffff848c7c5f R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffeb487f
-> R13: dffffc0000000000 R14: 0000000000000020 R15: 000000000014b780
-> FS:  0000555584fe3380(0000) GS:ffff88808c599000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000055835cf3c000 CR3: 0000000044318000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  bch2_inum_snap_offset_err_msg_trans+0x374/0x680 fs/bcachefs/error.c:691
->  bch2_indirect_extent_missing_error+0x411/0x1290 fs/bcachefs/reflink.c:192
->  gc_trigger_reflink_p_segment fs/bcachefs/reflink.c:392 [inline]
->  __trigger_reflink_p+0x196c/0x1cc0 fs/bcachefs/reflink.c:432
->  bch2_trigger_reflink_p+0x299/0x380 fs/bcachefs/reflink.c:451
->  bch2_key_trigger fs/bcachefs/bkey_methods.h:88 [inline]
->  bch2_gc_mark_key+0x6bd/0x1180 fs/bcachefs/btree_gc.c:639
->  bch2_gc_btree fs/bcachefs/btree_gc.c:677 [inline]
->  bch2_gc_btrees fs/bcachefs/btree_gc.c:740 [inline]
->  bch2_check_allocations+0x1488/0x6ab0 fs/bcachefs/btree_gc.c:1042
->  bch2_run_recovery_pass+0xf0/0x1e0 fs/bcachefs/recovery_passes.c:226
->  bch2_run_recovery_passes+0x2ad/0xa90 fs/bcachefs/recovery_passes.c:285
->  bch2_fs_recovery+0x292a/0x3e20 fs/bcachefs/recovery.c:936
->  bch2_fs_start+0x2fb/0x610 fs/bcachefs/super.c:1060
->  bch2_fs_get_tree+0x113e/0x18f0 fs/bcachefs/fs.c:2253
->  vfs_get_tree+0x90/0x2b0 fs/super.c:1759
->  do_new_mount+0x2cf/0xb70 fs/namespace.c:3878
->  do_mount fs/namespace.c:4218 [inline]
->  __do_sys_mount fs/namespace.c:4429 [inline]
->  __se_sys_mount+0x38c/0x400 fs/namespace.c:4406
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f22f815ae2a
-> Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffd84c61a58 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-> RAX: ffffffffffffffda RBX: 00007ffd84c61a70 RCX: 00007f22f815ae2a
-> RDX: 0000200000000040 RSI: 0000200000000000 RDI: 00007ffd84c61a70
-> RBP: 0000200000000000 R08: 00007ffd84c61ab0 R09: 0000000000005995
-> R10: 0000000000800001 R11: 0000000000000282 R12: 0000200000000040
-> R13: 0000000000000004 R14: 0000000000000003 R15: 00007ffd84c61ab0
->  </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:bch2_snapshot_tree_oldest_subvol+0x1d3/0x6a0 fs/bcachefs/snapshot.c:400
-> Code: e6 e8 81 dd 36 fd 4c 39 e5 0f 86 c9 03 00 00 e8 13 db 36 fd 49 6b c4 38 49 01 c6 49 83 c6 18 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 c6 03 00 00 41 8b 2e 31 ff 89 ee e8 24
-> RSP: 0018:ffffc9000d46e020 EFLAGS: 00010202
-> RAX: 0000000000000004 RBX: 0000000000000001 RCX: ffff888000f98000
-> RDX: 0000000000000000 RSI: 00000000ffeb487f RDI: 0000000000000001
-> RBP: 0000000000000001 R08: ffffffff848c7c5f R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffeb487f
-> R13: dffffc0000000000 R14: 0000000000000020 R15: 000000000014b780
-> FS:  0000555584fe3380(0000) GS:ffff88808c599000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000556b9781f0c8 CR3: 0000000044318000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> ----------------
-> Code disassembly (best guess):
->    0:	e6 e8                	out    %al,$0xe8
->    2:	81 dd 36 fd 4c 39    	sbb    $0x394cfd36,%ebp
->    8:	e5 0f                	in     $0xf,%eax
->    a:	86 c9                	xchg   %cl,%cl
->    c:	03 00                	add    (%rax),%eax
->    e:	00 e8                	add    %ch,%al
->   10:	13 db                	adc    %ebx,%ebx
->   12:	36 fd                	ss std
->   14:	49 6b c4 38          	imul   $0x38,%r12,%rax
->   18:	49 01 c6             	add    %rax,%r14
->   1b:	49 83 c6 18          	add    $0x18,%r14
->   1f:	49 83 c6 20          	add    $0x20,%r14
->   23:	4c 89 f0             	mov    %r14,%rax
->   26:	48 c1 e8 03          	shr    $0x3,%rax
-> * 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
->   2f:	84 c0                	test   %al,%al
->   31:	0f 85 c6 03 00 00    	jne    0x3fd
->   37:	41 8b 2e             	mov    (%r14),%ebp
->   3a:	31 ff                	xor    %edi,%edi
->   3c:	89 ee                	mov    %ebp,%esi
->   3e:	e8                   	.byte 0xe8
->   3f:	24                   	.byte 0x24
->
->
+There's an update to the yaml you need to account for now.
 
-#syz test
+https://gitlab.freedesktop.org/linux-media/users/bodonoghue/-/blob/next/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml?ref_type=heads#L25
 
-diff --git a/fs/bcachefs/snapshot.c b/fs/bcachefs/snapshot.c
-index 0c65065b08ec..8862714b1806 100644
---- a/fs/bcachefs/snapshot.c
-+++ b/fs/bcachefs/snapshot.c
-@@ -397,7 +397,11 @@ u32 bch2_snapshot_tree_oldest_subvol(struct bch_fs *c, u32 snapshot_root)
- 
- 	rcu_read_lock();
- 	while (id) {
--		s = snapshot_t(c, id)->subvol;
-+		const struct snapshot_t *snap = snapshot_t(c, id);
-+		if (!snap)
-+			break;
-+
-+		s = snap->subvol;
- 
- 		if (s && (!subvol || s < subvol))
- 			subvol = s;
+---
+bod
