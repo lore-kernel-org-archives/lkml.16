@@ -1,124 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59A31F2367
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DB216FF44
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385911; cv=none; b=N9Le9bJ3oGy5KIaHjARLgDyTjvJMoE3fI1MBQ+d7EQc7PA3GRkExfsfNNRFuqLUTw/RU0TlbFPHSMrVBtStTB8UCV4aBxavelEh1zpZShbj3lvwilkQW8hmnxI+5X0MbCP69Z0HpYjA7D1a2H6s8peQGHRqVbGi4jR0ARrLeAC0=
+	t=1744385956; cv=none; b=bH3RV5r3XocCWgGjaO8L3VZb+LiQaLsc37jNpzaUqH2VPGwviyXpD7/c742XJiQjCXWCz0JwCxSi7y7Rx+pIjPu1isgvQT/28ng+fYt6WENJ0aU85bleqCuALcYSDo1lS/qUmUUmfWJ6dQjhogwPPjAifydcRE+cePo0sGqzjhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385911; c=relaxed/simple;
-	bh=pkTZW9XYlyOYB2j7FarBvvMasW31VotRzO6lhbSNgjI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G/jZHpy74yD9n0pKtF16Mk54iLfJpixCO6lTuQ9rOe2VUrI7CXjfNckk8njbsCJkFs8cuH0tS/S+sB8NN8jSk0cuMbI5RWGzfx2syAaIBSf246Va7wyj1ZedNEq+Sr3ZGd4cVDVM7ZXbKpCMheqy0JP3bPpygqMgcTwgHYkqNlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gE7rDCAA; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744385956; c=relaxed/simple;
+	bh=bImw5OOGbgEA6iZslrff03WUdjwcF/rPO1mcSAR7CUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tQymecbkTTfXM+00oRHKCmWAC7vf2FKecQBW0a2QQR/Bnha7MxFICrAmataSa9oP2kYiilxZusGPZImswgISeMNhb/n2IdTzURQ086G3+XWf0t2cyK40O0bB4Gv8t5z5ieHcjv0YARyfeXP4K6UA5Rd6pXWFAcNRuP8fJtoglkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=Clrdxkac; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gE7rDCAA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744385910; x=1775921910;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pkTZW9XYlyOYB2j7FarBvvMasW31VotRzO6lhbSNgjI=;
-  b=gE7rDCAAAeV+eLWmLpEp5KinUuuBlSb7qGixGPu8A9O+RhcMgNh5ho6P
-   kfVMtdvd7LlFzsdwit6etGlykiny0COj/hybVZWSm4F6P1IS5ou1+YKbK
-   kDhS9YphH9PTA0Zdy4qSoR1hp+ULiojmJ5If+ZCF2Pqsz2YISCndpbBf8
-   SDgDp7kZOO/V9XdiKqT0W+bjY321ArO1gHE4gu1EhXZaNuyTR7slqoP5q
-   /+dTjZstCDqsSuERRdl0Bbm5MsCXLkaIYd4Mt+mFjmG34LPOhm3qB9yKD
-   OJcOmYRl+unshGaT7gsHOSbYl5ibKEsTtSnpmgQvCG4I/Bw6U9dB4zB2O
-   w==;
-X-CSE-ConnectionGUID: P1mSCCMaSei7lxQUppNlqw==
-X-CSE-MsgGUID: v13BFKcHTqCeNOTg+6va9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="48649055"
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="48649055"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:38:29 -0700
-X-CSE-ConnectionGUID: HDMm3ijxSPyaGiN0A/c56A==
-X-CSE-MsgGUID: gq9y3QADRom6nNMx44SA/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="129207118"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.221.159]) ([10.124.221.159])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:38:28 -0700
-Message-ID: <bf63b3e3-afdd-424c-87dc-f5488e770315@intel.com>
-Date: Fri, 11 Apr 2025 08:38:26 -0700
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="Clrdxkac"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so23073056d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744385952; x=1744990752; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4zYNA1FuF5UGOp9xK52pBzhGeanKaxhrzOWMnlAuxLI=;
+        b=Clrdxkac3+Q3ALaXDQT3UWowZwE0RPAcPe6Smh+RWgril+1acfTphbf1KQ5PAFboep
+         DLZJAiR0MeG8xdhLhOeZi9mJzg/b0ErLlMyi120EsYGK+dWxXl26CuekJNV69u+vdgpc
+         7Ir95+U+Qr0SBY7WFD0gfSCLjXcQF/jlj/nfsvlvHGzgRN3USdYTXvc7S3lbVPfaNqLG
+         RoJD56qMk+cOjE48/zIGQcY0eI9ayI6LY8LG1df2zw6zrInuTN193zq8eY3DwCSuBes2
+         PVEk1AoJNwNIW6Is0xeprXR3wNHtQ8svW/66QN8I4qmfLlrkaWuneB5ejXPa0H1+Nwf0
+         plVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744385952; x=1744990752;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4zYNA1FuF5UGOp9xK52pBzhGeanKaxhrzOWMnlAuxLI=;
+        b=tipUDQL+92XVrn4GdZi0wHyBpcXmgS7ouloz74wKI1Q/D58e3sZdpvweaLYl2Fw6Ah
+         LPJz+NwGG2mX4C/A8QDGRHRPbAr5iKybs6QqAHorWeUrn8I0sWEgXrxs65TfSZYlzqWa
+         jH7EgAmIKw1U64mJYKMD5pQRY2rTHOEqxRzuNF2fMK3LJy7dkL/+MIjIn/IrJxO1i0wg
+         nEPa5YBDiwsrCswdATEKHzZihHsKkUPgpf0KXVYCAAR+ESURcsW2ddB5cGL1TK7uIysz
+         T1G4AtHHJLDPDJBADBkR8MI6t9oirzZ5/sVDqwugWYnrmHH1Tg9fLNo7w1RNDAwkF2vH
+         0ccA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxRBrbXHZsCT+AM1JRCklD24T8XCbp1tInL3OV5z/YQ8/p4SND3Pa7wMyFY0A05+ehKKGH+t2OIudONRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkSqQMpBVj5KroiQ8jVYCJHre+hP6j+kNYP/vahTkg9mbTxXNI
+	ueYDIWRa9Ty5gsLNCx92UjssrcdGwEDSCroqj19k6nV8ESft7YxZOmJB7n3+yaI=
+X-Gm-Gg: ASbGnculoqBpEXWrBieVXR/EHpP1QBTCzUe+S9O3sBZFZB21trVOa9HJ9Xi+RPksLM4
+	+Bki6frljbidfpsDDXY3R8iAg6EatiJxDVuXbCR4YSc2n+H3qaCxEyxrGUbfHb8j4S+/jlnIRhZ
+	Wiwl7h3KpsiD6qjWVeNHiYcJ+VzZmgWFDXQqITKU5nrp720oNSLofH7SMqskdA6jRqVXYa4D08D
+	UrRRoR+ToLeor8fmgCMpLRs04PDLQ0h2PD/ajyKkhhAeFYvpyJe+Bt6HK8kNSS+PBsWmb3r+kVl
+	6CNqwtObtQnpP2DF2kXbF6k1j/NMrFlbVHL8654=
+X-Google-Smtp-Source: AGHT+IFIqADj/xLZLbLmVnObT99X4OVEjUc986G0OtNBq54QFbfU9AIGF7a8i90vQRDbqoaQq6HKEg==
+X-Received: by 2002:ad4:5742:0:b0:6eb:28e4:8519 with SMTP id 6a1803df08f44-6f230d52924mr50696356d6.21.1744385951619;
+        Fri, 11 Apr 2025 08:39:11 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0dea10681sm37921396d6.104.2025.04.11.08.39.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 08:39:10 -0700 (PDT)
+Date: Fri, 11 Apr 2025 11:39:06 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] mm: page_alloc: defrag_mode kswapd/kcompactd
+ watermarks
+Message-ID: <20250411153906.GC366747@cmpxchg.org>
+References: <20250313210647.1314586-1-hannes@cmpxchg.org>
+ <20250313210647.1314586-6-hannes@cmpxchg.org>
+ <46f1b2ab-2903-4cde-9e68-e334a0d0df22@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] devmem: Block mmap access when read/write access
- is restricted
-To: Dan Williams <dan.j.williams@intel.com>, Kees Cook <kees@kernel.org>
-Cc: dave.hansen@linux.intel.com, Nikolay Borisov <nik.borisov@suse.com>,
- linux-kernel@vger.kernel.org
-References: <174433453526.924142.15494575917593543330.stgit@dwillia2-xfh.jf.intel.com>
- <174433455090.924142.10859114556652046264.stgit@dwillia2-xfh.jf.intel.com>
- <202504101926.0F8FB73@keescook>
- <67f8a1a15cc29_7205294d7@dwillia2-xfh.jf.intel.com.notmuch>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <67f8a1a15cc29_7205294d7@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46f1b2ab-2903-4cde-9e68-e334a0d0df22@suse.cz>
 
-On 4/10/25 21:59, Dan Williams wrote:
->> I don't think we can just fail the mmap. 🙁
-> For the TVM case the havoc of failing mmap for DMI info is smaller and
-> the recommended fallback for /dev/mem being in accessible is
-> /sys/firmware/dmi/tables. So I feel ok making TVMs take the modern
-> replacement path which is what they would need to do anyway in the
-> lockdown_kernel case. Tom, Dave, what do you think?
+On Fri, Apr 11, 2025 at 10:19:58AM +0200, Vlastimil Babka wrote:
+> On 3/13/25 22:05, Johannes Weiner wrote:
+> > The previous patch added pageblock_order reclaim to kswapd/kcompactd,
+> > which helps, but produces only one block at a time. Allocation stalls
+> > and THP failure rates are still higher than they could be.
+> > 
+> > To adequately reflect ALLOC_NOFRAGMENT demand for pageblocks, change
+> > the watermarking for kswapd & kcompactd: instead of targeting the high
+> > watermark in order-0 pages and checking for one suitable block, simply
+> > require that the high watermark is entirely met in pageblocks.
+> 
+> Hrm.
 
-Yeah, doing the same as lockdown should be fine.
+Hrm!
 
-The other alternative to failing all mmap()s is to allow mmap(PROT_READ)
-to succeed and then just map the zero page.
+> > @@ -2329,6 +2329,22 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+> >  	if (!pageblock_aligned(cc->migrate_pfn))
+> >  		return COMPACT_CONTINUE;
+> >  
+> > +	/*
+> > +	 * When defrag_mode is enabled, make kcompactd target
+> > +	 * watermarks in whole pageblocks. Because they can be stolen
+> > +	 * without polluting, no further fallback checks are needed.
+> > +	 */
+> > +	if (defrag_mode && !cc->direct_compaction) {
+> > +		if (__zone_watermark_ok(cc->zone, cc->order,
+> > +					high_wmark_pages(cc->zone),
+> > +					cc->highest_zoneidx, cc->alloc_flags,
+> > +					zone_page_state(cc->zone,
+> > +							NR_FREE_PAGES_BLOCKS)))
+> > +			return COMPACT_SUCCESS;
+> > +
+> > +		return COMPACT_CONTINUE;
+> > +	}
+> 
+> Wonder if this ever succeds in practice. Is high_wmark_pages() even aligned
+> to pageblock size? If not, and it's X pageblocks and a half, we will rarely
+> have NR_FREE_PAGES_BLOCKS cover all of that? Also concurrent allocations can
+> put us below high wmark quickly and then we never satisfy this?
+
+The high watermark is not aligned, but why does it have to be? It's a
+binary condition: met or not met. Compaction continues until it's met.
+
+NR_FREE_PAGES_BLOCKS moves in pageblock_nr_pages steps. This means
+it'll really work until align_up(highmark, pageblock_nr_pages), as
+that's when NR_FREE_PAGES_BLOCKS snaps above the (unaligned) mark. But
+that seems reasonable, no?
+
+The allocator side is using low/min, so we have the conventional
+hysteresis between consumer and producer.
+
+For illustration, on my 2G test box, the watermarks in DMA32 look like
+this:
+
+  pages free     212057
+        boost    0
+        min      11164		(21.8 blocks)
+        low      13955		(27.3 blocks)
+        high     16746		(32.7 blocks)
+        promo    19537
+        spanned  456704
+        present  455680
+        managed  431617		(843.1 blocks)
+
+So there are several blocks between the kblahds wakeup and sleep. The
+first allocation to cut into a whole free block will decrease
+NR_FREE_PAGES_BLOCK by a whole block. But subsequent allocs that fill
+the remaining space won't change that counter. So the distance between
+the watermarks didn't fundamentally change (modulo block rounding).
+
+> Doesn't then happen that with defrag_mode, in practice kcompactd basically
+> always runs until scanners met?
+
+Tracing kcompactd calls to compaction_finished() with defrag_mode:
+
+@[COMPACT_CONTINUE]: 6955
+@[COMPACT_COMPLETE]: 19
+@[COMPACT_PARTIAL_SKIPPED]: 1
+@[COMPACT_SUCCESS]: 17
+@wakeuprequests: 3
+
+Of course, similar to kswapd, it might not reach the watermarks and
+keep running if there is a continuous stream of allocations consuming
+the blocks it's making. Hence the ratio between wakeups & continues.
+
+But when demand stops, it'll balance the high mark and quit.
+
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -6724,11 +6724,24 @@ static bool pgdat_balanced(pg_data_t *pgdat, int order, int highest_zoneidx)
+> >  	 * meet watermarks.
+> >  	 */
+> >  	for_each_managed_zone_pgdat(zone, pgdat, i, highest_zoneidx) {
+> > +		unsigned long free_pages;
+> > +
+> >  		if (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING)
+> >  			mark = promo_wmark_pages(zone);
+> >  		else
+> >  			mark = high_wmark_pages(zone);
+> > -		if (zone_watermark_ok_safe(zone, order, mark, highest_zoneidx))
+> 
+> I think you just removed the only user of this _safe() function. Is the
+> cpu-drift control it does no longer necessary?
+
+Ah good catch. This should actually use zone_page_state_snapshot()
+below depending on z->percpu_drift_mark.
+
+This is active when there are enough cpus for the vmstat pcp deltas to
+exceed low-min. Afaics this is still necessary, but also still
+requires a lot of CPUs to matter (>212 cpus with 64G of memory).
+
+I'll send a follow-up fix.
+
+> > +		/*
+> > +		 * In defrag_mode, watermarks must be met in whole
+> > +		 * blocks to avoid polluting allocator fallbacks.
+> > +		 */
+> > +		if (defrag_mode)
+> > +			free_pages = zone_page_state(zone, NR_FREE_PAGES_BLOCKS);
+> > +		else
+> > +			free_pages = zone_page_state(zone, NR_FREE_PAGES);
+> > +
+> > +		if (__zone_watermark_ok(zone, order, mark, highest_zoneidx,
+> > +					0, free_pages))
+> >  			return true;
+> >  	}
+> >  
