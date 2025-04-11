@@ -1,52 +1,52 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AF7221FD1;
-	Fri, 11 Apr 2025 17:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97124221730;
+	Fri, 11 Apr 2025 17:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744390878; cv=none; b=FZYMEZ2MeKdhPLxaQrme8Osw30W/BU6CSNnGaAxXKncdujxdOUkNIRvy2tmNjN6Wu5K602x3cC1lp0o9aoiqZiLHckF/atGuBeV3TgDpa6eigNffhIPyULOtndgFWRaKEmcU1IclDKWzC+FgTRqmoEtUc9rH3idZ724TwGoT0dA=
+	t=1744390882; cv=none; b=koUVuHGnsdkaLPq4D/TkjG0HfzP0dTKpjjPPd0DmoShWEPtRUaovaKKgx2Bl3MNWhEWYXDFgusiCfSVgugDRMx0Nazqoor8tm8N7PTk2e5sK0cYHFnWthnyLkJNiqvmXf8E9uXNb5PcpSt/QcXXNs+35nTsBVigyHs/j2jMw9k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744390878; c=relaxed/simple;
-	bh=jAnjkX4YrOhRhNYOu9uh8jXBzMfz1KBX4pd4yKauKKY=;
+	s=arc-20240116; t=1744390882; c=relaxed/simple;
+	bh=LkKbG7mBW1nBa3rIzXBPWQRGLBKmqnkuELzeBvOUWsw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PM1WFQvCg6dLqboUTmcGs+4Uzml4qHGZKwlOMvaHaWhr+dbcgbux8u/YKgpdpHvvlLL5lc/+4cQd8ymJobdN1K4igTlS52jsrFWd1+8N2EZdxSkdfOv2Zrs6MGPr9UJLffTZXMfbIaBcYLN2BrJAXPuZrT7GGCS5CDwAIgJ9kxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
+	 In-Reply-To:To:Cc; b=YeNcvsjCtv0CKLRkWARvWeJBEg8O0vpJfur551LGwfbVsIC7gwweFSfEZULVNR7WkxLcLlddyEVQBK3oIDeraYyGS11bj/gbi7hrnGsKXRliMFBnTfYwBJQAHwwp5zIJi6g+TOBoDHWEtUzLIVWtgDSEzFZcOlQ0iUgKgkG31sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so364924366b.1;
-        Fri, 11 Apr 2025 10:01:16 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso373527266b.1;
+        Fri, 11 Apr 2025 10:01:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744390875; x=1744995675;
+        d=1e100.net; s=20230601; t=1744390879; x=1744995679;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fQXC8rdVYEJK5/GnNV1XkDFI5aEgmK+iXihPheDmHow=;
-        b=TkorCZcOYAw+isZx1d6zD1Te1t5Zzb1D0oTkD+6/eYflnXBYwdkLsOBqW+CQQUlHLz
-         LZRBrcN1W+zGr4DyK/gscEI4wTUWtAezg7jFek2DUO0RxUVC7B/oUU5Lqqw6rvPxHQgV
-         w4DqK7upfl6P4lrcEytdzGXwXPbwNwuDuMt/wub9t3ZA/6mKn6zBhIa+rDk1vHYVNs/W
-         LSVzJbjXQI3uB538qYTRPAubwt2RSdZcrL29sUZaTB2PBzdbmFHZ1dWLpDDVQZbC+MGA
-         XilEHhZl9LByYgEutyhhtY/QXyrpu3guz+0wwqLHTjowtza7iqa4M65pVPpkPA0/2Bu0
-         cdsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqWMm2x5VH64g+NobD+RCGmHr7lyZyNowip28XBPas7pF1pq4k67yQqoO/rEPzUbA7VDUoPwGN2VQruiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7uZRgxmZO5g3Taf4DRFHiOdBAhpkOuCyEVaDHut7e2TIh49W6
-	JnegKM5Bnjf2DHTCD7Jc+iGlPV/wpFVjQCFIWhjWvT/JwfICBxY9
-X-Gm-Gg: ASbGncvtb3BHUPEca9/LpoDH/JV2looMPYrUTeaPUdb6OLchCUVRB9uewuI+DTvY0nR
-	l/cFoHrK2h4d8O90KNEx1nunfnpz+yznfXhggPvStUKS0W9exIIUVgb84HEniFHJwIFk+Oc+Zhj
-	7Io3iKNmm2VvJ0OTRhdG+Suy+jEXYNZVnVzvdG96G+eygsukkSqRRAWuupEjJF0pciJKgDBm7Jk
-	RptOBtOpLitYieQqBxfuxo117i6OOX1mYJ1mLXWr6I+W5DVEzy+0LAgVZlZOeUA7zY9Ka7D4TXN
-	L5jZ95bHjoC4qj+591/uupPQ9YmkxL0=
-X-Google-Smtp-Source: AGHT+IFTMNt3WGPwQFfIPSjcsNmzwhAtn0IcAk4iI8gALkyrUbqusSigAjgQ5yukEFkCw/8HuQraeQ==
-X-Received: by 2002:a17:906:f5a9:b0:aca:a1d7:a830 with SMTP id a640c23a62f3a-acad349a005mr350299466b.13.1744390874870;
-        Fri, 11 Apr 2025 10:01:14 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:3::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb3da7sm466230366b.112.2025.04.11.10.01.14
+        bh=rQJdK7pWNGAO1N3US6hhCsS+d/YXVzKHaSs7dhJL6eI=;
+        b=JYOvkjJ1PGcwjYXICK2BQ21iZqVwNjj41QZ9DX45xKxAV4uuMySSKCDVTWT8vtohVa
+         GH96sqDC6agZvOEgO3wYBsoH7Ot3vaOujEMXTAlGjdtskW8T1c94EyHUO+UeYFcRLqke
+         FlzpC6a41Q5s2477H7zicCnx0xPg1TRiYzhIs5y9owpj+Xrg9lPWiEYzoVGG8sfioS8k
+         Cu4gp0nkd1iMN8TuCUP8+m+XjXpEFH6LusPxELY/m+vf+EAiYRrnvdCufasbdy4yi008
+         xO2stNV/EAoOsNsT3yhgnAWmOjSRhL8SHGfuq2ha5Cj8RIbjWgvrua/wKPNNqIUHPHDq
+         K4RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWT+R5enuMG/7XnysT/wNXXk+jgfV6vyxK22420mOIpKzUEJN+PHJ01VwZXskgUqa/JVtATC5jRFcmUUN4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpprCCdOs/mxuJ4aChS9Whlyy6rIWRGe6K7+7I/UK1p0ME0pVw
+	XxXVszOi8tDmhVlZtwKwNSu6vkeX4aVa5/2vyvfSpj5lbmfjIRCm
+X-Gm-Gg: ASbGncvT4kF5NfRn7mXKJRd+hOhtkJEyv4cH1Zb9UDfXveptipllzahNVEmReJvrc8Q
+	+kG163HPZ7X6gzUpAK1LdW8kQLN4DFLnotH5qfiB8nYb2FeLyeltz8OxOoz9qEkGJ4vhbhbR3A+
+	XkB/OO/nBsCFaAkKGoNFNFhhJ6pMw+LWTzpnPanr0siMFLhyyBvqz8nbvzeTvC+xkmnQytph+X+
+	Q6Jm9lU0coHOFfcZmB0/36bEcc5bMRPccqQFRd5rPo5llg4wRBe/KAstcaMOxIGhqDyFhdSKLHx
+	0gyurSQbjhhY4Fv1G9W7f+ziEE/QF6W9
+X-Google-Smtp-Source: AGHT+IGEAP/y3VxuIYYyHAM+9ZlDagbzQCkDP4bFRg5FhVudcEXAozpCj8kZi+6xHWOVGsW0earNCg==
+X-Received: by 2002:a17:907:d92:b0:ac2:af42:4719 with SMTP id a640c23a62f3a-acad34960camr287700066b.21.1744390878360;
+        Fri, 11 Apr 2025 10:01:18 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:43::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acad99c4456sm82905066b.110.2025.04.11.10.01.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 10:01:14 -0700 (PDT)
+        Fri, 11 Apr 2025 10:01:17 -0700 (PDT)
 From: Breno Leitao <leitao@debian.org>
-Date: Fri, 11 Apr 2025 10:00:50 -0700
-Subject: [PATCH net-next 3/9] neighbour: Use nlmsg_payload in
- neigh_valid_get_req
+Date: Fri, 11 Apr 2025 10:00:52 -0700
+Subject: [PATCH net-next 5/9] mpls: Use nlmsg_payload in
+ mpls_valid_fib_dump_req
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-nlmsg-v1-3-ddd4e065cb15@debian.org>
+Message-Id: <20250411-nlmsg-v1-5-ddd4e065cb15@debian.org>
 References: <20250411-nlmsg-v1-0-ddd4e065cb15@debian.org>
 In-Reply-To: <20250411-nlmsg-v1-0-ddd4e065cb15@debian.org>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -65,53 +65,50 @@ To: "David S. Miller" <davem@davemloft.net>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Breno Leitao <leitao@debian.org>
 X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1074; i=leitao@debian.org;
- h=from:subject:message-id; bh=jAnjkX4YrOhRhNYOu9uh8jXBzMfz1KBX4pd4yKauKKY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn+UrUCMtIJyDxtp2QOiuNeVBrPdDHzGNIr/EHx
- 2KJEdkwcVyJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/lK1AAKCRA1o5Of/Hh3
- bXOLD/916eNhYEeo97LAEad4mtf/vppIawkoPOySf/v5pMlFpENgJY7+mlZNEAyajolJg+IdZFQ
- Rd86aZmHshCLJZKhlkl4MFcx1dVuBR1f68TU9LGGIUQESWPOTVZ3rVjKuI6Q+UK66P/9QDCnuAp
- ed+YktTnfmfplFLfUfHvUfGAH8jSCn+adgp6CTimnyA2XOnGdwjgutsZacLo1TxI92kfg4p/dRq
- TTYUsACl1o4xstYpX5ja5eb355rsIuDr4jxF122OORkaFZLjhSHm4Z0KdexBg4NYRgCpPwe5xa1
- uB7nfdqEPvKC2pQDZjyAL1psxrm+lEFX9eUfMYbVf36Q4ZqItXeAQmU9uEhHQyeZYtmiiWtBCE6
- xN2FH/lTJNiisYW5EmZaJc55S0gI/aAw2Hp3D84NQ+jstQPrI9Kh9MiL06Ymibl2yT72s2XSc9V
- 291RPlDX5Gdpm/k2ctKyvKcfw/l+mdIVoKjiWkTJjnLO97G3WFLWV8YpvnGd3vBx24a+pODSsLx
- JqduBtLhxlRA9Rpv8mGp6zld2UYNOnX6R/K0lxf6U84TT6auOBFjmDlR9EqGZaQ9YKmdCiFxSD1
- gqopD7yb+nCOcbnWBoLIx+4zz1TM8H1U/ziQYJwKZLyGNwRUDsuB3D7VBmlVtpIOYaUb/+a6ZZM
- RGGSwL5aScOGrOQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=953; i=leitao@debian.org;
+ h=from:subject:message-id; bh=LkKbG7mBW1nBa3rIzXBPWQRGLBKmqnkuELzeBvOUWsw=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn+UrUM3ubDo8oz3MedYafDsVqjXYw3iV30IJIV
+ NnsT0GOd+mJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/lK1AAKCRA1o5Of/Hh3
+ bYAiD/oDtn9YbF8tLeegy9qOTh93EJIh5sVQuVqQcG2IXGaWXXu0WhbtD2X5JW06hFN7EYKHo2s
+ Fco+fa5RI7amoyITt2CucKMitlXCtAh0JUcbZuxFt2Ssf2SWK/TM6gvS5QVU+8Dnjd2Y4feDXHz
+ 7fm6Liz1zbknLcaF3wLrYCoCUbaGUN0TmLqQbQneL/vx2j1xVvRwpt5rIgN52FIhfKgw2RHlIJ2
+ eiyabDqotJrrX1ZUBXnS7ybz+JJ/RFPGnD0ksysaAWJC7VkCCcVWUzeJ31wU6slmOE6urIqukyS
+ Htws5QiAp+8TKv9PT/Hl0fFF9pwFTzM/Q1Y7CKxRCQlq+ZzIEdWq0XcvW7P6MnBgojPUg3kEuaY
+ pwJNVO205ETC3NBI4jLGT35WCttBAjLoLCCKsadBgReotfJuLFi74Jrx9V50bWqIGOpP7uRy7GI
+ LPVg29lFFSX8LCgv3omlbRyg2exQTGHsErA4zsNY0xPGvvFqqgk00SCIiofx0g8H+8MVPdRyH3G
+ 0+sM7izNiX+2P4XOvrgnmyMANfzbfGpTdCgTvoKOtVUuBRmGneoBIt5vP85cWYF2gE++yHhXnpG
+ GtTTyGnSmsrzHjTG+J5JtAHpjM3/nzGOoA+1w6Zw32F9cMJkBBICZsPjuzPk23jtckl3wIAZIvG
+ GIgYLCqSvRYFSwg==
 X-Developer-Key: i=leitao@debian.org; a=openpgp;
  fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-Update neigh_valid_get_req function to utilize the new nlmsg_payload()
-helper function.
-
-This change improves code clarity and safety by ensuring that the
-Netlink message payload is properly validated before accessing its data.
+Leverage the new nlmsg_payload() helper to avoid checking for message
+size and then reading the nlmsg data.
 
 Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- net/core/neighbour.c | 4 ++--
+ net/mpls/af_mpls.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index b6bc4836c6e45..65cf582b5dacd 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -2855,12 +2855,12 @@ static int neigh_valid_get_req(const struct nlmsghdr *nlh,
- 	struct ndmsg *ndm;
+diff --git a/net/mpls/af_mpls.c b/net/mpls/af_mpls.c
+index 1f63b32d76d67..bf7cd290c2369 100644
+--- a/net/mpls/af_mpls.c
++++ b/net/mpls/af_mpls.c
+@@ -2095,12 +2095,12 @@ static int mpls_valid_fib_dump_req(struct net *net, const struct nlmsghdr *nlh,
+ 	struct rtmsg *rtm;
  	int err, i;
  
--	if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*ndm))) {
-+	ndm = nlmsg_payload(nlh, sizeof(*ndm));
-+	if (!ndm) {
- 		NL_SET_ERR_MSG(extack, "Invalid header for neighbor get request");
+-	if (nlh->nlmsg_len < nlmsg_msg_size(sizeof(*rtm))) {
++	rtm = nlmsg_payload(nlh, sizeof(*rtm));
++	if (!rtm) {
+ 		NL_SET_ERR_MSG_MOD(extack, "Invalid header for FIB dump request");
  		return -EINVAL;
  	}
  
--	ndm = nlmsg_data(nlh);
- 	if (ndm->ndm_pad1  || ndm->ndm_pad2  || ndm->ndm_state ||
- 	    ndm->ndm_type) {
- 		NL_SET_ERR_MSG(extack, "Invalid values in header for neighbor get request");
+-	rtm = nlmsg_data(nlh);
+ 	if (rtm->rtm_dst_len || rtm->rtm_src_len  || rtm->rtm_tos   ||
+ 	    rtm->rtm_table   || rtm->rtm_scope    || rtm->rtm_type  ||
+ 	    rtm->rtm_flags) {
 
 -- 
 2.47.1
