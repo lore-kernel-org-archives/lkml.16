@@ -1,154 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3283221FDE
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A215233148;
+	Fri, 11 Apr 2025 16:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744389871; cv=none; b=WXjui6D8ihlTtMk67WMYCpwGNLysbHFARHxELWSASw9Fj0EddeZl2P1wjx+5/iGNcJX9uPXx85P8swZ05bEU4d+bgqGJgzOw2v/7gn3UkxiACOnO/sj0BXeekNo4BIjdpuErjQxnp67WbK+LrUzSzxITfGOH/mbiRkpZ9RcHjKY=
+	t=1744389872; cv=none; b=XZdS3A+p2GuWCHqiVJlD3lhocReqZsLgQjUm6FZm3X+NYUw1ljj7DzM/8VOQu0iHJViXV7a+6OD2CH4TYFTi8QhN+nfpjt4ArI8mxS6hji8f+/Qst0MZdB1CDwb82jCwwt/C0qdcFCUgtyQyhGAxmQ6ZHPqRA/TFefx3lYYw0W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744389871; c=relaxed/simple;
-	bh=IKhiSIwWokukxJGyscyvR5Ko8jRfZFxgmm3B9maAeEk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MiXAWD/3m6EB2pghafg+TQUzkOBlXFcvoYd+Vpjui2q7aCZdwXhH25zHa4kJJlqa9t43lrys2joGSp94DS02BdPB75N+03YOgwNHZcfeEe3PxPzexEpBtzb/LmjInK2R6ShNQkSNiC/H35CY/v5IFhQtGMs+hjIHGiJ1pj1ZJcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D139B244B;
-	Fri, 11 Apr 2025 09:44:28 -0700 (PDT)
-Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C76AE3F694;
-	Fri, 11 Apr 2025 09:44:25 -0700 (PDT)
-From: James Morse <james.morse@arm.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	James Morse <james.morse@arm.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com,
-	lcherian@marvell.com,
-	bobo.shaobowang@huawei.com,
-	tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	peternewman@google.com,
-	dfustini@baylibre.com,
-	amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>,
-	Dave Martin <dave.martin@arm.com>,
-	Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	fenghuay@nvidia.com,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
-	Babu Moger <babu.moger@amd.com>
-Subject: [PATCH v8 21/21] x86,fs/resctrl: Move resctrl.rst to live under Documentation/filesystems
-Date: Fri, 11 Apr 2025 16:42:29 +0000
-Message-Id: <20250411164229.23413-22-james.morse@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250411164229.23413-1-james.morse@arm.com>
-References: <20250411164229.23413-1-james.morse@arm.com>
+	s=arc-20240116; t=1744389872; c=relaxed/simple;
+	bh=L/mb+QQWwTatT5L5Nejifp0o/+LSgqAg5l4QjS3xCZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=piROzL/mhdaIcJ2oeFz1SgzZjMIzKt28Eq43rP4CqHa3Ez+kTpIxPi++AOo1C5IGWtW/aJ4mOTE7z0etQeTFE35239d9/dXeUazjy8mdGIMQAaI5+8l33s88ceeh5U9hA1PEx+gmRFEb0bxx2oKYtMW2E3ST+wa8lDDqj1p8KW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38296C4CEED;
+	Fri, 11 Apr 2025 16:44:30 +0000 (UTC)
+Date: Fri, 11 Apr 2025 12:45:52 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
+ <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
+ <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
+ <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <20250411124552.36564a07@gandalf.local.home>
+In-Reply-To: <c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+References: <20250227185804.639525399@goodmis.org>
+	<20250227185822.810321199@goodmis.org>
+	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+	<20250410131745.04c126eb@gandalf.local.home>
+	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The filesystem code has moved from arch/x86 to fs. Move the documentation
-too.
+On Fri, 11 Apr 2025 14:00:40 +0100
+Mark Brown <broonie@kernel.org> wrote:
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Tested-by: Peter Newman <peternewman@google.com>
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
-Tested-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
----
- Documentation/arch/x86/index.rst                    | 1 -
- Documentation/filesystems/index.rst                 | 1 +
- Documentation/{arch/x86 => filesystems}/resctrl.rst | 0
- MAINTAINERS                                         | 2 +-
- arch/x86/kernel/cpu/resctrl/monitor.c               | 2 +-
- fs/resctrl/Kconfig                                  | 2 +-
- 6 files changed, 4 insertions(+), 4 deletions(-)
- rename Documentation/{arch/x86 => filesystems}/resctrl.rst (100%)
+> On Thu, Apr 10, 2025 at 01:17:45PM -0400, Steven Rostedt wrote:
+> > Mark Brown <broonie@kernel.org> wrote:  
+> 
+> > > We've been seeing the PID filters selftest failing for a while on
+> > > several arm64 systems, a bisect I managed to run without running into
+> > > any confounding issues pointed to this patch which is in mainline as
+> > > ff5c9c576e75.  It's in the ftrace code, but I'm not immediately seeing
+> > > the relevance.  Output from a failing run:  
+> 
+> > Hmm, I wonder if there's junk being added into the trace.  
+> 
+> > Can you add this patch, and show me the output when it fails again?  
+> 
 
-diff --git a/Documentation/arch/x86/index.rst b/Documentation/arch/x86/index.rst
-index 8ac64d7de4dc..00f9a99689fb 100644
---- a/Documentation/arch/x86/index.rst
-+++ b/Documentation/arch/x86/index.rst
-@@ -31,7 +31,6 @@ x86-specific Documentation
-    pti
-    mds
-    microcode
--   resctrl
-    tsx_async_abort
-    buslock
-    usb-legacy-support
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index a9cf8e950b15..32618512a965 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -113,6 +113,7 @@ Documentation for filesystem implementations.
-    qnx6
-    ramfs-rootfs-initramfs
-    relay
-+   resctrl
-    romfs
-    smb/index
-    spufs/index
-diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/filesystems/resctrl.rst
-similarity index 100%
-rename from Documentation/arch/x86/resctrl.rst
-rename to Documentation/filesystems/resctrl.rst
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c30c6fbd1f7a..f7a829898344 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20281,7 +20281,7 @@ M:	Tony Luck <tony.luck@intel.com>
- M:	Reinette Chatre <reinette.chatre@intel.com>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
--F:	Documentation/arch/x86/resctrl*
-+F:	Documentation/filesystems/resctrl.rst
- F:	arch/x86/include/asm/resctrl.h
- F:	arch/x86/kernel/cpu/resctrl/
- F:	fs/resctrl/
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 182f0514cc88..41af0ed18259 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -40,7 +40,7 @@ unsigned int rdt_mon_features;
- static int snc_nodes_per_l3_cache = 1;
- 
- /*
-- * The correction factor table is documented in Documentation/arch/x86/resctrl.rst.
-+ * The correction factor table is documented in Documentation/filesystems/resctrl.rst.
-  * If rmid > rmid threshold, MBM total and local values should be multiplied
-  * by the correction factor.
-  *
-diff --git a/fs/resctrl/Kconfig b/fs/resctrl/Kconfig
-index 478a8e2ad99f..21671301bd8a 100644
---- a/fs/resctrl/Kconfig
-+++ b/fs/resctrl/Kconfig
-@@ -21,7 +21,7 @@ config RESCTRL_FS
- 	  On architectures where this can be disabled independently, it is
- 	  safe to say N.
- 
--	  See <file:Documentation/arch/x86/resctrl.rst> for more information.
-+	  See <file:Documentation/filesystems/resctrl.rst> for more information.
- 
- config RESCTRL_FS_PSEUDO_LOCK
- 	bool
--- 
-2.20.1
+Can you show the information before this output, to see what it is actually
+testing?
 
+> # # + cat trace
+> # # # tracer: function_graph
+> # # #
+> # # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
+> # # # |     |    |           |   |                     |   |   |   |
+> # # 0)  ftracet-5190  | ! 537.633 us  |  kernel_clone(); /* ret=0x1470 */
+> # # 
+> # # 0)  ftracet-5190  | ! 508.253 us  |  kernel_clone(); /* ret=0x1471 */
+> # # 
+> # # 0)  ftracet-5190  | ! 215.716 us  |  kernel_clone(); /* ret=0x1476 */
+> # # 
+> # # 0)  ftracet-5190  | ! 493.890 us  |  kernel_clone(); /* ret=0x147b */
+> # # 
+> # # + fail PID filtering not working?
+> 
+> ...
+> 
+> # # + cat trace
+> # # # tracer: function_graph
+> # # #
+> # # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
+> # # # |     |    |           |   |                     |   |   |   |
+> # # 0) ftracet-12279  | ! 598.118 us  |  kernel_clone(); /* ret=0x301f */
+> # # 
+> # # 0) ftracet-12279  | ! 492.539 us  |  kernel_clone(); /* ret=0x3020 */
+> # # 
+> # # 0) ftracet-12279  | ! 231.104 us  |  kernel_clone(); /* ret=0x3025 */
+> # # 
+> # # 0) ftracet-12279  | ! 555.566 us  |  kernel_clone(); /* ret=0x302a */
+> # # 
+> # # + fail PID filtering not working?
+
+Also, is it possible to just enable function_graph tarcing and see if it
+adds these blank lines between events?
+
+-- Steve
