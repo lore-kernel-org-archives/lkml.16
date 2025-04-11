@@ -1,196 +1,115 @@
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F861EE7DC;
-	Fri, 11 Apr 2025 17:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F2821B908
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744392755; cv=none; b=MYzJQI3gamv5ooaB2o9fNZOqnpOOAEWfHuZMX0zzH61ITJzRB5nEWLcQCLJ1D0f2XsdxOGe/VMiJQ6MjzRclkMeyb69OYMSQxFha03lXP1GGbEX1XfVIX3cD6j7BgMcvMhZ8XOVePi54j1ffOYg4l47MeJFjtIV58wubuJYA3Po=
+	t=1744392915; cv=none; b=IVfM/3NTgI3y0akniPJE6Q6VILRu83S+DZQzsuyQCwNWv2HC4Q1ZQV8hyOhZ4xUbo8yIZjh8kcG9Cb1guQF9UH3yOoS0D8vM0PJdZuw9SygPurJubtW80f01IrZrJgW7Ta+gHzDfV0j5EZ7JsxqmZe4L33K1IkFswK9/PuIBRAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744392755; c=relaxed/simple;
-	bh=qEFwlwFU8JzVdNNkeYufW32qp80etZKdwBROax8UN6s=;
+	s=arc-20240116; t=1744392915; c=relaxed/simple;
+	bh=+eht9iaQ6o1fN2gEoUHVMqICYWehtz7ZUwi+FbnEXgE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dkuvxoQUqyBlh4b4XcSrFZgmigUJGn4CLH1h0TJ9Koo3LAyfDaK7hwlLP5DWQaZatqH7y66TjdHdJCTXvaoGH1W7eTJ1vkSecfK4ZPg48CipGxq68boLdA0poEZn9oJ4KGRpmNdyydNrPjWit36ZcK1Gg0P9WxjXLVvx7fgq1LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BG7t/8fP; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=U+JI5NMOq0CJ9hn5V7tuf85dr3Fzrrll2Y+/wiZ0E8ebEavrWC8vd7DMd+UZDi+UAEHqGrnBALfkcLbYZh15aMZqc/5epbivACgu3YtPlPPz2HMHqYyZs57vN74f0G26XmIvXCNNSDsDCnmkp7xQSF9eyP8TQvG4Y2hlItR7/jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MjLSlTVZ; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BG7t/8fP"
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso5822098a12.0;
-        Fri, 11 Apr 2025 10:32:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MjLSlTVZ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240aad70f2so17505ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744392752; x=1744997552; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SQWkltRQiXKa1eCWkClFhYuqHVMPhzVxPWnvXGgLhs4=;
-        b=BG7t/8fPSP2oOGvFyXCGrx7LJzLygJ0FnNvEmYIzuxCd/lF88giQUkUStm++jCawvX
-         mYtroWRcRKhJHyPtzs1YR/FkjsCjE0w3Gsm6NPwr0zNyBL0iuG1ywQUiFqpXVxCLVNiC
-         0STkB6j5yJrAtwYXlYu57FyRWUGnbviW9ns8wkYE9Wd4+IdZHsuhoEIwh89VOk51diii
-         vYFSLZSYYtt9SXdHPc+EVvCTgXMj/rOhTel2VvQOhPQwN5cRXj7UUg9Bhvk3AjAcOtNi
-         ZuRG51H0dylESw+B83siEbLsV5wn73+sF2aGzzJENpDsZ+TOTYd6ZMahUK11Z1DxDE3D
-         na/w==
+        d=google.com; s=20230601; t=1744392909; x=1744997709; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+eht9iaQ6o1fN2gEoUHVMqICYWehtz7ZUwi+FbnEXgE=;
+        b=MjLSlTVZjYfLqKTf33/JtYchF8CUgF0UwEGkkv0JgwG/ap3v/DCXMCABtsxenEZRcX
+         yNs20K5X1/pMnI/dMIhE9ZHz0gw3+8r2044zJmWF/rA+c3XSDNGiegIR8Z3MsV/CjET8
+         F8io6HWMeqq52Z4T3HrXJP2NwZxKTIQjs6eVipzOgkHCZWcTbqZyEOLP8SAsGTtJBcV2
+         OIV+aA6abwPo4+FUk8BWP5DA6nBZ/dnspeuKAVQf7P7mAMoSHE0+ae/OFJ7dgwdEnIwR
+         GsIpzp1uMHozhtiWq3mKAJQ8DLasDh4Qe6rhw5SCABehigHy465d4r2tUwg8LJkDWHyZ
+         vRsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744392752; x=1744997552;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SQWkltRQiXKa1eCWkClFhYuqHVMPhzVxPWnvXGgLhs4=;
-        b=XfHoy/ZmG+vcI0VoRYpDO592GybSlIKC+V41IB/kQ3L+/kl0peXWQp2zEdGwpLifxf
-         sSdUiHSyVUxdUPLMxpRk1Hq4bL62R/SWW7A7X4KEWTPvJ0OYY1h7Re2aKNuPVp+gORTs
-         W/pKoUX5sFX1KR82107o2UtWbNf4QuHN4N1XjxVJzYajc5saigkKex45DKrmzHT9rrCm
-         Y9q+rl/IQkH6XD5xzMi9OOyAICTPTnDUOIfvznwuboFiKu2dx6J7a0Rihi4ek9Gd8qgN
-         7zNy1T2GeFi8QVlUNrJQkx8xvuGqw+zgAMY7vCAGaCSFPKZwuDZ8BLLFm/sEes+3lXmM
-         AyMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUK1NaGG3AFIl7Q7VBcGxijr2k0CtAepioFLCcepseeTCC3qlbEAKE6YG1wmrAK85ffvZU=@vger.kernel.org, AJvYcCVfEJMTMAfri1w5oZxnYQjpKiIkykhi7TadJKpRMFFGK4XJ4qAKV/KjasQUIazkyaQuaY17a0SRqzpsNsns@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQKWdpOSZm6ZlPIC/0z9+HWO47GG010HWVoMx33fF9JPkzbVyi
-	UaQoFngXMR2NYFOR4IqwDkgmhFEr/prJXEOGXUvPEWM+yiH+Jb8Bq6U8w6ykNGfIbkhezcs0gSA
-	QG+MIUigd866EtAEu/2p1fajZfgI=
-X-Gm-Gg: ASbGncvyl+wh/pmgYYkRGS0r5Wf7AL7ctJEGu4CbcTqYsQU3Zz2jOxfBBTPnezTYa4C
-	ytvw1geO+vRxy0sMsZ+xnlhhzXOBl9LSan7yK0xSCFaQVxLNPim0sg0xrsrSpgr56HoLTFujZgu
-	S6jjkx36tZcO+RPikwjtSv5E7a8KJb1fWjxd7DBwt9zME0tpAcURm97kM8
-X-Google-Smtp-Source: AGHT+IGhPAu9n9VXjlg2RHiZRNKWBPAVLDUMWnZ2OaaXl0Ti6pCozccP+CBJZa9mwAJfUrRn4iQj3D07Zzhh1UZeIcI=
-X-Received: by 2002:a05:6402:1d51:b0:5f3:4606:14c5 with SMTP id
- 4fb4d7f45d1cf-5f3639f4267mr2980051a12.15.1744392751690; Fri, 11 Apr 2025
- 10:32:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744392909; x=1744997709;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+eht9iaQ6o1fN2gEoUHVMqICYWehtz7ZUwi+FbnEXgE=;
+        b=S//VBOKOIray9X9YqYcQfw+1tDA5jUNhI4X66p8/uzl75VGE6pmlL4KTQdW8GlsFX8
+         /HWlsW3WiauzZeA12e5wYNJb7me3DZJLSHR+/6MpzpcZO5JFOd50UgAw1aMzk1TAWlK8
+         7tkDdHnpdo+38bAdfjKBG+xR10MkbOrpCUT4GrkzC1Wnn2LJyOi4cZxOSTcqTJp/w7Gs
+         g6jsk/gMQIhXEPpL0B4yXs9BsYR0zUD5jbC2aC5zxmGQqVJjRuX6oT2VSwHP7IeU28db
+         MrRvmTO663LV2eMIoGxmUZ665IuiMiX0rKdtU37O4IlRaHziAgOOxVgA+5FxNIirWd1+
+         VlFg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7g4Y+EA3rQI/kZu72IK3NywHpaSpiixLpN4h2LSJ0wqjRCGCAkriPdhzNZPwog4avkILMRLgjdkOur00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykD7K79fxlLG7Mc9OeLQwtI8nMdVRWDbAmQgOAoN5iw75CDfCW
+	Yz6nAvsljuTF+FvZk243F63/jdgQJ9D29TMajMCxH77T0XpR3yYhhrEgErqRfRjXe6vs64D0tju
+	1yiXXUwrhtLoCseql2qm6wTvJgYOgrx9XxWeB
+X-Gm-Gg: ASbGnct51Q4S2IaQdq8GYrpMGxjXAulT866wo9E9BhlysN5A+RiO86Og9LLSubuKysC
+	NEPARcdVRnjQtwz42WjAGaOLE2vLXA8py+KATkmrzWt47GhVSx+Xl7H/hZTtL0LiSR3rdMb4Iec
+	P9dFgKCzknVDz/c5ayQ+2vMRQ=
+X-Google-Smtp-Source: AGHT+IFsqGb2NI4C998L4eRk5pxG9ZDV+EPyXU0sBnQYjqjaZsqLTIZPs5b8kewYg6GP32+Vd/vVcfo+p6pguFqbuOY=
+X-Received: by 2002:a17:902:c40e:b0:216:21cb:2e06 with SMTP id
+ d9443c01a7336-22bea920b31mr3043845ad.19.1744392908956; Fri, 11 Apr 2025
+ 10:35:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP01T76CVtC=z=JYP+HFtVrfkrZjuiR20xLWtHkshGjoA77MwA@mail.gmail.com>
- <67f94f0a.050a0220.2c5fcf.0003.GAE@google.com>
-In-Reply-To: <67f94f0a.050a0220.2c5fcf.0003.GAE@google.com>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Fri, 11 Apr 2025 19:31:55 +0200
-X-Gm-Features: ATxdqUHzn-2AQVmIwGFxxAXqWLLaom16eXSWKUCzxwHi-ZpA9yS9jxukdZE-ip0
-Message-ID: <CAP01T74p7xy9riqMYiaZ563p0xd=QUWyPseHkNe_037wAdnu3Q@mail.gmail.com>
-Subject: Re: [syzbot] [bpf?] possible deadlock in __bpf_ringbuf_reserve
-To: syzbot <syzbot+850aaf14624dc0c6d366@syzkaller.appspotmail.com>
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, kernel-team@meta.com, kkd@meta.com, 
-	linux-kernel@vger.kernel.org, martin.lau@kernel.org, 
-	syzkaller-bugs@googlegroups.com
+References: <20250408171530.140858-1-mark.barnett@arm.com> <Z_ZcRiHTGljxEEdN@gmail.com>
+ <2fa741d8-13c7-49c0-a6c5-540a7c2cf3a7@arm.com>
+In-Reply-To: <2fa741d8-13c7-49c0-a6c5-540a7c2cf3a7@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 11 Apr 2025 10:34:56 -0700
+X-Gm-Features: ATxdqUEZa_1pWKSod4wY40ZarBa-DN6S4qpDe5Ur1LE7Pb1ofS8DC8N_Fn09SwQ
+Message-ID: <CAP-5=fUukVQMRHUQ9Mpx38H-7VNLt4mDj-jaYgn8Tf4zjecD-A@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] A mechanism for efficient support for per-function metrics
+To: Mark Barnett <mark.barnett@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, ben.gainey@arm.com, 
+	deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org, 
+	james.clark@arm.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 11 Apr 2025 at 19:19, syzbot
-<syzbot+850aaf14624dc0c6d366@syzkaller.appspotmail.com> wrote:
+On Fri, Apr 11, 2025 at 4:08=E2=80=AFAM Mark Barnett <mark.barnett@arm.com>=
+ wrote:
+> Tool Integration
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 >
-> Hello,
+> We've been using a python script to process the data into a report. We
+> can look at implementing this directly in perf report, if that is
+> required. However, I'm nervous about making the new feature the default
+> behaviour for the tool.
 >
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> possible deadlock in __bpf_ringbuf_reserve
->
-> ============================================
-> WARNING: possible recursive locking detected
-> 6.15.0-rc1-syzkaller-ge618ee89561b #0 Not tainted
-> --------------------------------------------
-> kworker/2:3/6044 is trying to acquire lock:
-> ffffc90006f360d8 (&rb->spinlock){-.-.}-{2:2}, at: __bpf_ringbuf_reserve+0x36e/0x4b0 kernel/bpf/ringbuf.c:423
->
-> but task is already holding lock:
-> ffffc900070410d8 (&rb->spinlock){-.-.}-{2:2}, at: __bpf_ringbuf_reserve+0x36e/0x4b0 kernel/bpf/ringbuf.c:423
->
-> other info that might help us debug this:
->  Possible unsafe locking scenario:
->
->        CPU0
->        ----
->   lock(&rb->spinlock);
->   lock(&rb->spinlock);
->
->  *** DEADLOCK ***
->
->  May be due to missing lock nesting notation
->
-> 6 locks held by kworker/2:3/6044:
->  #0: ffff88801b48ad48 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x12a2/0x1b70 kernel/workqueue.c:3213
->  #1: ffffc90004c1fd18 ((work_completion)(&(&ssp->srcu_sup->work)->work)){+.+.}-{0:0}, at: process_one_work+0x929/0x1b70 kernel/workqueue.c:3214
->  #2: ffff88801ea8f158 (&ssp->srcu_sup->srcu_gp_mutex){+.+.}-{4:4}, at: srcu_advance_state kernel/rcu/srcutree.c:1701 [inline]
->  #2: ffff88801ea8f158 (&ssp->srcu_sup->srcu_gp_mutex){+.+.}-{4:4}, at: process_srcu+0x73/0x1920 kernel/rcu/srcutree.c:1861
->  #3: ffffffff8e3c15c0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
->  #3: ffffffff8e3c15c0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
->  #3: ffffffff8e3c15c0 (rcu_read_lock){....}-{1:3}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2362 [inline]
->  #3: ffffffff8e3c15c0 (rcu_read_lock){....}-{1:3}, at: bpf_trace_run2+0x1b6/0x590 kernel/trace/bpf_trace.c:2404
->  #4: ffffc900070410d8 (&rb->spinlock){-.-.}-{2:2}, at: __bpf_ringbuf_reserve+0x36e/0x4b0 kernel/bpf/ringbuf.c:423
->  #5: ffffffff8e3c15c0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
->  #5: ffffffff8e3c15c0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
->  #5: ffffffff8e3c15c0 (rcu_read_lock){....}-{1:3}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2362 [inline]
->  #5: ffffffff8e3c15c0 (rcu_read_lock){....}-{1:3}, at: bpf_trace_run2+0x1b6/0x590 kernel/trace/bpf_trace.c:2404
->
-> stack backtrace:
-> CPU: 2 UID: 0 PID: 6044 Comm: kworker/2:3 Not tainted 6.15.0-rc1-syzkaller-ge618ee89561b #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: rcu_gp process_srcu
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:94 [inline]
->  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
->  print_deadlock_bug+0x1e9/0x240 kernel/locking/lockdep.c:3042
->  check_deadlock kernel/locking/lockdep.c:3094 [inline]
->  validate_chain kernel/locking/lockdep.c:3896 [inline]
->  __lock_acquire+0xff7/0x1ba0 kernel/locking/lockdep.c:5235
->  lock_acquire kernel/locking/lockdep.c:5866 [inline]
->  lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
->  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
->  _raw_spin_lock_irqsave+0x3a/0x60 kernel/locking/spinlock.c:162
->  __bpf_ringbuf_reserve+0x36e/0x4b0 kernel/bpf/ringbuf.c:423
->  ____bpf_ringbuf_reserve kernel/bpf/ringbuf.c:474 [inline]
->  bpf_ringbuf_reserve+0x57/0x90 kernel/bpf/ringbuf.c:466
->  bpf_prog_385141c453c15099+0x36/0x5d
->  bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
->  __bpf_prog_run include/linux/filter.h:718 [inline]
->  bpf_prog_run include/linux/filter.h:725 [inline]
->  __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
->  bpf_trace_run2+0x230/0x590 kernel/trace/bpf_trace.c:2404
->  __bpf_trace_contention_begin+0xc9/0x110 include/trace/events/lock.h:95
->  __traceiter_contention_begin+0x5a/0xa0 include/trace/events/lock.h:95
->  __preempt_count_dec_and_test arch/x86/include/asm/preempt.h:95 [inline]
->  class_preempt_notrace_destructor include/linux/preempt.h:482 [inline]
->  __do_trace_contention_begin include/trace/events/lock.h:95 [inline]
->  trace_contention_begin.constprop.0+0xde/0x160 include/trace/events/lock.h:95
->  __pv_queued_spin_lock_slowpath+0x109/0xcf0 kernel/locking/qspinlock.c:219
->  pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:572 [inline]
->  queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:51 [inline]
->  queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
->  do_raw_spin_lock+0x20e/0x2b0 kernel/locking/spinlock_debug.c:116
->  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
->  _raw_spin_lock_irqsave+0x42/0x60 kernel/locking/spinlock.c:162
->  __bpf_ringbuf_reserve+0x36e/0x4b0 kernel/bpf/ringbuf.c:423
->  ____bpf_ringbuf_reserve kernel/bpf/ringbuf.c:474 [inline]
->  bpf_ringbuf_reserve+0x57/0x90 kernel/bpf/ringbuf.c:466
->  bpf_prog_385141c453c15099+0x36/0x5d
->  bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
->  __bpf_prog_run include/linux/filter.h:718 [inline]
->  bpf_prog_run include/linux/filter.h:725 [inline]
->  __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
->  bpf_trace_run2+0x230/0x590 kernel/trace/bpf_trace.c:2404
->  __bpf_trace_contention_begin+0xc9/0x110 include/trace/events/lock.h:95
->  __traceiter_contention_begin+0x5a/0xa0 include/trace/events/lock.h:95
->  __do_trace_contention_begin include/trace/events/lock.h:95 [inline]
->  trace_contention_begin+0xc1/0x130 include/trace/events/lock.h:95
->  __mutex_lock_common kernel/locking/mutex.c:603 [inline]
->  __mutex_lock+0x1a6/0xb90 kernel/locking/mutex.c:746
->  srcu_advance_state kernel/rcu/srcutree.c:1701 [inline]
->  process_srcu+0x73/0x1920 kernel/rcu/srcutree.c:1861
->  process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
->  process_scheduled_works kernel/workqueue.c:3319 [inline]
->  worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
->  kthread+0x3c2/0x780 kernel/kthread.c:464
->  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
->  </TASK>
->
->
-> Tested on:
->
-> commit:         e618ee89 Merge tag 'spi-fix-v6.15-rc1' of git://git.ke..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10461c04580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=36c5de4d99134dda
-> dashboard link: https://syzkaller.appspot.com/bug?extid=850aaf14624dc0c6d366
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
->
-> Note: no patches were applied.
+> This feature has been integrated into our tools [1] for the last 12
+> months, and has received a lot of testing on Arm Neoverse hardware.
+> Other platforms have received less rigorous testing. In my opinion, more
+> work would be needed to validate the PMU hardware & software
+> characteristics of other architectures before this can be made the defaul=
+t.
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
+Hi Mark,
+
+Wrt testing, in v6.14 we've fixed up the python scripting with perf a
+bit more and there is an example that parses an event and then dumps
+samples here:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/python/tracepoint.py?h=3Dperf-tools-next
+There is also the perf script integration for things like flame graphs:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/scripts/python/flamegraph.py?h=3Dperf-tools-next#n96
+
+I don't think work should be gated on cleaning up perf report, top,
+etc. which still needs clean up for things like hybrid events. As the
+histograms should use the sample's period then I believe things should
+just work in much the same way as leader sampling can work. It'd be
+worth checking.
+
+Thanks,
+Ian
