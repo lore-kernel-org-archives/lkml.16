@@ -1,64 +1,66 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8AE35946;
-	Fri, 11 Apr 2025 13:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C608519CC06
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377503; cv=none; b=dnPcmPRft3yOZBaPzCGrqGDHtr8TEf0AzoDkvNUX61ESGrNzPAs6Lu2MCM5q6LqOPG7oym6qyX85KJvpYjPuINaA9co5ivy7oxN43VTY4ohB/edPEkVzcxn62lUrq8bUX4qxLCb5aYslZEuCxm1eyrJujNzV5tmyHTjOrKtfwcc=
+	t=1744377506; cv=none; b=QOhMhXF7MmT48t3pfPvIbKTRzI4VpcmEr43WD3pSxayDC0EWcLZucpJPQVNYWFNcn5Op9nVk4VYiNscrnvrwdtvxp2OWiasVioRTy3M3PD631wAfNwzfMVMkcajAuybJdlI5J+t7Xhko5i1e8z9vdttgyVCklUNnF3yQKfU/8j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377503; c=relaxed/simple;
-	bh=IeI3eSeAL/MoeRlrl2yOI3hGBvGPXUPVq1OPhKbWqkQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZgiU9o2qkcVsRBkbP2E+jJm/VHkiLg86JyQHrhlPTb3FX3CeXucT4ghIHGxMLIXkbQR5DiWpuZqalXqk2J4jVv2TIwCNdDmBl5ttPHwaArq3JkAmwvB3YB2QFO8TChKyj4D4RJz9Sw0DCkRpldbTKsQQOvSQmi2IvwjkaUB0Cos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j8hcrf6t; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744377506; c=relaxed/simple;
+	bh=BUjqMSGXFNAQCtSnMnZLc7ifXcyak1+IAzaJHHRD/+k=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NE4lp7UyAsS4VDd5QBijOUjeSNoLWSZzBCE/nl+Y0dJv4tYhJg9V7wXJj4EXYuAIuNyARZ6GdERw5NwhW9nF6qRST9hlOfZe/fftA9vcrIcok7uZUv7aash/DOswSvGEMcz5mFqMl5whuLTmVMDFq84toHW2qFESo+6ENTTj6i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gL/1K5zF; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8hcrf6t"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-739be717eddso1483942b3a.2;
-        Fri, 11 Apr 2025 06:18:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gL/1K5zF"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-391342fc1f6so1506170f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744377501; x=1744982301; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5MA5L9R0Nf5HUBvu/X2l/N9S6FUK2IdgYTVoNXD7ORo=;
-        b=j8hcrf6t/XlVFpkYBdtHvdm08nzBLdpYw5RBOU8YJxOG9rsAZGrtUDBfvPQp4XJ9gq
-         L6FZuUI9vJ5eCLY6pFyaCrjNt8eOhQcUt46u8M/VM0Suz3q6izMKUEZnjZmNapGKxTsg
-         HlGSq2Zy/wZk1uWUZtNLIYMJis5rS99d61COPs95SGklYW2RdJ8W/bhvNi62etJ9DBA8
-         8d53AMKVAbyh6e2t5QGV7WBueeSYCbWx5UqTDy4OGrUFNZfzgFmaXU+3f1QgG50WzgH7
-         63SUEp14f8VSqrcbzRuVyV7Y7c1tcc/TRureTNV4tQGr+urg4p9V7dTM2XjZVhMlTjAs
-         CiiQ==
+        d=linaro.org; s=google; t=1744377502; x=1744982302; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bAgS7d7mQW64Ugh4mepLGUIYDIVFQL72jfWiNoLCjqQ=;
+        b=gL/1K5zFWzePesNp68srbCiau2LLI4vcxizrPT4LXwECcJhsBI/QUwILU3uPxdb9Yc
+         Kla6HWVW4Z5xXW/0XllmLX0I2zThkH1+oU7AZh0I1FIjlNJFBAl1gKsuy4+AWCck8gg8
+         VdQCdAIj7uyAvV1WBj9J4/g+thTHEZnWYWWoElUu08XNTZx22lb8Sg+/FzqDS3RNdr9y
+         KQVJ8ORUHtY0FB8n0slT2v5tfX3HIe7S3ZyJrX3JFiZ2pi47CM8o3/YQs2oHF5FNarrY
+         TxppeqL2dRGtHtYo8ReQ0B98/SKt1tBFoWdIQc/e5LG6ItXFVf99jxE1QAKVTrvhlkHC
+         IUIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744377501; x=1744982301;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5MA5L9R0Nf5HUBvu/X2l/N9S6FUK2IdgYTVoNXD7ORo=;
-        b=DgjfBj8TJZTxyXLvrg1PlcV/gkyaeSu+BpdROITGY5qYQeslw+BFZu/f+fPgISQwJm
-         O17IPoVO29Xt+F858rRfC3nBA2mwADNyJUi1pqj8vlI8jV1CRyyE71LbGbbDiNPIW5CZ
-         /kaSywrXqaqeehjUASaiqRoREz58iFySImaiuWC3uJZg/755iFb8Up/H1TOdM+VRsbwo
-         JjV+i631eySiRuQwPjx+xX4qGNSUaUQ8OwRVWpq3bp+tcVtoUOPTRnCVWfB2B0psvAGM
-         homC/0z7UtKrl/FU03NKuXHWd7G9QlA4xGbKmtR8y/lA1Jtepz29fhwqbeXAnIcze2FD
-         hTXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqtpVXbrO+Xztgugt/ilSFDCXabxzt7MxUonlAoqF5+NjAkYHF8e+Nf50Qx/2f6vdTDujY+KCh/KxGqqc=@vger.kernel.org, AJvYcCVP1VaCDFNyeM3+jvLG8FH8QykpYY0tOTIEOca3zlOvXH35/n1UvjsDJ7hYuMsJznMd5F/tkNARqXvlFTSu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/hQZc1Ah4N8nQu0gZ7l5ec1SbBwbAYCZxoKKnlnvInLT6Q2qa
-	EWbhxGNcqOeZ+UCk8j4bwTTEkGrLojBqP1hFTBjitNsrMd1lxyDM
-X-Gm-Gg: ASbGnctaIFBOhRNvlm/gTRwSqiLsWhhZycBjgDy+2mvmrdSNDKYIIDCfoLBtEsUne2o
-	bUbHxdhE6lfY/Ibmjvmi6I089WTGDlX08Jo7YKyVaHwdz8Sfmd9+/5mzQIyplEJlE3f20chMbKf
-	zTo2asnvuoqpmbfR/prI20XsSGfnhVpFS0Tr3EST7EmGIa2c1LK9+s6MTp3fm4f2aBF++xX8ah6
-	ucRJZHNLh2RmYQS1UWfGKS7C2wPPYuTckIIvt2G7Pc0yCoiWAAhDGkCBOBUzG5KwZc8BKpynxLY
-	J9lLWyBwGErfAVfw8yrR0XkxmgJ444uEnZ5mJ56sXwvIEg45BQ==
-X-Google-Smtp-Source: AGHT+IHh9ALpWW2aR602qeuewomF8oAjCqp7iPCudPX2N9HrVhUM+2LF030dKHxB43SWhnuH7ccwfg==
-X-Received: by 2002:a05:6a20:ce44:b0:1f5:8754:324d with SMTP id adf61e73a8af0-2017978a754mr4840372637.9.1744377500682;
-        Fri, 11 Apr 2025 06:18:20 -0700 (PDT)
-Received: from [192.168.0.161] ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a11d2bbfsm4705583a12.41.2025.04.11.06.18.17
+        d=1e100.net; s=20230601; t=1744377502; x=1744982302;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bAgS7d7mQW64Ugh4mepLGUIYDIVFQL72jfWiNoLCjqQ=;
+        b=jLfm2R5ft+a3F1iE4Jo5tlmmDGeA6Pq6lCtj8HXp3Yiwr2y754LKuvMGXNGNebTooB
+         9+h5MWpHejgWlTunQt7X6i2dK6DyZWCBOskdow5dcutXKYjdMCNl7TRcMKrd7AsoSqEv
+         BDfaXYfK28TsC99NoKHRaAepVEcENDOBLuR5TevRS6WNmVxGpvPK72gxnmitAO00gnj4
+         GIxZE39cIKnCfAyMr0TGCdEEqqBcVfvGR0UTC+ECJgQJiX4ZxUyEpv6NCFTMTcN9yfjB
+         vtWPZX8uUJ9FTGaT3Ppso2/dPXtP/3MocteGYFR8KJMNVcBckCA+7IjqNNNmqhyaJ6Tv
+         W7gQ==
+X-Gm-Message-State: AOJu0YyxlwZ70rWSKmPkKwRDvJTQnCtQ7HgKGBNLIfzhSoUM7N2twBWL
+	lSilDMl80DGLv/TZNLUrSGIq9SGf+E8n9p+cHDmPTP8sv+1XKK0gIde4Zl2vQgQ=
+X-Gm-Gg: ASbGncs36hR1xUdg5Os+3CUIEgiBosdTD0211i8QsTLj18g/+jk3IMv7Iq3dbCQmI3m
+	4nHKMVlshXfowanJ/2V+I6tw7bPRzx4L37zjTOaJiy/PeFDdnB5Cvn1FBdfEr0uuSZMK8Te11TH
+	mTfr/LpOPp3GpDqsNECG9LZo2rnGjDtstldIs8Ix93SGnFZ+Ngdc4IrSgp+BlIuEFjaIOAu9ORU
+	hZ18aLzkW/WvYDsgFqPuxEgvp+8rBnggfRrZO9tN5r6JYD/zakpnYY001Yu/AZ0urhff0TTQDst
+	6GewJSEzHPADpzhH/pwKGPckUXzGRKw6vvCDBPCeimh1Wuiz++6xgKwO81QMG/BggICPpxf9RL7
+	RGNp4T8xxB88+45rb0w==
+X-Google-Smtp-Source: AGHT+IHTemPYNTUynUWh83jsKhT4widmDCcaayD2CGUwpmZyqG/QggCO0fOH8ooS57JxWfPnFAgDDA==
+X-Received: by 2002:a05:6000:2507:b0:390:e311:a8c7 with SMTP id ffacd0b85a97d-39ea51ecbecmr2515462f8f.5.1744377501994;
+        Fri, 11 Apr 2025 06:18:21 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:f77b:949e:1d61:69a8? ([2a01:e0a:3d9:2080:f77b:949e:1d61:69a8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae978023sm2004192f8f.47.2025.04.11.06.18.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 06:18:20 -0700 (PDT)
-Message-ID: <641cb805-b279-48af-a3a9-492a8738c841@gmail.com>
-Date: Fri, 11 Apr 2025 18:48:13 +0530
+        Fri, 11 Apr 2025 06:18:21 -0700 (PDT)
+Message-ID: <9bc74360-a74c-47f4-b8ad-3153bf47ea06@linaro.org>
+Date: Fri, 11 Apr 2025 15:18:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,66 +68,298 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty: vt: keyboard: Fix uninitialized variables in
- vt_do_kdgkb_ioctl
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: jirislaby@kernel.org, tglx@linutronix.de, hdegoede@redhat.com,
- mingo@kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20250411111548.31399-1-purvayeshi550@gmail.com>
- <2025041107-postbox-bonanza-2049@gregkh>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <2025041107-postbox-bonanza-2049@gregkh>
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH RFC v5 1/8] media: qcom: iris: move sm8250 to gen1 catalog
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
+ <VyOGKudgZHGHSwAUc_c_syksKTaFJrgQwY5885fB812reMOnISG0ito3a9NquHCtVt9W2gENP3ioyZ7e0ne_Fw==@protonmail.internalid>
+ <20250410-topic-sm8x50-upstream-iris-catalog-v5-1-44a431574c25@linaro.org>
+ <a7f41eaa-74d0-42f6-ba80-afa62a521b7e@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <a7f41eaa-74d0-42f6-ba80-afa62a521b7e@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/04/25 16:58, Greg KH wrote:
-> On Fri, Apr 11, 2025 at 04:45:48PM +0530, Purva Yeshi wrote:
->> Fix Smatch-detected issue:
+On 11/04/2025 13:50, Bryan O'Donoghue wrote:
+> On 10/04/2025 17:30, Neil Armstrong wrote:
+>> Re-organize the platform support core into a gen1 catalog C file
+>> declaring common platform structure and include platform headers
+>> containing platform specific entries and iris_platform_data
+>> structure.
 >>
->> drivers/tty/vt/keyboard.c:2106 vt_do_kdgkb_ioctl() error:
->> uninitialized symbol 'kbs'.
->> drivers/tty/vt/keyboard.c:2108 vt_do_kdgkb_ioctl() error:
->> uninitialized symbol 'ret'.
+>> The goal is to share most of the structure while having
+>> clear and separate per-SoC catalog files.
 >>
->> Fix uninitialized variable warnings reported by Smatch in
->> vt_do_kdgkb_ioctl(). The variables kbs and ret were used in the kfree
->> and return statements without guaranteed initialization paths, leading to
->> potential undefined behavior or false positives during static analysis.
+>> The organization is based on the current drm/msm dpu1 catalog
+>> entries.
 >>
->> Initialize char *kbs to NULL and int ret to -EINVAL at declaration.
->> This ensures safe use of kfree(kbs) and return ret regardless of control
->> flow. Also add a default case in the switch to preserve fallback behavior.
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>>   drivers/media/platform/qcom/iris/Makefile          |  2 +-
+>>   .../media/platform/qcom/iris/iris_catalog_gen1.c   | 83 ++++++++++++++++++++++
+>>   ...ris_platform_sm8250.c => iris_catalog_sm8250.h} | 80 ++-------------------
+>>   3 files changed, 89 insertions(+), 76 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/qcom/iris/Makefile b/drivers/media/platform/qcom/iris/Makefile
+>> index 35390534534e93f4617c1036a05ca0921567ba1d..7e7bc5ca81e0f0119846ccaff7f79fd17b8298ca 100644
+>> --- a/drivers/media/platform/qcom/iris/Makefile
+>> +++ b/drivers/media/platform/qcom/iris/Makefile
+>> @@ -25,7 +25,7 @@ qcom-iris-objs += \
+>>                iris_vpu_common.o \
+>>
+>>   ifeq ($(CONFIG_VIDEO_QCOM_VENUS),)
+>> -qcom-iris-objs += iris_platform_sm8250.o
+>> +qcom-iris-objs += iris_catalog_gen1.o
+>>   endif
+>>
+>>   obj-$(CONFIG_VIDEO_QCOM_IRIS) += qcom-iris.o
+>> diff --git a/drivers/media/platform/qcom/iris/iris_catalog_gen1.c b/drivers/media/platform/qcom/iris/iris_catalog_gen1.c
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..c4590f8996431eb5103d45f01c6bee2b38b848c2
+>> --- /dev/null
+>> +++ b/drivers/media/platform/qcom/iris/iris_catalog_gen1.c
+>> @@ -0,0 +1,83 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include "iris_core.h"
+>> +#include "iris_ctrls.h"
+>> +#include "iris_platform_common.h"
+>> +#include "iris_resources.h"
+>> +#include "iris_hfi_gen1.h"
+>> +#include "iris_hfi_gen1_defines.h"
+>> +#include "iris_vpu_common.h"
 > 
-> When you say "also" in a patch, that is a HUGE flag that this should be
-> split up into a separate change.  Please do that here, don't mix changes
-> that have nothing to do with each other together into one.
+> Any reason why these aren't alphabetised ?
+
+Copied as-is, I guess the order can be important, especially the iris_core must be first.
+
+Neil
+
 > 
-> Also, why isn't the compilers noticing that these are uninitialized
-> variables?  Are you sure the warning is correct?
+> Please do so unless there's some technical reason to have in this order.
 > 
-> thanks,
+>> +
+>> +/* Common SM8250 & variants */
+>> +static struct platform_inst_fw_cap inst_fw_cap_sm8250[] = {
+>> +    {
+>> +        .cap_id = PIPE,
+>> +        .min = PIPE_1,
+>> +        .max = PIPE_4,
+>> +        .step_or_mask = 1,
+>> +        .value = PIPE_4,
+>> +        .hfi_id = HFI_PROPERTY_PARAM_WORK_ROUTE,
+>> +        .set = iris_set_pipe,
+>> +    },
+>> +    {
+>> +        .cap_id = STAGE,
+>> +        .min = STAGE_1,
+>> +        .max = STAGE_2,
+>> +        .step_or_mask = 1,
+>> +        .value = STAGE_2,
+>> +        .hfi_id = HFI_PROPERTY_PARAM_WORK_MODE,
+>> +        .set = iris_set_stage,
+>> +    },
+>> +    {
+>> +        .cap_id = DEBLOCK,
+>> +        .min = 0,
+>> +        .max = 1,
+>> +        .step_or_mask = 1,
+>> +        .value = 0,
+>> +        .hfi_id = HFI_PROPERTY_CONFIG_VDEC_POST_LOOP_DEBLOCKER,
+>> +        .set = iris_set_u32,
+>> +    },
+>> +};
+>> +
+>> +static struct platform_inst_caps platform_inst_cap_sm8250 = {
+>> +    .min_frame_width = 128,
+>> +    .max_frame_width = 8192,
+>> +    .min_frame_height = 128,
+>> +    .max_frame_height = 8192,
+>> +    .max_mbpf = 138240,
+>> +    .mb_cycles_vsp = 25,
+>> +    .mb_cycles_vpp = 200,
+>> +};
+>> +
+>> +static struct tz_cp_config tz_cp_config_sm8250 = {
+>> +    .cp_start = 0,
+>> +    .cp_size = 0x25800000,
+>> +    .cp_nonpixel_start = 0x01000000,
+>> +    .cp_nonpixel_size = 0x24800000,
+>> +};
+>> +
+>> +static const u32 sm8250_vdec_input_config_param_default[] = {
+>> +    HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE,
+>> +    HFI_PROPERTY_PARAM_UNCOMPRESSED_FORMAT_SELECT,
+>> +    HFI_PROPERTY_PARAM_UNCOMPRESSED_PLANE_ACTUAL_CONSTRAINTS_INFO,
+>> +    HFI_PROPERTY_PARAM_BUFFER_COUNT_ACTUAL,
+>> +    HFI_PROPERTY_PARAM_VDEC_MULTI_STREAM,
+>> +    HFI_PROPERTY_PARAM_FRAME_SIZE,
+>> +    HFI_PROPERTY_PARAM_BUFFER_SIZE_ACTUAL,
+>> +    HFI_PROPERTY_PARAM_BUFFER_ALLOC_MODE,
+>> +};
+>> +
+>> +static const u32 sm8250_dec_ip_int_buf_tbl[] = {
+>> +    BUF_BIN,
+>> +    BUF_SCRATCH_1,
+>> +};
+>> +
+>> +static const u32 sm8250_dec_op_int_buf_tbl[] = {
+>> +    BUF_DPB,
+>> +};
+>> +
+>> +/* platforms catalogs */
+>> +#include "iris_catalog_sm8250.h"
+>> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8250.c b/drivers/media/platform/qcom/iris/iris_catalog_sm8250.h
+>> similarity index 59%
+>> rename from drivers/media/platform/qcom/iris/iris_platform_sm8250.c
+>> rename to drivers/media/platform/qcom/iris/iris_catalog_sm8250.h
+>> index 5c86fd7b7b6fd36dc2d57a1705d915308b4c0f92..4d2df669b3e1df2ef2b0d2f88fc5f309b27546db 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8250.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_catalog_sm8250.h
+>> @@ -1,55 +1,10 @@
+>> -// SPDX-License-Identifier: GPL-2.0-only
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>   /*
+>>    * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>>    */
+>>
+>> -#include "iris_core.h"
+>> -#include "iris_ctrls.h"
+>> -#include "iris_platform_common.h"
+>> -#include "iris_resources.h"
+>> -#include "iris_hfi_gen1.h"
+>> -#include "iris_hfi_gen1_defines.h"
+>> -#include "iris_vpu_common.h"
+>> -
+>> -static struct platform_inst_fw_cap inst_fw_cap_sm8250[] = {
+>> -    {
+>> -        .cap_id = PIPE,
+>> -        .min = PIPE_1,
+>> -        .max = PIPE_4,
+>> -        .step_or_mask = 1,
+>> -        .value = PIPE_4,
+>> -        .hfi_id = HFI_PROPERTY_PARAM_WORK_ROUTE,
+>> -        .set = iris_set_pipe,
+>> -    },
+>> -    {
+>> -        .cap_id = STAGE,
+>> -        .min = STAGE_1,
+>> -        .max = STAGE_2,
+>> -        .step_or_mask = 1,
+>> -        .value = STAGE_2,
+>> -        .hfi_id = HFI_PROPERTY_PARAM_WORK_MODE,
+>> -        .set = iris_set_stage,
+>> -    },
+>> -    {
+>> -        .cap_id = DEBLOCK,
+>> -        .min = 0,
+>> -        .max = 1,
+>> -        .step_or_mask = 1,
+>> -        .value = 0,
+>> -        .hfi_id = HFI_PROPERTY_CONFIG_VDEC_POST_LOOP_DEBLOCKER,
+>> -        .set = iris_set_u32,
+>> -    },
+>> -};
+>> -
+>> -static struct platform_inst_caps platform_inst_cap_sm8250 = {
+>> -    .min_frame_width = 128,
+>> -    .max_frame_width = 8192,
+>> -    .min_frame_height = 128,
+>> -    .max_frame_height = 8192,
+>> -    .max_mbpf = 138240,
+>> -    .mb_cycles_vsp = 25,
+>> -    .mb_cycles_vpp = 200,
+>> -};
+>> +#ifndef _IRIS_CATALOG_SM8250_H
+>> +#define _IRIS_CATALOG_SM8250_H
 > 
-> greg k-h
+> __IRIS_CATALOG_SM8250_H__ as with other header guards.
+> 
+>>
+>>   static void iris_set_sm8250_preset_registers(struct iris_core *core)
+>>   {
+>> @@ -80,33 +35,6 @@ static const struct platform_clk_data sm8250_clk_table[] = {
+>>       {IRIS_HW_CLK,   "vcodec0_core" },
+>>   };
+>>
+>> -static struct tz_cp_config tz_cp_config_sm8250 = {
+>> -    .cp_start = 0,
+>> -    .cp_size = 0x25800000,
+>> -    .cp_nonpixel_start = 0x01000000,
+>> -    .cp_nonpixel_size = 0x24800000,
+>> -};
+>> -
+>> -static const u32 sm8250_vdec_input_config_param_default[] = {
+>> -    HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE,
+>> -    HFI_PROPERTY_PARAM_UNCOMPRESSED_FORMAT_SELECT,
+>> -    HFI_PROPERTY_PARAM_UNCOMPRESSED_PLANE_ACTUAL_CONSTRAINTS_INFO,
+>> -    HFI_PROPERTY_PARAM_BUFFER_COUNT_ACTUAL,
+>> -    HFI_PROPERTY_PARAM_VDEC_MULTI_STREAM,
+>> -    HFI_PROPERTY_PARAM_FRAME_SIZE,
+>> -    HFI_PROPERTY_PARAM_BUFFER_SIZE_ACTUAL,
+>> -    HFI_PROPERTY_PARAM_BUFFER_ALLOC_MODE,
+>> -};
+>> -
+>> -static const u32 sm8250_dec_ip_int_buf_tbl[] = {
+>> -    BUF_BIN,
+>> -    BUF_SCRATCH_1,
+>> -};
+>> -
+>> -static const u32 sm8250_dec_op_int_buf_tbl[] = {
+>> -    BUF_DPB,
+>> -};
+>> -
+>>   struct iris_platform_data sm8250_data = {
+>>       .get_instance = iris_hfi_gen1_get_instance,
+>>       .init_hfi_command_ops = &iris_hfi_gen1_command_ops_init,
+>> @@ -147,3 +75,5 @@ struct iris_platform_data sm8250_data = {
+>>       .dec_op_int_buf_tbl = sm8250_dec_op_int_buf_tbl,
+>>       .dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8250_dec_op_int_buf_tbl),
+>>   };
+>> +
+>> +#endif
+>>
+>> -- 
+>> 2.34.1
+>>
+>>
+> Once done.
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-Hi Greg,
-
-Thank you for the feedback.
-
-Got it. I will remove the default case from this patch and resend it 
-with only the fix for the uninitialized variables.
-
-Yes, Smatch reports uninitialized variable warnings for kbs and ret 
-because, in the function vt_do_kdgkb_ioctl(), both variables are used 
-outside the switch block but are only initialized conditionally within 
-certain case branches. If the cmd value passed to the function does not 
-match any of the explicitly handled cases (KDGKBSENT or KDSKBSENT), then 
-the switch body is skipped entirely. In such a scenario, kbs remains 
-uninitialized, yet kfree(kbs) is still called, which could result in 
-undefined behavior.
-
-Similarly, ret is returned at the end of the function even though it may 
-not have been assigned a value, leading to unpredictable results.
-
-Best regards,
-Purva
