@@ -1,64 +1,67 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19F81F3BAA
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCAC14F9D6;
+	Fri, 11 Apr 2025 14:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381782; cv=none; b=s3Ri2sPXRjSb/s5VRn2eUxnMrph+rlxg6D8GVkpKbwn/bw+71Rj5zZLw94lIxf5MaUORj0gHSJiq+SULU6p3+0DfegGVqX5HQLfni9S8TsGX92wBEM1lV1tiHvbAW2x0LOJIzg+kbE3fI1b4Npk+mGM6Xet2kLea1tOiR2Hk7nQ=
+	t=1744381783; cv=none; b=Bki469jaeV1OjzvC+97QkCNgEo02taK8VFSLL97VY96EIFMMbyt+mZf66rn/q7nRUuGbBvmJhbNKEfWS/X7XVfkQiggHS4Nn+uL9EeFsN+mPpANrRk6PuzA/hGcrgNiJD9vz46i/nGCwliMJlrRrtuk7HtfzEVC+EZDN0r7kLgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381782; c=relaxed/simple;
-	bh=/iEDuG2zIehPz6KVZMTx7mu4Lm71sDlFq0jr0v8mSrU=;
+	s=arc-20240116; t=1744381783; c=relaxed/simple;
+	bh=G+0nVYQRoJH4rJppKIhEIBLL7hjyhBhGIcXNcwUucIU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SB1wmDUz4LH+BWQlAApDh/t/BxD4F0VMnxwfsI3mhuNgGVY5237XcUD/78UjH0PRy10SVfVszMF3z/QE5A/fqzGpy9tywchBIJ/KLSqc1MzbrKo5B2QLF7EmVSNowNTRsVBZ3F6vKy3lPJmxg2NECzpheB8VHLAo3MVupfksdNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=X/vMj+OO; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	 In-Reply-To:Content-Type; b=PWan76D4d7bYX15XSof7a8twkVF2RV4/gWdkJV8wPEmH1Ben5UuHcO4LffKiS1ostqIPrwmFA3tIVZ0TluY39Rv19JmoQ6EPLFDgr4fD0kKhz38nWAZVUr5WgxUoOAmH9MVQOFMFI+Vk2JzOmBullwc66lv0jnnCzTJj5bQHpUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DpArR5aK; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="X/vMj+OO"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c1efc457bso1320515f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:29:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpArR5aK"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736a7e126c7so1848402b3a.3;
+        Fri, 11 Apr 2025 07:29:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1744381779; x=1744986579; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8hqxBUyC0ns9eaPvESS3za+oYCsUAFhI9e/U4xWblAI=;
-        b=X/vMj+OOQEiTDPWARbkN6qmjFHOTPup+RI/3K1768rfPWYChq3rq7WxEXoxlZrZthR
-         D1y+9V6oFFRnC91LkARWcmPWY/oBgBpVkFays1KTPWMxoDrqPQX2slz8B5s3X2yD/GIw
-         mioDMXySt0X96eHnDw6ES3ZlMh5yh3djw8XoylmHo/DODkoNLJ5XgsqPL7VqI2WvfBwr
-         e7oCDqkvMjlTUXvQ4V2QLmejR9fCQsiybSkWmFMDko912iHUqjRakZaxniKsgmWYo7dK
-         DSJ05D4vS9GsMZJrr5mJ1EzSwwXasJI0gm9UmPD2rib19wD6sRq+DBodrsXWldnAEanQ
-         tq/A==
+        d=gmail.com; s=20230601; t=1744381781; x=1744986581; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=P0B2X27Vy1PVZALJj52RE/yzAKgD4YWmN8f+MkQnKqE=;
+        b=DpArR5aK/vdIs6ize/utGCQpGl+sLhrEV3TsJi5PI0VZD3zDbK70Bw4tHRtztNnoqh
+         XuhRqQA33QHPdmTtvAeto/qrCePBhXba4cGJ2mXuObkKKW8Np6KmsKhmFouPuIHY03fZ
+         ta9T1NS7/u1bJdOj/0snB2hFzN3xwf807tft1ZXfgO7lPR/TM4o9Rh0h9EKZYH7BmEbL
+         rOLUO52XiIDII7RIRW+3c0qS2R+wlGKR85l2L2FDnu9GDugHvTMVpCjPHDkoZ9B7u32C
+         CFZ/4dagRZcNSO3CD/VJg+qCZZvrTtZs0vfjEDrHHRy8tsIcMQggIpbSugfInbu9js57
+         tqwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744381779; x=1744986579;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8hqxBUyC0ns9eaPvESS3za+oYCsUAFhI9e/U4xWblAI=;
-        b=b8nwLLv5xLE//pelSgpqQbZ4U4u0QxcSgvpSy2vdRqhU8ur9BBS6CqgIK9mo5wY3s6
-         kRguFgy0OAr20qqU59hhHGFCzHFQ37M6iSfaCq0Z5FiKxvYl7/vsINEl4CYzqEhFnXpX
-         ha4Buj9UGL2eWNVl6vnCKdgvpsDy5GN/mQMTqyRew7bti9bIITgUJVojtbfphuWUNS4Z
-         a6cWD0NErw76H+eBwvkXGPMLdB0VneBHY3r87oCALz+7nh94v1rJTeTNDqoe1aE7PN7R
-         B8em0TGFehuaHb2hB9IY8DSA//oDPQU3NWKOKNFyS+1CxRdUCiigc3ZV/10CJzzULkeK
-         qPEA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2A08dyxC7UOncgUut/T3s8d3IzllHQw/OljDgj/SQcZ3uM87lC6hweHcK/Gulvvcal5gBtY2egAJgGzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFUT9IIBA+8Je6yd8lZpHbJDjeW0/dYFKNJvxXxJ8irOKqSOYL
-	QXszCiBxomYQmL1nhUdgmr8i39khg8YPBSwZb2lWgo7UkEZML893yBz1NE9Wx5c=
-X-Gm-Gg: ASbGnct0cNEep9eX1AxI09+bCfl3iFUWIjD+5ftxdGN19sIAkp18tuwXQ6X28cIwL4T
-	qvydLaOkEiO3u+7RljcgfSs13+mWBanuMiEDIQArAx8vMWa1MxRae3fXauR+pP6wx0F2L9CmDO0
-	khjd5RcdqVA1jWjtOJQ0nEqRUOUZZl7fRrtRxg3IPpIDaOiBwBI8d/P4VyQq9Xwvl+JE6xSsCIj
-	gxYOkbJ9nM2azcFrnB799Of0i8yPgE42qCeEu1dmnYpW3/lnBGQwcUP1kCsoHZQejBOi/aF53Ax
-	VTRMaPEwkCEYWOz4WnbLGAQJZGMpyx1gGQnD6Y3zrIN60qBs
-X-Google-Smtp-Source: AGHT+IHD7Cas+STyP0l4SArtn2i6scRGDrYYRpRyE7WLAnpJy9q9S7ex/ksN5K6SfcSK5n+MPRT4DA==
-X-Received: by 2002:a5d:59ad:0:b0:397:8f09:5f6 with SMTP id ffacd0b85a97d-39eaaebed00mr2197064f8f.47.1744381779046;
-        Fri, 11 Apr 2025 07:29:39 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae977a7fsm2151767f8f.45.2025.04.11.07.29.37
+        d=1e100.net; s=20230601; t=1744381781; x=1744986581;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P0B2X27Vy1PVZALJj52RE/yzAKgD4YWmN8f+MkQnKqE=;
+        b=kxSJuvcrmJ5YBeZTiumnFAgi/FGWw2qDUwMQsw3zLFYO/VZMmDZ0bbtEGz/qHjQoMv
+         WQ22XfCBZAYekZcYlYkLUm1CNE02uwuEAa4ZR7MmWQ9iP000dDMqnVHPq01LAbxabIuQ
+         C+0hTwmQkozX7LMybcVh5brZT9VJAjz4aMUpNFVfMchVU9DWwsmBJkHk3bnMP2WvgncU
+         J4TBGsFIeA1qkrvPRFAgWE0Cnf8Lyv4tjD787jnLND2jVJAEPmiQlobGb20c3TsFhxSt
+         EYtuZmM0KJs6CABdeP/rjK7iP5yOT17zFnsyeVYd7hXqVUxES6xVGbRT8mGszPsgNW0M
+         hYDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOs/6JNAQWqyAMczGh9PMbldFcbuM3Ma6CSClu4/cjHoGvBkAcn9erXcpy3w216WDbei2bhAf/@vger.kernel.org, AJvYcCVzALEqSlZSwvNjieP2b0UFxz/m01aoL5Splek4MuM5ozu9oVajDnen0FMqhVxmXKLa6JjGL0rEjRTBn2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm93z6533sGJOYBNokdsrIvs6jiTkoTsr8jhEOp0z5Hjw4Vmi3
+	1q/sEyv/J2b/r1mL2ZP2YyNipKaasgZP/Tg8vhCw8HxjA89QQlPM
+X-Gm-Gg: ASbGncu28vgjtsn9tcbQgObOrvokJVK2VB1x19vLZ1tvFyKOiia0Z2lTiKoed8HPuAq
+	B4ZVcNNREo//n69IHy1Ffdwj5U6Txnxh0ZpyqpnnhYc6Ekmy6q+sjT7LElEK0JmEqWB+4gkUEnS
+	GlICEtFtfSyzwN6bM3NFRPuFoXYDvgv3NS+Ku6GDePEyQoVM1XGP/pBOw/piUrIEMqVaO43i9eI
+	3h9WRO0UsL6lFyYmU+FsZNhQ0zDN/LTq6FIXLrlRS1j+eozXNmqf1RYwMJmqVl1BGEbNHPuUm5J
+	o6OxMqTNuTT+nMIzZnveCyf799QW9lRuyRXRjTSN4MjPZqmYK5JbWTTdEXIE8auHYDS5To3B2Nn
+	S1ZnpaTIz4t7BZA==
+X-Google-Smtp-Source: AGHT+IGAnZdXK8PXfdxuwTPTQNYwmDyrng6oztRepxmPAHYqxemSZWZ7A3RasclLiCfvOYTVVUh+1g==
+X-Received: by 2002:a05:6a20:6f07:b0:1f5:8714:8147 with SMTP id adf61e73a8af0-201797c3481mr4195387637.23.1744381780848;
+        Fri, 11 Apr 2025 07:29:40 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2334468sm1540239b3a.169.2025.04.11.07.29.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 07:29:38 -0700 (PDT)
-Message-ID: <ba68477d-33b8-4b3d-9a88-9f6bee6feac3@tuxon.dev>
-Date: Fri, 11 Apr 2025 17:29:37 +0300
+        Fri, 11 Apr 2025 07:29:40 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <90288944-3f5b-45b7-ae7d-c7a54398db55@roeck-us.net>
+Date: Fri, 11 Apr 2025 07:29:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,108 +69,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] ARM: dts: microchip: sama7d65: Enable GMAC interface
-To: Ryan.Wanner@microchip.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzk+dt@kernel.org, onor+dt@kernel.org, alexandre.belloni@bootlin.com
-Cc: nicolas.ferre@microchip.com, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <cover.1743523114.git.Ryan.Wanner@microchip.com>
- <fca0c1deb74006cdedbdd71061dec9dabf1e9b9a.1743523114.git.Ryan.Wanner@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: Re: [PATCH 6.1 000/205] 6.1.134-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+ hargar@microsoft.com, broonie@kernel.org
+References: <20250409115832.610030955@linuxfoundation.org>
 Content-Language: en-US
-In-Reply-To: <fca0c1deb74006cdedbdd71061dec9dabf1e9b9a.1743523114.git.Ryan.Wanner@microchip.com>
-Content-Type: text/plain; charset=UTF-8
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250409115832.610030955@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi, Ryan,
-
-On 01.04.2025 19:13, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On 4/9/25 05:02, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.134 release.
+> There are 205 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Enable GMAC0 interface for sama7d65_curiosity board.
+> Responses should be made by Fri, 11 Apr 2025 11:58:02 +0000.
+> Anything received after that time might be too late.
 > 
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-> ---
->  .../dts/microchip/at91-sama7d65_curiosity.dts | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
-> index 30fdc4f55a3b..441370dbb4c2 100644
-> --- a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
-> +++ b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
-> @@ -105,7 +105,58 @@ &main_xtal {
->  	clock-frequency = <24000000>;
->  };
->  
-> +&gmac0 {
 
-Please keep nodes alphanumerically sorted.
+Building loongarch:defconfig ... failed
+--------------
+Error log:
+In file included from arch/loongarch/net/bpf_jit.c:7:
+arch/loongarch/net/bpf_jit.h: In function 'emit_nop':
+arch/loongarch/net/bpf_jit.h:30:22: error: 'INSN_NOP' undeclared
 
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_gmac0_default
-> +		     &pinctrl_gmac0_mdio_default
-> +		     &pinctrl_gmac0_txck_default
-> +		     &pinctrl_gmac0_phy_irq>;
-> +	phy-mode = "rgmii-id";
-> +	status = "okay";
-> +
-> +	ethernet-phy@7 {
-> +		reg = <0x7>;
-> +		interrupt-parent = <&pioa>;
-> +		interrupts = <PIN_PC1 IRQ_TYPE_LEVEL_LOW>;
-> +		status = "okay";
+Caused by commit e9ccb262b39a ("LoongArch: BPF: Fix off-by-one error
+in build_prologue()"). INSN_NOP was introduced with commit 19e5eb15b00c5
+in v6.2.
 
-No need for status here, default is okay.
+Also, the description of e9ccb262b39a says "With BPF progs mixing bpf2bpf
+and tailcalls...". Support for that was introduced in v6.4 with commit
+bb035ef0cc91 ("LoongArch: BPF: Support mixing bpf2bpf and tailcalls"),
+so I do wonder if e9ccb262b39a was really needed in 6.1.
 
-> +	};
-> +};
-
-Missing blank line here.
-
-As this are mainly cosmetics I will adjust while applying.
-
-Thank you,
-Claudiu
-
->  &pioa {
-> +	pinctrl_gmac0_default: gmac0-default {
-> +		pinmux = <PIN_PA26__G0_TX0>,
-> +			 <PIN_PA27__G0_TX1>,
-> +			 <PIN_PB4__G0_TX2>,
-> +			 <PIN_PB5__G0_TX3>,
-> +			 <PIN_PA29__G0_RX0>,
-> +			 <PIN_PA30__G0_RX1>,
-> +			 <PIN_PB2__G0_RX2>,
-> +			 <PIN_PB6__G0_RX3>,
-> +			 <PIN_PA25__G0_TXCTL>,
-> +			 <PIN_PB3__G0_RXCK>,
-> +			 <PIN_PA28__G0_RXCTL>;
-> +		slew-rate = <0>;
-> +		bias-disable;
-> +	};
-> +
-> +	pinctrl_gmac0_mdio_default: gmac0-mdio-default {
-> +		pinmux = <PIN_PA31__G0_MDC>,
-> +			 <PIN_PB0__G0_MDIO>;
-> +		bias-disable;
-> +	};
-> +
-> +	pinctrl_gmac0_phy_irq: gmac0-phy-irq {
-> +		pinmux = <PIN_PC1__GPIO>;
-> +		bias-disable;
-> +	};
-> +
-> +	pinctrl_gmac0_txck_default: gmac0-txck-default {
-> +		pinmux = <PIN_PB1__G0_REFCK>;
-> +		slew-rate = <0>;
-> +		bias-pull-up;
-> +	};
-> +
->  	pinctrl_i2c10_default: i2c10-default{
->  		pinmux = <PIN_PB19__FLEXCOM10_IO1>,
->  			 <PIN_PB20__FLEXCOM10_IO0>;
+Guenter
 
