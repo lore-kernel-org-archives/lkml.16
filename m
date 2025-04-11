@@ -1,193 +1,165 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD461DDC04
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A037D1DDC04
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358655; cv=none; b=Gq4jtTvsl54Qc/4hXYHkU12rqIFmzpnJ7CJnvBjNPoImq38DHkmRRfXxqcPwXnDLKpD8POSYcc+LPePy1TrDWK0wGiWPGRgJgZWfDwSl9xy9CxVNsCaMbS8yOJg/wowHOssShdt+Gd+Oa6Y9O7l8TodnvmPx9DGhpzXlo3WAOVc=
+	t=1744358678; cv=none; b=PeIVOwI3FC+GiK1Mc/93pmtKQjMHyrPu4R8WlT/gqjjibx9bFmUVAJXrBdBxT9FOleP01qbtUXC7JoeslyupQhMZ2NbskEjWSorFe3VOhXJ1H17d9TmAzWMH2w+V3lWJJ/B+4FSBSspY2bgHo17u0FcehoQGpsZqznh5/BTPCHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358655; c=relaxed/simple;
-	bh=l2VcdA3YeulrePkCB9vvQsx8l22MvCKUb0C19JBaY5U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OszY3+JRItSRisPuo0AWCTtNVFvMlzXm2fQCO5UnK5jXg8akw3+F9RRPWvKk/9dDU2p9/sV3vY9C9fozBR3S60oe4vIm+CEXrv68ZGC7vKSs+oYY22sg5UNLCk8uaoGIM14Pj4cSUe/5TLkdXtdve0Gj8TLLVxK2VqlEpaVDRHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=QGebh9SC; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
+	s=arc-20240116; t=1744358678; c=relaxed/simple;
+	bh=rd9t4WCJQQ2mQXlGhme8jcXbXVqpab5P1pXLppiJikA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=om+hkHXD34o7FQaN02WK5xh6ovXYnJV5JAPhvmyjBWxd6iVQQZi+DPbekoP7EcAqhQlt3/ORJsksf+3NFTXGbDx3ZBuW1Z6CBz2+wBBkP4bECkknAdSCvZ19ipCx9BaC8C1NlxY2OX6fOIQ87AmkPu/EEVZlDwwj/UmT3xPmjNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=a8VGs2S4; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="QGebh9SC"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso1962971f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:04:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="a8VGs2S4"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86d377306ddso710723241.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openvpn.net; s=google; t=1744358652; x=1744963452; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=fRXgc2yeSotpusr+TwNESYUQv74jCMGOVv7hGlcYd3k=;
-        b=QGebh9SC2JWyJKZJskrHI8qas/GJHNUQpdJYCtn0IIShZf+w0AtB0FKUzMVck6cD4n
-         DrUZL5vehUkSCrT9F6/+iS2Es8tlKk1fW/iK9MCvuQ5gm0SA9w/aUh8yFqGqXmAt4YJ7
-         MJnH3fJQIQknZ2wHNL9HWfrWy2gSk/JYkifnN9PyepkLgUo4ThnldEcw00nVMLksAYXx
-         morczaQZ4YM28BAS06NJD9YXpkE8iJgYXIVvyQ/iyE4BFRuES9I/I2gAru7BW7S1sT9H
-         Lw8rY2V2q9WWnOqXItxZaWe1eVc7YAvN4XVYjsUN05lsyXA7vz+FMzzQvDK2iGNSsFeO
-         rF1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744358652; x=1744963452;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=sifive.com; s=google; t=1744358675; x=1744963475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fRXgc2yeSotpusr+TwNESYUQv74jCMGOVv7hGlcYd3k=;
-        b=mVQLCatjiwJ28HpdJZpzFMJxiXMwT6+2W9lUmQ6OKAjZfa9YTSAvIuBDsgrRizY4zZ
-         I33QM44epzd/a7k+2sHtJOeBebYdhAXZwKJbcJtsNmghhcfWOW3LbBFYMSPzWIf2VW+W
-         a6Pu8KpFCK1bchQf1s8iyWgmb+Zkcy5/OioSM82Y4yvPjGxJI2eBEQ+DRih69XPlJlfn
-         S8G8YGsIrXTBzULOA7vHzIJjG5xLD8eKNnq0q6qkC/WKbIR/+SNoxMurZn/tfBonYggr
-         xoEnQmcSOcfMgv0l4fHtEgmT2uvP7bg1Ie0l7aRkZtGS5CegAfU2ovPgRM1XVEhR7LgS
-         VnBw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOZNmfRVMwUY6n847bCTHaxGA1rxvX3jY4k5Lk+Migt5FnEU4/ih1yHCelm03CgqOcVPCNnRGbnSdBYt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2vL0bU08aPMT/Tgul8on73i6suwvDnObyc+lbxkBDGC/hRO2N
-	1lPugqflqyBn0NoFIlGc6Om1r77IViaV++hwIrGMvwVpn8vYSB3dUCMGnOeeR4r4PgOWItvRtJ+
-	1Ug7LMhiNABTBuwhNAKHvtrm0Mv9BoPtplv2LnlLrV5FaGuzL944gJFQ=
-X-Gm-Gg: ASbGnctCgOKfMbuSgO5b/fh2kCnctIMzvpNN0vugdKFdkt5NReWO+w07QASeFju5Wcf
-	O43vjGL1GRAVWE1XHDdkUt2aO99sbQj0YCQEFw3BjJfHtQg0M6A9e5XFmqtdzsef06hAh4n43G6
-	CfIygaLYhwlWffN7J8902XV4Me1YkVEJ/UjxOVq9umSzR/eXfS4GP3o91J/U2lRHwbWruClSrvc
-	KuHBLoPAL+pmh5lsJKxrHCKKq4/9oMMiF9CMmxfTS5YgYyw4fxuj30XVgoDi6us4oFoYwJxgKdh
-	sATdVcC95UadWba6ARst4K/xI3BVJ0B2zzXmwbXSvynbhPptxzFFJYfPB6zwAy7BNmELJwFX0zg
-	g/Kc=
-X-Google-Smtp-Source: AGHT+IENyVLM5p/12g1chaFoiAzlC11eK8uC+Ot8/0ux7IvOoPgK3CJzBt98Vrnsaq3XDTmh9tIEpQ==
-X-Received: by 2002:a05:6000:250a:b0:391:39bd:a381 with SMTP id ffacd0b85a97d-39ea521193amr1291092f8f.30.1744358652166;
-        Fri, 11 Apr 2025 01:04:12 -0700 (PDT)
-Received: from ?IPV6:2001:67c:2fbc:1:e8be:40be:972d:7ee4? ([2001:67c:2fbc:1:e8be:40be:972d:7ee4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96400dsm1286529f8f.11.2025.04.11.01.04.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 01:04:11 -0700 (PDT)
-Message-ID: <f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net>
-Date: Fri, 11 Apr 2025 10:04:10 +0200
+        bh=eL6mQhh76fyOvITqDMOePPOrdn2eCivxVT00/39k9KQ=;
+        b=a8VGs2S4vRneclxC+ztvd8nZP9FpFDAocqEZBKNNG3dyb2ZV4Y0ogs3U2ww+Cex2EC
+         jsQUoYo9HMgxzAswNDia6WW6KTj3Id7eNEjqHbtYzCeLgB7dXjKxNFH9vd0a9hQPgj1G
+         wY8baw/xHAd0KA+Gptr/QUGGrCoNsc5dFlHtMDCjc9iHZERgEvyqpGhz9WV2jXdftxd8
+         C0BcnZzSZ3vmfrdpeA4Fwfj7Ju29E7W+v5D3aIf18x431jo/4kaVo+0Yq9sQqRFgGJLr
+         Yh3hqztg7Jnu1+eOYrpCkxBEB1z+EIXdFMUTOV/jiMTsTE1LkYxY4i1JBT+GY2mYDlAF
+         GFYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744358675; x=1744963475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eL6mQhh76fyOvITqDMOePPOrdn2eCivxVT00/39k9KQ=;
+        b=N8j5SkErpb4Fu2o48To9itUMtZu/z9SuvmH1FC83vRsd15ngTtcdwdxeCOKsgEX1nS
+         WHteSicsGi3S7mTQAsETC1vesAbwZuO6GW2UdFGFHXYFJfALkUg8XtsOpRPIeSVRdnYk
+         kVKDJWozgA7Bpf4xE41rySZFOn6OUDXjlVQd43GSj2Jony2PTJqx1EZot2rwX3X1DSXq
+         L0RRntBL/UOf+u/Sb1nN4h4kAgny1u2X4w/km6EM1+GQDYoGDSmw5G64D49ySyr21qUJ
+         Sx2bZMkCN9lmUD4E+WbF0eVoWow8tBPMA9QGrorcoolTsxmntVaqRA0V2FQOXIUFRejN
+         Yrlw==
+X-Gm-Message-State: AOJu0YzQ8TIqIRH4bbhgDND/3zY6OkN1UNSQmqwsgHTBRlxt4svVxYcM
+	5C0OOGEHZBC9i8w3W9Ac9kxQ9wbjxnSlKDE5cIG2FVzEupTRA/fP7l3u0xA5Azjx7jtRO3hARg9
+	gUQ79tZwYIR4tXCJ+nEU3ANXnX/bBHdD7WqlnsA==
+X-Gm-Gg: ASbGncsMTvIHoIEvKTYxT+2PclLsC7qKQltXHGjQ/uGSrk0p5bMAAm7+JYALAYqrnoP
+	1eakFaRx9gL6QqZxUkyS/rfPrYLKpOmBE6por56ei802xC16kExDMdJQQJvXgH4m/2IQU+Jn/kI
+	WrF81DXkdp3vgsZIOCvmGVLyG4ivKNndGxjXdoNMQ1W5ztq6vwJ7+scMCtjUt/IMLf/+Q=
+X-Google-Smtp-Source: AGHT+IFS+vDPSsUy3KBR+YuGEKwg0Uf3ZoAvbd0MVCMxEojLhJBnmjz9Np5nkTvKpK/n9aULedLJ1qS+Z07+mWcOA8o=
+X-Received: by 2002:a05:6102:5487:b0:4ba:9923:fa57 with SMTP id
+ ada2fe7eead31-4c9e4f1f22amr855491137.15.1744358675331; Fri, 11 Apr 2025
+ 01:04:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v25 01/23] net: introduce OpenVPN Data Channel
- Offload (ovpn)
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
- Shuah Khan <shuah@kernel.org>, sd@queasysnail.net, ryazanov.s.a@gmail.com,
- Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Xiao Liang <shaw.leon@gmail.com>, steffen.klassert@secunet.com,
- antony.antony@secunet.com
-References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
- <20250407-b4-ovpn-v25-1-a04eae86e016@openvpn.net>
- <20250410195440.3ba7ba0f@kernel.org>
-Content-Language: en-US
-From: Antonio Quartulli <antonio@openvpn.net>
-Autocrypt: addr=antonio@openvpn.net; keydata=
- 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
-Organization: OpenVPN Inc.
-In-Reply-To: <20250410195440.3ba7ba0f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250411073850.3699180-1-nylon.chen@sifive.com>
+ <20250411073850.3699180-3-nylon.chen@sifive.com> <992e3135-0c55-403c-9f71-d76c59cec75b@rivosinc.com>
+In-Reply-To: <992e3135-0c55-403c-9f71-d76c59cec75b@rivosinc.com>
+From: Nylon Chen <nylon.chen@sifive.com>
+Date: Fri, 11 Apr 2025 16:04:23 +0800
+X-Gm-Features: ATxdqUGn2A6qXgf2-HkGrf1A-Gq8MHEb_wirNKnK1k9VoLh8b2bfH0MqDkKbStk
+Message-ID: <CAHh=Yk9RrUDi+73QAYgjBhMOzKKznq9NGwRCo_GkbYZwi4cuuQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv: misaligned: fix sleeping function called
+ during misaligned access handling
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, charlie@rivosinc.com, jesse@rivosinc.com, evan@rivosinc.com, 
+	zhangchunyan@iscas.ac.cn, samuel.holland@sifive.com, zong.li@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jakub,
+Hi Cl=C3=A9ment,
 
-thanks for taking the time to go through my patchset :)
+Thanks for your information
 
-On 11/04/2025 04:54, Jakub Kicinski wrote:
-> On Mon, 07 Apr 2025 21:46:09 +0200 Antonio Quartulli wrote:
->> +static int ovpn_netdev_notifier_call(struct notifier_block *nb,
->> +				     unsigned long state, void *ptr)
->> +{
->> +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
->> +
->> +	if (!ovpn_dev_is_valid(dev))
->> +		return NOTIFY_DONE;
->> +
->> +	switch (state) {
->> +	case NETDEV_REGISTER:
->> +		/* add device to internal list for later destruction upon
->> +		 * unregistration
->> +		 */
->> +		break;
->> +	case NETDEV_UNREGISTER:
->> +		/* can be delivered multiple times, so check registered flag,
->> +		 * then destroy the interface
->> +		 */
->> +		break;
->> +	case NETDEV_POST_INIT:
->> +	case NETDEV_GOING_DOWN:
->> +	case NETDEV_DOWN:
->> +	case NETDEV_UP:
->> +	case NETDEV_PRE_UP:
->> +	default:
->> +		return NOTIFY_DONE;
->> +	}
-> 
-> Why are you using a notifier to get events for your own device?
+I will test your patch as well, and if no other issues arise,
+I'll remove this change from the patchset in the next version
 
-My understanding is that this is the standard approach to:
-1) hook in the middle of registration/deregistration;
-2) handle events generated by other components/routines.
+Thanks
 
-I see in /drivers/net/ almost every driver registers a notifier for 
-their own device.
-
-Isn't this expected?
-
-> 
->> +	return NOTIFY_OK;
->> +}
-> 
->> +MODULE_DESCRIPTION("OpenVPN data channel offload (ovpn)");
->> +MODULE_AUTHOR("(C) 2020-2025 OpenVPN, Inc.");
-> 
-> Companies can't author code, only people. Note that MODULE_AUTHOR()
-> is optional.
-
-Ouch, thanks. Will get this addressed.
-
-Regards,
-
--- 
-Antonio Quartulli
-OpenVPN Inc.
-
+Nylon
+Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com> =E6=96=BC 2025=E5=B9=B44=E6=
+=9C=8811=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:37=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+> Hi Nylon,
+>
+> I already have a pending fix for that bug which is to reenable
+> interrupts while handling misaligned faults. Please see:
+> https://lore.kernel.org/linux-riscv/20250317170625.1142870-12-cleger@rivo=
+sinc.com/
+>
+> Thanks,
+>
+> Cl=C3=A9ment
+>
+> On 11/04/2025 09:38, Nylon Chen wrote:
+> > Use copy_from_user_nofault() and copy_to_user_nofault() instead of
+> > copy_from/to_user functions in the misaligned access trap handlers.
+> >
+> > The following bug report was found when executing misaligned memory
+> > accesses:
+> >
+> > BUG: sleeping function called from invalid context at ./include/linux/u=
+access.h:162
+> > in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 115, name: two
+> > preempt_count: 0, expected: 0
+> > CPU: 0 UID: 0 PID: 115 Comm: two Not tainted 6.14.0-rc5 #24
+> > Hardware name: riscv-virtio,qemu (DT)
+> > Call Trace:
+> >  [<ffffffff800160ea>] dump_backtrace+0x1c/0x24
+> >  [<ffffffff80002304>] show_stack+0x28/0x34
+> >  [<ffffffff80010fae>] dump_stack_lvl+0x4a/0x68
+> >  [<ffffffff80010fe0>] dump_stack+0x14/0x1c
+> >  [<ffffffff8004e44e>] __might_resched+0xfa/0x104
+> >  [<ffffffff8004e496>] __might_sleep+0x3e/0x62
+> >  [<ffffffff801963c4>] __might_fault+0x1c/0x24
+> >  [<ffffffff80425352>] _copy_from_user+0x28/0xaa
+> >  [<ffffffff8000296c>] handle_misaligned_store+0x204/0x254
+> >  [<ffffffff809eae82>] do_trap_store_misaligned+0x24/0xee
+> >  [<ffffffff809f4f1a>] handle_exception+0x146/0x152
+> >
+> > Fixes: b686ecdeacf6 ("riscv: misaligned: Restrict user access to kernel=
+ memory")
+> > Fixes: 441381506ba7 ("riscv: misaligned: remove CONFIG_RISCV_M_MODE spe=
+cific code")
+> >
+> > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+> > ---
+> >  arch/riscv/kernel/traps_misaligned.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/t=
+raps_misaligned.c
+> > index d7275dfb6b7e..563f73f88fa8 100644
+> > --- a/arch/riscv/kernel/traps_misaligned.c
+> > +++ b/arch/riscv/kernel/traps_misaligned.c
+> > @@ -455,7 +455,7 @@ static int handle_scalar_misaligned_load(struct pt_=
+regs *regs)
+> >
+> >       val.data_u64 =3D 0;
+> >       if (user_mode(regs)) {
+> > -             if (copy_from_user(&val, (u8 __user *)addr, len))
+> > +             if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
+> >                       return -1;
+> >       } else {
+> >               memcpy(&val, (u8 *)addr, len);
+> > @@ -556,7 +556,7 @@ static int handle_scalar_misaligned_store(struct pt=
+_regs *regs)
+> >               return -EOPNOTSUPP;
+> >
+> >       if (user_mode(regs)) {
+> > -             if (copy_to_user((u8 __user *)addr, &val, len))
+> > +             if (copy_to_user_nofault((u8 __user *)addr, &val, len))
+> >                       return -1;
+> >       } else {
+> >               memcpy((u8 *)addr, &val, len);
+>
