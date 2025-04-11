@@ -1,122 +1,110 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F620DD47;
-	Fri, 11 Apr 2025 09:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02D928D857
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744363294; cv=none; b=lli1xI+yBkk5+DrP/R5jfpH/bKMCICKhuAcCZpd3LfdZBdruLICNvgybd8N6Aa5MZl934eAktiC/V3NmjwhE4qSy+faz1WV4peck5Wsn5jXQK9b4zBqXKNgG5osw/lZ+IOMm6tMQvjKQAMauGJgi4ukz8kEWj0dDF1wVC9Y5oqY=
+	t=1744363304; cv=none; b=kY/ELPvtCJUXyT4YYOLAy3nyQorQ6E4oA0z7EYozqzynKVdenPrIibbZkoMal4gcf/p8RvafF7S2t7jO1iZsYGDIfbb6p6D/u07pbHZ3UldbJUIS7KaSKK+lJNpZzZ6J35+I8AbW7PeFySxX06EzINenX6n8b4DU6PU0+Fwggf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744363294; c=relaxed/simple;
-	bh=GF5I4HDrY8UX8vkATNsvnxdK5wqH9mXL9n37eldxjZM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sRJK+l5GyG9qR/Lw70TMbc5ckCm8KX7jS9x0jCRfUf3GpKxCQNjfsQU4l9Z+PpOXsbieon2FBx5YXoeBO+Zx6k4KPxCKjuy6sMgXAZFlv0+k5Lml+SyCdCet8Kkbln2qW0bTnLVBCH6HbZ4mpLGyZZaWQKdGnO70Nfj5zNnEbaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VDswg6FJ; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744363304; c=relaxed/simple;
+	bh=TU38Yz0wslbhAhgiT67MgDKR2lBijTLSXefhthfuYAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7supgekAzAYTm8b5TRg+0a+CKgliI0G/3o4+Fub6i15pIbcgkKwwcUCMxboXn3zamFkISgF0ZRxH170YniX9Vo6mEKBT6faAMrIxaJF6QnKmORBmwGxnFRSmqe5bA/Ae6yBYZejK5AGzCW4EP+FA92UeuGnQvvraMSOnVz9H+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjXHwmnM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VDswg6FJ"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B9LH5U2078754
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 04:21:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744363278;
-	bh=0NX2vOw4ZRae1V2JRwjOkGJo9DQjMbPoKMVpYg1An7o=;
-	h=From:To:CC:Subject:Date;
-	b=VDswg6FJmWylPIyKVoVYZJFRFJ1MAgSyVk0C8+MFMxyL/C1AUMpXGGNf/AKa8okqM
-	 B9iK/4Joci6KdGBoXX5gwGvHssIWeBKou5CPRYX7jvptu2xQChMn0YIKZCA/MplJbX
-	 X+OJf0RdlC3amiQvcH8Lv/o8wbfBnPJrKq8XErYA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B9LHvS054119
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 04:21:17 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 04:21:17 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 04:21:17 -0500
-Received: from pratham-Workstation-PC (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B9LGv1053002;
-	Fri, 11 Apr 2025 04:21:16 -0500
-From: T Pratham <t-pratham@ti.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: T Pratham <t-pratham@ti.com>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kamlesh
- Gurudasani <kamlesh@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Manorit Chawdhry <m-chawdhry@ti.com>
-Subject: [PATCH v2 0/2] Add support for Texas Instruments DTHE V2 crypto accelerator
-Date: Fri, 11 Apr 2025 14:43:20 +0530
-Message-ID: <20250411091321.2925308-1-t-pratham@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjXHwmnM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A46C4CEE2;
+	Fri, 11 Apr 2025 09:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744363304;
+	bh=TU38Yz0wslbhAhgiT67MgDKR2lBijTLSXefhthfuYAI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SjXHwmnMOpa/T9EDIGZIX3IDPYF02ahzYO+YFFts9WBT9LzVU+sYE7lMFunEOQ6jC
+	 i3wle5PIGi0XEF7KoFSrobsHG4iLPceRLhg3C6GU3Ry3UNp7hkKNQcQYQ/s4/NLn+3
+	 Q0EFYQ0FW4/p5igzjZmcqVsIOYDmArkMmLPPFLrgyi5FToLl/MbdIPVJjn76QEOMPC
+	 i53dzsttNM1if0JeK0UXoTKlynDInlA6vtJAPClKBzRETPL9clMN33KrpH1gQo6+bh
+	 5/FPJTOH4S0Pe27UzE9YpsNYeyXYnrbnG+Ca6jrZMF65hsEqwfCPUL/tiO65R1C7rW
+	 ATb6+H13FBf2A==
+Date: Fri, 11 Apr 2025 11:21:30 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Subject: Re: [RFC PATCH v4 00/18] pkeys-based page table hardening
+Message-ID: <Z_jfGlOEb4Bjl3vO@gmail.com>
+References: <20250411091631.954228-1-kevin.brodsky@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411091631.954228-1-kevin.brodsky@arm.com>
 
-This series adds support for TI DTHE V2 crypto accelerator. DTHE V2 is a
-new crypto accelerator which contains multiple crypto IPs [1].
-This series implements support for ECB and CBC modes of AES for the AES
-Engine of DTHE, using skcipher APIs of the kernel.
 
-Tested with:
-CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+* Kevin Brodsky <kevin.brodsky@arm.com> wrote:
 
-and tcrypt,
-sudo modprobe tcrypt mode=500 sec=1
+> Performance
+> ===========
+> 
+> Caveat: these numbers should be seen as a lower bound for the overhead
+> of a real POE-based protection. The hardware checks added by POE are
+> however not expected to incur significant extra overhead.
+> 
+> +-------------------+----------------------------------+------------------+---------------+
+> | Benchmark         | Result Class                     | Without batching | With batching |
+> +===================+==================================+==================+===============+
+> | mmtests/kernbench | elsp-64                          |            0.20% |         0.20% |
+> |                   | syst-64                          |            1.62% |         0.63% |
+> |                   | user-64                          |           -0.04% |         0.05% |
+> +-------------------+----------------------------------+------------------+---------------+
+> | micromm/fork      | fork: p:1                        |      (R) 225.56% |        -0.07% |
+> |                   | fork: p:512                      |      (R) 254.32% |         0.73% |
+> +-------------------+----------------------------------+------------------+---------------+
+> | micromm/munmap    | munmap: p:1                      |       (R) 24.49% |         4.29% |
+> |                   | munmap: p:512                    |      (R) 161.47% |     (R) 6.06% |
+> +-------------------+----------------------------------+------------------+---------------+
+> | micromm/vmalloc   | fix_size_alloc_test: p:1, h:0    |       (R) 14.80% |    (R) 11.85% |
+> |                   | fix_size_alloc_test: p:4, h:0    |       (R) 38.42% |    (R) 10.47% |
+> |                   | fix_size_alloc_test: p:16, h:0   |       (R) 64.74% |     (R) 6.41% |
+> |                   | fix_size_alloc_test: p:64, h:0   |       (R) 79.98% |     (R) 3.24% |
+> |                   | fix_size_alloc_test: p:256, h:0  |       (R) 85.46% |     (R) 2.77% |
+> |                   | fix_size_alloc_test: p:16, h:1   |       (R) 47.89% |         3.10% |
+> |                   | fix_size_alloc_test: p:64, h:1   |       (R) 62.43% |         3.36% |
+> |                   | fix_size_alloc_test: p:256, h:1  |       (R) 64.30% |     (R) 2.68% |
+> |                   | random_size_alloc_test: p:1, h:0 |       (R) 74.94% |     (R) 3.13% |
+> |                   | vm_map_ram_test: p:1, h:0        |       (R) 30.53% |    (R) 26.20% |
+> +-------------------+----------------------------------+------------------+---------------+
 
-Signed-off-by: T Pratham <t-pratham@ti.com>
----
-[1]: Section 14.6.3 (DMA Control Registers -> DMASS_DTHE)
-Link: https://www.ti.com/lit/ug/sprujb4/sprujb4.pdf
+So I had to look 3 times to figure out what the numbers mean: they are 
+the extra overhead from this hardening feature, measured in system time 
+percentage, right?
 
-Chnage log:
-v2:
- - Corrected dt-bindings syntax errors and other review comments in v1.
- - Completely changed driver code structure, splitting code into
-   multiple files
+So "4.29%" means there's a 4.29% slowdown on that particular workload 
+when the feature is enabled. Maybe add an explanation to the next iteration? :-)
 
-Link to previous versions:
-v1: https://lore.kernel.org/all/20250206-dthe-v2-aes-v1-0-1e86cf683928@ti.com/
----
-T Pratham (2):
-  dt-bindings: crypto: Add binding for TI DTHE V2 driver
-  crypto: ti: Add driver for DTHE V2 AES Engine (ECB, CBC)
+Thanks,
 
- .../devicetree/bindings/crypto/ti,dthev2.yaml |  50 +++
- MAINTAINERS                                   |   7 +
- drivers/crypto/Makefile                       |   1 +
- drivers/crypto/ti/Kconfig                     |  10 +
- drivers/crypto/ti/Makefile                    |   3 +
- drivers/crypto/ti/dthev2-aes.c                | 416 ++++++++++++++++++
- drivers/crypto/ti/dthev2-common.c             | 206 +++++++++
- drivers/crypto/ti/dthev2-common.h             | 110 +++++
- 8 files changed, 803 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
- create mode 100644 drivers/crypto/ti/Kconfig
- create mode 100644 drivers/crypto/ti/Makefile
- create mode 100644 drivers/crypto/ti/dthev2-aes.c
- create mode 100644 drivers/crypto/ti/dthev2-common.c
- create mode 100644 drivers/crypto/ti/dthev2-common.h
-
--- 
-2.34.1
-
+	Ingo
