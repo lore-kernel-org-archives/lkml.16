@@ -1,94 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249FB20DD6B;
-	Fri, 11 Apr 2025 15:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA2620E33F;
+	Fri, 11 Apr 2025 15:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744386279; cv=none; b=c4pNGGTwHXcvQ68BGXek6t2AwW9LgFnbOdR2lSyGrmL8jrqYjEBF/IMHunDwACz7fuEx9surOF86xwHPIF09qG9rFkhKn0Gxz+u9Ghi8WjaliCVTNiLdvRIcjqZDDjNAR4nGMoTaljyAPyY/5cwv735bYsdD4z6rbCF+1lqqglo=
+	t=1744386338; cv=none; b=svjIsITF89v0t09hWT0e81KwldoikFzkAJME9p2YYiBjAP1pfs1RA9sf4HwDZTUFC3EJlSbB/aU8N/rZ2TBTuQp9cBM7KBQlptSFQTlzmNdXf25R5IMtnh6aPA9xlj5XUQ+KRL5maJ6P+OGPZ/6ntuZbhRO4C91bJjfw3LAdGy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744386279; c=relaxed/simple;
-	bh=rhk63kE+eFhK1H4ZWcBbfIoHVGFGzCPZDckKZnOUHQk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=et/FOIqPqqqStsIfyuo5mTi9MxCejeiEmE/gZZk3i0c5lMl9Mvo4kCdYVrQ/gXMJLr3XeuRY3xeXBELYpF23RWdUnchlw/BTgntZx9rmZNeIxj2spDJZVyYSSADpDfR6Ui2H5DqfgCSTRiHbmjLff0Eq2/1dgEiAhH1BALdMV3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A794C4CEE9;
-	Fri, 11 Apr 2025 15:44:38 +0000 (UTC)
-Received: from wens.tw (localhost [127.0.0.1])
-	by wens.tw (Postfix) with ESMTP id F10975FCDB;
-	Fri, 11 Apr 2025 23:44:35 +0800 (CST)
-From: Chen-Yu Tsai <wens@csie.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Conor Dooley <conor@kernel.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Steen Hegelund <Steen.Hegelund@microchip.com>, 
- Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Andy Gross <agross@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
- Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Stephan Gerhold <stephan.gerhold@linaro.org>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, imx@lists.linux.dev, 
- linux-rockchip@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-renesas-soc@vger.kernel.org, linux-mips@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- Andre Przywara <andre.przywara@arm.com>, 
- =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
- Ulf Hansson <ulf.hansson@linaro.org>
-In-Reply-To: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
-References: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
-Subject: Re: (subset) [PATCH v2 00/17] Arm cpu schema clean-ups
-Message-Id: <174438627597.2569515.3740142615905391643.b4-ty@csie.org>
-Date: Fri, 11 Apr 2025 23:44:35 +0800
+	s=arc-20240116; t=1744386338; c=relaxed/simple;
+	bh=P6bHlax7gtaFOXyBlmDivlwl4i2XuFH3nXhBHUOMVX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Stv55MIM82vaCpUnF1dowsfirS3DRbE0Y13FAcAlyutKmvI+ASCQGRUVYl1BrK9Fz32J0pSY0SWNMEkbrbhWWpBw2TK5XtFDgoaclQ6gn7ScglNrqQlaWup7gyoSNVkO1BWqjDuWevkS1fp2kfTpPHWYxy8ZSDekzYOPS5NUC10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=PKfuqoTB; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="PKfuqoTB"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0A915103B92D7;
+	Fri, 11 Apr 2025 17:45:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1744386333; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=+Upffkr9Yy13DmAWHLsmplXaonISPjC+YsZOOcmdckk=;
+	b=PKfuqoTBF8hjxW1TDHptk6vQF1Na4fKu97/graZ1upeWhnoUHjsLEoWYFxyC8VPu6oyC99
+	9Uto9JRbj8FkfXTq/K2/OC0pPMDnatJ/j0bxpB7riTgd/Jqke49Bgzflc6fdFcHFOanZJn
+	IiVZ+p8nvpYIH3+z3iY0V2MWcYw78Xee0+ek4V462morBil0Sys8qMkL8eyjcbd+psxghK
+	gzS33Lz3HveHbzpPwh1qjeHaGodlFLGGQlBO99IBW//nRUwfcn4Ljj+OZ9ZMAweKB4HhLx
+	qzgbqyXNiZ/XBU8hl79FMd3XYTtb3Se3FpwE2iOyV9P099yoH20PPiJxKrHfKQ==
+Date: Fri, 11 Apr 2025 17:45:27 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
+ <wahrenst@gmx.net>
+Subject: Re: [net-next v4 3/5] ARM: dts: nxp: mxs: Adjust XEA board's DTS to
+ support L2 switch
+Message-ID: <20250411174527.14a175d1@wsk>
+In-Reply-To: <CAOMZO5B6q06nvk3+hzbioGpcW8_JXPZGEebApTU5JZbKvMLzxA@mail.gmail.com>
+References: <20250407145157.3626463-1-lukma@denx.de>
+	<20250407145157.3626463-4-lukma@denx.de>
+	<CAOMZO5B6q06nvk3+hzbioGpcW8_JXPZGEebApTU5JZbKvMLzxA@mail.gmail.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; boundary="Sig_/RjsyxtHSE6bgRB8ADC.4s63";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, 10 Apr 2025 10:47:21 -0500, Rob Herring (Arm) wrote:
-> The Arm cpu.yaml schema fails to restrict allowed properties in 'cpu'
-> nodes. The result, not surprisely, is a number of additional properties
-> and errors in .dts files. This series resolves those issues.
-> 
-> There's still more properties in arm32 DTS files which I have not
-> documented. Mostly yet more supply names and "fsl,soc-operating-points".
-> What's a few more warnings on the 10000s of warnings...
-> 
-> [...]
+--Sig_/RjsyxtHSE6bgRB8ADC.4s63
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Applied to dt-for-6.16 in git@github.com:linux-sunxi/linux-sunxi.git, thanks!
+Hi Fabio,
 
-[01/17] arm64: dts: allwinner: h5/h6: Drop spurious 'clock-latency-ns' properties
-        commit: 4df05f4a5fead4e5fc7e3c39cae74e5c0dc5282a
+> Hi Lukasz,
+>=20
+> On Mon, Apr 7, 2025 at 11:52=E2=80=AFAM Lukasz Majewski <lukma@denx.de> w=
+rote:
+>=20
+> > +               ethphy0: ethernet-phy@0 {
+> > +                       reg =3D <0>;
+> > +                       smsc,disable-energy-detect;
+> > +                       /* Both PHYs (i.e. 0,1) have the same,
+> > single GPIO, */
+> > +                       /* line to handle both, their interrupts
+> > (OR'ed) */ =20
+>=20
+> Please fix the multi-line comment style.
+
+Ok, I will fix it.
+
 
 Best regards,
--- 
-Chen-Yu Tsai <wens@csie.org>
 
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/RjsyxtHSE6bgRB8ADC.4s63
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmf5ORcACgkQAR8vZIA0
+zr2oJwf8Ck6aJmjSk5FB00W4YTIEgy2n/BJVaK1BTJCll5U54B+Hlrwra2iixLwh
+jvZqm01bg4Qncx7bYbcHaUeyiW7B7SBc/ikaBi56eDthprdbKS0r3s5wFHTEW8vg
+V2JzJjT6jeGJT+nMW7wRouLuZ5EQvi2rrUWbbi8gCKaztEHwEVqbc8BOJ4Kbhinz
+gB1OakDJzWZPtgadY8QOUYQMdLx68vBOG9tsttGiiKQG0+s0a4Tih0jqbQCfBgwJ
+CQAYHWX11CLdPW7yNvJFKO7nTdw3fNRmFQf3+fk5LbkeLKt7IWNHBPoiB3m3bUZh
+YFEUvNsexJb+gquBquCl/bIpp/AVCQ==
+=OHjq
+-----END PGP SIGNATURE-----
+
+--Sig_/RjsyxtHSE6bgRB8ADC.4s63--
