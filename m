@@ -1,182 +1,76 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C6228F939;
-	Fri, 11 Apr 2025 07:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5F7293440
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357897; cv=none; b=geHW3ZLoVg5qFLMpC174EHywei4IN3aJ/tYLm2QlD4+u7OQziCkfCY2gjX2KWzRAusPlmW/yciZnyO+n3cxtYL7FZOhmFfJ/zvvpljPg218x6uPCgP0VnyOacnYlD9oaCZaduQj9NzDm4+7LieufJEemVS5WPcA3t6Esl02+CJI=
+	t=1744357904; cv=none; b=YXi8LG2yLNAB7jOPtB7SKzA4r6uSicMVVELtA1jPRzPE85AuiF2KhfqcUVl5ZsCJdmeV/9mMxzdG5iiQCrDQHrGRfFGAnEwhtrcGO6OC9NrxRhSumzQ5wf1Vd+F1XYOpAV+UlrfSnbyJEMulaKVdFVx5jC2n7xpGcuh2Q/1gGjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357897; c=relaxed/simple;
-	bh=LpyY1HmKB5P1TZETFUc27hEubUH+I0U3rTI0Tnjwluk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s3m6aEnm3yTg2j8ZAT7wvkfrN741cdVagQIjiZd/T1UA8bwKvGpjk2+6gHlOrmMIhev9J+SzQ05YT9F67bM03VW7bCXfb2KwuFNWWhw3vk0YRaDBDrzHebwBGTBl4R7ruxNpw78gGGYsIEtQsX9ecA34ZAEiAZ2HF4fsL2c9JnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
-Received: from [89.212.21.243] (port=53044 helo=[192.168.69.116])
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <primoz.fiser@norik.com>)
-	id 1u39Ai-003jxP-2O;
-	Fri, 11 Apr 2025 09:51:32 +0200
-Message-ID: <8c41e55a-1fcd-4bac-9e1b-3dfdcc7d3e9d@norik.com>
-Date: Fri, 11 Apr 2025 09:51:30 +0200
+	s=arc-20240116; t=1744357904; c=relaxed/simple;
+	bh=RoaRnEuDGYNZNBysc6IoCuCalvE8roZQ3otz4VDUpFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UL+1AsyptTdV+P8xLQI1eRXqV1w3yCIKDlRn5Zs0LjZrRGGXSnSdCSmAKi/HCE0zKNhAAl7f8mRdVh9NiD5NP7V67DQJrjGj4LJDgMgWHob9HcXoD4TXx4xC2Q46XsyoA9GbcD4IWKMODHqmMJAnbL6vXyvNCUpSxBwweMjHhL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B8vwrX/t; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8vwrX/t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744357900;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/nq9vWKH5vK+LG8V0e3I7yV8cZfspJSlkpTU7meTlsU=;
+	b=B8vwrX/t9/cy4yXQE1+4/169Z4QjPCHg/VlgRH49lx1bGyECTkpMWHWzoHdtuKMXV9kpWS
+	QGv9YKwYC29VFijypGPUzV6STjaZV0AGL8OV4O9ipYtui/7HaYCWQx6BVDUN5G0yb/Flcl
+	LtR8ySDl6K4obaYKFThx5O4aLR79dDU=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-175-4MRAc9WOPCav8HDlsRdL7Q-1; Fri,
+ 11 Apr 2025 03:51:36 -0400
+X-MC-Unique: 4MRAc9WOPCav8HDlsRdL7Q-1
+X-Mimecast-MFC-AGG-ID: 4MRAc9WOPCav8HDlsRdL7Q_1744357894
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 75B701955BC1;
+	Fri, 11 Apr 2025 07:51:34 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.6])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 49E021828A9E;
+	Fri, 11 Apr 2025 07:51:29 +0000 (UTC)
+Date: Fri, 11 Apr 2025 15:51:24 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ublk: pass ublksrv_ctrl_cmd * instead of io_uring_cmd *
+Message-ID: <Z_jJ_EU28D3C5P6F@fedora>
+References: <20250409012928.3527198-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/13] arm64: dts: freescale: imx93-phyboard-segin: Add
- RTC support
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, upstream@lists.phytec.de
-References: <20250410090251.1103979-1-primoz.fiser@norik.com>
- <20250410090251.1103979-10-primoz.fiser@norik.com>
- <Z/ff8rQ7wGzKiX+d@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Primoz Fiser <primoz.fiser@norik.com>
-Autocrypt: addr=primoz.fiser@norik.com; keydata=
- xjMEZrROOxYJKwYBBAHaRw8BAQdAADVOb5tiLVTUAC9nu/FUl4gj/+4fDLqbc3mk0Vz8riTN
- JVByaW1veiBGaXNlciA8cHJpbW96LmZpc2VyQG5vcmlrLmNvbT7CiQQTFggAMRYhBK2YFSAH
- ExsBZLCwJGoLbQEHbnBPBQJmtE47AhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQagttAQducE+T
- gAD+K4fKlIuvH75fAFwGYG/HT3F9mN64majvqJqvp3gTB9YBAL12gu+cm11m9JMyOyN0l6Os
- jStsQFghPkzBSDWSDN0NzjgEZrROPBIKKwYBBAGXVQEFAQEHQP2xtEOhbgA+rfzvvcFkV1zK
- 6ym3/c/OUQObCp50BocdAwEIB8J4BBgWCAAgFiEErZgVIAcTGwFksLAkagttAQducE8FAma0
- TjwCGwwACgkQagttAQducE8ucAD9F1sXtQD4iA7Qu+SwNUAp/9x7Cqr37CSb2p6hbRmPJP8B
- AMYR91JYlFmOJ+ScPhQ8/MgFO+V6pa7K2ebk5xYqsCgA
-Organization: Norik systems d.o.o.
-In-Reply-To: <Z/ff8rQ7wGzKiX+d@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
-X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409012928.3527198-1-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hi Frank,
-
-On 10. 04. 25 17:12, Frank Li wrote:
-> On Thu, Apr 10, 2025 at 11:02:47AM +0200, Primoz Fiser wrote:
->> Add support for RTC clock connected via I2C on phyBOARD-Segin-i.MX93.
->> Make I2C RTC the default clock by configuring the aliases.
+On Tue, Apr 08, 2025 at 07:29:26PM -0600, Caleb Sander Mateos wrote:
+> The ublk_ctrl_*() handlers all take struct io_uring_cmd *cmd but only
+> use it to get struct ublksrv_ctrl_cmd *header from the io_uring SQE.
+> Since the caller ublk_ctrl_uring_cmd() has already computed header, pass
+> it instead of cmd.
 > 
-> "Add support for RTC connected via I2C on phyBOARD-Segin-i.MX93. Set
-> default RTC by configuring the aliases."
-> 
-> Frank
->>
->> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
->> ---
->>  .../dts/freescale/imx93-phyboard-segin.dts    | 36 +++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> index 525f52789f8b..38b89398e646 100644
->> --- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> @@ -17,6 +17,11 @@ /{
->>  	compatible = "phytec,imx93-phyboard-segin", "phytec,imx93-phycore-som",
->>  		     "fsl,imx93";
->>
->> +	aliases {
->> +		rtc0 = &i2c_rtc;
->> +		rtc1 = &bbnsm_rtc;
->> +	};
->> +
->>  	chosen {
->>  		stdout-path = &lpuart1;
->>  	};
->> @@ -33,6 +38,24 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
->>  	};
->>  };
->>
->> +/* I2C2 */
->> +&lpi2c2 {
->> +	clock-frequency = <400000>;
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_lpi2c2>;
->> +	status = "okay";
->> +
->> +	/* RTC */
->> +	i2c_rtc: rtc@68 {
->> +		compatible = "microcrystal,rv4162";
->> +		reg = <0x68>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pinctrl_rtc>;
->> +		interrupt-parent = <&gpio4>;
->> +		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
->> +	};
->> +};
->> +
->>  /* Console */
->>  &lpuart1 {
->>  	pinctrl-names = "default";
->> @@ -56,6 +79,13 @@ &usdhc2 {
->>  };
->>
->>  &iomuxc {
->> +	pinctrl_lpi2c2: lpi2c2grp {
->> +		fsl,pins = <
->> +			MX93_PAD_I2C2_SCL__LPI2C2_SCL		0x40000b9e
->> +			MX93_PAD_I2C2_SDA__LPI2C2_SDA		0x40000b9e
->> +		>;
->> +	};
->> +
->>  	pinctrl_uart1: uart1grp {
->>  		fsl,pins = <
->>  			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
->> @@ -69,6 +99,12 @@ MX93_PAD_SD2_RESET_B__GPIO3_IO07	0x31e
->>  		>;
->>  	};
->>
->> +	pinctrl_rtc: rtcgrp {
->> +		fsl,pins = <
->> +			MX93_PAD_ENET2_RD2__GPIO4_IO26		0x31e
->> +		>;
->> +	};
->> +
-> 
-> keep order by node name.
-> 
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
-pinctrl_uart1 was out of order since beginning.
-
-I will create a separate patch to this series ordering nodes
-alphabetically as a last step.
-
-OK?
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
 
-> Frank
->>  	pinctrl_usdhc2_cd: usdhc2cdgrp {
->>  		fsl,pins = <
->>  			MX93_PAD_SD2_CD_B__GPIO3_IO00		0x31e
->> --
->> 2.34.1
->>
+Thanks,
+Ming
 
--- 
-Primoz Fiser
-phone: +386-41-390-545
-email: primoz.fiser@norik.com
---
-Norik systems d.o.o.
-Your embedded software partner
-Slovenia, EU
-phone: +386-41-540-545
-email: info@norik.com
