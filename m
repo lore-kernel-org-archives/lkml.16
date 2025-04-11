@@ -1,97 +1,139 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59D52989B3
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FDAEEB1
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365072; cv=none; b=TJdMfK3mFLukReQEB2Nz0AAPJ5GvGuIb9/66OfbvlHV5LSi6FLm+zUfBlPOwOJ+xQUFHzIRO75oZYE4SC0jVZqBzZux3MilbOB7r9TXb1GotZ8G8g7LHrAvhogY0bO4uf1ircVDpTzmRNUQYXA3FV9GXGcuQDhMgba0Kqblw+MQ=
+	t=1744365195; cv=none; b=M5DdqhrSOx1pIgiFv3YlMBdm+k3ny+Q9bY12dkhFWPINOKjrEgITCCXkwaRBAkdUzJBHDsmvT4iCLINQ6Q17+dd4BxndpEF1JAh45Ppi1E/d2aFYber7kLur6JpACmItTFxPEBQasa85EgNlbWWYoAFDS7zV6I5rWWSDoDsZAJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365072; c=relaxed/simple;
-	bh=aAkMjJEdeOUJBORC3WJHhBKrNd6RMnYwpWX83qkxdU0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E67LAd73zIXS55W5SMVVPW5Lvtq2Nq+W5QNCiZRoE5qF5vgPvhT/AJ3OJY2jWDdHXsDqWPn0PolLmPkhomvPzeT93etZb9h002sfS96zxLkC9oJ7q8yji7k4DeJN5+jNg/1Vwv3ROMVRLqSfw1inxSla4vmfbFXS40pmqZBTuAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rNvdBvht; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744365195; c=relaxed/simple;
+	bh=bYz4VWYXRVMZMzO/WeiodKWmw1L7VQDJw8uSANjmYZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AS8mfio+MOB/yCGzrBRYqWFgm8uA4hJk+i7WtgX33g74ASFBBjrPSO5rq0wQs43NWcGspfEwpN9Dk2l/KKZSmOw/CzmzKl8e/U0cLzReea1iBg2aiAls5ZwBEPLiv+/9FDk2zu3JHTKg4kvA4mf/f++FqOX2yzI8m0k9LkjShio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hj1BlvFC; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rNvdBvht"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B9ojbZ1538872
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 04:50:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744365045;
-	bh=9OUXsKYr4L8cuuHUPZZv3opOZe1U/R9+5ovmxBvfKK0=;
-	h=From:To:CC:Subject:Date;
-	b=rNvdBvhtHct0DEJBrhbtzrrcRyvGfUPNa3Q7m4AZ1q1I+B3WqtBNN4CYrFznkmhkT
-	 0CdkIuuJMCOHHTUnvvQQWYR6hNT2z49vt3y8OrClasGNqdmJK58d4+DRkFzlJt4iL9
-	 6Y4Yz63IW6GmdajvVFPjvyWxvbrN0aeQ7ytT3uwg=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B9oj0C036392
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 04:50:45 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 04:50:45 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 04:50:45 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B9oiQX104055;
-	Fri, 11 Apr 2025 04:50:44 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <nm@ti.com>,
-        <linux-kernel@vger.kernel.org>
-CC: <bjorn.andersson@oss.qualcomm.com>, <krzysztof.kozlowski@linaro.org>,
-        <geert+renesas@glider.be>, <lumag@kernel.org>,
-        <nfraprado@collabora.com>, <quic_tdas@quicinc.com>,
-        <elinor.montmasson@savoirfairelinux.com>, <ebiggers@google.com>,
-        <ross.burton@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <j-choudhary@ti.com>
-Subject: [PATCH] arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
-Date: Fri, 11 Apr 2025 15:20:43 +0530
-Message-ID: <20250411095043.272488-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hj1BlvFC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=v5Ml
+	bzfy/UYtcdXL3mkK2vLrVgQkVRSUpZGGQs7rGuU=; b=hj1BlvFCT8dW5Iu9XbxD
+	yDptYRJWrwOidK2/AR/7UnLCIYNA2L8GKb3bqXdAMuEssiYjNOM6xS7OliOXDI0w
+	Maut5TKDfTEyfXSimJXq6DaB5IIc91ZKKYCD1Ht+NCzwa9nkQOA7QM0RgP97nDzd
+	8FOEka8rbYUVTTgL25HXjm+V6s6KBOo1e8hANEha9vrCiztBfK+g8/u5Da0f6nww
+	y8tWYElrfCCfehVwgjiBpywsjmnC3YMZLREpqpIKZCWSBtVE6TwG1fuJWjVRpClj
+	9Odje1lqwq0+CImlgyGq1WJ04NO0JOQ5FBm5sqLZVOEy93fW4MIBlWFRyEyP3XE9
+	1A==
+Received: (qmail 1242354 invoked from network); 11 Apr 2025 11:53:02 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Apr 2025 11:53:02 +0200
+X-UD-Smtp-Session: l3s3148p1@AHYSq30y8pMujnsS
+Date: Fri, 11 Apr 2025 11:53:02 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v4] ARM: dts: r9a06g032: add r9a06g032-rzn1d400-eb board
+ device-tree
+Message-ID: <Z_jmflS03VHFOE3d@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+References: <20250324-rzn1d400-eb-v4-1-d7ebbbad1918@bootlin.com>
+ <CAMuHMdVM66ni0opbUopt6mCPshoQzO5GPEUZDji39CxtkoFLSA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5meMjSjKXGTajXvg"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVM66ni0opbUopt6mCPshoQzO5GPEUZDji39CxtkoFLSA@mail.gmail.com>
 
-Enable configs for cdns-dsi and cdns-dphy. (dsi wrapper for
-j721e is enabled by default if cdns-dsi config is enabled)
 
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+--5meMjSjKXGTajXvg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5c85e5da152f..4c0eb2711bbe 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -938,6 +938,7 @@ CONFIG_DRM_TI_SN65DSI86=m
- CONFIG_DRM_ANALOGIX_ANX7625=m
- CONFIG_DRM_I2C_ADV7511=m
- CONFIG_DRM_I2C_ADV7511_AUDIO=y
-+CONFIG_DRM_CDNS_DSI=m
- CONFIG_DRM_CDNS_MHDP8546=m
- CONFIG_DRM_IMX8MP_DW_HDMI_BRIDGE=m
- CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
-@@ -1579,6 +1580,7 @@ CONFIG_PHY_CAN_TRANSCEIVER=m
- CONFIG_PHY_NXP_PTN3222=m
- CONFIG_PHY_SUN4I_USB=y
- CONFIG_PHY_CADENCE_TORRENT=m
-+CONFIG_PHY_CADENCE_DPHY=m
- CONFIG_PHY_CADENCE_DPHY_RX=m
- CONFIG_PHY_CADENCE_SIERRA=m
- CONFIG_PHY_CADENCE_SALVO=m
--- 
-2.34.1
 
+> > +       pinctrl-0 =3D <&pins_eth1>, <&pins_eth2>, <&pins_eth3>, <&pins_=
+eth4>,
+> > +                   <&pins_mdio1>;
+> > +
+> > +       mdio {
+> > +               /* CN15 and CN16 switches must be configured in MDIO2 m=
+ode */
+> > +               switch0phy1: ethernet-phy@1 {
+> > +                       reg =3D <1>;
+> > +                       leds {
+> > +                               #address-cells =3D <1>;
+> > +                               #size-cells =3D <0>;
+> > +
+> > +                               led@0 {
+> > +                                       reg =3D <0>;
+>=20
+> color =3D <LED_COLOR_ID_GREEN>;
+>=20
+> > +                               };
+> > +                               led@1 {
+> > +                                       reg =3D <1>;
+>=20
+> color =3D <LED_COLOR_ID_ORANGE>;
+>=20
+> > +                               };
+>=20
+> The above should also have one of:
+>=20
+>     function =3D LED_FUNCTION_LAN;
+>     function =3D LED_FUNCTION_SPEED_LAN;
+>=20
+> I don't know the LED function mapping.
+
+I have an incremental fix for the LEDs to this patch. Thomas cannot
+really do it because he doesn't have the board. I was waiting with my
+patch until this patch is upstream, but I better send it out now, so you
+can squash it into this one?
+
+
+--5meMjSjKXGTajXvg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf45noACgkQFA3kzBSg
+KbbhBQ//SA3eCGX0eMFXQS4vM9SjlKaSOc8Sv9fxFOcUPfIOzFQ2in7V5MSsS86y
+qLykrEEz0ddawdAm1v4Ll97vvODHsLJ+Zb7JTcuv3xltq2MddsxOxEldllAXS5dd
+wmAP+krIqhWTZO7l1hOx42rY7lfrw12WM1fZFDXIlwRshciS/6VKBvDdcKrWub5M
+/H3ffK/6jHSUrXmP+2YnqZ/R1KsTnDU8OI72ib/4Tpy6yonmMVJhLwQQFxtXo4YM
+KsDO8oaYhhDqjdMms9juwMiDaObkxXc1Q/Ex27OnQKVQe5Ns7Zxw/Io2r6qMYiZn
+6c4QXDrHZaHsxifc5KdL37R1+CfBJX5/cK6/KpSDYoz9WwiBCaWccjf3tsizxTZL
+FanpqH+9Ddbg8XSSPpJ2HutmK8MQYsYoCtw+paoHUVmBzOR2F9pePbxQxZ1SM0rH
+TnuuureYZje+nAOlQNoLRkqbD2bUfmTlqS3SI/SHDaihesPs2ETWTgyn4LLM0XGI
+JejAOCbYhtXG7CzHcuzRs6dNKmr7OFsuvJcnY4iVshsUvQIgeOqL9YgP9LUeql0x
+mb2eiIfLUswA3m+qvrVbb2QSnq1zUyYkYGNtlDFKv5XRUrP1KY2iGEYxaNL9FmRg
+pgjVrSpKCxlON7Q+2QhIAJfycNG8GPMJbpLsIo4xMq8feKqXYQU=
+=KXkU
+-----END PGP SIGNATURE-----
+
+--5meMjSjKXGTajXvg--
