@@ -1,101 +1,135 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C0F29614A;
-	Fri, 11 Apr 2025 21:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5F9284B33;
+	Fri, 11 Apr 2025 21:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744406124; cv=none; b=icFLBNSs9fPtrSIoU071R2mrXkvGaCDGDyhPuXxx96FgifomVeYjU5NMua2qPBo/Aw6dPg8o4C9ZS4OvnW885FcUszL+jBx9k/nc5J3SbreqM60hrf3mlPzIsolnfoDx81pJ9I6G7SBXz1tul7TzJlZIKt5jU+M3eVv1K1L2avs=
+	t=1744406162; cv=none; b=f2gtl2phIyEXcIFxkduMMDr4JT3ck/bmb71PcpZ+Vv691DtMeM3+REbygurA3SucJmWLh/I1jyxlclkjS39cCNMQyWl4EA8k8xxVrngciLZaDEtidalW0fH9Cxzl+UsDCofPCjN0YI+OfkNxXOJM47qIIBhcs4JG6JZCYWyPUQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744406124; c=relaxed/simple;
-	bh=zUAbfaDi+mFMIZ9/oYPb7idFOR0R4eD4ad4u+ZuUC9w=;
+	s=arc-20240116; t=1744406162; c=relaxed/simple;
+	bh=2vnAEWZkA42wh2oIp2t/KaSx2CHjm7tWA5x5tdHlG70=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gOkpXyK/BKgDDEd6b9cZKdXzxJLGJYiiO2T7406c/k7yu78MJS3FVOknw8++AxImnRr8+7hRbf2plHC0uUjgCS6tLA8kz2TUhN+hmnE425d6aJWa8T/6h8BCskkhePc/WjzuCSlQUpxHFdDFeYRxtx7DQtWKvEgECM+1J/4B+tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3cEqeT4; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sfWyNOeT49Fr+9QGizmo8qA+MDpqXsi0oVLAPILsg+u1+d4tTuPJRUH4kwW/JzXOHiyEADqS/09PE8m80Qf9+ItlSRurrPXTan59ToLUukWumqQjHWHAE7gMBvsbrh51PPjIwGmaSsc374wZtpAfTdJ176if0hiNLWK7IzpD3LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VvcJFGQm; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3cEqeT4"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf848528aso19244535e9.2;
-        Fri, 11 Apr 2025 14:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744406121; x=1745010921; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gPK+H6sOhTLm30dsqOJGvaQCZuKrA5gTcKcyNfzVAVg=;
-        b=E3cEqeT4gXKXaZjMbwDlPAGeTzICVOyGvCiqN0dzJWLFZ4goiEIf5vCqahBuL3EzXs
-         Z3pBIbD6M47jq4mhPlF+Q7gOWlF4y9PEzFBp2egR8QQKuEa0lY6Cy0D2gFVRX9cd9sDc
-         RAIsNQV6RiAatISbeU1CMjMdZcO6yTHJqDpQieVoz8Qx5/wX75v+9K7ya4c06Hhxb1uB
-         zzm5dIWZOMJxlzpCj8io4L1uPB5rWH/VudiWXxh40YGQLx2bKplr2HJCqMYhQwfRsfH+
-         VXAz4u1KlJsY3gPQE8zMWMuiyiyIeBAw9B5J/NqQo4k7btkFObDuVOfbGj3vFJtAlZcQ
-         SW+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744406121; x=1745010921;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gPK+H6sOhTLm30dsqOJGvaQCZuKrA5gTcKcyNfzVAVg=;
-        b=jalcGZ+qmmM9nSqfKuVUoXaCu8vh8X03GX9Ea2KdSt6EZMbG1vhsuanonBn/NS9rFl
-         1Z1Y8hZlXysMZgqjSLARE0eZ5vhDSq8YsAmxFMbzb8YWtD8meETe1oFtO+Yb4d1+LoqG
-         8fUGfsUHKxhYIwQBLb1b6jAVa2jwc3CO6ws7pfXsmejdBTl3gbycwS7suJMZz4ullXcS
-         gPurfy7Ofk2ScNmMg0TVNFXUeEE39fC02739h1DaHhaZiK7C/eXepB1rv+MScqki4rxb
-         7XAmhJU77I/pTjXm0I35IVlS0cmLJYOnudKp7GKFg6WRLKSbd0xKXIh6f4YJlbMbp4sf
-         i26Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWXC+l6I/AjMxsfWEC1owRy4DYWxvhJtwkhS4zP159hoA3ehh3offh8YZbz+z8jaw+9Bw9nUcooav7aWP1E@vger.kernel.org, AJvYcCXj215fnAo3IgOpQXeCjxySxeA8NLMtttvLk+/SgOJrZD/8MWPHnGK4AK60dhsWhKtdxWjTqNtsP5jIrHk3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZApHzMcnyJDs1r9Nch3BtyizgDVE9Ocav3mBNvAxRONH3dJ73
-	sSlzKTenNJpdU7ponQbBQVMNYVKyEbI3rpAq2688fAaifEpVHATA
-X-Gm-Gg: ASbGncu8LaLhEWmQXeyAnq4dohPTFfAYoZLSOmAu0EWwtUGeIP1wMUy06IAe9BdwhEO
-	bqB5HDKpp2KFI8H8X4vfTTcsM5T33h+DD4ZAMbn3M24wQNez/Jc/Kk/MKo6fbTpWZiqCTe0xI/0
-	asb0FDLwLAtGbisdLhBd5FpEtEskYkHgTY07bdPF77HJ/Z0nmats/5JTl0gVkX+XyAPC4HMIoqb
-	zO8gxEDYi/hAKHXBxG4iWHPxBLtV6D15+W8LtqWacHz9jfIbS1j8PIEDWJ6zHgSlcDsiVbEjGw3
-	TOdalNx2T6m5LhJ692S9ddNEGUGtJZQR8K3kP7H1WameKPV4FXToIUshBJrFJlU5
-X-Google-Smtp-Source: AGHT+IEgeIHzXRmIqmpC5LyYH+Jtr/lT2cTeX/UOjaeIsufaoxo9zBEh6F6AvgV6eCmVOW+48CAP6Q==
-X-Received: by 2002:a05:600c:46d1:b0:43c:ec28:d310 with SMTP id 5b1f17b1804b1-43f3a93cc34mr43776805e9.10.1744406120863;
-        Fri, 11 Apr 2025 14:15:20 -0700 (PDT)
-Received: from f (cst-prg-90-20.cust.vodafone.cz. [46.135.90.20])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cd17sm3157603f8f.78.2025.04.11.14.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 14:15:20 -0700 (PDT)
-Date: Fri, 11 Apr 2025 23:15:12 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: lirongqing <lirongqing@baidu.com>, viro@zeniv.linux.org.uk, 
-	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: Make file-nr output the total allocated file handles
-Message-ID: <p6rnvi5kvu7zwk6ypui2gwezvg3onqeqajwtw6uksv4jagannh@q2mx54icpmig>
-References: <20250410112117.2851-1-lirongqing@baidu.com>
- <20250411-gejagt-gelistet-88c56be455d1@brauner>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VvcJFGQm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744406161; x=1775942161;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2vnAEWZkA42wh2oIp2t/KaSx2CHjm7tWA5x5tdHlG70=;
+  b=VvcJFGQmQ8H0CodMrcXovUSBgJKtf+wBCNNBAxTDM/mYbqcKrHmLTZC/
+   nlXfki1G11eUVa51BD5sQYwZCRT4tzs1rP6m/gfkr8raFc6xv+1lqwodC
+   JvP12JAK4C5N9Ruaca8tnrgjMusQ6ud+FkEVoySM9AAKB3kIn/sgX6yPp
+   t8URurajncv89Jr6crIDJjVNmo0nsmUQ6vXoZVxz5Wd1MIg+D6DHC5EkG
+   sjRXXGvoBsjDfgYa0X/kZj8IMv/pZNCIFBjpb984pWPz/Dzx1eh/JES/2
+   ZQpNWjlVInIDVBEJoBjY8w4pJah7N/YLTdPh0mxJ2FAuwl6YloDMKsiiB
+   A==;
+X-CSE-ConnectionGUID: MUs8LDCgTTONAsGIYtF/EQ==
+X-CSE-MsgGUID: Gc0gBUKyS7a/TUSZvPhhxg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="45858068"
+X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
+   d="scan'208";a="45858068"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 14:16:01 -0700
+X-CSE-ConnectionGUID: cx2nNfxiSY+MhvwZfP+VeA==
+X-CSE-MsgGUID: Q2dsqUdWQtqq92q2eTODlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
+   d="scan'208";a="129150774"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 11 Apr 2025 14:15:56 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u3Lj7-000BNy-2s;
+	Fri, 11 Apr 2025 21:15:53 +0000
+Date: Sat, 12 Apr 2025 05:15:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"(maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
+ definition to amd_node.h
+Message-ID: <202504120432.0F8lOF3k-lkp@intel.com>
+References: <20250410200202.2974062-3-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250411-gejagt-gelistet-88c56be455d1@brauner>
+In-Reply-To: <20250410200202.2974062-3-superm1@kernel.org>
 
-On Fri, Apr 11, 2025 at 04:16:08PM +0200, Christian Brauner wrote:
-> On Thu, Apr 10, 2025 at 07:21:17PM +0800, lirongqing wrote:
-> > From: Li RongQing <lirongqing@baidu.com>
-> > 
-> > Make file-nr output the total allocated file handles, not per-cpu
-> > cache number, it's more precise, and not in hot path
-> > 
-> > Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> > ---
-> 
-> That means grabbing a lock suddenly. Is there an actual use-case
-> behind this?
-> 
+Hi Mario,
 
-The centralized value can be really grossly inaccurate as CPU count increases.
+kernel test robot noticed the following build errors:
 
-There is some talks about fixing that, see:
-https://lore.kernel.org/linux-mm/20250410175149.1206995-1-mathieu.desnoyers@efficios.com/
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on andi-shyti/i2c/i2c-host tip/master linus/master v6.15-rc1 next-20250411]
+[cannot apply to bp/for-next tip/auto-latest]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-In the meantime, given that this is only accessed when reading the /proc
-file, this should be fine?
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/Documentation-Add-AMD-Zen-debugging-document/20250411-040641
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20250410200202.2974062-3-superm1%40kernel.org
+patch subject: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd_node.h
+config: arm-randconfig-001-20250412 (https://download.01.org/0day-ci/archive/20250412/202504120432.0F8lOF3k-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250412/202504120432.0F8lOF3k-lkp@intel.com/reproduce)
 
-Note it still wont delay bumps/decs as long as they fit the batch (which
-is the common case).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504120432.0F8lOF3k-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/i2c/busses/i2c-piix4.c:24:10: fatal error: 'asm/amd_node.h' file not found
+      24 | #include <asm/amd_node.h>
+         |          ^~~~~~~~~~~~~~~~
+   1 error generated.
+
+
+vim +24 drivers/i2c/busses/i2c-piix4.c
+
+    23	
+  > 24	#include <asm/amd_node.h>
+    25	#include <linux/module.h>
+    26	#include <linux/moduleparam.h>
+    27	#include <linux/pci.h>
+    28	#include <linux/kernel.h>
+    29	#include <linux/delay.h>
+    30	#include <linux/stddef.h>
+    31	#include <linux/ioport.h>
+    32	#include <linux/i2c.h>
+    33	#include <linux/i2c-smbus.h>
+    34	#include <linux/slab.h>
+    35	#include <linux/dmi.h>
+    36	#include <linux/acpi.h>
+    37	#include <linux/io.h>
+    38	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
