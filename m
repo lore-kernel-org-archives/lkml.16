@@ -1,82 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A17202C43;
-	Fri, 11 Apr 2025 11:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6B5210F44;
+	Fri, 11 Apr 2025 11:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744371330; cv=none; b=p3AH10HyaKXepHNWBYX6yf6r7ZVE6Cgafio87Fn28ORCo65rsShWOyYtf89WtmikKHBvFU43d7SWxRiydtQD0gnqY3b8kyb3x2TdK6/fGe3wg5pEImEkZpcABeODmE7bdGWTT5nmmSa6GOHi5AhBecvnHiUJDZ6LcnNCDJTe3XU=
+	t=1744371366; cv=none; b=EmZgAgg6aXDlx25ObmMWPkTY3kxJp2MKOiRdhFYBjn3WlHSv8Q+CH1JXUxJSRqAa6Iu02hF513LJUq/+ZN6y9VyGn75Dg/fYP+1o0OhM1fVN8jj3F1hnTycLDfpm0+RSv/YHiHeiLcY5PavJvvkPYdzL0gkccX6DCOIJeh5q6Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744371330; c=relaxed/simple;
-	bh=ZHpRmlxi0N8UYKKEPd33twsru7ukxPU6RRFGjJueWLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GR9d9IrlhQ4YF8mqEwKRiX5HcYx7As2oaGNaAlxJvH5dDhH1N2722LfqklKGLEmGGEU4uM2/hDPPK9oPh2siNRMlI39WrrhFxhqEZn4f6XdbR4u1y6r4NzdrtG/9wRH0sM7NkwrTyOu44qw4w36LmvjNSRFO8IhnSNdxI7ZcU6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtzGtOeI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744371366; c=relaxed/simple;
+	bh=JMRklJqhVtouLAt1XwB02XpuCUep8UgISVlnhZIsh2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KfWAeK6mRawSfucf/4YItHIQgjqPI/5ENryHyXlWImclTpdQbpQ44Fv0QKU3SjPRluK4Lsx4pTmv5+zosQMg2sG/kDz9UtUiNFHYbVSr8S4U3DKmHmc3w9//P5mXLALBBuziBbgOQPUXVD+8my6ig8BVsEzJy0pZzDZ1WbjPfzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pw4KTvFn; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtzGtOeI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59453C4CEE7;
-	Fri, 11 Apr 2025 11:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744371330;
-	bh=ZHpRmlxi0N8UYKKEPd33twsru7ukxPU6RRFGjJueWLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YtzGtOeI6RXdDJWLkuG5+oLCHHjqqKyUaVr2+/eUUMUheu1SmJnT6/0CQ4pdeGN7f
-	 8EWsWZniLDnUaLfdMuk3dovnwAJNuhDT6vw77iXrXgvt/gl9Dbjqkrx0fX2LHO/xYy
-	 DbWJ+ZhoBUjskHCl+2X4/go5vHczuBFY/U78BDFyXArgnr6s85mq4R2r2A6BCOSGpI
-	 CYJ2nY5E64Qb1NzaazPOLgk9DJ07KZw2+mclhd30BETTwy4kPfogwBg8cfwV7EtrNj
-	 AMMq9TqDQpDP3i6Q16wZ+UgE1DGwLv7t8vWcZIZXjHn3bfywfB93OPxnBbJjqvuLUy
-	 qrIYtHqYbF3Hg==
-Date: Fri, 11 Apr 2025 17:05:26 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	Varadarajan Narayanan <quic_varada@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: qcom-qusb2: Update the phy settings for IPQ5424
-Message-ID: <Z/j+fs6hCVhGKLcH@vaman>
-References: <20250407-revert_hs_phy_settings-v1-1-ec94e316ea19@oss.qualcomm.com>
- <Z/i+6k6VseihdQ69@vaman>
- <734cf70a-1d96-4a87-bc7e-c070c1e7dc8c@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pw4KTvFn"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5o5LN016303;
+	Fri, 11 Apr 2025 11:35:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=EeW71NEVNxT
+	eB7Pkhj0pQrKBjQJQErVE6wNG3aOqLxg=; b=pw4KTvFnagiEfTMeiyVEdtMr+AF
+	N+h5ZidpgKAFNIMEQ3Adz+LNm25n1Kn2Z8rhkQfKnNDxY+2r3bBePy/EoRtrNZFo
+	U5Q3AU+1mG0X7yPDqwZ5C+QgOD3dSIekICsqIcBRNAS3+VAPGEn1EX+u3yCvtqpR
+	rvqYYJGU58//qM1jJEk182kpuATmfWkb6OE6zH46qZjGL/najV7VYGibgQLCc66c
+	8l++sl7EzLvAcaqOBusKQgGfBd6xLQ7XiBNA/ICd59h03XYUvx/SK4+Gndj5a6Q2
+	vJFjy1AJUP838lvvR05SJQGCh6K3LDPwI1p7qlkz5TFto+RarFvNH4BEAGw==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1t251-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 11:35:55 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53BBZqIA031912;
+	Fri, 11 Apr 2025 11:35:52 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 45ue7gawyp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 11:35:52 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53BBZqoU031906;
+	Fri, 11 Apr 2025 11:35:52 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 53BBZqxD031905
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 11:35:52 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
+	id 5478624077; Fri, 11 Apr 2025 17:05:51 +0530 (+0530)
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+To: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
+        linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: andersson@kernel.org, konradybcio@kernel.org,
+        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Subject: [PATCH v4 1/3] dt-bindings: i3c: Add support for Qualcomm I3C controller
+Date: Fri, 11 Apr 2025 17:05:14 +0530
+Message-Id: <20250411113516.87958-2-quic_msavaliy@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250411113516.87958-1-quic_msavaliy@quicinc.com>
+References: <20250411113516.87958-1-quic_msavaliy@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <734cf70a-1d96-4a87-bc7e-c070c1e7dc8c@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: oWwpMscOKVPOzrqhUlXt-vMiTjoTD-9i
+X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f8fe9c cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=a4gNajxLRnOSRrId0dEA:9 a=sptkURWiP4Gy88Gu7hUp:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: oWwpMscOKVPOzrqhUlXt-vMiTjoTD-9i
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=1
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110074
 
-On 11-04-25, 14:29, Kathiravan Thirumoorthy wrote:
-> 
-> On 4/11/2025 12:34 PM, Vinod Koul wrote:
-> > On 07-04-25, 19:51, Kathiravan Thirumoorthy wrote:
-> > > Update the phy settings for IPQ5424 to meet compliance requirements.
-> > Can you specify which requirements are these?
-> 
-> The eye diagram (Host High-speed Signal Quality) tests are failed with the
-> current settings. So design team asked to revert.
+Add device tree bindings for the Qualcomm I3C controller. This includes
+the necessary documentation and properties required to describe the
+hardware in the device tree.
 
-That would be good to mention in changelog.. am sure you wont recall 6
-months down the line, which requirement this triggered the change!
+Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+---
+ .../bindings/i3c/qcom,geni-i3c.yaml           | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml
 
-> > > The current settings do not meet the requirements, and the design team
-> > > has requested to use the settings used for IPQ6018.
-> > > 
-> > > Revert the commit 9c56a1de296e ("phy: qcom-qusb2: add QUSB2 support for
-> > > IPQ5424") and reuse the IPQ6018 settings.
-> > Why not do revert first and then add the settings?
-> 
-> 
-> I thought of submitting it separately. But what-if only the first patch
-> merged and second one didn't due to some issue, it will break the USB
-> feature. So, I thought it would be better to keep it in single commit.
-> Please let me know, I can send V2 with 2 patches with the merging strategy
-> (both patches should go together to avoid the USB breakage) in cover letter.
-
-Series is applied together and you can mention the dependency on cover
-letter
-
+diff --git a/Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml b/Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml
+new file mode 100644
+index 000000000000..433e096eddf4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i3c/qcom,geni-i3c.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Geni based QUP I3C Controller
++
++maintainers:
++  - Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
++
++description:
++  I3C in master mode supports up to 12.5MHz, SDR mode data transfer in mixed
++  bus mode (I2C and I3C target devices on same i3c bus). It also supports
++  hotjoin, IBI mechanism.
++
++  I3C Controller nodes must be child of GENI based Qualcomm Universal
++  Peripharal. Please refer GENI based QUP wrapper controller node bindings
++  described in Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml.
++
++allOf:
++  - $ref: i3c.yaml#
++
++properties:
++  compatible:
++    const: qcom,geni-i3c
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/qcom,sm8550-gcc.h>
++
++    i3c@884000 {
++        compatible = "qcom,geni-i3c";
++        reg = <0x00884000 0x4000>;
++        clocks = <&gcc GCC_QUPV3_WRAP2_S1_CLK>;
++        interrupts = <GIC_SPI 583 IRQ_TYPE_LEVEL_HIGH>;
++        #address-cells = <3>;
++        #size-cells = <0>;
++    };
++...
 -- 
-~Vinod
+2.25.1
+
