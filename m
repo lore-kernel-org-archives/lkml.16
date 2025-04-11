@@ -1,218 +1,384 @@
-Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF3AEEB2;
-	Fri, 11 Apr 2025 04:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.84.65.235
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744344616; cv=fail; b=V25REW/Lc5/wqElcVpHKP/jUzSUi2M+ZWLk0ANgkySxMRg8JJefL6iWLs7JCwNC8mi0R4BzW3P6O50H36tPNWyV7tphcXx1lhYhxZTcChjEz+8VK9Q/hYxxOqwF/gNGELsDfkP4Pq/YvnKWTzqaFVymVGyq9mCyO/DoNJ6p8nfQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744344616; c=relaxed/simple;
-	bh=6BesAd+rI/F9FZ0c95RQxiwk7Ig3CM5sMcct75wJWDU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lG0nWAyO/4BNQOc0btiiH3Z7jgy3gzcnAfCdgWrBB1YgysGJH0beDxSRABaVUPdjmEtSongKP3n18xo/bms/Fen7w6Tu6JLEpZ367ead+N5jOSZCF89dNfDLUb0JXPAOzMitrT0vVn5z7WpcZ4moS7KmqVF9hdeUsJ5TP6AmjKE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=gna0jt/o; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=U+yqnUMI; arc=fail smtp.client-ip=208.84.65.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1F027BF7B;
+	Fri, 11 Apr 2025 04:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744344751; cv=none; b=lbLwOppaJ/gVVoSK2DcfMdBoUlBLSFf63q4ULo/j+7OF7s1aubtQvv/JD/jKEsOBtsDliUN9D/2EOjgpL9cHfInhsg9BMOwWO7rQnAzwYO522yRe7D7NJ/9Acs2jSkBM87N7lPeWGXiKUDkTyEoiOPzggCLncAYVUj4KPGAzj1M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744344751; c=relaxed/simple;
+	bh=ySMsdsrcT7K4/6KzeJdBUXGq0fyIokY6Q83+X3lzHbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VPdg52UyWUjM9n1yRDY1gVgilWPeYrRAoNnGcCin7RLKWySatdV7tMpkE85p+gUQucyK8m8OV46ZlpAECA0v/t4zHZA6xQvPvyeAVRnY/PB7KOVIibm1ii3zNCnLBkUBmTLI5b3AE96zeRfVBNPGfqlxi5OuDKRSWAhqJ+rgczE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FW62hLXS; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="gna0jt/o";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="U+yqnUMI"
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-	by mx0a-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKwgii001987;
-	Thu, 10 Apr 2025 21:10:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=proofpoint;
-	 bh=Hgw83K3ja0/Y84o82aRw5+EVpU3yQDYPc3exinTzqzA=; b=gna0jt/ooRUw
-	rDkJbJR96DgPVBeoTo/3BzqG6Rm+rP1MQ/VeTaJC7kuJPw7kLNzAsnAHESJHmDey
-	tdqpaw1uUOINv9VB+1bbsUPNkAQIQTn3rMyAgChavIs+iAIC05QzWRUPsLIHZKbs
-	SZEPll+NXqX8LObGtzNzazkXzpT9DanviMQ2Prz/QlaW1lHbjqnHaSkrVnl0bBru
-	YmYOJZjQ9ciqbYuXJOtWPG2zMK/x7516FTEX2QWUiSgytAfJz80A3NVPz64wjQsj
-	w8oRDFGUB4iDj4UcrvP3DLajBiULCh//qrwCtTMNoWmpSRG7VpWVnmq4manRS6U9
-	5E32gaHO8g==
-Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazlp17012036.outbound.protection.outlook.com [40.93.1.36])
-	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 45vbd2wuj3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 21:10:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jZ/9g3UX780YJBoh/4qrfM1USpXb8Saz3JyDI9J2TrayjxahVCQD4WIpFF3HZdm29ufppzSiTWcjxG4rwuHFV0LjqJIJVs2G1OeylldMxsVKI4Pr4rBlUdwfrUjcWQN9p8XkL0k19csxrXGNIBic3SNHvFNr7Htg8tTzB2+04p+5ZuDBcSX1wLGX/BAv97eD5TEnQfWHzLnEUZApsZlXuefDNCncCv2+pfMuy+IyePmQ2ZY8JUp7JxB/KRGPjrXzWWsIloQCMnpez8/GH4dx9fphWGr0oBRibT/M8XKR0AivQK4BN00YeymU+V0niWCbDweP8i1jp5e4SUzn0CFrfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hgw83K3ja0/Y84o82aRw5+EVpU3yQDYPc3exinTzqzA=;
- b=PTeQI3a6vZ310/R9YMdvUsf4+OoO7l+O0BoWPzdUALCIJDA65iPxeIwjimR0DxAG8FC/E2DAELuY4XK4nMG0AAgkuSJoKMMUTyzjG3mtZ7alyp2sqWmMct7CJb4LInzRXf/mYgVGv9mM6vkMPapOJt1UOS48YwDFJfraeDYABIS3AtqlomDKioMmvQ20NrJGr9Ab9ma7JGLEP3AOFnp+Ruz9L0hmKk2WQ33xGq8KI4kleXKEdidPq8LHUHJNV1sFgPD6LZw2Q61zeWukdBL4nKPANasWq/nRXSDFtX2skfmkaTAVpPvDkzmGGm5t+TDQoSi65a7KbzGFb/U8akV0qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hgw83K3ja0/Y84o82aRw5+EVpU3yQDYPc3exinTzqzA=;
- b=U+yqnUMIwSgeXPJt9i1gYXNu/3QHb+i7+axefpUVDz+0iyBoT60jXr9r7Cfeci+24eNqDSWOhLvA5kMUANs5RQVzHqhqa7Ml7bP5BRTnslGzBHY6Apsr4Uenybp23Wkw13zsMe6DsMMpkmqdoAGaulxwnD1xWKk5rx0XbDiofDg=
-Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- (2603:10b6:61f:fc00::278) by CH2PR07MB8169.namprd07.prod.outlook.com
- (2603:10b6:610:67::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 11 Apr
- 2025 04:10:01 +0000
-Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- ([fe80::2e5:1b6b:f0e1:26ec]) by CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- ([fe80::2e5:1b6b:f0e1:26ec%8]) with mapi id 15.20.8606.039; Fri, 11 Apr 2025
- 04:10:01 +0000
-From: Manikandan Karunakaran Pillai <mpillai@cadence.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        Milind
- Parab <mparab@cadence.com>,
-        "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/7] Enhance the PCIe controller driver
-Thread-Topic: [PATCH 0/7] Enhance the PCIe controller driver
-Thread-Index: AQHbnwasjE0SelmZSEibiI56xlER37OGz6YQgBUJVwCAAhfkkA==
-Date: Fri, 11 Apr 2025 04:10:01 +0000
-Message-ID:
- <CH2PPF4D26F8E1C62AAD4619677E94525CFA2B62@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
-References:
- <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250409201104.GA295084@bhelgaas>
-In-Reply-To: <20250409201104.GA295084@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH2PPF4D26F8E1C:EE_|CH2PR07MB8169:EE_
-x-ms-office365-filtering-correlation-id: 62ea7232-5510-4881-8923-08dd78aebaf2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?TmW13uh+A9gGDtdYuurYUNtHtVzfe1/jTMTwrKBtTi40Cq80fhLRB2lrIeeh?=
- =?us-ascii?Q?CLhwVvVenIMC+XQIz4jQ2QXh7McMWKWC7KuLHRcPn7eke3SCDBbvojqUSTKl?=
- =?us-ascii?Q?nH3CkEGyfr2kr0h1vjTCEnw6MQ34zPvOoaAKHJTtEGyo97/jl5BEStk895/C?=
- =?us-ascii?Q?xqkfnCm1GLFXFyY+8Xel4/j8QFR2zpWJ5gZZnqSKQEX9r55JOMKIcQEgBm9X?=
- =?us-ascii?Q?mTAMiiog6I3yw7mUxQ7SdHn3l2F90tU+8z0hIjF8U7j98Jnfxk93I5u9A+6j?=
- =?us-ascii?Q?xWuSWqUT9UCgk/l81tZo8KaAoPSd1kKQ0Ge7ic+tHSMBH+DhfZXcY/KC29R6?=
- =?us-ascii?Q?Db9MTJZbA1DDNhBs1oh44u0QA5b5dcnPjXxwru6UXxoj+RFQdfXSmfPXeRGW?=
- =?us-ascii?Q?APz9qew3PNT79nOe67kwe73sK7/++8QWn3AqYiSd1u1kqrKQxIUDrz0sz0rY?=
- =?us-ascii?Q?x8McWso8oHIF3b/0j97jtxvfcSdXpnRgYnOPSOsuXSmMlFwKPVbLFGrN0wZd?=
- =?us-ascii?Q?geboTPgtdMEdkNwDvBKSq3EbQOzUy9Agh2N3Gh5NGTrLTmfgrV2Iym1U8Ft2?=
- =?us-ascii?Q?CvMHDpuBG0Pn1lAMScaOmuVelV094zisbTG9sn+41zPxJ7Qdz0kqn7KvGrPv?=
- =?us-ascii?Q?f6IA9Y7nLarZigJkgLAFaWeApxaMEnE6eC8hXIQlSqo4aGhhVNk8+CvNCYHy?=
- =?us-ascii?Q?EFhWABZx604NYC8oDnp51DcjBO+mLxY7v/luqfb2gB8g5BBq2J0VTKfXplX7?=
- =?us-ascii?Q?TerDRlJEi144eJeia0L0rj65iv+U1mzpnxG+aavr5BfBj0scy4ZMBHK0KuIW?=
- =?us-ascii?Q?Tjg6lqSpHzgI3N+RucgPOUQ8KQ2fcvkeSUUsPd6qloCkGssnMm5IJOQg5e0h?=
- =?us-ascii?Q?4q+/iw+srGi2G5i121S2EI+k3FGSX74eCjoJF2US4JR56Hml9OrA4siS/2fx?=
- =?us-ascii?Q?dlZ9hCuIFwZPxmK/ocWxR6WRC79Zmt3f7oPB3nbmziNCglQb/9Chj2noGcHX?=
- =?us-ascii?Q?vsUvAoEuxpRGIqxdVhiH35dyLaolFVEqxl1rhYrxWrcVBlNUxHjzfJEbUkPC?=
- =?us-ascii?Q?mw9kwksHKzJtQ6SMO8HtjUOydIGSIdbFNJZvc8YcOzM/4n2qe8mJVHy8TUQh?=
- =?us-ascii?Q?K2VNmRG56kc2JL86ZoEUCtyBdYy/JVyjDim+OChOQ2n7YT/bLgohoFjgp3nP?=
- =?us-ascii?Q?z+wRVciqAHfLlNxAOu8B4ZKz6jF1NJr6QfQ33rFlZa4qiyM9CHSK49eJVzSo?=
- =?us-ascii?Q?o2R2taxsOyPd7NgB/QNMtqAwo4CKgRGT1xSukZpxycD+r4gn9JCCIO8I1ZFM?=
- =?us-ascii?Q?0wtrveOG0AM7KQd+zhut9e2EJ71eePHF2rMMbNIwl+j+rKayTkAr+d5EdWs9?=
- =?us-ascii?Q?G7bIN5xGLBolOFJdWpjWS7eNOOYoTi52d6C1W8wELoFQC1NY24sTGbbJk0AS?=
- =?us-ascii?Q?K15btD42ahekQfiiUL8c5BT+v0i6/riNM7sVT93FsZn4jaKaH4gTwBfmfjVc?=
- =?us-ascii?Q?sWptBwpSdvP3Q28=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PPF4D26F8E1C.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Bggfaoru9elNTld5gF7ayxm76xi1AE1VvfRFRwpBFWAaLGYS4rMPk5n/IRCY?=
- =?us-ascii?Q?SUjbvVMd0AphrtrpURKMHiV6iwuM2RiQbyGHaU0uk91FX+NuC9sKFuf7Bo17?=
- =?us-ascii?Q?dRnbwCj/nZ1ULXxT6qnXDDWUR7sngy+R1VBDssQXB53uIOu3ajaFdRpRYbag?=
- =?us-ascii?Q?lP9Gm/vDNBeA7c6ycRh9kyqraklO05Hnl4BRuGRgKmZc0rEn65LntmJarOQL?=
- =?us-ascii?Q?RejGgZka5+5MdWz3RuHgc+5MFe09Lu4tGXnODgyBxYCsLYvT21GR1+DWhuGI?=
- =?us-ascii?Q?BGN+GZmIEMzxYeCYvbYXUsrM/35j1ZpbdXU5DF135GdQEgpzyVm9vJk32+Pl?=
- =?us-ascii?Q?HYS+CfuXe05Rk6H0g9/tBKBApcqsPIRn2XEOpeDP4ghHqFOMggOlcKocNX03?=
- =?us-ascii?Q?3pSWAYsIY8MSs8F5Cfjotk4wPYDdsc7N4Q7gQMFvLDl+28hinXQS8zo41Gq8?=
- =?us-ascii?Q?XCfw3/pk1MhVLzQgqaYzawpGLTI505SFIOeQULjpTKIRvZ0TAUWW+pTNwEpC?=
- =?us-ascii?Q?CwmI/TcQIk0X35uKJky9vS32qlJRMyXCUwQXjbgmKBzNe3YD4XlXPXeSLjEZ?=
- =?us-ascii?Q?lexlm3UVjYnUNq8IX4eWcRA0+YtJC08o6Qkb1TYY3MeOiCdQUDf5+D2+qOwd?=
- =?us-ascii?Q?S/HSTG++Yr+JbRYU+GKmtfzTolEGQH2dkzhANrMcx5NMMkuiDdEvq0WH/hgF?=
- =?us-ascii?Q?QaW4fh5uB1Z/iuQgt2JdUbQ6DrHEpwAt+8AD+eEWt5Q8N5C7E4FZipwE3tUt?=
- =?us-ascii?Q?dI4rzeZwFpzP8n8rGKXnk+Y1Vyosn6yKT1dG/KvUrVDmevO3a0usNcCL6y44?=
- =?us-ascii?Q?ClnqMuAC/AqJcn4iVrID1TW+KeGzxYU0lj/NX19FW+KD7OcU0Y4YsHTJTbKt?=
- =?us-ascii?Q?CSnDw2VoFgjr6NomH8R7V09kcCcmKwZGg19cxNOajheJXebF5Yl4nHoSVtiY?=
- =?us-ascii?Q?HMNl4Exb+o6eqfdR4XPiDK0et1a8hT1DY0hbDmxMp5AgRoJusDsZ7EkdieU9?=
- =?us-ascii?Q?Y8o/Y1mw/tzdK6T6yedRCRXQF/Y7QX3LpDsYhmHroKGnizzxPzd8XzGV/dSH?=
- =?us-ascii?Q?k25jNpghIckF5QwsX4W30XLUixAaiVXg1GiCNK4bc3qfhy2io3VMczFMxqBI?=
- =?us-ascii?Q?5cQqv9yk3JupxeWf8qkRrmmxS7DM83qhx043sTXzckWdTV6Cqkb2S8ZJCtLk?=
- =?us-ascii?Q?0hV/dz+z+IzFI/EVvYpHYANqKPGPy+lqQaVY4gaL3qP4CsyuVGx8PjLTBq0d?=
- =?us-ascii?Q?GGYTTh5b0XywM0Eu/P/0Z4EFOvXTwMuUMAZ1LSgZRWkuLPHNiwl7ni5++0gF?=
- =?us-ascii?Q?WuVcL1R2zQvGcicyhKBfWbbw/koqKEHecRAfLophhk24FOP5TWVHa63ttIYd?=
- =?us-ascii?Q?EjGCKSbJR68Te9GK48qpeQjQaX9+vKOqdcT75HIEjPDyx8Etn4JznyQK0F2r?=
- =?us-ascii?Q?zRoO8nlAKZNfqt7O9XSI4WCTnQSzkweov4WuBmbJ7s4eC5LGohYJaDYOYXPA?=
- =?us-ascii?Q?NDRfCzM67ncktd6Lv3FEawfkXPinIuWls5yv1Tug85ZRjnKXmtB8UH21U+Uw?=
- =?us-ascii?Q?IvCiRI4Q/3DdJB6bvqxSjMVRkIDL/7k9qY0FBzHHi/1VC1eyB0IImZ0FpWRS?=
- =?us-ascii?Q?2w=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FW62hLXS"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B4CE3b1473638
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 23:12:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744344734;
+	bh=8XC15NhKFd0PY+4Z1N+K5fXmaFufMv7nE++wOrKWixg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=FW62hLXSq91mU6OGMd3X4DNS6b8tOBLV2Ej0PjEUI4JNcmnPg7v7oMT9LIW3VGzlp
+	 BlysRAJWkSR33YVTOfv6PAsCDBUIm9cEE31V2YoC0YH3Dv0cSh6L9/zfX6XQI+HpLK
+	 xOiLCKjwbYokjiHWtqj1gU2V75jZ5dUhKVZf0Wpk=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B4CES5068987
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 10 Apr 2025 23:12:14 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
+ Apr 2025 23:12:14 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 10 Apr 2025 23:12:13 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B4C9am074277;
+	Thu, 10 Apr 2025 23:12:10 -0500
+Message-ID: <7629a496-4495-4333-9a90-829e53e9ea84@ti.com>
+Date: Fri, 11 Apr 2025 09:42:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PPF4D26F8E1C.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62ea7232-5510-4881-8923-08dd78aebaf2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 04:10:01.2542
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: H8fQCj0h/Pd+z7E46+YRakSREOv3NHfqoGJDUJzCNfUfSobQv3gZNdCmflx5Cu2sV21fS7/3JmCrMCdvq+3YsKBJXzjEkHCJeUpCmx6XAHE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR07MB8169
-X-Proofpoint-ORIG-GUID: 1bcKk0awmGj3eJ7IvxRtow3EIj6l6Yac
-X-Authority-Analysis: v=2.4 cv=HIXDFptv c=1 sm=1 tr=0 ts=67f8961b cx=c_pps a=eoA+jwG2N97X2eoE7Om4vA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=XR8D0OoHHMoA:10 a=Zpq2whiEiuAA:10 a=hslJUmW0oW_hk4mgZC4A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: 1bcKk0awmGj3eJ7IvxRtow3EIj6l6Yac
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 mlxlogscore=760 suspectscore=0
- clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110028
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+To: Andrew Davis <afd@ti.com>, Judith Mendez <jm@ti.com>,
+        Devarsh Thakkar
+	<devarsht@lewv0571a.ent.ti.com>,
+        Nishanth Menon <nm@ti.com>, Hari Nagalla
+	<hnagalla@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Markus
+ Schneider-Pargmann <msp@baylibre.com>
+References: <20250405001518.1315273-1-jm@ti.com>
+ <20250405001518.1315273-7-jm@ti.com>
+ <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
+ <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
+ <f8f1d877-3d13-4ba7-90e1-455923458c11@ti.com>
+ <fe735242-4643-432a-adaf-27e29719948a@ti.com>
+ <bffd8489-1556-425d-b3f9-8fde8a7d34a7@ti.com>
+ <b97c1eaa-f34c-4731-8e9e-b51faa4619c4@ti.com>
+Content-Language: en-US
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <b97c1eaa-f34c-4731-8e9e-b51faa4619c4@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+Hi Andrew,
+
+On 10/04/25 23:20, Andrew Davis wrote:
+> On 4/10/25 3:55 AM, Beleswar Prasad Padhi wrote:
+>> Hi Judith,
+>>
+>> On 10/04/25 04:02, Judith Mendez wrote:
+>>> Hi Beleswar,
+>>>
+>>> On 4/7/25 11:00 PM, Beleswar Prasad Padhi wrote:
+>>>> Hi Judith, Andrew,
+>>>>
+>>>> On 07/04/25 19:43, Judith Mendez wrote:
+>>>>> Hi Devarsh,
+>>>>>
+>>>>> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
+>>>>>> Hi Judith,
+>>>>>>
+>>>>>> On 05/04/25 05:45, Judith Mendez wrote:
+>>>>>>  > From: Devarsh Thakkar <devarsht@ti.com>
+>>>>>>>
+>>>>>>
+>>>>>> Thanks for the patch.
+>>>>>>
+>>>>>>> For each remote proc, reserve memory for IPC and bind the mailbox
+>>>>>>> assignments. Two memory regions are reserved for each remote 
+>>>>>>> processor.
+>>>>>>> The first region of 1MB of memory is used for Vring shared buffers
+>>>>>>> and the second region is used as external memory to the remote 
+>>>>>>> processor
+>>>>>>> for the resource table and for tracebuffer allocations.
+>>>>>>>
+>>>>>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+>>>>>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>>>>>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>>>>>> ---
+>>>>>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 
+>>>>>>> +++++++++++++++++++++++--
+>>>>>>>   1 file changed, 90 insertions(+), 6 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts 
+>>>>>>> b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>>>> index 1c9d95696c839..7d817b447c1d0 100644
+>>>>>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>>>> @@ -52,6 +52,42 @@ linux,cma {
+>>>>>>>               linux,cma-default;
+>>>>>>>           };
+>>>>>>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
+>>>>>>> +            compatible = "shared-dma-pool";
+>>>>>>> +            reg = <0x00 0x99800000 0x00 0x100000>;
+>>>>>>> +            no-map;
+>>>>>>> +        };
+>>>>>>> +
+>>>>>>> +        c7x_0_memory_region: c7x-memory@99900000 {
+>>>>>>> +            compatible = "shared-dma-pool";
+>>>>>>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
+>>>>>>> +            no-map;
+>>>>>>> +        };
+>>>>>>> +
+>>>>>>> +        mcu_r5fss0_core0_dma_memory_region: 
+>>>>>>> r5f-dma-memory@9b800000 {
+>>>>>>> +            compatible = "shared-dma-pool";
+>>>>>>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
+>>>>>>> +            no-map;
+>>>>>>> +        };
+>>>>>>> +
+>>>>>>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
+>>>>>>> +            compatible = "shared-dma-pool";
+>>>>>>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
+>>>>>>> +            no-map;
+>>>>>>> +        };
+>>>>>>> +
+>>>>>>> +        wkup_r5fss0_core0_dma_memory_region: 
+>>>>>>> r5f-dma-memory@9c800000 {
+>>>>>>> +            compatible = "shared-dma-pool";
+>>>>>>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
+>>>>>>> +            no-map;
+>>>>>>> +        };
+>>>>>>> +
+>>>>>>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+>>>>>>> +            compatible = "shared-dma-pool";
+>>>>>>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
+>>>>>>> +            no-map;
+>>>>>>> +        };
+>>>>>>> +
+>>>>>>>           secure_tfa_ddr: tfa@9e780000 {
+>>>>>>>               reg = <0x00 0x9e780000 0x00 0x80000>;
+>>>>>>>               alignment = <0x1000>;
+>>>>>>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
+>>>>>>>               alignment = <0x1000>;
+>>>>>>>               no-map;
+>>>>>>>           };
+>>>>>>> -
+>>>>>>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+>>>>>>> -            compatible = "shared-dma-pool";
+>>>>>>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
+>>>>>>> -            no-map;
+>>>>>>> -        };
+>>>>>>>       };
+>>>>>>
+>>>>>> This is missing the edgeAI specific remote-core carveouts and 
+>>>>>> RTOS-to-RTOS IPC memory regions [1] being used by edgeAI 
+>>>>>> firmwares which come as pre-packaged in the official SDK release 
+>>>>>> for AM62A.
+>>>>>>
+>>>>>> There is only one official SDK release for AM62A (which is edgeAI 
+>>>>>> based) [2] which packages these edgeAI remoteproc firmwares and 
+>>>>>> in my view it is a fair expectation that remote core careveouts 
+>>>>>> in device-tree should align with firmwares released in SDK.
+>>>>>>
+>>>>>> This is because most developers (including me) and vendors 
+>>>>>> download this official SDK release and use it with latest 
+>>>>>> upstream kernel and modules (right now we are applying required 
+>>>>>> patches locally) and this patch won't suffice for this, in-fact 
+>>>>>> it won't work since the remoteproc firmwares are already using 
+>>>>>> regions beyond the reserved-regions from this patch.
+>>>>>
+>>>>> I understand your point, currently with this patch remoteproc loading
+>>>>> will not work for some cores. However, the goal here is to 
+>>>>> standardize
+>>>>> as much as possible the memory carveout sizes, push the "demo 
+>>>>> firmware"
+>>>>> to request resources the correct way from resource table, 
+>>>>
+>>>>
+>>>> It is indeed more suitable if the memory carveouts are called out 
+>>>> in the resource table of the firmware. But you will still need to 
+>>>> reserve that memory sections in the Device Tree so that Kernel does 
+>>>> not map that memory for anything else. So I am thinking how moving 
+>>>> to resource table will help solve this problem?
+>>>
+>>> The point is that our default FW is doing things incorrectly. We 
+>>> want to
+>>> push the existing FW to
+>>> 1. Request resources via resource table.
+>>> 2. Fix their memory requirements (recent offline discussion proved that
+>>> FW is requesting more than it needs)
+>>> 3. FW should adapt to Linux not Linux adapt to FW
+>>
+>>
+>> Thanks. I also agree with you on all of the above points for a 
+>> standard firmware.
+>>
+>> However, I was referring to this problem:
+>> Can we get rid of static reserved memory carveouts in DT?
+>> People using a custom firmware will have to patch the Device Tree to 
+>> reserve larger/different memory regions. Is there some way where the 
+>> firmware can dictate the "reserved" memory carveouts at runtime? 
+>> Memory carveouts can be announced through Resource Table, but there 
+>> is no guarantee we will be able to allocate it (it could be mapped by 
+>> the Kernel for some other alloc), unless its pre-reserved in DT.
+>
+> That's the neat thing about the RSC_CARVEOUT item in the resource table,
+> it works both ways. The firmware can request a static address, or it can
+> use FW_RSC_ADDR_ANY for the address and Linux will go and dynamically
+> allocate it a region. Then it passes this info back to the firmware by
+> updating the resource table in memory. Firmware can then simply read this
+> carveout address from its resource table and start using it.
 
 
->EXTERNAL MAIL
->
->
->On Thu, Mar 27, 2025 at 10:59:08AM +0000, Manikandan Karunakaran Pillai
->wrote:
->> Enhances the exiting Cadence PCIe controller drivers to support second
->> generation PCIe controller also referred as HPA(High Performance
->> Architecture) controllers.
->
->Usual convention is to include a space before "(" in English text.
->Apply throughout this series in commit logs and comments.
->
+Ah yes, I forgot about that. We already use FW_RSC_ADDR_ANY for VRING
+allocations. We can scale it to memory carveouts in the similar way. Thanks.
 
-Ok
-
->Others have mentioned the fact that we can't easily extract the
->patches from this posting because of the Outlook series.  That also
->makes it harder to review because we can't apply the series and see
->the changes in context.
 >
-Planning to send the patches through another Linux developer who has the
-necessary environment setup.
+> The only time we need a static addresses would be for code sections as
+> they are not relocatable (yet). And that is the reason we have the
+> minimal carveouts we are adding in this patch. Code goes here. And
+> these carveouts are 15MB! No firmware I know of has 15MB of *code*
+> section.
+>
+> As we found in the offline discussion, even our largest firmware
+> doesn't use near that much space. What that firmware is doing is picking
+> some spots in DRAM for its heap and buffer areas, and without 
+> coordinating
+> with Linux, just starts using that memory. We have to then go into DT and
+> carveout all these ranges to avoid stepping on the firmware heaps from
+> Linux.
 
->Bjorn
+
+Yeah I have found this as well. All of those heap/buffer areas should be 
+moved
+to the resource table now.
+
+>
+> With these firmware heap/buffer memory static carveouts we have to 
+> account
+> for the worst case and statically carve out enough memory for the largest
+> possible amount of memory a firmware could ever use. In some firmware
+> we ship today this is +2GB! So why should every user of this board lose
+> all this memory when they might happen to be using a more sane firmware
+> that doesn't use so much (like my Zephyr firmware), or if their firmware
+> doesn't need any heap at all (like some other firmware we have).
+
+
+Agreed on your point.
+
+Thanks,
+Beleswar
+
+>
+> Andrew
+>
+>>
+>> Thanks,
+>> Beleswar
+>>
+>>>
+>>> If not, then then we should try to move to Zephyr firmware or other/
+>>> better options.
+>>>
+>>> Hope I am able to explain myself better this time around.
+>>>
+>>> ~ Judith
+>>>
+>>>>
+>>>> Thanks,
+>>>> Beleswar
+>>>>
+>>>>> and move away
+>>>>> from this dependency and limitations that we have with our 
+>>>>> firmware. We
+>>>>> should soon be able to generate our own firmware using Zephyr, which
+>>>>> Andrew is pioneering, so with this firmware we should move to the
+>>>>> correct direction upstream. Downstream we are still using the memory
+>>>>> carveout sizes that the firmware folk want so desperately to keep, 
+>>>>> for
+>>>>> now..
+>>>>>
+>>>>> ~ Judith
+>>>>>
+>>>>>>
+>>>>>> [1]: 
+>>>>>> https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
+>>>>>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
+>>>>>>
+>>>>>> Regards
+>>>>>> Devarsh
+>>>>>>
+>>>>>>>       opp-table {
+>>>>>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
+>>>>>>>           };
+>>>>>>>       };
+>>>>>>>   };
+>>>>>>> +
+>>>>>>> +&mailbox0_cluster0 {
+>>>>>>> +    status = "okay";
+>>>>>>> +
+>>>>>>> +    mbox_r5_0: mbox-r5-0 {
+>>>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>>>> +    };
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&mailbox0_cluster1 {
+>>>>>>> +    status = "okay";
+>>>>>>> +
+>>>>>>> +    mbox_c7x_0: mbox-c7x-0 {
+>>>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>>>> +    };
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&mailbox0_cluster2 {
+>>>>>>> +    status = "okay";
+>>>>>>> +
+>>>>>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
+>>>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>>>> +    };
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&wkup_r5fss0 {
+>>>>>>> +    status = "okay";
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&wkup_r5fss0_core0 {
+>>>>>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
+>>>>>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
+>>>>>>> + <&wkup_r5fss0_core0_memory_region>;
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&mcu_r5fss0 {
+>>>>>>> +    status = "okay";
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&mcu_r5fss0_core0 {
+>>>>>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
+>>>>>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+>>>>>>> + <&mcu_r5fss0_core0_memory_region>;
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +&c7x_0 {
+>>>>>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
+>>>>>>> +    memory-region = <&c7x_0_dma_memory_region>,
+>>>>>>> +            <&c7x_0_memory_region>;
+>>>>>>> +    status = "okay";
+>>>>>>> +};
+>>>>>>
+>>>>>
+>>>
