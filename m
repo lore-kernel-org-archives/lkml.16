@@ -1,159 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FC52586EA;
-	Fri, 11 Apr 2025 17:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F4F1D9A5F
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744394252; cv=none; b=bWP8Ho90u1xiy3U7X8Mnj3KuRyZ2NQJKHsSnpgSr4yKCaOIhXj82qw5ahysfaRjmWzSzFBh1aG1wXH1rwuE2oC48g5QMoRq1DjxklGm2IW6HgEuplTBX6BnSh6Ho6h028RP45po/xFoD3RjtZBilKjNgv3E4abLQ1pBsNVEfqgc=
+	t=1744394465; cv=none; b=mQEDkmlLNwL9RwER4qezzBEq464WN7uIJjcCNfcAAPKjAy5Ihf4zIC4Kl6j/Nd3+DGvzE984Or+ql4G59tG5QXIX9l9TGr4VIr95K1pukhr2fk0NfLkopdocNEHacliq1wIi8LvJJ/iI4DG7FUe19U6hOQP2lTDBbJNPRowV0mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744394252; c=relaxed/simple;
-	bh=1/CULNrp6gAuXONzF0vqUued6nOAitWEc5QO9k0BcfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=njuFd64YES7ExutJKF7BzzS90a7tRth+Ub9lSXzjkdwvv53PZmV5dUslPynaJ6fuejwYBL9nfmdc6eF+8dUl+Xdg8QqLknYFROhEfE+EsyVIYXPTy2lxAMRM49wmZc+QYzxQlvTw6NDwezOVPm2/ggffwqt5m7aHIzShs7IyktI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQL8jzqT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQL8jzqT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADAA8C4CEE2;
-	Fri, 11 Apr 2025 17:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744394251;
-	bh=1/CULNrp6gAuXONzF0vqUued6nOAitWEc5QO9k0BcfM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vQL8jzqTq0Mt9e5/JneJadi8HlMfBW1lUfP29jeKA7AXF17GrRL7EGjSF+OcxDTT+
-	 Q50Le5Uho9FyrtY+DS4gnwRNTMhp/OUFgUvRVrNTKuE3RBQ/08g1tBRNipNXvacs4I
-	 ftH0qnbINyOjg7oXIJ/ksRpF0whK+c8FL3a01Hjcl5BJrCbccsmdBbUemLNby+jJeM
-	 mf2OPQgQV7mxABw09VRCzxGJhc+rCD5IUckA9shSmPoerGfaMXVpjTtVhGXwnVRj8X
-	 xoKkQgPqQ3GtFcbeilxBgRG+WI2yZ4YZvo8719+bMdMHD8AqcjXj1QkjBycLBEidbx
-	 49MTgDL6i9Qfw==
-Date: Fri, 11 Apr 2025 12:57:30 -0500
-From: Rob Herring <robh@kernel.org>
-To: Praveen Talari <quic_ptalari@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pm@vger.kernel.org, psodagud@quicinc.com, djaggi@quicinc.com,
-	quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
-	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
-	quic_shazhuss@quicinc.com, Nikunj Kela <quic_nkela@quicinc.com>
-Subject: Re: [PATCH v1 2/9] dt-bindings: serial: describe SA8255p
-Message-ID: <20250411175730.GA3642862-robh@kernel.org>
-References: <20250410174010.31588-1-quic_ptalari@quicinc.com>
- <20250410174010.31588-3-quic_ptalari@quicinc.com>
+	s=arc-20240116; t=1744394465; c=relaxed/simple;
+	bh=29F5/4brLuTIUNZs0SGB0imlFrxYlFI20ycy5m0lvAI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=egVVKLa/B7XA9giM07mikFjuczerqeVBsb7xzKYNQPFdplHrzwvX3yDL8lgTZoiIv1NCfIba/8LcjiAOtxBpKDjzpjAdZAIN+RIY1ZVW9bfNmrs4BPtovQ7/NhW08EEJTv2uhnbA9/jiRH+rtvQpppJ6ZddxYSMCa/7g4qvLLUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d43d1df18bso23518365ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:01:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744394462; x=1744999262;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OVK9582xJ/K6d/nWSfhNSTUPLLFVBAToLF5CLvCzU6c=;
+        b=iWV+mc7ITszlLnOaAOVBdER/SgNuyqwzJUNj0EqGBfHZzB+J8CLGxZhFCVbU+pIovD
+         lGoVPQ4D/4Vn3dnXb5P2ELEa5LGHPitpsYAuLBSI/veOBtuYndvtESp171y1DhIYwBvO
+         O4GRIi7yIsYbfiURLGg8harw+MVdraRJPswgojC2woQTNYxF2RbSglB8WUPeDef5MUyk
+         Cm/TJRsyRZUk7aFIMRQ7OxR37ERlo9MZRM+d0G6Y7Ro9fhcTctyr00Ng9SnwiHluzXm4
+         HfqiycWzerxwsLVkJXsHtnIgBCBN58KeO4yItYDfzIOr97lcI7Pfg4D+V37CQZ/cOTfk
+         ijMg==
+X-Gm-Message-State: AOJu0Yy6yGk/Ap0QozpYUl2d3+iO0HGXBvQhPqst5iBp4nASbrwl8kau
+	9zGRNQlupt2Xm8aa95u2z8VgNWRh6n6r0cBLmR+xNzsW9qMvx/aDaSdwIYitmCvHtsQv+dPNzcC
+	Hr3apfpJe17kZ6hhQjy5WnV2u3VVAGLfqzmnAFpPGi++uydCv20DK8fU=
+X-Google-Smtp-Source: AGHT+IGhi9o59dU6k2gMxcIg1hQgp3Ck0Mvr7t/t0ubWyyA8RVKUTduF1sJp9JJVyXFNosJxzw41KmK2cNsmoRbl5uMwXgkaRLj+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410174010.31588-3-quic_ptalari@quicinc.com>
+X-Received: by 2002:a92:c261:0:b0:3d3:e284:afbb with SMTP id
+ e9e14a558f8ab-3d7ec2276f9mr36758595ab.11.1744394462425; Fri, 11 Apr 2025
+ 11:01:02 -0700 (PDT)
+Date: Fri, 11 Apr 2025 11:01:02 -0700
+In-Reply-To: <CAP01T77pot4y_m1eb6AP5K24CM3u8=yfJhFW7R9H-nZTmFgo9g@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f958de.050a0220.2c5fcf.0006.GAE@google.com>
+Subject: Re: [syzbot] [bpf?] possible deadlock in __bpf_ringbuf_reserve
+From: syzbot <syzbot+850aaf14624dc0c6d366@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, memxor@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 10, 2025 at 11:10:03PM +0530, Praveen Talari wrote:
-> From: Nikunj Kela <quic_nkela@quicinc.com>
-> 
-> SA8255p platform abstracts resources such as clocks, interconnect and
-> GPIO pins configuration in Firmware. SCMI power and perf protocols are
-> used to send request for resource configurations.
-> 
-> Add DT bindings for the QUP GENI UART controller on sa8255p platform.
-> 
-> Co-developed-by: Praveen Talari <quic_ptalari@quicinc.com>
-> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+Hello,
 
-Your tags go last because you touched this last (I assume). The order 
-here would be correct if you were the original author, but Nikunj made 
-significant enough changes to change the author and also sent the 
-patches. The sender always has the last S-o-b (until the maintainer 
-adds their's when applying).
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
-> ---
->  .../serial/qcom,sa8255p-geni-uart.yaml        | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
-> new file mode 100644
-> index 000000000000..0dbfbfa1d504
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/qcom,sa8255p-geni-uart.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Geni based QUP UART interface
-> +
-> +maintainers:
-> +  - Praveen Talari <quic_ptalari@quicinc.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/serial/serial.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sa8255p-geni-uart
-> +      - qcom,sa8255p-geni-debug-uart
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    items:
-> +      - description: UART core irq
-> +      - description: Wakeup irq (RX GPIO)
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
-If this is a wakeup source, then you should have interrupt-names with 
-'wakeup' for the 2nd irq.
 
-> +
-> +  power-domains:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  power-domain-names:
-> +    items:
-> +      - const: power
-> +      - const: perf
-> +
-> +  reg:
-> +    maxItems: 1
+Tested on:
 
-'reg' goes after compatible.
+commit:         e403941b bpf: Convert ringbuf.c to rqspinlock
+git tree:       https://github.com/kkdwivedi/linux.git res-lock-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=110a8f4c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ea2b297a0891c87e
+dashboard link: https://syzkaller.appspot.com/bug?extid=850aaf14624dc0c6d366
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - reg
-> +  - power-domains
-> +  - power-domain-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    serial@990000 {
-> +        compatible = "qcom,sa8255p-geni-uart";
-> +        reg = <0x990000 0x4000>;
-> +        interrupts = <GIC_SPI 531 IRQ_TYPE_LEVEL_HIGH>;
-> +        power-domains = <&scmi0_pd 0>, <&scmi0_dvfs 0>;
-> +        power-domain-names = "power", "perf";
-> +    };
-> +...
-> -- 
-> 2.17.1
-> 
+Note: no patches were applied.
