@@ -1,57 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D2C6FB9;
-	Fri, 11 Apr 2025 03:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF816FB9
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744341091; cv=none; b=PyuQAw3TZw5KtwpjXy/hmATm+S3Xry+ArJXuaAdrtxQGJeqhIBa7tNZgs0z5JB5zJGusMy9q3fIc7wtZjoFUCpELGh9rTPS/kQZFnjsFfqS3UMskGTQLUvMtmPPpENa4bTT3kDXu9IVHJFGU+yQlzn00yzF7dEpLBdhEN3ufLAQ=
+	t=1744341203; cv=none; b=jBVslERYmJMlpIGb1KHwn8AjgMjJVHLXf0WAvGKaBc/XLfgOdYRZWR8fGG3DqgyJu+Stlq7WGNZor2LHI0Qa5UxXcHkIwIvK7m2X/hv0WkIL5Wsx/ZYGomEdYTBqu8P15giytPeokqYxwYZ89Z47yKlxKou/cmj8iDQE6zKJncI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744341091; c=relaxed/simple;
-	bh=+I1LKR5/GFel5Hnsw++Z7Q1F/FET2wm6yRqFmjbIVmA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XDCV2BK5Ck2ACsU1yLVwGHQhbaswMd5gwJ3wqhmJTXqxZNLTt+s55YXuTNZN744gq2Stz3VBOOtO8rnMqO0clAZ4bAwPx+sZYP9PE2uIL0MuvSH5svh+btWF4uxQNcHnYOrcYN4n6oMF6m1zyde2jD+6iC2KR3F/MRdFv2O9DJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gtCLTFGg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744341203; c=relaxed/simple;
+	bh=wUxHDLbBSGAp81otzfEfZX3sRBMR1DvVQr28hy/Lndo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=jpzNPdSYu9Xu64GmIwmXmF8KG03AD4OGjHJEcRgtluLCL/Ix9CzhjnUGQT1mtCFUSkfumTOcRuDe53WLca0Hd9YoPYyhOn6E41XOLHodcuZov1SjUxn6nrCwAm5ZDIS5nTlVsrs5hoqGYhAF7gAJXOV9n0BSgADmfjeD9JZngOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jlxip.net; spf=pass smtp.mailfrom=jlxip.net; dkim=pass (2048-bit key) header.d=jlxip.net header.i=@jlxip.net header.b=oHmntTTx; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jlxip.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jlxip.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gtCLTFGg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4954EC4CEDD;
-	Fri, 11 Apr 2025 03:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744341090;
-	bh=+I1LKR5/GFel5Hnsw++Z7Q1F/FET2wm6yRqFmjbIVmA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gtCLTFGgRKY6euMdDXye/Rn3aGQFaJQUjvO+8duaHDulgk6VjvxGQa6wu3241kEla
-	 tvSWVm2wTyRpqO7F8agliERkDylSoP6IB/UkQUnmuMPp9GABwRAaknq0m46r6KBMzX
-	 gmu3kbLrywL+4phpVCJ2KVmusqbwNd1Ky42lQqWw=
-Date: Thu, 10 Apr 2025 20:11:29 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: gourry@gourry.net, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
- ying.huang@linux.alibaba.com, david@redhat.com,
- Jonathan.Cameron@huawei.com, osalvador@suse.de, kernel_team@skhynix.com,
- honggyu.kim@sk.com, yunjeong.mun@sk.com, Dan Williams
- <dan.j.williams@intel.com>
-Subject: Re: [PATCH v7 2/3] mm/mempolicy: Prepare weighted interleave sysfs
- for memory hotplug
-Message-Id: <20250410201129.59daece11914dc086bd32f2c@linux-foundation.org>
-In-Reply-To: <20250410080629.564-1-rakie.kim@sk.com>
-References: <20250410075341.549-1-rakie.kim@sk.com>
-	<20250410080629.564-1-rakie.kim@sk.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=jlxip.net header.i=@jlxip.net header.b="oHmntTTx"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZYhb14W1Hz9sph
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:13:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jlxip.net; s=MBO0001;
+	t=1744341197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y0CUiD9VG0osrfjJg+84MY6J5qxYRyRwM5/TGsZSPAg=;
+	b=oHmntTTxlBZZcip6KAyx1MRReo/SIX6CLRqsFU8DDwsXlpAMutgo92dLkHVtXIp6D2RBn+
+	96aD5Kr52ENN3YvlgPrc9QS9clhhiZkzH0Ie6d2aj3cUHCXPqwYFAs2WnB8AHqsPd6Tg0E
+	BdCqP1SOy4UTdfSp+37N+whFt5zIG1PJEK/p8GX7pJdX/gyzkTAZX/VOFlb1wVZEA5rBx6
+	3OxAImyGoO/c0BBu9hO4GRgU899/9gI75po/pGyxbabavVLchrhql28y48gfSy9QkpWqa8
+	xbtfKNMwDao1dflg2IyU0sfpXcymhgeULldKtche05jBnghDwlMT+FeL88UrUg==
+Message-ID: <deaf91f5-6d7f-4708-a020-f32f9df8894d@jlxip.net>
+Date: Fri, 11 Apr 2025 05:13:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+From: Jose Luis Amador <jlxip@jlxip.net>
+Subject: [PATCH] init: Update help for CONFIG_KERNEL_LZO
+To: linux-kernel@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4ZYhb14W1Hz9sph
 
-On Thu, 10 Apr 2025 17:06:19 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
+The statement was not updated after the introduction of LZ4 and is no
+longer true.
 
-> I sincerely apologize for the inconvenience. It appears that this commit still
-> requires additional corrections. I would appreciate it if you could drop the
-> changes you merged into -mm, mm-new branch yesterday.
+Signed-off-by: Jose Luis Amador <jlxip@jlxip.net>
+---
+ init/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-No problems, it happens, glad to be of service.  Dropped.
+diff --git a/init/Kconfig b/init/Kconfig
+index dd2ea3b9a799..d79d309a6b0b 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -354,8 +354,9 @@ config KERNEL_LZO
+ 	depends on HAVE_KERNEL_LZO
+ 	help
+ 	  Its compression ratio is the poorest among the choices. The kernel
+-	  size is about 10% bigger than gzip; however its speed
+-	  (both compression and decompression) is the fastest.
++	  size is about 10% bigger than gzip. Its compression speed is the
++	  fastest, similar to LZ4. Its decompression speed is only surpassed
++	  by LZ4.
+ 
+ config KERNEL_LZ4
+ 	bool "LZ4"
+-- 
+2.49.0
