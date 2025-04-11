@@ -1,62 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881061C3BEB;
-	Fri, 11 Apr 2025 14:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159CD17D2;
+	Fri, 11 Apr 2025 14:24:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381423; cv=none; b=r5NxglBr4DJ/S+ETtACa3JFTzM6QpCTR0OJz8lJDvKTPn2fgTOK7CZ9joNXZCRhWXLP2mIeQVfwagAIO/fXiZ2cacyYOGOyaeTbQJRdEesQJBXXb3Ko87HeBjbYyLkdYcIJ65h8vGi/+ueQ3XUlDZPOqURn7WHIo8FcQ4Z+PxQM=
+	t=1744381494; cv=none; b=UkdnWgktxzwOQ6yuwmwOBb6C5lfSBk0HGYUIlcDxJgsgzrvkNyIgzK3naFhxt+IbJrDtrSCusi+D4X4nEssiFwD9gavkF+w+s/RWJej/NDsemV1U/etUSIYTkKPl3teOaiZa4p6cBxlceJ466U6xRN/CyyyJ2BkQ7ZB9G1cAw80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381423; c=relaxed/simple;
-	bh=GJX49r3BKpYaA7bCwqkvzU5fTQ0dfWOuIUAYjRLKwrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GWhUcJPDLu58KM1+CVnnQq1hsBPgsvnc4lK+iDVA4j5KRgHuW0eTUAyWIW79g/gLdaBnYU/au2s0/nzhzeVq7faanGySxJij1wXi8na+WhbHsqQ0f16PhnDXjDtouAO6jm7OZRhHU+4WD3/Mz45R+ex0O0TL3H6ttH4+76ZvaoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ykrbSkiF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744381494; c=relaxed/simple;
+	bh=nEXymR/eQt1PYODPFLho0tc0POeO7fQ2lEpt9xKM3MY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vyk95lyJg330w6EWYYdZJz0KQmCrpJtso3+TCUbsD3Mhs8c01k9k1WZCWKaJQn/9F2PNLJcSdA3b/z3b28cmIsLsvR8y+GW4l6k5YOA03Z/zWzjskPu4vgGkRFJwJ8idxIMnImfkxnQTaU/VTFhP2oJAX7Orzg3W3dIDuaQ0708=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMl3EnhZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ykrbSkiF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D59FC4CEE2;
-	Fri, 11 Apr 2025 14:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744381423;
-	bh=GJX49r3BKpYaA7bCwqkvzU5fTQ0dfWOuIUAYjRLKwrI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ykrbSkiFYCTU78cv7nHZ/NKfAWj8GpkCFCqBKjO0j0/eisI7B3hvs/K9YlpPNiFdI
-	 YBc9iW4tTH96iD8Aj0DArHvuOhdVqUZ6hcMZbNMFs+Mbon2Y2pQXU3fjbOnuz9NvaI
-	 Y5wPUpg3gdByrBIFKnOun9nT+lOg20Mieq7XkzIs=
-Date: Fri, 11 Apr 2025 16:23:40 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kuen-Han Tsai <khtsai@google.com>
-Cc: Thinh.Nguyen@synopsys.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3] usb: dwc3: Abort suspend on soft disconnect failure
-Message-ID: <2025041149-krypton-rejoice-bced@gregkh>
-References: <20250327133233.2566528-1-khtsai@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMl3EnhZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C39C4CEE2;
+	Fri, 11 Apr 2025 14:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744381493;
+	bh=nEXymR/eQt1PYODPFLho0tc0POeO7fQ2lEpt9xKM3MY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TMl3EnhZ6i5vhk3qembdwSNpRWcJQ7qYiH5kLeVlhuIaB9qu7Iv5ABb+m3CLfAsJd
+	 ZLQ6H/LFadRoPDgIZ9PzS+UNHxxRgV5NGbb22tgD4yR+Ul5QpR7jqEm9oxhL+JXxvo
+	 lhSHf/VLT4m5b5dXQFr7EhPbW0wOdAXk3qjBJnfKK1SeSNv5A0/4eY6ULS/rP+JScx
+	 4JrjhCwzOOC/0DZ6L3WSsBYy7WTfCol6/uzY3QkaHzBIOqDvXi7yMBMfnwRDrtvzCN
+	 pqC/+0aW08feGvmpcZxuUKuMly3yF/vulK56gwDpEKsA5qkCixSKZAI0LSU0pwpwET
+	 Cplsiz2PA0ofw==
+From: Christian Brauner <brauner@kernel.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	David Howells <dhowells@redhat.com>
+Subject: Re: (subset) [PATCH 5/5] fs/fs_context: Mark an unlikely if condition with unlikely() in vfs_parse_monolithic_sep()
+Date: Fri, 11 Apr 2025 16:24:41 +0200
+Message-ID: <20250411-flechten-berglandschaft-88fd2b1a6c98@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250410-fix_fs-v1-5-7c14ccc8ebaa@quicinc.com>
+References: <20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com> <20250410-fix_fs-v1-5-7c14ccc8ebaa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327133233.2566528-1-khtsai@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1147; i=brauner@kernel.org; h=from:subject:message-id; bh=nEXymR/eQt1PYODPFLho0tc0POeO7fQ2lEpt9xKM3MY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/VNN/Nj/B9nDf6RdL5d9/1dc9ESeuusJGSm6vwI7aF Z2MEkWvOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZieYqR4bT7J/7rYavjKzYe 7DPb/mfK0S2s8syn9Z+8jb221f9xkQwjwy69FPfFt/ev/Hg6/HeRlXWQhHOLVHqBs12qs5aLBJ8 MPwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 27, 2025 at 09:32:16PM +0800, Kuen-Han Tsai wrote:
-> When dwc3_gadget_soft_disconnect() fails, dwc3_suspend_common() keeps
-> going with the suspend, resulting in a period where the power domain is
-> off, but the gadget driver remains connected.  Within this time frame,
-> invoking vbus_event_work() will cause an error as it attempts to access
-> DWC3 registers for endpoint disabling after the power domain has been
-> completely shut down.
+On Thu, 10 Apr 2025 19:45:31 +0800, Zijun Hu wrote:
+> There is no mount option with pattern "...,=key_or_value,...", so the if
+> condition '(value == key)' in while loop of vfs_parse_monolithic_sep() is
+> is unlikely true.
 > 
-> Abort the suspend sequence when dwc3_gadget_suspend() cannot halt the
-> controller and proceeds with a soft connect.
+> Mark the condition with unlikely() to improve both performance and
+> readability.
 > 
-> Fixes: 9f8a67b65a49 ("usb: dwc3: gadget: fix gadget suspend/resume")
-> CC: stable@vger.kernel.org
-> Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
+> [...]
 
-Always test your patches before submitting them so you don't get emails
-from grumpy maintainers telling you to test your patches so that they
-don't break the build :(
+Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.misc branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.misc
+
+[5/5] fs/fs_context: Mark an unlikely if condition with unlikely() in vfs_parse_monolithic_sep()
+      https://git.kernel.org/vfs/vfs/c/95bfd4b5928f
