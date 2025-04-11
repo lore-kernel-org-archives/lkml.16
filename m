@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011A020D4E1
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:11:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FAB29344B;
+	Fri, 11 Apr 2025 12:11:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744373464; cv=none; b=bAXYNwVWQwxAaUkKH2v+pJNlcrJklC7Js90vNivz1OySwWNBmlyc9Pb03iIBgivDpihoYYJx9oFIHPKDZUcdO/t7dxDynqOJNhMNlHGOATjfRd3LEE50qxl0X3xPdlZUKQeqOyceszRSqXD6h5XtjnNj/+dnROXkKvnGg4Rmk08=
+	t=1744373468; cv=none; b=Luhkg54AKeEE6p44UunREU1RQnJLHEWacoF7MpbXi/AvcKe9XUIZe410TWcxNAnS2Bvns45l+t9bctTIxqjGqrl/FoyMwTSy6sSdpdRxvOS7LtDtTbE0+4el1wFR6kDKcIJceuDKDy+xYbL0hw56McYbmOitu+QCmpeGHpetpf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744373464; c=relaxed/simple;
-	bh=EVla19k7Xz+stoAyJo+yqYuYF6XV6eRPPI+AlLJ62TU=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bAfmmtBvwbv7Tf7Utuc4bsHeKymTFdC3Lb5WEVYc97LcAvyAkH+IdKYWMNhEQ/2pYZRjgKLOwk1z/xasWy5Mii/5IeD/gUCV0ZN6HT4mL6j7QdouzS5/3pVUOtLSaDCst63nc/FzNHAptrJ8fdv+YyyvudVX4PbxA90Z2NPwMnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qT6QbywF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744373468; c=relaxed/simple;
+	bh=d+FLiWuinx/mnrMg1djQFjn220kbb6rhpINiatKBBLA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=qPtTZXtvNb1OYfOL0tdysg+Pi4rHvuYa4ZWVD29DXlpke8z9AxYI7sPKytbmbrgzQ8ZEHYDPOSWdCSQMIQxNBK4SYfRMBBctcRYCYcaqpg3yDZ0x17+6CHtHkVtD6/MoLahipbhXKFShvgIBcu+pInRBR2ImA4eMtyRa7rg6Vc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gx+YEbdM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qT6QbywF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 478BBC4CEE2;
-	Fri, 11 Apr 2025 12:11:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gx+YEbdM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FDF1C4CEE2;
+	Fri, 11 Apr 2025 12:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744373463;
-	bh=EVla19k7Xz+stoAyJo+yqYuYF6XV6eRPPI+AlLJ62TU=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=qT6QbywFqYsrdZFdqe20nIlTmNihKMZ+lrEgG5/C7gEaUewM5LBELkTBrqpdZjuRI
-	 O/DjsxQpgNfd2xZrhmjeGVszCnpmAFkEgA40zr4Nhm9ZsGgIzup3Qir7rbxSSTpL3Q
-	 xpGU7cToXWwkXxApwWT3pxdwEwwnzu1ZY3U3ftgWvnKiK1IGW78X6c6kVAVQ1l/REu
-	 RFNrCBsL0tHgiXPkCRBdmbGrpCLc3j82Yr9wXGp1HtaBQAdF4j1DKsmrmdfA5XssOS
-	 gjXithieX0VGwQFLQkNqVLZwNguljxQcmOgMTbf62mw/LL7k4lusUfSR9xMhoacxKC
-	 euYyM3VAwNCyg==
+	s=k20201202; t=1744373468;
+	bh=d+FLiWuinx/mnrMg1djQFjn220kbb6rhpINiatKBBLA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=gx+YEbdMFS3jQ3nJQJAkyi7Q6MKRLcUIyVT96m3Tpp6fTNCHVQsqKRdTyJIbF3JW5
+	 W/K8IstBhsDJPWKFat640JKteq+vINh8/ee/PvKVr29MOxDAwneKsfF6PvZJTw744p
+	 gJshN5dI7YngxelyDks/Wvx4Jn3IFswA067NQweRE658r9WJeYCa252GwO1fz5Zc0q
+	 wCWoGJTxe/b2uVTCM7YRZwSO7+KyfnFIB7rAL6ngTwmINeLIPXFZQK/8JLv833Hk3p
+	 llPLLOcCrgmX456j8uz0T7Lg9X3c6K4NV9yR/coVss3tDoqdcpXyLvdpQvazFA7vg6
+	 yEss+5665JJ+w==
 From: Vinod Koul <vkoul@kernel.org>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Anand Moon <linux.amoon@gmail.com>
-In-Reply-To: <20250410133332.294556-1-linux.amoon@gmail.com>
-References: <20250410133332.294556-1-linux.amoon@gmail.com>
-Subject: Re: [PATCH v1 0/6] Messon: Simplify error handling with
- dev_err_probe()
-Message-Id: <174437346092.673939.9321583863717790007.b4-ty@kernel.org>
-Date: Fri, 11 Apr 2025 17:41:00 +0530
+To: kishon@kernel.org, p.zabel@pengutronix.de, abel.vesa@linaro.org, 
+ quic_qianyu@quicinc.com, neil.armstrong@linaro.org, 
+ manivannan.sadhasivam@linaro.org, quic_devipriy@quicinc.com, 
+ konrad.dybcio@oss.qualcomm.com, linux-arm-msm@vger.kernel.org, 
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Dmitry Baryshkov <lumag@kernel.org>, Wenbin Yao <quic_wenbyao@quicinc.com>
+Cc: krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com, 
+ quic_mrana@quicinc.com, quic_cang@quicinc.com
+In-Reply-To: <20250411113120.651363-1-quic_wenbyao@quicinc.com>
+References: <20250411113120.651363-1-quic_wenbyao@quicinc.com>
+Subject: Re: [PATCH v7 0/2] phy: qcom: qmp-pcie: Add PCIe PHY no_csr reset
+ support
+Message-Id: <174437346409.673939.2537740696548096560.b4-ty@kernel.org>
+Date: Fri, 11 Apr 2025 17:41:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,30 +52,25 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Thu, 10 Apr 2025 19:03:15 +0530, Anand Moon wrote:
-> Use dev_err_probe() for phy resources to indicate the deferral
-> reason when waiting for the resource to come up.
+On Fri, 11 Apr 2025 19:31:18 +0800, Wenbin Yao wrote:
+> The series aims to skip phy register programming and drive PCIe PHY with
+> register setting programmed in bootloader by simply toggling no_csr reset,
+> which once togglled, PHY hardware will be reset while PHY registers are
+> retained.
 > 
-> Note: The following patch for RTC:
-> 
-> phy: amlogic: phy-meson-axg-pcie: Fix PHY creation order in axg-pcie probe
+> First, determine whether PHY setting can be skipped by checking
+> QPHY_START_CTRL register and the existence of nocsr reset. If it is
+> programmed and no_csr reset is supported, do no_csr reset and skip BCR
+> reset which will reset entire PHY.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/6] phy: amlogic: phy-meson-gxl-usb2: Simplify error handling with dev_err_probe()
-      commit: 05457917e50c3d6bf75d2e3b99c7e6709a4a6844
-[2/6] phy: amlogic: phy-meson-g12a-usb2: Simplify error handling with dev_err_probe()
-      commit: 9bff4ef29a6409850c27df705da54277a8e836f2
-[3/6] phy: amlogic: phy-meson-axg-mipi-pcie-analog: Simplify error handling with dev_err_probe()
-      commit: de39730f9258e9984892c0af68a3e884ad19acea
-[4/6] phy: amlogic: phy-meson-axg-mipi-dphy: Simplify error handling with dev_err_probe()
-      commit: a77e2e899841937798bff0924c03d4d0e4963aa3
-[5/6] phy: amlogic: phy-meson-axg-pcie: Simplify error handling with dev_err_probe()
-      commit: fef364bd4c9cf712c91e0013f5f304f4e7f09198
-[6/6] phy: amlogic: phy-meson-axg-pcie: Fix PHY creation order in axg-pcie probe
-      commit: bdeff6d8a211c832f5ce1a65aff17f4a5e6de00f
+[1/2] phy: qcom: pcie: Determine has_nocsr_reset dynamically
+      commit: ea57d7fe4f5af517b5ce91fdff96cc33be932690
+[2/2] phy: qcom: qmp-pcie: Add PHY register retention support
+      commit: 0cc22f5a861c3149171485349dafac3047212a5d
 
 Best regards,
 -- 
