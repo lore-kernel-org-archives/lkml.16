@@ -1,102 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A215233148;
-	Fri, 11 Apr 2025 16:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E1521D3E8;
+	Fri, 11 Apr 2025 16:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744389872; cv=none; b=XZdS3A+p2GuWCHqiVJlD3lhocReqZsLgQjUm6FZm3X+NYUw1ljj7DzM/8VOQu0iHJViXV7a+6OD2CH4TYFTi8QhN+nfpjt4ArI8mxS6hji8f+/Qst0MZdB1CDwb82jCwwt/C0qdcFCUgtyQyhGAxmQ6ZHPqRA/TFefx3lYYw0W0=
+	t=1744389953; cv=none; b=K4lrHZJzgaBY2L9nEvEOtHNyX+ScWmSVSQuQ+MWmUd0nXDKM/vJ8SRdD1PngZPHS1f0tRDUNuQAn1ekXF3kgsjZCA2W3CgyxVtGhQJKN5cDEwhMWCHYBECeWeEaQ71G2QVl7o3BSTjVoUBE/quODgz5ukw/gf1D/fmTYyCJK+g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744389872; c=relaxed/simple;
-	bh=L/mb+QQWwTatT5L5Nejifp0o/+LSgqAg5l4QjS3xCZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=piROzL/mhdaIcJ2oeFz1SgzZjMIzKt28Eq43rP4CqHa3Ez+kTpIxPi++AOo1C5IGWtW/aJ4mOTE7z0etQeTFE35239d9/dXeUazjy8mdGIMQAaI5+8l33s88ceeh5U9hA1PEx+gmRFEb0bxx2oKYtMW2E3ST+wa8lDDqj1p8KW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38296C4CEED;
-	Fri, 11 Apr 2025 16:44:30 +0000 (UTC)
-Date: Fri, 11 Apr 2025 12:45:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
- <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
- <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
- <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <20250411124552.36564a07@gandalf.local.home>
-In-Reply-To: <c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
-References: <20250227185804.639525399@goodmis.org>
-	<20250227185822.810321199@goodmis.org>
-	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
-	<20250410131745.04c126eb@gandalf.local.home>
-	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744389953; c=relaxed/simple;
+	bh=FReu7ujzly8pZap8rq/c03boQMmt8+KCe6FrmfH2yCE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pAnRbNhQvSmaWCNKsDjIWMDKJMZXCYFqrNNBQHoN9o+aeMZYtqAUhh8mI6u9KQZ/mANIb+4u2nfHEYXaR+dDNaPfO5WyzQBiPiY3nHEDaSXmI2YxrpF5wv9M5OJAa95xfXNQ3qisdTgBbQGGiPr4w8bv0nGYBRaVJoGgjv8+fMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=apRdzapp; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="apRdzapp"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 9C49B25F0B;
+	Fri, 11 Apr 2025 18:45:48 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 5yNZHi-ciocG; Fri, 11 Apr 2025 18:45:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1744389947; bh=FReu7ujzly8pZap8rq/c03boQMmt8+KCe6FrmfH2yCE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=apRdzappuSD49zp/c8cUCIaxLXjUZzTLuQuHDgA3xO/9JdspzAemEucN35tvbdo//
+	 L9nkGgctgEjBOeHFyrYTZiOW99ku2p3NVHOS+Dp4cabkbBZyB5lbKu4Z5NzGp+o6DB
+	 d/y6fGP/WQ8SFGBhFVHWwE4uUW6FuCj5/DpaONwtrcuQrF5CHVapjQdrV/Ary5aXge
+	 6l8Hcewr0SaOxKmyetrThMuslXyTzqhqWuhJIBMQbAY46BHLXRfg7AQAIwIIY7W6Lx
+	 TS+dUDm30LUdFEG2mMNq1fDui/Tz3qLBXY9HcQG+HTzYpvw0MQ/fls4X+JJx46S0Ty
+	 /aGTIIyqi5PVg==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Date: Fri, 11 Apr 2025 22:15:27 +0530
+Subject: [PATCH v5 1/5] dt-bindings: arm: samsung: add compatibles for
+ exynos7870 devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250411-exynos7870-v5-1-6b319ae36c36@disroot.org>
+References: <20250411-exynos7870-v5-0-6b319ae36c36@disroot.org>
+In-Reply-To: <20250411-exynos7870-v5-0-6b319ae36c36@disroot.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744389935; l=1423;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=FReu7ujzly8pZap8rq/c03boQMmt8+KCe6FrmfH2yCE=;
+ b=CMR6Gu0sdI7dK3mhb1BomzExVt5a/C8GNsl8xIayXh1wcOc2ijItEXD495eq6Z4ogXYEbAXoQ
+ q6GACmjH5DdDDpcZI9b/ZTXC48kk3BQzPNjwy4heLTn2YHiO3NoIpgI
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On Fri, 11 Apr 2025 14:00:40 +0100
-Mark Brown <broonie@kernel.org> wrote:
+Document the compatible string for Exynos7870 - "samsung,exynos7870".
 
-> On Thu, Apr 10, 2025 at 01:17:45PM -0400, Steven Rostedt wrote:
-> > Mark Brown <broonie@kernel.org> wrote:  
-> 
-> > > We've been seeing the PID filters selftest failing for a while on
-> > > several arm64 systems, a bisect I managed to run without running into
-> > > any confounding issues pointed to this patch which is in mainline as
-> > > ff5c9c576e75.  It's in the ftrace code, but I'm not immediately seeing
-> > > the relevance.  Output from a failing run:  
-> 
-> > Hmm, I wonder if there's junk being added into the trace.  
-> 
-> > Can you add this patch, and show me the output when it fails again?  
-> 
+The following devices are also added:
+ - Galaxy A2 Core       ("samsung,a2corelte")
+ - Galaxy J6            ("samsung,j6lte")
+ - Galaxy J7 Prime      ("samsung,on7xelte")
 
-Can you show the information before this output, to see what it is actually
-testing?
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+ Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> # # + cat trace
-> # # # tracer: function_graph
-> # # #
-> # # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
-> # # # |     |    |           |   |                     |   |   |   |
-> # # 0)  ftracet-5190  | ! 537.633 us  |  kernel_clone(); /* ret=0x1470 */
-> # # 
-> # # 0)  ftracet-5190  | ! 508.253 us  |  kernel_clone(); /* ret=0x1471 */
-> # # 
-> # # 0)  ftracet-5190  | ! 215.716 us  |  kernel_clone(); /* ret=0x1476 */
-> # # 
-> # # 0)  ftracet-5190  | ! 493.890 us  |  kernel_clone(); /* ret=0x147b */
-> # # 
-> # # + fail PID filtering not working?
-> 
-> ...
-> 
-> # # + cat trace
-> # # # tracer: function_graph
-> # # #
-> # # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
-> # # # |     |    |           |   |                     |   |   |   |
-> # # 0) ftracet-12279  | ! 598.118 us  |  kernel_clone(); /* ret=0x301f */
-> # # 
-> # # 0) ftracet-12279  | ! 492.539 us  |  kernel_clone(); /* ret=0x3020 */
-> # # 
-> # # 0) ftracet-12279  | ! 231.104 us  |  kernel_clone(); /* ret=0x3025 */
-> # # 
-> # # 0) ftracet-12279  | ! 555.566 us  |  kernel_clone(); /* ret=0x302a */
-> # # 
-> # # + fail PID filtering not working?
+diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
+index fab29f95d8e62f5ea75bb0819a9d514e54f88d3c..b3be184c7e563478aa37eb16a69c08ff7f70af29 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
++++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
+@@ -212,6 +212,14 @@ properties:
+               - samsung,exynos7-espresso        # Samsung Exynos7 Espresso
+           - const: samsung,exynos7
+ 
++      - description: Exynos7870 based boards
++        items:
++          - enum:
++              - samsung,a2corelte               # Samsung Galaxy A2 Core
++              - samsung,j6lte                   # Samsung Galaxy J6
++              - samsung,on7xelte                # Samsung Galaxy J7 Prime
++          - const: samsung,exynos7870
++
+       - description: Exynos7885 based boards
+         items:
+           - enum:
 
-Also, is it possible to just enable function_graph tarcing and see if it
-adds these blank lines between events?
+-- 
+2.49.0
 
--- Steve
