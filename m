@@ -1,54 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD215290BDE
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10321E7C0E;
+	Fri, 11 Apr 2025 07:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358214; cv=none; b=HF+5MtdDXMeXX0Jz9P3rwnzlR+1VIOmgxKLu4kT0IcB8+uxLmuojFHdGVUiL9cpQlbRFMGTmSN+JWSv7+SabrmUxg1B5yLPjTnTlhBwcplvl/vjSdDpVTDF5Lzz70VefKofy8CZrGjPfduAKv1TLLJRooW/os6nrKtxCHiGXEhY=
+	t=1744358308; cv=none; b=ETGRw07/NU0qy+O5B5DetomwX22eUViRx7lpLTP6BTCUmVGVbCDDcs96lF160eDL6+EDpqh4qyDQ1jm01+mCQ5H6jENyusWsFkNbj66V9FfMnJtvrL3G5t8oZexBnb5Ie0BPfnLjX7p1bKjMOJG93gGZVgWVzH6jHFjwzsoUmuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358214; c=relaxed/simple;
-	bh=6uaWW0RaxojMlRB5Y0zUXcKAWLlpIcACNTPnX9kl/Q8=;
+	s=arc-20240116; t=1744358308; c=relaxed/simple;
+	bh=RPYcAqD4y+hgyeMW2NJKkGGQDPPJG1ewfZv3Mzh/woc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eYw0cK00JQBA0tzhpAmWhxC39uHSCdpoalSJKHL7zX28b7CET1rHDcBwrCz7+6etxR5rL+ASWS40X7UP8wLlhrUWf+uQDzAYxpj7m/Tnm2aTJZQ1W1B/UjBKD0VUneVjAEz8dy32Yt9S8vak8l1dHkpce0NMEbft2CgwS7eW4Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RNucVBnv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gm29BKxSenwRG1XvoOrimDgfwDm+ZQ833IaWxxo3iB8lm3+wgC83erTtGW1yQmmdM1N/pM+BiJ1eKA8vd+CeLgjSp0ZIh23QVbguzoGQtCTQRAvmCAfbpLWeuMRIGnUHV80VCLATXF7e7I7gunHIA7mve7bvFPKYGWjdnUjPvCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Pg3+w1Tk; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RNucVBnv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744358211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jk/xXbgSfIo3w5XOnaXVWQMQjFq+vwdxT/bYPGVBprc=;
-	b=RNucVBnv4g/GyEgGsDK24tFfTqzvdboW9IzBRqtoYSQnsVNjXULBZeCkQylEPzTsfX5ABM
-	WOK0LPmmFJWvoDV3D5t2dGDEMfgF+wqLtYAK4bjwBL3IzzM8l++CF/mxH9P3f+I6R6TpnR
-	rsElbd3A3/0C9BgPJ1YaWPCK9+qfJY0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-ls9bcY5tMP6s_nzZLFqxqg-1; Fri,
- 11 Apr 2025 03:56:48 -0400
-X-MC-Unique: ls9bcY5tMP6s_nzZLFqxqg-1
-X-Mimecast-MFC-AGG-ID: ls9bcY5tMP6s_nzZLFqxqg_1744358207
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DDB47180025E;
-	Fri, 11 Apr 2025 07:56:46 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.6])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9CDE0180B493;
-	Fri, 11 Apr 2025 07:56:42 +0000 (UTC)
-Date: Fri, 11 Apr 2025 15:56:36 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: skip blk_mq_tag_to_rq() bounds check
-Message-ID: <Z_jLNGzRJAQBN8Nx@fedora>
-References: <20250409024955.3626275-1-csander@purestorage.com>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Pg3+w1Tk"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 31B1F1F95D;
+	Fri, 11 Apr 2025 09:58:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1744358302;
+	bh=jhFLKSiuMEHIVF1fYtgFDkjX7z90xWK4KoI2jpP6mFQ=; h=From:To:Subject;
+	b=Pg3+w1TkdRCZg2QZGbZQGRD7HO7IKsprBmVvuMDem+CGtF4FKPugDC3PWt6kc/UpQ
+	 ZIUiGHZQoVil7td6XlFXUMOK5SqiMuJWBUzLSPfHqCsAWYyjX+UQH7zql9jsahxBxV
+	 dk6YSV0+8hkrq+h7B8z/zh+sgm2NQ95peP4wxcfweqInP8kTstnsyWdc6pFj0hpxTq
+	 QsuKtlt4wQElvlTrvePVq+kQKqv08wzSO5yNxtP+RnPDSgce1z4TrbdHirgldKNUCv
+	 VTDcvGgQjw9T4RIOha+GtE/u23ohjDjeSXt4xmLovcrvwqUsgnBZDagEcMaHhQm51O
+	 OfTxXUSsaoqsA==
+Date: Fri, 11 Apr 2025 09:58:20 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH 2/4] wifi: mwifiex: let mwifiex_init_fw() return 0 for
+ success
+Message-ID: <20250411075820.GB12707@francesco-nb>
+References: <20250410-mwifiex-drop-asynchronous-init-v1-0-6a212fa9185e@pengutronix.de>
+ <20250410-mwifiex-drop-asynchronous-init-v1-2-6a212fa9185e@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,31 +48,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409024955.3626275-1-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250410-mwifiex-drop-asynchronous-init-v1-2-6a212fa9185e@pengutronix.de>
 
-On Tue, Apr 08, 2025 at 08:49:54PM -0600, Caleb Sander Mateos wrote:
-> The ublk driver calls blk_mq_tag_to_rq() in several places.
-> blk_mq_tag_to_rq() tolerates an invalid tag for the tagset, checking it
-> against the number of tags and returning NULL if it is out of bounds.
-> But all the calls from the ublk driver have already verified the tag
-> against the ublk queue's queue depth. In ublk_commit_completion(),
-> ublk_handle_need_get_data(), and case UBLK_IO_COMMIT_AND_FETCH_REQ, the
-> tag has already been checked in __ublk_ch_uring_cmd(). In
-> ublk_abort_queue(), the loop bounds the tag by the queue depth. In
-> __ublk_check_and_get_req(), the tag has already been checked in
-> __ublk_ch_uring_cmd(), in the case of ublk_register_io_buf(), or in
-> ublk_check_and_get_req().
+On Thu, Apr 10, 2025 at 12:28:44PM +0200, Sascha Hauer wrote:
+> mwifiex_sta_init_cmd() returns -EINPROGRESS as sucess indication when
+> the init param is true. Likewise mwifiex_init_fw() returns -EINPROGRESS
+> as success indication: It will either return -EINPROGRESS directly when
+> in mfg_mode or the return value of mwifiex_sta_init_cmd() when in normal
+> mode.
 > 
-> So just index the tagset's rqs array directly in the ublk driver.
-> Convert the tags to unsigned, as blk_mq_tag_to_rq() does.
+> -EINPROGRESS is a leftover from times when the initialization commands
+> were sent asynchronously. Since 7bff9c974e1a ("mwifiex: send firmware
+> initialization commands synchronously") the return value has become
+> meaningless, so change mwifiex_sta_init_cmd() and mwifiex_init_fw()
+> to return 0 for success.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-If blk_mq_tag_to_rq() turns out to be not efficient enough, we can kill it
-in fast path by storing it in ublk_io and sharing space with 'struct io_uring_cmd *',
-since the two's lifetime isn't overlapped basically.
-
-
-
-Thanks,
-Ming
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
