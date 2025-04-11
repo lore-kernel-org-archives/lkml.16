@@ -1,59 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7006E29AB0F;
-	Fri, 11 Apr 2025 10:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CB429CB37;
+	Fri, 11 Apr 2025 10:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365799; cv=none; b=SfSlDSbCa+YuqUWNEref0r+uBso04JxZq89ekhhksra0GyteRgUNuFRaMteOIj8QrK8Oqc3v3F2E3PhEaxiwuec0Kssdpv8YlmtBNAJdA9fPEc2yOyXfcmKwB5QLWDmqJBpY/Bps1ORUOH24Ya2fVOB2AJwuFf8c9RReU1IO/e0=
+	t=1744365813; cv=none; b=R5jJVsxy57Na1gHTLp2WGbQ7S+A2/FcPUsqdtxP4MebYglrJoy/nXnLrqDXAO4bZO4oBF+3kHzjZz8Kdep/lYXlt06tHWFhZ9klpPofcQDhoDy2OJl8yF+Ukk6TH0LU2XROXYGkxlX+BHuOhdBuWA63UViKT984lbpk1UvlqDYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365799; c=relaxed/simple;
-	bh=G0ccYDcVmNaW4i7jQrUQm2ImT7AM3+xsmhVnz88nrm4=;
+	s=arc-20240116; t=1744365813; c=relaxed/simple;
+	bh=b2Ie6XJ2A2NKBljjWxVkQT+qhr6ceNjwd/GaOMtseAU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sLGIwCoCB3c69ospAj9zPzmFM62oVorsn6hwH9inTDNtTi8lWahQVVMTdAWBotRokVevpzghJmFkSGNHVI1sWH6QexTn2o57ev1apxuySYjrwbeOtNZ68McmU+pkrRi4BwqRgsLxeXds5pWftzGg7q5SEatqZuxfHmhrNn9fbqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QNaEj7OZ; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=XcAH2DNCxX/Wc0tevuAgnd6aodfc7AnbySxy3azbWKkig3L0RhZgPK4NM/p22sYIQxjNbLtPuSZshaXp9luUJ4RO2Yhx5pRQuzXf1KwrlH9QeHBtOaWXFzg3rEuhktOXSuI4gUMzRoKKubK5wBaoVRgXI8RBfAxSwKFLMQ3CiTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5cZTVgp; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QNaEj7OZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5cZTVgp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744365798; x=1775901798;
+  t=1744365812; x=1775901812;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=G0ccYDcVmNaW4i7jQrUQm2ImT7AM3+xsmhVnz88nrm4=;
-  b=QNaEj7OZZJtW4lTrphZPVa4UG5zSfipC0yIRDg0jedz7PrMrDF/fZUAF
-   ZoO8DKYzRRpe9Z5CUrtR1XNPbiO34pW9D1AxsK5uIX/MSwnXczgJmvi6t
-   wVmZbEYbKjPt9V0+R9YNZlPoTfNkWinUF5v7kl2bq7v8kJMKw+UVGgTQv
-   4N8OqWzqkmdYvuvMWZs0mxSfqGbznRqzMjcANJ8/fGjQDKhvhkbt647Jg
-   nJJVFyqW7+8Q5+pL/C1EPGpyhW30BTYqAcK4p+/Kq1NJd534YGMzqef95
-   L/9SGC0bLynLM2vlEW4l5w9FwjTOD9MR7Ddesv8anIo0IQQayiBMOo8gV
-   Q==;
-X-CSE-ConnectionGUID: 1iSqPBNQS9iUVIXkeTQVag==
-X-CSE-MsgGUID: vcGiFadwSEKskU5QW1TRww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="68399677"
+  bh=b2Ie6XJ2A2NKBljjWxVkQT+qhr6ceNjwd/GaOMtseAU=;
+  b=I5cZTVgp+77wiPL3g5QRzVaL1e76p9WR8R668+ro3v5NsOrmYjMPHvPP
+   QvAKRhBxH5XhkZfhgmnKTzZRHduBpS+hoziXLSRcvsh9MLevsWPnDT6BD
+   u6csNh8/2seztjGSw9FWDlKJVWLjgF8WMYgUHwZTbyu/V8swaZhIcKvse
+   RSuliviJKA3XTbI1Hawf59mpoDSm+frtsHFxaPQ1I5iWd8nHVHkDyLimZ
+   XxWzLjsyBZp6whE0UNvkX/NoiJS1l2XKhR2hdgfN3BvV7zPzv46XJ06/c
+   7tD0cRIDF1IYhnqpNporHkfiXWvzegjOLGawLIJ5+hjHHQHO3nPbvbOKr
+   g==;
+X-CSE-ConnectionGUID: 9Wk7b9uiT7KTFnaaB7cVVg==
+X-CSE-MsgGUID: FMnl3DzKRuqbLQwu1M94Qg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="68399691"
 X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="68399677"
+   d="scan'208";a="68399691"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 03:03:17 -0700
-X-CSE-ConnectionGUID: popynGDlS3CoInAuACFg+w==
-X-CSE-MsgGUID: /b4cKC+mR+mwwXJ941XPig==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 03:03:32 -0700
+X-CSE-ConnectionGUID: 2G259lLWQqyzCDXEvpTM/w==
+X-CSE-MsgGUID: IdYAU45TToWWXuskk0iDKw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="134136122"
+   d="scan'208";a="134136153"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 03:03:13 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 03:03:28 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Corentin Chary <corentin.chary@gmail.com>, 
- Denis Arefev <arefev@swemel.ru>
-Cc: "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- lvc-project@linuxtesting.org, stable@vger.kernel.org
-In-Reply-To: <20250403122603.18172-1-arefev@swemel.ru>
-References: <20250403122603.18172-1-arefev@swemel.ru>
-Subject: Re: [PATCH v2] asus-laptop: Fix an uninitialized variable
-Message-Id: <174436578937.2374.8623940315358740853.b4-ty@linux.intel.com>
-Date: Fri, 11 Apr 2025 13:03:09 +0300
+To: hdegoede@redhat.com, vadimp@nvidia.com, 
+ David Thompson <davthompson@nvidia.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250407132558.2418719-1-davthompson@nvidia.com>
+References: <20250407132558.2418719-1-davthompson@nvidia.com>
+Subject: Re: [PATCH] mlxbf-bootctl: use sysfs_emit_at() in
+ secure_boot_fuse_state_show()
+Message-Id: <174436580385.2374.522905941005450478.b4-ty@linux.intel.com>
+Date: Fri, 11 Apr 2025 13:03:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,16 +63,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Thu, 03 Apr 2025 15:26:01 +0300, Denis Arefev wrote:
+On Mon, 07 Apr 2025 13:25:58 +0000, David Thompson wrote:
 
-> The value returned by acpi_evaluate_integer() is not checked,
-> but the result is not always successful, so it is necessary to
-> add a check of the returned value.
+> A warning is seen when running the latest kernel on a BlueField SOC:
+> [251.512704] ------------[ cut here ]------------
+> [251.512711] invalid sysfs_emit: buf:0000000003aa32ae
+> [251.512720] WARNING: CPU: 1 PID: 705264 at fs/sysfs/file.c:767 sysfs_emit+0xac/0xc8
 > 
-> If the result remains negative during three iterations of the loop,
-> then the uninitialized variable 'val' will be used in the clamp_val()
-> macro, so it must be initialized with the current value of the 'curr'
-> variable.
+> The warning is triggered because the mlxbf-bootctl driver invokes
+> "sysfs_emit()" with a buffer pointer that is not aligned to the
+> start of the page. The driver should instead use "sysfs_emit_at()"
+> to support non-zero offsets into the destination buffer.
 > 
 > [...]
 
@@ -84,8 +84,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] asus-laptop: Fix an uninitialized variable
-      commit: 6c683c6887e4addcd6bd1ddce08cafccb0a21e32
+[1/1] mlxbf-bootctl: use sysfs_emit_at() in secure_boot_fuse_state_show()
+      commit: b129005ddfc0e6daf04a6d3b928a9e474f9b3918
 
 --
  i.
