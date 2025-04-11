@@ -1,66 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3EC29B22A;
-	Fri, 11 Apr 2025 10:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DE029C342;
+	Fri, 11 Apr 2025 10:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365706; cv=none; b=AVjCaeyinwloysbEZEgB2o6x5MsX2lEOuOlwCtkxKbgsNsPTY7xMjKtz90ErsyUUTcwlT4neJXPBYvhB51Ywv7jSHepcBiEanq6swCSWEf39yVSkVkY9yrqAF0nId07HOK/3DuRLDoRCAf7p+PP30Q+s+aTfCvT2jHCc5pzDXcM=
+	t=1744365707; cv=none; b=F8GN/jvAuYsPFNN5SHqzKlX38sCto+p7EzNzvh4H+oQ06o6CpADVVhdEm6QOtv2xGg1m1/+/Guv+ac+QMRaJ9zbxmeVpzMfYmjGovKiUDjnPlO39FKyW0z2pEotlrgl+sOXBths6HnL2pfc5ebwMXgvjVpnHBGqTqv8e6txae28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365706; c=relaxed/simple;
-	bh=sIs1X+HgjtqVfFCy270Ah7tkSQusIICi9NW3ffJkm8A=;
+	s=arc-20240116; t=1744365707; c=relaxed/simple;
+	bh=hFWT5sM5BNVwMlz6W9OH0RqjDQDAaGVFzyricsMucT4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=nQAkB1jBWx+tg38irY0Yoz9r1b06jjI5ncBJCFgLACNDcPdb4ejRZlmBo95F7QMjGUMCi9Y2eZBj4b+PMB0c95d8upH9+6oZUps4yyImvnJrC1JqzawnvCWAlkKM3hjBJ4eFMvgOmwyVPVxo6U9RYZgnI/7iL5dqzhzLRzBblus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bfONl26x; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yCjMuZl/; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=H8zhjWysjRkaxHzhOhMuiidXl+wgqVXV7WKoTvkIpilYn7i15H7Yy9KpONtB7ULF1WELXw7u7VvwfMVjdd7j4D9bkm8lBlspYPtTfmAGMdxQXzMPVrdaLViI0XNi6QC9Ut+vAy6kxpgb+B89s39VntUBSC7QyJE3p8+yt2vWRZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3I4H5Ikr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QpNrDjaG; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bfONl26x";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yCjMuZl/"
-Date: Fri, 11 Apr 2025 10:01:40 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3I4H5Ikr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QpNrDjaG"
+Date: Fri, 11 Apr 2025 10:01:42 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744365701;
+	s=2020; t=1744365703;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ljUMMSOZ3RB2FLlleuND0VV8bb1rvsQgh0M2xpiw+rw=;
-	b=bfONl26xiD9DEDhG8MKUGCeLYQ7bVBR+FNJTOoltFJbo7bqBFjfTuP2KRbYUdf20RSaYKB
-	C8ARyclEZEtPYScSt1wij8W1FN9EKdfkHnzR+Yk/OxiKY+YQcYEeKB8pbaUdFryvGO9412
-	TYqV504+XC5sXN2pQa9Zb9kK5+lqWFYuD0vDg6cKMeuglm4niVhh0pK5DFpeEK7lO/DHof
-	N53bdXYgqHpcQUtZ3lUxlFdCiCXte0OE0FLuVe7u9iYbJHzRqyDlCwflHYNlTspCA8WAUA
-	HPtUZzdJEc2bUWuWyzbhQwIbVkkokMB3ZPsjBxPbvK/rumWmvx2QLl+ta6zHUg==
+	bh=C/niuLqY/eeNxG06GOZ1d0rqnFDMcKFj61+ogwYeFSc=;
+	b=3I4H5Ikrx9s7EHDBiO7KYTRnKdwS44wEdU7TUeT8RrPFTHj1mTkPzRK15dvWv8DTAq6jSU
+	7tZZUXvGtaFxnZpMzbItq7jGV0QHAYeaE8KY1VCYPsDz4z/XfQWQ7nqXwqZM0s9OGae3kV
+	3twK5i+9NZ0EcQdadHLGuhSCXq4b7BSFhIckG7IPQeA7g6YWTtRTUZWxeR+2MYM9fszoLS
+	npOtPZjGpQRLiBfM7sGyB4m+DLVzJvgT9h8m8w5U/4rHFIr47no6GrAqsWnY/jnkXWKvo0
+	QtskvlhzTN1OJ9JYyf5kD5PCzz/O/EOczNrJ0u8daEODSDn/MPTdr1ArHT811A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744365701;
+	s=2020e; t=1744365703;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ljUMMSOZ3RB2FLlleuND0VV8bb1rvsQgh0M2xpiw+rw=;
-	b=yCjMuZl/Jgu8Z6islvxQplRdHNFuewhdSvOiCyXPAJF+INkcGKUtTCya6Tt6gxMq1wrME1
-	XE11oQoPAl6FHsBQ==
+	bh=C/niuLqY/eeNxG06GOZ1d0rqnFDMcKFj61+ogwYeFSc=;
+	b=QpNrDjaGPUBs+WCLavXvsbMYiwowscYA1VeqoQZuIAh7i27g/o1sQv3L7dxf5hstnyJukr
+	KTdLNygvhakyNMDw==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/alternatives] x86/alternatives: Move declarations of
- vmlinux.lds.S defined section symbols to <asm/alternative.h>
+Subject: [tip: x86/alternatives] x86/alternatives: Rename
+ 'POKE_MAX_OPCODE_SIZE' to 'TEXT_POKE_MAX_OPCODE_SIZE'
 Cc: Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
  "H . Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250411054105.2341982-49-mingo@kernel.org>
-References: <20250411054105.2341982-49-mingo@kernel.org>
+In-Reply-To: <20250411054105.2341982-47-mingo@kernel.org>
+References: <20250411054105.2341982-47-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174436570097.31282.7563580379273077780.tip-bot2@tip-bot2>
+Message-ID: <174436570249.31282.18245046767723205634.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,60 +70,71 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     b1bb39185df6f5ddafcb912304b73e70c6b70c5f
-Gitweb:        https://git.kernel.org/tip/b1bb39185df6f5ddafcb912304b73e70c6b70c5f
+Commit-ID:     3c8454dfc9143c992375a166a620ea3d62c3e434
+Gitweb:        https://git.kernel.org/tip/3c8454dfc9143c992375a166a620ea3d62c3e434
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 11 Apr 2025 07:41:00 +02:00
+AuthorDate:    Fri, 11 Apr 2025 07:40:58 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 11 Apr 2025 11:01:35 +02:00
 
-x86/alternatives: Move declarations of vmlinux.lds.S defined section symbols to <asm/alternative.h>
+x86/alternatives: Rename 'POKE_MAX_OPCODE_SIZE' to 'TEXT_POKE_MAX_OPCODE_SIZE'
 
-Move it from the middle of a .c file next to the similar declarations
-of __alt_instructions[] et al.
+Join the TEXT_POKE_ namespace.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Juergen Gross <jgross@suse.com>
 Cc: "H . Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250411054105.2341982-49-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250411054105.2341982-47-mingo@kernel.org
 ---
- arch/x86/include/asm/alternative.h | 6 ++++++
- arch/x86/kernel/alternative.c      | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/text-patching.h | 4 ++--
+ arch/x86/kernel/alternative.c        | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 4a37a8b..ef84739 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -82,6 +82,12 @@ struct alt_instr {
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index d9dbbe9..a45ac8a 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -11,7 +11,7 @@
+  * JUMP_LABEL_NOP_SIZE/RELATIVEJUMP_SIZE, which are 5.
+  * Raise it if needed.
+  */
+-#define POKE_MAX_OPCODE_SIZE	5
++#define TEXT_POKE_MAX_OPCODE_SIZE	5
  
- extern struct alt_instr __alt_instructions[], __alt_instructions_end[];
+ extern void text_poke_early(void *addr, const void *opcode, size_t len);
  
-+extern s32 __retpoline_sites[], __retpoline_sites_end[];
-+extern s32 __return_sites[],	__return_sites_end[];
-+extern s32 __cfi_sites[],	__cfi_sites_end[];
-+extern s32 __ibt_endbr_seal[],	__ibt_endbr_seal_end[];
-+extern s32 __smp_locks[],	__smp_locks_end[];
-+
- /*
-  * Debug flag that can be tested to see whether alternative
-  * instructions were patched in already:
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index eb3be5d..cd828c2 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -149,12 +149,6 @@ static void add_nop(u8 *buf, unsigned int len)
- 		*buf = INT3_INSN_OPCODE;
+@@ -82,7 +82,7 @@ static __always_inline int text_opcode_size(u8 opcode)
  }
  
--extern s32 __retpoline_sites[], __retpoline_sites_end[];
--extern s32 __return_sites[], __return_sites_end[];
--extern s32 __cfi_sites[], __cfi_sites_end[];
--extern s32 __ibt_endbr_seal[], __ibt_endbr_seal_end[];
--extern s32 __smp_locks[], __smp_locks_end[];
--
- /*
-  * Matches NOP and NOPL, not any of the other possible NOPs.
-  */
+ union text_poke_insn {
+-	u8 text[POKE_MAX_OPCODE_SIZE];
++	u8 text[TEXT_POKE_MAX_OPCODE_SIZE];
+ 	struct {
+ 		u8 opcode;
+ 		s32 disp;
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 4b460de..b8e0b1b 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2461,7 +2461,7 @@ struct smp_text_poke_loc {
+ 	s32 disp;
+ 	u8 len;
+ 	u8 opcode;
+-	const u8 text[POKE_MAX_OPCODE_SIZE];
++	const u8 text[TEXT_POKE_MAX_OPCODE_SIZE];
+ 	/* see smp_text_poke_batch_process() */
+ 	u8 old;
+ };
+@@ -2653,8 +2653,8 @@ static void smp_text_poke_batch_process(void)
+ 	 * Second step: update all but the first byte of the patched range.
+ 	 */
+ 	for (do_sync = 0, i = 0; i < text_poke_array.nr_entries; i++) {
+-		u8 old[POKE_MAX_OPCODE_SIZE+1] = { text_poke_array.vec[i].old, };
+-		u8 _new[POKE_MAX_OPCODE_SIZE+1];
++		u8 old[TEXT_POKE_MAX_OPCODE_SIZE+1] = { text_poke_array.vec[i].old, };
++		u8 _new[TEXT_POKE_MAX_OPCODE_SIZE+1];
+ 		const u8 *new = text_poke_array.vec[i].text;
+ 		int len = text_poke_array.vec[i].len;
+ 
