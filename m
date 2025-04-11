@@ -1,181 +1,153 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28742C80
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7AC21C198
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388179; cv=none; b=dSV9raU0OtPzZaf0NyU4iH7xuCXYq1BH5/i9EOP63nmklPi9SUzjIZEVcmU6wD+sKZDWqE/RCJRc/cRjxMeLItDgJfxxhDDTkLrM3c2vavxXQUyT3SlgUIcL/KvuHNOl2J8R6t1BvR9jLeNFNlyuDXqomz4mCE4v+Oguhj4lfc0=
+	t=1744388185; cv=none; b=pQ+C7RwLO5+t6vkWhxAsCMCzuxtZOk9TBmrU2Gs676nDNR2kBTflFdMhkYBq+Mj8qjYMlLEwEP1WZqB3XqQhukWAzlvzaULiwWmeEBPknrvR6/3VRMpbp4+wMLDAP4liqFJWju5dt9YIiFOl+IbpCqMjiNNajdzHg/xEOQngx8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388179; c=relaxed/simple;
-	bh=jjADHVXuoeWo3zMXJLAqhnQjIwflie+48BytBxS7vtc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qeEhDq9DdMnakZSWQ1F2W/iKJhXLxLOM758vA3qyI2aAazSoChzX1c/fafI+GwEsJ5baiJVjKdZRQRmukoWcrSiBGSXiabjLkHUidMiXA7pxtNRZsmERcoEZ6iGQHg8y4oWZDxFH4jBdxAMK17m8JrDgMA2bydNXV23dnzGoXaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IZUJlcqX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IZUJlcqX"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BGDh6P031989
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:16:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4IhlaAVM447bRlfi7RkIp9IzM8AW0t5T8e260lhmWr8=; b=IZUJlcqX3iFQJxmv
-	b4Gl6CvM1wCowY4OrpLABeMLNYcfbIPv89CGhTHGgycNT52L9qdKZMbNK0tDNC4X
-	iXpeRofYnSQRlVt+E1yvLz2ucDWhx4IFcqdNLtiWFpOTnepfO7o3NHGavGStxon1
-	aMaUGCncNbGVivzOiwxfFAiaka6IRkyyr42C/NxkyZ2HfzFAeakE12R4twR77dtm
-	hGTABMO1h+SBfdOb/0W5evCiUnBOj29e3r64eAVjPRojImhwcvASnvA0Utd7VME3
-	x7Z1rNx0cAZ/svZpxQMVumh/0cx6mI1sB3Z00KncltYHhjiIUaqWbBfrNePDQAFD
-	GY6I3Q==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twpmjw2u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:16:16 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-73720b253fcso1725559b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:16:16 -0700 (PDT)
+	s=arc-20240116; t=1744388185; c=relaxed/simple;
+	bh=ofG/bh88nXyGpqlK5TshtTQr9cd49SO+uJzCwBw3KLk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IopiBqeYPKyzWSYBgsTYyzSc0ZmYFIjv9IgqVWXx/tqyYswGmIpp5ZkxwLpxWRLd17sz1oOzMVwrhcONg3UJesaN210p5JasJQZ26D+0QiVWjawbg+9NCGwv+3o4m8VLCYH4mKZGhyufaFUYPM5GB+M0T9jHSxA9VESsLvPErGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b41b906b3so229624739f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:16:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744388175; x=1744992975;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4IhlaAVM447bRlfi7RkIp9IzM8AW0t5T8e260lhmWr8=;
-        b=wGaTVWyTsyYz2KpJZVbnEhCbQ9ws3ULSRXO/vgyHXgZgi7n95ovLKeu0g8vumlmKjf
-         szEk2kL7MFiAxNE74lIl770SefAUtmOLgIbOZWfh2lHksBiGFW332hsDfbWYyLK9q4vw
-         i34MfCsxbDoHZLlwtj8r6qiJDIQokHFbpyhZwDGYmGv2QdFqsvTzK/ptHXQ+S8hPVr4j
-         aHviOipa83p2aj+TmGan/3yn2CqPju3qBewV96BTHUQ4BccL71Kgb9Y8/Cb0+/WKk0Qp
-         Prt0Bl9zVKFfj3ieaqjzf9YAsZ6P1z3gSnOobkMKYg1r9DCgajRrthKT4kO+tdrD4LdU
-         LsZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVD6u0+GxAnvM0l1evbaaNvHeMJQ9+7x+or0Sdx3RWzqyhuXbBybwUjUBtBe8n6MllDX6J/A3F82EvWJkk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+XWzIGWl9Da//pyeR1ex4p7lfcnyYxvbCUzckNeO8xQlwTUkf
-	XxpRD63oCpexa9QcmkGNFIZ/UsruhTsBqrSvU9GSdBxEkNtmdVWU/SmcRmn5fWQBcyhIb3i2Jy0
-	t/tKBf5iQDl+v1mW2gQsGoLe+QUQCRi+Q93enuVVRKtNfP7RDfekb3/7M/lRLJEKXuYv2xug=
-X-Gm-Gg: ASbGncuJFR/Fyw0v/04jVx5iQnpCnbNJOeg6mb9OFpKvJDmIuUqFtJpcFU9oOJsq1eK
-	jMRGYB9VyKEEwVc76wlyeDbgrtIb8oUdguhVzL7ekkWdpAyHUR//S3yp3o/9IgecWrz9lQb1Sr5
-	OWIexljSqMj6Gj9uzCQERjAVKYaF3VJfZ08L/WQZmOZfPuHRUfgfPRpjKWXhr53vQEi2IXqS/iR
-	5fvSYs3q4L1d97AfZXWdNShv6Ki/T46ISv3jFsRGAjX/VNkL4g/1yo3BOREWj408Z6i7UmPLLjY
-	u6u+0wMLC0QBdDEFtshjISOzrdofYjoVRB4aTxf2oQ6QogRf0C/Ma2urlWXOHA==
-X-Received: by 2002:a05:6a20:c995:b0:1f5:769a:a4c2 with SMTP id adf61e73a8af0-201797b96camr6010742637.22.1744388175334;
-        Fri, 11 Apr 2025 09:16:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF2C+sSIwxuAmGGQvBGazeQxoErfToQK8MgYWtP1mBFETFneyUCN4Iy+2hWS/Y2/4HLTAN5Gw==
-X-Received: by 2002:a05:6a20:c995:b0:1f5:769a:a4c2 with SMTP id adf61e73a8af0-201797b96camr6010683637.22.1744388174958;
-        Fri, 11 Apr 2025 09:16:14 -0700 (PDT)
-Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230ddefsm1789764b3a.143.2025.04.11.09.16.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 09:16:14 -0700 (PDT)
-Message-ID: <1c7ed443-a5b0-446c-8689-97fb8319ddb4@oss.qualcomm.com>
-Date: Fri, 11 Apr 2025 10:16:12 -0600
+        d=1e100.net; s=20230601; t=1744388183; x=1744992983;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UQQgQ7UyS3LAdQoJwwRUwxPug3+VYmSPMHNWzlZpu7g=;
+        b=shkDps5ODEQShXQLq0sYmhn3tIEnXNO2tTLG74U1xQmlvTZogvXhrM+AySPrQXpIEJ
+         pg8GoFKUKqffJ8d02ju7a97DjCbqMCFzXPP3iuRXa10ylTu7anIhMEopVzqA8PSmy34b
+         sjpEzjnXDD44B9rLF3Wsyxn2O+iJzDGzUlMEoOJaZ96+vEZc9PkSfQdqPM7wBUdSxI4m
+         0zlYtV+DRMqbcEYqCXeijc2/1PTWi6arKaWioBZe7HwOqPXznu9unwtFhUZJBUL9db4/
+         AOp9NnKmAd6/Q36rmwA1XDEKGvPOmSkDkBn3Ic7gYYZWm6OvDTKwwIhibDpL10GP8GNq
+         YdBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUYozBqM65Q2tGUHB1fmxlXpa3vrikNodGohVaYu5Ag1t8zV1d0lfo+dWHf/BQf/ih9DeXWUt7Lgxg2V0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC4HCGKFDirXIZk4d8AVCy5POx3GO8lmysgQRLyXki9Rz+fEsd
+	1VIna0dHzRoGVHyjMtjel2MskJ1X7BWxR5Vt4ZlG+mwB3rtwRq+NfbIzonfXokyOqGE5PVZl3OT
+	6Sj6WVu/P4POdoiarrj+76hHNzo2LYo03ivSDHXbI7+H8m3iwKYXGDS4=
+X-Google-Smtp-Source: AGHT+IEe4DwMfsWGIOsRrmluePkQd1t+HY4zIFS0USg703O/1roEm3f4y8+Ckg8Q0QViO6JDMSw+MTbDD8BrjyKQPKMWtQc7aaBe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: accel: add device tree for AMD PKI
- accelerator
-To: Nipun Gupta <nipun.gupta@amd.com>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        krzk+dt@kernel.org, gregkh@linuxfoundation.org, robh@kernel.org,
-        conor+dt@kernel.org, ogabbay@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-        derek.kiernan@amd.com, dragan.cvetic@amd.com, arnd@arndb.de
-Cc: praveen.jain@amd.com, harpreet.anand@amd.com, nikhil.agarwal@amd.com,
-        srivatsa@csail.mit.edu, code@tyhicks.com, ptsm@linux.microsoft.com
-References: <20250409173033.2261755-1-nipun.gupta@amd.com>
-Content-Language: en-US
-From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-In-Reply-To: <20250409173033.2261755-1-nipun.gupta@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: FbbZYsqYhmVSg-zyQJFlhqiN2F8aYlYq
-X-Proofpoint-ORIG-GUID: FbbZYsqYhmVSg-zyQJFlhqiN2F8aYlYq
-X-Authority-Analysis: v=2.4 cv=MpRS63ae c=1 sm=1 tr=0 ts=67f94050 cx=c_pps a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=zd2uoN0lAAAA:8 a=DZtHtFm8LNTDz7ZeIvIA:9 a=QEXdDO2ut3YA:10
- a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_06,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
- spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
- phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110102
+X-Received: by 2002:a05:6e02:3804:b0:3d6:cb9b:cbd6 with SMTP id
+ e9e14a558f8ab-3d7ec227bf0mr32050795ab.13.1744388183354; Fri, 11 Apr 2025
+ 09:16:23 -0700 (PDT)
+Date: Fri, 11 Apr 2025 09:16:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f94057.050a0220.2c5fcf.0001.GAE@google.com>
+Subject: [syzbot] [ext4?] kernel BUG in ext4_ext_insert_extent (2)
+From: syzbot <syzbot+ad86dcdffd6785f56e03@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/9/2025 11:30 AM, Nipun Gupta wrote:
+Hello,
 
-No cover letter?
+syzbot found the following issue on:
 
-> Add binding documentation for AMD PKI accelerator supported for AMD
-> versal-net SoC.
-> 
-> AMD PKI accelerator is a device on AMD versa-net SoC to execute public key
-> asymmetric crypto operations like ECDSA, ECDH, RSA etc. with high performance.
-> The driver provides accel interface to applications for configuring the device
-> and performing the required operations. AMD PKI device comprises of multiple
-> Barco Silex ba414 PKI engines bundled together, and providing a queue based
-> interface to interact with the device.
-> 
->   +------------------+
->   |    Software      |
->   +------------------+
->       |          |
->       |          v
->       |     +-----------------------------------------------------------+
->       |     |                     RAM                                   |
->       |     |  +----------------------------+   +---------------------+ |
->       |     |  |           RQ pages         |   |       CQ pages      | |
->       |     |  | +------------------------+ |   | +-----------------+ | |
->       |     |  | |   START (cmd)          | |   | | req_id | status | | |
->       |     |  | |   TFRI (addr, sz)---+  | |   | | req_id | status | | |
->       |     |  | | +-TFRO (addr, sz)   |  | |   | | ...             | | |
->       |     |  | | | NTFY (req_id)     |  | |   | +-----------------+ | |
->       |     |  | +-|-------------------|--+ |   |                     | |
->       |     |  |   |                   v    |   +---------------------+ |
->       |     |  |   |         +-----------+  |                           |
->       |     |  |   |         | input     |  |                           |
->       |     |  |   |         | data      |  |                           |
->       |     |  |   v         +-----------+  |                           |
->       |     |  |  +----------------+        |                           |
->       |     |  |  |  output data   |        |                           |
->       |     |  |  +----------------+        |                           |
->       |     |  +----------------------------+                           |
->       |     |                                                           |
->       |     +-----------------------------------------------------------+
->       |
->       |
->   +---|----------------------------------------------------+
->   |   v                AMD PKI device                      |
->   |  +-------------------+     +------------------------+  |
->   |  | New request FIFO  | --> |       PK engines       |  |
->   |  +-------------------+     +------------------------+  |
->   +--------------------------------------------------------+
-> 
-> To perform a crypto operation, the software writes a sequence of descriptors,
-> into the RQ memory. This includes input data and designated location for the
-> output data. After preparing the request, request offset (from the RQ memory
-> region) is written into the NEW_REQUEST register. Request is then stored in a
-> common hardware FIFO shared among all RQs.
-> 
-> When a PK engine becomes available, device pops the request from the FIFO and
-> fetches the descriptors. It DMAs the input data from RQ memory and executes
-> the necessary computations. After computation is complete, the device writes
-> output data back to RAM via DMA. Device then writes a new entry in CQ ring
-> buffer in RAM, indicating completion of the request. Device also generates
-> an interrupt for notifying completion to the software.
-> 
-> Signed-off-by: Nipun Gupta <nipun.gupta@amd.com>
-> ---
-> 
-> The patch series was originally submitted as misc driver:
-> https://lore.kernel.org/all/20250312095421.1839220-1-nipun.gupta@amd.com/
-> 
-> As suggested by Greg, the driver does not fit in misc and should be part
-> of accel or crypto. Accel is well suited for AMD PKI Crypto Accelerator,
-> and thus the driver is updated as an accel driver and yaml moved to
-> newly created accel folder.
+HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17198c04580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f175b153b655dbb3
+dashboard link: https://syzkaller.appspot.com/bug?extid=ad86dcdffd6785f56e03
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-Why does this not fit in crypto?
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f1d71d1bf77d/disk-0af2f6be.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7f1638f065da/vmlinux-0af2f6be.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9b3e49834705/bzImage-0af2f6be.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ad86dcdffd6785f56e03@syzkaller.appspotmail.com
+
+EXT4-fs error (device loop3): mb_free_blocks:1945: group 0, inode 19: block 289:freeing already freed block (bit 18); block bitmap corrupt.
+------------[ cut here ]------------
+kernel BUG at fs/ext4/extents.c:2151!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 6611 Comm: syz.3.178 Not tainted 6.15.0-rc1-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:ext4_ext_insert_extent+0x317c/0x4610 fs/ext4/extents.c:2151
+Code: 8b 74 24 60 e8 c5 ab ff ff 48 89 04 24 e9 2c da ff ff e8 97 40 4c ff 41 8d 9c 1c 00 80 ff ff e9 be ee ff ff e8 85 40 4c ff 90 <0f> 0b e8 7d 40 4c ff 44 01 e3 e9 1f f1 ff ff e8 70 40 4c ff 01 dd
+RSP: 0018:ffffc900049ff0f0 EFLAGS: 00010287
+RAX: 000000000004b428 RBX: ffff88807e54ec30 RCX: ffffc9000c50b000
+RDX: 0000000000080000 RSI: ffffffff826efc8b RDI: 0000000000000004
+RBP: ffff88804d74c418 R08: 0000000000000004 R09: 0000000000000028
+R10: 0000000000000028 R11: 0000000000000000 R12: 0000000000000028
+R13: 0000000000000028 R14: 0000000000000054 R15: ffff888053f4dc18
+FS:  00007fe2885d66c0(0000) GS:ffff8881249b9000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b3080cff8 CR3: 000000005ea0a000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ ext4_ext_map_blocks+0x205b/0x5d60 fs/ext4/extents.c:4400
+ ext4_map_create_blocks fs/ext4/inode.c:519 [inline]
+ ext4_map_blocks+0x45b/0x1390 fs/ext4/inode.c:705
+ _ext4_get_block+0x24e/0x5a0 fs/ext4/inode.c:784
+ ext4_get_block_unwritten+0x29/0x110 fs/ext4/inode.c:817
+ ext4_block_write_begin+0x3fb/0xf40 fs/ext4/inode.c:1066
+ ext4_write_begin+0x670/0x11f0 fs/ext4/inode.c:1221
+ ext4_da_write_begin+0x29d/0x990 fs/ext4/inode.c:2931
+ generic_perform_write+0x3d0/0x930 mm/filemap.c:4102
+ ext4_buffered_write_iter+0x119/0x440 fs/ext4/file.c:299
+ ext4_file_write_iter+0xa4c/0x1d10 fs/ext4/file.c:718
+ new_sync_write fs/read_write.c:591 [inline]
+ vfs_write+0x5bd/0x1180 fs/read_write.c:684
+ ksys_write+0x12a/0x240 fs/read_write.c:736
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe28778d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fe2885d6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fe2879a5fa0 RCX: 00007fe28778d169
+RDX: 000000000000fcb8 RSI: 0000200000000140 RDI: 0000000000000007
+RBP: 00007fe28780e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fe2879a5fa0 R15: 00007ffee8100088
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:ext4_ext_insert_extent+0x317c/0x4610 fs/ext4/extents.c:2151
+Code: 8b 74 24 60 e8 c5 ab ff ff 48 89 04 24 e9 2c da ff ff e8 97 40 4c ff 41 8d 9c 1c 00 80 ff ff e9 be ee ff ff e8 85 40 4c ff 90 <0f> 0b e8 7d 40 4c ff 44 01 e3 e9 1f f1 ff ff e8 70 40 4c ff 01 dd
+RSP: 0018:ffffc900049ff0f0 EFLAGS: 00010287
+RAX: 000000000004b428 RBX: ffff88807e54ec30 RCX: ffffc9000c50b000
+RDX: 0000000000080000 RSI: ffffffff826efc8b RDI: 0000000000000004
+RBP: ffff88804d74c418 R08: 0000000000000004 R09: 0000000000000028
+R10: 0000000000000028 R11: 0000000000000000 R12: 0000000000000028
+R13: 0000000000000028 R14: 0000000000000054 R15: ffff888053f4dc18
+FS:  00007fe2885d66c0(0000) GS:ffff8881249b9000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb70b406378 CR3: 000000005ea0a000 CR4: 0000000000350ef0
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
