@@ -1,88 +1,109 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D8A36D
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2B517C68;
+	Fri, 11 Apr 2025 00:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744331942; cv=none; b=W0Fiar7rZ6W+MzfprdfCrAQdrTPQBcB0eLNnEL3xJMrS6Y+PtPi1Cyr7vpnly3ZN51EQjGyHSEwF23RT/Um9v7wX/vOdXGWe/WLBxHoUIp6vryvwXHiC+dW9XhdaiVaZAo3wb3Gz7RGMT8pLFMHy7M/XDxN2hNY4QaRFYlDnajg=
+	t=1744331950; cv=none; b=q5iEPwGNf5a4R3LpsRj5TSTUhYEEE+uLes4n3EaKE1P8QeCHQRKUOACxRYP3Cfz7vfh8CnQrTUix0WkRpTtNC34jXDyCcPobmbOdwsIJX7w5EJFo/9YkLLBWf9dRbjAqzDqy6f+wS0K16uXD1jZt15WJgqjzT7TZI0DLKoRqfW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744331942; c=relaxed/simple;
-	bh=+5YsoHQ8CSMxUeDudniraau5fmGGTFuPzw0XxUxa5Sw=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=slFUy3ylHpN2MPdqt/YbmEbjfbYvMnlhDEPgqKUQMWhwCwbQ4cKa5USD2QJbfaWn3Kv9DXOXTN+89aY6zwn5Rm+t2nVLxIcyjQyPpaTHI01AXwmDU/XIjaL7PaYCTT3Cs/jS+emhI0o8oDG97FG6c6YtRDPTZ9ccDMBLPTV2tY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zbcrWb36; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744331950; c=relaxed/simple;
+	bh=iQ5x/Qc96rZ/PCJW8hewnQTM/hC7OymarH96ZYHDwuI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cWVfOssrfrYf0lfHrlA40Z3YmlJoONA65K7uNjyGFBzv7rN+aH7Q6F3H3kjJKPD9w9OGdblHGUh7HQqDGyIpOUydMAZOrjjb6j0yRcyIjZJIQvJezxE1OQzvOQL5hW8pVxzWDiOh2x0GZe65I30L3Yq2uLawOWYmiMf70MqgJtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OVGMn9Pb; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zbcrWb36"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7369ce5d323so1272751b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:39:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVGMn9Pb"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30db1bd3bebso13040641fa.2;
+        Thu, 10 Apr 2025 17:39:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744331940; x=1744936740; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:to:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+5YsoHQ8CSMxUeDudniraau5fmGGTFuPzw0XxUxa5Sw=;
-        b=zbcrWb36cOskvr/Uzp6OZmRd1No8pPYrsWD5NUFet671YZrG5nbONkJvmcupPK4VYA
-         hxBQFstZuFiMNnq1JQUF1FWSiS+8V7rnBPwH3JrTed2A2/9xOoxN9xJqm1HqV3tV3LyQ
-         pYv2yboDCJw76Wxa7BJDyvsPE1ty5zuJNgBHAdhsEwxK9VqHiGEFvRafzZLjTkHjYB/b
-         Q+OFHOXv3C+Q7V/UPtr2XZJzzsad9OiHbPdsjba9FCdYqgbWQAZTC/tTkHSbZ115Gm2C
-         AzPY7uYaW5T/+Fs7J5zQuACzpJYz//oqYOTERDnybBRN/ErhkP0bt5mZ0qHDTi1BOSRf
-         mITQ==
+        d=gmail.com; s=20230601; t=1744331947; x=1744936747; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TvlzBRZmcfQZqiC8OpRLt5DZkcEUBfxEVIIuGLShicA=;
+        b=OVGMn9Pb6p+MrX9BGzIbwDufFd2qW6jdHKtuEWbuPtM1Hp6e1EPqnUbh+jOn+Cl430
+         tEvuY+b5YlQ1k2Ck5fHklKRRuREpsEnuHL8qbH4+LHHm5qWpeUXcDuCH/39SnpLmi2I2
+         d9pQfM4eUvkZlA9OSkHco8A146zu7Zql3td3BjsNHYdyFs4W1CaZq+B1MF2tpzqbOeoi
+         0dZROagmcQx6xbm1WWc0qUYuLj2LPg724ymK0KW1ir2d+wO38e3R4IA31+eitq5NQ3fK
+         zs1aXLIJ2SMMAnHJ2XDDDLZabM6kdapMjeI0icEuoVK8xwgklW6pzWOSrXJjQLY4SAa9
+         FFOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744331940; x=1744936740;
-        h=mime-version:message-id:date:references:in-reply-to:subject:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+5YsoHQ8CSMxUeDudniraau5fmGGTFuPzw0XxUxa5Sw=;
-        b=C5fi09REtMiVVN3voZmeRw5iJIZ7OCR++FrcAglxfPMbTQJ3Kr1I0gup6G430rgnB0
-         sT9sS4P7SX2CVmnAdFSpl6+SDouHxkXrAy4nuunx0T2wueV0csSyG4rBB7T7CbO2Nqo8
-         8syKELCxyYsGD6D5WUcrEHPttUQJit0Asc9QoWLZ7A5KruxCGk1zEz8ls2/ijZn8BX8W
-         Ct2Vo9mhyaC4PdzTh/HeNbh7z5MIwi7GJcoqRr6STnUiTC8MvX5CUYZ1wHbt2KADi7qk
-         i39vYrOlTB8W6qaa0WqSvimy/rFnVy65GLkRtqSB5fZBdkTzCOgT3LqcftzoncK8IkwL
-         bZIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXUZ+YlcJWfxyNl5KMITZMlL/kR7aQKZHgLsF49elBHn4ra3/D9u+fhZ9HA7mNDNJhzCdQ4DcAaZlOXnk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbpiKQMWjCA9XQCoRy+YoDpwAkFy390IrMfTFRfazq5o0tfRYo
-	Df9DWi1Li2yGaUzoz9apoFJ5IghLaZObXjUI6f5aYOcGYAmT8YlF/ym77skEG7g=
-X-Gm-Gg: ASbGncsRyNzqWdCtjfHxu4KzbapVaxtCDT0Wtf87Zk5VtclTl4Iy51s0zGdwXsWgjwe
-	zaM8/mFLtmoScdSWUS19QaUNS0OVTYN4WpRl0Yw/1sEMH7GbLdfmbLNNZVRjtDEvASgNAxdWRR7
-	Eazn8KomJFFdUP9qcd6b6WBrruKHQHyoB9IlT/OOLpjMsyLTWlof5yK1aTIeqaL66GAYydVtNrG
-	zFCLIeVsBTeaqNZTP1zvm5MPCRtN4NVndlNJPya8JFHXeRnBZjzm2dL9wuMQh5cLIkqbGD7m94b
-	sLqdDbAfjwxe5sHmWwQAT1LVLrVDity9FagWh5aSUU3C4pppeQ==
-X-Google-Smtp-Source: AGHT+IH81RSmoGv2vG9iqqRjG+DYtBzAdJMaGkRjl+5vBHC3a1xD7FDcQMu2Rp5DtnM0NFxvXyDmyA==
-X-Received: by 2002:a05:6a20:2d13:b0:1f3:33c2:29c5 with SMTP id adf61e73a8af0-20179787583mr1577432637.7.1744331940263;
-        Thu, 10 Apr 2025 17:39:00 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2335294sm212602b3a.176.2025.04.10.17.38.59
+        d=1e100.net; s=20230601; t=1744331947; x=1744936747;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TvlzBRZmcfQZqiC8OpRLt5DZkcEUBfxEVIIuGLShicA=;
+        b=RcWm53GZ/yAk1uMgnaFa/RUSmUd+KTgxvzxS6ve8X6r4IS2L1KcC05tc5OjBtEGo4x
+         89BmBBF6emZB7Wqs1zJHum5ppSB190s27aVZPoYF8c/fBO8XNYic0qoWAmUMoDv0KoZR
+         z+8tUasaDn9OZgs4dZAXcfzHcugpJUgMBNxwCVFjReYQNmsZhXs488mk+VP3yFQrz0Zj
+         tGY2e7TJwID51D/Ee8tO1x4IaTVTvQARPkt3feaUBC3wiQ/ePhLlcVw95GMQXyPKtGsH
+         SCDgUKYs0aXbGeDgnHF7Py978s//8L7u2wZyyLJKH5hcFtzsPoAn8Gk1GxU72wMSy8Ie
+         C9Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8NUrASr2CKi8kfm05nd8+20FqZKLFACg8WYdXR80Nr+S80DZdpR0mWA7wF35Uy3HxAj6/a/4OYNWv@vger.kernel.org, AJvYcCXHB+tM5/wM0Pe6JMugk42XUPrICqLIC01gO2pfqO5rtvDaknJLZnFxtFsuZDZEsXnTczbR3tSWzgc=@vger.kernel.org, AJvYcCXv9/6BTyD+i+D44lyIbWwitot6lwfnfPBBBWkIQXIazAnhvGJBSy6aJgi5ZnOLvrI1qf0ZQsz4ScVw9M6i@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeTHZXUoTlN+BvJkf2R3ZO/96JhmqPk7O5ArE07fvxyl20QgRC
+	Ddx24QafCrHAC8FxLCrE/Mai9fWkqImYs0ccyPyB6dZysp1M0LhS
+X-Gm-Gg: ASbGnctK+WWG2zAoiH3Ceiw5f9BMoyzAjoSxk0BobngPUJIChjogd6tOiHzj9i9WDIk
+	rS8/t+aO4HMLNOzZn0arMj5WoxMnA1bqr4wp1i+v7ebBmAPgvgPRB9pZGBj4SZSAJ1aJ5akK7sH
+	803L601CeYSrIHkFW44VlPaHL0bRxCyBE6MG5g9OBzKNgOvHqOP5JRL1z5qv14Q1Q0Gazie+kJv
+	QaCuhnpB2PjGcgdqx2EuwUu6i6TPH/YtbR7fjmxGdPWfZQm6+3kTJGojuReNtGyRgkgcWMmeLpk
+	49la+mrqfWpk2q8APXUWkI9kzPOzpMNZeDouttpvG/11Nq/7fpTNqHZhw9m8
+X-Google-Smtp-Source: AGHT+IEN5mMmLvML1RixznmVQhwUVwoYFg/6bDCB7jcePQLJIp/PR0tcJr9jJQCpqbPiczh3txeYEA==
+X-Received: by 2002:a2e:be88:0:b0:30b:fe19:b07a with SMTP id 38308e7fff4ca-31049a8085dmr1938891fa.25.1744331946976;
+        Thu, 10 Apr 2025 17:39:06 -0700 (PDT)
+Received: from localhost.localdomain ([176.106.241.81])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464ea5c6sm6344251fa.62.2025.04.10.17.38.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 17:38:59 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: Andreas Kemnade <andreas@kemnade.info>, aaro.koskinen@iki.fi,
- andreas@kemnade.info, rogerq@kernel.org, tony@atomide.com,
- linux@armlinux.org.uk, linux-omap@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: omap2plus_defconfig: enable I2C devices of GTA04
-In-Reply-To: <20250228112750.367251-1-andreas@kemnade.info>
-References: <20250228112750.367251-1-andreas@kemnade.info>
-Date: Thu, 10 Apr 2025 17:38:59 -0700
-Message-ID: <7hwmbrwmzg.fsf@baylibre.com>
+        Thu, 10 Apr 2025 17:39:06 -0700 (PDT)
+From: iuncuim <iuncuim@gmail.com>
+To: Vasily Khoruzhick <anarsoul@gmail.com>,
+	Yangtao Li <tiny.windzz@gmail.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Andre Przywara <andre.przywara@arm.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Subject: [PATCH 0/6] Add support for A523 Thermal system
+Date: Fri, 11 Apr 2025 08:38:20 +0800
+Message-ID: <20250411003827.782544-1-iuncuim@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Andreas Kemnade <andreas@kemnade.info> writes:
+This patch series adds temperature sensor support for the Allwinner A523
+family of processors (same die with H728/A527/T527)
 
-> Enable I2C devices of GTA04 to get better test coverage when using
-> the defconfig. Until the I2C host driver is fixed, BMG160 module should be
-> blacklisted when booting on the GTA04A5.
->
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Mikhail Kalashnikov (6):
+  thermal/drivers/sun8i: add gpadc clock
+  thermal/drivers/sun8i: replace devm_reset_control_get to shared
+  thermal/drivers/sun8i: Add support for A523 THS0/1 controllers
+  arm64: dts: allwinner: A523: Add SID controller node
+  arm64: dts: allwinner: A523: Add thermal sensors and zones
+  dt-bindings: thermal: sun8i: Add A523 THS0/1 controllers
 
-Queued for v6.16,
+ .../thermal/allwinner,sun8i-a83t-ths.yaml     |   5 +
+ .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 145 +++++++++++++++++
+ drivers/thermal/sun8i_thermal.c               | 154 +++++++++++++++++-
+ 3 files changed, 300 insertions(+), 4 deletions(-)
 
-Thanks,
+-- 
+2.49.0
 
-Kevin
