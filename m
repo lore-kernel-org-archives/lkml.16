@@ -1,139 +1,207 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A233238C09;
-	Fri, 11 Apr 2025 10:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C47221273
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744369005; cv=none; b=d/rnmknTBZ0cIW+Nshd5DLo7Vf+1OwCpbwvLjMu+AAAptBiM9EwWtqQxHEpKsPBBmGmMj4HobffgVB4hfHYFp8DCUtPnV8ORkaQn3zn9Ag7/WQQjR1VtEkZF41hRj617gRqUWZwnsKGi+ViRYdJiQCl/v/r+q2QZ0JlDsfXuKY4=
+	t=1744369007; cv=none; b=dqMVtfMWwYQpWB+ohXWaZfpkjCyXLumWtUpJ1zKWNOYP2qK12oxI+x1Q6rsO4iDVTZSdphUXSrXoYx4oRvDHnjNyDHlJYFLot2RjN/wtSQxG06zN6WvOMQ2OVAMdF8LHWHqH/foy6YWDx2Rk6gPRPaHGa2RMUzqJ9JxDiuLyzQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744369005; c=relaxed/simple;
-	bh=oy5d/S4pW5MASgYEOTGgUSbVs+pUxqnQeCfcjnI416o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LEH2FKgObPLbRUmv+Tr9jjfGGmvMMrV2A8WM5D3jjN6w+Ah/KwnAAEkrjjRPXwyEfaNfV2IWYQxtnqOz/F/xCg1SE+J1wLMRz3P4KnSILmLfrOi+FFiTagZqCak6UAOKscOxKRVQiarBQlhaKXJPaHrz326YOIpvWWetw5IFVbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=UspNZreF; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744369007; c=relaxed/simple;
+	bh=z+r9d889Eoa+DB7Ik17dKAV89gPyeioS4D9kppwe7T8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IQyaTSBM3rM5GIlXxoW2srLj4HlWGDn3S2WE7hqq5m751pvz0hlx9Gdb/hVJhmUtp1By7kjtcOSl02yXUdw054/+BEnh9oz972FguabRHM/5SUn96KDSvr5/SnEKdnYk6tRVYuOxrTpEWVweg06WYNf5Q3rRV/Z0MZbA0BJdXvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CIqcFrmk; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="UspNZreF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744368988;
-	bh=g48Qtb2HgrJLkqkNBpiJ1SxVJhJHuhOOWJNEegE8LW4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=UspNZreFEoDVooUaoW8dbiO13tV7z8eDKK+4rco/RDwLbLhghTFObAMB70fyChXiI
-	 R4YsEsK+i8LPLeC0hC/XuwSn5Q6H27/WqVTO/hNb9YtyDKjHn+w48Vf+WWZw4TRSWX
-	 snW80FC/G5+evua+4sa3OF9i7TkiKgi6C+UZO8SQ=
-X-QQ-mid: bizesmtp23t1744368963t53fc982
-X-QQ-Originating-IP: 2fxz1gLvHhLKZ3VuxioAS5pWAz4jebflTDRToLk4ZBA=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 11 Apr 2025 18:55:57 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 402799742258955829
-EX-QQ-RecipientCnt: 8
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Chengchang Tang <tangchengchang@huawei.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>,
-	Winston Wen <wentao@uniontech.com>,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 5/7] RDMA/hns: initialize db in update_srq_db()
-Date: Fri, 11 Apr 2025 18:54:53 +0800
-Message-ID: <FF922C77946229B6+20250411105459.90782-5-chenlinxuan@uniontech.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250411105459.90782-1-chenlinxuan@uniontech.com>
-References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
- <20250411105459.90782-1-chenlinxuan@uniontech.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CIqcFrmk"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5c6Bv008467
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:56:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=NMnuTa2g/u6bG5PBHb9WLLOX
+	p+EvkptmiqFPCHgzMnk=; b=CIqcFrmkaz+J91+AAQCMZo8BtGjG2gHwDxlWR8Mj
+	Ubba4ZfDjw1kgMt7k92VYQ+E35NEj9QGX5Ei14goYUFLjhewVzB49wNOGmkNz99U
+	M9eUxCLgyEuVZbWB7piS/7tanafjCwVf73vurRimktUx4Bbp3bmFKuAFgL2nXzZS
+	SW1N8Brkom7+aM+xiMUaBibMStEvjIm/jbtuRpuzTxezWT4szr3bQQgvxZ0M3HpS
+	eGBoc9icqRpNFZYFsqzr9jf78e7aqz9qbfGsewctKqShg9b5LcGAfjmH6mIxt3T2
+	lwO2a54aFPQMBkXzDTMNPW7PE4RgcnQSWphjrLaPMb/T7w==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd0a9a8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:56:44 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ff798e8c3bso1876238a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:56:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744369003; x=1744973803;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NMnuTa2g/u6bG5PBHb9WLLOXp+EvkptmiqFPCHgzMnk=;
+        b=AEEjgvc5XxGj159EuT6uEorYrg0WimRHf2BprdOUmXuho6yNwn0i1d3ZdsZhNohNIk
+         9hqAaN4fUkiPLJF4118hrcceoXVtttj2SnUGeVzXvbiWdzjY9UuPjYQhw/v470uKKJq0
+         FN4UQ9l8cUlsI9iqk0WtkYGCcZejCIVYx6kdyNHOXRmsi0LO54gEaRS+Kdk4Kgvk3hB4
+         33EReBEwBJPVEmLf5AWjkp4/2ConMxQ/7GGn5XCsRTUdlxb0DjOyBasIsAk8mhLJjIlP
+         dnmeKsOB3wAqsFiEa75ZyCue41bv3jZtI17M0ccTEk01WX4zkqCeFWZ1JpYp70CXw+Yk
+         74tw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjDplEqgRW5m5BZH1HCC+e8qQUK9gZQJ11S9Yu3S1J6AShKUM/ZEwfzxCXPG0dazpm8+opaOdSPGM8bSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9HxvZRseIg623hbLd1VYzNDyw7mBFd9wqS8xbZHZppOgPNbME
+	UZiedkPFx8lyb3/jKzRxvgR757EheoWTw+lK+S8fGOzTH3DWO8kE1TaDUmt3Q0zYn7keBK5tDue
+	ZAKWl966O6a9hxf11yrERMkhdU+wofL/bfnj5Dc3ukSIFcKcvlr6GW8svGf+6yOBZdBlkXINSlD
+	NDQF62A5Yk44udcyZwBCXLF3LZ7cy3ArceEZdF+A==
+X-Gm-Gg: ASbGncskB6+qgnXJEgkcXwjgG1yJGaVQkaCwaeiFh9qKt1d/hBWVBSol9RO2xYnw0YV
+	mY5ttM89jbPaqtm0JlUu/DA6ICATPjmvY34lUo8MiDo5hX12dZy8Ywgdtw2uAgsyetYP5
+X-Received: by 2002:a17:90b:5190:b0:2ff:4bac:6fba with SMTP id 98e67ed59e1d1-3082367ccebmr3972431a91.24.1744369003016;
+        Fri, 11 Apr 2025 03:56:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEC10V4HuepcPrjAbfR7o7tQD4T9I5MwkHAg2tixv6MMcm+xs1JfiXocI3oSlU1LZsF7E5UV8cn7MGz9lE5X8g=
+X-Received: by 2002:a17:90b:5190:b0:2ff:4bac:6fba with SMTP id
+ 98e67ed59e1d1-3082367ccebmr3972395a91.24.1744369002676; Fri, 11 Apr 2025
+ 03:56:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: OAj1qrjhA85AfHsK+j36bU99pHpvKn9xm6f++7FHQ2suVasozllnp2XU
-	OiLmm6z+ScOETPPNgheUFvkn6YEZZafvtnDRKsBt/6Ra2bJ2XyGVguQmgPYUul2YmVRkTVp
-	hwfGXISY7XaOlpPNR/Jzsae/zbBhkQWbenWC4vbYfpV7/4MOJCsWdJ5cRMUHpj/ylKKtk7U
-	YQnfS601mfeOP6gW/DjXbe0e3yg0ecTBxxGWkSeN6dqVQUa2njETm/mRpNKl5DRKnWY1Ier
-	Zwb6Ck06WUhqMOhA+ZzXGj9meWECie8q8fvFsX/TvVuJARcEBgVJb8jwmjtIfPcl914r26P
-	10YynOm09utG5NuAGKBVteQnBYRiDL76hUGWIlz7FuO3C+WDeSGSJdWl3guMLskj8cPdaC7
-	+Bk+dbX/SUyPvUdKzXitSurVWh/jUsgczZ+D5dRMYsfO6VjPUdtVpzSYgS6Ix2nwtXhCwqV
-	ttKokWkr6QV02owuSe8DXhIEfopKYaDh/RGi9K6mNDezD6/SQrfIF7ie8SqdC9F3g+jeq5y
-	wVQip7dUJxG3cj1PiE2j+BnnDvDLhwvdzSMk2maiDqz9wM3ZPasvgvMpcTCXeHNtVY8l/CI
-	NrGK4hqEQIq3fNTSlCgOupJecIEAZ6pylStQdi2g+KTCGJOkGhxh+Lsa3QWeYu+dYw9TH3X
-	6QY9uSRK0qhi1mrUDd6lJar8lqByn0Dz8CHl46M5JpqELocPQihSn9gDUJ3gth2WRLr0wVb
-	YQ2SZR0YAcSRLJkrZseJPrdfrGODKNbWlt4ZkIKYj+HtlgvTXD2hYl/jGHH49y6vV4V1+oS
-	weTYriFQi7+DbQD7MVjLnzIhtFdAUJDaSFeRUEw4xwe44ZwleEI/ltJZ7MRmXKNCYX7w8YE
-	2Zms2Tpz3sNhJTDAkONnP8GcsY3BpL+hqZfhX+NaEx0PZnKPfT92NMOnvg6FovGFOP3aD5q
-	WDEIZD3pXsby/IhyDEXSDL0cLyp9UBANSm4mGO8EIr2LZGns4UYHb7u1H80frosZXmmgVFl
-	6KadT0Rg==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
+ <20250410090102.20781-6-quic_nitirawa@quicinc.com> <zvc3gf7mek7u46wlcrjak3j2hihj4vfgdwpdzjhvnxxowuyvsr@hlra5bmz5ign>
+ <4557abf9-bcd2-4a06-8161-43ad5047b277@quicinc.com>
+In-Reply-To: <4557abf9-bcd2-4a06-8161-43ad5047b277@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Fri, 11 Apr 2025 13:56:30 +0300
+X-Gm-Features: ATxdqUFwNiDRdMcwM_zHvHGXNZvki0LX1hVsBLYCd-Z5sRRiCA8vfgXKNnKyQxk
+Message-ID: <CAO9ioeXyDWOhe1cbGO_tR=ppZd1aC0GSdeMzQjir4XmDRMQ3Jg@mail.gmail.com>
+Subject: Re: [PATCH V3 5/9] phy: qcom-qmp-ufs: Remove qmp_ufs_com_init()
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
+        James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+        bvanassche@acm.org, bjorande@quicinc.com, neil.armstrong@linaro.org,
+        konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-ORIG-GUID: AyEufKcyyw2nEGnMFJrs0DPbXkG5iXdc
+X-Authority-Analysis: v=2.4 cv=Q4vS452a c=1 sm=1 tr=0 ts=67f8f56c cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=1tzRQYHw1gqR9l_dhREA:9 a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: AyEufKcyyw2nEGnMFJrs0DPbXkG5iXdc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 phishscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110069
 
-On x86_64 with gcc version 13.3.0, I compile
-drivers/infiniband/hw/hns/hns_roce_hw_v2.c with:
+On Fri, 11 Apr 2025 at 13:42, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
+>
+>
+>
+> On 4/11/2025 1:39 AM, Dmitry Baryshkov wrote:
+> > On Thu, Apr 10, 2025 at 02:30:58PM +0530, Nitin Rawat wrote:
+> >> Simplify the qcom ufs phy driver by inlining qmp_ufs_com_init() into
+> >> qmp_ufs_power_on(). This change removes unnecessary function calls and
+> >> ensures that the initialization logic is directly within the power-on
+> >> routine, maintaining the same functionality.
+> >
+> > Which problem is this patch trying to solve?
+>
+> Hi Dmitry,
+>
+> As part of the patch, I simplified the code by moving qmp_ufs_com_init
+> inline to qmp_ufs_power_on, since qmp_ufs_power_on was merely calling
+> qmp_ufs_com_init. This change eliminates unnecessary function call.
 
-  make defconfig
-  ./scripts/kconfig/merge_config.sh .config <(
-    echo CONFIG_COMPILE_TEST=y
-    echo CONFIG_HNS3=m
-    echo CONFIG_INFINIBAND=m
-    echo CONFIG_INFINIBAND_HNS_HIP08=m
-  )
-  make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once" \
-    drivers/infiniband/hw/hns/hns_roce_hw_v2.o
+You again are describing what you did. Please start by stating the
+problem or the issue.
 
-Then I get a compile error:
+>
+> Regards,
+> Nitin
+>
+>
+>
+> >
+> >>
+> >> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> >> ---
+> >>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 44 ++++++++++---------------
+> >>   1 file changed, 18 insertions(+), 26 deletions(-)
+> >>
+> >> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> >> index 12dad28cc1bd..2cc819089d71 100644
+> >> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> >> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> >> @@ -1757,31 +1757,6 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
+> >>      qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
+> >>   }
+> >>
+> >> -static int qmp_ufs_com_init(struct qmp_ufs *qmp)
+> >> -{
+> >> -    const struct qmp_phy_cfg *cfg = qmp->cfg;
+> >> -    void __iomem *pcs = qmp->pcs;
+> >> -    int ret;
+> >> -
+> >> -    ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
+> >> -    if (ret) {
+> >> -            dev_err(qmp->dev, "failed to enable regulators, err=%d\n", ret);
+> >> -            return ret;
+> >> -    }
+> >> -
+> >> -    ret = clk_bulk_prepare_enable(qmp->num_clks, qmp->clks);
+> >> -    if (ret)
+> >> -            goto err_disable_regulators;
+> >> -
+> >> -    qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRDN);
+> >> -
+> >> -    return 0;
+> >> -
+> >> -err_disable_regulators:
+> >> -    regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
+> >> -
+> >> -    return ret;
+> >> -}
+> >>
+> >>   static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+> >>   {
+> >> @@ -1799,10 +1774,27 @@ static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+> >>   static int qmp_ufs_power_on(struct phy *phy)
+> >>   {
+> >>      struct qmp_ufs *qmp = phy_get_drvdata(phy);
+> >> +    const struct qmp_phy_cfg *cfg = qmp->cfg;
+> >> +    void __iomem *pcs = qmp->pcs;
+> >>      int ret;
+> >> +
+> >>      dev_vdbg(qmp->dev, "Initializing QMP phy\n");
+> >>
+> >> -    ret = qmp_ufs_com_init(qmp);
+> >> +    ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
+> >> +    if (ret) {
+> >> +            dev_err(qmp->dev, "failed to enable regulators, err=%d\n", ret);
+> >> +            return ret;
+> >> +    }
+> >> +
+> >> +    ret = clk_bulk_prepare_enable(qmp->num_clks, qmp->clks);
+> >> +    if (ret)
+> >> +            goto err_disable_regulators;
+> >> +
+> >> +    qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRDN);
+> >> +    return 0;
+> >> +
+> >> +err_disable_regulators:
+> >> +    regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
+> >>      return ret;
+> >>   }
+> >>
+> >> --
+> >> 2.48.1
+> >>
+> >
+>
 
-    CALL    scripts/checksyscalls.sh
-    DESCEND objtool
-    INSTALL libsubcmd_headers
-    CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
-  In file included from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:47:
-  drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function 'update_srq_db':
-  drivers/infiniband/hw/hns/hns_roce_common.h:74:17: error: 'db' is used uninitialized [-Werror=uninitialized]
-     74 |                 *((__le32 *)_ptr + (field_h) / 32) &=                          \
-        |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  drivers/infiniband/hw/hns/hns_roce_common.h:90:17: note: in expansion of macro '_hr_reg_clear'
-     90 |                 _hr_reg_clear(ptr, field_type, field_h, field_l);              \
-        |                 ^~~~~~~~~~~~~
-  drivers/infiniband/hw/hns/hns_roce_common.h:95:39: note: in expansion of macro '_hr_reg_write'
-     95 | #define hr_reg_write(ptr, field, val) _hr_reg_write(ptr, field, val)
-        |                                       ^~~~~~~~~~~~~
-  drivers/infiniband/hw/hns/hns_roce_hw_v2.c:948:9: note: in expansion of macro 'hr_reg_write'
-    948 |         hr_reg_write(&db, DB_TAG, srq->srqn);
-        |         ^~~~~~~~~~~~
-  drivers/infiniband/hw/hns/hns_roce_hw_v2.c:946:31: note: 'db' declared here
-    946 |         struct hns_roce_v2_db db;
-        |                               ^~
-  cc1: all warnings being treated as errors
 
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-Co-Developed-by: Winston Wen <wentao@uniontech.com>
-Signed-off-by: Winston Wen <wentao@uniontech.com>
----
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 160e8927d364..7d6c0cfa1ded 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -943,7 +943,7 @@ static void fill_wqe_idx(struct hns_roce_srq *srq, unsigned int wqe_idx)
- static void update_srq_db(struct hns_roce_srq *srq)
- {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(srq->ibsrq.device);
--	struct hns_roce_v2_db db;
-+	struct hns_roce_v2_db db = { 0 };
- 
- 	hr_reg_write(&db, DB_TAG, srq->srqn);
- 	hr_reg_write(&db, DB_CMD, HNS_ROCE_V2_SRQ_DB);
 -- 
-2.48.1
-
+With best wishes
+Dmitry
