@@ -1,115 +1,155 @@
 Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937B5205513;
-	Fri, 11 Apr 2025 18:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B442586C3
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744395180; cv=none; b=qjjArXsgFdrfp3u3XAw9UUi7ZAnBy/Ro1Q1fbmVZjvNM2c9PfrZGx7z8zKG66peT4JDoToAlcw+3c0Mwx5PGxfcQnzpGcP7I3gppA0EocOYZEc9IwDLpSR3EHZFihFyx+NPC9YaeBSeF6eApPka+4y53jdAKbOPeoERjYm46Qpo=
+	t=1744395263; cv=none; b=SSm1XEKZiRcBhoDT4zVKwn/O9LfZFyThc16bBO+wnPWJOoQgUe7V49WKkLDGP2Y06JsXWhE/O4eY0eq2IwzqfBSu1gKMhHEd7Tu3lHja2kcmwP8DKDMcjsmzSx1l0ZXqnzmVfEpmKsD0iEWoDfebV9bNY93QaZVJct9Fy6pLT5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744395180; c=relaxed/simple;
-	bh=RohNaCbynXMsTU9AdMmyEMzpA/tTHrz5QG5mLFjKvQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eTOG0kF6MWDJ5t8fh+GQsIhArIBQBNVqoDBUsq+JpXpbwqkO8w4NFdWfPlmJi5qPhnYIARAM5koLnLrrnn6zf0tYMddyjJGW6BO+LLUgALFd1sO58ipyztOvQTRSJYSeGaBDfSEnBUOP66Eq6p101qoR0TjqZYvMq5L5jgAaBKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XN2YtGnc; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744395263; c=relaxed/simple;
+	bh=+0uNU7Oeos0VO05Dwi4rcMvnJVrCn/uWmtDIXT53pwc=;
+	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
+	 References:In-Reply-To; b=EBgQDJJz/NtYuUZSDfhPtPMN1cXpLzkPJXiYuQUc/a2qgOcnGVAkTxSlv5tXcIWFPRR9LXqprDMvYnflaI5e0P5/79ZJPhg/UAtr/uE6XRbH2Fpau+NBe8n0AqQhPq5l45l0WSMlBZ0U/00LMHIdt3bIlq2szhRZfMmWDoCJLNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=aPhTPd4M; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XN2YtGnc"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c546334bdeso188200985a.2;
-        Fri, 11 Apr 2025 11:12:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="aPhTPd4M"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c542ffec37so236880985a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744395177; x=1744999977; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RohNaCbynXMsTU9AdMmyEMzpA/tTHrz5QG5mLFjKvQE=;
-        b=XN2YtGnc5HHhcpc+q8UlpKczGjvYwu9l75iedpZRpK0xzgqFCtXKVrV+wEtpWkb3wo
-         qI6BODP4nzaQd68Sm/lzUsPRDICi7Lswy2YlOg1JHa22alQFnrFlNg4bbc7Sgv8G6kcQ
-         2EV+nsC3X31p2FrXyniqB/2ASACk8wQ4ScXaMGwlebxk59OYyvdooM676bxaKnoYP/gK
-         Ntrva1RAZWoRj472Qvjt28YIy90HFxKJhXF/FSq+FmsrvI4W9OFxfqV4k79PqXAirFe5
-         6PT8HMkY26KBwRBUXCGWxuQ9i20XUyToVo0LYJAuGfUImut61st6fGxMbr2dE+SkwwqP
-         Xn2g==
+        d=paul-moore.com; s=google; t=1744395260; x=1745000060; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lpax22jUpEC8/o2V84iV6AYGXauCao5nHo6OcPn1kRA=;
+        b=aPhTPd4MS61wzwm4pgEDBey+40jAtZyTSs5ISKVkta0oqb2AqYssvQbwN9sB7xXs1z
+         APtOMOFEeP/Nyn3y89P8e7ihmAZ4nk9BJiiyvjvsYmmwaw+tMPRAPiZkt/uF5adePF7C
+         0VCjZJoCB5M5aNMRj7F46bqVe3wHbuxkufx0Fl2CmeyDauqqsPNomg0UjSgcmQhIpNXf
+         jO5qbG06J4v5cVbMcfOdpoPGJm9nj0IWmhfiFIxpk1hg95YcxUSBujM2hSTPRID+E1JM
+         9SIHtBJRQuD0YckB/zIfNwhuSEQpnU/DJfNqECn32beAqEqkkHCzJIUUdCo6CZfHjtOy
+         Xpyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744395177; x=1744999977;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RohNaCbynXMsTU9AdMmyEMzpA/tTHrz5QG5mLFjKvQE=;
-        b=n4mwuSAgrJgbL3Sy5wJsfbpPNQ74uazpu9XsWcb9pmtTaS/4nmwqfxKvqgtXZMEqH7
-         tftZ+4Hy4UgHPSzlnSjMdaa4VsvcMSuOxZKpIhHUmmarF+n7sFuSaezYaZiYFIgKHCrJ
-         jD7McNxK4+cWFhY9xWu+NirXFi1SCJw5O2jnoiuX2lWqOCDQTNlkMXH9lRVoUUr0lP4J
-         hmTccWtPv4EyxEdpBsLaxAb7VoHZ8R9QJwqcZTAhDTVur6PPqFTrAN7ihih9spVmoftW
-         ANTjaifZO7Ql+s/jUK0q0UdiVtMTnzS7ISYQz5aV3cdv84sjWSjIDU9OTTT8NhRFaXGB
-         PEyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKk06IKFtDJLjWE8YDUIMDljOs9ErKllWigmk/wry9APwpcpbKJ0+VJ52UwfI5e5sjdIGwkL16@vger.kernel.org, AJvYcCXKpFWSEl6sbVTzP+tbLHqnCoBaOZbYj+bcta50dnT8sSIazxgjatIbxy6/8Y8QPVgfmFizajo5cUBTBSGZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YykLsjrPh+5QPYQ7eXPrgY4cbBK7OZwtQjPLB/mkHwiSYMpS5jB
-	t2U2o+TQujQFPxqAavC10luQfB6mYJalzKq/08YqbN4LG7C3otYSmj9nA7DRyPwRp/jFF+1gT7p
-	QOwufY5474S4JouE5X76wX5JfOhI=
-X-Gm-Gg: ASbGncsSrxlduAggN7inMxSZpigaEmni/EBoavwHTobLsZuLQmsRat4AuQZQd+8Bpc5
-	u9wV92PzuFqmEnVqY3DGa2ioDKr5VoEQ+bv9rQKpHsrj50y3UBouK9Nb6+xuLMvOV2yaLT/EKNc
-	xXmiH6SVgZ5pIq5fitL0cqw/XqDtGSu/R1Aly8ivEzqcOVWaYRCBw2NMSFrnMHf3j+dQI=
-X-Google-Smtp-Source: AGHT+IG8jVgxtwWubehVN+Idyf1Ufevy60rGqvVQAG1oqRSMZHvG5QfgPIhp6kOOvLpu3Hu/Kwxt+gKP7lJmYuDJNw4=
-X-Received: by 2002:a05:620a:4399:b0:7c5:6396:f161 with SMTP id
- af79cd13be357-7c7af20ba80mr660931985a.49.1744395177325; Fri, 11 Apr 2025
- 11:12:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744395260; x=1745000060;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lpax22jUpEC8/o2V84iV6AYGXauCao5nHo6OcPn1kRA=;
+        b=hg5ROHtYhsS+4G1V27SZNm9CnCkCHBPj1JgQX3zKz+YzxmJ0LXyZs1LiV84PaFntxV
+         Rz4dcEbAaskq2xahI/55eGrZdhjHOTHUpnm+SF5+m75xwz2PaJ/a3U0i0hvDG3xI7gnc
+         de0Du3uBlr6bIq11UE5JZvxDCBlFZXNi0REjqhe9h47oAa5fVue4be9OVVZZ/mFGAhL+
+         Jqe6HUxi9SQyBpc4dkYFlyOgflCcaAG/oYfd3JXYTQz0p+ykdfrRcuxPfzWbYx9eViMB
+         cvnEUmwxB2nuFUv0JrsYXGVqIA8mmgQ3UP8vSM2+TE4OOuRFc41zasaR2yPNtQdRSnIW
+         uIHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNgTCxNkSD4xoEqs1Qc4Ad6lhqUMlwOb5xaF5GaOsq/fKcZ/f7ehDgmyZ8DFmDr6qws5RaTr4RI3mbeKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ8YELLWiorpgkEAMUOlv/jaZOnVTDm6ZCC2XYmxP90ek2FqE7
+	tGs2X8/p1tRHfxgkBTxdUc+wagBjcmGlSrIu26fizCO8FCZTpq3eBuFOtqfBWQ==
+X-Gm-Gg: ASbGnct+y63zZcLB9cNb2SQsj57tM5f+A7l6AHRXXJHXmdHpVnzpu8hfd7c6wLv1/za
+	NXmuhHnXLLqpN7VvPMXDp2LCiHhH0ElFF5bL4a+sjzWVCPdk2mfDcepJFQEVlKCRSLpRsBxdv31
+	pPmf3D/9DW88mxkyBuW7yN9qZKbxfSLKs07IpZBFzoY4TofJGgflUbjUMGYe7AiGBVkVIp8TrFf
+	j9WP4W9PpnHNYSLWjy55Z5N8/1lsSSN208eidLYeaA6cOynL/kzo3/zhHnhxDK672Em//ZYv5M+
+	KjQ2ptdENqUIK2Tllgqw9RJuDMippm1EOF0v+h4iedV6+r7OWLZHTffA31qV1z145tLB7pGWp4L
+	uMqj9UxZThg==
+X-Google-Smtp-Source: AGHT+IE83Ajq4beiDm1bFY4FGCw5MiahPXF6d4P6EXZKH9SzDGizkbA3x/o6nOpdUtJ2dcUATqen3Q==
+X-Received: by 2002:a05:620a:3182:b0:7c5:5f08:3c5c with SMTP id af79cd13be357-7c7af116707mr505028685a.3.1744395260493;
+        Fri, 11 Apr 2025 11:14:20 -0700 (PDT)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a8a1c772sm294412585a.115.2025.04.11.11.14.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 11:14:20 -0700 (PDT)
+Date: Fri, 11 Apr 2025 14:14:19 -0400
+Message-ID: <fb8db86ae7208a08277ddc0fb949419b@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250410210623.1016767-1-shakeel.butt@linux.dev>
- <0e9e2d5d-ec64-4ad4-a184-0c53832ff565@suse.cz> <CAGj-7pUxYUDdRGaiFon=V2EG+3Ex5s9i7VvWbDH5T0v-7SE-CQ@mail.gmail.com>
- <8cce9a28-3b02-4126-a150-532e92c0e7f8@suse.cz>
-In-Reply-To: <8cce9a28-3b02-4126-a150-532e92c0e7f8@suse.cz>
-From: Shakeel Butt <shakeel.butt@gmail.com>
-Date: Fri, 11 Apr 2025 14:12:46 -0400
-X-Gm-Features: ATxdqUEuqDVleemKEFKk_6Ulu3ecA-4XDITgG6BPtj9oe0wu99PMHvXpTs2Zmaw
-Message-ID: <CAGj-7pXRmG2D+5=yj-5uuciiNccWws6erBg_hSm9S6coEhN+3Q@mail.gmail.com>
-Subject: Re: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Waiman Long <llong@redhat.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=UTF-8 
+Content-Transfer-Encoding: 8bit 
+X-Mailer: pstg-pwork:20250411_1406/pstg-lib:20250410_1510/pstg-pwork:20250411_1406
+From: Paul Moore <paul@paul-moore.com>
+To: Richard Guy Briggs <rgb@redhat.com>, Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>, LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, Linux Kernel Audit Mailing List <audit@vger.kernel.org>
+Cc: Eric Paris <eparis@parisplace.org>, Steve Grubb <sgrubb@redhat.com>, Richard Guy Briggs <rgb@redhat.com>, Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>
+Subject: Re: [PATCH v1 1/2] audit: record fanotify event regardless of presence  of rules
+References: <3c2679cb9df8a110e1e21b7f387b77ddfaacc289.1741210251.git.rgb@redhat.com>
+In-Reply-To: <3c2679cb9df8a110e1e21b7f387b77ddfaacc289.1741210251.git.rgb@redhat.com>
 
-On Fri, Apr 11, 2025 at 2:06=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> On 4/11/25 19:54, Shakeel Butt wrote:
-> > (my migadu/linux.dev stopped working and I have to send through gmail,
-> > sorry for any formatting issue)
-> >
-> > I don't see how local_irq_save() will break anything. We are working on
-> > a stock of a dead remote cpu. We actually don't even need to disable ir=
-q
-> > or need local cpu's local_lock. It is actually the calls to
-> > __mod_memcg_lruvec_state() and __mod_memcg_state() in
-> > __drain_obj_stock() which need irq-disabled on non-RT kernels and for
-> > RT-kernels they already have preempt_disable_nested().
-> >
-> > Disabling irq even on RT seems excessive but this is not a performance
-> > critical code, so I don't see an issue unless there is
-> > local_lock_irqsave() alternative which does not disables irqs on RT
-> > kernels.
->
-> local_lock_irqsave() does not disable irqs on RT kernels :)
+On Mar  5, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
+> 
+> When no audit rules are in place, fanotify event results are
+> unconditionally dropped due to an explicit check for the existence of
+> any audit rules.  Given this is a report from another security
+> sub-system, allow it to be recorded regardless of the existence of any
+> audit rules.
+> 
+> To test, install and run the fapolicyd daemon with default config.  Then
+> as an unprivileged user, create and run a very simple binary that should
+> be denied.  Then check for an event with
+> 	ausearch -m FANOTIFY -ts recent
+> 
+> Link: https://issues.redhat.com/browse/RHEL-1367
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> Acked-by: Jan Kara <jack@suse.cz>
+> ---
+>  include/linux/audit.h | 8 +-------
+>  kernel/auditsc.c      | 2 +-
+>  2 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 0050ef288ab3..d0c6f23503a1 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -418,7 +418,7 @@ extern void __audit_log_capset(const struct cred *new, const struct cred *old);
+>  extern void __audit_mmap_fd(int fd, int flags);
+>  extern void __audit_openat2_how(struct open_how *how);
+>  extern void __audit_log_kern_module(char *name);
+> -extern void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
+> +extern void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
+>  extern void __audit_tk_injoffset(struct timespec64 offset);
+>  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
+>  extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+> @@ -525,12 +525,6 @@ static inline void audit_log_kern_module(char *name)
+>  		__audit_log_kern_module(name);
+>  }
+>  
+> -static inline void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
+> -{
+> -	if (!audit_dummy_context())
+> -		__audit_fanotify(response, friar);
+> -}
 
-Sorry, I wanted to say local_irq_save() here instead of local_lock_irqsave(=
-).
+It seems like we should at least have an audit_enabled() check, yes?
+We've had people complain about audit events being generated when audit
+is disabled, any while we don't currently have such a check in place
+here, I believe the dummy context check is doing that for us.
 
-> so keeping
-> local_lock as is would do the irq disable on !RT and be more RT-friendly =
-on
-> RT. It's just wrong from the logical scope of the lock to perform it on a
-> different cpu than the stock we modify. If one day we have some runtime
-> checks for that, they would complain.
+  static inline void audit_fanotify(...)
+  {
+    if (!audit_enabled)
+      return;
+    __audit_fanotify(...);
+  }
 
-Basically I don't want to use stock_lock here. Maybe I should explore
-adding a new local_lock for __mod_memcg_lruvec_state and
-__mod_memcg_state.
+>  static inline void audit_tk_injoffset(struct timespec64 offset)
+>  {
+>  	/* ignore no-op events */
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index 0627e74585ce..936825114bae 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -2880,7 +2880,7 @@ void __audit_log_kern_module(char *name)
+>  	context->type = AUDIT_KERN_MODULE;
+>  }
+>  
+> -void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
+> +void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
+>  {
+>  	/* {subj,obj}_trust values are {0,1,2}: no,yes,unknown */
+>  	switch (friar->hdr.type) {
+> -- 
+> 2.43.5
+
+--
+paul-moore.com
