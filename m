@@ -1,44 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3A215A848;
-	Fri, 11 Apr 2025 14:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882D41F3BB8;
+	Fri, 11 Apr 2025 14:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380517; cv=none; b=nV/j/N764MsN6G2Bqhc6QA0WLSTof6z5AQhPNo32ELg6yB4YMv8+TWEdkiNvEqg2g0Wa4rqNjyNf3s0T3xFUMyZ6B5GyCBhnCYfEHj+JD5mv0Trh4UD+OVus/IvZ0FPoR/7oxQMAKQ1xV5ifGbwvSwP56xb8FwaEzOusJFuxLHQ=
+	t=1744380520; cv=none; b=ZN8z2Pv+PUOxb2LtzU2KBo1VDb14gze3rvss7TIOp3y9E7UwXebQtCdwS7uyQqQKO1o1QLcP/EAIUm5wHZMmF4srVJPErZmWKUoGauRHaix8+PgUThNBuTpkbN9Aau4hQuRrvk4hEWQjKdYwT5xTSo1rT3Fa/O5jvzMOGADYZMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380517; c=relaxed/simple;
-	bh=+6ZoGuxO7lMvb7tocC279TGiDtafYckzm6Ockln5kAY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CFWrvMfzpg3HfPpOVJGcUWrtQeRkOgWK7lX9XuW38fYrhvb9Ug1K2nIG8DUlJUFekn+FBqZVfIpnsGon1xd5rOliydPm2s4WxLRfckUbM6lkRChAEgZ8CDSezkGj5zXSXXtzw3AMeVjbG7p47+FFrnG75msMu3Qz8orJ+9Gd0o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3P8xhnw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744380520; c=relaxed/simple;
+	bh=Q3eaWd+6wGMNRQPZybiIJSiRvz0UKOQRz+P7X6jycHs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=udRTdI+6fKPzItv/S1ucECP0kJRi2K04EhhDfOYHE+0TZj8kj3MFxC/I4Nkpgo2KQXOF4qU5L6dJn/WEcb1x0GHRXFZk4acauGvctvAlBFedR/oWM+6l/KpQ0tBHO8FZiJyQE3nmspGXLKiB5HOd41UaF8TwDW6VWA2reWLTzeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h3IJbWDl; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3P8xhnw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 201F9C4CEE2;
-	Fri, 11 Apr 2025 14:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744380516;
-	bh=+6ZoGuxO7lMvb7tocC279TGiDtafYckzm6Ockln5kAY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B3P8xhnwvhV5G5jcYQH2Gj4QQfQj9XgSJVmE0DmCAH7orRPQjHgHLyOVSdjNbcN9l
-	 LeXaBSvzWQHz0pIG8pRQwHQU6VF6K067DIjB/Z7EYAMh91GlQvil1YGu1+g+vvF5lb
-	 AQEcc1rvZMOfiytqqTx2WidR0Ezr6rCXrLosM5dCaHTbX+buCrcIrbWgfDXSP5Lt0B
-	 4EdSxBj1L0AZjB5OhD+sYQJRLMIiSKM6MOtHUBA13Vw6y79e13fpugXZlxM1QhqPO2
-	 edDt5PajQlGOKn8DqsY4UN5E8yPHBuf7LsolkJaXzVgtYES0OHNUJsnooT/rKLnwEy
-	 6yVSwxCAALN0A==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org,
-	Jan Stancek <jstancek@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: use namespace_{lock,unlock} in dissolve_on_fput()
-Date: Fri, 11 Apr 2025 16:08:30 +0200
-Message-ID: <20250411-computer-wandschmuck-97a26d943a7b@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
-References: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3IJbWDl"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47677b77725so20505301cf.3;
+        Fri, 11 Apr 2025 07:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744380517; x=1744985317; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yzM0vwTr4TmNBoJJcVUz9Je6wZw8hkznV+w3yMHTmLs=;
+        b=h3IJbWDlhW13bfKWuhbx4beyHVzzKAJhM8muhfO+fXXZAjgws/P3lxupwl2zLbmLaA
+         YDuZ9SbcRYNG79Lwo/HTTFe5kEllNiSUNm2Abh9PUKlN7125an9a9rKr9ABMj3zBnkY2
+         Vo85ZUuRlB+4wmqDsIPiBIsbT3TIEEzChOLON7dl/ToVzTbNiv19PhHB6Nt6IRGfUm9s
+         pNmt03uCfIMZ2Hw3XkXGIir0Y8BqiIYPJ2w1T7tuQcfAxcq4p3dEcxYttbVaJctCRd3z
+         PuBGSjy8SzYn0ZEhj5btFAdPxCXpt+ro7LbKIRc+cUpfeodvI6RrMNoh+mxgq4F+dtEJ
+         3JVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744380517; x=1744985317;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yzM0vwTr4TmNBoJJcVUz9Je6wZw8hkznV+w3yMHTmLs=;
+        b=mZSMMmKMvfcMmmMwizBMylqwH5QGRGNvlS69bnPlhrohxlV56eBcA9fcgsCk0lkgCn
+         Hr5u2Bjt5DmPF06joFDAkhy1kcX1a0wKG+xJqV4n4gFUEezmpweSqg5ZioAcJ/H7MD3S
+         HJXPBEueZtYfDwXQMqGUcSBcqeldInL4IymjPHpIgkY3uCp0jYoVgGd7w0Mfcm55fnyZ
+         s50PdqMPzIvU7tQcVhI2YrFggdx6HxUntw4k1lPvafMUsrnGc5a9NSwDKSFI+kI1xVpq
+         uGpedXx/5rZVQmvzoATA/lRNwj2plkB8n6LNiCWM8TYr6S6x7cX9PnimJcqpY/EJThwo
+         /xvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUt9AIRz/j66Vn9h3SzmSjvnCCgZMZCn/pT2QwYuFlFOUcFTA/s6T8+NjU9GF4D878eolsTVkV5fM8wn+xAgso=@vger.kernel.org, AJvYcCVDcclDcwx1CiF6+7yc8XfC8llTCIkrjjyicgZtBUemL+nVnOB787ACyCO7TExPU+r8JCkla74gTWHY@vger.kernel.org, AJvYcCVN541V6xF43beR4nP3AeqN9L9Xo0ja2O3dUwfptIBSOW9wbCLYVITkApHDnYpzKXM1Zo9ICgM3k424Q8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC86SK6uhqFFQQDWq5z+q0XZtDP4qqYXQZYO1eY7EplTpI388D
+	L90tkSdqymw/6ZK7G6AuE2y5mZDS2k0DwaH3NrV6OjbaoaIn1LCPFE8q3BI5
+X-Gm-Gg: ASbGnctefUipodzp0EgxdWascyzELf7aECQPloWAWIg63j7GGkQM5dDtFtGTq3XSLnc
+	Fi97FW/a++PhLu3ffk4jacs2VqTdUTZTT8y8J3ESdp3rNc56TB+M40m3vNUefvEEd5hdfcP6Wlh
+	17MZ6mDsp0XmrP3tyPJIK/fjYt77lNr6iILlpto+pG2B78B4uwsbW6yM44bIFXeEahGoAVeFRvv
+	xBp8AG2g/J+eItSdQZFhBuNVXWR98Q6usX3ZxEocmo2pus2vaap1o10e2uDSozu4VLcYm9cfDHs
+	rKvMw45b8kqEzyF11nihQ0+C7nHGtN1ABAB/x43mRK9mWUZwo1Eg4BPX5jGK5iO46qE=
+X-Google-Smtp-Source: AGHT+IEkZCpPSOfFFs4p/DramAWWHRy0xJDNth8YSq+TvpMzGWw9fJchjS6mFS3f28qolg0RykLZ5g==
+X-Received: by 2002:ac8:5745:0:b0:476:add4:d2a9 with SMTP id d75a77b69052e-4797755dfcemr41402541cf.30.1744380516812;
+        Fri, 11 Apr 2025 07:08:36 -0700 (PDT)
+Received: from [192.168.1.159] ([2600:4041:5be7:7c00:1d83:73da:5aa:7e95])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796ed9cc64sm25872641cf.62.2025.04.11.07.08.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 07:08:36 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 11 Apr 2025 10:08:27 -0400
+Subject: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,46 +65,155 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1993; i=brauner@kernel.org; h=from:subject:message-id; bh=+6ZoGuxO7lMvb7tocC279TGiDtafYckzm6Ockln5kAY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/VIrXtvW+tkvM8FLfraYbFzXn+rRtv+JeqPiwwM2BP 2vLTuPkjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIl0yjEyrOufUMFb/EeSZduc ZayWn+7PiFmz5+QlMaYWrweCCd38Jxn+isSaVIVN47xyZnp4qvR8iyh/aZPm22KeZ521ghpZftZ yAgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAFoi+WcC/22QzW7DIBCEX8XiXCr+jMGnvkeVAz9LglRDCsRqF
+ PndQxKp9aHH2d0ZfbM3VKFEqGgebqjAGmvMqQv+NiB3MukIOPquESNsJJxMOGWcQ6jQMAjJpZz
+ MxIJF/f5cIMSfZ9bnoetTrC2X6zN6pY/pfykrxQQTNzEVJLdSu4/jYuLXu8sLeqSs7M8piN47W
+ Xd6bxRQQY0meu/cXkAFvi+9U3tRIWsq4L5fYpsHYgIL0gK1ginK1WglVc4qabwWEjx4orRxCu1
+ /MQ+/JC6nZmKC0oHwcmkJasWWjtwbK7hSfu6tD9t2BwJidGRkAQAA
+X-Change-ID: 20250307-no-offset-e463667a72fb
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Thu, 10 Apr 2025 17:05:42 +0200, Jan Stancek wrote:
-> In commit b73ec10a4587 ("fs: add fastpath for dissolve_on_fput()"),
-> the namespace_{lock,unlock} has been replaced with scoped_guard
-> using the namespace_sem. This however now also skips processing of
-> 'unmounted' list in namespace_unlock(), and mount is not (immediately)
-> cleaned up.
-> 
-> For example, this causes LTP move_mount02 fail:
->     ...
->     move_mount02.c:80: TPASS: invalid-from-fd: move_mount() failed as expected: EBADF (9)
->     move_mount02.c:80: TPASS: invalid-from-path: move_mount() failed as expected: ENOENT (2)
->     move_mount02.c:80: TPASS: invalid-to-fd: move_mount() failed as expected: EBADF (9)
->     move_mount02.c:80: TPASS: invalid-to-path: move_mount() failed as expected: ENOENT (2)
->     move_mount02.c:80: TPASS: invalid-flags: move_mount() failed as expected: EINVAL (22)
->     tst_test.c:1833: TINFO: === Testing on ext3 ===
->     tst_test.c:1170: TINFO: Formatting /dev/loop0 with ext3 opts='' extra opts=''
->     mke2fs 1.47.2 (1-Jan-2025)
->     /dev/loop0 is apparently in use by the system; will not make a filesystem here!
->     tst_test.c:1170: TBROK: mkfs.ext3 failed with exit code 1
-> 
-> [...]
+Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+the interface of `HasWork` and replacing pointer arithmetic with
+`container_of!`. Remove the provided implementation of
+`HasWork::get_work_offset` without replacement; an implementation is
+already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
+`HasWork::work_container_of` which was apparently necessary to access
+`OFFSET` as `OFFSET` no longer exists.
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+A similar API change was discussed on the hrtimer series[1].
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org/ [1]
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Tested-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v3:
+- Extract first commit to its own series as it is shared with other
+  series.
+- Reword `HasWork` safety comment.
+- Link to v2: https://lore.kernel.org/r/20250409-no-offset-v2-0-dda8e141a909@gmail.com
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Changes in v2:
+- Rebase on v6.15-rc1.
+- Add WORKQUEUE maintainers to cc.
+- Link to v1: https://lore.kernel.org/r/20250307-no-offset-v1-0-0c728f63b69c@gmail.com
+---
+ rust/kernel/workqueue.rs | 50 ++++++++++++++++--------------------------------
+ 1 file changed, 17 insertions(+), 33 deletions(-)
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+index f98bd02b838f..d092112d843f 100644
+--- a/rust/kernel/workqueue.rs
++++ b/rust/kernel/workqueue.rs
+@@ -429,51 +429,28 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut bindings::work_struct {
+ ///
+ /// # Safety
+ ///
+-/// The [`OFFSET`] constant must be the offset of a field in `Self` of type [`Work<T, ID>`]. The
+-/// methods on this trait must have exactly the behavior that the definitions given below have.
++/// The methods [`raw_get_work`] and [`work_container_of`] must return valid pointers and must be
++/// true inverses of each other; that is, they must satisfy the following invariants:
++/// - `work_container_of(raw_get_work(ptr)) == ptr` for any `ptr: *mut Self`.
++/// - `raw_get_work(work_container_of(ptr)) == ptr` for any `ptr: *mut Work<T, ID>`.
+ ///
+ /// [`impl_has_work!`]: crate::impl_has_work
+-/// [`OFFSET`]: HasWork::OFFSET
++/// [`raw_get_work`]: HasWork::raw_get_work
++/// [`work_container_of`]: HasWork::work_container_of
+ pub unsafe trait HasWork<T, const ID: u64 = 0> {
+-    /// The offset of the [`Work<T, ID>`] field.
+-    const OFFSET: usize;
+-
+-    /// Returns the offset of the [`Work<T, ID>`] field.
+-    ///
+-    /// This method exists because the [`OFFSET`] constant cannot be accessed if the type is not
+-    /// [`Sized`].
+-    ///
+-    /// [`OFFSET`]: HasWork::OFFSET
+-    #[inline]
+-    fn get_work_offset(&self) -> usize {
+-        Self::OFFSET
+-    }
+-
+     /// Returns a pointer to the [`Work<T, ID>`] field.
+     ///
+     /// # Safety
+     ///
+     /// The provided pointer must point at a valid struct of type `Self`.
+-    #[inline]
+-    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID> {
+-        // SAFETY: The caller promises that the pointer is valid.
+-        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut Work<T, ID> }
+-    }
++    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID>;
+ 
+     /// Returns a pointer to the struct containing the [`Work<T, ID>`] field.
+     ///
+     /// # Safety
+     ///
+     /// The pointer must point at a [`Work<T, ID>`] field in a struct of type `Self`.
+-    #[inline]
+-    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self
+-    where
+-        Self: Sized,
+-    {
+-        // SAFETY: The caller promises that the pointer points at a field of the right type in the
+-        // right kind of struct.
+-        unsafe { (ptr as *mut u8).sub(Self::OFFSET) as *mut Self }
+-    }
++    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self;
+ }
+ 
+ /// Used to safely implement the [`HasWork<T, ID>`] trait.
+@@ -504,8 +481,6 @@ macro_rules! impl_has_work {
+         // SAFETY: The implementation of `raw_get_work` only compiles if the field has the right
+         // type.
+         unsafe impl$(<$($generics)+>)? $crate::workqueue::HasWork<$work_type $(, $id)?> for $self {
+-            const OFFSET: usize = ::core::mem::offset_of!(Self, $field) as usize;
+-
+             #[inline]
+             unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_type $(, $id)?> {
+                 // SAFETY: The caller promises that the pointer is not dangling.
+@@ -513,6 +488,15 @@ unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_typ
+                     ::core::ptr::addr_of_mut!((*ptr).$field)
+                 }
+             }
++
++            #[inline]
++            unsafe fn work_container_of(
++                ptr: *mut $crate::workqueue::Work<$work_type $(, $id)?>,
++            ) -> *mut Self {
++                // SAFETY: The caller promises that the pointer points at a field of the right type
++                // in the right kind of struct.
++                unsafe { $crate::container_of!(ptr, Self, $field) }
++            }
+         }
+     )*};
+ }
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250307-no-offset-e463667a72fb
+prerequisite-change-id: 20250409-container-of-mutness-b153dab4388d:v1
+prerequisite-patch-id: 53d5889db599267f87642bb0ae3063c29bc24863
 
-[1/1] fs: use namespace_{lock,unlock} in dissolve_on_fput()
-      https://git.kernel.org/vfs/vfs/c/47a742fd977a
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
+
