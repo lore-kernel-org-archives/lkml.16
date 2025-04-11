@@ -1,236 +1,120 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5B51E515
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C513E27BF9A
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744338743; cv=none; b=AWj5oOEIg1gLxYIdMlFnMxHbGAfbeRwToDucBqgno32juoqmVuu9HIRTrUtf38TroWs6b+7UwhCmQoj8Wi4NRzXzhujAKF0nt5Emv90TLYmu2liSjuKYnZ4tGDCkw4LLmEEw6obYbXGANd3NUna7RqEUqZ2cqzxCjyoBHRDvxxo=
+	t=1744338745; cv=none; b=RiCiBTL/BjLrWuK71eB62hQr+ytk4CIvuCaSPh9s16Z2RNA/lWG6nuLNWy2yWINEXEjUZ16iVrRe/7utvKKCSJ6kkidTmo6RzKcmNxiq839HKmf5AiiWNKdhMj5b43BHb2+Su/p8fYAHf60lj1NCyXhv8QfoyMKX3WafVuRYahM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744338743; c=relaxed/simple;
-	bh=/hqxGD9W0FgD1JUxPPTz0p/0Ql2HWWia3BMkg5Ue2sM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fOje3of58RElN0itGJR1Ds99CaE6+90mu4+4mobFVPIyv52QJ6Fh12vxF9xaetY0E72L4ujIshcLVDhOiR76YqNkdHrF0TIlyNLChzI2zlckAsTaRX+Lw14UKg/3Ve3FsR4R8j2MD4jhglkf4Y6F7Z2J3K/UKZqGIK+Du/+NG5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QI3F3QB3; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744338745; c=relaxed/simple;
+	bh=UB8LKThtVBnJDF+n48L8Fijl+lGomrgoYCRKp/i8I0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jBJUw6NCQZ2NG+DHUg0sTxvxepCZzaq/oRDUyDLxPPZTGz+NjaDPIlg/tWSGOCrndv0JfRp4R7sTPNUXlRPcHE9zjOj7GcF8bKqAhBqolQIMwOolqz7NWvtFTS5uA6HhHfrldhMo8m4PS52SoQKUxau/2QX1erKWgX9hWkrQwAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVf0cNqL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QI3F3QB3"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5259327a937so700125e0c.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 19:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744338741; x=1744943541; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Oet4xjacdRFK4mL9zn9UPqlVTgqYSPvEuBC6Nv1MA+Y=;
-        b=QI3F3QB3oTlLmCj4wfxkj107ekxRz6f0DZ+ihhMs9o9IWtS1lffpyLWim7ynpjeno3
-         9WihDKMdgT3ymcmO+RHEm4R8M4LcnvkFLwv4ewtKS/Zu8tIvAZIq3OheFQQPPDQrcRum
-         pRZ8foR8nUct7NYtc0ERn2QbypKhWr1WZgTwLx1u5HcyRJ7mlXFjblnxhZZblASzqIx4
-         zbkdQ/EhHIkowW3suvFwHSCXqvhcgsS27y4ZRV3pie1F8d01YnH64Z8S2UygBNRvHEaO
-         puOcO1c1XfnjCVXpm2XrWT7YwXlEud9hSpFNWtF9Blpo/HRC3hcy9wTV3yyReJu4WYdX
-         6+dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744338741; x=1744943541;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oet4xjacdRFK4mL9zn9UPqlVTgqYSPvEuBC6Nv1MA+Y=;
-        b=m4SYxbAIKEmyU1Ekshcbi8KdBMrAAp1HxegJ2/nO1VJh5LnO2pBuIpcy4unRY59KqH
-         9JIGq287EGB/Y0w1lT3eikDeN5kn7vr635eAXEe8RYZNj4sjPcPCRj4EbAhZJsrL2wo8
-         CK9Ojo+ZPA+Js6bYnfijsbJjtzdOXzsKVU7q7RtB3K+ixhLcfSbpQZLLi0KNv5k9JY0h
-         CIXOf8ORzv6r+FYNL4AT706iT+3x2rxdBfEcFshpkfTqpWxBHNdj9lM9mjAq6sYMoXdv
-         hWVEJmZhHJspyJ9Z5M7ykDljoEAxvRAG5Okzfr951YLZ0ktWcx8ZvZBfLX/fLkTZ1q+k
-         c8jw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1aRUpitV3ywDlGXI9or4ayY2lZNekHoO4KtkdWPuWvtDgPEddkYTO0Ve99InsknUXVlGZ2loWX7Tt530=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztKdVF9coeQmA4n8Lhw1aZmfmGMhnvIRYrTPXejG7ADj79JdEt
-	ILhmiAkiPipDtVizuHLf12NBm1nuZ0Uv16Vp+7J/4jzqv7BMSAWFnXD/BGGJ4+qrP4xeuMX06sH
-	8t0YJQNSTbH8CeeovtVkzdnUSg6Y=
-X-Gm-Gg: ASbGncv5YsmXbsdzaiLlLSZoW0VIAcEwh50gSxy6mwmFy+O6+fOO5FLF02OUKli8H8p
-	tgH6YCXKgzBqCtTe+VQzy3lrLsqEETomkSEukheCIj4evroqxMCBekuYUfvW60A+WTUt4G9Aa3g
-	x76gAMReXykfoAn95uTxhZPw==
-X-Google-Smtp-Source: AGHT+IFS99NpqnJe3fPiO2Vv75HJy/9VPWWWpqc65/yb2pIMNMR1uoR8eXOmQFl7vyUVhjZU1EnZ5wZh+gKzO+rO5HI=
-X-Received: by 2002:a05:6102:3308:b0:4bb:c9bd:8dc5 with SMTP id
- ada2fe7eead31-4c9e4ec0b6amr610595137.3.1744338740694; Thu, 10 Apr 2025
- 19:32:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVf0cNqL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491EBC4CEDD;
+	Fri, 11 Apr 2025 02:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744338745;
+	bh=UB8LKThtVBnJDF+n48L8Fijl+lGomrgoYCRKp/i8I0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HVf0cNqLzQpmeldSV8ZJgCdK8HXbWR947tl8x5sgLQVNGnBr0pXC/trqNlrNOjm8b
+	 yv1cgdNrBpUFA3oHFKhYXMNFWi2MYLMuyYprzMep1X9eCIOEFLhIrU7qEffrVvYs6h
+	 /dVjI1GOmXaG9B0FWEnR/Sdo5IWsWhxvuShAACk7xZFO++Sb1nSEUWiSt93yHh+5o6
+	 wnwiMfyRj2AWiFyGCAX8nkPzqdg0feTICxvIFeWE8vuS7XE7670cI+1RF1jFSx8RiM
+	 Kxy1f6EbOv5Kir/ILiFbBU3Xv84KdcTezrbFux1aA9tFRzQx1HDkX8A0HyCYRSWymq
+	 K8D0rdvlmv8MQ==
+Date: Thu, 10 Apr 2025 19:32:22 -0700
+From: Kees Cook <kees@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: dave.hansen@linux.intel.com, Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] devmem: Block mmap access when read/write access
+ is restricted
+Message-ID: <202504101926.0F8FB73@keescook>
+References: <174433453526.924142.15494575917593543330.stgit@dwillia2-xfh.jf.intel.com>
+ <174433455090.924142.10859114556652046264.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <34bab7a60930472377afbfeefe05b980d0512aa4.1744118089.git.baolin.wang@linux.alibaba.com>
- <CAGsJ_4wnvWmOz-FNvYzkqEW1kz0UCfzythbeJSbSyWy_=ib5MA@mail.gmail.com>
- <5c52b67a-8e7e-4dd7-9127-96944715d883@linux.alibaba.com> <CAGsJ_4yPxoF5P87WdXbXVb8BqovVvxhKg40YVddkEQmFjFsRYw@mail.gmail.com>
- <1E123113-7A0B-4D3A-AC7A-01767D7BF2D8@nvidia.com> <CAGsJ_4zMthcj0dtCX1OKQ1_A01OdF=P1n9FGLpGsbkTRwWoqVA@mail.gmail.com>
- <247fca57-8280-41a6-85b0-03a32ea08210@linux.alibaba.com>
-In-Reply-To: <247fca57-8280-41a6-85b0-03a32ea08210@linux.alibaba.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 11 Apr 2025 14:32:09 +1200
-X-Gm-Features: ATxdqUEMrypm2hClmam6_ErnN-OnEZ-4nRiV_TqVcIdUvz9QDxN6rk0epTgE5kE
-Message-ID: <CAGsJ_4zDG0w4X0WJBZzjO0TedEeA0Su25T8VxWonB3cgP2NvUg@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: huge_memory: add folio_mark_accessed() when
- zapping file THP
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Zi Yan <ziy@nvidia.com>, akpm@linux-foundation.org, willy@infradead.org, 
-	david@redhat.com, ryan.roberts@arm.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174433455090.924142.10859114556652046264.stgit@dwillia2-xfh.jf.intel.com>
 
-On Fri, Apr 11, 2025 at 1:20=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
->
->
-> On 2025/4/11 05:56, Barry Song wrote:
-> > On Fri, Apr 11, 2025 at 3:13=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
-> >>
-> >> On 10 Apr 2025, at 6:29, Barry Song wrote:
-> >>
-> >>> On Thu, Apr 10, 2025 at 9:05=E2=80=AFPM Baolin Wang
-> >>> <baolin.wang@linux.alibaba.com> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2025/4/10 16:14, Barry Song wrote:
-> >>>>> On Wed, Apr 9, 2025 at 1:16=E2=80=AFAM Baolin Wang
-> >>>>> <baolin.wang@linux.alibaba.com> wrote:
-> >>>>>>
-> >>>>>> When investigating performance issues during file folio unmap, I n=
-oticed some
-> >>>>>> behavioral differences in handling non-PMD-sized folios and PMD-si=
-zed folios.
-> >>>>>> For non-PMD-sized file folios, it will call folio_mark_accessed() =
-to mark the
-> >>>>>> folio as having seen activity, but this is not done for PMD-sized =
-folios.
-> >>>>>>
-> >>>>>> This might not cause obvious issues, but a potential problem could=
- be that,
-> >>>>>> it might lead to more frequent refaults of PMD-sized file folios u=
-nder memory
-> >>>>>> pressure. Therefore, I am unsure whether the folio_mark_accessed()=
- should be
-> >>>>>> added for PMD-sized file folios?
-> >>>>>>
-> >>>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> >>>>>> ---
-> >>>>>>    mm/huge_memory.c | 4 ++++
-> >>>>>>    1 file changed, 4 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> >>>>>> index 6ac6d468af0d..b3ade7ac5bbf 100644
-> >>>>>> --- a/mm/huge_memory.c
-> >>>>>> +++ b/mm/huge_memory.c
-> >>>>>> @@ -2262,6 +2262,10 @@ int zap_huge_pmd(struct mmu_gather *tlb, st=
-ruct vm_area_struct *vma,
-> >>>>>>                                   zap_deposited_table(tlb->mm, pmd=
-);
-> >>>>>>                           add_mm_counter(tlb->mm, mm_counter_file(=
-folio),
-> >>>>>>                                          -HPAGE_PMD_NR);
-> >>>>>> +
-> >>>>>> +                       if (flush_needed && pmd_young(orig_pmd) &&
-> >>>>>> +                           likely(vma_has_recency(vma)))
-> >>>>>> +                               folio_mark_accessed(folio);
-> >>>>>
-> >>>>> Acked-by: Barry Song <baohua@kernel.org>
-> >>>>
-> >>>> Thanks.
-> >>>>
-> >>>>> I also came across an interesting observation: on a memory-limited =
-system,
-> >>>>> demoting unmapped file folios in the LRU=E2=80=94specifically when =
-their mapcount
-> >>>>> drops from 1 to 0=E2=80=94can actually improve performance.
-> >>>>
-> >>>> These file folios are used only once? Can folio_set_dropbehind() be =
-used
-> >>>> to optimize it, which can avoid the LRU activity movement in
-> >>>> folio_mark_accessed()?
-> >>>
-> >>> For instance, when a process, such as a game, just exits, it can be e=
-xpected
-> >>> that it won't be used again in the near future. As a result, demoting
-> >>> its previously
-> >>> unmapped file pages can improve performance.
-> >>
-> >> Is it possible to mark the dying VMAs either VM_SEQ_READ or VM_RAND_RE=
-AD
-> >> so that folio_mark_accessed() will be skipped? Or a new vm_flag?
-> >> Will it work?
-> >
-> > Actually took a more aggressive approach and observed good performance
-> > improvements on phones. After zap_pte_range() called remove_rmap(),
-> > the following logic was added:
-> >
-> > if (file_folio && !folio_mapped())
-> >      deactivate_file_folio();
-> >
-> > This helps file folios from exiting processes get reclaimed more quickl=
-y
-> > during the MGLRU's min generation scan while the folios are probably
-> > in max gen.
-> >
-> > I'm not entirely sure if this is universally applicable or worth submit=
-ting as
-> > a patch.
->
-> IMHO, I'm afraid this is not universally applicable. Although these file
-> folios have been unmapped, it's not certain that they won't be accessed
-> again. These file folios might be remapped and accessed again soon, or
-> accessed through read()/write() operations using a file descriptor.
+On Thu, Apr 10, 2025 at 06:22:30PM -0700, Dan Williams wrote:
+> Back in 2022 Kees noted that he is able to mmap System RAM below 1MB
+> even with CONFIG_STRICT_DEVMEM=y [1]. That is allowed for x86 legacy
+> compatibility reasons for userspace that wants to read BIOS data
+> resident at that address. However, the expectation is that when
+> devmem_is_allowed() returns 2 that the access is redirected to return
+> zeroes.
+> 
+> That happens for the read()/write() case, but by code inspection for
+> mmap(), there is no restriction.
+> 
+> Now, the confidential x86 VM (CVM) use case wants to depend on
+> "devmem_is_allowed() == 2" guaranteeing that no mapping to potentially
+> encrypted memory is established [2]. The options to enable that are
+> teach mmap_mem() to meet the "zeroed buffer" implication of
+> devmem_is_allowed() returning "2", or return -EPERM for that case.
+> 
+> Return -EPERM on the hope that userspace does not actually depend on the
+> legacy behavior of being able to reliably map the first 1MB of memory on
+> x86. I.e. that all legacy cases are using read()/write() to safely read
+> zeroes. If that turns out not to be true then either a "map zeroes"
+> scheme can be added, or the CVM case can return 3 from
+> devmem_is_allowed() to hide the CVM restriction from legacy
+> environments.
+> 
+> Link: http://lore.kernel.org/CAPcyv4iVt=peUAk1qx_EfKn7aGJM=XwRUpJftBhkUgQEti2bJA@mail.gmail.com [1]
+> Link: http://lore.kernel.org/fd683daa-d953-48ca-8c5d-6f4688ad442c@intel.com [2]
+> Suggested-by: Nikolay Borisov <nik.borisov@suse.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  include/linux/io.h |    7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/io.h b/include/linux/io.h
+> index 0642c7ee41db..564934f7e70d 100644
+> --- a/include/linux/io.h
+> +++ b/include/linux/io.h
+> @@ -191,7 +191,12 @@ static inline int range_is_allowed(unsigned long pfn, unsigned long size)
+>  	u64 cursor = from;
+>  
+>  	while (cursor < to) {
+> -		if (!devmem_is_allowed(pfn))
+> +		/*
+> +		 * Any restricted access is treated as "no access", i.e.
+> +		 * handle devmem_is_allowed() returning "2" to indicate
+> +		 * restricted access.
+> +		 */
+> +		if (devmem_is_allowed(pfn) != 1)
+>  			return 0;
+>  		cursor += PAGE_SIZE;
+>  		pfn++;
 
-This might apply to interactive systems such as desktops and Android phones=
-.
-When an app exits, it's unlikely to be reopened very soon. For
-example, Firefox=E2=80=99s
-text and other file handles are of no use to LibreOffice. So, if we
-can help reclaim
-Firefox=E2=80=99s files promptly (rather than promoting them), we may be ab=
-le to assist
-LibreOffice in getting memory more efficiently.
+Looking through the 16 page of Debian Code Search results for
+`open("/dev/mem")`, I find a LOT of mmap() use. Some random examples:
 
-Imagine a desktop system with limited memory that can only hold either Fire=
-fox
-or LibreOffice at a time. When Firefox exits, its files are still
-relatively "young"
-in memory. If they=E2=80=99re marked as recently accessed, it becomes harde=
-r to reclaim
-Firefox=E2=80=99s exclusive files.
+https://sources.debian.org/src/i810switch/0.6.5-7.1/i810switch.c/?hl=413#L402
 
-Consider the current LRU list:
+https://sources.debian.org/src/radeontop/1.4-2/detect.c/?hl=91#L88
 
-active --------------------------------------------------------------------=
->
-inactive
+https://sources.debian.org/src/libdebian-installer/0.125/src/system/subarch-x86-linux.c/?hl=113#L93
+Which includes this gem of a comment, implying that it uses mmap
+_specifically to bypass the devmem restrictions_:
+	/* Please note that we don't use mmap() for performance reasons here,
+	 * but to workaround problems many people encountered when trying
+	 * to read from /dev/mem using regular read() calls.
+	 */
 
-firefox files - common .so file - firefox file - common .so file
+I don't think we can just fail the mmap. :(
 
-If we demote Firefox=E2=80=99s files, the LRU could instead look like this:
-
-active --------------------------------------------------------------------=
->
-inactive
-
-common .so files - common .so files - firefox files - firefox files
-
-With this arrangement, when launching LibreOffice, the system can quickly
-reclaim Firefox's files, rather than spending time evicting the commonly
-used .so files that LibreOffice may also need.
-
->
-> I agree with Zi's suggestion. Using some kind of madvise() hint to mark
-> these file folios as those that won't be accessed after being unmapped,
-> seems can work?
-
-The issue is that userspace doesn=E2=80=99t know why or when it should call
-madvise(). From its perspective, it=E2=80=99s simply the app exiting.
-
-But I agree=E2=80=94there are always exceptions to the pattern I described =
-above.
-Just don't know how to tell the kernel the proper pattern.
-
-Thanks
-Barry
+-- 
+Kees Cook
