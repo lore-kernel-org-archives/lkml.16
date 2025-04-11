@@ -1,272 +1,672 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C56126C13;
-	Fri, 11 Apr 2025 15:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884131F2367;
+	Fri, 11 Apr 2025 15:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744386458; cv=none; b=lR8ZezvdUlp6/oyvH0o449VO95Hge47HLEfuxL8ySUosXzqgFJrsZSINEk0OnpdDenNljXJAgeLQ7soN2jbxSFJrSaBG+fbjJdTrNLuWgbOvJjAUJWg257d3UJ3auEL6XjwiSOL1/VkO8rlwV3xyZQe3Slsrrlhdvwr4f9frKGE=
+	t=1744386469; cv=none; b=U3cAhrxwfV2KB+Ujt43hDSqsjKpOnGuYMYONV4gZ+cIxMppQUDgJR+F/8VhKneADYx7LY36aNGoWrSiKGtkogG4EmcooDQtMbJnNIOZ/q8s2/PrTCDrpAedi2Dfd+McxhXWuGipjxHPF3nfUhoPgOsdtCSa1+vY+KgwYbuQ0Qv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744386458; c=relaxed/simple;
-	bh=po4BvKzJF2xBksLFY2NnG7GejpaqqPlM+UT7tazBV6o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qVxEshLNKWPEONSmJfytgIVkFEnNDcgfHToVkt5JntRm9t9x4Zr4vfELRvGnGe4eNX0X6FEDI1nQoyF2SR0t7HmygUNUwC0Ri0DC+X0VBUgCj4RmcgXLhoQ1lA/AYGT68uWvG1CLomZTlsn4lMG8WnVh9FL+dGW1NZYZmVpGKy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=N6S1vzww; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744386469; c=relaxed/simple;
+	bh=ua+sG8LwZhGNuX4+8zqo0oGX4oAevu0pRYislR7Z1cI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HTttJiXBUFTE+RHZBaga357i387FEdwRWRi6JsnSNfthVEb4KWq3T+oOpOLx2uDhWneY/xXWoTcjQcAofeKaKiweiBGJhGfYoJI2YG1lm/MN0y3bZOOm9Api3KaEUkXoXrepISsZwmkVJAtiYg1C1aO6rikKSBwBc2jgOYDcgA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOWag5L+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="N6S1vzww"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744386453;
-	bh=po4BvKzJF2xBksLFY2NnG7GejpaqqPlM+UT7tazBV6o=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=N6S1vzwwBb+zQZm0uasxR1zixpz9L1eCoruKAMEV3yigigQ3ihzp6BqKrn+UeSatM
-	 z4b6xU937yiZXvSwEUhb/dMYIDPcQmhI5g1lA30zAq8B1wEgeMkK5O4VlP61LRSdTS
-	 ILTbYdSuL4pl1p+rsNPvq0QZqn9/Ad74P2KTehDjYXktI0XzkNOnWfSOyFAJI8Ock2
-	 ULOPpuVKCURN4drEhjkO37o4m6UkjB08E/UyIJOBoKzVK3VWiwc0ZOWw8SJzN3VwAs
-	 hmaqRrxmlNgDTXkO4sD4pniKTFcVe7VIkQMIK50ryhkK8qjbks0a+wPeb/9ktl2vUu
-	 y5DPTY6RuFvkg==
-Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 69DE717E0FD9;
-	Fri, 11 Apr 2025 17:47:32 +0200 (CEST)
-Message-ID: <47312bcc8352bf190a59de448d9fd31f04ef954d.camel@collabora.com>
-Subject: Re: [RESEND PATCH v1 0/7] Performance improvement of decoder
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: "jackson.lee" <jackson.lee@chipsnmedia.com>, "mchehab@kernel.org"	
- <mchehab@kernel.org>, "hverkuil-cisco@xs4all.nl"
- <hverkuil-cisco@xs4all.nl>,  "sebastian.fricke@collabora.com"	
- <sebastian.fricke@collabora.com>, "bob.beckett@collabora.com"	
- <bob.beckett@collabora.com>, "dafna.hirschfeld@collabora.com"	
- <dafna.hirschfeld@collabora.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
- "lafley.kim" <lafley.kim@chipsnmedia.com>,  "b-brnich@ti.com"	
- <b-brnich@ti.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, Nas Chung	
- <nas.chung@chipsnmedia.com>
-Date: Fri, 11 Apr 2025 11:47:31 -0400
-In-Reply-To: <SE1P216MB130319B98B3A33A22CA8CFF4EDB62@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
-References: <20250410034002.88-1-jackson.lee@chipsnmedia.com>
-	 <cb2266a3ff0cf9d57bdfdf3e88dc82c211d18e83.camel@collabora.com>
-	 <SE1P216MB130319B98B3A33A22CA8CFF4EDB62@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOWag5L+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD1EDC4CEE2;
+	Fri, 11 Apr 2025 15:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744386469;
+	bh=ua+sG8LwZhGNuX4+8zqo0oGX4oAevu0pRYislR7Z1cI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hOWag5L+AY9qo3x/8cadgo3HhOUQluNpUkTGYe6zmZ97A6RBBRrfxlOgP20jVUnMy
+	 7rWiweb6uYuWFPj8XkZjS0HmImaSHk6kAdZ4sxkRtaY29NQXQCJAleDza4xiRz6n7s
+	 SXWvv6ECYevamXCeKPVbpP9FeUE81lwEXExfPX0EKNtUk3I1DRF0A+jtFVIrLIP363
+	 kq3dphwRLl/R09kVyPoLddsL9wOhzT+MT8Gr+wIlFBkRAYpj2IIr2dE/lEWqaUkILR
+	 csIZB5L4nCRifyZBnMeFIphiZqpmPLPxo9OOUyt4Yh28hqX/AlP5HVvyyGhuHQdJCW
+	 SribHO5+4vCeg==
+Date: Fri, 11 Apr 2025 10:47:47 -0500
+From: Rob Herring <robh@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, dlechner@baylibre.com,
+	nuno.sa@analog.com, andy@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v1 1/7] dt-bindings: iio: adc: Add AD4170
+Message-ID: <20250411154747.GA3278243-robh@kernel.org>
+References: <cover.1744200264.git.marcelo.schmitt@analog.com>
+ <d2f8e8227022afe411005882cfd269124cd81e01.1744200264.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d2f8e8227022afe411005882cfd269124cd81e01.1744200264.git.marcelo.schmitt@analog.com>
 
-Hi,
-
-Le vendredi 11 avril 2025 à 00:49 +0000, jackson.lee a écrit :
-> Hi Nicolas
+On Wed, Apr 09, 2025 at 09:24:18AM -0300, Marcelo Schmitt wrote:
+> Add device tree documentation for AD4170 and similar sigma-delta ADCs.
+> The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
 > 
-> There was warning message of patch work.
-> Hash value of "Improve performance of decoder" in the patch series
-> were used for FIXS tag, I removed the FIXS tags in the commit
-> message.
-
-I'd prefer if you simply comment back that this needs to be removed
-before merging. If you get enough comment for a new version, you can do
-it, if its the only thing preventing the merge, I will fix it.
-
-Resends are mostly used when a patches have had no comment, no feedback
-for a long period of time. When the patches have been forgotten, and
-are not expected to hold any edits.
-
-regards,
-Nicolas
-
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
+> The AD4170 design has features to aid interfacing with weigh scale and RTD
+> sensors that are expected to be setup with external circuitry for proper
+> sensor operation. A key characteristic of those sensors is that the circuit
+> they are in must be excited with a pair of signals. The external circuit
+> can be excited either by voltage supply or by AD4170 excitation signals.
+> The sensor can then be read through a different pair of lines that are
+> connected to AD4170 ADC.
 > 
-> thanks
+>  .../bindings/iio/adc/adi,ad4170.yaml          | 527 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 +
+>  2 files changed, 534 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
 > 
-> 
-> 
-> > -----Original Message-----
-> > From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > Sent: Thursday, April 10, 2025 9:39 PM
-> > To: jackson.lee <jackson.lee@chipsnmedia.com>; mchehab@kernel.org;
-> > hverkuil-cisco@xs4all.nl; sebastian.fricke@collabora.com;
-> > bob.beckett@collabora.com; dafna.hirschfeld@collabora.com
-> > Cc: linux-media@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > lafley.kim
-> > <lafley.kim@chipsnmedia.com>; b-brnich@ti.com; hverkuil@xs4all.nl;
-> > Nas
-> > Chung <nas.chung@chipsnmedia.com>
-> > Subject: Re: [RESEND PATCH v1 0/7] Performance improvement of
-> > decoder
-> > 
-> > Hi,
-> > 
-> > Le jeudi 10 avril 2025 à 12:39 +0900, Jackson.lee a écrit :
-> > > From: Jackson Lee <jackson.lee@chipsnmedia.com>
-> > > 
-> > > v4l2-compliance results:
-> > > ========================
-> > 
-> > What there reason for a resend within 3h ?
-> > 
-> > Nicolas
-> > 
-> > > 
-> > > v4l2-compliance 1.28.1-5233, 64 bits, 64-bit time_t
-> > > 
-> > > Buffer ioctls:
-> > >                 warn: v4l2-test-buffers.cpp(693):
-> > > VIDIOC_CREATE_BUFS
-> > > not supported
-> > >                 warn: v4l2-test-buffers.cpp(693):
-> > > VIDIOC_CREATE_BUFS
-> > > not supported
-> > >         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> > >         test CREATE_BUFS maximum buffers: OK
-> > >         test VIDIOC_EXPBUF: OK
-> > >         test Requests: OK (Not Supported)
-> > > 
-> > > Total for wave5-dec device /dev/video0: 46, Succeeded: 46,
-> > > Failed: 0,
-> > > Warnings: 2
-> > > Total for wave5-enc device /dev/video1: 46, Succeeded: 46,
-> > > Failed: 0,
-> > > Warnings: 0
-> > > 
-> > > Fluster test results:
-> > > =====================
-> > > 
-> > > Running test suite JCT-VC-HEVC_V1 with decoder GStreamer-H.265-
-> > > V4L2-
-> > > Gst1.0
-> > > Using 3 parallel job(s)
-> > > Ran 133/147 tests successfully               in 41.629 secs
-> > > 
-> > > (1 test fails because of not supporting to parse multi frames, 1
-> > > test
-> > > fails because of a missing frame and slight corruption,
-> > >  2 tests fail because of sizes which are incompatible with the
-> > > IP, 11
-> > > tests fail because of unsupported 10 bit format)
-> > > 
-> > > 
-> > > Running test suite JVT-AVC_V1 with decoder GStreamer-H.264-V4L2-
-> > > Gst1.0
-> > > Using 3 parallel job(s)
-> > > Ran 78/135 tests successfully               in 44.578 secs
-> > > 
-> > > (57 fail because the hardware is unable to decode  MBAFF / FMO /
-> > > Field
-> > > / Extended profile streams.)
-> > > 
-> > > Seek test
-> > > =====================
-> > > 1. gst-play-1.0 seek.264
-> > > 2. this will use waylandsink since gst-play-1.0 uses playbin.
-> > >    if you don't want to hook up display,
-> > >    you can run gst-play-1.0 seek.264 --videosink=fakevideosink
-> > > instead
-> > > 3. Let pipeline run for 2-3 seconds 4. press SPACE key to pause
-> > > 5.
-> > > press 0 to reset press SPACE to start again
-> > > 
-> > > gst-play-1.0 seek.264 --videosink=fakevideosink Press 'k' to see
-> > > a
-> > > list of keyboard shortcuts.
-> > > Now playing /root/seek.264
-> > > Redistribute latency...
-> > > Redistribute latency...
-> > > Redistribute latency...
-> > > Redistribute latency...
-> > > Redistribute latency...aused
-> > > 0:00:09.9 / 0:00:09.7
-> > > Reached end of play list.
-> > > 
-> > > Sequence Change test
-> > > =====================
-> > > gst-launch-1.0 filesrc
-> > > location=./switch_1080p_720p_240frames.h264 !
-> > > h264parse ! v4l2h264dec ! filesink location=./h264_output_420.yuv
-> > > Setting pipeline to PAUSED ...
-> > > Pipeline is PREROLLING ...
-> > > Redistribute latency...
-> > > Redistribute latency...
-> > > Pipeline is PREROLLED ...
-> > > Setting pipeline to PLAYING ...
-> > > Redistribute latency...
-> > > New clock: GstSystemClock
-> > > Got EOS from element "pipeline0".
-> > > Execution ended after 0:00:05.772414400 Setting pipeline to NULL
-> > > ...
-> > > Freeing pipeline ...
-> > > 
-> > > Change since v0:
-> > > ===================
-> > > * For [PATCH v1 2/7] media: chips-media: wave5: Improve
-> > > performance of
-> > > decoder
-> > >  - separates the previous patch to a few patches
-> > > 
-> > > * For [PATCH v1 3/7] media: chips-media: wave5: Fix not to be
-> > > closed
-> > >  - separated from the previous patch of performance improvement
-> > > of
-> > >    decoder
-> > > 
-> > > * For [PATCH v1 4/7] media: chips-media: wave5: Use spinlock
-> > > whenever
-> > > state is changed
-> > >  - separated from the previous patch of performance improvement
-> > > of
-> > >    decoder
-> > > 
-> > > * For [PATCH v1 5/7] media: chips-media: wave5: Fix not to free
-> > > resources normally when
-> > >     instance was destroyed
-> > >  - separated from the previous patch of performance improvement
-> > > of
-> > >    decoder
-> > > 
-> > > * For [PATCH v1 7/7] media: chips-media: wave5: Fix SError of
-> > > kernel
-> > > panic when closed
-> > >  - separated from the previous patch of performance improvement
-> > > of
-> > >    decoder
-> > > 
-> > > Jackson Lee (7):
-> > >   media: chips-media: wave5: Fix Null reference while testing
-> > > fluster
-> > >   media: chips-media: wave5: Improve performance of decoder
-> > >   media: chips-media: wave5: Fix not to be closed
-> > >   media: chips-media: wave5: Use spinlock whenever state is
-> > > changed
-> > >   media: chips-media: wave5: Fix not to free resources normally
-> > > when
-> > >     instance was destroyed
-> > >   media: chips-media: wave5: Reduce high CPU load
-> > >   media: chips-media: wave5: Fix SError of kernel panic when
-> > > closed
-> > > 
-> > >  .../platform/chips-media/wave5/wave5-helper.c |  10 +-
-> > >  .../chips-media/wave5/wave5-vpu-dec.c         | 116 +++++++++++-
-> > > ----
-> > > --
-> > >  .../chips-media/wave5/wave5-vpu-enc.c         |   8 +-
-> > >  .../platform/chips-media/wave5/wave5-vpu.c    |  70 +++++++++--
-> > >  .../platform/chips-media/wave5/wave5-vpuapi.c |  36 +++---
-> > >  .../platform/chips-media/wave5/wave5-vpuapi.h |  10 ++
-> > >  .../chips-media/wave5/wave5-vpuconfig.h       |   1 +
-> > >  7 files changed, 179 insertions(+), 72 deletions(-)
-> > 
-> > --
-> > Nicolas Dufresne
-> > Principal Engineer at Collabora
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> new file mode 100644
+> index 000000000000..93fe3b4648a0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> @@ -0,0 +1,527 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4170 and similar Analog to Digital Converters
+> +
+> +maintainers:
+> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converters.
+> +  Specifications can be found at:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4170-4.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4190-4.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4195-4.pdf
+> +
+> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +$defs:
+> +  sensor-node:
+> +    type: object
+> +    description: |
 
--- 
-Nicolas Dufresne
-Principal Engineer at Collabora
+Don't need '|' if no formatting.
+
+> +      Common properties of external sensor circuitry connected to the ADC.
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          Channel number. Connects the sensor to the channel with this number
+> +          of the device.
+> +        minimum: 1
+> +        maximum: 16
+> +
+> +      diff-channels:
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+
+Already has a type in adc.yaml which needs to be referenced for 
+'sensor-node'.
+
+> +        maxItems: 2
+> +        minItems: 2
+> +        description: |
+
+Don't need '|'. And a few more places...
+
+> +          ADC analog input pins to which the sensor circuit is connected.
+> +          The first value specifies the positive input pin, the second
+> +          specifies the negative input pin. See adc.yaml for details.
+> +
+> +      bipolar:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+
+Already has a type.
+
+> +        description: If provided, the channel is to be used in bipolar mode.
+> +
+> +      adi,sensor-type:
+> +        description: Type of sensor connected to the device.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +
+> +      adi,ac-excited:
+> +        type: boolean
+> +        description: |
+
+Don't need '|'
+
+> +          Whether the external circuit has to be AC or DC excited.
+> +
+> +      adi,excitation-pins:
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        description: |
+> +          ADC pins used for external circuit excitation. Some applications
+> +          require optimum matching between excitation currents. Using excitation
+> +          current pairs minimizes the excitation current mismatch and the
+> +          excitation current drift matching on the ADC. Must describe either 1
+> +          or 2 pairs of pins. E.g. <0 1>; <2 3>; <0 1>, <2 3>.
+
+This looks like a uint32-matrix instead:
+
+items:
+  minItems: 2
+  maxItems: 2
+  items:
+    maximum: <max pin number>?
+
+> +
+> +      adi,excitation-current-microamp:
+> +        description: |
+> +          Excitation current in microamperes to be output to each excitation pin
+> +          specified by adi,excitation-pins property.
+> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
+> +        default: 0
+> +
+> +      adi,reference-select:
+> +        description: |
+> +          Select the reference source to use when converting on the specific
+> +          channel. Valid values are:
+> +          0: Differential reference voltage REFIN+ - REFIN−.
+> +          1: Differential reference voltage REFIN2+ - REFIN2−.
+> +          2: Internal 2.5V referece (REFOUT) relative to AVSS.
+> +          3: Analog supply voltage (AVDD) relative AVSS.
+> +          If this field is left empty, the first external reference is selected.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        enum: [0, 1, 2, 3]
+> +        default: 0
+> +
+> +    required:
+> +      - reg
+> +      - diff-channels
+> +      - bipolar
+> +      - adi,sensor-type
+> +      - adi,excitation-pins
+> +      - adi,reference-select
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad4170
+> +      - adi,ad4190
+> +      - adi,ad4195
+> +
+> +  avss-supply:
+> +    description:
+> +      Referece voltage supply for AVSS. If provided, describes the magnitude
+> +      (absolute value) of the negative voltage supplied to the AVSS pin. Since
+> +      AVSS must be −2.625V minimum and 0V maximum, the declared supply voltage
+> +      must be between 0 and 2.65V. If not provided, AVSS is assumed to be at
+> +      system ground (0V).
+> +
+> +  avdd-supply:
+> +    description:
+> +      A supply of 4.75V to 5.25V relative to AVSS that powers the chip (AVDD).
+> +
+> +  iovdd-supply:
+> +    description: 1.7V to 5.25V reference supply to the serial interface (IOVDD).
+> +
+> +  refin1p-supply:
+> +    description: REFIN+ supply that can be used as reference for conversion.
+> +
+> +  refin1n-supply:
+> +    description: REFIN- supply that can be used as reference for conversion. If
+> +      provided, describes the magnitude (absolute value) of the negative voltage
+> +      supplied to the REFIN- pin.
+> +
+> +  refin2p-supply:
+> +    description: REFIN2+ supply that can be used as reference for conversion.
+> +
+> +  refin2n-supply:
+> +    description: REFIN2- supply that can be used as reference for conversion. If
+> +      provided, describes the magnitude (absolute value) of the negative voltage
+> +      supplied to the REFIN2- pin.
+> +
+> +  spi-cpol: true
+> +
+> +  spi-cpha: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    description: |
+> +      Specify which pin should be configured as Data Ready interrupt.
+> +      Default if not supplied is sdo.
+
+default: sdo
+
+And drop the sentence.
+
+> +    enum:
+> +      - sdo
+> +      - dig_aux1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      Optional external clock source. Can specify either an external clock or
+> +      external crystal.
+> +
+> +  clock-names:
+> +    enum:
+> +      - ext-clk
+> +      - xtal
+
+default?
+
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +    description: |
+> +      The first cell is for the GPIO number: 0 to 3.
+> +      The second cell takes standard GPIO flags.
+> +
+> +  ldac-gpios:
+> +    description:
+> +      GPIO connected to DIG_AUX2 pin to be used as LDAC toggle to control the
+> +      transfer of data from the DAC_INPUT_A register to the DAC.
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^channel@[0-9a-f]$":
+> +    $ref: adc.yaml
+> +    type: object
+> +    unevaluatedProperties: false
+> +    description: |
+> +      Represents the external channels which are connected to the ADC.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          The channel number.
+> +        items:
+
+Drop 'items' to imply there's only 1 entry.
+
+> +          minimum: 0
+> +          maximum: 15
+> +
+> +      diff-channels:
+> +        description: |
+> +          This property is used for defining the inputs of a differential
+> +          voltage channel. The first value is the positive input and the second
+> +          value is the negative input of the channel.
+> +
+> +          Besides the analog input pins AIN0 to AIN8, there are special inputs
+> +          that can be selected with the following values:
+> +          17: Internal temperature sensor
+> +          18: (AVDD-AVSS)/5
+> +          19: (IOVDD-DGND)/5
+> +          20: DAC output
+> +          21: ALDO
+> +          22: DLDO
+> +          23: AVSS
+> +          24: DGND
+> +          25: REFIN+
+> +          26: REFIN-
+> +          27: REFIN2+
+> +          28: REFIN2-
+> +          29: REFOUT
+> +          For the internal temperature sensor, use the input number for both
+> +          inputs (i.e. diff-channels = <17 17>).
+> +        items:
+> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+> +                 26, 27, 28, 29]
+
+These constraints don't apply to other cases of diff-channels?
+
+> +
+> +      single-channel: true
+> +
+> +      common-mode-channel: true
+> +
+> +      bipolar: true
+> +
+> +      adi,sensor-type:
+> +        description: Sensor type for direct ADC sensors.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        const: 0
+
+Since this is optional and only one possible value, you don't need it...
+
+> +
+> +      adi,buffered-positive:
+> +        description: |
+> +          Enable precharge buffer, full buffer, or skip reference buffering of
+> +          the positive voltage reference. Because the output impedance of the
+> +          source driving the voltage reference inputs may be dynamic, RC
+> +          combinations of those inputs can cause DC gain errors if the reference
+> +          inputs go unbuffered into the ADC. Enable reference buffering if the
+> +          provided reference source has dynamic high impedance output. Note the
+> +          absolute voltage allowed on positive reference inputs (REFIN+,
+> +          REFIN2+) is from AVSS − 50 mV to AVDD + 50 mV when the reference
+> +          buffers are disabled but narrows to AVSS to AVDD when reference
+> +          buffering is enabled or in precharge mode.
+> +          0: Reference precharge buffer.
+> +          1: Full Buffer.
+> +          2: Bypass reference buffers (buffering disabled).
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        enum: [0, 1, 2]
+> +        default: 0
+> +
+> +      adi,buffered-negative:
+> +        description: |
+> +          Enable precharge buffer, full buffer, or skip reference buffering of
+> +          the negative voltage reference. Because the output impedance of the
+> +          source driving the voltage reference inputs may be dynamic, RC
+> +          combinations of those inputs can cause DC gain errors if the reference
+> +          inputs go unbuffered into the ADC. Enable reference buffering if the
+> +          provided reference source has dynamic high impedance output. Note the
+> +          absolute voltage allowed on negative reference inputs (REFIN-,
+> +          REFIN2-) is from AVSS − 50 mV to AVDD + 50 mV when the reference
+> +          buffers are disabled but narrows to AVSS to AVDD when reference
+> +          buffering is enabled or in precharge mode.
+> +          0: Reference precharge buffer.
+> +          1: Full Buffer.
+> +          2: Bypass reference buffers (buffering disabled).
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        enum: [0, 1, 2]
+> +        default: 0
+> +
+> +      adi,reference-select:
+> +        description: |
+> +          Select the reference source to use when converting on the specific
+> +          channel. Valid values are:
+> +          0: Differential reference voltage REFIN+ - REFIN−.
+> +          1: Differential reference voltage REFIN2+ - REFIN2−.
+> +          2: Internal 2.5V referece (REFOUT) relative to AVSS.
+> +          3: Analog supply voltage (AVDD) relative AVSS.
+> +          If this field is left empty, the internal reference is selected.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        enum: [0, 1, 2, 3]
+> +        default: 2
+> +
+> +    required:
+> +      - reg
+> +
+> +    allOf:
+> +      - oneOf:
+> +          - required: [single-channel]
+> +            properties:
+> +              diff-channels: false
+> +          - required: [diff-channels]
+> +            properties:
+> +              single-channel: false
+> +              common-mode-channel: false
+> +
+> +  "^weighscale@":
+> +    $ref: '#/$defs/sensor-node'
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      diff-channels: true
+> +      bipolar: true
+> +
+> +      adi,sensor-type:
+> +        description: Weigh scale sensor.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        const: 1
+> +
+> +      adi,excitation-pins:
+> +        description: |
+> +          ADC pins to use for weigh scale bridge circuit excitation. Must
+> +          describe either 1 or 2 pairs of pins. E.g. <0 1>; <2 3>; <0 1>, <2 3>.
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 2
+> +        maxItems: 4
+> +        items:
+> +          minimum: 0
+> +          maximum: 20
+> +
+> +      adi,excitation-current-microamp:
+> +        description: |
+> +          Excitation current in microamperes to be output to each excitation pin
+> +          specified by adi,excitation-pins property. If not provided and
+> +          adi,ac-excited is true, use predefined ACX1, ACX1 negated, ACX2, and
+> +          ACX2 negated signals to AC excite the weigh scale bridge. Those
+> +          singals are output on GPIO2, GPIO0, GPIO3, and GPIO1, respectively.
+> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
+> +
+> +      adi,power-down-switch-pin:
+> +        description: |
+> +          Number of the GPIO used as power-down switch for the bridge circuit.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        enum: [0, 1]
+> +
+> +  "^thermocouple@":
+> +    $ref: '#/$defs/sensor-node'
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      diff-channels: true
+> +      bipolar: true
+> +
+> +      adi,sensor-type:
+> +        description: Thermocouple sensor.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        const: 2
+> +
+> +      adi,excitation-pins:
+> +        description: |
+> +          ADC pins to use for bridge circuit excitation. Must describe either 1
+> +          or 2 pairs of pins. E.g. <0 1>; <2 3>; <0 1>, <2 3>.
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 2
+> +        maxItems: 4
+> +        items:
+> +          minimum: 0
+> +          maximum: 20
+> +
+> +      adi,excitation-current-microamp:
+> +        description: |
+> +          Excitation current in microamperes to be output to each excitation pin
+> +          specified by adi,excitation-pins property. If not provided and
+> +          adi,ac-excited is true, use predefined ACX1, ACX1 negated, ACX2, and
+> +          ACX2 negated signals to AC excite the bridge circuit. Those singals
+> +          are output on GPIO2, GPIO0, GPIO3, and GPIO1, respectively.
+> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
+> +
+> +      adi,vbias:
+> +        type: boolean
+> +        description: |
+> +          For unbiased thermocouple applications, the voltage generated by the
+> +          thermocouple must be biased around some DC voltage. When present, this
+> +          property specifies a bias voltage of (AVDD + AVSS)/2 to be applied as
+> +          common-mode voltage for the sensor.
+> +
+> +      adi,power-down-switch-pin:
+> +        description: |
+> +          Number of the GPIO used as power-down switch for the bridge circuit.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        enum: [0, 1]
+> +
+> +  "^rtd@":
+> +    $ref: '#/$defs/sensor-node'
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      diff-channels: true
+> +      bipolar: true
+> +
+> +      adi,sensor-type:
+> +        description: RTD sensor.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        const: 3
+> +
+> +      adi,excitation-pins:
+> +        description: |
+> +          ADC pins to use for RTD circuit excitation. Must describe a pair of
+> +          pins. E.g. <0 1>; <2 3>.
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 2
+> +        maxItems: 2
+> +        items:
+> +          minimum: 0
+> +          maximum: 20
+> +
+> +      adi,excitation-current-microamp: true
+> +
+> +    required:
+> +      - adi,excitation-current-microamp
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - avdd-supply
+> +  - iovdd-supply
+> +  - spi-cpol
+> +  - spi-cpha
+> +
+> +allOf:
+> +  # Some devices don't have integrated DAC
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - adi,ad4190
+> +              - adi,ad4195
+> +    then:
+> +      properties:
+> +        ldac-gpios: false
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        adc@0 {
+> +            compatible = "adi,ad4170";
+> +            reg = <0>;
+> +            spi-max-frequency = <20000000>;
+> +            spi-cpol;
+> +            spi-cpha;
+> +            avdd-supply = <&avdd>;
+> +            iovdd-supply = <&iovdd>;
+> +            interrupt-parent = <&gpio_in>;
+> +            interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            // Sample AIN0 with respect to AIN1 throughout AVDD/AVSS input range
+> +            // Differential bipolar. If AVSS < 0V, differential true bipolar
+> +            channel@0 {
+> +                reg = <0>;
+> +                bipolar;
+> +                diff-channels = <0 1>;
+> +                adi,sensor-type = /bits/ 8 <0>;
+> +                adi,reference-select = /bits/ 8 <3>;
+> +            };
+> +            // Sample AIN2 with respect to DGND throughout AVDD/DGND input range
+> +            // Pseudo-differential unipolar (fig. 2a)
+> +            channel@1 {
+> +                reg = <1>;
+> +                single-channel = <2>;
+> +                common-mode-channel = <24>;
+> +                adi,sensor-type = /bits/ 8 <0>;
+> +                adi,reference-select = /bits/ 8 <3>;
+> +            };
+> +            // Sample AIN3 with respect to 2.5V throughout AVDD/AVSS input range
+> +            // Pseudo-differential bipolar (fig. 2b)
+> +            channel@2 {
+> +                reg = <2>;
+> +                bipolar;
+> +                single-channel = <3>;
+> +                common-mode-channel = <29>;
+> +                adi,sensor-type = /bits/ 8 <0>;
+> +                adi,reference-select = /bits/ 8 <3>;
+> +            };
+> +            // Sample AIN4 with respect to DGND throughout AVDD/AVSS input range
+> +            // Pseudo-differential bipolar (fig. 2c)
+> +            channel@3 {
+> +                reg = <3>;
+> +                bipolar;
+> +                single-channel = <4>;
+> +                common-mode-channel = <24>;
+> +                adi,sensor-type = /bits/ 8 <0>;
+> +                adi,reference-select = /bits/ 8 <3>;
+> +            };
+> +            // Sample AIN5 with respect to 2.5V throughout AVDD/AVSS input range
+> +            // Pseudo-differential unipolar (AD4170 datasheet page 46 example)
+> +            channel@4 {
+> +                reg = <4>;
+> +                single-channel = <5>;
+> +                common-mode-channel = <29>;
+> +                adi,sensor-type = /bits/ 8 <0>;
+> +                adi,reference-select = /bits/ 8 <3>;
+> +            };
+> +            // Sample AIN6 with respect to 2.5V throughout REFIN+/REFIN- input range
+> +            // Pseudo-differential bipolar
+> +            channel@5 {
+> +                reg = <5>;
+> +                bipolar;
+> +                single-channel = <6>;
+> +                common-mode-channel = <29>;
+> +                adi,sensor-type = /bits/ 8 <0>;
+> +                adi,reference-select = /bits/ 8 <0>;
+> +            };
+
+Can you try to have every child node type in the example rather than 
+multiple cases of 'channel' nodes? We want every property defined in 
+schemas in the examples if possible (but not creating every possible 
+iteration).
+
+> +            // Weigh scale sensor
+> +            weighscale@6 {
+> +                reg = <6>;
+> +                bipolar;
+> +                diff-channels = <7 8>;
+> +                adi,sensor-type = /bits/ 8 <1>;
+> +                adi,ac-excited;
+> +                adi,excitation-pins = <17 18>, <19 20>;
+> +                adi,reference-select = /bits/ 8 <0>;
+> +            };
+> +        };
+> +    };
+> +...
+> +
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 030d90d38341..991b6e2e373a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1337,6 +1337,13 @@ F:	Documentation/ABI/testing/sysfs-bus-iio-adc-ad4130
+>  F:	Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
+>  F:	drivers/iio/adc/ad4130.c
+>  
+> +ANALOG DEVICES INC AD4170 DRIVER
+> +M:	Marcelo Schmitt <marcelo.schmitt@analog.com>
+> +L:	linux-iio@vger.kernel.org
+> +S:	Supported
+> +W:	https://ez.analog.com/linux-software-drivers
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> +
+>  ANALOG DEVICES INC AD4695 DRIVER
+>  M:	Michael Hennerich <michael.hennerich@analog.com>
+>  M:	Nuno Sá <nuno.sa@analog.com>
+> -- 
+> 2.47.2
+> 
