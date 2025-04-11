@@ -1,127 +1,191 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2CE1D95B3;
-	Fri, 11 Apr 2025 13:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5E81D86FB;
+	Fri, 11 Apr 2025 13:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379183; cv=none; b=Ry97x6ZZiiorFGdQLAGNJmYUsmLz5oQ7zucTdZxdqTgAtBsU6KnLckY228ghelTm05Vt0ykbNpdcX77gMtVTMAUuhRrKYKjWa9/JIN8SNP2I9dC38ESBimqMoK5r0EPB1zTspw7baA46L5tXZZZtYakGiNZupBjY/kvD1NB0PFM=
+	t=1744379206; cv=none; b=NqjOCWLqfMouToQbDmhDbU/GsQOYt+Beztm3OBjFgKReWlVy23SWJr+GqUHo89xEzPe46sxbtgymSHTiQ+ij5bAZ1Te4ZAlyEVhxVMTDxE7ngTPGCyGl5LtV1dz0m6SKS0ieDr6ekO8qumQ2peXvZ0e7mBzPUMa8c3gpO1zKyHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379183; c=relaxed/simple;
-	bh=zw6iXtHpECB8AOe7/FVi+IgvgSypoJ2Ji1MLxsLtHx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YXF3usQq66Z2dSnxt/QkpKspUNMC1+ZJsgDYRHj9m2FktwGHR2MTAZrSH5wWWKyUoD8Jq/KGhXrNL4AppFjkWGFFPs5xDP+SPUjGOXQwBgXVp7yx/oTfAG9VvPFDuTjDtFtTOny5FIh/EIICMDUsqF6NOxMY2lEFR/KkKcUJXok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Gk2uQTcH; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744379206; c=relaxed/simple;
+	bh=lfpofwq7AhcRnEO56wgTDW+zKFWju8+OfJKpaNYI9T0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u1xqnNHjp1wliYNJA0vn63NlxBliR0D4pXqPoTiHpbtuwlNFaq6hcxpc4ieGQThkvvwpuZ9M75Nb3YYP1WexZx807vAT/TKDkdGberN1rs2FTQr14z+JczgpleITcKp0X/3N82UaIoqv6xkjK0fnXOYiA2CY6EjL6TMM93sF28s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGSplrp1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gk2uQTcH"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDkB0a2140146
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 08:46:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744379171;
-	bh=dyl4VJ4NFKTvxc57ODEOoVjJmEfMQrs8ZXag1cIaiu0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Gk2uQTcHeH4nzT6Glj0uV8LS0iUAda68IF4ZwTF0mGzcW11qGTDUo24Emn6kLRBpX
-	 SWehkYMfkE968s7ORvuFuh0P903Qp2G/RFTtyq1cC6n9wg2WqfZsaKjJK/BZh3/pob
-	 QFJTH+KUz9kIz9uawiCPq+jWGG3BNxwZHwU+ub40=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDkBlG054534
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 08:46:11 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 08:46:10 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 08:46:10 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDk6S7109624;
-	Fri, 11 Apr 2025 08:46:07 -0500
-Message-ID: <6b730f33-9d83-4ced-839d-dc03b2eb8e4c@ti.com>
-Date: Fri, 11 Apr 2025 19:16:05 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGSplrp1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7652C4CEE2;
+	Fri, 11 Apr 2025 13:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744379206;
+	bh=lfpofwq7AhcRnEO56wgTDW+zKFWju8+OfJKpaNYI9T0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YGSplrp1HwBSG2RE7WPdi2jjo9tolZLXEJo86WNr+DMYcwi1SyAIrJDuTS/gq47jZ
+	 XAlVqJ1iCaF0+veS3PPAWdoLzBrusy2ioGIuVy3wc12EfuawG0NBDhnhQmEgIT0nFm
+	 NKVuho1JDHwdzex0lormI5ZE9w0Y4Kj1db2hijdEqFDKomv7/Rq6l5u5VVYNwif/uB
+	 fztfpBWH6c/2SaCvIoQeQqRYYrPBYua8U8A4zsk5kL6bQ38N8qNl2XOJdD0mJz+Enj
+	 8e+pLoF2VRY+O7gv2n0On3XlC6KeM2WhPl3wclFi923af+yTBKyybraqVIVLDVjgiJ
+	 CvBv3tPswefvg==
+Date: Fri, 11 Apr 2025 08:46:44 -0500
+From: Rob Herring <robh@kernel.org>
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: Add device Trace Network On
+ Chip definition
+Message-ID: <20250411134644.GA3059343-robh@kernel.org>
+References: <20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com>
+ <20250411-trace-noc-v3-1-1f19ddf7699b@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] arm64: dts: ti: am68-sk: Fix regulator hierarchy
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
- <20250409134128.2098195-3-y-abhilashchandra@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250409134128.2098195-3-y-abhilashchandra@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411-trace-noc-v3-1-1f19ddf7699b@quicinc.com>
 
-
-On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
-> Update the vin-supply of the TLV71033 regulator from LM5141 (vsys_3v3) to
-> LM61460 (vsys_5v0) to match the schematics. Add a fixed regulator node for
-> the LM61460 5V supply to support this change.
->
-> AM68-SK schematics: https://www.ti.com/lit/zip/sprr463
-> Fixes: a266c180b398 ("arm64: dts: ti: k3-am68-sk: Add support for AM68 SK base board")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+On Fri, Apr 11, 2025 at 04:57:52PM +0800, Yuanfang Zhang wrote:
+> Add a new coresight-tnoc.yaml file to describe the bindings required to
+> define Trace Network On Chip (TNOC) in device trees. TNOC is an
+> integration hierarchy which is a hardware component that integrates the
+> functionalities of TPDA and funnels. It collects trace form subsystems
+> and transfers to coresight sink.
+> 
+> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
 > ---
->   arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> index 11522b36e0ce..5fa70a874d7b 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> @@ -44,6 +44,17 @@ vusb_main: regulator-vusb-main5v0 {
->   		regulator-boot-on;
->   	};
->   
-> +	vsys_5v0: regulator-vsys5v0 {
-> +		/* Output of LM61460 */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vsys_5v0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vusb_main>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
+>  .../bindings/arm/qcom,coresight-tnoc.yaml          | 111 +++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..709c1bc63db48c29bb2b33e7a795a5999768c5e7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
+> @@ -0,0 +1,111 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/qcom,coresight-tnoc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->   	vsys_3v3: regulator-vsys3v3 {
->   		/* Output of LM5141 */
->   		compatible = "regulator-fixed";
-> @@ -76,7 +87,7 @@ vdd_sd_dv: regulator-tlv71033 {
->   		regulator-min-microvolt = <1800000>;
->   		regulator-max-microvolt = <3300000>;
->   		regulator-boot-on;
-> -		vin-supply = <&vsys_3v3>;
-> +		vin-supply = <&vsys_5v0>;
+> +title: Qualcomm Trace Network On Chip - TNOC
+> +
+> +maintainers:
+> +  - Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> +
+> +description:
 
-Looking at schematic page -3
+'>' is needed for paragraphs.
 
-USB PD Controller is giving input to LM61460 , LM5141(3V3), and TPS62177.
-
-Could you please recheck this, vin-supply for 3v3 regulator
-
-Thanks
-
-Udit
-
-
->   		gpios = <&main_gpio0 49 GPIO_ACTIVE_HIGH>;
->   		states = <1800000 0x0>,
->   			 <3300000 0x1>;
+> +  The Trace Network On Chip (TNOC) is an integration hierarchy hardware
+> +  component that integrates the functionalities of TPDA and funnels.
+> +
+> +  It sits in the different subsystem of SOC and aggregates the trace and
+> +  transports it to Aggregation TNOC or to coresight trace sink eventually.
+> +  TNOC embeds bridges for all the interfaces APB, ATB, TPDA and NTS (Narrow
+> +  Time Stamp).
+> +
+> +  TNOC can take inputs from different trace sources i.e. ATB, TPDM.
+> +
+> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - qcom,coresight-tnoc
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^tn(@[0-9a-f]+)$"
+> +
+> +  compatible:
+> +    items:
+> +      - const: qcom,coresight-tnoc
+> +      - const: arm,primecell
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb_pclk
+> +
+> +  clocks:
+> +    items:
+> +      - description: APB register access clock
+> +
+> +  in-ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +
+> +    patternProperties:
+> +      '^port(@[0-9a-f]{1,2})?$':
+> +        description: Input connections from CoreSight Trace Bus
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +
+> +  out-ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      port:
+> +        description:
+> +          Output connection to CoreSight Trace Bus
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - in-ports
+> +  - out-ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    tn@109ab000  {
+> +      compatible = "qcom,coresight-tnoc", "arm,primecell";
+> +      reg = <0x0 0x109ab000 0x0 0x4200>;
+> +
+> +      clocks = <&aoss_qmp>;
+> +      clock-names = "apb_pclk";
+> +
+> +      in-ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +
+> +          tn_ag_in_tpdm_gcc: endpoint {
+> +            remote-endpoint = <&tpdm_gcc_out_tn_ag>;
+> +          };
+> +        };
+> +      };
+> +
+> +      out-ports {
+> +        port {
+> +          tn_ag_out_funnel_in1: endpoint {
+> +            remote-endpoint = <&funnel_in1_in_tn_ag>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +...
+> 
+> -- 
+> 2.34.1
+> 
