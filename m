@@ -1,108 +1,72 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out28-74.mail.aliyun.com (out28-74.mail.aliyun.com [115.124.28.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B912989A6;
-	Fri, 11 Apr 2025 09:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F52529614B;
+	Fri, 11 Apr 2025 09:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365326; cv=none; b=eEgxdoYs3SX4V1DNoxGBk1Pw76JtZ/uovplFXt8JEWYut8rv14HxGleql+dpWDmZObLEUB5heEDferW4Cpe/v44e+nBtmkLbAd94VJGrrDHUOZhk2ur/0caIifcEWl1cA/XgH/JTczs0So7xAL1o2T+QO4uhxlidB+iIWtE3O+c=
+	t=1744365392; cv=none; b=pv5uvPyl4Y3twG5ZOKZvvO3z2+kGeuNFkFOKaBuXi1Z/qzAtiAoY5cW0lgKY2+pWJQwIUkXn5r/kbbpALHhRp5N0vrszMr6WFmPKw1p/M4u4E9eCEvMXCWPtKCU4JJ30GmNUec9KEwqGDwqUgZryJrlf1C75l6QHgw0VlrUY0oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365326; c=relaxed/simple;
-	bh=fzuHk7gnHpykNso93QwYWcqCbfx9xm7veKnjadys5ak=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=q8TvjIWZC0QtIDUB6Spe9C8Az31vMJXtwQ6qmkx7lhit0riBIFPvmbDE4azxLU0XeLEh0Z0kK6Vp1Uo83/FHcmadbK7tDtZjCHyrb0gxZHRRADWgH1UxRqqhswM3iOZI9uTOrZrK12IBZRQHj+tGoWy6ibOL2LnuK5f2EPKBS0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lldZTB8a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K/Gh8U4C; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lldZTB8a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K/Gh8U4C"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744365322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IFilB1CWtJRNPPBhabQDjIrMR//U86n9XWn9p+phq6s=;
-	b=lldZTB8aa3KylyrLGpWT3q3PIdaWlu4BkIKbhmi0Vwqtf5DpEsfRYbG0LTyUr8+UgMqsaH
-	92IE8hVzpaQ7jIFVvXotuqddCs4ueHRNSSA6AyTt0QCzL+hZ/Jl7FpwyGA+0lqMHB8FnYk
-	2ZgN331Fp2lWsN9GaB9sn4KSR857ErFolh8FNe/CPpOuIk2Kq27+9vbRagUYNHAISi/T01
-	yrAl0oBah/SlbViI/yxNkYS8aAk92ZxuyTKzMPaQvoBmkzLGp6OkGZXXKLUcNVgRR2NyBD
-	0xM+1NGeJGFLPwrVbbp1P73nRYoDlcdaYxT1hchYih7EoHKH316WSu9KeA1L4A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744365322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IFilB1CWtJRNPPBhabQDjIrMR//U86n9XWn9p+phq6s=;
-	b=K/Gh8U4CXj+l1NLqONuUhEP+NCa3T+gi/I84He2UrtbFNxqfACmP8QJbhrqX8/KZ7DBdSC
-	bhnQPg63Dk/LunCA==
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Marc Zyngier
- <maz@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Sascha Bischoff <sascha.bischoff@arm.com>, Timothy Hayes
- <timothy.hayes@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Liam.Howlett@oracle.com, ast@kernel.org
-Subject: Re: [PATCH 20/24] irqchip/gic-v5: Add GICv5 LPI/IPI support
-In-Reply-To: <Z/jgL52ZVdcxTEkP@lpieralisi>
-References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
- <20250408-gicv5-host-v1-20-1f26db465f8d@kernel.org>
- <Z/jgL52ZVdcxTEkP@lpieralisi>
-Date: Fri, 11 Apr 2025 11:55:22 +0200
-Message-ID: <87plhjrpit.ffs@tglx>
+	s=arc-20240116; t=1744365392; c=relaxed/simple;
+	bh=dI24S8coPzz7k1htKptwmRID8NIsoRVYe1b7fMWVAk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ttEZKMhTCw4mmGlNHX4vIFXq8nz///3S0m4/upKrkMwAvUtEzIGHWARPsW5QB2BYhqyZ+sL4kvo+YwTxNNaeBKz311ZRbfoHEvDNqNsUW2Z7PA2SWLz4I3gDFj4AYzl+/b9k2DxysT6qwObIN8TGibm5NSOSs7nZOQ51DI0fNi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=115.124.28.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motor-comm.com
+Received: from 10.0.2.15(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.cK5WKQw_1744365055 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 11 Apr 2025 17:50:56 +0800
+Message-ID: <da434f13-fb08-4036-96ed-7de579cb9ddc@motor-comm.com>
+Date: Fri, 11 Apr 2025 17:50:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-
-On Fri, Apr 11 2025 at 11:26, Lorenzo Pieralisi wrote:
-> On Tue, Apr 08, 2025 at 12:50:19PM +0200, Lorenzo Pieralisi wrote:
->> Maple tree entries are not used by the driver, only the range tracking
->> is required - therefore the driver first finds an empty area large
->> enough to contain the required number of LPIs then checks the
->> adjacent (and possibly occupied) LPI ranges and try to merge them
->> together, reducing maple tree slots usage.
->
-> The maple tree usage for this purpose is an RFC at this stage.
->
-> Added Alexei because I know BPF arena used the maple tree in
-> a similar way in the past and moved to a range tree because
-> the BPF arena requires a special purpose mem allocator.
->
-> As Thomas already pointed out a plain bitmap could do even though
-> it requires preallocating memory up to 2MB (or we can grow it
-> dynamically).
->
-> We could allocate IDs using an IDA as well, though that's 1 by 1,
-> we allocate LPI INTIDs 1 by 1 - mostly, upon MSI allocation, so
-> using an IDA could do (AFAIU it works for 0..INT_MAX we need
-> 0..2^24 worst case).
-
-The point is that you really only need a 1-bit storage per entry,
-i.e. used/unused. You won't use any of the storage functions of maple
-tree, idr or whatever.
-
-So the obvious choice is a bitmap and as you said, it's trivial to start
-with a reasonably sized one and reallocate during runtime if the need
-arises.
-
-The reallocation happens in domain::ops::alloc() which is fully
-preemptible context, i.e. no restrictions vs. allocations.
-
-For the top-most domain, the callers hold domain::mutex, which excludes
-concurrency vs. ops::alloc/free(). If the bitmap is in a domain further
-down the hierarchy then you need your own mutex there.
-
-Thanks,
-
-       tglx
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 00/14] yt6801: Add Motorcomm yt6801 PCIe
+ driver
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, netdev@vger.kernel.org,
+ Masahiro Yamada <masahiroy@kernel.org>, Parthiban.Veerasooran@microchip.com,
+ linux-kernel@vger.kernel.org,
+ "andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>, lee@trager.us,
+ horms@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
+ geert+renesas@glider.be, xiaogang.fan@motor-comm.com,
+ fei.zhang@motor-comm.com, hua.sun@motor-comm.com
+References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
+ <Z_T6vv013jraCzSD@shell.armlinux.org.uk>
+Content-Language: en-US
+From: Frank Sae <Frank.Sae@motor-comm.com>
+In-Reply-To: <Z_T6vv013jraCzSD@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
+On 2025/4/8 18:30, Russell King (Oracle) wrote:
+> On Tue, Apr 08, 2025 at 05:28:21PM +0800, Frank Sae wrote:
+>> This series includes adding Motorcomm YT6801 Gigabit ethernet driver
+>>  and adding yt6801 ethernet driver entry in MAINTAINERS file.
+>> YT6801 integrates a YT8531S phy.
+> 
+> What is different between this and the Designware GMAC4 core supported
+> by drivers/net/ethernet/stmicro/stmmac/ ?
+> 
 
+We support more features: NS, RSS, wpi, wol pattern and aspm control.
 
+> Looking at the register layout, it looks very similar. The layout of the
+> MAC control register looks similar. The RX queue and PMT registers are
+> at the same relative offset. The MDIO registers as well.
+> 
+> Can you re-use the stmmac driver?
+> 
+
+I can not re-use the stmmac driver, because pcie and ephy can not work well on
+the stmmac driver.
