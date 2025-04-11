@@ -1,202 +1,176 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2072.outbound.protection.outlook.com [40.107.22.72])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47916278E63;
-	Fri, 11 Apr 2025 10:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744368400; cv=fail; b=M6sa2pdlSuU9x2WDl32HApGcmqEC69HCN2Q6bahDgoDt0jIjIsDYSicMhhpXDzQXuZYqNu8ETeMay1mvVBKpVmWCYp/8Wg9HHY787bgUK22sWOEah8RDZauHuPBnaxxq+toDgMAA573uNnXztf1gjkBROaneGZb85jZo+vREfL0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744368400; c=relaxed/simple;
-	bh=XXqIo80dL82WhVaUgKdOSqN1JOJtM/1VrlJSBvjq1Ww=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=d6lnhBMShIX00OAchI/aFDH39briOxXWe72+oNrTiKvIqKPu/N6aXYcUxohEtZFzSK3VddgowlQ8lzKfH50NJTyHSonlLYanUu1sRJ6tVQk/dYJIy/YwyiXFY07P8QOo4uVY+SPt3nYHoj3bi37tcNl1XbZ+FslQQETCkNi8Zv4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=wr1CcXNZ; arc=fail smtp.client-ip=40.107.22.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=est.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8981F03F4
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744368614; cv=none; b=cqOELjS35nMtXbb3nMO6Bn/lNIov35azmIiNMt9603n8Bj5FRw7QUNG5sdlZ/zVoyXhVVuAHb8q/Cjg79A1nqGtPRInmo7cL/IdSPpc18Lo3gU4Aiiz0thTCAx+B6XDQ5oI1NvdPi0HcQ4IjmK7XtGDnYEC9vpR21zWAF2HvJhY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744368614; c=relaxed/simple;
+	bh=lSCdES3Wegn2px6sBYIOT1QpjTAuEGimv1iDsjuQuXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rQwUPCQYzVTj7y+5CmH6Prxs93d4LjR+npXHOe1UTG4Da+Ue3x2aIYRjtP/Hy8B5aWA/So699+TwjN3135QqRtlanH8s7/S/skqi3XE2ypo7R+F/cTDax4b7Z1ruuJRcxMq3Ktg1QqRYf3rhhFa8k0Kn3NiG6IDq0EaTfOIpD9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bImzi9je; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="wr1CcXNZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K1cfhHZcqFpLAVWIv/13MR1aetbGpe8KbiQJjhCgK9eUa9cSBm3UlgV9UzkdQfek8mZr2Sxf3o2AhG5GIKYzAZ9oO4yExmidU/gUbAunIKFpDNHCVBJIQAvU5sSbkNE64A4EWoqed0Q/hu4mUBzoAHOYbY5PFW2cq1vmXvxdmk6EfryULU8wK/8aGQLUnzHy10u6L8+yEe8NHZQXDkAgRRo011E5LIrt31F3dc1ND90bh+7xDlnNc7321WDpJd0h/Lc9SdUsKedPia9xRmGayEbSZKwCqlElebFZ6YFZj84Y54hC2SXqtCp4nW0/vHmX2oISGO+NM68CNfdHot6Nig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t8UVaF0TKk8y7WIXdy84OQUiqGEiSgC4+HhN1CUoVmo=;
- b=WqMFYIl65XqmkgdV4JeExdTE/6SzFBeTKs3e2RmNsRmdLIqlV+9DfPctRECm1PZajJT2Cp67hh4yYI3MCmb9rDwoQFQw6vKwtkSwfEfdqvsZu6I1wdj+5QdfDoabsj7PbLcAyKp+uBPMAqQuS+nU9POK2Iz8jqDV+vMdPt2CuDGHPsmaOWEnbKRhdJDn7LLbMr1OxiEhIVWJBiIw41XB08yDKI0xGoFETG5O5KagAGtWxVIN5KHi610sMTHxLyrmFTNCfbYafxBQCr2PHGgF1lDpUgyyFSlJ19kSnVGCZc0SyACjAJ7EJlJcoaYZ1McKn16/1MvxCCQRIY6LOJsRzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
- dkim=pass header.d=est.tech; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t8UVaF0TKk8y7WIXdy84OQUiqGEiSgC4+HhN1CUoVmo=;
- b=wr1CcXNZBRZNFJCB9pwIWd2BNWEkD/aCjZa2j0rJYZxcBb59XMMs/u9Urd0N9Ol+EcTV6GqIGUOq78wji301pb0fQGZbEhea/iJNrcTnueT+g7Nsp2/5nrE48NsWCCksyEyQJezrgfhQiAqFXHLgB1PDxzROQ1t7v1Na4YZTcsqEYw11FsB5TPg2PqlHYBg6+tCFloen36rg4Moo/U4qpnWHHUPm+uMEMqWxvKbbCi51ZY1SvX/TUjNBuhY78rFeXMyyM3n5G5DCODnLYU9d4+KRmVCi83B1LibNcYKt9GwyABm36ZllpFdJKmX7K/hxdKaXf+HNxQY+PgxeSiN8sw==
-Received: from PRAP189MB1897.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:290::22)
- by AS4P189MB1991.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:506::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.25; Fri, 11 Apr
- 2025 10:46:33 +0000
-Received: from PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
- ([fe80::91d:6a2d:65d3:3da4]) by PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
- ([fe80::91d:6a2d:65d3:3da4%4]) with mapi id 15.20.8632.021; Fri, 11 Apr 2025
- 10:46:33 +0000
-From: Tung Quang Nguyen <tung.quang.nguyen@est.tech>
-To: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>, "jmaloy@redhat.com"
-	<jmaloy@redhat.com>, "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	"horms@kernel.org" <horms@kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "tipc-discussion@lists.sourceforge.net"
-	<tipc-discussion@lists.sourceforge.net>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next] tipc: Removing deprecated strncpy()
-Thread-Topic: [PATCH net-next] tipc: Removing deprecated strncpy()
-Thread-Index: AQHbqr7NeiJH9CFBbUW+jREhfYw45bOeSFSg
-Date: Fri, 11 Apr 2025 10:46:32 +0000
-Message-ID:
- <PRAP189MB1897EE07B01E866F0C757156C6B62@PRAP189MB1897.EURP189.PROD.OUTLOOK.COM>
-References: <20250411085010.6249-1-kevinpaul468@gmail.com>
-In-Reply-To: <20250411085010.6249-1-kevinpaul468@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=est.tech;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PRAP189MB1897:EE_|AS4P189MB1991:EE_
-x-ms-office365-filtering-correlation-id: 87e1cdfa-ec7b-4c18-779e-08dd78e61fee
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?cbqc/6HqJ/74yBkkH3//4EJt4HhHkBH/IjnzlNbqQFSw1ZDSFzsm0tvm2SQc?=
- =?us-ascii?Q?l4E3fT8FFLkrbPVGjsdyKEezIAozIPb76t7OKymW8Q9jKFG9ZTDEvVY+2cQN?=
- =?us-ascii?Q?7gTjCY7VN4oZrVWkL7v0RbEBgInsIe2CD+OWhkLytYlcTwQTM81tfJwrD1jI?=
- =?us-ascii?Q?rnbs3EjomUNDs6GHDZq9IdxzZmByFH2nBnmbbTqRw7aTtchBvlFmhNtfIANf?=
- =?us-ascii?Q?qvZwOzIkqGD8j7GF/CSjOn/AKWD+ivvMGf/zMkLrO7CjsuJzwtGzvZvDYId2?=
- =?us-ascii?Q?KSgayyHvaX4yukZK/JPNhXcRIyY3TWe6HY5NkTiHn03QIXDPkrsjsHh7dc0J?=
- =?us-ascii?Q?1jGCEU6ilQr3Z3mSL87zz0KlNTQb4PK2Dr8ews5k9giR6UvGbV2aVGyP/rzw?=
- =?us-ascii?Q?noPl77T4NBmnl4WIAiZfjI3+b2K03Inkmz1OMtW9WQaq4WOC3+mEkRer8WvI?=
- =?us-ascii?Q?UkOdMClGiruRK4oUMUgby6zSPsDatnVjkE5XVcmgo/IgM0WWOWINWfXLeG9n?=
- =?us-ascii?Q?hG4aqttVap9TY8cTQaNzBdZD2nOdeZB3ipH22KtwjT7pq0cqaHQ/OBQpPAHa?=
- =?us-ascii?Q?+cmyHzIvqc7nOQrEwjHbSNVNJ2vCHG7lncP4dGhK0PPgXU1nN4FKnR6EBj4b?=
- =?us-ascii?Q?uRq1XyahLsQT+29EWwMDtipCpmQgvw/S7bp2NPlMfNjuD6tAZYtmWYHNkD9F?=
- =?us-ascii?Q?tAlIXMd9kCxnU9C9zMIfs5jZOT4vBhiA8WgvR86sxImmjjWX3JszT+jHLFDD?=
- =?us-ascii?Q?S0TlcxdhZDzTtwy4jzfjJyLhbFGSMmb1KyqEGmJV5n3W1eSSkqpBfjqlgQiG?=
- =?us-ascii?Q?2DpzfUTSH2Bbv7qJZUT2fn+qEfLPOs0JeRi+CApnF2CpPharBit36lYBWpge?=
- =?us-ascii?Q?QHE7z7uyw9OxGVEd1JlBBLye/KN0ejUk7jBMo/0UVC3kkdbm1BBii9+XtUDd?=
- =?us-ascii?Q?4qbW+IZus03TIimAFZ/yEvF9qodWfLCKyQmTf/u3B/tj3VLmKTJiaAxtNzCc?=
- =?us-ascii?Q?A9yvn3Ob7sB2HwA5JuFWL2Zhb8Mxljfq22DU2Qp2uxs2G2B2kIS4topkyypN?=
- =?us-ascii?Q?vvDnU5Egc1CQL0oqHBj/MyJRhttVMizOM6QwesI5k7++20aMbgIJw0C5fw2H?=
- =?us-ascii?Q?xrJgC5DNQ9K1UIPid7bLlhRtK3R/YSo/hRX2dA6V4k9Lwc6w6MmW95Xq/luX?=
- =?us-ascii?Q?Y+cLR5ySbz1oQ1GL5R403CjasBfKli2TkKX8gmJvoU93IAEq50dVj7/oIsAB?=
- =?us-ascii?Q?X+pA3JeODVvSMxOwJ5MDD8wqcCavd3Y6jZavMmlkhpr2mbnBP9zQwFJUvLmu?=
- =?us-ascii?Q?WPBOhDoqWsYHnndpb/K3O5dgKslWrBjCkeEjnCpdnnqI3UF9Sm0UcrkWllPG?=
- =?us-ascii?Q?yJi0FUScbbDqgTHACG71mfaonAFliqBG9Z/C+wuc/dZPMMo/ZOEN26aSVNXb?=
- =?us-ascii?Q?iaeAM+92XJFXk2i50/vbYIVhDYVBKOQ7b906DlXLTjVSgf7c+hZBb7QJcnyu?=
- =?us-ascii?Q?Qe7Z5xYSiLjEFMU=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PRAP189MB1897.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?V5fXlH0EeTY1WIIayqqVT530FiKkTFU1USl8JOSC6PfblL+1HFLpww0PeUql?=
- =?us-ascii?Q?qaKOYov5pzCjHf95rpgp5M+po2DB+PeKKWOWbO5wT9UpohBGaGmBzZGfdvud?=
- =?us-ascii?Q?mqjxXOS/FycZYBPePQxJUwoweIxiCDmDs6cxfatl9UF9K2zWwANXP6BxuZQy?=
- =?us-ascii?Q?RohcbdII/O2t/KuG676n+IS9Gn3xj6dwVPLrUFdVDdYMmb/3/qFAyR09wPvT?=
- =?us-ascii?Q?NIJr/du/YBE8YdP0ZZjutBWjQhze0z4bq1PTuXV7aCirHelPZUZkeCyMKOZb?=
- =?us-ascii?Q?jhdYfkPNmHqp9G7fbQGERBFECnxC/KQ71OUVgkTFCDcQ/UktENdaMJd2Ts1T?=
- =?us-ascii?Q?4sbqGYm6lTebUq/utlvSsWtiNiWzNkltJO0014JMpFNKcr/Z4laaM7Ak09VS?=
- =?us-ascii?Q?DtXFdr4DUz6lIx/GySrzcNXOQk4bPVOR7xEVjM4sp/kjoeqEBiRt2ToH3tKr?=
- =?us-ascii?Q?XRL1THBe2c1gZ+umDuD/O+TuxLbpmPnIE8seLq3hFwOdW+rLfm/Lnvbn7q3I?=
- =?us-ascii?Q?WqGOaXgjsXKTUEc0mEsM37yGTLnnYG+I4KgQOBooCdUxLT5ahOv52OhC8sMF?=
- =?us-ascii?Q?KC7/ZFbD2x0r1Ze7Hg9jT6jqP3gFetpvzddR4kjUU2XL6Zcddwaq7mip53pE?=
- =?us-ascii?Q?yBUf72viGL7im0btRVT9CwGOOXA8//XBzS/8HxpBht81gO7047npTpMnzijj?=
- =?us-ascii?Q?HoSGnmSAX/iNAOb43HFgQTUv5QebTvQyXrW7e4V/Wh8IifsTPMzCbtqzzi1T?=
- =?us-ascii?Q?X/vaAAQW2KY01F7i54CjwXTX9JM+xAl6MGgpEpcz2RWklFFm7ykBBnCCVkoe?=
- =?us-ascii?Q?t4Ie0soIICinTvLRN1ZQC/WzKfScz+9xj/NYD1I1mX0C2qhyDuQpW0H7LW5P?=
- =?us-ascii?Q?1nIp3FjoUxQOH10x3oEu9up3s1tzWEq4fGwKY8VYng5GxXlA+5opQqv+7WUs?=
- =?us-ascii?Q?dKFCbuiXSYzfU4AabatZksFp4bOKlQKSw6DbUPQFbXHqNaHDmkupecpE34Cs?=
- =?us-ascii?Q?7EJ6BWHL5a9w9QwDBQ0H3oVJzJAbzAso8Z7TcaPFPb428LXFQ9raWLfNW0VO?=
- =?us-ascii?Q?BpS/dSJsLVg4Aao036XdWI1xEC27zXPtAZOCCkcqWTsliDW9yVvuYok0rtfY?=
- =?us-ascii?Q?tYHQsmo3xq6WLXAOvQDFJghqcJt3w8JXzvYdNhcigvW9qrS2q+UZ40AvMDWq?=
- =?us-ascii?Q?bC0jGeStFUoyHpxflQwFemkkCLEDoTeo3H1VTv/Js+uq/2FBQRLLbB/Lbqys?=
- =?us-ascii?Q?W9AV68bWpXUun2HWaNQzXczqqviiX3WyJcCSy5u8duEfYNb3MuMVkHROy0d2?=
- =?us-ascii?Q?hRFqcgEooVRID+k2ePgmYjeTdIiV/vZecdBjHQgE0vf9InszDvecKE0jrhv0?=
- =?us-ascii?Q?y1hdkYp+s15r1ZKnkbpgiV6OnKVN/+5ObofbGJC+7g2kms0C5Pzay1ojfkOF?=
- =?us-ascii?Q?68+zIWmH93jgUlFuFFUiyNpnCcGGm2NcUxTEeKmaZNNa9uUztScCqAGBWEmB?=
- =?us-ascii?Q?OAui/wJM70x3lb+toOoBD+JZ5HmW2otiJV64Mp/PbpuTiyWX76U5btr8gcEC?=
- =?us-ascii?Q?qdpGMvqqc+j6DLW0CdlsRaGmO3HzHqfZSgTz+Alp?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bImzi9je"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5rZsY008236
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:50:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=C97yfs8Wv2cDcw2jhs5lGZau
+	Urf5iXgcz88ISp/clXI=; b=bImzi9jeqU4XRcJUar4+UAKMea3Bcl+eE/FvD+KV
+	r7qDUPKpU8A86zZjmCGdb6Xq721PoHlqB3zss95FQmOKxfGBhYvZ1XpJJ0klzNpR
+	vKMVi/rmR0YLx1DZpd5YxQ74el+itp8MprAZlQYRptAXXRK78U/bPVRNr78CIcWi
+	mUjGnunaZ8FSVgcMzPZzDMmBZ0p2qSyCz4yAspIktlx76ub7mDKeIbprc9EPlh5F
+	nYPqM3R0a+zeaRGp0ZdXfo5jqDQEN/vZSJX1RRkFVvpUA36R5ylEM+7saCdlk5sT
+	Fqagh7eVBcVXky8k0ZRij7Gq2f3RvJj3S8+PbGezaJTOAA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd0a8vx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:50:12 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5d608e703so321704985a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:50:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744368611; x=1744973411;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C97yfs8Wv2cDcw2jhs5lGZauUrf5iXgcz88ISp/clXI=;
+        b=AWbqLUGwltXfkKXd7zPex7aTMvKs/WWHKB7ZSPrkbftnPEsB6KkrexMktO91z2HvD3
+         I3eFvxTrF6ydOZ/WugisuBh0Fp4hvQ6XvQQ5hJJLaDT4YNKsTkAO9nSSw5gwpgwxdMn+
+         uImHDeWT6E3Mbooqob2JoRz5fnxrXaUoJ+UzeYk4dUT2o38/j9U+B0HuG7bpyI9qiG9E
+         +LRdzIIWYewZTjFtH2tNZPTd6n9us8eAV8qCArA4jmPI/TML8oFS9HcbBqC5s/FEus9Q
+         72rIQON2gOhGrTHICK/RDq7+OUh6ou7hGmX4aRNUSrn+nk05YmTGr37ei/3Nn5SIBYBj
+         yu/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVy3osqc2csVTivHwXSzdXW00VFmrPcY208Sq5ItsMv6htD0Y5BzpF4oo3aFIdFF/GFRPsaH+NcOEB3ZcY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL7ps1pC+UCskGs6vkQ1rJzFIlxc7ZfqXB66Kfdc/rrlgzXkYi
+	Jy643aaldJ1dpJvs9fa3oJL4uScvKU2SkpOf+5WrLLdPO0gtG7geJK+hgmcmG7E1z9fHhzlD1gx
+	/llj4Rt3wGM+S84FkXj4ACR63Sa2qXTCWGdqGiJgTAx/qboQIZQYQ8ZE6ydBM9o4=
+X-Gm-Gg: ASbGnctuPrIzUOJsQn1x2OM4i+3R7Fd6qcA+dijPx52VJ5q9A55kh3ZSRfQJaQCTNXI
+	rQdj26hqNuaUyY6Lgb5O2+q2Efh+HvIO+J2b1jZIA+7Jp1fu1pDUJQvcrzSY5LCv4tf1cFGRpzv
+	UCRCTvWK1BQJc40SC5eskkKQ9bx1Ffuh5f4IbVBIW4/7BdRCK0/P+9JTjNyCQ3jPF4c0TgyguTI
+	44Jkm1PxigWaUw1XZpI3LS+UcWS+baqO8gYSWpF4NRGNVz/1sMG2Jp1EGCrdN+O+PWsc/d2veqk
+	GA3rBtRMM0s6BjEAL769/x+xoVd12f4hNaBZq6KLf4PsQ1RtoaZk7evXXTl1b9vFVRRwSfqzr5g
+	=
+X-Received: by 2002:a05:620a:3944:b0:7c0:b523:e1b6 with SMTP id af79cd13be357-7c7af118d54mr322640985a.11.1744368611151;
+        Fri, 11 Apr 2025 03:50:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFwuTv7stLnK+XR3ItFXzEehhs3MrRks/jgeNMsXwGYVinCOPI7c7U5rRfwv5bn3sWzVW7hog==
+X-Received: by 2002:a05:620a:3944:b0:7c0:b523:e1b6 with SMTP id af79cd13be357-7c7af118d54mr322638185a.11.1744368610673;
+        Fri, 11 Apr 2025 03:50:10 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d2369c8sm398622e87.59.2025.04.11.03.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 03:50:09 -0700 (PDT)
+Date: Fri, 11 Apr 2025 13:50:08 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org
+Subject: Re: [PATCH 0/4] Retrieve information about DDR from SMEM
+Message-ID: <sgjporlde6bgcp2mhr3r5c6wj3a3u37s5nlrrokbutsyizixod@7shpt55muqki>
+References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
+ <685e784c-3f36-4cd1-9c34-7f98c64d50f2@oss.qualcomm.com>
+ <0bec3e62-0753-4c3d-abe1-1a43356afc80@oss.qualcomm.com>
+ <e7bd2840-dd93-40dd-a1bc-4cd606a34b44@oss.qualcomm.com>
+ <CAO9ioeUeNeSxz7ADZ-BbJbhEKkszVS+SmbqaZCgTpL=csak=hg@mail.gmail.com>
+ <b04464b6-2ad9-4866-88e9-437e96645726@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87e1cdfa-ec7b-4c18-779e-08dd78e61fee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 10:46:32.9697
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HqFqMfCSrjBQRRNiF3uirQoVvd2T40/iGkMIM/mZtiGFQ+kYhrciZVtJv1CdpVSdIQB+ysuwrilSIDcRc0jp+IISWio2deJ+R7WYnTI/K3E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4P189MB1991
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b04464b6-2ad9-4866-88e9-437e96645726@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: Qc7cQ2Y2-Ziep8QZr5bzdYcE2OT6tiHG
+X-Authority-Analysis: v=2.4 cv=Q4vS452a c=1 sm=1 tr=0 ts=67f8f3e4 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=pm7WE2fj5uaCs4OQ7f8A:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: Qc7cQ2Y2-Ziep8QZr5bzdYcE2OT6tiHG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 phishscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=779 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110068
 
->This patch suggests the replacement of strncpy with strscpy as per
->Documentation/process/deprecated.
->The strncpy() fails to guarantee NULL termination, The function adds zero =
-pads
->which isn't really convenient for short strings as it may cause performanc=
-e
->issues.
->
->strscpy() is a preferred replacement because it overcomes the limitations =
-of
->strncpy mentioned above.
->
->Compile Tested
->
->Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
->---
-> net/tipc/link.c | 2 +-
-> net/tipc/node.c | 2 +-
-> 2 files changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/net/tipc/link.c b/net/tipc/link.c index 18be6ff4c3db..3ee44d7=
-31700
->100644
->--- a/net/tipc/link.c
->+++ b/net/tipc/link.c
->@@ -2228,7 +2228,7 @@ static int tipc_link_proto_rcv(struct tipc_link *l, =
-struct
->sk_buff *skb,
-> 			break;
-> 		if (msg_data_sz(hdr) < TIPC_MAX_IF_NAME)
-> 			break;
->-		strncpy(if_name, data, TIPC_MAX_IF_NAME);
->+		strscpy(if_name, data, TIPC_MAX_IF_NAME);
->
-> 		/* Update own tolerance if peer indicates a non-zero value */
-> 		if (tipc_in_range(peers_tol, TIPC_MIN_LINK_TOL,
->TIPC_MAX_LINK_TOL)) { diff --git a/net/tipc/node.c b/net/tipc/node.c index
->ccf5e427f43e..cb43f2016a70 100644
->--- a/net/tipc/node.c
->+++ b/net/tipc/node.c
->@@ -1581,7 +1581,7 @@ int tipc_node_get_linkname(struct net *net, u32
->bearer_id, u32 addr,
-> 	tipc_node_read_lock(node);
-> 	link =3D node->links[bearer_id].link;
-> 	if (link) {
->-		strncpy(linkname, tipc_link_name(link), len);
->+		strscpy(linkname, tipc_link_name(link), len);
-> 		err =3D 0;
-> 	}
-> 	tipc_node_read_unlock(node);
->--
->2.39.5
-Reviewed-and-tested-by: Tung Nguyen <tung.quang.nguyen@est.tech>
+On Fri, Apr 11, 2025 at 12:03:03PM +0200, Konrad Dybcio wrote:
+> On 4/11/25 11:57 AM, Dmitry Baryshkov wrote:
+> > On Fri, 11 Apr 2025 at 12:49, Konrad Dybcio
+> > <konrad.dybcio@oss.qualcomm.com> wrote:
+> >>
+> >> On 4/9/25 5:49 PM, Konrad Dybcio wrote:
+> >>> On 4/9/25 5:44 PM, Dmitry Baryshkov wrote:
+> >>>> On 09/04/2025 17:47, Konrad Dybcio wrote:
+> >>>>> SMEM allows the OS to retrieve information about the DDR memory.
+> >>>>> Among that information, is a semi-magic value called 'HBB', or Highest
+> >>>>> Bank address Bit, which multimedia drivers (for hardware like Adreno
+> >>>>> and MDSS) must retrieve in order to program the IP blocks correctly.
+> >>>>>
+> >>>>> This series introduces an API to retrieve that value, uses it in the
+> >>>>> aforementioned programming sequences and exposes available DDR
+> >>>>> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
+> >>>>> information can be exposed in the future, as needed.
+> >>>>
+> >>>> I know that for some platforms HBB differs between GPU and DPU (as it's being programmed currently). Is there a way to check, which values are we going to program:
+> >>>>
+> >>>> - SM6115, SM6350, SM6375 (13 vs 14)
+> >>
+> >> SM6350 has INFO_V3
+> >> SM6375 has INFO_V3_WITH_14_FREQS
+> > 
+> > I'm not completely sure what you mean here. I pointed out that these
+> > platforms disagreed upon the HBB value between the DPU/msm_mdss.c and
+> > a6xx_gpu.c.
+> > In some cases (a610/SM6115 and a619/SM6350) that was intentional to
+> > fix screen corruption issues. I don't remember if it was the case for
+> > QCM2290 or not.
+> 
+> As I said below, I couldn't get a good answer yet, as the magic value
+> is not provided explicitly and I'll hopefully be able to derive it from
+> the available data
+
+I see...
+Is this data even supposed to be poked into? The foo_WITH_bar types
+doesn't sound like a very stable API.
+
+> 
+> Konrad
+> 
+> > 
+> >>
+> >>>> - SC8180X (15 vs 16)
+> >>
+> >> So I overlooked the fact that DDR info v3 (e.g. on 8180) doesn't provide
+> >> the HBB value.. Need to add some more sanity checks there.
+> >>
+> >> Maybe I can think up some fallback logic based on the DDR type reported.
+> >>
+> >>>> - QCM2290 (14 vs 15)
+> >>
+> >> I don't have one on hand, could you please give it a go on your RB1?
+> >> I would assume both it and SM6115 also provide v3 though..
+> >>
+> >> Konrad
+> > 
+> > 
+> > 
+
+-- 
+With best wishes
+Dmitry
