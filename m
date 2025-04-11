@@ -1,121 +1,97 @@
-Received: from ms11p00im-qufo17282001.me.com (ms11p00im-qufo17282001.me.com [17.58.38.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF67F215067
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.38.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C43C1DFE8;
+	Fri, 11 Apr 2025 15:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385537; cv=none; b=SO5yJe2EPtqZkoVVCISMujSwpMAO6KpT0WFwpuFVyloS+JhH7IZ1E5iM/dodcQ9jnqzNjk46SrU5a11qj+9DgmugeTmp6L6PWC4xMh4SQ/BkbbSscxhokyCsrezn1Mo+NwRjfmfajJkBQ5NZcXxj/ecFgSl6CBJo1/tJFUiLhOY=
+	t=1744385606; cv=none; b=l4PbGWaygdTHgU3r7g/CnsJWtBRRWJlNvsDxw/IE/PH2cLMewqMq4kUyL7UMp/y2pMfOFd+jxLXxJ4CcWmHAY2l+rMQQhQsdoKI98dM2kSnkq5PnoMqq3utcYV4xg1hrKDUegJlr6DmzOBKlxYj2vTGVxBI8p4chbg2pWyORTzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385537; c=relaxed/simple;
-	bh=Q+b1uj2Yuc5VJ/ui7Oz4J9OvaUP+S6G9VrEPYRna1yg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Lt9VKoK0sF3ipQPpUWBLlrOfKfLBfN88AQ6+vVyYjdSTbEh169Cwl/kSGZojA3j/k1HhZ718UPbb7hLdRvtOCg1Yg83Qe7CvCN2mt1x9Gj3Olp7Xcxn2q0SwJeWDERdiSOfbK03IciKxrgwsQ8PebE7JOxVw6Pc8a8ptTG79W5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Un0jMtNS; arc=none smtp.client-ip=17.58.38.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744385606; c=relaxed/simple;
+	bh=kg3VXemwiKmKd4G0Z2R0124+RUSjZF/WWLbtBHb58c0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=K8gToATqUGFmiUBFN4V2FThhN5XoCOz5ht0OVSIEKuLRRrXd1Np4B3BL3vxAmVDOcBff4r7L54wtwpDfXBzYV/XvWQI37gSemWYdEpa2Xzia9Pi8qdDUjQELQJSe+MBtTfncmHyiAzgKJ9tYT0o5s09BoKU1klnKgEh/OKoQ2Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eaVrzHSO; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Un0jMtNS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=yujqbfWH4Vu7cBrznjNw3PAx5cjIMFD5qOZHcZDi32I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=Un0jMtNSdWU2dsdyZUgCWkrlVJa6I76EN2yfmOwITLHYCbrazYz57jWQjPNRploRi
-	 coP0v/uNj/aVWU+Q9IY2peqx9zjZ3ntuvyt11U+9UPo38HYwn2Nw/IOMhCaiqV/ux9
-	 SRoP4dwDcP4kZwQ9nYPQU/aEKMQf1wa5b4emqZqqsZx4tvi+I9TAvo5TH8DVq6Dujx
-	 /p324vBUOT2iK6CwclIK1N7pBzXYoAArgcUo8h2sw2gyo8G1EosfkbMBtv45at6lYm
-	 IQJ5dGya/1PjZL6Bm//E1UJS5/DzviTpjkyfhhoNPp47e9VlDAfCOTHlzvaHJ1phUj
-	 jNOKikgk0CE/Q==
-Received: from ms11p00im-qufo17282001.me.com (ms11p00im-qufo17282001.me.com [17.58.38.57])
-	by ms11p00im-qufo17282001.me.com (Postfix) with ESMTPS id 5A8FB1E0310;
-	Fri, 11 Apr 2025 15:32:13 +0000 (UTC)
-Received: from [192.168.1.26] (ms11p00im-dlb-asmtpmailmevip.me.com [17.57.154.19])
-	by ms11p00im-qufo17282001.me.com (Postfix) with ESMTPSA id 648961E034D;
-	Fri, 11 Apr 2025 15:32:09 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Fri, 11 Apr 2025 23:31:41 +0800
-Subject: [PATCH v2 2/2] fs/fs_parse: Fix 3 issues for
- validate_constant_table()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaVrzHSO"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso3361820a12.0;
+        Fri, 11 Apr 2025 08:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744385603; x=1744990403; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kg3VXemwiKmKd4G0Z2R0124+RUSjZF/WWLbtBHb58c0=;
+        b=eaVrzHSODiVs/ta75uBPW6PUOUmrZ2k+mxgdSdU1sxfDZK4Grcgn6Y/RMFV2FYoopX
+         DubR1uyp+IYU5UbCT3aBfO7m+QKs4VC3wKUq9LJjZnedA+WfuDiFn44C4dMaIlYbByz1
+         XWmkivksg2dGtB1BOg/PS6lVNDufK3Fa0/DblD79S0xgpX+hMCsP9zA42jsmVAjN7nxE
+         AK+aB/2j6fjFBrgNIbab7HUdnq+v0Hw2l8dfAsfwU//B5HVv4OwdWKXo96yMDiI/qs1i
+         VGJIv4pPF5lcV6NTTn28NZj5gkJOsLaIRyTgYT0qjD8ki3ZjvQZwo14HRyx5bt6G0JMA
+         HeTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744385603; x=1744990403;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kg3VXemwiKmKd4G0Z2R0124+RUSjZF/WWLbtBHb58c0=;
+        b=qY6o5IdPBGKQqqAd5pLg6eqReb6UW2i6K7Q0wmRca04CEzyikqDGEWKugMvIfuz2Il
+         PygoKVaqnYMXLZ66g4RJX2szK+anXukiWA0cWc/GBiA6mXuV/H7DMoWK0KgZAVpSrNfq
+         4KVgdftoeuELk0Dm7uVMpH+thS4G8yIdNNl8xWOkqtlVobqpcMPv1R0BT53xQ++pYtt8
+         pThz25mcUbApliH7rMCdnl/iFPM2fVsDLmdmP+vJ8mCviq70psGmdopIQPRpk00Lp3ux
+         DH0iqYgM6smpfPZrxDbm9paBdktVtqSWKsfU3EzYXR7Ul3nmMj6xL4xoIV2RUX5M+dbF
+         b8Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZSaFjctppFo0vLkiPPqsQrJtD9Wnzmj2/OIlqjFrwSmUQOI85mwmn6ZpSnj8hNcI6B1NMe6XyogNGlCGV@vger.kernel.org, AJvYcCVfvGIx4IpueKoowtRiEyEt/zKgMlCViF0OJg/VF4pHgQWYe42yas6QPfgSMwoVvnUQJ1MpQ0iAiqMWLw==@vger.kernel.org, AJvYcCXhogMpGccu2hf9x62ZuzoMWPbrYPN04EvTcDOjgQud+BbhGndQwzIPJcCGcaQ+CaZNq1UdwqMOSlCIYERl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYSRe0Z5IawtlGEgIyoRZ2+NdbDqoGpbJkqaX3Eog8c5upRgQO
+	KnVCTH+drXYNMwmY3f+lT8wmuQCwioGgL8gWtUqO1WwX8qW8xp2u
+X-Gm-Gg: ASbGncst3CH/tLfdsNQHGCICCJ+paj/OQSJfst9Vq1Rgxso6WjlIYnvlN2g4df+2Ru8
+	Gp29jXUIRIlWikztXjz3yuE011MSsRFOhUVj+Opj8fukKQTMMfAmrObZDHWbcPQKBuaiu4K0Ck0
+	fnnNosth3IpL3VbOsnqlWeluDm5xX7omSMC3POhvbZxqwhqTeCUCT8Drpt+03aAvXfK0bAJp2vR
+	kU8P8O8iwAgoOTOwHjeD2OULWU4wEktnhVjUQCP0b4T+Fz3zQ5ISMkUuHHVC5v+2yGIV3Th3pyk
+	eNmgD4FuxlS3NLPv2GYrQrnZqAwG2y8sW56R5ce8ii0KZoneBS/5gA==
+X-Google-Smtp-Source: AGHT+IFolPfgBh4MqDlhl5CFTWgay9WZHGjuX99wTZEKev4h2CnxJ5Ib471SmxyPwOcN/aFAO+58zw==
+X-Received: by 2002:a17:906:f58c:b0:ac3:8988:deda with SMTP id a640c23a62f3a-acad36a5de5mr300024066b.40.1744385603057;
+        Fri, 11 Apr 2025 08:33:23 -0700 (PDT)
+Received: from [10.176.234.34] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ccd69asm456861266b.159.2025.04.11.08.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 08:33:22 -0700 (PDT)
+Message-ID: <3939a945088f4b43bf4e69c05a5718b31bc151b7.camel@gmail.com>
+Subject: Re: [PATCH V3 1/2] ufs: qcom: Add quirks for Samsung UFS devices
+From: Bean Huo <huobean@gmail.com>
+To: Manish Pandey <quic_mapa@quicinc.com>, "James E.J. Bottomley"
+	 <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+	 <martin.petersen@oracle.com>, Manivannan Sadhasivam
+	 <manivannan.sadhasivam@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman
+ <avri.altman@wdc.com>,  Bart Van Assche <bvanassche@acm.org>,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, quic_nitirawa@quicinc.com, 
+ quic_bhaskarv@quicinc.com, quic_rampraka@quicinc.com,
+ quic_cang@quicinc.com,  quic_nguyenb@quicinc.com
+Date: Fri, 11 Apr 2025 17:33:20 +0200
+In-Reply-To: <20250411121630.21330-2-quic_mapa@quicinc.com>
+References: <20250411121630.21330-1-quic_mapa@quicinc.com>
+	 <20250411121630.21330-2-quic_mapa@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-fix_fs-v2-2-5d3395c102e4@quicinc.com>
-References: <20250411-fix_fs-v2-0-5d3395c102e4@quicinc.com>
-In-Reply-To: <20250411-fix_fs-v2-0-5d3395c102e4@quicinc.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- David Howells <dhowells@redhat.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: oVcoFRum3OnSNydi8BgdF6TLHwzlIMor
-X-Proofpoint-GUID: oVcoFRum3OnSNydi8BgdF6TLHwzlIMor
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_05,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2504110099
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Fri, 2025-04-11 at 17:46 +0530, Manish Pandey wrote:
+> Introduce quirks for Samsung UFS devices to adjust PA TX HSG1 sync
+> length
+> and TX_HS_EQUALIZER settings on the Qualcomm UFS Host controller.
+> This
+> ensures proper functionality of Samsung UFS devices with the Qualcomm
+> UFS Host controller.
+>=20
+> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
 
-Constant table array array[] which must end with a empty entry and fix
-below issues for validate_constant_table(array, ARRAY_SIZE(array), ...):
-
-- Always return wrong value for good constant table array which ends
-  with a empty entry.
-
-- Imprecise error message for missorted case.
-
-- Potential NULL pointer dereference since the last pr_err() may use
-  'tbl[i].name' NULL pointer to print the last constant entry's name.
-
-Fortunately, the function has no caller currently.
-Fix these issues mentioned above.
-
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- fs/fs_parser.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-index e635a81e17d965df78ffef27f6885cd70996c6dd..ef7876340a917876bc40df9cdde9232204125a75 100644
---- a/fs/fs_parser.c
-+++ b/fs/fs_parser.c
-@@ -399,6 +399,9 @@ bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
- 	}
- 
- 	for (i = 0; i < tbl_size; i++) {
-+		if (!tbl[i].name && (i + 1 == tbl_size))
-+			break;
-+
- 		if (!tbl[i].name) {
- 			pr_err("VALIDATE C-TBL[%zu]: Null\n", i);
- 			good = false;
-@@ -411,13 +414,13 @@ bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
- 				good = false;
- 			}
- 			if (c > 0) {
--				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>=%s\n",
-+				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>%s\n",
- 				       i, tbl[i-1].name, tbl[i].name);
- 				good = false;
- 			}
- 		}
- 
--		if (tbl[i].value != special &&
-+		if (tbl[i].name && tbl[i].value != special &&
- 		    (tbl[i].value < low || tbl[i].value > high)) {
- 			pr_err("VALIDATE C-TBL[%zu]: %s->%d const out of range (%d-%d)\n",
- 			       i, tbl[i].name, tbl[i].value, low, high);
-
--- 
-2.34.1
-
+Reviewed-by: Bean Huo <beanhuo@micron.com>
