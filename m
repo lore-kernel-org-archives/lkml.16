@@ -1,125 +1,168 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B921E9B38
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BFD1E98FB;
+	Fri, 11 Apr 2025 07:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744355387; cv=none; b=Kx3mVsPmu88WhSmQKuKW+Q7OB6q03KkVYrNcVeM1COPvh+KB4ge1LE3WouvgrFerD/yq2fhc4sDYcgTJlq6jOjXdr0UbqmwvLON5ksi7/x1nj6BztXy3qoPxUjkr8LOzHR3ycTxTzfiDmLEftyCzA8RlEHAP24aiVAqdI9LOZwY=
+	t=1744355473; cv=none; b=QW/a2QQWhkl4PW3lJ3A6tacNL/jBSXH5nLVCh03vOznQapXYTo//1W/Fla7Hg7XTtea8YSQVTvzsFs3um4bHzGBkM8CePZXp3LuCYEkbGU5/c/Tn7eXrvj1yf2eawxESLXfav/13TvwlwywKNKtBCGqrYT5U4o/FvDOGfXBFzLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744355387; c=relaxed/simple;
-	bh=2HKkKC82etiMsqe1ATwTtzyBnGYDYBFXiV6zeDl4Fys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n7ExCuhyxSUi2IY4SByx5POXNKZda5O/yEvD9YT7/OPs6jSa8oIYGD8J63k7KiKeaJA+INSB8GfWegepN5+5/ZBDkCi4tF2diCNzID45g9T8Vq4VdlixhYb66XfgjPbdxXAIPvfMwAfKrau/ApBwBj2TmeJYSHQtCwm2OOK7RUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n9xMDIBd; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n9xMDIBd"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22a976f3131so17971775ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744355385; x=1744960185; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SsaZNHdeANXtSEjMxf+DUvyz9Eisyu48b8JNmNeFVJQ=;
-        b=n9xMDIBd9w69awd+45JOJMBrruaUOV93mNs/5WEnq/vQcIT3OsRurowehVFGSez8ZR
-         CRb73DMes08+Z7yTPV5MaoeGoLiakUEhfjol1XCt5OCZ9dTpBexoPOKy18O+ChkzODY+
-         sHpS61CFZElGq5MWFbnv5cIzX1GCBTZ4qvHKVCy5CiDUfiD+U19uqdVH2RnNi346s6ew
-         h2i9V8UMMf9349e66iR0ZEGdpdjOHEmXj/7ZQZkeyljxqo2PQ3b6X1YI7W53kqzWH52a
-         /lVb92Zij+eIj8x/Mp1nwR/qMxR77XeuhpVqNSE6J99po16+ffI4W4rwVX/75HscTn+O
-         cs9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744355385; x=1744960185;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SsaZNHdeANXtSEjMxf+DUvyz9Eisyu48b8JNmNeFVJQ=;
-        b=IPBzWD27WdHlzPlRRg/HqYYasCiyv7KwXLombsLtyaHLJW57WUgIj9qwTa1YKGdJOa
-         2w4uIFUJZgURzlZWfhoJIWMiIW4YmAPwFTGt3SEvkup9uNd5yIq47BVkwJ9DnYPONBWD
-         I3ESAvvTEEYSZpNTahHAQv8BseKaz12PZD8fcuxoj3BQ/yaDA4sEbHnGNE1pFH3kEbbN
-         fQ3ZoluwD5kOzTY0xqcc6S1V8tg7yU9vBrkFYmjLXhOmkMKifWfvkm2C26fKAjieGrx6
-         edkteVrFnzLT5PUFaafblQLEj6ia/UOzhfgzfjRYlYtZB+n0Xnf4IwLBoZjzKv+/pOXp
-         0DnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNozDc+H/RsBee3ZAeLU694RUqPy7tPpM9RmmCBHoxmkVaTmEWfzdr4vHakNgKIPvmgNiwi8bzWNMRH2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxDaYZE93C0yCPdv1xLY9TZNngCiSmfE18IawvZE+OOLrAmk0N
-	FdOvUd5GuNZyrTTpYe7lmx0WNH2axP+4muhM+lFBjysVaaSjXl/cbTPTTNS4VRg=
-X-Gm-Gg: ASbGnct2zwkuBu2CVvQlOXT4szHhAO+NpUExI07hax6ZNyFwSxMeMpk8mMt1JaGeWzn
-	iv25hw6fwHJAwlq0qZ9fPyFGaloAZym+lHOO9ExERtEGngnRThkCZbq/xA0YA3v1ivQlm8FTVBT
-	EBidRxmv2mFNKpEDuSqX7VzYBrZi3ZQMe3nreWb79vhOOnM7S8z8gnEon16qqvF1BCEVSpdwSMr
-	kRCMHp4OruIHuNRp4FbM69TdVGCCFPWR9huSyDZBxCLYqnCho2w+zbFmuT1agZFQ0Hi9vGDH9dw
-	WeCJ5hozFWsKOoWP1Zaw34/zzolqhLJ9vK642vdnC4KoddBPH0FL
-X-Google-Smtp-Source: AGHT+IHQQmLLJrkqWF9B7mkZc3DCkY3lsb5cw00cICBBOVuQHLOx7UsWGycFoczOYNtiuWWk6Tj2Mg==
-X-Received: by 2002:a17:903:22c4:b0:224:a74:28d2 with SMTP id d9443c01a7336-22bea4c6cbcmr24391065ad.26.1744355384775;
-        Fri, 11 Apr 2025 00:09:44 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccb569sm42002035ad.225.2025.04.11.00.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 00:09:43 -0700 (PDT)
-Date: Fri, 11 Apr 2025 12:39:41 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>,
-	rust-for-linux@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH V4 1/2] rust: Add initial cpumask abstractions
-Message-ID: <20250411070941.6xbz4lrwkejr3aqf@vireshk-i7>
-References: <cover.1743572195.git.viresh.kumar@linaro.org>
- <35f4223be4a51139348fed82420481b370d7b1db.1743572195.git.viresh.kumar@linaro.org>
- <Z-1b_FkYUJEIj-YW@thinkpad>
- <CACQBu=WMu_CmzERJAHmjiuQ-NZe6DK2kAkvP0cnFN-Y+QhRwvg@mail.gmail.com>
+	s=arc-20240116; t=1744355473; c=relaxed/simple;
+	bh=d1asBId/vImwN+l9IIgHITylI4P4oM+6PNnKpdlyGyY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Kj5k9D71BbVYlQdSlxAvjhVQwvJZdg0UPMq2l7252XNrGPqx2udBWnuUmUZUEYTpkjq2Wvy9w1ri3dqVkJJnasYhyB1bQUxl+5qjTj1PrggMXSOqPs1FD/GWCtk0fv+QWpCfWdsLHhN8Qx9IRdH1ZE8xMtt5pRAASoQK47V7mPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5AfLo028040;
+	Fri, 11 Apr 2025 07:10:22 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tug8qxyh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 11 Apr 2025 07:10:22 +0000 (GMT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Fri, 11 Apr 2025 00:10:21 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Fri, 11 Apr 2025 00:10:16 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
+        <ast@kernel.org>, <daniel@iogearbox.net>, <john.fastabend@gmail.com>,
+        <andrii@kernel.org>, <martin.lau@linux.dev>, <song@kernel.org>,
+        <yhs@fb.com>, <kpsingh@kernel.org>, <sdf@google.com>,
+        <haoluo@google.com>, <jolsa@kernel.org>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <hawk@kernel.org>, <bpf@vger.kernel.org>,
+        <xukuohai@huawei.com>
+Subject: [PATCH 6.1.y] bpf: Prevent tail call between progs attached to different hooks
+Date: Fri, 11 Apr 2025 15:10:15 +0800
+Message-ID: <20250411071015.3418413-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACQBu=WMu_CmzERJAHmjiuQ-NZe6DK2kAkvP0cnFN-Y+QhRwvg@mail.gmail.com>
+Content-Type: text/plain
+X-Proofpoint-GUID: tT9gAepxN9zNWcm2eSIYEBdIy9MSnCNk
+X-Authority-Analysis: v=2.4 cv=YJefyQGx c=1 sm=1 tr=0 ts=67f8c05e cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=AiHppB-aAAAA:8 a=i0EeH86SAAAA:8 a=t7CeM3EgAAAA:8 a=iaREAby1aPJEnX_tXCEA:9
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-ORIG-GUID: tT9gAepxN9zNWcm2eSIYEBdIy9MSnCNk
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_02,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1011 impostorscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504110049
 
-On 02-04-25, 18:00, Burak Emir wrote:
-> On Wed, Apr 2, 2025 at 5:47 PM Yury Norov <yury.norov@gmail.com> wrote:
-> > On Wed, Apr 02, 2025 at 11:08:42AM +0530, Viresh Kumar wrote:
-> > > +    pub fn set(&mut self, cpu: u32) {
-> > > +        // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `cpumask_set_cpus`.
-> > > +        unsafe { bindings::cpumask_set_cpu(cpu, self.as_raw()) };
-> > > +    }
-> >
-> > Alright, this is an atomic operation. For bitmaps in rust, Burak and
-> > Alice decided to switch naming, so 'set()' in C becomes 'set_atomic()'
-> > in rust, and correspondingly, '__set()' becomes 'set()'.
-> >
-> > I think it's maybe OK to switch naming for a different language. But
-> > guys, can you please be consistent once you made a decision?
-> >
-> > Burak, Alice, please comment.
-> 
-> I really like the explicit naming convention that includes "atomic" if
-> an operation is atomic.
-> It seems also consistent with std library.
-> 
-> > Regardless, without looking at the end code I can't judge if you need
-> > atomic or non-atomic ops. Can you link the project that actually uses
-> > this API? Better if you just prepend that series with this 2 patches
-> > and move them together.
-> 
-> The type &mut self gives it away: the Rust type system enforces
-> exclusive access here due to aliasing rules.
-> So a non-atomic operation is sufficient here.
+From: Xu Kuohai <xukuohai@huawei.com>
 
-I should leave it as is then, right ? Don't rename to set_atomic() ?
+[ Upstream commit 28ead3eaabc16ecc907cfb71876da028080f6356 ]
 
+bpf progs can be attached to kernel functions, and the attached functions
+can take different parameters or return different return values. If
+prog attached to one kernel function tail calls prog attached to another
+kernel function, the ctx access or return value verification could be
+bypassed.
+
+For example, if prog1 is attached to func1 which takes only 1 parameter
+and prog2 is attached to func2 which takes two parameters. Since verifier
+assumes the bpf ctx passed to prog2 is constructed based on func2's
+prototype, verifier allows prog2 to access the second parameter from
+the bpf ctx passed to it. The problem is that verifier does not prevent
+prog1 from passing its bpf ctx to prog2 via tail call. In this case,
+the bpf ctx passed to prog2 is constructed from func1 instead of func2,
+that is, the assumption for ctx access verification is bypassed.
+
+Another example, if BPF LSM prog1 is attached to hook file_alloc_security,
+and BPF LSM prog2 is attached to hook bpf_lsm_audit_rule_known. Verifier
+knows the return value rules for these two hooks, e.g. it is legal for
+bpf_lsm_audit_rule_known to return positive number 1, and it is illegal
+for file_alloc_security to return positive number. So verifier allows
+prog2 to return positive number 1, but does not allow prog1 to return
+positive number. The problem is that verifier does not prevent prog1
+from calling prog2 via tail call. In this case, prog2's return value 1
+will be used as the return value for prog1's hook file_alloc_security.
+That is, the return value rule is bypassed.
+
+This patch adds restriction for tail call to prevent such bypasses.
+
+Signed-off-by: Xu Kuohai <xukuohai@huawei.com>
+Link: https://lore.kernel.org/r/20240719110059.797546-4-xukuohai@huaweicloud.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+[Minor conflict resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ include/linux/bpf.h |  1 +
+ kernel/bpf/core.c   | 19 +++++++++++++++++--
+ 2 files changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 2189c0d18fa7..e9c1338851e3 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -250,6 +250,7 @@ struct bpf_map {
+ 	 * same prog type, JITed flag and xdp_has_frags flag.
+ 	 */
+ 	struct {
++		const struct btf_type *attach_func_proto;
+ 		spinlock_t lock;
+ 		enum bpf_prog_type type;
+ 		bool jited;
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 83b416af4da1..c281f5b8705e 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2121,6 +2121,7 @@ bool bpf_prog_map_compatible(struct bpf_map *map,
+ {
+ 	enum bpf_prog_type prog_type = resolve_prog_type(fp);
+ 	bool ret;
++	struct bpf_prog_aux *aux = fp->aux;
+ 
+ 	if (fp->kprobe_override)
+ 		return false;
+@@ -2132,12 +2133,26 @@ bool bpf_prog_map_compatible(struct bpf_map *map,
+ 		 */
+ 		map->owner.type  = prog_type;
+ 		map->owner.jited = fp->jited;
+-		map->owner.xdp_has_frags = fp->aux->xdp_has_frags;
++		map->owner.xdp_has_frags = aux->xdp_has_frags;
++		map->owner.attach_func_proto = aux->attach_func_proto;
+ 		ret = true;
+ 	} else {
+ 		ret = map->owner.type  == prog_type &&
+ 		      map->owner.jited == fp->jited &&
+-		      map->owner.xdp_has_frags == fp->aux->xdp_has_frags;
++		      map->owner.xdp_has_frags == aux->xdp_has_frags;
++		if (ret &&
++		    map->owner.attach_func_proto != aux->attach_func_proto) {
++			switch (prog_type) {
++			case BPF_PROG_TYPE_TRACING:
++			case BPF_PROG_TYPE_LSM:
++			case BPF_PROG_TYPE_EXT:
++			case BPF_PROG_TYPE_STRUCT_OPS:
++				ret = false;
++				break;
++			default:
++				break;
++			}
++		}
+ 	}
+ 	spin_unlock(&map->owner.lock);
+ 
 -- 
-viresh
+2.34.1
+
