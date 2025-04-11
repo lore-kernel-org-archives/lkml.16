@@ -1,131 +1,86 @@
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5E5200CB;
-	Fri, 11 Apr 2025 13:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6744964E;
+	Fri, 11 Apr 2025 13:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377742; cv=none; b=RRvm06w4BXMiLnVoFc/c4GueQC1g1zxxBZq2K0T/NPTu5Cyh16S/oxjxu8oL63ieYu6n7KoJe9MJsJYpMvda4OFkineh6x60qHtVwyzgeSXxelgC2W7EJe00nlj15rGw6CCl0kZD/KLm3c3LwOLdQ/9vajGazBlvRni5Jfjm/1s=
+	t=1744377773; cv=none; b=kkrk9/SG2Uh3JoRUGNROlce0kgYp9eyxb7UFoVpj1nC4rMbARCX5hxp8ozgAr0LdcQUVeE/KmhoSUC2WPbeuDSzQFo3AmfhWrhqA4acaziTb70hEvm/fPL8meytJUhXv/esFE4rFuFZzqufW4pwsHONqUZ3MRnhk0zuvP8VbDd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377742; c=relaxed/simple;
-	bh=EpULsdwEbrZTkpHDw292seYcbb+7NxXrhCvlVf1h1q0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bRXXecby8/d9bt/clx7e3eeDR4zdBbeeyNbNgsZjszLEDw/WojIrbyKoK8YyVtHBLNPvz7oD4WVMyOA6K/KmxMl8FTM/HCKTB7xGLSo0bfuq1ecCMGnHleZ2pkDbIyEkKKu8DLZkDfMCBWLXEUWHI5q9w/XDTmTGaBv2k/D/dc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xm4NZKel; arc=none smtp.client-ip=209.85.208.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744377773; c=relaxed/simple;
+	bh=ly6rpIyPaDRJfWGU1MeNR1JLAEhIsdS0hC/xHmLN0+A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SZCt1L74rDuYqCiWSVACga/ZNGyuFQWrARN1vdtyC/2oihyMQwA2/qT7AynEWouk4Rd6Ye3fgk1mmu75oSpRjyICVCy91JFKiuMbRT7GJGrBC4EBqjauEiIs4JS0taIfnaPTWDcvPspTd4sRDRn61C/Kwvo/nBMWoZNp5DqGpfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ziyk9fec; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xm4NZKel"
-Received: by mail-lj1-f194.google.com with SMTP id 38308e7fff4ca-30bee278c2aso31693961fa.0;
-        Fri, 11 Apr 2025 06:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744377739; x=1744982539; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sah0SVBmFLpz4h/jlec344lM1AesPXbeFTOSULVxmM4=;
-        b=Xm4NZKelzaKQ2jGSXd0wUARc6D6PB15xJp+bf9+/SM2bJo0bSy7fqDuFCTgYfz4VV+
-         /909CEzlH7UrgLLgtPBQRXqXAVcywpCguY/auaKhwdUdwSF/uES+/ZT8eX/KK23S3+C4
-         rbP7pbMmV+bTJQDDeRV9PzzC+JpXYcVowPO672dKVmZOV3bK25/oH0el2gl5YMxAISYQ
-         5KWIrTMJfOKYffY1exyaGw6KdeMgx2EUCLRh08T8Cyi1dGAI6lPhBRLLm+j1jxR0qH/p
-         ad38/OzIi9SZsfknEKHLMmEpdL1GWbIC6NtVeYFA/QivU9ogJvwIhvAsvjq39tlp6RZ7
-         wSaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744377739; x=1744982539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sah0SVBmFLpz4h/jlec344lM1AesPXbeFTOSULVxmM4=;
-        b=mhZhEi8UMwBAz8j5MQ5wnheSYMMZteNY6CHXnckz/gmBQ/K0uIFQhLLkQ8pfeYZZRG
-         lF33bXK+9TT8CL27PrMcUqvns8I3WCtarDGFmrJ4/0kU/7hu5TDeQh7SvCTPYYY8l+7R
-         2x9swrtpkFw0411iRccpTafpJDXyBFsIk5atNIwi2LxXGp74mLH1V5yjhObgojKeEVdk
-         7e3psxRb2+fAy/u+pzGmrAt994VhJ8Rd9oyQ3JC248ORlLT7v0peRef9zYAl7k4txHvz
-         32btfQs7BshWy2SscBSIFugk4WsKfyLM+CvEB9dSFhyqU2pNJq0wJH0ndTX4ANnvvEVF
-         R6Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1nO6UE1rMNlbcBZwXrjhsOTH1UJVOPwLygRapRNlwZ6gUjdPWB6VPbMEiu5U+Xg0kuXffHJRY@vger.kernel.org, AJvYcCWYlGwqAgMebu+hSpPAVKtJV70bSxsqeKfFHqAfcd5jkEV3afO4LKnzG58Qys8Knt0LwOdmqM++lgsYDls=@vger.kernel.org, AJvYcCXMQwFjWKhbjNcuIiE/n0FBRsnKPglkvxRHB62Vp0GRfKXuBEjWvSg8tkFtuEREksr/l5kNtcGF/9qw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdJwLpxz0Uzf7axtrTJ3CeXeT4gtmAn9CwLT7NRA+fEPAAq/xX
-	PB7/n3+oG/FlvNOYJuLDCRaSXjNwvMXu+GskrlOn9/Wm8BMpnkP4PSxXiuMf4adg04Ds9VE5hKr
-	I7sEoI7n4/nfwXadgDwnbM1AJ6kUIQoPvOSSIB/Of
-X-Gm-Gg: ASbGncs3+5q/Xic73BfIEMNhevW/xJ2j7ZJD5Nd9rHsfWIHsU1Cl9SfPtOo0RP4NdHe
-	4flIQ84qJiRYzScv7vE6XSvSMBa7cw41JuWa+Qe4nEdoNKv0h7H5h2/d5Rp9M1b7I+NiaHMIlfk
-	1ukn7roAitusCyu5MsuwAdSw==
-X-Google-Smtp-Source: AGHT+IHw+lifGU70y9Vd72DyBga7i8AjGwQnPrs/Ioo3jLXofjG+CAq6Y1GhP4WwWrG6KrV6FXm0JU1muYB3vRAji0U=
-X-Received: by 2002:a05:651c:312a:b0:30d:c4c3:eafa with SMTP id
- 38308e7fff4ca-31048972d82mr10675451fa.7.1744377738559; Fri, 11 Apr 2025
- 06:22:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ziyk9fec"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89274C4CEE2;
+	Fri, 11 Apr 2025 13:22:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744377772;
+	bh=ly6rpIyPaDRJfWGU1MeNR1JLAEhIsdS0hC/xHmLN0+A=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Ziyk9fecgjkeEfcj+/L5o69uJjmjr4ZuqM70FwcN42IAD1QBDh/e4UYEZCcREGYjB
+	 9/P6pdodGdMbOWdH5O0oeaStONBNqpR6Zd6Sb8rZtNrKnBS53kb9biBQHGvZrOlcUQ
+	 e0+tgaPrkQUm+kwAPKMBF1QEENh78MtvHe8xipPWV0SafP5EeGyBJX6u4cbiuRba49
+	 Tcx/itOFAP1ipUORlDw5zmeGW9L3Su4xaRvW49c2h4Q6p9BQjVLEmiLQ3GwoCZwkXU
+	 06M1J8be9u8e77KDzeBdHoo0GLYavGQGyOi4HemUwhHN5PITOCKPIQdua6Jsct5Yh1
+	 swU0PXSu9uVUQ==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH v2 0/2] pidfs: ensure consistent ENOENT/ESRCH reporting
+Date: Fri, 11 Apr 2025 15:22:43 +0200
+Message-Id: <20250411-work-pidfs-enoent-v2-0-60b2d3bb545f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250405113020.80387-1-bsdhenrymartin@gmail.com> <2025041119-debit-cosmic-f41c@gregkh>
-In-Reply-To: <2025041119-debit-cosmic-f41c@gregkh>
-From: henry martin <bsdhenrymartin@gmail.com>
-Date: Fri, 11 Apr 2025 21:22:07 +0800
-X-Gm-Features: ATxdqUGEZYsaCXX5XdyoJ9leRiLY8Ans_fSIobpjEITgHPNCVrlUjQY0Xk24xqI
-Message-ID: <CAEnQdOoikipXfvBUcfmFUp8As4+K58Bb=oeFKmEH8x_nqkTX_g@mail.gmail.com>
-Subject: Re: [PATCH v2] usb/gadget: Add NULL check in ast_vhub_init_dev()
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: joel@jms.id.au, andrew@codeconstruct.com.au, linux-usb@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKMX+WcC/yXMQQqDMBCF4avIrDuSBG3aXqW4iHGsQ2EiE6kF8
+ e6NdvnDe98GmZQpw6PaQOnDmZOUcJcK4hTkRchDaXDGtaaxFtekb5x5GDOSJJIFfeNbf7dXE28
+ Rym9WGvl7ms+udB8yYa9B4nRIB1CfQP2f7fsP6ktxsIYAAAA=
+X-Change-ID: 20250411-work-pidfs-enoent-747579160c8c
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
+ Lennart Poettering <lennart@poettering.net>, 
+ Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
+ linux-kernel@vger.kernel.org, Peter Ziljstra <peterz@infradead.org>, 
+ Christian Brauner <brauner@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1002; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=ly6rpIyPaDRJfWGU1MeNR1JLAEhIsdS0hC/xHmLN0+A=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/FF81da06o8yljJApy5g0trYc/xeQUnP+47siNS/TG
+ yK9NwMkOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbipMfIcFyyqpcvwnKblMX7
+ sNl/P8+e5Ljw25as7PKXW88s5shf2sXwVyb1wKm4bQ4Czc9XvHp6mmWr3lzpvRa/X+2O89r358Z
+ KUW4A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-Hi Greg,
+In a prior patch series we tried to cleanly differentiate between:
 
-Thanks for the review.
+(1) The task has already been reaped.
+(2) The caller requested a pidfd for a thread-group leader but the pid
+actually references a struct pid that isn't used as a thread-group
+leader.
 
-This patch was made against v6.14. I=E2=80=99ll rebase it onto v6.15-rc1 an=
-d send a v3
-shortly.
+as this was causing issues for non-threaded workloads.
 
-Best regards,
-Henry
+But there's cases where the current simple logic is wrong. Specifically,
+if the pid was a leader pid and the check races with __unhash_process().
+Stabilize this by using the pidfd waitqueue lock.
 
-Greg KH <gregkh@linuxfoundation.org> =E4=BA=8E2025=E5=B9=B44=E6=9C=8811=E6=
-=97=A5=E5=91=A8=E4=BA=94 21:06=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Sat, Apr 05, 2025 at 07:30:20PM +0800, Henry Martin wrote:
-> > devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> > ast_vhub_init_dev() does not check for this case, which results in a
-> > NULL pointer dereference.
-> >
-> > Add NULL check after devm_kasprintf() to prevent this issue.
-> >
-> > Cc: stable@vger.kernel.org    # v4.18
-> > Fixes: 7ecca2a4080c ("usb/gadget: Add driver for Aspeed SoC virtual hub=
-")
-> > Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> > ---
-> > V1 -> V2: Add Cc: stable label and correct commit message.
-> >
-> >  drivers/usb/gadget/udc/aspeed-vhub/dev.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/dev.c b/drivers/usb/gad=
-get/udc/aspeed-vhub/dev.c
-> > index 573109ca5b79..5b7d41a990d7 100644
-> > --- a/drivers/usb/gadget/udc/aspeed-vhub/dev.c
-> > +++ b/drivers/usb/gadget/udc/aspeed-vhub/dev.c
-> > @@ -548,6 +548,8 @@ int ast_vhub_init_dev(struct ast_vhub *vhub, unsign=
-ed int idx)
-> >       d->vhub =3D vhub;
-> >       d->index =3D idx;
-> >       d->name =3D devm_kasprintf(parent, GFP_KERNEL, "port%d", idx+1);
-> > +     if (!d->name)
-> > +             return -ENOMEM;
-> >       d->regs =3D vhub->regs + 0x100 + 0x10 * idx;
-> >
-> >       ast_vhub_init_ep0(vhub, &d->ep0, d);
-> > --
-> > 2.34.1
-> >
->
-> What kernel version did you make this against?  It does not apply to
-> 6.15-rc1 for me :(
->
-> thanks,
->
-> greg k-h
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+Christian Brauner (2):
+      exit: move wake_up_all() pidfd waiters into __unhash_process()
+      pidfs: ensure consistent ENOENT/ESRCH reporting
+
+ kernel/exit.c |  5 +++++
+ kernel/fork.c | 31 +++++++++++++------------------
+ kernel/pid.c  |  5 -----
+ 3 files changed, 18 insertions(+), 23 deletions(-)
+---
+base-commit: 1e940fff94374d04b6c34f896ed9fbad3d2fb706
+change-id: 20250411-work-pidfs-enoent-747579160c8c
+
