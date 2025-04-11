@@ -1,334 +1,193 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2082.outbound.protection.outlook.com [40.107.237.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08622110;
-	Fri, 11 Apr 2025 04:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744347049; cv=none; b=XnQ1qkAb3n9euBDvMlCQMB7gNPJBhqAaJyZd6woicZH/jd45khT3C96sMVEQOaZF4y5V85R60WVtvuSNJjKgf6wXiLWYlSY7g2RdSfOcCrDHzVCxzbcQuunsCdR9ulvnUSfbcP2HvoAN43gGARDWNR6FvzcVV1PNz7lMYTiqkeo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744347049; c=relaxed/simple;
-	bh=s+ZuiDn3GuYyyPNvyEaUaEHFNU/y/Rmlc27erlKgRjA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LFauasr9YhN7sEnaosucL1zr+IejSPJsm8jlqAvKUaw0/JI7K6v6LoLWCV/0LqjQOri+66xqMbKRL8Ge2Vo87JiYrILo4DthMNbsXfeqNKDrHthDM5TJ4GLH6qPy6oLw2za+zNm5J+/hA4rxFvhIaHWJNvHQy0Qvyo+O1RuU3a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xRXuiQ7h; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730F127BF8D;
+	Fri, 11 Apr 2025 04:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744347081; cv=fail; b=K+Q4Uz2iBHu3JxJoLsXmC4fOPEY9hCmFNzhqMvjjGw4nX4c9wUNLwDWjvv2Nvg/ubsWqdlOLkt+wyRazOvG9kGeOjLoGQfQ2O+Nj6RIsdhlQgPpC7f0dE1QT51q6W6Sjm6Rfae7TJUmPu5DiMkCvvygwmU3Vui1y+jOnXS+h25M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744347081; c=relaxed/simple;
+	bh=3QkfnwNwnzRtGplQfYtBNF74/8nfC6vU8rVS05Gh6OQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JsppM4AJJJt77L2PhVvQDi/Wqpumq5x8XXfOvcrK0eERX88bp93+BsqMK5UC1rYo2QIAnxjrgOG6qKasVrATV4JYfd42M9DtqWA559igiMDFNZGT/zWbL+7+iO/YFwwJC3BPmIziMgCjylUNa7NPjaQwiMxiIiIQNRQQHusRb0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VcVD7BsP; arc=fail smtp.client-ip=40.107.237.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xRXuiQ7h"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B4oY2J1343515
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 23:50:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744347034;
-	bh=EhPbf5qDTYI4Rkb9QPmEziHECCtQigOHNhmMQ53dyy0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=xRXuiQ7h1kSO1ts3PT79Sdn6gQKHQ0vQH0UrNkS4YUO7uOGgY8rkOXW2/Xq7oe50i
-	 c0agGDxIwbbQxgvGMIwreSmFn+QN4BMcGrc2JJMEuShwa+ZY9iQSW2rCgc5w0J8tN9
-	 ljIZwNibqdpIZ9UpYFk1lKk1iz+jpMxkGpf5qErk=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B4oYIe091892
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 10 Apr 2025 23:50:34 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
- Apr 2025 23:50:33 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 10 Apr 2025 23:50:33 -0500
-Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B4oQJY113805;
-	Thu, 10 Apr 2025 23:50:27 -0500
-Message-ID: <ad637368-5fa7-45fa-8bb3-3a2cc754ed9b@ti.com>
-Date: Fri, 11 Apr 2025 10:20:26 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VcVD7BsP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nqkOGwTxzopmAwHclfHFsOqT6GVeEMTIzV1QdiZ38yTSBQ3AwLTKJIW1gN5/t1O5xdb+9lBdTBDjpO80RILh4s230QWGIZocQcztspagJuMY27XGlVnwijqEgvgUqFj1nbR21Ygst48B2EKwdocSgtZOGxrnM9KJnoeDnRrHgVFTciQ7e79Y+q+ki2nIti1sEvR+LfNDwP+zkUA73VDfHdtYTeDBQbw91XDoMFjijafkEuweSGE/UxvP51CO1EGIBw1XbnKneNUjGh3J0OauzQCvoNeHUkaOxaDseleAKpvb9eU+x1fEGHqG8eXjv0e0CFEECo2O40c6PhWqOYU2nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SibUX0cRVul7jPAIuqOCOKgRCqnRXQa+jsszI65VxOE=;
+ b=gsU+urxbpA8ovHpRj9mjjFQRh+OkEdFDKrnjyacuw8NGfiJampnIbo1KPgpyw2E2cI6XzOZF73Q66g3LYyfyzTrh43/g3q09obeJjTn5FrUAJUlWllKvs/D64WwjwSCCI6ve99342kU+NTy+ZoobcBHmIu/GeqVSEOnm4BC0ofnHI/mzA+JjSQu+00R116VGdVwiwL+ElSg2Vt2gJkcELzRdI+V5DZVnX447W2Q8dUPHJHU3djz7dDfMG/L2Bobx3zzjLrfmkQ1AuuN9o0tWSTf7Zq3/hN4FZLRrdseWywsKYj057ngZxWUC2EBLRSFd5ceYiJGjkH3/JdyhpkG7rA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SibUX0cRVul7jPAIuqOCOKgRCqnRXQa+jsszI65VxOE=;
+ b=VcVD7BsPKsD1PiZIjg755pnBVfMbl8o3eDU8+vqfnVGlt8ZjdBZvkOkdFJ4doMEsdZqqNqQn87l9PIk1JOIlZvUaMx1iIkYJS2Pd7UKqUI8DXpHFmah+OH7DhwqzqNhFweqLJw24u9XJKrlNk+k9U1GT4rXDTJRLygfI9Xu2G00=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9193.namprd12.prod.outlook.com (2603:10b6:610:195::14)
+ by SJ2PR12MB8692.namprd12.prod.outlook.com (2603:10b6:a03:543::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.29; Fri, 11 Apr
+ 2025 04:51:14 +0000
+Received: from CH3PR12MB9193.namprd12.prod.outlook.com
+ ([fe80::7818:d337:2640:e6c7]) by CH3PR12MB9193.namprd12.prod.outlook.com
+ ([fe80::7818:d337:2640:e6c7%5]) with mapi id 15.20.8606.029; Fri, 11 Apr 2025
+ 04:51:14 +0000
+Message-ID: <bf851be7-74a5-8f9d-375b-b617691b6765@amd.com>
+Date: Fri, 11 Apr 2025 10:21:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v2 2/3] accel/amdpk: add driver for AMD PKI accelerator
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>, herbert@gondor.apana.org.au,
+ davem@davemloft.net
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, krzk+dt@kernel.org,
+ gregkh@linuxfoundation.org, robh@kernel.org, conor+dt@kernel.org,
+ ogabbay@kernel.org, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ derek.kiernan@amd.com, dragan.cvetic@amd.com, arnd@arndb.de,
+ praveen.jain@amd.com, harpreet.anand@amd.com, nikhil.agarwal@amd.com,
+ srivatsa@csail.mit.edu, code@tyhicks.com, ptsm@linux.microsoft.com,
+ herbert@gondor.apana.org.au, davem@davemloft.net,
+ linux-crypto@vger.kernel.org
+References: <20250409173033.2261755-1-nipun.gupta@amd.com>
+ <20250409173033.2261755-2-nipun.gupta@amd.com>
+ <20250410-sly-inventive-squirrel-ddecbc@shite>
+From: "Gupta, Nipun" <nipun.gupta@amd.com>
+In-Reply-To: <20250410-sly-inventive-squirrel-ddecbc@shite>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0023.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:97::13) To CH3PR12MB9193.namprd12.prod.outlook.com
+ (2603:10b6:610:195::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-To: Andrew Davis <afd@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
-        Jai Luthra
-	<jai.luthra@ideasonboard.com>
-CC: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Hari Nagalla
-	<hnagalla@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Markus Schneider-Pargmann <msp@baylibre.com>, <praneeth@ti.com>,
-        "Khasim, Syed Mohammed" <khasim@ti.com>,
-        <tomi.valkeinen@ideasonboard.com>, <v-krishnamoorthy@ti.com>,
-        <s-tripathy@ti.com>, <s-tripathi1@ti.com>, <c-shilwant@ti.com>,
-        <r-ravikumar@ti.com>
-References: <20250405001518.1315273-1-jm@ti.com>
- <20250405001518.1315273-7-jm@ti.com>
- <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
- <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
- <e131298f-3713-482a-a740-ff89709270b4@ti.com>
- <091c0869-525b-4b40-b5fe-a5c1907ec606@ti.com>
- <czmir7yvss3oreveesyrjqfdcawyn2axtstomsj3yx5sntqwo2@r3udnsyrxvkp>
- <5969e1e8-0bb7-4334-a0c5-b4c396b8b6af@ti.com>
- <dccef5d7-46c6-4e08-98f3-ba0e8168aaff@ti.com>
-Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <dccef5d7-46c6-4e08-98f3-ba0e8168aaff@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9193:EE_|SJ2PR12MB8692:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1fc59814-2d44-4850-9aca-08dd78b47d02
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OFRpdTFRQmlpR3dOelpKc3kwWXFvT2g3YllXTmwxbE5UcjdmYjRCYkdnTjEz?=
+ =?utf-8?B?Mlg2MkxHaTFtM0YrT21YUHJrU3BpVWpZREIxRkhMZTU2MitPSER0UEZmeFMx?=
+ =?utf-8?B?Q0VnT2dlN2xvbTA2cEVLb1hLWjNLUTNoeGRFN2szVkJhQXh5SzdxS2hMN3k1?=
+ =?utf-8?B?Y2lHb2MwZ2ZydkMvb3RrU2Uzd0FLU0dOQ09abmRwSnlSUndkNzYxYUFjcHVi?=
+ =?utf-8?B?MjlWUHNTMVRIKy9BaXhsRHR4eWxvei8yUkhsL0VEY1phWkIyYTRSR0E0NVY5?=
+ =?utf-8?B?MFF0eGZoeWhpSit5M3VvM3NmVUhHZWJwMVY0Mzh1VGFPUjRlaThUTDdzbHdQ?=
+ =?utf-8?B?Y0toQ3NndzBmd1daWm9PdmgwWU9nNjdBdkpXb2hQQVRZYVp0alpaTEY1OGxC?=
+ =?utf-8?B?SlNnOVd5cDJqRmdQYXdaaXVxc0FBaGVQME5DMTRva0pHdU5NeEdoS3pPUWhU?=
+ =?utf-8?B?LzFRTndKWExpVjZiQUxjcVpHV3p5R2tlTjNJZWNQcUo0Qm1uTnlFNXkrVzUx?=
+ =?utf-8?B?SjNYa2RhRnYrcFVDd1NDWldCSi9waU9IeTVuaERvakFLNTBhNDZ1TUlTOFF0?=
+ =?utf-8?B?N3NSeXUyaGNoRVM2M29BZDhMZCtMTXNIZTBJSlBtNmdqU2tjcktlV2dGNmNo?=
+ =?utf-8?B?VUpUOENxUEs1ZjVUSVJpWVBIWS9sNHBjRjl2TTFIY1RtVXJrUzFyK2NQNmtj?=
+ =?utf-8?B?Y2ZqZTZocW1QN3YrOW9PM3B1SCtrNlE5bE1tYk5jQVhPQ2M0b0J6K0g5NVh6?=
+ =?utf-8?B?M1pUNUowelFjblJlTCtiZlJhV1o5aDI4NEFMZFhLSzB4U0hlem5ETXpzcUY2?=
+ =?utf-8?B?M2xpblJQTGJOenRKZGZGSWo5dUVaWEw4Vkc5WmNTUS9UQkc4c21oSnQ5d010?=
+ =?utf-8?B?dGQwaGJYWVZXSlBuMzBwSnNCOEkvM1dCN2VEODAzNkNwUlB0N1Zkby82RDVV?=
+ =?utf-8?B?dHJHZlgzNjlJRGI4NDBab2Naa2FaMlh2d1RQY0dsZm5JZkQ4eWV3TDczWDBJ?=
+ =?utf-8?B?a2FjcTRIVDY2aWMyWmN4dVlxNjVEV3RyQmN3U1U2a2YvdWROYmcvWXJqL3F6?=
+ =?utf-8?B?Y3k5UURqTFhobVpUaDZVM1VIZmFSZ1RhQzlWaWtBWXd2WjBtMXdrWHg0dTNn?=
+ =?utf-8?B?Nkd1Yk44UnptbUxEN2MvNEhKc2ZwU3NjeGhrbVJWZnppZ3FES0pVY3VtUTIw?=
+ =?utf-8?B?N2RVZnRTSTRjaEpsbXFsRTd6Sk5mZHJ5b1FSNnYrSGFmSWxOMS9DemhRQWtD?=
+ =?utf-8?B?RnRLUFZBRHNQb3FXT0hjWG1SV1c2Z0ZnQUhWVnRrR1pwKy9pQit3c2wraER6?=
+ =?utf-8?B?K0NMMGZkSTBRUm84N1loVWdJYW1aRTFNT1c0MTdMOVE5bVJ3aktCRVRjK014?=
+ =?utf-8?B?YWhONE10dDJlVjhXK0phOEZXTlc2ZHJEcVVqRzErOWNDMi9kOVB2dmY2d3d3?=
+ =?utf-8?B?WEM1V2duaVJ4NktEcEhRdGdoM2Z6aS9rNStTZnlTREtSSU51UXhiY21GTTlJ?=
+ =?utf-8?B?R0FwNkdzWjVVRVNLeE1vcVlaeXhNR25IRnh5RXFIYTRXbjdrZFlFSjJpaTBL?=
+ =?utf-8?B?eXp3ZDdXY0JmV2lPUVVzSDU1TzBYeFJlMkFlT1FFdEhsUzJ5OUJZdHk1RzR0?=
+ =?utf-8?B?ZkUrcnVnbCtlb3RzUHA3endaRXNvZ2kwVXAvZXZBR1V3amZxNWFFcVU2ekg1?=
+ =?utf-8?B?dzkzK1hjSVMrbVRXeEJMZUlSOTVkU2hBUEtZcjA0ZVhqVFdKTkFWR3g5ay8x?=
+ =?utf-8?B?Qm1zQWJ6ZmZrV1EzbVdwVkdTZVBxbDJsVHozUVcrdmxWVTdWRnQ3aklScnBO?=
+ =?utf-8?B?WEFlOXh4Q0xPdmJ0ZHZKaDBYWnlvMUZIaUVXdCtpZ3VQUHFaR0Q3eFFxUkp6?=
+ =?utf-8?Q?LEiJwpFENRgpp?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9193.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dHBOU1FzTjdKVUhhaDM3THd2QmFiRVRxMlNqMXJlSVpwcEhySytkMnlxV1Vi?=
+ =?utf-8?B?NDUvZHJicUxCVG9Id2t3OUlidENISWhZcllzZTlkWXJHSjNFOURLK3N2Mll1?=
+ =?utf-8?B?TkFYRUJ2UVJGbElBSFl6NnFsdGJTRHB6Y1BZWm5RK2ZKQ2FtYlFISmhiUjB1?=
+ =?utf-8?B?M3VveWo2Y1JaU2xZT1ZzSWdlRS9oQWRoYmdQT2ZrVzJnaE9MRThlVjlUZXRC?=
+ =?utf-8?B?cFBPTnE3cTgzakVvZ2Y1eEdFTDRTdG1DaXVnZXZhZE1zajNQb1lJZTR4Z1hN?=
+ =?utf-8?B?R1FkaWUyaUpXWHJ3c0pnajR2Tk9sdVA5SkhOMEhZTXRYbmhsTXQyQVIyMG4z?=
+ =?utf-8?B?Wlo2V2tiMjlZRC8zc3RMSUpUNkcrUkRlMzJwWGxjTW9tQjZTellNaGNYRzdX?=
+ =?utf-8?B?eVNrL3o1VFF1czZuZHJMNjZ0WFFVaytBMVVleldIMklBYTJqakJwMmJ5OWE5?=
+ =?utf-8?B?VTBybUFyanFycEY5aGVGUVlPVHlsWEdNR1A0VVFqeVp0cHpwMzJlbmxRaUY0?=
+ =?utf-8?B?QzZxWklvVmlxVmt2LzFnNW1sY1NWcDBIV2Y5OFgwQlltSHk4eVZubEFQaVhH?=
+ =?utf-8?B?NTFxT1hseWlDZlRvOUE0bStBcUVGRVlpSmdjVERGTDBtamg4TXREem1ycWhP?=
+ =?utf-8?B?QlRMRWJqR1VRei9mbFovQ3RlbUFSNUNkc0J4YjRtUkNxMkh3R3F5Mk10M2xa?=
+ =?utf-8?B?ai9iRk9aRlloR2NidEJqTGJTZHN6MVdQeG1vbHpwSVVRSW95cW9UakVzelBB?=
+ =?utf-8?B?eHJaNDFnbWU3VEN1NlM2TlFXd1BnREJPWXZHODhGaDB3R2FHVFZrRmhxdzA1?=
+ =?utf-8?B?TVVydUtGMWErTElPeENXREFYVzhVOVdrcnhITWlZNHJjVmVRSmJEOXQyYUR0?=
+ =?utf-8?B?b1FNYStQcVQ0UW1ZalNqcFRGUUdJRy9zWWdkTXhaZktqNWdrTmxrQTA1ZGxI?=
+ =?utf-8?B?OG5qamZTU0JiekRicHZhQVN6TjJGMmpiRFBrUG5XOGZ2YVdnQjN2cmxucmgz?=
+ =?utf-8?B?Z2s2RDlrby9INWpQU1RYMFV1ZEtxcHYxV01uclYzYUtIZTBPZkhGdzREWUEv?=
+ =?utf-8?B?bFJVNFRhS2ZtSkl3dUFYRUlzZnFtQ2JSYm5odDZ3Y203VWZzTEs4V1Y2bkts?=
+ =?utf-8?B?RkllTXNFK3JLZ25vbFE4a0FKdkxVNkRZSnNuMWtXV1V2Qk5kcGdZUzVwckIz?=
+ =?utf-8?B?cS8xdTdyU041ZFVONDd5YlM2Y24rRC9wTkhwN3lGWnlCdiswZkdjTkJic01u?=
+ =?utf-8?B?VktpYXVXeC9YTUEyVFpVb2JqNi9NNmF3ZGN0bUY4WjU0UEc0QWo5QU03NlNT?=
+ =?utf-8?B?dHdrOHkwZ0FsUnYyeTI3OVhWcWxyTnR0L2RBeDNLcHlYalZkZE5yeUFsQk5F?=
+ =?utf-8?B?dnI0RjdLTkdoZHVDVXd2aXNtVzNkdkR6b0xaY2lLb3A4a1cwallxRlFXZmtN?=
+ =?utf-8?B?RCtzSHBST042OUxPd0tBSngvUHJiVitLbFoxY3Q5QWlxajlLK0lmckNtcUVh?=
+ =?utf-8?B?Mk5DSFpNdEp5MEpQZmwzZWM5STM2d1dKM2d1QzJ4UmhiK3J1VWpuVXVjdmY3?=
+ =?utf-8?B?blAvR2lsUmQweFV4bksxZExVWUpiSyt5UGt2cE9lWkIzU2htY2VmZDVBWG5i?=
+ =?utf-8?B?ZkhIdGJnSHh0eFM0K2tFTTc4M1ZtVmU0Yks0Vmp2MTdQUFZzd1B0U0p2eVVl?=
+ =?utf-8?B?SFFOK1hQVUxpcVhlb3ltRG5zeXNaUHBCaDI4b2ZzQUIrNDA4QktCTmFWSzZW?=
+ =?utf-8?B?ZGlQSnh3UWpKTW5EZVAyU0Ywc0RyNFBSVnZXdEdsa1Rtcmp1R1NkWnk2eEta?=
+ =?utf-8?B?ZVk1OGsrTVBrVjUwSmprcWdqcm9WQmpJZnBmRjF2L2lGTkRpOWJ5MDNrVHpR?=
+ =?utf-8?B?NzdYcTkrTkZ1bWtsYitINDh3VDMxc3VIdElTZzJoSkpwUVA3WnVEeXhEcW50?=
+ =?utf-8?B?ajgyQitlRWMrZ2lnd1dnb0lHYXZycmFpcXZHOVNJaUxPOUJoRTRzS2psd3Mx?=
+ =?utf-8?B?QVBVTXRUSlJNc1hTOVZGUXhEZ2VoWmdFM09WRUkrenRZMDVFUHlZWkoyRVM5?=
+ =?utf-8?B?L2FTTEdZQ2NGa0hsVTgxdmgyY2g1bTNQVGdsaWFvWiszNXJwVU82djFBU2ZT?=
+ =?utf-8?Q?idBZtD35iVOvu9RlX+rWal/Bi?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fc59814-2d44-4850-9aca-08dd78b47d02
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9193.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 04:51:14.7315
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xz07HWcAUu91MmdBlHqHfyMIt77zQX4y29kedzmb0DaJdvOsVRkQgEjAWc9neGE1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8692
 
 
-On 10/04/25 23:52, Andrew Davis wrote:
-> On 4/10/25 6:38 AM, Devarsh Thakkar wrote:
->> Hi Jai,
->>
->> On 10/04/25 15:48, Jai Luthra wrote:
->>> Hi Devarsh,
->>>
->>> Thanks for the cc here.
->>
->> Thanks for the quick comments.
->>
->>>
->> <snip>
->>
->>> On the basic camera + ISP usecase, afaiu the downstream edgeAI SDK uses
->>> custom gstreamer elements that make calls to the aforementioned R5 core
->>> that controls the ISP. On top of that there are additional gstreamer
->>> patches that are not yet posted upstream for review from the community,
->>> so the userspace design isn't really set in stone, or upstream-friendly
->>> yet.
->>>
->>
->> I don't see much relation of carve-outs with Gstreamer or it's 
->> pending downstream patches. The memory is mainly managed from 
->> firmwares (mainly openvx layer being used underneath) and there are 
->> even non-gstreamer pure openvx based use-cases/tests which use these 
->> carveouts. At the end of the day, the firmwares from the only SDK 
->> which is released publicly for AM62A uses all these carveouts.
->>
->
-> These are programmable cores, you can run whatever you want on them. 
-> You can
-> make your own firmware if you like, we have support for them in our 
-> MCU+(FreeRTOS)
-> offering today[0](look at all these firmware you can build/run!).
->
-> In a week or so I'll start pushing support for these cores into Zephyr,
-> bringing in even more firmware options for these cores.
->
-> I simply do not see why one firmware, shipped with one of our SDKs*, 
-> doing
-> things wrong should force us to hack up our DT here in upstream Linux.
 
+On 10-04-2025 13:06, Krzysztof Kozlowski wrote:
+> On Wed, Apr 09, 2025 at 11:00:32PM GMT, Nipun Gupta wrote:
+>> The AMD PKI accelerator driver provides a accel interface to interact
+>> with the device for offloading and accelerating asymmetric crypto
+>> operations.
+>>
+> 
+> For me this is clearly a crypto driver and you are supposed to:
+> 1. Cc crypto maintaners,
+> 2. Put it actually into crypto and use crypto API.
 
-Agreed. I don't see why we should incline towards supporting one of the 
-SDKs.
+added crypto maintainers for comments.
+IMO, as accel framework is designed to support any type of compute
+accelerators, the PKI crypto accelerator in accel framework is not 
+completely out of place here, as also suggested at:
+https://lore.kernel.org/all/2025031352-gyration-deceit-5563@gregkh/
 
-For this patch as it as,
+Having the crypto accelerator as part of accel also enables to extract
+the most performance from the HW PKI engines, given that the queue
+assignment is handled per drm device open call.
 
-Reviewed-by: Beleswar Padhi <b-padhi@ti.com>
-
-Thanks,
-Beleswar
-
->
-> *Speaking of the "only" SDK's firmware, if you take our Yocto meta-ti 
-> layer and
-> build an SDK yourself, you get firmware by default that *doesn't need 
-> extra
-> carveouts*! [1][2]
->
-> Andrew
->
-> [0] 
-> https://github.com/TexasInstruments/mcupsdk-core-k3/blob/k3_main/makefile.am62ax
-> [1] 
-> https://git.yoctoproject.org/meta-ti/tree/meta-ti-bsp/recipes-bsp/ti-rtos-fw/ti-rtos-echo-test-fw.bb
-> [2] 
-> https://git.ti.com/cgit/processor-firmware/ti-linux-firmware/tree/ti-ipc/am62axx?h=ti-linux-firmware
->
->>
->>> IMO if that architecture is still under discussion, it might be better
->>> to keep the edgeAI specific carveouts out of the upstream DTs.. just in
->>> case the carevouts have to go away, or change significantly.
->>>
->>> If you are sure that the regions and firmware architecture is set in
->>> stone and won't be updated even if there is a complete redesign of the
->>> userspace/application level stack for accessing the ISP (let's say u
->> sing> libcamera), only then it makes sense to add the carveouts right 
->> now.
->>
->>
->> Yes as I said if whole firmware arch is getting updated then better 
->> to wait. I think probably the firmware team marked in cc can comment 
->> on that. Moreover I don't see any point of adding only half the 
->> regions as that would anyway not work with SDK supplied firmwares, 
->> for e.g. RTOS-to-RTOS ipc test run by firmwares on bootup would fail, 
->> along with other camera+ISP and AI use-cases.
->>
->> Regards
->> Devarsh
->>
->>>>>>
->>>>>> I understand your point, currently with this patch remoteproc 
->>>>>> loading
->>>>>> will not work for some cores. However, the goal here is to 
->>>>>> standardize
->>>>>> as much as possible the memory carveout sizes, push the "demo 
->>>>>> firmware"
->>>>>> to request resources the correct way from resource table, and 
->>>>>> move away
->>>>>> from this dependency and limitations that we have with our firmware.
->>>>
->>>> I understand this, but my view is that w.r.t firmware only goal 
->>>> should not
->>>> just be tp demonstrate correct way of requesting resources from
->>>> resource-tables, optimize the carve-outs etc but also to 
->>>> demonstrate the
->>>> primary use-cases (camera+ISP+edgeAI) which the device is capable of.
->>>>
->>>>>> should soon be able to generate our own firmware using Zephyr,  
->>>>>> which
->>>>>> Andrew is pioneering, so with this firmware we should move to the
->>>>>> correct direction upstream. Downstream we are still using the memory
->>>>>> carveout sizes that the firmware folk want so desperately to 
->>>>>> keep, for
->>>>>> now..
->>>>>>
->>>>>
->>>>> +1
->>>>>
->>>>> I have this Zephyr based firmware for AM62A working and it uses the
->>>>> standard IPC regions as specified in this patch. I'll be posting 
->>>>> the PR
->>>>> for it in Zephyr upstream by the end of week.
->>>>>
->>>>
->>>> I understand this, but will this zephyr based firmware support 
->>>> vision +
->>>> edgeAI analytics ? Does it demonstrate all the unique capabilities 
->>>> of AM62A
->>>> SoC ? If not, then what would be utility of such firmware on AM62A 
->>>> where
->>>> these are the primary use-cases w.r.t AM62A ?
->>>>
->>>> Why should upstream device-tree use carve-outs which match to this 
->>>> demo
->>>> zephyr based firmware (which apparently not many are using and is 
->>>> not going
->>>> into any official SDK release) instead of official firmwares going 
->>>> into SDK
->>>> ? SDK released firmwares are being used by so many customers and SDK
->>>> documentation maps to it, but zephyr firmware that is being pitched 
->>>> here,
->>>> who would be the potential users and what would be it's utility ?
->>>>
->>>> [1]: https://www.ti.com/tool/PROCESSOR-SDK-J721E
->>>>
->>>> Regards
->>>> Devarsh
->>>>
->>>>> For this patch as it is:
->>>>>
->>>>> Acked-by: Andrew Davis <afd@ti.com>
->>>>>
->>>>
->>>>
->>>>> Andrew
->>>>>
->>>>> [0] 
->>>>> https://lore.kernel.org/lkml/20241011123922.23135-1-richard@nod.at/
->>>>> [1] https://git.ti.com/cgit/edgeai/meta-edgeai/tree/recipes-kernel/
->>>>> linux/linux-ti-staging/j721e-evm/0001-arm64-dts-ti-Add-DTB-overlays-for- 
->>>>>
->>>>> vision-apps-and-ed.patch?h=kirkstone
->>>>>
->>>>>> ~ Judith
->>>>>>
->>>>>>>
->>>>>>> [1]:
->>>>>>> https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/
->>>>>>> arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
->>>>>>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
->>>>>>>
->>>>>>> Regards
->>>>>>> Devarsh
->>>>>>>
->>>>>>>>        opp-table {
->>>>>>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
->>>>>>>>            };
->>>>>>>>        };
->>>>>>>>    };
->>>>>>>> +
->>>>>>>> +&mailbox0_cluster0 {
->>>>>>>> +    status = "okay";
->>>>>>>> +
->>>>>>>> +    mbox_r5_0: mbox-r5-0 {
->>>>>>>> +        ti,mbox-rx = <0 0 0>;
->>>>>>>> +        ti,mbox-tx = <1 0 0>;
->>>>>>>> +    };
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +&mailbox0_cluster1 {
->>>>>>>> +    status = "okay";
->>>>>>>> +
->>>>>>>> +    mbox_c7x_0: mbox-c7x-0 {
->>>>>>>> +        ti,mbox-rx = <0 0 0>;
->>>>>>>> +        ti,mbox-tx = <1 0 0>;
->>>>>>>> +    };
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +&mailbox0_cluster2 {
->>>>>>>> +    status = "okay";
->>>>>>>> +
->>>>>>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
->>>>>>>> +        ti,mbox-rx = <0 0 0>;
->>>>>>>> +        ti,mbox-tx = <1 0 0>;
->>>>>>>> +    };
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +&wkup_r5fss0 {
->>>>>>>> +    status = "okay";
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +&wkup_r5fss0_core0 {
->>>>>>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
->>>>>>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
->>>>>>>> + <&wkup_r5fss0_core0_memory_region>;
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +&mcu_r5fss0 {
->>>>>>>> +    status = "okay";
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +&mcu_r5fss0_core0 {
->>>>>>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
->>>>>>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
->>>>>>>> + <&mcu_r5fss0_core0_memory_region>;
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +&c7x_0 {
->>>>>>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
->>>>>>>> +    memory-region = <&c7x_0_dma_memory_region>,
->>>>>>>> +            <&c7x_0_memory_region>;
->>>>>>>> +    status = "okay";
->>>>>>>> +};
->>>>>>>
->>>>>>
->>>>>
->>>>
->>>>
->>>
->>
+Regards,
+Nipun
