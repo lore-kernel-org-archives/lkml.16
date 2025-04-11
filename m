@@ -1,261 +1,279 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2135.outbound.protection.outlook.com [40.107.102.135])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2048.outbound.protection.outlook.com [40.107.220.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8019A202F67;
-	Fri, 11 Apr 2025 07:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA44F1CEACB;
+	Fri, 11 Apr 2025 07:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357658; cv=fail; b=qMEbTUZEvjSMtEGZ8aWuCmfKWDAOMlP+sdLr5/t198FLg8znaqQVmwd1KqRLktLBovO9pBlbNmGE+oBsj81v6uh9dagnWELRcUg5cckxFIqClGORhtVlvbiPVeezlzIf1TgiBBA62kxj+1YXJs/9Dvot0C3AFq2oUVq7VVGoVZo=
+	t=1744357693; cv=fail; b=A0t/XRalXUQjjCRx1OYV+qB/1nTH3Mh1lwjld/RZI+vXWbkOolQqdgvyAslnM4mrBvLHjS7DiKKFOWptLgQSdL8Hc/WV3Jrafd+pJsrQV173FZA+SylihH+eP5wOjvrDhz/GNABJQR0DGknjzr8gsYJGpFyErsLOXnopxcelUrg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357658; c=relaxed/simple;
-	bh=xJ6+9sSrp1P0VAx1EBAVvLDYNJA84UFHeAKcf3fm5FA=;
-	h=From:Date:Subject:Content-Type:Message-Id:To:Cc:MIME-Version; b=DhkYLQVePw4eLsqqPU1Pr/OfTc2N9qSU3a6KSdO974y8bp2Mx0n22bBjATpCi8+0v/KYlmBxwoWqP9+LsP9duKq1qK4X7+w7aLWb2PgW/Qyc3RfyQyaWD7lESqdwsrKo4o210VvQwszhUrbff5oP+Kqqvn3PgOgDXE20WbDJ2Yk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kneron.us; spf=pass smtp.mailfrom=kneron.us; dkim=pass (1024-bit key) header.d=kneron.us header.i=@kneron.us header.b=kRrztl+P; arc=fail smtp.client-ip=40.107.102.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kneron.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kneron.us
+	s=arc-20240116; t=1744357693; c=relaxed/simple;
+	bh=dxxwTqZ0pmoA55d3YDPX0Z8GV1YM16E4aAa074wyacs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WC7xPregKoZV3oy6PD6aUXuAQxMFNi4MjD4/nmn1ErbkUvWuVJYToMdg71ld80UXjhUuUWlecBuOmx+2YL7brfPTd3TV4xg/e2lR4fSy7zLiw9VlR1EsoMMKo58mH/67taoHS99t1Zc5OTZyTaQ0GPIomPcAVhvt+uO0XZPME/g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NDwuxaWp; arc=fail smtp.client-ip=40.107.220.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kneron.us header.i=@kneron.us header.b="kRrztl+P"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NDwuxaWp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SyicsA/a5YFss3/wROzNd7csipzCB/LARMHacouyKK8eIc2HyqwMB18kov+982PNHzDQ0RvmkgMNtbk2TsYahsx8Wy+FHKkdNUNmZ3bSlnuynn8i0DiK3uS4gIyNgch0SGVdEoLTWnq3TpXChQCHysrkfBk5gT3cykbq45sBdSXtM8C3TCl+WUEeoBAvQAMhkamykUwIuXNKWNNYO4NUWfDZUQHbMLin4pdxIvDHj6rrpq7w790NqUKZlKYQww+1SahcUinzZtkRf/E51afEdK9ioahiuAhP/LFvYQp8nm8T91G6YAzGotKebr95gcP9rhIUhFLAnxLQMi8h8Qpo6A==
+ b=uAHAFvqaUN9e44EMhkDr6QqHTq92bo7I0yFytDd+C1gr3jwplrB0tDt4s8f4NgzorTZpRQRKfE8d9LVjJ4X71BTVny0GyJnobqC+uY6GTF8caNT1cID9UClikPgMZoot/XaMbG5XTZt1uVCdRL6s+Vd5fJQqbTJ5AZqF+z+kE27VbkBPku/gLAqKmQjlmP6oC4Qo3xhQmSwMxNqJh674/QnvAq6swV+Q4b+YMmiGvdGMM7Hc4zEvfaZUAohNzLmF5B1F6+9S6iIEhXwJmccWKCoYufpuMH0oI1Paprvruw68GnSThR9tcI7NQTFMk4BWIcwAN6krVndPwf4tZkX6bA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UjD1OO33htcyIy56P1hWEUievqSJG7gvD9llgkhJ/vw=;
- b=bMZw8BwGSHCPOFUoKU9l1JDrt0HAhmk2D34rptfcPNVKwuUs4n3AZe0TFoJVzn5nSILoKsNJaXifvTpGPfpwaEjSQ3gaTKinI0zNPL0dlBNEqFeo0HUTQgNCQRJLlntIRhwzUJ7M1mdO06YQCwQEnn6U4NmaPAuwsSOFVJAlFbUmSqPj9nT5ztPahz/Cb8gXuER7v/nvgM3FfK+JGmvAS3ek5NSodf1YzbIIlg7EwN8DCpXmHn/pr1fUfZAQsl4GsE8nmuJGP+QR5H/lw211dBjFRvQBrE2Z8lroWI6JLtbrJnJh1YfcTV3ZH8eXmpKPnsOU35L1lrnkMmQqsz0qEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kneron.us; dmarc=pass action=none header.from=kneron.us;
- dkim=pass header.d=kneron.us; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kneron.us;
- s=selector1;
+ bh=9oqrF0dTSsULB44KUI7GFe0malehQY0HMNPfTYLPDNI=;
+ b=lOSHyKryZkSvz7J2/rxJ7zJiEYAYLSloSZsTPgSTy4VDEXOh208gKO0AgH/yM0GfYok0EexNTf/XZENSR96Ystpdllw2wpYtEA4keLbIr8shtCV+djTQEiKCr1Lcr0toQ4rQnW+cKnUArHAeL2/Jfn2ikuTu6GPMAUrhohir4a95j3o8PF+Hd+WAZzDTibTeX54ggStyQkljySHHDlfqr7geX9Y8w+hRnlMiVXBM6rJYAQbiWWQ5BznhEHPY924T+uRDo62LJ/D2ZVuxMqYxkPMz0jThGJvlKICjUsfn6rrGMxA5vk51KoGLJn9hgV6nMTUxkTlHF8nGmqPocx3z0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UjD1OO33htcyIy56P1hWEUievqSJG7gvD9llgkhJ/vw=;
- b=kRrztl+PJkWk+LcVvkdBKbx1/OWMLu2NKX17zZTESTsHtnMYGg7ZxtFt0DcRftPC/PSgc9TMhLubZjO9k92y5kZ77hvX0rbCq+8aHGCEfYlg8HDBNgUGsCNLLjhx5vuaBimq0KC55uhmXT1rkUM/zft3GQHa95VBEjE0NZN7LG4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kneron.us;
-Received: from PH0PR14MB4360.namprd14.prod.outlook.com (2603:10b6:510:26::18)
- by MN2PR14MB4191.namprd14.prod.outlook.com (2603:10b6:208:19a::15) with
+ bh=9oqrF0dTSsULB44KUI7GFe0malehQY0HMNPfTYLPDNI=;
+ b=NDwuxaWp7uOx+F1opW4jMvjscRHNLSreY/c2LxUHKyxk3p4Or71qOgpf7VQ5gL1JsQawjnPaak+lhZ53167JBSDLw5JqO9jBeAFX9g+AVvpW10UJrWFrsPtzJbagyGtjzWePhm2wVSFEu8U+pkr5T9Zblh52WI0Yq96LJ13q7fM=
+Received: from BY3PR05CA0049.namprd05.prod.outlook.com (2603:10b6:a03:39b::24)
+ by DS7PR12MB5981.namprd12.prod.outlook.com (2603:10b6:8:7c::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
- 2025 07:47:32 +0000
-Received: from PH0PR14MB4360.namprd14.prod.outlook.com
- ([fe80::f91d:52ba:8284:3e02]) by PH0PR14MB4360.namprd14.prod.outlook.com
- ([fe80::f91d:52ba:8284:3e02%6]) with mapi id 15.20.8606.029; Fri, 11 Apr 2025
- 07:47:32 +0000
-From: Chance Yang <chance.yang@kneron.us>
-Date: Fri, 11 Apr 2025 15:47:08 +0800
-Subject: [PATCH v2] usb: common: usb-conn-gpio: use a unique name for usb
- connector device
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-work-next-v2-1-40beb82df5a9@kneron.us>
-X-B4-Tracking: v=1; b=H4sIAPvI+GcC/23Myw6CMBCF4Vchs7aGKZeCK9/DsNB2kIakJVOsG
- NJ3t7J2+Z+cfDsEYksBLsUOTNEG610OeSpAT3f3JGFNbpClbMoaUbw9z8LRtgrToVKdMm01Ssj
- /hWm022HdhtyTDavnz0FH/K3/lIgCRV/p+tE3RK3G6+yIvTu/AgwppS8MEK52ogAAAA==
-X-Change-ID: 20250411-work-next-d817787d63f2
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- morgan.chang@kneron.us, Chance Yang <chance.yang@kneron.us>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3075; i=chance.yang@kneron.us;
- h=from:subject:message-id; bh=xJ6+9sSrp1P0VAx1EBAVvLDYNJA84UFHeAKcf3fm5FA=;
- b=owGbwMvMwCVmsuR+7eedxj8YT6slMaT/OCn48JjTtXwLY+sEuTq1N3d1vprZ7+AwC2bkMsy4t
- upIwe+kjlIWBjEuBlkxRZbP2Ur7vVua59260rMfZg4rE8gQBi5OAZiIeCDD/4LERT3ukTMXbzs/
- 902LRMfGSkVJo923Hy0u++lWamDcIsPwV8KllP+M/LSZGTPz94SZHWCJna6xdve8u2oqZ0/bLFu
- nzgwA
-X-Developer-Key: i=chance.yang@kneron.us; a=openpgp;
- fpr=F36B22BF4B84839EDAD48CBF34A4DF7DF3B933F8
-X-ClientProxiedBy: TP0P295CA0006.TWNP295.PROD.OUTLOOK.COM (2603:1096:910:2::6)
- To PH0PR14MB4360.namprd14.prod.outlook.com (2603:10b6:510:26::18)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Fri, 11 Apr
+ 2025 07:48:07 +0000
+Received: from SJ5PEPF000001CF.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b:cafe::fb) by BY3PR05CA0049.outlook.office365.com
+ (2603:10b6:a03:39b::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.19 via Frontend Transport; Fri,
+ 11 Apr 2025 07:48:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001CF.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8632.13 via Frontend Transport; Fri, 11 Apr 2025 07:48:07 +0000
+Received: from [10.136.43.133] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Apr
+ 2025 02:48:03 -0500
+Message-ID: <d6ccf531-2ed0-4e38-97a5-2b747497fadb@amd.com>
+Date: Fri, 11 Apr 2025 13:17:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/67] KVM: SVM: Track per-vCPU IRTEs using
+ kvm_kernel_irqfd structure
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+	<pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, David Woodhouse
+	<dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
+CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Joao
+ Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
+References: <20250404193923.1413163-1-seanjc@google.com>
+ <20250404193923.1413163-10-seanjc@google.com>
+Content-Language: en-US
+From: "Arun Kodilkar, Sairaj" <sarunkod@amd.com>
+In-Reply-To: <20250404193923.1413163-10-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR14MB4360:EE_|MN2PR14MB4191:EE_
-X-MS-Office365-Filtering-Correlation-Id: d6b031bb-c6de-4992-74e0-08dd78cd1e12
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CF:EE_|DS7PR12MB5981:EE_
+X-MS-Office365-Filtering-Correlation-Id: f535272b-858a-4683-327b-08dd78cd32c0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014|80162021;
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|7416014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TkUxcmhldFBsVXBIZGxzQW4ra2xoWDFGMitJdVZvUnU5MGpWQ3JjN3JzNUhw?=
- =?utf-8?B?bnEyT0wvc3NobWZ0ZklqdWM5K1JGbnNyZXN2U2ZKVE5GZXBTVWdiK0xUQ1da?=
- =?utf-8?B?blFqOGJyalFOdTUrblNxblZxSmVqUEIwY01zVm5ydUFPTExaRCtOUFo0RHQ1?=
- =?utf-8?B?ZTJaaTNBdExhRFhhL2VTWExWNWxlZzgrM0F6NEFLbEp2NGg4VU1GZGpUZkNI?=
- =?utf-8?B?SHhKVFlPNFg2TTdvajJoSGRteXBXWjU0c0tZVG9PMXBQU0JZaUdraHJwUEQw?=
- =?utf-8?B?aWowaWk3bmhkL3J1eTBJcE9XMWlkUlBubjZ6dy9FL3pFOWMycEg3OEk1TkFH?=
- =?utf-8?B?ZXRZUXJZdGh5S21hTEtPeDdnWjdTMWc5NVVOY2V0ZlM5UGZlVkt0bFhmem51?=
- =?utf-8?B?M0hSTXdGbVh4MUxPZkkvcW9KbDNMK3BoWTkzU0YwRmtPb1pTS0hYaHVNcWo0?=
- =?utf-8?B?VG5MdHkzUnFkOG84UTVvK3FxQi9tWitta0hqNXp0bWJsZUxJejdZKzVFbzJM?=
- =?utf-8?B?Y2NqVUlpZGxJZVNRVUZJKzQ0ZW1mTTBYU0M1QmtsTlZ6djhjS3hIVitGeDJq?=
- =?utf-8?B?d3NidTZBQUg3MStZOWdrRzFMSUEyWVpEVGFoZWxlUm9xZlFzWEpxR1dMdHVE?=
- =?utf-8?B?Z2xaQm12c1N6bmZHL3AyZDZlTlVrdGlGblQ0N2lqNVBndEozcCtjd1BzMEpE?=
- =?utf-8?B?UWFUb3JXdjVCUU42bUNIWGpCM21mUS9lMzRQR0REMWFrR3NkMWpZcCs4U3Fs?=
- =?utf-8?B?WjFoeEZ6enBPOS9yNnFHNHdSdTFXZ2kzN2dENU55VWw1ZWJzbE1zN1ppV0dw?=
- =?utf-8?B?OTk4eEgxMHBZTnEzWWI5bm56eWM1TkhEMHJBTm9zaTBwODJlWEU4a2tUazVz?=
- =?utf-8?B?cWpTNTIxRlNnNkorejZzbmZLTTdzV1NDSU1xakNITEdKMUUzS1dGMVBDWXlW?=
- =?utf-8?B?QlEwZzhMd0VobWNhWEQ4WlBzZ3h1djIxTVZnYVl4QmhYQ0gzQXRYcHZhT2Qw?=
- =?utf-8?B?ZVk5WjVNSkJuM3BNcTVhQjc3a1ZTejhvUC9EbVRNaGd4bmdQQk5ZSVdTM1hI?=
- =?utf-8?B?TE5URGI2NUI2Q1k5aHg4Q0l6VzhmUnpKOUtlN3ZLTldiOHJ3TzZvZXZoaTZ0?=
- =?utf-8?B?bWpMUGd0WFhpUk1nQjVINGdEM3BUSTEzTjF6YjAwNG5JSFErTDdHOStiaGlP?=
- =?utf-8?B?YXdhK1l3b1duMjNxK1l1bGFUZHRtdDlvbmtHU0l1Q2l2Nnp2ZkRXWXRweDhu?=
- =?utf-8?B?YnhacFdYSWhDOEpjbzhYNDBiNzhEQlNmREpwTzI3VjZNdjNGWDJ3dEtWWXpm?=
- =?utf-8?B?RnorSnkzODN3dFhycHdwWWJvRUdKZlltRUcvTkVtTXZWR3NHNWpSOUE4MmR5?=
- =?utf-8?B?UVYrNDVVbHJORmRPS2IyZ1FncGZWLzJMYjExK0xqbkpsYStQRTJQOXRkT3pJ?=
- =?utf-8?B?bUl5azBMK3lBTFhIb29xcXVaalBETSttcGFWWTlVTCtnNGxwT2ZDUlpTanFE?=
- =?utf-8?B?ZU5wT204VjhBVnEzcm5NUWR2dkh1V3hWYnQwSk9VRkczcjFBSG1LZ2o4SzIx?=
- =?utf-8?B?SUdGNDQzZlBzR1I0WmxkV1U2RUhwTGdKVTJOZ0NSdW1MRzl2K3Z6MTZLNGl1?=
- =?utf-8?B?QXZ4NnVTZ0Z3YmdUWTNSa21nUjdkUlJ5a2w4MWdKajZKMkduSThicVhBcEkw?=
- =?utf-8?B?aHYxN01ockczTzl0azRSSUpzQlJva2NOUTNzMVdIMURWOGhtckRjUFBoWWhp?=
- =?utf-8?B?aThzR0pOVUpWU09GMlpPZmxaSnNQOWRqbnFiQnk4Rmh6Wk80ZWk2bVNXWnBE?=
- =?utf-8?B?QWhCZVlxQlhXVHczK28vREN0NWNWQTJVbEorMGRRZWRqZU1jYlU1VDZmV3RW?=
- =?utf-8?B?cEZFWStDTG5nZTNBZE9rdXh1OTBkUnpGZUNVNUR0WXlNQzVZSXRuRDRyU3RP?=
- =?utf-8?B?NUxOUU1Zdy9SL3NSbXlFVC9jVG94RVBvTTdZdS9Ma3NHckJ4cm9YbG82SHNn?=
- =?utf-8?B?cnl4S3VMT0prQ1FPZGEzTUNzT3IraDJyZ0RkQUNObE83Z3FtbnhyMGo0RHp3?=
- =?utf-8?Q?pLQv8X?=
+	=?utf-8?B?UTM4RVlLamtoaUZpVFArRWR4WGxCS2lSUlgvZ0tvTERWL0JUa3kzMWlGblpK?=
+ =?utf-8?B?VzcxWGRIMWlSNkdZMy9aaHR5UWduSTRSM3pEdm1oMFQweGFsTGlkcUovZzI3?=
+ =?utf-8?B?dGVHZGZLM3VIZnZVRUl5NkRiN1pvN3FMV2JlQWJCREluSktSeFRnMk9RNzlV?=
+ =?utf-8?B?cVk5SVk1a0xsWERlV0JIOXM5TzFvV1FFSVhhcVByUHpzQk90YmQyeG01ck92?=
+ =?utf-8?B?MDVWbkMrcVl4YlErUGFpRm03SDN4V2tJTUdycytzRUZ5SGgxeTA5SmJyVmdw?=
+ =?utf-8?B?Mk1ydlBuVk5qdWVMMHNuV29TMFRzT0R2MkFldm9SM2xPOXdDSE5GMVBITTUr?=
+ =?utf-8?B?eWx4Ky9DZUZoVHdxc0ZMRDVzMllpWU1mWDEzd2hBRTBNY2UydFMyUEZud1c4?=
+ =?utf-8?B?WFNTc20vTFY5MVRDMVFhUzQ4dEtRZC9GNHhiMDgyN3Fjdk5YT1FSK1I5OVRu?=
+ =?utf-8?B?RndSZndOaVg1bG4ydUlrMEIyRDBnVzdjb0FwK3lpc3dLZE9Va1hmL0JFV1lx?=
+ =?utf-8?B?ZzE4aSszYXc5RXZ1eUVyaDBsd3VnaWErUDhWRkl0bTh3SDRkOFBLUVc0U2ly?=
+ =?utf-8?B?cDZybTJZNDEyempVWHNYamc4TkE5UGhNQnhENWtHNDU3Ukp0cGFjRW9YR1R2?=
+ =?utf-8?B?MlN3YW5JMC9IQjFQbTV0c1U3aW5EeFBBNXJ6aXFWRGVSeURwUThyUjJDQ0Zn?=
+ =?utf-8?B?a1cwdUhVa0FGZncyT09jQVRiRVFwV2lWVXdRb0Q1enBxejhnZ0p1T0ZUTmNB?=
+ =?utf-8?B?QlJQanU2aEY3SHZ0Z0JYdjE5UmJzWFg4cGNhTVh1aUxiUVh1WEoydkd5Nk9Y?=
+ =?utf-8?B?VE1sczMwQ0hKdURGaG9UUGZlbkRXUkMrcGJCS1hxdGdMTjh3eDRMeElTY3N2?=
+ =?utf-8?B?WDJOcHJhUHcwbHlPTE5QZVFrSGhkZitFWUFGYlNQZE9odmMxczBxMVRmOWsv?=
+ =?utf-8?B?dC8rc2R4TE1XMCtSYXpnVzlyZVVvSVlMZVZ5R2RJWFM4RGZDR3c5c3pTcVhQ?=
+ =?utf-8?B?NThOUU04RTVsRjZkV3hablFNZDRZc1lmT29QTGFiU0REaUtBb1pRS2s5TWkr?=
+ =?utf-8?B?YzNrQUVTSGM4L0ppbUdGR05wQjB6bGhQNUdodVArUEJDVm5leFg0akx6M05o?=
+ =?utf-8?B?NFRmUk02SmZoZUZybWJBNU1OeXQxU2Vndy9oeUxVV0pxWmlTd1djMFN4czNm?=
+ =?utf-8?B?K00wSCtjOW9LNjQrU3B1SDBHL2p6TDRyTEJxcThqYUhScHRZWnBzaHJRYnJw?=
+ =?utf-8?B?Q2w0dUwrSWFNS2ZKZ2R5RXBENTlwMU52TC96cU9OT2RjaDl1Tkx6ZWUxeFhB?=
+ =?utf-8?B?WnlKQlFnODV6S0NMQ0pjcGpNMDZZaGFCT2hxcWlnYi94REdZWXowUUpjdzlk?=
+ =?utf-8?B?c3g4NVRCMDliZU1hbjBhb21ha1pJZklxTFFTdmQ4aGRqMGxUSXZYcUVjTVMr?=
+ =?utf-8?B?eTJsWmNnem1pUmZaQ2cvU2Q0MHhDVVBRQmlueVgvdG90cFdOcGlESWZGL1VS?=
+ =?utf-8?B?L1Y1dXJMejhOMVpGM0RWNGtuejg1b2o1eUlBVkovVm9nSmJZbWtKdFlGNW9O?=
+ =?utf-8?B?UG55dWFIeUJNMGVxUXlHcVZtTVM4aklma1htcTVZaFhMeUN4VHBHODBDNVd4?=
+ =?utf-8?B?WDhQc0Jzd2E3aXkxM0UyV1lYU013V3h2RDhicWtZWlRtRFlDaFlJRlp3cmFo?=
+ =?utf-8?B?cC80Ui9kdGxQNU9penI0NmwzOTJma0crU2l0TmZzNW5YMmxPS0xVa3UyTHVV?=
+ =?utf-8?B?cVIxZFBpSXBmQWpUcFJoUkJtTzZqc1REV0o3cXE1a2s1ZTBuTmk4dnJTUC94?=
+ =?utf-8?B?NjVqYm5wYWFDMi9vL0RIVEJCSlZMTnFvSmVUMWdFUkVyS3pPNXdhUGsyUkkw?=
+ =?utf-8?B?V3JrQjI5VHdmakFOQ2RFR2FIeFRSeURGbkthT20rNnFOcHFIYzZlVWwybjA5?=
+ =?utf-8?B?K29oLzNwblVxaGk5angvQnRmVkhTRVkvdVF3b2QyYWM2OEgrbTBXTzdXSFpP?=
+ =?utf-8?B?akJ6TnRSZzB5eXJPVHQ1TWR2ZEk4bkEvMUlVNGJtSDJoSkNNU0xSWk9yTFVQ?=
+ =?utf-8?Q?AEXANV?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR14MB4360.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014)(80162021);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eU93U2NXNnY1dndxU2p6ZjRZSUFDc0dENThUZkRhbHNpQm1RVWVwYVVsWXRR?=
- =?utf-8?B?ajhEQ1pqZHhtT1RwV0s1OEhEaHFncTlrZW9qQ0FPbHlvcEJvRHNHK0dOOGF2?=
- =?utf-8?B?WXNreTc3UnpXR25wZlZ2NGZJa1pVTllhdVgxcys0NDBlL2w4WVJPbWZkMDNJ?=
- =?utf-8?B?TC81OGU4K3AxaWlCRzZPR2RSaW1uZTBlbmlyR3M3aEx5QVVEeWxJaStNYVBT?=
- =?utf-8?B?ZnhTYlpoS0YwYXhvSWNOVTBrK0ZELzgyK3BqV2dqY1Q4T3ZjTjQ5RHlteTJw?=
- =?utf-8?B?N0ZHWUZxM2kzbGVLS2cxTElCNzE5Qy9Cb09SaFBPS3B1OHRjakYwSk04QUlL?=
- =?utf-8?B?dGxxdUpuVURmQ3k0cHAvNndXSEtIVVhuOG4rWHJQRWZTbTg0WkJWcFBtWDZZ?=
- =?utf-8?B?cHl6UHZ2S2ozYXc5SjI3czBEdzhZMXEvZWtXUnhoTUFSMEZLNkZlUWw2Tktp?=
- =?utf-8?B?ZnlHaGRRNms5NDY1Z2lZazdrQVFtSWxYam5GNEdTUE5JMCtSaUZ0aDJVSUcz?=
- =?utf-8?B?ZUdVcitwODJpZVJoNnNEa2tOL3UxQ1g3cG0yS1NvbEZib3dCcUN0MWZZOWhP?=
- =?utf-8?B?cHQzL1dZb0J5VE9ubVVpSjVhdlZXNUNuTnVNaEpiTkpKOFg0MDRsRGhQWlVw?=
- =?utf-8?B?U1pZRld0cHlteDNJYzJnL2x2ZEl1d2x5OW1rQ2JMRWhiMndxeUk4MEZZWGdr?=
- =?utf-8?B?RFJoR3lCNTR2MjZKNkszTUtLYmxTQ3VPZXpVdHduZXJaTXdBNkZ6OW9xLzFG?=
- =?utf-8?B?MGYzOEl6MkJHa3VHZWxkTHpkY0lXbEFSRzRjNEJlS3lCZW1BbWdnb0ZaZWRT?=
- =?utf-8?B?ZVgrYlVjSHUvTGZsaVdmZmxIc2pxQ1VuUWNFejV1aEV5Y0U0VWsxZktVai9B?=
- =?utf-8?B?QTJpS3lwMnlxTVJLNWVZWUVTWGZXREdQNThIMG5BRWtwbVNzbTloZ2NuVUhh?=
- =?utf-8?B?ZlFCUTM1QWVEeGJQelVrVDRISytCNmQyTmMzOVhqNllrSDhnZHprYWFGUlBJ?=
- =?utf-8?B?enBxQkpKL2dYV3hwcHBGOFJteGtQaENFQmlIbFZKTGUxVUVBNjFxV1hHaTRO?=
- =?utf-8?B?RmVvTDR6dXVkTms5dStDM3F2TVBVWFFSUnYwV2ZBMm5kUzNNN3BuSWZVNXhs?=
- =?utf-8?B?bEVUUnpSS1FxMWlKSlorWHFlR2ZraFcyR0RKb3l0VFpkWGs0NEw5QUtrUXVm?=
- =?utf-8?B?N05mRnJpYmVMWnU3elZXQWp4bGpwWHRaWVM2eWRKQ1JJVTBkeW5PTWNlQ0FJ?=
- =?utf-8?B?U0l3QXZWd3M0dDl2WjUrUnhHTmcweTNCenByNTlTVURlemthSE5yYlBGdEpz?=
- =?utf-8?B?Znd2ZEtWM2kzc0hERmhGTkNSanUycTlBQWdhNnY1M2Z0T3ViNnZYakFSMkpY?=
- =?utf-8?B?RTlSd0dxRFRiN2dxWUViYmgzOXkxMHlBSkp1V3lubC9Yb1hDNXZNdkJJZ1lW?=
- =?utf-8?B?QjZ5NnVzd2RMZnRFM2Q5M3hhOENzNDVmcHNkSVBNQ2xJYVNIdWNZRThiOFBl?=
- =?utf-8?B?UDcxWW9jQklOZ1ppY28xZE1GUlV2YXJURGtnb3R0cndHZ1dKY3o0bk04ME9M?=
- =?utf-8?B?OWo5U3kxY2tlZVFabmh0RERoUXppQVFITHFWdmdpRFM1YVJtakNUTjg1SGdL?=
- =?utf-8?B?R05uRTdpRGtPZHN1Y1ZYWktJN0lxaHdXalVrazl1STBGeElCTzZaYzc3d3NX?=
- =?utf-8?B?bTU2c2p0ODU1T0c5eGdTT0dHVkNBeVNMUTdmT0diRFBMOGtLSDg2Nm16dTNH?=
- =?utf-8?B?cm9Xc1NXdCs4U3dURXRwSlF5Z2lzclUzYVdIYWdDSnlNV2s1eit0V2xNcWVj?=
- =?utf-8?B?VFZ6TEpZM1N0YW85NmMrYStLbmIzMUlqOGMwTy9xNGVZQTNKSzNuaUNsYUNP?=
- =?utf-8?B?TVNLVVdlSUc3QzVQd2J0Ly9VNDUyclhLVUJVWXE2ZUNkTmtXakxEQ2lHYTNo?=
- =?utf-8?B?NUVWOHhsdlBuYmJEakxyUktwMENqWkhLU1RYNktZRkxHQ2ZaT01qRlVtK3U4?=
- =?utf-8?B?Z2QrQVBLYyt2Zmd0YzJmWjl1WHd3NnZBVm12K2RiblloNytTRStHOFhibnFI?=
- =?utf-8?B?RGxFVGpLWXI1SUZKOTNDeDMxU2NSMjBHQkozbnJoQmdpNTI4allxOEZEVjNX?=
- =?utf-8?Q?UbZW5HCZ4w7MQXbf6m8fi0vk6?=
-X-OriginatorOrg: kneron.us
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6b031bb-c6de-4992-74e0-08dd78cd1e12
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR14MB4360.namprd14.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 07:47:32.6053
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 07:48:07.0157
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f92b0f4b-650a-4d8a-bae3-0e64697d65f2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fQXBBrx/jgrKtvF2F8Um0ywnEof21YmB7zUEH0Qe4HN+JyIQz9TpOypqQaJHLfR5fDU3TK9ifM8eLs/hVfoS7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR14MB4191
+X-MS-Exchange-CrossTenant-Network-Message-Id: f535272b-858a-4683-327b-08dd78cd32c0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001CF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5981
 
-The current implementation of the usb-conn-gpio driver uses a fixed
-"usb-charger" name for all USB connector devices. This causes conflicts
-in the power supply subsystem when multiple USB connectors are present,
-as duplicate names are not allowed.
+On 4/5/2025 1:08 AM, Sean Christopherson wrote:
+> Track the IRTEs that are posting to an SVM vCPU via the associated irqfd
+> structure and GSI routing instead of dynamically allocating a separate
+> data structure.  In addition to eliminating an atomic allocation, this
+> will allow hoisting much of the IRTE update logic to common x86.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/svm/avic.c   | 49 ++++++++++++++++-----------------------
+>   include/linux/kvm_irqfd.h |  3 +++
+>   2 files changed, 23 insertions(+), 29 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+> index 04dfd898ea8d..967618ba743a 100644
+> --- a/arch/x86/kvm/svm/avic.c
+> +++ b/arch/x86/kvm/svm/avic.c
+> @@ -774,27 +774,30 @@ static int avic_set_pi_irte_mode(struct kvm_vcpu *vcpu, bool activate)
+>   	return ret;
+>   }
+>   
+> -static void svm_ir_list_del(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
+> +static void svm_ir_list_del(struct vcpu_svm *svm,
+> +			    struct kvm_kernel_irqfd *irqfd,
+> +			    struct amd_iommu_pi_data *pi)
+>   {
+>   	unsigned long flags;
+> -	struct amd_svm_iommu_ir *cur;
+> +	struct kvm_kernel_irqfd *cur;
+>   
+>   	spin_lock_irqsave(&svm->ir_list_lock, flags);
+> -	list_for_each_entry(cur, &svm->ir_list, node) {
+> -		if (cur->data != pi->ir_data)
+> +	list_for_each_entry(cur, &svm->ir_list, vcpu_list) {
+> +		if (cur->irq_bypass_data != pi->ir_data)
+>   			continue;
+> -		list_del(&cur->node);
+> -		kfree(cur);
+> +		if (WARN_ON_ONCE(cur != irqfd))
+> +			continue;
+> +		list_del(&irqfd->vcpu_list);
+>   		break;
+>   	}
+>   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
+>   }
+>   
+> -static int svm_ir_list_add(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
+> +static int svm_ir_list_add(struct vcpu_svm *svm,
+> +			   struct kvm_kernel_irqfd *irqfd,
+> +			   struct amd_iommu_pi_data *pi)
+>   {
+> -	int ret = 0;
+>   	unsigned long flags;
+> -	struct amd_svm_iommu_ir *ir;
+>   	u64 entry;
+>   
+>   	if (WARN_ON_ONCE(!pi->ir_data))
+> @@ -811,25 +814,14 @@ static int svm_ir_list_add(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
+>   		struct kvm_vcpu *prev_vcpu = kvm_get_vcpu_by_id(kvm, vcpu_id);
+>   		struct vcpu_svm *prev_svm;
+>   
+> -		if (!prev_vcpu) {
+> -			ret = -EINVAL;
+> -			goto out;
+> -		}
+> +		if (!prev_vcpu)
+> +			return -EINVAL;
+>   
+>   		prev_svm = to_svm(prev_vcpu);
+> -		svm_ir_list_del(prev_svm, pi);
+> +		svm_ir_list_del(prev_svm, irqfd, pi);
+>   	}
+>   
+> -	/**
+> -	 * Allocating new amd_iommu_pi_data, which will get
+> -	 * add to the per-vcpu ir_list.
+> -	 */
+> -	ir = kzalloc(sizeof(struct amd_svm_iommu_ir), GFP_ATOMIC | __GFP_ACCOUNT);
+> -	if (!ir) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> -	}
+> -	ir->data = pi->ir_data;
+> +	irqfd->irq_bypass_data = pi->ir_data;
+>   
+>   	spin_lock_irqsave(&svm->ir_list_lock, flags);
+>   
+> @@ -844,10 +836,9 @@ static int svm_ir_list_add(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
+>   		amd_iommu_update_ga(entry & AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK,
+>   				    true, pi->ir_data);
+>   
+> -	list_add(&ir->node, &svm->ir_list);
+> +	list_add(&irqfd->vcpu_list, &svm->ir_list);
+>   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
+> -out:
+> -	return ret;
+> +	return 0;
+>   }
+>   
+>   /*
+> @@ -951,7 +942,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+>   			 * scheduling information in IOMMU irte.
+>   			 */
+>   			if (!ret && pi.is_guest_mode)
+> -				svm_ir_list_add(svm, &pi);
+> +				svm_ir_list_add(svm, irqfd, &pi);
+>   		}
+>   
+>   		if (!ret && svm) {
+> @@ -991,7 +982,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+>   
+>   			vcpu = kvm_get_vcpu_by_id(kvm, id);
+>   			if (vcpu)
+> -				svm_ir_list_del(to_svm(vcpu), &pi);
+> +				svm_ir_list_del(to_svm(vcpu), irqfd, &pi);
+>   		}
+>   	} else {
+>   		ret = 0;
+> diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
+> index 8ad43692e3bb..6510a48e62aa 100644
+> --- a/include/linux/kvm_irqfd.h
+> +++ b/include/linux/kvm_irqfd.h
+> @@ -59,6 +59,9 @@ struct kvm_kernel_irqfd {
+>   	struct work_struct shutdown;
+>   	struct irq_bypass_consumer consumer;
+>   	struct irq_bypass_producer *producer;
+> +
+> +	struct list_head vcpu_list;
+> +	void *irq_bypass_data;
+>   };
+>   
+>   #endif /* __LINUX_KVM_IRQFD_H */
 
-Use IDA to manage unique IDs for naming usb connectors (e.g.,
-usb-charger-0, usb-charger-1).
+Hi Sean,
+You missed to update the functions avic_set_pi_irte_mode and
+avic_update_iommu_vcpu_affinity, which iterate over the ir_list.
 
-Fixes: 880287910b189 ("usb: common: usb-conn-gpio: fix NULL pointer dereference of charger")
-Signed-off-by: Chance Yang <chance.yang@kneron.us>
----
-Changes in v2:
-- Replaced atomic_t with IDA for unique ID management
-- Link to v1: https://lore.kernel.org/r/20250411-work-next-v1-1-93c4b95ee6c1@kneron.us
----
- drivers/usb/common/usb-conn-gpio.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
-index 1e36be2a28fd5ca5e1495b7923e4d3e25d7cedef..421c3af38e06975259f4a1792aa3b3708a192d59 100644
---- a/drivers/usb/common/usb-conn-gpio.c
-+++ b/drivers/usb/common/usb-conn-gpio.c
-@@ -21,6 +21,9 @@
- #include <linux/regulator/consumer.h>
- #include <linux/string_choices.h>
- #include <linux/usb/role.h>
-+#include <linux/idr.h>
-+
-+static DEFINE_IDA(usb_conn_ida);
- 
- #define USB_GPIO_DEB_MS		20	/* ms */
- #define USB_GPIO_DEB_US		((USB_GPIO_DEB_MS) * 1000)	/* us */
-@@ -30,6 +33,7 @@
- 
- struct usb_conn_info {
- 	struct device *dev;
-+	int conn_id; /* store the IDA-allocated ID */
- 	struct usb_role_switch *role_sw;
- 	enum usb_role last_role;
- 	struct regulator *vbus;
-@@ -161,7 +165,17 @@ static int usb_conn_psy_register(struct usb_conn_info *info)
- 		.fwnode = dev_fwnode(dev),
- 	};
- 
--	desc->name = "usb-charger";
-+	info->conn_id = ida_alloc(&usb_conn_ida, GFP_KERNEL);
-+	if (info->conn_id < 0)
-+		return info->conn_id;
-+
-+	desc->name = devm_kasprintf(dev, GFP_KERNEL, "usb-charger-%d",
-+				    info->conn_id);
-+	if (!desc->name) {
-+		ida_free(&usb_conn_ida, info->conn_id);
-+		return -ENOMEM;
-+	}
-+
- 	desc->properties = usb_charger_properties;
- 	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
- 	desc->get_property = usb_charger_get_property;
-@@ -169,8 +183,10 @@ static int usb_conn_psy_register(struct usb_conn_info *info)
- 	cfg.drv_data = info;
- 
- 	info->charger = devm_power_supply_register(dev, desc, &cfg);
--	if (IS_ERR(info->charger))
--		dev_err(dev, "Unable to register charger\n");
-+	if (IS_ERR(info->charger)) {
-+		dev_err(dev, "Unable to register charger %d\n", info->conn_id);
-+		ida_free(&usb_conn_ida, info->conn_id);
-+	}
- 
- 	return PTR_ERR_OR_ZERO(info->charger);
- }
-@@ -278,6 +294,9 @@ static void usb_conn_remove(struct platform_device *pdev)
- 
- 	cancel_delayed_work_sync(&info->dw_det);
- 
-+	if (info->charger)
-+		ida_free(&usb_conn_ida, info->conn_id);
-+
- 	if (info->last_role == USB_ROLE_HOST && info->vbus)
- 		regulator_disable(info->vbus);
- 
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250411-work-next-d817787d63f2
-
-Best regards,
--- 
-Chance Yang <chance.yang@kneron.us>
-
+Regards
+Sairaj Kodilkar
