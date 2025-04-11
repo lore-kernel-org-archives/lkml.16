@@ -1,136 +1,190 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4599B2980CB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45272980CF
 	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360711; cv=none; b=PbWF32OFkGWu7JwfP1uDFJCWbsQD4bvX1hzXA7r3Bc3TZCnvGOEo/kEOaU9LSPoXtd7j52ZDphH62kzJvkrrvqb7ngZfXwXjJdJiekuE2cmBZEw9QIlIUa8TuGOdHTXLtl1yhLXiZRo8ZCY0H6NrDlyuRUO0a9Zt4vtFF4hIsFs=
+	t=1744360712; cv=none; b=CwiyvvD0pkDyZ3w8Z6gJBMIL8nwR91Gni7W/pn3oiTCvex57QLKbVxGybbosEwZXZL01FoYqKe/DvbTB/UV2pQmEzaGL7V5AgrZgx9lOrqLzaNS9kzztj4MdElW4ShEXxV6ayZfbAcffGdQIKP+mOTt8XY47BL1POF1wuypDHZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360711; c=relaxed/simple;
-	bh=D7R9oFDs5xYoXN43Ulwrouo3nLF61el6kbjtNoLpuyw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HVjbnTj4gYBQIlcx79o8xJbmEcL/JztLgMuGI2LlGWqws8QjMWy7V6HaHRjF/JjfsNhzN15t4ahd6U4h1MjzD2ARUAZx5wtjmlC7FMKxs+Ac7ji1cx/9xbZs2uPUlaD3mo2yerojC9Kwtu6oQPMdc4tDBIpiLlml4ReGt2BwTJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=UzpIvUwx; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1744360712; c=relaxed/simple;
+	bh=iQegmjPNvgyXMQhA6K2uIdTy01dFmeDwep8uKg4p18M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NYaCTNbvfOGnYC7edZ8WuwBi5bQLotHiJE/AcJHX9xFX38fWJ1kHVABhkePyl072TGxSzDX2wLTb043SxJp4BwK82elyGTVAhBv5qJRttqqFByc5ME66lbXkzePE5vg28uIrtfWgORTpAmJnmIsAITrab2tnf8nTrNE8PTjjdqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qzMeZlWI; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="UzpIvUwx"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e589c258663so1652454276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:38:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qzMeZlWI"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7370a2d1981so1339263b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:38:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1744360708; x=1744965508; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RtU+pOoZbsLOnPjUI7YZ5FGGjZ40GzcCM59B/7LbYr4=;
-        b=UzpIvUwxO+k22fbZNAK9zkUFeyaa/VmpTJvs0do+/nfTjsFynHnh185YRbcfQ0rzcR
-         vB3E3/0ij478ZA+Qg2zv/OrH/0bL9efzaQzx+uXutMvMqJ6ivOQKWo6IlDs+jZsUJVrO
-         ZoAj3W/isU9utclcGyzHD/b6+qj6i5lTWwdLk=
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744360709; x=1744965509; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aAL/6p83YpXkd2lWxaTuipFX1SLH+v+iTkrYyMI4qJI=;
+        b=qzMeZlWI0Aka9nW1WQ4SWfM75zJD5Q+NsJ5igDsZm3GYTeqXzKmZaWXuNbIHI8WtS1
+         CByH333Y8qjtawK8Gl9pYq9HptnkhEUMVuTfdl49TVI0nCli+2D6oa405YWC7OxidIvM
+         Xc9vtok8vze4iUEfZ9oAnmmeyjovsSfIz77lw4EU9XtI4iD2++OU9uLrqAJBogFR79o8
+         l+wgLaTEyy8bSL5m3x/HjwiCps1k9uOO+DIyo9NnNd0qF+XzUd48MSFtcHxwgcF7RHo7
+         oFRCw0TmYZ5cpHM+4AB3i+rbgECwVAk2mfQSQ4XjZ6ToDscD6nbyTCXcaXUCEC0Fn25H
+         ZQTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744360708; x=1744965508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RtU+pOoZbsLOnPjUI7YZ5FGGjZ40GzcCM59B/7LbYr4=;
-        b=KJV4/DmC5J6kTft9+M4z5R2l+igdeHse5bljFVDaaf6fmGgkwkRl8QXeo+KFKcDpLZ
-         KLdl7k/RWM2REmISjJDCcjXObSFuZ5DfmZRYcJPYkeBPa0707ot3Va0QlKhVgnt/uBHM
-         ze7Gw4ndtSLuN8TvzBcaKS2sMY+TFZy3cWZApsmEwuvMtwFFjn3EjppUogb64iyaJhN6
-         37M/wiz0gLUlfhyKI3sEPgXG4uZlDKE1OxQocP8e6Bw/bZQCxSOPZddqjaNx+MkKHGzW
-         mRs2YTUa0YdKlh0Yn2autcKCnCqC/q//9+gxwKdzHJveEsDvc0YVd0eOZip72WIVTp3J
-         iSdw==
-X-Gm-Message-State: AOJu0Yz/Qwdq3VSh7A8a57K35bw45cWwnIGsrwl5Nwn5uRw7TD488KQq
-	cBCIgAP0g+H3p0rccoxxSpHtsQbJZh1aWthbSOVxHZ2QKUGcy2r7A03KkY9XbduPtJWHxe4tIUQ
-	qqE4N7/KpWpbosCq2V2+yUHWVSFsuofC+5IQt0g==
-X-Gm-Gg: ASbGncvuXk3vtM3Wf77nv41NAXL6pSg4Xo3X8fg9E7PWBsdrYDgpkWLZI+qY5g7nSwL
-	tzr9NtkXllNL7GSnpG/VntjdD+taBLC8wwQnwo8jzdR1yzQBvxC43x4J7YOefluMiVCX/8sViLI
-	MvAXpivBgl17m9NR04K2A=
-X-Google-Smtp-Source: AGHT+IHCodNLsYqxPgYy8KacCIFQ8uMbF8eAgpfHHABuPW/r+cXCzHR5Dy1G6JiUbudEZgEzb8V1wt8pBrFYRs9UU4s=
-X-Received: by 2002:a05:6902:2012:b0:e6d:dfea:8f09 with SMTP id
- 3f1490d57ef6-e704decd54bmr3276455276.26.1744360708185; Fri, 11 Apr 2025
- 01:38:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744360709; x=1744965509;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aAL/6p83YpXkd2lWxaTuipFX1SLH+v+iTkrYyMI4qJI=;
+        b=e446iHIcdr80WNWJa/PTRAuZvzrDYXPqXDc+xswZMauM/GyEu6jB5lint3UHQxcVxL
+         tt7YPFO9LAl89c1S0zxZ6aQTP0ZGQRXzGNOHJV0g3I69LUm6pygPf20hAyIxxSfaAOe7
+         /ew6cJtcGHgMYLKHXqjTUwbKS9Km+boaTeFXqFP4+xkZiOEwBU9NmKHRLU4eh/VBNAZo
+         7p3nLawFpRnfT/nFRU2JwAHIeWovLTh79qY+++t84s9bRoLmFfSDkO7ZwW1QsSwIpAE0
+         VougXule61+nwvXTk+hLuNapjM1rIvtNwWp4hk9bg7IjjG27wwRjqv9q13JR3/iX+QWp
+         Zdig==
+X-Forwarded-Encrypted: i=1; AJvYcCURlh29LXTRdk55UTKG1XXVANyOjsWhvaacOKl99SpYyS5/gqwRQ8jQmtK8FV018k5lVY/bX0Q+XoXm/70=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3Fqz09cUd/Q3mPqiUuUq5ZZONsZBO7TT0AsLheeIXYV+YpcSu
+	JR6lV2e4A4lajFjFXiUqMxEpXla0kDZhlLoBKos7ecQ6Oqxj9gH/SusiPqIJk2s=
+X-Gm-Gg: ASbGncvp7ZDpLlvDtgY9BvIKfUnPhhXqEeBokhEvr4nwX4Ucl9iBx5xnytju+3shmAE
+	7efA4btY8biDJ5JWQVvLLEyrfxoSCSwI4Br24GJ6MO+HOPbwptGd896v1AuxMsH1lMvVnUZU2kk
+	QJruONNWYx0MSlDjO/VCIJoUIBLXRN6yBmrc3nsIfGZzUjqSgy7q1SjQg944by+g/ZxfqVnPkRB
+	kUN74UoGxZM2SKabxuoIYyAjhGWhifVNFYnqybq95Nc+bXXhRb9kwn9UfniqyPPxEZR18RBMPPf
+	IbNrEEavBq3cQah5pxjZuCHLjUIIjrPdzgmbHNkPiGASk8i0g6wBed8FRsgzs3F/V2IIwFFiN6E
+	lv9pK6HTJpA==
+X-Google-Smtp-Source: AGHT+IEc1zf/fjqiNF1HMx499nzROimsFdgb4amqFTVGVHXlXwhSyAjiyD+tanp9f2f2sNWK6e9KZA==
+X-Received: by 2002:a05:6a00:1147:b0:732:5276:4ac9 with SMTP id d2e1a72fcca58-73bd11dd516mr2510411b3a.9.1744360708569;
+        Fri, 11 Apr 2025 01:38:28 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c65c9sm964123b3a.61.2025.04.11.01.38.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 01:38:27 -0700 (PDT)
+Message-ID: <f4be063b-f321-45d4-9891-b50f30beb1ef@rivosinc.com>
+Date: Fri, 11 Apr 2025 10:38:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306112959.242131-1-dario.binacchi@amarulasolutions.com> <20250314093503.GD12210@nxa18884-linux>
-In-Reply-To: <20250314093503.GD12210@nxa18884-linux>
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Date: Fri, 11 Apr 2025 10:38:17 +0200
-X-Gm-Features: ATxdqUF7idGp2hnH8dEoppZJLC3ZC9jhgwG1uStDtkKfsGzYjzpE_DfoJqtsu9k
-Message-ID: <CABGWkvq2X9L6P39K5OeQW4+c2OmSYGHN03mUW-96U5okO1CK5A@mail.gmail.com>
-Subject: Re: [PATCH v10 00/18] Support spread spectrum clocking for i.MX8M PLLs
-To: Peng Fan <peng.fan@oss.nxp.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Abel Vesa <abelvesa@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
-	linux-amarula@amarulasolutions.com, Conor Dooley <conor+dt@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Fabio Estevam <festevam@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Mar 14, 2025 at 9:27=E2=80=AFAM Peng Fan <peng.fan@oss.nxp.com> wro=
-te:
->
-> On Thu, Mar 06, 2025 at 12:27:49PM +0100, Dario Binacchi wrote:
-> >This version keeps the version v9 patches that can be merged and
-> >removes the patches that will need to be modified in case Peng's
-> >PR https://github.com/devicetree-org/dt-schema/pull/154 is accepted.
-> >The idea is to speed up the merging of the patches in the series
-> >that have already been reviewed and are not dependent on the
-> >introduction of the assigned-clocks-sscs property, and postpone
-> >the patches for spread spectrum to a future series once it becomes
-> >clear what needs to be done.
-> >
-> Although I give R-b, there is an idea just come out in my mind that this
-> might break OS distribution that use firmware(e.g. U-Boot) to publish
-> device tree for Linux Kernel, such as ARM System-Ready complaint OS.
-> I overlooked this point in previous patchset reviewing.
->
-> Since this patchset is to move anatop stuff to a new driver to reflect
-> the HW truth.  And requires new entries in CCM node, so old bootloader
-> with new kernel will not boot for OS distribution, such as Fedora/openSus=
-e.
->
-> Not sure how to keep backwards support as before. Leave to maintainers
-> to say if they are ok with this.
-
-Many thanks to Peng for the review, and a gentle ping to the maintainers.
-This series has been ongoing for a few months and has reached version 10,
-thanks to the reviews from Krzysztof and Peng.
-I kindly ask you to consider it as well.
-
-Thanks and regards,
-Dario
-
->
-> Regards,
-> Peng
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] riscv: misaligned: fix sleeping function called
+ during misaligned access handling
+To: Alexandre Ghiti <alex@ghiti.fr>, Nylon Chen <nylon.chen@sifive.com>,
+ linux-kernel@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, charlie@rivosinc.com,
+ jesse@rivosinc.com, evan@rivosinc.com, zhangchunyan@iscas.ac.cn,
+ samuel.holland@sifive.com, zong.li@sifive.com
+References: <20250411073850.3699180-1-nylon.chen@sifive.com>
+ <20250411073850.3699180-3-nylon.chen@sifive.com>
+ <992e3135-0c55-403c-9f71-d76c59cec75b@rivosinc.com>
+ <22a2c734-b446-4b1e-a2bc-a0080656fe29@ghiti.fr>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <22a2c734-b446-4b1e-a2bc-a0080656fe29@ghiti.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
---=20
+On 11/04/2025 10:35, Alexandre Ghiti wrote:
+> Hi Clément,
+> 
+> On 11/04/2025 09:36, Clément Léger wrote:
+>> Hi Nylon,
+>>
+>> I already have a pending fix for that bug which is to reenable
+>> interrupts while handling misaligned faults. Please see:
+>> https://lore.kernel.org/linux-riscv/20250317170625.1142870-12-
+>> cleger@rivosinc.com/
+> 
+> 
+> Can you extract this fix from the series so that it can be merged in 6.15?
 
-Dario Binacchi
+Hi Alex,
 
-Senior Embedded Linux Developer
+Yes sure, I can send a small series as well. However, I'd like the
+associated kselftest to be reviewed since it would allow to catch such
+behavior (there is no test for misaligned delegation yet).
 
-dario.binacchi@amarulasolutions.com
+Thanks,
 
-__________________________________
+Clément
 
+> 
+> Thanks,
+> 
+> Alex
+> 
+> 
+>>
+>> Thanks,
+>>
+>> Clément
+>>
+>> On 11/04/2025 09:38, Nylon Chen wrote:
+>>> Use copy_from_user_nofault() and copy_to_user_nofault() instead of
+>>> copy_from/to_user functions in the misaligned access trap handlers.
+>>>
+>>> The following bug report was found when executing misaligned memory
+>>> accesses:
+>>>
+>>> BUG: sleeping function called from invalid context at ./include/
+>>> linux/uaccess.h:162
+>>> in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 115, name: two
+>>> preempt_count: 0, expected: 0
+>>> CPU: 0 UID: 0 PID: 115 Comm: two Not tainted 6.14.0-rc5 #24
+>>> Hardware name: riscv-virtio,qemu (DT)
+>>> Call Trace:
+>>>   [<ffffffff800160ea>] dump_backtrace+0x1c/0x24
+>>>   [<ffffffff80002304>] show_stack+0x28/0x34
+>>>   [<ffffffff80010fae>] dump_stack_lvl+0x4a/0x68
+>>>   [<ffffffff80010fe0>] dump_stack+0x14/0x1c
+>>>   [<ffffffff8004e44e>] __might_resched+0xfa/0x104
+>>>   [<ffffffff8004e496>] __might_sleep+0x3e/0x62
+>>>   [<ffffffff801963c4>] __might_fault+0x1c/0x24
+>>>   [<ffffffff80425352>] _copy_from_user+0x28/0xaa
+>>>   [<ffffffff8000296c>] handle_misaligned_store+0x204/0x254
+>>>   [<ffffffff809eae82>] do_trap_store_misaligned+0x24/0xee
+>>>   [<ffffffff809f4f1a>] handle_exception+0x146/0x152
+>>>
+>>> Fixes: b686ecdeacf6 ("riscv: misaligned: Restrict user access to
+>>> kernel memory")
+>>> Fixes: 441381506ba7 ("riscv: misaligned: remove CONFIG_RISCV_M_MODE
+>>> specific code")
+>>>
+>>> Signed-off-by: Zong Li <zong.li@sifive.com>
+>>> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+>>> ---
+>>>   arch/riscv/kernel/traps_misaligned.c | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/
+>>> kernel/traps_misaligned.c
+>>> index d7275dfb6b7e..563f73f88fa8 100644
+>>> --- a/arch/riscv/kernel/traps_misaligned.c
+>>> +++ b/arch/riscv/kernel/traps_misaligned.c
+>>> @@ -455,7 +455,7 @@ static int handle_scalar_misaligned_load(struct
+>>> pt_regs *regs)
+>>>         val.data_u64 = 0;
+>>>       if (user_mode(regs)) {
+>>> -        if (copy_from_user(&val, (u8 __user *)addr, len))
+>>> +        if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
+>>>               return -1;
+>>>       } else {
+>>>           memcpy(&val, (u8 *)addr, len);
+>>> @@ -556,7 +556,7 @@ static int handle_scalar_misaligned_store(struct
+>>> pt_regs *regs)
+>>>           return -EOPNOTSUPP;
+>>>         if (user_mode(regs)) {
+>>> -        if (copy_to_user((u8 __user *)addr, &val, len))
+>>> +        if (copy_to_user_nofault((u8 __user *)addr, &val, len))
+>>>               return -1;
+>>>       } else {
+>>>           memcpy((u8 *)addr, &val, len);
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-Amarula Solutions SRL
-
-Via Le Canevare 30, 31100 Treviso, Veneto, IT
-
-T. +39 042 243 5310
-info@amarulasolutions.com
-
-www.amarulasolutions.com
