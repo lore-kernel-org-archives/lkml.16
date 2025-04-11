@@ -1,146 +1,255 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361CC6AA7
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4963F20AF94
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744363001; cv=none; b=DsHuWSsllJoFV6HWmxm9p+15ajIPU++//E/p41wbRjoWWOOH2CsO/mlaHW5x5A3M8WJklHyaov0aIWLo5rqx+6l6q6z38fRZjASLmj/n0cOhTHzq+YmwTGC3pTihaxNNC1gnNCQpDmm4Ah6ry4suc+nF48gqU6qxEDaJ95ARJOQ=
+	t=1744363024; cv=none; b=PchlSbG6NuOpSSAX7yI1oMI5A9WNN6kMooSn84Y4OmuIbwRX8liJaABfd5ZTgWzyZVaHTMnnEQKGIyodXprvG6Av82Qv/OTPmXqrwvKEMEHI6jFPpGi4gU+z/MiEqAH7lu1koggeXZyjudeF6o5EMajXSq5NKhizBlTf+n9sS20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744363001; c=relaxed/simple;
-	bh=C+RN3MzxMKy12kB1vgpMBhSAt+yGWRPeVpqXvFuJ8Po=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nR1U6soxWpiOgSwJfJmRaKoA0O6ZNyHMWf95DiIBreu8vyz/f5mwpAbgZc1nS8GcOUac0Cua6xiDnfKyjMBndZn4oqJRZ9XMkNLWMc5ntWoj5olcby2oTVy2RAP/pz+E+7ZK3ZJxpsQhJD66SY0gefwPTYBMpwn03rQQk1sRHBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MfRWrUpW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MfRWrUpW"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B62xS5016319
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:16:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ufhmds+kkSlO2rSMDq46DFe1lGxthqem6KM44BdOhnI=; b=MfRWrUpWHKOXgxYd
-	tlO/p2GZIa8GpGmxViFMmae42WC/Sm1LQQSfsr1NCsUoMXDIaJcLbGKAHmC/vmO9
-	mGCfteziXR1g/s5n4OXVCfBnlE+djitVvKKVaO0PNb1yjIvOk4sXsZyteZl/MXRU
-	0u74+JzCVDzaGwOwQK7IzLVuZqj2WT82Y6ZZdVDBWMoTUSpTGWgMQ5JlvvhiEuf2
-	Dn04zgeuEvj9ASmeFiha/ItVQzLRwcsdtbbXHHOkdsh+X6zRW5qmMas5wY2VLWDj
-	jMR8zbMd2spdPqvT3hrO77tyq2fJSup339513IQbyZBJVJJou3eIdlBUHZjZCLEV
-	8A6aGg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1sq1s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:16:38 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5ad42d6bcso43538085a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:16:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744362997; x=1744967797;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ufhmds+kkSlO2rSMDq46DFe1lGxthqem6KM44BdOhnI=;
-        b=Rb5nIgs/zHZdyPnYjomzmCICdcwnNvv1EZ99JLOjXrGDu6xAJjPuHQitj92+KpiVjz
-         s8YLFVDU37COQJrVUnZPklgRW8Yh5up54Fu4qQGW0k61aiPlvVk3IzA4DFdtuTsdptwg
-         jK6gmvgd5DSD1B+wVZ/I9UG9c9pcfESiYMCV67uaqucPcFP7iZX6BpEu/ik2jLigDD6G
-         D3o+J6icg3CjLQ+om1NC1fc8s6nFbsraL286BFDA+Py4TttPMeESPP/q1jef7IVI8DZV
-         tIugVJc5ExYY2yKJWE1Q6quTzJrW1e3RXHIExgWkaQiTU2q6gP6JOEYwXA3OOpZNnVjP
-         oNlg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5guQHvh2a5c6NzyK1qmPQrmQ2tUf3fHyLZce0Y2UDbsUS2uAu3JW0ki3dh8eqEixg1UwPovC3TCrRK2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf9BQ0kSWv9WdVgu/TsNieL19Knb4Vw1ME6uFzuG3al4mJGbes
-	mVfPJf11z9sa6GaQ+EfQFkQsTGjfS/7Ovca1kAyqUKJzGM3jM8BbZPSRo80XpqO/eXe/LMkuKXV
-	Xya5RcC6/XsF6qy/XLbkt9ZtK5GGbMxXw/THNvEQhOW9NxuHmaO+fyOt56AzXKWA=
-X-Gm-Gg: ASbGncu1cYCGwaCucs4R5N4jXLZ79FaPx6HNjpV7XZ0amo3IfbZiIjkpJa48Fz56kXa
-	eF8/Y9upZY6CatkOstRikJ8LhAUdI54r5JciXictpte/eHQZsYFyFu7OOVeB1l6PcUketwH2xrZ
-	ujL3cCw4naQbixKDYI7SodYScyovBSQRwbUbYyGwhDhZhL0yw1oeU0iP/6jHinmoovkc8TkLX4R
-	TlwJ0kLx//TIcM23TFzOps+xt17wS1UH36O3hhf6o11ahKJOla1FdtHuE/Adnh8r1OrAYZm5PSx
-	CGk02tMqsb2MeCjtHL3wahgN6Y6X1rtaZ//aoKLnFQOgBgFVUhnKwaqFWvohHNTmiw==
-X-Received: by 2002:a05:620a:24d3:b0:7c3:c340:70bf with SMTP id af79cd13be357-7c7b1af7826mr48638185a.14.1744362997402;
-        Fri, 11 Apr 2025 02:16:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFk9dXYbzUf6tHquMMviOk/dVPcbI1gX6P3/o7uHdR9WHzJEGAa5g8BLBffgulwxemVb9V1bw==
-X-Received: by 2002:a05:620a:24d3:b0:7c3:c340:70bf with SMTP id af79cd13be357-7c7b1af7826mr48635885a.14.1744362997070;
-        Fri, 11 Apr 2025 02:16:37 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1be9632sm424190666b.66.2025.04.11.02.16.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 02:16:36 -0700 (PDT)
-Message-ID: <d4f29833-a9c3-4942-a333-8ca4e7a8bd97@oss.qualcomm.com>
-Date: Fri, 11 Apr 2025 11:16:31 +0200
+	s=arc-20240116; t=1744363024; c=relaxed/simple;
+	bh=erby/7BK+EMICKzhQ1iqW19K0ZhAMF17XzLgQq+a4tI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dTe4iggPhlOREG79NJ0qhHdaNESsPJO7lToeyAi9KLf1dFg7+X/1FyS0y9Ud8R7QivpfBnb2ZgWxRhCuKz8DJUhPrRoEjmsMIyd8chv5NBf5jkyezB5z6/doxsvatIBdI9AVJpFUeYgfIB4Sx7RVqQSHA8To5ahM6LsCjDevRaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 081411596;
+	Fri, 11 Apr 2025 02:17:01 -0700 (PDT)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 763A83F6A8;
+	Fri, 11 Apr 2025 02:16:57 -0700 (PDT)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org
+Subject: [RFC PATCH v4 01/18] mm: Introduce kpkeys
+Date: Fri, 11 Apr 2025 10:16:14 +0100
+Message-ID: <20250411091631.954228-2-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250411091631.954228-1-kevin.brodsky@arm.com>
+References: <20250411091631.954228-1-kevin.brodsky@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/17] arm: dts: qcom: sdx55/sdx65: Fix CPU
- power-domain-names
-To: "Rob Herring (Arm)" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>, Conor Dooley <conor@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Daniel Machon <daniel.machon@microchip.com>,
-        UNGLinuxDriver@microchip.com, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, imx@lists.linux.dev,
-        linux-rockchip@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
- <20250410-dt-cpu-schema-v2-7-63d7dc9ddd0a@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250410-dt-cpu-schema-v2-7-63d7dc9ddd0a@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: ulYJJCnzNy04DMpAziO8BRxjDi-TwCFz
-X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f8ddf6 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=yZJRhKYQK8xzFtgzSFMA:9 a=QEXdDO2ut3YA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: ulYJJCnzNy04DMpAziO8BRxjDi-TwCFz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=905 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110057
+Content-Transfer-Encoding: 8bit
 
-On 4/10/25 5:47 PM, Rob Herring (Arm) wrote:
-> "rpmhpd" is not documented nor used anywhere. The power-domain is used
-> for performance scaling (cpufreq), so "perf" is the correct name to use.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+kpkeys is a simple framework to enable the use of protection keys
+(pkeys) to harden the kernel itself. This patch introduces the basic
+API in <linux/kpkeys.h>: a couple of functions to set and restore
+the pkey register and macros to define guard objects.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+kpkeys introduces a new concept on top of pkeys: the kpkeys level.
+Each level is associated to a set of permissions for the pkeys
+managed by the kpkeys framework. kpkeys_set_level(lvl) sets those
+permissions according to lvl, and returns the original pkey
+register, to be later restored by kpkeys_restore_pkey_reg(). To
+start with, only KPKEYS_LVL_DEFAULT is available, which is meant
+to grant RW access to KPKEYS_PKEY_DEFAULT (i.e. all memory since
+this is the only available pkey for now).
 
-Konrad
+Because each architecture implementing pkeys uses a different
+representation for the pkey register, and may reserve certain pkeys
+for specific uses, support for kpkeys must be explicitly indicated
+by selecting ARCH_HAS_KPKEYS and defining the following functions in
+<asm/kpkeys.h>, in addition to the macros provided in
+<asm-generic/kpkeys.h>:
+
+- arch_kpkeys_set_level()
+- arch_kpkeys_restore_pkey_reg()
+- arch_kpkeys_enabled()
+
+Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+---
+ include/asm-generic/kpkeys.h |  17 ++++++
+ include/linux/kpkeys.h       | 113 +++++++++++++++++++++++++++++++++++
+ mm/Kconfig                   |   2 +
+ 3 files changed, 132 insertions(+)
+ create mode 100644 include/asm-generic/kpkeys.h
+ create mode 100644 include/linux/kpkeys.h
+
+diff --git a/include/asm-generic/kpkeys.h b/include/asm-generic/kpkeys.h
+new file mode 100644
+index 000000000000..ab819f157d6a
+--- /dev/null
++++ b/include/asm-generic/kpkeys.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __ASM_GENERIC_KPKEYS_H
++#define __ASM_GENERIC_KPKEYS_H
++
++#ifndef KPKEYS_PKEY_DEFAULT
++#define KPKEYS_PKEY_DEFAULT	0
++#endif
++
++/*
++ * Represents a pkey register value that cannot be used, typically disabling
++ * access to all keys.
++ */
++#ifndef KPKEYS_PKEY_REG_INVAL
++#define KPKEYS_PKEY_REG_INVAL	0
++#endif
++
++#endif	/* __ASM_GENERIC_KPKEYS_H */
+diff --git a/include/linux/kpkeys.h b/include/linux/kpkeys.h
+new file mode 100644
+index 000000000000..faa6e2615798
+--- /dev/null
++++ b/include/linux/kpkeys.h
+@@ -0,0 +1,113 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _LINUX_KPKEYS_H
++#define _LINUX_KPKEYS_H
++
++#include <linux/bug.h>
++#include <linux/cleanup.h>
++
++#define KPKEYS_LVL_DEFAULT	0
++
++#define KPKEYS_LVL_MIN		KPKEYS_LVL_DEFAULT
++#define KPKEYS_LVL_MAX		KPKEYS_LVL_DEFAULT
++
++#define __KPKEYS_GUARD(name, set_level, restore_pkey_reg, set_arg, ...)	\
++	__DEFINE_CLASS_IS_CONDITIONAL(name, false);			\
++	DEFINE_CLASS(name, u64,						\
++		     restore_pkey_reg, set_level, set_arg);		\
++	static inline void *class_##name##_lock_ptr(u64 *_T)		\
++	{ return _T; }
++
++/**
++ * KPKEYS_GUARD_NOOP() - define a guard type that does nothing
++ * @name: the name of the guard type
++ * @cond_arg: an argument specification (optional)
++ *
++ * Define a guard type that does nothing, useful to match a real guard type
++ * that is defined under an #ifdef. @cond_arg may optionally be passed to match
++ * a guard defined using KPKEYS_GUARD_COND().
++ */
++#define KPKEYS_GUARD_NOOP(name, ...)					\
++	__KPKEYS_GUARD(name, 0, (void)_T, ##__VA_ARGS__, void)
++
++#ifdef CONFIG_ARCH_HAS_KPKEYS
++
++#include <asm/kpkeys.h>
++
++/**
++ * KPKEYS_GUARD_COND() - define a guard type that conditionally switches to
++ *                       a given kpkeys level
++ * @name: the name of the guard type
++ * @level: the kpkeys level to switch to
++ * @cond: an expression that is evaluated as condition
++ * @cond_arg: an argument specification for the condition (optional)
++ *
++ * Define a guard type that switches to @level if @cond evaluates to true, and
++ * does nothing otherwise. @cond_arg may be specified to give access to a
++ * caller-defined argument to @cond.
++ */
++#define KPKEYS_GUARD_COND(name, level, cond, ...)			\
++	__KPKEYS_GUARD(name,						\
++		       cond ? kpkeys_set_level(level)			\
++			    : KPKEYS_PKEY_REG_INVAL,			\
++		       kpkeys_restore_pkey_reg(_T),			\
++		       ##__VA_ARGS__, void)
++
++/**
++ * KPKEYS_GUARD() - define a guard type that switches to a given kpkeys level
++ *                  if kpkeys are enabled
++ * @name: the name of the guard type
++ * @level: the kpkeys level to switch to
++ *
++ * Define a guard type that switches to @level if the system supports kpkeys.
++ */
++#define KPKEYS_GUARD(name, level)					\
++	KPKEYS_GUARD_COND(name, level, arch_kpkeys_enabled())
++
++/**
++ * kpkeys_set_level() - switch kpkeys level
++ * @level: the level to switch to
++ *
++ * Switches the kpkeys level to the specified value. @level must be a
++ * compile-time constant. The arch-specific pkey register will be updated
++ * accordingly, and the original value returned.
++ *
++ * Return: the original pkey register value if the register was written to, or
++ *         KPKEYS_PKEY_REG_INVAL otherwise (no write to the register was
++ *         required).
++ */
++static __always_inline u64 kpkeys_set_level(int level)
++{
++	BUILD_BUG_ON_MSG(!__builtin_constant_p(level),
++			 "kpkeys_set_level() only takes constant levels");
++	BUILD_BUG_ON_MSG(level < KPKEYS_LVL_MIN || level > KPKEYS_LVL_MAX,
++			 "Invalid level passed to kpkeys_set_level()");
++
++	return arch_kpkeys_set_level(level);
++}
++
++/**
++ * kpkeys_restore_pkey_reg() - restores a pkey register value
++ * @pkey_reg: the pkey register value to restore
++ *
++ * This function is meant to be passed the value returned by kpkeys_set_level(),
++ * in order to restore the pkey register to its original value (thus restoring
++ * the original kpkeys level).
++ */
++static __always_inline void kpkeys_restore_pkey_reg(u64 pkey_reg)
++{
++	if (pkey_reg != KPKEYS_PKEY_REG_INVAL)
++		arch_kpkeys_restore_pkey_reg(pkey_reg);
++}
++
++#else /* CONFIG_ARCH_HAS_KPKEYS */
++
++#include <asm-generic/kpkeys.h>
++
++static inline bool arch_kpkeys_enabled(void)
++{
++	return false;
++}
++
++#endif /* CONFIG_ARCH_HAS_KPKEYS */
++
++#endif /* _LINUX_KPKEYS_H */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index e113f713b493..819ef5b70695 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1131,6 +1131,8 @@ config ARCH_USES_HIGH_VMA_FLAGS
+ 	bool
+ config ARCH_HAS_PKEYS
+ 	bool
++config ARCH_HAS_KPKEYS
++	bool
+ 
+ config ARCH_USES_PG_ARCH_2
+ 	bool
+-- 
+2.47.0
+
