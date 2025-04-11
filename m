@@ -1,60 +1,46 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA4828137E;
-	Fri, 11 Apr 2025 05:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606FA281536
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744350106; cv=none; b=RXxPeP666eWV/suQXT+RG67ggUlgSek2F02kJW9xMJyiB1o79RM7G8zAnSVpS7cj/YvVBlRB/StA3GUJndmlN5Y6TrAiA1XbrvWN8h1/h38dsV5JVNcTSlU63++BJjYLd7j4hU8JrIrFvISucA2QfOOw7MIZGnwoCNuw5JK8PmQ=
+	t=1744350108; cv=none; b=svd3JUHcdNiCJg+Fd3WpvFPQau7dLoYCd+/Wjys+koWlYA909EL2sRGmIrBODrny2KeXK7sXZSUWEz5d5wswuNk9LpmG+zOZ6pMkizTvs8mX4iCVw/yWfVfEzD9ePgMfROn2xfKUmcsVr/Tn3YB6x7bd6CjbdocN65bIFCpowTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744350106; c=relaxed/simple;
-	bh=qriyPMO1ibC8ioDySsSvLU5ijXvqtxPCpFVSERXUKaU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=taJc2ja/b6SgWrrZNfphoeYQXu/mrmNzFEQ2Yu7Pm8GzbaBHI6NSutC67gKKD6em4imuhlAE1JISukd9VkKjYIsY/iRnj5g8M4gqhaCUleNF9Xt6m6ng6J/PYBpDte1NntIPzWvGC/no+KalOWVXDbAY/13PVTGWvqc4KANcWOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ZGSORI51; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1744350108; c=relaxed/simple;
+	bh=CtYdubQzU/wKiIbjdpR3sYf3OATSeMckXnWIpeQyi98=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZQnH+SWkJPxoZjm2mZe/zbYmBFaUeNaDhj4Gv7adud1u21sUKfqBUwafaurM9zaGhXQu8aME3kuovX+QVxDjFOUABtfqKgvQeX8JMKrwICMzuRaJBLPi0eJaRreF9Unm1phHS7p6/KtzU1iYa5uTA7MAFi9sGKy0b+xjA3Mzwog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pn5fSagN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZGSORI51"
-X-UUID: a42a5622169711f08eb9c36241bbb6fb-20250411
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=B5tqHLMKf7g8Wxc9Q71D/XsmV0B59emr8eOs+ci5NQI=;
-	b=ZGSORI51ENGs8HTKctwhcJLU9SjYQXPhMCKsU0P5/Dp9cS32kGG1T0AKhZNeskanlGGicOVSESf9z9DJViPw3ROYboFuRqEYJ6qvWUxkGCImhqVR8WJG6d+6YBxW3fxPu7ixwrXQ1JCk3kX8HQ1ux5YmSgVmFbmfxrzzweaaVWY=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:1ea20e90-0b09-4886-920f-3304685c8918,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:84397b8d-f5b8-47d5-8cf3-b68fe7530c9a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: a42a5622169711f08eb9c36241bbb6fb-20250411
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
-	(envelope-from <axe.yang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 903616265; Fri, 11 Apr 2025 13:41:39 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 11 Apr 2025 13:41:38 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 11 Apr 2025 13:41:37 +0800
-From: Axe Yang <axe.yang@mediatek.com>
-To: Chaotian Jing <chaotian.jing@mediatek.com>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<yong.mao@mediatek.com>, <qingliang.li@mediatek.com>,
-	<andy-ld.lu@mediatek.com>, Wenbin Mei <wenbin.mei@mediatek.com>
-CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	Axe Yang <axe.yang@mediatek.com>
-Subject: [RESEND v2] mmc: mtk-sd: Add condition to enable 'single' burst type
-Date: Fri, 11 Apr 2025 13:40:25 +0800
-Message-ID: <20250411054134.31822-1-axe.yang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pn5fSagN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA98C4CEE2;
+	Fri, 11 Apr 2025 05:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744350108;
+	bh=CtYdubQzU/wKiIbjdpR3sYf3OATSeMckXnWIpeQyi98=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pn5fSagN2qxOTTGne15Py8nlssPv548QtIhOGcrqnDzrLGmDriSVHd8GHzwZkRvLC
+	 LrVSkVbbMePDBUoAN25ABoHzFOV6UOKLHJ9rrUpadqKbVpiRnhi2hqO0LNY4+UzM1I
+	 BtXNezeqyLxNnd63xgATVnaJz+zjgGDHALVtxdLPoZHfKXg0+qK4sDL7oBrAx96oZI
+	 j0sX3mKw7ReJzK/++JcnZJ8IPbDNcvaJLxoo9QqrgXk8xhK+AO8iRp1+deE4wBEgpA
+	 tHlJcAyl9ErJFTXAeRBvJIq+aFoOVD96GHMtbxfuWYrkmsEmEZ6Tpg7wDzF219jHzD
+	 aY6N/j+D82uXQ==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 15/53] x86/alternatives: Rename 'text_poke_finish()' to 'smp_text_poke_batch_finish()'
+Date: Fri, 11 Apr 2025 07:40:27 +0200
+Message-ID: <20250411054105.2341982-16-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250411054105.2341982-1-mingo@kernel.org>
+References: <20250411054105.2341982-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,67 +48,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
 
-This change add a condition for 'single' burst type selection.
+This name is actively confusing as well, because the simple text_poke*()
+APIs use MM-switching based code patching, while text_poke_finish()
+is part of the INT3 based text_poke_int3_*() machinery that is an
+additional layer of functionality on top of regular text_poke*() functionality.
 
-Read AXI_LEN field from EMMC50_CFG2(AHB2AXI wrapper) register, if the
-value is not 0, it means the HWIP is using AXI as AMBA bus, which do
-not support 'single' burst type.
+Rename it to smp_text_poke_batch_finish() to make it clear which layer
+it belongs to.
 
-Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Axe Yang <axe.yang@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
-This change dependents on 'mmc: mtk-sd: Cleanups for register R/W':
+ arch/x86/include/asm/text-patching.h | 2 +-
+ arch/x86/kernel/alternative.c        | 2 +-
+ arch/x86/kernel/ftrace.c             | 4 ++--
+ arch/x86/kernel/jump_label.c         | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-https://patchwork.kernel.org/project/linux-mediatek/cover/20250325110701.52623-1-angelogioacchino.delregno@collabora.com/
----
- drivers/mmc/host/mtk-sd.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index ceeae1aeac94..2e4bd5166c17 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -84,6 +84,7 @@
- #define EMMC51_CFG0	 0x204
- #define EMMC50_CFG0      0x208
- #define EMMC50_CFG1      0x20c
-+#define EMMC50_CFG2      0x21c
- #define EMMC50_CFG3      0x220
- #define SDC_FIFO_CFG     0x228
- #define CQHCI_SETTING	 0x7fc
-@@ -306,7 +307,10 @@
- /* EMMC50_CFG1 mask */
- #define EMMC50_CFG1_DS_CFG        BIT(28)  /* RW */
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index 7e3527385708..f27d29042f8c 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -42,7 +42,7 @@ extern int smp_text_poke_int3_handler(struct pt_regs *regs);
+ extern void smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate);
  
--#define EMMC50_CFG3_OUTS_WR       GENMASK(4, 0)  /* RW */
-+/* EMMC50_CFG2 mask */
-+#define EMMC50_CFG2_AXI_SET_LEN   GENMASK(27, 24) /* RW */
-+
-+#define EMMC50_CFG3_OUTS_WR       GENMASK(4, 0)   /* RW */
+ extern void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate);
+-extern void text_poke_finish(void);
++extern void smp_text_poke_batch_finish(void);
  
- #define SDC_FIFO_CFG_WRVALIDSEL   BIT(24)  /* RW */
- #define SDC_FIFO_CFG_RDVALIDSEL   BIT(25)  /* RW */
-@@ -1917,9 +1921,13 @@ static void msdc_init_hw(struct msdc_host *host)
- 	pb1_val |= FIELD_PREP(MSDC_PATCH_BIT1_CMDTA, 1);
- 	pb1_val |= MSDC_PB1_DDR_CMD_FIX_SEL;
+ #define INT3_INSN_SIZE		1
+ #define INT3_INSN_OPCODE	0xCC
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 35a89ead153c..63561e81bfaf 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2866,7 +2866,7 @@ static void smp_text_poke_batch_flush(void *addr)
+ 	}
+ }
  
--	/* Set single burst mode, auto sync state clear, block gap stop clk */
--	pb1_val |= MSDC_PB1_SINGLE_BURST | MSDC_PB1_RSVD20 |
--		   MSDC_PB1_AUTO_SYNCST_CLR | MSDC_PB1_MARK_POP_WATER;
-+	/* Support 'single' burst type only when AXI_LEN is 0 */
-+	sdr_get_field(host->base + EMMC50_CFG2, EMMC50_CFG2_AXI_SET_LEN, &val);
-+	if (!val)
-+		pb1_val |= MSDC_PB1_SINGLE_BURST;
-+
-+	/* Set auto sync state clear, block gap stop clk */
-+	pb1_val |= MSDC_PB1_RSVD20 | MSDC_PB1_AUTO_SYNCST_CLR | MSDC_PB1_MARK_POP_WATER;
+-void text_poke_finish(void)
++void smp_text_poke_batch_finish(void)
+ {
+ 	smp_text_poke_batch_flush(NULL);
+ }
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 7175a0404def..c35a928364b9 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -58,7 +58,7 @@ void ftrace_arch_code_modify_post_process(void)
+ 	 * module load, and we need to finish the text_poke_queue()
+ 	 * that they do, here.
+ 	 */
+-	text_poke_finish();
++	smp_text_poke_batch_finish();
+ 	ftrace_poke_late = 0;
+ 	mutex_unlock(&text_mutex);
+ }
+@@ -250,7 +250,7 @@ void ftrace_replace_code(int enable)
+ 		text_poke_queue((void *)rec->ip, new, MCOUNT_INSN_SIZE, NULL);
+ 		ftrace_update_record(rec, enable);
+ 	}
+-	text_poke_finish();
++	smp_text_poke_batch_finish();
+ }
  
- 	/* Set low power DCM, use HCLK for GDMA, use MSDC CLK for everything else */
- 	pb1_val |= MSDC_PB1_LP_DCM_EN | MSDC_PB1_RSVD3 |
+ void arch_ftrace_update_code(int command)
+diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
+index 166e12037199..28be6eb6cb3d 100644
+--- a/arch/x86/kernel/jump_label.c
++++ b/arch/x86/kernel/jump_label.c
+@@ -143,6 +143,6 @@ bool arch_jump_label_transform_queue(struct jump_entry *entry,
+ void arch_jump_label_transform_apply(void)
+ {
+ 	mutex_lock(&text_mutex);
+-	text_poke_finish();
++	smp_text_poke_batch_finish();
+ 	mutex_unlock(&text_mutex);
+ }
 -- 
-2.46.0
+2.45.2
 
