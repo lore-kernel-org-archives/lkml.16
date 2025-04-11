@@ -1,500 +1,275 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D64213E65;
-	Fri, 11 Apr 2025 16:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9917F21B909;
+	Fri, 11 Apr 2025 16:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388606; cv=none; b=MSLL5gHb1BRTuGzGg1G7jwW8L9kRXyEMkBfWT0aNWhzb50iyITXKcpjR3mCMBHWCZMWYMnHidMjLGlwlRy350smmA9q42UMngsYPf8tzIcwceIbPSRvRAmgpavSaErHbcwWgYk3RcJF5abCOscMI0Ohh67u8wTNGtuJo32+Gc7I=
+	t=1744388616; cv=none; b=BURbv4U2UFEVoXvd3YrChDauzPn4cKqQAEcPBhZnnuZL2RmE88F827a08P7eaVfmBXETSwtJKTxIz1rBt80EPKFgh/9sgbJPIsJ+zZ8+mv2P1gvAnelMtTFKcAUsorU6A/tt2tYql9lICmbWJzg8ZG4hJ1v066d2YwWnbwvfZ5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388606; c=relaxed/simple;
-	bh=bX5gf//gLe4HTi0xG4qcd5655L/UHY4vtT4unJzu7wU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N+2JaX6vmzn6bgmG2FliucMy1NBCo5ZREexypH3fVN3hOWWYwyd3XurE9144l+E+ec6bdytqzFFmeW4dkfOFfzMIHeoGAuiWCPtyZ8eNUUpOXnwbRAxx5Ow3X0pfUshF2yDAUCJW1DxbqiWeIDTXKFdMBmDMCB7o4mLt8kuLp2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=U0PeYI+1; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1744388616; c=relaxed/simple;
+	bh=vCMcEgHUigUOX4/6itupqbvmSxHNfPGr6uYveuFsH9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aS1TUXNlDgWwpCDB1d5erliXGkbaLBWL7L1HGlvw0PVzYgTMAgvogDPqe3Cy7cDnz77jJ8/ftF2/dGGXb7BqB9uV8dfjubHt7gcPo3PUOnKn1qc62hyYMemcEazXQtiETcm8FGdx4d5qSznSuwofq2X440s1ew2NIlYFzHBJTWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Df9jLXKT; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="U0PeYI+1"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 899C0103B92D7;
-	Fri, 11 Apr 2025 18:23:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1744388601; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=i7toiZ3aam9FmI8Y9mV60LP7YPqeaa6HscQKkSu5zHE=;
-	b=U0PeYI+1FyzkVZVseUqc/jpImE4b/LrGLZdAo9SAW+hYdtoFyX/j/n4u4iAfot99lSfS3s
-	dLvlVZ0RneEYIX736NcBPca27ZjKcrlXeWjAZL97qGyK2MFyCZNS1HfMSrN4tFgclM3BQD
-	pIvrpQJieTjsDIeubBD/XZmpkL1TPSYd2dqHWJPqyIMc9acJCos7eqA1QnH2BLhnU8NABW
-	qi6EBMlEU6wt/Q3dvx+Ze58hBn87xfIBqgQuN7rfqseWbseTwgrwQF6GvpiQmd3vhbCcDV
-	yo52dZ/Pkwm0gXveUpXo8lfvlZxjEnnHDJoDaIFqhO4NebIcWlUhYB7kLxFkSg==
-Date: Fri, 11 Apr 2025 18:23:15 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [net-next v4 4/5] net: mtip: The L2 switch driver for imx287
-Message-ID: <20250411182315.17b18a7f@wsk>
-In-Reply-To: <90c19e6e-235e-465d-9e1e-1ebef49156a0@gmx.net>
-References: <20250407145157.3626463-1-lukma@denx.de>
-	<20250407145157.3626463-5-lukma@denx.de>
-	<8ceea7c4-6333-43b9-b3c2-a0dceeb62a0c@gmx.net>
-	<20250410153744.17e6ee5b@wsk>
-	<90c19e6e-235e-465d-9e1e-1ebef49156a0@gmx.net>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Df9jLXKT"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so2097636a91.3;
+        Fri, 11 Apr 2025 09:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744388614; x=1744993414; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T5FckoYafwVaXPWK2PUB+GpDyPBlHFtc4ZPOsKk2Ipg=;
+        b=Df9jLXKTciE34go8Ei8DIcysY65aJN8SNRWbWycT0J6vsmN6ggND4NHjDRUtEJlIxy
+         Gwb1g6UCfAR0UfgOKpwai4HpJvzqT5I9VAsfvMOXOkGiBbITcm1l/rQcJ6agOfWTRWdv
+         gKrwD+vdCYTtS1sFx26420/kU7JPY2iZxILKBoYTj0tSK9IzAMIJVsO7BWZ49ax5DvZ+
+         RHdr2dyygJsLqeo8iUUsEk8rxdrgnvSG5Ky9oL5OUuZuVuAwG9okCngSysoKM4eBrvKi
+         4REUomapfpPi6Xfez4txZc+H1Fy/2YFSVJHodZrMs6fzT4Et/icihp6DQHDygkSBJrjn
+         n52Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744388614; x=1744993414;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T5FckoYafwVaXPWK2PUB+GpDyPBlHFtc4ZPOsKk2Ipg=;
+        b=iPiCjzCUyJrNnZl6hHRU4ch9PkOZ83zmQJDA5KY3wGhIjqYL7g2sbU5gGlHaSvbbiM
+         mfE7g6P1HW1xhgEToAH8QLXUFgUwYmNYfbY1+daGW0jKbNR2WzvAQoWVoGlFTpGjioyS
+         oP1YIgo0DxrkX7BmBU4KyWnC1DmP/gNf0cKqdDUEdQT8TGwFF52HG9IHhN4FcaCgfDwa
+         y9td4+ULGA43ekUPq0wLraTAKNP/3P/DIPI8BeZYzZzHuw6+VMVyM4pn1RpIn5K8WpS/
+         ZiAVL/JKkdmDJiOwnnuLU26AmjRFoCaNbjF/dVmKuXc5ZPMRmSt/yjz5m6CMxxhc891s
+         9ZPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXm0Q920fvtX8JKi7MzGzBby00/wI8BePBKTYtIhWU8tI+SVwfG49nfq9rj27mPtWILGHUGFFPh9jLTjJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9axuCQ0cN/FnqKj+4l52Sk8iVhnR3ihsWlNcXMNFXElfuM1eu
+	hZGpMEN/8R+xv8YRhPkw9E/dsKp8brp3K7wNXX9MuxzB3NyaifCl
+X-Gm-Gg: ASbGnctiY6D1zI39udA/DsuNmEtoV0buqAO8XzGr3udk7tlUaCNqxR7VZ+K7/hexa1j
+	s8byGB/Q6tbT9r+fXpbV911L8xeINTKKN3IqTLjljNZkbwPXPfek3Rek0xnnccQm0ytlV4BBWZ+
+	T+uwrqF9tRbKyiRTroN7+jxGOcWDc/eNEX40jDzCxLdHgv5sT2Zzp2XcRRhoZqiE/EOZtLdRFlZ
+	/b1OWVKZsqI8RPBhuQ71aNDDdJNg2t17CYCXyzD6qQYwgpiOI7L6dTuwF8aU3SY5XMuzBGjGRnL
+	BEtimDluz25Ep37EX0PyDYB56TND/UGL7LQ+Ktsxg9t3KM2exw==
+X-Google-Smtp-Source: AGHT+IFCfUV6384bNBCr+vSp/DTf6SVjkwz2rSVIWqsuCTiK8sT2R3/nhh6FK0ZbTjida+uNgTjQKg==
+X-Received: by 2002:a17:90b:2647:b0:2ff:5ec1:6c6a with SMTP id 98e67ed59e1d1-30823646ae2mr5751053a91.18.1744388613682;
+        Fri, 11 Apr 2025 09:23:33 -0700 (PDT)
+Received: from hiago-nb ([2804:1b3:a7c3:a964:9277:4e8:b712:66e2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a14bsm5814830a91.1.2025.04.11.09.23.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 09:23:33 -0700 (PDT)
+Date: Fri, 11 Apr 2025 13:23:28 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
+ Cortex-M4 is running and it was started by U-Boot bootaux
+Message-ID: <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
+References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
+ <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
+ <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PnT58d9hqwB_als1lKLOmPt";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
---Sig_/PnT58d9hqwB_als1lKLOmPt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Peng,
 
-Hi Stefan,
+On Fri, Apr 11, 2025 at 01:23:32PM +0000, Peng Fan wrote:
+> Hi,
+> 
+> Sorry for late.
+> > Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
+> > when Cortex-M4 is running and it was started by U-Boot bootaux
+> > 
+> > On Fri, Apr 04, 2025 at 11:17:13AM -0300, Hiago De Franco wrote:
+> > > #regzbot introduced: 4f6c983261
+> > >
+> > > Hi Peng and all,
+> > >
+> > > Commit 4f6c9832613b ("genpd: imx: scu-pd: initialize is_off
+> > according
+> > > to HW state") introduced a regression where the Kernel reboots
+> > > unexpectedly (without any warnings, crashes or errors) when the
+> > > Cortex-M4 was loaded and running by U-Boot, using the bootaux
+> > command:
+> > >
+> > > # load mmc 0:2 ${loadaddr} /home/root/hello_world.bin # bootaux
+> > > ${loadaddr} 0 # boot
+> > >
+> > > This is a simple hello world binary that prints a message into the
+> > > M40.UART0 pin (demo from NXP MCUXpresso).
+> 
+> Which release is this image from?
 
-> Am 10.04.25 um 15:37 schrieb Lukasz Majewski:
-> > Hi Stefan,
-> > =20
-> >> Hi Lukasz,
-> >>
-> >> thanks for sending this to linux-arm-kernel
-> >>
-> >> Am 07.04.25 um 16:51 schrieb Lukasz Majewski: =20
-> >>> This patch series provides support for More Than IP L2 switch
-> >>> embedded in the imx287 SoC.
-> >>>
-> >>> This is a two port switch (placed between uDMA[01] and
-> >>> MAC-NET[01]), which can be used for offloading the network
-> >>> traffic.
-> >>>
-> >>> It can be used interchangeably with current FEC driver - to be
-> >>> more specific: one can use either of it, depending on the
-> >>> requirements.
-> >>>
-> >>> The biggest difference is the usage of DMA - when FEC is used,
-> >>> separate DMAs are available for each ENET-MAC block.
-> >>> However, with switch enabled - only the DMA0 is used to
-> >>> send/receive data to/form switch (and then switch sends them to
-> >>> respecitive ports).
-> >>>
-> >>> Signed-off-by: Lukasz Majewski<lukma@denx.de>
-> >>> ---
-> >>> Changes for v2:
-> >>>
-> >>> - Remove not needed comments
-> >>> - Restore udelay(10) for switch reset (such delay is explicitly
-> >>> specifed in the documentation
-> >>> - Add COMPILE_TEST
-> >>> - replace pr_* with dev_*
-> >>> - Use for_each_available_child_of_node_scoped()
-> >>> - Use devm_* function for memory allocation
-> >>> - Remove printing information about the HW and SW revision of the
-> >>> driver
-> >>> - Use devm_regulator_get_optional()
-> >>> - Change compatible prefix from 'fsl' to more up to date 'nxp'
-> >>> - Remove .owner =3D THIS_MODULE
-> >>> - Use devm_platform_ioremap_resource(pdev, 0);
-> >>> - Use devm_request_irq()
-> >>> - Use devm_regulator_get_enable_optional()
-> >>> - Replace clk_prepare_enable() and devm_clk_get() with single
-> >>>     call to devm_clk_get_optional_enabled()
-> >>> - Cleanup error patch when function calls in probe fail
-> >>> - Refactor the mtip_reset_phy() to serve as mdio bus reset
-> >>> callback
-> >>> - Add myself as the MTIP L2 switch maintainer (squashed the
-> >>> separated commit)
-> >>> - More descriptive help paragraphs (> 4 lines)
-> >>>
-> >>> Changes for v3:
-> >>> - Remove 'bridge_offloading' module parameter (to bridge ports
-> >>> just after probe)
-> >>> - Remove forward references
-> >>> - Fix reverse christmas tree formatting in functions
-> >>> - Convert eligible comments to kernel doc format
-> >>> - Remove extra MAC address validation check at
-> >>> esw_mac_addr_static()
-> >>> - Remove mtip_print_link_status() and replace it with
-> >>> phy_print_status()
-> >>> - Avoid changing phy device state in the driver (instead use
-> >>> functions exported by the phy API)
-> >>> - Do not print extra information regarding PHY (which is printed
-> >>> by phylib) - e.g. net lan0: lan0: MTIP eth L2 switch
-> >>> 1e:ce:a5:0b:4c:12
-> >>> - Remove VERSION from the driver - now we rely on the SHA1 in
-> >>> Linux mainline tree
-> >>> - Remove zeroing of the net device private area (shall be already
-> >>> done during allocation)
-> >>> - Refactor the code to remove mtip_ndev_setup()
-> >>> - Use -ENOMEM instead of -1 return code when allocation fails
-> >>> - Replace dev_info() with dev_dbg() to reduce number of
-> >>> information print on normal operation
-> >>> - Return ret instead of 0 from mtip_ndev_init()
-> >>> - Remove fep->mii_timeout flag from the driver
-> >>> - Remove not used stop_gpr_* fields in mtip_devinfo struct
-> >>> - Remove platform_device_id description for mtipl2sw driver
-> >>> - Add MODULE_DEVICE_TABLE() for mtip_of_match
-> >>> - Remove MODULE_ALIAS()
-> >>>
-> >>> Changes for v4:
-> >>> - Rename imx287 with imx28 (as the former is not used in kernel
-> >>> anymore)
-> >>> - Reorder the place where ENET interface is initialized - without
-> >>> this change the enet_out clock has default (25 MHz) value, which
-> >>> causes issues during reset (RMII's 50 MHz is required for proper
-> >>> PHY reset).
-> >>> - Use PAUR instead of PAUR register to program MAC address
-> >>> - Replace eth_mac_addr() with eth_hw_addr_set()
-> >>> - Write to HW the randomly generated MAC address (if required)
-> >>> - Adjust the reset code
-> >>> - s/read_atable/mtip_read_atable/g and
-> >>> s/write_atable/mtip_write_atable/g
-> >>> - Add clk_disable() and netif_napi_del() when errors occur during
-> >>>     mtip_open() - refactor the error handling path.
-> >>> - Refactor the mtip_set_multicast_list() to write (now) correct
-> >>> values to ENET-FEC registers.
-> >>> - Replace dev_warn() with dev_err()
-> >>> - Use GPIO_ACTIVE_LOW to indicate polarity in DTS
-> >>> - Refactor code to check if network device is the switch device
-> >>> - Remove mtip_port_dev_check()
-> >>> - Refactor mtip_ndev_port_link() avoid starting HW offloading for
-> >>> bridge when MTIP ports are parts of two distinct bridges
-> >>> - Replace del_timer() with timer_delete_sync()
-> >>> ---
-> >>>    MAINTAINERS                                   |    7 +
-> >>>    drivers/net/ethernet/freescale/Kconfig        |    1 +
-> >>>    drivers/net/ethernet/freescale/Makefile       |    1 +
-> >>>    drivers/net/ethernet/freescale/mtipsw/Kconfig |   13 +
-> >>>    .../net/ethernet/freescale/mtipsw/Makefile    |    3 +
-> >>>    .../net/ethernet/freescale/mtipsw/mtipl2sw.c  | 1970
-> >>> +++++++++++++++++ .../net/ethernet/freescale/mtipsw/mtipl2sw.h  |
-> >>> 782 +++++++ .../ethernet/freescale/mtipsw/mtipl2sw_br.c   |  122 +
-> >>>    .../ethernet/freescale/mtipsw/mtipl2sw_mgnt.c |  449 ++++
-> >>>    9 files changed, 3348 insertions(+)
-> >>>    create mode 100644
-> >>> drivers/net/ethernet/freescale/mtipsw/Kconfig create mode 100644
-> >>> drivers/net/ethernet/freescale/mtipsw/Makefile create mode 100644
-> >>> drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c create mode
-> >>> 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw.h create
-> >>> mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw_br.c
-> >>> create mode 100644
-> >>> drivers/net/ethernet/freescale/mtipsw/mtipl2sw_mgnt.c
-> >>>
-> >>> diff --git a/MAINTAINERS b/MAINTAINERS
-> >>> index 4c5c2e2c1278..9c5626c2b3b7 100644
-> >>> --- a/MAINTAINERS
-> >>> +++ b/MAINTAINERS
-> >>> @@ -9455,6 +9455,13 @@ S:	Maintained
-> >>>    F:	Documentation/devicetree/bindings/i2c/i2c-mpc.yaml
-> >>>    F:	drivers/i2c/busses/i2c-mpc.c
-> >>>
-> >>> +FREESCALE MTIP ETHERNET SWITCH DRIVER
-> >>> +M:	Lukasz Majewski<lukma@denx.de>
-> >>> +L:	netdev@vger.kernel.org
-> >>> +S:	Maintained
-> >>> +F:
-> >>> Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
-> >>> +F:	drivers/net/ethernet/freescale/mtipsw/* +
-> >>>    FREESCALE QORIQ DPAA ETHERNET DRIVER
-> >>>    M:	Madalin Bucur<madalin.bucur@nxp.com>
-> >>>    L:	netdev@vger.kernel.org
-> >>> diff --git a/drivers/net/ethernet/freescale/Kconfig
-> >>> b/drivers/net/ethernet/freescale/Kconfig index
-> >>> a2d7300925a8..056a11c3a74e 100644 ---
-> >>> a/drivers/net/ethernet/freescale/Kconfig +++
-> >>> b/drivers/net/ethernet/freescale/Kconfig @@ -60,6 +60,7 @@ config
-> >>> FEC_MPC52xx_MDIO
-> >>>
-> >>>    source "drivers/net/ethernet/freescale/fs_enet/Kconfig"
-> >>>    source "drivers/net/ethernet/freescale/fman/Kconfig"
-> >>> +source "drivers/net/ethernet/freescale/mtipsw/Kconfig"
-> >>>
-> >>>    config FSL_PQ_MDIO
-> >>>    	tristate "Freescale PQ MDIO" diff --git
-> >>> a/drivers/net/ethernet/freescale/Makefile
-> >>> b/drivers/net/ethernet/freescale/Makefile index
-> >>> de7b31842233..0e6cacb0948a 100644 ---
-> >>> a/drivers/net/ethernet/freescale/Makefile +++
-> >>> b/drivers/net/ethernet/freescale/Makefile @@ -25,3 +25,4 @@
-> >>> obj-$(CONFIG_FSL_DPAA_ETH) +=3D dpaa/ obj-$(CONFIG_FSL_DPAA2_ETH) +=3D
-> >>> dpaa2/ obj-y +=3D enetc/ +obj-y +=3D mtipsw/ diff --git
-> >>> a/drivers/net/ethernet/freescale/mtipsw/Kconfig
-> >>> b/drivers/net/ethernet/freescale/mtipsw/Kconfig new file mode
-> >>> 100644 index 000000000000..450ff734a321 --- /dev/null +++
-> >>> b/drivers/net/ethernet/freescale/mtipsw/Kconfig @@ -0,0 +1,13 @@
-> >>> +# SPDX-License-Identifier: GPL-2.0-only +config FEC_MTIP_L2SW +
-> >>> tristate "MoreThanIP L2 switch support to FEC driver"
-> >>> +	depends on OF
-> >>> +	depends on NET_SWITCHDEV
-> >>> +	depends on BRIDGE
-> >>> +	depends on ARCH_MXS || ARCH_MXC || COMPILE_TEST
-> >>> +	help
-> >>> +	  This enables support for the MoreThan IP L2 switch on
-> >>> i.MX
-> >>> +	  SoCs (e.g. iMX28, vf610). It offloads bridging to this
-> >>> IP block's =20
-> >> This is confusing. The Kconfig and most of the code looks prepared
-> >> for other platforms than i.MX28, but there is only a i.MX28 OF
-> >> compatible. =20
-> > I've took the approach to upstream the driver in several steps.
-> > The first step is this patch set - add the code for a single
-> > platform (imx28).
-> >
-> > And Yes, I also have on my desk another board with soc having this
-> > IP block (vf610).
-> >
-> > However, I will not start any other upstream work until patches from
-> > this "step" are not pulled.
-> >
-> > (To follow "one things at a time" principle)
-> > =20
-> >> I don't like that Kconfig pretent something, which is not
-> >> true. =20
-> > If you prefer I can remove 'depends on ARCH_MXC' and the vf610
-> > SoC... (only to add it afterwards). =20
-> In case you want to do "one thing at a time", please remove this.
+This is MCUXpresso SDK 2.9.0.
 
-+1
+> 
+> > >
+> > > Before this commit, everything worked as expected, Linux boots fine
+> > > and the HMP core keeps running and printing messages to the UART.
+> > > After the commit, the kernel reboots at the beggining of the boot
+> > > process. The only relevant message is printed by U-Boot after reset:
+> > >
+> > > "Reset cause: SCFW fault reset"
+> > >
+> > > This commit was bisectabled, the same device tree, u-boot version,
+> > and
+> > > SCFW versions were used. Reverting this commit fixes the issues.
+> > >
+> > > For testing purposes, I created the following patch which also fixes
+> > > the
+> > > issue:
+> > >
+> > > diff --git a/drivers/pmdomain/imx/scu-pd.c
+> > > b/drivers/pmdomain/imx/scu-pd.c index
+> > 38f3cdd21042..0477b3fb4991
+> > > 100644
+> > > --- a/drivers/pmdomain/imx/scu-pd.c
+> > > +++ b/drivers/pmdomain/imx/scu-pd.c
+> > > @@ -539,6 +539,9 @@ imx_scu_add_pm_domain(struct device
+> > *dev, int idx,
+> > >                 return NULL;
+> > >         }
+> > >
+> > > +       if (strstr("cm40", sc_pd->name) != NULL)
+> > > +               is_off = true;
+> > > +
+> > >         ret = pm_genpd_init(&sc_pd->pd, NULL, is_off);
+> > >         if (ret) {
+> > >                 dev_warn(dev, "failed to init pd %s rsrc id %d",
+> > >
+> > >
+> > > Test Environment:
+> > > - Hardware: Colibri iMX8DX 1GB with Colbiri Evaluation Board.
+> > > - U-Boot Version: 2024.04
+> > > - U-Boot Build info:
+> > > 	SCFW 83624b99, SECO-FW c9de51c0, IMX-MKIMAGE
+> > 4622115c, ATF 7c64d4e
+> > >
+> > > The issue is not present on: v6.5
+> > >
+> > > The real root cause is still unclear to me. Anybody has any ideas? I
+> > > am happy to share more details if needed.
+> 
+> Have you tried pd_ignore_unused? 
+> 
+> I think it is linux power down M4 which M4 is running, then SCFW
+> reports error. So please give a try pd_ignore_unused.
 
-> >>> +
-> >>> +static void mtip_config_switch(struct switch_enet_private *fep)
-> >>> +{
-> >>> +	struct switch_t *fecp =3D fep->hwp;
-> >>> +
-> >>> +	esw_mac_addr_static(fep);
-> >>> +
-> >>> +	writel(0, &fecp->ESW_BKLR);
-> >>> +
-> >>> +	/* Do NOT disable learning */
-> >>> +	mtip_port_learning_config(fep, 0, 0, 0);
-> >>> +	mtip_port_learning_config(fep, 1, 0, 0);
-> >>> +	mtip_port_learning_config(fep, 2, 0, 0); =20
-> >> Looks like the last 2 parameter are always 0? =20
-> > Those functions are defined in mtipl2sw_mgnt.c file.
-> >
-> > I've followed the way legacy (i.e. vendor) driver has defined them.
-> > In this particular case the last '0' is to not enable interrupt for
-> > learning. =20
-> This wasn't my concern. The question was "why do we need a parameter
-> if it's always the same?". But you answered this further below, so
-> i'm fine.
+For debugging purposes, I tried it and it works, kernel boots fine with
+M4 running and pd_ignore_unused parameter.
 
-Ok.
+> 
+> If this is the case, may I know do you have m4 nodes in dts and
+> with power domain included?
 
-> >>> +
-> >>> +static irqreturn_t mtip_interrupt(int irq, void *ptr_fep)
-> >>> +{
-> >>> +	struct switch_enet_private *fep =3D ptr_fep;
-> >>> +	struct switch_t *fecp =3D fep->hwp;
-> >>> +	irqreturn_t ret =3D IRQ_NONE;
-> >>> +	u32 int_events, int_imask;
-> >>> +
-> >>> +	/* Get the interrupt events that caused us to be here */
-> >>> +	do {
-> >>> +		int_events =3D readl(&fecp->ESW_ISR);
-> >>> +		writel(int_events, &fecp->ESW_ISR);
-> >>> +
-> >>> +		if (int_events & (MCF_ESW_ISR_RXF |
-> >>> MCF_ESW_ISR_TXF)) {
-> >>> +			ret =3D IRQ_HANDLED;
-> >>> +			/* Disable the RX interrupt */
-> >>> +			if (napi_schedule_prep(&fep->napi)) {
-> >>> +				int_imask =3D
-> >>> readl(&fecp->ESW_IMR);
-> >>> +				int_imask &=3D ~MCF_ESW_IMR_RXF;
-> >>> +				writel(int_imask,
-> >>> &fecp->ESW_IMR);
-> >>> +				__napi_schedule(&fep->napi);
-> >>> +			}
-> >>> +		}
-> >>> +	} while (int_events); =20
-> >> This looks bad, in case of bad hardware / timing behavior this
-> >> interrupt handler will loop forever. =20
-> > The 'writel(int_events, &fecp->ESW_ISR);'
-> >
-> > clears the interrupts, so after reading them and clearing (by
-> > writing the same value), the int_events shall be 0.
-> >
-> > Also, during probe the IRQ mask for switch IRQ is written, so only
-> > expected (and served) interrupts are delivered. =20
-> This was not my point. A possible endless loop especially in a
-> interrupt handler should be avoided. The kernel shouldn't trust the
-> hardware and the driver should be fair to all the other interrupts
-> which might have occurred.
+This is the device tree overlay I am testing:
 
-Ok.
+/dts-v1/;
+/plugin/;
 
-> > +
-> > +static int mtip_rx_napi(struct napi_struct *napi, int budget)
-> > +{
-> > +	struct mtip_ndev_priv *priv =3D netdev_priv(napi->dev);
-> > +	struct switch_enet_private *fep =3D priv->fep;
-> > +	struct switch_t *fecp =3D fep->hwp;
-> > +	int pkts, port;
-> > +
-> > +	pkts =3D mtip_switch_rx(napi->dev, budget, &port);
-> > +	if (!fep->br_offload &&
-> > +	    (port =3D=3D 1 || port =3D=3D 2) && fep->ndev[port - 1]) =20
-> >> (port > 0) && fep->ndev[port - 1]) =20
-> > This needs to be kept as is - only when port is set to 1 or 2 (after
-> > reading the switch internal register) this shall be executed. =20
-> Oops, missed that
-> > (port also can be 0xFF or 0x3 -> then we shall send frame to both
-> > egress ports). =20
-> Maybe we should use defines for such special values
+#include <dt-bindings/clock/imx8mm-clock.h>
+#include <dt-bindings/firmware/imx/rsrc.h>
 
-Port =3D 1 or port =3D 2 seems to be self explanatory.
+/ {
+	compatible = "toradex,colibri-imx8x";
+};
 
-Nonetheless, I've added MTIP_PORT_FORWARDING_INIT for 0xFF initial
-forwarding value.
+&{/} {
+	imx8x-cm4 {
+		compatible = "fsl,imx8qxp-cm4";
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&lsio_mu5 0 1
+			  &lsio_mu5 1 1
+			  &lsio_mu5 3 1>;
+		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
+				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
+		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
+				<&pd IMX_SC_R_M4_0_MU_1A>;
+		fsl,entry-address = <0x34fe0000>;
+		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
+	};
 
-> > This code is responsible for port separation when bridge HW
-> > offloading is disabled.
-> >
-> > =20
-> >>> +		of_get_mac_address(port, &fep->mac[port_num -
-> >>> 1][0]); =20
-> >> This can fail =20
-> > I will add:
-> >
-> > ret =3D of_get_mac_address(port, &fep->mac[port_num - 1][0]);
-> > if (ret)
-> > 	dev_warn(dev, "of_get_mac_address(%pOF) failed\n", port);
-> >
-> > as it is also valid to not have the mac address defined in DTS (then
-> > some random based value is generated). =20
-> AFAIK this is a little bit more complex. It's possible that the MAC is
-> stored within a NVMEM and the driver isn't ready (EPROBE_DEFER).
->=20
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
 
-In my use case - always the local mac address is provided during
-production (to ethernet-port nodes).
+		vdev0vring0: memory@90000000 {
+			reg = <0 0x90000000 0 0x8000>;
+			no-map;
+		};
 
-The other possibility is no MAC address provided, that is why there is
-dev_warn().
+		vdev0vring1: memory@90008000 {
+			reg = <0 0x90008000 0 0x8000>;
+			no-map;
+		};
 
-> Are you sure about the randomize fallback behavior of
-> of_get_mac_address() ?
->=20
-> I tought you still need to call eth_random_addr().
->=20
+		vdev1vring0: memory@90010000 {
+			reg = <0 0x90010000 0 0x8000>;
+			no-map;
+		};
 
-The "random" MAC address is generated in another place - namely
-mtip_setup_mac();
+		vdev1vring1: memory@90018000 {
+			reg = <0 0x90018000 0 0x8000>;
+			no-map;
+		};
 
->=20
-> >>> +
-> >>> +int mtip_set_vlan_verification(struct switch_enet_private *fep,
-> >>> int port,
-> >>> +			       int vlan_domain_verify_en,
-> >>> +			       int vlan_discard_unknown_en)
-> >>> +{
-> >>> +	struct switch_t *fecp =3D fep->hwp;
-> >>> +
-> >>> +	if (port < 0 || port > 2) {
-> >>> +		dev_err(&fep->pdev->dev, "%s: Port (%d) not
-> >>> supported!\n",
-> >>> +			__func__, port);
-> >>> +		return -EINVAL;
-> >>> +	}
-> >>> +
-> >>> +	if (vlan_domain_verify_en =3D=3D 1) {
-> >>> +		if (port =3D=3D 0)
-> >>> +			writel(readl(&fecp->ESW_VLANV) |
-> >>> MCF_ESW_VLANV_VV0,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +		else if (port =3D=3D 1)
-> >>> +			writel(readl(&fecp->ESW_VLANV) |
-> >>> MCF_ESW_VLANV_VV1,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +		else if (port =3D=3D 2)
-> >>> +			writel(readl(&fecp->ESW_VLANV) |
-> >>> MCF_ESW_VLANV_VV2,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +	} else if (vlan_domain_verify_en =3D=3D 0) {
-> >>> +		if (port =3D=3D 0)
-> >>> +			writel(readl(&fecp->ESW_VLANV) &
-> >>> ~MCF_ESW_VLANV_VV0,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +		else if (port =3D=3D 1)
-> >>> +			writel(readl(&fecp->ESW_VLANV) &
-> >>> ~MCF_ESW_VLANV_VV1,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +		else if (port =3D=3D 2)
-> >>> +			writel(readl(&fecp->ESW_VLANV) &
-> >>> ~MCF_ESW_VLANV_VV2,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +	}
-> >>> +
-> >>> +	if (vlan_discard_unknown_en =3D=3D 1) {
-> >>> +		if (port =3D=3D 0)
-> >>> +			writel(readl(&fecp->ESW_VLANV) |
-> >>> MCF_ESW_VLANV_DU0,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +		else if (port =3D=3D 1)
-> >>> +			writel(readl(&fecp->ESW_VLANV) |
-> >>> MCF_ESW_VLANV_DU1,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +		else if (port =3D=3D 2)
-> >>> +			writel(readl(&fecp->ESW_VLANV) |
-> >>> MCF_ESW_VLANV_DU2,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +	} else if (vlan_discard_unknown_en =3D=3D 0) {
-> >>> +		if (port =3D=3D 0)
-> >>> +			writel(readl(&fecp->ESW_VLANV) &
-> >>> ~MCF_ESW_VLANV_DU0,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +		else if (port =3D=3D 1)
-> >>> +			writel(readl(&fecp->ESW_VLANV) &
-> >>> ~MCF_ESW_VLANV_DU1,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +		else if (port =3D=3D 2)
-> >>> +			writel(readl(&fecp->ESW_VLANV) &
-> >>> ~MCF_ESW_VLANV_DU2,
-> >>> +			       &fecp->ESW_VLANV);
-> >>> +	} =20
-> >> This looks like a lot of copy & paste =20
-> > IMHO, the readability of the code is OK. =20
-> Actually the concern was about maintenance.
+		rsc_table: memory@900ff000 {
+			reg = <0 0x900ff000 0 0x1000>;
+			no-map;
+		};
 
-IMHO, (for me) the maintenance cost of this code is acceptable.
+		vdevbuffer: memory@90400000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0x90400000 0 0x100000>;
+			no-map;
+		};
+	};
+};
 
+&lsio_mu5 {
+	status = "okay";
+};
 
-Best regards,
+This was basically copied from
+arch/arm64/boot/dts/freescale/imx8qxp-mek.dts. Do you see anything
+wrong? Should I also add the "clocks" property to imx8x-cm4 node?
 
-Lukasz Majewski
+> 
+> Anyway, I will give a try on i.MX8QM EVK.
 
---
+Great, thanks.
 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+> 
+> > 
+> > Hello everyone, as this introduced a regression, should I send a revert
+> > for 4f6c983261? 
+> 
+> Please wait a while, I think we need find root cause.
+> 
+> Thanks,
+> Peng.
+> 
+> Or any ideas that might help fix this issue?
+> > 
+> > >
+> > > Cheers,
+> > > Hiago.
+> > 
+> > Cheers,
+> > Hiago.
 
---Sig_/PnT58d9hqwB_als1lKLOmPt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmf5QfMACgkQAR8vZIA0
-zr2f+QgAlF7OeAre3nTYFZiVN+1Yt/F4dKrvb0XOQzfy1iWSxYZi1P9OPSFHznwL
-dKLMe43mE85YlVOGRjHYncTNvMaFABZj1AWKTxSQB4xSb4Ksjl3L8nOL1z7sNZHL
-fKJuVUaT8v2yu7+/SlYt4ea1Bp3+U+ZTU/JAJn2apb89RLxde1Y0/YT9PtB/OLbN
-LlmpYnB6PblMqL6UqNXObbu3R3aIyAfEjcSbUwfB06sCCnl0DvBMLTrhAPYe1Y8C
-n8Ghz4dHx6Jwqzb78mG7cX2qHpUuafCc06kwbqJhVRgRjnSPVFJpn3iR78aaObWy
-7Dxjr0qTlChyq+91qF9OVCm3OxrZ6A==
-=pTcG
------END PGP SIGNATURE-----
-
---Sig_/PnT58d9hqwB_als1lKLOmPt--
+Cheers,
+Hiago.
