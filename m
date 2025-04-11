@@ -1,170 +1,167 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2053.outbound.protection.outlook.com [40.107.247.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8C01E7C0E;
-	Fri, 11 Apr 2025 07:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358066; cv=fail; b=q+i4uY0NwmZ0KQRIQkbN6YFj0JLZ1UFv/NpPkVeYWo2WSG/vKgH1iVD9Ag1bvJqWLlTXE3QyFhUAgxcLDfCaVAENQznMgHLA8aDLv2hYaHjDIxAY4E0Pny+/7bBHxNm9EYyqheXm1nLcvb17DUzPxjwO/AJnEiK6TJIJYLePfT8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358066; c=relaxed/simple;
-	bh=bOq5ku8PltudUCSw1jfioKWzfCCC+lA7l95rWuPcIg8=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WVw82in/UNJIN/TsxbFBTyg9N1DNHY9PikgEzNM60Cf8P+bEwUV2E1FFdf3e2LgGmsnazjbaJlLKP2pDWLPr7Cd7NlruR7D0x/Kr3ysSjG3iA1TpiysfBFec/S/56F7MvmHgWfRZgx9Ln/5ZHJY3H124yxU666ZAtmSe3fBDevw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=id69kXJo; arc=fail smtp.client-ip=40.107.247.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=est.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0281E7C0E;
+	Fri, 11 Apr 2025 07:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744358138; cv=none; b=l18SjbUGgX6K82rzhzJdgaFL8FV68MvnktAKLE7/AAlzRJUWk6jfz6EfHWTz52ZnqgUpoTMhCcdqZEieu3IEj1xrQ2HpV5zWWIvkQ0ekZkPxPJVqdCaKghz1wMl2GO13OCuVyWdyjl7gUTho/FV9cB9sXsm0UE3byQNXHzM5rpg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744358138; c=relaxed/simple;
+	bh=wlmcAhCm6zahkvpuLIUEhEZ18hG3/lDplSHhbarvimE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S72FwV4mWgpcYS8GHA3TfOwEoQ1Iy8XuN91x67PmL0b1EwrOjchNxuEfGQqq0J1AN1v06BlEWgJ+1GeGvoYTJri7UCROGvbIVn3hRLc6N0k3yZMz0Zscl6oQQ3RANrPGwcSOzGO7lueGMMsPrNyN74vGBmVrpSzYGMpxLdIDjqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gjRVyrZv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="id69kXJo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ncsR4a4m2VUy854BVopJX4i3b75kYqcUFXwRevv+X7CCJj25SqGOyrP6HEnmDzhh/agW4vSVMsuIb0U6mcrrUTjXa2Cs2BAluiWN93SeWpowTZdveeWgALO0Wk+XKc5X7UkZ1nwNliBDjPauaqOh1k7ALKVBsaK0dflmZjbXJB/nIZ/zex20DJVfL3b0cvbHG34BTKIn55YJqTlfNG3cg9LQ+9NAbKR8S2W/kW9x5tZc9ev88LCvFoWV81ny62J5iIBkTHdbqXvssZMDih6nC5hVGVxNl7uuZkIg08qa1QTPJ4WOd+38oDiKDrMSS5X9QUjUYJNMaZX9vvSKkHwLzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bOq5ku8PltudUCSw1jfioKWzfCCC+lA7l95rWuPcIg8=;
- b=cqLLyrXs8VyNwjvm24zDl8PmthI8OGzoI6zEoxcWpTkwaPeJSIoO3kxDqN+x+cSkovjlCUb+v/pQpuUNPw1wkhLvAWOomzJvVsKrktowGl1dUwZUDTsluPcJGgmCFIisHpign+oQiNVrPeGanfA27dAt+KxZhUJyqr2tpkncL8lbLxfse2tduTF15QgZSezfx8HZhJb/CtqoHTwE5QObBq+VdA0Vfz18JaiDHNK7NYVStXlzE8hyKiTTJLDAQWzmB/x7KiiSjlhpeqjeER9L0nDuRt+4+UM8/z/g+WvVN3f/QN+SG2l2dFdUjToQq5gffbb68fesVNdlUfyVsEiC/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
- dkim=pass header.d=est.tech; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bOq5ku8PltudUCSw1jfioKWzfCCC+lA7l95rWuPcIg8=;
- b=id69kXJoqTSn0TlANfoHiQ1M55hxBLlp6/S1FC2Cef0MBm5m+5TO+dqoRFNwol9pPpSWdpXPn+gmD/0bqYsRXdJHQeMvEy55icYejga+QLxG1nm6HbNCmiabYAJiiVW3GfBR6bhZ5PnMcDeR05/QGOl+s9VO+64iNeg1TVi62DSVFzqe7wOvCdyzoS9vjEzLDtylYZa3CF/AGDj5fETiP8mcdUxnQ5851rm7iUgifHEWuspdPbQUczwXHsY/JDzWuFDMIz+/UONHG7Z6+m+41d9ZZUQUc0qKuSfT3Qj66E92Pnl/t9XX8QkLtXH2ut5WXBzBf6HalSZHkSvQS6YGHw==
-Received: from PRAP189MB1897.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:290::22)
- by PA4P189MB1312.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:ce::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
- 2025 07:54:21 +0000
-Received: from PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
- ([fe80::91d:6a2d:65d3:3da4]) by PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
- ([fe80::91d:6a2d:65d3:3da4%4]) with mapi id 15.20.8632.021; Fri, 11 Apr 2025
- 07:54:21 +0000
-From: Tung Quang Nguyen <tung.quang.nguyen@est.tech>
-To: Tung Quang Nguyen <tung.quang.nguyen@est.tech>, Kevin Paul Reddy Janagari
-	<kevinpaul468@gmail.com>, "jmaloy@redhat.com" <jmaloy@redhat.com>,
-	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org"
-	<horms@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"tipc-discussion@lists.sourceforge.net"
-	<tipc-discussion@lists.sourceforge.net>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next] Removing deprecated strncpy()
-Thread-Topic: [PATCH net-next] Removing deprecated strncpy()
-Thread-Index: AQHbqqg2fKRPQg2KPEqrm5rJStmyB7OeEwbAgAAD7aA=
-Date: Fri, 11 Apr 2025 07:54:21 +0000
-Message-ID:
- <PRAP189MB1897261C37B1E27196F2188BC6B62@PRAP189MB1897.EURP189.PROD.OUTLOOK.COM>
-References: <20250411060754.11955-1-kevinpaul468@gmail.com>
- <PRAP189MB1897052C5306AC237EE5154CC6B62@PRAP189MB1897.EURP189.PROD.OUTLOOK.COM>
-In-Reply-To:
- <PRAP189MB1897052C5306AC237EE5154CC6B62@PRAP189MB1897.EURP189.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=est.tech;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PRAP189MB1897:EE_|PA4P189MB1312:EE_
-x-ms-office365-filtering-correlation-id: b2c7c314-0a18-4bdd-ce80-08dd78ce11d8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?jrguiCsdrUVUsVhmf+z1mwNJluVWT2HWzioJk1H321wqb+9JXTcrtiYzEu3E?=
- =?us-ascii?Q?Giw/xxSeHecZ85hbhqtmZlXWbuqSvY085eDC2//O5Kmh5rMHI3kkj8lSgGNt?=
- =?us-ascii?Q?g9v50UFTWOTSxLUNV6/JsmIoRdF3Ud5LBSWAo0vOQIMwtqnpH7bKABCl902o?=
- =?us-ascii?Q?ioDvIBbus3Je9fKnI1jWlkUp4U2HXA8eALTFTTHKT2Kks0Nf30CRCD3nHikc?=
- =?us-ascii?Q?zeSyGlZ+oGO/wyz3NKvJdIamUG0vWVWttrTO+gAAFM9QHx/bjpkhUylbMT4v?=
- =?us-ascii?Q?mf4tAxTdu73JnBG+0vLSpbtToh3yJqtRFvCk4z1VnslsQ0QssrQt2gVEjrzg?=
- =?us-ascii?Q?0gEBOnul/BKdkLttA9A8c1c+sjg/lHU2jU/p5KzVYp5TBZtqjPE5Plwt8gkv?=
- =?us-ascii?Q?oZQghCslcxgvApOZZNG8fHw+/5Fxsfu3j87ghZUEAQ9nfXKLqhX38e71/Hyy?=
- =?us-ascii?Q?noqbIQAKnztGWXJjEGuPcgIExvylMI5ecBiKwT65w6fJVj+jQXCpR9BEluXs?=
- =?us-ascii?Q?GJq96/yC8ACR/hvAkISU4roOLyzKM7vta6bhdGLvUgQq/8rHhhutMYJisR5r?=
- =?us-ascii?Q?tcxHzXpcCeJ2Sf653xahWcWqVNERxKUEltTq99vl/XPw2BDny+Wo2E0CZvDh?=
- =?us-ascii?Q?CeV1S+NcjkNa1ogXIKO0ajtocrhRQdmeLqE97tiDctVyNdYc1XWSE7bHoNiu?=
- =?us-ascii?Q?SXauwyi2Uo31xS24A/16w2JMQz2uBxU36jD11g7rir5tKcGv6ClJf2ko0EGL?=
- =?us-ascii?Q?kIBra6bMpQmPWFXeDG5uauSRP23nvYGLjNKQI0VXdeuQtY2GTnKr5p1Kk5TZ?=
- =?us-ascii?Q?KYpyY1J7JT0NKaYIbeCK9XFRSeecCEW+Mrlcl1yoLThERCUczyO2JibcLi/x?=
- =?us-ascii?Q?7z3AmchlnuyN1KNjJHZ/VHYT3kNU5s7a/w4I+2rWGiVSKrxRtDnb+h5oRqel?=
- =?us-ascii?Q?IzZL8T1xkNiKAqdHv2JiKGS7efu72ejsC76saLYSlWwcZlM+qWeoPMQ/QMOn?=
- =?us-ascii?Q?JMCQphFL55tsgBJnlsNJ1/4Bb98ss7gj2EtfRdCJQNReyiCJGDAztgFQiBfB?=
- =?us-ascii?Q?RCFqHaEpukDpOUaMfk8pXp/W3PImgG5F4hEuvNTclxo8FA+Bj0lQPyvqtTvr?=
- =?us-ascii?Q?k5fKudzWUWpNO0VMkefcGNdBacMJ1+4nQq8AiMjWBni1HTwS8bRJOJA1KM05?=
- =?us-ascii?Q?p3qogPeKgxdMquPMvRGdr3yEYr9LYF4fsP1qoWQ2Pmdwnw0MVMiDLZ3VmZCK?=
- =?us-ascii?Q?vUE5OfNbblCSmwdk+3ysk2zjqihIKv7aoTb/WGNNm4JK4GWr3mAWEjTylnka?=
- =?us-ascii?Q?tgvTf2X4l/DpPY53AaqYlwMlsxusZ4NBl/Bld8/52sZmS+Xb8n34FCoEqG9v?=
- =?us-ascii?Q?ToE94zs8T32KUR4qy1um8gYdr1xjHxBlm7EV8PE3NlLCVjfwYLru7QzzmShV?=
- =?us-ascii?Q?8ndtupA/bNdcXmt4EbmUjeQkzkNyDd3b6Sd0HQSh4wNL3rHMHGC/riyRSg+k?=
- =?us-ascii?Q?F96mGvnYyfEaAGI=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PRAP189MB1897.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?VsW+WD1ERSaFtixZPFWJlGQlP1OHhm389D9o9IL4a6/21G6vDQq9aorjVKtV?=
- =?us-ascii?Q?qmYnE0ss/w6EM6xOgJmJF5VX/E3XJRi313pRWtEXK0C4UHonA9Oap4U6+X3y?=
- =?us-ascii?Q?hsRx3NL/wV9Dl0Bev3Lig52tbU396hkdPAW+LrS7v77SD0gvodL+sDzyCwnT?=
- =?us-ascii?Q?zNE6B9rcMEKdgtZCB59Yz/ur0BvHKYEtNO0jSAVS99kDflNFE+GvlQmcKIk6?=
- =?us-ascii?Q?EY2R2yCQVidwJS5U5lzQU3BKA4RAFlFIfkEeAYluXivFmetqdnc0XhswZP83?=
- =?us-ascii?Q?845FnM1PpWrxTnqcCtG+Yqa4uIDr7lrRttxGlRpG8WesULZ2hFNPJVXMVfG5?=
- =?us-ascii?Q?wMw37dlTiYqZTMFwRY/syxC4UQ7rbJFtGCq2sqUCOvnWtUBDPVMw+5fhUHD4?=
- =?us-ascii?Q?SCTlRdLrHJsAtjAusjOyazuoxD+2cCspMeKMuALtFiar3jEFRvFcX2hIfEHU?=
- =?us-ascii?Q?cnWgGIoBwlvUgJkq+GdLZePDOZvBG1Vg6u1X/gvqtZakxASJNBgY4qHdwNgR?=
- =?us-ascii?Q?O6tx/eyMTw7NEK298QfZ0irjY9YCDSgsRxl4AVBWe3UI8pgSfzgWD4wI3ppz?=
- =?us-ascii?Q?AOeZTlR44KoG9xnVy50rBHSi1ExEZTs1Spta6Qt05+gL8gi0V0zxbvzyVCTf?=
- =?us-ascii?Q?HH2CsvKRlpFitmh4fgvQakOL41ZWw1hQrM6aLbCFkOjeTx/XyvKNTQCgl6Or?=
- =?us-ascii?Q?4Edh32q7W0DKqOHRJjzEStg46Ooe93+EiJHbDZYtUjnD6US7AVRHUylYpsOK?=
- =?us-ascii?Q?kKLmZoEywOgae9TLvUXpRIDAZwmCa3NYyX0zKNgP04hfXrcKnUWatWv5PZGJ?=
- =?us-ascii?Q?cN6VfI4qUXsDmxJlNVMgNlRQA1Tpzuu5vWLNhnfRm3wfxZLU4oeQ5MrEtYe/?=
- =?us-ascii?Q?jpxS/oxlDQ4GyjFZrky3WolkNqeLJws/8rSO6la5knQJAw2psRgkBUu6rOm0?=
- =?us-ascii?Q?ZjwglVOO5PwnmumJ9IXOpB02mTyNSSyJ+gk6f/j8Mp4dCYSdUuIsA/o40rgR?=
- =?us-ascii?Q?viH+2bkMCedNbUN/P/3LrTQfJWCyjK8eIB9IHSs0qnVcze932USrt7V2aLzj?=
- =?us-ascii?Q?O1Bnw4DKgpdRrqGv1wKtSkzd23DwZ6A1ELF4HbdfF8d0Dy1j3MGMZJks+T4+?=
- =?us-ascii?Q?bV+hCYl+ss3rP+FFWF+kLf/Hw+9APU3K2jitWb7meTP6ghQiz1d3syTXUhcx?=
- =?us-ascii?Q?xUF8xvKS0o7r190ccBaW2PQeHqesvJpDY1Iwp1qhYlNAq7B9JEmvY81XwPax?=
- =?us-ascii?Q?y/QqtVDwlQVJ0bw/FMwnvhSGoC5LqBPBjwaygjkDPGQVu2R3Lw/d463pUs85?=
- =?us-ascii?Q?ERmhQ6Pn4b2yTZU8t+sciH+SP8VoxwXtnSkBZJ8k6rIyTAfpNdmTNT3TM33d?=
- =?us-ascii?Q?bEG+i0Wql3zkcUgl6CvcEPNpiaTlhC7yoiS+1RgGOr1ueEPF1LrHz1fABGaw?=
- =?us-ascii?Q?+oDBQf/KSGC3AMeRRuPuMWsVLQ+xo5O4ANPjqw8Xx6HVHLGTw4ajXJu5fZxG?=
- =?us-ascii?Q?TMn1iw4bsXHfIKQBymB69kVvGhMLnDQ4bI6hKyEoaZ3J3dx+Ng2fNTaIvODc?=
- =?us-ascii?Q?zKZepOsEGvR9+5xxdvfPD6F0QEp1DIMIktLjqhVY?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gjRVyrZv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF4E4C4CEE2;
+	Fri, 11 Apr 2025 07:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744358137;
+	bh=wlmcAhCm6zahkvpuLIUEhEZ18hG3/lDplSHhbarvimE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gjRVyrZvgHWrhg7BwxYLKVYE7aCaCPt5+z+1HM3YmjSvhTfZfBENHpXgPxFecDQ97
+	 E4AMcEn2CJnt1J3LxjUgy2vkW1YDBZtIhjwOxk7tZYJ2fWmkywjsJgkTCynlK5yZpW
+	 oL0RBFwEQLnTSbuQJxaf2SltV8Is9VygI3INgpDQ=
+Date: Fri, 11 Apr 2025 09:55:34 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Chance Yang <chance.yang@kneron.us>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, morgan.chang@kneron.us
+Subject: Re: [PATCH v2] usb: common: usb-conn-gpio: use a unique name for usb
+ connector device
+Message-ID: <2025041119-pluck-malformed-fc41@gregkh>
+References: <20250411-work-next-v2-1-40beb82df5a9@kneron.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2c7c314-0a18-4bdd-ce80-08dd78ce11d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 07:54:21.4077
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FSmhjo+qM2vszQrfCgfUpyXPNqX4tVi5KCsvS6oxutyzQ7qImERrJOqCq2iCRCwnWSgwwW1viCNv8+WyBG+3CEgRJwdh3vJSrAwqQMgYeEo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4P189MB1312
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411-work-next-v2-1-40beb82df5a9@kneron.us>
 
->Subject: RE: [PATCH net-next] Removing deprecated strncpy()
->
->>Subject: [PATCH net-next] Removing deprecated strncpy()
->>
->>This patch suggests the replacement of strncpy with strscpy as per
->>Documentation/process/deprecated.
->>The strncpy() fails to guarantee NULL termination, The function adds
->>zero pads which isn't really convenient for short strings as it may
->>cause performance issues.
->>
->>strscpy() is a preferred replacement because it overcomes the
->>limitations of strncpy mentioned above.
->>
->>Compile Tested
->>
->>Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-Sorry, one more nit you need to change: Please append "tipc:" to your subje=
-ct like this: [PATCH net-next] tipc: Removing deprecated strncpy()
+On Fri, Apr 11, 2025 at 03:47:08PM +0800, Chance Yang wrote:
+> The current implementation of the usb-conn-gpio driver uses a fixed
+> "usb-charger" name for all USB connector devices. This causes conflicts
+> in the power supply subsystem when multiple USB connectors are present,
+> as duplicate names are not allowed.
+> 
+> Use IDA to manage unique IDs for naming usb connectors (e.g.,
+> usb-charger-0, usb-charger-1).
+> 
+> Fixes: 880287910b189 ("usb: common: usb-conn-gpio: fix NULL pointer dereference of charger")
+> Signed-off-by: Chance Yang <chance.yang@kneron.us>
+> ---
+> Changes in v2:
+> - Replaced atomic_t with IDA for unique ID management
+> - Link to v1: https://lore.kernel.org/r/20250411-work-next-v1-1-93c4b95ee6c1@kneron.us
+> ---
+>  drivers/usb/common/usb-conn-gpio.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
+> index 1e36be2a28fd5ca5e1495b7923e4d3e25d7cedef..421c3af38e06975259f4a1792aa3b3708a192d59 100644
+> --- a/drivers/usb/common/usb-conn-gpio.c
+> +++ b/drivers/usb/common/usb-conn-gpio.c
+> @@ -21,6 +21,9 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/string_choices.h>
+>  #include <linux/usb/role.h>
+> +#include <linux/idr.h>
+> +
+> +static DEFINE_IDA(usb_conn_ida);
+>  
+>  #define USB_GPIO_DEB_MS		20	/* ms */
+>  #define USB_GPIO_DEB_US		((USB_GPIO_DEB_MS) * 1000)	/* us */
+> @@ -30,6 +33,7 @@
+>  
+>  struct usb_conn_info {
+>  	struct device *dev;
+> +	int conn_id; /* store the IDA-allocated ID */
+>  	struct usb_role_switch *role_sw;
+>  	enum usb_role last_role;
+>  	struct regulator *vbus;
+> @@ -161,7 +165,17 @@ static int usb_conn_psy_register(struct usb_conn_info *info)
+>  		.fwnode = dev_fwnode(dev),
+>  	};
+>  
+> -	desc->name = "usb-charger";
+> +	info->conn_id = ida_alloc(&usb_conn_ida, GFP_KERNEL);
+> +	if (info->conn_id < 0)
+> +		return info->conn_id;
+> +
+> +	desc->name = devm_kasprintf(dev, GFP_KERNEL, "usb-charger-%d",
+> +				    info->conn_id);
+> +	if (!desc->name) {
+> +		ida_free(&usb_conn_ida, info->conn_id);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	desc->properties = usb_charger_properties;
+>  	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
+>  	desc->get_property = usb_charger_get_property;
+> @@ -169,8 +183,10 @@ static int usb_conn_psy_register(struct usb_conn_info *info)
+>  	cfg.drv_data = info;
+>  
+>  	info->charger = devm_power_supply_register(dev, desc, &cfg);
+> -	if (IS_ERR(info->charger))
+> -		dev_err(dev, "Unable to register charger\n");
+> +	if (IS_ERR(info->charger)) {
+> +		dev_err(dev, "Unable to register charger %d\n", info->conn_id);
+> +		ida_free(&usb_conn_ida, info->conn_id);
+> +	}
+>  
+>  	return PTR_ERR_OR_ZERO(info->charger);
+>  }
+> @@ -278,6 +294,9 @@ static void usb_conn_remove(struct platform_device *pdev)
+>  
+>  	cancel_delayed_work_sync(&info->dw_det);
+>  
+> +	if (info->charger)
+> +		ida_free(&usb_conn_ida, info->conn_id);
+> +
+>  	if (info->last_role == USB_ROLE_HOST && info->vbus)
+>  		regulator_disable(info->vbus);
+>  
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250411-work-next-d817787d63f2
+> 
+> Best regards,
+> -- 
+> Chance Yang <chance.yang@kneron.us>
+> 
+> 
+
+Hi,
+
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
