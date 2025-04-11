@@ -1,154 +1,213 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A73929008D
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:53:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACB21FBCB1
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:54:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361641; cv=none; b=o9WG0TF+iwKuJHeHkIs1/FezLMN3K58UXBirlIS/7K5cpD1Zvc+GX9J8mdCNys2IYX09naSvI0iIy5yi3YkN7/HipVmsLtFlPe7G6xrmb+r00mgR1e0a7OBAa1iUJPoZCYVNA/+6LQyDLhg2jBeNuq9plWpC2kA7VOVI4lbqkR0=
+	t=1744361657; cv=none; b=UVMYVdoh3Na8vjN18ql6DW6M+fAKsRUnEdk0EUoVWGUZRC024bFZkB3ttXPOh4jPFuriNtwktV9cbL/fgp7B0ay7vVfI2P+DhnqapRAnYgmndlhtZMcnY9ZlxAOc2UARG5/0jsqB9uQ6wVRv8aoBtbNsYoPlsq5JKk2iWswHx+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361641; c=relaxed/simple;
-	bh=k0e87+8OGPQmaFWxAfBs/XQk7xPQcTlDXk5MeAbKx+A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sA2ZtGl/5eduEIxQbHaVNOIJOyeCMkeIuNYwWJDoqffGw9mUfBFLLZYu0Ri+KdQskDik/0CUrEpaf8ecSVa3LCnmB6TYFsfOV3alEWC3mYPQ7qmDC0ZPsK1zT44z1wFcZJYjUo4EarvJiff9PlcmHkKeBboHlRW69kAzyzuJChk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZLgviyZF; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1744361657; c=relaxed/simple;
+	bh=qjO090hnYvSO7+q5RyTsNvTDWzwLtjmFLi7+QUNA+Nk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O5DBeZU22NukDvyoMPyX1U+EuLKcQa6NrBGSrxmVtLefcoBKehbINAw+rAAg/LLUFAt+KkecWlz+y6XnJWF5Qkh3auVh3gL5McXM6a86JJD+gA0Ia8rBhfEv80Htiwr8eO9AEfKaMSyN5XeRBz5keBCxdWVaK1dgjKySlAgnkMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S6hP7Cp+; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZLgviyZF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S6hP7Cp+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744361638;
+	s=mimecast20190719; t=1744361653;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=k0e87+8OGPQmaFWxAfBs/XQk7xPQcTlDXk5MeAbKx+A=;
-	b=ZLgviyZFiuP6z5NZT0pV4Lk7HCtukfuGyFPFtlt27ueyrdvcFRAbNhcWlvmOWDYqfRIzaT
-	AJQ7ksoWY2ER1o3W+iMA4JdRuXPUe7sUrDUblyYsaS3W0sYKWdc9wH7RHkKdeweZaH8RZU
-	XZ3KwW9wXS7yNaNmKWCn9HMo8sAWQaY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=lUHjzYBwpvrIsKo7sSrLS26Mz4GzgpGjSzm2tB0vXgE=;
+	b=S6hP7Cp+WyRsb2Dgvmj3G/DueLVsKXK0F1JwmOTYxbB0VpJSKzY6TF/gpdkqIb5PJaKQot
+	RicthfSVyk57MFfhx6T5mQNEwLnH9579I1aKhku45Cr/s1UiEtosUB5dD+6+vQP/9DDRPO
+	5/udBl1rXz9i/lF/ATxMPwUQqp+mHfc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-189-jhYZ3EC_PE27orgvc5wuFg-1; Fri, 11 Apr 2025 04:53:57 -0400
-X-MC-Unique: jhYZ3EC_PE27orgvc5wuFg-1
-X-Mimecast-MFC-AGG-ID: jhYZ3EC_PE27orgvc5wuFg_1744361636
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39134c762ebso761809f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:53:57 -0700 (PDT)
+ us-mta-577-EZ31ElFaOSy9HmkjXtHYag-1; Fri, 11 Apr 2025 04:54:11 -0400
+X-MC-Unique: EZ31ElFaOSy9HmkjXtHYag-1
+X-Mimecast-MFC-AGG-ID: EZ31ElFaOSy9HmkjXtHYag_1744361651
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39ac9b0cb6aso1105912f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:54:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744361636; x=1744966436;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k0e87+8OGPQmaFWxAfBs/XQk7xPQcTlDXk5MeAbKx+A=;
-        b=hbc7qM/49wKOY6J6AkwIWxGCwQdj76nb1oRKYRC/B3Ft4c3HBFnafwLJhJ43FOAHrF
-         +gOoFUoGr8sE4yZ3D4NWtGK5CIX5TAYfyt3fBAqfsmLYVEGRW52P32KDrt3uCSKnbOpf
-         XC059NCp7IFDxR3AUsesHFhURZmgROtJd27wsS2DdEX2KIJzNEoiOwC9LHGpBpNZROEt
-         Fj37sXbVQ0YHy27aYBnVMO56sIwRPKm2XEoXOCIx7WLlEjIvjcgJsyJRoYoDt11Srn09
-         2IJhcunDGt2kVRCKkfSokPU7wegi/NeCDZIg8w80M/3m2Ws4SXevP39UxD8MI793u8bs
-         Pkfw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1fHe5/45H34/Mxi76pThZiIIF8S8lXyFLad+qFOw+IJl6PH9k63Uag4rPAjheX17RV4pLbuRXWK9fzWU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvrNs+z3NcXqJIyUIkRLc0v3jgzklp2fu61LBW/QTlaBa3eNoM
-	0VKmge3JsiJnEyfX6BsaOnTRl0KScQWSdKUMgcHkaLNF9ySuEp1Nj3D6/EIMdjmFRYA61z12ufm
-	nO6QTHo7yXukYapuhnrJyOH5ZajepvwtbeMUQ13/a3sBCtd/TRHtzlDgLbhO6Sg==
-X-Gm-Gg: ASbGncs1iYzpzaFXgUB7mvt49MhOijGuo+aiAGMgSlzKJBsD9MT8SlWeV4hZOBCxmid
-	BjPPp1BkAy45Is/B/ufgVoFfdfBi5gKwkW+qt9xe7uBvdNqa6urk8+O+HSnCKTl4vRfhl0fhB9A
-	9nW3+hELQaLczCipq9g02t+uCsRHZXeKTYLbUDM6ntPfomgVfnaM76JsrcSTeZXI9DnAAPSw7I/
-	hNsO6MBLrLIsN8u915/4j6Pvv7xDwjnpWFpsI7NOSNXgQxwcT1OcIrprfBx2rtCrS8XA3Pa6jIo
-	Zca2yqBV6Hm3QJ2vqcsG1o71+t2RFr1vFek4EQ==
-X-Received: by 2002:a05:6000:1863:b0:391:952:c728 with SMTP id ffacd0b85a97d-39ea51d2ef2mr1307054f8f.4.1744361636073;
-        Fri, 11 Apr 2025 01:53:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZHH2qTSDheGEe1uWpBsnE3Tq6ugbYEaivo2aQTNOcuG05nQHeLEfmSnMJN6OnPKr9PgpSTw==
-X-Received: by 2002:a05:6000:1863:b0:391:952:c728 with SMTP id ffacd0b85a97d-39ea51d2ef2mr1307034f8f.4.1744361635759;
-        Fri, 11 Apr 2025 01:53:55 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96cfdbsm1342657f8f.40.2025.04.11.01.53.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 01:53:55 -0700 (PDT)
-Message-ID: <16410f1680d27424869f0aa642ef41ae9647bd40.camel@redhat.com>
-Subject: Re: [PATCH v2 06/22] verification/dot2k: Remove __buff_to_string()
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de
-Date: Fri, 11 Apr 2025 10:53:52 +0200
-In-Reply-To: <5e50fa5438830238d92c037c6e609db104503584.1744355018.git.namcao@linutronix.de>
-References: <cover.1744355018.git.namcao@linutronix.de>
-	 <5e50fa5438830238d92c037c6e609db104503584.1744355018.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        d=1e100.net; s=20230601; t=1744361651; x=1744966451;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lUHjzYBwpvrIsKo7sSrLS26Mz4GzgpGjSzm2tB0vXgE=;
+        b=CA/bOLIFhsDy00rpSp4DQfRGAbH923n/fveiJywyVMKe5gc8QVNj1ZE/l6JP4Qoev2
+         nHENRAZaIW2m9mSQ2o1E/Uc4vbpbKg+1HqO4SqLBkAdjkSFxv6BkTVV1qbY0HULsW4lC
+         4Jq4IvJuo2KfXJnz4HvTuO46G1cdgh9+K5c6QeT//B2mizGug+Yjt4poCUAl0fJOEvrw
+         QGVu+XTWY0WarRWxEVRCja8V2skCd7O++WSvBjnSojNgLsyPZBbPBmrZRGopiNI7Xdv1
+         1DCegk7ieVdjOfWCk5z+pxlETYWgWmSPrax75b7m7eF74mR7IbVXNFogkEqNx8LjUnUZ
+         zWKA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+rLTFsiAiDeD4i84Iki/zYjlamFgx0FDwhikXx5U8mWQwz4C9vNoT9qayld9BJxp/Oakf/1U80iaAYeM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYbLQilumPOmZkdGhpgU8GHRheY1Z+Jb+FUpCSONY1iOO5Chqf
+	pv9Rf1j181ICs4XYkIKW00B/T66qJSsd3Hf1/a8Ht31Kpe3CUXPBmACTes+QgPlU+iQ/kBnXGnI
+	UIiTgHY+3CZb3KpSE0+6MCpxdQbD0lZLYOZG7JSaIIhp9SEmi5wRvuHRdCO0g8Q==
+X-Gm-Gg: ASbGncsnsxabHNN08Jl8s3glOmwofREXWiwM9jakzwY5M77GDnUmTNxDhezs+zFihoV
+	a4CX/xW3sAf+ny/9othlf50PVXITd8+4yjDCrdjmdA6MMonM9ohOTH6X8FqQt8hJc80cigqCnOd
+	z5KuErBtZQ/G8v3bIjkT8FDBKIX79bQGgoqJx351HDLxNqy+t3dUInJe9Zf0Sx8kPwSh1NAmZkw
+	/KJZ5fhFAxB5v1HVYfgir4aujn5EAduMSkGJKxh1uITW/oIPHhenYoNPlv4Oi1d94eTobxRaHID
+	SDm7T3mC4sjBq+rpXHhp7wvGlvL7IjCtIAaHvLf4IRZavTJQmtnAJQfmM9ub48YHtKoQfTsrfa0
+	jn3ecJj5iCCUFR60z+snTB80VqvoKtcR8xza5
+X-Received: by 2002:a05:6000:22c1:b0:38f:6287:6474 with SMTP id ffacd0b85a97d-39ea51f45bemr1272186f8f.15.1744361650772;
+        Fri, 11 Apr 2025 01:54:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH33DDjaZp2a66XGNnz3i3XKByjcm2LRqZFjma/j5OURalaa1m61K6BdzZVPlt2Z7fND7LBjQ==
+X-Received: by 2002:a05:6000:22c1:b0:38f:6287:6474 with SMTP id ffacd0b85a97d-39ea51f45bemr1272177f8f.15.1744361650431;
+        Fri, 11 Apr 2025 01:54:10 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c726:6800:7ddf:5fc:2ee5:f08a? (p200300cbc72668007ddf05fc2ee5f08a.dip0.t-ipconnect.de. [2003:cb:c726:6800:7ddf:5fc:2ee5:f08a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae977a7fsm1367091f8f.45.2025.04.11.01.54.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 01:54:10 -0700 (PDT)
+Message-ID: <f03f7e13-3d37-4d4a-87a6-61731744f476@redhat.com>
+Date: Fri, 11 Apr 2025 10:54:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] mm/gup: clean up codes in fault_in_xxx() functions
+To: Baoquan He <bhe@redhat.com>, linux-mm@kvack.org
+Cc: akpm@linux-foundation.org, osalvador@suse.de, yanjun.zhu@linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250410035717.473207-1-bhe@redhat.com>
+ <20250410035717.473207-5-bhe@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250410035717.473207-5-bhe@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gRnJpLCAyMDI1LTA0LTExIGF0IDA5OjM3ICswMjAwLCBOYW0gQ2FvIHdyb3RlOgo+IHN0ci5q
-b2luKCkgY2FuIGRvIHdoYXQgX19idWZmX3RvX3N0cmluZygpIGRvZXMuIFRoZXJlZm9yZSByZXBs
-YWNlCj4gX19idWZmX3RvX3N0cmluZygpIHRvIG1ha2UgdGhlIHNjcmlwdHMgbW9yZSBweXRob25p
-Yy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBOYW0gQ2FvIDxuYW1jYW9AbGludXRyb25peC5kZT4KPiAt
-LS0KPiDCoHRvb2xzL3ZlcmlmaWNhdGlvbi9kb3QyL2RvdDIvZG90MmsucHkgfCAyMSArKysrKyst
-LS0tLS0tLS0tLS0tLS0KPiDCoDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDE1IGRl
-bGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS90b29scy92ZXJpZmljYXRpb24vZG90Mi9kb3Qy
-L2RvdDJrLnB5Cj4gYi90b29scy92ZXJpZmljYXRpb24vZG90Mi9kb3QyL2RvdDJrLnB5Cj4gaW5k
-ZXggZGQ0YjU1MjhhNGYyLi4wOTIyNzU0NDU0YjkgMTAwNjQ0Cj4gLS0tIGEvdG9vbHMvdmVyaWZp
-Y2F0aW9uL2RvdDIvZG90Mi9kb3Qyay5weQo+ICsrKyBiL3Rvb2xzL3ZlcmlmaWNhdGlvbi9kb3Qy
-L2RvdDIvZG90MmsucHkKPiBAQCAtMTA5LDE1ICsxMDksNiBAQCBjbGFzcyBkb3QyayhEb3QyYyk6
-Cj4gwqDCoMKgwqDCoMKgwqDCoCBmZC5jbG9zZSgpCj4gwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4g
-Y29udGVudAo+IMKgCj4gLcKgwqDCoCBkZWYgX19idWZmX3RvX3N0cmluZyhzZWxmLCBidWZmKToK
-PiAtwqDCoMKgwqDCoMKgwqAgc3RyaW5nID0gIiIKPiAtCj4gLcKgwqDCoMKgwqDCoMKgIGZvciBs
-aW5lIGluIGJ1ZmY6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RyaW5nID0gc3RyaW5nICsg
-bGluZSArICJcbiIKPiAtCj4gLcKgwqDCoMKgwqDCoMKgICMgY3V0IG9mZiB0aGUgbGFzdCBcbgo+
-IC3CoMKgwqDCoMKgwqDCoCByZXR1cm4gc3RyaW5nWzotMV0KPiAtCj4gwqDCoMKgwqAgZGVmIGZp
-bGxfbW9uaXRvcl90eXBlKHNlbGYpOgo+IMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHNlbGYubW9u
-aXRvcl90eXBlLnVwcGVyKCkKPiDCoAo+IEBAIC0xNDgsMTkgKzEzOSwxOSBAQCBjbGFzcyBkb3Qy
-ayhEb3QyYyk6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnVmZi5hcHBlbmQo
-Ilx0ZGFfJXNfJXMoJXMlcyk7IiAlIChoYW5kbGUsCj4gc2VsZi5uYW1lLCBldmVudCwgc2VsZi5l
-bnVtX3N1ZmZpeCkpOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgifSIp
-Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYuYXBwZW5kKCIiKQo+IC3CoMKgwqDCoMKg
-wqDCoCByZXR1cm4gc2VsZi5fX2J1ZmZfdG9fc3RyaW5nKGJ1ZmYpCj4gK8KgwqDCoMKgwqDCoMKg
-IHJldHVybiAnXG4nLmpvaW4oYnVmZikKPiDCoAo+IMKgwqDCoMKgIGRlZiBmaWxsX3RyYWNlcG9p
-bnRfYXR0YWNoX3Byb2JlKHNlbGYpOgo+IMKgwqDCoMKgwqDCoMKgwqAgYnVmZiA9IFtdCj4gwqDC
-oMKgwqDCoMKgwqDCoCBmb3IgZXZlbnQgaW4gc2VsZi5ldmVudHM6Cj4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGJ1ZmYuYXBwZW5kKCJcdHJ2X2F0dGFjaF90cmFjZV9wcm9iZShcIiVzXCIsIC8q
-IFhYWDoKPiB0cmFjZXBvaW50ICovLCBoYW5kbGVfJXMpOyIgJSAoc2VsZi5uYW1lLCBldmVudCkp
-Cj4gLcKgwqDCoMKgwqDCoMKgIHJldHVybiBzZWxmLl9fYnVmZl90b19zdHJpbmcoYnVmZikKPiAr
-wqDCoMKgwqDCoMKgwqAgcmV0dXJuICdcbicuam9pbihidWZmKQo+IMKgCj4gwqDCoMKgwqAgZGVm
-IGZpbGxfdHJhY2Vwb2ludF9kZXRhY2hfaGVscGVyKHNlbGYpOgo+IMKgwqDCoMKgwqDCoMKgwqAg
-YnVmZiA9IFtdCj4gwqDCoMKgwqDCoMKgwqDCoCBmb3IgZXZlbnQgaW4gc2VsZi5ldmVudHM6Cj4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYuYXBwZW5kKCJcdHJ2X2RldGFjaF90cmFjZV9w
-cm9iZShcIiVzXCIsIC8qIFhYWDoKPiB0cmFjZXBvaW50ICovLCBoYW5kbGVfJXMpOyIgJSAoc2Vs
-Zi5uYW1lLCBldmVudCkpCj4gLcKgwqDCoMKgwqDCoMKgIHJldHVybiBzZWxmLl9fYnVmZl90b19z
-dHJpbmcoYnVmZikKPiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuICdcbicuam9pbihidWZmKQo+IMKg
-Cj4gwqDCoMKgwqAgZGVmIGZpbGxfbWFpbl9jKHNlbGYpOgo+IMKgwqDCoMKgwqDCoMKgwqAgbWFp
-bl9jID0gc2VsZi5tYWluX2MKPiBAQCAtMjEwLDcgKzIwMSw3IEBAIGNsYXNzIGRvdDJrKERvdDJj
-KToKPiDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYgPSBzZWxmLmZpbGxfbW9kZWxfaF9oZWFkZXIoKQo+
-IMKgwqDCoMKgwqDCoMKgwqAgYnVmZiArPSBzZWxmLmZvcm1hdF9tb2RlbCgpCj4gwqAKPiAtwqDC
-oMKgwqDCoMKgwqAgcmV0dXJuIHNlbGYuX19idWZmX3RvX3N0cmluZyhidWZmKQo+ICvCoMKgwqDC
-oMKgwqDCoCByZXR1cm4gJ1xuJy5qb2luKGJ1ZmYpCj4gwqAKPiDCoMKgwqDCoCBkZWYgZmlsbF9t
-b25pdG9yX2NsYXNzX3R5cGUoc2VsZik6Cj4gwqDCoMKgwqDCoMKgwqDCoCBpZiBzZWxmLm1vbml0
-b3JfdHlwZSA9PSAicGVyX3Rhc2siOgo+IEBAIC0yNDIsNyArMjMzLDcgQEAgY2xhc3MgZG90Mmso
-RG90MmMpOgo+IMKgwqDCoMKgwqDCoMKgwqAgdHBfYXJnc19jID0gIiwgIi5qb2luKFtiIGZvciBh
-LGIgaW4gdHBfYXJnc10pCj4gwqDCoMKgwqDCoMKgwqDCoCBidWZmLmFwcGVuZCgiCcKgwqDCoMKg
-IFRQX1BST1RPKCVzKSwiICUgdHBfcHJvdG9fYykKPiDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYuYXBw
-ZW5kKCIJwqDCoMKgwqAgVFBfQVJHUyglcykiICUgdHBfYXJnc19jKQo+IC3CoMKgwqDCoMKgwqDC
-oCByZXR1cm4gc2VsZi5fX2J1ZmZfdG9fc3RyaW5nKGJ1ZmYpCj4gK8KgwqDCoMKgwqDCoMKgIHJl
-dHVybiAnXG4nLmpvaW4oYnVmZikKPiDCoAo+IMKgwqDCoMKgIGRlZiBmaWxsX21vbml0b3JfZGVw
-cyhzZWxmKToKPiDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYgPSBbXQo+IEBAIC0yNTAsNyArMjQxLDcg
-QEAgY2xhc3MgZG90MmsoRG90MmMpOgo+IMKgwqDCoMKgwqDCoMKgwqAgaWYgc2VsZi5wYXJlbnQ6
-Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1ZmYuYXBwZW5kKCIJZGVwZW5kcyBvbiBSVl9N
-T05fJXMiICUKPiBzZWxmLnBhcmVudC51cHBlcigpKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBidWZmLmFwcGVuZCgiCWRlZmF1bHQgeSIpCj4gLcKgwqDCoMKgwqDCoMKgIHJldHVybiBzZWxm
-Ll9fYnVmZl90b19zdHJpbmcoYnVmZikKPiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuICdcbicuam9p
-bihidWZmKQo+IMKgCj4gwqDCoMKgwqAgZGVmIGZpbGxfdHJhY2VfaChzZWxmKToKPiDCoMKgwqDC
-oMKgwqDCoMKgIHRyYWNlX2ggPSBzZWxmLnRyYWNlX2gKCkdvb2Qgb25lLCBJJ3ZlIGJlZW4gdG9v
-IGxhenkgdG8gZG8gaXQuIFRoYW5rcyEKClJldmlld2VkLWJ5OiBHYWJyaWVsZSBNb25hY28gPGdt
-b25hY29AcmVkaGF0LmNvbT4K
+On 10.04.25 05:57, Baoquan He wrote:
+> The code style in fault_in_readable() and fault_in_writable() is a
+> little inconsistent with fault_in_safe_writeable(). In fault_in_readable()
+> and fault_in_writable(), it uses 'uaddr' passed in as loop cursor. While
+> in fault_in_safe_writeable(), local variable 'start' is used as loop
+> cursor. This may mislead people when reading code or making change in
+> these codes.
+> 
+> Here define explicit loop cursor and use for loop to simplify codes in
+> these three functions. These cleanup can make them be consistent in
+> code style and improve readability.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>   mm/gup.c | 65 +++++++++++++++++++++++---------------------------------
+>   1 file changed, 26 insertions(+), 39 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 77a5bc622567..a76bd7e90a71 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2113,28 +2113,24 @@ static long __get_user_pages_locked(struct mm_struct *mm, unsigned long start,
+>    */
+>   size_t fault_in_writeable(char __user *uaddr, size_t size)
+>   {
+> -	char __user *start = uaddr, *end;
+> +	const unsigned long start = (unsigned long)uaddr;
+> +	const unsigned long end = start + size;
+> +	unsigned long cur = start;
+
+I would initialize cur in the for loop header, makes the loop easier to 
+read.
+
+>   
+>   	if (unlikely(size == 0))
+>   		return 0;
+> +
+
+Would not add that line to keep it like fault_in_readable() below.
+
+>   	if (!user_write_access_begin(uaddr, size))
+>   		return size;
+> -	if (!PAGE_ALIGNED(uaddr)) {
+> -		unsafe_put_user(0, uaddr, out);
+> -		uaddr = (char __user *)PAGE_ALIGN((unsigned long)uaddr);
+> -	}
+> -	end = (char __user *)PAGE_ALIGN((unsigned long)start + size);
+> -	if (unlikely(end < start))
+> -		end = NULL;
+> -	while (uaddr != end) {
+> -		unsafe_put_user(0, uaddr, out);
+> -		uaddr += PAGE_SIZE;
+> -	}
+> +
+> +	/* Stop once we overflow to 0. */
+> +	for (; cur && cur < end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
+> +		unsafe_put_user(0, (char __user *)cur, out);
+>   
+
+Staring at fault_in_safe_writeable(), we could also do
+
+/* Stop once we overflow to 0. */
+end = PAGE_ALIGN(end)
+if (start < end)
+	end = 0;
+
+for (cur = start; cur != end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
+	unsafe_put_user(0, (char __user *)cur, out);
+
+Essentially, removing the "cur" check from the loop condition. Not sure 
+if that is better.
+
+In any case, if all functions later look similar and clearer it's a big win.
+
+-- 
+Cheers,
+
+David / dhildenb
 
