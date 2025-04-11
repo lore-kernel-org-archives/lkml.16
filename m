@@ -1,108 +1,101 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A111D2BF3DF;
-	Fri, 11 Apr 2025 12:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BBE29344B
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744373479; cv=none; b=aij4CgPGVQkySSXi0TARSksd/JdqDE5Yp9+VYYZpoRubs0yAAPuf3CC82XoT0UdP5eghz78Yz2E60OP0ImnLzpQnmOmuRNX+1u9Fg/kWvYHZXNFaaVPfmHGEmcVmcjJW9NEgIXT1m3ikbahWAKqQQIMa3jwZwBBnyF9IBG4m8As=
+	t=1744373480; cv=none; b=gcJZyyfc7LntyN+oJfZVT/AuwJH14pY3Na5p2TXZfMdr62m9zVmzT6rV+NQViqm0TnZ8HryRfFDi/cuQoUCxnx9gVIz/KOcgd9iwYWqlLNulGX1s/lG2fv4b+/bJoBoegg8ila32BiB1iIOId55lVuusuTvNrAv1/CEzenIMiM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744373479; c=relaxed/simple;
-	bh=yzF33gKvYRvTTNQyiHSKd1m6sCWnvqK2EfrNCow/rKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qd0quCBjdTksYbOM4/cSfYqlDOUXoB26lEbWJC4dATODuQEN4SxlYFyI5Hq2f3J114ESvUEmVmaiCzF9tDqa/YjSc7V+NeC8dHVVd2J9Wf9gxAc8gxd0WrHBWyy6K/Z5DgMyVdWjyYi2S67dLcsdrtjorR/4wx5WGfKugD/9s0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KJrmP+Jo; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744373480; c=relaxed/simple;
+	bh=12U8A9tqFraTkbX8UucQrHYVXY0lsm8Dl+Z4zRDU7+M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TT/+5UZ+L0vo0YYlMaqh6dW54/kn8OdWd9lGyvu5LrA8fpjA3D0/ts/BKIwtmXFIqoQJDlYZXa1IA99TsY/UCvofpQnnfahBS50ST1hwHl3ul4ixOko4G+yAl/Pk0qiF+crGOu/9eO6x5AW1/voOfcxo2/FabnoFAPdo3/oNYq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3dSX4tR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KJrmP+Jo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rNYHj+jMsjKcQ0NBqVY00CTxiyNat9iFuHkI3uiocOY=; b=KJrmP+JovP2P9xpa3JDZx/JtZP
-	JtWQwOoCQvVCPB4QGUr5YlNkKzL3r7Q5mOODeZKTr1+MR3Dhk7G+Paus7+haNrtDezlEwg0j3NSKd
-	YcQudvJbx9SMzW55WVSP0oT924FtLAFG5eyLkvjBQKf+Cie6VGV/D73o5BfqDN5fT+Pkc67908pAp
-	0KhKLNFsCx4PTo+fip5FDCjhK/MFYrHbEOofJZiTd3Gp0CMf4cuYeGZtr8rxgKVUBtzqY5m6NtZ8k
-	PYv2jHn1UBaDECx067z/Fi7ZPPXJ/bPK0S5bsXIhQsnWK6ENdII4+oKiiHi/5bVoTtEiKwGkKZXc7
-	1nPsgQIg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54684)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u3DDq-0003Js-0Q;
-	Fri, 11 Apr 2025 13:11:02 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u3DDh-0004bC-1Y;
-	Fri, 11 Apr 2025 13:10:53 +0100
-Date: Fri, 11 Apr 2025 13:10:53 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Frank Sae <Frank.Sae@motor-comm.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Parthiban.Veerasooran@microchip.com, linux-kernel@vger.kernel.org,
-	"andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>, lee@trager.us,
-	horms@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
-	geert+renesas@glider.be, xiaogang.fan@motor-comm.com,
-	fei.zhang@motor-comm.com, hua.sun@motor-comm.com
-Subject: Re: [PATCH net-next v4 00/14] yt6801: Add Motorcomm yt6801 PCIe
- driver
-Message-ID: <Z_kGzeUfQB9qa2EN@shell.armlinux.org.uk>
-References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
- <Z_T6vv013jraCzSD@shell.armlinux.org.uk>
- <da434f13-fb08-4036-96ed-7de579cb9ddc@motor-comm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3dSX4tR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12A5DC4CEEC;
+	Fri, 11 Apr 2025 12:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744373479;
+	bh=12U8A9tqFraTkbX8UucQrHYVXY0lsm8Dl+Z4zRDU7+M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=K3dSX4tRj7rJ9O1JP0isV71y1pRkYOkWhdxA4/IoSEK64MYcwp+4fRUgs4XuosURC
+	 FJ+eVvLwRBH/Xmz4HsgLa4bMNianpOCI+1O66a+ekF5/AkNzXrzzt5h1nxS0ASDF54
+	 X6pa08EMqcgJvIZJQp0EJZPkQLX8YvbtdvAKHlUQ2ZE2VBdtUCCDew4Bk6M+g5HXbX
+	 X9+QYoUY94VJuma7WoS7l7Vv3fOsbLjPmaLHgkE3M71MsTcvmAsm8z6duGH46ePTIh
+	 ukJZUFxvECbyl6MxIm/kK0tV1+SKSPH5KhZQRoxIj4Ey+hkEoxQtPq2VkBQD9c3dW6
+	 yJUZQmyGxClgw==
+From: Vinod Koul <vkoul@kernel.org>
+To: Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Heiko Stuebner <heiko@sntech.de>, 
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Maxime Ripard <mripard@kernel.org>, kernel@collabora.com, 
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ Dmitry Baryshkov <lumag@kernel.org>
+In-Reply-To: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
+References: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
+Subject: Re: [PATCH v6 00/14] phy: rockchip: samsung-hdptx: Support high
+ color depth management
+Message-Id: <174437347571.673939.550787962753296084.b4-ty@kernel.org>
+Date: Fri, 11 Apr 2025 17:41:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <da434f13-fb08-4036-96ed-7de579cb9ddc@motor-comm.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Fri, Apr 11, 2025 at 05:50:55PM +0800, Frank Sae wrote:
+
+On Tue, 18 Mar 2025 14:35:34 +0200, Cristian Ciocaltea wrote:
+> This series relies on the new HDMI PHY configuration options [1] (patch
+> included here for convenience) to provide high color depth management
+> for rockchip-samsung-hdptx, and to introduce a proper solution to setup
+> the TMDS character rate on this PHY.
 > 
+> [1] https://lore.kernel.org/lkml/d1cff6c03ec3732d2244022029245ab2d954d997.1734340233.git.Sandor.yu@nxp.com/
 > 
-> On 2025/4/8 18:30, Russell King (Oracle) wrote:
-> > On Tue, Apr 08, 2025 at 05:28:21PM +0800, Frank Sae wrote:
-> >> This series includes adding Motorcomm YT6801 Gigabit ethernet driver
-> >>  and adding yt6801 ethernet driver entry in MAINTAINERS file.
-> >> YT6801 integrates a YT8531S phy.
-> > 
-> > What is different between this and the Designware GMAC4 core supported
-> > by drivers/net/ethernet/stmicro/stmmac/ ?
-> > 
-> 
-> We support more features: NS, RSS, wpi, wol pattern and aspm control.
+> [...]
 
-Is it not possible to add those features?
+Applied, thanks!
 
-> > Looking at the register layout, it looks very similar. The layout of the
-> > MAC control register looks similar. The RX queue and PMT registers are
-> > at the same relative offset. The MDIO registers as well.
-> > 
-> > Can you re-use the stmmac driver?
-> > 
-> 
-> I can not re-use the stmmac driver, because pcie and ephy can not work well on
-> the stmmac driver.
+[01/14] phy: Add HDMI configuration options
+        commit: 10ed34d6eaaf86e301a8f2dd190d26dfbc9799bd
+[02/14] phy: hdmi: Add color depth configuration
+        commit: 3bb9286f4ece6acbc1fbaa9f192a82645d30efbf
+[03/14] phy: rockchip: samsung-hdptx: Fix clock ratio setup
+        commit: 0422253ac1919fea8292381c85f11a9decff1bb1
+[04/14] phy: rockchip: samsung-hdptx: Do no set rk_hdptx_phy->rate in case of errors
+        commit: 1f4d382769e3b38dfc498c806811dae856e40f31
+[05/14] phy: rockchip: samsung-hdptx: Drop unused struct lcpll_config
+        commit: 6218c3fd6702a5bc4ab323fed25714cde127684c
+[06/14] phy: rockchip: samsung-hdptx: Drop unused phy_cfg driver data
+        commit: bcd61d182618c6a77d0841fcdc3333e125725360
+[07/14] phy: rockchip: samsung-hdptx: Drop superfluous cfgs driver data
+        commit: bacf2fe750dab6bc7ed50556aaadd3ab107fc643
+[08/14] phy: rockchip: samsung-hdptx: Avoid Hz<->hHz unit conversion overhead
+        commit: 0edf9d2bb9b4ba7566dfdc7605883e04575129d9
+[09/14] phy: rockchip: samsung-hdptx: Setup TMDS char rate via phy_configure_opts_hdmi
+        commit: c871a311edf0ebb1b934946a84a6c532cac0c035
+[10/14] phy: rockchip: samsung-hdptx: Provide config params validation support
+        commit: 2392050a2cb94ff3397949e109e4b9f0285ee085
+[11/14] phy: rockchip: samsung-hdptx: Restrict altering TMDS char rate via CCF
+        commit: 6efbd0f46dd8ae1d2b91b41d98c2800c60ab1f5e
+[12/14] phy: rockchip: samsung-hdptx: Rename ambiguous rk_hdptx_phy->rate
+        commit: 37f335dbfd028c008d0a7940ca5a270d1e2f6b81
+[13/14] phy: rockchip: samsung-hdptx: Optimize internal rate handling
+        commit: 45b14bdcf4acfd483d9890396197c35c23821124
+[14/14] phy: rockchip: samsung-hdptx: Add high color depth management
+        commit: 9d0ec51d7c227c3ae837e22832eaed219e25f126
 
-Doesn't the stmmac driver support PCIe already (e.g. for Intel
-platforms?) Can't it be fixed?
-
-We shouldn't be duplicating what we already have, but fixing it if
-there are problems.
-
+Best regards,
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+~Vinod
+
+
