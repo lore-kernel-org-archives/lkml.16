@@ -1,124 +1,203 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF562238D52;
-	Fri, 11 Apr 2025 17:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7476F23AE62;
+	Fri, 11 Apr 2025 17:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744393343; cv=none; b=c0hDQzP0xk+CEXVquOg48OThOSBJwpj9lFpD1ZuZgX5kt13xt6eJehZgowFedQ6k0qNwIQ0L8gIXUGWZjTo4YL/RnHgg9Flo6ktuBfaq/hlVO7QL9EcoZrR6OL+l94MLI9LF6QvZ9zoISH3BehSF8Ju9wRyCjdOUEd/4zAYuIuk=
+	t=1744393444; cv=none; b=lb6y9DhyaSL3rtX/hcP5oAWDwq/coltVIzr4sc/sShgcELIlA/f09pofyORxnU15ombimWOHbjrLjh1UNezW9DJgl/9n0cXkOndIZz56OpUjbQsknjepecT9SYPLjrv/Lmwn3iBhabLRFD4uC0JBfUQJoGS5kh1Tt4LtMFkcev8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744393343; c=relaxed/simple;
-	bh=vfPoSRfQH477/CFLb6ZTwRTcQNsLhqllklqufNLvGCM=;
-	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UkkXUgPiinaSOktvq5tka6wiq0C1CdDrNjPYIMgBHRFzrisEcvfqJcBUFATuNcoSlrgUHg5buUjc3z9F8Kn/n5DiHtuLYs4qJZbdwYorSibKNX964LpZvC7W4N8AcluQT6YYo+hzjP8NObkO8bi9r9j68UkBhDbVuTtcLxBU5CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=KP6JkVGJ; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1744393444; c=relaxed/simple;
+	bh=xAo68r/zLZKopFFxEIk6BtCwwpIOjTADTc6B2aF6X4k=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=nVtC2H+12uGU8o51uD2t/S6+qppzDKuqw5mY8zZYEHBhFPe+7MxydTyzegrwPKwbAw+SQQRsimkCcBlkdq7ZJ1MiZAZ63d6lQ34YBKRd89xd7J+yhkxl15qsYnvedT2Fbdua43q5JKw74Il/aZA2HvMYpjn+kcgTap9hjt+f20E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=U8qBk3Vx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OV+kP/rp; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KP6JkVGJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744393342; x=1775929342;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=vfPoSRfQH477/CFLb6ZTwRTcQNsLhqllklqufNLvGCM=;
-  b=KP6JkVGJ40qUHSJy1GeTNKbwfzY7Jg2TyujHgw/Xeptx0fQwNS5DA+1u
-   KNI/8a3DxZz2nIMAPjNQrLeAz6JQTIV2VhyfJIufapAx+EDTNrfXCMo6L
-   +7cjnE4mdX2IrErxyO/bxcKIMjuADtbeWN1JF9vGq8CFS5ZqX/Moo7rl7
-   I=;
-X-IronPort-AV: E=Sophos;i="6.15,205,1739836800"; 
-   d="scan'208";a="82951899"
-Subject: Re: [PATCH v10 10/11] arm64: idle: export arch_cpu_idle()
-Thread-Topic: [PATCH v10 10/11] arm64: idle: export arch_cpu_idle()
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 17:42:19 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:8072]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.63:2525] with esmtp (Farcaster)
- id 0532a55d-5243-42fd-a042-f17c28a7bc62; Fri, 11 Apr 2025 17:42:18 +0000 (UTC)
-X-Farcaster-Flow-ID: 0532a55d-5243-42fd-a042-f17c28a7bc62
-Received: from EX19D032UWA003.ant.amazon.com (10.13.139.37) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 11 Apr 2025 17:42:18 +0000
-Received: from EX19D032UWA003.ant.amazon.com (10.13.139.37) by
- EX19D032UWA003.ant.amazon.com (10.13.139.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 11 Apr 2025 17:42:17 +0000
-Received: from EX19D032UWA003.ant.amazon.com ([fe80::8e94:8f60:9531:c497]) by
- EX19D032UWA003.ant.amazon.com ([fe80::8e94:8f60:9531:c497%5]) with mapi id
- 15.02.1544.014; Fri, 11 Apr 2025 17:42:17 +0000
-From: "Okanovic, Haris" <harisokn@amazon.com>
-To: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"xueshuai@linux.alibaba.com" <xueshuai@linux.alibaba.com>,
-	"ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>
-CC: "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
-	"boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>, "maz@kernel.org"
-	<maz@kernel.org>, "zhenglifeng1@huawei.com" <zhenglifeng1@huawei.com>,
-	"konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, "cl@gentwo.org"
-	<cl@gentwo.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"maobibo@loongson.cn" <maobibo@loongson.cn>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "misono.tomohiro@fujitsu.com"
-	<misono.tomohiro@fujitsu.com>, "daniel.lezcano@linaro.org"
-	<daniel.lezcano@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>,
-	"mtosatti@redhat.com" <mtosatti@redhat.com>, "will@kernel.org"
-	<will@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>, "vkuznets@redhat.com"
-	<vkuznets@redhat.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-	"Okanovic, Haris" <harisokn@amazon.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "x86@kernel.org" <x86@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
-Thread-Index: AQHbgkz0Ww97KFD5dk6R1pgSTFxUF7OeIC2AgADtWYA=
-Date: Fri, 11 Apr 2025 17:42:17 +0000
-Message-ID: <87639d1b017b6032c1d5382567415fad4e2c9e4e.camel@amazon.com>
-References: <20250218213337.377987-1-ankur.a.arora@oracle.com>
-	 <20250218213337.377987-11-ankur.a.arora@oracle.com>
-	 <18875bd7-bf01-4ba8-b38a-4c0767e3130e@linux.alibaba.com>
-In-Reply-To: <18875bd7-bf01-4ba8-b38a-4c0767e3130e@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3A0A36EF8CE7174988CDDF9482C3DAC5@amazon.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="U8qBk3Vx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OV+kP/rp"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 32114114015E;
+	Fri, 11 Apr 2025 13:44:00 -0400 (EDT)
+Received: from phl-frontend-01 ([10.202.2.160])
+  by phl-compute-01.internal (MEProxy); Fri, 11 Apr 2025 13:44:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
+	 t=1744393440; x=1744479840; bh=prpraNBeUM3zXDzIoi1D0Ms8tSWXePNg
+	ZwUoM8XhD2I=; b=U8qBk3Vx8Y0mRmVqcLqPk6RJ+A2yQz3LmRPOQo0cJuf6sKjP
+	lEvqglguqa5UjiNgTDj4Yv9jgJUFbFiLXUJthtv35N3YODm7mqQDXZcgRZ1O8KG9
+	MNxUMtcQvmKdSk+kJsVq12Gsaq1YRdRZS28VOanzXOwtgVkCJWoWP83p+vBgJ+CN
+	kYzk6CB19Y8BJ+25OUqN93/+X2wG7JxSl1c4MTtuWsJX+RpQo1xE4bc3tdovR+1g
+	AyxivLeZGYYEdfD9DeSQ0qkU0M5cpJ3IH/uUP2IKmh+G4aTZB1kCbhoZi5W9mhI0
+	mH0MHUxoVUkSgl24x4K5XCe7K66gy5PHFWpMIQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744393440; x=
+	1744479840; bh=prpraNBeUM3zXDzIoi1D0Ms8tSWXePNgZwUoM8XhD2I=; b=O
+	V+kP/rpUX0J+XZIxN3j2ZT8zZFMOfDC8ub7QpuKTXDXVKp7upbpKNJkrA97mwWCX
+	ob96/7+gwlp0JQLLLM8QPEc48BCQb0aUt2csUVmblfJ/Ok6is4SzsfCnDkGx2dTA
+	3KtzyPjIeooNX5ZIg9NtQOVAXkE0Pv08oj6zf6EMlulmTHAvCGxUWlynvZn0hz/B
+	nVFbaRQxPSf/eopKJWqYYrTJNuK80cSAoRXtCY0iTiTTcyL4nq0jdFBFx8DJYb9L
+	oq3+xO53zQiCl1+fijyctrkqUZqrTdB9ZsHOi0lOFv1VJQ7sVZXL1lALqFlpGfZh
+	ZqGhKeWUwkDSjBFzkf3Ig==
+X-ME-Sender: <xms:31T5Z2EmFc02pCLo63WO68g04-EKY__5AjrEWo1y-K8hoSGbVbqUfQ>
+    <xme:31T5Z3WZ3hl0btOWQQt42mTiyLhDkJhNhLbeMF9LoirxZ_vP3jj7HN_EoQ6NMq0ce
+    GMhOUWaxvUUPy9qHtM>
+X-ME-Received: <xmr:31T5ZwLN4uadnQ124gI9UAbeV7FDGxMTdBv5aDpoW1VZYbW7VjyyZDlJBTRR7xQCUVuv_EczTvLDCkW0SfGQwry9WHS627mNXXGJ-XWbEuZKjb-UIA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddvgeegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkgggtsehttdertddttddvnecu
+    hfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrdhnvg
+    htqeenucggtffrrghtthgvrhhnpeeigfeiteevgefgtdehhfegvedvvdfhtedugeettdek
+    veegteeifefgveeigeetvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhitghosehflhhu
+    gihnihgtrdhnvghtpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehnphhithhrvgessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepjhhi
+    rhhishhlrggshieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
+    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepuggrvhgvsehmihgvlhhk
+    vgdrtggtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhg
+X-ME-Proxy: <xmx:31T5ZwGCfBEmUmB0hVMHBcCdtfU3TL7UD5XfqzQ5Y-YOaOjL-7IMnA>
+    <xmx:31T5Z8UEAEK4gg0jXB6gCZcdqlrxOxEUuGojwgeVJx20p3gq3JMlDQ>
+    <xmx:31T5ZzOizdrtch5CmSMF3R1yLq38sqgKvTrR1OB8zfaR7NotEXmdfg>
+    <xmx:31T5Zz1z6RxrmU6m5S13qBtXoh3tOmEG8YqfwBAEs5zGFR2Mg-BqwA>
+    <xmx:4FT5Z50ntE4Td1IkSAmuHOROfjoViyiOD5xf0rTDjuMqGABhZVqRaLV1>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 11 Apr 2025 13:43:59 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id A675F10DDA13;
+	Fri, 11 Apr 2025 13:43:58 -0400 (EDT)
+Date: Fri, 11 Apr 2025 13:43:58 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Jiri Slaby <jirislaby@kernel.org>, Dave Mielke <Dave@mielke.cc>, 
+    Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: [PATCH] vt: fix comment vs definition mismatch
+Message-ID: <o4974349-pp4p-4374-80q9-2oppqqr94r60@syhkavp.arg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-T24gRnJpLCAyMDI1LTA0LTExIGF0IDExOjMyICswODAwLCBTaHVhaSBYdWUgd3JvdGU6DQo+ID4g
-Q0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5p
-emF0aW9uLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91
-IGNhbiBjb25maXJtIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCj4g
-PiANCj4gPiANCj4gPiANCj4gPiDlnKggMjAyNS8yLzE5IDA1OjMzLCBBbmt1ciBBcm9yYSDlhpnp
-gZM6DQo+ID4gPiA+IE5lZWRlZCBmb3IgY3B1aWRsZS1oYWx0cG9sbC4NCj4gPiA+ID4gDQo+ID4g
-PiA+IEFja2VkLWJ5OiBXaWxsIERlYWNvbiA8d2lsbEBrZXJuZWwub3JnPg0KPiA+ID4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBBbmt1ciBBcm9yYSA8YW5rdXIuYS5hcm9yYUBvcmFjbGUuY29tPg0KPiA+ID4g
-PiAtLS0NCj4gPiA+ID4gICBhcmNoL2FybTY0L2tlcm5lbC9pZGxlLmMgfCAxICsNCj4gPiA+ID4g
-ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPiA+ID4gDQo+ID4gPiA+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybTY0L2tlcm5lbC9pZGxlLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9pZGxl
-LmMNCj4gPiA+ID4gaW5kZXggMDVjZmIzNDdlYzI2Li5iODViYTBkZjliMDIgMTAwNjQ0DQo+ID4g
-PiA+IC0tLSBhL2FyY2gvYXJtNjQva2VybmVsL2lkbGUuYw0KPiA+ID4gPiArKysgYi9hcmNoL2Fy
-bTY0L2tlcm5lbC9pZGxlLmMNCj4gPiA+ID4gQEAgLTQzLDMgKzQzLDQgQEAgdm9pZCBfX2NwdWlk
-bGUgYXJjaF9jcHVfaWRsZSh2b2lkKQ0KPiA+ID4gPiAgICAgICAgKi8NCj4gPiA+ID4gICAgICAg
-Y3B1X2RvX2lkbGUoKTsNCj4gPiANCj4gPiBIaSwgQW5rdXIsDQo+ID4gDQo+ID4gV2l0aCBoYWx0
-cG9sbF9kcml2ZXIgcmVnaXN0ZXJlZCwgYXJjaF9jcHVfaWRsZSgpIG9uIHg4NiBjYW4gc2VsZWN0
-DQo+ID4gbXdhaXRfaWRsZSgpIGluIGlkbGUgdGhyZWFkcy4NCj4gPiANCj4gPiBJdCB1c2UgTU9O
-SVRPUiBzZXRzIHVwIGFuIGVmZmVjdGl2ZSBhZGRyZXNzIHJhbmdlIHRoYXQgaXMgbW9uaXRvcmVk
-DQo+ID4gZm9yIHdyaXRlLXRvLW1lbW9yeSBhY3Rpdml0aWVzOyBNV0FJVCBwbGFjZXMgdGhlIHBy
-b2Nlc3NvciBpbg0KPiA+IGFuIG9wdGltaXplZCBzdGF0ZSAodGhpcyBtYXkgdmFyeSBiZXR3ZWVu
-IGRpZmZlcmVudCBpbXBsZW1lbnRhdGlvbnMpDQo+ID4gdW50aWwgYSB3cml0ZSB0byB0aGUgbW9u
-aXRvcmVkIGFkZHJlc3MgcmFuZ2Ugb2NjdXJzLg0KPiA+IA0KPiA+IFNob3VsZCBhcmNoX2NwdV9p
-ZGxlKCkgb24gYXJtNjQgYWxzbyB1c2UgdGhlIExEWFIvV0ZFDQo+ID4gdG8gYXZvaWQgd2FrZXVw
-IElQSSBsaWtlIHg4NiBtb25pdG9yL213YWl0Pw0KDQpXRkUgd2lsbCB3YWtlIGZyb20gdGhlIGV2
-ZW50IHN0cmVhbSwgd2hpY2ggY2FuIGhhdmUgc2hvcnQgc3ViLW1zDQpwZXJpb2RzIG9uIG1hbnkg
-c3lzdGVtcy4gTWF5IGJlIHNvbWV0aGluZyB0byBjb25zaWRlciB3aGVuIFdGRVQgaXMgbW9yZQ0K
-d2lkZWx5IGF2YWlsYWJsZS4NCg0KPiA+IA0KPiA+IFRoYW5rcy4NCj4gPiBTaHVhaQ0KPiA+IA0K
-PiA+IA0KDQpSZWdhcmRzLA0KSGFyaXMgT2thbm92aWMNCkFXUyBHcmF2aXRvbiBTb2Z0d2FyZQ0K
-DQo=
+From: Nicolas Pitre <npitre@baylibre.com>
+
+Fixes for:
+
+  ucs_is_zero_width()
+  ucs_is_double_width()
+  ucs_recompose()
+
+Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504111036.YH1iEqBR-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202504111359.urXWyzvQ-lkp@intel.com/
+---
+
+On Fri, 11 Apr 2025, Greg Kroah-Hartman wrote:
+
+> Wow, very nice work, thanks for doing all of this.  I'll go queue it up
+> now, the kernel test robot warnings for comments can be fixed up later
+> if you want to.
+
+Oops. Here it is.
+
+diff --git a/drivers/tty/vt/gen_ucs_recompose.py b/drivers/tty/vt/gen_ucs_recompose.py
+index 64418803e4..dc176d32e2 100755
+--- a/drivers/tty/vt/gen_ucs_recompose.py
++++ b/drivers/tty/vt/gen_ucs_recompose.py
+@@ -289,8 +289,8 @@ static int recomposition_compare(const void *key, const void *element)
+ /**
+  * Attempt to recompose two Unicode characters into a single character.
+  *
+- * @param previous: Previous Unicode code point (UCS-4)
+- * @param current: Current Unicode code point (UCS-4)
++ * @param base: Base Unicode code point (UCS-4)
++ * @param combining: Combining mark Unicode code point (UCS-4)
+  * Return: Recomposed Unicode code point, or 0 if no recomposition is possible
+  */
+ uint32_t ucs_recompose(uint32_t base, uint32_t combining)
+@@ -301,7 +301,6 @@ uint32_t ucs_recompose(uint32_t base, uint32_t combining)
+ 		return 0;
+ 
+ 	struct compare_key key = {{ base, combining }};
+-
+ 	struct recomposition *result =
+ 		__inline_bsearch(&key, recomposition_table,
+ 				 ARRAY_SIZE(recomposition_table),
+diff --git a/drivers/tty/vt/gen_ucs_width.py b/drivers/tty/vt/gen_ucs_width.py
+index c6cbc93e83..e65f43e208 100755
+--- a/drivers/tty/vt/gen_ucs_width.py
++++ b/drivers/tty/vt/gen_ucs_width.py
+@@ -292,7 +292,7 @@ static bool is_in_interval32(uint32_t cp, const struct interval32 *intervals, si
+ /**
+  * Determine if a Unicode code point is zero-width.
+  *
+- * @param ucs: Unicode code point (UCS-4)
++ * @param cp: Unicode code point (UCS-4)
+  * Return: true if the character is zero-width, false otherwise
+  */
+ bool ucs_is_zero_width(uint32_t cp)
+@@ -305,7 +305,7 @@ bool ucs_is_zero_width(uint32_t cp)
+ /**
+  * Determine if a Unicode code point is double-width.
+  *
+- * @param ucs: Unicode code point (UCS-4)
++ * @param cp: Unicode code point (UCS-4)
+  * Return: true if the character is double-width, false otherwise
+  */
+ bool ucs_is_double_width(uint32_t cp)
+diff --git a/drivers/tty/vt/ucs_recompose.c b/drivers/tty/vt/ucs_recompose.c
+index 5c30c989de..52cde1517f 100644
+--- a/drivers/tty/vt/ucs_recompose.c
++++ b/drivers/tty/vt/ucs_recompose.c
+@@ -147,8 +147,8 @@ static int recomposition_compare(const void *key, const void *element)
+ /**
+  * Attempt to recompose two Unicode characters into a single character.
+  *
+- * @param previous: Previous Unicode code point (UCS-4)
+- * @param current: Current Unicode code point (UCS-4)
++ * @param base: Base Unicode code point (UCS-4)
++ * @param combining: Combining mark Unicode code point (UCS-4)
+  * Return: Recomposed Unicode code point, or 0 if no recomposition is possible
+  */
+ uint32_t ucs_recompose(uint32_t base, uint32_t combining)
+@@ -159,7 +159,6 @@ uint32_t ucs_recompose(uint32_t base, uint32_t combining)
+ 		return 0;
+ 
+ 	struct compare_key key = { base, combining };
+-
+ 	struct recomposition *result =
+ 		__inline_bsearch(&key, recomposition_table,
+ 				 ARRAY_SIZE(recomposition_table),
+diff --git a/drivers/tty/vt/ucs_width.c b/drivers/tty/vt/ucs_width.c
+index 060aa8ae7f..4d5a0021e3 100644
+--- a/drivers/tty/vt/ucs_width.c
++++ b/drivers/tty/vt/ucs_width.c
+@@ -512,7 +512,7 @@ static bool is_in_interval32(uint32_t cp, const struct interval32 *intervals, si
+ /**
+  * Determine if a Unicode code point is zero-width.
+  *
+- * @param ucs: Unicode code point (UCS-4)
++ * @param cp: Unicode code point (UCS-4)
+  * Return: true if the character is zero-width, false otherwise
+  */
+ bool ucs_is_zero_width(uint32_t cp)
+@@ -525,7 +525,7 @@ bool ucs_is_zero_width(uint32_t cp)
+ /**
+  * Determine if a Unicode code point is double-width.
+  *
+- * @param ucs: Unicode code point (UCS-4)
++ * @param cp: Unicode code point (UCS-4)
+  * Return: true if the character is double-width, false otherwise
+  */
+ bool ucs_is_double_width(uint32_t cp)
