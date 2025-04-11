@@ -1,63 +1,63 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4964F29DB60
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 22:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8A02BD597
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 22:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744409495; cv=none; b=m3GnmD8x+tChTDOO8Zf7UqTTA+cRMd+UunAzFdUF/HEV22hWGBRHqApY69hx37j4ILxfGJFIEarpf7tSVlG6KMVM+QH7lDVOBC3Z20rLAIAwr1QTFVBn8ZMC7zqSmpaO3gBglutSJlauZCDh4whmFdrEmUDGAz+8EnFoOLkYR/k=
+	t=1744409497; cv=none; b=jebNHZEWdgm4Qpjq+rdtTu9E7edoyWP0UVxdLYtidGgde9qXk7fr/nBqoz/4INcsJ8KNydYuW1TuKIwxlKEVgxpU6driceAWVWFdIh0ojQJhLclBqpoGOrNMz2pgzLKEpdjLFcaMg9qIGIfRyOq1wa4z4qU8P4b4SNyH2ALJ4P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744409495; c=relaxed/simple;
-	bh=kJWlhdTJTSNuYWImWmYIv1Uf59B3tlS7eTrMHq4Ex/0=;
+	s=arc-20240116; t=1744409497; c=relaxed/simple;
+	bh=2v63zeJJ3qyNW130IYWsx6Y2dRfyeqo3wdMnGBLseKE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VmSzlh+X3DHvIlSor5QekipbpK6CvTqZS5COnoQyZrJLlt9bOG0ANoRWEt376dI4wdKG9bpdWBqE1oMujpku0q9TYoos2B88gqQkKTU8ZwIDfCSUHJNbyrgHTSCVUHk11Q+9ovp/itXi7RvngaMbi/jmL2EaFSZ/nvbG5PXCsQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=TdGW12g3; arc=none smtp.client-ip=209.85.222.175
+	 MIME-Version; b=dk95KVuxk+qqeoeftPfEXzoekHa+7HdMu4a1FNN+yUQ+JDxhtFsha9NfHxG2KTmYao3WYXtymayh+7G2h5xSDFsWhXNsX1Kd8+J0PrAods+6rDvfxJzWsbfUT+/quFA++G27olelPJgT04iwT7soso2UCc2yEl6HXPbFKYK03Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MBxwcFJA; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="TdGW12g3"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c5e2fe5f17so242256285a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:11:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MBxwcFJA"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c58974ed57so239908385a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1744409493; x=1745014293; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1744409494; x=1745014294; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zIYGb9o3ZNMSFtQQpPHltGF8QRH6KOuBpYhDX4oYg1I=;
-        b=TdGW12g30q3/AQsNCcS212qsR0uh5AW+C+WCWm3+v8St5raVfGJt98eir+FyBikS07
-         2Rmu+Tw94+2SVk4r2ip0QSNxt4iucGxAN05XuVNqVl8okhCkztRCoGPMV6Z9I+sBQ9PN
-         oFip9oo07UCfEP4ifuIv0N1Cacg+WJJweTHASNSaWCnvsTFWfadzd5T+mWYIlp0Ksset
-         eZiw0iP91jAF3I8JMEdbyFNBF0fBanLUNIcJcq4HJtTV9fW0N/PQ3raNve6TB3057/5S
-         wiswEzVz734cpP0VDQ2vFwjK0PS9dstkYXvtgS47/Z22eRLrwOXU0UQn60/qUJq8CLhr
-         1kjA==
+        bh=sQiBfRqPk8mw1dZkgLepdccSbpRToMErHEtsnH4pLbA=;
+        b=MBxwcFJAwyaHVdTY4d1ulzA8U65YmPxEO7ZRxjJdaY9FKRBmKM+tYrKf96yG9ppUs7
+         fjDWaeikomndNvxIGJNo3cy7ZfiC0vIXiY3z5iOfW7GdPs0wZmLTmEz9II1tLi7rcGsl
+         VHgHb+K7ISXII9fa8Y8YSc19WZF4oavcT0Lcczri3WcWjXMO02HzyD9prL2bRFYJ4ZYy
+         ULVUM77ZuBVpzZiCHl/mMSrYfp3tX/o7QMts6Y/45KAn0+SFIs4WaKC2LpAcb726HF89
+         6EZ5NUCJeQHvfir9ndEzdT2k40ppYtsh2HHGhEoWKfCT50O7dnbmhdMeCqCLdiX5ig9/
+         cL+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744409493; x=1745014293;
+        d=1e100.net; s=20230601; t=1744409494; x=1745014294;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zIYGb9o3ZNMSFtQQpPHltGF8QRH6KOuBpYhDX4oYg1I=;
-        b=vj87cSJIca/ZnKGy2jaqPi0rzGN7KBDPWQthg0mX2IMJkS9LiRpdykWTjd6C+kTUU/
-         HM5iw86G+p1CbE7Kp97FXKhYmRAi3WArmVSB4K23uPe2aCZzjj10hiOyy2vN0Nv5Y/WS
-         i4/0ANGrNiGujCazi8bxGoQGmA5Qx2LBCSmKynZ8wwQSDACFyZzBf1de+VKDMcL4rcLx
-         XwaP0CfUWUrTPMnSZajelooqLtCDRikrngYijugstyRu3gYKISC6PzOf2J7zL445LiGB
-         RCywKm36eJoJ7nhcCZdfb3JBsLgxdGXLpTdcTjM3nw0pzTYK1oTd3H9QvnhTWfQ1mwTD
-         ucUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaPoN9xizv1GplC2JTnM/RKYhl14535gBoq+AWMUP8yodjftHUFc5ZDBw1sFpdBxNjaiWKFxmNDA35q6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZp1bh+FyKoIE1pbFakmhvbccAoslPQoq6AA5Y0YMxas4NP2hn
-	Oy3HtFV6EE2r7GzwwmUDQPn4bupjA9iZKMVtDG+RHbH6SDYiJhwV5KHL9nBfTmE=
-X-Gm-Gg: ASbGncswILbZX6I0FDYdy3Ws5UlFgqLZ4+rpp0NvIKG/xxSnPxp+PHEaQlJiA73oK5d
-	bMbpbssZymSNZnU1+grwjbe8Zqt+d5Mlob+MaUY7km5TLI3tDqciHUX9Ibf3dvuija3WUDyFkxa
-	FeQLGqet/NpqTxI2789KfP9qpAVgMYWeqHIzmUwgl7cWWfKFBGBPVtei1Uz3NB4HFxfGnKch6Ex
-	etPqfISAxItN8Me5ZCldqnbZfGYODXrv6mCh1Wc61PMGWaZCVRK1A79q9Hfs9OXGIyp0n3/dVEf
-	YKENG0Lhue68TjF6+CsnmReLC2HkdZOu8EK9hE839XRMgxgB0fsdFYNczwPvnW7gwI0bYO3dAJg
-	cd5fxLNW69KniTUNQeJ8R2Z9igM86
-X-Google-Smtp-Source: AGHT+IFv83+YHnaxvDRk0rvRzSWriqasX5eo6zDdijLVMUUFZ6zWAcypdJ15PvWFrs2NGam5+oBtYQ==
-X-Received: by 2002:a05:620a:2906:b0:7c5:5692:ee95 with SMTP id af79cd13be357-7c7af12ae32mr620115585a.51.1744409492937;
-        Fri, 11 Apr 2025 15:11:32 -0700 (PDT)
+        bh=sQiBfRqPk8mw1dZkgLepdccSbpRToMErHEtsnH4pLbA=;
+        b=Mw0kQatJLjt3zNPOAOuxOAAwdgl17SX4x19LUHfpCK2kOXjv7ZUM63ys/5eTxTyNUN
+         BZ5tWaCAgzy29qxdunvP70yzOPDTGnXq0+GZh7/2r79KO/k7PR1u6R/ojF4lk62HoEtk
+         XO/tt8u7h6fV3WdDVhu3KyCJejQbcaMmGP4+T26l6mXdg9oqn7lvbK6ZfAg1tyOM3amb
+         IbFaE9//ShUVPBrPGTYUX3EiyHKprzmmpStV6760BQEGaQQizKGe/yubdN7oTRXlMYk9
+         7Y/RfVzBnveNAG5wq/kY1tEq0tdyBvX7xrweIKkPzEAKpZc3B8UywvHJqD4HpeL22ojh
+         EOjg==
+X-Forwarded-Encrypted: i=1; AJvYcCW40Cj6aVgGpLbOynN3Wiy7vJHdBrZAjpzPbkfA8NER4cqNMpCFvKSzEOsbYyBX85gH90o+Z/YSLXhk0TA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzULxmg6134cCsnVg+Abs+6r2OFoX3Xt1XmIWz1sGZjspWz1a/q
+	LMUa6v62a9xLUR87fa5a0n0T7usPHN+2SLsA2zs5nrVc3cU4Fudj47KzlyOfEGE=
+X-Gm-Gg: ASbGncvITBnqtT7E49WYctyh7Zycwp3FOlqooKa8PkmckX7jqV64LEho90mr1IfhxVU
+	OK4ttXn3DjdXuAMFV4fYFjh0eQYWIBmcT3wCbuMNIHGp+PAaZniO6c0psWJSMfhnf4nT3TxDYl8
+	cWxRL+7Tx5HmtEHqGudZ5mv5FggAFfgCSGbLJ+ZUA29PF6QU4COLMJtugLXoLrs8rKahl4A6txK
+	ytAdL0MxnHr2IQz1247b1m/e9u0u1B01ZzKsWKLXX+ShSnjhTt0Gbm58BWdTjXJjUtsMFBgbX7v
+	ybbcCVaWuAzL6Qqh4ktMeHMXATtXhqrHutYbsrji9zKlSrK6UcTWK/oWUmLqPk5I+u9qWkjU0/W
+	vyXWdh+xsvSyTSkoVpvZ6KvS2q9Tt
+X-Google-Smtp-Source: AGHT+IHFJC0NN/wSPotsTklWaXCxqH3AtdGqhorgwESblRoLtPrItNQuVu4sWimxPm4HxktfyaglUg==
+X-Received: by 2002:a05:620a:2586:b0:7c5:aec7:7ecc with SMTP id af79cd13be357-7c7af0d3f56mr657187185a.13.1744409494387;
+        Fri, 11 Apr 2025 15:11:34 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8943afcsm321264485a.16.2025.04.11.15.11.32
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8943afcsm321264485a.16.2025.04.11.15.11.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 15:11:32 -0700 (PDT)
+        Fri, 11 Apr 2025 15:11:34 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: cgroups@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: cgroups@vger.kernel.org,
 	roman.gushchin@linux.dev,
 	shakeel.butt@linux.dev,
 	donettom@linux.ibm.com
-Subject: [RFC PATCH v4 3/6] vmstat: add page-cache numa hints
-Date: Fri, 11 Apr 2025 18:11:08 -0400
-Message-ID: <20250411221111.493193-4-gourry@gourry.net>
+Subject: [RFC PATCH v4 4/6] migrate: implement migrate_misplaced_folio_batch
+Date: Fri, 11 Apr 2025 18:11:09 -0400
+Message-ID: <20250411221111.493193-5-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250411221111.493193-1-gourry@gourry.net>
 References: <20250411221111.493193-1-gourry@gourry.net>
@@ -87,89 +87,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Count non-page-fault events as page-cache numa hints instead of
-fault hints in vmstat. Add a define to select the hint type to
-keep the code clean.
+A common operation in tiering is to migrate multiple pages at once.
+The migrate_misplaced_folio function requires one call for each
+individual folio.  Expose a batch-variant of the same call for use
+when doing batch migrations.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- include/linux/vm_event_item.h | 8 ++++++++
- mm/memcontrol.c               | 1 +
- mm/memory.c                   | 6 +++---
- mm/vmstat.c                   | 2 ++
- 4 files changed, 14 insertions(+), 3 deletions(-)
+ include/linux/migrate.h |  6 ++++++
+ mm/migrate.c            | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index f11b6fa9c5b3..fa66d784c9ec 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -65,6 +65,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		NUMA_HUGE_PTE_UPDATES,
- 		NUMA_HINT_FAULTS,
- 		NUMA_HINT_FAULTS_LOCAL,
-+		NUMA_HINT_PAGE_CACHE,
-+		NUMA_HINT_PAGE_CACHE_LOCAL,
- 		NUMA_PAGE_MIGRATE,
- #endif
- #ifdef CONFIG_MIGRATION
-@@ -187,6 +189,12 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		NR_VM_EVENT_ITEMS
- };
+diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+index 61899ec7a9a3..2df756128316 100644
+--- a/include/linux/migrate.h
++++ b/include/linux/migrate.h
+@@ -145,6 +145,7 @@ const struct movable_operations *page_movable_ops(struct page *page)
+ int migrate_misplaced_folio_prepare(struct folio *folio,
+ 		struct vm_area_struct *vma, int node);
+ int migrate_misplaced_folio(struct folio *folio, int node);
++int migrate_misplaced_folio_batch(struct list_head *foliolist, int node);
+ #else
+ static inline int migrate_misplaced_folio_prepare(struct folio *folio,
+ 		struct vm_area_struct *vma, int node)
+@@ -155,6 +156,11 @@ static inline int migrate_misplaced_folio(struct folio *folio, int node)
+ {
+ 	return -EAGAIN; /* can't migrate now */
+ }
++static inline int migrate_misplaced_folio_batch(struct list_head *foliolist,
++						int node)
++{
++	return -EAGAIN; /* can't migrate now */
++}
+ #endif /* CONFIG_NUMA_BALANCING */
  
-+#ifdef CONFIG_NUMA_BALANCING
-+#define NUMA_HINT_TYPE(vmf) (vmf ? NUMA_HINT_FAULTS : NUMA_HINT_PAGE_CACHE)
-+#define NUMA_HINT_TYPE_LOCAL(vmf) (vmf ? NUMA_HINT_FAULTS_LOCAL : \
-+					 NUMA_HINT_PAGE_CACHE_LOCAL)
-+#endif
+ #ifdef CONFIG_MIGRATION
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 047131f6c839..7e1ba6001596 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2731,5 +2731,36 @@ int migrate_misplaced_folio(struct folio *folio, int node)
+ 	BUG_ON(!list_empty(&migratepages));
+ 	return nr_remaining ? -EAGAIN : 0;
+ }
 +
- #ifndef CONFIG_TRANSPARENT_HUGEPAGE
- #define THP_FILE_ALLOC ({ BUILD_BUG(); 0; })
- #define THP_FILE_FALLBACK ({ BUILD_BUG(); 0; })
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 40c07b8699ae..d50f7522863c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -463,6 +463,7 @@ static const unsigned int memcg_vm_event_stat[] = {
- 	NUMA_PAGE_MIGRATE,
- 	NUMA_PTE_UPDATES,
- 	NUMA_HINT_FAULTS,
-+	NUMA_HINT_PAGE_CACHE,
- #endif
- };
- 
-diff --git a/mm/memory.c b/mm/memory.c
-index e72b0d8df647..8d3257ee9ab1 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -5700,12 +5700,12 @@ int numa_migrate_check(struct folio *folio, struct vm_fault *vmf,
- 	else
- 		*last_cpupid = folio_last_cpupid(folio);
- 
--	count_vm_numa_event(NUMA_HINT_FAULTS);
-+	count_vm_numa_event(NUMA_HINT_TYPE(vmf));
- #ifdef CONFIG_NUMA_BALANCING
--	count_memcg_folio_events(folio, NUMA_HINT_FAULTS, 1);
-+	count_memcg_folio_events(folio, NUMA_HINT_TYPE(vmf), 1);
- #endif
- 	if (folio_nid(folio) == numa_node_id()) {
--		count_vm_numa_event(NUMA_HINT_FAULTS_LOCAL);
-+		count_vm_numa_event(NUMA_HINT_TYPE_LOCAL(vmf));
- 		*flags |= TNF_FAULT_LOCAL;
- 	}
- 
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index ab5c840941f3..0f1cc0f2c68f 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1343,6 +1343,8 @@ const char * const vmstat_text[] = {
- 	"numa_huge_pte_updates",
- 	"numa_hint_faults",
- 	"numa_hint_faults_local",
-+	"numa_hint_page_cache",
-+	"numa_hint_page_cache_local",
- 	"numa_pages_migrated",
- #endif
- #ifdef CONFIG_MIGRATION
++/*
++ * Batch variant of migrate_misplaced_folio. Attempts to migrate
++ * a folio list to the specified destination.
++ *
++ * Caller is expected to have isolated the folios by calling
++ * migrate_misplaced_folio_prepare(), which will result in an
++ * elevated reference count on the folio.
++ *
++ * This function will un-isolate the folios, dereference them, and
++ * remove them from the list before returning.
++ */
++int migrate_misplaced_folio_batch(struct list_head *folio_list, int node)
++{
++	pg_data_t *pgdat = NODE_DATA(node);
++	unsigned int nr_succeeded;
++	int nr_remaining;
++
++	nr_remaining = migrate_pages(folio_list, alloc_misplaced_dst_folio,
++				     NULL, node, MIGRATE_ASYNC,
++				     MR_NUMA_MISPLACED, &nr_succeeded);
++	if (nr_remaining)
++		putback_movable_pages(folio_list);
++
++	if (nr_succeeded) {
++		count_vm_numa_events(NUMA_PAGE_MIGRATE, nr_succeeded);
++		mod_node_page_state(pgdat, PGPROMOTE_SUCCESS, nr_succeeded);
++	}
++	BUG_ON(!list_empty(folio_list));
++	return nr_remaining ? -EAGAIN : 0;
++}
+ #endif /* CONFIG_NUMA_BALANCING */
+ #endif /* CONFIG_NUMA */
 -- 
 2.49.0
 
