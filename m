@@ -1,67 +1,69 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2C627BF78
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 20:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A01280CCD
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 20:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744403916; cv=none; b=m8+VVUmT7qTa2jozvz9Becuh+qH6F3WBryCnMXiVxSY9Y+Mbmh8g8BmMEZKfxplc6nPSve7UZOkDPKjLVxff4Pn57ui88Kq5uCIfeqKgaWlueAiVtHyTDwiTJl2t8L86/2ldUjUa+WL9E3YMnFnkE6mjgZBgA+UDUac6+Sj1evs=
+	t=1744403917; cv=none; b=OS7HpIq+BzUjzxzYk6wC7RsiebMt8/qfptyW92aHHOXOxVfraWHj3lB7ehORn7XTRrCTMhpacEOEgmjXj6qyNX5aR13I+ZNKa+v38k3e5SqvgECMYXQoa65tJFciK9tAXYu3Z0hfeKtGwXxBuIqis/YGNcSWge8TPelGriRL92M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744403916; c=relaxed/simple;
-	bh=jP2gH2HxizlXVnfCoefiIXX50CVQy/awrI7TNYRAzsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=imMZlg0DmS6C/48fdkUZrEmDA4PufwBSUCV3RyN/e3apwOvp1OnJ71pyiRAbAHbfomnIo6v3ph8b7qsq70ydaDzRMA0Jmya6JL88HuRWwnBHaZx6cc5L0YpkoIfVHc7YIpAU2weyjWtyxJRXSDw/HZvUw/K1OSDjadPWrwb1KVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=HuZd3vAa; arc=none smtp.client-ip=209.85.166.44
+	s=arc-20240116; t=1744403917; c=relaxed/simple;
+	bh=kgcUq4gxhAS41S/CjHcT1RY9hEDolidwVa0J5wWVKTQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lO3SLX+VQtDN1IszSvxaeLMIsQhsz5f/u2OZP0LWvpuILxmuGuHruS4aqgXLwOFMbABHkzZO/oWO/BxETWd0wyXxLVvxvRYRFdxCGgG48xJfqBylVfrzx8YVFiYm8dZUhmVtpdsUBS2mjE5k5t3KtfvLcSlG5e2kA/+UdHtvWNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=viIHxl+S; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="HuZd3vAa"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-8616987c261so76428039f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:38:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="viIHxl+S"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d46ef71b6cso19676425ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:38:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744403913; x=1745008713; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G2ZInTEwsl47QZUkjk8fk2tvbcX5FPggXx8vW7X4elk=;
-        b=HuZd3vAaKxn6C6d2hH42QD+cWH/9GKh1OwWI/pMjqPJC+IRTZ1mAelTWKHMFQxSF5D
-         YEqy0dAByDxGN3L/ycvXZlkAmy2IBGSiYBuPCQMAMdkoGNUIZinNE9jt8IUJw9D0FHSf
-         kZjoS6NS3fSNpLV4tteaZPIprDaGB+uqM5Q2q2Ok5fZNkIhvlP2ndUS4FAxOyIO/8I/d
-         nC4oqP+EkmZGgAfUnLT1ijAjlVlJo24Zlgj9sI9QB2ydIqBPgfgkeOrOqkF3tgNO3aPv
-         +kdAcQEE/zuZPxeZos7cEOfkQR339aWkEphL0R5MGTEFetaDAiuqONimvOzmpAmdVAoM
-         gNZA==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744403914; x=1745008714; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qT3eKW0OgVfu/zUbqU6ev7ARx/bWRnIm3eKXRAL5nSo=;
+        b=viIHxl+SZtwF02PI5YsOlOCPiJ24FIfJ+pCJ9eeG8IufUMlxpmaSxPJiQbgFxRPgEc
+         SdLo6tTgugssKSzDZYngYwASkRh+AmP6hVMEyiZ1yuJa9behcZHMPgkIXjc6VV7XkxT8
+         LACIvamGBwcRx+96p18EFkxPz89EZ74ME9by5wP/pqgEzt2Al1u6Np+etIEOfP8wvfqQ
+         OhSlVfELR47ZCQyg3lwgGGsYI0TRpUxVrCvWp6VTzD2ZVieS+IZUEUJgVh7xH1rb3FXo
+         b2JN/q7Glnazk4BfJus5CuHBo5etSWnbnHn+nYiaZNa+2qI3OPa2vCwGjuXRVwg+jTOk
+         q4QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744403913; x=1745008713;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G2ZInTEwsl47QZUkjk8fk2tvbcX5FPggXx8vW7X4elk=;
-        b=B1d3mOyLPYuq1ejca4cyqXuhlyTas6530JLSD2/mnJ9zaShCHfx/TvWe6n0K+ha54B
-         cvp8IooRy+hSHhe5hLNPlJkHvCMBBEyAYnt00FKDUnOiRA4/lPbUKWlqLc8ryG7FjVYY
-         uGdLtSIbYN27OstGxKvLJ5KBXgj10TUObsPx0iJx6DXdNznQNExJwIrckIaxWa8WS7rR
-         WTRaVO5uS5Mxi9C8lqewCGGzCmkuAMvIya0G8NiROlKytJDs3apN7ctyA8Y94cvUcx6c
-         SlVPQX3wf88RdA1yzP6pNmoeVw+EKfUVJ14zWSHH9y1A+X6AqQsEId0JwloDaOyTv9kP
-         1udA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfedi/MsqoZZbDXPuRDJbnKwjn4TJAGvqANVXcOGcwapFgiwwftwvSY4urvT2EyvgzBwGIS4KpVF7c7ao=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPN59oMiFK6Wyj0TvEASfYBpaUwT5/PNjBZvNfhr2n+X4a7Q9P
-	uDJDL1wQVZEmtuJChPGbbcSHhm7XsRMU7zsmsoklYo5uYjOfaQ75PRiqz9CkZHg=
-X-Gm-Gg: ASbGncvy2B3YZDUYMRwCD9Z2ZPkR+gCX+Voo92N08TZO+RjjVPnHVi03aJfe5tfVBSR
-	IXRfcjZz9y3DDrPJ2Lb9KTh9sv7UwSadtt2PSdEHD1ykjuekb8ffWdQMj6RXvC4G3jJTqCNFlzL
-	W+1G4pWLUcszVMIedowllrUmnLLr5uzHvyU24RFWyJZnUEAfLyQOPFWJI3IyJ9ylaPW/MOxa0hl
-	WU2GFipo0LiiXe8IlBR6SfQSBZZ11scn/8vOzVeTkxr6cwS496qFogmzy4koDEB5B3OHW+0yGLz
-	K5tjp2El+HJuNFcJ4XxzlOWq77QjY/Si6iN0xXfjIclyUk/f7vL84eAimK+bgzSCu5I8kNRVRY9
-	cGW1fICe0PGmn5F7i805OrR2D
-X-Google-Smtp-Source: AGHT+IF64rFuEmhScHDoMsL9QXFX4Agysz2oW5sGUVVn3Q82xJQ20AI5xuTlCrtn92K/dBEu6SxbnQ==
-X-Received: by 2002:a92:c267:0:b0:3d6:cb9b:cbe9 with SMTP id e9e14a558f8ab-3d7ec1caab5mr44116655ab.5.1744403913131;
-        Fri, 11 Apr 2025 13:38:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744403914; x=1745008714;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qT3eKW0OgVfu/zUbqU6ev7ARx/bWRnIm3eKXRAL5nSo=;
+        b=sUDqD02o0bU6ahP59Sg+Fqj0mOgFIaj+1KfVdH/Y7vlcTrIWVhIDtGwCrzTA0G46Wc
+         2L8Sy3h9exbbvZdMzzTDyXjyI6tuVBRMosvWADi8ayXMxOKWCtT1iIZZHmo4LZs3jL6u
+         LeuYC/8dKnQcI7SJhtr9R97LyGt0C5m7IeppX8pjMQ4VBk14MUwdYbbADSUu23hpg/od
+         fvHiXPlrqtMiTdW/8mi8BYiRvYzvuijyVverzxneVH4snu/LCQcN3/a+ftgbM2p5vYE+
+         tyXAKOGHYwZfdz4RuoLcDTbLWpvVRhIJBZUvOtnkeNW5PhY/3kIDAdfnQ57yz+gZHqIJ
+         VBQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwJdvaf61ITmi69ZPJ+cBKhA/ie7K7iwCKJ9r+ATQ9VRA2iYZ8vYY28CzF2AcZLioO2xoFt9tEP9zlgNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweRg3slnht1e0yLMtg3L7JUPT+QC9xzDKC4lP1gL7pwQcP/wRw
+	h6+FmFBLemZrlLUaJP5w/9/6qfWKv1TGSPei20+nuFnYLcytel1oBOwG0LjUNRk=
+X-Gm-Gg: ASbGnctS9m3oedDHUE86FDbemghf+kldKBXpjNff1sYms5pjH0sCs7KSkOiAKFxyfM4
+	CUtwU6XQAC1prwUKe3wNN9fZebeoXTnfm+d0NImtvsfA6/uSFD1Z1SHLMF4yNIiPFzZYYq6qMhw
+	RNMgjwBy6jbDRdAgmHz4xAc4lrPHEjpVGEL6dyIPKHbsxyNfPncfs5L2h4T0it+2VZNnLKMDu0A
+	JhhmtOPeTL/aQDIAlIIKN2REoUH3fuSCpSMc/BRqOvnKO/Us2PZuqzGcy6Binq9kBL62WQI55WS
+	tlRl+OlisjeUI9bkwxonZn32dv9EaXZQmlrFNFqRxP3M1fokLCWSpMmv+K40fmmsD3aB3zuKPG7
+	I/aG4FS8X0rc9XQ==
+X-Google-Smtp-Source: AGHT+IHNU+YtLYKKg9Rbak8AqmRKKNb3APAoh0D667oTnKj2dbdwTHDE6V53boBISDwawaoWJ0qvsQ==
+X-Received: by 2002:a05:6e02:23c9:b0:3d4:3556:741 with SMTP id e9e14a558f8ab-3d7ec26b630mr50230125ab.17.1744403914302;
+        Fri, 11 Apr 2025 13:38:34 -0700 (PDT)
 Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e2ea1esm1420787173.123.2025.04.11.13.38.31
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e2ea1esm1420787173.123.2025.04.11.13.38.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 13:38:32 -0700 (PDT)
+        Fri, 11 Apr 2025 13:38:34 -0700 (PDT)
 From: Alex Elder <elder@riscstar.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	robh@kernel.org,
+To: robh@kernel.org,
 	krzk+dt@kernel.org,
-	conor+dt@kernel.org
+	conor+dt@kernel.org,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
 Cc: andy.shevchenko@gmail.com,
 	dlan@gentoo.org,
 	benjamin.larsson@genexis.eu,
@@ -73,10 +75,12 @@ Cc: andy.shevchenko@gmail.com,
 	linux-serial@vger.kernel.org,
 	spacemit@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/3] serial: 8250_of: support an optional bus clock
-Date: Fri, 11 Apr 2025 15:38:24 -0500
-Message-ID: <20250411203828.1491595-1-elder@riscstar.com>
+Subject: [PATCH v4 1/3] dt-bindings: serial: 8250: support an optional second clock
+Date: Fri, 11 Apr 2025 15:38:25 -0500
+Message-ID: <20250411203828.1491595-2-elder@riscstar.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250411203828.1491595-1-elder@riscstar.com>
+References: <20250411203828.1491595-1-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,56 +89,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SpacemiT UART hardware requires a bus clock to be enabled in addition
-to the primary function clock.
+The SpacemiT UART driver requires a bus clock to be enabled in addition
+to the primary function clock.  Add the option to specify two clocks
+for an 8250-compatible UART, named "core" and "bus".  If both are needed,
+require them to be named.
 
-This series makes it possible to specify both clocks via DTS.  If a
-bus clock is required, it and the primary clock are fetched by name.
-
-This code is available here:
-  https://github.com/riscstar/linux/tree/outgoing/serial-v4
-
-Changes between v3 and v4:
-  - I simplified the third patch by reusing the local variable, as
-    suggested by Andy Shevchenko
-  - The first two patches are identical to what was in v3
-
-Here is version 3 of this series:
-  https://lore.kernel.org/lkml/20250411154419.1379529-1-elder@riscstar.com/
-
-Changes between v2 and v3:
-  - A third patch was added to disable the bus clock on suspend and
-    enable it again on resume, as requested by Yixun Lan
-  - Rob's Reviewed-by tag has been added to patch 1
-  - The first two patches are otherwise identical to what was in v2
-
-Here is version 2 of this series:
-  https://lore.kernel.org/lkml/20250409192213.1130181-1-elder@riscstar.com/
-
-Changes between v1 and v2:
-  - The DT binding was fixed to properly define the number of clocks and
-    clock names based on the compatible string, as suggested by Rob Herring
-  - Logic to look up the optional bus clock was changed as requested
-    by Andy Shevchenko
-  - The bus clock pointer (which was never used after it was enabled)
-    was renmoved from the of_serial_info structure
-
-Here is the first version of this series:
-  https://lore.kernel.org/lkml/20250408175146.979557-1-elder@riscstar.com/
-
-					-Alex
-
-Alex Elder (3):
-  dt-bindings: serial: 8250: support an optional second clock
-  serial: 8250_of: add support for an optional bus clock
-  serial: 8250_of: manage bus clock in suspend/resume
-
+Signed-off-by: Alex Elder <elder@riscstar.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
  .../devicetree/bindings/serial/8250.yaml      | 30 ++++++++++++++++++-
- drivers/tty/serial/8250/8250_of.c             | 15 +++++++++-
- 2 files changed, 43 insertions(+), 2 deletions(-)
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
+index dc0d52920575f..33d2016b65090 100644
+--- a/Documentation/devicetree/bindings/serial/8250.yaml
++++ b/Documentation/devicetree/bindings/serial/8250.yaml
+@@ -135,7 +135,16 @@ properties:
+   clock-frequency: true
+ 
+   clocks:
+-    maxItems: 1
++    minItems: 1
++    items:
++      - description: The core function clock
++      - description: An optional bus clock
++
++  clock-names:
++    minItems: 1
++    items:
++      - const: core
++      - const: bus
+ 
+   resets:
+     maxItems: 1
+@@ -224,6 +233,25 @@ required:
+   - reg
+   - interrupts
+ 
++if:
++  properties:
++    compatible:
++      contains:
++        const: spacemit,k1-uart
++then:
++  required: [clock-names]
++  properties:
++    clocks:
++      minItems: 2
++    clock-names:
++      minItems: 2
++else:
++  properties:
++    clocks:
++      maxItems: 1
++    clock-names:
++      maxItems: 1
++
+ unevaluatedProperties: false
+ 
+ examples:
 -- 
 2.45.2
 
