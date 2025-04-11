@@ -1,197 +1,184 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F4729344B;
-	Fri, 11 Apr 2025 12:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744374892; cv=pass; b=rED0Tay/pt4rBBZqmgaEjaAwbZ2N946FBlRHXvJCnKh8f6UdL/g10TjBp2r+arhibdCdAucJU5NvkcOQ+ZOqyB3ir8Taf19mcqjuJ51ahNDEdMxF0/TuO8nUep7j+Djl330fs6jeT5G3U1vZmXMf4GJkbqm3lY+xcpxWOwVdulM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744374892; c=relaxed/simple;
-	bh=Qos49NVgrAlMjMuABgHqA09+VX8Qabl+AB2UgZAZVnQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWFfXaGE9zLnTnd3fk2iX5y6FWBosxdxaVeX3f1C7alSR3hhSoRo3sL/oeHEX0lNDf9Fyc1S1jbzVowUSqRVDTt1IwaiwrlcA9rOBluuNT5NiqfPvBWw27l2nl6UL3I1bmumEwtOhGSf5y4GT9RBUIWRa3QehGfdHkHgPkgHZ74=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=g+apquat; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D224221266
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744374911; cv=none; b=kbyRS8rkM98J7MkjixjIcOMuUDzF9sYWbxZt4J/J1POxbNichmd1F6dMJQYlcB/oWq8dTrFfwNncV8JQvLSECqKDCMxDwXg2BlzIBKJpvrMa9VNPszHorZ0UltbPDNk4AjulRrnW83Zzt+xxx1g3kqFOYlH/s8PQsR/van91+Ec=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744374911; c=relaxed/simple;
+	bh=EC6fzVkAc5QBoX1E1chjXEc7nrbHL8W4dzov1UpCg5g=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=lWxAXZAou4bKajfsi4FJBx1PBFSu3cavi6m6+dK1C6Kwbl58324pCSpJiaCZb+7+zJ+X43jXJDEdgstylDOeCOkXXByQyuY2YQHOdqSp5lV4677xCFYo5XciBrQCOkEE0yNo1E4/jEQByuexTanCV6aoo9fNXe4KIRG/2NUD3Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lxdlmLKL; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="g+apquat"
-ARC-Seal: i=1; a=rsa-sha256; t=1744374871; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=jAu+dIumyTWcixiH0aT0BkZ9JZKPDflHo1ApovBUplJwVJJocBl+EFKtjR659jp6tKeUvIzXbFhMbA8MtRTn1ZPnBam9PnUGxS6BaPtOIjH1A2tCXNBw23TPkV87X9+j9BaLSHTdtzuFQD3VRclClboSKCX8olp7M8GGPomiAMo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744374871; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=IDhcIJLaAPZ0hY0thCIRQ8WB/yFxEgviJhFDdroGRPo=; 
-	b=Q7FyUOOip/KwR4X/A/jH7VdkY97fRhqBHzO8WOMVmkiTS8oH0H3vw14RrvLqx47wijd5eDCBlaZWOCp4HQ/gT7utu8xvxbcJ62ziGl1tYV/D9vU3MsVSTlbvfl3Vp1P0OZjTvwrM0gwDku+hOP30bzmVifAzlbymlTrdRXLD1Uw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744374871;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=IDhcIJLaAPZ0hY0thCIRQ8WB/yFxEgviJhFDdroGRPo=;
-	b=g+apquat2dDMp5AnqJiMZhbVK0WFh6t+sv9IytZhoB6XbIyl1wj/85aBAOUlCRQJ
-	An1ZdawVyZOJKIfEh9wJjIkyL9+yzDFfK4rOXeP/CnWxtlHrLhwZ+UryxLPu9DRuCYA
-	MBG0Q7Z3x5EggR2MrINCzK6XhKTMNH+MmEL/J91c=
-Received: by mx.zohomail.com with SMTPS id 1744374869473393.2831161950327;
-	Fri, 11 Apr 2025 05:34:29 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 477931801EB; Fri, 11 Apr 2025 14:34:26 +0200 (CEST)
-Date: Fri, 11 Apr 2025 14:34:26 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: quentin.schulz@cherry.de, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	dse@thaumatec.com, Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: Re: [PATCH v3 2/3] arm64: dts: rockchip: add dsi controller nodes on
- rk3588
-Message-ID: <p5wucvjabwnkw2itlfrq6hs4wp673cnt2yzqumroz2r3zu5rts@eayxhqm5i4h2>
-References: <20250226140942.3825223-1-heiko@sntech.de>
- <20250226140942.3825223-3-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lxdlmLKL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744374909; x=1775910909;
+  h=date:from:to:cc:subject:message-id;
+  bh=EC6fzVkAc5QBoX1E1chjXEc7nrbHL8W4dzov1UpCg5g=;
+  b=lxdlmLKLWKSDKWEfh1vkikE5XqR9CjniB/NO37zrqF4dOY9nIbpEJ/Oo
+   xaNNYSfp2++TFaK8Cj8jvKdilNqr5yZRvyMH6ZSracUsU+m25suNrC3RF
+   P+JZ0n5dtnsx3EzrWp4+oqsP3GX1sP6lHT/SVnxmLETp/z11joiQt+1Fa
+   XxGbJe0/0LJPWXWXTKH1IhvXAeHv76PFOGmbSuINYicpt/z//jWjF8quK
+   oriBZRiFy/t8wzbeWilWLOEsfoJVYgu7gxXiUIZX/UXh3phaxXmk8Bs0Q
+   3JRU0EC+x+lo8XdVJN5UpJqTYpjJraawjNy22GwQTukgD0648V1asfhat
+   Q==;
+X-CSE-ConnectionGUID: mXz9BVdlQt2PYsWNsABaeg==
+X-CSE-MsgGUID: LMVel354Thi6DmB5U6tUxQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="46087936"
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="46087936"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 05:35:08 -0700
+X-CSE-ConnectionGUID: U5ZsnPZARvSoFXrqmFUjlw==
+X-CSE-MsgGUID: c/jWpVq3QsabVGtV+ZYKbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="129749371"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 11 Apr 2025 05:35:07 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u3Db7-000B5q-1q;
+	Fri, 11 Apr 2025 12:35:05 +0000
+Date: Fri, 11 Apr 2025 20:34:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/boot] BUILD SUCCESS
+ 9e8e879426d863fc326cda53d704bbc7369c1afc
+Message-ID: <202504112033.A81WyxEK-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ekx3fcfiyobjremz"
-Content-Disposition: inline
-In-Reply-To: <20250226140942.3825223-3-heiko@sntech.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/244.360.14
-X-ZohoMailClient: External
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
+branch HEAD: 9e8e879426d863fc326cda53d704bbc7369c1afc  Merge tag 'v6.15-rc1' into x86/boot, to pick up fixes and refresh to a known base
 
---ekx3fcfiyobjremz
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/3] arm64: dts: rockchip: add dsi controller nodes on
- rk3588
-MIME-Version: 1.0
+elapsed time: 1461m
 
-Hi,
+configs tested: 107
+configs skipped: 1
 
-On Wed, Feb 26, 2025 at 03:09:41PM +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@cherry.de>
->=20
-> The RK3588 comes with two DSI2 controllers based on a new Synopsis IP.
-> Add the necessary nodes for them.
->=20
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
-> ---
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com> # RK3588 EVB1
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250410    gcc-14.2.0
+arc                   randconfig-002-20250410    gcc-12.4.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                       aspeed_g4_defconfig    clang-21
+arm                           h3600_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250410    clang-21
+arm                   randconfig-002-20250410    clang-18
+arm                   randconfig-003-20250410    gcc-7.5.0
+arm                   randconfig-004-20250410    gcc-8.5.0
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250410    clang-21
+arm64                 randconfig-002-20250410    clang-21
+arm64                 randconfig-003-20250410    gcc-6.5.0
+arm64                 randconfig-004-20250410    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250410    gcc-14.2.0
+csky                  randconfig-002-20250410    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250410    clang-21
+hexagon               randconfig-002-20250410    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250410    clang-20
+i386        buildonly-randconfig-002-20250410    clang-20
+i386        buildonly-randconfig-003-20250410    clang-20
+i386        buildonly-randconfig-004-20250410    gcc-11
+i386        buildonly-randconfig-005-20250410    clang-20
+i386        buildonly-randconfig-006-20250410    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250410    gcc-12.4.0
+loongarch             randconfig-002-20250410    gcc-12.4.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                       m5208evb_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250410    gcc-14.2.0
+nios2                 randconfig-002-20250410    gcc-10.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250410    gcc-5.5.0
+parisc                randconfig-002-20250410    gcc-11.5.0
+parisc64                         alldefconfig    gcc-14.1.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                     mpc512x_defconfig    clang-21
+powerpc                  mpc885_ads_defconfig    clang-21
+powerpc               randconfig-001-20250410    gcc-6.5.0
+powerpc               randconfig-002-20250410    gcc-6.5.0
+powerpc               randconfig-003-20250410    clang-21
+powerpc64             randconfig-001-20250410    clang-21
+powerpc64             randconfig-002-20250410    clang-21
+powerpc64             randconfig-003-20250410    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250410    clang-21
+riscv                 randconfig-002-20250410    gcc-8.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250410    clang-17
+s390                  randconfig-002-20250410    gcc-6.5.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250410    gcc-12.4.0
+sh                    randconfig-002-20250410    gcc-10.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250410    gcc-10.3.0
+sparc                 randconfig-002-20250410    gcc-7.5.0
+sparc64               randconfig-001-20250410    gcc-7.5.0
+sparc64               randconfig-002-20250410    gcc-5.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250410    clang-21
+um                    randconfig-002-20250410    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250410    clang-20
+x86_64      buildonly-randconfig-002-20250410    gcc-12
+x86_64      buildonly-randconfig-003-20250410    clang-20
+x86_64      buildonly-randconfig-004-20250410    clang-20
+x86_64      buildonly-randconfig-005-20250410    clang-20
+x86_64      buildonly-randconfig-006-20250410    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250410    gcc-14.2.0
+xtensa                randconfig-002-20250410    gcc-7.5.0
 
-Greetings,
-
--- Sebastian
-
->  arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/b=
-oot/dts/rockchip/rk3588-base.dtsi
-> index 5535d5d905f6..9f9e0d3c7722 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-> @@ -6,6 +6,7 @@
->  #include <dt-bindings/clock/rockchip,rk3588-cru.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/phy/phy.h>
->  #include <dt-bindings/power/rk3588-power.h>
->  #include <dt-bindings/reset/rockchip,rk3588-cru.h>
->  #include <dt-bindings/phy/phy.h>
-> @@ -1406,6 +1407,62 @@ i2s9_8ch: i2s@fddfc000 {
->  		status =3D "disabled";
->  	};
-> =20
-> +	dsi0: dsi@fde20000 {
-> +		compatible =3D "rockchip,rk3588-mipi-dsi2";
-> +		reg =3D <0x0 0xfde20000 0x0 0x10000>;
-> +		interrupts =3D <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		clocks =3D <&cru PCLK_DSIHOST0>, <&cru CLK_DSIHOST0>;
-> +		clock-names =3D "pclk", "sys";
-> +		resets =3D <&cru SRST_P_DSIHOST0>;
-> +		reset-names =3D "apb";
-> +		power-domains =3D <&power RK3588_PD_VOP>;
-> +		phys =3D <&mipidcphy0 PHY_TYPE_DPHY>;
-> +		phy-names =3D "dcphy";
-> +		rockchip,grf =3D <&vop_grf>;
-> +		status =3D "disabled";
-> +
-> +		ports {
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			dsi0_in: port@0 {
-> +				reg =3D <0>;
-> +			};
-> +
-> +			dsi0_out: port@1 {
-> +				reg =3D <1>;
-> +			};
-> +		};
-> +	};
-> +
-> +	dsi1: dsi@fde30000 {
-> +		compatible =3D "rockchip,rk3588-mipi-dsi2";
-> +		reg =3D <0x0 0xfde30000 0x0 0x10000>;
-> +		interrupts =3D <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		clocks =3D <&cru PCLK_DSIHOST1>, <&cru CLK_DSIHOST1>;
-> +		clock-names =3D "pclk", "sys";
-> +		resets =3D <&cru SRST_P_DSIHOST1>;
-> +		reset-names =3D "apb";
-> +		power-domains =3D <&power RK3588_PD_VOP>;
-> +		phys =3D <&mipidcphy1 PHY_TYPE_DPHY>;
-> +		phy-names =3D "dcphy";
-> +		rockchip,grf =3D <&vop_grf>;
-> +		status =3D "disabled";
-> +
-> +		ports {
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			dsi1_in: port@0 {
-> +				reg =3D <0>;
-> +			};
-> +
-> +			dsi1_out: port@1 {
-> +				reg =3D <1>;
-> +			};
-> +		};
-> +	};
-> +
->  	hdmi0: hdmi@fde80000 {
->  		compatible =3D "rockchip,rk3588-dw-hdmi-qp";
->  		reg =3D <0x0 0xfde80000 0x0 0x20000>;
-> --=20
-> 2.47.2
->=20
->=20
-
---ekx3fcfiyobjremz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmf5DFEACgkQ2O7X88g7
-+pqkLQ/+MtRu/6wuVD8vKaXfYITTqMMKPNMm/y2MpaKVOVwek4rNxfOCTj2dAxgr
-QY3aUQuKLEw1ljC6QWrVAUVvnbEiGb/TEwEt0AdJcP0JHkip8BcBYiRMHDN7jiz9
-k3SqIXRKDnZYE2kTbH9QPgs/ebnjJPkH0g6s3uB1n+VFSHWybgo60STsrCwTQMnn
-ozgz/tOwKloLhYLEv7onjpCQh36JIQ7Y9F2SOAjar8iGPy2D/pvoFpn4Ztv9EArS
-iyW0SsAHFODXcrYD44w/luoq3+YIKj4j/C5H4qYl8YFVNqPKgOYQJ6aOSm/9iWfo
-wZ9wEgupLu49FccxegXcYEKTFYmAp4g8jH5gpKIag3Mq2r2moy38Mb8DjxEUXNrj
-hs4c9h8+dgYTNYzyRHLO3WJz5Hv8d2DsCqZ3qRvcfoi/xbA2IiF7pqYYzje/K12J
-/JZUpYBV8ixlCyA5RK/UAuGvPDMOKn/TpwofWh2imW2sMw9y5ToUI2jP0hxCrTE8
-3L+6JKRY67iauXez3A0ds5oRrS3EtdVX/R+oxKddD0BwtxlgcAk68XR8GHN+L5e/
-ouw5bRmAUyMArUADyyNSZ20xw6bRCerWH9yYI+5UbxSxK7OoBhRgs/SeRpZsEj7M
-qr106Y9szomiMFM/jeIkfdhxajGnuHIgpTBK6ivYT2VmMTB6wak=
-=lXSV
------END PGP SIGNATURE-----
-
---ekx3fcfiyobjremz--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
