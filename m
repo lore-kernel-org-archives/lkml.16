@@ -1,137 +1,197 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EE929C32E;
-	Fri, 11 Apr 2025 12:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744375006; cv=pass; b=OFIJ4WQ/878sy2Kd1yVChkQduK81gjbQRHdJS7WVAG7/QWOL2C6sharLl0z2HQyQXluCxzafHyKwhmpAOgmpoqlTHsL600oA5WijbhMEqj35bn+nPBEz0mPVjw/4xvqHElM9+USZxASgmxrSmlR/no/fQRJjBO17nAJaUFTVTOA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F15C29C32A
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744375006; cv=none; b=XKr+74fkLqgpIkeruL+VHfBN3i2//1v1dhTGJLNAtnkK1zQ+KCO9tamD6RzRIkA8eNcI/jvMH3u1mqVFB3DCiDcEhbjq+ypIwKtwdSiB87g6CJ58boWQGU1mswqD2dvHJap7muKZ5yuXxOyiWqrH4vub3z/6otvpw569nw5vK5w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744375006; c=relaxed/simple;
-	bh=/Odg9lL9TgBKwEIAHmwzHxOyl6eF0Cd6KglLSqmCqBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GiyrQ5vXXP20GlxPbrjjY3iZn0B6wpS1BKuCZru4hvr8k7IRPEzPH5Op5v9XR1X6Z3bccohqjr9KO4h6MXZTVAJ19hQilW3YNthaWty98jZrOejmOGX7Az/KygnnhrKjT1SW+CdXTWuOLjKdwZ4vCrop7eqcIAYgUe84ccBXlJI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=CPPXP7mB; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=vGUfgBYd/nqdiWhakMrxzcEEIqB0t/sqp/diq7LMGlc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FCA3RParGuVDy8W/+svjUIGsYloGCh6Fzz6iSbAdKZPfsnWKg8CEt6REB4dcGF/2BolfLdMOKAGQWRv6g0rlAwatplxcYe1TK2+xYmEAQWwtVvqvd7+adzV4ymr6L7OGp8gsaPhCirgFy/BydMtS26DDzHQ2nmAS3MFguhl0XT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RArPY3MD; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="CPPXP7mB"
-ARC-Seal: i=1; a=rsa-sha256; t=1744374996; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Z2BghWrAKiUotlAVU/k3Yodv4OdFxYLO33Tib6mF667GaBi8+I34ya8GHOrPpsFUyLRNjpPN52f0pYLnqYdtFfcx0ef9bXV0J5lyX7ALMNtZlAZPCCk8+Emf+mJJCAErEEodVA8ceVv7DOqyPfsPWdNnCwIlS77hX4viogKzZ9Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744374996; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Pl05Da7C3vz6G/H2IKlSjFxpaCyLWPpzmBcWtm8HlMM=; 
-	b=nFORDdQXA01Vdu2VxbwlrunBZMVKMa9Pf9baXbUSLSGilNg53tpQ1W9gTgxr6sG06wwn1rGjyp/In4oq28OYqbIE6oxyFJSHyE2CZUKGYn0cU845xElOmQoBz833YMODT8V5qJg0XihmIauJ8lm7TNfsDu5mYpiZY60wEBCMDus=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744374996;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=Pl05Da7C3vz6G/H2IKlSjFxpaCyLWPpzmBcWtm8HlMM=;
-	b=CPPXP7mB1N0G8YugQE+svNa7kN5wdFLfAr1TGWzzCq4i6dbpa4X+ydymS7/EhWgE
-	dyrswrDhD/3fHN2xB8shD6/ok05ZbOBC8mjVWkvpVuMDG288KCTxhwQqOZbykuKK9Iz
-	bEEEZvAk2eKGIrIsyiKPzPDq6ysFarK95jcSLXJk=
-Received: by mx.zohomail.com with SMTPS id 1744374993419573.2779806109937;
-	Fri, 11 Apr 2025 05:36:33 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 7FFA51801EB; Fri, 11 Apr 2025 14:36:30 +0200 (CEST)
-Date: Fri, 11 Apr 2025 14:36:30 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: quentin.schulz@cherry.de, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	dse@thaumatec.com
-Subject: Re: [PATCH v3 0/3] arm64: dts: rockchip: add and enable DSI2 on
- rk3588
-Message-ID: <4pygfbajnn4g6nt5jdzdymp6ukwft5qhhll4c3urmefgchmx5j@iwzmdsyq3dqq>
-References: <20250226140942.3825223-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RArPY3MD"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso2302497b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744375003; x=1744979803; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wWvOtZ2Ij96tOi1o1hUr0b9qGVWu80vcBedKzsseg9k=;
+        b=RArPY3MDH2P26+1MurZ2G5433n6JbjHnVEzDtnNEeQYlFFlPXzDtA4R4c70CY0+hGg
+         3X01IAK5Y97ijCubaueulHJk1a1SyMIgniFtJMeWdXq4pKx+NPCnMjyh/y2Do0DfTbYt
+         6iaPBvF3yU4KPk1Pq1WzbZANLd1DszyioRPVpEPD4a03aU4R61OLyGeitY876utK2F/o
+         XsDTsucntkTkWcGbE4TbKBFBcOQDFX1584oT/Ebb6EkdfbeudlQePbvC/lU7SknTJXXq
+         jbQbOsMG8+MHnhIs4TiUrxv2SP+pROB3C3usccOHUdvIQDsBTNak9IFfmLsBi+zqY3Su
+         3yaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744375003; x=1744979803;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wWvOtZ2Ij96tOi1o1hUr0b9qGVWu80vcBedKzsseg9k=;
+        b=U/Zz5Ru0MWXCWPqditQjQx0unRxEAxv726Xc2pYR0acFydoMcO1IA6bt6nARC84deF
+         6vr0qP24ub8gW6USy7ydUJjJyi+CIE4bof+FnC8mbHrWQvJ3QWaYTcr7VOaIt9xH87s3
+         Rrke3KH4gU/1Etz2sNaNMGi5T7Hk+9htCbvkU5+h1l7HK3PyczXRzawrdsw22odVrfvX
+         3abJjyTY5IeRvuoYnjgi23eY1OOrxa4nf+aql5y+mlL/BTWY7Plu/if3PNCn7rKJVzsG
+         IDfMnqyQ6oRook/y1sKNR7U7C9cHaaSjj7F0F2FHZaZ7ChrLajcw7PGjVdDHVuqo4+8J
+         lEew==
+X-Forwarded-Encrypted: i=1; AJvYcCWNT2Rj5V171OA+qBJ7soaFkQchui3yj8mv9bW4sSk3g0+y8QUnOvJn+vRbopjNIY8dyc6/HMTnMR7wans=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXPIDQgBNKZH4dnsDyjPgkcyvbSmYnyF+wPkICTtykhWXzYjQi
+	WzqtQiA+XRyYq3NbHeXdAGl4E7mShkQ2s76wpRxlDoO7wFS1wAZfTjnD3XWVnzRJYE1HOsDRuco
+	J6wQ=
+X-Gm-Gg: ASbGncuNrFjicgo8T4mxwzl5hY/K1+4uAh1J7vILKJqlDm44uw6taC/CMFsSoCIBvjH
+	FkWwwBtVQfYbTmK1su6hU6wt7ts+HDKzajuoebLeoKGqKxei10OSHoiWTvnPTrDYjoiQkgpd//8
+	ig0q5jNDZ+4hPK0NKj//tUB6YNYyPejSSePyUBqosxgBtY84ei69bFzMJET4uW2b8HH4e7Mq9CL
+	RO1q8ebRH/AXJZVEjha816E/dTbf07wWMlnLc29uLlVzAZbC3exd/7B63YSjFLnYFlpHLBM4qMF
+	G6DnREDwMNdlI9QB1KnjTxx1263uPib3lTew5LSg/+o=
+X-Google-Smtp-Source: AGHT+IHHr6PfcniD19K70c7n3k5QYjLiwj66+qa8B+xXfSPCuWN5/YZWkukIqVWOva+qdLyKiB11mg==
+X-Received: by 2002:a05:6a00:3908:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-73bd129c6d1mr3275598b3a.21.1744375003638;
+        Fri, 11 Apr 2025 05:36:43 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:e0a:5ee:79d0:cf9d:bb30:5951:692])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73bd22f8253sm1408292b3a.93.2025.04.11.05.36.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 05:36:43 -0700 (PDT)
+From: Alexandre Mergnat <amergnat@baylibre.com>
+Date: Fri, 11 Apr 2025 14:35:56 +0200
+Subject: [PATCH v3 3/5] rtc: Fix the RTC time comparison issues adding cast
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tqddv3vmsx3kze6v"
-Content-Disposition: inline
-In-Reply-To: <20250226140942.3825223-1-heiko@sntech.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/244.360.14
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250109-enable-rtc-v3-3-f003e8144419@baylibre.com>
+References: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
+In-Reply-To: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
+To: Eddie Huang <eddie.huang@mediatek.com>, 
+ Sean Wang <sean.wang@mediatek.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Alexandre Mergnat <amergnat@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3840; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=vGUfgBYd/nqdiWhakMrxzcEEIqB0t/sqp/diq7LMGlc=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBn+Qy+G925gTSnI2f/g5RRp1mmiZxGxczjO4K3kNYm
+ 9g+lrSyJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZ/kMvgAKCRArRkmdfjHURcl9D/
+ wP0ww2kkK7+Wdz6lCWG8tR0wOKrrvr2qjTu4xuKN9SRbZGSWhA9QmDb/dWzu4/0eAm8sl3qJMEk5Yk
+ 72cNB66JOZpwVfgY4Xp+ppUa5CNpHWBGe3QOQegRAvq9iSOBZ0Befi0rR5kfl788zp72w+3x1VXO7E
+ R1BFLx8c2FhBePEp0TmhPL/thzoVTQhUv/11ONiQwlSewTu3UTlymMfTRZ8D6pSsM3pfNhSLzDLCh1
+ yybqickSMBVYd4qqOnp08M4WsDnTHYsFYb51RyUczq3CSXrZ7Tw3/8rnGoaMFfRoe+9a2GaVNfcena
+ LCt1tD6kBkx31OUdTCgi2xU4TbUkN0KBgcGLu8G6MH2r4Zj/Ul3Dd8BAHPtQdYc1qL86ylvzmkLCT+
+ XZ04Bh+xraV8u4h7iUkZAoDEn12HInoSfG5xk2AIlsUP6jWf5w1VGcBHbwuBvVfUQr4IF3WsZNJb5p
+ +iS8HHZgWKGNJaC7hsERyf63bEwLaYX/v9yCj9JsPBJ8kN+CnJ9QvKUqS39GqOS0fNyH34jfvnBUSv
+ eX9nVxrWHyd4x5cifMm5s4lhMt2iZinXa7klv9V8rXsvW5aXOUmt9iBd0RF3YBmxDj+xcv5XUVKG6H
+ MPHZrxIA9oPg2KHF1+4pye8NG1q1tx7stersv89cat7tXtLmaMbi2Fs7UNbQ==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
+The RTC subsystem was experiencing comparison issues between signed and
+unsigned time values. When comparing time64_t variables (signed) with
+potentially unsigned range values, incorrect results could occur leading
+to runtime errors.
 
---tqddv3vmsx3kze6v
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 0/3] arm64: dts: rockchip: add and enable DSI2 on
- rk3588
-MIME-Version: 1.0
+Adds explicit type casts to time64_t for critical RTC time comparisons
+in both class.c and interface.c files. The changes ensure proper
+handling of negative time values during range validation and offset
+calculations, particularly when dealing with timestamps before 1970.
 
-Hi,
+The previous implementation might incorrectly interpret negative values
+as extremely large positive values, causing unexpected behavior in the
+RTC hardware abstraction logic.
 
-On Wed, Feb 26, 2025 at 03:09:39PM +0100, Heiko Stuebner wrote:
-> This adds the dcphy and dsi2 controller nodes and adds an overlay
-> for the Tiger-Haikou Video-Demo adapter that provides a DSI display.
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+---
+ drivers/rtc/class.c     | 6 +++---
+ drivers/rtc/interface.c | 8 ++++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-I think this can be merged now, so that I can send a patch adding
-the RK3588 EVB1 panel in the devicetree without having to specify
-any dependencies on other series? :)
+diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
+index e31fa0ad127e9..1ee3f609f92ea 100644
+--- a/drivers/rtc/class.c
++++ b/drivers/rtc/class.c
+@@ -282,7 +282,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
+ 	 * then we can not expand the RTC range by adding or subtracting one
+ 	 * offset.
+ 	 */
+-	if (rtc->range_min == rtc->range_max)
++	if (rtc->range_min == (time64_t)rtc->range_max)
+ 		return;
+ 
+ 	ret = device_property_read_u32(rtc->dev.parent, "start-year",
+@@ -299,7 +299,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
+ 	if (!rtc->set_start_time)
+ 		return;
+ 
+-	range_secs = rtc->range_max - rtc->range_min + 1;
++	range_secs = (time64_t)rtc->range_max - rtc->range_min + 1;
+ 
+ 	/*
+ 	 * If the start_secs is larger than the maximum seconds (rtc->range_max)
+@@ -327,7 +327,7 @@ static void rtc_device_get_offset(struct rtc_device *rtc)
+ 	 *
+ 	 * Otherwise the offset seconds should be 0.
+ 	 */
+-	if (rtc->start_secs > rtc->range_max ||
++	if (rtc->start_secs > (time64_t)rtc->range_max ||
+ 	    rtc->start_secs + range_secs - 1 < rtc->range_min)
+ 		rtc->offset_secs = rtc->start_secs - rtc->range_min;
+ 	else if (rtc->start_secs > rtc->range_min)
+diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+index aaf76406cd7d7..93bdf06807f23 100644
+--- a/drivers/rtc/interface.c
++++ b/drivers/rtc/interface.c
+@@ -37,7 +37,7 @@ static void rtc_add_offset(struct rtc_device *rtc, struct rtc_time *tm)
+ 	 */
+ 	if ((rtc->start_secs > rtc->range_min && secs >= rtc->start_secs) ||
+ 	    (rtc->start_secs < rtc->range_min &&
+-	     secs <= (rtc->start_secs + rtc->range_max - rtc->range_min)))
++	     secs <= (time64_t)(rtc->start_secs + rtc->range_max - rtc->range_min)))
+ 		return;
+ 
+ 	rtc_time64_to_tm(secs + rtc->offset_secs, tm);
+@@ -58,7 +58,7 @@ static void rtc_subtract_offset(struct rtc_device *rtc, struct rtc_time *tm)
+ 	 * device. Otherwise we need to subtract the offset to make the time
+ 	 * values are valid for RTC hardware device.
+ 	 */
+-	if (secs >= rtc->range_min && secs <= rtc->range_max)
++	if (secs >= rtc->range_min && secs <= (time64_t)rtc->range_max)
+ 		return;
+ 
+ 	rtc_time64_to_tm(secs - rtc->offset_secs, tm);
+@@ -66,7 +66,7 @@ static void rtc_subtract_offset(struct rtc_device *rtc, struct rtc_time *tm)
+ 
+ static int rtc_valid_range(struct rtc_device *rtc, struct rtc_time *tm)
+ {
+-	if (rtc->range_min != rtc->range_max) {
++	if (rtc->range_min != (time64_t)rtc->range_max) {
+ 		time64_t time = rtc_tm_to_time64(tm);
+ 		time64_t range_min = rtc->set_start_time ? rtc->start_secs :
+ 			rtc->range_min;
+@@ -74,7 +74,7 @@ static int rtc_valid_range(struct rtc_device *rtc, struct rtc_time *tm)
+ 			(rtc->start_secs + rtc->range_max - rtc->range_min) :
+ 			rtc->range_max;
+ 
+-		if (time < range_min || time > range_max)
++		if (time < range_min || time > (time64_t)range_max)
+ 			return -ERANGE;
+ 	}
+ 
 
-Greetings,
+-- 
+2.25.1
 
--- Sebastian
-
-> changes in v3:
-> - rebase on newly added overlay-test-infrastructure
-> - add reset-gpio to gpio expander
->=20
-> changes in v2:
-> - adapt to changed dcphy binding (phy-cells =3D 1)
-> - tiger-overlay changes (Quentin):
->   - drop forgotten hdmi-connector node
->   - improve description
->   - fix node sorting
->   - drop unnecessary pwm-pinctrl (set in tiger.dtsi)
->=20
-> Heiko Stuebner (3):
->   arm64: dts: rockchip: add mipi dcphy nodes to rk3588
->   arm64: dts: rockchip: add dsi controller nodes on rk3588
->   arm64: dts: rockchip: add overlay for tiger-haikou video-demo adapter
->=20
->  arch/arm64/boot/dts/rockchip/Makefile         |   5 +
->  arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  99 ++++++++++++
->  .../rk3588-tiger-haikou-video-demo.dtso       | 153 ++++++++++++++++++
->  3 files changed, 257 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-vide=
-o-demo.dtso
->=20
-> --=20
-> 2.47.2
->=20
->=20
-
---tqddv3vmsx3kze6v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmf5DM4ACgkQ2O7X88g7
-+pqUHw/+Nf5gsmCdCh559WvamUyOxdMHUed8EwFz9zqglvZN58ibQRL6awLyI/oh
-N9mxk0QkExDpfBzD7Dy9GSrZ5bs7+Tg+LlMbT7Jq3NcLhkUZLk29hJA18S1+4I0U
-KurrJqF/baxgDcAT1wbmYG/7avHqiG54lZKMksGis+OEOQQ8XZkxd9E9TXyCTG3V
-8ylbmgV4lZC0JId2ESy2AuMidpvw83cFhRM5FNdlEDXgs2hLkbRCn9kkZew364mw
-O9qooKKVI3Z6QlKCKvlpJd17HOdAeezNrXScpYPh80bNi69LMQ/PUOVDON0Eni/S
-ikvRVlK4kuLXYxznAQqfLelPvu1rAVuqxsmq8xoBhsfOnpklr5jTpyEUX0BlaU9M
-viuldgbDp6DrcbMsJVCGZxVTjWqr4WrY01v7aO7Js9/oqkk5xjF45w2X0nQxzF/v
-5AJ5EuKN4JqvD1m7dFqvRJXBP9yJPxTP8wIekiYWka0EZfiF8WJHlHndZFWj0dWl
-eCt6MSwS038x+GZfbLSl6/wy87IT5EmmwutEtkCV5LOrPT22kyjvtyq2m3IHjwmK
-T7i75CmZfwuyHYlgKHekhZlOnBBLQ09zmc3kxsaciI2B8I5YhAFnLF55TiUwnFmq
-09LsWD9M3vRXCvAXWSw5dJgc0ZxxbOuXwtWmOFDmjbe6shm0RxI=
-=UWSi
------END PGP SIGNATURE-----
-
---tqddv3vmsx3kze6v--
