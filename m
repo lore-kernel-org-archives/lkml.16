@@ -1,275 +1,137 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9917F21B909;
-	Fri, 11 Apr 2025 16:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D902C80;
+	Fri, 11 Apr 2025 16:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388616; cv=none; b=BURbv4U2UFEVoXvd3YrChDauzPn4cKqQAEcPBhZnnuZL2RmE88F827a08P7eaVfmBXETSwtJKTxIz1rBt80EPKFgh/9sgbJPIsJ+zZ8+mv2P1gvAnelMtTFKcAUsorU6A/tt2tYql9lICmbWJzg8ZG4hJ1v066d2YwWnbwvfZ5c=
+	t=1744388669; cv=none; b=ZmfgHXL9+pirtoh7xxfsXtASnJem+biBjVqiTYlib74vl8GPHukKNOMX6kMRZqLNYGl2M0VUSkB07h+KrWEeD7lVwX1hEFiHGKU8FiMbGYbdMaMPZbJfFJmgBGOav98EW0bF6yvxP8JhGhjICWkkFRgnAzF8o89nQ8fzr0sXFoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388616; c=relaxed/simple;
-	bh=vCMcEgHUigUOX4/6itupqbvmSxHNfPGr6uYveuFsH9g=;
+	s=arc-20240116; t=1744388669; c=relaxed/simple;
+	bh=HLTkaTxD7CG28J8nNqScvqtP9UC6xZ1vDO2iU2D8fBQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aS1TUXNlDgWwpCDB1d5erliXGkbaLBWL7L1HGlvw0PVzYgTMAgvogDPqe3Cy7cDnz77jJ8/ftF2/dGGXb7BqB9uV8dfjubHt7gcPo3PUOnKn1qc62hyYMemcEazXQtiETcm8FGdx4d5qSznSuwofq2X440s1ew2NIlYFzHBJTWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Df9jLXKT; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2WyJIEcj5SHaBcnZQmZSY1yjxGWyWa3+Ld5rDX/s276vsdBBWNeOAamSMu26b1U7BmBAR8iRepkq3HkMun1HxwLLHgLIgwsh5lyf1Y3JRmUTE46STc9NYvfrKfwv20X16GONfRmMx4c7+d1brwUcOnXTUkbEx8iFAFYAwrBttY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Is5B+Bgu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Df9jLXKT"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so2097636a91.3;
-        Fri, 11 Apr 2025 09:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744388614; x=1744993414; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T5FckoYafwVaXPWK2PUB+GpDyPBlHFtc4ZPOsKk2Ipg=;
-        b=Df9jLXKTciE34go8Ei8DIcysY65aJN8SNRWbWycT0J6vsmN6ggND4NHjDRUtEJlIxy
-         Gwb1g6UCfAR0UfgOKpwai4HpJvzqT5I9VAsfvMOXOkGiBbITcm1l/rQcJ6agOfWTRWdv
-         gKrwD+vdCYTtS1sFx26420/kU7JPY2iZxILKBoYTj0tSK9IzAMIJVsO7BWZ49ax5DvZ+
-         RHdr2dyygJsLqeo8iUUsEk8rxdrgnvSG5Ky9oL5OUuZuVuAwG9okCngSysoKM4eBrvKi
-         4REUomapfpPi6Xfez4txZc+H1Fy/2YFSVJHodZrMs6fzT4Et/icihp6DQHDygkSBJrjn
-         n52Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744388614; x=1744993414;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T5FckoYafwVaXPWK2PUB+GpDyPBlHFtc4ZPOsKk2Ipg=;
-        b=iPiCjzCUyJrNnZl6hHRU4ch9PkOZ83zmQJDA5KY3wGhIjqYL7g2sbU5gGlHaSvbbiM
-         mfE7g6P1HW1xhgEToAH8QLXUFgUwYmNYfbY1+daGW0jKbNR2WzvAQoWVoGlFTpGjioyS
-         oP1YIgo0DxrkX7BmBU4KyWnC1DmP/gNf0cKqdDUEdQT8TGwFF52HG9IHhN4FcaCgfDwa
-         y9td4+ULGA43ekUPq0wLraTAKNP/3P/DIPI8BeZYzZzHuw6+VMVyM4pn1RpIn5K8WpS/
-         ZiAVL/JKkdmDJiOwnnuLU26AmjRFoCaNbjF/dVmKuXc5ZPMRmSt/yjz5m6CMxxhc891s
-         9ZPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXm0Q920fvtX8JKi7MzGzBby00/wI8BePBKTYtIhWU8tI+SVwfG49nfq9rj27mPtWILGHUGFFPh9jLTjJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9axuCQ0cN/FnqKj+4l52Sk8iVhnR3ihsWlNcXMNFXElfuM1eu
-	hZGpMEN/8R+xv8YRhPkw9E/dsKp8brp3K7wNXX9MuxzB3NyaifCl
-X-Gm-Gg: ASbGnctiY6D1zI39udA/DsuNmEtoV0buqAO8XzGr3udk7tlUaCNqxR7VZ+K7/hexa1j
-	s8byGB/Q6tbT9r+fXpbV911L8xeINTKKN3IqTLjljNZkbwPXPfek3Rek0xnnccQm0ytlV4BBWZ+
-	T+uwrqF9tRbKyiRTroN7+jxGOcWDc/eNEX40jDzCxLdHgv5sT2Zzp2XcRRhoZqiE/EOZtLdRFlZ
-	/b1OWVKZsqI8RPBhuQ71aNDDdJNg2t17CYCXyzD6qQYwgpiOI7L6dTuwF8aU3SY5XMuzBGjGRnL
-	BEtimDluz25Ep37EX0PyDYB56TND/UGL7LQ+Ktsxg9t3KM2exw==
-X-Google-Smtp-Source: AGHT+IFCfUV6384bNBCr+vSp/DTf6SVjkwz2rSVIWqsuCTiK8sT2R3/nhh6FK0ZbTjida+uNgTjQKg==
-X-Received: by 2002:a17:90b:2647:b0:2ff:5ec1:6c6a with SMTP id 98e67ed59e1d1-30823646ae2mr5751053a91.18.1744388613682;
-        Fri, 11 Apr 2025 09:23:33 -0700 (PDT)
-Received: from hiago-nb ([2804:1b3:a7c3:a964:9277:4e8:b712:66e2])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a14bsm5814830a91.1.2025.04.11.09.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 09:23:33 -0700 (PDT)
-Date: Fri, 11 Apr 2025 13:23:28 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
- Cortex-M4 is running and it was started by U-Boot bootaux
-Message-ID: <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
-References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
- <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
- <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Is5B+Bgu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5AE1C4CEE2;
+	Fri, 11 Apr 2025 16:24:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744388669;
+	bh=HLTkaTxD7CG28J8nNqScvqtP9UC6xZ1vDO2iU2D8fBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Is5B+BguzA59qWVeT0IR70Xx7nsF3d95ae7vmk2mshW00sOhhwf/BQXti5ctO/rG8
+	 /I/aP/hrUOd5rt4xaS1P6OuKcCe2Qs5mCGhA3P4CVlik6NGFVQHOEKF2vTnZgkZh2B
+	 mDNluiWpU+PZcz6/alg561TOEl0vEp+GI/Yo5uiURnzV88ZeRulbO3DTtRI6jcfSNX
+	 FkjKVknWtJhCRFn39oJfaAFfQtUXMdoeb+P/IMf95+3y/+4dLOriMpWobWSoTiS1eW
+	 kvsglcWIEgsT9cQvOt8a/tRfnXeZsF9lEfcQqTrN8lJGnV+1ocA8gsrt+JB0mUvKrP
+	 EgTh5Q4/I/VUA==
+Date: Fri, 11 Apr 2025 17:24:24 +0100
+From: Conor Dooley <conor@kernel.org>
+To: jean-baptiste.maneyrol@tdk.com
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: imu: icm42600: add interrupt
+ naming support
+Message-ID: <20250411-subwoofer-pushiness-107d847c8a07@spud>
+References: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-0-19e4e2f8f7eb@tdk.com>
+ <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-1-19e4e2f8f7eb@tdk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gCJy362GUAEnBLtu"
+Content-Disposition: inline
+In-Reply-To: <20250410-iio-imu-inv-icm42600-rework-interrupt-using-names-v4-1-19e4e2f8f7eb@tdk.com>
+
+
+--gCJy362GUAEnBLtu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Peng,
+On Thu, Apr 10, 2025 at 05:39:40PM +0200, Jean-Baptiste Maneyrol via B4 Rel=
+ay wrote:
+> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+>=20
+> Add interrupt-names field for specifying interrupt pin configured.
+>=20
+> Chips are supporting up to 2 interrupt pins with configurable interrupt
+> sources. Change interrupt to support 1 or 2 entries.
+>=20
+> Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 
-On Fri, Apr 11, 2025 at 01:23:32PM +0000, Peng Fan wrote:
-> Hi,
-> 
-> Sorry for late.
-> > Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
-> > when Cortex-M4 is running and it was started by U-Boot bootaux
-> > 
-> > On Fri, Apr 04, 2025 at 11:17:13AM -0300, Hiago De Franco wrote:
-> > > #regzbot introduced: 4f6c983261
-> > >
-> > > Hi Peng and all,
-> > >
-> > > Commit 4f6c9832613b ("genpd: imx: scu-pd: initialize is_off
-> > according
-> > > to HW state") introduced a regression where the Kernel reboots
-> > > unexpectedly (without any warnings, crashes or errors) when the
-> > > Cortex-M4 was loaded and running by U-Boot, using the bootaux
-> > command:
-> > >
-> > > # load mmc 0:2 ${loadaddr} /home/root/hello_world.bin # bootaux
-> > > ${loadaddr} 0 # boot
-> > >
-> > > This is a simple hello world binary that prints a message into the
-> > > M40.UART0 pin (demo from NXP MCUXpresso).
-> 
-> Which release is this image from?
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-This is MCUXpresso SDK 2.9.0.
+> ---
+>  .../devicetree/bindings/iio/imu/invensense,icm42600.yaml    | 13 +++++++=
++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm4260=
+0.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> index 7e4492bbd0278a336587dc5ac04da7153453da29..d4d4e5c3d8562523872a73786=
+4610c26c8fccd82 100644
+> --- a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+> @@ -39,7 +39,16 @@ properties:
+>      maxItems: 1
+> =20
+>    interrupts:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      enum:
+> +        - INT1
+> +        - INT2
+> =20
+>    drive-open-drain:
+>      type: boolean
+> @@ -76,6 +85,7 @@ examples:
+>              reg =3D <0x68>;
+>              interrupt-parent =3D <&gpio2>;
+>              interrupts =3D <7 IRQ_TYPE_EDGE_FALLING>;
+> +            interrupt-names =3D "INT1";
+>              vdd-supply =3D <&vdd>;
+>              vddio-supply =3D <&vddio>;
+>          };
+> @@ -95,6 +105,7 @@ examples:
+>              spi-cpol;
+>              interrupt-parent =3D <&gpio1>;
+>              interrupts =3D <2 IRQ_TYPE_EDGE_FALLING>;
+> +            interrupt-names =3D "INT1";
+>              vdd-supply =3D <&vdd>;
+>              vddio-supply =3D <&vddio>;
+>          };
+>=20
+> --=20
+> 2.49.0
+>=20
+>=20
 
-> 
-> > >
-> > > Before this commit, everything worked as expected, Linux boots fine
-> > > and the HMP core keeps running and printing messages to the UART.
-> > > After the commit, the kernel reboots at the beggining of the boot
-> > > process. The only relevant message is printed by U-Boot after reset:
-> > >
-> > > "Reset cause: SCFW fault reset"
-> > >
-> > > This commit was bisectabled, the same device tree, u-boot version,
-> > and
-> > > SCFW versions were used. Reverting this commit fixes the issues.
-> > >
-> > > For testing purposes, I created the following patch which also fixes
-> > > the
-> > > issue:
-> > >
-> > > diff --git a/drivers/pmdomain/imx/scu-pd.c
-> > > b/drivers/pmdomain/imx/scu-pd.c index
-> > 38f3cdd21042..0477b3fb4991
-> > > 100644
-> > > --- a/drivers/pmdomain/imx/scu-pd.c
-> > > +++ b/drivers/pmdomain/imx/scu-pd.c
-> > > @@ -539,6 +539,9 @@ imx_scu_add_pm_domain(struct device
-> > *dev, int idx,
-> > >                 return NULL;
-> > >         }
-> > >
-> > > +       if (strstr("cm40", sc_pd->name) != NULL)
-> > > +               is_off = true;
-> > > +
-> > >         ret = pm_genpd_init(&sc_pd->pd, NULL, is_off);
-> > >         if (ret) {
-> > >                 dev_warn(dev, "failed to init pd %s rsrc id %d",
-> > >
-> > >
-> > > Test Environment:
-> > > - Hardware: Colibri iMX8DX 1GB with Colbiri Evaluation Board.
-> > > - U-Boot Version: 2024.04
-> > > - U-Boot Build info:
-> > > 	SCFW 83624b99, SECO-FW c9de51c0, IMX-MKIMAGE
-> > 4622115c, ATF 7c64d4e
-> > >
-> > > The issue is not present on: v6.5
-> > >
-> > > The real root cause is still unclear to me. Anybody has any ideas? I
-> > > am happy to share more details if needed.
-> 
-> Have you tried pd_ignore_unused? 
-> 
-> I think it is linux power down M4 which M4 is running, then SCFW
-> reports error. So please give a try pd_ignore_unused.
+--gCJy362GUAEnBLtu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For debugging purposes, I tried it and it works, kernel boots fine with
-M4 running and pd_ignore_unused parameter.
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> If this is the case, may I know do you have m4 nodes in dts and
-> with power domain included?
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/lCOAAKCRB4tDGHoIJi
+0uS/AQDvorsdrJ0xeZtNY5PVoUWYc6H3zQbCI3wt0WfDkHq3sgD/Zu6+4WofITEE
+QmuyUEJ+Stpi3A+sOeAlVOXnpHWIxgg=
+=1j0R
+-----END PGP SIGNATURE-----
 
-This is the device tree overlay I am testing:
-
-/dts-v1/;
-/plugin/;
-
-#include <dt-bindings/clock/imx8mm-clock.h>
-#include <dt-bindings/firmware/imx/rsrc.h>
-
-/ {
-	compatible = "toradex,colibri-imx8x";
-};
-
-&{/} {
-	imx8x-cm4 {
-		compatible = "fsl,imx8qxp-cm4";
-		mbox-names = "tx", "rx", "rxdb";
-		mboxes = <&lsio_mu5 0 1
-			  &lsio_mu5 1 1
-			  &lsio_mu5 3 1>;
-		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
-				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
-				<&pd IMX_SC_R_M4_0_MU_1A>;
-		fsl,entry-address = <0x34fe0000>;
-		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
-	};
-
-	reserved-memory {
-		#address-cells = <2>;
-		#size-cells = <2>;
-		ranges;
-
-		vdev0vring0: memory@90000000 {
-			reg = <0 0x90000000 0 0x8000>;
-			no-map;
-		};
-
-		vdev0vring1: memory@90008000 {
-			reg = <0 0x90008000 0 0x8000>;
-			no-map;
-		};
-
-		vdev1vring0: memory@90010000 {
-			reg = <0 0x90010000 0 0x8000>;
-			no-map;
-		};
-
-		vdev1vring1: memory@90018000 {
-			reg = <0 0x90018000 0 0x8000>;
-			no-map;
-		};
-
-		rsc_table: memory@900ff000 {
-			reg = <0 0x900ff000 0 0x1000>;
-			no-map;
-		};
-
-		vdevbuffer: memory@90400000 {
-			compatible = "shared-dma-pool";
-			reg = <0 0x90400000 0 0x100000>;
-			no-map;
-		};
-	};
-};
-
-&lsio_mu5 {
-	status = "okay";
-};
-
-This was basically copied from
-arch/arm64/boot/dts/freescale/imx8qxp-mek.dts. Do you see anything
-wrong? Should I also add the "clocks" property to imx8x-cm4 node?
-
-> 
-> Anyway, I will give a try on i.MX8QM EVK.
-
-Great, thanks.
-
-> 
-> > 
-> > Hello everyone, as this introduced a regression, should I send a revert
-> > for 4f6c983261? 
-> 
-> Please wait a while, I think we need find root cause.
-> 
-> Thanks,
-> Peng.
-> 
-> Or any ideas that might help fix this issue?
-> > 
-> > >
-> > > Cheers,
-> > > Hiago.
-> > 
-> > Cheers,
-> > Hiago.
-
-Cheers,
-Hiago.
+--gCJy362GUAEnBLtu--
