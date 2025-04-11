@@ -1,104 +1,321 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pub.sortix.org (pub.sortix.org [88.99.244.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E401F7575;
-	Fri, 11 Apr 2025 14:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A91D1F418D;
+	Fri, 11 Apr 2025 15:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.244.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744383459; cv=none; b=bt9mgwIDqkDmVwsLEY62BquriJ75eYCp+Q/jKoWZ+ORdGA+VkiG/ShhyaI7Qv8wm+iQgVOzhP1LsbaFct4KYmQRLhrqp9Z9WRDTok3XD2yUtUqisqfRpzUh6R4ZtInDVkIiIRaE69ntrno5qqa/slqL3MFr1JwKiN+AW91vnIGM=
+	t=1744383614; cv=none; b=MbymljBcbuCCo9BB2atkxlF/o5+WDcA4T4zOVSWMSe43aNHQTOvsm/1+ZfXsEfkdI/mgF1Y4GLxItx5Y12CvhiRfJJtLevDOiekfqaTm9LtV+Exz24qQwziFzdPP9IZJlq3GUaY7mWz9kfB7zvtGalurl//2uQ5IxrW9Um7Pw5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744383459; c=relaxed/simple;
-	bh=XMYmtaaUQ2VVNlPLM1fOfKTQ9pdUuVLK4wYq6Ebg3/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gamdp99WavqvwWpA2fDwwLulR+xSZi3mWZd1yn/aTfS7IalvrhbYRtpoIPvNoz4X9maHWh3bXp31g087DXcUok6qvNsXRHqHRUh7+DCA8c34ry6ghdfHDAuKTi3EpRInmeImwRzWh+59YUGFoG0I+wq0SXQGUzHpeqJ5SQccSjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hpoUVj5R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744383614; c=relaxed/simple;
+	bh=VPNLtC2XszoizTSw8VO2x421UjLkb77QCBbGwfVDW/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RbBd6c154eBPfYhJxp+izcW52A+lLDSEInxnD1kO+hpOTOFMaRLNQj/vXd3qRlte2t6XlCJWBaH9sxNzF9YtCqP+aM2GdCbcbU9eu9BXm/PQXZiinRkXrGsBAXovWV1fGS6sgXKv4jTR64uiD/ximxrlxQdHkc4/cSkyULSb4YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=maxsi.org; spf=pass smtp.mailfrom=maxsi.org; dkim=pass (2048-bit key) header.d=maxsi.org header.i=@maxsi.org header.b=YtgEwGQv; arc=none smtp.client-ip=88.99.244.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=maxsi.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maxsi.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hpoUVj5R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE926C4CEE2;
-	Fri, 11 Apr 2025 14:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744383459;
-	bh=XMYmtaaUQ2VVNlPLM1fOfKTQ9pdUuVLK4wYq6Ebg3/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hpoUVj5R8bwYr3FUIpQqIZzXGSG1gqA0s3uniEizYS6gGVkzLFl9o1YMAjSU0HFPP
-	 aZGyVGcsjDtA6OiYmx4sJmPaggmXqskJZzDO8FQiEh0ByqFnyfUBnSd9iIiuSb/GUe
-	 ZV4t7OH1rK/OTAoqLb8YCPxnUU3Tt7vEi8ePZDL8ZU+w4hhbGaJlXin6pdlEQ5tlM6
-	 DxTQ1Vi2NTzYIk8IaVioZ2JSvHzbLvMv8p0Vm/P6l0ZGHkIewgJWf/mLDIK+9PV9jC
-	 4DXtOHmaSs+42z+mWG98XLvpP7Gxm5EVw4sGSidGJjVZRDyHAiUTjMYExej30FnRC4
-	 0cZYYgA6VaCfw==
-Date: Fri, 11 Apr 2025 15:57:34 +0100
-From: Simon Horman <horms@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Abdun Nihaal <abdun.nihaal@gmail.com>, netdev@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-	Vishal Kulkarni <vishal@chelsio.com>
-Subject: Re: [PATCH net-next] cxgb4: fix memory leak in
- cxgb4_init_ethtool_filters() error path
-Message-ID: <20250411145734.GH395307@horms.kernel.org>
-References: <20250409054323.48557-1-abdun.nihaal@gmail.com>
- <5cb34dde-fb40-4654-806f-50e0c2ee3579@web.de>
+	dkim=pass (2048-bit key) header.d=maxsi.org header.i=@maxsi.org header.b="YtgEwGQv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=maxsi.org; s=default;
+	t=1744383104; bh=VPNLtC2XszoizTSw8VO2x421UjLkb77QCBbGwfVDW/0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YtgEwGQvbFCF+jh19TvAqd8Wew+DsuWa+yj4DGLaRiGRpJ+d2iyd7UfOL/+tZntUF
+	 ilNzMs+opihf3eYzXjU8T2Vy3OWGdQO5WCMC3jueyJWytjwOJXxcVsToYuFKVGKb1w
+	 QWf8vvYmPuTKSUh9gIy2W7NaoOSeQ8jK94UrtASoKI08Yh97NIvvbabwA/dih4DHv0
+	 OyVs0yy+PYT12rq+S+WONLxar8PBy6eqzW+HBuF/ZznC7SIqk0i/920oghMx1wJtey
+	 AomGdvbfZ029pEa5hcM278RFl8ismfZ3O0EEhUfAoCQ/mVOyue9B4KR/ekanMw2i44
+	 J8IaXXhYjFq2w==
+Received: from sortie-pc1.bbsyd.net (unknown [85.203.218.26])
+	by pub.sortix.org (Postfix) with ESMTPSA id 10FB322610B4;
+	Fri, 11 Apr 2025 16:51:44 +0200 (CEST)
+From: Jonas 'Sortie' Termansen <sortie@maxsi.org>
+To: Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Schmitt <scdbackup@gmx.net>,
+	Jonas 'Sortie' Termansen <sortie@maxsi.org>
+Subject: [PATCH] isofs: fix Y2038 and Y2156 issues in Rock Ridge TF entry
+Date: Fri, 11 Apr 2025 16:50:21 +0200
+Message-ID: <20250411145022.2292255-1-sortie@maxsi.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5cb34dde-fb40-4654-806f-50e0c2ee3579@web.de>
 
-On Wed, Apr 09, 2025 at 05:47:46PM +0200, Markus Elfring wrote:
-> …
-> > +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-> > @@ -2270,6 +2270,7 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
-> >  		eth_filter->port[i].bmap = bitmap_zalloc(nentries, GFP_KERNEL);
-> >  		if (!eth_filter->port[i].bmap) {
-> >  			ret = -ENOMEM;
-> > +			kvfree(eth_filter->port[i].loc_array);
-> >  			goto free_eth_finfo;
-> >  		}
-> >  	}
-> 
-> How do you think about to move the shown error code assignment behind the mentioned label
-> (so that another bit of duplicate source code could be avoided)?
+This change implements the Rock Ridge TF entry LONG_FORM bit, which uses
+the ISO 9660 17-byte date format (up to year 9999, with 10ms precision)
+instead of the 7-byte date format (up to year 2155, with 1s precision).
 
-Hi Markus,
+Previously the LONG_FORM bit was ignored; and isofs would entirely
+misinterpret the date as the wrong format, resulting in garbage
+timestamps on the filesystem.
 
-If you mean something like the following. Then I agree that it
-is both in keeping with the existing error handling in this function
-and addresses the problem at hand.
+The Y2038 issue in iso_date() is fixed by returning a struct timespec64
+instead of an int.
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-index 7f3f5afa864f..df26d3388c00 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
-@@ -2270,13 +2270,15 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
-                eth_filter->port[i].bmap = bitmap_zalloc(nentries, GFP_KERNEL);
-                if (!eth_filter->port[i].bmap) {
-                        ret = -ENOMEM;
--                       goto free_eth_finfo;
-+                       goto free_eth_finfo_loc_array;
-                }
-        }
+parse_rock_ridge_inode_internal() is fixed so it does proper bounds
+checks of the TF entry timestamps.
 
-        adap->ethtool_filters = eth_filter;
-        return 0;
+Signed-off-by: Jonas 'Sortie' Termansen <sortie@maxsi.org>
+---
+I tested this change by making two .isos:
 
-+free_eth_finfo_loc_array:
-+       kvfree(eth_filter->port[i].loc_array);
- free_eth_finfo:
-        while (i-- > 0) {
-                bitmap_free(eth_filter->port[i].bmap);
+* A normal .iso with Rock Ridge TF without LONG_FORM made with xorriso
+* A long-form .iso with Rock Ridge TF LONG_FORM made with a patched xorriso
 
+Each containing these test files:
 
-> 
-> Regards,
-> Markus
-> 
+-rw-rw-r-- 1 root root       0 Apr 11 16:20 Y2025
+-rw-rw-r-- 1 root root       0 Jun  1  2038 Y2038
+-rw-rw-r-- 1 root root       0 Jun  1  2155 Y2155
+-rw-rw-r-- 1 root root       0 Jun  1  2156 Y2156
+
+The normal Rock Ridge .iso was made with xorriso, and a long form .iso was
+made with a custom xorriso patched to output Rock Ridge TF LONG_FORM.
+
+On Linux master mounting an iso without LONG_FORM:
+
+-r--r--r--  1 root root       0 Apr 11 16:20 Y2025
+-r--r--r--  1 root root       0 Apr 25  1902 Y2038
+-r--r--r--  1 root root       0 Apr 24  2019 Y2155
+-r--r--r--  1 root root       0 Nov 24  2019 Y2156
+
+(Y2025 is correct; Y2038, Y2155, and Y2156 are garbage)
+
+On Linux master mounting an iso with LONG_FORM:
+
+-r--r--r--  1 root root       0 Jan 25  1954 Y2025
+-r--r--r--  1 root root       0 Jan 26  1954 Y2038
+-r--r--r--  1 root root       0 Feb 28  1954 Y2155
+-r--r--r--  1 root root       0 Feb 28  1954 Y2156
+
+(All timestamps are garbage)
+
+With this patch, mounting an iso without LONG_FORM:
+
+-r--r--r--  1 root root       0 Apr 11 16:20 Y2025
+-r--r--r--  1 root root       0 Jun  1  2038 Y2038
+-r--r--r--  1 root root       0 Jun  1  2155 Y2155
+-r--r--r--  1 root root       0 Jan  1  2156 Y2156
+
+(Y2025, Y2038, and Y2155 are correct;
+ Y2156 was correctly truncated by xorriso)
+
+With this patch, mounting an iso with LONG_FORM:
+
+-r--r--r--  1 root root       0 Apr 11 16:20 Y2025
+-r--r--r--  1 root root       0 Jun  1  2038 Y2038
+-r--r--r--  1 root root       0 Jun  1  2155 Y2155
+-r--r--r--  1 root root       0 Jun  1  2156 Y2156
+
+(All timestamps are correct)
+---
+ fs/isofs/inode.c |  7 +++++--
+ fs/isofs/isofs.h |  4 +++-
+ fs/isofs/rock.c  | 40 ++++++++++++++++++++++-----------------
+ fs/isofs/rock.h  |  6 +-----
+ fs/isofs/util.c  | 49 +++++++++++++++++++++++++++++++-----------------
+ 5 files changed, 64 insertions(+), 42 deletions(-)
+
+diff --git a/fs/isofs/inode.c b/fs/isofs/inode.c
+index 47038e660812..d5da9817df9b 100644
+--- a/fs/isofs/inode.c
++++ b/fs/isofs/inode.c
+@@ -1275,6 +1275,7 @@ static int isofs_read_inode(struct inode *inode, int relocated)
+ 	unsigned long offset;
+ 	struct iso_inode_info *ei = ISOFS_I(inode);
+ 	int ret = -EIO;
++	struct timespec64 ts;
+ 
+ 	block = ei->i_iget5_block;
+ 	bh = sb_bread(inode->i_sb, block);
+@@ -1387,8 +1388,10 @@ static int isofs_read_inode(struct inode *inode, int relocated)
+ 			inode->i_ino, de->flags[-high_sierra]);
+ 	}
+ #endif
+-	inode_set_mtime_to_ts(inode,
+-			      inode_set_atime_to_ts(inode, inode_set_ctime(inode, iso_date(de->date, high_sierra), 0)));
++	ts = iso_date(de->date, high_sierra ? ISO_DATE_HIGH_SIERRA : 0);
++	inode_set_ctime_to_ts(inode, ts);
++	inode_set_atime_to_ts(inode, ts);
++	inode_set_mtime_to_ts(inode, ts);
+ 
+ 	ei->i_first_extent = (isonum_733(de->extent) +
+ 			isonum_711(de->ext_attr_length));
+diff --git a/fs/isofs/isofs.h b/fs/isofs/isofs.h
+index 2d55207c9a99..506555837533 100644
+--- a/fs/isofs/isofs.h
++++ b/fs/isofs/isofs.h
+@@ -106,7 +106,9 @@ static inline unsigned int isonum_733(u8 *p)
+ 	/* Ignore bigendian datum due to broken mastering programs */
+ 	return get_unaligned_le32(p);
+ }
+-extern int iso_date(u8 *, int);
++#define ISO_DATE_HIGH_SIERRA (1 << 0)
++#define ISO_DATE_LONG_FORM (1 << 1)
++struct timespec64 iso_date(u8 *p, int flags);
+ 
+ struct inode;		/* To make gcc happy */
+ 
+diff --git a/fs/isofs/rock.c b/fs/isofs/rock.c
+index dbf911126e61..576498245b9d 100644
+--- a/fs/isofs/rock.c
++++ b/fs/isofs/rock.c
+@@ -412,7 +412,12 @@ parse_rock_ridge_inode_internal(struct iso_directory_record *de,
+ 				}
+ 			}
+ 			break;
+-		case SIG('T', 'F'):
++		case SIG('T', 'F'): {
++			int flags, size, slen;
++
++			flags = rr->u.TF.flags & TF_LONG_FORM ? ISO_DATE_LONG_FORM : 0;
++			size = rr->u.TF.flags & TF_LONG_FORM ? 17 : 7;
++			slen = rr->len - 5;
+ 			/*
+ 			 * Some RRIP writers incorrectly place ctime in the
+ 			 * TF_CREATE field. Try to handle this correctly for
+@@ -420,27 +425,28 @@ parse_rock_ridge_inode_internal(struct iso_directory_record *de,
+ 			 */
+ 			/* Rock ridge never appears on a High Sierra disk */
+ 			cnt = 0;
+-			if (rr->u.TF.flags & TF_CREATE) {
+-				inode_set_ctime(inode,
+-						iso_date(rr->u.TF.times[cnt++].time, 0),
+-						0);
++			if ((rr->u.TF.flags & TF_CREATE) && size <= slen) {
++				inode_set_ctime_to_ts(inode,
++						iso_date(rr->u.TF.data + size * cnt++, flags));
++				slen -= size;
+ 			}
+-			if (rr->u.TF.flags & TF_MODIFY) {
+-				inode_set_mtime(inode,
+-						iso_date(rr->u.TF.times[cnt++].time, 0),
+-						0);
++			if ((rr->u.TF.flags & TF_MODIFY) && size <= slen) {
++				inode_set_mtime_to_ts(inode,
++						iso_date(rr->u.TF.data + size * cnt++, flags));
++				slen -= size;
+ 			}
+-			if (rr->u.TF.flags & TF_ACCESS) {
+-				inode_set_atime(inode,
+-						iso_date(rr->u.TF.times[cnt++].time, 0),
+-						0);
++			if ((rr->u.TF.flags & TF_ACCESS) && size <= slen) {
++				inode_set_atime_to_ts(inode,
++						iso_date(rr->u.TF.data + size * cnt++, flags));
++				slen -= size;
+ 			}
+-			if (rr->u.TF.flags & TF_ATTRIBUTES) {
+-				inode_set_ctime(inode,
+-						iso_date(rr->u.TF.times[cnt++].time, 0),
+-						0);
++			if ((rr->u.TF.flags & TF_ATTRIBUTES) && size <= slen) {
++				inode_set_ctime_to_ts(inode,
++						iso_date(rr->u.TF.data + size * cnt++, flags));
++				slen -= size;
+ 			}
+ 			break;
++		}
+ 		case SIG('S', 'L'):
+ 			{
+ 				int slen;
+diff --git a/fs/isofs/rock.h b/fs/isofs/rock.h
+index 7755e587f778..c0856fa9bb6a 100644
+--- a/fs/isofs/rock.h
++++ b/fs/isofs/rock.h
+@@ -65,13 +65,9 @@ struct RR_PL_s {
+ 	__u8 location[8];
+ };
+ 
+-struct stamp {
+-	__u8 time[7];		/* actually 6 unsigned, 1 signed */
+-} __attribute__ ((packed));
+-
+ struct RR_TF_s {
+ 	__u8 flags;
+-	struct stamp times[];	/* Variable number of these beasts */
++	__u8 data[];
+ } __attribute__ ((packed));
+ 
+ /* Linux-specific extension for transparent decompression */
+diff --git a/fs/isofs/util.c b/fs/isofs/util.c
+index e88dba721661..42f479da0b28 100644
+--- a/fs/isofs/util.c
++++ b/fs/isofs/util.c
+@@ -16,29 +16,44 @@
+  * to GMT.  Thus  we should always be correct.
+  */
+ 
+-int iso_date(u8 *p, int flag)
++struct timespec64 iso_date(u8 *p, int flags)
+ {
+ 	int year, month, day, hour, minute, second, tz;
+-	int crtime;
++	struct timespec64 ts;
++
++	if (flags & ISO_DATE_LONG_FORM) {
++		year = (p[0] - '0') * 1000 +
++		       (p[1] - '0') * 100 +
++		       (p[2] - '0') * 10 +
++		       (p[3] - '0') - 1900;
++		month = ((p[4] - '0') * 10 + (p[5] - '0'));
++		day = ((p[6] - '0') * 10 + (p[7] - '0'));
++		hour = ((p[8] - '0') * 10 + (p[9] - '0'));
++		minute = ((p[10] - '0') * 10 + (p[11] - '0'));
++		second = ((p[12] - '0') * 10 + (p[13] - '0'));
++		ts.tv_nsec = ((p[14] - '0') * 10 + (p[15] - '0')) * 10000000;
++		tz = p[16];
++	} else {
++		year = p[0];
++		month = p[1];
++		day = p[2];
++		hour = p[3];
++		minute = p[4];
++		second = p[5];
++		ts.tv_nsec = 0;
++		/* High sierra has no time zone */
++		tz = flags & ISO_DATE_HIGH_SIERRA ? 0 : p[6];
++	}
+ 
+-	year = p[0];
+-	month = p[1];
+-	day = p[2];
+-	hour = p[3];
+-	minute = p[4];
+-	second = p[5];
+-	if (flag == 0) tz = p[6]; /* High sierra has no time zone */
+-	else tz = 0;
+-	
+ 	if (year < 0) {
+-		crtime = 0;
++		ts.tv_sec = 0;
+ 	} else {
+-		crtime = mktime64(year+1900, month, day, hour, minute, second);
++		ts.tv_sec = mktime64(year+1900, month, day, hour, minute, second);
+ 
+ 		/* sign extend */
+ 		if (tz & 0x80)
+ 			tz |= (-1 << 8);
+-		
++
+ 		/* 
+ 		 * The timezone offset is unreliable on some disks,
+ 		 * so we make a sanity check.  In no case is it ever
+@@ -65,7 +80,7 @@ int iso_date(u8 *p, int flag)
+ 		 * for pointing out the sign error.
+ 		 */
+ 		if (-52 <= tz && tz <= 52)
+-			crtime -= tz * 15 * 60;
++			ts.tv_sec -= tz * 15 * 60;
+ 	}
+-	return crtime;
+-}		
++	return ts;
++}
+-- 
+2.47.2
+
