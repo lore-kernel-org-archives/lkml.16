@@ -1,98 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F25AD24;
-	Fri, 11 Apr 2025 13:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7218C1C3BEB;
+	Fri, 11 Apr 2025 13:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379445; cv=none; b=K6CFIn0syPzYwg3uqkriouPj9pChxLhHffEZbQnX48wiZJfdhHtE0dovKocw6KOKdVaWbbngfI7UCBnJx2nvoJwFXAviC9V0PUd0BbPg/4lSGzLJUh0tS01nZ8ouyLxtYzlGSbpMeaOW/vT2chB1O7pZCq7MMDxfvYKqblJZ9A8=
+	t=1744379457; cv=none; b=N0gwma7Skw0kxG5g8wQH+vPwBbZNVJA1mnpQXr5JU7c0QA3/ebI3u6VorFNtNak40s/a4CRqWG5YTwBWUNDQ0EphB4viW2Sm/pe+aD4gJZVOa5LA2CKWzuVTQC8dw/p1FQtI+O4mgoQYzB2WcvTWcHc3oeXWHWoaC0n8MMXaNmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379445; c=relaxed/simple;
-	bh=WVbUWZM/0R8dQ4aHJyJFuK4CcNxXNeH0CZegsHqPlZk=;
+	s=arc-20240116; t=1744379457; c=relaxed/simple;
+	bh=qtOV60ECJZu9Fi40Bf5lH+RBr8bVEl7SPzPMLSpbslo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aCfD1BLF8Nr2jQ7DQ5cl5gMmHkT8+UVHONLoBUxgyIq3dHTKrZDShPXC5OBEfa3E45UuuWCKlQoXa4tNUTIRUXPSIGqVh7q4lCsUjPlmpfYq7VQx8xmTN0xzNfH6EacjANWMbH76xuXed301Gbv0kD7FLX8/oe6VF5KraILM0zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1fmQx+zP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TtgGemACEBpDKCsa8KvWOynEi4Z3HFuBLTNxRcFgWSqFCBe9DMJhxZzf0C9a8qJpV9uTesi9YVDWj3W2YYo9Od7+Gzo9gnbWJvbmEZJ6HAzrCYGTtZvdquumMXDYJ7WSeH0lI044U3a4v5g2NcGlX/5sgZZCDNObJUsSP+qV8AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=lynEyBVh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XHXPK9Yc; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1fmQx+zP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E482C4CEE2;
-	Fri, 11 Apr 2025 13:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744379445;
-	bh=WVbUWZM/0R8dQ4aHJyJFuK4CcNxXNeH0CZegsHqPlZk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1fmQx+zPVEHRXYCDKCtMFMlTe37sDe6o7Xz7ADOR0a3WsZHsZYaeMuINsM6QXUIos
-	 aYF/9OTwrLfbG1y5X+OtWpeciTDn01D5TsA1BjA4IZwyyf+cmW1xhGMcQFLxDmtIcZ
-	 TjjUjaMHCn1OadOXtzgKyeaa+SYHwXUuTQz6ShgY=
-Date: Fri, 11 Apr 2025 15:50:42 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] usb: renesas_usbhs: Add error handling for
- usbhsf_fifo_select()
-Message-ID: <2025041154-refinery-bronzing-7893@gregkh>
-References: <20250402124515.3447-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="lynEyBVh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XHXPK9Yc"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id 6439B13802B1;
+	Fri, 11 Apr 2025 09:50:53 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Fri, 11 Apr 2025 09:50:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1744379453; x=
+	1744465853; bh=Y1OSHZSZRnVHTncatSZJml8c2A69m+s5Vr0UXqqvqfQ=; b=l
+	ynEyBVhe4Sz+Xi3AgsWBDOxUNFh1FL2InBt59AGa0xdbXkhQbP3Py3G+rIiJ/muD
+	uUAx72fAM68BKOMI8SsflJXBdxdj8iF7hYB2VSn68oEezdOA2JM5hcXzTwxLBw5+
+	SUh/HUyGIlm5+gmzhvGNkztrKNXmm5+oQJ++g8Jq2YZak3QJMX9tTyEOtg5Wp51M
+	8VaAFzToLV4boXfRtUsOmCkzUKIhUH170zQez89cehVjTQ4SEHlu2TOaG4BA6nae
+	khQRT9xB5xdWFvwbWWFtqW3DyxL9UOc3xESSWCzs6iuCEKYtb20kaoKxP2COSmvl
+	g0m//ZjNJJt3JEpbQzMCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744379453; x=1744465853; bh=Y1OSHZSZRnVHTncatSZJml8c2A69m+s5Vr0
+	UXqqvqfQ=; b=XHXPK9Yci0zzoHLVvgAwg6ZA28WsHFw+TPedlNEN/8jdvkxE+ue
+	Q2yja/SAS3xV1Ys8uqmqQpFHaPYNWPFDqmVrQpj5eXhg+CY35o6px4EKw+6T14aW
+	Rv+H7v7H/jrWjOm6s7zo1mD/SDGftbgh2h87SFkvG8Q3cmfDx1i7LBp7bMv2fEeG
+	gkxuiiS4bdRiI+ihbVi+/PhvkYTwktIL/4xlRcXQZjQTzHmwWw+pqjHMTxhFAJrn
+	LiyDV8qg+UnkDQZ53OKIOvLJkzCbQ7zHGEC3C7F3uk/GweJYrU2AxfZ+BOpRIFWB
+	HPgS65+AuPKK86Drjw8VCedc4H4py3RJ/qA==
+X-ME-Sender: <xms:PB75Z3PdTJWbL-EYX19JeLDwA77yl_nbEC3AUrCvQdrLM5Dw8OQyvA>
+    <xme:PB75Zx-4qciYr6TILHli5NCvqcg72ZXbvOHQgnYIxKiN_oqR_dB3GX08Xg7Rh3Ixz
+    j7PjHDXRniOeGiQtMM>
+X-ME-Received: <xmr:PB75Z2SXo4FLPtLgP3cE6RJRZFw92yb4F_2ChNYkc5tPDtP2kv5i8KDHkcxb>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduleekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
+    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefhhfffgfffhfefueeiudegtdef
+    hfekgeetheegheeifffguedvuefffefgudffnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepshgusehquhgvrghshihsnhgrihhlrdhnvghtpdhn
+    sggprhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnth
+    honhhiohesohhpvghnvhhpnhdrnhgvthdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehp
+    rggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepughonhgrlhgurdhhuhhnth
+    gvrhesghhmrghilhdrtghomhdprhgtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehrhigriigrnhhovhdrshdrrgesghhmrghilhdrtghomhdprhgtph
+    htthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghh
+X-ME-Proxy: <xmx:PB75Z7u5vrlCWPEgZTQsqDxNamNyQkNBDuL0n0IXaH8LXqRleJZCiA>
+    <xmx:PB75Z_faug92tfCJp0aKdS57AkNXwJ0P11VU0mwuKnqz7FzwrU5GeA>
+    <xmx:PB75Z33B4yHa1LlSkzJ-o-9W3PKUeMMklwsDAoqjWDC2chNLdoGcTw>
+    <xmx:PB75Z79BqUUcq0xQYbFg3nn2Sj4DmiSy_fOEwUu_oNrBtEMe9KP0Tg>
+    <xmx:PR75Z6rliDh_6ma4bSc2SFswX7tQTDhYEiTk5D2w52UXpS81YpxnnaTy>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 11 Apr 2025 09:50:51 -0400 (EDT)
+Date: Fri, 11 Apr 2025 15:50:49 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: Antonio Quartulli <antonio@openvpn.net>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
+	steffen.klassert@secunet.com, antony.antony@secunet.com
+Subject: Re: [PATCH net-next v25 01/23] net: introduce OpenVPN Data Channel
+ Offload (ovpn)
+Message-ID: <Z_keORW4OWc8i5Vz@krikkit>
+References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
+ <20250407-b4-ovpn-v25-1-a04eae86e016@openvpn.net>
+ <20250410195440.3ba7ba0f@kernel.org>
+ <f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250402124515.3447-1-vulab@iscas.ac.cn>
+In-Reply-To: <f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net>
 
-On Wed, Apr 02, 2025 at 08:45:15PM +0800, Wentao Liang wrote:
-> In usbhsf_dcp_data_stage_prepare_pop(), the return value of
-> usbhsf_fifo_select() needs to be checked. A proper implementation
-> can be found in usbhsf_dma_try_pop_with_rx_irq().
+2025-04-11, 10:04:10 +0200, Antonio Quartulli wrote:
+> Hi Jakub,
 > 
-> Add an error check and jump to PIO pop when FIFO selection fails.
+> thanks for taking the time to go through my patchset :)
 > 
-> Fixes: 9e74d601de8a ("usb: gadget: renesas_usbhs: add data/status stage handler")
-> Cc: stable@vger.kernel.org # v3.2+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/usb/renesas_usbhs/fifo.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-
-How was this tested?
-
-
-
+> On 11/04/2025 04:54, Jakub Kicinski wrote:
+> > On Mon, 07 Apr 2025 21:46:09 +0200 Antonio Quartulli wrote:
+> > > +static int ovpn_netdev_notifier_call(struct notifier_block *nb,
+> > > +				     unsigned long state, void *ptr)
+> > > +{
+> > > +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+> > > +
+> > > +	if (!ovpn_dev_is_valid(dev))
+> > > +		return NOTIFY_DONE;
+> > > +
+> > > +	switch (state) {
+> > > +	case NETDEV_REGISTER:
+> > > +		/* add device to internal list for later destruction upon
+> > > +		 * unregistration
+> > > +		 */
+> > > +		break;
+> > > +	case NETDEV_UNREGISTER:
+> > > +		/* can be delivered multiple times, so check registered flag,
+> > > +		 * then destroy the interface
+> > > +		 */
+> > > +		break;
+> > > +	case NETDEV_POST_INIT:
+> > > +	case NETDEV_GOING_DOWN:
+> > > +	case NETDEV_DOWN:
+> > > +	case NETDEV_UP:
+> > > +	case NETDEV_PRE_UP:
+> > > +	default:
+> > > +		return NOTIFY_DONE;
+> > > +	}
+> > 
+> > Why are you using a notifier to get events for your own device?
 > 
-> diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
-> index 10607e273879..6cc07ab4782d 100644
-> --- a/drivers/usb/renesas_usbhs/fifo.c
-> +++ b/drivers/usb/renesas_usbhs/fifo.c
-> @@ -466,6 +466,7 @@ static int usbhsf_dcp_data_stage_prepare_pop(struct usbhs_pkt *pkt,
->  	struct usbhs_pipe *pipe = pkt->pipe;
->  	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
->  	struct usbhs_fifo *fifo = usbhsf_get_cfifo(priv);
-> +	int ret;
->  
->  	if (usbhs_pipe_is_busy(pipe))
->  		return 0;
-> @@ -480,10 +481,14 @@ static int usbhsf_dcp_data_stage_prepare_pop(struct usbhs_pkt *pkt,
->  
->  	usbhs_pipe_sequence_data1(pipe); /* DATA1 */
->  
-> -	usbhsf_fifo_select(pipe, fifo, 0);
-> +	ret = usbhsf_fifo_select(pipe, fifo, 0);
-> +	if (ret < 0)
-> +		goto usbhsf_pio_prepare_pop;
-> +
->  	usbhsf_fifo_clear(pipe, fifo);
->  	usbhsf_fifo_unselect(pipe, fifo);
->  
-> +usbhsf_pio_prepare_pop:
->  	/*
->  	 * change handler to PIO pop
->  	 */
+> My understanding is that this is the standard approach to:
+> 1) hook in the middle of registration/deregistration;
+> 2) handle events generated by other components/routines.
+> 
+> I see in /drivers/net/ almost every driver registers a notifier for their
+> own device.
 
-This change really looks wrong and I would like you to test and verify
-tha it actually works before going forward.
+I think most of them register a notifier for their lower device
+(bridge port, real device under a vlan, or similar).
 
-thanks,
+I've mentioned at some point that it would be more usual to replace
+this notifier with a custom dellink, and that ovpn->registered could
+likely be replaced with checking for NETREG_REGISTERED. I just thought
+it could be cleaned up a bit later, but it seems Jakub wants it done
+before taking the patches :)
 
-greg k-h
+-- 
+Sabrina
