@@ -1,157 +1,221 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B10189B84
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D0B1FBE8B
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360389; cv=none; b=KAgyIECpZX6jxVEc62IYUkreAreH4MDMpwhAZobWC0E2JjbERac1i8JhVcQmFVVSjL9WhemlWJ/Omu0zL437JOivs/hv/0mP4dvGjfR9XulDQe1KJTSlkdA9myYPbUb8TOkq1bKPitajlelWyrswNkVXOBnIFZTV1RpROMMShjY=
+	t=1744360423; cv=none; b=m1Eh82/qqLPLU2JbRF3N7u4O0E8h3DtfPfgYKszbSOpVT88LunoSQhWayCO8eFOwXpdnwJoZXTIMjG6EeGs4sgN97JYPKXeAfO0g5Lmq5qoqHTOTvqziHvkvTiYtykBisv6hJooU8ZTkGKY1fnryVye6n26JECSn2x9Lm/oU0tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360389; c=relaxed/simple;
-	bh=HAyZGybeCz9h4PHTXPASf1dhJui7CR5lGJo26SGl6OY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=tTlr/xyduAEzOt5FV2CN8QZ9+0m5KLiX7FHe++AYCPlaCmED6VMs7M3AsYjRBMIaqzSGHsjX1KEW6Qq8A8iAKHjjx1nn+35nAy6nk0YfifigVXbY0VDjRjSdH7MEw8DUKBp588cawW5iv31bA0WZKP9tjVCgQcCEyA73ESoB+6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RPhmyjQl; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744360423; c=relaxed/simple;
+	bh=YtyEfPCLhxuh+HxbSQ37x4q0L+ygNb73OUpvm28vAvM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=a/PBdV/UUPcZjHuuxbSTp6eF4+SnWowTIGyHvtAz3Mz/Uz0gYpTr1COqJQ5yVB2IsUOO70Nc+dDFXnDkuLa4HUSYxzV2SDnZOBJ7oLSSQ0BlHHLh4s5xad5lS0QxPU1vTrmXMgtr5+v6JEVijl4M9fGO9uIOH7hT1HaUeOwoOrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=S7o0qsbP; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RPhmyjQl"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f2f391864so915412f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:33:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="S7o0qsbP"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so293694866b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:33:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744360386; x=1744965186; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EK9rCz5R2JGRLR/abCueMGVjM/KpF6kJW3tcRtlcRvM=;
-        b=RPhmyjQlEM7vEt3UFiTQeq9JUAnrUaUukHi29lorlFV/v5euOVMMFTtUPTjQMq4wzq
-         1Q6cBdyPE++pORxWl0p4/uGo5HofL4Zc/ybhP3X5delV67sySCq0xftDHxgHByEL8FSF
-         38fEC9E0suqJ/2DAx2J4gYYhr06JtSlTCK/GRQctKFNm+Z3YZWQTbdAPDFoixhfgX6QO
-         pWdewkDqi8j+crVd9iYmo+4uM8USVWwkMtCCPSloQf8cH/CxnQbD73QiR0GeU67oYJhk
-         At467oC1cEyOGKQKtrQj5N71f6pw0DKZrqrEkVIKpKnOORYfE6twpz0vuiZzRsJR01d9
-         o2oQ==
+        d=fairphone.com; s=fair; t=1744360419; x=1744965219; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/OEIkhs5i/56iKsf6Ln6xmh08Ek/lCXrCNvVIOB0uw=;
+        b=S7o0qsbPxtvT0a7pl9GDP7ZK/zfsxgYD4IkQSDdnp+eIYceMiZTuhQdlL/auXdc09e
+         Pwe9SYFobseAe2ucfW2vTgWbmPQH+UjZ7uAGeVWU6/7BJ8GLwu0WouyEfvOAUlQcaLcM
+         BizmjRLBzKQ697xhkajEKnkggAhhEYNHhnhQ/D/FOXvsE7mdUk/6hpezL+KbEjSbZxUg
+         KmBYEoyDHfO04K5n2yEUTW4j97awngz+MgqGS+UnFkEavwIUSRjHyusdZTbsL+wNclp9
+         fZcgIsCUxeRE2goKvkqTD7EaKAOtyRRwG7cXNiV7/HqIlPlVCKiqKKh4iRVrAS+5+HvJ
+         9r8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744360386; x=1744965186;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EK9rCz5R2JGRLR/abCueMGVjM/KpF6kJW3tcRtlcRvM=;
-        b=phpH4yi/w3ktqXAJwi9PFA1QVEiO7fWxoSCyFIIKxh2GIOmB5FqVnwVbD685qkG4dR
-         Y2x55CzJ6G8BLZUdjoSX2DwGQDnEejswJl83u/LhJQlvX7AY3E4XAxdC51V3RNu8ILkt
-         gtRZVqUDsU/XNC70faWnZU6x4LQuZ+LXsxJR4QkDOc9nQd9m/YqpabYyCE9a7AdxIfPw
-         bHcxMdQb+ozYWezY8/17zCXaQvWPQUYWc7ySP5YUcq7iPWPWt0lyKbL6PbRrdBxu9yYn
-         3HTphp5WXDj7pWMj8kZN7AYqfMFLMipR4yy8YCEN4bG1hKkqwNyoY4rIUTXqHoKlFkVo
-         l4DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+C4cLkRPuh6srlZY7eesMXk7m/KOBT0AaMNta9p5UnmuPtWm7fXcP4T2zqpBXUKtBISOlisSez97GRT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy0RBPNtHCS9c1cS7Xw+4pWpescOjtoRb8MWG+hKyqFs8Zulv+
-	7inu4+0Z0Gp6DwyD5ehjqgjdcjzMIJv/aHX4ElSb2+Jnbll2K8ZH7Ndw4mcnWo0=
-X-Gm-Gg: ASbGncubWrBuUMNVCBi5/JjoFclUoqtieKfWmaEQ8NFRLZNeeP196IkEd4RS55WhpDd
-	s+LMMZln1ABheK9jnQg2R8OAGtt6dHFJW7VJwnDCQVSE6xbVaTchuplrWJVxkjwRRWPbtL9BPMH
-	YM3p+Bhiq23QCpdVcU2e96hei6vgmcw5tEaQqNsxpX3exal62G300LeDZ2KtKEaGUry4aUsthGm
-	fBW4WDLAV7mBfWCPAtrpzjNuDkxcgFnV/a1KtTD66urWUSE0Rpbdyw/pW0JlmMboaPcafrQUddu
-	aojHiBr+Qt6Sctl1u/2Nw4TkunNRZyTjbFy/RqKusaX0T8QyhqSsu37c5csUVA0jF5lkV2B9P83
-	95NGru22VcTuTdMd/8A==
-X-Google-Smtp-Source: AGHT+IHlLQ8VnWkMNxW6NJ/2XfY1PSwDp+GZZTngXF4ukLUEAUWIscJaYqmOWxV7FEHDv1xafn6WCA==
-X-Received: by 2002:a05:6000:144b:b0:390:f2f1:2a17 with SMTP id ffacd0b85a97d-39eaaed2b6fmr1302713f8f.53.1744360385924;
-        Fri, 11 Apr 2025 01:33:05 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:f77b:949e:1d61:69a8? ([2a01:e0a:3d9:2080:f77b:949e:1d61:69a8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c074sm1290725f8f.28.2025.04.11.01.33.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 01:33:05 -0700 (PDT)
-Message-ID: <8e8aff0f-36cf-42cf-88a4-a9e3a646b73b@linaro.org>
-Date: Fri, 11 Apr 2025 10:33:05 +0200
+        d=1e100.net; s=20230601; t=1744360419; x=1744965219;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5/OEIkhs5i/56iKsf6Ln6xmh08Ek/lCXrCNvVIOB0uw=;
+        b=etvXg8NKjh8Oqj4Xby2TTEA2NcWym9RMBWDAEyPBMY903S3IIG/wRPWh3JbeiUTAMS
+         bMQ1Q7P16tbVimHKGOz3u3aFDes6clMDgJuB+Q0kkElDWOCO6WQnmZSCmAiBaqnExGSc
+         Bsgg/+GS5V86gnO2wz0zobWenV8EXCfXbkZeufRcJdxIPytMK43MB4slpNjGzRbT2HrA
+         vWHDS3X46xug5/Qjgqt2V3POTeO5qsYI/A/etqQ5SPMoJgqrFyA9FKgNp+/2YMPkgl94
+         ymFlMTt+yEsdQ/7Kj5To7+9rxtbamfhE5kY815IDrqDALNZjeuX2/uuoB6peu5sN5otW
+         c9bw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnk4GuqgLw3pvmMHqjhoMDfr2X5qGs0WBl9zc31NoJGj/+NniczJOyUOhuemTbRAzbGYuOfF6cxIZ0p6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTnn86p8yHpAYsQ4NFHTBbQ4h35gKeklwWZ0fxLtNs2rQ8q1b0
+	FC7L2fdUJMhcuEZoDT6ApkkyA5BmIGBGp0zx0akJsv3GxrEWm9Gx7v6kZfnNnOU=
+X-Gm-Gg: ASbGncs1IwK5ueUBYgurTsi3NyNuMgsXukv/vAHFWvNnAZXprYcarTfeZX/4aVkobg5
+	LutFRUlaHqpByU0Tj8H6yWTmIvgkyTxeZrb0AOSUzijTmCaQZ/omah1B5ed2kEeabUGVLWcsLHm
+	/qGvw47OIs/BOQRLk/B28Q2pw/N4IzN4yPvURUV7ufHIYuIOygk9bwRcbzn7Q/HggYn42c9FoPe
+	JR+7ZipfaXtT4Mrya2pb7J4R353ZUZXUOssM5RRBD6o5gT/L6ea5MRn5gqmXaqlRC9h4OMqh+W2
+	hAYnfJqHfv9DzB5JQAseYC+jjPUmykVRkOlpXEvpLtjhvZLZNJd9mjC1gJjGPk75MwWi+lL7xv3
+	RLsb1BRyxui/4qQ==
+X-Google-Smtp-Source: AGHT+IGoM4A7Qtqtt1Dy9i6pdPwoGCXRAZYCNHk6wtIo7PyTKrh0k7tkODDWcluBWIFiL+qyGGp5HQ==
+X-Received: by 2002:a17:907:6e87:b0:aca:96a7:d373 with SMTP id a640c23a62f3a-acad36c4587mr149028766b.57.1744360419442;
+        Fri, 11 Apr 2025 01:33:39 -0700 (PDT)
+Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb2ee1sm417729266b.12.2025.04.11.01.33.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 01:33:39 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Fri, 11 Apr 2025 10:33:29 +0200
+Subject: [PATCH] arm64: dts: qcom: Remove unnecessary MM_[UD]L audio routes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v1 6/6] phy: amlogic: phy-meson-axg-pcie: Fix PHY creation
- order in axg-pcie probe
-To: Anand Moon <linux.amoon@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
- "moderated list:ARM/Amlogic Meson SoC support"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:ARM/Amlogic Meson SoC support"
- <linux-amlogic@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
-References: <20250410133332.294556-1-linux.amoon@gmail.com>
- <20250410133332.294556-7-linux.amoon@gmail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250410133332.294556-7-linux.amoon@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250411-cleanup-mm-routes-v1-1-ba98f653aa69@fairphone.com>
+X-B4-Tracking: v=1; b=H4sIANjT+GcC/x3MTQqAIBBA4avErBtQy8KuEi36mWqgLDQjCO+et
+ PwW773gyTF5aLIXHN3s+bAJMs9gXHu7EPKUDEooLUopcdyot+HEfUd3hIs81oMho0yltC4gdae
+ jmZ//2XYxfnOj4vJjAAAA
+X-Change-ID: 20250411-cleanup-mm-routes-7b9e92962553
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
 
-On 10/04/2025 15:33, Anand Moon wrote:
-> Reorder the PHY creation in the axg-pcie probe function to ensure all
-> the resource is mapped before creating the PHY. This change addresses
-> the issue where the PHY creation was attempted before
-> mapping the necessary resources, potentially causing failures.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->   drivers/phy/amlogic/phy-meson-axg-pcie.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> index 54baf7b8930e1..14dee73f9cb57 100644
-> --- a/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> @@ -136,11 +136,6 @@ static int phy_axg_pcie_probe(struct platform_device *pdev)
->   	if (!priv)
->   		return -ENOMEM;
->   
-> -	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
-> -	if (IS_ERR(priv->phy))
-> -		return dev_err_probe(dev, PTR_ERR(priv->phy),
-> -				     "failed to create PHY\n");
-> -
->   	base = devm_platform_ioremap_resource(pdev, 0);
->   	if (IS_ERR(base))
->   		return PTR_ERR(base);
-> @@ -158,6 +153,11 @@ static int phy_axg_pcie_probe(struct platform_device *pdev)
->   	if (IS_ERR(priv->analog))
->   		return PTR_ERR(priv->analog);
->   
-> +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
-> +	if (IS_ERR(priv->phy))
-> +		return dev_err_probe(dev, PTR_ERR(priv->phy),
-> +				     "failed to create PHY\n");
-> +
->   	phy_set_drvdata(priv->phy, priv);
->   	dev_set_drvdata(dev, priv);
->   	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+Since commit 6fd8d2d275f7 ("ASoC: qcom: qdsp6: Move frontend AIFs to
+q6asm-dai") from over 4 years ago the audio routes beween MM_DL* +
+MultiMedia* Playback and MultiMedia* Capture + MM_UL* are not necessary
+anymore and can be removed from the dts files. It also helps to stop
+anyone copying these into new dts files.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts          | 5 +----
+ arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts   | 5 +----
+ arch/arm64/boot/dts/qcom/qrb4210-rb2.dts             | 2 --
+ arch/arm64/boot/dts/qcom/qrb5165-rb5.dts             | 6 +-----
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 6 +-----
+ arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 5 +----
+ arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts     | 5 +----
+ 7 files changed, 6 insertions(+), 28 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
+index e8148b3d6c50c670d6bc8045e42074162dc1c6d9..1089964e6c0d819e166fd5a959f7f1e6fe688d65 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
+@@ -1012,10 +1012,7 @@ wcd9335: codec@1,0 {
+ &sound {
+ 	compatible = "qcom,apq8096-sndcard";
+ 	model = "DB820c";
+-	audio-routing = "RX_BIAS", "MCLK",
+-		"MM_DL1",  "MultiMedia1 Playback",
+-		"MM_DL2",  "MultiMedia2 Playback",
+-		"MultiMedia3 Capture", "MM_UL3";
++	audio-routing = "RX_BIAS", "MCLK";
+ 
+ 	mm1-dai-link {
+ 		link-name = "MultiMedia1";
+diff --git a/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts b/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
+index dbad8f57f2fa34575440caa7f0a19d5893efcfbb..d7fa56808747ae1290b884430d5fa5443bdd9be1 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
++++ b/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
+@@ -156,10 +156,7 @@ &slpi_pil {
+ &sound {
+ 	compatible = "qcom,apq8096-sndcard";
+ 	model = "gemini";
+-	audio-routing = "RX_BIAS", "MCLK",
+-		"MM_DL1",  "MultiMedia1 Playback",
+-		"MM_DL2",  "MultiMedia2 Playback",
+-		"MultiMedia3 Capture", "MM_UL3";
++	audio-routing = "RX_BIAS", "MCLK";
+ 
+ 	mm1-dai-link {
+ 		link-name = "MultiMedia1";
+diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+index d485249bcda44055689b5556eec9dd057b92d0ae..a37860175d2733214f1b257e84d5cb4821033242 100644
+--- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
++++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+@@ -110,8 +110,6 @@ sound {
+ 		pinctrl-0 = <&lpi_i2s2_active>;
+ 		pinctrl-names = "default";
+ 		model = "Qualcomm-RB2-WSA8815-Speakers-DMIC0";
+-		audio-routing = "MM_DL1", "MultiMedia1 Playback",
+-				"MM_DL2", "MultiMedia2 Playback";
+ 
+ 		mm1-dai-link {
+ 			link-name = "MultiMedia1";
+diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+index 4cc14ab1b9ea0f92a12a12ef4df1cdc37bf5591c..dcb998b8b05498d8f9a82ff9a984c1e237a61308 100644
+--- a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
++++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+@@ -1053,11 +1053,7 @@ &sound {
+ 		"SpkrLeft IN", "WSA_SPK1 OUT",
+ 		"SpkrRight IN", "WSA_SPK2 OUT",
+ 		"VA DMIC0", "vdd-micb",
+-		"VA DMIC1", "vdd-micb",
+-		"MM_DL1",  "MultiMedia1 Playback",
+-		"MM_DL2",  "MultiMedia2 Playback",
+-		"MultiMedia3 Capture", "MM_UL3",
+-		"MM_DL4", "MultiMedia4 Playback";
++		"VA DMIC1", "vdd-micb";
+ 
+ 	mm1-dai-link {
+ 		link-name = "MultiMedia1";
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index 2b2ef4dbad2fc55b27fd176baf1b4205802e1c42..adfd916270055df0a957c573868302e0d77c614d 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -777,11 +777,7 @@ &quat_mi2s_sd2_active
+ 		"DMIC2", "MIC BIAS3",
+ 		"DMIC3", "MIC BIAS3",
+ 		"SpkrLeft IN", "SPK1 OUT",
+-		"SpkrRight IN", "SPK2 OUT",
+-		"MM_DL1",  "MultiMedia1 Playback",
+-		"MM_DL2",  "MultiMedia2 Playback",
+-		"MM_DL4",  "MultiMedia4 Playback",
+-		"MultiMedia3 Capture", "MM_UL3";
++		"SpkrRight IN", "SPK2 OUT";
+ 
+ 	mm1-dai-link {
+ 		link-name = "MultiMedia1";
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+index e8012205954e76627febda14ee51ecff9d29e4fb..7677acd08e2d176be932d3f726fe5602cf8d50d1 100644
+--- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
++++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+@@ -632,10 +632,7 @@ &sound {
+ 		"RX_BIAS", "MCLK",
+ 		"AMIC2", "MIC BIAS2",
+ 		"SpkrLeft IN", "SPK1 OUT",
+-		"SpkrRight IN", "SPK2 OUT",
+-		"MM_DL1",  "MultiMedia1 Playback",
+-		"MM_DL3",  "MultiMedia3 Playback",
+-		"MultiMedia2 Capture", "MM_UL2";
++		"SpkrRight IN", "SPK2 OUT";
+ 
+ 	mm1-dai-link {
+ 		link-name = "MultiMedia1";
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
+index 26217836c2707ba2f7b0030c9801d7de3a797315..d6d4e7184c5603864668057de79c7497ad361ab3 100644
+--- a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
++++ b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
+@@ -445,10 +445,7 @@ &sound {
+ 		"RX_BIAS", "MCLK",
+ 		"AMIC2", "MIC BIAS2",
+ 		"SpkrLeft IN", "SPK1 OUT",
+-		"SpkrRight IN", "SPK2 OUT",
+-		"MM_DL1",  "MultiMedia1 Playback",
+-		"MM_DL3",  "MultiMedia3 Playback",
+-		"MultiMedia2 Capture", "MM_UL2";
++		"SpkrRight IN", "SPK2 OUT";
+ 
+ 	mm1-dai-link {
+ 		link-name = "MultiMedia1";
+
+---
+base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
+change-id: 20250411-cleanup-mm-routes-7b9e92962553
+
+Best regards,
+-- 
+Luca Weiss <luca.weiss@fairphone.com>
+
