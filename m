@@ -1,40 +1,40 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2102.outbound.protection.outlook.com [40.107.215.102])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2116.outbound.protection.outlook.com [40.107.117.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D7F1E8356;
-	Fri, 11 Apr 2025 10:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C6A221282;
+	Fri, 11 Apr 2025 10:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.116
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744367830; cv=fail; b=Tc1x6vf8gLVEh57/1rZqHN9Vmr2ZjY76KmQ2o/Kz1s9mT0ZrOQRF1ot0OT90yTfN8oZFptfr7VctbfiTGEgqemv40gRpAAnV2FubaNyaxK4qOPixSleI/T71aBPujhshO9bWn+TdsVnLP6icQThli8/vueXka8OMEaIFsUeB7lE=
+	t=1744367831; cv=fail; b=l3axsYf2mKjA2P0SmeMRgcJyh6+N+G8ZsA2g7u9/zNbL7SrdCXtyUm38u7Ls6Z7BxVg6ttGCKs+pz6YbJWqHUghOZNu5WNdwpzexVhSKMV7KfGap3g11GyCqWJoJbIEg1jlCEUcAONw9Qv6eUTUWhp4dEjqbuLGIlVtqvVsU0KE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744367830; c=relaxed/simple;
-	bh=eDYm0vQfscaTszrmT1L2rwls4lKycy6wmtg+ZMziMMo=;
+	s=arc-20240116; t=1744367831; c=relaxed/simple;
+	bh=zFHjhej9B/mjQ2aTEmoHt4x1RzX9EmZeGqFMjBoBUlg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PSLMmARTx+i2v6HnGZJvZsWdZR/I7LsOF6XzNKFZJ1I7xDhwpV94Mf9u9am2FhjGGDBksAakmAk5cmD45gfYLysqiP8Xp15VZF0n0UA53rQgo4op/bKOeqET09vyiaxl/45XwyQrNXbdfJmGlWwWa8WMFD2lyS/msvziEdJNSm0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.215.102
+	 MIME-Version:Content-Type; b=PqRC7Clr2wVOZGJ+qB/Mequayf3kW3j3j1WL0ZytkVpXE/eocyw+fgvC9iNmv19IE6FrTmHzmdFQoJDQO8zkP2SjCZw6hpVkrNqlIlgIUqEf6Icz6jFc6H9w05NPzn7QD7JO0IQf3ZB4nqty070oLs02hjhUbsNXfWcad805rDg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.117.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kFrt/+Dsv05rkb+BhpikcPgH0mBWLwMTg7FOgX2HxvuXEix+zHv7wDwpstGOF/CYYboq9siwrQJ6A1IgjxNaOcA6Gtp7z/fCXkNKAZW7cObgoUOkm4shwVAp9bwfu6DJgsLNTtI1prCFw6hVXkTjHiWPkRr0PDgplxc8e83T77FXGplRZhNp7jKbNR5C0T6GqybJ+eQVGEQJrKfaOuHZTW6U2McQtrioKG6mUTpUMyQEsn3LjoORmeXskd/K1X6BYWL3G7GugGNBl5cfvrs2GgoPqv/Y0Da/kopYLx2vcHEzUDEHdquAbwQ39lXNkpozNjHyuirCHtDA7gwXT+F0FA==
+ b=oIXYU0kTdw8WHhijoSj73t2Kide/BC+yzX0KVk9M4908kjbcccfjDBeiHou6IF1J95zRMHgP++KUNxLfE6lhPBHsUFO0G/3efTiA5giY/Sg4mAHKZ1WPcdRP1TpKcQ7HXiW1IpcST1I9KSO5OxCMsCMgDkyjDNELgF8rciZCmH6Lv31LE8GEI/F3/huNDZko57bh0jtimTISUXd1ZjooD0QiZSNAtT/apxCpWZAkDiuSvboLZTmR6gXcbvl25Q421tnJz5l7rmiEc5Xj25gOAnfmdnFPEe4mfEIon8tyR/cHg0XVKo621PtgbYAEKYysruw87FDrMthgb8rH8tyMew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VYy9y/HiIAQZ5HCmUE5jeNbHow/RCSnS/c+4tHh7vVw=;
- b=Aup3Gsq9S1EGkwBDNgFCn/Pf0jyeuQtqn4EZGhHKsYVhcfK6bGztbuRsYlV0fy5Zgjfn7S9/FNHTROve+zz+mcLt+JTq/2WXyPnmiSCjzUCvzCSdWVlslgbywRb6OCzNRfDyQIJAGM6j3pQ/2yMlHDZF1rxGSpmEUn9HKFMv9pwPwYtnj6zlIAdmK9JeWRmQM2wNAOY8ovtVS2LrfYoq746voWRPP/cu2Taxjn8rv20nB8F46mcv46oUTw6NNOnipa3s1A76IcAeNdyKZITiOZGMccDBQXeF1/SUu2TsacDJv4G7kfKum6Zvj69mAjyF9xoKF2FN0iDxF0fJfZCZrg==
+ bh=vPzVup3QHJtUyBDpX84qqgk7DIMFX294sqsqVqWjh8Q=;
+ b=lRBj6fm3WSSuk4Dh4bw3nQtA5zmfJotS6Zsuq+APVKhyyizBz/l5PNi62gkwbKQeBljTD9SQR3IvDieFHR9j2elbmVMwMGwlXPwJkdq3Cua/jOgsAvndYDG5pSAgkq/NvVRJxiD21ngwb6MtoOQvqOo1nyJ2IvppQ9PsHkBvc5AHtJ0tHb/oMXzb1kSMqB5IvpZTdSGsKQu0QvBOUfx+zS8c4RiQQyQNVB+h4iA06r2+NzibQyBzvXEJW24M6a7kVGxXz05+bpMgNznHY+qlaICx2ZftP1Szu8z+zbNWSkrZTaWmL55D6863hXY/Bf9YE+uaLTp235n21nkxwF3Svg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from PS2PR01CA0045.apcprd01.prod.exchangelabs.com
- (2603:1096:300:58::33) by SE1PPF54561D20A.apcprd06.prod.outlook.com
- (2603:1096:108:1::416) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
- 2025 10:37:01 +0000
-Received: from HK2PEPF00006FAE.apcprd02.prod.outlook.com
- (2603:1096:300:58:cafe::bb) by PS2PR01CA0045.outlook.office365.com
- (2603:1096:300:58::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Fri,
- 11 Apr 2025 10:37:01 +0000
+Received: from TY2PR0101CA0030.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:8000::16) by KL1PR06MB6017.apcprd06.prod.outlook.com
+ (2603:1096:820:d3::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Fri, 11 Apr
+ 2025 10:37:05 +0000
+Received: from TY2PEPF0000AB83.apcprd03.prod.outlook.com
+ (2603:1096:404:8000:cafe::fd) by TY2PR0101CA0030.outlook.office365.com
+ (2603:1096:404:8000::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.35 via Frontend Transport; Fri,
+ 11 Apr 2025 10:37:04 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -42,11 +42,11 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- HK2PEPF00006FAE.mail.protection.outlook.com (10.167.8.4) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Fri, 11 Apr 2025 10:36:59 +0000
+ TY2PEPF0000AB83.mail.protection.outlook.com (10.167.253.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Fri, 11 Apr 2025 10:37:03 +0000
 Received: from localhost.localdomain (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 5D1194160CA4;
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 818524160CA7;
 	Fri, 11 Apr 2025 18:36:58 +0800 (CST)
 From: hans.zhang@cixtech.com
 To: bhelgaas@google.com,
@@ -61,9 +61,9 @@ Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Manikandan K Pillai <mpillai@cadence.com>,
 	Hans Zhang <hans.zhang@cixtech.com>
-Subject: [PATCH v3 3/6] PCI: cadence: Add header support for PCIe HPA controller
-Date: Fri, 11 Apr 2025 18:36:53 +0800
-Message-ID: <20250411103656.2740517-4-hans.zhang@cixtech.com>
+Subject: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP controller
+Date: Fri, 11 Apr 2025 18:36:55 +0800
+Message-ID: <20250411103656.2740517-6-hans.zhang@cixtech.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250411103656.2740517-1-hans.zhang@cixtech.com>
 References: <20250411103656.2740517-1-hans.zhang@cixtech.com>
@@ -76,687 +76,787 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FAE:EE_|SE1PPF54561D20A:EE_
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB83:EE_|KL1PR06MB6017:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 5a7ab50c-e452-4e1b-0614-08dd78e4ca2a
+X-MS-Office365-Filtering-Correlation-Id: 0a01c1f7-47da-4cf7-ff5e-08dd78e4cc75
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JnrhDV64UTyI1dgkjooQcrLJXWCZJsCM1LTtVBQwKykc81tEeUGG54Sm5NSF?=
- =?us-ascii?Q?mRergCmmOpQrGygDc/V603/E/sdIa5l7fvg5AYsUfdivQvIRmoRcZL3pelr1?=
- =?us-ascii?Q?GcLF/+alDOylBAe7UZ0nv+QWJzGhwRu9Ssa6MmVMTwqLYwNbTauwem1gIrne?=
- =?us-ascii?Q?rhq5K4Qs0Lfvch2PO5E74ziXHZEPKgsSSGzCd/4HfCFpswLLaEYmZeK/onNr?=
- =?us-ascii?Q?/vKzPJGwiBekU7+nN1gNgtclC6ktAFIb03bZr63TACM9c/Ve8pafezlZilO2?=
- =?us-ascii?Q?GlMsPMuD2Ty+9zKuZq9LgpWxZ8mv0Ig15olyXimwYGy7IfnqRsfCTA7nNNQn?=
- =?us-ascii?Q?lwJ8dyjPSRiHeNofN2yBIFO32MY5p2eR6Tm6hvIdVEPDtSm4UiLLOPODRTSm?=
- =?us-ascii?Q?PZBrF28jT6CCBmtY/XKT5V0liml2kVt0J6CgJmlFcS93pZlSNTRIJKpGPqBU?=
- =?us-ascii?Q?N/9Oj+92TLO2IyvlMnVaTjD2RUab1fShcst7cMgb0Ao0Ujjra5jseKQsVJt8?=
- =?us-ascii?Q?mley0j1efdZkR6/hgKc/07MVzZwIHURVbdzsdCEtLC5Yfwv7yh0x2OTGnLmx?=
- =?us-ascii?Q?iQ5GxJlfmAoOiNxSMdVg8JzYSdljds2uofJJ4YkzR4iwvglSQB5BmAFKnWU8?=
- =?us-ascii?Q?Z+ENhdlisgOuHMI8T4406GGO0+r8F1b/1seuvo1Pi+gudiAWudNPq8eGojLD?=
- =?us-ascii?Q?5ND1T9u6Q3Kpqmr3J0pDPyKDDByJUAWzZfJ48kzFeOC2OcqAYSTK4Yubd0jI?=
- =?us-ascii?Q?adV7BpFAXcssd2fkiKCm929E13wGTNkPe+nqsrrHEzDrJ4tUEQGE6TDD+3Oy?=
- =?us-ascii?Q?uLlzl6k7DR9Q7L2VDY/jLPQSPW6nxtgqwEZeevmxQWbKT8X0oIswOh4i5l5Q?=
- =?us-ascii?Q?tv3+XoZUZwzbzGzLMMaMYr7WI7bLn7X8Xq/RWsFwinAQmWaQ/XU4jFjYkTu2?=
- =?us-ascii?Q?MEuihwUso7zVNGZwOp+igncwOFV25r1eE9RdxnqpP6XOTqrjmxQLcmUdFkCH?=
- =?us-ascii?Q?51CYgUK0XILlMsht4P1p4/DyKrByP/FGnq8OSCMvsMHWCgg4VybKsgTmHsDI?=
- =?us-ascii?Q?ZhR+MAnQSFKjaRAj4dOO1iVvUa04aa2tr9M9Ndt9w0XyHYg5x3msnOtT9Sf7?=
- =?us-ascii?Q?lFqH7G6xZXsR1Rr9s6lDqLif8ShHNj0rPMJyLYFSj/K9lpmV0NXIEfipH+Sn?=
- =?us-ascii?Q?aPHaOkJaTS4Lyh793vopZ4l2Nvj+ID6Tabi6jK7VLEpI0Ow2CRSuiRhfQri1?=
- =?us-ascii?Q?WG6UVxrNFH+BSWIcSI5yjfl+PMX+NMVUJK1rFVVNmVvsVCh2oUzl2O6dYgZz?=
- =?us-ascii?Q?qzO4hI2SKm5Diz2hEWAzwhycE8Mhc0B2NAME+rLCors21u3XQeLKYcry+Z19?=
- =?us-ascii?Q?c2FGQsZbPOx4NDzIH7m0u/G6hbT6BMyQj7OzjPyDVYjf/N/oGbpW0HATCxLW?=
- =?us-ascii?Q?3RcGZR7fUEdVIdHGzHlsW6SNlAsriie31nAgMzBIqhIZedch8ScISBRsgQRY?=
- =?us-ascii?Q?pwx8f7M/gY7NNMVNFSyYXO7AuLt8vEapVhfp?=
+	=?us-ascii?Q?OdxgLZbijCux4iYC10BbjhIqKB3LtrfTCRr5rBYKVf6AnNW/YLieRJDj0G8L?=
+ =?us-ascii?Q?vHCbkHNAjbtMK0xySt07vTUXZYn5CGsjAlpGkVo8tmAiDZ86Cg9qeNn+jwL6?=
+ =?us-ascii?Q?/i/4z2INoLoJv54OhR9VRx4libOlxxvB4k7JJwggM5/UgzSDhG8PBBdPdmrs?=
+ =?us-ascii?Q?P33fP/8fUvoHck+P748mr8aWPpVw8LAfQdDhZ8nw/Q8ZKTCoz258xnRykAyD?=
+ =?us-ascii?Q?Mb8M14/U/zru2X5bdNeStRE99H9TyqlOpeXTxzRFYCxwi7uXARE3ehb8gkqy?=
+ =?us-ascii?Q?F62N8enCzKpBDaoLZ9XER+YagJa3YR1uoRV56kp94Dq+sTNOuKb8IdhO22BR?=
+ =?us-ascii?Q?lXg0OmmySjtu9JCbmtJtGiatlX014iSdSUwrXC3VgZWMJ1xHcnO0n/Vymy5V?=
+ =?us-ascii?Q?wbkicnop5eX3YbYcZWoyRnEkR3SSitoRQ0rbCeLPtKrj8S9IDVBOIuPmnwmE?=
+ =?us-ascii?Q?LEP0nDq5lkgCztQ4XAgEA27A0vOQk9qpyTRPkW13jmk6kwOC3l3umzWPu5/y?=
+ =?us-ascii?Q?FT0rb1SclIiUsqYWKeuux3iCeteZDW3Zb4F640SzX1y9L2N+RkRc7ETSbNlJ?=
+ =?us-ascii?Q?08yU8i9lDAYVwfWlbM9374lOM2bgepY39Myaipezfl/BFZVg8CmRJhjHcAzx?=
+ =?us-ascii?Q?fhwM+SEK1EBJrVa4L5FB2wMHjf3oHJPxt7AWZRhcB0QbPSDL41UE65Rk6NR/?=
+ =?us-ascii?Q?IgFQBD8um6hOvII1HusGhb/oiCdNJCsbswgH9dCXEjHaKcxHCQRW654Z5mYx?=
+ =?us-ascii?Q?LDgN5wxpNTh8OmeIahadxVnc50JKY/ZzdK4YXoH0BN8YyGdwrGYV/SIwLesk?=
+ =?us-ascii?Q?qq16D8qu2Gud9DdstHrwj/bWSyn1aGKK46uNV1/OyzorEfnAR4PugjFHtDDa?=
+ =?us-ascii?Q?YwxwGLHcumCyvsbSzjDHgZKzpCznpHmj4+ZHy5DIc5Qiv0hIyw6Kxm5RVuH3?=
+ =?us-ascii?Q?C46BdoYR0gorZBvUQCJNCe6h6sKRAdPOj2ZcAB9Xav86gSfWyYKjX5KDjmUF?=
+ =?us-ascii?Q?OTWBZwEldXrKokNd+ToHzmqF4z6h0LVrLAC1jteqdfiavIrHH8rZ5IlzYC1p?=
+ =?us-ascii?Q?B26tuVBus8MIXtOlezLfhGLA3Z//C8bvSYWSDU5JHQJD0gl7HQDfwMAwWG98?=
+ =?us-ascii?Q?cyuPPCTxyK0cqlv0nRhj1FEmNZCzVjg+psLF1NdJJrFQx1sOi79uqhj7Wy5J?=
+ =?us-ascii?Q?NGqV4EXDcGh0tNBSqb3VNj8uOCsBCsrgK7+xTH8x7jYGjrucIsuKzZRvY+K8?=
+ =?us-ascii?Q?yAywG7ozH6iHTHhKCx7Sh6uDkwg1ATuieE9rUH+SLOwDqxzikbmdD09RjXbR?=
+ =?us-ascii?Q?h7qpw/UVl2pITcpoirOwOQLb6+lhrTJMY3qjY8xekL3Df5OCinen++IeAWK8?=
+ =?us-ascii?Q?JdLjUOOphJI6RxelTlz6bVwd0tL154/CzWJowXUpf+4yK6j2yFLbYC9OdkNC?=
+ =?us-ascii?Q?MfQn/uPm84W83o+J5MZWrg7tGmQ+AtRCu8OrdIizzf+up6tsHL2UgLdyUY+8?=
+ =?us-ascii?Q?qsuGdR3ru3aqfzOBZ0ne8ZuaCDWcWyG+uq0c?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 10:36:59.3919
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 10:37:03.1513
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a7ab50c-e452-4e1b-0614-08dd78e4ca2a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a01c1f7-47da-4cf7-ff5e-08dd78e4cc75
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: HK2PEPF00006FAE.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB83.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE1PPF54561D20A
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6017
 
 From: Manikandan K Pillai <mpillai@cadence.com>
 
-Add the required definitions for register addresses and register bits
-for the  Cadence PCIe HPA controllers. Add the register bank offsets
-for different platform architecture and update the global platform
-data - platform architecture, EP or RP configuration and the correct
-values of register offsets for different register banks during the
-platform probe.
+Add support for the Cadence PCIe HPA controller by adding
+the required callback functions. Update the common functions for
+RP and EP configuration. Invoke the relevant callback functions
+for platform probe of PCIe controller using the callback function.
 
 Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
 Co-developed-by: Hans Zhang <hans.zhang@cixtech.com>
 Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
 ---
- .../controller/cadence/pcie-cadence-host.c    |  13 +-
- .../controller/cadence/pcie-cadence-plat.c    |  87 +++++
- drivers/pci/controller/cadence/pcie-cadence.h | 320 +++++++++++++++++-
- 3 files changed, 410 insertions(+), 10 deletions(-)
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  29 +-
+ .../controller/cadence/pcie-cadence-host.c    | 271 ++++++++++++++++--
+ .../controller/cadence/pcie-cadence-plat.c    |  23 ++
+ drivers/pci/controller/cadence/pcie-cadence.c | 196 ++++++++++++-
+ drivers/pci/controller/cadence/pcie-cadence.h |  12 +
+ 5 files changed, 488 insertions(+), 43 deletions(-)
 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index f3f956fa116b..f4961c760434 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -192,7 +192,7 @@ static int cdns_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, u8 vfn,
+ 	}
+ 
+ 	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+-	cdns_pcie_set_outbound_region(pcie, 0, fn, r, false, addr, pci_addr, size);
++	pcie->ops->set_outbound_region(pcie, 0, fn, r, false, addr, pci_addr, size);
+ 
+ 	set_bit(r, &ep->ob_region_map);
+ 	ep->ob_addr[r] = addr;
+@@ -214,7 +214,7 @@ static void cdns_pcie_ep_unmap_addr(struct pci_epc *epc, u8 fn, u8 vfn,
+ 	if (r == ep->max_regions - 1)
+ 		return;
+ 
+-	cdns_pcie_reset_outbound_region(pcie, r);
++	pcie->ops->reset_outbound_region(pcie, r);
+ 
+ 	ep->ob_addr[r] = 0;
+ 	clear_bit(r, &ep->ob_region_map);
+@@ -329,8 +329,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
+ 	if (unlikely(ep->irq_pci_addr != CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY ||
+ 		     ep->irq_pci_fn != fn)) {
+ 		/* First region was reserved for IRQ writes. */
+-		cdns_pcie_set_outbound_region_for_normal_msg(pcie, 0, fn, 0,
+-							     ep->irq_phys_addr);
++		pcie->ops->set_outbound_region_for_normal_msg(pcie, 0, fn, 0, ep->irq_phys_addr);
+ 		ep->irq_pci_addr = CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY;
+ 		ep->irq_pci_fn = fn;
+ 	}
+@@ -411,11 +410,11 @@ static int cdns_pcie_ep_send_msi_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
+ 	if (unlikely(ep->irq_pci_addr != (pci_addr & ~pci_addr_mask) ||
+ 		     ep->irq_pci_fn != fn)) {
+ 		/* First region was reserved for IRQ writes. */
+-		cdns_pcie_set_outbound_region(pcie, 0, fn, 0,
+-					      false,
+-					      ep->irq_phys_addr,
+-					      pci_addr & ~pci_addr_mask,
+-					      pci_addr_mask + 1);
++		pcie->ops->set_outbound_region(pcie, 0, fn, 0,
++					       false,
++					       ep->irq_phys_addr,
++					       pci_addr & ~pci_addr_mask,
++					       pci_addr_mask + 1);
+ 		ep->irq_pci_addr = (pci_addr & ~pci_addr_mask);
+ 		ep->irq_pci_fn = fn;
+ 	}
+@@ -514,11 +513,11 @@ static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
+ 	if (ep->irq_pci_addr != (msg_addr & ~pci_addr_mask) ||
+ 	    ep->irq_pci_fn != fn) {
+ 		/* First region was reserved for IRQ writes. */
+-		cdns_pcie_set_outbound_region(pcie, 0, fn, 0,
+-					      false,
+-					      ep->irq_phys_addr,
+-					      msg_addr & ~pci_addr_mask,
+-					      pci_addr_mask + 1);
++		pcie->ops->set_outbound_region(pcie, 0, fn, 0,
++					       false,
++					       ep->irq_phys_addr,
++					       msg_addr & ~pci_addr_mask,
++					       pci_addr_mask + 1);
+ 		ep->irq_pci_addr = (msg_addr & ~pci_addr_mask);
+ 		ep->irq_pci_fn = fn;
+ 	}
+@@ -869,7 +868,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+ 	set_bit(0, &ep->ob_region_map);
+ 
+ 	if (ep->quirk_detect_quiet_flag)
+-		cdns_pcie_detect_quiet_min_delay_set(&ep->pcie);
++		pcie->ops->detect_quiet_min_delay_set(&ep->pcie);
+ 
+ 	spin_lock_init(&ep->lock);
+ 
 diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 8af95e9da7ce..ce035eef0a5c 100644
+index ce035eef0a5c..c7066ea3b9e8 100644
 --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
 +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -175,7 +175,7 @@ static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
- 	return ret;
+@@ -60,10 +60,7 @@ void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+ 	/* Configuration Type 0 or Type 1 access. */
+ 	desc0 = CDNS_PCIE_AT_OB_REGION_DESC0_HARDCODED_RID |
+ 		CDNS_PCIE_AT_OB_REGION_DESC0_DEVFN(0);
+-	/*
+-	 * The bus number was already set once for all in desc1 by
+-	 * cdns_pcie_host_init_address_translation().
+-	 */
++
+ 	if (busn == bridge->busnr + 1)
+ 		desc0 |= CDNS_PCIE_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
+ 	else
+@@ -73,12 +70,81 @@ void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+ 	return rc->cfg_base + (where & 0xfff);
  }
  
--static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
-+int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
++void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn,
++				   int where)
++{
++	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
++	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
++	struct cdns_pcie *pcie = &rc->pcie;
++	unsigned int busn = bus->number;
++	u32 addr0, desc0, desc1, ctrl0;
++	u32 regval;
++
++	if (pci_is_root_bus(bus)) {
++		/*
++		 * Only the root port (devfn == 0) is connected to this bus.
++		 * All other PCI devices are behind some bridge hence on another
++		 * bus.
++		 */
++		if (devfn)
++			return NULL;
++
++		return pcie->reg_base + (where & 0xfff);
++	}
++
++	/*
++	 * Clear AXI link-down status
++	 */
++	regval = cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE, CDNS_PCIE_HPA_AT_LINKDOWN);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE, CDNS_PCIE_HPA_AT_LINKDOWN,
++			     (regval & GENMASK(0, 0)));
++
++	desc1 = 0;
++	ctrl0 = 0;
++
++	/*
++	 * Update Output registers for AXI region 0.
++	 */
++	addr0 = CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
++		CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) |
++		CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS(busn);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(0), addr0);
++
++	desc1 = cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE,
++				    CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0));
++	desc1 &= ~CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK;
++	desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
++	ctrl0 = CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
++		CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
++
++	if (busn == bridge->busnr + 1)
++		desc0 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
++	else
++		desc0 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1;
++
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC0(0), desc0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0), desc1);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(0), ctrl0);
++
++	return rc->cfg_base + (where & 0xfff);
++}
++
+ static struct pci_ops cdns_pcie_host_ops = {
+ 	.map_bus	= cdns_pci_map_bus,
+ 	.read		= pci_generic_config_read,
+ 	.write		= pci_generic_config_write,
+ };
+ 
++static struct pci_ops cdns_pcie_hpa_host_ops = {
++	.map_bus	= cdns_pci_hpa_map_bus,
++	.read           = pci_generic_config_read,
++	.write		= pci_generic_config_write,
++};
++
+ static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
  {
- 	struct cdns_pcie *pcie = &rc->pcie;
- 	u32 value, ctrl;
-@@ -215,10 +215,10 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- 	return 0;
+ 	u32 pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
+@@ -154,8 +220,14 @@ static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
+ {
+ 	u32 val;
+ 
+-	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+-	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
++	if (!pcie->is_hpa) {
++		val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
++		cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
++	} else {
++		val = cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_LM_PTM_CTRL);
++		cdns_pcie_hpa_writel(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_LM_PTM_CTRL,
++				     val | CDNS_PCIE_HPA_LM_TPM_CTRL_PTMRSEN);
++	}
  }
  
--static int cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
--					enum cdns_pcie_rp_bar bar,
--					u64 cpu_addr, u64 size,
--					unsigned long flags)
-+int cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
-+				 enum cdns_pcie_rp_bar bar,
-+				 u64 cpu_addr, u64 size,
-+				 unsigned long flags)
+ static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+@@ -340,8 +412,8 @@ static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+ 		 */
+ 		bar = cdns_pcie_host_find_min_bar(rc, size);
+ 		if (bar != RP_BAR_UNDEFINED) {
+-			ret = cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr,
+-							   size, flags);
++			ret = pcie->ops->host_bar_ib_config(rc, bar, cpu_addr,
++							    size, flags);
+ 			if (ret)
+ 				dev_err(dev, "IB BAR: %d config failed\n", bar);
+ 			return ret;
+@@ -366,8 +438,7 @@ static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+ 		}
+ 
+ 		winsize = bar_max_size[bar];
+-		ret = cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, winsize,
+-						   flags);
++		ret = pcie->ops->host_bar_ib_config(rc, bar, cpu_addr, winsize, flags);
+ 		if (ret) {
+ 			dev_err(dev, "IB BAR: %d config failed\n", bar);
+ 			return ret;
+@@ -408,8 +479,8 @@ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+ 	if (list_empty(&bridge->dma_ranges)) {
+ 		of_property_read_u32(np, "cdns,no-bar-match-nbits",
+ 				     &no_bar_nbits);
+-		err = cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0,
+-						   (u64)1 << no_bar_nbits, 0);
++		err = pcie->ops->host_bar_ib_config(rc, RP_NO_BAR, 0x0,
++						    (u64)1 << no_bar_nbits, 0);
+ 		if (err)
+ 			dev_err(dev, "IB BAR: %d config failed\n", RP_NO_BAR);
+ 		return err;
+@@ -467,17 +538,159 @@ int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ 		u64 pci_addr = res->start - entry->offset;
+ 
+ 		if (resource_type(res) == IORESOURCE_IO)
+-			cdns_pcie_set_outbound_region(pcie, busnr, 0, r,
+-						      true,
+-						      pci_pio_to_address(res->start),
+-						      pci_addr,
+-						      resource_size(res));
++			pcie->ops->set_outbound_region(pcie, busnr, 0, r,
++						       true,
++						       pci_pio_to_address(res->start),
++						       pci_addr,
++						       resource_size(res));
++		else
++			pcie->ops->set_outbound_region(pcie, busnr, 0, r,
++						       false,
++						       res->start,
++						       pci_addr,
++						       resource_size(res));
++
++		r++;
++	}
++
++	return cdns_pcie_host_map_dma_ranges(rc);
++}
++
++int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	u32 value, ctrl;
++
++	/*
++	 * Set the root complex BAR configuration register:
++	 * - disable both BAR0 and BAR1.
++	 * - enable Prefetchable Memory Base and Limit registers in type 1
++	 *   config space (64 bits).
++	 * - enable IO Base and Limit registers in type 1 config
++	 *   space (32 bits).
++	 */
++
++	ctrl = CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_DISABLED;
++	value = CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
++		CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
++		CDNS_PCIE_HPA_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
++		CDNS_PCIE_HPA_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
++		CDNS_PCIE_HPA_LM_RC_BAR_CFG_IO_ENABLE |
++		CDNS_PCIE_HPA_LM_RC_BAR_CFG_IO_32BITS;
++	cdns_pcie_hpa_writel(pcie, REG_BANK_IP_CFG_CTRL_REG,
++			     CDNS_PCIE_HPA_LM_RC_BAR_CFG, value);
++
++	if (rc->vendor_id != 0xffff)
++		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
++
++	if (rc->device_id != 0xffff)
++		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
++
++	cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
++	cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
++	cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
++
++	return 0;
++}
++
++int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
++				     enum cdns_pcie_rp_bar bar,
++				     u64 cpu_addr, u64 size,
++				     unsigned long flags)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	u32 addr0, addr1, aperture, value;
++
++	if (!rc->avail_ib_bar[bar])
++		return -EBUSY;
++
++	rc->avail_ib_bar[bar] = false;
++
++	aperture = ilog2(size);
++	addr0 = CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
++		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
++	addr1 = upper_32_bits(cpu_addr);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_MASTER,
++			     CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0(bar), addr0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_MASTER,
++			     CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR1(bar), addr1);
++
++	if (bar == RP_NO_BAR)
++		return 0;
++
++	value = cdns_pcie_hpa_readl(pcie, REG_BANK_IP_CFG_CTRL_REG, CDNS_PCIE_HPA_LM_RC_BAR_CFG);
++	value &= ~(HPA_LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar) |
++		   HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar) |
++		   HPA_LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar) |
++		   HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar) |
++		   HPA_LM_RC_BAR_CFG_APERTURE(bar, bar_aperture_mask[bar] + 2));
++	if (size + cpu_addr >= SZ_4G) {
++		if (!(flags & IORESOURCE_PREFETCH))
++			value |= HPA_LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
++		value |= HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
++	} else {
++		if (!(flags & IORESOURCE_PREFETCH))
++			value |= HPA_LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
++		value |= HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
++	}
++
++	value |= HPA_LM_RC_BAR_CFG_APERTURE(bar, aperture);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_IP_CFG_CTRL_REG, CDNS_PCIE_HPA_LM_RC_BAR_CFG, value);
++
++	return 0;
++}
++
++int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(rc);
++	struct resource *cfg_res = rc->cfg_res;
++	struct resource_entry *entry;
++	u64 cpu_addr = cfg_res->start;
++	u32 addr0, addr1, desc1;
++	int r, busnr = 0;
++
++	entry = resource_list_first_type(&bridge->windows, IORESOURCE_BUS);
++	if (entry)
++		busnr = entry->res->start;
++
++	/*
++	 * Reserve region 0 for PCI configure space accesses:
++	 * OB_REGION_PCI_ADDR0 and OB_REGION_DESC0 are updated dynamically by
++	 * cdns_pci_map_bus(), other region registers are set here once for all.
++	 */
++	addr1 = 0;
++	desc1 = CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(busnr);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(0), addr1);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0), desc1);
++
++	addr0 = CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
++		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
++	addr1 = upper_32_bits(cpu_addr);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0(0), addr0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR1(0), addr1);
++
++	r = 1;
++	resource_list_for_each_entry(entry, &bridge->windows) {
++		struct resource *res = entry->res;
++		u64 pci_addr = res->start - entry->offset;
++
++		if (resource_type(res) == IORESOURCE_IO)
++			pcie->ops->set_outbound_region(pcie, busnr, 0, r,
++						       true,
++						       pci_pio_to_address(res->start),
++						       pci_addr,
++						       resource_size(res));
+ 		else
+-			cdns_pcie_set_outbound_region(pcie, busnr, 0, r,
+-						      false,
+-						      res->start,
+-						      pci_addr,
+-						      resource_size(res));
++			pcie->ops->set_outbound_region(pcie, busnr, 0, r,
++						       false,
++						       res->start,
++						       pci_addr,
++						       resource_size(res));
+ 
+ 		r++;
+ 	}
+@@ -489,11 +702,11 @@ int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
  {
- 	struct cdns_pcie *pcie = &rc->pcie;
- 	u32 addr0, addr1, aperture, value;
-@@ -428,7 +428,7 @@ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
- 	return 0;
+ 	int err;
+ 
+-	err = cdns_pcie_host_init_root_port(rc);
++	err = rc->pcie.ops->host_init_root_port(rc);
+ 	if (err)
+ 		return err;
+ 
+-	return cdns_pcie_host_init_address_translation(rc);
++	return rc->pcie.ops->host_init_address_translation(rc);
  }
  
--static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
-+int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
- 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(rc);
-@@ -536,7 +536,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 		return -ENOMEM;
+ int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+@@ -503,7 +716,7 @@ int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+ 	int ret;
  
- 	pcie = &rc->pcie;
--	pcie->is_rc = true;
+ 	if (rc->quirk_detect_quiet_flag)
+-		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
++		pcie->ops->detect_quiet_min_delay_set(&rc->pcie);
  
- 	rc->vendor_id = 0xffff;
- 	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+ 	cdns_pcie_host_enable_ptm_response(pcie);
+ 
+@@ -566,8 +779,12 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (!bridge->ops)
+-		bridge->ops = &cdns_pcie_host_ops;
++	if (!bridge->ops) {
++		if (pcie->is_hpa)
++			bridge->ops = &cdns_pcie_hpa_host_ops;
++		else
++			bridge->ops = &cdns_pcie_host_ops;
++	}
+ 
+ 	ret = pci_host_probe(bridge);
+ 	if (ret < 0)
 diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-index 0456845dabb9..b24176d4df1f 100644
+index b24176d4df1f..8d5fbaef0a3c 100644
 --- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
 +++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-@@ -24,6 +24,15 @@ struct cdns_plat_pcie {
+@@ -43,7 +43,30 @@ static u64 cdns_plat_cpu_addr_fixup(struct cdns_pcie *pcie, u64 cpu_addr)
+ }
  
- struct cdns_plat_pcie_of_data {
- 	bool is_rc;
-+	bool is_hpa;
-+	u32  ip_reg_bank_off;
-+	u32  ip_cfg_ctrl_reg_off;
-+	u32  axi_mstr_common_off;
-+	u32  axi_slave_off;
-+	u32  axi_master_off;
-+	u32  axi_hls_off;
-+	u32  axi_ras_off;
-+	u32  axi_dti_off;
- };
- 
- static const struct of_device_id cdns_plat_pcie_of_match[];
-@@ -72,6 +81,19 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
- 		rc = pci_host_bridge_priv(bridge);
- 		rc->pcie.dev = dev;
- 		rc->pcie.ops = &cdns_plat_ops;
-+		rc->pcie.is_hpa = data->is_hpa;
-+		rc->pcie.is_rc = data->is_rc;
-+
-+		/* Store all the register bank offsets */
-+		rc->pcie.cdns_pcie_reg_offsets.ip_reg_bank_off = data->ip_reg_bank_off;
-+		rc->pcie.cdns_pcie_reg_offsets.ip_cfg_ctrl_reg_off = data->ip_cfg_ctrl_reg_off;
-+		rc->pcie.cdns_pcie_reg_offsets.axi_mstr_common_off = data->axi_mstr_common_off;
-+		rc->pcie.cdns_pcie_reg_offsets.axi_master_off = data->axi_master_off;
-+		rc->pcie.cdns_pcie_reg_offsets.axi_slave_off = data->axi_slave_off;
-+		rc->pcie.cdns_pcie_reg_offsets.axi_hls_off = data->axi_hls_off;
-+		rc->pcie.cdns_pcie_reg_offsets.axi_ras_off = data->axi_ras_off;
-+		rc->pcie.cdns_pcie_reg_offsets.axi_dti_off = data->axi_dti_off;
-+
- 		cdns_plat_pcie->pcie = &rc->pcie;
- 
- 		ret = cdns_pcie_init_phy(dev, cdns_plat_pcie->pcie);
-@@ -99,6 +121,19 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
- 
- 		ep->pcie.dev = dev;
- 		ep->pcie.ops = &cdns_plat_ops;
-+		ep->pcie.is_hpa = data->is_hpa;
-+		ep->pcie.is_rc = data->is_rc;
-+
-+		/* Store all the register bank offset */
-+		ep->pcie.cdns_pcie_reg_offsets.ip_reg_bank_off = data->ip_reg_bank_off;
-+		ep->pcie.cdns_pcie_reg_offsets.ip_cfg_ctrl_reg_off = data->ip_cfg_ctrl_reg_off;
-+		ep->pcie.cdns_pcie_reg_offsets.axi_mstr_common_off = data->axi_mstr_common_off;
-+		ep->pcie.cdns_pcie_reg_offsets.axi_master_off = data->axi_master_off;
-+		ep->pcie.cdns_pcie_reg_offsets.axi_slave_off = data->axi_slave_off;
-+		ep->pcie.cdns_pcie_reg_offsets.axi_hls_off = data->axi_hls_off;
-+		ep->pcie.cdns_pcie_reg_offsets.axi_ras_off = data->axi_ras_off;
-+		ep->pcie.cdns_pcie_reg_offsets.axi_dti_off = data->axi_dti_off;
-+
- 		cdns_plat_pcie->pcie = &ep->pcie;
- 
- 		ret = cdns_pcie_init_phy(dev, cdns_plat_pcie->pcie);
-@@ -150,10 +185,54 @@ static void cdns_plat_pcie_shutdown(struct platform_device *pdev)
- 
- static const struct cdns_plat_pcie_of_data cdns_plat_pcie_host_of_data = {
- 	.is_rc = true,
-+	.is_hpa = false,
-+	.ip_reg_bank_off = 0x0,
-+	.ip_cfg_ctrl_reg_off = 0x0,
-+	.axi_mstr_common_off = 0x0,
-+	.axi_slave_off = 0x0,
-+	.axi_master_off = 0x0,
-+	.axi_hls_off = 0x0,
-+	.axi_ras_off = 0x0,
-+	.axi_dti_off = 0x0,
- };
- 
- static const struct cdns_plat_pcie_of_data cdns_plat_pcie_ep_of_data = {
- 	.is_rc = false,
-+	.is_hpa = false,
-+	.ip_reg_bank_off = 0x0,
-+	.ip_cfg_ctrl_reg_off = 0x0,
-+	.axi_mstr_common_off = 0x0,
-+	.axi_slave_off = 0x0,
-+	.axi_master_off = 0x0,
-+	.axi_hls_off = 0x0,
-+	.axi_ras_off = 0x0,
-+	.axi_dti_off = 0x0,
+ static const struct cdns_pcie_ops cdns_plat_ops = {
++	.link_up = cdns_pcie_linkup,
+ 	.cpu_addr_fixup = cdns_plat_cpu_addr_fixup,
++	.host_init_root_port = cdns_pcie_host_init_root_port,
++	.host_bar_ib_config = cdns_pcie_host_bar_ib_config,
++	.host_init_address_translation = cdns_pcie_host_init_address_translation,
++	.detect_quiet_min_delay_set = cdns_pcie_detect_quiet_min_delay_set,
++	.set_outbound_region = cdns_pcie_set_outbound_region,
++	.set_outbound_region_for_normal_msg =
++					    cdns_pcie_set_outbound_region_for_normal_msg,
++	.reset_outbound_region = cdns_pcie_reset_outbound_region,
 +};
 +
-+static const struct cdns_plat_pcie_of_data cdns_plat_pcie_hpa_host_of_data = {
-+	.is_rc = true,
-+	.is_hpa = true,
-+	.ip_reg_bank_off = CDNS_PCIE_HPA_IP_REG_BANK,
-+	.ip_cfg_ctrl_reg_off = CDNS_PCIE_HPA_IP_CFG_CTRL_REG_BANK,
-+	.axi_mstr_common_off = CDNS_PCIE_HPA_IP_AXI_MASTER_COMMON,
-+	.axi_slave_off = CDNS_PCIE_HPA_AXI_SLAVE,
-+	.axi_master_off = CDNS_PCIE_HPA_AXI_MASTER,
-+	.axi_hls_off = 0,
-+	.axi_ras_off = 0,
-+	.axi_dti_off = 0,
-+};
++static const struct cdns_pcie_ops cdns_hpa_plat_ops = {
++	.start_link = cdns_pcie_hpa_startlink,
++	.stop_link = cdns_pcie_hpa_stop_link,
++	.link_up = cdns_pcie_hpa_linkup,
++	.host_init_root_port = cdns_pcie_hpa_host_init_root_port,
++	.host_bar_ib_config = cdns_pcie_hpa_host_bar_ib_config,
++	.host_init_address_translation = cdns_pcie_hpa_host_init_address_translation,
++	.detect_quiet_min_delay_set = cdns_pcie_hpa_detect_quiet_min_delay_set,
++	.set_outbound_region = cdns_pcie_hpa_set_outbound_region,
++	.set_outbound_region_for_normal_msg =
++					    cdns_pcie_hpa_set_outbound_region_for_normal_msg,
++	.reset_outbound_region = cdns_pcie_hpa_reset_outbound_region,
+ };
+ 
+ static int cdns_plat_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+index 204e045aed8c..c0d3ab3c363f 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -8,6 +8,45 @@
+ 
+ #include "pcie-cadence.h"
+ 
++bool cdns_pcie_linkup(struct cdns_pcie *pcie)
++{
++	u32 pl_reg_val;
 +
-+static const struct cdns_plat_pcie_of_data cdns_plat_pcie_hpa_ep_of_data = {
-+	.is_rc = false,
-+	.is_hpa = true,
-+	.ip_reg_bank_off = CDNS_PCIE_HPA_IP_REG_BANK,
-+	.ip_cfg_ctrl_reg_off = CDNS_PCIE_HPA_IP_CFG_CTRL_REG_BANK,
-+	.axi_mstr_common_off = CDNS_PCIE_HPA_IP_AXI_MASTER_COMMON,
-+	.axi_slave_off = CDNS_PCIE_HPA_AXI_SLAVE,
-+	.axi_master_off = CDNS_PCIE_HPA_AXI_MASTER,
-+	.axi_hls_off = 0,
-+	.axi_ras_off = 0,
-+	.axi_dti_off = 0,
- };
++	pl_reg_val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_BASE);
++	if (pl_reg_val & GENMASK(0, 0))
++		return true;
++	return false;
++}
++
++bool cdns_pcie_hpa_linkup(struct cdns_pcie *pcie)
++{
++	u32 pl_reg_val;
++
++	pl_reg_val = cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_PHY_DBG_STS_REG0);
++	if (pl_reg_val & GENMASK(0, 0))
++		return true;
++	return false;
++}
++
++int cdns_pcie_hpa_start_link(struct cdns_pcie *pcie)
++{
++	u32 pl_reg_val;
++
++	pl_reg_val = cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_PHY_LAYER_CFG0);
++	pl_reg_val |= CDNS_PCIE_HPA_LINK_TRNG_EN_MASK;
++	cdns_pcie_hpa_writel(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_PHY_LAYER_CFG0, pl_reg_val);
++	return 0;
++}
++
++void cdns_pcie_hpa_stop_link(struct cdns_pcie *pcie)
++{
++	u32 pl_reg_val;
++
++	pl_reg_val = cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_PHY_LAYER_CFG0);
++	pl_reg_val &= ~CDNS_PCIE_HPA_LINK_TRNG_EN_MASK;
++	cdns_pcie_hpa_writel(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_PHY_LAYER_CFG0, pl_reg_val);
++}
++
+ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
+ {
+ 	u32 delay = 0x3;
+@@ -55,7 +94,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+ 	desc1 = 0;
  
- static const struct of_device_id cdns_plat_pcie_of_match[] = {
-@@ -165,6 +244,14 @@ static const struct of_device_id cdns_plat_pcie_of_match[] = {
- 		.compatible = "cdns,cdns-pcie-ep",
- 		.data = &cdns_plat_pcie_ep_of_data,
- 	},
-+	{
-+		.compatible = "cdns,cdns-pcie-hpa-host",
-+		.data = &cdns_plat_pcie_hpa_host_of_data,
-+	},
-+	{
-+		.compatible = "cdns,cdns-pcie-hpa-ep",
-+		.data = &cdns_plat_pcie_hpa_ep_of_data,
-+	},
- 	{},
- };
+ 	/*
+-	 * Whatever Bit [23] is set or not inside DESC0 register of the outbound
++	 * Whether Bit [23] is set or not inside DESC0 register of the outbound
+ 	 * PCIe descriptor, the PCI function number must be set into
+ 	 * Bits [26:24] of DESC0 anyway.
+ 	 *
+@@ -147,6 +186,161 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r)
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), 0);
+ }
  
++void cdns_pcie_hpa_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
++{
++	u32 delay = 0x3;
++	u32 ltssm_control_cap;
++
++	/* Set the LTSSM Detect Quiet state min. delay to 2ms. */
++	ltssm_control_cap = cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG,
++						CDNS_PCIE_HPA_PHY_LAYER_CFG0);
++	ltssm_control_cap = ((ltssm_control_cap &
++			    ~CDNS_PCIE_HPA_DETECT_QUIET_MIN_DELAY_MASK) |
++			    CDNS_PCIE_HPA_DETECT_QUIET_MIN_DELAY(delay));
++
++	cdns_pcie_hpa_writel(pcie, REG_BANK_IP_REG,
++			     CDNS_PCIE_HPA_PHY_LAYER_CFG0, ltssm_control_cap);
++}
++
++void cdns_pcie_hpa_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
++				       u32 r, bool is_io,
++				       u64 cpu_addr, u64 pci_addr, size_t size)
++{
++	/*
++	 * roundup_pow_of_two() returns an unsigned long, which is not suited
++	 * for 64bit values.
++	 */
++	u64 sz = 1ULL << fls64(size - 1);
++	int nbits = ilog2(sz);
++	u32 addr0, addr1, desc0, desc1, ctrl0;
++
++	if (nbits < 8)
++		nbits = 8;
++
++	/* Set the PCI address */
++	addr0 = CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(nbits) |
++		(lower_32_bits(pci_addr) & GENMASK(31, 8));
++	addr1 = upper_32_bits(pci_addr);
++
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(r), addr0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(r), addr1);
++
++	/* Set the PCIe header descriptor */
++	if (is_io)
++		desc0 = CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_IO;
++	else
++		desc0 = CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MEM;
++	desc1 = 0;
++
++	/*
++	 * Whether Bit [26] is set or not inside DESC0 register of the outbound
++	 * PCIe descriptor, the PCI function number must be set into
++	 * Bits [31:24] of DESC1 anyway.
++	 *
++	 * In Root Complex mode, the function number is always 0 but in Endpoint
++	 * mode, the PCIe controller may support more than one function. This
++	 * function number needs to be set properly into the outbound PCIe
++	 * descriptor.
++	 *
++	 * Besides, setting Bit [26] is mandatory when in Root Complex mode:
++	 * then the driver must provide the bus, resp. device, number in
++	 * Bits [31:24] of DESC1, resp. Bits[23:16] of DESC0. Like the function
++	 * number, the device number is always 0 in Root Complex mode.
++	 *
++	 * However when in Endpoint mode, we can clear Bit [26] of DESC0, hence
++	 * the PCIe controller will use the captured values for the bus and
++	 * device numbers.
++	 */
++	if (pcie->is_rc) {
++		/* The device and function numbers are always 0. */
++		desc1 = CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(busnr) |
++			CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
++		ctrl0 = CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
++			CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
++	} else {
++		/*
++		 * Use captured values for bus and device numbers but still
++		 * need to set the function number.
++		 */
++		desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(fn);
++	}
++
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC0(r), desc0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(r), desc1);
++
++	addr0 = CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
++		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
++	addr1 = upper_32_bits(cpu_addr);
++
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0(r), addr0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR1(r), addr1);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(r), ctrl0);
++}
++
++void cdns_pcie_hpa_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie,
++						      u8 busnr, u8 fn,
++						      u32 r, u64 cpu_addr)
++{
++	u32 addr0, addr1, desc0, desc1, ctrl0;
++
++	desc0 = CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG;
++	desc1 = 0;
++
++	/* See cdns_pcie_set_outbound_region() comments above. */
++	if (pcie->is_rc) {
++		desc1 = CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(busnr) |
++			CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
++		ctrl0 = CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
++			CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
++	} else {
++		desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(fn);
++	}
++
++	addr0 = CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
++		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
++	addr1 = upper_32_bits(cpu_addr);
++
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(r), 0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(r), 0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC0(r), desc0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(r), desc1);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0(r), addr0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR1(r), addr1);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(r), ctrl0);
++}
++
++void cdns_pcie_hpa_reset_outbound_region(struct cdns_pcie *pcie, u32 r)
++{
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(r), 0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(r), 0);
++
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC0(r), 0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(r), 0);
++
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0(r), 0);
++	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
++			     CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR1(r), 0);
++}
++
+ void cdns_pcie_disable_phy(struct cdns_pcie *pcie)
+ {
+ 	int i = pcie->phy_count;
 diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 39ee9945c903..a39077d64d1d 100644
+index a39077d64d1d..c317fc10f5d1 100644
 --- a/drivers/pci/controller/cadence/pcie-cadence.h
 +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -218,6 +218,172 @@
- 	 (((delay) << CDNS_PCIE_DETECT_QUIET_MIN_DELAY_SHIFT) & \
- 	 CDNS_PCIE_DETECT_QUIET_MIN_DELAY_MASK)
- 
-+/* HPA (High Performance Architecture) PCIe controller register */
-+#define CDNS_PCIE_HPA_IP_REG_BANK 0x01000000
-+#define CDNS_PCIE_HPA_IP_CFG_CTRL_REG_BANK 0x01003c00
-+#define CDNS_PCIE_HPA_IP_AXI_MASTER_COMMON 0x01020000
-+
-+/* Address Translation Registers (HPA) */
-+#define CDNS_PCIE_HPA_AXI_SLAVE 0x03000000
-+#define CDNS_PCIE_HPA_AXI_MASTER 0x03002000
-+
-+/* Root port register base address */
-+#define CDNS_PCIE_HPA_RP_BASE 0x0
-+
-+#define CDNS_PCIE_HPA_LM_ID 0x1420
-+
-+/* Endpoint Function BARs (HPA) Configuration Registers */
-+#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG(bar, fn)			\
-+	(((bar) < BAR_3) ? CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG0(fn) :	\
-+			   CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG1(fn))
-+#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG0(pfn) (0x4000 * (pfn))
-+#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG1(pfn) ((0x4000 * (pfn)) + 0x04)
-+#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG(bar, fn)			\
-+	(((bar) < BAR_3) ? CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG0(fn) :	\
-+			   CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG1(fn))
-+#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG0(vfn) ((0x4000 * (vfn)) + 0x08)
-+#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG1(vfn) ((0x4000 * (vfn)) + 0x0c)
-+#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(f) (GENMASK(9, 4) << ((f) * 10))
-+#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE(b, a) \
-+	(((a) << (4 + ((b) * 10))) & (CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b)))
-+#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(f) (GENMASK(3, 0) << ((f) * 10))
-+#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL(b, c) \
-+	(((c) << ((b) * 10)) & (CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b)))
-+
-+/* Endpoint Function Configuration Register */
-+#define CDNS_PCIE_HPA_LM_EP_FUNC_CFG 0x02c0
-+
-+/* Root Complex BAR Configuration Register */
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG 0x14
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_APERTURE_MASK GENMASK(9, 4)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_APERTURE(a) \
-+	FIELD_PREP(CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_APERTURE_MASK, a)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL_MASK GENMASK(3, 0)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL(c) \
-+	FIELD_PREP(CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL_MASK, c)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_APERTURE_MASK GENMASK(19, 14)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_APERTURE(a) \
-+	FIELD_PREP(CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_APERTURE_MASK, a)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_CTRL_MASK GENMASK(13, 10)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_CTRL(c) \
-+	FIELD_PREP(CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_CTRL_MASK, c)
-+
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE BIT(20)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS BIT(21)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_IO_ENABLE BIT(22)
-+#define CDNS_PCIE_HPA_LM_RC_BAR_CFG_IO_32BITS BIT(23)
-+
-+/* BAR control values applicable to both Endpoint Function and Root Complex */
-+#define CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_DISABLED 0x0
-+#define CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_IO_32BITS 0x3
-+#define CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_MEM_32BITS 0x1
-+#define CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS 0x9
-+#define CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_MEM_64BITS 0x5
-+#define CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS 0xD
-+
-+#define HPA_LM_RC_BAR_CFG_CTRL_DISABLED(bar) \
-+	(CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_DISABLED << ((bar) * 10))
-+#define HPA_LM_RC_BAR_CFG_CTRL_IO_32BITS(bar) \
-+	(CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_IO_32BITS << ((bar) * 10))
-+#define HPA_LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar) \
-+	(CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_MEM_32BITS << ((bar) * 10))
-+#define HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar) \
-+	(CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS << ((bar) * 10))
-+#define HPA_LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar) \
-+	(CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_MEM_64BITS << ((bar) * 10))
-+#define HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar) \
-+	(CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS << ((bar) * 10))
-+#define HPA_LM_RC_BAR_CFG_APERTURE(bar, aperture) \
-+	(((aperture) - 7) << ((bar) * 10))
-+
-+#define CDNS_PCIE_HPA_LM_PTM_CTRL 0x0520
-+#define CDNS_PCIE_HPA_LM_TPM_CTRL_PTMRSEN BIT(17)
-+
-+/* Root Port Registers PCI config space (HPA) for root port function */
-+#define CDNS_PCIE_HPA_RP_CAP_OFFSET 0xC0
-+
-+/* Region r Outbound AXI to PCIe Address Translation Register 0 */
-+#define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(r) (0x1010 + ((r) & 0x1f) * 0x0080)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS_MASK GENMASK(5, 0)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(nbits)           \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS_MASK, \
-+		   ((nbits) - 1))
-+#define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK GENMASK(23, 16)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK, devfn)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS_MASK GENMASK(31, 24)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS(bus) \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS_MASK, bus)
-+
-+/* Region r Outbound AXI to PCIe Address Translation Register 1 */
-+#define CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(r) (0x1014 + ((r) & 0x1f) * 0x0080)
-+
-+/* Region r Outbound PCIe Descriptor Register 0 */
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC0(r) (0x1008 + ((r) & 0x1f) * 0x0080)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MASK GENMASK(28, 24)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MEM \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MASK, 0x0)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_IO \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MASK, 0x2)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0 \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MASK, 0x4)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1 \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MASK, 0x5)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_NORMAL_MSG \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MASK, 0x10)
-+
-+/* Region r Outbound PCIe Descriptor Register 1 */
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC1(r) (0x100c + ((r) & 0x1f) * 0x0080)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS_MASK GENMASK(31, 24)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(bus) \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS_MASK, bus)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK GENMASK(23, 16)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(devfn) \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK, devfn)
-+
-+#define CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(r) (0x1018 + ((r) & 0x1f) * 0x0080)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS BIT(26)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN BIT(25)
-+
-+/* Region r AXI Region Base Address Register 0 */
-+#define CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0(r) (0x1000 + ((r) & 0x1f) * 0x0080)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS_MASK GENMASK(5, 0)
-+#define CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS_MASK, ((nbits) - 1))
-+
-+/* Region r AXI Region Base Address Register 1 */
-+#define CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR1(r) (0x1004 + ((r) & 0x1f) * 0x0080)
-+
-+/* Root Port BAR Inbound PCIe to AXI Address Translation Register */
-+#define CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0(bar) (((bar) * 0x0008))
-+#define CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS_MASK GENMASK(5, 0)
-+#define CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS(nbits) \
-+	FIELD_PREP(CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS_MASK, ((nbits) - 1))
-+#define CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR1(bar) (0x04 + ((bar) * 0x0008))
-+
-+/* AXI link down register */
-+#define CDNS_PCIE_HPA_AT_LINKDOWN 0x04
-+
-+/*
-+ * Physical Layer Configuration Register 0
-+ * This register contains the parameters required for functional setup
-+ * of Physical Layer.
-+ */
-+#define CDNS_PCIE_HPA_PHY_LAYER_CFG0 0x0400
-+#define CDNS_PCIE_HPA_DETECT_QUIET_MIN_DELAY_MASK GENMASK(26, 24)
-+#define CDNS_PCIE_HPA_DETECT_QUIET_MIN_DELAY(delay) \
-+	FIELD_PREP(CDNS_PCIE_HPA_DETECT_QUIET_MIN_DELAY_MASK, delay)
-+#define CDNS_PCIE_HPA_LINK_TRNG_EN_MASK GENMASK(27, 27)
-+
-+#define CDNS_PCIE_HPA_PHY_DBG_STS_REG0 0x0420
-+
-+#define CDNS_PCIE_HPA_RP_MAX_IB 0x3
-+#define CDNS_PCIE_HPA_MAX_OB 15
-+
-+/* Endpoint Function BAR Inbound PCIe to AXI Address Translation Register (HPA) */
-+#define CDNS_PCIE_HPA_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar) (((fn) * 0x0040) + ((bar) * 0x0008))
-+#define CDNS_PCIE_HPA_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar) (0x4 + ((fn) * 0x0040) + ((bar) * 0x0008))
-+
- enum cdns_pcie_rp_bar {
- 	RP_BAR_UNDEFINED = -1,
- 	RP_BAR0,
-@@ -249,6 +415,7 @@ struct cdns_pcie_rp_ib_bar {
- #define CDNS_PCIE_MSG_DATA			BIT(16)
- 
- struct cdns_pcie;
-+struct cdns_pcie_rc;
- 
- enum cdns_pcie_msg_code {
- 	MSG_CODE_ASSERT_INTA	= 0x20,
-@@ -281,11 +448,60 @@ enum cdns_pcie_msg_routing {
- 	MSG_ROUTING_GATHER,
- };
- 
-+enum cdns_pcie_reg_bank {
-+	REG_BANK_RP,
-+	REG_BANK_IP_REG,
-+	REG_BANK_IP_CFG_CTRL_REG,
-+	REG_BANK_AXI_MASTER_COMMON,
-+	REG_BANK_AXI_MASTER,
-+	REG_BANK_AXI_SLAVE,
-+	REG_BANK_AXI_HLS,
-+	REG_BANK_AXI_RAS,
-+	REG_BANK_AXI_DTI,
-+	REG_BANKS_MAX,
-+};
-+
- struct cdns_pcie_ops {
- 	int	(*start_link)(struct cdns_pcie *pcie);
- 	void	(*stop_link)(struct cdns_pcie *pcie);
- 	bool	(*link_up)(struct cdns_pcie *pcie);
- 	u64     (*cpu_addr_fixup)(struct cdns_pcie *pcie, u64 cpu_addr);
-+	int	(*host_init_root_port)(struct cdns_pcie_rc *rc);
-+	int	(*host_bar_ib_config)(struct cdns_pcie_rc *rc,
-+				      enum cdns_pcie_rp_bar bar,
-+				      u64 cpu_addr, u64 size,
-+				      unsigned long flags);
-+	int	(*host_init_address_translation)(struct cdns_pcie_rc *rc);
-+	void	(*detect_quiet_min_delay_set)(struct cdns_pcie *pcie);
-+	void	(*set_outbound_region)(struct cdns_pcie *pcie, u8 busnr, u8 fn,
-+				       u32 r, bool is_io, u64 cpu_addr,
-+				       u64 pci_addr, size_t size);
-+	void	(*set_outbound_region_for_normal_msg)(struct cdns_pcie *pcie,
-+						      u8 busnr, u8 fn, u32 r,
-+						      u64 cpu_addr);
-+	void	(*reset_outbound_region)(struct cdns_pcie *pcie, u32 r);
-+};
-+
-+/**
-+ * struct cdns_pcie_reg_offset - Register bank offset for a platform
-+ * @ip_reg_bank_off: ip register bank start offset
-+ * @ip_cfg_ctrl_reg_off: ip config control register start offset
-+ * @axi_mstr_common_off: AXI master common register start
-+ * @axi_slave_off: AXI slave offset start
-+ * @axi_master_off: AXI master offset start
-+ * @axi_hls_off: AXI HLS offset start
-+ * @axi_ras_off: AXI RAS offset
-+ * @axi_dti_off: AXI DTI offset
-+ */
-+struct cdns_pcie_reg_offset {
-+	u32 ip_reg_bank_off;
-+	u32 ip_cfg_ctrl_reg_off;
-+	u32 axi_mstr_common_off;
-+	u32 axi_slave_off;
-+	u32 axi_master_off;
-+	u32 axi_hls_off;
-+	u32 axi_ras_off;
-+	u32 axi_dti_off;
- };
- 
- /**
-@@ -294,21 +510,25 @@ struct cdns_pcie_ops {
-  * @mem_res: start/end offsets in the physical system memory to map PCI accesses
-  * @dev: PCIe controller
-  * @is_rc: tell whether the PCIe controller mode is Root Complex or Endpoint.
-+ * @is_hpa: indicates if the architecture is HPA
-  * @phy_count: number of supported PHY devices
-  * @phy: list of pointers to specific PHY control blocks
-  * @link: list of pointers to corresponding device link representations
-  * @ops: Platform-specific ops to control various inputs from Cadence PCIe
-  *       wrapper
-+ * @cdns_pcie_reg_offsets: Register bank offsets for different SoC
-  */
- struct cdns_pcie {
- 	void __iomem		*reg_base;
- 	struct resource		*mem_res;
- 	struct device		*dev;
- 	bool			is_rc;
-+	bool			is_hpa;
- 	int			phy_count;
- 	struct phy		**phy;
- 	struct device_link	**link;
- 	const struct cdns_pcie_ops *ops;
-+	struct cdns_pcie_reg_offset cdns_pcie_reg_offsets;
- };
- 
- /**
-@@ -386,6 +606,41 @@ struct cdns_pcie_ep {
- 	unsigned int		quirk_disable_flr:1;
- };
- 
-+static inline u32 cdns_reg_bank_to_off(struct cdns_pcie *pcie,
-+				       enum cdns_pcie_reg_bank bank)
-+{
-+	u32 offset = 0x0;
-+
-+	switch (bank) {
-+	case REG_BANK_IP_REG:
-+		offset = pcie->cdns_pcie_reg_offsets.ip_reg_bank_off;
-+		break;
-+	case REG_BANK_IP_CFG_CTRL_REG:
-+		offset = pcie->cdns_pcie_reg_offsets.ip_cfg_ctrl_reg_off;
-+		break;
-+	case REG_BANK_AXI_MASTER_COMMON:
-+		offset = pcie->cdns_pcie_reg_offsets.axi_mstr_common_off;
-+		break;
-+	case REG_BANK_AXI_MASTER:
-+		offset = pcie->cdns_pcie_reg_offsets.axi_master_off;
-+		break;
-+	case REG_BANK_AXI_SLAVE:
-+		offset = pcie->cdns_pcie_reg_offsets.axi_slave_off;
-+		break;
-+	case REG_BANK_AXI_HLS:
-+		offset = pcie->cdns_pcie_reg_offsets.axi_hls_off;
-+		break;
-+	case REG_BANK_AXI_RAS:
-+		offset = pcie->cdns_pcie_reg_offsets.axi_ras_off;
-+		break;
-+	case REG_BANK_AXI_DTI:
-+		offset = pcie->cdns_pcie_reg_offsets.axi_dti_off;
-+		break;
-+	default:
-+		break;
-+	};
-+	return offset;
-+}
- 
- /* Register access */
- static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
-@@ -398,6 +653,27 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
- 	return readl(pcie->reg_base + reg);
- }
- 
-+static inline void cdns_pcie_hpa_writel(struct cdns_pcie *pcie,
-+					enum cdns_pcie_reg_bank bank,
-+					u32 reg,
-+					u32 value)
-+{
-+	u32 offset =  cdns_reg_bank_to_off(pcie, bank);
-+
-+	reg += offset;
-+	writel(value, pcie->reg_base + reg);
-+}
-+
-+static inline u32 cdns_pcie_hpa_readl(struct cdns_pcie *pcie,
-+				      enum cdns_pcie_reg_bank bank,
-+				      u32 reg)
-+{
-+	u32 offset =  cdns_reg_bank_to_off(pcie, bank);
-+
-+	reg += offset;
-+	return readl(pcie->reg_base + reg);
-+}
-+
- static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
- {
- 	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-@@ -444,6 +720,9 @@ static inline void cdns_pcie_rp_writeb(struct cdns_pcie *pcie,
- {
- 	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
- 
-+	if (pcie->is_hpa)
-+		addr = pcie->reg_base + CDNS_PCIE_HPA_RP_BASE + reg;
-+
- 	cdns_pcie_write_sz(addr, 0x1, value);
- }
- 
-@@ -452,6 +731,9 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
- {
- 	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
- 
-+	if (pcie->is_hpa)
-+		addr = pcie->reg_base + CDNS_PCIE_HPA_RP_BASE + reg;
-+
- 	cdns_pcie_write_sz(addr, 0x2, value);
- }
- 
-@@ -459,6 +741,9 @@ static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
- {
- 	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
- 
-+	if (pcie->is_hpa)
-+		addr = pcie->reg_base + CDNS_PCIE_HPA_RP_BASE + reg;
-+
- 	return cdns_pcie_read_sz(addr, 0x2);
- }
- 
-@@ -523,29 +808,52 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
- int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
- int cdns_pcie_host_init(struct cdns_pcie_rc *rc);
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
-+int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc);
- void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
- 			       int where);
-+int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc);
-+int cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
-+				 enum cdns_pcie_rp_bar bar,
-+				 u64 cpu_addr, u64 size,
-+				 unsigned long flags);
+@@ -816,6 +816,14 @@ int cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
+ 				 enum cdns_pcie_rp_bar bar,
+ 				 u64 cpu_addr, u64 size,
+ 				 unsigned long flags);
++void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn,
++				   int where);
++int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc);
++int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
++				     enum cdns_pcie_rp_bar bar,
++				     u64 cpu_addr, u64 size,
++				     unsigned long flags);
++int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *rc);
  #else
  static inline int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
  {
- 	return 0;
+@@ -865,6 +873,10 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
  }
--
- static inline int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
- {
- 	return 0;
- }
--
- static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- {
- 	return 0;
- }
--
- static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
- 					     int where)
- {
- 	return NULL;
- }
-+static inline void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn
-+						 int where)
-+{
-+	return NULL;
-+}
-+static inline int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc)
-+{
-+	return 0;
-+}
-+static inline int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
-+						   enum cdns_pcie_rp_bar bar,
-+						   u64 cpu_addr, u64 size,
-+						   unsigned long flags)
-+{
-+	return 0;
-+}
-+static inline int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *rc)
-+{
-+	return 0;
-+}
  #endif
  
- #ifdef CONFIG_PCIE_CADENCE_EP
-@@ -571,6 +879,12 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
- void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
-+void cdns_pcie_hpa_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
-+void cdns_pcie_hpa_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn, u32 r,
-+				       bool is_io, u64 cpu_addr, u64 pci_addr, size_t size);
-+void cdns_pcie_hpa_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie,
-+						      u8 busnr, u8 fn, u32 r, u64 cpu_addr);
-+void cdns_pcie_hpa_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
- extern const struct dev_pm_ops cdns_pcie_pm_ops;
++bool cdns_pcie_linkup(struct cdns_pcie *pcie);
++bool cdns_pcie_hpa_linkup(struct cdns_pcie *pcie);
++int cdns_pcie_hpa_start_link(struct cdns_pcie *pcie);
++void cdns_pcie_hpa_stop_link(struct cdns_pcie *pcie);
+ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
  
- #endif /* _PCIE_CADENCE_H */
+ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
 -- 
 2.47.1
 
