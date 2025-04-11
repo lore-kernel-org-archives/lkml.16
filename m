@@ -1,55 +1,55 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6C72046AF
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BFC26FD98
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744349903; cv=none; b=WDpNpsjQm3kpY3dtV/FrA7d4HCgbME8FhXdMDvJWIXIA/pluFKJ5L0YC2cKOYy4Loup8d49J1Y4Rl3lrCs1/pkHfTAIxFyrz8Frkr+zfsnbaAG4fSGEhn37ytr2Z+l537Z83LBI26CwxgpqvCef3EBtbBV4XNIyJhreLAU9VR14=
+	t=1744349902; cv=none; b=LpfEhKGSBPiF0HIWwP8x9Cxt6/Ep12lneAFjxLSL41Xw33ahM5O4fheYZE329kMtIA8xKtMHr2fZ2EepfAGQkstKz9uYRR7jT9YdnEd2U71zjk+1MvyLfSB9vXcqXecV1i4yCvR1r5jnnN3SIgW1RdrSNtiAfD97IMFs6mye72w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744349903; c=relaxed/simple;
-	bh=O4paHUM5WUKRElwhqbiya2OTDy+4u3mMqoywnUx+Lrg=;
+	s=arc-20240116; t=1744349902; c=relaxed/simple;
+	bh=Pb/tRndq6JCrs3AYjuqGQHDREhWVsfYYQ6eTP7qSQWs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KtP1p71QUVvxX3U1EOrg/G/JE9Y1itNrnwOfWixupmwkfWjdMMtUo0l2ZIPtPcsfLSi49LiE60CIhI3LoJv8luTIKDXGEDEchsH33vn96LA1+3tZWhStjqDycuNtu/ZNavslEjfrgoYypIH+B51OxVFGg/d2X8YT1b/M2AuOL2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IaogZ+bl; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=eZM0qaYTg1/jAMwxJZ6hX6hNScfYVujVzDFhv3Nse36nUurQNc+fbpOxgsvZgHE96gJX5lXFx69cR85DYP1O0UchDkqWVl0soDpv6NwVanRa5ZfOTTeaEiFb+zg4DhJWLfCIAUCRa2jU11zt+Cu/rN3Sf8T1YZnW7+2QLVnuXeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0CPQ0oRc; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IaogZ+bl"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227e2faab6dso14293655ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:38:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0CPQ0oRc"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-229170fbe74so13409765ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:38:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744349901; x=1744954701; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744349899; x=1744954699; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IlX8nA7Xk9H5c98D5iYmnhzWmAB9L4MDv6xIzYdT0mI=;
-        b=IaogZ+bl5wxEFYGZOfHGFp7Un45RUOWUE8bRoAaAeq+FruP5NRXYDM3Y27UIcWBEfW
-         xYzLJZgjEr2mieqhR/ynq7wo+8LY3LYWrHLWZtKx6dquNxqrHy0E2KlVgbFW0y+8uiTt
-         hwk4A/fZ/NnfRy+yTQRyWcxgH8AU4u3AsQ4b9bByawXkjgA+OSu8VKQNlU5DbVBqw5oX
-         3MTfAWOpnjZGpTwXJUt3UFnsaBKLhDmtpZEtIT2hXct/saITZRQmeu/vdCD8eNmdy19n
-         GuN4LbjN1e2SaFxy6sjYJD6lHSzVr3rENl50nuqEWc28XeZFijNEnkpp3jd0B/rj5TbN
-         lWCA==
+        bh=z/qZgzMmxZEsawIy31A7dWlG2yn5UQrX3y3KTJwsEo8=;
+        b=0CPQ0oRclOCrV6QIIwekkEAA6JwuBVM761xyMiLkGK2O1ZxIKaTMxyH3CQG+Vp8Ot1
+         HtFzgGfkic/SOhnABOs4zA1xmV66My+lwE4gM60XE5l/7qL8vWlr4rPQVGkJFQ/YBIqp
+         IWcYUvkWfRDfjKzw7DmHbdZjOumYEM6H1KFV47ikLgbLhA28gfpJ1uUlDtBYxx35kGDN
+         +LOxwET9N2u/RU+1FTwd8459ghXrftzJDfCrRPRUXe4E5olJkgJNtksE9hheAg+IP+ST
+         vHyfVsppMql2FC1v4eNLHZaifkdOjoqASJj1w7iYKR7+2u4S0Mkk0bvksIp2vR6p4oqC
+         8xfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744349901; x=1744954701;
+        d=1e100.net; s=20230601; t=1744349899; x=1744954699;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IlX8nA7Xk9H5c98D5iYmnhzWmAB9L4MDv6xIzYdT0mI=;
-        b=tJ8ZNHVicztZi6ayRCEaaGP5zaUuUfY8ZcJ+eQHLVFp+8GaBQ59TjP4zY1Yl99bs1B
-         JpQlkFw71C1cXWt+5zNwz4NPoteFaEjP/+56iHhONj59mzD9QSWu4zrwSIOFqGPBI8ys
-         rpbnLl+uV0N+odA15vNNH9JFFwp5v+YHbLVrN5981bsvpH7hTwPRKrb493nEVKQ20H25
-         Q/JSr9mloSnq9a8uNp+zkPxdoN7vD8XLs5Ia5NkV1RRQd0hsADw47WBCdjpsrD3IF6l1
-         kMCDsGzsktgnR+aF6nvYV4b9Bi5G3prx1qouHUR4G6IxhIKZzX1tdCeNbywSfBWBwqbZ
-         gsRQ==
-X-Gm-Message-State: AOJu0YwnPI4Ucx+AGpGw3On8vpA9GCS34lSRmPWTvtDD8UhwUu6slcPB
-	PjQzGbXv3zdUqEGdJYm3cqudVjag9QcNiW+4uPoh52MGNB9ZIbBLDpIbqX0lPQTWGhcM4iuJVXK
-	OgEA+GEBRoaJV92yPR98ABGJLrXHomWulkMHl40ZV09bgzCVfCCl5iP0GrmOT3JOFMFZIPqTa5P
-	KpKJKQM53yOe1CSBVZDmdX1gYzdCzFZ+aBkGJota5yeAJ/Ph0UTl836Fx6qqBG6Q==
-X-Google-Smtp-Source: AGHT+IGmLdsivViTeSGIGhIMJrpZ+eiCfZe7b18ElxHjAINDV7KJLIeK9aAKlBDGOH8e7R2YQZlTLbj0XmtsWn8h
-X-Received: from plfu7.prod.google.com ([2002:a17:902:e5c7:b0:220:ddee:5ee])
+        bh=z/qZgzMmxZEsawIy31A7dWlG2yn5UQrX3y3KTJwsEo8=;
+        b=rsyyo6IRyZqcyZtYWSbEREJx2iNZuXKsqEZz98k6jRcPHb6UZKdpq3BfvEyhDtQNNB
+         npsVtne2R6JXIqdBjijr3uHQQ+InX5Fi7dRYTZDhQTBSqQw6+CdTUhmnsgBPrTDNQeaC
+         +juvB2SWYKCajJBhMtqty4yC9R1pd1VxQ9PJ2rbeP+sWuF4/iIOWInwdkWDSlkLytnCU
+         vO6DWIWFKCc7mURcIxStUyIOSxYLeAW/q0TlA5yQcvBfjNXstWHvC53ru7QxAG1mqtuq
+         Ul0ekgqg+4tI6Bs0rEOW6kcScTtGF65lmQJ3f2Q8xtdL8D25E9ty6EFqSMBvxUeY3j9s
+         va1g==
+X-Gm-Message-State: AOJu0YxorY3DRAxVXS3YgP2pHZ404GtoDXd+IidevEw8TC93Ux9IyDyK
+	pOSpRis2sm9TgioWroxriGCFg33DwjkjDw+/RQGumN4gAMN1l7aTp293J4sNnDPZIP8SWGvqlfg
+	KFOoY1IgbxVv5U9EmBr81OZTgmxwPGkTnkePKQwAdfKsnOTdF0L6101ojCpvuadJAOqPAmZGXhi
+	tZ1a3o6Kns5hZV+2W8/OWl2lydrUc7IuxmKHVXCurqYASaYg1KKEPIH+0GOaB3Aw==
+X-Google-Smtp-Source: AGHT+IG99LUNNyI0F5UCDR00CoDYpDqXcEmBQa4iTq8cZs6Lne71ZulPB0DnHumN1g4tR4PErtiR85Wp6/nGpAgv
+X-Received: from plgw6.prod.google.com ([2002:a17:902:e886:b0:227:967c:4f38])
  (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:c951:b0:21f:68ae:56e3 with SMTP id d9443c01a7336-22bea4f009amr23225795ad.39.1744349900801;
- Thu, 10 Apr 2025 22:38:20 -0700 (PDT)
-Date: Thu, 10 Apr 2025 22:37:33 -0700
+ 2002:a17:903:2385:b0:227:e74a:a066 with SMTP id d9443c01a7336-22bea4c755cmr27075215ad.28.1744349898687;
+ Thu, 10 Apr 2025 22:38:18 -0700 (PDT)
+Date: Thu, 10 Apr 2025 22:37:32 -0700
 In-Reply-To: <20250411053745.1817356-1-changyuanl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250411053745.1817356-1-changyuanl@google.com>
 X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250411053745.1817356-3-changyuanl@google.com>
-Subject: [PATCH v6 02/14] memblock: Add support for scratch memory
+Message-ID: <20250411053745.1817356-2-changyuanl@google.com>
+Subject: [PATCH v6 01/14] memblock: add MEMBLOCK_RSRV_KERN flag
 From: Changyuan Lyu <changyuanl@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
@@ -77,224 +77,339 @@ Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
 	will@kernel.org, x86@kernel.org, Changyuan Lyu <changyuanl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Alexander Graf <graf@amazon.com>
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-With KHO (Kexec HandOver), we need a way to ensure that the new kernel
-does not allocate memory on top of any memory regions that the previous
-kernel was handing over. But to know where those are, we need to include
-them in the memblock.reserved array which may not be big enough to hold
-all ranges that need to be persisted across kexec. To resize the array,
-we need to allocate memory. That brings us into a catch 22 situation.
+to denote areas that were reserved for kernel use either directly with
+memblock_reserve_kern() or via memblock allocations.
 
-The solution to that is limit memblock allocations to the scratch regions:
-safe regions to operate in the case when there is memory that should remain
-intact across kexec.
-
-KHO provides several "scratch regions" as part of its metadata. These
-scratch regions are contiguous memory blocks that known not to contain any
-memory that should be persisted across kexec. These regions should be large
-enough to accommodate all memblock allocations done by the kexeced kernel.
-
-We introduce a new memblock_set_scratch_only() function that allows KHO to
-indicate that any memblock allocation must happen from the scratch regions.
-
-Later, we may want to perform another KHO kexec. For that, we reuse the
-same scratch regions. To ensure that no eventually handed over data gets
-allocated inside a scratch region, we flip the semantics of the scratch
-region with memblock_clear_scratch_only(): After that call, no allocations
-may happen from scratch memblock regions. We will lift that restriction
-in the next patch.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Co-developed-by: Changyuan Lyu <changyuanl@google.com>
 Signed-off-by: Changyuan Lyu <changyuanl@google.com>
 ---
- include/linux/memblock.h | 20 +++++++++++++
- mm/Kconfig               |  4 +++
- mm/memblock.c            | 61 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 85 insertions(+)
+ include/linux/memblock.h                      | 19 ++++++++-
+ mm/memblock.c                                 | 40 +++++++++++++++----
+ tools/testing/memblock/tests/alloc_api.c      | 22 +++++-----
+ .../memblock/tests/alloc_helpers_api.c        |  4 +-
+ tools/testing/memblock/tests/alloc_nid_api.c  | 20 +++++-----
+ 5 files changed, 73 insertions(+), 32 deletions(-)
 
 diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 6c00fbc085132..993937a6b9620 100644
+index ef5a1ecc6e595..6c00fbc085132 100644
 --- a/include/linux/memblock.h
 +++ b/include/linux/memblock.h
-@@ -45,6 +45,11 @@ extern unsigned long long max_possible_pfn;
-  * @MEMBLOCK_RSRV_KERN: memory region that is reserved for kernel use,
-  * either explictitly with memblock_reserve_kern() or via memblock
-  * allocation APIs. All memblock allocations set this flag.
-+ * @MEMBLOCK_KHO_SCRATCH: memory region that kexec can pass to the next
-+ * kernel in handover mode. During early boot, we do not know about all
-+ * memory reservations yet, so we get scratch memory from the previous
-+ * kernel that we know is good to use. It is the only memory that
-+ * allocations may happen from in this phase.
+@@ -42,6 +42,9 @@ extern unsigned long long max_possible_pfn;
+  * kernel resource tree.
+  * @MEMBLOCK_RSRV_NOINIT: memory region for which struct pages are
+  * not initialized (only for reserved regions).
++ * @MEMBLOCK_RSRV_KERN: memory region that is reserved for kernel use,
++ * either explictitly with memblock_reserve_kern() or via memblock
++ * allocation APIs. All memblock allocations set this flag.
   */
  enum memblock_flags {
  	MEMBLOCK_NONE		= 0x0,	/* No special request */
-@@ -54,6 +59,7 @@ enum memblock_flags {
+@@ -50,6 +53,7 @@ enum memblock_flags {
+ 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
  	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
  	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
- 	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
-+	MEMBLOCK_KHO_SCRATCH	= 0x40,	/* scratch memory for kexec handover */
++	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
  };
  
  /**
-@@ -148,6 +154,8 @@ int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
- int memblock_mark_nomap(phys_addr_t base, phys_addr_t size);
- int memblock_clear_nomap(phys_addr_t base, phys_addr_t size);
- int memblock_reserved_mark_noinit(phys_addr_t base, phys_addr_t size);
-+int memblock_mark_kho_scratch(phys_addr_t base, phys_addr_t size);
-+int memblock_clear_kho_scratch(phys_addr_t base, phys_addr_t size);
- 
- void memblock_free(void *ptr, size_t size);
- void reset_all_zones_managed_pages(void);
-@@ -291,6 +299,11 @@ static inline bool memblock_is_driver_managed(struct memblock_region *m)
- 	return m->flags & MEMBLOCK_DRIVER_MANAGED;
- }
- 
-+static inline bool memblock_is_kho_scratch(struct memblock_region *m)
+@@ -116,7 +120,19 @@ int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid,
+ int memblock_add(phys_addr_t base, phys_addr_t size);
+ int memblock_remove(phys_addr_t base, phys_addr_t size);
+ int memblock_phys_free(phys_addr_t base, phys_addr_t size);
+-int memblock_reserve(phys_addr_t base, phys_addr_t size);
++int __memblock_reserve(phys_addr_t base, phys_addr_t size, int nid,
++		       enum memblock_flags flags);
++
++static __always_inline int memblock_reserve(phys_addr_t base, phys_addr_t size)
 +{
-+	return m->flags & MEMBLOCK_KHO_SCRATCH;
++	return __memblock_reserve(base, size, NUMA_NO_NODE, 0);
 +}
 +
- int memblock_search_pfn_nid(unsigned long pfn, unsigned long *start_pfn,
- 			    unsigned long  *end_pfn);
- void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
-@@ -619,5 +632,12 @@ static inline void early_memtest(phys_addr_t start, phys_addr_t end) { }
- static inline void memtest_report_meminfo(struct seq_file *m) { }
- #endif
- 
-+#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
-+void memblock_set_kho_scratch_only(void);
-+void memblock_clear_kho_scratch_only(void);
-+#else
-+static inline void memblock_set_kho_scratch_only(void) { }
-+static inline void memblock_clear_kho_scratch_only(void) { }
-+#endif
- 
- #endif /* _LINUX_MEMBLOCK_H */
-diff --git a/mm/Kconfig b/mm/Kconfig
-index e113f713b4938..60ea9eba48140 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -469,6 +469,10 @@ config HAVE_GUP_FAST
- 	depends on MMU
- 	bool
- 
-+# Enable memblock support for scratch memory which is needed for kexec handover
-+config MEMBLOCK_KHO_SCRATCH
-+	bool
++static __always_inline int memblock_reserve_kern(phys_addr_t base, phys_addr_t size)
++{
++	return __memblock_reserve(base, size, NUMA_NO_NODE, MEMBLOCK_RSRV_KERN);
++}
 +
- # Don't discard allocated memory used to track "memory" and "reserved" memblocks
- # after early boot, so it can still be used to test for validity of memory.
- # Also, memblocks are updated with memory hot(un)plug.
+ #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+ int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
+ #endif
+@@ -476,6 +492,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
+ 
+ phys_addr_t memblock_phys_mem_size(void);
+ phys_addr_t memblock_reserved_size(void);
++phys_addr_t memblock_reserved_kern_size(phys_addr_t limit, int nid);
+ unsigned long memblock_estimated_nr_free_pages(void);
+ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
 diff --git a/mm/memblock.c b/mm/memblock.c
-index 2dc95ecdee5ce..3a213e2a485bc 100644
+index 0a53db4d9f7be..2dc95ecdee5ce 100644
 --- a/mm/memblock.c
 +++ b/mm/memblock.c
-@@ -107,6 +107,13 @@ unsigned long min_low_pfn;
- unsigned long max_pfn;
- unsigned long long max_possible_pfn;
+@@ -492,7 +492,7 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
+ 	 * needn't do it
+ 	 */
+ 	if (!use_slab)
+-		BUG_ON(memblock_reserve(addr, new_alloc_size));
++		BUG_ON(memblock_reserve_kern(addr, new_alloc_size));
  
-+#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
-+/* When set to true, only allocate from MEMBLOCK_KHO_SCRATCH ranges */
-+static bool kho_scratch_only;
-+#else
-+#define kho_scratch_only false
-+#endif
-+
- static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_MEMORY_REGIONS] __initdata_memblock;
- static struct memblock_region memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
- #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-@@ -166,6 +173,10 @@ bool __init_memblock memblock_has_mirror(void)
- 
- static enum memblock_flags __init_memblock choose_memblock_flags(void)
- {
-+	/* skip non-scratch memory for kho early boot allocations */
-+	if (kho_scratch_only)
-+		return MEMBLOCK_KHO_SCRATCH;
-+
- 	return system_has_some_mirror ? MEMBLOCK_MIRROR : MEMBLOCK_NONE;
- }
- 
-@@ -925,6 +936,18 @@ int __init_memblock memblock_physmem_add(phys_addr_t base, phys_addr_t size)
- }
+ 	/* Update slab flag */
+ 	*in_slab = use_slab;
+@@ -642,7 +642,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
+ #ifdef CONFIG_NUMA
+ 			WARN_ON(nid != memblock_get_region_node(rgn));
  #endif
+-			WARN_ON(flags != rgn->flags);
++			WARN_ON(flags != MEMBLOCK_NONE && flags != rgn->flags);
+ 			nr_new++;
+ 			if (insert) {
+ 				if (start_rgn == -1)
+@@ -902,14 +902,15 @@ int __init_memblock memblock_phys_free(phys_addr_t base, phys_addr_t size)
+ 	return memblock_remove_range(&memblock.reserved, base, size);
+ }
  
-+#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
-+__init_memblock void memblock_set_kho_scratch_only(void)
+-int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
++int __init_memblock __memblock_reserve(phys_addr_t base, phys_addr_t size,
++				       int nid, enum memblock_flags flags)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+-		     &base, &end, (void *)_RET_IP_);
++	memblock_dbg("%s: [%pa-%pa] nid=%d flags=%x %pS\n", __func__,
++		     &base, &end, nid, flags, (void *)_RET_IP_);
+ 
+-	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
++	return memblock_add_range(&memblock.reserved, base, size, nid, flags);
+ }
+ 
+ #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+@@ -1460,14 +1461,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ again:
+ 	found = memblock_find_in_range_node(size, align, start, end, nid,
+ 					    flags);
+-	if (found && !memblock_reserve(found, size))
++	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
+ 		goto done;
+ 
+ 	if (numa_valid_node(nid) && !exact_nid) {
+ 		found = memblock_find_in_range_node(size, align, start,
+ 						    end, NUMA_NO_NODE,
+ 						    flags);
+-		if (found && !memblock_reserve(found, size))
++		if (found && !memblock_reserve_kern(found, size))
+ 			goto done;
+ 	}
+ 
+@@ -1752,6 +1753,28 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
+ 	return memblock.reserved.total_size;
+ }
+ 
++phys_addr_t __init_memblock memblock_reserved_kern_size(phys_addr_t limit, int nid)
 +{
-+	kho_scratch_only = true;
-+}
++	struct memblock_region *r;
++	phys_addr_t total = 0;
 +
-+__init_memblock void memblock_clear_kho_scratch_only(void)
-+{
-+	kho_scratch_only = false;
++	for_each_reserved_mem_region(r) {
++		phys_addr_t size = r->size;
++
++		if (r->base > limit)
++			break;
++
++		if (r->base + r->size > limit)
++			size = limit - r->base;
++
++		if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
++			if (r->flags & MEMBLOCK_RSRV_KERN)
++				total += size;
++	}
++
++	return total;
 +}
-+#endif
 +
  /**
-  * memblock_setclr_flag - set or clear flag for a memory region
-  * @type: memblock type to set/clear flag for
-@@ -1050,6 +1073,36 @@ int __init_memblock memblock_reserved_mark_noinit(phys_addr_t base, phys_addr_t
- 				    MEMBLOCK_RSRV_NOINIT);
- }
- 
-+/**
-+ * memblock_mark_kho_scratch - Mark a memory region as MEMBLOCK_KHO_SCRATCH.
-+ * @base: the base phys addr of the region
-+ * @size: the size of the region
-+ *
-+ * Only memory regions marked with %MEMBLOCK_KHO_SCRATCH will be considered
-+ * for allocations during early boot with kexec handover.
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
-+int __init_memblock memblock_mark_kho_scratch(phys_addr_t base, phys_addr_t size)
-+{
-+	return memblock_setclr_flag(&memblock.memory, base, size, 1,
-+				    MEMBLOCK_KHO_SCRATCH);
-+}
-+
-+/**
-+ * memblock_clear_kho_scratch - Clear MEMBLOCK_KHO_SCRATCH flag for a
-+ * specified region.
-+ * @base: the base phys addr of the region
-+ * @size: the size of the region
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
-+int __init_memblock memblock_clear_kho_scratch(phys_addr_t base, phys_addr_t size)
-+{
-+	return memblock_setclr_flag(&memblock.memory, base, size, 0,
-+				    MEMBLOCK_KHO_SCRATCH);
-+}
-+
- static bool should_skip_region(struct memblock_type *type,
- 			       struct memblock_region *m,
- 			       int nid, int flags)
-@@ -1081,6 +1134,13 @@ static bool should_skip_region(struct memblock_type *type,
- 	if (!(flags & MEMBLOCK_DRIVER_MANAGED) && memblock_is_driver_managed(m))
- 		return true;
- 
-+	/*
-+	 * In early alloc during kexec handover, we can only consider
-+	 * MEMBLOCK_KHO_SCRATCH regions for the allocations
-+	 */
-+	if ((flags & MEMBLOCK_KHO_SCRATCH) && !memblock_is_kho_scratch(m))
-+		return true;
-+
- 	return false;
- }
- 
-@@ -2465,6 +2525,7 @@ static const char * const flagname[] = {
+  * memblock_estimated_nr_free_pages - return estimated number of free pages
+  * from memblock point of view
+@@ -2441,6 +2464,7 @@ static const char * const flagname[] = {
+ 	[ilog2(MEMBLOCK_NOMAP)] = "NOMAP",
  	[ilog2(MEMBLOCK_DRIVER_MANAGED)] = "DRV_MNG",
  	[ilog2(MEMBLOCK_RSRV_NOINIT)] = "RSV_NIT",
- 	[ilog2(MEMBLOCK_RSRV_KERN)] = "RSV_KERN",
-+	[ilog2(MEMBLOCK_KHO_SCRATCH)] = "KHO_SCRATCH",
++	[ilog2(MEMBLOCK_RSRV_KERN)] = "RSV_KERN",
  };
  
  static int memblock_debug_show(struct seq_file *m, void *private)
+diff --git a/tools/testing/memblock/tests/alloc_api.c b/tools/testing/memblock/tests/alloc_api.c
+index 68f1a75cd72c4..c55f67dd367d0 100644
+--- a/tools/testing/memblock/tests/alloc_api.c
++++ b/tools/testing/memblock/tests/alloc_api.c
+@@ -134,7 +134,7 @@ static int alloc_top_down_before_check(void)
+ 	PREFIX_PUSH();
+ 	setup_memblock();
+ 
+-	memblock_reserve(memblock_end_of_DRAM() - total_size, r1_size);
++	memblock_reserve_kern(memblock_end_of_DRAM() - total_size, r1_size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r2_size, SMP_CACHE_BYTES);
+ 
+@@ -182,7 +182,7 @@ static int alloc_top_down_after_check(void)
+ 
+ 	total_size = r1.size + r2_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
++	memblock_reserve_kern(r1.base, r1.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r2_size, SMP_CACHE_BYTES);
+ 
+@@ -231,8 +231,8 @@ static int alloc_top_down_second_fit_check(void)
+ 
+ 	total_size = r1.size + r2.size + r3_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r3_size, SMP_CACHE_BYTES);
+ 
+@@ -285,8 +285,8 @@ static int alloc_in_between_generic_check(void)
+ 
+ 	total_size = r1.size + r2.size + r3_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r3_size, SMP_CACHE_BYTES);
+ 
+@@ -422,7 +422,7 @@ static int alloc_limited_space_generic_check(void)
+ 	setup_memblock();
+ 
+ 	/* Simulate almost-full memory */
+-	memblock_reserve(memblock_start_of_DRAM(), reserved_size);
++	memblock_reserve_kern(memblock_start_of_DRAM(), reserved_size);
+ 
+ 	allocated_ptr = run_memblock_alloc(available_size, SMP_CACHE_BYTES);
+ 
+@@ -608,7 +608,7 @@ static int alloc_bottom_up_before_check(void)
+ 	PREFIX_PUSH();
+ 	setup_memblock();
+ 
+-	memblock_reserve(memblock_start_of_DRAM() + r1_size, r2_size);
++	memblock_reserve_kern(memblock_start_of_DRAM() + r1_size, r2_size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r1_size, SMP_CACHE_BYTES);
+ 
+@@ -655,7 +655,7 @@ static int alloc_bottom_up_after_check(void)
+ 
+ 	total_size = r1.size + r2_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
++	memblock_reserve_kern(r1.base, r1.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r2_size, SMP_CACHE_BYTES);
+ 
+@@ -705,8 +705,8 @@ static int alloc_bottom_up_second_fit_check(void)
+ 
+ 	total_size = r1.size + r2.size + r3_size;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc(r3_size, SMP_CACHE_BYTES);
+ 
+diff --git a/tools/testing/memblock/tests/alloc_helpers_api.c b/tools/testing/memblock/tests/alloc_helpers_api.c
+index 3ef9486da8a09..e5362cfd2ff30 100644
+--- a/tools/testing/memblock/tests/alloc_helpers_api.c
++++ b/tools/testing/memblock/tests/alloc_helpers_api.c
+@@ -163,7 +163,7 @@ static int alloc_from_top_down_no_space_above_check(void)
+ 	min_addr = memblock_end_of_DRAM() - SMP_CACHE_BYTES * 2;
+ 
+ 	/* No space above this address */
+-	memblock_reserve(min_addr, r2_size);
++	memblock_reserve_kern(min_addr, r2_size);
+ 
+ 	allocated_ptr = memblock_alloc_from(r1_size, SMP_CACHE_BYTES, min_addr);
+ 
+@@ -199,7 +199,7 @@ static int alloc_from_top_down_min_addr_cap_check(void)
+ 	start_addr = (phys_addr_t)memblock_start_of_DRAM();
+ 	min_addr = start_addr - SMP_CACHE_BYTES * 3;
+ 
+-	memblock_reserve(start_addr + r1_size, MEM_SIZE - r1_size);
++	memblock_reserve_kern(start_addr + r1_size, MEM_SIZE - r1_size);
+ 
+ 	allocated_ptr = memblock_alloc_from(r1_size, SMP_CACHE_BYTES, min_addr);
+ 
+diff --git a/tools/testing/memblock/tests/alloc_nid_api.c b/tools/testing/memblock/tests/alloc_nid_api.c
+index 49bb416d34ffc..562e4701b0e02 100644
+--- a/tools/testing/memblock/tests/alloc_nid_api.c
++++ b/tools/testing/memblock/tests/alloc_nid_api.c
+@@ -324,7 +324,7 @@ static int alloc_nid_min_reserved_generic_check(void)
+ 	min_addr = max_addr - r2_size;
+ 	reserved_base = min_addr - r1_size;
+ 
+-	memblock_reserve(reserved_base, r1_size);
++	memblock_reserve_kern(reserved_base, r1_size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r2_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -374,7 +374,7 @@ static int alloc_nid_max_reserved_generic_check(void)
+ 	max_addr = memblock_end_of_DRAM() - r1_size;
+ 	min_addr = max_addr - r2_size;
+ 
+-	memblock_reserve(max_addr, r1_size);
++	memblock_reserve_kern(max_addr, r1_size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r2_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -436,8 +436,8 @@ static int alloc_nid_top_down_reserved_with_space_check(void)
+ 	min_addr = r2.base + r2.size;
+ 	max_addr = r1.base;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -499,8 +499,8 @@ static int alloc_nid_reserved_full_merge_generic_check(void)
+ 	min_addr = r2.base + r2.size;
+ 	max_addr = r1.base;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -563,8 +563,8 @@ static int alloc_nid_top_down_reserved_no_space_check(void)
+ 	min_addr = r2.base + r2.size;
+ 	max_addr = r1.base;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
+@@ -909,8 +909,8 @@ static int alloc_nid_bottom_up_reserved_with_space_check(void)
+ 	min_addr = r2.base + r2.size;
+ 	max_addr = r1.base;
+ 
+-	memblock_reserve(r1.base, r1.size);
+-	memblock_reserve(r2.base, r2.size);
++	memblock_reserve_kern(r1.base, r1.size);
++	memblock_reserve_kern(r2.base, r2.size);
+ 
+ 	allocated_ptr = run_memblock_alloc_nid(r3_size, SMP_CACHE_BYTES,
+ 					       min_addr, max_addr,
 -- 
 2.49.0.604.gff1f9ca942-goog
 
