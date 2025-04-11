@@ -1,112 +1,150 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA727221FB8;
-	Fri, 11 Apr 2025 17:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA202253EA
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744391123; cv=none; b=nr8GZLKvmsh0HP1meAi2vFb/9AVF85E6O9o7PyZsOFvliRGZnvxGKysfesxtwBbFzHJiKwnNpKc+j02Oyn19ojFBi0lnAjBXOaNN+GoSV9e6dUCgkmusuDGtAYRKIBqWFJRYoCn8ZhSx76TpFGLZTpWRCEAwZNf0DxUHtC2sKIA=
+	t=1744391126; cv=none; b=UKlnIbLui9cfA/wjqCE1V6DnwpP+uSkK4ORDQnY/phtFjaUUH3xvwkUrP6LXdvLTel5ltA+h5I0cCWueuZgHlLUdrjWH2vbrlZl/gfLV++aDWXoYgdNIPJl4cXi9l+6DDh5RVRRxiLI5unPwQKKEfmrzmNmczzysPM0BpvnUykI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744391123; c=relaxed/simple;
-	bh=buv6tJFU81bfMwxhN4X5pTfsZqKCjfGk62wzBC7Mcdc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kCLzjeG8CHv/kycPFBED8hhdEYj+AeK2ahszgpLJ+43jKrOemJCSj6ltXDQrZ8W8nnonImXLXefjWYWHO/n0LA6ZiwT9CpJjQnA4baIOy+gtC6XJ+Patw2C3kG+nveVwy7s4y0tSityj/Yk4AVMiVvvxfiM1J+vF0B7Z+iLl9sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WfUvvKxc; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfUvvKxc"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223f7b10cbbso2149175ad.3;
-        Fri, 11 Apr 2025 10:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744391121; x=1744995921; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=buv6tJFU81bfMwxhN4X5pTfsZqKCjfGk62wzBC7Mcdc=;
-        b=WfUvvKxcdt6TLJM82RLdPNjUmoE8/TJ6ZpJ/NU3/7L/cEOnYhQHHDQqHzysILgCSF0
-         mOYHoyPT91scseaR7//A4aBp2bbBGY86M8A2MQWOw7Vdn4y8mFI6DwHzqRj/nLUc6PXp
-         /H+pc3PUOYooCz3eNtQaEXoxC2mIoH6Y0K2LG7giuAl+NN3tOSKkQcNIeb6lRe0ZwP1I
-         +vKIMpnJIXhoei7aq1fLTZOHyGLw4GNrO6iVXDsmdP/xq13zVIXJtcs4MooSh2ikljIx
-         4kUaX/1PxwqSE3Ftq27PhRrW0GpQQANZidXgQ24/eTL6ArkDyff8WOQBsOGQUzPNtdgh
-         36Gw==
+	s=arc-20240116; t=1744391126; c=relaxed/simple;
+	bh=Q7nX6M6eNslpOwakPZTqmgHlETfOtFKkHPbAbGcM5ZA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=m874h9hRnlxMY9DEWPf/Vd2WRfO8Bws7+iZMT5cO/TN48UPJVtrN5RjV4y5CMqrAP0cTUDxJcaPtyudpL3ghvivfNtis00ExgzT/ER+0dbI+EZc9oTkDLRD4Rz4BbWXKYsuE0WF6MgzreJ/E8bwmaHFZbgxeCmm/AF5Kq5ry260=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d43d3338d7so4325745ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:05:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744391121; x=1744995921;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=buv6tJFU81bfMwxhN4X5pTfsZqKCjfGk62wzBC7Mcdc=;
-        b=kMFyLgTObZ1R+TcpUyrc1hirI5/2X+kcPZpTf+H0UuHlxG7nNOsTYcy67jRxKfaxC2
-         H1LKA98ti54bl1K/TvDxy0ShDttAryRJIoVFikVKog0aqegDcWYQLm5NyPZlUaQFtHO9
-         h+EjbOf8p6WZs/BQS68A91Gt5bPQZ6DTsyKFqgJxNWFPzT4TxCna0IemwqQTGa4UjlQ/
-         xvPXYCmfUDsNgtHLTSwJKiGhBscg0/LqkCPktXnCft/VlIqo7gwp0VW2lrl6kZit/FDr
-         2HodmvwdDlMC+bp0bKxmYujm4wLVwAhN56fw6+UyXv5pnA/40dZw8dv5e4yAVPE7zz6Z
-         gnJg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+wnhbUQTdjEGZAGah/0mQN5b0zsG4IyKRj2/nhNPA6KZdx0EiD5GBpiVtKucDYbkZ8YJT6RxCM+Q90XsWljM=@vger.kernel.org, AJvYcCUXoTtX3uGZn8MqSdYAB57KnaY5dFxRBxuqPrn5yh5KqGa0oRoUBpnQymphjuSRwOrVP0dZsEAMCdU=@vger.kernel.org, AJvYcCVukGN2LY8l8pbV6vV9/osh7snsxcx75swC1NQIwas3qftzOzrNgIxzPCsEzqRUa4a+eMWTtk7UvDw=@vger.kernel.org, AJvYcCXpPDiFhGGeT8GAU+dC1yftLXUMFjv7q6isAHmBPUADYt+Nc6cOu/hwsgB7z/Jyul1/xO/cUW3fWXgiH8jY@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGNrAUUsoZC+U8Ogjn6TfXz/e3XwE70DzTJsabs8AfUrZ6HaEo
-	g70Oy8o/bx/z3hc1iHvU47uI4EHdaL7SroerxtF/fnf9iyaHkR9LY7Lc+clel8dTNF0hPRbGTOB
-	YLMUWQtHWfMgme5/NX0FL8z3WqUs=
-X-Gm-Gg: ASbGnctMxpvfjiGzJZJ3ipRD2xjjXT7M6p6khVygs80aWalu5djOizRTMx6HXEGPYHR
-	RwRB2OLvQjG4+JxePH7n6eJ4mNHDGpNxEvzHUPmyLvz2fCpxfw1SXTNtYXbhhhk6doii7cjilFL
-	m0gxMr7IZDeQzV+0Kd1AhVsw==
-X-Google-Smtp-Source: AGHT+IF4aatQf3rnY6osYH3EMe4i9rbmYsDluNQrPMOtOIVHemw9VZIB+8OoMzzvtyR1YTkT45UxmOnvrh1DXifR7sI=
-X-Received: by 2002:a17:903:1b2c:b0:224:10a2:cad1 with SMTP id
- d9443c01a7336-22becc4dcddmr17546085ad.10.1744391120834; Fri, 11 Apr 2025
- 10:05:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744391124; x=1744995924;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qe9Tx7leG+dcnGFNOaqX5bc/oITZz0EijtVRnEXj/Fk=;
+        b=iPj3WBEjCM6Aqfb/eBVcYLDqIXwwYqwsjITX7rQLlogU5XeP2puinc6WiF6ypv6NgP
+         DV7qHbUmPCcgOlnDzrCHyhZLZWTbt/vslRGaxtbmv2DY1X3jFfYxENRH91+/HV9JpP1B
+         QAA70r6XNqNa2nZOuIKGsdH1Y84n/FsgnPVAB9dTqmoBjU87rGJrSdnRhhLRaIjuF4XV
+         YM+z3QlAaZ2r15WU6S7Ylov+YxbJWyE4o40vQUIQv1Kqz0kdTlsTVkqW/Dfq0rbJcKgD
+         a9Glm7yghFWWDfrxcqi52/EXFnNaclR8A4UnXTi9uujuclJvnQ9ZjpbgffTC19zQel0c
+         r4KQ==
+X-Gm-Message-State: AOJu0YxaUgwbGyidXS/1aOdhtdkQQOejlRaVFdArFgDZsonc4gcyNZl2
+	dv4FDzdftM519+GOc9xkxdJ4kkTYlksHp1Iw9la22cyG0lnhW0/uADNlf6cKPDEFuPiZJ6hlBZi
+	cOQpfgdKErqxnuKy/9B6mGjanCqNVByRI/WH3Rt+0MClxOIx5jY/say4=
+X-Google-Smtp-Source: AGHT+IE7YShYOepmIxuLq21efy6APotluleYNJS3OWBWeIavsUTqSeK/41y/rl6BjHP9JO4dXE8uwAadL1nQy+i56hxadK9yXJG7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1744366571.git.viresh.kumar@linaro.org> <efbdd8212a90175c293313de961c34d13b9f4b43.1744366571.git.viresh.kumar@linaro.org>
- <Z_k-TFCkLWu9eiFt@yury>
-In-Reply-To: <Z_k-TFCkLWu9eiFt@yury>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 11 Apr 2025 19:05:07 +0200
-X-Gm-Features: ATxdqUGsS-qbRPikOYkiQqiZ2TOsQj8myZv74OnTvJYe0U7MJJlY5XaRE0u-Ujs
-Message-ID: <CANiq72=8iokcwv8zG81oxi9_+8p3_X2s8dRgrXi9DGjaSaDDMg@mail.gmail.com>
-Subject: Re: [PATCH V9 08/17] cpufreq: Use enum for cpufreq flags that use BIT()
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, 
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, 
-	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, Burak Emir <bqe@google.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
-	linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
-	linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6e02:378f:b0:3cf:c9ad:46a1 with SMTP id
+ e9e14a558f8ab-3d7ec21c324mr34765125ab.13.1744391123907; Fri, 11 Apr 2025
+ 10:05:23 -0700 (PDT)
+Date: Fri, 11 Apr 2025 10:05:23 -0700
+In-Reply-To: <0000000000004aa700061379547e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f94bd3.050a0220.378c5e.0000.GAE@google.com>
+Subject: Re: [syzbot] Re: [PATCH bpf v1] bpf: Convert ringbuf.c to rqspinlock
+From: syzbot <syzbot+850aaf14624dc0c6d366@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 6:07=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
-rote:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+
+***
+
+Subject: Re: [PATCH bpf v1] bpf: Convert ringbuf.c to rqspinlock
+Author: memxor@gmail.com
+
+On Fri, 11 Apr 2025 at 12:18, Kumar Kartikeya Dwivedi <memxor@gmail.com> wr=
+ote:
 >
-> The BIT() is as simple as '1 << nr'. How that it's so complex for that
-> tool to realize that '1 << 2' is the constant?
+> Convert the raw spinlock used by BPF ringbuf to rqspinlock. Currently,
+> we have an open syzbot report of a potential deadlock. In addition, the
+> ringbuf can fail to reserve spuriously under contention from NMI
+> context.
+>
+> It is potentially attractive to enable unconstrained usage (incl. NMIs)
+> while ensuring no deadlocks manifest at runtime, perform the conversion
+> to rqspinlock to achieve this.
+>
+> This change was benchmarked for BPF ringbuf's multi-producer contention
+> case on an Intel Sapphire Rapids server, with hyperthreading disabled
+> and performance governor turned on. 5 warm up runs were done for each
+> case before obtaining the results.
+>
+> Before (raw_spinlock_t):
+>
+> Ringbuf, multi-producer contention
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> rb-libbpf nr_prod 1  11.440 =C2=B1 0.019M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 2  2.706 =C2=B1 0.010M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 3  3.130 =C2=B1 0.004M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 4  2.472 =C2=B1 0.003M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 8  2.352 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 12 2.813 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 16 1.988 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 20 2.245 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 24 2.148 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 28 2.190 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 32 2.490 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 36 2.180 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 40 2.201 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 44 2.226 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 48 2.164 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+> rb-libbpf nr_prod 52 1.874 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s)
+>
+> After (rqspinlock_t):
+>
+> Ringbuf, multi-producer contention
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> rb-libbpf nr_prod 1  11.078 =C2=B1 0.019M/s (drops 0.000 =C2=B1 0.000M/s)=
+ (-3.16%)
+> rb-libbpf nr_prod 2  2.801 =C2=B1 0.014M/s (drops 0.000 =C2=B1 0.000M/s) =
+(3.51%)
+> rb-libbpf nr_prod 3  3.454 =C2=B1 0.005M/s (drops 0.000 =C2=B1 0.000M/s) =
+(10.35%)
+> rb-libbpf nr_prod 4  2.567 =C2=B1 0.002M/s (drops 0.000 =C2=B1 0.000M/s) =
+(3.84%)
+> rb-libbpf nr_prod 8  2.468 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s) =
+(4.93%)
+> rb-libbpf nr_prod 12 2.510 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s) =
+(-10.77%)
+> rb-libbpf nr_prod 16 2.075 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s) =
+(4.38%)
+> rb-libbpf nr_prod 20 2.640 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s) =
+(17.59%)
+> rb-libbpf nr_prod 24 2.092 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s) =
+(-2.61%)
+> rb-libbpf nr_prod 28 2.426 =C2=B1 0.005M/s (drops 0.000 =C2=B1 0.000M/s) =
+(10.78%)
+> rb-libbpf nr_prod 32 2.331 =C2=B1 0.004M/s (drops 0.000 =C2=B1 0.000M/s) =
+(-6.39%)
+> rb-libbpf nr_prod 36 2.306 =C2=B1 0.003M/s (drops 0.000 =C2=B1 0.000M/s) =
+(5.78%)
+> rb-libbpf nr_prod 40 2.178 =C2=B1 0.002M/s (drops 0.000 =C2=B1 0.000M/s) =
+(-1.04%)
+> rb-libbpf nr_prod 44 2.293 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s) =
+(3.01%)
+> rb-libbpf nr_prod 48 2.022 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s) =
+(-6.56%)
+> rb-libbpf nr_prod 52 1.809 =C2=B1 0.001M/s (drops 0.000 =C2=B1 0.000M/s) =
+(-3.47%)
+>
+> There's a fair amount of noise in the benchmark, with numbers on reruns
+> going up and down by 10%, so all changes are in the range of this
+> disturbance, and we see no major regressions.
+>
+> Reported-by: syzbot+850aaf14624dc0c6d366@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/0000000000004aa700061379547e@google.c=
+om
+> Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+> ---
 
-It is a C macro which requires evaluating a C expression as the C
-compiler would.
-
-A solution (a workaround, really) in `bindgen` is coming, that
-essentially forces `libclang` to evaluate it for us, but even if it
-works perfectly fine already, it will require upgrading the minimum
-version and so on, so it will take time.
-
-For the moment, either we do something like this (a similar approach
-was used for some `enum`s in Binder) or the values can be replicated
-on the Rust side (ideally with a test somewhere to ensure they are in
-sync). The latter may be best if the values have not changed much over
-time, i.e. if there is low maintenance required.
-
-I hope that helps.
-
-Cheers,
-Miguel
+#syz test
