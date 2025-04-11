@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43DA27F4C8;
-	Fri, 11 Apr 2025 19:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA7327F4CF
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 19:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744400036; cv=none; b=Pfg4uYGfhw8kva8gyCBf35iRgAL2D30yOM1jsTLksUXZWRq53Am4YuMdAJime3GWmKZB9B9PENrmTnb+x0cfX+Jqp/fmYHwaWNoK0I2yqL5t931huG94RTshlpiBi7i52BAf4G9trWfIT1+gVQ4tH917outhBKtDsD8e1kfYbCk=
+	t=1744400169; cv=none; b=hLkLAsOXjW903aSRTqDqo/TLbqc44DtaFuCloV3o4wowQh+yQhG5qtPBNigkxu+SYvsrGAjvRJRgupPN+6Rg/HUJIPMaB7CdUOeW8DnhpW87p5dTmjJsM2qkChSIlkKUUqmuqw7j+YfrsaL/jzgfMcshr4MWLo0/VbKq1jBgwP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744400036; c=relaxed/simple;
-	bh=SrT6rgnxdHfJzhh2SqWlmgTwglXLTpyms5quPAeP0UQ=;
+	s=arc-20240116; t=1744400169; c=relaxed/simple;
+	bh=YWpsO5xUUd8r+lQC+34HlNpUYxi1N7dTXlea29z2cjI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UbOe3j0A6RBEYgAwcMY2uZAWzqLGiWyaLe56/+rWTR8dd42XtBrHkbmZLvRfGzH8YYLJDAjPcwUc+GEKJFGfwPguxxl4iL6/nBu5+qvqYCWoz096wc7uIxGklDHM03uXVjcI2C/qDXzCU/uez8uKeZWPR0p42SYSs1vReOgob4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NoqPrLxj; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=JZ2VBOZMRkEQuenOgyOYMcteAee5OjNgFRh98HbFlflGIobL9lLDHxc+EUy/fPh7FM5vg+5SjVahrEEvT+vxcbTbHG0F4XQWNJogbFnoscSvfS4Mw8nEIQTXo+iduJHabZW/aZymkUidemwN2qONL8+bY7s/yN0MferQqaNo91k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Ju8bl2gP; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NoqPrLxj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744400035; x=1775936035;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SrT6rgnxdHfJzhh2SqWlmgTwglXLTpyms5quPAeP0UQ=;
-  b=NoqPrLxj7XnJJNIlIaieagDggZOksSvNBDAxQwCpF39lMcvuZ/3TGh+8
-   XswTv7x8yRHyo4hYmGQB3zuB7Lu3JDm8IfTl6ZQzba9oUm/ZAV93zZEQu
-   hQHJOkLYMblbaK4rbi3F4y8bs7GKf9XlQFbcvSBMlWadZu7RLLC2wR32F
-   Knb2QJVOGhszlKwItn2iykusF6o9pl5ONTWkSmV5F2TXNyRB2hMNcL4cp
-   wTEOV76WWDoeM0Ep79sE5z094d/SKvKaKprOwLuvj0ru+yJvoro76c/2J
-   wv+xTMaUv+jpfFW2liaViMKuBKJhnyYltVjUX/vZTl2fSTUUm3XOHP4s+
-   w==;
-X-CSE-ConnectionGUID: wrXHpTfcR+Oo0QpYL1l9mg==
-X-CSE-MsgGUID: S894KPe7SbaCpVnPKgYSgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="45847001"
-X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
-   d="scan'208";a="45847001"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 12:33:50 -0700
-X-CSE-ConnectionGUID: l38zGMh2Sf2CeVBpLvCA1A==
-X-CSE-MsgGUID: 9baDhnPqS+WCte5KodWmYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
-   d="scan'208";a="134261368"
-Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.221.159]) ([10.124.221.159])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 12:33:50 -0700
-Message-ID: <364ad671-5e5c-47c1-af22-34a7c481f8e3@intel.com>
-Date: Fri, 11 Apr 2025 12:33:47 -0700
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Ju8bl2gP"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85b41281b50so69165039f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:36:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744400167; x=1745004967; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v8IJA/pmXvNuiKKrx3r2PtlepPD+xmj2yEuRTpmM5lw=;
+        b=Ju8bl2gP0mV12mt8bsAgo8oJEj7o9WSc/Fc9K713oROoZXtvxVsveKZW3/74T1VkKE
+         QGP0GJEwSMaKwNQY6Bb/kZPm1CQ1w+Vq1Ezt7LYy7SQs12Uvy+lje3GhmjfzALr9FdKe
+         1E0nwTdK0BBE7TEDCCsYjDz6UHL+V00CH/p4HomCZPheBZ6xp+moH5UhiEwGKkIRuMPa
+         m3bjRlbIwGWzCEQi1mIw6T+170Vkew9P5hgBbm+rV7F+9mFEMzupy4pJYOGB2mMxk8Ah
+         WElQHTu4qM2dDVzyitOIgTxa8YTUMLCRpn4Q5E/z40hDlwlWp0/pjuxQ2pzSFvWLF2SF
+         gsaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744400167; x=1745004967;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v8IJA/pmXvNuiKKrx3r2PtlepPD+xmj2yEuRTpmM5lw=;
+        b=NUuRvMHj/dVVJNcUW1vVMnFbpCSedLCCS1sM2/PYev3Iz7+fjgKrVPHphAWAh0eJVI
+         1P0cfUS5BX6/km1/9dffTzFsh75btNz4x2BU2VFB5zUJxA4BhXxlO3VYm/Pr9y2lci/o
+         wsQb77VFgryJZ5RN6gfIyLWEx03Qg6+h5C448hr+fTD8gUEhSaDiJQxvf/9wId9nNKlo
+         PVMISAFK/Xy6hpfbq4oK6cPPSD1ierau1h8HzxlVvyoZhWG5qWa6r3o8LQ4pL/GWVxYC
+         kRaUQLwDucnUEHZGN3FK3PO/rFd3sevtAfejwf0PUrjV77jf0WzU66nkXScYlWnHgXB4
+         Bwug==
+X-Forwarded-Encrypted: i=1; AJvYcCX7+OgZGTWrCPT5yoRbYwMNJ4YqtV5Q8+1Nu9r0EEoCAPkTPJjEVbCg9jIkgbz/1mA6AWulihal44He+cg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9DrHj7T4qHixy/UIVitP+97NpEawinSDFHVQtU5qMio1cseot
+	1/0PxqfRDqHKJ4RybGQPeNEGPEqIhNr5/dTkX5lH6UB9Ehaq7h8N4nyBRE/PZ3o=
+X-Gm-Gg: ASbGnct0xBLj1JYWoDi4FxUDaraySclNs0Gurk67hLGnKiElIf4NftjFvbClcoE5XX3
+	hAJO515Us5hALQIOGe2mit+mzh+nyjXfhWkcnSmn3zNKfv2fN6muzCpzqwg4Eo11n9iZrV/Ln4E
+	F50MInR6CSBRxhvmcVTMgw9VGXT2qK3OcQD34hObzLNoBTmDmlE3YV/FkskG0dWM+T0AO6c/uir
+	mqqaz1HpcHShlrokPpShOXG5dPGU4SJob4+F6BxH7UePZW1f7CHqil7X3BKnaKabxurLOvoEUtE
+	gZGeTNU9AUDpwTEdYbOm8U9wGfAn3TY7Hgc2TpN0yNC6C7XbM3WJE2ttei9O4J4ap6pMJ6G35Om
+	B1db1rDS2eOY8Voo=
+X-Google-Smtp-Source: AGHT+IHpEgSqemBHCC96JM+TCmkYLDtVyLUCKWRb0L7zdDTWhisBDSszCwSCFlcKlvql0c4WxZEtlA==
+X-Received: by 2002:a05:6602:3713:b0:855:5e3a:e56b with SMTP id ca18e2360f4ac-8617cc3d525mr485687939f.12.1744400166792;
+        Fri, 11 Apr 2025 12:36:06 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-861654295d5sm107606839f.19.2025.04.11.12.36.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 12:36:06 -0700 (PDT)
+Message-ID: <a3b2d0cc-c055-4cf0-9e03-3ea73041642a@riscstar.com>
+Date: Fri, 11 Apr 2025 14:36:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,87 +67,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [tip: x86/build] x86/boot: Drop CRC-32 checksum and the build
- tool that generates it
-To: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Ian Campbell <ijc@hellion.org.uk>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-References: <20250307164801.885261-2-ardb+git@google.com>
- <174138907883.14745.965399833848496586.tip-bot2@tip-bot2>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v3 3/3] serial: 8250_of: manage bus clock in
+ suspend/resume
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, dlan@gentoo.org,
+ benjamin.larsson@genexis.eu, bastien.curutchet@bootlin.com,
+ andriy.shevchenko@linux.intel.com, u.kleine-koenig@baylibre.com,
+ lkundrak@v3.sk, devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
+ spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250411154419.1379529-1-elder@riscstar.com>
+ <20250411154419.1379529-4-elder@riscstar.com>
+ <Z_ltyAO-OBzl0adV@surfacebook.localdomain>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <174138907883.14745.965399833848496586.tip-bot2@tip-bot2>
-Content-Type: text/plain; charset=UTF-8
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <Z_ltyAO-OBzl0adV@surfacebook.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 3/7/25 15:11, tip-bot2 for Ard Biesheuvel wrote:
-> x86/boot: Drop CRC-32 checksum and the build tool that generates it
+On 4/11/25 2:30 PM, Andy Shevchenko wrote:
+> Fri, Apr 11, 2025 at 10:44:18AM -0500, Alex Elder kirjoitti:
+>> Save the bus clock pointer in the of_serial_info structure, and use
+>> that to disable the bus clock on suspend and re-enable it on resume.
+> 
+> ...
+> 
+>>   	if (!port->uartclk) {
+>> -		struct clk *bus_clk;
+>> -
+>> -		bus_clk = devm_clk_get_optional_enabled(dev, "bus");
+>> -		if (IS_ERR(bus_clk)) {
+>> -			ret = dev_err_probe(dev, PTR_ERR(bus_clk), "failed to get bus clock\n");
+>> +		info->bus_clk = devm_clk_get_optional_enabled(dev, "bus");
+>> +		if (IS_ERR(info->bus_clk)) {
+>> +			ret = dev_err_probe(dev, PTR_ERR(info->bus_clk),
+>> +					    "failed to get bus clock\n");
+>>   			goto err_pmruntime;
+>>   		}
+>>   
+>>   		/* If the bus clock is required, core clock must be named */
+>> -		info->clk = devm_clk_get_enabled(dev, bus_clk ? "core" : NULL);
+>> +		info->clk = devm_clk_get_enabled(dev, info->bus_clk ? "core" : NULL);
+>>   		if (IS_ERR(info->clk)) {
+>>   			ret = dev_err_probe(dev, PTR_ERR(info->clk), "failed to get clock\n");
+> 
+> While the first patch against this file looks okay now, this one inherits the
+> same problem (seems like not enought thinking about the code representation).
+> 
+> Instead of rewritting half of the lines you just introduced (which is also a
+> bad practice), add a one-liner that assigns a field to the local variable.
 
-This is breaking really early boot for me across a whole bunch of i386
-and 64-bit builds. I had to bisect it because this does not seem like
-the kind of thing that would break the boot. It's either hanging the
-kernel *really* early, or making KVM angry:
+So you want me to re-spin this again so that I use the local variable?
 
-KVM internal error. Suberror: 1
-extra data[0]: 0x0000000000000000
-extra data[1]: 0x0000000000000030
-extra data[2]: 0x0000000000000784
-extra data[3]: 0x0000000000000000
-extra data[4]: 0x0000000000000000
-extra data[5]: 0x0000000000000000
-emulation failure
-EAX=00000000 EBX=00000000 ECX=00000000 EDX=00083238
-ESI=00000000 EDI=00000000 EBP=00000000 ESP=0000fff5
-EIP=00008300 EFL=00010002 [-------] CPL=0 II=0 A20=1 SMM=0 HLT=0
-...
+I understand what you're saying based on ease of review, but this
+is a simple patch and the change is very understandable, and the
+code is no more or less clear when using the local variable.
 
-I'm going to go start backing out individual hunks like the
-arch/x86/boot/compressed/vmlinux.lds.S changes, but I figured I'd see if
-anyone else is having problems or has more of a clue than I do.
+					-Alex
 
-The only weird thing I'm doing is booting the kernel with qemu's -kernel
-argument.
+
+> 
+>>   			goto err_pmruntime;
+> 
+> 
+
