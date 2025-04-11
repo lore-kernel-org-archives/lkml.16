@@ -1,49 +1,65 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0950D238C39
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E012F278E71
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744369549; cv=none; b=tN/eOO0V3g1OAHhvQLf4BoTHmWNIN8oEtJ9sp+phKB+6agJJ8c1KpZvDVLAO5OF5oDh7qPddT2JGCd6NtVbvhO6vToEOLShcgI80v9+T0WDciAyaefVuR5ncxrud1Ae/7aCMmXkJEOHcQku1wNuzrJOvFO+eycL/4D466Vw5JyQ=
+	t=1744369666; cv=none; b=kt7t6yfjNEZgbTMNGlQTwkwp9OVYMT+wA//jKKJFdTNaJeSAsmFEgQT3t46g/ZcMDZ+w3TjSuQebeg4FHQVHoRF2c025Vs01JdrhSijHhYeErhlcT8pMuvpzvkd/VDK2YZ3tvdUaUHJh8UkRF+kHMKl6rzeQKMxA1f6YcHYS/4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744369549; c=relaxed/simple;
-	bh=GIKA8AMXlX9X+0M9iGrvgLxqvYzYRa/cFuvb8elcc1w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LaZrzibc60Sic0JyL8IzJpH8HOZjCINGNXUfiSoOEew/m/iRvVwtbrqaELZTuBanSYvcSQ4FnjUoIBf5MnpvIcIXe+wB7nlr3DGYdi10A1G04PD/TVPopOuUcYqhMkqweNu7ql+eh4Kb1FN6DEP/Y9MmRclFxBD7EgNBQ/HNoAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=muCjlfpL; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744369666; c=relaxed/simple;
+	bh=NVCdGWx2oZcWulAlSe9BTNwujDKzfiKzn7HY/Yoerqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U7/HepLB7ZjRuza76o4CmLdvIY2f4+JVYfLQsZTNvoa9I302N2oCgDJxlP9rLjhmffTbDaZlMn6vahfbacnWGEb0ZmfE08wPaMfTF1in5Mz0EaY/TfhAi1TbTdw/qjdHujA4HWeXTRvhtS2Bo41Vfpus/PJah1N0XSTr0JRAA28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=Srs+ghrJ; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="muCjlfpL"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BB4jYZ2106336
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 06:04:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744369486;
-	bh=i+gloN32aTctMyYVY8o5DLDdWWJ4UCqYZXXvoBTDYI8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=muCjlfpLevMlxfx1lzbBdxLjtIXk9wZy688HJhcvvW7+MfRN7EZehMeoPVzRYUemZ
-	 fOblX2MEKavuBlu8mjdyOARu+XcNdyRHRtVGEBxLqAqQ3PcxJFMJ/xeJMRlNN1s2CC
-	 4ca9wNPoBZtpV94lW8UkiaDMJa0JfIgYP3WSxz2c=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BB4j5S118132
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 06:04:45 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 06:04:45 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 06:04:45 -0500
-Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BB4de0063402;
-	Fri, 11 Apr 2025 06:04:40 -0500
-Message-ID: <eb4729f4-2f1b-49ca-ab01-4afca321e4a1@ti.com>
-Date: Fri, 11 Apr 2025 16:34:38 +0530
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="Srs+ghrJ"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-739525d4e12so1685855b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 04:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1744369663; x=1744974463; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9XLG9LyOBwh9wClGUHHGD4bGh+PDIqzBXkT2KKCmZgk=;
+        b=Srs+ghrJDkWQkymHwNVvqlJCI/TCPLFmYIxN8j8MVBUIlbL4IPQZgIFhrEHflYO0uc
+         TwwG7VU2Ircshb1Vt8qYyVDO3KapcAE6DY5eAM77jd5JPoXX0tMYiGhCfz/P7llePaEr
+         NqgEZw3eBX4FRBpUtQKUufE7FEGV+De+/9iN99dgD9wESO04B4ETc/kIMDxs0Z6/ucor
+         Pzh/BnS2r2Zd9sMpPI9s/S8u5tEktazdfTsO3+J0nbxWMvL+WOSB88bpW3HuEP2mIois
+         gHTOCpKve2Lt6LTmLhmLnz+Sr4jZfFwPxpdfAtD02J6gWAokAk57qpHRDTSKSdQqdn3l
+         D4fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744369663; x=1744974463;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9XLG9LyOBwh9wClGUHHGD4bGh+PDIqzBXkT2KKCmZgk=;
+        b=aclMUy7Ux2NTDM9+3M39SVJ/nbFtqheLHl1+xD/MtaL/bdlUDS9rb4DDaKrOS9w4az
+         QHI0cBaGZ55XvsBGoI7gr78dI4yXTzDLKNaaXHK/SPfUfWHvV135K8lBWLNR9UL4aaK+
+         F7yE7FYl2eZPkh6dJSQ+VG+ZNEMIkhDncjUUaw1AQT0pHgPpfhjx26hVoACcxcmZkPs1
+         sWugF0YW+7E1aSxegWsMQo8NQH2ukxePUO0jXxPYDYC+MVXPDv8rB20sAFrIoJ50qylK
+         QjeJq7P1jd8Fr+bUg9QGnwwsUQ8w6VJ3J5VjqR1AtkOSrWUKCfZkyf/curyx4sEJ/UyK
+         mifw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqfMk6gfFrqC4jwNoduRhRVz6Z5p3gp0cyH3ugjx58bC5TF+EmotQ/B03/A87Ek5hRfmejuwGyE1z4nLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwV7R/ebf+MJyPZOx5IZnjIdi9Znng28NAQWuYp3uusV/qe0ZB
+	jv4d3PWplwTqOnn4m4UZF7JXyTFSZQcM2y/VDwu8gvaD7RLCxtStDaczd4oeaA==
+X-Gm-Gg: ASbGncthq39bwlD6VUcXA8fjyGQWqU7WpYUnfzjIENu3EDGces+w6jYvtcY2N+U3q1C
+	yLPSd8JjzvRhSWwbgBDh1FmAu1MvUBDORPM/BK/+ZcSm0HUzjtqqV5zzOcZYDudYmVdoUQXofMC
+	5g/+DqSFPqSGMJh/f+El2RqW3MvGHmPhtuZPyy9xv6yEFWTunRAxwWGyz3F7D7B+FdCloGBmsxs
+	pjjTHl/liXzxeu5a1L42h6TohtyhSuRWIw6NuqE9uod97TjjlBw3naa0rXfp/4Xq/Kl1Eb2e9Gr
+	NZ1gmNyiMiY4sNGq8kb65tvxJiqFzxQy5N5PmFDyRQ5dNSmprnx8XlODmjV1BkFyVxeQg0ytVxy
+	0NRZG/gGnK0M=
+X-Google-Smtp-Source: AGHT+IFm7A0VgFpeL1lolsIebnz1iD2c6GvvmnzywiHF9zm6AzHf0EpYuc4cmENBCcGaza8M8Vc0Wg==
+X-Received: by 2002:a05:6a00:4608:b0:736:b101:aed3 with SMTP id d2e1a72fcca58-73bd11aa506mr3032337b3a.1.1744369663061;
+        Fri, 11 Apr 2025 04:07:43 -0700 (PDT)
+Received: from ?IPV6:2804:7f1:e2c3:b109:bcd7:b61f:e265:af16? ([2804:7f1:e2c3:b109:bcd7:b61f:e265:af16])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c5eaesm1207682b3a.44.2025.04.11.04.07.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 04:07:42 -0700 (PDT)
+Message-ID: <c6bd1363-df93-4757-8fcc-96af2f9293de@mojatatu.com>
+Date: Fri, 11 Apr 2025 08:07:38 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,130 +67,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/18] drm/bridge: cdns-dsi: Fix event mode
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Jyri Sarha
-	<jyri.sarha@iki.fi>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Vinod Koul
-	<vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>,
-        Francesco Dolcini <francesco@dolcini.it>,
-        Aradhya Bhatia <aradhya.bhatia@linux.dev>,
-        Devarsh Thakkar <devarsht@ti.com>
-References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
- <20250402-cdns-dsi-impro-v2-10-4a093eaa5e27@ideasonboard.com>
+Subject: Re: [PATCH net v2] selftests/tc-testing: Add test for echo of big TC
+ filters
+To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+ linux-kernel@vger.kernel.org
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
+ <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+ Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org
+References: <20250410104322.214620-1-toke@redhat.com>
 Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <20250402-cdns-dsi-impro-v2-10-4a093eaa5e27@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+From: Victor Nogueira <victor@mojatatu.com>
+In-Reply-To: <20250410104322.214620-1-toke@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello Tomi,
-
-On 02/04/25 19:00, Tomi Valkeinen wrote:
-> The timings calculation gets it wrong for DSI event mode, resulting in
-> too large hbp value. Fix the issue by taking into account the
-> pulse/event mode difference.
+On 4/10/25 07:43, Toke HÃ¸iland-JÃ¸rgensen wrote:
+> Add a selftest that checks whether the kernel can successfully echo a
+> big tc filter, to test the fix introduced in commit:
 > 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
-
+> 369609fc6272 ("tc: Ensure we have enough buffer space when sending filter netlink notifications")
+> 
+> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
 > ---
->   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 33 ++++++++++++++++++--------
->   1 file changed, 23 insertions(+), 10 deletions(-)
+> v2:
+> - Move to infra/actions.json
 > 
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> index 62811631341b..9797e6faa29d 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> @@ -417,7 +417,8 @@
->   #define DSI_OUTPUT_PORT			0
->   #define DSI_INPUT_PORT(inputid)		(1 + (inputid))
->   
-> -#define DSI_HBP_FRAME_OVERHEAD		12
-> +#define DSI_HBP_FRAME_PULSE_OVERHEAD	12
-> +#define DSI_HBP_FRAME_EVENT_OVERHEAD	16
+>   .../tc-testing/tc-tests/infra/actions.json    | 22 +++++++++++++++++++
+>   1 file changed, 22 insertions(+)
 
-
-I have also observed this 4B discrepancy for event-mode after comparing
-the dsi packet sizes for each line type as per the dsi specifications.
-
->   #define DSI_HSA_FRAME_OVERHEAD		14
->   #define DSI_HFP_FRAME_OVERHEAD		6
->   #define DSI_HSS_VSS_VSE_FRAME_OVERHEAD	4
-> @@ -503,12 +504,18 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
->   
->   	bpp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
->   
-> -	dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + (sync_pulse ? 0 : dpi_hsa),
-> -					 bpp, DSI_HBP_FRAME_OVERHEAD);
-> +	if (sync_pulse) {
-> +		dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp, bpp,
-> +						 DSI_HBP_FRAME_PULSE_OVERHEAD);
->   
-> -	if (sync_pulse)
-> -		dsi_cfg->hsa =
-> -			dpi_to_dsi_timing(dpi_hsa, bpp, DSI_HSA_FRAME_OVERHEAD);
-> +		dsi_cfg->hsa = dpi_to_dsi_timing(dpi_hsa, bpp,
-> +						 DSI_HSA_FRAME_OVERHEAD);
-> +	} else {
-> +		dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + dpi_hsa, bpp,
-> +						 DSI_HBP_FRAME_EVENT_OVERHEAD);
-> +
-> +		dsi_cfg->hsa = 0;
-> +	}
->   
->   	dsi_cfg->hact = dpi_to_dsi_timing(dpi_hact, bpp, 0);
->   
-> @@ -532,9 +539,12 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
->   	unsigned int dsi_hfp_ext;
->   	unsigned int lanes = output->dev->lanes;
->   
-> -	dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
-> -	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
-> +		dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_PULSE_OVERHEAD;
->   		dsi_htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
-> +	} else {
-> +		dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_EVENT_OVERHEAD;
-> +	}
->   
->   	dsi_htotal += dsi_cfg->hact;
->   	dsi_htotal += dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
-> @@ -607,9 +617,12 @@ static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
->   		return -EINVAL;
->   	}
->   
-> -	dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
-> -	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
-> +		dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_PULSE_OVERHEAD;
->   		dsi_hss_hsa_hse_hbp += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
-> +	} else {
-> +		dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_EVENT_OVERHEAD;
-> +	}
->   
->   	/*
->   	 * Make sure DPI(HFP) > DSI(HSS+HSA+HSE+HBP) to guarantee that the FIFO
-> 
-
-Thanks,
-Jayesh
+Tested-by: Victor Nogueira <victor@mojatatu.com>
