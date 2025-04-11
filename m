@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E07298CC2
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B85298CD7
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744350149; cv=none; b=hxt1AGJ9y5AF6XiURcJIOIEfNdfn4e/CHWVqU9SUHIZd68Q1G3K/8LGO/DppE1yd85P6ydkhGkJ5tpsSfSgyr2XSU5EdXwM6QPQLcdwzLKhMmik4hOKqCf5N9JlkO1bXaoZ39yYQUw5VoF+rNdPK1vFUsgjpyQDtaNCfrw0kfBw=
+	t=1744350151; cv=none; b=Qxs1rbguH7XGD2C7VX9cJiUlc71iXjHvVlJEs0Vp4a/75IMNW6rb4n5NaKw/xQlAwY5ORD2h3L29M3P3PO2rQknBJr1V/McuhPJ+XYnFD/qi7asv7pjrYc/UcGE91btooikJUlNoemZxT7E+xcjWCPPptuIyXrdkgnYxCgTJStY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744350149; c=relaxed/simple;
-	bh=956PC3FXixsFDAeLSWwOk0G94ROVX8E2HD5NDUABTno=;
+	s=arc-20240116; t=1744350151; c=relaxed/simple;
+	bh=mrD1rbGrQKN82oUVMkFYkr3GJMh92Eu93Tf8zWhbpEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IRXqdYMESe29RSvGSy+g7hWyd35cC0ZYY2ymisW8FrC4T8CahnEJgZr5KWMUAMZ16WaGHv9cndQ/GHmHiHfjd/Ypwk5xmA5Yzv7QOIfDgAyZaCEyAaiNObXbMlUNqHdLBpjwWvfHTCavtB4BopsHBHzm+tcE50ui5kc3goY1dCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtqPnaFQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OnpdMud/WuQr1zcaBSREGmRH+k7OKi+iheBuWFUcID7TxZlYKGQfpix+3Dxdekt9cSn8LfiTydYCnYBvSvJmy/OXsiuTWP7ZTpcG87bSzfl1HXymqH6BtW/89jgUBRhMRb6B3fQVF8Q9r1HP6YSjFPnEmYqpA9Y+IH6KT+pZCps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ymbq4C3T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtqPnaFQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8093C4CEE9;
-	Fri, 11 Apr 2025 05:42:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ymbq4C3T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F45C4CEE5;
+	Fri, 11 Apr 2025 05:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744350148;
-	bh=956PC3FXixsFDAeLSWwOk0G94ROVX8E2HD5NDUABTno=;
+	s=k20201202; t=1744350151;
+	bh=mrD1rbGrQKN82oUVMkFYkr3GJMh92Eu93Tf8zWhbpEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AtqPnaFQHHe6cJQahbhz+mHGRI7aAEFL7HJ2UPsZJ3Ean3N0X24+/WPEHm7164uhB
-	 v0R4QYYBnh2x8IArCaVZK8T6qbvBZaQf/Yk5PvfmJGKrPoVp1o3FV/AyRncuhtJSfh
-	 SCkzasDpkS2dYYLTo5EClz7jL/gfXV7dB7APNaef5sn3RxtFulj/fj9eguThBdPz1R
-	 Lugzyr4IHhKJiIzIQz4UBGkGIBC1Wye+lBI16Y4ehXoGOCvPTnBALnUGUQIbmubULu
-	 2ueGc3DpsSa15oNzKLsdSj3nOIvTm6ScwJ9sjviPiyPK5sanJ/VT7tXst6XH8YhcCc
-	 4cfz1p/UxLb6w==
+	b=Ymbq4C3TXAbCufiGsXN5PPR6HRdN+LtdwcoTQnmKx8D2LhTZ98ECMZjLMsYQjbYu8
+	 e9imqLCJGpRZXZ+R7SOaEUcJekFEECdAJgQZ09fJNTOMnlGcTkl1Gh1WvaLWL/1uU5
+	 vlf3L2t6rqLAZ30xW4VSk/XGuzE2ZzEojDuVgKD3t5IKJzdE/zmoMo1X/l2E/PowLE
+	 us7hLoOF6SQERFR6ZQhyA60zkRGONphAIEjZ90oo96QqRxUFGHwN/+h4ihNwQc+lFm
+	 qX/vN2t4OyfhiSbAOqDqo5dK/7vFb875Ym5TFc++yA313cA2vtrYkfjYSLw5EegbUt
+	 h9RpobN3Fn3wg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -35,9 +35,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 32/53] x86/alternatives: Simplify smp_text_poke_int3_handler()
-Date: Fri, 11 Apr 2025 07:40:44 +0200
-Message-ID: <20250411054105.2341982-33-mingo@kernel.org>
+Subject: [PATCH 33/53] x86/alternatives: Simplify smp_text_poke_batch_process()
+Date: Fri, 11 Apr 2025 07:40:45 +0200
+Message-ID: <20250411054105.2341982-34-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250411054105.2341982-1-mingo@kernel.org>
 References: <20250411054105.2341982-1-mingo@kernel.org>
@@ -49,54 +49,147 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove the 'desc' local variable indirection and use
-text_poke_array directly.
+This function is now using the text_poke_array state exclusively,
+make that explicit by removing the redundant input parameters.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/x86/kernel/alternative.c | 43 ++++++++++++++++++++-----------------------
+ 1 file changed, 20 insertions(+), 23 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 357d708a3d4f..f94a715d9b2b 100644
+index f94a715d9b2b..f5db49434020 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2511,7 +2511,6 @@ static __always_inline int patch_cmp(const void *key, const void *elt)
+@@ -2591,8 +2591,8 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
  
- noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+ /**
+  * smp_text_poke_batch_process() -- update instructions on live kernel on SMP
+- * @tp:			vector of instructions to patch
+- * @nr_entries:		number of entries in the vector
++ * @text_poke_array.vec:		vector of instructions to patch
++ * @text_poke_array.nr_entries:	number of entries in the vector
+  *
+  * Modify multi-byte instruction by using int3 breakpoint on SMP.
+  * We completely avoid stop_machine() here, and achieve the
+@@ -2610,7 +2610,7 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+  *		  replacing opcode
+  *	- sync cores
+  */
+-static void smp_text_poke_batch_process(struct smp_text_poke_loc *tp, unsigned int nr_entries)
++static void smp_text_poke_batch_process(void)
  {
--	struct smp_text_poke_array *desc;
- 	struct smp_text_poke_loc *tp;
- 	int ret = 0;
- 	void *ip;
-@@ -2531,9 +2530,6 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+ 	unsigned char int3 = INT3_INSN_OPCODE;
+ 	unsigned int i;
+@@ -2618,9 +2618,6 @@ static void smp_text_poke_batch_process(struct smp_text_poke_loc *tp, unsigned i
  
- 	if (!try_get_text_poke_array())
- 		return 0;
--	desc = &text_poke_array;
+ 	lockdep_assert_held(&text_mutex);
+ 
+-	WARN_ON_ONCE(tp != text_poke_array.vec);
+-	WARN_ON_ONCE(nr_entries != text_poke_array.nr_entries);
 -
--	WARN_ON_ONCE(desc->vec != text_poke_array.vec);
+ 	/*
+ 	 * Corresponds to the implicit memory barrier in try_get_text_poke_array() to
+ 	 * ensure reading a non-zero refcount provides up to date text_poke_array data.
+@@ -2640,16 +2637,16 @@ static void smp_text_poke_batch_process(struct smp_text_poke_loc *tp, unsigned i
  
  	/*
- 	 * Discount the INT3. See smp_text_poke_batch_process().
-@@ -2543,14 +2539,14 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
- 	/*
- 	 * Skip the binary search if there is a single member in the vector.
+ 	 * Corresponding read barrier in int3 notifier for making sure the
+-	 * nr_entries and handler are correctly ordered wrt. patching.
++	 * text_poke_array.nr_entries and handler are correctly ordered wrt. patching.
  	 */
--	if (unlikely(desc->nr_entries > 1)) {
--		tp = __inline_bsearch(ip, desc->vec, desc->nr_entries,
-+	if (unlikely(text_poke_array.nr_entries > 1)) {
-+		tp = __inline_bsearch(ip, text_poke_array.vec, text_poke_array.nr_entries,
- 				      sizeof(struct smp_text_poke_loc),
- 				      patch_cmp);
- 		if (!tp)
- 			goto out_put;
- 	} else {
--		tp = desc->vec;
-+		tp = text_poke_array.vec;
- 		if (text_poke_addr(tp) != ip)
- 			goto out_put;
+ 	smp_wmb();
+ 
+ 	/*
+ 	 * First step: add a int3 trap to the address that will be patched.
+ 	 */
+-	for (i = 0; i < nr_entries; i++) {
+-		tp[i].old = *(u8 *)text_poke_addr(&tp[i]);
+-		text_poke(text_poke_addr(&tp[i]), &int3, INT3_INSN_SIZE);
++	for (i = 0; i < text_poke_array.nr_entries; i++) {
++		text_poke_array.vec[i].old = *(u8 *)text_poke_addr(&text_poke_array.vec[i]);
++		text_poke(text_poke_addr(&text_poke_array.vec[i]), &int3, INT3_INSN_SIZE);
  	}
+ 
+ 	text_poke_sync();
+@@ -2657,15 +2654,15 @@ static void smp_text_poke_batch_process(struct smp_text_poke_loc *tp, unsigned i
+ 	/*
+ 	 * Second step: update all but the first byte of the patched range.
+ 	 */
+-	for (do_sync = 0, i = 0; i < nr_entries; i++) {
+-		u8 old[POKE_MAX_OPCODE_SIZE+1] = { tp[i].old, };
++	for (do_sync = 0, i = 0; i < text_poke_array.nr_entries; i++) {
++		u8 old[POKE_MAX_OPCODE_SIZE+1] = { text_poke_array.vec[i].old, };
+ 		u8 _new[POKE_MAX_OPCODE_SIZE+1];
+-		const u8 *new = tp[i].text;
+-		int len = tp[i].len;
++		const u8 *new = text_poke_array.vec[i].text;
++		int len = text_poke_array.vec[i].len;
+ 
+ 		if (len - INT3_INSN_SIZE > 0) {
+ 			memcpy(old + INT3_INSN_SIZE,
+-			       text_poke_addr(&tp[i]) + INT3_INSN_SIZE,
++			       text_poke_addr(&text_poke_array.vec[i]) + INT3_INSN_SIZE,
+ 			       len - INT3_INSN_SIZE);
+ 
+ 			if (len == 6) {
+@@ -2674,7 +2671,7 @@ static void smp_text_poke_batch_process(struct smp_text_poke_loc *tp, unsigned i
+ 				new = _new;
+ 			}
+ 
+-			text_poke(text_poke_addr(&tp[i]) + INT3_INSN_SIZE,
++			text_poke(text_poke_addr(&text_poke_array.vec[i]) + INT3_INSN_SIZE,
+ 				  new + INT3_INSN_SIZE,
+ 				  len - INT3_INSN_SIZE);
+ 
+@@ -2705,7 +2702,7 @@ static void smp_text_poke_batch_process(struct smp_text_poke_loc *tp, unsigned i
+ 		 * The old instruction is recorded so that the event can be
+ 		 * processed forwards or backwards.
+ 		 */
+-		perf_event_text_poke(text_poke_addr(&tp[i]), old, len, new, len);
++		perf_event_text_poke(text_poke_addr(&text_poke_array.vec[i]), old, len, new, len);
+ 	}
+ 
+ 	if (do_sync) {
+@@ -2721,16 +2718,16 @@ static void smp_text_poke_batch_process(struct smp_text_poke_loc *tp, unsigned i
+ 	 * Third step: replace the first byte (int3) by the first byte of
+ 	 * replacing opcode.
+ 	 */
+-	for (do_sync = 0, i = 0; i < nr_entries; i++) {
+-		u8 byte = tp[i].text[0];
++	for (do_sync = 0, i = 0; i < text_poke_array.nr_entries; i++) {
++		u8 byte = text_poke_array.vec[i].text[0];
+ 
+-		if (tp[i].len == 6)
++		if (text_poke_array.vec[i].len == 6)
+ 			byte = 0x0f;
+ 
+ 		if (byte == INT3_INSN_OPCODE)
+ 			continue;
+ 
+-		text_poke(text_poke_addr(&tp[i]), &byte, INT3_INSN_SIZE);
++		text_poke(text_poke_addr(&text_poke_array.vec[i]), &byte, INT3_INSN_SIZE);
+ 		do_sync++;
+ 	}
+ 
+@@ -2859,7 +2856,7 @@ static bool text_poke_addr_ordered(void *addr)
+ void smp_text_poke_batch_finish(void)
+ {
+ 	if (text_poke_array.nr_entries) {
+-		smp_text_poke_batch_process(text_poke_array.vec, text_poke_array.nr_entries);
++		smp_text_poke_batch_process();
+ 		text_poke_array.nr_entries = 0;
+ 	}
+ }
+@@ -2869,7 +2866,7 @@ static void smp_text_poke_batch_flush(void *addr)
+ 	lockdep_assert_held(&text_mutex);
+ 
+ 	if (text_poke_array.nr_entries == TP_ARRAY_NR_ENTRIES_MAX || !text_poke_addr_ordered(addr)) {
+-		smp_text_poke_batch_process(text_poke_array.vec, text_poke_array.nr_entries);
++		smp_text_poke_batch_process();
+ 		text_poke_array.nr_entries = 0;
+ 	}
+ }
 -- 
 2.45.2
 
