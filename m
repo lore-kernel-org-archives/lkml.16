@@ -1,119 +1,160 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A776D20B804
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744371526; cv=none; b=opYHqpfM+h5fLxSFaWC68Hj93SuSi+JEaugJPgsqmo4vDhrtoP0UwkUSCS6v9dBIYplBYM2ZpRTrrlvLQfWeRiZwvXhl969A9DUBUbvC8o/T+iUaA4IzXZcLaKdwIEKpDlrhaIoLxjLR2fkwqpBAn9D59K5T3iqCb2SY3I/qU5M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744371526; c=relaxed/simple;
-	bh=odkZFZUi0f71HBPvN8uYjy7mYt551ylhud30ueDx3R0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q1Q1xpC07fg9ngzqQA1rjqSA4/Rgx79J5+Wsw3oY6MqBhVL0qP19Xq4a7fGcgxTStvj7zSg+nw34DfSY8P0XmVP031sag/4tKUuG0roSG71uGptqbz1YFUAA1m2r3H3kF2QZNfYhggaDo8dU+aME6kCfHfL7WBbgdgV3RdV2sJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3gU2NpFK; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD81203716;
+	Fri, 11 Apr 2025 11:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744371610; cv=pass; b=uKxUxH81SiGbRC+xNzSO0ANtFWYOashgIP+VTgteXxtW3DWys+pHzw7lvtVxbH2mRwlzts1cXlx5DEAbBkCPR+zmI91fc2TvfHp46VJCvf6wLXHZmKqey2pGkkPDoIEfCgysQl6h+kgd/SfVVULgkbbF2zvqsVz5RcKquj7sfBw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744371610; c=relaxed/simple;
+	bh=eZ7not74ayGyErQY97GIAbWimn+2ZHtNHi2jpeugyx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U8gkDHGcjXpiMCDV9bp5m53mwy//VHgwwU5bH/Qa0rUuGT2YR9IN1P9OpKXLjIDXFzEzWlunfRiUdtPHCCs55A9kF0Ke6tJjQr+mT45/NS4lRKkm/C+GXU6U2D8/UhvLPlFLNOxr63u2Lg1X2m59eXADad7xHQqsr3u8IYqKJ1E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=nkBQ91k7; arc=pass smtp.client-ip=23.83.223.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3gU2NpFK"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30de488cf81so17533121fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 04:38:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744371520; x=1744976320; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+dh8vYDsog/Ci3+DrgXMQu6sX2O8M8O9Wafm3pVbf48=;
-        b=3gU2NpFKoBHjKBeoK2isTG4PGs1TxydkmO6Q7r3d0i4xZ23tf+PMwiGRAN0xFGiGr6
-         4vSuHNE+YhHv0Mhr6JtTTtI4M/8FzXi3fWqtx5OP8VqA0IUzJYx1UME3xEvZRF/Eh1ey
-         uU2lfyl5GKDXgn7fCgyWCn37wMvG6y90Lyf8AMUvb+dQ6jJWEDsrnyycy5YrNutG0xoP
-         rBwI0bsfgM4ifxUXwP/OTRqxHzw4o2QEG1bJPq1vvgmBS6fFX2e4IUMfchh8SBQp1FnW
-         FMbFLyWKbuKoF1BbawgybKzxdIxZHuASTGrasoznUwfq/ahWlnR4pXXXXgi49+z2aYsE
-         xjtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744371520; x=1744976320;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+dh8vYDsog/Ci3+DrgXMQu6sX2O8M8O9Wafm3pVbf48=;
-        b=Zy11HSl1uEAlqnBL0fFT/0u/AbNZLAcosdx+y5VYxCFWzOw69iqTvtI5fYYn3SaUvT
-         OgQaf3Yf4rQMHYmPtY9522xSbA3NiEzf39gRKydUjjTBX4LgpFLCbsLcb/4Fv08hoXx2
-         CWHLfl9Hyv+lqEMd1MN7esURb1nDoa9UOwm3A6VwSZy+iC5B2dqfwbyHYhqa6IfNoUeR
-         OYsXcePq8UVQJeK9XxlffFyP9MzzYBKusZPPem2eZtUUgc5z8qQ4BuD0XD/U/RidXu1k
-         gXWsnFHBQEJEAzOD+rWG/AMVjWV+9/8NRXokXhg8OvM7FAsfaB9pLCP+9mJfft6Eb971
-         6WUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAxWvoVbJ4EUtPWBnvbdJqfOg0PCkZcL6tUQE7wZ/Iv4RlZ7X/v8gLKP9ak02xt2tvjkdLo1Y91c5cQTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZq4c9xfnR0yyVi6wse5bjm5LkJje4EQfghW/Uo6+KwL+TtQzC
-	izyGaEfjuCGhw+yfTe62jD+jCuo6hnX4S64LylCYUJMMJKTx6SCxqKVjZguoarHUqhcMRALrSHt
-	aZVhdSGb7/dq/m8jKjDCabpIFlnL/CaM2DtQcdw==
-X-Gm-Gg: ASbGncsgOb7zAcMFx1BFDc+TMxUhjG8WD2LGsfxk6GE3cS2LtZa1/q6P0apdeZ//f6m
-	aC+MpUM9vuT/np1TNbP0t3E+WS7JZmWOvqggE6cXGAIC4gorps0w+6H2CGPPwor/8rkQPX6l6d9
-	TpD/I3lzp+YJ6m5QzIdaB3jnEodhK57jzCNT4akjh71DQg0ODVJb51fflV
-X-Google-Smtp-Source: AGHT+IFFm00GPIYdXZ4l3vc4zErYQVOB90f/c77ivhuoRRZN68YVc/a2XaGhO2gIGxfB93Qso8/XMsIqT+2Mct+UlFg=
-X-Received: by 2002:a2e:bea2:0:b0:30b:9813:b011 with SMTP id
- 38308e7fff4ca-31049a7e684mr8679781fa.28.1744371519491; Fri, 11 Apr 2025
- 04:38:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="nkBQ91k7"
+X-Sender-Id: dreamhost|x-authsender|rob@landley.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 1115E8A3BDD;
+	Fri, 11 Apr 2025 11:25:46 +0000 (UTC)
+Received: from pdx1-sub0-mail-a230.dreamhost.com (trex-5.trex.outbound.svc.cluster.local [100.107.20.214])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 883768A3F3E;
+	Fri, 11 Apr 2025 11:25:45 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1744370745; a=rsa-sha256;
+	cv=none;
+	b=TPsLdr6dZ2BhAH4E345JeFCYsm0G2TnumsTCY1Ilub/9FV8+DBVHwxeumGBfDUCv8RphG4
+	Kxgi+DrCceZQ+DmWUYZV1SJ+qAISjK3W+HQS0MZw/PKvFjNZCxMzCMxtYF+SnHv2xRBs9l
+	+svlj1w/mv6IhbgviOmTid8Ae0ti/m8wpre4JGTV5KY8Yi9wiMY0cv3nOr4jHpCWOirztc
+	jgkK2DprIlyHQd7CeNF1LtLKHNrNPesUAn/RBzbiMJaEvsGFL+Em1qo+ndRK07NEscyiR7
+	6hdUAJ1eSu7k0mkf9dv/NNVZoEXpGQvpxNGOyRdyg4w0En8+IjdgJb0RlBDsBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1744370745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=75ipyekksOM5Ri+JXFAQmqUxDl2VTW0Cqiu2vU7L33g=;
+	b=2HFGKAdBD3yTFIuPbD5v7zJxcotuv766D9IjMOWOYL1dJQBTo0epj7S9jNK1PGpX6u+L8/
+	PFebKug1w+zvqYP/YRlZBsSYS7xymqdeRG+EzzKjbQk6BSHUOfxnXlwp8GND/eyJUl5Fhm
+	cU+WnvmwgMCkwTbFnBMCQkWtUJiHZdj804jtoQPpq4m0TOmCGFPH72UrOSSvylcI2atA7R
+	V5ZghU5fS6SqiZz2Z+gkx0a3Q3/gu/XTKLcgEvwmSRyfo+AIxeloMjem2okhXdpKZpsNsn
+	N5X+88/fHqxuSjW+Mlpyidh93Dw+lf8fYGkA+UDS+32px6uJRWbndo6F8v42tw==
+ARC-Authentication-Results: i=1;
+	rspamd-7d787bdb4f-jxj67;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
+X-Sender-Id: dreamhost|x-authsender|rob@landley.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
+X-MailChannels-Auth-Id: dreamhost
+X-Chemical-Cooing: 1fa47b837051dce2_1744370745843_230911863
+X-MC-Loop-Signature: 1744370745843:2240973692
+X-MC-Ingress-Time: 1744370745842
+Received: from pdx1-sub0-mail-a230.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.107.20.214 (trex/7.0.3);
+	Fri, 11 Apr 2025 11:25:45 +0000
+Received: from [172.22.7.54] (unknown [198.232.126.195])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: rob@landley.net)
+	by pdx1-sub0-mail-a230.dreamhost.com (Postfix) with ESMTPSA id 4ZYvWD2Q8szFh;
+	Fri, 11 Apr 2025 04:25:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
+	s=dreamhost; t=1744370745;
+	bh=75ipyekksOM5Ri+JXFAQmqUxDl2VTW0Cqiu2vU7L33g=;
+	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+	b=nkBQ91k7vY1XDAEskO+FcFbCEFC0W4ZJ1yOUSLwkzdnEAT5i4nZSFbjOyCrUX/NpP
+	 nQjY0k9JRbymra0/BJd1KXHsgyq56CO8PviX214E7TnvLf+xaWeAeTMcj9+nerguyr
+	 ic951PGOQFcSQdpTW28eeSuOw0vzo9LBbsv2D6AkDAvNNZqYeJOiRR9M41xa2zHAbG
+	 BJCqPpmP8kDEl5ezYaWxcMdYg5ZR3fEJgrWufr+GlYA5/8NoqRK+LOfFsVYUkqGM8w
+	 dpBROtmFSqTd9Tpxdw7TDZTh8l3+vyc7+Oq8NimBZ1xJ84vzPkgPkmPZv4jIl2ZF1i
+	 YFq1zfZyXBQqQ==
+Message-ID: <5656d614-c851-4600-a79c-92edebc9c55e@landley.net>
+Date: Fri, 11 Apr 2025 06:25:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-mdb-gpiolib-setters-fix-v1-1-dea302ab7440@bootlin.com>
-In-Reply-To: <20250411-mdb-gpiolib-setters-fix-v1-1-dea302ab7440@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 11 Apr 2025 13:38:26 +0200
-X-Gm-Features: ATxdqUHeXHWBZ4MIFvMYwmaS8Gr1mIm67O6dg2SJ8aNNGnkJhnRQNVQbFwlbeI4
-Message-ID: <CAMRc=MegvXZGAVA210rjnFuKZwg4appN4nAJNejfC2jpY0JLOg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Allow to use setters with return value for
- output-only gpios
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] J2 Turtle Board fixes
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Artur Rojek <contact@artur-rojek.eu>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+ "D . Jeff Dionne" <jeff@coresemi.io>, linux-sh@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250216175545.35079-1-contact@artur-rojek.eu>
+ <f574808500e2c5fb733c1e5d9b4d17c2884d1b9f.camel@physik.fu-berlin.de>
+ <1551804b-fc78-4a3f-add8-af693f340a01@landley.net>
+ <48881e2d8efa9d7df8156f5f81cd662c2286e597.camel@physik.fu-berlin.de>
+ <9cf43bbe-898f-4b29-bd85-04f5320bce77@landley.net>
+ <afec7233266c6c1fd1e70ac615ff129d9dc3f710.camel@physik.fu-berlin.de>
+Content-Language: en-US
+From: Rob Landley <rob@landley.net>
+In-Reply-To: <afec7233266c6c1fd1e70ac615ff129d9dc3f710.camel@physik.fu-berlin.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 11, 2025 at 12:31=E2=80=AFPM Mathieu Dubois-Briand
-<mathieu.dubois-briand@bootlin.com> wrote:
->
-> The gpiod_direction_output_raw_commit() function checks if any setter
-> callback is present before doing anything. As the new GPIO setters with
-> return values were introduced, make this check also succeed if one is
-> present.
->
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> ---
->  drivers/gpio/gpiolib.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index b8197502a5ac..cd4fecbb41f2 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2879,7 +2879,7 @@ static int gpiod_direction_output_raw_commit(struct=
- gpio_desc *desc, int value)
->          * output-only, but if there is then not even a .set() operation =
-it
->          * is pretty tricky to drive the output line.
->          */
-> -       if (!guard.gc->set && !guard.gc->direction_output) {
-> +       if (!guard.gc->set && !guard.gc->set_rv && !guard.gc->direction_o=
-utput) {
->                 gpiod_warn(desc,
->                            "%s: missing set() and direction_output() oper=
-ations\n",
->                            __func__);
->
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250411-mdb-gpiolib-setters-fix-b87976992070
->
-> Best regards,
-> --
-> Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->
+On 4/8/25 10:23, John Paul Adrian Glaubitz wrote:
+> Hi Rob,
+> 
+> On Fri, 2025-02-28 at 16:19 -0600, Rob Landley wrote:
+>>>> Which was fixed a year ago, which is why I told you to use the new
+>>>> toolchain with a current musl-libc:
+>>>>
+>>>> http://lists.landley.net/pipermail/toybox-landley.net/2024-February/030040.html
+>>>>
+>>>> Unless you're hitting the OTHER issue I fixed last year...
+>>>>
+>>>> https://github.com/landley/toybox/commit/0b2d5c2bb3f1
+>>>
+>>> I just downloaded the latest toolchain from:
+>>>
+>>> https://landley.net/bin/toolchains/latest/sh2eb-linux-muslfdpic-cross.tar.xz
+>>>
+>>> and the issue still persists.
+>>>
+>>> Am I missing anything?
+>>
+>> The march 2024 rebuild was in response to that Feb 2024 bugfix, so it
+>> _should_ have the fix? (I'm waiting for another musl release to rebuild
+>> them again...)
+>>
+>> I just downloaded the toolchain currently at that URL and built mkroot
+>> and it worked for me:
+>>
+>> Run /init as init process
+>> sntp: time.google.com:123: Try again
+>> Type exit when done.
+>> $ cat /proc/version
+>> Linux version 6.14.0-rc3 (landley@driftwood) (sh2eb-linux-muslfdpic-cc
+>> (GCC) 11.2.0, GNU ld (GNU Binutils) 2.33.1) #1 SMP Fri Feb 28 15:47:36
+>> CST 2025
+>>
+>> And the failure _without_ the fix was deterministic rather than
+>> intermittent, so...
+>>
+>> Keep in mind the init script has a 3 second timeout trying to call sntp
+>> to set the clock, which will fail if the ethernet isn't connected (or no
+>> driver, or no internet...)
+> 
+> I just gave it another try and it still hangs for me at:
+> 
+> 	Run /init as init process
+> 
+> with the latest toolchain, toybox and kernel (v6.15-rc-1).
 
-Ah good catch. Since the culprit is already in mainline, would you
-mind resending with Cc: stable and Fixes: tags?
+FYI I reproduced this but haven't tracked it down yet.
 
-Bart
+Rob
