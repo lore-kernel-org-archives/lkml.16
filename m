@@ -1,66 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29872BD591;
-	Fri, 11 Apr 2025 10:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1552BD5B3;
+	Fri, 11 Apr 2025 10:01:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365713; cv=none; b=d0k5/WDvq4lHKzw59MrARxLD4PwdpH+OEFz3OKi6+3AFP3tKdiHqkW6rIUfBD75lFBObYApA76DlMlNIkpDtU7zr1x0YbTeH64Q8qyI8dnUOJG4BDa7/mtgNQ8K6xPk9y/9Cw1J5CPFwefQxzaTZUAzqVKAbJrEey5KrWfFRIs0=
+	t=1744365715; cv=none; b=g8Ao14pwbgNZTk1BVicRzSM4YQHhRVogNC9tQkdju38gdDItJwJAoIv0FmUvcFlPMDS7DdLvRL6k6dQixOA4SZM+yjUISq01LUlXh6NK44LiFob8MylY0l0k9gnyuJM1GuVwOgxIZVJH58XTWrcyRDjVbcdbh+hJxXq/WR9WN7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365713; c=relaxed/simple;
-	bh=/SxXB/6mlneRurIRS9U3vxeXmhpC+jpGzcRVoKnGue4=;
+	s=arc-20240116; t=1744365715; c=relaxed/simple;
+	bh=yLMOlTSoQA4CgV3c8sURJmZi5VNuRQGVDaaQ3Qbeu+g=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=p1JfelpDgrBsBRTNwkszoUL2LCmVHGA5+XJKBqiZlgPbzyBGRR+6TMaK1yOJLXDk2eD9uCq/ensncN2vtUPaA0TvATzeGXuXK+uiEoIDD45FYbPUpWbsMcRWfMFThPY2ZueiaoW/8vl0lVlq3QwBP0iQVyxK+pIdRH33tgobVb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PhpWBxop; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YBjepKek; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=mCaZxBkGSP/Vo2F+lZERPVervFKIPes6hUAiQpi1LVgzH6NzXPtijMxn+vQ2uAhX2Uv0vc1Rx4hSvTkGH0YaIMNg5MvhHOiPR4Y67CDcY8DOaTK+yOIaIBVLe+IoYIqz5AXyPYOKxSoMRy20x61IhPCOnnycyjyKClsJJViKrz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OBseLV7e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=irP3dDtI; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PhpWBxop";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YBjepKek"
-Date: Fri, 11 Apr 2025 10:01:47 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OBseLV7e";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="irP3dDtI"
+Date: Fri, 11 Apr 2025 10:01:50 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744365710;
+	s=2020; t=1744365711;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9EbdYF3jT/9PhrBa8iWmVin2FDRS16Vusg6n/jf3BMM=;
-	b=PhpWBxopFe42z7b3VUu4ir98Guxc6mVw+BWRVNSYuguRPk98RlNRU7bIrAeHljPAgN0/1h
-	Ic/IP0EB2VucjCA+4odEYd3gjhPWg+PAAyc4XU40OuBo3G6UIVGo0kjNONcYsB1CuhevGs
-	p5b9YOv6kJvIFesZwvqLUMwJdOnhty0rP4tdWzLVsGU9CKGKKuQfrdW99NfIxO9SK29iyH
-	Q9xMN2DLpwQIshX9TXed4M2UwhCpKD08Ffd+wYHDm7c9UwLhkEbDSe2JRSjkB9fP10eCGH
-	JMGn5HxVpT7Uf6XXixhCfpzIHX0ujJj+cHg2eb2qHYINYJTpSkH8FMUmn5OvGQ==
+	bh=Okwoo7jasjDrHu0wt10vwxxwmGP+unLWY29pPALunFI=;
+	b=OBseLV7eMUGIWH7qJW1zIXnpgjFHlyJJZHkrwP9Ik2ilmUprIZmdfsP+kJSq2d0q0XizkZ
+	JhLJeZH+nj+i0nY8R+XiHWidNplWElr0cR9hIf+Q4cpMXnkwTCCd8I7fSC/LQoQvduubl1
+	bQ2TOB6b1Ii/ygSgqWi4X0469jVOvqSTveFVJzOqS/f59JvyCCDyS7gek5ER0XBjurwlEc
+	PHttQKRs8CRUR2FcwJucGXt50UpI0H2JcFlbWQkF+P0LB4DhdFi9yweO8Lm5HIcROrUCD0
+	vhtitklnu1SPRaFGCATZtagkcPSPBMxCEvsto8NlhaN4aj/4woDjzPG9ILklFg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744365710;
+	s=2020e; t=1744365711;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9EbdYF3jT/9PhrBa8iWmVin2FDRS16Vusg6n/jf3BMM=;
-	b=YBjepKekaZSFvphgxlMTkBw3HnYN/R5Ky69WIHi5HjR1KXZwBI4IKmy5y80P1Dsuu91kee
-	qbd77VjDqbNW54Dg==
+	bh=Okwoo7jasjDrHu0wt10vwxxwmGP+unLWY29pPALunFI=;
+	b=irP3dDtIhSWr06P+G1HWkVME3EmjX5GaIoCu/P3/zZN/rdYLyOcWUZDuiTqFMkKYfXcWSD
+	3qejwoktDx7ubkCQ==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/alternatives] x86/alternatives: Simplify text_poke_addr_ordered()
+Subject: [tip: x86/alternatives] x86/alternatives: Move text_poke_array
+ completion from smp_text_poke_batch_finish() and smp_text_poke_batch_flush()
+ to smp_text_poke_batch_process()
 Cc: Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
  "H . Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250411054105.2341982-42-mingo@kernel.org>
-References: <20250411054105.2341982-42-mingo@kernel.org>
+In-Reply-To: <20250411054105.2341982-40-mingo@kernel.org>
+References: <20250411054105.2341982-40-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174436570792.31282.14816566853577109032.tip-bot2@tip-bot2>
+Message-ID: <174436571089.31282.13083237359357215357.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,50 +71,65 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     0e67e587e2e07be8d6775a1444e679c6afbc87f4
-Gitweb:        https://git.kernel.org/tip/0e67e587e2e07be8d6775a1444e679c6afbc87f4
+Commit-ID:     7fbadb50d95a8bbc0de720e0857c77d4f13ddcaf
+Gitweb:        https://git.kernel.org/tip/7fbadb50d95a8bbc0de720e0857c77d4f13ddcaf
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 11 Apr 2025 07:40:53 +02:00
+AuthorDate:    Fri, 11 Apr 2025 07:40:51 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 11 Apr 2025 11:01:34 +02:00
 
-x86/alternatives: Simplify text_poke_addr_ordered()
+x86/alternatives: Move text_poke_array completion from smp_text_poke_batch_finish() and smp_text_poke_batch_flush() to smp_text_poke_batch_process()
 
- - Use direct 'void *' pointer comparison, there's no
-   need to force the type to 'unsigned long'.
+Simplifies the code and improves code generation a bit:
 
- - Remove the 'tp' local variable indirection
+   text	   data	    bss	    dec	    hex	filename
+  14769	   1017	   4112	  19898	   4dba	alternative.o.before
+  14742	   1017	   4112	  19871	   4d9f	alternative.o.after
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Juergen Gross <jgross@suse.com>
 Cc: "H . Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250411054105.2341982-42-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250411054105.2341982-40-mingo@kernel.org
 ---
- arch/x86/kernel/alternative.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/x86/kernel/alternative.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index e4c51d8..a747b08 100644
+index b47ad08..556a82f 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2838,8 +2838,6 @@ static void __smp_text_poke_batch_add(void *addr, const void *opcode, size_t len
-  */
- static bool text_poke_addr_ordered(void *addr)
+@@ -2750,6 +2750,9 @@ static void smp_text_poke_batch_process(void)
+ 		if (unlikely(!atomic_dec_and_test(refs)))
+ 			atomic_cond_read_acquire(refs, !VAL);
+ 	}
++
++	/* They are all completed: */
++	text_poke_array.nr_entries = 0;
+ }
+ 
+ static void __smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
+@@ -2857,20 +2860,16 @@ static bool text_poke_addr_ordered(void *addr)
+ 
+ void smp_text_poke_batch_finish(void)
  {
--	struct smp_text_poke_loc *tp;
--
- 	WARN_ON_ONCE(!addr);
+-	if (text_poke_array.nr_entries) {
++	if (text_poke_array.nr_entries)
+ 		smp_text_poke_batch_process();
+-		text_poke_array.nr_entries = 0;
+-	}
+ }
  
- 	if (!text_poke_array.nr_entries)
-@@ -2851,8 +2849,7 @@ static bool text_poke_addr_ordered(void *addr)
- 	 * is violated and we must first flush all pending patching
- 	 * requests:
- 	 */
--	tp = &text_poke_array.vec[text_poke_array.nr_entries-1];
--	if ((unsigned long)text_poke_addr(tp) > (unsigned long)addr)
-+	if (text_poke_addr(text_poke_array.vec + text_poke_array.nr_entries-1) > addr)
- 		return false;
+ static void smp_text_poke_batch_flush(void *addr)
+ {
+ 	lockdep_assert_held(&text_mutex);
  
- 	return true;
+-	if (text_poke_array.nr_entries == TP_ARRAY_NR_ENTRIES_MAX || !text_poke_addr_ordered(addr)) {
++	if (text_poke_array.nr_entries == TP_ARRAY_NR_ENTRIES_MAX || !text_poke_addr_ordered(addr))
+ 		smp_text_poke_batch_process();
+-		text_poke_array.nr_entries = 0;
+-	}
+ }
+ 
+ /**
