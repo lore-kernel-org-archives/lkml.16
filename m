@@ -1,168 +1,170 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9D62144AC
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E0D1E7C07
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744391524; cv=none; b=E6jVc4tJ0ytF/uL+b7spxOTW2Py3CpxZXsYO+zdZhLHLdyYYSC9wBm874lQ6ichWXL9a/zIRTX9+DCxs507SYi+EoNkOrMSp6T/SsgpHaIGnFm/mbigxIZfj0PHOJioOTM6aYgE5EumPkrdzY3mRh4IkAPpQLXQK2tSrixm93yY=
+	t=1744391631; cv=none; b=gg1iybE5mg5qFm80o/MgztDtFaFoVxWOcBy6hFEeLL2lBn+hSdhMRwcJBjPAyOFRBZYjL9sTusbRyH5grjUlK1JKH4j7Q34tdykQZ+9P4g/sbFiHZcYM59cqg3lXzbZlQlWUsXHkXQq77Hytrs2i7pJialllhgVEYAjF5rVfPUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744391524; c=relaxed/simple;
-	bh=OYphbyhoYzlQdJS6+N5tDVqhL4XTIjegUyZQMQBubds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NY79PFlOp+WWTjWs4SH6E/ZGOPhuuV/I/7GdMf7BCjsQPDKQviLoklRNpyAF9JoSvsbWn9sQ2i2YbiMRZFNcN8eiBM9e5J/uR/rzYKmS8hwti8+7hdULfG7kcqxcUxuQHyACkHIuOK+O+cIV0BhpM5tYF76suV4myCUfpTvb4Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=a8RZR2ML; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744391631; c=relaxed/simple;
+	bh=zH/0sIli93wZ6ILHuU5fEjNVP5CrnyvbfusxXFTbRXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vea1euhZvNlTGXo9acw/JucQ3aV2kBe+EzHdcbxnfjsucCxl72fyKiGhbgBJkn/8q/KrJAx4vKpllbqSBokShx2jXm0//j5xWL84Udfha1ANHiw8SEDj3/7cS7TafpqV5xvIrP0yeh+CrETJWjovP5iscwHU/VLR0I35hQPfeqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BUbUoJ4W; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="a8RZR2ML"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so23606325e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744391519; x=1744996319; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TrunUqs/N09Jqukhxf1FYqRGiAYPy6gzssLwyfD3SEQ=;
-        b=a8RZR2ML8/AMZWmnQZSSyed2dGwwKu35Lx62GN0eKtNtBTs3e9OGixHjYIn+BVIoB/
-         y8c/eaqaTyqIsizYaTFfLzUnRMFl8MVYxhUid7zdviH2OVfhVrUrjAMOQ2iFAU3OFSFo
-         V0m1D+7yy0pK7hR5TYspiR1ClFGYwh39aU5Ui10U73v8dsuhC2f3uUwnlhW9O55/jDN0
-         kn0LnQSM3sPukbya2ldwz5Yr2xBNbf+03VwD4vcW45cSALg8kd+hQM3ijxYj6FMqlwTt
-         ry53S7cWai+uBamSVk7NzDkVWf4sfNdAh2dWEWMr4nx56+DDvfOwMqs6BgUSUKpoXeVs
-         o+0Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BUbUoJ4W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744391628;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=neywMREG3kC+bngOS26dPsNzqIJnBC57g6tNRxTe/TM=;
+	b=BUbUoJ4WYDsgI18QkIsKwBGwwHugR94rE44IDM2LMu1Z39tAG8HzIrTMmrYYEcSvb8NA7o
+	xzwL8tZJvNflHVHUL3R30hab27EZzpC9jgpro9o2glRKLXy6k8fw4ohspPDg22MpBqUaet
+	BNGo49XY+WZna0cj8KmPq4RNE9NpszY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-117-7t_9QATJOWaUKangBUWEEQ-1; Fri, 11 Apr 2025 13:13:46 -0400
+X-MC-Unique: 7t_9QATJOWaUKangBUWEEQ-1
+X-Mimecast-MFC-AGG-ID: 7t_9QATJOWaUKangBUWEEQ_1744391625
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf327e9a2so19884015e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:13:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744391519; x=1744996319;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TrunUqs/N09Jqukhxf1FYqRGiAYPy6gzssLwyfD3SEQ=;
-        b=QslL+ssd5xDSwgiF/WZWQuzKcY9fiYOYmBVQT+LwmPaX9paWz3uWtsA0KsuCkdLQt1
-         Rvj4kBW8c+pqu3e1/r1PbB/5yKj5hm8zxEhcAyNaPH5CSAi+LsGjH7KmYr0yz9UBZOfy
-         /fjEBAJ5zziK7cZ3Wd5y0zNxBZeN/BzYijcb+mtc43EWWGVOoX/Vyq/xclgUqERjdrlW
-         wuf3PegeL9tnWTM6tUtHKlrXmIBC6A0v+guxbLKpO7VuD5F9Vt1o52bK4qg66RlhZ/Pc
-         kMg6ZD8quTjA2WrNt337yGCjDoplgyPb8f8AmKDD5ybC8a4C37NIQeObCtZezA0GcysU
-         J92g==
-X-Forwarded-Encrypted: i=1; AJvYcCXW7MSu4bePIK6Uy+5y5n6fe1JE6MKaOuBVSX5HDDSCw0dpUoyIoWtFl9RyQmu2iez5rBJGrQhM9eK/Cgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3ADvPMy/vkrCrlJZYD2VqRDrjJTzOC/n7DBjxMvdz59G13B1N
-	zAVMuceZa1HQXu1reVG0swcvGLupDD1NCVzPZ6mhJh+L4VPPD3AOEHc6RvEzRJQ=
-X-Gm-Gg: ASbGncuLU1u0cv51A/saAJfn+0nmXRGlAnHYcZNvhaNC48tTv32YUZX80teKGel+DM1
-	/EaxnGDuUMFLcy08A/Zg+88k0WRJ8PH+q9OXax8HeGmmUzhQiCo7kjslcdD5u6wcT6/FAUmyAVa
-	krRb7bADs6/OMcbT92BzxV6ncGxxapfYGFGCCew5ytI5yuVFeRnmZPAIrfQ8eKiKXfV5s3QQoua
-	sJmJiiZNPz/BwwMVuwBNUoDYs0+I64mGfA9FMwVBaxZeL376VBSO3ZHma3p5nP4yfJSW5QQN3xh
-	FkMtNbxeMwluNp92WElHKdA5jnUlg8uFWFIjaS/Ger0=
-X-Google-Smtp-Source: AGHT+IH0dLGja95QCcgcHh1wVVB1WPemcJDZs2T8C3sybPrHDMiiHlmMWJ7oUMDbKCpkKMWyzNOAAw==
-X-Received: by 2002:a05:600c:3ca1:b0:43d:186d:a4bf with SMTP id 5b1f17b1804b1-43f39420017mr32333865e9.0.1744391519127;
-        Fri, 11 Apr 2025 10:11:59 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5e9dsm92843575e9.36.2025.04.11.10.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 10:11:58 -0700 (PDT)
-Date: Fri, 11 Apr 2025 19:11:57 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] mm/vmscan: Skip memcg with !usage in
- shrink_node_memcgs()
-Message-ID: <wc2pf5r5j4s7rpk7yfgltudj7kz2datcsmljmoacp6wyhwuimq@hgeey77uv5oq>
-References: <20250407162316.1434714-1-longman@redhat.com>
- <20250407162316.1434714-2-longman@redhat.com>
+        d=1e100.net; s=20230601; t=1744391625; x=1744996425;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=neywMREG3kC+bngOS26dPsNzqIJnBC57g6tNRxTe/TM=;
+        b=BhSX5+ULVokxkobMuRbMzaQZnpJF2ILby7svEog6X0xGl1CISc0StrUuRxuWs9cIEt
+         le5cnVNDoxzzTDsjbOhuMhAOaSVqOr7ow4M6WCZ/CrmDhP2rp7FVzZmMtHA+OPd0aC61
+         WR0xE7bGkZU+HE9XUItsrtPsw9VYGVP6IW77dX6A2e1fmuFJjKScBXAvJIqCfGugJ/lR
+         i138bnBwrOc8YS+pTo5vUiMRASiIRCLrQTW6p2Dgw6SyxvWf4sSrnGNZiEXVKqyYWTcS
+         UlIeJ5kWc0nnpJrjvIyW54mGzsa3oYlNHzU/geHJ0wU98hV6xSYIozGHJUkJ4tNNcH56
+         dcWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUx75L9jXeKCbzQnuB4o6HJ3JRhG0+IWC3PjG0fiUDlS96OK6krxTCyvsFzhn5ZHLmTDak5YMNeEFNuZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9jb+QjegWgGnv0WrxSPfhv9cQGp5+9NBlJXhsULMERCtfdchx
+	eAbzC7TNcXGLYMs6Z1NVK1XysXCQr8LTtZf4jiaMVFJ5cIoW53T7OxY1h6DAvgaKbRJn7/4KHcD
+	GgecT67rhpDfVtk6zExIgHnO/PgMR6MNw200Ip9GrPVY34b6YJvjgMJ00T1pYaQ==
+X-Gm-Gg: ASbGnctdfzmH5CDyJPCbjRv6+YDJguP0H5P0HbAQBnPYFATd6opi66rRFS01R1J9Nh5
+	OsQmK80Exu8ciUibQyPiBzBrsBflczHYBQHi6gbMW24MxD07GQKsUAYaNEM15D7ahh2yA7P9DVd
+	mGSdytjWKL/XeAuyQdrh89SmMgHAkKgFp+Q9RAW5mgWy9/ATBXKwYbRNuguWiJEt9zJyIvUE2Pk
+	oVGlVDyuKikmmhDE+4XKg7aTu8mwHZ0AJQAwfV6SRQLraDgDSkKbAo7IYMiqDRB+362c5HdnEkX
+	h4paUmgMZr+z4zS7CEhQyWsFUQxcgrMq9AOVF/IZwDULrjeXCufMei9EbFsZn0qpNytXo0UJqpx
+	GjLHj4JxbOTXbx0SCwF1i1ionFJadbKH+C1GB
+X-Received: by 2002:a05:6000:4285:b0:390:f9a5:bd79 with SMTP id ffacd0b85a97d-39ea5207243mr3240519f8f.26.1744391625171;
+        Fri, 11 Apr 2025 10:13:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE5z9WPEm/LW3FUIiwo3WmsMkOxZZVOwmdjiMfPK51RUb5ALU9dZOgsH2MHB5VMYrn9P+iZ6Q==
+X-Received: by 2002:a05:6000:4285:b0:390:f9a5:bd79 with SMTP id ffacd0b85a97d-39ea5207243mr3240493f8f.26.1744391624722;
+        Fri, 11 Apr 2025 10:13:44 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c726:6800:7ddf:5fc:2ee5:f08a? (p200300cbc72668007ddf05fc2ee5f08a.dip0.t-ipconnect.de. [2003:cb:c726:6800:7ddf:5fc:2ee5:f08a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445515sm2536028f8f.89.2025.04.11.10.13.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 10:13:44 -0700 (PDT)
+Message-ID: <5a7d427c-c729-47c7-b851-9c49a30af279@redhat.com>
+Date: Fri, 11 Apr 2025 19:13:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t3lluon3t4cqfa5a"
-Content-Disposition: inline
-In-Reply-To: <20250407162316.1434714-2-longman@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm,hugetlb: Allocate frozen pages in
+ alloc_buddy_hugetlb_folio
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+References: <20250411132359.312708-1-osalvador@suse.de>
+ <f0373427-b4e8-4612-b668-980d93febe26@redhat.com>
+ <Z_kldseGr033Hqny@casper.infradead.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z_kldseGr033Hqny@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 11.04.25 16:21, Matthew Wilcox wrote:
+> On Fri, Apr 11, 2025 at 03:44:31PM +0200, David Hildenbrand wrote:
+>> I assume htlb_alloc_mask() will always include _GFP_COMP.
+> 
+> static inline gfp_t htlb_alloc_mask(struct hstate *h)
+> {
+>          gfp_t gfp = __GFP_COMP | __GFP_NOWARN;
+> 
 
---t3lluon3t4cqfa5a
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 1/2] mm/vmscan: Skip memcg with !usage in
- shrink_node_memcgs()
-MIME-Version: 1.0
+I checked that as well and actually meant to say the I assume that we 
+will here always have __GFP_COMP because the gfp_mask we get here will 
+always be derived from htlb_alloc_mask().
 
-Hello.
+>> But semantically, it might be wrong: __folio_alloc() will in the memdesc
+>> world also make sure to allocate the memdesc, __alloc_frozen_pages() not.
+>>
+>> Maybe one would want a __alloc_frozen_folio() .... @willy?
+> 
+> This is fine.  Yes, it'll need to be modified when we get to the
+> separately allocated memdesc, but there's a number of places that
+> cast the freshly allocated page to a folio, and I'll have to come up
+> with a way to catch them all.
 
-On Mon, Apr 07, 2025 at 12:23:15PM -0400, Waiman Long <longman@redhat.com> =
-wrote:
-> --- a/mm/memcontrol-v1.h
-> +++ b/mm/memcontrol-v1.h
-> @@ -22,8 +22,6 @@
->  	     iter !=3D NULL;				\
->  	     iter =3D mem_cgroup_iter(NULL, iter, NULL))
-> =20
-> -unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap);
-> -
+Okay, thanks for clarifying.
 
-Hm, maybe keep it for v1 only where mem_cgroup_usage has meaning for
-memsw (i.e. do the opposite and move the function definition to -v1.c).
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
->  void drain_all_stock(struct mem_cgroup *root_memcg);
-> =20
->  unsigned long memcg_events(struct mem_cgroup *memcg, int event);
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index b620d74b0f66..a771a0145a12 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -5963,6 +5963,10 @@ static void shrink_node_memcgs(pg_data_t *pgdat, s=
-truct scan_control *sc)
-> =20
->  		mem_cgroup_calculate_protection(target_memcg, memcg);
-> =20
-> +		/* Skip memcg with no usage */
-> +		if (!mem_cgroup_usage(memcg, false))
-> +			continue;
-> +
+-- 
+Cheers,
 
-(Not only for v2), there is mem_cgroup_size() for this purpose (already
-used in mm/vmscan.c).
+David / dhildenb
 
->  		if (mem_cgroup_below_min(target_memcg, memcg)) {
->  			/*
->  			 * Hard protection.
-> diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/tes=
-ting/selftests/cgroup/test_memcontrol.c
-> index 16f5d74ae762..bab826b6b7b0 100644
-> --- a/tools/testing/selftests/cgroup/test_memcontrol.c
-> +++ b/tools/testing/selftests/cgroup/test_memcontrol.c
-> @@ -525,8 +525,13 @@ static int test_memcg_protection(const char *root, b=
-ool min)
->  		goto cleanup;
->  	}
-> =20
-> +	/*
-> +	 * Child 2 has memory.low=3D0, but some low protection is still being
-> +	 * distributed down from its parent with memory.low=3D50M. So the low
-> +	 * event count will be non-zero.
-> +	 */
->  	for (i =3D 0; i < ARRAY_SIZE(children); i++) {
-> -		int no_low_events_index =3D 1;
-> +		int no_low_events_index =3D 2;
-
-See suggestion in
-https://lore.kernel.org/lkml/awgbdn6gwnj4kfaezsorvopgsdyoty3yahdeanqvoxstz2=
-w2ke@xc3sv43elkz5/
-
-HTH,
-Michal
-
---t3lluon3t4cqfa5a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/lNWgAKCRAt3Wney77B
-SQOUAQCqcf+/VLJ4QspbjJmrhi+j/ZGy+0Ms5yQ2UA3mfz96vAD+NYpSXSOXiT1r
-0oyHlNs+QwiydZG2ffDsveeh1dl2ZAQ=
-=eMQ9
------END PGP SIGNATURE-----
-
---t3lluon3t4cqfa5a--
