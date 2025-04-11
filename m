@@ -1,151 +1,116 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13AC2AE72
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3CD1EFF91;
+	Fri, 11 Apr 2025 05:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744349679; cv=none; b=tGI0dPcf46yr5GotVehZlej8zTFusL+XCFyG+dC8oY2nFunvEPhQHX1ivvpMwa4qLRAmNKx1VI7+crl1sdYjUwcSYNWR6Mf8gBxX2b79EntQMh8ZU7SH2qOlHsP3HcEJ4WeeC6MT1tpIreRJsewR9JlrGWZIXRNv/k+TbRPcgcs=
+	t=1744349688; cv=none; b=pMGRMRkg4UVUHMGhGkpUpQoPI+2bRYi12kV9uUaspOpD6Qu3XkF7HuET/m2tNzRlcoz5qDrKpT4CVhh5wZE0TrjI/+DDrHFstlLkaQ9HAiKJvaBgudWuGtbIkIl1znzP2gBpoFhf46X4w01cj664sniO2rUeAk19cpnr+XRKL0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744349679; c=relaxed/simple;
-	bh=Hv4e5V0BCbYZrebDMQbtvBoTosdvVdtixx5yWpYr0ZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JyNLfc/89UsJ4v3/TyqtAEz2ShJy5MABt7ix/pJTESv/dQwJJoOuPw3/L4YMBBmIiBWhqgZlhzHGietP8rkO0j2XniohLkC7Infv9g4e+uuhbV0Yy1QxOOL+cuMKsXycJR4ncXn3MAeggbpnk8yoxDSSjPBg7r10Smd3r4XOnFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ozol07SU; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744349688; c=relaxed/simple;
+	bh=H2Qqw27rWurJ/QM/BRFlhS3OhPfOdj1QefRWTHpFEf0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BOdxwWriEjRV13lJPOBiDGJ5A9eG18nIGYrb/kGZw9Ww3gNUGgK9AkJd7PtZMZyxWrDfMEo1E02n5UPxQLR5EK9uEs2rJhYzOtumzyqGy0jp28i6btqM/slEiNfL9lOf2vXoR7xknFqrk1wX5Hhys4y7nf2dqfBfs7FfZBABy44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XSGpiGpL; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ozol07SU"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5J0wj018823
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:34:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qeZOBA7bGd6/3zx1megEDIxp2d37sujIY0FeKSvlT50=; b=Ozol07SUmF/RqaPP
-	3c2LsOfxdHu9dF3/xJJdpZ9cBZGqdpPxOskZfGCwDGPyeFwqNp2f6IkFBMCDB08t
-	FYkI/0Gwtm9y4svXwqQAB3QwQOjSHRF1qrtNdi0mXEjWm2Hph05LsXXyQ86n+4Ny
-	WNMUjr1hdCTom/a9AnIHLdF4lW6gDuiCx3V9FTQobwsDQH8QCcuKESm2dN1Motvp
-	6PQ4z5oF4cMjVcZRczkzFG+mjV6/gfkPskJqJe4lTHdeIKTKFH4RvsrKnZ0GGM7G
-	FoRQyc4OevSvzIURs9bTF/B5OaA4OqHZ3NlBcwKe6x7lk7kfebzW+ibAnB1kT//1
-	Aka0LQ==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgsesj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:34:36 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7395095a505so1266579b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:34:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744349675; x=1744954475;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qeZOBA7bGd6/3zx1megEDIxp2d37sujIY0FeKSvlT50=;
-        b=ratqNNZylVc1HZ7l2rJmF4uKljFjfm9pWHpkHmQ9Xmv1ZK7lfbOPgGEUrpUGgBENQo
-         +8sSHVbUUNyxnNf65PUbxK1iMjeQd/ORRPoS57iaLgbYEDVM8H6UbPnvI7gOYxSENxJe
-         BpVtGsX0ZOXSaaM2noVwl60aKMOoU0uoyQvCRuBKHWtaPZG2CXOqRAV3Ya4Zdp+R1a1T
-         CvBIF2f5vkywvF/cRGOeH4Q2evMXuB0l+LzQPjFofnI/9pp4JId9ix25I3xf8/sTON0Z
-         Qy399G0tvBMW7UmlEhRNpk4C6zBJg4juV5bvP2dOn2ewh9KmMzr7rKmRempilzrNrvl/
-         9J9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXJr6OvZ00rf92nSl5nZq6thP0oaAVoWxRbFI0oHuFyXAqyQOqNmGv9mQVnWK7KoV02DBpFKMjciB3qz8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxihcJt/SSMz/ySy1+fEY8sJ9J76s2KyOOtwA2jPa874am/0px
-	ppoesvBEFMutaD8yxk3O2q7Ejndq5wR8Ate+pGwmXc2NZ1oc/1ZVEmXGGZns6HpoWdnGxgNBf44
-	HdCRYY8iVFgtCUWPl+HAsZKuRP+3IsZUUb9XjWXLNzMK6xSw3SNxDXZMEQep73JQ=
-X-Gm-Gg: ASbGnctrPSt/nQ2iaiWwsee5yuMvyiqUTPE7TdzCRAT+j3gk5/OmdiM9Xowy+Po1xUj
-	RyqSwb6/YvM0hHAwFRt7qxe+PioEiPSq0agssWB8nR4epinmv52KFBZniDuO+6V6TRdnq+Pz6qN
-	itU3EKceUgwL734PCk5TV/hjpmgIQrv9RwZt3AwohJ7uLq5fX2JhlAqsgISIo1mWPylf9gy+w+x
-	3qcgxh+aaBOSHwnaQVKAXB/ZCSrE6U6nVRFLufwspERZ67EQpUPKVaHKmz2aD9/MtdlDGo8za+u
-	XAWC9OAiW/tT9rK7mTsfuAJqLwKnUfYXlBIpOdzIttWS7uIB2Oll
-X-Received: by 2002:a05:6a21:158e:b0:1f5:79c4:5da2 with SMTP id adf61e73a8af0-20179972d43mr2744860637.31.1744349675346;
-        Thu, 10 Apr 2025 22:34:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE28h/1iClxcTMmDZfKAVOeDYMJlcYpwcYuxjXLKEBn2EDL+ykBLLm8HYKNSwOjNRf6lOChvg==
-X-Received: by 2002:a05:6a21:158e:b0:1f5:79c4:5da2 with SMTP id adf61e73a8af0-20179972d43mr2744828637.31.1744349675007;
-        Thu, 10 Apr 2025 22:34:35 -0700 (PDT)
-Received: from [10.151.37.217] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2198958sm584678b3a.30.2025.04.10.22.34.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 22:34:34 -0700 (PDT)
-Message-ID: <f3a632e0-338f-4704-a33c-472a5197d8d5@oss.qualcomm.com>
-Date: Fri, 11 Apr 2025 11:04:30 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XSGpiGpL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744349687; x=1775885687;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=H2Qqw27rWurJ/QM/BRFlhS3OhPfOdj1QefRWTHpFEf0=;
+  b=XSGpiGpLbqJ9HQn5QJZahS9A5NeE+RzsrvQm2iQIV9kN/rCXDJ+6Ps8q
+   0srjKRm4NMPfFsNVkb3Vfgd0Dk59alpliuxAmIiFBGEKi/lwQ7xOgSeNx
+   +fNvrEebf/oLeyTRy/UtYRhVGt+oMwXn1w9gziM0dzVUatX1g1gylzlzI
+   MJsL5xpizpUx6UdTqtNCbemICDrGCEND6skOdl36jtiX2QBbUPlCSyPbP
+   uF9UKt+Oer1DFVFTyePsck2L1lMhBoXsdPrxNplL6FAC8ysTpzVRizIX5
+   uYna87QWeXfq2SUXiZHBVqOW5QHF5aAhpK4dPhKs+UoBocTrEdKFxPL8b
+   Q==;
+X-CSE-ConnectionGUID: wqtrFZMPR467xaiWGgrBaA==
+X-CSE-MsgGUID: EckEgiJuTI+3B4T948wLnA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="49545162"
+X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
+   d="scan'208";a="49545162"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 22:34:46 -0700
+X-CSE-ConnectionGUID: /AJKS0U2ScCcxWfmtWg1wQ==
+X-CSE-MsgGUID: CCkP4B5KTQur8nrJAkgQxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
+   d="scan'208";a="166293792"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 22:34:43 -0700
+Date: Fri, 11 Apr 2025 07:34:27 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Henry Martin <bsdhenrymartin@gmail.com>
+Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
+	netdev@vger.kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	amirtz@nvidia.com, ayal@nvidia.com, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] net/mlx5: Fix null-ptr-deref in
+ mlx5_create_{inner_,}ttc_table()
+Message-ID: <Z/ip4y2qSYcn93U/@mev-dev.igk.intel.com>
+References: <20250411022916.44698-1-bsdhenrymartin@gmail.com>
+ <20250411022916.44698-2-bsdhenrymartin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 5/6] watchdog: qcom-wdt: add support to read the
- restart reason from IMEM
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com>
- <20250408-wdt_reset_reason-v1-5-e6ec30c2c926@oss.qualcomm.com>
- <d075946b-44f4-42a4-a0b2-90ddeeb15960@kernel.org>
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <d075946b-44f4-42a4-a0b2-90ddeeb15960@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f8a9ec cx=c_pps a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=QQLzL5ziG8lQO_hVxMcA:9 a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-ORIG-GUID: IOe3Apx8uMbjU7nKnkD0cseiAeHo8x8i
-X-Proofpoint-GUID: IOe3Apx8uMbjU7nKnkD0cseiAeHo8x8i
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
- impostorscore=0 suspectscore=0 mlxlogscore=882 bulkscore=0 mlxscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110039
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411022916.44698-2-bsdhenrymartin@gmail.com>
 
+On Fri, Apr 11, 2025 at 10:29:16AM +0800, Henry Martin wrote:
+> Add NULL check for mlx5_get_flow_namespace() returns in
+> mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() to prevent
+> NULL pointer dereference.
+> 
+> Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_table")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+> V2 -> V3: No functional changes, just gathering the patches in a series.
+> V1 -> V2: Add a empty line after the return statement.
+> 
+>  drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> index eb3bd9c7f66e..18cc6960a5c1 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> @@ -655,6 +655,9 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
+>  	}
+>  
+>  	ns = mlx5_get_flow_namespace(dev, params->ns_type);
+> +	if (!ns)
+> +		return ERR_PTR(-EOPNOTSUPP);
 
-On 4/9/2025 12:33 PM, Krzysztof Kozlowski wrote:
->> +static int  qcom_wdt_get_restart_reason(struct qcom_wdt *wdt)
->> +{
->> +	struct device_node *np;
->> +	struct resource imem;
->> +	void __iomem *base;
->> +	int ret;
->> +
->> +	np = of_find_compatible_node(NULL, NULL, "qcom,restart-reason-info");
->> +	if (!np)
-> That's not how you express dependencies between devices.
+There is ttc = kvzalloc() before. I think you should call kvfree(ttc)
+before returning. It looks like the same leak is already when
+params->ns_type is unknown.
 
+> +
+>  	groups = use_l4_type ? &inner_ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+>  			       &inner_ttc_groups[TTC_GROUPS_DEFAULT];
+>  
+> @@ -728,6 +731,9 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
+>  	}
+>  
+>  	ns = mlx5_get_flow_namespace(dev, params->ns_type);
+> +	if (!ns)
+> +		return ERR_PTR(-EOPNOTSUPP);
 
-As I mentioned in the bindings patch, I leveraged this from the 
-qcom_pil_info.c[1]. I shall use the syscon_regmap_lookup_by_compatible() 
-function.
+The same here.
 
-
->
->> +		return -ENOENT;
->> +
->> +	ret = of_address_to_resource(np, 0, &imem);
->> +	of_node_put(np);
->> +	if (ret < 0) {
->> +		dev_err(wdt->wdd.parent, "can't translate OF node address\n");
->> +		return ret;
->> +	}
->> +
->> +	base = ioremap(imem.start, resource_size(&imem));
->> +	if (!base) {
->> +		dev_err(wdt->wdd.parent, "failed to map restart reason info region\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	memcpy_fromio(&ret, base, sizeof(ret));
->> +	iounmap(base);
-> All this is wrong usage of syscon API, missing devlinks, messing up with
-> other device's address space.
-
-I shall use regmap_read() instead of memcpy_fromio().
-
+> +
+>  	groups = use_l4_type ? &ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+>  			       &ttc_groups[TTC_GROUPS_DEFAULT];
+>  
+> -- 
+> 2.34.1
