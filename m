@@ -1,253 +1,194 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2058.outbound.protection.outlook.com [40.107.21.58])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238B1487BF;
-	Fri, 11 Apr 2025 15:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385716; cv=fail; b=uI0R9DhUnvFLv4moh7uaOxM9Po43j3pzvafL4A2Hq9qiyteYwfBkbu6Z0j1hdRRwhl3/ViMuocgOtwaiDC2ksFPDJ9fahh++KZ3b2c6OLKdNrKJ4hk602n6k01ccKuw1ufHyrIhqpGh6XghnY3f0/UK43aawxrtRmyimKefM1pE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385716; c=relaxed/simple;
-	bh=jM3DjSVS+dpszwY229eXX4TdlSK8orUTLwrQNYiPxNk=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=u8IXA7xhm2O8FwC+xJKW8xi+WZ1dmaT+G4B1HxboDvzAsbnh7X/XOmsrUyPc9NCfshny5Bl5QIDxy4ap2s+0fY64y77+X+wSPeH2BJ32PA3dYJWm12+Ym1feFF0aRAXaSqGuZplXWTlg48gII3KGu2iLMpACug6lC1FMsl332uc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=hZc88OaX; arc=fail smtp.client-ip=40.107.21.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27AF1DFE8
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744385743; cv=none; b=DrAuUjmWfRgATX78A1BmCgQDqjG55WjpybHQ4eDBFk8hh/Z5D6y/3tUO8NBOIHYTfoXYNfOzITKgx8AIgZXnd4tHaYfVfLHUpkU7fFbT79zWn+WH0JFXYKTE8BEZjj0zm1uFTYtcVEDJ+3g1WVOHpxvqEjlvtiMjKesztrOZGF4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744385743; c=relaxed/simple;
+	bh=pnjuot0PRjHdDOdm8RowAL3yao/N9rw2tuNoMgHgtBw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=G1Wo3ddsDsfBst2T+DfhO+f41oBa8/dNFEC+Yp44qzZAOMSWJnaQAMKtTv7/+8HKVii/10xHb61VCQlpd5T2qJLHKsuB4GUZks7vw9cCry0N0gJX62gv/hI5bXAwZ/I+ceLaXRnMmuLSvj4l4jVdiuFpR1rzh/oGkySQSl6/fEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=TNk5r+gr; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="hZc88OaX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OIMldf1miwtHXLlORiCuUwwls0Vk9gLnBrAR9CGul1W7v5OX+4yD9y+Y6IAenSehN9bxVGJ9M/m+Gl+I8cduTT+6aAb1eYiuqC7rV6anT7fHFwltuONefWdY6Rkrk1MVWEwWG+QR0k2xf8HTDOnROEhp52H5Wuuyg1SCvyiiCcpu9h4JuXhqbtZN2mTOFw2TpZrHXmQeXWQ4Hw5WMsz1BD3hCJ1x1/JSnawy0NEMYch1YjDpL5jUaHiuAwXnkVbMSvI2Ab8pW/NaZOLWkeUGQqKU5SLDLJNKwKjSPTWvo4vUJBjX6CMdlJJVaB+78u3U69WI4gCrXYSbYFSxIr0LyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yD8ET43vilSmbbEha8XAhP25pzyvlYKe3jALG0O2CQo=;
- b=K8+gPCkH9K1uS7e78RR2PQAohCZ/KQwXJcTiVj//Uiz9Lr6CTaanEBDXMA7devURD6hqsjQlfufGmAMMBS0C1N9Mfwz02SPnVHvLJwH4IgIELBU4zAaw1q+TlnFfrWA+BH6jX8hT578XVsuMTg1llaPt2h8rKH2SqCShfBc8e6bMlX7dTuWX1fsYZh/jF7EFGP6yct4OfiT9TMxZiTtu9IsgWSLJOFGBDLks60Sw7gYSalRHOAw+Q9uDqBj6agcl1th4j596y3oVbzDO4KNe9uV7sIV1dY5a4PyXqA+qSt3Krl2N1Wmn1zTl1z2xQAdI9zYd1Lcaq/N6B6Y2Wxf/6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yD8ET43vilSmbbEha8XAhP25pzyvlYKe3jALG0O2CQo=;
- b=hZc88OaXXCG7iqD2szqcpcEZIODCjUXhwSrfOfDAWmVTYflct0xRHvEEO9eT+mZsCviOdE/Cjyg+kM7u0vOwG9RIQ9Peuh49Kv9FWvMsAeZJ0OcPmbTOwLm9NKnBNe92F9rkpmnJwPMIeYdC5EFaIvXkU9jTgMTfeN8pjoRdVcvvRv36+XsNELCfk1wbhdDcCvKodbBJhda4CN9Sp5NitUIuGgxsKpUKYnID8POX8Od+m2OMsVomV8sWeNhrO2uumV5Vd7mBkYp9RbSHVa4ah8t5A2onDZruNtFc3udaon4/2RVeGTYX6c+Z2qZWoGmNOcRonP69tdjMeHElRPQwEw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by PAXPR04MB8159.eurprd04.prod.outlook.com (2603:10a6:102:1c1::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
- 2025 15:35:09 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
- 15:35:09 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: s-vadapalli@ti.com
-Cc: Frank.Li@nxp.com,
-	bhelgaas@google.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	tony@atomide.com,
-	vigneshr@ti.com
-Subject: [PATCH v2 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
-Date: Fri, 11 Apr 2025 11:34:54 -0400
-Message-Id: <20250411153454.3258098-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PH5P220CA0005.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:34a::15) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="TNk5r+gr"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 48F62240101
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:35:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1744385733; bh=pnjuot0PRjHdDOdm8RowAL3yao/N9rw2tuNoMgHgtBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 From;
+	b=TNk5r+gr9DCPWTCDCU9kShxTmn/AEc+aZaRQQPyiaGbbXQmg3bQ4ezhwTsqc2cCg9
+	 DFBDr2qSR75eCCX79qopNsPrwKzDsswP77GyBUOeSPDPU7pl7mG0R+p+EfEHT46PYi
+	 E5YEEnLyNF6Mt0QHOFsYynwBxBCDpDb1eCCWcRBefgWMyQR8AZGrNJEr5MsOVs5+Rs
+	 ZeBYAQsCePlNSSRzjzImy4ft1bCUqWXUYyaXDqf2wurvvLRO3QMzu6KMp34fIP2QK0
+	 rRiImwmXhrC9fHPGSNiQCsSEKqeZErl0udV6bRAb7OhGeU1qrQl8QRYJEwxflqmyUp
+	 FGN3JoeOXyvOQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZZ13M1M9zz6tw1;
+	Fri, 11 Apr 2025 17:35:27 +0200 (CEST)
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: syzbot <syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com>
+Cc: kent.overstreet@linux.dev,  linux-bcachefs@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bcachefs?] general protection fault in
+ bch2_snapshot_tree_oldest_subvol
+In-Reply-To: <67eef48d.050a0220.9040b.0262.GAE@google.com> (syzbot's message
+	of "Thu, 03 Apr 2025 13:50:21 -0700")
+References: <67eef48d.050a0220.9040b.0262.GAE@google.com>
+Date: Fri, 11 Apr 2025 15:35:26 +0000
+Message-ID: <m2o6x2r9s1.fsf@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PAXPR04MB8159:EE_
-X-MS-Office365-Filtering-Correlation-Id: 16a69c9e-44db-477c-7fb4-08dd790e7137
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hCREMt6jxUmyxqTigkieWT6lbQ50AjMvKEdJjjZVJGAznGcOhmEOb6uuXHO0?=
- =?us-ascii?Q?18EydddQd0gQ1as4Rjo9cy/axk5tEl+X+xxQBWs3KI34u4CcrTJ+t7HmDr5s?=
- =?us-ascii?Q?7virQwqgPKgeaHyTDyQCIqHbD3rf1MgBj/sexkUx/X2ky/SDGrV8IBz8e3XR?=
- =?us-ascii?Q?HVQPbtUi8nXuCQLTKgcZamsspOGXONxw+/wFFQT1cZ6OiwH15/rJJJKBJowa?=
- =?us-ascii?Q?/w6PFmly5aq3zmKZaSJLs6Cjf2wu056efF8EseY21nSVP3eRlehmlg/gCeAS?=
- =?us-ascii?Q?uLOwEKB6br0EnCJ3QXzvHblCzUPoT49NgS1nJUqOExC1wcXinOw0sB+s0EV/?=
- =?us-ascii?Q?YlLPD9hlVHqNXbIklnP5Z5myB4ty3qLlbInMhz0nGKWTv/OeYtzB7JXeUYEp?=
- =?us-ascii?Q?svezMv1aQPMtdLtKItw1krDc1ub2urXKeLzikjZDBxTZJfOeEmaSXXwM8mNE?=
- =?us-ascii?Q?eZ4UfVhp65+XSrGg5rz6rpLilBEHx94VtKliCd91nF+vAJFSrpthVY3Cj8Vm?=
- =?us-ascii?Q?QUVbdiiJxA4SQtmI8u0T1TpbKI2KIFj88bKQsolBK4aZu+hSIivTkjA+CQHP?=
- =?us-ascii?Q?Z7LZcLtym04wH4fdELiaBBDNVL78IAH4lXWAnGbiwnghgxfqw6CYSGjMSOPn?=
- =?us-ascii?Q?AMum25z/EPVnNPlVCY6WGlaJiqrSqzdmjR31V5XKBu1QsDUch6/U0IkGsbjM?=
- =?us-ascii?Q?dz/0NjjRvRYvpTL3itOZ8HbgShktKmvrOSe1wzyM+4VuYFgr299/avSwOg4x?=
- =?us-ascii?Q?+352XtuiREz+SNPM46iXRDIuHaPdvFclyeI3wqPcEbXs3ICwpWlMkV7xGlon?=
- =?us-ascii?Q?s5Jx3OivTlm+LoegXTuzzrqA8D2RihNkevUvoVj8OGBffnYwb/++u21k8TQW?=
- =?us-ascii?Q?aqITRiwqVJNUk4crKILfbVFmebc26H2XuxlUKZIoNsG7DXFrZMdlKQauTfN2?=
- =?us-ascii?Q?od8G3pTtoArvlJawY+M+M2IGuAG1upqrotQJ+dsH7TtrBvlnuZE7yjdDLS+S?=
- =?us-ascii?Q?koa5hU4bXgvlaZbdifGgTQwYnBYujm3bdnUg1PKIgt0EgE9YCBj/sP43Fv/0?=
- =?us-ascii?Q?uluEh2D5td9txTQnvsC2fycD6Czwsxq2Mfxie+q1iI1YXX0CvxpYFGadUI2f?=
- =?us-ascii?Q?HdtXqvey6/Gi+WGTABDNm/vF21b/hSNgc77aUsS2BG5LdO2s9dYZevjE890X?=
- =?us-ascii?Q?vCfqCtg+D4dl7TWEF02xtMyH2Mk2REQSjKfFbA8OPO+mEqUdEmKplh0Iw+8H?=
- =?us-ascii?Q?LX9xMDCGChOWL6R13mcb09X2TDqb5I+/ZnSXZSKyjH5tctrGoFxbAA/TXEJG?=
- =?us-ascii?Q?s0tMmHwvIDzxKyhLTXgl/fuWOt7v2M+s4K8H314p7uZDa5ih2kelXYLtj+du?=
- =?us-ascii?Q?IgaHHayjGrHBBwv8hBUifku15EBp4SIZgZR2hyg7rFAGcx7d64Q4d6jVVg52?=
- =?us-ascii?Q?tD5gqZhiAsQ2E+3Q2JPHu+CWs0kXJ+TOdQC/MWp0GlEDm/b0sP2BfUenoir5?=
- =?us-ascii?Q?f7WQ5Hfc5E6Craw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0kYyi6a2cHNZBctLChVcBBMknjXNmaw2YMJZV7rj0QDgmNqFMcswQ+HbHbdn?=
- =?us-ascii?Q?k5rVi/JPhy2sU6/ihXyc5SBo+0IYLJQqpXVm4Hptr410a6ubxQdw0EcZBO4s?=
- =?us-ascii?Q?mZ512xZjVddYtCIBFDDG8IZUzUV/aQ4VpcCyc0RHKcrbb/SBt/AFtHJ0G4Nu?=
- =?us-ascii?Q?EUH749CB9uyEAqD+yOelcibSh2NkAIPg6L+OR0MKnbVBb9HeLTBAgOyWUplM?=
- =?us-ascii?Q?xJKwYxrI3Ak+j8O0l1j+yu4Pjti6bMMBOOJPbsoBM1WjJaiajrV1FWqg2FOH?=
- =?us-ascii?Q?MUvb0jhkbPwCYAee3mtN3vIjVU/ZpfGZiA31rWYWbFpkKLb6mypMAZRBPyBi?=
- =?us-ascii?Q?2kuje5SnGoA77piR0S/VBxgc8znpjjNRGDHzBD9yeEC2kkEwYQplkEJNIKox?=
- =?us-ascii?Q?Isg7a3jebDcwF/HfQyCxQ46Mc/Y7MczMzKlk6FT8ygWgDaceISchnRFsDQp/?=
- =?us-ascii?Q?oWmLcYlVhAPl1JqFhG36BCF6MXalpUhLW4YF4T1NmVwZO00ysYhLOc6soeOZ?=
- =?us-ascii?Q?n/7i4Qkfy8P+KKaN5dd+nC+qeAA9yYdp4i69rl1RTCgt0VY9ahxkhamWu71a?=
- =?us-ascii?Q?Z6oVR5MdQ+f6JXXakcnRRIPMgvNIoL16SR57uQaXdd37zJaMItGHBItXeZRB?=
- =?us-ascii?Q?P5yhanOWp4PFnY5yiHbrXs9UIbvmj+pb9XZBoRLv2q+oGl3TcCpjD6lJQ3Cn?=
- =?us-ascii?Q?0gOBb7ejnXflvOnKfbOdg5fUI1YEaMbOYJvGcKMbAlhoQLSt3lzgnwhfR0uv?=
- =?us-ascii?Q?mKiG74FU9NpkwF1vQfa09L7rLoxhGqDudo6JQJjyPWp3EVSEsb3xmZKJYeWu?=
- =?us-ascii?Q?vtvK4I6FSI89H5Qa0Vlp0CM27x9UYCA7cQIdSG8qBAvCfJnSA6RKiNBLaP/m?=
- =?us-ascii?Q?oN8jlJTuzS6E4u4hbiDBGOh4OP7eJm7feWVDKiB9CHS0UAmy/+d1dA3F2kAJ?=
- =?us-ascii?Q?WjP+EehSbnJFOr6GxPXfJSYe9Sdbn7gK0eyahRpChx7KYqYdsfom+nxkGd3W?=
- =?us-ascii?Q?JnfioHz57cs3TfS3+lsV3W4z5dqAMSSZmgDzSdK4TMRk8eRhkSLh+8wWS7yk?=
- =?us-ascii?Q?QnVclTSvoCgTxOGIzFjBmnQDca9NqR34nPDRr/jmpp8noJedn9dE1lTYSigD?=
- =?us-ascii?Q?qTdq4K2LyQRuIWviuXwoDSjV/lCYuWuy2tz3V+gpfIxi84i6O7QnopxQCEtv?=
- =?us-ascii?Q?n2blNDm9so+kYpYMUzYxCwVtMWjvYEw7QQI6P3BynmVcKqG5WPw2Sy9zA8f1?=
- =?us-ascii?Q?T3N1JBdVN7Gs4pZsJA9oZX76RZfq9x4ckMWe6EI04Pm9CNeRwfaWACHofkRs?=
- =?us-ascii?Q?xSHXS3l3Df2szm9z77SaThl9j/vjVhUAJnkuZWO6qodQ1S7iqT0heesgwiCj?=
- =?us-ascii?Q?JwT0tYyO4D74HeGYp4CpkXLyqF/Lf1kcPev4+wUQPHnvIYO43/wYivZAqw0E?=
- =?us-ascii?Q?andejfZavsZe5JcKuZxtfGssjj5rBvREwBidnuZoaeEGMUx1tG2M2DNFXzsm?=
- =?us-ascii?Q?W2e1VTo5wJaDTc2ZrhaoKNIxNZh4jT297aUMd4eKZnu0OygR/MSdYXdEzDEM?=
- =?us-ascii?Q?l3nl4F5U0+IwzWbOFtGZJMWrvQiO2sgQgp6rErqU?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16a69c9e-44db-477c-7fb4-08dd790e7137
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 15:35:09.5479
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r/H1vSza7WXtI+x60cM5ZSO0qc/1ZSicEWLTus0cxxeRv2ffX08PmO1dpB/XQaBMtkdYTnpnutxAmnTrBuDN0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8159
+Content-Type: text/plain
 
-This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
+syzbot <syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com> writes:
 
-The commit being reverted updated the "ranges" property for the sake of
-readability. However, this change is no longer appropriate due to the
-following reasons:
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12482fb0580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6fe3b5e6a2cb1cc2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=baee8591f336cab0958b
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10530be4580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d6d404580000
+>
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a2cc6ff5.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/c58c1555aab7/vmlinux-a2cc6ff5.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/61fb9d013359/bzImage-a2cc6ff5.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/86cf46d3a5d9/mount_0.gz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com
+>
+>  done
+> bcachefs (loop0): accounting_read... done
+> bcachefs (loop0): alloc_read... done
+> bcachefs (loop0): snapshots_read... done
+> bcachefs (loop0): check_allocations...
+> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN NOPTI
+> KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+> CPU: 0 UID: 0 PID: 5318 Comm: syz-executor394 Not tainted 6.14.0-syzkaller-12966-ga2cc6ff5ec8f #0 PREEMPT(full) 
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> RIP: 0010:bch2_snapshot_tree_oldest_subvol+0x1d3/0x6a0 fs/bcachefs/snapshot.c:400
+> Code: e6 e8 81 dd 36 fd 4c 39 e5 0f 86 c9 03 00 00 e8 13 db 36 fd 49 6b c4 38 49 01 c6 49 83 c6 18 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 c6 03 00 00 41 8b 2e 31 ff 89 ee e8 24
+> RSP: 0018:ffffc9000d46e020 EFLAGS: 00010202
+> RAX: 0000000000000004 RBX: 0000000000000001 RCX: ffff888000f98000
+> RDX: 0000000000000000 RSI: 00000000ffeb487f RDI: 0000000000000001
+> RBP: 0000000000000001 R08: ffffffff848c7c5f R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffeb487f
+> R13: dffffc0000000000 R14: 0000000000000020 R15: 000000000014b780
+> FS:  0000555584fe3380(0000) GS:ffff88808c599000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055835cf3c000 CR3: 0000000044318000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  bch2_inum_snap_offset_err_msg_trans+0x374/0x680 fs/bcachefs/error.c:691
+>  bch2_indirect_extent_missing_error+0x411/0x1290 fs/bcachefs/reflink.c:192
+>  gc_trigger_reflink_p_segment fs/bcachefs/reflink.c:392 [inline]
+>  __trigger_reflink_p+0x196c/0x1cc0 fs/bcachefs/reflink.c:432
+>  bch2_trigger_reflink_p+0x299/0x380 fs/bcachefs/reflink.c:451
+>  bch2_key_trigger fs/bcachefs/bkey_methods.h:88 [inline]
+>  bch2_gc_mark_key+0x6bd/0x1180 fs/bcachefs/btree_gc.c:639
+>  bch2_gc_btree fs/bcachefs/btree_gc.c:677 [inline]
+>  bch2_gc_btrees fs/bcachefs/btree_gc.c:740 [inline]
+>  bch2_check_allocations+0x1488/0x6ab0 fs/bcachefs/btree_gc.c:1042
+>  bch2_run_recovery_pass+0xf0/0x1e0 fs/bcachefs/recovery_passes.c:226
+>  bch2_run_recovery_passes+0x2ad/0xa90 fs/bcachefs/recovery_passes.c:285
+>  bch2_fs_recovery+0x292a/0x3e20 fs/bcachefs/recovery.c:936
+>  bch2_fs_start+0x2fb/0x610 fs/bcachefs/super.c:1060
+>  bch2_fs_get_tree+0x113e/0x18f0 fs/bcachefs/fs.c:2253
+>  vfs_get_tree+0x90/0x2b0 fs/super.c:1759
+>  do_new_mount+0x2cf/0xb70 fs/namespace.c:3878
+>  do_mount fs/namespace.c:4218 [inline]
+>  __do_sys_mount fs/namespace.c:4429 [inline]
+>  __se_sys_mount+0x38c/0x400 fs/namespace.c:4406
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f22f815ae2a
+> Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffd84c61a58 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+> RAX: ffffffffffffffda RBX: 00007ffd84c61a70 RCX: 00007f22f815ae2a
+> RDX: 0000200000000040 RSI: 0000200000000000 RDI: 00007ffd84c61a70
+> RBP: 0000200000000000 R08: 00007ffd84c61ab0 R09: 0000000000005995
+> R10: 0000000000800001 R11: 0000000000000282 R12: 0000200000000040
+> R13: 0000000000000004 R14: 0000000000000003 R15: 00007ffd84c61ab0
+>  </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:bch2_snapshot_tree_oldest_subvol+0x1d3/0x6a0 fs/bcachefs/snapshot.c:400
+> Code: e6 e8 81 dd 36 fd 4c 39 e5 0f 86 c9 03 00 00 e8 13 db 36 fd 49 6b c4 38 49 01 c6 49 83 c6 18 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 c6 03 00 00 41 8b 2e 31 ff 89 ee e8 24
+> RSP: 0018:ffffc9000d46e020 EFLAGS: 00010202
+> RAX: 0000000000000004 RBX: 0000000000000001 RCX: ffff888000f98000
+> RDX: 0000000000000000 RSI: 00000000ffeb487f RDI: 0000000000000001
+> RBP: 0000000000000001 R08: ffffffff848c7c5f R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffeb487f
+> R13: dffffc0000000000 R14: 0000000000000020 R15: 000000000014b780
+> FS:  0000555584fe3380(0000) GS:ffff88808c599000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000556b9781f0c8 CR3: 0000000044318000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> ----------------
+> Code disassembly (best guess):
+>    0:	e6 e8                	out    %al,$0xe8
+>    2:	81 dd 36 fd 4c 39    	sbb    $0x394cfd36,%ebp
+>    8:	e5 0f                	in     $0xf,%eax
+>    a:	86 c9                	xchg   %cl,%cl
+>    c:	03 00                	add    (%rax),%eax
+>    e:	00 e8                	add    %ch,%al
+>   10:	13 db                	adc    %ebx,%ebx
+>   12:	36 fd                	ss std
+>   14:	49 6b c4 38          	imul   $0x38,%r12,%rax
+>   18:	49 01 c6             	add    %rax,%r14
+>   1b:	49 83 c6 18          	add    $0x18,%r14
+>   1f:	49 83 c6 20          	add    $0x20,%r14
+>   23:	4c 89 f0             	mov    %r14,%rax
+>   26:	48 c1 e8 03          	shr    $0x3,%rax
+> * 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
+>   2f:	84 c0                	test   %al,%al
+>   31:	0f 85 c6 03 00 00    	jne    0x3fd
+>   37:	41 8b 2e             	mov    (%r14),%ebp
+>   3a:	31 ff                	xor    %edi,%edi
+>   3c:	89 ee                	mov    %ebp,%esi
+>   3e:	e8                   	.byte 0xe8
+>   3f:	24                   	.byte 0x24
+>
+>
 
-- On many SoCs, the PCIe parent bus translates CPU addresses to different
-values before passing them to the PCIe controller.
-- The reverted commit introduced a fake address translation, which violates
-the fundamental DTS principle: the device tree should reflect actual
-hardware behavior.
+#syz test
 
-Reverting this change prepares for the cleanup of the driver's
-cpu_addr_fixup() hook.
-
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Change from v1 to v2:
-- update commit message to add more detail.
-
-Previous disscusion at
-https://lore.kernel.org/linux-pci/20250314064642.fyf3jqylmc6meft7@uda0492258/
----
- arch/arm/boot/dts/ti/omap/dra7.dtsi | 29 +++++++++++------------------
- 1 file changed, 11 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-index b709703f6c0d4..711ce4c31bb1f 100644
---- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
-+++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-@@ -195,24 +195,22 @@ axi0: target-module@51000000 {
- 			clock-names = "fck", "phy-clk", "phy-clk-div";
- 			#size-cells = <1>;
- 			#address-cells = <1>;
--			ranges = <0x51000000 0x51000000 0x3000>,
--				 <0x20000000 0x20000000 0x10000000>;
-+			ranges = <0x51000000 0x51000000 0x3000
-+				  0x0	     0x20000000 0x10000000>;
- 			dma-ranges;
- 			/**
- 			 * To enable PCI endpoint mode, disable the pcie1_rc
- 			 * node and enable pcie1_ep mode.
- 			 */
- 			pcie1_rc: pcie@51000000 {
--				reg = <0x51000000 0x2000>,
--				      <0x51002000 0x14c>,
--				      <0x20001000 0x2000>;
-+				reg = <0x51000000 0x2000>, <0x51002000 0x14c>, <0x1000 0x2000>;
- 				reg-names = "rc_dbics", "ti_conf", "config";
- 				interrupts = <0 232 0x4>, <0 233 0x4>;
- 				#address-cells = <3>;
- 				#size-cells = <2>;
- 				device_type = "pci";
--				ranges = <0x81000000 0 0x00000000 0x20003000 0 0x00010000>,
--					 <0x82000000 0 0x20013000 0x20013000 0 0x0ffed000>;
-+				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-+					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
-@@ -235,10 +233,7 @@ pcie1_intc: interrupt-controller {
- 			};
+diff --git a/fs/bcachefs/snapshot.c b/fs/bcachefs/snapshot.c
+index 0c65065b08ec..8862714b1806 100644
+--- a/fs/bcachefs/snapshot.c
++++ b/fs/bcachefs/snapshot.c
+@@ -397,7 +397,11 @@ u32 bch2_snapshot_tree_oldest_subvol(struct bch_fs *c, u32 snapshot_root)
  
- 			pcie1_ep: pcie_ep@51000000 {
--				reg = <0x51000000 0x28>,
--				      <0x51002000 0x14c>,
--				      <0x51001000 0x28>,
--				      <0x20001000 0x10000000>;
-+				reg = <0x51000000 0x28>, <0x51002000 0x14c>, <0x51001000 0x28>, <0x1000 0x10000000>;
- 				reg-names = "ep_dbics", "ti_conf", "ep_dbics2", "addr_space";
- 				interrupts = <0 232 0x4>;
- 				num-lanes = <1>;
-@@ -269,21 +264,19 @@ axi1: target-module@51800000 {
- 			reset-names = "rstctrl";
- 			#size-cells = <1>;
- 			#address-cells = <1>;
--			ranges = <0x51800000 0x51800000 0x3000>,
--				 <0x30000000 0x30000000 0x10000000>;
-+			ranges = <0x51800000 0x51800000 0x3000
-+				  0x0	     0x30000000 0x10000000>;
- 			dma-ranges;
- 			status = "disabled";
- 			pcie2_rc: pcie@51800000 {
--				reg = <0x51800000 0x2000>,
--				      <0x51802000 0x14c>,
--				      <0x30001000 0x2000>;
-+				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
- 				reg-names = "rc_dbics", "ti_conf", "config";
- 				interrupts = <0 355 0x4>, <0 356 0x4>;
- 				#address-cells = <3>;
- 				#size-cells = <2>;
- 				device_type = "pci";
--				ranges = <0x81000000 0 0x00000000 0x30003000 0 0x00010000>,
--					 <0x82000000 0 0x30013000 0x30013000 0 0x0ffed000>;
-+				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-+					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
--- 
-2.34.1
-
+ 	rcu_read_lock();
+ 	while (id) {
+-		s = snapshot_t(c, id)->subvol;
++		const struct snapshot_t *snap = snapshot_t(c, id);
++		if (!snap)
++			break;
++
++		s = snap->subvol;
+ 
+ 		if (s && (!subvol || s < subvol))
+ 			subvol = s;
