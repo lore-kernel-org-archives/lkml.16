@@ -1,139 +1,299 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D169259C9B
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744395828; cv=none; b=RimbB35BZJAPePBpUQEO9vXx1BrggLUHMVmfWo8BjViuO6O35nYtG/Cvww4m5gAwWmf2M8AtHlyczo19+M32TbpMa9vagYx3lgagn5Twg8FuSBrjpkyKA3RgwoCmdh0BrJGCDekvmpawvHt8PgdYpd6JR4/wKh9Wb5CAUajsK9M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744395828; c=relaxed/simple;
-	bh=wRp633fAvN432QNkHOn3Sh2WuHOXAZD5y1ya/0TaED8=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=Cxgfmd2ubcesllxkberNtF9EsNd9+EIfa3fqjMkqIx2LTV3dqh72h+2Y7bxN5KjDlfA/NBJ69m3x2cQ+NSyyevzLSJ5gDlyK8TSQLAf35BtrsC1ucQ5fggxaTy0y+8IhBHXtH4j6HRkKPaho1+Qsk+QDaO32AFr65vTXPwLRu28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=b7dCwIxt; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D44B25A2D6
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744395834; cv=fail; b=bNvrHC067B8tPJ7Hq9UsPbwowMvbrRnI8+Ym9yuCn1nm9Np2unlopf/d6TtJ5OfLUaT8taWOD6AmdCQL8wZ2+K+x8uJVGOKeIXXuz25dsSblrpctzTLecA6R6sRa0jNloV71wPyes5SP7NtVXgG7RSZFlp8ZJvHxWHyoLgJWEyM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744395834; c=relaxed/simple;
+	bh=QPjU3QMTAWpldNeKns3hHU+hCHJC18b6O4G1CVFo7Wk=;
+	h=Content-Type:Message-ID:Date:Subject:To:CC:References:From:
+	 In-Reply-To:MIME-Version; b=G4oPzYFvyRJ27/urImKNNSKfTUqgT4kxfMAxTTeADFCgLBgAT9KwNYowbEG0jSvurRii6FF4BNjuBI608ugOSr+0iWEdHpeV010dm31CXWW91HdigoCFAuleTCAD1ErlJIqCbWfQgqPoBFIYHln7WGCVW7k7fgQ4pI0wHuieTcs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ru7mmn5B; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="b7dCwIxt"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5675dec99so220090685a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:23:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1744395825; x=1745000625; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xJ5YQmBzzxkqZ4hz8rzQpHRMLyXN9+w+kR88cQLsbB4=;
-        b=b7dCwIxtJARe7cspE3HpNPoA6XonETix6GDMvhiVaRSoridHQj21256YEf1KrI0Rd6
-         TSvKxg5eBXaEiBdBhzZyyHMoWoZ6uJvV72QBetB4dq+udymWe7wloEieO//bqtMNacVJ
-         9jVoVh/brFLnrT9tz0uq86OMtjU6ZV32P3dv5ldohSgyBwGzfOTPquIInT82LlwNLdMj
-         H5jLHfzougCW2PH26L3f58eT8eHnwvdmlTLs/z199Wt4yIy9lMpr9zk5e1IpM9FiX/5Z
-         QWRwyWl6IJ4RCtuXkAr5W6s3TR5rURWmiWeGeC7OhqtY2r8Ymk+QSmTlezdV9K9ZyBkx
-         p3Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744395825; x=1745000625;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xJ5YQmBzzxkqZ4hz8rzQpHRMLyXN9+w+kR88cQLsbB4=;
-        b=tPjCNCYbXqa4oQdtz4AoSJHIn+/UuBnIa5KG8lH2dhVNq8d0PUAEGiGagmFoemlnz5
-         9XqAfYJQGH/5FEUkWgc2WYiomjWAJQteJ8LTyFa+B7HmNF05/wPaTbayEtnhvugcz7d+
-         oKXjwZE3iAoeXqHA7ANHzFxCLFGpGmdo66g1yjDKwO20kynXyUYIXxVQitmFUB671Uir
-         BD+H1h73X+FesBWIa2samUobQIEIa/t/LmzjkTNlUb06b/Y3GZ9alvZnKmppxN5j07mF
-         GxM81S+Bi5Q6/80jK8mWV2Q+XtZap0wmommx9I3TQEUwoh6LrDbXB6/wrD/2bsD5Kqst
-         Xc2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVn2K/rwjf5bBD8xHbzCJ3vwOUByBHKjVnmquKRwiwy3qOwNhKMYjDwGIIYuWw/mAABriffuNj3GbBbZMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7jaDpoU6KyFZtzMqbYysBTgPDYnoO7xUeqK78SJAHKSBlCyuI
-	lqhNeZkH0PhS6BR1BWrdgYBCvDOZZTBTRm/5crt+vIj3K4ZkOGnBrBoa8gFgjw==
-X-Gm-Gg: ASbGncvomWoXJ7rDU84S0dQgWdVVZXNoyMpjLFWd/SGJAwZRySGKUsvn0GRA1OQGczx
-	UfcwOqSx0MXze/LF0OLGyYp08aE9gwoZ4yNlfQlehOVbQgVDl2Cek498LKjMzpEwSik7K6TWLJK
-	uqksCi/+yE4pqVyQA7voDj7Sc/3IZWhT036ANLW7HbrAISDI7b+x4DZME8H3RYMCzqInLtIGsoX
-	/zbXY+PvXPFtzAD12Yzt0oR4WJHICgweLZn0aUPAOfpytfX7YsiuUahPqVPXse5wJzJ8N3ES5Cb
-	Kn2zTH0yJlq0GtwjpeNqkCHgZcaoQdbOYGCpaFURXEUFsWjeZZbfQT1uSn9DtHSzEMZ2XZjS42b
-	6TMF5KmuADkHv+AsXt8lT
-X-Google-Smtp-Source: AGHT+IFpxoHsqE2rqU3QKNPJxTXFDKVYNRpkbdRdb3VY4DSQsTti4hjvh96mfKN0WMPjfhsC18cy/w==
-X-Received: by 2002:a05:620a:25c8:b0:7c5:48bc:8c77 with SMTP id af79cd13be357-7c7af0f7486mr546571885a.12.1744395825315;
-        Fri, 11 Apr 2025 11:23:45 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a8943834sm296919185a.22.2025.04.11.11.23.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 11:23:44 -0700 (PDT)
-Date: Fri, 11 Apr 2025 14:23:44 -0400
-Message-ID: <92e9622d6dd1bd3e59a36269275aa1fe@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ru7mmn5B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744395832; x=1775931832;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:mime-version;
+  bh=QPjU3QMTAWpldNeKns3hHU+hCHJC18b6O4G1CVFo7Wk=;
+  b=Ru7mmn5B/A5cXXOBk68NcuJnjSaaE0QObMH83ymDhk0m4MHj6x+b8IOt
+   dyOyvUKINiw3x71ATNAbO0OftLnrNhF/EHPIf/u9CKqpAyX4k2TwzV313
+   RydVCSwfM0Ub7dNkqqa7iXJ8pACBrqCX0dz9ikLg2BfJawYZvIq3TRkhV
+   8k2+ct+vRu/OYcl4/nW8+0jTjlTtFUCsW4Xx7RaNuh/BbXlOAG0+fMvhj
+   es5mJcUOB1djKOucOxwNzlcpB1rCqWq+QgLDgt/OOJgiQsBVm/DCfYkQr
+   rykcRDDpDWVpQ97OfZzj4WsSa1CYkb5kNXBlxSl6K34TYSdWTFcvNpB/3
+   g==;
+X-CSE-ConnectionGUID: Kpo9WAYMS+esnAbP9qeN9g==
+X-CSE-MsgGUID: LfuBR6LATwG7HN9e26P9SQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="49610095"
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208,223";a="49610095"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 11:23:51 -0700
+X-CSE-ConnectionGUID: s4aBJrM/RTmje39WFAdoTw==
+X-CSE-MsgGUID: 2Kqr4ApqRmuJ7MqepMk0dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208,223";a="134421781"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 11:23:51 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 11 Apr 2025 11:23:51 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 11 Apr 2025 11:23:51 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.45) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 11 Apr 2025 11:23:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hkfi5HkGhWrcmAmQiAbeGzzOqdgZV8/jHU2lFeSa1k3wCppStgT6Jffhv7/+XsTpAmCBu5V07Bsfu3C+ZJyw87mh661yQXVZcFvIoBgiTxyZuPA3KiaYOjK40TaTtgocIx4zL7dIclGRdwkCUt4q9s82Wa63RpCsnI1Fb92tXerxvvMmaBFgKcye2lHXIwS8m7TlyIURwCXi4Og+0xymhSXyMCIfA8SO7pDVpqenng2BrLQ+IdT+k3ifjYHV1F67wB6VZ4NXl0CAamxnH6u5jTlOcgIg8IJdhveHnstKhhQLrHO4FI0JozH9Je2Cl6olDVjmBlsL2sNb2pqxnnShiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LlhneBjC4xbYci9KHlzddlgiec4pqO5TUxs4EVGtENc=;
+ b=qn3mp3t8xmTl4XlPB8zeVdHjwqBMnNUIJJ2pgWN+ZZ8MgbNh15hULQGnA5H8bKwtLoHqo+xPPbo8lQVyD0pbHEC2RB+LlSHAPIamD90MIo144frzCgd2AaUHSKXjk+6u5ShfYjC6yKWn7Vd5K5+UOzeJaoKKokwSWEBZ9eQVPzvInuA2oqRDdp1suNvUCwTfTplXuSoL56ts0x8/SwCGeNfFzQhkbf1fUtJBhASbYHI+6V/lWneSRep3jc4Ync2WWK7nys8tKYJZwwiqDFPQERrCjETSRoB9XpB1EzclmoFN5I2YwfbCOytQshEDhOQqwuYW7UOd/OhekMyESADBlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7925.namprd11.prod.outlook.com (2603:10b6:8:f8::18) by
+ PH0PR11MB4982.namprd11.prod.outlook.com (2603:10b6:510:37::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8632.29; Fri, 11 Apr 2025 18:23:34 +0000
+Received: from DS0PR11MB7925.namprd11.prod.outlook.com
+ ([fe80::b1ef:c95b:554d:19c9]) by DS0PR11MB7925.namprd11.prod.outlook.com
+ ([fe80::b1ef:c95b:554d:19c9%4]) with mapi id 15.20.8632.025; Fri, 11 Apr 2025
+ 18:23:34 +0000
+Content-Type: multipart/mixed;
+	boundary="------------p2favoQN77XUwAxXNPbwIjzw"
+Message-ID: <7b91d929-fe97-44c6-aa94-05417bce1014@intel.com>
+Date: Fri, 11 Apr 2025 11:23:32 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2a 5/9] x86/cpufeatures: Add X86_FEATURE_APX
+To: Sohil Mehta <sohil.mehta@intel.com>, <linux-kernel@vger.kernel.org>
+CC: <x86@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>
+References: <20250320234301.8342-6-chang.seok.bae@intel.com>
+ <20250411161250.14662-1-chang.seok.bae@intel.com>
+ <d076ee8c-0c22-4e99-964c-5ea254f5be14@intel.com>
+Content-Language: en-US
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+In-Reply-To: <d076ee8c-0c22-4e99-964c-5ea254f5be14@intel.com>
+X-ClientProxiedBy: SJ0P220CA0009.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::25) To DS0PR11MB7925.namprd11.prod.outlook.com
+ (2603:10b6:8:f8::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250411_1406/pstg-lib:20250410_1510/pstg-pwork:20250411_1406
-From: Paul Moore <paul@paul-moore.com>
-To: Richard Guy Briggs <rgb@redhat.com>, Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>, LKML <linux-kernel@vger.kernel.org>, linux-modules@vger.kernel.org, Linux Kernel Audit Mailing List <audit@vger.kernel.org>
-Cc: Eric Paris <eparis@parisplace.org>, Steve Grubb <sgrubb@redhat.com>, Richard Guy Briggs <rgb@redhat.com>
-Subject: Re: [PATCH v2] audit,module: restore audit logging in load failure  case
-References: <b96c64d522cf1c46dce1b8987e83f2f41ff2e5ee.1742231027.git.rgb@redhat.com>
-In-Reply-To: <b96c64d522cf1c46dce1b8987e83f2f41ff2e5ee.1742231027.git.rgb@redhat.com>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7925:EE_|PH0PR11MB4982:EE_
+X-MS-Office365-Filtering-Correlation-Id: cc753763-8513-4bf1-5980-08dd7925f859
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|4053099003;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?MEUvM0g4WDBtOENuWFBERjZNY2YxTVdSNUNPL0dncnVUSjFRUU9FdjNSUkNj?=
+ =?utf-8?B?dHlhOHZVSTZZcnFBd21qUm0wVEtpZXN1ZTl0ZEtBelNMbHY2Tkh4aVFMb3dJ?=
+ =?utf-8?B?R1RycjdwK1A2NUNTMldvZWRyMUEwdC9VVVBDSkpBMWNyYytnMzB3djQ2aXNy?=
+ =?utf-8?B?alZJdWtlUmQ0TEFiSkJXbnhzTTdYOFhHVWdZUHM3OGpmN09FSTUzVVZYYjF2?=
+ =?utf-8?B?QUtGbVRKaXZXdk50UEYwRVJWZUdDaEVMVXN0aU5aNEV5VUFOOFRlNDU3Q3lJ?=
+ =?utf-8?B?Q0VtZ0llOWNDRGx3YUZ3c1YrSC9LUjhYYTdJL05NN09uQWRDMVhncGlYdVFo?=
+ =?utf-8?B?NmlwWUhOVW9ORVkxbU5lOVh5YXZTYnAvenFYWlhIUzhLZXp2MnBqWDFidG9y?=
+ =?utf-8?B?bkdmMWNzOGNhQzJHV3p4MnlieGtCL0RyMGhLOWhmNzBDOXhOUVpXTGxoUUNS?=
+ =?utf-8?B?Q3ZFdzdkVzg4U1hkK2hqMjNtNkNrSzlnS3pSQzlFR0pUVk8rZlk3MTBkalQ2?=
+ =?utf-8?B?ekc5SXBhNmw1dnpuem1EYmFTak1UakNyQmQwSXNQVE5ncUZURHhKejI2ZThS?=
+ =?utf-8?B?OTF0STNJc0d4Z0srU1BjbDk1b2hpeTdtY3JTejJPR3U4L2p3T3hSM0ZjMDNX?=
+ =?utf-8?B?Vy9JRlhqcnNpcS9SaGUxUmF5Y1BROU80TW1yQ251Rko2aDBHMGlmdTY2TVlx?=
+ =?utf-8?B?L1VTZHhBYWZjNVhjRElRcUxsdkNsY1NuTnQrM3NDWlZMOWNxY1kzU3RLVGFG?=
+ =?utf-8?B?MjUrMWRwL1lXYmNLbzNoTFBoQkRTYnIzc3J3UUVKSzE1VkJiaHcvWXZPSXZO?=
+ =?utf-8?B?YkY2dTVxbTg4WjkvY1hBM3RpMmprUi9uVXhldGZObDhpNndFMDdrZ0JiSHNV?=
+ =?utf-8?B?Tmt2SXUxZ2pVb21uMXVWNWNsTGNjNjdDc2kwUUg3WVFLdmhsSkJXSm4rdnRO?=
+ =?utf-8?B?MmFqNTE5akw0OStaMjRGcHRWcDl2ejZtLzBzNjlhbnkyMmlDMkoxV0MzSlJR?=
+ =?utf-8?B?K3Frd1I0VmFMdklJOEdWdlJ1dmZGYVh5MUlpYWs1TkFuUEhPUHB5Q2d0QkNK?=
+ =?utf-8?B?REJzYUZKZ0JRanV2Z1c1NTZoZjNUU05XendUSjZWT3NEMEF0Mnp4Z094REg0?=
+ =?utf-8?B?WXg5amtCWit1cFJKbU9jNGtnOHNiczFPOERGbEdZREVnT2xHbFdyTm4wWkR6?=
+ =?utf-8?B?U08wUjBKZlpBWXVpZjVtOVZPODV6SXdESDBuSjBmVUEvVTZxNEhYNE5lQ3VN?=
+ =?utf-8?B?cDkxcjFtTDF0ZjF1MHVUZFRybmthbGNhcHpCT0UxWm1TR00zQXN4ZDVEZzE0?=
+ =?utf-8?B?Mnlqc1I5a2NVeFBFVEJqNE1SMExhaS9SVTZiNzE3dnMzcU9QYXVWaWhmOXl0?=
+ =?utf-8?B?b2ZHUWtSWWZrMUkrN1pDOTErL21OVUlpMGlDWEhsSWxybDdpekp2ZndkNmQ3?=
+ =?utf-8?B?dHg2Z0lMRTlmKzdyditadXkwMUF4a0c0Z3F3cUptUFRNclFBTkt2QzBvUXJR?=
+ =?utf-8?B?Rzd3R3NpSllCeWVqYytERVNJazh3T0tCcDRibHdEOGtCZEZTQ1NCcmRsQlAy?=
+ =?utf-8?B?Ymw4NVJVK2ZZOVRraFoxTFFocmVWNStxVnAvMDN4T0lhWXBqKzZoMCtmRCtS?=
+ =?utf-8?B?QS9nU2NTSVRBb09yek1XQnBYK3I3L0NsTnc3VWxiWGdZMXV3NlpqcUo0VlNN?=
+ =?utf-8?B?N0tFU2kxNnJsblZmMDgxVVFyVnZTY3dSRldPb28yK0FUdFNQWXpQckU3WlZ2?=
+ =?utf-8?B?cGEzUlBnZVRTQ2xFK3hJMkkzdGdCU3AvanNVSU9GeVI2ZjJTczlWM3NKbldK?=
+ =?utf-8?B?bXAyamZmRjBlaWVOQjluSlB5ckgzbnFtR01QL05lZ3JQQ3E0SWFOaHF3QTND?=
+ =?utf-8?B?VHVQMERrZ2hMNXo0MWV5bWE1SUhrQmljTjFvdzFuOGpaRExWaHhyL1RhVDJ5?=
+ =?utf-8?Q?5GlUkqj/kfI=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7925.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(4053099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dDBQSklIUlhjL0xrV0FhSWhrazNSVlMxdGhkZWc1ZUxSZTJTbDdtYTJyamJZ?=
+ =?utf-8?B?SXI0UElPRE1TdEdKdXZrcjFFVmNSWUhKMEVncTRwczBxb2tNbUhzbUlFU0Ir?=
+ =?utf-8?B?bVpZakVLWXVxUmV5aHQ4WXoxU3h5c0ZFWEpmaCtydWw4NFNxaDM3bHVqcFZi?=
+ =?utf-8?B?aXJ5cDFRVUJuOHdNbXYwWWUraDY2SkxFTHcwMzUwTEswS3J0Umw0VTJ6Nmxj?=
+ =?utf-8?B?VDhESWJhWXFJU1ZMM0FYK0dkelliaXJLWTZlWURIK3NJTkxWUllNc2swZENs?=
+ =?utf-8?B?RjRaZXZMTUpwcWJGT2tXUHFydzlvWXRtWno0ZUg5WWdvZ0o3QnZIaFgzczdM?=
+ =?utf-8?B?Y2xDdkFaMHFIUEx4d3FoeVpnaWQvc3ArSjBISEpYQVBGazlHaWg2cXZwRUhO?=
+ =?utf-8?B?V011K3R4YkdreU5VRUFEcmNpSVBTNGd1aWYyYkxGYnB3WlNWdWhyUDZvb2Yx?=
+ =?utf-8?B?WEQ1dCtaWG9EQUd4cTZYRkRBVVQ5d0d6Y0ZYSjB5eXMvb3F3K1A0SmxDMm5q?=
+ =?utf-8?B?M0pRTEZTcVgwbDRQelpsYkk5Nk9Tc2FDc1pzK05ETGFTZmxvbGNuM2JOWGp3?=
+ =?utf-8?B?cUZhUnZiUGg1a0EvZk0reFdXS0w3NFNTMzdGRDFJMWF2dWZNTkx4ZndNRWpS?=
+ =?utf-8?B?TjBNYjdNa3AxN0VvTTd0c25uQ2kyM2I0ZHdQVlJFUDBidlAyVHBrTjJHeCt0?=
+ =?utf-8?B?L09zK1AzWFpGeVRST0hqeXZxcng3MHRrS1phZlpEYTNaM2tuajRYWmtGazBE?=
+ =?utf-8?B?bitrZG5MK2hWbTZKQ1dlOWpZT3ZrZ3REQnhEM2VydDhPaWhUZlN4OStaYnU3?=
+ =?utf-8?B?ZHV6azMwamx2Z2dRN2gwSjUrVWZDbGs2QVpVendHMHk5VS9mVER0elppUy9H?=
+ =?utf-8?B?QXZQS1dONlRtSDhiQjg2UzdRaXZKTWpmMG1VTnNZb0VDTGg0SUxhbkk0MTRj?=
+ =?utf-8?B?VnBNN1lnZFlzSUVEbnpOeHVJRnB0SW52Ni9Bam5XNGw3VkU1eU1uaHVEZWYz?=
+ =?utf-8?B?T1RmTWtJRTBEWjRKLzlnQ3dFQlJkSVFwcWErM2tmMWlPWDgvZGU5UHE1ZUc1?=
+ =?utf-8?B?WUU5TVAwYXJ5cEgyTW9LV3pQVHRSUVJtUitLa0VwRm40cnI4SElaYndmUXEw?=
+ =?utf-8?B?V3VpbHNDM0VCeTlXMWM3WVZaditZUmQzemZzY2J3alFIcDk1QWErM3ZNRnl3?=
+ =?utf-8?B?SzRLS1NUdGJwM1BpVlU2VGQ5Mnk1djJsa1FsckdWcUg3ZEZMckpoU0t4aXcw?=
+ =?utf-8?B?RXlFdmQwVE1teTFzQmIrZzl6eUJCU2pqOTFKVTRYc1Jzd1FaV3IyK0MyYWZv?=
+ =?utf-8?B?MnZKZFVLZ1grMnREZGVoallYb2pYamNzZDc5aCtFWjNYaVRaMko4R1VOdDlX?=
+ =?utf-8?B?OGVhQkVDejBBR0tqOU9SZ1RlR2hmdjVjMjg0UUJCd3Q1WDhHTlRpeFlIUVYv?=
+ =?utf-8?B?TjJPUVlhVlRtZWplcFZNMkFUSnYwZnVVNWcxa0FUSklFcjJJRVZwQmFQaVU3?=
+ =?utf-8?B?eGNrTExuUWgra3RMTm9sZnkzYTBMV0pMRFplWEFTRzR3VFBQOEt6YnBkWHYy?=
+ =?utf-8?B?b1dkTit6aDRhMjlpNWw2U2NIV1NIRHExNzJlc0RiTlREcEkxdzZEc3J0Unlv?=
+ =?utf-8?B?L1V3WG1LeXhKalU1dXZpMlNrbXhQSWkwVHQvdWRpVVgxaTBwbDJUL2tpWm96?=
+ =?utf-8?B?OHczcHVpd28wYXloUnU5U1I4ZTZTQWV2eWtvVkdOS1Z4c3AweFBDUW9WcmJr?=
+ =?utf-8?B?amZVNE05a05FLzFWbHF4WDN6M0xPaHQ3UnlDWWxoYzlNVit5Q0haZjdXeUNF?=
+ =?utf-8?B?S1plZEQ0T2l4NFBtMldhR2ZmSGFQZlNwcnRLMk1vMEsvQzhrRVZRRHJVSk1Z?=
+ =?utf-8?B?eWMxUUt3VXB2Wll5cUdSNGltSDhEdXVxeXZKdHZuZFlnLzRBR3o3YU1ER1FV?=
+ =?utf-8?B?ejdiZlUvOWIvU0xRdFAzazByRkJIajhpZ3RmeUpjZkdFK2Fpa09ZRllCN3l3?=
+ =?utf-8?B?OW1OQVlsTlhPOTZPN0FoNHprS1drVXI2Wk40c1BoYmZaQlA1QkxKMGtnblYw?=
+ =?utf-8?B?VUM5RDB6Q3FwSWJ1WXd2RlNIZitOeFVVb3VTY2duRFUvYy9pKzZWSTV5TUMy?=
+ =?utf-8?B?b1BlL1pZbmNheXBsb2JQdmNFUUl4am5XVkRGanVTV2lTTWpRVTcxU0pDVUM4?=
+ =?utf-8?B?cHc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc753763-8513-4bf1-5980-08dd7925f859
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7925.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 18:23:34.6102
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0btNKZV7fgI0kyJS1pJGzPjmkwoWipWcCj3/V0NJPnoWEOEcPxGj5HPBHVGIi1tliR03kDV1MwJgRAWA1VBaT3N6H/4soSfh1DFQeY6jPbE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4982
+X-OriginatorOrg: intel.com
 
-On Mar 17, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
+--------------p2favoQN77XUwAxXNPbwIjzw
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 4/11/2025 9:54 AM, Sohil Mehta wrote:
+> On 4/11/2025 9:12 AM, Chang S. Bae wrote:
 > 
-> The move of the module sanity check to earlier skipped the audit logging
-> call in the case of failure and to a place where the previously used
-> context is unavailable.
+>> +#define X86_FEATURE_APX			(21*32 + 9) /* Advanced #Performance Extensions */
 > 
-> Add an audit logging call for the module loading failure case and get
-> the module name when possible.
+> Is the '#' before 'Performance' intentional? The previous version didn't
+> seem to have it.
+
+Oh no — I only meant to update the bit position. My bad!
+> I don't think this table follows any specific logic, but recent patches
+> have tried grouping by similar features or features with similar
+> dependencies.
 > 
-> Link: https://issues.redhat.com/browse/RHEL-52839
-> Fixes: 02da2cbab452 ("module: move check_modinfo() early to early_mod_check()")
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
-> Changelog:
-> v2
-> - use info->name for both audit_log_kern_module() calls and add const
-> ---
->  include/linux/audit.h | 9 ++++-----
->  kernel/audit.h        | 2 +-
->  kernel/auditsc.c      | 2 +-
->  kernel/module/main.c  | 6 ++++--
->  4 files changed, 10 insertions(+), 9 deletions(-)
+> I don't have a preference, but should this be inserted closer to other
+> XSAVE dependent features?
+> 
+>      { X86_FEATURE_PKU,                      X86_FEATURE_XSAVE     },
+>      { X86_FEATURE_MPX,                      X86_FEATURE_XSAVE     },
+>      { X86_FEATURE_XGETBV1,                  X86_FEATURE_XSAVE     },
+> +   { X86_FEATURE_APX,                      X86_FEATURE_XSAVE     },
+>      { X86_FEATURE_CMOV,                     X86_FEATURE_FXSR      },
 
-Agree with Petr's previous comment about the URL in the commit
-description, if it isn't publicly accessible please don't include it in
-the commit description; I'm going to remove it.
+> There is a comment on top of that table that says:
+> "Please keep the leaf sorted by cpuid_bit.level for faster search."
+> 
+> Based on that, APX should be inserted here:
+> 
+>   { X86_FEATURE_INTEL_PPIN,               CPUID_EBX,  0, 0x00000007, 1 },
+> +{ X86_FEATURE_APX,                      CPUID_EDX, 21, 0x00000007, 1 },
+>   { X86_FEATURE_RRSBA_CTRL,               CPUID_EDX,  2, 0x00000007, 2 },Yeah, both suggestions make sense. Thanks for pointing them out!
 
-> diff --git a/kernel/module/main.c b/kernel/module/main.c
-> index 1fb9ad289a6f..efa62ace1b23 100644
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -3346,7 +3346,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
->  
->  	module_allocated = true;
->  
-> -	audit_log_kern_module(mod->name);
-> +	audit_log_kern_module(info->name);
->  
->  	/* Reserve our place in the list. */
->  	err = add_unformed_module(mod);
-> @@ -3506,8 +3506,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
->  	 * failures once the proper module was allocated and
->  	 * before that.
->  	 */
-> -	if (!module_allocated)
-> +	if (!module_allocated) {
-> +		audit_log_kern_module(info->name ? info->name : "(unavailable)");
+I've attached the patch revision.
 
-In keeping with audit tradition, wouldn't we want this to be "?" instead
-of "(unavailable)"?
+Thanks,
+Chang
 
->  		mod_stat_bump_becoming(info, flags);
-> +	}
->  	free_copy(info, flags);
->  	return err;
->  }
-> -- 
-> 2.43.5
 
---
-paul-moore.com
+
+--------------p2favoQN77XUwAxXNPbwIjzw
+Content-Type: text/plain; charset="UTF-8";
+	name="0005-x86-cpufeatures-Add-X86_FEATURE_APX.patch"
+Content-Disposition: attachment;
+	filename="0005-x86-cpufeatures-Add-X86_FEATURE_APX.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSBhM2E2OGVkZjM1YzQzMTYyYTU3ZGFkODBlYTJlZWNjOWMxMTAxMjQ2IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiAiQ2hhbmcgUy4gQmFlIiA8Y2hhbmcuc2Vvay5iYWVAaW50ZWwu
+Y29tPgpEYXRlOiBUaHUsIDEzIEZlYiAyMDI1IDIzOjAwOjI4IC0wODAwClN1YmplY3Q6IFtQQVRD
+SCBSRkMgdjJiIDUvOV0geDg2L2NwdWZlYXR1cmVzOiBBZGQgWDg2X0ZFQVRVUkVfQVBYCgpJbnRl
+bCBBZHZhbmNlZCBQZXJmb3JtYW5jZSBFeHRlbnNpb25zIChBUFgpIGludHJvZHVjZSBhIG5ldyBz
+ZXQgb2YKZ2VuZXJhbC1wdXJwb3NlIHJlZ2lzdGVycywgbWFuYWdlZCBhcyBhbiBleHRlbmRlZCBz
+dGF0ZSBjb21wb25lbnQgdmlhIHRoZQp4c3RhdGUgbWFuYWdlbWVudCBmYWNpbGl0eS4KCkJlZm9y
+ZSBlbmFibGluZyB0aGlzIG5ldyB4c3RhdGUsIGRlZmluZSBhIGZlYXR1cmUgZmxhZyB0byBjbGFy
+aWZ5IHRoZQpkZXBlbmRlbmN5IGluIHhzYXZlX2NwdWlkX2ZlYXR1cmVzW10uIEFQWCBpcyBlbnVt
+ZXJhdGVkIHVuZGVyIENQVUlEIGxldmVsCjcgd2l0aCBFRFg9MS4gU2luY2UgdGhpcyBDUFVJRCBs
+ZWFmIGlzIG5vdCB5ZXQgYWxsb2NhdGVkLCBwbGFjZSB0aGUgZmxhZwppbiBhIHNjYXR0ZXJlZCBm
+ZWF0dXJlIHdvcmQuCgpXaGlsZSB0aGlzIGZlYXR1cmUgaXMgaW50ZW5kZWQgb25seSBmb3IgdXNl
+cnNwYWNlLCBleHBvc2luZyBpdCB2aWEKL3Byb2MvY3B1aW5mbyBpcyB1bm5lY2Vzc2FyeS4gSW5z
+dGVhZCwgdGhlIGV4aXN0aW5nIGFyY2hfcHJjdGwoMikKbWVjaGFuaXNtIHdpdGggdGhlIEFSQ0hf
+R0VUX1hDT01QX1NVUFAgb3B0aW9uIGNhbiBiZSB1c2VkIHRvIHF1ZXJ5IHRoZQpmZWF0dXJlIGF2
+YWlsYWJpbGl0eS4KCkZpbmFsbHksIGNsYXJpZnkgdGhhdCBBUFggZGVwZW5kcyBvbiBYU0FWRS4K
+ClNpZ25lZC1vZmYtYnk6IENoYW5nIFMuIEJhZSA8Y2hhbmcuc2Vvay5iYWVAaW50ZWwuY29tPgot
+LS0KUkZDLVYyYSAtPiBSRkMtVjJiOiBGaXggdHlwbyBhbmQgb3JnYW5pemUgQVBYIGVudHJpZXMg
+b3JkZXJseSAoU29oaWwpClJGQy1WMiAgLT4gUkZDLVYyYTogUmViYXNlZCBvbnRvIHY2LjE1LXJj
+MTsgcmVzb2x2ZSBjb25mbGljdCB3aXRoIGNvbW1pdAogICAgOTY4ZTliYzRjZWY4ICgieDg2OiBt
+b3ZlIFpNTSBleGNsdXNpb24gbGlzdCBpbnRvIENQVSBmZWF0dXJlIGZsYWciKQotLS0KIGFyY2gv
+eDg2L2luY2x1ZGUvYXNtL2NwdWZlYXR1cmVzLmggfCAxICsKIGFyY2gveDg2L2tlcm5lbC9jcHUv
+Y3B1aWQtZGVwcy5jICAgfCAxICsKIGFyY2gveDg2L2tlcm5lbC9jcHUvc2NhdHRlcmVkLmMgICAg
+fCAxICsKIDMgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJj
+aC94ODYvaW5jbHVkZS9hc20vY3B1ZmVhdHVyZXMuaCBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2Nw
+dWZlYXR1cmVzLmgKaW5kZXggNmMyYzE1MmQ4YTY3Li5lYjczZjNmMGVjNzAgMTAwNjQ0Ci0tLSBh
+L2FyY2gveDg2L2luY2x1ZGUvYXNtL2NwdWZlYXR1cmVzLmgKKysrIGIvYXJjaC94ODYvaW5jbHVk
+ZS9hc20vY3B1ZmVhdHVyZXMuaApAQCAtNDgxLDYgKzQ4MSw3IEBACiAjZGVmaW5lIFg4Nl9GRUFU
+VVJFX0FNRF9IRVRFUk9HRU5FT1VTX0NPUkVTICgyMSozMiArIDYpIC8qIEhldGVyb2dlbmVvdXMg
+Q29yZSBUb3BvbG9neSAqLwogI2RlZmluZSBYODZfRkVBVFVSRV9BTURfV09SS0xPQURfQ0xBU1MJ
+KDIxKjMyICsgNykgLyogV29ya2xvYWQgQ2xhc3NpZmljYXRpb24gKi8KICNkZWZpbmUgWDg2X0ZF
+QVRVUkVfUFJFRkVSX1lNTQkJKDIxKjMyICsgOCkgLyogQXZvaWQgWk1NIHJlZ2lzdGVycyBkdWUg
+dG8gZG93bmNsb2NraW5nICovCisjZGVmaW5lIFg4Nl9GRUFUVVJFX0FQWAkJCSgyMSozMiArIDkp
+IC8qIEFkdmFuY2VkIFBlcmZvcm1hbmNlIEV4dGVuc2lvbnMgKi8KIAogLyoKICAqIEJVRyB3b3Jk
+KHMpCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvY3B1L2NwdWlkLWRlcHMuYyBiL2FyY2gv
+eDg2L2tlcm5lbC9jcHUvY3B1aWQtZGVwcy5jCmluZGV4IDk0YzA2MmNkZGZhNC4uNDZlZmNiZDZh
+ZmE0IDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9rZXJuZWwvY3B1L2NwdWlkLWRlcHMuYworKysgYi9h
+cmNoL3g4Ni9rZXJuZWwvY3B1L2NwdWlkLWRlcHMuYwpAQCAtMjgsNiArMjgsNyBAQCBzdGF0aWMg
+Y29uc3Qgc3RydWN0IGNwdWlkX2RlcCBjcHVpZF9kZXBzW10gPSB7CiAJeyBYODZfRkVBVFVSRV9Q
+S1UsCQkJWDg2X0ZFQVRVUkVfWFNBVkUgICAgIH0sCiAJeyBYODZfRkVBVFVSRV9NUFgsCQkJWDg2
+X0ZFQVRVUkVfWFNBVkUgICAgIH0sCiAJeyBYODZfRkVBVFVSRV9YR0VUQlYxLAkJCVg4Nl9GRUFU
+VVJFX1hTQVZFICAgICB9LAorCXsgWDg2X0ZFQVRVUkVfQVBYLAkJCVg4Nl9GRUFUVVJFX1hTQVZF
+ICAgICB9LAogCXsgWDg2X0ZFQVRVUkVfQ01PViwJCQlYODZfRkVBVFVSRV9GWFNSICAgICAgfSwK
+IAl7IFg4Nl9GRUFUVVJFX01NWCwJCQlYODZfRkVBVFVSRV9GWFNSICAgICAgfSwKIAl7IFg4Nl9G
+RUFUVVJFX01NWEVYVCwJCQlYODZfRkVBVFVSRV9NTVggICAgICAgfSwKZGlmZiAtLWdpdCBhL2Fy
+Y2gveDg2L2tlcm5lbC9jcHUvc2NhdHRlcmVkLmMgYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L3NjYXR0
+ZXJlZC5jCmluZGV4IDE2ZjNjYTMwNjI2YS4uZmZiODBiNWFkOTdmIDEwMDY0NAotLS0gYS9hcmNo
+L3g4Ni9rZXJuZWwvY3B1L3NjYXR0ZXJlZC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9jcHUvc2Nh
+dHRlcmVkLmMKQEAgLTI3LDYgKzI3LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBjcHVpZF9iaXQg
+Y3B1aWRfYml0c1tdID0gewogCXsgWDg2X0ZFQVRVUkVfQVBFUkZNUEVSRiwJCUNQVUlEX0VDWCwg
+IDAsIDB4MDAwMDAwMDYsIDAgfSwKIAl7IFg4Nl9GRUFUVVJFX0VQQiwJCQlDUFVJRF9FQ1gsICAz
+LCAweDAwMDAwMDA2LCAwIH0sCiAJeyBYODZfRkVBVFVSRV9JTlRFTF9QUElOLAkJQ1BVSURfRUJY
+LCAgMCwgMHgwMDAwMDAwNywgMSB9LAorCXsgWDg2X0ZFQVRVUkVfQVBYLAkJCUNQVUlEX0VEWCwg
+MjEsIDB4MDAwMDAwMDcsIDEgfSwKIAl7IFg4Nl9GRUFUVVJFX1JSU0JBX0NUUkwsCQlDUFVJRF9F
+RFgsICAyLCAweDAwMDAwMDA3LCAyIH0sCiAJeyBYODZfRkVBVFVSRV9CSElfQ1RSTCwJCQlDUFVJ
+RF9FRFgsICA0LCAweDAwMDAwMDA3LCAyIH0sCiAJeyBYODZfRkVBVFVSRV9DUU1fTExDLAkJCUNQ
+VUlEX0VEWCwgIDEsIDB4MDAwMDAwMGYsIDAgfSwKLS0gCjIuNDUuMgoK
+
+--------------p2favoQN77XUwAxXNPbwIjzw--
