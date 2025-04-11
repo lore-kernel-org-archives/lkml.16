@@ -1,149 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD54229DB64;
-	Fri, 11 Apr 2025 11:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0950D238C39
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744369536; cv=none; b=Ibk+xSEvZk2qq1YNXrvankWaT7j7r+mZl7/L6zxaAREGqqQmuajgaB+RiPGuWuw5A3I+o8/+PA9Q+jiMHJxyW532nRvETIFn3GOj9SWdJs2IwwEovm1MpyXvUW6dLT+J5xP+lRK/KiOAz/UHuvTKBrjjx7e+BejaMqfHxyVJT5M=
+	t=1744369549; cv=none; b=tN/eOO0V3g1OAHhvQLf4BoTHmWNIN8oEtJ9sp+phKB+6agJJ8c1KpZvDVLAO5OF5oDh7qPddT2JGCd6NtVbvhO6vToEOLShcgI80v9+T0WDciAyaefVuR5ncxrud1Ae/7aCMmXkJEOHcQku1wNuzrJOvFO+eycL/4D466Vw5JyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744369536; c=relaxed/simple;
-	bh=rKIA8P8ck0NbKkzwHpkUlyV4dTbzRC4THZQ1beZsiJw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rCcMHWSb0TpOoAHDQ4qbE1i6iKdzmqzYJUPCMUr5hqYGkqR5MGIyBoturbf1kNRZGQ1R2T2Oq1cI+ecsJEmpq9Nm48nryzWoQiOZfHhPBUfV6YF3HSkgDLwRRurfRR1cZXbYJVqM2ZdZaPm0RPvvm9ud38nitePG2nRMYDwmWoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBYVclk0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744369549; c=relaxed/simple;
+	bh=GIKA8AMXlX9X+0M9iGrvgLxqvYzYRa/cFuvb8elcc1w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LaZrzibc60Sic0JyL8IzJpH8HOZjCINGNXUfiSoOEew/m/iRvVwtbrqaELZTuBanSYvcSQ4FnjUoIBf5MnpvIcIXe+wB7nlr3DGYdi10A1G04PD/TVPopOuUcYqhMkqweNu7ql+eh4Kb1FN6DEP/Y9MmRclFxBD7EgNBQ/HNoAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=muCjlfpL; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBYVclk0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8780C4CEE8;
-	Fri, 11 Apr 2025 11:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744369534;
-	bh=rKIA8P8ck0NbKkzwHpkUlyV4dTbzRC4THZQ1beZsiJw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IBYVclk0RDcl+6Qi1L1gdYAv7BtmBzryU0DAjp4TfkRF/soatOdRw0xkzB3ePxNxQ
-	 oHkcMYOAUmpyDnUuUOIJcDafRdznMsULb+tTxGoyI11nLNqHKDbAuBEaoUKAFX+Mmt
-	 sOs2wUSIQw66nk6w3nfvC7z+HpSB/YxCSc/RbV/uhbZVvh4RWCaaIp9yJM1u2sEFcz
-	 BwOb7MgLVd4sjHl19DvSpUyehbULaA8xcB4ONUOyXXnCcpo3rZl+Ux2Y8R2/BjUnA4
-	 paDf112/74JFfovp4gI5oLpQE3VNXz3MyaSfctVijcLLK+aXx5J8Lr6wzHkevJ8Ifv
-	 LbpdXt3Nm74bw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 11 Apr 2025 13:04:54 +0200
-Subject: [PATCH net-next 8/8] selftests: mptcp: use IPPROTO_MPTCP for
- getaddrinfo
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="muCjlfpL"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BB4jYZ2106336
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 06:04:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744369486;
+	bh=i+gloN32aTctMyYVY8o5DLDdWWJ4UCqYZXXvoBTDYI8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=muCjlfpLevMlxfx1lzbBdxLjtIXk9wZy688HJhcvvW7+MfRN7EZehMeoPVzRYUemZ
+	 fOblX2MEKavuBlu8mjdyOARu+XcNdyRHRtVGEBxLqAqQ3PcxJFMJ/xeJMRlNN1s2CC
+	 4ca9wNPoBZtpV94lW8UkiaDMJa0JfIgYP3WSxz2c=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BB4j5S118132
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 06:04:45 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 06:04:45 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 06:04:45 -0500
+Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BB4de0063402;
+	Fri, 11 Apr 2025 06:04:40 -0500
+Message-ID: <eb4729f4-2f1b-49ca-ab01-4afca321e4a1@ti.com>
+Date: Fri, 11 Apr 2025 16:34:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/18] drm/bridge: cdns-dsi: Fix event mode
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        Jyri Sarha
+	<jyri.sarha@iki.fi>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Vinod Koul
+	<vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Andrzej Hajda
+	<andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert
+ Foss <rfoss@kernel.org>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej
+ Skrabec <jernej.skrabec@gmail.com>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>,
+        Francesco Dolcini <francesco@dolcini.it>,
+        Aradhya Bhatia <aradhya.bhatia@linux.dev>,
+        Devarsh Thakkar <devarsht@ti.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-10-4a093eaa5e27@ideasonboard.com>
+Content-Language: en-US
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <20250402-cdns-dsi-impro-v2-10-4a093eaa5e27@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-net-next-mptcp-sched-mib-sft-misc-v1-8-85ac8c6654c3@kernel.org>
-References: <20250411-net-next-mptcp-sched-mib-sft-misc-v1-0-85ac8c6654c3@kernel.org>
-In-Reply-To: <20250411-net-next-mptcp-sched-mib-sft-misc-v1-0-85ac8c6654c3@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- zhenwei pi <pizhenwei@bytedance.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2775; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=hAqb+9EwIsZn40xu+6ctRkc54LS4FAN8XGDT4iQnIuE=;
- b=owEBbQKS/ZANAwAKAfa3gk9CaaBzAcsmYgBn+PdlbPUd21AsOdYhyIUyuF04g+5hcYhzWrwS1
- KASAoBqkS2JAjMEAAEKAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ/j3ZQAKCRD2t4JPQmmg
- c4RYD/9fB/KGOne2fdX6ZppR7lISrMhvvQVtN15vyE6HR7rI1zMeh02FrmTi+M5jQaMiq3H71nl
- 0lGZ4CMF0h1K0SAptpMy6VoMjxg2gtHnTIl+JHiuw/0xLZSD/stL2NUl2KxZ+ZWPwIPPVCcY8Tl
- 0x6yecMgDjvZVEeUD2z4S1QvGCt7IWPbbselLkeXfyyLNR+YwkjtUhKrAGVyta9MGn3TgSagNNh
- Fv2/3mS9ljUzbzbrZ90f1M5a1y1Qha4dJca8RZrxE1VrGqRcMkgGYcXGnyCipBiT/zPTm2XfU2f
- N+gmCqsdnA0Yti06GapgUpsx4pa3vAK0+qDT6poSAfuzMixuKMCix5YuMkunn2O3tGfGy3UnbhM
- mLGuZWE2M4fDGWg/uoE9Iqnv+y7pnB2pJo/+hGn2cry1vGylstPL347hh8LRoc0m65Rv7FV4NLe
- Sj5UjFCKgXKTLpB8XFctKoCzdNpBLHb1aQOYnAd0y9tNCKUB1ZM5m0GUXdYNNPrt5bmXrH3Kl24
- IL4bfXY1lL3u7SoeypRFnlcpA4lsDWi5S5wtmGPuGWusa7uyCcyGHTi4thvFyJlBaY5zvLrK3s/
- 2uEdVgE8ccJowvjAIx2eTHAe8XfAASWd971Dmnq+rTm/9hK/3DaKz5DjRADcROo7ctP+VtdOeFw
- swTzLpp55VtuVGA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: zhenwei pi <pizhenwei@bytedance.com>
+Hello Tomi,
 
-mptcp_connect.c is a startup tutorial of MPTCP programming, however
-there is a lack of ai_protocol(IPPROTO_MPTCP) usage. Add comment for
-getaddrinfo MPTCP support.
+On 02/04/25 19:00, Tomi Valkeinen wrote:
+> The timings calculation gets it wrong for DSI event mode, resulting in
+> too large hbp value. Fix the issue by taking into account the
+> pulse/event mode difference.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-This patch first uses IPPROTO_MPTCP to get addrinfo, and if glibc
-version is too old, it falls back to using IPPROTO_TCP.
+Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
 
-Co-developed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
-- a previous version has already been sent to Netdev. ChangeLog:
-  - show how to use IPPROTO_MPTCP with getaddrinfo, not only a comment.
-  - Link to this version:
-    https://lore.kernel.org/20250407085122.1203489-1-pizhenwei@bytedance.com
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+> ---
+>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 33 ++++++++++++++++++--------
+>   1 file changed, 23 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> index 62811631341b..9797e6faa29d 100644
+> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> @@ -417,7 +417,8 @@
+>   #define DSI_OUTPUT_PORT			0
+>   #define DSI_INPUT_PORT(inputid)		(1 + (inputid))
+>   
+> -#define DSI_HBP_FRAME_OVERHEAD		12
+> +#define DSI_HBP_FRAME_PULSE_OVERHEAD	12
+> +#define DSI_HBP_FRAME_EVENT_OVERHEAD	16
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index c83a8b47bbdfa5fcf1462e2b2949b41fd32c9b14..ac1349c4b9e5404c95935eb38b08a15d774eb1d9 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -180,13 +180,26 @@ static void xgetnameinfo(const struct sockaddr *addr, socklen_t addrlen,
- }
- 
- static void xgetaddrinfo(const char *node, const char *service,
--			 const struct addrinfo *hints,
-+			 struct addrinfo *hints,
- 			 struct addrinfo **res)
- {
-+again:
- 	int err = getaddrinfo(node, service, hints, res);
- 
- 	if (err) {
--		const char *errstr = getxinfo_strerr(err);
-+		const char *errstr;
-+
-+		/* glibc starts to support MPTCP since v2.42.
-+		 * For older versions, use IPPROTO_TCP to resolve,
-+		 * and use TCP/MPTCP to create socket.
-+		 * Link: https://sourceware.org/git/?p=glibc.git;a=commit;h=a8e9022e0f82
-+		 */
-+		if (err == EAI_SOCKTYPE) {
-+			hints->ai_protocol = IPPROTO_TCP;
-+			goto again;
-+		}
-+
-+		errstr = getxinfo_strerr(err);
- 
- 		fprintf(stderr, "Fatal: getaddrinfo(%s:%s): %s\n",
- 			node ? node : "", service ? service : "", errstr);
-@@ -292,7 +305,7 @@ static int sock_listen_mptcp(const char * const listenaddr,
- {
- 	int sock = -1;
- 	struct addrinfo hints = {
--		.ai_protocol = IPPROTO_TCP,
-+		.ai_protocol = IPPROTO_MPTCP,
- 		.ai_socktype = SOCK_STREAM,
- 		.ai_flags = AI_PASSIVE | AI_NUMERICHOST
- 	};
-@@ -356,7 +369,7 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 			      int infd, struct wstate *winfo)
- {
- 	struct addrinfo hints = {
--		.ai_protocol = IPPROTO_TCP,
-+		.ai_protocol = IPPROTO_MPTCP,
- 		.ai_socktype = SOCK_STREAM,
- 	};
- 	struct addrinfo *a, *addr;
 
--- 
-2.48.1
+I have also observed this 4B discrepancy for event-mode after comparing
+the dsi packet sizes for each line type as per the dsi specifications.
 
+>   #define DSI_HSA_FRAME_OVERHEAD		14
+>   #define DSI_HFP_FRAME_OVERHEAD		6
+>   #define DSI_HSS_VSS_VSE_FRAME_OVERHEAD	4
+> @@ -503,12 +504,18 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+>   
+>   	bpp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
+>   
+> -	dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + (sync_pulse ? 0 : dpi_hsa),
+> -					 bpp, DSI_HBP_FRAME_OVERHEAD);
+> +	if (sync_pulse) {
+> +		dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp, bpp,
+> +						 DSI_HBP_FRAME_PULSE_OVERHEAD);
+>   
+> -	if (sync_pulse)
+> -		dsi_cfg->hsa =
+> -			dpi_to_dsi_timing(dpi_hsa, bpp, DSI_HSA_FRAME_OVERHEAD);
+> +		dsi_cfg->hsa = dpi_to_dsi_timing(dpi_hsa, bpp,
+> +						 DSI_HSA_FRAME_OVERHEAD);
+> +	} else {
+> +		dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + dpi_hsa, bpp,
+> +						 DSI_HBP_FRAME_EVENT_OVERHEAD);
+> +
+> +		dsi_cfg->hsa = 0;
+> +	}
+>   
+>   	dsi_cfg->hact = dpi_to_dsi_timing(dpi_hact, bpp, 0);
+>   
+> @@ -532,9 +539,12 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
+>   	unsigned int dsi_hfp_ext;
+>   	unsigned int lanes = output->dev->lanes;
+>   
+> -	dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
+> -	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
+> +		dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_PULSE_OVERHEAD;
+>   		dsi_htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
+> +	} else {
+> +		dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_EVENT_OVERHEAD;
+> +	}
+>   
+>   	dsi_htotal += dsi_cfg->hact;
+>   	dsi_htotal += dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
+> @@ -607,9 +617,12 @@ static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
+>   		return -EINVAL;
+>   	}
+>   
+> -	dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
+> -	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+> +	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
+> +		dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_PULSE_OVERHEAD;
+>   		dsi_hss_hsa_hse_hbp += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
+> +	} else {
+> +		dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_EVENT_OVERHEAD;
+> +	}
+>   
+>   	/*
+>   	 * Make sure DPI(HFP) > DSI(HSS+HSA+HSE+HBP) to guarantee that the FIFO
+> 
+
+Thanks,
+Jayesh
