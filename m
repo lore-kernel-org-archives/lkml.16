@@ -1,134 +1,95 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3632C3FB31;
-	Fri, 11 Apr 2025 16:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5912367DD;
+	Fri, 11 Apr 2025 16:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744387345; cv=none; b=cB6G7K1WRXOr3jaoeR2UoTSdAO3SbOt61ehUVIoYAmceRZnd9O2/NkdQHdoN0fajcSpxhFi12bGMS7gBvHO1yhUEC38rkqtFYxNwdQnt5qo/l4IFwjlx+izegEc4u8a2TesYG7zaBwQlLDCSrq7WAID0nSomh++NBFPMXZ8Uis0=
+	t=1744387355; cv=none; b=RgmVBgDBXS1TfymWffyP+CkivmA4TD4ATOSQ3S+qE0ORnNOw2enHxH1hp5syJPolH0Z0Qj5idJhj7ovnkg504woZLt/qRuTd0WRNrhDklC5BlQ4pOPM15gqflVvfRKfam7P6UKC/ytctuwACPH54F0nRa9l1zL/k6WX/xYoxB2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744387345; c=relaxed/simple;
-	bh=FBhKAhCk/Hs4jh6mOB55KPo132DTLmqr0zUPgw6DWE4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iulaEI19wTMDTv1FfBS8E6ptjqUAmFfo7ltPBZaREJDHzw90POe+bhpdk1aIbn+q/+Gs0TWNd4o7rRJbL5ZTjiTZORvzhEmtRhlfl5eYCLpndL3BLsuXQg99A0iDCHWCZiX+OdXo47RTo4XJbB72pRSxtowtK4S+/KFe7Xp3mcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bnjiYj6k; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744387355; c=relaxed/simple;
+	bh=vAL2HWsYZdwCmYgBhqkDTW705E6nfjbHy8zZUtbDK1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hOwPm9J796+vnm3bEluS6c5tXgftlMQ/352H/MEDAZkSZxYgxxFW3xiAcWgUhnme5ZEf9AyvA6X3d/WNbGi8iHqVTf8XDjGq6rYViXTLKIXjV/CB/u0MsCiZm9yivMJkoLOVC4rAv/1JfZXnE3HEw1CffQWWLprhA32WCPl28Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lM3n2Loz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnjiYj6k"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-223fd89d036so28663275ad.1;
-        Fri, 11 Apr 2025 09:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744387343; x=1744992143; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C3DPNfADpRbO1wif/yzIDEg2UdfSfF1zHSCMQvWGdmc=;
-        b=bnjiYj6k6QuOY4HRTlpR+uwXSq9zZrkMmgd7kp966jIEVi33vPuVTcUZDnCO2EfKop
-         U/OOu4Enq8iNVQzTuO+872xTjsiXxs2ssBiluNRFHrOcZ+2kUHkeB5u7reysnyHGJlVw
-         FdYaI7NtcXmF4fFIDTDanLa6MOalkZ9JxqJvyFJ/OJs9licThWUO/wC6ZE3na1dmQcp5
-         n97vg4+Q9NlE1/xcBI5RPMuw6R01eU/Fh2KMTmv6uqFuLQWPfT/utdBjrFwaz91IT1Rv
-         fAioWEmha/zrw/L3XDfIYNbBuxOtsyPb11kUdBc4bG9bE4g68Ynsf1pFVTWRiD1cfscA
-         YwVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744387343; x=1744992143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C3DPNfADpRbO1wif/yzIDEg2UdfSfF1zHSCMQvWGdmc=;
-        b=XYF4E9PJypIJIMa9L4i8TJdXubLZsN5U1edTTgTmBN6PNLcQ3ewh4uRAyXVF1iUtzS
-         LsTeUB0PGMaOq8PFzJWt8Te/ELrFG/Ci6Fn2DTTZc1woro7rPjpSeKOBfgy2iIeiSaoL
-         Rd6V1G7NfitYjC4fBKl7glyg7V4RHZpohltNWTbmNWKjL0+7NQCbeSau1KZR/zYjg0ry
-         sVAQj5nk8ZYKE8WqMwIWF1gS+g7R5Rvf6AhBabt6na8wY+vRV99qHmtty1YULhrdw8NF
-         gmlTYZaUKD+Rz/Xf19emLZLNdAzzRCaafdXOgl8dFW818SDCY6rDF0/yqc2MtWEpODQn
-         0TDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwZa3LRXb5aUVKo0mVKbDsg7wbjVCyisdg8i2efN7peJK1ztKPahgoMoS/rsN3IrINh1xFhqFUU/N4I39bwRI1w6uk@vger.kernel.org, AJvYcCV6mmuh82YQyxZzcnYvT4gEZxqkGUiUMZzLG075Fp0NXVH3ICKXhb2VsOiqcwsbk3vftCoZi39g0aE3K1YA@vger.kernel.org, AJvYcCWupsh5INAoZGbrw7EdmfhaOp0Qq4WolxL/CgxRlNEV/sQbMx6PlmdzYdJdFAjPzapiUdY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzITOh3RACCP4FPNNaZ64AotDTdvmOpTx/z1By0vBA3/0Hawzdp
-	x9nwUikqSGgX4RaOZsuKSMJPhZAPLGdpwlF3b1YzMDsjqsuUkPMTmlr07X0ZLPR98yB/FipW+wo
-	h//OFt7WlnIPn5y61QhwQI4JVb/k=
-X-Gm-Gg: ASbGncs6ZXDo/CqGJy043ApfKMzPWfS1vnbOuESSdWm1+kfbDN1JoQpAkKbd8InCvzA
-	3QRpldyZuEhCZ4RX9qHRDcn3maWbIAlcZFv2iEsoSWeVAQ5S8dv0c8YR3SF01p0Li4sy4OmPbI/
-	2Xb6UPiyu3PIT9iooNPIE8UXUfMDlsyShA9mOv
-X-Google-Smtp-Source: AGHT+IGE6SwOYErmeGW2zkfo9iEtcidg/4bcd7sx1oOsxjrLzNGHC5Ih6AYkQc+8dfsKufqVyATMTAoEoVaFDP5FwK0=
-X-Received: by 2002:a17:902:d544:b0:224:f12:3735 with SMTP id
- d9443c01a7336-22bea4c622cmr51167305ad.31.1744387342268; Fri, 11 Apr 2025
- 09:02:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lM3n2Loz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660A0C4CEE2;
+	Fri, 11 Apr 2025 16:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744387354;
+	bh=vAL2HWsYZdwCmYgBhqkDTW705E6nfjbHy8zZUtbDK1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lM3n2Loz/+36sq/6Lei4iAuRvu0gIZAxvFRJtwZJkrecobf/bxMztsQO8Ec0gJN/f
+	 fXLjuuIGuhEKNlEDySUgAFXjabeqc/IU7+VSGmwoOungmellXHntYqTXYbyWHYqW5R
+	 nPTTpV656C2vLz6f0jvUeU6hmU23lQqoEwlpFaf4W0hxSA0f2n12r/4oYKMyVz841q
+	 DQloyDbE7vemgtETopzA47uMliPINAXLBoy/olrdvyxgU7Pd9lVlDefKAoo81dVMzU
+	 8orDcHPaYgZPwO2Pzul9QKFGqTIjHhhv0N96eMQ1RSesLVcCCaGOeRgic6Rzpk29vL
+	 Cx6nXHbilX9OA==
+Date: Fri, 11 Apr 2025 17:02:26 +0100
+From: Will Deacon <will@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, linux-kbuild@vger.kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, Takashi Iwai <tiwai@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 4/4] arm64: drop binutils version checks
+Message-ID: <20250411160225.GA5675@willie-the-truck>
+References: <20250407094116.1339199-1-arnd@kernel.org>
+ <20250407094116.1339199-5-arnd@kernel.org>
+ <20250408084642.GA1768@willie-the-truck>
+ <f79695b7-f0c0-442f-963d-6ecae246ebf5@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411121756.567274-1-jolsa@kernel.org>
-In-Reply-To: <20250411121756.567274-1-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 11 Apr 2025 09:02:10 -0700
-X-Gm-Features: ATxdqUFMdxe1xSqNq0fGhqgKKXiKqkLATtLR8xwfoX2J_XiJhj9ETSYhQ_MQ18U
-Message-ID: <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
-Subject: Re: [PATCHv2 perf/core 1/2] uprobes/x86: Add support to emulate nop instructions
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f79695b7-f0c0-442f-963d-6ecae246ebf5@app.fastmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, Apr 11, 2025 at 5:18=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding support to emulate all nop instructions as the original uprobe
-> instruction.
->
-> This change speeds up uprobe on top of all nop instructions and is a
-> preparation for usdt probe optimization, that will be done on top of
-> nop5 instruction.
->
-> With this change the usdt probe on top of nop5 won't take the performance
-> hit compared to usdt probe on top of standard nop instruction.
->
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
-> v2 changes:
-> - follow Adndrii/Oleg's suggestion and emulate all the nops
->
->  arch/x86/kernel/uprobes.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 9194695662b2..262960189a1c 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -840,6 +840,12 @@ static int branch_setup_xol_ops(struct arch_uprobe *=
-auprobe, struct insn *insn)
->         insn_byte_t p;
->         int i;
->
-> +       /* x86_nops[i]; same as jmp with .offs =3D 0 */
-> +       for (i =3D 1; i <=3D ASM_NOP_MAX; ++i) {
+On Tue, Apr 08, 2025 at 03:10:57PM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 8, 2025, at 10:46, Will Deacon wrote:
+> > Hi Arnd,
+> >
+> > On Mon, Apr 07, 2025 at 11:41:16AM +0200, Arnd Bergmann wrote:
+> >> From: Arnd Bergmann <arnd@arndb.de>
+> >> 
+> >> Now that gcc-8 and binutils-2.30 are the minimum versions, a lot of
+> >> the individual feature checks can go away for simplification.
+> >> 
+> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >> ---
+> >>  arch/arm64/Kconfig              | 37 ++-------------------------------
+> >>  arch/arm64/Makefile             | 21 ++-----------------
+> >>  arch/arm64/include/asm/rwonce.h |  4 ----
+> >>  arch/arm64/kvm/Kconfig          |  1 -
+> >>  arch/arm64/lib/xor-neon.c       |  2 +-
+> >>  5 files changed, 5 insertions(+), 60 deletions(-)
+> >
+> > Since some of these checks are dynamic (i.e. they try passing various
+> > options to the tools to see if they barf), have you checked that the
+> > minimum supported version of clang implements them all?
+> 
+> I did some randconfig build testing with clang-13/lld-13, since that
+> is the oldest supported version, and checked that the options are
+> all supported. I'm pretty sure it's been there for a long time before
+> that already.
 
-i <=3D ASM_NOP_MAX && i <=3D insn->length
+Thanks (especially to Mark!) for checking.
 
-?
-
-otherwise what prevents us from reading past the actual instruction bytes?
-
-
-or, actually, shouldn't we just check memcmp(x86_nops[insn->length])
-if insn->length < ASM_NOP_MAX ?
-
-
-> +               if (!memcmp(insn->kaddr, x86_nops[i], i))
-> +                       goto setup;
-> +       }
-> +
->         switch (opc1) {
->         case 0xeb:      /* jmp 8 */
->         case 0xe9:      /* jmp 32 */
-> --
-> 2.49.0
->
+Will
