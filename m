@@ -1,149 +1,142 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DBA1F4616
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E051D95B3
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744378433; cv=none; b=Xt9D0Hrj00cqktwcFqn9Am4eBmPT6iBa5GoW4AwFu06ugkfmgazO5oRokEVd/lwvRMO75gKP0P2bdQlIlhAngUiViAeDx9TAsGZBvEnak2DIYdaiV6iEu4XA14qrMoqp19sL2Cm5FifY++CRKzj87/EQJgwkoGnVzPphs5CJZhg=
+	t=1744378487; cv=none; b=QIUzXnox7OI0fjQO+SRFMam8FlYM+OazwFxXqlFYffVUNv8+AcuKF1zf0mkmm0IaC9vW/BFyrQpWMBzQTA6qXv3qkbuV6WI6feLlczBxYO5SCdAnkqRdXewuaYvlUhHyEwlw6f+8UwdX+qefbUwmbv5m52R29YEni761BZeql64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744378433; c=relaxed/simple;
-	bh=ldPo19FYLkdC9LtTNfMtFSNkiI0cDGvCEhUtivH/b38=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z6aDSwww2eTThvHwR5YQcRj7E7Q3kYZ+dfRN/zhgHqb/KLKe0jUWwmzka2yu+BL8IOZ5+/I98Se6q77+Kn3jQC6BLTqgPag0oaEXLPj7UeRwvfYb61Bb6PlPHp+6NH+oIF/RnAmAw/zxsf62wDRv5mm3BL8iOVs76pimzx4rwes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T9kC21xw; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com
+	s=arc-20240116; t=1744378487; c=relaxed/simple;
+	bh=cSh27txL7g12Strb6q9ScZqSSlVYAqRMDdbPYxuxSbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XEMigNPg7iNHccQswnYw8YpSdy6piGiF4bOxSertzIIWhgRDrMCBo45cMQWUKrpMktTDsX3HcX/hIhHn034OGY+vsfxPiush5/CiOKP/AYGT9UfjOJAeSJoxSAywQRim9nNUWUcd4x0Id6+NijWRFfcf2uLye+sBxJjw0/GCrpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pzJodieH; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T9kC21xw"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af96cdd7f5bso1410194a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:33:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pzJodieH"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72bd828f18dso606775a34.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744378431; x=1744983231; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4g2/yGXEKl1OCoyKSP0aAd6iujvLtuHh//72VEdm0hA=;
-        b=T9kC21xwj33s3J7B1YXGx9x32xOEXFXccer0LUsrjI6xd+WV5+z+sP5+dzWQqDi0Av
-         JKVAgxsAUGqRMNgbrXOLVB8zQWRU9ZmNb3IXkGRh51ywHmUqFr24BSOT36GsHoNcKa+I
-         X9C/FIyrSCZnYg/FA7URi0qu602THQMN+06n93HiDOMZ2AFhlSvM081c/pxdW/6TPJix
-         ekE81dAmP1VYHxYvcDydhQKzzRIElVsubfNIAUrXuh5MXIq9uB0gJ9AWP1mu8ESyBgBE
-         Ix3uT0tre3CCa3besMbPefmkDdNsahdDlLNH2vcdjVFBl1XpuCXPKnNivceYz5MNuhNw
-         nWIA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744378484; x=1744983284; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rKN2yK5A2t8FCF5ACCCiUYzvtITcUF9NBPgqaU4hUEs=;
+        b=pzJodieHa1HsIwrzs+G5Ns+QcuOUBgoYtIISRFt1kPO5+CyKaJy6mTYKdN3fNnEOIe
+         udmiK0+BA8TjMP6qdSh8b4xMMkzI64DBf1YPO0J7tP0IPvqFiQO28kWI6jxkTRHz8qEL
+         QU2J3qPYC8pKVd9yrA+9ErV7S9Og2UI8vz8aj2TVINB/jkilGnNVqmbyKYVQA7a8VPK6
+         ZZSYFZTyNviAV5scQ2O4XREi8V+w1GBPs9eyluiagmtkOzAQuBIUhpOIuRVXxRCxKykG
+         KeH5R3NEy0Kl1alrQ6isE+smoPb/0wE/NKTVsX4Ko3lpMs2FUmVwgoJ0Xkx25aNQaubx
+         XPHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744378431; x=1744983231;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4g2/yGXEKl1OCoyKSP0aAd6iujvLtuHh//72VEdm0hA=;
-        b=OtVmbBf+TZMs3euAlI4OTY/ne1FgFERvZdKTYUv3CsHAF8XUO5z21JTHgnel+V8pwg
-         0n4tH9/hh3cS8DtOQqeG3fVTGzIEfOtGtqo24cM9Vjj98VOej0vNHkxrFyi06EcXZYtn
-         oagaRwUcp+z1NkmeOdwjNdjqDBcs1hFP8RnuKJl92PC9Kg07cd1gbXKaKATjf/+oa9Id
-         7Ymv0/K3JZmfryi61VAaeiz1VJml69mf3NPFOvnqhOLW6jsCZuOlihevVk7/9a7LRpb1
-         +y02LdVOk/qtCX2C1v0eSMeCYM2Ze58MSrs1ZaS+qC+p1svxsjrlkD7N1C/OA0zpGHQA
-         hAOA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnthTD4DKke+prGcOSaZWL/SFgIw1c12ldr6kepjf8Wacqx7ieqfND7a0efU1uzRysDtd+DeY9Ay+sLxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjAxTjYbfSqNUhbmw49Z4ZoLZbR74cNvDuBPmhGmGacw+1Wk1e
-	ukBJ9pjCZkduuM054lu0FNwjQMpEHYrF07TxbYvLNWGSpDtON0C4G+tdlswRXWHZ3VVaVUTpF+c
-	HnFsMFw==
-X-Google-Smtp-Source: AGHT+IE6SnW+E2UcTarv9RF0JjGVhIc1w/GHbS5+IUmBSxMiMg0FWAXESXXjo+IWqcn9srZlCgeM+oH2+leB
-X-Received: from pgux9.prod.google.com ([2002:a65:6aa9:0:b0:af2:48c3:360f])
- (user=chharry job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:2d0a:b0:1f3:36f7:c0d2
- with SMTP id adf61e73a8af0-20179990733mr5205499637.41.1744378430727; Fri, 11
- Apr 2025 06:33:50 -0700 (PDT)
-Date: Fri, 11 Apr 2025 21:33:08 +0800
-In-Reply-To: <20250411133330.171563-1-chharry@google.com>
+        d=1e100.net; s=20230601; t=1744378484; x=1744983284;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKN2yK5A2t8FCF5ACCCiUYzvtITcUF9NBPgqaU4hUEs=;
+        b=juD1rAd4ox+OrfLCuOmFfSRKVnPwyIUjRhCE5dUa6iXoZ0kRizpUYrZSzHa1c2+Pv+
+         Aumv/z+CqCrpGT+OsfZYirMkyIFJAKx7ccqxIO2+joMhlPhP7+BsGi9YIKRdzwQcUCz4
+         WX9J/EsAkQp0MCWhq+Hl3uz1q/G64uWKe8vDKHAyT8Uze1wvtt4XBo1TZsjQaHO9fpc1
+         wTR3nNmWOWFx1vm22pcQF4Ur0AuaU9oEz0QQ+fLndjAv7q2oGcyx5Knwj8P1jzMJQST7
+         C1s4p86Q9UmPYLk2X4BiBC9ATOOgxJwPGhZopXHqc6712G6ECySE66LESSuwB645LCNP
+         Bfnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeK3XCO/V9U9DV+rifyJ/tHC0YxTRD9hCo7RRMkNs/3wGht2qvvHwN0yMAJEGGpSKiLwfTt5x/iivVv6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQP2ROTi3WnDpjNG2zwr0fIUM+lILmm0pJl6rAgi3yBmBCIJmL
+	GLEzu2v86DsDvTGLfKK1zIU1d13SrpXAfqG32AvEaI/44E4vnVmG7ZlgGIihiRI=
+X-Gm-Gg: ASbGnctXVS+UUzhMnQON3aVQG1AHENO2yBL+DzPuZxRu2ji6AHTpvMdzHeuvX8FC9QY
+	PwqC8PLtrF1gb8GuXiKwip+AjsFH1YyOQGrzZEpOyjpGOHOMYxtTsOWZi9lM/X1BP20dhxz9xG6
+	SY12q0dcSt6LV/KelFeplyZdXmiLNMpPwajPGNWbAjJyoijD2OBavYq4Zkkap6Rc1R5aMIYGF3H
+	WD96EIfrZVeTI6QM4EDIdOESalnGVjHe4huNz0ft2tO8nPLBCPxfMykURc9LynAKjUTZ8qozDjP
+	jLRxG1+0ndwz775Ak/EsgxhghLHnV3tZ0RNUx4QlWhc1zxkuIYwEWwGE22MX4eubY3SSV4iPrBB
+	gsg==
+X-Google-Smtp-Source: AGHT+IFcb3rviFsCJrfn4ipJXNeVmWfsFgxwgxvqzCDjBUYafcrhTNRMoGOOe9Z1tVQubzu82tEoJg==
+X-Received: by 2002:a05:6830:61cb:b0:72b:a009:db44 with SMTP id 46e09a7af769-72e862d6ca7mr1686691a34.1.1744378484676;
+        Fri, 11 Apr 2025 06:34:44 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d8fcaasm929090a34.38.2025.04.11.06.34.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 06:34:43 -0700 (PDT)
+Message-ID: <78d17b05-3f0d-4903-afe3-8051d4bd051d@baylibre.com>
+Date: Fri, 11 Apr 2025 08:34:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250411133330.171563-1-chharry@google.com>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250411133330.171563-4-chharry@google.com>
-Subject: [PATCH 4/4] Revert "Bluetooth: btusb: add sysfs attribute to control
- USB alt setting"
-From: Hsin-chen Chuang <chharry@google.com>
-To: luiz.dentz@gmail.com
-Cc: Hsin-chen Chuang <chharry@chromium.org>, chromeos-bluetooth-upstreaming@chromium.org, 
-	Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 8/8] iio: ti-adc128s052: Drop variable vref
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1744022065.git.mazziesaccount@gmail.com>
+ <db5cb2e1543e03d5a9953faa3934d66f4621cd12.1744022065.git.mazziesaccount@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <db5cb2e1543e03d5a9953faa3934d66f4621cd12.1744022065.git.mazziesaccount@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Hsin-chen Chuang <chharry@chromium.org>
+On 4/7/25 6:37 AM, Matti Vaittinen wrote:
+> According to Jonathan, variable reference voltages are very rare. It is
+> unlikely it is needed, and supporting it makes the code a bit more
+> complex.
+> 
+> Simplify the driver and drop the variable vref support.
+> 
+> Suggested-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> ---
 
-This reverts commit b16b327edb4d030fb4c8fe38c7d299074d47ee3f.
+...
 
-The sysfs node introduced by this patch could potentially race with user
-space. The original motivation - Support configuring altsetting from the
-user space will be added by another series.
+>  static int adc128_probe(struct spi_device *spi)
+>  {
+>  	const struct adc128_configuration *config;
+> @@ -183,17 +173,12 @@ static int adc128_probe(struct spi_device *spi)
+>  	indio_dev->channels = config->channels;
+>  	indio_dev->num_channels = config->num_channels;
+>  
+> -	adc->reg = devm_regulator_get(&spi->dev, config->refname);
+> -	if (IS_ERR(adc->reg))
+> -		return PTR_ERR(adc->reg);
+> +	adc->vref_mv = devm_regulator_get_enable_read_voltage(&spi->dev,
+> +							   config->refname);
+> +	if (adc->vref_mv < 0)
+> +		return adc->vref_mv;
+>  
+> -	ret = regulator_enable(adc->reg);
+> -	if (ret < 0)
+> -		return ret;
+> -	ret = devm_add_action_or_reset(&spi->dev, adc128_disable_regulator,
+> -				       adc->reg);
+> -	if (ret)
+> -		return ret;
+> +	adc->vref_mv /= 1000;
 
-Cc: chromeos-bluetooth-upstreaming@chromium.org
-Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
----
+In other drivers, we've been doing:
 
- drivers/bluetooth/btusb.c | 34 +---------------------------------
- 1 file changed, 1 insertion(+), 33 deletions(-)
+ret = devm_regulator_get_enable_read_voltage(...);
+if (ret < 0)
+	return dev_err_probe(dev, ret, "failed to read '%s' voltage, ...);
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index b7040747b890..304ec6f830f1 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3688,32 +3688,6 @@ static const struct file_operations force_poll_sync_fops = {
- 	.llseek		= default_llseek,
- };
- 
--static ssize_t isoc_alt_show(struct device *dev,
--			     struct device_attribute *attr,
--			     char *buf)
--{
--	struct btusb_data *data = dev_get_drvdata(dev);
--
--	return sysfs_emit(buf, "%d\n", data->isoc_altsetting);
--}
--
--static ssize_t isoc_alt_store(struct device *dev,
--			      struct device_attribute *attr,
--			      const char *buf, size_t count)
--{
--	struct btusb_data *data = dev_get_drvdata(dev);
--	int alt;
--	int ret;
--
--	if (kstrtoint(buf, 10, &alt))
--		return -EINVAL;
--
--	ret = btusb_switch_alt_setting(data->hdev, alt);
--	return ret < 0 ? ret : count;
--}
--
--static DEVICE_ATTR_RW(isoc_alt);
--
- #define BTUSB_HCI_DRV_OP_SUPPORTED_ALTSETTINGS   HCI_DRV_OP_DRIVER_SPECIFIC_BASE
- #define BTUSB_HCI_DRV_SUPPORTED_ALTSETTINGS_SIZE 0
- struct btusb_hci_drv_rp_supported_altsettings {
-@@ -4197,10 +4171,6 @@ static int btusb_probe(struct usb_interface *intf,
- 						 data->isoc, data);
- 		if (err < 0)
- 			goto out_free_dev;
--
--		err = device_create_file(&intf->dev, &dev_attr_isoc_alt);
--		if (err)
--			goto out_free_dev;
- 	}
- 
- 	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_BCM) && data->diag) {
-@@ -4247,10 +4217,8 @@ static void btusb_disconnect(struct usb_interface *intf)
- 	hdev = data->hdev;
- 	usb_set_intfdata(data->intf, NULL);
- 
--	if (data->isoc) {
--		device_remove_file(&intf->dev, &dev_attr_isoc_alt);
-+	if (data->isoc)
- 		usb_set_intfdata(data->isoc, NULL);
--	}
- 
- 	if (data->diag)
- 		usb_set_intfdata(data->diag, NULL);
--- 
-2.49.0.604.gff1f9ca942-goog
+adc->vref_mv = ret / 1000;
+
+It can be easy to make a typo or forget to specify the voltage when creating
+a .dts, so I think the error message is helpful to catch that.
+
+And we use ret to avoid having adc->vref_mv temporarily holding a
+value with the wrong units (and can make it have an unsigned type).
+
+>  
+>  	if (config->num_other_regulators) {
+>  		ret = devm_regulator_bulk_get_enable(&spi->dev,
 
