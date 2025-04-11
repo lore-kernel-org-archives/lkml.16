@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D5928FFFB
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3934C27D797
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744350117; cv=none; b=EptTtKhkQG8g2hOIMGnThIrwAEcznkIv3AQDQ2G2eRpKr7wq2jhEcLuE/ZBvTTwgPgI6bZB/cAt/JBPHNtJcAbv9vJ1dZ6INU2GvbBMp1eFjN9wRp0AH9LN6gnQ1fe4kywOKQehfTVSo943hnYhQE29TpsrbYpNMoXg2gru9lBc=
+	t=1744350120; cv=none; b=px41ePt1bWO5UrJOO9o2zezn4t6xsKbQlkeT60Z7wK3f85T8w95oavIP6b79/MSfPCY+bQpaLTK6hCBX8k7JvUrhj55HS5q9k4fGez/Oqyeum4oHGGOf2EJof/hpFEKEFgd/fk16yCbf4sDpNjnXPTf3iSbqszsXYMib9ULJ9GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744350117; c=relaxed/simple;
-	bh=fMWeKBd9lbhMMm3nKgIyEkTL3zQn1EXu1KKQ4Sg/rPQ=;
+	s=arc-20240116; t=1744350120; c=relaxed/simple;
+	bh=1TfzjV65Vu98Mi2aJPbWFVq8Ym9PXjl/pxflZuUinfg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SWQyXNO0fRVJNLUFa0HIS5Ft1S05OEvKsEHhYgtoufQBnyJ5DOsJ1kWFirUSSGD0NyyvRKIDwP9KAp+lkD26z0oBq/wnmDRTe2J/s1wLASfrjdD4E/hnf44SX1vsAjWduY/JHS6XhL9sRaT/GXmfZ11qL8jsJ6dR7AwDuuXpTL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4bIExAn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UGDYvAO6UbvNaP6ZMflIpXxz+MsUsIjk6RRyPpoxdqU1FzNgvrc5i31RRyy/r4Ru3UfCvKcoBNQvTGvJ2ugohQl0befnuhp3z2snxfZxfSrP9KbmGmM86mAGcO4VnK8AoXPQc8Y+S5ctosuTTiLuRMOX9ENvKAskaKy+leAeJRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/bvONuz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4bIExAn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB775C4CEE2;
-	Fri, 11 Apr 2025 05:41:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/bvONuz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EACC4CEE2;
+	Fri, 11 Apr 2025 05:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744350117;
-	bh=fMWeKBd9lbhMMm3nKgIyEkTL3zQn1EXu1KKQ4Sg/rPQ=;
+	s=k20201202; t=1744350120;
+	bh=1TfzjV65Vu98Mi2aJPbWFVq8Ym9PXjl/pxflZuUinfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z4bIExAnr1y8yy+ucv83IImHU85/vva+/Y0aCacKWbdAcg3G9hXA/DDAhBRpQuUHv
-	 7iRSIGgI5KTxBD3QNWriZDv0B4wag6jY3mHnFXKi6h4mMMy1nguHpn2f9D2hWW1Tvl
-	 62eWcfBcR1X6qeg3Et8l6oMJC9GihX5DNgMvctcf5CdTiiaf7hkvbHshe2Ykl+FlBw
-	 Iz5OSpmosNZ/huimIaLf1BTytkfo4b40249myhH/rF4tnzS/i2N4Ax8DPW97jIRG9d
-	 2uEbkhgUNL55m0ITwZAdhgEqcCVYj1ln0iSttLzdJOTIU7zGArUqzCGZqfVVuZ01Jl
-	 Uehn5QiVRrZog==
+	b=I/bvONuz2pjRT8xXmuRhAcCA6HMAa/N9lGQy7zL7Rx0ZhYFSb/mdsEhiC5IJuoIGX
+	 zu0+sMln/7BU/0etZE5K5OrCtrUE8SSx8K6N5EtEYdaF2zCm/NWwut+6d6vI9plrDJ
+	 1z2piMN03JpUmKUk08GH+Q5WHtX279BDEF+1WpjPWATBYZJr3rL9R4Ar6nDC1v5l36
+	 sMqZNGn+SpUvwxcAGrbKCuAdh97s8PRtpvYbk7yNnUP6S3lMq0Q8BmIjgAjwxdy50Z
+	 zC1BOP4vBwOmFxAhg/E3BA5DwdqBRd/B4CYJt0OIYN72X0UgqS1UAleQIrI8gSZI8Q
+	 kvoazOijnndFQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -35,9 +35,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 19/53] x86/alternatives: Rename 'struct int3_patching_desc' to 'struct text_poke_int3_vec'
-Date: Fri, 11 Apr 2025 07:40:31 +0200
-Message-ID: <20250411054105.2341982-20-mingo@kernel.org>
+Subject: [PATCH 20/53] x86/alternatives: Rename 'int3_desc' to 'int3_vec'
+Date: Fri, 11 Apr 2025 07:40:32 +0200
+Message-ID: <20250411054105.2341982-21-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250411054105.2341982-1-mingo@kernel.org>
 References: <20250411054105.2341982-1-mingo@kernel.org>
@@ -49,49 +49,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Follow the INT3 text-poking nomenclature, and also adopt the
-'vector' name for the entire object, instead of the rather
-opaque 'descriptor' naming.
-
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/alternative.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 8bd5842e626e..ca4599ef44f3 100644
+index ca4599ef44f3..cb1723730f1e 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2466,17 +2466,17 @@ struct smp_text_poke_loc {
- 	u8 old;
- };
- 
--struct int3_patching_desc {
-+struct text_poke_int3_vec {
- 	struct smp_text_poke_loc *vec;
- 	int nr_entries;
- };
+@@ -2473,7 +2473,7 @@ struct text_poke_int3_vec {
  
  static DEFINE_PER_CPU(atomic_t, int3_refs);
  
--static struct int3_patching_desc int3_desc;
-+static struct text_poke_int3_vec int3_desc;
+-static struct text_poke_int3_vec int3_desc;
++static struct text_poke_int3_vec int3_vec;
  
  static __always_inline
--struct int3_patching_desc *try_get_desc(void)
-+struct text_poke_int3_vec *try_get_desc(void)
- {
- 	atomic_t *refs = this_cpu_ptr(&int3_refs);
+ struct text_poke_int3_vec *try_get_desc(void)
+@@ -2483,7 +2483,7 @@ struct text_poke_int3_vec *try_get_desc(void)
+ 	if (!raw_atomic_inc_not_zero(refs))
+ 		return NULL;
  
-@@ -2512,7 +2512,7 @@ static __always_inline int patch_cmp(const void *key, const void *elt)
+-	return &int3_desc;
++	return &int3_vec;
+ }
  
- noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
- {
--	struct int3_patching_desc *desc;
-+	struct text_poke_int3_vec *desc;
- 	struct smp_text_poke_loc *tp;
- 	int ret = 0;
- 	void *ip;
+ static __always_inline void put_desc(void)
+@@ -2522,7 +2522,7 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+ 
+ 	/*
+ 	 * Having observed our INT3 instruction, we now must observe
+-	 * int3_desc with non-zero refcount:
++	 * int3_vec with non-zero refcount:
+ 	 *
+ 	 *	int3_refs = 1		INT3
+ 	 *	WMB			RMB
+@@ -2625,12 +2625,12 @@ static void smp_text_poke_batch_process(struct smp_text_poke_loc *tp, unsigned i
+ 
+ 	lockdep_assert_held(&text_mutex);
+ 
+-	int3_desc.vec = tp;
+-	int3_desc.nr_entries = nr_entries;
++	int3_vec.vec = tp;
++	int3_vec.nr_entries = nr_entries;
+ 
+ 	/*
+ 	 * Corresponds to the implicit memory barrier in try_get_desc() to
+-	 * ensure reading a non-zero refcount provides up to date int3_desc data.
++	 * ensure reading a non-zero refcount provides up to date int3_vec data.
+ 	 */
+ 	for_each_possible_cpu(i)
+ 		atomic_set_release(per_cpu_ptr(&int3_refs, i), 1);
 -- 
 2.45.2
 
