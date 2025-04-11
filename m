@@ -1,63 +1,63 @@
-Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
+Received: from mx0a-0014ca01.pphosted.com (mx0b-0014ca01.pphosted.com [208.86.201.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE9E29A1;
-	Fri, 11 Apr 2025 04:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.84.65.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BF23234;
+	Fri, 11 Apr 2025 04:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.86.201.193
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744345014; cv=fail; b=I0pGCRlsjaPy19tF8kK0xwecCgqCk9r8h7ys9ETnRs/G1UbvVQj2rxDDU/KWTCBpp+gTLMmGD28gGK99kRO18df6p7YOzQE4U9eqqKfBk57mQsTdSdRqK0Kv/EPdPUFnPxLeajrAGDFXWI47pZcn4VBTa0hyx0zX0u4BZfV8p7w=
+	t=1744345403; cv=fail; b=N7pVavqi/BKM2adHtaxdjQiwL4ARqRpii5OnpuKIWRZq2fuqOIdnQugB/ejZIQc2tpRovo7oyLvJUWNdekJUFmGjiT2vTmGuKwYrm74HzFAEG5iP3ABtbhmFuOyygDMSzZlTZ/0f/gK60a9aAKXEjavKUJYAbGVnH12HlZNVzYw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744345014; c=relaxed/simple;
-	bh=tu98y/Z6cuHXgHqpIx7WWP6+R65VBBbeEEK5ARw0ArI=;
+	s=arc-20240116; t=1744345403; c=relaxed/simple;
+	bh=jX2g7ONQ0CceuNm4QzIxgl2Bf27NXv/aPb41R/gbQUE=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=hoA4ZU3RZmmB6kqVzg38p379Vj1SWRvYl4MDAf8iDzg0T/ekW4uw7tvSRWccQDqbJPeS4iAnuYhg5iKRGvjH2otBG/rrh91szz6pzLg+fyHpmMKj7N5NRV1RfNiBSVVY55yrn9BsgcPrllgei8ctC1k3nYd0WCUdPwn5GS9xSdM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=j+R/4iVi; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=4O1S90KQ; arc=fail smtp.client-ip=208.84.65.235
+	 Content-Type:MIME-Version; b=XEWBFGz/+Cy1cibZEBQILHHxqaV6xvWne0IeQ1ThTQwmxWlzPUPV+hjeiySll0osa4HosYIG00pTwUwEt7UIfgQ8paiTN/M31s6IOnHbHrBQts3O28dZgO3G9U4JtiByWSeU8JNQOls/OaY4fwuzK35h+1aXdZstjyKH307cEdM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=h+BdC60Z; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=6a4fg/33; arc=fail smtp.client-ip=208.86.201.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="j+R/4iVi";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="4O1S90KQ"
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-	by mx0a-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKwgvq001972;
-	Thu, 10 Apr 2025 21:16:46 -0700
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="h+BdC60Z";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="6a4fg/33"
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+	by mx0b-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKwgFH026724;
+	Thu, 10 Apr 2025 21:23:13 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=proofpoint;
-	 bh=1kkq54SzcmUhrtD7C3O1LKQYiUosE2i6q1XgwOSE9Q4=; b=j+R/4iViSUwR
-	SqBoUYhv0i7zXZdjYDKRyKHdj3iBop1u7/Qkpw4Tl1gRD7kEwTDLc4xCKHUh3F8O
-	C0oGnqFjGPrsMG4t9NuEeHWxVhkxP/Phb4O/f2ZSLoklyq/ROVbFNnjGH0M1ICNP
-	m4ZyLt208q9XV1mkvP6MhGfNBeMYK6d3NwgGn3YEhEh6utMBV310FRbnNoCrDBxl
-	wMU1M6xLh/HUaHNYQ4hQZBdjlgFRcPtTvvm3zL4TaM8ujtUpG42f4OW50kCFW9fg
-	LJWgpkrKs3BuhOZK97qdRlsLHD3UWoNkT7dtQuHHIcgi2QUUPlzw/GZC6B+iZk6S
-	NBE36XBl+g==
-Received: from cy4pr02cu008.outbound.protection.outlook.com (mail-westcentralusazlp17011029.outbound.protection.outlook.com [40.93.6.29])
-	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 45vbd2wv8r-1
+	 bh=0MIfBYa0yeSj46edzXRiNzwRtaANtcPKjw4FITlEUgE=; b=h+BdC60Z0srN
+	9dlGkLfJAkRG3JnnWFbtCAMqI259OrufyCm0eGbIil/a5PuXqrzT4D48EE3960NQ
+	f6Kg9gESdsNcbS0xQEFJcVBo3RUAjqviWNOomkfnvWtE0s80GPDS/F5z50CEEm/j
+	HbY81CtPzxkz3mDBJjvT5j+t09wLBrdMYaocknKNKwS8hOiVkqitMu9Wr+8AfR3H
+	HpplvlFQdz/p6wRC6PM7lojHnk2GUsQ78ioHZ2ORPCG4LHm7OXDP9BVX/Y/48ed1
+	lcJ0u1eH+ezXkorkh7SJhs+7uVk3nN+S4dayJQuNvj+z7rMp+Anaj9pCkVuq7Qb+
+	f3GrIMDOuQ==
+Received: from co1pr03cu002.outbound.protection.outlook.com (mail-westus2azlp17010003.outbound.protection.outlook.com [40.93.10.3])
+	by mx0b-0014ca01.pphosted.com (PPS) with ESMTPS id 45u03wuevv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 21:16:45 -0700 (PDT)
+	Thu, 10 Apr 2025 21:23:13 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qj2lfrJLB0O3mOAxnDDJbBzsEd9XzkPAZwAXHLHcsokR63cqSPgAITwXAd/TsCSrHvQHYHI0r35i0GTLiNafekINfhVeFYhMWC6Sl/RRuqGPdgqc/LxuQggWj7jR7FcqJXcGr0BE225wOh9XzKIPOqZPE3ikCTRfivzZGiBOWvfabkq8bWku69lzC8lDv+VMKemTMSsb3y7uCDrRl7s0t8jz5aLCOvJciEc95xFdqeWsOEUutW51PnzPYmmo4vNlFSgsHiGoXNT7cmLFEcswXeCnibV2nC2SBZN18+o3YZVnWiKCthVict3Kcl18hsCZ7Ucc56aSpa4HJrkXkuwHrA==
+ b=MgoVCh0npetKKaOTt0p2sJuSjH4TybjTETs9z0mQy6o/PN77hWnNrYnjk0UgfA7dzut5RRv9qAemtAuxcnJDUqVMpcrHpB/Jby2zboJsZnWGElvNLNHjdUK6cuuBS53slpGTd57bVU+g5qIgz35TKENa9qnhhwxlJ+M/pQvrvgseUSgPMIufkOFy/nWbdIGEuOl0Koyst8q8O5VjEkVo3pXCjsn/l0BXxD6+hI52OrYgSz+Z39U27/mcrDSYM7zVIewgfZFu4ZehrPktu+jB5FjVvZ7IkcDiTtO3lku/fdHN2KFpappWrR2t5Aq/rJv6bZRHVlfiFesmRCuX4ZQN4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1kkq54SzcmUhrtD7C3O1LKQYiUosE2i6q1XgwOSE9Q4=;
- b=Wr8UxDa7i41iTNourjMlmlHP4m4ptNjLG37axybv0sArkPB1mMUCKrjJspj1XAyCGt/R8W6VSzlWav9l/idpNivH7d/fK+YTDCQyybWmpxptYqKSwcdGOqrkg40Uv1rbjV8WnrZEa/5vKn09IO4aRMOT1d0+r4oX1NAO7Pm8Hvc8dFHCIwVICRo2jR5yqEXA5RyqfWy26DjqozAGWKz7yYvw5rSU0jRCShZZfsEAH4ZnEahY+397gfaA5dQDwD6EodZ7BEpkBNytlOSIcZut2L2GJE7/f63TP2MbhdSIcOl4uaDz8x42TQ+JNuAOMQcWGK+/By9wUJladYFCESxPBA==
+ bh=0MIfBYa0yeSj46edzXRiNzwRtaANtcPKjw4FITlEUgE=;
+ b=d9/PVGqaGMSGggn5TXSJ3H0wBaUHByDWkUs99d77EPPae5wJWysRiRztJn3oYzaGORz+V+otHujALksgQJ/VwKh3tU4mnSHIoGJ7pkXJQ51uo1gBtY9P/NQx6cKO9k1gJLXH3dAHOXVCKEOC+Re0M4jN5WmfsHER1pQ+6BiRRSmb7BIEo0tU7AUPcfzWK39D6XRZ51MKKNSv37mf/aLVKWAlD3Pbz2Gmr8IjCoUemHMOrNm9n10SFphUchB1g+S/MYm1eO/tMuzWsa7/BMuJVeHrqqjHDpVIXGI3XH+Oa6q9YnuBX8HhX0FUMLdHBVUmBGiVTf9cHQAM9xWeIDFPUw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
  dkim=pass header.d=cadence.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1kkq54SzcmUhrtD7C3O1LKQYiUosE2i6q1XgwOSE9Q4=;
- b=4O1S90KQkxFv4dWn4NnOZVURpOF0xHjLEtFnkMIpMwJMOocCIWamr2Qv5F8YMAaaAc9uGCKCFcMH5/W6Ac3y1f6tXZl6n2kAIiLomK4ulVQi6+7KfXustcuUBt51hCtjfJMATm5bNW69rI6fmw6ORBorxw/2gozaMK1sRdEbypQ=
+ bh=0MIfBYa0yeSj46edzXRiNzwRtaANtcPKjw4FITlEUgE=;
+ b=6a4fg/33RKo1NY/9lIdZe76HeesmzZKd5dfcv/VggPY7Mp39OZtC6ZcM6J7M0fzE0TISh6lmiz8Tz49LamwIZlRd9kfzWingvpaoNIKgVX90DTGq84PcCzpUKXCf1/LQeUt4bu772mCLHFJM8LKIml1ycioeUNWsm0ttw3V6g+o=
 Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
  (2603:10b6:61f:fc00::278) by PH0PR07MB10693.namprd07.prod.outlook.com
  (2603:10b6:510:337::7) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Fri, 11 Apr
- 2025 04:16:42 +0000
+ 2025 04:23:10 +0000
 Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
  ([fe80::2e5:1b6b:f0e1:26ec]) by CH2PPF4D26F8E1C.namprd07.prod.outlook.com
  ([fe80::2e5:1b6b:f0e1:26ec%8]) with mapi id 15.20.8606.039; Fri, 11 Apr 2025
- 04:16:42 +0000
+ 04:23:09 +0000
 From: Manikandan Karunakaran Pillai <mpillai@cadence.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 CC: "bhelgaas@google.com" <bhelgaas@google.com>,
@@ -70,18 +70,18 @@ CC: "bhelgaas@google.com" <bhelgaas@google.com>,
 	<linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/7] PCI: cadence: Add header support for PCIe next generation
+Subject: [PATCH 4/7] PCI: cadence: Add support for PCIe Endpoint HPA
  controllers
-Thread-Topic: [PATCH 2/7] PCI: cadence: Add header support for PCIe next
- generation controllers
-Thread-Index: AQHbnwkCpgh5QvQSuU67PmiD5J2SNrOG17lggBUJKYCAAhCwQA==
-Date: Fri, 11 Apr 2025 04:16:42 +0000
+Thread-Topic: [PATCH 4/7] PCI: cadence: Add support for PCIe Endpoint HPA
+ controllers
+Thread-Index: AQHbnwkT/WXya8JxT0KBS+TATPDd87OG289QgBUgEICAAfhiAA==
+Date: Fri, 11 Apr 2025 04:23:09 +0000
 Message-ID:
- <CH2PPF4D26F8E1C027259EF9266ECCBDB66A2B62@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <CH2PPF4D26F8E1CA2D74FDA7DAD29C33518A2B62@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 References:
- <CH2PPF4D26F8E1CE94EC3F4A0D6B9849818A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250409203923.GA295549@bhelgaas>
-In-Reply-To: <20250409203923.GA295549@bhelgaas>
+ <CH2PPF4D26F8E1C61F700C22A738FF8846DA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250409221559.GA299990@bhelgaas>
+In-Reply-To: <20250409221559.GA299990@bhelgaas>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -89,69 +89,69 @@ X-MS-TNEF-Correlator:
 x-dg-rorf: true
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: CH2PPF4D26F8E1C:EE_|PH0PR07MB10693:EE_
-x-ms-office365-filtering-correlation-id: 6e6d6180-5a48-40da-92f4-08dd78afaa42
+x-ms-office365-filtering-correlation-id: eb82f97e-68a5-49df-e5dc-08dd78b0910c
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?O6ToqalMf4QitrntB5l8BfTl0DHC2mNmY3ZhvnpKhpJjysPaG+AZlt77Tz/8?=
- =?us-ascii?Q?W9ZjfPu/7j8INMJTk0hxS/qeQXMbU0A1L24hNoArb09sA+Az/m4PAgf1DJpp?=
- =?us-ascii?Q?eknG1gDh+Dnrzuyc67FCE+czCqbRXFgsAndsfnmjuPxpe5FDW/by8/s/PZ4y?=
- =?us-ascii?Q?gVgXkNW2AwVIyVtdqlwQ9okaitOlHnH/AMH2R+Ls8F49augCV7odNh7T5ZbU?=
- =?us-ascii?Q?mdNR2scVwPNlk3z8aHEedrRk2Wx5H0ptQEuNS47pEhrmucPoKHuieJwjNjAk?=
- =?us-ascii?Q?gHjzbiCeDm2dfkpVX9r48r2okNV84lRNzWoQ71vnHQlcWfW3ZM/MW1y4DTor?=
- =?us-ascii?Q?dWeKXl9D7yzRHQcXYrBS3rRSlha7fAf5Vg7XQWT/ZjO7o6GKRgRUlYNi9k9f?=
- =?us-ascii?Q?eVr7jHn8DHxKnCsCknkFQQx1dzBja/+PLYJQisQd15OaWGqb4a4Tmi2sXqRE?=
- =?us-ascii?Q?SuIev6PwONt+Vfq4jDNCFMomWsQzBrlxIKg9MND/bUx8FnvbWpPQS7+6voRA?=
- =?us-ascii?Q?IlS9/Mm8NvVYe/olsKJwj12cKlcWEUR17R3QmKH9KYkUjkHklMLRooygOkMD?=
- =?us-ascii?Q?P/TaAl+/totikqhUBnYcEzdiJUmuJaevBpBpALuvrdzp4DHJR0lKsNPDTouc?=
- =?us-ascii?Q?18NydH56ie6eIoWBqZqVftXE8dVzkjkj4QAO/9X5IWffDMV/8PfNqbVqrOYQ?=
- =?us-ascii?Q?oqmNm1O0iQ2TiZBsoh0zgHAcGG66bxJtm0KW27GiS2MIoea9i4nrw7UKrJ/6?=
- =?us-ascii?Q?Oph3AYHjdb5Whv/9q/Eac0CAsEHyVqu9hUpeLsdjOaaC1Ly86sCETCTJNqCH?=
- =?us-ascii?Q?M//4slQkX++zCJsxAdNdefxEspsWAOUZHXA0f6GH6vcBMlK6cxLs389cTPu7?=
- =?us-ascii?Q?b2RJ1k+UzdgF0Ua/jILDoIcKt9PbpEQwOK87Acu4YQRBZmeQfqZ00GUH8Lr3?=
- =?us-ascii?Q?nabctBqB5TWhCPqDnbZPXhQ11vSD7S7xMcGsVGNFQ5BARqqEncX3/DXMp+Td?=
- =?us-ascii?Q?ciIgaS8uZ1YRdTQPqG4dDI7K0Hto3JA5rxCUT1ySjeEOhz9FWnW1JH7FDLbN?=
- =?us-ascii?Q?cRulQ+a6ZWqtFUjfipKKUY0gC/fVRMbUea5NweImnTybLu/uaVeqniOcqRce?=
- =?us-ascii?Q?ZitAUN/G+QupknDkMeAhh+fIZiv5x3Ut3IRzHHP5hxRufFzjNvYgt/BRTEA3?=
- =?us-ascii?Q?ESufq/hiyLzxrTXxOINKDXJSmAqUTFZTZACAzUJzMq0aSsMTdE0Jxp1l4MGE?=
- =?us-ascii?Q?sZLpqSJYscvqRSiIZ5BNQJmxxqnUmI48qgiWRjYoTGjbVZwME3H438k9A0bI?=
- =?us-ascii?Q?ZMwKN/1st5t2KNOJtMwBN7sNgtbmlK1QPscTWm2EJWssCRNZp6q4/zr4LKhu?=
- =?us-ascii?Q?d0q0bqpARv0SRrasfpp95s33bUwhxFkrnRvAPvMMbQNWxDZgopuYs70fINfH?=
- =?us-ascii?Q?pvAiHDXGds4iF6RbzfUhTQcqL6IXQdGSB6GlP4isomUEOuvTWIDKjTeUEXgd?=
- =?us-ascii?Q?Ge+DLZSGMytYh30=3D?=
+ =?us-ascii?Q?7v63rjCdjuwZXLrXnceKdbUp89wAI0ttYALOZSm2d5wnwYutd2E2DFwZoGfF?=
+ =?us-ascii?Q?CfS5pb4spmTT1vbFko7MAyer6lwWBYz0odW6ngMeSGaU+U8Zpl3mvKWoJSdF?=
+ =?us-ascii?Q?O20iXS31qM52/ebiPqYZsnVTja2g/logCFl6NSVW8yOBuVAkSu8uiedIRsK2?=
+ =?us-ascii?Q?1PyRZ7IxjJvqN9UmHQTjf0WyLn39fD+zBD/RSP454mC4SZhsP2PEsKtrzmTp?=
+ =?us-ascii?Q?2h7VwjM1vwhS+ma85WrHqiYniIT9H5CNcnT4QqpIGWO+/eoR6uFYC41lKr3/?=
+ =?us-ascii?Q?Lj2qlsyOuCes8a9cCjmIYhd1ozCsyYrhNY0ZWmxurdBU5lYs/ghvS1eZjElg?=
+ =?us-ascii?Q?IQq+oKV+paCsnfyxKfvlY+P6k8Ue4a53iWe/o/xXCQaqv0kFv9Fg3o9i9OoI?=
+ =?us-ascii?Q?JlqwQjekXwFqlZU3xHfpuSSxGqBkRsE7twlyKQ4CPMT4VmuNJ9X7+d+LLedR?=
+ =?us-ascii?Q?k2ojDHrWEh+Xr8WkX0xzx8JCjHdu/pWI4vdqkL/LU3G2szZQQklCBykfRNCY?=
+ =?us-ascii?Q?8gjMmgQjHvhvh9m1N7K8LPfjWKQh6jPZupln0IBvOG3/a7STAsNXBoDXMs6S?=
+ =?us-ascii?Q?Kp8KYmT5MB1ozfGL0JtJ/0eWYppsp8//GQX7ktF1nOgYIfIRytw/qMne1qxv?=
+ =?us-ascii?Q?JpZ9s45IKI9GPpI7qbh8Wx45H39xO6F9CwRz3BRx/6VgtaOwl+1TqIjo8e89?=
+ =?us-ascii?Q?AY2YgyJ9tY0c3hu5LpBRiwawtnb/gCI1Hqc9Sr3IIIAA9UzdlNQB+ehObOa9?=
+ =?us-ascii?Q?8p1K31MnB63iQoUtLGgCMTmD2gZ23Rd8KqzC8FRJxoFR+Sa7K+/meM4V+k7V?=
+ =?us-ascii?Q?EIrAH5UW1aUCX72apfkUnGhkbtBScXPUARxn0UTsDXJhLkZ8s+najDgO2zu4?=
+ =?us-ascii?Q?8sqEzcSBoTfBANqslpjQa8OjfVEsoEHz0TB8vLC00bFrt99pE6kkOFNxu4v2?=
+ =?us-ascii?Q?/hHwpUOf6qiqui58cWkj+x+IBlQ4uDd9R+HECDlDXDw7wrzqd/ETb8mKvuQC?=
+ =?us-ascii?Q?a21RifDxBnvQ6mkquU/3xkuMigUwHeRs0MHBwVCwS6eFevM4sUGeTskSNCEp?=
+ =?us-ascii?Q?9voHd5mTDP+Q53M0EovNUXTIBg6xZUt32EQZ5imEMGNqLicmWG7c46dyVbVt?=
+ =?us-ascii?Q?XkGYHTRrl/9k0FojJzvSMdowJOv/Ham9xwYH+GmvDILeWZEO4ei0DRfsddY0?=
+ =?us-ascii?Q?m+DlKPdPIrvzehGp9G56XO1AoXHXUq1BP2tyXMCPQed7jHyPfh19om14vD4x?=
+ =?us-ascii?Q?UGFQWuqbHWDePm5JWFqhVoV8us9vUr2Guguaf8ZE8Si+G2VOCZRjkIGF5ZvB?=
+ =?us-ascii?Q?Y9o5OlJA4dKrlin/sXJwodCPnNDIquzETFp7uJnOHxgncQJPq3vKpf42qYyG?=
+ =?us-ascii?Q?k/pXJCIyV46Vb6k5f/LTCjfIsrMQQ+Z8SczoKreTq7oUqW3J9H2i1xw3EP9S?=
+ =?us-ascii?Q?Q672OaxoC51fClD6Vsou0ai8uO/F8es15dlRNBN/GYWou4E3MvZ+f8BzH07Z?=
+ =?us-ascii?Q?de0kd5/ju6p+tls=3D?=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PPF4D26F8E1C.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?DLiwuA449OPqE+blvvHnvYRgoKJApfRMtGq9IclvJD5i6kNIzwjV1sN6EQyK?=
- =?us-ascii?Q?X6b7uQvhZL7iyZ3FQEFJjct3Ibq9NskoOqW5pyCiZIM7uLZH2q8ujDbpfuRD?=
- =?us-ascii?Q?4XJAqX7VulOz68ML6XgJ7DHMn7wC2CMYXQSPfT0pUDeWY48MC6dD34gwhYwW?=
- =?us-ascii?Q?pkwelurpHVSmXjxO7S2uTZoyxda0kf1qtGa2vLSQZeim8uoNc++Uo9GzG1HD?=
- =?us-ascii?Q?P0NPy032ZnZAUYFFEYFZCKw2BQifutao708kAjwwwMw/5sUqllhwPs73BalM?=
- =?us-ascii?Q?IrSRY1fj/zAh1Gy0vPpgGCOp18mesV09h4wS6N7g2fvI3hOQC1yxD1d/GfJ5?=
- =?us-ascii?Q?FyC904u6QAUKdEX9DE5tBCYGI2mxIJtuKqFzBW3sqZWlJU5FQMdkUq6wS4n0?=
- =?us-ascii?Q?uM3rRTh6Bkynu0wd93M+YZA2YxfT/udCy2cwTcUV5AjVxoycPFAPH2wrqURp?=
- =?us-ascii?Q?O2yPkeFSjFbN6Js/BRq7/SqkbNVz0qw2AacgQ5IfX6yaqhhFWJCtx+02I3ah?=
- =?us-ascii?Q?ekRfTo0PPEP2biuSgWMHGszEcrc1ao1t5QYn7Pnkkm+hqePMf5m6Cxo1BvbN?=
- =?us-ascii?Q?9OE+FpdxTEI3j4J+rqebourIDj27jkRaOeYqUsSlEXXrTZ+rxTMvvQhoTBeM?=
- =?us-ascii?Q?iEQN3hlBMsgeBRUgI1xISAOkaiVp2noTupB/WUT+P0jJpcBYQ79xuk7Fevlw?=
- =?us-ascii?Q?6yxSwFyQwgjh8XAdR6RxuITjTBbrTO3DH4L6t9tPxRB7L3dOu09qQUPjJSCw?=
- =?us-ascii?Q?ez2vnTo7mfV8hMNVAR1XQHexz8gnQXIAgNWVztPJoq3TqVcRClkCvQUaTENm?=
- =?us-ascii?Q?Uo/ZASxXvMNr5V7ZJY4DisVHJ3WCimpc6b4LVFFlKm4wbsohxtsgH9WyZSYa?=
- =?us-ascii?Q?rARcTJc+K5ZnELrrhGPaHJV9oO3nNybkwBOsmfqV5GCqzvlMESJU7gMuYPnd?=
- =?us-ascii?Q?ozvYH7IZugt5i5cykC/Lpj8QFB8I+aJKg1zqWWnJAv7RzMX5tVWofvsi5kF1?=
- =?us-ascii?Q?V59xZPgnQgmEaij9EZb1kxA6l0MmlDWdCv299jGQZqEOq4S2t2WkKX0ZH6gx?=
- =?us-ascii?Q?NOJnXDJB8ytc0ZqchJ3aA5mJMTZKVqmJr6G8UPIzZ+7IWzxx0w+V6yOgUmtA?=
- =?us-ascii?Q?bOhF6MhCeZ+OxQWazcfIeKkm0dwUJ+p5AqDYpPuB6FG7Jm3kuBF45JABdnh2?=
- =?us-ascii?Q?+lOmV1Ug1sPE2A8NVmozrH4j6dAyys0lLKgwOjuaTzY0Vbk7NHngtHxCUMC8?=
- =?us-ascii?Q?rZ+CKiFB9QYE5MTok/SyMqX9fjXV65QAL4oBq45flJvThO+lJ8yT/0zDcdKq?=
- =?us-ascii?Q?917lYkfATYZRCoy/UAOI+QibyNjNCbNwblTmuLeYgQbLvI/v2g3GVPs26yvv?=
- =?us-ascii?Q?QxNM8bzkLBY9Xrr3jTfFYPlmHSqW7ExbY25pgRmx2HQSvJSw+p5zEyThAuH8?=
- =?us-ascii?Q?J2c7fjmLxdLgQfPv2KL+oEyz9tdOiKn9y6q72iQZztzSFKhxo05x8K6VEdDf?=
- =?us-ascii?Q?Bm1eDpGagAqfKfHCo2HcpcnPbqn9oVGWZyhyIClydcVrsUhV1LpXXm3X+AEG?=
- =?us-ascii?Q?GHE/9j1Dd1mdBwak0TMiJVEtukEfmD8ADImVugf0GOj+GRkZgwdgdgB8qgXC?=
- =?us-ascii?Q?nw=3D=3D?=
+ =?us-ascii?Q?iM+zHtoJPbksCeSH1/cP+4hQ04gxYbZv5RkgrjIj+56sQtwywctn6msEvEbw?=
+ =?us-ascii?Q?CYvh3Js2AHMeuxP8Mzir6DT8Iba/tcWjZHA+yddjrOjwxLjfOcbOJEU0mheD?=
+ =?us-ascii?Q?Jx5QT8kcUoiNE1pF/ZbF0frexkWs8OeCfmRixPvB1KNDgpyIsv31t9fvqtwp?=
+ =?us-ascii?Q?xi30qumKbrvgFLcWPfdCOrSdqQQ4fjEIDY1IkgX1qJfdmJFYj7q7PadAYXGX?=
+ =?us-ascii?Q?+zBC9d7CcUqrGayXAvhbvZXugUJCPRj7dIK+8YOYcimcJwBPSmNeNryhClqj?=
+ =?us-ascii?Q?mhRmvvBRoXL8mAECMZtAd1aU9jC6t6pIgESlCFqKffHtiserajnQwqzoCpD7?=
+ =?us-ascii?Q?F6rg9utErlgMNJFq7GkPxqJk5Ob6g0wgLKRlPPZK3+jzBFydTPXT2e8e/OtU?=
+ =?us-ascii?Q?ieW2XHZGFKNTp0PaqpAmdfOC2p9EkJTavtVs6T6UbhtYzGtcSyblyjDMzbuj?=
+ =?us-ascii?Q?twG4tAjRacul8Pm+BWODTtoeon47CsM07ohYhK5CxGTH+IXUOSSCUW63qUmQ?=
+ =?us-ascii?Q?tHfiZd3qsQCCHnBRey29I/cT/rrDphsSRxJP3Ad7gGsBtPcX3XSCN7tPUGeI?=
+ =?us-ascii?Q?9bVDceakg63HvcJ1FMb3nf2lNrSAolOlavlRmZ5uilbf6nG2jkWKcKYskFqM?=
+ =?us-ascii?Q?t4XVA39lxaXNrvRXxgbYEpH0UznBtNCfdFIJwMqYghG4rdYogvaWoUazi19G?=
+ =?us-ascii?Q?DKA1uh2D2ASlVKfz/zuIewtz/d7uXWJhnXHg45TSXBC/Fyxy8PtkIKySSTQU?=
+ =?us-ascii?Q?jKPo7NWuruLxM8r3jwrpOpTqX9mASIaxbFBlMJAq/M20cFBIvGo3uBUVvPDq?=
+ =?us-ascii?Q?r6hN2EL0jbcYyri0/yBSC6Ym/7DOZ+x9eOB9cJLmQK85Mwhk7iH/8EXfR3aB?=
+ =?us-ascii?Q?w38RXAMjNnyZoMjm5KzEzhI9MJxaYFkOEMkL4baf9sbxclmk/F8ikdy/oEk7?=
+ =?us-ascii?Q?LQJ0r7005fCVy4CPDHXtdEOnp+cMDaDOtIazmiqU0l+KByTP30ootHXayv3m?=
+ =?us-ascii?Q?0fimNQUcPE3BqswtZf6NvdQ79grY7dp9KfDcxlBf0BxRrIxDwSHswi2hou2o?=
+ =?us-ascii?Q?zBjM0FxgOTnDQ+nTU62ryk2SRKw26W15/r7Papc0gTDcS7jAmlVCPQjI6Q9H?=
+ =?us-ascii?Q?kaQbu9Bo2a7jqIeUIUVFHIAJtDd/xJPZ3zBLFdAEuCCzxztn4rsBgZg9c39t?=
+ =?us-ascii?Q?NL8nE5CrJh4/Y8xo50jxZAHmCyBaM4aVt48ytbq9oEaeayuDYDrJq/QG0yEd?=
+ =?us-ascii?Q?xhYiFC1N6NDCHD9KckzDHRAJukBYiCLoN8aqcWYwhaOtEqzf3JT1Wksv0/e7?=
+ =?us-ascii?Q?VrsIlZ2dsbGLZ0iqPuhh7SWqhsDWT2Kk9S+oBw0G0qQvBJKWvK7BIN+JHA4m?=
+ =?us-ascii?Q?6xd5KyqPJrOhgwCZDElyb/zVSqbpIptTgJyXx2R9Jqge295SX83mHzn4qT+s?=
+ =?us-ascii?Q?Y4i56f84/Qn+k2IvYg7s5c0PDhRhSeDM4a7dCKe2njcrDlZnl5THhwC1f+d6?=
+ =?us-ascii?Q?wCauz8xN0vGm7uegpbEvuxhcxCcP6LR1yBPHP64Og+qGSvUIBR7RGb+zuHJA?=
+ =?us-ascii?Q?yuTMR5ViNkzeqGEdKZojPvDNc4nfgfr35vt4qGPSGn6T4gTup0qUVMkpP+RC?=
+ =?us-ascii?Q?3g=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -163,198 +163,139 @@ MIME-Version: 1.0
 X-OriginatorOrg: cadence.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: CH2PPF4D26F8E1C.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e6d6180-5a48-40da-92f4-08dd78afaa42
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 04:16:42.7054
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb82f97e-68a5-49df-e5dc-08dd78b0910c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 04:23:09.9276
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eXWwnoAcvxU0ml8KWrNXHtSNCjUw6WejbbpEm/av+BacaNIdu7Bjb++xhi/UHTtrddumV5dATc/kw7000Uwtb9oSrwhUM6g9Mcwk+MQIp+U=
+X-MS-Exchange-CrossTenant-userprincipalname: F17nQ2jODIGjfBVt33D0GN4RWEdS7ts5gsT2Ij/gxZwA2GePxURhR1z6XdFPdzifJdyxZnxb/cmkMDN+CKl6ns+cSluRcHwAzBgm1XaSNXI=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR07MB10693
-X-Proofpoint-ORIG-GUID: lsJffB9upm-8oyUbSoZh-flBRMj07qMY
-X-Authority-Analysis: v=2.4 cv=HIXDFptv c=1 sm=1 tr=0 ts=67f897ad cx=c_pps a=MGIL9jhmtb3Hqg0nl2vIzw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=XR8D0OoHHMoA:10 a=Zpq2whiEiuAA:10 a=sEGdoHQ-cMIKJbrvSkAA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: lsJffB9upm-8oyUbSoZh-flBRMj07qMY
+X-Proofpoint-ORIG-GUID: f2OkUVMCt_0SDk5z7kFsl-O5hbkjv1uh
+X-Authority-Analysis: v=2.4 cv=Qcdmvtbv c=1 sm=1 tr=0 ts=67f89931 cx=c_pps a=aBehHGrvSf44cF3hBtnTuw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=XR8D0OoHHMoA:10 a=Zpq2whiEiuAA:10 a=Izo7mvsFxUDh_7T53NwA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: f2OkUVMCt_0SDk5z7kFsl-O5hbkjv1uh
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-11_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 clxscore=1015
+ impostorscore=0 priorityscore=1501 spamscore=0 bulkscore=0 mlxscore=0
+ mlxlogscore=945 lowpriorityscore=0 malwarescore=0 phishscore=0
+ adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110029
+ definitions=main-2504110030
 
-
->On Thu, Mar 27, 2025 at 11:26:21AM +0000, Manikandan Karunakaran Pillai
+>
+>On Thu, Mar 27, 2025 at 11:40:36AM +0000, Manikandan Karunakaran Pillai
 >wrote:
->> Add the required definitions for register addresses and register bits
->> for the next generation Cadence PCIe controllers - High performance
->> rchitecture(HPA) controllers. Define register access functions for
->> SoC platforms with different base address
+>> Add support for the second generation(HPA) Cadence PCIe endpoint
+>> controller by adding the required functions based on the HPA registers
+>> and register bit definitions
 >
->"Next generation" is not really meaningful since there will probably
->be a next-next generation, and "high performance architecture" is
->probably not much better because the next-next generation will
->presumably be "higher than high performance."
+>Add period.
 >
->I would just use the codename or marketing name and omit "next
->generation."  Maybe that's "HPA" and we can look forward to another
->superlative name for the next generation after this :)
->
-"HPA" will be used from the next patch series
 
->s/High performance/High Performance/
->s/rchitecture/Architecture/
->
->Add period at end of sentence.
->
-OK
+Ok
 
->> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG(bar, fn) \
->> +	(((bar) < BAR_3) ? CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG0(fn) : \
->> +			CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG1(fn))
->> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG0(pfn) (0x4000 * (pfn))
->> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG1(pfn) ((0x4000 * (pfn)) +
->0x04)
->> +#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG(bar, fn) \
->> +	(((bar) < BAR_3) ? CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG0(fn) : \
->> +			CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG1(fn))
->> +#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG0(vfn) ((0x4000 * (vfn)) +
->0x08)
->> +#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG1(vfn) ((0x4000 * (vfn)) +
->0x0C)
->> +#define
->CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(f) \
->> +	(GENMASK(9, 4) << ((f) * 10))
->> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE(b, a) \
->> +	(((a) << (4 + ((b) * 10))) &
->(CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b)))
->> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(f) \
->> +	(GENMASK(3, 0) << ((f) * 10))
->> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL(b, c) \
->> +	(((c) << ((b) * 10)) &
->(CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b)))
+>> @@ -93,7 +93,10 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc,
+>u8 fn, u8 vfn,
+>>  	 * for 64bit values.
+>>  	 */
+>>  	sz =3D 1ULL << fls64(sz - 1);
+>> -	aperture =3D ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
+>> +	/*
+>> +	 * 128B -> 0, 256B -> 1, 512B -> 2, ...
+>> +	 */
+>> +	aperture =3D ilog2(sz) - 7;
 >
->Wow, these names are ... loooong.  This would be more readable if they
->could be abbreviated a bit.  "PCIE" could be dropped with no loss.
->There are probably other words that could be dropped too.
+>Unclear exactly how this is related to HPA and whether it affects
+>non-HPA.
 >
-The names are in sync with the hardware register specification and also wit=
-h the existing
-code for legacy Cadence PCIe controller. Hence would like to retain them fo=
-r readability.
 
->>  struct cdns_pcie_ops {
->>  	int	(*start_link)(struct cdns_pcie *pcie);
->>  	void	(*stop_link)(struct cdns_pcie *pcie);
->>  	bool	(*link_up)(struct cdns_pcie *pcie);
->>  	u64     (*cpu_addr_fixup)(struct cdns_pcie *pcie, u64 cpu_addr);
->> +	int	(*pcie_host_init_root_port)(struct cdns_pcie_rc *rc);
->> +	int	(*pcie_host_bar_ib_config)(struct cdns_pcie_rc *rc,
->> +					   enum cdns_pcie_rp_bar bar,
->> +					   u64 cpu_addr, u64 size,
->> +					   unsigned long flags);
->> +	int	(*pcie_host_init_address_translation)(struct cdns_pcie_rc *rc);
->> +	void	(*pcie_detect_quiet_min_delay_set)(struct cdns_pcie *pcie);
->> +	void	(*pcie_set_outbound_region)(struct cdns_pcie *pcie, u8 busnr,
->u8 fn,
->> +					    u32 r, bool is_io, u64 cpu_addr,
->> +					    u64 pci_addr, size_t size);
->> +	void	(*pcie_set_outbound_region_for_normal_msg)(struct
->cdns_pcie *pcie,
->> +							   u8 busnr, u8 fn, u32 r,
->> +							   u64 cpu_addr);
->> +	void	(*pcie_reset_outbound_region)(struct cdns_pcie *pcie, u32 r);
->
->Also some pretty long names here that don't fit the style of the
->existing members (none of the others have the "pcie_" prefix).
+Removed in the next patch series
 
 
-"pcie" is removed from the function names to be in sync with other function=
- pointer naming
+>> @@ -121,7 +124,7 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc,
+>u8 fn, u8 vfn,
+>>  		reg =3D CDNS_PCIE_LM_EP_VFUNC_BAR_CFG(bar, fn);
+>>  	else
+>>  		reg =3D CDNS_PCIE_LM_EP_FUNC_BAR_CFG(bar, fn);
+>> -	b =3D (bar < BAR_4) ? bar : bar - BAR_4;
+>> +	b =3D (bar < BAR_3) ? bar : bar - BAR_3;
+>
+>Unclear what's going on here because this doesn't look specific to
+>HPA.  Should this be a separate patch that fixes an existing defect?
+>
+>>  	if (vfn =3D=3D 0 || vfn =3D=3D 1) {
+>>  		cfg =3D cdns_pcie_readl(pcie, reg);
+>> @@ -158,7 +161,7 @@ static void cdns_pcie_ep_clear_bar(struct pci_epc
+>*epc, u8 fn, u8 vfn,
+>>  		reg =3D CDNS_PCIE_LM_EP_VFUNC_BAR_CFG(bar, fn);
+>>  	else
+>>  		reg =3D CDNS_PCIE_LM_EP_FUNC_BAR_CFG(bar, fn);
+>> -	b =3D (bar < BAR_4) ? bar : bar - BAR_4;
+>> +	b =3D (bar < BAR_3) ? bar : bar - BAR_3;
+>
+>And here.
+
+Removed in the next patch series and will be submitted as patch for bug fix
 
 >
->> + * struct cdns_pcie_reg_offset - Register bank offset for a platform
->> + * @ip_reg_bank_off - ip register bank start offset
->> + * @iP_cfg_ctrl_reg_off - ip config contrl register start offset
+>> @@ -569,7 +572,11 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>>  	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
+>>  	 * and can't be disabled anyway.
+>>  	 */
+>> -	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, epc-
+>>function_num_map);
+>> +	if (pcie->is_hpa)
+>> +		cdns_pcie_hpa_writel(pcie, REG_BANK_IP_REG,
+>> +				     CDNS_PCIE_HPA_LM_EP_FUNC_CFG, epc-
+>>function_num_map);
+>> +	else
+>> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, epc-
+>>function_num_map);
 >
->s/@iP_cfg_ctrl_reg_off/@ip_cfg_ctrl_reg_off/
+>Sprinkling tests of "is_hpa" around is not very extensible.  When the
+>next generation after HPA shows up, then it gets really messy.
+>Sometimes generation-specific function pointers can make this simpler.
 >
->"scripts/kernel-doc -none <file>" should find errors like this for you.
 
-kernel-doc --none is run on all the files for the next patch series
->
->s/contrl/control/
->
->> + * @axi_mstr_common_off - AXI master common register start
->> + * @axi_slave_off - AXI skave offset start
->
->s/skave/slave/
->
->> +struct cdns_pcie_reg_offset {
->> +	u32  ip_reg_bank_off;
->> +	u32  ip_cfg_ctrl_reg_off;
->> +	u32  axi_mstr_common_off;
->> +	u32  axi_slave_off;
->> +	u32  axi_master_off;
->> +	u32  axi_hls_off;
->> +	u32  axi_ras_off;
->> +	u32  axi_dti_off;
->>  };
->>
->>  /**
->> @@ -305,10 +551,12 @@ struct cdns_pcie {
->>  	struct resource		*mem_res;
->>  	struct device		*dev;
->>  	bool			is_rc;
->> +	bool			is_hpa;
->>  	int			phy_count;
->>  	struct phy		**phy;
->>  	struct device_link	**link;
->>  	const struct cdns_pcie_ops *ops;
->> +	struct cdns_pcie_reg_offset cdns_pcie_reg_offsets;
->
->Why does struct cdns_pcie need to contain an entire struct
->cdns_pcie_reg_offset instead of just a pointer to it?
+The "is_hpa" are used at very few places in the code where putting a genera=
+tion specific
+functions might be an overkill
 
-The cdns_pci_reg_offset is declared only in this global store for further u=
-sage by the driver. There is only
-Struct defined for a PCIe controller and it made sense to define it inside =
-this global context struct for controllers
-
->
->> +static inline u32 cdns_reg_bank_to_off(struct cdns_pcie *pcie, enum
->cdns_pcie_reg_bank bank)
+>> +static int cdns_pcie_hpa_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
+>> +				    struct pci_epf_bar *epf_bar)
 >> +{
->> +	u32 offset;
+>> +	struct cdns_pcie_ep *ep =3D epc_get_drvdata(epc);
+>> +	struct cdns_pcie_epf *epf =3D &ep->epf[fn];
+>> +	struct cdns_pcie *pcie =3D &ep->pcie;
+>> +	dma_addr_t bar_phys =3D epf_bar->phys_addr;
+>> +	enum pci_barno bar =3D epf_bar->barno;
+>> +	int flags =3D epf_bar->flags;
+>> +	u32 addr0, addr1, reg, cfg, b, aperture, ctrl;
+>> +	u64 sz;
 >> +
->> +	switch (bank) {
->> +	case REG_BANK_IP_REG:
->> +		offset =3D pcie->cdns_pcie_reg_offsets.ip_reg_bank_off;
+>> +	/*
+>> +	 * BAR size is 2^(aperture + 7)
+>> +	 */
+>> +	sz =3D max_t(size_t, epf_bar->size, CDNS_PCIE_EP_MIN_APERTURE);
+>> +	/*
 >
->It's a little hard to untangle this without being able to apply the
->series, but normally we would add the struct cdns_pcie_reg_offset
->definition, the inclusion in struct cdns_pcie, this use of it, and the
->setting of it in the same patch.
->
+>Add blank line between code and comment.
+
 Ok
 
->>  #ifdef CONFIG_PCIE_CADENCE_EP
->> @@ -556,7 +909,10 @@ static inline int cdns_pcie_ep_setup(struct
->cdns_pcie_ep *ep)
->>  	return 0;
->>  }
->>  #endif
->> -
 >
->Probably spurious change?  Looks like we would want the blank line
->here.
+>> +	 * roundup_pow_of_two() returns an unsigned long, which is not
+>suited
+>> +	 * for 64bit values.
+>> +	 */
+>> +	sz =3D 1ULL << fls64(sz - 1);
+>> +	/*
 >
-Ok
-
->> +bool cdns_pcie_linkup(struct cdns_pcie *pcie);
->> +bool cdns_pcie_hpa_linkup(struct cdns_pcie *pcie);
->> +int cdns_pcie_hpa_startlink(struct cdns_pcie *pcie);
->> +void cdns_pcie_hpa_stop_link(struct cdns_pcie *pcie);
->>  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
+>Again.  Check for other places in this series.
+>
+>> +	 * 128B -> 0, 256B -> 1, 512B -> 2, ...
+>> +	 */
+>> +	aperture =3D ilog2(sz) - 7;
