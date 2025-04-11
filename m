@@ -1,114 +1,121 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D317D1953A1
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB39E1C3BEB;
+	Fri, 11 Apr 2025 13:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379398; cv=none; b=iux8v3NDMSDnsAxw7eLZVNXsBot5ND/lVz1ZDmATQ5HFE1bjDY9SuUOsXIv418ZohCdQvWwHh3Zt6BL+GhTyjQbBOqWTpfSMafphG3o9e7S4VMeQluW/a2Ms9Ap5MO06RWEEcD2LXZOondTiOFlX6yuWPLyPFWz8lBlmXNIQijE=
+	t=1744379431; cv=none; b=j57aPpqVlcoYM+zhahnyJdX9H8lvcoQuf1eny39R2dkpbyTh2smU/VcVSFVsusoQeys46+N6uvUBsv0pxtK3LPbmMEvUqcs45VFAleKGXgRDhWgFkeh1jYEGxioSGVjUMR9Vf6bardMWmivf1uXuJqHGnnXNuqiAx0bXoM6zLX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379398; c=relaxed/simple;
-	bh=I56Ww0FL0p3WycuTmoOZOg78vER//umvFNWysezLXBU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aWkJ43Qii3q8s4p/8AJnEve9CR3ea0Obi3cmazCAY89OU3Mzkr3ZxKKZcz8hagJZUXE/BLBa6act2cDGXdeZJ53MWbjK4F0IQl1Bwa1DHjst3XSSccCjmUMFVP7aW//BN65rTyDPx4qljaOwZOVPXrENmSVMaF6Kz5mviVu4cB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gRtnG0S/; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744379431; c=relaxed/simple;
+	bh=fBMPce3nXkTzC5YitcBdnnxth6H4sTrD9RAuJ+F4s38=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iYWtGeUcXBFoJDcbDwDaY7R9CdcVTMz0T+J0s3dL/X92rW+n3wv9c1GmDgDLHIq/raVvKhF9ZnHmGy9w4XExmAXvCcUXJD0lsS6+2qpP9AsVpYthrlmd52jQTV/NE7TnivWpvI3+GJAkNBIVcjMP5eWyTJK1Lnqgo1a6ZneGKyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SR5jd+om; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRtnG0S/"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736b5f9279cso1809674b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:49:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744379396; x=1744984196; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=npTqIzcflaiGl9UdPw4hvsTt3mABWsyegIi1jVx2GCM=;
-        b=gRtnG0S/GquVunJXSGtsm2dEouitECg2lJc1D+WVF8v9ic7i+Xp/I3EojhqvNRWD00
-         o5/hgpzHCAMkA8ifR7gBeO1FRHbbkE7+FW9G0kf9Dd4UxE5Y9AYX83wuyVyDq59BA5kd
-         Qv1rAInQ/isjYFx1s75SRVwtLVNpfQJ3AnYxY9b2oUcy6Gc/LxXwG5bxNLQsN6T8cbqu
-         OWXBO47y8S27WBSg6fFlauMKQiDvpqx18AWPuQ7bJ2JtInYClHroPBHhYEPZb7J0a0AD
-         WBg2TVnxgPL3Th6V16Z+rfpUFhzX8fNM5OZHJ1yPoZIYyYabPrT9G0ZFDBOzXL2/NM8s
-         9CVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744379396; x=1744984196;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=npTqIzcflaiGl9UdPw4hvsTt3mABWsyegIi1jVx2GCM=;
-        b=h4FTgvuaMXhIR5acZtxfd83ExxT2DXwXfvTN0ixJ+BVm5qlJBJ6eeMnFGqupOC8IWN
-         UPwuvanilQfUOFBm5tT9hvZU3/96zsof/kYExwk0PNTvO6pvUzHtcoGMd1c+qqUa/QMb
-         ghFBDl95QoyktmgLwg7ya+Jv6Jp7gXfo8YOw4hXICgKv+mJJmzOijHbxgm3NlkqWjiC+
-         ycjA3XrTxyo4HtwHQ7b+PHyYuOvLVpmk7+VZKxJKN0O5L1TK+YgSvK7qFVQaW7GtYxcG
-         UL630f/S2cbpuXpwFKtu16TIkDhXv+KlFLuvYfd8/sik+Y6oqSWkIzSB3qVFyTNDpuAQ
-         gr0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXIms9erHJ753eOlQongQMYuHjEUghzPXBPrcbeFkyVI2dYSLvGEMRzrCjL06zzeS06TtEm0BMBY2zImJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMC2xmU20yWTLVTDR3O8edrV1pP13rmFs6if/w7qJSu3Fd0HmY
-	/Wap2e1j2QMNEDhwdNaMvPBRaaPWWDnn/QsW12qmzqMIDpcXIBEnNiYkPndJG9k678QLRpNqWUu
-	Feg==
-X-Google-Smtp-Source: AGHT+IGb9i/RjgaxU2Do5EdMDxGsLuUKqdWEfvBOiP/9SNprmTPZMIPFWsiljfHIcPA5/tG9Kzn3dZaCecg=
-X-Received: from pfbfq2.prod.google.com ([2002:a05:6a00:60c2:b0:739:45ba:a49a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b89:b0:736:34a2:8a20
- with SMTP id d2e1a72fcca58-73bd12c9e39mr4023128b3a.21.1744379396163; Fri, 11
- Apr 2025 06:49:56 -0700 (PDT)
-Date: Fri, 11 Apr 2025 06:49:54 -0700
-In-Reply-To: <20250411094059.GIZ_jjq0DxLhJOEQ9B@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SR5jd+om"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDoJUS2141356
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 08:50:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744379419;
+	bh=qQDSFd0KgWBYuvyGNC6FIuW3TAEXHe3afLsrb7vpjYk=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=SR5jd+omWQxFX6UsqjsPKJ90ihXVqD9unyjxmpgtOwxUWqzaiAGqu+/+jjisWUfZk
+	 +WE12+qo/scn+FIl4BsRZoTY1FrVvLWk7j5+i8bflzxwUroKQX+ExD41QTVPhB2l8L
+	 qlrxRuy3vo36UxIaEBzPUACKcMxqdba+I8Hu2sRw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDoJCD031578
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 08:50:19 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 08:50:19 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 08:50:18 -0500
+Received: from [10.249.136.157] ([10.249.136.157])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDoDJO001396;
+	Fri, 11 Apr 2025 08:50:14 -0500
+Message-ID: <293dfbda-841b-4a5a-85ac-6a6c2df5df09@ti.com>
+Date: Fri, 11 Apr 2025 19:20:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241204134345.189041-1-davydov-max@yandex-team.ru>
- <20241204134345.189041-2-davydov-max@yandex-team.ru> <20250411094059.GIZ_jjq0DxLhJOEQ9B@fat_crate.local>
-Message-ID: <Z_keAsy09KU0kDFj@google.com>
-Subject: Re: [PATCH v3 1/2] x86: KVM: Advertise FSRS and FSRC on AMD to userspace
-From: Sean Christopherson <seanjc@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Maksim Davydov <davydov-max@yandex-team.ru>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, babu.moger@amd.com, 
-	mingo@redhat.com, tglx@linutronix.de, dave.hansen@linux.intel.com, 
-	hpa@zytor.com, jmattson@google.com, pbonzini@redhat.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/7] arm64: dts: ti: am68-sk: Fix regulator hierarchy
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>, <stable@vger.kernel.org>
+References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
+ <20250409134128.2098195-3-y-abhilashchandra@ti.com>
+Content-Language: en-US
+From: "Francis, Neha" <n-francis@ti.com>
+In-Reply-To: <20250409134128.2098195-3-y-abhilashchandra@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Apr 11, 2025, Borislav Petkov wrote:
-> On Wed, Dec 04, 2024 at 04:43:44PM +0300, Maksim Davydov wrote:
-> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> > index 17b6590748c0..45f87a026bba 100644
-> > --- a/arch/x86/include/asm/cpufeatures.h
-> > +++ b/arch/x86/include/asm/cpufeatures.h
-> > @@ -460,6 +460,8 @@
-> >  #define X86_FEATURE_NULL_SEL_CLR_BASE	(20*32+ 6) /* Null Selector Clears Base */
-> >  #define X86_FEATURE_AUTOIBRS		(20*32+ 8) /* Automatic IBRS */
-> >  #define X86_FEATURE_NO_SMM_CTL_MSR	(20*32+ 9) /* SMM_CTL MSR is not present */
-> > +#define X86_FEATURE_AMD_FSRS	        (20*32+10) /* AMD Fast short REP STOSB supported */
-> > +#define X86_FEATURE_AMD_FSRC		(20*32+11) /* AMD Fast short REP CMPSB supported */
+On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
+> Update the vin-supply of the TLV71033 regulator from LM5141 (vsys_3v3) to
+> LM61460 (vsys_5v0) to match the schematics. Add a fixed regulator node for
+> the LM61460 5V supply to support this change.
 > 
-> Since Intel has the same flags, you should do
+> AM68-SK schematics: https://www.ti.com/lit/zip/sprr463
+> Fixes: a266c180b398 ("arm64: dts: ti: k3-am68-sk: Add support for AM68 SK base board")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> 	if (cpu_has(c, X86_FEATURE_AMD_FSRS))
-> 		set_cpu_cap(c, X86_FEATURE_FSRS);
-> 
-> and the other one too. Probably in init_amd() so that guest userspace doesn't
-> need to differentiate between the two and you don't have to do...
-> 
-> >  #define X86_FEATURE_SBPB		(20*32+27) /* Selective Branch Prediction Barrier */
-> >  #define X86_FEATURE_IBPB_BRTYPE		(20*32+28) /* MSR_PRED_CMD[IBPB] flushes all branch type predictions */
-> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > index 097bdc022d0f..7bc095add8ee 100644
-> > --- a/arch/x86/kvm/cpuid.c
-> > +++ b/arch/x86/kvm/cpuid.c
-> > @@ -799,8 +799,8 @@ void kvm_set_cpu_caps(void)
-> >  
-> >  	kvm_cpu_cap_mask(CPUID_8000_0021_EAX,
-> >  		F(NO_NESTED_DATA_BP) | F(LFENCE_RDTSC) | 0 /* SmmPgCfgLock */ |
-> > -		F(NULL_SEL_CLR_BASE) | F(AUTOIBRS) | 0 /* PrefetchCtlMsr */ |
-> > -		F(WRMSR_XX_BASE_NS)
-> > +		F(NULL_SEL_CLR_BASE) | F(AUTOIBRS) | F(AMD_FSRS) |
-> > +		F(AMD_FSRC) | 0 /* PrefetchCtlMsr */ | F(WRMSR_XX_BASE_NS)
-> 
-> ... this.
+> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> index 11522b36e0ce..5fa70a874d7b 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> @@ -44,6 +44,17 @@ vusb_main: regulator-vusb-main5v0 {
+>  		regulator-boot-on;
+>  	};
+>  
+> +	vsys_5v0: regulator-vsys5v0 {
+> +		/* Output of LM61460 */
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vsys_5v0";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&vusb_main>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+>  	vsys_3v3: regulator-vsys3v3 {
+>  		/* Output of LM5141 */
+>  		compatible = "regulator-fixed";
+> @@ -76,7 +87,7 @@ vdd_sd_dv: regulator-tlv71033 {
+>  		regulator-min-microvolt = <1800000>;
+>  		regulator-max-microvolt = <3300000>;
+>  		regulator-boot-on;
+> -		vin-supply = <&vsys_3v3>;
+> +		vin-supply = <&vsys_5v0>;
+>  		gpios = <&main_gpio0 49 GPIO_ACTIVE_HIGH>;
+>  		states = <1800000 0x0>,
+>  			 <3300000 0x1>;
 
-KVM should still explicitly advertise support for AMD's flavor.  There are KVM
-use cases where KVM's advertised CPUID support is used almost verbatim, in which
-case not advertising AMD_FSRC would result it the features not be enumerated to
-the guest.  Linux might cross-pollinate, but KVM can't rely on all software to do
-so.
+Reviewed-by: Neha Malcom Francis <n-francis@ti.com>
+
+-- 
+Thanking You
+Neha Malcom Francis
+
