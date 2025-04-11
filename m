@@ -1,116 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799CE1DE2DB;
-	Fri, 11 Apr 2025 16:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18831213E65;
+	Fri, 11 Apr 2025 16:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388529; cv=none; b=KW6T93NL9QEO1TNHU/FEn/jBXF1j8PgaaVyzXLVCSnDAIwvRc0mvkPvbxd4We68pZq24ig4gjhDyd5laZT0RlFga7W0bXrFYUCEpzD//Y3WKuH8Pm7178xkxv56eBD+kSF/GwwVhO4Ajoopxi9GQhOsGSyIerVdu2240uS3oQ2w=
+	t=1744388559; cv=none; b=sd/4GFvJLLuge7mHqfuzn8sHwen8AsWg4cmXbFZ+d5AQ8bGm0J3dU8uMARTOsHebuW31omIiB9KTfS1OpfB5MX1aenwv3MI0nelYeLgxk5XaxA2r+i8jNg9eSLQTTcbxu9eaLxB/8Q3ub0dnUjLFCIr559fqnT75Nv2B5H/55sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388529; c=relaxed/simple;
-	bh=wzAQATy54vCpkwt37K9i8fVvLuJ9F3HtOZNJF5NfmuI=;
+	s=arc-20240116; t=1744388559; c=relaxed/simple;
+	bh=+d5DKKo1v78kV+TNR5Gfv+4eKPOxFTR8Ql/9UIjtyKQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KHKEb5SXA+J8bcWDhGZhDLdzdr2JfB8X8wzNkp4go7CQelGiyx6i1+743QCUuS61VECelSF+8qlo45JYgLzOAuwC8XdPkYSKsRg2rhyP2srBIJkfPMdY0iiJ36DDNUDBxEwH3Gagn+sOfu096j+p42/EPYBwnFIQdi5gIOxKerk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUDwvmlm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LS/mkv8VWwLec2wEmfITYo+u3yd4z9jC2moIXJgRRQFVeMH1pQI7GDapv6fLpKW+WXNV9gfCAcdD2fDi9MRU/mZh6ivvHW+3wQKvQhsK4lF7GTJWPDp/2HN+wMOk3z2sGAO86LJ8NZb2zHMKDeXfyBpOmLP6GZ2B+D3LbTsjXSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G+sLpqrP; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUDwvmlm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B53EC4CEE2;
-	Fri, 11 Apr 2025 16:22:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744388528;
-	bh=wzAQATy54vCpkwt37K9i8fVvLuJ9F3HtOZNJF5NfmuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fUDwvmlmGNEOE6UiCuFajisN/+N0W4PsppgK3YKQxxblTRgJXcyGl2fDX3uKbdkJr
-	 2+V+sMZvOsWOB80R99rxGcKZe/jhqzm0hntMRCAIy4yRtUp3Z4QdbvxGA5YqfA03A3
-	 rYUgo1Y+GdFxYB1N83XbBdrM4GXSFVjUhy41gNQt4vi776Nz1z2pujd5vBTWwcchh0
-	 LwBeY4i9+9HM515v7PIK0hiLxAtE6fjRjKg39JQ2sB/mENgOkt6gYw9FHfBK8gy26+
-	 5tArMU4Hk5fUZbPjg7m9cwn4VJ8htSVvHAG7uy6YUzsnNBC5x0t8iefCYpo59D3X6t
-	 SfC0haIi7PSxQ==
-Date: Fri, 11 Apr 2025 17:21:58 +0100
-From: Conor Dooley <conor@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Andy Gross <agross@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, imx@lists.linux.dev,
-	linux-rockchip@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 03/17] arm64: dts: microchip: sparx5: Fix CPU node
- "enable-method" property dependencies
-Message-ID: <20250411-ebay-exerciser-392c42daf5ba@spud>
-References: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
- <20250410-dt-cpu-schema-v2-3-63d7dc9ddd0a@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+sLpqrP"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22622ddcc35so29812345ad.2;
+        Fri, 11 Apr 2025 09:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744388557; x=1744993357; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7xeBHVKhYndq78B4q1huCzjJY9AapOKvL/UNB0eTr0I=;
+        b=G+sLpqrPpHWHl7cjUvrZdZonLXZoLligxnHVBo9vqMYwniNJW+GAp6gGMfngQGt/r9
+         XV7ibT35dU8KoOF7yanHEv90iEkO2BrtYPiLwCmmYNDJGdgvg/FPAQdLEck2fN7bq488
+         6vGHJysSQF95g1vEzI8RAzRyKja3JXZrUkOkPNSU7A5AwG/sGO4LO8aVXNGnDxAZDGUo
+         bd8FsG+7oQG5dzPN1/lv4OyUozEETj7XYotgR1JWIt8lxSGxCJIXBozeRWBUvdxTJHoh
+         M0KzoAWtTdikzfXKlVCs1BCcjbzRHjIml5Ht/1BhPwVB4jQ4jL5IDRNsMhEPxdSwxrgv
+         KFVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744388557; x=1744993357;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7xeBHVKhYndq78B4q1huCzjJY9AapOKvL/UNB0eTr0I=;
+        b=HxzzoiYGFTSot8hPgJ3n/zQsx8e8Vs6bx8rc3yx63UPDWjAVGrCzSrXJs5HzxugdHJ
+         hdIeTGDM/4nqX1BKM9tE75sIAzLA2/Zwfe/SZsbVIx6CAMRmCogNcls3ug6gsTAEPfQz
+         m0UFu/l6YVon5bp7lS/MHKqtvrslqaYpn6G98urmxmAc+q3z/6bF1TXZM2sfaXiyHNcY
+         EtfzNzm0Tyb+WrgNZ3JZecYO5zNjBf6HcTaMtSiFCOelDDc5iKXEHIcMfVBZ8dY52w5R
+         TsFfIvMO5dw5fmfRcNhk7LO/PIC1E6I6w/Irv6IwdkE/C8/QFFp4DWMGBOl4kyj7VNns
+         Qoww==
+X-Forwarded-Encrypted: i=1; AJvYcCUKPAarnxo+IxD7h/UPh7SEAt+RC8TuH2pzPTMX5gRC7XTMlLCdSZggxJdBvzkuWqPgRgqkTGFb@vger.kernel.org, AJvYcCVJoZjYdEYFQwdjQHRyW8lq56vprrbMA8IIA8Km899J8Rp2fe8mBLK0lsMmIXLwTXLUSVCa6eKdiJn4dFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxFHzp7BQug6wyjlXSyAtQyipD93312S3KJIhdWVtsF5YZGWMg
+	5WxukRwg718yAedz8vNWUGucgA4H2dTpEmhoQoqkMp1vrTW0hvqs
+X-Gm-Gg: ASbGncvKh5cfqiBBpO+1q0ZUHQq41tFY0hp3XcGzFAl1z28zy3WP45Nf75ksWGEwfFJ
+	fEeqk64TTldqg8dEavgq7LX8Ug368zXVSBY5E+8HGaG0QTZxgtDhuoBEOnuiBn5S3zAXPr4gGpV
+	5G6dDc4D+ijT20N+AO0xobF4jTfdRFPGuPWrj7lPh/znbn/UpCgPPT1PFUh2qGocci/wiJ6zTJg
+	odMUHK3PHba2PuCJqnSN9bf5AkB5m5e4e49ZRkrjfyNY3AshReZ2UUjoqlxWN2og9a4uNcEOeb1
+	VzQ+0q5LxJRbllem7QoZ3OrJE8vF/KWt
+X-Google-Smtp-Source: AGHT+IHLwswaT1bdi1ILiCjHIqFoK6E1VSFmRul2uIzZmlnn3OBHjYXh2A9RP8aYGTDuUJcj6/RCmQ==
+X-Received: by 2002:a17:903:2bce:b0:224:a79:5fe9 with SMTP id d9443c01a7336-22bea4bd2cbmr48588625ad.30.1744388557316;
+        Fri, 11 Apr 2025 09:22:37 -0700 (PDT)
+Received: from nsys ([49.47.218.16])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c78a8sm1752135b3a.70.2025.04.11.09.22.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 09:22:36 -0700 (PDT)
+Date: Fri, 11 Apr 2025 21:52:29 +0530
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Potnuri Bharat Teja <bharat@chelsio.com>, Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>, 
+	Vishal Kulkarni <vishal@chelsio.com>
+Subject: Re: [PATCH net-next] cxgb4: fix memory leak in
+ cxgb4_init_ethtool_filters() error path
+Message-ID: <o4o32xf7oejvzyd3cb7sr4whvganh2uds3rvkxzcaqyhllaaum@iovzdahpu3ha>
+References: <20250409054323.48557-1-abdun.nihaal@gmail.com>
+ <5cb34dde-fb40-4654-806f-50e0c2ee3579@web.de>
+ <20250411145734.GH395307@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gXwATB6SbIWbLkFw"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250410-dt-cpu-schema-v2-3-63d7dc9ddd0a@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250411145734.GH395307@horms.kernel.org>
 
+On Fri, Apr 11, 2025 at 03:57:34PM +0100, Simon Horman wrote:
+> On Wed, Apr 09, 2025 at 05:47:46PM +0200, Markus Elfring wrote:
+> > …
+> > > +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+> > > @@ -2270,6 +2270,7 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
+> > >  		eth_filter->port[i].bmap = bitmap_zalloc(nentries, GFP_KERNEL);
+> > >  		if (!eth_filter->port[i].bmap) {
+> > >  			ret = -ENOMEM;
+> > > +			kvfree(eth_filter->port[i].loc_array);
+> > >  			goto free_eth_finfo;
+> > >  		}
+> > >  	}
+> > 
+> > How do you think about to move the shown error code assignment behind the mentioned label
+> > (so that another bit of duplicate source code could be avoided)?
+> 
+> Hi Markus,
+> 
+> If you mean something like the following. Then I agree that it
+> is both in keeping with the existing error handling in this function
+> and addresses the problem at hand.
+> 
+> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+> index 7f3f5afa864f..df26d3388c00 100644
+> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+> @@ -2270,13 +2270,15 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
+>                 eth_filter->port[i].bmap = bitmap_zalloc(nentries, GFP_KERNEL);
+>                 if (!eth_filter->port[i].bmap) {
+>                         ret = -ENOMEM;
+> -                       goto free_eth_finfo;
+> +                       goto free_eth_finfo_loc_array;
+>                 }
+>         }
+> 
+>         adap->ethtool_filters = eth_filter;
+>         return 0;
+> 
+> +free_eth_finfo_loc_array:
+> +       kvfree(eth_filter->port[i].loc_array);
+>  free_eth_finfo:
+>         while (i-- > 0) {
+>                 bitmap_free(eth_filter->port[i].bmap);
+> 
 
---gXwATB6SbIWbLkFw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think what Markus meant, was to move the ret = -ENOMEM from both the
+allocations in the loop, to after the free_eth_finfo label because it is
+-ENOMEM on both goto jumps.
 
-On Thu, Apr 10, 2025 at 10:47:24AM -0500, Rob Herring (Arm) wrote:
-> The "spin-table" enable-method requires "cpu-release-addr" property,
-> so add a dummy entry. It is assumed the bootloader will fill in the
-> correct values.
->=20
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: Daniel Machon <daniel.machon@microchip.com>
-> Tested-by: Daniel Machon <daniel.machon@microchip.com>
+But personally I would prefer having the ret code right after the call 
+that is failing. Also I would avoid creating new goto labels unless
+necessary, because it is easier to see the kvfree in context inside the
+loop, than to put it in a separate label.
 
-This is already applied, guess I forgot to merge it into the branch that
-appears in linux next. I'll do that now..
+I just tried to make the most minimal code change to fix the memory leak.
 
---gXwATB6SbIWbLkFw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/lBpgAKCRB4tDGHoIJi
-0h05APsEcaA5n4MeMUDF1Ullyde98iLkYYAFaHTFR+km537NdgEAxwuhCZvt2UZz
-n9hkciE6jwyE29jkNaUkkhNiH534NAA=
-=8lEZ
------END PGP SIGNATURE-----
-
---gXwATB6SbIWbLkFw--
+Regards,
+Nihaal
