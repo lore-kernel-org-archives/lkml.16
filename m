@@ -1,43 +1,34 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA8C5143748
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4127278E64;
+	Fri, 11 Apr 2025 10:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744368207; cv=none; b=Jxda3+vSQ6bOr91jdT7pWlJyAuySn5lGjLr6VH1uwYgG/oSj867yIK5fBZnjgq/vLzbpJdDSCpFAFG1SDNFx9md8m71Abi2KvCYWlVMJSglWFqKGeTY5OkWaZM62r3P5ehuYxRkm4tMU/ooFMqNI5a5L7udEqfamw5ACyO/gfsY=
+	t=1744368216; cv=none; b=fbuLz5nLwu3MI5bl5k8uXgNKKTM5RxyGfAAmSNESQFdLi4GAuiBcPA+sLNQlKf4WAg4211FVQwZwEMg3+T+AfjzTInFiimO6W/bKRVxXo5hjXdk0jmraNpYGnCpRSusDVePgqISDhOWMc0w5r0L1kC2BXYltZvykGooKOjFFfuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744368207; c=relaxed/simple;
-	bh=YqwfqaCJBoFKbX+KBgP8jOEVSEqmcgGQRnYVE1vGI+E=;
+	s=arc-20240116; t=1744368216; c=relaxed/simple;
+	bh=TY4BcYnPfrKFA2/AVV1qhzSrSnSVkHMrc911GcJujzo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nm1XQysxqJfdKKIy0rl8Uht/OCWWPOKO3A12xcVpgcmnDhBYlPASOMY1z645E9owBQnLE/A/uuFboZhqdH+8WCyAfjePPWM3xrH0IM0iXecdDLzoKkt4TY9QCCwfAB7oPrnjyhvRekEHM6PtODMI+zsWMO2WAe93IyqNf2/TvF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=5xdjPp33; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="5xdjPp33"
-Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id A2C6B47EA4;
-	Fri, 11 Apr 2025 12:43:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1744368204;
-	bh=YqwfqaCJBoFKbX+KBgP8jOEVSEqmcgGQRnYVE1vGI+E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=5xdjPp332/yyJLskJcmAnMloJwa8q21xHc/l0D/UAC0J7t1TSsDXKlJ64vF3SlENw
-	 B+TFghWxGkS54FF3Y3+Rk6pWrV0SCn4NrKhVz0rUTEcT7ktQLeU62T6kmz4a1T3eNn
-	 GUH1n/M++4sFOkkxVu23SUwpKL+gi6TmoTlNgWpXFJp6tfPA54IVgHF64ObeVlwjC3
-	 PuR5/RGBb4/+iH2chbRnjFBH0zt1IpChJ9XJEuqJ4doADqvdiCucRJ02/8V/tsNDsK
-	 YBQKCD4SaolgMJwV3Lw+juMxyGyfE1YZbHr2vNh5ZkT7f3QWfhBApLViTGrbI/71h4
-	 LlU9ajvKq0QzQ==
-Date: Fri, 11 Apr 2025 12:43:23 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: xiaopeitux@foxmail.com
-Cc: robin.murphy@arm.com, will@kernel.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Pei Xiao <xiaopei01@kylinos.cn>
-Subject: Re: [PATCH] iommu: remove unneeded semicolon
-Message-ID: <Z_jyS5YZsvAKnZ7I@8bytes.org>
-References: <tencent_73EEE47E6ECCF538229C9B9E6A0272DA2B05@qq.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFPz2lDtBkYjQq0mOHIG6+xOeZmZl7J+7ONSXvdMIpIZf78iPXJPzoXtVKnhoj5AmoSqJClS0BffOiKwoGGnLzmY1ltlwa93T5wBAZtbF6Sk5I8mr6BFFRZHqCuuEtLs3KE6PXK/mPTfZduX9ZBzHPElTkvzWOLUFkVK4mPGYnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77F3D106F;
+	Fri, 11 Apr 2025 03:43:28 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 492143F59E;
+	Fri, 11 Apr 2025 03:43:27 -0700 (PDT)
+Date: Fri, 11 Apr 2025 11:43:24 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, peterhuewe@gmx.de, jgg@ziepe.ca,
+	Sudeep Holla <sudeep.holla@arm.com>, stuart.yoder@arm.com,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tpm_ffa_crb: access tpm service over FF-A direct
+ message request v2
+Message-ID: <20250411-glittering-cerulean-scallop-ddfdaa@sudeepholla>
+References: <20250411090856.1417021-1-yeoreum.yun@arm.com>
+ <Z_jw6z_2k0vzqyK_@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,20 +37,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tencent_73EEE47E6ECCF538229C9B9E6A0272DA2B05@qq.com>
+In-Reply-To: <Z_jw6z_2k0vzqyK_@kernel.org>
 
-On Mon, Apr 07, 2025 at 09:53:28AM +0800, xiaopeitux@foxmail.com wrote:
-> From: Pei Xiao <xiaopei01@kylinos.cn>
+On Fri, Apr 11, 2025 at 01:37:31PM +0300, Jarkko Sakkinen wrote:
+> On Fri, Apr 11, 2025 at 10:08:56AM +0100, Yeoreum Yun wrote:
+> > For secure partition with multi service, tpm_ffa_crb can access tpm
+> > service with direct message request v2 interface according to chapter 3.3,
+> > TPM Service Command Response Buffer Interface Over FF-A specification [0].
+> > 
+> > This patch reflects this spec to access tpm service over
+> > FF-A direct message request v2 ABI.
+> > 
+> > Link: https://developer.arm.com/documentation/den0138/latest/ [0]
 > 
-> cocci warnings:
-> 	drivers/iommu/dma-iommu.c:1788:2-3: Unneeded semicolon
+> Sorry, did not notice in the first round:
 > 
-> so remove unneeded semicolon to fix cocci warnings.
+> 1. Does not have "[0]" postfix.
+> 2. Only for lore links:
+>    https://www.kernel.org/doc/html/v6.12/maintainer/configure-git.html#creating-commit-links-to-lore-kernel-org 
 > 
-> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
-> ---
->  drivers/iommu/dma-iommu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Applied, thanks.
+I was about to comment on the presence of link itself but left it to
+the maintainer. It was part of the first commit log from Stuart. If it
+is so important that it requires mention in each commit, it better me
+made part of the file itself to avoid having to mention again and again.
+Just my opinion, I leave it to the maintainers.
 
+-- 
+Regards,
+Sudeep
