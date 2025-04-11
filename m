@@ -1,138 +1,170 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2053.outbound.protection.outlook.com [40.107.247.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD5F27E1AE
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358008; cv=none; b=XEX2crDGRpsbwStMCGDNz2XrnrztmoKJAmG9LDccu5Vu1WnGzf2G4ib9SibS+KcLgtBvrx4LfH/WvOhBjhp4o+zbdO7pLoAD1q4FgyteJTeTdwBfpwL/8rpJfLSa9CcU6qPl6J3VB8MiM4YOIDTnWOu0BC/wXF8ZvhrG7c5ZPTM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358008; c=relaxed/simple;
-	bh=wrMIIyoNkg0GvWLVsFxO4DWjVl+zeWy2K3A2/oJhLyo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YN7f0DbCcc2z/e/JtZ0m13+kRf8ltLHmMxjWR2uUzi0VnA/zCmR621TVbeEFgqMnFrR+RcJnzhSpfwhaAGFhvX3WzydH8Dm3E6dPjL0RzxfdaDWiDps60cWjYCvjoyHNwqgCEFtwJMYpVkc69Ot9p7uSyKsBzPsdgMgsXE7vHN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pqe77l09; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8C01E7C0E;
+	Fri, 11 Apr 2025 07:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744358066; cv=fail; b=q+i4uY0NwmZ0KQRIQkbN6YFj0JLZ1UFv/NpPkVeYWo2WSG/vKgH1iVD9Ag1bvJqWLlTXE3QyFhUAgxcLDfCaVAENQznMgHLA8aDLv2hYaHjDIxAY4E0Pny+/7bBHxNm9EYyqheXm1nLcvb17DUzPxjwO/AJnEiK6TJIJYLePfT8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744358066; c=relaxed/simple;
+	bh=bOq5ku8PltudUCSw1jfioKWzfCCC+lA7l95rWuPcIg8=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WVw82in/UNJIN/TsxbFBTyg9N1DNHY9PikgEzNM60Cf8P+bEwUV2E1FFdf3e2LgGmsnazjbaJlLKP2pDWLPr7Cd7NlruR7D0x/Kr3ysSjG3iA1TpiysfBFec/S/56F7MvmHgWfRZgx9Ln/5ZHJY3H124yxU666ZAtmSe3fBDevw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=id69kXJo; arc=fail smtp.client-ip=40.107.247.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=est.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pqe77l09"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-601a891ab8fso1020367eaf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744358006; x=1744962806; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gBcUPPWMo0x9QRBDKxX86bCRLz+TjlTr0rHbbRjUHX0=;
-        b=pqe77l09aNbhVbR0X1m6U9OcLJ3dHND3iI/Wo8B0I83UkVVHXABP3O0fQM/B6jbIOa
-         ZvCjMG/A4GNS1+kFxOzulUCq+72py7l8auYmTm4571ceGVSdaPK4PpguPUwEjw3oxR3s
-         YIWJBTTDS/kBq63jCJHQjh94RI/0qVWKssJhwoVLLl28DpajG6eiqSOcwfzkY/a5D5gz
-         MHfouekzgna5kaqFHLbUSwAmcu0TY2wrjEuV42r/LwWLoLyr0Aw810UXim2cEAbVNP1D
-         CBo25jjWiZPpcyPwgB7iD6vwZujay/W8KrBytHJgoKs75MSvI1b9XggDAiBVyzpjB642
-         jlDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744358006; x=1744962806;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gBcUPPWMo0x9QRBDKxX86bCRLz+TjlTr0rHbbRjUHX0=;
-        b=O3SaLva8c08ay5a7WTtak75NOOpNQAw3rqBkfD1h7nguaciNy3l6RE2fWsI5801fsb
-         Mw9bZPiXDtS6F9/1hT0P67JW6x3/4DqCuNA2ynlmWLvo10DlfMkaGapNSYg8RqnVX46A
-         kGcVuteALFkok/lYB7y+8m734owVyP1aAaq0ZlV6PX8/Fn8xfHGavp8r9ykPsz2nnYTW
-         eNgKfqDUTP/lYRiuDUqycYK0DIahVURbn9McxSpaM130OSLoa9u1kzKCJvIjq7uuFyRh
-         eFnOpNNSv5c1RLT7oL+W36cgbYUla96dIcT0BBMzesp7EEx95ejMGt+5EZTbFmC08t9C
-         FPDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXysJsL/YmXlGcuQevStlCXaXGRKXwwBylO+chBOunINqwFTW9G4iBy5Hw3iDkoOSnLrjoWKjW6mkKqqn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDtBNh+OM843Mt3f4YgCwQf/g4NxBPn4Ju3H9rLYdJLkWgYUyN
-	iWNyqDItLty9C673TWJqRK2jc/M47rrBkERskO+ut8jxfeFtMPwGyU5FbRPhDygGs49gpcjUtwx
-	cMOv6m0D55+lBK7bFS4g45XLG5vYhh/9NJS08
-X-Gm-Gg: ASbGncvPNAexx7cH7L2goPH6vBqGXBSGowBHseElYwQdPucBfoahPTUdVQZs7j5SwCk
-	gf6Y8vhsWWz4DDy3wjuY3Cz2T9w0A20kkw9uLAw6Nl+1kK+R7zH+QpPIH51a8iomT6pOg0YAIcj
-	AbFJ/wlTyaIImW8iZEZ+P5YN2rzgGq0l5NPMvOle5DG/C9Hj9Lz9DUSSkINR/LP00=
-X-Google-Smtp-Source: AGHT+IEH6DSKeIBYYPYId0RQDbPKVQO5OtuscgU/Q/XSMiWHlIBnLJLkY+aJDN2xt2jxZyk39bRLfXuVbV6FVIzl/7s=
-X-Received: by 2002:a05:6820:4b95:b0:603:f809:ce19 with SMTP id
- 006d021491bc7-6046efe70c4mr1060061eaf.3.1744358005750; Fri, 11 Apr 2025
- 00:53:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="id69kXJo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ncsR4a4m2VUy854BVopJX4i3b75kYqcUFXwRevv+X7CCJj25SqGOyrP6HEnmDzhh/agW4vSVMsuIb0U6mcrrUTjXa2Cs2BAluiWN93SeWpowTZdveeWgALO0Wk+XKc5X7UkZ1nwNliBDjPauaqOh1k7ALKVBsaK0dflmZjbXJB/nIZ/zex20DJVfL3b0cvbHG34BTKIn55YJqTlfNG3cg9LQ+9NAbKR8S2W/kW9x5tZc9ev88LCvFoWV81ny62J5iIBkTHdbqXvssZMDih6nC5hVGVxNl7uuZkIg08qa1QTPJ4WOd+38oDiKDrMSS5X9QUjUYJNMaZX9vvSKkHwLzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bOq5ku8PltudUCSw1jfioKWzfCCC+lA7l95rWuPcIg8=;
+ b=cqLLyrXs8VyNwjvm24zDl8PmthI8OGzoI6zEoxcWpTkwaPeJSIoO3kxDqN+x+cSkovjlCUb+v/pQpuUNPw1wkhLvAWOomzJvVsKrktowGl1dUwZUDTsluPcJGgmCFIisHpign+oQiNVrPeGanfA27dAt+KxZhUJyqr2tpkncL8lbLxfse2tduTF15QgZSezfx8HZhJb/CtqoHTwE5QObBq+VdA0Vfz18JaiDHNK7NYVStXlzE8hyKiTTJLDAQWzmB/x7KiiSjlhpeqjeER9L0nDuRt+4+UM8/z/g+WvVN3f/QN+SG2l2dFdUjToQq5gffbb68fesVNdlUfyVsEiC/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
+ dkim=pass header.d=est.tech; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bOq5ku8PltudUCSw1jfioKWzfCCC+lA7l95rWuPcIg8=;
+ b=id69kXJoqTSn0TlANfoHiQ1M55hxBLlp6/S1FC2Cef0MBm5m+5TO+dqoRFNwol9pPpSWdpXPn+gmD/0bqYsRXdJHQeMvEy55icYejga+QLxG1nm6HbNCmiabYAJiiVW3GfBR6bhZ5PnMcDeR05/QGOl+s9VO+64iNeg1TVi62DSVFzqe7wOvCdyzoS9vjEzLDtylYZa3CF/AGDj5fETiP8mcdUxnQ5851rm7iUgifHEWuspdPbQUczwXHsY/JDzWuFDMIz+/UONHG7Z6+m+41d9ZZUQUc0qKuSfT3Qj66E92Pnl/t9XX8QkLtXH2ut5WXBzBf6HalSZHkSvQS6YGHw==
+Received: from PRAP189MB1897.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:290::22)
+ by PA4P189MB1312.EURP189.PROD.OUTLOOK.COM (2603:10a6:102:ce::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
+ 2025 07:54:21 +0000
+Received: from PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
+ ([fe80::91d:6a2d:65d3:3da4]) by PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
+ ([fe80::91d:6a2d:65d3:3da4%4]) with mapi id 15.20.8632.021; Fri, 11 Apr 2025
+ 07:54:21 +0000
+From: Tung Quang Nguyen <tung.quang.nguyen@est.tech>
+To: Tung Quang Nguyen <tung.quang.nguyen@est.tech>, Kevin Paul Reddy Janagari
+	<kevinpaul468@gmail.com>, "jmaloy@redhat.com" <jmaloy@redhat.com>,
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org"
+	<horms@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"tipc-discussion@lists.sourceforge.net"
+	<tipc-discussion@lists.sourceforge.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next] Removing deprecated strncpy()
+Thread-Topic: [PATCH net-next] Removing deprecated strncpy()
+Thread-Index: AQHbqqg2fKRPQg2KPEqrm5rJStmyB7OeEwbAgAAD7aA=
+Date: Fri, 11 Apr 2025 07:54:21 +0000
+Message-ID:
+ <PRAP189MB1897261C37B1E27196F2188BC6B62@PRAP189MB1897.EURP189.PROD.OUTLOOK.COM>
+References: <20250411060754.11955-1-kevinpaul468@gmail.com>
+ <PRAP189MB1897052C5306AC237EE5154CC6B62@PRAP189MB1897.EURP189.PROD.OUTLOOK.COM>
+In-Reply-To:
+ <PRAP189MB1897052C5306AC237EE5154CC6B62@PRAP189MB1897.EURP189.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=est.tech;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PRAP189MB1897:EE_|PA4P189MB1312:EE_
+x-ms-office365-filtering-correlation-id: b2c7c314-0a18-4bdd-ce80-08dd78ce11d8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018|921020;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?jrguiCsdrUVUsVhmf+z1mwNJluVWT2HWzioJk1H321wqb+9JXTcrtiYzEu3E?=
+ =?us-ascii?Q?Giw/xxSeHecZ85hbhqtmZlXWbuqSvY085eDC2//O5Kmh5rMHI3kkj8lSgGNt?=
+ =?us-ascii?Q?g9v50UFTWOTSxLUNV6/JsmIoRdF3Ud5LBSWAo0vOQIMwtqnpH7bKABCl902o?=
+ =?us-ascii?Q?ioDvIBbus3Je9fKnI1jWlkUp4U2HXA8eALTFTTHKT2Kks0Nf30CRCD3nHikc?=
+ =?us-ascii?Q?zeSyGlZ+oGO/wyz3NKvJdIamUG0vWVWttrTO+gAAFM9QHx/bjpkhUylbMT4v?=
+ =?us-ascii?Q?mf4tAxTdu73JnBG+0vLSpbtToh3yJqtRFvCk4z1VnslsQ0QssrQt2gVEjrzg?=
+ =?us-ascii?Q?0gEBOnul/BKdkLttA9A8c1c+sjg/lHU2jU/p5KzVYp5TBZtqjPE5Plwt8gkv?=
+ =?us-ascii?Q?oZQghCslcxgvApOZZNG8fHw+/5Fxsfu3j87ghZUEAQ9nfXKLqhX38e71/Hyy?=
+ =?us-ascii?Q?noqbIQAKnztGWXJjEGuPcgIExvylMI5ecBiKwT65w6fJVj+jQXCpR9BEluXs?=
+ =?us-ascii?Q?GJq96/yC8ACR/hvAkISU4roOLyzKM7vta6bhdGLvUgQq/8rHhhutMYJisR5r?=
+ =?us-ascii?Q?tcxHzXpcCeJ2Sf653xahWcWqVNERxKUEltTq99vl/XPw2BDny+Wo2E0CZvDh?=
+ =?us-ascii?Q?CeV1S+NcjkNa1ogXIKO0ajtocrhRQdmeLqE97tiDctVyNdYc1XWSE7bHoNiu?=
+ =?us-ascii?Q?SXauwyi2Uo31xS24A/16w2JMQz2uBxU36jD11g7rir5tKcGv6ClJf2ko0EGL?=
+ =?us-ascii?Q?kIBra6bMpQmPWFXeDG5uauSRP23nvYGLjNKQI0VXdeuQtY2GTnKr5p1Kk5TZ?=
+ =?us-ascii?Q?KYpyY1J7JT0NKaYIbeCK9XFRSeecCEW+Mrlcl1yoLThERCUczyO2JibcLi/x?=
+ =?us-ascii?Q?7z3AmchlnuyN1KNjJHZ/VHYT3kNU5s7a/w4I+2rWGiVSKrxRtDnb+h5oRqel?=
+ =?us-ascii?Q?IzZL8T1xkNiKAqdHv2JiKGS7efu72ejsC76saLYSlWwcZlM+qWeoPMQ/QMOn?=
+ =?us-ascii?Q?JMCQphFL55tsgBJnlsNJ1/4Bb98ss7gj2EtfRdCJQNReyiCJGDAztgFQiBfB?=
+ =?us-ascii?Q?RCFqHaEpukDpOUaMfk8pXp/W3PImgG5F4hEuvNTclxo8FA+Bj0lQPyvqtTvr?=
+ =?us-ascii?Q?k5fKudzWUWpNO0VMkefcGNdBacMJ1+4nQq8AiMjWBni1HTwS8bRJOJA1KM05?=
+ =?us-ascii?Q?p3qogPeKgxdMquPMvRGdr3yEYr9LYF4fsP1qoWQ2Pmdwnw0MVMiDLZ3VmZCK?=
+ =?us-ascii?Q?vUE5OfNbblCSmwdk+3ysk2zjqihIKv7aoTb/WGNNm4JK4GWr3mAWEjTylnka?=
+ =?us-ascii?Q?tgvTf2X4l/DpPY53AaqYlwMlsxusZ4NBl/Bld8/52sZmS+Xb8n34FCoEqG9v?=
+ =?us-ascii?Q?ToE94zs8T32KUR4qy1um8gYdr1xjHxBlm7EV8PE3NlLCVjfwYLru7QzzmShV?=
+ =?us-ascii?Q?8ndtupA/bNdcXmt4EbmUjeQkzkNyDd3b6Sd0HQSh4wNL3rHMHGC/riyRSg+k?=
+ =?us-ascii?Q?F96mGvnYyfEaAGI=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PRAP189MB1897.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?VsW+WD1ERSaFtixZPFWJlGQlP1OHhm389D9o9IL4a6/21G6vDQq9aorjVKtV?=
+ =?us-ascii?Q?qmYnE0ss/w6EM6xOgJmJF5VX/E3XJRi313pRWtEXK0C4UHonA9Oap4U6+X3y?=
+ =?us-ascii?Q?hsRx3NL/wV9Dl0Bev3Lig52tbU396hkdPAW+LrS7v77SD0gvodL+sDzyCwnT?=
+ =?us-ascii?Q?zNE6B9rcMEKdgtZCB59Yz/ur0BvHKYEtNO0jSAVS99kDflNFE+GvlQmcKIk6?=
+ =?us-ascii?Q?EY2R2yCQVidwJS5U5lzQU3BKA4RAFlFIfkEeAYluXivFmetqdnc0XhswZP83?=
+ =?us-ascii?Q?845FnM1PpWrxTnqcCtG+Yqa4uIDr7lrRttxGlRpG8WesULZ2hFNPJVXMVfG5?=
+ =?us-ascii?Q?wMw37dlTiYqZTMFwRY/syxC4UQ7rbJFtGCq2sqUCOvnWtUBDPVMw+5fhUHD4?=
+ =?us-ascii?Q?SCTlRdLrHJsAtjAusjOyazuoxD+2cCspMeKMuALtFiar3jEFRvFcX2hIfEHU?=
+ =?us-ascii?Q?cnWgGIoBwlvUgJkq+GdLZePDOZvBG1Vg6u1X/gvqtZakxASJNBgY4qHdwNgR?=
+ =?us-ascii?Q?O6tx/eyMTw7NEK298QfZ0irjY9YCDSgsRxl4AVBWe3UI8pgSfzgWD4wI3ppz?=
+ =?us-ascii?Q?AOeZTlR44KoG9xnVy50rBHSi1ExEZTs1Spta6Qt05+gL8gi0V0zxbvzyVCTf?=
+ =?us-ascii?Q?HH2CsvKRlpFitmh4fgvQakOL41ZWw1hQrM6aLbCFkOjeTx/XyvKNTQCgl6Or?=
+ =?us-ascii?Q?4Edh32q7W0DKqOHRJjzEStg46Ooe93+EiJHbDZYtUjnD6US7AVRHUylYpsOK?=
+ =?us-ascii?Q?kKLmZoEywOgae9TLvUXpRIDAZwmCa3NYyX0zKNgP04hfXrcKnUWatWv5PZGJ?=
+ =?us-ascii?Q?cN6VfI4qUXsDmxJlNVMgNlRQA1Tpzuu5vWLNhnfRm3wfxZLU4oeQ5MrEtYe/?=
+ =?us-ascii?Q?jpxS/oxlDQ4GyjFZrky3WolkNqeLJws/8rSO6la5knQJAw2psRgkBUu6rOm0?=
+ =?us-ascii?Q?ZjwglVOO5PwnmumJ9IXOpB02mTyNSSyJ+gk6f/j8Mp4dCYSdUuIsA/o40rgR?=
+ =?us-ascii?Q?viH+2bkMCedNbUN/P/3LrTQfJWCyjK8eIB9IHSs0qnVcze932USrt7V2aLzj?=
+ =?us-ascii?Q?O1Bnw4DKgpdRrqGv1wKtSkzd23DwZ6A1ELF4HbdfF8d0Dy1j3MGMZJks+T4+?=
+ =?us-ascii?Q?bV+hCYl+ss3rP+FFWF+kLf/Hw+9APU3K2jitWb7meTP6ghQiz1d3syTXUhcx?=
+ =?us-ascii?Q?xUF8xvKS0o7r190ccBaW2PQeHqesvJpDY1Iwp1qhYlNAq7B9JEmvY81XwPax?=
+ =?us-ascii?Q?y/QqtVDwlQVJ0bw/FMwnvhSGoC5LqBPBjwaygjkDPGQVu2R3Lw/d463pUs85?=
+ =?us-ascii?Q?ERmhQ6Pn4b2yTZU8t+sciH+SP8VoxwXtnSkBZJ8k6rIyTAfpNdmTNT3TM33d?=
+ =?us-ascii?Q?bEG+i0Wql3zkcUgl6CvcEPNpiaTlhC7yoiS+1RgGOr1ueEPF1LrHz1fABGaw?=
+ =?us-ascii?Q?+oDBQf/KSGC3AMeRRuPuMWsVLQ+xo5O4ANPjqw8Xx6HVHLGTw4ajXJu5fZxG?=
+ =?us-ascii?Q?TMn1iw4bsXHfIKQBymB69kVvGhMLnDQ4bI6hKyEoaZ3J3dx+Ng2fNTaIvODc?=
+ =?us-ascii?Q?zKZepOsEGvR9+5xxdvfPD6F0QEp1DIMIktLjqhVY?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743572195.git.viresh.kumar@linaro.org> <35f4223be4a51139348fed82420481b370d7b1db.1743572195.git.viresh.kumar@linaro.org>
- <Z-1b_FkYUJEIj-YW@thinkpad> <CACQBu=WMu_CmzERJAHmjiuQ-NZe6DK2kAkvP0cnFN-Y+QhRwvg@mail.gmail.com>
- <20250411070941.6xbz4lrwkejr3aqf@vireshk-i7>
-In-Reply-To: <20250411070941.6xbz4lrwkejr3aqf@vireshk-i7>
-From: Burak Emir <bqe@google.com>
-Date: Fri, 11 Apr 2025 09:53:14 +0200
-X-Gm-Features: ATxdqUEwLh2_74YKkrLKK7zDnyccoB-LkD8mJ3kuQwNJnV5zwsNXnIYA6mqlKX0
-Message-ID: <CACQBu=XxT9x3w4=zd4+cRuePWi-8tqcfaPtNqioS7oENNiff_A@mail.gmail.com>
-Subject: Re: [PATCH V4 1/2] rust: Add initial cpumask abstractions
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
-	Danilo Krummrich <dakr@redhat.com>, rust-for-linux@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: est.tech
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PRAP189MB1897.EURP189.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2c7c314-0a18-4bdd-ce80-08dd78ce11d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 07:54:21.4077
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FSmhjo+qM2vszQrfCgfUpyXPNqX4tVi5KCsvS6oxutyzQ7qImERrJOqCq2iCRCwnWSgwwW1viCNv8+WyBG+3CEgRJwdh3vJSrAwqQMgYeEo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4P189MB1312
 
-On Fri, Apr 11, 2025 at 9:09=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
+>Subject: RE: [PATCH net-next] Removing deprecated strncpy()
 >
-> On 02-04-25, 18:00, Burak Emir wrote:
-> > On Wed, Apr 2, 2025 at 5:47=E2=80=AFPM Yury Norov <yury.norov@gmail.com=
-> wrote:
-> > > On Wed, Apr 02, 2025 at 11:08:42AM +0530, Viresh Kumar wrote:
-> > > > +    pub fn set(&mut self, cpu: u32) {
-> > > > +        // SAFETY: By the type invariant, `self.as_raw` is a valid=
- argument to `cpumask_set_cpus`.
-> > > > +        unsafe { bindings::cpumask_set_cpu(cpu, self.as_raw()) };
-> > > > +    }
-> > >
-> > > Alright, this is an atomic operation. For bitmaps in rust, Burak and
-> > > Alice decided to switch naming, so 'set()' in C becomes 'set_atomic()=
-'
-> > > in rust, and correspondingly, '__set()' becomes 'set()'.
-> > >
-> > > I think it's maybe OK to switch naming for a different language. But
-> > > guys, can you please be consistent once you made a decision?
-> > >
-> > > Burak, Alice, please comment.
-> >
-> > I really like the explicit naming convention that includes "atomic" if
-> > an operation is atomic.
-> > It seems also consistent with std library.
-> >
-> > > Regardless, without looking at the end code I can't judge if you need
-> > > atomic or non-atomic ops. Can you link the project that actually uses
-> > > this API? Better if you just prepend that series with this 2 patches
-> > > and move them together.
-> >
-> > The type &mut self gives it away: the Rust type system enforces
-> > exclusive access here due to aliasing rules.
-> > So a non-atomic operation is sufficient here.
->
-> I should leave it as is then, right ? Don't rename to set_atomic() ?
->
-
-The issue is that your code calls `bindings::cpumask_set_cpu` calls C
-`cpumask_set_cpu` which calls `set_bit` which is atomic.
-So if it was only about naming, you should call it `set_atomic`.
-
-More important than the name is the meaning: you don't actually *need*
-or want to call to call (atomic) `set_bit` underneath, since you have
-`&mut self`.
-So you should rather introduce and call `bindings::__cpumask_set_cpu`
-which would call the C `__cpumask_set_cpu` which calls the
-(non-atomic) `__set_bit`.
-
-Example where we need bindings helpers for both atomic and non-atomic
-versions: https://lore.kernel.org/rust-for-linux/20250327161617.117748-3-bq=
-e@google.com/
-
-cheers,
-Burak
+>>Subject: [PATCH net-next] Removing deprecated strncpy()
+>>
+>>This patch suggests the replacement of strncpy with strscpy as per
+>>Documentation/process/deprecated.
+>>The strncpy() fails to guarantee NULL termination, The function adds
+>>zero pads which isn't really convenient for short strings as it may
+>>cause performance issues.
+>>
+>>strscpy() is a preferred replacement because it overcomes the
+>>limitations of strncpy mentioned above.
+>>
+>>Compile Tested
+>>
+>>Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+Sorry, one more nit you need to change: Please append "tipc:" to your subje=
+ct like this: [PATCH net-next] tipc: Removing deprecated strncpy()
