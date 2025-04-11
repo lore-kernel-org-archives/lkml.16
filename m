@@ -1,62 +1,75 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C241D63F7
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8EC18D;
+	Fri, 11 Apr 2025 00:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744329624; cv=none; b=dCVwI+0k3RAQ3S6nzA/iovW3LLzo/9tqP1M2wFVLgAvvZAIPTug8N8rT3E3MzKi3693IdvO5GT07b2QuG1o2InvdwmcNv1HEKEke2AYFhIFq+pjc+OzN4AnlHgZeRTJIS9uwHX1r8lJvGn+Fm5aCbRcCZ3la3e+xYi0V8SnU2xQ=
+	t=1744329694; cv=none; b=oRiltykbm+yhmqx9DZqUAiut8d1xQ6TjVuE3pTdLozrvRb1u+rjZ8XiQL5R0EaNqZyJ/rHcoPegytz3m2mjWJlSeKQsvoYfpGGqreOneBGpaj2lS+M0CUeFGOpac69a/So7cx2TnSFfkp57ViMV+X7ptKsHbEUn56TTyWEZ5Uvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744329624; c=relaxed/simple;
-	bh=6sWCEwfn1sFr1IFbEijwYkuh53sbb6VptPWgsOJyegI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Eo8vmvyr/K1Tlk2OVp2dRqTkvKpqJTqblGXZj2+tP41Tpp0yvs/HfYcyZmEYJma/bDL2+/4CV/v8if79abEK6VlMY5GSgmo1FyWIvk3QO5YxIF96CQOXjnAKdEMVHdMy+W/nbAdoyjscQWkFzR/e7q56BHzauZwqZKJNTJbRZdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cc3gI6SW; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744329694; c=relaxed/simple;
+	bh=sR6Q2H/tnBfnFHzjVwe0ng8gYSuAZzZOuKXxcR4gvfQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a86QJzE2zWQ/lU7u2NynohWn9RZ3p71BTi2puFA6KcSGHAJBTwgP1mqaJOnEI0/RxCWHZX/Os5owIxzGKSqPUkQjE6pxFYJxreEaTuK8eBqc63pFIoY0qrhJGd+no67grNK2AOSnykLCHPZpXGRc365t2c0zoJ1aPngfKeeWH2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LaGPbOB8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cc3gI6SW"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744329621;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6sWCEwfn1sFr1IFbEijwYkuh53sbb6VptPWgsOJyegI=;
-	b=cc3gI6SWNxqIlRHMfU9oR1gCq3DQMclPD/cDnfL6YU5rubUDPvq69lcgct8IMymJW4gu1W
-	3DOJQdehp9lhfOr80Ul3R8ON1naeuk/W+eSIDRGJP6Jp5QJ5uYKpOHPD3lszWXwA6u/odY
-	4xFF7keOj3XPWdGCrYo6e/qcEQJcf/E=
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Johannes Weiner
- <hannes@cmpxchg.org>,  Michal Hocko <mhocko@kernel.org>,  Muchun Song
- <muchun.song@linux.dev>,  Yosry Ahmed <yosry.ahmed@linux.dev>,  Waiman
- Long <llong@redhat.com>,  Vlastimil Babka <vbabka@suse.cz>,
-  linux-mm@kvack.org,  cgroups@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
-In-Reply-To: <20250410210623.1016767-1-shakeel.butt@linux.dev> (Shakeel Butt's
-	message of "Thu, 10 Apr 2025 14:06:23 -0700")
-References: <20250410210623.1016767-1-shakeel.butt@linux.dev>
-Date: Fri, 11 Apr 2025 00:00:15 +0000
-Message-ID: <7ia41ptz1sa8.fsf@castle.c.googlers.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LaGPbOB8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39248C4CEDD;
+	Fri, 11 Apr 2025 00:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744329693;
+	bh=sR6Q2H/tnBfnFHzjVwe0ng8gYSuAZzZOuKXxcR4gvfQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LaGPbOB8tSHaDXo1ERd4/9ACIqqJgQ5kzlaG49zuvx+5I+G9uPsWsze5zZMtKDrpZ
+	 Mn0K2CDCpuQgL/YjT0BXGTuFKTadqX9lMphGOmC/rl/HuguojawUJjVDu0A++AJbt6
+	 h8rhsBQNRuwf//uD4UD3IPy47GOJ6RWyHumuOzSi0X//70M/ktc1R26vaDaop7lncu
+	 2kD9Yda+s5tLHkMTWLIJcMICOLqF6aj3m55Hr2WCx1ObRj+R3Sy+Fm0p3e8NRPVa1N
+	 1gSTZcKWgu91Qm4Zf55k4k5tZ+LQ2q+ZoizMeKQ/6laMtp/aKDYUuOUGOuWN/r2261
+	 ROJmWnUtNkNsA==
+Message-ID: <228dd40d-29b6-4978-bf40-71c9c531f938@kernel.org>
+Date: Fri, 11 Apr 2025 09:01:31 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] null_blk: Use strscpy() instead of strscpy_pad() in
+ null_add_dev()
+To: Thorsten Blum <thorsten.blum@linux.dev>, Jens Axboe <axboe@kernel.dk>,
+ Chaitanya Kulkarni <kch@nvidia.com>,
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+ Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ Zhu Yanjun <yanjun.zhu@linux.dev>, Zheng Qixing <zhengqixing@huawei.com>,
+ Yu Kuai <yukuai3@huawei.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250410154727.883207-1-thorsten.blum@linux.dev>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20250410154727.883207-1-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Shakeel Butt <shakeel.butt@linux.dev> writes:
+On 4/11/25 00:47, Thorsten Blum wrote:
+> blk_mq_alloc_disk() already zero-initializes the destination buffer,
+> making strscpy() sufficient for safely copying the disk's name. The
+> additional NUL-padding performed by strscpy_pad() is unnecessary.
+> 
+> If the destination buffer has a fixed length, strscpy() automatically
+> determines its size using sizeof() when the argument is omitted. This
+> makes the explicit size argument unnecessary.
+> 
+> The source string is also NUL-terminated and meets the __must_be_cstr()
+> requirement of strscpy().
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-> The function memcg_hotplug_cpu_dead works on the stock of a remote dead
-> CPU and drain_obj_stock works on the given stock instead of local stock,
-> so there is no need to take local stock_lock anymore.
->
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
-Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
-
-Thanks!
+-- 
+Damien Le Moal
+Western Digital Research
