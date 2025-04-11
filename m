@@ -1,109 +1,71 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED91E2580EC
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3DB2367C2
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744393571; cv=none; b=leVjstFeyW6aWxobBrDPcZoYeIs6WVj7+5XCmrDW23nI39zWU8CGWy2Tejcy45eUOREvhi/yyLofLnM9ledbGJoDVVukkFcuDRUypDqXxT7mSMBOYRlYPYeNQN1RpmFS4vfEUHZu1L1MWkTssRcLvE3lydpmgNKsFWw5jrn29y0=
+	t=1744393628; cv=none; b=oCKb9Iq0b5A8zG/BgVRHbnPp3wdKjrKFT3+uSj5IUcNClt7S8w3yjPGK6IZhbSHIytZL34LdOEpNm7b0Ut9WTW307ZosSy8f49/0oDZovo4fN5E21JX6b8lcKvW7Svv42aBB17IIVH63BDTbspMcazp87gDPT5bfVZ+SfDffCgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744393571; c=relaxed/simple;
-	bh=B1jYEsWvbPKX/zHd+TR/zfbKqNYvM6PzAvJxDjT/KEc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=PNaiZAfOuz2U7zk7cl32Mf69K7NDhUlmZg4kz/T9LfwKmhoJXugn3cR4C+dmwUbPakddKuvewtaPVwwtMUqKgr/WZBdBuJ1ZwKTKDQFRlbCcqEtjxCJSyvnGyl2Ki/HiMk0xVKnUej7ULDct2H90ycVRlt54ZY3YAkS0xjiSAyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IV+0Ryad; arc=none smtp.client-ip=209.85.160.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IV+0Ryad"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2c28e1b1cefso709709fac.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744393569; x=1744998369; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Jgi9ZCDenpfQcCDLeVmdhfWFbSEmiaBaDhUIXsiKq7M=;
-        b=IV+0Ryad6hON/NcTvv9AQ8yWYhFHfCV2fn3NoIwHyq/SJpL1lciMTT228BPGfIiV8r
-         VZLzzYgXIrwJlf/7J8DYspE1K9u82LiRwVOyVmITp4oe0h3fIuSELRS3ggmOHFooc82b
-         /qvgOfiMJAJIdDxO/WfJWVone4kMUiC3aLzebAZXKJTysWnGkOqE7tWtS23gbqafkJsV
-         3knqpXo7BY3o1fuT87Ei9n30cVyj1P2g9iST5ZIfrK4UHd8hwl3kanoDs6NCPYBXob16
-         V4atPKD0yBNZTlbHY3xPhSBKsZtE6YOaLXXwJ0YTUITKppv5MFDRv85uKhlaiPLU7GfG
-         WTHQ==
+	s=arc-20240116; t=1744393628; c=relaxed/simple;
+	bh=oOtosL1HHFlHGy1b5imn/50Yhv08U7HIjdgOoPs5wX0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=GfQB0yHmok+gonBsyJfYVMKo9DXCNJTqL4CCBqB2JSBhlQWmv15IyHRUxvpZOiFcw2PoDOWiEQaxBjWWUCb0/mr12WAupMEVUg2fFFicz81bum0wAQhFRxwC4ulO6DyQ3BqK/ZsyJWVDVr/nNraWTcVurtSQQ6UJZyr4CQXvIi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d586b968cfso5052015ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:47:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744393569; x=1744998369;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jgi9ZCDenpfQcCDLeVmdhfWFbSEmiaBaDhUIXsiKq7M=;
-        b=lg9OZ1CGMpiPMyln0/JdAjaHbfWbx3R+XoaM1dVwLfbvCYpxF8dh+xnVVkxjgwBy+x
-         QfRU5pCfq/VroysdXZn5KapL3ecq4XLYzxem3o/UmeMxrTIVD03y1yCfZCq+HyJb6Io8
-         xD/dqVnuxZ1JLpjXIbyrX/Qx8xO1KdeSVNzjf+EWExR4IP60d50limiJg82KGZ1TfYMk
-         kVEMcM1xr3fq2qKM/hhAaRZj6qyzT4jOuBJoHvuRKH3+C7RpBm/gyzTTNTLdkXvgxdsX
-         IxwCg2T36KMSg1caWvU71o+QoL5PlxS83jznddfO+U8uzLU3Uosewd/8spXv/5wbz9zi
-         Txhw==
-X-Gm-Message-State: AOJu0YyVo21RY5MWcM4zwqELygK6AGWQMkT3yv2qViIr+oODv/kl1PEv
-	DZPBy2B23r8jW+W9b82T4fQnGJHIdtXd3OnQegdoi+pw9etibklaqjwHreSEPJqolKoksyXk+qf
-	14ntM5PcMhP99sSOPBNohIMBDHA7C5RIuOsrjIcvSdpYypu1TQ744RlK0Srrs31ltTsM7zWmiOT
-	ttY7sUFYNxuKXFqfHULXWAI6haEpx7ldyKVaTYo3fx
-X-Google-Smtp-Source: AGHT+IHCxo9rii7BaWbC7Qp3hg0zBqPEpg/RV9DoMTnkF1kSO93N6tJwevyHOyZkZ5+N1SP74Cnm73DYhOo=
-X-Received: from oabwa5.prod.google.com ([2002:a05:6871:a485:b0:2bc:65b9:2ace])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:6086:b0:29e:5e83:150e
- with SMTP id 586e51a60fabf-2d0d5f408f3mr2303412fac.27.1744393568940; Fri, 11
- Apr 2025 10:46:08 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:45:21 -0700
+        d=1e100.net; s=20230601; t=1744393625; x=1744998425;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6eYB1ZtJj/aUtD4KjdQc7TPmxcY404LeKypCpPv2ksw=;
+        b=cJ69OQmzXRObAZEFRZw0LYfIcVFfd9vYxlenHG28pVrz4J6XxezCT+nlI4wfwoRI+U
+         vTfvKDDvoHahpM/UH0D1fbEhlwpOCM6r9Xu8n9CR7bp0FMgxB/5bMmkDdUmewQFLNDk2
+         Mc5yzzI49OFWDrgI1WA7HcysCeVA2b8NygTOw6ta4qKtY1ogAj5gA8+Kw6DvSOFUAdK7
+         Wl9UefgSHcIemggtHKhRdJ1/yWVuUQBrXHhmKZBmYmxzUA26UJWx3riDCD2XC2G55iFG
+         Xu60a+GfeEQ1Xvt9oMrHI9nTZbe9fxVM85O23JpLBgkkP/kFRt+ktXDvVuEq3RF319x6
+         YkiQ==
+X-Gm-Message-State: AOJu0YxIId1VLV6tnrxOxjKM4htq2ByuOHHzh2ogllyF1FpDCcxWYpsb
+	LD5eh83YQdzo0pYkqI7lct2YLJotm//4Eb++LBL/gBH+vzUMwWowd8VhKxqU2szofPWeuXy6uLL
+	KTmgtgQbF+8vgVTrjwIWw7djIYVoA562NWPSTq7qf+Sggoc+hTRG86sc=
+X-Google-Smtp-Source: AGHT+IHjBwSKlZ3uMeVNQ9sGsJzLrvXbkRh5W+fnpD3uiDE5KT766d4vRRgaIjXYEn3pKbv+iazqRND7tgMx8DLLC7W/B1UZVCRP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250411174547.2208959-1-ctshao@google.com>
-Subject: [PATCH v3] perf report: Skip unsupported new event types
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	dvyukov@google.com, ben.gainey@arm.com, linux-perf-users@vger.kernel.org
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1909:b0:3d3:f4fc:a291 with SMTP id
+ e9e14a558f8ab-3d7ec26fb94mr38097315ab.19.1744393625660; Fri, 11 Apr 2025
+ 10:47:05 -0700 (PDT)
+Date: Fri, 11 Apr 2025 10:47:05 -0700
+In-Reply-To: <CAP01T75me69hbXJuS=6Q1z7nCLd5ctBtKk=hU0RMjdDZAQ11Ww@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f95599.050a0220.2c5fcf.0005.GAE@google.com>
+Subject: Re: [syzbot] [bpf?] possible deadlock in queue_stack_map_push_elem
+From: syzbot <syzbot+252bc5c744d0bba917e1@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, memxor@gmail.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-`perf report` currently halts with an error when encountering
-unsupported new event types (`event.type >= PERF_RECORD_HEADER_MAX`).
-This patch modifies the behavior to skip these samples and continue
-processing the remaining events. Additionally, stops reporting if the
-new event size is not 8-byte aligned.
+Hello,
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/session.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 60fb9997ea0d..f55b2ac4e103 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1639,8 +1639,17 @@ static s64 perf_session__process_event(struct perf_session *session,
- 	if (session->header.needs_swap)
- 		event_swap(event, evlist__sample_id_all(evlist));
- 
--	if (event->header.type >= PERF_RECORD_HEADER_MAX)
--		return -EINVAL;
-+	if (event->header.type >= PERF_RECORD_HEADER_MAX) {
-+		/* perf should not support unaligned event, stop here. */
-+		if (event->header.size % sizeof(u64))
-+			return -EINVAL;
-+
-+		/* This perf is outdated and does not support the latest event type. */
-+		ui__warning("Unsupported type %u, please considering update perf.\n",
-+			    event->header.type);
-+		/* Skip unsupported/unaligned event by returning its size. */
-+		return event->header.size;
-+	}
- 
- 	events_stats__inc(&evlist->stats, event->header.type);
- 
--- 
-2.49.0.604.gff1f9ca942-goog
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
+
+Tested on:
+
+commit:         e403941b bpf: Convert ringbuf.c to rqspinlock
+git tree:       https://github.com/kkdwivedi/linux.git res-lock-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b68a3f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ea2b297a0891c87e
+dashboard link: https://syzkaller.appspot.com/bug?extid=252bc5c744d0bba917e1
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
