@@ -1,173 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5621F3FC8;
-	Fri, 11 Apr 2025 15:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF451F3BA2;
+	Fri, 11 Apr 2025 15:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744384450; cv=none; b=UorPbzK6+Jtfh6nEycvHJdpR5ku4rJKmHvZyQnrfy+/BadxdCTg5SdoeP5DevevL/aH928uBHBo6myp23W0n1dO3KMLaDgAYyVAgddLuibH9H8fiRkhS3QO7jWhoIZv/c7aQQILk6Yi/jYPdA+lCiT3M8zpNAGNNlUzTtaybLlU=
+	t=1744384481; cv=none; b=YWBzhVyDYrIEvii6AZZyUQSGKav9sQUtcg4sSD3AcLOulks6AopExKbSRcrb6Z1kD/irVkzDug6QV6A6YMahcpcW74XV5zKp2u/XCEMHC16KMucblvz6fmKSKnNdbORIYMRKopaUrpyLK7XqWN4yBAt4vQuhMsVuNc01O0qm9l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744384450; c=relaxed/simple;
-	bh=dOEcyStR65ZFPlrTf3X/KNmQkCp/V+Eznx6i8ACB4lQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AHnhgIiBrAhJUxisq807BJUc5yH7ye+igZdX1XnI4i+idhqVu6uk9LDGQc16G//LBgTOR30lZy/R5Mlxl1NC5H8jzNXladQIiHqw8IE8sLYOxd3lMrkNTP1SilJAqky9CoF9djmV0WLN6bqjJwVWixpbpCAg4tFnDsd0m/tyEyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LEN78ifD; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744384481; c=relaxed/simple;
+	bh=gmBY25FRzaUixYh0G1dDKVBQRxr2w2r5aRoTTgcp2+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NWJn9FJbZFhzXTuuDFiiwBOtpxG5gPnMSI8SnT4hr+vMddXRQbeBSd0QrkGe6C86WEM+0uVu19YeWoIMc0wUnw8vvM+Qhatx0gmUE6z+mH/c92a7gPxoc+U8zun2Y6w+1oLYUkbweYB7ocjSqynDRiW5Gjzomh8SJWUWkophRuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+3fPpCi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LEN78ifD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744384449; x=1775920449;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=dOEcyStR65ZFPlrTf3X/KNmQkCp/V+Eznx6i8ACB4lQ=;
-  b=LEN78ifDbFBjli/20xfgj/G5YxkpgY4YD30W1bR5TJrYlbxXRlOMnu4f
-   84ovZDujA75wzlzg22+r4+6JQPOAYh8c/7/KaZhCCFOctcfhJd+b04Edn
-   51vkCSvy2Hss8jHyI8RGRaMoL4rmZOWWrvUQa80K9jIRFpJ9bqulNHH7p
-   krBa/2PkUb2uwnENlMASph3/o7YZ9WmbdzzF/byj7iV4gCuQwZB/ibzmY
-   sSb4z4UmYn8b06MiLNkU1XmdyLRu9gSlJD8d+33A+9M8YjKo061i+hPF7
-   uglQADpWhxL2dvNpVKyUr/gU9RNxC6QEraQnr/yWK5Ra+6ebPmwXmu9Mv
-   g==;
-X-CSE-ConnectionGUID: V3/xW8R7TZSLGEQJzIG6xg==
-X-CSE-MsgGUID: yEMR3Qm/ReaGVvQNXvIcFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="56586372"
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="56586372"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:14:08 -0700
-X-CSE-ConnectionGUID: thjoLN1cSpWHwmzzR+gcDA==
-X-CSE-MsgGUID: E4ncuSNURySKF83PIWNyVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="129573443"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:14:00 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 11 Apr 2025 18:13:57 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
-    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
-    Jonathan Corbet <corbet@lwn.net>, 
-    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
-    Derek J Clark <derekjohn.clark@gmail.com>, 
-    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
-    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
-    Eileen <eileen@one-netbook.com>, LKML <linux-kernel@vger.kernel.org>, 
-    sre@kernel.org, linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>, 
-    mario.limonciello@amd.com
-Subject: Re: [PATCH v8 10/14] platform/x86: oxpec: Move fan speed read to
- separate function
-In-Reply-To: <20250322103606.680401-11-lkml@antheas.dev>
-Message-ID: <342144b1-6380-dda7-b40e-a9090a9c6b90@linux.intel.com>
-References: <20250322103606.680401-1-lkml@antheas.dev> <20250322103606.680401-11-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+3fPpCi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECE23C4CEE2;
+	Fri, 11 Apr 2025 15:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744384481;
+	bh=gmBY25FRzaUixYh0G1dDKVBQRxr2w2r5aRoTTgcp2+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D+3fPpCi/CDANgwrbccX92QDrQF2CJRkW58ZclYe9dBOso6Fsm3+5m1zt0KEZIZFQ
+	 iqauIAri4PjH5TbX674tVfDC+TaZNDeqMlIkjlS0rMlZ1xes6LVfKRfzvHhBbS57eq
+	 1yb4ncdXEoEgQgGvqZIyAgZ2rP+FhlkbMNzf7CPhQbtkZ28bvkHkWh2IBCGGpqqFwr
+	 HeLQfvRQnrOBC6982MmtbzV55eev66GJ3EFUmokbrTPR9EKovFAI+TXQKo1R49aG1O
+	 1GH9b4lBK1d1dQWt7RqXx+soS5jY4wnL0b9hSAzZRdYFkjRDjBa5PDbA+gfJthgX97
+	 7s+AM9LDmeWdg==
+Date: Fri, 11 Apr 2025 17:14:36 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
+	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org, 
+	Peter Ziljstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 2/2] pidfs: ensure consistent ENOENT/ESRCH reporting
+Message-ID: <20250411-abbitten-caravan-ec53428b33e0@brauner>
+References: <20250411-work-pidfs-enoent-v2-0-60b2d3bb545f@kernel.org>
+ <20250411-work-pidfs-enoent-v2-2-60b2d3bb545f@kernel.org>
+ <20250411135445.GF5322@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-190906982-1744384437=:944"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250411135445.GF5322@redhat.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Apr 11, 2025 at 03:54:45PM +0200, Oleg Nesterov wrote:
+> For both patches:
+> 
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> 
+> a minor nit below...
+> 
+> On 04/11, Christian Brauner wrote:
+> >
+> >  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
+> >  {
+> > -	int err = 0;
+> > -
+> > -	if (!(flags & PIDFD_THREAD)) {
+> > +	scoped_guard(spinlock_irq, &pid->wait_pidfd.lock) {
+> > +		/*
+> > +		 * If this wasn't a thread-group leader struct pid or
+> > +		 * the task already been reaped report ESRCH to
+> > +		 * userspace.
+> > +		 */
+> > +		if (!pid_has_task(pid, PIDTYPE_PID))
+> > +			return -ESRCH;
+> 
+> The "If this wasn't a thread-group leader struct pid" part of the
+> comment looks a bit confusing to me, as if pid_has_task(PIDTYPE_PID)
+> should return false in this case.
 
---8323328-190906982-1744384437=:944
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Ok.
 
-On Sat, 22 Mar 2025, Antheas Kapenekakis wrote:
+> 
+> OTOH, perhaps it makes sense to explain scoped_guard(wait_pidfd.lock)?
+> Something like "see unhash_process -> wake_up_all(), detach_pid(TGID)
+> isn't possible if pid_has_task(PID) succeeds".
 
-> While not necessary for fixing the ABI hwmon issue, fan speed will be
-> the only remaining value without a function. Therefore, finish the
-> refactor by moving it to a separate function.
->=20
-> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/platform/x86/oxpec.c | 53 ++++++++++++++++++++----------------
->  1 file changed, 29 insertions(+), 24 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> index 67bfd397802d1..5b84647569931 100644
-> --- a/drivers/platform/x86/oxpec.c
-> +++ b/drivers/platform/x86/oxpec.c
-> @@ -599,6 +599,34 @@ static umode_t oxp_ec_hwmon_is_visible(const void *d=
-rvdata,
->  =09}
->  }
-> =20
-> +/* Fan speed read function */
-> +static int oxp_pwm_fan_speed(long *val)
-> +{
-> +=09switch (board) {
-> +=09case orange_pi_neo:
-> +=09=09return read_from_ec(ORANGEPI_SENSOR_FAN_REG, 2, val);
-> +=09case oxp_2:
-> +=09case oxp_x1:
-> +=09=09return read_from_ec(OXP_2_SENSOR_FAN_REG, 2, val);
-> +=09case aok_zoe_a1:
-> +=09case aya_neo_2:
-> +=09case aya_neo_air:
-> +=09case aya_neo_air_1s:
-> +=09case aya_neo_air_plus_mendo:
-> +=09case aya_neo_air_pro:
-> +=09case aya_neo_flip:
-> +=09case aya_neo_geek:
-> +=09case aya_neo_kun:
-> +=09case oxp_fly:
-> +=09case oxp_mini_amd:
-> +=09case oxp_mini_amd_a07:
-> +=09case oxp_mini_amd_pro:
-> +=09=09return read_from_ec(OXP_SENSOR_FAN_REG, 2, val);
-> +=09default:
-> +=09=09return -EOPNOTSUPP;
-> +=09}
-> +}
-> +
->  /* PWM input read/write functions */
->  static int oxp_pwm_input_write(long val)
->  {
-> @@ -693,30 +721,7 @@ static int oxp_platform_read(struct device *dev, enu=
-m hwmon_sensor_types type,
->  =09case hwmon_fan:
->  =09=09switch (attr) {
->  =09=09case hwmon_fan_input:
-> -=09=09=09switch (board) {
-> -=09=09=09case orange_pi_neo:
-> -=09=09=09=09return read_from_ec(ORANGEPI_SENSOR_FAN_REG, 2, val);
-> -=09=09=09case oxp_2:
-> -=09=09=09case oxp_x1:
-> -=09=09=09=09return read_from_ec(OXP_2_SENSOR_FAN_REG, 2, val);
-> -=09=09=09case aok_zoe_a1:
-> -=09=09=09case aya_neo_2:
-> -=09=09=09case aya_neo_air:
-> -=09=09=09case aya_neo_air_1s:
-> -=09=09=09case aya_neo_air_plus_mendo:
-> -=09=09=09case aya_neo_air_pro:
-> -=09=09=09case aya_neo_flip:
-> -=09=09=09case aya_neo_geek:
-> -=09=09=09case aya_neo_kun:
-> -=09=09=09case oxp_fly:
-> -=09=09=09case oxp_mini_amd:
-> -=09=09=09case oxp_mini_amd_a07:
-> -=09=09=09case oxp_mini_amd_pro:
-> -=09=09=09=09return read_from_ec(OXP_SENSOR_FAN_REG, 2, val);
-> -=09=09=09default:
-> -=09=09=09=09break;
-> -=09=09=09}
-> -=09=09=09break;
-> +=09=09=09return oxp_pwm_fan_speed(val);
->  =09=09default:
->  =09=09=09break;
->  =09=09}
->=20
+I'm verbose. I hope you can live with it:
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+        /*
+         * While holding the pidfd waitqueue lock removing the task
+         * linkage for the thread-group leader pid (PIDTYPE_TGID) isn't
+         * possible. Thus, if there's still task linkage for PIDTYPE_PID
+         * not having thread-group leader linkage for the pid means it
+         * wasn't a thread-group leader in the first place.
+         */
 
---=20
- i.
-
---8323328-190906982-1744384437=:944--
+:)
