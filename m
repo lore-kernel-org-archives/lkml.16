@@ -1,201 +1,172 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0D227EC70;
-	Fri, 11 Apr 2025 06:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D0B27D79E;
+	Fri, 11 Apr 2025 06:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744354404; cv=none; b=f9si/Bh/POvF2mUodcH7EAXjdsLOUh6d5hAFFDuc31F/msfUwZrn8eCrd52uf1VqtUEr+EFEGZTkx8vawLznKmTvxQlbOyQ9v9xkQe5CaLfijfvtaa36xa9WBzCpZptzc1icx/f+QzefOGif1s18+WjxClBsj/R65e4G+/mAeoM=
+	t=1744354418; cv=none; b=CZoHcM/3rOFuk4mZVrJUnF1KPYhEAywpSMmvi4640I+6u9VNcZ6Ak2F20y/EqXVPu/rtH/Al0ODZu/VZzwb8gDm+Z99MjBYJP+mdLeGQhI+59bUzdeb7tuACV7l6FunItg6tZtUmmP4Dad3sDiiE36jcvowJ3hLbq8pBzCODqN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744354404; c=relaxed/simple;
-	bh=0s0s8V6FqulB244TMU5h7c8JoFobYb31JUt0QhZva9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b3AN0JL0tR52Mkp6HKs3xxQadqYIQnWQ00l4LXUWi7Ay4FCyyVq19rteimCJDpb+6sHBI/EbAxVF/aIPSTmLGR37UEZTttEHVqyHglGrNVmKrT10Tla0dAX75Wcm9axa5SZt4jRF/OepRaNR47WTTL6KUo781aD+7BsyUPQuIKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=Eusy+zkn; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ObxHs5bm reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1744354418; c=relaxed/simple;
+	bh=LsVrtsWTdgZtWEyKw4K0oMuOxvSqk85g6kxJNX2LRG4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=V1BmLEjhPrRaQQI1NcLSHsFHrWpjjQ5eeQZaNvZRiSubbisEpi5ek9U46qZJ1nGTZyyzPYAob9J3+LIu7fCXC8lcbrH+4NPBKiVPCdY78+Kk/38Pp8zjTy6/fWL0yTa0CQne1+e7hgrRuyyUgxxu7y3EsrqUEUg5O0lNqB5vZjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HGlv+QXx; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Eusy+zkn";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ObxHs5bm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGlv+QXx"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2260c91576aso13868635ad.3;
+        Thu, 10 Apr 2025 23:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744354400; x=1775890400;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/PE1UT1vGb/hTcLrz4p41JHU3RYkVqbBAbl7yr7Gp8o=;
-  b=Eusy+zknRs3FSoxD5byTPfzyFKsyQtYhXFGJ4wgGaTnIN55fB0+0mkzg
-   eMknBf+eFhPNpg6FuAdz48qa0YYH+I+W1YxOchuwincxq0Hll7cr3lvDe
-   SqyQyLfnn6cd2LAHHX3f5BFDOmdFoEZTsS32ijvEQ5P/b0B/6QQlyopwT
-   +JDNN5RP3CLsOd4meDnjtkMhKhUg/seOz0gwH5eJV2zdX6tEfA/xNAS1Z
-   sLefNCWpcf2BxDHzRtOdOyOsXLSJ2PLX3JhpH3om30bAqpJfdTs9cn24Y
-   K6DYDsqNGMceMZlenZ78pVbrKJEKsjGxaaRHVRnWaAfsrearxg/RcnHT2
-   A==;
-X-CSE-ConnectionGUID: bEW0VtO/RoCQkufVuKYI6w==
-X-CSE-MsgGUID: +UQt4EtqRP2L26xK+qmaUw==
-X-IronPort-AV: E=Sophos;i="6.15,203,1739833200"; 
-   d="scan'208";a="43471096"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 11 Apr 2025 08:53:17 +0200
-X-CheckPoint: {67F8BC5D-10-903EAEAC-E04C76C8}
-X-MAIL-CPID: 7DB6D4A40A213011B16BFC23CBDF85ED_5
-X-Control-Analysis: str=0001.0A006372.67F8BC61.007F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C38D01697E2;
-	Fri, 11 Apr 2025 08:53:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744354392;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/PE1UT1vGb/hTcLrz4p41JHU3RYkVqbBAbl7yr7Gp8o=;
-	b=ObxHs5bmtUyUlJ5potmtAPxPKmKZKcFpev9omi6tSvtVIVNuwbVrQnFnHYKLCyx2OWrfyu
-	Qgsg49VfJTjkSq3Yi8SH9oA03AsUGTVxgxq31IoQPnDxmwejWb1aXgAKyMOBOed3fi5v1Z
-	LuxBVn5GVwFNJFNZwhM5YBSm8wE45uct+JHa32BRVjXQK44Aw6yh/f9szr0ERSPUGyV9MH
-	rWb8294wFjuhCPi5NMfYFOHMwZ/zQA2WrNDkSvJIctExfJYElraZRzBN1Wo6J5pJ2BAg/1
-	8LxcNSfGsdFSgocQrsfg/PM0WoFoRKekjU70ua3Z9aesmXe+JqlVTmiduwmfzg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
- "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>, hongxing.zhu@nxp.com
-Subject:
- Re: [PATCH 4/5] arm64: dts: imx95: add PCIe's msi-map and iommu-map property
-Date: Fri, 11 Apr 2025 08:53:02 +0200
-Message-ID: <1970445.taCxCBeP46@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <Z/aLSWGP4mimMNlv@lizhi-Precision-Tower-5810>
-References:
- <20250128211559.1582598-1-Frank.Li@nxp.com> <10643619.nUPlyArG6x@steina-w>
- <Z/aLSWGP4mimMNlv@lizhi-Precision-Tower-5810>
+        d=gmail.com; s=20230601; t=1744354416; x=1744959216; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q0GUgempXeR1Ai6jdCUdrwnFpwuRrrfXxvPcXnoqanQ=;
+        b=HGlv+QXxDqa/8B2DXS3DzaCslr3uilInE2Dq0y3tG+3ysk1KHfQ+p43iOnkp+83Mbm
+         r/w4GfvkccRuAJdnvpRAx881cmaqNiZ3Te6kP65XJyVvL9i3oD6EdmlXXt5eEJmsJsUY
+         9U0dc1FuQvVNP6Wijpy5r51rcjw7SAxqr+vTmfOE2Ir8j/U6x2SzkbkJO0lAc7s7Qve7
+         QDcK+TxHB3df1MZqVvkGMf7zP/3mUFtJt+7o/hK8KLE1LQHa5WBNPgsRaAAdiLNq5pKw
+         8YobRQDOPxCzPWz3QK6UOHbK9M8s5lU1KEcsEtXbzk9AF/11LctOpi2oxZ8EuCVZf+VH
+         Rf9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744354416; x=1744959216;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q0GUgempXeR1Ai6jdCUdrwnFpwuRrrfXxvPcXnoqanQ=;
+        b=pG6yLB6/JQHRSbF3fZmjeP/W5xBzLeW836peYcwTxwZrZaIrkpjByiL8XIdrZ54A2Z
+         0tWa18l9r1drv4J0ikWBEgbOZ/u9cN5rh6K2Q1cZDs0+yTIuirUUm/Rh+XDDgWYf+u6x
+         yNgrw2go+82Tj4rCVaCwL6UQkczrweYVlRaBC5wjsaEwh2e3Eb44IT5brTXbJzjWseLo
+         ucigJ3A77pak9IfD8EasuogvOqadbQqkTu/4VZM2yIDifXRYysj4H12vSTAXAJlfXXJF
+         JduKJ7AmOryUrlyV17tkVBmElT3uqUZfEFaAgwt3Zmx/+LxIIpnhAQ5yQ2JdxOACBSJ2
+         PyRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVExbdBrTu5BOcHjE8Z3VRu1PDQDaJ9Fmw98BFXE2gnAjttKQQ7SQucNqvpaCVMVxUP36YFRwlTrQH6fg==@vger.kernel.org, AJvYcCVU1vAi9zOpOAq8LiZoUER19MOwYL8VAeOYsh70MPzr9ZijmBUQnupPNpAhw6PAahoHwMhtjh9ktlGBYg==@vger.kernel.org, AJvYcCWBxi+3JsYvqcZV3m60cIMoV2ETgi97xjRw+nuwmfg5GW4mA1uuqb7yfbjWngdmozzU+g2hST1vbqvEXMc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQWK+Pwh0JTGY/Op2BGBSkMGy/4K2DW2PkJYBW2zK637tMgk1S
+	Ee1xtIT0125ENz4lNriomgCCG8svLjgnQVCnkAgToP+gByAYGVur
+X-Gm-Gg: ASbGncvItZDuL+aq5dWNX/MFKh1RK7yGuaVLHwfXtsgpORIeWtjp12RILh5QbJSKJ4K
+	wfA3DuVFtc61iUT39FLSh6PK7hG7ApokE2YbdUuoP4L70Pe06aEbp2c0ITidrfqZG/INPt5E5OW
+	efonMms9m4ZqPXKC7xgCelUvPDm9EwC17dp5xfeLGJCdUnAFjC+WS6XXdoLQqNBZ0876ki+lUJv
+	UjBOMn3hx/I00/VWt5K2veJ0vicvu4vZ+RXBLm/wjiHHPkkUPRPSCgwvKwxh1nJ2U8U7dVYwMS2
+	VAthNr9cdqU0rVKTxNZE1u748Yf0mbix9Q==
+X-Google-Smtp-Source: AGHT+IGl0nL5wKmwFlWsQ9ssGXCB2kOLf/x4PGlQUnJhSihZMIEaJP/+c7G4d96OdeU+R8O+pnzM/Q==
+X-Received: by 2002:a17:902:cec4:b0:224:e33:889b with SMTP id d9443c01a7336-22bea4ade03mr24590165ad.12.1744354416369;
+        Thu, 10 Apr 2025 23:53:36 -0700 (PDT)
+Received: from localhost ([220.253.99.94])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2333841sm728200b3a.160.2025.04.10.23.53.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 23:53:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 11 Apr 2025 16:53:29 +1000
+Message-Id: <D93M14UCYU7Y.39ZQIH7VON6DG@gmail.com>
+From: "Nicholas Piggin" <npiggin@gmail.com>
+To: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>
+Cc: "Hugh Dickins" <hughd@google.com>, "Guenter Roeck" <linux@roeck-us.net>,
+ "Juergen Gross" <jgross@suse.com>, "Jeremy Fitzhardinge" <jeremy@goop.org>,
+ <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+ <kasan-dev@googlegroups.com>, <sparclinux@vger.kernel.org>,
+ <xen-devel@lists.xenproject.org>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-s390@vger.kernel.org>
+Subject: Re: [PATCH v1 3/4] mm: Protect kernel pgtables in
+ apply_to_pte_range()
+X-Mailer: aerc 0.19.0
+References: <cover.1744037648.git.agordeev@linux.ibm.com>
+ <11dbe3ac88130dbd2b8554f9369cd93fe138c655.1744037648.git.agordeev@linux.ibm.com>
+In-Reply-To: <11dbe3ac88130dbd2b8554f9369cd93fe138c655.1744037648.git.agordeev@linux.ibm.com>
 
-Hi,
+On Tue Apr 8, 2025 at 1:11 AM AEST, Alexander Gordeev wrote:
+> The lazy MMU mode can only be entered and left under the protection
+> of the page table locks for all page tables which may be modified.
+> Yet, when it comes to kernel mappings apply_to_pte_range() does not
+> take any locks. That does not conform arch_enter|leave_lazy_mmu_mode()
+> semantics and could potentially lead to re-schedulling a process while
+> in lazy MMU mode or racing on a kernel page table updates.
+>
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  mm/kasan/shadow.c | 7 ++-----
+>  mm/memory.c       | 5 ++++-
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
+> index edfa77959474..6531a7aa8562 100644
+> --- a/mm/kasan/shadow.c
+> +++ b/mm/kasan/shadow.c
+> @@ -308,14 +308,14 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, =
+unsigned long addr,
+>  	__memset((void *)page, KASAN_VMALLOC_INVALID, PAGE_SIZE);
+>  	pte =3D pfn_pte(PFN_DOWN(__pa(page)), PAGE_KERNEL);
+> =20
+> -	spin_lock(&init_mm.page_table_lock);
+>  	if (likely(pte_none(ptep_get(ptep)))) {
+>  		set_pte_at(&init_mm, addr, ptep, pte);
+>  		page =3D 0;
+>  	}
+> -	spin_unlock(&init_mm.page_table_lock);
+> +
+>  	if (page)
+>  		free_page(page);
+> +
+>  	return 0;
+>  }
+> =20
 
-Am Mittwoch, 9. April 2025, 16:59:21 CEST schrieb Frank Li:
-> On Wed, Apr 09, 2025 at 12:14:48PM +0200, Alexander Stein wrote:
-> > Hi Frank,
-> >
-> > Am Donnerstag, 27. M=E4rz 2025, 19:48:33 CEST schrieb Frank Li:
-> > > [snip]
-> > > Finially we get realtek PCI card
-> > >
-> > > it quite complex, there are one PCIe switch to split it to two pci bu=
-s.
-> > >
-> > >  lspci -t
-> > > -[0000:00]---00.0-[01-ff]----00.0-[02-04]--+-03.0-[03]----00.0
-> > >                                            \-07.0-[04]----00.0
-> >
-> > Interesting. Mine looks slightly different:
-> >
-> > $ lspci -t
-> > -[0000:00]---00.0-[01-ff]----00.0-[02-04]--+-01.0-[03]----00.0
-> >                                            \-02.0-[04]----00.0
-> >
-> > >
-> > >
-> > > 0000:00:00.0 PCI bridge: Philips Semiconductors Device 0000
-> > > 0000:01:00.0 PCI bridge: ASMedia Technology Inc. ASM1182e 2-Port PCIe=
- x1 Gen2 Packet Switch
-> > > 0000:02:03.0 PCI bridge: ASMedia Technology Inc. ASM1182e 2-Port PCIe=
- x1 Gen2 Packet Switch
-> > > 0000:02:07.0 PCI bridge: ASMedia Technology Inc. ASM1182e 2-Port PCIe=
- x1 Gen2 Packet Switch
-> >
-> > It seems you have a newer hardware revision. I have
-> > 0000:01:00.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
-> > 0000:02:01.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
-> > 0000:02:02.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
-> >
-> > PCIe bridges.
-> >
-> > > 0000:03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL=
-8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 09)
-> > > 0000:04:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL=
-8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 09)
-> > >
-> > > It need below change
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/bo=
-ot/dts/freescale/imx95.dtsi
-> > > index 9bb26b466a061..9dbf395b9a67b 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx95.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
-> > > @@ -1660,10 +1660,18 @@ pcie0: pcie@4c300000 {
-> > >                         power-domains =3D <&scmi_devpd IMX95_PD_HSIO_=
-TOP>;
-> > >                         /* pcie0's Devid(BIT[7:6]) is 0x00, stream id=
-(BIT[5:0]) is 0x10~0x17 */
-> > >                         msi-map =3D <0x0 &its 0x10 0x1>,
-> > > -                                 <0x100 &its 0x11 0x7>;
-> > > +                                 <0x100 &its 0x11 0x1>,
-> > > +                                 <0x218 &its 0x12 0x1>,
-> > > +                                 <0x238 &its 0x13 0x1>,
-> > > +                                 <0x300 &its 0x14 0x1>,
-> > > +                                 <0x400 &its 0x15 0x1>;
-> > >                         iommu-map =3D <0x000 &smmu 0x10 0x1>,
-> > > -                                   <0x100 &smmu 0x11 0x7>;
-> > > -                       iommu-map-mask =3D <0x1ff>;
-> > > +                                   <0x100 &smmu 0x11 0x1>,
-> > > +                                   <0x218 &smmu 0x12 0x1>,
-> > > +                                   <0x238 &smmu 0x13 0x1>,
-> > > +                                   <0x300 &smmu 0x14 0x1>,
-> > > +                                   <0x400 &smmu 0x15 0x1>;
-> > > +                       //iommu-map-mask =3D <0x1ff>;
-> > >                         fsl,max-link-speed =3D <3>;
-> > >                         status =3D "disabled";
-> > >
-> > >
-> > > Only 8 stream id assign to PCIe0 device, it is hard to dynamaic alloc=
-e one,
-> > > or need extra works
-> >
-> > Uh, this looks awefully complicated. Even worse this doesn't work on
-> > my hardware. I need mappings for IDs 0x208 and 0x210, so I replaced 0x2=
-18
-> > and 0x238 from your diff into my numbers.
-> >
-> > So I take that PCIe bridges are not supported properly. What would be
-> > necessary to support this?
->=20
-> I remember bridge use msi to do port power managements.
->=20
-> ITS msi-map can distribute difference irq to difference cores beside iommu
-> address protection. It is quite userful for nvme or network devices, which
-> have multi queues. Of course, we need more elegant solution.
->=20
-> My card use difference pcie switch chip. But suppose it should work after
-> you update RID information.
+kasan_populate_vmalloc_pte() is really the only thing that
+takes the ptl in the apply_to_page_range fn()... Looks like
+you may be right. I wonder why they do and nobody else? Just
+luck?
 
-Yep, after adjusting RID mapping, it works here.
+Seems okay.
 
-> which kernel version do you base on?
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 
-My development is usually based on current linux-next versions, so it's
-based on v6.15-rc1.
-
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+> @@ -401,13 +401,10 @@ static int kasan_depopulate_vmalloc_pte(pte_t *ptep=
+, unsigned long addr,
+> =20
+>  	page =3D (unsigned long)__va(pte_pfn(ptep_get(ptep)) << PAGE_SHIFT);
+> =20
+> -	spin_lock(&init_mm.page_table_lock);
+> -
+>  	if (likely(!pte_none(ptep_get(ptep)))) {
+>  		pte_clear(&init_mm, addr, ptep);
+>  		free_page(page);
+>  	}
+> -	spin_unlock(&init_mm.page_table_lock);
+> =20
+>  	return 0;
+>  }
+> diff --git a/mm/memory.c b/mm/memory.c
+> index f0201c8ec1ce..1f3727104e99 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2926,6 +2926,7 @@ static int apply_to_pte_range(struct mm_struct *mm,=
+ pmd_t *pmd,
+>  			pte =3D pte_offset_kernel(pmd, addr);
+>  		if (!pte)
+>  			return err;
+> +		spin_lock(&init_mm.page_table_lock);
+>  	} else {
+>  		if (create)
+>  			pte =3D pte_alloc_map_lock(mm, pmd, addr, &ptl);
+> @@ -2951,7 +2952,9 @@ static int apply_to_pte_range(struct mm_struct *mm,=
+ pmd_t *pmd,
+> =20
+>  	arch_leave_lazy_mmu_mode();
+> =20
+> -	if (mm !=3D &init_mm)
+> +	if (mm =3D=3D &init_mm)
+> +		spin_unlock(&init_mm.page_table_lock);
+> +	else
+>  		pte_unmap_unlock(mapped_pte, ptl);
+> =20
+>  	*mask |=3D PGTBL_PTE_MODIFIED;
 
