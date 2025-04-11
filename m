@@ -1,46 +1,46 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2051.outbound.protection.outlook.com [40.107.244.51])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2052.outbound.protection.outlook.com [40.107.237.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4511F0E44;
-	Fri, 11 Apr 2025 13:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB4E1F236E;
+	Fri, 11 Apr 2025 13:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744378330; cv=fail; b=MR2Z4WWSRDK7C+7nexm6u1V6xRxBmEvxeampMg+46xPOuF1aM7jZzckX+dKCeT/ESo4Xy1yLvQOGBwq6uQhxyUKbV+2BM8Gi//9RdtzdGrIOY0o719nyrkPyy/k5d/VcseNRwdaEWE4FaJEjgTkvq/632himoNVjf2FA50fnuO8=
+	t=1744378336; cv=fail; b=OEaw/B0eX2RYlBnuRM8MH+/J3s2cPX8FtxzVCmpYMTXiv7zYFVKEYvUNNb4r1LXyGngE61/q1scX5hzZrXZv5lH3Um2jZtoeSmUfqhDgEkK8f6JWSznKEO8I4I/uYwp4LnPrORvtpTpvx0sAL4RqDl5YkZmgvjvGhQI5jyyQQ8U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744378330; c=relaxed/simple;
-	bh=IuNCf6bnUwvnw8IDe0LAQf4yk2UGWE8bQlSXKOjiTug=;
+	s=arc-20240116; t=1744378336; c=relaxed/simple;
+	bh=8opl4y0hnuZ9gx2dEW2/a9TrekbQPLO1eMV1qq96I2Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OScVdgX7w+xWdNTYKGZHLpdQZUoOP7rewKCEat9erILNKoTr2VTITmBJ9iu2qe+pzwE6kQVVMN8OiKQdgjQGedGEUj/n0AyofptivHDDEvn9r2Se2dN43oOuRh79KZMkkUARe+UsH/uZwJSSHCrFCmtLG4xR1ybLt/YCZt/Fnvs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dkb56rb9; arc=fail smtp.client-ip=40.107.244.51
+	 MIME-Version:Content-Type; b=mTmWgISufjonYP8GHB8irIIFdviylLlRWQqmqAit6ENMmjnP1us5iyH344/GbAg93BW5b+9fHrdxcaZPhHv2mZt6pE/rLD1VIRy4sAfENI4TS9uJljnCKNKi5kkO8CfFWE3VOjgqzfizHCRwCOFMo3ar86sOg1whIEgHpc5oRYE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rVVLyKnE; arc=fail smtp.client-ip=40.107.237.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dkb56rb9"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rVVLyKnE"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=um/IfCqHsfPfCFXQRoUplbbOHd1SwINHq/9QEIJBHkMH89p+y6DHtAPnSssgxiQPLqaC9iLKi0jFsZxFizt6JwhoXGugcADKV1WQc2RFD9lAMOn2XZ0FXQ5dYjkTRGDNZpfd+p5npWTlRkDSTiKauVNMy3DTov74OiVYhWF0Qmn24bBOuGlxg+ISDLAcI7S3YCExDqkOQFDjI/QVgSb5262FrSDsfAQ2LkigptA9uRFNhonaidaPj6DQ1sw6vJpJ30gOsMy5G+igOwc/OUZUrakQLtBeF2ONbqLOo7nkaa9ig4nGgH/7C916HU8BleM8B+BaaQhWNwl/c/dNjq4eDA==
+ b=pJ79Y9KI7MnFaK1JGQ2Xjcu8JJDG0PD7azvopKPOcWQ2s1mk16gfdANGpxy5BMDAXRgWkzyqQKTwKXpRgdTgY1uqQooni/ZhuB3JT48BXeljufFthEYVTE17+yuNkbT/82tw9cZpupA1vIl7Aj5NOLecJpvOauFSfNNhBw+62X5tWjPE2aPMxMDIpnK/5TMbDwTgnT75co84tvpJ6MY8BaxPEC2JVE2AvnkrKs+37ydEFxZQrPJqOttlz8ToAmA0L/cm0qc1WkC8ii6k8lyjUWlrRdMO/6DP+vmW/LWb2s/+MrH4+feG1zvH7c7vSs80vdneG2Zo1/j8tmcvBfURVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O/kahapFlp8K+3dWMtIuVdgPzOOLqJ2YiHWrdTONz/I=;
- b=ir9wXffNZZ5AoFzDOYOUfW/+8KUym34EPoTngN0EJwO+g2U+UCNHBkIo54nuaECCbjfCBNO5cwvim/67Vp2jVWFaz2hetN2fpVSFpxueybBL80PPXav4Y6MKff4qtJogaGA0sij0SEGgbpSinJGfTG8RbeWcvoXIt1oVArpb/Bsbkt1VDygCOdC/FYWztEU1NguX3Mgt/pY9PAwurBdokQ2ijdIrLUgvmV6MiFjwxBgWSFme2974tgp5VvQX+o+Vt+aKenBwnIav/WWrsG9GXJq+At29ijDdHwgXAqW7pcPfmxP9PmfTZOrSnit9Smn/7qwTJ0ykAnj2ki9jcepdCw==
+ bh=LENG8yRUDJ2eVDDiT8rg4/91BvisxWe9lf7dFLhlMyo=;
+ b=AOyJJ6yU7nw09M4dPburnQsLQoG/HX4S5UfiFfM+a0FRYaFJo3tkCCXbYwa3malQTs2WlQHxCqHwjIk3m4V5rw+AAyj4NSGXHTja+KdgtKke8YW2R+yNbsB2Mf/Zkbr32v/kczcTc8l4QIMLYsvxGZydfuPyGuIng9qDIgDZvjOp6Aop/YGoLif6k75eZYMyvomTKxe3DzQo+gDNJUugLncN2KiG/fz/qU7QBbOWVs2wtwBh1gyMQ1GFVqKcxOILPpSu7TexdQtXWF37733PIbRIEbxOXGxqjLeVBht9utSWqFjA6Nzl+WQjhu4JDwFUfZ7xFL7Prcal3SxAr/lhbA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O/kahapFlp8K+3dWMtIuVdgPzOOLqJ2YiHWrdTONz/I=;
- b=dkb56rb9tjxr4R5ZSTSFDYyJySdDdomfzI6daP7ulzppTDNmlbJSvqPRi2zY76bISPiVUPnccsjl8BJuBZHy/Cv1mICtefJSJKXv8+2P1t/MkFFU6lIeYBjzv4aK/helKDygFSJKlm84hfGhAQxyxsJd2VEvG3nuaYL493eBRy4=
-Received: from PH8PR07CA0045.namprd07.prod.outlook.com (2603:10b6:510:2cf::14)
- by DM6PR12MB4388.namprd12.prod.outlook.com (2603:10b6:5:2a9::10) with
+ bh=LENG8yRUDJ2eVDDiT8rg4/91BvisxWe9lf7dFLhlMyo=;
+ b=rVVLyKnErCee9LbfXd8AYLPZzamwMLBubMuiWqUZtPtMhQJ9AK/iv+iYrl4RwsNmAS2qi0ptR1fvTRJViyD/Dv+KBecx/MiXljsGjUGw8gaOfBvVXV6g5esj5ZflCXNY+uFdMeBtxMj5/7vPQtJ8/y2U/qSE01bo5bRdhkRhE5I=
+Received: from PH8PR07CA0026.namprd07.prod.outlook.com (2603:10b6:510:2cf::21)
+ by BL1PR12MB5778.namprd12.prod.outlook.com (2603:10b6:208:391::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
- 2025 13:32:06 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Fri, 11 Apr
+ 2025 13:32:09 +0000
 Received: from MWH0EPF000A672F.namprd04.prod.outlook.com
- (2603:10b6:510:2cf:cafe::ca) by PH8PR07CA0045.outlook.office365.com
- (2603:10b6:510:2cf::14) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:510:2cf:cafe::94) by PH8PR07CA0026.outlook.office365.com
+ (2603:10b6:510:2cf::21) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Fri,
- 11 Apr 2025 13:32:05 +0000
+ 11 Apr 2025 13:32:09 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,20 +50,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  MWH0EPF000A672F.mail.protection.outlook.com (10.167.249.21) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Fri, 11 Apr 2025 13:32:05 +0000
+ 15.20.8655.12 via Frontend Transport; Fri, 11 Apr 2025 13:32:09 +0000
 Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Apr
- 2025 08:32:00 -0500
+ 2025 08:32:04 -0500
 From: Akshay Gupta <akshay.gupta@amd.com>
 To: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <linux@roeck-us.net>, <gregkh@linuxfoundation.org>, <arnd@arndb.de>,
 	<shyam-sundar.s-k@amd.com>, <gautham.shenoy@amd.com>,
 	<mario.limonciello@amd.com>, <naveenkrishna.chatradhi@amd.com>,
 	<anand.umarji@amd.com>, Akshay Gupta <akshay.gupta@amd.com>
-Subject: [PATCH v8 06/10] misc: amd-sbi: Add support for AMD_SBI IOCTL
-Date: Fri, 11 Apr 2025 13:31:18 +0000
-Message-ID: <20250411133122.1806991-7-akshay.gupta@amd.com>
+Subject: [PATCH v8 07/10] misc: amd-sbi: Add support for CPUID protocol
+Date: Fri, 11 Apr 2025 13:31:19 +0000
+Message-ID: <20250411133122.1806991-8-akshay.gupta@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250411133122.1806991-1-akshay.gupta@amd.com>
 References: <20250411133122.1806991-1-akshay.gupta@amd.com>
@@ -79,76 +79,58 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000A672F:EE_|DM6PR12MB4388:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ac4779d-b33f-4419-4a51-08dd78fd4015
+X-MS-TrafficTypeDiagnostic: MWH0EPF000A672F:EE_|BL1PR12MB5778:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b7d4d7b-99aa-4aeb-0883-08dd78fd427a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kiFrkG8lnqHVQlNpsQ6P22tBZsLTrKoPhdliDrJc4rZjtqVwRGu5vk1cQ2hb?=
- =?us-ascii?Q?jf+T1CxC2S7vHyy/FHwHSDNwegqDZO6Cz54BSJqI425DVjGqjog5fExPCwqi?=
- =?us-ascii?Q?SzZxOtgoMK1BdTuuyXkoBBsExCpX/qqgzHleFv3+r6oVIjtmV7S3llXzDAB3?=
- =?us-ascii?Q?RTm4XGbZl7pyzo9bbytKWXrPmXhHeJmWyfmlKw1+06eB7/PfoIw0K4PJTLKb?=
- =?us-ascii?Q?TC1fYv9E4dh/kxLrMThV0Up9i+A81WGtFREL8t7wDFZiCcVLe13MIxx+HqFD?=
- =?us-ascii?Q?xth4TcZpbVZQSG37eoG2iPYAXlN4jl+U7U8K+rllQYzTIZgWRE+zI/dF5z/b?=
- =?us-ascii?Q?yLS18iaz9Afpq6T+uUmCAx3UMKqc0qR2ZkdRYad6J+nrn8JsD8Y8/e+CbC3K?=
- =?us-ascii?Q?dE4w1nbmuX0p1gpneXaCyVBTzJYI0SVovtg6NFqQB8CtI3p3Vc6Vh6uZQ75m?=
- =?us-ascii?Q?0/dQHlBBSs2T1eBZVQ6VgnQJRBqUScRz8ZXx85dIuvO7liZkk3rwzg9GotDB?=
- =?us-ascii?Q?9esJIcxpQ8rgRR6eMWIv3U9AnP6bbNCXxZeAEFmFn0dqn8YjO4DlPGU5ciJB?=
- =?us-ascii?Q?4JDwoNfR0cFM/NLsfoBeYSbkKf0icAhpSTyaANgB3EB5rqrBX4TyToBGCfEx?=
- =?us-ascii?Q?LcK163hzVjaaFvcM1hhmbzMLYSG02TQAQNZco2M5oX9PetGyjGGtakGASRot?=
- =?us-ascii?Q?SVgfwGjRAiG1s992J8FdJfgGL0+4m37exoUSjGGZA8f6JMYw7MwDf5n26SXZ?=
- =?us-ascii?Q?zkZOKZxbG8nFKiboc8ZKhvR/k7DYw/9Jp+XCXq3fXF550V4zlMYiI1vHRWCu?=
- =?us-ascii?Q?HvtMZ4sKhpxbgB4fCDc7WzAuvfF/QqhodrYNFHGBO/JGGc5trDSiXoBG28Dl?=
- =?us-ascii?Q?IaKR5xNFtxFbqHsiZtd5bQ7po1fpkEWEBwomLBrZuoxrZQscorG8yV9FsJip?=
- =?us-ascii?Q?631CPK3UcKo7lnHYaBciNSu2H171lV2j8ESG3OE6TatC0PW6J4iY7tlVsROT?=
- =?us-ascii?Q?OKHrAULSOQBob2M6Rke0vtcBe8hlHp/xLuJZRg19niY7SuootI4H/l6eqUz/?=
- =?us-ascii?Q?b1G4INUc42jQanMoYKJD77BeY8wg9M1dxHL2bt7jqtx/VVUj17vpY9rI4b2c?=
- =?us-ascii?Q?yJW2nQqAjyqblwlAPf93d/RiFEIzCPK5UTI2S3mQ3/KI8s4K11K+oGEG9VZU?=
- =?us-ascii?Q?MiVLVYFFZajhxoFb2Hpbk315s7nOCsLCS1h39otQ4X4R+VLYN3lSgbbDs09Y?=
- =?us-ascii?Q?9ye52SqFL5TsMmbDaelKiVtxoonBOmo6exCoXDwjfcQd7PsHCyRLo8Pr5Thq?=
- =?us-ascii?Q?qXJ6gHGye1uN75bI+cXp9yKIBf7Cspjhl2hh5VksRLgSy0SQNr/ffglGQYyp?=
- =?us-ascii?Q?37jLd61OtZWL+rYbIcNaM67SBcUC2Dqjj/Tf35812vj/5oVNyhz4dSQc3/+V?=
- =?us-ascii?Q?KVY/S/52sZ4Z65AaN47zFQ2YDtCYNY54gSRA17F+8wf7rbGIaoYpgTYKrZRu?=
- =?us-ascii?Q?4WfYEOVj7Rij7qCAKULk5UWNgzmft54+pdhR?=
+	=?us-ascii?Q?ymDqY2sAdAh3M9qOHiKOvw2bSTDmVqtKIIq4cbkMPZizDOaqFuKnTFxHzo1N?=
+ =?us-ascii?Q?iqy5Os0OXbYs8X/43UkgYPkM6cMImyQmqP3xmE17grgQoL2syCbHSPr3mpPM?=
+ =?us-ascii?Q?4cWNLneZb0oukjKK/b2SSzVIDKuC7DFV2YKP3s4OHiRR2T1Su5z+aHJDXB/W?=
+ =?us-ascii?Q?sA4ApJbIA1xOnL6oUBG+h4qt6YWilMVx+QShIiAjLw/yMeAstZyJuGgA7w/z?=
+ =?us-ascii?Q?P1euWFtQa5iPY0jGCMti/77iJMX+1c+LXlQkj74kbCeogdAvntokJhJ5TfoO?=
+ =?us-ascii?Q?iXWuvABqXYTXG2+GRBGr9yxjrLfVC6VrB/qedvcwio065S4qqe7dqdi6FPn3?=
+ =?us-ascii?Q?5XLKvTTPchASE3It8464QyYayA6VcytGugnacahadyaI6hLEi12xd1x19glZ?=
+ =?us-ascii?Q?SYhYiYz1iKA7+6ootzXoKcCPqP2Ca6nTbakHfd9fLRuo3Ii4ADkYDC9CiMQa?=
+ =?us-ascii?Q?r4Bk6gVBSnKq6peVodhaIm6621BacWnRp24S1CJxc4SjlTannV4CAImGQT8S?=
+ =?us-ascii?Q?R61HGB27P3jCpEqca6xE6w16sUhI/VcwK9zffDZi7sl37OE8vGxyZiy8nNcW?=
+ =?us-ascii?Q?v3LwFG2WJH4DoxhmqJ/ZvaXA3Jc46V1ID66Z3yCsws2I7TsfEdDWpjT1nT4R?=
+ =?us-ascii?Q?MQgiCLg307l2cmD9U7ID5qdUlYFmD0vLcE5n4c9NboJbSft+MNVky9CGq9Ot?=
+ =?us-ascii?Q?+D5T/yXqq3UPH3aHt6sGoAUoAvgRswbFhGurBeNbMdAKtQpFT6IPFgHQfSA7?=
+ =?us-ascii?Q?nb7lVmboVGa/MyR1pE28FdY/wSCQ2++gaKuOa5qSoID211tiG8Foguzcf5vQ?=
+ =?us-ascii?Q?6yGAd9i5IDSJD6t733J4jboDECFjBYm4HVjm3Ny4OCt9nFQ5dYrcoz7jGOfp?=
+ =?us-ascii?Q?ZW/1n276YRCiGGZ1tripaqB5VxRP3JdDY+3t5TGnGOZ/Xa25Zia9oewDnBx2?=
+ =?us-ascii?Q?w0Sln4fNTJDvBJiUj29Z2eDAc7gMCXSPD3GTNuvc2R5snWiV7WvmZGG7reTA?=
+ =?us-ascii?Q?hdIsti92dkkm9Dw6LYge6P2NoYPQiRuTiPzNpRl2ngxUA/vctzQlWs1K1gnS?=
+ =?us-ascii?Q?D1AxghMWa0nyyJWlqYR/r9T6e9z8TNn88TDBs/JaIpsFK53HKxhqTK5PrwdI?=
+ =?us-ascii?Q?8hn36CYOix4ORgy2DYgeKz+GXdUGzf+bkbnbUXUSMtVGR9b9ty5FQX5luLdA?=
+ =?us-ascii?Q?h9Xatfs6j77wCA3xuo8w0ToJmS0Z+8SSYQuQ6ckHJjafwp18frO5RsKNzIAX?=
+ =?us-ascii?Q?+g90zpRCsUeVFaDReCYvESt4A5Y0trv8AAuLj/cuJrTKz5OWknh55ysTWq0x?=
+ =?us-ascii?Q?kHNMofZGqkvQ2KNTkgprvDvxISFviycmO0x3YXb1ocKxk6GR/qsvaJyIVu09?=
+ =?us-ascii?Q?1XEHs9FoJsCSByCO3os/wfKvujMWktT99Jy/BTvy3WBrTPAXKS3YhHYpDQAB?=
+ =?us-ascii?Q?loWKjndW+9XuV3ulFt+TN5uaVhxybhV0apmsltDFTCP1mQ3B/kOtAsOm7alj?=
+ =?us-ascii?Q?hxcTYqwy7nTlb8pQAR3DB3cqiOOr2+9ihhaZ?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 13:32:05.2112
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 13:32:09.2268
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac4779d-b33f-4419-4a51-08dd78fd4015
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b7d4d7b-99aa-4aeb-0883-08dd78fd427a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	MWH0EPF000A672F.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4388
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5778
 
-The present sbrmi module only support reporting power via hwmon.
-However, AMD data center range of processors support various
-system management functionality using custom protocols defined in
-Advanced Platform Management Link (APML) specification.
-
-Register a miscdevice, which creates a device /dev/sbrmiX with an IOCTL
-interface for the user space to invoke the APML Mailbox protocol, which
-is already defined in sbrmi_mailbox_xfer().
-
-The APML protocols depend on a set of RMI registers. Having an IOCTL
-as a single entry point will help in providing synchronization among
-these protocols as multiple transactions on RMI register set may
-create race condition.
-Support for other protocols will be added in subsequent patches.
-
-APML mailbox protocol returns additional error codes written by
-SMU firmware in the out-bound register 0x37. These errors include,
-invalid core, message not supported over platform and
-others. This additional error codes can be used to provide more
-details to user space.
-
-Open-sourced and widely used https://github.com/amd/esmi_oob_library
-will continue to provide user-space programmable API.
+- AMD provides custom protocol to read Processor feature
+  capabilities and configuration information through side band.
+  The information is accessed by providing CPUID Function,
+  extended function and thread ID to the protocol.
+  Undefined function returns 0.
 
 Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
@@ -159,447 +141,315 @@ Changes since v7:
     ioctl for each protocol
 
 Changes since v6:
-- Address Arnd comments
- - Squash patch 7 in this patch
- - Remove check on "cmd" size as it's implied
- - Update check on input structure, msg.cmd to max value of 0xFF
+- Address Arnd comment
+  - Add padding to the uapi structure
+- Rebased patch, previously patch 8
 
 Changes since v5:
-- Address review comment
- - Address Arnd comments
- - Add check for cmd in ioctl
- - Remove attribute packed from uapi header file structure apml_message{}
-- Address kernel test robot warn:
- - warn: can 'data' even be NULL?
+- Patch rebased
 
 Changes since v4:
-- Address review comment
- - Address Greg review comments
- - Not initialize ret
- - return on error
-- Previously patch 4
-- Fix documentation warning
+- Previously patch 6
+- Address review comments
 
 Changes since v3:
-- Previously patch 3
-- Documentation and comments changes
+- Address review comments:
+  - update the #define to inline function
+  - pack the union inside the structure
 
 Changes since v2:
 - update the MACROS name as per feedback
 
 Changes since v1:
-- Previously patch 5
-- Add IOCTL description in ioctl-number.rst
-- Split patch as per suggestion.
+- bifurcated from previous patch 5
 
- Documentation/misc-devices/index.rst          |  1 +
- .../userspace-api/ioctl/ioctl-number.rst      |  2 +
- drivers/misc/amd-sbi/rmi-core.c               | 92 ++++++++++++++++---
- drivers/misc/amd-sbi/rmi-core.h               | 15 ++-
- drivers/misc/amd-sbi/rmi-hwmon.c              | 13 ++-
- drivers/misc/amd-sbi/rmi-i2c.c                | 25 ++++-
- include/uapi/misc/amd-apml.h                  | 51 ++++++++++
- 7 files changed, 167 insertions(+), 32 deletions(-)
- create mode 100644 include/uapi/misc/amd-apml.h
 
-diff --git a/Documentation/misc-devices/index.rst b/Documentation/misc-devices/index.rst
-index 8c5b226d8313..081e79415e38 100644
---- a/Documentation/misc-devices/index.rst
-+++ b/Documentation/misc-devices/index.rst
-@@ -12,6 +12,7 @@ fit into other categories.
-    :maxdepth: 2
- 
-    ad525x_dpot
-+   amd-sbi
-    apds990x
-    bh1770glc
-    c2port
-diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-index 7a1409ecc238..3191d96ea4da 100644
---- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-+++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-@@ -397,6 +397,8 @@ Code  Seq#    Include File                                           Comments
-                                                                      <mailto:mathieu.desnoyers@efficios.com>
- 0xF8  all    arch/x86/include/uapi/asm/amd_hsmp.h                    AMD HSMP EPYC system management interface driver
-                                                                      <mailto:nchatrad@amd.com>
-+0xF9  00-0F  uapi/misc/amd-apml.h		                     AMD side band system management interface driver
-+                                                                     <mailto:naveenkrishna.chatradhi@amd.com>
- 0xFD  all    linux/dm-ioctl.h
- 0xFE  all    linux/isst_if.h
- ====  =====  ======================================================= ================================================================
+ drivers/misc/amd-sbi/rmi-core.c | 168 ++++++++++++++++++++++++++++++++
+ drivers/misc/amd-sbi/rmi-core.h |   5 +-
+ include/uapi/misc/amd-apml.h    |  37 +++++++
+ 3 files changed, 209 insertions(+), 1 deletion(-)
+
 diff --git a/drivers/misc/amd-sbi/rmi-core.c b/drivers/misc/amd-sbi/rmi-core.c
-index 1d5e2556ab88..7d13c049c98d 100644
+index 7d13c049c98d..471f50f0c368 100644
 --- a/drivers/misc/amd-sbi/rmi-core.c
 +++ b/drivers/misc/amd-sbi/rmi-core.c
-@@ -7,7 +7,10 @@
-  */
- #include <linux/delay.h>
- #include <linux/err.h>
-+#include <linux/fs.h>
- #include <linux/i2c.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/regmap.h>
- #include "rmi-core.h"
-@@ -20,15 +23,17 @@
+@@ -17,11 +17,160 @@
+ 
+ /* Mask for Status Register bit[1] */
+ #define SW_ALERT_MASK	0x2
++/* Mask to check H/W Alert status bit */
++#define HW_ALERT_MASK	0x80
+ 
+ /* Software Interrupt for triggering */
+ #define START_CMD	0x80
  #define TRIGGER_MAILBOX	0x01
  
- int rmi_mailbox_xfer(struct sbrmi_data *data,
--		     struct sbrmi_mailbox_msg *msg)
-+		     struct apml_mbox_msg *msg)
- {
--	unsigned int bytes;
-+	unsigned int bytes, ec;
- 	int i, ret;
- 	int sw_status;
- 	u8 byte;
- 
- 	mutex_lock(&data->lock);
- 
-+	msg->fw_ret_code = 0;
++/* Default message lengths as per APML command protocol */
++/* CPUID */
++#define CPUID_RD_DATA_LEN	0x8
++#define CPUID_WR_DATA_LEN	0x8
++#define CPUID_RD_REG_LEN	0xa
++#define CPUID_WR_REG_LEN	0x9
 +
- 	/* Indicate firmware a command is to be serviced */
- 	ret = regmap_write(data->regmap, SBRMI_INBNDMSG7, START_CMD);
- 	if (ret < 0)
-@@ -44,8 +49,8 @@ int rmi_mailbox_xfer(struct sbrmi_data *data,
- 	 * Command Data In[31:0] to SBRMI::InBndMsg_inst[4:1]
- 	 * SBRMI_x3C(MSB):SBRMI_x39(LSB)
- 	 */
--	for (i = 0; i < 4; i++) {
--		byte = (msg->data_in >> i * 8) & 0xff;
-+	for (i = 0; i < AMD_SBI_MB_DATA_SIZE; i++) {
-+		byte = (msg->mb_in_out >> i * 8) & 0xff;
- 		ret = regmap_write(data->regmap, SBRMI_INBNDMSG1 + i, byte);
- 		if (ret < 0)
- 			goto exit_unlock;
-@@ -69,29 +74,90 @@ int rmi_mailbox_xfer(struct sbrmi_data *data,
- 	if (ret)
- 		goto exit_unlock;
- 
-+	ret = regmap_read(data->regmap, SBRMI_OUTBNDMSG7, &ec);
-+	if (ret || ec)
-+		goto exit_clear_alert;
- 	/*
- 	 * For a read operation, the initiator (BMC) reads the firmware
- 	 * response Command Data Out[31:0] from SBRMI::OutBndMsg_inst[4:1]
- 	 * {SBRMI_x34(MSB):SBRMI_x31(LSB)}.
- 	 */
--	if (msg->read) {
--		for (i = 0; i < 4; i++) {
--			ret = regmap_read(data->regmap,
--					  SBRMI_OUTBNDMSG1 + i, &bytes);
--			if (ret < 0)
--				goto exit_unlock;
--			msg->data_out |= bytes << i * 8;
--		}
-+	for (i = 0; i < AMD_SBI_MB_DATA_SIZE; i++) {
-+		ret = regmap_read(data->regmap,
-+				  SBRMI_OUTBNDMSG1 + i, &bytes);
-+		if (ret < 0)
-+			break;
-+		msg->mb_in_out |= bytes << i * 8;
- 	}
- 
-+exit_clear_alert:
- 	/*
- 	 * BMC must write 1'b1 to SBRMI::Status[SwAlertSts] to clear the
- 	 * ALERT to initiator
- 	 */
- 	ret = regmap_write(data->regmap, SBRMI_STATUS,
- 			   sw_status | SW_ALERT_MASK);
--
-+	if (ec) {
-+		ret = -EPROTOTYPE;
-+		msg->fw_ret_code = ec;
-+	}
- exit_unlock:
- 	mutex_unlock(&data->lock);
- 	return ret;
- }
++/* CPUID MSR Command Ids */
++#define CPUID_MCA_CMD	0x73
++#define RD_CPUID_CMD	0x91
 +
-+static int apml_mailbox_xfer(struct sbrmi_data *data, struct apml_mbox_msg __user *arg)
++/* CPUID MCAMSR mask & index */
++#define CPUID_MCA_THRD_MASK	GENMASK(15, 0)
++#define CPUID_MCA_THRD_INDEX	32
++#define CPUID_MCA_FUNC_MASK	GENMASK(31, 0)
++#define CPUID_EXT_FUNC_INDEX	56
++
++/* input for bulk write to CPUID protocol */
++struct cpu_msr_indata {
++	u8 wr_len;	/* const value */
++	u8 rd_len;	/* const value */
++	u8 proto_cmd;	/* const value */
++	u8 thread;	/* thread number */
++	union {
++		u8 reg_offset[4];	/* input value */
++		u32 value;
++	} __packed;
++	u8 ext; /* extended function */
++};
++
++/* output for bulk read from CPUID protocol */
++struct cpu_msr_outdata {
++	u8 num_bytes;	/* number of bytes return */
++	u8 status;	/* Protocol status code */
++	union {
++		u64 value;
++		u8 reg_data[8];
++	} __packed;
++};
++
++static inline void prepare_cpuid_input_message(struct cpu_msr_indata *input,
++					       u8 thread_id, u32 func,
++					       u8 ext_func)
 +{
-+	struct apml_mbox_msg msg = { 0 };
++	input->rd_len		= CPUID_RD_DATA_LEN;
++	input->wr_len		= CPUID_WR_DATA_LEN;
++	input->proto_cmd	= RD_CPUID_CMD;
++	input->thread		= thread_id << 1;
++	input->value		= func;
++	input->ext		= ext_func;
++}
++
++static int sbrmi_get_rev(struct sbrmi_data *data)
++{
++	unsigned int rev;
++	u16 offset = SBRMI_REV;
++	int ret;
++
++	ret = regmap_read(data->regmap, offset, &rev);
++	if (ret < 0)
++		return ret;
++
++	data->rev = rev;
++	return 0;
++}
++
++/* Read CPUID function protocol */
++static int rmi_cpuid_read(struct sbrmi_data *data,
++			  struct apml_cpuid_msg *msg)
++{
++	struct cpu_msr_indata input = {0};
++	struct cpu_msr_outdata output = {0};
++	int val = 0;
++	int ret, hw_status;
++	u16 thread;
++
++	mutex_lock(&data->lock);
++	/* cache the rev value to identify if protocol is supported or not */
++	if (!data->rev) {
++		ret = sbrmi_get_rev(data);
++		if (ret < 0)
++			goto exit_unlock;
++	}
++	/* CPUID protocol for REV 0x10 is not supported*/
++	if (data->rev == 0x10) {
++		ret = -EOPNOTSUPP;
++		goto exit_unlock;
++	}
++
++	thread = msg->cpu_in_out << CPUID_MCA_THRD_INDEX & CPUID_MCA_THRD_MASK;
++
++	/* Thread > 127, Thread128 CS register, 1'b1 needs to be set to 1 */
++	if (thread > 127) {
++		thread -= 128;
++		val = 1;
++	}
++	ret = regmap_write(data->regmap, SBRMI_THREAD128CS, val);
++	if (ret < 0)
++		goto exit_unlock;
++
++	prepare_cpuid_input_message(&input, thread,
++				    msg->cpu_in_out & CPUID_MCA_FUNC_MASK,
++				    msg->cpu_in_out >> CPUID_EXT_FUNC_INDEX);
++
++	ret = regmap_bulk_write(data->regmap, CPUID_MCA_CMD,
++				&input, CPUID_WR_REG_LEN);
++	if (ret < 0)
++		goto exit_unlock;
++
++	/*
++	 * For RMI Rev 0x20, new h/w status bit is introduced. which is used
++	 * by firmware to indicate completion of commands (0x71, 0x72, 0x73).
++	 * wait for the status bit to be set by the hardware before
++	 * reading the data out.
++	 */
++	ret = regmap_read_poll_timeout(data->regmap, SBRMI_STATUS, hw_status,
++				       hw_status & HW_ALERT_MASK, 500, 2000000);
++	if (ret)
++		goto exit_unlock;
++
++	ret = regmap_bulk_read(data->regmap, CPUID_MCA_CMD,
++			       &output, CPUID_RD_REG_LEN);
++	if (ret < 0)
++		goto exit_unlock;
++
++	ret = regmap_write(data->regmap, SBRMI_STATUS,
++			   HW_ALERT_MASK);
++	if (ret < 0)
++		goto exit_unlock;
++
++	if (output.num_bytes != CPUID_RD_REG_LEN - 1) {
++		ret = -EMSGSIZE;
++		goto exit_unlock;
++	}
++	if (output.status) {
++		ret = -EPROTOTYPE;
++		msg->fw_ret_code = output.status;
++		goto exit_unlock;
++	}
++	msg->cpu_in_out = output.value;
++exit_unlock:
++	if (ret < 0)
++		msg->cpu_in_out = 0;
++	mutex_unlock(&data->lock);
++	return ret;
++}
++
+ int rmi_mailbox_xfer(struct sbrmi_data *data,
+ 		     struct apml_mbox_msg *msg)
+ {
+@@ -123,6 +272,23 @@ static int apml_mailbox_xfer(struct sbrmi_data *data, struct apml_mbox_msg __use
+ 	return copy_to_user(arg, &msg, sizeof(struct apml_mbox_msg));
+ }
+ 
++static int apml_cpuid_xfer(struct sbrmi_data *data, struct apml_cpuid_msg __user *arg)
++{
++	struct apml_cpuid_msg msg = { 0 };
 +	int ret;
 +
 +	/* Copy the structure from user */
-+	if (copy_from_user(&msg, arg, sizeof(struct apml_mbox_msg)))
++	if (copy_from_user(&msg, arg, sizeof(struct apml_cpuid_msg)))
 +		return -EFAULT;
 +
-+	/* Mailbox protocol */
-+	ret = rmi_mailbox_xfer(data, &msg);
++	/* CPUID Protocol */
++	ret = rmi_cpuid_read(data, &msg);
 +	if (ret && ret != -EPROTOTYPE)
 +		return ret;
 +
-+	return copy_to_user(arg, &msg, sizeof(struct apml_mbox_msg));
++	return copy_to_user(arg, &msg, sizeof(struct apml_cpuid_msg));
 +}
 +
-+static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
-+{
-+	void __user *argp = (void __user *)arg;
-+	struct sbrmi_data *data;
-+
-+	data = container_of(fp->private_data, struct sbrmi_data, sbrmi_misc_dev);
-+	switch (cmd) {
-+	case SBRMI_IOCTL_MBOX_CMD:
-+		return apml_mailbox_xfer(data, argp);
-+	default:
-+		return -ENOTTY;
-+	}
-+}
-+
-+static const struct file_operations sbrmi_fops = {
-+	.owner		= THIS_MODULE,
-+	.unlocked_ioctl	= sbrmi_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
-+};
-+
-+int create_misc_rmi_device(struct sbrmi_data *data,
-+			   struct device *dev)
-+{
-+	data->sbrmi_misc_dev.name	= devm_kasprintf(dev,
-+							 GFP_KERNEL,
-+							 "sbrmi-%x",
-+							 data->dev_static_addr);
-+	data->sbrmi_misc_dev.minor	= MISC_DYNAMIC_MINOR;
-+	data->sbrmi_misc_dev.fops	= &sbrmi_fops;
-+	data->sbrmi_misc_dev.parent	= dev;
-+	data->sbrmi_misc_dev.nodename	= devm_kasprintf(dev,
-+							 GFP_KERNEL,
-+							 "sbrmi-%x",
-+							 data->dev_static_addr);
-+	data->sbrmi_misc_dev.mode	= 0600;
-+
-+	return misc_register(&data->sbrmi_misc_dev);
-+}
+ static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
+ {
+ 	void __user *argp = (void __user *)arg;
+@@ -132,6 +298,8 @@ static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
+ 	switch (cmd) {
+ 	case SBRMI_IOCTL_MBOX_CMD:
+ 		return apml_mailbox_xfer(data, argp);
++	case SBRMI_IOCTL_CPUID_CMD:
++		return apml_cpuid_xfer(data, argp);
+ 	default:
+ 		return -ENOTTY;
+ 	}
 diff --git a/drivers/misc/amd-sbi/rmi-core.h b/drivers/misc/amd-sbi/rmi-core.h
-index 3a6028306d10..8ab31c6852d1 100644
+index 8ab31c6852d1..975ae858e9fd 100644
 --- a/drivers/misc/amd-sbi/rmi-core.h
 +++ b/drivers/misc/amd-sbi/rmi-core.h
-@@ -6,10 +6,12 @@
- #ifndef _SBRMI_CORE_H_
- #define _SBRMI_CORE_H_
- 
-+#include <linux/miscdevice.h>
- #include <linux/mutex.h>
- #include <linux/i2c.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-+#include <uapi/misc/amd-apml.h>
+@@ -15,7 +15,8 @@
  
  /* SB-RMI registers */
  enum sbrmi_reg {
-@@ -48,19 +50,15 @@ enum sbrmi_msg_id {
+-	SBRMI_CTRL		= 0x01,
++	SBRMI_REV,
++	SBRMI_CTRL,
+ 	SBRMI_STATUS,
+ 	SBRMI_OUTBNDMSG0	= 0x30,
+ 	SBRMI_OUTBNDMSG1,
+@@ -34,6 +35,7 @@ enum sbrmi_reg {
+ 	SBRMI_INBNDMSG6,
+ 	SBRMI_INBNDMSG7,
+ 	SBRMI_SW_INTERRUPT,
++	SBRMI_THREAD128CS	= 0x4b,
+ };
  
- /* Each client has this additional data */
- struct sbrmi_data {
-+	struct miscdevice sbrmi_misc_dev;
- 	struct regmap *regmap;
-+	/* Mutex locking */
+ /*
+@@ -56,6 +58,7 @@ struct sbrmi_data {
  	struct mutex lock;
  	u32 pwr_limit_max;
-+	u8 dev_static_addr;
+ 	u8 dev_static_addr;
++	u8 rev;
  };
  
--struct sbrmi_mailbox_msg {
--	u8 cmd;
--	bool read;
--	u32 data_in;
--	u32 data_out;
--};
--
--int rmi_mailbox_xfer(struct sbrmi_data *data, struct sbrmi_mailbox_msg *msg);
-+int rmi_mailbox_xfer(struct sbrmi_data *data, struct apml_mbox_msg *msg);
- #ifdef CONFIG_AMD_SBRMI_HWMON
- int create_hwmon_sensor_device(struct device *dev, struct sbrmi_data *data);
- #else
-@@ -69,4 +67,5 @@ static inline int create_hwmon_sensor_device(struct device *dev, struct sbrmi_da
- 	return 0;
- }
- #endif
-+int create_misc_rmi_device(struct sbrmi_data *data, struct device *dev);
- #endif /*_SBRMI_CORE_H_*/
-diff --git a/drivers/misc/amd-sbi/rmi-hwmon.c b/drivers/misc/amd-sbi/rmi-hwmon.c
-index 720e800db1f0..f4f015605daa 100644
---- a/drivers/misc/amd-sbi/rmi-hwmon.c
-+++ b/drivers/misc/amd-sbi/rmi-hwmon.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/err.h>
- #include <linux/hwmon.h>
-+#include <uapi/misc/amd-apml.h>
- #include "rmi-core.h"
- 
- /* Do not allow setting negative power limit */
-@@ -15,7 +16,7 @@ static int sbrmi_read(struct device *dev, enum hwmon_sensor_types type,
- 		      u32 attr, int channel, long *val)
- {
- 	struct sbrmi_data *data = dev_get_drvdata(dev);
--	struct sbrmi_mailbox_msg msg = { 0 };
-+	struct apml_mbox_msg msg = { 0 };
- 	int ret;
- 
- 	if (!data)
-@@ -24,7 +25,6 @@ static int sbrmi_read(struct device *dev, enum hwmon_sensor_types type,
- 	if (type != hwmon_power)
- 		return -EINVAL;
- 
--	msg.read = true;
- 	switch (attr) {
- 	case hwmon_power_input:
- 		msg.cmd = SBRMI_READ_PKG_PWR_CONSUMPTION;
-@@ -35,7 +35,7 @@ static int sbrmi_read(struct device *dev, enum hwmon_sensor_types type,
- 		ret = rmi_mailbox_xfer(data, &msg);
- 		break;
- 	case hwmon_power_cap_max:
--		msg.data_out = data->pwr_limit_max;
-+		msg.mb_in_out = data->pwr_limit_max;
- 		ret = 0;
- 		break;
- 	default:
-@@ -44,7 +44,7 @@ static int sbrmi_read(struct device *dev, enum hwmon_sensor_types type,
- 	if (ret < 0)
- 		return ret;
- 	/* hwmon power attributes are in microWatt */
--	*val = (long)msg.data_out * 1000;
-+	*val = (long)msg.mb_in_out * 1000;
- 	return ret;
- }
- 
-@@ -52,7 +52,7 @@ static int sbrmi_write(struct device *dev, enum hwmon_sensor_types type,
- 		       u32 attr, int channel, long val)
- {
- 	struct sbrmi_data *data = dev_get_drvdata(dev);
--	struct sbrmi_mailbox_msg msg = { 0 };
-+	struct apml_mbox_msg msg = { 0 };
- 
- 	if (!data)
- 		return -ENODEV;
-@@ -68,8 +68,7 @@ static int sbrmi_write(struct device *dev, enum hwmon_sensor_types type,
- 	val = clamp_val(val, SBRMI_PWR_MIN, data->pwr_limit_max);
- 
- 	msg.cmd = SBRMI_WRITE_PKG_PWR_LIMIT;
--	msg.data_in = val;
--	msg.read = false;
-+	msg.mb_in_out = val;
- 
- 	return rmi_mailbox_xfer(data, &msg);
- }
-diff --git a/drivers/misc/amd-sbi/rmi-i2c.c b/drivers/misc/amd-sbi/rmi-i2c.c
-index 7a9801273a4c..f891f5af4bc6 100644
---- a/drivers/misc/amd-sbi/rmi-i2c.c
-+++ b/drivers/misc/amd-sbi/rmi-i2c.c
-@@ -38,15 +38,14 @@ static int sbrmi_enable_alert(struct sbrmi_data *data)
- 
- static int sbrmi_get_max_pwr_limit(struct sbrmi_data *data)
- {
--	struct sbrmi_mailbox_msg msg = { 0 };
-+	struct apml_mbox_msg msg = { 0 };
- 	int ret;
- 
- 	msg.cmd = SBRMI_READ_PKG_MAX_PWR_LIMIT;
--	msg.read = true;
- 	ret = rmi_mailbox_xfer(data, &msg);
- 	if (ret < 0)
- 		return ret;
--	data->pwr_limit_max = msg.data_out;
-+	data->pwr_limit_max = msg.mb_in_out;
- 
- 	return ret;
- }
-@@ -81,8 +80,25 @@ static int sbrmi_i2c_probe(struct i2c_client *client)
- 	if (ret < 0)
- 		return ret;
- 
-+	data->dev_static_addr = client->addr;
- 	dev_set_drvdata(dev, data);
--	return create_hwmon_sensor_device(dev, data);
-+
-+	ret = create_hwmon_sensor_device(dev, data);
-+	if (ret < 0)
-+		return ret;
-+	return create_misc_rmi_device(data, dev);
-+}
-+
-+static void sbrmi_i2c_remove(struct i2c_client *client)
-+{
-+	struct sbrmi_data *data = dev_get_drvdata(&client->dev);
-+
-+	misc_deregister(&data->sbrmi_misc_dev);
-+	/* Assign fops and parent of misc dev to NULL */
-+	data->sbrmi_misc_dev.fops = NULL;
-+	data->sbrmi_misc_dev.parent = NULL;
-+	dev_info(&client->dev, "Removed sbrmi-i2c driver\n");
-+	return;
- }
- 
- static const struct i2c_device_id sbrmi_id[] = {
-@@ -105,6 +121,7 @@ static struct i2c_driver sbrmi_driver = {
- 		.of_match_table = of_match_ptr(sbrmi_of_match),
- 	},
- 	.probe = sbrmi_i2c_probe,
-+	.remove = sbrmi_i2c_remove,
- 	.id_table = sbrmi_id,
- };
- 
+ int rmi_mailbox_xfer(struct sbrmi_data *data, struct apml_mbox_msg *msg);
 diff --git a/include/uapi/misc/amd-apml.h b/include/uapi/misc/amd-apml.h
-new file mode 100644
-index 000000000000..a5f086f84b06
---- /dev/null
+index a5f086f84b06..bb57dc75758a 100644
+--- a/include/uapi/misc/amd-apml.h
 +++ b/include/uapi/misc/amd-apml.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (C) 2021-2024 Advanced Micro Devices, Inc.
-+ */
-+#ifndef _AMD_APML_H_
-+#define _AMD_APML_H_
-+
-+#include <linux/types.h>
-+
-+/* Mailbox data size for data_in and data_out */
-+#define AMD_SBI_MB_DATA_SIZE		4
-+
-+struct apml_mbox_msg {
+@@ -25,6 +25,24 @@ struct apml_mbox_msg {
+ 	__u32 fw_ret_code;
+ };
+ 
++struct apml_cpuid_msg {
 +	/*
-+	 * Mailbox Message ID
++	 * CPUID input
++	 * [0]...[3] cpuid func,
++	 * [4][5] cpuid: thread
++	 * [6] cpuid: ext function & read eax/ebx or ecx/edx
++	 *	[7:0] -> bits [7:4] -> ext function &
++	 *	bit [0] read eax/ebx or ecx/edx
++	 * CPUID output
 +	 */
-+	__u32 cmd;
++	__u64 cpu_in_out;
 +	/*
-+	 * [0]...[3] mailbox 32bit input/output data
-+	 */
-+	__u32 mb_in_out;
-+	/*
-+	 * Error code is returned in case of soft mailbox error
++	 * Status code for CPUID read
 +	 */
 +	__u32 fw_ret_code;
++	__u32 pad;
 +};
 +
-+/*
-+ * AMD sideband interface base IOCTL
-+ */
-+#define SB_BASE_IOCTL_NR	0xF9
-+
+ /*
+  * AMD sideband interface base IOCTL
+  */
+@@ -48,4 +66,23 @@ struct apml_mbox_msg {
+  */
+ #define SBRMI_IOCTL_MBOX_CMD		_IOWR(SB_BASE_IOCTL_NR, 0, struct apml_mbox_msg)
+ 
 +/**
-+ * DOC: SBRMI_IOCTL_MBOX_CMD
++ * DOC: SBRMI_IOCTL_CPUID_CMD
 + *
 + * @Parameters
 + *
-+ * @struct apml_mbox_msg
-+ *	Pointer to the &struct apml_mbox_msg that will contain the protocol
++ * @struct apml_cpuid_msg
++ *	Pointer to the &struct apml_cpuid_msg that will contain the protocol
 + *	information
 + *
 + * @Description
 + * IOCTL command for APML messages using generic _IOWR
-+ * The IOCTL provides userspace access to AMD sideband mailbox protocol
-+ * - Mailbox message read/write(0x0~0xFF)
++ * The IOCTL provides userspace access to AMD sideband cpuid protocol
++ * - CPUID protocol to get CPU details for Function/Ext Function
++ * at thread level
 + * - returning "-EFAULT" if none of the above
 + * "-EPROTOTYPE" error is returned to provide additional error details
 + */
-+#define SBRMI_IOCTL_MBOX_CMD		_IOWR(SB_BASE_IOCTL_NR, 0, struct apml_mbox_msg)
++#define SBRMI_IOCTL_CPUID_CMD		_IOWR(SB_BASE_IOCTL_NR, 1, struct apml_cpuid_msg)
 +
-+#endif /*_AMD_APML_H_*/
+ #endif /*_AMD_APML_H_*/
 -- 
 2.25.1
 
