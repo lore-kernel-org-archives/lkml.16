@@ -1,41 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5522980DF;
-	Fri, 11 Apr 2025 09:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0B2293478;
+	Fri, 11 Apr 2025 09:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744362101; cv=none; b=ob9K4GK2/0O2wT9LFNS+rAU4Jmal+CEUAnQlqp3A4ybBVVkVmLaxB2DWV4jEd1FbhOKYIS8oEpPSWUv1ub8w1V2US4WZTgHZa/foBf2GryyghB14oZ7icUo3tngezn5OLZ2O/hO7VaGPu4+XDmkyL82A3s2PMPMT0H0eIGjb7Zo=
+	t=1744362110; cv=none; b=EPigVoNhXqMK8xYQL+GIHix3CrnnTyqg3eRkQEwSHmLBFz2QbeMfwDMJKzrb8BFnbbqytL89rEN+YK+F6Vbrm4rbN68W1gfMZzSqwci3raM1xTKuAtWsmpEqWhv5O9b01OzIaJP616NxALPa5dTOIQG3SFuk+CC34NoNcZe3VhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744362101; c=relaxed/simple;
-	bh=C8WRrehvFxOy56Znw0l8VZJoxOKVE0NyfCg5AVvsocg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nRI6grfsKaYvQB249Nqrlogzlfge8EhA+ddMyo9nKWzq8nvxeoWS0iDkfDxoVHHP7LyXqc7dCy59UuePG/GN2Y3Bz4WKSLt2g3WSOyrvrwhbiBHvvs7D76duW7mmPTd87Y9Yr5W5Xcn5o4qri8X5fp5MxMmhwtqaPtpM1Q7BjQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBwIZNop; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744362110; c=relaxed/simple;
+	bh=jGKlKoofOPJIAZx1RxcX4p7LfMYOyHoN+Nx2/9d9seQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=P3a6IEAeRByEk43SLjrk7w3QtDpoXN1FKJat4k9L5c0StuB3XyOUXWUXG3Tim8N6c794kRq1N85vtd7Oc9D3PH0awYw/nUkj/3WyDF91K027CcYM7PacOjYTxNKhiCT+H4wYv/5Pxx/4DfkMPiYN7xof//i+6suR0zS20e9pcXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KdgZ6DD8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FrUc3rHd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBwIZNop"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A24FC4CEE2;
-	Fri, 11 Apr 2025 09:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744362100;
-	bh=C8WRrehvFxOy56Znw0l8VZJoxOKVE0NyfCg5AVvsocg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rBwIZNopcMhGjgjpHTP8g8YGFD+PPKXklhfrp9goyeTwB2B3BYk6m+CZeBWFvkdMV
-	 VZXxC4OzOnymFqhOMykau39d6j2y4fM14Lm7Zf224CC/kaTmeXjlZQt35xMJ1/4w0H
-	 zd6LQ9z7y1KYX8arUxcWyRB/RL7HPlWfwPytnBcjlrPkGMLx+Y01flJmXvAnAPt7Ww
-	 W19LZnxCmOp3IA578Xk69h0OYTnfAMJ1H0jSlt55Rt1nB8Pp/jFzBP8UG/M76dG9Fv
-	 9yK9u9i7rvX3XDkVit4S2y70AvNVxnjr0Rv1npccGGPaUo2WaAJdSOj6cQZFMJbWPq
-	 2LhJBIfYMb17A==
-From: Lee Jones <lee@kernel.org>
-To: Pavel Machek <pavel@kernel.org>, Lee Jones <lee@kernel.org>, 
- Andrew Davis <afd@ti.com>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250407183555.409687-1-afd@ti.com>
-References: <20250407183555.409687-1-afd@ti.com>
-Subject: Re: [PATCH 1/6] leds: lp8860: Use regmap_multi_reg_write for
- EEPROM writes
-Message-Id: <174436209877.2243005.12744981743232234297.b4-ty@kernel.org>
-Date: Fri, 11 Apr 2025 10:01:38 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KdgZ6DD8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FrUc3rHd"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744362106;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wLj0ETsEs/I2mut8MoZZYVz5W4X+4bN5Q7Nlryt1VEQ=;
+	b=KdgZ6DD8bCWkBMBa/MtVkzTx/Qy53mrG7UGCY4MGLQSqpaEJi/CaWe/tw2rYTFcHi7Xe1P
+	OMFtlI3PiuZTiI/l1BK4yvwOVMVxA+ARzh0PsVNbc0elSzwh/waHVk5L/Ry+RbOEbx/lyC
+	ila9497X9Ahh+8dsUJ354gb4V8M89iH5Lzzy2iT3qkUn+ajXu11hT5d814AnRZWDdmJ/uB
+	y08MN2rkQ9HT+X/Yu/bbnuNO3ReMP1MCMgd35m0qDUM8WwkY8LwBqznlsXtGv6ExaRyzKT
+	GuYUl7NiCTnHm1bW/GY6sqQEI8tW1s6o2Ksw02Km4/voA9kMYvDQrIuSocemwQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744362106;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wLj0ETsEs/I2mut8MoZZYVz5W4X+4bN5Q7Nlryt1VEQ=;
+	b=FrUc3rHdPs5SpaBvgWpYgyMphDwQs6SfV6DetCpt5CtfnpaR2efoAQef8Awoy9oBXHDIaB
+	jdNJu7Wr8u74s+BQ==
+Date: Fri, 11 Apr 2025 11:00:26 +0200
+Subject: [PATCH v3 02/32] selftests: harness: Use C89 comment style
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,28 +49,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-510f9
+Message-Id: <20250411-nolibc-kselftest-harness-v3-2-4d9c0295893f@linutronix.de>
+References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
+In-Reply-To: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
+To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Kees Cook <kees@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744362103; l=842;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=jGKlKoofOPJIAZx1RxcX4p7LfMYOyHoN+Nx2/9d9seQ=;
+ b=JA0b04Xx84JihNi3xbQ2Xf/AUiNA1hy1Fb9zwOX/yqj/PNAT3GSJZ20xs5Q8N1LQZYDGRJXgT
+ Z/KjAcI2iugBrMvDPuz6XtavKwa59su6Yk8p1jsgiBQn3me20fD9kek
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Mon, 07 Apr 2025 13:35:50 -0500, Andrew Davis wrote:
-> This helper does the same thing as manual looping, use it instead.
-> 
-> 
+All comments in this file use C89 comment style.
+Except for this one. Change it to get one step closer to C89
+compatibility.
 
-Applied, thanks!
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ tools/testing/selftests/kselftest_harness.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1/6] leds: lp8860: Use regmap_multi_reg_write for EEPROM writes
-      commit: 868242c7dca3b5625e08b9e682ed56aa63e74e29
-[2/6] leds: lp8860: Use new mutex guards to cleanup function exits
-      commit: c20b0f27b352e9d26b12f16e7214f397e7ef1cd1
-[3/6] leds: lp8860: Remove default regs when not caching
-      commit: f4a9dd5a9a67d813b89ca4ccfdd61f7a3aaf5afa
-[4/6] leds: lp8860: Enable regulator using enable_optional helper
-      commit: fa604baf13ced084636afbfa8d93f030ad8b593c
-[5/6] leds: lp8860: Only unlock in lp8860_unlock_eeprom()
-      commit: 16df093d79e43babdb8a35f66291f382402a414b
-[6/6] leds: lp8860: Disable GPIO with devm action
-      commit: e9bde6230972ad76fc91279850edd8dbc6f1cb4d
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 666c9fde76da9d25fe6e248a7f2143c113473fe1..bac4327775ea65dbe977e9b22ee548bedcbd33ff 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -983,7 +983,7 @@ static void __timeout_handler(int sig, siginfo_t *info, void *ucontext)
+ 	}
+ 
+ 	t->timed_out = true;
+-	// signal process group
++	/* signal process group */
+ 	kill(-(t->pid), SIGKILL);
+ }
+ 
 
---
-Lee Jones [李琼斯]
+-- 
+2.49.0
 
