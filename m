@@ -1,108 +1,71 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3A0202F88
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890EC23E359;
+	Fri, 11 Apr 2025 18:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744394638; cv=none; b=QURSG+28dkoqrJww4sy+gzFs3ay3E/bhxQjRGj8F6NgQ95dG5EK6aS7y/Lwn2cqQuQ9xYUgeVo5YOdUNxJh2OAyrS07vXnyxk59zzcLS2F0kmC+9apk4cADgoDaWNhxbSmCndNAjRvJsl1T3g9L07LHtiRJyjYTc++o/LcWo2zA=
+	t=1744394748; cv=none; b=U2ovOYO4LC4i9TPFrHuZR+dkDur2JZZjSam3JbM+k3nshrdOLcqZnpbx/edZwdYFhopLQ43YRpSNyoEBJJqrd3rEenKl/cXANJIiloVfXApJue2q8JYoM1agkGLbyhGs78wQzT1WCAJexc6iVP5te0ZU9kyzuDYEBxIRb7CvWQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744394638; c=relaxed/simple;
-	bh=x8x+1RUUuoyKVvm4rwiW1cGjTypYl2uDQbLP7Tq+/ZM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XsOIJcHPiVHZgICcFyZBMI+MLjecqrxbKtCAvyYGZzEiyAEHVBC0sXIMTku5dUWvT4T3MA80YcFq454vAElqPPlWlyRrqRk+64+FVLvgh40/kwHMncDXUzweehH0Ke+O6W6SUHulePs2l9jJSQBv27ZeyQNewSXHZYoGZBCBRKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=DXEJAYp/; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1744394748; c=relaxed/simple;
+	bh=d0eTxp4UU3sSrwW/EB6XhwnIu0J5rklUPk4/9k0bVbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCxmhNprSo47K/ceeeZdxvoMgANPD7GWoJyGCaQMrCqRlg6HUFortmeFq0hL1eIEgF4pf0rtf8iYvmoXe3ECJ1ZfTr1VNil5a4tIXNN0VDuwpNM+wvFLhBqdKxdsNmEkMz4zSN27fKu9Y67wnBPDmbUWs5hbQ046PRTla/otUZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEZSzV+4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="DXEJAYp/"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e7040987879so2094495276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1744394635; x=1744999435; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fwUA3HJN+kY+Z/XkRzxrR6K4yzKq89b6kJGOJP40UfI=;
-        b=DXEJAYp/YUT7qY6hWE5d6lyGPp2cKofR+BrACFakl3jhGZK4x7NOmb7mrlsQcidUne
-         Z7iolTqlMEpZXIWQAQs+2UG+8Sms2U2H34sDS6L0SvEQSrQ9SATrHLkpmaoDayLcSFue
-         hcZnJ0rqsXhF5MA6Oc6um1Re4WKSBcskP30SssltzMccn+NrC5UL7ZU6Q3yQCuGsSUoE
-         a3qqiZ73WokBSChm+m5VNK1lV1Z6ahrStLtLyVfMuL3GoDQh4NBwD3qUGamOwTv6crD9
-         K0xjJt3YiypUckpk3H+HPP9uwIdzDK1v5TpEze5ugZ5XOSXTWizUJLL6q/Oq+4zz3Rs3
-         QIOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744394635; x=1744999435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fwUA3HJN+kY+Z/XkRzxrR6K4yzKq89b6kJGOJP40UfI=;
-        b=EfWkLD1Mydcrn+uRUPJorOB+9TR8hHCkxCSOnNCc7n9BCfY1ZReQSX5IO8CJYQVh84
-         mnL6ZweVTauq8uuXDYpR3Ck4R9N2SdasxTCrqCO44Crj9UEWKkg3FVFk9IsbgMnvXhcJ
-         ic/y/mEtJAVWImqJNk8g14d3HXTaiUARjY9hWJT1j/WmKuMlc90KAv7pTRhtieq3MuYN
-         Ctp4lzlKROw7ZsAJocWTG7uKkRhNOw+kZ2vfouGI9qcBcDQUEs/ZI2b99uTxC70cMFEV
-         uBLZZIqaRyewGtBUy/WykmJ/oYn8nQ5ZCzUtEGsRbsLsCjtLcBiBT3pFOM0DIaW9k903
-         9R/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXfSCmy7tmTEOvvic7UGN/CDQt0fyhdpHsUjenTAPijjIEbleLPssWKGS4CESJPsI7sebNDwkHfVXDqVQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwokVm37Z1MMheEfS/8dGD5aVTHtZt4/GgRT926l7N0XXm/JikU
-	HJ9E0EoxTW9bXV8XdPzRJtqqI1xqbZutE8/Jw6GyzpiTINa0mcNLU2m+iea1OsT3EkpAxxyMxLs
-	nww7aopCbNtiArwzxh+XM+W3PEd/l9NtYviJi
-X-Gm-Gg: ASbGnctDyG/YwEhE58EqNvQAvckm6P7HeFTN1I1ZdIh+fTP69l2y9emLvnxRH005+kp
-	aqF4zlPQ7WNo8v2dl6LVpGNmW3u3IF/QdjmJt8zq3EDGRnWYUSs6Rd1rmNQJ5OsW95VYsE+7aF6
-	JA4iMNG0zMBPnBnGIGVkOEdw==
-X-Google-Smtp-Source: AGHT+IEECo1qjKE9+f5KAGYFBltXYqlNcShZy0OxIxRF/dripUpXcghaKlFEoodTVnpFvHNNqn3e9noR9gmhbN9E1gs=
-X-Received: by 2002:a05:6902:1404:b0:e6d:f0a6:4cdc with SMTP id
- 3f1490d57ef6-e704deca03bmr6577544276.20.1744394635152; Fri, 11 Apr 2025
- 11:03:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEZSzV+4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C40CBC4CEE2;
+	Fri, 11 Apr 2025 18:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744394748;
+	bh=d0eTxp4UU3sSrwW/EB6XhwnIu0J5rklUPk4/9k0bVbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oEZSzV+4gTSd/n1O2uloRjarn9CguqUVtYzGWrHITtorkQ8PYEnnwvpVcnI7flg3I
+	 ouP90nWieQZ3SaWV7rvJqvLAsWx0nwn6fmh4dYko2K2X/n8FnfmI7q4LhFmqC6ruA/
+	 Y7UtF3nXDNhCPFxUc+7YDCC3IpAMOghksGmuqhJ1SUHcj678R+mkz6Tpatb+p9Bmkm
+	 eVotFEwoMHJ1CvnJcRO2PMOjoLAnAfURDtV/d5Nr0MxrR0ZMeF1Ut5Ju1jMpy/1R2H
+	 4DRVx8ju5BABNplhWsINA28dyruwXaDM2VW3BpuYlGduHjALF7hQWiql99W3DIUV6O
+	 JXNOM06LI6tlQ==
+Date: Fri, 11 Apr 2025 13:05:46 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Michael Riesch <michael.riesch@collabora.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Collabora Kernel Team <kernel@collabora.com>, imx@lists.linux.dev,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH 3/3] media: dt-bindings: sony,imx415: update maintainer
+ e-mail address
+Message-ID: <174439474605.3672762.16503161569954829590.robh@kernel.org>
+References: <20250410-maintainer-mriesch-v1-0-cdc5c6c68238@collabora.com>
+ <20250410-maintainer-mriesch-v1-3-cdc5c6c68238@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313085343.241623-1-andriy.shevchenko@linux.intel.com> <c7f860b806603cd8af7740c73db68197@paul-moore.com>
-In-Reply-To: <c7f860b806603cd8af7740c73db68197@paul-moore.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Fri, 11 Apr 2025 14:03:44 -0400
-X-Gm-Features: ATxdqUEPAvVP9dZVohwiFoxW7AmOhM6emkPlKEK8JPh8cs8epZY_MHf0QmZ7qQk
-Message-ID: <CAHC9VhT9VKQuWONEoosKtB_n=xLz6rrRubmEZi8_+dQrJe3nBA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] audit: Mark audit_log_vformat() with __printf() attribute
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>, audit@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Eric Paris <eparis@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410-maintainer-mriesch-v1-3-cdc5c6c68238@collabora.com>
 
-On Thu, Mar 20, 2025 at 6:02=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
-ote:
-> On Mar 13, 2025 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote=
-:
-> >
-> > audit_log_vformat() is using printf() type of format, and GCC compiler
-> > (Debian 14.2.0-17) is not happy about this:
-> >
-> > kernel/audit.c:1978:9: error: function =E2=80=98audit_log_vformat=E2=80=
-=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribute =
-[-Werror=3Dsuggest-attribute=3Dformat]
-> > kernel/audit.c:1987:17: error: function =E2=80=98audit_log_vformat=E2=
-=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribu=
-te [-Werror=3Dsuggest-attribute=3Dformat]
-> >
-> > Fix the compilation errors (`make W=3D1` when CONFIG_WERROR=3Dy, which =
-is default)
-> > by adding __printf() attribute.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > v2: added necessary technical information to the commit message (Paul)
-> >
-> >  kernel/audit.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> Merged into audit/dev-staging, this will move to audit/dev after the
-> upcoming merge window.
 
-... and now it is in audit/dev, thanks.
+On Thu, 10 Apr 2025 21:41:32 +0200, Michael Riesch wrote:
+> I recently left WolfVision but would like to continue to maintain the
+> Sony IMX415 image sensor driver. Update my e-mail address.
+> 
+> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml | 2 +-
+>  MAINTAINERS                                                  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
 
---=20
-paul-moore.com
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+
