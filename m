@@ -1,171 +1,164 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F771F7575;
-	Fri, 11 Apr 2025 14:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97B218FC89
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744382080; cv=none; b=l+8fJ5lTGVzXRZeKg0So3fD5rnJJcdQY0h/kr8l1MyVCni2AGlNXBASEzzcQY9doZn0O6iBO2RsQDN0+98AwUqQ1luQPSv3pb3rh0m32X/zqnype9EF9GMIFI/raBvjwwz4sJaFgkidd/hCx2IYYNeQgblX7BesY1qfx6m24tMQ=
+	t=1744382114; cv=none; b=jpqRJLXbO/DPuHzZ2YbOlBUIp9Rkhpm600lnS3pXejOK5fE920f6o+tDzEcOX8QEDFdthc8Ovx4KVWnjwHZQk/Re169SUYvYM8VEdedxYAP0/4DoEIGdWqeIgTduuNNcyR+H4Z2I1Mpej13t4/7iDp3nLLi3YMfGydkxd+vY7II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744382080; c=relaxed/simple;
-	bh=EE0z7VcnS5alp4WrNEPDp5Ms9yqPCFGjsjy878pe6mw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TSgPRezWPqLVgQU2P66NL3sGFUChaJU6jnnuKgjgkvsaZ1JeyOeyLaffqyxsfBT8x9fr6Rd3qdD7H5iv5yW+W1L2XtnRw6i+vG90Lit7YKekMtYSSW0bENjz1W7EnAdeCtgeYGq53bbww4NtZ+Kvbz/HyBUqRNufliU+YChxC8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VrN1qj8A; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744382114; c=relaxed/simple;
+	bh=+JX5U0EjJREG9HSMHYCRyXVbgB+tK+mvxRwn25oBnj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UzZV5yROpSFyGGqiDHUtHnLk8EfJoKr/+pQM4h8DugJOViC106uLwWhBwnXnRz1o00einGwYBQDYDpij3BlSaCBYhuCqMa95tVhBEYe4lDRnac9ZjmqhFd7R4oQNbEfsP4KUH4jf0KZRk+2GLAzuC1WgD9+h7USe/jvjOL4oNNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TZntA8cP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrN1qj8A"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30613802a59so21504301fa.0;
-        Fri, 11 Apr 2025 07:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744382077; x=1744986877; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0iiM4A5jNc7XQCTZ7wbH5EfX577sulbS78AGVv/5JM4=;
-        b=VrN1qj8AzV1baf4YRBreWeB8R+k1RcTJ6ACOgZkxHFqwOqkCjdC23Gk2gcgxELB2zo
-         +mzeNGVIaASAOz/rTbmc9MwWX8trTbR1WtGliPEnHhjAL31TxrKTLe+EFLZBc2iOxc4L
-         jlSmidKJMy1Ss0fTS6qiKyHb4bW1h5U+E3TyJgaIxDIvcJFfSfsOgY4PCdcfS/ad2Kdx
-         oKXvjxjASWbpEiY5vD4HrthD/CInDAbK8/zI2onLhKcTPd+7qz4YJDDdeW78uw7fevea
-         NOJnaYZjjHL2Eh5qDwKdyxMqbiQest6KICxQK7Ffkq6xTqM0PgfKR/GJGC+X1llSfktA
-         o5LA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TZntA8cP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744382111;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vf0r7l4Ywoar8pkovwpvugRV/uWgMLgm0xBNpY+jCXE=;
+	b=TZntA8cP/L7y2I8TOL4OqAeGtYUUeRhWOEfJM60SqJkoV56MnA7/LzfVjnXjlpF6v8eTaU
+	5/aqJSuWKwZd1GO1nbVZvojyLLRsr5ASQgnxduV6e3q9G3DfOIpdmiR9OQYpxTD+5yc4jz
+	AGudPIzRLd0p/rovYHpIvWP9YWyKNzw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-629-sR3XawTJMJOcxYVZIYXxpA-1; Fri, 11 Apr 2025 10:34:31 -0400
+X-MC-Unique: sR3XawTJMJOcxYVZIYXxpA-1
+X-Mimecast-MFC-AGG-ID: sR3XawTJMJOcxYVZIYXxpA_1744382070
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5e72c1bf151so2171151a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:34:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744382077; x=1744986877;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0iiM4A5jNc7XQCTZ7wbH5EfX577sulbS78AGVv/5JM4=;
-        b=rGAh/RYPleDKlDoKeAAJn1dhzbCmvhgLh9rnJVYAjhBuDEgvtaAlhAyWi1EgacHfod
-         W4Gs6CDk2BoDK89pFu2ZAkoKoU8oCmHRaH6pwC+GDOIHLq65RCgOCcQVrRS9Tk0lz8u+
-         xvN7K3x4XFjwRkpaAQgE0ivPf0UrDH+FDFSJBLuCPYku7jYq/SFRy/vGFTgIjSlqVp/y
-         B/KAhwkqXjlSVEQlVhJYBxfiJmAokOEsG5ATGaeUrJTT9KUkUp79aNAZY9zsu9QKDj5s
-         MKKbCYnxCMkC5NaHj/ejDykSPD+pUyESMuhIpvV2QpmBRP8GSX7ygOckfFWGVlWpTHS7
-         XvTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi9UuFjaLxTZgf69k8L0WZvNiGIF5aNowisdeXfmie+HzyBuXzxJ3xQukL8+EBhj8yHIHsXpbKC93n7rIdCgQ=@vger.kernel.org, AJvYcCVDgFDNMQ6OKGQPvXSiiPwSnCEJEnPJUewFLW68EezEd0mFDyfSmBTi+3iIWM2YZZgII3iVJ2aYP2crceM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+0eP4Padfhd9SjloGEAMXSCkcjZWLKU/No0meo6dDS2qybecU
-	+34wUQIQpcA2SgwsipOm3mNEsbCoSSDI7SRjflqshZRDLxgt6MGX1wM10ulb624Fdr1fbIeMwvV
-	9IF28H47keNm52a6rXoaSqh9b7G0=
-X-Gm-Gg: ASbGncuI/SOdMJDNeskwrQfwPxKeI9LAkPBX8XtBIAK9VLNv9mqdyQ8bfYXrhdqjbK8
-	CZTAnTmb+NiQSwp5xOG2bOLYZ9rBhTr3hKaylJozJEowd4iSHeGTUbYyWx+9f0ckiA/J2piHmhs
-	qr4n/kZMPmekj2pmxWR4q9rFJVcx7OqzsQrwJ+JU5vN86LRDAjR0WwT1c=
-X-Google-Smtp-Source: AGHT+IGSlwBM6FhbW7GiINpo0e0h9j8maWNeh2TROlmjwiwk8OBBSwUPmjW49GjLZpDNULwYmRok5G0g9+2l3lLU1JM=
-X-Received: by 2002:a05:651c:1443:b0:30d:894a:a538 with SMTP id
- 38308e7fff4ca-310499fb2d4mr11682591fa.21.1744382076746; Fri, 11 Apr 2025
- 07:34:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744382070; x=1744986870;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vf0r7l4Ywoar8pkovwpvugRV/uWgMLgm0xBNpY+jCXE=;
+        b=R6aGnb3GxamZdNCCtazjZDzVUZOMMSBOdy2rQsA20JhLsytTbkjSkx3e/M060ZqtM7
+         HLC+ltX79fdg8k8mM9kmZnuwEN7sLYoX3wtd5n7ZbKWpmeIQJ4SJsfJOc7mAnxpuTqaY
+         UUXIDcsaWQr5Om40tZQh5sQCmjVJ9OEgSMARDXMwqy+W/Ekn2pVQDQI8RVL64lg0fEYM
+         UDilGpYmPGJRfciVn6DDiFu2tqRsC+ybIATLMFF2MovezOnUmaKzN4m7tQQHKVf/YKss
+         FrQkXhQh/pNLEJ0DcZaRcmgTBlEJcqo4BQ0eQcMZ174NlgagtHCDRrGLoGu1extsLl2p
+         zp+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXV05207tGV2XVmNcSgnm+a2dGv8YhlK1rc68UYW2mAAnZPww71p+4uqMzLxAmsZ/4ld9Kq5mijxAqVdL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkELUtvB6XAeV27xn3ItQVxc6z+xTwpknQvEUdNhSWfb0q14Bb
+	w8QwozBA6wJApqYXMNmgcNVIO6cTc72F2k8mkfq2TyPFR4SwW5ZKdN+BA7G/QI0gn29QyL1rz+O
+	0CQCptr+0ElAB/H1+D1BmyRhwVtLFZ416g+nxSPOCeMGnUWUIE4tMQvUC/G0tKw==
+X-Gm-Gg: ASbGncuq22PU+8AvpStc8SVqTqO6MUwus1wEu7sJYuVO77QFrn9e1uF206n8BEB7uiL
+	+afoYqjrZEYuCGpHe1aSqRABFKPWJPAbWcX+QlLE72Amyvs4pA7BVdkf2NMChtKF99AVkMIechA
+	frTwN6oPaA/k+H+SSnY2qmmIOclRq3NVfk0nKxAYE95lJj4cYtEBlyM6Eqskyt3BIn73uukYcj6
+	Mb0fb7GfUD0GHttDpOzId5ORxn0F+zZidhbAcjYt1oHKaA7vghHA/6qnH3KKpf9d4gyjcTYWfVx
+	3ifeb6ySiqbMLvcSdLpQF9oSDP1g2/cbfudvrm8KUiGu6atjb2hiLaJBOl7MsPzi9Zr2pSooVbR
+	78SV1OultHwBA/tL1fUDZJC2mrDpBS0PfrTAUC4jgpatZoWsIlZxuc9gIOLLNog==
+X-Received: by 2002:a05:6402:350d:b0:5e4:be64:b562 with SMTP id 4fb4d7f45d1cf-5f36f525f8emr2157744a12.1.1744382070353;
+        Fri, 11 Apr 2025 07:34:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGsyMGRP3aENMWxFEhPPQZuAAVo/qXO98QCyQRyDjgRoGmFZl6CSgQGNG1R6VKsu1/p4Nf+hw==
+X-Received: by 2002:a05:6402:350d:b0:5e4:be64:b562 with SMTP id 4fb4d7f45d1cf-5f36f525f8emr2157726a12.1.1744382069836;
+        Fri, 11 Apr 2025 07:34:29 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f50567esm1070601a12.61.2025.04.11.07.34.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 07:34:29 -0700 (PDT)
+Message-ID: <347b59ca-e655-4064-aefd-a8355d426962@redhat.com>
+Date: Fri, 11 Apr 2025 16:34:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com>
- <Z_jakOS8mciIpxy0@google.com> <CAJ-ks9kEMwpDoys=RJGfWvyLdRco_Lm1984KSmju7mio5_5_WA@mail.gmail.com>
- <D93TAL6PHO34.2WCMTNVGUY522@proton.me> <CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP5wBuGPYh9ZTAiww@mail.gmail.com>
- <CAJ-ks9k_0Ly1nG5jDYQZL=GQ26FVajekCaMQ9C3MOK9VknZssg@mail.gmail.com> <CAH5fLggDVVwfsxVqOojcib3v0COqyatCisQem5z+CUC7aaLDww@mail.gmail.com>
-In-Reply-To: <CAH5fLggDVVwfsxVqOojcib3v0COqyatCisQem5z+CUC7aaLDww@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 11 Apr 2025 10:34:00 -0400
-X-Gm-Features: ATxdqUGC7GCFIQ26Wis4gvos7FvyMBrX6ffMxRK8sEct8rCKgc9dMd5Gn0fzTjw
-Message-ID: <CAJ-ks9mxRqFPz4J_L3KLa-VHX+dcbsobncc=n2f84iZ+ju2VaA@mail.gmail.com>
-Subject: Re: [PATCH] rust: retain pointer mut-ness in `container_of!`
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv4] platform/x86: ideapad-laptop: added support for some
+ new buttons
+To: =?UTF-8?Q?Ga=C5=A1per_Nemgar?= <gasper.nemgar@gmail.com>,
+ ikepanhc@gmail.com
+Cc: ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250410212937.28772-1-gasper.nemgar@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250410212937.28772-1-gasper.nemgar@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 11, 2025 at 9:29=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Fri, Apr 11, 2025 at 3:09=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
-> >
-> > On Fri, Apr 11, 2025 at 8:38=E2=80=AFAM Alice Ryhl <aliceryhl@google.co=
-m> wrote:
-> > >
-> > > On Fri, Apr 11, 2025 at 2:35=E2=80=AFPM Benno Lossin <benno.lossin@pr=
-oton.me> wrote:
-> > > >
-> > > > On Fri Apr 11, 2025 at 2:25 PM CEST, Tamir Duberstein wrote:
-> > > > > On Fri, Apr 11, 2025 at 5:02=E2=80=AFAM Alice Ryhl <aliceryhl@goo=
-gle.com> wrote:
-> > > > >> On Wed, Apr 09, 2025 at 10:43:16AM -0400, Tamir Duberstein wrote=
-:
-> > > > >> > @@ -199,9 +199,8 @@ fn panic(info: &core::panic::PanicInfo<'_>=
-) -> ! {
-> > > > >> >  #[macro_export]
-> > > > >> >  macro_rules! container_of {
-> > > > >> >      ($ptr:expr, $type:ty, $($f:tt)*) =3D> {{
-> > > > >> > -        let ptr =3D $ptr as *const _ as *const u8;
-> > > > >> >          let offset: usize =3D ::core::mem::offset_of!($type, =
-$($f)*);
-> > > > >> > -        ptr.sub(offset) as *const $type
-> > > > >> > +        $ptr.byte_sub(offset).cast::<$type>()
-> > > > >> >      }}
-> > > > >> >  }
-> > > > >>
-> > > > >> This implementation does not check the type of `ptr`. Would we n=
-ot want
-> > > > >> it to have the type of the field?
-> > > > >
-> > > > > I might be missing it but ISTM that the current implementation do=
-esn't
-> > > > > check that either.
-> > > > >
-> > > > > It's not obvious to me how you'd implement such a check; given `$=
-ptr`
-> > > > > and `$f`, how do you get your hands on the type of `$ptr->$($f)*`=
-?
-> > > >
-> > > > I don't think it's possible with current rust, but maybe with field
-> > > > projection (:
-> > > >
-> > > >     ($ptr:expr, $type:ty, $($f:tt)*) =3D> {{
-> > > >         // do not run this code, only use it for type-checking:
-> > > >         let _ =3D || {
-> > > >             let mut ptr =3D $ptr;
-> > > >             ptr =3D $ptr.cast::<<field_of!($t, $($f)*) as Field>::T=
-ype>();
-> > > >         };
-> > > >         let offset: usize =3D ::core::mem::offset_of!($type, $($f)*=
-);
-> > > >         $ptr.byte_sub(offset).cast::<$type>()
-> > > >     }}
-> > >
-> > > You can definitely implement the check with current Rust. You use
-> > > addr_of! to create a raw pointer with the type of the field, and
-> > > trigger a type error if `ptr` doesn't have the same type as that othe=
-r
-> > > pointer. Something along these lines would do it:
-> > >
-> > > let mut ptr =3D $ptr;
-> > > let offset: usize =3D ::core::mem::offset_of!($type, $($f)*);
-> > > let container =3D ptr.byte_sub(offset).cast::<$type>();
-> > > if false {
-> > >     ptr =3D ::core::ptr::addr_of!((*container).$($f)*).cast_mut();
-> > > }
-> > > container
-> >
-> > It's a nice idea. Wouldn't it require `$ptr` to be `*mut _` and not
-> > work with `*const _`?
->
-> As far as I can tell, it should work with const pointers too. The rhs
-> of the last assignment gets downgraded back to a const pointer in that
-> case.
->
-> > In any case, I hope we agree that this can be
-> > done separately.
->
-> Yes, since the feature does not exist today, it can happen separately.
+Hi Gašper,
 
-Sent as another patch:
-https://lore.kernel.org/all/20250411-b4-container-of-type-check-v1-1-08262e=
-f67c95@gmail.com/.
+On 10-Apr-25 11:29 PM, Gašper Nemgar wrote:
+> Added entries to unsuported wmi codes in ideapad_keymap[]
+> and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+> 
+> Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
+> ---
+> Changes in v4:
+>  - Changed performace button to KE_IGNORE
+> Changes in v3:
+>  - Minor changes
+> Changes in v2:
+>  - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
+>  - Added performence toggle in wmi_notify()
+> Changes in v1:
+>  - Added codes for buttons on laptop(performance, star, ...)
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 17a09b778..72d3306ef 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
+>  	/* Specific to some newer models */
+>  	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+>  	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+> +	/* Star- (User Asignable Key) */
+> +	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> +	/* Eye */
+> +	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+> +	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
+> +	{ KE_IGNORE,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
 
-Thanks for the suggestion!
-Tamir
+I missed that below there is a "if (priv->dytc)" conditional,
+this means that it would still be good to send KEY_PROG4
+when a keycode of 0x3d is received on laptops where
+DYTC platform-profile support is lacking.
+
+For v5, please change this back to KE_KEY so that KEY_PROG4 will
+be send when the "if (priv->dytc)" check fails. Sorry about this.
+
+Note please also address Alok's review remarks for version 5.
+
+Regards,
+
+Hans
+
+
+
+> +	/* shift + prtsc */
+> +	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
+> +	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+> +	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+>  
+>  	{ KE_END },
+>  };
+> @@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+>  		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+>  			data->integer.value);
+>  
+> +		/* performance button triggered by 0x3d  */
+> +		if (data->integer.value == 0x3d) {
+> +			if (priv->dytc) {
+> +				platform_profile_cycle();
+> +				break;
+> +			}
+> +		}
+> +
+>  		/* 0x02 FnLock, 0x03 Esc */
+>  		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+>  			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
+
