@@ -1,102 +1,89 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAE51C863E;
-	Fri, 11 Apr 2025 13:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32B11D95B3;
+	Fri, 11 Apr 2025 13:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744378789; cv=none; b=tnyKggZUnVLuOaE0aHOgN6lqXLoFA27UTXBXW64syvR2b5F/MrptF19qwJ5SdFK9Ou+tW0ktKbGKrpzCf5FXYt0jlrP5YPDvOHUiBSIyoimqMX/b83pR4mQFVvNd/TNOCdIaFcoDJSiZAqnQ5C7CVX4vEghChzuOyizafOqbx4g=
+	t=1744378801; cv=none; b=NahpS3mMK+foFGYGgcPm2ivhyeJlqEa+cNT9BcCpiZds6fjMU9xyM1bEb8WmDjw6O+vKzFJx4TCscabdviv1rmzcb0Ip3WUeu9wxkGs6Pb//P20SNnZ3hMlu63JXoffTdd3tpHow+u1gADy54FIs+NjmaNjSc35A8a5mGfmhETI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744378789; c=relaxed/simple;
-	bh=MTBfFUuaknDnpEoE11pyg0/w98CA+nnxjMj+AcUfjUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GoC+7O25bF2o+6xw45owEWw4Qi7zQ0dFJBff7qldnYmi5+BRTa0Y1db9i6Mg05lIT/jA8BsSzQVr737ngX77adFfW0QzpmpBpaN1wUPoTCJjkJfj/PGoM/rjF/wPa91la73mJHLH0/We0zhwQB+HHJybtQiHJ/AuYJRv8wdlT9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=yyhPjoGo; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744378801; c=relaxed/simple;
+	bh=5jz1qkE/Q8XQMrUn0GNQ78dWw3mtN7ZWkDw+3cClcNw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TxBXs7PdHX3Fiz5Pw3JezVmtRGBhtLS9RbnWYDluHApCOG1G+aTbvRz+i6IRHl93U5JC7d/gt3e8+AnVTPefBEZu6Q2anT91by3f1Sn31skgb/SNys1I++hDIOet4vfSWckRK/IMO97NOsJZ/az303tWAHaHNcaTh/qPoY71Byg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kc1u2MTN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yyhPjoGo"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDddgp2137114
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 08:39:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744378779;
-	bh=9OyvleqLlN3Vcd3jJey54De9/WGKxGUsExiQtJz/ET0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=yyhPjoGoHutd1mbDtkKG1nlpLVHmPUI+dMGGeTQDeN41jbUVTohuVHakhpbCkK4Ae
-	 Ru3dMoykPaydlIvSBJsrB1wmw+ZdHwukQ+ZfWFW6hW2aPQFG3v25j6HmeE4NXaGKqw
-	 gZOBLvvuEsN3krvwAg9QX0+x5e1r6vsu2YuxYVlI=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDdd4v112806
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 08:39:39 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 08:39:38 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 08:39:38 -0500
-Received: from [10.249.136.157] ([10.249.136.157])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDdXtR100609;
-	Fri, 11 Apr 2025 08:39:33 -0500
-Message-ID: <2919918b-d827-4154-8bbd-fd2de64e7526@ti.com>
-Date: Fri, 11 Apr 2025 19:09:32 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kc1u2MTN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E74C4CEE2;
+	Fri, 11 Apr 2025 13:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744378801;
+	bh=5jz1qkE/Q8XQMrUn0GNQ78dWw3mtN7ZWkDw+3cClcNw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=kc1u2MTNnqVwdU7xx75NS/icTmamaZ5iDsKfeTouFwbnqSNbi6mp7TEgefztuDNNN
+	 LJBRafVvZMvE4mvZRgV2m4nsCuDwKdLqWqOoZ9mPiAHFBKpJEPmkzhwosdP9J8yI6S
+	 hTQI+ePPn/z3cI7yvcGmsBrciWQ854wHC9pJQyU+COt34pV6AOO/csbFOxuth3oG6c
+	 keYG37dudgyZZm2DfNk/jBaBq+TRH6fwOpMSwhaaTFILzTblEFE0hUpPiwQsg/TDm/
+	 ZU9NkSmKa6RRDsWEpqjJFSlM3Ynw+J54wXeqxM2m69br5gw1j8KAYSSQWIqXtNsi3r
+	 qHFRF5NlDQe+A==
+From: Mark Brown <broonie@kernel.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Daniel Baluta <daniel.baluta@gmail.com>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel@collabora.com
+In-Reply-To: <20250410-test-component-tdm-slot-v1-1-9c3a7162fa7a@collabora.com>
+References: <20250410-test-component-tdm-slot-v1-1-9c3a7162fa7a@collabora.com>
+Subject: Re: [PATCH] ASoC: test-component: add set_tdm_slot stub
+ implementation
+Message-Id: <174437879941.1666456.2351901600646571889.b4-ty@kernel.org>
+Date: Fri, 11 Apr 2025 14:39:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/7] arm64: dts: ti: k3-am62x: Remove clock-names
- property from IMX219 overlay
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, <stable@vger.kernel.org>
-References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
- <20250409134128.2098195-6-y-abhilashchandra@ti.com>
-Content-Language: en-US
-From: "Francis, Neha" <n-francis@ti.com>
-In-Reply-To: <20250409134128.2098195-6-y-abhilashchandra@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-Mailer: b4 0.15-dev-c25d1
 
-On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
-> The IMX219 sensor device tree bindings do not include a clock-names
-> property. Remove the incorrectly added clock-names entry to avoid
-> dtbs_check warnings.
+On Thu, 10 Apr 2025 21:25:32 +0200, Nicolas Frattaroli wrote:
+> The test-component driver implements various stub callbacks. One
+> of the ones it doesn't implement is set_tdm_slot. This has no
+> functional impact on whether ASoC core believes test-component to
+> do TDM or not, it just means that any TDM configuration can't
+> readily be dumped for debugging purposes like it can with the other
+> callbacks.
 > 
-> Fixes: 4111db03dc05 ("arm64: dts: ti: k3-am62x: Add overlay for IMX219")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
-> index 76ca02127f95..7a0d35eb04d3 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
-> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
-> @@ -39,7 +39,6 @@ ov5640: camera@10 {
->  				reg = <0x10>;
->  
->  				clocks = <&clk_imx219_fixed>;
-> -				clock-names = "xclk";
->  
->  				reset-gpios = <&exp1 13 GPIO_ACTIVE_HIGH>;
->  
+> [...]
 
-Reviewed-by: Neha Malcom Francis <n-francis@ti.com>
+Applied to
 
--- 
-Thanking You
-Neha Malcom Francis
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: test-component: add set_tdm_slot stub implementation
+      commit: e78e7856d233010e6afef62f15567a8e7777c8bc
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
