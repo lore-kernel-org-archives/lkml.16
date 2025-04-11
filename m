@@ -1,142 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from ms11p00im-qufo17282001.me.com (ms11p00im-qufo17282001.me.com [17.58.38.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880A338FAD;
-	Fri, 11 Apr 2025 15:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7111F3B96
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.38.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385429; cv=none; b=krvGZZq1A+zJbxmDZHAFfVgZ0kl+LuvrBEx5euQM/L9GTYQEsgissc26XRCs6tRLHOpEXmZFxTQLJxeDWB5kuDHIVC/phRIWusLLkM/qlZBVMxPOmr0D/9S2Qr52v5YsoiJSOhSIKqjucoXoobnUxIVCtknauLN0RtR/GrLFmCE=
+	t=1744385529; cv=none; b=PRFqWsCtRuQ4nZF9QNF+/HL2vSB8W0DF9ah3NWaFQaR7yxWZKsenL+RajlxmVQQaWTa82aUH4cZ/rTpJYG21aVIGNdMwTYsuhph0/65YtCBtpOzQcG9LMI/s2ekYfcQcG0VzNG58uSmRhfOXj39ERK0XaTctdkV6tPWOKpsDtfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385429; c=relaxed/simple;
-	bh=ceFpHSmg7DtGgF8kgC03aZJ7RA1jPrdtiFPTWPJTh+4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=acV+RmItygJduL0kU2ZEFbT4H32GNAh7DKJX+t9JR1YGhsr2LOkAMlZHMMccSuwqsDsryVmrrZ6IQjSRDKAwSDgky+DtMlVs4TgQtL2nwxihk7ZBcHn6UuKIXCZTTbbynPah72yKG45Fzxu7rZ94jki+mn4mrEDBHM76W342A74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPvV0iC+; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744385529; c=relaxed/simple;
+	bh=LJf4cNbR+18dNf4e2tN8ZbyNLYaUlg6D4P0qVVixi9I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NCOpI6S5WylJyBRvxBLwXQDGWcX3EO9gJ7YOj7+n1ZDuaMXccbZEFXBqD901deTAnOcPr64V6qlV2JZ6+fm6MgkfS1S8I/2LoQyFmuMUHNisR8xUyLxf2VErHx72TeHJz7EhaMdylx47S/YU/R6d196lND+869XyAdWw+hESaas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gAfqA9KD; arc=none smtp.client-ip=17.58.38.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPvV0iC+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744385427; x=1775921427;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ceFpHSmg7DtGgF8kgC03aZJ7RA1jPrdtiFPTWPJTh+4=;
-  b=HPvV0iC+QPfhLLSLrLLv9j1jV+e/c8lUPhFcXgo0AnGz1O3DT672zjxV
-   HUTZQ6/G1EIo6cApt84Ug93oXNPSATi7GKoP3I8LOzvBVQT76vqfB0n2q
-   yXcIbsf7Q7VIXvAQThb8EMKgYMGX2BKiIOY83KHFlO8aGYjQV3pGjGTMi
-   dwVfPmmrjEWPiQ9ZJcaP2jyhlwKHvJswRyCm5lls6oGwHqCz2hRbQaROR
-   ascUW4OGCHnzMzCeUPd3A3Sg+ayVb0AOzygY7X3ljWI7HYNWrBB1IoOK/
-   R6LV5SQ05ci6IzWBkXC6lzAZ5WhKirZy4BjfaUrWjaqAHhYtBWQJGF7A2
-   Q==;
-X-CSE-ConnectionGUID: eNpYV1aPTuOh8oIbFIW8hg==
-X-CSE-MsgGUID: X17jGYEPRNK1SiFmJwy/bg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="63485790"
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="63485790"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:30:26 -0700
-X-CSE-ConnectionGUID: /YRv8toyQZqPVbbB+pEJMA==
-X-CSE-MsgGUID: RCoc+ZhwSoy+fC74571Mgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="134093530"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:30:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 11 Apr 2025 18:30:17 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
-    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
-    Jonathan Corbet <corbet@lwn.net>, 
-    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
-    Derek J Clark <derekjohn.clark@gmail.com>, 
-    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
-    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
-    Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org, 
-    sre@kernel.org, linux@weissschuh.net, ilpo.jarvinen@linux.intel.com, 
-    hdegoede@redhat.com, mario.limonciello@amd.com
-Subject: Re: [PATCH v8 01/14] hwmon: (oxp-sensors) Distinguish the X1
- variants
-In-Reply-To: <20250322103606.680401-2-lkml@antheas.dev>
-Message-ID: <a2ff773b-fb41-4d02-6f4d-8d8db7a7a28f@linux.intel.com>
-References: <20250322103606.680401-1-lkml@antheas.dev> <20250322103606.680401-2-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gAfqA9KD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=1MdNnYd5YWaOYraYVGqeVZVykkFFLwDntXLomc/V3kE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme;
+	b=gAfqA9KD7WkT2JKnYJMpZcty/ADqipBVcTFxS2TQ2OyHtj6eNfoePC9EoQsla2xnv
+	 2LWX40b2fc0SdJjCe6mVe/vA56sl1z8MS3ljKKmLn5liXk0O8wjzPNX+eTkE+pm/Ed
+	 hffdY1zVhkVyWYv7Axwio7kGqQk+IYemKwK+IVgIC28Fdv2IpkQ7ZadAqJ8nPFcOcN
+	 221KtZm2GolS6hpty1lfUG1YJ+xEd6ZaivHq5ZcXDNIrtr07vDrhU9HZfcL6CaEnI5
+	 Dlz3xJxxa+3jhwhB0Fgd1Tfas2GTPvZKetS2Aoa2jb4u70y/MGy5UgE4zqxmRLzL2O
+	 1iWpccJog4kjw==
+Received: from ms11p00im-qufo17282001.me.com (ms11p00im-qufo17282001.me.com [17.58.38.57])
+	by ms11p00im-qufo17282001.me.com (Postfix) with ESMTPS id A62881E030E;
+	Fri, 11 Apr 2025 15:32:05 +0000 (UTC)
+Received: from [192.168.1.26] (ms11p00im-dlb-asmtpmailmevip.me.com [17.57.154.19])
+	by ms11p00im-qufo17282001.me.com (Postfix) with ESMTPSA id C2CF11E0050;
+	Fri, 11 Apr 2025 15:32:02 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH v2 0/2] fs: bug fixes
+Date: Fri, 11 Apr 2025 23:31:39 +0800
+Message-Id: <20250411-fix_fs-v2-0-5d3395c102e4@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1590340832-1744385417=:944"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANs1+WcC/2WMQQ7CIBBFr9LMWgwQaq0r72Eag+NgZyFUsKSm4
+ e5ity7f/y9vhUSRKcGpWSFS5sTBV9C7BnC0/kGC75VBS91Ko6RwvFxdEgeStu/QUNs7qPIUqT5
+ b6DJUHjm9Q/xs3ax+618iKyFFh8og4pFu1p5fMyN73GN4wlBK+QJReG2KngAAAA==
+X-Change-ID: 20250410-fix_fs-6e0a97c4e59f
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ David Howells <dhowells@redhat.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: 4C9qywBCX3-HZYfhTLg7yUIxgea8hM-i
+X-Proofpoint-ORIG-GUID: 4C9qywBCX3-HZYfhTLg7yUIxgea8hM-i
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
+ mlxlogscore=918 adultscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ clxscore=1015 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2308100000 definitions=main-2504110099
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Changes in v2:
+- Drop applied patches and remove fixes tag for remaining patches
+- Remove fsparam_u32hex() instead of fixing it
+- Add more comment for the NULL pointer dereference issue
+- Link to v1: https://lore.kernel.org/r/20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com
 
---8323328-1590340832-1744385417=:944
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+---
+Zijun Hu (2):
+      fs/fs_parse: Delete macro fsparam_u32hex()
+      fs/fs_parse: Fix 3 issues for validate_constant_table()
 
-On Sat, 22 Mar 2025, Antheas Kapenekakis wrote:
+ Documentation/filesystems/mount_api.rst | 1 -
+ fs/fs_parser.c                          | 7 +++++--
+ include/linux/fs_parser.h               | 2 --
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250410-fix_fs-6e0a97c4e59f
 
-> Currently, the oxp-sensors driver fuzzy matches the X1 variants. Luckily,
-> X1 and X1 mini share most hardware features so this works. However, they
-> are completely different product lines, and there is an expectation that
-> OneXPlayer will release more devices in the X1 line that may have
-> differences.
->=20
-> Therefore, distinguish the 3 devices that currently exist in the market.
-> These are the OneXPlayer X1 AMD and Intel variants, and the X1 mini which
-> only has an AMD variant. As far as registers go, all three support the
-> current driver functionality.
->=20
-> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
-> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/hwmon/oxp-sensors.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
-> index 83730d9318240..5a4230ad3757e 100644
-> --- a/drivers/hwmon/oxp-sensors.c
-> +++ b/drivers/hwmon/oxp-sensors.c
-> @@ -205,7 +205,28 @@ static const struct dmi_system_id dmi_table[] =3D {
->  =09{
->  =09=09.matches =3D {
->  =09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> -=09=09=09DMI_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1"),
-> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 A"),
-> +=09=09},
-> +=09=09.driver_data =3D (void *)oxp_x1,
-> +=09},
-> +=09{
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 i"),
-> +=09=09},
-> +=09=09.driver_data =3D (void *)oxp_x1,
-> +=09},
-> +=09{
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 mini"),
-> +=09=09},
-> +=09=09.driver_data =3D (void *)oxp_x1,
-> +=09},
-> +=09{
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro"),
->  =09=09},
->  =09=09.driver_data =3D (void *)oxp_x1,
->  =09},
->=20
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-1590340832-1744385417=:944--
