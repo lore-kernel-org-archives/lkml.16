@@ -1,173 +1,63 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAD4537FF;
-	Fri, 11 Apr 2025 14:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCA71F5827;
+	Fri, 11 Apr 2025 14:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744383400; cv=none; b=TlLVzmee3Xywm9aZ3aZl5V6Pmq0WyMOYHcDuMR+qnEch67P6Yzo4/vaSYezwyGD5niwCCvtapMCJ4U2JhLI25KKpsxlENAiogzeeWyjZiiuJIWzO1c47H/UFLcKRLbWe45eZs9dhMHU6AOuYfiftNRtPcIJzzZ8uSVblSsTmUdI=
+	t=1744383448; cv=none; b=gTX3qPXRzgLgMkY5gE4zfXSv4A2u/Hf5QU0GA21xxmZD7pitjHjZru1iQyNpE+vkreVMqS1MbkrSFJ4q91TfYSDgXdM//x9etFR38ynntgTPkHEmH6WPCLewjBOJjk0IHUHv2AsMHZVW+NPy+91Om642C5sG02gq0ZJljdn6t7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744383400; c=relaxed/simple;
-	bh=zWdF7QoaOLIE+jmvSXVqWmHLvhor+vabMK1HXjfyclg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=epddOafcF+PGTBkOfeG7jKEGC0THUiApJf9Is6C76nHW17s015/+PMdHxpHU/QJfmaJzl+PNmdnpPlQQxVAVQMr6WgKImO97aIn/qXcnItlvpoaagE0AuZz5ilVRz1bqEfZ2sinRrv87MmmrdEadIPwxGxPlGpZT0xGTVsT77Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1u3FjC-000000005D4-2uHd;
-	Fri, 11 Apr 2025 10:51:34 -0400
-Date: Fri, 11 Apr 2025 10:51:34 -0400
-From: Rik van Riel <riel@surriel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Pat Cody <pat@patcody.io>, mingo@redhat.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- linux-kernel@vger.kernel.org, patcody@meta.com, kernel-team@meta.com,
- stable@vger.kernel.org, Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH] sched/fair: Add null pointer check to
- pick_next_entity()
-Message-ID: <20250411105134.1f316982@fangorn>
-In-Reply-To: <20250409152703.GL9833@noisy.programming.kicks-ass.net>
-References: <20250320205310.779888-1-pat@patcody.io>
-	<20250324115613.GD14944@noisy.programming.kicks-ass.net>
-	<9d38c61098b426777c1a748cf1baf8e57c41c334.camel@surriel.com>
-	<20250402180734.GX5880@noisy.programming.kicks-ass.net>
-	<b40f830845f1f97aa4b686c5c1333ff1bf5d59b3.camel@surriel.com>
-	<20250409152703.GL9833@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1744383448; c=relaxed/simple;
+	bh=T5oHrVbXP56dRNBGSCdGaviDwIp0EdmHjG+wEyMK04Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mEgjCxECR5iCecbhWtzjO0QD3SgqOz7CDrneRYMPPFfDiEOCpc4gG3WaQOFAaBUiHXi3XDjn/xLsPNnpCVU1UAQHFWP8tLy/QXQjFoyl5uAuMQs/Yau4vtcuvvB25XUS4a3GfPTDeCD5yjU62/lW41TEHs9L4VndMcdwt3ETiZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gDx38se1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gDx38se1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A024C4CEE2;
+	Fri, 11 Apr 2025 14:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744383448;
+	bh=T5oHrVbXP56dRNBGSCdGaviDwIp0EdmHjG+wEyMK04Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gDx38se1gXERwBqYkCXoQbH26eSrIY4TISh51W7tsyGUtrKFeBwEDSftszj0AQ9Yy
+	 4qmGa1TBElqRFnKeu/pFOY7qbDbRG2W7zvvy2iJQjFHgJgJ+AqKxMy6joDFsRuAEhL
+	 +kUxaTCNN3uOo6QhrNcnS1ObGbaj7FXO+Kxf3qXE=
+Date: Fri, 11 Apr 2025 16:57:25 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v7 10/13] serial: sh-sci: Add support for RZ/T2H SCI
+Message-ID: <2025041152-puzzling-clinking-e573@gregkh>
+References: <20250403212919.1137670-1-thierry.bultel.yh@bp.renesas.com>
+ <20250403212919.1137670-11-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403212919.1137670-11-thierry.bultel.yh@bp.renesas.com>
 
-On Wed, 9 Apr 2025 17:27:03 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-> On Wed, Apr 09, 2025 at 10:29:43AM -0400, Rik van Riel wrote:
-> > Our trouble workload still makes the scheduler crash
-> > with this patch.
-> > 
-> > I'll go put the debugging patch on our kernel.
-> > 
-> > Should I try to get debugging data with this patch
-> > part of the mix, or with the debugging patch just
-> > on top of what's in 6.13 already?  
-> 
-> Whatever is more convenient I suppose.
-> 
-> If you can dump the full tree that would be useful. Typically the
-> se::{vruntime,weight} and cfs_rq::{zero_vruntime,avg_vruntime,avg_load}
-> such that we can do full manual validation of the numbers.
+On Thu, Apr 03, 2025 at 11:29:12PM +0200, Thierry Bultel wrote:
+> --- a/include/uapi/linux/serial_core.h
+> +++ b/include/uapi/linux/serial_core.h
+> @@ -231,6 +231,9 @@
+>  /* Sunplus UART */
+>  #define PORT_SUNPLUS	123
+>  
+> +/* SH-SCI */
+> +#define PORT_RSCI	124
 
-Here is a dump of the scheduler tree of the crashing CPU.
+Why do you need to tell userspace about this specific port?  Is that a
+hard requirement that your userspace tools require?  If not, please
+don't export this here.
 
-Unfortunately the CPU crashed in pick_next_entity, and not in your
-debugging code. I'll add two more calls to avg_vruntime_validate(),
-one from avg_vruntime_update(), and one rfom __update_min_vruntime()
-when we skip the call to avg_vruntime_update(). The line numbers in
-the backtrace could be a clue.
+thanks,
 
-I have edited the cgroup names to make things more readable, but everything
-else is untouched.
-
-One thing that stands out to me is how the vruntime of each of the
-entities on the CPU's cfs_rq are really large negative numbers.
-
-vruntime = 18429030910682621789 equals 0xffc111f8d9ee675d
-
-I do not know how those se->vruntime numbers got to that point,
-but they are a suggestive cause of the overflow.
-
-I'll go comb through the se->vruntime updating code to see how those
-large numbers could end up as the vruntime for these sched entities.
-
-
-nr_running = 3
-min_vruntime = 107772371139014
-avg_vruntime = -1277161882867784752
-avg_load = 786
-tasks_timeline = [
-  {
-    cgroup /A
-    weight = 10230 => 9
-    rq = {
-      nr_running = 0
-      min_vruntime = 458975898004
-      avg_vruntime = 0
-      avg_load = 0
-      tasks_timeline = [
-      ]
-    }
-  },
-  {
-    cgroup /B
-    vruntime = 18445226958208703357
-    weight = 319394 => 311
-    rq = {
-      nr_running = 2
-      min_vruntime = 27468255210769
-      avg_vruntime = 0
-      avg_load = 93
-      tasks_timeline = [
-        {
-          cgroup /B/a
-          vruntime = 27468255210769
-          weight = 51569 => 50
-          rq = {
-            nr_running = 1
-            min_vruntime = 820449693961
-            avg_vruntime = 0
-            avg_load = 15
-            tasks_timeline = [
-              {
-                task = 3653382 (fc0)
-                vruntime = 820449693961
-                weight = 15360 => 15
-              },
-            ]
-          }
-        },
-        {
-          cgroup /B/b
-          vruntime = 27468255210769
-          weight = 44057 => 43
-          rq = {
-            nr_running = 1
-            min_vruntime = 563178567930
-            avg_vruntime = 0
-            avg_load = 15
-            tasks_timeline = [
-              {
-                task = 3706454 (fc0)
-                vruntime = 563178567930
-                weight = 15360 => 15
-              },
-            ]
-          }
-        },
-      ]
-    }
-  },
-  {
-    cgroup /C
-    vruntime = 18445539757376619550
-    weight = 477855 => 466
-    rq = {
-      nr_running = 0
-      min_vruntime = 17163581720739
-      avg_vruntime = 0
-      avg_load = 0
-      tasks_timeline = [
-      ]
-    }
-  },
-]
-
+greg k-h
