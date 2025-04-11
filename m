@@ -1,219 +1,276 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09087204840;
-	Fri, 11 Apr 2025 10:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E093E278E51;
+	Fri, 11 Apr 2025 10:15:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744366547; cv=none; b=OEZ5ise+mb5/JooO5vY8t1/p4Ors6o9eDQCFWu/gcIAVS548dYBbqTfOmq5oI268XsYFPGJ4cJx2yw3IrI5e5KMYMKxKrpa3XLmUhrGkmuHU/A8Dh3JuHic51ShKBtriPR0r94Re3YNfBfyQGeyxvk23thu11D5OE7A79py4Kho=
+	t=1744366548; cv=none; b=N+ba5noYnzRsu/66kJrpLFVbmdjiDSgvWs7XMPj0+V4HcHWkI9mwJpGbM2iaU3PINmjNvPZU5xOzicLgotlOVQBSiPjAoEqOG+BfFEbBwan+7GOZl+vZjn/rS4zDyC3/zlID2GDAxYT4HAxZJvzEW3rhHNQ+AufZWV5qRbSAJEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744366547; c=relaxed/simple;
-	bh=L00IjLlZ2rWkQaW1//YsBvypWiWceXUt03CVZefdY9w=;
+	s=arc-20240116; t=1744366548; c=relaxed/simple;
+	bh=Jh8DD3IFc9zI0c4Jtpz8t6t+NCItFvt6dAI799oyBXc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ed83YZHQSkCS3mdfI9RvLgnFEnYK51qeOFhGv7xBqARlKJ37Y6LNJFLWepxOao3xGeo+fb4FQXFxun2X77DTAx9iTAKp8NeJK06A56YKNKtURXRUu9Vi5F74ngsY2kDNJaMLAAMRWgZfkHAEoyWi3e6Yf4+AvftfX2eAUGu9/Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uX7vGStJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7z1aeg2M; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JwXDzpNpF4fGL/noNEgvH33giNP57hj6H25ye7z8tj8k8LZDQNPk6rQRyNpUsV9dRMrHVfNtSWtP7DTdCzemhX7+7dBDU4b7oMzywWq0xjt8x+mOn2RRRTYpTdx5STd8LVOTIuX2Fb59kfo46Mquok0w2Q/rGLqUa5XKfiNiL10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tEItYojZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qEIHPgS1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uX7vGStJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7z1aeg2M"
-Date: Fri, 11 Apr 2025 10:15:43 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tEItYojZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qEIHPgS1"
+Date: Fri, 11 Apr 2025 10:15:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744366544;
+	s=2020; t=1744366542;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s4GniOxpV0OBM6kwuRup1fM/XRNRpCGpV3hqZTqy/Ow=;
-	b=uX7vGStJZqRF4YVMbyFFf7RC3pB71UAovUxuorDPhoSuhck5a4xeDGj5SoXx+LDIBMUbci
-	rQlVfWmzD9fujaMSm1fnrpDGNjd4DDZfH720uGU9m9MquzHNRW9NWtNg9r6w1eVnxn3rDt
-	o0K6S/4WeNteUkekEeAGeW7x1Fy5KeBl45+O3yhsIGMBzPUgTdN2ImxD3O0/Mugi9NWEOl
-	qGHm6e0qnURGBNOlchDyNjLpPK3O4MtXPP721ODUSBgOoCFMgYtw6/8xwUse2Vis+hxBx5
-	6nNG7HV611fm0iwabn5LiCb8RKDr17rxFd2u7xVQyZ9DEN3+9gAWe1Et+X8B2w==
+	bh=sVZR7fCMZ3UbVw/IWtglDPHL2+xVWxpNNBaVWQ5QBOY=;
+	b=tEItYojZVFUCPjAsl7z29sQwwWHnwDLK1tpyiYQ7dNH4zJXeq4RajBzSXpnhA4MPalD5NQ
+	gS0tPOyrSeV65YFEveWYMT1LID4Cf8AoUcrPxKOuNS9NEQLu0DPX1+lKAcSsMfM72RRN0W
+	R09hnPq8t3n6Cmc+y4b4mzs0dY338RKEhXpeX46KzGSVExk0E6c0rDW5ZBt3MJI7WLlc2t
+	DKTB3K2sBj5FKjrJi1tR+Xc/sIUMJwcEp2QftwI4QKIGhUv4pSKeIQRFplNLDCDUTymxwU
+	sOKXQSFHMb+vTZW+t5Qwgnv5wCqBwwS+BDe1hZsbbGT7Q9ijFE0N93MFqOz98Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744366544;
+	s=2020e; t=1744366542;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s4GniOxpV0OBM6kwuRup1fM/XRNRpCGpV3hqZTqy/Ow=;
-	b=7z1aeg2MJMyhFf7fbqBfVhHllum54U3c4Twen1J+NnLc5nucT0epnBBYEzyoOXNlWfHEkJ
-	KKnLxli6BPKa0uDw==
+	bh=sVZR7fCMZ3UbVw/IWtglDPHL2+xVWxpNNBaVWQ5QBOY=;
+	b=qEIHPgS1BhwdB6EsQi/pjm1XUnUvE+/E3YsnnW5//+1yFCUhfwIrhz+7XKzmZoojdifbvK
+	XL6ETw5OScasklCA==
 From: "tip-bot2 for Stefano Garzarella" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sev] x86/sev: Add SVSM vTPM probe/send_command functions
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>,
- Claudio Carvalho <cclaudio@linux.ibm.com>,
- Stefano Garzarella <sgarzare@redhat.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>,
- Tom Lendacky <thomas.lendacky@amd.com>, Jarkko Sakkinen <jarkko@kernel.org>,
+Subject: [tip: x86/sev] tpm: Add SNP SVSM vTPM driver
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Jarkko Sakkinen <jarkko@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250403100943.120738-2-sgarzare@redhat.com>
-References: <20250403100943.120738-2-sgarzare@redhat.com>
+In-Reply-To: <20250410135118.133240-4-sgarzare@redhat.com>
+References: <20250410135118.133240-4-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174436654323.31282.652380775473462628.tip-bot2@tip-bot2>
+Message-ID: <174436654133.31282.1172867310137729031.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/sev branch of tip:
 
-Commit-ID:     770de678bc281f6b0be339c29c1ad74dfb0e9325
-Gitweb:        https://git.kernel.org/tip/770de678bc281f6b0be339c29c1ad74dfb0=
-e9325
+Commit-ID:     93b7c6b3ce918c3d24de82dcff7a87b8bd631b2e
+Gitweb:        https://git.kernel.org/tip/93b7c6b3ce918c3d24de82dcff7a87b8bd631b2e
 Author:        Stefano Garzarella <sgarzare@redhat.com>
-AuthorDate:    Thu, 03 Apr 2025 12:09:39 +02:00
+AuthorDate:    Thu, 10 Apr 2025 15:51:15 +02:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 10 Apr 2025 16:15:41 +02:00
+CommitterDate: Thu, 10 Apr 2025 16:24:29 +02:00
 
-x86/sev: Add SVSM vTPM probe/send_command functions
+tpm: Add SNP SVSM vTPM driver
 
-Add two new functions to probe and send commands to the SVSM vTPM. They
-leverage the two calls defined by the AMD SVSM specification [1] for the vTPM
-protocol: SVSM_VTPM_QUERY and SVSM_VTPM_CMD.
+Add driver for the vTPM defined by the AMD SVSM spec [1].
 
-Expose snp_svsm_vtpm_send_command() to be used by a TPM driver.
+The specification defines a protocol that a SEV-SNP guest OS can use to
+discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM) in
+the guest context, but at a more privileged level (VMPL0).
+
+The new tpm-svsm platform driver uses API exposed by the x86/sev core
+implementation interface to a SVSM to send commands and receive responses.
+
+The device cannot be hot-plugged/unplugged as it is emulated by the platform,
+so module_platform_driver_probe() can be used. The device will be registered
+by the platform only when it's available, so the probe function just needs to
+setup the tpm_chip.
+
+This device does not support interrupts and sends responses to commands
+synchronously.
+
+In order to have .recv() called just after .send() in tpm_try_transmit(), the
+.status() callback is not implemented as recently supported by commit
+
+  980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt").
 
   [1] "Secure VM Service Module for SEV-SNP Guests"
       Publication # 58019 Revision: 1.00
 
-  [ bp: Some doc touchups. ]
+  [ bp: Massage commit message. ]
 
-Co-developed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Co-developed-by: Claudio Carvalho <cclaudio@linux.ibm.com>
-Signed-off-by: Claudio Carvalho <cclaudio@linux.ibm.com>
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Link: https://lore.kernel.org/r/20250403100943.120738-2-sgarzare@redhat.com
+Link: https://lore.kernel.org/r/20250410135118.133240-4-sgarzare@redhat.com
 ---
- arch/x86/coco/sev/core.c   | 58 +++++++++++++++++++++++++++++++++++++-
- arch/x86/include/asm/sev.h |  7 ++++-
- 2 files changed, 65 insertions(+)
+ drivers/char/tpm/Kconfig    |  10 +++-
+ drivers/char/tpm/Makefile   |   1 +-
+ drivers/char/tpm/tpm_svsm.c | 125 +++++++++++++++++++++++++++++++++++-
+ 3 files changed, 136 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_svsm.c
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index b0c1a7a..ecd09da 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -2625,6 +2625,64 @@ e_restore_irq:
- 	return ret;
- }
-=20
-+/**
-+ * snp_svsm_vtpm_probe() - Probe if SVSM provides a vTPM device
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index fe4f3a6..dddd702 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -234,5 +234,15 @@ config TCG_FTPM_TEE
+ 	help
+ 	  This driver proxies for firmware TPM running in TEE.
+ 
++config TCG_SVSM
++	tristate "SNP SVSM vTPM interface"
++	depends on AMD_MEM_ENCRYPT
++	help
++	  This is a driver for the AMD SVSM vTPM protocol that a SEV-SNP guest
++	  OS can use to discover and talk to a vTPM emulated by the Secure VM
++	  Service Module (SVSM) in the guest context, but at a more privileged
++	  level (usually VMPL0).  To compile this driver as a module, choose M
++	  here; the module will be called tpm_svsm.
++
+ source "drivers/char/tpm/st33zp24/Kconfig"
+ endif # TCG_TPM
+diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+index 2b004df..9de1b3e 100644
+--- a/drivers/char/tpm/Makefile
++++ b/drivers/char/tpm/Makefile
+@@ -45,3 +45,4 @@ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+ obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+ obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
++obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+new file mode 100644
+index 0000000..4280edf
+--- /dev/null
++++ b/drivers/char/tpm/tpm_svsm.c
+@@ -0,0 +1,125 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
 + *
-+ * Check that there is SVSM and that it supports at least TPM_SEND_COMMAND
-+ * which is the only request used so far.
++ * Driver for the vTPM defined by the AMD SVSM spec [1].
 + *
-+ * Return: true if the platform provides a vTPM SVSM device, false otherwise.
++ * The specification defines a protocol that a SEV-SNP guest OS can use to
++ * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
++ * in the guest context, but at a more privileged level (usually VMPL0).
++ *
++ * [1] "Secure VM Service Module for SEV-SNP Guests"
++ *     Publication # 58019 Revision: 1.00
 + */
-+static bool snp_svsm_vtpm_probe(void)
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/platform_device.h>
++#include <linux/tpm_svsm.h>
++
++#include <asm/sev.h>
++
++#include "tpm.h"
++
++struct tpm_svsm_priv {
++	void *buffer;
++};
++
++static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
 +{
-+	struct svsm_call call =3D {};
++	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
++	int ret;
 +
-+	/* The vTPM device is available only if a SVSM is present */
-+	if (!snp_vmpl)
-+		return false;
++	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
++	if (ret)
++		return ret;
 +
-+	call.caa =3D svsm_get_caa();
-+	call.rax =3D SVSM_VTPM_CALL(SVSM_VTPM_QUERY);
-+
-+	if (svsm_perform_call_protocol(&call))
-+		return false;
-+
-+	/* Check platform commands contains TPM_SEND_COMMAND - platform command 8 */
-+	return call.rcx_out & BIT_ULL(8);
++	/*
++	 * The SVSM call uses the same buffer for the command and for the
++	 * response, so after this call, the buffer will contain the response
++	 * that can be used by .recv() op.
++	 */
++	return snp_svsm_vtpm_send_command(priv->buffer);
 +}
 +
-+/**
-+ * snp_svsm_vtpm_send_command() - Execute a vTPM operation on SVSM
-+ * @buffer: A buffer used to both send the command and receive the response.
-+ *
-+ * Execute a SVSM_VTPM_CMD call as defined by
-+ * "Secure VM Service Module for SEV-SNP Guests" Publication # 58019 Revisio=
-n: 1.00
-+ *
-+ * All command request/response buffers have a common structure as specified=
- by
-+ * the following table:
-+ *     Byte      Size   =C2=A0=C2=A0 =C2=A0In/Out=C2=A0=C2=A0=C2=A0=C2=A0Des=
-cription
-+ *     Offset=C2=A0=C2=A0=C2=A0=C2=A0(Bytes)
-+ *     0x000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A04=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0In=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-Platform command
-+=C2=A0*=C2=A0=C2=A0=C2=A0  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0Out=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Platform command response size
-+ *
-+ * Each command can build upon this common request/response structure to cre=
-ate
-+ * a structure specific to the command. See include/linux/tpm_svsm.h for more
-+ * details.
-+ *
-+ * Return: 0 on success, -errno on failure
-+ */
-+int snp_svsm_vtpm_send_command(u8 *buffer)
++static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
 +{
-+	struct svsm_call call =3D {};
++	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
 +
-+	call.caa =3D svsm_get_caa();
-+	call.rax =3D SVSM_VTPM_CALL(SVSM_VTPM_CMD);
-+	call.rcx =3D __pa(buffer);
-+
-+	return svsm_perform_call_protocol(&call);
++	/*
++	 * The internal buffer contains the response after we send the command
++	 * to SVSM.
++	 */
++	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
 +}
-+EXPORT_SYMBOL_GPL(snp_svsm_vtpm_send_command);
 +
- static struct platform_device sev_guest_device =3D {
- 	.name		=3D "sev-guest",
- 	.id		=3D -1,
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index ba7999f..d9ba035 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -384,6 +384,10 @@ struct svsm_call {
- #define SVSM_ATTEST_SERVICES		0
- #define SVSM_ATTEST_SINGLE_SERVICE	1
-=20
-+#define SVSM_VTPM_CALL(x)		((2ULL << 32) | (x))
-+#define SVSM_VTPM_QUERY			0
-+#define SVSM_VTPM_CMD			1
++static struct tpm_class_ops tpm_chip_ops = {
++	.flags = TPM_OPS_AUTO_STARTUP,
++	.recv = tpm_svsm_recv,
++	.send = tpm_svsm_send,
++};
 +
- #ifdef CONFIG_AMD_MEM_ENCRYPT
-=20
- extern u8 snp_vmpl;
-@@ -481,6 +485,8 @@ void snp_msg_free(struct snp_msg_desc *mdesc);
- int snp_send_guest_request(struct snp_msg_desc *mdesc, struct snp_guest_req =
-*req,
- 			   struct snp_guest_request_ioctl *rio);
-=20
-+int snp_svsm_vtpm_send_command(u8 *buffer);
++static int __init tpm_svsm_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct tpm_svsm_priv *priv;
++	struct tpm_chip *chip;
++	int err;
 +
- void __init snp_secure_tsc_prepare(void);
- void __init snp_secure_tsc_init(void);
-=20
-@@ -524,6 +530,7 @@ static inline struct snp_msg_desc *snp_msg_alloc(void) { =
-return NULL; }
- static inline void snp_msg_free(struct snp_msg_desc *mdesc) { }
- static inline int snp_send_guest_request(struct snp_msg_desc *mdesc, struct =
-snp_guest_req *req,
- 					 struct snp_guest_request_ioctl *rio) { return -ENODEV; }
-+static inline int snp_svsm_vtpm_send_command(u8 *buffer) { return -ENODEV; }
- static inline void __init snp_secure_tsc_prepare(void) { }
- static inline void __init snp_secure_tsc_init(void) { }
-=20
++	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	/*
++	 * The maximum buffer supported is one page (see SVSM_VTPM_MAX_BUFFER
++	 * in tpm_svsm.h).
++	 */
++	priv->buffer = (void *)devm_get_free_pages(dev, GFP_KERNEL, 0);
++	if (!priv->buffer)
++		return -ENOMEM;
++
++	chip = tpmm_chip_alloc(dev, &tpm_chip_ops);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++
++	dev_set_drvdata(&chip->dev, priv);
++
++	err = tpm2_probe(chip);
++	if (err)
++		return err;
++
++	err = tpm_chip_register(chip);
++	if (err)
++		return err;
++
++	dev_info(dev, "SNP SVSM vTPM %s device\n",
++		 (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2");
++
++	return 0;
++}
++
++static void __exit tpm_svsm_remove(struct platform_device *pdev)
++{
++	struct tpm_chip *chip = platform_get_drvdata(pdev);
++
++	tpm_chip_unregister(chip);
++}
++
++/*
++ * tpm_svsm_remove() lives in .exit.text. For drivers registered via
++ * module_platform_driver_probe() this is ok because they cannot get unbound
++ * at runtime. So mark the driver struct with __refdata to prevent modpost
++ * triggering a section mismatch warning.
++ */
++static struct platform_driver tpm_svsm_driver __refdata = {
++	.remove = __exit_p(tpm_svsm_remove),
++	.driver = {
++		.name = "tpm-svsm",
++	},
++};
++
++module_platform_driver_probe(tpm_svsm_driver, tpm_svsm_probe);
++
++MODULE_DESCRIPTION("SNP SVSM vTPM Driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:tpm-svsm");
