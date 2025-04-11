@@ -1,214 +1,144 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E088028F952
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741431DDC04
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358703; cv=none; b=MPQPVP7QUre6YoCKs4L/pV/tTwu/7FjIHoZp3Ix8LhDVUffR4P1cgTIPeBfp04JW18YNQVwswRjmV7DpeLdD6IPYt45+rGV75QQPpW2k5UNkfPMeO/WoUEwH542+CCoJ9BxYV0zVB19xqbHygAQZDmMnbOlTTK6VOevVEycykSs=
+	t=1744358782; cv=none; b=KoGnqQ8b7DT2Pm4OiUilR8jQNwaeEyQSzbxOm7RjZ5wZzJImBFI7MKpIy6ujOzO9ZIyRImzm5NGqUWp3A+W09VyhaRRyAUKD0WBOk+6+2bH/u0Uscjb8kkmq8mUUy82si2+CPstT65MhEQfAZERGJ/Igfdx0xJtRhnDWOyZ4+aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358703; c=relaxed/simple;
-	bh=6VE+DhjJ/CNlU8qlEAH22RJnfVlayNkgvidu6F8WaX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BTnBYKEX/xzXzVWLdIQwcnIQBdBe6/ywfKmQ+9GU2wFC3EEBs1uKMOE1JSKP4Zria9to/xHmiGRDwBvvQMWSnElDmC853KSHBVH6yLrwW5DIjL2Ak2mrOWDf7g++qnKqbO4rER9bWpzZ0xKrjfN4+gobh8zA5jV/d5g5gR8qEdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vn4ssqD5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ugY7xUUZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744358782; c=relaxed/simple;
+	bh=25gpjSM2pwypS0nnqcZaK6eDCYbGmXx+lmeJ0pd9c70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZMy+C/OmWavAISm6Ok/war/uNaRoJ7w/yOYOo9TEfGpieiI9mNvrfBdkuaPLYs7QluLmz+UDbaxNsE67VMwFWRuG/18Q5cvNPEaxz+INkjzZa51esqOlpYMbJNTj+zQSCpi3SBvBWQmFJVMm+CQEJ2PqsSwIGu8siWojLdFvzX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=B+vFVWi1; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vn4ssqD5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ugY7xUUZ"
-Date: Fri, 11 Apr 2025 10:04:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744358699;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=acahTmX/Ax/Xqa2f81n9R3vfnkbghOQZSuqUtDgmDeM=;
-	b=vn4ssqD5JVEiAj/kpeH5e0vHVyEUEGiE7CU9zpBifLFAgaz8fIAq/Rcrtkko0HIVY48woe
-	nArX6fn3jfNP/ZaIq+wlktW0KmJcCmYESJNZryoJtZ4lOS8Z0Ec06fsu5RbG5lxypBWr9i
-	ZP9cgKaQYJT8aDbtZHshjRpIirBMSINoviM602kahPTR+nF9uNOeautxlIg4PJBnT3yqtk
-	MOYaZdfuXocNfACPJEySkRVYZYZaNz6YY4/RvgikVGqFFKaBEyg8R9swpUZXGawT7CKp2d
-	1Quk8T1XWpuP57fTryJGK0GL3QpyfyR5OT51Xq6H282YFbmpzN2+IYRi6Hcrqg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744358699;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=acahTmX/Ax/Xqa2f81n9R3vfnkbghOQZSuqUtDgmDeM=;
-	b=ugY7xUUZqt2Uu5n/DsIYlO/QK28i7E0Wv0P6u+AYKwbrXKRVEEmoB5JIw3qdikao3pKbo9
-	DVSp/qUHQ84BA3BQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Guo Ren <guoren@kernel.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] RISC-V: vDSO: Wire up getrandom() vDSO implementation
-Message-ID: <20250411095103-2aad099a-e4a1-4efb-8374-dd27bf05b668@linutronix.de>
-References: <20250411024600.16045-1-xry111@xry111.site>
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="B+vFVWi1"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so13157055e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openvpn.net; s=google; t=1744358777; x=1744963577; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=isqlcTTyZ7Sm6lBmUjMYNncUIpye7YFqhmstYJsaMMY=;
+        b=B+vFVWi1z8O3qyNMUa0rhbuCdIiHug8G/6ggkTGAqrR96eavAETjBJDfw0VxlW8sNa
+         PeUbZEj+5P7U9xlY5SlJej7+fAbADHDgFEuI+UERNCP40NyKvUmIdkiH9/hxqxEWTdCD
+         KFFDCaupS/wYrNA0QTYFaCQSYZxN6gPA51fWN8jXOZhAjePPmrtDh35bvMANsjzvrZ2r
+         v8aAseGP3MDrYu3ihodIrTKT0ZwmMy22y2dEIfz2QEn93pJPd9ilZG82SrzvDZpm00uC
+         lM3ISGHTAwwbICIU5MxmvvWvTk42AfY1GAFSb0Jcyi8SlHbvH+4amDFqOrHAEb3rNGSO
+         rMng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744358777; x=1744963577;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=isqlcTTyZ7Sm6lBmUjMYNncUIpye7YFqhmstYJsaMMY=;
+        b=asNYjQ90CroatXISdyrV49fk8qKfk8o2DYBgodGpDOOPgR255fCZfS94OhieRTv356
+         Ak56tinhaSyGDZwxZM8qb3uL/2eSC0ia6X8t2ofHm5MF6Ut+4bWE+I2lnezaHXf3A3A0
+         Ffcd1vit6iG871gLvsFw+IuFT0t4NMf6czgHsexWbLxdzvMBObyqzvsc8zs0jcGZ+NCv
+         4d3YGkMum2bZklcdRnq0SepxWT34YfqZKoOiVNE2EtVe/QoiwSVfyNx0H6cIO+kXWY1x
+         +td7sxkSfk+jhAaUVzy3fIIna21ZpslAt8/aBT2MarJwIu8p7IuQm3zFlgoOxHbES3q+
+         4zWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcyX3KlyR/mzlAGuM4kulryCfSoWFZEyJuhgyr7Hd6ENIHvzbGF0mFwFQ2qqLGRlyOdqhlL3/yvvsQNqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNoehj29NppS8HfoZw5Sh8OAnGzdS/WD8Us6HrBbEnl5Og+QWk
+	bmTRQj8j0RuCy9YAKy1UgTgvFY7eAduUxMrxKVNb+48Lv4w56O3SzAmSYi5XJw2sV8dZ526H8B8
+	gWZTDH+MjlGwAI0k/rGnc540qzru64L9go/B72ScN9IFdsqcT9P5slxo=
+X-Gm-Gg: ASbGncunkt+MXdRRgsQ1l5mnNdXSwZ/uZuzfGPzc3oIEMEjMtDaTJxn6BosKeOWhZHQ
+	3v92F9m9aeWKX1jOG0aezfWd+ZDZosb2flaXCC7EA99wNPo3il9o8zLTwZ3+GOX3+U1ML//sPqb
+	m6knag+TiR3iOzeDNuelVTZb1SoBfU1Om0+Pfwe41qVAlYRiaEPw5zueXLH50ADl5VP756fpJ6h
+	gKK2X8fj96q36IHC1xlIPVqqFfE7GPUfXykyNLjlm33K7f0fN+XV5rD+yH+pjm+akOWCekuzexS
+	Ed4/p2KB6TJ1GBFFATkPRi8qfrzEkVjN7/yElKPw3eYHRqrrThBadQ8YDYUjDqXu4zoS3KW3yc/
+	EAcg=
+X-Google-Smtp-Source: AGHT+IGSDtegkKJY64mlTCzxcAmGSdXhvH2SNshDQWGQBnzWzeEgK+uqlJuIomQMWE1qtExRuuPWJQ==
+X-Received: by 2002:a05:6000:4205:b0:391:4684:dbef with SMTP id ffacd0b85a97d-39ea51f5804mr1148582f8f.17.1744358776666;
+        Fri, 11 Apr 2025 01:06:16 -0700 (PDT)
+Received: from ?IPV6:2001:67c:2fbc:1:e8be:40be:972d:7ee4? ([2001:67c:2fbc:1:e8be:40be:972d:7ee4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a273fsm74655795e9.9.2025.04.11.01.06.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 01:06:16 -0700 (PDT)
+Message-ID: <b3980874-ef04-4688-ac98-1f35bb1e677e@openvpn.net>
+Date: Fri, 11 Apr 2025 10:06:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411024600.16045-1-xry111@xry111.site>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v25 02/23] ovpn: add basic netlink support
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, sd@queasysnail.net, ryazanov.s.a@gmail.com,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Xiao Liang <shaw.leon@gmail.com>
+References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
+ <20250407-b4-ovpn-v25-2-a04eae86e016@openvpn.net>
+ <20250410195822.41a77f1c@kernel.org>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ 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
+Organization: OpenVPN Inc.
+In-Reply-To: <20250410195822.41a77f1c@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 11, 2025 at 10:46:00AM +0800, Xi Ruoyao wrote:
-> Hook up the generic vDSO implementation to the generic vDSO getrandom
-> implementation by providing the required __arch_chacha20_blocks_nostack
-> and getrandom_syscall implementations. Also wire up the selftests.
+On 11/04/2025 04:58, Jakub Kicinski wrote:
+> On Mon, 07 Apr 2025 21:46:10 +0200 Antonio Quartulli wrote:
+>> +        checks:
+>> +         exact-len: nonce-tail-size
 > 
-> The benchmark result:
-> 
-> 	vdso: 25000000 times in 2.466341333 seconds
-> 	libc: 25000000 times in 41.447720005 seconds
-> 	syscall: 25000000 times in 41.043926672 seconds
-> 
-> 	vdso: 25000000 x 256 times in 162.286219353 seconds
-> 	libc: 25000000 x 256 times in 2953.855018685 seconds
-> 	syscall: 25000000 x 256 times in 2796.268546000 seconds
-> 
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
-> 
-> [v1]->v2:
-> - Fix the commit message.
-> - Only build the vDSO getrandom code if CONFIG_VDSO_GETRANDOM, to
->   unbreak RV32 build.
-> - Likewise, only enable the selftest if __riscv_xlen == 64.
-> 
-> [v1]: https://lore.kernel.org/all/20250224122541.65045-1-xry111@xry111.site/
-> 
->  arch/riscv/Kconfig                            |   1 +
->  arch/riscv/include/asm/vdso/getrandom.h       |  30 +++
->  arch/riscv/kernel/vdso/Makefile               |  12 +
->  arch/riscv/kernel/vdso/getrandom.c            |  10 +
->  arch/riscv/kernel/vdso/vdso.lds.S             |   1 +
->  arch/riscv/kernel/vdso/vgetrandom-chacha.S    | 244 ++++++++++++++++++
->  .../selftests/vDSO/vgetrandom-chacha.S        |   2 +
->  7 files changed, 300 insertions(+)
->  create mode 100644 arch/riscv/include/asm/vdso/getrandom.h
->  create mode 100644 arch/riscv/kernel/vdso/getrandom.c
->  create mode 100644 arch/riscv/kernel/vdso/vgetrandom-chacha.S
+> some of the checks look slightly mis-indented (needs one more space)
 
-<snip>
+ACK. Will fix those.
 
-> diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.lds.S
-> index 8e86965a8aae..abc69cda0445 100644
-> --- a/arch/riscv/kernel/vdso/vdso.lds.S
-> +++ b/arch/riscv/kernel/vdso/vdso.lds.S
-> @@ -80,6 +80,7 @@ VERSION
->  #ifndef COMPAT_VDSO
->  		__vdso_riscv_hwprobe;
->  #endif
-> +		__vdso_getrandom;
+Regards,
 
-For consistency this could be gated behind CONFIG_VDSO_GETRANDOM.
 
->  	local: *;
->  	};
->  }
-> diff --git a/arch/riscv/kernel/vdso/vgetrandom-chacha.S b/arch/riscv/kernel/vdso/vgetrandom-chacha.S
-> new file mode 100644
-> index 000000000000..d793cadc78a6
-> --- /dev/null
-> +++ b/arch/riscv/kernel/vdso/vgetrandom-chacha.S
-> @@ -0,0 +1,244 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2025 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
-> + *
-> + * Based on arch/loongarch/vdso/vgetrandom-chacha.S.
-> + */
-> +
-> +#include <asm/asm.h>
-> +#include <linux/linkage.h>
-> +
-> +.text
-> +
-> +.macro	ROTRI	rd rs imm
-> +	slliw	t0, \rs, 32 - \imm
-> +	srliw	\rd, \rs, \imm
-> +	or	\rd, \rd, t0
-> +.endm
-> +
-> +.macro	OP_4REG	op d0 d1 d2 d3 s0 s1 s2 s3
-> +	\op	\d0, \d0, \s0
-> +	\op	\d1, \d1, \s1
-> +	\op	\d2, \d2, \s2
-> +	\op	\d3, \d3, \s3
-> +.endm
-> +
-> +/*
-> + *	a0: output bytes
-> + * 	a1: 32-byte key input
-> + *	a2: 8-byte counter input/output
-> + *	a3: number of 64-byte blocks to write to output
-> + */
-> +SYM_FUNC_START(__arch_chacha20_blocks_nostack)
-> +
-> +#define output		a0
-> +#define key		a1
-> +#define counter		a2
-> +#define nblocks		a3
-> +#define i		a4
-> +#define state0		s0
-> +#define state1		s1
-> +#define state2		s2
-> +#define state3		s3
-> +#define state4		s4
-> +#define state5		s5
-> +#define state6		s6
-> +#define state7		s7
-> +#define state8		s8
-> +#define state9		s9
-> +#define state10		s10
-> +#define state11		s11
-> +#define state12		a5
-> +#define state13		a6
-> +#define state14		a7
-> +#define state15		t1
-> +#define cnt		t2
-> +#define copy0		t3
-> +#define copy1		t4
-> +#define copy2		t5
-> +#define copy3		t6
-> +
-> +/* Packs to be used with OP_4REG */
-> +#define line0		state0, state1, state2, state3
-> +#define line1		state4, state5, state6, state7
-> +#define line2		state8, state9, state10, state11
-> +#define line3		state12, state13, state14, state15
-> +
-> +#define line1_perm	state5, state6, state7, state4
-> +#define line2_perm	state10, state11, state8, state9
-> +#define line3_perm	state15, state12, state13, state14
-> +
-> +#define copy		copy0, copy1, copy2, copy3
-> +
-> +#define _16		16, 16, 16, 16
-> +#define _20		20, 20, 20, 20
-> +#define _24		24, 24, 24, 24
-> +#define _25		25, 25, 25, 25
-> +
-> +	addi		sp, sp, -12*SZREG
-> +	REG_S		s0,         (sp)
-> +	REG_S		s1,    SZREG(sp)
-> +	REG_S		s2,  2*SZREG(sp)
-> +	REG_S		s3,  3*SZREG(sp)
-> +	REG_S		s4,  4*SZREG(sp)
-> +	REG_S		s5,  5*SZREG(sp)
-> +	REG_S		s6,  6*SZREG(sp)
-> +	REG_S		s7,  7*SZREG(sp)
-> +	REG_S		s8,  8*SZREG(sp)
-> +	REG_S		s9,  9*SZREG(sp)
-> +	REG_S		s10, 10*SZREG(sp)
-> +	REG_S		s11, 11*SZREG(sp)
+-- 
+Antonio Quartulli
+OpenVPN Inc.
 
-This should have the same comment as the loongarch implementation that it is
-fine to store to the stack here. Contrary to the general claim of the
-documentation for __arch_chacha20_blocks_nostack() in include/linux/getrandom.h.
-
-<snip>
