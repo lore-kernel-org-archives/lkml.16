@@ -1,226 +1,222 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C6323A9A0;
-	Fri, 11 Apr 2025 17:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744392983; cv=none; b=LJ7AfAa3VMOnIluj8HadHKKPrScLJ1CK5/2+tGsZwTbVhEfAJYWy43uRH0jkYlvXZomCwxzBgQeYRrYLBfyf6leNJHk5zqoV0t1DprmiNtBFE4rGWmrok/B45BPWeiK0/ODh6znsKkru4Ukr/wvZLyc9K43WXEEmoAw0nm6IRaw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744392983; c=relaxed/simple;
-	bh=RrQmy/7o+Lvxl/t4l7CT1gzLGDDGt209WtpOumTSV00=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qdkXsSMYZFcho5WttZ0Di+C+j4EeTTpOaW9qo8QToG/upOFkNKiXtMYgYorW2C8yFEvgD/QeZ30VgKfw3aQc76b6/YktQqXwAJf+GP/njzP1vsjxeGlZFEKJCao1t8e+ksa+Fip+9dAINY/g1eFT8K6zqsEtCyn9Mjl3eWosq/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZZ3f821gxz6K9X0;
-	Sat, 12 Apr 2025 01:32:16 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D77C81402F7;
-	Sat, 12 Apr 2025 01:36:16 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 11 Apr
- 2025 19:36:16 +0200
-Date: Fri, 11 Apr 2025 18:36:14 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Remi Buisson via B4 Relay <devnull+remi.buisson.tdk.com@kernel.org>
-CC: <remi.buisson@tdk.com>, Jonathan Cameron <jic23@kernel.org>, David Lechner
-	<dlechner@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH 6/8] iio: imu: add Kconfig and Makefile for inv_icm45600
- driver
-Message-ID: <20250411183614.00002382@huawei.com>
-In-Reply-To: <20250411-add_newport_driver-v1-6-15082160b019@tdk.com>
-References: <20250411-add_newport_driver-v1-0-15082160b019@tdk.com>
-	<20250411-add_newport_driver-v1-6-15082160b019@tdk.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E8822069E
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744393074; cv=fail; b=tX+FTV99/a6+y//U9jCL6F2PJoEd/9e5YLmfDOz0EDfXN1DRjecG5o5Nf3wZgCigaUDnZz38NelN/S2Rh6V7osBtU2tTvgclCwLj4SO2Dc2yeniEQE7bJe4XWqyDF2GlVoK0u8gqLAUqpCOLGZZzXW3rdKMMjEdjquoVG+inrGk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744393074; c=relaxed/simple;
+	bh=Uca2GQR0IhtyRZp1UBX1U8rG48jrZsCCOARCOgJCb8Q=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=iCghEDEbachky/+GfUfBwM4CXO7sO+hiSVRgkF560CbuAkaTdnJdLOXa9Rr4IbWjv6fHOM86v8DMhuwCzJ0S2IRrWAyD5VJhcEDglnE0XEA77+wggizwJ4pDi5HGIAF4Ao7fML8o+Y9J7BMwkbLBzimmM1ykiqi33p3eii3PFN8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e5k71+FK; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e5k71+FK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744393073; x=1775929073;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Uca2GQR0IhtyRZp1UBX1U8rG48jrZsCCOARCOgJCb8Q=;
+  b=e5k71+FKfdvI07OjOiZ9SRql5Tm8OrHbNvSi+sCIE2smvwpUqmXdvlQe
+   eusFcp+RNFrEeWPXyQX1pVzDrbaux+IsBR0XtuBXpZGz5fWZ1f/v6r7f7
+   DeuJGkaCxURCW/5NydPTjMqNAw7ZvbBuX6Ns7mzvCTnZn0asNjuEPTC2W
+   NBED/1NyHb9RYYr9eIWFEMUZRT7p4Yn9WJmbeP/RIIjsZnefFCg7zs/jm
+   cl0whKPuZQW+zrC/3atUY9uvRzfN2giRa1ckxc+5qyw2UtDkgh6+lXZRI
+   zCMeY0wXcwu6YD+1v2ZVsByIfwUXWGIXXazG66uOuc7oLa7bWWUIYfWgU
+   g==;
+X-CSE-ConnectionGUID: uW8uFZ0GQ364tMzjDMlLMA==
+X-CSE-MsgGUID: eKo9OXHYTUGtry6eviH33g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="56935962"
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="56935962"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 10:37:52 -0700
+X-CSE-ConnectionGUID: z2/qPnD5SGqMVvNr3Ap/4A==
+X-CSE-MsgGUID: jDoU68nKTZOUQhbmlTnD7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="130087116"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 10:37:51 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 11 Apr 2025 10:37:51 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 11 Apr 2025 10:37:51 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 11 Apr 2025 10:37:49 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eKjB5kVWqw9Hpl3tnS3yFr1ah2OR3jV1wj2nfr/PEvf2EsLA7B9oxOaaf7BZg48XgGaMNt8wQp3KMLt0NXTSlR0hhGcVMK/M99Jvy313ULsteHTZnH2XyNatLEPC4oxLn+sf105HUEs/6kkwdkQe7tf858S/im2AknesX6IEvvoknkqsqwV+rHl9ijxO2dNDXBgZn8C4c8/U4XAI5flJPv4VsZzBJcsYClRIk3b3CQAWNq0dr1ioJSPL/pqyTI6N+BslHxN4QTKkTy06KRluCWakqAICoLFAzoS1AgjP3qbeBBJ39kROoViCIkkbyIIHvyUyEMDo2toAf9oCitztUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Dlz/kEiFdi7Ma/CFHwrBURysNyq+/IyTMLHXQzV7Nwo=;
+ b=dLBdVsvQZcDp3rWyoRhIhpEvEpcc4kQ1bfRXdrGPl7V5GYMpahkN4oRGlYdVnJeYC/UKG+wco4R4nPHcBlIj5x5eLUyyYU4ls3DXTBSpt0lQ8q2gUbm7vfEtNXh75qgb3ROQat2vsWWikVXgmr+B+NPk+iKAYIizwnvtAA+YfWovDtKROCvnx0HB30laqEXzc1tAed+MEGKllvbdqN+3gzA/n0UNrzYCfOiYK9twVxelfGgOzimxSi9GimiYqsxHrCQjXvE8lSaeFgpj15Bz4eD84GK/exMxFUPFs0EQMqqxkTYQd1CD5Ntoy0MKNj7lZOEkhY+h3zqmQ18rZ58NRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB6269.namprd11.prod.outlook.com (2603:10b6:8:97::14) by
+ LV2PR11MB6047.namprd11.prod.outlook.com (2603:10b6:408:179::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
+ 2025 17:37:41 +0000
+Received: from DS7PR11MB6269.namprd11.prod.outlook.com
+ ([fe80::af1f:dcc:49bf:1a26]) by DS7PR11MB6269.namprd11.prod.outlook.com
+ ([fe80::af1f:dcc:49bf:1a26%5]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
+ 17:37:41 +0000
+Message-ID: <7d1330e3-a0f0-4a4c-a487-46304822e0fd@intel.com>
+Date: Fri, 11 Apr 2025 12:37:33 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/5] x86/tdx: tdx_mcall_get_report0: Return -EBUSY on
+ TDCALL_OPERAND_BUSY error
+To: Dan Williams <dan.j.williams@intel.com>, "Kirill A. Shutemov"
+	<kirill.shutemov@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-coco@lists.linux.dev>, "Dionna
+ Amalie Glaze" <dionnaglaze@google.com>, Guorui Yu
+	<guorui.yu@linux.alibaba.com>, James Bottomley
+	<James.Bottomley@hansenpartnership.com>, Dan Middleton
+	<dan.middleton@linux.intel.com>, Mikko Ylinen <mikko.ylinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20250407-tdx-rtmr-v3-0-54f17bc65228@intel.com>
+ <20250407-tdx-rtmr-v3-4-54f17bc65228@intel.com>
+ <67f601e35845f_720529475@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: "Xing, Cedric" <cedric.xing@intel.com>
+In-Reply-To: <67f601e35845f_720529475@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0082.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::27) To DS7PR11MB6269.namprd11.prod.outlook.com
+ (2603:10b6:8:97::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB6269:EE_|LV2PR11MB6047:EE_
+X-MS-Office365-Filtering-Correlation-Id: 028410b9-0577-4033-b3e4-08dd791f8f1c
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?NHpYYkRsM1o4bGV1MmpDY0RMSk9YZ254aHoxUCt3RXo2RWNtaElOSlJCRlpX?=
+ =?utf-8?B?S0tUNjNUc0plUzh3cm5lWGUxYlVjdVBMT1NOUnpWQkRyK2pJV3pVd2JqcTlP?=
+ =?utf-8?B?NitoelpSTmZ5RnVON0ttY24xendmNVZqVEdxQlJoRG5yOWNkQ0YxR2xoNCtt?=
+ =?utf-8?B?QWE0bHhMT0IxaSsyS3ZkcmorSnFYSVpYbi9wWUhDbW56UHozak1oWE1WeHVZ?=
+ =?utf-8?B?MGI0Yk5ZQlJVVm1XMHJ4bGFOakNXS1JEekFnMldYM01DeFVBNzkwTVpGSzdN?=
+ =?utf-8?B?VnIvY1N5SlNINXQzM3BNN3ZUUyt6WEhhSkJPdTdRby9sQUNTTmpxQnU0NzBa?=
+ =?utf-8?B?eEdyaEhTZ0M0MGlLMmJLNkZicU9VUEt2dUtaZ1I1MnlMZjQ5OHhuUm92dExG?=
+ =?utf-8?B?NUtPVENHL2QvYXh4VHVRMDQvWkF5Tzl4cWV5NnprVnJHQ2lXSHNnTnI4aThE?=
+ =?utf-8?B?K3dJNVdTZnNMQ3pxSmtnV0w3WWxSRFdNRDVZREw4U2ljVjFFMGErSkpiV0hZ?=
+ =?utf-8?B?eXlSbWxYSjBZbnJPc2h5cnZsRzJkVnh4VnUxQWJKREg3bm95OEJQa0d2c0FU?=
+ =?utf-8?B?YklIOWJhdEVIdHoyeFZyOGxhUFNaNGZTTXJTYk15a0s3NmswcXNjRzJGcUtT?=
+ =?utf-8?B?UnEyWUZ2bzhmZSsxVkt5RVBrNGltWXl6c2hKdWVKb2xnL0lpdGZjdFhPVGRk?=
+ =?utf-8?B?NE1ERmVsVi9kcTJwNHM0ODBnbTN4WlZKSWx0WHhpVFVDR2gwNnhnYnlqNkpU?=
+ =?utf-8?B?N1daM25tQzJxSHpMNFRrUEM0bTNhQndsWW13cHI0YXFta2F1eTFrL0xrWDQz?=
+ =?utf-8?B?UUwxczJRU0MwQnpheXozdStWaHNGWnliSHEzTDBkQm5SK0VLVjB6QTlSQVl1?=
+ =?utf-8?B?N05IVS9LRGNJL0wzWS9wWlErMm1QYnl3b0dHSFpnRXRBbGxrVGVhMi9lbFlB?=
+ =?utf-8?B?VjUzeTRubXlHVTZxWG9wa25SRkRKeEhXMG0rTi9MQkFYN3k4a3o2WSs1R2ow?=
+ =?utf-8?B?ZXFvNkhTUUxrazdUM2NKL1VCb3daT0srcmhaeWR2L01Sd1cwMGdWaXdxcTNN?=
+ =?utf-8?B?OVlSaVlMMVhDOXhwMzVTV1pEUDZYT3Z6QlNIVy9qTC9CSGtRNWhqN3g0NGZ2?=
+ =?utf-8?B?ellhTFg3UnJSQlJHS1pPR0xNeTd4anpJdHA1bThBM3hGWjFOWkxjdWVIV1p4?=
+ =?utf-8?B?bW4xODA1NXZsYVJDTE5od3dLZjROTHNWSk1qbGRMQmVINTBIVWRveUV6VW5T?=
+ =?utf-8?B?YW9RSHhWWTNsU0EzdUllcXZuUERlYmJDNDl5U2JVMFdleC9oVmVySjVnNWlp?=
+ =?utf-8?B?NGtJdFNVNFVHMzZmZkNUc1JqbHBIbUM4U2J4am1ETG5Ta1pVSnpULy8veEdn?=
+ =?utf-8?B?TkJ3QmVNK0RpS3FlNjBkRy94Y3EvVmNOTTk0V29ZcUMybmFyTktqVDVuZDhy?=
+ =?utf-8?B?SW1TY2ltdjdRYzZ2TVEyY1YwOHNqM2dKYittcnBPSnVWU2ZMaXgyVWZoV3ZK?=
+ =?utf-8?B?S2tIWnR5ckVEV1lWLzM3QWhoWmxCQzE3WkFFRlk2Zk9OQVZMT0ozRGlYM0Ez?=
+ =?utf-8?B?akVuOTNpcms0TGdYazVuT1Z0Vy9yanZHLzRud3Jib2NDdldPQm9lTkJFanlJ?=
+ =?utf-8?B?TmQyNUpHRFlic3k4SkxHTk5YYXZLYjBoRzZkR3hoY1l3cDVQMlEveU83NDMz?=
+ =?utf-8?B?dnBUZUQxajB5TFVlT1QyZ1BzOXhwa1FoNlo4eTlWWmtESHB5LytjRW9xMnl3?=
+ =?utf-8?B?OHVqK2xDU0FEaWpBaXFpVjYrME1mUkluK3NvZlNJZXM5ekpXV3luTTd2V2pk?=
+ =?utf-8?B?SkVDNVJkR2IxSHB3UjQySnhmMGxaNjVCQUFiOGk0czJ6RVJ5U2Z3L3lpdmVJ?=
+ =?utf-8?B?SGZ1NFVSZGlZVU9EZ2piSXhqSU5YeGRYeWNtNHVRQVJvRU4rQjR2MGx3emxs?=
+ =?utf-8?Q?Jm2hwFZgj8o=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB6269.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V1duWEkxbGZ5VnJxd0tBdWNjMGg0MXJZR2hob0lXbVAxTG9xTHZGZDA2b3BS?=
+ =?utf-8?B?TWIrYkZPcjY2MGZTWnZlQ0g5WUxnYStyV1NsZk02cnB0YlhUQmNZRFBnT29q?=
+ =?utf-8?B?Y1JwYkhLanJGbWpDOCtRVy9vRG1kd045dTNaV1B5RjZOd2FMdXl0cVFIZHdL?=
+ =?utf-8?B?OVI2ZWZ4QkxVaDZiSzhZTVpkbWRzM1BZc1BRalNEZU1iYlordk5FY2s3Zllk?=
+ =?utf-8?B?UzZzZ1hPRnp1aEZSTFI2azVLT2ZFZ0QycTZDeWN0RGRRNlRFVHdwRFI3ejV0?=
+ =?utf-8?B?SDA2MmVXaGdsci9LSitodlYxbEhSMk1ac0xENUwwT1F5T1c3SEpRSDlicjky?=
+ =?utf-8?B?K2FrWXB3VUtNUnE4Nk82SjI4cGZJZDNObXpZa1BoNE83Ym4rTE5OMnpIOXRX?=
+ =?utf-8?B?TnpZdTcvbm4xOS9TNjRuL0phL2hTM0FnMk5QN0kyQ2VETFRtemc2dldNd0py?=
+ =?utf-8?B?WkpZMmgyVUxkZkJsNjErQThaTjBDb1R5K0hIMWdEc0dRajE0USt6NGtQdWZ5?=
+ =?utf-8?B?TVg1aVJ5VGZNRFEyZUY5ckdraXp4RVVWdHNReWZFemhGYldUU0JSazdqa0Mz?=
+ =?utf-8?B?N3k5UG1keE5yVm1KY2lzT3Q2cWxwUDBTdUF0MkRhYnc0Uk1FUXR4T25ZOWxs?=
+ =?utf-8?B?ODZuR1IvZXdGWnQvejVHQXRIcjhZOFlIMmJnL1d3T05oM0tmYUtscjhWRFMz?=
+ =?utf-8?B?UGJ6ZmFHeDBvSW1QSktPQW9WdTMxdWIwZVBNY0FJZHRtaCt4N0lRLzVQNHRY?=
+ =?utf-8?B?cjdhUS81OVJNMDliNHNTeEFkYjZ4a3lFcVZYY1M0SnVjL3plditGY1JDQzBr?=
+ =?utf-8?B?dmNoL0ZiTzZ3dENqTEt0ZGFQdWFzSllENUUyRkJEMGVTcHRpU0Y4UUNuOHZK?=
+ =?utf-8?B?OE9Cc09EZWlFdTJsMENlTzNnTHBJNlNqTmRpWG54S0RqT2VaaU5PRkZFTmw4?=
+ =?utf-8?B?Zm5HS3Jtc1BOMVR3N2xPSVhwNUdScXE0R25xZ0RXTDZja2xVZ2F0YUgvMWdw?=
+ =?utf-8?B?WTZKTW4wNkpOd21vb05jYnZ2aEtkbGl3bUtFZEQ0VnVjNWVlU2oyYlc0WkZo?=
+ =?utf-8?B?bngrelQ1MDhNTUxMaDdtenNJMHY1cXlHOVVkajc5dTJ2RVhxRDZhYml2dXVJ?=
+ =?utf-8?B?N3FXWWlHTnVDSWFaSm9PakFjMm5MR2Z5dlNUbk9BZjEzbGh0S3JueHBYZzFS?=
+ =?utf-8?B?MTBFSmxzVDdMZVhJRFpnUWJuVnN0MitYL3ZnWTBuUWpQL3FzejgvL0dCMlkv?=
+ =?utf-8?B?WnBud3ZMeGgycDc5cUJWNUZCMzczd281cjlHVVBLZ3RIdUxPci9BNjdyMkFX?=
+ =?utf-8?B?L24veHBRSzUrTjhOWnVtOXM2V3pZVnNlczBIMnBqcCtMM3JjVlhUTCthQVdY?=
+ =?utf-8?B?Tkd5c1VRcGxhcTIybDJsNWpIaDdXSHRhbFI5QjRmeEh2YndHdE1BTTVNZzJM?=
+ =?utf-8?B?ZUNnSEoxbjhtMVI2N2tiblp5bE5mYWxjZDZZa0R5NVlCQVhUQnQ0TlJVWFFs?=
+ =?utf-8?B?ZjZrbDFkUEs2a1V6eXBQaEp4RlNpeFdvUU9Sam94WnhKSFZ4c2JvVzRTRWlE?=
+ =?utf-8?B?Q1JTUkZKV0JDOGZRajlad2w5UHJoSEdKMlVCZG5nMXljM1ZKZUtId2gzN0RN?=
+ =?utf-8?B?VTkwZlJ4bEs2c3dWNkI0b0tSc0UrSU1UcStmZE9SSlVweU5jT1V4K2tjdGFS?=
+ =?utf-8?B?QXkvbUhjNjJUOXlTS2NTcHl3M0NlOU5GUnpiZEg2b1MyM1pvdjhRNjdydm9i?=
+ =?utf-8?B?bzVvdnFjZ1h4OXBuYURjaS9Lb3BVZ1hoR3p5N0EvVkFBUm1rNS9ra1NaLzgx?=
+ =?utf-8?B?QW5KU2R3N0FZT1RCUktLYkJ1c21xcmh5TzJxQnU3b1FKWTFZZFRCckRCTzgv?=
+ =?utf-8?B?YkRwT3pZSEtSTElIajdNRC80UXA4TTJ2OWcrOStBUDFkK1cyNit2ZUZjbFdX?=
+ =?utf-8?B?dFdCdktJNjBWaVdKcHJrSXFsaTFuSGNyMUJFOUgrRmpyc1hMTzdlME1mOFFK?=
+ =?utf-8?B?UTRteVBFRE1POERaZCtjNHVwSnQreHF0enhRdGNDaHg1RUY0bnJUcVc1ZGU3?=
+ =?utf-8?B?aTBLRWU5TlVBeG9Mbzl6bFpiK1BoN2tJRGpmQmxNOFJQQ0pNaTNjZ3NlTWth?=
+ =?utf-8?Q?J+Do1Zw95BXU9O2g2XFt3yP/a?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 028410b9-0577-4033-b3e4-08dd791f8f1c
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB6269.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 17:37:41.0714
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AgFmr7TNxQzOov7W/r8d80mFN6lxDS/Oxq7BEBvRQ/zn5MpFsiOtKIgRZM/tlhjRjQBP4PUYGartlU+hD1dbLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB6047
+X-OriginatorOrg: intel.com
 
-On Fri, 11 Apr 2025 13:28:38 +0000
-Remi Buisson via B4 Relay <devnull+remi.buisson.tdk.com@kernel.org> wrote:
-
-> From: Remi Buisson <remi.buisson@tdk.com>
+On 4/9/2025 12:13 AM, Dan Williams wrote:
+> Cedric Xing wrote:
+>> Return `-EBUSY` from tdx_mcall_get_report0() when `TDG.MR.REPORT` returns
+>> `TDCALL_OPERAND_BUSY`. This enables the caller to retry obtaining a
+>> TDREPORT later if another VCPU is extending an RTMR concurrently.
 > 
-> Add 4 modules:
-> - inv-icm45600
-> - inv-icm45600-i2c
-> - inv-icm45600-spi
-> - inv-icm45600-i3c.
+> Can this not be prevented by proper locking? Otherwise this type of
+> collision sounds like a kernel bug, not something that should escape to
+> userspace.
 > 
-> Signed-off-by: Remi Buisson <remi.buisson@tdk.com>
+Yes, -EBUSY should never happen with proper locking, which however is 
+implemented in the upper layer.
 
-Hi Remi,
+Similarly, -EINVAL will also indicate a kernel bug but is left for the 
+upper layer to handle.
 
-One quick comment.  A driver should be structured to build fully
-after each patch.  That means the makefile and kconfig should be introduced
-in patch 1 of the series. Obviously more stuff will be added as you go
-along.
-
-If someone just wants to pick up the patches for the core and one bus
-they should be able to do so and expect that to work.
-
-Some other areas of the kernel are more flexible on this than I am
-but for IIO at least that's they way we have always done things
-and I'm not keen to change it.  It means that we know everything
-we need to review each step in sequence is there as otherwise it
-would not build.
-
-It does mean that you need to build test each additional patch
-whenever you do a new version to be sure that the series will be
-fine for a bisection build. 
-
-The exception of 'hidden' library modules like the core one here
-that won't get built until someone selects them from another kconfig
-symbol is fine though.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/imu/Kconfig               |  1 +
->  drivers/iio/imu/Makefile              |  1 +
->  drivers/iio/imu/inv_icm45600/Kconfig  | 70 +++++++++++++++++++++++++++++++++++
->  drivers/iio/imu/inv_icm45600/Makefile | 17 +++++++++
->  4 files changed, 89 insertions(+)
-> 
-> diff --git a/drivers/iio/imu/Kconfig b/drivers/iio/imu/Kconfig
-> index 15612f0f189b5114deb414ef840339678abdc562..9d732bed9fcdac12a13713dba3455c1fdf9f4a53 100644
-> --- a/drivers/iio/imu/Kconfig
-> +++ b/drivers/iio/imu/Kconfig
-> @@ -109,6 +109,7 @@ config KMX61
->  	  be called kmx61.
->  
->  source "drivers/iio/imu/inv_icm42600/Kconfig"
-> +source "drivers/iio/imu/inv_icm45600/Kconfig"
->  source "drivers/iio/imu/inv_mpu6050/Kconfig"
->  
->  config SMI240
-> diff --git a/drivers/iio/imu/Makefile b/drivers/iio/imu/Makefile
-> index e901aea498d37e5897e8b71268356a19eac2cb59..2ae6344f84699b2f85fff1c8077cb412f6ae2658 100644
-> --- a/drivers/iio/imu/Makefile
-> +++ b/drivers/iio/imu/Makefile
-> @@ -25,6 +25,7 @@ obj-$(CONFIG_FXOS8700_I2C) += fxos8700_i2c.o
->  obj-$(CONFIG_FXOS8700_SPI) += fxos8700_spi.o
->  
->  obj-y += inv_icm42600/
-> +obj-y += inv_icm45600/
->  obj-y += inv_mpu6050/
->  
->  obj-$(CONFIG_KMX61) += kmx61.o
-> diff --git a/drivers/iio/imu/inv_icm45600/Kconfig b/drivers/iio/imu/inv_icm45600/Kconfig
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..4fade8852a0dcf54df2bbd67b9269ed2c59f8699
-> --- /dev/null
-> +++ b/drivers/iio/imu/inv_icm45600/Kconfig
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +config INV_ICM45600
-> +	tristate
-> +	select IIO_BUFFER
-> +	select IIO_KFIFO_BUF
-> +	select IIO_INV_SENSORS_TIMESTAMP
-> +
-> +config INV_ICM45600_I2C
-> +	tristate "InvenSense ICM-456xx I2C driver"
-> +	depends on I2C
-> +	select INV_ICM45600
-> +	select REGMAP_I2C
-> +	help
-> +	  This driver supports the InvenSense ICM-456xx motion tracking
-> +	  devices over I2C.
-> +	  Supported devices:
-> +	  - ICM-45605
-> +	  - ICM-45686
-> +	  - ICM-45688-P
-> +	  - ICM-45608
-> +	  - ICM-45634
-> +	  - ICM-45689
-> +	  - ICM-45606
-> +	  - ICM-45687
-> +
-> +	  This driver can be built as a module. The module will be called
-> +	  inv-icm45600-i2c.
-> +
-> +config INV_ICM45600_SPI
-> +	tristate "InvenSense ICM-456xx SPI driver"
-> +	depends on SPI_MASTER
-> +	select INV_ICM45600
-> +	select REGMAP_SPI
-> +	help
-> +	  This driver supports the InvenSense ICM-456xx motion tracking
-> +	  devices over SPI.
-> +	  Supported devices:
-> +	  - ICM-45605
-> +	  - ICM-45686
-> +	  - ICM-45688-P
-> +	  - ICM-45608
-> +	  - ICM-45634
-> +	  - ICM-45689
-> +	  - ICM-45606
-> +	  - ICM-45687
-> +
-> +	  This driver can be built as a module. The module will be called
-> +	  inv-icm45600-spi.
-> +
-> +config INV_ICM45600_I3C
-> +	tristate "InvenSense ICM-456xx I3C driver"
-> +	depends on I3C
-> +	select INV_ICM45600
-> +	select REGMAP_I3C
-> +	help
-> +	  This driver supports the InvenSense ICM-456xx motion tracking
-> +	  devices over I3C.
-> +	  Supported devices:
-> +	  - ICM-45605
-> +	  - ICM-45686
-> +	  - ICM-45688-P
-> +	  - ICM-45608
-> +	  - ICM-45634
-> +	  - ICM-45689
-> +	  - ICM-45606
-> +	  - ICM-45687
-> +
-> +	  This driver can be built as a module. The module will be called
-> +	  inv-icm45600-i3c.
-> diff --git a/drivers/iio/imu/inv_icm45600/Makefile b/drivers/iio/imu/inv_icm45600/Makefile
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..0fd6fbce0286f24504dbfe71925f9c35e717c446
-> --- /dev/null
-> +++ b/drivers/iio/imu/inv_icm45600/Makefile
-> @@ -0,0 +1,17 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +obj-$(CONFIG_INV_ICM45600) += inv-icm45600.o
-> +inv-icm45600-y += inv_icm45600_core.o
-> +inv-icm45600-y += inv_icm45600_gyro.o
-> +inv-icm45600-y += inv_icm45600_accel.o
-> +inv-icm45600-y += inv_icm45600_temp.o
-> +inv-icm45600-y += inv_icm45600_buffer.o
-> +
-> +obj-$(CONFIG_INV_ICM45600_I2C) += inv-icm45600-i2c.o
-> +inv-icm45600-i2c-y += inv_icm45600_i2c.o
-> +
-> +obj-$(CONFIG_INV_ICM45600_SPI) += inv-icm45600-spi.o
-> +inv-icm45600-spi-y += inv_icm45600_spi.o
-> +
-> +obj-$(CONFIG_INV_ICM45600_I3C) += inv-icm45600-i3c.o
-> +inv-icm45600-i3c-y += inv_icm45600_i3c.o
-> 
-
+> I.e. userspace can not reasonably know when it is safe to retry, so take
+> locks to ensure forward progress.
+tdx-guest does WARN() on errors. There are no other users of this 
+function currently. Returning an error, however, will allow different 
+error handling in the future (e.g., retry instead of WARN on -EBUSY).
