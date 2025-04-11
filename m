@@ -1,106 +1,91 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57B3204840
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7784278E5D
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744367328; cv=none; b=FX8eT0nSTHm4pqI2WilwN5Z/WsidseUWsXm4HUazmL8R08F7nxzy4NOEmZzMbZycmaqiz3w6zZ8f/ERYsH8X7pdGVQJnS1P3jW7lZNh5O2oI6kuvwONaYBrHS2J+QWIo86y+7ADff91e72vzXEF9+pZ2+odSwh/XWNG/PuFdNxo=
+	t=1744367446; cv=none; b=e6ho4bO1ltM+qLrHZlfrslMBrwNHMuoD8BBtahHayrFA+k6G/k5NZ+lxP7kQsc1cj3E4B/mYZpC+LtcVdzPqqpujzDFFOUIq8Ytqw0gCMu675TtA03f4OwpZ/UQXzQePd0OERM3Qwl5d0SmjnZYn5YTVqXBttXrH1bO+/dNY0Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744367328; c=relaxed/simple;
-	bh=ZDCwX/VIIX2cwjTORa/viaElRwz8HH8NWVCcOJobQOI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G9aPkeqmhun3b/H6NEKo4r4EikdoQhcI9T9mzqMuekqC1hzkLFABE2tZdGeKm7T8g8mNUUZt7aEbMOSBdhZ1Wxi4eS5dQTKm/Xo/PxU82Iop5r+U+O65QU194FBKNlvXueEuF6DFgU0wQkPKBEzPcpeo2/pkU/+ZO0lirk5lCqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=AMB1+Gay; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="AMB1+Gay"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744367220;
-	bh=Qvl4cj8ljBGCVeGDelcgbiIaxF0858Xn7bz1tzcyE/c=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=AMB1+GayCZ2msOfMu4sw9l2YodfAa4F7Smo6rdQngCRhumO5VY4iI3ApjIDVBlUGV
-	 /Lyc9fzWfm2Ys46pO14Ffa31pwepkx1O+l7gleLtpKl9XY7A4VChWo6C7HS02fV/mK
-	 F6b7tnYbcIxcmBxOC8wlVvk67vZCTDTGjOYoK5l4=
-X-QQ-mid: zesmtpip3t1744367176t06a84176
-X-QQ-Originating-IP: T6GmBeruXCFtkICI5bUi36KWkx/42EidU75gg0SRHd8=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 11 Apr 2025 18:26:13 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 11810010522310925225
-EX-QQ-RecipientCnt: 15
-From: WangYuli <wangyuli@uniontech.com>
-To: mark@fasheh.com,
-	jlbec@evilplan.org,
-	joseph.qi@linux.alibaba.com
-Cc: akpm@linux-foundation.org,
-	kuba@kernel.org,
-	dmantipov@yandex.ru,
-	mingo@kernel.org,
-	axboe@kernel.dk,
-	wangyuli@uniontech.com,
-	tglx@linutronix.de,
-	ocfs2-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com
-Subject: [PATCH] ocfs2: o2net_idle_timer: Rename del_timer_sync in comment
-Date: Fri, 11 Apr 2025 18:26:10 +0800
-Message-ID: <BDDB1E4E2876C36C+20250411102610.165946-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744367446; c=relaxed/simple;
+	bh=F9ZVS7uMc2q4H4pc2JAAa9mcfQxEK9dcS46bLi6g7U4=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=be4gf+eiaBRO88E4ZK4zTpY/yDaWXhrQ5c2a8a4PQrHY8/93t613XOY7kK62IimL/LhfjRDPlLLompbKgAdC8c0UIzHcIdquPpwimnaErdpLn6yHNJkrZ6VGWJ51MAtQ3NwwOKz6UlkwPJVt9ZBQmETuwmxWRVedp58pUhctP74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mxde.zte.com.cn (unknown [10.35.20.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZYt9G3RBTzKjJ
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:25:06 +0800 (CST)
+Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mxde.zte.com.cn (FangMail) with ESMTPS id 4ZYt990HDXzBRHKW
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:25:01 +0800 (CST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZYt8z3Tztz5B1J4;
+	Fri, 11 Apr 2025 18:24:51 +0800 (CST)
+Received: from njy2app03.zte.com.cn ([10.40.13.14])
+	by mse-fl2.zte.com.cn with SMTP id 53BAOjIV027590;
+	Fri, 11 Apr 2025 18:24:46 +0800 (+08)
+	(envelope-from jiang.kun2@zte.com.cn)
+Received: from mapi (njb2app05[null])
+	by mapi (Zmail) with MAPI id mid204;
+	Fri, 11 Apr 2025 18:24:48 +0800 (CST)
+Date: Fri, 11 Apr 2025 18:24:48 +0800 (CST)
+X-Zmail-TransId: 2afd67f8edf0fffffffff09-ab5a3
+X-Mailer: Zmail v1.0
+Message-ID: <20250411182448645tJ7XVmvNHqUXluy9xYQ_7@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NWaY/LEHNR/FznKEMis7KFA3cuZI6LvpOtEWDSfif2oJYzutp3G2Bhmw
-	p50Mlqe9LYhzY6J03qqnB0RwZP38Qyfav7dFWw4RnO8C4Pw1Nl+//Oq0OD5FKohz5Rv30Ms
-	YN479BzXUwe8mphEPA1tzN5RubvWdXgle+O44UWWQcFn6NSX0AqZTuKUc+5pQOQzZwlC7yl
-	94tJPy7WWXkCzhc393TVwGbgklsppbxrcAnz8yBGk4CYJ73CxkCPw1VZufrWopNoskFhWVo
-	2XrVG5UL1hbYoyVgcesumwYL/xs+aqIzmGrdo7JOBBm98/B/GApoRReZsI23g0r392c0Smg
-	+K2DjfJ2+s6yDXobuH0qleO2lQomQ1uxOjUNSUCNPZVZy/nPpsqHoI3UZ3HDbXHimptCc+Q
-	Z9OrdeixAn9pGHXaxGH1iGVrboiONDGBfegArvtryts04ctv4r9hbuLrbKyXTQz9Os3wDCP
-	FgXr35nwV/FL73mbJLobJz6gVlb+OerHRl89P2DsSOlO/vLXXvAIRLVtExmlFeh1z78Q+8p
-	4dgQrYVe/4E8Md6GfXAtw4yK6zdSSVBLcTmPsct+1XV+2myqpW3ufuiEnPkYYmSvRvA1Zgt
-	Jm13116uM7xSCogc0/Q4NqtJyczZCW2Yxkb0MfUatX/3tdjE423OoljgJYgcRI2ggpKttOX
-	Y5kEqQyBugbyvXl21o9/DVNKFWdjDOPp+Y0fv2Rg4Y2X3SPiXxNU9u9AqQeOmJxA/ymZ7/F
-	n1fPmQIqKk6uHsRruIZsbJbb+BftKL3x8KT3yKaXYijXuUkdCp4U35Wwjr9dpsc3UYH1dY0
-	bBqYgMz4atLJOkm5wFGKc8cUyz0SW5yp0n9n97TNiHDSIuLCuhkluEMXraZxHyFgOPnQOzc
-	gXRUGs78XbPd/G5KLmYklDLToFYp1hNG/mFhwJBwZuc9bwym9Ff2otbNG7SRn/WQAo1ErHc
-	WYRkR1HTxlTsXf0TX1EgdZ7AMb9iESDAMoC3YqEfYW/dUBX88A+fqoleBXlwk0zuoxiMZ+1
-	lekEBAHw==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+Mime-Version: 1.0
+From: <jiang.kun2@zte.com.cn>
+To: <tglx@linutronix.de>, <frederic@kernel.org>, <peterz@infradead.org>,
+        <oleg@redhat.com>, <brauner@kernel.org>, <joel.granados@kernel.org>,
+        <viro@zeniv.linux.org.uk>, <lorenzo.stoakes@oracle.com>,
+        <linux-kernel@vger.kernel.org>
+Cc: <fan.yu9@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBzaWduYWw6IFVwZGF0ZSBzZW5kX3NpZ25hbF9sb2NrZWQgaW4gcmVsZXZhbnQgY29tbWVudHM=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 53BAOjIV027590
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67F8EE01.000/4ZYt9G3RBTzKjJ
 
-Commit 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
-switched del_timer_sync to timer_delete_sync, but did not modify the
-comment for o2net_idle_timer(). Now fix it.
+From: Fan Yu <fan.yu9@zte.com.cn>
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
+The __send_signal has been renamed to __send_signal_locked,
+after the following commit:
+
+'commit 157cc18122b4 ("signal: Rename send_signal send_signal_locked")'
+
+But some comments have not been modified along with the
+code, so they need to be updated. This will help readers
+better understand the code.
+
+Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
 ---
- fs/ocfs2/cluster/tcp.c | 2 +-
+ kernel/signal.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/cluster/tcp.c b/fs/ocfs2/cluster/tcp.c
-index fce9beb214f0..43e652a2adaf 100644
---- a/fs/ocfs2/cluster/tcp.c
-+++ b/fs/ocfs2/cluster/tcp.c
-@@ -1483,7 +1483,7 @@ static void o2net_sc_send_keep_req(struct work_struct *work)
- 	sc_put(sc);
- }
- 
--/* socket shutdown does a del_timer_sync against this as it tears down.
-+/* socket shutdown does a timer_delete_sync against this as it tears down.
-  * we can't start this timer until we've got to the point in sc buildup
-  * where shutdown is going to be involved */
- static void o2net_idle_timer(struct timer_list *t)
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 148082db9a55..af5f8bb50491 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2252,7 +2252,7 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+ 			sig = 0;
+ 	}
+ 	/*
+-	 * Send with __send_signal as si_pid and si_uid are in the
++	 * Send with __send_signal_locked as si_pid and si_uid are in the
+ 	 * parent's namespaces.
+ 	 */
+ 	if (valid_signal(sig) && sig)
 -- 
-2.49.0
-
+2.25.1
