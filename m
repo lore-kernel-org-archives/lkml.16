@@ -1,69 +1,67 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADE02BE7CB
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5852BE7A8
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744369200; cv=none; b=fTLThDBpOlnVsJqhZwMsnOyEHIfgPbblsNPYyUcjkoJBr+GOHPa5hMobt/ATvtkvqrD2g9tZokIHYYJpCybyfOk0zrOkuQ6XY3dE600bBC07F3YqPdtY4eUmzb5qhzHx2w81bfZTlmHtztX6ZxcUJ+LK83Mf18RMNnAAXcm/3T0=
+	t=1744369198; cv=none; b=mqq2NMdgav2KTt1yx8qW3FhRr1PZvBpbfW4dpyAmwun0Ae3SBdnDb7VXhQvLVYXooua83nxhsFHKxk63tH1oy/CLUVuQgZIE0gyAISTxKp834LCOM2Z2JeQ4ZL/aO+oEMwPMd2aO+4SdIRfmRxb6QSw52UdjIjHS/Wgl6/NZsus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744369200; c=relaxed/simple;
-	bh=YfkEvdysLwoMmcnG/s03bKY53YATs71FlnrnNvf18rM=;
+	s=arc-20240116; t=1744369198; c=relaxed/simple;
+	bh=x9ocZuCMF6s1tLJISfuyOmdKP9oOJA6RAJRtbMhG13w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Hrg4hgz3pvNLftsltZC9caS+vz/tRgKqHkICbQjn7dWgwXQP9pA+D1P9lHvNTM18BVm3/ZcPkplyq1ChK7GnQWCGEpdBSMNw1lZBQd+bpN22YqES3MxgYLX3EPWON02LtwBFuduzDWTmdK1JSe4Rxvg64Su+15UqXXcNDXkoeW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EYCOf8aO; arc=none smtp.client-ip=209.85.210.174
+	 MIME-Version; b=hG7fIY/bhvu/M1ElqaQjGp0a9v+rWlI3WveB/vN+w/nMSOwgssl0mkZdrjx82/Zgvhj9u3S5ik8OjObd51jL4Xu4btPlZ8t4cj3k4ANqiavHFhwJbfEq+LN+dW4e7MUmFJRh6JSuF/hLWaS/5MJiUbfLgGZNxxHFWbw4/YVY8cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RKiz/d2g; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EYCOf8aO"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7370a2d1981so1413265b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:59:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RKiz/d2g"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736c1138ae5so1825111b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:59:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744369199; x=1744973999; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744369196; x=1744973996; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5O39+KsHhbO3NhJV0D2xQKPBr7meyvBFEMUfJdpqZjU=;
-        b=EYCOf8aODVPPX0FhyvlNF0SbvElYhQcTGPVQu+VmwhlXimf7KyaYCjHb+TQpZAqOKa
-         7D93GW/X+8CmOxCLxqSI4dzA8bNjDdvRvaUgbfdFbw7HikZfGY0a6q0J1CFEi2GMUC12
-         aBCKFldhqhgMuQptseEFCcCVAlB+zHY/u5G5lB2ey2b3BKfnFatsH5U7Wp4jyrAOPwsN
-         sjoIUNwWyaMPssPXg50UZW3tTOv5+L34UWJWGF4EOaCHfBP8PMQbuCEwgnn7wRWoG2Hb
-         wNV8IhDfi6UDXVDqUhCm00CkseGCwrmfao4DhWa3ZPyAkM7oF0C4YAt6Vo7cuvOg1T7z
-         Tu/A==
+        bh=8icndP/zvg1XI2+CBWAxu2KWgnBqQFP1Hmt5Q3cH4NQ=;
+        b=RKiz/d2gCQT0s82PQvVOOUSxPOzKBP6CRu/jQZSmQQmNklutc5MDp20PHBp70FCrb4
+         p2vWAI0gAsjUwpOkro1tOFL/FfnFGjrCKSwTbjfaGP21NW86R3f5MSOUpUYINqfFttrs
+         pRQfuXN0SD0uiGawJivS0RohKy1JnadUJ3MLixwm/HDICVQ3fZrjBsyGII11sO/QnWI/
+         uaI9urpUOjeuhjVJyKXczRvZoZiEqj/qf8eo1xbBUk31cKFiWrzUbdyjBeSwRYpijoKe
+         fx4K/MV56YbWAK5AALzfc+DTcRD0P+kO7yw/lv/OrzQp1RtSQrzebuu0RD9vguGs5Ars
+         tqyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744369199; x=1744973999;
+        d=1e100.net; s=20230601; t=1744369196; x=1744973996;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5O39+KsHhbO3NhJV0D2xQKPBr7meyvBFEMUfJdpqZjU=;
-        b=sWpEYXbhwvv5hGCG6RiWOzic7wfpy2xR8X9ygNOqQk00Xtle6kKYVw5z7jB3kUyTz1
-         KfJRW9UXO4SFjeh+2VLNvFNjDIqsATv3B4SgSi0UdamfYkA7ryWwfK/HVxjSTtfPnojb
-         wdWPB9Ek1jxGKLifqkaltu7hdA5Fy5v/R4L0j3NXLMbyHSBojgSLOM3kwkR6rYHUvLhu
-         hv2Qi8oDYmnpendwPSYX3hPf+/grqMtyUlFtvrohIsDZ1JSsLhX2k2JggDyz252u177L
-         bVzt2gHKFsOZiG0ZfmKeRevJP7Iz91JSGe6OBJ0N6tvI5svzEiYW4UMCKnKiwpHYXZu2
-         z8fg==
-X-Forwarded-Encrypted: i=1; AJvYcCX60Rm3Tuh16k+Qk2CfsiIxpA+mDDZUaQ+5jZlQ97my8/yHvuEA7T/6mHTZoWHMPZrbPVQ4+2t5RxFhne0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysXHjuqFEXnfJodYQ5smbqlTphXgSWtT0rp0ovhusRcP/l5ezO
-	L4HGP3B3gn3gQBARoy90mIYhG8Pc/Da4iPBYzwTouea1GXFW/Jlb98h8d0XmOuw=
-X-Gm-Gg: ASbGncvWBPJCZrIGkTlM9xQ4gGH+ieZgvxFcgQ5dvibmLvdBgaKGSbfGVhEAFtCAQyj
-	EPiBf7b6IBv4L/nXLEYtz3PEgVoG+AB9cCrK9aTTRddr0sykicaQhHEZPPknLNiS9+qujuLn1gR
-	AO6/PCdAbqWyQwuMs7356vT9AEB8xDsmIc5t7oBA3F9UIHuA+RH3jsFxr49+3CjBZ1NwapqZ2UM
-	48RhCaudjgGJqeB/Hy0rMdDGavhARSraTmKwq8CMBJWTYEXSBQLCi8hTgb04bZDQAYSe9YvTLQd
-	XhfLI4YX8LB8z5kl6mW12VOuKkYDJfcJm+vJ1ifgxA==
-X-Google-Smtp-Source: AGHT+IFUZzi3or0+gmBFWhEoaT6J6YgEu6VDaT3zpSxk4MU/e2d8OAjpgFPpre9Wl18Dad1dznFhiQ==
-X-Received: by 2002:a17:90b:5188:b0:301:98fc:9b51 with SMTP id 98e67ed59e1d1-3082365a310mr3170141a91.5.1744369198940;
-        Fri, 11 Apr 2025 03:59:58 -0700 (PDT)
+        bh=8icndP/zvg1XI2+CBWAxu2KWgnBqQFP1Hmt5Q3cH4NQ=;
+        b=iJ/kugnF7SY/XoYseZW0flQzqZUoKftlK6QMUxr1ajg1nqgAxiollT9nKt58h2KCDC
+         ubOCtMRCYMkQoMkQYc3Y2grGF2QYdK85V11PltDUEmZsZj9fFq9+Q6riuHQNsmhNCwcd
+         iUTqNcYEaBlmN8eBkCxYbsRJnLFbstfa/I73/gQblqf/VXabtG5IyL/OeOgeJj/+//Gb
+         wM/Jl6gCA6ip40uwn1bh0F/OlQPVJ2kWqcTu7ifExWcrZn0lii95kf3izeBv3xzoLmjJ
+         rchUGLgg+yQP8lUjW/p7K4+wSTLGno4XzpWqRXrG22MxQjCDD9yX8QM4qO5u6v3LczGJ
+         i6xw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFRbgOv0yL4DtoDzKH6EYkvz02jqXkrreQzeifQ/BnsX+E6iB05qJOMij5inJkOV392P29sTztY10JRUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2nCSMVZu51qu7sCsjpj2BiW7v/YUtVY9ZRNfSkW7vduOycjLL
+	s5r0wtLfOmMy7QKcDHcsgQeLoKShq+R23QJWvTGu0ZmLzM1U9aPNtGZz+paED04=
+X-Gm-Gg: ASbGncudG4X5NhnlkzjlUYBBttHuhZXGXqMMv1Aiv9rvkuSEeqNxCc4e98AerVwzOQW
+	0901bDBjV7Tc7EwGpVqKJS0rJrCkWT0tcO+tT7g0HzBhEGjGuDGvjqvCXSZzGtYzXgtxyFkggdK
+	O0AnGqkRdffpPpWLTp/7dd7nywJRXpN9Fhm0tQhHQWS9/9LLwV5c2+3WIXTPoncga0okVc7UMAg
+	X0RrGJpXpjgP2i+ssA26qByK94xjYBffaAX0/ryhjD/hn/GVZkdvnT0infXz2REKJU13h2cpsDm
+	MUMWBIf+f0Vx2CfqSVhVqI10DAZtz41NHbtlSn9oNQ==
+X-Google-Smtp-Source: AGHT+IHOlqPXQbP/NH5YoopqX8rs99m8OO1ecidoEx4lWwHl9VBhh51/az5okTqwk9eilX+LPwMurg==
+X-Received: by 2002:a05:6a00:1147:b0:736:a638:7f9e with SMTP id d2e1a72fcca58-73bd11dc3bamr4082106b3a.8.1744369195524;
+        Fri, 11 Apr 2025 03:59:55 -0700 (PDT)
 Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df08f63bsm5260842a91.24.2025.04.11.03.59.57
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c62f7sm1226889b3a.65.2025.04.11.03.59.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 03:59:58 -0700 (PDT)
+        Fri, 11 Apr 2025 03:59:54 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
 	Danilo Krummrich <dakr@redhat.com>,
-	Viresh Kumar <vireshk@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
@@ -74,9 +72,10 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Trevor Gross <tmgross@umich.edu>,
 	Danilo Krummrich <dakr@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-pm@vger.kernel.org,
+Cc: linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
 	rust-for-linux@vger.kernel.org,
 	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
 	Erik Schilling <erik.schilling@linaro.org>,
@@ -90,9 +89,9 @@ Cc: Viresh Kumar <viresh.kumar@linaro.org>,
 	linux-clk@vger.kernel.org,
 	Michael Turquette <mturquette@baylibre.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V9 16/17] rust: opp: Extend OPP abstractions with cpufreq support
-Date: Fri, 11 Apr 2025 16:25:15 +0530
-Message-Id: <e88fae38cb339ff88cb64fcd506ce767b458f310.1744366572.git.viresh.kumar@linaro.org>
+Subject: [PATCH V9 15/17] rust: cpufreq: Extend abstractions for driver registration
+Date: Fri, 11 Apr 2025 16:25:14 +0530
+Message-Id: <2f7a1331ad513b94fb47c05bf1d0f5c3fa803858.1744366572.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1744366571.git.viresh.kumar@linaro.org>
 References: <cover.1744366571.git.viresh.kumar@linaro.org>
@@ -104,107 +103,568 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend the OPP abstractions to include support for interacting with the
-cpufreq core, including the ability to retrieve frequency tables from
-OPP table.
+Extend the cpufreq abstractions to support driver registration from
+Rust.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- rust/kernel/opp.rs | 67 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ rust/kernel/cpufreq.rs | 530 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 528 insertions(+), 2 deletions(-)
 
-diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
-index 7bf612fa0cc5..a46ac28d4464 100644
---- a/rust/kernel/opp.rs
-+++ b/rust/kernel/opp.rs
-@@ -20,6 +20,12 @@
-     types::{ARef, AlwaysRefCounted, Opaque},
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index 3e9ded655d46..4194b9558413 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -13,7 +13,8 @@
+     clk::{Clk, Hertz},
+     cpumask,
+     device::Device,
+-    error::{code::*, from_err_ptr, to_result, Result, VTABLE_DEFAULT_ERROR},
++    devres::Devres,
++    error::{code::*, from_err_ptr, from_result, to_result, Result, VTABLE_DEFAULT_ERROR},
+     ffi::c_ulong,
+     prelude::*,
+     types::ForeignOwnable,
+@@ -21,9 +22,11 @@
  };
  
-+#[cfg(CONFIG_CPU_FREQ)]
-+use crate::cpufreq;
-+
-+#[cfg(CONFIG_CPU_FREQ)]
-+use core::ops::Deref;
-+
- use core::{marker::PhantomData, ptr};
+ use core::{
++    cell::UnsafeCell,
++    marker::PhantomData,
+     ops::{Deref, DerefMut},
+     pin::Pin,
+-    ptr::self,
++    ptr,
+ };
  
  use macros::vtable;
-@@ -497,6 +503,60 @@ extern "C" fn config_regulators(
+@@ -792,3 +795,526 @@ fn register_em(_policy: &mut Policy) {
+         build_error!(VTABLE_DEFAULT_ERROR)
      }
  }
- 
-+/// OPP frequency table.
++
++/// CPU frequency driver Registration.
 +///
-+/// A [`cpufreq::Table`] created from [`Table`].
-+#[cfg(CONFIG_CPU_FREQ)]
-+pub struct FreqTable {
-+    dev: ARef<Device>,
-+    ptr: *mut bindings::cpufreq_frequency_table,
++/// ## Examples
++///
++/// The following example demonstrates how to register a cpufreq driver.
++///
++/// ```
++/// use kernel::{
++///     c_str,
++///     cpu, cpufreq,
++///     device::Device,
++///     macros::vtable,
++///     sync::Arc,
++/// };
++/// struct FooDevice;
++///
++/// #[derive(Default)]
++/// struct FooDriver;
++///
++/// #[vtable]
++/// impl cpufreq::Driver for FooDriver {
++///     type Data = ();
++///     type PData = Arc<FooDevice>;
++///
++///     fn init(policy: &mut cpufreq::Policy) -> Result<Self::PData> {
++///         // Initialize here
++///         Ok(Arc::new(FooDevice, GFP_KERNEL)?)
++///     }
++///
++///     fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result<()> {
++///         Ok(())
++///     }
++///
++///     fn suspend(policy: &mut cpufreq::Policy) -> Result<()> {
++///         policy.generic_suspend()
++///     }
++///
++///     fn verify(data: &mut cpufreq::PolicyData) -> Result<()> {
++///         data.generic_verify()
++///     }
++///
++///     fn target_index(policy: &mut cpufreq::Policy, index: u32) -> Result<()> {
++///         // Update CPU frequency
++///         Ok(())
++///     }
++///
++///     fn get(policy: &mut cpufreq::Policy) -> Result<u32> {
++///         policy.generic_get()
++///     }
++/// }
++///
++/// fn foo_probe(dev: &Device) {
++///     cpufreq::Registration::<FooDriver>::new_foreign_owned(
++///         dev,
++///         c_str!("cpufreq-foo"),
++///         (),
++///         cpufreq::flags::NEED_INITIAL_FREQ_CHECK | cpufreq::flags::IS_COOLING_DEV,
++///         true,
++///     ).unwrap();
++/// }
++/// ```
++pub struct Registration<T: Driver> {
++    drv: KBox<UnsafeCell<bindings::cpufreq_driver>>,
++    _p: PhantomData<T>,
 +}
 +
-+#[cfg(CONFIG_CPU_FREQ)]
-+impl FreqTable {
-+    /// Creates a new instance of [`FreqTable`] from [`Table`].
-+    fn new(table: &Table) -> Result<Self> {
-+        let mut ptr: *mut bindings::cpufreq_frequency_table = ptr::null_mut();
++// SAFETY: `Registration` doesn't offer any methods or access to fields when shared between threads
++// or CPUs, so it is safe to share it.
++unsafe impl<T: Driver> Sync for Registration<T> {}
 +
-+        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
-+        // requirements.
-+        to_result(unsafe {
-+            bindings::dev_pm_opp_init_cpufreq_table(table.dev.as_raw(), &mut ptr)
-+        })?;
++#[allow(clippy::non_send_fields_in_send_ty)]
++// SAFETY: Registration with and unregistration from the cpufreq subsystem can happen from any
++// thread.  Additionally, `T::Data` (which is dropped during unregistration) is `Send`, so it is
++// okay to move `Registration` to different threads.
++unsafe impl<T: Driver> Send for Registration<T> {}
++
++impl<T: Driver> Registration<T> {
++    /// Registers a CPU frequency driver with the cpufreq core.
++    pub fn new(name: &'static CStr, data: T::Data, flags: u16, boost: bool) -> Result<Self> {
++        // Required due to Rust 1.82's stricter handling of `unsafe` in mutable statics. The
++        // `unsafe` blocks aren't required anymore with later versions.
++        #![allow(unused_unsafe)]
++
++        let mut drv = KBox::new(
++            UnsafeCell::new(bindings::cpufreq_driver::default()),
++            GFP_KERNEL,
++        )?;
++        let drv_ref = drv.get_mut();
++
++        // Account for the trailing null byte.
++        let len = name.len() + 1;
++        if len > drv_ref.name.len() {
++            return Err(EINVAL);
++        };
++
++        // SAFETY: `name` is a valid `CStr`, and we are copying it to an array of equal or larger
++        // size.
++        let name = unsafe { &*(name.as_bytes_with_nul() as *const [u8]) };
++        drv_ref.name[..len].copy_from_slice(name);
++
++        drv_ref.boost_enabled = boost;
++        drv_ref.flags = flags;
++
++        // Initialize mandatory callbacks.
++        drv_ref.init = Some(Self::init_callback);
++        drv_ref.verify = Some(Self::verify_callback);
++
++        // Initialize optional callbacks based on the traits of `T`.
++        drv_ref.setpolicy = if T::HAS_SETPOLICY {
++            Some(Self::setpolicy_callback)
++        } else {
++            None
++        };
++        drv_ref.target = if T::HAS_TARGET {
++            Some(Self::target_callback)
++        } else {
++            None
++        };
++        drv_ref.target_index = if T::HAS_TARGET_INDEX {
++            Some(Self::target_index_callback)
++        } else {
++            None
++        };
++        drv_ref.fast_switch = if T::HAS_FAST_SWITCH {
++            Some(Self::fast_switch_callback)
++        } else {
++            None
++        };
++        drv_ref.adjust_perf = if T::HAS_ADJUST_PERF {
++            Some(Self::adjust_perf_callback)
++        } else {
++            None
++        };
++        drv_ref.get_intermediate = if T::HAS_GET_INTERMEDIATE {
++            Some(Self::get_intermediate_callback)
++        } else {
++            None
++        };
++        drv_ref.target_intermediate = if T::HAS_TARGET_INTERMEDIATE {
++            Some(Self::target_intermediate_callback)
++        } else {
++            None
++        };
++        drv_ref.get = if T::HAS_GET {
++            Some(Self::get_callback)
++        } else {
++            None
++        };
++        drv_ref.update_limits = if T::HAS_UPDATE_LIMITS {
++            Some(Self::update_limits_callback)
++        } else {
++            None
++        };
++        drv_ref.bios_limit = if T::HAS_BIOS_LIMIT {
++            Some(Self::bios_limit_callback)
++        } else {
++            None
++        };
++        drv_ref.online = if T::HAS_ONLINE {
++            Some(Self::online_callback)
++        } else {
++            None
++        };
++        drv_ref.offline = if T::HAS_OFFLINE {
++            Some(Self::offline_callback)
++        } else {
++            None
++        };
++        drv_ref.exit = if T::HAS_EXIT {
++            Some(Self::exit_callback)
++        } else {
++            None
++        };
++        drv_ref.suspend = if T::HAS_SUSPEND {
++            Some(Self::suspend_callback)
++        } else {
++            None
++        };
++        drv_ref.resume = if T::HAS_RESUME {
++            Some(Self::resume_callback)
++        } else {
++            None
++        };
++        drv_ref.ready = if T::HAS_READY {
++            Some(Self::ready_callback)
++        } else {
++            None
++        };
++        drv_ref.set_boost = if T::HAS_SET_BOOST {
++            Some(Self::set_boost_callback)
++        } else {
++            None
++        };
++        drv_ref.register_em = if T::HAS_REGISTER_EM {
++            Some(Self::register_em_callback)
++        } else {
++            None
++        };
++
++        // Set driver data before registering the driver, as the cpufreq core calls few callbacks
++        // before `cpufreq_register_driver` returns.
++        Self::set_data(drv_ref, data)?;
++
++        // SAFETY: It is safe to register the driver with the cpufreq core in the kernel C code.
++        to_result(unsafe { bindings::cpufreq_register_driver(drv_ref) })?;
 +
 +        Ok(Self {
-+            dev: table.dev.clone(),
-+            ptr,
++            drv,
++            _p: PhantomData,
 +        })
 +    }
 +
-+    // Returns a reference to the underlying [`cpufreq::Table`].
-+    #[inline]
-+    fn table(&self) -> &cpufreq::Table {
-+        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
-+        unsafe { cpufreq::Table::from_raw(self.ptr) }
++    /// Same as [`Registration::new`], but does not return a [`Registration`] instance.
++    ///
++    /// Instead the [`Registration`] is owned by [`Devres`] and will be revoked / dropped, once the
++    /// device is detached.
++    pub fn new_foreign_owned(
++        dev: &Device,
++        name: &'static CStr,
++        data: T::Data,
++        flags: u16,
++        boost: bool,
++    ) -> Result<()> {
++        Devres::new_foreign_owned(dev, Self::new(name, data, flags, boost)?, GFP_KERNEL)?;
++        Ok(())
++    }
++
++    // Sets the `Data` for the CPU frequency driver.
++    fn set_data(drv: &mut bindings::cpufreq_driver, data: T::Data) -> Result<()> {
++        if drv.driver_data.is_null() {
++            // Transfer the ownership of the data to the C code.
++            drv.driver_data = <T::Data as ForeignOwnable>::into_foreign(data) as _;
++            Ok(())
++        } else {
++            Err(EBUSY)
++        }
++    }
++
++    /// Returns borrowed `Data` previously set for the CPU frequency driver.
++    pub fn data(&mut self) -> Option<<T::Data as ForeignOwnable>::Borrowed<'static>> {
++        let drv = self.drv.get_mut();
++
++        if drv.driver_data.is_null() {
++            None
++        } else {
++            // SAFETY: The data is earlier set by us from `set_data`.
++            Some(unsafe { <T::Data as ForeignOwnable>::borrow(drv.driver_data) })
++        }
++    }
++
++    // Clears and returns the `Data` for the CPU frequency driver.
++    fn clear_data(&mut self) -> Option<T::Data> {
++        let drv = self.drv.get_mut();
++
++        if drv.driver_data.is_null() {
++            None
++        } else {
++            // SAFETY: The data is earlier set by us from `set_data`.
++            let data = Some(unsafe { <T::Data as ForeignOwnable>::from_foreign(drv.driver_data) });
++            drv.driver_data = ptr::null_mut();
++            data
++        }
 +    }
 +}
 +
-+#[cfg(CONFIG_CPU_FREQ)]
-+impl Deref for FreqTable {
-+    type Target = cpufreq::Table;
++// CPU frequency driver callbacks.
++impl<T: Driver> Registration<T> {
++    // Driver's `init` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn init_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
 +
-+    #[inline]
-+    fn deref(&self) -> &Self::Target {
-+        self.table()
++            let data = T::init(policy)?;
++            policy.set_data(data)?;
++            Ok(0)
++        })
++    }
++
++    // Driver's `exit` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn exit_callback(ptr: *mut bindings::cpufreq_policy) {
++        // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++        // lifetime of `policy`.
++        let policy = unsafe { Policy::from_raw_mut(ptr) };
++
++        let data = policy.clear_data();
++        let _ = T::exit(policy, data);
++    }
++
++    // Driver's `online` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn online_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::online(policy).map(|()| 0)
++        })
++    }
++
++    // Driver's `offline` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn offline_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::offline(policy).map(|()| 0)
++        })
++    }
++
++    // Driver's `suspend` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn suspend_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::suspend(policy).map(|()| 0)
++        })
++    }
++
++    // Driver's `resume` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn resume_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::resume(policy).map(|()| 0)
++        })
++    }
++
++    // Driver's `ready` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn ready_callback(ptr: *mut bindings::cpufreq_policy) {
++        // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++        // lifetime of `policy`.
++        let policy = unsafe { Policy::from_raw_mut(ptr) };
++        T::ready(policy);
++    }
++
++    // Driver's `verify` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn verify_callback(ptr: *mut bindings::cpufreq_policy_data) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let data = unsafe { PolicyData::from_raw_mut(ptr) };
++            T::verify(data).map(|()| 0)
++        })
++    }
++
++    // Driver's `setpolicy` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn setpolicy_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::setpolicy(policy).map(|()| 0)
++        })
++    }
++
++    // Driver's `target` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn target_callback(
++        ptr: *mut bindings::cpufreq_policy,
++        target_freq: u32,
++        relation: u32,
++    ) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::target(policy, target_freq, Relation::new(relation)?).map(|()| 0)
++        })
++    }
++
++    // Driver's `target_index` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn target_index_callback(
++        ptr: *mut bindings::cpufreq_policy,
++        index: u32,
++    ) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::target_index(policy, index).map(|()| 0)
++        })
++    }
++
++    // Driver's `fast_switch` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn fast_switch_callback(
++        ptr: *mut bindings::cpufreq_policy,
++        target_freq: u32,
++    ) -> kernel::ffi::c_uint {
++        // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++        // lifetime of `policy`.
++        let policy = unsafe { Policy::from_raw_mut(ptr) };
++        T::fast_switch(policy, target_freq)
++    }
++
++    // Driver's `adjust_perf` callback.
++    extern "C" fn adjust_perf_callback(
++        cpu: u32,
++        min_perf: usize,
++        target_perf: usize,
++        capacity: usize,
++    ) {
++        if let Ok(mut policy) = PolicyCpu::from_cpu(cpu) {
++            T::adjust_perf(&mut policy, min_perf, target_perf, capacity);
++        }
++    }
++
++    // Driver's `get_intermediate` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn get_intermediate_callback(
++        ptr: *mut bindings::cpufreq_policy,
++        index: u32,
++    ) -> kernel::ffi::c_uint {
++        // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++        // lifetime of `policy`.
++        let policy = unsafe { Policy::from_raw_mut(ptr) };
++        T::get_intermediate(policy, index)
++    }
++
++    // Driver's `target_intermediate` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn target_intermediate_callback(
++        ptr: *mut bindings::cpufreq_policy,
++        index: u32,
++    ) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::target_intermediate(policy, index).map(|()| 0)
++        })
++    }
++
++    // Driver's `get` callback.
++    extern "C" fn get_callback(cpu: u32) -> kernel::ffi::c_uint {
++        PolicyCpu::from_cpu(cpu).map_or(0, |mut policy| T::get(&mut policy).map_or(0, |f| f))
++    }
++
++    // Driver's `update_limit` callback.
++    extern "C" fn update_limits_callback(cpu: u32) {
++        if let Ok(mut policy) = PolicyCpu::from_cpu(cpu) {
++            T::update_limits(&mut policy);
++        }
++    }
++
++    // Driver's `bios_limit` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_int {
++        from_result(|| {
++            let mut policy = PolicyCpu::from_cpu(cpu as u32)?;
++
++            // SAFETY: `limit` is guaranteed by the C code to be valid.
++            T::bios_limit(&mut policy, &mut (unsafe { *limit })).map(|()| 0)
++        })
++    }
++
++    // Driver's `set_boost` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn set_boost_callback(
++        ptr: *mut bindings::cpufreq_policy,
++        state: i32,
++    ) -> kernel::ffi::c_int {
++        from_result(|| {
++            // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++            // lifetime of `policy`.
++            let policy = unsafe { Policy::from_raw_mut(ptr) };
++            T::set_boost(policy, state).map(|()| 0)
++        })
++    }
++
++    // Driver's `register_em` callback.
++    //
++    // SAFETY: Called from C. Inputs must be valid pointers.
++    extern "C" fn register_em_callback(ptr: *mut bindings::cpufreq_policy) {
++        // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
++        // lifetime of `policy`.
++        let policy = unsafe { Policy::from_raw_mut(ptr) };
++        T::register_em(policy);
 +    }
 +}
 +
-+#[cfg(CONFIG_CPU_FREQ)]
-+impl Drop for FreqTable {
++impl<T: Driver> Drop for Registration<T> {
++    // Removes the `Registration` from the kernel, if it has initialized successfully earlier.
 +    fn drop(&mut self) {
-+        // SAFETY: The pointer was created via `dev_pm_opp_init_cpufreq_table`, and is only freed
-+        // here.
-+        unsafe { bindings::dev_pm_opp_free_cpufreq_table(self.dev.as_raw(), &mut self.as_raw()) };
++        let drv = self.drv.get_mut();
++
++        // SAFETY: The driver was earlier registered from `new`.
++        unsafe { bindings::cpufreq_unregister_driver(drv) };
++
++        // Free data
++        drop(self.clear_data());
 +    }
 +}
-+
- /// A reference-counted OPP table.
- ///
- /// Rust abstraction for the C `struct opp_table`.
-@@ -752,6 +812,13 @@ pub fn adjust_voltage(
-         })
-     }
- 
-+    /// Creates [`FreqTable`] from [`Table`].
-+    #[cfg(CONFIG_CPU_FREQ)]
-+    #[inline]
-+    pub fn cpufreq_table(&mut self) -> Result<FreqTable> {
-+        FreqTable::new(self)
-+    }
-+
-     /// Configures device with [`OPP`] matching the frequency value.
-     #[inline]
-     pub fn set_rate(&self, freq: Hertz) -> Result<()> {
 -- 
 2.31.1.272.g89b43f80a514
 
