@@ -1,193 +1,201 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2044.outbound.protection.outlook.com [40.107.243.44])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890D38635B;
-	Fri, 11 Apr 2025 06:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744354313; cv=fail; b=u7cOKsfTpKvH0zhLQ203FgmACj1STCgD37t/7RRGst/hnd0hf2kYNPLJY0HbBep37jHHwNN98BAoiCU68hTEMgL/k7HwRmcRN71R9mss5CTeLBgPOk6NTSQApdS6Wqg6wtHY9wCRZGZQKF9YuKl29uGHCKEv2UpaddavQl/dH6c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744354313; c=relaxed/simple;
-	bh=yGD4+oEWH3mhJHREyfS81Syma0QAWzYU2dKfbQA1hCY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uhy250n6W52nC3YXHQMKZKxyK+vTPrOpTCJGDAcAYcS0iIYTNl1SDmS1JrK9XNGQczY/kuZukSKKJzkCyw6I5B1ED6zhmfCHFOFGa6LYgBZsmhWuYUyq302LOajOBXzMiLqrau0i3siXt9GS93XnW7tLpcf7GzeM3y5hO8ctH94=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hycjP4uN; arc=fail smtp.client-ip=40.107.243.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0D227EC70;
+	Fri, 11 Apr 2025 06:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744354404; cv=none; b=f9si/Bh/POvF2mUodcH7EAXjdsLOUh6d5hAFFDuc31F/msfUwZrn8eCrd52uf1VqtUEr+EFEGZTkx8vawLznKmTvxQlbOyQ9v9xkQe5CaLfijfvtaa36xa9WBzCpZptzc1icx/f+QzefOGif1s18+WjxClBsj/R65e4G+/mAeoM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744354404; c=relaxed/simple;
+	bh=0s0s8V6FqulB244TMU5h7c8JoFobYb31JUt0QhZva9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b3AN0JL0tR52Mkp6HKs3xxQadqYIQnWQ00l4LXUWi7Ay4FCyyVq19rteimCJDpb+6sHBI/EbAxVF/aIPSTmLGR37UEZTttEHVqyHglGrNVmKrT10Tla0dAX75Wcm9axa5SZt4jRF/OepRaNR47WTTL6KUo781aD+7BsyUPQuIKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=Eusy+zkn; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ObxHs5bm reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hycjP4uN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o9Xdcig41dXe/6Dj+xP7gbBXcVbZkAPRjD+DQqO5/Zdlj0EeNySyCZ8zBOS+LxnA96z4aOnqgyPqVxSNIK2CpGUl2zUq/VgP8jeo06VY2nJGFX6GznpVuyubFYu3ZeNUyiymCnRT3TiAhQFwLK527N4L6vFZ3y15dMPEr6j9vfL+DBotvUpEziQnk51w9RtmzSsV9RMk8m3byCnzFospKGlJwF/USAZjFkQ8Ez4f9GFVKVM2XogwILrEyFQqQ22NWVvN7W0qEKOAMQzjihEFE7dFd8OqD1HIbQ2kP+vqa1iagwC2hFJkzb0J1M/puO5io0BrE8wvsQdWDVAfKQy3yQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BwslmbOobTCYPVkDH/sxVzW78KGZXXZihmaQROlUwlE=;
- b=qGnRcJTrL3ASd+vnOPWJQ7dYv43iaOmKWF7h4c0m1PapS+cyU+0kUyo3F4Xc36e5KBOi3tu1uVaUE7Hr8oEqCwhEsZNqYms4vqEyv76MO340eOsRTgx10aob3AMWdJ9WOkTnBth/ZApiRgpEZVWD5LrE4wXRh0eS1TGtp+1aHzDgNlyn4+4DUXggyKkcX30OXPFTUr6G5lMF0B3DwKRJyH8Nm+0AnEgbYbuDD6uRU9Rpk/p195Ycot6G7J0HrP98bPo0jRMnpfnPPl3q79bpr+1b6Urwbiy3GKBlwDVRsTV2eqt6uGQgHR0Ar2EPyay1TzW7rd3dRPyyzkpBGp9HEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BwslmbOobTCYPVkDH/sxVzW78KGZXXZihmaQROlUwlE=;
- b=hycjP4uNEAO2SuPUXIDnUopdVZZPQVhhO/eWfalJjUQlvvtk3WAVxSA5ZYkfHwuYCt9XaMnCgyqTVBDiuwShTcgo34klXC76sve0LC7A1umDk2TjlVnSVLd8MiEZV0Tms4ZNGr6REjohKxKPJlZyYxJp9fsLSI+Bp9n7jwHDxiQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH2PR12MB4262.namprd12.prod.outlook.com (2603:10b6:610:af::8)
- by PH7PR12MB9066.namprd12.prod.outlook.com (2603:10b6:510:1f6::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Fri, 11 Apr
- 2025 06:51:49 +0000
-Received: from CH2PR12MB4262.namprd12.prod.outlook.com
- ([fe80::3bdb:bf3d:8bde:7870]) by CH2PR12MB4262.namprd12.prod.outlook.com
- ([fe80::3bdb:bf3d:8bde:7870%4]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
- 06:51:49 +0000
-Message-ID: <e91f1c4a-5319-49dd-93fb-16275ed8607f@amd.com>
-Date: Fri, 11 Apr 2025 12:21:35 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v7 3/8] security: Export
- security_inode_init_security_anon for KVM guest_memfd
-To: Christoph Hellwig <hch@infradead.org>
-Cc: seanjc@google.com, david@redhat.com, vbabka@suse.cz, willy@infradead.org,
- akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com,
- ackerleytng@google.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com, tabba@google.com,
- vannapurve@google.com, chao.gao@intel.com, bharata@amd.com, nikunj@amd.com,
- michael.day@amd.com, yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com,
- thomas.lendacky@amd.com, michael.roth@amd.com, aik@amd.com, jgg@nvidia.com,
- kalyazin@amazon.com, peterx@redhat.com, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-coco@lists.linux.dev
-References: <20250408112402.181574-1-shivankg@amd.com>
- <20250408112402.181574-4-shivankg@amd.com> <Z_eEUrkyq1NApL1U@infradead.org>
-Content-Language: en-US
-From: Shivank Garg <shivankg@amd.com>
-In-Reply-To: <Z_eEUrkyq1NApL1U@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2P287CA0014.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:21b::8) To CH2PR12MB4262.namprd12.prod.outlook.com
- (2603:10b6:610:af::8)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Eusy+zkn";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ObxHs5bm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744354400; x=1775890400;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=/PE1UT1vGb/hTcLrz4p41JHU3RYkVqbBAbl7yr7Gp8o=;
+  b=Eusy+zknRs3FSoxD5byTPfzyFKsyQtYhXFGJ4wgGaTnIN55fB0+0mkzg
+   eMknBf+eFhPNpg6FuAdz48qa0YYH+I+W1YxOchuwincxq0Hll7cr3lvDe
+   SqyQyLfnn6cd2LAHHX3f5BFDOmdFoEZTsS32ijvEQ5P/b0B/6QQlyopwT
+   +JDNN5RP3CLsOd4meDnjtkMhKhUg/seOz0gwH5eJV2zdX6tEfA/xNAS1Z
+   sLefNCWpcf2BxDHzRtOdOyOsXLSJ2PLX3JhpH3om30bAqpJfdTs9cn24Y
+   K6DYDsqNGMceMZlenZ78pVbrKJEKsjGxaaRHVRnWaAfsrearxg/RcnHT2
+   A==;
+X-CSE-ConnectionGUID: bEW0VtO/RoCQkufVuKYI6w==
+X-CSE-MsgGUID: +UQt4EtqRP2L26xK+qmaUw==
+X-IronPort-AV: E=Sophos;i="6.15,203,1739833200"; 
+   d="scan'208";a="43471096"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 11 Apr 2025 08:53:17 +0200
+X-CheckPoint: {67F8BC5D-10-903EAEAC-E04C76C8}
+X-MAIL-CPID: 7DB6D4A40A213011B16BFC23CBDF85ED_5
+X-Control-Analysis: str=0001.0A006372.67F8BC61.007F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C38D01697E2;
+	Fri, 11 Apr 2025 08:53:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744354392;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/PE1UT1vGb/hTcLrz4p41JHU3RYkVqbBAbl7yr7Gp8o=;
+	b=ObxHs5bmtUyUlJ5potmtAPxPKmKZKcFpev9omi6tSvtVIVNuwbVrQnFnHYKLCyx2OWrfyu
+	Qgsg49VfJTjkSq3Yi8SH9oA03AsUGTVxgxq31IoQPnDxmwejWb1aXgAKyMOBOed3fi5v1Z
+	LuxBVn5GVwFNJFNZwhM5YBSm8wE45uct+JHa32BRVjXQK44Aw6yh/f9szr0ERSPUGyV9MH
+	rWb8294wFjuhCPi5NMfYFOHMwZ/zQA2WrNDkSvJIctExfJYElraZRzBN1Wo6J5pJ2BAg/1
+	8LxcNSfGsdFSgocQrsfg/PM0WoFoRKekjU70ua3Z9aesmXe+JqlVTmiduwmfzg==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+ "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>, hongxing.zhu@nxp.com
+Subject:
+ Re: [PATCH 4/5] arm64: dts: imx95: add PCIe's msi-map and iommu-map property
+Date: Fri, 11 Apr 2025 08:53:02 +0200
+Message-ID: <1970445.taCxCBeP46@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <Z/aLSWGP4mimMNlv@lizhi-Precision-Tower-5810>
+References:
+ <20250128211559.1582598-1-Frank.Li@nxp.com> <10643619.nUPlyArG6x@steina-w>
+ <Z/aLSWGP4mimMNlv@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4262:EE_|PH7PR12MB9066:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff12667c-9098-4bd1-8cbb-08dd78c554e6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TFlOdGV1MUVCUXdJWXIzZ3RpcjBVcEprU3cwQVRnMEtWOS9TNXg5SU55WTE5?=
- =?utf-8?B?Q2xQWVh0Ny9KYUNFYmJGMGQyWUFENGdVcHAxYUZUYi9BSkN6N3JjT3VQVkE0?=
- =?utf-8?B?Qnh3eVZxQThWOURVWk1BQ2FHTllQTjF2OEhMdHVEdVAyc0NRcnVnMHh3WTg3?=
- =?utf-8?B?Q0Z2MVhaaUFyVEtwRU54ZEsyZG5xUEljOG00MzcrRGZvd3dNTkNQVkV1YmlL?=
- =?utf-8?B?czgwdWZaemNEMk00aWhJWUpWcmNySlBwTFhPcGI2SlNFK0RvY3FlYUxNdnFp?=
- =?utf-8?B?WUxicU5DMFBaQzRleHo4SDg0cnFaYStPVzZSUzJIMEVHeXA3RjFKcjlLaTFr?=
- =?utf-8?B?cElsdFRxYXk5VTdSdlh2LzZKSkhuNDVRd3I5cTdzYUJqalZlMHpvMmlBTVRv?=
- =?utf-8?B?dEo3L0VUcGQ1MmJLZFU3dk5GOEY5cEtLVWZUTnkzalRKQTkwZHBsb3ZKcUlr?=
- =?utf-8?B?dkprUjJqa041Sjd6cjZyTjd4V3Q4dHdNN2U3RmhqcWk4Y0x0VFBkOG1tbi9o?=
- =?utf-8?B?azVtWnV3M0ZWT2xjUHJWWFd3YWZHTUwvTk9RZE1WSE1mQ3k4UktKWmR6QWNz?=
- =?utf-8?B?MWxEaEJseEMwT1VxTGxCWENuT0hYSlJ6azdKTkNGYWNkaTFodW5aVGNKOHJ6?=
- =?utf-8?B?bVJCQnliZ1pqOW5WWjQrekdsZmMrN1NRMTRNWGsySHZ3OXJQMENUTGNCVHBE?=
- =?utf-8?B?NTkwN0lsNW5JanI3bHFVbUIydDRLditSTEVyZnNlY09nZ0ZCdituY1d2T252?=
- =?utf-8?B?V29BR0JNeUxhMUpkbG1tWTY2d0JXV09TVDBBUTdYY1N5QXlsMXIwa2xNcGRZ?=
- =?utf-8?B?MGgrbSt5UThrMHFYTHAyQThuYlhlRG5FcjZwU2xwemhoSW1WSnlYQm1ybkpr?=
- =?utf-8?B?Ync1MHlMeExDZGxaZnlZNXoxNGRqcVFPU29PQkpEeGxSZitiTnROVVVWY3Yw?=
- =?utf-8?B?SVZlR2RCUmVGanZmRXZZNG53NkFKMEthb29uSjRsMnhxQVpEVjRNem1YMG9F?=
- =?utf-8?B?MEhwRXdveDZ6WE5Ubk85blByMFd3K1FlZzZvZFJmYjZhU1BidHJHUHFITERF?=
- =?utf-8?B?NUU3MU9JTEpDc1RJS3plN0V0S1FPNDhyWENiWEVHbmZUOW9MRXJHNlJIeTg1?=
- =?utf-8?B?U3d6Z1NBZ3h0TFpsZEZCQ1AvZHVGaEJwREs1a0xpbXlmNU15dVpEczVQN1Ay?=
- =?utf-8?B?R2hQV2hZV0xTNzE5R29TbTBCNkpIeUFpckVuUkFETnFTRGxseEZpQ0xPbmxT?=
- =?utf-8?B?QytDdTFJUjAyUDlmbmpXcWhtSHpJVEVwaEtGSnJvZkgrYlJCWjhEVEJKWmU2?=
- =?utf-8?B?VWFyT2NXR29iYkZNM25jK2hiL21NZ3UxNGJmV2tHTCtsWm45SEZFRnJtMjhy?=
- =?utf-8?B?ZWc4eHJSbVJta1JsUzVGeU5jb3kxN1FBOCtLUzFhd09rWFBrK0tQaStTajlh?=
- =?utf-8?B?RWhOb1BMQm40eXVMMDZjd01LOTdXWXV3d3Q2NjdTRjBmb2RIS2tKZmNVVEIz?=
- =?utf-8?B?Rytsb1JLT0NxWU5aQ3JmZ0tqd3FleVFnTFlUT3NDWXR6M2FxRnBhdkw1M24z?=
- =?utf-8?B?QkpSRHpFTmFLRFlDTE4vYXhXZkI1RkpPMURmSHZjL2NXdmlYcTBGb3ZzVzRT?=
- =?utf-8?B?NmZKUDV5bStzU2hiVytNUFNHOUlXSDVtR2NhY0IwdmFYZHJkZGt1MFM5Mzlh?=
- =?utf-8?B?eGx6N2xoc1BRL2dlY3lqVzZ5Mmk1bFArNDMwYTR3SnVJV2p3K0FWa1YvMXFv?=
- =?utf-8?B?N21Ebi81S1hnNldLMmNPTlJDaEs5NG9EanQ0N0VYTWUySmdseTdCKzh5SnZ1?=
- =?utf-8?B?Vm1lcTlOd21zd0RIbzZiMWdXRDlxNjJLa1RtRFlNY01GeHR6dit4cnVNclJS?=
- =?utf-8?B?RlkxTC9tQUdvd2VIbmpXd3Y5SU5mcmduZ3ROdjB0bVJaVFZTbjVid0E2aVNX?=
- =?utf-8?Q?nUgPo4iBUPU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4262.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SmxlV0VFL0hpZzg2U2kyU0N6RjVVTGF5L0VBRmw1TmZ1MHhWejhmQU1EZFVn?=
- =?utf-8?B?UkhTRVVkcXBERjFoWFRvYzZhUUF2cTBZYndZQmNDUnJpVmRCOTh4MzVOYzRE?=
- =?utf-8?B?UlBSaXdNTXhHaDJLbFVOcTJoVFVQdzdzaEp6UlZ6YkRwZXYzQ0lrWmp1ckpG?=
- =?utf-8?B?WUplMTZyYzE5a084UTN0RzVTLy8veDBvNjkyRDRhb2pvL1pSWnI1SUZTQkdI?=
- =?utf-8?B?NDNWWHRodlNKOFdhaG9wekIvSHhYQXFJUjkzbGNVSzQ3QU5JajJmMWE4RWo3?=
- =?utf-8?B?MkIwQWg1TzlwcmR3SDg5OHB3dTFOMkQ0amNPY3p4bkozMCtoQlhteDdFK3pY?=
- =?utf-8?B?VDg1bDVnY3VyL0RhTy9iRy80VmRQRGc3VEhuWUM0RTAxZmlvR3krSDFWS2Vh?=
- =?utf-8?B?OEdXMTF1VzRlSVljMDZ0clR5a3RKam1xVmxzOVQ3UFJlUVgvU1YzVmJKajM0?=
- =?utf-8?B?bGFtWFJmZ3ZDM0Z4V2p2OWRNRE8xVmFHbXZ6ZUpFZFo1TVd6UnlaR2RaeUVM?=
- =?utf-8?B?amRrd2NuOTNjU0dtSFV3eVhLVmkrNGU4a2xiRDJvdHdjTXZkVW1lZ1hjdlRQ?=
- =?utf-8?B?RXpDdUhrQ3NhZkZOWjM0QUxqWHQ1UFlXZVJiZnRYYkxQSmF0eGpVeURtVHBK?=
- =?utf-8?B?QUlBM0lUSnVkRXl3cjZKRmZZWEl0R1l5ZG5YcG9PaVM2NXE5a1RHK1NMd2xj?=
- =?utf-8?B?cEJmT2NTeUxQM1gxQWZzYnIwMzNBODUvMWFLdnUwTzFPSHFsRjlCZHZqQ2hn?=
- =?utf-8?B?b2cySzNRU29ka3lxT0M3aVRyLzZxQnpnQjF2MWVWWHRJdmRHN2FDUys4Sks2?=
- =?utf-8?B?U1ZVWTA4Y01ZNkVoZDV3RkFYNjZGNkxJWFBuSUt6eWJqcmRCS0trQXZhT2VX?=
- =?utf-8?B?YUg0dWc2OENUaWFPeFRxRmR0V01vQnRpbWZCZjBIKzh5MVFCcXI2V1ZKR2lM?=
- =?utf-8?B?WnNvd0hYTnBNVkpWMjJwQ1pla0ZRd3RSSk1vK0RDY0M3Q01LOVVEUC9zRDdD?=
- =?utf-8?B?QW9UQXhyQVp4QUFKZG9uQ0JrWXlMdVhPZERnMTZETFJjSng4UTVuaTVlZUpq?=
- =?utf-8?B?WEFxSFBON1N4WDJpd3NQVE81Rnh2aDVWRkhjQVVka3QyUTdvWUxTWjMzNEJt?=
- =?utf-8?B?RG9PNEtYYS91M0pOMGFnRWFpUzhnV3dlVng3SUdFTTRFeTFjODNLNm5hZ1FW?=
- =?utf-8?B?Y011R3l0QzhnU3hMbGZUY2duL0EvbG5VYkUwb0x2OTk4eExDaU9BY2lLMy82?=
- =?utf-8?B?VFZUTG5BQkswRHdVckFEc3VNNDNFaTBIZGp4SnkzdFBCSGhvYjNxOTR0eU1J?=
- =?utf-8?B?QWhwZFVZdW45V1JmUUYrRy9vUERIT3l4bWxTenhuaUZUQkM4bTZaZ0VrL1I5?=
- =?utf-8?B?SjgyTEdIU3ZXa0lmakM5dnlPd08wdTdNR1NscW9vUU1LZGcwVW53R1kzRmZp?=
- =?utf-8?B?S2dHelVxNVBOblBjZDZwNFNsOTN3NnpFUzJKSXlTUE12cFFzbHhlTTlhQmFT?=
- =?utf-8?B?U24zQmlybjBwdDRyUjUrS2ZTN0hHTWR1UHZhUTVzRjl1WmRlRFp2NlJhQmMw?=
- =?utf-8?B?N3BVajZNbTExY2FaSEZXSXF1ZGt0eFNXd1ZmMlVqU2xlN3VMcURnMGgzTnZs?=
- =?utf-8?B?azdlUG41VExLRXdpemg0V2d6VEZYK2VobXhBOUhKU2ZVRlRDcy8rdWV2N3JM?=
- =?utf-8?B?OU4rU2pkTzQxUG0rVzZaOGJJZzB3VE0weWpUZlYyYlFmeEJaS2w1b0IxTUZy?=
- =?utf-8?B?Rms5WWs4R0R0UVVScWQxWml6MVlXNFFnb05XQVdScnVBeDdONEJzUDFCMUcz?=
- =?utf-8?B?RmhkQlNVb3hGa200ZjBGbUZGcmRsYXExMXBFY3hPNjd0YWhGa3RlcHVNSCtu?=
- =?utf-8?B?dUtiSE5leFVuVURFRTFDMkdGYU93djNDSW5QQjZlMGt4aHNYSG55QlpyT3N2?=
- =?utf-8?B?UjVYOEhUcWE1TjlDQ3JWeGVucGswNG8zM3Y3QzBEdmtvUDA4aFJQTEptK25t?=
- =?utf-8?B?ZmV6b0V1d1pXQWkveEFBcW9aMnRtNURyUkJvQWxUOS9sZlc5SGRDb1RuODRP?=
- =?utf-8?B?WmVXYm1NMEkvODlvRVhkR0RaTGZFaFUxVnRYTVo4RGlXWkp4WE9UV09iTXZ5?=
- =?utf-8?Q?hZw/dHecZPo78H1YBiy/DcJF5?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff12667c-9098-4bd1-8cbb-08dd78c554e6
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4262.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 06:51:48.9304
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wM9d5WrJJuTaSPRTgNgmqk+uekUFp2Lg9sAXFfrJebhK0t9zPWhos0ToYRwj7p0iMxPuQPBgDCODeHg5+yQXTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9066
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
+
+Hi,
+
+Am Mittwoch, 9. April 2025, 16:59:21 CEST schrieb Frank Li:
+> On Wed, Apr 09, 2025 at 12:14:48PM +0200, Alexander Stein wrote:
+> > Hi Frank,
+> >
+> > Am Donnerstag, 27. M=E4rz 2025, 19:48:33 CEST schrieb Frank Li:
+> > > [snip]
+> > > Finially we get realtek PCI card
+> > >
+> > > it quite complex, there are one PCIe switch to split it to two pci bu=
+s.
+> > >
+> > >  lspci -t
+> > > -[0000:00]---00.0-[01-ff]----00.0-[02-04]--+-03.0-[03]----00.0
+> > >                                            \-07.0-[04]----00.0
+> >
+> > Interesting. Mine looks slightly different:
+> >
+> > $ lspci -t
+> > -[0000:00]---00.0-[01-ff]----00.0-[02-04]--+-01.0-[03]----00.0
+> >                                            \-02.0-[04]----00.0
+> >
+> > >
+> > >
+> > > 0000:00:00.0 PCI bridge: Philips Semiconductors Device 0000
+> > > 0000:01:00.0 PCI bridge: ASMedia Technology Inc. ASM1182e 2-Port PCIe=
+ x1 Gen2 Packet Switch
+> > > 0000:02:03.0 PCI bridge: ASMedia Technology Inc. ASM1182e 2-Port PCIe=
+ x1 Gen2 Packet Switch
+> > > 0000:02:07.0 PCI bridge: ASMedia Technology Inc. ASM1182e 2-Port PCIe=
+ x1 Gen2 Packet Switch
+> >
+> > It seems you have a newer hardware revision. I have
+> > 0000:01:00.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
+> > 0000:02:01.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
+> > 0000:02:02.0 PCI bridge: Pericom Semiconductor Device a303 (rev 03)
+> >
+> > PCIe bridges.
+> >
+> > > 0000:03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL=
+8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 09)
+> > > 0000:04:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL=
+8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 09)
+> > >
+> > > It need below change
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/bo=
+ot/dts/freescale/imx95.dtsi
+> > > index 9bb26b466a061..9dbf395b9a67b 100644
+> > > --- a/arch/arm64/boot/dts/freescale/imx95.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
+> > > @@ -1660,10 +1660,18 @@ pcie0: pcie@4c300000 {
+> > >                         power-domains =3D <&scmi_devpd IMX95_PD_HSIO_=
+TOP>;
+> > >                         /* pcie0's Devid(BIT[7:6]) is 0x00, stream id=
+(BIT[5:0]) is 0x10~0x17 */
+> > >                         msi-map =3D <0x0 &its 0x10 0x1>,
+> > > -                                 <0x100 &its 0x11 0x7>;
+> > > +                                 <0x100 &its 0x11 0x1>,
+> > > +                                 <0x218 &its 0x12 0x1>,
+> > > +                                 <0x238 &its 0x13 0x1>,
+> > > +                                 <0x300 &its 0x14 0x1>,
+> > > +                                 <0x400 &its 0x15 0x1>;
+> > >                         iommu-map =3D <0x000 &smmu 0x10 0x1>,
+> > > -                                   <0x100 &smmu 0x11 0x7>;
+> > > -                       iommu-map-mask =3D <0x1ff>;
+> > > +                                   <0x100 &smmu 0x11 0x1>,
+> > > +                                   <0x218 &smmu 0x12 0x1>,
+> > > +                                   <0x238 &smmu 0x13 0x1>,
+> > > +                                   <0x300 &smmu 0x14 0x1>,
+> > > +                                   <0x400 &smmu 0x15 0x1>;
+> > > +                       //iommu-map-mask =3D <0x1ff>;
+> > >                         fsl,max-link-speed =3D <3>;
+> > >                         status =3D "disabled";
+> > >
+> > >
+> > > Only 8 stream id assign to PCIe0 device, it is hard to dynamaic alloc=
+e one,
+> > > or need extra works
+> >
+> > Uh, this looks awefully complicated. Even worse this doesn't work on
+> > my hardware. I need mappings for IDs 0x208 and 0x210, so I replaced 0x2=
+18
+> > and 0x238 from your diff into my numbers.
+> >
+> > So I take that PCIe bridges are not supported properly. What would be
+> > necessary to support this?
+>=20
+> I remember bridge use msi to do port power managements.
+>=20
+> ITS msi-map can distribute difference irq to difference cores beside iommu
+> address protection. It is quite userful for nvme or network devices, which
+> have multi queues. Of course, we need more elegant solution.
+>=20
+> My card use difference pcie switch chip. But suppose it should work after
+> you update RID information.
+
+Yep, after adjusting RID mapping, it works here.
+
+> which kernel version do you base on?
+
+My development is usually based on current linux-next versions, so it's
+based on v6.15-rc1.
+
+Best regards,
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
 
-
-On 4/10/2025 2:11 PM, Christoph Hellwig wrote:
-> On Tue, Apr 08, 2025 at 11:23:57AM +0000, Shivank Garg wrote:
->> KVM guest_memfd is implementing its own inodes to store metadata for
->> backing memory using a custom filesystem. This requires the ability to
->> initialize anonymous inode using security_inode_init_security_anon().
->>
->> As guest_memfd currently resides in the KVM module, we need to export this
->> symbol for use outside the core kernel. In the future, guest_memfd might be
->> moved to core-mm, at which point the symbols no longer would have to be
->> exported. When/if that happens is still unclear.
-> 
-> This really should be a EXPORT_SYMBOL_GPL, if at all.
-> 
-> But you really should look into a new interface in anon_inode.c that
-> can be reused instead of duplicating anonymouns inode logic in kvm.ko.
-> 
-
-I agree, it makes sense.
-I'll use EXPORT_SYMBOL_GPL in next version and look into reusing reusing
-existing logic.
-
-Thanks,
-Shivank
