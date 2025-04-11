@@ -1,124 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0EA221DB3;
-	Fri, 11 Apr 2025 17:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9D62144AC
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744391492; cv=none; b=OTi12D3HzXxKh5XmSh1E2O4bZ9GkvHLNvkD/PNJzMTvLrwEdWEgTBJvhiSvVLkMm7DfUR59lc44AfcC+FGNINDuzOIra/Oa2P4AwtoiN2O2OSvhwFT1Fog9dQsMg0/DheMIp4mQCbDJigarES4zHJvIDnsv3EST8zMlhi8cL9mM=
+	t=1744391524; cv=none; b=E6jVc4tJ0ytF/uL+b7spxOTW2Py3CpxZXsYO+zdZhLHLdyYYSC9wBm874lQ6ichWXL9a/zIRTX9+DCxs507SYi+EoNkOrMSp6T/SsgpHaIGnFm/mbigxIZfj0PHOJioOTM6aYgE5EumPkrdzY3mRh4IkAPpQLXQK2tSrixm93yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744391492; c=relaxed/simple;
-	bh=BiAve9al5LDiCb8Dy9WpZ7PL+zzjdXGewisDWrORLt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gxQ3nyT76X2CE17aAr8dMJo9MTA2rRAWxRTsqlch5zSsZkh+SfDEX8Kmvgyhkkiy/tF9ydNCBCnaa44BaFF8Tmg4kn2jInXShSDUG5dgmYdyqS7lAq5LgPW4djWJPkt11H5R2RsH9w5NzlzJo43yXuzppa2BG2uEaI2mNLKEQ4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A2AFC4CEE2;
-	Fri, 11 Apr 2025 17:11:30 +0000 (UTC)
-Date: Fri, 11 Apr 2025 13:12:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
- <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
- <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
- <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <20250411131254.3e6155ea@gandalf.local.home>
-In-Reply-To: <2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
-References: <20250227185804.639525399@goodmis.org>
-	<20250227185822.810321199@goodmis.org>
-	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
-	<20250410131745.04c126eb@gandalf.local.home>
-	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
-	<20250411124552.36564a07@gandalf.local.home>
-	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744391524; c=relaxed/simple;
+	bh=OYphbyhoYzlQdJS6+N5tDVqhL4XTIjegUyZQMQBubds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NY79PFlOp+WWTjWs4SH6E/ZGOPhuuV/I/7GdMf7BCjsQPDKQviLoklRNpyAF9JoSvsbWn9sQ2i2YbiMRZFNcN8eiBM9e5J/uR/rzYKmS8hwti8+7hdULfG7kcqxcUxuQHyACkHIuOK+O+cIV0BhpM5tYF76suV4myCUfpTvb4Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=a8RZR2ML; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="a8RZR2ML"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so23606325e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744391519; x=1744996319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TrunUqs/N09Jqukhxf1FYqRGiAYPy6gzssLwyfD3SEQ=;
+        b=a8RZR2ML8/AMZWmnQZSSyed2dGwwKu35Lx62GN0eKtNtBTs3e9OGixHjYIn+BVIoB/
+         y8c/eaqaTyqIsizYaTFfLzUnRMFl8MVYxhUid7zdviH2OVfhVrUrjAMOQ2iFAU3OFSFo
+         V0m1D+7yy0pK7hR5TYspiR1ClFGYwh39aU5Ui10U73v8dsuhC2f3uUwnlhW9O55/jDN0
+         kn0LnQSM3sPukbya2ldwz5Yr2xBNbf+03VwD4vcW45cSALg8kd+hQM3ijxYj6FMqlwTt
+         ry53S7cWai+uBamSVk7NzDkVWf4sfNdAh2dWEWMr4nx56+DDvfOwMqs6BgUSUKpoXeVs
+         o+0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744391519; x=1744996319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TrunUqs/N09Jqukhxf1FYqRGiAYPy6gzssLwyfD3SEQ=;
+        b=QslL+ssd5xDSwgiF/WZWQuzKcY9fiYOYmBVQT+LwmPaX9paWz3uWtsA0KsuCkdLQt1
+         Rvj4kBW8c+pqu3e1/r1PbB/5yKj5hm8zxEhcAyNaPH5CSAi+LsGjH7KmYr0yz9UBZOfy
+         /fjEBAJ5zziK7cZ3Wd5y0zNxBZeN/BzYijcb+mtc43EWWGVOoX/Vyq/xclgUqERjdrlW
+         wuf3PegeL9tnWTM6tUtHKlrXmIBC6A0v+guxbLKpO7VuD5F9Vt1o52bK4qg66RlhZ/Pc
+         kMg6ZD8quTjA2WrNt337yGCjDoplgyPb8f8AmKDD5ybC8a4C37NIQeObCtZezA0GcysU
+         J92g==
+X-Forwarded-Encrypted: i=1; AJvYcCXW7MSu4bePIK6Uy+5y5n6fe1JE6MKaOuBVSX5HDDSCw0dpUoyIoWtFl9RyQmu2iez5rBJGrQhM9eK/Cgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3ADvPMy/vkrCrlJZYD2VqRDrjJTzOC/n7DBjxMvdz59G13B1N
+	zAVMuceZa1HQXu1reVG0swcvGLupDD1NCVzPZ6mhJh+L4VPPD3AOEHc6RvEzRJQ=
+X-Gm-Gg: ASbGncuLU1u0cv51A/saAJfn+0nmXRGlAnHYcZNvhaNC48tTv32YUZX80teKGel+DM1
+	/EaxnGDuUMFLcy08A/Zg+88k0WRJ8PH+q9OXax8HeGmmUzhQiCo7kjslcdD5u6wcT6/FAUmyAVa
+	krRb7bADs6/OMcbT92BzxV6ncGxxapfYGFGCCew5ytI5yuVFeRnmZPAIrfQ8eKiKXfV5s3QQoua
+	sJmJiiZNPz/BwwMVuwBNUoDYs0+I64mGfA9FMwVBaxZeL376VBSO3ZHma3p5nP4yfJSW5QQN3xh
+	FkMtNbxeMwluNp92WElHKdA5jnUlg8uFWFIjaS/Ger0=
+X-Google-Smtp-Source: AGHT+IH0dLGja95QCcgcHh1wVVB1WPemcJDZs2T8C3sybPrHDMiiHlmMWJ7oUMDbKCpkKMWyzNOAAw==
+X-Received: by 2002:a05:600c:3ca1:b0:43d:186d:a4bf with SMTP id 5b1f17b1804b1-43f39420017mr32333865e9.0.1744391519127;
+        Fri, 11 Apr 2025 10:11:59 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5e9dsm92843575e9.36.2025.04.11.10.11.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 10:11:58 -0700 (PDT)
+Date: Fri, 11 Apr 2025 19:11:57 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] mm/vmscan: Skip memcg with !usage in
+ shrink_node_memcgs()
+Message-ID: <wc2pf5r5j4s7rpk7yfgltudj7kz2datcsmljmoacp6wyhwuimq@hgeey77uv5oq>
+References: <20250407162316.1434714-1-longman@redhat.com>
+ <20250407162316.1434714-2-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t3lluon3t4cqfa5a"
+Content-Disposition: inline
+In-Reply-To: <20250407162316.1434714-2-longman@redhat.com>
 
-On Fri, 11 Apr 2025 17:58:32 +0100
-Mark Brown <broonie@kernel.org> wrote:
 
-> On Fri, Apr 11, 2025 at 12:45:52PM -0400, Steven Rostedt wrote:
-> > Mark Brown <broonie@kernel.org> wrote:  
-> > > On Thu, Apr 10, 2025 at 01:17:45PM -0400, Steven Rostedt wrote:  
-> 
-> > > > Hmm, I wonder if there's junk being added into the trace.    
-> 
-> > > > Can you add this patch, and show me the output when it fails again?    
-> 
-> > Can you show the information before this output, to see what it is actually
-> > testing?  
-> 
-> Here's a bit more of the context - this is literally just the ftrace
-> selftests so it'll be doing whatever that does, there's a huge amount of
-> log splat generated when enumerating all the triggers.  I do note that
-> it appears to assume there's a ping binary which might confusing things,
-> though I'm surprised that'd be a regression rather than something that
-> just never worked:
+--t3lluon3t4cqfa5a
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 1/2] mm/vmscan: Skip memcg with !usage in
+ shrink_node_memcgs()
+MIME-Version: 1.0
 
-Thanks, even though I figured it out...
+Hello.
 
-> # # + yield
-> # # + ping 127.0.0.1 -c 1
-> # # ./ftracetest: 179: /opt/kselftest/ftrace/test.d/ftrace/func-filter-pid.tc: ping: not found
+On Mon, Apr 07, 2025 at 12:23:15PM -0400, Waiman Long <longman@redhat.com> =
+wrote:
+> --- a/mm/memcontrol-v1.h
+> +++ b/mm/memcontrol-v1.h
+> @@ -22,8 +22,6 @@
+>  	     iter !=3D NULL;				\
+>  	     iter =3D mem_cgroup_iter(NULL, iter, NULL))
+> =20
+> -unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap);
+> -
 
-The ping was just a way to add some extra noise, as sometimes, the system
-just went totally idle, and nothing else showed up.
+Hm, maybe keep it for v1 only where mem_cgroup_usage has meaning for
+memsw (i.e. do the opposite and move the function definition to -v1.c).
 
-> # # + sleep .001
-> # # + cat trace
-> # # + grep -v ^#
-> # # + grep 5190
-> # # + wc -l
-> # # + count_pid=2
-> # # + cat trace
-> # # + grep -v ^#
-> # # + grep -v 5190
-> # # + wc -l
-> # # + count_other=3
+>  void drain_all_stock(struct mem_cgroup *root_memcg);
+> =20
+>  unsigned long memcg_events(struct mem_cgroup *memcg, int event);
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index b620d74b0f66..a771a0145a12 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -5963,6 +5963,10 @@ static void shrink_node_memcgs(pg_data_t *pgdat, s=
+truct scan_control *sc)
+> =20
+>  		mem_cgroup_calculate_protection(target_memcg, memcg);
+> =20
+> +		/* Skip memcg with no usage */
+> +		if (!mem_cgroup_usage(memcg, false))
+> +			continue;
+> +
 
-This is what I was looking for. The "count_other" is the number of lines of
-output that wasn't due to a '#' or something with '5190'.
+(Not only for v2), there is mem_cgroup_size() for this purpose (already
+used in mm/vmscan.c).
 
-> # # + [ 2 -eq 0 -o 3 -ne 0 ]
+>  		if (mem_cgroup_below_min(target_memcg, memcg)) {
+>  			/*
+>  			 * Hard protection.
+> diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/tes=
+ting/selftests/cgroup/test_memcontrol.c
+> index 16f5d74ae762..bab826b6b7b0 100644
+> --- a/tools/testing/selftests/cgroup/test_memcontrol.c
+> +++ b/tools/testing/selftests/cgroup/test_memcontrol.c
+> @@ -525,8 +525,13 @@ static int test_memcg_protection(const char *root, b=
+ool min)
+>  		goto cleanup;
+>  	}
+> =20
+> +	/*
+> +	 * Child 2 has memory.low=3D0, but some low protection is still being
+> +	 * distributed down from its parent with memory.low=3D50M. So the low
+> +	 * event count will be non-zero.
+> +	 */
+>  	for (i =3D 0; i < ARRAY_SIZE(children); i++) {
+> -		int no_low_events_index =3D 1;
+> +		int no_low_events_index =3D 2;
 
-And it was expecting zero.
+See suggestion in
+https://lore.kernel.org/lkml/awgbdn6gwnj4kfaezsorvopgsdyoty3yahdeanqvoxstz2=
+w2ke@xc3sv43elkz5/
 
-> # # + cat trace
-> # # # tracer: function_graph
-> # # #
-> # # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
-> # # # |     |    |           |   |                     |   |   |   |
-> # # 0)  ftracet-5190  | ! 537.633 us  |  kernel_clone(); /* ret=0x1470 */
-> # # 
-> # # 0)  ftracet-5190  | ! 508.253 us  |  kernel_clone(); /* ret=0x1471 */
-> # # 
-> # # 0)  ftracet-5190  | ! 215.716 us  |  kernel_clone(); /* ret=0x1476 */
-> # # 
-> # # 0)  ftracet-5190  | ! 493.890 us  |  kernel_clone(); /* ret=0x147b */
+HTH,
+Michal
 
-But it found 3 blank lines!
+--t3lluon3t4cqfa5a
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> That'll take a bit more arranging, I'm running these tests as batch jobs
-> in CI infrastructure.  I'll try to have a look.  The only other test
-> that actually failed was:
-> 
-> # not ok 25 Checking dynamic events limitations
-> 
-> which isn't flagged as a regression (there's some other UNRESOLVED ones).
+-----BEGIN PGP SIGNATURE-----
 
-Hmm, don't know about that one.
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/lNWgAKCRAt3Wney77B
+SQOUAQCqcf+/VLJ4QspbjJmrhi+j/ZGy+0Ms5yQ2UA3mfz96vAD+NYpSXSOXiT1r
+0oyHlNs+QwiydZG2ffDsveeh1dl2ZAQ=
+=eMQ9
+-----END PGP SIGNATURE-----
 
--- Steve
-
+--t3lluon3t4cqfa5a--
