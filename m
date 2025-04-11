@@ -1,185 +1,113 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4E5211A15;
-	Fri, 11 Apr 2025 15:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A2C219A6B;
+	Fri, 11 Apr 2025 15:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744387082; cv=none; b=YUfHhEO7Aj7R7lNlvIQY11vdZOTvCV1pTV0C1R3oBlMy4hPYkaOayO5JZ8wR5EBTgkWqCuYy+nZX68CmT3ft7sLIyZou//dr+zh4WSAA09F8k7K9rbO4tTLogeNmp0vGSpasyxlCZWv6b0WpLLbyNWHAFXIPvh7pPk4m+oyPGdE=
+	t=1744387098; cv=none; b=niemOvWViFdPwNb0V+Rfiiv+wObPI3d9vhJrL4taqL5+P6RNzuD7RriAxlr8baC4flNHLbhiX3rvyRb8Xt1RZU6UmWXxWlhrG9XlyphyKDGIrM+ruvgexYaj7iFLvSx6wZeUyuMqvtMJ5zTL0cVPvomodEZ0q12nO2najsATDTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744387082; c=relaxed/simple;
-	bh=nyEkozhjfcZa5PRocazay7Uf8cQv5RSqC5XQAn7WlBc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kM8w+hsBp7Btn9RyM1OZEr4/YT/INSVoYAL2lY3E4jRYEeOWKhUUeOIK6EfrezrsU3KbsE1aWYzG5qkPhrYveaswb0hLIkLezxBauRsp18AdGJ9cE1rUbsWKdfVyLxLlBOTpxQUN2X2jpLK4Kq4zBs/yd4UXImMbBOTWfbag504=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=VMn6NZh8; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1744387098; c=relaxed/simple;
+	bh=OhOHmS6oEpl2rCpCbTcrVIGxyXbOWYR16l3MT2Mp0Bg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XtlskoTe201ziX1Ukd1fM9YItdkDseY01mY/uU5HY6X74LOQRNDWf2UQJ50ysmRBPBjwpnVHSz8SAYb/dGklVvhGPFMPlcaN6KaFDyc099aqZKiIRI1Wj9imPhirOGN3vtwQfqtE98ilOTJBm53AeSdLXXRSPoZ5CatOZxYKGhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIfTOfxv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="VMn6NZh8"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BDePY7015243;
-	Fri, 11 Apr 2025 11:57:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=E9qMM
-	oH6bhaj7QRhYtQMQfRp+qfxAP6mJTdN8IQn1DU=; b=VMn6NZh8zf3D6/08YUorB
-	hPKyHWj4BsFdPrp1Gzna0Lp/uLpzg8ozEKVhQU1b7mLQvD4PY4GpABdGGW5ANbX9
-	HG1+kKuhhe053BnKcXBVCQwMANqC7houZbMp84/Ph/MQx0GoLGZqivxAgzzeidhY
-	/Y3aa0RnsQFZpDK65Hp4ijqd0EHaZt4aarpxJbf0k+ncJ8FVAmfeO49+pb39HxvQ
-	H1m84bApjGV0ozhlITDD+LL+KCjy6qeNQqWhbJzI/rlV3NdM0f14fheYmD0NWcI2
-	9XfUQPBfXU0rFcodmLKGIC0lLQiR1dE2bDNxkxUsOwtKySCnrOPk0anhoFj65vkv
-	g==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45u1e6uymc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 11:57:43 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 53BFvgvg022293
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 11:57:42 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 11 Apr
- 2025 11:57:42 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 11 Apr 2025 11:57:42 -0400
-Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53BFvN6f015621;
-	Fri, 11 Apr 2025 11:57:26 -0400
-From: Jonathan Santos <Jonathan.Santos@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Sergiu Cuciurean <sergiu.cuciurean@analog.com>, <lars@metafoo.de>,
-        <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
-        <jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <jonath4nns@gmail.com>, <dlechner@baylibre.com>,
-        Jonathan Santos <Jonathan.Santos@analog.com>
-Subject: [PATCH v5 07/14] iio: adc: ad7768-1: Move buffer allocation to a separate function
-Date: Fri, 11 Apr 2025 12:57:23 -0300
-Message-ID: <11c1777b406875ce1a7216dc4b094ff99af8da7f.1744325346.git.Jonathan.Santos@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1744325346.git.Jonathan.Santos@analog.com>
-References: <cover.1744325346.git.Jonathan.Santos@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIfTOfxv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D41D9C4CEE2;
+	Fri, 11 Apr 2025 15:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744387098;
+	bh=OhOHmS6oEpl2rCpCbTcrVIGxyXbOWYR16l3MT2Mp0Bg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MIfTOfxvt6QZ5jsaMnHOu2eOmn+ZqPBEOHoN2qNiYv4PW003U2EsKw8qlDT8GTfiN
+	 SKX89snH9AmjI8H6EO2RqSlC4Kha5LvQwP7PkCoYnhYlli9Ecj369vWptN7ChI0pRl
+	 CCmv7AWbCAu1PXRciiIo9OINGB04DLWIJRvNLXNzGVsPQcQAHCLGmbga7+qfih8EAu
+	 OSDpeGf7GqvPc6SBz6w12MbhTZUL3d/zynNdwPkteCsQ93dyVlPF9w+6Eeux8tYscp
+	 LjjmfPr0LNsSb0fTfRm6+OvmaIh10z7q7xGwW64E5RefN4JO3isPMap+R5Tap87M6A
+	 sXXk+2xzta3lA==
+Date: Fri, 11 Apr 2025 10:58:16 -0500
+From: Rob Herring <robh@kernel.org>
+To: Michal Schmidt <mschmidt@redhat.com>
+Cc: Lee Jones <lee@kernel.org>, Ivan Vecera <ivecera@redhat.com>,
+	netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
+Message-ID: <20250411155816.GA3300495-robh@kernel.org>
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250411072616.GU372032@google.com>
+ <CADEbmW1XBDT39Cs5WcAP_GHJ+4_CTdgFA4yoyiTTnJfC7M2YVQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: 4AY1pLk9pZNJ_4BXlX_AM8tdMQod3vLH
-X-Authority-Analysis: v=2.4 cv=cdjSrmDM c=1 sm=1 tr=0 ts=67f93bf7 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=l9GLs7LQBT_n29Jb_ZMA:9 a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-GUID: 4AY1pLk9pZNJ_4BXlX_AM8tdMQod3vLH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_06,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015 mlxlogscore=999
- phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110101
+In-Reply-To: <CADEbmW1XBDT39Cs5WcAP_GHJ+4_CTdgFA4yoyiTTnJfC7M2YVQ@mail.gmail.com>
 
-From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+On Fri, Apr 11, 2025 at 04:27:08PM +0200, Michal Schmidt wrote:
+> On Fri, Apr 11, 2025 at 9:26 AM Lee Jones <lee@kernel.org> wrote:
+> > On Wed, 09 Apr 2025, Ivan Vecera wrote:
+> > > Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+> > > provides DPLL and PTP functionality. This series bring first part
+> > > that adds the common MFD driver that provides an access to the bus
+> > > that can be either I2C or SPI.
+> > > [...]
+> >
+> > Not only are all of the added abstractions and ugly MACROs hard to read
+> > and troublesome to maintain, they're also completely unnecessary at this
+> > (driver) level.  Nicely authored, easy to read / maintain code wins over
+> > clever code 95% of the time.
+> 
+> Hello Lee,
+> 
+> IMHO defining the registers with the ZL3073X_REG*_DEF macros is both
+> clever and easy to read / maintain. On one line I can see the register
+> name, size and address. For the indexed registers also their count and
+> the stride. It's almost like looking at a datasheet. And the
+> type-checking for accessing the registers using the correct size is
+> nice. I even liked the paranoid WARN_ON for checking the index
+> overflows.
 
-This change moves the buffer allocation and related trigger allocation
-in a separate function, making space for adding another type of iio
-buffer if needed.
+If this is much better, define (and upstream) something for everyone to 
+use rather than a one-off in some driver. It doesn't matter how great it 
+is if it is different from everyone else. The last thing I want to do is 
+figure out how register accesses work when looking at an unfamilar 
+driver.
 
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Reviewed-by: David Lechner <dlechner@baylibre.com>
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
----
-v5 Changes:
-* mentioned trigger allocation in the commit message.
+> The weak point is the non-obvious usage in call sites. Seeing:
+>   rc = zl3073x_read_id(zldev, &id);
+> can be confusing. One will not find the function with cscope or grep.
 
-v4 Changes:
-* None.
+Exactly.
 
-v3 Changes:
-* Added missing SoB.
+> Nothing immediately suggests that there's macro magic behind it.
+> What if usage had to be just slightly more explicit?:
+>   rc = ZL3073X_READ(id, zldev, &id);
+> 
+> I could immediately see that ZL3073X_READ is a macro. Its definition
+> would be near the definitions of the ZL3073X_REG*_DEF macros, so I
+> could correctly guess these things are related.
+> The 1st argument of the ZL3073X_READ macro is the register name.
+> (There would be a ZL3073X_READ_IDX with one more argument for indexed
+> registers.)
+> In vim, having the cursor on the 1st argument (id) and pressing gD
+> takes me to the corresponding ZL3073X_REG16_DEF line.
+> 
+> Would it still be too ugly in your view?
 
-v2 Changes:
-* Interrupt and completion moved out from ad7768_triggered_buffer_alloc(). 
----
- drivers/iio/adc/ad7768-1.c | 44 ++++++++++++++++++++++----------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+If you have opinions on how register accesses should look, how to do 
+them in rust is being defined now.
 
-diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-index 34712d3756e2..66087fabe181 100644
---- a/drivers/iio/adc/ad7768-1.c
-+++ b/drivers/iio/adc/ad7768-1.c
-@@ -619,6 +619,31 @@ static int ad7768_set_channel_label(struct iio_dev *indio_dev,
- 	return 0;
- }
- 
-+static int ad7768_triggered_buffer_alloc(struct iio_dev *indio_dev)
-+{
-+	struct ad7768_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	st->trig = devm_iio_trigger_alloc(indio_dev->dev.parent, "%s-dev%d",
-+					  indio_dev->name,
-+					  iio_device_id(indio_dev));
-+	if (!st->trig)
-+		return -ENOMEM;
-+
-+	st->trig->ops = &ad7768_trigger_ops;
-+	iio_trigger_set_drvdata(st->trig, indio_dev);
-+	ret = devm_iio_trigger_register(indio_dev->dev.parent, st->trig);
-+	if (ret)
-+		return ret;
-+
-+	indio_dev->trig = iio_trigger_get(st->trig);
-+
-+	return devm_iio_triggered_buffer_setup(indio_dev->dev.parent, indio_dev,
-+					       &iio_pollfunc_store_time,
-+					       &ad7768_trigger_handler,
-+					       &ad7768_buffer_ops);
-+}
-+
- static int ad7768_probe(struct spi_device *spi)
- {
- 	struct ad7768_state *st;
-@@ -689,20 +714,6 @@ static int ad7768_probe(struct spi_device *spi)
- 		return ret;
- 	}
- 
--	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-dev%d",
--					  indio_dev->name,
--					  iio_device_id(indio_dev));
--	if (!st->trig)
--		return -ENOMEM;
--
--	st->trig->ops = &ad7768_trigger_ops;
--	iio_trigger_set_drvdata(st->trig, indio_dev);
--	ret = devm_iio_trigger_register(&spi->dev, st->trig);
--	if (ret)
--		return ret;
--
--	indio_dev->trig = iio_trigger_get(st->trig);
--
- 	init_completion(&st->completion);
- 
- 	ret = ad7768_set_channel_label(indio_dev, ARRAY_SIZE(ad7768_channels));
-@@ -716,10 +727,7 @@ static int ad7768_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
--	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
--					      &iio_pollfunc_store_time,
--					      &ad7768_trigger_handler,
--					      &ad7768_buffer_ops);
-+	ret = ad7768_triggered_buffer_alloc(indio_dev);
- 	if (ret)
- 		return ret;
- 
--- 
-2.34.1
-
+Rob
