@@ -1,85 +1,156 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5731323026C;
-	Fri, 11 Apr 2025 20:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E4B27604F
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 20:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744401694; cv=none; b=UlRYx3MKOq2sR48KIICjTqlGv624zlKBNASNlzoh196AwVAnOO8/oCyq2fPZdN6jk1eElIpPc4j5kPkFslFPpSVRBCct+Jj7Z7EG5p4vkZ4QW86Jt/ehjFGdSLPyJjXK35+YujnZJKmEvPGwq4Wwhq+L22sJ2pOaPbVOdXpqp7w=
+	t=1744402049; cv=none; b=ggrFLpArKb3t7TjmUHqABNZraWbhkXuLxP5rxLWC19A/iiHiwaGdFqXcfMpIscDHjM1Up2kBlvRcLZ11RPmuRxI73nPlGHAL5GCxlHWWU7kKFYGIPBCz2N82pV587pppGhf9u1LUf4JWmv3sd9abkFPTfvNUN1VmytqY6eV08cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744401694; c=relaxed/simple;
-	bh=2QhpccvsdGc8U6v2k8YHD/vVE7lypg2Vj/lFVArppZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mlpW1aucQfj5F7BykFRhOmYAEKwU1bUMO/5j1cw0FmcZGbCyA89e9mQdQTu43hGFvVcDA/TdEls9vVxf5gSuxFvGPT0LGgp6JJfzLY1DMTsBM1M0ZJK/grDN8Osok6cNWaDXNJscEe9bFcGOwLSTlIRSPYpYhuOGABzzHU+H6eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=O2ohyfAb; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="O2ohyfAb"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0F15740E0243;
-	Fri, 11 Apr 2025 20:01:30 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 9glBSqHv_OV9; Fri, 11 Apr 2025 20:01:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744401686; bh=2QhpccvsdGc8U6v2k8YHD/vVE7lypg2Vj/lFVArppZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O2ohyfAbOFoYk/IS7F6pj+r7hxBWHGrFh1bpf0pJovk1nahEj3SAMEXKUupoyI+3t
-	 jDX1o0HabmK0N9rrBwgcjNtCx5Iu+hzLFL4Bux+gBJ/Vor3Nu9pganZsrwk8PS7/he
-	 cVEUFcyScw1fJZZNhXHVCW2R6Jcu1qYNOK5wgAAJOkA1j8M7rlV/bmXlO2Aa8o+iD6
-	 5X9t5AyAtMzenDsWKkEc12THvdXiq3Zh8/MbkFgIaoUtirX1P1N1zmGYblm9GifAd4
-	 HdS35xg2kLDN/7Uma4ZyQgW69IkHaC8PT940fC2erOMfWSCeVCcAe8d6BMvGfUex9s
-	 B1wk3vPmNwPvrzo4mBsbncz7L4vJsLnM737NKQhufsjkVKSGqNgyTf7gFWWsT8WVEm
-	 F+2RkiN9swlorig+qSC3CvJqwfKdNKUDerRTSh7+WzhPRk+2D/C+VAlyN2rN+qKDCG
-	 aTHdxS36aHIms7V4D6KF4JDtdLiMZcT2oLBsxL9erkH5Neq0kDcxoeIysgsdUfZuB0
-	 RFBGse1y6asNH4iBrF2CJZrbYC+GRam5YgqJCAzGOQY14M82XEVyz9ETO03daVrYJh
-	 sCzSXyEbmt+dbQzSBx70ZwmtEieT5zumK6hkSOklkSy7RIUSLL1wJTCxvI3Tntetua
-	 zjFI/GGGqItVTEjBnBE+uW9A=
-Received: from rn.tnic (ip-185-104-138-50.ptr.icomera.net [185.104.138.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id E2BB140E01FF;
-	Fri, 11 Apr 2025 20:01:14 +0000 (UTC)
-Date: Fri, 11 Apr 2025 22:02:07 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Marc Zyngier <maz@kernel.org>
-Cc: "Tyler Hicks (Microsoft)" <code@tyhicks.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Vijay Balakrishna <vijayb@linux.microsoft.com>,
-	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
-Message-ID: <20250411200207.GAZ_l1P91QuMi_wecf@renoirsky.local>
-References: <1744241785-20256-1-git-send-email-vijayb@linux.microsoft.com>
- <1744241785-20256-3-git-send-email-vijayb@linux.microsoft.com>
- <319b7c65-3e2f-456b-a845-45f7a57ba2c5@kernel.org>
- <86o6x4lcf9.wl-maz@kernel.org>
- <Z/fV+SP0z+slV9/1@redbud>
- <86frigkmtd.wl-maz@kernel.org>
+	s=arc-20240116; t=1744402049; c=relaxed/simple;
+	bh=MC1GxL3YNgplNVXsU7o24+sQqmgQXfDMNauEZcGstVE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jzI1sy9b1xxMq8hV6f5dY5SidlmRzmE0hIUQVkVHHYFAun6VN+Uc19IEkiN0ABZN6PCRE944TBQCUGBKe84fL/ymVwEed8pSHxXBFnUEcJQY5VAyzjiavt0PpqfDNaE6cTnANIvm1jLhzJDdpZrhvUzpUV1p66mhukJRbjfmM78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d43c0dbe6aso46859335ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:07:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744402047; x=1745006847;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PHWntVF7Lj9UqD4Jmbr2lpcm7Lsg+sulLP9wseK5UK8=;
+        b=Yqzjeqdc5p///fIVkwapa4w8xjtLzoD/erfPNpm8s7oHRczND3FezTtY0cytyBWBGK
+         wHXZY+n4PXp7nLUaWeL2c+6GQEYa3QeK20O4uKNJwSq4xa0dorGRqy+EyamoaIoeTqle
+         d26eaq8HLOlqtfE3eC4i+VwEP3gGbvOlcig/Jj2WHoN/O/+cJiuZSTUpErWqA39z0uMC
+         Y9em7g6GVDHxeXZICFNjOCttRtWndqA6S0+IqlDj4xD4JpCsBLFOuD4XkKNQW/IPpIFY
+         GcMq1AXTAuANntYCozF6GFT5/8zie7ArmZZ1Mkv9VTsKGAxzaNzuStlx1IcXMmExkXZQ
+         iw+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVqM5y14t5wm2lamxlM6+1ptnR3uW3dK7lTbqYKfvEqikje37anttwQ0/PSlgsHbfYO9hOAq+gzJkruovA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx4VaoDaExXxHi9b6LBBeszPy1NEBmspOm4USfRV/8VuM1sppX
+	5+XJcGbCL6sjS9RDj6IMLzTpvDSenZM7j9uu1wS2h1brS2aylC61A9DKvv4jjH1eviZjPxLUnbN
+	20GYx4bNp9UW6nCERUTjMN5whevml4ILOPl+gf12ovAb7YTUBtcAW3wI=
+X-Google-Smtp-Source: AGHT+IFt0RFpOsth3RSP9XD28/8HE4I6EKvTyTaa7qsdjH0oA2BN9IKKV2+cqrfSuNjPF9dz+31fybHGGIBF2XcnMVWmutII2eyO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <86frigkmtd.wl-maz@kernel.org>
+X-Received: by 2002:a05:6e02:1f0e:b0:3d5:8103:1a77 with SMTP id
+ e9e14a558f8ab-3d7ec1dc7d5mr49842395ab.1.1744402047375; Fri, 11 Apr 2025
+ 13:07:27 -0700 (PDT)
+Date: Fri, 11 Apr 2025 13:07:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f9767f.050a0220.379d84.0003.GAE@google.com>
+Subject: [syzbot] [openvswitch?] KMSAN: uninit-value in validate_set (2)
+From: syzbot <syzbot+b07a9da40df1576b8048@syzkaller.appspotmail.com>
+To: aconole@redhat.com, davem@davemloft.net, dev@openvswitch.org, 
+	echaudro@redhat.com, edumazet@google.com, horms@kernel.org, 
+	i.maximets@ovn.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, pshelar@ovn.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 10, 2025 at 05:23:26PM +0100, Marc Zyngier wrote:
-> We have some other EDAC implementation for arm64 CPUs (XGene,
-> ThunderX), and they are all perfectly useless (I have them in my
-> collection of horrors).
+Hello,
 
-Oh oh, can I remove, can I remove?
+syzbot found the following issue on:
 
-My trigger finger is itching to kill some more useless code...
+HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=14e26d78580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7cfe1169d7fc8523
+dashboard link: https://syzkaller.appspot.com/bug?extid=b07a9da40df1576b8048
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1367bb4c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1495d23f980000
 
-Thx.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7526e189e315/disk-0af2f6be.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/60a25cc98e41/vmlinux-0af2f6be.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2d7bf8af0faf/bzImage-0af2f6be.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b07a9da40df1576b8048@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in validate_set+0x1a2/0x1640 net/openvswitch/flow_netlink.c:2879
+ validate_set+0x1a2/0x1640 net/openvswitch/flow_netlink.c:2879
+ __ovs_nla_copy_actions+0x2efc/0x61a0 net/openvswitch/flow_netlink.c:3383
+ ovs_nla_copy_actions+0x36b/0x550 net/openvswitch/flow_netlink.c:3543
+ get_flow_actions+0x99/0x1d0 net/openvswitch/datapath.c:1148
+ ovs_nla_init_match_and_action+0x221/0x420 net/openvswitch/datapath.c:1198
+ ovs_flow_cmd_set+0x320/0xec0 net/openvswitch/datapath.c:1236
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x1214/0x12c0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x375/0x650 net/netlink/af_netlink.c:2534
+ genl_rcv+0x40/0x60 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0xf52/0x1260 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x10da/0x11e0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x30f/0x380 net/socket.c:727
+ ____sys_sendmsg+0x890/0xda0 net/socket.c:2566
+ ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x212/0x3c0 net/socket.c:2655
+ x64_sys_call+0x2e0f/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:47
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4157 [inline]
+ slab_alloc_node mm/slub.c:4200 [inline]
+ kmem_cache_alloc_node_noprof+0x921/0xe10 mm/slub.c:4252
+ kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:577
+ __alloc_skb+0x366/0x7b0 net/core/skbuff.c:668
+ alloc_skb include/linux/skbuff.h:1340 [inline]
+ netlink_alloc_large_skb+0x1b4/0x280 net/netlink/af_netlink.c:1187
+ netlink_sendmsg+0xa96/0x11e0 net/netlink/af_netlink.c:1858
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x30f/0x380 net/socket.c:727
+ ____sys_sendmsg+0x890/0xda0 net/socket.c:2566
+ ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x212/0x3c0 net/socket.c:2655
+ x64_sys_call+0x2e0f/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:47
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 UID: 0 PID: 5787 Comm: syz-executor365 Not tainted 6.15.0-rc1-syzkaller #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
