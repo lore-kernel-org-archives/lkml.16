@@ -1,119 +1,131 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BAA63B9;
-	Fri, 11 Apr 2025 14:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59148635A;
+	Fri, 11 Apr 2025 14:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380281; cv=none; b=pTuWcJzFHEP7Nt4aGEs3nFXd091ZqeMdod/IldOBroTKXmM9JEVQ+IpINWqLdWdA5uRj/7DGmUmqs9Big6zlr8QLRqUyB+XKWZli5WLFNwWvBOFotcZQikGu3kWPpi2RJEb/2tFHbTau0fBLNmNq1KZWVhgdH4oqItoBjve8ykU=
+	t=1744380319; cv=none; b=Thj4Rw6KBLIc/sNoxUYfDfpMOiRCPX1pbSu0N+hJLq+gNRqFtW3VHQOf7E98n+03071h7ke0vquV6Kdx/WLTZBbSLJtA+mgmFbp3SX3GoEmAMFJdsV0AsgNtRVJ6HMAbwMeLtT3yMLWQCRsbADcO11gwxP/Ts5HmzP6CuzNGtQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380281; c=relaxed/simple;
-	bh=JqIaSwcQTLnteqKdk/e79JKvBIxPhUAuMFVFJtOtX/4=;
+	s=arc-20240116; t=1744380319; c=relaxed/simple;
+	bh=WWH7pjgLhq7CdCx4NdmHmV8ilE+5LHo+30ZTrkElue8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XwN2NBVDh6lEk5eawMlTuHegWo5L3CNoFNvlPJ3/8sS7JgN6zjhx3jw9GtOAX3zHc/g0OEHct/xidyN0nOfkna0PB2uEB3kqRi+eEQRkvx0g1x7CBtejh/AN2irsV3lvQGGEeE3wRAXIoK2SiAp8Y+2Byf0KCiJB3XMuGCwKnfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J0EeUS+Y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+yLPPCCR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J0EeUS+Y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+yLPPCCR"
-Date: Fri, 11 Apr 2025 16:04:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744380277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7VfvJqPXeFnMlJmDgFmRfagJyG6Zqa/JynZ0wj1VizA=;
-	b=J0EeUS+Y9srDohJFWcRB0YV8XOw0F+QJ/Hb2F/Du1yCUX7NTsiC/YdSoblsXpDNZeyImLx
-	Fw+rhRZWzIc+GYFFdiFTTj/zXAiPBX/BJeS5FBX/LmXU2NIjmqle+WGjszwsTsTovGdDAk
-	fsrmptLgRlCDnbL89JHkyQBMdlK0b4yO9AivWYXESdqawk2Trfwvtu4Ycm7BtlPFmCllPB
-	5ZF9HNo+0hgQmYRv2/pGmpiUxnn5LwJ1KJe4vWlG3M5t/pCChGHTVQHBD9mq52izraRiq6
-	THkA7v0HTzR5ef98gRP8WikvnkQaafmcvf+iazx+OXutpt3zpwe0IwUzX0e6RA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744380277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7VfvJqPXeFnMlJmDgFmRfagJyG6Zqa/JynZ0wj1VizA=;
-	b=+yLPPCCRjuWDeF5bNIaPNHu1JZPF52h1Oa/RffQ872BRnMQv505ub7Ai/L9HkFN85Zt4+k
-	sj97KTPvzi2lKtCQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: john.ogness@linutronix.de, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/22] verification/dot2k: Make it possible to invoke
- dot2k without installation
-Message-ID: <20250411140433.QiY-1pL2@linutronix.de>
-References: <cover.1744355018.git.namcao@linutronix.de>
- <caa6a7668f958c68fc7b8a40256e3edf3f11ae99.1744355018.git.namcao@linutronix.de>
- <4b4c9ac8411e6398b7d4487541d978f908785d27.camel@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=npFI8Iz0BXhC0r7sQ7EE3JEv/mdMJxXdOAARitJrZ/bzovwTZlOy7LJwlPnCznNKC7cd5/JcUd+Rmc/H0nPX2dJKK2QL4EughQxEkKxqbF8JMC1bg80+FGSk3ow1uOS9RXxqsdIdpvvaFkiyPcWVYcSvQ6oGbnXr6gTmEy5+BJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 901F03433FD;
+	Fri, 11 Apr 2025 14:05:15 +0000 (UTC)
+Date: Fri, 11 Apr 2025 14:05:10 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Guodong Xu <guodong@riscstar.com>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de,
+	drew@pdp7.com, inochiama@gmail.com, geert+renesas@glider.be,
+	heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com,
+	unicorn_wang@outlook.com, duje.mihanovic@skole.hr,
+	elder@riscstar.com, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH 7/9] riscv: dts: spacemit: Add PWM14 backlight support
+ for BPI-F3
+Message-ID: <20250411140510-GYA22364@gentoo>
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-8-guodong@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b4c9ac8411e6398b7d4487541d978f908785d27.camel@redhat.com>
+In-Reply-To: <20250411131423.3802611-8-guodong@riscstar.com>
 
-On Fri, Apr 11, 2025 at 11:23:25AM +0200, Gabriele Monaco wrote:
-> On Fri, 2025-04-11 at 09:37 +0200, Nam Cao wrote:
-> > Without installation, dot2k doesn't work:
-> >
-> > namcao@yellow:~/linux/tools/verification$ python3 ./dot2/dot2k
-> > Traceback (most recent call last):
-> >   File "/home/namcao/linux/tools/verification/./dot2/dot2k", line 12,
-> > in <module>
-> >     from dot2.dot2k import dot2k
-> > ModuleNotFoundError: No module named 'dot2'
-> > 
-> > Installing dot2k to the system is not always desirable. Sometimes it
-> > is not
-> > even possible (e.g. no root permission).
-> > 
-> > Restructure the files to make it work without installing.
-> > 
-> > Signed-off-by: Nam Cao <namcao@linutronix.de>
+
+On 21:14 Fri 11 Apr     , Guodong Xu wrote:
+> Add a PWM-based backlight node for the Banana Pi BPI-F3 board,
+> using PWM14. The backlight is defined as a 'pwm-backlight' device with
+> brightness levels and a default brightness setting. PWM14 is assigned
+> a period length of 2000 nanoseconds.
 > 
-> Mmh, the workflow
+> This configuration was used to verify PWM driver changes, with PWM14
+> tested and its waveform confirmed as correct.
 > 
-> pushd tools/verification
-> ...
-> popd
->
+> The node status is set to "disabled", and should be enabled when the
+> display driver is ready.
 > 
-> has always been working in my case, but probably that's because I have
-> PYTHONPATH="." , not sure how much of a good practice that is.
-
-Ahh, PYTHONPATH is the trick. But that shouldn't be required. The scripts
-should work out of the box without any environment setup.
-
-> Anyway, since you're already moving things around in 9/22
-> ("verification/dot2k: Prepare the frontend for LTL inclusion"), does it
-> make sense to keep the commits separated? Or you could directly move to
-> rvgen here and just add the ltl related changes in the later commit.
-
-Yes, it makes sense to move them to rvgen here.
-
-> Also, after your changes on my system, I can run the script from the
-> kernel directory too, which is much better than having to cd to
-> tools/verification .
-> If that's something portable, I'd change the default definition of
-> monitor_templates_dir and allow the user to run the script only from
-> the kernel root.
+.. see comments below
+> Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> ---
+>  .../boot/dts/spacemit/k1-bananapi-f3.dts      | 32 +++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 > 
-> What do you think?
+> diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> index 816ef1bc358e..d04b57ddeb46 100644
+> --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> @@ -28,6 +28,32 @@ led1 {
+>  			default-state = "on";
+>  		};
+>  	};
+> +
+> +	pwm_bl: lcd_backlight {
+> +		compatible = "pwm-backlight";
+> +
+> +		pwms = <&pwm14 2000>;
+> +		brightness-levels = <
+> +			0   40  40  40  40  40  40  40  40  40  40  40  40  40  40  40
+> +			40  40  40  40  40  40  40  40  40  40  40  40  40  40  40  40
+> +			40  40  40  40  40  40  40  40  40  41  42  43  44  45  46  47
+> +			48  49  50  51  52  53  54  55  56  57  58  59  60  61  62  63
+> +			64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79
+> +			80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95
+> +			96  97  98  99  100 101 102 103 104 105 106 107 108 109 110 111
+> +			112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
+> +			128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+> +			144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
+> +			160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+> +			176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+> +			192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+> +			208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
+> +			224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239
+> +			240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255
+> +		>;
+> +		default-brightness-level = <100>;
+> +		status = "disabled";
+I'm confused, has DT in board file with disabled status doesn't make sense?
+it doesn't really useful for placeholder, even worse that functionality may not
+verified, so I'd suggest sending along with display driver while at it..
 
-I actually prefer running the script from tools/verification. We can allow
-user to run from anywhere, with something like:
+> +	};
+>  };
+>  
+>  &uart0 {
+> @@ -35,3 +61,9 @@ &uart0 {
+>  	pinctrl-0 = <&uart0_2_cfg>;
+>  	status = "okay";
+>  };
+> +
+> +&pwm14 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm14_1_cfg>;
+..
+> +	status = "disabled";
+ditto
 
- class dot2k(Monitor, Dot2c):
--    monitor_templates_dir = "rvgen/templates/dot2k"
-+    monitor_templates_dir = os.path.join(os.path.dirname(__file__), "../../rvgen/templates/dot2k")
+> +};
+> -- 
+> 2.43.0
+> 
 
-Best regards,
-Nam
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
