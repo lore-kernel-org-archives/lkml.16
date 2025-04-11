@@ -1,91 +1,83 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7784278E5D
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885B278E5D;
+	Fri, 11 Apr 2025 10:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744367446; cv=none; b=e6ho4bO1ltM+qLrHZlfrslMBrwNHMuoD8BBtahHayrFA+k6G/k5NZ+lxP7kQsc1cj3E4B/mYZpC+LtcVdzPqqpujzDFFOUIq8Ytqw0gCMu675TtA03f4OwpZ/UQXzQePd0OERM3Qwl5d0SmjnZYn5YTVqXBttXrH1bO+/dNY0Es=
+	t=1744367462; cv=none; b=ImmpVVuucHrbalVV+CiRAeBAkrUiA2mZokYpmjuWge8KvblQXmlktgw01Roc2v4oRtmQ49s+ieJCDqPULcm506DEnQLXwPIoxAJQS+5n/UiOlq87/bW7hgT1oK6xKQSGrGRDH5JF/YGMLxnG1tpROkSB/PecoKkf+AVAHm8O+c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744367446; c=relaxed/simple;
-	bh=F9ZVS7uMc2q4H4pc2JAAa9mcfQxEK9dcS46bLi6g7U4=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=be4gf+eiaBRO88E4ZK4zTpY/yDaWXhrQ5c2a8a4PQrHY8/93t613XOY7kK62IimL/LhfjRDPlLLompbKgAdC8c0UIzHcIdquPpwimnaErdpLn6yHNJkrZ6VGWJ51MAtQ3NwwOKz6UlkwPJVt9ZBQmETuwmxWRVedp58pUhctP74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZYt9G3RBTzKjJ
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:25:06 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4ZYt990HDXzBRHKW
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:25:01 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZYt8z3Tztz5B1J4;
-	Fri, 11 Apr 2025 18:24:51 +0800 (CST)
-Received: from njy2app03.zte.com.cn ([10.40.13.14])
-	by mse-fl2.zte.com.cn with SMTP id 53BAOjIV027590;
-	Fri, 11 Apr 2025 18:24:46 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njb2app05[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Fri, 11 Apr 2025 18:24:48 +0800 (CST)
-Date: Fri, 11 Apr 2025 18:24:48 +0800 (CST)
-X-Zmail-TransId: 2afd67f8edf0fffffffff09-ab5a3
-X-Mailer: Zmail v1.0
-Message-ID: <20250411182448645tJ7XVmvNHqUXluy9xYQ_7@zte.com.cn>
+	s=arc-20240116; t=1744367462; c=relaxed/simple;
+	bh=6Gwa5w3owrBlIZyBkzhAeBY2fksfigo03OfNrgjBtbA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GPZtYgmihKTPEBsZhgnEMsrNQWIvb2jHOIIMOOXJhjU88Mket5v8KqI5AIXQMALpgrM7nTT19ve36E0SnWpzbcT3RTjgwP/C4dZbouuJnVRQwSmHxZWRuAy2UitL5Iwkq9abRTV+hcrk1WDU0qiomPAXvBHmd/pCSthVuxuf5ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqsYxC9G; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqsYxC9G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85DEBC4CEF0;
+	Fri, 11 Apr 2025 10:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744367461;
+	bh=6Gwa5w3owrBlIZyBkzhAeBY2fksfigo03OfNrgjBtbA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FqsYxC9GSdc3kIp0YcBtpyQpp10sGD1DZM4LgjlRF3+PvvX/AtSzFHCb/kh0arojD
+	 eO5+BaWLftgF6MxPcobSNezgMErH9MJmu/EG4LbUiUikCrlZYCCpAJTdBy1C8sTvq2
+	 c+K3oJc+OH12x0RBFF9AVo7TS58pHh/9ZKlBJ+lgC/VjPTg8K43BxCX70YVpelF8gC
+	 kZmovlpy5El+5lfSvZSws35SaTXaVPUOE1yIOzNc1D2RpytKRqh/iC/PclFB2H2dTP
+	 fwCxEkoaoMt0VwII/oLXJoaiuaBMZ9gXBPVn7GAObiGNTNU61aLjwJgZJL+jI0H/Nb
+	 KQar3532qazuw==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2c6ed7ec0a5so817512fac.1;
+        Fri, 11 Apr 2025 03:31:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJdqnfofj1W08gUTMbGoPWwIIGxF7RfnbrcROjjtJJFV1kh53bZA19jD5UWcvVCo7zZAbXJZyyQmg=@vger.kernel.org, AJvYcCXb7S16wVqOAGicd46kOQyS+Qbqd1L8vGxuUwkPkWBhLGTw0TRt0KnxNcPtSlRZdRcqgBKa4Ol2BW1FOcY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYlD/2GabW3B3mCvWYsfRpZ43dtZ87/9sFRYG+sgCwwcbt+jZW
+	KaFxgl5G0GX14KBuiMsd/5AsFAA2FQs5ZlAdAEpP9lRSG+t9M/tVPHj9vc506H8s2PJlm2lDkPx
+	OSh4ujRmVz3zWWKeCWZ7Dj1OFxzA=
+X-Google-Smtp-Source: AGHT+IH0LX3bDDoDBM0kIknin6Kvq5ZRj0ozncoHMNHLV1Eir1yLnmQSTP9h3Tww8fkeKeA6kWZsW4FwIzMNMKuSkRA=
+X-Received: by 2002:a05:6871:e71a:b0:2c2:5639:3a4d with SMTP id
+ 586e51a60fabf-2d0d5fcc80amr1201791fac.38.1744367460800; Fri, 11 Apr 2025
+ 03:31:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <tglx@linutronix.de>, <frederic@kernel.org>, <peterz@infradead.org>,
-        <oleg@redhat.com>, <brauner@kernel.org>, <joel.granados@kernel.org>,
-        <viro@zeniv.linux.org.uk>, <lorenzo.stoakes@oracle.com>,
-        <linux-kernel@vger.kernel.org>
-Cc: <fan.yu9@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBzaWduYWw6IFVwZGF0ZSBzZW5kX3NpZ25hbF9sb2NrZWQgaW4gcmVsZXZhbnQgY29tbWVudHM=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 53BAOjIV027590
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67F8EE01.000/4ZYt9G3RBTzKjJ
+MIME-Version: 1.0
+References: <20250410024439.20859-1-sultan@kerneltoast.com>
+ <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com> <CAB8ipk-EAALE1bhihF3k8i=uk_cPtDom+dD0KP-U3k=vgVj9ZA@mail.gmail.com>
+In-Reply-To: <CAB8ipk-EAALE1bhihF3k8i=uk_cPtDom+dD0KP-U3k=vgVj9ZA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 11 Apr 2025 12:30:48 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hTb6+cNA4fP6ovg2M3woLjid-fMy8jAp8S--=tv+7f4Q@mail.gmail.com>
+X-Gm-Features: ATxdqUHSAKFBNaCPYAfEF12zbgjVtf7UFcyxO-QAEdSoxtit892-U_G_UKOm0hs
+Message-ID: <CAJZ5v0hTb6+cNA4fP6ovg2M3woLjid-fMy8jAp8S--=tv+7f4Q@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: schedutil: Don't ignore limit changes when util
+ is unchanged
+To: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Sultan Alsawaf <sultan@kerneltoast.com>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Fan Yu <fan.yu9@zte.com.cn>
+On Fri, Apr 11, 2025 at 10:22=E2=80=AFAM Xuewen Yan <xuewen.yan94@gmail.com=
+> wrote:
+>
+> ...
+> >
+> > AFAICS, after this code modification, a limit change may be missed due
+> > to a possible race with sugov_limits() which cannot happen if
+> > sg_policy->limits_changed is only cleared when it is set before
+> > updating sg_policy->need_freq_update.
+> >
+> could the following patch prevent the race?
+>
+> https://lore.kernel.org/all/CAB8ipk_Ayqmh=3DCh2aH2c+i-q+qdiQ317VBH1kOHYN=
+=3DR9dt6LOw@mail.gmail.com/
 
-The __send_signal has been renamed to __send_signal_locked,
-after the following commit:
-
-'commit 157cc18122b4 ("signal: Rename send_signal send_signal_locked")'
-
-But some comments have not been modified along with the
-code, so they need to be updated. This will help readers
-better understand the code.
-
-Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
----
- kernel/signal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 148082db9a55..af5f8bb50491 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2252,7 +2252,7 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
- 			sig = 0;
- 	}
- 	/*
--	 * Send with __send_signal as si_pid and si_uid are in the
-+	 * Send with __send_signal_locked as si_pid and si_uid are in the
- 	 * parent's namespaces.
- 	 */
- 	if (valid_signal(sig) && sig)
--- 
-2.25.1
+The first hunk is essentially a partial revert of the problematic
+commit, but I'm not sure what you want to achieve with the second one.
