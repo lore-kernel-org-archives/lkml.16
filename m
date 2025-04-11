@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053CB3234;
-	Fri, 11 Apr 2025 23:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658AF3234;
+	Fri, 11 Apr 2025 23:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744414796; cv=none; b=k3bFQX1JXw8ZOpDniQfNodi2SeASBKVFs4rOkLNFP/IDQ+B0yCj5rVUePUipd27wZ/phUdNQgWNF7wWMxX/HlyoyUMWRMOrxUXaDvdb3h0danixRRQM9LQUS6cSZ8HRoDEa64z+ANkOMRC9kERjcR/7o4dsRLQp8pGJkhwzS0PE=
+	t=1744414801; cv=none; b=kaDCu2imwaYcfN79lcw/yr/kt6Jrv24w1Mq1kPnDrE5+soHpecUzlsh4835zA1Sf+q6tR3W50t+pMU4yAvg1i+eJVaaYG50EbJ7pBz8RpH2rRwXQr1KbWyMw5IEF+MfF/u59jjec7y0rFYfAfBwokRuY6YsGLf8EKdi7g00nAH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744414796; c=relaxed/simple;
-	bh=++wYaIrj3C2ZV5bOYqSEcsVhOStqZL2wJ7OB7mGhvyE=;
+	s=arc-20240116; t=1744414801; c=relaxed/simple;
+	bh=O7y/ukdVyq46qGxMt1hcV5NVG9xSTvqnublVrmQNsz0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=V6vmJ66DZGtQ5bGendCMT88cx6xhutnQZxJ6aSZ8j/6RLt8MPPwh1LiyJxCoHMCCGkWiRxZ5WO/MO17sc4BOQJ547RIjG+TaAOKuFuNbpQ2YBGeSDL73rQ0j2gUo54HWlKEYh2KDB3Lrt1/ikKvPBjE3W6H0qdaeAd7Qkp7pN54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBcnZmv3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=nZIegcmTN0u7y+Phyg7JVkzwUwS6ol8LXi/JFmRMBnIzJNTzwGsgdvXjjzYCnYSo3qA5XDSDLIJlu/+35ivhUbAHTnlJf6mRF6wFeBJzoCjhY8jx7BCM0I5NREYIYBgBGH5mNmHRcNKJ0au1rr40b6PCH+INmF4VdyuoQ6IBvB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTZn9e0U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBcnZmv3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3829C4CEE2;
-	Fri, 11 Apr 2025 23:39:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTZn9e0U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D61C4CEE2;
+	Fri, 11 Apr 2025 23:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744414795;
-	bh=++wYaIrj3C2ZV5bOYqSEcsVhOStqZL2wJ7OB7mGhvyE=;
+	s=k20201202; t=1744414800;
+	bh=O7y/ukdVyq46qGxMt1hcV5NVG9xSTvqnublVrmQNsz0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fBcnZmv33kdYUqRrDHMY5BOofCyUPRLVdeWVSbFiAyTx+QPDQtXN78xwYZOnp0Y6X
-	 P6b0f5Icsn+rFGb76B/NMM1FZKp6GLz4Tpml/LTauvQiFms9hw9/OO3IqKr54plAvo
-	 LSU+01RrDszwcBY44+tkf+tEFG+RLckFmCyFjN7FdMWNNGfJ/9IxOM/XW4doLOwmbl
-	 Rc+WqrMOk0FZLV8DSMgQtHT3D5Rx/g+ce2v1WFD8UrlNC8xzSN6ODy3MPRuX4rMDPk
-	 twUrl2BF4jSfOgkPW4UDY8Mvas2rIm4Y7eZ/PxKcln6LLxwYjMCPly3KvswF/c1jCh
-	 Aqxx0vNuB9jJQ==
+	b=XTZn9e0U3NdE8+LRlKLP5WJtIwv0stD6PG175gRkzsgFR9jzv2Fvy3071kl14EpBO
+	 pTXYGdF2XZU9zPzc6nxMpLUGfxAWYqu7B/hH/F7orlgTi9ZOOPQPGdgyrI4rSwzVpo
+	 5k/8y6yoi7WGf9F76D5rJM1h5UQHchcHtsQAr2c/QxCDOMeWrDCctejk25JmLZOF0A
+	 w92I0ZYxUuXnkqBnklF8H8uUHxf/bslangIfZNA8OnwaZy9+lIo98+Jy6RxgZppFCD
+	 u2fGDtyU7VK+DdyZespdXFqM0Wtp0O5nhsUYHUCrbaZHTsjwyAJkhXKTUD794VNsBw
+	 QHvGx+rCfijzQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AEACD38111E2;
-	Fri, 11 Apr 2025 23:40:34 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B007038111E2;
+	Fri, 11 Apr 2025 23:40:39 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,36 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] selftests/tc-testing: Add test for echo of big TC
- filters
+Subject: Re: [PATCH net-next v2] sock: Correct error checking condition for
+ (assign|release)_proto_idx()
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174441483351.518794.17356849326579261334.git-patchwork-notify@kernel.org>
-Date: Fri, 11 Apr 2025 23:40:33 +0000
-References: <20250410104322.214620-1-toke@redhat.com>
-In-Reply-To: <20250410104322.214620-1-toke@redhat.com>
-To: =?utf-8?b?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2VuIDx0b2tlQHJlZGhhdC5jb20+?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: linux-kernel@vger.kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
- jiri@resnulli.us, shuah@kernel.org, netdev@vger.kernel.org
+ <174441483842.518794.6671375598659101505.git-patchwork-notify@kernel.org>
+Date: Fri, 11 Apr 2025 23:40:38 +0000
+References: <20250410-fix_net-v2-1-d69e7c5739a4@quicinc.com>
+In-Reply-To: <20250410-fix_net-v2-1-d69e7c5739a4@quicinc.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: edumazet@google.com, kuniyu@amazon.com, pabeni@redhat.com,
+ willemb@google.com, davem@davemloft.net, kuba@kernel.org, horms@kernel.org,
+ xemul@openvz.org, dada1@cosmosbay.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, quic_zijuhu@quicinc.com
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 10 Apr 2025 12:43:21 +0200 you wrote:
-> Add a selftest that checks whether the kernel can successfully echo a
-> big tc filter, to test the fix introduced in commit:
+On Thu, 10 Apr 2025 09:01:27 +0800 you wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
 > 
-> 369609fc6272 ("tc: Ensure we have enough buffer space when sending filter netlink notifications")
+> (assign|release)_proto_idx() wrongly check find_first_zero_bit() failure
+> by condition '(prot->inuse_idx == PROTO_INUSE_NR - 1)' obviously.
 > 
-> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+> Fix by correcting the condition to '(prot->inuse_idx == PROTO_INUSE_NR)'
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,v2] selftests/tc-testing: Add test for echo of big TC filters
-    https://git.kernel.org/netdev/net/c/18c889a9a419
+  - [net-next,v2] sock: Correct error checking condition for (assign|release)_proto_idx()
+    https://git.kernel.org/netdev/net-next/c/faeefc173be4
 
 You are awesome, thank you!
 -- 
