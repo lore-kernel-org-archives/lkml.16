@@ -1,83 +1,83 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.80])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEDC27CB36;
-	Fri, 11 Apr 2025 06:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE821EFF9C;
+	Fri, 11 Apr 2025 06:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.168
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744352690; cv=pass; b=W9butUd13xPFndbWF6OQrORhP4KheVa0mpDktArYUz/DAxaGE72utlPPDFeLkgpcqv841/kyPbsw46vk8rpk0QtrK2dw/o2NlvOikuYf0cMY1KTaZhrNaKnAfA161QxlnfIf7xxlP82E88QNkzYrPHWmU8aEeW4ixAAfgfj5Lyg=
+	t=1744352866; cv=pass; b=nsoIpIscURmzf6Dj3cJZNJ5pSc0Ye0lpqWE2gDIU06/nT/V3VBDP0I+G7aZ4jqmQMkVwHduFXxkjjO3XVXLX+xZDi1vB+EgmdfgjKu4riY9A9/x1sg2Hd0KjN6SYsYzxKo5suM4NmHBJqR4K1FZer6PWe2J4PVG3kPh0d8VHe6U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744352690; c=relaxed/simple;
-	bh=l+I6yaZDQZFzU/0lOna1bxv1XefK864QEYTNwA/sEjc=;
+	s=arc-20240116; t=1744352866; c=relaxed/simple;
+	bh=+K6YHjvkbari11VbJs9ues3NAMomaotXfMS3OiznqhU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m7JDKJfFs0Jvk6HXBitiAPa6vFY5dG82U7ZStwVJaOTDjnMNTGAZp4Adi0twvM5TtqHmuIvPsOoyZHU607QE6uhj0ElMATdlienD4i0qUp8bNTCOPUBj9rW8VvvPhrXH8nUECQzcdYJeMuELfFq2r3iIY3UuvIgGl17fE2PmbNg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=tTyJVGz7; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=5RXs4eJG; arc=pass smtp.client-ip=85.215.255.80
+	 MIME-Version:Content-Type; b=nb6nxim/zeCdclIzNN4PiaFJLMq5718wJHgxNr9VyDh+McA7srSHjKfdLbmZEj4voOXzqzm6l/vcyZb9SOmzppOrgqm9NpK+wSZLf3Od96znUVZryX1tL8PiY+3A4fdX8jt4mBHhntB2ghlb1yO7mVRP/MIji5QrvKVpaCUhJks=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=QEwNlC26; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=/xucxOZu; arc=pass smtp.client-ip=81.169.146.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="tTyJVGz7";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="5RXs4eJG"
-ARC-Seal: i=1; a=rsa-sha256; t=1744352677; cv=none;
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="QEwNlC26";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="/xucxOZu"
+ARC-Seal: i=1; a=rsa-sha256; t=1744352674; cv=none;
     d=strato.com; s=strato-dkim-0002;
-    b=kk0uNfbOtzMQ8ForAz8b6Lt/k7bXB2s+CHd+GpQDCe/NYJj/UwpebXwIf7+SDf1Sln
-    rKXllh6RCHYpgQ9GCO8W3NOvdFImzdNhcO5siWFpYo5AVXhRbIIJbH2nlVpEG4iOBzQo
-    1zL7P0UlJxacWXWM/ZponojxCyMy9Q6Ws9mESn3SDVou74RTaq7//Gx3opZPRej2+D2z
-    d0mXCHHxcDoFXrsy4NhsnSczLMVPcquw2ZkIaUOlcRil43UyCTQxUeIUOCn9DYRxd9mj
-    krTf8fwLKJX09Bc+Wl2UCN9pbdA/b2dJ7416kAUGZMhwnxAqC6hRqJa9UXdUqNXZ6eAj
-    ajBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744352677;
+    b=ZUqjoEZoRVuDdO4CH+VYQhF44yj6oUJwtjOn2fxRDdAlJ+FyHTlnxgVEZLGsh4L4W0
+    1npNxGuBJraNYCkiH5IHNNb0HgF3aJtsFL8VsD4kKFXb/84LvIYy8qWgVjO25yVSRj5w
+    7tQfMy2OiEAoVak/N9GcN80+WdkZWxE0fdvHQZfSSKP0p1lyiBcO/CZ/i0XNW2UEKqek
+    WE5IOnP0HouhxQTFmJsTxRAUuCtdE4WXKtu2c0tMpDXfyEhU08S7tzHHSzxRDUCkky+u
+    yTl2xOik9VsDL+egEP1e9QaZKkwCtcOHMB+dC/Dj+CtsqmpQMZynKEpq+uy61WA69o+B
+    AYEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744352674;
     s=strato-dkim-0002; d=strato.com;
     h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=GOW7EgaK4eTMqPSWF+IPv4cYDIseNc2HtpiUiSUFm3M=;
-    b=Bwf0n1nwuy9C2bPDdtFB7XDkyD7Y2l8tr5jxEyngd1RHklsQvVeuQLLv/dyXEGQUrX
-    4/o0L9fz72wpvGbt9SCyn1+6lQ/MUS5FX//rte+HXbwZjwc8MB+aoXT5VD3djt6UeWu2
-    vFAn7agjASgCj5bRWVOVNl2i5qtfDTVmRL6gSDwFQniqeyWDfdKRol4baHjZPfM8Ssau
-    iik9fux553Ec7Wbtdmz74qHHI0KL0tNIqNeiOl33CXnT29cz8Jeg2npgJE+JlvXVhTVx
-    2YQ7NXz+zhLn2mN5X2SlBfXjEBDDA8hWoY9JafGxSYGwV/TMdMqq+HKvvIeFQM2x/D1v
-    loqA==
+    bh=tkaNobdjZa50PTheeyfzhzE2mQpO9JIwD7JBFoLI1z8=;
+    b=fm0NSHno1URXn6JhgeZogoMhHRdRktFJoLr4YqXrS1O+UlHHaRkL9OpV1MCOpcahfA
+    xSDT8P9jmYAbi6x+QeZeDDD/8D+kXIOYwjY7QJz2GNdntaaFp7+VAbIg222k+K4R5kTN
+    3Jk/Lhl4UfmYl3BG5JzZpiqMYd5s5zRNqevym2Xmbk2wf/bmw86/HfCF/7CwpkdJCiWX
+    bdZkbV+axB7Bj60tIS/SCZltMnr7EJirHrMTWFoEOXcZYygtWxvt4jBZpvZUp50x9CNw
+    L0r6vgNu+fSf9xee5Gois71oNdKBMG9RUjRsax2D+816bQN1selbXHHWrKc+dBwAGoR3
+    yaKA==
 ARC-Authentication-Results: i=1; strato.com;
     arc=none;
     dkim=none
 X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744352677;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744352674;
     s=strato-dkim-0002; d=fossekall.de;
     h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=GOW7EgaK4eTMqPSWF+IPv4cYDIseNc2HtpiUiSUFm3M=;
-    b=tTyJVGz7GWMYjq9wJD/2fFLB6QiD1iKe11NQGviPtWNAN7Nxf3xe5FEjGlnzwIcdt4
-    ogUPqsDhymWtwjgchgmXuy5U390bqd5cbhg3AWmmPmYUrRR91I+O8YDwh2wEtHsGdUiM
-    2Y0DyJZho4xicql8ZYuogPAkO2g4aT4nywdahux1G6L+BE577GH+pWxYAUUzLK8XHaEk
-    uRv145FqR4eLGNGnI8ynrnQWj1KxLzdwrwlJ1uocPEKxSoKRYrG16WxfipLqMQXslheC
-    xSDOZy3gWC6fzj2B+i4J5YTMHludKCEJh0jft5xkY9ek04bbHVq/f0UUozVpPekCVLJB
-    7vVQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744352677;
+    bh=tkaNobdjZa50PTheeyfzhzE2mQpO9JIwD7JBFoLI1z8=;
+    b=QEwNlC26dexDFcinM5eIx4sk3ny/ke2/0Vr/01zj2nmQ2N05KV+onJkVF56WcdiO3x
+    /iYue5KwOhmpa+Rn0VKMOs5UFl/Du9DwlZs2eRm9g33XITuHVcCjtLl8fyPZNSDGp2an
+    eDLIiWwqblxWmfVBrWmDXBim5eQ7NF0VEWOOpSjZoJgt/8uzpa8TfkRHj7r9MOtkA6ZH
+    D5YrvkzVap0qatdElLNCiIr85U+T7QfmkmMY1Tb1HqYztohopSc4kWw0Lg7Oz/UY2xV4
+    ++uCqplTMD6gc1hdsvIAk6vfh2bz2QgVppTs4XcZa8D48FtilIRup1XPUFUy0C8p/Wf3
+    iNXg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744352674;
     s=strato-dkim-0003; d=fossekall.de;
     h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=GOW7EgaK4eTMqPSWF+IPv4cYDIseNc2HtpiUiSUFm3M=;
-    b=5RXs4eJGxZJMKw39+mgUX5pGHyDtJPTiHknySH+W7L4dA8eseQrQ1Fgi5oA0Xk8swu
-    ZpcW2eZVhQsTm7A7DIAw==
+    bh=tkaNobdjZa50PTheeyfzhzE2mQpO9JIwD7JBFoLI1z8=;
+    b=/xucxOZu4EGrd/cHu1M/QGUcQTA5kI4gngiOloo+JMFTotsIIdeQXjlIDbEZ98VE++
+    CDTy80Xa+BJHWK7ggsCQ==
 X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
 Received: from aerfugl
     by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b3513B6ObHae
+    with ESMTPSA id f28b3513B6OYHab
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
 	(Client did not present a certificate);
-    Fri, 11 Apr 2025 08:24:37 +0200 (CEST)
+    Fri, 11 Apr 2025 08:24:34 +0200 (CEST)
 Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
 	by aerfugl with smtp (Exim 4.96)
 	(envelope-from <michael@a98shuttle.de>)
-	id 1u37oa-0000Nm-2r;
-	Fri, 11 Apr 2025 08:24:36 +0200
-Received: (nullmailer pid 8911 invoked by uid 502);
-	Fri, 11 Apr 2025 06:24:36 -0000
+	id 1u37oX-0000NC-00;
+	Fri, 11 Apr 2025 08:24:33 +0200
+Received: (nullmailer pid 8883 invoked by uid 502);
+	Fri, 11 Apr 2025 06:24:32 -0000
 From: Michael Klein <michael@fossekall.de>
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
 Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [net-next v6 4/4] net: phy: realtek: Add support for PHY LEDs on RTL8211E
-Date: Fri, 11 Apr 2025 08:24:26 +0200
-Message-Id: <20250411062426.8820-5-michael@fossekall.de>
+Subject: [net-next v6 2/4] net: phy: realtek: Clean up RTL8211E ExtPage access
+Date: Fri, 11 Apr 2025 08:24:24 +0200
+Message-Id: <20250411062426.8820-3-michael@fossekall.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250411062426.8820-1-michael@fossekall.de>
 References: <20250411062426.8820-1-michael@fossekall.de>
@@ -90,56 +90,43 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="us-ascii"
 
-Like the RTL8211F, the RTL8211E PHY supports up to three LEDs.
-Add netdev trigger support for them, too.
+- Factor out RTL8211E extension page access code to
+  rtl8211e_modify_ext_page() and clean up rtl8211e_config_init()
 
 Signed-off-by: Michael Klein <michael@fossekall.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/realtek/realtek_main.c | 125 +++++++++++++++++++++++--
- 1 file changed, 119 insertions(+), 6 deletions(-)
+ drivers/net/phy/realtek/realtek_main.c | 40 +++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index cf310cc90b97..a37be6b4e9f4 100644
+index f6e402bf78bf..b06d53867b99 100644
 --- a/drivers/net/phy/realtek/realtek_main.c
 +++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -50,6 +50,20 @@
- #define RTL8211E_RX_DELAY			BIT(11)
- #define RTL8211E_DELAY_MASK			GENMASK(13, 11)
+@@ -38,12 +38,17 @@
  
-+#define RTL8211E_LEDCR_EXT_PAGE			0x2c
+ #define RTL821x_INSR				0x13
+ 
+-#define RTL821x_EXT_PAGE_SELECT			0x1e
+ #define RTL821x_PAGE_SELECT			0x1f
+ 
++#define RTL8211E_EXT_PAGE_SELECT		0x1e
++#define RTL8211E_SET_EXT_PAGE			0x07
 +
-+#define RTL8211E_LEDCR1				0x1a
-+#define RTL8211E_LEDCR1_ACT_TXRX		BIT(4)
-+#define RTL8211E_LEDCR1_MASK			BIT(4)
-+#define RTL8211E_LEDCR1_SHIFT			1
-+
-+#define RTL8211E_LEDCR2				0x1c
-+#define RTL8211E_LEDCR2_LINK_1000		BIT(2)
-+#define RTL8211E_LEDCR2_LINK_100		BIT(1)
-+#define RTL8211E_LEDCR2_LINK_10			BIT(0)
-+#define RTL8211E_LEDCR2_MASK			GENMASK(2, 0)
-+#define RTL8211E_LEDCR2_SHIFT			4
-+
++#define RTL8211E_RGMII_EXT_PAGE			0xa4
++#define RTL8211E_RGMII_DELAY			0x1c
+ #define RTL8211E_CTRL_DELAY			BIT(13)
+ #define RTL8211E_TX_DELAY			BIT(12)
+ #define RTL8211E_RX_DELAY			BIT(11)
++#define RTL8211E_DELAY_MASK			GENMASK(13, 11)
+ 
  #define RTL8211F_PHYCR1				0x18
  #define RTL8211F_PHYCR2				0x19
- #define RTL8211F_CLKOUT_EN			BIT(0)
-@@ -66,7 +80,8 @@
- #define RTL8211F_LEDCR_MASK			GENMASK(4, 0)
- #define RTL8211F_LEDCR_SHIFT			5
- 
--#define RTL8211F_LED_COUNT			3
-+/* RTL8211E and RTL8211F support up to three LEDs */
-+#define RTL8211x_LED_COUNT			3
- 
- #define RTL8211F_TX_DELAY			BIT(8)
- #define RTL8211F_RX_DELAY			BIT(3)
-@@ -141,6 +156,21 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
+@@ -136,6 +141,21 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
  	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
  }
  
-+static int rtl8211e_read_ext_page(struct phy_device *phydev, u16 ext_page,
-+				  u32 regnum)
++static int rtl8211e_modify_ext_page(struct phy_device *phydev, u16 ext_page,
++				    u32 regnum, u16 mask, u16 set)
 +{
 +	int oldpage, ret = 0;
 +
@@ -147,159 +134,47 @@ index cf310cc90b97..a37be6b4e9f4 100644
 +	if (oldpage >= 0) {
 +		ret = __phy_write(phydev, RTL8211E_EXT_PAGE_SELECT, ext_page);
 +		if (ret == 0)
-+			ret = __phy_read(phydev, regnum);
++			ret = __phy_modify(phydev, regnum, mask, set);
 +	}
 +
 +	return phy_restore_page(phydev, oldpage, ret);
 +}
 +
- static int rtl8211e_modify_ext_page(struct phy_device *phydev, u16 ext_page,
- 				    u32 regnum, u16 mask, u16 set)
+ static int rtl821x_probe(struct phy_device *phydev)
  {
-@@ -530,7 +560,7 @@ static int rtl821x_resume(struct phy_device *phydev)
- 	return 0;
- }
+ 	struct device *dev = &phydev->mdio.dev;
+@@ -608,7 +628,6 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
  
--static int rtl8211f_led_hw_is_supported(struct phy_device *phydev, u8 index,
-+static int rtl8211x_led_hw_is_supported(struct phy_device *phydev, u8 index,
- 					unsigned long rules)
- {
- 	const unsigned long mask = BIT(TRIGGER_NETDEV_LINK_10) |
-@@ -549,9 +579,11 @@ static int rtl8211f_led_hw_is_supported(struct phy_device *phydev, u8 index,
- 	 *      rates and Active indication always at all three 10+100+1000
- 	 *      link rates.
- 	 * This code currently uses mode B only.
-+	 *
-+	 * RTL8211E PHY LED has one mode, which works like RTL8211F mode B.
- 	 */
- 
--	if (index >= RTL8211F_LED_COUNT)
-+	if (index >= RTL8211x_LED_COUNT)
- 		return -EINVAL;
- 
- 	/* Filter out any other unsupported triggers. */
-@@ -570,7 +602,7 @@ static int rtl8211f_led_hw_control_get(struct phy_device *phydev, u8 index,
- {
- 	int val;
- 
--	if (index >= RTL8211F_LED_COUNT)
-+	if (index >= RTL8211x_LED_COUNT)
- 		return -EINVAL;
- 
- 	val = phy_read_paged(phydev, 0xd04, RTL8211F_LEDCR);
-@@ -603,7 +635,7 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
- 	const u16 mask = RTL8211F_LEDCR_MASK << (RTL8211F_LEDCR_SHIFT * index);
- 	u16 reg = 0;
- 
--	if (index >= RTL8211F_LED_COUNT)
-+	if (index >= RTL8211x_LED_COUNT)
- 		return -EINVAL;
- 
- 	if (test_bit(TRIGGER_NETDEV_LINK_10, &rules))
-@@ -626,6 +658,84 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
- 	return phy_modify_paged(phydev, 0xd04, RTL8211F_LEDCR, mask, reg);
- }
- 
-+static int rtl8211e_led_hw_control_get(struct phy_device *phydev, u8 index,
-+				       unsigned long *rules)
-+{
-+	int ret;
-+	u16 cr1, cr2;
-+
-+	if (index >= RTL8211x_LED_COUNT)
-+		return -EINVAL;
-+
-+	ret = rtl8211e_read_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
-+				     RTL8211E_LEDCR1);
-+	if (ret < 0)
-+		return ret;
-+
-+	cr1 = ret >> RTL8211E_LEDCR1_SHIFT * index;
-+	if (cr1 & RTL8211E_LEDCR1_ACT_TXRX) {
-+		__set_bit(TRIGGER_NETDEV_RX, rules);
-+		__set_bit(TRIGGER_NETDEV_TX, rules);
-+	}
-+
-+	ret = rtl8211e_read_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
-+				     RTL8211E_LEDCR2);
-+	if (ret < 0)
-+		return ret;
-+
-+	cr2 = ret >> RTL8211E_LEDCR2_SHIFT * index;
-+	if (cr2 & RTL8211E_LEDCR2_LINK_10)
-+		__set_bit(TRIGGER_NETDEV_LINK_10, rules);
-+
-+	if (cr2 & RTL8211E_LEDCR2_LINK_100)
-+		__set_bit(TRIGGER_NETDEV_LINK_100, rules);
-+
-+	if (cr2 & RTL8211E_LEDCR2_LINK_1000)
-+		__set_bit(TRIGGER_NETDEV_LINK_1000, rules);
-+
-+	return ret;
-+}
-+
-+static int rtl8211e_led_hw_control_set(struct phy_device *phydev, u8 index,
-+				       unsigned long rules)
-+{
-+	const u16 cr1mask =
-+		RTL8211E_LEDCR1_MASK << (RTL8211E_LEDCR1_SHIFT * index);
-+	const u16 cr2mask =
-+		RTL8211E_LEDCR2_MASK << (RTL8211E_LEDCR2_SHIFT * index);
-+	u16 cr1 = 0, cr2 = 0;
-+	int ret;
-+
-+	if (index >= RTL8211x_LED_COUNT)
-+		return -EINVAL;
-+
-+	if (test_bit(TRIGGER_NETDEV_RX, &rules) ||
-+	    test_bit(TRIGGER_NETDEV_TX, &rules)) {
-+		cr1 |= RTL8211E_LEDCR1_ACT_TXRX;
-+	}
-+
-+	cr1 <<= RTL8211E_LEDCR1_SHIFT * index;
-+	ret = rtl8211e_modify_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
-+				       RTL8211E_LEDCR1, cr1mask, cr1);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (test_bit(TRIGGER_NETDEV_LINK_10, &rules))
-+		cr2 |= RTL8211E_LEDCR2_LINK_10;
-+
-+	if (test_bit(TRIGGER_NETDEV_LINK_100, &rules))
-+		cr2 |= RTL8211E_LEDCR2_LINK_100;
-+
-+	if (test_bit(TRIGGER_NETDEV_LINK_1000, &rules))
-+		cr2 |= RTL8211E_LEDCR2_LINK_1000;
-+
-+	cr2 <<= RTL8211E_LEDCR2_SHIFT * index;
-+	ret = rtl8211e_modify_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
-+				       RTL8211E_LEDCR2, cr2mask, cr2);
-+
-+	return ret;
-+}
-+
  static int rtl8211e_config_init(struct phy_device *phydev)
  {
+-	int ret = 0, oldpage;
  	u16 val;
-@@ -1401,6 +1511,9 @@ static struct phy_driver realtek_drvs[] = {
- 		.resume		= genphy_resume,
- 		.read_page	= rtl821x_read_page,
- 		.write_page	= rtl821x_write_page,
-+		.led_hw_is_supported = rtl8211x_led_hw_is_supported,
-+		.led_hw_control_get = rtl8211e_led_hw_control_get,
-+		.led_hw_control_set = rtl8211e_led_hw_control_set,
- 	}, {
- 		PHY_ID_MATCH_EXACT(0x001cc916),
- 		.name		= "RTL8211F Gigabit Ethernet",
-@@ -1414,7 +1527,7 @@ static struct phy_driver realtek_drvs[] = {
- 		.read_page	= rtl821x_read_page,
- 		.write_page	= rtl821x_write_page,
- 		.flags		= PHY_ALWAYS_CALL_SUSPEND,
--		.led_hw_is_supported = rtl8211f_led_hw_is_supported,
-+		.led_hw_is_supported = rtl8211x_led_hw_is_supported,
- 		.led_hw_control_get = rtl8211f_led_hw_control_get,
- 		.led_hw_control_set = rtl8211f_led_hw_control_set,
- 	}, {
+ 
+ 	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
+@@ -638,20 +657,9 @@ static int rtl8211e_config_init(struct phy_device *phydev)
+ 	 * 12 = RX Delay, 11 = TX Delay
+ 	 * 10:0 = Test && debug settings reserved by realtek
+ 	 */
+-	oldpage = phy_select_page(phydev, 0x7);
+-	if (oldpage < 0)
+-		goto err_restore_page;
+-
+-	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
+-	if (ret)
+-		goto err_restore_page;
+-
+-	ret = __phy_modify(phydev, 0x1c, RTL8211E_CTRL_DELAY
+-			   | RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
+-			   val);
+-
+-err_restore_page:
+-	return phy_restore_page(phydev, oldpage, ret);
++	return rtl8211e_modify_ext_page(phydev, RTL8211E_RGMII_EXT_PAGE,
++					RTL8211E_RGMII_DELAY,
++					RTL8211E_DELAY_MASK, val);
+ }
+ 
+ static int rtl8211b_suspend(struct phy_device *phydev)
 -- 
 2.39.5
 
