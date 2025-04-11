@@ -1,90 +1,136 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F08627D787;
-	Fri, 11 Apr 2025 06:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC81327CCD5;
+	Fri, 11 Apr 2025 06:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744354262; cv=none; b=XmpZkO0nQtmr2ICVXEYuEVrohr8vfI+qXh5x+i1VOuw4ohMdCfejGPTJ70TFZACV5oAfE2DEXXyrcCcuKdgl0uKaxTCl4oWfGaWJ+Mv28wuYSALdJfVK/W7lnVC5emoGlyynh4apfd+FFilNWmC3iryPUygCn1nxfsP9UyuVU/g=
+	t=1744354284; cv=none; b=mJXsUAP6D9wambmqGtPfAfZWdSrGeqazhU3F6y7vGTSg/qVDd4X1GmQJCmvkc2mvr2imDZjqQgis3obzqDZCGbRIKy2in/elsQulxx4JiPhrPEI1NOXbD9QiPbX9CaBvQkdESTz3zYPHc2ceBvWrI7epqzxiQ56CwbqCguFijMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744354262; c=relaxed/simple;
-	bh=H5M+RwsQOulVvzrUR1rxNWFkr1ScfSx7Ms0AQnVWbPA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uQnrzT3HymDuY5Rk8kkMvkIOLBmty4wpNXuziEhD8UYiS1hUVsDMfAjB9320cVdct7CGGF67wykPm/KvlXHMymDuTlaS+WyCTr3BKR9dZCQBvVMgTVpNIs51G7tRJdnAMjHzAKowhNDXd5SLwfKC2TKcGqca4pdJ4IjfnI4kvJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=I3y5txtt; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I3y5txtt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=oulxrBhV/GtDVDbQQtRTXKElduFaApaSwW+JQxQ0T5g=; b=I3y5txttoV21DxBgQlAbXPKORi
-	eXDnPQ0PQU8BRO8eeknYHyujG0wFjTNPLny0IsNQUT5HqgaWEpQJJEkiu9DuswbwNgiH6xwzrbaAC
-	+rWAb4mJTUj9C6XM77SpJPcKymfbgVe01UDGjkTYWJj+/9IVcmEpxwTkvopZDucmboqkFJkdtjTXr
-	nIT58gyz9cY1VZC9zkFQhWe6yXeldAnWihG6OItsByFfkPErCeK0Cj3HCb5tvSrcKoH+115iV+15N
-	++v0x9nMtGMJfH9L9aNVteALOXWgAfnYd2vRcdByupeBrCt8i9tJdTeZfI1oS0cBvxMyc2rvMWSe1
-	1/vv8xqA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u38E2-00000003tfC-0WJh;
-	Fri, 11 Apr 2025 06:50:55 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 43E6630057A; Fri, 11 Apr 2025 08:50:54 +0200 (CEST)
-Date: Fri, 11 Apr 2025 08:50:54 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
-	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>,
-	Sergio =?iso-8859-1?Q?Gonz=E1lez?= Collado <sergio.collado@gmail.com>,
-	David Gow <davidgow@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Mostafa Saleh <smostafa@google.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/mksysmap: skip objtool __pfx_ symbols
-Message-ID: <20250411065054.GM9833@noisy.programming.kicks-ass.net>
-References: <20250328112156.2614513-1-arnd@kernel.org>
- <ycgbf7jcq7nc62ndqiynogt6hkabgl3hld4uyelgo7rksylf32@oysq7jpchtp4>
+	s=arc-20240116; t=1744354284; c=relaxed/simple;
+	bh=HDXDrlVt+FGDxrjS5VgTAI4hnyLXPAN2IU8yC7FA2pI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E42BGF1T4Y4HMEZ4+0wnYbikrPctsjZgT0NfIpiBopXibNWDxYKD87/aCWw/4O2dsZDwcKUlp2kPA7ITaVikcH5ujk7JmeesvltEkJlvE6sn1BSJvyqCtD25BdViDc0SOqH2e2webUrshM9UMsTFQ734tGYj9MODH30ZnBeX97M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+Received: from [89.212.21.243] (port=39246 helo=[192.168.69.116])
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <primoz.fiser@norik.com>)
+	id 1u38ES-003Yz0-13;
+	Fri, 11 Apr 2025 08:51:19 +0200
+Message-ID: <cffdcd6c-88c5-43c1-9f00-d1c84af73f4c@norik.com>
+Date: Fri, 11 Apr 2025 08:51:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ycgbf7jcq7nc62ndqiynogt6hkabgl3hld4uyelgo7rksylf32@oysq7jpchtp4>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/13] arm64: dts: freescale: imx93-phycore-som: Add eMMC
+ no-1-8-v by default
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, upstream@lists.phytec.de
+References: <20250410090251.1103979-1-primoz.fiser@norik.com>
+ <20250410090251.1103979-6-primoz.fiser@norik.com>
+ <Z/fdR2C0IRUfUv4U@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: Primoz Fiser <primoz.fiser@norik.com>
+Autocrypt: addr=primoz.fiser@norik.com; keydata=
+ xjMEZrROOxYJKwYBBAHaRw8BAQdAADVOb5tiLVTUAC9nu/FUl4gj/+4fDLqbc3mk0Vz8riTN
+ JVByaW1veiBGaXNlciA8cHJpbW96LmZpc2VyQG5vcmlrLmNvbT7CiQQTFggAMRYhBK2YFSAH
+ ExsBZLCwJGoLbQEHbnBPBQJmtE47AhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQagttAQducE+T
+ gAD+K4fKlIuvH75fAFwGYG/HT3F9mN64majvqJqvp3gTB9YBAL12gu+cm11m9JMyOyN0l6Os
+ jStsQFghPkzBSDWSDN0NzjgEZrROPBIKKwYBBAGXVQEFAQEHQP2xtEOhbgA+rfzvvcFkV1zK
+ 6ym3/c/OUQObCp50BocdAwEIB8J4BBgWCAAgFiEErZgVIAcTGwFksLAkagttAQducE8FAma0
+ TjwCGwwACgkQagttAQducE8ucAD9F1sXtQD4iA7Qu+SwNUAp/9x7Cqr37CSb2p6hbRmPJP8B
+ AMYR91JYlFmOJ+ScPhQ8/MgFO+V6pa7K2ebk5xYqsCgA
+Organization: Norik systems d.o.o.
+In-Reply-To: <Z/fdR2C0IRUfUv4U@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
+X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Tue, Apr 08, 2025 at 06:58:49PM -0700, Josh Poimboeuf wrote:
-> On Fri, Mar 28, 2025 at 11:48:19AM +0100, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> > 
-> > The recently added testcase for overly long symbols triggers when
-> > CONFIG_FUNCTION_PADDING_CFI is set:
-> > 
-> > Symbol __pfx_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n too long for kallsyms (517 >= 512).
-> > Please increase KSYM_NAME_LEN both in kernel and kallsyms.c
-> > 
-> > Change the mksymtab table so the prefixed symbols are not included
-> > in kallsyms.
-> > 
-> > Fixes: c104c16073b7 ("Kunit to check the longest symbol length")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi Frank,
+
+On 10. 04. 25 17:01, Frank Li wrote:
+> On Thu, Apr 10, 2025 at 11:02:43AM +0200, Primoz Fiser wrote:
+>> Add property 'no-1-8-v' by default to usdhc1 (eMMC) node. Bootloader
+>> will take care of deleting the property in case SOM supports HS400 mode
+>> (1.8V IO voltage feature flag has to be set in the EEPROM).
 > 
-> I'm not sure we want to remove the __pfx_ symbols from kallsyms. There
-> can be actual code there.
+> what means of EEPROM here?
 > 
-> For example, FineIBT writes code in the __pfx area which can trigger an
-> #UD.  And we'd want a sane backtrace for that.
+> Generally eMMC worked fixed voltage, why need 'no-1-8-v' here, even no
+> HS400 support.
 
-On top of that, clang kcfi builds do a similar thing, they will generate
-__cfi_ prefixed symbols.
+The phyCORE-i.MX93 SoM comes in two variants, one with 3.3V VDD_IO and
+the other one with 1.8V VDD_IO voltage set.
 
-And yes, those symbols exist for a reason, there is code there under
-various circumstances and backtraces look really weird without these
-symbols on -- notably the code in the prefix will be attributed to
-whatever symbol comes before, most confusing.
+The 3.3V variant can only support DDR52 mode, while 1.8V variant will
+support HS400ES eMMC mode.
 
-So yeah, don't remove these symbols, and fix the kunit test.
+The information about VDD_IO option is encoded in the SoM's EEPROM. We
+read EEPROM in the bootloader and clear "no-1-8-v" flag in case of 1.8V
+SOM variant is detected.
+
+In case of EEPROM error (erased or read error) the fall-back option has
+to support both SoM variants, hence the "no-1-8-v" flag has to be set by
+default.
+
+BR,
+Primoz
+
+
+
+> 
+> Frank
+>>
+>> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+>> ---
+>>  arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+>> index 3d84eed33074..d6589d26c875 100644
+>> --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+>> @@ -172,6 +172,7 @@ &usdhc1 {
+>>  	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+>>  	bus-width = <8>;
+>>  	non-removable;
+>> +	no-1-8-v;
+>>  	status = "okay";
+>>  };
+>>
+>> --
+>> 2.34.1
+>>
+
+-- 
+Primoz Fiser
+phone: +386-41-390-545
+email: primoz.fiser@norik.com
+--
+Norik systems d.o.o.
+Your embedded software partner
+Slovenia, EU
+phone: +386-41-540-545
+email: info@norik.com
