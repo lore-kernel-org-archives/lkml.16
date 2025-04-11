@@ -1,66 +1,72 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047952BD5A1
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB98826A09B
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744413263; cv=none; b=sL8l5+ypQIDsAbzM6VUEWucISFiuYj3w2hZued7SeaX22RdeCHbT2JYnJp/SGqd3vDL2lmRgIASCpK8YKu7XCOQ0X0B7CqXKrwzzIwmYr3mEoV9NVAbsEEIa3S5+nZNhYPiV2Qasab8MATcwGdZ6V6a6X58cam3SOZt6nAsQZqU=
+	t=1744413363; cv=none; b=YeWCwuO4h01H4mdFAbRCgQ0CO2MDnjEiBXsJPqRFddkB7hTB1ZJWUel5kvXUlH9bw7RVPIdjhdTMaGhv2ici+5f9mNShxdtWgAnEp2dJnQ5umtdH4lIIVxCMDhBMaXvgYjdL+4eFlQDS8OtiD4Qr6+chmL07EwetTLSqLvSNHC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744413263; c=relaxed/simple;
-	bh=5+IYzvxdGiVJBQrU6OvpI8zkSDj8uS4VrXAb+7K70s4=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EwPHxRv/ajORAcEzYODXBMNldNbtXH2eNDEf9Q0I9xCeOqef11S6DjtjCz5qmxw4acbyJu9Ed607BFFABwAD+Sgs/PwHpqvgh0/ZiVSkQ4Hp3qB5ZCDfPKSKJ9IjcLB89GVI4Z3cevp1hw7okkPDyQmUzVRyfvx0jwd4zG/A+80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=hAJKhcMS; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
+	s=arc-20240116; t=1744413363; c=relaxed/simple;
+	bh=MRZQCpe6Ahgg1QYz9GHnsVEcgoKbW8A7T2OVsED1vuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WTjZDlgzturzpN57T4/A3rVNUlv5HFv/7Ki9Xdxx3Ro15jF3edkXiKlUWb5raNeGMzGI0uwvS6fKnAf0wlof1861lQdGyFwNxjPZf/71xhFMyQGmOkYnrpFebO3wT84PTI13F9qW+k22h854Vgx8iiBBl3dTUYO+odhIjYNvf5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=maVUGWfX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="hAJKhcMS"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac25d2b2354so405777966b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1744413259; x=1745018059; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=L7gZ2a4kNRAu7jwQR+r8fyDCj7+uKKM15SUMg3PT2KM=;
-        b=hAJKhcMSpno0bnTzg0oOR85rz8Lo1KK1HWvajM20l00m+olMNBlOVchTVMEmTEcdEv
-         w4lD022cZurW4RBK9m0E33cg8lf9UE/qZDq9zObzs1HciU2qXzuD0Vw5M+YuALbhJ3Ec
-         H/Im/ArWpMlck5FPZ+BSddiLr7wN6PradrEBmYrK9wDZAkIhfEdOQ+CRy69NIMXj2ugA
-         YL4AVMtvTxwbWw24nDVv/ng+6Vucu5/HF33lhtUztkErXxtBRoqXsJkFQXqZJzJOQssR
-         906bOOfKMjrUB2uRWvCHCqbpjtMAg/hC4j1Ayn1o6FZtx4JQNxy0UzCzxuEKbYxQQepp
-         vrZA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="maVUGWfX"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BFTY89018319
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:16:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SWYjnlKB3xFSuVzJ001Y4FJ4SKo0Jqb3PotCGIfe3Ss=; b=maVUGWfXkUTpn41i
+	09UXW0nMdQ5GBlVgso5tLTEjdEL5R1MQ2iyjnJ31BT+QDC3UVh/w0O0ouMxAqSU/
+	WqzNEOl9cJEv0+4+s5tbB0GGAuPHlu7BT3gcV2D5vGL0XV71DJIXlEVS7tl1UKi0
+	R52cyHbewuDB7QPQ0HWL4P3+jxg+/At5fJ1rcQRJjEcBHZv2dxZsLww3as64IXt8
+	ZX5P7oKKRDOwsyQUYjWz2Bu5F5M2TPmHLETSPOwBZjK8XOErLAyQXGr63vkUigON
+	5+Ta9jB30Ab9ey2dfu+hZaf8wnsbDmBq8ixUm7rz/vaiTz+JeAE7PXg/OY7JJMmA
+	hUUhdA==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twtbc07d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:16:00 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4792d998b21so2114791cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:16:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744413259; x=1745018059;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
+        d=1e100.net; s=20230601; t=1744413359; x=1745018159;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L7gZ2a4kNRAu7jwQR+r8fyDCj7+uKKM15SUMg3PT2KM=;
-        b=pzGoqFX5rteTIPlQ1Fk5x80yntEmNB/Gsk6UC/f51AUlTcYMHUTKnJQSq8zfV8ClQB
-         lftBRNwFEI3h97FSBbLiahoqOoFweheXPuZ+rXL0V6LCsDOU/Efp6QAmyMH0P7LEZMds
-         aHtIYRFN03m3kfeCChDLsGqWfF9edxVw9jVPC17n2mwu+MsHm/Z7OwETA9gY5Y9jMYBd
-         vBsVjJveNG1od+3Oo9nUDdhdH2OCLMv07/Nrv3OO4XypvPOdbqDTjPTPowCdkAwxkbz0
-         LTuhJQB4nT9f7aSNIvi1dkJth0qRfPChF8KQkt1YtwfeeAMxQ3jmlpLu5GBZou5etaml
-         b6ug==
-X-Forwarded-Encrypted: i=1; AJvYcCU35wghLBr6PYIMm6pYyKvqLkhdzSdGquRT+fjiKhQ0XP716iR0bs7ZvoklDyRt7STP87YoD/52XUYtNS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSzXh7SoNtCgCcCbvlH87yWW/GMvb6ZKqNl2Oh6jheCOfvQXzK
-	6x4ZwLWcgA/uc6Mtvx9neL/jflfY0F4gzcg2fVgLdZ+GSIAEG2Wy+e2uXYH8DQ==
-X-Gm-Gg: ASbGncsKnnjj+c/g3Kqp3FIjBJxL+euHeEagZTlF+V6hnDPtx1th9ZwSU2dhIPh1BlL
-	yeJsdFAKtVPfQtU1GUgPRepCLCkQk+fM/D/zfpMaGknaCN/5tOVZ61rSskmLYaoCIFu0KVsq+3+
-	X0CM5Zn4n6p/zV9+VJixCRVE37epQxo7o89DhX6RYsOA6Eshha9TO+aBNfVZK4dyMwfZiM9/iIk
-	B4XZZsBbTcaicuZHMpCYAP383f11Abgzpnvkp3R6mP3DCWxe6bMLmB2J1SkmdNbwwVEr1Es0t9u
-	A4Pnhcd07bBp2DtZF3w7hiLldjODJ/2jaFWfbJIfFU/HWNcFmw==
-X-Google-Smtp-Source: AGHT+IEvy6kgULlZZh+g/Jo9ZEWmTjrbZlUGLIqKPnfHXoHdBf0RzSc9G7gT62xhdLc+tXmoYTQ/WQ==
-X-Received: by 2002:a17:906:f58d:b0:aca:a1de:5e62 with SMTP id a640c23a62f3a-acad359505amr320916466b.42.1744413259061;
-        Fri, 11 Apr 2025 16:14:19 -0700 (PDT)
-Received: from [10.2.1.132] ([194.53.194.238])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb4104sm513940666b.99.2025.04.11.16.14.18
+        bh=SWYjnlKB3xFSuVzJ001Y4FJ4SKo0Jqb3PotCGIfe3Ss=;
+        b=G6SXQzrdQI642uZf782+OMkAOeMiQJxHcR+UkHe71umb3QeUcp1VKmSzTdi2OURD4b
+         gNcI17IZrsxDnLhmfq9RcxYBAKJUccCcyPfPOz8wgs6HsiBOBIg4MeLguIQi+rN7CIip
+         znHjUM6euvWXP3jLQ31B/gykV9Xxb4TIQq3tm3sHEVRhSgKXp2DeQKlnNm5HX6gtC6QA
+         /68fQxlUEGwjZxpsCFoXeeHNCfmbfRElq2HqGW9qftLBqaQMWpgsOLEPHtrTKAr/iEx3
+         zQ92+sIj+txhtI9uGeEaDXy5xnXjN6KsNWAhIgwwOTXLymqDM6isokA+hkH+9UH9DeUY
+         7apg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKm/Yjw9+8b6gXv1jAY7hh/FcDSPLWAJ3YqK8Mwq2lQQ+Z6LYWJKOAkQ8kkCnPQFUKi5T9wdDfRbSl8wQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJL7xkWzbe0qYGUU9e1n8osRp7JQ/ZAOohOyygZHXAQXSR6NBX
+	L29C4MNuNDwb9jJvMbrMSJzwcj0awNAyHi5YK0VelDTG509eX03LIeR95/hEPKnESKMXzVKSreE
+	1qp4i0T+PJxdxQVfUfrVEhKyNa6wYTUV5qENFTtl4td5kXkPNC1yQ6UeyRm9b1oE=
+X-Gm-Gg: ASbGncuMOV+O8pFFI0PUcr1+Iq9C5R5lMBKU3qSah7pv0nk4FihsS8S52tRsEFHfHbj
+	0Qwsfh0Vt2Baw3YgB/mCBQgwuiQSSJyjFnSmGfP68x/uVTgqf/H9/zDMJmpLo4tAM9UDj4RLKiG
+	CtO5HgZ68B0VlU08ddgobg7wPxoXkG2UNq65acjpZJUStOfxmi4LGZJsfcI4KlVjvpF7v8KiREL
+	qV0Ha2klJYFGJLd7bYdps94I2RHo8r2SxpJTdgeEj/cuxlxVkgTQK177NOacW4Em9RIxgqcVXT0
+	u4v+SfhPLk5jcMwh507VtEV3QJon0tGG2UHDhwcat4o8eovCyYyxz5Hoq2LfS7isiw==
+X-Received: by 2002:a05:6214:5091:b0:6ed:122c:7daa with SMTP id 6a1803df08f44-6f230cd679fmr22236726d6.4.1744413358781;
+        Fri, 11 Apr 2025 16:15:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFPWNkej1AKI8QkkdNL0h+57zX6+IrX5kuTTbHg8ZUj9LFhjqqYwlQKiN+qsCMFDFMK+Yfbbw==
+X-Received: by 2002:a05:6214:5091:b0:6ed:122c:7daa with SMTP id 6a1803df08f44-6f230cd679fmr22236506d6.4.1744413358144;
+        Fri, 11 Apr 2025 16:15:58 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce81c5sm506439366b.184.2025.04.11.16.15.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 16:14:18 -0700 (PDT)
-From: Jacek Kowalski <jacek@jacekk.info>
-X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <1c4b00b6-f6e3-4b04-a129-24452df60903@jacekk.info>
-Date: Sat, 12 Apr 2025 01:14:17 +0200
+        Fri, 11 Apr 2025 16:15:57 -0700 (PDT)
+Message-ID: <a1e85e39-4be6-4793-aee4-d990e1e46bdb@oss.qualcomm.com>
+Date: Sat, 12 Apr 2025 01:15:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,84 +74,590 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: add option not to verify NVM
- checksum
-To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <c0435964-44ad-4b03-b246-6db909e419df@jacekk.info>
- <9ad46cc5-0d49-8f51-52ff-05eb7691ef61@intel.com>
- <a6d71bdc-3c40-49a1-94e5-369029693d06@jacekk.info>
- <ca5e7925-1d75-5168-2c54-1f4fa9ef523e@intel.com>
+Subject: Re: [PATCH v4 2/3] i3c: master: Add Qualcomm I3C controller driver
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+        alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
+        linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: andersson@kernel.org, konradybcio@kernel.org
+References: <20250411113516.87958-1-quic_msavaliy@quicinc.com>
+ <20250411113516.87958-3-quic_msavaliy@quicinc.com>
 Content-Language: en-US
-In-Reply-To: <ca5e7925-1d75-5168-2c54-1f4fa9ef523e@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250411113516.87958-3-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: B4pBbONPYcSiBLx7eU31PH8QtjBk0vpy
+X-Authority-Analysis: v=2.4 cv=LLlmQIW9 c=1 sm=1 tr=0 ts=67f9a2b0 cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=nJRoVwah8GYVuZlq0p0A:9 a=QEXdDO2ut3YA:10
+ a=kacYvNCVWA4VmyqE58fU:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: B4pBbONPYcSiBLx7eU31PH8QtjBk0vpy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_09,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=999 malwarescore=0 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110152
 
->> I'll experiment a little more and get back to you.>> Specifically I'll try to dump the NVM contents before
->> and after running e1000e_update_nvm_checksum and after
->> a reboot.
+On 4/11/25 1:35 PM, Mukesh Kumar Savaliya wrote:
+> Add support for the Qualcomm I3C controller driver, which implements
+> I3C master functionality as defined in the MIPI Alliance Specification
+> for I3C, Version 1.0.
+> 
+> This driver supports master role in SDR mode.
+> 
+> Unlike some other I3C master controllers, this implementation
+> does not support In-Band Interrupts (IBI) and Hot-join requests.
+> 
+> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> ---
 
-I finally had a moment to take a look at the issue again.
+[...]
 
-This change also makes everything work on my system:
+> +#define SE_I3C_SCL_HIGH                 0x268
+> +#define SE_I3C_TX_TRANS_LEN             0x26C
+> +#define SE_I3C_RX_TRANS_LEN             0x270
+> +#define SE_I3C_DELAY_COUNTER            0x274
+> +#define SE_I2C_SCL_COUNTERS             0x278
+> +#define SE_I3C_SCL_CYCLE                0x27C
 
+lowercase hex, please
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index 364378133526..4538059091e6 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -4266,7 +4266,7 @@ static s32 e1000_validate_nvm_checksum_ich8lan(struct e1000_hw *hw)
-         if (!(data & valid_csum_mask)) {
-                 e_dbg("NVM Checksum valid bit not set\n");
-  
--               if (hw->mac.type < e1000_pch_tgp) {
-+               if (hw->mac.type <= e1000_pch_tgp) {
-                         data |= valid_csum_mask;
-                         ret_val = e1000_write_nvm(hw, word, 1, &data);
-                         if (ret_val)
+> +#define SE_GENI_HW_IRQ_EN               0x920
+> +#define SE_GENI_HW_IRQ_IGNORE_ON_ACTIVE 0x924
+> +#define SE_GENI_HW_IRQ_CMD_PARAM_0      0x930
+> +
+> +/* HW I3C IBI interrupt enable */
+> +#define M_IBI_IRQ_EN BIT(0)
+> +
+> +/* M_IBI_IRQ_IGNORE */
+> +#define M_IBI_IRQ_IGNORE BIT(0)
+> +
+> +/* SE_GENI_M_CLK_CFG field shifts */
+> +#define	CLK_DIV_VALUE_MASK	GENMASK(23, 4)
 
+' ' after "define", '\t' after
 
-(the modification is not persisted - it is lost even after rmmod/insmod).
+> +#define SER_CLK_EN		BIT(0)
+> +
+> +/* SE_GENI_HW_IRQ_CMD_PARAM_0 field bits */
+> +#define M_IBI_IRQ_PARAM_7E BIT(0)
+> +#define M_IBI_IRQ_PARAM_STOP_STALL BIT(1)
+> +/* SE_I2C_SCL_COUNTERS field shifts */
+> +#define I2C_SCL_HIGH_COUNTER_MASK	GENMASK(29, 20)
+> +#define I2C_SCL_LOW_COUNTER_MASK	GENMASK(19, 10)
+> +#define I2C_SCL_CYCLE_COUNTER_MASK	GENMASK(9, 0)
+> +
+> +#define SE_I3C_ERR  (M_CMD_OVERRUN_EN | M_ILLEGAL_CMD_EN | M_CMD_FAILURE_EN |\
+> +	M_CMD_ABORT_EN | M_GP_IRQ_0_EN | M_GP_IRQ_1_EN | M_GP_IRQ_2_EN | \
+> +	M_GP_IRQ_3_EN | M_GP_IRQ_4_EN)
+> +
+> +/* M_CMD OP codes for I2C/I3C */
+> +#define I3C_READ_IBI_HW          0
+> +#define I2C_WRITE                1
+> +#define I2C_READ                 2
+> +#define I2C_WRITE_READ           3
+> +#define I2C_ADDR_ONLY            4
+> +#define I3C_INBAND_RESET         5
+> +#define I2C_BUS_CLEAR            6
+> +#define I2C_STOP_ON_BUS          7
+> +#define I3C_HDR_DDR_EXIT         8
+> +#define I3C_PRIVATE_WRITE        9
+> +#define I3C_PRIVATE_READ         10
+> +#define I3C_HDR_DDR_WRITE        11
+> +#define I3C_HDR_DDR_READ         12
+> +#define I3C_DIRECT_CCC_ADDR_ONLY 13
+> +#define I3C_BCAST_CCC_ADDR_ONLY  14
+> +#define I3C_READ_IBI             15
+> +#define I3C_BCAST_CCC_WRITE      16
+> +#define I3C_DIRECT_CCC_WRITE     17
+> +#define I3C_DIRECT_CCC_READ      18
+> +
+> +/* M_CMD params for I3C */
+> +#define PRE_CMD_DELAY          BIT(0)
+> +#define TIMESTAMP_BEFORE       BIT(1)
+> +#define STOP_STRETCH           BIT(2)
+> +#define TIMESTAMP_AFTER        BIT(3)
+> +#define POST_COMMAND_DELAY     BIT(4)
+> +#define IGNORE_ADD_NACK        BIT(6)
+> +#define READ_FINISHED_WITH_ACK BIT(7)
+> +#define CONTINUOUS_MODE_DAA    BIT(8)
+> +
+> +#define SLAVE_ADDR_MASK           GENMASK(15, 9)
+> +#define SLV_ADDR_SHFT          9
 
-The diff between "before" and "after" NVM rewrite looks like this
-(MAC address masked):
+The shift is now unused
 
-< 0x0000:               XX XX XX XX XX XX 00 08 ff ff 84 00 01 00 70 00
----
-> 0x0000:               XX XX XX XX XX XX 01 08 ff ff 84 00 01 00 70 00 
-10c10
-< 0x0070:               ff ff ff ff ff ff ff ff ff ff 00 02 ff ff fe 36
----
-> 0x0070:               ff ff ff ff ff ff ff ff ff ff 00 02 ff ff fd 34
+> +
+> +#define CCC_HDR_CMD_MSK        GENMASK(23, 16)
+> +#define CCC_HDR_CMD_SHFT       16
 
+And this one *should* be unused, fill in the value with FIELD_PREP instead
 
+> +#define IBI_NACK_TBL_CTRL      BIT(24)
+> +#define USE_7E                 BIT(25)
+> +#define BYPASS_ADDR_PHASE      BIT(26)
+> +
+> +/* GSI callback error fields - DMA_TX_IRQ_STAT */
+> +#define GP_IRQ0	BIT(5)
+> +#define GP_IRQ1	BIT(6)
+> +#define GP_IRQ2	BIT(7)
+> +#define GP_IRQ3	BIT(8)
+> +#define GP_IRQ4	BIT(9)
+> +#define GP_IRQ5	BIT(10)
+> +#define DM_I3C_CB_ERR   GENMASK(10, 5)
+> +
+> +#define I3C_AUTO_SUSPEND_DELAY  250
+> +#define KHZ(freq)               (1000 * (freq))
 
-Reading https://bugzilla.kernel.org/show_bug.cgi?id=213667 the issue
-started with yet another Dell system, Precision 7760, locking itself
-up with such modification.
+You can store the values in kHz and do (x * HZ_PER_KHZ) where they're
+used instead
 
-The "fix" (4051f68318: e1000e: Do not take care about recovery NVM checksum)
-fixed some problems (i.e. Precision 7760) and "broke" some configurations
-(i.e. mine Latitude 5420).
+> +#define PACKING_BYTES_PW        4
 
-The condition itself was changed once already (ffd24fa2fc: e1000e: Correct
-NVM checksum verification flow).
+PW -> "PER_WORD", if that's what it means, please
 
+> +#define XFER_TIMEOUT            250
+> +#define DFS_INDEX_MAX           7
+> +
+> +#define I3C_ADDR_MASK 0x7f
 
-> If this approach is acceptable to you, I will prepare a patch with
-> the proposed fix and send it to you next week for testing on your system.
+This could go to some i3c common header, IIUC it's part of the spec
 
-What solution do you have in mind?
+[...]
 
-The only one I can think of is to ignore the checksum completely if the
-valid_csum_mask condition is not met on e1000_pch_tgp.
+> +static inline struct geni_i3c_dev *to_geni_i3c_master(struct i3c_master_controller
+> +							*master)
+> +{
+> +	return container_of(master, struct geni_i3c_dev, ctrlr);
+> +}
 
--- 
-Best regards,
-   Jacek Kowalski
+#define instead
+
+> +
+> +struct geni_i3c_clk_settings {
+> +	u32 clk_freq_out;
+> +	u32 clk_src_freq;
+> +	u8  clk_div;
+> +	u8  i2c_t_high_cnt;
+> +	u8  i2c_t_low_cnt;
+> +	u8  i3c_t_high_cnt;
+> +	u8  i3c_t_cycle_cnt;
+> +	u8  i2c_t_cycle_cnt;
+> +};
+> +
+> +/*
+> + * Hardware uses the underlying formula to calculate time periods of
+> + * SCL clock cycle. Firmware uses some additional cycles excluded from the
+> + * below formula and it is confirmed that the time periods are within
+> + * specification limits.
+> + *
+> + * time of high period of I2C SCL:
+> + *         i2c_t_high = (i2c_t_high_cnt * clk_div) / source_clock
+> + * time of low period of I2C SCL:
+> + *         i2c_t_low = (i2c_t_low_cnt * clk_div) / source_clock
+> + * time of full period of I2C SCL:
+> + *         i2c_t_cycle = (i2c_t_cycle_cnt * clk_div) / source_clock
+> + * time of high period of I3C SCL:
+> + *         i3c_t_high = (i3c_t_high_cnt * clk_div) / source_clock
+> + * time of full period of I3C SCL:
+> + *         i3c_t_cycle = (i3c_t_cycle_cnt * clk_div) / source_clock
+> + * clk_freq_out = t / t_cycle
+> + */
+> +static const struct geni_i3c_clk_settings geni_i3c_clk_map[] = {
+> +/* op-freq,  src-freq,  div,  i2c_high,  i2c_low, i3c_high, i3c_cyc i2c_cyc */
+> +	{ KHZ(100),    KHZ(19200), 1, 76, 90, 7, 8, 192},
+> +	{ KHZ(400),    KHZ(19200), 1, 12, 24, 7, 8, 48},
+> +	{ KHZ(1000),   KHZ(19200), 1,  4,  9, 7, 0, 19},
+> +	{ KHZ(12500), KHZ(100000), 1, 45, 63, 6, 7, 110},
+
+It's gonna take up considerably more space, but you may want to write
+this using C99 designated initializers:
+
+{
+	.op_freq = ...,
+	.src_freq = ...,
+}, {
+	...
+}
+
+etc.
+
+> +};
+> +
+> +static int geni_i3c_clk_map_idx(struct geni_i3c_dev *gi3c)
+> +{
+> +	const struct geni_i3c_clk_settings *clk_idx = geni_i3c_clk_map;
+> +	struct i3c_master_controller *m = &gi3c->ctrlr;
+> +	struct i3c_bus *bus = i3c_master_get_bus(m);
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(geni_i3c_clk_map); i++, clk_idx++) {
+> +		if ((!bus || clk_idx->clk_freq_out == bus->scl_rate.i3c) &&
+
+Move this nullcheck out of the loop, please.
+Or get rid of it, the master registration ensures that there's a bus bound
+to it, IIUC.
+
+> +		    clk_idx->clk_src_freq == gi3c->clk_src_freq) {
+> +			gi3c->clk_cfg = clk_idx;
+> +		}
+> +
+> +		if (clk_idx->clk_freq_out == bus->scl_rate.i2c)
+> +			gi3c->clk_od_cfg = clk_idx;
+> +	}
+> +
+> +	if (!gi3c->clk_cfg || !gi3c->clk_od_cfg)
+> +		return -EINVAL;
+
+IIUC this makes the 100 kHz configuration invalid (index 0)
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void set_new_addr_slot(unsigned long *addrslot, u8 addr)
+> +{
+> +	if (addr > I3C_ADDR_MASK)
+> +		return;
+> +
+> +	set_bit(addr, addrslot);
+> +}
+
+Inline this single-use function, please
+
+> +
+> +static void clear_new_addr_slot(unsigned long *addrslot, u8 addr)
+> +{
+> +	if (addr > I3C_ADDR_MASK)
+> +		return;
+> +
+> +	clear_bit(addr, addrslot);
+> +}
+
+And this one
+
+> +
+> +static bool is_new_addr_slot_set(unsigned long *addrslot, u8 addr)
+> +{
+> +	if (addr > I3C_ADDR_MASK)
+> +		return false;
+
+This condition is impossible given the user
+
+> +
+> +	return test_bit(addr, addrslot);
+
+Inline this check
+
+[...]
+
+> +static void qcom_geni_i3c_conf(struct geni_i3c_dev *gi3c, enum i3c_bus_phase bus_phase)
+> +{
+> +	const struct geni_i3c_clk_settings *clk_idx = gi3c->clk_cfg;
+> +	unsigned long freq;
+> +	u32 val, dfs_idx;
+> +	int ret;
+> +
+> +	if (bus_phase == OPEN_DRAIN_MODE)
+> +		clk_idx = gi3c->clk_od_cfg;
+> +
+> +	ret = geni_se_clk_freq_match(&gi3c->se, clk_idx->clk_src_freq,
+> +				     &dfs_idx, &freq, false);
+> +	if (ret)
+> +		dfs_idx = 0;
+
+Shouldn't we throw some sort of error here instead?
+
+[...]
+
+> +static void geni_i3c_handle_err(struct geni_i3c_dev *gi3c, u32 status)
+> +{
+> +	dev_dbg(gi3c->se.dev, "len:%d, %s\n",
+> +		gi3c->cur_len, gi3c->cur_is_write ? "write" : "read");
+> +
+> +	if (status & M_GP_IRQ_0_EN) {
+> +		gi3c->err = -EINVAL;
+> +		dev_dbg(gi3c->se.dev, "%s\n", "I3C slave early read termination");
+
+Whenever there's just a string literal, please just print it directly.
+
+> +	}
+
+Please separate these with a newline
+
+> +	if (status & M_GP_IRQ_1_EN) {
+> +		gi3c->err = -ENOTCONN;
+> +		dev_dbg(gi3c->se.dev, "%s\n", "NACK: slave unresponsive, check power/reset");
+> +	}
+
+[...]
+
+> +static irqreturn_t geni_i3c_irq(int irq, void *dev)
+> +{
+> +	u32 m_stat_mask, dm_tx_st, dm_rx_st, m_stat, rx_st, dma;
+> +	struct geni_i3c_dev *gi3c = dev;
+> +	unsigned long flags;
+> +	int j;
+> +
+> +	m_stat = readl_relaxed(gi3c->se.base + SE_GENI_M_IRQ_STATUS);
+> +	m_stat_mask = readl_relaxed(gi3c->se.base + SE_GENI_M_IRQ_EN);
+> +	rx_st = readl_relaxed(gi3c->se.base + SE_GENI_RX_FIFO_STATUS);
+> +	dm_tx_st = readl_relaxed(gi3c->se.base + SE_DMA_TX_IRQ_STAT);
+> +	dm_rx_st = readl_relaxed(gi3c->se.base + SE_DMA_RX_IRQ_STAT);
+> +	dma = readl_relaxed(gi3c->se.base + SE_GENI_DMA_MODE_EN);
+> +
+> +	spin_lock_irqsave(&gi3c->irq_lock, flags);
+> +
+> +	if (m_stat & SE_I3C_ERR || dm_rx_st & DM_I3C_CB_ERR) {
+> +		geni_i3c_handle_err(gi3c, m_stat);
+> +		/* Disable the TX Watermark interrupt to stop TX */
+> +		if (!dma)
+> +			writel_relaxed(0, gi3c->se.base + SE_GENI_TX_WATERMARK_REG);
+> +		goto irqret;
+> +	}
+> +
+> +	if (dma) {
+> +		dev_dbg(gi3c->se.dev, "i3c dma tx:0x%x, dma rx:0x%x\n", dm_tx_st, dm_rx_st);
+> +		goto irqret;
+> +	}
+> +
+> +	if ((m_stat &
+> +		(M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN)) &&
+> +		!gi3c->cur_is_write && gi3c->cur_buf) {
+
+The indentation here is confusing, please align the `(M_RX..` with `m_stat &`
+
+> +		u32 rxcnt = rx_st & RX_FIFO_WC_MSK;
+> +
+> +		for (j = 0; j < rxcnt; j++) {
+> +			u32 val;
+> +			int p = 0;
+> +
+> +			val = readl_relaxed(gi3c->se.base + SE_GENI_RX_FIFOn);
+> +			while (gi3c->cur_idx < gi3c->cur_len && p < sizeof(val)) {
+
+sizeof(val) is 4, please unroll this loop into something more readable
+
+> +				gi3c->cur_buf[gi3c->cur_idx++] = val & 0xff;
+> +				val >>= 8;
+> +				p++;
+> +			}
+> +			if (gi3c->cur_idx == gi3c->cur_len)
+> +				break;
+> +		}
+> +	} else if (m_stat & M_TX_FIFO_WATERMARK_EN &&
+> +		gi3c->cur_is_write && gi3c->cur_buf) {
+> +		for (j = 0; j < gi3c->tx_wm; j++) {
+> +			u32 temp;
+> +			u32 val = 0;
+> +			int p = 0;
+> +
+> +			while (gi3c->cur_idx < gi3c->cur_len && p < sizeof(val)) {
+
+ditto
+
+> +				temp = gi3c->cur_buf[gi3c->cur_idx++];
+> +				val |= temp << (p * 8);
+> +				p++;
+> +			}
+> +
+> +			writel_relaxed(val, gi3c->se.base + SE_GENI_TX_FIFOn);
+> +			if (gi3c->cur_idx == gi3c->cur_len) {
+> +				writel_relaxed(0, gi3c->se.base + SE_GENI_TX_WATERMARK_REG);
+> +				break;
+> +			}
+> +		}
+> +	}
+> +
+> +irqret:
+> +	if (m_stat)
+> +		writel_relaxed(m_stat, gi3c->se.base + SE_GENI_M_IRQ_CLEAR);
+> +
+> +	if (dma) {
+> +		if (dm_tx_st)
+> +			writel_relaxed(dm_tx_st, gi3c->se.base + SE_DMA_TX_IRQ_CLR);
+> +		if (dm_rx_st)
+> +			writel_relaxed(dm_rx_st, gi3c->se.base + SE_DMA_RX_IRQ_CLR);
+> +	}
+> +
+> +	/* if this is err with done-bit not set, handle that through timeout. */
+> +	if (m_stat & M_CMD_DONE_EN || m_stat & M_CMD_ABORT_EN) {
+> +		writel_relaxed(0, gi3c->se.base + SE_GENI_TX_WATERMARK_REG);
+> +		complete(&gi3c->done);
+> +	} else if (dm_tx_st & TX_DMA_DONE || dm_rx_st & RX_DMA_DONE	||
+
+odd '\t'
+
+> +		dm_rx_st & RX_RESET_DONE) {
+> +		complete(&gi3c->done);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
+> +	return IRQ_HANDLED;
+
+a '\n' before return is customary
+
+[...]
+
+> +static int _i3c_geni_execute_command(struct geni_i3c_dev *gi3c, struct geni_i3c_xfer_params *xfer)
+> +{
+> +	bool is_write = gi3c->cur_is_write;
+> +	dma_addr_t tx_dma = 0, rx_dma = 0;
+> +	unsigned long time_remaining;
+> +	u32 len = gi3c->cur_len;
+> +	int ret;
+> +
+> +	geni_se_select_mode(&gi3c->se, xfer->mode);
+> +
+> +	gi3c->err = 0;
+> +	gi3c->cur_idx = 0;
+> +
+> +	if (!is_write) {
+
+Nit: if (is_write) {} .. else {} is more natural> +		dev_dbg(gi3c->se.dev, "I3C cmd:0x%x param:0x%x READ len:%d\n",
+> +			xfer->m_cmd, xfer->m_param, len);
+> +		writel_relaxed(len, gi3c->se.base + SE_I3C_RX_TRANS_LEN);
+> +		geni_se_setup_m_cmd(&gi3c->se, xfer->m_cmd, xfer->m_param);
+> +		if (xfer->mode == GENI_SE_DMA) {
+> +			ret = geni_se_rx_dma_prep(&gi3c->se, gi3c->cur_buf, len, &rx_dma);
+> +			if (ret) {
+Why would it fail? And why should we fall back silently to FIFO mode then?
+
+> +				xfer->mode = GENI_SE_FIFO;
+> +				geni_se_select_mode(&gi3c->se, xfer->mode);
+> +			}
+> +		}
+> +	} else {
+> +		dev_dbg(gi3c->se.dev, "I3C cmd:0x%x param:0x%x WRITE len:%d\n",
+> +			xfer->m_cmd, xfer->m_param, len);
+> +
+> +		writel_relaxed(len, gi3c->se.base + SE_I3C_TX_TRANS_LEN);
+> +		geni_se_setup_m_cmd(&gi3c->se, xfer->m_cmd, xfer->m_param);
+> +
+> +		if (xfer->mode == GENI_SE_DMA) {
+> +			ret = geni_se_tx_dma_prep(&gi3c->se, gi3c->cur_buf, len, &tx_dma);
+> +			if (ret) {
+> +				xfer->mode = GENI_SE_FIFO;
+> +				geni_se_select_mode(&gi3c->se, xfer->mode);
+> +			}
+> +		}
+> +
+> +		if (xfer->mode == GENI_SE_FIFO && len > 0) /* Get FIFO IRQ */
+> +			writel_relaxed(1, gi3c->se.base + SE_GENI_TX_WATERMARK_REG);
+> +	}
+> +
+> +	time_remaining = wait_for_completion_timeout(&gi3c->done, XFER_TIMEOUT);
+> +	if (!time_remaining) {
+> +		unsigned long flags;
+> +
+> +		dev_dbg(gi3c->se.dev, "Timeout completing FIFO transfer\n");
+
+Can it not be DMA mode here too?
+
+[...]
+
+> +static void geni_i3c_perform_daa(struct geni_i3c_dev *gi3c)
+> +{
+> +	u8 last_dyn_addr = 0;
+> +	int ret;
+> +
+> +	while (1) {
+> +		u8 rx_buf[8], tx_buf[8];
+> +		struct geni_i3c_xfer_params xfer = { GENI_SE_FIFO };
+> +		struct i3c_device_info info = { 0 };
+> +		struct i3c_dev_desc *i3cdev;
+> +		bool new_device = true;
+> +		u64 pid;
+> +		u8 bcr, dcr, addr;
+> +
+> +		xfer.m_cmd = I2C_READ;
+> +		xfer.m_param = STOP_STRETCH | CONTINUOUS_MODE_DAA | USE_7E;
+> +		ret = i3c_geni_execute_read_command(gi3c, &xfer, rx_buf, 8);
+> +		if (ret)
+> +			break;
+> +
+> +		dcr = rx_buf[7];
+> +		bcr = rx_buf[6];
+> +		pid = ((u64)rx_buf[0] << 40) |
+> +			((u64)rx_buf[1] << 32) |
+> +			((u64)rx_buf[2] << 24) |
+> +			((u64)rx_buf[3] << 16) |
+> +			((u64)rx_buf[4] <<  8) |
+> +			((u64)rx_buf[5]);
+
+FIELD_PREP + GENMASK, please
+
+> +
+> +		i3c_bus_for_each_i3cdev(&gi3c->ctrlr.bus, i3cdev) {
+> +			i3c_device_get_info(i3cdev->dev, &info);
+> +			if (pid == info.pid && dcr == info.dcr && bcr == info.bcr) {
+> +				new_device = false;
+> +				addr = (info.dyn_addr) ? info.dyn_addr :
+
+addr = info.dyn_addr ?: info.static_addr;
+
+> +					info.static_addr;
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (new_device) {
+> +			ret = i3c_master_get_free_addr(&gi3c->ctrlr, last_dyn_addr + 1);
+> +			if (ret < 0)
+> +				break;
+> +			addr = (u8)ret;
+> +			last_dyn_addr = (u8)ret;
+
+nit: while logically the same, last_dyn_addr = addr would make sense here
+
+> +			set_new_addr_slot(gi3c->newaddrslots, addr);
+> +		}
+> +
+
+suppose addr=0x38
+
+> +		tx_buf[0] = (addr & I3C_ADDR_MASK) << 1;
+
+tx_buf[0] = (0x38 & 0x7f) << 1 = 0x38<<1 = 0x70 = 0b1110000
+
+> +		tx_buf[0] |= ~(hweight8(addr & I3C_ADDR_MASK) & 1);
+
+0x70 | ~(hweight8(0x70 & 0x7f) & 1) = 0x70 | ~(3 & 1) = 0x70 | ~BIT(0) = 0xfe
+
+is that the intended result?
+
+> +
+> +		xfer.m_cmd = I2C_WRITE;
+> +		xfer.m_param = STOP_STRETCH | BYPASS_ADDR_PHASE | USE_7E;
+> +
+> +		ret = i3c_geni_execute_write_command(gi3c, &xfer, tx_buf, 1);
+> +		if (ret)
+> +			break;
+> +	}
+> +}
+> +
+> +static int geni_i3c_master_send_ccc_cmd(struct i3c_master_controller *m,
+> +					struct i3c_ccc_cmd *cmd)
+> +{
+> +	struct geni_i3c_dev *gi3c = to_geni_i3c_master(m);
+> +	int i, ret;
+> +
+> +	if (!(cmd->id & I3C_CCC_DIRECT) && cmd->ndests != 1)
+> +		return -EINVAL;
+> +
+> +	ret = i3c_geni_runtime_get_mutex_lock(gi3c);
+> +	if (ret)
+> +		return ret;
+> +
+> +	qcom_geni_i3c_conf(gi3c, OPEN_DRAIN_MODE);
+> +	for (i = 0; i < cmd->ndests; i++) {
+> +		int stall = (i < (cmd->ndests - 1)) ||
+> +			(cmd->id == I3C_CCC_ENTDAA);
+
+bool
+
+Konrad
