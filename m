@@ -1,151 +1,194 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5BC27CCCF
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6281EFF9C;
+	Fri, 11 Apr 2025 06:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744352895; cv=none; b=T8M2zipvWwmpHzA20YkJJrZEJhL9D01OYiXoS5IQZD9lZzdczz1NVR4or6aDBcqsLooVexJzK0MOPRjQtnV6YKmk3jtkpW3/Sgm3OMac6rNZBovKzNA4Wy75+q1eebyP955GmDehCLAi4Hw4wBqIq7Ucq5C5CrOdgpcJJX6wVOo=
+	t=1744352951; cv=none; b=LMli9tGRDZFKdr6UH4BQubp39hj5scO2eI7zB/BmhypjoGbAlDavEhn97ffulcTP4L3cWJ1wAmUJ8l/1HnPU0Ps0JTXwDCVNIxS+mqbdyF5fCFQBNBiH4JS3Cw1xXzHTzuBqzOtBwLntnWqEvgSBjMpHQ7VX1lh/umiGB8E6FUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744352895; c=relaxed/simple;
-	bh=NuArtcv0yvrbxm8h5eZX3ZhdCgwnnBc1d2QdkHpQhEY=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=LOVIMLXZL1zF9MXSvS/+I7AYPvFEcE8bi+GacoIWbSvFXYQQ44MX6UHZZ/2EFnGAt/GDw2XtFRFUeBLGZOrV04CFihCWVZCTUL74Pn+124hLRKOG3GreOet2GHlrA8RDjpzOb/IL7TwsHOKMOfzcgLdjGXSwtTdwU3d9/LmRNZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=N/8txkv+; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N/8txkv+"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250411062805epoutp01840c3db5c78635038146c7e62cf10291~1L7UKJx9O0258502585epoutp01Z
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:28:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250411062805epoutp01840c3db5c78635038146c7e62cf10291~1L7UKJx9O0258502585epoutp01Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744352885;
-	bh=NuArtcv0yvrbxm8h5eZX3ZhdCgwnnBc1d2QdkHpQhEY=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=N/8txkv+5pzo/upg++obqz4WsH5nNTKaBRSOiMkl/8gx3FcpSrz/uyh5NiTfgsRxA
-	 8mC82wCybM3QDObV83XrQHX0cL+OifNp4sICGHxL03p6elt3R0p/Cv48O81zL4vNfX
-	 WFV64K1r4fe6MGiJc3KPxvLSRdaMli3ItUmvEsEM=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250411062804epcas5p3d31ce10848709a9ac85ac4557bbae885~1L7TmDIBW2518725187epcas5p3X;
-	Fri, 11 Apr 2025 06:28:04 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4ZYmvk1M62z2SSKX; Fri, 11 Apr
-	2025 06:28:02 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BB.DA.10173.276B8F76; Fri, 11 Apr 2025 15:28:02 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250411062357epcas5p24091330994395616ad24998eed97044a~1L3s7jSrw1768217682epcas5p2z;
-	Fri, 11 Apr 2025 06:23:57 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250411062356epsmtrp23c04c9ff80cea2ef861f5e351af0f225~1L3swZmYf3232932329epsmtrp2K;
-	Fri, 11 Apr 2025 06:23:56 +0000 (GMT)
-X-AuditID: b6c32a44-8b5fb700000027bd-bc-67f8b672bb8d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	34.9E.08805.C75B8F76; Fri, 11 Apr 2025 15:23:56 +0900 (KST)
-Received: from INBRO000519 (unknown [107.122.1.150]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250411062355epsmtip1a9da26eb2195619c4c24d1029a803ea3~1L3rMyBMT0874008740epsmtip1H;
-	Fri, 11 Apr 2025 06:23:55 +0000 (GMT)
-From: "Faraz Ata" <faraz.ata@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <alim.akhtar@samsung.com>,
-	<krzk+dt@kernel.org>, <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>
-Cc: <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>, <rosa.pila@samsung.com>,
-	<dev.tailor@samsung.com>
-In-Reply-To: <9970c307-eba6-4c2d-98de-1a0f846efcd4@kernel.org>
-Subject: RE: [PATCH v2] tty: serial: samsung_tty: support 18 uart ports
-Date: Fri, 11 Apr 2025 11:53:44 +0530
-Message-ID: <03cc01dbaaaa$4dea13f0$e9be3bd0$@samsung.com>
+	s=arc-20240116; t=1744352951; c=relaxed/simple;
+	bh=RNF67hXYbIj7AuiBeY9z8+U88Il7RL5JK188qv9/XdI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ft9vMZCZRZqy4G+hlXNgbnJVypxAIW2rreHTqkG6heXJQM/0sxU6+O8kmuag2E1KAcdEw3KPn2UfkMMtMfhse1Yl8Uo4MqQL9cTF9bHAg2OvxobxlB11aJXpIo8c8kDm+MglvpPrhdZwc70HVy3yj22iV5yKPnLV87xjZvmJYLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+Received: from [89.212.21.243] (port=57560 helo=[192.168.69.116])
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <primoz.fiser@norik.com>)
+	id 1u37sx-003VJz-29;
+	Fri, 11 Apr 2025 08:29:07 +0200
+Message-ID: <d68df49c-222a-445d-b29c-f9ad962b87aa@norik.com>
+Date: Fri, 11 Apr 2025 08:29:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQE/iintFYLILbr1Km3BNZJiCnEHnQEG7k++AhEV2Ou0vXbOMA==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHJsWRmVeSWpSXmKPExsWy7bCmlm7Rth/pBgdfsVs8mLeNzeLejmXs
-	Fs2L17NZvJsrY/Fy1j02i/PnN7BbbHp8jdXi8q45bBYzzu9jsjizuJfd4svPB8wO3B6bVnWy
-	eeyfu4bdY/OSeo++LasYPT5vkgtgjcq2yUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0
-	MFdSyEvMTbVVcvEJ0HXLzAE6TEmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYFKg
-	V5yYW1yal66Xl1piZWhgYGQKVJiQnfF61wSWgl72ij+dvA2MZ1m7GDk5JARMJPZees3UxcjF
-	ISSwm1Fi0ZHLzBDOJ0aJM3c2sEA43xgl5i6fyQbT8mzPLHaIxF5Gif+z57NCOC8ZJXobOhlB
-	qtgENCXufH4KNlhEYBqjxN/DN8EGMwucYJS482cGC0gVp4CdxLVX/WAdwgLuEs/6r7GD2CwC
-	qhLTtvSC1fAKWErsWzqZGcIWlDg58wlYnFlAW2LZwtfMEDcpSPx8ugzsJREBJ4lT33oYIWrE
-	JV4ePQJ2q4TAWg6Ja/0LWSAaXCS+tfRD2cISr45vYYewpSQ+v9sL9aiPxOSj34AGcQDZGRJ3
-	1opAhO0lVi84wwoSZgb6cv0ufYiwrMTUU+uYINbySfT+fsIEEeeV2DEPxlaWOLlnDzTkJSUO
-	3X7BOoFRaRaSz2Yh+WwWkg9mIWxbwMiyilEytaA4Nz012bTAMC+1HB7jyfm5mxjBCVfLZQfj
-	jfn/9A4xMnEwHmKU4GBWEuFtD/6RLsSbklhZlVqUH19UmpNafIjRFBjcE5mlRJPzgSk/ryTe
-	0MTSwMTMzMzE0tjMUEmct3lnS7qQQHpiSWp2ampBahFMHxMHp1QDk8qq4vUT+H5cVUjw3/ly
-	ufmLGTe67mbfX+X/jvWUb4hxqNX2vHmT/uZ/jWyN5TBhf5VdlXm92PLkHu5PG25EsfmHpeVf
-	nyJyP8EysmPPrIgpQQVrPxv3i2yaZW/2x9DAYolVZMb0pA8tyeby8VvDE16pLO1ecZnBn7nH
-	x50pKFP52suZx4Vkn00TYlqtP43pZ13I1hpeW9fXax58O6MRz8a1i3dd2nGFBavfuiy6H7JF
-	9ufqGJkFL0tnykifF3p8Y4/JsmUfOmV7y76UtL/q2f7x2Ynw5aFsPbLSPpobAtv/sH36+vzP
-	l6unv8ve78/yV+j98vqtlsL5T7r3KjSjrfcmzbC46sTk7eC6XuI+sxJLcUaioRZzUXEiAHXf
-	QVVBBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnG7N1h/pBi2NOhYP5m1js7i3Yxm7
-	RfPi9WwW7+bKWLycdY/N4vz5DewWmx5fY7W4vGsOm8WM8/uYLM4s7mW3+PLzAbMDt8emVZ1s
-	HvvnrmH32Lyk3qNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyLr89yFLQwV7ROP8zUwPjMdYu
-	Rk4OCQETiWd7ZrF3MXJxCAnsZpS49XEPO0RCUuLw07tQRcISK/89hyp6zijx//FaNpAEm4Cm
-	xJ3PT5lAEiICcxglrv7vZQNxmAXOMEo8fPQfquUAo8T779PB5nIK2Elce9XPCGILC7hLPOu/
-	BhZnEVCVmLallwXE5hWwlNi3dDIzhC0ocXLmE7A4s4C2xNObT+HsZQtfM0PcpyDx8+kysFtF
-	BJwkTn3rYYSoEZd4efQI+wRG4VlIRs1CMmoWklGzkLQsYGRZxSiZWlCcm55bbFhglJdarlec
-	mFtcmpeul5yfu4kRHHlaWjsY96z6oHeIkYmD8RCjBAezkghve/CPdCHelMTKqtSi/Pii0pzU
-	4kOM0hwsSuK83173pggJpCeWpGanphakFsFkmTg4pRqYDs7Wt9iU9vX3C647ys0LdCdO2pe2
-	K/RIs3nWxj2vvzvZmLCvitvwt1ZL4tAO4c/xi0QXvM88Y75ZaNeS7CMZWzmreJaoTf05ZdGB
-	tubkzbsaK26an7+hx/asOf/ZSze1K2vbdz/Zdt5L3EzjuLJIToRV9u5Oqb0bzx5lC09lN36+
-	1FOt1iGx8Fr7UdevLGvn73vM3r+T05pHeetvi1ndW1K7/ToeZ3EHfg7V62K6OnOz6OSOFhv+
-	NgfTI59cXt3Z92TPl5pgkVqdY7PShb8xX25ckHyiYMbudO24xTMq84QtQ+/fuvx7/WHp2il7
-	5f7NSUi99WLtr7mSxR0xqWd4ZogELJQ23P0+NlOLfd91JiWW4oxEQy3mouJEAPquNo8rAwAA
-X-CMS-MailID: 20250411062357epcas5p24091330994395616ad24998eed97044a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250404134131epcas5p4794f2b1e5d289e1faa142c9093ea45e5
-References: <CGME20250404134131epcas5p4794f2b1e5d289e1faa142c9093ea45e5@epcas5p4.samsung.com>
-	<20250404135006.1263827-1-faraz.ata@samsung.com>
-	<9970c307-eba6-4c2d-98de-1a0f846efcd4@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/13] arm64: dts: freescale: imx93-phycore-som: Enhance
+ eMMC pinctrl
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, upstream@lists.phytec.de
+References: <20250410090251.1103979-1-primoz.fiser@norik.com>
+ <20250410090251.1103979-5-primoz.fiser@norik.com>
+ <Z/fcFPrHdI8/IBRC@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: Primoz Fiser <primoz.fiser@norik.com>
+Autocrypt: addr=primoz.fiser@norik.com; keydata=
+ xjMEZrROOxYJKwYBBAHaRw8BAQdAADVOb5tiLVTUAC9nu/FUl4gj/+4fDLqbc3mk0Vz8riTN
+ JVByaW1veiBGaXNlciA8cHJpbW96LmZpc2VyQG5vcmlrLmNvbT7CiQQTFggAMRYhBK2YFSAH
+ ExsBZLCwJGoLbQEHbnBPBQJmtE47AhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQagttAQducE+T
+ gAD+K4fKlIuvH75fAFwGYG/HT3F9mN64majvqJqvp3gTB9YBAL12gu+cm11m9JMyOyN0l6Os
+ jStsQFghPkzBSDWSDN0NzjgEZrROPBIKKwYBBAGXVQEFAQEHQP2xtEOhbgA+rfzvvcFkV1zK
+ 6ym3/c/OUQObCp50BocdAwEIB8J4BBgWCAAgFiEErZgVIAcTGwFksLAkagttAQducE8FAma0
+ TjwCGwwACgkQagttAQducE8ucAD9F1sXtQD4iA7Qu+SwNUAp/9x7Cqr37CSb2p6hbRmPJP8B
+ AMYR91JYlFmOJ+ScPhQ8/MgFO+V6pa7K2ebk5xYqsCgA
+Organization: Norik systems d.o.o.
+In-Reply-To: <Z/fcFPrHdI8/IBRC@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
+X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-Hello Krzysztof
+Hi Frank,
 
-> Subject: Re: =5BPATCH v2=5D tty: serial: samsung_tty: support 18 uart por=
-ts
->=20
-> On 04/04/2025 15:50, Faraz Ata wrote:
-> > Exynos Auto v920 SoC supports up to 18 UART ports.
-> > Hence changing the value of UART_NR to 18.
-> > ---
->=20
-> How v2, without changelog, is even worse than v1? It goes to wrong
-> direction.
->=20
-> Please run scripts/checkpatch.pl and fix reported warnings. After that, r=
-un
-> also =60scripts/checkpatch.pl --strict=60 and (probably) fix more warning=
-s. Some
-> warnings can be ignored, especially from --strict run, but the code here =
-looks
-> like it needs a fix. Feel free to get in touch if the warning is not clea=
-r.
->=20
->
-Thanks for your review and sorry for the noise,
- that was not intentional, got posted by mistake, will takecare about it.
-Will send another version with change-log.
-> ...
-> Best regards,
-> Krzysztof
+On 10. 04. 25 16:56, Frank Li wrote:
+> On Thu, Apr 10, 2025 at 11:02:42AM +0200, Primoz Fiser wrote:
+>> Improve eMMC on phyCORE-i.MX93 SOM by adding 100MHz and 200MHz pinctrl
+>> modes. This enables to use eMMC at enhanced data rates (e.g. HS400).
+>>
+>> While at it, apply a workaround for the i.MX93 chip errata ERR052021.
+>>
+>> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+>> ---
+>>  .../boot/dts/freescale/imx93-phycore-som.dtsi | 57 +++++++++++++++----
+>>  1 file changed, 47 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+>> index 82f680d891c2..3d84eed33074 100644
+>> --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+>> @@ -166,8 +166,10 @@ eeprom@50 {
+>>
+>>  /* eMMC */
+>>  &usdhc1 {
+>> -	pinctrl-names = "default";
+>> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+>>  	pinctrl-0 = <&pinctrl_usdhc1>;
+>> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+>> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+>>  	bus-width = <8>;
+>>  	non-removable;
+>>  	status = "okay";
+>> @@ -213,18 +215,53 @@ MX93_PAD_ENET2_RD3__GPIO4_IO27		0x31e
+>>  		>;
+>>  	};
+>>
+>> +	/* need to config the SION for data and cmd pad, refer to ERR052021 */
+>>  	pinctrl_usdhc1: usdhc1grp {
+>>  		fsl,pins = <
+>>  			MX93_PAD_SD1_CLK__USDHC1_CLK		0x179e
+>> -			MX93_PAD_SD1_CMD__USDHC1_CMD		0x1386
+>> -			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x138e
+>> -			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x1386
+>> -			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x138e
+>> -			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x1386
+>> -			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x1386
+>> -			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x1386
+>> -			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x1386
+>> -			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x1386
+>> +			MX93_PAD_SD1_CMD__USDHC1_CMD		0x40001386
+>> +			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000138e
+>> +			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x40001386
+>> +			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x4000138e
+>> +			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x40001386
+>> +			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x40001386
+>> +			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x40001386
+>> +			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x40001386
+>> +			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x40001386
+>> +			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
+>> +		>;
+>> +	};
+>> +
+>> +	/* need to config the SION for data and cmd pad, refer to ERR052021 */
+>> +	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
+>> +		fsl,pins = <
+>> +			MX93_PAD_SD1_CLK__USDHC1_CLK		0x17be
+>> +			MX93_PAD_SD1_CMD__USDHC1_CMD		0x4000139e
+>> +			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000138e
+> 
+> any reason why DATA0 is difference with other one?
+> 
+>> +			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x4000139e
+>> +			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x400013be
+>> +			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x4000139e
+>> +			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x4000139e
+>> +			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x4000139e
+>> +			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x4000139e
+>> +			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x4000139e
+>> +			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
+>> +		>;
+>> +	};
+>> +
+>> +	/* need to config the SION for data and cmd pad, refer to ERR052021 */
+>> +	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
+>> +		fsl,pins = <
+>> +			MX93_PAD_SD1_CLK__USDHC1_CLK		0x17be
+>> +			MX93_PAD_SD1_CMD__USDHC1_CMD		0x4000139e
+>> +			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000139e
+> 
+> any reason why DATA0/DATA1 is difference with other one
 
+Bus signal integrity envelope was measured and drive-strengths adjusted
+accordingly by the PHYTEC hardware department to conform to the specs.
+
+Values were thus determined empirically to adjust for differences in
+signal impedance due to PCB layout.
+
+BR,
+Primoz
+
+> 
+> Frank
+>> +			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x400013be
+>> +			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x400013be
+>> +			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x400013be
+>> +			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x400013be
+>> +			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x400013be
+>> +			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x400013be
+>> +			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x400013be
+>>  			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
+>>  		>;
+>>  	};
+>> --
+>> 2.34.1
+>>
+
+-- 
+Primoz Fiser
+phone: +386-41-390-545
+email: primoz.fiser@norik.com
+--
+Norik systems d.o.o.
+Your embedded software partner
+Slovenia, EU
+phone: +386-41-540-545
+email: info@norik.com
