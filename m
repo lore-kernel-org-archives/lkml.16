@@ -1,65 +1,65 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF19280CD5
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 20:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA70928D85A
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 20:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744403379; cv=none; b=au3dnCvhzNUXuLpCBM1Hpcq1OmGAz+76G+snjpc1Ncl11TfIZBhKyyyqN2hZDUFfSPxergIjkp2ndGnEE8i9NeWe6A6VBu8eVwlkZwaQ2EAHXemDhR6OnMgdRBbg0O9S57qGsBs4rU68Ll9N3qIF4UtIHKpN4rSBaCGfyv6+u9g=
+	t=1744403381; cv=none; b=roMHWbUgA8vssNRfGOfNqnn/2zOYUVMGr24VcpDmC4cEmXZXPOE5FU5Oe05dtPb9siiH8H2/IiJ7jR/ESkww+kSP0aU2O7gZFQh+T0yH2jhJ5ArbsXeTItVck3uohlp8WcdnG/c72SCDheicDLGuuTHrXKGi0WS5cWA+uS5QRd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744403379; c=relaxed/simple;
-	bh=PLl9qmt/fzbjwndzJldvUlU3AVSqPKp1HHLdDNYCu9s=;
+	s=arc-20240116; t=1744403381; c=relaxed/simple;
+	bh=yfZ7tSoVUlgX2zAOigOxPAbHH5o70chJtfqLZj811rc=;
 	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=ma/AIL4Pkv2EjXUaTmQ5PzSpgKl4WN8+yhq9yjJ8znydrkywDDQxniShO1YvPmPVLBrRoaIciIuTxHcwLgiqEJ1yImINCthBVk6Jgztr092nk50N4ewxj0t9QXPivR0TNw5I5Prfeb//AUtPtcpS733JoLDwOtvXZVSkL11C6sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=PWk1Glzl; arc=none smtp.client-ip=209.85.222.177
+	 References:In-Reply-To; b=clEKXDUk884snQ9vgWTjzxm2JWGY8lkxN9erTp0qSmqWf8Pe+gicdprX4jyIMxtKaLHYqZB4ky88rzBDVAek1u4WY0NeB3FWL6zNnco11Vjy4qzTzat1pbJAdZAxucRquVvQtGX2E3Q/YQyjXk7yVvOCHYLiRCHKED26HOnB8Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=J4q3tkaN; arc=none smtp.client-ip=209.85.222.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="PWk1Glzl"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5b2472969so246544985a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:29:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="J4q3tkaN"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c560c55bc1so249679485a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:29:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1744403376; x=1745008176; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1744403379; x=1745008179; darn=vger.kernel.org;
         h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
          :mime-version:message-id:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ktRVy/kIheAqpbf8tUSC8ehC31QAJCePsk0t6WKxomI=;
-        b=PWk1GlzlbAObnirKuJ7i+Y0A0IHBshXp3bAJMN+BXP+lWjDB3+W7AXLpxbgEeP3hMU
-         3vE9TMrRrL7a4z0/8YAFHYS0FSJQB0AZhu4Huzfd3SWnuAxEcYsFbc4ke0jb33jog4Yc
-         /6nwHJfVXClhVKHMEkxyV8cRk+zejfLaQV3jrsZfsrB3U5apoKT1eu6nDmmj8Unuztco
-         wV+0NkXJsc3xI6Xy4Out51HLha1tNKeJBkCBuhHzl8TxAioKaum/QUgLy2Ch95Sle2kC
-         IZ2vkzkRP/EALGjCZCcg0thlZ4xjcdHEDJc1aTD3G1HhrDf4cWLP9TksQSRx76Zgp0XI
-         45fw==
+        bh=udx8P5NQgti6FOsmWgVm69I0Zh1i+WolhwcYzN3WDvs=;
+        b=J4q3tkaNtRFIicpeJxa6YNjci735jlGkg7rFCar+Z7sYItlaqf9gNPaHrC5N93OSmy
+         J4GOmAAy4BLExOa3Trys1UgredqQIB+3aOTWsc69uV0JnqaYepZT4QbcqTXTAsBXruaP
+         u239HmOj+NQ3SF+XZelllTGa4KNEA1IJd+GLBtwoTg/XIkTWjZQFKO7Iq1GT57qo3jOe
+         af21Ggzs55yZasGLMizrCnD2LnHodcUKDdz0OmIYWtxt0JvIksJng58ghnIY0sUFV3fO
+         3TjoJ3XqAgmk6KPGvGek0ybhKJ4EN//MiNZHXshDZfLCkf2dyn0oZllVCJsQRAjxFsdl
+         c8Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744403376; x=1745008176;
+        d=1e100.net; s=20230601; t=1744403379; x=1745008179;
         h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
          :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=ktRVy/kIheAqpbf8tUSC8ehC31QAJCePsk0t6WKxomI=;
-        b=ZKl/oS5eB2VS8qD9CcC2eou+2cNh8Klvjq+pIQ6S2STKMi+NLPgZZApofUF+GK59bS
-         4xSWgkHvIXypuo7LJaXcwPh99ekhySdOgatktfmbVfZNBazwBKsDV8VirOQqQUdImHoB
-         MM8euBHhQJL15e3gECz+UK0ohOogIY1Tr0gr1fwW/FGshovlXEer/RLiZ4jrl6W2OD5a
-         J4mnwRFq251BjKSN8+Eh2zoUWcpy7JDhjVOYubVypZQK8pjTZ8/6hzVj/ZwzXwYNl5yd
-         sgYXiGkpJI0p253ZGHB/RuRyFXlMrLfzuJtb+HyWGmLOmh1BUJt2YVBQcFixBDzqkxVF
-         yxrA==
-X-Forwarded-Encrypted: i=1; AJvYcCV99yURMIqpKJy5Kdx5+pJrp4e2A9d51wiND280qB2FIpjhZF4AEG1A0GacGpHnSbxEk2mJyxh+JXzKGhc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEj7Fnt+uzcbLCgA5/7A3imoTaCUqKzZHe+C4wmJCrD2PldV3A
-	0l/3UE/XWEIpCsw1HULBQO9jUaAQSd+52OZmus8qHa/C5ExD20c95FcGaB/etw==
-X-Gm-Gg: ASbGncvB6EzsO6apD0Ug9i8MKW7br2gsplEYIoxAJ6WXEtC1iaPrVdZ6tK0o/SdKpBm
-	0lIjFArAEzs4+t3vDwmqW418JAq2zVDSam+QteJwDmKEG2eV0DQeD7RAZTD+MFZYflu7OP/UIau
-	coQcIHHDd1fBn1Rt5Y3G3thSJAKuXVMr23NZA9YZS1v4Ly5ATEQDn5BxjssL+3T58jeQPxna4kY
-	1UaivdJxDoYWMYIL0mxAnnbWv70yV3zv0IXo1079aDY+sSoVrCF7P8MlBImioLw5qfyM8/90yXh
-	muGQC7XQZJKXRUJnlldaFwEvLlNoRM0FdFBn9h1pUIcc/8pTGJYtbyhByw+VOnqNlgHGBK9lS5t
-	wgbHgoTwEmXt1PJcRVimz
-X-Google-Smtp-Source: AGHT+IHrI1EUrUVygltkuHfnRucDiC0qqict77jWL5RBb/PkRNG9F9tnOg0M8ZX6T5ukmsj9PaclnQ==
-X-Received: by 2002:a05:620a:1792:b0:7c5:a55b:fa6c with SMTP id af79cd13be357-7c7af1f3a65mr569107785a.38.1744403376436;
-        Fri, 11 Apr 2025 13:29:36 -0700 (PDT)
+        bh=udx8P5NQgti6FOsmWgVm69I0Zh1i+WolhwcYzN3WDvs=;
+        b=M4JobZkk62/qJHhNfeSNJ7UivyW+AMAD0xswf5jZhOIAsqHNQFoKQCGpnDuXRCoCyD
+         kt3YsxTDNj2kPA3PcdCX2RmRQ3qqoRWdnLzczAl7WOBzED1VDcZwPNLGx5DNA/ofc1Wr
+         Ymaehd2Tjh1o7ZWlW8mjFpTjCP46G1gSw/8F2uWB6x4q6ktZ/KOWJn7WnXuasgTPerxh
+         sQqKArE6YG7LM8GcEwSkst3cuYLU6aevQvuPLjgZmMhbUM/x51zGqzlHaFgjZH9XxeAv
+         SEsOHHukseiVeB2IlvEjM5jcM2MGmtz7+hTO410sgql5YWGqrMQi3q94g3RGMDaTsJKR
+         pILQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/9ooKy2w2638YeCVt7YHyrDs9DjyzX8Q/cApSZerGDceDt6GLWNfboSFIuNd4+nI/DCVw/t3b6PKZP4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsEYIAH1RvlmiDn1aDu2UUqXqJ+wSJo2qDHWyAZpJPNxbN8sFP
+	BA/D5uJ0LhsKus3q229BjV79zCearEteFmcX/eS+YZSvZqdOcbJ9eQRhgqUM3A==
+X-Gm-Gg: ASbGncsphEXjEkV/L452ooi9SEF2I+weaAkSTiEpmb6xALILsgqUsh1ZXZ0vSz09GAw
+	Wp+DSH5eUOTw7qKOVYPns6j/hOsRREdZXEALgzxzlOpozZ69dXNCi2/ndJADHIETub/Lz/qsnf/
+	z372URw5rrSJgKbYLNR4Ku/rXlxH5vD04Lrhrhmjgi01njtdNzG/Nk2ORMZVlqdYRQ04u8uPMLH
+	3dlEOsKuji9Vgtv29bkJGxYslKWTwX+U6ZOGehEObj16rtKD2ucfw2U09r8mAnDkCsc6Vei07Ux
+	LXaCLwb6Kyir5uVhk6HJMnlwhzxz8SFEKgxVZn5JkS1F4R71BP4GYuGrogDoAnHmLbo3DwhPrfo
+	LrR30FhB5Ig==
+X-Google-Smtp-Source: AGHT+IHAZKi3da6H9ZT6r5+1QkoznXgFAO4EgfroOWd3yfn68Dolte8fO5VnmxOOmYKtTSskUzNiQQ==
+X-Received: by 2002:a05:620a:4554:b0:7c7:739d:5cea with SMTP id af79cd13be357-7c7af12dc20mr617096885a.35.1744403378650;
+        Fri, 11 Apr 2025 13:29:38 -0700 (PDT)
 Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a89514f7sm309302285a.25.2025.04.11.13.29.35
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a896a15dsm308067185a.56.2025.04.11.13.29.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 13:29:36 -0700 (PDT)
-Date: Fri, 11 Apr 2025 16:29:35 -0400
-Message-ID: <b2a47590f8fea264863d0cef0a9c426d@paul-moore.com>
+        Fri, 11 Apr 2025 13:29:38 -0700 (PDT)
+Date: Fri, 11 Apr 2025 16:29:37 -0400
+Message-ID: <4e6ec6918748074d1f081320eba38eda@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,24 +71,38 @@ Content-Transfer-Encoding: 8bit
 X-Mailer: pstg-pwork:20250411_1406/pstg-lib:20250411_1552/pstg-pwork:20250411_1406
 From: Paul Moore <paul@paul-moore.com>
 To: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
-Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, =?UTF-8?q?Thi=C3=A9baud=20Weksteen?= <tweek@google.com>, =?UTF-8?q?Bram=20Bonn=C3=A9?= <brambonne@google.com>, Casey Schaufler <casey@schaufler-ca.com>, Canfeng Guo <guocanfeng@uniontech.com>, GUO Zihua <guozihua@huawei.com>, selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/6] selinux: add likely hints for fast paths
-References: <20250318083422.21489-2-cgoettsche@seltendoof.de>
-In-Reply-To: <20250318083422.21489-2-cgoettsche@seltendoof.de>
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, =?UTF-8?q?Thi=C3=A9baud=20Weksteen?= <tweek@google.com>, =?UTF-8?q?Bram=20Bonn=C3=A9?= <brambonne@google.com>, Casey Schaufler <casey@schaufler-ca.com>, Canfeng Guo <guocanfeng@uniontech.com>, GUO Zihua <guozihua@huawei.com>, Chen Zhou <chenzhou10@huawei.com>, selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 5/6] selinux: unify OOM handling in network hashtables
+References: <20250318083422.21489-4-cgoettsche@seltendoof.de>
+In-Reply-To: <20250318083422.21489-4-cgoettsche@seltendoof.de>
 
 On Mar 18, 2025 =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de> wrote:
 > 
-> In the network hashtable lookup code add likely() compiler hints in the
-> fast path, like already done in sel_netif_sid().
+> For network objects, like interfaces, nodes, port and InfiniBands, the
+> object to SID lookup is cached in hashtables.  OOM during such hashtable
+> additions of new objects is considered non-fatal and the computed SID is
+> simply returned without adding the compute result into the hash table.
 > 
+> Actually ignore OOM in the InfiniBand code, despite the comment already
+> suggesting to do so.  This reverts commit c350f8bea271 ("selinux: Fix
+> error return code in sel_ib_pkey_sid_slow()").
+> 
+> Add comments in the other places.
+> 
+> Use kmalloc() instead of kzalloc(), since all members are initialized on
+> success and the data is only used in internbal hash tables, so no risk
+> of information leakage to userspace.
+> 
+> Fixes: c350f8bea271 ("selinux: Fix error return code in sel_ib_pkey_sid_slow()")
 > Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
 > ---
->  security/selinux/ibpkey.c  | 2 +-
->  security/selinux/netnode.c | 2 +-
->  security/selinux/netport.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+>  security/selinux/ibpkey.c  | 11 +++++------
+>  security/selinux/netif.c   |  6 +++++-
+>  security/selinux/netnode.c |  5 ++++-
+>  security/selinux/netport.c |  6 +++++-
+>  4 files changed, 19 insertions(+), 9 deletions(-)
 
-Merged into selinux/dev, thanks.
+Merged into selinux/dev, thanks!
 
 --
 paul-moore.com
