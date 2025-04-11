@@ -1,67 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E74270ED8;
-	Fri, 11 Apr 2025 22:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344CA221FDA;
+	Fri, 11 Apr 2025 22:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744410538; cv=none; b=TG/uG+52dxjQejGUm1HgoP3YDm+vwL5iICNAocvaA4Hd7+6fZyRdQMUhlRCgpbYGGAXYKm/brWJxioq4fSlFUawoJp4MBz3+aesB8FTkl5N3+xMa3iCr7uqDBONc2VpOXElkxoW+8hPUcq75M4A4nZwpZNO7qeqWGqK55WDsIUg=
+	t=1744410872; cv=none; b=BOvSgus+2xwM9nZFVpHWHDPTj11ogWQLkB7PlP9NxgpeE4im51lrlEFDnYkU7p9bVS8a9y+y+q3q531RyuX2nRWOSNz4oBXAtwJDOTRjWeUGzkWPDzLNnGbFGJtCA6pZFH8DaMJTm16+jjv53eYZ9nx+sHDex3F3Ebbhv2Z6SAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744410538; c=relaxed/simple;
-	bh=q0dosBq62p8nJI13NCPBgpG7xr4NCIfSVpSNWnjWU1k=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XCu1zB2GGNNa4W4gEjdzdrulpT2tkinOczAFVKU2BXCRrhIhmfjRGxbmmbTtMol9+QJ53ROOpwgi3ow+jmim7O6gjTa/J+6kYO7wZaz6I7wGSzkc8lwOqHduTEYUQoPOEV1RIHLKeLHk4fKfoL8Uk1QNH6vMCJMOl+KPCd+8IYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=qR61Q5/H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744410872; c=relaxed/simple;
+	bh=IJVHtolrjrUUgBGSALBhI1zt4156D2MFsEdtgePT11s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J9PgYj0TphLmEh84TYG22DuFZpum+DDhaKHbaHvVe1SnTFD1BXOuzU05SIFYImYFMjQWOsD5eSoEKusYP98H9llnuMuwM+6zCuAE67WEstpt42wqyi2ujj285CFoDzU2b1U5ONLEFL0b8XVgSG2MRyd8ZKEuT/iWVHKgw57NKew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWbwFLB9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="qR61Q5/H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA0CAC4CEE2;
-	Fri, 11 Apr 2025 22:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744410537;
-	bh=q0dosBq62p8nJI13NCPBgpG7xr4NCIfSVpSNWnjWU1k=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWbwFLB9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0885CC4CEE2;
+	Fri, 11 Apr 2025 22:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744410871;
+	bh=IJVHtolrjrUUgBGSALBhI1zt4156D2MFsEdtgePT11s=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qR61Q5/HTr1CGOIXBKrDgK0weL86YiOWk9RAqh9a9n0ZIQiTubhlELGmLwxgtXg9X
-	 5HY+GuiUSbm3fqv7YTa9aYrBaLihP9XHN44/GMmG0sXeqOfMzaAH4YChPvI2se3hot
-	 +c/tdqFnRk/IPbetbqMuvMwdW9IpNzJuUgJcbgbs=
-Date: Fri, 11 Apr 2025 15:28:56 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Waiman Long <llong@redhat.com>
-Cc: Michal =?ISO-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>, Johannes Weiner
- <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Roman Gushchin
- <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, Muchun
- Song <muchun.song@linux.dev>, Tejun Heo <tj@kernel.org>, Shuah Khan
- <shuah@kernel.org>, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] mm/vmscan: Skip memcg with !usage in
- shrink_node_memcgs()
-Message-Id: <20250411152856.41a12ac2b3eb1005a86168e6@linux-foundation.org>
-In-Reply-To: <6d81d576-7e94-4523-af9a-d43298ea64ba@redhat.com>
-References: <20250407014159.1291785-1-longman@redhat.com>
-	<20250407014159.1291785-2-longman@redhat.com>
-	<awgbdn6gwnj4kfaezsorvopgsdyoty3yahdeanqvoxstz2w2ke@xc3sv43elkz5>
-	<6d81d576-7e94-4523-af9a-d43298ea64ba@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=IWbwFLB92lbbltn7jrVBWUYtenz3L5Ri+lthZDJLfpiGHUN7R+UQwiSzAd8SHHj6f
+	 IoWgp7+Gb7Vu+DZL6R4bMeAaPNIdHaV+r9FfQFOBNHgC+vFUDFItrKk/Vj+dvYv9l4
+	 EO68TG4MSKeCAMVQJ2SKNPao/j3xgUlFbuzKdprejBGj9fg5LuYr0xD3OJhnJ0LJy4
+	 m/PNQfrcOVXiAJJVuMnoB5bojY1/UcVYaQ7ilz/execCRj80ZyUUvDqnt/UlhdSCvT
+	 1vEUC7bFWBqnHiRshRKYxCe7anvqPG1HkrT18VMvEu2nZMi8cZjCa73ZmD5WXM2YnO
+	 VEiozyn+pjdpA==
+Date: Fri, 11 Apr 2025 15:34:29 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: syzbot <syzbot+46043677477d6064a1a0@syzkaller.appspotmail.com>
+Cc: andrii@kernel.org, ast@kernel.org, bjorn@kernel.org,
+ bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+ edumazet@google.com, horms@kernel.org, jonathan.lemon@gmail.com,
+ linux-kernel@vger.kernel.org, maciej.fijalkowski@intel.com,
+ magnus.karlsson@intel.com, netdev@vger.kernel.org, pabeni@redhat.com,
+ syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bpf?] [net?] possible deadlock in xsk_bind
+Message-ID: <20250411153429.697267f9@kernel.org>
+In-Reply-To: <67f72e6d.050a0220.258fea.0027.GAE@google.com>
+References: <67f72e6d.050a0220.258fea.0027.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Apr 2025 17:08:33 -0400 Waiman Long <llong@redhat.com> wrote:
-
-> > - * A/B/F  memory.current  = 0
-> > + * A/B/C  memory.current ~= 29M, memory.events:low > 0
-> > + * A/B/D  memory.current ~= 21M, memory.events:low > 0
-> > + * A/B/E  memory.current ~= 0,   memory.events:low not specified (==0 w/out memory_recursiveprot)
-> > + * A/B/F  memory.current  = 0,   memory.events:low == 0
-> >    * (for origin of the numbers, see model in memcg_protection.m.)
+On Wed, 09 Apr 2025 19:35:25 -0700 syzbot wrote:
+> Hello,
 > 
-> Sorry for the late reply. I think it is a good idea to update the header 
-> as well. This function is actually used by both test_memcg_low and 
-> test_memcg.min. So I will use low/min instead.
+> syzbot found the following issue on:
+> 
+> HEAD commit:    61f96e684edd Merge tag 'net-6.15-rc1' of git://git.kernel...
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1635523f980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
+> dashboard link: https://syzkaller.appspot.com/bug?extid=46043677477d6064a1a0
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-It appears that quite a few updates are expected for this series,
-so I'll drop v4 from mm.git.
+#syz dup: possible deadlock in xsk_diag_dump
