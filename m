@@ -1,112 +1,128 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3342367D1
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F7926AD9
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:27:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381637; cv=none; b=NvnCc4xPiZ2R2VnkubRFzt/QVHML0H+P2GfCOpVsKRDOe0DJfk5fSUs9XOUOS/ekJnC9Lr5VgITxxV5KIC2sn4wiORprpcVzIMfgrfNPTAjmsiUl+GaCuU2E6p8nl7QhIFDjHN71PUc+WB34PIeGTMtDmBchl50STQ9RydwCxZk=
+	t=1744381645; cv=none; b=BA9SVX+UeVX9yfJ/qSo1oyZiqfTb3lLksf2iBHH2HIaX0Wpate+VFDYUD/wwgH/0gb71WSaG02zXJFC2Iw2CBDS4PTlejOr/38krr1bwhB6jnsyNfHGi0FuUcEAPeO34CYO9x3kWoSbnZtqosUH4ZgwyBJbYU0ZaDkiaGi/mTBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381637; c=relaxed/simple;
-	bh=0sSLM8Gl1SSfcycmM/UtlknnQ4e+BUVsux/kF0SISqQ=;
+	s=arc-20240116; t=1744381645; c=relaxed/simple;
+	bh=qKrKM9zA7GTqQdCuPeaq+7zcbxqyXjrCtpoVdskcyuU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MclLhhwK0pbraSs8G7XppdwSC4krn6AmKXhdFboIwsL5z9oeqNtJD1H7OmqmUbUIuOFgclAvzETKVLzfjl0+eo26uLuQ0+/yQZnTwRzv5iqOxgKgc/ZUYMOoqchWKhuWzD9lGn90cFeu1XcmE3EfzNt2un0top6HhDVYFWX1Qs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eabWNFMd; arc=none smtp.client-ip=170.10.129.124
+	 To:Cc:Content-Type; b=WFvZ9gmZyx3um5PDAlpoEz9WWrUjB5pY1rcrxLGUev8GjFxoJd/PtDX78XDDUTo8LSrTbA9xSj4hskW5kk17T3P8qsfIjKUTAujT/NCq8KgLjoOW6kMy0XouVeEjqL2i/2pK2kcJayHEBP0fSDoBmBHIYZcd1BHXA9YEUV/CIyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=etBt9kzK; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eabWNFMd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="etBt9kzK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744381634;
+	s=mimecast20190719; t=1744381642;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GP8/HtUHIEVDUJEVLPkaBWTUMFy21m2j5eMBYPZlbWY=;
-	b=eabWNFMdwqiMKt92TIsvdOfWTwoTQtHcKO8v9dxovFp79sZOQONkC1rtTOL6WFVzfY5iVS
-	nSjpccYrcrppCtqI+RQ95TMSCJU51aSbXK5KC9cMjm8Ea/Ed/FJRdCRMnPsU0+oJW2omvj
-	5DvMoqpjhUg6b4YUGw5Zmpz1nmG761c=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Im7PLUkW7j3mmQzh3EFVKWQVrxz4pA7bf7TSdZHW8os=;
+	b=etBt9kzK/GM1QUBfetfP0L3vI9gvpvyt8Co8eyTeZ1+RHxV6lep+umbMtkkKI4ky2XeioI
+	Od0LK2pwEo9oFs2yYbe43p4LXRcTj3d3K1l2iRcRKImMGo6eliQUZcGXq6HIQNcD56aCVB
+	5kx0/o0F+fkf++cSvirgDq0kfajpU4E=
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
+ [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-9Rg67iVsNPSjQAxWbNzimw-1; Fri, 11 Apr 2025 10:20:44 -0400
-X-MC-Unique: 9Rg67iVsNPSjQAxWbNzimw-1
-X-Mimecast-MFC-AGG-ID: 9Rg67iVsNPSjQAxWbNzimw_1744381244
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5e2a31f75so595542085a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:20:44 -0700 (PDT)
+ us-mta-159-OEM17uTVPuWp9paJNAxULw-1; Fri, 11 Apr 2025 10:27:21 -0400
+X-MC-Unique: OEM17uTVPuWp9paJNAxULw-1
+X-Mimecast-MFC-AGG-ID: OEM17uTVPuWp9paJNAxULw_1744381640
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2c24ce4d924so26229fac.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:27:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744381244; x=1744986044;
+        d=1e100.net; s=20230601; t=1744381640; x=1744986440;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GP8/HtUHIEVDUJEVLPkaBWTUMFy21m2j5eMBYPZlbWY=;
-        b=u6wvTRKx+2Csr2eks//m4WhTeoItjLHjfRwIrl+dhEBXcPvlHo2s2n3EyJV+XCs88d
-         5uXEYdJS4WbWHsn6sRnhE8tW0rEzz2isP4iSrIiK0sDOxNkjUa7hdjnPVOA8cfmOX+pM
-         g9T+cmKbC1GneTTtYmZ+DB16hazjWGHZwctEQQd6ryg+7k7qf0U6LTYBxGZSXnZRvDLk
-         8C2/EUk6XufgLLGif1fFmFRkHG7SDlgq1E0Mql89a28E9RLj17oT+0usVTPgwqKeY1dv
-         adm/f97DTGHEk1tZLfNLyGAdWQLsqyAfubmYbPrLi3fxOg3B5ZkuRBfkPGwSMwqzKZ4f
-         61xA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5mZZO4fsSaWD7yW8rAsaR2AXTUxkAsQ2twAx1sxCaD4fHry6RdLbTFjxnh3PiN1haKWbiwVX44qKBDzM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznuG8/m8toiRObW3lmW1kpgO2Mgn1g2pJYXV9cX58115sWrc0p
-	ALScBmDzJqy+FrD2VDFeB7djrbw26d9MW/lHgHqm2vyWbFMN44kkIrfLIDuxMRW47YyEPvTAdmS
-	d1VEqFGmaXGe7XY+0XbYiA6naDdVx3t4roIEx1VQ0eHgLZ8FEDImsPkFJh1shMxU2AZu0+gCEUN
-	qu4OM9l0M/vGYbjFWAlhikI3eF6zg8EgeLe/C+
-X-Gm-Gg: ASbGncuXEeMCB20QzRNx7NronCjvElpDW/agPGiJTmLERin9v3CplL2GSYpfpOuZSUD
-	fxwcJDkDyeZFdztp5wjh0kANLqWarE696h13l4k2in8dyICSCDZro5nn4pDkbI2Wz8Gmo
-X-Received: by 2002:a05:620a:4555:b0:7c3:d5a4:3df3 with SMTP id af79cd13be357-7c7af0e4069mr446713985a.34.1744381244168;
-        Fri, 11 Apr 2025 07:20:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE87/SkmJqkCTFo3ondJGkFj0c7IjvtrQht+ufW53KKYYwMMEMEB+bhas8EXXkb6Qb8MJd6901LxjVSU8qgMcU=
-X-Received: by 2002:a05:620a:4555:b0:7c3:d5a4:3df3 with SMTP id
- af79cd13be357-7c7af0e4069mr446710485a.34.1744381243833; Fri, 11 Apr 2025
- 07:20:43 -0700 (PDT)
+        bh=Im7PLUkW7j3mmQzh3EFVKWQVrxz4pA7bf7TSdZHW8os=;
+        b=PwMp3f+JVQhz9pl0HwTyo6HvWruoGAgHAVUoCm1zu5+Nxsxr5LJaAD6fsS4kZELihA
+         VMOBxHbNWHH98KgSk5xQH5OQJuQrNCULIm/O1jXX7pg112t9c/SFlIGm+05rHvu8zglC
+         VN410qwbSiCchPqFgZYBwK8ZohF382OydiygW8KQoJHym6jtzwSvXY3rkzQYSPwWVc2G
+         FCP66bjHQamlCuTaVlD+LurU07ojRRfEf+jT85DR+qC11omGGiDvDu0KOykJ/SMBC0on
+         sUznDHmOLEmZTsk1zSDQjiTq2sfhBoHPWuRPLeyMiRa1tBDYkFWP4OYkU1d7+z7iTYHj
+         cUfg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5nvfy9A1v0nnwm1a9NkdIhYZIZJOTy7mfQ9HpC6+0th5VgCTcw/BFJzcQ3+9frajs9UThhMjKKiuFZpI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMUWoqSHVJGkVbs4yck5tUSc820A2ADRAO3B/MojGc0G2hDGSx
+	rB42hR5+voR28uqM1W2vqYkBqUxO0+CYmmcD9n6wACsSAw4o/MnxsxR/csCb09GsiX8PFDFM2QF
+	gminoUgiJdRcmk7BBaANsQhJwoWXcGrvXW6wAqsoyLcmy0ZwRpqjyPydpqTZ1rm4rGTgHRemmLX
+	sMJBpdFM9V2sXHj49IBItLSzru5ieuGNvMeumi
+X-Gm-Gg: ASbGncuwOU0d51zDublwdVyEOOv8CuKXMcjvx98YCiMApqXQr9Cy11aEWYLbVxvjWrR
+	VU2v9Jo2qan4m3TDub8fRTUnFBbAodW7evwkCrSMkDFCymTEuQ9y4CqO/1HK1DESafP4=
+X-Received: by 2002:a05:6871:4102:b0:2b7:fc4b:8408 with SMTP id 586e51a60fabf-2d0d5c4f9damr599361fac.2.1744381640294;
+        Fri, 11 Apr 2025 07:27:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFtyIy8awglJHeyK/BCOHDP8jLvXWR8za9vqwQmLys5HN7G2p0PJqVELul9ZwicD73ayRi27zCy73dC8JEDk38=
+X-Received: by 2002:a05:6871:4102:b0:2b7:fc4b:8408 with SMTP id
+ 586e51a60fabf-2d0d5c4f9damr599349fac.2.1744381640021; Fri, 11 Apr 2025
+ 07:27:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
- <20250411-umlegen-herauf-508fe182fffa@brauner>
-In-Reply-To: <20250411-umlegen-herauf-508fe182fffa@brauner>
-From: Jan Stancek <jstancek@redhat.com>
-Date: Fri, 11 Apr 2025 16:20:27 +0200
-X-Gm-Features: ATxdqUFDVkes1gAHo_3pSyiyrwIAhhZcJcFcsj7AiggBUI7bmKdbRteKcHOEm_c
-Message-ID: <CAASaF6yT=YbDfnwczWSEiEkn+evkWCPF0_MmO3OKCEmuFOG32w@mail.gmail.com>
-Subject: Re: [PATCH] fs: use namespace_{lock,unlock} in dissolve_on_fput()
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com> <20250411072616.GU372032@google.com>
+In-Reply-To: <20250411072616.GU372032@google.com>
+From: Michal Schmidt <mschmidt@redhat.com>
+Date: Fri, 11 Apr 2025 16:27:08 +0200
+X-Gm-Features: ATxdqUHHcxYvn-_fU1mId7EG_BUpa6k1ihUDWebZvcqQhgKIHJ5La9lAEIRJHKA
+Message-ID: <CADEbmW1XBDT39Cs5WcAP_GHJ+4_CTdgFA4yoyiTTnJfC7M2YVQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
+To: Lee Jones <lee@kernel.org>
+Cc: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org, 
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Prathosh Satish <Prathosh.Satish@microchip.com>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 4:09=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
+On Fri, Apr 11, 2025 at 9:26=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
+> On Wed, 09 Apr 2025, Ivan Vecera wrote:
+> > Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+> > provides DPLL and PTP functionality. This series bring first part
+> > that adds the common MFD driver that provides an access to the bus
+> > that can be either I2C or SPI.
+> > [...]
 >
-> On Thu, Apr 10, 2025 at 05:05:42PM +0200, Jan Stancek wrote:
-> > In commit b73ec10a4587 ("fs: add fastpath for dissolve_on_fput()"),
-> > the namespace_{lock,unlock} has been replaced with scoped_guard
-> > using the namespace_sem. This however now also skips processing of
-> > 'unmounted' list in namespace_unlock(), and mount is not (immediately)
-> > cleaned up.
->
-> Thank you for spotting and fixing this! My bad.
->
-> > diff --git a/fs/namespace.c b/fs/namespace.c
-> > index 14935a0500a2..ee1fdb3baee0 100644
-> > --- a/fs/namespace.c
-> > +++ b/fs/namespace.c
-> > @@ -1830,6 +1830,8 @@ static inline void namespace_lock(void)
-> >       down_write(&namespace_sem);
-> >  }
-> >
-> > +DEFINE_GUARD(namespace_locked, struct rw_semaphore *, namespace_lock()=
-, namespace_unlock())
->
-> I'll call that namespace_lock instead if you don't mind.
+> Not only are all of the added abstractions and ugly MACROs hard to read
+> and troublesome to maintain, they're also completely unnecessary at this
+> (driver) level.  Nicely authored, easy to read / maintain code wins over
+> clever code 95% of the time.
 
-I don't mind - I used "locked" because it's easier to grep for, when
-it has distinct name.
+Hello Lee,
 
-Regards,
-Jan
+IMHO defining the registers with the ZL3073X_REG*_DEF macros is both
+clever and easy to read / maintain. On one line I can see the register
+name, size and address. For the indexed registers also their count and
+the stride. It's almost like looking at a datasheet. And the
+type-checking for accessing the registers using the correct size is
+nice. I even liked the paranoid WARN_ON for checking the index
+overflows.
+
+The weak point is the non-obvious usage in call sites. Seeing:
+  rc =3D zl3073x_read_id(zldev, &id);
+can be confusing. One will not find the function with cscope or grep.
+Nothing immediately suggests that there's macro magic behind it.
+What if usage had to be just slightly more explicit?:
+  rc =3D ZL3073X_READ(id, zldev, &id);
+
+I could immediately see that ZL3073X_READ is a macro. Its definition
+would be near the definitions of the ZL3073X_REG*_DEF macros, so I
+could correctly guess these things are related.
+The 1st argument of the ZL3073X_READ macro is the register name.
+(There would be a ZL3073X_READ_IDX with one more argument for indexed
+registers.)
+In vim, having the cursor on the 1st argument (id) and pressing gD
+takes me to the corresponding ZL3073X_REG16_DEF line.
+
+Would it still be too ugly in your view?
+
+Michal
 
