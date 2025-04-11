@@ -1,127 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AEC1E7C07;
-	Fri, 11 Apr 2025 03:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB461E7C07
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744343245; cv=none; b=ZU3sKcySg4wP8RMfrBWeDhNID+vD65RBxB+OtB+ccEFK9gXHC+Ay0+c+yiWrnP8YODTYNDZJZZ2TAoavpT+YeRljrXC+WHl/jVvKDJ4pQEhmcDpSReBfZi6TC7J6gzhulbDqRCX4M8yV3dmKx3u+AWTOgwG57BiQnEsKqyZ+xdw=
+	t=1744343288; cv=none; b=QNUl0heIV+H//5pSLaVqhEFnM+Jy/RkDiM9UWxKtG2Vh6eGq+cIyPtCZfBkGc86WHVs99Qk8Z2Iy0qYR8M6aTR1sV3EkrjxUB5Q7xN6GDUIyFnqjM+88/e0ybPiE40x4C6bdldHv5qbLkFhb9g/lKF9wqWKigLrAwpDuXgXHpig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744343245; c=relaxed/simple;
-	bh=VRpaDPeddYKoPCJkNZD93So02dw0UKpgz41AvSL+wns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rW9W+hosigElqP6EJJUAit3wEmlEuXzA6a5K7djNyAuUWsbVIK0bDBzBO+taEv88Dp7GdtfGLm6eSM6KUrhMTThxXzJQgmU0jRADshqtiYovsh4/avpJvIXLhioPWtmMo0J0ssHEcP7jht9kB4YWnoImcK3mYUc2azjqhXnmEmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jKj7Mpg0; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744343288; c=relaxed/simple;
+	bh=tdqBmESetdGGPc6KO5x2xTxdoiBPMTYDt3kvVyCIxUM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZSj2/WPcHA00oKYGbS9tHnCRFLkYmAUR76Gm9cIiVQXvr3tKiD9wy4or62m8rVb2fsbglIn+0jE7SQYFUCep8jcEVdEVuPIpPVXVTKTb8zs2/E6P03rm6UvUXUBn2eR+1mLGpStXHKhHilqtlKgNcbGvZVU9f8zO4LYt+78ky8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=toUiFLMT; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jKj7Mpg0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744343243; x=1775879243;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VRpaDPeddYKoPCJkNZD93So02dw0UKpgz41AvSL+wns=;
-  b=jKj7Mpg0U55MQRwIlYMPR2cP6Bl4DquWIxijQVB+UFeznw85ZdwhNtmy
-   GsPtCpLzvOnxoxx3tltGkD1BI59uuB9+1sct7ABtLEiSCECYWjoA7x3BQ
-   LizPmqbtfmjSMV4X/MyPfIlgMaioDR62zO0p0rWDGC71tGlFTfnJXbFEI
-   NvD2BVQQ7lyNqh/s491ky0xAAHBGCxVDZiYus1aAUbZBlTqFFI7g56yzl
-   EJVR6I5EpyfTJvOVFytogOfSKNzTN+l+BAAiR185DrrWHGRjf4t19ND7Q
-   8UXiHN+NQ6KOIVhNLD7zs4eikF/KEMalKeO0AC9g+a+HEH42sVy4mjGZz
-   g==;
-X-CSE-ConnectionGUID: 0aNCJT/mTPCb9yBEOio6qQ==
-X-CSE-MsgGUID: FxlXGMDES1W+nyNrMqqzSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="57267543"
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="57267543"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 20:47:22 -0700
-X-CSE-ConnectionGUID: Tif5TBgzTjyoB3N3tyIcvg==
-X-CSE-MsgGUID: KgZ2Tod7TQy/msqFuOQ11Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="129026885"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 10 Apr 2025 20:47:19 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u35ML-000Amd-1P;
-	Fri, 11 Apr 2025 03:47:17 +0000
-Date: Fri, 11 Apr 2025 11:47:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nicolas Pitre <nico@fluxnic.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Nicolas Pitre <npitre@baylibre.com>,
-	Dave Mielke <Dave@mielke.cc>, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/11] vt: update ucs_width.c using gen_ucs_width.py
-Message-ID: <202504111036.YH1iEqBR-lkp@intel.com>
-References: <20250410011839.64418-6-nico@fluxnic.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="toUiFLMT"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22650077995so21254505ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744343286; x=1744948086; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7dlryhVy6NeWg3O2Okngw+V+H7NewUDTwovui9xGS0o=;
+        b=toUiFLMTfFq4KH4yzXIU1qVJ5/CuLkaVAHkcbEfKieMsrmDYyyvZcKPw0WY4bKJa8j
+         m9ivc8JAyL5v+4RWKuXWy+dd+ZtCe49KunVI4WNrDDHpumnzexD7opM4aXtx9zhR96SA
+         CoMlOpS2M1EmgAy8YQXZLuhymB99mAVp4U7AdDgP62gGXkGkZS1iat6Ap2CiBbwl+Gbv
+         N2zeAk8RaguYFUnACOnOvyiFVGfVI1aNwwmYHyLesYYwmFi0nQckrHiUBD57zjbZwFhp
+         OdRqLLq80Gx5Y/H2ni3NxFoVwKnxHPasgDUoLn2MyvBPc32/JZPeGep/wTHM/J46gvWF
+         5McQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744343286; x=1744948086;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7dlryhVy6NeWg3O2Okngw+V+H7NewUDTwovui9xGS0o=;
+        b=kAdD5uc2Qz5GkBQ5OGXyX8gLMX8K9fu+269epKaCcGaGxaoD+kEQS00y8Rabrkl4H5
+         tQ1kVGk7LKbacFJ4DXZwW8VeV0p6myT+V+2Ml0gzIuO7pPRuLoWb9RlaqNFZjLGPTaa6
+         WSBxFG15e0CB2Wr6bxHfTbuWxtbZXcy9OP7LV/4C3jjaz3FmmVhEzMZG00iFRTpe189j
+         ZeezdFn8OQiFE/R6UMchnOqXuxL3BTQ2F+pbMHs2OHE1CMQ2fuXanHltUZSzckp9V/03
+         JvtrBKuMZFWMMHn5bxg6B0tLnAeKR70CkWKwGdWXRv2sIF2zBQQRzpsNkFzIJA6ScTSJ
+         ZLRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWG26r5T6VnWdM2J3QWjPAT0cZICHEE+hrQdL3HbfdmgQr8QrGpQqMFyi4ynDC+kZF6V2XFJLi/B2bwMWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxERPlVeyvMSp1oaZet71LjwrNabojShS9A0LzYhK7FPfM0OvE
+	HNvqxAvbjzQW89I3OyHIBL8AAGFsAGiDAf3jii7MLTKTpwgss1zjMH3MZDbnaReR5yK+If32Loc
+	+lFS1C6BvEZ2KZoephw==
+X-Google-Smtp-Source: AGHT+IEOZPbbuwHUT+vSKb7YqC/0TcONKVVdEEEvZeXr5rZzrszLtokHPfZVQrxjUuNtcfTum+JkVNbqScaVm0pW
+X-Received: from plks14.prod.google.com ([2002:a17:903:2ce:b0:226:4240:2027])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:e5cf:b0:215:94eb:adb6 with SMTP id d9443c01a7336-22bea4efe58mr23857515ad.40.1744343286238;
+ Thu, 10 Apr 2025 20:48:06 -0700 (PDT)
+Date: Thu, 10 Apr 2025 20:47:48 -0700
+In-Reply-To: <20250320015551.2157511-13-changyuanl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410011839.64418-6-nico@fluxnic.net>
+Mime-Version: 1.0
+References: <20250320015551.2157511-13-changyuanl@google.com>
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+Message-ID: <20250411034748.1781232-1-changyuanl@google.com>
+Subject: Re: [PATCH v5 12/16] arm64: add KHO support
+From: Changyuan Lyu <changyuanl@google.com>
+To: changyuanl@google.com
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
+	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
+	catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com, 
+	devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com, 
+	graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org, 
+	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org, rostedt@goodmis.org, 
+	rppt@kernel.org, saravanak@google.com, skinsburskii@linux.microsoft.com, 
+	tglx@linutronix.de, thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Nicolas,
+On Wed, Mar 19, 2025 at 18:55:47 -0700, Changyuan Lyu <changyuanl@google.com> wrote:
+> From: Alexander Graf <graf@amazon.com>
+> [...]
+> +/**
+> + * early_init_dt_check_kho - Decode info required for kexec handover from DT
+> + */
+> +static void __init early_init_dt_check_kho(void)
+> +{
+> +	unsigned long node = chosen_node_offset;
+> +	u64 kho_start, scratch_start, scratch_size;
+> +	const __be32 *p;
+> +	int l;
+> +
+> +	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER) || (long)node < 0)
+> +		return;
+> +
+> +	p = of_get_flat_dt_prop(node, "linux,kho-fdt", &l);
+> +	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
+> +		return;
+> +
+> +	kho_start = dt_mem_next_cell(dt_root_addr_cells, &p);
+> +
+> +	p = of_get_flat_dt_prop(node, "linux,kho-scratch", &l);
+> +	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
+> +		return;
+> +
+> +	scratch_start = dt_mem_next_cell(dt_root_addr_cells, &p);
+> +	scratch_size = dt_mem_next_cell(dt_root_addr_cells, &p);
+> +
+> +	kho_populate(kho_start, scratch_start, scratch_size);
+> +}
+> [...]
+> +static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node)
+> +{
+> +	int ret = 0;
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +	phys_addr_t dt_mem = 0;
+> +	phys_addr_t dt_len = 0;
+> +	phys_addr_t scratch_mem = 0;
+> +	phys_addr_t scratch_len = 0;
+> +
+> +	if (!image->kho.fdt || !image->kho.scratch)
+> +		return 0;
+> +
+> +	dt_mem = image->kho.fdt->mem;
+> +	dt_len = image->kho.fdt->memsz;
+> +
+> +	scratch_mem = image->kho.scratch->mem;
+> +	scratch_len = image->kho.scratch->bufsz;
+> +
+> +	pr_debug("Adding kho metadata to DT");
+> +
+> +	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-fdt",
+> +				       dt_mem, dt_len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
+> +				       scratch_mem, scratch_len);
 
-kernel test robot noticed the following build warnings:
+While testing on ARM64 today, I realized that calling "fdt_appendprop_addrrange"
+here intercedes a bug that prevents consecutive KHO-enabled kexecs.
 
-[auto build test WARNING on tty/tty-testing]
-[also build test WARNING on tty/tty-next tty/tty-linus linus/master v6.15-rc1 next-20250410]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Suppose we do KHO kexec from kernel 1 to kernel 2 and then from kernel 2 to
+kernel 3. The firmware DT got by kernel 2 from kernel 1 already has
+"linux,kho-fdt" and "linux,kho-scratch" in the "chosen" node. And when KHO
+kexec-ing to kernel 3 from kernel 2, kernel 2 will __append__ the its KHO
+FDT address to the "linux,kho-fdt". Thus the "linux,kho-fdt" received by
+kernel 3 contains 2 address ranges. Kernel 3 would fail at
+early_init_dt_check_kho() above.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nicolas-Pitre/vt-minor-cleanup-to-vc_translate_unicode/20250410-092318
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
-patch link:    https://lore.kernel.org/r/20250410011839.64418-6-nico%40fluxnic.net
-patch subject: [PATCH 05/11] vt: update ucs_width.c using gen_ucs_width.py
-config: csky-randconfig-001-20250411 (https://download.01.org/0day-ci/archive/20250411/202504111036.YH1iEqBR-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250411/202504111036.YH1iEqBR-lkp@intel.com/reproduce)
+I will fix this bug in v6.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504111036.YH1iEqBR-lkp@intel.com/
+> +
+> +#endif /* CONFIG_KEXEC_HANDOVER */
+> +	return ret;
+> +}
+> [...]
 
-All warnings (new ones prefixed by >>):
-
->> drivers/tty/vt/ucs_width.c:485: warning: Function parameter or struct member 'cp' not described in 'ucs_is_zero_width'
->> drivers/tty/vt/ucs_width.c:485: warning: expecting prototype for Determine if a Unicode code point is zero(). Prototype was for ucs_is_zero_width() instead
->> drivers/tty/vt/ucs_width.c:496: warning: Function parameter or struct member 'cp' not described in 'ucs_is_double_width'
->> drivers/tty/vt/ucs_width.c:496: warning: expecting prototype for Determine if a Unicode code point is double(). Prototype was for ucs_is_double_width() instead
-
-
-vim +485 drivers/tty/vt/ucs_width.c
-
-   477	
-   478	/**
-   479	 * Determine if a Unicode code point is zero-width.
-   480	 *
-   481	 * @param ucs: Unicode code point (UCS-4)
-   482	 * Return: true if the character is zero-width, false otherwise
-   483	 */
-   484	bool ucs_is_zero_width(uint32_t cp)
- > 485	{
-   486		return is_in_interval(cp, zero_width_ranges, ARRAY_SIZE(zero_width_ranges));
-   487	}
-   488	
-   489	/**
-   490	 * Determine if a Unicode code point is double-width.
-   491	 *
-   492	 * @param ucs: Unicode code point (UCS-4)
-   493	 * Return: true if the character is double-width, false otherwise
-   494	 */
-   495	bool ucs_is_double_width(uint32_t cp)
- > 496	{
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best,
+Changyuan
