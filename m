@@ -1,55 +1,51 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9D227EC9D;
-	Fri, 11 Apr 2025 10:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C725221282;
+	Fri, 11 Apr 2025 10:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744369013; cv=none; b=Jagp0ojAHt69wDnlqKIDbT0YdO2r5dbw1af+Rpt/bly61a+89PD6lkStA8e1+MQqCiMmOQNGLMnUyJ4fCueLoMCcRE+3DefZZpzh5VIHiFkIFH5gov5p5GmRw7osNt0nS4ypMqRvW7zAtlc3f5vPwfQYKT3vxyh+fpnbx0KAFiA=
+	t=1744369027; cv=none; b=LJT4Es4rk4pb3X06RSDR8TK7yhEbXLXdxKbtZVcT0NwzdhW76b8ZKMLo/NKAx4kWVbX+GxCroZl2k0wp6Jvg4yX0Dd44B/TC2ex5SL/kKzYJnG+pLKZJLLxWQp1xsr7vrzcymSw5XVqWaCsseLbGIPqf5NQDKX23LKH0Ywc7kO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744369013; c=relaxed/simple;
-	bh=KV7838qVuJFvwP0GE1fI+kpv6Rs/f7TnldAdDLmDYlc=;
+	s=arc-20240116; t=1744369027; c=relaxed/simple;
+	bh=zB/MGnfcUM0HicN1On6vH3cQhYwo+G4uPJU6tqb/Pgo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SCYplPyIG2KAFYvRlrgnE4EBR02BpEt1bnpgtPoRu9yfld7EKtIC1g+BZdiIVhNL+F2USUblcR3Rw5wh9pZkV+jUB5QNM8M27vmpEkML6UaIiNPs71beRCLniKXXsKtHAXXLznpmnsb4L7yjThVHWcPj5tQLw9XnBwEcAriuddY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=SXjMmusB; arc=none smtp.client-ip=54.204.34.130
+	 MIME-Version; b=kX60GXNBknHayNVIa5/6gZ8OiO0kYbN/lqPpRDnz3JlGt05m1pQSGtespWDoUhriArsXHUuJMY141A6Zz/HtIw5ialiGDtHW8lMDqwTYBmOUZeUArLzUWUmaAG2a4qK6dYshRsA/4AvMhnMcjaslBpQl9Qhyhsr2nQkZp2HSxbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Li71ddM9; arc=none smtp.client-ip=18.169.211.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="SXjMmusB"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Li71ddM9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744369007;
-	bh=XD6rEhxQqjvTOqUCfuE2USI2iV6mhbN96PZIywkA7yY=;
+	s=onoh2408; t=1744368973;
+	bh=dnoZUln+EAjEGDwlnRvIY0rJIrjfNNUSfdyabxk3/N0=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=SXjMmusBye4hbRvUMMGeaHBJs5G/ZJgv0YX5fdg9qbUaPXKGvGZANQgxlRG3akHUd
-	 MgC35D7Hpbg6lErY3zg6e/oA6zCHgGzwm/AMY/vt806jGlynO9KjxZj8GbJio9l0IZ
-	 SuKsl11pV10acnhvOsceCSWI0uwJKdo3ZWPM2zYY=
-X-QQ-mid: bizesmtp23t1744368979t8c6ba75
-X-QQ-Originating-IP: hyEvcGxRx4R8ga2tMqHGxAY7PKJA9kC//8bMj+yDfx8=
+	b=Li71ddM9aKP19uf1AwXGV5CCCAY5+C4xKJc2WxtHcRyRWsmvw0H9XE6Osd9a5cWt1
+	 Q+cHArAWkaTnjnbuk23RZtdQ+U9gDbVdDAd0zhjXkAu62jNxbjGYmAcFRI6HiHXlgv
+	 x/6OWjkXt6IyIWqmSINvdCdUCWGtM8x2TSYBxY5Y=
+X-QQ-mid: bizesmtp23t1744368946t15cf48c
+X-QQ-Originating-IP: ehBLQkOhan5VWsz5Lv+65mc8nv4szt2NCntTi+SKFNY=
 Received: from localhost.localdomain ( [113.57.152.160])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 11 Apr 2025 18:56:12 +0800 (CST)
+	id ; Fri, 11 Apr 2025 18:55:40 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 5292152857670839937
-EX-QQ-RecipientCnt: 14
+X-BIZMAIL-ID: 15212760454377048684
+EX-QQ-RecipientCnt: 10
 From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
+To: Yishai Hadas <yishaih@nvidia.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>
 Cc: Winston Wen <wentao@uniontech.com>,
-	Changbin Du <changbin.du@gmail.com>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
 	Chen Linxuan <chenlinxuan@uniontech.com>,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [RFC PATCH 7/7] lib/Kconfig.debug: introduce CONFIG_NO_AUTO_INLINE
-Date: Fri, 11 Apr 2025 18:54:55 +0800
-Message-ID: <69F64A6F8DE504F5+20250411105459.90782-7-chenlinxuan@uniontech.com>
+	kvm@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 3/7] vfio/virtio: add __always_inline for virtiovf_get_device_config_size
+Date: Fri, 11 Apr 2025 18:54:51 +0800
+Message-ID: <27A329AA0DBF4A2B+20250411105459.90782-3-chenlinxuan@uniontech.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250411105459.90782-1-chenlinxuan@uniontech.com>
 References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
@@ -63,110 +59,88 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: NiOJPUCsZYq4TCDbJhMvCuVKIoJm4Z9GKFmnE8rt2zBpACbE8RjswT02
-	xTWnEogZIVT23Qc+qBIt2YChmdJwAXd70ZVCgSu1h1ZyyKoASpYiG1P1S8oFRgFklCSgCkT
-	JvTkd5Jn4xxskZf1oFAJu3hmQCFMNcnbV12x1cwwNFNJhMKq1c4bz2HJabB7niBZokXI7/o
-	hCxPjR+x1a2y121s4gV0wNa9j6OtJsFzn8hemEYA1ucazgKZx7GTGqpvKszOYsYThLPyc72
-	A2BVD/YQ7xmJHUDPQkYQ+rZR8IX6un9uL3qJg0pcKVYAZhDYhyGPA7O9SI1t73SkFf5IGSB
-	G77aCV5quGOuzHHUCz4CLoMqjwMidVzpGOPGg6eaPHcoGhOsW5jfKrnMqoPpLF+qCDoiESf
-	Un19anxbVUOCntpc70C8OLNW0anZbXTvVXD/hN8a0ToywJ3G3sheRYZLZUVWMX6DOO6qnPL
-	ldD/0ZgFFHmSTFfpLY8GFDpWaD0jyMx6+Mpvt4bR194D9kJfPBD+1PWw4QMw1DyKuxY0X+h
-	dPggqIIpR61Z5T73sfMStXGs4BC/SSkTfUGe9EUZFiBJpjsPdPGENIrOia3bJrbFKmODLsQ
-	Qw5duusCRnhci40xodv1Qt/pjuatfs20LzlV6sS42Zk/Zt/aOjQS8vL1mdgPhJYN6ge/Si6
-	OeoL6XsjtvVA+y2JXP2Acmpec3FlS5nRFBtQOr6Tq8u8ADL4MEbb4B9gPhul/Or2zV8TxyA
-	bddhGr+zU6aB4Aa52M3qwn7jZ5NoFGt2q9ZlMSaQCHHN4mfELDUR9OZLgeTWg5XS4YT9Sl+
-	ZiRfsmdigU7hUtf1TTx8lMG5wGnJL+ucPSERFtp5Br3m89hVPzwhIoxTtjtqvkzvQBx6AdV
-	R5Oh2zMmDV5N+jG07q0RSW7qeJTwUUEZ91KeiLAKocLUvqe9KhZOGx8ZTQmrIJy4YPZohg/
-	5mxGOSG/SwQZWplkJzjs3uf1ag1s7+jLm5qPrgYxxaVE9WBpGPP/VVJG2rjxU4i0zH3okUZ
-	iaFaXc9hFqf3fgSMeB
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-XMAILINFO: M9OL2U7tWoeKVuKD663Z/dXV0DPNz+cv8UHITxKw6UV4gDMi1R6n144D
+	VyEBO1HNO1H0nRZPVeaIWwSvVNTRU4mcBYQes+2PuLcRM2CjzlKop4GtSvu1WilzEM4yUj+
+	5CHd91FYjlEFkxehBLmqfGxeIaSRf2Rj5++coAqFI0H63wnIhOI+jjyeg3SQAmnHxEZPGZt
+	CASF7CR/k2DlUgHRPJzmaf+WDVLiixHnEb7CDqevNbPOakp7RqjQEOqGlWibZXEF5b8icCY
+	BhZoNuv2t8GzJal4jA7WsULRVOmR0E2iRjPvgJN1z2rkNy/7JKERScAlehnmKewr0DTa2v5
+	36YuhBGVyAUVH6ja/I1c2wvl9/Lnzn3Xd+Fkh9EEKPEAnyV6pud8ZUG6ciq2F3ZvA4VynZT
+	w8S4lgzOa1bR3AXqwuSlnA+EFz1rLasBiHgfCaaKREGIV6b0A7jHqMZ0b2rSxHBiEdWAr/O
+	qUvKty7rhugcHHNwP9CmbYk93hdVpArIg3C52cVSp1CTfckIRLrZet2BDhBzarfmpewkaji
+	JNxhMByv3o+RT4NIZ2w3dQWJ/EjhiYS8OoRBNIKbfjWsIQ76N2lh7VTJNErG0V0wZK+6ldd
+	k3DAGh0hkwG8KRL9CbKYewMaYONYFuQp6quRsScnntHC9IK9JiyBVb5YMGgi6weD33vsKtn
+	0jc/Zf1FamqyWgquiaxKFkLRCgfH+ko+sTmoLXW+5a3bA0NnIjHe3GdV7cZSW7h2TO4rZ/0
+	5QKZ9va7M8lp4ntYQlvy83mCG1zMn/Vkl9MtUKrt67VsJjhnRvZYQcejDHySgh90ov9l8ZE
+	6tG/jyQbKRmjBuZJeTYcD4HmG+eN5xBv86Sr/OYgi+IEHHVjxWC2wyLSkZeu8/J5cga+WuC
+	j+7HkqMPkx7eZFwILQget+E11gB1a/+jGSzum5uswPCD/ULiWF77RSzQpDqVS3/7PLyhy8T
+	/WK+0OVJyVaCPrKNAcoXcFsQT1lyCMx8SclU1308jXohNYqmnuikpeNljgaOfzvp/Hyk+m2
+	RrfqqDx0+6dxSj98nhVgN99vZRLzVJZvarXrMWMw==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
 X-QQ-RECHKSPAM: 0
 
 From: Winston Wen <wentao@uniontech.com>
 
-Add a new kernel hacking option CONFIG_NO_AUTO_INLINE that prevents the
-compiler from auto-inlining functions not explicitly marked with the
-'inline' keyword.
+On x86_64 with gcc version 13.3.0, I compile
+drivers/vfio/pci/virtio/legacy_io.c with:
 
-This enhancement improves function tracer capabilities as it can only
-trace functions that haven't been inlined by the compiler.
+  make defconfig
+  ./scripts/kconfig/merge_config.sh .config <(
+    echo CONFIG_VFIO=m
+    echo CONFIG_VIRTIO_PCI=y
+    echo CONFIG_VIRTIO_PCI_LIB_LEGACY=y
+    echo CONFIG_VIRTIO_VFIO_PCI=m
+    echo CONFIG_VIRTIO_VFIO_PCI_ADMIN_LEGACY=y
+  )
+  make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once" \
+    drivers/vfio/pci/virtio/legacy_io.o
 
-Previous discussions:
-Link: https://lore.kernel.org/all/20181028130945.23581-3-changbin.du@gmail.com/
+Then I get a compile error:
 
-This patch is modified from 917fad29febd ("kernel hacking: add a config
-option to disable compiler auto-inlining") which can be founded in
-linux-next-history:
-Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next-history.git/commit/?id=917fad29febd
+    CALL    scripts/checksyscalls.sh
+    DESCEND objtool
+    INSTALL libsubcmd_headers
+    CC      drivers/vfio/pci/virtio/legacy_io.o
+  In file included from <command-line>:
+  drivers/vfio/pci/virtio/legacy_io.c: In function 'virtiovf_init_legacy_io':
+  ././include/linux/compiler_types.h:557:45: error: call to '__compiletime_assert_889' declared with attribute error: BUILD_BUG_ON failed: !is_power_of_2(virtvdev->bar0_virtual_buf_size)
+    557 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+        |                                             ^
+  ././include/linux/compiler_types.h:538:25: note: in definition of macro '__compiletime_assert'
+    538 |                         prefix ## suffix();                             \
+        |                         ^~~~~~
+  ././include/linux/compiler_types.h:557:9: note: in expansion of macro '_compiletime_assert'
+    557 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+        |         ^~~~~~~~~~~~~~~~~~~
+  ./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+        |                                     ^~~~~~~~~~~~~~~~~~
+  ./include/linux/build_bug.h:50:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+     50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+        |         ^~~~~~~~~~~~~~~~
+  drivers/vfio/pci/virtio/legacy_io.c:401:9: note: in expansion of macro 'BUILD_BUG_ON'
+    401 |         BUILD_BUG_ON(!is_power_of_2(virtvdev->bar0_virtual_buf_size));
+        |         ^~~~~~~~~~~~
 
-Unlike the original implementation, this patch:
-
-1. Make it depends on CC_IS_GCC,
-   as Clang 18.1.3 break test_bitmap_const_eval() in lib/test_bitmap.c
-
-2. Make it depends on X86_64,
-   as I haven't test other architectures
-
-3. Removes unnecessary cc-option checks per 7d73c3e9c514 ("Makefile:
-   remove stale cc-option checks").
-
-4. Update help information.
-
-Cc: Changbin Du <changbin.du@gmail.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Winston Wen <wentao@uniontech.com>
 Co-Developed-by: Chen Linxuan <chenlinxuan@uniontech.com>
 Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
 ---
- Makefile          |  6 ++++++
- lib/Kconfig.debug | 15 +++++++++++++++
- 2 files changed, 21 insertions(+)
+ drivers/vfio/pci/virtio/legacy_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index f42418556507..0a9bf33ce75f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1071,6 +1071,12 @@ endif
- # Ensure compilers do not transform certain loops into calls to wcslen()
- KBUILD_CFLAGS += -fno-builtin-wcslen
+diff --git a/drivers/vfio/pci/virtio/legacy_io.c b/drivers/vfio/pci/virtio/legacy_io.c
+index 832af5ba267c..b6871d50b9f9 100644
+--- a/drivers/vfio/pci/virtio/legacy_io.c
++++ b/drivers/vfio/pci/virtio/legacy_io.c
+@@ -350,7 +350,7 @@ int virtiovf_open_legacy_io(struct virtiovf_pci_core_device *virtvdev)
+ 	return virtiovf_set_notify_addr(virtvdev);
+ }
  
-+ifdef CONFIG_NO_AUTO_INLINE
-+KBUILD_CFLAGS   += -fno-inline-functions \
-+		   -fno-inline-small-functions \
-+		   -fno-inline-functions-called-once
-+endif
-+
- # change __FILE__ to the relative path to the source directory
- ifdef building_out_of_srctree
- KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9fe4d8dfe578..2ebb4802886a 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -436,8 +436,23 @@ config GDB_SCRIPTS
- 	  instance. See Documentation/process/debugging/gdb-kernel-debugging.rst
- 	  for further details.
- 
-+
- endif # DEBUG_INFO
- 
-+config NO_AUTO_INLINE
-+	bool "Disable compiler auto-inline optimizations (EXPERIMENTAL)"
-+	default n
-+	depends on CC_IS_GCC && (X86 || LOONGARCH)
-+	help
-+	  This will prevent the compiler from optimizing the kernel by
-+	  auto-inlining functions not marked with the inline keyword.
-+	  With this option, only functions explicitly marked with
-+	  "inline" will be inlined. This will allow the function tracer
-+	  to trace more functions because it only traces functions that
-+	  the compiler has not inlined.
-+
-+	  If unsure, select N.
-+
- config FRAME_WARN
- 	int "Warn for stack frames larger than"
- 	range 0 8192
+-static int virtiovf_get_device_config_size(unsigned short device)
++static __always_inline int virtiovf_get_device_config_size(unsigned short device)
+ {
+ 	/* Network card */
+ 	return offsetofend(struct virtio_net_config, status);
 -- 
 2.48.1
 
