@@ -1,567 +1,289 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E946DDC3;
-	Fri, 11 Apr 2025 13:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377086; cv=none; b=P9XnoYoXhoO7K3enuglSzlfVUb7Mb3ujjLT82F6dGxcV8mZE/hKFEvlRqjWZqjym6SFaxscMJSPl4cCv034azGjoPsafCO7HgSeafW0NE29Y8q7ERgjY3WtLkZI8xUXN4VYgz54mA9I51kJ9cwIqvMMIIeaGjYJW4p0CeU4cw5I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377086; c=relaxed/simple;
-	bh=zZKgJMja8KLTG4PHtuZartZzVEbQ7KWEvwiBwjx0mS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czBtGjtQOBLOWmJrx34ceTbGSP7hHx56vQ5sfCaynHm70+fxTtlVIt/1HJLp+dAThv9YxMmdPRLDKB8j1h0Bmzf2c5mPBfXU/vbtYREEm6KRLRpe8Xd0YCx1ODOqo728V2zRNl7gKK6DqpgtCXEeCvaEpYc2hoJzYKMExCRKd1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EfolVmcg; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1215835946
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744377099; cv=fail; b=c14BDO6oN4loGnGvFRPEhg8ZLjDhvuCEvVxMLTbryWWkDU7F270qf/NOWSRJXPEfbWco+y+mW7xWsQxLJ1Vcsn6ZdwKSPUtHcx1ZrwQS7juZNKo5X3XwfMagw7PiRnNVRh5WqIWD1QHJnSMbSAWLT5NGzVbxDMpVQJcNA8Yne3Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744377099; c=relaxed/simple;
+	bh=RyPKq301bE/K41osCvx2o36/wTz/SpQY6e1DlaRnGbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kc4wvR1gdHeoS3EnovnfkyhvrD+Gv0G40xiJ7VmSRsOA0VdytKL027CH78BRILaUx3a6SUKjcO6j1EuVz5rYPILFTwnyeEi2xV5o07r5DJ9xny5FU7CcLvaSNLvqwVusvk5JTCEq0i3ycRNnyJgw/o1tFijZTc50FCTBa7Ek4R0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YICYJP4a; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=MGpAqeIl; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EfolVmcg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=5vXVVyNwcqy/Pc/YHwZ4BPhYrvVFa7Iehsyl43qYaIo=;
-	b=EfolVmcg2OlRLDOVa6SeaC97kpX41Jwr64ilrWSgtBTnB5ibZdljN7D7PF5sQf
-	n3q4IYCANQL3EblNGTKQaX50Y2axQOQBa1IkPZQ7YoXDVyimVaum6lYwWfuSCFPP
-	b5a9AbsfYaxWN74PDztJWuYxv//ySfcZBYyVku5KAPde0=
-Received: from iZj6c3ewsy61ybpk7hrb16Z (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wCXb3yhFPlnG0PsFg--.20613S2;
-	Fri, 11 Apr 2025 21:09:55 +0800 (CST)
-Date: Fri, 11 Apr 2025 21:09:53 +0800
-From: Jiayuan Chen <mrpre@163.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>
-Subject: Re: [PATCH bpf-next v2 5/9] selftests/bpf: Add selftest for
- sockmap/hashmap redirection
-Message-ID: <fnsy7wey4vaewoyur5363w2q2nb7dvljmaroijflgq2hfqbumo@gqdged7tly47>
-References: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
- <20250411-selftests-sockmap-redir-v2-5-5f9b018d6704@rbox.co>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YICYJP4a";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="MGpAqeIl"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BD8obK025747;
+	Fri, 11 Apr 2025 13:10:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=ehc9YDAdeEMp06U3+D
+	7RXfCqZBtL//msjCqN2DGOOfI=; b=YICYJP4aBQje1UKwpdaA2vr6xWQm0edySR
+	qaBVi2PkBr6hqWwtm3gSBLGHc0CvsBECuFcIHu3T2wvw0m1l0b85tnQlP+1foL0h
+	3A1DXBeRThe93oOa+d6BjFaSKf4RM1avwzTkfHmH4DGxqWC8QlO+q5sS8enSFAsF
+	tHrq8VpX6uaVwYdrxdtbRzVnSnt9LRYX9RcGSpx1kAe3xMZphx0DU/a4wAwDVvg2
+	Of+EVP93PX0nTpJ/1UELnlQqG3MEutEHlI2ntb6LaFdV0E68/UGyxX7eLGBVZGW8
+	5PYB8xVqALDZgEPn/yDEL+J1O/uB7JEHg1cWrBGv0CFTzqi90pdw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45y3hjg128-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 13:10:54 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53BCHVuw013772;
+	Fri, 11 Apr 2025 13:10:52 GMT
+Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazlp17012032.outbound.protection.outlook.com [40.93.1.32])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttym1ckn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 13:10:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Dnq6G/xbfbrnIVjWsEYp/O07X36VtAxCCpmZGB73fABcnxyLNIszTfrg2Q4BaTWCgaNxL3vzgunSbYuZ7F2Aax54wXGKc+DE97785VnO4A3RbDnCLB4LCnAXJQ1nAZZABD0GPH8Jo+8NWZ2P9HyZX0+yUfvQLiYhFsMKvVy4UjQ6zA0WyT/UGmMnjvB+gZcl9A+Z9uFM2dlHKB68BcwxxwEfuhR18DpS8Sqh6yL5oPqAmj8gtZxTCQzswQ31jS4FbdLajpGwRtiwW3CJiT3ZZVIRRpDyAa2z+KKOOlTDAIp6xDLAsWxC76HQWohPEkln92h4dZoaE/MBKI1lQa5slQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ehc9YDAdeEMp06U3+D7RXfCqZBtL//msjCqN2DGOOfI=;
+ b=m2GRaLgYiwQsLrQGEYXmOFxxVSKR4P5QgdHJCt8yfhmwg5Denm7Xv7PsO3H7s68rpukOcS/KynJ5b4EIwaCrw5eWTo/dHRNfd/yOzFOYIYTuhlMDp/CTKnLa1zq6kjf1TpLmdE6R88DW+DxY0w85A9ULeIZoXKHfbYk0MQxZkeqYAtue3wgyLB7Ko4/98qxh6JvreMz8OFL8GEFIj1agN+OGpMeGlcdVUSia97g1KAJhB8KeAu2bmi2I89tv/18xnnquJZRT4MheM39MThb2G9Yi/lT+/CGF7MzGquEI1hXM0hzadt0E3zU71PsUC0U6PV3uVXp5aDkrS9XLdO8Ezg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ehc9YDAdeEMp06U3+D7RXfCqZBtL//msjCqN2DGOOfI=;
+ b=MGpAqeIl8gqIx8PcWdVRRgCAD0BdgFWracgjwo9re9wQkzmj4x7475WAIbpmq55KWq92exvbInho+xSae52pRd/ANbJRhXekuxYnS5tpbvcsRf/GHcrz9xKtqX/14knEqmbJHlZujX6OKN3hvDZv4DniP3J3VpjVaHHw4CktAeg=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by DM3PPF2E1953992.namprd10.prod.outlook.com (2603:10b6:f:fc00::c15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.24; Fri, 11 Apr
+ 2025 13:10:50 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%4]) with mapi id 15.20.8632.017; Fri, 11 Apr 2025
+ 13:10:50 +0000
+Date: Fri, 11 Apr 2025 14:10:47 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R.Howlett" <howlett@gmail.com>,
+        David Hildenbrand <david@redhat.com>, Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeel.butt@linux.dev>,
+        Vlastimil Babka <vbabka@suse.cz>, kernel-team@meta.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 4/4] mm/madvise: batch tlb flushes for
+ MADV_DONTNEED[_LOCKED]
+Message-ID: <ead4dd45-449f-4362-81d7-a25e634a4c5f@lucifer.local>
+References: <20250410000022.1901-1-sj@kernel.org>
+ <20250410000022.1901-5-sj@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410000022.1901-5-sj@kernel.org>
+X-ClientProxiedBy: LO4P265CA0174.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:312::19) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250411-selftests-sockmap-redir-v2-5-5f9b018d6704@rbox.co>
-X-CM-TRANSID:_____wCXb3yhFPlnG0PsFg--.20613S2
-X-Coremail-Antispam: 1Uf129KBjvAXoW3tw48Xw1xKFyxuw1DXr4ruFg_yoW8Xr1UXo
-	Z3GFnakr4fGrnrArWrW3s7Zw4F9a18Jay5Ja98XrW5XFnFvay5ur4DGws7XFyxur4SqF4D
-	JayIvr48Ga1Dt3yfn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUFID7DUUUU
-X-CM-SenderInfo: xpus2vi6rwjhhfrp/xtbBDwwsp2f5DjHk6AAAsl
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM3PPF2E1953992:EE_
+X-MS-Office365-Filtering-Correlation-Id: 445b2d3d-1f54-4c56-7784-08dd78fa47f1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?l8gny01rze1ZdOFlWppj0lV6pjZ8CEEOicShrGWSFyDLX6FOUIfraiVqoaXM?=
+ =?us-ascii?Q?/cIEwYvQ2dLQ6zX+9hypeKYmFUfE3oMgWAeGINsrrxN410r0h7q06sWGIcZa?=
+ =?us-ascii?Q?M0GmncVZ9/qbl+jAazmxpEWZk8rf04ivEz5GvfEByANa4cV46+J84sgMvR2y?=
+ =?us-ascii?Q?sD/M9QUZZY/Ag3r7oKb3Hq3gejgpui2XnJTgfQzijZfHRElFNDdcCv1S6lbo?=
+ =?us-ascii?Q?UWnWCAgIgXreAQwMZ6cUsVoJjvCEBLfgOF1enKp7tuU4i3+PFpS+QQgXzYKr?=
+ =?us-ascii?Q?IgncjoATaKdDpupKCXnA5dbOikt1Xd2L+gIXhA2r8OwhHD4Q+w4JZKRNxCb+?=
+ =?us-ascii?Q?zcjzbpQrlV57FuS3qEkg8AiiJ/2yu/RKl4vw4txOdXjs3iG05x8Q/JiyuafY?=
+ =?us-ascii?Q?fxqHxF8ZiodKVqYLrJ4yqUbPHDJ2aUsnSLNcRDg9KG7FKhRTupwWlv+ek1YW?=
+ =?us-ascii?Q?Ydtpy6EJHGZwR7c+8fEt/eIhYJ/RfOZ0/+D9/bSnfxrchirvpuuXXjUuSVdP?=
+ =?us-ascii?Q?PCUTBIVQPkjIk5nkmTID0DriMG/kCSsNfu0mJqkLPPHohObopDU96pterYeN?=
+ =?us-ascii?Q?5dAbgCKNmLnW970vOrIyH6m5Xzf9nd+hhCPyD6D6SeF/uKbqjdWCYDFnvOYd?=
+ =?us-ascii?Q?dwlQvQRjNfVkj0MTb5XpBtg0JZuU6lg4HpAyMUleMilwf0WDuv9RdJZYCvLY?=
+ =?us-ascii?Q?JWAagcc9vrVdgrxH/S76A1NPWA7v9Y8l1RBuAMmM9ab/zRIzpEGr+nc2y3Ua?=
+ =?us-ascii?Q?V4QsBERW/QsMOfl4/cTUDxS94fJANVfZtFLs4fXtd4oCXoXl/0lghd4mFdMu?=
+ =?us-ascii?Q?HrGc4jX1EAg7+UrXhRIfJIJxPxlIx5BXk1hmDGl3u6l8SoFn4IZmX5v/4mhs?=
+ =?us-ascii?Q?IkvieZ/TV1/oZHkjWt3EULmntvJK4R67aKFkbuJgsLctpGKiuoWgG8zhwg1X?=
+ =?us-ascii?Q?9r6l7qnoVexS+y4oNbtgr59HfOXu2PfHDs0/S8s0kuGhenMlOvUqu0WSnxYg?=
+ =?us-ascii?Q?9qbCUv9Ju1U6Eojd8BuJeP47vU++RRc0nmU2EtkQRd9ua8erDDEog8FJnCT5?=
+ =?us-ascii?Q?HOcpj0UaM0ajc2Gdl3AoB2M8pnZmeTqQh8zYILyOerLyX/CMpKH1wx2iudvv?=
+ =?us-ascii?Q?HzitOAE6SNJJ7WD0XKIpE9UodH8Zntpe3dkpKtzRCBY0dyS1PtGgbyn+beJy?=
+ =?us-ascii?Q?ppr1hwixfzblpQTp4g9AKY2kpybyOwV7Gk2jLeY/Slns2hJ7CBVz4Tj4KaAZ?=
+ =?us-ascii?Q?cd6rMRmzD7gOYCnQ2ONS9znYPCXt+vj+AMsqZHoHNJRzBQ4UUjyQnaj5dBot?=
+ =?us-ascii?Q?wuZyMADuuOXGg90cc4pt2qu/rEcLwExJrGVDlHPR6ZkfcqxGKvBSsb3S6erB?=
+ =?us-ascii?Q?bFJX2cu1TLs9hqxTU3jz97QP1Sl5UOr75uW8AnP3J++SXA4Cklb5sbZmK7lX?=
+ =?us-ascii?Q?tizkxo4+XPg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8IK47G0yse7V3AfPdlzPI5/HSMMwgqZiZNnCK4xG+dnUnL3BCCQhXCdhS9gh?=
+ =?us-ascii?Q?1WLB2ezIy8QsylV8DoUeBiYGbAvchoWFkPNBiuUIa0IGclk5HXOeJQO5UG6B?=
+ =?us-ascii?Q?Cp0r1ZRDR949EBhiIsz6mSl4xdam602DRKwd+DkOEbJMKWNazNzwF5dBjfnX?=
+ =?us-ascii?Q?nxx1MDu/xDSeWo/mua4JSWuOPOFlNf/vqqJmyKQT847CDx+FJTiZmm3qMlSr?=
+ =?us-ascii?Q?nLXt+KvivxCA6RhLsyc9pxCU4a1nlnsJNw7NAarLRqUIcB63dLCfFw0REHm4?=
+ =?us-ascii?Q?RzrBH2S26uBM4OdpM8s1bLTwGXz/XQn5zJOn4En4nZtD28JQUgpJriqZZKs+?=
+ =?us-ascii?Q?rwAvqHwwhjkovAQJk+XVklmOfdv3mMpZ6IVWhSu0W0rC338BeBQ2cjXraVSw?=
+ =?us-ascii?Q?N81IkrUo+MAATwf4yXNpoqJvPN0v+oUIGyBjD0LX/0HWgLUU1rXiAes2dmvW?=
+ =?us-ascii?Q?KKQRJEkpRq31cSpX43yPEB0U0ZI9KVPwRU8haF4x9Ba609SGuT7/bEAAsEid?=
+ =?us-ascii?Q?VR9g46fTnRpdGjhpH4RBhjRhsWPNlhYYJ60nJ6a2LC/Any++Cfxy8Hd/TNFP?=
+ =?us-ascii?Q?z03qG0FMV0uqbRL6psHGWmtFEhqd3Rj9WxkLpiW3UsMAxzQwR8AZ0peYlHjV?=
+ =?us-ascii?Q?ZSZyo7BCsKyA7T61uuJTHtg1SLxOOk8GNarrJQRqxFNdthP5g0EFKx+U0k3N?=
+ =?us-ascii?Q?qy72LhpBngG6JV/1youGKuWONzJH4IUFwsWtJZWYvARMRyndrqM5PF+csQv2?=
+ =?us-ascii?Q?ffSzvGvL63WGPbsPYyhnq6nDMJQlhiGQFOzU2jSRZXR3wRG8hJJVL+lJCSnM?=
+ =?us-ascii?Q?7dZZcHzuTqC+rmcLOwN8wIksvVYpwzngZSaW6i/qpJZxqDYH/lAgL0gYYKf2?=
+ =?us-ascii?Q?Bjs+Dz1/ITU5jhVfc4vCnYaL7nS6UJt/J6SvLukeRmfE45TYy+sZbIkhORTH?=
+ =?us-ascii?Q?9OfZgoPUH04x62mLtV5Xs2Sly5WmvsC9glpTyaHjxmMU2TrgkaLPQGbMQAEd?=
+ =?us-ascii?Q?YqZk9nccCFVfCgMYmOUFTh1CDQ+lOSn1rU8PcCKwmxCCltluZM/tWpB4/Lxm?=
+ =?us-ascii?Q?1UDadzWjRrmVecnAZ0k0TwwLaOef7v21X97wzdmwjJi2WeCf4OTv4pftT4bb?=
+ =?us-ascii?Q?0WOTpX8IOKgoLr52bMscKMSzG6aLHeokmB53XNBxODCT/HLmvaDGSdYD6L2f?=
+ =?us-ascii?Q?b9ewxFIKfxTW9DZZNFCX8V3/CpttV2wtBWQIYh/mtFlB5BYAB49Yhn32Ors5?=
+ =?us-ascii?Q?MSCBsy5Rkz9NhSYtfK+YwRxm89bgei9oZLZvMkhDczs6Y5jjRtEikuLi7+gG?=
+ =?us-ascii?Q?hw5LM64/bWeq0uUw7ojaYBQhO8Wtmj9mMDbYVVZHheXGPFmh3r5OuDGgZ+UC?=
+ =?us-ascii?Q?YPAQFa61MCmNEHX51lAYQI6GvK0tcEpHByneke2twxQnNiELm5buZO7Xcz4B?=
+ =?us-ascii?Q?UIcPluXm1spnDblwiq7x3wf6XECDaguOHe+EOvcKA8JRDThmV/lAHPevRGiY?=
+ =?us-ascii?Q?leHx6qakf7FxF9uSCCis/MbXf9bYyjjQXFwP0VP6N5HL4N0h80hl0qD8gTci?=
+ =?us-ascii?Q?+uxtRvOXPqCXR1y302uF7SwN/1/jtgN0IXIt/rBdnAuDnLDnv4ew7U15kW/J?=
+ =?us-ascii?Q?1g=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	US7JpXp2zQj+vcKoff9YUaTfq0oA0/rl+p3ASVPw66YDpD5RUvKu0lHlGVOO+BMB+n+T8S3Xp4PMyV09OZapq3BYp2iuTALglwkYpe87kCKXW4L9Y/rKds8cDep/ZPU7K26YFo4L2dF7mUnwpEG2vHaroeYLHPMjgn0Os1Sjw+5+jG4dopj9GBvxXnHsgi5OinU4RslnZzsCzOHSwASNSohvAgQJRMa2Bs+1bjRcDJqBjjFfWchDCl5ow+6WcHGH8JyizN80W8c+9fqENJPmnj4YxP/aNTCd4L7oBkFL7pyIJpyfgYUaOEKofDw0FFRgdZxCovQ7MLSM0XmquTevbJ81IKGrkUTchMgREqOjghGzqGB7n0XPhO55cBeGgG4AqCVrgpubrFce5jmakRGvx+aLlpRzLiX+WbV+hEI1uCLRstOKI0fIZWOpNOyGNzeRkxUB0rBqoFaAKBAbj4G1KrtgIqBfcT4PnKnhGi251r/JPwFGHFLnvt7sMx4wGipePDFN5x1UWbJBRZLoNuXxHqpvnC9OIHqehqN2bXfYVlutMzsI6cYXzwaJEv5iC083u/+axciijnYKJ6VyZJfxy1BnwKk7QnzXn5j+pCn94P0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 445b2d3d-1f54-4c56-7784-08dd78fa47f1
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 13:10:50.1744
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: q85+aSdwOfVSGT5tf8AHMwga6DMxsiybYMZTCuHXhv4QHH8hDy+ScnSsnzq4ALVh8r1z19HLI8RWlNK7W89lEd2MM0RAS1rbJVq+6/1WCxs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF2E1953992
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504110083
+X-Proofpoint-ORIG-GUID: 5GkUPIG6bgBNmzaTG-yEUmVZF70_dNKM
+X-Proofpoint-GUID: 5GkUPIG6bgBNmzaTG-yEUmVZF70_dNKM
 
-On Fri, Apr 11, 2025 at 01:32:41PM +0200, Michal Luczaj wrote:
-> Test redirection logic. All supported and unsupported redirect combinations
-> are tested for success and failure respectively.
-> 
-> BPF_MAP_TYPE_SOCKMAP
-> BPF_MAP_TYPE_SOCKHASH
-> 	x
-> sk_msg-to-egress
-> sk_msg-to-ingress
-> sk_skb-to-egress
-> sk_skb-to-ingress
+On Wed, Apr 09, 2025 at 05:00:22PM -0700, SeongJae Park wrote:
+> MADV_DONTNEED[_LOCKED] handling for [process_]madvise() flushes tlb for
+> each vma of each address range.  Update the logic to do tlb flushes in a
+> batched way.  Initialize an mmu_gather object from do_madvise() and
+> vector_madvise(), which are the entry level functions for
+> [process_]madvise(), respectively.  And pass those objects to the
+> function for per-vma work, via madvise_behavior struct.  Make the
+> per-vma logic not flushes tlb on their own but just saves the tlb
+> entries to the received mmu_gather object.  For this internal logic
+> change, make zap_page_range_single_batched() non-static and use it
+> directly from madvise_dontneed_single_vma().  Finally, the entry level
+> functions flush the tlb entries that gathered for the entire user
+> request, at once.
+>
+> Signed-off-by: SeongJae Park <sj@kernel.org>
 
-Could we also add test cases for SK_PASS (and even SK_DROP)?
-Previously, we encountered deadlocks and incorrect sequence issues when
-the program returned SK_PASS, so explicit testing for these cases would
-be helpful.
+Thanks, as usual always a pleasure to review your series :) Cheers for
+these changes!
 
-If implemented, this test would fully exercise all code paths and
-demonstrate a complete example that covers every aspect of
-sockmap's packet steering and connection management capabilities.
-> 	x
-> AF_INET, SOCK_STREAM
-> AF_INET6, SOCK_STREAM
-> AF_INET, SOCK_DGRAM
-> AF_INET6, SOCK_DGRAM
-> AF_UNIX, SOCK_STREAM
-> AF_UNIX, SOCK_DGRAM
-> AF_VSOCK, SOCK_STREAM
-> AF_VSOCK, SOCK_SEQPACKET
-> 
-> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
 > ---
->  .../selftests/bpf/prog_tests/sockmap_redir.c       | 461 +++++++++++++++++++++
->  1 file changed, 461 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_redir.c b/tools/testing/selftests/bpf/prog_tests/sockmap_redir.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..df550759c7e50d248322be3655b02b3a21267b4a
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/prog_tests/sockmap_redir.c
-> @@ -0,0 +1,461 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Test for sockmap/sockhash redirection.
-> + *
-> + * BPF_MAP_TYPE_SOCKMAP
-> + * BPF_MAP_TYPE_SOCKHASH
-> + *	x
-> + * sk_msg-to-egress
-> + * sk_msg-to-ingress
-> + * sk_skb-to-egress
-> + * sk_skb-to-ingress
-> + *	x
-> + * AF_INET, SOCK_STREAM
-> + * AF_INET6, SOCK_STREAM
-> + * AF_INET, SOCK_DGRAM
-> + * AF_INET6, SOCK_DGRAM
-> + * AF_UNIX, SOCK_STREAM
-> + * AF_UNIX, SOCK_DGRAM
-> + * AF_VSOCK, SOCK_STREAM
-> + * AF_VSOCK, SOCK_SEQPACKET
-> + */
-> +
-> +#include <errno.h>
-> +#include <error.h>
-> +#include <sched.h>
-> +#include <stdio.h>
-> +#include <unistd.h>
-> +
-> +#include <netinet/in.h>
-> +#include <sys/socket.h>
-> +#include <sys/types.h>
-> +#include <sys/un.h>
-> +#include <linux/string.h>
-> +#include <linux/vm_sockets.h>
-> +
-> +#include <bpf/bpf.h>
-> +#include <bpf/libbpf.h>
-> +
-> +#include "linux/const.h"
-> +#include "test_progs.h"
-> +#include "sockmap_helpers.h"
-> +#include "test_sockmap_listen.skel.h"
-> +
-> +/* The meaning of SUPPORTED is "will redirect packet as expected".
-> + */
-> +#define SUPPORTED		_BITUL(0)
-> +
-> +/* Note on sk_skb-to-ingress ->af_vsock:
-> + *
-> + * Peer socket may receive the packet some time after the return from sendmsg().
-> + * In a typical usage scenario, recvmsg() will block until the redirected packet
-> + * appears in the destination queue, or timeout if the packet was dropped. By
-> + * that point, the verdict map has already been updated to reflect what has
-> + * happened.
-> + *
-> + * But sk_skb-to-ingress/af_vsock is an unsupported combination, so no recvmsg()
-> + * takes place. Which means we may race the execution of the verdict logic and
-> + * read map_verd before it has been updated, i.e. we might observe
-> + * map_verd[SK_DROP]=0 instead of map_verd[SK_DROP]=1.
-> + *
-> + * This confuses the selftest logic: if there was no packet dropped, where's the
-> + * packet? So here's a heuristic: on map_verd[SK_DROP]=map_verd[SK_PASS]=0
-> + * (which implies the verdict program has not been ran) just re-read the verdict
-> + * map again.
-> + */
-> +#define UNSUPPORTED_RACY_VERD	_BITUL(1)
-> +
-> +enum prog_type {
-> +	SK_MSG_EGRESS,
-> +	SK_MSG_INGRESS,
-> +	SK_SKB_EGRESS,
-> +	SK_SKB_INGRESS,
-> +};
-> +
-> +enum {
-> +	SEND_INNER = 0,
-> +	SEND_OUTER,
-> +};
-> +
-> +enum {
-> +	RECV_INNER = 0,
-> +	RECV_OUTER,
-> +};
-> +
-> +struct maps {
-> +	int in;
-> +	int out;
-> +	int verd;
-> +};
-> +
-> +struct combo_spec {
-> +	enum prog_type prog_type;
-> +	const char *in, *out;
-> +};
-> +
-> +struct redir_spec {
-> +	const char *name;
-> +	int idx_send;
-> +	int idx_recv;
-> +	enum prog_type prog_type;
-> +};
-> +
-> +struct socket_spec {
-> +	int family;
-> +	int sotype;
-> +	int send_flags;
-> +	int in[2];
-> +	int out[2];
-> +};
-> +
-> +static int socket_spec_pairs(struct socket_spec *s)
-> +{
-> +	return create_socket_pairs(s->family, s->sotype,
-> +				   &s->in[0], &s->out[0],
-> +				   &s->in[1], &s->out[1]);
-> +}
-> +
-> +static void socket_spec_close(struct socket_spec *s)
-> +{
-> +	xclose(s->in[0]);
-> +	xclose(s->in[1]);
-> +	xclose(s->out[0]);
-> +	xclose(s->out[1]);
-> +}
-> +
-> +static void get_redir_params(struct redir_spec *redir,
-> +			     struct test_sockmap_listen *skel,
-> +			     int *prog_fd, enum bpf_attach_type *attach_type,
-> +			     bool *ingress_flag)
-> +{
-> +	enum prog_type type = redir->prog_type;
-> +	struct bpf_program *prog;
-> +	bool sk_msg;
-> +
-> +	sk_msg = type == SK_MSG_INGRESS || type == SK_MSG_EGRESS;
-> +	prog = sk_msg ? skel->progs.prog_msg_verdict : skel->progs.prog_skb_verdict;
-> +
-> +	*prog_fd = bpf_program__fd(prog);
-> +	*attach_type = sk_msg ? BPF_SK_MSG_VERDICT : BPF_SK_SKB_VERDICT;
-> +	*ingress_flag = type == SK_MSG_INGRESS || type == SK_SKB_INGRESS;
-> +}
-> +
-> +static void try_recv(const char *prefix, int fd, int flags, bool expect_success)
-> +{
-> +	ssize_t n;
-> +	char buf;
-> +
-> +	errno = 0;
-> +	n = recv(fd, &buf, 1, flags);
-> +	if (n < 0 && expect_success)
-> +		FAIL_ERRNO("%s: unexpected failure: retval=%zd", prefix, n);
-> +	if (!n && !expect_success)
-> +		FAIL("%s: expected failure: retval=%zd", prefix, n);
-> +}
-> +
-> +static void handle_unsupported(int sd_send, int sd_peer, int sd_in, int sd_out,
-> +			       int sd_recv, int map_verd, int status)
-> +{
-> +	unsigned int drop, pass;
-> +	char recv_buf;
-> +	ssize_t n;
-> +
-> +get_verdict:
-> +	if (xbpf_map_lookup_elem(map_verd, &u32(SK_DROP), &drop) ||
-> +	    xbpf_map_lookup_elem(map_verd, &u32(SK_PASS), &pass))
-> +		return;
-> +
-> +	if (pass == 0 && drop == 0 && (status & UNSUPPORTED_RACY_VERD)) {
-> +		sched_yield();
-> +		goto get_verdict;
-> +	}
-> +
-> +	if (pass != 0) {
-> +		FAIL("unsupported: wanted verdict pass 0, have %u", pass);
-> +		return;
-> +	}
-> +
-> +	/* If nothing was dropped, packet should have reached the peer */
-> +	if (drop == 0) {
-> +		errno = 0;
-> +		n = recv_timeout(sd_peer, &recv_buf, 1, 0, IO_TIMEOUT_SEC);
-> +		if (n != 1)
-> +			FAIL_ERRNO("unsupported: packet missing, retval=%zd", n);
-> +	}
-> +
-> +	/* Ensure queues are empty */
-> +	try_recv("bpf.recv(sd_send)", sd_send, MSG_DONTWAIT, false);
-> +	if (sd_in != sd_send)
-> +		try_recv("bpf.recv(sd_in)", sd_in, MSG_DONTWAIT, false);
-> +
-> +	try_recv("bpf.recv(sd_out)", sd_out, MSG_DONTWAIT, false);
-> +	if (sd_recv != sd_out)
-> +		try_recv("bpf.recv(sd_recv)", sd_recv, MSG_DONTWAIT, false);
-> +}
-> +
-> +static void test_send_redir_recv(int sd_send, int send_flags, int sd_peer,
-> +				 int sd_in, int sd_out, int sd_recv,
-> +				 struct maps *maps, int status)
-> +{
-> +	unsigned int drop, pass;
-> +	char *send_buf = "ab";
-> +	char recv_buf = '\0';
-> +	ssize_t n, len = 1;
-> +
-> +	/* Zero out the verdict map */
-> +	if (xbpf_map_update_elem(maps->verd, &u32(SK_DROP), &u32(0), BPF_ANY) ||
-> +	    xbpf_map_update_elem(maps->verd, &u32(SK_PASS), &u32(0), BPF_ANY))
-> +		return;
-> +
-> +	if (xbpf_map_update_elem(maps->in, &u32(0), &u64(sd_in), BPF_NOEXIST))
-> +		return;
-> +
-> +	if (xbpf_map_update_elem(maps->out, &u32(0), &u64(sd_out), BPF_NOEXIST))
-> +		goto del_in;
-> +
-> +	/* Last byte is OOB data when send_flags has MSG_OOB bit set */
-> +	if (send_flags & MSG_OOB)
-> +		len++;
-> +	n = send(sd_send, send_buf, len, send_flags);
-> +	if (n >= 0 && n < len)
-> +		FAIL("incomplete send");
-> +	if (n < 0) {
-> +		/* sk_msg redirect combo not supported? */
-> +		if (status & SUPPORTED || errno != EACCES)
-> +			FAIL_ERRNO("send");
-> +		goto out;
-> +	}
-> +
-> +	if (!(status & SUPPORTED)) {
-> +		handle_unsupported(sd_send, sd_peer, sd_in, sd_out, sd_recv,
-> +				   maps->verd, status);
-> +		goto out;
-> +	}
-> +
-> +	errno = 0;
-> +	n = recv_timeout(sd_recv, &recv_buf, 1, 0, IO_TIMEOUT_SEC);
-> +	if (n != 1) {
-> +		FAIL_ERRNO("recv_timeout()");
-> +		goto out;
-> +	}
-> +
-> +	/* Check verdict _after_ recv(); af_vsock may need time to catch up */
-> +	if (xbpf_map_lookup_elem(maps->verd, &u32(SK_DROP), &drop) ||
-> +	    xbpf_map_lookup_elem(maps->verd, &u32(SK_PASS), &pass))
-> +		goto out;
-> +
-> +	if (drop != 0 || pass != 1)
-> +		FAIL("unexpected verdict drop/pass: wanted 0/1, have %u/%u",
-> +		     drop, pass);
-> +
-> +	if (recv_buf != send_buf[0])
-> +		FAIL("recv(): payload check, %02x != %02x", recv_buf, send_buf[0]);
-> +
-> +	if (send_flags & MSG_OOB) {
-> +		/* Fail reading OOB while in sockmap */
-> +		try_recv("bpf.recv(sd_out, MSG_OOB)", sd_out,
-> +			 MSG_OOB | MSG_DONTWAIT, false);
-> +
-> +		/* Remove sd_out from sockmap */
-> +		xbpf_map_delete_elem(maps->out, &u32(0));
-> +
-> +		/* Check that OOB was dropped on redirect */
-> +		try_recv("recv(sd_out, MSG_OOB)", sd_out,
-> +			 MSG_OOB | MSG_DONTWAIT, false);
-> +
-> +		goto del_in;
-> +	}
-> +out:
-> +	xbpf_map_delete_elem(maps->out, &u32(0));
-> +del_in:
-> +	xbpf_map_delete_elem(maps->in, &u32(0));
-> +}
-> +
-> +static int is_redir_supported(enum prog_type type, const char *in,
-> +			      const char *out)
-> +{
-> +	/* Matching based on strings returned by socket_kind_to_str():
-> +	 * tcp4, udp4, tcp6, udp6, u_str, u_dgr, v_str, v_seq
-> +	 * Plus a wildcard: any
-> +	 * Not in use: u_seq, v_dgr
-> +	 */
-> +	struct combo_spec *c, combos[] = {
-> +		/* Send to local: TCP -> any, but vsock */
-> +		{ SK_MSG_INGRESS,	"tcp",	"tcp"	},
-> +		{ SK_MSG_INGRESS,	"tcp",	"udp"	},
-> +		{ SK_MSG_INGRESS,	"tcp",	"u_str"	},
-> +		{ SK_MSG_INGRESS,	"tcp",	"u_dgr"	},
-> +
-> +		/* Send to egress: TCP -> TCP */
-> +		{ SK_MSG_EGRESS,	"tcp",	"tcp"	},
-> +
-> +		/* Ingress to egress: any -> any */
-> +		{ SK_SKB_EGRESS,	"any",	"any"	},
-> +
-> +		/* Ingress to local: any -> any, but vsock */
-> +		{ SK_SKB_INGRESS,	"any",	"tcp"	},
-> +		{ SK_SKB_INGRESS,	"any",	"udp"	},
-> +		{ SK_SKB_INGRESS,	"any",	"u_str"	},
-> +		{ SK_SKB_INGRESS,	"any",	"u_dgr"	},
-> +	};
-> +
-> +	for (c = combos; c < combos + ARRAY_SIZE(combos); c++) {
-> +		if (c->prog_type == type &&
-> +		    (!strcmp(c->in, "any") || strstarts(in, c->in)) &&
-> +		    (!strcmp(c->out, "any") || strstarts(out, c->out)))
-> +			return SUPPORTED;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int get_support_status(enum prog_type type, const char *in,
-> +			      const char *out)
-> +{
-> +	int status = is_redir_supported(type, in, out);
-> +
-> +	if (type == SK_SKB_INGRESS && strstarts(out, "v_"))
-> +		status |= UNSUPPORTED_RACY_VERD;
-> +
-> +	return status;
-> +}
-> +
-> +static void test_socket(enum bpf_map_type type, struct redir_spec *redir,
-> +			struct maps *maps, struct socket_spec *s_in,
-> +			struct socket_spec *s_out)
-> +{
-> +	int fd_in, fd_out, fd_send, fd_peer, fd_recv, flags, status;
-> +	const char *in_str, *out_str;
-> +	char s[MAX_TEST_NAME];
-> +
-> +	fd_in = s_in->in[0];
-> +	fd_out = s_out->out[0];
-> +	fd_send = s_in->in[redir->idx_send];
-> +	fd_peer = s_in->in[redir->idx_send ^ 1];
-> +	fd_recv = s_out->out[redir->idx_recv];
-> +	flags = s_in->send_flags;
-> +
-> +	in_str = socket_kind_to_str(fd_in);
-> +	out_str = socket_kind_to_str(fd_out);
-> +	status = get_support_status(redir->prog_type, in_str, out_str);
-> +
-> +	snprintf(s, sizeof(s),
-> +		 "%-4s %-17s %-5s %s %-5s%6s",
-> +		 /* hash sk_skb-to-ingress u_str → v_str (OOB) */
-> +		 type == BPF_MAP_TYPE_SOCKMAP ? "map" : "hash",
-> +		 redir->name,
-> +		 in_str,
-> +		 status & SUPPORTED ? "→" : " ",
-> +		 out_str,
-> +		 (flags & MSG_OOB) ? "(OOB)" : "");
-> +
-> +	if (!test__start_subtest(s))
-> +		return;
-> +
-> +	test_send_redir_recv(fd_send, flags, fd_peer, fd_in, fd_out, fd_recv,
-> +			     maps, status);
-> +}
-> +
-> +static void test_redir(enum bpf_map_type type, struct redir_spec *redir,
-> +		       struct maps *maps)
-> +{
-> +	struct socket_spec *s, sockets[] = {
-> +		{ AF_INET, SOCK_STREAM },
-> +		// { AF_INET, SOCK_STREAM, MSG_OOB }, /* Known to be broken */
-> +		{ AF_INET6, SOCK_STREAM },
-> +		{ AF_INET, SOCK_DGRAM },
-> +		{ AF_INET6, SOCK_DGRAM },
-> +		{ AF_UNIX, SOCK_STREAM },
-> +		{ AF_UNIX, SOCK_STREAM, MSG_OOB },
-> +		{ AF_UNIX, SOCK_DGRAM },
-> +		// { AF_UNIX, SOCK_SEQPACKET},	/* Unsupported BPF_MAP_UPDATE_ELEM */
-> +		{ AF_VSOCK, SOCK_STREAM },
-> +		// { AF_VSOCK, SOCK_DGRAM },	/* Unsupported socket() */
-> +		{ AF_VSOCK, SOCK_SEQPACKET },
-> +	};
-> +
-> +	for (s = sockets; s < sockets + ARRAY_SIZE(sockets); s++)
-> +		if (socket_spec_pairs(s))
-> +			goto out;
-> +
-> +	/* Intra-proto */
-> +	for (s = sockets; s < sockets + ARRAY_SIZE(sockets); s++)
-> +		test_socket(type, redir, maps, s, s);
-> +
-> +	/* Cross-proto */
-> +	for (int i = 0; i < ARRAY_SIZE(sockets); i++) {
-> +		for (int j = 0; j < ARRAY_SIZE(sockets); j++) {
-> +			struct socket_spec *out = &sockets[j];
-> +			struct socket_spec *in = &sockets[i];
-> +
-> +			/* Skip intra-proto and between variants */
-> +			if (out->send_flags ||
-> +			    (in->family == out->family &&
-> +			     in->sotype == out->sotype))
-> +				continue;
-> +
-> +			test_socket(type, redir, maps, in, out);
-> +		}
-> +	}
-> +out:
-> +	while (--s >= sockets)
-> +		socket_spec_close(s);
-> +}
-> +
-> +static void test_map(enum bpf_map_type type)
-> +{
-> +	struct redir_spec *r, redirs[] = {
-> +		{ "sk_msg-to-ingress", SEND_INNER, RECV_INNER, SK_MSG_INGRESS },
-> +		{ "sk_msg-to-egress", SEND_INNER, RECV_OUTER, SK_MSG_EGRESS },
-> +		{ "sk_skb-to-egress", SEND_OUTER, RECV_OUTER, SK_SKB_EGRESS },
-> +		{ "sk_skb-to-ingress", SEND_OUTER, RECV_INNER, SK_SKB_INGRESS },
-> +	};
-> +
-> +	for (r = redirs; r < redirs + ARRAY_SIZE(redirs); r++) {
-> +		enum bpf_attach_type attach_type;
-> +		struct test_sockmap_listen *skel;
-> +		struct maps maps;
-> +		int prog_fd;
-> +
-> +		skel = test_sockmap_listen__open_and_load();
-> +		if (!skel) {
-> +			FAIL("open_and_load");
-> +			return;
-> +		}
-> +
-> +		switch (type) {
-> +		case BPF_MAP_TYPE_SOCKMAP:
-> +			skel->bss->test_sockmap = true;
-> +			maps.out = bpf_map__fd(skel->maps.sock_map);
-> +			break;
-> +		case BPF_MAP_TYPE_SOCKHASH:
-> +			skel->bss->test_sockmap = false;
-> +			maps.out = bpf_map__fd(skel->maps.sock_hash);
-> +			break;
-> +		default:
-> +			FAIL("Unsupported bpf_map_type");
-> +			return;
-> +		}
-> +
-> +		maps.in = bpf_map__fd(skel->maps.nop_map);
-> +		maps.verd = bpf_map__fd(skel->maps.verdict_map);
-> +		get_redir_params(r, skel, &prog_fd, &attach_type,
-> +				 &skel->bss->test_ingress);
-> +
-> +		if (xbpf_prog_attach(prog_fd, maps.in, attach_type, 0))
-> +			return;
-> +
-> +		test_redir(type, r, &maps);
-> +
-> +		if (xbpf_prog_detach2(prog_fd, maps.in, attach_type))
-> +			return;
-> +
-> +		test_sockmap_listen__destroy(skel);
-> +	}
-> +}
-> +
-> +void serial_test_sockmap_redir(void)
-> +{
-> +	test_map(BPF_MAP_TYPE_SOCKMAP);
-> +	test_map(BPF_MAP_TYPE_SOCKHASH);
-> +}
-> 
-> -- 
-> 2.49.0
-> 
-
+>  mm/internal.h |  3 +++
+>  mm/madvise.c  | 11 ++++++++---
+>  mm/memory.c   |  4 ++--
+>  3 files changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/mm/internal.h b/mm/internal.h
+> index ef92e88738fe..c5f9dd007215 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -435,6 +435,9 @@ void unmap_page_range(struct mmu_gather *tlb,
+>  			     struct vm_area_struct *vma,
+>  			     unsigned long addr, unsigned long end,
+>  			     struct zap_details *details);
+> +void zap_page_range_single_batched(struct mmu_gather *tlb,
+> +		struct vm_area_struct *vma, unsigned long addr,
+> +		unsigned long size, struct zap_details *details);
+>  int folio_unmap_invalidate(struct address_space *mapping, struct folio *folio,
+>  			   gfp_t gfp);
+>
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 951038a9f36f..8433ac9b27e0 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -851,7 +851,8 @@ static int madvise_free_single_vma(struct madvise_behavior *madv_behavior,
+>   * An interface that causes the system to free clean pages and flush
+>   * dirty pages is already available as msync(MS_INVALIDATE).
+>   */
+> -static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
+> +static long madvise_dontneed_single_vma(struct madvise_behavior *madv_behavior,
+> +					struct vm_area_struct *vma,
+>  					unsigned long start, unsigned long end)
+>  {
+>  	struct zap_details details = {
+> @@ -859,7 +860,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
+>  		.even_cows = true,
+>  	};
+>
+> -	zap_page_range_single(vma, start, end - start, &details);
+> +	zap_page_range_single_batched(
+> +			madv_behavior->tlb, vma, start, end - start, &details);
+>  	return 0;
+>  }
+>
+> @@ -950,7 +952,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+>  	}
+>
+>  	if (behavior == MADV_DONTNEED || behavior == MADV_DONTNEED_LOCKED)
+> -		return madvise_dontneed_single_vma(vma, start, end);
+> +		return madvise_dontneed_single_vma(
+> +				madv_behavior, vma, start, end);
+>  	else if (behavior == MADV_FREE)
+>  		return madvise_free_single_vma(madv_behavior, vma, start, end);
+>  	else
+> @@ -1628,6 +1631,8 @@ static void madvise_unlock(struct mm_struct *mm, int behavior)
+>  static bool madvise_batch_tlb_flush(int behavior)
+>  {
+>  	switch (behavior) {
+> +	case MADV_DONTNEED:
+> +	case MADV_DONTNEED_LOCKED:
+>  	case MADV_FREE:
+>  		return true;
+>  	default:
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 690695643dfb..559f3e194438 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1998,7 +1998,7 @@ void unmap_vmas(struct mmu_gather *tlb, struct ma_state *mas,
+>  	mmu_notifier_invalidate_range_end(&range);
+>  }
+>
+> -/*
+> +/**
+>   * zap_page_range_single_batched - remove user pages in a given range
+>   * @tlb: pointer to the caller's struct mmu_gather
+>   * @vma: vm_area_struct holding the applicable pages
+> @@ -2009,7 +2009,7 @@ void unmap_vmas(struct mmu_gather *tlb, struct ma_state *mas,
+>   * @tlb shouldn't be NULL.  The range must fit into one VMA.  If @vma is for
+>   * hugetlb, @tlb is flushed and re-initialized by this function.
+>   */
+> -static void zap_page_range_single_batched(struct mmu_gather *tlb,
+> +void zap_page_range_single_batched(struct mmu_gather *tlb,
+>  		struct vm_area_struct *vma, unsigned long address,
+>  		unsigned long size, struct zap_details *details)
+>  {
+> --
+> 2.39.5
