@@ -1,124 +1,86 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFA21F2B8E
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C431F419A;
+	Fri, 11 Apr 2025 14:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380629; cv=none; b=NpuiP21WE5CziR+x0RJcAuyEsQdCz5HhUf2PoTM4xEKU4yAjmGdcHTQVZ3aP9qGurejCfjAK+zqw0wQOSPSWyYqL8HHl2WaPgLvFGWw6tTbhdvaE2QBJKsoS/WY+gq5CQxvFfiZVh09r7Mc0eOJn8sTWm6ePX6Z8FkFakxp/KTM=
+	t=1744380640; cv=none; b=N94t5pWJlJpr4NfW4TM7C/YTGNU2HYQn+ptUmTiIUGtkgeMQeYovlRT2FlWAa22Swn5eTD32xVjEGJ8tYhXTWAjVOEGOBjRRmL2vJgGRy44g3tpy/EjUurGFw02kFZ/++teppH5QiQddae1unziTp5qSQ+z4jbjLjyzOLWgwQwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380629; c=relaxed/simple;
-	bh=IN/+c393zV8GLe2RZvcJ5D/UQHgVQBfnFKT0jSH76NQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=B0clnky0gm0B1c6pvvB8bI7Sr8k0y5/R5x+Wx1luyMcAgx0EGquCvkWTx5jcFK9+w1P4PO9NCYLH5viulNrD0+GmhPtMC5j/ErcROV1jUPl6QleePbQEulaCayVgCqjCqQAMXC6CEnI1atyACzdSHOnI7vkTQ/Id+yGqSqdh27Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TzFOfGUE; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744380640; c=relaxed/simple;
+	bh=KzXEO5UCRWyWpNuoUxoOb69fLAzMJ9uiD0OLQ/xcNZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rtu22zYfhVOzWNxbQp4PqxoxZ9M9639HH1AY9LQLxOzTCut+LlyePVUMutu5i3V4QdH1mpdo1j1mTBHlsrssDgfhUMUL5ohSCSKzcBlZbJ18atd1AVN5W4hoMSZ+ENV6/S/DDnBrP/JJpiERJbOTb053cmPg5w5JeNRiKevtlBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asukNt1y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TzFOfGUE"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2241e7e3addso18846425ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744380628; x=1744985428; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qHKInpn+xU6ux5UPqfyiTHJx6fsp5WeMoLWQfB1NP+8=;
-        b=TzFOfGUE8Ihlp/kU316YQNJC16lFYVJQzokGQJ+bEc6gHFgFOaWHdvH+Jwxdgs0K1H
-         0QHcyaImtB6H21leLTG7X64iBU0OanJLoQfdGkTP7m/CSXaaz7ZYklWtFNBNpm44EMr9
-         /cBDaw0yVWnF5RkRcNfgq2GQ8BFl4rOYKcbPhjvwfBqeh+sU1+/V8OHmQn4pgKV9HrIq
-         vZvlc/zkHzCMlI+wGkZawUNJGvjjxYiQbWvziPm6SjiUA9ZLbAwUEq6/dL/6JcsTmvOC
-         Zmh1XPgomQAPWSxMQZl0UkKQrkS/1x/A3rWI3nwXfZfcvdtELYQsku+FLB62eqCiNYAh
-         4aHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744380628; x=1744985428;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qHKInpn+xU6ux5UPqfyiTHJx6fsp5WeMoLWQfB1NP+8=;
-        b=qyXKxxHH6f6Z2IumKSI+w+azoyz7CKsrC7PntoKHAuwC5O4yawZcDM6w5YeoCiHG4L
-         QrSEEGFP6nXdZONFQQb5kX6IMkDy8JEwOJqQtqI4dYMMgCWzjhLo0fOygjHk2qeX+o7v
-         KEs9Y2LoHYxq4p8BfX7yCvAe8uhrgyZWaE4/Q97tW/MnPnOUMrjSSrG02PfSRh3YzBJ3
-         DsqYJEjg9h0IifhaQ6XZahQW+PKNfXPJ+2Fhrn1XTAmGShXIKu6Er8H4gqVpNvwJS21w
-         xEIKvz+8nlixWbdMDOYXIfNIlfSsng5ZBP21dF9VE7hOGXgbxSAcFWqJBLONebjuXtNx
-         VTuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUy0vGPbrhcZg4FANBonooKPAsMmlzsxU1wmf4BNleO7/k9euL+H9YiT8LyMPKexMjqaoAUr6Ywca4iC6U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc8agIculWz1NbydHfqYVBPdpFVMKRqa8vYDtLY4Q5SczXqzPz
-	I4AbbxKap9aBBUWy9bfMQU18PO9zbVZZ4FvGzIdA3hSvd41LT9u+xkC+Nly1Bwrcd1XihnqScjv
-	QsA==
-X-Google-Smtp-Source: AGHT+IGc8VAEmdu1RE7oH9FrOwfX7qVcVEStmOGwcbBo53IVWdDDkx8s11OnWyHGn0RRA5FtWaNzoX9rHXg=
-X-Received: from plda17.prod.google.com ([2002:a17:902:ee91:b0:221:8568:bfe3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cec9:b0:227:e980:9190
- with SMTP id d9443c01a7336-22bea4fcad1mr47422905ad.44.1744380627769; Fri, 11
- Apr 2025 07:10:27 -0700 (PDT)
-Date: Fri, 11 Apr 2025 07:10:26 -0700
-In-Reply-To: <0895007e-95d9-410e-8b24-d17172b0b908@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asukNt1y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9C0C4CEE2;
+	Fri, 11 Apr 2025 14:10:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744380640;
+	bh=KzXEO5UCRWyWpNuoUxoOb69fLAzMJ9uiD0OLQ/xcNZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=asukNt1yLWbClDpq3Zhy93G98botagBwqsj7zpUuvHTyLDAIxc/L1mrLr4ViPK9Dl
+	 YbslBdOH3olvZc5jul5ZqFO4wNyXkVO+g3iZrFrwAtSRGEv7d5iiCApiHpZbSqr9kE
+	 5eN2hMOm20+WWXAiMO6m3gqVna+NNb9CD9Nn2hrx/22iqmKvChkk5hq6naZU1HqtLA
+	 p9+o4FONnff6gocacy8AHi5gioVImwePn6Admzg6NErBaiL46fFuFZD6TsGO+xqhgy
+	 R9bTvLg6VRrEpYzCrrFerzFdeVnNVFXtNJZiSEL6UOTGRRS3xG88YKAbTgRWDxZf/V
+	 Ghnvt2NqGXO5Q==
+Date: Fri, 11 Apr 2025 16:10:36 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH RFC] fs/fs_context: Use KERN_INFO for
+ infof()|info_plog()|infofc()
+Message-ID: <20250411-fahrbahn-vortrag-ea3a07c30754@brauner>
+References: <20250410-rfc_fix_fs-v1-1-406e13b3608e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-7-seanjc@google.com>
- <0895007e-95d9-410e-8b24-d17172b0b908@amd.com>
-Message-ID: <Z_ki0uZ9Rp3Fkrh1@google.com>
-Subject: Re: [PATCH 06/67] iommu/amd: WARN if KVM attempts to set vCPU
- affinity without posted intrrupts
-From: Sean Christopherson <seanjc@google.com>
-To: Sairaj Kodilkar <sarunkod@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	David Matlack <dmatlack@google.com>, Naveen N Rao <naveen.rao@amd.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250410-rfc_fix_fs-v1-1-406e13b3608e@quicinc.com>
 
-On Fri, Apr 11, 2025, Sairaj Kodilkar wrote:
-> On 4/5/2025 1:08 AM, Sean Christopherson wrote:
-> > WARN if KVM attempts to set vCPU affinity when posted interrupts aren't
-> > enabled, as KVM shouldn't try to enable posting when they're unsupported,
-> > and the IOMMU driver darn well should only advertise posting support when
-> > AMD_IOMMU_GUEST_IR_VAPIC() is true.
-> > 
-> > Note, KVM consumes is_guest_mode only on success.
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >   drivers/iommu/amd/iommu.c | 13 +++----------
-> >   1 file changed, 3 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-> > index b3a01b7757ee..4f69a37cf143 100644
-> > --- a/drivers/iommu/amd/iommu.c
-> > +++ b/drivers/iommu/amd/iommu.c
-> > @@ -3852,19 +3852,12 @@ static int amd_ir_set_vcpu_affinity(struct irq_data *data, void *vcpu_info)
-> >   	if (!dev_data || !dev_data->use_vapic)
-> >   		return -EINVAL;
-> > +	if (WARN_ON_ONCE(!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir)))
-> > +		return -EINVAL;
-> > +
+On Thu, Apr 10, 2025 at 07:53:03PM +0800, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
 > 
-> Hi Sean,
-> 'dev_data->use_vapic' is always zero when AMD IOMMU uses legacy
-> interrupts i.e. when AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) is 0.
-> Hence you can remove this additional check.
+> Use KERN_INFO instead of default KERN_NOTICE for
+> infof()|info_plog()|infofc() to printk informational messages.
+> 
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> ---
+>  fs/fs_context.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/fs/fs_context.c b/fs/fs_context.c
+> index 582d33e8111739402d38dc9fc268e7d14ced3c49..2877d9dec0753a5f03e0a54fa7b8d25072ea7b4d 100644
+> --- a/fs/fs_context.c
+> +++ b/fs/fs_context.c
+> @@ -449,6 +449,10 @@ void logfc(struct fc_log *log, const char *prefix, char level, const char *fmt,
+>  			printk(KERN_ERR "%s%s%pV\n", prefix ? prefix : "",
+>  						prefix ? ": " : "", &vaf);
+>  			break;
+> +		case 'i':
+> +			printk(KERN_INFO "%s%s%pV\n", prefix ? prefix : "",
+> +						prefix ? ": " : "", &vaf);
 
-Hmm, or move it above?  KVM should never call amd_ir_set_vcpu_affinity() if
-IRQ posting is unsupported, and that would make this consistent with the end
-behavior of amd_iommu_update_ga() and amd_iommu_{de,}activate_guest_mode().
+We can try but it's not out of the question that this might cause users
+to complain or cause regressions.
 
-	if (WARN_ON_ONCE(!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir)))
-		return -EINVAL;
-
-	if (ir_data->iommu == NULL)
-		return -EINVAL;
-
-	dev_data = search_dev_data(ir_data->iommu, irte_info->devid);
-
-	/* Note:
-	 * This device has never been set up for guest mode.
-	 * we should not modify the IRTE
-	 */
-	if (!dev_data || !dev_data->use_vapic)
-		return -EINVAL;
-
-I'd like to keep the WARN so that someone will notice if KVM screws up.
+> +			break;
+>  		default:
+>  			printk(KERN_NOTICE "%s%s%pV\n", prefix ? prefix : "",
+>  						prefix ? ": " : "", &vaf);
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250410-rfc_fix_fs-cfa369930abe
+> 
+> Best regards,
+> -- 
+> Zijun Hu <quic_zijuhu@quicinc.com>
+> 
