@@ -1,24 +1,49 @@
-Received: from out28-74.mail.aliyun.com (out28-74.mail.aliyun.com [115.124.28.74])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F52529614B;
-	Fri, 11 Apr 2025 09:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F186298CCB
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365392; cv=none; b=pv5uvPyl4Y3twG5ZOKZvvO3z2+kGeuNFkFOKaBuXi1Z/qzAtiAoY5cW0lgKY2+pWJQwIUkXn5r/kbbpALHhRp5N0vrszMr6WFmPKw1p/M4u4E9eCEvMXCWPtKCU4JJ30GmNUec9KEwqGDwqUgZryJrlf1C75l6QHgw0VlrUY0oc=
+	t=1744365392; cv=none; b=Fz7Gjonuvbqhg9P2Jla7wWzBAP4NPa9huoxE/0G2o75G35eUwrPqtFY/WQlZDPWbDkAqEHg6wzyoCMy76bxsYxcP1dkWrjicPUh1jG1Woqwltjj2VbnTGfbOAeMFppOUqV1iLEbfZyfds4RHv1haM6gD0QPjOL+Nc78YkVYVPYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744365392; c=relaxed/simple;
-	bh=dI24S8coPzz7k1htKptwmRID8NIsoRVYe1b7fMWVAk4=;
+	bh=5Il5jcJw3FuAIORfi213Pt6kpRXF0u1YVGrWeMfFeSM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ttEZKMhTCw4mmGlNHX4vIFXq8nz///3S0m4/upKrkMwAvUtEzIGHWARPsW5QB2BYhqyZ+sL4kvo+YwTxNNaeBKz311ZRbfoHEvDNqNsUW2Z7PA2SWLz4I3gDFj4AYzl+/b9k2DxysT6qwObIN8TGibm5NSOSs7nZOQ51DI0fNi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=115.124.28.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motor-comm.com
-Received: from 10.0.2.15(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.cK5WKQw_1744365055 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 11 Apr 2025 17:50:56 +0800
-Message-ID: <da434f13-fb08-4036-96ed-7de579cb9ddc@motor-comm.com>
-Date: Fri, 11 Apr 2025 17:50:55 +0800
+	 In-Reply-To:Content-Type; b=Y6+TKHbB4hCvRjjODtvA6QZ293tUFSgagxrkEXrJMW8Yxbr7/1m+YtSo+avKNDKpPqAePL23XrfZk9nVkQlWfO6LNgxOPJfJrMVkveQ1KjvVpAtmqLAEnwJmj5PJI7aWTC0y9J1dwQC1LolUBKFQ7dn3TtsEytDeu8OLzCe+p7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a7olu1SW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7olu1SW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744365389;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ypViF9xwRKSdJxjymiRlr36Hbu2rzw35GmKD6sGYV+M=;
+	b=a7olu1SW0J+8HRl/WgHhvxHf8FNMZVV4KbclSLXJd2jj5o9Ngun5weTmQsjAU4wTjQ1d0D
+	WbjER+cfy3l5cg7ugT1BqKxhnCiPHFsE90tZmul+7Wul8C5YUldy8HszFS7W5Dpg5OJbDD
+	yts9Z4qr3oJCJSy4xdYl6cmAtJPFKS4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-EcPimzzdMei2_fs4BcGaGQ-1; Fri,
+ 11 Apr 2025 05:56:25 -0400
+X-MC-Unique: EcPimzzdMei2_fs4BcGaGQ-1
+X-Mimecast-MFC-AGG-ID: EcPimzzdMei2_fs4BcGaGQ_1744365383
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7225618007E1;
+	Fri, 11 Apr 2025 09:56:22 +0000 (UTC)
+Received: from [10.45.225.124] (unknown [10.45.225.124])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E0908180174E;
+	Fri, 11 Apr 2025 09:56:16 +0000 (UTC)
+Message-ID: <7e6bf69b-0916-4ad9-b42f-8645f5c95d5d@redhat.com>
+Date: Fri, 11 Apr 2025 11:56:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,47 +51,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 00/14] yt6801: Add Motorcomm yt6801 PCIe
- driver
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, netdev@vger.kernel.org,
- Masahiro Yamada <masahiroy@kernel.org>, Parthiban.Veerasooran@microchip.com,
- linux-kernel@vger.kernel.org,
- "andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>, lee@trager.us,
- horms@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
- geert+renesas@glider.be, xiaogang.fan@motor-comm.com,
- fei.zhang@motor-comm.com, hua.sun@motor-comm.com
-References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
- <Z_T6vv013jraCzSD@shell.armlinux.org.uk>
+Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Prathosh.Satish@microchip.com, conor@kernel.org, krzk@kernel.org,
+ netdev@vger.kernel.org, vadim.fedorenko@linux.dev,
+ arkadiusz.kubalewski@intel.com, jiri@resnulli.us, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org, kees@kernel.org,
+ andy@kernel.org, akpm@linux-foundation.org, mschmidt@redhat.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-3-ivecera@redhat.com>
+ <20250410-skylark-of-silent-symmetry-afdec9@shite>
+ <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
+ <20250410-puritan-flatbed-00bf339297c0@spud>
+ <6dc1fdac-81cc-4f2c-8d07-8f39b9605e04@redhat.com>
+ <CY5PR11MB6462412A953AF5D93D97DCE5ECB72@CY5PR11MB6462.namprd11.prod.outlook.com>
+ <bd7d005b-c715-4fd9-9b0d-52956d28d272@lunn.ch>
+ <7ab19530-d0d4-4df1-9f75-060c3055585b@redhat.com>
+ <4e331736-36f2-4796-945f-613279329585@lunn.ch>
 Content-Language: en-US
-From: Frank Sae <Frank.Sae@motor-comm.com>
-In-Reply-To: <Z_T6vv013jraCzSD@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <4e331736-36f2-4796-945f-613279329585@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
 
 
-On 2025/4/8 18:30, Russell King (Oracle) wrote:
-> On Tue, Apr 08, 2025 at 05:28:21PM +0800, Frank Sae wrote:
->> This series includes adding Motorcomm YT6801 Gigabit ethernet driver
->>  and adding yt6801 ethernet driver entry in MAINTAINERS file.
->> YT6801 integrates a YT8531S phy.
+On 10. 04. 25 11:12 odp., Andrew Lunn wrote:
+> On Thu, Apr 10, 2025 at 08:33:31PM +0200, Ivan Vecera wrote:
+>>
+>>
+>> On 10. 04. 25 7:36 odp., Andrew Lunn wrote:
+>>>> Prathosh, could you please bring more light on this?
+>>>>
+>>>>> Just to clarify, the original driver was written specifically with 2-channel
+>>>>> chips in mind (ZL30732) with 10 input and 20 outputs, which led to some confusion of using zl3073x as compatible.
+>>>>> However, the final version of the driver will support the entire ZL3073x family
+>>>>> ZL30731 to ZL30735 and some subset of ZL30732 like ZL80732 etc
+>>>>> ensuring compatibility across all variants.
+>>>
+>>> Hi Prathosh
+>>>
+>>> Your email quoting is very odd, i nearly missed this reply.
+>>>
+>>> Does the device itself have an ID register? If you know you have
+>>> something in the range ZL30731 to ZL30735, you can ask the hardware
+>>> what it is, and the driver then does not need any additional
+>>> information from DT, it can hard code it all based on the ID in the
+>>> register?
+>>>
+>>> 	Andrew
+>>>
+>> Hi Andrew,
+>> yes there is ID register that identifies the ID. But what compatible should
+>> be used?
+>>
+>> microchip,zl3073x was rejected as wildcard and we should use all
+>> compatibles.
 > 
-> What is different between this and the Designware GMAC4 core supported
-> by drivers/net/ethernet/stmicro/stmmac/ ?
+> You have two choices really:
 > 
-
-We support more features: NS, RSS, wpi, wol pattern and aspm control.
-
-> Looking at the register layout, it looks very similar. The layout of the
-> MAC control register looks similar. The RX queue and PMT registers are
-> at the same relative offset. The MDIO registers as well.
+> 1) You list each device with its own compatible, because they are in
+> fact not compatible. You need to handle each one different, they have
+> different DT properties, etc. If you do that, please validate the ID
+> register against the compatible and return -ENODEV if they don't
+> match.
 > 
-> Can you re-use the stmmac driver?
+> 2) You say the devices are compatible. So the DT compatible just
+> indicates the family, enough information for the driver to go find the
+> ID register. This does however require the binding is the same for all
+> devices. You cannot have one family member listing 10 inputs in its
+> binding, and another family member listing 20.
 > 
+> If you say your devices are incompatible, and list lots of
+> compatibles, you can then use constraints in the yaml, based on the
+> compatible, to limit each family member to what it supports.
+> 
+> My guess is, you are going to take the first route.
 
-I can not re-use the stmmac driver, because pcie and ephy can not work well on
-the stmmac driver.
+Yes, this looks reasonable... in this case should I use 
+microchip,zl3073x.yaml like e.g. gpio/gpio-pca95xx.yaml?
+
+Ivan
+
