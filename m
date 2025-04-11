@@ -1,107 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5571726AD9
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A62C026AD9
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744389213; cv=none; b=GZf4DwbWYAB+8vARjrmpiImhh9NgrC/UlQikOQ+Mm3Nw+bqJqJDIy5nKpY419pYjWisKcdf77CbGyp/5QkmoF6+SKgF56qabVKP+XYq6De5YSsQHClIcjUndqQgDJZvGVKTF3QPzBerVXU9QWriG6fDCyy1CA/JsS9F6pihoqn4=
+	t=1744389249; cv=none; b=REBE6AaPyszA02VHfzYpwGbCHfdQynqI8y3F/OTvg/rvNbdAmHdahuU9xmbf5mHZV0iKuUb5Ys4pMNglLe/uk0POBkxawWqwnhCKIic0KFIRVMfLtdbDS7jU2b58cJyHrZ9yzn67HG+29IUElhw/VR/pW7I9kVD9xnI1bbq13IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744389213; c=relaxed/simple;
-	bh=om9nbYY+KdTzhbx+Sci7wStJf0iLFQJL8AB1prjTKfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jx8gMq5dHfLH3EAT4mJgUni3KuYUnA/zcU464g7AuYgOyBfuWYQkKoUvejuUCHnl7RqOcdBB7Mw6XSF2B8KS42lq8xt7J2VoqjSjihQFSt6pjQcHU2Tk2gosk0oxmv7QqGfqhiQyQdd7WfgUTHcVVCDBaoXl3XrQrPI1QzEAkUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PGwhVadp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PGwhVadp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744389211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QaXhGD+EESkN0U5oQ1NX+Je+maGDUC3Z+TV9kV3doiU=;
-	b=PGwhVadpxrq453G79e4pHBRatPpVj45s3orU7rMEtWrfwYo503+EupkNYHUjNRbpkb5pLh
-	9rKyjiYEVpr0tvAc9b71T7lZ6eGoowBmwFb0cZuK2Lpq9L0md2ZSHbcAhUHIixJWIWKlvx
-	+RXoxczMMc6IqWrADN6xYVuSmsgbbUk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-575-ZH1NnPKVPMW98a8LUrDwLQ-1; Fri,
- 11 Apr 2025 12:33:27 -0400
-X-MC-Unique: ZH1NnPKVPMW98a8LUrDwLQ-1
-X-Mimecast-MFC-AGG-ID: ZH1NnPKVPMW98a8LUrDwLQ_1744389205
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A75A1954B36;
-	Fri, 11 Apr 2025 16:33:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.222])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A5DB91955DCE;
-	Fri, 11 Apr 2025 16:33:19 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 11 Apr 2025 18:32:49 +0200 (CEST)
-Date: Fri, 11 Apr 2025 18:32:43 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>
-Subject: Re: [PATCHv2 perf/core 1/2] uprobes/x86: Add support to emulate nop
- instructions
-Message-ID: <20250411163242.GI5322@redhat.com>
-References: <20250411121756.567274-1-jolsa@kernel.org>
- <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
+	s=arc-20240116; t=1744389249; c=relaxed/simple;
+	bh=GK6q/dVVr56KWhz4xjVfQwVF4jkBpchAnFtJB9s53JE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A3PqJPTRZ2eArSV8AhKLm5qrOlYBaEYNifNVt6ipbdbQAa9ZpVlzrUwYCU/rzz0EllAlMijcrPeOBvEMuht7EFfZn4NZBJ3E5Jxa5Snubmej6YHQqtEKoJjxdbEPwnqXjj3IbnB575u2l2/wuZcmVZLYNwnC512tcHzdbC4HZ3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E45C106F;
+	Fri, 11 Apr 2025 09:34:06 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5745F3F694;
+	Fri, 11 Apr 2025 09:34:06 -0700 (PDT)
+Message-ID: <24e278c3-98a3-4799-9d54-22bdbc7a15be@arm.com>
+Date: Fri, 11 Apr 2025 17:34:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu: Clear IOMMU DMA ops when detaching a device from
+ its IOMMU group
+To: Chen-Yu Tsai <wenst@chromium.org>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250410101001.429694-1-wenst@chromium.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250410101001.429694-1-wenst@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 04/11, Andrii Nakryiko wrote:
->
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -840,6 +840,12 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
-> >         insn_byte_t p;
-> >         int i;
-> >
-> > +       /* x86_nops[i]; same as jmp with .offs = 0 */
-> > +       for (i = 1; i <= ASM_NOP_MAX; ++i) {
->
-> i <= ASM_NOP_MAX && i <= insn->length
->
-> ?
->
-> otherwise what prevents us from reading past the actual instruction bytes?
+On 10/04/2025 11:09 am, Chen-Yu Tsai wrote:
+> In recent changes to the IOMMU subsystem seen in v6.15-rc1, the process
+> and order of how IOMMU linked devices are brought up has changed. Now
+> when the IOMMU is probed, the IOMMU subsystem core will attempt to link
+> or attach devices described in the device tree as using the IOMMU to
+> the IOMMU's associated group or domain. If any part of this fails, the
+> whole process is (mostly) undone. The IOMMU failure is then treated as
+> a deferred probe; after sufficient time, the deferred probe times out
+> and the attached devices are brought out without the IOMMU.
+> 
+> In the process of undoing changes, one part was missed. When a device
+> is initialized for use with the IOMMU, iommu_setup_dma_ops() is also
+> called, which signals that DMA operations should go through the IOMMU.
+> This part was not reverted when the IOMMU changes were undone. When
+> the device later probes without the IOMMU, DMA operations would attempt
+> to use IOMMU operations with no IOMMU domain present, causing a crash.
+> 
+> The above was observed on an MT8188 Chromebook. The MT8188 device tree
+> had incorrectly described the IOMMU endpoint for part of its display
+> pipeline; the IOMMU driver would successfully attach a couple hardware
+> blocks, fail at the incorrectly described one, and roll back all
+> changes. Later when the deferred probe times out, the display pipleine
+> probes without the IOMMU, but when a framebuffer is allocated, it goes
+> through the IOMMU DMA ops, causing a NULL pointer dereference crash.
+> 
+> Add a helper that is the opposite of iommu_setup_dma_ops(), and call it
+> when the IOMMU-enabled device is being detached from its IOMMU.
 
-Well, copy_insn() just copies MAX_UINSN_BYTES into arch_uprobe.insn[].
-If, say, the 1st 11 bytes of arch_uprobe.insn (or insn->kaddr) match
-x86_nops[11] then insn->length must be 11, or insn_decode() is buggy?
+Apologies for the crossover - seems you sent this just as I got to 
+finishing up the response and patch I'd left open on my office machine 
+the other day... and now I find that I forgot to actually send *this* 
+mail when I wrote it yesterday either, sigh :(
 
-> or, actually, shouldn't we just check memcmp(x86_nops[insn->length])
-> if insn->length < ASM_NOP_MAX ?
+As per my version I don't think this is really a fix as there was never 
+a consistent well-defined behaviour to begin with. From an arm64 
+perspective I think it would have last changed with b67483b3c44e 
+("iommu/dma: Centralise iommu_setup_dma_ops()"), but that's not the case 
+for other architectures/drivers which either already had this condition 
+beforehand or still didn't afterwards.
 
-Hmm... agreed.
+Thanks,
+Robin.
 
-Either way this check can't (doesn't even try to) detect, say,
-"rep; BYTES_NOP5", so we do not care if insn->length == 6 in this case.
-
-Good point!
-
-Oleg.
-
+> Closes: https://lore.kernel.org/all/CAGXv+5HJpTYmQ2h-GD7GjyeYT7bL9EBCvu0mz5LgpzJZtzfW0w@mail.gmail.com/
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> ---
+> This patch should be applied for v6.15. It's not immediately clear to
+> me which commit is the actual cause, so I did not add a Fixes tag.
+> ---
+>   drivers/iommu/dma-iommu.c | 5 +++++
+>   drivers/iommu/dma-iommu.h | 5 +++++
+>   drivers/iommu/iommu.c     | 2 ++
+>   3 files changed, 12 insertions(+)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index cb7e29dcac15..62a51d84ffe1 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -1739,6 +1739,11 @@ void iommu_setup_dma_ops(struct device *dev)
+>   	dev->dma_iommu = false;
+>   }
+>   
+> +void iommu_clear_dma_ops(struct device *dev)
+> +{
+> +	dev->dma_iommu = false;
+> +}
+> +
+>   static bool has_msi_cookie(const struct iommu_domain *domain)
+>   {
+>   	return domain && (domain->cookie_type == IOMMU_COOKIE_DMA_IOVA ||
+> diff --git a/drivers/iommu/dma-iommu.h b/drivers/iommu/dma-iommu.h
+> index eca201c1f963..dfd31cb9e685 100644
+> --- a/drivers/iommu/dma-iommu.h
+> +++ b/drivers/iommu/dma-iommu.h
+> @@ -10,6 +10,7 @@
+>   #ifdef CONFIG_IOMMU_DMA
+>   
+>   void iommu_setup_dma_ops(struct device *dev);
+> +void iommu_clear_dma_ops(struct device *dev);
+>   
+>   int iommu_get_dma_cookie(struct iommu_domain *domain);
+>   void iommu_put_dma_cookie(struct iommu_domain *domain);
+> @@ -30,6 +31,10 @@ static inline void iommu_setup_dma_ops(struct device *dev)
+>   {
+>   }
+>   
+> +static inline void iommu_clear_dma_ops(struct device *dev)
+> +{
+> +}
+> +
+>   static inline int iommu_dma_init_fq(struct iommu_domain *domain)
+>   {
+>   	return -EINVAL;
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index c8033ca66377..498f8f48394c 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -677,6 +677,8 @@ static void __iommu_group_remove_device(struct device *dev)
+>   	struct iommu_group *group = dev->iommu_group;
+>   	struct group_device *device;
+>   
+> +	iommu_clear_dma_ops(dev);
+> +
+>   	mutex_lock(&group->mutex);
+>   	for_each_group_device(group, device) {
+>   		if (device->dev != dev)
