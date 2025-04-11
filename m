@@ -1,196 +1,158 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F04A20E01F
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B02438FAD;
+	Fri, 11 Apr 2025 15:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385756; cv=none; b=KJ6C+CdMm/xBk3ZCtjELCMbtiFhkOea4twKn2XKb9Y05BLbffZx4XJiko74tyawYWfJZx13YeMHsv3WaphCbSMZpR6EHIfMCSi0oXcGz/I8Nq4wHAjCkWPtwmO3ABeV5pXAh6EWErx5McWAk2hg6MlRad0NaUkFkBHvQ+Du59aY=
+	t=1744385851; cv=none; b=Sfvx4uxF3LEfWnGC3G7fYceUtO2pCRUVerBokye0KtlPbrSALEiHHayxiPQo6z/x2hptmeLRLNYwLCM2AXmi5b85pVRXfOP4BmdXia/mmw1YvHaavSb/9d/J+QQdvK/6CtTpYWtNgatx5FP34alwx09nrZ/IPC4dsqJr7nMYE6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385756; c=relaxed/simple;
-	bh=6LB6UCvlvFB88/s52rhCdovokxut7cMvdT7ZY8sl8No=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hgSo+QXWXdEtoDWcijNkPg4wUg4mtibnwXJ+7tT7QDiKDQaLDgZaBfZ4DfqCbRH6cHe8iyzb6sFo1qwdx53yA3ad4nyzvwvnKMVO8yGOCD3vV9yFdhsBUT1XUqTz/D6AvJYkamdyvXcZJDLazai+UMZ2HEdQbQpyThfi43HG8JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ELid6Wuq; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744385851; c=relaxed/simple;
+	bh=fDRRe0Vo8MsJlmXmjA8331kCKEUcsy/Mwqle2vPH27A=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O3qGj23XZvor+a8hlxWmCrMV+V29CjFg2OShNt9S7/dUxpa+qE4tLjGFh0eYMwXc2ds1SjaFATw3qEMeWhN56o6FY7M/6aB0eWB+Eo/qDGcrFHCE0PMQJfOoaoQYX6z8nTWJmvO/Q+aILGw9VPk5aSPxxE6It+7FtxYbO7XwJGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MwTXJXH9; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ELid6Wuq"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso21804755e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:35:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwTXJXH9"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso14971275e9.0;
+        Fri, 11 Apr 2025 08:37:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744385752; x=1744990552; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lKaim36rDlvvtzFLUyngfIkva1VGFiay+NKjck/e1UY=;
-        b=ELid6WuqVpzoSmdTe8TeCuUfLCwqeyaPVjOGUrqXrtuMISuJ3gVcmeVVpZf6CVEwRX
-         PdS75Y6cfGDgsbm4KUPG/AIlvsekxZx34vvziUJLItkVZNoHEWyszbx4mGWaWq1n9cKx
-         hh5TeFytuitcrlkTgTIOv084nX1w63EOhkuhGU2i9c2kZ7ZR4RL5sZ/2BxHmztWcZAGA
-         PJAmWEpaH6fdjX2TZ3k42hMAnf5lRcUIZKNuJhrFQgpXmRa1QYizSkVWddp92++dDmSu
-         lZjwmnkIx5YxxYFyxDBObemY+kAiyCiX0j/av3zeAbIxy3Y1Q3GuEyAb7QgNJD0Y9LaK
-         Th5Q==
+        d=gmail.com; s=20230601; t=1744385848; x=1744990648; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NtHELzGhuW6IkR/SmUv1y38cOrSHAmRqhP7AdXLw9DY=;
+        b=MwTXJXH9BJoZK9VYudkwUjFlmgj2b9eods4y5kyfC4OIdaJRGyqcNAY9z8jCQaOGsg
+         OSgm9rgNa9liohkr27Imc7VhkgqJEnEW9UdLpY7SFaFmwDxBaXjx6R/Rc+eOh+583i8i
+         sZbESCwmWlIr13eqkjdiAzMrZmbxTBW1ES9sge65i17Z8j9hvHvPmo7csQoRFgFYyNLl
+         dSJayIIfh+Fv6JetONNbN2RXTdAUaSom0N/zJymkOR07NUZA70tBa2fuUnc+YRETBm6z
+         ANY5vxG/zVJXSJ/RCX1hd3jB24/h5u8bWIMTkZDZ4/8suSEFop5adTnf7ESNW5IhX+V8
+         blow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744385752; x=1744990552;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lKaim36rDlvvtzFLUyngfIkva1VGFiay+NKjck/e1UY=;
-        b=fYAk9j75qevvZRPQw8/yzl/7b6wew8o50WZV7cmWWcjJn/Xdq62r7k8Ox48tgpApAi
-         dCgWFc1yBq7zRenn3j3JLJueCcejyke/NcIe1Jx6+ei5HZECFGoA0NWisz4GDnJplG0I
-         BPY2fCzACESWZcnSkO/IQ2FvLnLLTDY0ZNK2XR2aj4gfQSBk9MLzcxhXJdP7s63E/z+W
-         2VOYBfoQIFra+FaeYPdYwJB6TxhjG3LaZ5Iyvq9+n611frp+0hVfKjhH3UeLVw0kyFdd
-         8zXZInlFrg/G3oTZRM8Qvyv2vsgXoDOqcUGNVVDyEhl9PME6vnWpYe3kBZ3QCnlxelfg
-         S+yA==
-X-Gm-Message-State: AOJu0YwmwqeTkvpHLgs1Dru24DnxJSYolLGPgepovY2JyKEpoZdVLsWu
-	rr4SM4anIIic7+qP2HNi++iOupp5FpjrO1yttmiqW/oaWNr3NCn1iqgGaEcG1hE=
-X-Gm-Gg: ASbGnctRZSPjRaJdINLwCQT02tujBgx+UeuJb2uQjFMO3e16C8GlINSwJY33iFPWRRC
-	JU8X4sti7Wys5Iqb6KOHYAus3y2YTex9n1mV4A6vZyASUUVqHjbNKS798EYrYivDf5GnnSYtiZM
-	E60vTzi2+CG2Stq3fFbY/BmRYrtGcHzoccIwnOmNByH0Jy6uXFwuPBtzFMp63MR+FEydovlDfJp
-	bEYABVIC7T3vq5q/DNS+FXGakcRuB2s4Dsy3TeE5rrRTmopfUi2RDwqbL4WFp44H9W2uavVik1j
-	Lkgsd3nzEe7PlQ0VF3E5QCBLvkVp8dWz4XD1u3684EeVzdftpb7nyNyR8OGxp8zhkfRaKzxppP8
-	2TuS3Qw==
-X-Google-Smtp-Source: AGHT+IHmLcfEt77kvPXMcWI46glOKuB81jeyuxsGo88GhaNrmPMx+9rHhUkY2slNl4+xQtTbU1h8iQ==
-X-Received: by 2002:a05:600c:83c6:b0:439:643a:c8d5 with SMTP id 5b1f17b1804b1-43f3a7db13dmr34023905e9.0.1744385752462;
-        Fri, 11 Apr 2025 08:35:52 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338d757sm87044235e9.5.2025.04.11.08.35.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 08:35:52 -0700 (PDT)
-Message-ID: <c1be38a9-1e3b-4e26-be4b-f4fde93468c5@linaro.org>
-Date: Fri, 11 Apr 2025 16:35:51 +0100
+        d=1e100.net; s=20230601; t=1744385848; x=1744990648;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NtHELzGhuW6IkR/SmUv1y38cOrSHAmRqhP7AdXLw9DY=;
+        b=SqchQjueKhoU8Q5vcmCawkx5JV86jehZyWGFOfsmekNKGGwGNKRVxS8Xbz6xwEQOon
+         4z+DIHf8q9FyNhwuddMjUWkO5AvW3uTleW+P7zS39nhXGVBCJ76azxaA0tl6IDeA2qRy
+         hDdGrImq+jiG1qsVI9zFExL+k7ZMjsrCARLKF60AHw93yNw8b+paJuOUrRHJ0HplcBLG
+         PCnrdCBh0IA0A1+kcwVlggq77FNsvhyFY/OECz0P++N0OE8/zhyPLcPy2/ngRwL7KHs/
+         u65dldO0HF4z5le4wHuIyElaOULnfVute5E36gRmehtA2JuLPS/lltQpO2cTQ0WMDFT8
+         WWoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnmBYIADdd3wYw1weSJNxb7loCK1fEK4K1CfRC8hqberMKZdgz5M6WX8fDiqy6WrZc/wmgHoOGZKZT@vger.kernel.org, AJvYcCW6uiNennPZIBJtMsr59Km16xJl1WBYrNxoNvs2HauCRuhD90QpH4mwiniNGtNz5LYUidaxy1ZtNk0T5oaa@vger.kernel.org, AJvYcCWI8itfHdisOVs8oQBBLDTP+m+o94vJUJRpN0t6FD5GLolQCr+SGZ08jb73nSVFg4H0z58+YvvS16l3@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfY927X7BLvB4oPmJgHKx1OGDUtnB6q4hK0fhaATwQ1pm8H4BH
+	9rGzp3COKQEJSHTz6bfvqjJ7ooICVGxa6GkTaVtVndM0gsUHePwfB+pqlHThtfUW0w==
+X-Gm-Gg: ASbGncuLhu6JIaS6qIn65etA4rmLssmWsoD2IE8m6kkxGxRzP/J+Mr9bNGizKRGgA99
+	vUwKEoa8MbJONtqa1H+6lVIaR7p6+EVDmmkQS1Qho52cSlvq54r7rV7YtN4wiMoWhtTvyG9obyE
+	w8TQWF47eQQTA0xGJvfUpTgCnxGCpYXDjbyIZCtyFNJXeNxeceMwVVj4i+tEkuF7BR0JvlB9BPE
+	K876hZFLFHgWDXnvo/APinW5SLbVStsumkfYXx++Lhp/QfAzfFWYGkEA6Q6kvFfFwLRSO/+66YB
+	yYVGZkKcUOAnXSYeoLyHlLntQa3gCTY7Y6TwyzqcTUC+uPbu0Umisqrqh4z+1CJuwbpGaFxz+il
+	T3DL6L0+X9K8R
+X-Google-Smtp-Source: AGHT+IGWFccAgv+5F837HqeaOX+7V6jFIxHpLZX6I3O2n7dkRELlFksUoypsTSa/82r3riMQSkeIiw==
+X-Received: by 2002:a05:600c:54ed:b0:43c:f680:5c2e with SMTP id 5b1f17b1804b1-43f2eb960b7mr56574855e9.13.1744385847472;
+        Fri, 11 Apr 2025 08:37:27 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5ec3sm88152935e9.39.2025.04.11.08.37.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 08:37:27 -0700 (PDT)
+Message-ID: <c352c000a9d2c855dc4e5b01e16682a239e8cae7.camel@gmail.com>
+Subject: Re: [PATCH v2 01/13] iio: backend: add support for filter config
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
+	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 11 Apr 2025 16:37:28 +0100
+In-Reply-To: <20250411123627.6114-2-antoniu.miclaus@analog.com>
+References: <20250411123627.6114-1-antoniu.miclaus@analog.com>
+	 <20250411123627.6114-2-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v5 0/8] media: qcom: iris: re-organize catalog & add
- support for SM8650
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-References: <sSGjuqPKGTjE9al-J0RHMuA3Rk7hIh9x9RMWNefg93pJOOacQodM38LE11xl4vmO1I0OgSZFYR2sblISUxkPeg==@protonmail.internalid>
- <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
- <X6Bg8c3Qrw5uxgOgENJL1NcyPhC6JJ-KaiGVeEk_iuzjE0TFgp4ZREnObm2n9DVQGANSurRREkp0AiqERQgU4g==@protonmail.internalid>
- <fa6ab24d-80ea-42f0-b764-b8596e6b724d@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <fa6ab24d-80ea-42f0-b764-b8596e6b724d@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 11/04/2025 12:55, Bryan O'Donoghue wrote:
-> On 10/04/2025 17:29, Neil Armstrong wrote:
->> Re-organize the platform support core into a gen1 catalog C file
->> declaring common platform structure and include platform headers
->> containing platform specific entries and iris_platform_data
->> structure.
->>
->> The goal is to share most of the structure while having
->> clear and separate per-SoC catalog files.
->>
->> The organization is based on the curent drm/msm dpu1 catalog
->> entries.
->>
->> Add support for the IRIS accelerator for the SM8650
->> platform, which uses the iris33 hardware.
->>
->> The vpu33 requires a different reset & poweroff sequence
->> in order to properly get out of runtime suspend.
->>
->> Follow-up of [1]:
->> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org/
->>
->> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->> ---
->> Changes in v4:
->> - Reorganized into catalog, rebased sm8650 support on top
->> - Link to v4: https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org
->>
->> Changes in v4:
->> - collected tags
->> - un-split power_off in vpu3x
->> - removed useless function defines
->> - added back vpu3x disappeared rename commit
->> - Link to v3: https://lore.kernel.org/r/20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org
->>
->> Changes in v3:
->> - Collected review tags
->> - Removed bulky reset_controller ops
->> - Removed iris_vpu_power_off_controller split
->> - Link to v2: https://lore.kernel.org/r/20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org
->>
->> Changes in v2:
->> - Collected bindings review
->> - Reworked rest handling by adding a secondary optional table to be used by controller poweroff
->> - Reworked power_off_controller to be reused and extended by vpu33 support
->> - Removed useless and unneeded vpu33 init
->> - Moved vpu33 into vpu3x files to reuse code from vpu3
->> - Moved sm8650 data table into sm8550
->> - Link to v1: https://lore.kernel.org/r/20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org
->>
->> ---
->> Neil Armstrong (8):
->>         media: qcom: iris: move sm8250 to gen1 catalog
->>         media: qcom: iris: move sm8550 to gen2 catalog
->>         dt-bindings: media: qcom,sm8550-iris: document SM8650 IRIS accelerator
->>         media: platform: qcom/iris: add power_off_controller to vpu_ops
->>         media: platform: qcom/iris: introduce optional controller_rst_tbl
->>         media: platform: qcom/iris: rename iris_vpu3 to iris_vpu3x
->>         media: platform: qcom/iris: add support for vpu33
->>         media: platform: qcom/iris: add sm8650 support
->>
->>    .../bindings/media/qcom,sm8550-iris.yaml           |  33 ++-
->>    drivers/media/platform/qcom/iris/Makefile          |   6 +-
->>    .../media/platform/qcom/iris/iris_catalog_gen1.c   |  83 +++++++
->>    ...{iris_platform_sm8550.c => iris_catalog_gen2.c} |  85 +------
->>    ...ris_platform_sm8250.c => iris_catalog_sm8250.h} |  80 +-----
->>    .../media/platform/qcom/iris/iris_catalog_sm8550.h |  91 +++++++
->>    .../media/platform/qcom/iris/iris_catalog_sm8650.h |  68 +++++
->>    drivers/media/platform/qcom/iris/iris_core.h       |   1 +
->>    .../platform/qcom/iris/iris_platform_common.h      |   3 +
->>    drivers/media/platform/qcom/iris/iris_probe.c      |  43 +++-
->>    drivers/media/platform/qcom/iris/iris_vpu2.c       |   1 +
->>    drivers/media/platform/qcom/iris/iris_vpu3.c       | 122 ---------
->>    drivers/media/platform/qcom/iris/iris_vpu3x.c      | 275 +++++++++++++++++++++
->>    drivers/media/platform/qcom/iris/iris_vpu_common.c |   4 +-
->>    drivers/media/platform/qcom/iris/iris_vpu_common.h |   3 +
->>    15 files changed, 598 insertions(+), 300 deletions(-)
->> ---
->> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
->> change-id: 20250410-topic-sm8x50-upstream-iris-catalog-3e2e4a033d6f
->>
->> Best regards,
->> --
->> Neil Armstrong <neil.armstrong@linaro.org>
->>
->>
-> 
-> Please fixup this
-> 
-> 0007-media-platform-qcom-iris-add-support-for-vpu33.patch has no obvious
-> style problems and is ready for submission.
-> 0007-media-platform-qcom-iris-add-support-for-vpu33.patch:7: slighly ==>
-> slightly
-> 
-> also accounting for my comments in patches #1 and #2 you can add for the
-> series
-> 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> 
+Hi Antoniu,
 
-There's an update to the yaml you need to account for now.
+I do not have time today for going through all the series but I'll already =
+leave
+my comment on this on..
 
-https://gitlab.freedesktop.org/linux-media/users/bodonoghue/-/blob/next/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml?ref_type=heads#L25
+On Fri, 2025-04-11 at 15:36 +0300, Antoniu Miclaus wrote:
+> Add backend support for digital filter enable/disable.
+>=20
+> This setting can be adjusted within the IP cores interfacing devices.
+>=20
+> The IP core can be configured based on the state of the actual
+> digital filter configuration of the part.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+> changes in v2:
+> =C2=A0- improve commit description
+> =C2=A0drivers/iio/industrialio-backend.c | 26 ++++++++++++++++++++++++++
+> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 6 ++++++
+> =C2=A02 files changed, 32 insertions(+)
+>=20
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
+o-
+> backend.c
+> index d4ad36f54090..ffafe7c73508 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -778,6 +778,32 @@ static int __devm_iio_backend_get(struct device *dev=
+,
+> struct iio_backend *back)
+> =C2=A0	return 0;
+> =C2=A0}
+> =C2=A0
+> +/**
+> + * iio_backend_filter_enable - Enable filter
+> + * @back: Backend device
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_filter_enable(struct iio_backend *back)
+> +{
+> +	return iio_backend_op_call(back, filter_enable);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_filter_enable, "IIO_BACKEND");
+> +
+> +/**
+> + * iio_backend_filter_disable - Disable filter
+> + * @back: Backend device
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_filter_disable(struct iio_backend *back)
+> +{
+> +	return iio_backend_op_call(back, filter_disable);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_filter_disable, "IIO_BACKEND");
 
----
-bod
+This seems to resemble the filter_type IIO attr so I would likely be more
+explicit in the API naming. Like 'iio_backend_filter_type_set()'. And that =
+also
+takes me into the more important point. I would consider having this API ta=
+king
+an unsigned int filter_type (or an enum with the same possibilities as defi=
+ned
+in the ABI) argument rather than an enable vs disable thing. Like this, we'=
+re
+just thinking about this particular usecase but it can very well happen tha=
+t in
+the future some backends might need to know the specific filter being
+configured. Sure we could change things later on but doing it now is pretty
+straight so why not :)?
+
+- Nuno S=C3=A1
+
