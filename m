@@ -1,105 +1,80 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mr85p00im-ztdg06011901.me.com (mr85p00im-ztdg06011901.me.com [17.58.23.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7485537FF;
-	Fri, 11 Apr 2025 14:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D6E537FF
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744383155; cv=none; b=EU3ss2285BDYJTSsBSiTr0Ai8vP2ThZw1k8pfe6j4hHVvpA2Y3sIaqSw3U+4Eaw+afW5z0sU573Mf5DBuyAd7mJcfF5Smt5Vi3mRknwg//uwmPWZZJXgwUt8kGW4r45r7zlQRWzegA4dnr/qQffcFgA159+3fDlgvn4ip47NEA4=
+	t=1744383174; cv=none; b=jUVtwmXnMXs3gCBAdqD/twYeOflnK2lbzh0YHD8z+bFImMaTiYY2mr0NhAaQaz9c1gdY2OmD4ytxc5Sm1bXnvM3YcAhJuQPYczaPUQ4mFAHO8q9l9J1lDJCWuEs4ouxKdjukio9n1qtf2TCtZvwxUYgKwGAUcxx4dJevOkF6Fqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744383155; c=relaxed/simple;
-	bh=B7cRh6flxc3wDyyTeZFBhXdqljBYzOjL9IBWbznSorQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NANerUmMbZPzGF0C8Le2aIK/gXbID0p6PbCbpsltexVonC9/OmRBUYSpa1DGmWIIwzh4HUYOJplZ5lrVxuSKDfuG0E6q8VAQByk29yQty5fz7hsZ0CjYzER4kJamJ0kpVGFF3tXJrqEu42DHuG1iuIbOtFVD3FbgN3hRFgJXHpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Xq/UAxUK; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744383174; c=relaxed/simple;
+	bh=+0oWcU2F0Py3hmqgfjsjt/5LDdkKhmPW/eMZ/yB3ZwM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KON+0Yfb8TwdyuSm/hija3AXuFAY2xIgZ/N8IuADwJtx/heE8C0bbHr9LCh90bwRhoEHPfZZVjie5wD3QU/QdPAg4vsxXuQTG5Imlxo4YARRkZ0R/E86HPhKvjPGz1/Oh3Ul3T2GmdF+HYj32Z9cdSj0bXyLysqprbxNM6bVGvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=kPRirKAb; arc=none smtp.client-ip=17.58.23.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Xq/UAxUK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7866C43846;
-	Fri, 11 Apr 2025 14:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744383150;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5WQj8JYIDKZIiU5BLzr8VSWJkkvHXrsWHxGSKXKhNz4=;
-	b=Xq/UAxUKEca5FS1wbJRQN/WGzbGua7wdXp/xnJGSERiHx/dw5Re9qjsuG5pQBpJ5VCdBzc
-	8xu0s5C5OSaUpKm2yxK4I5yny4rpww3JndLzOCaiN2lbH7Ciaw2H4m6LHl2ZXhIYx/pPyO
-	Vlx1zJ2xcFXw8vNnNynHgkOkMUrUl1p7BExm2j1+2fmOLT26lzuV6rJz4F+IriBMP3iKCC
-	yL7XcMlyuUhLeSNC/YW0UZLd+SpgZ6oClFQN//gr6OzXJuGaLgKMAkyNT53I8FW7+etiFR
-	spOcSKKF8FHN+HwiYRtQnQyR/UTUmQGcuBaj7wLZi0dTyG5W7sgLeaN/ILod5A==
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Fri, 11 Apr 2025 16:52:09 +0200
-Subject: [PATCH v2] gpiolib: Allow to use setters with return value for
- output-only gpios
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="kPRirKAb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=+0oWcU2F0Py3hmqgfjsjt/5LDdkKhmPW/eMZ/yB3ZwM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=kPRirKAbJPLxnXIpXmgXUki/wruTa4R8puIWQa00EQiXJFLHJGmA1f8vWaKHkS9DM
+	 Ug3BS04ho+pMtAdmCRqC9FgqYKS2nx5IQPhtFQfcs5NINcQSKmmohWrBpW4uBP7EsT
+	 F/AkLMDTgSSdj9i2a2IPSG1PSSFtQZCVoHVOifsRiDYYu5LOK6lIjuKZsq0FrZJECn
+	 Dz64CRve3bvYX1CofEqLB8GWJCVX0rZkYiW1rTYG77ibaqLN3k758QZTHlr98Yg0eE
+	 a6coooZQLTGp8W5J9DpDwiMK8ntfPhPQLlXIzO/CoCn9Rx7Dc5D6dxVXw8aJyrAbqi
+	 7sOyHinzg1Kzw==
+Received: from mr85p00im-ztdg06011901.me.com (mr85p00im-ztdg06011901.me.com [17.58.23.198])
+	by mr85p00im-ztdg06011901.me.com (Postfix) with ESMTPS id 5ACB01349E9A;
+	Fri, 11 Apr 2025 14:52:51 +0000 (UTC)
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-ztdg06011901.me.com (Postfix) with ESMTPSA id E90351349AF0;
+	Fri, 11 Apr 2025 14:52:48 +0000 (UTC)
+Message-ID: <6cf4c137-10cd-4d4c-b109-d87e03bda4f7@icloud.com>
+Date: Fri, 11 Apr 2025 22:52:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] fs/filesystems: Fix potential unsigned integer
+ underflow in fs_name()
+To: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com>
+ <20250410-fix_fs-v1-1-7c14ccc8ebaa@quicinc.com>
+ <20250411-kaiman-bewahren-bef1f1baee8e@brauner>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20250411-kaiman-bewahren-bef1f1baee8e@brauner>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-mdb-gpiolib-setters-fix-v2-1-9611280d8822@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAJgs+WcC/4WNQQ6CMBBFr0Jm7Zi2orWsvIdhQekIkwAlbUM0p
- He3cgGX7yX//R0iBaYITbVDoI0j+6WAOlXQj90yELIrDEqoq6ilxNlZHFb2E1uMlBKFiC9+o71
- ro2/GKKEFlPUaqOij/GwLjxyTD5/jaJM/+7+5SZToqLsI1Vld1+JhvU8TL+fez9DmnL8jx3hBw
- AAAAA==
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744383150; l=1462;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=B7cRh6flxc3wDyyTeZFBhXdqljBYzOjL9IBWbznSorQ=;
- b=XlcqQPOGKCYQh051bTYIKWVhhv6s3D0dQvElenhZ88XXUe/UN7ogyvti36ApuR+ocXMafBHbW
- E6pdlZSI99WDvI10QdVOV56X4h4p5m5yGE7KmGxsNVZQass1/nwY8Sl
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddvuddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeitdevuefguedvjeduieeludekudeiveffueektdehfeevheeugffhhfdtgedvgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuhdrkhhlvghinhgvq
- dhkohgvnhhighessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggrrhhtohhsiidrghholhgrshiivgifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+X-Proofpoint-GUID: y6FGHfjpYIHQQxC7hikPGYDCffZ95P8d
+X-Proofpoint-ORIG-GUID: y6FGHfjpYIHQQxC7hikPGYDCffZ95P8d
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0
+ mlxlogscore=898 bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0
+ clxscore=1015 phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2503100000 definitions=main-2504110094
 
-The gpiod_direction_output_raw_commit() function checks if any setter
-callback is present before doing anything. As the new GPIO setters with
-return values were introduced, make this check also succeed if one is
-present.
+On 2025/4/11 22:35, Christian Brauner wrote:
+>> Fix by breaking the for loop when '@index == 0' which is also more proper
+>> than '@index <= 0' for unsigned integer comparison.
+>>
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+>> ---
+> This is honestly not worth the effort thinking about.
+> I'm going to propose that we remove this system call or at least switch
+> the default to N. Nobody uses this anymore I'm pretty sure
 
-Fixes: 98ce1eb1fd87 ("gpiolib: introduce gpio_chip setters that return values")
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
----
-Changes in v2:
-- Add Fixes: tag and Cc: to stable
-- Link to v1: https://lore.kernel.org/r/20250411-mdb-gpiolib-setters-fix-v1-1-dea302ab7440@bootlin.com
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sound good.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index b8197502a5ac..cd4fecbb41f2 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2879,7 +2879,7 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
- 	 * output-only, but if there is then not even a .set() operation it
- 	 * is pretty tricky to drive the output line.
- 	 */
--	if (!guard.gc->set && !guard.gc->direction_output) {
-+	if (!guard.gc->set && !guard.gc->set_rv && !guard.gc->direction_output) {
- 		gpiod_warn(desc,
- 			   "%s: missing set() and direction_output() operations\n",
- 			   __func__);
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250411-mdb-gpiolib-setters-fix-b87976992070
-
-Best regards,
--- 
-Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+i just started looking at FS code (^^).
 
