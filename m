@@ -1,156 +1,126 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435A5208A9
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D68208A9;
+	Fri, 11 Apr 2025 12:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744372999; cv=none; b=jGUbT2HUkgSzMieBLAWQrNORRa3rxZR5p21g81qSeSWLFj9OG+PPbfqIWFfzJCSjxqNIqkp7CMQMLyO367cHWuEDPozk/A8LSeMYenX1jKXuL1ye9P1EAqusSgH78Bo8Mu2M52y8ikj4AgVAtz4QbPzeiIoLrVe0S3AhuPGX4Yw=
+	t=1744373116; cv=none; b=gusr8q5c1Hkj0w6mgftODbbQfq9ot37PJEZwD4Bfcz9VQYIQdTFoE94twctPKyMzsImzc0fUsnwj0jTf7uEvZI4xhiQuTdq5KKCesh9Y25W7YFIz4GBDx3ngaF6E1CULfjKbHIwRZK7DcHJKbRLpl/Qtb8jopnkEQOUzrUssWIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744372999; c=relaxed/simple;
-	bh=oCU3vedl5doF6iYUq0ED4E7nJQ1ERBJfXZjBRFR79gc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=apYkFPcRLfhCY7vRzjhTSFZ52SnDB121zUPQhYT7sKaTl6A0KKomLR3l1IDN9ugE2XPKFooXE/cwiVZ4b598SrtXiIq7QRgJdMI/vWi19rXKx6+87RqmvfZgKevDAL1C6cG4UYGeJI3lth5qTkiO3uXSWq5D4n2U9xdlt+9PT14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZBtIeMlV; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744373116; c=relaxed/simple;
+	bh=464zqGHOoSb3PtGMRlI2KSUxQhN2Muj3OeGGaVNbySQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NgYFY+iSnXCJBdVjt6clcvH+ktqiJKUgTneAdnQ4ecTwBUc5WX4WFxBKlPukL+tYX7FKiBWMSjogNwLu3fsMu/NAXlohmA4wUQkUvAsJ7HjcvBeq1LUPCAAKXESJZfr45gZvgeEVkgKbvI/5JCqKew+oE0zKyqQF9NmVcJsmQZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rg6+7yX1; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBtIeMlV"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso19102795e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:03:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744372996; x=1744977796; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2XUXdxG/BhkCfZVlPJvHGNM3P7ArX2Kcz52iyJMQG+U=;
-        b=ZBtIeMlVlXSb0ZNi9jyt41UDv/VRaiBoiAlM71umBsHVIMaOBVaHpA/YTVQg3lKbOc
-         sPEEr3waBVVvGEZlppBLsoxai1c/OYrLOWKRQ6S45x1u4qzi8oaqDpE+u0irhKvXpDzi
-         VePq4pXCWEf6rKCW6AI4nEigCYXw+HeejCrUeCoibYWYZ5ZjkFuHquyBkAzxLvtEfJ4/
-         VB/2yX1VUksVGvl70vii0yJep+xO3W4BtlEY1IUayvyeKZF0UHznvRBsoyypdnwR89Ba
-         ajxM6F/4kF1/jlzx55ADOSTwVqmG8lzlpms7QzRP7kLoxlh3qhmo8THpRw/T6wKj42hj
-         i07g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744372996; x=1744977796;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2XUXdxG/BhkCfZVlPJvHGNM3P7ArX2Kcz52iyJMQG+U=;
-        b=V89JjGFics4/OTBsToZwY6mL/BSTTt/PH0tEcQkZbAoXeYxmITr/xitsF0aKlKmVh6
-         E6E9uo+yR6fvRqoJ8ms2LaqkJLq6wtCfCpWJGFbXoOYgfVuiUZil4tc44rnBwg2f0vO3
-         wHh6xpBoTil2EtzTY4Us5555UgyqRpd7aplk9tlLeiz7Z7aoBB1d2/HTs8DNuXsZRyLX
-         s2B12jOkERaViRSX1jh5hCPmAaKOZNFaBUS6j0EUpwa8ZXa1CgKm/6Up+fFHJ49d7S0G
-         /8zSXudCVn8RINScKPNW/buFWlhsMIUbNEmgnpVsoi9DvjcQKBQi55lk7Bkt8RTpfkP9
-         j9hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsoaVVqv9GN3l0q/e60upX0AsCoiepxqDBzwmPDu31lpRZotRBMzni9Mr/xxgxdOEr/qdGk0DF57tS+us=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz35oeL0UiWfmYBJuQCYHztfkntO+KwBIx2VR+LsHblAziHBtu2
-	Wamg0RbZBN7nze3g8fWSpSBaIztukNXXmtiqfPg/p/GNtMyl+CHhnzLm0Q==
-X-Gm-Gg: ASbGnctEGIS5oSzYa9w+Day2QP88Yxe4gc1w0+YOgUam6Qb+O3a4iDds5I7FvnVrzrt
-	ydksqcIXHINcxIEVXrK993KZkMKNu/eFmhSUUn2iB80UphxHJMmL4S5cCU9t87EE7scfAlzpvxO
-	WtaJ7OHAlOqDc6zxDhgr92u1EZXtUBT4f5R/tx7j3hotMYltuYVquoKoQM6OOXSeJQlwfSwWwkN
-	TS+2u6Og1D7vUbBsX0KGMnrhNLFN+XBXerBCKqbgpRBTdQgbZll0+THq87jU8uKHMmD3g+vZplm
-	gEdjoT22qN+/uMYc0omBsRKqzZrM188ov3lDOcAR0WfWafIG3Zr5tkSg4xk7Tqx+obDN04PsQtZ
-	OIACpYjxRINQ8Qg==
-X-Google-Smtp-Source: AGHT+IFjJLiz90Y/fxzwTEEZjSN23htjHcLr+F0TlWnjvsqsniNtlVdnHF/+XW9GHr3Jqk8W2SymPg==
-X-Received: by 2002:a5d:584b:0:b0:39d:724f:a8f0 with SMTP id ffacd0b85a97d-39eaaebb54fmr1676129f8f.42.1744372996097;
-        Fri, 11 Apr 2025 05:03:16 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae97b249sm1834556f8f.58.2025.04.11.05.03.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 05:03:15 -0700 (PDT)
-Date: Fri, 11 Apr 2025 13:03:09 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: Xavier <xavier_qy@163.com>, catalin.marinas@arm.com, will@kernel.org,
- akpm@linux-foundation.org, ryan.roberts@arm.com, ioworker0@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant
- operations
-Message-ID: <20250411130309.7894f204@pumpkin>
-In-Reply-To: <CAGsJ_4wsW+urp6gbp+yDG40fZw9Bszny2iJVsV_AzzGqgQy+4g@mail.gmail.com>
-References: <20250407092243.2207837-1-xavier_qy@163.com>
-	<CAGsJ_4wsW+urp6gbp+yDG40fZw9Bszny2iJVsV_AzzGqgQy+4g@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rg6+7yX1"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B4Hwbv028306;
+	Fri, 11 Apr 2025 12:04:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=PnqGyYgzHT0Sz+5k6BXWUk5N9daIOA
+	t0miBGvgSDKAY=; b=rg6+7yX1oIY/hrDNoGj3DwccvaTK1QnKM/d3OmrcztqEDp
+	j4j5yfP62lfxD/7TrZFOhfyN/XMIoQfZ9vBMmaXQZiQxsA6GTPDm833Y+/EC3OIe
+	EVs/aJqbsqOqPuf9GkcCGI+TAuCYbMSXC3WAuwom/mXn7fzwJevaJwo4QojGds41
+	jOG6NWCKAmBMEP3STFTm8r6lvpkCTgDuZRyy1CUREkt2rgPkvaChg17e2Fifu4mj
+	LsxtUVPM4U+FemCOiNrQDNqf6JSM0VFG10GCRlIJZfrAUB7AhisPET/LTJCs7Vcx
+	K2jP6Vv5ysev6rq9j6y5SM7EnQ6SgRS4oy8ulnNA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xj5xmbq9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 12:04:49 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53BBvsIB009672;
+	Fri, 11 Apr 2025 12:04:49 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xj5xmbq7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 12:04:49 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53B8Brgm029520;
+	Fri, 11 Apr 2025 12:04:48 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45x1k78q3q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 12:04:48 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53BC4kR641484682
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 12:04:46 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8519420043;
+	Fri, 11 Apr 2025 12:04:46 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 975B920040;
+	Fri, 11 Apr 2025 12:04:45 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.62.45])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 11 Apr 2025 12:04:45 +0000 (GMT)
+Date: Fri, 11 Apr 2025 14:04:44 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Nicholas Piggin <npiggin@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Hugh Dickins <hughd@google.com>, Guenter Roeck <linux@roeck-us.net>,
+        Juergen Gross <jgross@suse.com>, Jeremy Fitzhardinge <jeremy@goop.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, sparclinux@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v1 0/4] mm: Fix apply_to_pte_range() vs lazy MMU mode
+Message-ID: <Z/kFXDwneQ9yHiJl@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <cover.1744037648.git.agordeev@linux.ibm.com>
+ <D93MFO5IGN4M.2FWKFWQ9G807P@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D93MFO5IGN4M.2FWKFWQ9G807P@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: G_BAGoiaaveYky3440tvomTW6sZpx75k
+X-Proofpoint-ORIG-GUID: 0HKwRFIDMdOHgUv5TCoToIJxhDHz4gm6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0
+ mlxlogscore=591 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504110077
 
-On Fri, 11 Apr 2025 09:25:39 +1200
-Barry Song <21cnbao@gmail.com> wrote:
+On Fri, Apr 11, 2025 at 05:12:28PM +1000, Nicholas Piggin wrote:
+...
+> Huh. powerpc actually has some crazy code in __switch_to() that is
+> supposed to handle preemption while in lazy mmu mode. So we probably
+> don't even need to disable preemption, just use the raw per-cpu
+> accessors (or keep disabling preemption and remove the now dead code
+> from context switch).
 
-> On Mon, Apr 7, 2025 at 9:23=E2=80=AFPM Xavier <xavier_qy@163.com> wrote:
-> >
-> > This commit optimizes the contpte_ptep_get function by adding early
-> >  termination logic. It checks if the dirty and young bits of orig_pte
-> >  are already set and skips redundant bit-setting operations during
-> >  the loop. This reduces unnecessary iterations and improves performance.
-> >
-> > Signed-off-by: Xavier <xavier_qy@163.com>
-> > ---
-> >  arch/arm64/mm/contpte.c | 13 +++++++++++--
-> >  1 file changed, 11 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-> > index bcac4f55f9c1..ca15d8f52d14 100644
-> > --- a/arch/arm64/mm/contpte.c
-> > +++ b/arch/arm64/mm/contpte.c
-> > @@ -163,17 +163,26 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pt=
-e)
-> >
-> >         pte_t pte;
-> >         int i;
-> > +       bool dirty =3D false;
-> > +       bool young =3D false;
-> >
-> >         ptep =3D contpte_align_down(ptep);
-> >
-> >         for (i =3D 0; i < CONT_PTES; i++, ptep++) {
-> >                 pte =3D __ptep_get(ptep);
-> >
-> > -               if (pte_dirty(pte))
-> > +               if (!dirty && pte_dirty(pte)) {
-> > +                       dirty =3D true;
-> >                         orig_pte =3D pte_mkdirty(orig_pte);
-> > +               }
-> >
-> > -               if (pte_young(pte))
-> > +               if (!young && pte_young(pte)) {
-> > +                       young =3D true;
-> >                         orig_pte =3D pte_mkyoung(orig_pte);
-> > +               }
-> > +
-> > +               if (dirty && young)
-> > +                       break; =20
->=20
-> This kind of optimization is always tricky. Dev previously tried a similar
-> approach to reduce the loop count, but it ended up causing performance
-> degradation:
-> https://lore.kernel.org/linux-mm/20240913091902.1160520-1-dev.jain@arm.co=
-m/
->=20
-> So we may need actual data to validate this idea.
+Well, I tried to do the latter ;)
+https://lore.kernel.org/linuxppc-dev/3b4e3e28172f09165b19ee7cac67a860d7cc1c6e.1742915600.git.agordeev@linux.ibm.com/
+Not sure how it is aligned with the current state (see below).
 
-You might win with 3 loops.
-The first looks for both 'dirty' and 'young'.
-If it finds only one it jumps to a different loop that continues
-the search but only looks for the other flag.
+> IIRC all this got built up over a long time with some TLB flush
+> rules changing at the same time, we could probably stay in lazy mmu
+> mode for a longer time until it was discovered we really need to
+> flush before dropping the PTL.
+> 
+> ppc64 and sparc I think don't even need lazy mmu mode for kasan (TLBs
+> do not require flushing) and will function just fine if not in lazy
+> mode (they just flush one TLB at a time), not sure about xen. We could
+> actually go the other way and require that archs operate properly when
+> not in lazy mode (at least for kernel page tables) and avoid it for
+> apply_to_page_range()?
 
-	David
+Ryan Roberts hopefully brought some order to the topic:
+https://lore.kernel.org/linux-mm/20250303141542.3371656-1-ryan.roberts@arm.com/
 
->=20
-> >         }
-> >
-> >         return orig_pte;
-> > --
-> > 2.34.1
-> > =20
->=20
-> Thanks
-> Barry
->=20
-
+> Thanks,
+> Nick
