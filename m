@@ -1,87 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B196E1FBEA6;
-	Fri, 11 Apr 2025 15:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74A01F461D
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744384071; cv=none; b=Ur0q4FkdXBGDC4+q+S6zpYFeAXZm7vG0wmieon1xvwzD7kAmcb0bjohhBdDIBmpa+SdkBDHC+3lzDdzdyIJzNIQ8YAfkTEPTjjWvVIpCA/e5Y+L0yNae+I4Qrgm/aYjDrQlWHyR2COtXqOZeBsZcDFFaXDn+Y+6r+eJIbnrxgVY=
+	t=1744384070; cv=none; b=swiEsFnd6lGahmXCjxh/Gx8qmceLe5kgLLPoDFYKTUJXt4S9jaRU0RdTEckFqFY3axc8uxkLN9SnQkFKwM1L8KP3TmOm8bd81wpuSBWpgeUGIVjy6xYE3NOoXXECZPe/5f9wH8YZsPOMWVBuYf43i1VxP66Fma710sHEdDMAl0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744384071; c=relaxed/simple;
-	bh=ilVcP95pO6GOl3XMTqH0fCiyL4mHYa7YuNVeE44k9Xc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X7mh/hiIdM22XcmS9w4s60VdKNgxUnlLn2v9DNxCINIQpHE+jJzYVJSRLUY947M5W1zu9H4Yjh41gYeFgZPPZp1vufAxPe1PyE5g0PQew8cgUdiEuBrH9l6y+6zLDvfW6k5jFMkVLVBluzSU9H2Nn6lA1SFVa/Iwm7gi3fNPe+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 748B71007;
-	Fri, 11 Apr 2025 08:07:48 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27F053F59E;
-	Fri, 11 Apr 2025 08:07:47 -0700 (PDT)
-Date: Fri, 11 Apr 2025 16:07:44 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Huisong Li <lihuisong@huawei.com>,
-	Adam Young <admiyo@os.amperecomputing.com>,
-	Robbie King <robbiek@xsightlabs.com>,
-	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v3 11/13] hwmon: (xgene-hwmon) Simplify PCC shared memory
- region handling
-Message-ID: <20250411-able-rattlesnake-of-calibration-fcdcd8@sudeepholla>
-References: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
- <20250313-pcc_fixes_updates-v3-11-019a4aa74d0f@arm.com>
- <0be30d7d-f091-4497-bb72-fdcad276285e@roeck-us.net>
+	s=arc-20240116; t=1744384070; c=relaxed/simple;
+	bh=nOqw3UCQNgkETNgENmxmP/upbcQxPunDT4ykImyo1N8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ne3RbI9/ArwX6p5W2ubuNNrVGsC4SkjHIdEgtQrnF7X9psjegv+RdCpG98EU4sRjmiuFrlrqmRzWoKVurtAYh5+T7nlp9EN1z468KpFFo9nEnbZ55MzzbPpDfzMinaHXJrYY0GqU0GfMtFAeO1P4qQhaACn29WUurTvlGLAN5z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NNa8O/WV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NNa8O/WV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744384067;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nOqw3UCQNgkETNgENmxmP/upbcQxPunDT4ykImyo1N8=;
+	b=NNa8O/WVEBRvG7g4ZCQFaHWf9/UT50qhWcLyX2UROCMid1An+CAN11T3w4l9sLaAxaJPX1
+	/tgW7fx0wrEqOwOOMdbSDiVXWopXf1CvLB/6B1oRV6UsuNjz6JP6YzX/GklOyj6uTPaGmO
+	vfBnd8JfxtRmaJGmJ5OU7tDXpMeul4E=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-688-PVSxihWVO1i6wwYuqixiKA-1; Fri, 11 Apr 2025 11:07:45 -0400
+X-MC-Unique: PVSxihWVO1i6wwYuqixiKA-1
+X-Mimecast-MFC-AGG-ID: PVSxihWVO1i6wwYuqixiKA_1744384064
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-229170fbe74so17559515ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:07:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744384064; x=1744988864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nOqw3UCQNgkETNgENmxmP/upbcQxPunDT4ykImyo1N8=;
+        b=g6SzDoSifrNXl3AuSa3iqBRXpbNc6kgCd/V0W9RM8+xXyx7jpSmqfUII2Bb9gn7p+V
+         jBHWDHlb8Z6QOCobZ0AEFCdhM0UrSGXpwXQhAZZ46q/eU8vb8Sx7zXlaH4+lbAv0sPgA
+         mip7QszXfrtBesvQxZGkHjRX+EX+LpQNvsOHmspxq67toXsikxH1EY3/c4GZI2oFMuV9
+         80JklRmy9Mj/QzNrvAgyEgzCnVFV1oKie2zB3yCbwAGBHI3HWWhI0FoChwmP+P56W82L
+         B9Q974CsBLIP1Bt88Stw3BQwew15k+FOn1RoFqEpyLdmuSvJvgZZvZTlMXohmSf5kZ4S
+         p18A==
+X-Forwarded-Encrypted: i=1; AJvYcCVVzx4ErN1IGzK2aRGd3ET+jqXb58ph+XJLnbtBTzl8L1LWISrsji1q+RhcUFQcwFZx7mBtSnKPTq/iilo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg0Mv3D6hrgHDf2gWC0QEqoCPxgiTd2dLiktae2GuyMxMkCoq5
+	f9Z/3xqvxjsRmkp2y2i1CfI4Uf1V8ezEY3V2Lds6YQZ7Fbmr7EW9w1knk/fc37f7D4BeV89azKe
+	te6B7IIixCIDXFaSQTSyYdY6Bjc0ZB0uHTEnEc7h13D8ry7J/rhtu9q40t/EEGg39Id+cpzZ9PI
+	Z2NGteJ5fxfouTsRx+e0FHjMXwNT2cl+ZxIDUY
+X-Gm-Gg: ASbGncsl/pq1x9lRZ7QHWnI1TZbTMrXxx6HVDH3sMSUbv6znzaqoXmb39ocK9RgoZMs
+	UyJmZNmUDleDfkK/vrNxGZt+0tCgoHcIyxXBlNbaBLKrNJYFe/tcvvwQCMLBSS2LEYVI=
+X-Received: by 2002:a17:902:e947:b0:220:fb23:48df with SMTP id d9443c01a7336-22bea5013d9mr47679175ad.36.1744384063951;
+        Fri, 11 Apr 2025 08:07:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEcyY0eGCvHI/gdDU7XNiZc6IWofGPi7vPYYYhj18wxtPn+ZObM4OBxwrLpEk3ZNRwlRvvdOslJtVL7ZRuw34Q=
+X-Received: by 2002:a17:902:e947:b0:220:fb23:48df with SMTP id
+ d9443c01a7336-22bea5013d9mr47678805ad.36.1744384063602; Fri, 11 Apr 2025
+ 08:07:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0be30d7d-f091-4497-bb72-fdcad276285e@roeck-us.net>
+References: <20250410035717.473207-1-bhe@redhat.com> <20250410035717.473207-2-bhe@redhat.com>
+ <20250410204338.4b2101afdf18d8898390ef58@linux-foundation.org> <Z/ipfCofBe99Ie+7@MiWiFi-R3L-srv>
+In-Reply-To: <Z/ipfCofBe99Ie+7@MiWiFi-R3L-srv>
+From: Andreas Gruenbacher <agruenba@redhat.com>
+Date: Fri, 11 Apr 2025 17:07:32 +0200
+X-Gm-Features: ATxdqUHXErCdiRkEhF36CcQgwOHHQJ4vauPwTGL6_wmpxLHi-chD_wBZ4Y_HerY
+Message-ID: <CAHc6FU7B5ORy-97OegzZ939MjuZWdBicLjRxj_bYmG3Hm1mKSA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] mm/gup: fix wrongly calculated returned value in fault_in_safe_writeable()
+To: Baoquan He <bhe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, gfs2@lists.linux.dev, linux-mm@kvack.org, 
+	david@redhat.com, osalvador@suse.de, yanjun.zhu@linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 07:15:22AM -0700, Guenter Roeck wrote:
-> On Thu, Mar 13, 2025 at 03:28:57PM +0000, Sudeep Holla wrote:
-> > The PCC driver now handles mapping and unmapping of shared memory
-> > areas as part of pcc_mbox_{request,free}_channel(). Without these before,
-> > this xgene hwmon driver did handling of those mappings like several
-> > other PCC mailbox client drivers.
-> > 
-> > There were redundant operations, leading to unnecessary code. Maintaining
-> > the consistency across these driver was harder due to scattered handling
-> > of shmem.
-> > 
-> > Just use the mapped shmem and remove all redundant operations from this
-> > driver.
-> > 
-> > Cc: Jean Delvare <jdelvare@suse.com>
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Cc: linux-hwmon@vger.kernel.org
-> > Acked-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> Not that it matters, but I keep wondering: Why don't people use auxiliary
-> devices for situations like this, and keep the subsystem code where it
-> belongs ?
-> 
+On Fri, Apr 11, 2025 at 7:32=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+> On 04/10/25 at 08:43pm, Andrew Morton wrote:
+> > On Thu, 10 Apr 2025 11:57:14 +0800 Baoquan He <bhe@redhat.com> wrote:
+> >
+> > > Not like fault_in_readable() or fault_in_writeable(), in
+> > > fault_in_safe_writeable() local variable 'start' is increased page
+> > > by page to loop till the whole address range is handled. However,
+> > > it mistakenly calcalates the size of handled range with 'uaddr - star=
+t'.
+> >
+> > What are the userspace-visible runtime effects of this change?
+>
+> I see it mainly affect gfs2_file_direct_read(). Not sure if GFS2 people
+> can sense any exceptional behaviour caused by this code bug.
 
-Good question. I haven't used auxiliary devices but did looks at it recently
-when I stumbled across some x86 telemetry code just last week. I need to go
-and understand it better to see how it can be used here as I don't have much
-understanding ATM other than its uses in GPU and Audio subsystems.
+Thanks for the heads up.
 
-> I am not requesting that you do it, I just wonder why the mechanism isn't
-> used. I would have thought that it would be perfect for situations like
-> this, so I guess I must be missing something, and I'd like to understand
-> what that something is.
-> 
+In gfs2, fault_in_iov_iter_writeable() is used in
+gfs2_file_direct_read() and gfs2_file_read_iter(), so this potentially
+affects buffered as well as direct reads. This bug could cause those
+gfs2 functions to spin in a loop.
 
-Not sure, just that no one spent time think about it and see what is missing
-if any and make it work.
+Can this fix please be sent to Linus for inclusion into 6.15?
 
--- 
-Regards,
-Sudeep
+Thanks,
+Andreas
+
