@@ -1,261 +1,412 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D461EFF9C;
-	Fri, 11 Apr 2025 05:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744349801; cv=fail; b=qg3PMtgDoKx3shUY8NBSx2C2eDb8B0tolbdYTBloaa0StAl6AIjNsL74oUsfqVkMlpAB+qRS5qwXGUopSjPrj0d/drw3RUMEtaDK+THmKJZt9i+fd/oRd4mYoovwi0vg6vhTWHC43L6PPkPbkZ3wlwjK5D8Ak2mYkFdXLse7xvM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744349801; c=relaxed/simple;
-	bh=4B5pdIGGFjd60eshrym5EaPW5I9keHSAL7vraZUGq8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bo0ZWKyhZBuDmlcYNYN+XsakQ8Fj7YFLvWErCkG9UfP2FwLFtXsLVrNe1uPmSsxKYR8izyf/ICUtQsMeEfBD9JkEKk8LKX0SuWC38JReC3J0V47d91X+ieHQQ9w+zTjOX7Zs4TSo3+GbDyyS1C2QXnD6A9TxUhQVVrehNPnUtBA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mHeXzAXz; arc=fail smtp.client-ip=40.107.223.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ACB1E835B
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744349899; cv=none; b=OCB6vwmWw+6AqJV3pylIdoCItxFxbSzRdHW8Uuap015R5PPecBgCPltCFPY2MhpHIKyTUQRvjVGK3Ce+9YQNQQC7bAM2kXAU8KIjaSRqQAr3Qd+Qzhd0eO7k1rBMCvYesGj6NnTiOp7HOMFdMauqFez+iFK3ncrGYJoPN6eIuWE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744349899; c=relaxed/simple;
+	bh=gwTzvsI+nVyapXtTU5ASJp42Hh/PKxKpDuOroirApmk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lqZ0CHMSGdy8rJya4ft0OB2oCggig3t1Ux1I9uPcH0FoCV92vt2bBblPg0gMEHBk9SXCr5ndY4OQFwr/SfemzzwtibOUkUZRvWYDuuhtfdhxsSiWCeTHC+55wbt9jB+RBdyZ+9n5rXuXTAT2oxTuWGMkuprBnk4hSRGeFB23MUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vUdVuLzs; arc=none smtp.client-ip=209.85.160.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mHeXzAXz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y5+7GzmcBU9WNvw2Pec4trXkkbZTP9ePK93RnZHsK0lQqu05MGLnMbQaQRxo4qiVoucB/pMdp2NlJBnIBthsHlJIaT3huAauKLXMhrXqZQX5VPYHVSrDOFizQU/WQVBRQx8XzYGe/WKP7OWqoBrpNuQIv4NqMVC7jrRxqYr22aubcZkSqzGezilG6E/wtXpU+dlP0oOr5MC/tcL0l7RG6Kltn4KoEwSplPtho5tGgofcN5xh+3PiVXWZUzk3mYu2nmbmaMl5yTL9oFQmv26Cz9KaODeVJ4VMY6oXn+Q4vc7VTXHzbpzyk2qKNQ6RWuRitGABAuGlJ7LC6liQchRHCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YVYx11IraA3sujim3LqzCmZRH04Njw6dxm4zd70kAyw=;
- b=FOyZLQINun5kQx/5RbKfToau4y68h5xZ5PJw1IJvEIf31aUkb+GHS5/l3O3ysGAcuCLCZ1UMsW1k/2OVw1UgrJ0fBZc7gIeNjJZrMD0+IBJN1B2DCLVXHyourv1mOWtjJyGfqJD+RrdKj92MH39ByERGv33jAvX/TjYWb6w8+wboiy4lnR8SEJcEc1OfdS6yp5lyyjSq7wXoqtBhElNBCfU3BJK9SuvsaBoUklcq9A1bFoU5A7+jXYYJObzbMY58FOFmyOeI2yWwH8hUW013sFoXJnr9UOi0v0kgsOHCqEKYj2V6vu5bvyPWpKDoaNOqA6nGWBsJmdlY9ecGewoCzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YVYx11IraA3sujim3LqzCmZRH04Njw6dxm4zd70kAyw=;
- b=mHeXzAXzHvRwXU7vuVICSUiwFjhzQx6IjFhVeEOG+bxOMRQJXYF4UXmG+W8meiEmeAJqKs8txQs09FvPJ0m9hZ3pzxzfjJyyumAy0Z2jEcUKBRFaPgIsoZLm6qg1kwji9kavvsmD74tQRRq+2MfPg3lDXgN2e1Qr11x67kh8HuPInFmr2ZHrfPUs6SauOa7cdebB0ZscGlGuIoRjRrL6k5UP6m6igU2yGMFJqcSGsNHWzwAoaVtjq6af5kNfed61eaMRb/Fvp46lG8vzJ+m0y18zTghcaTY0XELLLRLOwKtwRWGg8hWuaZb2hAFxlZ2Aztc6pc7kX/Aa4K7QSgXrkw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB8056.namprd12.prod.outlook.com (2603:10b6:510:269::21)
- by CYYPR12MB8962.namprd12.prod.outlook.com (2603:10b6:930:c4::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Fri, 11 Apr
- 2025 05:36:35 +0000
-Received: from PH7PR12MB8056.namprd12.prod.outlook.com
- ([fe80::5682:7bec:7be0:cbd6]) by PH7PR12MB8056.namprd12.prod.outlook.com
- ([fe80::5682:7bec:7be0:cbd6%4]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
- 05:36:35 +0000
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel <linux-kernel@vger.kernel.org>, Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, Davidlohr Bueso <dave@stgolabs.net>, rcu <rcu@vger.kernel.org>
-Subject: Re: [v3,1/2] rcutorture: Perform more frequent testing of ->gpwrap
-Date: Fri, 11 Apr 2025 05:36:32 -0000
-Message-ID: <174434979260.108.10046690878441100792@patchwork.local>
-In-Reply-To: <78c902f2-3b01-49ce-85c0-3c748fa43224@paulmck-laptop>
-References: <78c902f2-3b01-49ce-85c0-3c748fa43224@paulmck-laptop>
-Content-Type: text/plain; charset=utf-8
-X-ClientProxiedBy: MN2PR05CA0047.namprd05.prod.outlook.com
- (2603:10b6:208:236::16) To PH7PR12MB8056.namprd12.prod.outlook.com
- (2603:10b6:510:269::21)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vUdVuLzs"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2c2a9abc5b2so451260fac.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744349897; x=1744954697; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dRztDv7UKeFaADCE72F4yQXUcVEFrM8XX8Eya+y3UGI=;
+        b=vUdVuLzsPQuYcbmJeuNs0TgcwSchCIYUhHp/X0OUJlAcSG+pyWPhKEQDQr0VtKOC3J
+         5KVS8CBRNq0xcsqudo5aK8WrJZ7dAU7OgM0GvPcki+a0scsjivkL7xq6LklGY+to8zar
+         jg+yxSp+5tC+pmn88tWAYEs6NJuizlmIdVohpx8sW9h0ve8/tZ2eX6P++GkPRHHe1igV
+         7DJA/kievRNr2sLhy/bhKiR5fFyrg5Fu/qpBRLGZej6c6BBfS5AGusbderCJoojOGqXU
+         bV+Qx215zGTNS1ib9Hd/4XARN1xyUcmD1b4QfyVKz9KheZGMYk9AgycVwUY9gY2B2SNc
+         pttQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744349897; x=1744954697;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dRztDv7UKeFaADCE72F4yQXUcVEFrM8XX8Eya+y3UGI=;
+        b=Ma1CdOch947D8Kvw77u6TFN6ycX3TMXJQjoa8A4UPxEa48uyDKT5XnnqPDSwi6TyOA
+         SsS+j9IZrojJEMayKHxBa8bAiv3evRhlF7WA5ni5XOr0+EiLmNxiNaPRzt3zIcZSQkjY
+         iI0LxGkZi2LV+Ppv7Y7dguHq7tcNaLLnldwU2xIjxpOQ7TlT0q0AwX7nFVjVMLDlAOsU
+         OpeXKt15efDDAPVwQ/d+Q+ndgpyB0+041JyW6Nhbcuw6md8Y9DaJxvOnfSZWDsVIgZc8
+         a6UpMWXipHMYQyOI9OtZNzVVCZ9YGsk0a0riUYztMIzu9VQtSOvD2rXXlnXjZPWNODGY
+         5uyQ==
+X-Gm-Message-State: AOJu0YylrLhanqjNIUH8mgMAj+/PqvvUI7hIBqfPeg03eLMlKQYRoEvi
+	p1XM3/G7Mp6cFK9LfoU5J7p5zuKgfTigaBxSau7cjic1VDlCQQ260Guovz5zfO/euSgl4jObVrT
+	P98AqHLmLW8QNF3mjmkBJU0PZmaYpEkRD+xpTxP2Fj0zcZ+wwwQS01zEdx4kW7NZQPlAFIDHATL
+	lZfm3HO6/CTinzEpnFUUDcsHyhZTjoHjQEbDUT8VR2f+hNVGRzXMEcbM68ke6QpA==
+X-Google-Smtp-Source: AGHT+IEf747Ng+OAGeLQCD5jVHHnDJ/SbWv0Sb5xn/5yjl3LQubi9lMWpS2NdIiV6+8hCDx3XRlYjspYjK0n6sRM
+X-Received: from oabra5.prod.google.com ([2002:a05:6871:6105:b0:2bc:675d:7cf])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6871:3a8a:b0:2cc:3d66:b6ea with SMTP id 586e51a60fabf-2d0d5f6745bmr877770fac.34.1744349896583;
+ Thu, 10 Apr 2025 22:38:16 -0700 (PDT)
+Date: Thu, 10 Apr 2025 22:37:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB8056:EE_|CYYPR12MB8962:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24781557-78fe-427a-2de3-08dd78bad2db
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eExBMW1ZMDlFVGd2REpmdDVjWEpDN29tTHJOeGU2M2sxd0NaUmNPQkpvUFFW?=
- =?utf-8?B?RC8rZ1dwNWhRTmppdWM3WVdrejVlQzZybWs4YklSL0ZjdFpNQ29XTXYyZnFn?=
- =?utf-8?B?MUlPTXRsZGtNUEJ0WlBmUHNveWh0azdYak5PQXl3eTZEaVA1bFkxOUdWSWxw?=
- =?utf-8?B?TkIraGZFYWppaTk5elluZ3pveWcvRzVNbTJxUzdtV1VoY0VOM1lDSkZwRW5B?=
- =?utf-8?B?Nmw0SUVZeC9lU1Z1eUpWQmIva1ptVTlQNnMwcnBCUWpZYmZkR2hDNnkrbzIx?=
- =?utf-8?B?bFpndmJUckFiUTVscnZTWkRVbWFzYTdsb0Q2VTFSRXJmbkZubDRIdjRzbis5?=
- =?utf-8?B?K0tOUTF5YzI1bElKQjR2Wk5UQ2dQSWZ0RkIzTmRnci93d2xySGRlakpQS1k4?=
- =?utf-8?B?ak1LTWUyL0ZaKzVCN3IzMW9YVll6Rythamd4S0w4aU9oenhIRjhROHMvNnJF?=
- =?utf-8?B?ODd4WkIzcDd3b3pRSVRQczNhaENBc0s0eGVwclgyM1hubWEwNGxCY0xRVWZ5?=
- =?utf-8?B?N1BLcFpEazE0Q3ljZEd0M2JNbnQ3MjlsQWNRQ20xOGZsYkltMjdSQ2ZWSVdX?=
- =?utf-8?B?SU1qdTBTcUpHc1Q4cktSblZTRmRvUUtpN0k1TUZqWXJqamtwWWxFOGh5cHpI?=
- =?utf-8?B?NWxmdTRpaFBvVjF1bE1TUmd2S3BuY0JXdEZHVHUrdUZmZnI0SmtSVzdtUVNG?=
- =?utf-8?B?dTBIV3hzMHNxcjd0QmxOS005dEpEdDN1WTQrdWlwc251VWF0VzFMQ2t0ZkMz?=
- =?utf-8?B?cEVqanRDNU1qb044TzkyZjhSakw5c09sRHVsczRBbWRZMG93QVRKWVRuWVh5?=
- =?utf-8?B?aldSV2NQcVU3VDlrTDZBOVYwcFRsMGtYTTlBcUwvTXFhNXQyUjEydTZZU3RW?=
- =?utf-8?B?RFdCc2JYbnZhZUZ4T3RkM1lENC9XWlJHOVZyb0trMS9iaUFpNE56OWo3N2Fn?=
- =?utf-8?B?MVNNdFQ1UVEvVm9ST3BLN0RlK3VEaW9PaW9jUGJhV1JIaUtpRmlnM210a1k0?=
- =?utf-8?B?REtTMXFqZGJINE8yZDUwQ3RGOVJHTEg2Smp2c3NsQU1PNnFITlUrM20rSkV6?=
- =?utf-8?B?Z20rNDlZTUpmcGE1cTJQVEd4eHB2Vno3a2MrMkxzYk5rUUZmZmRsN092dUxE?=
- =?utf-8?B?akE4VnRVY3NZQU9wMDhKTk5ienVWNzNqSm9nSHJ2b0JWUVpsaWMxZnJtemg3?=
- =?utf-8?B?QW9jS0p5bkVLL0txNE5jdDNmRWdGc3l3dXlEZTV5YkhRL2lQek5wYStONVJz?=
- =?utf-8?B?RkUzRkJMdDBtblVYMW13Z3luTTlOMU9pclQ2RFJKcHJUZGlOcW51UXIramQ3?=
- =?utf-8?B?UndlZFd2QTZQT2s2R0dKTjQ1Qk1neStnU3VvR0o5akhPZUViTm5VQTJCdVYy?=
- =?utf-8?B?eEpVaXl2YU51K1IyaVk0ZkxOTnZvUXo4MW1PL3A1S0xydlN2bmdPRXdHVDRG?=
- =?utf-8?B?eDdieWRCTjlHeGNiaVFsZDdGVmk5VGl1QnNydm9aVDBPSnIvam9GczQ2SlJ4?=
- =?utf-8?B?ekRMZDZHTTJnUkRGamJoYjR5T0JBQzRrZXJJZWtaOWxqcHZDbFN6VVR4U01M?=
- =?utf-8?B?K01MQzBYd3RGNVJuMFh4MFZ3NFRhVk1hY3YvWUw4eWhNaWRsYkZaZVlmOHpj?=
- =?utf-8?B?cXRMbXJJdkZqRmdnS1lDWHNBTEhsaVlVamVjNjFNc01QVmdJcWh6TENtbDRI?=
- =?utf-8?B?OGs1bThFb1RVdElTYktQTUM0Z05oV0FZK0lvUWUxamRXMVQ3YVdBWmRqbStD?=
- =?utf-8?B?WTNtRG9RZW5JSEd5R0ZpZFVEaUN3ajJUNkVDbFliQ1ZzMThURlBoMFFibjdh?=
- =?utf-8?B?Q3EwdmU0QUJjMEh3NmV2ZEhQMEJaaWJiWW5FZkZjVi9mMjNTcWpQaFNOZTlO?=
- =?utf-8?B?VGpYaWppY2NIQ1N6Y0pUWmI5SzZDUzV6OCs2RWdNRU1KalZVVWF2QnpWQ05W?=
- =?utf-8?Q?JAkE0F7gCbY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB8056.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N2JtL1luL3FjMVBiZUFJTmlhaFY5UGpEbEJmaEVyblN2eS90bWM2MmtpWGoy?=
- =?utf-8?B?ZUpJLzNDYnJUaDFZNjZTN0FteVJiOFZ0RVhMY2pkdVk2VnVrK0lUa0pDczQx?=
- =?utf-8?B?c25wUldGWjRkSEJTWkNNNzNtV3RkMXVCUXdYbkdoWlhBSXo5V3lLL2N6dnJz?=
- =?utf-8?B?cnpsakl1Zi9wK2RTMUxGRGF4cnlwRDVFc3U3aU8rOXZRVkpQOFF6Y2VHRS9o?=
- =?utf-8?B?d2lUc0VxaEF4dTgrRFhHTlJ2QnVJdlVsNWFqdy8ybGw4UW9kR0plZ2gvMVVK?=
- =?utf-8?B?VTEwS0xDQW5VT2l4a0ZtR3hVcmhOK1ljWHhnSWFiVzBvKy93enMxZ3BXclVZ?=
- =?utf-8?B?YlF1OXh4SFFPaG45YnBDdlJOcmErSGhTRk5Uajc1a0tYdU9RRVVzbzFESTJx?=
- =?utf-8?B?MktwbjNyQTB3bUVUUGM1MDBTY2tWRk1iNittSG5CaWlvSkI2TFNzYVpIYVdn?=
- =?utf-8?B?aC9TdThiYzN4a2M0YVhhWUI0bk9JRkUzVVFzSXd4Rk00UGxLWU1XR1A3RU0z?=
- =?utf-8?B?SlZjWmw0b0duYjZjMTFwbHZHbkNnVWFjVnlWWEZoRFlqRW0zejVyNTIzMFNS?=
- =?utf-8?B?Y25UN3BzQ3FFQmtsRzhPVmZsbHUzaTVWKzhyVkh4dlVWWGlCODNodGFkcFhx?=
- =?utf-8?B?ZERUeTFac2gvb29IZjZXUzdSKzNneTd5T3RRby9mUllWYVNCZFM5K0VtVUJB?=
- =?utf-8?B?emhyT2ZLS2dtSDVVUStGZFgwZnVSdDRlSUZWdWtnY29pRmJudjgwb3BEZHZp?=
- =?utf-8?B?SXNVcGVlcFhxdVRYS3RwZGVyNHIwOFVtbkFGS0E5cXpCMWpKekxYdG9MNlcz?=
- =?utf-8?B?a2QxcW1CaDFzZ1FsWWVYTmFIWlA3T3VwemsvLzg2VWJzQXQzMkR5Mk5hMlJD?=
- =?utf-8?B?RVB1L1VBNnpFelR1WGw2UmhBd1A3SXViOHMvbXpyYjB4MEcwckMrcWVXeXJa?=
- =?utf-8?B?bmVNVjBEdzM4cmtTNFJpVGRTQnRjRmFrYlBhVW5Kcko5RWN1YzJZU09KcVRu?=
- =?utf-8?B?ZUNvQmZoVEt3ZU9MS2daZVBRWnRFU0lrSnhJekpTYnBiYVNEai84UjVRbjc1?=
- =?utf-8?B?WXRmVDZvSXJPM0djYW80b2F0eWtBS0NtSFFhV09jcGU0WXBuNjNSRUgrVFhU?=
- =?utf-8?B?Vmt0RnpIeDZLWWRNRmYxZmxTNExYblF4b0N2SXFVQm9taTdINWVNenNHOXBT?=
- =?utf-8?B?N3E5cllEZmJ6aHdWUHdoV0k4R0JIM3F3aVM0WWR1ZU1qbDdLVTBmRUY5cnZm?=
- =?utf-8?B?allYR0s5ME5HWG01aVR1VDBhOHR0bjFWb1QwakVFNnZ0Y3lXR1N3UDNvZzU5?=
- =?utf-8?B?ZUN1RzV3cVA2RVZYRnQvVloxbWlFUFJ0SENSeHc5TUszYU9XdG1Va2srYm5V?=
- =?utf-8?B?TXYxSXhnNXJtRkQwSWpGckNvY2F1WHFPMVc0OFY0ME5Ha1N3MnRNRDl4OVFW?=
- =?utf-8?B?MEdScTBRNzdFZGdxQ1pTSkJSZjc5TTVIUW9YSHFNQjhGWXJwR1lQMlU3MzVh?=
- =?utf-8?B?YnA4c3FCWmRhcWJFVUJrVVQ0MElSRUx1VlQ0ekNjd3ZzZ1AyU2xXWGwyeCtl?=
- =?utf-8?B?ZEY3d0FhS2FidGdVelVNUDQrTEF6SmVmQi9XdXhZWDhqR1V1azljWURSZFY5?=
- =?utf-8?B?SU1jMlB3azU2UGh1RE1meTRLcUJRSFFYb09iVGgvQ3djSVJST1JOamYyVWpD?=
- =?utf-8?B?b2NRNHROa21RalhheWFWSEtxOVZqSWxFZG5Cb0xtUVhhRTZ2WHJ6a1JIYThj?=
- =?utf-8?B?RXE1NmpPRFFVY0ZyMUNhYlJPNnFtdGo1NWQ4QlZ3OXU2NzNWUDJ6Vm5QdE5j?=
- =?utf-8?B?OEs5d2dabldENDZjY1hORTdwZlhMZEQzVzlwdnRTZ3JlSHhEZE5JTGhSWGl3?=
- =?utf-8?B?N2lMcHgvT3VVdFNUZXpBSnBkOGdXcVF0S0xzaDhHUlZoUTF3akhPNjB4eSt5?=
- =?utf-8?B?cVRzWU11ckFvZ3NyUHFSMk5SNzl2VWp6azlCWmoxeDlJZzU2Nk9lbUkvenlD?=
- =?utf-8?B?NGFVWC9lSmRSYXRWM1FCd0JoVlhjUG1JYVFuMnpjQWtkWk8rTU1BSmNSczdq?=
- =?utf-8?B?UTBXdE9DN0pXdWVqcTdTb0hOaFdzaW5sd0VsTmoxZzBQeWR4VTVnRWV2WC9B?=
- =?utf-8?B?a0U0L3NEc0QzNnNzazc5N1hnN1BwOG5NT3Y5YzZ3TVB2NUVlcGFhSkZWQUlG?=
- =?utf-8?B?YlE9PQ==?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24781557-78fe-427a-2de3-08dd78bad2db
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB8056.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 05:36:35.4591
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fSpKvHjJYIdgbCIQAUAFQUAH/2xabakNYYnxEoHswchwzfHOKxz2jbZtUI6H1hxquoH8m9KwB0PAsr/jdEvmqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8962
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+Message-ID: <20250411053745.1817356-1-changyuanl@google.com>
+Subject: [PATCH v6 00/14] kexec: introduce Kexec HandOver (KHO)
+From: Changyuan Lyu <changyuanl@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
+	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
+	catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com, 
+	devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com, 
+	graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org, 
+	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, pasha.tatashin@soleen.com, 
+	pbonzini@redhat.com, peterz@infradead.org, ptyadav@amazon.de, robh@kernel.org, 
+	rostedt@goodmis.org, rppt@kernel.org, saravanak@google.com, 
+	skinsburskii@linux.microsoft.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
+	will@kernel.org, x86@kernel.org, Changyuan Lyu <changyuanl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello, Paul,
+Hi,
 
-On Fri, 11 Apr 2025 05:33:16 GMT, "Paul E. McKenney" wrote:
-> On Thu, Apr 10, 2025 at 11:54:13AM -0700, Paul E. McKenney wrote:
-> > On Thu, Apr 10, 2025 at 11:29:03AM -0700, Paul E. McKenney wrote:
-> > > On Thu, Apr 10, 2025 at 11:03:27AM -0400, Joel Fernandes wrote: >
-> > > Currently, the ->gpwrap is not tested (at all per my testing) due to
-> > > the > requirement of a large delta between a CPU's rdp->gp_seq and its
-> > > node's > rnp->gpseq.  > > This results in no testing of ->gpwrap being
-> > > set. This patch by default > adds 5 minutes of testing with ->gpwrap
-> > > forced by lowering the delta > between rdp->gp_seq and rnp->gp_seq to
-> > > just 8 GPs. All of this is > configurable, including the active time for
-> > > the setting and a full > testing cycle.  > > By default, the first 25
-> > > minutes of a test will have the _default_ > behavior there is right now
-> > > (ULONG_MAX / 4) delta. Then for 5 minutes, > we switch to a smaller delt
-> a
-> > > causing 1-2 wraps in 5 minutes. I believe > this is reasonable since we
-> > > at least add a little bit of testing for > usecases where ->gpwrap is se
-> t.
-> > > > > Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
-> > > 
-> > > Much better, thank you!
-> > > 
-> > > One potential nit below.  I will run some tests on this version.
-> > 
-> > And please feel free to apply the following to both:
-> > 
-> > Tested-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> And this happy situation lasted only until I rebased onto v6.15-rc1 and
-> on top of this commit:
-> 
-> 1342aec2e442 ("Merge branches 'rcu/misc-for-6.16', 'rcu/seq-counters-for-6.1
-> 6' and 'rcu/torture-for-6.16' into rcu/for-next")
-> 
-> This got me the splat shown below when running rcutorture scenario SRCU-N.
-> I reverted this commit and tests pass normally.
-> 
-> Your other commit (ARM64 images) continues working fine.
+This is the version 6 of Alexander Graf and Mike Rapoport's
+"kexec: introduce Kexec HandOver (KHO)" series
+(https://lore.kernel.org/all/20250320015551.2157511-1-changyuanl@google.com/).
 
-Interesting.. it seems to be crashing during statistics printing.
+The patches are also available in git:
+https://github.com/googleprodkernel/linux-liveupdate/tree/kho/v6.
 
-I am wondering if the test itself uncovered a bug or the bug is in the test
-itself.
+v5 -> v6:
+  - Rebase the patchset on v6.15-rc1.
+  - Revert hashtable-based API introduced in V5.
+  - In kho_parse_scratch_size(), replace simple_strtoul() with kstrtouint().
+  - Make KHO focus on memory preservation. Subsystem's metadata is not
+    saved into KHO root tree, instead Subsystems allocate and create their
+    own FDT and use KHO to preserve the FDT's underlying folios, suggested
+    by [6].
+  - Subsystem's own FDT is presented at debugfs kho/(in|out)/sub_fdts/$name.
+  - Remove `fdt_max`, limit KHO root FDT to 1 page [6].
+  - Move linked pages of bitmaps of preserved memory from
+    /preserved-memory.metadata to preserved-memory-map of KHO root FDT
+    as suggested in [1].
+  - Add struct kho_serialization to hold the root FDT and struct
+    kho_mem_track, and pass it through notifiers, as suggested in [2].
+  - Update the KHO example of memblock. memblock now prepares its own FDT
+    early. In the notifier callback, it only preserves the memory and saves
+    its own FDT blob address to KHO root tree.
+  - Add the doc of KHO property in node 'chosen' to
+    github.com/devicetree-org/dt-schema [3] as requested in [4].
+  - Add back YAML files to describe KHO and memblock FDT bindings as requested
+    in [2]
+  - Remove kho_restore_phys().
+  - Move documentations to Documentation/admin-guide/kho.rst and
+    Documentation/core-api/kho as requested in [5].
+  - Split KHO from kexec in MAINTAINERS.
+  - kho_restore_folio() refuses to create folios larger than
+    MAX_PAGE_ORDER [7].
+  - Fix the bug on arm64 reported in [8].
+  - Fix the bug in kho_preserve_phys() reported in [9].
+  - Check KHO root node "compatible" in kho_populate().
 
-Looking forward to your test with the other patch and we could hold off on this
-one till we have more data about what is going on.
+Since the discussion of the data format for serializing preserved memory [10] is
+still going on, this version goes with the original xarray+bitmap approach
+and save the optimization for future versions/patches.
 
-thanks,
+[1] https://lore.kernel.org/all/20250212152336.GA3848889@nvidia.com/
+[2] https://lore.kernel.org/all/20250321134629.GA252045@nvidia.com/
+[3] https://github.com/devicetree-org/dt-schema/pull/158
+[4] https://lore.kernel.org/all/55a5e3f3-1b3f-469b-bde0-69abfff826e4@kernel.org/
+[5] https://lore.kernel.org/all/87wmcj69sg.fsf@trenco.lwn.net/
+[6] https://lore.kernel.org/all/Z+GIRecXeYXiPrYv@nvidia.com/
+[7] https://lore.kernel.org/all/mafs05xjmqsqc.fsf@amazon.de/
+[8] https://lore.kernel.org/all/20250411034748.1781232-1-changyuanl@google.com/
+[9] https://lore.kernel.org/all/20250411040207.1785245-1-changyuanl@google.com/
+[10] https://lore.kernel.org/all/20250320015551.2157511-10-changyuanl@google.com/
 
- - Joel
+Best,
+Changyuan
+
+= Original cover letter =
+
+Kexec today considers itself purely a boot loader: When we enter the new
+kernel, any state the previous kernel left behind is irrelevant and the
+new kernel reinitializes the system.
+
+However, there are use cases where this mode of operation is not what we
+actually want. In virtualization hosts for example, we want to use kexec
+to update the host kernel while virtual machine memory stays untouched.
+When we add device assignment to the mix, we also need to ensure that
+IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
+need to do the same for the PCI subsystem. If we want to kexec while an
+SEV-SNP enabled virtual machine is running, we need to preserve the VM
+context pages and physical memory. See "pkernfs: Persisting guest memory
+and kernel/device state safely across kexec" Linux Plumbers
+Conference 2023 presentation for details:
+
+  https://lpc.events/event/17/contributions/1485/
+
+To start us on the journey to support all the use cases above, this patch
+implements basic infrastructure to allow hand over of kernel state across
+kexec (Kexec HandOver, aka KHO). As a really simple example target, we use
+memblock's reserve_mem.
+With this patch set applied, memory that was reserved using "reserve_mem"
+command line options remains intact after kexec and it is guaranteed to
+reside at the same physical address.
+
+== Alternatives ==
+
+There are alternative approaches to (parts of) the problems above:
+
+  * Memory Pools [1] - preallocated persistent memory region + allocator
+  * PRMEM [2] - resizable persistent memory regions with fixed metadata
+                pointer on the kernel command line + allocator
+  * Pkernfs [3] - preallocated file system for in-kernel data with fixed
+                  address location on the kernel command line
+  * PKRAM [4] - handover of user space pages using a fixed metadata page
+                specified via command line
+
+All of the approaches above fundamentally have the same problem: They
+require the administrator to explicitly carve out a physical memory
+location because they have no mechanism outside of the kernel command
+line to pass data (including memory reservations) between kexec'ing
+kernels.
+
+KHO provides that base foundation. We will determine later whether we
+still need any of the approaches above for fast bulk memory handover of for
+example IOMMU page tables. But IMHO they would all be users of KHO, with
+KHO providing the foundational primitive to pass metadata and bulk memory
+reservations as well as provide easy versioning for data.
+
+== Overview ==
+
+We introduce a metadata file that the kernels pass between each other. How
+they pass it is architecture specific. The file's format is a Flattened
+Device Tree (fdt) which has a generator and parser already included in
+Linux. KHO is enabled in the kernel command line by `kho=on`. When the root
+user enables KHO through /sys/kernel/debug/kho/out/finalize, the kernel
+invokes callbacks to every KHO users to register preserved memory regions,
+which contain drivers' states.
+
+When the actual kexec happens, the fdt is part of the image
+set that we boot into. In addition, we keep "scratch regions" available
+for kexec: physically contiguous memory regions that are guaranteed to
+not have any memory that KHO would preserve.  The new kernel bootstraps
+itself using the scratch regions and sets all handed over memory as in use.
+When drivers initialize that support KHO, they introspect the fdt, restore
+preserved memory regions, and retrieve their states stored in the preserved
+memory.
+
+== Limitations ==
+
+Currently KHO is only implemented for file based kexec. The kernel
+interfaces in the patch set are already in place to support user space
+kexec as well, but it is still not implemented it yet inside kexec tools.
+
+== How to Use ==
+
+To use the code, please boot the kernel with the "kho=on" command line
+parameter. KHO will automatically create scratch regions. If you want to set
+the scratch size explicitly you can use "kho_scratch=" command line parameter.
+For instance, "kho_scratch=16M,512M,256M" will reserve a 16 MiB low
+memory scratch area, a 512 MiB global scratch region, and 256 MiB
+per NUMA node scratch regions on boot.
+
+Make sure to have a reserved memory range requested with reserv_mem
+command line option, for example, "reserve_mem=64m:4k:n1".
+
+Then before you invoke file based "kexec -l", finalize
+KHO FDT:
+
+  # echo 1 > /sys/kernel/debug/kho/out/finalize
+
+You can preview the generated FDT using `dtc`,
+
+  # dtc /sys/kernel/debug/kho/out/fdt
+  # dtc /sys/kernel/debug/kho/out/sub_fdts/memblock
+
+`dtc` is available on ubuntu by `sudo apt-get install device-tree-compiler`.
+
+Now kexec into the new kernel,
+
+  # kexec -l Image --initrd=initrd -s
+  # kexec -e
+
+(The order of KHO finalization and "kexec -l" does not matter.)
+
+The new kernel will boot up and contain the previous kernel's reserve_mem
+contents at the same physical address as the first kernel.
+
+You can also review the FDT passed from the old kernel,
+
+  # dtc /sys/kernel/debug/kho/in/fdt
+  # dtc /sys/kernel/debug/kho/in/sub_fdts/memblock
+
+== Changelog ==
+
+v4 -> v5:
+  - New: Preserve folios and address ranges in bitmaps [1]. Removed the
+    `mem` property.
+  - New: Hash table based API for manipulating the KHO state tree.
+  - Change the concept of "active phase" to "finalization phase". KHO
+    users can add/remove data into/from KHO DT anytime before the
+    finalization phase.
+  - Decouple kexec_file_load and KHO FDT creation. kexec_file_load can be
+    done before KHO FDT is created.
+  - Update the example usecase (reserve_mem) using the new KHO API,
+    replace underscores with dashes in reserve-mem fdt generation.
+  - Drop the YAMLs for now and add a brief description of KHO FDT before
+    KHO schema is stable.
+  - Move all sysfs interfaces to debugfs.
+  - Fixed the memblock test reported in [2].
+  - Incorporate fix for kho_locate_mem_hole() with !CONFIG_KEXEC_HANDOVER
+    [3] into "kexec: Add KHO support to kexec file loads".
+
+[1] https://lore.kernel.org/all/20250212152336.GA3848889@nvidia.com/
+[2] https://lore.kernel.org/all/20250217040448.56xejbvsr2a73h4c@master/
+[3] https://lore.kernel.org/all/20250214125402.90709-1-sourabhjain@linux.ibm.com/
+
+v3 -> v4:
+  - Major rework of scrach management. Rather than force scratch memory
+    allocations only very early in boot now we rely on scratch for all
+    memblock allocations.
+  - Use simple example usecase (reserv_mem instead of ftrace)
+  - merge all KHO functionality into a single kernel/kexec_handover.c file
+  - rename CONFIG_KEXEC_KHO to CONFIG_KEXEC_HANDOVER
+
+v2 -> v3:
+  - Fix make dt_binding_check
+  - Add descriptions for each object
+  - s/trace_flags/trace-flags/
+  - s/global_trace/global-trace/
+  - Make all additionalProperties false
+  - Change subject to reflect subsysten (dt-bindings)
+  - Fix indentation
+  - Remove superfluous examples
+  - Convert to 64bit syntax
+  - Move to kho directory
+  - s/"global_trace"/"global-trace"/
+  - s/"global_trace"/"global-trace"/
+  - s/"trace_flags"/"trace-flags"/
+  - Fix wording
+  - Add Documentation to MAINTAINERS file
+  - Remove kho reference on read error
+  - Move handover_dt unmap up
+  - s/reserve_scratch_mem/mark_phys_as_cma/
+  - Remove ifdeffery
+  - Remove superfluous comment
+
+v1 -> v2:
+  - Removed: tracing: Introduce names for ring buffers
+  - Removed: tracing: Introduce names for events
+  - New: kexec: Add config option for KHO
+  - New: kexec: Add documentation for KHO
+  - New: tracing: Initialize fields before registering
+  - New: devicetree: Add bindings for ftrace KHO
+  - test bot warning fixes
+  - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
+  - s/kho_reserve_mem/kho_reserve_previous_mem/g
+  - s/kho_reserve/kho_reserve_scratch/g
+  - Remove / reduce ifdefs
+  - Select crc32
+  - Leave anything that requires a name in trace.c to keep buffers
+    unnamed entities
+  - Put events as array into a property, use fingerprint instead of
+    names to identify them
+  - Reduce footprint without CONFIG_FTRACE_KHO
+  - s/kho_reserve_mem/kho_reserve_previous_mem/g
+  - make kho_get_fdt() const
+  - Add stubs for return_mem and claim_mem
+  - make kho_get_fdt() const
+  - Get events as array from a property, use fingerprint instead of
+    names to identify events
+  - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
+  - s/kho_reserve_mem/kho_reserve_previous_mem/g
+  - s/kho_reserve/kho_reserve_scratch/g
+  - Leave the node generation code that needs to know the name in
+    trace.c so that ring buffers can stay anonymous
+  - s/kho_reserve/kho_reserve_scratch/g
+  - Move kho enums out of ifdef
+  - Move from names to fdt offsets. That way, trace.c can find the trace
+    array offset and then the ring buffer code only needs to read out
+    its per-CPU data. That way it can stay oblivient to its name.
+  - Make kho_get_fdt() const
+
+Alexander Graf (9):
+  memblock: Add support for scratch memory
+  kexec: add Kexec HandOver (KHO) generation helpers
+  kexec: add KHO parsing support
+  kexec: add KHO support to kexec file loads
+  kexec: add config option for KHO
+  arm64: add KHO support
+  x86: add KHO support
+  memblock: add KHO support for reserve_mem
+  Documentation: add documentation for KHO
+
+Mike Rapoport (Microsoft) (5):
+  memblock: add MEMBLOCK_RSRV_KERN flag
+  memblock: introduce memmap_init_kho_scratch()
+  kexec: enable KHO support for memory preservation
+  x86/setup: use memblock_reserve_kern for memory used by kernel
+  Documentation: KHO: Add memblock bindings
+
+ .../admin-guide/kernel-parameters.txt         |   25 +
+ Documentation/admin-guide/mm/index.rst        |    1 +
+ Documentation/admin-guide/mm/kho.rst          |  120 ++
+ Documentation/core-api/index.rst              |    1 +
+ Documentation/core-api/kho/bindings/kho.yaml  |   43 +
+ .../kho/bindings/memblock/memblock.yaml       |   39 +
+ .../kho/bindings/memblock/reserve-mem.yaml    |   40 +
+ .../core-api/kho/bindings/sub-fdt.yaml        |   27 +
+ Documentation/core-api/kho/concepts.rst       |   74 +
+ Documentation/core-api/kho/fdt.rst            |   80 ++
+ Documentation/core-api/kho/index.rst          |   13 +
+ MAINTAINERS                                   |   12 +
+ arch/arm64/Kconfig                            |    3 +
+ arch/x86/Kconfig                              |    3 +
+ arch/x86/boot/compressed/kaslr.c              |   52 +-
+ arch/x86/include/asm/setup.h                  |    4 +
+ arch/x86/include/uapi/asm/setup_data.h        |   13 +-
+ arch/x86/kernel/e820.c                        |   18 +
+ arch/x86/kernel/kexec-bzimage64.c             |   36 +
+ arch/x86/kernel/setup.c                       |   41 +-
+ arch/x86/realmode/init.c                      |    2 +
+ drivers/of/fdt.c                              |   34 +
+ drivers/of/kexec.c                            |   42 +
+ include/linux/kexec.h                         |    7 +
+ include/linux/kexec_handover.h                |  111 ++
+ include/linux/memblock.h                      |   41 +-
+ kernel/Kconfig.kexec                          |   14 +
+ kernel/Makefile                               |    1 +
+ kernel/kexec_file.c                           |   13 +
+ kernel/kexec_handover.c                       | 1253 +++++++++++++++++
+ kernel/kexec_internal.h                       |   16 +
+ mm/Kconfig                                    |    4 +
+ mm/internal.h                                 |    2 +
+ mm/memblock.c                                 |  329 ++++-
+ mm/mm_init.c                                  |   19 +-
+ tools/testing/memblock/tests/alloc_api.c      |   22 +-
+ .../memblock/tests/alloc_helpers_api.c        |    4 +-
+ tools/testing/memblock/tests/alloc_nid_api.c  |   20 +-
+ 38 files changed, 2534 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/admin-guide/mm/kho.rst
+ create mode 100644 Documentation/core-api/kho/bindings/kho.yaml
+ create mode 100644 Documentation/core-api/kho/bindings/memblock/memblock.yaml
+ create mode 100644 Documentation/core-api/kho/bindings/memblock/reserve-mem.yaml
+ create mode 100644 Documentation/core-api/kho/bindings/sub-fdt.yaml
+ create mode 100644 Documentation/core-api/kho/concepts.rst
+ create mode 100644 Documentation/core-api/kho/fdt.rst
+ create mode 100644 Documentation/core-api/kho/index.rst
+ create mode 100644 include/linux/kexec_handover.h
+ create mode 100644 kernel/kexec_handover.c
 
 
-
-
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> [   15.911885] BUG: kernel NULL pointer dereference, address: 00000000000000
-> 00
-> [   15.912413] #PF: supervisor instruction fetch in kernel mode
-> [   15.912826] #PF: error_code(0x0010) - not-present page
-> [   15.913218] PGD 0 P4D 0 
-> [   15.913420] Oops: Oops: 0010 [#1] SMP PTI
-> [   15.913715] CPU: 3 UID: 0 PID: 62 Comm: rcu_torture_sta Not tainted 6.15.
-> 0-rc1-00047-g6e14cad86633 #19 PREEMPT(undef) 
-> [   15.914535] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.15
-> .0-1 04/01/2014
-> [   15.915147] RIP: 0010:0x0
-> [   15.915348] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
-> [   15.915856] RSP: 0000:ffffa0380021fdc8 EFLAGS: 00010246
-> [   15.916256] RAX: 0000000000000000 RBX: ffffffffb6b02cc0 RCX: 000000000000
-> 000a
-> [   15.916802] RDX: 0000000000000000 RSI: ffff9f121f418cc0 RDI: 000000000000
-> 0000
-> [   15.917305] RBP: 0000000000000000 R08: ffff9f121f418d20 R09: 000000000000
-> 0000
-> [   15.917789] R10: 0000000000000000 R11: 0000000000000005 R12: ffffffffb6b0
-> 2d20
-> [   15.918293] R13: 0000000000000000 R14: ffffa0380021fe50 R15: ffffa0380021
-> fdf8
-> [   15.918801] FS:  0000000000000000(0000) GS:ffff9f1268a96000(0000) knlGS:0
-> 000000000000000
-> [   15.919313] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   15.919628] CR2: ffffffffffffffd6 CR3: 0000000017c32000 CR4: 000000000000
-> 06f0
-> [   15.920004] Call Trace:
-> [   15.920139]  <TASK>
-> [   15.920256]  rcu_torture_stats_print+0x16b/0x670
-> [   15.920514]  ? __switch_to_asm+0x39/0x70
-> [   15.920719]  ? finish_task_switch.isra.0+0x76/0x250
-> [   15.920982]  ? __pfx_rcu_torture_stats+0x10/0x10
-> [   15.921222]  rcu_torture_stats+0x25/0x70
-> [   15.921435]  kthread+0xf1/0x1e0
-> [   15.921602]  ? __pfx_kthread+0x10/0x10
-> [   15.921797]  ? __pfx_kthread+0x10/0x10
-> [   15.922000]  ret_from_fork+0x2f/0x50
-> [   15.922193]  ? __pfx_kthread+0x10/0x10
-> [   15.922395]  ret_from_fork_asm+0x1a/0x30
-> [   15.922605]  </TASK>
-> [   15.922723] Modules linked in:
-> [   15.922890] CR2: 0000000000000000
-> [   15.923072] ---[ end trace 0000000000000000 ]---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+--
+2.49.0.604.gff1f9ca942-goog
