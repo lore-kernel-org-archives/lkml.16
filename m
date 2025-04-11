@@ -1,315 +1,152 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97ED12690FE
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2218A2690F0;
+	Fri, 11 Apr 2025 18:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744396875; cv=none; b=uneFnwRYm8V6W5EwhAUNcCrcKey3gJG6nztsH6Pt5juQkXEW7DDmkRSUdPuVK7KxicSlMt0YpZljUqkTXeqvaMrdrDruh4jCRlnAr6WX0IvqXDi0rHaiXaQlj3c+/wUunbKGbuLuWVvrfp40vRl60SLbQbIIGMtpP7/QFuxwNW8=
+	t=1744396911; cv=none; b=FpydZ459t7Ahbn4DxnpctBVLM/KQbAPbe7A0fxwXB8I7pTaenX1qfbeQpAROsTf9pwupuEGhc57/sJjXREjCj9g0NFuMNYh/4Bp90Nv8I6rqp2J596BVq7KKIvPCsHZ3SrlNwGVK1z0+k4zerzFMeXV31V6Hp3tLpwhzMy3p2lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744396875; c=relaxed/simple;
-	bh=uNSZ1QZVDenoJV10IwufIgPQGUCNINq4xlIGG/RUYT4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JPZME8cjfdkpxFqcpcEQE6APQjWXhXhWqRv+sh1PnDHpg2cpZd9c8nPZ4l04zynHRowkoQ5VmmqTas/LY9n2OE0CYXbeLw9aebyEeu85vqjk+YUIWhow1uyzdH43Tii7KWLRfss9yl+kxmk9V1I3JQi+vVDT0JN11FDu4GGROBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=YmkBkvMy; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1744396911; c=relaxed/simple;
+	bh=1iI4AfPrlPKUrGY6yeu/1zp9gMl5LZUj8I/yLIFJQZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MLOILKuppf+8tHReN3PiaMIAjy0rmOk4lCvg9mmMn1XM78A/G+weWQdASdYfsArESngheodF53fecVVY794+FuOL0tfdLVX2NKx3RAwHGl/ED3dngHimKA6gvJ6mj8d+1UoYQUICu6TavrL/6hBMg0ZFies9xF3TNCGZgBprP90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b3gmgPBj; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="YmkBkvMy"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e8fce04655so19316866d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:41:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1744396872; x=1745001672; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=l0WkjI1RT93u5XgdiSSA60ZXeKfvXZmRgF+shu9tTxQ=;
-        b=YmkBkvMy+qfNX9+xZ7jMjm74vBeMt9BCIwcSXxecCnP9M4hDLl7F2FBTul8Iy+5MLS
-         DqUZHr7iLLpzpcqBCsfOV2CQzC1reEM8d+ssx2i8nbs5MFCuTaq1F2MLI24KCIYZg1JE
-         0IxYoZTkJ2RCa4F1hdApPG3uscLVz+FK0v0WFFO/8B5EPm6KggE3n6vQaTfntxOtb+qr
-         1mL8hKRJkdILMRKzzONjohyX+oJMET8Xu4FOyZMtlkSP028LsmcVLP70RJHZO8JDxiK1
-         8lFDxTF4GSm2cKt5Tv0sRdnokvhc7CZ4MIT2qBoHwUCAxV0GYJSZoehp3QJDdoKV/lma
-         oU6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744396872; x=1745001672;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l0WkjI1RT93u5XgdiSSA60ZXeKfvXZmRgF+shu9tTxQ=;
-        b=thZuOaa7GENDvbxpdr0sKj/xEmqCyvYIjhzhGfZrU3mZAJuovHnp5FcRd+gKmlhhRF
-         YHBm40sFv4BOXyFDqNVJvrB8nJj/h15d//KUaIVeHUGzcc4z4qK3tYgDrTYEGukz6R6w
-         XV4BeBsCvgTkZcgff3lJAGD3CwpQhGKzu8tAW9wW+rjH9M3bmOGQaJ2iVdEbF/UzWzs4
-         QMSW4AMdXDI1otrX/a7fTDg8RyLqT6l7N/ymNlLsY7NjfWFvyr+PQPuKpDCaMnOZC4Ax
-         A8YCsO57APOkgz5n8o8AHmgc3YUSYMSDglZmmd5LL1S4i/0Nd1S9cwPNKb2Cs1VJrZ5m
-         Y/qw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7ytWqlds/ypF66onfjj1lbZZMm8MdTxfyd41C4LA95C+8h5CD9TjjLVtDPGKcQcWLpvhLKsbi286I/1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSk6Np0vITMI6nE++8V+G8ii0tIVNGEhEEDSFoPgqkmG/CWVi9
-	QUOd55FN4wK/ByANsMel6snfSstCqw2cp1FkX1Mic9Jh4/Ka1bCJKkBbdLzOCTZZAdhJoAH36Za
-	f
-X-Gm-Gg: ASbGncv7+PsUMnM2TlZXnIkVCOhcW5ilPraODrErulcl/GeEPubxUmGVq8XiEWWzFGz
-	NymWpzk6lRjZ4EPsNg0XcOW41P/yE5xI6SenH8dSlsAKPl/xosqbsP6urVA010kEMVKSEhbjXWj
-	HAzz/Cyh22A9wFzkRlxKiotQBo/o72Pd7/Cd2RZ8TjfHHS5Entid+bYT9qsZ9fMJVUW2tCsM3l8
-	dgH+WmSEEtwAXMU95kd7MKQuIzGT+/mG7TfiuiyASPnU8HVunzg7JvgT/Kn3Vc7/6BJxx7QMpON
-	D1c8Oeq1ARcbgQln7LIPOMMK0tB3sZxk8yWqdMbB4Ddw3A==
-X-Google-Smtp-Source: AGHT+IEm1bKOCQM0tpYs4mhMv4OIhRqLjtx6rGPCZPT/jI6AVdN/7xOTd3xITbioxVcVFqr64gbv6w==
-X-Received: by 2002:ad4:5d63:0:b0:6e8:f4e2:26d9 with SMTP id 6a1803df08f44-6f23f14adb0mr60576306d6.35.1744396872420;
-        Fri, 11 Apr 2025 11:41:12 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:11:e976::5ac? ([2606:6d00:11:e976::5ac])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de95f862sm40376636d6.15.2025.04.11.11.41.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 11:41:11 -0700 (PDT)
-Message-ID: <100a275a1d5a01f72372666b21b68ad7fc4d5eb9.camel@ndufresne.ca>
-Subject: Re: [PATCH 3/3] uio: Add UIO_DMABUF_HEAP
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>, Sumit Semwal	
- <sumit.semwal@linaro.org>, Christian =?ISO-8859-1?Q?K=F6nig?=	
- <christian.koenig@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Date: Fri, 11 Apr 2025 14:41:11 -0400
-In-Reply-To: <20250410-uio-dma-v1-3-6468ace2c786@bootlin.com>
-References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
-	 <20250410-uio-dma-v1-3-6468ace2c786@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b3gmgPBj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744396909; x=1775932909;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1iI4AfPrlPKUrGY6yeu/1zp9gMl5LZUj8I/yLIFJQZk=;
+  b=b3gmgPBjzm7JSGgp//U02k+WH6FpxneP4+wnlHuzYcjJLEm1L3Hb5S7b
+   B57d77Lwlxrj4tOcQ9CC98cZzFsHJXRtIGrr/A1fnzatEExasdwfdtZD6
+   3n8BUoEV+Q2mccfw0WcMqzjzn5oZ46U+cMQq3t+Cte2mXa9diJ4m9vguc
+   LeCBmeJCXnYEIqJNSiJzBkZTG04afDbZsL9jMnysUpd+uhZP+9q0moGdN
+   6mFT/aRW2eGmr/rUjDBQoVyod4mFvXNKVa4eAEaAGDTgB3S3GDnGqn/hs
+   lAFzVJUa8rqe2q3XRC5/064MtuZPAjEuYEmFiPs9al5knaMO5Bc1k8NkD
+   A==;
+X-CSE-ConnectionGUID: MJO0Ehl1RHuT70iYESW5YQ==
+X-CSE-MsgGUID: m2V9Yo7jQQW4PFH8xLRoDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="63500548"
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="63500548"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 11:41:48 -0700
+X-CSE-ConnectionGUID: pJSGaWLJTF2fqMRCROz6IQ==
+X-CSE-MsgGUID: nmZqz5r4RXGz8z9j0H9ajw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
+   d="scan'208";a="129124557"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 11 Apr 2025 11:41:43 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u3JJt-000BJc-0s;
+	Fri, 11 Apr 2025 18:41:41 +0000
+Date: Sat, 12 Apr 2025 02:40:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Praveen Talari <quic_ptalari@quicinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, psodagud@quicinc.com, djaggi@quicinc.com,
+	quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
+	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
+	quic_shazhuss@quicinc.com
+Subject: Re: [PATCH v1 4/9] soc: qcom: geni-se: Enable QUPs on SA8255p
+ Qualcomm platforms
+Message-ID: <202504120240.SMbLkgHv-lkp@intel.com>
+References: <20250410174010.31588-5-quic_ptalari@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410174010.31588-5-quic_ptalari@quicinc.com>
 
-Hi Bastien,
+Hi Praveen,
 
-Le jeudi 10 avril 2025 =C3=A0 16:53 +0200, Bastien Curutchet a =C3=A9crit=
-=C2=A0:
-> Some UIO users need to access DMA addresses from userspace to be able to
-> configure DMA done by the UIO device. Currently there is no way of doing
-> this.
->=20
-> Add a UIO_DMABUF_HEAP Kconfig option. When selected, a dma-heap
-> allocator is created for every new UIO device. This allocator only
-> implements 4 basic operations: allocate, release, mmap and get_dma_addr.
-> The buffer allocation is done through dma_alloc_coherent().
+kernel test robot noticed the following build warnings:
 
-This is quite redundant with the CMA heap. I believe a better design is
-to make UIO devices dmabuf importers. This will make your UIO dmabuf
-implementation a lot more useful.
+[auto build test WARNING on tty/tty-testing]
+[also build test WARNING on tty/tty-next tty/tty-linus robh/for-next driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus usb/usb-testing usb/usb-next usb/usb-linus linus/master v6.15-rc1 next-20250411]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-As for the physical addresses, everywhere you currently pass a physical
-address, you should be able to add ioctl to pass a DMABuf FD, or a
-handle to an UIO specific object (similar to buffer objects in DRM) and
-hide these.
+url:    https://github.com/intel-lab-lkp/linux/commits/Praveen-Talari/opp-add-new-helper-API-dev_pm_opp_set_level/20250411-015310
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
+patch link:    https://lore.kernel.org/r/20250410174010.31588-5-quic_ptalari%40quicinc.com
+patch subject: [PATCH v1 4/9] soc: qcom: geni-se: Enable QUPs on SA8255p Qualcomm platforms
+config: arc-randconfig-001-20250412 (https://download.01.org/0day-ci/archive/20250412/202504120240.SMbLkgHv-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250412/202504120240.SMbLkgHv-lkp@intel.com/reproduce)
 
-regards,
-Nicolas
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504120240.SMbLkgHv-lkp@intel.com/
 
->=20
-> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
-> ---
-> =C2=A0drivers/uio/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0=C2=A0 9 ++++
-> =C2=A0drivers/uio/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 1 +
-> =C2=A0drivers/uio/uio.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0=C2=A0 4 ++
-> =C2=A0drivers/uio/uio_heap.c=C2=A0=C2=A0=C2=A0=C2=A0 | 120 ++++++++++++++=
-+++++++++++++++++++++++++++++++
-> =C2=A0include/linux/uio_driver.h |=C2=A0=C2=A0 2 +
-> =C2=A05 files changed, 136 insertions(+)
->=20
-> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-> index b060dcd7c6350191726c0830a1ae7b9a388ca4bb..2f3b1e57fceb01354b65cc4d3=
-9f342f645a238db 100644
-> --- a/drivers/uio/Kconfig
-> +++ b/drivers/uio/Kconfig
-> @@ -164,4 +164,13 @@ config UIO_DFL
-> =C2=A0	=C2=A0=C2=A0=C2=A0 opae-sdk/tools/libopaeuio/
-> =C2=A0
-> =C2=A0	=C2=A0 If you compile this as a module, it will be called uio_dfl.
-> +
-> +config UIO_DMABUF_HEAP
-> +	bool "DMA-BUF UIO Heap"
-> +	select DMABUF_HEAPS
-> +	help
-> +	=C2=A0 Choose this option to enable DMA-BUF UIO heap. It will create a =
-new
-> +	=C2=A0 heap allocator under /dev/dma_heap/ for every UIO device. This
-> +	=C2=A0 allocator allows userspace applications to allocate DMA buffers =
-and
-> +	=C2=A0 access their DMA addresses thanks to the DMA_BUF_IOCTL_GET_DMA_H=
-ANDLE
-> =C2=A0endif
-> diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-> index 1c5f3b5a95cf5b681a843b745a046d7ce123255d..f6696daa36567a4e5d18b1b89=
-ba688057e758400 100644
-> --- a/drivers/uio/Makefile
-> +++ b/drivers/uio/Makefile
-> @@ -11,3 +11,4 @@ obj-$(CONFIG_UIO_MF624)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 +=3D uio_mf624.o
-> =C2=A0obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+=3D uio_fsl_elbc_gpcm.o
-> =C2=A0obj-$(CONFIG_UIO_HV_GENERIC)	+=3D uio_hv_generic.o
-> =C2=A0obj-$(CONFIG_UIO_DFL)	+=3D uio_dfl.o
-> +obj-$(CONFIG_UIO_DMABUF_HEAP) +=3D uio_heap.o
-> diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
-> index d93ed4e86a174b5bad193a61aa522cd833fe7bb5..f31936a897805a284165cccfe=
-e3d66e96acd4b39 100644
-> --- a/drivers/uio/uio.c
-> +++ b/drivers/uio/uio.c
-> @@ -1046,7 +1046,11 @@ int __uio_register_device(struct module *owner,
-> =C2=A0		}
-> =C2=A0	}
-> =C2=A0
-> +#if defined(CONFIG_UIO_DMABUF_HEAP)
-> +	return add_uio_heap(idev);
-> +#else
-> =C2=A0	return 0;
-> +#endif
-> =C2=A0
-> =C2=A0err_request_irq:
-> =C2=A0	uio_dev_del_attributes(idev);
-> diff --git a/drivers/uio/uio_heap.c b/drivers/uio/uio_heap.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..2e836b503458e280babba0e0a=
-dc4f6d8344efc82
-> --- /dev/null
-> +++ b/drivers/uio/uio_heap.c
-> @@ -0,0 +1,120 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/dma-buf.h>
-> +#include <linux/dma-heap.h>
-> +#include <linux/uio_driver.h>
-> +
-> +struct uio_heap {
-> +	struct dma_heap *heap;
-> +	struct device *dev;
-> +};
-> +
-> +struct uio_heap_buffer {
-> +	struct uio_heap *heap;
-> +	dma_addr_t dma_addr;
-> +	unsigned long len;
-> +	void *vaddr;
-> +};
-> +
-> +static int uio_heap_mmap(struct dma_buf *dmabuf, struct vm_area_struct *=
-vma)
-> +{
-> +	struct uio_heap_buffer *buffer =3D dmabuf->priv;
-> +
-> +	return dma_mmap_coherent(buffer->heap->dev, vma, buffer->vaddr,
-> +				 buffer->dma_addr, buffer->len);
-> +}
-> +
-> +static void uio_heap_dma_buf_release(struct dma_buf *dmabuf)
-> +{
-> +	struct uio_heap_buffer *buffer =3D dmabuf->priv;
-> +
-> +	dma_free_coherent(buffer->heap->dev, buffer->len, buffer->vaddr,
-> +			=C2=A0 buffer->dma_addr);
-> +	kfree(buffer);
-> +}
-> +
-> +static int uio_heap_get_dma_addr(struct dma_buf *dmabuf, u64 *addr)
-> +{
-> +	struct uio_heap_buffer *buffer =3D dmabuf->priv;
-> +
-> +	*addr =3D buffer->dma_addr;
-> +	return 0;
-> +}
-> +
-> +static const struct dma_buf_ops uio_heap_buf_ops =3D {
-> +	.mmap =3D uio_heap_mmap,
-> +	.release =3D uio_heap_dma_buf_release,
-> +	.get_dma_addr =3D uio_heap_get_dma_addr,
-> +};
-> +
-> +static struct dma_buf *uio_heap_allocate(struct dma_heap *heap,
-> +					 unsigned long len,
-> +					 u32 fd_flags,
-> +					 u64 heap_flags)
-> +{
-> +	struct uio_heap *uio_heap =3D dma_heap_get_drvdata(heap);
-> +	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-> +	struct uio_heap_buffer *buffer;
-> +	struct dma_buf *dmabuf;
-> +
-> +	buffer =3D kzalloc(sizeof(*buffer), GFP_KERNEL);
-> +	if (!buffer)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	dma_set_coherent_mask(uio_heap->dev, DMA_BIT_MASK(32));
-> +
-> +	buffer->heap =3D uio_heap;
-> +	buffer->len =3D len;
-> +	buffer->vaddr =3D dma_alloc_coherent(uio_heap->dev, buffer->len,
-> +					=C2=A0=C2=A0 &buffer->dma_addr, GFP_KERNEL);
-> +	if (IS_ERR(buffer->vaddr))
-> +		goto free_buf;
-> +
-> +	exp_info.exp_name =3D dma_heap_get_name(heap);
-> +	exp_info.ops =3D &uio_heap_buf_ops;
-> +	exp_info.size =3D buffer->len;
-> +	exp_info.flags =3D fd_flags;
-> +	exp_info.priv =3D buffer;
-> +	dmabuf =3D dma_buf_export(&exp_info);
-> +	if (IS_ERR(dmabuf))
-> +		goto free_dma;
-> +
-> +	return dmabuf;
-> +
-> +free_dma:
-> +	dma_free_coherent(uio_heap->dev, buffer->len, buffer->vaddr, buffer->dm=
-a_addr);
-> +free_buf:
-> +	kfree(buffer);
-> +
-> +	return ERR_PTR(-ENOMEM);
-> +}
-> +
-> +static const struct dma_heap_ops uio_heap_ops =3D {
-> +	.allocate =3D uio_heap_allocate,
-> +};
-> +
-> +int add_uio_heap(struct uio_device *uio)
-> +{
-> +	struct dma_heap_export_info exp_info;
-> +	struct uio_heap *uio_heap;
-> +
-> +	uio_heap =3D kzalloc(sizeof(*uio_heap), GFP_KERNEL);
-> +	if (!uio_heap)
-> +		return -ENOMEM;
-> +
-> +	uio_heap->dev =3D &uio->dev;
-> +
-> +	/* Use device name as heap name */
-> +	exp_info.name =3D uio_heap->dev->kobj.name;
-> +	exp_info.ops =3D &uio_heap_ops;
-> +	exp_info.priv =3D uio_heap;
-> +
-> +	uio_heap->heap =3D dma_heap_add(&exp_info);
-> +	if (IS_ERR(uio_heap->heap)) {
-> +		int ret =3D PTR_ERR(uio_heap->heap);
-> +
-> +		kfree(uio_heap);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
-> index 18238dc8bfd356a20996ba6cd84f1ff508bbb81c..f8b774d2fa1c7de4b6af881f1=
-e53dfa9f25b3dbf 100644
-> --- a/include/linux/uio_driver.h
-> +++ b/include/linux/uio_driver.h
-> @@ -143,6 +143,8 @@ extern int __must_check
-> =C2=A0				=C2=A0=C2=A0 struct device *parent,
-> =C2=A0				=C2=A0=C2=A0 struct uio_info *info);
-> =C2=A0
-> +extern int add_uio_heap(struct uio_device *uio);
-> +
-> =C2=A0/* use a define to avoid include chaining to get THIS_MODULE */
-> =C2=A0
-> =C2=A0/**
+All warnings (new ones prefixed by >>):
+
+   drivers/soc/qcom/qcom-geni-se.c: In function 'geni_se_probe':
+>> drivers/soc/qcom/qcom-geni-se.c:953:1: warning: label 'out' defined but not used [-Wunused-label]
+     953 | out:
+         | ^~~
+--
+>> drivers/soc/qcom/qcom-geni-se.c:110: warning: Function parameter or struct member 'geni_se_rsc_init' not described in 'geni_se_desc'
+
+
+vim +/out +953 drivers/soc/qcom/qcom-geni-se.c
+
+   928	
+   929	static int geni_se_probe(struct platform_device *pdev)
+   930	{
+   931		struct device *dev = &pdev->dev;
+   932		struct geni_wrapper *wrapper;
+   933		const struct geni_se_desc *desc;
+   934		int ret;
+   935	
+   936		wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
+   937		if (!wrapper)
+   938			return -ENOMEM;
+   939	
+   940		wrapper->dev = dev;
+   941		wrapper->base = devm_platform_ioremap_resource(pdev, 0);
+   942		if (IS_ERR(wrapper->base))
+   943			return PTR_ERR(wrapper->base);
+   944	
+   945		desc = device_get_match_data(&pdev->dev);
+   946	
+   947		if (!has_acpi_companion(&pdev->dev) && desc->geni_se_rsc_init) {
+   948			ret = desc->geni_se_rsc_init(wrapper, desc);
+   949			if (ret)
+   950				return -EINVAL;
+   951		}
+   952	
+ > 953	out:
+   954		dev_set_drvdata(dev, wrapper);
+   955		dev_dbg(dev, "GENI SE Driver probed\n");
+   956		return devm_of_platform_populate(dev);
+   957	}
+   958	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
