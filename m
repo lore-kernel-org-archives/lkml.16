@@ -1,49 +1,25 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E3D13635E
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F471DD873
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377576; cv=none; b=WSPelJCMWFSS+gpnURtkCXTm3sbS/XJAutSktXHzTeNOgXivJjAdP/Ivf6GLtMpS7FIhJhjqaArpTqI2z8fXocZW0crRh7Q519MN8r8D2lSyfekqlol7rrIPmKNLzvy2pzPIEDGC4mhdGGbYEC9JQ9NJIk/Be+1hW3e7PosN+PM=
+	t=1744377585; cv=none; b=p7rrVtsEmW29WlL5cDGSH8Y11TvkZLQAaUM1y30jmPau1KhfKKbFw1estVbZwLoweSOGwOu7sW4tpZAOrcXQh/1EflQNXu/1Lst4V5o/fkMU3p4H1RNItam5j8zB4rEA/z+NVZUMfFDULsEnNtMjHR/ZL5ETMOCjyu6muVbQDQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377576; c=relaxed/simple;
-	bh=DvdCNV3kj/5TD9O7DSU/WxOtcVOvJSx4AkDTYs+lxkM=;
+	s=arc-20240116; t=1744377585; c=relaxed/simple;
+	bh=qFvMGql/cEW31NPnv3bTQfWoCfSEwWIMfkNjqDnykKw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uR6djD0Y4JbO1v/fQJnVzIyfJ4grKRqjzQvkW7mqMWOFyfD5fY/BGkzyqrKePrZ5+nJ48wdLZnOGJx4pxcLioD6Hu7RFxoKWbp4jCpQoq3KxuUxslo9I4sBLYEFg1Jbj1xmardT3xdlX6s5ZMIpSK1xH7jehihprtoYQc3TTlgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WQf1ENGG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WQf1ENGG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744377574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=shuX7fon/hIq4duj4t+qKrqkD2Z+ua79QnTf8iIlD5c=;
-	b=WQf1ENGGpLfM4GhFvCdY+6chV8mBSXlfXT8cnoBHGNNTnSbyV9MNX4ebA/x1DGnfaN9v5f
-	x9DBiUAgPmwwT1QO/LhzlsNHekc/Ehb+4MRiCFei/3yTMsTVCmepXGmtnWqnNk/P0LY6Ay
-	9hIlXGn+lThYMeOnZWEkF2n5WzI3fZI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-15-7Bs_rkfVNzqHaoE-430wBA-1; Fri,
- 11 Apr 2025 09:19:30 -0400
-X-MC-Unique: 7Bs_rkfVNzqHaoE-430wBA-1
-X-Mimecast-MFC-AGG-ID: 7Bs_rkfVNzqHaoE-430wBA_1744377568
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2197C1801A1A;
-	Fri, 11 Apr 2025 13:19:28 +0000 (UTC)
-Received: from [10.45.225.124] (unknown [10.45.225.124])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B2043180B486;
-	Fri, 11 Apr 2025 13:19:22 +0000 (UTC)
-Message-ID: <e80b24f2-a936-4f7a-a86b-af3bc9b6a380@redhat.com>
-Date: Fri, 11 Apr 2025 15:19:20 +0200
+	 In-Reply-To:Content-Type; b=fVnby+vqiUbb/e4/7P+LoHDK9sdWqY39xR2OBakL1WtYjhhqPGPOpMFsKsPmpEY/Cp+cAuC9AIRQOKJCLZTmORr2BKXmgOW+ssQIQtJpVAgYvVmx76tRnzXgPLgiiAeHq2eEGHtLJt79J4vmZM8/Jg4U4N+ipG/2ossVhqFhMgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9865A106F;
+	Fri, 11 Apr 2025 06:19:41 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 617BA3F59E;
+	Fri, 11 Apr 2025 06:19:40 -0700 (PDT)
+Message-ID: <60c980c1-16b6-460e-89a4-203e9f0cbf3b@arm.com>
+Date: Fri, 11 Apr 2025 14:19:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,50 +27,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev@vger.kernel.org,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <CAHp75Ve4LO5rB3HLDV5XXMd4SihOQbPZBEZC8i1VY_Nz0E9tig@mail.gmail.com>
- <b7e223bd-d43b-4cdd-9d48-4a1f80a482e8@redhat.com>
- <8c9e95e2-27da-4f3d-b277-ca8e98ab61ef@lunn.ch>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <8c9e95e2-27da-4f3d-b277-ca8e98ab61ef@lunn.ch>
+Subject: Re: [PATCH] iommu/io-pgtable-arm: dynamically allocate selftest
+ device struct
+To: Arnd Bergmann <arnd@kernel.org>, Will Deacon <will@kernel.org>,
+ Joerg Roedel <joro@8bytes.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mostafa Saleh <smostafa@google.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>,
+ Rob Clark <robdclark@chromium.org>, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250411125423.1411061-1-arnd@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250411125423.1411061-1-arnd@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-
-
-On 11. 04. 25 2:31 odp., Andrew Lunn wrote:
->> 2nd regmap for indirect registers (mailboxes) (pages 10-15) with disabled
->> locking:
->>
->> regmap_config {
->> 	...
->> 	.disable_lock = true,
->> 	...
->> };
+On 11/04/2025 1:54 pm, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Do all registers in pages 10-15 need special locking? Or just a
-> subset?
+> In general a 'struct device' is way too large to be put on the kernel
+> stack. Apparently something just caused it to grow a slightly larger,
+> which pushed the arm_lpae_do_selftests() function over the warning
+> limit in some configurations:
 > 
-> 	Andrew
+> drivers/iommu/io-pgtable-arm.c:1423:19: error: stack frame size (1032) exceeds limit (1024) in 'arm_lpae_do_selftests' [-Werror,-Wframe-larger-than]
+>   1423 | static int __init arm_lpae_do_selftests(void)
+>        |                   ^
 > 
-All of them... 1 page (>=10) == 1 mailbox.
+> Change the function to use a dynamically allocated platform_device
+> instead of the on-stack device structure. The device is not actually
+> registered with the system, but is initialized enough to be used here.
+> 
+> Fixes: ca25ec247aad ("iommu/io-pgtable-arm: Remove iommu_dev==NULL special case")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/iommu/io-pgtable-arm.c | 13 +++++++++----
+>   1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+> index 7632c80edea6..9f3bf0b5e8da 100644
+> --- a/drivers/iommu/io-pgtable-arm.c
+> +++ b/drivers/iommu/io-pgtable-arm.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/bitops.h>
+>   #include <linux/io-pgtable.h>
+>   #include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+>   #include <linux/sizes.h>
+>   #include <linux/slab.h>
+>   #include <linux/types.h>
+> @@ -1433,15 +1434,17 @@ static int __init arm_lpae_do_selftests(void)
+>   	};
+>   
+>   	int i, j, k, pass = 0, fail = 0;
+> -	struct device dev;
 
-I.
+Could we not simply make this static? Per the comment it's only here to 
+serve a NUMA node lookup buried deep in the pagetable allocator (TBH my 
+first thought was to just put an int on the stack and contrive a pointer 
+as the inverse of dev_to_node(), but I decided that would probably be 
+too contentious...)
 
+> +	struct platform_device *pdev;
+>   	struct io_pgtable_cfg cfg = {
+>   		.tlb = &dummy_tlb_ops,
+>   		.coherent_walk = true,
+> -		.iommu_dev = &dev,
+>   	};
+>   
+> -	/* __arm_lpae_alloc_pages() merely needs dev_to_node() to work */
+> -	set_dev_node(&dev, NUMA_NO_NODE);
+> +	pdev = platform_device_alloc("io-pgtable-test", 0);
+
+Otherwise, this would seem to be another perfect case for the new 
+faux_device.
+
+Thanks,
+Robin.
+
+> +	if (!pdev)
+> +		return -ENOMEM;
+> +
+> +	cfg.iommu_dev = &pdev->dev;
+>   
+>   	for (i = 0; i < ARRAY_SIZE(pgsize); ++i) {
+>   		for (j = 0; j < ARRAY_SIZE(address_size); ++j) {
+> @@ -1461,6 +1464,8 @@ static int __init arm_lpae_do_selftests(void)
+>   	}
+>   
+>   	pr_info("selftest: completed with %d PASS %d FAIL\n", pass, fail);
+> +	platform_device_put(pdev);
+> +
+>   	return fail ? -EFAULT : 0;
+>   }
+>   subsys_initcall(arm_lpae_do_selftests);
