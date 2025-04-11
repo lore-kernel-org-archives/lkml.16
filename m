@@ -1,130 +1,143 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70E02980AE;
-	Fri, 11 Apr 2025 08:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8246D2980BA
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360537; cv=none; b=DdlES6tkI1V3eVAlvh4ad94dYITViWpSnWCDOh+zpoMIGs6euzW2Zl/X1JLAm6oRmpseY+dF3IZgqBYFgk6F4DSj1HLwQP2h7gIkh9LlsMnR+ghMiyq5PvvoiMXbsmOO02J+LYHEpjjCFf5aZW0FUzgjlP0KVWx2dDUVxut5f+o=
+	t=1744360552; cv=none; b=ZuitfhwDzRtO4K8AFt7vTtCYNylJWQHymN9LIK2VHqzC36HTaMllkeCEcBgbXIVEk1PGfBeqor+NyDo3OrvwOFuWhuM5mi9DEy9gB69ZsPJkiQFuJbkisyTBu5kr2I2yZkNv77UZN32eAg5YcQZGYJ8UFRUly93/KCdyaBpj9Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360537; c=relaxed/simple;
-	bh=IMFF4gsFIW+Xo+Q1Z/FeUWv0CGqiTVKx30ut9GDruI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SnVNYpSfGtLLMWZ1uKW0EXiWlTDJEalfi9R9ufCfleeiw72UvnSg94Hp91/NvsCeFscdgFFmSFS/vF/QP9fhO+9j8XlnNHib4rXuJf0nhEsUp7LnQMQ5Zhl4mzd6P5Wbb3r8YQJSmRpqEk09YgQlXWSAy8eWVzVgdRBzJw1AVr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLawreZ+; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744360552; c=relaxed/simple;
+	bh=+9AbACK5K6GlC+ll7IX0NZn7vGxKN9QF2fW0BIOEzKI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iPzynsd6j5hCuVOmr82TMuunWk3g8GSVER+FPDkgS39BGxl5yS1LA1LLQyDbQ8U89z/y+WRPOMKR3+kLkWdIP5/3LhCxyMEyWawQy/yGMxIjT0surByNYFyoUZbxXKzTETER9JbRhme+W/1AJ/UgF2VYttw1NaeNwtmDoGRdDD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ocZhzBPb; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLawreZ+"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf848528aso12963395e9.2;
-        Fri, 11 Apr 2025 01:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744360534; x=1744965334; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JeZ1VCswI7QX1GjP0qXY6ng0b/NdREuqFUKOgDA2mwM=;
-        b=iLawreZ+sB3eD1v4tNQkTu+xZg0PUiuzBhFhDpI5z8v1dSFlWl+cu/KsS09lxqz+7W
-         WoLVwJe93HG5NGWRNyxSby4pPf95tGYE4ELrF9pt+0+BNsxT4qollLrIXQpdzWppKYWv
-         pAY215D/uXlfGUfXiQB0Rs59Qpq+IeP3GGlPqn2enXDyIcNs8NzAjC33Mcy/yyWDrkWP
-         aYDKL8l2E13JJc+k2haSiTVkTP0ZkvRuz1jhosyd4OL8htuRKh03BU+uAjXZtT6fuqRy
-         fCUkvFhxu2LZvnTj6McROzHNUtgZdVo5OdjZDyTMPrfp5TdlSqjyVd06iD7jljDBqOfW
-         0Lyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744360534; x=1744965334;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JeZ1VCswI7QX1GjP0qXY6ng0b/NdREuqFUKOgDA2mwM=;
-        b=Q8BkO1qEVHEWM4GVGvO2ubVvYxP4F3nSBzouxf/RCr+w04j37a3eROVwaqeuTLOq2e
-         AEmQCcEc8coeQW1ctQL6ZL3c6U4elmFzVIzUFegIH/l/rLcO6ZSVFBkRkxmnRglm4sq2
-         5oQrFyGS3HPYQKqW7OdC4K4FlvttPCR764OoTFK0sGfbGveOg3Qwya4HrAEKW7rwJr33
-         RoQlrrQKYD1rWaGY+TokD6sS8jlHCpO8r+bfvp4TV7inLqBjiI9OIOlnVd3ApLZZSf9b
-         Hcfie1RuyfsT33pn+1OcUP2BXhIdqtTFm27W4C8N4eiPG6PHwsGWK2pHcUEFOL8fmSDD
-         pcFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVN7lIA2t+wU1NXGWZAqHQo39z3d3gQWEwLFuSP+3L2MmuIrrF8PduN87hpxXUDJCDTk4h0ULzBPej/Lnz6VPj5/fKCFYL2@vger.kernel.org, AJvYcCWaUxr+o+TbTJYPL/Ffhc6h9JbRd7sUFYj1CLQ0wApAlpsHuHRd4sGcJJEZdcDGWH68xFqYZhFAlLzX2q4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWkPLABNhhPzzDeErcO/6OemyYwV92EsUKk1BYOmuwselfhze7
-	+LoPWzWhNdrb89ntHZq5Uh5ifebDcGYlwkdz3ewlNE3q5q2thYhS
-X-Gm-Gg: ASbGncuozknLy8B3IBAUmJ9M2TADSIRVuyeG5lxZ7KcGF+dM+K7deTLnIq5nGwaUlpi
-	ObabxaKHLIWZt21jSjOJZgXF6gXjwQKimEnARvLqnSpx6aoFwT1Sn5d2pk5VBnPBJA3KNvQHYb3
-	9/5HRFyXRupiI/zMDRZ4J13r7ghRCzUoZOLIXOncciB8OMA1eByxitI19t93uwwu00y6zw0kcCo
-	3VXtyDSpJislSmOg6Zlv9aeZDPdv2v3pNKeXOBhDI/c3CdKZMdOIFFMcV3Jpkxf4ustc/JzumFo
-	wjH9kUH0hgFITUrwdncpWnuSp0RU9bD34l9KsXbCZxX86XPHO1NQ3O58+n0zo9rpcVw=
-X-Google-Smtp-Source: AGHT+IHZ7/aIl27D+/wmqNZfCbOR61KOSE41AnWgPK7HD6QuxRb4Z5v5AwM0WQcQhNmjp3l0KD6IOA==
-X-Received: by 2002:a05:600c:470d:b0:43c:fa24:873e with SMTP id 5b1f17b1804b1-43f3a93d162mr11919975e9.13.1744360533734;
-        Fri, 11 Apr 2025 01:35:33 -0700 (PDT)
-Received: from localhost (ip87-106-108-193.pbiaas.com. [87.106.108.193])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f233a2f71sm75974325e9.15.2025.04.11.01.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 01:35:33 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:35:31 +0200
-From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>,
-	Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH v1 1/3] landlock: Log the TGID of the domain creator
-Message-ID: <20250411.3c94c5c9e6bb@gnoack.org>
-References: <20250410171725.1265860-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ocZhzBPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744360548;
+	bh=+9AbACK5K6GlC+ll7IX0NZn7vGxKN9QF2fW0BIOEzKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ocZhzBPbK1nk7t+xQ27xK7ppksn+DK2uKAxqV98S1qXuZstwXZrsZZIzXrPUnxIhD
+	 ykJADh+etnfRyNnwtFdbrjl/h8fuBN3yTZWwXh9PXZGVmksEArM4KV4In8WhbAL9Pf
+	 0QpiVfmb+11WcJPnea9GStdZdc74GdBH481069e9Fl7ldNjdhxt2NekSXKWFGJOfn/
+	 ZYIdURYSydTcVHv8S8LWGgKSN5SYNVyTtAMtYZqarBIL+EDEcLx3poc/ChvMeVc7i6
+	 57w9sMvpuV1cAkkH5TuLf+/rFIORzRL4bGK5h32/wJllz/tY8C4CUT9ow7UTSvezf3
+	 kCHakW8OA5QbQ==
+Received: from [192.168.50.250] (unknown [171.76.80.238])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E1C4B17E0EB8;
+	Fri, 11 Apr 2025 10:35:44 +0200 (CEST)
+Message-ID: <cd1329ef-05ad-4598-804e-7801ddb1025d@collabora.com>
+Date: Fri, 11 Apr 2025 14:05:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] drm/ci: Add devicetree validation and KUnit tests
+To: Helen Koike <koike@igalia.com>, dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com, daniel@fooishbar.org, helen.fornazier@gmail.com,
+ airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com,
+ guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
+ valentine.burley@collabora.com, lumag@kernel.org, quic_abhinavk@quicinc.com,
+ mripard@kernel.org, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+ linux-kernel@vger.kernel.org
+References: <20250409061543.311184-1-vignesh.raman@collabora.com>
+ <ef5b7030-c38a-44b9-b0bd-28ea6adb17c2@igalia.com>
+ <a16c70e0-9078-4a21-9fa1-ca9d33823ff2@collabora.com>
+ <2266002e-372d-434c-a2f5-282166e28c70@igalia.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <2266002e-372d-434c-a2f5-282166e28c70@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250410171725.1265860-1-mic@digikod.net>
 
-On Thu, Apr 10, 2025 at 07:17:21PM +0200, Micka�l Sala�n wrote:
-> As for other Audit's "pid" fields, Landlock should use the task's TGID
-> instead of its TID.  Fix this issue by keeping a reference to the TGID
-> of the domain creator.
+Hi Helen,
+
+On 10/04/25 20:10, Helen Koike wrote:
 > 
-> Existing tests already check for the PID but only with the thread group
-> leader, so always the TGID.  A following patch adds dedicated tests for
-> non-leader thread.
 > 
-> Remove the current_real_cred() check which does not make sense because
-> we only reference a struct pid, whereas a previous version did reference
-> a struct cred instead.
+> On 10/04/2025 05:07, Vignesh Raman wrote:
+>> Hi Helen,
+>>
+>> On 09/04/25 23:53, Helen Koike wrote:
+>>> Hi Vignesh,
+>>>
+>>> Thank you for your patch.
+>>>
+>>> On 09/04/2025 03:15, Vignesh Raman wrote:
+>>>> Add jobs to validate devicetrees and run KUnit tests.
+>>>>
+>>>> Pipeline link,
+>>>> https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1400550
+>>>
+>>> I see the checks are in the same stage as build, does it make sense 
+>>> to create another stage? Similar to what was proposed on kci-gitlab?
+>>>
+>>> Also, I don't think it make sense for kunit to be in the build stage. 
+>>> Maybe in software-driver? Since kunit runs on a qemu.
+>>
+>> We can add a `test` stage for kunit and a `static-checks` stage for 
+>> devicetree validation and check patch. What do you think?
 > 
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: G�nther Noack <gnoack@google.com>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Signed-off-by: Micka�l Sala�n <mic@digikod.net>
-> ---
->  security/landlock/domain.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Ack on static-checks stage.
+
+I will update it.
+
 > 
-> diff --git a/security/landlock/domain.c b/security/landlock/domain.c
-> index bae2e9909013..a647b68e8d06 100644
-> --- a/security/landlock/domain.c
-> +++ b/security/landlock/domain.c
-> @@ -16,6 +16,7 @@
->  #include <linux/path.h>
->  #include <linux/pid.h>
->  #include <linux/sched.h>
-> +#include <linux/signal.h>
->  #include <linux/uidgid.h>
->  
->  #include "access.h"
-> @@ -99,8 +100,7 @@ static struct landlock_details *get_current_details(void)
->  		return ERR_PTR(-ENOMEM);
->  
->  	memcpy(details->exe_path, path_str, path_size);
-> -	WARN_ON_ONCE(current_cred() != current_real_cred());
-> -	details->pid = get_pid(task_pid(current));
-> +	details->pid = get_pid(task_tgid(current));
->  	details->uid = from_kuid(&init_user_ns, current_uid());
->  	get_task_comm(details->comm, current);
->  	return details;
-> -- 
-> 2.49.0
+> `test` stage confuses me, because all the other stages with driver names 
+> are also tests, this is why I suggested to move to `software-driver`.
+> 
+> Or maybe we could just have a kunit stage for now.
+
+Yes, we can add kunit stage. Let the `software-driver` have only vkms 
+and virtio-gpu tests.
+
+Regards,
+Vignesh
+
+> 
+> Helen
+> 
+>>
+>> Regards,
+>> Vignesh
+>>
+>>>
+>>> Helen
+>>>
+>>>>
+>>>> Link to v1,
+>>>> https://lore.kernel.org/all/20250327160117.945165-1- 
+>>>> vignesh.raman@collabora.com/
+>>>>
+>>>> Vignesh Raman (2):
+>>>>    drm/ci: Add jobs to validate devicetrees
+>>>>    drm/ci: Add jobs to run KUnit tests
+>>>>
+>>>>   drivers/gpu/drm/ci/check-devicetrees.yml | 43 ++++++++++++++++++++ 
+>>>> ++++
+>>>>   drivers/gpu/drm/ci/dt-binding-check.sh   | 16 +++++++++
+>>>>   drivers/gpu/drm/ci/dtbs-check.sh         | 19 +++++++++++
+>>>>   drivers/gpu/drm/ci/gitlab-ci.yml         |  2 ++
+>>>>   drivers/gpu/drm/ci/kunit.sh              | 11 ++++++
+>>>>   drivers/gpu/drm/ci/kunit.yml             | 32 ++++++++++++++++++
+>>>>   6 files changed, 123 insertions(+)
+>>>>   create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
+>>>>   create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
+>>>>   create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
+>>>>   create mode 100755 drivers/gpu/drm/ci/kunit.sh
+>>>>   create mode 100644 drivers/gpu/drm/ci/kunit.yml
+>>>>
+>>>
+>>
 > 
 
-Ah, a classic! Good catch finding this early enough for 6.15!
-
-Reviewed-by: G�nther Noack <gnoack3000@gmail.com>
