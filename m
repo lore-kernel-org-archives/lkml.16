@@ -1,84 +1,158 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81D02980A4
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6AA29614A
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361087; cv=none; b=A2/LvfVVX5b86LmCp/I/ywQiSHWe/LClu1X+syo3N58EoJpOtYWtIddzOn/u1Wvr6CS0ZOzSSNGazJkJQKN5wSEmjVNRsOgpg+TkQcmzAhW10FT3r1f19nbLi/4aeWJSFxPs5l5JYq9kULyjFu748Bs8ZtmmetqA9EgLlVY6S90=
+	t=1744361092; cv=none; b=S5Q3G9EG0cZbcndiqLtPiIkwwoWl/4Si7Vx6NgtyElQYLpcTagzwKVbfJNkdVH0RTbV6DK8yTHRir2OxcsOGUIfs+zDud1slThEifCIOCaK3CPKsquFi67Ml1XTwnxmezGYiCYSFzDtiOx0DEWy94xzyZQvlAWSZqHfJJtBTT3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361087; c=relaxed/simple;
-	bh=lHO6aNOn5EwTvO2wFlp/SwAPagQH5zCdbSrrXnM1y3g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kr07xx7QCnrG0+qEcSR3RFrui5I4TffMIk+majlDBTNYQsk4wOtE9FVGgRozSy6251E+SUkxIJlArWkCUTvh0D3fvofpQx0xqKWV/4AE6DIXpQUZhV2eA68KTIEYO929M048yYtIWL3GeKVlFm3ZucZFp85JGc61c83q1JmuPGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CTWa7HoJ; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744361092; c=relaxed/simple;
+	bh=9cLwMw68mIgHIxF1qVqrql4c16I3edCul3SDUKeu+G8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q1GOmBcLVPQkXvs4M4eWXSkj65KUBTTFo2mBUElXm0tibLsRhPiTWJom9Rj4/gUPeJx4ucijKF+t9m+UL6wVYCQZ6h0L3x4HJ1Qm8Q/kJiqgxfo6voigJryCBe7Tuw80IS0rJ2606Sr+ddF5CJnfHNwzf/vCBrB4ERqsXuMp580=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=enpRr1dU; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CTWa7HoJ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744361081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Xcey4MLmxG1qv2MDXN4YFYZKnSncQZSjL+M9HUoeNcU=;
-	b=CTWa7HoJpG3999H2QBJIg6wcyQBwbHXqSHSX7e8mXQ4cEyyghaOLgfhO2IqRzjz0BChWj7
-	hQUuXx1dgozYD00/uhXIfdgeNuyV4/nz1pvkGfUAjcDPQJoJuS+UIRdTAE7SK9iy3oA5M4
-	hcJ9XXxgw3oZb/xwUy16cOzo8NQIRto=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] pcmcia: Use str_off_on() and str_yes_no() helpers
-Date: Fri, 11 Apr 2025 10:44:29 +0200
-Message-ID: <20250411084434.7178-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="enpRr1dU"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39bf44be22fso980805f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744361089; x=1744965889; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zMGgS5fCEfGgSPkzbjBwVuqib9p8e2egk8zRG8FlzXk=;
+        b=enpRr1dUTuun/9ZTgkrViHTDeX58ABGjjTdR6fKYTeW0XY5NmsSDdVNp8Jgg1SjFcM
+         3rRWUwLvCxRLzvMztd9DsTx2hqXQrTc+9qnLmoeCIJsW8sGQSwgTQk81fGfwpdCEHjEH
+         M4SfRM2yIzF6U/ofPbJrF1paaTYLrW1EHAVgoPTvHyNXewEcrXFFvZHwIIrhULTp3219
+         ZImL9ImHKkIevjySCnPr7sFurQvq6jckgCdXqvuDFy5UIojlFTflQotv3APpDXrJKvfR
+         hsMx5pkklmN5mlmDyoZSbMCLB+CkwKEv1SWmn3wUOx5E0XNsW0hAyQv28Fe1DSOjufK6
+         il7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744361089; x=1744965889;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zMGgS5fCEfGgSPkzbjBwVuqib9p8e2egk8zRG8FlzXk=;
+        b=eXsH8/jP7kGQd2nKtPyNWHCx4Zi+Ep2Lf94Cr7oxdEESQwvgoAQM+aewtRLBvuf7x9
+         fv3Tx1F6qqjc7THby1XO5pKEY58KiTDi98f7PI5j2piJT5smiXJrca7v5y3Yxw7wZfY7
+         ZmRguuoM/BNRqrvhVfwhwDoTurelDgp1Yw6iHgcY4czC9zo6IfJISkZszoS7nVtp3Rhw
+         wD3VEdHgdZC6Y/HzaJ0jvBnkJwKFy5m2GKDIdcwSgklmtbwZTkcqnmEn+dWPG0x+AgJg
+         g5Mkk0KRc1YeDjfIQ6RJHJZJQLamzNtlNxJPQ0lVfiEuahcH2clRtcsKfnEuRdAkNPHN
+         Kr9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUuXAu+IFE2cWdbzm4riks+6nOTIRmviT3W1tFHBe+p3rDVlruns/8M8dfEd2C5AIMfVFmSOx633QbuSqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyedU7joY7pKS3F+6qNzwsqQ5KqtQJdVsH6CP+SzBT7LRdKbTWU
+	y4qHWWr3Jxf6AbgPp32ML4MhM94Nyqz1LNU1SACabjifRxg/mDCuX8iuqYwi4hg=
+X-Gm-Gg: ASbGncsm9LrrHMkRWqwscQKZr4/CNQRbU3rSAMhwmsJppCgmOyV/ycOpncEQhNygMjO
+	DHT3bW7HYH/kHfibCil3YNcIfXZk7K5TNClwi7A+nOcSCo/GgJ4ZmtCSpbLQf09jbA0QUnOTFjw
+	/wqbhM0ES3c7SBlIxFwjfhbP/Q7IU3hO1Ggr41N/afTtuXMZ9vbhfJ6ACHFhtuZtwdQBq+B8w/b
+	aUc04wPeOE58atrhzxtfVQOe9C1fX3bD4rnhePKjaczU3AEyJHzJjLWcSJnlM4j3cscQ1lbMQO4
+	La6VmR/Nxx2ArPJg6FFHabNmGU+4Hwz89dX8mA==
+X-Google-Smtp-Source: AGHT+IE9HwRJqdBoFZARSKejgbKlYpB5ZyiUnFyow4d/RQYRPI6i3/YxPI/2/DT5RWcCHGw3YkUedA==
+X-Received: by 2002:a05:6000:40d9:b0:39c:1258:2dc9 with SMTP id ffacd0b85a97d-39eaaeca292mr1424739f8f.58.1744361089162;
+        Fri, 11 Apr 2025 01:44:49 -0700 (PDT)
+Received: from [192.168.2.177] ([81.0.8.231])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5b08sm78726825e9.33.2025.04.11.01.44.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 01:44:48 -0700 (PDT)
+Message-ID: <2746c8a3-2d35-44bf-829a-e09c9441c2f9@suse.com>
+Date: Fri, 11 Apr 2025 10:44:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] pmdomain: mediatek: Bump maximum bus protect data
+ array elements
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ robh@kernel.org
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org, ulf.hansson@linaro.org,
+ matthias.bgg@gmail.com, fshao@chromium.org, y.oudjana@protonmail.com,
+ wenst@chromium.org, lihongbo22@huawei.com, mandyjh.liu@mediatek.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, kernel@collabora.com
+References: <20250410143944.475773-1-angelogioacchino.delregno@collabora.com>
+ <20250410143944.475773-3-angelogioacchino.delregno@collabora.com>
+Content-Language: en-US, ca-ES, es-ES
+From: Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; keydata=
+ xsFNBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
+ fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
+ OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
+ gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
+ 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
+ EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
+ fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
+ ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
+ HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
+ 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABzSRNYXR0aGlhcyBC
+ cnVnZ2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT7CwXgEEwECACIFAlV6iM0CGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAAAoJENkUC7JWEwLx6isQAIMGBgJnFWovDS7ClZtjz1LgoY8skcMU
+ ghUZY4Z/rwwPqmMPbY8KYDdOFA+kMTEiAHOR+IyOVe2+HlMrXv/qYH4pRoxQKm8H9FbdZXgL
+ bG8IPlBu80ZSOwWjVH+tG62KHW4RzssVrgXEFR1ZPTdbfN+9Gtf7kKxcGxWnurRJFzBEZi4s
+ RfTSulQKqTxJ/sewOb/0kfGOJYPAt/QN5SUaWa6ILa5QFg8bLAj6bZ81CDStswDt/zJmAWp0
+ 08NOnhrZaTQdRU7mTMddUph5YVNXEXd3ThOl8PetTyoSCt04PPTDDmyeMgB5C3INLo1AXhEp
+ NTdu+okvD56MqCxgMfexXiqYOkEWs/wv4LWC8V8EI3Z+DQ0YuoymI5MFPsW39aPmmBhSiacx
+ diC+7cQVQRwBR6Oz/k9oLc+0/15mc+XlbvyYfscGWs6CEeidDQyNKE/yX75KjLUSvOXYV4d4
+ UdaNrSoEcK/5XlW5IJNM9yae6ZOL8vZrs5u1+/w7pAlCDAAokz/As0vZ7xWiePrI+kTzuOt5
+ psfJOdEoMKQWWFGd/9olX5ZAyh9iXk9TQprGUOaX6sFjDrsTRycmmD9i4PdQTawObEEiAfzx
+ 1m2MwiDs2nppsRr7qwAjyRhCq2TOAh0EDRNgYaSlbIXX/zp38FpK/9DMbtH14vVvG6FXog75
+ HBoOzsFNBF3VOUgBEACbvyZOfLjgfB0hg0rhlAfpTmnFwm1TjkssGZKvgMr/t6v1yGm8nmmD
+ MIa4jblx41MSDkUKFhyB80wqrAIB6SRX0h6DOLpQrjjxbV46nxB5ANLqwektI57yenr/O+ZS
+ +GIuiSTu1kGEbP5ezmpCYk9dxqDsAyJ+4Rx/zxlKkKGZQHdZ+UlXYOnEXexKifkTDaLne6Zc
+ up1EgkTDVmzam4MloyrA/fAjIx2t90gfVkEEkMhZX/nc/naYq1hDQqGN778CiWkqX3qimLqj
+ 1UsZ6qSl6qsozZxvVuOjlmafiVeXo28lEf9lPrzMG04pS3CFKU4HZsTwgOidBkI5ijbDSimI
+ CDJ+luKPy6IjuyIETptbHZ9CmyaLgmtkGaENPqf+5iV4ZbQNFxmYTZSN56Q9ZS6Y3XeNpVm6
+ FOFXrlKeFTTlyFlPy9TWcBMDCKsxV5eB5kYvDGGxx26Tec1vlVKxX3kQz8o62KWsfr1kvpeu
+ fDzx/rFpoY91XJSKAFNZz99xa7DX6eQYkM2qN9K8HuJ7XXhHTxDbxpi3wsIlFdgzVa5iWhNw
+ iFFJdSiEaAeaHu6yXjr39FrkIVoyFPfIJVyK4d1mHe77H47WxFw6FoVbcGTEoTL6e3HDwntn
+ OGAU6CLYcaQ4aAz1HTcDrLBzSw/BuCSAXscIuKuyE/ZT+rFbLcLwOQARAQABwsF2BBgBCAAg
+ FiEE5rmSGMDywyUcLDoX2RQLslYTAvEFAl3VOUgCGwwACgkQ2RQLslYTAvG11w/+Mcn28jxp
+ 0WLUdChZQoJBtl1nlkkdrIUojNT2RkT8UfPPMwNlgWBwJOzaSZRXIaWhK1elnRa10IwwHfWM
+ GhB7nH0u0gIcSKnSKs1ebzRazI8IQdTfDH3VCQ6YMl+2bpPz4XeWqGVzcLAkamg9jsBWV6/N
+ c0l8BNlHT5iH02E43lbDgCOxme2pArETyuuJ4tF36F7ntl1Eq1FE0Ypk5LjB602Gh2N+eOGv
+ hnbkECywPmr7Hi5o7yh8bFOM52tKdGG+HM8KCY/sEpFRkDTA28XGNugjDyttOI4UZvURuvO6
+ quuvdYW4rgLVgAXgLJdQEvpnUu2j/+LjjOJBQr12ICB8T/waFc/QmUzBFQGVc20SsmAi1H9c
+ C4XB87oE4jjc/X1jASy7JCr6u5tbZa+tZjYGPZ1cMApTFLhO4tR/a/9v1Fy3fqWPNs3F4Ra3
+ 5irgg5jpAecT7DjFUCR/CNP5W6nywKn7MUm/19VSmj9uN484vg8w/XL49iung+Y+ZHCiSUGn
+ LV6nybxdRG/jp8ZQdQQixPA9azZDzuTu+NjKtzIA5qtfZfmm8xC+kAwAMZ/ZnfCsKwN0bbnD
+ YfO3B5Q131ASmu0kbwY03Mw4PhxDzZNrt4a89Y95dq5YkMtVH2Me1ZP063cFCCYCkvEAK/C8
+ PVrr2NoUqi/bxI8fFQJD1jVj8K0=
+In-Reply-To: <20250410143944.475773-3-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Remove hard-coded strings by using the str_off_on() and str_yes_no()
-helper functions.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/pcmcia/socket_sysfs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pcmcia/socket_sysfs.c b/drivers/pcmcia/socket_sysfs.c
-index c7a906664c36..4eadd0485066 100644
---- a/drivers/pcmcia/socket_sysfs.c
-+++ b/drivers/pcmcia/socket_sysfs.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-+#include <linux/string_choices.h>
- #include <linux/major.h>
- #include <linux/errno.h>
- #include <linux/mm.h>
-@@ -98,7 +99,7 @@ static ssize_t pccard_show_card_pm_state(struct device *dev,
- 					 char *buf)
- {
- 	struct pcmcia_socket *s = to_socket(dev);
--	return sysfs_emit(buf, "%s\n", s->state & SOCKET_SUSPEND ? "off" : "on");
-+	return sysfs_emit(buf, "%s\n", str_off_on(s->state & SOCKET_SUSPEND));
- }
- 
- static ssize_t pccard_store_card_pm_state(struct device *dev,
-@@ -177,7 +178,7 @@ static ssize_t pccard_show_resource(struct device *dev,
- 				    struct device_attribute *attr, char *buf)
- {
- 	struct pcmcia_socket *s = to_socket(dev);
--	return sysfs_emit(buf, "%s\n", s->resource_setup_done ? "yes" : "no");
-+	return sysfs_emit(buf, "%s\n", str_yes_no(s->resource_setup_done));
- }
- 
- static ssize_t pccard_store_resource(struct device *dev,
--- 
-2.49.0
+On 10/04/2025 16:39, AngeloGioacchino Del Regno wrote:
+> In preparation for adding support for the MediaTek Dimensity 1200
+> MT6893 SoC, bump the maximum elements of the bp_cfg array to 7.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+
+> ---
+>   drivers/pmdomain/mediatek/mtk-pm-domains.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.h b/drivers/pmdomain/mediatek/mtk-pm-domains.h
+> index 2ac96804b985..7085fa2976e9 100644
+> --- a/drivers/pmdomain/mediatek/mtk-pm-domains.h
+> +++ b/drivers/pmdomain/mediatek/mtk-pm-domains.h
+> @@ -44,7 +44,7 @@
+>   #define PWR_STATUS_AUDIO		BIT(24)
+>   #define PWR_STATUS_USB			BIT(25)
+>   
+> -#define SPM_MAX_BUS_PROT_DATA		6
+> +#define SPM_MAX_BUS_PROT_DATA		7
+>   
+>   enum scpsys_bus_prot_flags {
+>   	BUS_PROT_REG_UPDATE = BIT(1),
 
