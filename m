@@ -1,145 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FFD296166
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8620293B4B
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360016; cv=none; b=pdGXnNKLBzCklRklC3/VUQn+8aiNgjvAQ0WLHpCiMPZy183zMjMxnt+0zvwf3yTE4K7cK22SBgvjqZabXu5DF19vLT9c8z+CEzxN6huF0/HyLcTFyxqANUENYxUwrprkEQStlZU6Y5HEpfKrfxMgpuJdlytbuYfUiJMaK2+Mn4g=
+	t=1744360116; cv=none; b=VGC4aW4bZ3KMsm8vlRo5Z5y/HlGRSq4H0c0Z8yuYQ6yuXRpoBV1N+EFKJxg1OS1PFpB3e36A2uP1rUbJLH1rcnI4koX7Ch0vnGTFHju6f3xWPBLLpCZRWWUq4GEtBDeJfAIJ/1I/GjqRdS46yNdmUfktjYeDFfvczj4J91//e3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360016; c=relaxed/simple;
-	bh=VoFoSA0jg7hSIJLOIKHXHZX0zceZ/JT2UFZrRC+wD4M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=C/TSJtzUGZ9vbM/g24ZWC4OrO7Cts2zQst+orGoHQY6bKYDFWbMYqxgJ0Jbt5ojIjNAb+kixZXlPPOYpsAjDeZACU5a7CBvfoahWvppwegloEOGMsOoW3hMElX2vyfyRxpSehA1+C+sQfs528mbOnmPvEy/JDr1UtvCSzFa3zxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Deq50/M4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Deq50/M4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744360013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=00Q0S17WmRjZl0Npwk/8K6zLHrHsysPjv1qRjdhJKjc=;
-	b=Deq50/M45+WmS6DvqYPmrlk/2XmJ2ICTZkuFYL+FKlletJRPkBRIwUmO8Sz6gZx70tb8yo
-	lPZaxoLFaVNbbYCSKY1bqzw5k83JVSQ3gHFfj3tRZW1/dEeoXmk6rH21LDpZc6ZjfoDt4g
-	pW/6yLG8WGCIDYds7NQY+9wui6ujKt0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-eytAFm7OO1OS55dS-iRuWg-1; Fri, 11 Apr 2025 04:26:51 -0400
-X-MC-Unique: eytAFm7OO1OS55dS-iRuWg-1
-X-Mimecast-MFC-AGG-ID: eytAFm7OO1OS55dS-iRuWg_1744360010
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf3168b87so8852105e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:26:51 -0700 (PDT)
+	s=arc-20240116; t=1744360116; c=relaxed/simple;
+	bh=BdcRozpMh5XamS/3Rky22G9yMjXlMrX+TsooJQKwUKE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RNHt7JO695cjUQ4epWQGtOfzhC7kopaQkj2xsxoU25IAp6Z5v69HNzttf2pJCXYWTCPDjrw/innm2C2syrBZoxQzax2A9FV82h2zAkVnJhbxIearo8IzW5PEEeXdhUaR/encHJiWywSL4X9F2RkrJhzV/6FQyE7HRnhuGC1QYUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d4578fbaf4so37739255ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:28:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744360010; x=1744964810;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=00Q0S17WmRjZl0Npwk/8K6zLHrHsysPjv1qRjdhJKjc=;
-        b=KRdcfH7Jd9ZtTunm9VSjLF0Z9hSstGx3qR1+mH5FNZWOsE6/LHANaiZJ5V81GisHog
-         0IeK6PYQY3qlNbmuen5m2HjSEQ3w6QcauUoKKeFq8QlTNQ1+LTmjR2mID6nL45r5EbkH
-         8mpStcxUtkGVWVFYkcTEbSGAZKZawuHVTGiO2cLdjah3FHpgISyfbMQtxjtSW3gxOr6N
-         o7neJiwna4M/3TlTYUsJUTWlcGL3Ym5vSsEFnzkmEmjKvjuyPX6Sk+PCSLy+EOXtofAk
-         zQfB18XiEGpCdP2vOReXdqhyMRgPXD7q+tFg86qRsPsIipPANY8nRA44NsnBOiEYwn4T
-         pGsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbNMXIWHLsTZFtBy5ZpL3PqOW2rNJPcBcV2EfrXFL2lBZgiXwM5FH85c9UST4R7UKCFemzlF6dlXTrhQY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8xOTbgcgm4mgugPRA2tyqmTLuFacSoBuvANYW9+dotZgSdIZh
-	3gJqXVJux/TyxUXrCTr5U+54XptoqfKjn4zxLm+dAKDojhVncwfje8g8lrdEtx/ieFoWdABsrUe
-	MvmKTjA9QGefSZZ7oowA13MZ0ZKb6lIV+2y40esDt1vYPdneXhkSbUd2lRCdWpg==
-X-Gm-Gg: ASbGncuaAIa7nHBjdBAqAnxwMdXhqJVVqQGdA8jyZ8An0f/8OZdpA5pTFfrZc+pvVf0
-	gUuknwpADA4D4q8y5Nb27Sy/3sLu5kYzxYtdhfr+UrgyZ7ZALfM6+job8fsYg0/8/OcS3aUbdy7
-	5aamGupjNKmCYdSpi3/PiyDEPFOD33Ckerd7dtzy0VaIEbjp8BvU/QkMoeuCAQ65/biwQGGyEjH
-	PzjFDHPnQwZQv6ojXQIcdxraFZ8vdMfCF+5MVX32oD02Y+CI2t/e5TgeL3ArOLkS3j9y/AN6c9v
-	HyjpuJuS+j99XFaOdAx+TsyZ1qU+j3gnXaU+WakGZT8Wq5Xsy+3pfW8n20h7sE7TO2YP3w==
-X-Received: by 2002:a05:600c:698c:b0:43d:49eb:963f with SMTP id 5b1f17b1804b1-43f3a9a70aemr14225985e9.24.1744360010169;
-        Fri, 11 Apr 2025 01:26:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZKb6d7+fqXZ7A3CJpuhmceu1xTasq+foZTV7ndHM9hXVFEaFi7ujrGUL6mhaYAsYNAIUYKA==
-X-Received: by 2002:a05:600c:698c:b0:43d:49eb:963f with SMTP id 5b1f17b1804b1-43f3a9a70aemr14225655e9.24.1744360009817;
-        Fri, 11 Apr 2025 01:26:49 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c49f7sm74871495e9.17.2025.04.11.01.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 01:26:49 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas
- Zimmermann <tzimmrmann@suse.de>
-Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
- LCD controller
-In-Reply-To: <Z_iwspuiYAhARS6Y@gmail.com>
-References: <20250408-st7571-v3-0-200693efec57@gmail.com>
- <20250408-st7571-v3-2-200693efec57@gmail.com>
- <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
- <Z_Uin2dvmbantQU4@gmail.com>
- <87ecy1g8z8.fsf@minerva.mail-host-address-is-not-set>
- <Z_YWq4ry6Y-Jgvjq@gmail.com>
- <87bjt5fz51.fsf@minerva.mail-host-address-is-not-set>
- <Z_iwspuiYAhARS6Y@gmail.com>
-Date: Fri, 11 Apr 2025 10:26:47 +0200
-Message-ID: <875xjb2jeg.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20230601; t=1744360114; x=1744964914;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mspE9D6zeHc2ZpttYDmZv4JvJy7d9xVAiCjmcyAGyWw=;
+        b=v9bOu4decUwZMH0+H7iCQjNEscxYFPvNjHnd3i92OzNe3JuY4lZBUTI8tQyq5cBE21
+         7eMq9CcyC+QTwBsvuh6NqMYgptvP5mY0i8MuJqLGelczUfFIKHzgio1uHvri5sYZEwnt
+         n3TG0eOEMwjXYVCdz3j8hSI0vLJusyrvZ3KkTWK7ej/N3uz+xgTyS3pwmgZV95u0+0nL
+         r+fTIhFkqtvHCBEKOVfMKWdcU21MJJM3DjI3g+yrRF2fxErsTDhaVh/ifeFXjjD8XZXc
+         kPq5rcnM2bBp4eKAeBUNCSyWyqF3PKkcfxK2Z16KgqoiCpp2eDmYRwyOeOB0i7+EJMcq
+         UWRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG5AdLG7bC3oeewMUBJzS0ED9f7XzKS72+cqVMqxZx619Lc6nNEnbiwA8/hCHAIdQZoQkdMNfitRa9/5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy80fD2KK6sWiIGcDZoOsE/Vpdq5xrejxCm62p+iru6OnPB8/N4
+	y/subyDi3ElaGGFZR7lrMF6WHca9Uk5XQUYhMV6jRcY5QnWHGTHnQSVSvpVP8BNtue4At9zcvw6
+	rY9txxV/h/Dl+4882KHxzgjGLEufhsl58qqYt1LJP3/tpkDfqZfQLoqo=
+X-Google-Smtp-Source: AGHT+IH3+I5WCI3vqlNIRDjcsCj8Z19nQyPqROdXvLgFUOnL4Yc7EuzFFOs+PAdYTUCiRy2Qs5kdcTduBaYbImMJNvDCM9Cg3N3q
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6e02:339f:b0:3d3:dfa2:4642 with SMTP id
+ e9e14a558f8ab-3d7ec229316mr19127035ab.13.1744360114107; Fri, 11 Apr 2025
+ 01:28:34 -0700 (PDT)
+Date: Fri, 11 Apr 2025 01:28:34 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f8d2b2.050a0220.355867.001c.GAE@google.com>
+Subject: [syzbot] [gfs2?] UBSAN: shift-out-of-bounds in gfs2_fill_super
+From: syzbot <syzbot+b0018b7468b2af33b4d5@syzkaller.appspotmail.com>
+To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Marcus Folkesson <marcus.folkesson@gmail.com> writes:
+Hello,
 
-Hello Marcus,
+syzbot found the following issue on:
 
-[...]
+HEAD commit:    a4cda136f021 Add linux-next specific files for 20250404
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15dc523f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8a257c454bb1afb7
+dashboard link: https://syzkaller.appspot.com/bug?extid=b0018b7468b2af33b4d5
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
->> static const struct of_device_id st7571_of_match[] = {
->> 	/* monochrome displays */
->> 	{
->> 		.compatible = "sinocrystal,sc128128012-v01",
->> 		.data = monochrome_formats,
->> 	},
->> ...
->>         /* grayscale displays */
->> 	{
->> 		.compatible = "foo,bar",
->> 		.data = grayscale_formats,
->> 	},
->> };
->
-> A comment for v4:
->
-> I think I will go for a property in the device tree. I've implemented
-> board entries as above, but I'm not satisfied for two reasons:
->
-> 1. All other properties like display size and resolution are already
->    specified in the device tree. If I add entries for specific boards,
->    these properties will be somehow redundant and not as generic.
->
-> 2. I could not find a ST7571 with a grayscale display as a off-the-shelf
->    product.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Sure, that makes sense to me.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/59048bc9c206/disk-a4cda136.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ad2ba7306f20/vmlinux-a4cda136.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b3bef7acbf10/bzImage-a4cda136.xz
 
-Can I ask if you could still add reasonable default values that could be set
-in the device ID .data fields ?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b0018b7468b2af33b4d5@syzkaller.appspotmail.com
 
-As mentioned, I've a ST7567 based LCD and a WIP driver for it. But I could
-just drop that and use your driver, since AFAICT the expected display data
-RAM format is exactly the same than when using monochrome for the ST7571.
+loop0: detected capacity change from 0 to 32768
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in fs/gfs2/ops_fstype.c:1172:19
+shift exponent 4294967287 is too large for 64-bit type 'unsigned long'
+CPU: 1 UID: 0 PID: 6127 Comm: syz.0.42 Not tainted 6.14.0-next-20250404-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:492
+ gfs2_fill_super+0x255e/0x27b0 fs/gfs2/ops_fstype.c:1172
+ get_tree_bdev_flags+0x490/0x5c0 fs/super.c:1636
+ gfs2_get_tree+0x54/0x220 fs/gfs2/ops_fstype.c:1330
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1759
+ do_new_mount+0x2cf/0xb70 fs/namespace.c:3879
+ do_mount fs/namespace.c:4219 [inline]
+ __do_sys_mount fs/namespace.c:4430 [inline]
+ __se_sys_mount+0x38c/0x400 fs/namespace.c:4407
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb2fa18e90a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb2fafe2e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007fb2fafe2ef0 RCX: 00007fb2fa18e90a
+RDX: 0000200000000400 RSI: 0000200000012500 RDI: 00007fb2fafe2eb0
+RBP: 0000200000000400 R08: 00007fb2fafe2ef0 R09: 0000000000000102
+R10: 0000000000000102 R11: 0000000000000246 R12: 0000200000012500
+R13: 00007fb2fafe2eb0 R14: 00000000000125bb R15: 00002000000004c0
+ </TASK>
+---[ end trace ]---
 
-But due the ST7567 only supporting R1, it would be silly to always have to
-define a property in the DT node given that does not support other format.
 
--- 
-Best regards,
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
