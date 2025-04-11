@@ -1,159 +1,137 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 729C4283C8A;
-	Fri, 11 Apr 2025 07:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB4428369A
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744355562; cv=none; b=Bg0wTjfrhdyfk0kq9ScmuLQrWCWB/i7wP6VkjXnGvXZOkhqpTMSC1+KuBeVmDR6Dzw8tq4/jfl0yKlbZ2VP71EQxB3TRNUiEW3hN0dIxf7nro0u+KvPUUTANusD8YYIeaUu6iYHhutT/H2a7TBxoAf5pWaAv+o8y0olivMUxEc8=
+	t=1744355569; cv=none; b=QZief62K272CI/25IfLE3V1M8UKOa772KkiAoq7HhWqF1+7ZkfSRlj+JMqjNrlYTbRRzbtyS7lwnqLGZgkZlB60C6an/tTFHK5KfoIq8s6VzzT3eIgkHbBAR0dGxi1cEprlLIjxxhZpeRd5Pe4raHWFz5iDTZAWlmJIVSjIncuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744355562; c=relaxed/simple;
-	bh=yY1oHUe582lGxyx4eCz34x3c0y9yzaNniW+6J65cqqE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lNwTltcd5kxI7dXEb/KRwV7eL/nK7sok//OfsyKobw+RT+kApU5/hQxT+FKQ8HnUCopEFoh2TLB/pNsScnX4G2ErH2C0WSU0WQ6NJtyFMgb6hk6G5/MyZMzapyMirn4uCY0JHuB6VjGRjN7F2IYewtRQmQw+e6AuxAdKjVOOU6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WUO4j2Cx; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744355569; c=relaxed/simple;
+	bh=1bbCoIICaOjAgKM/FjPojrJuedc/KFAL+hSxDE+eY+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W6jp2wEFUYfTwOe43TvpjWk48K/uVHEnehGPXcLCUuLFMQV7Cm7stITYpkKk/zXSNWTeQi4VyoH8Ib8QSbtcc+VkyrdQ31XIRksVvmipYorh9rbc7um9rkOkKNRlHfirvloM58izmTIP6mDi6M3HKysYDWitqmJ7Am3QDCVSnbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SPZ9j5O3; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WUO4j2Cx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=hTcAR
-	Rvnn8qq+1dZy1r2KQFiwbDtnMu0NN5G/m8h1rY=; b=WUO4j2Cx0zqDMuEg6OOfF
-	dAL+rj23i/NN4VUrnQUzMyL/bLmRtaJcTAMa9X/20nde/OHqa88CI5ifj/KHxkxI
-	iY9JBihV8EYUO7iUD4vdmob/0WvgYgyiYsCGckXHxzPnt59WC16BIyUwu8y+/4OZ
-	v76b+v5RN77UiGDF3dUER0=
-Received: from localhost (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgBXThbEwPhnm38MAA--.12885S2;
-	Fri, 11 Apr 2025 15:12:04 +0800 (CST)
-From: Honggang LI <honggangli@163.com>
-To: zyjzyj2000@gmail.com,
-	jgg@ziepe.ca,
-	leon@kernel.org,
-	matsuda-daisuke@fujitsu.com
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Honggang LI <honggangli@163.com>
-Subject: [PATCH] RDMA/rxe: Fix kernel panic for fast registered MR
-Date: Fri, 11 Apr 2025 15:11:41 +0800
-Message-ID: <20250411071141.82619-1-honggangli@163.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SPZ9j5O3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744355569; x=1775891569;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1bbCoIICaOjAgKM/FjPojrJuedc/KFAL+hSxDE+eY+g=;
+  b=SPZ9j5O3p6QXVjAh8fcAQ5JB/pVKye+BcbdKfxDUuMQ964eKWVt1SkOR
+   CVJErh6nboVFxnAm4TU0N9O+qgCWzBPCOHgKi2SMgNox+EEvfC9sGfa+j
+   Us/DR04h0cisJzUqVt7Xu2Glcu1h6Y3el/W6y4pprXlQwwTHLQ+1NSEWb
+   TFxhZsT2LJM8PGH0TB+PtOVpzq/QRVq3ICV52h41hcyaQ/j4rRm2Sk4/W
+   pU+/YRjDrkTHpXcWUG9jC5SpKFCWrzyBw8MKLwqGTkGWPpu0l3WHQjvi2
+   FfUoiPaEkWpzcgcEAsyLk/a5HyCUC+0ixMcDMP0k6RUGOxmJOIrJCL2cD
+   w==;
+X-CSE-ConnectionGUID: pNTYAOmbQ5eM7AvjKt5Vow==
+X-CSE-MsgGUID: ekCz3OaYQoePo222IbAXPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45913535"
+X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
+   d="scan'208";a="45913535"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 00:12:43 -0700
+X-CSE-ConnectionGUID: ClesbpNgSmmban5dLkKaKw==
+X-CSE-MsgGUID: 1Z44Zn4nTzCMFAuQPZKR9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
+   d="scan'208";a="129469542"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 11 Apr 2025 00:12:39 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u38Z3-000Av4-1E;
+	Fri, 11 Apr 2025 07:12:37 +0000
+Date: Fri, 11 Apr 2025 15:12:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+Message-ID: <202504111433.IwFLpkrz-lkp@intel.com>
+References: <20250410065446.57304-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgBXThbEwPhnm38MAA--.12885S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Gw43tF4fGryUtF48Cw47XFb_yoW7ur4DpF
-	WrJ3WYkF48G3WUZa1DAr1jg3y7Za17Za4DWr9Fq3sruF15urWUWasxtryjgryDtr1DJay2
-	qF1UXw4vkw4fGaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEeMK9UUUUU=
-X-CM-SenderInfo: 5krqwwxdqjzxi6rwjhhfrp/1tbiOgksRWf4vxhJ4wAAsI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410065446.57304-2-gmonaco@redhat.com>
 
-`rxe_reg_fast_mr` does not set the `umem` for fast registered MRs.
-Check the `umem` pointer before check `umem->is_odp` flag, otherwise
-we will have kernel panic issue.
+Hi Gabriele,
 
-[ 1475.416503] BUG: kernel NULL pointer dereference, address: 0000000000000028
-[ 1475.416560] #PF: supervisor read access in kernel mode
-[ 1475.416583] #PF: error_code(0x0000) - not-present page
-[ 1475.416607] PGD 0 P4D 0
-[ 1475.416625] Oops: Oops: 0000 [#1] SMP PTI
-[ 1475.416649] CPU: 2 UID: 0 PID: 6106 Comm: kworker/u33:0 Kdump: loaded Not tainted 6.15.0-0.rc0.20250401git08733088b566.8.fc43.x86_64 #1 PREEMPT(lazy)
-[ 1475.416694] Hardware name: Powerleader PR1715R/X9DRD-iF, BIOS 3.3 09/10/2018
-[ 1475.416721] Workqueue: rxe_wq do_work [rdma_rxe]
-[ 1475.416774] RIP: 0010:rxe_mr_copy+0x71/0xf0 [rdma_rxe]
-[ 1475.416819] Code: 3c 24 4c 8b 4c 24 08 85 c0 44 8b 5c 24 18 4c 8b 54 24 10 44 8b 44 24 1c 75 4f 48 8b 87 f0 00 00 00 44 89 d9 4c 89 d2 4c 89 ce <f6> 40 28 02 74 09 48 83 c4 20 e9 20 47 00 00 48 83 c4 20 e9 57 f7
-[ 1475.416874] RSP: 0018:ffffcbcfc936fd70 EFLAGS: 00010246
-[ 1475.416897] RAX: 0000000000000000 RBX: ffff8a9c48314328 RCX: 000000000000003c
-[ 1475.416924] RDX: ffff8a9dc5f7110a RSI: ffff8a9c4ce40024 RDI: ffff8a9c44ae9200
-[ 1475.416949] RBP: ffff8a9c4007f800 R08: 0000000000000000 R09: ffff8a9c4ce40024
-[ 1475.416974] R10: ffff8a9dc5f7110a R11: 000000000000003c R12: ffff8a9c45112000
-[ 1475.416999] R13: ffff8a9c4007f800 R14: 0000000000000000 R15: ffff8a9c4007fc28
-[ 1475.417024] FS:  0000000000000000(0000) GS:ffff8a9dfb58e000(0000) knlGS:0000000000000000
-[ 1475.417052] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1475.417075] CR2: 0000000000000028 CR3: 000000040282e006 CR4: 00000000001726f0
-[ 1475.417103] Call Trace:
-[ 1475.417119]  <TASK>
-[ 1475.417135]  execute+0x281/0x310 [rdma_rxe]
-[ 1475.417179]  rxe_receiver+0x41f/0xda0 [rdma_rxe]
-[ 1475.417219]  do_task+0x61/0x1d0 [rdma_rxe]
-[ 1475.417256]  process_one_work+0x18e/0x350
-[ 1475.417286]  worker_thread+0x25a/0x3a0
-[ 1475.417309]  ? __pfx_worker_thread+0x10/0x10
-[ 1475.417334]  kthread+0xfc/0x240
-[ 1475.417354]  ? __pfx_kthread+0x10/0x10
-[ 1475.417374]  ret_from_fork+0x34/0x50
-[ 1475.417396]  ? __pfx_kthread+0x10/0x10
-[ 1475.417416]  ret_from_fork_asm+0x1a/0x30
-[ 1475.418046]  </TASK>
-[ 1475.418615] Modules linked in: rnbd_server rtrs_server rtrs_core rdma_cm iw_cm ib_cm brd rdma_rxe ib_uverbs ip6_udp_tunnel udp_tunnel ib_core rfkill intel_rapl_msr intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel sunrpc kvm binfmt_misc rapl intel_cstate iTCO_wdt intel_pmc_bxt iTCO_vendor_support ipmi_ssif intel_uncore pcspkr isci acpi_ipmi i2c_i801 i2c_smbus mgag200 ipmi_si mei_me lpc_ich libsas mei scsi_transport_sas ipmi_devintf ioatdma joydev ipmi_msghandler acpi_pad ip6_tables ip_tables fuse loop nfnetlink zram lz4hc_compress lz4_compress igb polyval_clmulni polyval_generic ghash_clmulni_intel sha512_ssse3 sha256_ssse3 dca sha1_ssse3 i2c_algo_bit wmi
-[ 1475.422332] CR2: 0000000000000028
+kernel test robot noticed the following build warnings:
 
-Fixes: 2fae67ab63db ("RDMA/rxe: Add support for Send/Recv/Write/Read with ODP")
-Fixes: d03fb5c6599e ("RDMA/rxe: Allow registering MRs for On-Demand Paging")
-Signed-off-by: Honggang LI <honggangli@163.com>
----
- drivers/infiniband/sw/rxe/rxe_mr.c   | 4 ++--
- drivers/infiniband/sw/rxe/rxe_odp.c  | 2 +-
- drivers/infiniband/sw/rxe/rxe_resp.c | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+[auto build test WARNING on 3b07108ada81a8ebcebf1fe61367b4e436c895bd]
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c b/drivers/infiniband/sw/rxe/rxe_mr.c
-index 868d2f0b74e9..7aebb359f69d 100644
---- a/drivers/infiniband/sw/rxe/rxe_mr.c
-+++ b/drivers/infiniband/sw/rxe/rxe_mr.c
-@@ -323,7 +323,7 @@ int rxe_mr_copy(struct rxe_mr *mr, u64 iova, void *addr,
- 		return err;
- 	}
- 
--	if (mr->umem->is_odp)
-+	if (mr->umem && mr->umem->is_odp)
- 		return rxe_odp_mr_copy(mr, iova, addr, length, dir);
- 	else
- 		return rxe_mr_copy_xarray(mr, iova, addr, length, dir);
-@@ -536,7 +536,7 @@ int rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
- 	u64 *va;
- 
- 	/* ODP is not supported right now. WIP. */
--	if (mr->umem->is_odp)
-+	if (mr->umem && mr->umem->is_odp)
- 		return RESPST_ERR_UNSUPPORTED_OPCODE;
- 
- 	/* See IBA oA19-28 */
-diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
-index 9f6e2bb2a269..066a50da06f4 100644
---- a/drivers/infiniband/sw/rxe/rxe_odp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_odp.c
-@@ -229,7 +229,7 @@ int rxe_odp_mr_copy(struct rxe_mr *mr, u64 iova, void *addr, int length,
- 	if (length == 0)
- 		return 0;
- 
--	if (unlikely(!mr->umem->is_odp))
-+	if (unlikely(!(mr->umem && mr->umem->is_odp)))
- 		return -EOPNOTSUPP;
- 
- 	switch (dir) {
-diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
-index 54ba9ee1acc5..e27efc93a138 100644
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@ -650,7 +650,7 @@ static enum resp_states process_flush(struct rxe_qp *qp,
- 	struct resp_res *res = qp->resp.res;
- 
- 	/* ODP is not supported right now. WIP. */
--	if (mr->umem->is_odp)
-+	if (mr->umem && mr->umem->is_odp)
- 		return RESPST_ERR_UNSUPPORTED_OPCODE;
- 
- 	/* oA19-14, oA19-15 */
-@@ -706,7 +706,7 @@ static enum resp_states atomic_reply(struct rxe_qp *qp,
- 	if (!res->replay) {
- 		u64 iova = qp->resp.va + qp->resp.offset;
- 
--		if (mr->umem->is_odp)
-+		if (mr->umem && mr->umem->is_odp)
- 			err = rxe_odp_atomic_op(mr, iova, pkt->opcode,
- 						atmeth_comp(pkt),
- 						atmeth_swap_add(pkt),
+url:    https://github.com/intel-lab-lkp/linux/commits/Gabriele-Monaco/timers-Exclude-isolated-cpus-from-timer-migation/20250410-145629
+base:   3b07108ada81a8ebcebf1fe61367b4e436c895bd
+patch link:    https://lore.kernel.org/r/20250410065446.57304-2-gmonaco%40redhat.com
+patch subject: [PATCH] timers: Exclude isolated cpus from timer migation
+config: csky-randconfig-001-20250411 (https://download.01.org/0day-ci/archive/20250411/202504111433.IwFLpkrz-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250411/202504111433.IwFLpkrz-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504111433.IwFLpkrz-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/uprobes.h:18,
+                    from include/linux/mm_types.h:16,
+                    from include/linux/mmzone.h:22,
+                    from include/linux/topology.h:33,
+                    from include/linux/irq.h:19,
+                    from include/asm-generic/hardirq.h:17,
+                    from ./arch/csky/include/generated/asm/hardirq.h:1,
+                    from include/linux/hardirq.h:11,
+                    from include/linux/interrupt.h:11,
+                    from include/linux/kernel_stat.h:8,
+                    from arch/csky/kernel/asm-offsets.c:5:
+   include/linux/timer.h: In function 'tmigr_isolated_exclude_cpumask':
+>> include/linux/timer.h:196:1: warning: no return statement in function returning non-void [-Wreturn-type]
+     196 | static inline int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask) { }
+         | ^~~~~~
+--
+   In file included from include/linux/uprobes.h:18,
+                    from include/linux/mm_types.h:16,
+                    from include/linux/mmzone.h:22,
+                    from include/linux/topology.h:33,
+                    from include/linux/irq.h:19,
+                    from include/asm-generic/hardirq.h:17,
+                    from ./arch/csky/include/generated/asm/hardirq.h:1,
+                    from include/linux/hardirq.h:11,
+                    from include/linux/interrupt.h:11,
+                    from include/linux/kernel_stat.h:8,
+                    from arch/csky/kernel/asm-offsets.c:5:
+   include/linux/timer.h: In function 'tmigr_isolated_exclude_cpumask':
+>> include/linux/timer.h:196:1: warning: no return statement in function returning non-void [-Wreturn-type]
+     196 | static inline int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask) { }
+         | ^~~~~~
+
+
+vim +196 include/linux/timer.h
+
+   192	
+   193	#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+   194	extern int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask);
+   195	#else
+ > 196	static inline int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask) { }
+   197	#endif
+   198	
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
