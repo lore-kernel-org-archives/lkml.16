@@ -1,35 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3B327C850;
-	Fri, 11 Apr 2025 02:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79633FD1
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744337999; cv=none; b=M/vDsSmaYA/80NkZ3Zs6VkRoAkDo5VWDrOGuJsZRlGHJ/DU6AvO1+x2bH3S0dQgWnQMojOc+mcCLqonB3MB/nXba9Dba/8fDjl828WuSXAlKI2XMZnHQpb6V7Rfj6M8ir5jKiQi5Pq9Cpe7S7GoNOsgYsPZS54RD/Q89C6340L0=
+	t=1744338276; cv=none; b=B2jBJwV7iAOhyTZ3qDLOpeDg/Of6cV4falOrN3QBKLozNw3LLTcFRPJOBsQCV+C8IK5yqlr/9UxrcUaqG+b6CawbMQTzvYQHAuUU7kzv3qBXpTGbMZP4hoM3jQxOQPbjfxAc7qf4zS6v3xftvArCyKPP/IhIwZtL5EipP+OsMvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744337999; c=relaxed/simple;
-	bh=PsZLh4T13NB7qk/vGmaAx9AKvVBCdru8kTy1pzKLr2U=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LHL4zF6HENAL+3lAkbtVXLBw4NTkkNf/3fSto1i0hULIMws3d5Zt5KIhrHfB8ShoTac0kZMMDLeB0ZkV1g4uvYR+74HaKNZv+QsOalmoHkloFX6Jyh8/Vzk55FGCUUKMELaCSP6RPE14LjySg87Dx463OglliGXqMy5xRqc2ahc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr+NHtrL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744338276; c=relaxed/simple;
+	bh=hT/lMRuzLt1zOyLHVW8bU55TzCJt0dTyCRlvoPgoGFs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iKLHMGhThOKBWhhOxGMJYInCNaZ4owQ6Dw31YHalTPN6h2YlyR+YCqHKbQfeBkr556e1vFdQ8kXCZvYD7MzTpOvKKpIJ4lFkfpiqao/WodeYMssSROKjCgNWtyBrr5xVch6eYXbGa1houQptMkwYQKCKZfPiRMhQgt1LGdrhS40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GeGTJAz9; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr+NHtrL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A08E3C4CEE9;
-	Fri, 11 Apr 2025 02:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744337998;
-	bh=PsZLh4T13NB7qk/vGmaAx9AKvVBCdru8kTy1pzKLr2U=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Hr+NHtrLXQEUOcnBalO/VKwv/a4JAqm/GcRUo6YbO4WMTMs1QkZoRGIYmXqrKh/x0
-	 3ZRZPT/xCURwJM7sjvQGkCBdSpyOS+R9wzjrmCQOlGpgiAfytUunjnuAjRctHsX4Q0
-	 vIDX3T7UFEBiS7iNE4zAGC/EgERDV35/wYZmjqCD/rtk38Tjuk1DNdfkrotTwILLt7
-	 AnY3F1radXjsckAF88L/THDKQYncpfURWo/ydtQkgeq4ND9H4z/FtWE/ZVbPWsKiEx
-	 AyS4/Oftr1OB4yCgdhYPoe2UwSYhKq0n9WJ5H85bvVtH2NseNmBQjXvEiarTn+6/xe
-	 y7KBKvBtyYa8A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70FA1380CEF4;
-	Fri, 11 Apr 2025 02:20:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GeGTJAz9"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7376e311086so1925185b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 19:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744338274; x=1744943074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gc6CmYXidkzPLNB0SO00YEXOEa7ICBVRjIrdnfdrG0E=;
+        b=GeGTJAz9PrLQ7IiDbFsu9tLJ76ZZWyKsM+OgFwqqZpkzMGKBmOsCFeSnwgmTycahRB
+         X1AlcFEe6n/cQAk8n7wAwOiqd5jKroQylfLWiRqf6VkqzEuutKHCSkSsdj9/tV+3sHao
+         xIgM4bllBk0GEm+ZvrlDfwHLOuw0AMs/CgXivutC2kzaF7mWzZS8rAxeDXCYqlepr7Ae
+         02XRpUiUsZhw40oCUNYahBGndlyG1ClV+7TxpJ9YlpgJGo1dyWzTrLo/C0FfluXSxBZn
+         JBKMUgIBvciPp5Dbv936/pQDhERe7YgZ+f3cM/E5l6rjTRST8ZjmOHBEYPRJKPzZ7yEe
+         eqJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744338274; x=1744943074;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gc6CmYXidkzPLNB0SO00YEXOEa7ICBVRjIrdnfdrG0E=;
+        b=FIsytrrdnrS52JFrf4efwGzPIe8Mc021P2Dr1xtP5ZYh8Xcl6pNo1FBYRp387wmssv
+         crDagbKj370MM2ym46IGwMJdIrW7bheasN2Vv2jBP/uSeCiaf8CeLwt2VDFxxu7p8K4o
+         EZeEFALSJAiKbmrdev0Ez5v/xklVGhkEYu/xhx8qfPvHJpiLly3X5q+tep/XbSj2sQDi
+         dSTumlCb+PKIgJwTx4tYbHv6WF83PbfroW6XsPfZ8Ib/Hx0GsDrEfRNUjtJSts+ZOOvG
+         eujjAYpRT2icOJvgTZwSV+UEgZpNM5X2FjwLAlLOEw8eeT4Q3c3/rH5kOk3SGjx6yhGK
+         5/wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYbc8+iaIM0pZjSxK0SccGJcHLhZyPP8AwpZF/X8g1DLlJCb+tcVqYsGUs0geFy8G1hHgvqGj/co7Y91Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI6fZUEIDDU361rMb0Z4u+teLgW2Qy2Epn0/oEwLVeUnqRC5k7
+	iZIoOTCBSR/JcWEtp4RxjPgQvOxCGRWe1P8jpwGy4CyT18yYxYo+
+X-Gm-Gg: ASbGncunwuqCJpZ46iEirPxhZSVws6YNlF/UCBpHyT+N+g9FyOY9OvA6sKBIEPzJDX1
+	5wYK+xOAKNuD4153AiP+esbma1/oAcvEWI19Bmy+hz63Kms00JE5Rze16S55xP5rpnFW5Mo0vFu
+	iPZhMriqkvTTr4hcrVlQulVPhZSc/1KXfNTC+Pe2rYPCeY5KDBb6p6Xkfi5tc0vlGMiT8mIVdEm
+	VYHzYzkzJ7ryNw7xBQ74Hd+KXo3MjBZHeZxxxpL1IjLaAF1eya29l56TR7pU+XgLWfEiPadZ/cl
+	2v2r5LIXUA9T7tsU5TRKGVbVamG1HNA+JyIcEQOyeTB/lWDKnEGuz6xIH6PaikNG7JhmlP8Sntw
+	VFQ==
+X-Google-Smtp-Source: AGHT+IHWqeE8BFVPVT6kvWnNVQXq8J6YpXRu6YCZc8UiscUgLxWWW+xd6xqeMJFm/G50uShEipUgyw==
+X-Received: by 2002:a05:6a00:4653:b0:736:5b85:a911 with SMTP id d2e1a72fcca58-73bd11f84a1mr1630630b3a.8.1744338273952;
+        Thu, 10 Apr 2025 19:24:33 -0700 (PDT)
+Received: from localhost.localdomain ([110.191.179.234])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2198a7esm316781b3a.31.2025.04.10.19.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 19:24:33 -0700 (PDT)
+From: Jiangyong Wang <wjy.scu@gmail.com>
+To: obitton@habana.ai
+Cc: ogabbay@kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	trivial@kernel.org,
+	Jiangyong Wang <wjy.scu@gmail.com>
+Subject: [PATCH] accel/habanalabs:fix typos found in command_submission.c
+Date: Fri, 11 Apr 2025 10:23:31 +0800
+Message-Id: <20250411022331.4511-1-wjy.scu@gmail.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,49 +74,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v4 0/2] tcp: add a new TW_PAWS drop reason
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174433803599.3928161.6673282068202917345.git-patchwork-notify@kernel.org>
-Date: Fri, 11 Apr 2025 02:20:35 +0000
-References: <20250409112614.16153-1-jiayuan.chen@linux.dev>
-In-Reply-To: <20250409112614.16153-1-jiayuan.chen@linux.dev>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: kuba@kernel.org, edumazet@google.com, mrpre@163.com, davem@davemloft.net,
- pabeni@redhat.com, horms@kernel.org, corbet@lwn.net, ncardwell@google.com,
- kuniyu@amazon.com, dsahern@kernel.org, steffen.klassert@secunet.com,
- sd@queasysnail.net, antony.antony@secunet.com, chopps@labn.net,
- netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
 
-Hello:
+Fix typos found in drivers/accel/habanalabs/common/command_submission.c.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Signed-off-by: Jiangyong Wang <wjy.scu@gmail.com>
+---
+ drivers/accel/habanalabs/common/command_submission.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed,  9 Apr 2025 19:26:03 +0800 you wrote:
-> Devices in the networking path, such as firewalls, NATs, or routers, which
-> can perform SNAT or DNAT, use addresses from their own limited address
-> pools to masquerade the source address during forwarding, causing PAWS
-> verification to fail more easily under TW status.
-> 
-> Currently, packet loss statistics for PAWS can only be viewed through MIB,
-> which is a global metric and cannot be precisely obtained through tracing
-> to get the specific 4-tuple of the dropped packet. In the past, we had to
-> use kprobe ret to retrieve relevant skb information from
-> tcp_timewait_state_process().
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v4,1/2] tcp: add TCP_RFC7323_TW_PAWS drop reason
-    https://git.kernel.org/netdev/net-next/c/04271411121a
-  - [net-next,v4,2/2] tcp: add LINUX_MIB_PAWS_TW_REJECTED counter
-    https://git.kernel.org/netdev/net-next/c/c449d5f3a3d7
-
-You are awesome, thank you!
+diff --git a/drivers/accel/habanalabs/common/command_submission.c b/drivers/accel/habanalabs/common/command_submission.c
+index 59823e3c3..c9c61687d 100644
+--- a/drivers/accel/habanalabs/common/command_submission.c
++++ b/drivers/accel/habanalabs/common/command_submission.c
+@@ -1786,7 +1786,7 @@ static int hl_cs_ctx_switch(struct hl_fpriv *hpriv, union hl_cs_args *args,
+ }
+ 
+ /*
+- * hl_cs_signal_sob_wraparound_handler: handle SOB value wrapaound case.
++ * hl_cs_signal_sob_wraparound_handler: handle SOB value wraparound case.
+  * if the SOB value reaches the max value move to the other SOB reserved
+  * to the queue.
+  * @hdev: pointer to device structure
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.39.3
 
