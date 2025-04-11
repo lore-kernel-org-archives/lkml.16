@@ -1,103 +1,281 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968076125;
-	Fri, 11 Apr 2025 09:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744364768; cv=none; b=uCi6dYrUjgygyK7j3rC8fBv4nJQflQZS32yu8Q2oh8thJMG1rbIgiBEoNUjzfLvlP8uk4MOiRqe5lydVAjf11ogt2onDtOvNEnsq11DBiH2lYLJCktqTsebrtRkvJOayrYO0h25sl/NlJ32VWBH1RXk4d961fuNlV3THnaxup8M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744364768; c=relaxed/simple;
-	bh=1RVik0NlfQSByh+MVGU2m8fVn3PKpjEfUQ8PK51vI3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F5OXgwUaLqtZj6vlEYDO1l1jOMLAunFGGs6CzMRMdKqW0eGCeuXsLRDIoSsIjjZyVTmJacAMSb+nHpHcdjotq/MAbrnVLSymL57p19Il353ZJYPxw6IsY5zhzkId7cGtLfwW4omsMZjDxtADl/caFc7tcCJhfMrsSpduXC38LXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=H6Bl+6Yn; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4871E5B72;
+	Fri, 11 Apr 2025 09:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.84.65.235
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744364928; cv=fail; b=hfo/tx22u4iQZlrQ7JnwK/ft/xYLKSV5AnFbl7qd2YqLU/UrA41iKhSJS1blkNx2kRZY4oM4rBF7Ie/ap3N2zADgTdm8Vrd1OzLAl26eEA4IkRxq7YJNMXl52CYccP+XNkcV0JZupglGgXR2vSU2jPLRq34CNPODE+AATrbM5Gs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744364928; c=relaxed/simple;
+	bh=H0XnrNj4To2HrCMF4S666NOqwtTdVf6jIpP/b22utAA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YYoNcsv1771I4dUTME5xJ/Okb0OaGQFnRKgmBmv4ddoWnOEvlo6u0+a8D9QSJNR+LEI0bSGPWErpNvBvSvSR5VwE4XrNRrNEHgAJXlbbzGSrxVwefY1+YvtXgiPf38VYg6O3mDKMwlrxep52Him165JQwyDCHwgmJvZX62KhewU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=mrUPLLuA; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=ioDT9Eoy; arc=fail smtp.client-ip=208.84.65.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="H6Bl+6Yn"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7961640E0244;
-	Fri, 11 Apr 2025 09:46:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id r5D8zoiJXQKE; Fri, 11 Apr 2025 09:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744364759; bh=ayElILbyVh8//B/ihafKwcK06o8pVHIZiL8+eeH1q1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H6Bl+6YnOZ7oHDpjjH9I6xLEYfdi7fyVTrPlZPxWTGM6We8DXdvABPJ71+M4Xk+9u
-	 LK12I1A+ZP3QAjFQyil6tFEAc66x8kQAUCjyu6oL/5RUftjBtwEHYoivaJL10bp988
-	 IztDKABslaY3i4hus+2chG486EgFJZ0ZCXxmVNO42hTVLwcH7TYuw27k5awsJDeq+h
-	 stbhRxUi95giNWd47hdlW6jb/uGjxrpnsxV+N4r0L6mrhRoKndPK6d65EB88EB9tR7
-	 nGgAhZNWS9iMqEtaLWX2MxB4PwrVd60yrbPUTUIehnwehfVY27zGHfBLxcagamqEhQ
-	 c2zJsH7zr/JEJRJ+lhhRaCkNOqhy24v0ynlDDs6LRWnEYkb5jlJ54By2/kkTxPkyar
-	 CRFbY79Bht/75kb4b/+dTepW/hA0S8ZXy/ThOjFClww6Pv6f5UuMlzzvupc5VbU+3E
-	 DSUlXUFvw+UvOdwbUG4eT8ZraAZ07WSvJc9kM9+zehjh6BjF1Zwu4XZ8oKwwGALFYj
-	 6deRmuW1kK49j3AAiI0/+GaP727CCXwBYlVwzAKrN6Rcu74Wq9rJ4tXQRg2nrkxreo
-	 a8d7Ag9MjzTdUCbnNn7NUm6UXxJekhUKhltJur3GPaHvpzlxwpAZKKpjgrcsetgfYk
-	 Rqy2mYyfCmJOq7PtjVYBuWQM=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1258740E0243;
-	Fri, 11 Apr 2025 09:45:53 +0000 (UTC)
-Date: Fri, 11 Apr 2025 11:45:51 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Borislav Petkov <bp@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-	X86 ML <x86@kernel.org>, KVM <kvm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: x86: Sort CPUID_8000_0021_EAX leaf bits properly
-Message-ID: <20250411094551.GAZ_jkz8N2zDkkPbTt@fat_crate.local>
-References: <20250324160617.15379-1-bp@kernel.org>
- <Z_g8Py8Ow85Uj6RT@google.com>
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="mrUPLLuA";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ioDT9Eoy"
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+	by mx0a-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B8K3Z0002028;
+	Fri, 11 Apr 2025 02:48:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=proofpoint;
+	 bh=A3Pr2SXIuGldEL7Cq6VHqlDoDIewTOTS+eZqF9OU3FI=; b=mrUPLLuAFaRH
+	zIpQdRahlNuJpKFyUsv/tcNgz08er0F5eWErh9dLqQju85DcR1sihgtidxFIkQrA
+	Ecp6oyCVED2N0QHbe4IgHzcxs7asD7LqAAB/j7GR1AS4XQukXZWhNDO5TcCOQL0n
+	St9pUJp0gGlcKfiVatkOxbrawa1qKjQPZtIkvgrNLx2TZ4Njl+R7blCi2IwdSe8q
+	5fQhxFv/vg3ufyn33xZjbRrrwxW0dWZa0yM5QawjO3iYZBJUr3CFDWcaLJNDmgVV
+	QfG7mQc40snL5e1Y0vUvtZZ2yO9HI8uhLjKMoB889gb/kddRAF9azkh41fBbROva
+	/yemKXw7HA==
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azlp17010021.outbound.protection.outlook.com [40.93.12.21])
+	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 45vbd2y7jv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 02:48:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BtkHlIcTJPPWaF2LipBl2lknT3tpOwKJRoj+/LCea0ZfYxpb0C3AfDoGDVDL5tOhjvx8Edft/eZFDcXBWBCODxJH/A1WZJkIHxZ700kicgQR2ps6poQd94G90pLtv5h0yXETcSAY/WwcWikuLuBDEbY9rC+l1D+ezq8JogzZnAMSqNmx0NRDW9SqpUUIoPXXAa0DhoLC60fbDUSZuJ37JjIVNXmN+UPKOjl0ikQWpnb12fuAZ5J3i8YytRsCcR3Urw8d7UpaOem4iurAYkyU7PrKUFpUXQyp8uLqhjRJZn3NA1jZSwwl7EVq+I/eORBRohrjFyaD9gbpeJXe/Ccjww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A3Pr2SXIuGldEL7Cq6VHqlDoDIewTOTS+eZqF9OU3FI=;
+ b=eloQib2ib6kRIyjSwnlnwMpn72o3vfrXHYl6w3tH6srPFDv+4Pad9oki4esB2MjMSaynVMuHm1ZmT/Hs8jdPVIVQe7/XYJ5eUkkd2ocqgEaj1VwpzkcSVsILPs6HNfJQaRett/ZQOTHEWkS+O9D7UQnu/nS6EKGw8OM7bzM3auMLXaA37UoZnF4twl4A3OJOwEmrtuZYNQRLE7R2YJQWbQu+XSvdj4om6+8vH4NeiUAHb6KfL4jyxptYVgCxrXOyEfmu6trEIH1k3Qtz1LJUWNiED9qtA0nXF4Fp+t+rhlermJjgg9j63T6zVlC5fVCijAcY4lgP0Pfkkuohok5rTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A3Pr2SXIuGldEL7Cq6VHqlDoDIewTOTS+eZqF9OU3FI=;
+ b=ioDT9EoyfVLsfXuzc7PelR3YomHeXJw3Ianvg535ssM31+i9nhXfHk7FkiCDhnQE7f/LAuBmOhp4XKtDD87gqSCpkV+qJoiAgS/OUXJwIFyCQjour19YK2HlGElkgcJlfV1xzyuJNLcXUMt3e9aqlUqn5cCdbVPHZWzIvB1dtnM=
+Received: from PH7PR07MB9538.namprd07.prod.outlook.com (2603:10b6:510:203::19)
+ by DS0PR07MB10951.namprd07.prod.outlook.com (2603:10b6:8:1f9::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Fri, 11 Apr
+ 2025 09:48:41 +0000
+Received: from PH7PR07MB9538.namprd07.prod.outlook.com
+ ([fe80::5dbd:49e3:4dc:ccc7]) by PH7PR07MB9538.namprd07.prod.outlook.com
+ ([fe80::5dbd:49e3:4dc:ccc7%5]) with mapi id 15.20.8606.029; Fri, 11 Apr 2025
+ 09:48:40 +0000
+From: Pawel Laszczak <pawell@cadence.com>
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC: "peter.chen@kernel.org" <peter.chen@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] usb: cdnsp: Fix issue with resuming from L1
+Thread-Topic: [PATCH] usb: cdnsp: Fix issue with resuming from L1
+Thread-Index: AQHbqemXS6B5IuQjiUyJckm8ZGIk1bOcgYzQgAAf8gCAAZTOMIAAAwBg
+Date: Fri, 11 Apr 2025 09:48:40 +0000
+Message-ID:
+ <PH7PR07MB9538B41AA7F38F515DD402F4DDB62@PH7PR07MB9538.namprd07.prod.outlook.com>
+References: <20250410072333.2100511-1-pawell@cadence.com>
+ <PH7PR07MB9538959C61B32EBCA33D1909DDB72@PH7PR07MB9538.namprd07.prod.outlook.com>
+ <2025041050-condition-stout-8168@gregkh>
+ <PH7PR07MB9538E0DE72D3A4C0B8A6DABFDDB62@PH7PR07MB9538.namprd07.prod.outlook.com>
+In-Reply-To:
+ <PH7PR07MB9538E0DE72D3A4C0B8A6DABFDDB62@PH7PR07MB9538.namprd07.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-dg-rorf: true
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR07MB9538:EE_|DS0PR07MB10951:EE_
+x-ms-office365-filtering-correlation-id: 17646bbb-3e7a-46f6-03be-08dd78de0a6a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|7053199007;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?3JySIldv1R5gMczpH9Zxk/kdfIhQy1EvhHxr0V6RD5AvZOsefxdQlPBqSthN?=
+ =?us-ascii?Q?F4AJ6ViQ0CO9kwJf7R+jSeb1fPjxah4oSwLU9cnV/wRKrTPT6CXh0uRmFh/r?=
+ =?us-ascii?Q?IVsC6UZJHS3iy5SK0PnlXtMhP1HRkgNU5SYjW53MAwNInzD6y4ZhyiuqmwVV?=
+ =?us-ascii?Q?rVgGHRV4wR33izW7hM2nJjE2lhKYlCIdTDIJhXp7YBNdAQhpq1jfmG/Dy9am?=
+ =?us-ascii?Q?iPW/ysbR6Ja8b425cK+7RcFQV3HBznUcvQKmaFzEB3WVfjIxeeshYJGRALlI?=
+ =?us-ascii?Q?DGVLpRHw64JE97RsIsLWO7kpTBqJoGwsrqbfiVVypWZRCR+pl8oaQ7dRtcts?=
+ =?us-ascii?Q?Y2T/+Z5q+/pyLKX2xSlSBuXtRaIVVOlHRB6IcPiftm8xuRKVeuRWO/k4rMxe?=
+ =?us-ascii?Q?eZtusShHyqebBN7zNfbjN6FqgeB3o12cR4l8txhaFhn6zmj+3FOXewbX0eq0?=
+ =?us-ascii?Q?/uDSlkbNZLvD09LU8b32ibdTsk61Ap++QFfsm0tDhtFc2/OPPWJ5uKhYTtKX?=
+ =?us-ascii?Q?BTsRx7rtvrnHR3hDxpbR3NHp90liH1wH/l7YF9OZyVUB0X+lQiYdo7vh/RP9?=
+ =?us-ascii?Q?b5PCx7AuDIG61QfJri+BhILOqOxmPX7kAz258qFayj5fqHB0OCUEx+AD1cNe?=
+ =?us-ascii?Q?MG4bjtAewCnce0Syakhtpom9MV8zQydfXFRf+9AUSIQ3g/CkLcnM0ywi45GS?=
+ =?us-ascii?Q?sdGvXN1F2mnqcZpgTNDu6O+HcE7LfrgisfbBokh78RO9j+sVgbtA+dKd2lSa?=
+ =?us-ascii?Q?srLmif2rz8iZjD4kaPQboDH8RZBtHDUBEpeK/yP4B27W9NVDMhfExZdNK36b?=
+ =?us-ascii?Q?78Xzq7VLfFfeQPT5WTrwPTZukP0Xdin4UJv8XAnbTYo8FXWwBZ56JOZ0YLPA?=
+ =?us-ascii?Q?KvTaotSlu9E2DJTBvD/4rF2glkn/NK0OsKS7ZReks5srCg/GNt20+n5Fu3Oe?=
+ =?us-ascii?Q?ifQTCQVQRui+AOtGQPIA0+0TlwaAtajqywUNAkbhSOgHXibKVZR2GqHGkJKq?=
+ =?us-ascii?Q?v26QKjHPNIslUp0521I3e3til5vdT3Yu3LPiWG/PZ3Qmbyp/yd+OIctockvL?=
+ =?us-ascii?Q?RsdAbQvGaw2xFlrWeqRTW9zAF8jEngRZ69hZeq9Zx8gMkhRN4rF3pVWzLEm3?=
+ =?us-ascii?Q?51SMVAtbss9tS9p+B+eWi1aEiP/mXedVXlv6DRWnccNbXxpTw0C9zheak4E1?=
+ =?us-ascii?Q?/gtnixsGGKGjRWYV640a6lSTQtMRCwOE0nO1qguYy5P3nlj92k1FAnVc182a?=
+ =?us-ascii?Q?LSrXAPmXhzZV6JKBGgnIlvgzNMeAfASPbi+BkzMXXGYciFpdZAiy5k83i9PK?=
+ =?us-ascii?Q?AgYnABcJYUPrYISMlZIja+k8l3hJq1XE80Dp+Lh0OljPM1f4JAKidFmlioGX?=
+ =?us-ascii?Q?gjyIB1QpRTEKQyE5oKD8S8GbhdpCW8TdZPeLne7QfC6dCCKknbPQIevhtWWz?=
+ =?us-ascii?Q?rso9HvD9xosBh6Ui3p3M1XSZnQaScNcuWn/Uga26MBtrZ+XZa6zFsOpeeXbI?=
+ =?us-ascii?Q?OL/qDInSRwK0kno=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR07MB9538.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(7053199007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?kHITFaVzda5v1bYbsoT1YAQ09yrJx4JnmqKvPBN09U3aPwriQeXuLM1rFE+9?=
+ =?us-ascii?Q?GtjC3u6gHONhufDjeAxMq9V4RqlYRXX0AwqMbkLyVzeASeBcsm6f5ntgq1U3?=
+ =?us-ascii?Q?NVW6j2wIwzRzGtatgXZq9enWsUQQVZZLZtMNsZ7wQQPYSChScmt53eVNGMUw?=
+ =?us-ascii?Q?FkmjmNO4+7blIKMlYPAfNcud2eql4gRBq94UaalIsEiPzc4AiBCmSBHEhAzw?=
+ =?us-ascii?Q?pxsf3Hseod+TaW9sypojK/T4Y0cehgqirWma+8x6JA05xiID+hSJk5G9A48P?=
+ =?us-ascii?Q?1AZPbtRBQ9uktYXMss4NCgArBepeDRKwSCuhvcW5WJZ6e7JyTU93dbrv7y2b?=
+ =?us-ascii?Q?E2ss8Ed8h45FzPfmL/R/W3WcnASwxrLWUavxlo34aUehQsAf0hqpx24HZpXX?=
+ =?us-ascii?Q?pLKNN+kA7oN2Ed9Oi7lPUY3W1OR26nVBovwGK8kRe9k2Tr43/9db3f33vPr/?=
+ =?us-ascii?Q?S9EeUIMJxv1oTErdDW5+5myGkGoPOk68cxALktiamYz/a3LTMDoKASh2kmF8?=
+ =?us-ascii?Q?HnNcDdRoIKnkLemFN61K6iW+fAoR1FKx8RCcu+mPhVBhYe2jTsP9Lw1riZif?=
+ =?us-ascii?Q?1snBBy3VQvk8zdGSqalLtbW5D7QvtCpCkKQss50WoqvqIrS7F5S/Nwxs/+hd?=
+ =?us-ascii?Q?2SHBXrbP9/WLxM4BzwSE6VFBwHQpRPbSETw8vQgUjzmVSotv+L9Jm7KoMVaB?=
+ =?us-ascii?Q?gPRkZyBHeKtLGIUtlGrpUSn17QdZQYLREG99pRDjv7oyerlcplu2OOuJhlIV?=
+ =?us-ascii?Q?zOUNkOMKH+C9KGzxd29gr0BM0relMVPNnOTkZXI/4sjoeXaiv1GZtg83ck3D?=
+ =?us-ascii?Q?q252beWl1BtSJHHsBhoY3JNG2P2H/4loGY2YfZw8ZBWe9pb13BJ4g64vQLvI?=
+ =?us-ascii?Q?qzc+g+A8X2mWvuClCC5M51WlbZXSgbRMvbuFkBd2r+24aMOgZPCbMOHaSIDJ?=
+ =?us-ascii?Q?qrCxMiHMZ5JPInavWJ2Hw65Km6nvPjbKyorpTJ/dGwf0FQsAAfVXED80Pqom?=
+ =?us-ascii?Q?IvjvV572EIhtTpyQv0jMv5F9IQXhKK9Q3RNCGt2smdgP0ec714VsAZXG2wMM?=
+ =?us-ascii?Q?R0xhVLx+FxVcLi+D/W7eOw/sPjvt/EoMloCC5dv4uSBiMSE6yGv9WKkVYkJs?=
+ =?us-ascii?Q?T+nl2MyAvgNVrM2O2bdbtqQJjJJ7Zbk8iM0lCs5fPR31B4+nHUII9sk9PLaE?=
+ =?us-ascii?Q?0QcbcRLs4AIcx9IqRAowiwBayQaKnOaZ66siRPpnLHn2sAW7o8/YFgQasdNL?=
+ =?us-ascii?Q?hXZ8g83jUdxzfmHUoB4dDfrsBKY3D4Nbhv4ZhoGnOcpfaPXsfyJsVOeeOCT0?=
+ =?us-ascii?Q?E4vwTbSrsjNCixgnoHLRuQc61sVP1yHPi6l5VVOvkqqW/l3tm3A1P+yCU5vv?=
+ =?us-ascii?Q?7TsRA1MdBVVAInRCnxHcK/BLiYB0M8ufoRZkwJUtBq4RcNjXfoCNMxfjr0Ga?=
+ =?us-ascii?Q?HYHVDP0N3y20MbhUa4PwVlM/FAFABgXgGIr44pSisO9AP3sEgbhxL1qQyX7o?=
+ =?us-ascii?Q?vByUhTSJKnYSVrHWKM4LG9zb5LnD9nuujI75IM8/CfAe0K0Z/Adk5KeCfQQ1?=
+ =?us-ascii?Q?ewvgurF8CdT4UXVnui9qQUQBsUymtqCWw0j3KcG9?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z_g8Py8Ow85Uj6RT@google.com>
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR07MB9538.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17646bbb-3e7a-46f6-03be-08dd78de0a6a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 09:48:40.9188
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Zoz7oV+WtSWnwSupEXghiJJ9py83TCRoXeWUzdF3uDWBBEmF7enyenL0SOVZN3lD+X0FVt9LwDqz7PwlIiSzKVGNDOZnG4G5WDZfQB6veL8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR07MB10951
+X-Proofpoint-ORIG-GUID: UmX0OESaCUx0E5cF_DzGvpr31_9xbcm7
+X-Authority-Analysis: v=2.4 cv=HIXDFptv c=1 sm=1 tr=0 ts=67f8e57b cx=c_pps a=6dLVn7RwcbTzQ1hpYGxp6A==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=XR8D0OoHHMoA:10 a=Zpq2whiEiuAA:10 a=ag1SF4gXAAAA:8 a=VwQbUJbxAAAA:8 a=Br2UW1UjAAAA:8 a=qenp9_zV_eD-rfQxtnoA:9 a=CjuIK1q_8ugA:10 a=Yupwre4RP9_Eg_Bd0iYG:22 a=WmXOPjafLNExVIMTj843:22
+X-Proofpoint-GUID: UmX0OESaCUx0E5cF_DzGvpr31_9xbcm7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
+ clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110060
 
-On Thu, Apr 10, 2025 at 02:46:39PM -0700, Sean Christopherson wrote:
-> I'm going to skip these, as they aren't yet publicly documented,
 
-https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/programmer-references/57238.zip
 
-> and there are patches proposed to add actual support.  I wouldn't care all
-> that much if these didn't collide with Intel's version (the proposed patches
-> name them AMD_FSxx).
+>-----Original Message-----
+>From: Pawel Laszczak
+>Sent: Friday, April 11, 2025 11:40 AM
+>To: gregkh@linuxfoundation.org
+>Cc: peter.chen@kernel.org; linux-usb@vger.kernel.org; linux-
+>kernel@vger.kernel.org; stable@vger.kernel.org
+>Subject: RE: [PATCH] usb: cdnsp: Fix issue with resuming from L1
 >
-> https://lore.kernel.org/all/20241204134345.189041-2-davydov-max@yandex-team.ru
+>>
+>>
+>>On Thu, Apr 10, 2025 at 07:34:16AM +0000, Pawel Laszczak wrote:
+>>> Subject: [PATCH] usb: cdnsp: Fix issue with resuming from L1
+>>
+>>Why is the subject line duplicated here?  Can you fix up your git
+>>send-email process to not do that?
+>>
+>>> In very rare cases after resuming controller from L1 to L0 it reads
+>>> registers before the clock has been enabled and as the result driver
+>>> reads incorrect value.
+>>> To fix this issue driver increases APB timeout value.
+>>>
+>>> Probably this issue occurs only on Cadence platform but fix should
+>>> have no impact for other existing platforms.
+>>
+>>If this is the case, shouldn't you just handle this for
+>>Cadence-specific hardware and add the check for that to this change?
+>
+>This fix will not have negative impact for other platforms, but I'm not su=
+re
+>whether other platforms are free from this issue.
+>It is very hard to recreate and debug this issue.
 
-Pff, I think the right thing to do is to detect those and when set, set the
-Intel flags because they're basically the same.
+Sorry, you have right should be platform specific. Other platform with Cade=
+nce
+USB controller may require this time even longer.
 
-Lemme go reply there.
-
-... goes and replies...
-
-> 
-> >  		/* PrefetchCtlMsr */
-> > -		F(WRMSR_XX_BASE_NS),
-> > +		/* GpOnUserCpuid */
-> > +		/* EPSF */
-> 
-> FWIW, this one's also not in the APM (though the only APM I can find is a year old),
-> though it's in tools/x86/kcpuid.
-
-See above. Yeah, the PPRs have them earlier than the APM.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>
+>Thanks,
+>Pawel
+>>
+>>>
+>>> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence
+>>> USBSSP DRD Driver")
+>>> cc: stable@vger.kernel.org
+>>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>>> ---
+>>>  drivers/usb/cdns3/cdnsp-gadget.c | 22 ++++++++++++++++++++++
+>>> drivers/usb/cdns3/cdnsp-gadget.h |  4 ++++
+>>>  2 files changed, 26 insertions(+)
+>>>
+>>> diff --git a/drivers/usb/cdns3/cdnsp-gadget.c
+>>> b/drivers/usb/cdns3/cdnsp-gadget.c
+>>> index 87f310841735..b12581b94567 100644
+>>> --- a/drivers/usb/cdns3/cdnsp-gadget.c
+>>> +++ b/drivers/usb/cdns3/cdnsp-gadget.c
+>>> @@ -139,6 +139,21 @@ static void cdnsp_clear_port_change_bit(struct
+>>cdnsp_device *pdev,
+>>>  	       (portsc & PORT_CHANGE_BITS), port_regs);  }
+>>>
+>>> +static void cdnsp_set_apb_timeout_value(struct cdnsp_device *pdev) {
+>>> +	__le32 __iomem *reg;
+>>> +	void __iomem *base;
+>>> +	u32 offset =3D 0;
+>>> +	u32 val;
+>>> +
+>>> +	base =3D &pdev->cap_regs->hc_capbase;
+>>> +	offset =3D cdnsp_find_next_ext_cap(base, offset, D_XEC_PRE_REGS_CAP);
+>>> +	reg =3D base + offset + REG_CHICKEN_BITS_3_OFFSET;
+>>> +
+>>> +	val  =3D le32_to_cpu(readl(reg));
+>>> +	writel(cpu_to_le32(CHICKEN_APB_TIMEOUT_SET(val)), reg);
+>>
+>>Do you need to do a read to ensure that the write is flushed to the
+>>device before continuing?
+>>
+>>> +}
+>>> +
+>>>  static void cdnsp_set_chicken_bits_2(struct cdnsp_device *pdev, u32
+>>> bit)  {
+>>>  	__le32 __iomem *reg;
+>>> @@ -1798,6 +1813,13 @@ static int cdnsp_gen_setup(struct cdnsp_device
+>>*pdev)
+>>>  	pdev->hci_version =3D HC_VERSION(pdev->hcc_params);
+>>>  	pdev->hcc_params =3D readl(&pdev->cap_regs->hcc_params);
+>>>
+>>> +	/* In very rare cases after resuming controller from L1 to L0 it read=
+s
+>>> +	 * registers before the clock has been enabled and as the result driv=
+er
+>>> +	 * reads incorrect value.
+>>> +	 * To fix this issue driver increases APB timeout value.
+>>> +	 */
+>>
+>>Nit, please use the "normal" kernel comment style.
+>>
+>>thanks,
+>>
+>>greg k-h
