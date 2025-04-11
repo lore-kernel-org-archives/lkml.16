@@ -1,72 +1,82 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728D478F45;
-	Fri, 11 Apr 2025 20:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2C627BF78
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 20:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744403851; cv=none; b=fFt7/z9Wu+3Uyae/nUqwsBhW9X6sFBAkYLD006fWTiM+sJojBqvjK3b7ZV9MheFnQ/vxKzZGPGN/yD2Mv3flTfNR9bTEr8K+uzF3Ylq1+7bUBZjdP0nui+Wh2dCTzWgh7/ezt25esLXuVzXMNRktt4pGj3dPBjVwoRdnDruCIIc=
+	t=1744403916; cv=none; b=m8+VVUmT7qTa2jozvz9Becuh+qH6F3WBryCnMXiVxSY9Y+Mbmh8g8BmMEZKfxplc6nPSve7UZOkDPKjLVxff4Pn57ui88Kq5uCIfeqKgaWlueAiVtHyTDwiTJl2t8L86/2ldUjUa+WL9E3YMnFnkE6mjgZBgA+UDUac6+Sj1evs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744403851; c=relaxed/simple;
-	bh=oIWBKkXkkO4Zh/VDrurxg+HNlP+42/RW0fj+dTWJ2KU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jnfQLxtZBLu0RE1tX00KF7Nl4aRHzgA3aWtix/hsh/UDiyBPBO8LAq/ydpkFxtwPt0XDN/Ya+TK1odsWxgt9xhm7pxdCyOBq4WHmHE2kpI2SFIm1K0/E8jF0pV4gbbTqY1+ecIeZlCHKWuvy05KvxqewqUMfeaiRworGknkZPyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HoqY8PpT; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744403916; c=relaxed/simple;
+	bh=jP2gH2HxizlXVnfCoefiIXX50CVQy/awrI7TNYRAzsk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=imMZlg0DmS6C/48fdkUZrEmDA4PufwBSUCV3RyN/e3apwOvp1OnJ71pyiRAbAHbfomnIo6v3ph8b7qsq70ydaDzRMA0Jmya6JL88HuRWwnBHaZx6cc5L0YpkoIfVHc7YIpAU2weyjWtyxJRXSDw/HZvUw/K1OSDjadPWrwb1KVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=HuZd3vAa; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoqY8PpT"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e8efefec89so21189516d6.3;
-        Fri, 11 Apr 2025 13:37:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="HuZd3vAa"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-8616987c261so76428039f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744403848; x=1745008648; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744403913; x=1745008713; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pDw/ZTuHFnJesj//SiyqIBnca/7W39lBjmBrmXxiUuY=;
-        b=HoqY8PpTC8xnPh6obHMcHrghSk3o50sMcDeqa5azhhSsbRkWXDh7VQ9CYzzNCmoonC
-         tfdd+SW9Kv8m4WBaK1x7G3qb034SDEeu+jijB0jH5X8S87dwUGw9rKR4IU81siACZRyK
-         IzefTZmKZIJZvNlc2ihINr6bSzF7/oMMtJHXUZpaOUagodIiIPPs5T5I0A4qotaFv+LX
-         uZWoMVFMJUkt167ZGdmy68wAwscd0P1EW0uYHe1wAu4nbdcm8glf59EYmC+tyWV2hYfW
-         FGL0sVsxPAlNpjO6Hw+p8tcQT3fI2nVIV+esCw09pSnqZsMGLAVgVjZmC3QbdBgfIZYj
-         UHQg==
+        bh=G2ZInTEwsl47QZUkjk8fk2tvbcX5FPggXx8vW7X4elk=;
+        b=HuZd3vAaKxn6C6d2hH42QD+cWH/9GKh1OwWI/pMjqPJC+IRTZ1mAelTWKHMFQxSF5D
+         YEqy0dAByDxGN3L/ycvXZlkAmy2IBGSiYBuPCQMAMdkoGNUIZinNE9jt8IUJw9D0FHSf
+         kZjoS6NS3fSNpLV4tteaZPIprDaGB+uqM5Q2q2Ok5fZNkIhvlP2ndUS4FAxOyIO/8I/d
+         nC4oqP+EkmZGgAfUnLT1ijAjlVlJo24Zlgj9sI9QB2ydIqBPgfgkeOrOqkF3tgNO3aPv
+         +kdAcQEE/zuZPxeZos7cEOfkQR339aWkEphL0R5MGTEFetaDAiuqONimvOzmpAmdVAoM
+         gNZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744403848; x=1745008648;
+        d=1e100.net; s=20230601; t=1744403913; x=1745008713;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pDw/ZTuHFnJesj//SiyqIBnca/7W39lBjmBrmXxiUuY=;
-        b=uCKU+3vTo2mcC2Y+zAO0dPNgWRGEkgQpZYWm/Hhd/wE8ps9WmTWV0s87CdK3b0VBG6
-         KRAk9jN5UEQMo2ZC49Lhm6c3cT9f2j5bqg1K5Bx7GtWzUtl+vdhZVc4xJ/x6I2Zmq4R7
-         zfEAnichxc5ebJCGREYoADaSVS2A0R4ZuDAWWVyzRaTupW4+MfN3HBBvULQYMkv9UMyt
-         VrWBAK8mTkjSias7hfa/Q3Zh3dEVPxjxAbtz2lPO6Wdi/pG9E2lwSGgXGW0XvFV2Pf5d
-         yMLm9a/0INwd8f+ymBV5eMwYYUXcRPibRwAFJqP80KZfrwiGTYoeIZykQWdr07UL70ld
-         nkow==
-X-Forwarded-Encrypted: i=1; AJvYcCXzvRNDfkouUD8veGl/NYKnGTozJp1xT6o0nRvsXUSg+swcjZMfju2+BGAvtPMhqvsvFi8iHLGbpabf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT1vAAxD0oqFE3xnYemb83lY55Ugs06x180cYuPVpuC3HL3sL9
-	uZ2Ml8Q019DwqK0j82xMCkM2Y1qtnIBh+zTNnXRua/RaOJSRQNxsLCqhwUfo
-X-Gm-Gg: ASbGnctXVKeEinWiQfK5PVodKlfVb/54YptMxQLOtvWv4xmFgmJ39/adpTiEI/sj5iY
-	MeL0iHSpkAFbIb1UaogLJqsGXWL57/Ue1Dke1ydvqdqJ6dpIDJk63VYstGAHpt/O1MAkZJWGyNd
-	yDcJ1N4xuSvqF1vVhjt+a+UvM4QGdc/beMqLj4m0HLWWXImrrJoUxql51hgIT0clV3zvuYq1VS+
-	FqMlms0TcbuNoYSvtiw9TSADhRLeB7yVVlRZ+WH4LlDq0Rllpi91sU72soczkbHnhc6UN33+hO0
-	UJx5GRDn15SSYeBp8tCnyEBzK/PDYjOKRG/Xnwj7sfkUu3shtqOzmoFvhSFMkfVi3B4=
-X-Google-Smtp-Source: AGHT+IFKJCiPL/txs5IUnRij57IfGbWPux7jawiwWcbebRmXf+IJZF2m3W142hBW8wEjgv/207PJkA==
-X-Received: by 2002:a05:6214:ac3:b0:6e4:407c:fcfc with SMTP id 6a1803df08f44-6f230d55380mr64312606d6.4.1744403848149;
-        Fri, 11 Apr 2025 13:37:28 -0700 (PDT)
-Received: from localhost.localdomain.com (sw.attotech.com. [208.69.85.34])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea10681sm41165856d6.104.2025.04.11.13.37.27
+        bh=G2ZInTEwsl47QZUkjk8fk2tvbcX5FPggXx8vW7X4elk=;
+        b=B1d3mOyLPYuq1ejca4cyqXuhlyTas6530JLSD2/mnJ9zaShCHfx/TvWe6n0K+ha54B
+         cvp8IooRy+hSHhe5hLNPlJkHvCMBBEyAYnt00FKDUnOiRA4/lPbUKWlqLc8ryG7FjVYY
+         uGdLtSIbYN27OstGxKvLJ5KBXgj10TUObsPx0iJx6DXdNznQNExJwIrckIaxWa8WS7rR
+         WTRaVO5uS5Mxi9C8lqewCGGzCmkuAMvIya0G8NiROlKytJDs3apN7ctyA8Y94cvUcx6c
+         SlVPQX3wf88RdA1yzP6pNmoeVw+EKfUVJ14zWSHH9y1A+X6AqQsEId0JwloDaOyTv9kP
+         1udA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfedi/MsqoZZbDXPuRDJbnKwjn4TJAGvqANVXcOGcwapFgiwwftwvSY4urvT2EyvgzBwGIS4KpVF7c7ao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPN59oMiFK6Wyj0TvEASfYBpaUwT5/PNjBZvNfhr2n+X4a7Q9P
+	uDJDL1wQVZEmtuJChPGbbcSHhm7XsRMU7zsmsoklYo5uYjOfaQ75PRiqz9CkZHg=
+X-Gm-Gg: ASbGncvy2B3YZDUYMRwCD9Z2ZPkR+gCX+Voo92N08TZO+RjjVPnHVi03aJfe5tfVBSR
+	IXRfcjZz9y3DDrPJ2Lb9KTh9sv7UwSadtt2PSdEHD1ykjuekb8ffWdQMj6RXvC4G3jJTqCNFlzL
+	W+1G4pWLUcszVMIedowllrUmnLLr5uzHvyU24RFWyJZnUEAfLyQOPFWJI3IyJ9ylaPW/MOxa0hl
+	WU2GFipo0LiiXe8IlBR6SfQSBZZ11scn/8vOzVeTkxr6cwS496qFogmzy4koDEB5B3OHW+0yGLz
+	K5tjp2El+HJuNFcJ4XxzlOWq77QjY/Si6iN0xXfjIclyUk/f7vL84eAimK+bgzSCu5I8kNRVRY9
+	cGW1fICe0PGmn5F7i805OrR2D
+X-Google-Smtp-Source: AGHT+IF64rFuEmhScHDoMsL9QXFX4Agysz2oW5sGUVVn3Q82xJQ20AI5xuTlCrtn92K/dBEu6SxbnQ==
+X-Received: by 2002:a92:c267:0:b0:3d6:cb9b:cbe9 with SMTP id e9e14a558f8ab-3d7ec1caab5mr44116655ab.5.1744403913131;
+        Fri, 11 Apr 2025 13:38:33 -0700 (PDT)
+Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e2ea1esm1420787173.123.2025.04.11.13.38.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 13:37:27 -0700 (PDT)
-From: Steve Siwinski <stevensiwinski@gmail.com>
-X-Google-Original-From: Steve Siwinski <ssiwinski@atto.com>
-To: James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	bgrove@atto.com,
-	Steve Siwinski <ssiwinski@atto.com>
-Subject: [PATCH] scsi: sd_zbc: Limit the report zones buffer size to UIO_MAXIOV
-Date: Fri, 11 Apr 2025 16:36:00 -0400
-Message-ID: <20250411203600.84477-1-ssiwinski@atto.com>
-X-Mailer: git-send-email 2.43.5
+        Fri, 11 Apr 2025 13:38:32 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: andy.shevchenko@gmail.com,
+	dlan@gentoo.org,
+	benjamin.larsson@genexis.eu,
+	bastien.curutchet@bootlin.com,
+	andriy.shevchenko@linux.intel.com,
+	u.kleine-koenig@baylibre.com,
+	lkundrak@v3.sk,
+	devicetree@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] serial: 8250_of: support an optional bus clock
+Date: Fri, 11 Apr 2025 15:38:24 -0500
+Message-ID: <20250411203828.1491595-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,42 +85,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The report zones buffer size is currently limited by the HBA's
-maximum segment count to ensure the buffer can be mapped. However,
-the user-space SG_IO interface further limits the number of iovec
-entries to UIO_MAXIOV when allocating a bio.
+The SpacemiT UART hardware requires a bus clock to be enabled in addition
+to the primary function clock.
 
-To avoid allocation of buffers too large to be mapped, further
-restrict the maximum buffer size to UIO_MAXIOV * PAGE_SIZE.
+This series makes it possible to specify both clocks via DTS.  If a
+bus clock is required, it and the primary clock are fetched by name.
 
-This ensures that the buffer size complies with both kernel
-and user-space constraints.
+This code is available here:
+  https://github.com/riscstar/linux/tree/outgoing/serial-v4
 
-Signed-off-by: Steve Siwinski <ssiwinski@atto.com>
----
- drivers/scsi/sd_zbc.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes between v3 and v4:
+  - I simplified the third patch by reusing the local variable, as
+    suggested by Andy Shevchenko
+  - The first two patches are identical to what was in v3
 
-diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
-index 7a447ff600d2..a19e76ec8fb6 100644
---- a/drivers/scsi/sd_zbc.c
-+++ b/drivers/scsi/sd_zbc.c
-@@ -180,12 +180,15 @@ static void *sd_zbc_alloc_report_buffer(struct scsi_disk *sdkp,
- 	 * Furthermore, since the report zone command cannot be split, make
- 	 * sure that the allocated buffer can always be mapped by limiting the
- 	 * number of pages allocated to the HBA max segments limit.
-+	 * Since max segments can be larger than the max sgio entries, further
-+	 * limit the allocated buffer to the UIO_MAXIOV.
- 	 */
- 	nr_zones = min(nr_zones, sdkp->zone_info.nr_zones);
- 	bufsize = roundup((nr_zones + 1) * 64, SECTOR_SIZE);
- 	bufsize = min_t(size_t, bufsize,
- 			queue_max_hw_sectors(q) << SECTOR_SHIFT);
- 	bufsize = min_t(size_t, bufsize, queue_max_segments(q) << PAGE_SHIFT);
-+	bufsize = min_t(size_t, bufsize, UIO_MAXIOV * PAGE_SIZE);
- 
- 	while (bufsize >= SECTOR_SIZE) {
- 		buf = kvzalloc(bufsize, GFP_KERNEL | __GFP_NORETRY);
+Here is version 3 of this series:
+  https://lore.kernel.org/lkml/20250411154419.1379529-1-elder@riscstar.com/
+
+Changes between v2 and v3:
+  - A third patch was added to disable the bus clock on suspend and
+    enable it again on resume, as requested by Yixun Lan
+  - Rob's Reviewed-by tag has been added to patch 1
+  - The first two patches are otherwise identical to what was in v2
+
+Here is version 2 of this series:
+  https://lore.kernel.org/lkml/20250409192213.1130181-1-elder@riscstar.com/
+
+Changes between v1 and v2:
+  - The DT binding was fixed to properly define the number of clocks and
+    clock names based on the compatible string, as suggested by Rob Herring
+  - Logic to look up the optional bus clock was changed as requested
+    by Andy Shevchenko
+  - The bus clock pointer (which was never used after it was enabled)
+    was renmoved from the of_serial_info structure
+
+Here is the first version of this series:
+  https://lore.kernel.org/lkml/20250408175146.979557-1-elder@riscstar.com/
+
+					-Alex
+
+Alex Elder (3):
+  dt-bindings: serial: 8250: support an optional second clock
+  serial: 8250_of: add support for an optional bus clock
+  serial: 8250_of: manage bus clock in suspend/resume
+
+ .../devicetree/bindings/serial/8250.yaml      | 30 ++++++++++++++++++-
+ drivers/tty/serial/8250/8250_of.c             | 15 +++++++++-
+ 2 files changed, 43 insertions(+), 2 deletions(-)
+
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 -- 
-2.43.5
+2.45.2
 
