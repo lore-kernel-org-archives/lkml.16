@@ -1,401 +1,253 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013038.outbound.protection.outlook.com [40.107.159.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CA32BEC43
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744369205; cv=none; b=JbRCBe7niWlZB6eM+9t0xVKEWMv8s2gkBNnE8F4WJzroXX94D8aPVyFB5YSrIWAi69hU77VzN8yq3IEzMKlLq9a7xBAlIDsqeOUu3ZlcO6RCTRnMNicksLoVKv9+XUv+a+wge98f/q4h9zGE2ZOH7AjPgIBbhk28sNKDYLjyu30=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744369205; c=relaxed/simple;
-	bh=pWo35UcpFfXt0lltVDkHvDrvwug3xEzrt77oiEiP7XI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C50pe8qqRof3nCAcDUU2HOIZV8R6nWiW3J7YHZg4bLEQJyR/IhT34M4PLOpFit2g4N7yvK6nyxqj8OO6oZwXBiExOiT6AROGpFprfYq36A/ZL89V6ILAa4+9l43QazeqzOrRAgupkIETTCJxbWwEOYbSh+3zRn8Uv5HTSLUPznI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xmb9Upzf; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43C02111;
+	Fri, 11 Apr 2025 11:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744369382; cv=fail; b=pnB/926ggYOGvGUkYdWW9iQ26GD6wAc02/tzBPBXOWF9AkVB/z8IC0lnj6vUcviLmIhwT7OfqwMmSll56G/9PBEsouAwTR6o5ItIMB6QdpzjYpMiCGGgf3XNmQyMonKI3w1mjphVEoqPHg3x96trB3Mqil9dobjgJGlP/uD5r0s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744369382; c=relaxed/simple;
+	bh=zgVS1eS3I6nJ7k95DYWOVY2jIcYtYOl2kIUmd3njbIM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Om/j0e8QiXZYsHV/NcD+WEKubarkESBMBnBe9AsNkmtEqyPhD+r+SAtCjgGLTnKFJUhyAXwX85e/ELZct0EoYTSzYwjxokPDBBNONv7TWqiP7U4W8akgQwEispAeVxKthcgXvw5rpc3WUXDMfsA6tCAfWhPzNqDRDGxt4Mtjsyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Pp2eq2Ne; arc=fail smtp.client-ip=40.107.159.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xmb9Upzf"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-227a8cdd241so21744015ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 04:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744369203; x=1744974003; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4mNVvyernaxT52HQcm+4cNUWaUzVLRpgc/yTn2bSQaE=;
-        b=xmb9UpzfcIDoUm86ZJ00J+nBYQkL0d42SvqYHpzbnt3ceJMZK+vlEsuPKVJc4yBUdA
-         Wx5SnU1XCHqEKvdq+7ZTLEP2JMZcVUtdBjygJQFlP2HAKz1MEhAZmeJKT+eyO5KWKhmZ
-         B+3QT8PgNgCTPy4I1rnQHkO2+Vdy9hxgjhItDmRwBeRqP8oYz9LGSIPEDtxSmwOtIsHi
-         FXKncbaHFGkUoelPnAe+4CFzLvLZ2jMLzU94UG739x08TfQFMXUGlpg3jW00txnFra3f
-         8K+XVRBP3STBMxq+PuiEWE9ifBPLQpuOc9jZQtfgdpqvBIRQWEiCnbvhFKDYUHLJOfnV
-         QPhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744369203; x=1744974003;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4mNVvyernaxT52HQcm+4cNUWaUzVLRpgc/yTn2bSQaE=;
-        b=fr0rBIymXOpQQnM7SIYoJcWSBxdjGVFSp77R41yhyFFPLzILlnvHFbGqLQgYBymGjY
-         TO9egszXnicKfTmxRfNayMRH1N/0mATOK7Su4mCHfj0egHydJlHd0yeVLG6MPbHiQOMS
-         a0VPeNDmnQB5g+QeHy7ENTmNR04u4+peJhv8o5l299adFUWhPSN7ZBZk9rgv8P9pFktg
-         NTqcc+sVZhch4jyvP9Jhc82S5gltayWvEsC016UpW+qg54bzL7ZT4yGZ3MRHmb5rszZz
-         AppjyCSPb9MJWF/KeRC6uNBLHb9l/e/7Z6LUsOPbhtZ7kdSzDJ+5g68+WfBVF6vZTuDX
-         eXHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbPjD4ox6Yl+Of4yNVYFHrk8T+V2eIEHu44eRQJN0VpYqLOmNYUAj3DBmsU1azqthDqzzTVG8ETGVR0H8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUUtbQs5QI7fw/lagh7qXwOKIrFC4Xay99KIrhDOM5AFf5fYAm
-	r9shDBw7geoTX91VbWm2NHLOb9aWAgIhrOkritbMiJdrMdHTck3JgowbbCIHpiU=
-X-Gm-Gg: ASbGncvGbOf2gcEzU8mWYQ1AFGdCqF4WzkKypsDf+hkGbfyVZ9oXIdNKlon+Zr7M13s
-	6FspxKQ85sgUibu1PZeVHvxU9FbxDz7jaDYp+67ZpZOqBjHNaCT/IM2nBbiI2buVOqVOfowl9SG
-	U9G+c40ERWFdppIEWp0InC7zpS8IGJqADu0ykcQ72v/SMzsoOJKj/XaAPYSkR61u0fHjKUk/mRV
-	77zjpAHdnrqakBL2FzA32xCw7+PDvRqAOn6DaA7JPe6t4Pq7D1JRk98Wv5zawhRa3vN4jAfuQ+7
-	Tmbi25cSWKHzUWo39lbrq5yNgBKJt4A//0zO2xgZmw==
-X-Google-Smtp-Source: AGHT+IHE8HlOfRWkUJ6bGufM5iixKyxjSNZZ9SqxCniqwDGeJ+fDGcaMFZXytSiHOOkDy5nU5HRnVw==
-X-Received: by 2002:a17:903:2a8f:b0:21f:1bd:efd4 with SMTP id d9443c01a7336-22bea4ab8bemr35593525ad.19.1744369202779;
-        Fri, 11 Apr 2025 04:00:02 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cafdaasm46053495ad.165.2025.04.11.04.00.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 04:00:02 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V9 17/17] cpufreq: Add Rust-based cpufreq-dt driver
-Date: Fri, 11 Apr 2025 16:25:16 +0530
-Message-Id: <0bb160bbbc11d7b9249e064cdaec48dfc4380d90.1744366572.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1744366571.git.viresh.kumar@linaro.org>
-References: <cover.1744366571.git.viresh.kumar@linaro.org>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Pp2eq2Ne"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x5gAAO4owUdtAHKXRU8tkPvgD3qlZX4XCoDtLtAYpmfdNUpO2D5kJ7Xyf9UkrcwHLb1dXtUUthqvXnWQlg74VWluFIex5kWrkXp1DR3OZI1F9oWDRB1bHE6kNm3Ay7Txc5uHntUPPkySqgBV8DjJBNGNW8R/4H+4E8hxYeIvsXYkyvNLVkR0uCaWIf7hpMr8aT09UJwURMR0A3FzPSwD02m3VQfaEXhuNr6RqCu5oeulPzJiXfvYc4nR5//FBiDrQ1uu3EBpMshbGiZgZTdSH+yf7mtjXgN7NTW59caW6/TL4XLOBJckInrqBK9jzGD/+0D024GhRTOdkJQuusMIvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XBGOPA0rSgsOkUxC0jabv7gIHO1nS92cUrArFFC77vc=;
+ b=NTviZOouuevOZj1tGe1+0dQez6fR7V3i+T7loJoE0J9kmsV00+3i2lRa3gOGbWVnueNntkI5fwvGrsUPeI0EZZzupS/Je5VHcu4ORgU6HItq/dcxiWWmS1xwjwgWb/qT7DB/hxAhVPDKHrhVPcuY6jtqxPAfmqPblEtg4Nrt7Sa80gAF+Q5P1pqz1iIJJEWq8o7Fcc5ia82jl69CiJcajAJzlm7xv9/mb0Cb1PtzMJsW/MzPsqV+wdCip6V9LGYOowaNGdpBG9nlKSKPHOne0gZY1G7IPk5k9xbrmoKZOdfHhkrtVLMDjoyST/fFK8zuRcztYLmeS5KOG9RWs+EMFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XBGOPA0rSgsOkUxC0jabv7gIHO1nS92cUrArFFC77vc=;
+ b=Pp2eq2NeWWs/JU+3T1nGHhKzbpgnzeHJruo1zqLkAZ+9RbPHshClzMdCkXeLBxYrm5SrxbAwnd/FlDNy3ziyaQjhP+8rFZuE4sLs2oqJTQsCFSidLslgHaiViTn+rUz5XOOqfY0zmauGyxdR7ObFNRIetmttzN8i5vWdSSHlgPf38uDf62MQDjuKfSbGyfJSAkGx6iAoPYlYsxHb/yHslId/BQDwzSG9636DprEK4pQ3/MKS9XbuJmFchN5PilXvukDDXLACaiSNpn8CUZdhxFkDobYohUEX4MT+egebTx7zXChIILlIT1OU88PMjsim1Ud65DFOo9J1EgVglmXHPg==
+Received: from DU2PR04MB8567.eurprd04.prod.outlook.com (2603:10a6:10:2d6::21)
+ by AS8PR04MB8705.eurprd04.prod.outlook.com (2603:10a6:20b:428::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
+ 2025 11:02:52 +0000
+Received: from DU2PR04MB8567.eurprd04.prod.outlook.com
+ ([fe80::4db:3dc0:c292:493a]) by DU2PR04MB8567.eurprd04.prod.outlook.com
+ ([fe80::4db:3dc0:c292:493a%5]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
+ 11:02:52 +0000
+From: Luke Wang <ziniu.wang_1@nxp.com>
+To: Arnd Bergmann <arnd@kernel.org>, Bough Chen <haibo.chen@nxp.com>, Adrian
+ Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Shawn
+ Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
+CC: Arnd Bergmann <arnd@arndb.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Josua Mayer
+	<josua@solid-run.com>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, dl-S32
+	<S32@nxp.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH] [v2] mmc: esdhc-imx: convert to modern PM_OPS
+Thread-Topic: [EXT] [PATCH] [v2] mmc: esdhc-imx: convert to modern PM_OPS
+Thread-Index: AQHbqsAQEeWYoKBe402OH8kq6kt3qrOeTE4w
+Date: Fri, 11 Apr 2025 11:02:52 +0000
+Message-ID:
+ <DU2PR04MB8567B7E1DF735B19F54A987FEDB62@DU2PR04MB8567.eurprd04.prod.outlook.com>
+References: <20250411085932.1902662-1-arnd@kernel.org>
+In-Reply-To: <20250411085932.1902662-1-arnd@kernel.org>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU2PR04MB8567:EE_|AS8PR04MB8705:EE_
+x-ms-office365-filtering-correlation-id: 98d6c957-855c-4ce4-272e-08dd78e867a0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?nFsPSbuK8W8uAraQhSUWwCYs1oqXFHoJde47S6WqlZR/vtMUKGRIrqtxsP04?=
+ =?us-ascii?Q?z4hTHiEOGLMaA6BRJodUYHyd0UpTWTMvdEqSSEJwionVu6i9Ad30hf65/Gdg?=
+ =?us-ascii?Q?jaezMV7Zwb52AgbVzf349txj4UWWUAK4E/7e+H7ujc5cJ6AgjABYvghH3BJw?=
+ =?us-ascii?Q?PZGEYyAWgi2Q3GhKJywTPLPuvlabdGpK0wu1+sNAoLDBcoN47Y0d3MJmq96w?=
+ =?us-ascii?Q?UBHKGbNaPFkVa5YBHG+4c6JzjCDiP9xD3pBOl4lvdPx9v05/erqD2GwgyMJ6?=
+ =?us-ascii?Q?RveZpw4GFJYGhnEKoiVU6hlCQY5C4Fltp148bNm5pJUJqf/Hr7b0vGbdZjGf?=
+ =?us-ascii?Q?Wg6qHsrx8pF0L+Hl6dfuXCEPhFB8OiuiFc5m539C54CPIjlFj7gPC3VmV8wP?=
+ =?us-ascii?Q?/pHb4ej6eS7j+JqA5Y29SqZMXENdtSEIKco6Yv6m93qiL33Q4uOztn5Co0xZ?=
+ =?us-ascii?Q?BDPSCFmTnKzgC3yH+t4HC9qSLB7UoeKGCdEBx4WQlXaUyD4PPznzfO6ndONk?=
+ =?us-ascii?Q?zI21Xl4cHMZK/hrJhrmoY881ldb6ruqJuX+xMoA1sLwMpT4dEhmz9eskhsyn?=
+ =?us-ascii?Q?ungumtCXHkHO0+0FIBl0dmKkuL8+Vm+Oi82RV6Gw/O2QDNNwtIp6Gvg+rf3N?=
+ =?us-ascii?Q?GbO4ne3vk5WRu/39HJMT7cWWBWCuOf4RfteoeUKeOWuFkekx8Mgz0CyOp3JV?=
+ =?us-ascii?Q?yELP6Wa5FcHwNUIDpPdfaPlxlB+eAPuJ4wxTBfR1GtAxkwE9OOvR8YT8MdOh?=
+ =?us-ascii?Q?LTC9K+qG3yYgA5KtWN2Z4hr6QRzmkzrBo8lJXiJWTCVitqyx1VVkOrNEBaqZ?=
+ =?us-ascii?Q?wJ9Kv4tG6ReQoHiUnIaXuPGbbvsLDp4G4jVvZq1pi0RDcFda8e8rJSUk+JJ2?=
+ =?us-ascii?Q?HKeZcRFsNnzJPfjst2Aqh6WTNOaVqmAhUXwwjn7srdBKPDydcIJD5yRHgv5w?=
+ =?us-ascii?Q?bKJqRZ1zIsaw1iNA4i9OYQoXIGaMDnnz1X45H3b9rVzQoEcwCUf+ZV8tsLMK?=
+ =?us-ascii?Q?Hbqh6z/QZCCeD9/a08PWeeIfzvb/bjfW3tDxRsN998HIvmUXLej/NJb+O1zc?=
+ =?us-ascii?Q?ouqlMDAehP138E8TWmORsu+ydv2LczgD41dyNQu8UK3159kdmPGZZtifzUFB?=
+ =?us-ascii?Q?SGf2cC5BvfNE3TuG6PLUcejxN5BXgj0oLBlIF1fvkQURphqfcGvcX978MvWH?=
+ =?us-ascii?Q?SD1oPedxE4hcxGEQcfvKQaPb9edAqvoxyH0gJ4v4P/P1t3+Q2cfDCOdLYTT0?=
+ =?us-ascii?Q?QdphcUnwhpir1FMuc6CsRNvhzyVdCedzfSAJ2X98NbcqLrSB8KJ3Dn1J0Crn?=
+ =?us-ascii?Q?K0MM50033Ag4Uk3gU/016xXBbP/DVkhMceIZTsYX48F1kQNteHJqb4C3xhvM?=
+ =?us-ascii?Q?QTJ59/gQ/6HJQoaqbhoLPnyovaiSPbM0L4jqGQ9psOy0BDGQuzuGd6MZShWb?=
+ =?us-ascii?Q?fTwBzjajC3cPZndeRQ2pO7oPZjKcMbxXmSm7dvO5s7hog84D6JSytg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8567.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?qNpUwJnvC0Xr7cPUVfU60PH6syOb0f24a+aBUGawQ0uX2mTFPHybVCQz11fW?=
+ =?us-ascii?Q?CzRhVtPJzKtVpfRjRdIw3QFYqXp4XKAm+WKwTZpFnbElR8J9KYxf5pfp9/C0?=
+ =?us-ascii?Q?QWFr4v0jbksTLQZhq+8ZGdNJKbh+Jm5vGqrl4MHvtDgZHuMepaM35Jkmxy6/?=
+ =?us-ascii?Q?JBf9BMyBbd6Lc0QbIY9QJGVIg7DtuKzavEtLgIAT0rHPm6SLon5Fog5mJ6dj?=
+ =?us-ascii?Q?l4GgbQakSK56Mmdf5PJNcZr1kRJPtcDSTOb9LBRvncwL7CamNmElNG06NocT?=
+ =?us-ascii?Q?jOik8+8HfzRvgBgr3Zd2tayZ3CRuKNq5vLgC0sPqNJFR3rQgdpvWIIw9OhXI?=
+ =?us-ascii?Q?03QXH4iGL4CQRx8ZXkzbb1r5HnGKPzJ4W1Kvum6uLe7ZS9cVBFGJQSJskeGv?=
+ =?us-ascii?Q?lKgeQghxls6b6COfvxiUEoZr4z48iHMCWV2qm0i/XZnUFwBoVzuNp8nFua5w?=
+ =?us-ascii?Q?hYdrDnlqZ+4TyQRTM7aciLQBNJtAQR7H5b2EXg0VrfiL+DEtY6eaCLNhCXxE?=
+ =?us-ascii?Q?wEEq5IiDvRUEXmieu9MW0uYzIdSRmDWdupDJD+11pgatQnQYkAsmpTB+AWyF?=
+ =?us-ascii?Q?AFEP3MUfyOXkpNSlHEIK/41irDdSiUahg2HsE9cSP204ZJNlLxt7TPiMCQNE?=
+ =?us-ascii?Q?zgfXA2CaXFblACxdGljK4a5pZFYt46VZxj3CUdNoMCo8rE6UtKDRaq233rV7?=
+ =?us-ascii?Q?FR81jCQh8WFjryzoF5ED9WRJtaJU967y+e2P8Cbc+f/3+ufCqdSRFEKA8tI5?=
+ =?us-ascii?Q?aJOOkxDCHjmF0uqiCJCLHdL5DMRMlMuN4+FXsQSkafotCUzA5gn/OjGu4x1j?=
+ =?us-ascii?Q?wsT6gzJZHj45kpmvdxMJt7M4JImOOXc1r/cMd01/SQDaxjXegtPQaQDApbZz?=
+ =?us-ascii?Q?WYVhspWVfA7LBRzsPJnKbHECqfwY2MlfpgRN+Cm6Qn1ixi53AAstBOAnFbM0?=
+ =?us-ascii?Q?SnYtnh0AbcSUi/JUyFs0e2U/AMzqhbnFtcw4rgeNTINz6POJN8PUfLTP9wso?=
+ =?us-ascii?Q?8mp2So+EL0wlOJEwpmbw0adlHiNs/5atwsaw/Va39xmnaFa65ydqZTNM7JS9?=
+ =?us-ascii?Q?EENTs+5BG3fKpU+kGTLwBqXh8DCR1acBBlPVtqltmODj7WeHLbpgo1wAYp6R?=
+ =?us-ascii?Q?ptXRbZg02ZmyZTOuZQTRw21C9ppwne62a+qQW7BpnXQH/9Ta/1Cu1eukIDNZ?=
+ =?us-ascii?Q?EViepyfaMWoFPX92N6XZ+Gvw56YfowkxzA9/1dDrD/bZTMpbxwzECgpKs6Bi?=
+ =?us-ascii?Q?QC4Yp5OEYzQuQ9jTD+95KLTsKT5FY51kko7Y3An+Ul2JGVG/npqfQ5+Xy/1c?=
+ =?us-ascii?Q?NPc7jnrWqBNXVG44f5BgLVXxwfw0UFTBWXX1Mn5424DslSdslDWEpxriIV5E?=
+ =?us-ascii?Q?UAusr9gwl9iIJJXkXXEl+ltYlmwII/GytMFaHOsy6g0f2OOIZqte1l08aKX/?=
+ =?us-ascii?Q?VyROG88Fe3NhMjnvPC80froK+1VRDT57rkf0XZDkOzQxh/eWiwQwxGgmK5Ab?=
+ =?us-ascii?Q?wH218SQT436Rg6ZwCi/1vJ0egl51kQWDQYEOWL5bnqEVAHAvhnsMMEoFR383?=
+ =?us-ascii?Q?Q3IBFzwFQ15svWjv4ZBrd7qpLMy1v7DtjaB5CS5p?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8567.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98d6c957-855c-4ce4-272e-08dd78e867a0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 11:02:52.2517
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4BE9UJ/SP8y1PQDF17vQwvity71h0jq1Q5DHPhQsGeOuff55arbFeMf7Hv/t4FO7iWQYR6WXeunBWPBjh6Slhw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8705
 
-Introduce a Rust-based implementation of the cpufreq-dt driver, covering
-most of the functionality provided by the existing C version. Some
-features, such as retrieving platform data from `cpufreq-dt-platdev.c`,
-are still pending.
+Tested-by: Luke Wang <ziniu.wang_1@nxp.com>
 
-The driver has been tested with QEMU, and frequency scaling works as
-expected.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/Kconfig        |  12 ++
- drivers/cpufreq/Makefile       |   1 +
- drivers/cpufreq/rcpufreq_dt.rs | 236 +++++++++++++++++++++++++++++++++
- 3 files changed, 249 insertions(+)
- create mode 100644 drivers/cpufreq/rcpufreq_dt.rs
-
-diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-index d64b07ec48e5..78702a08364f 100644
---- a/drivers/cpufreq/Kconfig
-+++ b/drivers/cpufreq/Kconfig
-@@ -217,6 +217,18 @@ config CPUFREQ_DT
- 
- 	  If in doubt, say N.
- 
-+config CPUFREQ_DT_RUST
-+	tristate "Rust based Generic DT based cpufreq driver"
-+	depends on HAVE_CLK && OF && RUST
-+	select CPUFREQ_DT_PLATDEV
-+	select PM_OPP
-+	help
-+	  This adds a Rust based generic DT based cpufreq driver for frequency
-+	  management.  It supports both uniprocessor (UP) and symmetric
-+	  multiprocessor (SMP) systems.
-+
-+	  If in doubt, say N.
-+
- config CPUFREQ_VIRT
- 	tristate "Virtual cpufreq driver"
- 	depends on GENERIC_ARCH_TOPOLOGY
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 22ab45209f9b..d38526b8e063 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_COMMON)		+= cpufreq_governor.o
- obj-$(CONFIG_CPU_FREQ_GOV_ATTR_SET)	+= cpufreq_governor_attr_set.o
- 
- obj-$(CONFIG_CPUFREQ_DT)		+= cpufreq-dt.o
-+obj-$(CONFIG_CPUFREQ_DT_RUST)		+= rcpufreq_dt.o
- obj-$(CONFIG_CPUFREQ_DT_PLATDEV)	+= cpufreq-dt-platdev.o
- obj-$(CONFIG_CPUFREQ_VIRT)		+= virtual-cpufreq.o
- 
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-new file mode 100644
-index 000000000000..751be33c0218
---- /dev/null
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -0,0 +1,236 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust based implementation of the cpufreq-dt driver.
-+
-+use kernel::{
-+    c_str,
-+    clk::Clk,
-+    cpu, cpufreq,
-+    cpumask::CpumaskVar,
-+    device::{Core, Device},
-+    error::code::*,
-+    fmt,
-+    macros::vtable,
-+    module_platform_driver, of, opp, platform,
-+    prelude::*,
-+    str::CString,
-+    sync::Arc,
-+};
-+
-+// Finds exact supply name from the OF node.
-+fn find_supply_name_exact(dev: &Device, name: &str) -> Option<CString> {
-+    let prop_name = CString::try_from_fmt(fmt!("{}-supply", name)).ok()?;
-+    dev.property_present(&prop_name)
-+        .then(|| CString::try_from_fmt(fmt!("{name}")).ok())
-+        .flatten()
-+}
-+
-+// Finds supply name for the CPU from DT.
-+fn find_supply_names(dev: &Device, cpu: u32) -> Option<KVec<CString>> {
-+    // Try "cpu0" for older DTs, fallback to "cpu".
-+    let name = (cpu == 0)
-+        .then(|| find_supply_name_exact(dev, "cpu0"))
-+        .flatten()
-+        .or_else(|| find_supply_name_exact(dev, "cpu"))?;
-+
-+    let mut list = KVec::with_capacity(1, GFP_KERNEL).ok()?;
-+    list.push(name, GFP_KERNEL).ok()?;
-+
-+    Some(list)
-+}
-+
-+// Represents the cpufreq dt device.
-+struct CPUFreqDTDevice {
-+    opp_table: opp::Table,
-+    freq_table: opp::FreqTable,
-+    #[allow(dead_code)]
-+    mask: CpumaskVar,
-+    #[allow(dead_code)]
-+    token: Option<opp::ConfigToken>,
-+    #[allow(dead_code)]
-+    clk: Clk,
-+}
-+
-+#[derive(Default)]
-+struct CPUFreqDTDriver;
-+
-+#[vtable]
-+impl opp::ConfigOps for CPUFreqDTDriver {}
-+
-+#[vtable]
-+impl cpufreq::Driver for CPUFreqDTDriver {
-+    type Data = ();
-+    type PData = Arc<CPUFreqDTDevice>;
-+
-+    fn init(policy: &mut cpufreq::Policy) -> Result<Self::PData> {
-+        let cpu = policy.cpu();
-+        // SAFETY: The CPU device is only used during init; it won't get hot-unplugged. The cpufreq
-+        // core  registers with CPU notifiers and the cpufreq core/driver won't use the CPU device,
-+        // once the CPU is hot-unplugged.
-+        let dev = unsafe { cpu::from_cpu(cpu)? };
-+        let mut mask = CpumaskVar::new(GFP_KERNEL)?;
-+
-+        mask.set(cpu);
-+
-+        let token = find_supply_names(dev, cpu)
-+            .map(|names| {
-+                opp::Config::<Self>::new()
-+                    .set_regulator_names(names)?
-+                    .set(dev)
-+            })
-+            .transpose()?;
-+
-+        // Get OPP-sharing information from "operating-points-v2" bindings.
-+        let fallback = match opp::Table::of_sharing_cpus(dev, &mut mask) {
-+            Ok(()) => false,
-+            Err(e) if e == ENOENT => {
-+                // "operating-points-v2" not supported. If the platform hasn't
-+                // set sharing CPUs, fallback to all CPUs share the `Policy`
-+                // for backward compatibility.
-+                opp::Table::sharing_cpus(dev, &mut mask).is_err()
-+            }
-+            Err(e) => return Err(e),
-+        };
-+
-+        // Initialize OPP tables for all policy cpus.
-+        //
-+        // For platforms not using "operating-points-v2" bindings, we do this
-+        // before updating policy cpus. Otherwise, we will end up creating
-+        // duplicate OPPs for the CPUs.
-+        //
-+        // OPPs might be populated at runtime, don't fail for error here unless
-+        // it is -EPROBE_DEFER.
-+        let mut opp_table = match opp::Table::from_of_cpumask(dev, &mut mask) {
-+            Ok(table) => table,
-+            Err(e) => {
-+                if e == EPROBE_DEFER {
-+                    return Err(e);
-+                }
-+
-+                // The table is added dynamically ?
-+                opp::Table::from_dev(dev)?
-+            }
-+        };
-+
-+        // The OPP table must be initialized, statically or dynamically, by this point.
-+        opp_table.opp_count()?;
-+
-+        // Set sharing cpus for fallback scenario.
-+        if fallback {
-+            mask.setall();
-+            opp_table.set_sharing_cpus(&mut mask)?;
-+        }
-+
-+        let mut transition_latency = opp_table.max_transition_latency_ns() as u32;
-+        if transition_latency == 0 {
-+            transition_latency = cpufreq::ETERNAL_LATENCY_NS;
-+        }
-+
-+        policy
-+            .set_dvfs_possible_from_any_cpu(true)
-+            .set_suspend_freq(opp_table.suspend_freq())
-+            .set_transition_latency_ns(transition_latency);
-+
-+        let freq_table = opp_table.cpufreq_table()?;
-+        // SAFETY: The `freq_table` is not dropped while it is getting used by the C code.
-+        unsafe { policy.set_freq_table(&freq_table) };
-+
-+        // SAFETY: The returned `clk` is not dropped while it is getting used by the C code.
-+        let clk = unsafe { policy.set_clk(dev, None)? };
-+
-+        mask.copy(policy.cpus());
-+
-+        Ok(Arc::new(
-+            CPUFreqDTDevice {
-+                opp_table,
-+                freq_table,
-+                mask,
-+                token,
-+                clk,
-+            },
-+            GFP_KERNEL,
-+        )?)
-+    }
-+
-+    fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result<()> {
-+        Ok(())
-+    }
-+
-+    fn online(_policy: &mut cpufreq::Policy) -> Result<()> {
-+        // We did light-weight tear down earlier, nothing to do here.
-+        Ok(())
-+    }
-+
-+    fn offline(_policy: &mut cpufreq::Policy) -> Result<()> {
-+        // Preserve policy->data and don't free resources on light-weight
-+        // tear down.
-+        Ok(())
-+    }
-+
-+    fn suspend(policy: &mut cpufreq::Policy) -> Result<()> {
-+        policy.generic_suspend()
-+    }
-+
-+    fn verify(data: &mut cpufreq::PolicyData) -> Result<()> {
-+        data.generic_verify()
-+    }
-+
-+    fn target_index(policy: &mut cpufreq::Policy, index: u32) -> Result<()> {
-+        let Some(data) = policy.data::<Self::PData>() else {
-+            return Err(ENOENT);
-+        };
-+
-+        // SAFETY: `index` is guaranteed to be valid by the C API.
-+        let freq = unsafe { data.freq_table.freq(index.try_into()?)? };
-+        data.opp_table.set_rate(freq)
-+    }
-+
-+    fn get(policy: &mut cpufreq::Policy) -> Result<u32> {
-+        policy.generic_get()
-+    }
-+
-+    fn set_boost(_policy: &mut cpufreq::Policy, _state: i32) -> Result<()> {
-+        Ok(())
-+    }
-+
-+    fn register_em(policy: &mut cpufreq::Policy) {
-+        policy.register_em_opp()
-+    }
-+}
-+
-+kernel::of_device_table!(
-+    OF_TABLE,
-+    MODULE_OF_TABLE,
-+    <CPUFreqDTDriver as platform::Driver>::IdInfo,
-+    [(of::DeviceId::new(c_str!("operating-points-v2")), ())]
-+);
-+
-+impl platform::Driver for CPUFreqDTDriver {
-+    type IdInfo = ();
-+    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-+
-+    fn probe(
-+        pdev: &platform::Device<Core>,
-+        _id_info: Option<&Self::IdInfo>,
-+    ) -> Result<Pin<KBox<Self>>> {
-+        cpufreq::Registration::<CPUFreqDTDriver>::new_foreign_owned(
-+            pdev.as_ref(),
-+            c_str!("cpufreq-dt"),
-+            (),
-+            cpufreq::flags::NEED_INITIAL_FREQ_CHECK | cpufreq::flags::IS_COOLING_DEV,
-+            true,
-+        )?;
-+
-+        let drvdata = KBox::new(Self {}, GFP_KERNEL)?;
-+
-+        Ok(drvdata.into())
-+    }
-+}
-+
-+module_platform_driver! {
-+    type: CPUFreqDTDriver,
-+    name: "cpufreq-dt",
-+    author: "Viresh Kumar <viresh.kumar@linaro.org>",
-+    description: "Generic CPUFreq DT driver",
-+    license: "GPL v2",
-+}
--- 
-2.31.1.272.g89b43f80a514
+> -----Original Message-----
+> From: Arnd Bergmann <arnd@kernel.org>
+> Sent: Friday, April 11, 2025 4:59 PM
+> To: Bough Chen <haibo.chen@nxp.com>; Adrian Hunter
+> <adrian.hunter@intel.com>; Ulf Hansson <ulf.hansson@linaro.org>; Shawn
+> Guo <shawnguo@kernel.org>; Sascha Hauer <s.hauer@pengutronix.de>;
+> Luke Wang <ziniu.wang_1@nxp.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>; Pengutronix Kernel Team
+> <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>; Josua
+> Mayer <josua@solid-run.com>; imx@lists.linux.dev; linux-
+> mmc@vger.kernel.org; dl-S32 <S32@nxp.com>; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: [EXT] [PATCH] [v2] mmc: esdhc-imx: convert to modern PM_OPS
+>=20
+> Caution: This is an external email. Please take care when clicking links =
+or
+> opening attachments. When in doubt, report the message using the 'Report
+> this email' button
+>=20
+>=20
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> Two newly added functions are unused in configurations without
+> power management support:
+>=20
+> drivers/mmc/host/sdhci-esdhc-imx.c:1586:13: error: unused function
+> 'sdhc_esdhc_tuning_save' [-Werror,-Wunused-function]
+>  1586 | static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
+>       |             ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/mmc/host/sdhci-esdhc-imx.c:1608:13: error: unused function
+> 'sdhc_esdhc_tuning_restore' [-Werror,-Wunused-function]
+>  1608 | static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> Remove the #ifdef checks and instead use the better macros that
+> silently drop the unused functions when PM is disabled. This also
+> requires using pm_ptr() to eliminate both the runtime and pm_sleep
+> operations.
+>=20
+> Fixes: 3d1eea493894 ("mmc: sdhci-esdhc-imx: Save tuning value when card
+> stays powered in suspend")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: add pm_ptr()
+> ---
+>  drivers/mmc/host/sdhci-esdhc-imx.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-
+> esdhc-imx.c
+> index 7e8addaed697..3c2e50d0260d 100644
+> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> @@ -1942,7 +1942,6 @@ static void sdhci_esdhc_imx_remove(struct
+> platform_device *pdev)
+>         sdhci_pltfm_free(pdev);
+>  }
+>=20
+> -#ifdef CONFIG_PM_SLEEP
+>  static int sdhci_esdhc_suspend(struct device *dev)
+>  {
+>         struct sdhci_host *host =3D dev_get_drvdata(dev);
+> @@ -2021,9 +2020,7 @@ static int sdhci_esdhc_resume(struct device *dev)
+>=20
+>         return ret;
+>  }
+> -#endif
+>=20
+> -#ifdef CONFIG_PM
+>  static int sdhci_esdhc_runtime_suspend(struct device *dev)
+>  {
+>         struct sdhci_host *host =3D dev_get_drvdata(dev);
+> @@ -2103,11 +2100,10 @@ static int sdhci_esdhc_runtime_resume(struct
+> device *dev)
+>                 cpu_latency_qos_remove_request(&imx_data->pm_qos_req);
+>         return err;
+>  }
+> -#endif
+>=20
+>  static const struct dev_pm_ops sdhci_esdhc_pmops =3D {
+> -       SET_SYSTEM_SLEEP_PM_OPS(sdhci_esdhc_suspend,
+> sdhci_esdhc_resume)
+> -       SET_RUNTIME_PM_OPS(sdhci_esdhc_runtime_suspend,
+> +       SYSTEM_SLEEP_PM_OPS(sdhci_esdhc_suspend, sdhci_esdhc_resume)
+> +       RUNTIME_PM_OPS(sdhci_esdhc_runtime_suspend,
+>                                 sdhci_esdhc_runtime_resume, NULL)
+>  };
+>=20
+> @@ -2116,7 +2112,7 @@ static struct platform_driver
+> sdhci_esdhc_imx_driver =3D {
+>                 .name   =3D "sdhci-esdhc-imx",
+>                 .probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+>                 .of_match_table =3D imx_esdhc_dt_ids,
+> -               .pm     =3D &sdhci_esdhc_pmops,
+> +               .pm     =3D pm_ptr(&sdhci_esdhc_pmops),
+>         },
+>         .probe          =3D sdhci_esdhc_imx_probe,
+>         .remove         =3D sdhci_esdhc_imx_remove,
+> --
+> 2.39.5
 
