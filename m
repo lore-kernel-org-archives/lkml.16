@@ -1,162 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71471F4CB3;
-	Fri, 11 Apr 2025 14:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4340B73176;
+	Fri, 11 Apr 2025 14:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380642; cv=none; b=GxIFsHAlpM09ZNvFB+eMKx4V+MdcO7InkKjywNYXrK0/u5GIU2TDGfOoXZFNoPsRnL5kmYsQu7ogV1eat3ReIIXfhv4HpimccF09PO2T0x81gO9ZS99HFiPOGHkJg3U54X9q0j3HjQoeKs/OhPVAgFVoTH4Hi9Yzcm4Fl5/5WeU=
+	t=1744380678; cv=none; b=WV+0UL/thZu497l0Tq5w3hgWbzSzdsGxA4eF/ZjJy5i8aHYjsdEp3DjMfJVJWfc4ouoIcQCy0fcVE7EWiSO7TqcjVainmGidLhWqzyzYvoibGGakaK7qGktWxy8BMu1E2uDYVOPFOyCOx5UpKVp1WSsZKHf3rBUuaBdGLxFmGyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380642; c=relaxed/simple;
-	bh=5Eb5RD9S+/4Z7ayBspoUl784FepXgYv3Qj7qRiSwiD0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m68S6dPG0Td/NiJwdlI2TWEJhjETq/mA7TWQWDuFiAGRHIbQ2ixvcX+79uLzLna2LbHMIXqxunxqx3QGSuk5sv81VJtsWr9QGEtHAVQP5JoSyIcDCQINX0jubskOKTFkRe0xMJJsJ0jGysO5hQCfWNNcAw+E7MzS2/dTtHXrAmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXeYcm3L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744380678; c=relaxed/simple;
+	bh=utYbBrYPoRUDvsbORVJKE/czl807hlT3LrLfbDGlSa0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TugM4W85hCfHP4sLpXJlThiDBQ3LoX0AF3ftrxN6gEk7ITkX0UBbjsSdtHL1WWdjrej6UPoK4AKlB48ydjzJ8h4PAhoEggbXhA9CPjCUo3SB64bEQg2Ff3CXj4rTDxrfDgnmHc2cb+rHjGMiAO+z9JiooMen/LYkpCu2i4d3Fq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jh3XHA50; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXeYcm3L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 085E1C4AF09;
-	Fri, 11 Apr 2025 14:10:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jh3XHA50"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26543C4CEE2;
+	Fri, 11 Apr 2025 14:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744380642;
-	bh=5Eb5RD9S+/4Z7ayBspoUl784FepXgYv3Qj7qRiSwiD0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OXeYcm3L3HtOb6tuGbt14vjqwcvVWer8dhwuujD2hbrlpB74U+3zFwpxLXskZHg9d
-	 9nZFGv5terekbBwSbYMEdcsRYoLUD747BMeyNPH9YgDcstY6hHsBhhTINWJrZV9dyY
-	 GeljF2Pu5PxNRHpsMhuQC9WoU1uaBnhP46R8rGnosYwVBn290vMi84u4L5i0slpP+i
-	 XafqPMYHLPS/A5ck6WNHHhvMKv69wTQKj/WvVnxfraVBudnE4HWQKpzEz5xbbTzp/K
-	 VpW8sLDJzh6KA57XRSyaR5TDe27smh9G7IoOaXcLEK0KzblqR0qOJrHrzkHph+2K9W
-	 em9/sqxRn4QNg==
-Message-ID: <c81c2e8cc891bc07ed81eb5e89a3951aa77d3bdc.camel@kernel.org>
-Subject: Re: [PATCH v2 1/2] nfs: don't share pNFS DS connections between net
- namespaces
-From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Omar Sandoval <osandov@osandov.com>, Sargun Dillon <sargun@sargun.me>,
- linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Fri, 11 Apr 2025 10:10:40 -0400
-In-Reply-To: <1587C44B-7BDE-4B36-8CE6-C654CB154228@redhat.com>
-References: <20250410-nfs-ds-netns-v2-0-f80b7979ba80@kernel.org>
-	 <20250410-nfs-ds-netns-v2-1-f80b7979ba80@kernel.org>
-	 <1587C44B-7BDE-4B36-8CE6-C654CB154228@redhat.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=k20201202; t=1744380678;
+	bh=utYbBrYPoRUDvsbORVJKE/czl807hlT3LrLfbDGlSa0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jh3XHA50/lDICnVreaMYYiyo8FsZpvMcKDkfworAzN4DqOTXlqbDO5Y2uPTbUiijQ
+	 SEGPdnIQGsmDWs+YlzWSqN9W+tPjW3zSkJTxHyT+guqnOxVALno9U/+H1tKlniByHV
+	 4xFZxd0TP23uABdrn5UFWV35DPUj9RN4DsG3dKsE+qFfc5rgV/vOAP4vjQTRtxdYnN
+	 BxuPQJ0V2X2qEgy9GbUp24sE8HAejNEtFtH2pXOzRGM9kKZaeD3/NrJKdKVRuZrWuK
+	 CWw1BvRgKZqF+M377cHSbzk7rTsoXl68KgAmhUDhuYTPjyfIbyPAk5KYC/x/HcvXCt
+	 nJsYzSlCWhFxw==
+From: Christian Brauner <brauner@kernel.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH RFC] fs/fs_context: Use KERN_INFO for infof()|info_plog()|infofc()
+Date: Fri, 11 Apr 2025 16:11:05 +0200
+Message-ID: <20250411-addition-preis-020bf25053e4@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250410-rfc_fix_fs-v1-1-406e13b3608e@quicinc.com>
+References: <20250410-rfc_fix_fs-v1-1-406e13b3608e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=967; i=brauner@kernel.org; h=from:subject:message-id; bh=utYbBrYPoRUDvsbORVJKE/czl807hlT3LrLfbDGlSa0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/VGZo8b4kuu9/iJJXTP3cMK/9iy6rP1B/6s7VcXrXD ulIi3lzOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYiLcnwP5nhrqCn9T0r5d05 LJ2/jaRZ5Jt2XwxhU//ZarBP8lehKiPDblZ+Y41TFbf2Hk0vYNmuf+1ppf7yjwf32T2/cy/k8+V KNgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-04-11 at 09:57 -0400, Benjamin Coddington wrote:
-> On 10 Apr 2025, at 16:42, Jeff Layton wrote:
->=20
-> > Currently, different NFS clients can share the same DS connections, eve=
-n
-> > when they are in different net namespaces. If a containerized client
-> > creates a DS connection, another container can find and use it. When th=
-e
-> > first client exits, the connection will which can lead to stalls in
->=20
->                                          ^^ close ?
->=20
+On Thu, 10 Apr 2025 19:53:03 +0800, Zijun Hu wrote:
+> Use KERN_INFO instead of default KERN_NOTICE for
+> infof()|info_plog()|infofc() to printk informational messages.
+> 
+> 
 
-Yes, thanks. Trond/Anna, can you fix before merging?
+Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.misc branch should appear in linux-next soon.
 
-> > other clients.
-> >=20
-> > Add a net namespace pointer to struct nfs4_pnfs_ds, and compare those
-> > value to the caller's netns in _data_server_lookup_locked() when
-> > searching for a nfs4_pnfs_ds to match.
-> >=20
-> > Reported-by: Omar Sandoval <osandov@osandov.com>
-> > Reported-by: Sargun Dillon <sargun@sargun.me>
-> > Closes: https://lore.kernel.org/linux-nfs/Z_ArpQC_vREh_hEA@telecaster/
-> > Tested-by: Sargun Dillon <sargun@sargun.me>
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->=20
-> Looks good to me,
->=20
-> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
->=20
-> Ben
->=20
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Thank you!
---=20
-Jeff Layton <jlayton@kernel.org>
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.misc
+
+[1/1] fs/fs_context: Use KERN_INFO for infof()|info_plog()|infofc()
+      https://git.kernel.org/vfs/vfs/c/916148d24d77
