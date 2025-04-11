@@ -1,279 +1,140 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2048.outbound.protection.outlook.com [40.107.220.48])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA44F1CEACB;
-	Fri, 11 Apr 2025 07:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357693; cv=fail; b=A0t/XRalXUQjjCRx1OYV+qB/1nTH3Mh1lwjld/RZI+vXWbkOolQqdgvyAslnM4mrBvLHjS7DiKKFOWptLgQSdL8Hc/WV3Jrafd+pJsrQV173FZA+SylihH+eP5wOjvrDhz/GNABJQR0DGknjzr8gsYJGpFyErsLOXnopxcelUrg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357693; c=relaxed/simple;
-	bh=dxxwTqZ0pmoA55d3YDPX0Z8GV1YM16E4aAa074wyacs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WC7xPregKoZV3oy6PD6aUXuAQxMFNi4MjD4/nmn1ErbkUvWuVJYToMdg71ld80UXjhUuUWlecBuOmx+2YL7brfPTd3TV4xg/e2lR4fSy7zLiw9VlR1EsoMMKo58mH/67taoHS99t1Zc5OTZyTaQ0GPIomPcAVhvt+uO0XZPME/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NDwuxaWp; arc=fail smtp.client-ip=40.107.220.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D1C293473;
+	Fri, 11 Apr 2025 07:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744357701; cv=none; b=gV5K/Qk123wp1ZIkZiSRq7Su5BJEX0CgdgtTfwuVGFpJFxtpK23J9O91UmdVvmdr4Vkr2EmLtYz3q2GQtPIqzlb8SxawmkJNYlRkzQOae14Xpw7bWFHZekC6CVQiXeaDlBx2n5y+53OjbaydNImckS9WSZa3iEHEvdf57zOJ7bo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744357701; c=relaxed/simple;
+	bh=hiZDW/wltbaeVUflk1SbUDv/+7af9kZO5nsD9Vb9I9w=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=FrMg+E+gZcY/HQfLhL3BXhIb6OObnKlDnObRwPiNcPyX2nH5WtVNzYfZgQu3XD0CNhjYs5jvKA0b/WCsYAOE8pTBmSubpSd9Y0Sq41QnM2R6wYXb4kA6Ere7CRl1tWvOWPlcvRELiQXUaPzjJ0V5Put9xN7PYPyEiCrXpAQS41o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=HauYklEs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pfvfCZZA; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NDwuxaWp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uAHAFvqaUN9e44EMhkDr6QqHTq92bo7I0yFytDd+C1gr3jwplrB0tDt4s8f4NgzorTZpRQRKfE8d9LVjJ4X71BTVny0GyJnobqC+uY6GTF8caNT1cID9UClikPgMZoot/XaMbG5XTZt1uVCdRL6s+Vd5fJQqbTJ5AZqF+z+kE27VbkBPku/gLAqKmQjlmP6oC4Qo3xhQmSwMxNqJh674/QnvAq6swV+Q4b+YMmiGvdGMM7Hc4zEvfaZUAohNzLmF5B1F6+9S6iIEhXwJmccWKCoYufpuMH0oI1Paprvruw68GnSThR9tcI7NQTFMk4BWIcwAN6krVndPwf4tZkX6bA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9oqrF0dTSsULB44KUI7GFe0malehQY0HMNPfTYLPDNI=;
- b=lOSHyKryZkSvz7J2/rxJ7zJiEYAYLSloSZsTPgSTy4VDEXOh208gKO0AgH/yM0GfYok0EexNTf/XZENSR96Ystpdllw2wpYtEA4keLbIr8shtCV+djTQEiKCr1Lcr0toQ4rQnW+cKnUArHAeL2/Jfn2ikuTu6GPMAUrhohir4a95j3o8PF+Hd+WAZzDTibTeX54ggStyQkljySHHDlfqr7geX9Y8w+hRnlMiVXBM6rJYAQbiWWQ5BznhEHPY924T+uRDo62LJ/D2ZVuxMqYxkPMz0jThGJvlKICjUsfn6rrGMxA5vk51KoGLJn9hgV6nMTUxkTlHF8nGmqPocx3z0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9oqrF0dTSsULB44KUI7GFe0malehQY0HMNPfTYLPDNI=;
- b=NDwuxaWp7uOx+F1opW4jMvjscRHNLSreY/c2LxUHKyxk3p4Or71qOgpf7VQ5gL1JsQawjnPaak+lhZ53167JBSDLw5JqO9jBeAFX9g+AVvpW10UJrWFrsPtzJbagyGtjzWePhm2wVSFEu8U+pkr5T9Zblh52WI0Yq96LJ13q7fM=
-Received: from BY3PR05CA0049.namprd05.prod.outlook.com (2603:10b6:a03:39b::24)
- by DS7PR12MB5981.namprd12.prod.outlook.com (2603:10b6:8:7c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Fri, 11 Apr
- 2025 07:48:07 +0000
-Received: from SJ5PEPF000001CF.namprd05.prod.outlook.com
- (2603:10b6:a03:39b:cafe::fb) by BY3PR05CA0049.outlook.office365.com
- (2603:10b6:a03:39b::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.19 via Frontend Transport; Fri,
- 11 Apr 2025 07:48:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001CF.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8632.13 via Frontend Transport; Fri, 11 Apr 2025 07:48:07 +0000
-Received: from [10.136.43.133] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Apr
- 2025 02:48:03 -0500
-Message-ID: <d6ccf531-2ed0-4e38-97a5-2b747497fadb@amd.com>
-Date: Fri, 11 Apr 2025 13:17:53 +0530
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="HauYklEs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pfvfCZZA"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id DFD091380233;
+	Fri, 11 Apr 2025 03:48:15 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Fri, 11 Apr 2025 03:48:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744357695;
+	 x=1744444095; bh=C8qu2/USiUBNgma963cXFWLigmWdQNWUtuAfEatWw0I=; b=
+	HauYklEsZ9hrL1e3fm9iPKdqWoVA1FvunJ30bfP6OfcBuWZyDudpzWS/znRQ+lVH
+	QC0AkSJ2jK5RjasHh+MwXX4tloI4xxBbIw6uYjto8oEsatmN+2qwpQalDXFw7h/P
+	6KKS4FrgjuLtI+SXrcA15ejduEbvb8I2XOCmfCIgLVNqd7Ap7BSmZisrF4h0Bo3U
+	W2rsPLzgqGr9H4Nurwyt/GPtCySuwzLMQMBTCktDGJIbrj/is59KSNx3//YluPkN
+	21QWRjj24COVXTAsTuzr4dCDtUPuzEolR5lVyB+kHjwrcyxWV9yayYccG3FClACf
+	zrIVMUdho/QT3xA21E8qXA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744357695; x=
+	1744444095; bh=C8qu2/USiUBNgma963cXFWLigmWdQNWUtuAfEatWw0I=; b=p
+	fvfCZZArAJv7MOKq1wBMQZi+CqNWPQdPBe10NDTHoDYYE5cOpaC7f1otoqlvbytg
+	Lr+iUrp/Fl+fGsmrNlMQHNcpc1u4TPuilzLT096Ya/rIz4CREjV4hqBYCAZIh29Z
+	rqJbcri7EvXQbMb1YjfjWXhu6hvOUoic1u49qXOerJPEeW/zor0fewFI9MeLbxY2
+	dvN2MBTh7TboCJxllDyKsq9EGX/Sqq2UVw15cmrzKcJdz/8EB10tXwyJbkDudLgG
+	nDCWrAiiOO5Dc2JavRYbSmeVlY+ceKLV73UQtSijQMvWU1IAo9bHlmPuq3Di3Lv4
+	r/NG5BLfOKu3HguXOrvWg==
+X-ME-Sender: <xms:P8n4ZyjOr6qqMB2Ezs-vUXYVm2xqP3Vq5HW5dGpjwui2spyPVGKOsg>
+    <xme:P8n4ZzDT6KQyFa1S-ENJgbKSphwBo_skiwvshBUSZe5Hz9H-3F8dkhUiOF8QxGNE7
+    STONWECAoPA25BB7Ag>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduvdehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    udefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsvghrghhiohdrtgholhhlrg
+    guohesghhmrghilhdrtghomhdprhgtphhtthhopegurghvihgughhofiesghhoohhglhgv
+    rdgtohhmpdhrtghpthhtoheprhhmohgrrhesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
+    epshhmohhsthgrfhgrsehgohhoghhlvgdrtghomhdprhgtphhtthhopehpvghtvghriies
+    ihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepjhhpohhimhgsohgvsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehmrghsrghhihhrohihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnrghthhgrnh
+    eskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:P8n4Z6Fjf6wx4q2gTRIQ8AW4uRhfNP0sMaNU0J6TkcPOiav34hlWJA>
+    <xmx:P8n4Z7R9D6GcxQX_PlZmPCAB_StZEol_ldDPRV6QqBvjMPss0HvxVQ>
+    <xmx:P8n4Z_wBvLQzChsF4rjtD5RMBjbQs-kfm2V_o6VNfCzcGnYPzY2Rcw>
+    <xmx:P8n4Z57cC7uUJfDPlzx07Hj_EWLLXt2kSp5SJZaShB2PWCNRIZlzrw>
+    <xmx:P8n4Z5AAVl4teAB79TKtwOprOqGBFyjfqYALVOALeX0NxA_nXjlbE0pJ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 463372220073; Fri, 11 Apr 2025 03:48:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/67] KVM: SVM: Track per-vCPU IRTEs using
- kvm_kernel_irqfd structure
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
-	<pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, David Woodhouse
-	<dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
-CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Joao
- Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
-References: <20250404193923.1413163-1-seanjc@google.com>
- <20250404193923.1413163-10-seanjc@google.com>
-Content-Language: en-US
-From: "Arun Kodilkar, Sairaj" <sarunkod@amd.com>
-In-Reply-To: <20250404193923.1413163-10-seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+X-ThreadId: Td3151a787cba798d
+Date: Fri, 11 Apr 2025 09:47:51 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Peter Zijlstra" <peterz@infradead.org>,
+ "Josh Poimboeuf" <jpoimboe@kernel.org>
+Cc: "Arnd Bergmann" <arnd@kernel.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>, "Rae Moar" <rmoar@google.com>,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>,
+ "David Gow" <davidgow@google.com>, "Nathan Chancellor" <nathan@kernel.org>,
+ "Nicolas Schier" <nicolas.schier@linux.dev>,
+ "Mostafa Saleh" <smostafa@google.com>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <0073e739-e3aa-4743-ad2d-29d7c969f454@app.fastmail.com>
+In-Reply-To: <20250411065054.GM9833@noisy.programming.kicks-ass.net>
+References: <20250328112156.2614513-1-arnd@kernel.org>
+ <ycgbf7jcq7nc62ndqiynogt6hkabgl3hld4uyelgo7rksylf32@oysq7jpchtp4>
+ <20250411065054.GM9833@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH] scripts/mksysmap: skip objtool __pfx_ symbols
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CF:EE_|DS7PR12MB5981:EE_
-X-MS-Office365-Filtering-Correlation-Id: f535272b-858a-4683-327b-08dd78cd32c0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UTM4RVlLamtoaUZpVFArRWR4WGxCS2lSUlgvZ0tvTERWL0JUa3kzMWlGblpK?=
- =?utf-8?B?VzcxWGRIMWlSNkdZMy9aaHR5UWduSTRSM3pEdm1oMFQweGFsTGlkcUovZzI3?=
- =?utf-8?B?dGVHZGZLM3VIZnZVRUl5NkRiN1pvN3FMV2JlQWJCREluSktSeFRnMk9RNzlV?=
- =?utf-8?B?cVk5SVk1a0xsWERlV0JIOXM5TzFvV1FFSVhhcVByUHpzQk90YmQyeG01ck92?=
- =?utf-8?B?MDVWbkMrcVl4YlErUGFpRm03SDN4V2tJTUdycytzRUZ5SGgxeTA5SmJyVmdw?=
- =?utf-8?B?Mk1ydlBuVk5qdWVMMHNuV29TMFRzT0R2MkFldm9SM2xPOXdDSE5GMVBITTUr?=
- =?utf-8?B?eWx4Ky9DZUZoVHdxc0ZMRDVzMllpWU1mWDEzd2hBRTBNY2UydFMyUEZud1c4?=
- =?utf-8?B?WFNTc20vTFY5MVRDMVFhUzQ4dEtRZC9GNHhiMDgyN3Fjdk5YT1FSK1I5OVRu?=
- =?utf-8?B?RndSZndOaVg1bG4ydUlrMEIyRDBnVzdjb0FwK3lpc3dLZE9Va1hmL0JFV1lx?=
- =?utf-8?B?ZzE4aSszYXc5RXZ1eUVyaDBsd3VnaWErUDhWRkl0bTh3SDRkOFBLUVc0U2ly?=
- =?utf-8?B?cDZybTJZNDEyempVWHNYamc4TkE5UGhNQnhENWtHNDU3Ukp0cGFjRW9YR1R2?=
- =?utf-8?B?MlN3YW5JMC9IQjFQbTV0c1U3aW5EeFBBNXJ6aXFWRGVSeURwUThyUjJDQ0Zn?=
- =?utf-8?B?a1cwdUhVa0FGZncyT09jQVRiRVFwV2lWVXdRb0Q1enBxejhnZ0p1T0ZUTmNB?=
- =?utf-8?B?QlJQanU2aEY3SHZ0Z0JYdjE5UmJzWFg4cGNhTVh1aUxiUVh1WEoydkd5Nk9Y?=
- =?utf-8?B?VE1sczMwQ0hKdURGaG9UUGZlbkRXUkMrcGJCS1hxdGdMTjh3eDRMeElTY3N2?=
- =?utf-8?B?WDJOcHJhUHcwbHlPTE5QZVFrSGhkZitFWUFGYlNQZE9odmMxczBxMVRmOWsv?=
- =?utf-8?B?dC8rc2R4TE1XMCtSYXpnVzlyZVVvSVlMZVZ5R2RJWFM4RGZDR3c5c3pTcVhQ?=
- =?utf-8?B?NThOUU04RTVsRjZkV3hablFNZDRZc1lmT29QTGFiU0REaUtBb1pRS2s5TWkr?=
- =?utf-8?B?YzNrQUVTSGM4L0ppbUdGR05wQjB6bGhQNUdodVArUEJDVm5leFg0akx6M05o?=
- =?utf-8?B?NFRmUk02SmZoZUZybWJBNU1OeXQxU2Vndy9oeUxVV0pxWmlTd1djMFN4czNm?=
- =?utf-8?B?K00wSCtjOW9LNjQrU3B1SDBHL2p6TDRyTEJxcThqYUhScHRZWnBzaHJRYnJw?=
- =?utf-8?B?Q2w0dUwrSWFNS2ZKZ2R5RXBENTlwMU52TC96cU9OT2RjaDl1Tkx6ZWUxeFhB?=
- =?utf-8?B?WnlKQlFnODV6S0NMQ0pjcGpNMDZZaGFCT2hxcWlnYi94REdZWXowUUpjdzlk?=
- =?utf-8?B?c3g4NVRCMDliZU1hbjBhb21ha1pJZklxTFFTdmQ4aGRqMGxUSXZYcUVjTVMr?=
- =?utf-8?B?eTJsWmNnem1pUmZaQ2cvU2Q0MHhDVVBRQmlueVgvdG90cFdOcGlESWZGL1VS?=
- =?utf-8?B?L1Y1dXJMejhOMVpGM0RWNGtuejg1b2o1eUlBVkovVm9nSmJZbWtKdFlGNW9O?=
- =?utf-8?B?UG55dWFIeUJNMGVxUXlHcVZtTVM4aklma1htcTVZaFhMeUN4VHBHODBDNVd4?=
- =?utf-8?B?WDhQc0Jzd2E3aXkxM0UyV1lYU013V3h2RDhicWtZWlRtRFlDaFlJRlp3cmFo?=
- =?utf-8?B?cC80Ui9kdGxQNU9penI0NmwzOTJma0crU2l0TmZzNW5YMmxPS0xVa3UyTHVV?=
- =?utf-8?B?cVIxZFBpSXBmQWpUcFJoUkJtTzZqc1REV0o3cXE1a2s1ZTBuTmk4dnJTUC94?=
- =?utf-8?B?NjVqYm5wYWFDMi9vL0RIVEJCSlZMTnFvSmVUMWdFUkVyS3pPNXdhUGsyUkkw?=
- =?utf-8?B?V3JrQjI5VHdmakFOQ2RFR2FIeFRSeURGbkthT20rNnFOcHFIYzZlVWwybjA5?=
- =?utf-8?B?K29oLzNwblVxaGk5angvQnRmVkhTRVkvdVF3b2QyYWM2OEgrbTBXTzdXSFpP?=
- =?utf-8?B?akJ6TnRSZzB5eXJPVHQ1TWR2ZEk4bkEvMUlVNGJtSDJoSkNNU0xSWk9yTFVQ?=
- =?utf-8?Q?AEXANV?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 07:48:07.0157
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f535272b-858a-4683-327b-08dd78cd32c0
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001CF.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5981
 
-On 4/5/2025 1:08 AM, Sean Christopherson wrote:
-> Track the IRTEs that are posting to an SVM vCPU via the associated irqfd
-> structure and GSI routing instead of dynamically allocating a separate
-> data structure.  In addition to eliminating an atomic allocation, this
-> will allow hoisting much of the IRTE update logic to common x86.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/svm/avic.c   | 49 ++++++++++++++++-----------------------
->   include/linux/kvm_irqfd.h |  3 +++
->   2 files changed, 23 insertions(+), 29 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> index 04dfd898ea8d..967618ba743a 100644
-> --- a/arch/x86/kvm/svm/avic.c
-> +++ b/arch/x86/kvm/svm/avic.c
-> @@ -774,27 +774,30 @@ static int avic_set_pi_irte_mode(struct kvm_vcpu *vcpu, bool activate)
->   	return ret;
->   }
->   
-> -static void svm_ir_list_del(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
-> +static void svm_ir_list_del(struct vcpu_svm *svm,
-> +			    struct kvm_kernel_irqfd *irqfd,
-> +			    struct amd_iommu_pi_data *pi)
->   {
->   	unsigned long flags;
-> -	struct amd_svm_iommu_ir *cur;
-> +	struct kvm_kernel_irqfd *cur;
->   
->   	spin_lock_irqsave(&svm->ir_list_lock, flags);
-> -	list_for_each_entry(cur, &svm->ir_list, node) {
-> -		if (cur->data != pi->ir_data)
-> +	list_for_each_entry(cur, &svm->ir_list, vcpu_list) {
-> +		if (cur->irq_bypass_data != pi->ir_data)
->   			continue;
-> -		list_del(&cur->node);
-> -		kfree(cur);
-> +		if (WARN_ON_ONCE(cur != irqfd))
-> +			continue;
-> +		list_del(&irqfd->vcpu_list);
->   		break;
->   	}
->   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
->   }
->   
-> -static int svm_ir_list_add(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
-> +static int svm_ir_list_add(struct vcpu_svm *svm,
-> +			   struct kvm_kernel_irqfd *irqfd,
-> +			   struct amd_iommu_pi_data *pi)
->   {
-> -	int ret = 0;
->   	unsigned long flags;
-> -	struct amd_svm_iommu_ir *ir;
->   	u64 entry;
->   
->   	if (WARN_ON_ONCE(!pi->ir_data))
-> @@ -811,25 +814,14 @@ static int svm_ir_list_add(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
->   		struct kvm_vcpu *prev_vcpu = kvm_get_vcpu_by_id(kvm, vcpu_id);
->   		struct vcpu_svm *prev_svm;
->   
-> -		if (!prev_vcpu) {
-> -			ret = -EINVAL;
-> -			goto out;
-> -		}
-> +		if (!prev_vcpu)
-> +			return -EINVAL;
->   
->   		prev_svm = to_svm(prev_vcpu);
-> -		svm_ir_list_del(prev_svm, pi);
-> +		svm_ir_list_del(prev_svm, irqfd, pi);
->   	}
->   
-> -	/**
-> -	 * Allocating new amd_iommu_pi_data, which will get
-> -	 * add to the per-vcpu ir_list.
-> -	 */
-> -	ir = kzalloc(sizeof(struct amd_svm_iommu_ir), GFP_ATOMIC | __GFP_ACCOUNT);
-> -	if (!ir) {
-> -		ret = -ENOMEM;
-> -		goto out;
-> -	}
-> -	ir->data = pi->ir_data;
-> +	irqfd->irq_bypass_data = pi->ir_data;
->   
->   	spin_lock_irqsave(&svm->ir_list_lock, flags);
->   
-> @@ -844,10 +836,9 @@ static int svm_ir_list_add(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
->   		amd_iommu_update_ga(entry & AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK,
->   				    true, pi->ir_data);
->   
-> -	list_add(&ir->node, &svm->ir_list);
-> +	list_add(&irqfd->vcpu_list, &svm->ir_list);
->   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
-> -out:
-> -	return ret;
-> +	return 0;
->   }
->   
->   /*
-> @@ -951,7 +942,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   			 * scheduling information in IOMMU irte.
->   			 */
->   			if (!ret && pi.is_guest_mode)
-> -				svm_ir_list_add(svm, &pi);
-> +				svm_ir_list_add(svm, irqfd, &pi);
->   		}
->   
->   		if (!ret && svm) {
-> @@ -991,7 +982,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   
->   			vcpu = kvm_get_vcpu_by_id(kvm, id);
->   			if (vcpu)
-> -				svm_ir_list_del(to_svm(vcpu), &pi);
-> +				svm_ir_list_del(to_svm(vcpu), irqfd, &pi);
->   		}
->   	} else {
->   		ret = 0;
-> diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
-> index 8ad43692e3bb..6510a48e62aa 100644
-> --- a/include/linux/kvm_irqfd.h
-> +++ b/include/linux/kvm_irqfd.h
-> @@ -59,6 +59,9 @@ struct kvm_kernel_irqfd {
->   	struct work_struct shutdown;
->   	struct irq_bypass_consumer consumer;
->   	struct irq_bypass_producer *producer;
-> +
-> +	struct list_head vcpu_list;
-> +	void *irq_bypass_data;
->   };
->   
->   #endif /* __LINUX_KVM_IRQFD_H */
+On Fri, Apr 11, 2025, at 08:50, Peter Zijlstra wrote:
+> On Tue, Apr 08, 2025 at 06:58:49PM -0700, Josh Poimboeuf wrote:
+>> On Fri, Mar 28, 2025 at 11:48:19AM +0100, Arnd Bergmann wrote:
+>> 
+>> For example, FineIBT writes code in the __pfx area which can trigger an
+>> #UD.  And we'd want a sane backtrace for that.
+>
+> On top of that, clang kcfi builds do a similar thing, they will generate
+> __cfi_ prefixed symbols.
+>
+> And yes, those symbols exist for a reason, there is code there under
+> various circumstances and backtraces look really weird without these
+> symbols on -- notably the code in the prefix will be attributed to
+> whatever symbol comes before, most confusing.
+>
+> So yeah, don't remove these symbols, and fix the kunit test.
 
-Hi Sean,
-You missed to update the functions avic_set_pi_irte_mode and
-avic_update_iommu_vcpu_affinity, which iterate over the ir_list.
+kallsyms already removes some CFI symbol names based on regular
+expressions:
 
-Regards
-Sairaj Kodilkar
+# CFI type identifiers
+/ __kcfi_typeid_/d
+/ __kvm_nvhe___kcfi_typeid_/d
+/ __pi___kcfi_typeid_/d
+
+Do you think it should not remove some of them?
+
+I ran into another problem with generated symbols that I don't
+understand yet, and added this line to avoid the build failures:
+
+/ _GLOBAL__sub_/d
+
+This one is 534 characters long:
+_GLOBAL__sub_I_65535_1_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n
+
+      Arnd
