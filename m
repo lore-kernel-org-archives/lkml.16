@@ -1,131 +1,102 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FF827CCFC
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8079367
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744352156; cv=none; b=RYkKwOAj0eK+dzkCVifcOkwqTUjf0dTvActdn/Kf6JsSuTJcHTN2wZNi7PCeo8RY3H1FsQrwgaFVe04V83wLbvBR3REUCcI/mPPxDl/+o6SwCw1W7C05LHSoGwSfZlswoD3k+tn61TfbgP737VMR/MZmXSmrnHwJcz8W0T9whgc=
+	t=1744352497; cv=none; b=FP0EvY99Ia+uxOFD8OBFf5XdklmHo24Wxlmx4Ct1CBBsrhDHl8FgML0CevsGgvb4sD2mux7v8h/Qwfc+ZqwTjXZ7CeCxAezfoTiBtgLQH2uJZAoJEMkmHajmpYslKm4fzpRnbPVxan1mhmqMTH8olz0+up9WJEenywPk78hCF6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744352156; c=relaxed/simple;
-	bh=WEpiHiznWpAqCg0Q4zJ7VdWdknAkd3kpvJJ/H9iP7MM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Q4IVyjWfExGiScHtoHU+MA1Rw0aL9GzgDF0WL9+wV7KcJP91mFnTaX4DXPQNG8dIMcESUIx1SBeMNIoIIuORClrRRzQiv3ex4HfldTo2NNe8VdUQ2n9G3Mo7q+h00tTjwiO6NiGnJCU+UxulDeBAEts7kjQwvMJ2LYK1MUdtlcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=JRWukqIf; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="JRWukqIf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744352144; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=S0VfXWGHPH5LSwgQh/k4+cmjq4OOTI5xXI/EGgIhxWw=;
-	b=JRWukqIfPp2EPiUgQaPgx1elazUqHDNJIsVpS2VvAZrpqAawmHZntzUNAmKRiwWE4LIS8eM/r14JvTlgCSY7HxER7kv4ihbxDgYawNdiid3OrN/VdaxFuKRQJ9gRpBTctKDf8dNp7JR9Fy+NKZ8WHQ1xef3HQplL3wRmwC4IT38=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WWSVhJv_1744352142 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 11 Apr 2025 14:15:43 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Raghavendra K T <raghavendra.kt@amd.com>, Nikhil Dhama
- <nikhil.dhama@amd.com>
-Cc: akpm@linux-foundation.org,  bharata@amd.com,
-  raghavendra.kodsarathimmappa@amd.com,  oe-lkp@lists.linux.dev,
-  lkp@intel.com,  Huang Ying <huang.ying.caritas@gmail.com>,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,  Mel Gorman
- <mgorman@techsingularity.net>
-Subject: Re: [PATCH v3] mm: pcp: increase pcp->free_count threshold to
- trigger free_high
-In-Reply-To: <c8b2a3c9-2252-4c0a-85a9-26fa6b519757@amd.com> (Raghavendra
-	K. T.'s message of "Fri, 11 Apr 2025 11:32:08 +0530")
-References: <20250407105219.55351-1-nikhil.dhama@amd.com>
-	<87mscn8msp.fsf@DESKTOP-5N7EMDA>
-	<c8b2a3c9-2252-4c0a-85a9-26fa6b519757@amd.com>
-Date: Fri, 11 Apr 2025 14:15:42 +0800
-Message-ID: <87mscn5ilt.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1744352497; c=relaxed/simple;
+	bh=kcIP+POmxmkSEg5c9FMWXe/3dEsvXgJ4/4YSNQkpI1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ncWTybCt2X8emgd9xqkIm3c3Cr0D5e+P61XdiOLaqURMnEnHjdP7ec05AlwLh4WWURyOsC8KVqGdkIrinssG3XgtUnM0pvMK5/McBwMkSHooNL7lPopilpZKpAzadvmSYdGYOgjsLULAY4SX131w4BoTRczcJbBT1kzExSH3KZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 261264435A;
+	Fri, 11 Apr 2025 06:21:26 +0000 (UTC)
+Message-ID: <23693e7f-4fff-40f3-a437-e06d827278a5@ghiti.fr>
+Date: Fri, 11 Apr 2025 08:21:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] riscv: KGDB: Do not inline arch_kgdb_breakpoint()
+Content-Language: en-US
+To: WangYuli <wangyuli@uniontech.com>, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc: chenhuacai@kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, vincent.chen@sifive.com,
+ palmerdabbelt@google.com, samuel.holland@sifive.com, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, guanwentao@uniontech.com,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <C5DCACA951B6211D+20250408095454.67390-1-wangyuli@uniontech.com>
+ <ccc97669-a4dc-459f-a26f-1fdad8b4a334@ghiti.fr>
+ <3A22DFCBC7B91F71+320f58c6-0fc6-4dc4-9fb0-ab0d55be697a@uniontech.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <3A22DFCBC7B91F71+320f58c6-0fc6-4dc4-9fb0-ab0d55be697a@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddutdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepudelfedrfeefrdehjedrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleefrdeffedrheejrdduleelpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedugedprhgtphhtthhopeifrghnghihuhhlihesuhhnihhonhhtvggthhdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrihhstghvs
+ ehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhinhgtvghnthdrtghhvghnsehsihhfihhvvgdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-Raghavendra K T <raghavendra.kt@amd.com> writes:
+Hi WangYuli,
 
-> On 4/11/2025 7:46 AM, Huang, Ying wrote:
->> Hi, Nikhil,
->> Sorry for late reply.
->> Nikhil Dhama <nikhil.dhama@amd.com> writes:
->> 
->>> In old pcp design, pcp->free_factor gets incremented in nr_pcp_free()
->>> which is invoked by free_pcppages_bulk(). So, it used to increase
->>> free_factor by 1 only when we try to reduce the size of pcp list or
->>> flush for high order, and free_high used to trigger only
->>> for order > 0 and order < costly_order and pcp->free_factor > 0.
->>>
->>> For iperf3 I noticed that with older design in kernel v6.6, pcp list was
->>> drained mostly when pcp->count > high (more often when count goes above
->>> 530). and most of the time pcp->free_factor was 0, triggering very few
->>> high order flushes.
->>>
->>> But this is changed in the current design, introduced in commit 6ccdcb6d3a74
->>> ("mm, pcp: reduce detecting time of consecutive high order page freeing"),
->>> where pcp->free_factor is changed to pcp->free_count to keep track of the
->>> number of pages freed contiguously. In this design, pcp->free_count is
->>> incremented on every deallocation, irrespective of whether pcp list was
->>> reduced or not. And logic to trigger free_high is if pcp->free_count goes
->>> above batch (which is 63) and there are two contiguous page free without
->>> any allocation.
->> The design changes because pcp->high can become much higher than
->> that
->> before it.  This makes it much harder to trigger free_high, which causes
->> some performance regressions too.
->> 
->>> With this design, for iperf3, pcp list is getting flushed more frequently
->>> because free_high heuristics is triggered more often now. I observed that
->>> high order pcp list is drained as soon as both count and free_count goes
->>> above 63.
->>>
->>> Due to this more aggressive high order flushing, applications
->>> doing contiguous high order allocation will require to go to global list
->>> more frequently.
->>>
->>> On a 2-node AMD machine with 384 vCPUs on each node,
->>> connected via Mellonox connectX-7, I am seeing a ~30% performance
->>> reduction if we scale number of iperf3 client/server pairs from 32 to 64.
->>>
->>> Though this new design reduced the time to detect high order flushes,
->>> but for application which are allocating high order pages more
->>> frequently it may be flushing the high order list pre-maturely.
->>> This motivates towards tuning on how late or early we should flush
->>> high order lists.
->>>
->>> So, in this patch, we increased the pcp->free_count threshold to
->>> trigger free_high from "batch" to "batch + pcp->high_min / 2".
->>> This new threshold keeps high order pages in pcp list for a
->>> longer duration which can help the application doing high order
->>> allocations frequently.
->> IIUC, we restore the original behavior with "batch + pcp->high / 2"
->> as
->> in my analysis in
->> https://lore.kernel.org/all/875xjmuiup.fsf@DESKTOP-5N7EMDA/
->> If you think my analysis is correct, can you add that in patch
->> description too?  This makes it easier for people to know why the code
->> looks this way.
->> 
+On 10/04/2025 16:28, WangYuli wrote:
+> Hi Alex
 >
-> Yes. This makes sense. Andrew has already included the patch in mm tree.
+> On 2025/4/10 21:42, Alexandre Ghiti wrote:
+>> Hi WangYuli,
+>>
+>>
+>> You forgot to replace kgdb_breakinst into kgdb_compiled_break.
 >
-> Nikhil,
+> OK, I'll fix it.
 >
-> Could you please help with the updated write up based on Ying's
-> suggestion assuming it works for Andrew?
+> Thanks,
+>
+>>
+>> You are fixing 2 things here, you need to split this patch into 2. 
+> OK,
+>> And as noted by Palmer, we actually don't need norvc here, so you can 
+>> remove it instead.
+>
+> I have some questions regarding this.
+>
+> If .option norvc is unnecessary, what is the significance of .option 
+> push/.option pop?
+>
+> Should they also be removed as well?
 
-Thanks!
 
-Just send a updated version, Andrew will update the patch in mm tree
-unless it has been merged by mm-stable.
+Yes, you can remove them.
 
----
-Best Regards,
-Huang, Ying
+
+>
+> However, will this still function properly when the RISC-V C extension 
+> is active?
+
+
+.option norvc is used to prevent the assembler from using compressed 
+instructions, but it's generally used when we need to ensure the size of 
+the instructions that are used, which is not the case here as noted by 
+Palmer since we only care about the address. So yes it will work fine 
+with C enabled :)
+
+
+>
+>
+> Thanks,
+>
+
+Thanks for the changes!
+
+Alex
+
