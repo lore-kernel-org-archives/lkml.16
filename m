@@ -1,46 +1,47 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA6923A9;
-	Fri, 11 Apr 2025 06:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CA323A9;
+	Fri, 11 Apr 2025 06:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744351778; cv=none; b=EqBC/MW0X9JRGZRa8wQdwpSZhBe5GvoSS+bwxXgTlRXHRRp0QsNmf04XkWeczDk/R+mU+4DV5Hx5u4U97BUAbNZkTIABBZ1+ObIiVKDTHJXpiwZL6J1OkYxsdBqLGWgPXclOXiJPgZqs6XjUkHmUYjTRKtayVdbCu1E0EmlseGQ=
+	t=1744351788; cv=none; b=VRa4bjEEE7ZZB08oVJUhFqy+UjQBYzeFjkZIgWF6Rqwh2xhrS6/Fn3FMHxyvhLNWrBVW8qiPP3iRcNTgGVAicsRBBHV4O7I+tB3reXYOc0JfgsoLAml4hdFgH7WiQ/G2/biMLMJn3ipXJhXI8GFloSAWeKau8GUcywTRu3RHMLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744351778; c=relaxed/simple;
-	bh=t0HYUXLB2DaPJtMpf06vUrKOtSAvVcdv/VPIrYPXwgQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b6J+5XvD7O9LivxIIlJNRHxqLMpeSTMdyaCg268PlqsKwfhpdfibIrS0IiR51uk+JbiKaE844YVwOvU6MgLDBCoAZ3riHL5nPzPTgO3JTczoyUyHyYTWvc4kKYq8eczSod5dJAg0ofWv3L7Pj67u5ghjyEZJv5gfrowY4ss3geE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Rzfjm3gK; arc=none smtp.client-ip=198.47.19.246
+	s=arc-20240116; t=1744351788; c=relaxed/simple;
+	bh=dxZuWXoiPaMW9f2tmEql6gPJyEr0b1C2tOzOi5GxOnA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hjD743vt5frYTGIOU5ZFVyN5cVUXVBhpwA58TiL50Pt54Gd+Ouj4oWEnBSj2rYZg4/NgbRD0QZAUuEBehSmG6hJsq0GawbQNoeectR/HpPjXbjZd6OZOWC3uSi1AA3lsXTIl+KLK2OK8qW/jvOx0ujeEz1uFv2/8ExTUuWITAD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=f1al4Xug; arc=none smtp.client-ip=198.47.23.235
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rzfjm3gK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f1al4Xug"
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B69NGE2027079
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B69WLW1991990
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 01:09:23 -0500
+	Fri, 11 Apr 2025 01:09:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744351763;
-	bh=p6L9ox8QbZEfucXdJkpzXmXO81CguHbCQdxOp/2KlFk=;
-	h=From:To:CC:Subject:Date;
-	b=Rzfjm3gK/5E1dv7/TMK2yt4uSnlJ5SSq+1nIrJ7HSl1eY6LEuzYT2mJc5aGdCxfp1
-	 2j3VW5FVNWpasODqmkC+KhynaPcOxrVqum48vXjg17d0GvJ0rofOMG6LQd/V1+CW93
-	 +P57LGVlIAUk1bFicEBd2CMGx8xyDTDGsUMHv/NM=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B69NXZ049796
+	s=ti-com-17Q1; t=1744351772;
+	bh=zrx9fTvidzMHg5rKXmJJDzm+O68SCoI7cvY18Dkdu+g=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=f1al4XugidQdDKyXUVMIN8hWprGXmICaPfHG6IiPix0D6kcHKGFAGaVqJ6WvKtSXw
+	 EbTExKZUDq1xv/wZM5vDPHKy9QWeSQDg6DNQhCPbGtsYIrxqDUz2G+LI1w4+DVoPVq
+	 VXEkeEvt1ZUazdXNR9+J5ELdWXnTP1np20RuI1Ws=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B69VVQ049863
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 01:09:23 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 11 Apr 2025 01:09:31 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 01:09:22 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 01:09:31 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 01:09:22 -0500
+ Frontend Transport; Fri, 11 Apr 2025 01:09:31 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B69I9x065579;
-	Fri, 11 Apr 2025 01:09:18 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B69IA1065579;
+	Fri, 11 Apr 2025 01:09:27 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
         <kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
@@ -48,10 +49,12 @@ To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
 CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH net-next 0/2] CPSW Bindings for 5000M Fixed-Link
-Date: Fri, 11 Apr 2025 11:39:15 +0530
-Message-ID: <20250411060917.633769-1-s-vadapalli@ti.com>
+Subject: [PATCH net-next 2/2] dt-bindings: net: ti: k3-am654-cpsw-nuss: evaluate fixed-link property
+Date: Fri, 11 Apr 2025 11:39:17 +0530
+Message-ID: <20250411060917.633769-3-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250411060917.633769-1-s-vadapalli@ti.com>
+References: <20250411060917.633769-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,30 +65,27 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello,
+Since the fixed-link (phyless) mode of operation is supported by the
+CPSW MAC, include "fixed-link" in the set of properties to be evaluated.
 
-This series adds 5000M as a valid speed for fixed-link mode of operation
-and also updates the CPSW bindings to evaluate fixed-link property. This
-series is in the context of the following device-tree overlay which
-enables USXGMII 5000M Fixed-link mode of operation with CPSW on TI's
-J784S4 SoC:
-https://github.com/torvalds/linux/blob/v6.15-rc1/arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso
-
-Series is based on commit
-0c49baf099ba r8169: add helper rtl8125_phy_param
-of the main branch of net-next tree.
-
-Regards,
-Siddharth.
-
-Siddharth Vadapalli (2):
-  dt-bindings: net: ethernet-controller: add 5000M speed to fixed-link
-  dt-bindings: net: ti: k3-am654-cpsw-nuss: evaluate fixed-link property
-
- Documentation/devicetree/bindings/net/ethernet-controller.yaml  | 2 +-
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
  .../devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml          | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ 1 file changed, 2 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+index b11894fbaec4..7b3d948f187d 100644
+--- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
++++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+@@ -143,6 +143,8 @@ properties:
+           label:
+             description: label associated with this port
+ 
++          fixed-link: true
++
+           ti,mac-only:
+             $ref: /schemas/types.yaml#/definitions/flag
+             description:
 -- 
 2.34.1
 
