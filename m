@@ -1,39 +1,48 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A22AD5E;
-	Fri, 11 Apr 2025 02:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6052147F5;
+	Fri, 11 Apr 2025 02:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744339869; cv=none; b=rdBPrZtkkPjciNCirQk2c3A4/zu4Qc7Fbkr7Sa1sOCp/CHwGFfoc2vQAV7iQng0B70jjjRorHhOE4vOxCemd1QUcUpUkCuDmAr7JJMe2CT7y5HwPWlJShNJ0X+fOntLN+4af/jv/nCUC9ASNzU4afZNcIteaLI/oCgWqAaT7t0M=
+	t=1744339907; cv=none; b=tzISls20FWPfwEcN75bhstgoGilwa0f7EBQd3aOA393f1s0L0lP+rAIo5pNlWyPTy/QFnsU5FTWi2blNGWxFgGknwIZ2a78cdtq2pLV9F58OY7tBOJQ7nejhBHSPxNJnjepZLMjE7r6APnb19gkPdFbIqq55ejeQRk//1NthjeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744339869; c=relaxed/simple;
-	bh=fgryNa5zKi0ubunnKee26qgUsuQa2NNmIwewh06CCgs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X1rNmXQPZGWuGYZyxJv95T6awm6ygihYApVGdrWRL0sM03BZMDryA7JHhixaMlrn68rW2+bUgvEvCnEi4Eh8iWv27Zqmwc9Puwr8koGS7RxmygfRCfvOTBsGD6N3M/nhmFLOfzYDRTLsSYcM0CCGxRis0cmJl8M3m+uJmOu/tBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YUQJq/7I; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744339907; c=relaxed/simple;
+	bh=QGmAWk8YW54uZtf6oYIyPCnnrkMMqHu+DmUgJe2uWVw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SyEOjQwXqHXOiUWOncTfxKkuAGW7k70QyzXIEEWFhJfBIIbE3u7rwcBfcxc+37R7tHSQoYNK8VlUT/ynY9X2qSWLVabDey313setEGBRtRM1y19cHzkeJC8O9xMQlJB0zbxTxmvT3ik89tA19it4gjRq1rALvvcXx76hKlC/efg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FouJLVrr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YUQJq/7I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744339858;
-	bh=fgryNa5zKi0ubunnKee26qgUsuQa2NNmIwewh06CCgs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=YUQJq/7IJCN60T8VvoYp5xIxY37lgeXEj7Sl9yiqGvB7Y9jM0vZt6mepp2ZYKIwkx
-	 GifV+wUmaAVGtongz2iiCBo1+Hh7F5pCIA9F0mUkBVIfOn3ZWHRwK5DaDSNeDQMJ/Y
-	 wnTxzZZmoBKRlKF3p0xbIvc2EZ5kmtaVU2b4ItIs=
-X-QQ-mid: bizesmtpip3t1744339815t829151
-X-QQ-Originating-IP: LC/XEJPQIUQsCRmlXxovOrl/EJd+6nGplA2WrNLXio0=
-Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 11 Apr 2025 10:50:12 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 12992929127869699408
-EX-QQ-RecipientCnt: 18
-Message-ID: <A8ED9B14F380E4B2+7fc9a2e8-5661-4344-9ac2-481da95cc6f8@uniontech.com>
-Date: Fri, 11 Apr 2025 10:50:12 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FouJLVrr"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B21LgN007233;
+	Fri, 11 Apr 2025 02:51:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	54+weeQ0kRcPU5YNIxAUX0uPK9WSQdfhUffh6J44FZo=; b=FouJLVrrEvwqi8kP
+	U3d+nXa3Ol1gUQ7c3EQyhF1pky5nlkQfeKHeLqkjV/zY2rjBVLVlwNVjwYm1zm4H
+	sx4abW3elBnO5MZq3WJ2kJXi3MfgNDEAo3c6Erpd4ZTm5Zv6jPgBHM7kY7RcwNSF
+	7cuTKddQtp5s7xB2uc0L4Wl0ytFd5CT8JG1gpZuDverb/FAKC/+D2ko9/JTbVM40
+	bWiTZylSkRGIH0+x2uXWs9TtW1ihKKw+z4Xdr3VI8aak/vCDpr4Ss5EFpQGpP9ka
+	Fd8HFsXzw1vTU71KWZwptVKBMTDeOKjKuLuAK8HI92iWfWLTHH8+uDyxVED7w/uR
+	pG44dA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45xeh3hy84-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 02:51:32 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53B2pU2w001014
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 02:51:30 GMT
+Received: from [10.239.133.242] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
+ 2025 19:51:27 -0700
+Message-ID: <808b2ae5-5286-487c-8f52-03936c3686ef@quicinc.com>
+Date: Fri, 11 Apr 2025 10:51:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,138 +50,194 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Bug Report] A compilation failure occurs when landlock and
- RANDSTRUCT are combined with GCC 14.2.0.
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>
-Cc: gnoack@google.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, kees@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- nicolas@fjasle.eu, linux-security-module@vger.kernel.org,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
- =?UTF-8?B?6ZmI6bqf6L2p?= <chenlinxuan@uniontech.com>,
- =?UTF-8?B?5Y2g5L+K?= <zhanjun@uniontech.com>, =?UTF-8?B?6IGC6K+a?=
- <niecheng1@uniontech.com>, =?UTF-8?B?5YWz5paH5rab?=
- <guanwentao@uniontech.com>
-References: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
- <20250410.926dbc57c00b@gnoack.org> <20250410.Ahkoo7ihae8a@digikod.net>
+Subject: Re: [PATCH v3 7/7] coresight-tgu: add reset node to initialize
+To: Mike Leach <mike.leach@linaro.org>
+CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Clark
+	<james.clark@arm.com>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Songwei Chai
+	<quic_songchai@quicinc.com>
+References: <20250227092640.2666894-1-quic_songchai@quicinc.com>
+ <20250227092640.2666894-8-quic_songchai@quicinc.com>
+ <CAJ9a7Vh4OTZdbEygtwc7BxRJSLgkALoaNRPEiQLJQgZvFtnTtw@mail.gmail.com>
 Content-Language: en-US
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <20250410.Ahkoo7ihae8a@digikod.net>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------AcCCyMoaNchApTkF4A5pC4gu"
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MXE8fio8DejkOlTwN+HkZ2iRb50HfFI3px6ZyfQzXOPtaPlK2G8WiPh+
-	Mmut3ttxebf81MRnB9ee5hmdmmDVk8byzPsJWOgAjp0HXr3EISgJpykB6YlMYxgrLP3/J/c
-	O2WvJRkwqCE8PI4SBOIQ8P2Sk16jrRtHGo9Lk5mEiQdK8zux+0Q/Xr4LaP+Nd51TB2mAIdJ
-	1sojo69I6DqJkxHNKPtRgfDU0UWy8vzgo2mrkB/VlrzMUL+Br2bMcFMsb3gSfHGOkP9MCSf
-	mHinVAUaD5j9/MEu+ROmhISvZoqtby8REBks1sc9Tj/202A/y+yfs6vRS/ayYmNHEVQLje6
-	sfZ8JkkNkD7s7hDd6Gi1oRGeA6dL1+9s74nMlZbdBbwZPCqizT+w9u9gVnQwfEfV94Umw7b
-	o6J3IjnroOY//BPtiTd+RJX4MSDCq/WmloC/G+skbCczZdvEpuXT1/uG2hGkBvBhYgt68nb
-	jMEHDCoD3W2lvypcieHHLSnJH5aeSLTaNF9DBjo3vWLypZ4+j9ORBURxaEIJ8x37ehpHERZ
-	/OUEwXh9uXLU7HUFJy4gh5DQjLHGYNP1ug3Lx8UXNiyHfOgDLtj3rPj1oDUAyvgFsPoE+gM
-	xSQYw+zEy1FA+3+FUJfThB6ECnUFkP4wjhxLt6yyYWFLG/eOrwVAjeIe0hYZICycKimx7Y2
-	+R/FgF2JkAZA6pZx2raQbdNUUlL1qM4Xxlx1CH7eOZMywJV54jDwCZwSW2vrfOqSawRbf6e
-	/KhxQ1PjqY/0o0h28J5RFrquUda8oXqzwPCiRoNOJfkqJOKvMCbalqqEymFj+GO/nefjR95
-	20NsdWUUuGTO8tNhPRAQQvbCYkAqXPBlh9tLxaxAPi7j+mxHK/ceEXIXayYEh3pa4uHnVGi
-	XKu9BEBHB8YDEWzk6FuvQ3NvC5/lJAaCAbjTo0rJqeI81IqtGsu4fh5+4e65BJaEBToy+pW
-	m0THyCYURT+sUOaBaZP/Sj1kRkeckRcZ0UI9SJZPGoe3HZjPGgS5p6JNLpeBLCGqEcY3f5S
-	CPVDeZP504CF2XFV1F
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+From: songchai <quic_songchai@quicinc.com>
+In-Reply-To: <CAJ9a7Vh4OTZdbEygtwc7BxRJSLgkALoaNRPEiQLJQgZvFtnTtw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=VbH3PEp9 c=1 sm=1 tr=0 ts=67f883b4 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=vmeuUHBbrc6izfGtevMA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: M3FgirXRwWiVEtVfkR1R1N9M31nazOhl
+X-Proofpoint-ORIG-GUID: M3FgirXRwWiVEtVfkR1R1N9M31nazOhl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 impostorscore=0 suspectscore=0 adultscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 priorityscore=1501 bulkscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110020
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------AcCCyMoaNchApTkF4A5pC4gu
-Content-Type: multipart/mixed; boundary="------------FLHyHPO1D30HsUP8vKO5gYtQ";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>
-Cc: gnoack@google.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, kees@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- nicolas@fjasle.eu, linux-security-module@vger.kernel.org,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
- =?UTF-8?B?6ZmI6bqf6L2p?= <chenlinxuan@uniontech.com>,
- =?UTF-8?B?5Y2g5L+K?= <zhanjun@uniontech.com>, =?UTF-8?B?6IGC6K+a?=
- <niecheng1@uniontech.com>, =?UTF-8?B?5YWz5paH5rab?=
- <guanwentao@uniontech.com>
-Message-ID: <7fc9a2e8-5661-4344-9ac2-481da95cc6f8@uniontech.com>
-Subject: Re: [Bug Report] A compilation failure occurs when landlock and
- RANDSTRUCT are combined with GCC 14.2.0.
-References: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
- <20250410.926dbc57c00b@gnoack.org> <20250410.Ahkoo7ihae8a@digikod.net>
-In-Reply-To: <20250410.Ahkoo7ihae8a@digikod.net>
 
---------------FLHyHPO1D30HsUP8vKO5gYtQ
-Content-Type: multipart/mixed; boundary="------------tnDSPJ2ztk0RQK4ARmV9VKjf"
-
---------------tnDSPJ2ztk0RQK4ARmV9VKjf
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-SGkgR8O8bnRoZXIgYW5kIE1pY2thw6tsIFNhbGHDvG4sDQoNCk9uIDIwMjUvNC8xMSAwMTow
-NSwgTWlja2HDq2wgU2FsYcO8biB3cm90ZToNCj4+IFRoaXMgaXMgaW4gbXkgdW5kZXJzdGFu
-ZGluZyBhIGR1cGxpY2F0ZSBvZiB0aGUgZGlzY3Vzc2lvbiBpbg0KPj4gaHR0cHM6Ly9sb3Jl
-Lmtlcm5lbC5vcmcvYWxsLzIwMjUwNDA3LWtidWlsZC1kaXNhYmxlLWdjYy1wbHVnaW5zLXYx
-LTEtNWQ0NmFlNTgzZjVlQGtlcm5lbC5vcmcvDQo+IFllcywgYSBuZXcgcGF0Y2ggaGFzIGJl
-ZW4gc3VibWl0dGVkOg0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNTA0MDkx
-NTExNTQud29yay44NzIta2Vlc0BrZXJuZWwub3JnLw0KDQpUaGFuayB5b3UgYm90aCBmb3Ig
-dGhlIHJlbWluZGVyIQ0KDQpCdXQgSSdtIHN0aWxsIGEgYml0IGxvc3QuDQoNCldpdGggR0ND
-IDE0LCBJIGNhbiByZXByb2R1Y2UgdGhpcyBwcm9ibGVtIGJ5IG1lcmVseSBlbmFibGluZyBs
-YW5kbG9jayANCmFuZCBSQU5EU1RSVUNUIG9uIHRvcCBvZiB0aGUgYmFzZSB4ODZfNjRfZGVm
-Y29uZmlnLg0KDQpJdCBkb2Vzbid0IGFwcGVhciB0aGF0IG1ha2luZyBHQ0NfUExVR0lOUyBk
-ZXBlbmQgb24gIUNPTVBJTEVfVEVTVCBvciANCnJlc3RyaWN0aW5nIFJBTkRTVFJVQ1QgdG8g
-b25seSBiZSBlbmFibGVkIHdoZW4gQ0NfSEFTX1JBTkRTVFJVQ1QgaXMgc2V0IA0KYWN0dWFs
-bHkgYWRkcmVzc2VzIHRoZSByb290IGNhdXNlLg0KDQpJJ20gcXVpdGUgY3VyaW91cyB0byBr
-bm93IHdoYXQgdGhlIGFjdHVhbCBkaXJlY3QgY2F1c2Ugb2YgdGhpcyBpbnRlcm5hbCANCkdD
-QyBlcnJvciBpcy4NCg0KVGhhbmtzLA0KLS0gDQpXYW5nWXVsaQ0K
---------------tnDSPJ2ztk0RQK4ARmV9VKjf
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
-
---------------tnDSPJ2ztk0RQK4ARmV9VKjf--
-
---------------FLHyHPO1D30HsUP8vKO5gYtQ--
-
---------------AcCCyMoaNchApTkF4A5pC4gu
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/iDZAUDAAAAAAAKCRDF2h8wRvQL7k4R
-AP9d0MMFidIuBt7QMhq+wOU60bUHjNOTKTNdPGrY5IOV2wD8D3aj3NLa9eLjBSKVcNvyIZ/6MGXU
-cRwiiHlC0kHpLAg=
-=rFvs
------END PGP SIGNATURE-----
-
---------------AcCCyMoaNchApTkF4A5pC4gu--
+On 3/7/2025 9:33 PM, Mike Leach wrote:
+> Hi,
+>
+> On Thu, 27 Feb 2025 at 09:27, songchai <quic_songchai@quicinc.com> wrote:
+>> From: Songwei Chai <quic_songchai@quicinc.com>
+>>
+>> Add reset node to initialize the value of
+>> priority/condition_decode/condition_select/timer/counter nodes
+>>
+>> Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
+>> Signed-off-by: songchai <quic_songchai@quicinc.com>
+>> ---
+>>   .../testing/sysfs-bus-coresight-devices-tgu   |  7 ++
+>>   drivers/hwtracing/coresight/coresight-tgu.c   | 79 +++++++++++++++++++
+>>   2 files changed, 86 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
+>> index d88d05fbff43..8fb5afd7c655 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
+>> +++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
+>> @@ -42,3 +42,10 @@ KernelVersion   6.15
+>>   Contact:        Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
+>>   Description:
+>>                   (RW) Set/Get the counter value with specific step for TGU.
+>> +
+>> +What:           /sys/bus/coresight/devices/<tgu-name>/reset_tgu
+>> +Date:           February 2025
+>> +KernelVersion   6.15
+>> +Contact:        Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
+>> +Description:
+>> +                (Write) Reset the dataset for TGU.
+> Document the value needed to initiate the reset.
+Done.
+>
+>> diff --git a/drivers/hwtracing/coresight/coresight-tgu.c b/drivers/hwtracing/coresight/coresight-tgu.c
+>> index 693d632fb079..b36ced761c0d 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tgu.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tgu.c
+>> @@ -343,6 +343,84 @@ static ssize_t enable_tgu_store(struct device *dev,
+>>   }
+>>   static DEVICE_ATTR_RW(enable_tgu);
+>>
+>> +/* reset_tgu_store - Reset Trace and Gating Unit (TGU) configuration. */
+>> +static ssize_t reset_tgu_store(struct device *dev,
+>> +                              struct device_attribute *attr, const char *buf,
+>> +                              size_t size)
+>> +{
+>> +       unsigned long value;
+>> +       struct tgu_drvdata *drvdata = dev_get_drvdata(dev->parent);
+>> +       int i, j, ret;
+>> +
+>> +       if (kstrtoul(buf, 0, &value))
+>> +               return -EINVAL;
+>> +
+> Check "value" here and bail out with an error code if 0.
+Done.
+>
+>> +       if (!drvdata->enable) {
+>> +               ret = pm_runtime_get_sync(drvdata->dev);
+>> +               if (ret < 0) {
+>> +                       pm_runtime_put(drvdata->dev);
+>> +                       return ret;
+>> +               }
+>> +       }
+>> +
+>> +       spin_lock(&drvdata->spinlock);
+>> +       CS_UNLOCK(drvdata->base);
+>> +
+>> +       if (value) {
+> drop this line
+Done.
+>
+>> +               tgu_writel(drvdata, 0, TGU_CONTROL);
+>> +
+>> +               if (drvdata->value_table->priority)
+>> +                       memset(drvdata->value_table->priority, 0,
+>> +                              MAX_PRIORITY * drvdata->max_step *
+>> +                                      drvdata->max_reg * sizeof(unsigned int));
+>> +
+>> +               if (drvdata->value_table->condition_decode)
+>> +                       memset(drvdata->value_table->condition_decode, 0,
+>> +                              drvdata->max_condition_decode * drvdata->max_step *
+>> +                                      sizeof(unsigned int));
+>> +
+>> +               /* Initialize all condition registers to NOT(value=0x1000000) */
+>> +               for (i = 0; i < drvdata->max_step; i++) {
+>> +                       for (j = 0; j < drvdata->max_condition_decode; j++) {
+>> +                               drvdata->value_table
+>> +                                       ->condition_decode[calculate_array_location(
+>> +                                               drvdata, i, TGU_CONDITION_DECODE, j)] =
+>> +                                       0x1000000;
+>> +                       }
+>> +               }
+>> +
+>> +               if (drvdata->value_table->condition_select)
+>> +                       memset(drvdata->value_table->condition_select, 0,
+>> +                              drvdata->max_condition_select * drvdata->max_step *
+>> +                                      sizeof(unsigned int));
+>> +
+>> +               if (drvdata->value_table->timer)
+>> +                       memset(drvdata->value_table->timer, 0,
+>> +                              (drvdata->max_step) *
+>> +                                      (drvdata->max_timer_counter) *
+>> +                                      sizeof(unsigned int));
+>> +
+>> +               if (drvdata->value_table->counter)
+>> +                       memset(drvdata->value_table->counter, 0,
+>> +                              (drvdata->max_step) *
+>> +                                      (drvdata->max_timer_counter) *
+>> +                                      sizeof(unsigned int));
+>> +
+>> +               dev_dbg(dev, "Coresight-TGU reset complete\n");
+>> +       } else {
+>> +               dev_dbg(dev, "Coresight-TGU invalid input\n");
+> not needed if early exit on input errror
+Done.
+>
+>> +       }
+>> +
+>> +       CS_LOCK(drvdata->base);
+>> +
+>> +       drvdata->enable = false;
+>> +       spin_unlock(&drvdata->spinlock);
+>> +       pm_runtime_put(drvdata->dev);
+>> +
+>> +       return size;
+>> +}
+>> +static DEVICE_ATTR_WO(reset_tgu);
+>> +
+>>   static const struct coresight_ops_helper tgu_helper_ops = {
+>>          .enable = tgu_enable,
+>>          .disable = tgu_disable,
+>> @@ -354,6 +432,7 @@ static const struct coresight_ops tgu_ops = {
+>>
+>>   static struct attribute *tgu_common_attrs[] = {
+>>          &dev_attr_enable_tgu.attr,
+>> +       &dev_attr_reset_tgu.attr,
+>>          NULL,
+>>   };
+>>
+>>
+>
+> Regards
+>
+> Mike
+>
