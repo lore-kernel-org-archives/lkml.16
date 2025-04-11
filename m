@@ -1,115 +1,165 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56FA86340;
-	Fri, 11 Apr 2025 13:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1071F2367
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379150; cv=none; b=oT8S+KedLRZBrUem/jqt95tQy4aG/0/myKt3ZviIVRiQWzNGuMmTpOhbuUkc3M8eloi3Xj8iw1B7C8/LavyQgVCzEEFNn5RnSXSQ5ak+1lKR8TjUcbwPLISxWQc92ZEhQ4P3/lsFKycD+C41w0NAu4BgJkJxmSd8L3VGvO56aJ0=
+	t=1744379160; cv=none; b=t9i9HHMb5rJ2s17bn9NG2PSPTJ0WS8bVdklNtGU2tb+J8uQe56G/qt4+cYWVhSifGShUKYcZOOylPsrk7FomfjKTal1aa//nmLwaIOgR4/4Al+xSfB0T04WRUDzQ4W6yj+uIJdpGzNPNA6sIueEyI6iO1lhO7jKxfqbjeVLDYX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379150; c=relaxed/simple;
-	bh=8RXUTUAXs48P+XfMT6Eeype/W7T7auhLUdNE7QHMiLU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=gxa+jUcHFssrDihSvTnvqUqePY2re2JqXpRH7Vc5osBSHK+WiglWof/H3cuC6Kyz7qUAEXsQ/iuNLH7DO9qiykfydoy/IIQyGv3QAADpDm4aMJX2LihTVYf6nmCq+hoGTCmVUt1S3t2jhvWAoCt3w3d+M1kBzBrRmCfVAcTKxzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=NsEf5ibF; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744379160; c=relaxed/simple;
+	bh=0EhzynUQSHcwHPsq9OLq2/pVpubzU07LM1zxqs9Lpb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jVpwVhbwnRMOcjPOnZVi45Et22ohtNjXRSY4Nrbyrj/Z8/Tes8kR2O189NJzyaUs6m+e6jOLeOkgncNs/5l1ZT9Cst6LNxj/k76JW9selDIF8rFvIaPFJSDgRwKTZocACGlTidVTa5bv8r+Bgk6pBWUjb4GRrGFNPS1kvapd1Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=OaXkVdfs; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="NsEf5ibF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744379118; x=1744983918; i=markus.elfring@web.de;
-	bh=8RXUTUAXs48P+XfMT6Eeype/W7T7auhLUdNE7QHMiLU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=NsEf5ibFAroZmxFItzfEGrvLyLLpc9eHVkLBNN58rRd8nhQ2MBK43orIUQl9h05P
-	 xTSBgKSBKCj3Fs8SCALAWmAJLXfDbszcx5FDGASFwLB8He9e7HP11SpnXRGZ7KDT+
-	 +eIOEcsfYKg/oDR8iqd4NEdLgM8BBYBtHvMrcb+lK5RJp8rPAAFlVU3qJsRmOQIVH
-	 mQlGkqrjtD4CkaRlBQjrlm+qCSOAZ0treigKwML/QfHpVRsAuAnnPJZTEf0Ub19+T
-	 4BeNVRsYkOmnzV5pCGldRe8kzOYC4DEx0ChaRI0NiCMazFQsbX85ewqqumxhI5KUx
-	 NQAr2evTyhNze7I/lg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.66]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M1JAm-1u1Zzz3lE2-006AZY; Fri, 11
- Apr 2025 15:45:17 +0200
-Message-ID: <bbea0c47-9bc3-48a4-97cd-c422d6b40804@web.de>
-Date: Fri, 11 Apr 2025 15:45:07 +0200
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="OaXkVdfs"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4767e969b94so32960021cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744379155; x=1744983955; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zxmmu2NCRuHQ/p0IZo4CKnrYoaf6gi4nt3+l5uXITBc=;
+        b=OaXkVdfsaUu7dWQMnD7pOB9WpShE8bSbkIE4HRihDzFy0pDDU+LcjbahK/rAYtVcTQ
+         isME3eT2yHX3uvCpJ7qfCcdZV03H0QtJp9Pp+++lSYBu04FE4w74bzEA/vzRyHWSj97H
+         8JgCkBGEWH09wNIqDVTo+Y6Mn90xOdL2i6ni/34Y/ubM+pBq8PuuOHJ/TZn9/Wn95rcT
+         a2xbkDiYwXItnM5q181KZzqdXnLvhUQSWFP45T8h8qCqYUjFIsje6JZ3MrG5w7OOZKe4
+         RAmc/1JbP1KEg10Rm9XGi+z+7I57QqTK5L6p8OM7v6o34ONtSLFPs4Ann605OUwm+d6b
+         4wmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744379155; x=1744983955;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zxmmu2NCRuHQ/p0IZo4CKnrYoaf6gi4nt3+l5uXITBc=;
+        b=bcP4Ani4RiIN1JKiV21vH7E++84gYtVPDTFr9L4FRsOwDspGH4C9ek63GQvsjZJ+TT
+         BSVfrSz/f5ZsNEocQuUjuMIg9k+XgkR53U2LGY3GiV7gs+JBrgWWDXNdhb9DXL32uGWq
+         BCXBGhKGhnvowWUcQ+AyclHXMhva7yc5Zr+Bs2BqE0wHgTEgH8WbbMoM38olCt/g2W8P
+         id6Vu8cjUD21XhWv9VKYN8NjMeXqCUGLv4mYis3O/3kYAqJvMvaBa1wWgNdKbQrATl9Q
+         LaOOd25V6IW0nBhAa6wswoerj1qPbTzvpYTvZd72xhPCCzX9u5GtmtM4sBB3cncA89H4
+         2hOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLmPldJYTWGxxUh8a/OnJP/OXmCvJ1Np6TCRzoJU+KZG3AfT6BqA/0NJ285RYvYXmptwxx7faAVPuudGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyU9RO7vax3bx6XXmjKlbqWIf8Ba5dUqY3rEfWubAeyJCIHsKJ
+	7FuLN87skTFttq7tEiLIoQaA3tvh3uTp+7v/ftLGej06KpdKRBAx+i/q+t+RBUg=
+X-Gm-Gg: ASbGncvMjVHQEgdIdoBP+Ni8+DencazShrugSTpoAYWyQrDrXUkYOGexm7FYW/LFo1S
+	rEJ8zyegNg9cZQbSgwXo4oJqTe7FVUXFkUh7WtxFM9emdgsqd+AbcRNdvRwGSOeinCeqaBwXbGo
+	6+LIEpkPrv8J1/swJsuY5VSxnSGa8f+OeUUhi/snUbmwpyMXObqLkilJ+/7pZR4wpDDelqbKGED
+	4f1/dOglAO4c24ePQORpOkFMl6eUM4tRGIUhoYlXLG9sW2O7sbsEczaN0869ahOTCsQyJhGVZiA
+	JevsJOpggbkdcJ8CXK/jRq8r49H7uSrcSQgYmqM=
+X-Google-Smtp-Source: AGHT+IHocieVa/GLTrNp8bq2cpL9Zyfxy3zMjOWH8Uc94+yoMWWfQgNkIoyy9EBomrM62q71TWWrWQ==
+X-Received: by 2002:ac8:5992:0:b0:476:91f1:9de with SMTP id d75a77b69052e-479775e95afmr32144771cf.47.1744379155606;
+        Fri, 11 Apr 2025 06:45:55 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4796edc1c1esm25559621cf.68.2025.04.11.06.45.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 06:45:54 -0700 (PDT)
+Date: Fri, 11 Apr 2025 09:45:50 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Carlos Song <carlos.song@nxp.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm: page_alloc: tighten up find_suitable_fallback()
+Message-ID: <20250411134550.GB366747@cmpxchg.org>
+References: <20250407180154.63348-1-hannes@cmpxchg.org>
+ <20250407180154.63348-2-hannes@cmpxchg.org>
+ <D930DO9PAJR8.SOYZSGRG5Y2O@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Amir Tzin <amirtz@nvidia.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Aya Levin <ayal@nvidia.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Tariq Toukan <tariqt@nvidia.com>
-References: <20250411131431.46537-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v4 0/1] net/mlx5: Fix null-ptr-deref in TTC table creation
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250411131431.46537-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ZpggF9rjZ+uYBQnNaORYfGEJB9tI8aLneYYvKqn2CR6BnGmZIm+
- a3x3sbSUuyskFoeljJLmPZOc+QoIV3ripONdE/ep9qDZKn4bqfjNubXxzrlDYlQD0HDp2yM
- dsBtKsC+p6Otg4h62X5q8+h4776XeRhjSUQRJz9sC7EhiZSTq2hoizwGpXY6rw/v4Ow0PlE
- 8DMXQuqIqgWE+WmzFxYcA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8vHTHU/rFxQ=;P1l4cleXLQ+7pZ+T3XPpV4UoeRJ
- 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
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D930DO9PAJR8.SOYZSGRG5Y2O@google.com>
 
-> Henry Martin (1):
+On Thu, Apr 10, 2025 at 01:55:27PM +0000, Brendan Jackman wrote:
+> On Mon Apr 7, 2025 at 6:01 PM UTC, Johannes Weiner wrote:
+> > find_suitable_fallback() is not as efficient as it could be, and
+> > somewhat difficult to follow.
+> >
+> > 1. should_try_claim_block() is a loop invariant. There is no point in
+> >    checking fallback areas if the caller is interested in claimable
+> >    blocks but the order and the migratetype don't allow for that.
+> >
+> > 2. __rmqueue_steal() doesn't care about claimability, so it shouldn't
+> >    have to run those tests.
+> >
+> > Different callers want different things from this helper:
+> >
+> > 1. __compact_finished() scans orders up until it finds a claimable block
+> > 2. __rmqueue_claim() scans orders down as long as blocks are claimable
+> > 3. __rmqueue_steal() doesn't care about claimability at all
+> >
+> > Move should_try_claim_block() out of the loop. Only test it for the
+> > two callers who care in the first place. Distinguish "no blocks" from
+> > "order + mt are not claimable" in the return value; __rmqueue_claim()
+> > can stop once order becomes unclaimable, __compact_finished() can keep
+> > advancing until order becomes claimable.
+> 
+> Nice!
+> 
+> My initial thought was: now we can drop the boolean arg and just have
+> the callers who care about claimability just call
+> should_try_claim_block() themselves. Then we can also get rid of the
+> magic -2 return value and find_suitable_fallback() becomes a pretty
+> obvious function.
+> 
+> I think it's a win on balance but it does make more verbosity at the
+> callsites, and an extra interface between page_alloc.c and compaction.c
+> So maybe it's a wash, maybe you already considered it and decided you
+> don't prefer it.
+> 
+> So, LGTM either way, I will attempt to attach the optional additional
+> patch for your perusal, hopefully without molesting the mail encoding
+> this time...
+> 
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
 
-You may omit a cover letter for a single patch.
+Thanks!
 
-Regards,
-Markus
+> From 25f77012674db95354fb2496bc89954b8f8b4e6c Mon Sep 17 00:00:00 2001
+> From: Brendan Jackman <jackmanb@google.com>
+> Date: Thu, 10 Apr 2025 13:22:58 +0000
+> Subject: [PATCH] mm: page_alloc: Split up find_suitable_fallback()
+> 
+> Now that it's been simplified, it's clear that the bool arg isn't
+> needed, callers can just use should_try_claim_block(). Once that logic
+> is stripped out, the function becomes very obvious and can get a more
+> straightforward name and comment.
+> 
+> Signed-off-by: Brendan Jackman <jackmanb@google.com>
+> ---
+>  mm/compaction.c |  3 ++-
+>  mm/internal.h   |  5 +++--
+>  mm/page_alloc.c | 33 +++++++++++++--------------------
+>  3 files changed, 18 insertions(+), 23 deletions(-)
+> 
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 39a4d178dff3c..d735c22e71029 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -2363,7 +2363,8 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+>  		 * Job done if allocation would steal freepages from
+>  		 * other migratetype buddy lists.
+>  		 */
+> -		if (find_suitable_fallback(area, order, migratetype, true) >= 0)
+> +		if (should_try_claim_block(order, migratetype) &&
+> +		    find_fallback_migratetype(area, order, migratetype) >= 0)
+
+So I agree with pushing the test into the callers. However, I think
+the name "should_try_claim_block()" is not great for this. It makes
+sense in the alloc/fallback path, but compaction here doesn't claim
+anything. It just wants to know if this order + migratetype is
+eligible under block claiming rules.
+
+IMO this would be more readable with the old terminology:
+
+		if (can_claim_block(order, migratetype) &&
+		    find_fallback_migratetype(area, order, migratetype) >= 0)
