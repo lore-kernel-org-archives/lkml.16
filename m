@@ -1,94 +1,144 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4FF270ED8
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A602213240;
+	Fri, 11 Apr 2025 21:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744408188; cv=none; b=L156BbPawwfk94nwUMd6mcapg1ZzFDm7ZJmDZvZ5BhZxBqkZA2IO6l8KKZfJAZgALjnTfdsC6GSidWYnUSpVlgDWTPkTx57//yeOQs3oTEGYMQo2+/iILhgpf/vX9tdO6pG6wfAkDFhKcEu+mYMbLg+3PzKjZV0gMKsCItyq1us=
+	t=1744408304; cv=none; b=Kx1tpaZ05SXgYxjddUahtPecuLESYrTSsnYHAa32V7RXoabONKhEzlIryOch5GEfY/rxgC8pWRmttBJkH+P2XXYfySVjuABwdOQNxKmGh2AmQ2i1FnH9buGsJxdC1FuR845lYD0gzuv862QVR20eaaZOTb/aC8/rs8ddIDBEAew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744408188; c=relaxed/simple;
-	bh=w8axWvAzoBROAbaKa0HkkEJsDKW2aXtxlAmzSHGwG6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ePiZf/pXen+GL5h34OvHLWMvEccJLbiRM6u4u14UjGCN4ETDrvA4BkeLNRrxtL8vVLFloRX4gS+2BwTLYpQGx9Tt9Htag5NCCx60cCIvbZkYkWp2jJOklIrOG2R1cjtfx7/5ZkVbIP2ua8TF8OzcmFCJC4OyU7aM7teJo1hfAj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KPw48yCz; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744408304; c=relaxed/simple;
+	bh=69qOk6eU2eMUFY/3klKTHwS2QzO2QF7G4qVrEzSnRt8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DwED5SLgtJf+RyNNJO9zpUj24d6rBWiWgGNBiNZMhd6K4zeP8dfVH5lHOi46MtVDiJd4WhPDsm6yb1TOTtnN+yxAm3fNK2aEOwEhaPlt0cTsxoXV5mah4/WmepOA3VHjydLUy8JNIZLdP6CT244SWcpE3K9KS1S8YIe/7NWTwJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCrERvy7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KPw48yCz"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72a4793d4e2so1446985a34.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744408186; x=1745012986; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NYQrJT8juYdQFZjLx91E5kJsRhGDw+hb2VRtHNdByeQ=;
-        b=KPw48yCzjt5FABhrn6b5ixkhNLaBDrWkixTC944vauDRdVKUdL8lF41NuJAtZ5hZHv
-         wrHoyI0wcl2IRTiTbAwN35WTOy/iB+BKXQrV/EURCj0yfl04a8Wex+Kao3ecXfUD1obv
-         ZLt/gqgNfNk+roW0S+6/OUvByO2r/4u+fJKdJzB6ca/r2g9n1z+9xNq3+P9UnUgeKRQ2
-         5ulWZdQHvntxD70VufDiQDhBpHj7tNyZoolZEqmund+eeMEkrNXZQ8lcMGKLhG4E7hza
-         IYiy8jtojwMmJHQHO20UZ5figgjfHONgcjAWc5Vm06HKNKXgQkHia+CAl+SA1+uRmvAY
-         w5IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744408186; x=1745012986;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NYQrJT8juYdQFZjLx91E5kJsRhGDw+hb2VRtHNdByeQ=;
-        b=kD4X68u340O9ZvzyeaB/sF7E1qzcoRJOwNgjvbY0iQh5CflSwscL8C2fqKRDlH60+v
-         LO+wikhpSDRULmCEww0OaFrTfUw6Ic1fLprEVax3gowwfzX+aCvHnWw0UAZaylzyw14O
-         LPcNf3Uuhkqi8rBjp76OXcbQnNpXsCR9grzxou7cTx8dX+VA/lLwva+x8ccvSbohE5rx
-         jZkP4azMsHuAQE22n/ytfeKJ5Ulqh1hOiY3VsofsUp4e2lc9lYQgCwqO+bavoMSUx+Ba
-         Cg3NyBP1EWK7bD6LClSNuxSIaqDLkZp2Q4PPyIemWjb9CGp+BvsZXJ0OcAHCp1JUtptw
-         V/ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWbNEwqFOgqRj3fp0cefCBkiM336AP2eZ0Jw2IcFtAxxmgCifJ0LcttrdOatmY4RgRXCRBsF31a2k6z4O8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzroo8olbU1unrCx2VBTrX5pN7sTlkc1S3STInDDv8D35ZsqWoR
-	tORPUpQRBWKn0tEgbvCcsPklcwIgCzyLAve3D50TchlkT1DZhIPl7RPaDBUSUKA=
-X-Gm-Gg: ASbGncv/4W6csMBok7pV+gv/HjQZuIQpocY8bsBvp3GehQ7iIHfUgTakgIFJWD0fd2z
-	FJfy7lhoaTPSAG3FlXFV3V+LoCAJz5Q6b6YZUZTafa+d/UnB+zo4H0QYzf4BqinNTMqpX6AzAQC
-	3S23XPgZzDG89plugC424XCRXeS6wEofS8DuemfEPeNCmkPYORYhOeMay/saDM4O27+e+b/53w5
-	MDmJdKa6mCObKgm+mH/270tTgYWzQff8n1NIWNwnCT/753nm8H4RVDn3gyfXQCbUX6Z0xl+90Mn
-	Sm+9gt/34+EILu0DVeJvaDELTFeTbJFU0OZvWkxmXFTF8E+YolfAPutk1ZQt3DcbT9Qa5koNpOK
-	arrvzGBsN2gMM
-X-Google-Smtp-Source: AGHT+IHPOikh3UBhCXlw2AR7oEw93OGdTXiRotETPFiFy2ByOFyfOjXNww65p/TJmOhJE7ujAki41g==
-X-Received: by 2002:a05:6830:2aa5:b0:72b:8aec:fbd4 with SMTP id 46e09a7af769-72e862d8597mr3308938a34.3.1744408186078;
-        Fri, 11 Apr 2025 14:49:46 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d8acb4sm1103733a34.29.2025.04.11.14.49.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 14:49:45 -0700 (PDT)
-Message-ID: <341d3eff-aa26-4962-a357-256472622f34@baylibre.com>
-Date: Fri, 11 Apr 2025 16:49:44 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCrERvy7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 565C9C4CEE2;
+	Fri, 11 Apr 2025 21:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744408302;
+	bh=69qOk6eU2eMUFY/3klKTHwS2QzO2QF7G4qVrEzSnRt8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aCrERvy744ahOIYqn3b/YObKg46LBft6tF7c/7vF2cgRC8s4XpbE7jqVZNQERJeZE
+	 n09Zvdta81OYruk6d/Gm5NonXeHOW5OOw9ewJomb2cgLrME9nV4Ag3VbCJYOcI6PmZ
+	 Z5XIyaiyia1O3UiM+4d8+EMmimhw8bbuu7xtDyWPXwxAsbZxL+bTW83Ou8XBVBnJlT
+	 YqqBz3l2IpvGr+5tYDnYV3QnbWQv0kZQ3HrVsNEoHRmOwlUu/KI+tCyvBw59V6B4tZ
+	 IgwBuXVqaT0HHZhMuwtJpJmIWrfr2orVXe8HWICkacFVALHdBECsSL0nU0Wmys3W8l
+	 kp28FVj9fEhhw==
+Date: Fri, 11 Apr 2025 23:51:39 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Junxuan Liao <ljx@cs.wisc.edu>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: Interface for enabling context tracking
+Message-ID: <Z_mO6_m0bV-Q8NEa@pavilion.home>
+References: <9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu>
+ <a9d1144e-0f75-4594-b85f-d66b1de623a0@paulmck-laptop>
+ <20250410153244.6b20e328@gandalf.local.home>
+ <4a90f134-82ac-428e-be5b-916cf031157e@cs.wisc.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/14] dt-bindings: trigger-source: add generic GPIO
- trigger source
-To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, jonath4nns@gmail.com
-References: <cover.1744325346.git.Jonathan.Santos@analog.com>
- <414f5b60b81f87f99b4e18b9a55eb51f29d2225a.1744325346.git.Jonathan.Santos@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <414f5b60b81f87f99b4e18b9a55eb51f29d2225a.1744325346.git.Jonathan.Santos@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4a90f134-82ac-428e-be5b-916cf031157e@cs.wisc.edu>
 
-On 4/11/25 10:56 AM, Jonathan Santos wrote:
-> Inspired by pwn-trigger, create a new binding for using a GPIO
-
-s/pwn/pwm/
-
-> pin as a trigger source.
+Le Fri, Apr 11, 2025 at 12:41:37PM -0500, Junxuan Liao a écrit :
 > 
+> > > Are you interested in working on joining the noble quest of getting the
+> > > rest of the nohz_full support in place?  (Full disclosure: This stuff
+> > > is non-trivial.)
+> > 
+> > I believe the request is more of just tracing entry and exit from the
+> > kernel, which just needs a simple trace event at the border crossings.
+> 
+> Yeah I'm more interested in just tracing this for now.
+> 
+> > It's been on my todo list to add one for page
+> > fault exit (as I do care for how long they last.
+> 
+> I've added a tracepoint similar to page_fault_user for that but I'm not
+> sure if it's the best way to do it. Should I send a patch for review?
+
+If you do so, it may be a good idea to remove page_fault_user and
+page_fault_kernel and introduce page_fault_user_enter/page_fault_user_exit
+and page_fault_kernel_enter/page_fault_kernel_exit.
+
+But the following is also possible (and then trace/events/context_tracking.h
+should be renamed into trace/events/entry.h):
+
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index fc61d0205c97..83b1764078f7 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -15,6 +15,8 @@
+ 
+ #include <asm/entry-common.h>
+ 
++#include <trace/events/context_tracking.h>
++
+ /*
+  * Define dummy _TIF work flags if not defined by the architecture or for
+  * disabled functionality.
+@@ -115,6 +117,7 @@ static __always_inline void enter_from_user_mode(struct pt_regs *regs)
+ 	instrumentation_begin();
+ 	kmsan_unpoison_entry_regs(regs);
+ 	trace_hardirqs_off_finish();
++	trace_user_exit(0);
+ 	instrumentation_end();
+ }
+ 
+@@ -357,6 +360,7 @@ static __always_inline void exit_to_user_mode_prepare(struct pt_regs *regs)
+ static __always_inline void exit_to_user_mode(void)
+ {
+ 	instrumentation_begin();
++	trace_user_enter(0);
+ 	trace_hardirqs_on_prepare();
+ 	lockdep_hardirqs_on_prepare();
+ 	instrumentation_end();
+diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+index fb5be6e9b423..e9395936bded 100644
+--- a/kernel/context_tracking.c
++++ b/kernel/context_tracking.c
+@@ -428,9 +428,6 @@ static __always_inline void ct_kernel_enter(bool user, int offset) { }
+ 
+ #ifdef CONFIG_CONTEXT_TRACKING_USER
+ 
+-#define CREATE_TRACE_POINTS
+-#include <trace/events/context_tracking.h>
+-
+ DEFINE_STATIC_KEY_FALSE_RO(context_tracking_key);
+ EXPORT_SYMBOL_GPL(context_tracking_key);
+ 
+@@ -486,7 +483,6 @@ void noinstr __ct_user_enter(enum ctx_state state)
+ 			 */
+ 			if (state == CT_STATE_USER) {
+ 				instrumentation_begin();
+-				trace_user_enter(0);
+ 				vtime_user_enter(current);
+ 				instrumentation_end();
+ 			}
+@@ -623,7 +619,6 @@ void noinstr __ct_user_exit(enum ctx_state state)
+ 			if (state == CT_STATE_USER) {
+ 				instrumentation_begin();
+ 				vtime_user_exit(current);
+-				trace_user_exit(0);
+ 				instrumentation_end();
+ 			}
+ 
+
+
+
+
+
+-- 
+Frederic Weisbecker
+SUSE Labs
