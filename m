@@ -1,91 +1,56 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD04C290BBB
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB261293B4B
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360165; cv=none; b=BATE+WWsr1jobaQFKly/yxyJ1mKk/yYhOvfOqg0Jhx/seWqZQHeXoAvss/HYocBMzxcl7b+N1cVF/DCNPphLYds6n7gi6C2cLCU9lFozT59ZA2u+1N7v1BIBWTdjPCnRZCVE0BHxCQmlKS+BUQyoNgCd8dTs/czlpZpfSUGysTI=
+	t=1744360189; cv=none; b=o2YdT2OGG4ekojO0NGwRQEvyUcY9SX/XeQyOAFaBn4pAWkt4i7Z3QDe2kxnrwT3TD9X2y6Fek2b2slAtG49p6qqWknDvojwovz1hw6IBCi1mmEBWQXeh+J21GIysbXjUZBU7Bjs3AaNkEtw6ZMXednMtYPc0FbIy17bgrl77Hp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360165; c=relaxed/simple;
-	bh=PqYiNIq60sVsOxnoPxNWrX6kwiBdVsu9ypXudCyVCpE=;
+	s=arc-20240116; t=1744360189; c=relaxed/simple;
+	bh=7ssNupDgU8vmevJCxD5GdD5tPQfJ3L2pItFyCooetGI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kHgZRu0q+oX79NMc0lenMys1VphKHMOXSBWuSmlK+v+V0VXVLSzEB6uOkdD/9RDGaaG7GX6087kY9im1VUhAswgi69jI6ZFKcVfG0QUgc1ITJhJSbedDJIGYdjPGnQEmy6SNkiYzGfCOb/ifPCGGVPE2MFknbRLw0lbCRsu6SGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cUJsOhhT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SgMFKkEy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cUJsOhhT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SgMFKkEy; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=bVXScD8ZB8tOqJSzm7C+cc01rlMZFhE91KjakxdYxnylCTDRYZNVQ/FXxtbjq+Ud8BtFm6YnadWvUougaY6aVoJSSFvSyVBK0aV5yewNPwwDcVMmxjiyMt0aL48E2t2L9unFqP/vp01WyO2rR6srldjG55BH8+br42p0e2EZ3ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UQ8JFrLL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cUJsOhhT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SgMFKkEy";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cUJsOhhT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SgMFKkEy"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQ8JFrLL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744360185;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z0lPuDrrquqV/HjuED3BRdmAd5birwzsFY9dj2LQ0vk=;
+	b=UQ8JFrLLK+GA/kbMh+HGxBkjZ/e6fgudjBmvgbB8hizbd4kz/JautY5aOen9R7ILIsoiaj
+	L4eoFWCy/nOHUIjjJ5rppLL0VfnyK26UcM5u+pa75zpYRBGbYNrbCyu2RVYvR6rmkEjCmW
+	rEHecWtu0jpAmsXJeuzzseoKVhkt+kA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-588-QcxjdXmHNKWdtPw3iJ6LPw-1; Fri,
+ 11 Apr 2025 04:29:42 -0400
+X-MC-Unique: QcxjdXmHNKWdtPw3iJ6LPw-1
+X-Mimecast-MFC-AGG-ID: QcxjdXmHNKWdtPw3iJ6LPw_1744360181
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BD0571F453;
-	Fri, 11 Apr 2025 08:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744360161; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/JFELNZmbQXoKDlYSfQlfDzt9sNLftVYwoaimOzUeLE=;
-	b=cUJsOhhTRBXqWkuYDitSdRfcY6eDnIziQlRDUjtYnLo0PQSLUIj2wWbSrstGzcc9hen1Hz
-	N66W0tUOQ4bHX42wkMOzvKnKj9erxOFoGYqpRwI41/F2eEOz6oRuuZtjncRTVZeqffzFKA
-	xoTceFIvqxWWPjohiJHj/WujzAdo6Hg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744360161;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/JFELNZmbQXoKDlYSfQlfDzt9sNLftVYwoaimOzUeLE=;
-	b=SgMFKkEyKGXVyepkOEcslfDdZezPvPbqqWt5pIlrcNbbgv1DMEhe6ksQKPOeibBPizQLh+
-	+2A6c+A2pBDb3jCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744360161; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/JFELNZmbQXoKDlYSfQlfDzt9sNLftVYwoaimOzUeLE=;
-	b=cUJsOhhTRBXqWkuYDitSdRfcY6eDnIziQlRDUjtYnLo0PQSLUIj2wWbSrstGzcc9hen1Hz
-	N66W0tUOQ4bHX42wkMOzvKnKj9erxOFoGYqpRwI41/F2eEOz6oRuuZtjncRTVZeqffzFKA
-	xoTceFIvqxWWPjohiJHj/WujzAdo6Hg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744360161;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/JFELNZmbQXoKDlYSfQlfDzt9sNLftVYwoaimOzUeLE=;
-	b=SgMFKkEyKGXVyepkOEcslfDdZezPvPbqqWt5pIlrcNbbgv1DMEhe6ksQKPOeibBPizQLh+
-	+2A6c+A2pBDb3jCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 25B93136A4;
-	Fri, 11 Apr 2025 08:29:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KsxFBuHS+GeAFAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 11 Apr 2025 08:29:21 +0000
-Date: Fri, 11 Apr 2025 10:29:04 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Gavin Shan <gshan@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, adityag@linux.ibm.com,
-	donettom@linux.ibm.com, gregkh@linuxfoundation.org,
-	rafael@kernel.org, dakr@kernel.org, akpm@linux-foundation.org,
-	shan.gavin@gmail.com
-Subject: Re: [PATCH] drivers/base/memory: Avoid overhead from
- for_each_present_section_nr()
-Message-ID: <Z_jS0J4HmEreh-7J@localhost.localdomain>
-References: <20250410125110.1232329-1-gshan@redhat.com>
- <9deb3725-8991-43d1-8c3d-56523fabff28@redhat.com>
- <Z_fNx7hTOR8St0SM@localhost.localdomain>
- <Z_fR6c4o1V57ZAXR@localhost.localdomain>
- <a950dd20-d7eb-429b-b638-2df68208918d@redhat.com>
- <44dff493-9d79-4343-ba81-0c262d7a5b4e@redhat.com>
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E01F41955DC5;
+	Fri, 11 Apr 2025 08:29:40 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.6])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 03ED91955DCE;
+	Fri, 11 Apr 2025 08:29:35 +0000 (UTC)
+Date: Fri, 11 Apr 2025 16:29:29 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: Re: [PATCH v3 1/2] ublk: properly serialize all FETCH_REQs
+Message-ID: <Z_jS6cdN074Z_j4Q@fedora>
+References: <20250410-ublk_task_per_io-v3-0-b811e8f4554a@purestorage.com>
+ <20250410-ublk_task_per_io-v3-1-b811e8f4554a@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,50 +59,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <44dff493-9d79-4343-ba81-0c262d7a5b4e@redhat.com>
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,kvack.org,vger.kernel.org,linux.ibm.com,linuxfoundation.org,kernel.org,linux-foundation.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250410-ublk_task_per_io-v3-1-b811e8f4554a@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Fri, Apr 11, 2025 at 03:04:16PM +1000, Gavin Shan wrote:
-> I think it's a good point. Tried a quick test on a ARM64 machine whose memory
-> capacity is 1TB. Leaping 'nr' by 'sections_per_block' improves the performance a bit,
-> even it's not too much. The time taken by memory_dev_init() drops from 110ms to 100ms.
-> For the IBM Power9 machine (64GB memory) I have, there are not too much space to be
-> improved because the time taken by memory_dev_init() is only 10ms. I will post a patch
-> for review after this patch gets merged, if you agree.
+On Thu, Apr 10, 2025 at 06:17:50PM -0600, Uday Shankar wrote:
+> Most uring_cmds issued against ublk character devices are serialized
+> because each command affects only one queue, and there is an early check
+> which only allows a single task (the queue's ubq_daemon) to issue
+> uring_cmds against that queue. However, this mechanism does not work for
+> FETCH_REQs, since they are expected before ubq_daemon is set. Since
+> FETCH_REQs are only used at initialization and not in the fast path,
+> serialize them using the per-ublk-device mutex. This fixes a number of
+> data races that were previously possible if a badly behaved ublk server
+> decided to issue multiple FETCH_REQs against the same qid/tag
+> concurrently.
+> 
+> Reported-by: Caleb Sander Mateos <csander@purestorage.com>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> ---
+>  drivers/block/ublk_drv.c | 24 +++++++++++++++++-------
+>  1 file changed, 17 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+> index 2fd05c1bd30b03343cb6f357f8c08dd92ff47af9..812789f58704cece9b661713cd0107807c789531 100644
+> --- a/drivers/block/ublk_drv.c
+> +++ b/drivers/block/ublk_drv.c
+> @@ -1809,8 +1809,8 @@ static void ublk_nosrv_work(struct work_struct *work)
+>  
+>  /* device can only be started after all IOs are ready */
+>  static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
+> +	__must_hold(&ub->mutex)
+>  {
+> -	mutex_lock(&ub->mutex);
+>  	ubq->nr_io_ready++;
+>  	if (ublk_queue_ready(ubq)) {
+>  		ubq->ubq_daemon = current;
+> @@ -1822,7 +1822,6 @@ static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
+>  	}
+>  	if (ub->nr_queues_ready == ub->dev_info.nr_hw_queues)
+>  		complete_all(&ub->completion);
+> -	mutex_unlock(&ub->mutex);
+>  }
+>  
+>  static void ublk_handle_need_get_data(struct ublk_device *ub, int q_id,
+> @@ -1962,17 +1961,25 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+>  	case UBLK_IO_UNREGISTER_IO_BUF:
+>  		return ublk_unregister_io_buf(cmd, ub_cmd->addr, issue_flags);
+>  	case UBLK_IO_FETCH_REQ:
+> +		mutex_lock(&ub->mutex);
+>  		/* UBLK_IO_FETCH_REQ is only allowed before queue is setup */
+>  		if (ublk_queue_ready(ubq)) {
+>  			ret = -EBUSY;
+> -			goto out;
+> +			goto out_unlock;
+>  		}
+>  		/*
+>  		 * The io is being handled by server, so COMMIT_RQ is expected
+>  		 * instead of FETCH_REQ
+>  		 */
+>  		if (io->flags & UBLK_IO_FLAG_OWNED_BY_SRV)
+> -			goto out;
+> +			goto out_unlock;
+> +
+> +		/*
+> +		 * Check again (with mutex held) that the I/O is not
+> +		 * active - if so, someone may have already fetched it
+> +		 */
+> +		if (io->flags & UBLK_IO_FLAG_ACTIVE)
+> +			goto out_unlock;
+>  
+>  		if (ublk_need_map_io(ubq)) {
+>  			/*
+> @@ -1980,15 +1987,16 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+>  			 * DATA is not enabled
+>  			 */
+>  			if (!ub_cmd->addr && !ublk_need_get_data(ubq))
+> -				goto out;
+> +				goto out_unlock;
+>  		} else if (ub_cmd->addr) {
+>  			/* User copy requires addr to be unset */
+>  			ret = -EINVAL;
+> -			goto out;
+> +			goto out_unlock;
+>  		}
+>  
+>  		ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
+>  		ublk_mark_io_ready(ub, ubq);
+> +		mutex_unlock(&ub->mutex);
+>  		break;
+>  	case UBLK_IO_COMMIT_AND_FETCH_REQ:
+>  		req = blk_mq_tag_to_rq(ub->tag_set.tags[ub_cmd->q_id], tag);
+> @@ -2028,7 +2036,9 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+>  	ublk_prep_cancel(cmd, issue_flags, ubq, tag);
+>  	return -EIOCBQUEUED;
+>  
+> - out:
+> +out_unlock:
+> +	mutex_unlock(&ub->mutex);
+> +out:
+>  	pr_devel("%s: complete: cmd op %d, tag %d ret %x io_flags %x\n",
+>  			__func__, cmd_op, tag, ret, io->flags);
+>  	return ret;
 
-I have a patch that looked pretty much the same because I wanted to try
-it out after commenting it to David, to see the "gains".
-On a x86 system with 100GB and memory-blocks spanning 8 sections, I saw
-a gain of 12us.
-Of course, that kinda of accumulates wrt. memory capacity.
+Looks fine,
 
- 
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
--- 
-Oscar Salvador
-SUSE Labs
+BTW, FETCH_REQ could be put into one single function, so it will become
+cleaner.
+
+Thanks,
+Ming
+
