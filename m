@@ -1,165 +1,214 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A037D1DDC04
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E088028F952
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358678; cv=none; b=PeIVOwI3FC+GiK1Mc/93pmtKQjMHyrPu4R8WlT/gqjjibx9bFmUVAJXrBdBxT9FOleP01qbtUXC7JoeslyupQhMZ2NbskEjWSorFe3VOhXJ1H17d9TmAzWMH2w+V3lWJJ/B+4FSBSspY2bgHo17u0FcehoQGpsZqznh5/BTPCHE=
+	t=1744358703; cv=none; b=MPQPVP7QUre6YoCKs4L/pV/tTwu/7FjIHoZp3Ix8LhDVUffR4P1cgTIPeBfp04JW18YNQVwswRjmV7DpeLdD6IPYt45+rGV75QQPpW2k5UNkfPMeO/WoUEwH542+CCoJ9BxYV0zVB19xqbHygAQZDmMnbOlTTK6VOevVEycykSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358678; c=relaxed/simple;
-	bh=rd9t4WCJQQ2mQXlGhme8jcXbXVqpab5P1pXLppiJikA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=om+hkHXD34o7FQaN02WK5xh6ovXYnJV5JAPhvmyjBWxd6iVQQZi+DPbekoP7EcAqhQlt3/ORJsksf+3NFTXGbDx3ZBuW1Z6CBz2+wBBkP4bECkknAdSCvZ19ipCx9BaC8C1NlxY2OX6fOIQ87AmkPu/EEVZlDwwj/UmT3xPmjNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=a8VGs2S4; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1744358703; c=relaxed/simple;
+	bh=6VE+DhjJ/CNlU8qlEAH22RJnfVlayNkgvidu6F8WaX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTnBYKEX/xzXzVWLdIQwcnIQBdBe6/ywfKmQ+9GU2wFC3EEBs1uKMOE1JSKP4Zria9to/xHmiGRDwBvvQMWSnElDmC853KSHBVH6yLrwW5DIjL2Ak2mrOWDf7g++qnKqbO4rER9bWpzZ0xKrjfN4+gobh8zA5jV/d5g5gR8qEdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vn4ssqD5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ugY7xUUZ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="a8VGs2S4"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86d377306ddso710723241.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:04:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1744358675; x=1744963475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eL6mQhh76fyOvITqDMOePPOrdn2eCivxVT00/39k9KQ=;
-        b=a8VGs2S4vRneclxC+ztvd8nZP9FpFDAocqEZBKNNG3dyb2ZV4Y0ogs3U2ww+Cex2EC
-         jsQUoYo9HMgxzAswNDia6WW6KTj3Id7eNEjqHbtYzCeLgB7dXjKxNFH9vd0a9hQPgj1G
-         wY8baw/xHAd0KA+Gptr/QUGGrCoNsc5dFlHtMDCjc9iHZERgEvyqpGhz9WV2jXdftxd8
-         C0BcnZzSZ3vmfrdpeA4Fwfj7Ju29E7W+v5D3aIf18x431jo/4kaVo+0Yq9sQqRFgGJLr
-         Yh3hqztg7Jnu1+eOYrpCkxBEB1z+EIXdFMUTOV/jiMTsTE1LkYxY4i1JBT+GY2mYDlAF
-         GFYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744358675; x=1744963475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eL6mQhh76fyOvITqDMOePPOrdn2eCivxVT00/39k9KQ=;
-        b=N8j5SkErpb4Fu2o48To9itUMtZu/z9SuvmH1FC83vRsd15ngTtcdwdxeCOKsgEX1nS
-         WHteSicsGi3S7mTQAsETC1vesAbwZuO6GW2UdFGFHXYFJfALkUg8XtsOpRPIeSVRdnYk
-         kVKDJWozgA7Bpf4xE41rySZFOn6OUDXjlVQd43GSj2Jony2PTJqx1EZot2rwX3X1DSXq
-         L0RRntBL/UOf+u/Sb1nN4h4kAgny1u2X4w/km6EM1+GQDYoGDSmw5G64D49ySyr21qUJ
-         Sx2bZMkCN9lmUD4E+WbF0eVoWow8tBPMA9QGrorcoolTsxmntVaqRA0V2FQOXIUFRejN
-         Yrlw==
-X-Gm-Message-State: AOJu0YzQ8TIqIRH4bbhgDND/3zY6OkN1UNSQmqwsgHTBRlxt4svVxYcM
-	5C0OOGEHZBC9i8w3W9Ac9kxQ9wbjxnSlKDE5cIG2FVzEupTRA/fP7l3u0xA5Azjx7jtRO3hARg9
-	gUQ79tZwYIR4tXCJ+nEU3ANXnX/bBHdD7WqlnsA==
-X-Gm-Gg: ASbGncsMTvIHoIEvKTYxT+2PclLsC7qKQltXHGjQ/uGSrk0p5bMAAm7+JYALAYqrnoP
-	1eakFaRx9gL6QqZxUkyS/rfPrYLKpOmBE6por56ei802xC16kExDMdJQQJvXgH4m/2IQU+Jn/kI
-	WrF81DXkdp3vgsZIOCvmGVLyG4ivKNndGxjXdoNMQ1W5ztq6vwJ7+scMCtjUt/IMLf/+Q=
-X-Google-Smtp-Source: AGHT+IFS+vDPSsUy3KBR+YuGEKwg0Uf3ZoAvbd0MVCMxEojLhJBnmjz9Np5nkTvKpK/n9aULedLJ1qS+Z07+mWcOA8o=
-X-Received: by 2002:a05:6102:5487:b0:4ba:9923:fa57 with SMTP id
- ada2fe7eead31-4c9e4f1f22amr855491137.15.1744358675331; Fri, 11 Apr 2025
- 01:04:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vn4ssqD5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ugY7xUUZ"
+Date: Fri, 11 Apr 2025 10:04:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744358699;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=acahTmX/Ax/Xqa2f81n9R3vfnkbghOQZSuqUtDgmDeM=;
+	b=vn4ssqD5JVEiAj/kpeH5e0vHVyEUEGiE7CU9zpBifLFAgaz8fIAq/Rcrtkko0HIVY48woe
+	nArX6fn3jfNP/ZaIq+wlktW0KmJcCmYESJNZryoJtZ4lOS8Z0Ec06fsu5RbG5lxypBWr9i
+	ZP9cgKaQYJT8aDbtZHshjRpIirBMSINoviM602kahPTR+nF9uNOeautxlIg4PJBnT3yqtk
+	MOYaZdfuXocNfACPJEySkRVYZYZaNz6YY4/RvgikVGqFFKaBEyg8R9swpUZXGawT7CKp2d
+	1Quk8T1XWpuP57fTryJGK0GL3QpyfyR5OT51Xq6H282YFbmpzN2+IYRi6Hcrqg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744358699;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=acahTmX/Ax/Xqa2f81n9R3vfnkbghOQZSuqUtDgmDeM=;
+	b=ugY7xUUZqt2Uu5n/DsIYlO/QK28i7E0Wv0P6u+AYKwbrXKRVEEmoB5JIw3qdikao3pKbo9
+	DVSp/qUHQ84BA3BQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Guo Ren <guoren@kernel.org>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] RISC-V: vDSO: Wire up getrandom() vDSO implementation
+Message-ID: <20250411095103-2aad099a-e4a1-4efb-8374-dd27bf05b668@linutronix.de>
+References: <20250411024600.16045-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411073850.3699180-1-nylon.chen@sifive.com>
- <20250411073850.3699180-3-nylon.chen@sifive.com> <992e3135-0c55-403c-9f71-d76c59cec75b@rivosinc.com>
-In-Reply-To: <992e3135-0c55-403c-9f71-d76c59cec75b@rivosinc.com>
-From: Nylon Chen <nylon.chen@sifive.com>
-Date: Fri, 11 Apr 2025 16:04:23 +0800
-X-Gm-Features: ATxdqUGn2A6qXgf2-HkGrf1A-Gq8MHEb_wirNKnK1k9VoLh8b2bfH0MqDkKbStk
-Message-ID: <CAHh=Yk9RrUDi+73QAYgjBhMOzKKznq9NGwRCo_GkbYZwi4cuuQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] riscv: misaligned: fix sleeping function called
- during misaligned access handling
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, charlie@rivosinc.com, jesse@rivosinc.com, evan@rivosinc.com, 
-	zhangchunyan@iscas.ac.cn, samuel.holland@sifive.com, zong.li@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411024600.16045-1-xry111@xry111.site>
 
-Hi Cl=C3=A9ment,
+On Fri, Apr 11, 2025 at 10:46:00AM +0800, Xi Ruoyao wrote:
+> Hook up the generic vDSO implementation to the generic vDSO getrandom
+> implementation by providing the required __arch_chacha20_blocks_nostack
+> and getrandom_syscall implementations. Also wire up the selftests.
+> 
+> The benchmark result:
+> 
+> 	vdso: 25000000 times in 2.466341333 seconds
+> 	libc: 25000000 times in 41.447720005 seconds
+> 	syscall: 25000000 times in 41.043926672 seconds
+> 
+> 	vdso: 25000000 x 256 times in 162.286219353 seconds
+> 	libc: 25000000 x 256 times in 2953.855018685 seconds
+> 	syscall: 25000000 x 256 times in 2796.268546000 seconds
+> 
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+> 
+> [v1]->v2:
+> - Fix the commit message.
+> - Only build the vDSO getrandom code if CONFIG_VDSO_GETRANDOM, to
+>   unbreak RV32 build.
+> - Likewise, only enable the selftest if __riscv_xlen == 64.
+> 
+> [v1]: https://lore.kernel.org/all/20250224122541.65045-1-xry111@xry111.site/
+> 
+>  arch/riscv/Kconfig                            |   1 +
+>  arch/riscv/include/asm/vdso/getrandom.h       |  30 +++
+>  arch/riscv/kernel/vdso/Makefile               |  12 +
+>  arch/riscv/kernel/vdso/getrandom.c            |  10 +
+>  arch/riscv/kernel/vdso/vdso.lds.S             |   1 +
+>  arch/riscv/kernel/vdso/vgetrandom-chacha.S    | 244 ++++++++++++++++++
+>  .../selftests/vDSO/vgetrandom-chacha.S        |   2 +
+>  7 files changed, 300 insertions(+)
+>  create mode 100644 arch/riscv/include/asm/vdso/getrandom.h
+>  create mode 100644 arch/riscv/kernel/vdso/getrandom.c
+>  create mode 100644 arch/riscv/kernel/vdso/vgetrandom-chacha.S
 
-Thanks for your information
+<snip>
 
-I will test your patch as well, and if no other issues arise,
-I'll remove this change from the patchset in the next version
+> diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.lds.S
+> index 8e86965a8aae..abc69cda0445 100644
+> --- a/arch/riscv/kernel/vdso/vdso.lds.S
+> +++ b/arch/riscv/kernel/vdso/vdso.lds.S
+> @@ -80,6 +80,7 @@ VERSION
+>  #ifndef COMPAT_VDSO
+>  		__vdso_riscv_hwprobe;
+>  #endif
+> +		__vdso_getrandom;
 
-Thanks
+For consistency this could be gated behind CONFIG_VDSO_GETRANDOM.
 
-Nylon
-Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com> =E6=96=BC 2025=E5=B9=B44=E6=
-=9C=8811=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:37=E5=AF=AB=E9=81=
-=93=EF=BC=9A
->
-> Hi Nylon,
->
-> I already have a pending fix for that bug which is to reenable
-> interrupts while handling misaligned faults. Please see:
-> https://lore.kernel.org/linux-riscv/20250317170625.1142870-12-cleger@rivo=
-sinc.com/
->
-> Thanks,
->
-> Cl=C3=A9ment
->
-> On 11/04/2025 09:38, Nylon Chen wrote:
-> > Use copy_from_user_nofault() and copy_to_user_nofault() instead of
-> > copy_from/to_user functions in the misaligned access trap handlers.
-> >
-> > The following bug report was found when executing misaligned memory
-> > accesses:
-> >
-> > BUG: sleeping function called from invalid context at ./include/linux/u=
-access.h:162
-> > in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 115, name: two
-> > preempt_count: 0, expected: 0
-> > CPU: 0 UID: 0 PID: 115 Comm: two Not tainted 6.14.0-rc5 #24
-> > Hardware name: riscv-virtio,qemu (DT)
-> > Call Trace:
-> >  [<ffffffff800160ea>] dump_backtrace+0x1c/0x24
-> >  [<ffffffff80002304>] show_stack+0x28/0x34
-> >  [<ffffffff80010fae>] dump_stack_lvl+0x4a/0x68
-> >  [<ffffffff80010fe0>] dump_stack+0x14/0x1c
-> >  [<ffffffff8004e44e>] __might_resched+0xfa/0x104
-> >  [<ffffffff8004e496>] __might_sleep+0x3e/0x62
-> >  [<ffffffff801963c4>] __might_fault+0x1c/0x24
-> >  [<ffffffff80425352>] _copy_from_user+0x28/0xaa
-> >  [<ffffffff8000296c>] handle_misaligned_store+0x204/0x254
-> >  [<ffffffff809eae82>] do_trap_store_misaligned+0x24/0xee
-> >  [<ffffffff809f4f1a>] handle_exception+0x146/0x152
-> >
-> > Fixes: b686ecdeacf6 ("riscv: misaligned: Restrict user access to kernel=
- memory")
-> > Fixes: 441381506ba7 ("riscv: misaligned: remove CONFIG_RISCV_M_MODE spe=
-cific code")
-> >
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-> > ---
-> >  arch/riscv/kernel/traps_misaligned.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/t=
-raps_misaligned.c
-> > index d7275dfb6b7e..563f73f88fa8 100644
-> > --- a/arch/riscv/kernel/traps_misaligned.c
-> > +++ b/arch/riscv/kernel/traps_misaligned.c
-> > @@ -455,7 +455,7 @@ static int handle_scalar_misaligned_load(struct pt_=
-regs *regs)
-> >
-> >       val.data_u64 =3D 0;
-> >       if (user_mode(regs)) {
-> > -             if (copy_from_user(&val, (u8 __user *)addr, len))
-> > +             if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
-> >                       return -1;
-> >       } else {
-> >               memcpy(&val, (u8 *)addr, len);
-> > @@ -556,7 +556,7 @@ static int handle_scalar_misaligned_store(struct pt=
-_regs *regs)
-> >               return -EOPNOTSUPP;
-> >
-> >       if (user_mode(regs)) {
-> > -             if (copy_to_user((u8 __user *)addr, &val, len))
-> > +             if (copy_to_user_nofault((u8 __user *)addr, &val, len))
-> >                       return -1;
-> >       } else {
-> >               memcpy((u8 *)addr, &val, len);
->
+>  	local: *;
+>  	};
+>  }
+> diff --git a/arch/riscv/kernel/vdso/vgetrandom-chacha.S b/arch/riscv/kernel/vdso/vgetrandom-chacha.S
+> new file mode 100644
+> index 000000000000..d793cadc78a6
+> --- /dev/null
+> +++ b/arch/riscv/kernel/vdso/vgetrandom-chacha.S
+> @@ -0,0 +1,244 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2025 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
+> + *
+> + * Based on arch/loongarch/vdso/vgetrandom-chacha.S.
+> + */
+> +
+> +#include <asm/asm.h>
+> +#include <linux/linkage.h>
+> +
+> +.text
+> +
+> +.macro	ROTRI	rd rs imm
+> +	slliw	t0, \rs, 32 - \imm
+> +	srliw	\rd, \rs, \imm
+> +	or	\rd, \rd, t0
+> +.endm
+> +
+> +.macro	OP_4REG	op d0 d1 d2 d3 s0 s1 s2 s3
+> +	\op	\d0, \d0, \s0
+> +	\op	\d1, \d1, \s1
+> +	\op	\d2, \d2, \s2
+> +	\op	\d3, \d3, \s3
+> +.endm
+> +
+> +/*
+> + *	a0: output bytes
+> + * 	a1: 32-byte key input
+> + *	a2: 8-byte counter input/output
+> + *	a3: number of 64-byte blocks to write to output
+> + */
+> +SYM_FUNC_START(__arch_chacha20_blocks_nostack)
+> +
+> +#define output		a0
+> +#define key		a1
+> +#define counter		a2
+> +#define nblocks		a3
+> +#define i		a4
+> +#define state0		s0
+> +#define state1		s1
+> +#define state2		s2
+> +#define state3		s3
+> +#define state4		s4
+> +#define state5		s5
+> +#define state6		s6
+> +#define state7		s7
+> +#define state8		s8
+> +#define state9		s9
+> +#define state10		s10
+> +#define state11		s11
+> +#define state12		a5
+> +#define state13		a6
+> +#define state14		a7
+> +#define state15		t1
+> +#define cnt		t2
+> +#define copy0		t3
+> +#define copy1		t4
+> +#define copy2		t5
+> +#define copy3		t6
+> +
+> +/* Packs to be used with OP_4REG */
+> +#define line0		state0, state1, state2, state3
+> +#define line1		state4, state5, state6, state7
+> +#define line2		state8, state9, state10, state11
+> +#define line3		state12, state13, state14, state15
+> +
+> +#define line1_perm	state5, state6, state7, state4
+> +#define line2_perm	state10, state11, state8, state9
+> +#define line3_perm	state15, state12, state13, state14
+> +
+> +#define copy		copy0, copy1, copy2, copy3
+> +
+> +#define _16		16, 16, 16, 16
+> +#define _20		20, 20, 20, 20
+> +#define _24		24, 24, 24, 24
+> +#define _25		25, 25, 25, 25
+> +
+> +	addi		sp, sp, -12*SZREG
+> +	REG_S		s0,         (sp)
+> +	REG_S		s1,    SZREG(sp)
+> +	REG_S		s2,  2*SZREG(sp)
+> +	REG_S		s3,  3*SZREG(sp)
+> +	REG_S		s4,  4*SZREG(sp)
+> +	REG_S		s5,  5*SZREG(sp)
+> +	REG_S		s6,  6*SZREG(sp)
+> +	REG_S		s7,  7*SZREG(sp)
+> +	REG_S		s8,  8*SZREG(sp)
+> +	REG_S		s9,  9*SZREG(sp)
+> +	REG_S		s10, 10*SZREG(sp)
+> +	REG_S		s11, 11*SZREG(sp)
+
+This should have the same comment as the loongarch implementation that it is
+fine to store to the stack here. Contrary to the general claim of the
+documentation for __arch_chacha20_blocks_nostack() in include/linux/getrandom.h.
+
+<snip>
