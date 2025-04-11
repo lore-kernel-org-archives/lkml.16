@@ -1,107 +1,132 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A7D29B234
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6172929B234;
+	Fri, 11 Apr 2025 12:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744375060; cv=none; b=J6/Q8ygsElbccqFvbXgPUKfxuUSW9FIed9Jota4E7IpLCmmk0O7Eyr1swBIKsML+oOGubY07GKTS57SX/Fnhxt9VCAvl/zDn4PDMtE5/vdSLVDJ3bZ7KteHk6EO+a5n0VXC7PvNw+sy9juEKiUNKI3hlP3J0xGMD9SEDc+o0SNk=
+	t=1744375065; cv=none; b=Xat6nMTLsZE/zXqTt32Rzo9y7PBAqRPaJwOOVg2tK9EBcKsf2Ozt1ERWZuPTc07t5JHcLZ/I2spTG7S7J/KOvV/6TMYhUH1lh/KTQG8cpZ662BhtQADWyZiYQvKWWTZNkMgjJj5HgT4OwrymL2My46Sbyi8W59Nt6YgxqXyc6S8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744375060; c=relaxed/simple;
-	bh=K8aOFY0lZAi5uOXMBzfS/Bk2rYtxiD2U8l6dY0mtMkE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ovvk6iAhe67Qw2vqEHam/qx6fg4A7A8fGipE3Wz8GAF6+5MN//7aNuPvO09G8iS91jMViAaA/sBmhqRWhssU9VPO8+3CPtttUWa3WNlU9P16uTvJZkq1Lb6S9genLEI3kX85GGYI1h2BhPjb3EmCr5mr4yfLkOhBMgnD8wRV+Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12E3F106F;
-	Fri, 11 Apr 2025 05:37:37 -0700 (PDT)
-Received: from [10.57.72.36] (unknown [10.57.72.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81F003F694;
-	Fri, 11 Apr 2025 05:37:31 -0700 (PDT)
-Message-ID: <5bad616f-8a62-46f4-9c0c-929f4ab1dde0@arm.com>
-Date: Fri, 11 Apr 2025 14:37:28 +0200
+	s=arc-20240116; t=1744375065; c=relaxed/simple;
+	bh=/8uaMex2yn2R+ZosGV9NzEaxk9mPYO7HU4z+Z4R12M8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kSsXuOpA2g6R2tjkA/zKBZ8DI0QzSPGkt0Eg14qiCuoOdOHjeAFvvWM+6q1/bwgrUHFlJWMte0nOJZqmzjpNLQx1z/Ca/WZdPHLV1rCsmaV/4A9ycO30uVUGqAYy4P4iajFNoQXFoXqIBpKZ35qAlwMN1G5A2XCxRTApQBPlAqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKeLdWrf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKeLdWrf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AE7C4CEE2;
+	Fri, 11 Apr 2025 12:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744375065;
+	bh=/8uaMex2yn2R+ZosGV9NzEaxk9mPYO7HU4z+Z4R12M8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KKeLdWrfC19z9zd2XQZKVBqr/ODBHwml77Z5XtwSTq8zBuwd6C3EmMpajGA9shOn0
+	 p8dnJQPNMA6bJvv/eRDLvH+1oTJBvFNLEXrakVNYXDx/DKG9ma7QNpZBTu0lvkS2dS
+	 6v8pdd1GssLBoq9mi4rMBjN8UnS4G2dHy42sp0ZbnQ+JDY8RrsjFxuuJX+mXY6SZn9
+	 Kvy5rRowcJYRltwOUZvUSqYc4oBYWi71UglEu9nrrVEtdfqgGb0dBluyNJfTnC4nK3
+	 PA6VgD0XGRWTROp9HM7iJsMCo5HtC+sRsd1skLC8o0qLapS2ZKSKR5I46HuesqxFBI
+	 mEMOxpfh1w0qg==
+Date: Fri, 11 Apr 2025 14:37:40 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, John Sperbeck <jsperbeck@google.com>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/4] sysctl: move u8 register test to lib/test_sysctl.c
+Message-ID: <ncfru3u5wwbnsdtehdwecaihhxy4kdhn4ip5nyno7o7fgatwaw@rjp73b4nu7ci>
+References: <20250321-jag-test_extra_val-v1-0-a01b3b17dc66@kernel.org>
+ <20250321-jag-test_extra_val-v1-1-a01b3b17dc66@kernel.org>
+ <202504091020.3A06E6C548@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 00/18] pkeys-based page table hardening
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
- Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
- Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Andy Lutomirski <luto@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- "Mike Rapoport (IBM)" <rppt@kernel.org>, Ryan Roberts
- <ryan.roberts@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Will Deacon <will@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Qi Zheng <zhengqi.arch@bytedance.com>, linux-arm-kernel@lists.infradead.org,
- x86@kernel.org
-References: <20250411091631.954228-1-kevin.brodsky@arm.com>
- <Z_jfGlOEb4Bjl3vO@gmail.com>
-Content-Language: en-GB
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-In-Reply-To: <Z_jfGlOEb4Bjl3vO@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zg2ap4wtnzxx7lsp"
+Content-Disposition: inline
+In-Reply-To: <202504091020.3A06E6C548@keescook>
 
-On 11/04/2025 11:21, Ingo Molnar wrote:
-> * Kevin Brodsky <kevin.brodsky@arm.com> wrote:
->
->> Performance
->> ===========
->>
->> Caveat: these numbers should be seen as a lower bound for the overhead
->> of a real POE-based protection. The hardware checks added by POE are
->> however not expected to incur significant extra overhead.
->>
->> +-------------------+----------------------------------+------------------+---------------+
->> | Benchmark         | Result Class                     | Without batching | With batching |
->> +===================+==================================+==================+===============+
->> | mmtests/kernbench | elsp-64                          |            0.20% |         0.20% |
->> |                   | syst-64                          |            1.62% |         0.63% |
->> |                   | user-64                          |           -0.04% |         0.05% |
->> +-------------------+----------------------------------+------------------+---------------+
->> | micromm/fork      | fork: p:1                        |      (R) 225.56% |        -0.07% |
->> |                   | fork: p:512                      |      (R) 254.32% |         0.73% |
->> +-------------------+----------------------------------+------------------+---------------+
->> | micromm/munmap    | munmap: p:1                      |       (R) 24.49% |         4.29% |
->> |                   | munmap: p:512                    |      (R) 161.47% |     (R) 6.06% |
->> +-------------------+----------------------------------+------------------+---------------+
->> | micromm/vmalloc   | fix_size_alloc_test: p:1, h:0    |       (R) 14.80% |    (R) 11.85% |
->> |                   | fix_size_alloc_test: p:4, h:0    |       (R) 38.42% |    (R) 10.47% |
->> |                   | fix_size_alloc_test: p:16, h:0   |       (R) 64.74% |     (R) 6.41% |
->> |                   | fix_size_alloc_test: p:64, h:0   |       (R) 79.98% |     (R) 3.24% |
->> |                   | fix_size_alloc_test: p:256, h:0  |       (R) 85.46% |     (R) 2.77% |
->> |                   | fix_size_alloc_test: p:16, h:1   |       (R) 47.89% |         3.10% |
->> |                   | fix_size_alloc_test: p:64, h:1   |       (R) 62.43% |         3.36% |
->> |                   | fix_size_alloc_test: p:256, h:1  |       (R) 64.30% |     (R) 2.68% |
->> |                   | random_size_alloc_test: p:1, h:0 |       (R) 74.94% |     (R) 3.13% |
->> |                   | vm_map_ram_test: p:1, h:0        |       (R) 30.53% |    (R) 26.20% |
->> +-------------------+----------------------------------+------------------+---------------+
-> So I had to look 3 times to figure out what the numbers mean: they are 
-> the extra overhead from this hardening feature, measured in system time 
-> percentage, right?
 
-These are relative increases compared to the baseline for this series
-(described earlier on: 6.15-rc1 + 2 additional series). Real time is
-measured, except for kernbench where all 3 measurements are provided.
+--zg2ap4wtnzxx7lsp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> So "4.29%" means there's a 4.29% slowdown on that particular workload 
-> when the feature is enabled. Maybe add an explanation to the next iteration? :-)
+On Wed, Apr 09, 2025 at 10:26:56AM -0700, Kees Cook wrote:
+> On Fri, Mar 21, 2025 at 01:47:24PM +0100, Joel Granados wrote:
+> > If the test added in commit b5ffbd139688 ("sysctl: move the extra1/2
+> > boundary check of u8 to sysctl_check_table_array") is run as a module, a
+> > lingering reference to the module is left behind, and a 'sysctl -a'
+> > leads to a panic.
+> >=20
+> > To reproduce
+> >     CONFIG_KUNIT=3Dy
+> >     CONFIG_SYSCTL_KUNIT_TEST=3Dm
+> >=20
+> > Then run these commands:
+> >     modprobe sysctl-test
+> >     rmmod sysctl-test
+> >     sysctl -a
+> >=20
+> > The panic varies but generally looks something like this:
+> >=20
+> >     BUG: unable to handle page fault for address: ffffa4571c0c7db4
+> >     #PF: supervisor read access in kernel mode
+> >     #PF: error_code(0x0000) - not-present page
+> >     PGD 100000067 P4D 100000067 PUD 100351067 PMD 114f5e067 PTE 0
+> >     Oops: Oops: 0000 [#1] SMP NOPTI
+> >     ... ... ...
+> >     RIP: 0010:proc_sys_readdir+0x166/0x2c0
+> >     ... ... ...
+> >     Call Trace:
+> >      <TASK>
+> >      iterate_dir+0x6e/0x140
+> >      __se_sys_getdents+0x6e/0x100
+> >      do_syscall_64+0x70/0x150
+> >      entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> >=20
+> > Move the test to lib/test_sysctl.c where the registration reference is
+> > handled on module exit
+> >=20
+> > 'Fixes: b5ffbd139688 ("sysctl: move the extra1/2 boundary check of u8 to
+>=20
+> Typoe: drop leading '
+>=20
+> > sysctl_check_table_array")'
+>=20
+> And avoid wrapping this line for the field.
+>=20
+> >=20
+> > Signed-off-by: Joel Granados <joel.granados@kernel.org>
+>=20
+> Otherwise looks good to me.
 
-Yes that's right. I thought it was clear from the description above but
-evidently I was wrong :) I'll add a "plain text" reading like this one
-in the next version. I should also have mentioned which config was used,
-namely: defconfig + CONFIG_KPKEYS_HARDENED_PGTABLES=y
+Thx for the feedback;=20
+Changed this and took in your trailers, but wont resend.
 
-- Kevin
+Best
+--=20
+
+Joel Granados
+
+--zg2ap4wtnzxx7lsp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmf5DQgACgkQupfNUreW
+QU+E1Qv/QukQGbyEzmzoHNz2YK7Udn5VKQIOW2yPC5zsJqRGysBgkGyVoJa8wctt
+yaxtcx4FNYFCI/l6u8Z+2cFx3vkXGh3q02zvuQnMq6LwS/CO04cWjvHUhZAVXl4e
+fHXxF27eqpRePOZ5tUjXdo4s3DddBieYJ/aL+kRvsE6wDrwb9dWVwNJXcQoZO2oU
+Lhar9DC2NcA3StqOM2lfQ2xx2GQT5qGU6XzLCSXJTC9lwgCE3N1CT5cvk+Broc90
+/LLq7bKrsidFbwxvlByhaFif7ObFl6OKulQ84apUIqDWuKu62QPA/zZ5+w71xeYI
+AU1a72Grs54cgIVyrCNEKVbIu1nlVWjkhAGlS2gDihwx10y78gl7+25csFKklEhM
+KoqG/6ngemVRaJrzA6mV6JWA6omA0jfrobrjtboAqml37/fq0GBFk1CHrYIFtlNJ
+xhS+Ql3ImjslYY8vRVDstLnMBAisXmYNmAeDceh6JHhh8HigobkrSD5vfHGOUmwE
+4kA9kPyh
+=6Pet
+-----END PGP SIGNATURE-----
+
+--zg2ap4wtnzxx7lsp--
