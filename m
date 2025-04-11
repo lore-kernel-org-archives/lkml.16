@@ -1,122 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C5421146C;
-	Fri, 11 Apr 2025 11:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DCEE21146C
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744370736; cv=none; b=ImyqEZZ8quJUW2f+/iIkYURbdjLTmxnXZ4oz3zYJJzZ58IYjy2FY4aSl6nIpH+Lj9bOPQcqcJ94t0s6X700Gsk/8CKC+PXMeWQPfRI3UxPzloIGOHfcJXIXwTMDPpXBkHgiQcsrMZkH91uCCa5n8W63j4WRjQWIu7MdJtnBgQvk=
+	t=1744370745; cv=none; b=WOxeDY65ACKaGzkqe5cvSn/mn2IHjY8wF5i0vPj1w5JX8CQcINb0KTRWivdXTEdxvLdx+35caMwR5Rcmh/BKyD1W0dsq+9V0G5CnaGLSYkfDdbBMvjHFKf1OXKoY2kHFGGycl+l0AHosH27/We6DS7tf82afnOyMCC6/xCUr/Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744370736; c=relaxed/simple;
-	bh=5l3bqjZl+ty/hdXtbzKmsUlfDUP//EXNCWO3BwwnVQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lgwymuv6AdKZ01miUvIWFZNRtluOiCqHMI6vGnCB1SiQtA782hMyWW+zAzMuga4AGSLeIYM1Vfwv4Y+B1HjLzBn8oGKAOYPl4cPCo0C4fMJxJcrHUBKX4dmKxpP8MzZdX118j6Msj5ILlRju6K5J1FSC8pMSoR4fw5mPncXSvYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQncZjRG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQncZjRG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB1EC4CEE2;
-	Fri, 11 Apr 2025 11:25:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744370735;
-	bh=5l3bqjZl+ty/hdXtbzKmsUlfDUP//EXNCWO3BwwnVQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PQncZjRG98uxDMN44XqlPZgt2NTT1cJrmCzifzTQ06fCVUeVrzZO+mlHhzEzZTook
-	 40DFfj0FeXvdmtQvAqyO/jwcDP87tWUZW/h6Q2O4m6WxsxICdWfn4wS8aFeMKeuEf6
-	 OLojEheGa/9fonpiJPwxbKsdWX012NMXe2SkCDtvjQUXW4v7FKe7HAkaQxpb73gi5H
-	 Nb5gUb/lbzggKqlmLktJovekl56AkBz4hrHgoyVoXVhBu/I67rdCCf2GuyOIA5omEx
-	 mq3pDblo5+6DAQyOeTUJFGWMgunPGqJznLdeoOs6yJhAw+0seM00HF4yeoMhvXFjBp
-	 1Vg6AV4KtiZow==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u3CVv-000000008SK-29OY;
-	Fri, 11 Apr 2025 13:25:39 +0200
-Date: Fri, 11 Apr 2025 13:25:39 +0200
-From: Johan Hovold <johan@kernel.org>
-To: jens.glathe@oldschoolsolutions.biz,
-	Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] arm64: dts: qcom: x1e80100-hp-x14: add
- usb-1-ss1-sbu-mux
-Message-ID: <Z_j8M2Q0J3LuANAF@hovoldconsulting.com>
-References: <20250410-hp-x14-v2-0-d36414704a0a@oldschoolsolutions.biz>
- <20250410-hp-x14-v2-1-d36414704a0a@oldschoolsolutions.biz>
+	s=arc-20240116; t=1744370745; c=relaxed/simple;
+	bh=j3xA6bRZZ16EIr9OZEhJvJF9IVjwWP5YQPC7llL4Hgw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sv7fGqUVWZXxSHdfURZbrrVyQ5ZfySGtHVXDr9KIoj5X8Lblj52WaP5Df9+JWZLwm1E9wEFGKw8mlWNwQ3UGUjJC+wa40NDzW/b5Yq9vqjnei7SQafxkBvLMEk6VCNqPAHGBz4fHvYzCfNs9eX2enIeWswvxllqPJSTMYLtsEIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C21A106F;
+	Fri, 11 Apr 2025 04:25:43 -0700 (PDT)
+Received: from usa.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0DEDF3F694;
+	Fri, 11 Apr 2025 04:25:42 -0700 (PDT)
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Huisong Li <lihuisong@huawei.com>
+Subject: [PATCH] soc: hisilicon: kunpeng_hccs: Simplify PCC shared memory region handling
+Date: Fri, 11 Apr 2025 12:25:39 +0100
+Message-Id: <20250411112539.1149863-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410-hp-x14-v2-1-d36414704a0a@oldschoolsolutions.biz>
+Content-Transfer-Encoding: 8bit
 
-[ +CC: Stephan ]
+The PCC driver now handles mapping and unmapping of shared memory
+areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+this Kunpeng HCCS driver did handling of those mappings like several
+other PCC mailbox client drivers.
 
-On Thu, Apr 10, 2025 at 12:07:28PM +0200, Jens Glathe via B4 Relay wrote:
-> From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-> 
-> The usb_1_1 port doesn't have the PS8830 repeater, but apparently some
-> MUX for DP altmode control. After a suggestion from sgerhold on
-> '#aarch64-laptops' I added gpio-sbu-mux nodes from the x1e80100-QCP
-> tree, and this appears to work well. It is still guesswork, but
-> working guesswork.
+There were redundant operations, leading to unnecessary code. Maintaining
+the consistency across these driver was harder due to scattered handling
+of shmem.
 
-Did you confirm the three GPIOs experimentally, for example, by making
-sure that inverting the enable signal polarity breaks USB?
+Just use the mapped shmem and remove all redundant operations from this
+driver.
 
-> +	usb-1-ss1-sbu-mux {
-> +		compatible = "onnn,fsusb42", "gpio-sbu-mux";
-> +
-> +		enable-gpios = <&tlmm 179 GPIO_ACTIVE_LOW>;
-> +		select-gpios = <&tlmm 178 GPIO_ACTIVE_HIGH>;
-> +
-> +		pinctrl-0 = <&usb_1_ss1_sbu_default>;
-> +		pinctrl-names = "default";
+Cc: Huisong Li <lihuisong@huawei.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/soc/hisilicon/kunpeng_hccs.c | 42 ++++++++++------------------
+ drivers/soc/hisilicon/kunpeng_hccs.h |  2 --
+ 2 files changed, 15 insertions(+), 29 deletions(-)
 
->  };
->  
->  &apps_rsc {
-> @@ -1424,6 +1451,30 @@ reset-n-pins {
->  		};
->  	};
->  
-> +	usb_1_ss1_sbu_default: usb-1-ss1-sbu-state {
-> +		mode-pins {
-> +			pins = "gpio177";
-> +			function = "gpio";
-> +			bias-disable;
-> +			drive-strength = <2>;
-> +			output-high;
-> +		};
+Hi,
 
-This is more of a question for Stephan who added this to QCP [1], but
-why is this mode pin here and what does it do?
+This is just resend of the same patch that was part of a series [1].
+Only core PCC mailbox changes were merged during v6.15 merge window.
+So dropping all the maintainer acks and reposting it so that it can
+be picked up for v6.16 via maintainers tree.
 
-It's not part of the binding for the mux (which indeed only has two
-control signals according to the datasheet) so it looks like something
-is not modelled correctly.
+Regards,
+Sudeep
 
-> +
-> +		oe-n-pins {
-> +			pins = "gpio179";
-> +			function = "gpio";
-> +			bias-disable;
-> +			drive-strength = <2>;
-> +		};
-> +
-> +		sel-pins {
-> +			pins = "gpio178";
-> +			function = "gpio";
-> +			bias-disable;
-> +			drive-strength = <2>;
-> +		};
-> +	};
+[1] https://lore.kernel.org/all/20250313-pcc_fixes_updates-v3-9-019a4aa74d0f@arm.com/
 
-Johan
+diff --git a/drivers/soc/hisilicon/kunpeng_hccs.c b/drivers/soc/hisilicon/kunpeng_hccs.c
+index 444a8f59b7da..7fc353732d55 100644
+--- a/drivers/soc/hisilicon/kunpeng_hccs.c
++++ b/drivers/soc/hisilicon/kunpeng_hccs.c
+@@ -167,10 +167,6 @@ static void hccs_pcc_rx_callback(struct mbox_client *cl, void *mssg)
+ 
+ static void hccs_unregister_pcc_channel(struct hccs_dev *hdev)
+ {
+-	struct hccs_mbox_client_info *cl_info = &hdev->cl_info;
+-
+-	if (cl_info->pcc_comm_addr)
+-		iounmap(cl_info->pcc_comm_addr);
+ 	pcc_mbox_free_channel(hdev->cl_info.pcc_chan);
+ }
+ 
+@@ -179,6 +175,7 @@ static int hccs_register_pcc_channel(struct hccs_dev *hdev)
+ 	struct hccs_mbox_client_info *cl_info = &hdev->cl_info;
+ 	struct mbox_client *cl = &cl_info->client;
+ 	struct pcc_mbox_chan *pcc_chan;
++	struct mbox_chan *mbox_chan;
+ 	struct device *dev = hdev->dev;
+ 	int rc;
+ 
+@@ -196,7 +193,7 @@ static int hccs_register_pcc_channel(struct hccs_dev *hdev)
+ 		goto out;
+ 	}
+ 	cl_info->pcc_chan = pcc_chan;
+-	cl_info->mbox_chan = pcc_chan->mchan;
++	mbox_chan = pcc_chan->mchan;
+ 
+ 	/*
+ 	 * pcc_chan->latency is just a nominal value. In reality the remote
+@@ -206,34 +203,24 @@ static int hccs_register_pcc_channel(struct hccs_dev *hdev)
+ 	cl_info->deadline_us =
+ 			HCCS_PCC_CMD_WAIT_RETRIES_NUM * pcc_chan->latency;
+ 	if (!hdev->verspec_data->has_txdone_irq &&
+-	    cl_info->mbox_chan->mbox->txdone_irq) {
++	    mbox_chan->mbox->txdone_irq) {
+ 		dev_err(dev, "PCC IRQ in PCCT is enabled.\n");
+ 		rc = -EINVAL;
+ 		goto err_mbx_channel_free;
+ 	} else if (hdev->verspec_data->has_txdone_irq &&
+-		   !cl_info->mbox_chan->mbox->txdone_irq) {
++		   !mbox_chan->mbox->txdone_irq) {
+ 		dev_err(dev, "PCC IRQ in PCCT isn't supported.\n");
+ 		rc = -EINVAL;
+ 		goto err_mbx_channel_free;
+ 	}
+ 
+-	if (!pcc_chan->shmem_base_addr ||
+-	    pcc_chan->shmem_size != HCCS_PCC_SHARE_MEM_BYTES) {
+-		dev_err(dev, "The base address or size (%llu) of PCC communication region is invalid.\n",
+-			pcc_chan->shmem_size);
++	if (pcc_chan->shmem_size != HCCS_PCC_SHARE_MEM_BYTES) {
++		dev_err(dev, "Base size (%llu) of PCC communication region must be %d bytes.\n",
++			pcc_chan->shmem_size, HCCS_PCC_SHARE_MEM_BYTES);
+ 		rc = -EINVAL;
+ 		goto err_mbx_channel_free;
+ 	}
+ 
+-	cl_info->pcc_comm_addr = ioremap(pcc_chan->shmem_base_addr,
+-					 pcc_chan->shmem_size);
+-	if (!cl_info->pcc_comm_addr) {
+-		dev_err(dev, "Failed to ioremap PCC communication region for channel-%u.\n",
+-			hdev->chan_id);
+-		rc = -ENOMEM;
+-		goto err_mbx_channel_free;
+-	}
+-
+ 	return 0;
+ 
+ err_mbx_channel_free:
+@@ -246,7 +233,7 @@ static int hccs_wait_cmd_complete_by_poll(struct hccs_dev *hdev)
+ {
+ 	struct hccs_mbox_client_info *cl_info = &hdev->cl_info;
+ 	struct acpi_pcct_shared_memory __iomem *comm_base =
+-							cl_info->pcc_comm_addr;
++							cl_info->pcc_chan->shmem;
+ 	u16 status;
+ 	int ret;
+ 
+@@ -289,7 +276,7 @@ static inline void hccs_fill_pcc_shared_mem_region(struct hccs_dev *hdev,
+ 		.status = 0,
+ 	};
+ 
+-	memcpy_toio(hdev->cl_info.pcc_comm_addr, (void *)&tmp,
++	memcpy_toio(hdev->cl_info.pcc_chan->shmem, (void *)&tmp,
+ 		    sizeof(struct acpi_pcct_shared_memory));
+ 
+ 	/* Copy the message to the PCC comm space */
+@@ -309,7 +296,7 @@ static inline void hccs_fill_ext_pcc_shared_mem_region(struct hccs_dev *hdev,
+ 		.command = cmd,
+ 	};
+ 
+-	memcpy_toio(hdev->cl_info.pcc_comm_addr, (void *)&tmp,
++	memcpy_toio(hdev->cl_info.pcc_chan->shmem, (void *)&tmp,
+ 		    sizeof(struct acpi_pcct_ext_pcc_shared_memory));
+ 
+ 	/* Copy the message to the PCC comm space */
+@@ -321,12 +308,13 @@ static int hccs_pcc_cmd_send(struct hccs_dev *hdev, u8 cmd,
+ {
+ 	const struct hccs_verspecific_data *verspec_data = hdev->verspec_data;
+ 	struct hccs_mbox_client_info *cl_info = &hdev->cl_info;
++	struct mbox_chan *mbox_chan = cl_info->pcc_chan->mchan;
+ 	struct hccs_fw_inner_head *fw_inner_head;
+ 	void __iomem *comm_space;
+ 	u16 space_size;
+ 	int ret;
+ 
+-	comm_space = cl_info->pcc_comm_addr + verspec_data->shared_mem_size;
++	comm_space = cl_info->pcc_chan->shmem + verspec_data->shared_mem_size;
+ 	space_size = HCCS_PCC_SHARE_MEM_BYTES - verspec_data->shared_mem_size;
+ 	verspec_data->fill_pcc_shared_mem(hdev, cmd, desc,
+ 					  comm_space, space_size);
+@@ -334,7 +322,7 @@ static int hccs_pcc_cmd_send(struct hccs_dev *hdev, u8 cmd,
+ 		reinit_completion(&cl_info->done);
+ 
+ 	/* Ring doorbell */
+-	ret = mbox_send_message(cl_info->mbox_chan, &cmd);
++	ret = mbox_send_message(mbox_chan, &cmd);
+ 	if (ret < 0) {
+ 		dev_err(hdev->dev, "Send PCC mbox message failed, ret = %d.\n",
+ 			ret);
+@@ -356,9 +344,9 @@ static int hccs_pcc_cmd_send(struct hccs_dev *hdev, u8 cmd,
+ 
+ end:
+ 	if (verspec_data->has_txdone_irq)
+-		mbox_chan_txdone(cl_info->mbox_chan, ret);
++		mbox_chan_txdone(mbox_chan, ret);
+ 	else
+-		mbox_client_txdone(cl_info->mbox_chan, ret);
++		mbox_client_txdone(mbox_chan, ret);
+ 	return ret;
+ }
+ 
+diff --git a/drivers/soc/hisilicon/kunpeng_hccs.h b/drivers/soc/hisilicon/kunpeng_hccs.h
+index dc267136919b..f0a9a5618d97 100644
+--- a/drivers/soc/hisilicon/kunpeng_hccs.h
++++ b/drivers/soc/hisilicon/kunpeng_hccs.h
+@@ -60,10 +60,8 @@ struct hccs_chip_info {
+ 
+ struct hccs_mbox_client_info {
+ 	struct mbox_client client;
+-	struct mbox_chan *mbox_chan;
+ 	struct pcc_mbox_chan *pcc_chan;
+ 	u64 deadline_us;
+-	void __iomem *pcc_comm_addr;
+ 	struct completion done;
+ };
+ 
+-- 
+2.34.1
 
-[1] https://lore.kernel.org/all/20241212-x1e80100-qcp-dp-v1-2-37cb362a0dfe@linaro.org/
