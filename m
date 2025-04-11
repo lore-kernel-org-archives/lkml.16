@@ -1,88 +1,107 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBDAA94F;
-	Fri, 11 Apr 2025 01:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744333937; cv=none; b=NXUwKstEyIRPQwcN0gqMNRi3XH2iFi5CakUqnwKUVPy/MUIoGwWu/8JIMDyBzvqTHfCEIX8Pz+lIYeEKTqbpByrDXyKNiEY52g/2fqk3XxwhVABsw8zAYIDKeIj8JO1QetleRMfzDsYwYo/ntXn7IAD3Om8V10YuEZgHUjEURKs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744333937; c=relaxed/simple;
-	bh=GRyBUhrKRcofK7ITnvUObLLOwxkLUhDidiUBg6IVg2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oywmpELCvcWB4chKUEOCJNXcbZxb1aU6ru172UeREd8eOsrw5wD5oqo3Q6lyoP8DbBZVpEv4/iXWPlCpJFwMyOYLb0iayiTsPpF5q6OnId8HYS4svGw1H9wGo9YL7U5DIPiHybFBRp8/Kg82Tq7ncr0ARiNEIZ7Hsm+gVzLAW10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=2q3YK/HS; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224E61EFF9F;
+	Fri, 11 Apr 2025 01:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744334047; cv=pass; b=n2WCSyRRbgbC3vnvkV0nROCIC4uzk1HF9pqR2QsP2yjaiuUYS75/BaOeSOF8M2QWgT2uuGXzuZiFJmkb7aXbcv+y2VjyxBNaElXg0IJeGgaW0kDEF5eW0Zj9QDldNSTRsD7bONHM/aWsJrNQ0vGBNiirDPKvvYKHWFvKBiELSl0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744334047; c=relaxed/simple;
+	bh=I7i+GIouev0t7n+43O6YASB7FxlfVGMD0dqBCQj5mJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sxJN6oW70aUgHdHg45xYArnwMrFykLBDe4Mw/RiAZZfKmPGoQ6EjIEAQpsEwMP/Qak0qA0FYJ9BtMlcuRjMip6FZlIcsKk4QoURE3ZJqdiO3gHD+J3hggfl8pMonJNii8t0UNQduQIvBEq4oaxm7oZzprGGNI894iSaORsR8EzM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=WVka6cmP; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2q3YK/HS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=S/RCIdYiJVSUeowwqvrPZG00uB4tMfPhPiUYiVE6DQM=; b=2q3YK/HSW09L/ltBBLaXef5g/A
-	8f+re2CQice/OmTOLKa4exyVmH3UC8+PwrE72Ksfue6fPUmXpdfiG6XGKw4oyUfK8sDa1B1E6HXvU
-	lm/9E9rsEJNHQNrufBbjgCh4Tdq+cOlyNOU2xDS0Rlml5bZ4CzhZ4p7JyOAl8YnI4D4g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u32wA-008kk9-B7; Fri, 11 Apr 2025 03:12:06 +0200
-Date: Fri, 11 Apr 2025 03:12:06 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Qasim Ijaz <qasdev00@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	horms@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
-Subject: Re: [PATCH 1/4] net: fix uninitialised access in mii_nway_restart()
-Message-ID: <c8ebd8a1-cfdd-4a27-8cb6-114ea60ba294@lunn.ch>
-References: <20250319112156.48312-1-qasdev00@gmail.com>
- <20250319112156.48312-2-qasdev00@gmail.com>
- <20250325063307.15336182@kernel.org>
- <Z_hC-9C7Bc2lPrig@qasdev.system>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="WVka6cmP"
+ARC-Seal: i=1; a=rsa-sha256; t=1744334021; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Z5hnocibtqfSSHECQLrySBsEKPruFhchv0MhtyASs9fPZLK2UN6E6tWfe+lodd2ROXCgDU9rqvZHls8mxmwEH4TZFoykUSlg/2okZEJKiLvlk568+vUOgMrc8lCTWybYaBDtgcNRZuOgLmLInzvyEGBXeTjIluBzZCRjg2giefo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744334021; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+gqP9OdXVjB01afAL7nFZ5jI3eFKniYpprLC4MIIIfs=; 
+	b=TJEjxh6cUMMuQiSSOxEpS86teGloynnHsPUtHfEwoOGkiOrSps+kRa6gM2veqz6VOgKq/VnezbPaZCEaH+/LkyecTjG3ONPf6vKTYDOmEZXxzxjvSw4/cwV5zWZwQygSfDKy+Io49WpipNF46PpQevOioBt0JWIfaeEBP7rHqKY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744334020;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=+gqP9OdXVjB01afAL7nFZ5jI3eFKniYpprLC4MIIIfs=;
+	b=WVka6cmPAyOuIMoxh2Zj8x/58d9NEVmwzelxWKAxBVx2NX5ZAB1XY0qUwpv66dnw
+	IaWCF9rIRLsY4xERLirDVxCrRCH3m+7pJxhm/VBhy9wITYQUn3A1YM5X+PQfQoC3AvH
+	ZJkUjvCG/Sajs6rd/ES04cybE7XaGnBpuy165Bco=
+Received: by mx.zohomail.com with SMTPS id 1744334018182980.3859780297824;
+	Thu, 10 Apr 2025 18:13:38 -0700 (PDT)
+Message-ID: <1ca0fceb-ebca-45fb-8733-0018843b8075@collabora.com>
+Date: Fri, 11 Apr 2025 04:13:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_hC-9C7Bc2lPrig@qasdev.system>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] media: synopsys: hdmirx: Count dropped frames
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Shreeya Patel <shreeya.patel@collabora.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Dingxian Wen <shawn.wen@rock-chips.com>
+Cc: linux-media@vger.kernel.org, kernel@collabora.com,
+ linux-kernel@vger.kernel.org
+References: <20250410-rk3588-hdmirx-sequence-v1-0-aad3f216d351@collabora.com>
+ <20250410-rk3588-hdmirx-sequence-v1-2-aad3f216d351@collabora.com>
+Content-Language: en-US
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+In-Reply-To: <20250410-rk3588-hdmirx-sequence-v1-2-aad3f216d351@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Thu, Apr 10, 2025 at 11:15:23PM +0100, Qasim Ijaz wrote:
-> On Tue, Mar 25, 2025 at 06:33:07AM -0700, Jakub Kicinski wrote:
-> > On Wed, 19 Mar 2025 11:21:53 +0000 Qasim Ijaz wrote:
-> > > --- a/drivers/net/mii.c
-> > > +++ b/drivers/net/mii.c
-> > > @@ -464,6 +464,8 @@ int mii_nway_restart (struct mii_if_info *mii)
-> > >  
-> > >  	/* if autoneg is off, it's an error */
-> > >  	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
-> > > +	if (bmcr < 0)
-> > > +		return bmcr;
-> > >  
-> > >  	if (bmcr & BMCR_ANENABLE) {
-> > >  		bmcr |= BMCR_ANRESTART;
-> > 
-> > We error check just one mdio_read() but there's a whole bunch of them
-> > in this file. What's the expected behavior then? Are all of them buggy?
-> >
+10.04.2025 23:43, Nicolas Dufresne пишет:
+> The sequence number communicate the lost frames to userspace. For this
+> reason, it must be incremented even when a frame is skipped. This allows
+> userspace such as GStreamer to report the loss.
+> 
+> Fixes: 7b59b132ad439 ("media: platform: synopsys: Add support for HDMI input driver")
+> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> ---
+>  drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
+> index f5b3f5010ede55bde28756da326a434cc9245492..7af6765532e33239f4260b29ea82b31494b66213 100644
+> --- a/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
+> +++ b/drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
+> @@ -1956,10 +1956,6 @@ static void dma_idle_int_handler(struct snps_hdmirx_dev *hdmirx_dev,
+>  					vb_done->field = V4L2_FIELD_NONE;
 >  
-> Hi Jakub
->     
-> Apologies for my delayed response, I had another look at this and I
-> think my patch may be off a bit. You are correct that there are multiple
-> mdio_read() calls and looking at the mii.c file we can see that calls to
-> functions like mdio_read (and a lot of others) dont check return values.
->   
-> So in light of this I think a better patch would be to not edit the 
-> mii.c file at all and just make ch9200_mdio_read return 0 on     
-> error.
+>  				hdmirx_vb_done(stream, vb_done);
+> -				stream->sequence++;
+> -				if (stream->sequence == 30)
+> -					v4l2_dbg(1, debug, v4l2_dev,
+> -						 "rcv frames\n");
+>  			}
+>  
+>  			stream->curr_buf = NULL;
+> @@ -1971,6 +1967,10 @@ static void dma_idle_int_handler(struct snps_hdmirx_dev *hdmirx_dev,
+>  			v4l2_dbg(3, debug, v4l2_dev,
+>  				 "%s: next_buf NULL, skip vb_done\n", __func__);
+>  		}
+> +
+> +		stream->sequence++;
+> +		if (stream->sequence == 30)
+> +			v4l2_dbg(1, debug, v4l2_dev, "rcv frames\n");
+>  	}
+>  
+>  DMA_IDLE_OUT:
+> 
 
-Do you actually have one of these devices? If you do have, an even
-better change would be to throwaway the mii code and swap to phylib
-and an MDIO bus. You can probably follow smsc95xx.c.
+Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 
-	Andrew
+-- 
+Best regards,
+Dmitry
