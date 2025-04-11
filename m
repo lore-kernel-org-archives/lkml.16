@@ -1,102 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5934C78F45;
-	Fri, 11 Apr 2025 20:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7793078F45;
+	Fri, 11 Apr 2025 20:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744403674; cv=none; b=s86vlFStHcUz29cBeGJ9JLF8pVgdrhULaYKJN2p6wHYRoyE1QtRfXZZOQcA3uT0ALFBniIi5nLvduT7mBM7TVFauoJoCOjgDqOkjp7X2x8rcsdpnpreL3hZ3auTWXKYHypJeZYFsTET3AqUf00jnYeDWeHV0Z6mWS7qmxY3aEx4=
+	t=1744403845; cv=none; b=GEHKeD6C/0V9B6qqSrs8VMKzOpGw7zaRZASjHPfKrr3RcriBNL6JNlQ3juTVxbuAGGwZJwoDkuO1+J8P9LOwS9FxAyBnSdBFzYSDahZRuc7YNrzCbbu3/o4Pd6YMk1JhE3xMOuCEGolwVOHlA9APs3yFQ8ggP8hk5JbaMevLQ1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744403674; c=relaxed/simple;
-	bh=FAry2WrndROaE8YSKLu6gPsfRytuhZq+Odlo6QRirAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mtXt3FECmw16UbY2tmLVShVweO9fqazY56kPSqGIJNMBi9FoFy4viEko8fZNfDsfKuu5gRlq4cH2gPPXtUwg7GdjggU7mAUrXrGIq5dw2zQRFETWXmuZ7aHvAngqxgpLG3NeuK6U/pHrh+NGEd1Pq4rLH/VaVbUdpq5v1sBqH68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BBMGp2ko; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744403845; c=relaxed/simple;
+	bh=exZwru58LVotG272Mvo+05uK9XNLnHfaNNEeiFcpt3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DqpLduRNkim2TVjKPxuNi9UsY9GPW2Wg+wu7hWerelsYsqH9gNzG7uSsM8pG34i3jPp2YOmWtkaCWvIp4HcPRIMytc1PCtALhWbpiGMnvcoaenBo47NHShH9m4hY7vSV975M2VoU4Cxf1GlHvTewBOhDkaUJFgaD58j9UVjabyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TeJnRkc3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BBMGp2ko"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744403672; x=1775939672;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FAry2WrndROaE8YSKLu6gPsfRytuhZq+Odlo6QRirAk=;
-  b=BBMGp2koqBhrUCoggIfMhnYnTDTyx/aicwyAx0NnAQekHR99VjUwlj/W
-   0d+fqCSiMp/cEs2y7d/ALf33ejJF7Xl+XDLS8S0/S/ugPg6KUHuqF/58n
-   cdIsfB0SzOPS8eZpexhZEEp5E5NscZvQLOFdaQtxa4x+iH7RWRUZFngMN
-   3j97rcdERMqLouehEIyop9QTnURY9RXVHXOYYXL11292veWpzIpEp7im7
-   oIOcuwxOBSegzcVMZ7sHhicAGfDlsq9bqfPqEseo7OZOJDRLTXqx7ER16
-   /12a7hhxxRK5zC30/8dq+h9sv7cFAlZf//MKxoV+lolshdr2y0cSZAkYY
-   Q==;
-X-CSE-ConnectionGUID: 3FN2MryXSiyeUN88ik/8NQ==
-X-CSE-MsgGUID: /SdN1XJeRGeqdi2JSENSEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="46054730"
-X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
-   d="scan'208";a="46054730"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 13:34:32 -0700
-X-CSE-ConnectionGUID: dsCZvxaDQi265B+cIetFSQ==
-X-CSE-MsgGUID: 3Vhb6SZXQX2RaqR0qgNTIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
-   d="scan'208";a="134039993"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.108.170]) ([10.125.108.170])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 13:34:31 -0700
-Message-ID: <41a120c8-e5ad-4a0f-96cf-1159d5d1b4e1@intel.com>
-Date: Fri, 11 Apr 2025 13:34:28 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TeJnRkc3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ACDDC4CEE2;
+	Fri, 11 Apr 2025 20:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744403844;
+	bh=exZwru58LVotG272Mvo+05uK9XNLnHfaNNEeiFcpt3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TeJnRkc3zG3wy2mgbzvrgxwQsRfVNaGaoFQFiXfU5HkA5wNoiuWd9b49GgqcPC3DQ
+	 funKMNx+TdQU8HGqNvf95xspfm6X5W12pQb9E5ONPSpUJil+2IA67zJ8kJ6DHJ076L
+	 FBJav3c6rmR875bfzcB6iGRqL8bTX+xYbJtIimWilvwG76Mx567YYyUD5nf22YBocq
+	 U0kiL//sRUdblcQ4VWjLRxVIC2ln9JrrT5UX1KmBMJBXiNEh0XKCxFdBWWS6nkowAi
+	 VfPs0nA9Vy9WTZS87uXlMqPwVLlKqgOz+WPzFd1HI4uWepWCx4+lqFZw4qYeRVr24y
+	 6Amlaiw6Vp9QA==
+Date: Fri, 11 Apr 2025 23:37:19 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v8] KEYS: Add a list for unreferenced keys
+Message-ID: <Z_l9f45aO3CqYng_@kernel.org>
+References: <20250407125801.40194-1-jarkko@kernel.org>
+ <2426186.1744387151@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/1] dmaengine: ptdma: use SLAB_TYPESAFE_BY_RCU for
- the DMA descriptor slab
-To: Eder Zulian <ezulian@redhat.com>, Basavaraj.Natikar@amd.com,
- vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: jsnitsel@redhat.com, ddutile@redhat.com
-References: <20250411194148.247361-1-ezulian@redhat.com>
- <20250411194148.247361-2-ezulian@redhat.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250411194148.247361-2-ezulian@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2426186.1744387151@warthog.procyon.org.uk>
 
-
-
-On 4/11/25 12:41 PM, Eder Zulian wrote:
-> The SLAB_TYPESAFE_BY_RCU flag prevents a change of type for objects
-> allocated from the slab cache (although the memory may be reallocated to
-> a completetly different object of the same type.) Moreover, when the
-> last reference to an object is dropped the finalization code must not
-> run until all __rcu pointers referencing the object have been updated,
-> and then a grace period has passed.
-
-I would pull some of the explanation on why and how from your cover. Also, a fixes tag may be needed?
-
-DJ
- 
+On Fri, Apr 11, 2025 at 04:59:11PM +0100, David Howells wrote:
+> Jarkko Sakkinen <jarkko@kernel.org> wrote:
 > 
-> Signed-off-by: Eder Zulian <ezulian@redhat.com>
-> ---
->  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> > +	spin_lock_irqsave(&key_graveyard_lock, flags);
+> > +	list_splice_init(&key_graveyard, &graveyard);
+> > +	spin_unlock_irqrestore(&key_graveyard_lock, flags);
 > 
-> diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> index 715ac3ae067b..b70dd1b0b9fb 100644
-> --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> @@ -597,7 +597,8 @@ int pt_dmaengine_register(struct pt_device *pt)
->  
->  	pt->dma_desc_cache = kmem_cache_create(desc_cache_name,
->  					       sizeof(struct pt_dma_desc), 0,
-> -					       SLAB_HWCACHE_ALIGN, NULL);
-> +					       SLAB_HWCACHE_ALIGN |
-> +					       SLAB_TYPESAFE_BY_RCU, NULL);
->  	if (!pt->dma_desc_cache) {
->  		ret = -ENOMEM;
->  		goto err_cache;
+> I would wrap this bit in a check to see if key_graveyard is empty so that we
+> can avoid disabling irqs and taking the lock if the graveyard is empty.
 
+Can do, and does make sense.
+
+> 
+> > +		if (!refcount_inc_not_zero(&key->usage)) {
+> 
+> Sorry, but eww.  You're going to wangle the refcount twice on every key on the
+> system every time the gc does a pass.  Further, in some cases inc_not_zero is
+> not the fastest op in the world.
+
+One could alternatively "test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) &&
+!refcount_inc_not_zero(&key->usage))" without mb() on either side and
+set_bit() could be at the beginning of key_put().
+
+Race at worst would be an extra refcount_inc_not_zero() but not often.
+
+> 
+> > +			spin_lock_irqsave(&key_graveyard_lock, flags);
+> > +			list_add_tail(&key->graveyard_link, &key_graveyard);
+> > +			spin_unlock_irqrestore(&key_graveyard_lock, flags);
+> >  			schedule_work(&key_gc_work);
+> 
+> This is going to enable and disable interrupts twice and that can be
+> expensive, depending on the arch.  I wonder if it would be better to do:
+> 
+> 			local_irq_save(flags);
+> 			spin_lock(&key_graveyard_lock);
+> 			list_add_tail(&key->graveyard_link, &key_graveyard);
+> 			spin_unlock(&key_graveyard_lock);
+> 			schedule_work(&key_gc_work);
+> 			local_irq_restore(flags);
+
+I like this but shouldn't this also comprehend the quota update before
+(just asking for completeness sake)?
+
+> 
+> David
+> 
+> 
+
+BR, Jarkko
