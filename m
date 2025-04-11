@@ -1,64 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5AD1519A1;
-	Fri, 11 Apr 2025 19:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD2927F4FC;
+	Fri, 11 Apr 2025 19:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744400596; cv=none; b=XSTzy7xKDmANgLAyY6d26QtKCv46gEm4eWeMtIvu5Hj46yBhTjyK6XUqtr4eeHYqbopxV+pQv/Jq6nivugTCBURaI130tw2m8fJ4JWlLmdPs+Fzs4DVsOWSMQmSY6amekprDi49mqH49umYCOhI3y9jIAKrd9UJuSQdVf8/kDbs=
+	t=1744400648; cv=none; b=Nrzh86Q4GiBbf8RYakod7pA9GBgyOO8LQVNmmL2Q3iCx+v+k74KxOa3QNbhkjSsCayWAv9uDa+gpa1fgIIahQQxyqaHesSnpBcqE2EuA5PfqyPBwHNgCBQUt+Kf9qoQ0oQAT1NSHczuNdlIDk66rFr1TC5gTwGnjDX8LfBf3+Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744400596; c=relaxed/simple;
-	bh=hOEB6YQrTokdNyRISWiANEmdVnnbFKTd0VOc0CYFtps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RwzYl9uVlwy1ueRj3GMeYKY3kHu3l4RBI64KDGjWOzZGjwE518Q18Mn5saleT1kmKlZZx7T90wWRcpKZio+YdGwKmPCLr8eFcXmwP1zjRTF0bqGhDOXH8LVnoqVr64yzS1XG10octy7h2CKP22A0TW0mtr0ytmywzElWkjLx5aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2skaNCi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744400648; c=relaxed/simple;
+	bh=uGeh/UIgStngyUj6gwqOrANe61ukEvNIWqQmV5zU4EY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dV85Vf+GFizEsppG7kCiLbrzYWJ1Rqw1DRw/EBGWW5VXUQ/17gDiOMnmD7eiHX42lKg/E+hgtGwZAxeGbv5TnZNbq6Eir9ZcY18Ro5Bm8ctWz3ZSjjk/gkI8UPgsLJg6B8awiM84RVU2Nn/34i+yPR18oCU/SWCARe4+/ZlrUVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Py9h9zgh; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2skaNCi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 785B6C4CEE2;
-	Fri, 11 Apr 2025 19:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744400595;
-	bh=hOEB6YQrTokdNyRISWiANEmdVnnbFKTd0VOc0CYFtps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U2skaNCibdXg8ja374gy0Vpl9FvYpzoxTQsfprj9lGwTFuZ36Rj6tWNOhAl21Zcwo
-	 53TNIJSqU6cAAR0ejWAg03wYlBE44yyEEEEIQYbT2Z5SWgyPV3Xd44Xro7ZStvi0wr
-	 ny0tgi3EWJ3e0LJxQ5CTJDL7BVc8akwxdW3gjLOTgHL3Q0Es8EfYYN/maep6axfN7x
-	 ImlFNCr8dkqGlbKvki52Smf1enXqfYGmZloC9riqaJbZPEisA+Jq8sTi32xFYgeDRP
-	 cH8pxe2TL8Ptb9Rf0mxl5V4v+aawfCxUh/dff2gb1VhAYQzc/9eE8ddpVXhJsPe/Px
-	 c4iIDBeNbgUtQ==
-Date: Fri, 11 Apr 2025 14:43:11 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: edumazet@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	rogerq@kernel.org, srk@ti.com, linux-kernel@vger.kernel.org,
-	pabeni@redhat.com, davem@davemloft.net, netdev@vger.kernel.org,
-	kuba@kernel.org, andrew+netdev@lunn.ch, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next 2/2] dt-bindings: net: ti: k3-am654-cpsw-nuss:
- evaluate fixed-link property
-Message-ID: <174440059064.3779768.16005295494092694036.robh@kernel.org>
-References: <20250411060917.633769-1-s-vadapalli@ti.com>
- <20250411060917.633769-3-s-vadapalli@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Py9h9zgh"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6fee50bfea5so20725487b3.1;
+        Fri, 11 Apr 2025 12:44:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744400646; x=1745005446; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uGeh/UIgStngyUj6gwqOrANe61ukEvNIWqQmV5zU4EY=;
+        b=Py9h9zghItG0fw1GcYsNOYDj/4jeiIiA1+Y8rD81WMUuZJc51kf9fAVNT5Gx5jl3cl
+         7jFK51o3CIPGRxQkdFazQcIB/CzwgdPCPv9ighFLF3/aMPM9xF0D96awxDdSeJFCLbgV
+         2iWXflSiMdZUbE0VRbUvO82OTI63Yuh+o7aU5zxD6/adYREUBoNPKym9NtEwZbzouuHA
+         PVmz9kYH37PBBulfVDlaULeFN+r5oYMfOPid9psLLNqH7P6vgpkftiPVmZcvTMFv5FME
+         i3XsZGN2VAOpSkAjCPHnctWV7VslgHcgole8oli1BZZ3k05UtWvYH58WytKIpd+aHPfW
+         IXWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744400646; x=1745005446;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uGeh/UIgStngyUj6gwqOrANe61ukEvNIWqQmV5zU4EY=;
+        b=V9YcSTN+C2tlcWgGthEVxk9w6bw2ru47Tdn6VLnCWxMkWiwUe+s37TtmJqpRB05dYl
+         KO9I+qrcP9hmShZnm0w7cA95ICK2XRa973CXd+/RbS1BEj72RUxiRYSuZZb/ztoA8BMq
+         Ki+NixGhvbfT74SfYfZOv+qqSjxcmi4eF+9P4lCcshdGg6dHALyMzPz6yFIQ31+bngG+
+         vbOYb1Wr4u3fda2Hweko2mITVZDu8p42eMUGzfZmOxfMTAmfAxgbP9dzFJx1Z7vDISQe
+         Vb5ks5nxAjJXgtsczT4YnggdEObAPp0j1AMHjXn13YfkIqiIFEQTCvkiWqKTnOxM2qic
+         2fSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUt2f7Le6jV63jiw3OXiw8ixMsFv9PJRcOVBfJhYlNPyXbDzidwAolNbUdySbI6cgLWw59TjrnztgvYNok=@vger.kernel.org, AJvYcCXUX2KWRdcAeIvcZtcxZqr0ruIs1836i8959HIrDJHzRh4E+RZwGvXRGp1fO/QT5ykgad3BPfiSD/DKHw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMLFZAw4XFkNKvbcbzC0Cgz0dNlpksHh/1OJGd4z+ecflp8KVo
+	Hva3XOmKGTjaOHyVXjnxitwxhJKMdu2koIIQuuQXXukZlLNOyP+IRFYoazc3thjSwHwqqhXD9tl
+	OkcP3yj3cvX7R1MS+gltqIdE85QQ=
+X-Gm-Gg: ASbGnctElT75tEjeYlgzxmtgx8G0ShHRbnR9Ln6R55luQv4Un1vtb8yjERyjBCnX+74
+	twl+c7CdioEzVNTqRoVWVV0JqcC5q13T2RY3g791hf7tJCoI+ObW4h4W0UpmZNgjYWYwMQJAlfF
+	/qCWvudFo6iLdio1xe8Iyy
+X-Google-Smtp-Source: AGHT+IFEnwBammycbfCZDQBYHdaI0KWtrfEeTTOSzL0yFxfEGr8mHvI+9uEO/WOAFjNSV8q/Z1I5SgcyT1A6HrI5rPQ=
+X-Received: by 2002:a05:690c:3607:b0:6fb:9b8c:4b50 with SMTP id
+ 00721157ae682-705599c9835mr76926227b3.13.1744400645752; Fri, 11 Apr 2025
+ 12:44:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411060917.633769-3-s-vadapalli@ti.com>
+References: <20250409-fix-lpfc-bios-str-v1-1-05dac9e51e13@kernel.org>
+In-Reply-To: <20250409-fix-lpfc-bios-str-v1-1-05dac9e51e13@kernel.org>
+From: Justin Tee <justintee8345@gmail.com>
+Date: Fri, 11 Apr 2025 12:42:26 -0700
+X-Gm-Features: ATxdqUElLovRwptujdokF8EU-gfMPJaoffHCrnZ0MROGa38ttKerU5zFA2Zm4GA
+Message-ID: <CABPRKS_Fr6BT+pO5vGBaeNTcb3T5Yi1OJ7mEj_4+d9qSvQGrCQ@mail.gmail.com>
+Subject: Re: [PATCH] lpfc: use memcpy for bios version
+To: Daniel Wagner <wagi@kernel.org>
+Cc: Justin Tee <justin.tee@broadcom.com>, James Smart <james.smart@broadcom.com>, 
+	Dick Kennedy <dick.kennedy@broadcom.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Reviewed-by: Justin Tee <justin.tee@broadcom.com>
 
-On Fri, 11 Apr 2025 11:39:17 +0530, Siddharth Vadapalli wrote:
-> Since the fixed-link (phyless) mode of operation is supported by the
-> CPSW MAC, include "fixed-link" in the set of properties to be evaluated.
-> 
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
->  .../devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml          | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-
+Thanks,
+Justin Tee
