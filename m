@@ -1,230 +1,163 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB39233153;
-	Fri, 11 Apr 2025 19:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A553B233153;
+	Fri, 11 Apr 2025 19:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744399428; cv=none; b=kMEoehLTsSaXa/rT2I7btVZ4IihST8ne950VKGQulyW8jOZcVmW/Nt4TJikpdFrzTTZ6Ix+sd3XWOgsZhyEBg3nYox1XzIgGbphQ2+CLn39NnpNQOT+icNCbRkKNJoESE4j8bfqYGB6Is7KhgKJUIzWcjlkbLND8SpQji8Ut/4E=
+	t=1744399488; cv=none; b=ozFnIfUdeh11sW6LWT3Ot+G3xdykwmDHeW2K8OL3NVpFqXFonY9YKDosllJ+2fimetFJ2n9Liz8RnaYBUw5P5oWc7RL2XdQNJBSjbuZbDETI7VfRVZEZUGODL6ja5XqG+KgEqwWS0NXwdjhi80nOqgSIAPcD3+aZXJsTNFtjzaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744399428; c=relaxed/simple;
-	bh=FaakOh3rl4xSloWBhvpXgR9xn/hmIsKrKnH7eP/Pphc=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZRP/15yJ6smTtVlUT/nzOmwEqh16wdr35BoZYIMu5EQh4ZUkkGXhetm6iOCAVj9vTpyUamPyThz83S5q6DcD+IDxuOC0EhLNaWxxJD9BJC8lTDukY7nLrZ9P0bZAf6htxpz3OvXi/kkSB7SjhL7iHjSd09sizAiUfnq9/1ItZTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=cCQXklNI; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="cCQXklNI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1744399421; bh=FaakOh3rl4xSloWBhvpXgR9xn/hmIsKrKnH7eP/Pphc=;
-	h=Date:From:To:Subject:X-My-GPG-KeyId:References:From;
-	b=cCQXklNI+OnK65shRjSZCYrIZU39jsqjyRDuSJ3nCVzfOXULVK5nYxMLC8yQLmlJU
-	 OkHaGs1z4FAjwaBuJue+237RkZ/NXSVYMHQ0EHyMJqvuGp16uw6fBipiTFMcY6Y1iD
-	 odcxWAKGYUow9GgNLrg91dc7qdtTL+Xx3yJbwzv0=
-Date: Fri, 11 Apr 2025 21:23:40 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Shay Drory <shayd@nvidia.com>, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, leonro@nvidia.com, linux-kernel@vger.kernel.org, 
-	Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH v2] PCI: Fix NULL dereference in SR-IOV VF creation error
- path - REGRESSION
-Message-ID: <hrcsm2bo4ysqj2ggejndlou32cdc7yiknnm5nrlcoz4d64wall@7te4dfqsoe3y>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Shay Drory <shayd@nvidia.com>, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	leonro@nvidia.com, linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20250310084524.599225-1-shayd@nvidia.com>
- <dnkcl7j75mpnaaeuatug6rkwr3b3ibljpsol7nxwtquw7rwag2@5edfct5npe4a>
+	s=arc-20240116; t=1744399488; c=relaxed/simple;
+	bh=JedUTcfeYTCorFNspiCeOPahUYA07g0aSU7WDXE6Qac=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cwq5khn5rZsi9Qj1L0+aCzc/737qWZ5uSZhPfocP7+NeAB10Y4ByIV1Sami8yw9YcBpZ7ldrYDP7NKe2Mlji/axkA4RNdFHm7rmE8M4AQijlDZPetza3Vrk/ayXp5KCb8eQC0Q2qWf+Tl/VIq8VrPAERJBaPnqrhlkMVVvkZx+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 602E3C4CEE2;
+	Fri, 11 Apr 2025 19:24:46 +0000 (UTC)
+Date: Fri, 11 Apr 2025 15:26:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
+ <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
+ <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
+ <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <20250411152610.64d555bf@gandalf.local.home>
+In-Reply-To: <20250411151358.1d4fd8c7@gandalf.local.home>
+References: <20250227185804.639525399@goodmis.org>
+	<20250227185822.810321199@goodmis.org>
+	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+	<20250410131745.04c126eb@gandalf.local.home>
+	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+	<20250411124552.36564a07@gandalf.local.home>
+	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
+	<20250411131254.3e6155ea@gandalf.local.home>
+	<350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
+	<9dafc156-1272-4039-a9c0-3448a1bd6d1f@sirena.org.uk>
+	<20250411142427.3abfb3c3@gandalf.local.home>
+	<20250411143132.56096f76@gandalf.local.home>
+	<20250411151358.1d4fd8c7@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dnkcl7j75mpnaaeuatug6rkwr3b3ibljpsol7nxwtquw7rwag2@5edfct5npe4a>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 11, 2025 at 02:44:11PM +0200, megi xff wrote:
-> Hello Shay,
+
+Replying to my email as it appears gmail blocked it. Probably due to all
+the escape characters my output had. Resending with that cut out.
+
+Masami, I was sent a message from gmail that it blocked this from you.
+
+If you want to see the original email:
+
+  https://lore.kernel.org/all/20250411151358.1d4fd8c7@gandalf.local.home/
+
+-- Steve
+
+On Fri, 11 Apr 2025 15:13:58 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Fri, 11 Apr 2025 14:31:32 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> On Mon, Mar 10, 2025 at 10:45:24AM +0200, Shay Drory wrote:
-> > Add proper cleanup when virtfn setup fails to prevent NULL pointer
-> > dereference during device removal. The kernel oops[1] occurred due to
-> > Incorrect error handling flow when pci_setup_device() fails.
+> > Hmm, I just tested this, and it fails on my box too (I test on a debian VM).
 > > 
-> > Fix it by introducing pci_iov_scan_device() which handle virtfn
-> > allocation and setup properly, instead of invoking
-> > pci_stop_and_remove_bus_device() whenever pci_setup_device is failed.
-> > This prevents accessing partially initialized virtfn devices during
-> > removal.
+> > It fails with and without setting it to bash. I'll take a look too.  
 > 
-> I've found a regression on QuartzPro64 board with NVMe connected to
-> PCIe port no longer probing on boot and bisected it down to this
-> commit.
+> Hmm, maybe it is a bashism.
 > 
-> When reverting this commit on top of torvalds/master the issue is also
-> fixed.
+> The test has this:
 > 
-> From what I see in the diff of before/after of kernel log messages:
+>   # Max arguments limitation
+>   MAX_ARGS=128
+>   EXCEED_ARGS=$((MAX_ARGS + 1))
 > 
->   https://xff.cz/dl/tmp/revert.log.patch
+>   check_max_args() { # event_header
+>     TEST_STRING=$1
+>     # Acceptable
+>     for i in `seq 1 $MAX_ARGS`; do
+>       TEST_STRING="$TEST_STRING \\$i"
+>     done
+>     echo "$TEST_STRING" >> dynamic_events
+>     echo > dynamic_events
+>     # Error
+>     TEST_STRING="$TEST_STRING \\$EXCEED_ARGS"
+>     ! echo "$TEST_STRING" >> dynamic_events
+>     return 0
+>   }
 > 
->   (- before revert, + after revert)
+>   # Kprobe max args limitation
+>   if grep -q "kprobe_events" README; then
+>     check_max_args "p vfs_read"
+>   fi
 > 
-> It looks like this patch moves the discovery of the SSD up in the 
-> timeline:
+> So I tried manually executing this in bash:
 > 
-> -pci 0000:01:00.0: [15b7:501a] type 00 class 0x010802 PCIe Endpoint
-> -pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
-> -pci 0000:01:00.0: BAR 4 [mem 0x00000000-0x000000ff 64bit]
-> 
-> And later prevents this from happening somehow:
-> 
-> +pcieport 0000:00:00.0: bridge window [mem 0xf0200000-0xf02fffff]: assigned
-> +pci 0000:01:00.0: BAR 0 [mem 0xf0200000-0xf0203fff 64bit]: assigned
-> +pci 0000:01:00.0: BAR 4 [mem 0xf0204000-0xf02040ff 64bit]: assigned
-> 
-> I'm using pci=realloc kenel parameter with this board.
-> 
-> Full kernel logs of before revert and after revert:
-> 
->   https://xff.cz/dl/tmp/revert.log    (post revert)
->   https://xff.cz/dl/tmp/pre-revert.log
-> 
-> Why would this patch change the probe order so much and maybe break
-> pci=realloc?
+> --------------------------8<--------------------------
+> # TEST_STRING='p vfs_read'
+> # for i in `seq 1 128`; do TEST_STRING="$TEST_STRING \\$i" ; done
+> # echo $TEST_STRING
+> p vfs_read \1 \2
 
-By further experimentation I figured the real culprit that affects the
-order of the initialization and breaks NVMe on QuartzPro64 and
-Orange Pi 5+ are these two commits (mainly the first one, but build
-fails without reverting the other, too):
+[ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
 
-2499f53484314 "PCI: Rework optional resource handling"
-96336ec702643 "PCI: Perform reset_resource() and build fail list in sync"
+> # echo "$TEST_STRING" >> /sys/kernel/tracing/dynamic_events
+> # echo $?
+> 0
+> # cat /sys/kernel/tracing/dynamic_events
+> p:kprobes/p_vfs_read_0 vfs_read arg1=\1
 
-Reverting this one just "fixed" the QuartzPro64 (but breakage and
-order of probing remained same on Orange Pi 5+). Reverting the above
-two commits fixed both boards at once.
+[ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
 
-"PCI: Rework optional resource handling" also makes more sense as a
-culprit for changes seen in the log, I guess.
-
-Kind regards,
-	o.
-
-> Kind regards,
->         o.  
+> -------------------------->8--------------------------  
 > 
-> > [1]
-> > BUG: kernel NULL pointer dereference, address: 00000000000000d0
-> > PGD 0 P4D 0
-> > Oops: Oops: 0000 [#1] SMP
-> > CPU: 22 UID: 0 PID: 1151 Comm: bash Not tainted 6.13.0+ #1
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-> > RIP: 0010:device_del+0x3d/0x3d0
-> > Call Trace:
-> >  <TASK>
-> >  ? __die+0x20/0x60
-> >  ? page_fault_oops+0x150/0x3e0
-> >  ? exc_page_fault+0x74/0x130
-> >  ? asm_exc_page_fault+0x22/0x30
-> >  ? device_del+0x3d/0x3d0
-> >  pci_remove_bus_device+0x7c/0x100
-> >  pci_iov_add_virtfn+0xfa/0x200
-> >  sriov_enable+0x208/0x420
-> >  mlx5_core_sriov_configure+0x6a/0x160 [mlx5_core]
-> >  sriov_numvfs_store+0xae/0x1a0
-> >  kernfs_fop_write_iter+0x109/0x1a0
-> >  vfs_write+0x2c0/0x3e0
-> >  ksys_write+0x62/0xd0
-> >  do_syscall_64+0x4c/0x100
-> >  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> > 
-> > Fixes: e3f30d563a38 ("PCI: Make pci_destroy_dev() concurrent safe")
-> > CC: Keith Busch <kbusch@kernel.org>
-> > Change-Id: I7cee1123c90ce184661470dcafab45cec919bc72
-> > Signed-off-by: Shay Drory <shayd@nvidia.com>
-> > 
-> > ---
-> > changes from v1:
-> > - add pci_iov_scan_device() helper (Bjorn)
-> > ---
-> >  drivers/pci/iov.c | 47 +++++++++++++++++++++++++++++++++--------------
-> >  1 file changed, 33 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > index 9e4770cdd4d5..9f08df0e7208 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -285,23 +285,16 @@ const struct attribute_group sriov_vf_dev_attr_group = {
-> >  	.is_visible = sriov_vf_attrs_are_visible,
-> >  };
-> >  
-> > -int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-> > +static struct pci_dev *pci_iov_scan_device(struct pci_dev *dev, int id,
-> > +					   struct pci_bus *bus)
-> >  {
-> > -	int i;
-> > -	int rc = -ENOMEM;
-> > -	u64 size;
-> > -	struct pci_dev *virtfn;
-> > -	struct resource *res;
-> >  	struct pci_sriov *iov = dev->sriov;
-> > -	struct pci_bus *bus;
-> > -
-> > -	bus = virtfn_add_bus(dev->bus, pci_iov_virtfn_bus(dev, id));
-> > -	if (!bus)
-> > -		goto failed;
-> > +	struct pci_dev *virtfn;
-> > +	int rc = -ENOMEM;
-> >  
-> >  	virtfn = pci_alloc_dev(bus);
-> >  	if (!virtfn)
-> > -		goto failed0;
-> > +		return ERR_PTR(rc);
-> >  
-> >  	virtfn->devfn = pci_iov_virtfn_devfn(dev, id);
-> >  	virtfn->vendor = dev->vendor;
-> > @@ -314,8 +307,34 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-> >  		pci_read_vf_config_common(virtfn);
-> >  
-> >  	rc = pci_setup_device(virtfn);
-> > -	if (rc)
-> > -		goto failed1;
-> > +	if (rc) {
-> > +		pci_dev_put(dev);
-> > +		pci_bus_put(virtfn->bus);
-> > +		kfree(virtfn);
-> > +		return ERR_PTR(rc);
-> > +	}
-> > +
-> > +	return virtfn;
-> > +}
-> > +
-> > +int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-> > +{
-> > +	int i;
-> > +	int rc = -ENOMEM;
-> > +	u64 size;
-> > +	struct pci_dev *virtfn;
-> > +	struct resource *res;
-> > +	struct pci_bus *bus;
-> > +
-> > +	bus = virtfn_add_bus(dev->bus, pci_iov_virtfn_bus(dev, id));
-> > +	if (!bus)
-> > +		goto failed;
-> > +
-> > +	virtfn = pci_iov_scan_device(dev, id, bus);
-> > +	if (IS_ERR(virtfn)) {
-> > +		rc = PTR_ERR(virtfn);
-> > +		goto failed0;
-> > +	}
-> >  
-> >  	virtfn->dev.parent = dev->dev.parent;
-> >  	virtfn->multifunction = 0;
-> > -- 
-> > 2.38.1
-> > 
+> Doing the same in dash:
+> 
+> --------------------------8<--------------------------
+> # dash
+> # TEST_STRING='p vfs_read'
+> # for i in `seq 1 128`; do TEST_STRING="$TEST_STRING \\$i" ; done
+> # echo $TEST_STRING
+> p vfs_read         \8 \9 	 
+
+[ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
+
+> # echo "$TEST_STRING" >> /sys/kernel/tracing/dynamic_events
+> dash: 8: echo: echo: I/O error
+> -------------------------->8--------------------------  
+> 
+> Looks like dash will translate those "\#" into the ASCII equivalent,
+> whereas bash does not.
+> 
+> This patch seems to fix it:
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> index 6b94b678741a..ebe2a34cbf92 100644
+> --- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> @@ -11,7 +11,7 @@ check_max_args() { # event_header
+>    TEST_STRING=$1
+>    # Acceptable
+>    for i in `seq 1 $MAX_ARGS`; do
+> -    TEST_STRING="$TEST_STRING \\$i"
+> +    TEST_STRING="$TEST_STRING \\\\$i"
+>    done
+>    echo "$TEST_STRING" >> dynamic_events
+>    echo > dynamic_events
+> 
+> 
+> Masami, you just recently added this test (it's dated March 27th 2025), did
+> you mean to write in the ASCII characters? Why the backslash?
+> 
+> -- Steve
+
