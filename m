@@ -1,89 +1,135 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F5278174
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7695B238C29;
+	Fri, 11 Apr 2025 12:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744374301; cv=none; b=ON47HJmad3vYVJdcrOd2FF6EbSPudGzWnUtZ8IkZGTiquiD370LuxrO/vlT4ncq+Swbh1+SHWSnpPHL24dXbACzNZWSvDbUCXHvfE7fk06jnB2WAr5bGr5eOB6u/NP/YRFg9UCEhhPetedolLuOpNeobmeRkbF2gXaAl39xsbiY=
+	t=1744374389; cv=none; b=APlCTmq4YJHD6MqD+IjUiyPsa1entMtGGy8TiPsVq71cs7OE5UOFv2l36+PazGkt8GQE/wsMG1L4Frg3V8fimNX/ApnHmm3q06T+puyU/p9k6OixUUjY6BzfD+GwYgcF1rv5jBQOptlCOGbhqz74tIkNNr+H2GV9UV+qWNJNFYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744374301; c=relaxed/simple;
-	bh=S73mtvRXoKnp6wWCT4agWe2tdoLu9bOKyvuJg2gvwwo=;
+	s=arc-20240116; t=1744374389; c=relaxed/simple;
+	bh=23FaKcm93+0OymMKAv6oJ9knMnGvXsA8plzvi/c+m7E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HrRUPDjmOID35a/boP1JWP67oQCsar/Fy5944HpbMhpQ+gHchxWfZsKnwwhMTG+9i09e3nbKELTUN8cBgtOVjqK8K4zNNygoA4POGJQuZFZfJOex4Yincwph/+dx0JwKPvx7ijbPYE+BFfrCZvzLom1bO8VDVLb+FkpRwlkPTPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MrjO6Zh6; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=pqwTk9hbfDcQwyp3Tna6YD772wmYhutUOysgjURy0mY4gHwPAN9gQqUj38D5yeXM/NAlLK4hHxTPbXWZkMsOL8sVzUvBddlx+Kq8FrKmJQrQCLv1ALSjwDioOzppFwA7LVdLIkp+CH42E+OcC7r1laabJKDuJJJ2u2Kqfbh5jS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lTlaFdT7; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MrjO6Zh6"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so1565576f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:24:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTlaFdT7"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30eef9ce7feso18464591fa.0;
+        Fri, 11 Apr 2025 05:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744374298; x=1744979098; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744374385; x=1744979185; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S73mtvRXoKnp6wWCT4agWe2tdoLu9bOKyvuJg2gvwwo=;
-        b=MrjO6Zh67Ff9Nucj9zqlEw2UxlP0MPADEjXj+kEiJtP53a40tc9BK4toIhHs2xlIyk
-         tdTafFxWBdcTLOm4YhKhZPSHx5B3NqWpp9avYY5Iy1GgBSiujZdCEJWz4IaCStVhKcmd
-         bj9PMjmz4/hma6vQwNbPWZPnwRixs4Fj1wqZmbXX0cKfYG/iEnldXj9c4f7V8Gv50LpI
-         LsdZQgqnoC8YHypuXFhbiZpY2p0Rgwf/19Y091lCZRQTX9n3omnRunnFxkVySfSPFQ4D
-         ht62Q7WmfTzy35igJaVPsKeNWMh7KPafehjdzx2NguOKQ8a9mWLCZjYqcYtaMRYyA9zf
-         bGgA==
+        bh=dN/JI81BMTB6bPzJCvOGhiTJQ9G+R6jWgLCB/Ensjo0=;
+        b=lTlaFdT75cRcStqXKweW+RtToFFC1aXJ5SMRDtA9Gie1xTPivVT+frxkzMYWlKDxPF
+         /19ESpps2S/Gcz95VMMm+4nDXRkaH74NoZPRCyupIXeXmSLfxT2deg0MXLJC5E9n9wT3
+         oLb9SfV7WatmfEJWaomXVwSHkYL1c5/Zg9PVvsRY85CCZ6Z+DDF0E2mUtJvGsVdy1tzW
+         qNu8nPWGVFJFL5MNBdmoM7xtVI6sie2ywUFRr5cIrS/wRbuyrjJyq1SEOi01jDmYesON
+         dmKlwB9M4qYlQzQ1/OIAazNO0uXqvVsUzye47XKb9hb516yj9PxKjiZRwxPQ/Zu+dzAa
+         S0vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744374298; x=1744979098;
+        d=1e100.net; s=20230601; t=1744374385; x=1744979185;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S73mtvRXoKnp6wWCT4agWe2tdoLu9bOKyvuJg2gvwwo=;
-        b=NNYQAOotMyX/pux6PxHVPgxu4ajUqAUR95/yTpwKLn0Q1jd40egZ5uNdg3d3wxPVEy
-         OkWSMjhTdavFdGR5HkqQVGJpggMGJPCdjo4BKTWpobFx9u+IfNCUemJ9AJTxnMoNanbm
-         NUgXV1KAYFMuFdNk5EHSz30WasPLWnoIJ3wIPrW61bN1gajPDD8JL87Tn85QIci+0YT8
-         t0bhz2xP8gRZvsoCNRJ3EqLg5f0q+SdN2JoignBKkZiszF3YxJZENfhDdPbqaRJCuxxO
-         b4EdgAd+gzL3QK/rq9cs/FQDhpL4H2f1GjGBPBLX/liN78I2G1J59fh9h0a/cSo2FFFu
-         qLcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWbGg6UvBEMcFIb77J22K3awSE3wvzwfBbeetx1dRjGhmR5zT4hy9B1+yAbgqaN3jW9W1LumtP7fvSVcyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7yc+XKhSKctAysRvEtJb16urkJvxGTzEIUGvWhknxPAJsFZIF
-	tuGCNWConHj7GOIhUKAocdYz4z7xdsPp8gmwS08PE7rRctRXK1hesYcqDB3q/gSpGOQix7dQbTI
-	XODPmril6z0YwyEeNz0+X993rXL5WMmRRsBPS
-X-Gm-Gg: ASbGncsUNv1iMwrX9lcjxvy3V/xTsTyNzmZNqW009a6KB6HyKGm++WgaSmG1Lo8pQYX
-	35Tju1IUmKkJUU4UGsRNvIY2WTvUnZiAFm8t9Z8Sbc+d5p+BkVu0v1bNN/dvFgUMxGnH+oFXgK6
-	vGnnt+qyS//2n7PpZraL0cYbo=
-X-Google-Smtp-Source: AGHT+IFUQ/oSxDMQSF7UbzPHM1PMz6/HL8F9hqNZ2SVtXPbSMzWNeavfs1Jm4eP+fMT2PPiB5IGaNrouzhadLw/gIug=
-X-Received: by 2002:a05:6000:290c:b0:39c:266c:400a with SMTP id
- ffacd0b85a97d-39eaaed1fa5mr2002521f8f.50.1744374297780; Fri, 11 Apr 2025
- 05:24:57 -0700 (PDT)
+        bh=dN/JI81BMTB6bPzJCvOGhiTJQ9G+R6jWgLCB/Ensjo0=;
+        b=djnfpp6HSknXoDk8uRpaact5szJqd/Q/UY6yjY9pn22pq8wsmi2FzbSGQKjblbKAau
+         Qn4Uoe7Z8hZEWyLMwK96XU8NUuaXV9PYtcaBO3cBucuN/61R7PRDLtlEcYeOpgAWChGq
+         y4MVYA+7Q32RsQWI/qlOcWO0lFjgR6ODQeP8CKlScnyklJtINbp79V6H57Je99IrA7Y7
+         ightXmN6gEO9jPYTL7imk2QbbkO+XoToBPaKpAeyzP5T1/ShGYAt68IZ54lIKT2inAvx
+         OWHu1cBamr6x4XLLwUD9kyrZECIpvLZW0G+gZ8nyM8xFblBmCtR4Z+mCapcmKrICdI+R
+         BmUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVz2S1QndCWuZUblrP+B/mCQu4tRQY8BOikvsv9aCzcLRtuATOPtXMhOUfUPwGJ9IYHTuw02uVauWIXfa0XFs8=@vger.kernel.org, AJvYcCX6l5mjSVll/7/rN7gOJHLXoKLayo3pswac61YYc6c5HyCTf516HBLMWIr6ZYBwnLxrwOw97vJpQHL6ufM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwafGV961Cch/tPDtR3X1x6SycyVmP362zonYH5jCPmCKSaOO9H
+	xmacjznT4cVthKKKhNllxqkXLQOX9SSenCEHIUNhmUFpjJnnLZ92co9fmrNpkyBH0289OlLQwo2
+	7M7Tt9bGccu8WLyX1OCiWP0s7mLI=
+X-Gm-Gg: ASbGncsxwr+Jz8ItYmE1LgE9llOwxMnFwu0GemCiDOA3j0PAmff7fGtA2FAwjiakOi3
+	7ktHzbz7TumjVQRIV1wJkzc5Nd+ipCSgDJMq8h7m6zLKdJb/Y5TaL/2xSmqlenPpI5CBFQ+ox+N
+	7PSyy3P1npVvZzr6T57imwZA+WoVKVB8X6RWqPAqH10QTtDDLPQOVHKcs=
+X-Google-Smtp-Source: AGHT+IHul1gtOY4SlPWbnCUhT/btOBzezsLi9cmo5mp8Nqtzn+1HDhDRlgZZKvowK7cQmjg+M3mHzdCqLwXPNFgtz/s=
+X-Received: by 2002:a2e:ad07:0:b0:30c:aae:6d61 with SMTP id
+ 38308e7fff4ca-31049a80156mr7890111fa.30.1744374385154; Fri, 11 Apr 2025
+ 05:26:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-box_trait_objs-v2-1-c5f31b8db847@nvidia.com>
-In-Reply-To: <20250411-box_trait_objs-v2-1-c5f31b8db847@nvidia.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 11 Apr 2025 14:24:45 +0200
-X-Gm-Features: ATxdqUEwPywhMcciYH8vaOKcIZHSHmPedE8H-vOnx_DWvJZtR5N3XbUhlC8d5DE
-Message-ID: <CAH5fLggyQNrrMuN9RO9r1joXJZwyAKYZCr0_oWK9evn72gKsug@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: alloc: allow coercion from `Box<T>` to `Box<dyn
- U>` if T implements U
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+References: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com> <Z_jakOS8mciIpxy0@google.com>
+In-Reply-To: <Z_jakOS8mciIpxy0@google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 11 Apr 2025 08:25:49 -0400
+X-Gm-Features: ATxdqUFX8PlGtGC5DEFSYzzgQY3gfj1Tnheg9MQghvjw_naHFwwTai1f4q0NQT4
+Message-ID: <CAJ-ks9kEMwpDoys=RJGfWvyLdRco_Lm1984KSmju7mio5_5_WA@mail.gmail.com>
+Subject: Re: [PATCH] rust: retain pointer mut-ness in `container_of!`
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
 	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 2:07=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
+On Fri, Apr 11, 2025 at 5:02=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
 >
-> This enables the creation of trait objects backed by a Box, similarly to
-> what can be done with the standard library.
+> On Wed, Apr 09, 2025 at 10:43:16AM -0400, Tamir Duberstein wrote:
+> > Avoid casting the input pointer to `*const _`, allowing the output
+> > pointer to be `*mut` if the input is `*mut`. This allows a number of
+> > `*const` to `*mut` conversions to be removed at the cost of slightly
+> > worse ergonomics when the macro is used with a reference rather than a
+> > pointer; the only example of this was in the macro's own doctest.
+> >
+> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> > This patch is extracted from 3 other series to reduce duplication.
+> > ---
+> >  rust/kernel/lib.rs    |  5 ++---
+> >  rust/kernel/rbtree.rs | 23 ++++++++++-------------
+> >  2 files changed, 12 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > index de07aadd1ff5..1df11156302a 100644
+> > --- a/rust/kernel/lib.rs
+> > +++ b/rust/kernel/lib.rs
+> > @@ -190,7 +190,7 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+> >  /// }
+> >  ///
+> >  /// let test =3D Test { a: 10, b: 20 };
+> > -/// let b_ptr =3D &test.b;
+> > +/// let b_ptr: *const _ =3D &test.b;
+> >  /// // SAFETY: The pointer points at the `b` field of a `Test`, so the=
+ resulting pointer will be
+> >  /// // in-bounds of the same allocation as `b_ptr`.
+> >  /// let test_alias =3D unsafe { container_of!(b_ptr, Test, b) };
+> > @@ -199,9 +199,8 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+> >  #[macro_export]
+> >  macro_rules! container_of {
+> >      ($ptr:expr, $type:ty, $($f:tt)*) =3D> {{
+> > -        let ptr =3D $ptr as *const _ as *const u8;
+> >          let offset: usize =3D ::core::mem::offset_of!($type, $($f)*);
+> > -        ptr.sub(offset) as *const $type
+> > +        $ptr.byte_sub(offset).cast::<$type>()
+> >      }}
+> >  }
 >
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> This implementation does not check the type of `ptr`. Would we not want
+> it to have the type of the field?
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+I might be missing it but ISTM that the current implementation doesn't
+check that either.
+
+It's not obvious to me how you'd implement such a check; given `$ptr`
+and `$f`, how do you get your hands on the type of `$ptr->$($f)*`?
+
+Perhaps you could send a separate patch implementing this.
+
+Tamir
