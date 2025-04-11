@@ -1,85 +1,89 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99E9EEB2;
-	Fri, 11 Apr 2025 03:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472BB28F1;
+	Fri, 11 Apr 2025 03:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744342197; cv=none; b=g2JDXivlO1FSmc4UWZ9i+pGZJ3NkLkvLkJrXMGb68gEWuHvcQzYvZ+VD/xw5dOKXAdj4MFu5uZ+0zqOZGKRY1GX8KUyei4yvpvI4O6AstLR+8+VnZCOWAjqCNRZjj1HdqEvyjHOzx4op7mcppt0an9MKUraJyVJZpokQn9mhFi0=
+	t=1744342381; cv=none; b=Y4EAMn9MAN77wZE4a6W+XZEEfILCt/Aa9cw5dJlMxBHOUIs8HIDdV1PaAijw2/hT3jWrcxn39IroLPRW08ioUvM+5GzBxooLr0W1EaC/uvX6SNA96kdiQbsHluJq2HqbUVuVHcrzfTgliCS6RCpsO3jxaQ/2v3uCdScbaWjT/Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744342197; c=relaxed/simple;
-	bh=v86Y4EduVx5F581Emtz+UbUkY5PRb6rrKBbHjK/7wwA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qgslPTEsUeFub3+1S6Te/710faBIAjXc38gSCWdZsvjcHyzDAgS4N2QLuZ/Kf9SR5ykfMIYljQNwRpGOK0pFaoiKA/5SOxY7XPw5kC30tXhUUP5DyLN47ck4UsmJlSZWlLkyXiDwZPkf4/ObeBU96tIs2W08OZ898PbgZRh9PP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HA6gSiUa; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744342381; c=relaxed/simple;
+	bh=Y3RcddSGjWAAwq2TDLG7Co+ofKt9Ax8koqEjhnrjHEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cONsK2GgL2vfDBlHnDaYnCCBImc4iPlt5AaFkOmuv31zMEODb613zHf6dPydiZ1X0GORE96ysun4NFQ5vLlTcBUeUEJH5B7JWkC0CT0FpCLHvDZBb6rLQELZYyW96ZB4VOQ5g8paPy8NCb1sSXzsq/26qKGYbGJGvqoDt3Fce4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=R+1KZ6Mz; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HA6gSiUa"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B3Tko41957778
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 22:29:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744342186;
-	bh=cnH9sNRRqDYsJGbaVdR1OckLSTLwwD1L+xoqIwIinS4=;
-	h=From:To:CC:Subject:Date;
-	b=HA6gSiUa8riQ/P+7YmxAmGIK6BIbWnXN/RLmaAoMbp2GqmIJEkk3AZyg3yD88CJLP
-	 oJFS96apCJTonSPvPStyhZnh974BrNxhrQDl+Aasq2QPWlobS707tb4Q199kAJj5cW
-	 zQbM+DBIrmTriUs6PCnGncHsK6LeFHhB/FhtnxGA=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B3TkKH043200
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 10 Apr 2025 22:29:46 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
- Apr 2025 22:29:46 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 10 Apr 2025 22:29:46 -0500
-Received: from lelvsmtp5.itg.ti.com ([10.250.165.138])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B3Tge8027417;
-	Thu, 10 Apr 2025 22:29:43 -0500
-From: Baojun Xu <baojun.xu@ti.com>
-To: <jwboyer@kernel.org>
-CC: <shenghao-ding@ti.com>, <linux-firmware@kernel.org>, <13916275206@139.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Baojun Xu <baojun.xu@ti.com>
-Subject: [PATCH v1] ASoC: tas2781: Swap channel for SPI projects.
-Date: Fri, 11 Apr 2025 11:29:18 +0800
-Message-ID: <20250411032918.1739-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="R+1KZ6Mz"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744342369; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=6qUyEujLX22GdEnd5CUDnJ4Pz1LPAiyWrj7/y+BbMoE=;
+	b=R+1KZ6Mztf5GATFYUNuqTwJuIpDgwzOWWpbYrrQLH1+7OPiUPuGMVPRoUGUkD79R718Cdbl1LSw6FMXDHlgFvbVM3RlAeZgTLRgxX3jv8rRAvBtE2RBSehuuJfTA2coq8GlgcGVk9Ur980bmaEqk0gFKD8NNoUJfUKPP73j4FUg=
+Received: from 30.246.160.68(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WWRkGtA_1744342365 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 11 Apr 2025 11:32:47 +0800
+Message-ID: <18875bd7-bf01-4ba8-b38a-4c0767e3130e@linux.alibaba.com>
+Date: Fri, 11 Apr 2025 11:32:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 10/11] arm64: idle: export arch_cpu_idle()
+To: Ankur Arora <ankur.a.arora@oracle.com>, linux-pm@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: catalin.marinas@arm.com, will@kernel.org, x86@kernel.org,
+ pbonzini@redhat.com, vkuznets@redhat.com, rafael@kernel.org,
+ daniel.lezcano@linaro.org, peterz@infradead.org, arnd@arndb.de,
+ lenb@kernel.org, mark.rutland@arm.com, harisokn@amazon.com,
+ mtosatti@redhat.com, sudeep.holla@arm.com, cl@gentwo.org, maz@kernel.org,
+ misono.tomohiro@fujitsu.com, maobibo@loongson.cn, zhenglifeng1@huawei.com,
+ joao.m.martins@oracle.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+References: <20250218213337.377987-1-ankur.a.arora@oracle.com>
+ <20250218213337.377987-11-ankur.a.arora@oracle.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250218213337.377987-11-ankur.a.arora@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
----
- WHENCE | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/WHENCE b/WHENCE
-index d987f2b7..0e90a8ae 100644
---- a/WHENCE
-+++ b/WHENCE
-@@ -8412,8 +8412,8 @@ Link: TAS2XXX8DE90.bin -> ti/tas2781/TAS2XXX8DE9.bin
- Link: TAS2XXX8DE91.bin -> ti/tas2781/TAS2XXX8DE9.bin
- Link: TIAS2781RCA2.bin -> ti/tas2781/TIAS2781RCA2.bin
- Link: TIAS2781RCA4.bin -> ti/tas2781/TIAS2781RCA4.bin
--Link: TXNW2781RCA0.bin -> ti/tas2781/TXNW2781RCA0.bin
--Link: TXNW2781RCA1.bin -> ti/tas2781/TXNW2781RCA1.bin
-+Link: TXNW2781RCA1.bin -> ti/tas2781/TXNW2781RCA0.bin
-+Link: TXNW2781RCA0.bin -> ti/tas2781/TXNW2781RCA1.bin
- Link: TXNW2781RCA2.bin -> ti/tas2781/TIAS2781RCA2.bin
- Link: TXNW2781RCA4.bin -> ti/tas2781/TIAS2781RCA4.bin
- 
--- 
-2.34.1
+
+在 2025/2/19 05:33, Ankur Arora 写道:
+> Needed for cpuidle-haltpoll.
+> 
+> Acked-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+> ---
+>   arch/arm64/kernel/idle.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/kernel/idle.c b/arch/arm64/kernel/idle.c
+> index 05cfb347ec26..b85ba0df9b02 100644
+> --- a/arch/arm64/kernel/idle.c
+> +++ b/arch/arm64/kernel/idle.c
+> @@ -43,3 +43,4 @@ void __cpuidle arch_cpu_idle(void)
+>   	 */
+>   	cpu_do_idle();
+
+Hi, Ankur,
+
+With haltpoll_driver registered, arch_cpu_idle() on x86 can select
+mwait_idle() in idle threads.
+
+It use MONITOR sets up an effective address range that is monitored
+for write-to-memory activities; MWAIT places the processor in
+an optimized state (this may vary between different implementations)
+until a write to the monitored address range occurs.
+
+Should arch_cpu_idle() on arm64 also use the LDXR/WFE
+to avoid wakeup IPI like x86 monitor/mwait?
+
+Thanks.
+Shuai
+
 
