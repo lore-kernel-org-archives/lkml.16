@@ -1,52 +1,77 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155BC26AD9;
-	Fri, 11 Apr 2025 14:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B9817C208;
+	Fri, 11 Apr 2025 14:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380926; cv=none; b=kggN3Ni/HaK3VtAbliVPQwc3bcOIOXb91HQQxzfQJwDefhqoCpjK9R4z3jqTWC+mDzOudICNiHi/3WokaKDFe0yiExF8/L7yr2s4TY243v1nQrYh2cvpFKwIEDSsDL0iUschzyE2lRaSDaI+J6e6cKF0t8St4VPid9UM0i/7OQM=
+	t=1744380927; cv=none; b=c0lbAY2MzSy51z8Ap6m5Q095U99I++E2KLaJHwM0v+9c9OS7L13bx8W1cg+xog0s8kU5pP0Poeob4p8tCuA69sgOcj0Ch8o9UbqNKRg+d+nSfzVfmxy+gKzMjO9zEg/bHFeg3ciDjXA/2OcTy9+zFmqjF8wly0EktmN2aq/FWpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380926; c=relaxed/simple;
-	bh=yKn+5SF3Dpgrv0+A7PseJ1UZlNnllcUAY/s/idgnMtw=;
+	s=arc-20240116; t=1744380927; c=relaxed/simple;
+	bh=FSFkpzzGGBz0qe7fkRYUbnTeO49Cx5ANriYjuk/BOZ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dchv2nheNO8hRHxCoyVnuOG+UUS+9o3AeJLYddLvQzShfBEhiNlCaoN2vBBgEdTpI354YXRs8VEbAjoS2uHAUBNzQjT4v6XP7OlEExvDca8+bfQ7chuIkFEOGIJJoZ7fWEr/mQJ8MWPv7mpjMpxGZpmRczUXi4H+rJOnZdpgd6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vgbJMh/l; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4ixnTbgW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=VtVJobNlpFtYlJv9EoUd8oRElwSBOq8vSbywpHcAy/d5NvrDT8WAa24ZEcXbhD4JNPLO3hi6TgjGfX+K9qeTkY0AG9vUpvfkkZepsm1hrW4LB7RQ4V7hWAm9d4+tVbUvKF+b0bceomeD87+bjBaTNZ6rcAIX2eLZFvFVbx/kFeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXad2fQu; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vgbJMh/l";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4ixnTbgW"
-Date: Fri, 11 Apr 2025 16:15:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744380923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hxO+YChvuje2MP0BYtkRHXq4kPQhbbBFk2Mh1TGHe2Q=;
-	b=vgbJMh/lwXQuVgee5QjyEPZ5BWev+nDayzQ7/OyZz0sU/gVEU2VLKWnyfGExek2aZwf1Yi
-	0p7GrX3otiSwLlvp+MbQKCHYKAwmjI/CW5ms8eGrriuoZO7Lm3hpiq4HEF85QTe/UCBSKd
-	T8boPsW/li5t3WtjU3rnD1yLaU30+uG1XnlUjaGcXQi55ug1vZgPLiNaUVtoVjTA5FmMRL
-	zPmzUR+s0kCW/PpTEfw7t8grlnxTxUn/9aFi+Vaupkv4apisCu2QxwfQqjN9FRp3H9JDiz
-	FFRHPdlurY48EDX3OWl6/p8aJFmsriY52rDJ5m2rP6IZ0E2LMODW1MYesCyiIg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744380923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hxO+YChvuje2MP0BYtkRHXq4kPQhbbBFk2Mh1TGHe2Q=;
-	b=4ixnTbgWR0rqxsqOKcMXOg9Rzl/maCEmIWgKmxq8UgS94eODhcoDnvZRfSYuG+Bk3DTx8J
-	L/KhU0XKtaye2QCQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH v2 13/22] rv: Add support for LTL monitors
-Message-ID: <20250411141521.eCdcbw70@linutronix.de>
-References: <cover.1744355018.git.namcao@linutronix.de>
- <5dbd62940b252ee49777e9c4298eadd644bf6526.1744355018.git.namcao@linutronix.de>
- <ce9ef5e41c17953010bd31d19e7d2840cd533066.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXad2fQu"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224341bbc1dso19374985ad.3;
+        Fri, 11 Apr 2025 07:15:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744380925; x=1744985725; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G+G9Jy1y2uI9JGUJS5ikQwWYrZoZSDBZRFdvs7aJRh8=;
+        b=NXad2fQupQu9+mPMt9YgZZD5hB5nZgAGdD2AR55t9wCnqpy7G4UzPgc3nKF5K1yhpu
+         my2aAV3F6nUGTIyioDBs8zh3t6NUFdt1XBlGUZOOU2MAVYhkMuuU/1esdl/SJEvM5izU
+         Zb0Cm9qpfjTIttaJr4biP7aXSI29mniVgBA1RMKbDqd+lr2p/1J+W034aClKuLzhMqkf
+         v+zYRtB+FKrJ0OKup4oCQSGj7jnBTCz4TurOiPdEDiHgBUP4/xW+VM+jB3b06YhhD5zr
+         7dwrglgi58xtcQqlqiAoCRCShUJByNpDwEdeA9lL7hq2mIRxFbXt9wYyXVJSIoqS5168
+         VQkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744380925; x=1744985725;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G+G9Jy1y2uI9JGUJS5ikQwWYrZoZSDBZRFdvs7aJRh8=;
+        b=idjYepTZ6kw7Hst2c03nkJzHdXe9Vw4gCJ25gZCtSmmVcIZFAtcGzuLefYqr5RJCc2
+         oFiq05fyPQC3sXb7Lv+83LAZjaUH9VaB0lgql/9ExP3yY2o7/V8+3btPkw9Ma2DvM5Z2
+         iQy97FtYAVF7LDRMkX5Q2kzunvIqGm4JTIATGmZGF8DbRdcC2rk4KNpE7RxxDVTjA19z
+         hKi7DSGRLAwY9+Hv+JfFVY12kGQbbyhecMaKUQex7ypP2q1iRIYIBGGKUja61cYIvWvq
+         6nk7hBpYW6236eiHDJK8S/YKb9dAsNOfhT5x1AHWrRyAlYt05BB05i6ruSGzAvINW0/l
+         6z1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV4BUVjzUo5iXPdR3QWwYpHDZ2EgoV9qurBuabOJk0XYxo4KeWca48sT4c9bjX5Nh15pMSacKb+JbnAuQ==@vger.kernel.org, AJvYcCW3pW2ws6OOa10chcbDjhgRQzPW6tHk0BsUa6cStF9PgzbxMCpX+YhFmdw8yJkZwV3177+UeSOjKd2tcciu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8i+fgAsQ+kjL/rxP3kOb6txyQxlvUs+FrMJ5jZksDTyiA9Gtp
+	iBu00eBiufz9LJ1F/hqAvSEKvLUmdHTTk41twCkghOyvQlwezIrWzgPYKw==
+X-Gm-Gg: ASbGncuT1o7bca859OrA2Ds5Opa7wIYbsGcon4WFHD8+ZwiRqKwDvaPLuUXth+UQ66p
+	7oJd08sUhaDnkdpKyCybgHaHBxSpXPEWoW5A+0LoYVFrSGh4yln8zeQMhSySrm+ZQ7jobigq+tD
+	Bt/AaiP34UacAmomaKqCa7XGKq5BB/jle5enlUfVoCA6GA0aKGyWxEIgk4B93q5gvLeQC4Oaxu5
+	wmOvkXXR0fz3ezNTWa38Q/SyArFB4K5RzRdYhPOeaQse4hh+zxyxiRCc+IAiRsl+Y1PFEHGpw5p
+	e5/RFM3dzIPA4J1xGvBDOoSpznibhZsb0T/SnlVgp8gchfJbvFb7og==
+X-Google-Smtp-Source: AGHT+IFHbAnB2ypXi79cUfpFWUCDRj63BaQojKKoxescZtrzPLPM7NbB/idMuzVDAo84gc/ucjri3A==
+X-Received: by 2002:a17:902:d550:b0:224:1ec0:8a0c with SMTP id d9443c01a7336-22bea4bd74dmr47046475ad.29.1744380924516;
+        Fri, 11 Apr 2025 07:15:24 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb529esm49223525ad.168.2025.04.11.07.15.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 07:15:24 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 11 Apr 2025 07:15:22 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Huisong Li <lihuisong@huawei.com>,
+	Adam Young <admiyo@os.amperecomputing.com>,
+	Robbie King <robbiek@xsightlabs.com>,
+	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v3 11/13] hwmon: (xgene-hwmon) Simplify PCC shared memory
+ region handling
+Message-ID: <0be30d7d-f091-4497-bb72-fdcad276285e@roeck-us.net>
+References: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
+ <20250313-pcc_fixes_updates-v3-11-019a4aa74d0f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,86 +80,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ce9ef5e41c17953010bd31d19e7d2840cd533066.camel@redhat.com>
+In-Reply-To: <20250313-pcc_fixes_updates-v3-11-019a4aa74d0f@arm.com>
 
-On Fri, Apr 11, 2025 at 01:17:30PM +0200, Gabriele Monaco wrote:
-> On Fri, 2025-04-11 at 09:37 +0200, Nam Cao wrote:
-> > +struct ltl_monitor {
-> > +#ifdef CONFIG_RV_LTL_MONITOR
-> > +	DECLARE_BITMAP(states, RV_MAX_BA_STATES);
-> > +	DECLARE_BITMAP(atoms, RV_MAX_LTL_ATOM);
-> > +	DECLARE_BITMAP(unknown_atoms, RV_MAX_LTL_ATOM);
-> > +#endif
-> > +};
+On Thu, Mar 13, 2025 at 03:28:57PM +0000, Sudeep Holla wrote:
+> The PCC driver now handles mapping and unmapping of shared memory
+> areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+> this xgene hwmon driver did handling of those mappings like several
+> other PCC mailbox client drivers.
 > 
-> Mmh, we have a lot of those ifdefs in quite inappropriate places, but I
-> think we can do better than this.
+> There were redundant operations, leading to unnecessary code. Maintaining
+> the consistency across these driver was harder due to scattered handling
+> of shmem.
 > 
-> What about something like:
+> Just use the mapped shmem and remove all redundant operations from this
+> driver.
 > 
-> #ifdef CONFIG_RV_LTL_MONITOR
-> 
-> struct ltl_monitor {
-> 	DECLARE_BITMAP(states, RV_MAX_BA_STATES);
-> 	DECLARE_BITMAP(atoms, RV_MAX_LTL_ATOM);
-> 	DECLARE_BITMAP(unknown_atoms, RV_MAX_LTL_ATOM);
-> };
-> 
-> static inline bool rv_ltl_valid_state(struct ltl_monitor *mon)
-> {
-> 	...
-> }
-> 
-> static inline bool rv_ltl_all_atoms_known(struct ltl_monitor *mon)
-> {
-> 	...
-> }
-> 
-> #else
-> 
-> /*
->  * Leave the struct empty not to use up space
->  * In a later patch we could do the same for DAs..
->  */
-> struct ltl_monitor { };
-> 
-> #endif
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-hwmon@vger.kernel.org
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-I have no preference for either, so sure!
+Not that it matters, but I keep wondering: Why don't people use auxiliary
+devices for situations like this, and keep the subsystem code where it
+belongs ?
 
-> > diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
-> > new file mode 100644
-> > index 000000000000..78f5a1197665
-> > --- /dev/null
-> > +++ b/include/rv/ltl_monitor.h
-> 
-> You hate macros don't you? :)
+I am not requesting that you do it, I just wonder why the mechanism isn't
+used. I would have thought that it would be perfect for situations like
+this, so I guess I must be missing something, and I'd like to understand
+what that something is.
 
-YES!
-
-> Anyway I really like your approach, very neat.
-
-Thank you! I'm very happy to have found a way to escape the macros.
-
-> > +static struct ltl_monitor *ltl_get_monitor(struct task_struct *task)
-> > +{
-> > +	return &task->rv[ltl_monitor_slot].ltl_mon;
-> > +}
-> 
-> This means ltl monitors only support per-task, right?
-
-Yes.
-
-> It shouldn't take much effort putting an ifdef chain here and defining e.g.
-> PER_CPU in the header file to choose a different get_monitor.
-> Or directly an ltl_monitor_implicit.h
-
-Yes, either can work.
-
-> I think this patch is ready without it, just trying to brainstorm how we could
-> potentially extend this.
-> 
-> I need more time to play with these, but it looks promising.
-
-Thank you,
-Nam
+Thanks,
+Guenter
