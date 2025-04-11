@@ -1,112 +1,86 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D8B27CCD7;
-	Fri, 11 Apr 2025 05:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EEF27BF9B;
+	Fri, 11 Apr 2025 05:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744348005; cv=none; b=pdaTZnO89+9hkLatMH0faeKwReeqrT82KOUzOPlt7ZiqYbSh4DtkOEtwmOgWc3Hdzvo/8mrX8YcA/T6wc9mE4EgCfySjU06RmM7qNthvKELu7ysMrHH7bbF4OC/EXEsh+xSza3gAigrHmyN/IAuIPuzCXGZ3yZQBacyAquC74w8=
+	t=1744348009; cv=none; b=Lf+i+t2dG7gyh7fO3aTw0OdWBO4hPawjRAHWiWUAon88SFwKMD2yjbgfVyeP4PmfCkv/lxLKcbSk4CErquUqZ+Hp6kU1p7YInHVrYKXqZgHLHGivT1Yfn/czlYmk9a0TBrYVVVrEgiiJm8YiQnDThZFJ+7MvQ0MgaD4KWMSmRUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744348005; c=relaxed/simple;
-	bh=ph9yxNJxjytif7MW6JGpN2VeP3cdtJrpIHatp3pjQx8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lK0S9FWxRn+ujO5wvGc8hqoFSm21Xw88L+VT5YE++OKshlv7gLYAgY+tf4cq0AAaiSa5NKz2uiuGJg5+GG/wRY/F3AWobG02CVyr0Phr+UVKdEoZrqqsnkDO9c+Rbl6/zU9XnRCJokJQDtP6o1Q4DCrL/vbtFCu3OE5XFOX81T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B621/crY; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744348009; c=relaxed/simple;
+	bh=JN+0oLpNZwh8pYt/gMxB6bOiwor/JbjH+Git7qIT4ds=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=I/ON3lRUMVnSMlqo6/v3r4cY4E5ogxhOseeZaHXh4DhtEhW6f1meA5EejCWBiCzn/bwyzVeGkG3/aQD7S2AqjeeRbvSFia0cEhDXzLhJ56WzrNFqxfHddJnqesWywgBRrVN7eT1citrlgpigQk9I8BIkZ6CvHb0+vuwXA/2E8yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKtzwDT1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B621/crY"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7370a2d1981so1236500b3a.2;
-        Thu, 10 Apr 2025 22:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744348003; x=1744952803; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5UnJapsshMAFNTg0PJpSBNJuS/1ozPTcqpFD6vI6lxo=;
-        b=B621/crYDeWP4HAetCsiXYcpu6+oOu1Y9mDyMskKgrOZCuOjrsExVTb4ozbUfG4IqJ
-         i9F7xeHav0C3ASIN4jSMBIVbAcKNBXUYyNh/HbTxC24fyL+Mi80/l1VybDQripC+4PlT
-         DLpsQYGlDcnrtbimuQlS8ZrJL828TljtMhdEB17+3WDM0FxI2gvwRbSQEK+NALpgbnXR
-         5tqHGjr59vstvSaRDd26y9B4TYsnCeZt8v4AZtQEvHDe03d08XolomdCTEWKWtnGZUdB
-         709rgkXqUs6R8Op184ntlEoiufxp1XNHXT5DiYeaxgaMqJA9eM3oZlQpXCoYkEFvRl2+
-         brMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744348003; x=1744952803;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5UnJapsshMAFNTg0PJpSBNJuS/1ozPTcqpFD6vI6lxo=;
-        b=XFqhnO56fc0xMlYCxQqdtA7d1KdIk4PdEARbKSbVREelOHQJs2Mt/c5Fp4YM1Um3QT
-         JjHvZW86nLEyZ+VUl4O71rHskVjeZLZWHngwm52xlWqYkvcCIIbhqz+ccPjPgfOY/HnR
-         gbI6fRaEPgFi4viEl3CT/NcZFNuXmlJFB05FwhIM/HVpdiq5C0vJpCbIF3Fkzv8QIQYn
-         r3OwBZiL9NSelkB5PZDYQOMu2JxoFHQgfeeNVa2SnqBmSZwCQnCRY1piu2PwuIfsMxXI
-         F81nzdbb/NLsMFeeuny8WiWPPyTQtlMJ/yyqSPGQYGHs96VnX/eA9+9PHKEvwOEJKBMA
-         BU8A==
-X-Forwarded-Encrypted: i=1; AJvYcCU+ms2j0LfyG456zhqIv6Cs7xfWDWU6bU3raA8mvGq/65XP6vsZ0JKGHRZzTrTNVXwcxsC37RcZ/xFbbeE=@vger.kernel.org, AJvYcCWghIuCVhwTNJo5lVRngaAdaylnt6ik8pjOwZkagxcL1T1cZGHH7cBfJ4tDh80bj5mXCTkQ3nlp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd/UtTgbMkDXNmIzEd+TrG/D1W9Sg/hcHBUHI7p64PV4XQQN8c
-	g/mz9+oC3RAdOI7PgkQT95VkVKYbMsKqVM7jNEB5dwjY1ueiK4ku7SDduZ15Q1k=
-X-Gm-Gg: ASbGncvil4YGlfBIz6J11uN21FZNBE6lmOEVcGaMWYtXOfKjGYrRADah24MSniyVMGc
-	ilPcVP+tuLaD2MrF9ZeWbA4u2l4mJliSXRbxq9aDFNb4hmndRzx9nyW9mjh6oxhXKpbL490vrZh
-	GSLWU/ZCY7wS1RqDlle7jVYDMQ8UKysvwj5I7VLtsFvXAJc9xEwh2irUPI6aavoF6bbUpS0gwpA
-	pQt6a2fIRda12wCkCyoECOdXD4jFcApwR4wIUyHtOxZB9RWvUpDSsh6oyX8u8rP9yHsIg9OQz0E
-	QyDXEB2j6rSmNahC2XB0Llr6WacFEKlU7kEttF7sHvZRFHHe3YT5OVariaQ=
-X-Google-Smtp-Source: AGHT+IGLIi/7HyMpkoEks+uXZ/UWMvLn9AKsYBa2512q1PEkAkv3NJRwEgNHcO1lAPn2wY8N9VWyfQ==
-X-Received: by 2002:a05:6a00:a8e:b0:736:50d1:fc84 with SMTP id d2e1a72fcca58-73bd12a1937mr1899353b3a.21.1744348003106;
-        Thu, 10 Apr 2025 22:06:43 -0700 (PDT)
-Received: from localhost.localdomain ([2401:4900:4fe1:c798:5bf3:ef7a:ab5:388f])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230da87sm525712b3a.127.2025.04.10.22.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 22:06:42 -0700 (PDT)
-From: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-To: jmaloy@redhat.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	netdev@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	kevinpaul468@gmail.com
-Subject: [PATCH] Removing deprecated strncpy()
-Date: Fri, 11 Apr 2025 10:36:13 +0530
-Message-Id: <20250411050613.10550-1-kevinpaul468@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKtzwDT1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BBBFC4CEE2;
+	Fri, 11 Apr 2025 05:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744348009;
+	bh=JN+0oLpNZwh8pYt/gMxB6bOiwor/JbjH+Git7qIT4ds=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=sKtzwDT1F5mJV823npkyRutuya0rd+ZkY/y1G2+bXUNYNm/W5JohHjXkJZINZ5BQi
+	 OG8a0yNE1nYuzKYsYLXqisjynwJEsHbp/xi9Z2OUIGH6xR818mhhZD0fwTZmbLN7sV
+	 Sk2cUJb/fRd+1PPG0wuKldwj90UBgM5vCleL/ZS+RE5hwgf5iZkS8Q7PKxSWKQOY3b
+	 xaobiQ0dePZokLwnv9KWDIJiS4e0INiZxFO31TSk6Ki8rJ59kvK7cjx+1guy6ak3zZ
+	 kKkMSN9E6k5i0fBN+S4cfO05A9N7IbEvMkhZBVUGDln6qNmGb5cG3JkPJ757J22tfW
+	 EvDztvJQLSxBQ==
+From: Mark Brown <broonie@kernel.org>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ patches@opensource.cirrus.com
+In-Reply-To: <20250410101812.1180539-1-rf@opensource.cirrus.com>
+References: <20250410101812.1180539-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH] ASoC: wm_adsp: Use vmemdup_user() instead of
+ open-coding
+Message-Id: <174434800810.1298095.3518873899579787248.b4-ty@kernel.org>
+Date: Fri, 11 Apr 2025 06:06:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-This patch suggests the replacement of strncpy with strscpy
-as per Documentation/process/deprecated.
-The strncpy() fails to guarntee NULL termination,
-The function adds zero pads which isn't really convenient for short strings
-as it may cause performce issues
+On Thu, 10 Apr 2025 11:18:12 +0100, Richard Fitzgerald wrote:
+> Use vmemdup_user() to get a copy of the user buffer in wm_coeff_tlv_put().
+> 
+> Apart from simplifying the code and avoiding open-coding, it means we
+> also automatically benefit from any security enhancements in the code
+> behind vmemdup_user().
+> 
+> 
+> [...]
 
-strscpy() is a preffered replacement because
-it overcomes the limitations of strncpy mentioned above
+Applied to
 
-Compile Tested
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
----
- net/tipc/node.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks!
 
-diff --git a/net/tipc/node.c b/net/tipc/node.c
-index ccf5e427f43e..cb43f2016a70 100644
---- a/net/tipc/node.c
-+++ b/net/tipc/node.c
-@@ -1581,7 +1581,7 @@ int tipc_node_get_linkname(struct net *net, u32 bearer_id, u32 addr,
- 	tipc_node_read_lock(node);
- 	link = node->links[bearer_id].link;
- 	if (link) {
--		strncpy(linkname, tipc_link_name(link), len);
-+		strscpy(linkname, tipc_link_name(link), len);
- 		err = 0;
- 	}
- 	tipc_node_read_unlock(node);
--- 
-2.39.5
+[1/1] ASoC: wm_adsp: Use vmemdup_user() instead of open-coding
+      commit: b5d057a86e2086af0b1e6d0ca8b306be1c73a627
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
