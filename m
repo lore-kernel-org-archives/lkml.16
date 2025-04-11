@@ -1,66 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF99E24DC43;
-	Fri, 11 Apr 2025 10:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761B429B214;
+	Fri, 11 Apr 2025 10:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365742; cv=none; b=McuWPQYWkecKbg1GQzjpNGn7k7aBZfyPKf/B8Q5vWzwvUOYQ9DbaRGvjKinHWV1o0bFwMhvWq84yslrfGCat7UEO0re1tO4dxbj8txSiPb/WLqV2WD/OvqQ9Re8x41uM/AF42dxLrrGzoaO626srkU7Ef1RSQML55wNs2WVvDmk=
+	t=1744365743; cv=none; b=Z8NwMRO4vORd62sCsI5QbOsh0TCrz+7Z14OJcWCLKa8h/obauXiqybg4iPN+QHU4XBhc2ZeY2dLDSKrSmZfL3K68p832FRzuBUwaoc5zp4H1DoAeY8ocIG3MEjQO5LdUYENvqgyMhEFBN60NZlawFxm92kfl2/LfLlHGDbxw+2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365742; c=relaxed/simple;
-	bh=QPj+T2aTm3YQ/EThm5+WTuv8ki3lGSWBb4a38xZYH/w=;
+	s=arc-20240116; t=1744365743; c=relaxed/simple;
+	bh=d2j8JqGgCwmcZUfFuBnhj88PsErUTtS7Y1q4LDxXxwA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Pm5FUUHXGKxtQEzpe9YMKu/ZyJAl/yH77AK0sHronNZYjHFLLgZOkC7/utmBrB/nW5sZhyNsvD2CQkrPpcXGt3KXWctQCJIfnTrPlOdORJ3mDIQ52RnDJ+wE0T9aJE6zbXUno+hlbnKflKwFYww8cZUvooSdVQuWoP8OzHqO9Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Co4q5kQQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sDwbGPN6; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=H0RrCr8yjeYhcEJK/csV7lKj7znwk5kBLUwW+E7IBI2FeWGq216tauhEXVAEQbOIQEyppvO7uks5++HrHoGx+NCdddRXo/mKOfk5r/11/SJ7l6aEnQrzZq77+5H+vbkFtcvvN4H3Dz+IipxeXcRLL9z/6fntFEPrXt0xqwo9roQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qvJN/T1d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eKRh3NiJ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Co4q5kQQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sDwbGPN6"
-Date: Fri, 11 Apr 2025 10:02:17 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qvJN/T1d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eKRh3NiJ"
+Date: Fri, 11 Apr 2025 10:02:19 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744365738;
+	s=2020; t=1744365740;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5VnJ4KBESD4ejXQG1Z5e4HgxBK38HrMq03NQyYAuk1c=;
-	b=Co4q5kQQz9lKEHQiiGmsv/IXMDJlVB1vV14i18wP0TYs6/tS8fG540tpux7GYBiXTFkojl
-	fPxtuEi3CT9mRow9tZ+IDP6eJOQsm25IRBRBAI8eKmeQOffjUjuPFPzff4WVLxOaPf/SOR
-	nRlRHeUhLSQ35WfFMiSBZZd8n8yvOOV8eBajJKeB52SvmL7tONFhYy1LHtnVomNXauwPjO
-	/dOdg9Sy1zLK0QvqXG4YKTddRYir2yiBmYGJRtJBjuFn7M8K9ZYM9CA4RybTTT2OOZcFDj
-	/NWFzwJ+O1lw93cmAkHGo07thrW9+hcl2XeLcxZfGiLr9mG1uj9rC+UDKaRZfg==
+	bh=0k7Iaui3kZzdPNFKyepVMKjEfZLrX+KnaMDeZQebwGY=;
+	b=qvJN/T1dC/CuP9UPx6NGu0GfYdbC/5IGKRbkBMDjxixtq5DT0RVCTzD2zEI/4cSPbfLFZa
+	HOotxPD+eA5w7+gnvzk78AWeQEC9kp4eja3sVVlSZo4UC6T44fhm5P2hGRZtSmsBvw8yLy
+	ayu7gBp5YqyKJD8Cxp8y1s60L1qzu/AUfG0+jsKqJPM0clK7C78+0MkERVXT0Gt05kvDMB
+	JCkoFe47dRrWjtpqNeq5tsXtceOIh+Pb1iJejEtuOoAUevmB48GZj1YABkSWNtCxBN7TZr
+	n9AlNML/LdqDgYCp4aFcfYPS15Bv5NP7Ua9iVv/6sK3AqtN/UqRs3ezLzrztpw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744365738;
+	s=2020e; t=1744365740;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5VnJ4KBESD4ejXQG1Z5e4HgxBK38HrMq03NQyYAuk1c=;
-	b=sDwbGPN6Tsrj+0cscYfXVbraBQUTt9MNF+9AsuwOEmlXQwxDz1NuXlO+DEO7hyq7zO3y43
-	Q2uPbTe5skBAhcAQ==
+	bh=0k7Iaui3kZzdPNFKyepVMKjEfZLrX+KnaMDeZQebwGY=;
+	b=eKRh3NiJ0+/HGRCl6trS7EMHOiMnmnDlcp+W2aLThODbuSDcgbObrp+UeT3K1NenTl29/a
+	fpkbKlICb1GzIvBA==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject: [tip: x86/alternatives] x86/alternatives: Rename
- 'poke_int3_handler()' to 'smp_text_poke_int3_handler()'
+ 'text_poke_bp_batch()' to 'smp_text_poke_batch_process()'
 Cc: Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
  "H . Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250411054105.2341982-8-mingo@kernel.org>
-References: <20250411054105.2341982-8-mingo@kernel.org>
+In-Reply-To: <20250411054105.2341982-6-mingo@kernel.org>
+References: <20250411054105.2341982-6-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174436573771.31282.11272916613256807782.tip-bot2@tip-bot2>
+Message-ID: <174436573939.31282.2783999910189511914.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,78 +70,78 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     5236b6a0fe921f5de53b8eeea2d8fdd6d643dd7f
-Gitweb:        https://git.kernel.org/tip/5236b6a0fe921f5de53b8eeea2d8fdd6d643dd7f
+Commit-ID:     bee4fcfbc128c3ad604539f88307dc2c0fc6f843
+Gitweb:        https://git.kernel.org/tip/bee4fcfbc128c3ad604539f88307dc2c0fc6f843
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 11 Apr 2025 07:40:19 +02:00
+AuthorDate:    Fri, 11 Apr 2025 07:40:17 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 11 Apr 2025 11:01:33 +02:00
 
-x86/alternatives: Rename 'poke_int3_handler()' to 'smp_text_poke_int3_handler()'
-
-All related functions in this subsystem already have a
-text_poke_int3_ prefix - add it to the trap handler
-as well.
+x86/alternatives: Rename 'text_poke_bp_batch()' to 'smp_text_poke_batch_process()'
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Juergen Gross <jgross@suse.com>
 Cc: "H . Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250411054105.2341982-8-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250411054105.2341982-6-mingo@kernel.org
 ---
- arch/x86/include/asm/text-patching.h | 2 +-
- arch/x86/kernel/alternative.c        | 2 +-
- arch/x86/kernel/traps.c              | 6 +++---
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kernel/alternative.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index 5189188..93a6b7b 100644
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -38,7 +38,7 @@ extern void *text_poke_copy(void *addr, const void *opcode, size_t len);
- #define text_poke_copy text_poke_copy
- extern void *text_poke_copy_locked(void *addr, const void *opcode, size_t len, bool core_ok);
- extern void *text_poke_set(void *addr, int c, size_t len);
--extern int poke_int3_handler(struct pt_regs *regs);
-+extern int smp_text_poke_int3_handler(struct pt_regs *regs);
- extern void smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate);
- 
- extern void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate);
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 222021a..d2cd0d8 100644
+index 9bd71c0..78024e5 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2515,7 +2515,7 @@ static __always_inline int patch_cmp(const void *key, const void *elt)
- 	return 0;
- }
+@@ -2467,7 +2467,7 @@ struct text_poke_loc {
+ 	u8 len;
+ 	u8 opcode;
+ 	const u8 text[POKE_MAX_OPCODE_SIZE];
+-	/* see text_poke_bp_batch() */
++	/* see smp_text_poke_batch_process() */
+ 	u8 old;
+ };
  
--noinstr int poke_int3_handler(struct pt_regs *regs)
-+noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
- {
- 	struct text_poke_int3_vec *desc;
- 	struct text_poke_loc *tp;
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 9f88b8a..d67407c 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -882,16 +882,16 @@ static void do_int3_user(struct pt_regs *regs)
- DEFINE_IDTENTRY_RAW(exc_int3)
- {
+@@ -2540,7 +2540,7 @@ noinstr int poke_int3_handler(struct pt_regs *regs)
+ 		return 0;
+ 
  	/*
--	 * poke_int3_handler() is completely self contained code; it does (and
-+	 * smp_text_poke_int3_handler() is completely self contained code; it does (and
- 	 * must) *NOT* call out to anything, lest it hits upon yet another
- 	 * INT3.
+-	 * Discount the INT3. See text_poke_bp_batch().
++	 * Discount the INT3. See smp_text_poke_batch_process().
  	 */
--	if (poke_int3_handler(regs))
-+	if (smp_text_poke_int3_handler(regs))
- 		return;
+ 	ip = (void *) regs->ip - INT3_INSN_SIZE;
  
- 	/*
- 	 * irqentry_enter_from_user_mode() uses static_branch_{,un}likely()
--	 * and therefore can trigger INT3, hence poke_int3_handler() must
-+	 * and therefore can trigger INT3, hence smp_text_poke_int3_handler() must
- 	 * be done before. If the entry came from kernel mode, then use
- 	 * nmi_enter() because the INT3 could have been hit in any context
- 	 * including NMI.
+@@ -2602,7 +2602,7 @@ static struct text_poke_loc tp_vec[TP_VEC_MAX];
+ static int tp_vec_nr;
+ 
+ /**
+- * text_poke_bp_batch() -- update instructions on live kernel on SMP
++ * smp_text_poke_batch_process() -- update instructions on live kernel on SMP
+  * @tp:			vector of instructions to patch
+  * @nr_entries:		number of entries in the vector
+  *
+@@ -2622,7 +2622,7 @@ static int tp_vec_nr;
+  *		  replacing opcode
+  *	- sync cores
+  */
+-static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
++static void smp_text_poke_batch_process(struct text_poke_loc *tp, unsigned int nr_entries)
+ {
+ 	unsigned char int3 = INT3_INSN_OPCODE;
+ 	unsigned int i;
+@@ -2866,7 +2866,7 @@ static bool tp_order_fail(void *addr)
+ static void text_poke_flush(void *addr)
+ {
+ 	if (tp_vec_nr == TP_VEC_MAX || tp_order_fail(addr)) {
+-		text_poke_bp_batch(tp_vec, tp_vec_nr);
++		smp_text_poke_batch_process(tp_vec, tp_vec_nr);
+ 		tp_vec_nr = 0;
+ 	}
+ }
+@@ -2902,5 +2902,5 @@ void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *
+ 	struct text_poke_loc tp;
+ 
+ 	text_poke_loc_init(&tp, addr, opcode, len, emulate);
+-	text_poke_bp_batch(&tp, 1);
++	smp_text_poke_batch_process(&tp, 1);
+ }
