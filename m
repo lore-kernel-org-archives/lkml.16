@@ -1,91 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CD71C863E
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C48A198845;
+	Fri, 11 Apr 2025 14:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379918; cv=none; b=KIYhEgTxopAp/cT7vu+AMNoxLHmSiE4PTVACQQpohJ+FDLeTY+XhocZzdEi8C6gs5LlR7CEE1+Hl6x4BaQfSRR7RJOO1cOclENBG1wRbivI7i+hupRi4NlnkKFvKrmgvLWBuP9bG1X27lh7kY16kGGo5Zp5QQdsj3jz4jAGTN3E=
+	t=1744380062; cv=none; b=e3npR/gpp9SK+Un3/vz5rxn3hIGkK0Cxmo2y4dTpo1ik2C/6G92A8Dod9C5YjUC+5E76/037JGNPl/g6/NqFpymUQX3REBkcTufKobXhc4tHVlm4vyhn/SsXV7j0qRl0wDp0wE/kZ5tICo7wi4lxFtFWsIW0pW9/ziKfNp3M2oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379918; c=relaxed/simple;
-	bh=vDnLG72LCYd10fHlImIqsQps4BBiquf11s9rZSx7hyQ=;
+	s=arc-20240116; t=1744380062; c=relaxed/simple;
+	bh=7f8FYLo69ndVxvN+7drkLi5nDw1zMVObS8E6TwJKQ54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=izTQTX8nCxo4K2bOGougReAvlBohpvqP9X5i0NRB5mwdxTglK5LSmMaER1D+i0bUs0nAifn7TWlhZ8KELyRZ78ZjQQTAssnOSh5FCRwQkB/s2Gixdg0c1+SKUQusgpl6WsvQ29pwI17z1eEF+i9Hxa3LDnnLIraI3bGvYefvi/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c7BDzRiH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Type; b=bElp25qs0OcD9ePW1K06jjeDqBGXnuMie3cEjQfR6ZPKN6jfaSpqR+YScrRIrwsLmWNOfwIFgdVOBl6LEA1Di8/0r3jfRREFd6DZCSzyYTJKS7HuK1HVHGXni33iqlXvsNlSKNkVbzrCMcuKKHMpEn7Ij2cWh7uisrf/PskNXIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjOTStuo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7BDzRiH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744379912;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pkb2rwVHMrQO1vrCc1zgV2cwtlIuml/FIIAdKay+62E=;
-	b=c7BDzRiHTidn8I/brcxUBI5ghJEjmOZcUj7khvAg+WEWDK5G2FJf6i3Z8Qf5LY+1I7uzUx
-	8gpVdZ9A4fAlyWKjueBb8ZLH1JxLs+sQyWUFDNg0PM924XejiSAUJziDja3BHIcfakq1gx
-	/Nfum6xrxObyLLd6sdN7Y7q8hmiUIP8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-692-h-qS1FRYO-y5ttDd6TFTNQ-1; Fri,
- 11 Apr 2025 09:57:19 -0400
-X-MC-Unique: h-qS1FRYO-y5ttDd6TFTNQ-1
-X-Mimecast-MFC-AGG-ID: h-qS1FRYO-y5ttDd6TFTNQ_1744379838
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A6ABD180034D;
-	Fri, 11 Apr 2025 13:57:17 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.58.2])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 21A7419560AD;
-	Fri, 11 Apr 2025 13:57:15 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Omar Sandoval <osandov@osandov.com>, Sargun Dillon <sargun@sargun.me>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] nfs: don't share pNFS DS connections between net
- namespaces
-Date: Fri, 11 Apr 2025 09:57:13 -0400
-Message-ID: <1587C44B-7BDE-4B36-8CE6-C654CB154228@redhat.com>
-In-Reply-To: <20250410-nfs-ds-netns-v2-1-f80b7979ba80@kernel.org>
-References: <20250410-nfs-ds-netns-v2-0-f80b7979ba80@kernel.org>
- <20250410-nfs-ds-netns-v2-1-f80b7979ba80@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjOTStuo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F599C4CEE2;
+	Fri, 11 Apr 2025 14:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744380062;
+	bh=7f8FYLo69ndVxvN+7drkLi5nDw1zMVObS8E6TwJKQ54=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YjOTStuoSBRao9000Y9a+NBaI23xy+zjUoH35q3WBhxlTC2PUrJMtfugNCIFzRS7t
+	 c12e5evJb4D7MOA4FUb5whfSeYAKs6/z34T953OWztvzbdwJ3i8qHFAsQ9x95JqHEi
+	 18ruz9q2jBRxZkoKd8jPH2FIEafDSU4+87tgbV87xgaJVnlkv6FVTzC63bH2iy39JV
+	 HEsVZwoxCIhkBKvh6TfRdyaj7JMLGbCTNKwPHEB0hPaOfckA/ONq2XqMJI25aWofwC
+	 UKO2fgbHf58I24Qio2QCfaT/qaB5rooDI+0srVNaUVHcHRcEyvR0F1gce+1inVdRzv
+	 GZj/Tw2m5RQ0A==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Song Liu <song@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	kernel-team@meta.com,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: Re: [PATCH] fs: Fix filename init after recent refactoring
+Date: Fri, 11 Apr 2025 16:00:55 +0200
+Message-ID: <20250411-eisen-mitsingen-5885da4bce28@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250409220534.3635801-1-song@kernel.org>
+References: <20250409220534.3635801-1-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1023; i=brauner@kernel.org; h=from:subject:message-id; bh=7f8FYLo69ndVxvN+7drkLi5nDw1zMVObS8E6TwJKQ54=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/VJjRtWvBncvlZkGctizLErrcndujj11frHOw0flSV E9+p1RxRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwETcbzH8lfh+1Te/8VPo6ocf K9dPuqWlMadse1rh1w7XeCWzGTXPHjMy/OCpFFyRXr/WdtPVqrQXrIcMvK8/ZomZ1ubCeHNXSkU hAwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 10 Apr 2025, at 16:42, Jeff Layton wrote:
+On Wed, 09 Apr 2025 15:05:34 -0700, Song Liu wrote:
+> getname_flags() should save __user pointer "filename" in filename->uptr.
+> However, this logic is broken by a recent refactoring. Fix it by passing
+> __user pointer filename to helper initname().
+> 
+> 
 
-> Currently, different NFS clients can share the same DS connections, even
-> when they are in different net namespaces. If a containerized client
-> creates a DS connection, another container can find and use it. When the
-> first client exits, the connection will which can lead to stalls in
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-                                         ^^ close ?
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-> other clients.
->
-> Add a net namespace pointer to struct nfs4_pnfs_ds, and compare those
-> value to the caller's netns in _data_server_lookup_locked() when
-> searching for a nfs4_pnfs_ds to match.
->
-> Reported-by: Omar Sandoval <osandov@osandov.com>
-> Reported-by: Sargun Dillon <sargun@sargun.me>
-> Closes: https://lore.kernel.org/linux-nfs/Z_ArpQC_vREh_hEA@telecaster/
-> Tested-by: Sargun Dillon <sargun@sargun.me>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Looks good to me,
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
-Ben
-
+[1/1] fs: Fix filename init after recent refactoring
+      https://git.kernel.org/vfs/vfs/c/b463d7fd118b
