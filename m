@@ -1,120 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C513E27BF9A
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C9B1F0990
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744338745; cv=none; b=RiCiBTL/BjLrWuK71eB62hQr+ytk4CIvuCaSPh9s16Z2RNA/lWG6nuLNWy2yWINEXEjUZ16iVrRe/7utvKKCSJ6kkidTmo6RzKcmNxiq839HKmf5AiiWNKdhMj5b43BHb2+Su/p8fYAHf60lj1NCyXhv8QfoyMKX3WafVuRYahM=
+	t=1744338840; cv=none; b=r93raeetQFCW5NZGZttnyr9i8MBMjxhYXizKcetFFPHB8jNfums2nZ48hW72O6lX++E7E2dj1h800/eceYebCcPHMmzS8f8YfAIaxFqKK41+3P47kfI/KAIzS+q6EvRnCJnsbRCDPOmDJIw2I14oQT+Env/U1JIfIzfNU3q3aAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744338745; c=relaxed/simple;
-	bh=UB8LKThtVBnJDF+n48L8Fijl+lGomrgoYCRKp/i8I0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jBJUw6NCQZ2NG+DHUg0sTxvxepCZzaq/oRDUyDLxPPZTGz+NjaDPIlg/tWSGOCrndv0JfRp4R7sTPNUXlRPcHE9zjOj7GcF8bKqAhBqolQIMwOolqz7NWvtFTS5uA6HhHfrldhMo8m4PS52SoQKUxau/2QX1erKWgX9hWkrQwAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVf0cNqL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744338840; c=relaxed/simple;
+	bh=tZp/nWpeL3IjPih7amkifGty8bjxnO64DSgmN83xU/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u5PYinQF/7AokbP5KQ35KkzFdZ/0LNJsTBycgac7mwPafa8P5UOGCAbyO7++T1IM93N8a34pVtvwy9idR4GOKNCbrX/jdxUnv3xsTrKavdFEnVpxUszCl0RnfZirY/L7VZ2Ny2LO+G2L91iGYYgIJzoQIqxFRR5v8R9IT8lgak4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VJzcRa70; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVf0cNqL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491EBC4CEDD;
-	Fri, 11 Apr 2025 02:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744338745;
-	bh=UB8LKThtVBnJDF+n48L8Fijl+lGomrgoYCRKp/i8I0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HVf0cNqLzQpmeldSV8ZJgCdK8HXbWR947tl8x5sgLQVNGnBr0pXC/trqNlrNOjm8b
-	 yv1cgdNrBpUFA3oHFKhYXMNFWi2MYLMuyYprzMep1X9eCIOEFLhIrU7qEffrVvYs6h
-	 /dVjI1GOmXaG9B0FWEnR/Sdo5IWsWhxvuShAACk7xZFO++Sb1nSEUWiSt93yHh+5o6
-	 wnwiMfyRj2AWiFyGCAX8nkPzqdg0feTICxvIFeWE8vuS7XE7670cI+1RF1jFSx8RiM
-	 Kxy1f6EbOv5Kir/ILiFbBU3Xv84KdcTezrbFux1aA9tFRzQx1HDkX8A0HyCYRSWymq
-	 K8D0rdvlmv8MQ==
-Date: Thu, 10 Apr 2025 19:32:22 -0700
-From: Kees Cook <kees@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: dave.hansen@linux.intel.com, Nikolay Borisov <nik.borisov@suse.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] devmem: Block mmap access when read/write access
- is restricted
-Message-ID: <202504101926.0F8FB73@keescook>
-References: <174433453526.924142.15494575917593543330.stgit@dwillia2-xfh.jf.intel.com>
- <174433455090.924142.10859114556652046264.stgit@dwillia2-xfh.jf.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VJzcRa70"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744338834; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=E9bGGUreuEr9WcQwyHdCJYupubC8PqSvroGU5lP73V0=;
+	b=VJzcRa70n7ZGccrp2rhtDhj0p/UFDo7WHJYue1Zra1Oqsy8xehin038BlATyTdbpSYiYSPLP0Nb3/r7deEKO6RdbLHWV9kM3Nb1rBtF8efRWR3dYzMztUR8G6Go7lfkoZFYRGwclZsI7zYAHZSQWBwRaObyf/3Qyf1KbQx7wMqI=
+Received: from 30.74.129.90(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WWRQjjz_1744338516 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 11 Apr 2025 10:28:36 +0800
+Message-ID: <3f901a84-9157-4f93-86a4-b56f5c240f78@linux.alibaba.com>
+Date: Fri, 11 Apr 2025 10:28:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174433455090.924142.10859114556652046264.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] erofs: add __packed annotation to union(__le16..)
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+ kernel test robot <lkp@intel.com>
+References: <20250408114448.4040220-1-hsiangkao@linux.alibaba.com>
+ <20250409195222.4cadc368@pumpkin>
+ <7af3e868-04cb-47b1-a81b-651be3756ec5@linux.alibaba.com>
+ <20250410215305.0c919e78@pumpkin>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250410215305.0c919e78@pumpkin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 10, 2025 at 06:22:30PM -0700, Dan Williams wrote:
-> Back in 2022 Kees noted that he is able to mmap System RAM below 1MB
-> even with CONFIG_STRICT_DEVMEM=y [1]. That is allowed for x86 legacy
-> compatibility reasons for userspace that wants to read BIOS data
-> resident at that address. However, the expectation is that when
-> devmem_is_allowed() returns 2 that the access is redirected to return
-> zeroes.
+
+
+On 2025/4/11 04:53, David Laight wrote:
+> On Thu, 10 Apr 2025 07:56:45 +0800
+> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 > 
-> That happens for the read()/write() case, but by code inspection for
-> mmap(), there is no restriction.
+>> Hi David,
+>>
+>> On 2025/4/10 02:52, David Laight wrote:
+>>> On Tue,  8 Apr 2025 19:44:47 +0800
+>>> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+>>>    
+>>>> I'm unsure why they aren't 2 bytes in size only in arm-linux-gnueabi.
+>>>
+>>> IIRC one of the arm ABI aligns structures on 32 bit boundaries.
+>>
+>> Thanks for your reply, but I'm not sure if it's the issue.
 > 
-> Now, the confidential x86 VM (CVM) use case wants to depend on
-> "devmem_is_allowed() == 2" guaranteeing that no mapping to potentially
-> encrypted memory is established [2]. The options to enable that are
-> teach mmap_mem() to meet the "zeroed buffer" implication of
-> devmem_is_allowed() returning "2", or return -EPERM for that case.
+> Twas a guess, the fragment in the patch doesn't look as though it
+> will add padding.
 > 
-> Return -EPERM on the hope that userspace does not actually depend on the
-> legacy behavior of being able to reliably map the first 1MB of memory on
-> x86. I.e. that all legacy cases are using read()/write() to safely read
-> zeroes. If that turns out not to be true then either a "map zeroes"
-> scheme can be added, or the CVM case can return 3 from
-> devmem_is_allowed() to hide the CVM restriction from legacy
-> environments.
+> All tests I've tried generate a 2 byte union.
+> But there might be something odd about the definition of __le16.
 > 
-> Link: http://lore.kernel.org/CAPcyv4iVt=peUAk1qx_EfKn7aGJM=XwRUpJftBhkUgQEti2bJA@mail.gmail.com [1]
-> Link: http://lore.kernel.org/fd683daa-d953-48ca-8c5d-6f4688ad442c@intel.com [2]
-> Suggested-by: Nikolay Borisov <nik.borisov@suse.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  include/linux/io.h |    7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> Or the compiler is actually broken!
+
+Sigh, I'm not sure, it's really a mess but I don't have
+more time to look into that.
+
 > 
-> diff --git a/include/linux/io.h b/include/linux/io.h
-> index 0642c7ee41db..564934f7e70d 100644
-> --- a/include/linux/io.h
-> +++ b/include/linux/io.h
-> @@ -191,7 +191,12 @@ static inline int range_is_allowed(unsigned long pfn, unsigned long size)
->  	u64 cursor = from;
->  
->  	while (cursor < to) {
-> -		if (!devmem_is_allowed(pfn))
-> +		/*
-> +		 * Any restricted access is treated as "no access", i.e.
-> +		 * handle devmem_is_allowed() returning "2" to indicate
-> +		 * restricted access.
-> +		 */
-> +		if (devmem_is_allowed(pfn) != 1)
->  			return 0;
->  		cursor += PAGE_SIZE;
->  		pfn++;
+>>
+>>>    
+>>>>
 
-Looking through the 16 page of Debian Code Search results for
-`open("/dev/mem")`, I find a LOT of mmap() use. Some random examples:
 
-https://sources.debian.org/src/i810switch/0.6.5-7.1/i810switch.c/?hl=413#L402
+..
 
-https://sources.debian.org/src/radeontop/1.4-2/detect.c/?hl=91#L88
+>>
+>> I doesn't work and will report
+>>
+>> In file included from <command-line>:
+>> In function 'erofs_check_ondisk_layout_definitions',
+>>       inlined from 'erofs_module_init' at ../fs/erofs/super.c:817:2:
+>> ./../include/linux/compiler_types.h:542:38: error: call to '__compiletime_assert_332' declared with attribute error: BUILD_BUG_ON failed: sizeof(struct erofs_inode_compact) != 32
+>>     542 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>>         |
+> 
+> Try with just __packed __aligned(2) on the union definition.
+> That should overcome whatever brain-damage is causing the larger alignment,
 
-https://sources.debian.org/src/libdebian-installer/0.125/src/system/subarch-x86-linux.c/?hl=113#L93
-Which includes this gem of a comment, implying that it uses mmap
-_specifically to bypass the devmem restrictions_:
-	/* Please note that we don't use mmap() for performance reasons here,
-	 * but to workaround problems many people encountered when trying
-	 * to read from /dev/mem using regular read() calls.
-	 */
+Currently it works fine with `__packed` on the union definition,
 
-I don't think we can just fail the mmap. :(
+do you suggest adding both `__packed` and `__aligned(2)`, may
+I ask what's the benefit of `__aligned(2)`?
 
--- 
-Kees Cook
+> 
+>>
+>>>
+>>> I'd add a compile assert (of some form) on the size of the structure.
+>>
+>> you mean
+>>
+>> @@ -435,6 +435,7 @@ static inline void erofs_check_ondisk_layout_definitions(void)
+>>           };
+>>
+>>           BUILD_BUG_ON(sizeof(struct erofs_super_block) != 128);
+>> +       BUILD_BUG_ON(sizeof(union erofs_inode_i_nb) != 2);
+>>           BUILD_BUG_ON(sizeof(struct erofs_inode_compact) != 32);
+> 
+> I'm sure there is one that you can put in the .h file itself.
+> Might have to be Static_assert().
+> 
+>>
+>> ?
+>>
+>>
+>> ./../include/linux/compiler_types.h:542:38: error: call to '__compiletime_assert_332' declared with attribute error: BUILD_BUG_ON failed: sizeof(union erofs_inode_i_nb) != 2
+>>     542 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>>         |                                      ^
+>>
+>> That doesn't work too.
+> 
+> That it the root of the problem.
+> I'd check with just a 'short' rather than the __le16.
+
+.. sigh.. I have no more interest on this now due to lack
+of time (my current employer doesn't allow me), I think
+if there is no better ideas, let's keep the original patch
+way to resolve arm compile issues...
+
+Thanks,
+Gao Xiang
