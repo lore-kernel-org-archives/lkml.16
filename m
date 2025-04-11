@@ -1,175 +1,143 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002A91A9B32
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B783921D5A6
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744390675; cv=none; b=Mnyy+SrG0JHZ3ubkBS4mcLg2SxveYLvGME7U30uwDt+SDQbVgqe5zBBXjObMuhCdksP/LjRL5RwxjBQe1D//dcwD9IxUSPsLXyi9t1/uaSKNWgwprirHWwmVavWf4nPvhCD6wKZA5HRvTcM6VkWTo7xWppHr6INY3ft4016yOnE=
+	t=1744390678; cv=none; b=CNe4S/tc7jLNoRlen4tasUIbjyIh9kOA02GLr4cT8VTVYHk+eLNvonWFxPWSltKSb6eFKZZXhAbJnEyxpJNyQfaQ3rt9ZS4M0i2J9q9LvN1qxDcA1GnEZHgQYNpOStCu8A6J5VKweGazDOTW/NInoYB8bfCqQSgCmnFb12toD5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744390675; c=relaxed/simple;
-	bh=v331HTWEjWrY75FzM9Glh5DbMe5VAachmJixsMGV098=;
+	s=arc-20240116; t=1744390678; c=relaxed/simple;
+	bh=g1FN5PT3e+DmJD0YyLOI2xihs5Hpfcx6Ef4TFtLLHO4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KNhll89nXZtH6a6W1l2mvkurKNieJJhWewIBz0BvTD97wOe779XBlb3E+nJy6BEmORyWJFJ8aNbYWjhKt14P2LQYSzZs4AfxkYCC0ivIWetDZTaOMw91vj28+jOdduWtWYXQSQwlRvgs1cEEFcOkPAB4Lr/M64j79In3mv/95Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EZNd6p8i; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pt6GOmZfa+g6frnhjenOPVOHWyqRgudFVB0nTPOW/EPujYn/tWDsuT2NOG8+9pwJ3eP6rS5+psewqgkBvSCCfclerX3N2Z2OAFe+ONTS2Bew/uFQlFZuwXiz2jCT5gPq82ax362BU36dX1T2CDSePZHpHCQOUsUHxMLgn7XBeIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GJUUjNvP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EZNd6p8i"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c14016868so1913392f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:57:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744390671; x=1744995471; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=04xvq7rYUEoUgFpD/ewNZ0HJkNgz6MW/nJUoaxZ4pGA=;
-        b=EZNd6p8ieeiPLQ+M9YyeVn1RY7HGp5JijdKg2RijEqnP+hWVn/eMi5DADQXASB6Wfz
-         e0Kdv7KKY4NgE92PPLQLr1v2axGRReIKJmax+y9eB2w4mGtFEKbpmgd2OH+zA+whnK7r
-         5l0pa4BvCCPTa0OxqjaW6fb1eMOxuioY2ehV7fVGL9FJv1qrQ9LK0aWFLT80LOEwg0nU
-         16ob/riWyuNilQB5Rhpg+RKWgCiaK2j2n1KeXNXqLOsfwPqm6NIKIk44ixrCZ0DcTfGX
-         yPqCdB/r8aAB6exevRBZuM1MUSRYBoOEh9v6wvZAqMZUZ85GvX599xQvHZp5DfLm+ls+
-         Bjbg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GJUUjNvP"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BFk4hi019650
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:57:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=VKImoR0KichjLHhvcg5Snjqf
+	fOPNM4U3wHwTAAjNnW4=; b=GJUUjNvP/hHF34eVZKR4sQ7plSnvlEqvQoctOHgG
+	06hgN/Rn0wUkt4m37gC7xM2pcAgtjqxsrUsP5V1xxkdwaoWbn13lNNaCTF6cBIgL
+	1hbqS01cBrACvy9/BZyCxS4+otiEy2b51QkU+7Atp+0+oKO96e4X4euBCflto1Fb
+	FjQbFSROgqMhDd+P+aorWQHoDDo2WN1zgTxUu9FvyYVu8Wjx8fE9OHNGrKgrHcyj
+	fvXrPITy20GpUsBbVxxbylRl6jp0qplP7uzEBSERSmmN032BFjfgPV/4jdfQOZHp
+	kUJ6iiS0s9FfH8zZAa5Bispzr3a1QQkRsBReJqF5vQvZig==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcru7qv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:57:55 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2241ae15dcbso25304795ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:57:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744390671; x=1744995471;
+        d=1e100.net; s=20230601; t=1744390674; x=1744995474;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=04xvq7rYUEoUgFpD/ewNZ0HJkNgz6MW/nJUoaxZ4pGA=;
-        b=iRgjQMnA3y/NaHwUDQnMfJwhB+CMKf2ms9dt7ByG48TCrotkrQ6r5zdg1th+FjqPIJ
-         0g8eif26SFCvNyNO99xG9Lfcjvsk/IC4seStPmEDSc50feZ2u2ViV2UtG2LsLpclciKc
-         2rQ54/tM/+qRIl5GqgwUMDdOH3AfSaWVr6dIWm7Y+HHNq4ZV0JmWiRMS0qfC3PAkb45e
-         avh1o7wT2kFIR753o9I23XtO6UOhtX5tXSuT/9rQRRcByOoNeOm4s/zpzchAQiUDr8gD
-         /yKV0WsRDnbqfhzghkq0a0EPhqa+zHxsovMjlLJr33ZB49wOdC+x4eDDtiKInpT52fIL
-         Q92w==
-X-Forwarded-Encrypted: i=1; AJvYcCWIGI10TeP1dhdd1+tN3Jw4Y/YgUYDzxNszjMjuCofHy6+MxVEdJx71l9uj+Z1OAknRo4aPjPZAIprR0y4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV/FFPZFr1gKON0PcLnslrsNRNYIRiYzV+3gTnU9/FrzGbifel
-	YID86QsQ8nEAsr3DZh8JvaIz5Q6dXyazabgJQL/9HRLA0cy0ORditiPp8sz5QVE=
-X-Gm-Gg: ASbGnctYbuUk5+6T8ltoXnjXWLZccijI1SkDNz7hIX9gdApqiPl6HfsbRz8FbxYeZsK
-	oGLQlawpK/fruHWll39OQhkmGJsRtF1auAYYQwNXUPqtj5uu54TKV9AkOVsPDijgaW4WOxEXZRo
-	gC8sKJb+7o/fGW6EqYn0Is9kPCOPymTGoGIM41+PWfWIA3wrVlDNnzRWlwwd9pwz97N6lcASZom
-	mbv912tWASPR7Spfb6QTmLQri3p4HPv2g9p330wM86oBRByt6oQoN1O3EwkW1UjHzvoXdu+MIGo
-	dC8thAukJ1/Nn3puO9zlbXuzUW5VotTw1TQ31taopW8=
-X-Google-Smtp-Source: AGHT+IErI8KPwmdEuvWBk3FlgHVGYN+RcWvJM0a6rOwTi5daYDu+ij9vivNIziwzw8Zo71ai7Dk1fg==
-X-Received: by 2002:a05:6000:1a8a:b0:39a:d20b:5c14 with SMTP id ffacd0b85a97d-39eaaed2122mr3057697f8f.36.1744390671095;
-        Fri, 11 Apr 2025 09:57:51 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445315sm2533527f8f.82.2025.04.11.09.57.50
+        bh=VKImoR0KichjLHhvcg5SnjqffOPNM4U3wHwTAAjNnW4=;
+        b=ikQX+wk7wn2slLl+9qWu8GSusTBa4wDvxBVKHtfuDJa/5DJ0hafUZInGkw8qwRut/1
+         nPRwaVlXiQ4op7z8aw+ddEZk9gOj3BA0fjKzLtT2N6VQev1J3fl3jNlknxj/lct38yL0
+         Y0zbUPi3XpFUE0PRgt+AwjQPhNzTpG4yruX/RZhRP9RHQslX942w+lQy8W2vad6mQP46
+         wOoLD1iAztD4sbt+KP9L3mDRLqNRIehcdUnVdQKs2+JFY0MPj1AqgMGXb1jhMICcE/0V
+         taYzx37yPodIDIKY1OincUSXOljGBUPTWalAt0tJoas3NbokSI+4dFYRiO9rD8Mm21Ef
+         ykeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsQNXKe4qzXz0CdpMCtfcE6kQsGG8yBnLBnpK6LEhNJP8wP9dOX4EuAmlVhFZgXvi0NiEkzVYZey8eDeA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCeKR3C04aeRLQXOFC7z3E/MsUzIibkiOYb9V2effQs8bBOVs3
+	t0p96NZo+/WfQrpeBQD114Y6sZPGB/6GqEWvwA52AAyzvIJvTd7i3TW1ih84JGgcbNN1vwmUGpx
+	XHLYnAyCn4FJ74SvdjEzGk0X/3pkEDT77NyY08CWRhc2enuThdN+m5xPYfUnIUWpWR4JkK7M=
+X-Gm-Gg: ASbGncvb5KCnNI0ABWf6lrfZxt/3ihTsIx/px7KaVlUVBvS5iBeg3QGxDvhz8GbWrGo
+	75qsF4qwPdiaDp9y99sJ2zPhklyJ5k5qzD+fprV7WBtiROJRunif+k3XiJ8hhIsA3cqWmN/a301
+	w6lAao4iJUbXODTwHJ452C3FLF72l+9U1xz6AeUDgBCZqGQ15JmhTntiKL1IZvcK0NZlqUyfPH3
+	zTQb1vAHwHoGwpqUeQEEHosJFntkZiLqK7K0ySz6O0U8Xs7YfYqokF91+7QmwyIGWoS0mQruAgj
+	yw+7DTAVLXOwQ9NT66XNNI1ddGSugQ/3av32btk=
+X-Received: by 2002:a17:903:189:b0:223:f9a4:3fb6 with SMTP id d9443c01a7336-22bea4a183bmr44301125ad.11.1744390673866;
+        Fri, 11 Apr 2025 09:57:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHUVDTk+yzucEuAE4WKGO88quhWCVXvQVwZn02WXJ9p0EoVjVInbjnjnp7hGMhEFd7TQFVmsg==
+X-Received: by 2002:a17:903:189:b0:223:f9a4:3fb6 with SMTP id d9443c01a7336-22bea4a183bmr44300835ad.11.1744390673449;
+        Fri, 11 Apr 2025 09:57:53 -0700 (PDT)
+Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cc8daasm51998795ad.210.2025.04.11.09.57.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 09:57:50 -0700 (PDT)
-Date: Fri, 11 Apr 2025 18:57:48 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: jingxiang zeng <jingxiangzeng.cas@gmail.com>, 
-	Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Jingxiang Zeng <linuszeng@tencent.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, mhocko@kernel.org, 
-	muchun.song@linux.dev, kasong@tencent.com
-Subject: Re: [External] Re: [RFC 2/5] memcontrol: add boot option to enable
- memsw account on dfl
-Message-ID: <qfxzzbcfnojz3oz2ackzorwokhmr2dbkxfgbmewd74vtzrzxkh@rlqide3wg2v7>
-References: <20250319064148.774406-1-jingxiangzeng.cas@gmail.com>
- <20250319064148.774406-3-jingxiangzeng.cas@gmail.com>
- <m35wwnetfubjrgcikiia7aurhd4hkcguwqywjamxm4xnaximt7@cnscqcgwh4da>
- <7ia4tt7ovekj.fsf@castle.c.googlers.com>
- <20250320142846.GG1876369@cmpxchg.org>
- <ipskzxjtm656f5srrp42uxemh5e4jdwzsyj2isqlldfaokiyoo@ly4gfvldjc2p>
- <4lygax4lgpkkmtmpxif6psl7broial2h74lel37faelc3dlsx3@s56hfvqiazgc>
- <CACSyD1NisD-ZggRz0BaxUdJ9so4j-sKPZi361HJAum3+bHO+tQ@mail.gmail.com>
- <CAJqJ8ihLfcDROuCjMfoNzOtRRZhVDWEx04ik6cS9NO6hVua0xA@mail.gmail.com>
+        Fri, 11 Apr 2025 09:57:53 -0700 (PDT)
+Date: Fri, 11 Apr 2025 22:27:49 +0530
+From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] soc: qcom: socinfo: Add support for new fields in
+ revision 22
+Message-ID: <Z/lKDZFtJEQEYbWd@hu-mojha-hyd.qualcomm.com>
+References: <20250411095025.4067964-1-mukesh.ojha@oss.qualcomm.com>
+ <20250411095025.4067964-3-mukesh.ojha@oss.qualcomm.com>
+ <a730e112-b3c8-46a1-a9d7-186d22a2479f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kvvrqpgkexpz34pw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJqJ8ihLfcDROuCjMfoNzOtRRZhVDWEx04ik6cS9NO6hVua0xA@mail.gmail.com>
+In-Reply-To: <a730e112-b3c8-46a1-a9d7-186d22a2479f@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: FS-JitBJBk9Y5abW7ukakrSICKDF9nX3
+X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f94a13 cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=CieDfDEW6uGNFcNvMxgA:9 a=CjuIK1q_8ugA:10
+ a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-GUID: FS-JitBJBk9Y5abW7ukakrSICKDF9nX3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_06,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
+ clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110106
+
+On Fri, Apr 11, 2025 at 12:01:48PM +0200, Konrad Dybcio wrote:
+> On 4/11/25 11:50 AM, Mukesh Ojha wrote:
+> > Add the ncluster_cores_array_offset field with socinfo structure
+> > revision 22 which specifies no of cores present in each cluster.
+> > 
+> > Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+> > ---
+> 
+> So with all three of your patches, you neither introduce a user for them,
+> nor even expose them in debugfs.
+> 
+> Please definitely add the latter, and let's talk about the former.
+
+These all revision is added as part of latest boot firmware's socinfo
+struct version and that also necessitates updating Linux socinfo struct
+version.
+
+I don't have a problem in adding debugfs entry for all of them however, I
+don't feel the need unless there is already some user or kernel space code
+using it.
+
+If you still feel like we should add it, let me know, will do it.
+
+> 
+> What's 'subpart feture'?
+
+Ah, my bad I did not explain that field in the patch.
+
+Subpart_feat_offset, it is subpart like camera, display, etc., internal
+feature available on a bin. 
 
 
---kvvrqpgkexpz34pw
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [External] Re: [RFC 2/5] memcontrol: add boot option to enable
- memsw account on dfl
-MIME-Version: 1.0
+> How should we interpret the value added in patch 1? Does it expose the
+> higher temperature threshold in degrees, or do we need to add some hardcoded
+> variants for each platform separately?
 
-On Thu, Apr 03, 2025 at 05:16:45PM +0800, jingxiang zeng <jingxiangzeng.cas=
-@gmail.com> wrote:
-> > We encountered an issue, which is also a real use case. With memory off=
-loading,
-> > we can move some cold pages to swap. Suppose an application=E2=80=99s p=
-eak memory
-> > usage at certain times is 10GB, while at other times, it exists in a
-> > combination of
-> > memory and swap. If we set limits on memory or swap separately, it woul=
-d lack
-> > flexibility=E2=80=94sometimes it needs 1GB memory + 9GB swap, sometimes=
- 5GB
-> > memory + 5GB swap, or even 10GB memory + 0GB swap. Therefore, we strong=
-ly
-> > hope to use the mem+swap charging method in cgroupv2
+As the name feature suggest some of thermal policy could change based on
+this value and currently, this will contain only 0 or 1 and 1 means
+its heat dissipation is better and more relaxed thermal scheme can be
+put in place.
 
-App's peak need determines memory.max=3D10G.
-The apparent flexibility is dependency on how much competitors the app
-has. It can run 5GB memory + 5GB swap with some competition or 1GB
-memory + 9 GB with different competition (more memory demanding).
-If you want to prevent faulty app to eating up all of swap for itself
-(like it's possible with memsw), you may define some memory.swap.max.
-(There's no unique correspondence between this and original memsw value
-since the cost of mem<->swap is variable.)
-
-
-> Yes, in the container scenario, if swap is enabled on the server and
-> the customer's container requires 10GB of memory, we only need to set
-> memory.memsw.limit_in_bytes=3D10GB, and the kernel can automatically
-> swap out part of the business container's memory to swap according to
-> the server's memory pressure, and it can be fully guaranteed that the
-> customer's container will not use more memory because swap is enabled
-> on the server.
-
-This made me consider various causes of the pressure:
-
-- global pressure
-  - it doesn't change memcg's total consuption (memsw.usage=3Dconst)
-  - memsw limit does nothing
-- self-memcg pressure
-  - new allocations against own limit and memsw.usage hits memsw.limit
-  - memsw.limit prevents new allocations that would extend swap
-  - achievable with memory.swap.max=3D0
-- ancestral pressure=20
-  - when sibling needs to allocate but limit is on ancestor
-  - similar to global pressure (memsw.usage=3Dconst), self memsw.limit
-    does nothing
-
-- or there is no outer pressure but you want to prevent new allocations
-  when something has been swapped out already
-  - swapped out amount is a debt
-    - memsw.limit behavior is suboptimal until the debt needs to be
-      repaid
-      - repay is when someone else needs the swap space
-
-The above is a free flow of thoughts but I'd condense such conversions:
-- memory.max :=3D memory.memsw.limit_in_bytes
-- memory.swap.max :=3D anything between 0 and memory.memsw.limit_in_bytes
-
-Did I fail to capture some mode where memsw limits were superior?
-
-Thanks,
-Michal
-
---kvvrqpgkexpz34pw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/lKCgAKCRAt3Wney77B
-Sd4XAQD1bRQA6yZDQoj/MJ+ik5mlhJTIQdWWOLsLZzeI3md67QD/V43upzY0A00m
-MglkEUF7IOFMdyMrZOaQ5CzGBLohuwE=
-=g4em
------END PGP SIGNATURE-----
-
---kvvrqpgkexpz34pw--
+-Mukesh
