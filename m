@@ -1,82 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B2C1F0E32;
-	Fri, 11 Apr 2025 14:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C6B1DD0F2
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380173; cv=none; b=mPTbc1sbM6ilDCqt0h0hMgMlg7vtBgRm6TaN8aB7D/Tuj3DaZfbwWSKF0ltFSsTC3zvvM6t+LiMQZ5omLFDw5VkfV3zQPdbQ/8ZDMF3hlW/B8vkfP+6x4sbU3LASP8lSkhK5CNNyuSOuK++9uEqnEVn5S0WJezRitMvdHy2BOw4=
+	t=1744380217; cv=none; b=N4ogTB6MtcVqHZt5/911HJZpiIkZmvi5P872jYYYEr3PVlHoUx89SeTT2Opbx2DlLLx6Qu2HEzL9108+SfdFO8N2JMUlJv1ACyGEjDyR92RT8m11Shajlbn7U0wJdoHDVGP4iSqSXrx1QhLuyhftInyrdrpBNu9KqDlj5kQyeWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380173; c=relaxed/simple;
-	bh=L028CyjHdE2jxczbIM6pBy9pM8llSElkIkRS2OiXwDc=;
+	s=arc-20240116; t=1744380217; c=relaxed/simple;
+	bh=+B3dssbzQ0T+9tjtOKViLG4iLIBBnTTBP8+6J/vDyXE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qpr08Ei8vSCPdgyIrX+37Zaf2VnfKDLAW6dArrQzHE7qte+XO9vs34egf6rTMpTTECbNIRPk51zveVjddqFzWFVbp2BxdBxFWVmF3Hcdb6PVzT18P1aRCzWwEwYCgHBXUvVnFJGzd2bytkunSz4QSxGNan2qglGs4ntcR6C7ebc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pp7E9eCg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EW4esSf3hOCB1eXXZl8K9AcLcm1+9tmm/Fgo0dPN6ERQF88g9LnaWaWR9EgY55AOVdyhVTGu+elsP5zcESxCjgePh7YJXV2C7c6luM6DasUxTY82lyn1AnIYj3f51YbC/+cEBCBP2SRD+f90CBXAGrkdluWfM5AltW108KxnOCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PO8AItXl; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pp7E9eCg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 848DEC4CEE7;
-	Fri, 11 Apr 2025 14:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744380172;
-	bh=L028CyjHdE2jxczbIM6pBy9pM8llSElkIkRS2OiXwDc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pp7E9eCgI9DFYb5sLbeeMuVNF457lPAOtI0tZDKWJsevrSA/kg5avoarhIqKUl0or
-	 4EsbDFP1tEYXc8tRRzc6VkVOAxG53WXcfgunBVz9jOshAk8A8lZmz2dNp4Pfgtk7XQ
-	 PacQnSFcNwImN07bw4o5OubUTOLSR/oeEaoMwAGoOaboOB5K9M2cXPsxGUcnjE5dTJ
-	 Nn/JnId6zL717stJSLpO6xDKcflGYOljRDQcAMvyZ/CFqShK1JCTOTwQgseB2OQsoN
-	 Bvlz+Zpe23oJpTPS0hbXSFXOU0d+/EdakMbV5z69ltll3eXxeFr6nf+8K68xZP8ko2
-	 +saTpy3nZCgVQ==
-From: Christian Brauner <brauner@kernel.org>
-To: djwong@kernel.org,
-	hch@infradead.org,
-	Gou Hao <gouhao@uniontech.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	gouhaojake@163.com,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PO8AItXl"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso14009235e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744380214; x=1744985014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WjHI8iLKNyjSer6QwZ0T4nLrTbVuh8PFv9EW9BoptFs=;
+        b=PO8AItXlpHlJXYohYpQQKAom+Aj8yHrwLKVt2Pq5132DqhU3fHsva95bVqy03fzPbo
+         t2NJ7R5VjOL4tXUJyOZK5c1vLuOoHs2EfOuMJ7Xa9A4xfl2b+yHY2kkhDNes6HhOYNOV
+         BATSPjFmiq4BnkoT53wR+xdCHK7L/Di841TFU1eqyAkC78udk7KzbNv7r8MtPGVzQA57
+         WvDld3xfOVSDA7/CTfMzdyLcK7A8K0ZI6DNhfqhhLrxntZizhZVlOFHTEThGgLQmj7tX
+         IGNq9Be2HaVMZMdMq3fATgJpFf/XjBFrBQnVQz2fZnOTaC/d9Zm3rljIDlw0Bvdhr7Kh
+         AmuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744380214; x=1744985014;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WjHI8iLKNyjSer6QwZ0T4nLrTbVuh8PFv9EW9BoptFs=;
+        b=CSnKJUs0BukTNd3gmZ/6HbwwUbGK/Ii1Z8jw5slEkp8V+6Q5N1OJHjVdMU4ifmTSqe
+         4SZ5IdtVQNl1q18BtwGn8C3kVCI+VmY+lOivVFyzuPXh+powcPbNiQkq0ebu9VVw8jqQ
+         LVSzG/+j1i3KKlDl1kyZkWupSGI6ra8OsxBHZVWPuM2N9RcNajk9WuKyETsvhihFiW3/
+         t89fIvd5akYLbqespBwQVnk4mmZA1/IUa6x+1FAfvIJcu3lyBMC0zEOk9C4UNokJ4pIK
+         KKAvsAWo/n84SKgUgnjGj1DwRPLZJDlzmtu5fZMJxn1loMObZslTD/wXRZ6KFxRNY1vh
+         gcaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkcGXHShLpXEi1Uzj4NvJmnPa6+kOUWH+m38KWrlIP5G3jK9tMxxSjqgz42ugTfiyk2aQNB686J016HHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtuV0QsTHRUk4x8IwBeKeSd7KHC22UncoIsEeSsSGhO4z9hZef
+	jfct59WSIiu/aikima9iwhB7vDLMUJdgPms0dGK35ryq5U6d3tcCmV5DGJadBCw=
+X-Gm-Gg: ASbGncup0dsWoqwQoey9TCwtPG8CNcjuxhdoM+5Yi3r7hatg1+IQIif/q/YfJ2u7iZg
+	iFzBxgu0D/yEXLIdg8tIeqxM8xWVuFPBYvD7pPKoLZOwHRAm6g0quDdOOxdi+PiOpIcjd/qMEEg
+	s5gh5CsunxoF0AuImMIap4m+bVusFCps0wKBhxexTWzdPQXLezrRcx91iNVxwff+Eum+49wibzI
+	o6vXVgKI5QC1SZW+aJ7rF3xwkwTE//j9xlgJlgW1XJzYYT89FsQJ2wUmtR9nrwtoFGs0RbOcncH
+	R22yCu+qHt01DoqE1JjK6SYmCnmEG77d5hwwnRZn7a/dB5Lmyb7uS+x/yQ4rOzU=
+X-Google-Smtp-Source: AGHT+IFNQChJHGwm0jpg81EkuoYc4db4lN0W2dHhvYnddiYay5Ou28lyQpS+tRSobcbaI0Z86YjbrQ==
+X-Received: by 2002:a05:600c:5112:b0:439:4b23:9e8e with SMTP id 5b1f17b1804b1-43f39622947mr26940535e9.3.1744380212225;
+        Fri, 11 Apr 2025 07:03:32 -0700 (PDT)
+Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20a897b6sm51235895e9.1.2025.04.11.07.03.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 07:03:31 -0700 (PDT)
+From: Marco Crivellari <marco.crivellari@suse.com>
+To: marco.crivellari@suse.com
+Cc: anna-maria@linutronix.de,
+	chenhuacai@kernel.org,
+	frederic@kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	wangyuli@uniontech.com
-Subject: Re: [PATCH V3] iomap: skip unnecessary ifs_block_is_uptodate check
-Date: Fri, 11 Apr 2025 16:02:44 +0200
-Message-ID: <20250411-ermorden-sagenhaft-dea43a3c41f9@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250410071236.16017-1-gouhao@uniontech.com>
-References: <20250408172924.9349-1-gouhao@uniontech.com> <20250410071236.16017-1-gouhao@uniontech.com>
+	linux-mips@vger.kernel.org,
+	macro@orcam.me.uk,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	tsbogend@alpha.franken.de
+Subject: Re: [PATCH v7 1/2] MIPS: Fix idle VS timer enqueue
+Date: Fri, 11 Apr 2025 16:03:21 +0200
+Message-ID: <20250411140321.218752-1-marco.crivellari@suse.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250403161143.361461-2-marco.crivellari@suse.com>
+References: <20250403161143.361461-2-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1241; i=brauner@kernel.org; h=from:subject:message-id; bh=L028CyjHdE2jxczbIM6pBy9pM8llSElkIkRS2OiXwDc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/VGQ5d/6RNrMYY6o774XS86cvit0S+1v26chxL/8f+ +8Z1slwdZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzEup+RYckPh1zRewnhj9eK ypwJFSly43/zPf3SyyXlX3YZ+m8oKGZkOJHK+sfbpsZGd1J8j030rqK1H1rv3Vy6a6eZiqmrUog ZBwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Thu, 10 Apr 2025 15:12:36 +0800, Gou Hao wrote:
-> In iomap_adjust_read_range, i is either the first !uptodate block, or it
-> is past last for the second loop looking for trailing uptodate blocks.
-> Assuming there's no overflow (there's no combination of huge folios and
-> tiny blksize) then yeah, there is no point in retesting that the same
-> block pointed to by i is uptodate since we hold the folio lock so nobody
-> else could have set it uptodate.
-> 
-> [...]
+Gentle Ping, also for "MIPS: rename rollback_handler 
+with skipover_handler".
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/1] iomap: skip unnecessary ifs_block_is_uptodate check
-      https://git.kernel.org/vfs/vfs/c/8e3c15ee0d29
+Thanks in advance.
