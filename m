@@ -1,138 +1,122 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFF429CB3D;
-	Fri, 11 Apr 2025 22:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41680278E4D
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 22:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744412139; cv=none; b=gD8uBfbs5EkX9KN3IChW+zcMmEWFenrwutVGkmN2egP6DPKO58Mn1tuK9YVseFXu1bN5541RAQztBxrZKS90LcGomv9vqwG9dHuzPG83YqvUDT8vugozbq3Nkwdw8syFP68f+IZcx617a8ECW0X7T1+fw1JRF6Osazrj4t9ASZo=
+	t=1744412226; cv=none; b=BHXPkfwEGy14uQD5ZGcC3qY8fR7BWn8+Q2Cnz2k6lUe4AaGWSYHiINYJ5F42c54v5/4Fv9UUd181AP3NQd4A0bQfQ6uHobDpzpo4bMdp/QzUY/UTYaxZM4zGfm02Oe8xmC1NX8tZEKs1ZcSV6dF7+QX6CQqzyK0UmBo57b2Mf+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744412139; c=relaxed/simple;
-	bh=GMrDL5pQoDGhmVPfvwpSJ4KisP7dbK9ERODVtgcG88Y=;
+	s=arc-20240116; t=1744412226; c=relaxed/simple;
+	bh=SQ8e5BucK1+mCQ1BNvZqkeY3nDbX+TGi4VvneYOHp+g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QWtMD+WxQp0aEEqcqYGOZ7JrjvEKS2qQhy+NTaLYjvFRoSBMCXAlubKh20ceP18wsT4hn6x1MeQE2BUIca3Dzvyh6B516lgSvcWhpDnPiGFNno2xg8wLmdAlzGfYL0uzfoYUAxGrCBv3wzFOfG2rpF2ChwKfypzLhq1TdO+VwTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrHwYLeR; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekf5BC0zQ0UPPT9gb93hX3EBEWFI/6cIKum8iLAi5hY3XVeQ7E3mUjXzLAGlIGVXDeKSWLF5WTQsRziZ73XUM95DAO1x/KIHwbXOcLVuPoGYieYfLSZkmNVx77omA/H8GCnHc4ngY8Tt1vRH3XMsyWr6Q29eiqtco4CJzU+Wg0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jI8E0Uvp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrHwYLeR"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c5568355ffso210784485a.0;
-        Fri, 11 Apr 2025 15:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744412137; x=1745016937; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BsvfhzOprEtaLfmXELk368lBC6dzFrOtz5GX2QaLNAI=;
-        b=lrHwYLeRqQoLJnT3Fe7Dshek125X0k0FbdJ2asp3gP1CN7+98XbLCMv0YaQUs0er6X
-         YnTWKM6HXKKXBw667TMFXZhO5a7ibIkInuVj+KfzeHhzBsvixwhLvEcAJmF6m+mcgLhm
-         FSbaSh6tRyAqSf67qfqnkf3GvgUmKldrP85aWA65OcRzbCXnyl2YhO2n9G01NmYwz4MJ
-         DK/nvR9WYVb0qRj9m3RobjlyzOGejs3qasJom0nq4IQ+d/kLGLmE+jzzIW0FB5xo7e9l
-         2GasVKLaXQCt1G9nXMTkjWD51vVNhAwx8mLPuUblaHr0Of25gDdIHbI3IWLE69FbbBYs
-         MdIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744412137; x=1745016937;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BsvfhzOprEtaLfmXELk368lBC6dzFrOtz5GX2QaLNAI=;
-        b=QrhYfLxefWwQltCZIsgCEHILYzIPKro3SIM7tNvcs5GX7fozuTmX6n94qna8+Ov+kI
-         /Pca09a8NvzwFh4jKX7bAaWqaqHr0WucLB2wFsAz9gaO9Hob6zwwbrduyWMhqoabzWca
-         yEcYcIdx93kpSMJusyQQgVNp5UJS3SI34jrixposRwq8SYPtPXuoDpwod/s/SW1uwAA4
-         mFxaRuP3PppK+Q8Nannz3J+LW+wjrJh/jxgCoV1IJ+uwODMvuivRyv5aMoiZEIUETk9r
-         FRGmSnAcQ2+kyGfn0qQHXsZb6FkCRhJCsqak7UeV98UsnDNcM32n1Q9zF9wsuihcYtuY
-         WsvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUw4rQ2Aelycp/MtnUu9/5s80ZL1n98xOGfoSfe3mqr/IzWm7DOcs7x7Qn448GNUmAwuW3oMIhLPbQ9@vger.kernel.org, AJvYcCWPoN1+efKQ1sGKRzW7dPnXSuCliNv21xrsEmGiPcV5eNK1OBCqgmbFmlBl8280r/dmpL9aG0eyRtTbrAK+@vger.kernel.org, AJvYcCWXlwtmiQnOY1VXV65RjhlJX2VD73aI2uwXRlY5KpfdNPhW1u6jPyGGAe/wp8BDhapha6FdZfBzBzDH@vger.kernel.org
-X-Gm-Message-State: AOJu0YySWvuy/Kl2QO4BsN78UId45FOqTdp/8WhxC2SrZPn52NPsFGVZ
-	1vCiZje+lUfIAaU9ZG14Bz5aFwhJ7qTTlSkE6q8zc05RqBiXYpNd
-X-Gm-Gg: ASbGncvVR6HZp35H+ZtzcFfRVeZH+AwiMA2WWDq+wRcfryVJPuIYCucPFPKodFyCCMF
-	B8ZDR7mPF5fmQB9pEtl/uOMlQLFtviYZSQIkZLQqFw8oQOl9wbBakOj4lhoETOWfikl3FWEcFYu
-	cgJ1Wrj98H2rpGHOmbjblc+K2cTP5oFb9zi+GX7ATB+Tut/DnsJhJvq7UNCEge2ucTKH9DTg5hP
-	GABkZlHOOUtbT1xkWtX9TNb923Y3fIA/z3S9qv1ZDWzR4Adyp+o4VogUkv2YDYWsnBKlSs8/bih
-	yKLxMWuu84y0EcD5
-X-Google-Smtp-Source: AGHT+IE1/vXomAHPxMpa48ltkrdDHc/3oW7KILrsJLrC6iJGPLluuSppvCXu45uAv9myLPwVn1XuLQ==
-X-Received: by 2002:a05:620a:4148:b0:7c7:a1c4:86e2 with SMTP id af79cd13be357-7c7af0c0fbemr711017585a.11.1744412136857;
-        Fri, 11 Apr 2025 15:55:36 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a8943bd5sm325345885a.14.2025.04.11.15.55.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 15:55:36 -0700 (PDT)
-Date: Sat, 12 Apr 2025 06:54:57 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Guodong Xu <guodong@riscstar.com>, ukleinek@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
-	dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
-	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
-	unicorn_wang@outlook.com, duje.mihanovic@skole.hr
-Cc: elder@riscstar.com, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev
-Subject: Re: [PATCH 7/9] riscv: dts: spacemit: Add PWM14 backlight support
- for BPI-F3
-Message-ID: <cwbbq6pubksgpbloqdxspn7sr7tanbjdnbdobctayblpkahukp@zxypidw7a6un>
-References: <20250411131423.3802611-1-guodong@riscstar.com>
- <20250411131423.3802611-8-guodong@riscstar.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jI8E0Uvp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F052C4CEE2;
+	Fri, 11 Apr 2025 22:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744412225;
+	bh=SQ8e5BucK1+mCQ1BNvZqkeY3nDbX+TGi4VvneYOHp+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jI8E0Uvp9HL0cxu87B2JaaDwhqi5cG0NbndtaFSZYyTn+Kaja9XCitY78CZNrmcZs
+	 NvECRVKND5HG/W02K3yuR+IRgjIhM+KyMkJ5Yp0EywTMvHF7szySrF/RsyGDsHjcWJ
+	 ZrQAY0raBZcD+5g2Q47t45WmTW1XA1LpyN4sUxQDOKq3xzhpfaLlFabGBBaRcm9Dda
+	 O3KFW27lYv9XtI7HU2+nmXtNv9E/c9q6qEzcXJdHlQCb8pOQITv1AtN0vk6ttI/PGq
+	 Nt2XHOktlmUNkudR9X5SSkWeBG7Iw+UKAdrdi3JL/L8CmGVc8Y7/LcDLpFWg01IUnf
+	 bnjD/qW+zQNEw==
+Date: Sat, 12 Apr 2025 00:57:02 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+Message-ID: <Z_mePtIrl6z5fJBc@pavilion.home>
+References: <Z_fHLM4nWP5XVGBU@localhost.localdomain>
+ <4fdc6582c828fbcd8c6ad202ed7ab560134d1fc3.camel@redhat.com>
+ <Z_fTmzdvLEmrAth6@localhost.localdomain>
+ <56eae8396c5531b7a92a8e9e329ad68628e53729.camel@redhat.com>
+ <Z_fcv6CrHk0Qa9HV@localhost.localdomain>
+ <1c60e19d1cebc09a8fd89f073c3dbec80c8ddbf1.camel@redhat.com>
+ <Z_fkgN1ro9AeM1QY@localhost.localdomain>
+ <75607f0eb5939bf1651ff2e6c3eda4df2b4f26f0.camel@redhat.com>
+ <Z_j9fOxE4Ia79dtz@pavilion.home>
+ <1047ba4c25cdf4c0098dac308bcddb4b8b671954.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250411131423.3802611-8-guodong@riscstar.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1047ba4c25cdf4c0098dac308bcddb4b8b671954.camel@redhat.com>
 
-On Fri, Apr 11, 2025 at 09:14:21PM +0800, Guodong Xu wrote:
-> Add a PWM-based backlight node for the Banana Pi BPI-F3 board,
-> using PWM14. The backlight is defined as a 'pwm-backlight' device with
-> brightness levels and a default brightness setting. PWM14 is assigned
-> a period length of 2000 nanoseconds.
+Le Fri, Apr 11, 2025 at 03:02:11PM +0200, Gabriele Monaco a écrit :
 > 
-> This configuration was used to verify PWM driver changes, with PWM14
-> tested and its waveform confirmed as correct.
 > 
-> The node status is set to "disabled", and should be enabled when the
-> display driver is ready.
+> On Fri, 2025-04-11 at 13:31 +0200, Frederic Weisbecker wrote:
+> > Le Fri, Apr 11, 2025 at 09:08:35AM +0200, Gabriele Monaco a écrit :
+> > > Mmh, my patch is in fact allowing isolated cores to still migrate
+> > > everything if they go offline.
+> > 
+> > Sure that doesn't change.
+> > 
+> > > 
+> > > However I don't think housekeeping CPUs can execute remote timers
+> > > on
+> > > isolated ones.
+> > 
+> > I'm confused, a CPU can't execute something on another CPU (except
+> > with
+> > an IPI). But:
+> > 
+> > Before your patch, a housekeeping or isolated CPU can pull timers
+> > from
+> > any other CPU and execute them on its behalf.
+> > 
+> > After your patch, a housekeeping CPU can only pull timers from other
+> > housekeeping CPUs. And isolated CPUs each execute their own global
+> > timers.
+> > 
 > 
-> Signed-off-by: Guodong Xu <guodong@riscstar.com>
-> ---
->  .../boot/dts/spacemit/k1-bananapi-f3.dts      | 32 +++++++++++++++++++
->  1 file changed, 32 insertions(+)
+> Right, the way I said it doesn't really make sense.
 > 
-> diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> index 816ef1bc358e..d04b57ddeb46 100644
-> --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> @@ -28,6 +28,32 @@ led1 {
->  			default-state = "on";
->  		};
->  	};
-> +
-> +	pwm_bl: lcd_backlight {
-> +		compatible = "pwm-backlight";
-> +
-> +		pwms = <&pwm14 2000>;
+> What I mean is: why wouldn't a housekeeping CPU pull global timers from
+> an isolated one?
+> 
+> We want to prevent the other way around, but I think housekeeping
+> should be encouraged to pull timers from isolated CPUs, even if those
+> are not idle.
+> 
+> I see only preventing isolated CPUs from pulling remote timers may play
+> bad with the algorithm since they'd register in the hierarchy but just
+> not pull timers.
+> (This simpler approach works in our scenario though)
+> 
+> The idea in my patch could mostly work, but I'd explicitly let
+> housekeeping CPUs pull timers from isolated (while of course not doing
+> it for offline ones).
+> 
+> Does it make sense to you?
 
-> +		brightness-levels = <
-> +			0   40  40  40  40  40  40  40  40  40  40  40  40  40  40  40
-> +			40  40  40  40  40  40  40  40  40  40  40  40  40  40  40  40
-> +			40  40  40  40  40  40  40  40  40  41  42  43  44  45  46  47
-> +			48  49  50  51  52  53  54  55  56  57  58  59  60  61  62  63
-> +			64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79
-> +			80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95
-> +			96  97  98  99  100 101 102 103 104 105 106 107 108 109 110 111
-> +			112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
-> +			128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
-> +			144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
-> +			160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
-> +			176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
-> +			192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
-> +			208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
-> +			224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239
-> +			240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255
-> +		>;
+If you want housekeeping CPUs to pull timers from isolated ones, then you
+need isolated CPUs to eventually be part of the hierarchy (be "available"),
+because they would need to propagate their global timers up to the top.
 
-Can we simplify this level matrix? I see it is continous in most cases.
+If they propagate their global timers then they must play the whole hierarchy
+game and be ready to pull the timers from any other CPUs.
 
-Regards,
-Inochi
+Because if they propagate their timers, they must also propagate their
+idle state to synchronize with the whole hierarchy and know if there is
+a non-idle housekeeping CPU to take care of their timers. And if they propagate
+their (non) idle state, the isolated CPUs also declare themselves as available
+to handle other's timers.
+
+And working around that would be very nasty.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
