@@ -1,191 +1,238 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013035.outbound.protection.outlook.com [40.107.159.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40C41EB5D9;
-	Fri, 11 Apr 2025 14:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744382223; cv=none; b=k0mcS4zY0H55qUoLSouUaY/AKiR94tKE93mJSVK/JGC5xVDCOF6c2GjUXjn2JDFBxlsLaO3pwGrGBQ/ih1KgGofBbHdf46NlljZMdag4g0CaINk9TGYyy+pHFnLw9lY8um4c8a9MUV9usY4Fa8npzw+hE5T24FN3Rwh84i8txwY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744382223; c=relaxed/simple;
-	bh=Syd1lDbqlM7R+mGNi8fT1pBl5F1yrvGgk0SfomYYKT0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m4mc/Piw85ZDSoR2eYDkEBVl15LJw6LgeGPHT8/ZdY0xwp5M8wYj1D0nh1ElhZepr8ZXyUPlPPGD3nac8Ycxdr0Pf8w8jPAeClA5aXVsZUa058RXmMJY1KTkfBWxcvU0XaA93EE8HrIyvjpUil4L7qJxOmxsv9a61QHQ/mKI4JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aPY+zD0u; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD471F4CB3;
+	Fri, 11 Apr 2025 14:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744382226; cv=fail; b=esD9ppDP4KdJSplXsJ/kXA4kR3b/CICy4APHbvRoforXJUOAkDBGOqULr4sbBTllJdoH4g30I0JmX+eh5k6Lv6iMUBmWsR93e+suZHwFvaoeWq5hF9Wasu5jd5+6QzwdU/TSRmChxm2Xh1jfkv4dSEYLmrscK/qylTqzj4uiM2s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744382226; c=relaxed/simple;
+	bh=k82EClH62TQbXkXwzFlUWhb1DKv+9jXj0EPnCUn4tOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=W5Edf4jzof6uwJMtN5AdZcA+ADw4/yZTb2r7tMlyghKmCuwx7PkxMofYqg1fAjP7CRKVkfPJpe84q2kZqWJR/QB2rBUWukWY656Rw0EMlXwBPxR/JZ6DW2ay/3siYGCePHh+SMsT0g5PxOm1YGLsHQk4P0cxaaQwyb++Ed8UZIc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=h1lJBKFF; arc=fail smtp.client-ip=40.107.159.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPY+zD0u"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so3089663a91.1;
-        Fri, 11 Apr 2025 07:37:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744382221; x=1744987021; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qN83a4vtJr3jkDTP8/AnjFdICARlWdVcbsRDYISkcqs=;
-        b=aPY+zD0uc+rdh8M3LQG7rG3ei0rSqR5kJeDMl2wAlMY4krM4PXFsqsa85JTK8ItDux
-         D6p0PEwztYFqKOzuQvTI6zKi2IW5OW9f/+O6vXSq1jnM0NgMFurWyFZJXa8HRSMGRz53
-         ABY7bGh2Cl3TShODgKlmk8fFu7AYYt/KsP+wG9YGJY2mOktqvEYogk0xulQjPsG4YvTa
-         isQiVMXpoWFr7M9WhNEDZJ7NMtgdkDrYf2de0kQqHqVMof1mtGG7Y5SN/h7Ctzrl7Lqj
-         Nfhxi0gCZmWT1tiC2W2H27qleX5/YabSRqoqJTfm57GZaw1mL9ZMzEDD2YkHR0GuEFfr
-         gFyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744382221; x=1744987021;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qN83a4vtJr3jkDTP8/AnjFdICARlWdVcbsRDYISkcqs=;
-        b=jgPZaFccPShzczVpuln2TAOwX6JTdls+QpICpbdqH3vEcnXON9ZPTfkJmGmt5+1uwL
-         FkQAHWbpyZBY9xg3Ofh+zbqm68+p+yU2UAze/KcHbIhjc2kYVMYnZKBP6Cw7KpJ0LDYs
-         dVqaJSzHluqNqxFmJzvTnxWWCGuYW3tr3V2VStkY6afIVy1wzlj+6U1OlQ5QunP3+n9N
-         gi+UBgjagLKHV6+BUOyU1FxNZQ/x/mlGVPxqHC1gxgk9r8e/xT1m9qGcCiVa6CvvUu5v
-         2MB4WwZRjU8bBJaXS7ZafWML+QUi1eLzkFO55d5VbwkNjQM2yXzoTEbFbkfDgAWWoq+H
-         IQ4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUxGkiTq0+cf8xX7WePjQlG8etv1YE/gZZPH/K1GumEihqaThwPs+H2HRXsPdE+VnHbjc2arpUrQ6yna4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0zjVkSWabXhsAZ7POeE5Xf9K3lUIiGoa6nAO9rkNpViAx+wN3
-	pfDimn6Visz/AgyHVeqEv6L+1WVYYqnwYXSK34QfjP+7x/l9WPid
-X-Gm-Gg: ASbGnctnzRYgdiNBCoQtc0fCsikIovPs4fE5yz4NzqQKDiIz9R9Vw9ijDlXYsmzL2Ey
-	w9CtY3wDROiwdiIgkwQzUVSHbx82vcstLK/teJcrZ8rIXt9jFbgNbNE1h1NwevhPfTXZ8aqr+0h
-	K0KfteJ4/FqpYTXUVeOG2a8xuQDWj5GEsaxPHeGoHKCw5ASnK5v+Lyo12Zsb1ecX5mBCNUmw/Vc
-	xQIf0JOPuU0SE3KMDOw3zDL/QU4If1piHU0q8s30KQNdgK+3WDoEQf3tvOJ90wF9ZS6eALS+5Mi
-	LSTxrZdt5zVY21OYDQRHtc2pl2KzQg6/UcDDdr+Q
-X-Google-Smtp-Source: AGHT+IFUf++OgAgcgEE/jllAqe/2xp+HKZXduxPSgKSJzuJy0O2KnPlRozOobSvaE2OdSSt5BeiCYA==
-X-Received: by 2002:a17:90b:5845:b0:2fa:603e:905c with SMTP id 98e67ed59e1d1-307730fecd7mr10266507a91.2.1744382220922;
-        Fri, 11 Apr 2025 07:37:00 -0700 (PDT)
-Received: from [192.168.1.26] ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a14bsm5630754a91.1.2025.04.11.07.36.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 07:37:00 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Fri, 11 Apr 2025 11:36:43 -0300
-Subject: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="h1lJBKFF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LBxeD71KfWlQDub8+CqmaeaLdhWww0Clf3iHGNlih6cuilRfgDCg6LIQgVcw10CwVPjvXaX2srTe1jQk92xpKzx82PnXBn/HVgXqXrYXq8l5wIBn0XMw6qE/rMeNAYE1u1AdnoQq3JaiTrMNGqSM/F8opH5EFO4rV9luNHGL1QMAMws0zvLKjBkXgg/USBc5eyjqIPCVUqfG8EJ39DcEdMs6Du7ZZrtCr0YPCX/2zefVuqAbv1BWDyHGgwVTB1DkI24iDuix6R97n+I5HpiEFKBNdOx3i5QwCzhbR9dinbIDc/lKRvie+w7smibXbTmD2tKcrKh9X8DrCc8jbh0L0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yKC2NWEFRh4Mg74B8DZ+LDLhKYuiWDMJnfj4IpNnt3s=;
+ b=k2ZB8HvEbuhmLFv5Uq747PpCl7Kw+S29U9u70kQH9snePi+VbZ/poHgyhYwPFph8QpU/iRgpov6e/s10p8Qd3e0nM8RBT+YnBdifn/lbTe/sw5WEo9TmLMy2s3zrErBQlvWvh1tjUfMFPjitNKnEsMF2GirFkX7hApxpq8LjabABFWHrVsEw3yXXHBou0RbNBEIYt5Uz7ZAZpG8+ADdlGVEh42bAyIY1nwA40GZw62oUs18zFNsMj/OgZkbfr21B/ETOK6syEkxPbN1F34biGr0Sr63clG2a9NbtHXcaI0jQ5tiIRU+qQwRhCfSxubhCV4Cp3xvMS8TkkhKzafINHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yKC2NWEFRh4Mg74B8DZ+LDLhKYuiWDMJnfj4IpNnt3s=;
+ b=h1lJBKFFMx8the/XkBXYOx/zbY/wONIt0eZpbR50Cdqkv7obhI8KeFgmGLuK1L80c6XBedecsvg2uJZQJcEmmexVOw64zPPTdB/2TpbURSd8wcMGoGmIcSpjStmtomhMk1wqkT1MQe32/2aFpujf4Sr8sOasCm6wHrENWt7m0EG6CIKY6DX7z++4w0yTqV03izJoM89tgjl2Apz3mQB7rudAjf9lzJc161N60lqogJ/KKS10YwqGXvJIv8ZwBDMSSodtler1q49sLFxSS2tVafs+eSVgfpzq3RnqaJURXQ5BWoqjnhEKS1ufpm1s/SANpNFD90xTCpzMQkSxZyUGvg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by PAWPR04MB9987.eurprd04.prod.outlook.com (2603:10a6:102:387::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Fri, 11 Apr
+ 2025 14:37:01 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
+ 14:37:01 +0000
+Date: Fri, 11 Apr 2025 10:36:53 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: ming.qian@oss.nxp.com
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
+	imx@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/4] media: imx-jpeg: Move mxc_jpeg_free_slot_data()
+ ahead
+Message-ID: <Z/kpBXvJe/n2YHg7@lizhi-Precision-Tower-5810>
+References: <20250411074347.809-1-ming.qian@oss.nxp.com>
+ <20250411074347.809-2-ming.qian@oss.nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411074347.809-2-ming.qian@oss.nxp.com>
+X-ClientProxiedBy: SJ0PR05CA0209.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::34) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
-References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
-In-Reply-To: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
-To: Lyndon Sanche <lsanche@lyndeno.ca>, Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PAWPR04MB9987:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6edf4791-fa96-4462-b852-08dd790651f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nJUn82gkQpZ8whrMZks4GW0Gc/AK4b1gUMFRASDhwauJqd86nq8yak2OomWl?=
+ =?us-ascii?Q?pxJWElRp0y8vuv5d2GMyQ4Mib8HH9MzCRbarELk8InMLmA7QaFB2fNYNekM3?=
+ =?us-ascii?Q?mMPbViBbSXrOsBcGrI2DOcmTUa1lC+41AFSqxJDTGzQ1QeyTMmeM+9mfqb8W?=
+ =?us-ascii?Q?EQjW3oa5QGeiiuvbNFOKrso+FnKLZS7hbEa69nq1uqxeeaHiLSVhV6FBYJ2Y?=
+ =?us-ascii?Q?t5nrlEcHKjXQqUOox6V3vi/AoCLj6znSRw9vZtc5h3+UW0GFKHnfloQRTNuU?=
+ =?us-ascii?Q?8GswWg5QiMxPdmkwcx+ki/zoCBgqdpqQbJmANwJNI6t2nYfDIcId9hq/eHH7?=
+ =?us-ascii?Q?LKS0U3f6b1Wue06RTGcJHh5DHbyTlGsWe14GP3Cbnszz87cEFMzzNik1jXvQ?=
+ =?us-ascii?Q?ja45S/B10qguT5qpH9hFliN1NbcofYJh4iuBc2iwFPqClilIWpMdkf62XUFV?=
+ =?us-ascii?Q?Qbhrx+ezxosIC3rfr8PQBOUom2chPmwmVwMXqHamsisYc6aDZ7ABA3+LKcRP?=
+ =?us-ascii?Q?V/V+SIQSZjrZDWoD+/sreHpuavn7SpaX+YJoGnoNSH78FBgn35hiMDH4bghX?=
+ =?us-ascii?Q?6DWipCpT3Oa7HAsJBmjaTY6S5UT4vMrQ93jotXHGCo9QFZ/j5yf5fGGMytGo?=
+ =?us-ascii?Q?zYWk6rpvfNYlXFsuQPYD19uFP8hFNluLRD0lN+JSoOUVJccRAJylYl8CY3nD?=
+ =?us-ascii?Q?H7FN4WabaWb4fbslOUAjsPQHQ8yBppFckbYAEY+T64WleOr/RKGNgA8kW1ZD?=
+ =?us-ascii?Q?rF+1I7Lnk1UWftHL14+3Pqo7bGWhyVKuoMrMvTykhHjsk4hC3A40o8v2592K?=
+ =?us-ascii?Q?8WnuV0gXKpMUbIsUYIE0Y3xRJMBosMoDy7D8wAQ2aqmz3JKIJb476oqbMJSe?=
+ =?us-ascii?Q?+YKy3FBGuww2fxLqYO84pywHqfAY8j06J+PnSCQWlE6xrLxm688lc51NU7SJ?=
+ =?us-ascii?Q?68gAyKaAD3dBLKlTeHn4BRaKPD4A2jD9IQ7JEw6kcDclbokcKDFO2ARbWuxu?=
+ =?us-ascii?Q?n7pX45HAgsr6J5Vs+yG7P5X1pFIjZnpB8P8y5P2tHGsU98o4TrY5Y9gYeiVF?=
+ =?us-ascii?Q?BOTRrEtF0+FaGIJrVZhyr3km+XbToOQmSUDRyy8rNQ4LkU15UEgB5/mcNPdA?=
+ =?us-ascii?Q?qdIEl00ZDpKdWUSmUzwNT2BI5boa/+vOibNrgEvjUr3JJoM1rE2QUOcoZPZG?=
+ =?us-ascii?Q?uTtPQbgH0Vzg8AP12qPd74yJj6Aq6Vm8V57/gkDnusViIwYWCxxTMRJ0OiqC?=
+ =?us-ascii?Q?sDslSP5qujIS1vbRjyKfP9oxvCmLFfgpR9iX9Im3pGysv8BJUqpzistaiZGz?=
+ =?us-ascii?Q?dG+cJ3CymtEQpRJOZY71S8HYcV4DoPTxJBOwYDPIWjE8HIr+8Ieyk/IBK9sh?=
+ =?us-ascii?Q?TH1rAgFRSt1D+xf/cK1O8mhrMzEgPysslr/GKPRc4w3/jYhuhj/qru7F8VvF?=
+ =?us-ascii?Q?M5MOHbXbjHQNDPJABBNUHzrSNJC+luv0RRQ7ggiPw341/LtUFforU97VHNX4?=
+ =?us-ascii?Q?3vWFd4pDQy8OWTQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?AFwjJ+cytVlqd+LTbbqCKB6HYaX6MokLTabvMUjPZzmHjQq6F0/A90ZZVXdB?=
+ =?us-ascii?Q?G5tvjMqqJFvNoqDTFLnmAQhtLyfqIV6nOJTzVESZeVfJ/p8uFxQON6Xk1K/I?=
+ =?us-ascii?Q?pbselAFQeBmvxXWcHOYvvKKaqVogPWHBZoGuXkQKlQ+hZaxLgnzmnW8oSE7T?=
+ =?us-ascii?Q?U+S8kkrUse6TlOpdq4q9+PnZ5lKV9eiukdzqaal6/BhuBO8eq3do3mKVspS2?=
+ =?us-ascii?Q?tT8hKYmIVGItfyN+lekkfHJMzDEl90c69EYiZfNVP4kJcQZLQ15RMOPi7B7j?=
+ =?us-ascii?Q?3gLE6PMtb1VuoWkGgwRuCv5XtFRBsQVCwsz7nHuq0JO08UfgEXnbz5gelgoa?=
+ =?us-ascii?Q?Ke4mQYWBz4ylsrNcgoIDE4YCqf6oCMNwbVO4YRXkktbzvy+xZad5BNB478Uk?=
+ =?us-ascii?Q?IqUbtNeY/2zk4JgdjFW/ESdPESV0fABM2VybIByages1NRa4UCeONpIBHApW?=
+ =?us-ascii?Q?XBYLuoFy4WtL+ZeH95Z6Y5aRrxa3Qyht2O/NTMttQG5B2DV4TQoLUQLsS35X?=
+ =?us-ascii?Q?ps4GPjMZItjpLTQmcWLFEq+KqpYGEPC/62vRJHWATEl/oLOdkpuuLw/WEwWc?=
+ =?us-ascii?Q?PKzpLa/dZaIJdNIeEYne/GEY4DKQkXmL9ZignAs45beBAbjxVfEI05k9s1tG?=
+ =?us-ascii?Q?Kj7ouNeHsobeS6T/NFbhCBMz+OSzhb4H075XE4B/v1yYLw3Gn72fkpFpGVAU?=
+ =?us-ascii?Q?Olt+LjLxTEcPFsyvi04vDMh2SG+y2D7eziEgg7jKZSP6JJPmHe5ADb4zhWNM?=
+ =?us-ascii?Q?OGZqKJrMbDK6AdIwRf+Y0OFAeIIuc+lPvEGF/FnnUrzno7BxEkUlm3Ei0Y3o?=
+ =?us-ascii?Q?89MMG2WM0PC0lXpmx8tg/mQVnMSKanq4kttVtDRYelUAavdcxYxWAO5g78ua?=
+ =?us-ascii?Q?vQ6wXOvlv/excz9l1Xrrpz1nWsfxaiLXgS8Own7SHPoDbvr7XofpqVYqyZU0?=
+ =?us-ascii?Q?cZ38Dmd9s5b0Bv4sPN1KxQDSycTSeUFQXqiJ3WDVgIaNl5bfQt3Juu5ywnSN?=
+ =?us-ascii?Q?t9Cz41L+sEjE1tlncyEocaMaYwocL5lti/ixnzoLjG2nvvej9UkrrwuSkPQF?=
+ =?us-ascii?Q?7V3o62mjWBs4JKBRuJsF8/THtsEYw6Ium6hs4cqRfvXntQz/Lu6Zch21jUDq?=
+ =?us-ascii?Q?q6sj8nBYH/jq7XpWQK7GegCGAgDdYgHNIYrcXZQclJZZc1nEigEbvkXHpoXe?=
+ =?us-ascii?Q?RR4g/xBWigcuM6YqxE5X4CsPlLHEIK/mr6q3fE5KN01Ihjq11LGyTs7XE3jd?=
+ =?us-ascii?Q?8/DCuAIoz14wiyUEJMTuS6jrDRfacKv5OZGFQg2OhYcKJgEGi7g5l2uAvHrI?=
+ =?us-ascii?Q?mZ2Z1zIeXBuiJQ7uGNpqiDIq8Kde7ZuGSHx+DZtbyDRiUj8ENwSNrZlyF6Lh?=
+ =?us-ascii?Q?zAQ1RCZ3FIcnECDea6FuT52C5N6Q2Ea2gRECRe59MnCjOtxQnUXUVHzIyFIq?=
+ =?us-ascii?Q?edJHBP5udmyr6yCIFp/GtdLaHAZVAoAqeHl/flExVZgCU9HmvWSqyU76k8a/?=
+ =?us-ascii?Q?5eIeYUzOnJBjRXML3b8AEhpmdxJ0KZ7fVEAbcixMw3QBL/eEyHJnePSLLVhj?=
+ =?us-ascii?Q?g8YaJo5DAI8IGe5xamUs7CVx7yE5yHNsp9u7/pwl?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6edf4791-fa96-4462-b852-08dd790651f4
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 14:37:01.2491
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MKnefvzLrwkMh5fFe0rj9libjqrV45UOwpJY9FtAzhMKqgbIM8R4g51a/L2wxGQtcSjgSxyH4yGHfapU+yShHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9987
 
-Use a faux device parent for registering the platform_profile instead of
-a "fake" platform device.
+On Fri, Apr 11, 2025 at 03:43:40PM +0800, ming.qian@oss.nxp.com wrote:
+> From: Ming Qian <ming.qian@oss.nxp.com>
+>
+> Move function mxc_jpeg_free_slot_data() above mxc_jpeg_alloc_slot_data()
+> allowing to call that function during allocation failures.
+> No functional changes are made.
+>
+> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> ---
+>  .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 46 +++++++++++--------
+>  1 file changed, 26 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> index 0e6ee997284b..b2f7e9ad1885 100644
+> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> @@ -752,6 +752,32 @@ static int mxc_get_free_slot(struct mxc_jpeg_slot_data *slot_data)
+>  	return -1;
+>  }
+>
+> +static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
+> +{
+> +	/* free descriptor for decoding/encoding phase */
+> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+> +			  jpeg->slot_data.desc,
+> +			  jpeg->slot_data.desc_handle);
+> +	jpeg->slot_data.desc = NULL;
+> +	jpeg->slot_data.desc_handle = 0;
 
-The faux bus is a minimalistic, single driver bus designed for this
-purpose.
+You add above two lines, it is not simple move function. Move above two
+line change to next patch.
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/dell-pc.c | 46 +++++++++++--------------------------
- 1 file changed, 13 insertions(+), 33 deletions(-)
+Frank
 
-diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/dell/dell-pc.c
-index 794924913be0c6f13ed4aed8b01ffd21f1d34dea..48cc7511905a62d2828e3a7b593b3d2dae893e34 100644
---- a/drivers/platform/x86/dell/dell-pc.c
-+++ b/drivers/platform/x86/dell/dell-pc.c
-@@ -13,18 +13,18 @@
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/bits.h>
-+#include <linux/device/faux.h>
- #include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/platform_profile.h>
--#include <linux/platform_device.h>
- #include <linux/slab.h>
- 
- #include "dell-smbios.h"
- 
--static struct platform_device *platform_device;
-+static struct faux_device *dell_pc_fdev;
- static int supported_modes;
- 
- static const struct dmi_system_id dell_device_table[] __initconst = {
-@@ -246,7 +246,7 @@ static const struct platform_profile_ops dell_pc_platform_profile_ops = {
- 	.profile_set = thermal_platform_profile_set,
- };
- 
--static int thermal_init(void)
-+static int dell_pc_faux_probe(struct faux_device *fdev)
- {
- 	struct device *ppdev;
- 	int ret;
-@@ -258,51 +258,31 @@ static int thermal_init(void)
- 	if (ret < 0)
- 		return ret;
- 
--	platform_device = platform_device_register_simple("dell-pc", PLATFORM_DEVID_NONE, NULL, 0);
--	if (IS_ERR(platform_device))
--		return PTR_ERR(platform_device);
-+	ppdev = devm_platform_profile_register(&fdev->dev, "dell-pc", NULL,
-+					       &dell_pc_platform_profile_ops);
- 
--	ppdev = devm_platform_profile_register(&platform_device->dev, "dell-pc",
--					       NULL, &dell_pc_platform_profile_ops);
--	if (IS_ERR(ppdev)) {
--		ret = PTR_ERR(ppdev);
--		goto cleanup_platform_device;
--	}
--
--	return 0;
--
--cleanup_platform_device:
--	platform_device_unregister(platform_device);
--
--	return ret;
-+	return PTR_ERR_OR_ZERO(ppdev);
- }
- 
--static void thermal_cleanup(void)
--{
--	platform_device_unregister(platform_device);
--}
-+static const struct faux_device_ops dell_pc_faux_ops = {
-+	.probe = dell_pc_faux_probe,
-+};
- 
- static int __init dell_init(void)
- {
--	int ret;
--
- 	if (!dmi_check_system(dell_device_table))
- 		return -ENODEV;
- 
--	ret = thermal_init();
--	if (ret)
--		goto fail_thermal;
-+	dell_pc_fdev = faux_device_create("dell-pc", NULL, &dell_pc_faux_ops);
-+	if (!dell_pc_fdev)
-+		return -ENODEV;
- 
- 	return 0;
--
--fail_thermal:
--	thermal_cleanup();
--	return ret;
- }
- 
- static void __exit dell_exit(void)
- {
--	thermal_cleanup();
-+	faux_device_destroy(dell_pc_fdev);
- }
- 
- module_init(dell_init);
+> +
+> +	/* free descriptor for encoder configuration phase / decoder DHT */
+> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+> +			  jpeg->slot_data.cfg_desc,
+> +			  jpeg->slot_data.cfg_desc_handle);
+> +	jpeg->slot_data.cfg_desc_handle = 0;
+> +	jpeg->slot_data.cfg_desc = NULL;
 
--- 
-2.49.0
+The same here.
 
+> +
+> +	/* free configuration stream */
+> +	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
+> +			  jpeg->slot_data.cfg_stream_vaddr,
+> +			  jpeg->slot_data.cfg_stream_handle);
+> +	jpeg->slot_data.cfg_stream_vaddr = NULL;
+> +	jpeg->slot_data.cfg_stream_handle = 0;
+
+The same here.
+
+> +
+> +	jpeg->slot_data.used = false;
+> +}
+> +
+>  static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
+>  {
+>  	struct mxc_jpeg_desc *desc;
+> @@ -798,26 +824,6 @@ static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
+>  	return false;
+>  }
+>
+> -static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
+> -{
+> -	/* free descriptor for decoding/encoding phase */
+> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+> -			  jpeg->slot_data.desc,
+> -			  jpeg->slot_data.desc_handle);
+> -
+> -	/* free descriptor for encoder configuration phase / decoder DHT */
+> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+> -			  jpeg->slot_data.cfg_desc,
+> -			  jpeg->slot_data.cfg_desc_handle);
+> -
+> -	/* free configuration stream */
+> -	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
+> -			  jpeg->slot_data.cfg_stream_vaddr,
+> -			  jpeg->slot_data.cfg_stream_handle);
+> -
+> -	jpeg->slot_data.used = false;
+> -}
+> -
+>  static void mxc_jpeg_check_and_set_last_buffer(struct mxc_jpeg_ctx *ctx,
+>  					       struct vb2_v4l2_buffer *src_buf,
+>  					       struct vb2_v4l2_buffer *dst_buf)
+> --
+> 2.43.0-rc1
+>
