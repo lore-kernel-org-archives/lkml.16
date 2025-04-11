@@ -1,171 +1,208 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0F329C341;
-	Fri, 11 Apr 2025 12:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744374996; cv=fail; b=bjIK2cXE408BwrepPQaTAFZYEWmz0bghP8qfoJyc93GHxiqdAZpZNUOtTrpL2njdSJfNkm+/J/HTyhqa9osekedQGGNrecSUkuwRHDSyNnt4eBs55CYVnz5rlugUSfHY9boCUs5BwkvtrxUcumqGcQZ7MNwCPhKaChb/ACZnP/I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744374996; c=relaxed/simple;
-	bh=chPGRvmI83TuOacd5Vv2kRXijvQ3iw7xmHaDCUcS+zY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dBRWxXE2xYJUzw4qpqbBIcdOomFVUauLRcbGc0KXUz5YwmHrI/iSiSVHqACtx3XcVHl7SNi23PYpC0o4epv3W6NZyepvdLD7U3Irz8eEEOmbxozPy5g38tzsO7wd7ZC/cRQPH6xyFIQNXm6B247eusI81i23Vn1YumMGns8ANuM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=XPLINIsZ; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=uRXj83v/; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FE429CB4F
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744374998; cv=none; b=RZ5gu5J1S5kO7rlHFNfI7pQfw/Fug98aUCRWdUKc9AXxzMrc4M1X2GhRSCr7MRPPT9in7oIMWkKBlITpXedgYtTEVCELTzofZflyfJmGWoG3aMBWliPaqH8w3HCDJbZhSXzZou+MnzMnL1P2Ks7svHLl3v9APRVTAsbVUjd3Lmc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744374998; c=relaxed/simple;
+	bh=tyu764S29y/vhFyNtYKo1iTVWCgv8kwvcYIcevIAdQU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fmzRkTCa/IUh69hst+aJ8C4FaqHWI8qxzWhEtW1dr+0YmmERRMWNWS/xZ3nTuD7peZ8ekK7twPG8MStwuOa/BNFn7hYe0lDd84YqnnJ1o5z5xWezGK8f5GixpHULTOseLlYfsNw5wHCZVCu0k1qfmuH7JFVHA0eA6hOdBmmbxsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=y+aW4Q15; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XPLINIsZ";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="uRXj83v/"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B4xQ2Q029246;
-	Fri, 11 Apr 2025 07:36:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=L+ExDVpADn3oPIXQ
-	tQO9GHyJOaWflQAx2wC3sdiFlgE=; b=XPLINIsZiCzT91Wt31KVZXTppVeu+mdU
-	B7TEC2U/BWrcMVcIRI19XpTtir9iQIEVXfSGMuFDQ+KR25GFu6VgLgO5gJb+8HC2
-	dxhFu030s4+ObfjIQlUz3Z+gKRpWAWFIrvFS0ESiJVSz7U6zAwA1haeCvgmgFIms
-	Es5RKRWwYy0RYt6+VRT6jyoGY64+zbe4yw9hsFNtaGKvKVlNuoTM1xpPenReMfAb
-	zcm1MxNQ5IC0frs6a0IxqwgKhvE87AOap5SW/YILXAUPN9WzvRWWUXRTTsEgLQgR
-	zsS9YbDM+pOUg5EuaKaAIPukSVZu9whJN5oftPxpJP7hXNQdas+wxA==
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2170.outbound.protection.outlook.com [104.47.56.170])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 45xa4bhse2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 07:36:16 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=whKex2UNKzRFC8V2p/73G2xgt33sPKdoyY0Gu8U2iQvtc+OtMXHmRMr0WZYgkjeb7oFqYLaMybZE5AbOTRfNLT0/OtmYoP/e2Wb4PGxBtXM5Zqr5gUd3Ldr4PB3JJHa4iI1qJHlOcuVfQbAG5FPG6eF+2TZ4dSslLOUeNTeOr5LWRb3efJfR4uHDG0Li2DReQokRVECELDpge8MAbS3d5eGhSn7dh6PjF34TqTVh9h/wTz7ceyRq1yd4TA9LhVjZRMKBVMoREsRE58deeCPbo8u2tC6ziDeDXCwj3GQZ3Rd/fHWoZHyk4AYUP9KdlpmC/iMII5QZ3seg+BaoizcW/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L+ExDVpADn3oPIXQtQO9GHyJOaWflQAx2wC3sdiFlgE=;
- b=w8V7/3TOAj7rdXc6MsUzFpy3cEgoWz0RbOtHGhSveZLO+D0MkU5JWm+QM4L4NK3GRXe68rnyX/iWubF/fk5f0Oqv6OqyHR//Bm14zGhHy+NnvfvgsV09rPWFFNeZpIT/NGXZLiYAfb9yU7Ev4CKiQ/Cmy2jMY9+znHwwWM6uFhWqmbCwV3AMhb+4oLGfBqCGB4779gfKpUT+6MabmCog4LeQ3DICMn7pzHyd1KREzlkBR5imZNwCiWM5alKpOXVNafYQQoJDtK5liwaHR7zFQNHKvPSegbt3xiHajsfEi4WpEtpEqedXgyUqpMVelP2JZv56hAm7G55FD6tDByCwpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
- (0)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="y+aW4Q15"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-730517040a9so2324107b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L+ExDVpADn3oPIXQtQO9GHyJOaWflQAx2wC3sdiFlgE=;
- b=uRXj83v/aJ4cM9KomuwrbAMKFBbFNsoY7IiJUbtIbf4e1HlibHcuwgwZUIAxLjCg6JRWciifgrYse7kveD3tOW1Kla1gApbkJu1xTHwSA/S0JoSHWbflbtUrOnUqrDmNwcUbzxdpF53VWuGjkepVy35Y+s44YAClbf0XRTiWfdo=
-Received: from CH5P222CA0015.NAMP222.PROD.OUTLOOK.COM (2603:10b6:610:1ee::13)
- by LV8PR19MB8200.namprd19.prod.outlook.com (2603:10b6:408:18b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.29; Fri, 11 Apr
- 2025 12:36:10 +0000
-Received: from DS3PEPF000099DD.namprd04.prod.outlook.com
- (2603:10b6:610:1ee:cafe::1a) by CH5P222CA0015.outlook.office365.com
- (2603:10b6:610:1ee::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.27 via Frontend Transport; Fri,
- 11 Apr 2025 12:36:10 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
- designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
- client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- DS3PEPF000099DD.mail.protection.outlook.com (10.167.17.199) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.12
- via Frontend Transport; Fri, 11 Apr 2025 12:36:09 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 4848B406540;
-	Fri, 11 Apr 2025 12:36:08 +0000 (UTC)
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.23])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 2FA93820259;
-	Fri, 11 Apr 2025 12:36:08 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: broonie@kernel.org, brendan.higgins@linux.dev, davidgow@google.com,
-        rmoar@google.com, npache@redhat.com
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: [PATCH 0/3] Fix up building KUnit tests for Cirrus Logic modules
-Date: Fri, 11 Apr 2025 13:36:05 +0100
-Message-Id: <20250411123608.1676462-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744374996; x=1744979796; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3IG4g6G6O5d0C+h1ORyM98qH6q+iKpuRjuLFaymrvAM=;
+        b=y+aW4Q15vv7HJ9CpRUQFJ3D54yk1u8Ts95MSlXdCdXqEquJ0ZsoCdnWj+45Ju+a8U+
+         EHRKCHSi3c2I2bPBfkrJvbiZ98GYnk3escFA6+bZ2STX228J/mVroRimL4DJr43pDdhe
+         Mc707kOrIwS3Xd+L+ZlLIC7lljKnwqHMz08UDuvkavGCuJ58PWnzxhZA9dhkZZ8XF1Th
+         tzCuteLEMrz1coYglWdOzLo0IdwqvZo7kxjZU7c8XId8qOsEvPW8Zo40T/7VcGbUvoiO
+         vPH28CFPgIL8WvVXqVpEs0j/SbjmuzbCs3AbLpXDcsrzLwxEQ+NZh1mRUYwk5otWpbHs
+         ApsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744374996; x=1744979796;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3IG4g6G6O5d0C+h1ORyM98qH6q+iKpuRjuLFaymrvAM=;
+        b=R9vs5RkjjT6xZKIgtsaeYDn/AH/a/j6CnAfPJyrIGzpO1X/Y4ZBlMu0igqwtVGouf7
+         5jeXzJtvDa18O2T0TcM0T5yKsEg2bnB6ISb3gBeuKBZXbclKicuCBk8XJEU3a0h6tgW+
+         0x3SRXCxfTRamChb17ZPl67AYjstgO+u2HZW30rVas2LBiaCsDyWLtzMTCcRRCwNRUHC
+         DVgGGzRN9TlcEFe0v1oPJu1gypFI3WUJzjw0D/CkS2VoBZI0gXnUM9KI61pNYtUvJLG/
+         UzZ3Xo6jte481g9zFcSwlSUd9N5e8hnHd7Ibc7kEkyBev36mQ1aEpZwfQcqkYp4GqTBh
+         Z38w==
+X-Forwarded-Encrypted: i=1; AJvYcCUHhgYcUi2x0N0hASu8SIgm9Qv4Er93OMSSfXeDTStNytE3QcgUrtp4b2vkv1yslddxJzZPnTzoQcw4f2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF8SIk7tZ15VVDTXQ0mkhlVDFG+KZ6EEg5/R2HLQKld+DSKOw6
+	W3ZQbMkQfb7ZDW3lx40IVE7jmNU3QHU6/FGJwSqPi57+YjLrusxinpJPkeaXdioW5HvoUHo+v4P
+	KT4E=
+X-Gm-Gg: ASbGncttzRyvndi3dllqe/m9z0wPRRuyqzRxGJPGiSuDydBGE71mJJOMJyykm5AmoPg
+	2lbvNUG1BNUdqaIRDlV7JBiYEghC+dSaQBziDX1mqPECsip1K5wgwbT47p9JeEhp3FQcVzVIoOZ
+	/0pg/exL6sGMCc5J+saP+11cpApyfQ5iGdMJD5xJNpEuZvN2Cc6JLWcJ5EvSFuNiQ2YOfob/2Ih
+	NLSR5iu/aUSb/WikR/bI8PaYsU46MZfmaREXBXNSG4sG8E7grHhga/kghX26ucf3y4sy5EyhTl/
+	6qiiJPKuKUZOD4W14hIz/DSBrcH6pMSD6m5YJWbuNBo=
+X-Google-Smtp-Source: AGHT+IFsg0ZCckIXxc+IHljq9KDD7/UlDwl63B9XFgkbLhB3RqdDeYk2J9Ou9a3sdf+9kaQpQwYZGg==
+X-Received: by 2002:a05:6a20:6f06:b0:1f5:8622:5ecb with SMTP id adf61e73a8af0-2017996f524mr5486935637.34.1744374995986;
+        Fri, 11 Apr 2025 05:36:35 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:e0a:5ee:79d0:cf9d:bb30:5951:692])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73bd22f8253sm1408292b3a.93.2025.04.11.05.36.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 05:36:35 -0700 (PDT)
+From: Alexandre Mergnat <amergnat@baylibre.com>
+Date: Fri, 11 Apr 2025 14:35:55 +0200
+Subject: [PATCH v3 2/5] rtc: Add handling of pre-1970 dates in time
+ conversion functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DD:EE_|LV8PR19MB8200:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 73f3368e-fcf2-43bd-82c4-08dd78f5702b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|61400799027|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ApThcmvbPuCmKT2e5A8d8GbShfi1rqJRmvwdNtHvzw96CcbacsG6xjSKxUkZ?=
- =?us-ascii?Q?fZvSX/mvWNod0octxOsxSZgEI+btYe4BRSKXqGUSG+5GWAAhFprX66417DOO?=
- =?us-ascii?Q?3cshkBLdDUcSU2VuDNs1Sbx6prZq/wwXvv2PmKWop6ZIyZ4AgLAyUoUF816W?=
- =?us-ascii?Q?40J9oYaEnuXRokjPcW1Tv6/Ch8skDWgt/fDqWwNw+NHoMtyw1+QiSQHYMLNs?=
- =?us-ascii?Q?b7c4iMgO8ljzbesc/uTxv93CMPUX9m6a7OxgphaVa8XrV3advwydOyHcYjmh?=
- =?us-ascii?Q?MpXL+AGOUeZLjuzXvvOOKMSo4qyuConUdbMxFKFC0M9Ph2G6mcY3W2l9m97M?=
- =?us-ascii?Q?EseMH63QHTtVhSn8E6N7zi2UjGF26OTzoUrBFSESa8EsfM8O63Iv7ZX6GG76?=
- =?us-ascii?Q?y4jiQ3jp2+3rh28ZWca/vjOuiZcwUvgStEdzNNG0e21h68AzLd0tDcUycIJv?=
- =?us-ascii?Q?bPXakwyddAuAXQtgTfdSocBg4348tmrKALQbkmRgkB7u8jQ3jqge3/0zSNFT?=
- =?us-ascii?Q?8Bi5cUqtVKOoaVCGvJvbCS7hV2iQUhWJpJCqzRbSKkEuVqM2DxpypUZNJzuL?=
- =?us-ascii?Q?1858Dvd1GZApxtEe+Tab14alZEXr+6UEB1RoKzt7vfc35NV9tf5lQ4rQdDYo?=
- =?us-ascii?Q?rcUaQPVChlUCdOweutEC42YiEQPW10MD73zlMH16hiqaE0ct3QrTpJiq3jlx?=
- =?us-ascii?Q?EqO7lEinoBt2ae1uE/ezw9dMfKLnR92cC773fyxqLlG8lkWXnoJvsXXSOJ2F?=
- =?us-ascii?Q?4k621R3WcCBQ71iJQYNYRNwIO+jE8vVG0sl0J5mLSJhdU2nvJA6qBZH9enLM?=
- =?us-ascii?Q?wGbOQIRMRKB+251eh9QPxtx3gZJ5DzTGuIIbvE/ZaLrKvrKlHfyu4XUS2hDj?=
- =?us-ascii?Q?817+v79HtdWFpwSkb66VHc0wI6tVFkqiTD4nhXsSNzyhQVN69yuGIOpsQ1ub?=
- =?us-ascii?Q?Ha4mAwuJrpDudgtuIXbfUB4jqSD4rfHsMjIlUbjLBgXgsJTNCPq+bJHhrgei?=
- =?us-ascii?Q?LrnZk58IMEwCr2KkStXru+H/Ca7fe2V/qL76XsO4pY4Z35BCOl6keo6VE4sO?=
- =?us-ascii?Q?E6UD+EcqHTXFpXRM20hw1BNYLJmDl/ZDx/jjKA0P/boO+DfvtHJgUuKXbFQP?=
- =?us-ascii?Q?aCgtZ3n5fmKr1GU4Ua0eZnoVmdJ8A6kf17evH7rIoCjzqJFx83f0dIx8ciRJ?=
- =?us-ascii?Q?I4J32uDCfGeoc8Omn0N689odtsS32V3jyiWlC41LwF8T/VeDoVTNDlDbsLUN?=
- =?us-ascii?Q?oEYmWFkRbl6Jr2C42KLPadHQfZP2rcVevtcYCbu9lPNhOOLybYRWCFjYk6wY?=
- =?us-ascii?Q?jD3KBruZt8IEJNzCfSMB2UYpU9MzRMIJvBnDRFi2xWTiHLOYfRgaNk8sGOkV?=
- =?us-ascii?Q?3smVEFSyW1zxfBGyJW6VqrVNnR+3Two4elw65zxBEacvXsNx4FLJ/tnnI5Eu?=
- =?us-ascii?Q?GJ55VJp6umGCbuWJQsqssR6EX8Z20i39E1BpYlMMMvBv/rEhJgmkjQxxyvLH?=
- =?us-ascii?Q?FCC5NtzDpAmNEtAbUBVPXFzO5TpLP89QwRqA?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(61400799027)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 12:36:09.7886
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73f3368e-fcf2-43bd-82c4-08dd78f5702b
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099DD.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR19MB8200
-X-Proofpoint-ORIG-GUID: Zx3XNN06Pj3i_lBzVazALoLaoGonA5yP
-X-Proofpoint-GUID: Zx3XNN06Pj3i_lBzVazALoLaoGonA5yP
-X-Authority-Analysis: v=2.4 cv=B6W50PtM c=1 sm=1 tr=0 ts=67f90cc0 cx=c_pps a=o9WQ8H7iXVZ6wSn1fOU0uA==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=XR8D0OoHHMoA:10 a=s63m1ICgrNkA:10
- a=RWc_ulEos4gA:10 a=D82aKkiKT0t7tNYyCrAA:9 a=BGLuxUZjE2igh1l4FkT-:22
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250109-enable-rtc-v3-2-f003e8144419@baylibre.com>
+References: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
+In-Reply-To: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
+To: Eddie Huang <eddie.huang@mediatek.com>, 
+ Sean Wang <sean.wang@mediatek.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Alexandre Mergnat <amergnat@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3599; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=tyu764S29y/vhFyNtYKo1iTVWCgv8kwvcYIcevIAdQU=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBn+Qy+3CiQcNMagXuWDXp22y2fLo6SR/giORhsb2jL
+ j0l2Rq+JAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZ/kMvgAKCRArRkmdfjHURTB5D/
+ oD+VRGtB9vanDklEZ0FOkM4AmBfEcomkMxEDgrwUagbw2dNBqsBDibhbpl+Sfv8LRErcT0R2SZFxrp
+ RtKYr6GJex551wXHt1dKOuzkiwjjkQGGjkiMz+TiZl8EIkrta/RocTjEfge7N4L6OoD5NaFKz55+jX
+ DvEoKYEFAoRThw2/D2suWlaWpSHLdghBIsl/klG9QtRORclyp3HujfG0tvxr6jVmK/QGyQoCwf+LqW
+ pdAFz9vCGnFBX2sPbt3LKO3Gz8EctYNidjvItdLLiGh35/l+eicEv+l5H/9C/Cxp16Uhbuv4M6M72k
+ V+SnyE6EBtp/M17/nXlLAFGA2FhGXsyTJI1JKiICr9trYFGVONewVdRMfBAAx/LNpVs8Iyhyq6AlUE
+ fptqtoE5GZ5yngSLsMZxYzyPKrfq0Jn1O71MWTQ/oxB/B0YrrAxAaMyzgT0qni9cNCFO6PBHxhyxJ9
+ 3PH3bSZZUTYQLp2hq1tAFWNPWVtTRmareCUcNJ5ICuMxF0cyNOeiR0klJxiUOvVNiob/78WIIkHE77
+ PDAMkXx5z0Dscs7Vq0qwJflmgG9ccXA8U7czRYuErgYMYtVQYDhMJ6a53gbeMumYFwlK1Z1KGHV+pP
+ KLlRSR1FEgbNLnKO2j53929m8ZuE3EPJHDvWf+VXU1F/cbUYSk27vJnWk4xA==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
-This series fixes the KConfig for cs_dsp and cs-amp-lib tests so that
-CONFIG_KUNIT_ALL_TESTS doesn't cause them to add modules to the build.
+Linux RTC subsystem's time conversion functions couldn't properly handle
+dates before January 1, 1970 (negative time64_t values). This affected
+offset calculations, causing incorrect time translations for RTCs with
+pre-1970 base years like those using a 1900 epoch.
 
-Patch 1 adds the ASoC CS35L56 driver to KUnit all_tests.config so that
-        cs_dsp and cs-amp-lib will be included in the test build.
+The original rtc_time64_to_tm() function produced incorrect dates for
+pre-1970 inputs and rtc_valid_tm() rejected all years before 1970 as
+invalid, even if they were within the hardware's capabilities. For
+example, converting January 1, 1942 2:36:47 is equal to -883603393.
+converting it back resulted in wildly incorrect values
+=> January 2, 1942 1193025:5:3.
 
-Patch 2 and 3 fixup the KConfig entries for cs_dsp and cs-amp-lib.
+These issues made it impossible to correctly use RTCs with pre-1970 base
+years, particularly affecting embedded systems using hardware like the
+MT6357 RTC.
 
-Nico Pache (1):
-  firmware: cs_dsp: tests: Depend on FW_CS_DSP rather then enabling it
+Modify rtc_time64_to_tm to implement special handling for negative
+time values, properly calculating days and seconds for dates before
+1970. It also removes the tm_year < 70 restriction in rtc_valid_tm to
+allow pre-1970 dates to be validated correctly, ensuring accurate
+conversion between hardware and system time across the full range of
+RTC hardware capabilities.
 
-Richard Fitzgerald (2):
-  kunit: configs: Add some Cirrus Logic modules to all_tests
-  ASoC: cs-amp-lib-test: Don't select SND_SOC_CS_AMP_LIB
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+---
+ drivers/rtc/lib.c | 38 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 32 insertions(+), 6 deletions(-)
 
- drivers/firmware/cirrus/Kconfig              | 5 +----
- sound/soc/codecs/Kconfig                     | 5 ++---
- tools/testing/kunit/configs/all_tests.config | 2 ++
- 3 files changed, 5 insertions(+), 7 deletions(-)
+diff --git a/drivers/rtc/lib.c b/drivers/rtc/lib.c
+index fe361652727a3..2014a86499e02 100644
+--- a/drivers/rtc/lib.c
++++ b/drivers/rtc/lib.c
+@@ -46,7 +46,6 @@ EXPORT_SYMBOL(rtc_year_days);
+  * rtc_time64_to_tm - converts time64_t to rtc_time.
+  *
+  * @time:	The number of seconds since 01-01-1970 00:00:00.
+- *		(Must be positive.)
+  * @tm:		Pointer to the struct rtc_time.
+  */
+ void rtc_time64_to_tm(time64_t time, struct rtc_time *tm)
+@@ -59,11 +58,39 @@ void rtc_time64_to_tm(time64_t time, struct rtc_time *tm)
+ 		day_of_year, month, day;
+ 	bool is_Jan_or_Feb, is_leap_year;
+ 
+-	/* time must be positive */
+-	days = div_s64_rem(time, 86400, &secs);
++	bool is_negative = false;
++
++	/* Handle negative time values (dates before 1970-01-01) */
++	if (time < 0) {
++		/* Store that we had a negative value */
++		is_negative = true;
++
++		/* Convert to positive value for the algorithm, but
++		 * we'll subtract one more day to handle the boundary correctly
++		 */
++		time = -time;
++
++		/* Get days and seconds */
++		days = div_s64_rem(time, 86400, &secs);
++
++		/* If we have seconds, we need to adjust to the previous day */
++		if (secs > 0) {
++			days += 1;
++			secs = 86400 - secs;
++		}
++
++		/* Make days negative again */
++		days = -days;
++	} else {
++		/* Positive time value - normal case */
++		days = div_s64_rem(time, 86400, &secs);
++	}
+ 
+ 	/* day of the week, 1970-01-01 was a Thursday */
+ 	tm->tm_wday = (days + 4) % 7;
++	/* Ensure tm_wday is always positive */
++	if (tm->tm_wday < 0)
++		tm->tm_wday += 7;
+ 
+ 	/*
+ 	 * The following algorithm is, basically, Proposition 6.3 of Neri
+@@ -93,7 +120,7 @@ void rtc_time64_to_tm(time64_t time, struct rtc_time *tm)
+ 	 * thus, is slightly different from [1].
+ 	 */
+ 
+-	udays		= ((u32) days) + 719468;
++	udays		= days + 719468;
+ 
+ 	u32tmp		= 4 * udays + 3;
+ 	century		= u32tmp / 146097;
+@@ -146,8 +173,7 @@ EXPORT_SYMBOL(rtc_time64_to_tm);
+  */
+ int rtc_valid_tm(struct rtc_time *tm)
+ {
+-	if (tm->tm_year < 70 ||
+-	    tm->tm_year > (INT_MAX - 1900) ||
++	if (tm->tm_year > (INT_MAX - 1900) ||
+ 	    ((unsigned int)tm->tm_mon) >= 12 ||
+ 	    tm->tm_mday < 1 ||
+ 	    tm->tm_mday > rtc_month_days(tm->tm_mon,
 
 -- 
-2.39.5
+2.25.1
 
