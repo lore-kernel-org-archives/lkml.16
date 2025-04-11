@@ -1,124 +1,147 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B9D2367B7;
-	Fri, 11 Apr 2025 13:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0AE2367B7;
+	Fri, 11 Apr 2025 13:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379809; cv=none; b=Z4w+PNrrTRKn/U4K2q9gYqtWTfLiR4OLmpNAt4fHy3QKoXJ3dEzkbnwiMPAAFzK0iIU+gjwxZVBBMFDWQrheQYr8CY81e+bppAKyvfcmXpTGxmnkcywHUNwlpM5hEugQfSGbJofAzcXbuWbF2lgrF5usRmfSpMqQoY4YNiuw7kQ=
+	t=1744379829; cv=none; b=ARvE/hLdnrqd/cMoZ7lS/mWVqAqZ7UDMKpLNPZh7S8qztYfPWCeVGN5+di5AhqemHhzHyEtVhWh+lWTctzJViuJD4DB1/N7Aj1TG5qWsWn7D9mQM88QsgRcwb49Fji6PlHW8jlOxvmUtzs3/QowZbk4tYIg79xrtVX1vSQMjTMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379809; c=relaxed/simple;
-	bh=tXYZh8z7ILgkW3X+Yd6ejw+mkN0PDn5U4WMcYfRUhms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Gdy0UJBEVawnS8DhoFpoJqTe6s0RbuCiLxIfgxjT82rF3w65XC8ckOIA4mWSxxU7UKmZIXv1qUv4yCGNgs3vIGbPQTm/lmPjdIMYana/ifQtIFGOtq4Ki5NbBg24USKsTTnHwPMdyuY1z/hzkctcoCQzaNqIpRp7Jzdau56cPqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FP/LHciK; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744379829; c=relaxed/simple;
+	bh=EHr3sP17GP2rT9bubWQ05YlLLA63mOf++HaX/JCjz2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ypim+9o9m8NWm5DFw+FE/J91TEyZcjLGbXSvX8RJ14nseVwLCpDlZDMvTddTtPm1RZ/Rkdoi9NCRx3sK3Ocwx1+uZn0FkYMgrA54rLL6R4SdWXQ/G1YC7EclPG+EY4pJZYBdC5TwfIAK8J2GrGC7qq7AthaKJNqa7JDl3sLtRuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C6regj8R; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FP/LHciK"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDuebR1457292
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 08:56:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744379800;
-	bh=dh6bE3XEbiTa0mmTq1+LWP9AAzh6deTQmR8XrrWXPSI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=FP/LHciKb+kFVsE/9VAjEQwtM1lOXleR/rP4eUPFWF51epfLWamq+9ykFFT523ZtA
-	 rrdUBHyQ6519dkEZLCnjar0aUUpys03i7kAr9ZzzSh4yQYBxdnVRAsHoamx4PKwiAz
-	 Lf5a3XC3xbaF0FLbuOxOJesxtKfyi2rIKhz/28j4=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDuedm093360
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 08:56:40 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 08:56:40 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 08:56:40 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDuZCB124896;
-	Fri, 11 Apr 2025 08:56:36 -0500
-Message-ID: <b6cae091-caa8-41fa-97b1-fb243386b0b5@ti.com>
-Date: Fri, 11 Apr 2025 19:26:35 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6regj8R"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so16535431fa.2;
+        Fri, 11 Apr 2025 06:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744379826; x=1744984626; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V0ok80ZSRCyKju0uCz08exJzHvXoR6NaXt2Z+ekMppI=;
+        b=C6regj8R4uVoeTHievhfWvAjCjWRjhryRf3yN1MpDN22vyGH6gGPgK7/WlF/D+1Xrf
+         A0xoYa57wUehuQtpEPpBN7uwPIc2TIieq90FbQC5yFlkCvfIzLifqXR6Tfc8Wb3ieA7Y
+         lPEzT7yP4tczaBXjGowvrU0yZ1MtmIole+iJGyjny+EhOjDbCMaanuuBGqqZd4k874dP
+         pSpVd3jvMXwKzk8aOmjYNN1FUUWHJ2OBYuLGIBUQIK/lqJt/ZHhSoSMK9Pu5ksLby+Wz
+         COXWPxLZmxBfqyH8AGS3zrhYxn1qqFKqRfYXDIaaHjR/8PKsmJ1yBxICeteKAsRMBph2
+         wkJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744379826; x=1744984626;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V0ok80ZSRCyKju0uCz08exJzHvXoR6NaXt2Z+ekMppI=;
+        b=qQbE6P1q6taYH4hCn8G7MAmPu/W+Oq1tl/WhAiFuA8HcXD7GvQwpnD/KpgHnjMAwi5
+         HR67onIYkYKiWPxrokdM3Rk44B2+Ha9zMXW/ugWsC6GBf2WM6EhYKLlvshMN1mh/0SgA
+         lqIfhue5BwHOVlSbuooPYSBgI1qRY2eSL94dQ1pRJpIRmhSneOHcKHjyz3X6c4em6gR5
+         EKoHFj9nIvtlxL+Ux4oRcd0Ogs996kZHdlz4ZU3N/xJJOWNKiSdpYQU7KYORX3ZQSH/D
+         YzwY6zTpRTuH92wcQO+P4VWLoRxKGS0ShZW+IOsybDMoesIHvcWEXP3mobEMgYEYFztG
+         6arg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpPesI9DhzGUxmyESV7z5zK/u0zG5BOxGIFDqrsjVXeFi90OMmKoXCa3DzjU9cW1YPffWSTei2jM3dawY=@vger.kernel.org, AJvYcCW9yvjCsJXTRF/JdAQPbnK3dN+dzHFSj1aBP0knxbfVNKF0PJVvOretImM6sWSPS6J6i034IdGXhjkiCJP6DgE=@vger.kernel.org, AJvYcCXqah9Uiwmtd09lfRWs+kIhnp4XvQMAtljVhTgdpohG0+/ARWnhu3vo4oTnDxqzgjJTUsUkwI4wtUp3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4VftjNGRqoeBe45VM+Hc5qaW3v41U4nW0XB9WpC9IJw/HRCtJ
+	684J79lrCmdiBLQL1Q2msKgl5FHSYm/AyPG41tzMTv0COKULNR1TMC5HiYvCCLgLzTlVpAIplHS
+	OpyeWRhVeU6ls08cSJrubwn+mtk8=
+X-Gm-Gg: ASbGncu5sWROkGkBgaa2z2rq6KZRME7IQPFyi2wIFc7zC6aATOe2n8ynAg8d3Zl8UJJ
+	LyRUK4pbfmthMN3xVjv38XjOfvmzFHjo7jCznLa3UsYAQ1p1/UwX7e1Yv921YoGvMAhdX1g6YdJ
+	JLja6TOS+7a5jyXxL1I8VpYIggnv4j3vtdDDqSWYJq7BP+zGuL+Yi6DBcZd9fu/lCNqA==
+X-Google-Smtp-Source: AGHT+IGBOEIfPQcBcLGNI8B8t2buG2qyCkl07e+bDZ36eFeM5osRdU689Rog2YK5/bwFMtkYKvRRli/CrIyQ9ywcGXg=
+X-Received: by 2002:a05:651c:1448:b0:30c:5190:b264 with SMTP id
+ 38308e7fff4ca-310499fb271mr10915891fa.20.1744379825590; Fri, 11 Apr 2025
+ 06:57:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] arm64: dts: ti: k3-j722s-evm: Enable "serdes_wiz0"
- and "serdes_wiz1"
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <rogerq@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <u-kumar1@ti.com>
-References: <20250408103606.3679505-1-s-vadapalli@ti.com>
- <20250408103606.3679505-2-s-vadapalli@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250408103606.3679505-2-s-vadapalli@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250409-no-offset-v2-0-dda8e141a909@gmail.com>
+ <20250409-no-offset-v2-2-dda8e141a909@gmail.com> <Z_eMe7y0ixrBrHaz@google.com>
+ <CAJ-ks9kms_jFEAHX9MnW1pUOyTeuFuyWwXk-A+qhCPQQNfJdAw@mail.gmail.com> <Z_jcjEtKZRpRi9Yn@google.com>
+In-Reply-To: <Z_jcjEtKZRpRi9Yn@google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 11 Apr 2025 09:56:28 -0400
+X-Gm-Features: ATxdqUEDaQovMhot23oFo1TVInzFS-l1gpC5B1ahhOMK6wGAFHaYLD4oU7r3LQQ
+Message-ID: <CAJ-ks9ka0sASqBdhFSv6Ftbd7p1KCBuy6v-2jNd98gDpyAgQGA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] rust: workqueue: remove HasWork::OFFSET
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Apr 11, 2025 at 5:10=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> On Thu, Apr 10, 2025 at 10:15:53AM -0400, Tamir Duberstein wrote:
+> > On Thu, Apr 10, 2025 at 5:16=E2=80=AFAM Alice Ryhl <aliceryhl@google.co=
+m> wrote:
+> > >
+> > > On Wed, Apr 09, 2025 at 06:03:22AM -0400, Tamir Duberstein wrote:
+> > > > Implement `HasWork::work_container_of` in `impl_has_work!`, narrowi=
+ng
+> > > > the interface of `HasWork` and replacing pointer arithmetic with
+> > > > `container_of!`. Remove the provided implementation of
+> > > > `HasWork::get_work_offset` without replacement; an implementation i=
+s
+> > > > already generated in `impl_has_work!`. Remove the `Self: Sized` bou=
+nd on
+> > > > `HasWork::work_container_of` which was apparently necessary to acce=
+ss
+> > > > `OFFSET` as `OFFSET` no longer exists.
+> > > >
+> > > > A similar API change was discussed on the hrtimer series[1].
+> > > >
+> > > > Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-=
+1-5bd3bf0ce6cc@kernel.org/ [1]
+> > > > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> > > > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > > > Tested-by: Alice Ryhl <aliceryhl@google.com>
+> > > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > > > ---
+> > > >  rust/kernel/workqueue.rs | 45 ++++++++++++------------------------=
+---------
+> > > >  1 file changed, 12 insertions(+), 33 deletions(-)
+> > > >
+> > > > diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+> > > > index f98bd02b838f..1d640dbdc6ad 100644
+> > > > --- a/rust/kernel/workqueue.rs
+> > > > +++ b/rust/kernel/workqueue.rs
+> > > > @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> *m=
+ut bindings::work_struct {
+> > > >  ///
+> > > >  /// # Safety
+> > > >  ///
+> > > > -/// The [`OFFSET`] constant must be the offset of a field in `Self=
+` of type [`Work<T, ID>`]. The
+> > > > -/// methods on this trait must have exactly the behavior that the =
+definitions given below have.
+> > > > +/// The methods on this trait must have exactly the behavior that =
+the definitions given below have.
+> > >
+> > > This wording probably needs to be rephrased. You got rid of the
+> > > definitions that sentence refers to.
+> >
+> > I don't follow. What definitions was it referring to? I interpreted it
+> > as having referred to all the items: constants *and* methods.
+>
+> I meant for it to refer to the default implementations of the methods.
+>
+> > Could you propose an alternate phrasing?
+>
+> I guess the requirements are something along the lines of raw_get_work
+> must return a value pointer, and it must roundtrip with
+> raw_container_of.
 
-On 4/8/2025 4:06 PM, Siddharth Vadapalli wrote:
-> In preparation for disabling "serdes_wiz0" and "serdes_wiz1" device-tree
-> nodes in the SoC file, enable them in the board file. The motivation for
-> this change is that of following the existing convention of disabling
-> nodes in the SoC file and only enabling the required ones in the board
-> file.
->
-> Fixes: 485705df5d5f ("arm64: dts: ti: k3-j722s: Enable PCIe and USB support on J722S-EVM")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
->
-> v1 of this patch is at:
-> https://lore.kernel.org/r/20250408060636.3413856-2-s-vadapalli@ti.com/
-> Changes since v1:
-> - Added "Fixes" tag and updated commit message accordingly.
->
-> Regards,
-> Siddharth.
->
->   arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 8 ++++++++
->   1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-> index 2127316f36a3..0bf2e1821662 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-> @@ -843,6 +843,10 @@ &serdes_ln_ctrl {
->   		      <J722S_SERDES1_LANE0_PCIE0_LANE0>;
->   };
->   
-> +&serdes_wiz0 {
-> +	status = "okay";
-> +};
-> +
->   &serdes0 {
->   	status = "okay";
->   	serdes0_usb_link: phy@0 {
-> @@ -854,6 +858,10 @@ serdes0_usb_link: phy@0 {
->   	};
->   };
->   
-> +&serdes_wiz1 {
-> +	status = "okay";
-> +};
-> +
-
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
-
-
->   &serdes1 {
->   	status = "okay";
->   	serdes1_pcie_link: phy@0 {
+What is a value pointer?
