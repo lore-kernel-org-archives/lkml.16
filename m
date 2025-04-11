@@ -1,133 +1,76 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFBC1E8854
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046E427E1B0;
+	Fri, 11 Apr 2025 21:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744406324; cv=none; b=pMZMIox8i9h41s17I5bItHXzYwestlde97vkevJhCqmNkoqyBM+/cN33npta8M6Vvwi7tErtxbTXmeNGG5nXESPtRA/tl4JvwD/+eXAEYFLyK4Vazf0hfloY3Qc9YaITaJjC9QJDQllvhbtRTQaYSwum31LUn2Qd96a2lqVpzQU=
+	t=1744406329; cv=none; b=huMp5JmJIUZshtR0P1mh5g4348rUyUOJJWvs9lrIou9dN3PsdaxBzj+9L5SjAb/ll6K3MOOw7BE5tnR4L5mHRm2Ls06FP2H1WLd6Eco5nGnKa52atsNAMgnbdbrRZMzCTEbWY+A8G3hTwzyhwKTQ3wNGp+lWDaKdCh1cBueSQII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744406324; c=relaxed/simple;
-	bh=rag+QXq4vWakUy9sDsqwNJhEerW8S3rA/5RcjaDWrNA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cYP1IptKwHUfHf1j0tpuMvlK5BcBRHOlCO7pfTVth2Hp/jwOJc8ccEGpKerD8Zu02+ypOMb9/w4Ri1NvKbNTmHe5OrszjLaU1navq9s1JRdftlIvW6pDbmsHC+r3uPMdJRaouW0aa3kyFdS0Ey/J4v/Ukl4U1YibJv5XOZjUF5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=C5CGA81+; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744406329; c=relaxed/simple;
+	bh=0+8SOdZHpARtPKiOteQjtALkLBWbvVG2+mmUnczmE6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d6OGRHvAmDcEZTqfbsVk5u6UEdu5/88SBoS201eV1hiqJdBng6PofYkMAo+g2Ql1a8x7z/H8HTxOYvvbnJ9a59f/ZJ+x5esHa9QwiygKJICilEQBpIuChUUMDlHYCmX0Un9t+c5RQR34l/6Wgwx7wcaumeNV+/99UCWrLKYT2V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUSYJRts; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="C5CGA81+"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72b7a53ceb6so1372660a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744406320; x=1745011120; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sorNIy6LIPWEsa+dR7etTvE5w/Ir6yxO/CI3OrQDhzY=;
-        b=C5CGA81+q7th0x0t1dHgFf6HR9f7cGqpZZGqgSPJyc3iuxoHHsHxemOLXPNIvBMRM6
-         PvaHf9BVFZ/lzHwUtJzqfR23LfQZInmXbwXehW37JJOuRG8fykb9HAsuPAbwQHSQcUKK
-         8Z1VvzTOuJIaT5d328xtRA9PzOqgp4665CZARAA3xLIORLDtT6JJwG2YGpOu5mKK4gFN
-         UHzyq/p+1Pry9IiwvJvYP/RaKc9wyAVz+BRvHLGWMSoFLHrdJ0cVBzsVX9GskU+MWTDF
-         lGRRZynNvGW/nncDWhFcDpEY/Vmp2hsEsL86re3WPEBiiw9s23jl5R+GkgQyioohaYDB
-         doXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744406320; x=1745011120;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sorNIy6LIPWEsa+dR7etTvE5w/Ir6yxO/CI3OrQDhzY=;
-        b=afvgQGLGXNZHsX77q8aW100kpCs7WfOwXaFZkmoCM129JDrxzkUS1bcwxH4N8eEUTX
-         NX70ODAS9xu4j+v1A4Ia/F3fPKjc+hiaxLBH63rrM6IBAyu5shXQejMa9coHGXVC47s3
-         3rdfIQ4EMCS/C85FJhPyIiYXe7jIm8Zo4KHhkQgFr/LKfWMAj4u26MY/XK3fZJgoBjPS
-         pa4tsbBhN5AYN+MHZZzcq0cW3Dv6PItI3KSls3g8geE9fQ38U2LkbCQa+/ok61nNlden
-         j3FQtd9fcMsEq8TSC5Ku+YgEhxRY7lg/Fx0HQW6xCN1SDIzKuBHMSs5cKjONAu2bQQzY
-         RShA==
-X-Gm-Message-State: AOJu0Yw7HFviwc1gbVszNswmidsziUMqvQIvZ3OJ6ypXdD9VYnn2d5wj
-	zyi1U7RqbwQz9Xza0IA+Eq2jvt3eei3ttY5oMJLyN9DResbBkB4sDJIFd9ktq0o=
-X-Gm-Gg: ASbGnctzb85RkWTvfL2PAZSl7/fAX+CiVb6F5R21I4T9zMN4NJ83/27bZG9emRTT1HW
-	WzZwu833EK6wHgCA/Nr2nD4WHPTY7xyDNY3Caa2Ha313q8vrPMVCzJuGM2QDFP21HU924q/SDen
-	VjesaL2uDYs0ZY+5g3LWKuUAOyOVXGePZVqNvpMDHHa4HtRAjCsG2vObJx5kjYTDK2EBF9IAJYq
-	PGus1jcQVNcvlUkClSBE5BvnwsugWdS3bTtRY1YNytTinMSzBua/etnRerWlJKI0A5qj/EuVAfS
-	PnVyw6roq5w7s+/Yw/mo9CmyLRwEyUrNlHLhtVfFIU0G6qjpXpX5XrsdVnfFUTZz+ZAcByPuQTc
-	qmw==
-X-Google-Smtp-Source: AGHT+IEQ7gV6ZTG0Y504SCL7jpKeuLLtLbDwYjcmeg4BjGRNRDE++XVtQ96KcNIUD2IdTct72Q7wAQ==
-X-Received: by 2002:a05:6830:6407:b0:72b:2513:ad54 with SMTP id 46e09a7af769-72e7c173715mr5591645a34.10.1744406320668;
-        Fri, 11 Apr 2025 14:18:40 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e67444sm1082695a34.63.2025.04.11.14.18.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 14:18:40 -0700 (PDT)
-Message-ID: <4460df06-6da1-4b23-8789-82945e90a09c@baylibre.com>
-Date: Fri, 11 Apr 2025 16:18:39 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUSYJRts"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05D44C4CEE2;
+	Fri, 11 Apr 2025 21:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744406328;
+	bh=0+8SOdZHpARtPKiOteQjtALkLBWbvVG2+mmUnczmE6k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eUSYJRtsz0gqNFUtQzmCGPrW/hjcU/fV1v3EUKrVUCHeUHQCF/QhOeSNGADnYl+aC
+	 PdCzw4h+2c365BC1VVrAw2Yg6TL1HTZ7RX1k0NYkuIiHho3+wwCRrAXYU13v985kNe
+	 RAS/tmcJ60mcCO/54quTUZQckfa/7TqfVu+sb10hwxmHQYY3+aCVANq4exr2vvon/0
+	 JXgFRdC9/3cEs7Ro7mHv48ny5inlbk1y4xWKH1sJZ0xt4zLxUXpom4OdOwOR7/5QNI
+	 f226gcwTSS68TrnwJAfyhhpTdjeimOAT5vu+ycF7BstGAXE0OJePO+I8jRsQwr8Fcn
+	 Jlby+osCVN8kA==
+Date: Fri, 11 Apr 2025 14:18:47 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Sabrina Dubroca <sd@queasysnail.net>
+Cc: Antonio Quartulli <antonio@openvpn.net>, netdev@vger.kernel.org, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Donald
+ Hunter <donald.hunter@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ ryazanov.s.a@gmail.com, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
+ <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
+ steffen.klassert@secunet.com, antony.antony@secunet.com
+Subject: Re: [PATCH net-next v25 01/23] net: introduce OpenVPN Data Channel
+ Offload (ovpn)
+Message-ID: <20250411141847.6dba6987@kernel.org>
+In-Reply-To: <Z_keORW4OWc8i5Vz@krikkit>
+References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
+	<20250407-b4-ovpn-v25-1-a04eae86e016@openvpn.net>
+	<20250410195440.3ba7ba0f@kernel.org>
+	<f11e8a14-deb0-456f-bb4a-b5e4e16a79d7@openvpn.net>
+	<Z_keORW4OWc8i5Vz@krikkit>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] dt-bindings: iio: imu: Add inv_icm45600 documentation
-To: remi.buisson@tdk.com, Jonathan Cameron <jic23@kernel.org>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250411-add_newport_driver-v1-0-15082160b019@tdk.com>
- <20250411-add_newport_driver-v1-7-15082160b019@tdk.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250411-add_newport_driver-v1-7-15082160b019@tdk.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 4/11/25 8:28 AM, Remi Buisson via B4 Relay wrote:
-> From: Remi Buisson <remi.buisson@tdk.com>
+On Fri, 11 Apr 2025 15:50:49 +0200 Sabrina Dubroca wrote:
+> > My understanding is that this is the standard approach to:
+> > 1) hook in the middle of registration/deregistration;
+> > 2) handle events generated by other components/routines.
+> > 
+> > I see in /drivers/net/ almost every driver registers a notifier for their
+> > own device.  
 > 
-> Document the ICM-456xxx devices devicetree bindings.
-> Describe custom sysfs API for controlling the power modes.
+> I think most of them register a notifier for their lower device
+> (bridge port, real device under a vlan, or similar).
 > 
-> Signed-off-by: Remi Buisson <remi.buisson@tdk.com>
-> ---
+> I've mentioned at some point that it would be more usual to replace
+> this notifier with a custom dellink, and that ovpn->registered could
+> likely be replaced with checking for NETREG_REGISTERED. I just thought
+> it could be cleaned up a bit later, but it seems Jakub wants it done
+> before taking the patches :)
 
-IMHO, it is more logical to have the dt-bindings patch first in the series
-before the code that uses it.
-
->  .../ABI/testing/sysfs-bus-iio-inv_icm45600         |  37 ++++++
->  .../bindings/iio/imu/invensense,icm45600.yaml      | 136 +++++++++++++++++++++
->  2 files changed, 173 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-inv_icm45600 b/Documentation/ABI/testing/sysfs-bus-iio-inv_icm45600
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..8d2d9b68ad9e35fe0d6c157e984afc327eab92ec
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-inv_icm45600
-
-
-ABI documentation is separate from dt-bindings and needs to go in a
-different patch.
-
-Also, it looks like /sys/.../iio:deviceX/in_accelY_power_mode is
-already a standard attribute in Documentation/ABI/testing/sysfs-bus-iio
-so we could add to that instead of creating a new file.
-
-And there is Documentation/ABI/testing/sysfs-bus-iio-inv_icm42600
-that has the same attribute essentially. So it would be good to
-delete this file and consolidate everything in the main file.
-
-> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm45600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm45600.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..51455f0b5cb90abdd823f154e45891ad364296e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm45600.yaml
-> @@ -0,0 +1,136 @@
-
-...
-
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-
-Since this can be connected to different buses, I don't think we want
-to always ref this. It gets included implicitly for all child nodes on a
-spi controller node anyway.
-
+Ideally, yes. One fewer place for us to check when trying to figure 
+out if we will break anything with the locking changes :(
+Notifiers are very powerful but that comes at high maintenance cost.
