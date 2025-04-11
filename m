@@ -1,109 +1,89 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE192367B6
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F60E2367A3
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744375700; cv=none; b=X/ipksZydRZLmEPs+Xnyn/Fc/20sBvpFx7GwTWLtr90es31jUak1SHJ/HITDgN5ySjbdBQTmSE2jcaqA2v6fWCTWC4ZFY2NW2sSdsSfaaQXSSULZOF/NZ3w0zSaurDCZNPe82hTZbwOyEobwpX+pNcA7iVD5pwZS1xwycQLesmI=
+	t=1744375736; cv=none; b=iGmdB7A+PKKKuN2qpptO4v2mLTvqJpVGzQuuej+jm+ERSmeU6Rjl2OOnv1Va534sTKRC3Az1/tmejBVUD+fgQ30739M3Glf2GsX1Tz5H727vn6t3GaziHGhug49Bjzn3tXTSQ2chkVsNlJP7i8Fdd/lxmMfGYqY+GNzR0NNrAUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744375700; c=relaxed/simple;
-	bh=iIXhUTuTMVRtBV6akmIRKiVFuAsKIeKfSEx1kF6Jb8I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tMxbehNzlg36GBqBGPPBRJ+mC1mZYQbRM3vRDFuS62qVbZmoOO5ubZSiiQjl5CDhS9hlVIQ6lPwwNRfSFfJzG678K9PE9sXHtTLvVGNmHDwplW7F0c0cgeGG1tyxabi6689qymr6FQ0pJGHhZzSWH7BDwKzgoMU4pNv2WwZMXoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hn/r5F90; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744375736; c=relaxed/simple;
+	bh=BcC98ws7X2rPc51yx5q6n6PNb7iZ49cCMtEKJk2Evo0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9dqDu0OP6ZoLwWW/FZq247cNlsuEqNFu6D3HleT5aFGlPJpV7VXtxXbHja0p1qaRfb/Te/byjTYhz3tYl0EQ/vGcxvx159ScwjfK8RZMX2W/8QumFkQEfFkxGLKAOU4kYPbCJm2ogRGDY0Mi+gm5SUdkXWYni7EmYEMUmb7uO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ikEu5Lgh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hn/r5F90"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso2399502a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:48:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744375697; x=1744980497; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/uUhACwZlOE2GToixSeEf4eAlE3fOBpPw4pGGk5hedw=;
-        b=hn/r5F90GZMWmEtWsK9eJJ9u2jwdS0fr9shaPXHIwXS/XlZhl++5XQBY15nuF498Mi
-         R3XV+ce0lW41shNchYQDsbinkQyx7p/4MO4jcfWbdQWA2h/Nssnn8q9u+FWpmgd/5+dd
-         tUlrYdmpa4KD+DUXlvmjn9mlqc2SJIAEtQbWUwcFBGQSADhAQr5jmtVDSWBGmKlSNNg2
-         bRz1OLlkN1TmG2qCpcY1OXa/WIiJnMEjlkmpWcybp/nkMyUg7oz0AcIuCTnnFdmMGigF
-         tN5TXx18zw0Ob3vZdnzSfhqCsngrHOcjf7U08JBHQGlPat0hONQj9G0t0FePZ6sMrQyb
-         EltA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744375697; x=1744980497;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/uUhACwZlOE2GToixSeEf4eAlE3fOBpPw4pGGk5hedw=;
-        b=TQpYxLScjbEX530W7BBiCJP20K7k2oKMFH+RLqHO6pA41Tbsy/ZaH45rG4cTLeoza9
-         EbCz+sxriuaLotZha5jBpKFhp1tXB0XvRHEd29Q1lRGQfQ/W2WxDhVywVRN7nqI1AKEP
-         SHnfCsRZVVwAv0E/GPvWXCFox0xuTO+283+ESTVyf7yUdb8BENAarKu+/RxJAkvKhr3x
-         xFPv7kzeRZ4SW7DCnFFBPOAZ295QEdQQrCOJizxaqPw/LiSCjiyC8DgkDfil+onuHsCo
-         QFzGCzrPUpPXC/7SpwcPIKlxaH5gq7mFqjOxb3X7+MchfFuB6/LVBQZuDFSCICUr4sAQ
-         GVig==
-X-Forwarded-Encrypted: i=1; AJvYcCW+zcH4FpwGAY6pbKgJwF19JAz7nCoSjnPRlfGA7OYePlEV/gKPm8P+qTFeMurdzV1eqkdPg89xem5VyCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhMRDW9Of7gN0eARmi/ox8DNGPkXj0zilbP7PwKMYFv7rrolQs
-	hFCkZYBbrcvIvO8EA9mNeML4/B5yqf4slVcar5rsVyND0otBydPdu4xvgHF00MasXekzlK7SjjP
-	CUIcaL31dW5h5P3KH2ml0cfpdK4k=
-X-Gm-Gg: ASbGnctRUTZ23mY4P1Gf9yXChmk3soT7SvBGKFgTigKCzZfRaL1+Riw2qcwBOZnUlfy
-	bTVS5jPILR78aFGRgyw9PWmsf5GlBh8Fo3zLzBUOKmYUR3GZAGXV3h4Yd8acyKRisO9Yixf0EZd
-	602krd6PhOjdYWjnkuHdu9og==
-X-Google-Smtp-Source: AGHT+IENqg2TMgVvXnFD8HPwGEygChGNKLbwW1vPhSEy0Hge9XMVbW5fpxQYCipcWET9fpnnP8CwQ0J5aummKNhaga8=
-X-Received: by 2002:a17:907:6ea4:b0:abf:7636:3cab with SMTP id
- a640c23a62f3a-acad34c6e2cmr210546066b.29.1744375696469; Fri, 11 Apr 2025
- 05:48:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ikEu5Lgh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744375733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TrutyA31aFwEpX5Hu60jTx9GaJXm6qHgLzII0vBWWqU=;
+	b=ikEu5Lghf/10uuC8e66HHmGmyM2k/bZgvCOaoPDsu43gPVf5rrg5Jcv3loK89Z6xD/ZzlS
+	1ONrnOWjcokpehl9vRI2ZsSnzMuAtcS3nWw4vSO4t5VVqbAeGfSZEE/i2yw66EmQ77olnH
+	VRgU6082Ae3JzqcqXeK6XaN7SyfYKAU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-449-9lGNpQCmNfK6zLJmOCGtyA-1; Fri,
+ 11 Apr 2025 08:48:49 -0400
+X-MC-Unique: 9lGNpQCmNfK6zLJmOCGtyA-1
+X-Mimecast-MFC-AGG-ID: 9lGNpQCmNfK6zLJmOCGtyA_1744375727
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2E9F180025F;
+	Fri, 11 Apr 2025 12:48:46 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.222])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 714E71956094;
+	Fri, 11 Apr 2025 12:48:40 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 11 Apr 2025 14:48:11 +0200 (CEST)
+Date: Fri, 11 Apr 2025 14:48:03 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: Re: [PATCHv2 perf/core 1/2] uprobes/x86: Add support to emulate nop
+ instructions
+Message-ID: <20250411124802.GE5322@redhat.com>
+References: <20250411121756.567274-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z/bA4tMF5uKLe55p@ubuntu> <CAHp75Vd0PUFv_tigmKp7MEiOOuHpFhB_i8u42jZdQ1jajjq0rw@mail.gmail.com>
- <b4904b21-0a41-43f6-b386-dea4e27c7a27@stanley.mountain>
-In-Reply-To: <b4904b21-0a41-43f6-b386-dea4e27c7a27@stanley.mountain>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 11 Apr 2025 15:47:40 +0300
-X-Gm-Features: ATxdqUF-_H-8QqtApbiHgqOdbAIohEab_xD36YpEQTHp3CadLWW5d2dKWwCOkD4
-Message-ID: <CAHp75VehJd4FUXBJSJh35a6KF3Qr2eBG6PiNogZ1m9SzBph0Ow@mail.gmail.com>
-Subject: Re: [PATCH] staging: rtl8723bs: Replace `& 0xfff` with `% 4096u`
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>, outreachy@lists.linux.dev, 
-	julia.lawall@inria.fr, gregkh@linuxfoundation.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	david.laight.linux@gmail.com, andy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411121756.567274-1-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Fri, Apr 11, 2025 at 1:37=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
-> On Thu, Apr 10, 2025 at 08:43:53PM +0300, Andy Shevchenko wrote:
-> >
-> > > $ make drivers/staging/rtl8723bs/core/rtw_xmit.o
-> > > $ cmp rtw_xmit_before.o rtw_xmit_after.o
-> >
-> > cmp is good but not good enough in general. Here it shows the 1:1
-> > binary, but in some cases code can be the same, while binaries are
-> > different. To make sure the code is the same use the bloat-o-meter
-> > tool instead.
+On 04/11, Jiri Olsa wrote:
 >
-> I don't understand what you're saying at all.  cmp shows that the compile=
-r
-> was automaticall tanslating the "& 0xfff" into "% 04096u" so the resultin=
-g
-> object files are exactly the same.
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -840,6 +840,12 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+>  	insn_byte_t p;
+>  	int i;
+>
+> +	/* x86_nops[i]; same as jmp with .offs = 0 */
+> +	for (i = 1; i <= ASM_NOP_MAX; ++i) {
+> +		if (!memcmp(insn->kaddr, x86_nops[i], i))
+> +			goto setup;
+> +	}
 
-There is a possibility that the compiler changes the code to the
-equivalent and cmp will break, bloat-o-meter will check at least what
-happened to the size of the *code*. object file is not only a code. It
-may also contain debug symbols and other stuff which may break cmp,
-while the code can be *the same*.
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-> ./scripts/bloat-o-meter just looks at the sizes so it's less useful in
-> this case.
-
-
-
---=20
-With Best Regards,
-Andy Shevchenko
