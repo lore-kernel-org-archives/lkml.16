@@ -1,156 +1,151 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D38626FA47;
-	Fri, 11 Apr 2025 07:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EA01ADC69
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744355825; cv=none; b=dnLtquWfJMGsiAr0chzeweGNyNOck6pzCBAl54OHvIFS9NBn9ROfXrEPgtdlBPo46leYpGTwqWME+myHNGrtc7h2p6yPH/hwJ+2FGbKcr9vfIvAAw3qcZtZKkplauUNB0KWIpWl8mVLypjHkfO6x0UKrolEDv5R5kmZl7VyI1hY=
+	t=1744356067; cv=none; b=ZXZiTsCFAeSjNrAYe9naw+g2Kle7a4aLluamNq/3fGeYPZx4LOOnbQ0lHVu8kNWhJsp604AnmGTUXw6CXVbTaBR4EOBBCN9yDdoz66kjtCy6TNhIxmReqO/jKKJ9zxNlwT5Nbq2xINaxXGVG88kFfr+FHx147y+VSAIxVfOvEOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744355825; c=relaxed/simple;
-	bh=rcR2zyimgt9f04I1InrGGFxvSbaEobKZB/d5wJ3F9B0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=e6hCACLB+8sNBtqcgEUTtyW3kqNDZasJPI+i/LbRyZadbzU2oEmN1c0uDOH/ZT0ZuBy5nNbuabbSccn1WRGZzSfJQeBHeC7DpnOeMTtKX/aY90WzIbgFJtrk+w0g7tv8PhBr3a4qgVJLg55a70+M2GMlCyKfM4CPJpQlHEwiMHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V/vG/JOO; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744356067; c=relaxed/simple;
+	bh=tfY0+aiphqwjINKWSldhfBgZGc6Bs+gu2iidj5ZXeew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oaEia8AorAXCHixY0ymSY2/C80WTxkSvjsIns2HVSGOru1J3Wja1Yzu5FtshrSikDexSVtFlOqjCzBQyvP/lsccmiPGmDu8OR+LmHYWtEs5LJlZ1I7kG5CpxlveH3/7PkhQyELiv0GYJdPd4c0XnpPyYPes+wy5m9Q/uJuFgBQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kl5wWprz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V/vG/JOO"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5Ksn6013871;
-	Fri, 11 Apr 2025 07:16:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yGZ60w+aUSnPgf+eMvzcULIVP/4egO2dKsVfAMyddWg=; b=V/vG/JOOIBNTrk35
-	vScIPUH0MfMfPAE2moJcNE50LWKgJVcClyrx1eJLlulJvMHSeKpawi9Wn7hgl1MJ
-	QenbobSYa7oUFRFAd8WvYPVIU9fkPJ0c4kpv2Qisq+vk7Oy+TcjzCJUphIvI4FJk
-	1EaByyBccmuZxsq30xf+Qo8JkKMGlRVezQlrywTUJb2i7fwOuddPQxOMp2Bd1BiC
-	okkEAXhI1cHsk6BJvdTjKNYZrT3C+sVo/mZua/eXbHFShjXjWyoPvmbspZAqP12d
-	FODM5I0rVtTQ8LI2n37YUdFalLMjh9ZMEWzAeh5rq6na5PsUpzEzm02J4aRJryc/
-	D6d3jQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbehkmf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 07:16:59 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53B7Gwub007245
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 07:16:58 GMT
-Received: from [10.218.22.7] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 11 Apr
- 2025 00:16:51 -0700
-Message-ID: <44dad3b5-ea3d-47db-8aca-8f67294fced9@quicinc.com>
-Date: Fri, 11 Apr 2025 12:46:47 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kl5wWprz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744356063;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gU+hARZZfkB6r2YbUGlr1S1PdLPrDG1XB/07xKaVaWg=;
+	b=Kl5wWprzx4GotgHjVuqX3FRjqgSCgSN2+mV0gdEjO5uwwGwwg1OaB76Oq76Beq1fZnIPQC
+	c8SZbbTFrbF2/M1GVZQ/ozd16x2c7q6a3gOLMNhu9Ylgniy3q+QVjuWQNOBe00znbGSDaX
+	p4mUuQj0UQyRwJ+AHi+YJwT3nYYOQIE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-629-u9Q63wI9MtGkzrklnm8rBQ-1; Fri, 11 Apr 2025 03:21:02 -0400
+X-MC-Unique: u9Q63wI9MtGkzrklnm8rBQ-1
+X-Mimecast-MFC-AGG-ID: u9Q63wI9MtGkzrklnm8rBQ_1744356061
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39130f02631so637108f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:21:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744356061; x=1744960861;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gU+hARZZfkB6r2YbUGlr1S1PdLPrDG1XB/07xKaVaWg=;
+        b=djJisRNPjwaumoWugEPN/WxXMJLx2EIsnojR1MmaBGuaVMB4WibtFurhtB8rvnukJE
+         hlcyPBQueA8hZPMUuuJnPi6RtlPw2yogm2D0q4f0Hkc/+CxvIatv2kTd3S5PKAC3SdKF
+         XkXzG/BjQApTO5EaF4JeaVfn4bLQxGvzv6LTtwnUDbQYfJ4PhrkKXs4+q8oiXcZRdiOG
+         9YmNucoJwoICouJ1pZpiV9ofPlKnMLIIUfcgVW3ncyijLwKRVbsJnJGZ1hKzyNvZsLfa
+         /b464xB3OBCzjfmfLNA55QLjtF7uXhD19RB6JvH8MeSmfpahnO9VRY7EumY1qUPj3jau
+         l2yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKkUOVLc1SvB/l/kXCCZtf6L3jLVDsfBzKDR1pJ9Zx87W8lnrs5MZLr4e8SHWu/60rInkndEuHDAQMb6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrpsZZIFDXph+PqpAaWrUd1HV9AQMHeCpCMrMRUXKyGyHAhCk2
+	nJj7nqYifTNRpeey1VUsffNU+k1kRt6c38Mfa29IjvPOMmWMNp24fNmvPK1FSgG8OsuOzGWrgUu
+	7YuqJ4p0lBpdBDG7Z6O3VBAn7T0JBKxb0LZGRoA1N8HgqKMbLaCkgSoBY8vdziw==
+X-Gm-Gg: ASbGncs2fUNWTa1vsgz1YUdV9p7IHtznDBGNqF9lbgVyT9VsUWB+MU7QMhV2/zVNgjI
+	sbxkIO9yWjUGFPi+wOWcBKkUnPcPwOLRwxhKazW/ECEkPvlNC6SSxEodZxt2V6StI0R0lSI/JYg
+	SS/VNaTxC0QRCUMJdY1aYs3HY/MtvTnp1oSBz2K9p06JQx8CS8LhmjLAZI+TO/Gu83OcnTbEVzE
+	a6kookQlPt1IxjBXEq9rBFYG2SLBl8GLKYaWBNsuqYIUwbXCI7Al4vvBRwS4T54o17TkWNUTpqN
+	KCnzqQQJsVDIBARr2CS+Q49fNsqRDU1X1YahMzY9X87SaDYGdhcSOCfxIM8R
+X-Received: by 2002:a5d:6da5:0:b0:397:3900:ef8c with SMTP id ffacd0b85a97d-39eaaeaa1aemr1401791f8f.35.1744356061098;
+        Fri, 11 Apr 2025 00:21:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE2jtPdv16xG1nJWEPcEfUEGfKBbRody2tYk5FP7adbLH4loS3sGojYe46GWuT4PaxDCOT5bQ==
+X-Received: by 2002:a5d:6da5:0:b0:397:3900:ef8c with SMTP id ffacd0b85a97d-39eaaeaa1aemr1401756f8f.35.1744356060639;
+        Fri, 11 Apr 2025 00:21:00 -0700 (PDT)
+Received: from sgarzare-redhat (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cf42sm1146799f8f.64.2025.04.11.00.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 00:20:59 -0700 (PDT)
+Date: Fri, 11 Apr 2025 09:20:57 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] char: tpm: tpm-buf: Add sanity check fallback in read
+ helpers
+Message-ID: <6w3lsskngim3x6lx7akwfly3hrrzxyi4pq4itwyye3rywlqum7@oiwkjmvtawl7>
+References: <20250410103442.17746-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 15/18] arm64: dts: qcom: Add MXC power domain to
- videocc node on SM8650
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>
-References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
- <20250327-videocc-pll-multi-pd-voting-v3-15-895fafd62627@quicinc.com>
- <12986cda-99eb-4a1b-a97b-544ea01e2dbb@oss.qualcomm.com>
-Content-Language: en-US
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <12986cda-99eb-4a1b-a97b-544ea01e2dbb@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: b6d0Xt6LXxBq9MxDSkBpg3KPP3KMUfZY
-X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f8c1eb cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=6YLGWxb0gomxboG-hEAA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: b6d0Xt6LXxBq9MxDSkBpg3KPP3KMUfZY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=997 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110049
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250410103442.17746-1-purvayeshi550@gmail.com>
 
+On Thu, Apr 10, 2025 at 04:04:42PM +0530, Purva Yeshi wrote:
+>Fix Smatch-detected issue:
+>
+>drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
+>uninitialized symbol 'value'.
+>drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
+>uninitialized symbol 'value'.
+>drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
+>uninitialized symbol 'value'.
+>
+>Zero-initialize the return values in tpm_buf_read_u8(),
+>tpm_buf_read_u16(), and tpm_buf_read_u32() to guard against
+>uninitialized data in case of a boundary overflow.
+>
+>Add defensive initialization ensures the return values are
+>always defined, preventing undefined behavior if the unexpected
+>happens.
+>
+>Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>---
+>V1 - https://lore.kernel.org/all/20250409205536.210202-1-purvayeshi550@gmail.com/
+>V2 - Update commit message to clarify patch adds a sanity check
 
+LGTM!
 
-On 4/1/2025 8:57 PM, Konrad Dybcio wrote:
-> On 3/27/25 10:52 AM, Jagadeesh Kona wrote:
->> Videocc requires both MMCX and MXC rails to be powered ON to configure
->> the video PLLs on SM8650 platform. Hence add MXC power domain to videocc
->> node on SM8650.
->>
->> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
->> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sm8650.dtsi | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
->> index 818db6ba3b3be99c187512ea4acf2004422f6a18..ad60596b71d25bb0198b26660dc41195a1210a23 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
->> @@ -4959,7 +4959,8 @@ videocc: clock-controller@aaf0000 {
->>  			reg = <0 0x0aaf0000 0 0x10000>;
->>  			clocks = <&bi_tcxo_div2>,
->>  				 <&gcc GCC_VIDEO_AHB_CLK>;
->> -			power-domains = <&rpmhpd RPMHPD_MMCX>;
->> +			power-domains = <&rpmhpd RPMHPD_MMCX>,
->> +					<&rpmhpd RPMHPD_MXC>;
-> 
-> So all other DTs touched in this series reference low_svs in required-opps
-> 
-> Is that an actual requirement? Otherwise since Commit e3e56c050ab6
-> ("soc: qcom: rpmhpd: Make power_on actually enable the domain") we get the
-> first nonzero state, which can be something like low_svs_d2
-> 
-Yes, commit e3e56c050ab6 enables the power-domain at first non-zero level, but in
-some chipsets, the first nonzero state could be retention, which is not sufficient
-for clock controller to operate. So required-opps is needed to ensure the rails are
-at a level above retention for clock controller to operate. low_svs was choosen since
-that is a level that is generally supported across all the chipsets, but low_svs_d2
-may not be supported on some chipsets.
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
-And required-opps is not mandatory for MXC power domain due to commit f0cc5f7cb43f
-(pmdomain: qcom: rpmhpd: Skip retention level for Power Domains), which ensures MXC
-always gets enabled above retention level. But it was added to make number of
-required-opps uniform with the number of power domains based on discussion at [1].
+>
+> drivers/char/tpm/tpm-buf.c | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
+>
+>diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
+>index e49a19fea3bd..dc882fc9fa9e 100644
+>--- a/drivers/char/tpm/tpm-buf.c
+>+++ b/drivers/char/tpm/tpm-buf.c
+>@@ -201,7 +201,7 @@ static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t count, void
+>  */
+> u8 tpm_buf_read_u8(struct tpm_buf *buf, off_t *offset)
+> {
+>-	u8 value;
+>+	u8 value = 0;
+>
+> 	tpm_buf_read(buf, offset, sizeof(value), &value);
+>
+>@@ -218,7 +218,7 @@ EXPORT_SYMBOL_GPL(tpm_buf_read_u8);
+>  */
+> u16 tpm_buf_read_u16(struct tpm_buf *buf, off_t *offset)
+> {
+>-	u16 value;
+>+	u16 value = 0;
+>
+> 	tpm_buf_read(buf, offset, sizeof(value), &value);
+>
+>@@ -235,7 +235,7 @@ EXPORT_SYMBOL_GPL(tpm_buf_read_u16);
+>  */
+> u32 tpm_buf_read_u32(struct tpm_buf *buf, off_t *offset)
+> {
+>-	u32 value;
+>+	u32 value = 0;
+>
+> 	tpm_buf_read(buf, offset, sizeof(value), &value);
+>
+>-- 
+>2.34.1
+>
+>
 
-[1]: https://lore.kernel.org/all/eoqqz5hyyq6ej5uo6phijbeu5qafbpfxlnreyzzcyfw23pl2yq@ftxnasc6sr2t/#t
-
-Thanks,
-Jagadeesh
-
-> Konrad
