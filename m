@@ -1,37 +1,37 @@
 Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03462147E6;
-	Fri, 11 Apr 2025 01:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FFE26FA6B
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744333753; cv=none; b=rHp7M/mEOWhRFir/r/oT9h+HdQ/IMEcKSisycz/qMmmrgoVdSvKJrXR/ui/C3p9D6RF4xR4YW+Mz604elrgeSuez/bnT+d/WuF5ZZ0+2a9fi4D2ttuLlRXr1IcbKQtDcvX1zcWquQNerwjUXJJGSlH0aOjMDCC6KQnVsRJf/3TE=
+	t=1744333753; cv=none; b=LqBjejSZ+geEPtV6MmR93aVGPNZ92YDd1ABzeUJ0dbdCwwaWbdIOFkwtwVZJ5f7bRZW3lyawOtivjTV3FOOwXu3WQtdBqeXZgR/z0/2hjEalKPZjlO54X6wucvoZnO6Foc4aNZEtgT9kI3DUsy7F4czWWuajLt9pVAWCTZ2F9gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744333753; c=relaxed/simple;
-	bh=zZLrOshl7jtZigXcVzuG4B997DqzO0hNq3/wxtw6lag=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=B5AzL7TroAvWew0QS6Hq96HDjldpC9+PWKjnM1UnT4Hz0BY/H7hnaIqf/lYzJN1nXDiYpFYtde6RcSiNp1qE3HvWZSWV0LWC1vocjQR9Btjy7r2+3RrH8v9qIIAkErI7R7UgQ75JFMq4yjDxdXRWjWoHAlSirDT3Xm7PwoNzqi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=XqOdX6U3; arc=none smtp.client-ip=203.29.241.158
+	bh=dBx/Bplbl5f0nTzwDTbIYSziOVoFjQRy/oB8cwrUId4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qPCwsvQtG5AFV8qf8UpyiaGt4jT7xp5Q/dEHAOEUXCIQSUWsVW5r9TD/Jv5kDTv6zgv6YcaZtZWJ/xKpDOANRnF63yn5IWbMgwoYpsYjGFv4AkkiA5xrXp7z9oH7JDJ5PnACBt402z08OD5md7SpgGL2VrY1nP6J/z7shT6ItIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=KXybtiEp; arc=none smtp.client-ip=203.29.241.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="XqOdX6U3"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="KXybtiEp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1744333747;
-	bh=owww72mo7rRa4HGyljLXSQgsg6KGAlIxseqdPKYlAm0=;
-	h=From:Subject:Date:To:Cc;
-	b=XqOdX6U3Cq0OakPdb4QSUC556jn3yncHePtbEtu0jYQLrwHC7TKOeZ0RPYiMGHHvW
-	 TN0bxeNNvhlBtp8tXolu6w0pxB+HhyYZ45q3WtAOZW5BZTCpFjl3cIl/AImVPxYzBY
-	 +tf2NTr8dXALLFL4N+70njc+TxSuzcXFxRqqHgp+q+hm772phcDm4IBaKG/iKOJj6g
-	 Jys/+azHbxTEL3e+t8R5XJN3hW1BGC7ea8rXFNmoMAGI/l8iu5GcSCuTHE4FaW9AIK
-	 fn07ZDMEA+xhsjsK2Tw8+Pn1c3SciinO7Dkp1vZnUNujcZCmD1vgZUjxMVbdgD/dQJ
-	 hJYJLUonN45MA==
+	d=codeconstruct.com.au; s=2022a; t=1744333749;
+	bh=Kl9cNe70ebuqUBsGg3wclmdapJ/BbYZ4gItW6jHIc7A=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=KXybtiEpVaRs6sAGdOtnmP9rQxsNzrAWJmdNkLK8ew7d8QxZs4QbeawJkPJVvlGYE
+	 kqYN+QPIEr2LOIxkxWgr2NjAowCKjUwCHvNbLmMSyLR7qUkPolYIgpnpWyUpupKQsJ
+	 wxAzji6m4w24QEKZHRAbdORveQcLoi+OWJVPb4BDSrxBYVfHp2JrTWXny7XinCq+Tu
+	 Vcz/WVUl33+nQkgXC1Ji/Zpx2O+G9Fw1dMcujg6GCyxCOXGLc+cChI2/R6Zi+0025x
+	 9OnfmrhQZ2TQTXGqaW6izUHRwuev4+qYKqQQe8ekXqSEjAY3YwmSfMBrtXgZwPtOjP
+	 wq48PWVT/MeMw==
 Received: from [127.0.1.1] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 8D5237D705;
-	Fri, 11 Apr 2025 09:09:04 +0800 (AWST)
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 4EECF7D712;
+	Fri, 11 Apr 2025 09:09:09 +0800 (AWST)
 From: Andrew Jeffery <andrew@codeconstruct.com.au>
-Subject: [PATCH 0/7] soc: aspeed: lpc-snoop: Miscellaneous fixes
-Date: Fri, 11 Apr 2025 10:38:30 +0930
-Message-Id: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
+Date: Fri, 11 Apr 2025 10:38:33 +0930
+Subject: [PATCH 3/7] soc: aspeed: lpc-snoop: Ensure model_data is valid
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAI5r+GcC/y2M0QrCMBAEf6Xccw/SxELxV8SHkKx6IEnMWRFK/
- 91DfZxZZjdSdIHScdio4yUqtRhM40DpFssVLNmYvPOzO7iJozYg870l1lJr44u8oYw5+2UJOYY
- YyOLW8R2sPZ1/3PFY7f/5l/v+AWm6cWJ9AAAA
-X-Change-ID: 20250401-aspeed-lpc-snoop-fixes-e5d2883da3a3
+Message-Id: <20250411-aspeed-lpc-snoop-fixes-v1-3-64f522e3ad6f@codeconstruct.com.au>
+References: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
+In-Reply-To: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
 To: linux-aspeed@lists.ozlabs.org
 Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>, 
  Jean Delvare <jdelvare@suse.de>, 
@@ -51,42 +50,52 @@ Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>,
  Andrew Geissler <geissonator@yahoo.com>, 
  Ninad Palsule <ninad@linux.ibm.com>, Patrick Venture <venture@google.com>, 
  Robert Lippert <roblip@gmail.com>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@codeconstruct.com.au>, 
- stable@vger.kernel.org
+ linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@codeconstruct.com.au>
 X-Mailer: b4 0.14.2
 
-Henry's bug[1] and fix[2] prompted some further inspection by
-Jean.
+of_device_get_match_data() can return NULL, though shouldn't in current
+circumstances. Regardless, initialise model_data closer to use so it's
+clear we need to test for validity prior to dereferencing.
 
-This series provides fixes for the remaining issues Jean identified, as
-well as reworking the channel paths to reduce cleanup required in error
-paths. It is based on the tree at[3].
-
-Lightly tested on an AST2600 EVB. Further testing on platforms
-designed around the snoop device appreciated.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=219934
-[2]: https://lore.kernel.org/all/20250401074647.21300-1-bsdhenrymartin@gmail.com/
-[3]: https://git.kernel.org/pub/scm/linux/kernel/git/arj/bmc.git/log/?h=aspeed/drivers
-
+Fixes: 2dee584bc9e3 ("drivers/misc: (aspeed-lpc-snoop): Add ast2400 to compat")
 Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 ---
-Andrew Jeffery (7):
-      soc: aspeed: lpc-snoop: Cleanup resources in stack-order
-      soc: aspeed: lpc-snoop: Don't disable channels that aren't enabled
-      soc: aspeed: lpc-snoop: Ensure model_data is valid
-      soc: aspeed: lpc-snoop: Constrain parameters in channel paths
-      soc: aspeed: lpc-snoop: Rename 'channel' to 'index' in channel paths
-      soc: aspeed: lpc-snoop: Rearrange channel paths
-      soc: aspeed: lpc-snoop: Lift channel config to const structs
+ drivers/soc/aspeed/aspeed-lpc-snoop.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
- drivers/soc/aspeed/aspeed-lpc-snoop.c | 149 ++++++++++++++++++++--------------
- 1 file changed, 88 insertions(+), 61 deletions(-)
----
-base-commit: f3089a4fc24777ea2fccdf4ffc84732b1da65bdc
-change-id: 20250401-aspeed-lpc-snoop-fixes-e5d2883da3a3
+diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+index e9d9a8e60a6f062c0b53c9c02e5d73768453998d..28f034b8a3b7226efe20cbe30a7da0c2b49fbd96 100644
+--- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
++++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+@@ -186,10 +186,10 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+ 				   struct device *dev,
+ 				   int channel, u16 lpc_port)
+ {
+-	int rc = 0;
++	const struct aspeed_lpc_snoop_model_data *model_data;
+ 	u32 hicr5_en, snpwadr_mask, snpwadr_shift, hicrb_en;
+-	const struct aspeed_lpc_snoop_model_data *model_data =
+-		of_device_get_match_data(dev);
++	int rc = 0;
++
+ 
+ 	if (lpc_snoop->chan[channel].enabled)
+ 		return -EBUSY;
+@@ -236,9 +236,10 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+ 	regmap_update_bits(lpc_snoop->regmap, HICR5, hicr5_en, hicr5_en);
+ 	regmap_update_bits(lpc_snoop->regmap, SNPWADR, snpwadr_mask,
+ 			   lpc_port << snpwadr_shift);
+-	if (model_data->has_hicrb_ensnp)
+-		regmap_update_bits(lpc_snoop->regmap, HICRB,
+-				hicrb_en, hicrb_en);
++
++	model_data = of_device_get_match_data(dev);
++	if (model_data && model_data->has_hicrb_ensnp)
++		regmap_update_bits(lpc_snoop->regmap, HICRB, hicrb_en, hicrb_en);
+ 
+ 	lpc_snoop->chan[channel].enabled = true;
+ 
 
-Best regards,
 -- 
-Andrew Jeffery <andrew@codeconstruct.com.au>
+2.39.5
 
