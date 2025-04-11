@@ -1,230 +1,208 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BA7293B77
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD28290BCF
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361016; cv=none; b=E5EkZCrotzJvBHWU9C8LV9y3pQdKEyZVgCtQafILR9U+GqCiJvnvyL71i4n1BYdONpr2osGG8fCfNCYpgQqFhu65tRL4LuX5H1KcXb93G1nUKaAX36pU6fnw/rifbEgKVqPsCVVxna/jhFWI7t6V8oFWMOGwWdYjYR9Xv04OooQ=
+	t=1744361082; cv=none; b=gV/DPmxbX6hg0gg68dI4g0aM7zeSUcDyydXtr1Nuivyq1Th5iDG4zdOaY6AVg4aTcL9oaL4I49obLpMZ7ChEuybXhREzajF5M1CNieto6Hc0XAWL0r6ZB1zau4L4sSPRwqBaB8sTxMOObKtcSMnhdKv19CQLGGF3wYbruYgsTr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361016; c=relaxed/simple;
-	bh=ieQM3Fa2DG+TOL3wCqRWS+Fh9+UNPjyV4AvtFmtTjZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZkNPgO1TSbc10gvHQNipRicG6uMANyNxSGE4dEVNTa34tfFdUd0NrPWCkzJEL3Up5BEiymPGhgTMG5nKAvTZXwX/+XP3gxJp2dKlyZMRQKEasByeRjlDHNLiyJGsXybrEmH1SacwDJ847YDwTUhZdk5+ecl1OjiWLykqckhooM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s25WrjgD; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744361082; c=relaxed/simple;
+	bh=uQms5T9GBYZwPgvuRXFc7lqMU5m7t7Nv9XiicuMUwDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I9gb4/9Ro5tY6/Xy10h9KWNmjO0SKaC4B9cWYsVWwKqcLqmh+Xw0A2UAwkI0MkwBS5ICYZ51Zk+PPxV3AKvnn9bkgEHnK9gaJxqcw+YS0Xg3M9s04FcmyidvrzLSSfsomTVt0XvjukaFOcg7ceM7kp80a8rcVXYHIjl3LvQC3FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dq7bU5a0; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s25WrjgD"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso2107442a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:43:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dq7bU5a0"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso11698635e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:44:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744361012; x=1744965812; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=167NBAxwapel9/w4hU5o76Q6vm0N2JeJ45n3Xz0bAG0=;
-        b=s25WrjgDZGZBRpOYqx5dbNkiNui1iCBq23+08qrze40laHYkGRPxp/cIaSUe9hP3f+
-         9hX0vnqUqPPdjqZyFBZzQvmUbj2PoUxKJEJQhdM3fEkZ0QlAWTUidnWr6cOY1oVeqI/Q
-         hPkJfegl1gmE1xj8T5QlspyXZXapX4AHtOMQhse71hXVACPa/cmJMLe2tdCvJhhY/+Uq
-         D6VsWkSroH+4hs1shfMNaS1qSzNLBj3eaQWBJQUpNAfB6lI6TdBh6CcGVI8leKM+2ieL
-         UPir3mssE1ipXFiOeaPolfCFs+6+GNHridDNnyz1oydqi893tR+1NWkYWwiljPLmSqee
-         l0oA==
+        d=suse.com; s=google; t=1744361078; x=1744965878; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ym+swB0IGqW3GD8TUu3RUZwOm8qCGuP91NxIKul8xpM=;
+        b=dq7bU5a0KSFRSffiEK5ouQV9VLS5yS93sRok4aCUxCu/6rwFfH5ZnradTr163QTDrQ
+         Twaw8EKp6vlPa4QOqXH/l8LJPgYhZP8r55aK/MQWlEuF3m1n0SSRPyx5M8Js+dffd2Hw
+         J95jZsU8bqDJ10EDZrrzGRqLS0R829vJ6uvVgJXqfj71d26MwGmNO9/oXhL6CjtDU4fE
+         OdNP8SqXsVal6GGcXtOTeAJwIlkd60gurg0gOaRCClbAWGf2ByYOYhRV1fomQaSfHxHO
+         HS+lVAAWzKW/z/c08zwfhZGIhRfrM+SxYhweuoBXvulTbcHf0rVBcjI7+stlL6pOSweo
+         2KDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744361012; x=1744965812;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1744361078; x=1744965878;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=167NBAxwapel9/w4hU5o76Q6vm0N2JeJ45n3Xz0bAG0=;
-        b=JvoGpaC1nZuMw7e3eqcRCSS7uNRaaiAZLvnsJDQsHs2Tvlj8TA82SjRy7sVGYGaUFc
-         95GqXneWn/Yz6IIBDWpyhRVUaJVZZ9wksE+AQNkIe0yGsQTGASx3+niPZ3/8FvnitJYh
-         zjnu6p0XmQL8kJtBfOBKpZGG/B4ZHq6j5Fcu9foKA0XsIQ3GuNHqnoxvJwG5t8hUJaV3
-         dhOt7iIsTmD39ESVaPr80chz4NyKsS8G8oMeJEfXIRgIBxhGz8NqL6UQMKH7D2NwNrGA
-         SDrv8TynetG/v8gLwzx5QDVBfR7Y52ADlEAEyy85ZgQSJkVk5/LDFBs1Xx/VO/xltG5U
-         CiFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwl4xWgePPeZRtlWH6+EWmf7miqCPz9yjIR432aXkc6SFdIOqjoDkh9TCA058BK9MmLuTUU5n159vWl88=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsN2QZNnwJJ7QkK8MzQ+E0L2Lmhr7JX7eVCQF16fGb5uv4oUEF
-	HxHt0WqauDc/0CRW0W2Rd5SD37/QqcFpITqSorTfpLYMiSNswbfEFJB3xDQVDRc=
-X-Gm-Gg: ASbGncs1V6QNQ32MM5fyC9DX8IRZvkLIxmzqOczxiS4+gOS0ME34AHsTrNj6FjyR1Sw
-	pYfiZ0rA3SdLpQXLZyrK4v5Hw5yUyGOyAQtNgmYF7iC1wh+RTq7o4NgIGO7NZfQBJuyaVdunU+4
-	lsK1kgNdGvUb6tdYN8Pu+WGBpZtU0PNdSKE2XytHaKl5IvzaFhXLYTbbpQ8E4jqzXuJKMGp5AAh
-	heW/E/dnQFTqabM7IR0BNFE1/ZJjFFcVYclLvLcaA31Z+2btT+micwyu34mzyJ4BcYSDiSv2igl
-	5K0bbEOXqEiMPkSlcN3jPSN0Ul8NS1oBjoTRmMCY3wtI98TKM7lgdCCIz60RLhk=
-X-Google-Smtp-Source: AGHT+IFn6T/u+03XqCaTEMib8NLieFyPrI8ch7ele4xHb+XEXz8Ti8RBMogOoj3tdmlCFeXtc3lXig==
-X-Received: by 2002:a05:6402:42d5:b0:5ed:1400:f879 with SMTP id 4fb4d7f45d1cf-5f37012b286mr1299928a12.32.1744361012123;
-        Fri, 11 Apr 2025 01:43:32 -0700 (PDT)
-Received: from linaro.org ([2a02:2454:ff21:ef30:9d85:9567:3e11:a24d])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f52a4aasm633539a12.78.2025.04.11.01.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 01:43:30 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:43:26 +0200
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Alexey Klimov <alexey.klimov@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: Remove unnecessary MM_[UD]L audio
- routes
-Message-ID: <Z_jWLq6qJuGH3sNx@linaro.org>
-References: <20250411-cleanup-mm-routes-v1-1-ba98f653aa69@fairphone.com>
+        bh=ym+swB0IGqW3GD8TUu3RUZwOm8qCGuP91NxIKul8xpM=;
+        b=teQRKXXsmWc+FXVaZnY1EG7OqeftwvaxgMt5GIvdwoYKaGwlTAbRvL+C74TBPvWGEP
+         YwCLsAAEVj5XNDNijuRXzmrJYDtXvy7jmjShtEQwyAV9o9Q55HXFdcEMVp0aSLmdjx6a
+         H329h5owaI+YX3uUu2XzPlwXtmY7zXS8qgrnksBt7hhZ07nB6O5+Ezv78WW90L85FxFv
+         2IIPrHysxa5zBRAUzloCUIL0LzS4fPoHfpw028R1+FXFVk2Jv8shAo+GiwCv3kOkEWC9
+         Hc/qOylnSzyvsfkqdFIA6B15x+LH7Xl3Hh+FSIsIE/xO+5y1uPxhRuq9/RalgNgV2pVl
+         G/RA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5BYyejNRcxkdeF9uqMB87ffOVhHLHtsoMFp7+3VfFKfM2t4ZRvl9cEo3SCCibYyJzjOYbZ4Mk1MJTH84=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9j6th/ZhhYtrGyDd9IpXUU9WqsM5lqwOKkjHhP9KnRlVwlpXS
+	wBt5xNEP1+Bb4C01MZLd+xjwrGA+ha9T7pErRZAkcUM76O0XAjyZ+dydiRpjB3I=
+X-Gm-Gg: ASbGncucPxlh1OnaYSQ/Py5bLu2s2f06axQS9bHXq2ZCAj4Yy/i0Uo6tFlcWKzJziY8
+	kfza8d+IhQAVuzJpDw/2+5On8PpwUzDa739opFHdE1v24WAgy2kyBp2a8ki1+u2nkpb6t4KP/HC
+	uHYqtftL6+hOkQ4M7cbhwXfY28uPLkMa468IwtZxEUoBjn+IZeU3OMIKZQa4v3xcExZb3snQyG4
+	Eaz86N8jGvQj1umrkTil8R1F44wTyNqBxtdVRcf+JcXwKnP47nPsp5lXr5mGWaxllEYBPDCrdEQ
+	Ak5l1h6pkVPBKlWc7ZmPHd245Zob7y20yb/Csw==
+X-Google-Smtp-Source: AGHT+IFKNUhGZrGZqRnXSCGsdpeGUvavp84OjEvM5R0nmvrxT8ATRqB5MuH3sqH0n0cc88cvltPmyw==
+X-Received: by 2002:a05:600c:1e0e:b0:439:8490:d1e5 with SMTP id 5b1f17b1804b1-43f2ea2a1a9mr53082445e9.4.1744361078490;
+        Fri, 11 Apr 2025 01:44:38 -0700 (PDT)
+Received: from [192.168.2.177] ([81.0.8.231])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f206269c8sm82609535e9.16.2025.04.11.01.44.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 01:44:38 -0700 (PDT)
+Message-ID: <25d92af3-5aa4-4090-a60b-fff3bc30fcf4@suse.com>
+Date: Fri, 11 Apr 2025 10:44:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411-cleanup-mm-routes-v1-1-ba98f653aa69@fairphone.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] dt-bindings: power: mediatek: Support Dimensity
+ 1200 MT6893 MTCMOS
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ robh@kernel.org
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org, ulf.hansson@linaro.org,
+ matthias.bgg@gmail.com, fshao@chromium.org, y.oudjana@protonmail.com,
+ wenst@chromium.org, lihongbo22@huawei.com, mandyjh.liu@mediatek.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, kernel@collabora.com
+References: <20250410143944.475773-1-angelogioacchino.delregno@collabora.com>
+ <20250410143944.475773-2-angelogioacchino.delregno@collabora.com>
+Content-Language: en-US, ca-ES, es-ES
+From: Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; keydata=
+ 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
+ PVrr2NoUqi/bxI8fFQJD1jVj8K0=
+In-Reply-To: <20250410143944.475773-2-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-+Cc Srini, Alexey: FYI
 
-On Fri, Apr 11, 2025 at 10:33:29AM +0200, Luca Weiss wrote:
-> Since commit 6fd8d2d275f7 ("ASoC: qcom: qdsp6: Move frontend AIFs to
-> q6asm-dai") from over 4 years ago the audio routes beween MM_DL* +
-> MultiMedia* Playback and MultiMedia* Capture + MM_UL* are not necessary
-> anymore and can be removed from the dts files. It also helps to stop
-> anyone copying these into new dts files.
+
+On 10/04/2025 16:39, AngeloGioacchino Del Regno wrote:
+> Add support for the Power Domains (MTCMOS) integrated into the
+> MediaTek Dimensity 1200 (MT6893) SoC.
 > 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Thanks, I always forgot/postponed making this cleanup. :-)
-
-Reviewed-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 
 > ---
->  arch/arm64/boot/dts/qcom/apq8096-db820c.dts          | 5 +----
->  arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts   | 5 +----
->  arch/arm64/boot/dts/qcom/qrb4210-rb2.dts             | 2 --
->  arch/arm64/boot/dts/qcom/qrb5165-rb5.dts             | 6 +-----
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 6 +-----
->  arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 5 +----
->  arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts     | 5 +----
->  7 files changed, 6 insertions(+), 28 deletions(-)
+>   .../power/mediatek,power-controller.yaml      |  2 ++
+>   .../dt-bindings/power/mediatek,mt6893-power.h | 35 +++++++++++++++++++
+>   2 files changed, 37 insertions(+)
+>   create mode 100644 include/dt-bindings/power/mediatek,mt6893-power.h
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> index e8148b3d6c50c670d6bc8045e42074162dc1c6d9..1089964e6c0d819e166fd5a959f7f1e6fe688d65 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> @@ -1012,10 +1012,7 @@ wcd9335: codec@1,0 {
->  &sound {
->  	compatible = "qcom,apq8096-sndcard";
->  	model = "DB820c";
-> -	audio-routing = "RX_BIAS", "MCLK",
-> -		"MM_DL1",  "MultiMedia1 Playback",
-> -		"MM_DL2",  "MultiMedia2 Playback",
-> -		"MultiMedia3 Capture", "MM_UL3";
-> +	audio-routing = "RX_BIAS", "MCLK";
->  
->  	mm1-dai-link {
->  		link-name = "MultiMedia1";
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts b/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-> index dbad8f57f2fa34575440caa7f0a19d5893efcfbb..d7fa56808747ae1290b884430d5fa5443bdd9be1 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-> +++ b/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-> @@ -156,10 +156,7 @@ &slpi_pil {
->  &sound {
->  	compatible = "qcom,apq8096-sndcard";
->  	model = "gemini";
-> -	audio-routing = "RX_BIAS", "MCLK",
-> -		"MM_DL1",  "MultiMedia1 Playback",
-> -		"MM_DL2",  "MultiMedia2 Playback",
-> -		"MultiMedia3 Capture", "MM_UL3";
-> +	audio-routing = "RX_BIAS", "MCLK";
->  
->  	mm1-dai-link {
->  		link-name = "MultiMedia1";
-> diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-> index d485249bcda44055689b5556eec9dd057b92d0ae..a37860175d2733214f1b257e84d5cb4821033242 100644
-> --- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-> @@ -110,8 +110,6 @@ sound {
->  		pinctrl-0 = <&lpi_i2s2_active>;
->  		pinctrl-names = "default";
->  		model = "Qualcomm-RB2-WSA8815-Speakers-DMIC0";
-> -		audio-routing = "MM_DL1", "MultiMedia1 Playback",
-> -				"MM_DL2", "MultiMedia2 Playback";
->  
->  		mm1-dai-link {
->  			link-name = "MultiMedia1";
-> diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-> index 4cc14ab1b9ea0f92a12a12ef4df1cdc37bf5591c..dcb998b8b05498d8f9a82ff9a984c1e237a61308 100644
-> --- a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-> +++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-> @@ -1053,11 +1053,7 @@ &sound {
->  		"SpkrLeft IN", "WSA_SPK1 OUT",
->  		"SpkrRight IN", "WSA_SPK2 OUT",
->  		"VA DMIC0", "vdd-micb",
-> -		"VA DMIC1", "vdd-micb",
-> -		"MM_DL1",  "MultiMedia1 Playback",
-> -		"MM_DL2",  "MultiMedia2 Playback",
-> -		"MultiMedia3 Capture", "MM_UL3",
-> -		"MM_DL4", "MultiMedia4 Playback";
-> +		"VA DMIC1", "vdd-micb";
->  
->  	mm1-dai-link {
->  		link-name = "MultiMedia1";
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> index 2b2ef4dbad2fc55b27fd176baf1b4205802e1c42..adfd916270055df0a957c573868302e0d77c614d 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> @@ -777,11 +777,7 @@ &quat_mi2s_sd2_active
->  		"DMIC2", "MIC BIAS3",
->  		"DMIC3", "MIC BIAS3",
->  		"SpkrLeft IN", "SPK1 OUT",
-> -		"SpkrRight IN", "SPK2 OUT",
-> -		"MM_DL1",  "MultiMedia1 Playback",
-> -		"MM_DL2",  "MultiMedia2 Playback",
-> -		"MM_DL4",  "MultiMedia4 Playback",
-> -		"MultiMedia3 Capture", "MM_UL3";
-> +		"SpkrRight IN", "SPK2 OUT";
->  
->  	mm1-dai-link {
->  		link-name = "MultiMedia1";
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> index e8012205954e76627febda14ee51ecff9d29e4fb..7677acd08e2d176be932d3f726fe5602cf8d50d1 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> @@ -632,10 +632,7 @@ &sound {
->  		"RX_BIAS", "MCLK",
->  		"AMIC2", "MIC BIAS2",
->  		"SpkrLeft IN", "SPK1 OUT",
-> -		"SpkrRight IN", "SPK2 OUT",
-> -		"MM_DL1",  "MultiMedia1 Playback",
-> -		"MM_DL3",  "MultiMedia3 Playback",
-> -		"MultiMedia2 Capture", "MM_UL2";
-> +		"SpkrRight IN", "SPK2 OUT";
->  
->  	mm1-dai-link {
->  		link-name = "MultiMedia1";
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-> index 26217836c2707ba2f7b0030c9801d7de3a797315..d6d4e7184c5603864668057de79c7497ad361ab3 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-> @@ -445,10 +445,7 @@ &sound {
->  		"RX_BIAS", "MCLK",
->  		"AMIC2", "MIC BIAS2",
->  		"SpkrLeft IN", "SPK1 OUT",
-> -		"SpkrRight IN", "SPK2 OUT",
-> -		"MM_DL1",  "MultiMedia1 Playback",
-> -		"MM_DL3",  "MultiMedia3 Playback",
-> -		"MultiMedia2 Capture", "MM_UL2";
-> +		"SpkrRight IN", "SPK2 OUT";
->  
->  	mm1-dai-link {
->  		link-name = "MultiMedia1";
-> 
-> ---
-> base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
-> change-id: 20250411-cleanup-mm-routes-7b9e92962553
-> 
-> Best regards,
-> -- 
-> Luca Weiss <luca.weiss@fairphone.com>
-> 
+> diff --git a/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml b/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+> index 591a080ca3ff..9c7cc632abee 100644
+> --- a/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+> +++ b/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+> @@ -25,6 +25,7 @@ properties:
+>       enum:
+>         - mediatek,mt6735-power-controller
+>         - mediatek,mt6795-power-controller
+> +      - mediatek,mt6893-power-controller
+>         - mediatek,mt8167-power-controller
+>         - mediatek,mt8173-power-controller
+>         - mediatek,mt8183-power-controller
+> @@ -88,6 +89,7 @@ $defs:
+>           description: |
+>             Power domain index. Valid values are defined in:
+>                 "include/dt-bindings/power/mt6795-power.h" - for MT8167 type power domain.
+> +              "include/dt-bindings/power/mediatek,mt6893-power.h" - for MT6893 type power domain.
+>                 "include/dt-bindings/power/mt8167-power.h" - for MT8167 type power domain.
+>                 "include/dt-bindings/power/mt8173-power.h" - for MT8173 type power domain.
+>                 "include/dt-bindings/power/mt8183-power.h" - for MT8183 type power domain.
+> diff --git a/include/dt-bindings/power/mediatek,mt6893-power.h b/include/dt-bindings/power/mediatek,mt6893-power.h
+> new file mode 100644
+> index 000000000000..aeab51bb2ad8
+> --- /dev/null
+> +++ b/include/dt-bindings/power/mediatek,mt6893-power.h
+> @@ -0,0 +1,35 @@
+> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+> +/*
+> + * Copyright (c) 2025 Collabora Ltd
+> + *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_POWER_MT6893_POWER_H
+> +#define _DT_BINDINGS_POWER_MT6893_POWER_H
+> +
+> +#define MT6893_POWER_DOMAIN_CONN		0
+> +#define MT6893_POWER_DOMAIN_MFG0		1
+> +#define MT6893_POWER_DOMAIN_MFG1		2
+> +#define MT6893_POWER_DOMAIN_MFG2		3
+> +#define MT6893_POWER_DOMAIN_MFG3		4
+> +#define MT6893_POWER_DOMAIN_MFG4		5
+> +#define MT6893_POWER_DOMAIN_MFG5		6
+> +#define MT6893_POWER_DOMAIN_MFG6		7
+> +#define MT6893_POWER_DOMAIN_ISP			8
+> +#define MT6893_POWER_DOMAIN_ISP2		9
+> +#define MT6893_POWER_DOMAIN_IPE			10
+> +#define MT6893_POWER_DOMAIN_VDEC0		11
+> +#define MT6893_POWER_DOMAIN_VDEC1		12
+> +#define MT6893_POWER_DOMAIN_VENC0		13
+> +#define MT6893_POWER_DOMAIN_VENC1		14
+> +#define MT6893_POWER_DOMAIN_MDP			15
+> +#define MT6893_POWER_DOMAIN_DISP		16
+> +#define MT6893_POWER_DOMAIN_AUDIO		17
+> +#define MT6893_POWER_DOMAIN_ADSP		18
+> +#define MT6893_POWER_DOMAIN_CAM			19
+> +#define MT6893_POWER_DOMAIN_CAM_RAWA		20
+> +#define MT6893_POWER_DOMAIN_CAM_RAWB		21
+> +#define MT6893_POWER_DOMAIN_CAM_RAWC		22
+> +#define MT6893_POWER_DOMAIN_DP_TX		23
+> +
+> +#endif /* _DT_BINDINGS_POWER_MT6893_POWER_H */
+
