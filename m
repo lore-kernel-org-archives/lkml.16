@@ -1,48 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5E81D86FB;
-	Fri, 11 Apr 2025 13:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0031E51E7;
+	Fri, 11 Apr 2025 13:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379206; cv=none; b=NqjOCWLqfMouToQbDmhDbU/GsQOYt+Beztm3OBjFgKReWlVy23SWJr+GqUHo89xEzPe46sxbtgymSHTiQ+ij5bAZ1Te4ZAlyEVhxVMTDxE7ngTPGCyGl5LtV1dz0m6SKS0ieDr6ekO8qumQ2peXvZ0e7mBzPUMa8c3gpO1zKyHE=
+	t=1744379241; cv=none; b=P7hortZuYmE5toYINovV+GJ0PYxVmS7KGJuxm9oIdySDuTbDOHYMB4KGkomNcbFTFZLmfHw3B10KYbBQ1C0N6wrScm+epJcYLLYmrOJageSY2KsYjTrlPeOuSHqPbI77TKGNKUbwtWNbN6rUZqw7+MVIIdXbqgre5g86cSbHLLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379206; c=relaxed/simple;
-	bh=lfpofwq7AhcRnEO56wgTDW+zKFWju8+OfJKpaNYI9T0=;
+	s=arc-20240116; t=1744379241; c=relaxed/simple;
+	bh=+gq/NvDyBclUG5lQD7OHaapJTk3Id7Bevn6ruENvLMQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1xqnNHjp1wliYNJA0vn63NlxBliR0D4pXqPoTiHpbtuwlNFaq6hcxpc4ieGQThkvvwpuZ9M75Nb3YYP1WexZx807vAT/TKDkdGberN1rs2FTQr14z+JczgpleITcKp0X/3N82UaIoqv6xkjK0fnXOYiA2CY6EjL6TMM93sF28s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGSplrp1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=s+IgYBXakzqfH9IRCzKZ9PxUWWVlF1phQbjeyROcS+FF8SbFFMRO7sT6t7cAu6lJxIOvnGvjrdgpt6XC/s5pwHk3Z/ZXIHhsyVkK2Kgh/wfYs869vzkJCcuahL6XUmmjOWe8PVC2n5qS9XCKm3dSAAhNJrmQu1xspD3muiPz8RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iGZ1rQh3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGSplrp1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7652C4CEE2;
-	Fri, 11 Apr 2025 13:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744379206;
-	bh=lfpofwq7AhcRnEO56wgTDW+zKFWju8+OfJKpaNYI9T0=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iGZ1rQh3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C70A7C4CEE2;
+	Fri, 11 Apr 2025 13:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744379241;
+	bh=+gq/NvDyBclUG5lQD7OHaapJTk3Id7Bevn6ruENvLMQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YGSplrp1HwBSG2RE7WPdi2jjo9tolZLXEJo86WNr+DMYcwi1SyAIrJDuTS/gq47jZ
-	 XAlVqJ1iCaF0+veS3PPAWdoLzBrusy2ioGIuVy3wc12EfuawG0NBDhnhQmEgIT0nFm
-	 NKVuho1JDHwdzex0lormI5ZE9w0Y4Kj1db2hijdEqFDKomv7/Rq6l5u5VVYNwif/uB
-	 fztfpBWH6c/2SaCvIoQeQqRYYrPBYua8U8A4zsk5kL6bQ38N8qNl2XOJdD0mJz+Enj
-	 8e+pLoF2VRY+O7gv2n0On3XlC6KeM2WhPl3wclFi923af+yTBKyybraqVIVLDVjgiJ
-	 CvBv3tPswefvg==
-Date: Fri, 11 Apr 2025 08:46:44 -0500
-From: Rob Herring <robh@kernel.org>
-To: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: Add device Trace Network On
- Chip definition
-Message-ID: <20250411134644.GA3059343-robh@kernel.org>
-References: <20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com>
- <20250411-trace-noc-v3-1-1f19ddf7699b@quicinc.com>
+	b=iGZ1rQh3GWjmSzc+pjFMlXh4ajaGk2BhgzJjE/MRQSwMehH7FT9q/uMmOnhrID53e
+	 VkfNMgnB/rGN2n/6O3uLDn/XS7rCWztlAudxFBbZhtdjD1U5fzsZt+Csbp6+ubXiTB
+	 Sulieo0jhDm5BKBMfoVR8ZDTzoxJnNZwHPyKitW8=
+Date: Fri, 11 Apr 2025 15:47:18 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jie Deng <dengjie03@kylinos.cn>
+Cc: stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+	xiehongyu1@kylinos.cn
+Subject: Re: [PATCH] usb-storage: apply IGNORE_UAS for Realtek on RTL9210
+Message-ID: <2025041114-party-deport-cd14@gregkh>
+References: <20250326022019.1593669-1-dengjie03@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,141 +40,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250411-trace-noc-v3-1-1f19ddf7699b@quicinc.com>
+In-Reply-To: <20250326022019.1593669-1-dengjie03@kylinos.cn>
 
-On Fri, Apr 11, 2025 at 04:57:52PM +0800, Yuanfang Zhang wrote:
-> Add a new coresight-tnoc.yaml file to describe the bindings required to
-> define Trace Network On Chip (TNOC) in device trees. TNOC is an
-> integration hierarchy which is a hardware component that integrates the
-> functionalities of TPDA and funnels. It collects trace form subsystems
-> and transfers to coresight sink.
+On Wed, Mar 26, 2025 at 10:20:19AM +0800, Jie Deng wrote:
+> The UAS mode of Realtek USB_HDD is reported
+> to fail to work on several platforms with
+> the following error message, then after
+> re-connecting the device will be offlined
+> and not working at all.
 > 
-> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> [  143.361210] sd 9:0:0:0: [sdg]
+> tag#6 uas_eh_abort_handler 0 uas-tag 2 inflight: CMD IN
+> [  143.372377] sd 9:0:0:0: [sdg]
+> tag#6 CDB: Read(10) 28 00 00 00 00 10 00 00 10 00
+> [  143.382908] sd 9:0:0:0: [sdg]
+> tag#5 uas_eh_abort_handler 0 uas-tag 1 inflight: CMD IN
+> [  143.394080] sd 9:0:0:0: [sdg]
+> tag#5 CDB: Read(10) 28 00 00 00 00 00 00 00 10 00
+> [  143.404610] sd 9:0:0:0: [sdg]
+> tag#4 uas_eh_abort_handler 0 uas-tag 4 inflight: CMD IN
+> [  143.415782] sd 9:0:0:0: [sdg]
+> tag#4 CDB: Read(10) 28 00 00 00 00 30 00 00 10 00
+> [  148.437916][ 22] xhci_hcd 0000:ba:02.0:
+> xHCI host not responding to stop endpoint command.
+> [  148.462295][ 22] xhci_hcd 0000:ba:02.0:
+> xHCI host controller not responding, assume dead
+
+Please don't wrap error message lines.
+
+> The Realtek Manufacturer's device cannot
+> initialize properly using the UAS driver,
+> so we need to switch it to usb-storage
+
+Are you sure this now works?  Also wrap your changelog at 72 columns
+please.
+
+> 
+> Signed-off-by: Jie Deng <dengjie03@kylinos.cn>
 > ---
->  .../bindings/arm/qcom,coresight-tnoc.yaml          | 111 +++++++++++++++++++++
->  1 file changed, 111 insertions(+)
+>  drivers/usb/storage/uas-detect.h | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..709c1bc63db48c29bb2b33e7a795a5999768c5e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
-> @@ -0,0 +1,111 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/qcom,coresight-tnoc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Trace Network On Chip - TNOC
-> +
-> +maintainers:
-> +  - Yuanfang Zhang <quic_yuanfang@quicinc.com>
-> +
-> +description:
+> diff --git a/drivers/usb/storage/uas-detect.h b/drivers/usb/storage/uas-detect.h
+> index 4d3b49e5b87a..23579a2a1181 100644
+> --- a/drivers/usb/storage/uas-detect.h
+> +++ b/drivers/usb/storage/uas-detect.h
+> @@ -125,8 +125,11 @@ static int uas_use_uas_driver(struct usb_interface *intf,
+>  	 */
+>  	if (le16_to_cpu(udev->descriptor.idVendor) == 0x0bda &&
+>  			le16_to_cpu(udev->descriptor.idProduct) == 0x9210 &&
+> -			(udev->manufacturer && !strcmp(udev->manufacturer, "HIKSEMI")) &&
+> -			(udev->product && !strcmp(udev->product, "MD202")))
+> +			(((udev->manufacturer && !strcmp(udev->manufacturer, "HIKSEMI")) &&
+> +			(udev->product && !strcmp(udev->product, "MD202"))) ||
+> +			((udev->manufacturer && !strcmp(udev->manufacturer, "Realtek")) &&
+> +			(udev->product && !strcmp(udev->product, "RTL9210")))
 
-'>' is needed for paragraphs.
+So all products with that string are bad?  Why not use the product id
+instead?
 
-> +  The Trace Network On Chip (TNOC) is an integration hierarchy hardware
-> +  component that integrates the functionalities of TPDA and funnels.
-> +
-> +  It sits in the different subsystem of SOC and aggregates the trace and
-> +  transports it to Aggregation TNOC or to coresight trace sink eventually.
-> +  TNOC embeds bridges for all the interfaces APB, ATB, TPDA and NTS (Narrow
-> +  Time Stamp).
-> +
-> +  TNOC can take inputs from different trace sources i.e. ATB, TPDM.
-> +
-> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - qcom,coresight-tnoc
-> +  required:
-> +    - compatible
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^tn(@[0-9a-f]+)$"
-> +
-> +  compatible:
-> +    items:
-> +      - const: qcom,coresight-tnoc
-> +      - const: arm,primecell
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: apb_pclk
-> +
-> +  clocks:
-> +    items:
-> +      - description: APB register access clock
-> +
-> +  in-ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    patternProperties:
-> +      '^port(@[0-9a-f]{1,2})?$':
-> +        description: Input connections from CoreSight Trace Bus
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +
-> +  out-ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      port:
-> +        description:
-> +          Output connection to CoreSight Trace Bus
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - in-ports
-> +  - out-ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    tn@109ab000  {
-> +      compatible = "qcom,coresight-tnoc", "arm,primecell";
-> +      reg = <0x0 0x109ab000 0x0 0x4200>;
-> +
-> +      clocks = <&aoss_qmp>;
-> +      clock-names = "apb_pclk";
-> +
-> +      in-ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-> +          reg = <0>;
-> +
-> +          tn_ag_in_tpdm_gcc: endpoint {
-> +            remote-endpoint = <&tpdm_gcc_out_tn_ag>;
-> +          };
-> +        };
-> +      };
-> +
-> +      out-ports {
-> +        port {
-> +          tn_ag_out_funnel_in1: endpoint {
-> +            remote-endpoint = <&funnel_in1_in_tn_ag>;
-> +          };
-> +        };
-> +      };
-> +    };
-> +...
-> 
-> -- 
-> 2.34.1
-> 
+thanks,
+
+greg k-h
