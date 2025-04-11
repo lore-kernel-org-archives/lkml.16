@@ -1,169 +1,197 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2082.outbound.protection.outlook.com [40.107.223.82])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A882BF3CB
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744415065; cv=fail; b=Lzx0EU+8kkyzYowwUfUUVB2Nvc4E+4LJhCdKMl6fTuRLNeKDmt/ck8KcYqoKWxQfkx6tX0po0QI7zzca3tScvliP36e0OKpCxEcBeIEFRGdvJ+Sh4DR77XACd8HormUn0WHcigR0Vt1c6WYI20puRvu5nAcNXkhRoMtFkwznKo4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744415065; c=relaxed/simple;
-	bh=7DokeE5SQ5bWncF5KSU+o2WWw/FYq3My1wItqSRbJi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=P25g2584RE/EM7otCdc+o5aQ5lYwuQsK9Mmf6ljyYbgIKXnmL3wga8yxfFle2MFJtDDrI3fDIlrT8IfMMnRXkIsKdFbRKHr5ILZzVCh9kSbgpt8szR56o4sHwXRS5ZwByizU5r0jMY86Ux6kqqvVt9hhjFTWbK32gWCkh7XauH0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bjeodZmq; arc=fail smtp.client-ip=40.107.223.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97DC2BEC59;
+	Fri, 11 Apr 2025 23:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744415073; cv=none; b=qp0H4PxHTI0Q7/K7WWu7S2lX+8vqPnczZgb+gB4bCB4BtkFZU7kZXS5ivP+UMPn3XiL6TKWX1cWpo1ovVTfOqdemHEg6Ws0IXo2WzZIdL/E7qCY24rpAQwSLpmIcrzTZcOUsm9qvb/ec2IsIHleqzJHIwCacoJG+vXCeUPkaqpQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744415073; c=relaxed/simple;
+	bh=nTiktkxwTTIuoaDMGBCESJQS0PIKAYmw7EA1N95Tnhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bOwPUsZ3XRZZVa5vNLTSLLO3Ogr8uP8qX/ZTODb81wJK2V17kpQtFejzclJF+AXBvaCF+JFiAuU4VvrWcIrUHIzPLkz2OI/wx9+1GVG6aXzrMoApk+0EHCxhZNvxz+lhp/qQpU1e5NNisP2GjABRDViE0jm6VCOJvlSXgSbEvKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hvv8jGzH; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bjeodZmq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l36BHd3HHi+AqKnciSCyvgiW7dMQpww1L8sgCZkDAlGGni33gTOWj7ztGdHrWH5fIQ4ukgmuFBbNxVzIE4Hxwwg/7JeqmIisAKu0MZPtfQcs4uXlkJ8paiIJKr/4uARE6iyheX92CayCbV4aH0RPAdYUP+szOleXDxtriJThbLP/J/D3U5VcXbZCGN4GDHBclCzMYqCBwr0J2CmGnZfh2aAy/T/RElUku7TErH02Lj3n5DD5gSDgySfnptDQ09wDxaqHmcNl10coHeuORme7i/09Epo5+eMWcAvriOQDgCUhjfZCJeDbnUw7wgfVcUa9OjCjOYwulMmuFH4koxt53g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pfKIs20TGamjHe2YUoTrVlujIh7ge64cv2bHEZE3wJk=;
- b=On7PSJAfH8v4FIphyz0r+u0UmZVl7SqUouSFPCxDW3FrFOz2vsBaEmoxK4RElqYBx4qDB4lEhVA8C4ZNlbRJS31UQXFCYrik2qX9daMzYyo6CjUT8Uz28K1ii0/hI21KisRXshanNXiDnabfhLCUan/FuDyHbm4G2O1Ul+PWrbokER1hXHTW/hFePdNeAUV5om8AarwjchggyzfJOQALGxQoUQTE7KNUhSaoBvNpGS1ddubwu29HyizyIQuVzEN2yAAAhNLjoB6yqGp59h8yyUmyzmZjMKy1ZrmJ+gYb3JlXSH6QTOcHXAbVD57YgB2N0BQKpFZmU1hQIf07H/PgKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pfKIs20TGamjHe2YUoTrVlujIh7ge64cv2bHEZE3wJk=;
- b=bjeodZmqDd0sRlIjlDcRwcRtS6g+r0S+IBl958PfgI25ZiqlhAgGcWoTx3H8hUuvlWqYx4YIepqHf/yzt3HjZQ9CxqfKD9kfe/dV85X466jwC2l/nQx816NEVLYmLBYcA85DSx3tsDcQeyP9AQKA+vY+qeXmMA3UZG4P0tU0yXOubIYxDqdgBDHGiB5pa068ou8OeWJid3F6YnXeIvqdQtLup49yVGrFzuqciRSCOeoTNtGlzEYH85B1UBIcX2lpybXsq6wzM9IAdiUgw3jIQbXVbFX32uYSPEqqHDA4K1biTrpo6cyzrZ/NoNgNaGlXkg8k2pFIQANDQsHeklKvVg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DM3PR12MB9389.namprd12.prod.outlook.com (2603:10b6:0:46::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.27; Fri, 11 Apr 2025 23:44:21 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Fri, 11 Apr 2025
- 23:44:20 +0000
-Date: Fri, 11 Apr 2025 20:44:19 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, will@kernel.org, joro@8bytes.org,
-	jsnitsel@redhat.com, praan@google.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/arm-smmu-v3: Allow stream table to have nodes with
- the same ID
-Message-ID: <20250411234419.GC252886@nvidia.com>
-References: <20250411044706.356395-1-nicolinc@nvidia.com>
- <5c8d16f9-246e-45d0-aaac-45b7712cefb5@arm.com>
- <Z/mm2EQAQtOqpVCy@Asurada-Nvidia>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z/mm2EQAQtOqpVCy@Asurada-Nvidia>
-X-ClientProxiedBy: MN0PR05CA0017.namprd05.prod.outlook.com
- (2603:10b6:208:52c::21) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hvv8jGzH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744415072; x=1775951072;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nTiktkxwTTIuoaDMGBCESJQS0PIKAYmw7EA1N95Tnhs=;
+  b=hvv8jGzH0+iyr+oc42nViBeZzAtDb5E32FzbD6tgZmJs4koG9E87DgRK
+   G7/HqodxnVLERFRMGT4Bp/11UF53C4N+z762omKrfQAl/f9LcVjdBauay
+   3MHs0S5MKELna8IlZpGdLo8lh1b2TJe54VgYpp1WGSGNgGPswTW6tK429
+   ui83al0juWHFnDv2Jni9d0VNiPUqvpxcG42QQeg//ssUGW5VgQeiXzb0f
+   67UlsRqdXwCzj/ZnaCbcsiRfDbdw8IyXp54wKvUd7m0qZ55z47NUsikk0
+   q56kBI0+R4v+wDlyUdybcYhhS4ExT7gpREARa5RBmrd8gZrNBg0U9F8Y6
+   g==;
+X-CSE-ConnectionGUID: Qw1wZL/PTs61ZIK87CjCqA==
+X-CSE-MsgGUID: aLBCiYS/Th+e5VfsbXRtPw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="49808013"
+X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
+   d="scan'208";a="49808013"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 16:44:20 -0700
+X-CSE-ConnectionGUID: yeIxdz7XQxqWRWXxqIROJA==
+X-CSE-MsgGUID: tOssRkaKTcytuSJFzbuMgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
+   d="scan'208";a="134483138"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.221.159]) ([10.124.221.159])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 16:44:16 -0700
+Message-ID: <08b63835-121d-4adc-8f03-e68f0b0cabdf@intel.com>
+Date: Fri, 11 Apr 2025 16:44:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM3PR12MB9389:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17883d26-451e-48dd-cced-08dd7952c802
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?i5QD7MSyASJcOgYN0ig9xz7l/ZJaTtfAVO7bn3+3ZA3J4haXRDhHTcthWAYN?=
- =?us-ascii?Q?kNxqSI1AqaWSV2rMzdF84jE/E4euAPppKO1SG3dIqc8S5zameyXhdxun1Mmn?=
- =?us-ascii?Q?FRCwhBtXbb2URKz3J71LHd7IdYsFJWj+Dhcu/vIEDU3YRIhVPD14toP7oErK?=
- =?us-ascii?Q?Ha0juAhajtGnw7SBu7k6ludq+x14+Zb3ng31ZH1qPZrnjM7kHqKDi0Xyzff3?=
- =?us-ascii?Q?o3KDrrIautLg3OESdbCTexONrNrEMI7NT8uploCp6CCkmX8BBzMAd0d0Wttn?=
- =?us-ascii?Q?04LJQdLRkpBxjnYE54Rj5B51xM7THj/mi3C62xvkPnnO3TKBtJruW2Rlmk+F?=
- =?us-ascii?Q?JajwNVOyvTiy6gEXWHVYUXbSdTaUZpfpEyY6KEDctC+IOT8GybRFNtSCZ5CV?=
- =?us-ascii?Q?4XtPnDjc3yumV9yuAAEOogCJV/nqbH2VtJ1xB6yEXLlC4AQhMM+SVOvl1eeV?=
- =?us-ascii?Q?18gj4udL+NvPBwWll0wyLxKOJ84Bw/yKmU0Iw0cS0addHDXm2krUQy6Y7iIO?=
- =?us-ascii?Q?qaDYQsvrNt4L9uhBWHAYmFaM5FGYgQQTgpUmZDH9i3iiHc05R9gJ0vxtBBFK?=
- =?us-ascii?Q?pMelUwLOcpvk3ZDXv54ZLOvhocrVUU+MkLwHMPTo4TzeqNSaO0GxVecTDdTa?=
- =?us-ascii?Q?fIgOGRbPahGWZVj3eBr0cMlTJUbkuMgjmT9MdhEaW6r2DPETZ5R7+9ZKggxJ?=
- =?us-ascii?Q?Eo91konSTKSfw0Xeq+WI4WgXdSy8bJcJXpmHGWBpVEi796bEN7IYNP/IgPGh?=
- =?us-ascii?Q?q19XFuBAxKHjJPsyGvKybDXM2M3Y405AMCUbyJtVJ3zwM3+4lAkRw7CA/Ua0?=
- =?us-ascii?Q?zgrPeLefMSzkCzztdo0etzAGs7ZNk6raPvpEVZNyChHhW1Q5+toz+EuFzvCn?=
- =?us-ascii?Q?KwS9IlNHQFQ0XR8J4lq5NUIKDjkBn8SSYJuL83EK7a3gdmPZrBHZqZcZDtF3?=
- =?us-ascii?Q?sDLXevjTgyvK0rEqVFMk8ECDRc+RNkmVdkw1lq51hH36mB0ecPxh6WvBQt0K?=
- =?us-ascii?Q?KOTi+7PKZKD0KWzmVDMnad18gLbwyRwFXBNbGmHccWFBjrcBb2IqByEKbymu?=
- =?us-ascii?Q?2O6azdnbrkpUgCjU0MsYMwfiyBk7rJzxNqHyam8/yglLUNiwy5m0E7RbRSQn?=
- =?us-ascii?Q?48S2nI7NEOOH46cpREAAAqWiOdS5lfAttwD3DlG9hHOtyJh8xKsVsoyFX+zu?=
- =?us-ascii?Q?N6F7n2mDCVbvrSH3L2+Brj8Vihr7wiaJ0v/Q5zSfVoDFaYbrInzvtcFvyB7V?=
- =?us-ascii?Q?bjSbvkbwEkUL4L1C3V1Jsrs+UE7ZbM3kvZAQEgz0VVICz6/M8ga+7C8AFagm?=
- =?us-ascii?Q?4jKM/EEuXVXz9DLNbeqC9ZgWL5a7a9snzRTfiE9SvdsauJQUoz6MnB607g8b?=
- =?us-ascii?Q?goiOAWYO31IFcvy1Z0543hMOwicJcPxkGP7G8vUtDBALxwjE93cbqlIEHKMb?=
- =?us-ascii?Q?8z1sWNC6Q24=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jhmUNCOqk6jmBQ1+K9wb3OCsFT4w7msCR2QPAsSauBm/U2L0xAo2ld4Knprk?=
- =?us-ascii?Q?ebvVGXOpfghu94DVKT8wipDq4/bcZqPeCSZaZec3NQmBpJ8/xA+j0G4nGaXU?=
- =?us-ascii?Q?nDcFM3DU4T/7cejWaT2CuvWdihlUltemTbc0xPBM30rD+aqLHG3lRiERtMY4?=
- =?us-ascii?Q?GRnOUhNkwzx5G+RscBr2d8ZsWYjpXlYPq80sVgpQKFmb8HPAqaPJO7xopIs3?=
- =?us-ascii?Q?WlEhTvGVz6e+CqNEoutoL4nn2XXBHVwcOroQbvzmeaUaLiulldGC0efnwj2T?=
- =?us-ascii?Q?c0bK+AObAWOkiUbpAAYdDsjSnnUwPj877hmDFEfatGjnLRTYGQ8lWE1aozBo?=
- =?us-ascii?Q?sBfDkcgtw0H4QniheKkRc9ypS8e3lxps0d3Y1WvnWqTsaH1pOosGv1fROhnQ?=
- =?us-ascii?Q?0IAKaWfxVxJ5AIbf0Ied0t4vWYyNAeCsNZpg+sTDjdIIkKhdJKxkjSx+x3Zo?=
- =?us-ascii?Q?BuTiK+21o4aBO7VRFN+pV90A7JbWJvx1xFZiVMtSCYAb6zN0IODnUyZtAhR5?=
- =?us-ascii?Q?mQQb9cmH6Jp4VgX/7HqCO6ivHY5swsGVbYnrL2EqfnxZ0PViAW9Q71/DCQke?=
- =?us-ascii?Q?jHDtZJGNLOeFMgIlGUD46XwC5qxw74ezkExxatm4b3ieLlkOx6v4s/EnoyK0?=
- =?us-ascii?Q?JE1QsG3UBSpKey9bwKrdnBUJDCCQxpSi1TqicODpo4+mwGZphT1rjjkq5F5N?=
- =?us-ascii?Q?n0vAIU6Lh5EnQdcTtorjT6CQK/kDMqtnti6g4E5sZ/2KqAZEOHSQoABnvLvY?=
- =?us-ascii?Q?WUvRGOeUsE0hW8CtWc53A/CuubDhHay5biKnGXgHjyBykenMh1OPqUxpBoNV?=
- =?us-ascii?Q?1ZM2rfUXX8d1ofulzCnyrzaS5BfT0I6E3r/VAIaaLgCHc4YpCHHjXsPidc6H?=
- =?us-ascii?Q?ATnscCN5Ve/LaRrOi/5WYkx63tu1jVQ9UfMOI1KfCOOV855K5y40rlHfHwST?=
- =?us-ascii?Q?ccrMRNyWplZK6tIHtBNgAHgt/ntYLEsrdXmrwL48+mTJaXfdS4m3dMRURVGS?=
- =?us-ascii?Q?Yx67JCwvuNtvJxa8B1YnHnXUfUjdFtMslSAK/RJQ1knhSk9XsmWYRSZpZyyD?=
- =?us-ascii?Q?qCGpBxw7EsUTs4p/zUniYCpiwEoceAgATBSsVn909FESxFC+GT99cAOok3EK?=
- =?us-ascii?Q?G7kejJyaRY4G89Zk6okqq4aycqhsi12jPJgtQoI8uhtQsSwpNZNvq8Xspo7S?=
- =?us-ascii?Q?kxYCr9gP+T7Zn3InG/n4FzHWZQjgUjlT9HY2EsFudILK3Nw3XNbGpIQAd1OG?=
- =?us-ascii?Q?YwE34oS3ZHIegfdMs5THuwrM3xrnmFdmumgVGMm82BqGp1RMr4AYzI/6yS7l?=
- =?us-ascii?Q?idIsjlVKAnbQvlpWBZ0LYk2Guu25SOYA83+6FajnyEJQ/EPin7yPnBbv4oZc?=
- =?us-ascii?Q?9YSLD1kXDC0AqoT6osDp30XLv2g0Z3/mvRcOlP3vAAKbu8iZEVp38yIVPfUn?=
- =?us-ascii?Q?ESkQV3iO2YFnVEcmyq9auD47AinEdiHs6ofW8CqM5nIA8DtmCePwrS5UE3fS?=
- =?us-ascii?Q?NQO09qAOpyMNYzw9GGyejYeS3ehuUcQL0YDgpgu7l4PgRnxTCnEai6iJao3t?=
- =?us-ascii?Q?qhqBoykM6+ZebZXFbTiEP2RBCf6v5tP5vVFfGW7W?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17883d26-451e-48dd-cced-08dd7952c802
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 23:44:20.8382
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vsRCfr50GcdegleNiMWZWpHEb+Z3eTYWysrcK64vEDF5tQ+iEE/kx1NFbDKlxe/o
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9389
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/11] x86: remove HIGHMEM64G support
+To: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andy Shevchenko <andy@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Sean Christopherson <seanjc@google.com>,
+ Davide Ciminaghi <ciminaghi@gnudd.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ kvm@vger.kernel.org, Mike Rapoport <rppt@kernel.org>
+References: <20241204103042.1904639-1-arnd@kernel.org>
+ <20241204103042.1904639-6-arnd@kernel.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+In-Reply-To: <20241204103042.1904639-6-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 11, 2025 at 04:33:44PM -0700, Nicolin Chen wrote:
+Has anyone run into any problems on 6.15-rc1 with this stuff?
 
-> > The bridge *does* claim its own RID, and per the aliasing rules the
-> > devices behind it claim both their own RID and the alias to function
-> > 00.0 on the bridge's secondary bus, like so in action:
-> 
-> Yea, I just found out that the bridge does have a different SID.
-> It was actually the VGA controller itself having two fwspec->ids
-> populated by the IORT code. Then, the SMMU driver allocated two
-> separate streams with the same set of device pointer and SID:
->   pci 0008:06:00.0: arm_smmu_insert_master: fwspec index=0, sid=0x10600
->   pci 0008:06:00.0: Adding to iommu group 21
->   pci 0008:07:00.0: arm_smmu_insert_master: fwspec index=0, sid=0x10700
->   pci 0008:07:00.0: arm_smmu_insert_master: fwspec index=1, sid=0x10700
->   pci 0008:07:00.0: Adding to iommu group 21
-> 
-> Perhaps the duplicated fwspec->id should be avoided in the IORT
-> code at the first place v.s. bypassing the fwspec->ids[1]?
+0xf75fe000 is the mem_map[] entry for the first page >4GB. It obviously
+wasn't allocated, thus the oops. Looks like the memblock for the >4GB
+memory didn't get removed although the pgdats seem correct.
 
-It is a much easier fix if all you have to do is ignore hits in the RB
-tree that match to the same master, just don't fail on duplicates and
-don't add the duplicate rb node at all?
+I'll dig into it some more. Just wanted to make sure there wasn't a fix
+out there already.
 
-Seem strange though. Where did the duplicate come from?
+The way I'm triggering this is booting qemu with a 32-bit PAE kernel,
+and "-m 4096" (or more).
 
-Jason
+> [    0.003806] Warning: only 4GB will be used. Support for for CONFIG_HIGHMEM64G was removed!
+...
+> [    0.561310] BUG: unable to handle page fault for address: f75fe000
+> [    0.562226] #PF: supervisor write access in kernel mode
+> [    0.562947] #PF: error_code(0x0002) - not-present page
+> [    0.563653] *pdpt = 0000000002da2001 *pde = 000000000300c067 *pte = 0000000000000000 
+> [    0.564728] Oops: Oops: 0002 [#1] SMP NOPTI
+> [    0.565315] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc1-00288-ge618ee89561b-dirty #311 PREEMPT(undef) 
+> [    0.567428] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> [    0.568777] EIP: __free_pages_core+0x3c/0x74
+> [    0.569378] Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b 03 c1
+> [    0.571943] EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
+> [    0.572806] ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
+> [    0.573776] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+> [    0.574606] CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
+> [    0.575464] Call Trace:
+> [    0.575816]  memblock_free_pages+0x11/0x2c
+> [    0.576392]  memblock_free_all+0x2ce/0x3a0
+> [    0.576955]  mm_core_init+0xf5/0x320
+> [    0.577423]  start_kernel+0x296/0x79c
+> [    0.577950]  ? set_init_arg+0x70/0x70
+> [    0.578478]  ? load_ucode_bsp+0x13c/0x1a8
+> [    0.579059]  i386_start_kernel+0xad/0xb0
+> [    0.579614]  startup_32_smp+0x151/0x154
+> [    0.580100] Modules linked in:
+> [    0.580358] CR2: 00000000f75fe000
+> [    0.580630] ---[ end trace 0000000000000000 ]---
+> [    0.581111] EIP: __free_pages_core+0x3c/0x74
+> [    0.581455] Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b 03 c1
+> [    0.584767] EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
+> [    0.585651] ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
+> [    0.586530] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+> [    0.587480] CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
+> [    0.588344] Kernel panic - not syncing: Attempted to kill the idle task!
+> [    0.589435] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+> [    0.561310] BUG: unable to handle page fault for address: f75fe000
+> [    0.562226] #PF: supervisor write access in kernel mode
+> [    0.562947] #PF: error_code(0x0002) - not-present page
+> [    0.563653] *pdpt = 0000000002da2001 *pde = 000000000300c067 *pte = 0000000000000000 
+> [    0.564728] Oops: Oops: 0002 [#1] SMP NOPTI
+> [    0.565315] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc1-00288-ge618ee89561b-dirty #311 PREEMPT(undef) 
+> [    0.567428] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> [    0.568777] EIP: __free_pages_core+0x3c/0x74
+> [    0.569378] Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b 03 c1
+> [    0.571943] EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
+> [    0.572806] ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
+> [    0.573776] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+> [    0.574606] CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
+> [    0.575464] Call Trace:
+> [    0.575816]  memblock_free_pages+0x11/0x2c
+> [    0.576392]  memblock_free_all+0x2ce/0x3a0
+> [    0.576955]  mm_core_init+0xf5/0x320
+> [    0.577423]  start_kernel+0x296/0x79c
+> [    0.577950]  ? set_init_arg+0x70/0x70
+> [    0.578478]  ? load_ucode_bsp+0x13c/0x1a8
+> [    0.579059]  i386_start_kernel+0xad/0xb0
+> [    0.579614]  startup_32_smp+0x151/0x154
+> [    0.580100] Modules linked in:
+> [    0.580358] CR2: 00000000f75fe000
+> [    0.580630] ---[ end trace 0000000000000000 ]---
+> [    0.581111] EIP: __free_pages_core+0x3c/0x74
+> [    0.581455] Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b 03 c1
+> [    0.584767] EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
+> [    0.585651] ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
+> [    0.586530] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+> [    0.587480] CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
+> [    0.588344] Kernel panic - not syncing: Attempted to kill the idle task!
+> [    0.589435] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
