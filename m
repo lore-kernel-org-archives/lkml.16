@@ -1,128 +1,192 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8620293B4B
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360116; cv=none; b=VGC4aW4bZ3KMsm8vlRo5Z5y/HlGRSq4H0c0Z8yuYQ6yuXRpoBV1N+EFKJxg1OS1PFpB3e36A2uP1rUbJLH1rcnI4koX7Ch0vnGTFHju6f3xWPBLLpCZRWWUq4GEtBDeJfAIJ/1I/GjqRdS46yNdmUfktjYeDFfvczj4J91//e3A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360116; c=relaxed/simple;
-	bh=BdcRozpMh5XamS/3Rky22G9yMjXlMrX+TsooJQKwUKE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RNHt7JO695cjUQ4epWQGtOfzhC7kopaQkj2xsxoU25IAp6Z5v69HNzttf2pJCXYWTCPDjrw/innm2C2syrBZoxQzax2A9FV82h2zAkVnJhbxIearo8IzW5PEEeXdhUaR/encHJiWywSL4X9F2RkrJhzV/6FQyE7HRnhuGC1QYUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d4578fbaf4so37739255ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:28:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744360114; x=1744964914;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mspE9D6zeHc2ZpttYDmZv4JvJy7d9xVAiCjmcyAGyWw=;
-        b=v9bOu4decUwZMH0+H7iCQjNEscxYFPvNjHnd3i92OzNe3JuY4lZBUTI8tQyq5cBE21
-         7eMq9CcyC+QTwBsvuh6NqMYgptvP5mY0i8MuJqLGelczUfFIKHzgio1uHvri5sYZEwnt
-         n3TG0eOEMwjXYVCdz3j8hSI0vLJusyrvZ3KkTWK7ej/N3uz+xgTyS3pwmgZV95u0+0nL
-         r+fTIhFkqtvHCBEKOVfMKWdcU21MJJM3DjI3g+yrRF2fxErsTDhaVh/ifeFXjjD8XZXc
-         kPq5rcnM2bBp4eKAeBUNCSyWyqF3PKkcfxK2Z16KgqoiCpp2eDmYRwyOeOB0i7+EJMcq
-         UWRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVG5AdLG7bC3oeewMUBJzS0ED9f7XzKS72+cqVMqxZx619Lc6nNEnbiwA8/hCHAIdQZoQkdMNfitRa9/5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy80fD2KK6sWiIGcDZoOsE/Vpdq5xrejxCm62p+iru6OnPB8/N4
-	y/subyDi3ElaGGFZR7lrMF6WHca9Uk5XQUYhMV6jRcY5QnWHGTHnQSVSvpVP8BNtue4At9zcvw6
-	rY9txxV/h/Dl+4882KHxzgjGLEufhsl58qqYt1LJP3/tpkDfqZfQLoqo=
-X-Google-Smtp-Source: AGHT+IH3+I5WCI3vqlNIRDjcsCj8Z19nQyPqROdXvLgFUOnL4Yc7EuzFFOs+PAdYTUCiRy2Qs5kdcTduBaYbImMJNvDCM9Cg3N3q
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0AA290BBB;
+	Fri, 11 Apr 2025 08:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744360124; cv=fail; b=t/kjCiFQMXZTRZP8XYH+AJ4vQ8zrKXIFsk1SuMjm6Hby4bSGW6eZcgu5ThOrJlY6WDKCfQnIKlCqSi52LPguBmmH4NOVQP23VKadLj5oi0miMRORMcJSjUZrvDtdsmtvbU17N85Un/zhFE5VueX2HioUNDb30/N/8e4hF72oXy4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744360124; c=relaxed/simple;
+	bh=vMk0rH5pdm0F2DE+mrtz+WvyCY7rbhrJgqlzH1CiOts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZkJBkFxJjYa749nHu4pavVuJsJBegcTdTo3m2WlOfOLvXAhJ6cFyzFXKE5eWa0wXqiUSlB5FDlX4q84wMviE/1mP5ZVF2Dflcz5yWUqF2+S5dYrINAYl111QEZCWZQjL2vTUB6T6wHlcDcoqia9Z0P9D9yB9M/QEONm27Qs0BnU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=A/+4BFOy; arc=fail smtp.client-ip=40.107.223.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="A/+4BFOy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ayfhUQcTs3XmzuMhdwfquhIhRArNLqFqUEpC19I06Mktbr4azZKTAQstWu9B/CFrZT/Ss+PrK73JHM8u2hKQvXoYLErwUUsYfQeDplHMRVHs7bFbCyRKMPJGb49Xf1FKM8ZAEJi3nnaU1j24ePhYqd+3sAl/j/h8IHXvNX26m9tdPDAyaGN1ScEKskes0tM3dE6gi4itzJpAXljLwVI/wuOHjCU8ngNtkNqegE+7ZQOZedGc68BFu97uCfZwVVdsW9M74h4Thi7oUXjKrDI9gg/XNZHmltG0Ax8Cno9JfkanhzfDmhvpsVaCiB9VYa3QeARBVK0S2tITQOuZElCvgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pFmMe8lfpNhesbYDlygIwkv6TaGb4SEdXiNa3rxex9k=;
+ b=w9ETeDhj+ooWChGLp4/Sqbwn/8aLpdq9qcULK8c1XcWUniGfTjcukKg2uJtIujegnbyxnOIYMozwPI7Vc4XfcSRafHGJx+Is7jsMYslyh6x3sK1M8QTzFDBNoY/T1heXAfuFqHBSwAghqjBqGcGKmFPBUL7+WtKjbMbWSU1BDsNcopV8dmfWrk23cznMPioKAMFLSMkWL0HPTKUe/64r9UiG1CrNM9lQJoILdmtzEehGH5bl1hNI5PUSKqauWKJxHx3jT2ZxoJMvMfZgkBbZNF/A/UGYt53mwcxyMVXuE/Zn2phQ/UZ0w8iwbOdRaKPRcilJnZaiQwt5kl13heCcXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pFmMe8lfpNhesbYDlygIwkv6TaGb4SEdXiNa3rxex9k=;
+ b=A/+4BFOymvQTE/oXR1s44kfjvbPholkufFJqe0ldgEG/4S9nqwY0a+dnJAmjuPPHiAV0NErX6klV+RKPBi763oNd6KJXTtRQoYbDcwln2gUeRjoTh9xCsHJlZd06U3CuB3l3BmxOxpR5HPXh+nfKA0lXmOY6K+WBtTIowj5H1Sc=
+Received: from MW4PR03CA0138.namprd03.prod.outlook.com (2603:10b6:303:8c::23)
+ by MN2PR12MB4256.namprd12.prod.outlook.com (2603:10b6:208:1d2::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
+ 2025 08:28:37 +0000
+Received: from CO1PEPF000075EF.namprd03.prod.outlook.com
+ (2603:10b6:303:8c:cafe::a4) by MW4PR03CA0138.outlook.office365.com
+ (2603:10b6:303:8c::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.36 via Frontend Transport; Fri,
+ 11 Apr 2025 08:28:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000075EF.mail.protection.outlook.com (10.167.249.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8632.13 via Frontend Transport; Fri, 11 Apr 2025 08:28:37 +0000
+Received: from [10.136.43.133] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Apr
+ 2025 03:28:32 -0500
+Message-ID: <0895007e-95d9-410e-8b24-d17172b0b908@amd.com>
+Date: Fri, 11 Apr 2025 13:58:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:339f:b0:3d3:dfa2:4642 with SMTP id
- e9e14a558f8ab-3d7ec229316mr19127035ab.13.1744360114107; Fri, 11 Apr 2025
- 01:28:34 -0700 (PDT)
-Date: Fri, 11 Apr 2025 01:28:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f8d2b2.050a0220.355867.001c.GAE@google.com>
-Subject: [syzbot] [gfs2?] UBSAN: shift-out-of-bounds in gfs2_fill_super
-From: syzbot <syzbot+b0018b7468b2af33b4d5@syzkaller.appspotmail.com>
-To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/67] iommu/amd: WARN if KVM attempts to set vCPU
+ affinity without posted intrrupts
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+	<pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, David Woodhouse
+	<dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
+CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, "Joao
+ Martins" <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>,
+	Naveen N Rao <naveen.rao@amd.com>, Vasant Hegde <vasant.hegde@amd.com>
+References: <20250404193923.1413163-1-seanjc@google.com>
+ <20250404193923.1413163-7-seanjc@google.com>
+Content-Language: en-US
+From: Sairaj Kodilkar <sarunkod@amd.com>
+In-Reply-To: <20250404193923.1413163-7-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075EF:EE_|MN2PR12MB4256:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ef0c58a-314a-4c4c-4ade-08dd78d2db79
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|7416014|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NGduZWZHY1pZcDBzU3NVdkF1b3R6bG9FcUVZalo4RjNYOGtWREdDOWRUMVY5?=
+ =?utf-8?B?LzMzdmRlSzVaSEpHYmU0Rnl4eitQcFNFTjQrUkFNU1p3LzVDWXVLaWxFcS9X?=
+ =?utf-8?B?K2JnZER6OGd0K0ZzWnBQSkhlSjhuRmxkZGg0Q05xcE8wN00zZi9Kb0cvYkZ4?=
+ =?utf-8?B?U3Q1YkhJZG45US9rZ0Z3VkcwWXZuYlozcWxDb0d0QTFmZHdLRC9raEFyUzdL?=
+ =?utf-8?B?K1BoTVVxRTc4QlpsREdBZkRQNlk4RW03c2VEais2aFBQQnZzODhaSldtYWJ6?=
+ =?utf-8?B?RUUrZUVWcU5kSlk2eXptenF1L1FVdTV1a2VhNVk1dFZtQ21BV0hxMEZRTmQ1?=
+ =?utf-8?B?TFhwRnV1TEk4cTVoY1l6cEFrOHBmR1dCT0hXNHNQa0RtT2NKOWpMV1h3a3Uz?=
+ =?utf-8?B?K2hJM09NZ2VmK1M1ZWttbitwYXU5Z012QkExNG5HSlQzM0taUmZjMkxrSUFi?=
+ =?utf-8?B?enJJUjZudzJRdEk0Nm81UWRlbFIzSVMwekJNa2hBK1pXMzh2dWJSY1VBUzNB?=
+ =?utf-8?B?L0VsZ0JwQUEvYXhIckFUVklJOThrT1huRmU3YkhtaFJZTi8yTVYzaWRuTm0x?=
+ =?utf-8?B?dnVpcHBmOE4zbjhxNTlyUzgySXl4d0Mzd3ExUWFiM3BmZE8vTkV5aTlsUFpH?=
+ =?utf-8?B?bnZobTFrVHJZdks0MWVnNTVLT21WYUo0WWxBNkZWZWZuMmJwQUdmcytBcWFD?=
+ =?utf-8?B?eHU0L0JRY3BEUEhTYzZXbDFpN3VITy9TMDgva3o3b29zbFZIdEpFbks2NzZ0?=
+ =?utf-8?B?cXBCTERRTjVXcExtNlBnWTNJZTM0bWdiWWFyeS9wM1JnVEkrN1JMd29ITXVo?=
+ =?utf-8?B?MlFuWHpyNG9Sa29Gc3ZldzdVcXdZREVrTVBpMXcxMWh6MmlKaWxPWDViYlFk?=
+ =?utf-8?B?Q0MrOHZ4WGN2eGx1ZGtvbEhpTmMzOGMvUGFQVG9tS1FQUVRsYUkrbS85WC8x?=
+ =?utf-8?B?VThrTXVpb1UwMFBISVJ4YzBIT3FsSnBJUk1GTk91aWtJNGhuK0VMOEtab29Q?=
+ =?utf-8?B?OUNBSlJ5Q0paR0RwRlNyRU1QeTg3aHRhZWMrUExyNGhqc3ZhRWJhakJpY25P?=
+ =?utf-8?B?aU5LbjRHWTRLZFNaU2E1Q3BxZ0s1OHBHWjdPUDBZalFHMU0rMmlyUzkwVHZl?=
+ =?utf-8?B?YTB5QmtGT2gxRFB5bDBvTEJEUldGT0pVTUI5dFBDVGlSN0VQWVBVeVpESmVP?=
+ =?utf-8?B?ckpzRUhudkFJNmtiWGVRdm9PM29yYmZhQmRFTlIvQ09tV2g5NVJoNjZHYUg1?=
+ =?utf-8?B?WEtqZXIvL2RybHBrOW9vNWpLb2U3blYyUm1jNFFEZ2xPc242d2JvamJPSDlo?=
+ =?utf-8?B?Um5tNHAwNW1FUG9LZUEwenlMSHJtN2dMQkttdVlUMTJDczZxQXJVdmc2WVMy?=
+ =?utf-8?B?ZjRoaUgvQncvVXBYZUhjbm1FNDg0RGJpM0tqOXIxbXJmaTF3dEJBdFJvZDhN?=
+ =?utf-8?B?RUlRais0cU9DS0ZCSjhieDdvME5waWdjUUNrM0lWN3lTdnp1UVZZeUtOK3JM?=
+ =?utf-8?B?TW96UnI3VnFWQitKRVZFZWoyVGE0YmMyYWZJelZ6OWlYazAyZ2VXT3ZYZ3FI?=
+ =?utf-8?B?cVEwL1hSVSs5Qm0wcmc5MUxma05yYmNsMFpMTkQ0WE9rblA4U3Fhc2RFUDQy?=
+ =?utf-8?B?RG05dUIzUk1TcWdZbElNWFF2TjJNSFFZWUgvNVNnRVcwenV1S28wTE52NmFl?=
+ =?utf-8?B?aUtSWnJJRjFJeTFiVVBEdGxxWjNQNVFGY3BTbzBuY21rd1Y2Vm52cFBtZW9m?=
+ =?utf-8?B?c3cydzhLT0lKbWwrOU43LzQvTFcveFNDMmRFYVNXZ3lqY2pFelpGSThyYm9H?=
+ =?utf-8?B?Zk1GZmF3VnorcUxVa2IveFV0YzU2RmlUaHdPMi9JZi9qZm9LWDQzODQ4QXp0?=
+ =?utf-8?B?bFgza1c1UUZFcVYrUHUrcXNxRGdLME1XSGdLNVk0cnM4VlIrc004T1FLTHo4?=
+ =?utf-8?B?RllEbzhUclNCS2RzNTdJRDNvazMzNy9EYzdiNEdkS3NkRXZjMWRXTW1jN2Ev?=
+ =?utf-8?B?Y0hLL0x3NWJpWDhiUXRFaHA4RDFKckIwcmI5cTRscmhBcnk3WC9MVW54V05Z?=
+ =?utf-8?Q?b37SUw?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(7416014)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 08:28:37.5696
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ef0c58a-314a-4c4c-4ade-08dd78d2db79
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000075EF.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4256
 
-Hello,
+On 4/5/2025 1:08 AM, Sean Christopherson wrote:
+> WARN if KVM attempts to set vCPU affinity when posted interrupts aren't
+> enabled, as KVM shouldn't try to enable posting when they're unsupported,
+> and the IOMMU driver darn well should only advertise posting support when
+> AMD_IOMMU_GUEST_IR_VAPIC() is true.
+> 
+> Note, KVM consumes is_guest_mode only on success.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   drivers/iommu/amd/iommu.c | 13 +++----------
+>   1 file changed, 3 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+> index b3a01b7757ee..4f69a37cf143 100644
+> --- a/drivers/iommu/amd/iommu.c
+> +++ b/drivers/iommu/amd/iommu.c
+> @@ -3852,19 +3852,12 @@ static int amd_ir_set_vcpu_affinity(struct irq_data *data, void *vcpu_info)
+>   	if (!dev_data || !dev_data->use_vapic)
+>   		return -EINVAL;
+>   
+> +	if (WARN_ON_ONCE(!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir)))
+> +		return -EINVAL;
+> +
 
-syzbot found the following issue on:
+Hi Sean,
+'dev_data->use_vapic' is always zero when AMD IOMMU uses legacy
+interrupts i.e. when AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) is 0.
+Hence you can remove this additional check.
 
-HEAD commit:    a4cda136f021 Add linux-next specific files for 20250404
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15dc523f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8a257c454bb1afb7
-dashboard link: https://syzkaller.appspot.com/bug?extid=b0018b7468b2af33b4d5
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Regards
+Sairaj Kodilkar
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>   	ir_data->cfg = irqd_cfg(data);
+>   	pi_data->ir_data = ir_data;
+>   
+> -	/* Note:
+> -	 * SVM tries to set up for VAPIC mode, but we are in
+> -	 * legacy mode. So, we force legacy mode instead.
+> -	 */
+> -	if (!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir)) {
+> -		pr_debug("%s: Fall back to using intr legacy remap\n",
+> -			 __func__);
+> -		pi_data->is_guest_mode = false;
+> -	}
+> -
+>   	pi_data->prev_ga_tag = ir_data->cached_ga_tag;
+>   	if (pi_data->is_guest_mode) {
+>   		ir_data->ga_root_ptr = (pi_data->base >> 12);
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/59048bc9c206/disk-a4cda136.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ad2ba7306f20/vmlinux-a4cda136.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b3bef7acbf10/bzImage-a4cda136.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b0018b7468b2af33b4d5@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 32768
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/gfs2/ops_fstype.c:1172:19
-shift exponent 4294967287 is too large for 64-bit type 'unsigned long'
-CPU: 1 UID: 0 PID: 6127 Comm: syz.0.42 Not tainted 6.14.0-next-20250404-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- ubsan_epilogue lib/ubsan.c:231 [inline]
- __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:492
- gfs2_fill_super+0x255e/0x27b0 fs/gfs2/ops_fstype.c:1172
- get_tree_bdev_flags+0x490/0x5c0 fs/super.c:1636
- gfs2_get_tree+0x54/0x220 fs/gfs2/ops_fstype.c:1330
- vfs_get_tree+0x90/0x2b0 fs/super.c:1759
- do_new_mount+0x2cf/0xb70 fs/namespace.c:3879
- do_mount fs/namespace.c:4219 [inline]
- __do_sys_mount fs/namespace.c:4430 [inline]
- __se_sys_mount+0x38c/0x400 fs/namespace.c:4407
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb2fa18e90a
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb2fafe2e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fb2fafe2ef0 RCX: 00007fb2fa18e90a
-RDX: 0000200000000400 RSI: 0000200000012500 RDI: 00007fb2fafe2eb0
-RBP: 0000200000000400 R08: 00007fb2fafe2ef0 R09: 0000000000000102
-R10: 0000000000000102 R11: 0000000000000246 R12: 0000200000012500
-R13: 00007fb2fafe2eb0 R14: 00000000000125bb R15: 00002000000004c0
- </TASK>
----[ end trace ]---
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
