@@ -1,88 +1,109 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9153A1EDA11
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3442D38FB0;
+	Fri, 11 Apr 2025 08:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361267; cv=none; b=UTCSqpt0rGkMjeZoUESvaPpD+6+kkyEdt5E3nap+THjpfSlRKNH8iT+jTPri/wj9z26n5dUeyr4rNiZ56k+PjPfZoYpK5sAyy4KdSt5EAyQuXRsdHjCbUytR4fGapWZjZ1NE7EcTP0Uwavq1bpiNNQQCyWTmw9BK8cE3Yu9ykuA=
+	t=1744361403; cv=none; b=XqYmpJkfqQ+DWNfJcNeq2Rrx2b3nnqRAxHl41s1HLG2KdRopLcUQIBj0lQTyAeYFF1KbJ1hmrNW7zgTRNQEkw2Z05zpgHoIRBGls7Tvx+DYb6HA5syos3N76Li95i4ayjC7FbGG5tcVqs5r9YI5vzJBtWVZIFqm0x5OskVlzaW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361267; c=relaxed/simple;
-	bh=usfVP6LlpHBCPvtgzb/m0iAxVThx8yduHHfIQc3dpew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lYj4fZg0oGwqI10MurmvboY9Sc9ZhaMj2Hur/v8KfUoO2ByXJLMZ0NIpzBVwZ2H20I7D6Z7nwOaFh/iF8YaAts/umDK8t7MMn6Xf8MqxRSjN14jUt9nx0oYAyx+ZsdEabgQN5N6NYu6soa4K0X0ZIMEQWDbDgg9CSn7UmRMggxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TvUo8GK0; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744361403; c=relaxed/simple;
+	bh=V6Fu4VrxxO+l9OZXsluyJdviLxbdbOK0bDXx3CckqI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=paS+UEJsmXi8KLQxaSb9lZn7ou4Obujmw/I8Wj1NjnVATpiO12zM/h2QCWvR5qhlZH6JhRsmfCqmu/tOilpSrzT5thNXMDLWApQdtqbrAiUXgVwgoCE5BtYKq8uXKaw3c4DD+NDbf9oGgBFH1lwDoyJfXZBaWdNUS8j1omm8H6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=PPqMHCDI; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TvUo8GK0"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744361262;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CISzMpwIVKRzzULkCjNr+EVHLzO+7fOhSA52j2Jwi44=;
-	b=TvUo8GK0bJeYa8uDnR1BO0JMMwlbFvluTLw8tFxmhg+WE0gbr+lt/2fjFiEWXQmDkcO4s3
-	/SXU9HCyoCrisbe/ZfBUVlqjF9eJVcQr6AJlnxyWPxGPKv6eIQoH/DgtQxVHmavU4cSvqS
-	IGCsnyx8WGBOF+PwO1v0Ba7xBJ2EJkc=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Don Brace <don.brace@microchip.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	storagedev@microchip.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] scsi: hpsa: Use str_enabled_disabled() helper function
-Date: Fri, 11 Apr 2025 10:47:20 +0200
-Message-ID: <20250411084719.7396-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="PPqMHCDI"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id BA1CA1FBE7;
+	Fri, 11 Apr 2025 10:49:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1744361398;
+	bh=gPPyNPscjBGAPcxizRLq/wo01rgRCKMweMYk9HxkjrI=; h=From:To:Subject;
+	b=PPqMHCDIgBBA0F4F9wv9dAeM3d9AXchpcsYAlWig8HXS5xnia6ItNspSB2TDqzurV
+	 HlBpY8nDhOfxA8oBere45btV2jQ25SaGSz8r94TOjPLst5eRhkGHvTTP44PPQHVkuF
+	 G4w3Mw69d3xwbOdfjSfGcKi9YNfMo6s9si1tF2aJbZ8LXPBeMd6QV2vHqIPF9JN3PF
+	 28rW/E5wDRtr2lleCDIHofR2UQPaHB4gE7WS33Km9pNxS/D8xGHGJPwewKL8S9y/Hf
+	 rDOi37AB0VRRpdlVlmhSUiR1eFf9aGMkSycH8eamUV6a0r7VK34RZ3NU5uLVQMHf7k
+	 i+Xy3oywA8Lfw==
+Date: Fri, 11 Apr 2025 10:49:54 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH 3/4] wifi: mwifiex: drop asynchronous init waiting code
+Message-ID: <20250411084954.GA24608@francesco-nb>
+References: <20250410-mwifiex-drop-asynchronous-init-v1-0-6a212fa9185e@pengutronix.de>
+ <20250410-mwifiex-drop-asynchronous-init-v1-3-6a212fa9185e@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410-mwifiex-drop-asynchronous-init-v1-3-6a212fa9185e@pengutronix.de>
 
-Remove hard-coded strings by using the str_enabled_disabled() helper
-function.
+On Thu, Apr 10, 2025 at 12:28:45PM +0200, Sascha Hauer wrote:
+> Historically all commands sent to the mwifiex driver have been
+> asynchronous. The different commands sent during driver initialization
+> have been queued at once and only the final command has been waited
+> for being ready before finally starting the driver.
+> 
+> This has been changed in 7bff9c974e1a ("mwifiex: send firmware
+> initialization commands synchronously").
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/scsi/hpsa.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> With this the initialization is finished once the last
+> mwifiex_send_cmd_sync() (now mwifiex_send_cmd()) has returned.
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index c73a71ac3c29..c190412ad9fc 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -36,6 +36,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/completion.h>
- #include <linux/moduleparam.h>
-+#include <linux/string_choices.h>
- #include <scsi/scsi.h>
- #include <scsi/scsi_cmnd.h>
- #include <scsi/scsi_device.h>
-@@ -465,7 +466,7 @@ static ssize_t host_store_hp_ssd_smart_path_status(struct device *dev,
- 	h->acciopath_status = !!status;
- 	dev_warn(&h->pdev->dev,
- 		"hpsa: HP SSD Smart Path %s via sysfs update.\n",
--		h->acciopath_status ? "enabled" : "disabled");
-+		str_enabled_disabled(h->acciopath_status));
- 	return count;
- }
- 
-@@ -552,7 +553,7 @@ static ssize_t host_show_hp_ssd_smart_path_status(struct device *dev,
- 
- 	h = shost_to_hba(shost);
- 	return snprintf(buf, 30, "HP SSD Smart Path %s\n",
--		(h->acciopath_status == 1) ?  "enabled" : "disabled");
-+		str_enabled_disabled(h->acciopath_status == 1));
- }
- 
- /* List of controllers which cannot be hard reset on kexec with reset_devices */
--- 
-2.49.0
+Just for me, the rename/refactor happened in commit fa0ecbb9905d
+("mwifiex: remove global variable cmd_wait_q_required"), in v3.14.
+
+
+> This makes all the code used to wait for the last initialization
+> command to be finished unnecessary, so it's removed in this patch.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  drivers/net/wireless/marvell/mwifiex/cmdevt.c  | 16 ----------------
+>  drivers/net/wireless/marvell/mwifiex/init.c    |  5 +++--
+>  drivers/net/wireless/marvell/mwifiex/main.c    | 12 ++----------
+>  drivers/net/wireless/marvell/mwifiex/main.h    |  6 ------
+>  drivers/net/wireless/marvell/mwifiex/sta_cmd.c |  4 ----
+>  drivers/net/wireless/marvell/mwifiex/util.c    | 18 ------------------
+>  6 files changed, 5 insertions(+), 56 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> index 5573e2ded72f2..c07857c49a713 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> @@ -900,18 +900,6 @@ int mwifiex_process_cmdresp(struct mwifiex_adapter *adapter)
+>  		ret = mwifiex_process_sta_cmdresp(priv, cmdresp_no, resp);
+>  	}
+>  
+> -	/* Check init command response */
+> -	if (adapter->hw_status == MWIFIEX_HW_STATUS_INITIALIZING) {
+
+What about the code path from mwifiex_add_card()?
+
+mwifiex_add_card()
+ -> hw_status = MWIFIEX_HW_STATUS_INITIALIZING
+ -> mwifiex_init_hw_fw(adapter, true))
+   -> request_firmware_nowait(..., mwifiex_fw_dpc)
+
+mwifiex_fw_dpc()
+ ...
+     -> mwifiex_init_fw()
+       -> adapter->hw_status = MWIFIEX_HW_STATUS_READY  
+
+mwifiex_fw_dpc() is called asynchronously, is everything as safe as
+before, here?
+
+
+Francesco
 
