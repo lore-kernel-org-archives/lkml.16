@@ -1,125 +1,124 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DA31917F0;
-	Fri, 11 Apr 2025 13:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B9D2367B7;
+	Fri, 11 Apr 2025 13:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379759; cv=none; b=R73kP2Vxc+w43aSOxC3rer+wvYLPOJvD+JZG2qTsYoIWCyeVLcZHSWT6cJSUSpPvzELgRkFeVMuErDj7GrN1CI0M3XSfSf7JQ+AXX7zTMRgz5/TZ2YdtGXLCIYQy/zViTs45u22QYoZDOS/z8wUN3UgpSkamp6dKYv+qj1DQy14=
+	t=1744379809; cv=none; b=Z4w+PNrrTRKn/U4K2q9gYqtWTfLiR4OLmpNAt4fHy3QKoXJ3dEzkbnwiMPAAFzK0iIU+gjwxZVBBMFDWQrheQYr8CY81e+bppAKyvfcmXpTGxmnkcywHUNwlpM5hEugQfSGbJofAzcXbuWbF2lgrF5usRmfSpMqQoY4YNiuw7kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379759; c=relaxed/simple;
-	bh=Hksio+SBng2Ph0jL+AW8Cf2YcpKo99uTiSN2rqmAQVM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gNv7ohczrIhpkDs0XRoUHHV5Kf6dN+waZV6i+WaGP6yElxmI+EbuBzQHO15tfNrY6+PYjJ1InNwJIu/QW8eQJ04w61U5ad5q8NZMJY0Jvi5VxuQnXQwDFOOg1ElDGuONtT+0Izhv63UzXL/5pYI4tSliRV3Yv+313lv2RxUQNIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9CeYtAJ; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744379809; c=relaxed/simple;
+	bh=tXYZh8z7ILgkW3X+Yd6ejw+mkN0PDn5U4WMcYfRUhms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Gdy0UJBEVawnS8DhoFpoJqTe6s0RbuCiLxIfgxjT82rF3w65XC8ckOIA4mWSxxU7UKmZIXv1qUv4yCGNgs3vIGbPQTm/lmPjdIMYana/ifQtIFGOtq4Ki5NbBg24USKsTTnHwPMdyuY1z/hzkctcoCQzaNqIpRp7Jzdau56cPqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FP/LHciK; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9CeYtAJ"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736bfa487c3so1787839b3a.1;
-        Fri, 11 Apr 2025 06:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744379758; x=1744984558; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9fgT+aB/ObOAloX5DH3cQKl+POiKYMAsP7NDiSj4mfE=;
-        b=E9CeYtAJ0F0gllu6JtrNqgSzGZFGFoGPVvZBzrn6hCkDyLWvvLDRDcEpy68z8atTox
-         0cuDtLNxE5foj+flOnskYmns+I7R953AMBRppciRSyVAYLcCDkBpJDMP1hQpOwIdjKgS
-         ijHcpy/H7DwIUdlK4qEiSgxnnRbIJ/wmMA1/xW02DVjGOn9D9CH0xxlbca3I6ugMZ1Tt
-         GuWBhBfWg0hNAsyxlAJ8LWXPIsfw5o1uI/jl/i+jH2W30PrgEUPO3BMP4Mvue8OMkulb
-         7e7WCZs7RltEJg3jtTvy282eyo9vfW2dhu2dwujMOk1Hh1tGKqooSrECh2ShLaz2HR2A
-         OcLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744379758; x=1744984558;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9fgT+aB/ObOAloX5DH3cQKl+POiKYMAsP7NDiSj4mfE=;
-        b=pRz+5HKmkEBgXrghOwQrAzHYVrT+CgyhweSBy8s/2nbWEa/cISlTzYq53QgUZe1p0I
-         iH9PKjrGpCG2Q2mhrbfJNT7ZBmDiPXl792/kil5+Bzcnehb6zc2Sa5TLatpDwH1Sa6n6
-         HOhtAWH2NQwjmKSGNkGzCC+EutE5BKSP8hRWEXa/GbeQAQT8SADzdo0HD5avOvz4QI6c
-         fKEm9JTsqdkHNh4W2U6raM5nvKpONquHA6gWYIlfXFKfmjmqGgkRyQxabCYbE5qb4wVb
-         priZ+jec82pQYywU3Qyr0u6RHA663+B9+tQ4sDfoKRFkF5xsc1PdQZx5qYCdyzjoYFeR
-         yq1w==
-X-Forwarded-Encrypted: i=1; AJvYcCU3ZQxkEJrqH6GoN81AyJroxN+V7gDqEgiarei+vrnaRNsGFcJaOpE3oxmyoBNyisNF0ksKT8sOtg+0j0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLVz24fV8rjTvGF1LuNgkZA2AT2HXNSDc2tMQJlRvEz3uCKovU
-	gd6fSNzgGminsEfGrg9M+7LRf97h5BlnEEWvgTRIVrXCh32EQPoq
-X-Gm-Gg: ASbGncuuLUmlMadp18tl6mu/uREYk2smufNPInnujrXR7AVYBLdB0cgjQE95Nq1bEYY
-	xkCRZRz23Zd899Lv+mxLXhb81Z9yfVP68Rpbq7d6a6EUIiMvsV2/W+8j8hVSogXNhpER/C663Jp
-	TtbKRmHeweJBlQfYw471awSp3Trd7pfgNnLmmwDA2gkD5PJ2tkZpc4sMDJuM1TkF7gmXhyQl9yq
-	Fw0qLwKGHeJ7uSC7VbU21PmQvhYf+lnW4lXajHI49EBmYVLxV0Tqqx+qHT9tL4EI1LlJ/Mqiobs
-	3JYZ0gNoO05gzIjxvG1tj3sqS/MPGxp2D+JlKjnmwj6pq+npVSeP/or2rQ0=
-X-Google-Smtp-Source: AGHT+IF57uOoN1+g2NXZ4dw98X52Co0XdPWGzDqnOvXOt7h2udRQqPwsNmdyGbrkTlaIXPVHPNA03w==
-X-Received: by 2002:a05:6a00:843:b0:730:d5ca:aee with SMTP id d2e1a72fcca58-73bd12cdb7emr3902525b3a.23.1744379757687;
-        Fri, 11 Apr 2025 06:55:57 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c408:a0b5:6154:df3d:5cdc:6ad])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2333859sm1485740b3a.158.2025.04.11.06.55.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 06:55:56 -0700 (PDT)
-From: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-To: shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kevinpaul468@gmail.com
-Subject: [PATCH] selftests: Removing deprecated strncpy()
-Date: Fri, 11 Apr 2025 19:25:35 +0530
-Message-Id: <20250411135535.41423-1-kevinpaul468@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FP/LHciK"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDuebR1457292
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 08:56:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744379800;
+	bh=dh6bE3XEbiTa0mmTq1+LWP9AAzh6deTQmR8XrrWXPSI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=FP/LHciKb+kFVsE/9VAjEQwtM1lOXleR/rP4eUPFWF51epfLWamq+9ykFFT523ZtA
+	 rrdUBHyQ6519dkEZLCnjar0aUUpys03i7kAr9ZzzSh4yQYBxdnVRAsHoamx4PKwiAz
+	 Lf5a3XC3xbaF0FLbuOxOJesxtKfyi2rIKhz/28j4=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDuedm093360
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 08:56:40 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 08:56:40 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 08:56:40 -0500
+Received: from [10.249.141.75] ([10.249.141.75])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDuZCB124896;
+	Fri, 11 Apr 2025 08:56:36 -0500
+Message-ID: <b6cae091-caa8-41fa-97b1-fb243386b0b5@ti.com>
+Date: Fri, 11 Apr 2025 19:26:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] arm64: dts: ti: k3-j722s-evm: Enable "serdes_wiz0"
+ and "serdes_wiz1"
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <rogerq@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <u-kumar1@ti.com>
+References: <20250408103606.3679505-1-s-vadapalli@ti.com>
+ <20250408103606.3679505-2-s-vadapalli@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250408103606.3679505-2-s-vadapalli@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This patch suggests the replacement of strncpy with strscpy
-as per Documentation/process/deprecated.
-The strncpy() fails to guarantee NULL termination,
-The function adds zero pads which isn't really convenient for short strings
-as it may cause performance issues.
 
-strscpy() is a preferred replacement because
-it overcomes the limitations of strncpy mentioned above.
+On 4/8/2025 4:06 PM, Siddharth Vadapalli wrote:
+> In preparation for disabling "serdes_wiz0" and "serdes_wiz1" device-tree
+> nodes in the SoC file, enable them in the board file. The motivation for
+> this change is that of following the existing convention of disabling
+> nodes in the SoC file and only enabling the required ones in the board
+> file.
+>
+> Fixes: 485705df5d5f ("arm64: dts: ti: k3-j722s: Enable PCIe and USB support on J722S-EVM")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+>
+> v1 of this patch is at:
+> https://lore.kernel.org/r/20250408060636.3413856-2-s-vadapalli@ti.com/
+> Changes since v1:
+> - Added "Fixes" tag and updated commit message accordingly.
+>
+> Regards,
+> Siddharth.
+>
+>   arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> index 2127316f36a3..0bf2e1821662 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> @@ -843,6 +843,10 @@ &serdes_ln_ctrl {
+>   		      <J722S_SERDES1_LANE0_PCIE0_LANE0>;
+>   };
+>   
+> +&serdes_wiz0 {
+> +	status = "okay";
+> +};
+> +
+>   &serdes0 {
+>   	status = "okay";
+>   	serdes0_usb_link: phy@0 {
+> @@ -854,6 +858,10 @@ serdes0_usb_link: phy@0 {
+>   	};
+>   };
+>   
+> +&serdes_wiz1 {
+> +	status = "okay";
+> +};
+> +
 
-Compile Tested
+Reviewed-by: Udit Kumar <u-kumar1@ti.com>
 
-Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
----
- tools/testing/selftests/sync/sync.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/sync/sync.c b/tools/testing/selftests/sync/sync.c
-index 7741c0518d18..4b284f517433 100644
---- a/tools/testing/selftests/sync/sync.c
-+++ b/tools/testing/selftests/sync/sync.c
-@@ -29,8 +29,8 @@
- #include <malloc.h>
- #include <poll.h>
- #include <stdint.h>
--#include <string.h>
- #include <unistd.h>
-+#include <linux/string.h>
- 
- #include <sys/ioctl.h>
- #include <sys/stat.h>
-@@ -71,7 +71,7 @@ int sync_merge(const char *name, int fd1, int fd2)
- 	int err;
- 
- 	data.fd2 = fd2;
--	strncpy(data.name, name, sizeof(data.name) - 1);
-+	strscpy(data.name, name, sizeof(data.name) - 1);
- 	data.name[sizeof(data.name) - 1] = '\0';
- 
- 	err = ioctl(fd1, SYNC_IOC_MERGE, &data);
-@@ -198,7 +198,7 @@ int sw_sync_fence_create(int fd, const char *name, unsigned int value)
- 	int err;
- 
- 	data.value = value;
--	strncpy(data.name, name, sizeof(data.name) - 1);
-+	strscpy(data.name, name, sizeof(data.name) - 1);
- 	data.name[sizeof(data.name) - 1] = '\0';
- 
- 	err = ioctl(fd, SW_SYNC_IOC_CREATE_FENCE, &data);
--- 
-2.39.5
-
+>   &serdes1 {
+>   	status = "okay";
+>   	serdes1_pcie_link: phy@0 {
