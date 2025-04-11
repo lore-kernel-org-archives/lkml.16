@@ -1,71 +1,71 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E34298CC6
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C7429B221
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744370590; cv=none; b=EPSiFIq8kLpPA4u2hw5DuTTqm0dbEZAov8rRi53e2E6cRP6vu5r6aeZgjXr5Q4b5/g4DzyYWoatGh6aToM6gAGaE+r1Jnjki6NkoAbeZU/Q69JxnDuobQTniJnNiJw099BK7d64/rRMdxhjZcoBOvlHlDFysmDYSjn4gUQbYm5M=
+	t=1744370593; cv=none; b=akHY9wmijg2yKjfcIeRQn64lmnJIayDTh7Ken0H90Ggl0XOFD+JMFqydYiDtJk4wl6vfdA724gz1Crs8WNzuDK6m6FdFNPoZMEX4bhU1sYkYp2OTnIXL3apXYuA6sc58RYrqWHt1EmYNTcDjNXsHLg57etJxxE/Yi8b16yoS/yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744370590; c=relaxed/simple;
-	bh=EBIXp9MEwTv8npBMLtGlllYjPqDwC08/ANOAQbUSTNo=;
+	s=arc-20240116; t=1744370593; c=relaxed/simple;
+	bh=0h/wAFlFu424QPdbdTuYDgc3snDDYcmUHAH/j2XvOBE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=awRYNN/a37EWajaRlfXj1HjDZGMUfsA1S+Tww9OsxJj0cezpe38IBZuXrcPKcdOubS+EUacRMoKFLFUPOlSMPD+1PvNy+mdE+4cC9D0YkIl2gHMRiSBoxyNbY2H99TprILKumY6iggZxpLggipdlKEBgtCUbr1Ip3HAMHnHUq94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c4W/dQgR; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version:Content-Type; b=eejSban3cV1RvrZKb77f6M4NEI75BAkSQj5uZw5hBOIaoaD7gtEDi7DducMb6yYM6phvpYCNJJKS9PD1PRJhpyd0bWV7TOVKgcerQ4eQ6VHt7tJ6M/qkSbDJtihnBkGoiAFU3OWIFyozu64NKVp5EXsVDao9B/01ouGSR3QHD2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tInKhydb; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4W/dQgR"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso19808865e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 04:23:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tInKhydb"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso13631625e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 04:23:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744370587; x=1744975387; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744370588; x=1744975388; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=J7k8HfJLEdInVheN7W4N/TTPmfm2GybqEO8yAYEOdG0=;
-        b=c4W/dQgRIZ07OPbEuYHb/Bp8OAg/0C426yTgay3T9dNR9dcgXc1K3QUJY60NbaxApf
-         BcmzVBu1o2tVWeJGjtjSnIVnPvOFqWRY0ozAClgGJewiByApgwqjeL7P/QW5gZ7BLLpo
-         qTP8QrVJ/hQri6LuQGbs2xIDa6tfDCeI/xJ9D7+rkIPLgjqiPg1Z6zkHXWzNLlZWK/qJ
-         /abyrK2exJu6LQtLSLYySrmVVKnAE6QE01PqorvgRsHQn8ILTMe6nu9IG+iN2KUimKxn
-         GCqH1IhcZAjvcaWa8FVdMJidOU0obpstGs8JYG0Hrv5e1q9348eQ8at8oIEyrpb3fDst
-         vZxA==
+        bh=fmG63D30aRLLm0dfdRMDFAgoARZHLicvoWT/isnzgx8=;
+        b=tInKhydbx8ZOeBKIkHIUcPMdvE6jQsQPMGYhsh0txwVwgtF+3ZkdUU59Q1rVz5EIDU
+         KDTsi28vOSs2lbgP5NIrHkCNaowmj34kM6K7Ra6I2zJi0f5FHqkMhR2oDK3b6bVwdEea
+         eLRrpgzEYU5Fr+zMI4YgWbbiY7HX+EYkemOCpilAlBp+viI3qo3EfgWdT72qRo5R0lRX
+         Ast6pOnvKTVFapAZLZ2Cas1XDvCsvdFfldOIvebEnbACN4WPwSs+UnHI8nssjqH2XPwS
+         XmKPmeAA4sHHirvZja++QoGLaKAXx9GQjG7StbaGh9VULjkDfDpdoq8XwGUmO13ejTVM
+         Axsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744370587; x=1744975387;
+        d=1e100.net; s=20230601; t=1744370588; x=1744975388;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=J7k8HfJLEdInVheN7W4N/TTPmfm2GybqEO8yAYEOdG0=;
-        b=GV9nquB22xrgfZvkOvMwHIHoezbwThmBj3jnIcjts6isvuhi7M7CjQFqInKpcCuizu
-         ZZI2SxAl5s4T2ECYrlvsdmg/57WMzfX8uOHxxTE7M1DcMYk/NcrNSkOhDsqu57ELpKw2
-         7EdVafvTXZ18AFq7JW+/3SkfRslOZBl1nftGujExpLZU0r+S6wZBVoozACAfAbFRyTH4
-         Wsza2Y3oYAt98+WiGqYJpyoumsv+UBtV+kBgvooqSnCYkFp8Gl1NMJkUPODEFBWZMkfm
-         bVbHva12bHKvhKBdG08SuPSIiYFplWLqobh51KfjZQII+tEX1nTExVXyBce39dwr5cvB
-         OUTw==
-X-Gm-Message-State: AOJu0YxFJQeIg5+KfMKIBD6KcoN2eG9DCQS0drt2aBP3yoeHKZ/Kqy2A
-	hJGSp0Dl4andYoYvu+EXCgFJAwjgWCQN2ngnmY9X0uvmA0aq8o5LWTWkH8TcroU=
-X-Gm-Gg: ASbGncuea32gWmVxGODOcTsI/9MnXOd0UYUno2HObxS0NvpXWtq3i1nt0zaoxBZvwwY
-	lkn+AtPle9n6fHCmMoDyTCjS03v9O0ES4an7OE1toguIVoouRWwyv5sjnwZh0q/igoKczer2cgH
-	0Ro8MHwiIYrIwpwRjGyO+dow+OrjNKyqoEjYjCPDIIwuR0eXCR6Qx9ro0/62Mkyxefq9uP5iQkE
-	ACAA9DPxpfm4PmpKDkp4uFNYaxikmv1Br8kHSnkroRtuTxp7EuQ4wpshlZmjqJmGb9j8xi3zLgc
-	0OrxmifF5oUQw1Wz0lWfSEn0bQQKEn08LSMnthp2qf0UgGndj8CsAerxMmWCICmO2w==
-X-Google-Smtp-Source: AGHT+IELINoTEkAHWlVCYIWb7m6H7h4HnPMK4VEaUuCiZGS4aKw3gMCDn63rujZcK3uVfVbjB6V6lg==
-X-Received: by 2002:a05:600c:5104:b0:43c:fcbc:968c with SMTP id 5b1f17b1804b1-43f3a92639dmr16889645e9.7.1744370587251;
-        Fri, 11 Apr 2025 04:23:07 -0700 (PDT)
+        bh=fmG63D30aRLLm0dfdRMDFAgoARZHLicvoWT/isnzgx8=;
+        b=bf+h8GnwFis+m4LnZqLJTR8ifK0oj8qfQXhc2eUAbUNz9eMa58cFP4OQ2ptVX5vYos
+         drpHuYrHJrLmxurUvVBszwPLzygKUBU1q6XjMB1QWjX1eXQ6M4pUKjuk17egEmIGZgFK
+         ep/nWPEmJbiB5BBH6spBCi7S2fdXNCN4Z2Ad1cQz1vequOqmI9izYVfuZxyN1wIWvrOp
+         6biSpTlibBpjatGSIk6ntwWELFfM8+aLsUecPRsAzUMx1qrq6z21vbMGwAL9eco/v+D3
+         BpwSsEbUc8OP195BtUCb+XtHdg6tZhhOhi55HyM6l72ocrqQSgZMJklzQLtWzOLBkScH
+         Bv6g==
+X-Gm-Message-State: AOJu0Yw3GPyOr+u2lWpsGFn72eaiyCWcnbdz6wmHccU1iFxS/NHcx+J+
+	4SFzlqHeKMVm5mrerAL2TJFGU2XPBc9xAc+YUrK7fWysHgPFjXFXPwrDzSFObUI=
+X-Gm-Gg: ASbGncsm87vJ+FGX2cFmRuh72Utkop/VE8AalIM/WNN3ubr/txMZqvwp0YWTxXeGk4m
+	i3uSCnHYlR6qLmKLcQzHx+PBWEJyow6kCDUIryOAeA4kCzK2dYCM8sAg4fMXVgZXqpVqg7ocLW2
+	/C8l5IzFvrcGGCU6d7Do8w7T9uWrJsVTASkKZ5KJir2kNlbn63hWPC9lyzxyZKyWR6i9a+60OD0
+	7wR7dgUZfzgNzD/LPCTlctJkkJI6dR1EicbL2oe/1EFeApBzxLiR0ijCQn9rbY8s5RUIUoSGG++
+	cjEoeob/rnbhNIdpi0iLHT3t9e7j2y7wf2dA6KeSGxk0yTM/TfJjC4ecN9B2q/FYGA==
+X-Google-Smtp-Source: AGHT+IFVLrpaj1MA52yIDTi6iprl5N3WShaRAU7X+RDs4Z5l9JhNAQ6SWgcRV8CbcFv7CA3lyb208g==
+X-Received: by 2002:a05:600c:3c98:b0:43c:ec4c:25b4 with SMTP id 5b1f17b1804b1-43f3a93cc56mr24312145e9.10.1744370588568;
+        Fri, 11 Apr 2025 04:23:08 -0700 (PDT)
 Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc8esm85171445e9.30.2025.04.11.04.23.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075fc8esm85171445e9.30.2025.04.11.04.23.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 04:23:06 -0700 (PDT)
+        Fri, 11 Apr 2025 04:23:07 -0700 (PDT)
 From: srinivas.kandagatla@linaro.org
 To: gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org,
 	srini@kernel.org,
-	Akhil P Oommen <quic_akhilpo@quicinc.com>,
+	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RESEND PATCH v3 05/13] dt-bindings: nvmem: qfprom: Add X1E80100 compatible
-Date: Fri, 11 Apr 2025 12:22:43 +0100
-Message-Id: <20250411112251.68002-6-srinivas.kandagatla@linaro.org>
+Subject: [RESEND PATCH v3 06/13] dt-bindings: nvmem: Add compatible for MS8937
+Date: Fri, 11 Apr 2025 12:22:44 +0100
+Message-Id: <20250411112251.68002-7-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250411112251.68002-1-srinivas.kandagatla@linaro.org>
 References: <20250411112251.68002-1-srinivas.kandagatla@linaro.org>
@@ -75,13 +75,14 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+From: Barnabás Czémán <barnabas.czeman@mainlining.org>
 
-Document compatible string for the QFPROM on X1E80100 platform.
+Document the QFPROM block found on MSM8937.
 
-Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
@@ -89,17 +90,17 @@ Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-index 39c209249c9c..4c332b44d35e 100644
+index 4c332b44d35e..e1a8856ccba4 100644
 --- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
 +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-@@ -51,6 +51,7 @@ properties:
-           - qcom,sm8450-qfprom
-           - qcom,sm8550-qfprom
-           - qcom,sm8650-qfprom
-+          - qcom,x1e80100-qfprom
-       - const: qcom,qfprom
- 
-   reg:
+@@ -28,6 +28,7 @@ properties:
+           - qcom,msm8226-qfprom
+           - qcom,msm8916-qfprom
+           - qcom,msm8917-qfprom
++          - qcom,msm8937-qfprom
+           - qcom,msm8974-qfprom
+           - qcom,msm8976-qfprom
+           - qcom,msm8996-qfprom
 -- 
 2.25.1
 
