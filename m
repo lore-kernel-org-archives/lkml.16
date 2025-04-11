@@ -1,78 +1,159 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9C02AF11
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B225537FF;
+	Fri, 11 Apr 2025 14:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381309; cv=none; b=Kjr5S/fAyjn9Ukx64K+ei9+2DKyUzIOorLEX92yMCEEoHmSU5bKj5HCqkqYlKG29eRVJ8zpH2MTLKun7arO3lhO3kByxVDysflck9AER42wcvI65xyv8O0fmMJ5+RkJKqyZg1sDRAx6FQq4uND3kZV3OPa56sRHFx7g8f6nirjw=
+	t=1744381351; cv=none; b=N0I+j6uTch+f/1nqApArtIHFUNra0DJEebQgHxvq2yPsdKCWpuVLgGYE9/lUHX6cuiBBDsJ7C242bJK0tuyZ2xSY1oCozYYmzBsnwueduNZO2p2pkfYFtnD3RPIkirOWDGxajDdhPiH/lDXHW4IxzXA93f6W8Mm/FMcwaQWb6ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381309; c=relaxed/simple;
-	bh=zMQ5uKY/6zWhNuy6u2YZy5lpu11P/rMOuhYhxVwIu8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DGLqpEjyjKM0ewmoq6uTjjcPftO8mPp8GCOaSDcMckdIE9nDkVGMENYFYm/y2VSHXfBIjR2i5bFC5FLgxNq5qU6hLQQvL4pYLc9Bkb0cDOBxA8VCxrU2QFSdHlxX1gCgy4x/5SaAgEt2Ae3/hOA+sklf7dkwz85OXbD0gptgbbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KfmHQex8; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744381351; c=relaxed/simple;
+	bh=YROGXLoyPnGQUwrDEzwNUTEF7kTJ7MEfzPBgfw6hD8o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f+QMoA2tiVMxFoKCK3+R5srLEMIdhxT81o7HuT8KVmlsG5dUTMSmK1DUm6evs786RCqBhwvgM7COKwcG+GMEjyhbs13rtVV8syWSni5BXOHKNov+gfyHkoDAueTFQPH3+OLoODvrk7DYchictCkzfChM+MSp0iSMxXfEdQOMrXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+zfBUl9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KfmHQex8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YtT01ajOsSmZLSUYde+7t7bxHp2pbObLzVWdGuotdHQ=; b=KfmHQex8aMJwIORN5vrOuV7n6/
-	eyLo9D8CBDcLdEKIkPodWF8II4y9l7R+FQfmO90ZqVU56KHIK8CkuMGGfrOUX/mkbs+i7KxSgBCtM
-	AvSjTQK5o5rWof890naGoKIIHNmCeHiOixCBMcBBXsUrpgAgGR3Zxx52/xEl7tVA9t/hAyyoXV1OP
-	incV+dcc+2RwwtaWk74EqH4zRVIX6Qsh//FVWLjfZhktYpvx/BxVxCFuh/p6lr1tNyrGHul6/Akxl
-	MN9tZIfMicPQ7eoFB+ziUvyRAnpif2ub+YPAosWZe9ildBdq8nuzqlaYaA7ORCWJEdCcJlr3yh0uu
-	MZ5hEPRA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u3FGI-00000004Lk8-3IgK;
-	Fri, 11 Apr 2025 14:21:42 +0000
-Date: Fri, 11 Apr 2025 15:21:42 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm,hugetlb: Allocate frozen pages in
- alloc_buddy_hugetlb_folio
-Message-ID: <Z_kldseGr033Hqny@casper.infradead.org>
-References: <20250411132359.312708-1-osalvador@suse.de>
- <f0373427-b4e8-4612-b668-980d93febe26@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+zfBUl9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A2AC4CEE2;
+	Fri, 11 Apr 2025 14:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744381350;
+	bh=YROGXLoyPnGQUwrDEzwNUTEF7kTJ7MEfzPBgfw6hD8o=;
+	h=From:Date:Subject:To:Cc:From;
+	b=s+zfBUl9aGkDTTH0vUpvPnEXUNaC0mxSNp8MbovxcGBZQCKC7D2Bg2+semp0wWlCs
+	 5Drrqj34nklxkYZ7bqAUnPx5nRrDqKAfGVXtQU+Bi8qsz1o4Ovy860tKTqEb6nBC/g
+	 +0buzA2ZFF8wTgoat4UilC4sf4sgpIR5Ges2fMW1D1sVZpj/P5eZFl3wbfFCsBhcne
+	 kJrLZi0LAxjn02/gzC2K3DSxMWDyekE7l8H8fDLSR/0R8Kem6JY4LFlODEl4lPu3u4
+	 tG5Dg29JUvoRyIkRHKemXP7o3q2ctJ1ec8bG9EJOwhH7wiOe88z6zil5n5pwf/NG8/
+	 1qrLp4l223kXg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Fri, 11 Apr 2025 10:22:14 -0400
+Subject: [PATCH] sunrpc: add info about xprt queue times to
+ svc_xprt_dequeue tracepoint
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f0373427-b4e8-4612-b668-980d93febe26@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250411-sunrpc-tracepoints-v1-1-ed2eb14ce6ee@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAJUl+WcC/x3MQQ5AMBBA0avIrDUxpSGuIhbUlNlUM4NIxN01l
+ m/x/wNKwqTQFw8IXay8xwwsC/DbFFcyvGSDrayrGkSjZ5TkzSGTp7RzPNS0M/rF2a4O2EEOk1D
+ g+58O4/t+WPQ0s2QAAAA=
+X-Change-ID: 20250411-sunrpc-tracepoints-7b1cd5283f18
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3648; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=YROGXLoyPnGQUwrDEzwNUTEF7kTJ7MEfzPBgfw6hD8o=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn+SWYDoVqQqf9QByqMRuPwdhGISiVayqDYkSw+
+ qKd26QEvtGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ/klmAAKCRAADmhBGVaC
+ Fb2HD/4lYswF8SsHPsp/n/zn37H8983qtbOeywdXWC5CiktCy1prUk0cfCXfGtNicrPrhywuCau
+ +FXWnb8N6Q3GcPAi/c5rCG4dWBB6e2WqMu39YnSk5GWGoSbG+MtEhuxRPvb5YyqrZngquzBaXMD
+ j9w3Q2FBYkU3knQ8JDcbw2v6BwsQua2Pr7MAUROx9NbfWqpWjeHEReFywnn2JoKJ8BvAkB4qiLl
+ BaEfvVU2MS7hCAPqW03mzt5p0QhO3xpe31pH8Unf8Mj4IWKAPDYU2qI+RyyMioC+o8A6ZuMzhRt
+ vAZqbWENg3jDn1eOqg1oiCWF4/SAOeZkGNrrmGuRw7VLb5NX5n5d1Jkon738frO9c79ZixsmKl4
+ jhnsMe6VvDbF+JgxQR3wkRTrhNtECWl4wG8X0UDROTZLgHh6U6aFsV85Lxed1+ZkGJRRU/b5Bgp
+ 2SFrOQSq+V3Sm3tRj7Cc4hhLp+P+W+Nr5Z0twH+bUxPTl/fD4V7bzQu03LzCjgJI0K4kazz132G
+ IAIBrDZQ2dr308gIS7tVNyVumQHrhNEYVBiKIbZIFIqK5jIyBDcJgQkHVpzjFYZm3N+C48E7r01
+ lnwVpbcqF7JzTIA9wRrbODLa027wOjp9O+GWGGsUFT3lR4qfcM+ATZs4c1sJXSZg2VxjYcEnTfH
+ Rax3Dvc/yjZDLhQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Fri, Apr 11, 2025 at 03:44:31PM +0200, David Hildenbrand wrote:
-> I assume htlb_alloc_mask() will always include _GFP_COMP.
+I've been looking at a problem where we see increased RPC timeouts in
+clients when the nfs_layout_flexfiles dataserver_timeo value is tuned
+very low (6s). This is necessary to ensure quick failover to a different
+mirror if a server goes down, but it causes a lot more major RPC timeouts.
 
-static inline gfp_t htlb_alloc_mask(struct hstate *h)
-{
-        gfp_t gfp = __GFP_COMP | __GFP_NOWARN;
+Ultimately, the problem is server-side however. It's sometimes doesn't
+respond to connection attempts. My theory is that the interrupt handler
+runs when a connection comes in, the xprt ends up being enqueued, but it
+takes a significant amount of time for the nfsd thread to pick it up.
 
-> But semantically, it might be wrong: __folio_alloc() will in the memdesc
-> world also make sure to allocate the memdesc, __alloc_frozen_pages() not.
-> 
-> Maybe one would want a __alloc_frozen_folio() .... @willy?
+Currently, the svc_xprt_dequeue tracepoint displays "wakeup-us". This is
+the time between the wake_up() call, and the thread dequeueing the xprt.
+If no thread was woken, or the thread ended up picking up a different
+xprt than intended, then this value won't tell us how long the xprt was
+waiting.
 
-This is fine.  Yes, it'll need to be modified when we get to the
-separately allocated memdesc, but there's a number of places that
-cast the freshly allocated page to a folio, and I'll have to come up
-with a way to catch them all.
+Add a new xpt_qtime field to struct svc_xprt and set it in
+svc_xprt_enqueue(). When the dequeue tracepoint fires, also store the
+time that the xprt sat on the queue in total. Display it as "qtime-us".
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ include/linux/sunrpc/svc_xprt.h |  1 +
+ include/trace/events/sunrpc.h   | 13 +++++++------
+ net/sunrpc/svc_xprt.c           |  1 +
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-Oscar, if you want to take on the gigantic allocation next ...
+diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
+index 72be609525796792274d5b8cb5ff37f73723fc23..369a89aea18618748607ee943247c327bf62c8d5 100644
+--- a/include/linux/sunrpc/svc_xprt.h
++++ b/include/linux/sunrpc/svc_xprt.h
+@@ -53,6 +53,7 @@ struct svc_xprt {
+ 	struct svc_xprt_class	*xpt_class;
+ 	const struct svc_xprt_ops *xpt_ops;
+ 	struct kref		xpt_ref;
++	ktime_t			xpt_qtime;
+ 	struct list_head	xpt_list;
+ 	struct lwq_node		xpt_ready;
+ 	unsigned long		xpt_flags;
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 5d331383047b79b9f6dcd699c87287453c1a5f49..67db3f2953d5d64f2e8e455b218f7f6ecb7753ec 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -2040,19 +2040,20 @@ TRACE_EVENT(svc_xprt_dequeue,
+ 
+ 	TP_STRUCT__entry(
+ 		SVC_XPRT_ENDPOINT_FIELDS(rqst->rq_xprt)
+-
+ 		__field(unsigned long, wakeup)
++		__field(unsigned long, qtime)
+ 	),
+ 
+ 	TP_fast_assign(
+-		SVC_XPRT_ENDPOINT_ASSIGNMENTS(rqst->rq_xprt);
++		ktime_t ktime = ktime_get();
+ 
+-		__entry->wakeup = ktime_to_us(ktime_sub(ktime_get(),
+-							rqst->rq_qtime));
++		SVC_XPRT_ENDPOINT_ASSIGNMENTS(rqst->rq_xprt);
++		__entry->wakeup = ktime_to_us(ktime_sub(ktime, rqst->rq_qtime));
++		__entry->qtime = ktime_to_us(ktime_sub(ktime, rqst->rq_xprt->xpt_qtime));
+ 	),
+ 
+-	TP_printk(SVC_XPRT_ENDPOINT_FORMAT " wakeup-us=%lu",
+-		SVC_XPRT_ENDPOINT_VARARGS, __entry->wakeup)
++	TP_printk(SVC_XPRT_ENDPOINT_FORMAT " wakeup-us=%lu qtime-us=%lu",
++		SVC_XPRT_ENDPOINT_VARARGS, __entry->wakeup, __entry->qtime)
+ );
+ 
+ DECLARE_EVENT_CLASS(svc_xprt_event,
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index ae25405d8bd22672a361d1fd3adfdcebb403f90f..32018557797b1f683d8b7259f5fccd029aebcd71 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -488,6 +488,7 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
+ 	pool = svc_pool_for_cpu(xprt->xpt_server);
+ 
+ 	percpu_counter_inc(&pool->sp_sockets_queued);
++	xprt->xpt_qtime = ktime_get();
+ 	lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts);
+ 
+ 	svc_pool_wake_idle_thread(pool);
 
- - I don't think we need folio_alloc_gigantic() to be wrapped in
-   alloc_hooks
- - folio_alloc_gigantic() should return a frozen folio
- - as should hugetlb_cma_alloc_folio()
+---
+base-commit: acad0c0757d30205fba27fd8f08afda37d5aa66b
+change-id: 20250411-sunrpc-tracepoints-7b1cd5283f18
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
