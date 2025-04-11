@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5992989BD;
-	Fri, 11 Apr 2025 09:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A52298CCA;
+	Fri, 11 Apr 2025 09:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744362114; cv=none; b=IdEqDEBQAFmsrXLx1jqh0uBMWyQetqRj5jtLm7K4WO9kprAgFdzPT6u4zZM7iFxYUpOBdWtrvAGukRjtUIBON6YMQpjDW9JC3pjZQHpjRNYWazMKIWf2RrbLG2VTcOFUuTuPmoeIu+75ri03zyOKnSIwO5S9musyjQh3lDekNIg=
+	t=1744362114; cv=none; b=oZ3YBtKBpd85WOTn2mO8rRD3GCLLUXVw2sx0tq1BfK/07gyrlt/jGHsBkbMARlwXToYrFekJkMPaccL/NYGktbO7m8zACQngANUbpaKtKjZDltiujZqmKzhMjcfhSa8QYSLbkfXAfVwhBW0cnJl5ahD2FphnfTHRKIZ7V7lAXEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744362114; c=relaxed/simple;
-	bh=X+BMimOr27k+/lCB8IAFuJEQitOZeP8NtZG5I0zUYoE=;
+	bh=BVT171KPOVJVjfzTPXmBhG+I/rvwg4GYgQn0y8XhdF0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rO5kLF5MejfesGcK77rLpKQJY2mVsB64Sd4I50pCwoPKnqcem3xAnWSYF19aJ/Z6ts+fFywHVE0c5znAU48pzzSuilneoN1oOVDLudIWZZQPvgALwT/OOnLgjFzOwLOy+um2DkP54W7EMi8WwHcF3KhCnYgTV1UubjjZDEiDXVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1ghV41ak; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tnxh4Rq7; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=HZpwUK+DKcQspX+8cGG53LZZzFeuln3FYVeAez3MxNzTsPLMydiWY10qtyP95BXFwCXWnMgW2NmE5aO/bfDSnoAUCkQJm0k9tS7VUnqIxXVwS8rijwTSsCuKzNgi15FCNDo4TUsdBOmZE+D7pr5/OedF0WUMY6nNymMreJyRbvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w8ephqr4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uwXooJ/b; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1ghV41ak";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tnxh4Rq7"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w8ephqr4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uwXooJ/b"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744362109;
+	s=2020; t=1744362110;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wtICgEwn39BNK2RVwM0gACpiOULlMkuI9K6OeLRKX6w=;
-	b=1ghV41akaZSwLQ7urFX89khrmSalYn0EJp0/t4podAGy1uveW7dJMKGyPn7DMZWul5Fjcc
-	zi/5isGpJcYAIiS2Ytm8198ev0cz/GrvWpWBpua5OLuqKCb8v1PIUnpI7/7RffmkFVcS2q
-	MOTaxdIln8zu+GBCXlCpSr1Vl6oGqB3PigzpkOHwARaDRA7dLa+8lGJJ7U9ScLQlb4Efo8
-	HQHSxgi/fesbM1afnMwWXANIonoQzL80vt2AObhf+JUVcQwvqP9rZAqn0kHNrFM/m1a0s9
-	0gjQoWRtyFkLxaIVKkDMGzrRkbEVrqgjoSlHxVvEhUH+FsAK8rJRO4619CI/6w==
+	bh=PfHP6lDLf5mEBPgKe6QaxYDp7DWXdQcn3ptsh2iol5E=;
+	b=w8ephqr44jeknOTrmQuSC0azDs+LLpv03987OQuDvtYlekDrfbE1JMuQfw1V0YkxEoykvk
+	ldx9BZ6FWUBDSCJ2Rn4h+Mhs5LGelH8piTXz+vvFOg8mDquxFnmyq+8FlPTCRfMFtielss
+	7Efx5SYyIcHkKr6Neeufsh0gfBEAO0e23PQUHP/fCHDfVrDON07GXcPbjsLADsFqkhOIrF
+	BPbu5X7Nqf2qTiGmY0OrIjGVSYd1f1tVbSCttEhfnZ8GNkHrcp406eVzRnyRhqzSgy97lj
+	sM8ruVCUJeZRFNMX+y9ZqyMWIQaDFrzuR0yljb64Bl/y712d+jVeEeulohZobg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744362109;
+	s=2020e; t=1744362110;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wtICgEwn39BNK2RVwM0gACpiOULlMkuI9K6OeLRKX6w=;
-	b=tnxh4Rq7BreL3AkcMEmUE63b0xNeszlpzoFZx+AMPDD4iUlSMxTBwrtCtdVU09OXi4nlcw
-	LbpA7VfJMDP6VXBA==
-Date: Fri, 11 Apr 2025 11:00:30 +0200
-Subject: [PATCH v3 06/32] selftests: harness: Remove dependency on
- libatomic
+	bh=PfHP6lDLf5mEBPgKe6QaxYDp7DWXdQcn3ptsh2iol5E=;
+	b=uwXooJ/bkze83Ndkth12mXwO6CddYWvLD88efqB0B/RkCAfsmL19afvepVhtMTJqiihJ69
+	I3WltRHHtfcbM2CQ==
+Date: Fri, 11 Apr 2025 11:00:33 +0200
+Subject: [PATCH v3 09/32] selftests: harness: Always provide "self" and
+ "variant"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250411-nolibc-kselftest-harness-v3-6-4d9c0295893f@linutronix.de>
+Message-Id: <20250411-nolibc-kselftest-harness-v3-9-4d9c0295893f@linutronix.de>
 References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
 In-Reply-To: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -60,42 +60,54 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
 Cc: Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
  linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744362103; l=1409;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744362103; l=1726;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=X+BMimOr27k+/lCB8IAFuJEQitOZeP8NtZG5I0zUYoE=;
- b=Im72zI7x5XtITNJyoPf3w6jYh5XXgB8/srkQa44p0i0srwGO/a5ubt4hxFxRNQ4yqEUMrkwL3
- VgEPMKsuE/YAvyc15OO1qiLCDUcJA49pye8H12jtwSr+3GaDDHuEs0v
+ bh=BVT171KPOVJVjfzTPXmBhG+I/rvwg4GYgQn0y8XhdF0=;
+ b=aE1YqloT5sq4xow8ECRqaLDPl36mLdTU8dQGj0XC555BvnmnlRrQDIhbo7rtJXZe1fqDzafs8
+ YA3d26AOHXxBKzYxHVj47cdKMAL4gJEdzmkGy1B85V+T3eZjo4zzcUA
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-__sync_bool_compare_and_swap() is deprecated and requires libatomic on
-GCC. Compiler toolchains don't necessarily have libatomic available, so
-avoid this requirement by using atomics that don't need libatomic.
+Some upcoming changes to the assertion macros need those two symbols
+also to be available for tests without fixtures.
+Provide them with a NULL value.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/selftests/kselftest_harness.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/kselftest_harness.h | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 222a4f51a8d704c41597e09a241ad887ef787139..7ec4f66d0e3d7f129f6c2a45ff58310dabe5d03f 100644
+index 905986debbfb0ce8c9659dbd52b6c67c6759cae7..4038ceeb42a870a2b77c6888df8a7bb4c4a258ba 100644
 --- a/tools/testing/selftests/kselftest_harness.h
 +++ b/tools/testing/selftests/kselftest_harness.h
-@@ -439,12 +439,12 @@
- 		} \
- 		if (child == 0) { \
- 			if (_metadata->setup_completed && !fixture_name##_teardown_parent && \
--					__sync_bool_compare_and_swap(teardown, false, true)) \
-+					!__atomic_test_and_set(teardown, __ATOMIC_RELAXED)) \
- 				fixture_name##_teardown(_metadata, self, variant->data); \
- 			_exit(0); \
- 		} \
- 		if (_metadata->setup_completed && fixture_name##_teardown_parent && \
--				__sync_bool_compare_and_swap(teardown, false, true)) \
-+				!__atomic_test_and_set(teardown, __ATOMIC_RELAXED)) \
- 			fixture_name##_teardown(_metadata, self, variant->data); \
- 		munmap(teardown, sizeof(*teardown)); \
- 		if (self && fixture_name##_teardown_parent) \
+@@ -173,13 +173,13 @@
+ #define TEST_SIGNAL(test_name, signal) __TEST_IMPL(test_name, signal)
+ 
+ #define __TEST_IMPL(test_name, _signal) \
+-	static void test_name(struct __test_metadata *_metadata); \
++	static void test_name(struct __test_metadata *_metadata, void *self, const void *variant); \
+ 	static void wrapper_##test_name( \
+ 		struct __test_metadata *_metadata, \
+ 		struct __fixture_variant_metadata __attribute__((unused)) *variant) \
+ 	{ \
+ 		if (setjmp(_metadata->env) == 0) \
+-			test_name(_metadata); \
++			test_name(_metadata, NULL, NULL); \
+ 		__test_check_assert(_metadata); \
+ 	} \
+ 	static struct __test_metadata _##test_name##_object = \
+@@ -193,7 +193,9 @@
+ 		__register_test(&_##test_name##_object); \
+ 	} \
+ 	static void test_name( \
+-		struct __test_metadata __attribute__((unused)) *_metadata)
++		struct __test_metadata __attribute__((unused)) *_metadata, \
++		void __attribute__((unused)) *self, \
++		const void __attribute__((unused)) *variant)
+ 
+ /**
+  * FIXTURE_DATA() - Wraps the struct name so we have one less
 
 -- 
 2.49.0
