@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A75298CDD
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DD1298CB4
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365225; cv=none; b=Dv1PMCqR/3L2+yBxOKJUmzZocj9AdjgKciP0qZTByRSxQ+E+65nQBrD3s6BoqHmDJys/1f8cuX54use0kDRbhFdTi2/0fydo3OQSu2j6vS1j23h43JChStmeRwGXGxuvaPve+vPyCPrcfwpV83+lDu9sVNO0Tf1WLRohvXZpkcM=
+	t=1744365232; cv=none; b=HpB2yxiZzerTFSpTVysifgEQVKginOHDY3OxffDc0kY1cdwc37z7thd2seQdDAYU6F07yNoSY8RUXNE5UnrP3kC0NQGRMwExHuMuevU44Ywha437dVbw8Zi2WK289QdhY2fmo2xLaVrf0Tw3eeTokn7D6uZktp3XgX+ZI3U31QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365225; c=relaxed/simple;
-	bh=3KwKp2aD85mHffTAYEaBVdbMM9dx9pTF+DA2uQOAX9k=;
+	s=arc-20240116; t=1744365232; c=relaxed/simple;
+	bh=OB426BM0p2kUhbQOrBKo13ZJMHCjb0jc4Kvo8X9ZTO0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d3DtIGSWgNplaiK9+iSWCwpMEbpzobF+bQxsUfeL2qTcJnWvw0c1DTQOIiikyVN3TT+B8r99prk3LkA2lzx4OZ+F+yUYKJPOWzySXvRxqssh0sfVZzUu29el3/080pzBSHwDHqsfSUBP2Nu9wfUpuyQPqu43eF/ZkRy7FNQqf7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QOYxa0fM; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=sBlx1W6jJB/nToHjY1bRUshy/G2yObTO2lVQaiAJ884HlyZEsH7wH7bvj6lQ3NgbtchJWrvWNHHOi+kMF7vHTYkpkLTaKA+O0OJkFKjkYoJ56Zvjlw/WgC4N7JZ05Od5GQmm5cVns7Go/Y+mJOLoBsUuGH7csGaFp+mY69SiyTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N3mAGXap; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QOYxa0fM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3mAGXap"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744365222;
+	s=mimecast20190719; t=1744365229;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RdWuE1dWKOPxlS+GrAPuM5JDKKMOWefIovwm76mdaQ4=;
-	b=QOYxa0fMHPLxulVDrjTcKcyoC4o3UVmoFlppn7a+c0siyLVCfRD51ZJNHC1YteKjGCMejE
-	uO7rH4qaVSxdW0nVh3V5v0N9Ra/rSv34IJ0ViuPurLYWFCrK3lo4c4yb/YQ7IcoeUx1mCZ
-	OQ7KZ81WBF37Cyks7hKR8c+tdN4w+N4=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Gc2qEfudFxA0okgiag2VPHsjTUpgbRIn5RioL2rpa7A=;
+	b=N3mAGXap7xiZRrvQG5hovPLXbWK7G/CwucI1L8vyr+LNrpY4V4APOTM50PCgyPTDnnaMFd
+	98aG+8hnUXUM4cI3sRpTkhuIepcvFl5d0zP+ijAG/uaRhb7FbtXpOJwCFIfsa4khQmRcy7
+	HKPA+CnHIFtXQQ3+EN+cXYPGCsoP64c=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-597-5bJU3dfSNkKiNWGFpJHhLQ-1; Fri,
- 11 Apr 2025 05:53:30 -0400
-X-MC-Unique: 5bJU3dfSNkKiNWGFpJHhLQ-1
-X-Mimecast-MFC-AGG-ID: 5bJU3dfSNkKiNWGFpJHhLQ_1744365204
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-8Dp6UKgAOqi1EcCgfuOF9w-1; Fri,
+ 11 Apr 2025 05:53:43 -0400
+X-MC-Unique: 8Dp6UKgAOqi1EcCgfuOF9w-1
+X-Mimecast-MFC-AGG-ID: 8Dp6UKgAOqi1EcCgfuOF9w_1744365222
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B69781955DE9;
-	Fri, 11 Apr 2025 09:53:24 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8141196A961;
+	Fri, 11 Apr 2025 09:53:40 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.40])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7F45A1955DCE;
-	Fri, 11 Apr 2025 09:53:21 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 20C121955BF2;
+	Fri, 11 Apr 2025 09:53:35 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: netdev@vger.kernel.org
 Cc: David Howells <dhowells@redhat.com>,
@@ -54,10 +54,12 @@ Cc: David Howells <dhowells@redhat.com>,
 	Christian Brauner <brauner@kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>,
 	linux-afs@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 03/14] rxrpc: Remove some socket lock acquire/release annotations
-Date: Fri, 11 Apr 2025 10:52:48 +0100
-Message-ID: <20250411095303.2316168-4-dhowells@redhat.com>
+	linux-kernel@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-crypto@vger.kernel.org
+Subject: [PATCH net-next v3 06/14] rxrpc: Add YFS RxGK (GSSAPI) security class
+Date: Fri, 11 Apr 2025 10:52:51 +0100
+Message-ID: <20250411095303.2316168-7-dhowells@redhat.com>
 In-Reply-To: <20250411095303.2316168-1-dhowells@redhat.com>
 References: <20250411095303.2316168-1-dhowells@redhat.com>
 Precedence: bulk
@@ -67,79 +69,353 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Remove some socket lock acquire/release annotations as lock_sock() and
-release_sock() don't have them and so the checker gets confused.  Removing
-all of them, however, causes warnings about "context imbalance" and "wrong
-count at exit" to occur instead.
+Add support for the YFS-variant RxGK security class to support
+GSSAPI-derived authentication.  This also allows the use of better crypto
+over the rxkad security class.
 
-Probably lock_sock() and release_sock() should have annotations on
-indicating their taking of sk_lock - there is a dep_map in socket_lock_t,
-but I don't know if that matters to the static checker.
+The key payload is XDR encoded of the form:
+
+    typedef int64_t opr_time;
+
+    const AFSTOKEN_RK_TIX_MAX = 12000; 	/* Matches entry in rxkad.h */
+
+    struct token_rxkad {
+	afs_int32 viceid;
+	afs_int32 kvno;
+	afs_int64 key;
+	afs_int32 begintime;
+	afs_int32 endtime;
+	afs_int32 primary_flag;
+	opaque ticket<AFSTOKEN_RK_TIX_MAX>;
+    };
+
+    struct token_rxgk {
+	opr_time begintime;
+	opr_time endtime;
+	afs_int64 level;
+	afs_int64 lifetime;
+	afs_int64 bytelife;
+	afs_int64 enctype;
+	opaque key<>;
+	opaque ticket<>;
+    };
+
+    const AFSTOKEN_UNION_NOAUTH = 0;
+    const AFSTOKEN_UNION_KAD = 2;
+    const AFSTOKEN_UNION_YFSGK = 6;
+
+    union ktc_tokenUnion switch (afs_int32 type) {
+	case AFSTOKEN_UNION_KAD:
+	    token_rxkad kad;
+	case AFSTOKEN_UNION_YFSGK:
+	    token_rxgk  gk;
+    };
+
+    const AFSTOKEN_LENGTH_MAX = 16384;
+    typedef opaque token_opaque<AFSTOKEN_LENGTH_MAX>;
+
+    const AFSTOKEN_MAX = 8;
+    const AFSTOKEN_CELL_MAX = 64;
+
+    struct ktc_setTokenData {
+	afs_int32 flags;
+	string cell<AFSTOKEN_CELL_MAX>;
+	token_opaque tokens<AFSTOKEN_MAX>;
+    };
+
+The parser for the basic token struct is already present, as is the rxkad
+token type.  This adds a parser for the rxgk token type.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jakub Kicinski <kuba@kernel.org>
+cc: Herbert Xu <herbert@gondor.apana.org.au>
 cc: "David S. Miller" <davem@davemloft.net>
+cc: Chuck Lever <chuck.lever@oracle.com>
 cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
 cc: Paolo Abeni <pabeni@redhat.com>
 cc: Simon Horman <horms@kernel.org>
 cc: linux-afs@lists.infradead.org
+cc: linux-crypto@vger.kernel.org
 cc: netdev@vger.kernel.org
 ---
- net/rxrpc/ar-internal.h | 4 +++-
- net/rxrpc/call_object.c | 2 +-
- net/rxrpc/sendmsg.c     | 3 +--
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ include/keys/rxrpc-type.h |  17 ++++
+ net/rxrpc/key.c           | 185 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 202 insertions(+)
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 55810c6b4be8..c267b8ac1bb5 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -1000,7 +1000,9 @@ struct rxrpc_call *rxrpc_alloc_call(struct rxrpc_sock *, gfp_t, unsigned int);
- struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *,
- 					 struct rxrpc_conn_parameters *,
- 					 struct rxrpc_call_params *, gfp_t,
--					 unsigned int);
-+					 unsigned int)
-+	__releases(&rx->sk.sk_lock)
-+	__acquires(&call->user_mutex);
- void rxrpc_start_call_timer(struct rxrpc_call *call);
- void rxrpc_incoming_call(struct rxrpc_sock *, struct rxrpc_call *,
- 			 struct sk_buff *);
-diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
-index c4c8b46a68c6..d48e9b021d85 100644
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -322,7 +322,7 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
- 					 struct rxrpc_call_params *p,
- 					 gfp_t gfp,
- 					 unsigned int debug_id)
--	__releases(&rx->sk.sk_lock.slock)
-+	__releases(&rx->sk.sk_lock)
- 	__acquires(&call->user_mutex)
- {
- 	struct rxrpc_call *call, *xcall;
-diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 3f62c34ce7de..2342b5f1547c 100644
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -607,7 +607,7 @@ static int rxrpc_sendmsg_cmsg(struct msghdr *msg, struct rxrpc_send_params *p)
- static struct rxrpc_call *
- rxrpc_new_client_call_for_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg,
- 				  struct rxrpc_send_params *p)
--	__releases(&rx->sk.sk_lock.slock)
-+	__releases(&rx->sk.sk_lock)
- 	__acquires(&call->user_mutex)
- {
- 	struct rxrpc_conn_parameters cp;
-@@ -657,7 +657,6 @@ rxrpc_new_client_call_for_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg,
-  * - the socket may be either a client socket or a server socket
+diff --git a/include/keys/rxrpc-type.h b/include/keys/rxrpc-type.h
+index 333c0f49a9cd..0ddbe197a261 100644
+--- a/include/keys/rxrpc-type.h
++++ b/include/keys/rxrpc-type.h
+@@ -9,6 +9,7 @@
+ #define _KEYS_RXRPC_TYPE_H
+ 
+ #include <linux/key.h>
++#include <crypto/krb5.h>
+ 
+ /*
+  * key type for AF_RXRPC keys
+@@ -31,6 +32,21 @@ struct rxkad_key {
+ 	u8	ticket[];		/* the encrypted ticket */
+ };
+ 
++/*
++ * RxRPC key for YFS-RxGK (type-6 security)
++ */
++struct rxgk_key {
++	s64		begintime;	/* Time at which the ticket starts */
++	s64		endtime;	/* Time at which the ticket ends */
++	u64		lifetime;	/* Maximum lifespan of a connection (seconds) */
++	u64		bytelife;	/* Maximum number of bytes on a connection */
++	unsigned int	enctype;	/* Encoding type */
++	s8		level;		/* Negotiated security RXRPC_SECURITY_PLAIN/AUTH/ENCRYPT */
++	struct krb5_buffer key;		/* Master key, K0 */
++	struct krb5_buffer ticket;	/* Ticket to be passed to server */
++	u8		_key[];		/* Key storage */
++};
++
+ /*
+  * list of tokens attached to an rxrpc key
   */
- int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
--	__releases(&rx->sk.sk_lock.slock)
- {
- 	struct rxrpc_call *call;
- 	bool dropped_lock = false;
+@@ -40,6 +56,7 @@ struct rxrpc_key_token {
+ 	struct rxrpc_key_token *next;	/* the next token in the list */
+ 	union {
+ 		struct rxkad_key *kad;
++		struct rxgk_key *rxgk;
+ 	};
+ };
+ 
+diff --git a/net/rxrpc/key.c b/net/rxrpc/key.c
+index 8c99cf19b19d..9fdc1f031c9d 100644
+--- a/net/rxrpc/key.c
++++ b/net/rxrpc/key.c
+@@ -129,6 +129,160 @@ static int rxrpc_preparse_xdr_rxkad(struct key_preparsed_payload *prep,
+ 	return 0;
+ }
+ 
++static u64 xdr_dec64(const __be32 *xdr)
++{
++	return (u64)ntohl(xdr[0]) << 32 | (u64)ntohl(xdr[1]);
++}
++
++static time64_t rxrpc_s64_to_time64(s64 time_in_100ns)
++{
++	bool neg = false;
++	u64 tmp = time_in_100ns;
++
++	if (time_in_100ns < 0) {
++		tmp = -time_in_100ns;
++		neg = true;
++	}
++	do_div(tmp, 10000000);
++	return neg ? -tmp : tmp;
++}
++
++/*
++ * Parse a YFS-RxGK type XDR format token
++ * - the caller guarantees we have at least 4 words
++ *
++ * struct token_rxgk {
++ *	opr_time begintime;
++ *	opr_time endtime;
++ *	afs_int64 level;
++ *	afs_int64 lifetime;
++ *	afs_int64 bytelife;
++ *	afs_int64 enctype;
++ *	opaque key<>;
++ *	opaque ticket<>;
++ * };
++ */
++static int rxrpc_preparse_xdr_yfs_rxgk(struct key_preparsed_payload *prep,
++				       size_t datalen,
++				       const __be32 *xdr, unsigned int toklen)
++{
++	struct rxrpc_key_token *token, **pptoken;
++	time64_t expiry;
++	size_t plen;
++	const __be32 *ticket, *key;
++	s64 tmp;
++	u32 tktlen, keylen;
++
++	_enter(",{%x,%x,%x,%x},%x",
++	       ntohl(xdr[0]), ntohl(xdr[1]), ntohl(xdr[2]), ntohl(xdr[3]),
++	       toklen);
++
++	if (6 * 2 + 2 > toklen / 4)
++		goto reject;
++
++	key = xdr + (6 * 2 + 1);
++	keylen = ntohl(key[-1]);
++	_debug("keylen: %x", keylen);
++	keylen = round_up(keylen, 4);
++	if ((6 * 2 + 2) * 4 + keylen > toklen)
++		goto reject;
++
++	ticket = xdr + (6 * 2 + 1 + (keylen / 4) + 1);
++	tktlen = ntohl(ticket[-1]);
++	_debug("tktlen: %x", tktlen);
++	tktlen = round_up(tktlen, 4);
++	if ((6 * 2 + 2) * 4 + keylen + tktlen != toklen) {
++		kleave(" = -EKEYREJECTED [%x!=%x, %x,%x]",
++		       (6 * 2 + 2) * 4 + keylen + tktlen, toklen,
++		       keylen, tktlen);
++		goto reject;
++	}
++
++	plen = sizeof(*token) + sizeof(*token->rxgk) + tktlen + keylen;
++	prep->quotalen = datalen + plen;
++
++	plen -= sizeof(*token);
++	token = kzalloc(sizeof(*token), GFP_KERNEL);
++	if (!token)
++		goto nomem;
++
++	token->rxgk = kzalloc(sizeof(*token->rxgk) + keylen, GFP_KERNEL);
++	if (!token->rxgk)
++		goto nomem_token;
++
++	token->security_index	= RXRPC_SECURITY_YFS_RXGK;
++	token->rxgk->begintime	= xdr_dec64(xdr + 0 * 2);
++	token->rxgk->endtime	= xdr_dec64(xdr + 1 * 2);
++	token->rxgk->level	= tmp = xdr_dec64(xdr + 2 * 2);
++	if (tmp < -1LL || tmp > RXRPC_SECURITY_ENCRYPT)
++		goto reject_token;
++	token->rxgk->lifetime	= xdr_dec64(xdr + 3 * 2);
++	token->rxgk->bytelife	= xdr_dec64(xdr + 4 * 2);
++	token->rxgk->enctype	= tmp = xdr_dec64(xdr + 5 * 2);
++	if (tmp < 0 || tmp > UINT_MAX)
++		goto reject_token;
++	token->rxgk->key.len	= ntohl(key[-1]);
++	token->rxgk->key.data	= token->rxgk->_key;
++	token->rxgk->ticket.len = ntohl(ticket[-1]);
++
++	if (token->rxgk->endtime != 0) {
++		expiry = rxrpc_s64_to_time64(token->rxgk->endtime);
++		if (expiry < 0)
++			goto expired;
++		if (expiry < prep->expiry)
++			prep->expiry = expiry;
++	}
++
++	memcpy(token->rxgk->key.data, key, token->rxgk->key.len);
++
++	/* Pad the ticket so that we can use it directly in XDR */
++	token->rxgk->ticket.data = kzalloc(round_up(token->rxgk->ticket.len, 4),
++					   GFP_KERNEL);
++	if (!token->rxgk->ticket.data)
++		goto nomem_yrxgk;
++	memcpy(token->rxgk->ticket.data, ticket, token->rxgk->ticket.len);
++
++	_debug("SCIX: %u",	token->security_index);
++	_debug("EXPY: %llx",	token->rxgk->endtime);
++	_debug("LIFE: %llx",	token->rxgk->lifetime);
++	_debug("BYTE: %llx",	token->rxgk->bytelife);
++	_debug("ENC : %u",	token->rxgk->enctype);
++	_debug("LEVL: %u",	token->rxgk->level);
++	_debug("KLEN: %u",	token->rxgk->key.len);
++	_debug("TLEN: %u",	token->rxgk->ticket.len);
++	_debug("KEY0: %*phN",	token->rxgk->key.len, token->rxgk->key.data);
++	_debug("TICK: %*phN",
++	       min_t(u32, token->rxgk->ticket.len, 32), token->rxgk->ticket.data);
++
++	/* count the number of tokens attached */
++	prep->payload.data[1] = (void *)((unsigned long)prep->payload.data[1] + 1);
++
++	/* attach the data */
++	for (pptoken = (struct rxrpc_key_token **)&prep->payload.data[0];
++	     *pptoken;
++	     pptoken = &(*pptoken)->next)
++		continue;
++	*pptoken = token;
++
++	_leave(" = 0");
++	return 0;
++
++nomem_yrxgk:
++	kfree(token->rxgk);
++nomem_token:
++	kfree(token);
++nomem:
++	return -ENOMEM;
++reject_token:
++	kfree(token);
++reject:
++	return -EKEYREJECTED;
++expired:
++	kfree(token->rxgk);
++	kfree(token);
++	return -EKEYEXPIRED;
++}
++
+ /*
+  * attempt to parse the data as the XDR format
+  * - the caller guarantees we have more than 7 words
+@@ -228,6 +382,9 @@ static int rxrpc_preparse_xdr(struct key_preparsed_payload *prep)
+ 		case RXRPC_SECURITY_RXKAD:
+ 			ret2 = rxrpc_preparse_xdr_rxkad(prep, datalen, token, toklen);
+ 			break;
++		case RXRPC_SECURITY_YFS_RXGK:
++			ret2 = rxrpc_preparse_xdr_yfs_rxgk(prep, datalen, token, toklen);
++			break;
+ 		default:
+ 			ret2 = -EPROTONOSUPPORT;
+ 			break;
+@@ -390,6 +547,10 @@ static void rxrpc_free_token_list(struct rxrpc_key_token *token)
+ 		case RXRPC_SECURITY_RXKAD:
+ 			kfree(token->kad);
+ 			break;
++		case RXRPC_SECURITY_YFS_RXGK:
++			kfree(token->rxgk->ticket.data);
++			kfree(token->rxgk);
++			break;
+ 		default:
+ 			pr_err("Unknown token type %x on rxrpc key\n",
+ 			       token->security_index);
+@@ -433,6 +594,9 @@ static void rxrpc_describe(const struct key *key, struct seq_file *m)
+ 		case RXRPC_SECURITY_RXKAD:
+ 			seq_puts(m, "ka");
+ 			break;
++		case RXRPC_SECURITY_YFS_RXGK:
++			seq_puts(m, "ygk");
++			break;
+ 		default: /* we have a ticket we can't encode */
+ 			seq_printf(m, "%u", token->security_index);
+ 			break;
+@@ -597,6 +761,13 @@ static long rxrpc_read(const struct key *key,
+ 				toksize += RND(token->kad->ticket_len);
+ 			break;
+ 
++		case RXRPC_SECURITY_YFS_RXGK:
++			toksize += 6 * 8 + 2 * 4;
++			if (!token->no_leak_key)
++				toksize += RND(token->rxgk->key.len);
++			toksize += RND(token->rxgk->ticket.len);
++			break;
++
+ 		default: /* we have a ticket we can't encode */
+ 			pr_err("Unsupported key token type (%u)\n",
+ 			       token->security_index);
+@@ -676,6 +847,20 @@ static long rxrpc_read(const struct key *key,
+ 				ENCODE_DATA(token->kad->ticket_len, token->kad->ticket);
+ 			break;
+ 
++		case RXRPC_SECURITY_YFS_RXGK:
++			ENCODE64(token->rxgk->begintime);
++			ENCODE64(token->rxgk->endtime);
++			ENCODE64(token->rxgk->level);
++			ENCODE64(token->rxgk->lifetime);
++			ENCODE64(token->rxgk->bytelife);
++			ENCODE64(token->rxgk->enctype);
++			if (token->no_leak_key)
++				ENCODE(0);
++			else
++				ENCODE_DATA(token->rxgk->key.len, token->rxgk->key.data);
++			ENCODE_DATA(token->rxgk->ticket.len, token->rxgk->ticket.data);
++			break;
++
+ 		default:
+ 			pr_err("Unsupported key token type (%u)\n",
+ 			       token->security_index);
 
