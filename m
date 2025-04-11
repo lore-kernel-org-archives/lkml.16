@@ -1,103 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDC8298CD9;
-	Fri, 11 Apr 2025 11:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5AF2278E5E
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744372717; cv=none; b=SOvh7og7sve4+Iyoj0tJ6eqm3Fuob0Z8vBn9w7DodZ65W1o/9S4m83PgZY2eMHgBdQloTe3hAZSgtesl+BOAz9cbUIXkNHhuoctBC7tW+pgJuHqOWxnr7uoUsgi86NsUQMigNnsXGdpjzsq8eZipDXMIWW/FjOJq7pGctspMuYE=
+	t=1744372858; cv=none; b=D/S8PTg/dFhqopgxbajal3t66ahLekCw7iEfco41I8QxtxoGDxTAnFbW7xmynNKLNjKthkFxxZdADGeotgEUeKefl/pWEZ7CwK46TVlNiI6UDYTzco1LLfDaTP7oBN2TPwHY5i0sZJy//MYGIwzZkfV1Ws1lZtLzCKySK9MbKXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744372717; c=relaxed/simple;
-	bh=ePFF4GGH8AopDjRasGCwQmpgIQb6LyuLsOSi1mcIjU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DrvSrrgO/dysDoH20DhOFWz+csu6pynLt4WuTrDD1FQItTaQX4p9GF44MT3WB6VHTo91YzO3vf9RNHLL4G71+HQ8pzUXj0Sklahcg1VVPAcoqajC+exStwnTQqzmg6h9U2rkXaRy4XC/O0f8fyXNUh1G6U1kJP+iC9ON+pzAoDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvtzN8HW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744372858; c=relaxed/simple;
+	bh=p+KBJg/q0VC4AxurC0CaLJgxb/Q+KI0fay4d3RSnrro=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fYbTJbfYUcTO1rEttnqn7P4+FqFmwtQdlDfqHoPYMkwBr4YXq+wP9BkF3yc0+CBWLhHGy8YERUpN8NUgz0TqQ9Pa9Ffd8+3Jue3mGGD+WzDJP2IRZ8PYY2+9xWH2yz+zLCIxtpiw4JNQUDoCsEKTnjL4+6NdMRQLHdFlLlgbny0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=cwaBQPxu; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvtzN8HW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB0CC4CEE2;
-	Fri, 11 Apr 2025 11:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744372717;
-	bh=ePFF4GGH8AopDjRasGCwQmpgIQb6LyuLsOSi1mcIjU4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RvtzN8HWxAwCIvkN6HCqqxfGOxfSFf19EicjQaspg5ESxbw+SxHXeiickOJzw/hq0
-	 biwAXLqZaBSVBBx26AiP6Zx1NOCsvklAw1wqJ8XWRejKgXm6wYSWNG8qAgEXdVxZGM
-	 tAWH3847/h0PHRih1lnWpfxWO7gH+yM2+odo3+KUEQJaUNqeqNQnxlRX7Uy6WAB5UI
-	 DkY4RrvPfP0JNUA5fTbh1qCGcxieOtjG8SX7xYp/xvNwqv5KX2xK9SrWmeURa37lb3
-	 Uvy6K6jcFCsEYeLsEj6niJMNjyra0c1HBb3Qx6RPxn9b9f2OEuqevMkO4yCH1Uxt8H
-	 0hBmsvi6B/t8g==
-Date: Fri, 11 Apr 2025 13:58:28 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V9 15/17] rust: cpufreq: Extend abstractions for driver
- registration
-Message-ID: <Z_kD5G3WhcYlgqmr@cassiopeiae>
-References: <cover.1744366571.git.viresh.kumar@linaro.org>
- <2f7a1331ad513b94fb47c05bf1d0f5c3fa803858.1744366572.git.viresh.kumar@linaro.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cwaBQPxu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=Ai6KO
+	rDYRhXJ9lvg8B6jho/hJgKPY3oes6sm6uHCIVQ=; b=cwaBQPxugXqPHMuN975Hd
+	UFQNFOVGGuJZ/NgXaZ3/WIGz95Z4k5nKjTV5hGLeSjYUjHyPufr2Rwr44+3EQcEa
+	NniugkIkdMqlMREKpKmfxsig58eLbcW48Mq6Mv3iSR+8k55tMWYKRAvHDyDWPJ0O
+	zFbkzzGAhUciPngSeO79Vg=
+Received: from ProDesk.. (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgDXnwMuBPlnWR0nAA--.27850S2;
+	Fri, 11 Apr 2025 19:59:46 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: lumag@kernel.org
+Cc: cristian.ciocaltea@collabora.com,
+	mripard@kernel.org,
+	neil.armstrong@linaro.org,
+	andrzej.hajda@intel.com,
+	dianders@chromium.org,
+	jernej.skrabec@gmail.com,
+	Laurent.pinchart@ideasonboard.com,
+	maarten.lankhorst@linux.intel.com,
+	rfoss@kernel.org,
+	simona@ffwll.ch,
+	tzimmermann@suse.de,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	heiko@sntech.de,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v2] drm/bridge: dw-hdmi: Avoid including uapi headers
+Date: Fri, 11 Apr 2025 19:59:37 +0800
+Message-ID: <20250411115941.318558-1-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f7a1331ad513b94fb47c05bf1d0f5c3fa803858.1744366572.git.viresh.kumar@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgDXnwMuBPlnWR0nAA--.27850S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKr15ZFy8WF1rur1xZF48Xrb_yoWftwb_C3
+	WSvrW5JrWUCr1qyF17ZrsxZ3sF9a1UuFWxWFn5tr9xAF4kZr4YgwnrZFyUJwn8uF15KFZr
+	Wa45WFW2vrnxWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1_Ma5UUUUU==
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkAosXmf5AzIMjwACsG
 
-On Fri, Apr 11, 2025 at 04:25:14PM +0530, Viresh Kumar wrote:
-> +pub struct Registration<T: Driver> {
-> +    drv: KBox<UnsafeCell<bindings::cpufreq_driver>>,
-> +    _p: PhantomData<T>,
-> +}
-> +
-> +// SAFETY: `Registration` doesn't offer any methods or access to fields when shared between threads
-> +// or CPUs, so it is safe to share it.
-> +unsafe impl<T: Driver> Sync for Registration<T> {}
-> +
-> +#[allow(clippy::non_send_fields_in_send_ty)]
-> +// SAFETY: Registration with and unregistration from the cpufreq subsystem can happen from any
-> +// thread.  Additionally, `T::Data` (which is dropped during unregistration) is `Send`, so it is
-> +// okay to move `Registration` to different threads.
-> +unsafe impl<T: Driver> Send for Registration<T> {}
-> +
-> +impl<T: Driver> Registration<T> {
-> +    /// Registers a CPU frequency driver with the cpufreq core.
-> +    pub fn new(name: &'static CStr, data: T::Data, flags: u16, boost: bool) -> Result<Self> {
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Do you really need the private data? It seems to be used by only very few
-drivers in C either.
+It is not recommended for drivers to include UAPI header
+directly.
 
-If yes, I think you have to split this up into a CpufreqDriver structure and a
-separate Registration. Otherwise you won't ever get access to the private data
-again, after Registration::new_foreign_owned().
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-Note that we typically want Registration::new_foreign_owned(), because it
-implies the guaranteed "fence" for where we can safely consider a device to be
-bound. If we'd give out a Registration instance instead, the driver can
-arbitrarily extend its lifetime across the remove() boundary.
+---
 
-If no, it seems to me that you can even avoid allocating a struct cpufreq_driver
-dynamically and make it const instead. The fields name, boost_enabled and flags
-could be required consts in your cpufreq::Driver trait.
+Changes in v2:
+- Collect R-b from Heiko.
+
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index b1cdf806b3c40..deaba3b6f9978 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -22,8 +22,8 @@
+ 
+ #include <media/cec-notifier.h>
+ 
+-#include <uapi/linux/media-bus-format.h>
+-#include <uapi/linux/videodev2.h>
++#include <linux/media-bus-format.h>
++#include <linux/videodev2.h>
+ 
+ #include <drm/bridge/dw_hdmi.h>
+ #include <drm/display/drm_hdmi_helper.h>
+-- 
+2.43.0
+
