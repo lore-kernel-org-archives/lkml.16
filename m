@@ -1,188 +1,152 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B9D2C376D;
-	Fri, 11 Apr 2025 12:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744375017; cv=fail; b=unuXn+YMYiGLihVJJr0txShbR54NfZH5WrHrRNO+paXC13DvDdDZwBZlEA4Fk4UnG/nYnc0oA+rIlUSwe6xgZoiiX3tUsE4QR/2tL+1w7HM8DLnlf6NtTpF+pLftcXrvMKYebuvPEkDAxOsjO5w68gcshRiykMNDzcS9284+V+Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744375017; c=relaxed/simple;
-	bh=zMHsTmx/jXt6V5X+b8PYIKvMBDORKNqnBvkoE+7nGO4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WTfSTobu4iAsi+zq6cLM+Jvn5U17iuN5K+BVCPLvThcswoDFjLF2qcUi2mQp7wfIlgVaLwMjtpH6UEoEByS6QoyRsnBHKzGnnAYyLxV34hN6ZC5jr2JxZ6JcMypJlnYU/lMbqxHj3RcDWs2+Y2oS3fiuK9I6zWsdC/RLGCHEiDg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=p14ToePp; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=kKVebrYS; arc=fail smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2542BEC4D
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744375020; cv=none; b=qakMijF5U+GsZuFURitxfC+O98wlY6aKfJHRPxR+RaWbgg0prVuRHUvLnin3ByYfaMR4jFZgahiPIrpSI9tTMhHtQv+wltyuMCQ/jxGBweiuCXn1vQgwMYLo5XKurCip3Ye289ZGZS+4SMMDm0QfWMTZXIeKk67xk1BXwwpVqoU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744375020; c=relaxed/simple;
+	bh=7fUfH1eE+n+zmzKhP4D/88n0duk+DQJUKxhnlJl8LM8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=J+zXs/zF4+GPU4YCr9dzx0V9ZjNAqFccbcSDZ6nxeaY4CM+Qv6e6Nk7CQfiZR1nTeEtE1HG0DmSHOL8CHFn+YyyQYapVTQgcFcUYZ0YxUp4CJWgnjyEUOkx3uYgKq2+nVHVJS+Sd0lSnfiICz2bFKSKrmLXli6XEi7R1pmDybl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0oQmKPpf; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="p14ToePp";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="kKVebrYS"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B4gkZu011201;
-	Fri, 11 Apr 2025 07:36:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=deTRgEByAbIV/tjM3T5XXM2YUaWWsinq7/Fy65bhMXY=; b=
-	p14ToePpi/1KntV3pSLksmpmO65XYGq51WI9Qc98kDsA+lAw75DZJuMfOEnPmmqI
-	N85dz06wPrv3LTsSuwPHaywyknO6RQQ8GdTXapUt4bSaWr+qJENdjeLZ/3j+qOsl
-	9auJF3r0BYsioZkCF00KlaxyEaH34Vkiu8afCNywScdS4wxBkzGjtnd6MpW/pdk/
-	le51/7ljAJEbVeHb409ZM18EswGWAMxqKquXFYKFOgf4n12uUOl/9ZEH/mE8/fvK
-	e9CbXlQIhzG7+fNWiYV29fawa9/qzWYGaP3cInZyutLzd4zT2HJgENR01xC8cI5t
-	mUUdKXWLsdj86hfIQ50SGw==
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2045.outbound.protection.outlook.com [104.47.73.45])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 45wf0gutyr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 07:36:17 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iiFDBdjEoPb5YsMagsnARAf95F8HuFubhKeNKAbKbT4g9eca0KjmUf6R36O+YcIqAYOT06jsGivoELeHbnLBcv5v1M9eBG9ZmgmZlwrM8BzYk3lk/J3i3+Of8Ws3GbflC/ywTvgNqKxTTdgxb4U/s/lSodoHgf6UOWPyYsi5lW1ZHQ14EROix57yc8D0CkUTsl0QgpX7fmYsPuQBl28jeRIfxMYPQwoKQNsn60df3Y9XuzxypdYFq1+CvGYvG9o2VnO5lXIGjopEjWdS8AzIFAFLtpxTsZH4D7NCY91KoWNO10B6+bfdBkLdfujrxfVNePP/JCYpUTegHQheoO4BOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=deTRgEByAbIV/tjM3T5XXM2YUaWWsinq7/Fy65bhMXY=;
- b=GFYJCPWfHGVr+QOHvi7Ty6HJ9hk7UtPL0nlol+zYlcmKfja/vBPX1fQafehh5kYAhfCEkI0jobslWndrxk44rRUqUyCrxF3xbj8sZxsXkAJlSLV7G3Rgfxl/KbQXwHyAuObpkRi3wDLuzEFS+2u49M9NUL1GM9ZcfguwG2LvQQNJnSAZv+38oZJlDdg4e/cb8VW0DdRfeVxOTvQQ1rOQXJUq/apC8t8uITm7r6fzIYXgVoXxtlNX7vgrYRbQpzxVJ5Gjttdf8vUW0rWPnCKMOr7J5CIBjl1RhOiWOcqS3uLKfw2m2IL06evLV2a8G/NcpQ28PRUYaxSTHE4Gt9VkRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
- (0)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0oQmKPpf"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2255003f4c6so20850675ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:36:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=deTRgEByAbIV/tjM3T5XXM2YUaWWsinq7/Fy65bhMXY=;
- b=kKVebrYSk9vsU3MiuzL5r1ce0WdTznB+mbdoMtTx42rxv70uo9Nqvp0QqAe7iJzncCMkwoPKWiJCwem6IsvUHWB6FN4zIUW0tV18LUusbFCjcATYLOSebSKhCgTypzzk4Nx2+2sXVEoLFH5mojZEVk7ADPJt0KHqTCfBwqoNxdc=
-Received: from MN0P223CA0005.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:52b::22)
- by PH8PR19MB7120.namprd19.prod.outlook.com (2603:10b6:510:217::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Fri, 11 Apr
- 2025 12:36:11 +0000
-Received: from BN1PEPF00006000.namprd05.prod.outlook.com
- (2603:10b6:208:52b:cafe::91) by MN0P223CA0005.outlook.office365.com
- (2603:10b6:208:52b::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.27 via Frontend Transport; Fri,
- 11 Apr 2025 12:36:10 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
- designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
- client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- BN1PEPF00006000.mail.protection.outlook.com (10.167.243.232) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.12
- via Frontend Transport; Fri, 11 Apr 2025 12:36:09 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 67878406545;
-	Fri, 11 Apr 2025 12:36:08 +0000 (UTC)
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.23])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 58840820259;
-	Fri, 11 Apr 2025 12:36:08 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: broonie@kernel.org, brendan.higgins@linux.dev, davidgow@google.com,
-        rmoar@google.com, npache@redhat.com
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: [PATCH 3/3] firmware: cs_dsp: tests: Depend on FW_CS_DSP rather then enabling it
-Date: Fri, 11 Apr 2025 13:36:08 +0100
-Message-Id: <20250411123608.1676462-4-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250411123608.1676462-1-rf@opensource.cirrus.com>
-References: <20250411123608.1676462-1-rf@opensource.cirrus.com>
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744375018; x=1744979818; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uPJqCmoSsx1GevRwEqwTz+KiO5ldodlroUJvFu2/V3o=;
+        b=0oQmKPpfP4qUut/3hcryutK5usIxOqRG+Md7deKTQaAVOsjsfZZwV7b33kreEL8HT5
+         5qJAHw5VhjVT6t3f2ttK/JNHTaLob9acgitQfTYdefpsf7gvYNjsV0QvJ3e3tHhO1g4L
+         mMPqU9t8NnP+FM/MKVNd2EuJCJjBL9xVXms0GKzTvdFymq0zMI8b8QaWav8U9dDUQ+ja
+         qtV9/9TrKKR+DM5OYwXmjoZDAj5FRdv0BqvHRnUXCJwbHfRW3X+VNkuV0wrS6BB1b27r
+         PrCHiNuw2mbfiSLuhjB9p/NS/2jkkD8aErgCV5lGauY/I1MctF8VRsoTtxM74FmEsD+K
+         e2Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744375018; x=1744979818;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uPJqCmoSsx1GevRwEqwTz+KiO5ldodlroUJvFu2/V3o=;
+        b=dCd5ZgUJmlrRP+relXOKs3ljhp07PD/4EJjhkJqvoYLMjjqHuS3VDe9kPB3Rz0Ode0
+         kKbvYz1HZqxzKt6P+Tpb437qRTC72GSqfKa1+9Te2ZEeKW6oquGwvAF4U6mbF+wDWv+e
+         kNoGqwjjg656zDVdfDvUlSDN4fuwQEw4mOWRris4vIdRMTlpdntcEdL88GXRSJ9FH8Dc
+         1NQKCbrYywoBR/zNVXrHnzZYizC7UThe5w1aLIplcr0YdHhs/s5iyxyPHwd2AAFtUz15
+         Y/LJv/9ukMfDlYA2kwteAh3vVG/YAhMz5j/m6BkXc6HPNvNtudR0UZTriK09wwlsvF14
+         x3uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxxsKJgv0J8Wj6kht0uTrQ2DZPN/A33/TLnx19MOlusE3JVy0S8LCnwrx5Pm7fDos57Kn4Jnb8lQG48L4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWn/1LStxvsfWqmcYR7u7as0/+eq7am3OvnpPqmSBHs0UNEhrA
+	fn+x20UNbAILrXPk4fv+4LaRLSDTIKUOjBYvuTdd/1i3of17wr3ZafoJUO0EnTlfwVkCUhSmXlE
+	pGj0=
+X-Gm-Gg: ASbGncuuFwWwnq+cEQa52ILLYFKACW/82Pv95B6fGRS/LFkgXDnUSPLHBwRY/0eEknZ
+	zZtC24g3rWEQs1+1Tn9DN6cGQDhIQrzcobJb7S2035MvkLmcIQGw0fKwg4yw9NgM+OiFP2jLgBL
+	0ynQXqhS6M7wno4yp9MN4vdV1mBrJZZaXWybj4by03FCIgDMNz0AQXDA+w9hN+YLmOKIhqA9fKw
+	EVM4sy1tX0vyxB7Jnh8vZkEiPz2bN6gRrPP16bFwnVS9tO4z7/Q+q9jyMEAwkX3tUqoXjlx/nhi
+	5ZmS2FXM4jxx2HcL//r85dlZbzNaNzgKrF1a1bmi8Bo=
+X-Google-Smtp-Source: AGHT+IFpLD5B7k7fXna43PL4COCo2fb781nBQohi+uOKDq+PQ5C/xXOE6xN0MQ0jZ8H8pyV6WtJL6g==
+X-Received: by 2002:a17:902:cec9:b0:227:e980:9190 with SMTP id d9443c01a7336-22bea4fcad1mr41903285ad.44.1744375018241;
+        Fri, 11 Apr 2025 05:36:58 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:e0a:5ee:79d0:cf9d:bb30:5951:692])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73bd22f8253sm1408292b3a.93.2025.04.11.05.36.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 05:36:57 -0700 (PDT)
+From: Alexandre Mergnat <amergnat@baylibre.com>
+Date: Fri, 11 Apr 2025 14:35:58 +0200
+Subject: [PATCH v3 5/5] arm64: dts: mediatek: Set RTC start year property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00006000:EE_|PH8PR19MB7120:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 04875840-dc13-4dd7-6325-08dd78f57018
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|61400799027|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GTaPUTNTj2ybPuIFOXaoYvgMvLT5wlAy4XuRDP/KAsJo/522f5e83fMVQmFb?=
- =?us-ascii?Q?KIa6JZYexpkrj89lV7LzeJvJCecV6btM0q07gD8wP3ArJ3DKljfO2GMiM1Js?=
- =?us-ascii?Q?z8ZVpBFrRpQ8XDemkdUovn4a0nHeavZdRoC4KIOW9tmNbUHbacK+mb/Iz0Bf?=
- =?us-ascii?Q?wB/p46mShPBpf2NVM5u7fdaH5MX3tgJJbRxGX7iiPBgKxgTVIA5n7CcNO/m0?=
- =?us-ascii?Q?6WuPcklOP7MQY90UYHjcf20LqgpiJoCnT27CJxU8rZb9UBzz775jJ49TfQez?=
- =?us-ascii?Q?VIw9nUggPSAwfXr/W6V5SyZwQs+oSPur7w8na/W6NYDFrwOTj3/bwPZr8wwI?=
- =?us-ascii?Q?xUEHuuwYZHpXhwkL5M5eY1+PobkQMj4N57zym8Iel+u7ZCbU2vRD3HbLmzPa?=
- =?us-ascii?Q?DA2I6Cg2zk0MUTGwLQ8wz5Y4NdCQwOlKYvM+qc5gJ6lunm34HhocNYNsuaGz?=
- =?us-ascii?Q?HZAiBUVQk555eSkz2fLzcB+yNKX3BqGNbSOpAhD4M2gz8sauDI+ZVou+4UNL?=
- =?us-ascii?Q?kZvahBqShavOYHqqqTh2PpiT+lHUTPdkS/TtMw9c1xaK9YIQdN+kfjaG7AHv?=
- =?us-ascii?Q?H4aQvPNoWj8n7mx8aK1LKE0UejiwYPQmQuRnk1r7HwGg1p1F1sgMd+1uITog?=
- =?us-ascii?Q?Kdl9RG0tMM9KWm16hGw65Opxt4Ms5ZASGw4/5xTEaQBNIIJIMRES4VOze3yf?=
- =?us-ascii?Q?rNaP0FFHr8A+mZxPsqyd3NDmVF9XHnC2yxKWcGuvjn4bvLI8c+9FcuSeaLn9?=
- =?us-ascii?Q?p3ktS9oY7ID5sUcrq4F5B5HZz+p7OfaWpA9gIOzWCUuvqzxjtaRinNR0UK5S?=
- =?us-ascii?Q?W/o+8UCOdakQCNGXn0WvHoetG4IpgjpIIWt99mfs6iuO1yw5aI9Y1sHVsRob?=
- =?us-ascii?Q?Fwbe+B9Q7Ua/+w1HKVw+QkqrdHm+wZf4bWdTMcXy9CI8UJkUJURy4sCNBZGB?=
- =?us-ascii?Q?uLrld+c84rbbyPE7yb/OOPLOYbtcxv/YU32Sp40nUNOamAVzdxiZj3krtgSw?=
- =?us-ascii?Q?G0UD3ZqcG/92paMGDYL4nEtDEMV0MCBjP4EIBPl6xFH5N656wFc/1AITovIr?=
- =?us-ascii?Q?20Ol0CSvft2BbEGIuayDPGObuWkMVHgTBmMzMh4u3DKScAv3/GJW2kMIngxX?=
- =?us-ascii?Q?LrZD7UVPqrvq5PTQ0UxvdgKZH8cZj6HplWNNWg/qLJhwTSKC5xsrZaYmgTNN?=
- =?us-ascii?Q?B4sqx5kaCLW17d0xhmD1WlnlmLd5PxaRtKGFfc0W3uuC1qFb/Mpey3q40vvK?=
- =?us-ascii?Q?NkOE9PFC8RRqwVmvxt6azFoMuEVtawmE3kIuQk4gbmp1HnCpV/GetHFfRava?=
- =?us-ascii?Q?tCUsYrVR3e3oO9KChxHfSp/iBRuy1zmKaZBoQBBrEf2ogMnYv+O102pESZga?=
- =?us-ascii?Q?JNU943KqEs2mDaI2wIek59yHw/TPxM3GUpP+1cVWMnPQotbO4eTzYirrhJIR?=
- =?us-ascii?Q?4YJhhdbZzF6lvoDblDV8wFWPC2VJeVTgUua/OYN1ca3mD67alYY8u0Aar2QD?=
- =?us-ascii?Q?XxJYLQ3exNKNXtCvSP9B/TEg/K2G+eXjymSO?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(61400799027)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 12:36:09.7258
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04875840-dc13-4dd7-6325-08dd78f57018
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00006000.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR19MB7120
-X-Proofpoint-ORIG-GUID: amHBZrmes0wB8t0Je5tP4qYvnMKmyZEm
-X-Proofpoint-GUID: amHBZrmes0wB8t0Je5tP4qYvnMKmyZEm
-X-Authority-Analysis: v=2.4 cv=A71sP7WG c=1 sm=1 tr=0 ts=67f90cc1 cx=c_pps a=o99l/OlIsmxthp48M8gYaQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=XR8D0OoHHMoA:10 a=s63m1ICgrNkA:10
- a=RWc_ulEos4gA:10 a=20KFwNOVAAAA:8 a=w1d2syhTAAAA:8 a=UbqW4rUhvwvjDBTGmgsA:9 a=BGLuxUZjE2igh1l4FkT-:22
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250109-enable-rtc-v3-5-f003e8144419@baylibre.com>
+References: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
+In-Reply-To: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
+To: Eddie Huang <eddie.huang@mediatek.com>, 
+ Sean Wang <sean.wang@mediatek.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Alexandre Mergnat <amergnat@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1631; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=7fUfH1eE+n+zmzKhP4D/88n0duk+DQJUKxhnlJl8LM8=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBn+Qy+kE39onw4c/4Fkz528PzOFaSGz5L4XeHhWzBX
+ hDMFF+eJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZ/kMvgAKCRArRkmdfjHURZFAEA
+ CMgGOq5n82NrZ1LYEtWO5FV0efEnXxIHS7oTUff/+0zjS/Y8jlqnNx8HPZO5nwUH8Nf9LGtZBslozP
+ vWuRX7cK0jNVQfcIjqh9mpcZ2kT1QJoVCsGw9gN+QqAL6mNPZVhvCwG2HIOIEsxRF69xVDOMZbGJMH
+ DRGrZpV24VYPp83m3Rgz+RqqYjOsB6go3Cppb67f56Go43Wa7Bh4h5bL0jMyT9wvc47+ZzIhF8Dsnu
+ tL3sRzfjBIhd456WR4crywwS+Le3HSdnF0s0KBzUmHhKd4e9llBzJ6d9jxQfZmsNvXqlatDiioEYYz
+ G2WgVthTQ1zPwsLFGvmM8dAbs6P/tc1O1RRVxU1RIdOaRjwIh2+BuH6Nf9TC9a748hBugjATRYmiTX
+ 5DUCslbH/zOfvqxbGqVbwjZhdyKXFSTewkXwDt1YuxWaE8spAjAFQYBu6Wcf7p79iPZy1Eoq4D2VtD
+ 4VbzRlik1xMo/9KPiwY3Np5IFPJpEqx2CnO2uCx27ns+84mWkSUIPlxhQVC5yrk/qbbU/hc+7N9uCZ
+ EeICxRI7pmEj546cN1sweBOzcU67+ct8Kd4CZ1plilw+i65YAUP0JXj5JJVcxsWta+SoyGzIojnLcw
+ HDa/GKX3CnNeQrPYSTWlTk7V9dW560HevmEhZH0M64UhIbAGF5pDYsk1OjIw==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
-From: Nico Pache <npache@redhat.com>
+Set the start-year property for MT6357, MT6358 and MT6359 to have a
+consistent value between the HW registers and the RTC framework.
 
-FW_CS_DSP gets enabled if KUNIT is enabled. The test should rather
-depend on if the feature is enabled. Fix this by moving FW_CS_DSP to the
-depends on clause.
-
-Fixes: dd0b6b1f29b9 ("firmware: cs_dsp: Add KUnit testing of bin file download")
-Signed-off-by: Nico Pache <npache@redhat.com>
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 ---
- drivers/firmware/cirrus/Kconfig | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt6357.dtsi | 1 +
+ arch/arm64/boot/dts/mediatek/mt6358.dtsi | 1 +
+ arch/arm64/boot/dts/mediatek/mt6359.dtsi | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/drivers/firmware/cirrus/Kconfig b/drivers/firmware/cirrus/Kconfig
-index 0a883091259a..e3c2e38b746d 100644
---- a/drivers/firmware/cirrus/Kconfig
-+++ b/drivers/firmware/cirrus/Kconfig
-@@ -6,14 +6,11 @@ config FW_CS_DSP
+diff --git a/arch/arm64/boot/dts/mediatek/mt6357.dtsi b/arch/arm64/boot/dts/mediatek/mt6357.dtsi
+index 5fafa842d312f..d79ba87361d00 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6357.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6357.dtsi
+@@ -267,6 +267,7 @@ mt6357_vusb33_reg: ldo-vusb33 {
  
- config FW_CS_DSP_KUNIT_TEST_UTILS
- 	tristate
--	depends on KUNIT && REGMAP
--	select FW_CS_DSP
+ 		rtc {
+ 			compatible = "mediatek,mt6357-rtc";
++			start-year = <1942>;
+ 		};
  
- config FW_CS_DSP_KUNIT_TEST
- 	tristate "KUnit tests for Cirrus Logic cs_dsp" if !KUNIT_ALL_TESTS
--	depends on KUNIT && REGMAP
-+	depends on KUNIT && REGMAP && FW_CS_DSP
- 	default KUNIT_ALL_TESTS
--	select FW_CS_DSP
- 	select FW_CS_DSP_KUNIT_TEST_UTILS
- 	help
- 	  This builds KUnit tests for cs_dsp.
+ 		keys {
+diff --git a/arch/arm64/boot/dts/mediatek/mt6358.dtsi b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
+index e23672a2eea4a..226259a51188f 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6358.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
+@@ -340,6 +340,7 @@ mt6358_vsim2_reg: ldo_vsim2 {
+ 
+ 		mt6358rtc: rtc {
+ 			compatible = "mediatek,mt6358-rtc";
++			start-year = <1968>;
+ 		};
+ 
+ 		mt6358keys: keys {
+diff --git a/arch/arm64/boot/dts/mediatek/mt6359.dtsi b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
+index 150ad84d5d2b3..7f9182be79724 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6359.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
+@@ -299,6 +299,7 @@ mt6359_vsram_others_sshub_ldo: ldo_vsram_others_sshub {
+ 
+ 		mt6359rtc: mt6359rtc {
+ 			compatible = "mediatek,mt6358-rtc";
++			start-year = <1968>;
+ 		};
+ 	};
+ };
+
 -- 
-2.39.5
+2.25.1
 
