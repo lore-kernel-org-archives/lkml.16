@@ -1,66 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54BD238C0A;
-	Fri, 11 Apr 2025 10:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE95238C1D;
+	Fri, 11 Apr 2025 10:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365739; cv=none; b=bf33yUmHQO9eTGvXS6i50Ir/uZVWZcpy7vvrz3rDPfHiwbHdVv+cqlGuC3kkCm1KWdXaOTeoJMd4kVzuM9BwU4pKN48nkFNFBvxttVfhexgVYXGDdwVZDYmtFuR8cj0r1XhGWWiBKVjJ1yTkdXfYo7q7o+obrRX28qkoXu8oBpY=
+	t=1744365740; cv=none; b=rkvmVXx6nnqPl1vFj4Nk9otU/Oc4mkoNcv3yLMKabtFgy+UGI4TCfZYb5v8q7IgIZ+aNUOPCLtFookBg1yuf8PSsHS62cVw/atS7qv7xtNEPWmE+3kilokxIxOsO6ZQ22z8M0xu9Xo4jJpVRKHDviGkhwqDAFnHDfqUIKCdqcDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365739; c=relaxed/simple;
-	bh=j56QIgwDWL3stJTr3KgvBGqlmtJgo7jbHzwCJdk2ibM=;
+	s=arc-20240116; t=1744365740; c=relaxed/simple;
+	bh=rXYUoCY5cTRw9oWxdtC17jPUYcuqZrcw1fG3lqV4Yo8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=MuZDBSbeJIPNH6sjkN3tIbmgO01glerGxlkit3XveagkZRIL1zp36bXXWxLN8HrrhLxjsraoyLFmok3+ABTdRNasFr3g7TsrqAcYoIQ5k3QgRfJ/AOlpg85QHGjhhUtKFXqCH8jQ3Q1EZAmPx9iMPJCnl6kkeUykUy/54kt9KSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uZHHgI/g; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JB4XLmMs; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=cJuwX1np6EwEN8oxMRiE1lOyW2s+OLA8gZLMHpU36S7xDGkz0tfxrelMnocHctHrIguffzayhwqUS+gpX5Nzid/7SVdBv9p0AnsgE5WAqFAk2NanL2vAVqrVIE1ZZwValVbAG7e/UkogUKfJKPuz7KTumnriH24/kSwwMShy+rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gHD+D87i; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jVP9xNl3; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uZHHgI/g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JB4XLmMs"
-Date: Fri, 11 Apr 2025 10:02:14 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gHD+D87i";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jVP9xNl3"
+Date: Fri, 11 Apr 2025 10:02:16 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744365735;
+	s=2020; t=1744365737;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vHvqCAUhpuF+Gq0HuUYMAMKZgTfwqU0ZS29JOg3guko=;
-	b=uZHHgI/glHAJMxj0NAnZAXlBGKQijwJrSrYZB62gM83UVcHsL7U8qJqXliauLVW+ogjgHu
-	a02+B5jlrQ9RGWwel3DaL4byI0RNZBZFaCnCrPOwYfJ9mWcYkt8ifteYNBB9fjxYqUt+aU
-	4JYBgiMXjBe9vCwLHyMR3ZZfvxVzD7J7Kt1OnafGeM3iGG5V1U0253xpOsJDYlRym/17nI
-	NwkJblMRNYT3GTb4vlf73zT7bOTxm5tMeSiiEgZeR67GPvOL1Ni7ecwvCmgExcSA2UoCIn
-	nfyplJf2kU8++WC4bFbHirUGDZqbX+9Ff70GOn/ktutoNaSkK0qz9BAna/OWhA==
+	bh=owvqiXSL4GyNicDFwG13QMzNwtQ5P3as10A2Ol+xxaE=;
+	b=gHD+D87ivgHZFQir1UputCKM3t/YyY1//OcPCa9XJiLRYQuDn+RmELlfJd0hxKlpY4wgli
+	hCZqpihOok0MRNunA9+Q8BRfsKr6O5eOgthO6pBerf7+YV/pCC/rM5wTHn6KJsbnPeIEo/
+	lzNLplOb+xqARhE63i+95JXzUwVfCYRGYcuXks7mKbmw4xfbUvFRdcYH5BR+LjqF49Ipxr
+	nyWylpTGOjEJnDuN8LWLFahq4sBId0PcaN9VwLs1V5ZNzpbOtdck+zJ0WsPEiExltalmyB
+	gSpjygNk6sJU+DmkbZ4SdldQxA0vm5ydTc680axtZe0v+Egfw4qCrD7hcpEhWA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744365735;
+	s=2020e; t=1744365737;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vHvqCAUhpuF+Gq0HuUYMAMKZgTfwqU0ZS29JOg3guko=;
-	b=JB4XLmMsLWT6HaaT8uEoKPvF4+d3felWEQFJ2fMQyX7Jp0Ta2ok7QWtPzZsTBKwzjTmLeF
-	GomBKKyKECgffsBg==
+	bh=owvqiXSL4GyNicDFwG13QMzNwtQ5P3as10A2Ol+xxaE=;
+	b=jVP9xNl3tcz4zWNrBC4oJJc03ZmFdt/L6EFt6IqR6rxKfo8YtUFWpYXA2uf2C7Cu+6lrJ0
+	7zv7xAPfqu7nLqAw==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/alternatives] x86/alternatives: Update comments in
- int3_emulate_push()
+Subject: [tip: x86/alternatives] x86/alternatives: Rename 'poking_addr' to
+ 'text_poke_mm_addr'
 Cc: Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
  "H . Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250411054105.2341982-13-mingo@kernel.org>
-References: <20250411054105.2341982-13-mingo@kernel.org>
+In-Reply-To: <20250411054105.2341982-10-mingo@kernel.org>
+References: <20250411054105.2341982-10-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174436573439.31282.1023836498635767792.tip-bot2@tip-bot2>
+Message-ID: <174436573633.31282.4677765718126736719.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,50 +70,135 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     5224f09a7b57fcf2024245d89dcb26b0756fb1c8
-Gitweb:        https://git.kernel.org/tip/5224f09a7b57fcf2024245d89dcb26b0756fb1c8
+Commit-ID:     da364fc547897ed98fbf2192d86b5242439d7762
+Gitweb:        https://git.kernel.org/tip/da364fc547897ed98fbf2192d86b5242439d7762
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 11 Apr 2025 07:40:24 +02:00
+AuthorDate:    Fri, 11 Apr 2025 07:40:21 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 11 Apr 2025 11:01:33 +02:00
 
-x86/alternatives: Update comments in int3_emulate_push()
+x86/alternatives: Rename 'poking_addr' to 'text_poke_mm_addr'
 
-The idtentry macro in entry_64.S hasn't had a create_gap
-option for 5 years - update the comment.
-
-(Also clean up the entire comment block while at it.)
+Put it into the text_poke_* namespace of <asm/text-patching.h>.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Juergen Gross <jgross@suse.com>
 Cc: "H . Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250411054105.2341982-13-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250411054105.2341982-10-mingo@kernel.org
 ---
- arch/x86/include/asm/text-patching.h |  9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/text-patching.h |  2 +-
+ arch/x86/kernel/alternative.c        | 16 ++++++++--------
+ arch/x86/mm/init.c                   | 10 +++++-----
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index c8eac8c..7e35273 100644
+index 7a95c08..c8eac8c 100644
 --- a/arch/x86/include/asm/text-patching.h
 +++ b/arch/x86/include/asm/text-patching.h
-@@ -142,13 +142,14 @@ static __always_inline
- void int3_emulate_push(struct pt_regs *regs, unsigned long val)
+@@ -129,7 +129,7 @@ void *text_gen_insn(u8 opcode, const void *addr, const void *dest)
+ 
+ extern int after_bootmem;
+ extern __ro_after_init struct mm_struct *text_poke_mm;
+-extern __ro_after_init unsigned long poking_addr;
++extern __ro_after_init unsigned long text_poke_mm_addr;
+ 
+ #ifndef CONFIG_UML_X86
+ static __always_inline
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 8ce0d46..62d7444 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2192,7 +2192,7 @@ static inline temp_mm_state_t use_temporary_mm(struct mm_struct *mm)
+ }
+ 
+ __ro_after_init struct mm_struct *text_poke_mm;
+-__ro_after_init unsigned long poking_addr;
++__ro_after_init unsigned long text_poke_mm_addr;
+ 
+ static inline void unuse_temporary_mm(temp_mm_state_t prev_state)
  {
+@@ -2266,7 +2266,7 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
  	/*
--	 * The int3 handler in entry_64.S adds a gap between the
-+	 * The INT3 handler in entry_64.S adds a gap between the
- 	 * stack where the break point happened, and the saving of
- 	 * pt_regs. We can extend the original stack because of
--	 * this gap. See the idtentry macro's create_gap option.
-+	 * this gap. See the idtentry macro's X86_TRAP_BP logic.
- 	 *
--	 * Similarly entry_32.S will have a gap on the stack for (any) hardware
--	 * exception and pt_regs; see FIXUP_FRAME.
-+	 * Similarly, entry_32.S will have a gap on the stack for
-+	 * (any) hardware exception and pt_regs; see the
-+	 * FIXUP_FRAME macro.
+ 	 * The lock is not really needed, but this allows to avoid open-coding.
  	 */
- 	regs->sp -= sizeof(unsigned long);
- 	*(unsigned long *)regs->sp = val;
+-	ptep = get_locked_pte(text_poke_mm, poking_addr, &ptl);
++	ptep = get_locked_pte(text_poke_mm, text_poke_mm_addr, &ptl);
+ 
+ 	/*
+ 	 * This must not fail; preallocated in poking_init().
+@@ -2276,11 +2276,11 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
+ 	local_irq_save(flags);
+ 
+ 	pte = mk_pte(pages[0], pgprot);
+-	set_pte_at(text_poke_mm, poking_addr, ptep, pte);
++	set_pte_at(text_poke_mm, text_poke_mm_addr, ptep, pte);
+ 
+ 	if (cross_page_boundary) {
+ 		pte = mk_pte(pages[1], pgprot);
+-		set_pte_at(text_poke_mm, poking_addr + PAGE_SIZE, ptep + 1, pte);
++		set_pte_at(text_poke_mm, text_poke_mm_addr + PAGE_SIZE, ptep + 1, pte);
+ 	}
+ 
+ 	/*
+@@ -2290,7 +2290,7 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
+ 	prev = use_temporary_mm(text_poke_mm);
+ 
+ 	kasan_disable_current();
+-	func((u8 *)poking_addr + offset_in_page(addr), src, len);
++	func((u8 *)text_poke_mm_addr + offset_in_page(addr), src, len);
+ 	kasan_enable_current();
+ 
+ 	/*
+@@ -2299,9 +2299,9 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
+ 	 */
+ 	barrier();
+ 
+-	pte_clear(text_poke_mm, poking_addr, ptep);
++	pte_clear(text_poke_mm, text_poke_mm_addr, ptep);
+ 	if (cross_page_boundary)
+-		pte_clear(text_poke_mm, poking_addr + PAGE_SIZE, ptep + 1);
++		pte_clear(text_poke_mm, text_poke_mm_addr + PAGE_SIZE, ptep + 1);
+ 
+ 	/*
+ 	 * Loading the previous page-table hierarchy requires a serializing
+@@ -2314,7 +2314,7 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
+ 	 * Flushing the TLB might involve IPIs, which would require enabled
+ 	 * IRQs, but not if the mm is not used, as it is in this point.
+ 	 */
+-	flush_tlb_mm_range(text_poke_mm, poking_addr, poking_addr +
++	flush_tlb_mm_range(text_poke_mm, text_poke_mm_addr, text_poke_mm_addr +
+ 			   (cross_page_boundary ? 2 : 1) * PAGE_SIZE,
+ 			   PAGE_SHIFT, false);
+ 
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 84b52a1..f8c74d1 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -835,20 +835,20 @@ void __init poking_init(void)
+ 	 * will be mapped at the same PMD. We need 2 pages, so find space for 3,
+ 	 * and adjust the address if the PMD ends after the first one.
+ 	 */
+-	poking_addr = TASK_UNMAPPED_BASE;
++	text_poke_mm_addr = TASK_UNMAPPED_BASE;
+ 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
+-		poking_addr += (kaslr_get_random_long("Poking") & PAGE_MASK) %
++		text_poke_mm_addr += (kaslr_get_random_long("Poking") & PAGE_MASK) %
+ 			(TASK_SIZE - TASK_UNMAPPED_BASE - 3 * PAGE_SIZE);
+ 
+-	if (((poking_addr + PAGE_SIZE) & ~PMD_MASK) == 0)
+-		poking_addr += PAGE_SIZE;
++	if (((text_poke_mm_addr + PAGE_SIZE) & ~PMD_MASK) == 0)
++		text_poke_mm_addr += PAGE_SIZE;
+ 
+ 	/*
+ 	 * We need to trigger the allocation of the page-tables that will be
+ 	 * needed for poking now. Later, poking may be performed in an atomic
+ 	 * section, which might cause allocation to fail.
+ 	 */
+-	ptep = get_locked_pte(text_poke_mm, poking_addr, &ptl);
++	ptep = get_locked_pte(text_poke_mm, text_poke_mm_addr, &ptl);
+ 	BUG_ON(!ptep);
+ 	pte_unmap_unlock(ptep, ptl);
+ }
