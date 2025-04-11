@@ -1,135 +1,101 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84429278E5E
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C0F29614A;
+	Fri, 11 Apr 2025 21:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744406057; cv=none; b=RFAP06O1H9uutqnDpfgISCdaFr7lZK6dC9Ssccp4FlGSQjLX7tD+zF1aKdbAANgK/6/yp+D2miFceIZE4nYZroi5g+W3+EExOVnkGs/erkqYC+yOOZDuK2D/NWpr/kHDRZDQo/f1PqnuVxCT5AW/7pRxX3vDH3IOlM2zZctI/20=
+	t=1744406124; cv=none; b=icFLBNSs9fPtrSIoU071R2mrXkvGaCDGDyhPuXxx96FgifomVeYjU5NMua2qPBo/Aw6dPg8o4C9ZS4OvnW885FcUszL+jBx9k/nc5J3SbreqM60hrf3mlPzIsolnfoDx81pJ9I6G7SBXz1tul7TzJlZIKt5jU+M3eVv1K1L2avs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744406057; c=relaxed/simple;
-	bh=xpnH+3qYKCoErXdQ40aIICnufz90Wg10rOTSc3Dp1R8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TZHRIgtgbVPZ6oentU/H7DTZMuOm3o/5pP9Uig0RkQGKxOFfiP4Nz4RS95f0tGV3G6JLHdRv4TnJSbsq9c/yyU9khjE9IyvwaOqsJHVc2pBWuex1wbvhG99cqEypuNPCDBR5gyk+7p/HBB38HgWt4uNsjcRaVDrHWly1MFBSFtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=k+3yJCIJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744406124; c=relaxed/simple;
+	bh=zUAbfaDi+mFMIZ9/oYPb7idFOR0R4eD4ad4u+ZuUC9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gOkpXyK/BKgDDEd6b9cZKdXzxJLGJYiiO2T7406c/k7yu78MJS3FVOknw8++AxImnRr8+7hRbf2plHC0uUjgCS6tLA8kz2TUhN+hmnE425d6aJWa8T/6h8BCskkhePc/WjzuCSlQUpxHFdDFeYRxtx7DQtWKvEgECM+1J/4B+tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3cEqeT4; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="k+3yJCIJ"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BErCt7014128
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:14:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	92JOXCw7GPeB43zeDDjKUc5YArlwlhIU7W0D21HMUYo=; b=k+3yJCIJxlQ5L4az
-	10oy2FpvhCQc90Q2zZDq9ka6oNPigQHn8TUI8Gg4gPPZLvxjcC9TL78nCzfJZheN
-	VYfRR1n5TnQJ3WbMvgfE2rMbAcuV+10HbyRhrP2WkrGVGxaA36+Ofu2++usb3Fsq
-	ywV+gx1//MCqUjciIiqye2cWBq6QIejYocMFpv5LReTJp98k/8y6+qcD8ujSPCSd
-	DUo/mYx3gRV9Vz59ZAG8OVTCA6pOn5N1l5mCE6TU1r4oeivBJaZ3SgyFZ3p80XBw
-	OaS8C1pSAVXW0EAbaHtcVmdFBvKUAAbfol8YgRL/CsaHVyLpoFW+RKyoqCRfYKY8
-	xP24RQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbekqph-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:14:14 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f0c089909aso41279426d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:14:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3cEqeT4"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf848528aso19244535e9.2;
+        Fri, 11 Apr 2025 14:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744406121; x=1745010921; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gPK+H6sOhTLm30dsqOJGvaQCZuKrA5gTcKcyNfzVAVg=;
+        b=E3cEqeT4gXKXaZjMbwDlPAGeTzICVOyGvCiqN0dzJWLFZ4goiEIf5vCqahBuL3EzXs
+         Z3pBIbD6M47jq4mhPlF+Q7gOWlF4y9PEzFBp2egR8QQKuEa0lY6Cy0D2gFVRX9cd9sDc
+         RAIsNQV6RiAatISbeU1CMjMdZcO6yTHJqDpQieVoz8Qx5/wX75v+9K7ya4c06Hhxb1uB
+         zzm5dIWZOMJxlzpCj8io4L1uPB5rWH/VudiWXxh40YGQLx2bKplr2HJCqMYhQwfRsfH+
+         VXAz4u1KlJsY3gPQE8zMWMuiyiyIeBAw9B5J/NqQo4k7btkFObDuVOfbGj3vFJtAlZcQ
+         SW+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744406053; x=1745010853;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=92JOXCw7GPeB43zeDDjKUc5YArlwlhIU7W0D21HMUYo=;
-        b=vEJH2sGomig+2hsasUzCgylF+hB4AA4/qMgOvcSU1zGlprdTpvTQdZUsygRAVbXXyB
-         hagAzJ0S0yK6pBJtvlPgwY2BWL/dvLs9DmpAl/ghH9PcLPvVFRhjtFagXL38F3zOyJPh
-         dCNWqO6tIkpFyL01+TvJIuznapiNoWAHjqO03h69ni4Sce19II8fKxD/pyEN+wG5aGei
-         E0YLe+jeB9/AWGyEm/YTn5OcE9Rl9zbdbGHvxyDQj9ueaC56ze17kaJdZvRNo4+11oLR
-         X4441MVnelQdzqaWsgYmgeRHTL4yO6Vbzk2M4achi+45k+xKq9sabYw3sneX5iW1FgiW
-         vGdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU8gRf8+jm2czznqx2fH9Hrx0REy7I9IzBPcfJbZBe3NS80GSy8jIhXIK2pviejtyJE8Ofnca47SFi39U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA8Q8NvH0W4tcTUex2Kmff/r/cOZwEASbcPZ0D0M4ZCBvJUyOy
-	8E6Dyqe7ZZumbcnfYh1z+VaDG6OLGTwg+4ZlzHfO7Uq5Lf5Fsrz+kGPbZtj/6geMT+Cu2GWwUAC
-	+YloL9Qlgfz8Fa/J4pwBMv3OnKnZTqb/6hecEX5DH5AcIG9VzKKfwukVfWZSzRVg=
-X-Gm-Gg: ASbGncsxsEcGDJz7NIg19DjFG3QQMz/XQ1sdL5Ej24FAATU7blsZQwlSlfkE/gdQOoF
-	GNwru3yHZNGEH8tU6WkhuhzVOCIC+Cqw8f6EqvRE0rvZXS/G0xKerZroICTt2MQ6lbOi1/vwP2v
-	D+GaVMiIimQepqfA07JUG9Ew7Otj9q02DnPmFqyJSgHPgRqXkvzVx3dyLwSbJ4Da3GxgJHPrbIk
-	ILNlZd4jP2wuAH23uYwY6I0WEgDSrzTpZpvolegGBOnwBmWDhcx4J8IqNBcSEVGiDVf8l26bd9p
-	V2GKF1il2AlQFXYczRXKXvc/Evhfbj0311ZZngpn2/DVq+XL8PCN0JlHIJf1++U=
-X-Received: by 2002:a05:620a:2684:b0:7c5:50ab:ddf7 with SMTP id af79cd13be357-7c7af20babcmr610960685a.52.1744406052998;
-        Fri, 11 Apr 2025 14:14:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH9Cts1eb12qp8Qm/XF/8Jlw3D1SD8yryZJ5hAKDoT3xvwdBsPZyvVLM4xIaHOUKgSaKfe89A==
-X-Received: by 2002:a05:620a:2684:b0:7c5:50ab:ddf7 with SMTP id af79cd13be357-7c7af20babcmr610957885a.52.1744406052639;
-        Fri, 11 Apr 2025 14:14:12 -0700 (PDT)
-Received: from eriador.lan (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d51138esm510288e87.205.2025.04.11.14.14.08
+        d=1e100.net; s=20230601; t=1744406121; x=1745010921;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gPK+H6sOhTLm30dsqOJGvaQCZuKrA5gTcKcyNfzVAVg=;
+        b=jalcGZ+qmmM9nSqfKuVUoXaCu8vh8X03GX9Ea2KdSt6EZMbG1vhsuanonBn/NS9rFl
+         1Z1Y8hZlXysMZgqjSLARE0eZ5vhDSq8YsAmxFMbzb8YWtD8meETe1oFtO+Yb4d1+LoqG
+         8fUGfsUHKxhYIwQBLb1b6jAVa2jwc3CO6ws7pfXsmejdBTl3gbycwS7suJMZz4ullXcS
+         gPurfy7Ofk2ScNmMg0TVNFXUeEE39fC02739h1DaHhaZiK7C/eXepB1rv+MScqki4rxb
+         7XAmhJU77I/pTjXm0I35IVlS0cmLJYOnudKp7GKFg6WRLKSbd0xKXIh6f4YJlbMbp4sf
+         i26Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWXC+l6I/AjMxsfWEC1owRy4DYWxvhJtwkhS4zP159hoA3ehh3offh8YZbz+z8jaw+9Bw9nUcooav7aWP1E@vger.kernel.org, AJvYcCXj215fnAo3IgOpQXeCjxySxeA8NLMtttvLk+/SgOJrZD/8MWPHnGK4AK60dhsWhKtdxWjTqNtsP5jIrHk3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZApHzMcnyJDs1r9Nch3BtyizgDVE9Ocav3mBNvAxRONH3dJ73
+	sSlzKTenNJpdU7ponQbBQVMNYVKyEbI3rpAq2688fAaifEpVHATA
+X-Gm-Gg: ASbGncu8LaLhEWmQXeyAnq4dohPTFfAYoZLSOmAu0EWwtUGeIP1wMUy06IAe9BdwhEO
+	bqB5HDKpp2KFI8H8X4vfTTcsM5T33h+DD4ZAMbn3M24wQNez/Jc/Kk/MKo6fbTpWZiqCTe0xI/0
+	asb0FDLwLAtGbisdLhBd5FpEtEskYkHgTY07bdPF77HJ/Z0nmats/5JTl0gVkX+XyAPC4HMIoqb
+	zO8gxEDYi/hAKHXBxG4iWHPxBLtV6D15+W8LtqWacHz9jfIbS1j8PIEDWJ6zHgSlcDsiVbEjGw3
+	TOdalNx2T6m5LhJ692S9ddNEGUGtJZQR8K3kP7H1WameKPV4FXToIUshBJrFJlU5
+X-Google-Smtp-Source: AGHT+IEgeIHzXRmIqmpC5LyYH+Jtr/lT2cTeX/UOjaeIsufaoxo9zBEh6F6AvgV6eCmVOW+48CAP6Q==
+X-Received: by 2002:a05:600c:46d1:b0:43c:ec28:d310 with SMTP id 5b1f17b1804b1-43f3a93cc34mr43776805e9.10.1744406120863;
+        Fri, 11 Apr 2025 14:15:20 -0700 (PDT)
+Received: from f (cst-prg-90-20.cust.vodafone.cz. [46.135.90.20])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cd17sm3157603f8f.78.2025.04.11.14.15.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 14:14:10 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: xinliang.liu@linaro.org, tiantao6@hisilicon.com,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, kong.kongxinwei@hisilicon.com,
-        Simona Vetter <simona.vetter@ffwll.ch>,
-        Yongbang Shi <shiyongbang@huawei.com>
-Cc: liangjian010@huawei.com, chenjianmin@huawei.com, lidongming5@huawei.com,
-        libaihan@huawei.com, shenjian15@huawei.com, shaojijie@huawei.com,
-        jani.nikula@linux.intel.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 drm-dp 0/9] Add HPD, getting EDID, colorbar features in DP function
-Date: Sat, 12 Apr 2025 00:14:07 +0300
-Message-ID: <174437604934.3805099.10574399938467598929.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250331074212.3370287-1-shiyongbang@huawei.com>
-References: <20250331074212.3370287-1-shiyongbang@huawei.com>
+        Fri, 11 Apr 2025 14:15:20 -0700 (PDT)
+Date: Fri, 11 Apr 2025 23:15:12 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: lirongqing <lirongqing@baidu.com>, viro@zeniv.linux.org.uk, 
+	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: Make file-nr output the total allocated file handles
+Message-ID: <p6rnvi5kvu7zwk6ypui2gwezvg3onqeqajwtw6uksv4jagannh@q2mx54icpmig>
+References: <20250410112117.2851-1-lirongqing@baidu.com>
+ <20250411-gejagt-gelistet-88c56be455d1@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 1Ni8roiB8ZP_r-8kHuv_hUFRS0zNhXUw
-X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f98626 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=4BOo0Jww7fU-brOJr6UA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-ORIG-GUID: 1Ni8roiB8ZP_r-8kHuv_hUFRS0zNhXUw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_08,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=993 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110136
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250411-gejagt-gelistet-88c56be455d1@brauner>
 
-On Mon, 31 Mar 2025 15:42:03 +0800, Yongbang Shi wrote:
-> To support DP HPD, edid printing, and colorbar display features based on
-> the Hisislcon DP devices.
+On Fri, Apr 11, 2025 at 04:16:08PM +0200, Christian Brauner wrote:
+> On Thu, Apr 10, 2025 at 07:21:17PM +0800, lirongqing wrote:
+> > From: Li RongQing <lirongqing@baidu.com>
+> > 
+> > Make file-nr output the total allocated file handles, not per-cpu
+> > cache number, it's more precise, and not in hot path
+> > 
+> > Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> > ---
+> 
+> That means grabbing a lock suddenly. Is there an actual use-case
+> behind this?
 > 
 
-Applied to drm-misc-next, thanks!
+The centralized value can be really grossly inaccurate as CPU count increases.
 
-[1/9] drm/hisilicon/hibmc: Restructuring the header dp_reg.h
-      commit: f9698f802e50fbe696b3ac6f82c0e966574a3edb
-[2/9] drm/hisilicon/hibmc: Add dp serdes cfg to adjust serdes rate, voltage and pre-emphasis
-      commit: 9e736cd444f49efa2334e405f7a59773ea02155b
-[3/9] drm/hisilicon/hibmc: Add dp serdes cfg in dp process
-      commit: 5f80fb4d6abd1f7f4007e4bf8dd75a8c71d2f724
-[4/9] drm/hisilicon/hibmc: Refactor the member of drm_aux in struct hibmc_dp
-      commit: 1e7f35512e77dd7276e91ade4e03807f88b97eb3
-[5/9] drm/hisilicon/hibmc: Getting connector info and EDID by using AUX channel
-      commit: bd1c935811ae6bd112321c50ed83444eca4facc8
-[6/9] drm/hisilicon/hibmc: Add colorbar-cfg feature and its debugfs file
-      commit: 2f6182616cfdb154e2ecfe9554bb814b8a6378e9
-[7/9] drm/hisilicon/hibmc: Enable this hot plug detect of irq feature
-      commit: 3c7623fb5bb6c319531b941b15b7bfc12455d3d3
-[8/9] drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
-      commit: b11bc1ae46587f3563c47078e605184f18e7fa57
-[9/9] drm/hisilicon/hibmc: Add vga connector detect functions
-      commit: 4c962bc929f1734d209a0862359e25fef8f56fa0
+There is some talks about fixing that, see:
+https://lore.kernel.org/linux-mm/20250410175149.1206995-1-mathieu.desnoyers@efficios.com/
 
-Best regards,
--- 
-With best wishes
-Dmitry
+In the meantime, given that this is only accessed when reading the /proc
+file, this should be fine?
 
+Note it still wont delay bumps/decs as long as they fit the batch (which
+is the common case).
