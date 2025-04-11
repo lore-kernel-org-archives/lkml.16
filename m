@@ -1,61 +1,104 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095A7218EA2
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CAF208A9;
+	Fri, 11 Apr 2025 12:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744373728; cv=none; b=uHD5Ea3K9nuarHElEr27joNrhPhjEQTbwksKzyBeTb97Drsow6s+yCbbHF8O9ynbDFFdePZPqW5FZZlzSfPT/GD5UGYzyTf/BqmJEF1G3hUUvQtqST/glfMlaJOQy+U8nTUfzSEBWEZ9f5dHwEAB8OxOeF+o0ms5MhF3bQ35Tdw=
+	t=1744373782; cv=none; b=H6nIJ55OBVd7bWymd2b5VKkkYfuwae85p2PLAq48U7GRynjmK+oruvrYl0f7x2axbmhYLQBo+7+OGMXA/tGIKEOc9meUG3Bd2yTQk/+/lgesevZ2trNpWlSy6ILgIQRXHdxDa1nLxoICAhfBCtjTQpPk1u0lIy/8H5oBh9HIMKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744373728; c=relaxed/simple;
-	bh=yBO6AIJ9HHlZi2gVVUcQ5GTHpfKmff9t97vsnL8Guwo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=lNzj/43tFhOGGdBfvmOtScxLSxeHvp2Rjw0e25qxkFTBiPLtyVt1NGETh3ZypduvMDl8eoMyrrsalCZZRgAaEaMD8E9Vgnti7yTQdf3pZsFlfKtCJgBIoRaZXGgu4QiUMjKjC5uinOu9eKOdEAN4WZda5saicTQFl0TXAtAS7uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d43621bb7eso28784865ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:15:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744373726; x=1744978526;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hCMyHAFSBUg3/FvAK+7HAV0zKvgB7Cxwor2EeXLPwWY=;
-        b=R0fKrB7j4MUKzqgAtpAiivXYr+A12lmSz0i2J2npLa4ZuBeymb+TLud8yMfoiSqv+q
-         WQ74zBjwPGPWtqcx3jci5inWBwKhEFJ+3pGGO3ci3gxnHzseFPT45OLLjq32dhYCsHDp
-         j3jhUkQBCLKyrtPcbuNjwY8f37PH204CzrffmIgh4Wy4Pdxank1Aejt0HZKNgPe1aIF/
-         VKl8kaGax3U1PsHBhu8PoZuvzHUpAvxHDcPGyT0IcIi4cRjDWn9AX9xREWcLs5tbY60I
-         eGuJF+eWKZd2pCzuJ5FnGFA64Q7+AP70WMVFOHcrbnylkvPCh3cSqO+z1tbkFlvo9AyF
-         88Tg==
-X-Gm-Message-State: AOJu0Yxd7B69czjQxXL0Sh6Jy2obnAWkMmQaG70DMGvu/eMs8lBETeiP
-	OdA2ciBQqj7ue1QJhI+tLcwtDiqKk2P2U3P4jsPgtG0QJmJJPKy/RoWF/V67oYA33Egadl6q0kh
-	JisC0PyIg01kG9KyGU8dt3h+kN/lfJQw3w8NV2mjvn3sQMQJsIxUmIaQ=
-X-Google-Smtp-Source: AGHT+IFWvEchr01JHF6+jdb6eAw5N79C6sSROhLSB3getoZU8s5u87mvG3XC6wzblAZ/AxffO55y39i8NEzpJKZvmgQ/m8ZzMQBl
+	s=arc-20240116; t=1744373782; c=relaxed/simple;
+	bh=F6AxARnd3xc3ILccMeGQR4+AdsjAK1Ng9wcvSCTdcUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Du21XTVVR6yL9BEJarwLnHLaOG/fs0KC5LM+fDBOqCjvTMZ+QTsWhV44fzHX9u0H6VGb/UlyXC4b9VuLQsmgHwLWVkUcPX5dnaSXmyWvvBIaku6ilCg+MZC467vm38rFaQZIVNADuuFb/7RvSTs9wW8R4AZZF8l1fG6jyqHJEHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgN0QIaO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgN0QIaO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13006C4CEE2;
+	Fri, 11 Apr 2025 12:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744373782;
+	bh=F6AxARnd3xc3ILccMeGQR4+AdsjAK1Ng9wcvSCTdcUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GgN0QIaOqZwKC84+vH+4PYL6Yqoa2YbPgMzsNSS5Uokga7vW007H/vpuvWZ16f+vb
+	 G3HEFhPSwBziRClLsu7BYJ9wC7MR+J8Ot6bBgqD0YRFNCH0enAQlLyHJDqDddMwwBh
+	 CrBaSsXTxH9V65JLSZrKped29VS56QlTy23mlfTvE71ATxiGmgWdskJwk+dL4leo7d
+	 j82a2SR2BlbDvfotFq7Zv4gyBcvD0SF4zEjVaKwC3VfFn5Wu28irRy/UivCppMWmlx
+	 kN/YrUjtfpKHk1MnFmcQAU0+jjcWczr3ouPiM916K+TLUY9Gf+Fi6FyPvlY4YHCkMt
+	 z/g6jtw744FVw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u3DJ3-000000001ZR-3R9Z;
+	Fri, 11 Apr 2025 14:16:26 +0200
+Date: Fri, 11 Apr 2025 14:16:25 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: jens.glathe@oldschoolsolutions.biz,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] arm64: dts: qcom: x1e80100-hp-x14: add
+ usb-1-ss1-sbu-mux
+Message-ID: <Z_kIGS0GLduS1H1z@hovoldconsulting.com>
+References: <20250410-hp-x14-v2-0-d36414704a0a@oldschoolsolutions.biz>
+ <20250410-hp-x14-v2-1-d36414704a0a@oldschoolsolutions.biz>
+ <Z_j8M2Q0J3LuANAF@hovoldconsulting.com>
+ <Z_kChvolKDp2JAcS@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:1304:0:b0:3d3:d08d:d526 with SMTP id
- e9e14a558f8ab-3d7e4d0c549mr51581735ab.11.1744373726120; Fri, 11 Apr 2025
- 05:15:26 -0700 (PDT)
-Date: Fri, 11 Apr 2025 05:15:26 -0700
-In-Reply-To: <67b323a4.050a0220.173698.002a.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f907de.050a0220.355867.0022.GAE@google.com>
-Subject: Re: [syzbot] 
-From: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_kChvolKDp2JAcS@linaro.org>
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On Fri, Apr 11, 2025 at 01:52:38PM +0200, Stephan Gerhold wrote:
+> On Fri, Apr 11, 2025 at 01:25:39PM +0200, Johan Hovold wrote:
+ 
+> > > +	usb_1_ss1_sbu_default: usb-1-ss1-sbu-state {
+> > > +		mode-pins {
+> > > +			pins = "gpio177";
+> > > +			function = "gpio";
+> > > +			bias-disable;
+> > > +			drive-strength = <2>;
+> > > +			output-high;
+> > > +		};
+> > 
+> > This is more of a question for Stephan who added this to QCP [1], but
+> > why is this mode pin here and what does it do?
+> > 
+> > It's not part of the binding for the mux (which indeed only has two
+> > control signals according to the datasheet) so it looks like something
+> > is not modelled correctly.
+> 
+> I'm afraid you have opened a "can of worms" here. :')
 
-***
+Heh.
 
-Subject: 
-Author: qasdev00@gmail.com
+> On the QCP, there are actually two of these muxes chained for each port.
+> One of them does the orientation switching that we are describing here,
+> the other selects between routing SBU to DP AUX or USB SBTX/SBRX. I'm
+> guessing this is meant for USB4. Given that:
+> 
+>  - We don't have any support for USB4 on QC platforms at the moment.
+>  - We're not modelling the USB4 stuff for the retimer either(?).
+>  - We have no clear overview of what/how to model for USB4.
+>  - The ports without retimer aren't advertised with USB4 support (I'm
+>    guessing the signal quality is not reliable enough without retimer).
+>  - The gpio-sbu-mux driver doesn't support shared enable-gpios.
+> 
+> ... we just went with the tradeoff of forcing DP AUX mode here by
+> setting a fixed state for the second mux. I'm not sure if the other
+> configuration is even a valid use case for the ports without retimer.
+> 
+> A comment about this would have been nice, but I didn't think of that
+> anymore when cleaning up the patches. :-)
 
-#syz test
+Thanks for the explanation. Makes sense.
+
+Johan
