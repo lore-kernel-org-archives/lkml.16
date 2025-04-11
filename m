@@ -1,138 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85F227CCD0
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A00627CCFA
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744353100; cv=none; b=qsEuZNUywjGARtBVu20Zw/ZoZeCJ19rhIY/c6bFSrwjMUQH2m0KJEZ3YdNHNPuwOtn8tThvRO1QDsmdSD2S8iTR+3S/b6Aa4NP8EmIPwCwUdqweOGHnjTonuvPlQpsSnL5FMlW5zQT1vHNmtJWzKwPzQiGU/1Rlw3on/w75hoJw=
+	t=1744353103; cv=none; b=KZUQYZ52Etj8nPcMTs3FEIqhDku7YNVMYV1E4MSiE3KsnPZOF3/z6QYnPsuGlYnmKb1g6BKS3tK+eCBcxFI9TWsxzIOQISOk9pggRnMhMeQt01sFHFgpJHZBYb8BwSO6D+p8ow1R86w2JX36YHaWVa5+H74ypo6JDimFwFVoNMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744353100; c=relaxed/simple;
-	bh=gPbW4hxtFr5Vb/hEwyhC++dCtSsKBgR/5ZNQcAMJ4IQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LV9Xl9qNNb54DG+2hUAikPVsPjra/S83rlnoA0WFxYYHXrVhpahDnpR/BB/0/G/8j6sa5Qqz54G3BAJMGGmVhQMcnpoopFiF23P+ilD5UGDQwrJzVM5dUsI4c5rTE7P1+zduTUbx3EeGDpbRsZw17+Uo56yCDFI2EY+lGx40q3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fTRj6Biy; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fTRj6Biy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744353099; x=1775889099;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gPbW4hxtFr5Vb/hEwyhC++dCtSsKBgR/5ZNQcAMJ4IQ=;
-  b=fTRj6Biy3JZHbBJ3XEYDtX9IXKaxtnon9P9o10uFG6UpNlBP2ft7IhTp
-   4g/UAfTKreCCxU2iK3Wi+67JrNF4LiwcHmSLjY5GDVe8L9A1vtG4tMYgi
-   90dwijRIMUysD1S+VlOepz1Iy6crsWmjhX9LKmJnlE9sGjsxl29zct3L6
-   +eQ+pIw6nt4yVEgPYXbDFaGvs6wJZ/OLfb31qVl71dq/O+l6Ik0V5+erM
-   6XpuScDrQsKrL0IbsHNBZE9utCKzSjh0KeYh/IefJKha8gF3PN/0sJ1Pk
-   HVn0rYckCaWDk1RIVg0p+UOe650dQu+r4eh2Bc6CUPN5ZvVezoOigZeso
-   g==;
-X-CSE-ConnectionGUID: E/vbdaPsSlmQ0ERONx99vQ==
-X-CSE-MsgGUID: J/hEKRybQtefACwyeg9tSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="68380988"
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="68380988"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 23:31:38 -0700
-X-CSE-ConnectionGUID: wMz7CBueRzm/tXRadmdZxg==
-X-CSE-MsgGUID: P495+6TITKaP+RPdOXk7hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="134272881"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 10 Apr 2025 23:31:36 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u37vK-000Ati-0N;
-	Fri, 11 Apr 2025 06:31:34 +0000
-Date: Fri, 11 Apr 2025 14:30:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, Bo Liu <liubo03@inspur.com>
-Subject: Re: [PATCH 2/2] erofs: support deflate decompress by using Intel QAT
-Message-ID: <202504111440.2DIupC2G-lkp@intel.com>
-References: <20250410042048.3044-3-liubo03@inspur.com>
+	s=arc-20240116; t=1744353103; c=relaxed/simple;
+	bh=9A7DwqByXRMCKVIdkYcVcQ2WDj1fbv8iIBH5EpQdQYE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QsoDHZKCk/N7XjVM/9BlB5oR2d73AYrQLFArwS7t5z+OOJ8Fx8DMUlml+XiHuOywptAjUuhhNGv3dnWIwVafxT/2jdCBhZgF1SHaZFtmr5UhibTozUlJNIfUP46oWnbMrm39XrZToAeDn//LYHhDvsW4v1xZADgsmZ33UthdwPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-527b70bd90dso777473e0c.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 23:31:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744353098; x=1744957898;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wEO0P/4McgPJ7BP0yxbjT3/h2+Tl9EqmI0luXhkXNF0=;
+        b=a2DcRUts9cx7t/WmG4qGehMr5Of9TMvZbayBtCm+75jrSZO/JDtKzKTwRMFkfnq2hU
+         QwzJb0Hjx5zXKjXOGTajboSHsfRfbRX8vmoWypJuPMTPCiI2eoqX5+fMs+UygqJEqIIF
+         4MiEmy6lpq1IpU6uhkNvfNfo7fBWrjkfWCQsO+gAKs2Fo4kcxvtVV1nR97tZcINWkhra
+         5zQlOxOOTyF1l1gRx3n7YLyYJEf4lo+aYpwY7BUdbXQmhbZPJ3BCryDjoCu2H20gfZBv
+         8kBw+uliSN/KWi1QW18Wf6WkR7UqAT8YU7YI7hIt1mGyvjXQnrSKAjvynzWOIwa4K95T
+         MWJw==
+X-Forwarded-Encrypted: i=1; AJvYcCX1E4jRz5h3fGwef9IlAR8RmZpN3jE5Xcxv5GUyquYuQFTKlzuykbNaG1m+PpAoIyekwu2GOxnnjeStQoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ/IPTxTjS8oos/HwbTnHkaA3a4LFMEz5lXAMjeHXl7h7PzFYk
+	UzegGUDy8j+N1LDSlHGPs4bH4lAbeSUbGlwlbLxoGYZvTjKpHYhwh7I3bCUfkv0=
+X-Gm-Gg: ASbGnctIIhfRNZfNJ+H8VrxBcuZeEbXWtaP72MSg5dbulf7g9vHW4JqLdHtUoXY2qci
+	vU/evFUpLcc0XxUX2Gipr1P60KDcuXKHIAh9tkwUBawexEfkOjf7kjObiRpA9CrJFsWwlmNTKep
+	l5ZyH9144agoGnMb9VQhAfoU3bfNU03mQmQQ5Rwao2yVUUqos6R0wTO95ZFlXS6LA1Mi2vnqcOm
+	6D/YSjiE+oGIEKQvXT7kXRwQdOuCyRdnuelfsiXx+yHORXDqrBflTHB6nlUTN48myWqW/DTRnnH
+	hIVYtZ1M5YPdYIqUhoE8ZgMBpQxIiQeWXFKP8J3PAe8ohDUnfVPiTVyGceIVFSKUy5RpE9vjkmg
+	MV08=
+X-Google-Smtp-Source: AGHT+IGBbXiRf9m/J1RjkG7SglTN72AYn0GHXdPWi51OWYq7GNSwgajZ2Mrif3J7sE8BJEEwi7y2ZA==
+X-Received: by 2002:a05:6122:168e:b0:520:42d3:91aa with SMTP id 71dfb90a1353d-527c347f3c2mr904742e0c.2.1744353098489;
+        Thu, 10 Apr 2025 23:31:38 -0700 (PDT)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87557136a61sm972505241.8.2025.04.10.23.31.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 23:31:38 -0700 (PDT)
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86d3907524cso665494241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 23:31:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCURCr0Ccm6aoAur+14X00CBzwbvrTNm2wTQ1Edtezjf5JpyYmn5ZX69aAVLmHZfTWgdfy/a3iT4GiCU+T8=@vger.kernel.org
+X-Received: by 2002:a05:6102:b02:b0:4bb:e8c5:b164 with SMTP id
+ ada2fe7eead31-4c9e4ee720bmr793116137.7.1744353097831; Thu, 10 Apr 2025
+ 23:31:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410042048.3044-3-liubo03@inspur.com>
+References: <20250410200606.20318-1-dylanbhatch@google.com> <20250410200606.20318-3-dylanbhatch@google.com>
+In-Reply-To: <20250410200606.20318-3-dylanbhatch@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 11 Apr 2025 08:31:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU-1f3_ufKzHxg7KP-oQOTUR=P3e36W9X=+nkA4SH1F_Q@mail.gmail.com>
+X-Gm-Features: ATxdqUG8wphQEVB9r3YF2jmxCQ7GDshhzzkv5uNWZN8ycvFadPAv3ateJjFVJyg
+Message-ID: <CAMuHMdU-1f3_ufKzHxg7KP-oQOTUR=P3e36W9X=+nkA4SH1F_Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64/module: Use text-poke API for late relocations.
+To: Dylan Hatch <dylanbhatch@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Song Liu <song@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Roman Gushchin <kfree@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Bo,
+Hi Dylan,
 
-kernel test robot noticed the following build errors:
+Thanks for your patch!
 
-[auto build test ERROR on xiang-erofs/dev-test]
-[also build test ERROR on xiang-erofs/dev linus/master v6.15-rc1 next-20250410]
-[cannot apply to xiang-erofs/fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Thu, 10 Apr 2025 at 22:06, Dylan Hatch <dylanbhatch@google.com> wrote:
+> To enable late module patching, livepatch modules need to be able to
+> apply some of their relocations well after being loaded. In this
+> scenario, use the text-poking API to allow this, even with
+> STRICT_MODULE_RWX.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bo-Liu/erofs-remove-duplicate-code/20250410-122442
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-patch link:    https://lore.kernel.org/r/20250410042048.3044-3-liubo03%40inspur.com
-patch subject: [PATCH 2/2] erofs: support deflate decompress by using Intel QAT
-config: arc-randconfig-001-20250411 (https://download.01.org/0day-ci/archive/20250411/202504111440.2DIupC2G-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250411/202504111440.2DIupC2G-lkp@intel.com/reproduce)
+Wouldn't using the text-poking API involve calling text_poke()?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504111440.2DIupC2G-lkp@intel.com/
+> This patch is largely based off commit 88fc078a7a8f6 ("x86/module: Use
+> text_poke() for late relocations").
+>
+> Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
 
-All errors (new ones prefixed by >>):
+> --- a/arch/arm64/kernel/module.c
+> +++ b/arch/arm64/kernel/module.c
 
-   fs/erofs/sysfs.c: In function 'erofs_attr_show':
->> fs/erofs/sysfs.c:136:24: error: 'struct erofs_sb_info' has no member named 'erofs_tfm'
-     136 |                 if (sbi->erofs_tfm)
-         |                        ^~
-   fs/erofs/sysfs.c:138:59: error: 'struct erofs_sb_info' has no member named 'erofs_tfm'
-     138 |                                 crypto_comp_alg_common(sbi->erofs_tfm)->base.cra_driver_name);
-         |                                                           ^~
+> @@ -431,6 +444,30 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+>         return -ENOEXEC;
+>  }
+>
+> +int apply_relocate_add(Elf64_Shdr *sechdrs,
+> +                      const char *strtab,
+> +                      unsigned int symindex,
+> +                      unsigned int relsec,
+> +                      struct module *me)
+> +{
+> +       int ret;
+> +       bool early = me->state == MODULE_STATE_UNFORMED;
+> +       void *(*write)(void *, const void *, size_t) = memcpy;
+> +
+> +       if (!early) {
+> +               write = aarch64_insn_copy;
 
+Perhaps aarch64_insn_copy() should be renamed to text_poke(),  as it
+is a wrapper around __text_poke(), just like the x86 implementation?
 
-vim +136 fs/erofs/sysfs.c
+> +               mutex_lock(&text_mutex);
+> +       }
+> +
+> +       ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> +                                  write);
+> +
+> +       if (!early)
+> +               mutex_unlock(&text_mutex);
+> +
+> +       return ret;
+> +}
+> +
+>  static inline void __init_plt(struct plt_entry *plt, unsigned long addr)
+>  {
+>         *plt = get_plt_entry(addr, plt);
 
-   115	
-   116	static ssize_t erofs_attr_show(struct kobject *kobj,
-   117					struct attribute *attr, char *buf)
-   118	{
-   119		struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
-   120							s_kobj);
-   121		struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
-   122		unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
-   123	
-   124		switch (a->attr_id) {
-   125		case attr_feature:
-   126			return sysfs_emit(buf, "supported\n");
-   127		case attr_pointer_ui:
-   128			if (!ptr)
-   129				return 0;
-   130			return sysfs_emit(buf, "%u\n", *(unsigned int *)ptr);
-   131		case attr_pointer_bool:
-   132			if (!ptr)
-   133				return 0;
-   134			return sysfs_emit(buf, "%d\n", *(bool *)ptr);
-   135		case attr_comp_crypto:
- > 136			if (sbi->erofs_tfm)
-   137				return sysfs_emit(buf, "%s\n",
-   138					crypto_comp_alg_common(sbi->erofs_tfm)->base.cra_driver_name);
-   139			else
-   140				return sysfs_emit(buf, "NONE\n");
-   141		}
-   142		return 0;
-   143	}
-   144	
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
