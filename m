@@ -1,85 +1,75 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A993D1E9B09;
-	Fri, 11 Apr 2025 07:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE8B27E1BA;
+	Fri, 11 Apr 2025 07:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744356547; cv=none; b=srr7PujX4xSTQ1gwsqHf+86oJ+mW1xrJsnYJClyedt3F0/hCciAEJ6gWJdGomFj/f+mePQ5U+Y0j/mc9J+WOgaQ97/7zQizeIWZfVtUKOwSD1Ud/mzMTH18ZLvx/WkvFuHqN3y43WGsC+RcXcKutExVERSOC3WJWuUABO/jIJ6M=
+	t=1744356588; cv=none; b=uGEe6hip9Kd+3P9zbI5nHhfdqgNOc1RrIqpiws66wKc2nIYg3UVKRF37K71QBF01w4jOiNMQ6JRYE9fb6xF+xhnC5ehJwfXfWRvxqUsF0UPKUukZC0UEDWWBOFGwlRQ/GZRPEujV8nqEz+xEUk0Wbaigss69bcGkCkVljCACP08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744356547; c=relaxed/simple;
-	bh=bDqGY1AtiCPNgiPrNANi8hsarVF01F4kRY7ffI9MP0k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AcygXVBrQmitGJNampK1QUkvUSEDs6I39PmMSpFoD8tFKLimHz0ba3h2j5PUMqNqq4dKw1c59p1JCI+fPH9S6zaB+aoF0nSmUgI0DPOD+atCnDfWC0ePGKA4TYojOvg+cefmb9xj7om21F+3TihMdTJlmTKRT8QWoFCF/SukUMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
-	by SHSQR01.spreadtrum.com with ESMTP id 53B7T0gl066240;
-	Fri, 11 Apr 2025 15:29:00 +0800 (+08)
-	(envelope-from Yunlong.Xing@unisoc.com)
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 53B7SPXM062369;
-	Fri, 11 Apr 2025 15:28:25 +0800 (+08)
-	(envelope-from Yunlong.Xing@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4ZYpD85X3Gz2M5NG5;
-	Fri, 11 Apr 2025 15:27:20 +0800 (CST)
-Received: from tj10379pcu1.spreadtrum.com (10.5.32.15) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Fri, 11 Apr 2025 15:28:21 +0800
-From: Yunlong Xing <yunlong.xing@unisoc.com>
-To: <axboe@kernel.dk>, <linux-block@vger.kernel.org>
-CC: <niuzhiguo84@gmail.com>, <yunlongxing23@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <yunlong.xing@unisoc.com>,
-        <hao_hao.wang@unisoc.com>, <zhiguo.niu@unisoc.com>
-Subject: [PATCH] loop: aio inherit the ioprio of original request
-Date: Fri, 11 Apr 2025 15:28:16 +0800
-Message-ID: <20250411072816.445035-1-yunlong.xing@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744356588; c=relaxed/simple;
+	bh=FpvFJBCNZeQwsrZwlHDgycSPFQVP2F3VGtux5Rvt/7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U8e/8Bm0ggE/3q0E42qDtgNtFZmNJyvdjPuVvMQSo+OXXyYdHiTnBkMgWtz5cGd3CbDVeQfV+3o9mGiFtr95V7ywu8iPd2xgzmNW1egXRryC0f4zVh0BR3+qxJnAQ8gLHFOLv3HWfh+nm7gQWjozT2iZPdwxy2q9HtlHkR2LRuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7KDETyq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7KDETyq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76DDCC4CEE2;
+	Fri, 11 Apr 2025 07:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744356588;
+	bh=FpvFJBCNZeQwsrZwlHDgycSPFQVP2F3VGtux5Rvt/7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X7KDETyqBKkomQxqCqCT5fjZcfO0jb23vcPrDVG2sfYqceJ+FujzpC3NdTw+6+eH8
+	 ymkaW9HwrpugRm1tkoiu4yyUCbdE6FFc9uyLC0Ghx+MzXCJ+yIldW9qrRB5ZQGc6cg
+	 dTrVb61IvUc7ne+xSt6VbTT+bKA4Q6v6m1795KE38u8ULO4YsP9VGBOAFtcximuSaZ
+	 ds4phx3rmrS8DodJf1vyl/Q4qBfPbu2EnvZX2GWhDM7BPZ37w3ljtnP/Grsp9trsg+
+	 xCYkh7D5KkMbLl+Ao0NYtw6nK6MpFesNfCjGTR8zzzdJ/vbQnezh9J8wofR6ynMDVQ
+	 ebSTpatkqc3IQ==
+Date: Fri, 11 Apr 2025 12:59:44 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Wenbin Yao <quic_wenbyao@quicinc.com>
+Cc: kishon@kernel.org, p.zabel@pengutronix.de, dmitry.baryshkov@linaro.org,
+	abel.vesa@linaro.org, quic_qianyu@quicinc.com,
+	neil.armstrong@linaro.org, manivannan.sadhasivam@linaro.org,
+	quic_devipriy@quicinc.com, konrad.dybcio@oss.qualcomm.com,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/2] phy: qcom: qmp-pcie: Add PCIe PHY no_csr reset
+ support
+Message-ID: <Z/jE6FzW4MM98hgv@vaman>
+References: <20250319094544.3980357-1-quic_wenbyao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 53B7SPXM062369
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319094544.3980357-1-quic_wenbyao@quicinc.com>
 
-Set cmd->iocb.ki_ioprio to the ioprio of loop device's request.
-The purpose is to inherit the original request ioprio in the aio
-flow.
+On 19-03-25, 17:45, Wenbin Yao wrote:
+> The series aims to skip phy register programming and drive PCIe PHY with
+> register setting programmed in bootloader by simply toggling no_csr reset,
+> which once togglled, PHY hardware will be reset while PHY registers are
+> retained.
+> 
+> First, determine whether PHY setting can be skipped by checking
+> QPHY_START_CTRL register and the existence of nocsr reset. If it is
+> programmed and no_csr reset is supported, do no_csr reset and skip BCR
+> reset which will reset entire PHY.
+> 
+> This series also remove has_nocsr_reset flag in qmp_phy_cfg structure and
+> decide whether the PHY supports nocsr reset by checking the existence of
+> nocsr reset in device tree.
+> 
+> The series are tested on X1E80100-QCP and HDK8550.
+> 
+> The commit messages of this patchset have been modified based on comments
+> and suggestions.
 
-Signed-off-by: Yunlong Xing <yunlong.xing@unisoc.com>
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
----
- drivers/block/loop.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This does not apply for me on phy/next, pls rebase and resend
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 674527d770dc..ed73627af3ff 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -447,7 +447,6 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
- 	cmd->iocb.ki_filp = file;
- 	cmd->iocb.ki_complete = lo_rw_aio_complete;
- 	cmd->iocb.ki_flags = IOCB_DIRECT;
--	cmd->iocb.ki_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
- 
- 	if (rw == ITER_SOURCE)
- 		ret = file->f_op->write_iter(&cmd->iocb, &iter);
-@@ -1892,6 +1891,9 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
- 		break;
- 	}
- 
-+	/* get original request ioprio */
-+	cmd->iocb.ki_ioprio = req_get_ioprio(rq);
-+
- 	/* always use the first bio's css */
- 	cmd->blkcg_css = NULL;
- 	cmd->memcg_css = NULL;
 -- 
-2.25.1
-
+~Vinod
