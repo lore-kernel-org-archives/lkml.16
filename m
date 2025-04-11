@@ -1,46 +1,46 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2084.outbound.protection.outlook.com [40.107.96.84])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2075.outbound.protection.outlook.com [40.107.94.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA93910A1E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B23913FEE;
 	Fri, 11 Apr 2025 00:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.84
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744331554; cv=fail; b=A0SNLjmXni+wBMkOda8Dgm6vp1kytg4u60wj1DeUFuyz5VzUwvkqqxEnKzoBF9dXxR6DSwj1mwhJ5CsCKnYBsjPRSdw02uXxlDmuXKcy6yYotk/aNL6lTW57SSTyiCfjjX+tOubSAQZi/KBBk0UufYM1adF3rbdSu4nT5II+bT4=
+	t=1744331554; cv=fail; b=OLPPygQXEbjvAeKFJZNRLcJbRWvENN1J7RIydyBkfSLWUDNb5dXxqraCsXykM4AJV4b6Ue4BwDFBb8PCtFrKMeqhAumm97HVon7BJ43rwctYt+hZYAcSGsr3CbZ48O6L93TYHmVOdyc8UO00Nt+Ym/ODNx47vD5HKGlNJJtKVU4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744331554; c=relaxed/simple;
-	bh=5PAbZMc9GQdH9f6zQteDbHTD6p7Zv+ISQ2wYcoAVREE=;
+	bh=IuFk6orzQywZnDOrX+t0oDg8BjG2iIFP6ooBWLNoLcw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HfF2vcSw0U9HMgSD3LiH37Tf/9o89TJuAEqDaPT2vBtU8ObQtAOhnNONq6Dl0MBejU4p5iSBqqvPfvjndQftu9y2IGc9Gkol5BabtXIi+xhbDX/6pgzZZtOnIDtu56i79Bzf2gQvPiZ6hRRwCULmx0uY9fe09mGGHJs760VdlRE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zWq5bxui; arc=fail smtp.client-ip=40.107.96.84
+	 MIME-Version:Content-Type; b=pTMRNLA41wbv4okL5V9Ld5/u2rAUPgWT8ipPRCjZlmbi12Ee1nvtV4u7IDJT1FqT4B8sFv6/xBFZpZK/TmMGv4+OH8UzvECzJA2zVaFnhoeEhl1P6W4AjE3lLYM+2x0vQz0jU6458jaC91WovGbJrgLeaotXN5Rda0N6tbuCzj4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=szDzqHiR; arc=fail smtp.client-ip=40.107.94.75
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zWq5bxui"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="szDzqHiR"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YJQOsnfDmkP7jV5bgPaePrbKg8HSP/e+JBwKs7YhW5t061I2589XXjkUwt4Yz93mq8lHYTEcfI5XhjhEUwFCVPwfyjc2pA1Rijrgesp8NW5ZLIm3DtoPa+AwIyaDSW8bbyLN5IU7QWCsejckeAP5iakZkdI5Jp/1aW1rhzwHGAJy83p/ac5bt03wbJ3cba2/ZwN+4JkQDKu899tg2z89V2VsEx9YbZsZ+0sfK7xc6IvmUyXQszDqfTDel4uz3+KOf69eI2CT/rRs/CIoUIM7JTWRh0CDw0e2s1cUxi+mFuvcdKkkHefMXZ6aAtHBFNidgbt16A3O3+Bi/PwOg8MU+w==
+ b=Sy2HM3P/FjG9YlUmQormy2NJy+tBqIaSrnBShdOqjoUKzU8GTwZM1rlEWbU+IVvKYZ5m/CqAzMQqJ0PAfXEEzT61EnzEQfjkGQq8KrHypkrEVlcqWTEkNU5NmAaGn/dLvFjwE91/rFGoPzYFD1MzwWWDQBm82vFYCRvwKKT+30/BsxEg9GQ5bSVLWXSVj1XJeAJIEo2LZqrxFoNxbKFyc5LP69RhYeH8gEhncB6A1pwke/G05A7L5+XQmNC0/ps+kaGTZVAe9Qxx9CjOFt3KTfo6+vuRVBFq07Nk3Ba0egVs2vK+AU1/P/lkN6rxebpZHdxb6NuQeOpeY8my0pnB+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0opJKX/Imnt509eYuwDUjD3KXm8QPUG1tcXc4VMh82g=;
- b=jlws6fcAzSbxliMY2ilx/28y3z+V3wW1QDbzN1jUhRzmJCHl76taIF2qTEqf40hRlZnEdpmCW6L8tlsaJrBfevNQH1QTvZfGI/gYvVrfNQSmAjihmLQALFwRcYjw2Vl04A6XKdmYfRG9VHIAaTPbGkCveJGmMQR9BEhrEkZFDTNjWpFtzhGHL5ebfYlHfFh8eXHqkSXJoc/ccEQ/hPPQbIhzvD60I4xAPlpeHq1X3rZw07kJXh9PUcEbcHEPImKyl3LlpinUF1ZwdVTVGGSrEfuysdSH3BkgJiC/E+XfmbZoseo8EfH+jqhzKZfAHAeDWFowTNykH6nSX1HwNFvKHw==
+ bh=NETXusa+r6pk8sysJOzMu8s+VrKfQSZCzGPQqAO0X6A=;
+ b=N/PhEOkfSlDUCwnkS3BtuYsVTG3pjWSHApb4Cd/q/Oc2Em6LrTPdm6UBHOVM60KBwcSiLHldNHFcHw6awNW/2HIzQAyXg/e9IAxM+ix+rjZRM2tOz2V9G266n59iX+4Ld5CGnH8THohzKktrgt/KzyAKHziQBkzydYzGBBFcb5HGss84DGi7+qwKOBz7vfBzFPOLTnHS0a18bzWMzRBOVmShPEtbae3MQxtldoVJ8dkUNmLksXj3aRX6B4OgaK9lG1lpZ5bLynYIFkeZ5DGc4ezt52/1SC19x6Bv6k7TqU1IttJmROb69kmvdyc6lgF7OajKeg8cvkUmJh8C/BD1qw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0opJKX/Imnt509eYuwDUjD3KXm8QPUG1tcXc4VMh82g=;
- b=zWq5bxuixLo/IXZQYYekpQF6MLH96cJrG8WgBISJl8ewtLFFgRaadzD53n0lxCwMkjOTtf2Co4i+yvYw+tC4oRu3bwhz4JUhrE6j5vnQxFJB8ZXu2mt+pvoq94NCiDqPrFZYDLAGi8SLNlrXzMAJtM9e5rjsgWGbMnA6hcoOok4=
-Received: from DM6PR17CA0022.namprd17.prod.outlook.com (2603:10b6:5:1b3::35)
- by DM4PR12MB7696.namprd12.prod.outlook.com (2603:10b6:8:100::10) with
+ bh=NETXusa+r6pk8sysJOzMu8s+VrKfQSZCzGPQqAO0X6A=;
+ b=szDzqHiRydhlWdjZejZbxhoUJZxlWg/YMtHG595idMy3dHupjSceVs5M4lntuxVW7rmMlRYyzJ7iZSxq/WRbkqbaEbRrKXr+fhm28KzIyrWtk1XuwNDzicq8iW4/QZ+izNUjXe/eo4JrzUb9mi4pBbYhtbHMjilQYmCHtr+347c=
+Received: from CH2PR07CA0055.namprd07.prod.outlook.com (2603:10b6:610:5b::29)
+ by SA5PPFCAFD069B8.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8e1) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Fri, 11 Apr
- 2025 00:32:29 +0000
-Received: from DS3PEPF000099DF.namprd04.prod.outlook.com
- (2603:10b6:5:1b3:cafe::6b) by DM6PR17CA0022.outlook.office365.com
- (2603:10b6:5:1b3::35) with Microsoft SMTP Server (version=TLS1_3,
+ 2025 00:32:31 +0000
+Received: from DS3PEPF000099DC.namprd04.prod.outlook.com
+ (2603:10b6:610:5b:cafe::38) by CH2PR07CA0055.outlook.office365.com
+ (2603:10b6:610:5b::29) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.36 via Frontend Transport; Fri,
- 11 Apr 2025 00:32:29 +0000
+ 11 Apr 2025 00:32:31 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,22 +48,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099DF.mail.protection.outlook.com (10.167.17.202) with Microsoft
+ DS3PEPF000099DC.mail.protection.outlook.com (10.167.17.198) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8632.13 via Frontend Transport; Fri, 11 Apr 2025 00:32:29 +0000
+ 15.20.8655.12 via Frontend Transport; Fri, 11 Apr 2025 00:32:30 +0000
 Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 10 Apr
- 2025 19:32:28 -0500
+ 2025 19:32:30 -0500
 From: Shannon Nelson <shannon.nelson@amd.com>
 To: <andrew+netdev@lunn.ch>, <brett.creeley@amd.com>, <davem@davemloft.net>,
 	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
 	<michal.swiatkowski@linux.intel.com>, <horms@kernel.org>,
 	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
 CC: Shannon Nelson <shannon.nelson@amd.com>
-Subject: [PATCH v2 net 1/5] pds_core: Prevent possible adminq overflow/stuck condition
-Date: Thu, 10 Apr 2025 17:32:05 -0700
-Message-ID: <20250411003209.44053-2-shannon.nelson@amd.com>
+Subject: [PATCH v2 net 3/5] pds_core: handle unsupported PDS_CORE_CMD_FW_CONTROL result
+Date: Thu, 10 Apr 2025 17:32:07 -0700
+Message-ID: <20250411003209.44053-4-shannon.nelson@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250411003209.44053-1-shannon.nelson@amd.com>
 References: <20250411003209.44053-1-shannon.nelson@amd.com>
@@ -78,112 +78,98 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DF:EE_|DM4PR12MB7696:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad4a797d-6911-4649-4d37-08dd78905792
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DC:EE_|SA5PPFCAFD069B8:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5f8f684-703b-4184-23e8-08dd7890586e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024|921020;
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SIHk44bcLQJvdHZcB9SDfgX1Ph23v7ae/IfBI4bNIRsU5FAZjP73lndxlDVT?=
- =?us-ascii?Q?zQgjxbaI2qi3aiA7PtZxf0daByh0J+zeE5glQcwilyjy4IKFhD/fCrL4FuAn?=
- =?us-ascii?Q?XQAJX7ysT/VGywmMPPcsFZH58DdzzJEKk6Czei3Mlgj7d7SH3spA9z7I89+F?=
- =?us-ascii?Q?Sq3SrSuIq3wm6tI7cnRGwGy1oj6d5jFkfcpx9OSsVUbYJMwK1UmzsGiSmG9E?=
- =?us-ascii?Q?U7fLK/wbr3N4UQ9XQKqAPtXkM3cLdgMKQ85IvtNBETXpa9NB+VYml6lOhAcZ?=
- =?us-ascii?Q?hgqtUc5aB32QLF9dOXANgtfFnE6ZA/VJaqVMA/ph7OnyR8txCDg77l0CsGlR?=
- =?us-ascii?Q?6AjElptVsLIolSOcv5YpcLyO8SbxzWqbf3E8W2ov14+22JHobzuA/fFYAio/?=
- =?us-ascii?Q?vJ+04rbV1Xk2/g0PCWmozKNJSK/n72Pwbsfos1fKGarcA9/90EIPUwW9pRHE?=
- =?us-ascii?Q?C3eLIsEFnk56Kjb0Vzn3d4feZtS8DSttI1MHfbAXL8BeqrY1CMtacP1oxYEy?=
- =?us-ascii?Q?PqzLDuuiB37y727GT3XDYnYJAykOJDfUBFMI+FNOPdEG4MPhuf2c5D1chhsi?=
- =?us-ascii?Q?Xlx/ObzY1ORyhY+BdmdXGZ9m01o84cZ3AZK+fC/ML1BXf93lFqp69uaz3G7i?=
- =?us-ascii?Q?6TN2f6OxHPRgkT7BNG+8ESiV3nytsqPwjZiFHR0cxBOzBPx4BcCKKNm1vN0H?=
- =?us-ascii?Q?T8vtXj1/G4oSOiSBYrbf+7RDh/LYmsOLEfQwYp8B+nQVhl9axhEnXhrxqZ7Q?=
- =?us-ascii?Q?ErPG3ynfw1BRferV2P88lDWC4YrEuGYs9WXLohXxx0jWRxThW3KUYjB81Jr1?=
- =?us-ascii?Q?0E1PZ/21utJ2I39P4eEYpXuegUBGlBL1rKVn5O+ZDVz9lppEegvhtt5OKtEG?=
- =?us-ascii?Q?ZD2CkznfgTnuX8QrzjppMvhIHe0sjYuuPY+0oYrkMa2f6OmIjZPJFn2lU98V?=
- =?us-ascii?Q?r/lLGTgd1BuXiX9ZadChNBtCBD1TnVzYuC+AjUI2/sFNJWuw48RIVTGUcrjx?=
- =?us-ascii?Q?9Ry221WXkqQD2DEDcr5euRrhU9Fb9KrtUjMIfviQ5N7pvYdKDDpXAiFXn/17?=
- =?us-ascii?Q?Fpilc7iJgOC5dLLv6Hnr6O/CVkAzSrVQ+ftwi++eqTKGc1+LtC7M6P6OOd8n?=
- =?us-ascii?Q?zsKw+oNdKca8mstMKt3KkfJX1uHl/fcPEDBh0Tp3OEV6SE6RL5HHqMuciEZm?=
- =?us-ascii?Q?OidxqrWruWTAVgOy/rXki3FurMUS55lgE/Qx84UN/zZGnazKYny6meTWkfwC?=
- =?us-ascii?Q?ExBGeOcWFDl9rqEpqXMybqiZTCVDj0RPQcitEu8//QH164ceGzubKSoiMgwL?=
- =?us-ascii?Q?qr6z0Wh705ULk7osQFq7EnM7yVAyfOJ5h/uyzmrhLxD+AzDMCVua3vhZUdz3?=
- =?us-ascii?Q?r5eETxeejf/mCox1ptKzozqiL4zTCicVanA5UCWEhYx+PQ0wF3RJr2OujBEG?=
- =?us-ascii?Q?mdfVau8E0Zw4YGm38VToOCRGEWD5oC0YH41Ao21pR7alsymw5OVmCSVTXwBV?=
- =?us-ascii?Q?llaUN+9U9TBrsAAyPQ9WRCb1rAjQ2RlwSmv13uhDAaAwqvgUjmooZRjY4A?=
- =?us-ascii?Q?=3D=3D?=
+	=?us-ascii?Q?rq9Gwng5bTCLjNhHAF57dMYLFGECNaU7LKOM2UKL/3eUPqXyxu76ez68qNjj?=
+ =?us-ascii?Q?M+PKxxD7Bwfv/mK/NsfRlfDHivHcCaI6+5rtxR5TA3oBZUmIy5BAK3b1M2b8?=
+ =?us-ascii?Q?Jw7O4xHP5AdPB9Zqx09q8dC65O9W/tCvq8q1cB9UYt4PV6XkRxag7iWzCS2w?=
+ =?us-ascii?Q?jMz7t4Y4v+u3DN6ZKa+5u/0a8MUJTuz/aHLwywqIY12DYV7CgNhRtjZZQxEV?=
+ =?us-ascii?Q?0t/wQ83ljD0Oh5hyTHVrxTwX9gVXVHr6thf+tWYAY00zQZ/XNMQnP+iRjQOv?=
+ =?us-ascii?Q?O8lJSkc75WSNQst8hi49W5fB9a6dQq/hfTnpQ2anlS2ulJ3ZVXnoll9eiRJf?=
+ =?us-ascii?Q?ZB17TBze77pG86l31y6+pprn/mcmIZb+p5eerIYeYS0sFA1ZTCMUZjujxxJF?=
+ =?us-ascii?Q?r5YAh8zNYvdSD1ZFQBZkP+Lo9HJKDz2UvpPYE/cYYQrkmDKv4ISCwT8FaQei?=
+ =?us-ascii?Q?ISqBQ8fflCiD/M6AqzE0hzARKz+CN5IGvW0OZeexKhiIGvPtFLCLjFDO+fOU?=
+ =?us-ascii?Q?umZfb0UX6LQarorwgxbuqDdJtd5aIXlL5A+gsTctlEPylSl75FxmBvCOI9N3?=
+ =?us-ascii?Q?Qp/R8SEwditK0bR7XbomHBjs3kgRsp0yY4N3OdfHL9VsN36yZBLxKIBpo3Pc?=
+ =?us-ascii?Q?/IPqbEhqHumxYwUqsysYv0wAP46zNRzw7Ha/BWv6KfWegU/QsO/6P61O4TR+?=
+ =?us-ascii?Q?6IJjphPD4+ao5WEbNNtDs01viLID0BcAUYlZOH/p8wZBiOE+hAj5yaMaUGbp?=
+ =?us-ascii?Q?AKCxx2cBoqS2T2rr/38i2/BOLQnF2iJe3l2eJ8dzTL7mZJU+6cj6KOi5a8RA?=
+ =?us-ascii?Q?yWNjWrqsLomRz0HvA2FS4xWIFSfwVBxv55LzPMqkUQB6reDLPKSJWNYICCKO?=
+ =?us-ascii?Q?WDiCgaL9N7yHg6X2SOwnqa5TGrIp5x/zbk4XaxZviQJ+0ziHxyS/E8BvA8md?=
+ =?us-ascii?Q?hH8sGgU+vfsGeBCpAehQF6gLmYcNzcSSWj//6gpLdyjcRMyr6dP3FpN8x5OH?=
+ =?us-ascii?Q?AUPJvT9lNE+talEir3cbtcgTiWIRBLYBkr4R8fAJFUou2gKkmCt5CS9T0aFb?=
+ =?us-ascii?Q?4mX3NE29IxWDIKmLcYamW+KD8TUkFUERpBUckCIbD7XHDgmjMLU64cU0k8sN?=
+ =?us-ascii?Q?evrPqOsMy3Hy4/yjOx3XDu4uhY1aqEJwl0Yuf8RhdvgGsNfpTNqwiqhWcuwQ?=
+ =?us-ascii?Q?nXAtypsNus4zLhyNW7YII3AxZjkRiYGa556kMRxoXuEJgUZex58Wx8LoRiQP?=
+ =?us-ascii?Q?wgVUbpllpt2FFg6vt+0zdDPUuXujRlt2hhkYFRkYc78Wixblq/eq1egN9Yw9?=
+ =?us-ascii?Q?XiXc2JVVrStiGYkhf/xDdvssR54gSdul76gByPFDfthagpb+65YGD7zr0KXF?=
+ =?us-ascii?Q?Dajo+Iv7ARiZ5J8BQJ2MAtxGKokXOBzJ2SfRvJ4hoI7aqt2O5C2ie/BUXNpC?=
+ =?us-ascii?Q?QfNZBK0Z4M6E9n7Jf3b/RiFtSwOeJguvExfwS5pH+yr3sD5EloXZpR9TQRUW?=
+ =?us-ascii?Q?jrX5W5E4SiuTEwM=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 00:32:29.5370
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 00:32:30.9934
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad4a797d-6911-4649-4d37-08dd78905792
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5f8f684-703b-4184-23e8-08dd7890586e
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099DF.namprd04.prod.outlook.com
+	DS3PEPF000099DC.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7696
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFCAFD069B8
 
 From: Brett Creeley <brett.creeley@amd.com>
 
-The pds_core's adminq is protected by the adminq_lock, which prevents
-more than 1 command to be posted onto it at any one time. This makes it
-so the client drivers cannot simultaneously post adminq commands.
-However, the completions happen in a different context, which means
-multiple adminq commands can be posted sequentially and all waiting
-on completion.
+If the FW doesn't support the PDS_CORE_CMD_FW_CONTROL command
+the driver might at the least print garbage and at the worst
+crash when the user runs the "devlink dev info" devlink command.
 
-On the FW side, the backing adminq request queue is only 16 entries
-long and the retry mechanism and/or overflow/stuck prevention is
-lacking. This can cause the adminq to get stuck, so commands are no
-longer processed and completions are no longer sent by the FW.
+This happens because the stack variable fw_list is not 0
+initialized which results in fw_list.num_fw_slots being a
+garbage value from the stack.  Then the driver tries to access
+fw_list.fw_names[i] with i >= ARRAY_SIZE and runs off the end
+of the array.
 
-As an initial fix, prevent more than 16 outstanding adminq commands so
-there's no way to cause the adminq from getting stuck. This works
-because the backing adminq request queue will never have more than 16
-pending adminq commands, so it will never overflow. This is done by
-reducing the adminq depth to 16.
+Fix this by initializing the fw_list and by not failing
+completely if the devcmd fails because other useful information
+is printed via devlink dev info even if the devcmd fails.
 
 Fixes: 45d76f492938 ("pds_core: set up device and adminq")
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 Signed-off-by: Brett Creeley <brett.creeley@amd.com>
 Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
 ---
- drivers/net/ethernet/amd/pds_core/core.c | 5 +----
- drivers/net/ethernet/amd/pds_core/core.h | 2 +-
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/amd/pds_core/devlink.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/amd/pds_core/core.c b/drivers/net/ethernet/amd/pds_core/core.c
-index 1eb0d92786f7..55163457f12b 100644
---- a/drivers/net/ethernet/amd/pds_core/core.c
-+++ b/drivers/net/ethernet/amd/pds_core/core.c
-@@ -325,10 +325,7 @@ static int pdsc_core_init(struct pdsc *pdsc)
- 	size_t sz;
- 	int err;
+diff --git a/drivers/net/ethernet/amd/pds_core/devlink.c b/drivers/net/ethernet/amd/pds_core/devlink.c
+index c5c787df61a4..d8dc39da4161 100644
+--- a/drivers/net/ethernet/amd/pds_core/devlink.c
++++ b/drivers/net/ethernet/amd/pds_core/devlink.c
+@@ -105,7 +105,7 @@ int pdsc_dl_info_get(struct devlink *dl, struct devlink_info_req *req,
+ 		.fw_control.opcode = PDS_CORE_CMD_FW_CONTROL,
+ 		.fw_control.oper = PDS_CORE_FW_GET_LIST,
+ 	};
+-	struct pds_core_fw_list_info fw_list;
++	struct pds_core_fw_list_info fw_list = {};
+ 	struct pdsc *pdsc = devlink_priv(dl);
+ 	union pds_core_dev_comp comp;
+ 	char buf[32];
+@@ -118,8 +118,6 @@ int pdsc_dl_info_get(struct devlink *dl, struct devlink_info_req *req,
+ 	if (!err)
+ 		memcpy_fromio(&fw_list, pdsc->cmd_regs->data, sizeof(fw_list));
+ 	mutex_unlock(&pdsc->devcmd_lock);
+-	if (err && err != -EIO)
+-		return err;
  
--	/* Scale the descriptor ring length based on number of CPUs and VFs */
--	numdescs = max_t(int, PDSC_ADMINQ_MIN_LENGTH, num_online_cpus());
--	numdescs += 2 * pci_sriov_get_totalvfs(pdsc->pdev);
--	numdescs = roundup_pow_of_two(numdescs);
-+	numdescs = PDSC_ADMINQ_MAX_LENGTH;
- 	err = pdsc_qcq_alloc(pdsc, PDS_CORE_QTYPE_ADMINQ, 0, "adminq",
- 			     PDS_CORE_QCQ_F_CORE | PDS_CORE_QCQ_F_INTR,
- 			     numdescs,
-diff --git a/drivers/net/ethernet/amd/pds_core/core.h b/drivers/net/ethernet/amd/pds_core/core.h
-index 0bf320c43083..199473112c29 100644
---- a/drivers/net/ethernet/amd/pds_core/core.h
-+++ b/drivers/net/ethernet/amd/pds_core/core.h
-@@ -16,7 +16,7 @@
- 
- #define PDSC_WATCHDOG_SECS	5
- #define PDSC_QUEUE_NAME_MAX_SZ  16
--#define PDSC_ADMINQ_MIN_LENGTH	16	/* must be a power of two */
-+#define PDSC_ADMINQ_MAX_LENGTH	16	/* must be a power of two */
- #define PDSC_NOTIFYQ_LENGTH	64	/* must be a power of two */
- #define PDSC_TEARDOWN_RECOVERY	false
- #define PDSC_TEARDOWN_REMOVING	true
+ 	listlen = min(fw_list.num_fw_slots, ARRAY_SIZE(fw_list.fw_names));
+ 	for (i = 0; i < listlen; i++) {
 -- 
 2.17.1
 
