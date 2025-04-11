@@ -1,175 +1,61 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04ED29DB9C;
-	Fri, 11 Apr 2025 12:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095A7218EA2
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744373665; cv=none; b=fHWMFB1sHx5aGBuKUdUV4T1Lfy+QhY9uq7zX2+u9/3E7XLDsht9Gfs8py9PmkVbUj5XBm6Akfp7dlYDjTQzkiHZitNjO+eqRtMs+OujRPZ1qVCpPZv2H9P7NvgfAyezoMfAxwPNraVYy9Jvr/IZ2whnsOx3+AbXfyDJ5TCMTQGI=
+	t=1744373728; cv=none; b=uHD5Ea3K9nuarHElEr27joNrhPhjEQTbwksKzyBeTb97Drsow6s+yCbbHF8O9ynbDFFdePZPqW5FZZlzSfPT/GD5UGYzyTf/BqmJEF1G3hUUvQtqST/glfMlaJOQy+U8nTUfzSEBWEZ9f5dHwEAB8OxOeF+o0ms5MhF3bQ35Tdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744373665; c=relaxed/simple;
-	bh=V8IEbrrIKcRvYY5Xac9swmexAXB2Rf4t8KhLPJnZEcQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=glyBWdt6xzaXHdBTrQA3CrwY+LQgY7P7MJKbMOIhEj8/iQVH5WPduoHchYsBREA584Hk1Z17rThjaxhSxo0F0q0ruP+6BwCZAUwXsRon7XHdDqdvGGV093j3UyEIbhDwRfN1/LTbGDbf/JaTe1MXXhiNyyJCL4g5buMmyAsPevA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Iu7WX7+0; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Iu7WX7+0"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5eCpD000333;
-	Fri, 11 Apr 2025 12:14:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=3tSblUWUAqbLhb/ax47oFkaQ
-	Hzs6gm5u/BMBh8vwrvo=; b=Iu7WX7+0rVMcbB/9R7KIfgHiQxjluEAw3DYxk7sf
-	J8708DZR0JReRMm2gcmNFkXtwZPjCvmEZZpzpD020jJKyFo9ZwgC67tTlGn0PHKs
-	okFd4jc9xf4bKGokJ3w6X654dbDKgW+bXbdXrRaQmrS7yH57USWHy+cRXXkioJ3u
-	1RV3XmynuNiUg1tGEVIriMYjpkXbglYUUEDiY9cYAMJtRFhsa6iOVPfEZ4sY2W+z
-	57sdbUCTXyFt9V9DVBSTlR9KHriFnrBk9iBiPiM/XOHR7EqSgpbraB9MIWoQd4E2
-	rUlfs6YkNfMZLW7AOAlXmx6cE88XOoX+h5QDRm1hxnyf6g==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twfkt3w6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 12:14:19 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53BCEIVO022063
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 12:14:18 GMT
-Received: from hu-mapa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 11 Apr 2025 05:14:15 -0700
-From: Manish Pandey <quic_mapa@quicinc.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "James E.J.
- Bottomley" <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen"
-	<martin.petersen@oracle.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <quic_rampraka@quicinc.com>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>
-Subject: [PATCH V7 3/3] scsi: ufs-qcom: Add support to dump testbus registers
-Date: Fri, 11 Apr 2025 17:43:45 +0530
-Message-ID: <20250411121345.16859-4-quic_mapa@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250411121345.16859-1-quic_mapa@quicinc.com>
-References: <20250411121345.16859-1-quic_mapa@quicinc.com>
+	s=arc-20240116; t=1744373728; c=relaxed/simple;
+	bh=yBO6AIJ9HHlZi2gVVUcQ5GTHpfKmff9t97vsnL8Guwo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=lNzj/43tFhOGGdBfvmOtScxLSxeHvp2Rjw0e25qxkFTBiPLtyVt1NGETh3ZypduvMDl8eoMyrrsalCZZRgAaEaMD8E9Vgnti7yTQdf3pZsFlfKtCJgBIoRaZXGgu4QiUMjKjC5uinOu9eKOdEAN4WZda5saicTQFl0TXAtAS7uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d43621bb7eso28784865ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:15:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744373726; x=1744978526;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hCMyHAFSBUg3/FvAK+7HAV0zKvgB7Cxwor2EeXLPwWY=;
+        b=R0fKrB7j4MUKzqgAtpAiivXYr+A12lmSz0i2J2npLa4ZuBeymb+TLud8yMfoiSqv+q
+         WQ74zBjwPGPWtqcx3jci5inWBwKhEFJ+3pGGO3ci3gxnHzseFPT45OLLjq32dhYCsHDp
+         j3jhUkQBCLKyrtPcbuNjwY8f37PH204CzrffmIgh4Wy4Pdxank1Aejt0HZKNgPe1aIF/
+         VKl8kaGax3U1PsHBhu8PoZuvzHUpAvxHDcPGyT0IcIi4cRjDWn9AX9xREWcLs5tbY60I
+         eGuJF+eWKZd2pCzuJ5FnGFA64Q7+AP70WMVFOHcrbnylkvPCh3cSqO+z1tbkFlvo9AyF
+         88Tg==
+X-Gm-Message-State: AOJu0Yxd7B69czjQxXL0Sh6Jy2obnAWkMmQaG70DMGvu/eMs8lBETeiP
+	OdA2ciBQqj7ue1QJhI+tLcwtDiqKk2P2U3P4jsPgtG0QJmJJPKy/RoWF/V67oYA33Egadl6q0kh
+	JisC0PyIg01kG9KyGU8dt3h+kN/lfJQw3w8NV2mjvn3sQMQJsIxUmIaQ=
+X-Google-Smtp-Source: AGHT+IFWvEchr01JHF6+jdb6eAw5N79C6sSROhLSB3getoZU8s5u87mvG3XC6wzblAZ/AxffO55y39i8NEzpJKZvmgQ/m8ZzMQBl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: JnrVdh8EWZQqvokpsjyIJGHu7H7G2f_m
-X-Proofpoint-ORIG-GUID: JnrVdh8EWZQqvokpsjyIJGHu7H7G2f_m
-X-Authority-Analysis: v=2.4 cv=b7Oy4sGx c=1 sm=1 tr=0 ts=67f9079b cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=oU32yFmJg_HV1qE5Ry8A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 mlxscore=0 impostorscore=0 phishscore=0
- clxscore=1015 spamscore=0 mlxlogscore=939 bulkscore=0 lowpriorityscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110078
+X-Received: by 2002:a92:1304:0:b0:3d3:d08d:d526 with SMTP id
+ e9e14a558f8ab-3d7e4d0c549mr51581735ab.11.1744373726120; Fri, 11 Apr 2025
+ 05:15:26 -0700 (PDT)
+Date: Fri, 11 Apr 2025 05:15:26 -0700
+In-Reply-To: <67b323a4.050a0220.173698.002a.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f907de.050a0220.355867.0022.GAE@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add support to dump testbus registers to enhance debugging
-capabilities for the Qualcomm UFS Host Controller.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
----
- drivers/ufs/host/ufs-qcom.c | 50 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+***
 
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 4c0fe80f65f9..d879f1290046 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/clk.h>
-+#include <linux/cleanup.h>
- #include <linux/delay.h>
- #include <linux/devfreq.h>
- #include <linux/gpio/consumer.h>
-@@ -98,6 +99,24 @@ static const struct __ufs_qcom_bw_table {
- 	[MODE_MAX][0][0]		    = { 7643136,	819200 },
- };
- 
-+static const struct {
-+	int nminor;
-+	char *prefix;
-+} testbus_info[TSTBUS_MAX] = {
-+	[TSTBUS_UAWM]     = {32, "TSTBUS_UAWM"},
-+	[TSTBUS_UARM]     = {32, "TSTBUS_UARM"},
-+	[TSTBUS_TXUC]     = {32, "TSTBUS_TXUC"},
-+	[TSTBUS_RXUC]     = {32, "TSTBUS_RXUC"},
-+	[TSTBUS_DFC]      = {32, "TSTBUS_DFC"},
-+	[TSTBUS_TRLUT]    = {32, "TSTBUS_TRLUT"},
-+	[TSTBUS_TMRLUT]   = {32, "TSTBUS_TMRLUT"},
-+	[TSTBUS_OCSC]     = {32, "TSTBUS_OCSC"},
-+	[TSTBUS_UTP_HCI]  = {32, "TSTBUS_UTP_HCI"},
-+	[TSTBUS_COMBINED] = {32, "TSTBUS_COMBINED"},
-+	[TSTBUS_WRAPPER]  = {32, "TSTBUS_WRAPPER"},
-+	[TSTBUS_UNIPRO]   = {256, "TSTBUS_UNIPRO"},
-+};
-+
- static void ufs_qcom_get_default_testbus_cfg(struct ufs_qcom_host *host);
- static int ufs_qcom_set_core_clk_ctrl(struct ufs_hba *hba, unsigned long freq);
- 
-@@ -1566,6 +1585,32 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
- 	return 0;
- }
- 
-+static void ufs_qcom_dump_testbus(struct ufs_hba *hba)
-+{
-+	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-+	int i, j, nminor = 0, testbus_len = 0;
-+	u32 *testbus __free(kfree) = NULL;
-+	char *prefix;
-+
-+	testbus = kmalloc_array(256, sizeof(u32), GFP_KERNEL);
-+	if (!testbus)
-+		return;
-+
-+	for (j = 0; j < TSTBUS_MAX; j++) {
-+		nminor = testbus_info[j].nminor;
-+		prefix = testbus_info[j].prefix;
-+		host->testbus.select_major = j;
-+		testbus_len = nminor * sizeof(u32);
-+		for (i = 0; i < nminor; i++) {
-+			host->testbus.select_minor = i;
-+			ufs_qcom_testbus_config(host);
-+			testbus[i] = ufshcd_readl(hba, UFS_TEST_BUS);
-+		}
-+		print_hex_dump(KERN_ERR, prefix, DUMP_PREFIX_OFFSET,
-+			       16, 4, testbus, testbus_len, false);
-+	}
-+}
-+
- static int ufs_qcom_dump_regs(struct ufs_hba *hba, size_t offset, size_t len,
- 			      const char *prefix, enum ufshcd_res id)
- {
-@@ -1688,6 +1733,11 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
- 		/* Dump MCQ Host Vendor Specific Registers */
- 		if (hba->mcq_enabled)
- 			ufs_qcom_dump_mcq_hci_regs(hba);
-+
-+		/* voluntarily yield the CPU as we are dumping too much data */
-+		ufshcd_dump_regs(hba, UFS_TEST_BUS, 4, "UFS_TEST_BUS ");
-+		cond_resched();
-+		ufs_qcom_dump_testbus(hba);
- 	}
- }
- 
--- 
-2.17.1
+Subject: 
+Author: qasdev00@gmail.com
 
+#syz test
