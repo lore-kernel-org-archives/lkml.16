@@ -1,117 +1,114 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E4013C3CD;
-	Fri, 11 Apr 2025 19:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2C0367
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 19:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744400907; cv=none; b=P/OW91c7sKIiIV6Q/Ti9HhOUJHx3f/2PzSFkWkGAboZjdSBZpRWAuSufJQlhkRRucBTcvKqEQVtZzGwRcogo/X2LKrrEeJeaCbdL2jmwuCmhp4Z+9E43XSEsrlsTjV/2lEy2fyRYANIWhbA+QkvMicomDJZ4po/Wcnkt9h+8fwg=
+	t=1744401085; cv=none; b=XYbc7XyD3sSBOunLq98zFSnuOxkc9AfANpXYfNfqK/hfBz4IV7TKSEBy1lBeborxHqGumkwALmIEpNYxQlKaOSeNy2iypym0vCbqMeYsl7iafnOqwY3kFhretzBzt5m3hCbnNehn1MYlbs7KX7krh3Wigp6pP64DJTEyAZqHClM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744400907; c=relaxed/simple;
-	bh=S7wbx4z2viKpNfh/TbwztKNkVe7sXf9RouUCSiXpzrM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NWasxnFzVhxWyWOvS3BWmiL/pePYmHuKCbIAvfgCygVGL49Pe5y0OcBpt+9uP1U07dJyQA66a1Onv9fppps3Q5HS7T8TJ5/iu1VVm+UbMO5qo+yJU7cL1m+wzgyUdb1Ia4679kIi6YjPUVDHFpGsFILb9s1fUa7pxkFXDfshkEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOj/yDL4; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744401085; c=relaxed/simple;
+	bh=ZNbefensufV6PEA9RWDanN598P4aAIy9WLBjIH8wjHU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cd7zO83XSYf/hRjdCzO+XOPKPoPiTVg0s3kh47M5heLCaNg+6imO5zxThxLrGyDadQi68/nXD+YlRz18Lb+b8MYeSh5p5qYqaG6u8dA7QuJejAzbLqUeQHQqp0ToD2OBydZQw8GR4bR7kbFhvZ4RH/mEsb1iwJot8JYPQIg1Jvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=WChFlcTA; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOj/yDL4"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c7a5ee85dcso40777985a.2;
-        Fri, 11 Apr 2025 12:48:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="WChFlcTA"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so382390a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744400905; x=1745005705; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+pRntXP7VibmaqmzV/GwYuKDTGapH8yv3I9kSeDpHMc=;
-        b=XOj/yDL4DquQIO6WV63aRxzMqJtCPWoljKqbc79BJ8strONEgQuZX2jAUNeZ8xnOkS
-         4JYNBK5afeulBinqQ2+C/+j6nFhrrzuoq8vEQ2MsEv4liox32qIvgWteFpRWz8lUuVuK
-         6b2Ng7TlDFs5dB0Aj54FVI5aTkUL+RgWSHDPOanM1Mx6j/YLzsPcxpRIRFN0IQ954tBd
-         xIAKnemcEgdLJpG2KSpZ+i3VASv3zhU5LiU/xinYXtDSJqT1mUwuwjAAssGWfbZ4q8VM
-         b92PvgqJwwbyj5v7B7KUwjMsgtYDe2FY6NlqTE0UUtKFcjcLyZ/bEsb9KAHt4ry8tnHL
-         UIhg==
+        d=purestorage.com; s=google2022; t=1744401083; x=1745005883; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZNbefensufV6PEA9RWDanN598P4aAIy9WLBjIH8wjHU=;
+        b=WChFlcTA4O8sbwLK5KL2NGF3Vv4HFmMM0THyy4FjrjZshSFqHnMSd2o1oSWUFl0BFn
+         AEeJVtXS7eirRcettmkBG5exhX1/Wuc/b6kSGMAgbvILUvuQESR2z+O77hx5tgwylbgi
+         6YGmxy0iFltb+OccypBuzQr3OWY+DPT7UssuTMUdHSdbJHWcFgFmTTIFbvgfzm+3MRxp
+         HlhbJCiohvrRcBFYyc4ByR1GTrjFVia036yA7jCJG+bB3MS9fHK+PBRmAC8gLFJ5ADHK
+         wWDsHeQJSLsTkYfZ4cIfd9wASdcMxSCSO8lUrU9gnbQRJ5CkVGgF8+iqaa4UwdLxr36s
+         hgaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744400905; x=1745005705;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+pRntXP7VibmaqmzV/GwYuKDTGapH8yv3I9kSeDpHMc=;
-        b=ABOmBooHOaV0kZv+gODUmqTtmUVm0CkV81613bW7FiAGf6SLiVLWznlwDsKjTD0dMI
-         7rPgJoAZY8ILQcHiYQftIKl2WmVLHF4cYAGAcvVZMlQrmc4Xy2kO5Nf9kXFZVz0EggL8
-         WRXE2QzL0OiLlwpf4mRiuY54qik+zW0lzRhunPtybXRA0rB6YzWM4M6oCCO/7jPagQSE
-         DKYUR6bwClB/T+wil/1Fo4J6VetPBlk9YnYnPTRFYxvdvKWU56GLqPehulHos11fS9dr
-         i9ARqsERcV8ra0kb41tS2lYQcqE1SCmvN1J6wdfA9H72dj61PkipBoGmjQLfBR5NErie
-         4wmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxFWAeEg4RRo7WYKcRU30vCN46jY2pkvelepZeYpFiFKDyd1hj5qdc0vFRw0ckqgBP/EgjKMoXELg4vsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUPMAneDmOJWORGniuhU7csxGDYWU1jQ0/5GBJvcncs4i2pv8D
-	8Y2REsonbrLvPB42ALkpGfSHrjHW6L1cYryNJ7eAXg11q5dkF40=
-X-Gm-Gg: ASbGnctUbfnPMWllMD8j2ccVZLU7b3mkzEEJHA3EjgeIZPpRQus+Z9cxEZ93BEE/93t
-	smkGk/bdDkywpQBNayiiiXQWGmR1psqCYg1fLduTIX1sQh0BjQLeOzMymSpnwGArC5lKqpmletL
-	lXmXrO1v+wP0UaqtR67wXQboPqFEIiRThxt22Kc2oW06f3JlCfuhRiX80Stbl6BX9xJKfY5W2P3
-	8Y6SXGn5b+h5JcR/bk2aOqkXIu+ig7XSnZA8YpbznP557zX6tpLlY2s2fXPcfkS+OUuvIKgTtNB
-	JYO0UYq1Mug5NnEhevCmfwEWSFUd0OlJ03o/Tw==
-X-Google-Smtp-Source: AGHT+IE+DeUkY1FXhB5Zap8w+jJjeuXQJphIE2aTwQhSj6A1oSifYPg6CjvZfLBerA55tBG/P+XwVw==
-X-Received: by 2002:a05:620a:1787:b0:7c7:aee7:b959 with SMTP id af79cd13be357-7c7af1dd1e4mr207959385a.15.1744400904846;
-        Fri, 11 Apr 2025 12:48:24 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a895163asm305909985a.27.2025.04.11.12.48.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 12:48:24 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: rafael@kernel.org,
-	lenb@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	bhe@redhat.com,
-	kai.huang@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] x86/acpi: fix potential NULL deref in acpi_wakeup_cpu()
-Date: Fri, 11 Apr 2025 14:48:20 -0500
-Message-Id: <20250411194820.3976363-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1744401083; x=1745005883;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZNbefensufV6PEA9RWDanN598P4aAIy9WLBjIH8wjHU=;
+        b=szGWMpLnvZfLnJVt0jw/WPlUF3pJaQuwuwCa/w6Ylnbg8jzF4gtvPw1LP5OMHixXJx
+         zy6lOrGa3AxqyoOwigCsa84dTYRjcSgptSpUHaeNsxqHxJHdVBgZWL4OIsj+V/8Yyhp8
+         8rVu1KoEcI8//wJ8E9DljprKZQcGxdNvqCM9z4ECzO8aLyOYHyn1qvi2GS8MtMhQZeh9
+         0VQb0oCJAkoC6ysYUnZkTHdOLH9Tg+70Gkl4g5BxOYpFPGUbRteNRcI2vbrSDD0IgAp4
+         Ucj3D+VQCekgkKYejAeXybYOhyRZO1daducWmJx5HYQuTt8wiglFzXLZ84A8T7d85kPY
+         +6Lg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1NINh1nSLzW5to26ark0XgXUr/HkSyOiqDjXYIB2Inbv3wa+LuHGtBfPFEkgvFni+kBFdvmaRAKp9s0g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8Dqt4gPhgz4rZMN7zhMexDfpkIYjoWdyIZfdFuQ9SvzyS0Dno
+	jqI9iW4Tr1nVs+LXYInAVjVAA93ybJGw4k5Qloku42jYfK3FyG5pc+IWcMF6iobhUjkEvfYrzNq
+	qy11HzWrHoeOCTweDiRgLeFVHWVsB3gc95S9EpsZGb7X9Ml55LJc=
+X-Gm-Gg: ASbGncvoVtSYHu4LeRmt9mWxbGKaoO5AEE9zmmcyxKQOBn1t8Hci6/6Z6SbKssbiNOE
+	6KUVVOIgI87PUaJZblwoPLbYTOHZ3wZnM7R6XwsK2ZabQZrR8N/h1P1PEGH5QRNBCYRB3YJRJNF
+	1wigZQMIJ0FP9nnA+qXmT3
+X-Google-Smtp-Source: AGHT+IHfVGBOlQCdx1hvq2f3G+Q9xeD/L1BI5SF66ACmEbexLDrsnhLO5hkMo6X7kw90iJl5OBJJOl49yxpIK3V26r0=
+X-Received: by 2002:a17:90b:390e:b0:2ff:7970:d2b6 with SMTP id
+ 98e67ed59e1d1-308273f3592mr1634358a91.5.1744401083122; Fri, 11 Apr 2025
+ 12:51:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250409024955.3626275-1-csander@purestorage.com> <Z_jLNGzRJAQBN8Nx@fedora>
+In-Reply-To: <Z_jLNGzRJAQBN8Nx@fedora>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Fri, 11 Apr 2025 12:51:10 -0700
+X-Gm-Features: ATxdqUG_gUcty4tHPgf6uag1CJ_6lddPvCULsnuqPrU5I7O-7tHfq-XvNeIDgYY
+Message-ID: <CADUfDZp=CDAh-2gNB9_LQ4cdhFm--apgRB94cuzqjV4O93hUeQ@mail.gmail.com>
+Subject: Re: [PATCH] ublk: skip blk_mq_tag_to_rq() bounds check
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The result of memremap() may be NULL on failure, leading to a NULL
-dereference. Add explicit checks after memremap() call: if the
-MADT mailbox fails to map, return immediately.
+On Fri, Apr 11, 2025 at 12:56=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wro=
+te:
+>
+> On Tue, Apr 08, 2025 at 08:49:54PM -0600, Caleb Sander Mateos wrote:
+> > The ublk driver calls blk_mq_tag_to_rq() in several places.
+> > blk_mq_tag_to_rq() tolerates an invalid tag for the tagset, checking it
+> > against the number of tags and returning NULL if it is out of bounds.
+> > But all the calls from the ublk driver have already verified the tag
+> > against the ublk queue's queue depth. In ublk_commit_completion(),
+> > ublk_handle_need_get_data(), and case UBLK_IO_COMMIT_AND_FETCH_REQ, the
+> > tag has already been checked in __ublk_ch_uring_cmd(). In
+> > ublk_abort_queue(), the loop bounds the tag by the queue depth. In
+> > __ublk_check_and_get_req(), the tag has already been checked in
+> > __ublk_ch_uring_cmd(), in the case of ublk_register_io_buf(), or in
+> > ublk_check_and_get_req().
+> >
+> > So just index the tagset's rqs array directly in the ublk driver.
+> > Convert the tags to unsigned, as blk_mq_tag_to_rq() does.
+>
+> If blk_mq_tag_to_rq() turns out to be not efficient enough, we can kill i=
+t
+> in fast path by storing it in ublk_io and sharing space with 'struct io_u=
+ring_cmd *',
+> since the two's lifetime isn't overlapped basically.
 
-This is similar to the commit 966d47e1f27c
-("efi: fix potential NULL deref in efi_mem_reserve_persistent").
+I agree it would be nice to just store a pointer from in struct
+ublk_io to its current struct request. I guess we would set it in
+ubq_complete_io_cmd() and clear it in ublk_commit_completion()
+(matching when UBLK_IO_FLAG_OWNED_BY_SRV is set), as well as in
+ublk_timeout() for UBLK_F_UNPRIVILEGED_DEV?
 
-This is found by our static analysis tool KNighter.
+I'm not sure it is possible to overlap the fields, though. When using
+UBLK_U_IO_NEED_GET_DATA, the cmd field is overwritten with the a
+pointer to the UBLK_U_IO_NEED_GET_DATA command, but the req would need
+to be recorded earlier upon completion of the
+UBLK_U_IO_(COMMIT_AND_)FETCH_REQ command. Would you be okay with 2
+separate fields?
 
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-Fixes: 2b5e22afae07 ("x86/acpi: Extract ACPI MADT wakeup code into a separate file")
----
- arch/x86/kernel/acpi/madt_wakeup.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
-index f36f28405dcc..b386ec4b87c2 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -143,6 +143,10 @@ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
- 		acpi_mp_wake_mailbox = memremap(acpi_mp_wake_mailbox_paddr,
- 						sizeof(*acpi_mp_wake_mailbox),
- 						MEMREMAP_WB);
-+		if (!acpi_mp_wake_mailbox) {
-+			pr_err("Failed to remap MADT mailbox\n");
-+			return -ENOMEM;
-+		}
- 	}
- 
- 	/*
--- 
-2.34.1
-
+Best,
+Caleb
