@@ -1,138 +1,117 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3D11F3D50;
-	Fri, 11 Apr 2025 14:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466AD1F9A8B
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381066; cv=none; b=L4rsRV/3jo/uDG6iQSTY0SZg/64BrC9qjG3+AqIvmg3miNX0fjuGgzZpDSGqCDgnH36rLSXCRWKQRnyVUXyq2X+4/27sbBPWPNd/yKzLvZMtKZ5uvxwammHcGqfLNObV+yZiv9XqvkSoJwaRnD1jzzubYBdE5GsK7pjiOPBaXYI=
+	t=1744381073; cv=none; b=TaD4wY6rqdtUMJPB6UiiyFwo38hoMMP0xlCrQUgo6IMeP8GR088gHKsRjdvaS4P0jcZN9wBh3qLXPtEUggRwPO/Ly8xF0ldVB1h1DnGVJAGQbv/DklX/6iSHnQxUsWGgW+/mpwJIvBMWBJN2duJ2plg0J7V/EVHCoyAFtCo/6U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381066; c=relaxed/simple;
-	bh=MUxyJ6e8mDQbyfZx9BUETJLHV2q/o6GLx2i3m7D1L8k=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rnswRB7lYV6PQiWYBo9Yje3XLFL+CQkcSh77wHN4pLIIkjeCdH57qBRT72UCI5TOUKG6Uykb2sXaZzBGW6s4sCMLO+zvMKT/dG9BxMBhkK2WqF4LqAwmQVNuzjE5FxSzkhZ2RaUCW65rVi3N5cLeFOkIWN+pTHjbbCKfJIDBUtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=U8OmFibV; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744381073; c=relaxed/simple;
+	bh=H62hDkZOBjg3DErlwm1FGkIlvr4b9YKyzMshgw7FFGg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pOs/YShu1bDJUwXSTB8la1BYYHk6NgRsiiqzwGCqU+eZRTI5PvjurqW6BGvElKlqUj3MSDttcuPo28W6suNreRT2blXLiLLZB5HJI+M+DkqhJMjB6BfgWWjXUB8mwyRa9Wjhi7+++OYbx4+IxRcalxG1A3FHdKiA3rdXlAP86dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=B6JjTZE7; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U8OmFibV"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BEHbl32094889
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 09:17:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744381057;
-	bh=z1/nNUIFGXE6LFF+d4YwvIEc4Kciht20sPaPOMMio7c=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=U8OmFibV6W67vclOB7974WizPyD/km+DsqSpxO3R12f6uuNAlezzoUOgyx2+QIJFW
-	 u+qWAdvuZnr1QMbJtj+RQS38qsAoiNLb1KxDplErtYIto1AqW//A2mOxTqxCuA37Cv
-	 9166fbnauxJi+p0moAtgLpJkizvMgtv4y/Q/n0IM=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BEHb8i107722
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 09:17:37 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 09:17:37 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 09:17:37 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BEHako022556;
-	Fri, 11 Apr 2025 09:17:36 -0500
-Date: Fri, 11 Apr 2025 19:47:35 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: "Kumar, Udit" <u-kumar1@ti.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <rogerq@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: ti: k3-j722s-main: Disable
- "serdes_wiz0" and "serdes_wiz1"
-Message-ID: <475a1ac1-abb1-4c6e-b5b2-3f1a3399d5c4@ti.com>
-References: <20250408103606.3679505-1-s-vadapalli@ti.com>
- <20250408103606.3679505-3-s-vadapalli@ti.com>
- <7b2f69ad-48aa-4aa9-be0e-f0edae272bdb@ti.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="B6JjTZE7"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2963dc379so333916766b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744381069; x=1744985869; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oTqsSsP6q8mOn8ZNBlshDwf0wAfiYlzPvzrbYj6Dpj0=;
+        b=B6JjTZE7YZgtAKcQIiEeuS1GQn28g5rutKg+ytuZ1cl1ODFe51PEzTGkLL/Ju9Vn4t
+         PRuSMJ0iGVH7k/X2Pms6vV9+bcoan7+grZLiKxChLlCpLD2Ehc9BLfySGVApToNClF5Z
+         KxZ59NK/ND3Rs0ATQ8UWXMgVKxpHHBk0wdm/L05n2LZCrTZfyUXEH5EvhsYQK4F+ruhB
+         uFUzTCagtj/uTPErvksQcFO2LPhkkOEdXSni03AKC8B9Pl80/IzN8AAx2Gcq0Mzwxrdl
+         S/Y682QI0G6ZsXSrBd98OB72Uu3vZmpN1hDvJr9PpFcmqyC+2l5Cqfk5jVmIq4GnQ/Ny
+         heUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744381069; x=1744985869;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oTqsSsP6q8mOn8ZNBlshDwf0wAfiYlzPvzrbYj6Dpj0=;
+        b=oy8BaqwfhpP2b8l5XyE8cr/HZt+peF1Sbf7DA+8roii6KQv9HnNzQLT3wJwMGYdI8o
+         3W8hpULeNZVeDzEiwOY9VxczgD/cOGj8vkmNuM+f6R51+4JL83Gy6FzAbVOaOmykUog7
+         CT+wvOrvci6D5hjKqdvyYh/hWmsgYDK4cP/JiuzlDWI2mBd01PbiZuPfAedwFqGMVG+5
+         zHaNQslbK8PHdwTNA6o9D2bkTzJPsb9E17qL8qj6gaZAAqdW6N7c8OqKxj5X3I8bMepS
+         oqSk0Ig7YS4skkmszNEu+QT14ezH/thkssr7n+FcpO1t5VGzGv1r1PgIXs5ZC/FQDRxn
+         W/3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVXV6QUhoeT4xfTmHDX8Fj/InOCrVks98JRuEjnkw7RNrPvHY29nb99vUeMe/bR7el/NOkvpXfrBwYj0RA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdg+LGflTorybBEq2GlVaupONiYgwbWZ+ZGF7uO83zxjuKw54Z
+	TOhqbYbnusgb+Zxp1Swv7okQAnB7Fh9OihKbLyHq+pBKu3Su1AKJz0zvyOP0OdYPiW4VqIJJWs0
+	Lkmaix0JmFgnfD5qEkD+QgZCWMc2h/OdWd0KvWg==
+X-Gm-Gg: ASbGnct/EzeiH1QsjdExmoU0ShaigAPtuWpwIL7V6L33VHDpqHr1HcSYApiwjw0zMbu
+	pDdC4/XYSMjv2b+t1p68kwCQjgtIO99++g0qnBZpw5er7nf3ZBEdUUSJSzCnECtWPo233OMWVHC
+	yJJBQQ+9B5hRFchpTpdXwN
+X-Google-Smtp-Source: AGHT+IEY8cLHC7dDvBg77RvvSDDvI4LLGaIX3QkmIM0yIkHyN6pRf0ULJgjqYOmJ4HljtZuv4Durn+nqnhJRPnU6ykg=
+X-Received: by 2002:a17:906:cec5:b0:aca:d63b:3ebe with SMTP id
+ a640c23a62f3a-acad63b4519mr193412566b.21.1744381069560; Fri, 11 Apr 2025
+ 07:17:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <7b2f69ad-48aa-4aa9-be0e-f0edae272bdb@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250411034425.173648-1-frank.li@vivo.com>
+In-Reply-To: <20250411034425.173648-1-frank.li@vivo.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Fri, 11 Apr 2025 16:17:38 +0200
+X-Gm-Features: ATxdqUG88XaY8FJODqlLgLrNhPx5KOZKPJlXSpwqM9rMRoPUo2MrGKKgpFmjhLk
+Message-ID: <CAPjX3Fe34HVF2JUi2DEyxqShFhadxy7M7F6xTA_yVn5ywHMBhQ@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: use BTRFS_PATH_AUTO_FREE in btrfs_truncate_inode_items()
+To: Yangtao Li <frank.li@vivo.com>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 11, 2025 at 07:31:52PM +0530, Kumar, Udit wrote:
+On Fri, 11 Apr 2025 at 05:25, Yangtao Li <frank.li@vivo.com> wrote:
+>
+> All cleanup paths lead to btrfs_path_free so we can define path with the
+> automatic free callback.
+>
+> And David Sterba point out that:
+>         We may still find cases worth converting, the typical pattern is
+>         btrfs_path_alloc() somewhere near top of the function and
+>         btrfs_free_path() called right before a return.
+>
+> So let's convert it.
+>
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> ---
+>  fs/btrfs/inode-item.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-Hello Udit,
+And what about the other functions in that file? We could even get rid
+of two allocations passing the path from ..._inode_ref() to
+..._inode_extref().
 
-> 
-> On 4/8/2025 4:06 PM, Siddharth Vadapalli wrote:
-> > Since "serdes0" and "serdes1" which are the sub-nodes of "serdes_wiz0"
-> > and "serdes_wiz1" respectively, have been disabled in the SoC file already,
-> > and, given that these sub-nodes will only be enabled in a board file if the
-> > board utilizes any of the SERDES instances and the peripherals bound to
-> > them, we end up in a situation where the board file doesn't explicitly
-> > disable "serdes_wiz0" and "serdes_wiz1". As a consequence of this, the
-> > following errors show up when booting Linux:
-> > 
-> >    wiz bus@f0000:phy@f000000: probe with driver wiz failed with error -12
-> >    ...
-> >    wiz bus@f0000:phy@f010000: probe with driver wiz failed with error -12
-> > 
-> > To not only fix the above, but also, in order to follow the convention of
-> > disabling device-tree nodes in the SoC file and enabling them in the board
-> > files for those boards which require them, disable "serdes_wiz0" and
-> > "serdes_wiz1" device-tree nodes.
-> > 
-> > Fixes: 628e0a0118e6 ("arm64: dts: ti: k3-j722s-main: Add SERDES and PCIe support")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > ---
-> > 
-> > v1 of this patch is at:
-> > https://lore.kernel.org/r/20250408060636.3413856-3-s-vadapalli@ti.com/
-> > Changes since v1:
-> > - Added "Fixes" tag and updated commit message accordingly.
-> > 
-> > Regards,
-> > Siddharth.
-> > 
-> >   arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-> > index 6850f50530f1..beda9e40e931 100644
-> > --- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-> > +++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-> > @@ -32,6 +32,8 @@ serdes_wiz0: phy@f000000 {
-> >   		assigned-clocks = <&k3_clks 279 1>;
-> >   		assigned-clock-parents = <&k3_clks 279 5>;
-> > +		status = "disabled";
-> > +
-> 
-> Since you are disabling parent node.
-> 
-> Do you still want to carry status = "disabled" in child nodes serdes0 and
-> serdes1.
-
-I could drop it, but then the patches will look something like:
-1) Patch 1: Same as the first patch in this series
-2) Patch 2: Current patch + Remove status = "disabled" within serdes0/1
-3) Patch 3: Removed redundant status = "okay" within serdes0/1 in
-            k3-j722s-evm.dts
-
-Updated Patch 2 and the new Patch 3 mentioned above aren't necessarily a
-complete "Fix" and have other changes in addition to the "Fix". For that
-reason, the changes associated with the updated patch 2 and the new patch 3
-could be a separate series, unless you believe that they should go
-together in the current series. Please let me know.
-
-Regards,
-Siddharth.
+> diff --git a/fs/btrfs/inode-item.c b/fs/btrfs/inode-item.c
+> index 3530de0618c8..c9d37f6bb099 100644
+> --- a/fs/btrfs/inode-item.c
+> +++ b/fs/btrfs/inode-item.c
+> @@ -456,7 +456,7 @@ int btrfs_truncate_inode_items(struct btrfs_trans_handle *trans,
+>                                struct btrfs_truncate_control *control)
+>  {
+>         struct btrfs_fs_info *fs_info = root->fs_info;
+> -       struct btrfs_path *path;
+> +       BTRFS_PATH_AUTO_FREE(path);
+>         struct extent_buffer *leaf;
+>         struct btrfs_file_extent_item *fi;
+>         struct btrfs_key key;
+> @@ -743,6 +743,5 @@ int btrfs_truncate_inode_items(struct btrfs_trans_handle *trans,
+>         if (!ret && control->last_size > new_size)
+>                 control->last_size = new_size;
+>
+> -       btrfs_free_path(path);
+>         return ret;
+>  }
+> --
+> 2.39.0
+>
+>
