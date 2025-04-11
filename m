@@ -1,87 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDE31F0982
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AC527E1AF
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357607; cv=none; b=M2XD7W3ecVZ85ua6CbvFlT9aeOyq43DFxbEt4b0GtnE6mBZkAG5iSygiUlE7D92LIY1hYlWRo+gXoMWtC7W66c4dhyiqCQVAY+I3ibhrPgICOdh2OKapXn9IrLX+RimplrS4BvDSEj4BC36C6vc1m/HCJFrsVP58RXVapIWJlzM=
+	t=1744357644; cv=none; b=XS2T4WXLplyC/7opnF0PFwZ8t+r2mBc7dTCuU8nAWZfcM6mfFWKxqGES1GS1RyzKwnw9hP7iMf0qhnuNcgUduOxi6doQrBLYbB4QzKRwVBtgK6fyiBTvv5T9HW02I3xCB/j8TnjGD6KxQmpzqWnvtTqjXGoG+/W8znIfpeIhax8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357607; c=relaxed/simple;
-	bh=G4RjzkyNZnUpOccB2xpI6l0l5VfYV/D/abt4SSB02zc=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=p369yWrEidIn3CMlIyhnc219TvtuECCDtNs6kPYyyMhqsGJZKNiFlb6l+wUIQgENTIzkrAQ7T4ewGQJ5H7NjGIJ3g74Eyz0cGFCk/sL67OLprpteJkQqgezURDkZoC0QNr26bXiuPOBP+kjd4LUHUMlQSqOCyr+MAsOAtFqfI9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bg02Kcj1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744357644; c=relaxed/simple;
+	bh=EAz6BYyegX9HsUVlO2LvtyL+bKqfENHOMQini843ORE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eO1+W/Ic3w16+FKLkJkPoUS9/JN9DMY/sh8vcInK/Vk9jFAXI9DN2F5qY/WPV2OsJfI1Qr72V8PadidboEKE5HM2T3NNWCH1y1SDkVUwe/sajE0+6iNO1XHuAyCqoJbH0k1E/N3jWI8vH//TRsA/9qk84YJfZQGu0oVvnWuTN+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3AzJ3xPt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y3PEkJOF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3AzJ3xPt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y3PEkJOF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bg02Kcj1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744357604;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=16/lvzu2DyIa/AEpNIH9/VI98I48LJB90EPEiuPKhu4=;
-	b=bg02Kcj1kAoIoAmonoHs5ccfrx+F0mM5pXiNTbUFf2UW10/hRA3erZHKIqbPcdathAvZt2
-	3/+eD8uxMXoHIYXBwDBqyJrP3fNWeeoKEfDx4ySMg96OX6LIN+tpkHTYfPge4dd/jj273A
-	COCYhfgh2Ehx/MieqZzesXT+W43Hx50=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-244-8Ll0UaXQPhOe7WG0xA9cMg-1; Fri,
- 11 Apr 2025 03:46:42 -0400
-X-MC-Unique: 8Ll0UaXQPhOe7WG0xA9cMg-1
-X-Mimecast-MFC-AGG-ID: 8Ll0UaXQPhOe7WG0xA9cMg_1744357601
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3AzJ3xPt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y3PEkJOF";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3AzJ3xPt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y3PEkJOF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EF1B1800EC5;
-	Fri, 11 Apr 2025 07:46:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A4C871808882;
-	Fri, 11 Apr 2025 07:46:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250410163121.04d56770@kernel.org>
-References: <20250410163121.04d56770@kernel.org> <20250409190335.3858426f@kernel.org> <20250407161130.1349147-1-dhowells@redhat.com> <20250407161130.1349147-7-dhowells@redhat.com> <2099212.1744268049@warthog.procyon.org.uk>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: dhowells@redhat.com, netdev@vger.kernel.org,
-    Marc Dionne <marc.dionne@auristor.com>,
-    "David S.
- Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    Simon Horman <horms@kernel.org>,
-    Christian Brauner <brauner@kernel.org>,
-    Chuck Lever <chuck.lever@oracle.com>, linux-afs@lists.infradead.org,
-    linux-kernel@vger.kernel.org,
-    Herbert Xu <herbert@gondor.apana.org.au>,
-    linux-crypto@vger.kernel.org
-Subject: Re: [PATCH net-next v2 06/13] rxrpc: rxgk: Provide infrastructure and key derivation
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3C0A821125;
+	Fri, 11 Apr 2025 07:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744357641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
+	b=3AzJ3xPtXM9xl6A9NBybWV0Z+mdnzcsHM3ymLxCOl0O1rFgI1boQ3Vfk3y81515olX/b9Z
+	GJBdnvEpB3+a3m0kDO3vuJdQE5DA2jzsbgtkvpVGdiDc4PlhNPKpsMAtYWbMeOov+guYmH
+	f5rcCkufQ00ZcUrV+uQwWihxKDm1axY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744357641;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
+	b=Y3PEkJOFMDbn2b/M6sYqxko+XqKRr4dhrdZkciCJqVDGy7i2TKbC4ulkk5BifBd82OpI+G
+	WYDY7knV6nr0p2Dg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=3AzJ3xPt;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Y3PEkJOF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744357641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
+	b=3AzJ3xPtXM9xl6A9NBybWV0Z+mdnzcsHM3ymLxCOl0O1rFgI1boQ3Vfk3y81515olX/b9Z
+	GJBdnvEpB3+a3m0kDO3vuJdQE5DA2jzsbgtkvpVGdiDc4PlhNPKpsMAtYWbMeOov+guYmH
+	f5rcCkufQ00ZcUrV+uQwWihxKDm1axY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744357641;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G6aNx8roFs3brDqtJz4qS5Ktvp9IrPY2jgp3xIHvb3U=;
+	b=Y3PEkJOFMDbn2b/M6sYqxko+XqKRr4dhrdZkciCJqVDGy7i2TKbC4ulkk5BifBd82OpI+G
+	WYDY7knV6nr0p2Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 013AB13886;
+	Fri, 11 Apr 2025 07:47:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Vax0OwjJ+GcJCAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 11 Apr 2025 07:47:20 +0000
+Message-ID: <472508e5-2b96-403b-9284-274c5bf587c9@suse.cz>
+Date: Fri, 11 Apr 2025 09:47:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2132930.1744357595.1@warthog.procyon.org.uk>
-Date: Fri, 11 Apr 2025 08:46:35 +0100
-Message-ID: <2132931.1744357595@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
+ Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Randy Dunlap
+ <rdunlap@infradead.org>, Tamir Duberstein <tamird@gmail.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ linux-doc@vger.kernel.org, linux-mm@kvack.org, Thomas Huth
+ <thuth@redhat.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Stephen Boyd
+ <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250410174428.work.488-kees@kernel.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250410174428.work.488-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 3C0A821125
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,lwn.net,linux.intel.com,rasmusvillemoes.dk,chromium.org,linux-foundation.org,linux.com,kernel.org,google.com,lge.com,linux.dev,oracle.com,infradead.org,vger.kernel.org,kvack.org,redhat.com,alien8.de,linuxfoundation.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLisu716frudqkg98kczdd9eac)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Jakub Kicinski <kuba@kernel.org> wrote:
+On 4/10/25 19:44, Kees Cook wrote:
+> Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> but do not want to be forced into having kernel addresses exposed due
+> to the implicit "no_hash_pointers" boot param setting.[1]
+> 
+> Introduce the "hash_pointers" boot param, which defaults to "auto"
+> (the current behavior), but also includes "always" (forcing on hashing
+> even when "slab_debug=..." is defined), and "never". The existing
+> "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> 
+> This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+> 
+> Link: https://github.com/KSPP/linux/issues/368 [1]
+> Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
+> Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-> Sorry for the delay. I was hoping you could respin and maybe fix/give
-> up on the annotation in patch 3? Right now patch 3 gets flagged as 
-> a build warning which terminates the CI processing before we get to
-> make htmldocs. And it would be nice to get that run given patch 1.
+I like how this makes things more generic. Perhaps there are more debug
+boot/config options that could tie into the hash_pointers=auto and are even
+more obvious than slab_debug in the sense that you would really only enable
+them in debugging/CI runs when you do not care about the info leaks but want
+as much useful debug info as possible (KASAN etc?).
 
-I can remove the annotation, but it may just move the warning to a different
-place.
+Given how this changes mostly printk code and is in fact only a small change
+to slab, I'll wait first if printk maintainers want to take this patch. In
+that case please add
 
-David
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+Thanks!
 
