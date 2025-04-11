@@ -1,41 +1,41 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A05215783;
-	Fri, 11 Apr 2025 15:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BDA217668;
+	Fri, 11 Apr 2025 15:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744383910; cv=pass; b=YIImmqvjLnKatk9oKR8JGu7GnVHCqj2HLsF7L1KqJvpoMRlfiEqTJMvj+spYyHnNYpbOqt8otRr8o845pEAHJ4J/tNPjzJu49bHyeB5Rjz0KoNvXZpXnhGd25ujSMEje0RdAuDyy+NwrVdjIHxuk52DuUR2NRWlsBxlC9QW0bYk=
+	t=1744383912; cv=pass; b=rh+rv2LQWvDn+7DWsl0sIozxngnUU1RU6Kf5CScj6yIPJhD5JjVd5FqA4u2ISO4GpK0v66MO+Q3NvsfqyAJabDO/9ZH9yDpfi6io5UUINXIFsPSa9GQ4yhMXh69AkK82mzUy4IuHNYIU+ld5Xl5hRvRjcuOacEgcZEJTJeECiW0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744383910; c=relaxed/simple;
-	bh=68YC4WwgvizWG2K1gCGGlXfkw7uoRq2kKmdLPAA7HXE=;
+	s=arc-20240116; t=1744383912; c=relaxed/simple;
+	bh=9YNjAmlBo3VUWqWX5uq+JmjGl3uUnghfJlftwXExn2s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ivOME2+WJzxG1isHVhX1ly3BxpK/E/VAMfU0KAQE/cL7pymgKebNzhELNPRtMXxiKg3Zc6B3+R8Y6v6WWtZYZOkb/mBLVqggyx2bzqy57uk1HSHRDJ46uvvEq/1GrTTHgCRZZVI268I0NXDUVA3e/A2oJoVgLzucPu3Lz1Ah6os=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=RYcUqqvQ; arc=pass smtp.client-ip=136.143.188.112
+	 MIME-Version:Content-Type; b=t72iWqNGHU8/qFWRRs8icKc8fmoE+mCLbzURSgYn24FNi99XTKvcPdUi0elqSagCgsxmj0sqvaQ1whpq4nPy1TroSFkf5kMpWyhbhqhjGooQ5bWdqQx+1d9S9BZKbtwxVWt3XT2Lr908zFeBCpfIq+3sDsiDgzErDRoMuRYXwPQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=Rytqs4x3; arc=pass smtp.client-ip=136.143.184.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="RYcUqqvQ"
-ARC-Seal: i=1; a=rsa-sha256; t=1744383856; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="Rytqs4x3"
+ARC-Seal: i=1; a=rsa-sha256; t=1744383870; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=GVYb76KdkMLwyfy7vKqAdyxlpYTnoT24yH2Dd/3wp7cQdXnALGYcBNbXkxwCbZBJq+bLZN/5YAwFhCxMAnmrFzJcsqTQOBXt8F7PHVNOxh0ViQT+928p1LZgjBcnclCtL3kmu84R1EoxNw39GL9OshaB1xEDT90EIkySAsqroJE=
+	b=H4H2cyDmK+UMFzYSNOMGsRR/fGep4FYW9UIprBRcHlrNzkZ+ssutkduOunoKnXVBl+TCSXSj0tISLBTKoxDTH5s+UQ7OZBv7EaItX88ACJVK/SUfV9Ez4BvOqgFTgmfLcRK5W8EB5a1Xwd2WtkpdtDll4oD7M4MYU9s+HDPTOD8=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744383856; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=yPq5rlMfqv4prhYPYbwDMgzWWSIG2EEC0VgIJ0vg69U=; 
-	b=i3JuHlYsm3oSf4zzKYvX0XyJKQMtNvTiokM2YqB2Mt+NbwI9efUlNmySseyV9jZAmRN052DZVnW2Onbs2FeLCH04J3l56/0QnCkUZ1RyHBeHRjMO0y1m8lKWJ192AKV0XsksnI+EvcmN2AOn8zu81aHvD4KxeHGu+kQ7Nmc+DLg=
+	t=1744383870; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IEoN9iJNlLIjoOHl342Ah4nwx/70Dx1X4mBlxVBPFkI=; 
+	b=awU3vV7hFExifPv3byHUFdHv6yvCo5RD51AJ5GZMfRJ9BmXEV1pmEkjU3UibDB2HNMu5C+5a0pn+wgihti5QI0LsFtpn9KAS40/iqhQeXpXuIM0XhBAPpRR1CO47OgRstocSP2DmNZNj+P2iUS1i1LZjFIm/rL6tZanNATKx34E=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
 	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744383856;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744383870;
 	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=yPq5rlMfqv4prhYPYbwDMgzWWSIG2EEC0VgIJ0vg69U=;
-	b=RYcUqqvQQQQMflvmHNTKJdKbUKH9tJhJnGL6bj+ZFh5xZZTnyCq7L9przx3ejTYp
-	mTNT0SWg9h7AcAVoLsdiZy3xxGWr5wsJBb7ls6i1XEnvokugbAgIu8QRFk6CsuSLCv/
-	Ir5wgl+wb6tgjKnS0W2pRBzniVWFy2X3QRDlEdZg=
-Received: by mx.zohomail.com with SMTPS id 1744383855131188.2872276985496;
-	Fri, 11 Apr 2025 08:04:15 -0700 (PDT)
+	bh=IEoN9iJNlLIjoOHl342Ah4nwx/70Dx1X4mBlxVBPFkI=;
+	b=Rytqs4x3GnAmFVB/IRKnHpVfeXw4cpDmJgRUUd+IWJ5BbvQJe+CLkudVOZKZ3Ggl
+	6Svp234pfTUw3c0VpJ3ZuxFhkE/9t5hrQgj48ZPcudXBe/lNxEJukriR0KCmA0wQ25n
+	Te20aOjEu3hio61Tayb8vY6rBs7tugu9/gHy2ZXY=
+Received: by mx.zohomail.com with SMTPS id 1744383869112770.8607781927046;
+	Fri, 11 Apr 2025 08:04:29 -0700 (PDT)
 From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
 To: "To : Boris Brezillon" <boris.brezillon@collabora.com>,
 	Steven Price <steven.price@arm.com>,
@@ -53,9 +53,9 @@ Cc: kernel@collabora.com,
 	linux-kernel@vger.kernel.org,
 	linux-media@vger.kernel.org,
 	linaro-mm-sig@lists.linaro.org
-Subject: [PATCH v7 1/4] drm/panthor: Introduce BO labeling
-Date: Fri, 11 Apr 2025 16:03:49 +0100
-Message-ID: <20250411150357.3308921-2-adrian.larumbe@collabora.com>
+Subject: [PATCH v7 3/4] drm/panthor: Label all kernel BO's
+Date: Fri, 11 Apr 2025 16:03:51 +0100
+Message-ID: <20250411150357.3308921-4-adrian.larumbe@collabora.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250411150357.3308921-1-adrian.larumbe@collabora.com>
 References: <20250411150357.3308921-1-adrian.larumbe@collabora.com>
@@ -68,123 +68,153 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a new character string Panthor BO field, and a function that allows
-setting it from within the driver.
+Kernel BO's aren't exposed to UM, so labelling them is the responsibility
+of the driver itself. This kind of tagging will prove useful in further
+commits when want to expose these objects through DebugFS.
 
-Driver takes care of freeing the string when it's replaced or no longer
-needed at object destruction time, but allocating it is the responsibility
-of callers.
+Expand panthor_kernel_bo_create() interface to take a NULL-terminated
+string. No bounds checking is done because all label strings are given
+as statically-allocated literals, but if a more complex kernel BO naming
+scheme with explicit memory allocation and formatting was desired in the
+future, this would have to change.
 
 Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
 Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
 ---
- drivers/gpu/drm/panthor/panthor_gem.c | 39 +++++++++++++++++++++++++++
- drivers/gpu/drm/panthor/panthor_gem.h | 17 ++++++++++++
- 2 files changed, 56 insertions(+)
+ drivers/gpu/drm/panthor/panthor_fw.c    | 8 +++++---
+ drivers/gpu/drm/panthor/panthor_gem.c   | 4 +++-
+ drivers/gpu/drm/panthor/panthor_gem.h   | 2 +-
+ drivers/gpu/drm/panthor/panthor_heap.c  | 6 ++++--
+ drivers/gpu/drm/panthor/panthor_sched.c | 9 ++++++---
+ 5 files changed, 19 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panthor/panthor_fw.c
+index 0f52766a3120..a7fdc4d8020d 100644
+--- a/drivers/gpu/drm/panthor/panthor_fw.c
++++ b/drivers/gpu/drm/panthor/panthor_fw.c
+@@ -449,7 +449,8 @@ panthor_fw_alloc_queue_iface_mem(struct panthor_device *ptdev,
+ 				       DRM_PANTHOR_BO_NO_MMAP,
+ 				       DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+ 				       DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+-				       PANTHOR_VM_KERNEL_AUTO_VA);
++				       PANTHOR_VM_KERNEL_AUTO_VA,
++				       "Queue FW interface");
+ 	if (IS_ERR(mem))
+ 		return mem;
+ 
+@@ -481,7 +482,8 @@ panthor_fw_alloc_suspend_buf_mem(struct panthor_device *ptdev, size_t size)
+ 	return panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev), size,
+ 					DRM_PANTHOR_BO_NO_MMAP,
+ 					DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
+-					PANTHOR_VM_KERNEL_AUTO_VA);
++					PANTHOR_VM_KERNEL_AUTO_VA,
++					"FW suspend buffer");
+ }
+ 
+ static int panthor_fw_load_section_entry(struct panthor_device *ptdev,
+@@ -601,7 +603,7 @@ static int panthor_fw_load_section_entry(struct panthor_device *ptdev,
+ 		section->mem = panthor_kernel_bo_create(ptdev, panthor_fw_vm(ptdev),
+ 							section_size,
+ 							DRM_PANTHOR_BO_NO_MMAP,
+-							vm_map_flags, va);
++							vm_map_flags, va, "FW section");
+ 		if (IS_ERR(section->mem))
+ 			return PTR_ERR(section->mem);
+ 
 diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
-index 8244a4e6c2a2..af0ac17f357f 100644
+index af0ac17f357f..3c5fc854356e 100644
 --- a/drivers/gpu/drm/panthor/panthor_gem.c
 +++ b/drivers/gpu/drm/panthor/panthor_gem.c
-@@ -2,6 +2,7 @@
- /* Copyright 2019 Linaro, Ltd, Rob Herring <robh@kernel.org> */
- /* Copyright 2023 Collabora ltd. */
+@@ -82,7 +82,7 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo)
+ struct panthor_kernel_bo *
+ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
+ 			 size_t size, u32 bo_flags, u32 vm_map_flags,
+-			 u64 gpu_va)
++			 u64 gpu_va, const char *name)
+ {
+ 	struct drm_gem_shmem_object *obj;
+ 	struct panthor_kernel_bo *kbo;
+@@ -106,6 +106,8 @@ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
+ 	kbo->obj = &obj->base;
+ 	bo->flags = bo_flags;
  
-+#include <linux/cleanup.h>
- #include <linux/dma-buf.h>
- #include <linux/dma-mapping.h>
- #include <linux/err.h>
-@@ -18,6 +19,14 @@ static void panthor_gem_free_object(struct drm_gem_object *obj)
- 	struct panthor_gem_object *bo = to_panthor_bo(obj);
- 	struct drm_gem_object *vm_root_gem = bo->exclusive_vm_root_gem;
- 
-+	/*
-+	 * Label might have been allocated with kstrdup_const(),
-+	 * we need to take that into account when freeing the memory
-+	 */
-+	kfree_const(bo->label.str);
++	panthor_gem_kernel_bo_set_label(kbo, name);
 +
-+	mutex_destroy(&bo->label.lock);
-+
- 	drm_gem_free_mmap_offset(&bo->base.base);
- 	mutex_destroy(&bo->gpuva_list_lock);
- 	drm_gem_shmem_free(&bo->base);
-@@ -196,6 +205,7 @@ struct drm_gem_object *panthor_gem_create_object(struct drm_device *ddev, size_t
- 	obj->base.map_wc = !ptdev->coherent;
- 	mutex_init(&obj->gpuva_list_lock);
- 	drm_gem_gpuva_set_lock(&obj->base.base, &obj->gpuva_list_lock);
-+	mutex_init(&obj->label.lock);
- 
- 	return &obj->base.base;
- }
-@@ -247,3 +257,32 @@ panthor_gem_create_with_handle(struct drm_file *file,
- 
- 	return ret;
- }
-+
-+void
-+panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label)
-+{
-+	struct panthor_gem_object *bo = to_panthor_bo(obj);
-+	const char *old_label;
-+
-+	scoped_guard(mutex, &bo->label.lock) {
-+		old_label = bo->label.str;
-+		bo->label.str = label;
-+	}
-+
-+	kfree(old_label);
-+}
-+
-+void
-+panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label)
-+{
-+	const char *str;
-+
-+	str = kstrdup_const(label, GFP_KERNEL);
-+	if (!str) {
-+		/* Failing to allocate memory for a label isn't a fatal condition */
-+		drm_warn(bo->obj->dev, "Not enough memory to allocate BO label");
-+		return;
-+	}
-+
-+	panthor_gem_bo_set_label(bo->obj, str);
-+}
+ 	/* The system and GPU MMU page size might differ, which becomes a
+ 	 * problem for FW sections that need to be mapped at explicit address
+ 	 * since our PAGE_SIZE alignment might cover a VA range that's
 diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
-index 1a363bb814f4..af0d77338860 100644
+index beba066b4974..62aea06dbc6d 100644
 --- a/drivers/gpu/drm/panthor/panthor_gem.h
 +++ b/drivers/gpu/drm/panthor/panthor_gem.h
-@@ -46,6 +46,20 @@ struct panthor_gem_object {
+@@ -153,7 +153,7 @@ panthor_kernel_bo_vunmap(struct panthor_kernel_bo *bo)
+ struct panthor_kernel_bo *
+ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
+ 			 size_t size, u32 bo_flags, u32 vm_map_flags,
+-			 u64 gpu_va);
++			 u64 gpu_va, const char *name);
  
- 	/** @flags: Combination of drm_panthor_bo_flags flags. */
- 	u32 flags;
-+
-+	/**
-+	 * @label: BO tagging fields. The label can be assigned within the
-+	 * driver itself or through a specific IOCTL.
-+	 */
-+	struct {
-+		/**
-+		 * @label.str: Pointer to NULL-terminated string,
-+		 */
-+		const char *str;
-+
-+		/** @lock.str: Protects access to the @label.str field. */
-+		struct mutex lock;
-+	} label;
- };
+ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
  
- /**
-@@ -91,6 +105,9 @@ panthor_gem_create_with_handle(struct drm_file *file,
- 			       struct panthor_vm *exclusive_vm,
- 			       u64 *size, u32 flags, uint32_t *handle);
+diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/panthor/panthor_heap.c
+index 3bdf61c14264..d236e9ceade4 100644
+--- a/drivers/gpu/drm/panthor/panthor_heap.c
++++ b/drivers/gpu/drm/panthor/panthor_heap.c
+@@ -151,7 +151,8 @@ static int panthor_alloc_heap_chunk(struct panthor_heap_pool *pool,
+ 	chunk->bo = panthor_kernel_bo_create(pool->ptdev, pool->vm, heap->chunk_size,
+ 					     DRM_PANTHOR_BO_NO_MMAP,
+ 					     DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
+-					     PANTHOR_VM_KERNEL_AUTO_VA);
++					     PANTHOR_VM_KERNEL_AUTO_VA,
++					     "Tiler heap chunk");
+ 	if (IS_ERR(chunk->bo)) {
+ 		ret = PTR_ERR(chunk->bo);
+ 		goto err_free_chunk;
+@@ -555,7 +556,8 @@ panthor_heap_pool_create(struct panthor_device *ptdev, struct panthor_vm *vm)
+ 	pool->gpu_contexts = panthor_kernel_bo_create(ptdev, vm, bosize,
+ 						      DRM_PANTHOR_BO_NO_MMAP,
+ 						      DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
+-						      PANTHOR_VM_KERNEL_AUTO_VA);
++						      PANTHOR_VM_KERNEL_AUTO_VA,
++						      "Heap pool");
+ 	if (IS_ERR(pool->gpu_contexts)) {
+ 		ret = PTR_ERR(pool->gpu_contexts);
+ 		goto err_destroy_pool;
+diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+index 446ec780eb4a..43ee57728de5 100644
+--- a/drivers/gpu/drm/panthor/panthor_sched.c
++++ b/drivers/gpu/drm/panthor/panthor_sched.c
+@@ -3332,7 +3332,8 @@ group_create_queue(struct panthor_group *group,
+ 						  DRM_PANTHOR_BO_NO_MMAP,
+ 						  DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+ 						  DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+-						  PANTHOR_VM_KERNEL_AUTO_VA);
++						  PANTHOR_VM_KERNEL_AUTO_VA,
++						  "CS ring buffer");
+ 	if (IS_ERR(queue->ringbuf)) {
+ 		ret = PTR_ERR(queue->ringbuf);
+ 		goto err_free_queue;
+@@ -3362,7 +3363,8 @@ group_create_queue(struct panthor_group *group,
+ 					 DRM_PANTHOR_BO_NO_MMAP,
+ 					 DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+ 					 DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+-					 PANTHOR_VM_KERNEL_AUTO_VA);
++					 PANTHOR_VM_KERNEL_AUTO_VA,
++					 "Group job stats");
  
-+void panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label);
-+void panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label);
-+
- static inline u64
- panthor_kernel_bo_gpuva(struct panthor_kernel_bo *bo)
- {
+ 	if (IS_ERR(queue->profiling.slots)) {
+ 		ret = PTR_ERR(queue->profiling.slots);
+@@ -3493,7 +3495,8 @@ int panthor_group_create(struct panthor_file *pfile,
+ 						   DRM_PANTHOR_BO_NO_MMAP,
+ 						   DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+ 						   DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+-						   PANTHOR_VM_KERNEL_AUTO_VA);
++						   PANTHOR_VM_KERNEL_AUTO_VA,
++						   "Group sync objects");
+ 	if (IS_ERR(group->syncobjs)) {
+ 		ret = PTR_ERR(group->syncobjs);
+ 		goto err_put_group;
 -- 
 2.48.1
 
