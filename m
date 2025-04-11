@@ -1,111 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B2229AAF3;
-	Fri, 11 Apr 2025 12:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFC229B21C;
+	Fri, 11 Apr 2025 12:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744373547; cv=none; b=VNFp7FvdhmQXeACqwpSSdt1XCBvCTOpuZPv+H7YKXdqg5R8KLUF+Y+YxrGbOvpMNpcqo1CUqEy8UEBoW0SGSB+dsnh7sqg3EogQhzqnQ63+Pr0BmtyQe1Ak2lKTMSCbPmKjXNnGlrIQkcdcIKWkaKi88Za3cfsJfpWanmnU7fik=
+	t=1744373601; cv=none; b=TIkyBfOggcobFvOgeDrFp7bx27lizWoTBZF7VnGsqe7bbl5TEVntpWndo0PQ/YhWen2fFTnqLXNzwJWIGHHGjvzS6DVhnuFtjACznGweWm6BZ+ue3HPXRqYCZssUTXTyivgXjxucQ+/KjnuR+h7OO3Oob59fx8+JOzgu/93bD8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744373547; c=relaxed/simple;
-	bh=OgiHmzAMJV/c6pK5hif8A/swuofjSwyYdjGM252Al4I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PM/HmtBuz1gR3L3gc4Vrd28iFAoRGR+gHSKDFEvUo+uMYJy9b9l/KSReZX1zP7JuHlafM/rEeqTjpKjfCZFx3vXRSIxy0nu97il+Ljnsit0XtbjIy5dCkGeAWD/MavZT5zIsv6kkkWJpauULBcfFLXo0ukkNFizgz8vSHVWjqXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZKJfHHJy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744373601; c=relaxed/simple;
+	bh=rm6sb2SecoZ4haaiG5ldcKEZ6rgDcMeHIli61NwBfws=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sivWFXAVY2/zYdK81/0xf1KtFx26UXX6OMCDlW5UrUxvbLTtZvD76rGtkZ6n/gk8Jqf+ZXvHjgPq2HktVYEjfpmGKd2Fw5NFQckFZfPqhqyMlc/3IF9fH7WzCgua0HUnuMIZmtRvolUDaIr9vk8QFIH3g7USDsmCCUXDQyZ1qvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wCSiWD02; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZKJfHHJy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E57C4CEE7;
-	Fri, 11 Apr 2025 12:12:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744373547;
-	bh=OgiHmzAMJV/c6pK5hif8A/swuofjSwyYdjGM252Al4I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZKJfHHJyYcGvqjYidnEdh8euHtbuinPbP6cdaZSEqUi7bzcfkPnSL7swwOH6yxhAX
-	 gDwsQFbMZlI3PEgWeNs1Iy5e5391s9T6ySobR+MoHlCuICPMlTDuKbgJkeRONmQtaO
-	 ypN3kLxkdU1k2t3ob0oH5U7EsKYn+tsr/ZxWKDzsysLrwf5JLLxgV2XpT6Aqgp0G/H
-	 xc2nw8/ryVcV/TTlYoEN6Sb9QAVsPAh/EVfIj7+wgECvkB9pUh7BXO1tNUZ40qI5mu
-	 E7GeeGlSTAlib3jzC6EeFR+64GVoEQ1TQlFCtNmB20/uWKWdwVcaqRNaNBSTE3d21e
-	 YEBTcy/yLl3xA==
-Message-ID: <42b7547d-c1f7-4509-a381-7bf0a485a5f5@kernel.org>
-Date: Fri, 11 Apr 2025 07:12:24 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wCSiWD02"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BCDCVh2068790
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 07:13:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744373592;
+	bh=e9LI8VdJWzvGwvWyJvwbcvffdGYsX3wJ0VFrvvQKvgI=;
+	h=From:To:CC:Subject:Date;
+	b=wCSiWD02X5Oal4gMz3HMAUcHAmPsRCjaMHrBX/lHPCZmJMvW6fFvD8TQY8TS/X5v0
+	 wTgCGlitCJY+0uvwLEfvw4wlmvD8wAhSTqEyOw0wf7XIfJphejBitkr5kuO/Tz7v7R
+	 /Dxu5trogQP/qZvh152ZnyXkci+wsToB/SjjPunE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BCDCS1123695
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 07:13:12 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 07:13:11 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 07:13:11 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BCD7aa011992;
+	Fri, 11 Apr 2025 07:13:08 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v2 RESEND] arm64: dts: ti: k3-j784s4-j742s2-main-common: Enable ACSPCIE output for PCIe1
+Date: Fri, 11 Apr 2025 17:43:07 +0530
+Message-ID: <20250411121307.793646-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] x86/CPU/AMD: Print the reason for the last reset
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-References: <20250410200202.2974062-1-superm1@kernel.org>
- <20250410200202.2974062-5-superm1@kernel.org>
- <20250411120617.GMZ_kFucLFQQ7LJkys@fat_crate.local>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250411120617.GMZ_kFucLFQQ7LJkys@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+The PCIe reference clock required by the PCIe Endpoints connected to the
+PCIe connector corresponding to the PCIe1 instance of PCIe on J784S4-EVM
+and J742S2-EVM is driven by the ACSPCIE module. Add the device-tree support
+for enabling the same.
 
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
 
-On 4/11/25 07:06, Borislav Petkov wrote:
-> On Thu, Apr 10, 2025 at 03:02:02PM -0500, Mario Limonciello wrote:
->> +static __init int print_s5_reset_status_mmio(void)
->> +{
->> +	void __iomem *addr;
->> +	unsigned long value;
->> +	int bit = -1;
->> +
->> +	if (!cpu_feature_enabled(X86_FEATURE_ZEN))
->> +		return 0;
->> +
->> +	addr = ioremap(FCH_PM_BASE + FCH_PM_S5_RESET_STATUS, sizeof(value));
->> +	if (!addr)
->> +		return 0;
-> 
-> newline.
-> 
->> +	value = ioread32(addr);
->> +	iounmap(addr);
->> +
->> +	do {
->> +		bit = find_next_bit(&value, BITS_PER_LONG, bit + 1);
->> +	} while (!s5_reset_reason_txt[bit]);
-> 
-> What's the idea here? The highest bit is the most fitting one?
-> 
-> So why don't you do fls() or so?
+Hello,
 
-The idea was to walk all the bits and pick the first one that has a 
-string associated with it.  I was finding that sometimes the reserved 
-bits are set which would get you a NULL pointer deref.
+This patch is based on linux-next tagged next-20250411.
+The v2 patch is at:
+https://lore.kernel.org/r/20241209085157.1203168-1-s-vadapalli@ti.com/
+No changes since v2. The dtbs_check warnings are no longer seen with
+next-20250411 and no changes were required to the patch itself to fix
+the warnings. Hence the patch has been marked with a RESEND tag.
 
-> 
->> +	pr_info("x86/amd: Previous system reset reason [0x%08lx]: %s\n",
->> +		value, s5_reset_reason_txt[bit]);
-> 
-> What's guaranteeing that s5_reset_reason_txt[bit] is still set here?
-> 
-> I'd suggest you check it again and never trust the hw because we'll be fixing
-> a null ptr here at some point otherwise...
-> 
+Regards,
+Siddharth.
 
-Right; I was worried about that too but find_next_bit() will return the 
-size argument when it doesn't find anything.
+ .../boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi     | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-So that should be s5_reset_reason_txt[32] which has the "Unknown" string.
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+index 1944616ab357..591609f3194c 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+@@ -7,6 +7,7 @@
+ 
+ #include <dt-bindings/mux/mux.h>
+ #include <dt-bindings/phy/phy.h>
++#include <dt-bindings/phy/phy-cadence.h>
+ #include <dt-bindings/phy/phy-ti.h>
+ 
+ #include "k3-serdes.h"
+@@ -126,6 +127,11 @@ audio_refclk1: clock@82e4 {
+ 			assigned-clock-parents = <&k3_clks 157 63>;
+ 			#clock-cells = <0>;
+ 		};
++
++		acspcie0_proxy_ctrl: clock-controller@1a090 {
++			compatible = "ti,j784s4-acspcie-proxy-ctrl", "syscon";
++			reg = <0x1a090 0x4>;
++		};
+ 	};
+ 
+ 	main_ehrpwm0: pwm@3000000 {
+@@ -1093,8 +1099,8 @@ pcie1_rc: pcie@2910000 {
+ 		max-link-speed = <3>;
+ 		num-lanes = <4>;
+ 		power-domains = <&k3_pds 333 TI_SCI_PD_EXCLUSIVE>;
+-		clocks = <&k3_clks 333 0>;
+-		clock-names = "fck";
++		clocks = <&k3_clks 333 0>, <&serdes0 CDNS_TORRENT_REFCLK_DRIVER>;
++		clock-names = "fck", "pcie_refclk";
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+ 		bus-range = <0x0 0xff>;
+@@ -1105,6 +1111,7 @@ pcie1_rc: pcie@2910000 {
+ 		ranges = <0x01000000 0x0 0x18001000  0x00 0x18001000  0x0 0x0010000>,
+ 			 <0x02000000 0x0 0x18011000  0x00 0x18011000  0x0 0x7fef000>;
+ 		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
++		ti,syscon-acspcie-proxy-ctrl = <&acspcie0_proxy_ctrl 0x1>;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+2.34.1
 
