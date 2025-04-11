@@ -1,71 +1,79 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEC91DB346
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B1C230D35;
+	Fri, 11 Apr 2025 17:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744392725; cv=none; b=MxIqq/X1rmK+Y3zV6iXJbgz0/EChaNjDmxNBJ2+sGM4toSNZOlFmqeBMWdn+98QTU/ISfv+fIaT9c7kAqdoD+ODkHlFlyCi0dadV4z9tMjM8l2pleB1CuxcsXg+WlxN3O1opdbTyQDNTiY3oqva8+GKV0b4Pt2sQxF9J06tSZfk=
+	t=1744392745; cv=none; b=emywwYRt9vVYoJGXmHFD55MrZB1gx2TljuePJ0/DbyC6s8fBbrBlzygRGi6bA1cv0ldTCVbfhzB7RwhSBgA/oje/A56s2EIXiEiOa8ALtxYBHjHWU43mqCXsUMDk+zdE60lJU8fzja5ANaOSWJgRPlMK0UKSkdb7zgiaAD69kF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744392725; c=relaxed/simple;
-	bh=JEObpoeAi7mpJ4XtBWdTdJGAZx4mwP9jUytvLhjRH6Q=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=l9x8L6IPk1aZTU1DOt+Ugbp+M13thxfkUX7HpY+x9BNAPEoqfvJrKPM30Dze5U3iju91OV2IQ7qs0hdIdNcKbmplmobi2kkUgG9VWArN/sdoWx50Dsd0QGCLdlOugLLNnULW7VrcaZj/I1QENHBfpeIr+Ish/UwEPbzEAsgav/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d44ba1c2b5so21891305ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:32:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744392722; x=1744997522;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4luqEepRVG2eUJKzsszBXGgVmEc2HgHZcBzd3X/PEqU=;
-        b=ILiXw748L1n1AKzH6j5xK8CbzbbrhAUxvaVvYCVaJrmw2tap7E8Dfv62j6GEkFsFdw
-         GMX7TS/npOE2FRvnvnjw+CouNnJd3yrbS2RR29yEDM4l971e8mtZ+bvKEaL7ghmca0/D
-         PQedH5CEs0ATWSg7ZbdR5npmvh0jtGno2nkdp2XzosXeuCtBsWPInAvtt7QQqkUAgd9+
-         FBqBudfUAjBjq20IUpsf9MetXR9jZSDy/CW12RLU8ViP1U96/Fo0dr2+S+rcAixM4A9u
-         a95oKRNa4FWgHUfeJcEXoGpcVv41qBa4sUrY7Kr6CvFmr7S+VH7/ws1kRRiMGXFpahYv
-         xz7g==
-X-Gm-Message-State: AOJu0YwkSkxlYz6fb/GLuURAHiR5TjUL6Pw4ctFymhA98nHfGm+fw1vB
-	TGo6Elw/3mWno1dZO6b/NLwZefasGbEtqlUcBiH1ViBKd7hRaS8hHfIbh4uLG3O/AS6v2r93WZ9
-	RuI0xsh/XfnUiI/PYzXRyUTXalQj/Nqtc/RRHopOwMMOmMlMPwrzoFT0=
-X-Google-Smtp-Source: AGHT+IENbT2I53iWGd9TaeW5jKbUNCHgfYhoWvD5lbvUNA/HDZj78D9hp4MGu+FetDAUKhYy4ahWorabnWKBsxJyZkQt6gAjlxeG
+	s=arc-20240116; t=1744392745; c=relaxed/simple;
+	bh=8UJVOTaqMOUXwqVG2cSezf+/NN8n6SPcvSZu3a0lZzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ArF3Ac36xdXeyOMgR98YpscvaBefmTJL/pJ8NJI/8q922Z21DAPfOyR7LwnPFxALFhpaVLslSAJjyCTQjftAyd18gyRVrj00aiX5N83GFuN/EZBHdCafI4XvqgSxkykFXt1NhUYYhVAEDx6IW7b8o730lU07jr+acpEkAkwE7kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B68DAC4CEE2;
+	Fri, 11 Apr 2025 17:32:22 +0000 (UTC)
+Date: Fri, 11 Apr 2025 13:33:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
+ <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
+ <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
+ <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <20250411133347.014986f9@gandalf.local.home>
+In-Reply-To: <20250411130200.76b52a61@gandalf.local.home>
+References: <20250227185804.639525399@goodmis.org>
+	<20250227185822.810321199@goodmis.org>
+	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+	<20250410131745.04c126eb@gandalf.local.home>
+	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+	<20250411124552.36564a07@gandalf.local.home>
+	<20250411124849.30d612ed@gandalf.local.home>
+	<20250411130200.76b52a61@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:349b:b0:3d5:8922:77a0 with SMTP id
- e9e14a558f8ab-3d7ec26b625mr47725815ab.18.1744392721953; Fri, 11 Apr 2025
- 10:32:01 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:32:01 -0700
-In-Reply-To: <CAP01T748Cq2O0LXeaNix1zLtFuhuPWutyHo5XLt2ytNLdAno-w@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f95211.050a0220.379d84.0002.GAE@google.com>
-Subject: Re: [syzbot] [bpf?] possible deadlock in __queue_map_get
-From: syzbot <syzbot+8bdfc2c53fb2b63e1871@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, memxor@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Fri, 11 Apr 2025 13:02:00 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+> index 2f077d4158e5..718f6e84cc83 100644
+> --- a/kernel/trace/trace_functions_graph.c
+> +++ b/kernel/trace/trace_functions_graph.c
+> @@ -971,11 +971,10 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+>  
+>  		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
+>  			print_function_args(s, entry->args, ret_func);
+> -			trace_seq_putc(s, ';');
+> +			trace_seq_puts(s, ";\n");
+>  		} else
+> -			trace_seq_puts(s, "();");
+> +			trace_seq_puts(s, "();\n");
+>  	}
+> -	trace_seq_printf(s, "\n");
+>  
+>  	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
+>  			cpu, iter->ent->pid, flags);
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+I changed the patch to have print_graph_retval() simply not add a newline,
+and instead just have the caller always print the newline.
 
+I should have never let that function do that. But when it was added, there
+wasn't as many options, so it didn't look so bad, so I didn't ask for that
+to be changed.
 
-Tested on:
-
-commit:         e403941b bpf: Convert ringbuf.c to rqspinlock
-git tree:       https://github.com/kkdwivedi/linux.git res-lock-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16e61c04580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea2b297a0891c87e
-dashboard link: https://syzkaller.appspot.com/bug?extid=8bdfc2c53fb2b63e1871
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
+-- Steve
