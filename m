@@ -1,103 +1,97 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FCFB661
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5375D3FD1
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744331424; cv=none; b=L/xNPAwaZT3t64q53gxKZe/vYOyw6+iH7yOL5ZWIFhBleARrVOROTOEEpGF8pIPedyrpOfWJ6jUsfe3M6HsdxX0lVT0o2MFon4pTCqvUBgPaDS6ZFX7mkJfjnb52/7QHyzu4iCxSDupTVkCvsjRYrYFENxCR9USRqEVmTOtSxb0=
+	t=1744331545; cv=none; b=usUYN4YkmvfRQJlfFl+2iaLtYvARHwohCZylSnF5BE0JjoeBtkmNrpkCxJURyqOfmjT4j24unpuEUC1Bf88cL7iK0WX5aIG6XcmJY70WTD7GQyYjXHpmb/PnRfKXr0RRDYtHLiCHPLqiLw0ce8HUFuxnZpJWPJTR4ommxpP2IxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744331424; c=relaxed/simple;
-	bh=iCBIHlgYqBmRae+sv1JEgK6hpnqzk+F+c41u/4PRRSk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=k7NGuVzSUZh8HAyZOc6UPJyYMUfJqVLoRx779xl2puqQJrGWbXl+MYPGRERipeOoXoqWseIc333JVrSwYzf/Lgce6EX97RP/qcAin6n7jQiW/MxzOZcOOAmLY2XgmntmbYmKDMA5cUR/Jl9HwNp+G8We6OFWa4ubhnCZPbpxEzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Vz0rCi3K; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744331545; c=relaxed/simple;
+	bh=YRqr6Ii7qwUwr2w6LMJ18M2BD5ug6XXYaAD7Dv1RIlo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QQoGPyc40N9NRv9xCImhCD0aQgGh3jywSYxFZ5AHvlg6vbG+y3TmlsRJMOCWWW/yReHO2xmbFCWMmfgduRFG8t2otYRKvVTJwgtzFTmNBsMvXLcn3YjckYeIrorn9sqz59CzhRCTBHeWVDFJYPRHrs2lFMWGxB/EnQfzmSvE1dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kc6s4Xgu; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Vz0rCi3K"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-303a66af07eso1159046a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:30:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744331421; x=1744936221; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LEj/TlILN37TPKrS4vVDvJow8Rh350Q5eqqNTt+HqJQ=;
-        b=Vz0rCi3KjFp/uGhfKUxc3lTYusrqq9XTdoQLvG9waZT1/aiqpct5HdhhY+llKZLynx
-         bTKPC6+l4u71ZNTO2Vn9dZsvXaBQt4kBKlcCY4L4DcoVUwLVw8R9tawuDSxzzWIjmKeK
-         /+rRPJZs/P+LasovyIU+TXIYxJvWVBGO546hkDWf27CFYpfczqxPLmTrDTNjwX62nSDB
-         UxaydnJULZQ8N4XJ8JOHzC6otQftEMjQ5NL8oTMLDWGBD9sMR7/5/Eeor96xrcd13jg5
-         zQjbCqpWUKU5lTyHUJZvf3J5/n1FVr4/lXcPdAG5/ykzKC0vUIyQ9priBo3yhgh5I1AC
-         289g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744331421; x=1744936221;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LEj/TlILN37TPKrS4vVDvJow8Rh350Q5eqqNTt+HqJQ=;
-        b=U+6i/AZ0lo6HvrtPdQhZ+/hDOJjNJb0HB+vjsW4vbvxRo8Q5yALU0LjYrr+V2IZHl2
-         PWQFgbEV7tQn/GYoXj2xJxGNZF5t4PZTz0EiquDvLXVcPQWR7SNQ36qrhwill65Il8Ks
-         TeBg/yqncv5S6MS0ILIVjarjuj00sIJ0lg6KG1GFHbuN3OquHHa2tGtnSGHI2uopkEda
-         +GDecD+3X4EG4/uxtHaFIZhKi5/WLMWmniSYkDspmG2clNClZ6puvynCpIX4qRf4syA/
-         5RduiBmWQ2GHcLu2O7ru3Odl/O4m5//suMOe+lgPBQ71uEdKw3bGV5/DLw5lPeKWp7KI
-         V2cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRBEsHu/Whb3jkz31l4osKuipD0YG8UGZHahy25LR5nYzvwFTuMt37tIvx1Ay7/RSwNVmRaNN6mANPeBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQkXQm5QIH6vX+7sAvdwWlaxniPKqcyHRyvoZSaGAachY/YWpN
-	iwO+9SoluydHok7Htv9cxesHirOhef19D1CoXygcfVedYkDcKsKtOY6VXrImxnY=
-X-Gm-Gg: ASbGncvNZ5R/y4kUdATGQ/2HB1cCvtL/8x/IwPvElHk8daL+Km6wfUULgD9DhUvTB6T
-	xLHn6kSEq1lY7pu9xXpxJPNzRQS+N+X8inNo0TV14YeVj+VIkgxtkkmQ8GPXIFZmEO7O74waZL4
-	heAjDULd8BV07FZEqAH9xPDN2RVJUiEHQZWZJFRNgR/pYHGt7xxF31WdI+hUtetORaYuk8s2ffn
-	kgT7m3DQumXtV/uT6GXRHaux4fUWD/39f1F82LPpE/hiDZwdj2pqdULE1E+V/ayrcL3XLU7OuAj
-	qpP4uF/MILcBc8l1B0wklNgo1ghhK/CIVOld1VA=
-X-Google-Smtp-Source: AGHT+IHK+hZPSxDXu+yULAA+P8ggs/de/t3JfqukjQr3W1pHmgkXMe4iexgqgEe5uUDhbixl0eakvA==
-X-Received: by 2002:a17:90b:388c:b0:2ff:5a9d:937f with SMTP id 98e67ed59e1d1-308237e1b7emr1466823a91.24.1744331421495;
-        Thu, 10 Apr 2025 17:30:21 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd11e666sm4395562a91.15.2025.04.10.17.30.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 17:30:20 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: Sukrut Bellary <sbellary@baylibre.com>, Russell King
- <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>, Tony Lindgren
- <tony@atomide.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Nishanth
- Menon <nm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Sukrut Bellary <sbellary@baylibre.com>, Aaro Koskinen
- <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, Roger
- Quadros <rogerq@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Santosh
- Shilimkar <ssantosh@kernel.org>, Bajjuri Praneeth <praneeth@ti.com>,
- Raghavendra Vignesh <vigneshr@ti.com>, Bin Liu <b-liu@ti.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pm@vger.kernel.org
-Subject: Re: [PATCH 0/4] PM: TI: AM335x: PM STANDBY fixes
-In-Reply-To: <20250318230042.3138542-1-sbellary@baylibre.com>
-References: <20250318230042.3138542-1-sbellary@baylibre.com>
-Date: Thu, 10 Apr 2025 17:30:20 -0700
-Message-ID: <7h34efy1yb.fsf@baylibre.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kc6s4Xgu"
+Date: Thu, 10 Apr 2025 20:32:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744331531;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=2clB0mAcWnAgYlObzuiqKAAGiczD8l6iS9voXhdX8QQ=;
+	b=kc6s4XgunSODoBRn0NHtZbYYgqZSbm66zWX59H51G7DLHbmNK4h4FSJRLft5rzXXCLg0eA
+	WAMEF8MLqtFZfHSem+wIC+7hf+n4zW/CngK+ZllQq9kgOG1oRIh0npOLZ5acuXDM2cVH2T
+	N0HKfeLkij7ABsAgsg31WA6MsBTa0VA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] bcachefs fixes for 6.15-rc2
+Message-ID: <qmulyyzrlr6jdhqoluhqr32ho5qnuf4crxouj7let2anp4n2bz@z2wthovykeul>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
-Sukrut Bellary <sbellary@baylibre.com> writes:
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-> This patch series fixes the Power management issues on TI's am335x soc.
->
-> on AM335x, the wakeup doesn't work in the case of STANDBY.
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-This series is specifically targetted at the AM335x EVM (which I don't
-have to test), so I'd appreciate getting any test reports for this
-before I queue it up.
+are available in the Git repository at:
 
-For AM335x, I currently only have the ICEv2 and Beaglebone Black,
-neithor of which support suspend resume with RTC wake AFAICT.  If they
-do, please enlighten me. :)
+  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-04-10
 
-I was able to do a basic boot test on the 2 boards I have with this
-series applied on top of v6.15-rc1 and basic boot still works, but I was
-not able to test the PM path that's being changed here, so any tests on
-AM3 platforms that actually use this path are appreciated.
+for you to fetch changes up to 55fd97fbc4744a43fb2d134908e481266cf33bda:
 
-Kevin
+  bcachefs: Use sort_nonatomic() instead of sort() (2025-04-06 19:33:53 -0400)
+
+----------------------------------------------------------------
+bcachefs fixes for 6.15-rc2
+
+Mostly minor fixes.
+
+Eric Biggers' crypto API conversion is included because of long standing
+sporadic crashes - mostly, but not entirely syzbot - in the crypto API
+code when calling poly1305, which have been nigh impossible to reproduce
+and debug. His rework deletes the code where we've seen the crashes, so
+either it'll be a fix or we'll end up with backtraces we can debug.
+(Thanks Eric!).
+
+----------------------------------------------------------------
+Eric Biggers (2):
+      bcachefs: use library APIs for ChaCha20 and Poly1305
+      bcachefs: Remove unnecessary softdep on xxhash
+
+Gabriel Shahrouzi (3):
+      bcachefs: Fix escape sequence in prt_printf
+      bcachefs: Fix type for parameter in journal_advance_devs_to_next_bucket
+      bcachefs: Use cpu_to_le16 for dirent lengths
+
+Kent Overstreet (3):
+      bcachefs: Fix UAF in bchfs_read()
+      bcachefs: Fix duplicate "ro,read_only" in opts at startup
+      bcachefs: Use sort_nonatomic() instead of sort()
+
+ fs/bcachefs/Kconfig              |   5 +-
+ fs/bcachefs/bcachefs.h           |   4 +-
+ fs/bcachefs/btree_journal_iter.c |   5 +-
+ fs/bcachefs/btree_node_scan.c    |   6 +-
+ fs/bcachefs/btree_write_buffer.c |   8 +-
+ fs/bcachefs/checksum.c           | 247 +++++++++------------------------------
+ fs/bcachefs/checksum.h           |   3 +-
+ fs/bcachefs/data_update.c        |   2 +-
+ fs/bcachefs/dirent.c             |   4 +-
+ fs/bcachefs/fs-io-buffered.c     |  17 ++-
+ fs/bcachefs/io_read.c            |   3 +-
+ fs/bcachefs/journal_io.c         |   2 +-
+ fs/bcachefs/recovery.c           |   6 +-
+ fs/bcachefs/super.c              |  10 --
+ 14 files changed, 96 insertions(+), 226 deletions(-)
