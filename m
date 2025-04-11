@@ -1,53 +1,61 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2279A2980A6;
-	Fri, 11 Apr 2025 07:38:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506EE2980D3;
+	Fri, 11 Apr 2025 07:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357095; cv=none; b=LJNswAkDW/ZfcKfERbl/T1WFONhqzcTMohhnSQIzlIAdV7hUli6XlDfhsVBeztYdyhqNNoNY2I66e5kj5CclJgSGkZfqvHADna6FEWvIdWpmXJeEIs26MVz9vBYPbYkYzE3NFXqO4pc49oZe63JcQGijXz6jeOZDy0PuIuTKqlc=
+	t=1744357096; cv=none; b=Ho1eawegtGumfPQl+N1PsIyJlz69E9Hly4hpw77Ch/SnSlhMavkNVkBJBXNEbuVWHszuROZKpqz8/3lUqo2yXpwFQTwEPeipTj6RErPSDCpxL3nk0OMywABRx7+eVe0X+9iNGZR2+rBem9R0zn86RYwHgWsrKYSCy2NML8cCV5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357095; c=relaxed/simple;
-	bh=bOWZsjpGMyuHA/9yMQEnOXQit557utN/lLEtaYfXo6M=;
+	s=arc-20240116; t=1744357096; c=relaxed/simple;
+	bh=oEyGbTvoth7vmSAJ/obSmdU7SImAIuoZDjOIF1BYGRU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tf+2JrYpb5X58EmtjUE0IU9FQ9kjeIzE2EX/yg6kj9SmxSVFqy8bYopHqjtSs+qQ1CCC4NNjWIa71a+2UtqcItMSI0kfTmRH7/SuA9ObnoKhqP9atqlo4eSB0UXfZ7PD0xmf4joVmfDwZjqiuaqQtJoaLV7UoQFmVi2J1DxODos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n/9xG6gR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uIQuao1a; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=QGaCd47EERown/geKefZExSFvQimPdJIn5M84vC4EqEaGkt3pQ6h55RxM0Qq7eoPxBYJBRRNhv+cIIAzn4F2Ea89NdDA/giPOI+aKLDbPgHwf2syllCF6gy0I06yscifMtJsbYiA+Gsj/23TaqbQHpjLfXRvKogAwp77BNf5Z2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eOoalTJg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DBX+JO0m; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n/9xG6gR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uIQuao1a"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eOoalTJg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DBX+JO0m"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744357091;
+	s=2020; t=1744357092;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uFtVzpMnpK089v/2fXHCbOI7Lpmai8EW/LOy8Ub/+JY=;
-	b=n/9xG6gRQbP+8ghu0AV/7vDdW4tGHLfjohoaxOZ6mpqOz6/E9PZTvIZLlA3GzesPjpWKVG
-	2ZmV/DRM+4mIatXB9YGBR05D4uqAX0xFsWONYhH/rZoYRDGxYbIwvwqpRoMO5vMT9n95I0
-	iP/idss0qNHvnAnGvks7J3SdP2dDH2bDpIqpjOrFVRDof+KP6oFUzYL7ljPniiUDz5jqYu
-	+mi6LDp0Nq57MHoAeP9PiLkv10sOup7yqTIU20X4dlhlyR1x7VWHAf2fWWXz5CrQ2GDgZ8
-	aicGn+wwcuNKBsZy90a6G8CRJMTP5RZXysZ6S1yWy+/27ByjPcY9MyZLRfgXZA==
+	bh=eoysUVIr9RMMwEjwkmOmSOvor7eg1lyUe7b2Nqa/AGs=;
+	b=eOoalTJgzGgC46HLaE5WbeziQcsEuFdLiXHQi9Nm68zFCL44HWB9/dZF92HZme+eb8c4pe
+	AVhpZNuv72Gd2yKPBNnbGWtqvKG3se82cNOF629QiqEwq29dCJ1rJeIWP/Rx+0C0JkHvYv
+	4Pnmwa8JOQvJ7t7L9xlqlVwkeNdh/BsDskOMfXfmu9UoF5OA8qwWQzxR7hw3CuSi3BjGW6
+	1TQalxFvwINTE/zIZt4dUY0UN89scS46Y8Cr6nGH9ffhEKIx54iRtiJVNWk6qiB8XnICl6
+	Fxmkg/cH85sFSrn/eHvpEk94uxtErB5fPa/FF8n4Tp0MzA2Hf/4iDjE1p3FmZw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744357091;
+	s=2020e; t=1744357092;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uFtVzpMnpK089v/2fXHCbOI7Lpmai8EW/LOy8Ub/+JY=;
-	b=uIQuao1a5Omxnnr5W2lKJD0u8Kq4J+UlcyRMQuSB8z20wIgTB6Lt+MqUhYr2lsoo5BeEhf
-	VsfZWYvKFipW7RDw==
+	bh=eoysUVIr9RMMwEjwkmOmSOvor7eg1lyUe7b2Nqa/AGs=;
+	b=DBX+JO0mCz6tgxyRYZQW5Xafd3Z2f5nifuDcoMoiCoKy6o5tGyowfdp4whnBIXaCnk/0ph
+	ebuBEj4t9jbTETCw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
-	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v2 14/22] rv: Add rtapp container monitor
-Date: Fri, 11 Apr 2025 09:37:30 +0200
-Message-Id: <d5e5f28377991c3e73814a7ac24a571b7c9c6b61.1744355018.git.namcao@linutronix.de>
+	Nam Cao <namcao@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v2 16/22] x86/tracing: Move page fault trace points to generic
+Date: Fri, 11 Apr 2025 09:37:32 +0200
+Message-Id: <1c7c4baf4068eadecbf703a90cdde2cb90afa2b2.1744355018.git.namcao@linutronix.de>
 In-Reply-To: <cover.1744355018.git.namcao@linutronix.de>
 References: <cover.1744355018.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,113 +66,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add the container "rtapp" which is the monitor collection for detecting
-problems with real-time applications. The monitors will be added in the
-follow-up commits.
+Page fault trace points are interesting for other architectures as well.
+Move them to be generic.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- kernel/trace/rv/Kconfig                |  1 +
- kernel/trace/rv/Makefile               |  1 +
- kernel/trace/rv/monitors/rtapp/Kconfig |  6 +++++
- kernel/trace/rv/monitors/rtapp/rtapp.c | 34 ++++++++++++++++++++++++++
- kernel/trace/rv/monitors/rtapp/rtapp.h |  3 +++
- 5 files changed, 45 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/rtapp/Kconfig
- create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.c
- create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.h
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+ arch/x86/mm/fault.c                                 |  2 +-
+ .../asm/trace =3D> include/trace/events}/exceptions.h | 13 ++++---------
+ 2 files changed, 5 insertions(+), 10 deletions(-)
+ rename {arch/x86/include/asm/trace =3D> include/trace/events}/exceptions.h=
+ (79%)
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 6e157f964991..5c407d291661 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -41,6 +41,7 @@ source "kernel/trace/rv/monitors/snroc/Kconfig"
- source "kernel/trace/rv/monitors/scpd/Kconfig"
- source "kernel/trace/rv/monitors/snep/Kconfig"
- source "kernel/trace/rv/monitors/sncid/Kconfig"
-+source "kernel/trace/rv/monitors/rtapp/Kconfig"
- # Add new monitors here
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 7e3e51fa1f95..ad4cb1502316 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -38,7 +38,7 @@
+ #include <asm/sev.h>			/* snp_dump_hva_rmpentry()	*/
 =20
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index f9b2cd0483c3..9b28c2419995 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_RV_MON_SNROC) +=3D monitors/snroc/snroc.o
- obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
- obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
- obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
-+obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monit=
-ors/rtapp/Kconfig
-new file mode 100644
-index 000000000000..94689d66a79c
---- /dev/null
-+++ b/kernel/trace/rv/monitors/rtapp/Kconfig
-@@ -0,0 +1,6 @@
-+config RV_MON_RTAPP
-+	depends on RV
-+	bool "rtapp monitor"
-+	help
-+	  Collection of monitors to check for common problems with real-time appl=
-ication that cause
-+	  unexpected latency.
-diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.c b/kernel/trace/rv/monit=
-ors/rtapp/rtapp.c
-new file mode 100644
-index 000000000000..193c9d8dc0af
---- /dev/null
-+++ b/kernel/trace/rv/monitors/rtapp/rtapp.c
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+
-+#define MODULE_NAME "rtapp"
-+
-+#include "rtapp.h"
-+
-+struct rv_monitor rv_rtapp;
-+
-+struct rv_monitor rv_rtapp =3D {
-+	.name =3D "rtapp",
-+	.description =3D "Collection of monitors for detecting problems with real=
--time applications",
-+};
-+
-+static int __init register_rtapp(void)
-+{
-+	rv_register_monitor(&rv_rtapp, NULL);
-+	return 0;
-+}
-+
-+static void __exit unregister_rtapp(void)
-+{
-+	rv_unregister_monitor(&rv_rtapp);
-+}
-+
-+module_init(register_rtapp);
-+module_exit(unregister_rtapp);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
-+MODULE_DESCRIPTION("Collection of monitors for detecting problems with rea=
-l-time applications");
-diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.h b/kernel/trace/rv/monit=
-ors/rtapp/rtapp.h
-new file mode 100644
-index 000000000000..4c200d67c7f6
---- /dev/null
-+++ b/kernel/trace/rv/monitors/rtapp/rtapp.h
-@@ -0,0 +1,3 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+extern struct rv_monitor rv_rtapp;
+ #define CREATE_TRACE_POINTS
+-#include <asm/trace/exceptions.h>
++#include <trace/events/exceptions.h>
+=20
+ /*
+  * Returns 0 if mmiotrace is disabled, or if the fault is not
+diff --git a/arch/x86/include/asm/trace/exceptions.h b/include/trace/events=
+/exceptions.h
+similarity index 79%
+rename from arch/x86/include/asm/trace/exceptions.h
+rename to include/trace/events/exceptions.h
+index 34bc8214a2d7..a631f8de8917 100644
+--- a/arch/x86/include/asm/trace/exceptions.h
++++ b/include/trace/events/exceptions.h
+@@ -7,7 +7,7 @@
+=20
+ #include <linux/tracepoint.h>
+=20
+-DECLARE_EVENT_CLASS(x86_exceptions,
++DECLARE_EVENT_CLASS(exceptions,
+=20
+ 	TP_PROTO(unsigned long address, struct pt_regs *regs,
+ 		 unsigned long error_code),
+@@ -22,7 +22,7 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+=20
+ 	TP_fast_assign(
+ 		__entry->address =3D address;
+-		__entry->ip =3D regs->ip;
++		__entry->ip =3D instruction_pointer(regs);
+ 		__entry->error_code =3D error_code;
+ 	),
+=20
+@@ -30,18 +30,13 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+ 		  (void *)__entry->address, (void *)__entry->ip,
+ 		  __entry->error_code) );
+=20
+-DEFINE_EVENT(x86_exceptions, page_fault_user,
++DEFINE_EVENT(exceptions, page_fault_user,
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
+_code),
+ 	TP_ARGS(address, regs, error_code));
+-
+-DEFINE_EVENT(x86_exceptions, page_fault_kernel,
++DEFINE_EVENT(exceptions, page_fault_kernel,
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
+_code),
+ 	TP_ARGS(address, regs, error_code));
+=20
+-#undef TRACE_INCLUDE_PATH
+-#undef TRACE_INCLUDE_FILE
+-#define TRACE_INCLUDE_PATH .
+-#define TRACE_INCLUDE_FILE exceptions
+ #endif /*  _TRACE_PAGE_FAULT_H */
+=20
+ /* This part must be outside protection */
 --=20
 2.39.5
 
