@@ -1,245 +1,129 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346CF2980BF
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193711FBCB1
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361540; cv=none; b=nq15GH4iN4XyI/MV4/AxyyBUlYQy8lBtsgybaNQmBA9hD8Txx7b2SS6TMn/ESqhI4lMwP2ywpJB8IryuCocXLDtfn8x23/jBZOxoUvU6QPKI7QG8TV5G02V9rxKdR5R0ZwID2i1i8XlvqxmWFy3huwCFosk4oHLTGRQ/uXOMnQ4=
+	t=1744361618; cv=none; b=YPfM0hxjdyaSvi0QGg8DJ+DU37kCpc9HslNbcH9GPlUcmxL1IWuwpFUWvpleUM7G1ZSYueEadjojDZi4yNaD8cc7Ue5KvcAwyuxtQdrIBACz/XGF+TVCo9UFw98DplnUagdm52w5a6yySOSWJ7oBVMpqi5PwFizTsRUJtqnpeTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361540; c=relaxed/simple;
-	bh=V7KSZFBtA2pNy/GOdjVOUR3ghYSmXe5GfmpGe4w2sfI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bEtesOCTO4DgUA1WLXOjHwAbihG4rQbcHqeDPyxVRPQp/q8f/EiuPbDPWT4AI4fHEBzUVbmHHqXAvtUR9Au6+5zSG05WE1fs938dAfgTFhCNTtrENPj3hshOhWo/KaQJck/vXkdtVitupSOVhxbJaEkAEFH8weytt3ZStNF89O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UdEwQc6B; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744361618; c=relaxed/simple;
+	bh=Du5iqnvfawjuYpPozM9Hzm6S6A+I7fABDERNzH0HfVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BZHXeUFkIsb4B9EaPRTD8R+I+Sz4pL//Pdb8wybZI6mscVpfAbdrlAPb9Cg7jSWI7em93+EyvIBofehVCk76bfPmPINT8jQ0SbMOspSwnMaQFlo9xwJu+0J/DIF47KLVQ+SIikJ00iUoqOdO9pAvJzIvxSjBsTf95aQR32kYF9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OPc8Mves; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UdEwQc6B"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B4qvSE018818
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:52:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=z6jrc2XmgogjjH6Q652wRy6a
-	jx90JWJC0BHTJQ8w2o4=; b=UdEwQc6BK1DiLKtmUKzQsg/8WOk/LXPUCVjADXvq
-	nzBawJ1+6OGtpWGZjt8OcG/eaz7JA+svQ61ncI3oHzt88mGt6Dgnn3sGt1FBYfxU
-	SBpVNsQXOjnw5O70FMauBR1CQs1k3T5aJNGpRD6CDagdA1GTQ8y9jSi6ElGvjtdk
-	Kxzt2OeQhx2PWc8qUEoVVViDJ+cuG2gHdLDloFOFOukUGkhEimDnusA24sqEC70Z
-	mukjsjMPsBHWpExbZ6cWt4EkUpg17xfzM4pN3u8RntTAlZ15FttDF6nblnV7D0aX
-	/si9wTK87DX2Qf23zYjUcS9mjVDbQGcBeuog3enmAQXpbQ==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgt00b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:52:17 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-30828f9af10so341314a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:52:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744361531; x=1744966331;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z6jrc2XmgogjjH6Q652wRy6ajx90JWJC0BHTJQ8w2o4=;
-        b=i58NTL4gclDrKJf0eVJyFaJm6ZXjpoIlK4dWbp5RPLK6h4wgyF0SY3o4AMJtZwY7ai
-         7MdHo4uXbUBTn0K/FxExZrfm0ySXi/C/wY7scxlsjh0C/LtB95LzmFUmmX/FbbSWfECX
-         V4NcgmJRHe8t8HrgZoPYEg0dO/sUoptjdQ1UCaX45+YnRk0mMnCBmzBWBLpOl2Gn6gEx
-         UNdcvTOMJcoahPKT1vBrPx/cl3rUwsNlh+JInNc9vWf7zjXZ25O8oz8d2A+FZ732Ht7d
-         51DgHoHjGFfBqdmo/5DC/EeJkvBz6k7AFETdknu9aapoQXgfx5U70MXCjwjCu0PQeg4H
-         5KFA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7Yvk0Z3ccIZZfLSs9GVlNID79QcyFj74+KX8h+sPrhSdgQM+tsMQ300p7YWBcWkq/VxeqkVchvBU+qHE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDrLHW82QzT7yJJrlVVW9UwEUUVebYI4yhHL9jTZ04qbglT1Gc
-	Qg/TaAqh5aLtTr5sf+7Ep6oT+lmf59MdG6MmI9eZlmCNnWc55Qls4X0o7HYVSHbJgIdB3LcatT9
-	9PHnO0I2stwETsCjsFnPQu7D4M0qP0UVru/PRQfup62F688DJLWN2IM9S89KxeX2/pVyD8q5SII
-	eNjjDXpCP1sipuLm/cZweHFD5EIt39ZYI/I8/rtg==
-X-Gm-Gg: ASbGnctX+SprU9kEsAiI32HnQ/X5moGUvRY86nHeahEwaq/P3n6rv+B8TPuwecm9rr2
-	whhu00sDW1CPoeuZBqKjuMEH5yOJkgOVGmiXohmRs+7OZRm4IKLgz+dxzHKLckOQmFuNi
-X-Received: by 2002:a17:90b:2dd2:b0:2ff:72f8:3708 with SMTP id 98e67ed59e1d1-3082365241fmr3842166a91.17.1744361531313;
-        Fri, 11 Apr 2025 01:52:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHq8e1j3n7EBmrTV8VSjFwgnkjvrARK7lF9jn+i49uAmC3+EVD4SCW2qUF3b8oCeS9DmSewZ4/hidioLZDDQ8U=
-X-Received: by 2002:a17:90b:2dd2:b0:2ff:72f8:3708 with SMTP id
- 98e67ed59e1d1-3082365241fmr3842135a91.17.1744361530985; Fri, 11 Apr 2025
- 01:52:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OPc8Mves"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744361615;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a5C7Q05Cmg6RietpAXrzHXxL88YS3OA9/C782nP8RhY=;
+	b=OPc8MvesHVNTORRoDaxZUeaiDcthtHkKDpf7ap8vcbH4j0iczAuZcSXu4idC7LtOPe8Xjv
+	kEviypubd7VlREQ7PQ9F8z2rgA3FFymWt7g8Ds1h6idP3MYpI/H8m6uY3tv+nzDgGzAKe5
+	dulXZNAKJ2KjdNOno61TQ8peJW1B/1o=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-509-yzlCelZaMLW8eVlD_BKmdA-1; Fri,
+ 11 Apr 2025 04:53:31 -0400
+X-MC-Unique: yzlCelZaMLW8eVlD_BKmdA-1
+X-Mimecast-MFC-AGG-ID: yzlCelZaMLW8eVlD_BKmdA_1744361610
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 39B121954B33;
+	Fri, 11 Apr 2025 08:53:30 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.6])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 753401956094;
+	Fri, 11 Apr 2025 08:53:24 +0000 (UTC)
+Date: Fri, 11 Apr 2025 16:53:19 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: Re: [PATCH v3 2/2] ublk: require unique task per io instead of
+ unique task per hctx
+Message-ID: <Z_jYfwFN_AYkUNJK@fedora>
+References: <20250410-ublk_task_per_io-v3-0-b811e8f4554a@purestorage.com>
+ <20250410-ublk_task_per_io-v3-2-b811e8f4554a@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
- <20250327-videocc-pll-multi-pd-voting-v3-6-895fafd62627@quicinc.com>
- <aidlp3iq6pxym52tp63w35tpcctw4443yihvcwsdszk62xbwfp@esqpmsc4e6qd> <f1125370-c16a-4c20-a01d-2221fb12fdcb@quicinc.com>
-In-Reply-To: <f1125370-c16a-4c20-a01d-2221fb12fdcb@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Fri, 11 Apr 2025 11:51:58 +0300
-X-Gm-Features: ATxdqUFFFFcxLSxiqq4sEuhC8sxM4iqavJQpwJHVW040G1Di18g2WtFDFqnCkys
-Message-ID: <CAO9ioeWmuPhBPivthidXTFfnXRBx9rd=iX5aqjB4bMcCKueXeg@mail.gmail.com>
-Subject: Re: [PATCH v3 06/18] clk: qcom: common: Add support to configure clk
- regs in qcom_cc_really_probe
-To: Jagadeesh Kona <quic_jkona@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f8d841 cx=c_pps a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=eAQpRAmnPJoi4zBeIeUA:9 a=QEXdDO2ut3YA:10 a=uKXjsCUrEbL0IQVhDsJ9:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: tut-P2-xOzwrELHeD_Gs4_xXL2nFLhev
-X-Proofpoint-GUID: tut-P2-xOzwrELHeD_Gs4_xXL2nFLhev
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
- impostorscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410-ublk_task_per_io-v3-2-b811e8f4554a@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Fri, 11 Apr 2025 at 10:14, Jagadeesh Kona <quic_jkona@quicinc.com> wrote:
->
->
->
-> On 3/27/2025 6:20 PM, Dmitry Baryshkov wrote:
-> > On Thu, Mar 27, 2025 at 03:22:26PM +0530, Jagadeesh Kona wrote:
-> >> Add support to configure PLLS and clk registers in qcom_cc_really_probe().
-> >> This ensures all required power domains are enabled and kept ON by runtime
-> >> PM code in qcom_cc_really_probe() before configuring the PLLS or clock
-> >> registers.
-> >>
-> >> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> >> ---
-> >>  drivers/clk/qcom/common.c | 28 ++++++++++++++++++++++++++++
-> >>  drivers/clk/qcom/common.h | 19 +++++++++++++++++++
-> >>  2 files changed, 47 insertions(+)
-> >>
-> >> diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
-> >> index 9cbf1c5296dad3ee5477a2f5a445488707663b9d..c4d980c6145834969fada14863360ee81c9aa251 100644
-> >> --- a/drivers/clk/qcom/common.c
-> >> +++ b/drivers/clk/qcom/common.c
-> >> @@ -14,6 +14,8 @@
-> >>  #include <linux/of.h>
-> >>
-> >>  #include "common.h"
-> >> +#include "clk-alpha-pll.h"
-> >> +#include "clk-branch.h"
-> >>  #include "clk-rcg.h"
-> >>  #include "clk-regmap.h"
-> >>  #include "reset.h"
-> >> @@ -285,6 +287,29 @@ static int qcom_cc_icc_register(struct device *dev,
-> >>                                                   desc->num_icc_hws, icd);
-> >>  }
-> >>
-> >> +static void qcom_cc_clk_pll_configure(const struct qcom_cc_desc *desc,
-> >> +                                  struct regmap *regmap)
-> >> +{
-> >> +    int i;
-> >> +
-> >> +    for (i = 0; i < desc->num_alpha_plls; i++)
-> >> +            qcom_clk_alpha_pll_configure(desc->alpha_plls[i], regmap);
-> >> +}
-> >> +
-> >> +static void qcom_cc_clk_regs_configure(const struct qcom_cc_desc *desc,
-> >> +                                   struct regmap *regmap)
-> >> +{
-> >> +    struct qcom_clk_reg_setting *clk_regs = desc->clk_regs;
-> >> +    int i;
-> >> +
-> >> +    for (i = 0; i < desc->num_clk_cbcrs; i++)
-> >> +            qcom_branch_set_clk_en(regmap, desc->clk_cbcrs[i]);
-> >> +
-> >> +    for (i = 0 ; i < desc->num_clk_regs; i++)
-> >> +            regmap_update_bits(regmap, clk_regs[i].offset,
-> >> +                               clk_regs[i].mask, clk_regs[i].val);
-> >
-> > I think there are other semantic functions which we don't want to
-> > convert to offset-mask-val tuples. See drivers/clk/qcom/clk-branch.h.
-> > I'd suggest to move setup steps to a driver callback. We can improve it
-> > later on if it is found to make sense, but it won't block this series
-> > from being merged.
-> >
->
-> Yes, there are other wrapper functions as well but they are unused in most
-> clock controllers. We will check more on how we can improve this in a separate
-> series.
+On Thu, Apr 10, 2025 at 06:17:51PM -0600, Uday Shankar wrote:
+> Currently, ublk_drv associates to each hardware queue (hctx) a unique
+> task (called the queue's ubq_daemon) which is allowed to issue
+> COMMIT_AND_FETCH commands against the hctx. If any other task attempts
+> to do so, the command fails immediately with EINVAL. When considered
+> together with the block layer architecture, the result is that for each
+> CPU C on the system, there is a unique ublk server thread which is
+> allowed to handle I/O submitted on CPU C. This can lead to suboptimal
+> performance under imbalanced load generation. For an extreme example,
+> suppose all the load is generated on CPUs mapping to a single ublk
+> server thread. Then that thread may be fully utilized and become the
+> bottleneck in the system, while other ublk server threads are totally
+> idle.
+> 
+> This issue can also be addressed directly in the ublk server without
+> kernel support by having threads dequeue I/Os and pass them around to
+> ensure even load. But this solution requires inter-thread communication
+> at least twice for each I/O (submission and completion), which is
+> generally a bad pattern for performance. The problem gets even worse
+> with zero copy, as more inter-thread communication would be required to
+> have the buffer register/unregister calls to come from the correct
+> thread.
 
-Please do it the other way around. Implement a generic callback, then
-we can check how to sort things out.
+Agree.
 
->
-> Thanks,
-> Jagadeesh
->
-> >> +}
-> >> +
-> >>  int qcom_cc_really_probe(struct device *dev,
-> >>                       const struct qcom_cc_desc *desc, struct regmap *regmap)
-> >>  {
-> >> @@ -315,6 +340,9 @@ int qcom_cc_really_probe(struct device *dev,
-> >>                      return ret;
-> >>      }
-> >>
-> >> +    qcom_cc_clk_pll_configure(desc, regmap);
-> >> +    qcom_cc_clk_regs_configure(desc, regmap);
-> >> +
-> >>      reset = &cc->reset;
-> >>      reset->rcdev.of_node = dev->of_node;
-> >>      reset->rcdev.ops = &qcom_reset_ops;
-> >> diff --git a/drivers/clk/qcom/common.h b/drivers/clk/qcom/common.h
-> >> index 9c10bc8c197cd7dfa25ccd245763ad6acb081523..01b1ae52f2dc580350409d6244578944cce571f0 100644
-> >> --- a/drivers/clk/qcom/common.h
-> >> +++ b/drivers/clk/qcom/common.h
-> >> @@ -25,6 +25,19 @@ struct qcom_icc_hws_data {
-> >>      int clk_id;
-> >>  };
-> >>
-> >> +/**
-> >> + * struct qcom_clk_reg_setting - Represents miscellaneous clock register settings
-> >> + * @offset: address offset for the clock register
-> >> + * @mask: bit mask indicating the bits to be updated
-> >> + * @val: Encoded value to be set within the specified bit mask
-> >> + *       (e.g., if writing 7 to bits 4-7, mask = 0xF0 and val = 0x70)
-> >> + */
-> >> +struct qcom_clk_reg_setting {
-> >> +    u32 offset;
-> >> +    u32 mask;
-> >> +    u32 val;
-> >> +};
-> >> +
-> >>  struct qcom_cc_desc {
-> >>      const struct regmap_config *config;
-> >>      struct clk_regmap **clks;
-> >> @@ -38,6 +51,12 @@ struct qcom_cc_desc {
-> >>      const struct qcom_icc_hws_data *icc_hws;
-> >>      size_t num_icc_hws;
-> >>      unsigned int icc_first_node_id;
-> >> +    u32 *clk_cbcrs;
-> >> +    size_t num_clk_cbcrs;
-> >> +    struct clk_alpha_pll **alpha_plls;
-> >> +    size_t num_alpha_plls;
-> >> +    struct qcom_clk_reg_setting *clk_regs;
-> >> +    size_t num_clk_regs;
-> >>      bool use_rpm;
-> >>  };
-> >>
-> >>
-> >> --
-> >> 2.34.1
-> >>
-> >
+The limit is actually originated from current implementation, both
+REGISTER_IO_BUF and UNREGISTER_IO_BUF should be fine to run from other
+pthread because the request buffer 'meta' is actually read-only.
+
+> 
+> Therefore, address this issue in ublk_drv by requiring a unique task per
+> I/O instead of per queue/hctx. Imbalanced load can then be balanced
+> across all ublk server threads by having threads issue FETCH_REQs in a
+> round-robin manner. As a small toy example, consider a system with a
+> single ublk device having 2 queues, each of queue depth 4. A ublk server
+> having 4 threads could issue its FETCH_REQs against this device as
+> follows (where each entry is the qid,tag pair that the FETCH_REQ
+> targets):
+> 
+> poller thread:	T0	T1	T2	T3
+> 		0,0	0,1	0,2	0,3
+> 		1,3	1,0	1,1	1,2
+> 
+> Since tags appear to be allocated in sequential chunks, this setup
+> provides a rough approximation to distributing I/Os round-robin across
+> all ublk server threads, while letting I/Os stay fully thread-local.
+
+BLK_MQ_F_TAG_RR can be set for this way, so is it possible to make this
+as one feature? And set BLK_MQ_F_TAG_RR for this feature.
+
+Also can you share what the preferred implementation is for ublk server?
+
+I think per-io pthread may not be good, maybe partition tags space into
+fixed range/pthread?
+
+`ublk_queue' reference is basically read-only in IO code path, I think
+it need to be declared explicitly as 'const' pointer in IO code/uring code
+path first. Otherwise, it is easy to trigger data race with per-io task
+since it is lockless.
 
 
+Thanks, 
+Ming
 
--- 
-With best wishes
-Dmitry
