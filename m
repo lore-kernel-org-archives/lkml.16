@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA2921E0BE
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F32A521D5AA
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744389852; cv=none; b=H1q2WNqO9VxyPe4XmKzxUUAeRP7u1ayiywxpKrgKR92rOMj2DY5mdY1frjpKzHG9Q1UoxGyUxeLwKE34Vngq/fPyr1N0HnlOCaivjti5Ih0rUbMao36M9LPZ/RN/FP+HLF5AApZ5UtSSCI90RI/Uoxavy56FMAXyZhUzpoAm+aw=
+	t=1744389860; cv=none; b=ia9MaS2DtjEspyE0jy9jv6f+ntT6GzPrWTH/Unlwz7wonVC1XwlavrCsLinnhmwvqhehTQHoG6gLSccxYrQtUSjsibpjDtuYBEAw+rsY5MN+QGV1M8uJOjHKS/8HGwbWcq2LdgfRvMq05AoRWbQwG6SzvDVOCSRhcQLoFxD7N2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744389852; c=relaxed/simple;
-	bh=tBRi0MnA4nkgJqMlE8WrplzkTuqZfJ4AzKGyFEIRPMQ=;
+	s=arc-20240116; t=1744389860; c=relaxed/simple;
+	bh=VJ2TFBFlDmqkaw/5UIr4ubt+NFBR1fjRYsGifkhg2ps=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c3JMihTgcvRbrcmFcV9Klh3CMv1LaKW45tU9Rhjo/TpCbS1+uLbUCVTrG9Sw0dyg/BLCvFsNI8l1rzGnur0+vwPBhSG2ZEHw6Pszpvhdt3f5SoxlEpTvjPj6q8hWoW4Uq4+RZJ+RI0nrC+Zn7IPNKLZHoAYJE6uob9XpA0akuHI=
+	 MIME-Version; b=MlLDV9sT+cYOmgNt9xmj5H3DSVZBzGd1SpiG8vfiDrMO7CpdbLf//i2TY+/29VO6bJ0fQzhND0mP/LkHLYooW/qoybeGcgKPK2wTDLOMt03N/w0pMRY2QJxpaVO4zOY2AKkY5ZUcrVEmtCsY4O8kIlUltZxqEOcw2zEHunadekg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99FD3237B;
-	Fri, 11 Apr 2025 09:44:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2730A2403;
+	Fri, 11 Apr 2025 09:44:18 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C58463F694;
-	Fri, 11 Apr 2025 09:44:07 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AEEB3F694;
+	Fri, 11 Apr 2025 09:44:15 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -45,10 +45,12 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Dave Martin <dave.martin@arm.com>,
 	Koba Ko <kobak@nvidia.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
-	fenghuay@nvidia.com
-Subject: [PATCH v8 16/21] x86/resctrl: Always initialise rid field in rdt_resources_all[]
-Date: Fri, 11 Apr 2025 16:42:24 +0000
-Message-Id: <20250411164229.23413-17-james.morse@arm.com>
+	fenghuay@nvidia.com,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+	Babu Moger <babu.moger@amd.com>
+Subject: [PATCH v8 18/21] x86,fs/resctrl: Remove duplicated trace header files
+Date: Fri, 11 Apr 2025 16:42:26 +0000
+Message-Id: <20250411164229.23413-19-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250411164229.23413-1-james.morse@arm.com>
 References: <20250411164229.23413-1-james.morse@arm.com>
@@ -60,75 +62,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-x86 has an array, rdt_resources_all[], of all possible resources.
-The for-each-resource walkers depend on the rid field of all
-resources being initialised.
-
-If the array ever grows due to another architecture adding a resource
-type that is not defined on x86, the for-each-resources walkers will
-loop forever.
-
-Initialise all the rid values in resctrl_arch_late_init() before
-any for-each-resource walker can be called.
+The copy-pasting python script harmlessly creates some empty trace
+point header files. Remove them.
 
 Signed-off-by: James Morse <james.morse@arm.com>
-
+Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
+Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
+Tested-by: Babu Moger <babu.moger@amd.com>
 ---
-Changes since v7:
- * Split out of a previous patch due to a botched merged conflict.
----
- arch/x86/kernel/cpu/resctrl/core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kernel/cpu/resctrl/monitor.c       |  4 ----
+ arch/x86/kernel/cpu/resctrl/monitor_trace.h | 17 -----------------
+ fs/resctrl/pseudo_lock.c                    |  4 ----
+ fs/resctrl/pseudo_lock_trace.h              | 17 -----------------
+ 4 files changed, 42 deletions(-)
+ delete mode 100644 arch/x86/kernel/cpu/resctrl/monitor_trace.h
+ delete mode 100644 fs/resctrl/pseudo_lock_trace.h
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 58d7c6accdf2..ce684da600bc 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -60,7 +60,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
- 	[RDT_RESOURCE_L3] =
- 	{
- 		.r_resctrl = {
--			.rid			= RDT_RESOURCE_L3,
- 			.name			= "L3",
- 			.ctrl_scope		= RESCTRL_L3_CACHE,
- 			.mon_scope		= RESCTRL_L3_CACHE,
-@@ -74,7 +73,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
- 	[RDT_RESOURCE_L2] =
- 	{
- 		.r_resctrl = {
--			.rid			= RDT_RESOURCE_L2,
- 			.name			= "L2",
- 			.ctrl_scope		= RESCTRL_L2_CACHE,
- 			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_L2),
-@@ -86,7 +84,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
- 	[RDT_RESOURCE_MBA] =
- 	{
- 		.r_resctrl = {
--			.rid			= RDT_RESOURCE_MBA,
- 			.name			= "MB",
- 			.ctrl_scope		= RESCTRL_L3_CACHE,
- 			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_MBA),
-@@ -96,7 +93,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
- 	[RDT_RESOURCE_SMBA] =
- 	{
- 		.r_resctrl = {
--			.rid			= RDT_RESOURCE_SMBA,
- 			.name			= "SMBA",
- 			.ctrl_scope		= RESCTRL_L3_CACHE,
- 			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_SMBA),
-@@ -996,7 +992,11 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
- static int __init resctrl_arch_late_init(void)
- {
- 	struct rdt_resource *r;
--	int state, ret;
-+	int state, ret, i;
-+
-+	/* Initialise all rid values for_each_rdt_resource() */
-+	for (i = 0; i < RDT_NUM_RESOURCES; i++)
-+		rdt_resources_all[i].r_resctrl.rid = i;
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 1809e3fe6ef3..800e52845b1d 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -27,10 +27,6 @@
  
- 	/*
- 	 * Initialize functions(or definitions) that are different
+ #include "internal.h"
+ 
+-#define CREATE_TRACE_POINTS
+-
+-#include "monitor_trace.h"
+-
+ /*
+  * Global boolean for rdt_monitor which is true if any
+  * resource monitoring is enabled.
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor_trace.h b/arch/x86/kernel/cpu/resctrl/monitor_trace.h
+deleted file mode 100644
+index b5a142dd0f0e..000000000000
+--- a/arch/x86/kernel/cpu/resctrl/monitor_trace.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#undef TRACE_SYSTEM
+-#define TRACE_SYSTEM resctrl
+-
+-#if !defined(_FS_RESCTRL_MONITOR_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
+-#define _FS_RESCTRL_MONITOR_TRACE_H
+-
+-#include <linux/tracepoint.h>
+-
+-#endif /* _FS_RESCTRL_MONITOR_TRACE_H */
+-
+-#undef TRACE_INCLUDE_PATH
+-#define TRACE_INCLUDE_PATH .
+-
+-#define TRACE_INCLUDE_FILE monitor_trace
+-
+-#include <trace/define_trace.h>
+diff --git a/fs/resctrl/pseudo_lock.c b/fs/resctrl/pseudo_lock.c
+index 29682dd46871..7305b232384e 100644
+--- a/fs/resctrl/pseudo_lock.c
++++ b/fs/resctrl/pseudo_lock.c
+@@ -30,10 +30,6 @@
+ #include "../../events/perf_event.h" /* For X86_CONFIG() */
+ #include "internal.h"
+ 
+-#define CREATE_TRACE_POINTS
+-
+-#include "pseudo_lock_trace.h"
+-
+ /*
+  * Major number assigned to and shared by all devices exposing
+  * pseudo-locked regions.
+diff --git a/fs/resctrl/pseudo_lock_trace.h b/fs/resctrl/pseudo_lock_trace.h
+deleted file mode 100644
+index 7a6a1983953a..000000000000
+--- a/fs/resctrl/pseudo_lock_trace.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#undef TRACE_SYSTEM
+-#define TRACE_SYSTEM resctrl
+-
+-#if !defined(_X86_RESCTRL_PSEUDO_LOCK_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
+-#define _X86_RESCTRL_PSEUDO_LOCK_TRACE_H
+-
+-#include <linux/tracepoint.h>
+-
+-#endif /* _X86_RESCTRL_PSEUDO_LOCK_TRACE_H */
+-
+-#undef TRACE_INCLUDE_PATH
+-#define TRACE_INCLUDE_PATH .
+-
+-#define TRACE_INCLUDE_FILE pseudo_lock_trace
+-
+-#include <trace/define_trace.h>
 -- 
 2.20.1
 
