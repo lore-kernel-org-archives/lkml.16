@@ -1,102 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169FA1E0DD9
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1421E0DD9;
+	Fri, 11 Apr 2025 17:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744393148; cv=none; b=OrU0y0b2debsUS2VYaj5kdqiybgtazfrkrHIJeE6xUL7g1p28Do4wTEY9HkPcUtyXtTw6O2NoNQM8bH38+PiOAcNgJ8aR2L5OKJypzq59Bm2qjZEEbL/qroOfJgHCMBk1u03cRwd5ulwIcjMzyyNEzflnz1w3Rb4qi/0KqAkxXM=
+	t=1744393153; cv=none; b=p5qXRrqymSBz0HXYXsAYL90YweFXFQNu9DFtIJHjHbcVOWzfROOsWfpL3mYugemJ47pbg4lfAsgmGuuEXJslmUgAq62m9+AdONWBnK/UjpZN/ZV5X0/v4Wkd/Mwo3G3P2fuLwu3QHA31EqGMtn+BOIJ/Ufwc+d1gZXpD5zHnGnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744393148; c=relaxed/simple;
-	bh=zGJwNblsKqEOAKwEuDeH3u+zc5jfILger+41mjo0QGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r6ow4KeskecrBqWGkahIOx8AsKA7c+XEZal3RbgJgKpf8OJx+cRdM2Kf7+IBOGSFVdGCRn23b+Ap5Q8BiRSCAvC7w0Ri5Xe3i1m9EOEjwt9p9voli1FGB/k9rF8cKvQIOV9v8tDm0pCWN5MRrz6iSU2o901IrpMWgJKxgIqZgSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V4P+x8fZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744393153; c=relaxed/simple;
+	bh=vg7IgRdOXXWxOmnksER+VmkPMSbOnygUaoZ9aleekhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qg4CUA15VE7wUKXvI0oL9X4MPJDec7Lh4cBWCVZr/1XbaVnDfx1YtQIVU1m33H2qsOEjE9h70qNDu7Jqh5XQGV2YGWDjlrlY+4xxzwLMdexaBN59CZtv38XltXfvTTBkJzYhW9v81qoZHUYPWZZhXgZjvyBr64aOvoeJOFvn5DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8c2fw+t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V4P+x8fZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744393146;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dva4W/D+dzFw10w19z6EzVLC4AZPhczTeYs/RvqJzPQ=;
-	b=V4P+x8fZQgmgRFq55Coxn3/8rQv5DBuBW8+AIDC4ub+jI80zTEsuFFFb1MLnAhvqMWfadQ
-	zBo8psAWYyGRplrD0VzDMyZNwVQg1ByQx17xiW6YEymUMNlFDTPFhYXQe8TJ5YidB7f9Eh
-	TV9E9NhTMTMKcrp8V1SGwkZuCH+ozZg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-48-hn85JY29PSC-DeJZLdKDWg-1; Fri,
- 11 Apr 2025 13:39:02 -0400
-X-MC-Unique: hn85JY29PSC-DeJZLdKDWg-1
-X-Mimecast-MFC-AGG-ID: hn85JY29PSC-DeJZLdKDWg_1744393141
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57B291800260;
-	Fri, 11 Apr 2025 17:39:01 +0000 (UTC)
-Received: from pasta.fast.eng.rdu2.dc.redhat.com (unknown [10.45.224.37])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 28C8E1956094;
-	Fri, 11 Apr 2025 17:38:57 +0000 (UTC)
-From: Andreas Gruenbacher <agruenba@redhat.com>
-To: cgroups@vger.kernel.org
-Cc: Jan Kara <jack@suse.cz>,
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-	Rafael Aquini <aquini@redhat.com>,
-	gfs2@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH v2 2/2] writeback: Fix false warning in inode_to_wb()
-Date: Fri, 11 Apr 2025 19:38:47 +0200
-Message-ID: <20250411173848.3755912-3-agruenba@redhat.com>
-In-Reply-To: <20250411173848.3755912-1-agruenba@redhat.com>
-References: <20250411173848.3755912-1-agruenba@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8c2fw+t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63969C4CEE8;
+	Fri, 11 Apr 2025 17:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744393152;
+	bh=vg7IgRdOXXWxOmnksER+VmkPMSbOnygUaoZ9aleekhw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t8c2fw+tbUYho9vwZ94zgfU7ymDA6d4XO6Kmf/hN0I8ficbS30Zd30msb0jRfCBo+
+	 F/xsFj8uQ4y6REEG4bbvZqrwc66MeYB2yhGWcksD8vQB7wG2dA3VIIeZ+jIN8vi6Hl
+	 GKGQk/L37pr1INnguElzoX1Dp2UwljT0tV/4cozogHHNPwv6JrVaIjPnKQASNnJHii
+	 eGe0amunxDyNpRuKAKfDRe+DwHFrPmNDuB17s8Mamos03aaFpL2w37rdJIb3zOGlkO
+	 hHYt9APFDHvyriG0G9PEKdi7ckjYjnsH7cV57s53bDeRTMNvZ1efsMsRlOnOiEj3En
+	 JH/qNHbGrWgKg==
+Date: Fri, 11 Apr 2025 18:39:05 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Donglin Peng <dolinux.peng@gmail.com>,
+	Zheng Yejian <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
+References: <20250227185804.639525399@goodmis.org>
+ <20250227185822.810321199@goodmis.org>
+ <ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+ <20250410131745.04c126eb@gandalf.local.home>
+ <c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+ <20250411124552.36564a07@gandalf.local.home>
+ <2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
+ <20250411131254.3e6155ea@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="l4yZ4AuyN960k5am"
+Content-Disposition: inline
+In-Reply-To: <20250411131254.3e6155ea@gandalf.local.home>
+X-Cookie: You will be awarded some great honor.
 
-From: Jan Kara <jack@suse.cz>
 
-inode_to_wb() is used also for filesystems that don't support cgroup
-writeback. For these filesystems inode->i_wb is stable during the
-lifetime of the inode (it points to bdi->wb) and there's no need to hold
-locks protecting the inode->i_wb dereference. Improve the warning in
-inode_to_wb() to not trigger for these filesystems.
+--l4yZ4AuyN960k5am
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
----
- include/linux/backing-dev.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Fri, Apr 11, 2025 at 01:12:54PM -0400, Steven Rostedt wrote:
+> Mark Brown <broonie@kernel.org> wrote:
 
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 8e7af9a03b41..b503a9a4fa65 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -245,10 +245,11 @@ wb_get_create_current(struct backing_dev_info *bdi, gfp_t gfp)
-  * holding either @inode->i_lock, the i_pages lock, or the
-  * associated wb's list_lock.
-  */
--static inline struct bdi_writeback *inode_to_wb(const struct inode *inode)
-+static inline struct bdi_writeback *inode_to_wb(struct inode *inode)
- {
- #ifdef CONFIG_LOCKDEP
- 	WARN_ON_ONCE(debug_locks &&
-+		     (inode->i_sb->s_iflags & SB_I_CGROUPWB) &&
- 		     (!lockdep_is_held(&inode->i_lock) &&
- 		      !lockdep_is_held(&inode->i_mapping->i_pages.xa_lock) &&
- 		      !lockdep_is_held(&inode->i_wb->list_lock)));
--- 
-2.48.1
+> > That'll take a bit more arranging, I'm running these tests as batch jobs
+> > in CI infrastructure.  I'll try to have a look.  The only other test
+> > that actually failed was:
 
+> > # not ok 25 Checking dynamic events limitations
+
+> > which isn't flagged as a regression (there's some other UNRESOLVED ones).
+
+> Hmm, don't know about that one.
+
+The tail end of the log there is:
+
+# # + TEST_STRING=p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
+# # + TEST_STRING=p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128
+# # + echo p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128
+# # ./ftracetest: 16: echo: echo: I/O error
+
+which smells a bit of a shell incompatibility issue.  I'll try to find
+time to have a look.
+
+--l4yZ4AuyN960k5am
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf5U7gACgkQJNaLcl1U
+h9BV9QgAggpMP7vcZOw7vW/v1btFz0u8noa4OBFLsRVXcQcS2QsVRvEfN00apOCN
+mkU1zyqJPWCj1BKSVGiNCoPN4qXyuVlFf4E7zFjviTJt3BwG26CgRMFBRPXRYz4t
+AWZZIdkk3j38oodkVGxDWEZ1KN5SMelkotU0EENmtbBm7U3sa0Hp/gOWPNShuNcI
+i3QwGf5dm9g/fyF5b8va6zSicI2kYsMmg5TzKc3cenuoUuTfFO5UBdT3IOMO+5F+
+jsXirVCEjMcK3LZOx3g/fbHq8wN4bhO1rRD/9a5Fj5u2UlDTssWO/eXKGFGc0fDY
+wUJ1GopQvxwp88O8IsvQJaiJi6aOeA==
+=PcLN
+-----END PGP SIGNATURE-----
+
+--l4yZ4AuyN960k5am--
