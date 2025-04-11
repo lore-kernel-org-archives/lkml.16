@@ -1,80 +1,77 @@
-Received: from mr85p00im-ztdg06011901.me.com (mr85p00im-ztdg06011901.me.com [17.58.23.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D6E537FF
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB261F5858;
+	Fri, 11 Apr 2025 14:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744383174; cv=none; b=jUVtwmXnMXs3gCBAdqD/twYeOflnK2lbzh0YHD8z+bFImMaTiYY2mr0NhAaQaz9c1gdY2OmD4ytxc5Sm1bXnvM3YcAhJuQPYczaPUQ4mFAHO8q9l9J1lDJCWuEs4ouxKdjukio9n1qtf2TCtZvwxUYgKwGAUcxx4dJevOkF6Fqg=
+	t=1744383179; cv=none; b=Vbro8aHQtAlffcDAekvxu3+F4bMtGJM8J7SUo1Jmx/mMPjCcCSepC00dAUf7ym1q7m3G9mhps6lQ+QZfd129uxd/F3kSNeu3u2Nwdz68NfmtJSqv6cSsi7aSZORelazEdv1E0vbOXyIakutZ8zXoeAsLK2pF6pQxIVbtyg61EvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744383174; c=relaxed/simple;
-	bh=+0oWcU2F0Py3hmqgfjsjt/5LDdkKhmPW/eMZ/yB3ZwM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KON+0Yfb8TwdyuSm/hija3AXuFAY2xIgZ/N8IuADwJtx/heE8C0bbHr9LCh90bwRhoEHPfZZVjie5wD3QU/QdPAg4vsxXuQTG5Imlxo4YARRkZ0R/E86HPhKvjPGz1/Oh3Ul3T2GmdF+HYj32Z9cdSj0bXyLysqprbxNM6bVGvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=kPRirKAb; arc=none smtp.client-ip=17.58.23.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744383179; c=relaxed/simple;
+	bh=YYlILsGyYo5Vq+LNV2/sGtn8ufrLU88MhRh0wxwXRuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OdWLxhDyaklcI1iZYtR3WJWR8Jn+hIxx+G1zMAhj8T59A+Z6vGVSXL4MuKrd2OXX9FFiKFLnyY5qNd2UNi3KIqNpAXfyqS1KsjkC77cW+sfMq0Mcf5RIrKe6mj5aXlmLwW2h9mzu9SQQIEQXuZCLBxboWwY015KP3bNWv7koK0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOVBpxy/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="kPRirKAb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=+0oWcU2F0Py3hmqgfjsjt/5LDdkKhmPW/eMZ/yB3ZwM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=kPRirKAbJPLxnXIpXmgXUki/wruTa4R8puIWQa00EQiXJFLHJGmA1f8vWaKHkS9DM
-	 Ug3BS04ho+pMtAdmCRqC9FgqYKS2nx5IQPhtFQfcs5NINcQSKmmohWrBpW4uBP7EsT
-	 F/AkLMDTgSSdj9i2a2IPSG1PSSFtQZCVoHVOifsRiDYYu5LOK6lIjuKZsq0FrZJECn
-	 Dz64CRve3bvYX1CofEqLB8GWJCVX0rZkYiW1rTYG77ibaqLN3k758QZTHlr98Yg0eE
-	 a6coooZQLTGp8W5J9DpDwiMK8ntfPhPQLlXIzO/CoCn9Rx7Dc5D6dxVXw8aJyrAbqi
-	 7sOyHinzg1Kzw==
-Received: from mr85p00im-ztdg06011901.me.com (mr85p00im-ztdg06011901.me.com [17.58.23.198])
-	by mr85p00im-ztdg06011901.me.com (Postfix) with ESMTPS id 5ACB01349E9A;
-	Fri, 11 Apr 2025 14:52:51 +0000 (UTC)
-Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-ztdg06011901.me.com (Postfix) with ESMTPSA id E90351349AF0;
-	Fri, 11 Apr 2025 14:52:48 +0000 (UTC)
-Message-ID: <6cf4c137-10cd-4d4c-b109-d87e03bda4f7@icloud.com>
-Date: Fri, 11 Apr 2025 22:52:43 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOVBpxy/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 315B9C4CEE2;
+	Fri, 11 Apr 2025 14:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744383178;
+	bh=YYlILsGyYo5Vq+LNV2/sGtn8ufrLU88MhRh0wxwXRuM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LOVBpxy/G4XQpTGo983CC7VQT9aQAG1c5mjQC/ion1+XguF4o2qGzwwYb6vVl8udN
+	 HkNTB9+W4M5Mq4aM44dFJ4/Z8UTtX9DvrTEsFIBPvP6LzljTgnMiuzY1PUuWUKNb59
+	 IhJKrnsrTdm9LecEcFULMMv216B2nPGn0qknq+3UCCPMRcx3tsNC8I2oNcRXQooJKd
+	 fHcruwzE6/pYZi1plA8t4o5e/p2jne3Un1+2+MnD+SGu4FjNKyKz4MNtCcup7IlY5q
+	 OCNU7ROCxBPfFB+/S1O/e52vshj1BwvkrSS2JoJ6qbMkkymtfX7KMK4vJ7WdlQYy7B
+	 A4q0DPpzD/RVA==
+From: cel@kernel.org
+To: Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Sargun Dillon <sargun@sargun.me>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v2 00/12] nfsd: observability improvements
+Date: Fri, 11 Apr 2025 10:52:53 -0400
+Message-ID: <174438313317.30898.15954352003138182749.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
+References: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] fs/filesystems: Fix potential unsigned integer
- underflow in fs_name()
-To: Christian Brauner <brauner@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com>
- <20250410-fix_fs-v1-1-7c14ccc8ebaa@quicinc.com>
- <20250411-kaiman-bewahren-bef1f1baee8e@brauner>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20250411-kaiman-bewahren-bef1f1baee8e@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: y6FGHfjpYIHQQxC7hikPGYDCffZ95P8d
-X-Proofpoint-ORIG-GUID: y6FGHfjpYIHQQxC7hikPGYDCffZ95P8d
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_05,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0
- mlxlogscore=898 bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0
- clxscore=1015 phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2503100000 definitions=main-2504110094
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 2025/4/11 22:35, Christian Brauner wrote:
->> Fix by breaking the for loop when '@index == 0' which is also more proper
->> than '@index <= 0' for unsigned integer comparison.
->>
->> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->> ---
-> This is honestly not worth the effort thinking about.
-> I'm going to propose that we remove this system call or at least switch
-> the default to N. Nobody uses this anymore I'm pretty sure
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Sound good.
+On Wed, 09 Apr 2025 10:32:22 -0400, Jeff Layton wrote:
+> While troubleshooting a performance problem internally, it became
+> evident that we needed tracepoints in nfsd_commit. The first patch adds
+> that. While discussing that, Sargun pointed out some tracepoints he
+> added using kprobes. Those are converted to static tracepoints here, and
+> the legacy dprintk's removed.
+> 
+> Lastly, I've updated the svc_xprt_dequeue tracepoint to show how long
+> the xprt sat on the queue before being serviced.
+> 
+> [...]
 
-i just started looking at FS code (^^).
+Applied to nfsd-testing, thanks!
+
+[01/12] nfsd: add commit start/done tracepoints around nfsd_commit()
+        commit: f2a3825118e6177f4de5ee9996248ced2918b08b
+
+--
+Chuck Lever
 
