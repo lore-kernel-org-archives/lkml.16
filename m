@@ -1,157 +1,638 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227D129B22F
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C327029DB62
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744369186; cv=none; b=Dqqeldjuzh6WxUgeFy9QoVaVRg2PN9Zjl7Z7H06GhMJMnhlKZfpAvKf36mxHVrTkGQU3w5ljrlRxKYcIoQpM527Hc0x55O1ifzO6WGoRjVVLuDKYbYkd269kVRtjaq4dSLbA0g41O6/CJbn0/6z1SRJZNmQfuYx87/4JxhPkqH0=
+	t=1744369184; cv=none; b=V4n+qw9blpnfJBQn0pCpAyKDP39FigkN0wCop9TrTHB9zU30jPi66mtRIYvBCyQJ5z/dkrMLNAX9+1Uu8afsiAWNfPCbNCgjfK5ZKTNheKOQgQR6eStbYv7odp4SObebg7H/MmvUeIxfq8/5MfkKzz3qQcVwgsLMDamcDLYj+9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744369186; c=relaxed/simple;
-	bh=wc0UpXn6sUdus2QycRrAxOVVMt10J2WNcT8yUwvY1O0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z9OQ7BRcf5aEf8gtGw8L6W7qeTD0z0+oGV77Nq0YZcPaj6fr9fklPdMuS6YWhZ+pPd7Um32dpwhBd/M65HQE2hwqBPZZBiIGQSjjSUX5g/1yimNzKh5DqmKzC7z+zDpesZM3jh90+py26Ix9MZJLVXXKFUe9REU9LMFGo6mS1po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwF8Kcp7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744369184; c=relaxed/simple;
+	bh=v6QFll9/klY1IijI3W5e++N6keitgxvRHdj/+o5bFOA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BC6DB4lnus1deCYK+XCUxaOXuHMCfVtLXuwMu1KTV48Q59Vrs0a8dO3DblJH6wH3S/fOsZVOCvtl6/jALAogY0+IJiYte/rj6g0broVlK6NUeYwU3DEjhsen9UyLr++vyFb4p4bgip9KVo10Igao13ZM7zicdFeq1ANKxaWG1Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NDah7i/d; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwF8Kcp7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 662E9C4CEE2;
-	Fri, 11 Apr 2025 10:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744369185;
-	bh=wc0UpXn6sUdus2QycRrAxOVVMt10J2WNcT8yUwvY1O0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GwF8Kcp7+j1uVnsw6jVXeh65S2ekxKGXg+t2nQ8HwMpF6UpVIXPvaMAhGBGdVsix8
-	 ok5d3wvmWB8v4QmXPWsEW83xp9/YIg3eNGqKJe7Qbi+C3jajuxrfL22c0YLsnNoZ84
-	 EZlPoC7n0NPLAuTnhvo1oP6Gng8gqC4Y7xlO7MNBUQtvWAOiXe3s7xMD9gQM9IqK4H
-	 TsKtL6UrukOnfL5HHij0QKOOTRQ6VQQuJQY4GHeU8cU3n0dLANzEpT6nmhgRv7Pnvw
-	 YPboFa70FF5EM3gloLm31Hvp58KHKSD+TrAn2zAT+TzZuILeRnb8OwdKKXXysyfFt7
-	 i2MhX9zdxXkTw==
-Date: Fri, 11 Apr 2025 13:59:38 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NDah7i/d"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22622ddcc35so23510835ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744369180; x=1744973980; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QhbWqejZNQm6P0aBusiZGVh4RlUEh1rM32mYI+OrPGo=;
+        b=NDah7i/d2lGlF1JaXRAqmB9m5w6lvNHGuuvxPeVJhgNVesxNZFeMpcJTcsAwulWnFr
+         rTwFMhX2PLoMwToP2el9yIctbjdQesp+x4qys/G+G2ZhAUyTaUqE3DEwobSY+vmFzT1j
+         4JiLojF+48XOmHGB2/M5JclEOUDY6rZoKxauHunEN0R+tQDx4USkI9k+ldtayZtV6joB
+         WS2EGtdjDWo51sV4VJH9N2wHzWNz+ZQcJ+E6MXjmLyLRUToHNU7TTw9cVctKukymaIcQ
+         APvSoGMhjfwhncsElUkF+nauRpFKxc1zw6IuWNmw30A6oh/f4blEx2OyabYN21D5yXcf
+         dWGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744369180; x=1744973980;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QhbWqejZNQm6P0aBusiZGVh4RlUEh1rM32mYI+OrPGo=;
+        b=H3o5iSZYLTbUWr69yuRFTLCsxDKGrVL43lm/wBcGezXos2Ga7OyMRwK1JA2etB55TE
+         larGLzciRZxSbulBBPkvMnw7EroJZWd5VjCSQaUqbpKt+CqxnjFbpGcmk+KubyBNB3qX
+         S6ml5R6Ei8WogRh0g/YGz5h59SfQAvnAyocmkA4T2IvSXE269pogAMfnlEj3D5GYB5VK
+         uH29Fgg5bRd0teDTZjm3aWWiO/NXX53fYSu8tYkbTErLSHQ/vUEGdYs6UUecHB2RoaZH
+         fySw2K6b7sm4xZKk2KHoVCOi3CBmXCMYkbbQnKuImTlqRMjoAAtsi5TtyppLJxwXBIuW
+         5I1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVeQXwzVq0LaQXVf3+LeQuUzPNQehEgRntnwG+Fz5xd49jcnih8NjNmjwZXSaM/n/8ZkIljZLCUlWMpg3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzubmy1eZPAcOBIRyXnDjm9uPFRQ5OLVatdTJdTvRtkM0A6IY8K
+	Oxi6mekfMEFQhgKf6vr1zvU1zU7y8rcrg1UE5lIVJ6S0dcm9T0IdPSPmprAZteQ=
+X-Gm-Gg: ASbGncsbOJGlkWayMW2bqmWoADGWrtp2o1Cn9+MPEmk75+E5jO6fIHKN2AnrCCDfOs2
+	jJZKcs+Sl0ioxwokaY/8emcX/ZDEV71DIzRdQbSTf/1HSTJDBryJa/TcA0WDCc9HjE9tphDIhwB
+	kxqtQIxpabtxrysvFZQ1bLKGdI5orzrj+rTpIMr7xqJJd/xpFH20AsaV56eEpMaYqdLfu7pa9ua
+	HNGO5tgTRPqS52uRFWMeKaEABTn6Xlz5gTwL0wtxcHjx2uO3W27ag/S3tibN0FWjlGIb2pEHbah
+	v/0NpX33e5Qkr92FC7ULCCpz30yRiJRLW28armqPFQ==
+X-Google-Smtp-Source: AGHT+IGNPuH6cJTfNjOfoEbs5WUXszgit60bS/Bc3QN65T7yHRlnKlORXUIy3dKlujs451m55yaYUg==
+X-Received: by 2002:a17:903:1450:b0:223:6180:1bea with SMTP id d9443c01a7336-22bea4ef0b3mr34466755ad.37.1744369180051;
+        Fri, 11 Apr 2025 03:59:40 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8bcd7sm46107215ad.88.2025.04.11.03.59.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 03:59:39 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH 2/2] base/node: Use
- curr_node_memblock_intersect_memory_block to Get Memory Block NID if
- CONFIG_DEFERRED_STRUCT_PAGE_INIT is Set
-Message-ID: <Z_j2Gv9n4DOj6LSs@kernel.org>
-References: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
- <d10d1a9f11e9f8752c7ec5ff5bb262b3f6c6bb85.1744175097.git.donettom@linux.ibm.com>
- <Z_d8T3QtnZVeH3HF@kernel.org>
- <d982df07-e7d1-4d4f-a2c3-857901ccc0d0@linux.ibm.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V9 11/17] rust: opp: Add abstractions for the OPP table
+Date: Fri, 11 Apr 2025 16:25:10 +0530
+Message-Id: <1961fd9a4ef44dbda18a63eb832dc3a3176c2314.1744366571.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+In-Reply-To: <cover.1744366571.git.viresh.kumar@linaro.org>
+References: <cover.1744366571.git.viresh.kumar@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d982df07-e7d1-4d4f-a2c3-857901ccc0d0@linux.ibm.com>
 
-On Fri, Apr 11, 2025 at 12:27:28AM +0530, Donet Tom wrote:
-> 
-> On 4/10/25 1:37 PM, Mike Rapoport wrote:
-> > On Wed, Apr 09, 2025 at 10:57:57AM +0530, Donet Tom wrote:
-> > > In the current implementation, when CONFIG_DEFERRED_STRUCT_PAGE_INIT is
-> > > set, we iterate over all PFNs in the memory block and use
-> > > early_pfn_to_nid to find the NID until a match is found.
-> > > 
-> > > This patch we are using curr_node_memblock_intersect_memory_block() to
-> > > check if the current node's memblock intersects with the memory block
-> > > passed when CONFIG_DEFERRED_STRUCT_PAGE_INIT is set. If an intersection
-> > > is found, the memory block is added to the current node.
-> > > 
-> > > If CONFIG_DEFERRED_STRUCT_PAGE_INIT is not set, the existing mechanism
-> > > for finding the NID will continue to be used.
-> > I don't think we really need different mechanisms for different settings of
-> > CONFIG_DEFERRED_STRUCT_PAGE_INIT.
-> > 
-> > node_dev_init() runs after all struct pages are already initialized and can
-> > always use pfn_to_nid().
-> 
-> 
-> In the current implementation, if CONFIG_DEFERRED_STRUCT_PAGE_INIT
-> is enabled, we perform a binary search in the memblock region to
-> determine the pfn's nid. Otherwise, we use pfn_to_nid() to obtain
-> the pfn's nid.
-> 
-> Your point is that we could unify this logic and always use
-> pfn_to_nid() to determine the pfn's nid, regardless of whether
-> CONFIG_DEFERRED_STRUCT_PAGE_INIT is set. Is that
-> correct?
+Introduce Rust abstractions for `struct opp_table`, enabling access to
+OPP tables from Rust.
 
-Yes, struct pages should be ready by the time node_dev_init() is called
-even when CONFIG_DEFERRED_STRUCT_PAGE_INIT is set.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ rust/kernel/opp.rs | 495 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 494 insertions(+), 1 deletion(-)
+
+diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+index e4780b41664f..e074009e4b7a 100644
+--- a/rust/kernel/opp.rs
++++ b/rust/kernel/opp.rs
+@@ -11,8 +11,9 @@
+ use crate::{
+     bindings,
+     clk::Hertz,
++    cpumask::{Cpumask, CpumaskVar},
+     device::Device,
+-    error::{code::*, to_result, Result},
++    error::{code::*, from_err_ptr, to_result, Error, Result},
+     ffi::c_ulong,
+     types::{ARef, AlwaysRefCounted, Opaque},
+ };
+@@ -172,6 +173,477 @@ fn freq(&self) -> Hertz {
+     }
+ }
  
-> > 
-> > kernel_init_freeable() ->
-> > 	page_alloc_init_late(); /* completes initialization of deferred pages */
-> > 	...
-> > 	do_basic_setup() ->
-> > 		driver_init() ->
-> > 			node_dev_init();
-> > 
-> > The next step could be refactoring register_mem_block_under_node_early() to
-> > loop over memblock regions rather than over pfns.
-> So it the current implementation
-> 
-> node_dev_init()
->     register_one_node
->         register_memory_blocks_under_node
->             walk_memory_blocks()
->                 register_mem_block_under_node_early
->                     get_nid_for_pfn
-> 
-> We get each node's start and end PFN from the pg_data. Using these
-> values, we determine the memory block's start and end within the
-> current node. To identify the node to which these memory block
-> belongs,we iterate over each PFN in the range.
-> 
-> The problem I am facing is,
-> 
-> In my system node4 has a memory block ranging from memory30351
-> to memory38524, and memory128433. The memory blocks between
-> memory38524 and memory128433 do not belong to this node.
-> 
-> In  walk_memory_blocks() we iterate over all memory blocks starting
-> from memory38524 to memory128433.
-> In register_mem_block_under_node_early(), up to memory38524, the
-> first pfn correctly returns the corresponding nid and the function
-> returns from there. But after memory38524 and until memory128433,
-> the loop iterates through each pfn and checks the nid. Since the nid
-> does not match the required nid, the loop continues. This causes
-> the soft lockups.
-> 
-> This issue occurs only when CONFIG_DEFERRED_STRUCT_PAGE_INIT
-> is enabled, as a binary search is used to determine the PFN's nid. When
-> this configuration is disabled, pfn_to_nid is faster, and the issue does
-> not seen.( Faster because nid is getting from page)
-> 
-> To speed up the code when CONFIG_DEFERRED_STRUCT_PAGE_INIT
-> is enabled, I added this function that iterates over all memblock regions
-> for each memory block to determine its nid.
-> 
-> "Loop over memblock regions instead of iterating over PFNs" -
-> My question is - in register_one_node, do you mean that we should iterate
-> over all memblock regions, identify the regions belonging to the current
-> node, and then retrieve the corresponding memory blocks to register them
-> under that node?
-
-I looked more closely at register_mem_block_under_node_early() and
-iteration over memblock regions won't make sense there. 
-
-It might make sense to use for_each_mem_range() as top level loop in
-node_dev_init(), but that's a separate topic.
++/// [`OPP`] search options.
++///
++/// ## Examples
++///
++/// Defines how to search for an [`OPP`] in a [`Table`] relative to a frequency.
++///
++/// ```
++/// use kernel::clk::Hertz;
++/// use kernel::error::Result;
++/// use kernel::opp::{OPP, SearchType, Table};
++/// use kernel::types::ARef;
++///
++/// fn find_opp(table: &Table, freq: Hertz) -> Result<ARef<OPP>> {
++///     let opp = table.opp_from_freq(freq, Some(true), None, SearchType::Exact)?;
++///
++///     pr_info!("OPP frequency is: {:?}\n", opp.freq(None));
++///     pr_info!("OPP voltage is: {:?}\n", opp.voltage());
++///     pr_info!("OPP level is: {}\n", opp.level());
++///     pr_info!("OPP power is: {:?}\n", opp.power());
++///
++///     Ok(opp)
++/// }
++/// ```
++#[derive(Copy, Clone, Debug, Eq, PartialEq)]
++pub enum SearchType {
++    /// Match the exact frequency.
++    Exact,
++    /// Find the highest frequency less than or equal to the given value.
++    Floor,
++    /// Find the lowest frequency greater than or equal to the given value.
++    Ceil,
++}
++
++/// A reference-counted OPP table.
++///
++/// Rust abstraction for the C `struct opp_table`.
++///
++/// # Invariants
++///
++/// The pointer stored in `Self` is non-null and valid for the lifetime of the [`Table`].
++///
++/// Instances of this type are reference-counted.
++///
++/// ## Examples
++///
++/// The following example demonstrates how to get OPP [`Table`] for a [`Cpumask`] and set its
++/// frequency.
++///
++/// ```
++/// use kernel::clk::Hertz;
++/// use kernel::cpumask::Cpumask;
++/// use kernel::device::Device;
++/// use kernel::error::Result;
++/// use kernel::opp::Table;
++/// use kernel::types::ARef;
++///
++/// fn get_table(dev: &ARef<Device>, mask: &mut Cpumask, freq: Hertz) -> Result<Table> {
++///     let mut opp_table = Table::from_of_cpumask(dev, mask)?;
++///
++///     if opp_table.opp_count()? == 0 {
++///         return Err(EINVAL);
++///     }
++///
++///     pr_info!("Max transition latency is: {} ns\n", opp_table.max_transition_latency_ns());
++///     pr_info!("Suspend frequency is: {:?}\n", opp_table.suspend_freq());
++///
++///     opp_table.set_rate(freq)?;
++///     Ok(opp_table)
++/// }
++/// ```
++pub struct Table {
++    ptr: *mut bindings::opp_table,
++    dev: ARef<Device>,
++    em: bool,
++    of: bool,
++    cpumask_box: Option<CpumaskVar>,
++}
++
++// SAFETY: It is okay to send ownership of [`Table`] across thread boundaries.
++unsafe impl Send for Table {}
++
++// SAFETY: It is okay to access [`Table`] through shared references from other threads because
++// we're either accessing properties that don't change or that are properly synchronised by C code.
++unsafe impl Sync for Table {}
++
++impl Table {
++    /// Creates a new reference-counted [`Table`] from a raw pointer.
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that `ptr` is valid and non-null.
++    unsafe fn from_raw_table(ptr: *mut bindings::opp_table, dev: &ARef<Device>) -> Self {
++        // SAFETY: By the safety requirements, ptr is valid and its refcount will be incremented.
++        //
++        // INVARIANT: The reference-count is decremented when [`Table`] goes out of scope.
++        unsafe { bindings::dev_pm_opp_get_opp_table_ref(ptr) };
++
++        Self {
++            ptr,
++            dev: dev.clone(),
++            em: false,
++            of: false,
++            cpumask_box: None,
++        }
++    }
++
++    /// Creates a new reference-counted [`Table`] instance for a [`Device`].
++    pub fn from_dev(dev: &Device) -> Result<Self> {
++        // SAFETY: The requirements are satisfied by the existence of the [`Device`] and its safety
++        // requirements.
++        //
++        // INVARIANT: The reference-count is incremented by the C code and is decremented when
++        // [`Table`] goes out of scope.
++        let ptr = from_err_ptr(unsafe { bindings::dev_pm_opp_get_opp_table(dev.as_raw()) })?;
++
++        Ok(Self {
++            ptr,
++            dev: dev.into(),
++            em: false,
++            of: false,
++            cpumask_box: None,
++        })
++    }
++
++    /// Creates a new reference-counted [`Table`] instance for a [`Device`] based on device tree
++    /// entries.
++    #[cfg(CONFIG_OF)]
++    pub fn from_of(dev: &ARef<Device>, index: i32) -> Result<Self> {
++        // SAFETY: The requirements are satisfied by the existence of the [`Device`] and its safety
++        // requirements.
++        //
++        // INVARIANT: The reference-count is incremented by the C code and is decremented when
++        // [`Table`] goes out of scope.
++        to_result(unsafe { bindings::dev_pm_opp_of_add_table_indexed(dev.as_raw(), index) })?;
++
++        // Get the newly created [`Table`].
++        let mut table = Self::from_dev(dev)?;
++        table.of = true;
++
++        Ok(table)
++    }
++
++    // Remove device tree based [`Table`].
++    #[cfg(CONFIG_OF)]
++    #[inline]
++    fn remove_of(&self) {
++        // SAFETY: The requirements are satisfied by the existence of the [`Device`] and its safety
++        // requirements. We took the reference from [`from_of`] earlier, it is safe to drop the
++        // same now.
++        unsafe { bindings::dev_pm_opp_of_remove_table(self.dev.as_raw()) };
++    }
++
++    /// Creates a new reference-counted [`Table`] instance for a [`Cpumask`] based on device tree
++    /// entries.
++    #[cfg(CONFIG_OF)]
++    pub fn from_of_cpumask(dev: &Device, cpumask: &mut Cpumask) -> Result<Self> {
++        // SAFETY: The cpumask is valid and the returned pointer will be owned by the [`Table`]
++        // instance.
++        //
++        // INVARIANT: The reference-count is incremented by the C code and is decremented when
++        // [`Table`] goes out of scope.
++        to_result(unsafe { bindings::dev_pm_opp_of_cpumask_add_table(cpumask.as_raw()) })?;
++
++        // Fetch the newly created table.
++        let mut table = Self::from_dev(dev)?;
++        table.cpumask_box = Some(CpumaskVar::try_clone(cpumask)?);
++
++        Ok(table)
++    }
++
++    // Remove device tree based [`Table`] for a [`Cpumask`].
++    #[cfg(CONFIG_OF)]
++    #[inline]
++    fn remove_of_cpumask(&self, cpumask: &Cpumask) {
++        // SAFETY: The cpumask is valid and we took the reference from [`from_of_cpumask`] earlier,
++        // it is safe to drop the same now.
++        unsafe { bindings::dev_pm_opp_of_cpumask_remove_table(cpumask.as_raw()) };
++    }
++
++    /// Returns the number of [`OPP`]s in the [`Table`].
++    pub fn opp_count(&self) -> Result<u32> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        let ret = unsafe { bindings::dev_pm_opp_get_opp_count(self.dev.as_raw()) };
++        if ret < 0 {
++            Err(Error::from_errno(ret))
++        } else {
++            Ok(ret as u32)
++        }
++    }
++
++    /// Returns max clock latency (in nanoseconds) of the [`OPP`]s in the [`Table`].
++    #[inline]
++    pub fn max_clock_latency_ns(&self) -> usize {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        unsafe { bindings::dev_pm_opp_get_max_clock_latency(self.dev.as_raw()) }
++    }
++
++    /// Returns max volt latency (in nanoseconds) of the [`OPP`]s in the [`Table`].
++    #[inline]
++    pub fn max_volt_latency_ns(&self) -> usize {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        unsafe { bindings::dev_pm_opp_get_max_volt_latency(self.dev.as_raw()) }
++    }
++
++    /// Returns max transition latency (in nanoseconds) of the [`OPP`]s in the [`Table`].
++    #[inline]
++    pub fn max_transition_latency_ns(&self) -> usize {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        unsafe { bindings::dev_pm_opp_get_max_transition_latency(self.dev.as_raw()) }
++    }
++
++    /// Returns the suspend [`OPP`]'s frequency.
++    #[inline]
++    pub fn suspend_freq(&self) -> Hertz {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        Hertz(unsafe { bindings::dev_pm_opp_get_suspend_opp_freq(self.dev.as_raw()) })
++    }
++
++    /// Synchronizes regulators used by the [`Table`].
++    #[inline]
++    pub fn sync_regulators(&self) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe { bindings::dev_pm_opp_sync_regulators(self.dev.as_raw()) })
++    }
++
++    /// Gets sharing CPUs.
++    #[inline]
++    pub fn sharing_cpus(dev: &Device, cpumask: &mut Cpumask) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe { bindings::dev_pm_opp_get_sharing_cpus(dev.as_raw(), cpumask.as_raw()) })
++    }
++
++    /// Sets sharing CPUs.
++    pub fn set_sharing_cpus(&mut self, cpumask: &mut Cpumask) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe {
++            bindings::dev_pm_opp_set_sharing_cpus(self.dev.as_raw(), cpumask.as_raw())
++        })?;
++
++        if let Some(mask) = self.cpumask_box.as_mut() {
++            // Update the cpumask as this will be used while removing the table.
++            cpumask.copy(mask);
++        }
++
++        Ok(())
++    }
++
++    /// Gets sharing CPUs from device tree.
++    #[cfg(CONFIG_OF)]
++    #[inline]
++    pub fn of_sharing_cpus(dev: &Device, cpumask: &mut Cpumask) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe {
++            bindings::dev_pm_opp_of_get_sharing_cpus(dev.as_raw(), cpumask.as_raw())
++        })
++    }
++
++    /// Updates the voltage value for an [`OPP`].
++    #[inline]
++    pub fn adjust_voltage(
++        &self,
++        freq: Hertz,
++        volt: MicroVolt,
++        volt_min: MicroVolt,
++        volt_max: MicroVolt,
++    ) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe {
++            bindings::dev_pm_opp_adjust_voltage(
++                self.dev.as_raw(),
++                freq.into(),
++                volt.into(),
++                volt_min.into(),
++                volt_max.into(),
++            )
++        })
++    }
++
++    /// Configures device with [`OPP`] matching the frequency value.
++    #[inline]
++    pub fn set_rate(&self, freq: Hertz) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe { bindings::dev_pm_opp_set_rate(self.dev.as_raw(), freq.into()) })
++    }
++
++    /// Configures device with [`OPP`].
++    #[inline]
++    pub fn set_opp(&self, opp: &OPP) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe { bindings::dev_pm_opp_set_opp(self.dev.as_raw(), opp.as_raw()) })
++    }
++
++    /// Finds [`OPP`] based on frequency.
++    pub fn opp_from_freq(
++        &self,
++        freq: Hertz,
++        available: Option<bool>,
++        index: Option<u32>,
++        stype: SearchType,
++    ) -> Result<ARef<OPP>> {
++        let raw_dev = self.dev.as_raw();
++        let index = index.unwrap_or(0);
++
++        let ptr = from_err_ptr(match stype {
++            SearchType::Exact => {
++                if let Some(available) = available {
++                    // SAFETY: The requirements are satisfied by the existence of [`Device`] and
++                    // its safety requirements. The returned pointer will be owned by the new
++                    // [`OPP`] instance.
++                    unsafe {
++                        bindings::dev_pm_opp_find_freq_exact_indexed(
++                            raw_dev,
++                            freq.into(),
++                            index,
++                            available,
++                        )
++                    }
++                } else {
++                    return Err(EINVAL);
++                }
++            }
++
++            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++            // requirements. The returned pointer will be owned by the new [`OPP`] instance.
++            SearchType::Ceil => unsafe {
++                bindings::dev_pm_opp_find_freq_ceil_indexed(
++                    raw_dev,
++                    &mut freq.into() as *mut usize,
++                    index,
++                )
++            },
++
++            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++            // requirements. The returned pointer will be owned by the new [`OPP`] instance.
++            SearchType::Floor => unsafe {
++                bindings::dev_pm_opp_find_freq_floor_indexed(
++                    raw_dev,
++                    &mut freq.into() as *mut usize,
++                    index,
++                )
++            },
++        })?;
++
++        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
++        unsafe { OPP::from_raw_opp_owned(ptr) }
++    }
++
++    /// Finds [`OPP`] based on level.
++    pub fn opp_from_level(&self, mut level: u32, stype: SearchType) -> Result<ARef<OPP>> {
++        let raw_dev = self.dev.as_raw();
++
++        let ptr = from_err_ptr(match stype {
++            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++            // requirements. The returned pointer will be owned by the new [`OPP`] instance.
++            SearchType::Exact => unsafe { bindings::dev_pm_opp_find_level_exact(raw_dev, level) },
++
++            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++            // requirements. The returned pointer will be owned by the new [`OPP`] instance.
++            SearchType::Ceil => unsafe {
++                bindings::dev_pm_opp_find_level_ceil(raw_dev, &mut level as *mut u32)
++            },
++
++            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++            // requirements. The returned pointer will be owned by the new [`OPP`] instance.
++            SearchType::Floor => unsafe {
++                bindings::dev_pm_opp_find_level_floor(raw_dev, &mut level as *mut u32)
++            },
++        })?;
++
++        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
++        unsafe { OPP::from_raw_opp_owned(ptr) }
++    }
++
++    /// Finds [`OPP`] based on bandwidth.
++    pub fn opp_from_bw(&self, mut bw: u32, index: i32, stype: SearchType) -> Result<ARef<OPP>> {
++        let raw_dev = self.dev.as_raw();
++
++        let ptr = from_err_ptr(match stype {
++            // The OPP core doesn't support this yet.
++            SearchType::Exact => return Err(EINVAL),
++
++            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++            // requirements. The returned pointer will be owned by the new [`OPP`] instance.
++            SearchType::Ceil => unsafe {
++                bindings::dev_pm_opp_find_bw_ceil(raw_dev, &mut bw as *mut u32, index)
++            },
++
++            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++            // requirements. The returned pointer will be owned by the new [`OPP`] instance.
++            SearchType::Floor => unsafe {
++                bindings::dev_pm_opp_find_bw_floor(raw_dev, &mut bw as *mut u32, index)
++            },
++        })?;
++
++        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
++        unsafe { OPP::from_raw_opp_owned(ptr) }
++    }
++
++    /// Enables the [`OPP`].
++    #[inline]
++    pub fn enable_opp(&self, freq: Hertz) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe { bindings::dev_pm_opp_enable(self.dev.as_raw(), freq.into()) })
++    }
++
++    /// Disables the [`OPP`].
++    #[inline]
++    pub fn disable_opp(&self, freq: Hertz) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe { bindings::dev_pm_opp_disable(self.dev.as_raw(), freq.into()) })
++    }
++
++    /// Registers with Energy model.
++    #[cfg(CONFIG_OF)]
++    pub fn of_register_em(&mut self, cpumask: &mut Cpumask) -> Result<()> {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements.
++        to_result(unsafe {
++            bindings::dev_pm_opp_of_register_em(self.dev.as_raw(), cpumask.as_raw())
++        })?;
++
++        self.em = true;
++        Ok(())
++    }
++
++    // Unregisters with Energy model.
++    #[cfg(all(CONFIG_OF, CONFIG_ENERGY_MODEL))]
++    #[inline]
++    fn of_unregister_em(&self) {
++        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
++        // requirements. We registered with the EM framework earlier, it is safe to unregister now.
++        unsafe { bindings::em_dev_unregister_perf_domain(self.dev.as_raw()) };
++    }
++}
++
++impl Drop for Table {
++    fn drop(&mut self) {
++        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe
++        // to relinquish it now.
++        unsafe { bindings::dev_pm_opp_put_opp_table(self.ptr) };
++
++        #[cfg(CONFIG_OF)]
++        {
++            #[cfg(CONFIG_ENERGY_MODEL)]
++            if self.em {
++                self.of_unregister_em();
++            }
++
++            if self.of {
++                self.remove_of();
++            } else if let Some(cpumask) = self.cpumask_box.take() {
++                self.remove_of_cpumask(&cpumask);
++            }
++        }
++    }
++}
++
+ /// A reference-counted Operating performance point (OPP).
+ ///
+ /// Rust abstraction for the C `struct dev_pm_opp`.
+@@ -185,6 +657,27 @@ fn freq(&self) -> Hertz {
+ /// represents a pointer that owns a reference count on the [`OPP`].
+ ///
+ /// A reference to the [`OPP`], &[`OPP`], isn't refcounted by the Rust code.
++///
++/// ## Examples
++///
++/// The following example demonstrates how to get [`OPP`] corresponding to a frequency value and
++/// configure the device with it.
++///
++/// ```
++/// use kernel::clk::Hertz;
++/// use kernel::error::Result;
++/// use kernel::opp::{SearchType, Table};
++///
++/// fn configure_opp(table: &Table, freq: Hertz) -> Result {
++///     let opp = table.opp_from_freq(freq, Some(true), None, SearchType::Exact)?;
++///
++///     if opp.freq(None) != freq {
++///         return Err(EINVAL);
++///     }
++///
++///     table.set_opp(&opp)
++/// }
++/// ```
+ #[repr(transparent)]
+ pub struct OPP(Opaque<bindings::dev_pm_opp>);
  
-> Thanks
-> Donet
-> 
-
 -- 
-Sincerely yours,
-Mike.
+2.31.1.272.g89b43f80a514
+
