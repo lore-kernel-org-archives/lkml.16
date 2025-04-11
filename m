@@ -1,128 +1,400 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F7926AD9
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA69D1F3BAA
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381645; cv=none; b=BA9SVX+UeVX9yfJ/qSo1oyZiqfTb3lLksf2iBHH2HIaX0Wpate+VFDYUD/wwgH/0gb71WSaG02zXJFC2Iw2CBDS4PTlejOr/38krr1bwhB6jnsyNfHGi0FuUcEAPeO34CYO9x3kWoSbnZtqosUH4ZgwyBJbYU0ZaDkiaGi/mTBw=
+	t=1744381749; cv=none; b=Vzk3F9hKVMQuP3M7rN6qIVlg39dsoDtR8X/2lLayv4KARXXgsDuq1TiCBpE2ovusZzFfxJt10U3fIeg/6yYgUo9s/12rgSVqRK5i0fnsX8gQMpFAeeJ6xVgvabUuEnJ3S074EDI1qV0ewVR+VusQecN/Cx3L6siORYW3tiHl3tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381645; c=relaxed/simple;
-	bh=qKrKM9zA7GTqQdCuPeaq+7zcbxqyXjrCtpoVdskcyuU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WFvZ9gmZyx3um5PDAlpoEz9WWrUjB5pY1rcrxLGUev8GjFxoJd/PtDX78XDDUTo8LSrTbA9xSj4hskW5kk17T3P8qsfIjKUTAujT/NCq8KgLjoOW6kMy0XouVeEjqL2i/2pK2kcJayHEBP0fSDoBmBHIYZcd1BHXA9YEUV/CIyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=etBt9kzK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744381749; c=relaxed/simple;
+	bh=bhizy26eG/So0sRXK/OKdBRBEZzylaC/kbJZbrp/KY8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fRRNJ7mXvF0CE25lZMMSMIgoTlyawBtPdQHomwwOAqmJS6biUgG29YRRnaLrpkWTLRLIgPDdwUoo0m4OKZakLPw3VsPzMvKpXzg/zVfIyiNmBGbwE3muElnSyRO4mVLyr1zInckhDqY6SKr33DTIeha5Ts8x+lbIdx5aYcnNXrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=VtqG51qG; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="etBt9kzK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744381642;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Im7PLUkW7j3mmQzh3EFVKWQVrxz4pA7bf7TSdZHW8os=;
-	b=etBt9kzK/GM1QUBfetfP0L3vI9gvpvyt8Co8eyTeZ1+RHxV6lep+umbMtkkKI4ky2XeioI
-	Od0LK2pwEo9oFs2yYbe43p4LXRcTj3d3K1l2iRcRKImMGo6eliQUZcGXq6HIQNcD56aCVB
-	5kx0/o0F+fkf++cSvirgDq0kfajpU4E=
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
- [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-159-OEM17uTVPuWp9paJNAxULw-1; Fri, 11 Apr 2025 10:27:21 -0400
-X-MC-Unique: OEM17uTVPuWp9paJNAxULw-1
-X-Mimecast-MFC-AGG-ID: OEM17uTVPuWp9paJNAxULw_1744381640
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2c24ce4d924so26229fac.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:27:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="VtqG51qG"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso18670015e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:29:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1744381745; x=1744986545; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HDVClodjbP7WgqfOUXGhJYRlrZjTGCEuJa62uKxhb0I=;
+        b=VtqG51qGVYEdxFLFveN+0VRtV0vo109SXrLlySOW/Tt82xHJuYP/weBDmQX2YtSOYr
+         2KWk0wAMHkaYFj8QnkPnTtAbEqrbOsErrcsk1BlU/RnQ5KtDxqKSQxJb4l7dqh5ZM/eO
+         s2esx5zOY1Bj1MxawAAFBK0JL68HbltyEtPKrEAlKHv1c06U1HjzD/MUco65nWbT/gjk
+         UIkTpXh75XkQnqkgf6yXehxRKMgxsCi5FMfYWHQmNR/X7LzvO6Ztq3dzOMQdriYyJMNp
+         9APNwtIoNSZxjfHqfSbB3KbM1m91uIoVudMMq9vbDkI5buoP0PZFLJhym0ofQgsCUO3A
+         wGsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744381640; x=1744986440;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Im7PLUkW7j3mmQzh3EFVKWQVrxz4pA7bf7TSdZHW8os=;
-        b=PwMp3f+JVQhz9pl0HwTyo6HvWruoGAgHAVUoCm1zu5+Nxsxr5LJaAD6fsS4kZELihA
-         VMOBxHbNWHH98KgSk5xQH5OQJuQrNCULIm/O1jXX7pg112t9c/SFlIGm+05rHvu8zglC
-         VN410qwbSiCchPqFgZYBwK8ZohF382OydiygW8KQoJHym6jtzwSvXY3rkzQYSPwWVc2G
-         FCP66bjHQamlCuTaVlD+LurU07ojRRfEf+jT85DR+qC11omGGiDvDu0KOykJ/SMBC0on
-         sUznDHmOLEmZTsk1zSDQjiTq2sfhBoHPWuRPLeyMiRa1tBDYkFWP4OYkU1d7+z7iTYHj
-         cUfg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5nvfy9A1v0nnwm1a9NkdIhYZIZJOTy7mfQ9HpC6+0th5VgCTcw/BFJzcQ3+9frajs9UThhMjKKiuFZpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMUWoqSHVJGkVbs4yck5tUSc820A2ADRAO3B/MojGc0G2hDGSx
-	rB42hR5+voR28uqM1W2vqYkBqUxO0+CYmmcD9n6wACsSAw4o/MnxsxR/csCb09GsiX8PFDFM2QF
-	gminoUgiJdRcmk7BBaANsQhJwoWXcGrvXW6wAqsoyLcmy0ZwRpqjyPydpqTZ1rm4rGTgHRemmLX
-	sMJBpdFM9V2sXHj49IBItLSzru5ieuGNvMeumi
-X-Gm-Gg: ASbGncuwOU0d51zDublwdVyEOOv8CuKXMcjvx98YCiMApqXQr9Cy11aEWYLbVxvjWrR
-	VU2v9Jo2qan4m3TDub8fRTUnFBbAodW7evwkCrSMkDFCymTEuQ9y4CqO/1HK1DESafP4=
-X-Received: by 2002:a05:6871:4102:b0:2b7:fc4b:8408 with SMTP id 586e51a60fabf-2d0d5c4f9damr599361fac.2.1744381640294;
-        Fri, 11 Apr 2025 07:27:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFtyIy8awglJHeyK/BCOHDP8jLvXWR8za9vqwQmLys5HN7G2p0PJqVELul9ZwicD73ayRi27zCy73dC8JEDk38=
-X-Received: by 2002:a05:6871:4102:b0:2b7:fc4b:8408 with SMTP id
- 586e51a60fabf-2d0d5c4f9damr599349fac.2.1744381640021; Fri, 11 Apr 2025
- 07:27:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744381745; x=1744986545;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HDVClodjbP7WgqfOUXGhJYRlrZjTGCEuJa62uKxhb0I=;
+        b=Cq0MGo9crxiVbmWXu9f+FiaR2sNxldnROoEkIFcwmqcy5HNo9TaJYW6Vlk4Aq9IvUH
+         Nc7yI9+56linGMNE58KyMb/1/Q55pKMYZxHfiPIOF0i+DPBHvqxFcUfNK1apw6dKjWsJ
+         aRjwYTN3r5UiNdfsz0mO/kFI2agooDe87kcP6u1xK96g+BoAN6KMUvI7R2dGlv2G/idy
+         uxD9PAmvI9UCvi0cDoU54LeIhjxWdm+K8duaBmBdafbr+JwsMlThehWaqK9BuvG4bgry
+         8LAnQ2cAQxfMEaXNY1Zv6JQIJAaEFnfZaU1MGXI4hp8Q4e859BfYlGEjRl4W797halKv
+         +EyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVALMtTwhBFfGUz1gzO4Q/b8FVeYwTtrr0j78MqcEffwzkEasxr4998EbSUitkFV7dvYi8KBGMWRRY98Fs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5R6zcH8iVzUfvtRqIaunGoso/58OLeHT1PqxoL4gndaSFnfUs
+	flAuv6VoKzBLt0lO8nkToubpna88halLBVtJsAfZ6U/1eBb9v+zB6YSLgrJxEMo=
+X-Gm-Gg: ASbGncuvHUvsV5Wyev072Cwp4KkPI9Ii6TH75vYJ07v1HXLmg1lWilZ7XL7mxIB7jvR
+	YejsRVLZvE4YIwigAZcW3yoso2w6Iikohvf9YZ6dznLKScOeuCIr8LSKGIWhObV0RGqJPdz0CwY
+	L8k625pGXppHZHtgAxKKHPDqQWOsPlMHqv3ZnvhyyEP7y4uPnFjI7M4KUFXvMgjZar9fzlYNkT9
+	zI4MAP2GNhdu3ql1585oHevlSSxPI9lGnyLltLIg9gmumEFtyHhFAXQqTdV7UiurwOi4ED1LP9a
+	ol8qv/89jKbMYHixg1jg2lvhlJh7l74Y6nyC+Dk6VJODmFFL
+X-Google-Smtp-Source: AGHT+IEMd+8lqysG6izH7R/apKkjPjImt5zgqWC5HaUT+WT21VIlA4YDnTZixy/Lp0r7GGgQ19nKwg==
+X-Received: by 2002:a05:600c:4f45:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-43f3a959a54mr30766125e9.15.1744381744274;
+        Fri, 11 Apr 2025 07:29:04 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.57])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338d757sm85173315e9.5.2025.04.11.07.29.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 07:29:03 -0700 (PDT)
+Message-ID: <e59df78d-6dcb-430a-bec5-c1e47f3b3b55@tuxon.dev>
+Date: Fri, 11 Apr 2025 17:29:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409144250.206590-1-ivecera@redhat.com> <20250411072616.GU372032@google.com>
-In-Reply-To: <20250411072616.GU372032@google.com>
-From: Michal Schmidt <mschmidt@redhat.com>
-Date: Fri, 11 Apr 2025 16:27:08 +0200
-X-Gm-Features: ATxdqUHHcxYvn-_fU1mId7EG_BUpa6k1ihUDWebZvcqQhgKIHJ5La9lAEIRJHKA
-Message-ID: <CADEbmW1XBDT39Cs5WcAP_GHJ+4_CTdgFA4yoyiTTnJfC7M2YVQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
-To: Lee Jones <lee@kernel.org>
-Cc: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org, 
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/6] ARM: dts: microchip: sama7d65: Add FLEXCOMs to
+ sama7d65 SoC
+To: Ryan.Wanner@microchip.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzk+dt@kernel.org, onor+dt@kernel.org, alexandre.belloni@bootlin.com
+Cc: nicolas.ferre@microchip.com, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <cover.1743523114.git.Ryan.Wanner@microchip.com>
+ <d474fcd850978261ac889950ac1c3a36bc6d3926.1743523114.git.Ryan.Wanner@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <d474fcd850978261ac889950ac1c3a36bc6d3926.1743523114.git.Ryan.Wanner@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 11, 2025 at 9:26=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
-> On Wed, 09 Apr 2025, Ivan Vecera wrote:
-> > Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
-> > provides DPLL and PTP functionality. This series bring first part
-> > that adds the common MFD driver that provides an access to the bus
-> > that can be either I2C or SPI.
-> > [...]
->
-> Not only are all of the added abstractions and ugly MACROs hard to read
-> and troublesome to maintain, they're also completely unnecessary at this
-> (driver) level.  Nicely authored, easy to read / maintain code wins over
-> clever code 95% of the time.
+Hi, Ryan,
 
-Hello Lee,
+On 01.04.2025 19:13, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+> 
+> Add FLEXCOMs to the SAMA7D65 SoC device tree.
+> 
+> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+> ---
+>  arch/arm/boot/dts/microchip/sama7d65.dtsi | 267 ++++++++++++++++++++++
+>  1 file changed, 267 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
+> index cd17b838e179..9f453c686dc6 100644
+> --- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
+> +++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
+> @@ -217,6 +217,199 @@ pit64b1: timer@e1804000 {
+>  			clock-names = "pclk", "gclk";
+>  		};
+>  
+> +		flx0: flexcom@e1820000 {
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe1820000 0x200>;
+> +			ranges = <0x0 0xe1820000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 34>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			uart0: serial@200 {
+> +				compatible = "microchip,sama7d65-usart", "atmel,at91sam9260-usart";
+> +				reg = <0x200 0x200>;
+> +				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 34>;
+> +				clock-names = "usart";
+> +				dmas = <&dma1 AT91_XDMAC_DT_PERID(6)>,
+> +					<&dma1 AT91_XDMAC_DT_PERID(5)>;
 
-IMHO defining the registers with the ZL3073X_REG*_DEF macros is both
-clever and easy to read / maintain. On one line I can see the register
-name, size and address. For the indexed registers also their count and
-the stride. It's almost like looking at a datasheet. And the
-type-checking for accessing the registers using the correct size is
-nice. I even liked the paranoid WARN_ON for checking the index
-overflows.
+This here                               ^ should be aligned with the "<" on
+the previous line.
 
-The weak point is the non-obvious usage in call sites. Seeing:
-  rc =3D zl3073x_read_id(zldev, &id);
-can be confusing. One will not find the function with cscope or grep.
-Nothing immediately suggests that there's macro magic behind it.
-What if usage had to be just slightly more explicit?:
-  rc =3D ZL3073X_READ(id, zldev, &id);
+Same for the rest of dmas on this file.
 
-I could immediately see that ZL3073X_READ is a macro. Its definition
-would be near the definitions of the ZL3073X_REG*_DEF macros, so I
-could correctly guess these things are related.
-The 1st argument of the ZL3073X_READ macro is the register name.
-(There would be a ZL3073X_READ_IDX with one more argument for indexed
-registers.)
-In vim, having the cursor on the 1st argument (id) and pressing gD
-takes me to the corresponding ZL3073X_REG16_DEF line.
+> +				dma-names = "tx", "rx";
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +				atmel,usart-mode = <AT91_USART_MODE_SERIAL>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c0: i2c@600 {
+> +				compatible = "microchip,sama7d65-i2c", "microchip,sam9x60-i2c";
+> +				reg = <0x600 0x200>;
+> +				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 34>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				atmel,fifo-size = <32>;
+> +				dmas = <&dma0 AT91_XDMAC_DT_PERID(6)>,
+> +					<&dma0 AT91_XDMAC_DT_PERID(5)>;
+> +				dma-names = "tx", "rx";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		flx1: flexcom@e1824000 {
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe1824000 0x200>;
+> +			ranges = <0x0 0xe1824000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 35>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			spi1: spi@400 {
+> +				compatible = "microchip,sama7d65-spi", "atmel,at91rm9200-spi";
+> +				reg = <0x400 0x200>;
+> +				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>;
+> +				clock-names = "spi_clk";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				atmel,fifo-size = <32>;
 
-Would it still be too ugly in your view?
+Vendor specific properties should be placed at the end of the node.
 
-Michal
+> +				dmas = <&dma0 AT91_XDMAC_DT_PERID(8)>,
+> +					<&dma0 AT91_XDMAC_DT_PERID(7)>;
+> +				dma-names = "tx", "rx";
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c1: i2c@600 {
+> +				compatible = "microchip,sama7d65-i2c", "microchip,sam9x60-i2c";
+> +				reg = <0x600 0x200>;
+> +				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 35>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				atmel,fifo-size = <32>;
+> +				dmas = <&dma0 AT91_XDMAC_DT_PERID(8)>,
+> +					<&dma0 AT91_XDMAC_DT_PERID(7)>;
+> +				dma-names = "tx", "rx";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		flx2: flexcom@e1828000 {
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe1828000 0x200>;
+> +			ranges = <0x0 0xe1828000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 36>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			uart2: serial@200 {
+> +				compatible = "microchip,sama7d65-usart", "atmel,at91sam9260-usart";
+> +				reg = <0x200 0x200>;
+> +				interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 36>;
+> +				clock-names = "usart";
+> +				dmas = <&dma1 AT91_XDMAC_DT_PERID(10)>,
+> +					<&dma1 AT91_XDMAC_DT_PERID(9)>;
+> +				dma-names = "tx", "rx";
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +				atmel,usart-mode = <AT91_USART_MODE_SERIAL>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		flx3: flexcom@e182c000 {
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe182c000 0x200>;
+> +			ranges = <0x0 0xe182c000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 37>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			i2c3: i2c@600 {
+> +				compatible = "microchip,sama7d65-i2c", "microchip,sam9x60-i2c";
+> +				reg = <0x600 0x200>;
+> +				interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 37>;
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				atmel,fifo-size = <32>;
+> +				dmas = <&dma0 AT91_XDMAC_DT_PERID(12)>,
+> +						<&dma0 AT91_XDMAC_DT_PERID(11)>;
+> +				dma-names = "tx", "rx";
+> +				status = "disabled";
+> +			};
+> +
+> +		};
+> +
+> +		flx4: flexcom@e2018000 {
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe2018000 0x200>;
+> +			ranges = <0x0 0xe2018000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 38>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			uart4: serial@200 {
+> +				compatible = "microchip,sama7d65-usart", "atmel,at91sam9260-usart";
+> +				reg = <0x200 0x200>;
+> +				interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 38>;
+> +				clock-names = "usart";
+> +				dmas = <&dma1 AT91_XDMAC_DT_PERID(14)>,
+> +					<&dma1 AT91_XDMAC_DT_PERID(13)>;
+> +				dma-names = "tx", "rx";
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +				atmel,fifo-size = <16>;
+> +				atmel,usart-mode = <AT91_USART_MODE_SERIAL>;
+> +				status = "disabled";
+> +			};
+> +
+> +			spi4: spi@400 {
+> +				compatible = "microchip,sama7d65-spi", "atmel,at91rm9200-spi";
+> +				reg = <0x400 0x200>;
+> +				interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 38>;
+> +				clock-names = "spi_clk";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				atmel,fifo-size = <32>;
+> +				dmas = <&dma0 AT91_XDMAC_DT_PERID(14)>,
+> +					<&dma0 AT91_XDMAC_DT_PERID(13)>;
+> +				dma-names = "tx", "rx";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		flx5: flexcom@e201c000 {
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe201c000 0x200>;
+> +			ranges = <0x0 0xe201c000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 39>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			i2c5: i2c@600 {
+> +				compatible = "microchip,sama7d65-i2c", "microchip,sam9x60-i2c";
+> +				reg = <0x600 0x200>;
+> +				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 39>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				atmel,fifo-size = <32>;
+> +				dmas = <&dma0 AT91_XDMAC_DT_PERID(16)>,
+> +						<&dma0 AT91_XDMAC_DT_PERID(15)>;
+> +				dma-names = "tx", "rx";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>  		flx6: flexcom@e2020000 {
+>  			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+>  			reg = <0xe2020000 0x200>;
+> @@ -238,6 +431,80 @@ uart6: serial@200 {
+>  			};
+>  		};
+>  
+> +		flx7: flexcom@e2024000 {
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe2024000 0x200>;
+> +			ranges = <0x0 0xe2024000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 41>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			uart7: serial@200 {
+> +				compatible = "microchip,sama7d65-usart", "atmel,at91sam9260-usart";
+> +				reg = <0x200 0x200>;
+> +				interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 41>;
+> +				clock-names = "usart";
+> +				dmas = <&dma1 AT91_XDMAC_DT_PERID(20)>,
+> +					<&dma1 AT91_XDMAC_DT_PERID(19)>;
+> +				dma-names = "tx", "rx";
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +				atmel,fifo-size = <16>;
+> +				atmel,usart-mode = <AT91_USART_MODE_SERIAL>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		flx8: flexcom@e281c000{
+
+Missing space here -------------------^
+
+
+As these are mainly cosmetics I will adjust while applying.
+
+Thank you,
+Claudiu
+
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe281c000 0x200>;
+> +			ranges = <0x0 0xe281c000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 42>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			i2c8: i2c@600 {
+> +				compatible = "microchip,sama7d65-i2c", "microchip,sam9x60-i2c";
+> +				reg = <0x600 0x200>;
+> +				interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 42>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				atmel,fifo-size = <32>;
+> +				dmas = <&dma0 AT91_XDMAC_DT_PERID(22)>,
+> +					<&dma0 AT91_XDMAC_DT_PERID(21)>;
+> +				dma-names = "tx", "rx";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		flx9: flexcom@e2820000 {
+> +			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+> +			reg = <0xe2820000 0x200>;
+> +			ranges = <0x0 0xe281c000 0x800>;
+> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 43>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			status = "disabled";
+> +
+> +			i2c9: i2c@600 {
+> +				compatible = "microchip,sama7d65-i2c", "microchip,sam9x60-i2c";
+> +				reg = <0x600 0x200>;
+> +				interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&pmc PMC_TYPE_PERIPHERAL 43>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				atmel,fifo-size = <32>;
+> +				dmas = <&dma0 AT91_XDMAC_DT_PERID(24)>,
+> +					<&dma0 AT91_XDMAC_DT_PERID(23)>;
+> +				dma-names = "tx", "rx";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>  		flx10: flexcom@e2824000 {
+>  			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
+>  			reg = <0xe2824000 0x200>;
 
