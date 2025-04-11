@@ -1,171 +1,130 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68026AA7
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F01B27EC9D;
+	Fri, 11 Apr 2025 10:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365691; cv=none; b=Xs4sQ9T2O8l3aK0PH4GjsZWj2NRR0bBhR6HIidL2c6wIf7IwZ2hU6cq9+fHQHmSixR7xlv0e9OgzKRib2gicQ5qS/u+nhe+BasQU6Ba5kS7m2LeRTFWyXeDsOg14U1Ab4n/90srF2Z88WRvE4CSjYen/1y8jq4SVGi38bd42Ptg=
+	t=1744365700; cv=none; b=huFnh/otXHs6dTSnzYH9EwoYIDgbcAnoA3ssJdlaGkpSIvUhX2kyifwa9aBPcpI3bUtXWahM+acIdGWTjC6p5FCLpaQMSYzw3e4lAOC4xiOf8G77gLMee+VbGkLtwVx/pSMN5zcmpJBAN8P29XtIf31nzvlP/p+aH3haLu1CgcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365691; c=relaxed/simple;
-	bh=jew8lPNx8/TdaYvHZnoT0xFkBj7XSdDZqLsPxRDVv8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To; b=t3ZKfGixaYkaQ00J/Jaa1eNJqVSgRMXVbquzEOmUWSQkIsOwUhfv2F2K9WkmOCHJWkdYTRGvcDSEDbkaokLZ8UpcoMO492BR5FIR2r7/XkkZ4FCs+pEm+CbmDw/Z/xnlA/Zd5w6Vmc3CMU2T1jJgo9I3x6Eoq/ET9JqslXu4Sac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=DkesvRPb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AFKm5rGx; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1744365700; c=relaxed/simple;
+	bh=AFWwU6GMA/FhynWz2a1qsT5hZ1mmzT+E258eTGU783Y=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=bezDgF+2VuRtcebdh1nFLuUAKUQHNyLZ+flFpAn++NVjGTc8LkTy3tV1TeAzCqy4noV8SMNnwFwPKG+78v4aCO99hwS8yfjFbw5OLuCgzTkRlv3LhhRNS1rdFTJCrtBjW+uNQfGmPhzebll6Brdwtv4G8uh06J2H1ee0fzR4CGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0frQemnY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v+geXJgn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="DkesvRPb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AFKm5rGx"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id BF8911380226;
-	Fri, 11 Apr 2025 06:01:28 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Fri, 11 Apr 2025 06:01:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1744365688; x=1744452088; bh=z5cs1W8tVA
-	bJ3ZA2qMajWH2YzqXLYeH4TnXCQKM1qc8=; b=DkesvRPbaObCmJtnsaeuQhyWuE
-	jBT+v0SPalOYX2jilqnBC88s9Kpn3iKmJ0z3Ig7eYDIYd1PmwDW8ldGxpT3o+qeU
-	gZICnCYqz0pBx9EV1Q7Ya1h0tqVhUCf2kHf75wALwToRTJpflOgAQHTfLvIf89AY
-	RKKuPQ3Q6mIVJoKMM7NAk1AWF2LpRlf53Bg0PbRZcp0fS4iDhNpLEisur+bBxWSQ
-	qKXZGy6szUcI+TO5NQlQKjUOGDz7HThAz837SzRDnBFSpl72AMg8r+oIZKcoBZjp
-	ZtmNyM+NfJnQvFhm7LfN1Qm5v0DjpD6atDcaQ/DNMNtFz/0Jo7iltkwDpJJw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744365688; x=
-	1744452088; bh=z5cs1W8tVAbJ3ZA2qMajWH2YzqXLYeH4TnXCQKM1qc8=; b=A
-	FKm5rGx2BLCYEndgJ7mw3IN+L37G97Xeyaci4YKzEJ6xen2Y6XaE57Ucczz1kRnU
-	1L82wq/s8jPk4vsMp6G2p8X4rLrHGFAphiiB4Y3hs0g0CmVlc31BeUxkHUZU8dRf
-	WGILwzfEVGNCou7acgL+VcOgkwQmJL8DPTn7dw4wog123nihpwYJm2U5vIXvLS1/
-	zYGlcHfY9qxX1oXufcEVGpzkO/Gp2QPubG06TZFraW14ADQBNhTFMM3W0LpqVfN8
-	mkqg1QCQGOaG3Y47ljRt30aWD6OUEyYsb6S7vp8AzO7UgdOnoNqbPbup6nb8stYx
-	oWCMHGXW5LzQ635kHpI5Q==
-X-ME-Sender: <xms:eOj4Z18WohOqzZh-qJlmkzeCbSsRkR8now3uvVLiJJiUCE7KntVeFQ>
-    <xme:eOj4Z5v8pkWUzauwqvKEZMar3D6uq_IUrubosCzJknM-vQMjHEJUM0HLy1ccc8X-E
-    ni4SIsyRSa0OQ>
-X-ME-Received: <xmr:eOj4ZzAoUe-SJf3YXEDsTikSMVm2w2BYN9d9l7VW-KtuoeMIiZ43A-FmMEjwEmZBzJGAnWHaishA_BRniFUk_LNw3UECHcHTfg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduhedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtgfgjgesthekredttddt
-    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
-    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
-    ggftrfgrthhtvghrnhephefgteevgfefgeetteefueeuvefhfeektdelhfeuffeuleefhf
-    dvgeffkefgieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-    dpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehs
-    ohihvghrsehirhhlrdhhuhdprhgtphhtthhopegusggrrhihshhhkhhovhesghhmrghilh
-    drtghomhdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
-    epughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegrmhguqdhgfhigsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhg
-    pdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhope
-    grlhgvgigrnhguvghrrdguvghutghhvghrsegrmhgurdgtohhm
-X-ME-Proxy: <xmx:eOj4Z5eozMALmK2q7WTH3Y7NW2p5xx8GWN8pEMuDFLJ0mi2F1s7-AQ>
-    <xmx:eOj4Z6M2E5C1Nn_VE7HWQ6o8uJmm9wXtXpaRTTwA_4eNQUMH7eOrBw>
-    <xmx:eOj4Z7lRb9TdtFPHrQO6x-e0jhSIgjFA_uFcvgcYaS_cA_PWhH_7Zw>
-    <xmx:eOj4Z0uT-62w59kPKHqk3P3hXEjVInJ-nq6VqMNpiEPHU0iV2RAm8w>
-    <xmx:eOj4Zz3ztczLsdEPlh51aY9pvfDh_6eqGCOVKW2rVT7VRP6SMyDLSRaI>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 11 Apr 2025 06:01:26 -0400 (EDT)
-Date: Fri, 11 Apr 2025 12:01:24 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Gergo Koteles <soyer@irl.hu>
-Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
-	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>
-Subject: Re: amdgpu_dm_connector_mode_valid regression
-Message-ID: <Z_jodBrNFdEpJRKA@mail-itl>
-References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
- <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
- <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
- <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0frQemnY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v+geXJgn"
+Date: Fri, 11 Apr 2025 10:01:14 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744365696;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IskIfgBsXhU9raEgO4D2090Hvm2Ob2DcGjUjeSmVsWI=;
+	b=0frQemnYrjssBy5on6YcyEPiyDTvSp6BF/tq07FXSdjWx4AXGgM7PQwPAJeJEcB6MzN+T7
+	VPh5xxjf1KJefhSSFK/RbcU9KxuqTB7UTUch5UkkMy7LSZ1COggOMINczYY7ZeWgEpBXcE
+	CP6mairehB9144g2BMIyrsKrq4IYP+/j3DK7tteOFdXpbhBDtFSMxl4LeTJbL3x6WU87D5
+	o+kDUgK7vN392AEP8jsy645v86uOs7xLkDC3XTe7oDUmMMALA6GVfZPd9W385bZn1x8LQ7
+	OUNtAbiwqAgz7zQpKZCyG1YApa728aw4Cw8XAWVtII9AX8pVv3HSkmrmpvFF3Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744365696;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IskIfgBsXhU9raEgO4D2090Hvm2Ob2DcGjUjeSmVsWI=;
+	b=v+geXJgnJrPNQZNsJb4FdycHccnip/a1Gl0DpGM0ahDDY8t81sybyxE6TyMKzlrhf89h7D
+	1PpQVpw+wQyqupBQ==
+From: "tip-bot2 for Jason Andryuk" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/xen: Fix __xen_hypercall_setfunc()
+Cc: Juergen Gross <jgross@suse.com>, Jason Andryuk <jason.andryuk@amd.com>,
+ Ingo Molnar <mingo@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Xin Li (Intel)" <xin@zytor.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250410193106.16353-1-jason.andryuk@amd.com>
+References: <20250410193106.16353-1-jason.andryuk@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; x-action=pgp-signed
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+Message-ID: <174436567811.31282.12400498126986636858.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+The following commit has been merged into the x86/urgent branch of tip:
 
+Commit-ID:     164a9f712fa53e4c92b2a435bb071a5be0c31dbc
+Gitweb:        https://git.kernel.org/tip/164a9f712fa53e4c92b2a435bb071a5be0c31dbc
+Author:        Jason Andryuk <jason.andryuk@amd.com>
+AuthorDate:    Thu, 10 Apr 2025 15:31:05 -04:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 11 Apr 2025 11:39:50 +02:00
 
-Hi,
+x86/xen: Fix __xen_hypercall_setfunc()
 
-On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
-> Hi Dmitry,
-> 
-> But the code would start to become quite untraceable.
-> duplicate mode in amdgpu_dm_connector_mode_valid()
-> call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
-> duplicate mode in create_stream_for_sink()
-> overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
-> if crtc_clock == 0 call drm_mode_set_crtcinfo() again in
-> create_stream_for_sink() 
+Hypercall detection is failing with xen_hypercall_intel() chosen even on
+an AMD processor.  Looking at the disassembly, the call to
+xen_get_vendor() was removed.
 
-FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
-Ryzen 5 4500U). And the patch quoted below fixes it for me too.
+The check for boot_cpu_has(X86_FEATURE_CPUID) was used as a proxy for
+the x86_vendor having been set.
 
-> 
-> saved_mode is never used after this, so I can't add the condition here
->         if (recalculate_timing)
->                 drm_mode_set_crtcinfo(&saved_mode, 0);
-> 
-> This commit is related, I think:
-> 1101185 ("drm/amd/display: fix the ability to use lower resolution
-> modes on eDP")
-> 
-> Regards,
-> Gergo
-> 
-> ---
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index bae83a129b5f..83c8c81d4015 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -6984,6 +6984,9 @@ create_stream_for_sink(struct drm_connector
-> *connector,
->         if (recalculate_timing)
->                 drm_mode_set_crtcinfo(&saved_mode, 0);
->  
-> +       if (mode.crtc_clock == 0)
-> +               drm_mode_set_crtcinfo(&mode, 0);
-> +
->         /*
->          * If scaling is enabled and refresh rate didn't change
->          * we copy the vic and polarities of the old timings
-> --
+When CONFIG_X86_REQUIRED_FEATURE_CPUID=y (the default value), DCE eliminates
+the call to xen_get_vendor().  An uninitialized value 0 means
+X86_VENDOR_INTEL, so the Intel function is always returned.
 
-- -- 
-Best Regards,
-Marek Marczykowski-Górecki
-Invisible Things Lab
------BEGIN PGP SIGNATURE-----
+Remove the if and always call xen_get_vendor() to avoid this issue.
 
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmf46HQACgkQ24/THMrX
-1ywBfAf/SX79WOL0Rv1cL2F/YeEUbr6b/FxZ6W+xsFCi38UxcN0PKCGalQ76jT5r
-LAyy1zPedAAdGu+JdQ8abrVfPbSXnzLUcUZNN75kGHixS1c/TqfP4L9ymZ6Z5rAB
-BUt579EkdDZlm2dZ0mxwHcdoArv7fK05Fb+l3Vd645w5MK0fmwWPesCeBaEiwG2S
-ZiuSOWcJBL0yPPzvRaVPD5FCgjjjEhQ2fZZinqhwVy1LNA6OBXQrVvNhOazFVjKq
-rQV1YLG4gCBu6TD6NaETrPMevmZmovuo7o4/6Y5vJQexhQv3eaaxE5dh/0AaWovJ
-FqW2VrxvWXz6HgOokPpfispYzpMgEQ==
-=+SPC
------END PGP SIGNATURE-----
+Fixes: 3d37d9396eb3 ("x86/cpufeatures: Add {REQUIRED,DISABLED} feature configs")
+Suggested-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Xin Li (Intel)" <xin@zytor.com>
+Link: https://lore.kernel.org/r/20250410193106.16353-1-jason.andryuk@amd.com
+---
+ arch/x86/xen/enlighten.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
+index 1b7710b..53282dc 100644
+--- a/arch/x86/xen/enlighten.c
++++ b/arch/x86/xen/enlighten.c
+@@ -103,10 +103,6 @@ noinstr void *__xen_hypercall_setfunc(void)
+ 	void (*func)(void);
+ 
+ 	/*
+-	 * Xen is supported only on CPUs with CPUID, so testing for
+-	 * X86_FEATURE_CPUID is a test for early_cpu_init() having been
+-	 * run.
+-	 *
+ 	 * Note that __xen_hypercall_setfunc() is noinstr only due to a nasty
+ 	 * dependency chain: it is being called via the xen_hypercall static
+ 	 * call when running as a PVH or HVM guest. Hypercalls need to be
+@@ -118,8 +114,7 @@ noinstr void *__xen_hypercall_setfunc(void)
+ 	 */
+ 	instrumentation_begin();
+ 
+-	if (!boot_cpu_has(X86_FEATURE_CPUID))
+-		xen_get_vendor();
++	xen_get_vendor();
+ 
+ 	if ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
+ 	     boot_cpu_data.x86_vendor == X86_VENDOR_HYGON))
