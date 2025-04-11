@@ -1,71 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890EC23E359;
-	Fri, 11 Apr 2025 18:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A297258CE7
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744394748; cv=none; b=U2ovOYO4LC4i9TPFrHuZR+dkDur2JZZjSam3JbM+k3nshrdOLcqZnpbx/edZwdYFhopLQ43YRpSNyoEBJJqrd3rEenKl/cXANJIiloVfXApJue2q8JYoM1agkGLbyhGs78wQzT1WCAJexc6iVP5te0ZU9kyzuDYEBxIRb7CvWQ8=
+	t=1744394781; cv=none; b=AZx9axVUe1bcp8I3Z7fsNChHIO+Ie7HVJfIesakAcO4AoClns2otZpoYIwtFXZprUyqNBdOGvPkhGhVnTyMrJcThjQc6+2tFc5ONa8UYs+B9WgWZ30c2FN2hRsPsFVoHJowK5j7WtoMzAUpHocwsHVvDkm0oytIcHVLtAGZcnGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744394748; c=relaxed/simple;
-	bh=d0eTxp4UU3sSrwW/EB6XhwnIu0J5rklUPk4/9k0bVbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PCxmhNprSo47K/ceeeZdxvoMgANPD7GWoJyGCaQMrCqRlg6HUFortmeFq0hL1eIEgF4pf0rtf8iYvmoXe3ECJ1ZfTr1VNil5a4tIXNN0VDuwpNM+wvFLhBqdKxdsNmEkMz4zSN27fKu9Y67wnBPDmbUWs5hbQ046PRTla/otUZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEZSzV+4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744394781; c=relaxed/simple;
+	bh=ll6jYyIJK91Egam5YZq23oz57DO9B1/3u/Z1NHRqv2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lusbxuoHrwwKB51FVjyXNLKqyWj0Yozua5YZZpbaAS0LXltfrh6fW32qlSsUH6wXflQ4Wm34RXb4UHvCVtF5+lOnh+B6m5Xto4gEEJsDYwImwzknqlnXp+pzeUOCVtsO000cfICyK+O4ZuHXE7XfIKTkYpxXcTre4P2MU7Oe0Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dPu/ezpJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=GzLxMm2P; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dPu/ezpJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=GzLxMm2P; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEZSzV+4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C40CBC4CEE2;
-	Fri, 11 Apr 2025 18:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744394748;
-	bh=d0eTxp4UU3sSrwW/EB6XhwnIu0J5rklUPk4/9k0bVbk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oEZSzV+4gTSd/n1O2uloRjarn9CguqUVtYzGWrHITtorkQ8PYEnnwvpVcnI7flg3I
-	 ouP90nWieQZ3SaWV7rvJqvLAsWx0nwn6fmh4dYko2K2X/n8FnfmI7q4LhFmqC6ruA/
-	 Y7UtF3nXDNhCPFxUc+7YDCC3IpAMOghksGmuqhJ1SUHcj678R+mkz6Tpatb+p9Bmkm
-	 eVotFEwoMHJ1CvnJcRO2PMOjoLAnAfURDtV/d5Nr0MxrR0ZMeF1Ut5Ju1jMpy/1R2H
-	 4DRVx8ju5BABNplhWsINA28dyruwXaDM2VW3BpuYlGduHjALF7hQWiql99W3DIUV6O
-	 JXNOM06LI6tlQ==
-Date: Fri, 11 Apr 2025 13:05:46 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Michael Riesch <michael.riesch@collabora.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Collabora Kernel Team <kernel@collabora.com>, imx@lists.linux.dev,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH 3/3] media: dt-bindings: sony,imx415: update maintainer
- e-mail address
-Message-ID: <174439474605.3672762.16503161569954829590.robh@kernel.org>
-References: <20250410-maintainer-mriesch-v1-0-cdc5c6c68238@collabora.com>
- <20250410-maintainer-mriesch-v1-3-cdc5c6c68238@collabora.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dPu/ezpJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GzLxMm2P";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dPu/ezpJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GzLxMm2P"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 625C421192;
+	Fri, 11 Apr 2025 18:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744394777; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LSB2ncRIaB8MGwCyPZodshLfZ6drnJjoqfJfTj5uO7o=;
+	b=dPu/ezpJKvyI34rU3nNJkDYzXW8v+uOfvhFTRbWkkglaKXHsV6jl4rqEH53P1NmAP3Bgbe
+	5WP/DA+BAQ3LGBDjdljinqQFaKj+4sFetZMsICxxp9XURneUYTfIVoVc99nUATmhqMdR6Z
+	6wu3GlPvC1tSJp8ozCxYiZoB2i8S83M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744394777;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LSB2ncRIaB8MGwCyPZodshLfZ6drnJjoqfJfTj5uO7o=;
+	b=GzLxMm2Plqv//LoMUrMLo7uY3FkHcW5WpJ/DpFJw1+yRWScuS/oG3jCLKk/DqNi28Uyu4v
+	It45QtemXOkWtKAg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="dPu/ezpJ";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=GzLxMm2P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744394777; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LSB2ncRIaB8MGwCyPZodshLfZ6drnJjoqfJfTj5uO7o=;
+	b=dPu/ezpJKvyI34rU3nNJkDYzXW8v+uOfvhFTRbWkkglaKXHsV6jl4rqEH53P1NmAP3Bgbe
+	5WP/DA+BAQ3LGBDjdljinqQFaKj+4sFetZMsICxxp9XURneUYTfIVoVc99nUATmhqMdR6Z
+	6wu3GlPvC1tSJp8ozCxYiZoB2i8S83M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744394777;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LSB2ncRIaB8MGwCyPZodshLfZ6drnJjoqfJfTj5uO7o=;
+	b=GzLxMm2Plqv//LoMUrMLo7uY3FkHcW5WpJ/DpFJw1+yRWScuS/oG3jCLKk/DqNi28Uyu4v
+	It45QtemXOkWtKAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C522136A4;
+	Fri, 11 Apr 2025 18:06:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id w+QBDhla+WemSQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 11 Apr 2025 18:06:17 +0000
+Message-ID: <8cce9a28-3b02-4126-a150-532e92c0e7f8@suse.cz>
+Date: Fri, 11 Apr 2025 20:06:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410-maintainer-mriesch-v1-3-cdc5c6c68238@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
+Content-Language: en-US
+To: Shakeel Butt <shakeel.butt@gmail.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>,
+ Waiman Long <llong@redhat.com>, linux-mm@kvack.org, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+References: <20250410210623.1016767-1-shakeel.butt@linux.dev>
+ <0e9e2d5d-ec64-4ad4-a184-0c53832ff565@suse.cz>
+ <CAGj-7pUxYUDdRGaiFon=V2EG+3Ex5s9i7VvWbDH5T0v-7SE-CQ@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAGj-7pUxYUDdRGaiFon=V2EG+3Ex5s9i7VvWbDH5T0v-7SE-CQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 625C421192
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com,linutronix.de];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:dkim];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-
-On Thu, 10 Apr 2025 21:41:32 +0200, Michael Riesch wrote:
-> I recently left WolfVision but would like to continue to maintain the
-> Sony IMX415 image sensor driver. Update my e-mail address.
+On 4/11/25 19:54, Shakeel Butt wrote:
+> (my migadu/linux.dev stopped working and I have to send through gmail,
+> sorry for any formatting issue)
 > 
-> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
-> ---
->  Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml | 2 +-
->  MAINTAINERS                                                  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> I don't see how local_irq_save() will break anything. We are working on
+> a stock of a dead remote cpu. We actually don't even need to disable irq
+> or need local cpu's local_lock. It is actually the calls to
+> __mod_memcg_lruvec_state() and __mod_memcg_state() in
+> __drain_obj_stock() which need irq-disabled on non-RT kernels and for
+> RT-kernels they already have preempt_disable_nested().
 > 
+> Disabling irq even on RT seems excessive but this is not a performance
+> critical code, so I don't see an issue unless there is
+> local_lock_irqsave() alternative which does not disables irqs on RT
+> kernels.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-
+local_lock_irqsave() does not disable irqs on RT kernels :) so keeping
+local_lock as is would do the irq disable on !RT and be more RT-friendly on
+RT. It's just wrong from the logical scope of the lock to perform it on a
+different cpu than the stock we modify. If one day we have some runtime
+checks for that, they would complain.
