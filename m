@@ -1,147 +1,230 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849B3233153;
-	Fri, 11 Apr 2025 19:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB39233153;
+	Fri, 11 Apr 2025 19:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744399336; cv=none; b=tUWDE++iF9iBpNHz6Z2OM26ThPmZv7sXKBgI1b4eURd1sXvPgjuCu0R9yINsx9alVYoUrbKQvcUCocpilhaoJJappC1ktutQVR7XeLHaCn/4ORvd8FsEZNEyPCgYX8wtfdbWgX2GXwprF4ZbOpOPHrRuVPGoC5fWV2n+IPcMgqc=
+	t=1744399428; cv=none; b=kMEoehLTsSaXa/rT2I7btVZ4IihST8ne950VKGQulyW8jOZcVmW/Nt4TJikpdFrzTTZ6Ix+sd3XWOgsZhyEBg3nYox1XzIgGbphQ2+CLn39NnpNQOT+icNCbRkKNJoESE4j8bfqYGB6Is7KhgKJUIzWcjlkbLND8SpQji8Ut/4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744399336; c=relaxed/simple;
-	bh=89S6jUFBdre4FBJDt9xv9Ve9zhB8mTXROUpU59oVJww=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uvz8ff3gUwnNGAtHkE7M2JepL+ZromduiL3Yu4pkKHYE99quoda+Z9ImkIVXRxULQBEwTlLPMVrSXY8hhfwLVeEoYe67rrSuf9+/bI9cW073U2KyjhY5pjGbaURq4+5yj6v1wKPYOEC6OMrXR2VhIc6PP4/VzjTPlctleIMaVtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jm2hXpOS; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744399428; c=relaxed/simple;
+	bh=FaakOh3rl4xSloWBhvpXgR9xn/hmIsKrKnH7eP/Pphc=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZRP/15yJ6smTtVlUT/nzOmwEqh16wdr35BoZYIMu5EQh4ZUkkGXhetm6iOCAVj9vTpyUamPyThz83S5q6DcD+IDxuOC0EhLNaWxxJD9BJC8lTDukY7nLrZ9P0bZAf6htxpz3OvXi/kkSB7SjhL7iHjSd09sizAiUfnq9/1ItZTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=cCQXklNI; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jm2hXpOS"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e66407963fso4315339a12.2;
-        Fri, 11 Apr 2025 12:22:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744399333; x=1745004133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xk7Wr7mkEPmLsW55w0PzOV8/ik4aRFBmHrK0Atj+A3M=;
-        b=jm2hXpOSmcg9KCrKKxCYxruXzBFQ1GbjfilgCgT+WQOp/useofOMVtWsdL+epn62P9
-         PVDBwFcZI78oUYRizCMJxXPq64ah19cc3372V57TDcr3wYzGDTjw0V51ICySBDnTerK+
-         H0z1MMdte7vSU8nP6IRRRB70E1U8Q9J7GXC7diEiPS5/BZ/WZ1ZsofY0AH3LBtAvZpdf
-         gCb3FeMuGUJ63boTqdNprDCGfPcsufR+c8zEG0ZOOrY1QqiXhQUo0AI1UTlX1KV2xIxG
-         CD6n7f9j5E9CfioR1XbwcaX1GaQLCNpZTfzcd0j/nOPqqxDh+3rVvmyMxbFi5PXoxlPR
-         LDNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744399333; x=1745004133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xk7Wr7mkEPmLsW55w0PzOV8/ik4aRFBmHrK0Atj+A3M=;
-        b=o4pde8S8Lp0fMj20Sbqrxp22y8raDASAuTU7gcQmqAhZ2WUtO/N8COdkabmhKkJz64
-         fd+q6ZJW6mvg4jJoNHqFunoi5lvB31danRYk75lM/gVw8vD/D/0b+vuqDiUizW7VwVau
-         sukcx0vKB9zb5t+PCLcwFes8eqM/NuoTI5jZgot54/Bzdi7bDEVh49zsIdEnT8n0bwaf
-         FdolOJYX7aHXaQE71/7H1xVgm+9jIHtCDHGaRDdMHs3dJmvrpXaKQX6dRLclp5reYFZq
-         yhoBQxhLFKuW6ypRFrNwZIvjle3u1XNOsGsCSyzt2/tUfJ2zXW/DMBzlJWk6r3KL57I6
-         +z7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUXPATKSw/Kb+sX2bMlLibaQaRtQ8KuIjnkxmparu+riW96PYcDtFZ1mmd/2Rw/ldJLmXATC9Kx8Fin@vger.kernel.org, AJvYcCVSTKjE8KQqa6AY3EgjuXV4A1v7ggi8bpee4ok8/Yr56DRm8onaIBepeKRvH5yPRBcVeEAVI3dYgGCzy37M@vger.kernel.org, AJvYcCWk9NJ3ph+3x77xBZoO+kyjDdoAGaxL96WsTUrQkM6NO7tL04MhpqAunec9RGoCXtfI3gv8cuQKKJxT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLgXDZ1IUe7h66Sz9sXcEPR7agr7GiOXaK7LPZDXwszIdawB4I
-	4O9UBLNgcETHo0NosobtF67jK7PmJe/V5UReGwPoaIlbKA7CreXQjLwPXltc1CAD2gErxExR83P
-	/SR3TyKIHu5Y8zAk6LCVryS8ayV5jESxU26s=
-X-Gm-Gg: ASbGncv3RFlapjrEKx5vJRA0YPd4vhRqFzQgKWIdZJ8pSG+JDWg0envdgxJhv1kU1ix
-	IScgC+FJRXBixX8eOzKg8MUFqO4s46fABW/YjrvGRic6Se3O4TlbMupOkszs05N3+JY1Y5PuDv7
-	GVx5T3yT/uuoGTFvJUefhrww==
-X-Google-Smtp-Source: AGHT+IHafh0TzT82Q1iwtIEjA7exiMMqBkorbBoifF+rPaD2kGx/h0ceVXvgMfgp0zq3ea62NLd3qNqvroIvJGLvt54=
-X-Received: by 2002:a17:907:3d12:b0:ac3:17b6:737 with SMTP id
- a640c23a62f3a-acad36a465cmr370801166b.45.1744399332544; Fri, 11 Apr 2025
- 12:22:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="cCQXklNI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1744399421; bh=FaakOh3rl4xSloWBhvpXgR9xn/hmIsKrKnH7eP/Pphc=;
+	h=Date:From:To:Subject:X-My-GPG-KeyId:References:From;
+	b=cCQXklNI+OnK65shRjSZCYrIZU39jsqjyRDuSJ3nCVzfOXULVK5nYxMLC8yQLmlJU
+	 OkHaGs1z4FAjwaBuJue+237RkZ/NXSVYMHQ0EHyMJqvuGp16uw6fBipiTFMcY6Y1iD
+	 odcxWAKGYUow9GgNLrg91dc7qdtTL+Xx3yJbwzv0=
+Date: Fri, 11 Apr 2025 21:23:40 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Shay Drory <shayd@nvidia.com>, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, leonro@nvidia.com, linux-kernel@vger.kernel.org, 
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH v2] PCI: Fix NULL dereference in SR-IOV VF creation error
+ path - REGRESSION
+Message-ID: <hrcsm2bo4ysqj2ggejndlou32cdc7yiknnm5nrlcoz4d64wall@7te4dfqsoe3y>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Shay Drory <shayd@nvidia.com>, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	leonro@nvidia.com, linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20250310084524.599225-1-shayd@nvidia.com>
+ <dnkcl7j75mpnaaeuatug6rkwr3b3ibljpsol7nxwtquw7rwag2@5edfct5npe4a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-add_newport_driver-v1-0-15082160b019@tdk.com> <20250411-add_newport_driver-v1-2-15082160b019@tdk.com>
-In-Reply-To: <20250411-add_newport_driver-v1-2-15082160b019@tdk.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 11 Apr 2025 22:21:36 +0300
-X-Gm-Features: ATxdqUGv9nEafQzbmPl55jX5Pjx8laLLf3mgfmv5IDwzcpTt7W8ptj4-S2DCF6k
-Message-ID: <CAHp75Vdj81u8sXfsgBPYumFKWqsatJGHeME4rTtWM9NME6g0ZA@mail.gmail.com>
-Subject: Re: [PATCH 2/8] iio: imu: inv_icm45600: add I2C driver for
- inv_icm45600 driver
-To: remi.buisson@tdk.com
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dnkcl7j75mpnaaeuatug6rkwr3b3ibljpsol7nxwtquw7rwag2@5edfct5npe4a>
 
-On Fri, Apr 11, 2025 at 4:28=E2=80=AFPM Remi Buisson via B4 Relay
-<devnull+remi.buisson.tdk.com@kernel.org> wrote:
->
-> From: Remi Buisson <remi.buisson@tdk.com>
->
-> Add I2C driver for InvenSense ICM-456xxx devices.
+On Fri, Apr 11, 2025 at 02:44:11PM +0200, megi xff wrote:
+> Hello Shay,
+> 
+> On Mon, Mar 10, 2025 at 10:45:24AM +0200, Shay Drory wrote:
+> > Add proper cleanup when virtfn setup fails to prevent NULL pointer
+> > dereference during device removal. The kernel oops[1] occurred due to
+> > Incorrect error handling flow when pci_setup_device() fails.
+> > 
+> > Fix it by introducing pci_iov_scan_device() which handle virtfn
+> > allocation and setup properly, instead of invoking
+> > pci_stop_and_remove_bus_device() whenever pci_setup_device is failed.
+> > This prevents accessing partially initialized virtfn devices during
+> > removal.
+> 
+> I've found a regression on QuartzPro64 board with NVMe connected to
+> PCIe port no longer probing on boot and bisected it down to this
+> commit.
+> 
+> When reverting this commit on top of torvalds/master the issue is also
+> fixed.
+> 
+> From what I see in the diff of before/after of kernel log messages:
+> 
+>   https://xff.cz/dl/tmp/revert.log.patch
+> 
+>   (- before revert, + after revert)
+> 
+> It looks like this patch moves the discovery of the SSD up in the 
+> timeline:
+> 
+> -pci 0000:01:00.0: [15b7:501a] type 00 class 0x010802 PCIe Endpoint
+> -pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
+> -pci 0000:01:00.0: BAR 4 [mem 0x00000000-0x000000ff 64bit]
+> 
+> And later prevents this from happening somehow:
+> 
+> +pcieport 0000:00:00.0: bridge window [mem 0xf0200000-0xf02fffff]: assigned
+> +pci 0000:01:00.0: BAR 0 [mem 0xf0200000-0xf0203fff 64bit]: assigned
+> +pci 0000:01:00.0: BAR 4 [mem 0xf0204000-0xf02040ff 64bit]: assigned
+> 
+> I'm using pci=realloc kenel parameter with this board.
+> 
+> Full kernel logs of before revert and after revert:
+> 
+>   https://xff.cz/dl/tmp/revert.log    (post revert)
+>   https://xff.cz/dl/tmp/pre-revert.log
+> 
+> Why would this patch change the probe order so much and maybe break
+> pci=realloc?
 
-...
+By further experimentation I figured the real culprit that affects the
+order of the initialization and breaks NVMe on QuartzPro64 and
+Orange Pi 5+ are these two commits (mainly the first one, but build
+fails without reverting the other, too):
 
-> +/*
-> + * Copyright (C) 2025 InvenSense, Inc.
-> + */
+2499f53484314 "PCI: Rework optional resource handling"
+96336ec702643 "PCI: Perform reset_resource() and build fail list in sync"
 
-One line (instead of 3), please! This will slightly help with these
-rather longer files.
+Reverting this one just "fixed" the QuartzPro64 (but breakage and
+order of probing remained same on Orange Pi 5+). Reverting the above
+two commits fixed both boards at once.
 
-...
+"PCI: Rework optional resource handling" also makes more sense as a
+culprit for changes seen in the log, I guess.
 
-> +#include <linux/device.h>
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
+Kind regards,
+	o.
 
-Here and in the rest of the files the list of the header inclusions is
-(semi-)random. You shouldn't use kernel.h and other "proxy" headers in
-the code, please follow IWYU principle.
-
-...
-
-> +               return -ENOTSUPP;
-
-This is wrong. Please check what other drivers return in such cases.
-
-...
-
-> +       regmap =3D devm_regmap_init_i2c(client, &inv_icm45600_regmap_conf=
-ig);
-> +       if (IS_ERR(regmap))
-> +               return PTR_ERR(regmap);
-
-err.h is missing.
-
-...
-
-> +/*
-> + * device id table is used to identify what device can be
-> + * supported by this driver
-
-Please, respect English grammar and punctuation in all multi-line comments.
-
-> + */
-
-...
-
-> +               .data =3D (void *)INV_CHIP_ICM45688P,
-
-Just no. Please, use real pointers.
-
-...
-
-I'm not going to review anything else, the above already deserves a new ver=
-sion.
-
---=20
-With Best Regards,
-Andy Shevchenko
+> Kind regards,
+>         o.  
+> 
+> > [1]
+> > BUG: kernel NULL pointer dereference, address: 00000000000000d0
+> > PGD 0 P4D 0
+> > Oops: Oops: 0000 [#1] SMP
+> > CPU: 22 UID: 0 PID: 1151 Comm: bash Not tainted 6.13.0+ #1
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+> > RIP: 0010:device_del+0x3d/0x3d0
+> > Call Trace:
+> >  <TASK>
+> >  ? __die+0x20/0x60
+> >  ? page_fault_oops+0x150/0x3e0
+> >  ? exc_page_fault+0x74/0x130
+> >  ? asm_exc_page_fault+0x22/0x30
+> >  ? device_del+0x3d/0x3d0
+> >  pci_remove_bus_device+0x7c/0x100
+> >  pci_iov_add_virtfn+0xfa/0x200
+> >  sriov_enable+0x208/0x420
+> >  mlx5_core_sriov_configure+0x6a/0x160 [mlx5_core]
+> >  sriov_numvfs_store+0xae/0x1a0
+> >  kernfs_fop_write_iter+0x109/0x1a0
+> >  vfs_write+0x2c0/0x3e0
+> >  ksys_write+0x62/0xd0
+> >  do_syscall_64+0x4c/0x100
+> >  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> > 
+> > Fixes: e3f30d563a38 ("PCI: Make pci_destroy_dev() concurrent safe")
+> > CC: Keith Busch <kbusch@kernel.org>
+> > Change-Id: I7cee1123c90ce184661470dcafab45cec919bc72
+> > Signed-off-by: Shay Drory <shayd@nvidia.com>
+> > 
+> > ---
+> > changes from v1:
+> > - add pci_iov_scan_device() helper (Bjorn)
+> > ---
+> >  drivers/pci/iov.c | 47 +++++++++++++++++++++++++++++++++--------------
+> >  1 file changed, 33 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index 9e4770cdd4d5..9f08df0e7208 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -285,23 +285,16 @@ const struct attribute_group sriov_vf_dev_attr_group = {
+> >  	.is_visible = sriov_vf_attrs_are_visible,
+> >  };
+> >  
+> > -int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> > +static struct pci_dev *pci_iov_scan_device(struct pci_dev *dev, int id,
+> > +					   struct pci_bus *bus)
+> >  {
+> > -	int i;
+> > -	int rc = -ENOMEM;
+> > -	u64 size;
+> > -	struct pci_dev *virtfn;
+> > -	struct resource *res;
+> >  	struct pci_sriov *iov = dev->sriov;
+> > -	struct pci_bus *bus;
+> > -
+> > -	bus = virtfn_add_bus(dev->bus, pci_iov_virtfn_bus(dev, id));
+> > -	if (!bus)
+> > -		goto failed;
+> > +	struct pci_dev *virtfn;
+> > +	int rc = -ENOMEM;
+> >  
+> >  	virtfn = pci_alloc_dev(bus);
+> >  	if (!virtfn)
+> > -		goto failed0;
+> > +		return ERR_PTR(rc);
+> >  
+> >  	virtfn->devfn = pci_iov_virtfn_devfn(dev, id);
+> >  	virtfn->vendor = dev->vendor;
+> > @@ -314,8 +307,34 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> >  		pci_read_vf_config_common(virtfn);
+> >  
+> >  	rc = pci_setup_device(virtfn);
+> > -	if (rc)
+> > -		goto failed1;
+> > +	if (rc) {
+> > +		pci_dev_put(dev);
+> > +		pci_bus_put(virtfn->bus);
+> > +		kfree(virtfn);
+> > +		return ERR_PTR(rc);
+> > +	}
+> > +
+> > +	return virtfn;
+> > +}
+> > +
+> > +int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> > +{
+> > +	int i;
+> > +	int rc = -ENOMEM;
+> > +	u64 size;
+> > +	struct pci_dev *virtfn;
+> > +	struct resource *res;
+> > +	struct pci_bus *bus;
+> > +
+> > +	bus = virtfn_add_bus(dev->bus, pci_iov_virtfn_bus(dev, id));
+> > +	if (!bus)
+> > +		goto failed;
+> > +
+> > +	virtfn = pci_iov_scan_device(dev, id, bus);
+> > +	if (IS_ERR(virtfn)) {
+> > +		rc = PTR_ERR(virtfn);
+> > +		goto failed0;
+> > +	}
+> >  
+> >  	virtfn->dev.parent = dev->dev.parent;
+> >  	virtfn->multifunction = 0;
+> > -- 
+> > 2.38.1
+> > 
