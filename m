@@ -1,201 +1,516 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2066.outbound.protection.outlook.com [40.107.22.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0EB2D7BF
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377348; cv=fail; b=NJphiFv5/cRbRaErahZRUTgLeoVRL1fWIJlyHSYGfmvApBpcZB1r62IpGdL3EVKBE2UjRJSG64EgOE37vazrsqYJ/6Hwpzui6R9pnjTwRTj5YHfP8lDjx/h47j9NHWkxgZSH/DggUGpcdf/rilcLclWPIt9oMZcCAbQm2216vX8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377348; c=relaxed/simple;
-	bh=wBwuAHTmmfIFd2noZNXutfKwlQPK4Ld0YSgpMnXmfug=;
-	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=nadhJVv5C6YjuT/z1jNP92iz0evbEczFTFh6Qy/qLkF2jPToT5NoJ+t68KwoUgdkEFSHhwgYxx6tSnbRYnsNR4nQhRpgAecgFlu/CRcR8iJ4Wfrl4osBqL9eVs1r8qlEBOluZQ54s5md81A6inJlvYNdN1lXGT1cHu/e6//b6vU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=RmK8wTsi; arc=fail smtp.client-ip=40.107.22.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B887DA6A
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744377349; cv=none; b=r8HNo8uJBLW64SuIzh1xLsmX+QttwVyu4Qy9xFtWF8Iow/CCBiRHfTOHwB9W11sXHiS74L68ej5r1hb4p+PCBl8sDXaZOzcmO5oQ7BAgJYy6cAD2Ck9fsi8qzp6la38Y/rs4UkLssAbOtVJvmsUrBhCjkvJ6e1GSFu7yVmdLjX8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744377349; c=relaxed/simple;
+	bh=CQbisDDlqIuUL9kLnmsm4eBXkI4TlVKGpOx54RbTORs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Z1f3gTMuzw43cAEMjLCcoHrhMmiPlqkBKPWPL+0M+Sc3MAihVZyaeOAy/NdVBpqwF2IrOuVvQj+nUtmSr4d94ma6zC3kBqU9l+eQTuqwHqAHla+VNq9LsJI9djiB+nJbLj5NX2xr231cwKgVF1jHGJkZ+O2ObBG/OPqjEkt6Nn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=mxiYWBEu; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="RmK8wTsi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ipz1iiAJgO3tevc9/kibrcf9oKF2jaIv+V9CqRvrv1bidf2Eqiprh0Phbu1RS4iqm01gl4vLCT+qFkf8A7U0K7jUgvo3teFfCKqNZ5NUqpZOJmqO0oBco1aBBl6gNRX3+OTY8yiTaVSG+hfrDH+1nYMhVgR94QPjG/O3M6fFbYwuBYyhDdV+f2a+4KHl7Rgm5tv5O68jq48TZn1HenG8hUmNJ6K1qgIHw/lEcH5zGwyktX3WfSe/s8fmLqBOZ+OZdIzjlkkO6Hi4uCSgp7TrDvv/o+b4EMJmMsqOCdIgPUgpNOG2NkF2u1YZ/imG6jtizWRQm2Oe+oDquW5LZ48ByA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RO6LiDADqYGX8oOE8UId6vj3RZQf5GfL0Z0+n2uIce8=;
- b=RwzYUaj/9aCCfh6wcLh7sRwbCeIP1BrXVrG1FLQ16KoElj6ZfFeX+wpR9KWRbT+Lsl0FF9cDw9yO5MX8IV4ZBBqLMrtxJhHx3oRRR9DVDCD7WuEzxpLxCsgYQ/ct+TsoS+KdbUVA0ZodldlusfZ+/zFa/EUTI6p3HNa31rVNZD4wrZ2A0LCfA8tYuiMOPQp6FcF7C5Jg6LWCaHIJfV9EY33X2WFtQgmW/4MA9tHXV0v5ufZ+tlhhCKgqeZkC3/2KX2gNz0b7gQjGDdOt91aIcU/PBpW1BwMMWZPBKaSZrfooA1NzXgnLImDLQtT77vppaGIPN3VpB292pv1giToG1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RO6LiDADqYGX8oOE8UId6vj3RZQf5GfL0Z0+n2uIce8=;
- b=RmK8wTsiunurDtX6TUxYnZCZLq4Vgo8228eEO3szVVp/xiRU+eSQ1gb+zdoO6482SphVIVEwrhJCfOxuIBpLt0OzqRDO9AezkuD/IfKsOU8MOrOcNmr8GSHDcYbwe914hWtLkT4cBFQ7ojkH+wlfqHAxvg1l3774pcd4WMHi4DV8gRBgUb5pXJmPnMMwkcrgVOVa9AyrXqeGXr1aeFaCpAzDD3tgnL96RasOFW3b0TIJgBdrjG+v7lqdXvkovMyyKBPl+rw63V+Rr/Wyjyn2DRtfpgGjHo8n6cGO2PzuxWEdsT46NuNQRsuZ55vTBU9AqwqmhgesZi5U1LOhcw9Wpw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by PA1PR04MB10674.eurprd04.prod.outlook.com (2603:10a6:102:483::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.28; Fri, 11 Apr
- 2025 13:15:43 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8632.025; Fri, 11 Apr 2025
- 13:15:42 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Subject: [PATCH 0/6] mailbox: Trivial updates
-Date: Fri, 11 Apr 2025 21:14:08 +0800
-Message-Id: <20250411-mailbox-cleanup-v1-0-8db541394dc2@nxp.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKAV+WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEwNL3dzEzJyk/Ard5JzUxLzSAl1TsxRLI4M0Q+PkJAsloK6CotS0zAq
- widGxtbUAy88FJ2EAAAA=
-X-Change-ID: 20250409-mailbox-cleanup-56d920f13cb8
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Elliot Berman <quic_eberman@quicinc.com>, 
- Thierry Reding <treding@nvidia.com>, Sudeep Holla <sudeep.holla@arm.com>, 
- linux-kernel@vger.kernel.org, mailbox@lists.linux.dev, 
- Peng Fan <peng.fan@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744377279; l=962;
- i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=wBwuAHTmmfIFd2noZNXutfKwlQPK4Ld0YSgpMnXmfug=;
- b=j7T7q28ONf6/WjXRWZOmOl9kzLZe+uQ8KA7K49u5Av7sLy6vrSBZL8DqQMGjaGAUhEdO8Zfwf
- lJIrKM9EoP6BR5KqfzvkskUx6rxLAYsZAB5SkXqvUZ81NXjlngGp5Sc
-X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
- pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
-X-ClientProxiedBy: MAXPR01CA0104.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::22) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="mxiYWBEu"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-548409cd2a8so2548375e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:15:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744377345; x=1744982145; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0wN+ZoR9FraBx8eyzdPTJ1cLQd/mVtKq5MlDuPX3cQQ=;
+        b=mxiYWBEuR2sLPj8SDTpNZ833PYiYNLWxAIh7aG5oC3tcrDcdXAET1k1oIBGX63iMEW
+         YvAPUShT43lvxONGo1kKnVPyLAgnXJQRLzH5KdJ93Np2kclVvVteQHH/Y6CYSSwJcvQ4
+         aZQXFrOUhkDgTBtMV9OwbMR5HTShe0R7lDTjJ+zmaS4Oop6rtnqIPpiSBa6AqLBITBEj
+         HXlhRBCLOLdgl5P4Mj2+NgK92NW7EWpbzdZ/0A/9C7OyRPTRL7L9J7XnrnNr2+CbPNnj
+         W4n9jsynp1k9vKIZQVrpYY1PHF9CuFvkFasZWooJutXrwvEGf2j+FhYvqxmBa4EsRkxD
+         z1uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744377345; x=1744982145;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0wN+ZoR9FraBx8eyzdPTJ1cLQd/mVtKq5MlDuPX3cQQ=;
+        b=kETtRsPx19h0e3cyCqLn4oG9+AgG5zqkeq12nnNxx6H5wHkNouS5r7SLkn4fv2DooX
+         979V9FfZgYy/FCcehX6VHnVG9zLQpUVZnOldgQayoY3FBqnai30OZiNp2oDpwG6XV5ED
+         JNJ+rC2HO9z34wtceeL/K/L0hHA3+pJPmd8QcPlyTpnUK+Kr1WRqtTeuqscVX3VOL31h
+         tPydBkzdU88y6TrRoh8O46RST/G4r5Ywu+RDU4s3L9fjUTPBZP5tb6tYLi3xFsI5z2RK
+         QRiflTaga1z1kncy1rxn4ue+0NnS4Tl9mSiCgGvqCnhmXmhg0Tn5i3NoLhX+tn6PbHxc
+         o/iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDRinBA/qBdFKRMXM0574Eb9zPWOyR1qwZ+UudmtGnPRmuaZgMVe8be/oK2OfCU29PDaqC/nyKke8JOlc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+ScPuGR+1IfPmTsbqmQ0IBbKkzJZ1HK/rNhPR7I1cn0B5V0k2
+	M0FYoh5FsJ65IqV408+rLNnW3aZ70o0cTZFfqC8VmNeOU4s26QDqMEt+vcDxM+Y=
+X-Gm-Gg: ASbGnctq419J6kBvDdAuzpRN8HqWAPkCtK9O/PAfdVvMeSvsn3pQX2Lbr+0YOAkf8/F
+	BJqMhYiFxwvmYm3qlNUbkk9glLyQFjXB2W7dPOhFeeAL222F9hqTlGUUC1yGtgA5lz2cqauhSNX
+	Zv3S3gMH1OzGX/ku3A56BOUTWPTGUZBHUfLpF+S/MpF29hw2xUamolbAUkHEu0VXLJ5cgy+beH6
+	pYVAbH8LJzB4Qlt4K0jkkjRQ0+L/Rb4tW+5+CF7a1EruVN6ac2B3MdRZ3Jdy6Y74YTRPUtqPDeW
+	g9E/kpxTDcGjEOxwpo91RpMZYc8XtaLYQUn1j8y6RwNF7nBNFsgu46F6K/fWHUHB8eFKyRLebUs
+	oeCjDurJXXhU+x9aIy2IGQC3IMWJRgT+qvA==
+X-Google-Smtp-Source: AGHT+IE3083X574tqADw7NbJaCpkPbYkvntHjSXglZdCRT9a6tqLqs/ZFy4+2uPxGFh0eP/9eUbkmg==
+X-Received: by 2002:a05:6512:10c8:b0:549:91c6:96a8 with SMTP id 2adb3069b0e04-54d4528e891mr854002e87.7.1744377344426;
+        Fri, 11 Apr 2025 06:15:44 -0700 (PDT)
+Received: from h-2001-9b1-c3c7-e600-116c-cc53-dd4f-4ae1.na.bahnhof.se ([2001:9b1:c3c7:e600:116c:cc53:dd4f:4ae1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d238d43sm428622e87.78.2025.04.11.06.15.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 06:15:43 -0700 (PDT)
+Message-ID: <de8870a8cd2609b6f7db70a92e4a34e13c6e3e8d.camel@rivosinc.com>
+Subject: Re: [PATCH v4 05/12] riscv: ftrace: prepare ftrace for atomic code
+ patching
+From: Robbin Ehn <rehn@rivosinc.com>
+To: Andy Chiu <andybnac@gmail.com>, linux-riscv@lists.infradead.org, 
+	alexghiti@rivosinc.com, palmer@dabbelt.com
+Cc: Andy Chiu <andy.chiu@sifive.com>, =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?=
+ <bjorn@rivosinc.com>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+ Alexandre Ghiti <alex@ghiti.fr>, puranjay12@gmail.com,
+ paul.walmsley@sifive.com,  greentime.hu@sifive.com, nick.hu@sifive.com,
+ nylon.chen@sifive.com,  eric.lin@sifive.com, vicent.chen@sifive.com,
+ zong.li@sifive.com,  yongxuan.wang@sifive.com, samuel.holland@sifive.com,
+ olivia.chu@sifive.com,  c2232430@gmail.com
+Date: Fri, 11 Apr 2025 15:15:42 +0200
+In-Reply-To: <20250407180838.42877-5-andybnac@gmail.com>
+References: <20250407180838.42877-1-andybnac@gmail.com>
+	 <20250407180838.42877-5-andybnac@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA1PR04MB10674:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66ea61c9-bbae-4ce9-3a43-08dd78faf656
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|376014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MFJrU3ZORVZPM0VqV0xmUjk3UEhMQ2o2QjJtdEcvV3pNRlRBS2NLZVV5cStK?=
- =?utf-8?B?NFgyWko4Zm1zTjZmSEtTdDY2UU9ldEtROFAxdE12VTlhNHpOV2l4RkRkZ1d5?=
- =?utf-8?B?cE8wUnVhNXgzT2tNbHRvby91OUFBMVNMRFVhaktPZFFsckpBMFVrRXZtbjMr?=
- =?utf-8?B?RWt1dGlSdmV2NWd0VytSU3MrU3pvdUlJMFRFNjFBYlhMVTdWVVg1bEJJbnlT?=
- =?utf-8?B?R2prZWtoMC9JWE9OTHp2S0Q5U3AwVUZjUkVzM3FTUSt0bGlGKzU4VHM5d2ZV?=
- =?utf-8?B?ZVpqZ2lpMDIxOEw3Z1UrMGloaVlDeHJEOTVPYmhiTmdQNFZZVkpHRTk4TU9j?=
- =?utf-8?B?dlREa1hIMnFKbENQakhiVFJDM09kOGRyVjA2TFpaNEFrMURhdTFuVkNPa3pJ?=
- =?utf-8?B?cm1xOXhNU2pxMWJaNHpFMTg1QmpMUzZCNENWWlpPZ28rQ0I3ZUNxcldBUG9I?=
- =?utf-8?B?NG91dTNLeVMyL2M2R0lsemQ4WUhpUnQ0Q2dCTEZVcDhBbEhyMWhQSUxZQk00?=
- =?utf-8?B?SzdWVkx0cE9qRjV0bG8wOXNZVXdYT3RCcmdDMXh6Snh4U1UvSWMyeDhIUFRT?=
- =?utf-8?B?NXA5b3BzNTV4RXl5SytsckVPWUtaaHVlNURXRlpzQUxyK0RlLzlDR3JIOVZZ?=
- =?utf-8?B?SUo4VTg5WGpYeElGLzArZjZrZGhIV1FEd1NUR3MxL295K3FCL3NINHpYS0Jq?=
- =?utf-8?B?OTlGYzJVejRJdnBpeWd2aVc0bUpxempEWDNsTktSajIxOFR6THAzeERaL0pC?=
- =?utf-8?B?c05yWlA2cU1TT2ViR2o0czNkK3QrUjVaSUJCbzIzOXFHa2xkRWM4THBML3B2?=
- =?utf-8?B?OEcwcnRDRXJoZklmMFhGa25PSXRHbi9OYUNJWVJMVHF3TE44dXYrK05kNjhO?=
- =?utf-8?B?WUtRTUxrakJrbDQxR0FCc3h5YmxXMDZ1YmdCZDIxNEtscnFaQjFEcWdkMlAw?=
- =?utf-8?B?WlNYb3VQckx2a1dkTmRySjJ3UGlKMkFJdHlseXM5bWVBUkc3ZzBKYlNnWjF1?=
- =?utf-8?B?S2pxMlBuSkJQVXZlV3Z2L2U0RGxIN0JCd1JzTEIxZE9xck9LYWx0YzZrckNa?=
- =?utf-8?B?WWxPWUxNVFg5ZDFyV1FSNzBNZzBEUDZVejhHNm1HOWNpa1c4MlpsN0ZwUmh5?=
- =?utf-8?B?NFk0K0VVNGJTUE11Y0Vnb1FwRUZSenFPdHdjK0UvMEw2eTNuWXkyQ1pRWjha?=
- =?utf-8?B?b01Wc0RzRG5OOFV0Y2Foc0VtZDNIcFduL2MyR2g5OUJtRjcwR0lKckozUFJh?=
- =?utf-8?B?L09nRXNaM25RQVdTOVZnZnlYOEovUGV2WEd2VUkvQnFOK29RTmtxMGIveDRC?=
- =?utf-8?B?SDZEQWZDY1d0ZkRmaVZROXRodHA5bUswWC9NL0xBZUZ0c3ZlMjVoME5BMUtW?=
- =?utf-8?B?TVpUdXR4Qnc3UTM2a1B0RWY2MTJXWUpuekpsMlVpWk1PSkxTcUQrdXpWN3FC?=
- =?utf-8?B?QmpteHlxVW5qbWwxRHdCMFVpVUJ1eXdKVUdGQlBpWW1DMWQ1U2laYTR3ejRu?=
- =?utf-8?B?ZytjUVVTRGgyUlRTdmU2MXpXdCtlUmh2eG05T05WMDg0alN2NHVkNkdvK0xF?=
- =?utf-8?B?RUQra2JXQzVHKzFYMXZpdkJQVi9MZ0VpaXZHL1ZIdWs2ZFllMjY2Vm1zSXVv?=
- =?utf-8?B?cXJKOUxmL20xc1pVMXdKNXh2M0syQVFtbnYvUnlRbThlb3k1c0NWRjZrUEJo?=
- =?utf-8?B?YzY2V3hyTWFwSHpROEJJTm9VYnhLVG9OTnVMS0FpUlF6OEJzZlluWWN3L2hx?=
- =?utf-8?B?TnczY01SUUlTbGpaTERJWTZlelZQVElJWkpMV09nSnVHSDIzaWhQamRIR2o1?=
- =?utf-8?B?SFhoVFBucldmVFpPWStWVUtPR3d1WHowZDFOUlorNkxkM0pyWmkyRml0cGh2?=
- =?utf-8?B?eXZ6RUZDWTBJQ0tCaFdSa2lQdHQ0Y29kbmcyeitxc2NQQzNtZWxvOWI4TjJ5?=
- =?utf-8?B?MGFySGgvMldqRVpwYkNYNnk2NXRCUXZHcUFZTksxbVp1OHZxaU1ydithZHdU?=
- =?utf-8?Q?cz2Z4Nz+srZvHDCkVjaNgJKhHFhNg0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?REZTR2xDenRoZWRtWWVOS3VpZjFuUHd5SFJGd1JZY0lzakVZY210N0l5Qlc0?=
- =?utf-8?B?N1NNL3RYcFF2aTR0c1luYndwRy95OVdrOTduZHZOSHc0M3IySnFvMzRxYkpJ?=
- =?utf-8?B?Yk1iK0IrK3V4Y1IvT0FiNVd1RHF2WWJSV0VDdWp3b2grTVpxN2tVZ2YrSXpi?=
- =?utf-8?B?eHlwOUFuZ3JJbTFqUVVsNWFIWUhrV1FoeDFxNFZSNUlpSnB6NDBYc2ZuVjU4?=
- =?utf-8?B?T1E5dkp0OXdBNFpkV1FETGF6VEthMTNsOTNuTnZrc3gxbEwvZXppVGVUT3hq?=
- =?utf-8?B?alFndTRjSzBkWEJrb2E1QXRHbldZTWZ6OFpDcXJNNmFlbEpwelc5UFJLWDcx?=
- =?utf-8?B?eUhNZi9CQkdvVmI3K1Q5bmxNbG8wNE5uK09paWdNYVE3K21kTGhCejdHbDRv?=
- =?utf-8?B?d0hYNzVQTm9hNjdnVklTWEErd3Q5bDd6NDdrZTk1SG1JWUxwQmcrcExKRk5S?=
- =?utf-8?B?VWdRYWhmOHNkam9NUDZqS01vTmpiSEFONm5YM28yd3lML2xMN01MTjZXb3M3?=
- =?utf-8?B?VEErL0djK1F0VkIyNDhvaW5oYTYwVFRGNldXL0EvSUVNNm5nUEFoVXdocVdk?=
- =?utf-8?B?b1BUL00za2pOcE1tWWN2bUZaWExIQ2ZGejJEZW9YVUtEQ3E3YnlscHlmTzkr?=
- =?utf-8?B?YitsN1NlbEtKR000THFvekhralMzODlVTHRqVFFhNXZid0VtOTRMV2Y5MzI3?=
- =?utf-8?B?RlVBYmdKOUJTVEJFb1BxM2dqOTZDQmlSQXpkR1ZzSEg2NHR4bnEwbzR3Q2ZF?=
- =?utf-8?B?UitFUjc2ZVlzVDkzSStuYThMNTFtMzBSdmZHakVLZWl5ZVpHQUpYZy9pVjQw?=
- =?utf-8?B?M2c2L1ZneTM3bmVCRnM0VnBmeE93aWVPOGVnUUhwSUkvT0lhemVXU3RvR2FE?=
- =?utf-8?B?aElNRUlNUTFZczNTeFhMNTZRd1M2cGtUeCszZ05hTENXRENVdWdUWDNSOUFK?=
- =?utf-8?B?ajR0bWRKaWVmR1RyS012MDRudnB6bUtOY20zckV1STNLb3NOL2VyK0FNd2Uy?=
- =?utf-8?B?MkttZWZLa3lNY0ZMVVhHWTRsWlE2akpuUG95ZG9vMlYxMSt3QWkyR2FoYnUy?=
- =?utf-8?B?bUxhbjVMejhlYzNPcnc1d2w0KzFvR0lMRjYvaFJzM0NCcE84RndjZFUzL05o?=
- =?utf-8?B?cEV6U0dEM3ZRUXIwNXl5MFQvZC85MjRGMHdoczI3eDRoU0pCMHhYSXhCeVcv?=
- =?utf-8?B?Y05wRCtzbmYycmlwcWx0RlN0RkU2cWc3QUd3b0doZGVJVkFrVkZqUEk0a29N?=
- =?utf-8?B?bVVZd2tVK0k4aFR5b0wxZ1Q3dlBhb2J2TTR0U0xTVkVhUW9TcTRxOW5adjJO?=
- =?utf-8?B?Y2pNZmxZTlQ4YW1Fb0xGb3JWNHRrcDkwbW5FTkZieVdsbHRTQnYzV1paNWo5?=
- =?utf-8?B?VmdaU2VFM0tySnoxQUJZZXdQSUlYQ05vTHdMUHp0RGlXeklCVkx4WjhFbEVU?=
- =?utf-8?B?OE9jcTBSbUUzTVdQNHRaWlJDQUdjbEJVQ1Zyejc0TThZRHoyL1BUQVAzYk9K?=
- =?utf-8?B?bFBZRk5ZOFp3a1VNSTdua1pvbkxzNnl6SndvQnI3amMrbGpZWXNYMlRRZUlY?=
- =?utf-8?B?ZDkxRmZzemFFTnJCVG5FY3Y2djNDSElqTUp6emdWcm40bHB4elV6TU1QS3Mw?=
- =?utf-8?B?YWtNZ3RtaitzS3l0QXkvVWhySWNxUVByenJ0N3Y4OHd6MTFDUys0WU9iOFI1?=
- =?utf-8?B?RzgxaEE3RXUwVlh6YisyUTEzUTBUR2NpS0M2VXJxMXBqejJtMWI2NTRPNTdm?=
- =?utf-8?B?b3hjZFdRSWhqRGVNYktRVElCbGpPVTdnVmVodnQvNVk1U0MxQk52MGcxemY4?=
- =?utf-8?B?cElrWnBUc3M2Wmh4ZEc2OUZzRlFFTGFmdldMTVpmN2JMaVNZTEVsV1JRT2NM?=
- =?utf-8?B?bDZrNHcxNGpldXE2Mld6NkZtL3NEd2RuelRwNVc0Z3BUK1d1TWZPR2Fqckw4?=
- =?utf-8?B?eTZjdWdNN2VhSnAzcEtnNmZXUWdFbXpmWmMrUDNrbjl3SnZTdmJ4UVNlR2dH?=
- =?utf-8?B?enl2dWRqYk1IMldqdk5BdG45OEdzSzNjenUwU2xnUGd4REJoc1llaCt3dnM2?=
- =?utf-8?B?b2I3Y1Y5M1FkanRjQTdPWWo5aFRiZUtJa2tVZ1VhN1hqSjUyS3AvWTdkWDdT?=
- =?utf-8?Q?XpeIQjxQcFgyYMFQmoVMzzHJ7?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66ea61c9-bbae-4ce9-3a43-08dd78faf656
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 13:15:42.9058
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3qdDwNLw45lncUST3DNYwX0sA3zuCL72HViiDwL6VychEtsYqmHgS+WzVV8vUHyvH6M+wzvoe+m6gNpkJ4EDFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10674
 
-Several trivial updates to cleanup code.
-- use dev_err for print err information
-- propagate correct error value
-- use guard/scoped_guard
-- drop devm_mbox_controller_unregister
+Hi, thanks,
 
-Tested on i.MX95 with SCMI mailbox Transport
+On Tue, 2025-04-08 at 02:08 +0800, Andy Chiu wrote:
+> From: Andy Chiu <andy.chiu@sifive.com>
+>=20
+> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
+> instruction fetch can break down to 4 byte at a time, it is impossible
+> to update two instructions without a race. In order to mitigate it, we
+> initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
+> patching can change NOP4 to JALR to eable/disable ftrcae from a
+> function. This limits the reach of each ftrace entry to +-2KB displacing
+> from ftrace_caller.
+>=20
+> Starting from the trampoline, we add a level of indirection for it to
+> reach ftrace caller target. Now, it loads the target address from a
+> memory location, then perform the jump. This enable the kernel to update
+> the target atomically.
+>=20
+> The new don't-stop-the-world text patching on change only one RISC-V
+> instruction:
+>=20
+> =C2=A0 |=C2=A0 -8: &ftrace_ops of the associated tracer function.
+> =C2=A0 | <ftrace enable>:
+> =C2=A0 |=C2=A0=C2=A0 0: auipc=C2=A0 t0, hi(ftrace_caller)
+> =C2=A0 |=C2=A0=C2=A0 4: jalr=C2=A0=C2=A0 t0, lo(ftrace_caller)
+> =C2=A0 |
+> =C2=A0 |=C2=A0 -8: &ftrace_nop_ops
+> =C2=A0 | <ftrace disable>:
+> =C2=A0 |=C2=A0=C2=A0 0: auipc=C2=A0 t0, hi(ftrace_caller)
+> =C2=A0 |=C2=A0=C2=A0 4: nop
+>=20
+> This means that f+0x0 is fixed, and should not be claimed by ftrace,
+> e.g. kprobe should be able to put a probe in f+0x0. Thus, we adjust the
+> offset and MCOUNT_INSN_SIZE accordingly.
+>=20
+> Co-developed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+> ---
+> Changelog v4:
+> =C2=A0- Include Bj=C3=B6rn's fix for kprobe
+> =C2=A0- Refactor code for better reading (Robbin, Bj=C3=B6rn)
+> =C2=A0- Remove make_call_ra and friedns (Bj=C3=B6rn)
+> =C2=A0- Update comments to match reality (Bj=C3=B6rn)
+> =C2=A0- Drop code defined by !WITH_ARG
+> =C2=A0- Add a synchronization point when updating ftrace_call_dest (Bj=C3=
+=B6rn)
+> ---
+> =C2=A0arch/riscv/include/asm/ftrace.h |=C2=A0 49 ++++++------
+> =C2=A0arch/riscv/kernel/ftrace.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 130 ++++=
+++++++++++++----------------
+> =C2=A0arch/riscv/kernel/mcount-dyn.S=C2=A0 |=C2=A0=C2=A0 9 +--
+> =C2=A03 files changed, 92 insertions(+), 96 deletions(-)
+>=20
+> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftr=
+ace.h
+> index d8b2138bd9c6..6a5c0a7fb826 100644
+> --- a/arch/riscv/include/asm/ftrace.h
+> +++ b/arch/riscv/include/asm/ftrace.h
+> @@ -20,10 +20,9 @@ extern void *return_address(unsigned int level);
+> =C2=A0#define ftrace_return_address(n) return_address(n)
+> =C2=A0
+> =C2=A0void _mcount(void);
+> -static inline unsigned long ftrace_call_adjust(unsigned long addr)
+> -{
+> -	return addr;
+> -}
+> +unsigned long ftrace_call_adjust(unsigned long addr);
+> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip);
+> +#define ftrace_get_symaddr(fentry_ip) arch_ftrace_get_symaddr(fentry_ip)
+> =C2=A0
+> =C2=A0/*
+> =C2=A0 * Let's do like x86/arm64 and ignore the compat syscalls.
+> @@ -57,12 +56,21 @@ struct dyn_arch_ftrace {
+> =C2=A0 * 2) jalr: setting low-12 offset to ra, jump to ra, and set ra to
+> =C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return add=
+ress (original pc + 4)
+> =C2=A0 *
+> + * The first 2 instructions for each tracable function is compiled to 2 =
+nop
+> + * instructions. Then, the kernel initializes the first instruction to a=
+uipc
+> at
+> + * boot time (<ftrace disable>). The second instruction is patched to ja=
+lr to
+> + * start the trace.
+> + *
+> + *<Image>:
+> + * 0: nop
+> + * 4: nop
+> + *
+> =C2=A0 *<ftrace enable>:
+> - * 0: auipc=C2=A0 t0/ra, 0x?
+> - * 4: jalr=C2=A0=C2=A0 t0/ra, ?(t0/ra)
+> + * 0: auipc=C2=A0 t0, 0x?
+> + * 4: jalr=C2=A0=C2=A0 t0, ?(t0)
+> =C2=A0 *
+> =C2=A0 *<ftrace disable>:
+> - * 0: nop
+> + * 0: auipc=C2=A0 t0, 0x?
+> =C2=A0 * 4: nop
+> =C2=A0 *
+> =C2=A0 * Dynamic ftrace generates probes to call sites, so we must deal w=
+ith
+> @@ -75,10 +83,9 @@ struct dyn_arch_ftrace {
+> =C2=A0#define AUIPC_OFFSET_MASK	(0xfffff000)
+> =C2=A0#define AUIPC_PAD		(0x00001000)
+> =C2=A0#define JALR_SHIFT		20
+> -#define JALR_RA			(0x000080e7)
+> -#define AUIPC_RA		(0x00000097)
+> =C2=A0#define JALR_T0			(0x000282e7)
+> =C2=A0#define AUIPC_T0		(0x00000297)
+> +#define JALR_RANGE		(JALR_SIGN_MASK - 1)
+> =C2=A0
+> =C2=A0#define to_jalr_t0(offset)						\
+> =C2=A0	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
+> @@ -96,26 +103,14 @@ do
+> {									\
+> =C2=A0	call[1] =3D to_jalr_t0(offset);					\
+> =C2=A0} while (0)
+> =C2=A0
+> -#define to_jalr_ra(offset)						\
+> -	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_RA)
+> -
+> -#define to_auipc_ra(offset)						\
+> -	((offset & JALR_SIGN_MASK) ?					\
+> -	(((offset & AUIPC_OFFSET_MASK) + AUIPC_PAD) | AUIPC_RA) :	\
+> -	((offset & AUIPC_OFFSET_MASK) | AUIPC_RA))
+> -
+> -#define make_call_ra(caller, callee, call)				\
+> -do {									\
+> -	unsigned int offset =3D						\
+> -		(unsigned long) (callee) - (unsigned long) (caller);	\
+> -	call[0] =3D to_auipc_ra(offset);					\
+> -	call[1] =3D to_jalr_ra(offset);					\
+> -} while (0)
+> -
+> =C2=A0/*
+> - * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes here=
+.
+> + * Only the jalr insn in the auipc+jalr is patched, so we make it 4
+> + * bytes here.
+> =C2=A0 */
+> -#define MCOUNT_INSN_SIZE 8
+> +#define MCOUNT_INSN_SIZE	4
+> +#define MCOUNT_AUIPC_SIZE	4
+> +#define MCOUNT_JALR_SIZE	4
+> +#define MCOUNT_NOP4_SIZE	4
+> =C2=A0
+> =C2=A0#ifndef __ASSEMBLY__
+> =C2=A0struct dyn_ftrace;
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 1fd10555c580..cf78eef073a0 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -8,10 +8,21 @@
+> =C2=A0#include <linux/ftrace.h>
+> =C2=A0#include <linux/uaccess.h>
+> =C2=A0#include <linux/memory.h>
+> +#include <linux/irqflags.h>
+> =C2=A0#include <linux/stop_machine.h>
+> =C2=A0#include <asm/cacheflush.h>
+> =C2=A0#include <asm/text-patching.h>
+> =C2=A0
+> +unsigned long ftrace_call_adjust(unsigned long addr)
+> +{
+> +	return addr + MCOUNT_AUIPC_SIZE;
+> +}
+> +
+> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+> +{
+> +	return fentry_ip - MCOUNT_AUIPC_SIZE;
+> +}
+> +
+> =C2=A0#ifdef CONFIG_DYNAMIC_FTRACE
+> =C2=A0void ftrace_arch_code_modify_prepare(void) __acquires(&text_mutex)
+> =C2=A0{
+> @@ -32,51 +43,32 @@ void ftrace_arch_code_modify_post_process(void)
+> __releases(&text_mutex)
+> =C2=A0	mutex_unlock(&text_mutex);
+> =C2=A0}
+> =C2=A0
+> -static int ftrace_check_current_call(unsigned long hook_pos,
+> -				=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *expected)
+> +static int __ftrace_modify_call(unsigned long source, unsigned long targ=
+et,
+> bool validate)
+> =C2=A0{
+> +	unsigned int call[2], offset;
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
-Peng Fan (6):
-      mailbox: Use dev_err when there is error
-      mailbox: Not protect module_put with spin_lock_irqsave
-      mailbox: Propagate correct error return value
-      mailbox: Remove devm_mbox_controller_unregister
-      mailbox: Use guard/scoped_guard for con_mutex
-      mailbox: Use guard/scoped_guard for spinlock
+There is a mix of unsigned int and u32.
+It doesn't seem to serve any purpose?
 
- drivers/mailbox/mailbox.c          | 199 ++++++++++++++-----------------------
- include/linux/mailbox_controller.h |   3 -
- 2 files changed, 74 insertions(+), 128 deletions(-)
----
-base-commit: c10fe6005a47b49097119488ebb0cc80301623a8
-change-id: 20250409-mailbox-cleanup-56d920f13cb8
+> =C2=A0	unsigned int replaced[2];
+> -	unsigned int nops[2] =3D {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+> =C2=A0
+> -	/* we expect nops at the hook position */
+> -	if (!expected)
+> -		expected =3D nops;
+> +	offset =3D target - source;
+> +	call[1] =3D to_jalr_t0(offset);
+> =C2=A0
+> -	/*
+> -	 * Read the text we want to modify;
+> -	 * return must be -EFAULT on read error
+> -	 */
+> -	if (copy_from_kernel_nofault(replaced, (void *)hook_pos,
+> -			MCOUNT_INSN_SIZE))
+> -		return -EFAULT;
+> -
+> -	/*
+> -	 * Make sure it is what we expect it to be;
+> -	 * return must be -EINVAL on failed comparison
+> -	 */
+> -	if (memcmp(expected, replaced, sizeof(replaced))) {
+> -		pr_err("%p: expected (%08x %08x) but got (%08x %08x)\n",
+> -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (void *)hook_pos, expected[0], ex=
+pected[1],
+> replaced[0],
+> -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 replaced[1]);
+> -		return -EINVAL;
+> +	if (validate) {
+> +		call[0] =3D to_auipc_t0(offset);
+> +		/*
+> +		 * Read the text we want to modify;
+> +		 * return must be -EFAULT on read error
+> +		 */
+> +		if (copy_from_kernel_nofault(replaced, (void *)source, 2 *
+> MCOUNT_INSN_SIZE))
+> +			return -EFAULT;
+> +
+> +		if (replaced[0] !=3D call[0]) {
+> +			pr_err("%p: expected (%08x) but got (%08x)\n",
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (void *)source, call[0], replace=
+d[0]);
+> +			return -EINVAL;
+> +		}
+> =C2=A0	}
+> =C2=A0
+> -	return 0;
+> -}
+> -
+> -static int __ftrace_modify_call(unsigned long hook_pos, unsigned long ta=
+rget,
+> -				bool enable, bool ra)
+> -{
+> -	unsigned int call[2];
+> -	unsigned int nops[2] =3D {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+> -
+> -	if (ra)
+> -		make_call_ra(hook_pos, target, call);
+> -	else
+> -		make_call_t0(hook_pos, target, call);
+> -
+> -	/* Replace the auipc-jalr pair at once. Return -EPERM on write error.
+> */
+> -	if (patch_insn_write((void *)hook_pos, enable ? call : nops,
+> MCOUNT_INSN_SIZE))
+> +	/* Replace the jalr at once. Return -EPERM on write error. */
+> +	if (patch_insn_write((void *)(source + MCOUNT_AUIPC_SIZE), call + 1,
+> MCOUNT_JALR_SIZE))
+> =C2=A0		return -EPERM;
+> =C2=A0
+> =C2=A0	return 0;
+> @@ -84,22 +76,21 @@ static int __ftrace_modify_call(unsigned long hook_po=
+s,
+> unsigned long target,
+> =C2=A0
+> =C2=A0int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+> =C2=A0{
+> -	unsigned int call[2];
+> +	unsigned long distance, orig_addr, pc =3D rec->ip - MCOUNT_AUIPC_SIZE;
+> =C2=A0
+> -	make_call_t0(rec->ip, addr, call);
+> -
+> -	if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
+> -		return -EPERM;
+> +	orig_addr =3D (unsigned long)&ftrace_caller;
+> +	distance =3D addr > orig_addr ? addr - orig_addr : orig_addr - addr;
+> +	if (distance > JALR_RANGE)
+> +		return -EINVAL;
+> =C2=A0
+> -	return 0;
+> +	return __ftrace_modify_call(pc, addr, false);
+> =C2=A0}
+> =C2=A0
+> -int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+> -		=C2=A0=C2=A0=C2=A0 unsigned long addr)
+> +int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned=
+ long
+> addr)
+> =C2=A0{
+> -	unsigned int nops[2] =3D {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+> +	u32 nop4 =3D RISCV_INSN_NOP4;
+> =C2=A0
+> -	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
+> +	if (patch_insn_write((void *)rec->ip, &nop4, MCOUNT_NOP4_SIZE))
+> =C2=A0		return -EPERM;
+> =C2=A0
+> =C2=A0	return 0;
+> @@ -114,21 +105,38 @@ int ftrace_make_nop(struct module *mod, struct
+> dyn_ftrace *rec,
+> =C2=A0 */
+> =C2=A0int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+> =C2=A0{
+> -	int out;
+> +	unsigned long pc =3D rec->ip - MCOUNT_AUIPC_SIZE;
+> +	unsigned int nops[2], offset;
+> +	int ret;
+> +
+> +	offset =3D (unsigned long) &ftrace_caller - pc;
+> +	nops[0] =3D to_auipc_t0(offset);
+> +	nops[1] =3D RISCV_INSN_NOP4;
+> =C2=A0
+> =C2=A0	mutex_lock(&text_mutex);
+> -	out =3D ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+> +	ret =3D patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+> =C2=A0	mutex_unlock(&text_mutex);
+> =C2=A0
+> -	return out;
+> +	return ret;
+> =C2=A0}
+> =C2=A0
+> +ftrace_func_t ftrace_call_dest =3D ftrace_stub;
+> =C2=A0int ftrace_update_ftrace_func(ftrace_func_t func)
+> =C2=A0{
+> -	int ret =3D __ftrace_modify_call((unsigned long)&ftrace_call,
+> -				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (unsigned long)func, true, true=
+);
+> -
+> -	return ret;
+> +	WRITE_ONCE(ftrace_call_dest, func);
+> +	/*
+> +	 * The data fence ensure that the update to ftrace_call_dest happens
+> +	 * before the write to function_trace_op later in the generic ftrace.
+> +	 * If the sequence is not enforced, then an old ftrace_call_dest may
+> +	 * race loading a new function_trace_op set in ftrace_modify_all_code
+> +	 *
+> +	 * If we are in stop_machine, then we don't need to call remote fence
+> +	 * as there is no concurrent read-side of ftrace_call_dest.
+> +	 */
+> +	smp_wmb();
+> +	if (!irqs_disabled())
+> +		smp_call_function(ftrace_sync_ipi, NULL, 1);
+> +	return 0;
 
-Best regards,
--- 
-Peng Fan <peng.fan@nxp.com>
+Here we allow the read of cpu_online_mask being reordered with the store to
+ftrace_call_dest.
+
+Can't this happen then?
+
+Hart X                 | Hart new
+load cpu_online_mask   |
+                       | store cpu_online_mask
+                       | tlb shootdown/icache flush
+store ftrace_call_dest |
+ftrace_sync_ipi        | // not hit
+                       | sees old value ?
+
+Thanks, Robbin
+
+> =C2=A0}
+> =C2=A0
+> =C2=A0struct ftrace_modify_param {
+> @@ -172,17 +180,11 @@ void arch_ftrace_update_code(int command)
+> =C2=A0int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_ad=
+dr,
+> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long addr)
+> =C2=A0{
+> +	unsigned long caller =3D rec->ip - MCOUNT_AUIPC_SIZE;
+> =C2=A0	unsigned int call[2];
+> -	unsigned long caller =3D rec->ip;
+> -	int ret;
+> =C2=A0
+> =C2=A0	make_call_t0(caller, old_addr, call);
+> -	ret =3D ftrace_check_current_call(caller, call);
+> -
+> -	if (ret)
+> -		return ret;
+> -
+> -	return __ftrace_modify_call(caller, addr, true, false);
+> +	return __ftrace_modify_call(caller, addr, true);
+> =C2=A0}
+> =C2=A0#endif
+> =C2=A0
+> diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dy=
+n.S
+> index 3f06b40bb6c8..8aa554d56096 100644
+> --- a/arch/riscv/kernel/mcount-dyn.S
+> +++ b/arch/riscv/kernel/mcount-dyn.S
+> @@ -13,7 +13,6 @@
+> =C2=A0
+> =C2=A0	.text
+> =C2=A0
+> -#define FENTRY_RA_OFFSET	8
+> =C2=A0#define ABI_SIZE_ON_STACK	80
+> =C2=A0#define ABI_A0			0
+> =C2=A0#define ABI_A1			8
+> @@ -62,8 +61,7 @@
+> =C2=A0* After the stack is established,
+> =C2=A0*
+> =C2=A0* 0(sp) stores the PC of the traced function which can be accessed
+> -* by &(fregs)->epc in tracing function. Note that the real
+> -* function entry address should be computed with -FENTRY_RA_OFFSET.
+> +* by &(fregs)->epc in tracing function.
+> =C2=A0*
+> =C2=A0* 8(sp) stores the function return address (i.e. parent IP) that
+> =C2=A0* can be accessed by &(fregs)->ra in tracing function.
+> @@ -140,7 +138,7 @@
+> =C2=A0	.endm
+> =C2=A0
+> =C2=A0	.macro PREPARE_ARGS
+> -	addi	a0, t0, -FENTRY_RA_OFFSET
+> +	addi	a0, t0, -MCOUNT_JALR_SIZE	// ip (callsite's jalr insn)
+> =C2=A0	la	a1, function_trace_op
+> =C2=A0	REG_L	a2, 0(a1)
+> =C2=A0	mv	a1, ra
+> @@ -153,7 +151,8 @@ SYM_FUNC_START(ftrace_caller)
+> =C2=A0	PREPARE_ARGS
+> =C2=A0
+> =C2=A0SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+> -	call	ftrace_stub
+> +	REG_L	ra, ftrace_call_dest
+> +	jalr	ra, 0(ra)
+> =C2=A0
+> =C2=A0	RESTORE_ABI_REGS
+> =C2=A0	bnez	t1, .Ldirect
 
