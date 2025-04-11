@@ -1,65 +1,67 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E1B2980B4
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3882F290092
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361103; cv=none; b=nNVZ5SMOK2mSljpOXg2ZzrByV8cBiOv26YLNJViVuvDNzyoEmdiKf0Fwf6Gn1ytRXc1Q4TTmL+5IUNWJJbUQjv+866W01NwNfJz2w0TTqqAtqljyx7U3Npv+9qgycSwDkfWlrp3clymNA4TL9HuPuQz/a0uWdC9AM38qvh/adxk=
+	t=1744361179; cv=none; b=EP4tbIzBiCX2303Th18l7vY+ZNfxz7tsvAH2Not9DowhiFwr0v+GddeYroJGTuLUQHh7bc4/78AdnqknQ6iLhKJp3gBo7H0G5hmTBYohMTcICXNvcAZAxdPnDaR3PTp80xHsJ7qqlV6LTNxIf1ZAMEyld04XEL8nHiBRxl2qajU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361103; c=relaxed/simple;
-	bh=KT3ZPovNI1QLhpx/sSiAyZgWOThBW+OmkoKkybovVco=;
+	s=arc-20240116; t=1744361179; c=relaxed/simple;
+	bh=sxso+kVbfJAi9DIGOHSC8fpzXVVfBFw5jhcrBoSAr8o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fZ+FUXL+IBQmZY1XKb603A8hu/qZ9N2APN5ew/46O2hZqK+py3yrZPLleVUkvOjvVTSu7LM7fVNQksMAP0FxtUIzB6IfsijzJcEBgC1dOSPq2rgO9KGTRVc0BlULuL43sHN7Y4cmjbEmIEmRAiUvd7LGiovRZ9MxhdI5O5he3xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RBG1LnDS; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=f9JQikjOYbFglgntCD+5b8hOMIhhnJo2A+RIw+U/RbKDFijoB77X/Nyygd2mX93qMXQCJUmmc8Ybi+ffu8jek+HvjvmsPjAqRZ1anusnYue2put+2olFIVRI7emxGfBavKmr7/8g2WFGo2D60WvNiSSzIFIoCVAy1KCgaXtfO+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=Cg7iEOwC; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RBG1LnDS"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c2688619bso1039922f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:44:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="Cg7iEOwC"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso12324935e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:46:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744361098; x=1744965898; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
+        d=openvpn.net; s=google; t=1744361175; x=1744965975; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Aj7bYwGpmFij+p6WS5NWCrr8WK21yn91m17fgt7T08=;
-        b=RBG1LnDS0XL9QACH1EzRxLyIN+20ImfvA4fo1lXW8LLnOJ+XgQIZbVOY1Xh2mUAUKs
-         JSpJoDfaF0WLFlJntUNIs7ImBkNA8G7SDGffZ/5Tu+sEl9JqLKfR3TX5St5/f60zJTMG
-         yAxpf2i9dNak/PVE8hpxxrPYFsSGH2D2f3M6rr29V5ZFIYppAYBmhR44S6D8KLlkyp6S
-         MYRQuzRWJ133puckXqW6+IlCGf61jw3lrYNuAwuCkzHUXhuAWsrYhmao4GRYOz6nztJq
-         xL0A+axciZA6CQzMi+fiUDhg6Pf/VVhqa3nhe4FgbqhfWSgt/MSNwsFE8SGKeWdvpxU+
-         thVQ==
+        bh=FIH33XwPVxisy4YuF3BBBxAiOFW2ENyBMF7nIXApkn0=;
+        b=Cg7iEOwCz2GMwSWOV/+NVmN7IfshmfMMsfA1V+ICnhDf/pKqflRUqApkiEIUI0c/tI
+         T+qrMGuEz/vayY/ILlWyztEXko+hGrcXKReLiR1cq3aLIzGml7A+W34EXiP85o4x4N1R
+         Y1Qai1TaGcoEHNE8ETBO+HeMKobVwmvJ/g9SKDY7Qqqy/m8ZawjC4BvYUNOnoiWvMD0A
+         lGn7FPR6tZ02FsIeHBfHIZrL2IY0UTUyKmJx/8EqA1gNqS0qf1owCS2bkGyI7cX9N4uT
+         +oYq05RU+zhwagLzMa+muqXAsmvzDSV/H8uhLY1LcD4lcpalcNzlBNYXoxslY6hoEeZW
+         +dpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744361098; x=1744965898;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
+        d=1e100.net; s=20230601; t=1744361175; x=1744965975;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+Aj7bYwGpmFij+p6WS5NWCrr8WK21yn91m17fgt7T08=;
-        b=TS1YDkVqpNQNYDSOTduAXYNeN284ajzxrwYsZSKPPpqy4DliUgoW6fcmoVKVZWqu5q
-         xGTxWhXgDnMsCKOCJVaUogXLzf3sK3l6tCMImyBtGLetRVAN91bIlkjKS8Z/5O7FQX/J
-         BxHPxKNGL3cDAKVmM4xacAXWFQGbGRkilfCCgiSwhcNfEXirGbhVWpau0qL6l/sWIL9H
-         MXElos/JRxmI87/UwBVayDDflETqCuIFQmqv9A911w9AZae9fGHU+053ZsnV3O+PLHgA
-         uRMjXaeoDWdlS/gs+EIqADAUJKWeQOV9sEn9EUOGgIl2a32NFqlL76JZc/r4j0RWiId7
-         YkkA==
-X-Forwarded-Encrypted: i=1; AJvYcCXL2EGGXtfMFaTx7egeWZvD5N11FEY3iXhO4caqslBzjJId8Z1OvoqQ0V/5vcDurguqTVt2rghTFP1a434=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAeEkH8LgfK8zWXY0Rw9IL0DfrYLBrYXfzbz2VnkhHj892ojhB
-	uWlLO/MUwwXAW0UKByegQaLsFXibXEIrEpMkjKS6t1cU6cg4SV0utZQTRcurRyM=
-X-Gm-Gg: ASbGncvcgkBORayMLA2cAU9zheC140U4MbfdhuMoJpa934OCAp95UAhyV5QIuCyI2DC
-	9bL4eci2wEN+TLcHxwd9EcGtHimUunkUcPtxP2p1kDvKURiGUmAqRxPpn4BBPLnfhv5NuCP1IiH
-	Yg5pHxsxXVkJqs2oVT3XRNR3NzzjGewNdIzn6ahFk5uKBt4Qqt2SvPwhRmEU+pdmiVcr6XUJyxP
-	PQewPmK3yfX95AiSbxKYoTzx46Fnt5xbIBEzcdeXHYuCA4Mu0oEQVjrvrSDTkyCuhaRvF8Dg1xd
-	dYxFz5IbmwoO2WRWgiLKAOT7jO2oyNh+7cFVnyqUsoSei8Cg
-X-Google-Smtp-Source: AGHT+IFmDNoMNIPep30iQGk7L0aRLNYJN1WA4f/yj9i/HMl65pMcNflAUWdBjK5NVU7WvtrKQTywtA==
-X-Received: by 2002:a5d:6d82:0:b0:38f:2b77:a9f3 with SMTP id ffacd0b85a97d-39eaaecd9d3mr1479862f8f.43.1744361098447;
-        Fri, 11 Apr 2025 01:44:58 -0700 (PDT)
-Received: from [192.168.2.177] ([81.0.8.231])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cb29sm1328298f8f.76.2025.04.11.01.44.57
+        bh=FIH33XwPVxisy4YuF3BBBxAiOFW2ENyBMF7nIXApkn0=;
+        b=MbUUWb91M0kvXlINPJIXKnpk+CXaIA4tbJ34EthkYZe5mgCPZSOlP/I3znteZ3LYtC
+         +337hZDMuQlcnoARcMRcQEG/rpfGMbhuOpX80KQlg63QCg8Ryj7IarDf8VPM4pGw5lJx
+         UKWSbbHLJJjRXSNEdaSQ1ItK007HuPrn7AiyZZNHDIQ/BkIOUiBOC5hiip6y2vDrw+4E
+         e/9c9n/CpD8h8vriOUPoafEeOFCir8ZAGWmrrFw2GYRgYj8yrvt3S2ZntD0N+b3IEVQh
+         LXjcW9xTFdiv8wpmt6K6DP+viddmrXGEONauVMv4xLCIVhVJr48tFpPBEoGv8+x8gRNp
+         dmhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpcj9kv9jcqpOYddsN7324gqHtwsO6I5jrz0JyQvivyhd5RMo14SSXGXgnviS0Uy2dl41dJ/oweiG8jP8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzhAhgmuFZwwo6+eahh43rYNQtrsn61NXP7z1HEn1MgOQIfUiT
+	xG9pHlGlvb9t/pUiJT0wy3hOQlLNsTk4SUk3hQEO+xSTCos3z9Jhl94XbZ0fJLJt4vNcfBuzOQn
+	aJleHkU/mi7lqEEy0bU8+4qSEBtlqdERsbSKVccnWtK6H5eiNiG9xYPg=
+X-Gm-Gg: ASbGncvA2uXt0JFREgCHT8kWRaXvQRnEdhmkkKuYI1ToG+3lDBlt/35E3Pzk5kEzdW/
+	chrljPKs45T3QdTRrPHUX1KAUGL1fJAyIHVJoI4qXvG3vZ86Nw2qXKUGxBNc1q/JszmYPw0uPhK
+	C+ozsHQd0qzLLf7OOw0R8OP/3rc+Ag7jxMOad+1CkN50+2Dh1Cc+IueHt8MnW+x3cGdVdm/uVSz
+	SASxMyGxEoKKzDEVG4indisUpLhJpiNUGpgGpxPv9Zw79/fHOwrSWtrjWhshKuuD544tpSwlvLf
+	nPuQOvAzwDx66QalvbKYSqv3iwsEVDldwchxOHR4Cj3G56y6dS2bdqdLRScx2t+iWDAit9MOJry
+	zdv8=
+X-Google-Smtp-Source: AGHT+IE6oI30N+UvufzHNyAwyyReLUJoKKfM7r3c3yqJ2rQueKGdV8mtdHpGdKvpB1e2cp9zWVWkgw==
+X-Received: by 2002:a05:600c:1396:b0:43c:f8fc:f686 with SMTP id 5b1f17b1804b1-43f3a9287a7mr12879505e9.3.1744361175439;
+        Fri, 11 Apr 2025 01:46:15 -0700 (PDT)
+Received: from ?IPV6:2001:67c:2fbc:1:e8be:40be:972d:7ee4? ([2001:67c:2fbc:1:e8be:40be:972d:7ee4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075a65dsm82676205e9.31.2025.04.11.01.46.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 01:44:58 -0700 (PDT)
-Message-ID: <c65ed484-6edb-4e41-9f63-cde9671aa332@suse.com>
-Date: Fri, 11 Apr 2025 10:44:56 +0200
+        Fri, 11 Apr 2025 01:46:15 -0700 (PDT)
+Message-ID: <989a0a56-6891-4ecf-951c-81e7f9c0d7af@openvpn.net>
+Date: Fri, 11 Apr 2025 10:46:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,699 +69,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] pmdomain: mediatek: Add support for Dimensity 1200
- MT6893
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- robh@kernel.org
-Cc: krzk+dt@kernel.org, conor+dt@kernel.org, ulf.hansson@linaro.org,
- matthias.bgg@gmail.com, fshao@chromium.org, y.oudjana@protonmail.com,
- wenst@chromium.org, lihongbo22@huawei.com, mandyjh.liu@mediatek.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, kernel@collabora.com
-References: <20250410143944.475773-1-angelogioacchino.delregno@collabora.com>
- <20250410143944.475773-4-angelogioacchino.delregno@collabora.com>
-Content-Language: en-US, ca-ES, es-ES
-From: Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; keydata=
- xsFNBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
- fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
- OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
- gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
- 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
- EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
- fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
- ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
- HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
- 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABzSRNYXR0aGlhcyBC
- cnVnZ2VyIDxtYnJ1Z2dlckBzdXNlLmNvbT7CwXgEEwECACIFAlV6iM0CGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAAAoJENkUC7JWEwLx6isQAIMGBgJnFWovDS7ClZtjz1LgoY8skcMU
- ghUZY4Z/rwwPqmMPbY8KYDdOFA+kMTEiAHOR+IyOVe2+HlMrXv/qYH4pRoxQKm8H9FbdZXgL
- bG8IPlBu80ZSOwWjVH+tG62KHW4RzssVrgXEFR1ZPTdbfN+9Gtf7kKxcGxWnurRJFzBEZi4s
- RfTSulQKqTxJ/sewOb/0kfGOJYPAt/QN5SUaWa6ILa5QFg8bLAj6bZ81CDStswDt/zJmAWp0
- 08NOnhrZaTQdRU7mTMddUph5YVNXEXd3ThOl8PetTyoSCt04PPTDDmyeMgB5C3INLo1AXhEp
- NTdu+okvD56MqCxgMfexXiqYOkEWs/wv4LWC8V8EI3Z+DQ0YuoymI5MFPsW39aPmmBhSiacx
- diC+7cQVQRwBR6Oz/k9oLc+0/15mc+XlbvyYfscGWs6CEeidDQyNKE/yX75KjLUSvOXYV4d4
- UdaNrSoEcK/5XlW5IJNM9yae6ZOL8vZrs5u1+/w7pAlCDAAokz/As0vZ7xWiePrI+kTzuOt5
- psfJOdEoMKQWWFGd/9olX5ZAyh9iXk9TQprGUOaX6sFjDrsTRycmmD9i4PdQTawObEEiAfzx
- 1m2MwiDs2nppsRr7qwAjyRhCq2TOAh0EDRNgYaSlbIXX/zp38FpK/9DMbtH14vVvG6FXog75
- HBoOzsFNBF3VOUgBEACbvyZOfLjgfB0hg0rhlAfpTmnFwm1TjkssGZKvgMr/t6v1yGm8nmmD
- MIa4jblx41MSDkUKFhyB80wqrAIB6SRX0h6DOLpQrjjxbV46nxB5ANLqwektI57yenr/O+ZS
- +GIuiSTu1kGEbP5ezmpCYk9dxqDsAyJ+4Rx/zxlKkKGZQHdZ+UlXYOnEXexKifkTDaLne6Zc
- up1EgkTDVmzam4MloyrA/fAjIx2t90gfVkEEkMhZX/nc/naYq1hDQqGN778CiWkqX3qimLqj
- 1UsZ6qSl6qsozZxvVuOjlmafiVeXo28lEf9lPrzMG04pS3CFKU4HZsTwgOidBkI5ijbDSimI
- CDJ+luKPy6IjuyIETptbHZ9CmyaLgmtkGaENPqf+5iV4ZbQNFxmYTZSN56Q9ZS6Y3XeNpVm6
- FOFXrlKeFTTlyFlPy9TWcBMDCKsxV5eB5kYvDGGxx26Tec1vlVKxX3kQz8o62KWsfr1kvpeu
- fDzx/rFpoY91XJSKAFNZz99xa7DX6eQYkM2qN9K8HuJ7XXhHTxDbxpi3wsIlFdgzVa5iWhNw
- iFFJdSiEaAeaHu6yXjr39FrkIVoyFPfIJVyK4d1mHe77H47WxFw6FoVbcGTEoTL6e3HDwntn
- OGAU6CLYcaQ4aAz1HTcDrLBzSw/BuCSAXscIuKuyE/ZT+rFbLcLwOQARAQABwsF2BBgBCAAg
- FiEE5rmSGMDywyUcLDoX2RQLslYTAvEFAl3VOUgCGwwACgkQ2RQLslYTAvG11w/+Mcn28jxp
- 0WLUdChZQoJBtl1nlkkdrIUojNT2RkT8UfPPMwNlgWBwJOzaSZRXIaWhK1elnRa10IwwHfWM
- GhB7nH0u0gIcSKnSKs1ebzRazI8IQdTfDH3VCQ6YMl+2bpPz4XeWqGVzcLAkamg9jsBWV6/N
- c0l8BNlHT5iH02E43lbDgCOxme2pArETyuuJ4tF36F7ntl1Eq1FE0Ypk5LjB602Gh2N+eOGv
- hnbkECywPmr7Hi5o7yh8bFOM52tKdGG+HM8KCY/sEpFRkDTA28XGNugjDyttOI4UZvURuvO6
- quuvdYW4rgLVgAXgLJdQEvpnUu2j/+LjjOJBQr12ICB8T/waFc/QmUzBFQGVc20SsmAi1H9c
- C4XB87oE4jjc/X1jASy7JCr6u5tbZa+tZjYGPZ1cMApTFLhO4tR/a/9v1Fy3fqWPNs3F4Ra3
- 5irgg5jpAecT7DjFUCR/CNP5W6nywKn7MUm/19VSmj9uN484vg8w/XL49iung+Y+ZHCiSUGn
- LV6nybxdRG/jp8ZQdQQixPA9azZDzuTu+NjKtzIA5qtfZfmm8xC+kAwAMZ/ZnfCsKwN0bbnD
- YfO3B5Q131ASmu0kbwY03Mw4PhxDzZNrt4a89Y95dq5YkMtVH2Me1ZP063cFCCYCkvEAK/C8
- PVrr2NoUqi/bxI8fFQJD1jVj8K0=
-In-Reply-To: <20250410143944.475773-4-angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH net-next v25 07/23] ovpn: implement basic TX path (UDP)
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, sd@queasysnail.net, ryazanov.s.a@gmail.com,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Xiao Liang <shaw.leon@gmail.com>
+References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
+ <20250407-b4-ovpn-v25-7-a04eae86e016@openvpn.net>
+ <20250410200733.4fea860f@kernel.org>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ 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
+Organization: OpenVPN Inc.
+In-Reply-To: <20250410200733.4fea860f@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 10/04/2025 16:39, AngeloGioacchino Del Regno wrote:
-> Add power domains definitions to implement support for the
-> MediaTek Dimensity 1200 (MT6893) SoC.
+On 11/04/2025 05:07, Jakub Kicinski wrote:
+> On Mon, 07 Apr 2025 21:46:15 +0200 Antonio Quartulli wrote:
+>> diff --git a/drivers/net/ovpn/socket.c b/drivers/net/ovpn/socket.c
+>> index 97f6a249b09fe26cc6d078d80abc955f8d35e821..200036757fcd0a7f2ae554a1e3a3c03915c0e32f 100644
+>> --- a/drivers/net/ovpn/socket.c
+>> +++ b/drivers/net/ovpn/socket.c
+>> @@ -185,9 +185,8 @@ struct ovpn_socket *ovpn_socket_new(struct socket *sock, struct ovpn_peer *peer)
+>>   		goto sock_release;
+>>   	}
+>>   
+>> -	ovpn_sock->ovpn = peer->ovpn;
+>> -	ovpn_sock->sock = sock;
+>>   	kref_init(&ovpn_sock->refcount);
+>> +	ovpn_sock->sock = sock;
 > 
-> Since this chip's MTCMOS are similar to the ones of Kompanio
-> 820 (MT8192), the definitions from that have been reused where
-> possible.
+>> @@ -31,7 +262,7 @@ int ovpn_udp_socket_attach(struct ovpn_socket *ovpn_sock,
+>>   {
+>>   	struct socket *sock = ovpn_sock->sock;
+>>   	struct ovpn_socket *old_data;
+>> -	int ret = 0;
+>> +	int ret;
+>>   
+>>   	/* make sure no pre-existing encapsulation handler exists */
+>>   	rcu_read_lock();
 > 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Some unrelated-looking chunks here
 
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+ACK
 
-> ---
->   drivers/pmdomain/mediatek/mt6893-pm-domains.h | 585 ++++++++++++++++++
->   drivers/pmdomain/mediatek/mtk-pm-domains.c    |   5 +
->   2 files changed, 590 insertions(+)
->   create mode 100644 drivers/pmdomain/mediatek/mt6893-pm-domains.h
 > 
-> diff --git a/drivers/pmdomain/mediatek/mt6893-pm-domains.h b/drivers/pmdomain/mediatek/mt6893-pm-domains.h
-> new file mode 100644
-> index 000000000000..5baa965d22da
-> --- /dev/null
-> +++ b/drivers/pmdomain/mediatek/mt6893-pm-domains.h
-> @@ -0,0 +1,585 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2025 Collabora Ltd
-> + *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> + */
-> +
-> +#ifndef __PMDOMAIN_MEDIATEK_MT6893_PM_DOMAINS_H
-> +#define __PMDOMAIN_MEDIATEK_MT6893_PM_DOMAINS_H
-> +
-> +#include <linux/soc/mediatek/infracfg.h>
-> +#include <dt-bindings/power/mediatek,mt6893-power.h>
-> +#include "mtk-pm-domains.h"
-> +
-> +#define MT6893_TOP_AXI_PROT_EN_MCU_STA1				0x2e4
-> +#define MT6893_TOP_AXI_PROT_EN_MCU_SET				0x2c4
-> +#define MT6893_TOP_AXI_PROT_EN_MCU_CLR				0x2c8
-> +#define MT6893_TOP_AXI_PROT_EN_VDNR_1_SET			0xba4
-> +#define MT6893_TOP_AXI_PROT_EN_VDNR_1_CLR			0xba8
-> +#define MT6893_TOP_AXI_PROT_EN_VDNR_1_STA1			0xbb0
-> +#define MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_SET		0xbb8
-> +#define MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_CLR		0xbbc
-> +#define MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_STA1		0xbc4
-> +
-> +#define MT6893_TOP_AXI_PROT_EN_1_MFG1_STEP1			GENMASK(21, 19)
-> +#define MT6893_TOP_AXI_PROT_EN_2_MFG1_STEP2			GENMASK(6, 5)
-> +#define MT6893_TOP_AXI_PROT_EN_MFG1_STEP3			GENMASK(22, 21)
-> +#define MT6893_TOP_AXI_PROT_EN_2_MFG1_STEP4			BIT(7)
-> +#define MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_MFG1_STEP5	GENMASK(19, 17)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_VDEC0_STEP1			BIT(24)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_2_VDEC0_STEP2			BIT(25)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_VDEC1_STEP1			BIT(6)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_VDEC1_STEP2			BIT(7)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_VENC0_STEP1			BIT(26)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_2_VENC0_STEP2			BIT(0)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_VENC0_STEP3			BIT(27)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_2_VENC0_STEP4			BIT(1)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_VENC1_STEP1			GENMASK(30, 28)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_VENC1_STEP2			GENMASK(31, 29)
-> +#define MT6893_TOP_AXI_PROT_EN_MDP_STEP1			BIT(10)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_MDP_STEP2			(BIT(2) | BIT(4) | BIT(6) |	\
-> +								 BIT(8) | BIT(18) | BIT(22) |	\
-> +								 BIT(28) | BIT(30))
-> +#define MT6893_TOP_AXI_PROT_EN_MM_2_MDP_STEP3			(BIT(0) | BIT(2) | BIT(4) |	\
-> +								 BIT(6) | BIT(8))
-> +#define MT6893_TOP_AXI_PROT_EN_MDP_STEP4			BIT(23)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_MDP_STEP5			(BIT(3) | BIT(5) | BIT(7) |	\
-> +								 BIT(9) | BIT(19) | BIT(23) |	\
-> +								 BIT(29) | BIT(31))
-> +#define MT6893_TOP_AXI_PROT_EN_MM_2_MDP_STEP6			(BIT(1) | BIT(7) | BIT(9) | BIT(11))
-> +#define MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_MDP_STEP7		BIT(20)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_DISP_STEP1			(BIT(0) | BIT(6) | BIT(8) |	\
-> +								 BIT(10) | BIT(12) | BIT(14) |	\
-> +								 BIT(16) | BIT(20) | BIT(24) |	\
-> +								 BIT(26))
-> +#define MT6893_TOP_AXI_PROT_EN_DISP_STEP2			BIT(6)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_DISP_STEP3			(BIT(1) | BIT(7) | BIT(9) |	\
-> +								 BIT(15) | BIT(17) | BIT(21) |	\
-> +								 BIT(25) | BIT(27))
-> +#define MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_DISP_STEP4	BIT(21)
-> +#define MT6893_TOP_AXI_PROT_EN_2_ADSP				BIT(3)
-> +#define MT6893_TOP_AXI_PROT_EN_2_CAM_STEP1			BIT(1)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_CAM_STEP2			(BIT(0) | BIT(2) | BIT(4))
-> +#define MT6893_TOP_AXI_PROT_EN_1_CAM_STEP3			BIT(22)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_CAM_STEP4			(BIT(1) | BIT(3) | BIT(5))
-> +#define MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWA_STEP1		BIT(18)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWA_STEP2		BIT(19)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWB_STEP1		BIT(20)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWB_STEP2		BIT(21)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWC_STEP1		BIT(22)
-> +#define MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWC_STEP2		BIT(23)
-> +
-> +/*
-> + * MT6893 Power Domain (MTCMOS) support
-> + *
-> + * The register layout for this IP is very similar to MT8192 so where possible
-> + * the same definitions are reused to avoid duplication.
-> + * Where the bus protection bits are also the same, the entire set is reused.
-> + */
-> +static const struct scpsys_domain_data scpsys_domain_data_mt6893[] = {
-> +	[MT6893_POWER_DOMAIN_CONN] = {
-> +		.name = "conn",
-> +		.sta_mask = BIT(1),
-> +		.ctl_offs = 0x304,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = 0,
-> +		.sram_pdn_ack_bits = 0,
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_CONN,
-> +				    MT8192_TOP_AXI_PROT_EN_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_CONN_2ND,
-> +				    MT8192_TOP_AXI_PROT_EN_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_1_CONN,
-> +				    MT8192_TOP_AXI_PROT_EN_1_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_1_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_1_STA1),
-> +		},
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_MFG0] = {
-> +		.name = "mfg0",
-> +		.sta_mask = BIT(2),
-> +		.ctl_offs = 0x308,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF | MTK_SCPD_DOMAIN_SUPPLY,
-> +	},
-> +	[MT6893_POWER_DOMAIN_MFG1] = {
-> +		.name = "mfg1",
-> +		.sta_mask = BIT(3),
-> +		.ctl_offs = 0x30c,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_1_MFG1_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_1_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_1_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_1_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_2_MFG1_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_2_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MFG1_STEP3,
-> +				    MT8192_TOP_AXI_PROT_EN_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_2_MFG1_STEP4,
-> +				    MT8192_TOP_AXI_PROT_EN_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_2_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_MFG1_STEP5,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_SET,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_CLR,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_STA1),
-> +		},
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF | MTK_SCPD_DOMAIN_SUPPLY,
-> +	},
-> +	[MT6893_POWER_DOMAIN_MFG2] = {
-> +		.name = "mfg2",
-> +		.sta_mask = BIT(4),
-> +		.ctl_offs = 0x310,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_MFG3] = {
-> +		.name = "mfg3",
-> +		.sta_mask = BIT(5),
-> +		.ctl_offs = 0x314,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_MFG4] = {
-> +		.name = "mfg4",
-> +		.sta_mask = BIT(6),
-> +		.ctl_offs = 0x318,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_MFG5] = {
-> +		.name = "mfg5",
-> +		.sta_mask = BIT(7),
-> +		.ctl_offs = 0x31c,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_MFG6] = {
-> +		.name = "mfg6",
-> +		.sta_mask = BIT(8),
-> +		.ctl_offs = 0x320,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_ISP] = {
-> +		.name = "isp",
-> +		.sta_mask = BIT(12),
-> +		.ctl_offs = 0x330,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_ISP,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_ISP_2ND,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_ISP2] = {
-> +		.name = "isp2",
-> +		.sta_mask = BIT(13),
-> +		.ctl_offs = 0x334,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_ISP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_ISP2_2ND,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_IPE] = {
-> +		.name = "ipe",
-> +		.sta_mask = BIT(14),
-> +		.ctl_offs = 0x338,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_IPE,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_IPE_2ND,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_VDEC0] = {
-> +		.name = "vdec0",
-> +		.sta_mask = BIT(15),
-> +		.ctl_offs = 0x33c,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_VDEC0_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_2_VDEC0_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_VDEC1] = {
-> +		.name = "vdec1",
-> +		.sta_mask = BIT(16),
-> +		.ctl_offs = 0x340,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_VDEC1_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_VDEC1_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_VENC0] = {
-> +		.name = "venc0",
-> +		.sta_mask = BIT(17),
-> +		.ctl_offs = 0x344,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_VENC0_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_2_VENC0_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_VENC0_STEP3,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_2_VENC0_STEP4,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_STA1),
-> +		},
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_VENC1] = {
-> +		.name = "venc1",
-> +		.sta_mask = BIT(18),
-> +		.ctl_offs = 0x348,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_VENC1_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_VENC1_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +	[MT6893_POWER_DOMAIN_MDP] = {
-> +		.name = "mdp",
-> +		.sta_mask = BIT(19),
-> +		.ctl_offs = 0x34c,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MDP_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_MDP_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_2_MDP_STEP3,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MDP_STEP4,
-> +				    MT8192_TOP_AXI_PROT_EN_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_MDP_STEP5,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_2_MDP_STEP6,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_2_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_MDP_STEP7,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_SET,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_CLR,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_DISP] = {
-> +		.name = "disp",
-> +		.sta_mask = BIT(20),
-> +		.ctl_offs = 0x350,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_DISP_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_DISP_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_DISP_STEP3,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_DISP_STEP4,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_SET,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_CLR,
-> +				    MT6893_TOP_AXI_PROT_EN_SUB_INFRA_VDNR_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_AUDIO] = {
-> +		.name = "audio",
-> +		.sta_mask = BIT(21),
-> +		.ctl_offs = 0x354,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT8192_TOP_AXI_PROT_EN_2_AUDIO,
-> +				    MT8192_TOP_AXI_PROT_EN_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_2_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_ADSP] = {
-> +		.name = "audio",
-> +		.sta_mask = BIT(22),
-> +		.ctl_offs = 0x358,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(9),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_2_ADSP,
-> +				    MT8192_TOP_AXI_PROT_EN_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_2_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_CAM] = {
-> +		.name = "cam",
-> +		.sta_mask = BIT(23),
-> +		.ctl_offs = 0x35c,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_2_CAM_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_2_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_2_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_2_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_CAM_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_1_CAM_STEP3,
-> +				    MT8192_TOP_AXI_PROT_EN_1_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_1_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_1_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_CAM_STEP4,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_CAM_RAWA] = {
-> +		.name = "cam_rawa",
-> +		.sta_mask = BIT(24),
-> +		.ctl_offs = 0x360,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWA_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWA_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_CAM_RAWB] = {
-> +		.name = "cam_rawb",
-> +		.sta_mask = BIT(25),
-> +		.ctl_offs = 0x364,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWB_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWB_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_CAM_RAWC] = {
-> +		.name = "cam_rawc",
-> +		.sta_mask = BIT(26),
-> +		.ctl_offs = 0x368,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.bp_cfg = {
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWC_STEP1,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +			BUS_PROT_WR(INFRA,
-> +				    MT6893_TOP_AXI_PROT_EN_MM_CAM_RAWC_STEP2,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_SET,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_CLR,
-> +				    MT8192_TOP_AXI_PROT_EN_MM_STA1),
-> +		},
-> +	},
-> +	[MT6893_POWER_DOMAIN_DP_TX] = {
-> +		.name = "dp_tx",
-> +		.sta_mask = BIT(27),
-> +		.ctl_offs = 0x3ac,
-> +		.pwr_sta_offs = 0x16c,
-> +		.pwr_sta2nd_offs = 0x170,
-> +		.sram_pdn_bits = BIT(8),
-> +		.sram_pdn_ack_bits = BIT(12),
-> +		.caps = MTK_SCPD_KEEP_DEFAULT_OFF,
-> +	},
-> +};
-> +
-> +static const struct scpsys_soc_data mt6893_scpsys_data = {
-> +	.domains_data = scpsys_domain_data_mt6893,
-> +	.num_domains = ARRAY_SIZE(scpsys_domain_data_mt6893),
-> +};
-> +
-> +#endif /* __PMDOMAIN_MEDIATEK_MT6893_PM_DOMAINS_H */
-> diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.c b/drivers/pmdomain/mediatek/mtk-pm-domains.c
-> index b866b006af69..9a33321d9fac 100644
-> --- a/drivers/pmdomain/mediatek/mtk-pm-domains.c
-> +++ b/drivers/pmdomain/mediatek/mtk-pm-domains.c
-> @@ -18,6 +18,7 @@
->   
->   #include "mt6735-pm-domains.h"
->   #include "mt6795-pm-domains.h"
-> +#include "mt6893-pm-domains.h"
->   #include "mt8167-pm-domains.h"
->   #include "mt8173-pm-domains.h"
->   #include "mt8183-pm-domains.h"
-> @@ -617,6 +618,10 @@ static const struct of_device_id scpsys_of_match[] = {
->   		.compatible = "mediatek,mt6795-power-controller",
->   		.data = &mt6795_scpsys_data,
->   	},
-> +	{
-> +		.compatible = "mediatek,mt6893-power-controller",
-> +		.data = &mt6893_scpsys_data,
-> +	},
->   	{
->   		.compatible = "mediatek,mt8167-power-controller",
->   		.data = &mt8167_scpsys_data,
+>> +			dev_core_stats_tx_dropped_inc(ovpn->dev);
+> 
+> Since you're already using TSTATS could you switch to DSTATS
+> to count drops, and leave the core stats for the core ?
+
+I see DSTATS was implemented mid last year - I think we just didn't see 
+that.
+
+I will switch to DSTATS like other tunnels have done.
+
+Thanks!
+
+Regards,
+
+
+-- 
+Antonio Quartulli
+OpenVPN Inc.
 
