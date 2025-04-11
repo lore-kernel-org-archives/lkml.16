@@ -1,121 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C28820C49E;
-	Fri, 11 Apr 2025 15:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DB41F5433;
+	Fri, 11 Apr 2025 15:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385033; cv=none; b=XDZ+OViXukS8ens/RWz7+Ocb03jS9MKH5k49T9vp51eLQE9thn/q6OSfaDh61EdcurqsW+RiIv/CjKShPi4hpJzV2X0nzyvzXf6CKSqGedn5/Qlh4I2/PfbOJ73x67z3KmkaZU9syY6vgAzYajPAGAJN07HZKn7VJOXuLtUJDOY=
+	t=1744385070; cv=none; b=Jg8gpCNBlpt5VL7yTLvyhJd1cMFr0Vhmy33qrjnLaqlopFiYHcKH69NB5b1v+B8YAqBDhp45WvJVRdh5/dEIQhKZOF+uLwcGHZ17WnrDAqGxszpjDkxSMyBKFqbmfobw8vV6I6uFKcTTkzl2QsjHemIE+m6KTUfdt3QHjMcqIt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385033; c=relaxed/simple;
-	bh=f/+r7NNjXbrUArHILLHBRRMF683cnW/KbBRUzoqwqW0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=E+SbZZXno90jsRceVK7mua/UsNEkx4soKwdl/P4YmtQu+BSUPW2Q6mvSp+HN2zur4GhVNY8LOcVqZRyGsG/TgjbIm8arwijtv8Mp09GWz07cJkop8aO86sPk8cCo5KgL/ktHwicvdudGCQl28Z0PEDEgscP45S4qdQ1X84sd4MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bumjaCWI; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744385070; c=relaxed/simple;
+	bh=cTCtE7M2VM4FPzXtByWa4pTLyYxPE1Z31+L/QQw6RZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QYXuLOcKJNEL+l37JZjXWYUB6M39Pae+RxSloDPWlicmQmoNBFv2TsCvTbpz+Lz0+27mogfyUewe4baSCGMXms2/xLuAvQExjHbxmGaTBVsljc7Bj/CXXyuSLwONVOxIj9VgORJVcSiZXc2VcguaCIL43FRXpUxwdf09RIG8Jsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDO88O0k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bumjaCWI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744385032; x=1775921032;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=f/+r7NNjXbrUArHILLHBRRMF683cnW/KbBRUzoqwqW0=;
-  b=bumjaCWIRIf6P/oRu7DIBD4saza0UjTsDxuaXYLJFgcm16n9kQ40tfeg
-   3dggTkAunz6sDaj8Mlt0+F6/J2zx5TSttpGPzJqxAMdbPwSyMgKnpP8va
-   B7EhSnDP1G3FsYVJlQATg9k4FZ0d08Qg+kc2n1DKf7WKAdBnz7MlEaZaO
-   y4O0XHG8NSdJl7zLEmv9QmpM+avsePw85xkfqiiaU5nS+SoeTezr4SzRY
-   fZNDitBTFo8qi5EibU0hLbMkQfeD51xpmevzQH8J3BIRqBiiAyQvUGR/L
-   6xUnoTKl6gOTM2ZgwPOp/YhBsL6DoNSF5jfVjkwBlovWXz+6PKZwQWs0v
-   g==;
-X-CSE-ConnectionGUID: VJexNOUlTXO82RWGWEugOw==
-X-CSE-MsgGUID: rUBW0E7HSQaSBYCHLsH/Rw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="33555105"
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="33555105"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:23:51 -0700
-X-CSE-ConnectionGUID: 4a3iu6qzRn2khA9XEjV8JQ==
-X-CSE-MsgGUID: DPXAsLGhQE2EE/JYLIKUFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="160203959"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:23:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 11 Apr 2025 18:23:41 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
-    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
-    Jonathan Corbet <corbet@lwn.net>, 
-    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
-    Derek J Clark <derekjohn.clark@gmail.com>, 
-    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
-    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
-    Eileen <eileen@one-netbook.com>, LKML <linux-kernel@vger.kernel.org>, 
-    sre@kernel.org, linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>, 
-    mario.limonciello@amd.com
-Subject: Re: [PATCH v8 05/14] ABI: testing: sysfs-class-oxp: add tt_led
- attribute documentation
-In-Reply-To: <20250322103606.680401-6-lkml@antheas.dev>
-Message-ID: <fd6abf62-b822-c3e2-e006-92798abd8d04@linux.intel.com>
-References: <20250322103606.680401-1-lkml@antheas.dev> <20250322103606.680401-6-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDO88O0k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 284B4C4CEE2;
+	Fri, 11 Apr 2025 15:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744385069;
+	bh=cTCtE7M2VM4FPzXtByWa4pTLyYxPE1Z31+L/QQw6RZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WDO88O0kc0oPCPnbT1RIM6DPBqiYzsiXPXA4JBnnNPgV2b3KND7Cl3QRTxC1fZQc+
+	 fuN5am5HeMkTUl5gLe3U5yVCRxLZHCCWLm25cy6IWtS9sjhGejVoHgsjyWP8A05IFC
+	 Xo+Xfckq2xXOvxalh7jnnkc5sZIZsjYOy71HG76O5SopX3oQS0Y5vqYIduUFQ92h3l
+	 ARV1WWLIzQHd0KIhDar9+CD8ftR12r++YKaojl93gD0aeGvykhWCmHLeKpi1g56OhO
+	 opdB4Q29VkPmYT9pJVduWyKXJ9VtrIp1Kt1ZQlpW1PavKatDCTpTS5Rl4YA5jbh8ag
+	 qwLbW4DMD6otQ==
+Date: Fri, 11 Apr 2025 10:24:28 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org,
+	Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jes Sorensen <Jes.Sorensen@gmail.com>, devicetree@vger.kernel.org,
+	Matthias Kaehlcke <mka@chromium.org>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-wireless@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: net: wireless: Add Realtek
+ RTL8188ETV USB WiFi
+Message-ID: <174438506750.3274609.16595551844546804224.robh@kernel.org>
+References: <20250408-rtl-onboard-v2-0-0b6730b90e31@posteo.net>
+ <20250408-rtl-onboard-v2-1-0b6730b90e31@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-664722212-1744385021=:944"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250408-rtl-onboard-v2-1-0b6730b90e31@posteo.net>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-664722212-1744385021=:944
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Sat, 22 Mar 2025, Antheas Kapenekakis wrote:
-
-> Adds documentation about the tt_led attribute of OneXPlayer devices
-> to the sysfs-class-oxp ABI documentation.
->=20
-> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+On Tue, 08 Apr 2025 21:13:12 +0200, J. Neuschäfer wrote:
+> This is an on-board USB device that requires a 3.3V supply.
+> 
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 > ---
->  Documentation/ABI/testing/sysfs-platform-oxp | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-platform-oxp b/Documentation=
-/ABI/testing/sysfs-platform-oxp
-> index 091269ab2c8c4..ccf8e5902cf86 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-oxp
-> +++ b/Documentation/ABI/testing/sysfs-platform-oxp
-> @@ -11,3 +11,15 @@ Description:
->  =09=09shortcut over the AT keyboard of the device. In addition,
->  =09=09using this setting is a prerequisite for PWM control for most
->  =09=09newer models (otherwise it NOOPs).
-> +
-> +What:=09=09/sys/devices/platform/<platform>/tt_led
-> +Date:=09=09Feb 2025
-> +KernelVersion:=096.15
+> 
+> V2:
+> - Use my current email address
+> - Remove TODO comment
+> - Rename schema file to realtek,rtl8188e.yaml. This is the same
+>   granularity at which the rtl8xxxu driver is split into files, making
+>   it unnecessary to rename the schema file if another similar chip is added
+>   in the future.
+> - Change license identifier from (GPL-2.0 OR BSD-2-Clause) to (GPL-2.0-only
+>   OR BSD-2-Clause) because GPL-2.0 is ambiguous
+> ---
+>  .../bindings/net/wireless/realtek,rtl8188e.yaml    | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
 
-As usual with these versions/dates, this ship has sailed by now.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-> +Contact:=09"Antheas Kapenekakis" <lkml@antheas.dev>
-> +Description:
-> +=09=09Some OneXPlayer devices (e.g., X1 series) feature a little LED
-> +=09=09nested in the Turbo button. This LED is illuminated when the
-> +=09=09device is in the higher TDP mode (e.g., 25W). Once tt_toggle
-> +=09=09is engaged, this LED is left dangling to its last state. This
-> +=09=09attribute allows userspace to control the LED state manually
-> +=09=09(either with 1 or 0). Only a subset of devices contain this LED.
->=20
-
---=20
- i.
-
---8323328-664722212-1744385021=:944--
