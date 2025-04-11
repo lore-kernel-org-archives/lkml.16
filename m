@@ -1,97 +1,142 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4D0202C50;
-	Fri, 11 Apr 2025 19:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E97202C50;
+	Fri, 11 Apr 2025 19:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744398660; cv=none; b=abj4N8Z5YEW+KW/lIdoh2nCIrgkw4iuCOGuWdqG8OpRogg4Alp0gkVHAXwewDMYv77H9e89WYLSv7dSKYb30Xis6zifp+iYH0UMBp10to/A6kInLnQxwaBrLsKfrq8yxyMZxci9CfLeZcyBm4E8rtY3bz2GEqMK0zDyTtXIXeC4=
+	t=1744398713; cv=none; b=G+HHIcnBE+1KDrrwyN5tCrz1GttPgS/a9NGwqgcVzQQFPvBeoB4+1FUwqHLNOkyA3V5QQYvSjTfvT4xXYf5YP2Nr2Mk2/NgVdPkXvc9Gl5Njq3icsjmwTWHOSAiHS5ptNhRXK8mqCYJm6Fs8gdcPbzt2VmZwznBzXqHIczU1tds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744398660; c=relaxed/simple;
-	bh=PQfgCeltfLfqxCgPkBUBSiI0euQ23e9EyF9ihZ858WQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABWFn29pFjM8r4/5N/e9E04bOYj3+/ksObrYz4v4PU8OOmudoxImTzlTfiLFkz0e8y4tvRazi/DaCYTAm2iJvvFWkVsgeo6ZCRJtsXxq1M8TD50ARMg7bT6wl+MG32Vj6ly7rpSGlScQg5oWBB+TtOo0AJfc0FnjjIgPcHWdnng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QdD8jIZ+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QdD8jIZ+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 425AF40E023A;
-	Fri, 11 Apr 2025 19:10:55 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 641Kw7W2EULd; Fri, 11 Apr 2025 19:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744398652; bh=ly4z34N2KjiLu1eGundqdgzUw+XXcydOdDhrGGvC7CI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QdD8jIZ+HCquASk+1fuMRToAyQVml4Nl7vJEPAXrFwWOx7MtfoS2/aD1UNsWa3Td7
-	 klomHFps5UAB+UrVV6MncHibprjZgSVWiOmQHmYZlPY4M+gSJaLP4lIJTXLa+XjYJ6
-	 v3M9yIe3YbNMG+6lzz2EOH8tgjT+aL+r77iClGNowMpJECwJ1UUIvA7KaEOVhwMZoF
-	 VL3AexmyBofJSXjS7Y1cvk9lHT7HYagFbsr845I6s6yuenAUQLUw3vgbrIOz0rRAWz
-	 p/xtv7oD5JbEmJGWEObgGypnraUqP0iU6nvRJBsOCuYHBFOopD6TKo/PRONTTZZ0BH
-	 MiocLaq10220M+wH3icLe8kAknHjo+VFMZymESgKIrZQWJ+Q49q9z+qBGOQ8dvX6YH
-	 kFtV++5Su3X2q2OEQmBpTZ78Ny//eRKTgW2//Vkg6EI63LlsfjzeoG9E4cK5KNg56f
-	 Kylo/PqZwgfe0ylRVzNGd0gzXJA2OK4PxFUan/ZrmYb5xUqs+EC/R9X8cdDZl/3ZOT
-	 J4lHGp058+DMg1xrBgNTsMX93ql8LCWJnbmhEyCYQgkGCGN7h//W1icY/5B5G/D6B4
-	 ewdRz18JxvNxl2prtge1ogjrjRueDzN4tMX70NDRdTAszm+IYb5KOMnRWQNDfcCwQj
-	 id7pHLlAV5wIehifO9WzIKhc=
-Received: from rn.tnic (ip-185-104-138-50.ptr.icomera.net [185.104.138.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F35FD40E0242;
-	Fri, 11 Apr 2025 19:10:41 +0000 (UTC)
-Date: Fri, 11 Apr 2025 21:11:35 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org,
-	x86@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v3] x86/boot/sev: Avoid shared GHCB page for early memory
- acceptance
-Message-ID: <20250411191135.GCZ_lpZ-kgr88WNw8e@renoirsky.local>
-References: <20250410132850.3708703-2-ardb+git@google.com>
- <20250411184113.GBZ_liSYllx10eT-l1@renoirsky.local>
- <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
+	s=arc-20240116; t=1744398713; c=relaxed/simple;
+	bh=BO1ibUlep/whjAnhTU7bWrZmrU4wsai7V2ZchfCcIUE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jRroiuyzpml6GxXCzyXL0HRdKqtQDiyDIXYX5XUXMt1UQ3tkH/Tpj8WyG626gC5a2SYZRSmH5GPgOT829AQZSCgS+uFQ6UElONMeC0rRgIoB1KArg3RQkmIuzQmJhMuh2tWb0wJpOIpIHnRNnGvj1sDkYxw8B3mjMb7RlpFX374=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BCF6106F;
+	Fri, 11 Apr 2025 12:11:49 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5DB3F59E;
+	Fri, 11 Apr 2025 12:11:48 -0700 (PDT)
+Message-ID: <03e6283e-2ef7-498c-9460-8411114711e2@arm.com>
+Date: Fri, 11 Apr 2025 20:11:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEqWxokyJf_WUE5Owwz3fO6b-Wq8sSNxFmMVAA+Q47uPQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
+From: Robin Murphy <robin.murphy@arm.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Anders Roxell <anders.roxell@linaro.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
+ <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com>
+ <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
+ <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com>
+Content-Language: en-GB
+In-Reply-To: <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 11, 2025 at 09:00:51PM +0200, Ard Biesheuvel wrote:
-> ---%<---
-> The GHCB shared page method never worked for accepting memory from the
-> EFI stub, but this is rarely needed in practice: when using the higher
-> level page allocation APIs, the firmware will make sure that memory is
-> accepted before it is returned. The only use case for explicit memory
-> acceptance by the EFI stub is when populating the 'unaccepted memory'
-> bitmap, which tracks unaccepted memory at a 2MB granularity, and so
-> chunks of unaccepted memory that are misaligned wrt that are accepted
-> without being allocated or used.
-> ---%<---
+On 10/04/2025 4:36 pm, Robin Murphy wrote:
+> On 09/04/2025 4:56 pm, Naresh Kamboju wrote:
+>> On Wed, 2 Apr 2025 at 21:04, Robin Murphy <robin.murphy@arm.com> wrote:
+>>>
+>>> On 31/03/2025 5:03 am, Naresh Kamboju wrote:
+>>>> Regressions on arm64 Juno-r2 devices detect SSD tests failed on the
+>>>> Linux next and Linux mainline.
+>>>>
+>>>> First seen on the v6.14-7245-g5c2a430e8599
+>>>>    Good: v6.14
+>>>>    Bad: v6.14-7422-gacb4f33713b9
+>>>
+>>> Sorry, I can't seem to reproduce this on my end, both today's mainline
+>>> and acb4f33713b9 with my config, and even acb4f33713b9 with the linked
+>>> LKFT config, all work OK on my Juno r2 (using a SATA SSD and PCIe
+>>> networking). The only thing which stands out in your log is that PCI
+>>> seems to give up probing and assigning resources beyond the switch
+>>> downstream ports (so SATA and ethernet are never discovered), whereas on
+>>> mine it does[2]. However that all happens before the first IOMMU
+>>> instance probes (which conveniently is the PCIe one), so it's hard to
+>>> imagine how that could have an effect anyway...
+>>>
+>>> The only obvious difference is that I'm using EDK2 rather than U-Boot,
+>>> so that's done all the PCIe configuration once already, but it doesn't
+>>> seem like that's significant - looking back at a random older log[1],
+>>> the on-board endpoints were still being picked up right after
+>>> reconfiguring the switch, well before the IOMMU comes into the picture.
+>>>
+>>
+>> Since it is a still issue on mainline and next,
+>>
+>> Bisected and reverted patch ^ causing kernel warnings at boot time
+>> but finding the SSD drive,
+>>
+>>    [bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c]
+>>    iommu: Get DT/ACPI parsing into the proper probe path
+>>
+>> pcieport 0000:00:00.0: late IOMMU probe at driver bind, something 
+>> fishy here!
+>> WARNING: at drivers/iommu/iommu.c:559 __iommu_probe_device
+>>
+>> I see boot warnings [1]
+>> I am happy to test debug patches if you have any.
 > 
-> > I'm somehow missing that aspect of why that change is warranted...
-> >
+> Seeing the warning after reverting the commit which introduced the 
+> warning mostly just means the conflict resolution in the revert wasn't 
+> right (there were some subsequent fixups...)
 > 
-> This never worked correctly for SEV-SNP, we're just lucky the firmware
-> appears to accept memory in 2+ MB batches and so these misaligned
-> chunks are rare in practice. Tom did manage to trigger it IIUC by
-> giving a VM an amount of memory that is not a multiple of 2M.
+> Anyway, I have now managed to get my Juno booting with the same antique 
+> version of U-Boot and finally reproduce the issue. It seems to be 
+> somehow connected to bus->dma_configure() being called in the 
+> device_add() notifier (even though the rest of the IOMMU setup doesn't 
+> run at that point since the driver hasn't registered yet), but how and 
+> why that prevents the buses behind the switch downstream ports being 
+> probed, and why *that* only happens when the switch isn't already 
+> configured, remains a mystery so far. I'm still digging...
 
-Can you pls put that lenghty explanation in the commit message?
+OK, I found it, but I'm still not sure what exactly to make of it - it's 
+the pci_request_acs() in of_iommu_configure(), now being called early 
+enough to actually have an effect. Booting with EDK2 already using PCI 
+prior to Linux, here's what I get for `sudo lspci -vv | grep ACSctl` 
+with 6.15-rc1:
 
-It is useful and we might go back to it in the future.
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
 
-Thx.
+whereas with the 6.14 behaviour they are all '-'. I don't have a working 
+root filesystem with the U-Boot setup, but if I boot it with 
+"pci=config_acs=000000@pci:0:0" then the kernel does assign the bridge 
+windows and discover the ethernet/SATA endpoints again. I can spend some 
+time getting NFS working next week, but if you're able to get lspci 
+output off a machine in the "broken" state easily that would be handy to 
+compare.
+
+So at this point it would seem to be something about how Linux 
+configures ACS when doing it from scratch. What I don't really know is 
+where to go from there. I do know Juno's possibly a bit odd in that the 
+switch supports ACS, but both the root port and endpoints either side of 
+it don't. Could this be tickling some subtle bug in the PCI layer, and 
+what is EDK2 doing that makes it not happen?
+
+Thanks,
+Robin.
