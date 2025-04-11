@@ -1,66 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E431865EE;
-	Fri, 11 Apr 2025 14:08:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567336F30F;
+	Fri, 11 Apr 2025 14:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380497; cv=none; b=Q7FOxjeGrsE5eQnbu9IzD5lNdQFNu0pq9vodS76v6R4h3MZXaJG+ST9su6OyG7TubyRiPzcg183B97F48PH7H3ygYRPTEiA4AbZyHmSFZTPbjHccyNBQqzzueO5Cqee5oawjtVbCSbq9R7gc5dL29ynT7+MEJx/ym3vspzu0q4g=
+	t=1744380508; cv=none; b=hCEvyKvkujyqSqCaXef+JIQDturYBLPhwVPygFtY1h7LPX/NAjYqCaN//juL599zI2LEW3l9XDtqI9MlExCkUUrINtASA01l3yAsM+9kBpvzNlJ0i9xh5dQUarlykkHm1dQkmED5PFpN90KsqNIHZ6yz+QkKTGf6MEAc+s+HzyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380497; c=relaxed/simple;
-	bh=PodhmP7IA+b1pr+LJt26zz1zpXSXHObcfFT8DaM85BI=;
+	s=arc-20240116; t=1744380508; c=relaxed/simple;
+	bh=nX4DIF7APuUGgpi+dZMGrR759kRdWLm5IwHTBTnZ7RU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uAvFANlZL/3B+/fO0oBbsNjP++LUK8miyPLCiebi1rSNtTOPudlzzWsS/o3W04oWJiFltGHYMqN4qyWObvWVA6amllf2oqayq9ZRhp6JQA1QRugWKucXcOIv3HJWnBWwxvoFcv1vmdNY25JjWF4PLTwBZIt944dlVxJlLzbDdpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6P/XPij; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMG9SwHQ9zS4VQLAsYpe0CcnRPp0mzyWqaBBQaCTJTe66q4I/5DAV/Egt9b/Epr0owkzKK20d6pWfO4IPj9lIawApT3i205DIS3IUt6ALQawa398cbGj6/yjfW5zizIvw7Os/x3cFUq7rTvWW53M2ROD++jdmguAqrp53flwIzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBQ+xdRx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6P/XPij"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B854DC4CEE2;
-	Fri, 11 Apr 2025 14:08:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBQ+xdRx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFFCC4CEE2;
+	Fri, 11 Apr 2025 14:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744380497;
-	bh=PodhmP7IA+b1pr+LJt26zz1zpXSXHObcfFT8DaM85BI=;
+	s=k20201202; t=1744380507;
+	bh=nX4DIF7APuUGgpi+dZMGrR759kRdWLm5IwHTBTnZ7RU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s6P/XPij9+owbKpkyZK9j5tfz6QnlYAynhLzSYkbVQhR3FFQBjQ5FIKBsjmAATWJr
-	 4DZUesZcpvW84Z54FW3Egotjy5/BbempjQu9xE2pEt9Hj2y/kswR5a+o1BYqSY98bx
-	 cU8a6j7V3IF2EmsUziAjKeWj9C09E1+x23/JRoEvWrK53d9M0K25ydjigBElLsoKCi
-	 oAUDJGfF5DTUA6tUo61KicRQXnBJHaQQEAcknO3gv7yz4LvogfgfZTwhO0+vMk++H7
-	 TUmABjBBE1vSXGiFGYR7RCgIwvNi8TmDFtISm7f4ElgYXxHXwAAdpL5VcSspi4RXvS
-	 lfYJrp0ZJSX3w==
-Date: Fri, 11 Apr 2025 16:08:13 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Stancek <jstancek@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: use namespace_{lock,unlock} in dissolve_on_fput()
-Message-ID: <20250411-umlegen-herauf-508fe182fffa@brauner>
-References: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
+	b=KBQ+xdRxaUn4XSDExJwykf3BFFD6Qlfpa3CFVwRdFM6TTnqPMuea3fZE0FmT7AYfi
+	 bGkZy0iJCwbJ6JVJRq6ibhfYCvfghtDe+1D6zH0UyPTya1i7Z8Dd2MesZuo5lm47G5
+	 JpbojT0p392yV/vLSfM154vKVdz+ztKAVRP/qwreaGwftZzj8A9w96vGpBduPRBr5P
+	 zeTUiJAWiTFq0tzSH+ZeWt9WGTG4MpAdrwmDLEPntO1Bu7uapknv4KlArPY51j4Mmf
+	 at5QSa9W6okkRTHJFK/NFUTBHIDUdxOz6IRZGVbmy8xcyXwmU1OzswkprUAjjsM7kz
+	 hCDYkWFq7a0kg==
+Date: Fri, 11 Apr 2025 09:08:26 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: arm: samsung: document g0s board
+ binding
+Message-ID: <174438050588.3113760.16761182166000834243.robh@kernel.org>
+References: <20250321145556.1436201-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250321145556.1436201-2-ivo.ivanov.ivanov1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
+In-Reply-To: <20250321145556.1436201-2-ivo.ivanov.ivanov1@gmail.com>
 
-On Thu, Apr 10, 2025 at 05:05:42PM +0200, Jan Stancek wrote:
-> In commit b73ec10a4587 ("fs: add fastpath for dissolve_on_fput()"),
-> the namespace_{lock,unlock} has been replaced with scoped_guard
-> using the namespace_sem. This however now also skips processing of
-> 'unmounted' list in namespace_unlock(), and mount is not (immediately)
-> cleaned up.
 
-Thank you for spotting and fixing this! My bad.
+On Fri, 21 Mar 2025 16:55:53 +0200, Ivaylo Ivanov wrote:
+> Add binding for the Samsung Galaxy S22+ (SM-S906B) board, codenamed G0S,
+> which is based on the Samsung Exynos2200 SoC.
+> 
+> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> ---
+>  .../devicetree/bindings/arm/samsung/samsung-boards.yaml     | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index 14935a0500a2..ee1fdb3baee0 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -1830,6 +1830,8 @@ static inline void namespace_lock(void)
->  	down_write(&namespace_sem);
->  }
->  
-> +DEFINE_GUARD(namespace_locked, struct rw_semaphore *, namespace_lock(), namespace_unlock())
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-I'll call that namespace_lock instead if you don't mind.
