@@ -1,63 +1,63 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8A02BD597
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 22:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D4F202C50
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 22:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744409497; cv=none; b=jebNHZEWdgm4Qpjq+rdtTu9E7edoyWP0UVxdLYtidGgde9qXk7fr/nBqoz/4INcsJ8KNydYuW1TuKIwxlKEVgxpU6driceAWVWFdIh0ojQJhLclBqpoGOrNMz2pgzLKEpdjLFcaMg9qIGIfRyOq1wa4z4qU8P4b4SNyH2ALJ4P4=
+	t=1744409500; cv=none; b=FPQO7JB5JFbTWi2yWW8DW430rmVyC9r44ZQYAB0b2yn37OX8m1cSqmAsCKFHr+NDPaga3v1WKFEveeuLocxt1cTMBYs9K1AUFYRvyX/PiBxsSB4eA+5Dbc0i8atVMZcQot4tp/zuqtbmiMNBwnLSFF90cJhdfv0i3l+Vyhwt53c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744409497; c=relaxed/simple;
-	bh=2v63zeJJ3qyNW130IYWsx6Y2dRfyeqo3wdMnGBLseKE=;
+	s=arc-20240116; t=1744409500; c=relaxed/simple;
+	bh=iipUogHWKqbSnD4CjJCUz99hy1w9mLc5GhkbwJjFgE8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dk95KVuxk+qqeoeftPfEXzoekHa+7HdMu4a1FNN+yUQ+JDxhtFsha9NfHxG2KTmYao3WYXtymayh+7G2h5xSDFsWhXNsX1Kd8+J0PrAods+6rDvfxJzWsbfUT+/quFA++G27olelPJgT04iwT7soso2UCc2yEl6HXPbFKYK03Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MBxwcFJA; arc=none smtp.client-ip=209.85.222.177
+	 MIME-Version:Content-Type; b=VRQDbgBRWnMCgs+6mlzORLYEK5OdIK3bFUpZNwo2k+NTYdH6lbS0OwzkDNwKVBtYIJ4tZ8f1W59IjvgsPQM1rlSA4b3qDM+aqTgr/2Kzu9LkS0teHa/UxOFXTxduVkGHsTbdEQWBzDKK0e0JVCIrF8E+1vgvGpGzmiQW8MVeMKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LZ6ak8wR; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MBxwcFJA"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c58974ed57so239908385a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:11:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LZ6ak8wR"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7be49f6b331so283319285a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:11:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1744409494; x=1745014294; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1744409498; x=1745014298; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sQiBfRqPk8mw1dZkgLepdccSbpRToMErHEtsnH4pLbA=;
-        b=MBxwcFJAwyaHVdTY4d1ulzA8U65YmPxEO7ZRxjJdaY9FKRBmKM+tYrKf96yG9ppUs7
-         fjDWaeikomndNvxIGJNo3cy7ZfiC0vIXiY3z5iOfW7GdPs0wZmLTmEz9II1tLi7rcGsl
-         VHgHb+K7ISXII9fa8Y8YSc19WZF4oavcT0Lcczri3WcWjXMO02HzyD9prL2bRFYJ4ZYy
-         ULVUM77ZuBVpzZiCHl/mMSrYfp3tX/o7QMts6Y/45KAn0+SFIs4WaKC2LpAcb726HF89
-         6EZ5NUCJeQHvfir9ndEzdT2k40ppYtsh2HHGhEoWKfCT50O7dnbmhdMeCqCLdiX5ig9/
-         cL+g==
+        bh=lWwZ2vfL+KhsRUswnAKZ8QRNf9jCtW28RDZA6bxWNqI=;
+        b=LZ6ak8wR1fshCx0fXAjvmT/MFyk5V3oySomvy27rN65222y2m+kiIAq7DC0VBJWW95
+         9qXTGAq+4CFncw+tOmtqQRAmU4IlOkz/f6FJErAmD0HJo+mwY4OhqS5HNLBqqPlYGspl
+         yda+kscupelujuOAG00hQPejteMZrfi5NXXKf9WXq9A1tRqgqaXYMkLXjY/bL64ni02S
+         nYNNRo2QI2ILeXJMUcBrcx4TlAgzUJjNcqrbuHyyY1vXRWFzuYw+dXMmwAY4vCeD9ifl
+         /X990Ptl41isNUeFi7rFioLVSgiFhwl7jHFtJLrbh/XW8XjGRfI7vvmrEzJnHFnTL2uO
+         gqPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744409494; x=1745014294;
+        d=1e100.net; s=20230601; t=1744409498; x=1745014298;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sQiBfRqPk8mw1dZkgLepdccSbpRToMErHEtsnH4pLbA=;
-        b=Mw0kQatJLjt3zNPOAOuxOAAwdgl17SX4x19LUHfpCK2kOXjv7ZUM63ys/5eTxTyNUN
-         BZ5tWaCAgzy29qxdunvP70yzOPDTGnXq0+GZh7/2r79KO/k7PR1u6R/ojF4lk62HoEtk
-         XO/tt8u7h6fV3WdDVhu3KyCJejQbcaMmGP4+T26l6mXdg9oqn7lvbK6ZfAg1tyOM3amb
-         IbFaE9//ShUVPBrPGTYUX3EiyHKprzmmpStV6760BQEGaQQizKGe/yubdN7oTRXlMYk9
-         7Y/RfVzBnveNAG5wq/kY1tEq0tdyBvX7xrweIKkPzEAKpZc3B8UywvHJqD4HpeL22ojh
-         EOjg==
-X-Forwarded-Encrypted: i=1; AJvYcCW40Cj6aVgGpLbOynN3Wiy7vJHdBrZAjpzPbkfA8NER4cqNMpCFvKSzEOsbYyBX85gH90o+Z/YSLXhk0TA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzULxmg6134cCsnVg+Abs+6r2OFoX3Xt1XmIWz1sGZjspWz1a/q
-	LMUa6v62a9xLUR87fa5a0n0T7usPHN+2SLsA2zs5nrVc3cU4Fudj47KzlyOfEGE=
-X-Gm-Gg: ASbGncvITBnqtT7E49WYctyh7Zycwp3FOlqooKa8PkmckX7jqV64LEho90mr1IfhxVU
-	OK4ttXn3DjdXuAMFV4fYFjh0eQYWIBmcT3wCbuMNIHGp+PAaZniO6c0psWJSMfhnf4nT3TxDYl8
-	cWxRL+7Tx5HmtEHqGudZ5mv5FggAFfgCSGbLJ+ZUA29PF6QU4COLMJtugLXoLrs8rKahl4A6txK
-	ytAdL0MxnHr2IQz1247b1m/e9u0u1B01ZzKsWKLXX+ShSnjhTt0Gbm58BWdTjXJjUtsMFBgbX7v
-	ybbcCVaWuAzL6Qqh4ktMeHMXATtXhqrHutYbsrji9zKlSrK6UcTWK/oWUmLqPk5I+u9qWkjU0/W
-	vyXWdh+xsvSyTSkoVpvZ6KvS2q9Tt
-X-Google-Smtp-Source: AGHT+IHFJC0NN/wSPotsTklWaXCxqH3AtdGqhorgwESblRoLtPrItNQuVu4sWimxPm4HxktfyaglUg==
-X-Received: by 2002:a05:620a:2586:b0:7c5:aec7:7ecc with SMTP id af79cd13be357-7c7af0d3f56mr657187185a.13.1744409494387;
-        Fri, 11 Apr 2025 15:11:34 -0700 (PDT)
+        bh=lWwZ2vfL+KhsRUswnAKZ8QRNf9jCtW28RDZA6bxWNqI=;
+        b=U+ajiUMxgbPyEb+khB0NoPgrawWQeiNO5VGoVIOrcK3zF6MH4iZXjx3iEfpPAwAWt9
+         7xnARUTjR45AEsF5Cug/Pl5ibg4HHqAapkK8IbTWz8/z/6XTW/xlwAlLRSQJTv/lL6Ij
+         ytCJ3ztbZHkmrXHhh2kCaPrfoKefFpL/jdnJma4QGSb8FVvIg6lDGgMBEHgnCvQxNKXK
+         4Sd6iW9FXSzaprY6vip66uE/CmKQ21ZoT1gBKGtR1yQ2H84jY8xsTT2Mtp0YfZpN0tCG
+         D4nmO6d2fs2hlesStK9Vh2eGMrjqAB0YAJgsnDMsA1og0F/jbQ9RS8FmaCIubjdpCpnP
+         EitQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0ZqwbCVTxksgMIjtegKNme/qHUlA9lOCZlpY8repasAB4XHtKw0afO75ELQsAF/0FFivpxQ4SwC+wSKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtqwgBrbiwp7bXUh6VmJRuK2wY8rCAS3RY7TXSVCjIXdWXSG79
+	eWxtwTZ5bsfXW0GTks1qp+bk0zzqnvou+Uo9jRy1TLTsiMA+l3vUzIllqYM85Ng=
+X-Gm-Gg: ASbGncu9Sp9xqpdr696pX6DVIiYx+vh981Fnpy7Ga5g5JeQL1LVk2fpdiCbFtZt8StQ
+	0tyTU/lDtKlsCwBbA2PgVRcd6Ab4lGkSyitBb7GfzKjHHW84N1GKIZSaKT6tIvD//4xCynnIKmQ
+	/CPavhkCUTQocIKsJ0z7+dTkgZb+AhSyx9A+x8h/sOG4Ps8T33bavzVa65/tOzAN9pCMUgOjyC1
+	dT+siqW82bn+cGJ3Eo96uNCmzbHi8pP5XnnAv0cL+CbdD1hufq8GLJbenmIMF/2aLNrU0PDpf/N
+	KXGvpSJQv/u1nV6RNVseZMBVeqvIIOx+bmDfn/BVWuiSXoQ6ETPjQ4GN4IXmhtM4Iq2DqfQYq++
+	ImCzbRDDB6ZAeojmSqUiSRglDN0UR
+X-Google-Smtp-Source: AGHT+IGLtJZR0JJVKRILz/ZiqYmeVboSBH4PK1DJ0UoO9oX8aCb9uz98PkTHNKxCb1p4ZJETUczmng==
+X-Received: by 2002:a05:620a:3913:b0:7c7:a602:66ee with SMTP id af79cd13be357-7c7af0bd2fbmr513370685a.10.1744409497970;
+        Fri, 11 Apr 2025 15:11:37 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8943afcsm321264485a.16.2025.04.11.15.11.33
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8943afcsm321264485a.16.2025.04.11.15.11.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 15:11:34 -0700 (PDT)
+        Fri, 11 Apr 2025 15:11:37 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: cgroups@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: cgroups@vger.kernel.org,
 	roman.gushchin@linux.dev,
 	shakeel.butt@linux.dev,
 	donettom@linux.ibm.com
-Subject: [RFC PATCH v4 4/6] migrate: implement migrate_misplaced_folio_batch
-Date: Fri, 11 Apr 2025 18:11:09 -0400
-Message-ID: <20250411221111.493193-5-gourry@gourry.net>
+Subject: [RFC PATCH v4 6/6] mm/swap.c: Enable promotion of unmapped MGLRU page cache pages
+Date: Fri, 11 Apr 2025 18:11:11 -0400
+Message-ID: <20250411221111.493193-7-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250411221111.493193-1-gourry@gourry.net>
 References: <20250411221111.493193-1-gourry@gourry.net>
@@ -85,84 +85,94 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A common operation in tiering is to migrate multiple pages at once.
-The migrate_misplaced_folio function requires one call for each
-individual folio.  Expose a batch-variant of the same call for use
-when doing batch migrations.
+From: Donet Tom <donettom@linux.ibm.com>
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
+Extend MGLRU to support promotion of page cache pages.
+
+An MGLRU page cache page is eligible for promotion when:
+
+1. Memory Tiering and pagecache_promotion_enabled are enabled
+2. It resides in a lower memory tier.
+3. It is referenced.
+4. It is part of the working set.
+5. folio reference count is maximun (LRU_REFS_MASK).
+
+When a page is accessed through a file descriptor, folio_inc_refs()
+is invoked. The first access will set the folio’s referenced flag,
+and subsequent accesses will increment the reference count in the
+folio flag (reference counter size in folio flags is 2 bits). Once
+the referenced flag is set, and the folio’s reference count reaches
+the maximum value (LRU_REFS_MASK), the working set flag will be set
+as well.
+
+If a folio has both the referenced and working set flags set, and its
+reference count equals LRU_REFS_MASK, it becomes a good candidate for
+promotion. These pages will be added to the promotion list. The
+per-process task task_numa_promotion_work() takes the pages from the
+promotion list and promotes them to a higher memory tier.
+
+In the MGLRU, for folios accessed through a file descriptor, if the
+folio’s referenced and working set flags are set, and the folio's
+reference count is equal to LRU_REFS_MASK, the folio is lazily
+promoted to the second oldest generation in the eviction path. When
+folio_inc_gen() does this, it clears the LRU_REFS_FLAGS so that
+lru_gen_inc_refs() can start over.
+
+Test process:
+We measured the read time in below scenarios for both LRU and MGLRU.
+Scenario 1: Pages are on Lower tier + promotion off
+Scenario 2: Pages are on Lower tier + promotion on
+Scenario 3: Pages are on higher tier
+
+Test Results MGLRU
+----------------------------------------------------------------
+Pages on higher   | Pages Lower tier |  Pages on Lower Tier    |
+   Tier           |  promotion off   |   Promotion On          |
+----------------------------------------------------------------
+  0.48s           |    1.6s          |During Promotion - 3.3s  |
+                  |                  |After Promotion  - 0.48s |
+                  |                  |                         |
+----------------------------------------------------------------
+
+Test Results LRU
+----------------------------------------------------------------
+Pages on higher   | Pages Lower tier |  Pages on Lower Tier    |
+   Tier           |  promotion off   |   Promotion On          |
+----------------------------------------------------------------
+   0.48s          |    1.6s          |During Promotion - 3.3s  |
+                  |                  |After Promotion  - 0.48s |
+                  |                  |                         |
+----------------------------------------------------------------
+
+MGLRU and LRU are showing similar performance benefit.
+
+Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 ---
- include/linux/migrate.h |  6 ++++++
- mm/migrate.c            | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+ mm/swap.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-index 61899ec7a9a3..2df756128316 100644
---- a/include/linux/migrate.h
-+++ b/include/linux/migrate.h
-@@ -145,6 +145,7 @@ const struct movable_operations *page_movable_ops(struct page *page)
- int migrate_misplaced_folio_prepare(struct folio *folio,
- 		struct vm_area_struct *vma, int node);
- int migrate_misplaced_folio(struct folio *folio, int node);
-+int migrate_misplaced_folio_batch(struct list_head *foliolist, int node);
- #else
- static inline int migrate_misplaced_folio_prepare(struct folio *folio,
- 		struct vm_area_struct *vma, int node)
-@@ -155,6 +156,11 @@ static inline int migrate_misplaced_folio(struct folio *folio, int node)
- {
- 	return -EAGAIN; /* can't migrate now */
- }
-+static inline int migrate_misplaced_folio_batch(struct list_head *foliolist,
-+						int node)
-+{
-+	return -EAGAIN; /* can't migrate now */
-+}
- #endif /* CONFIG_NUMA_BALANCING */
+diff --git a/mm/swap.c b/mm/swap.c
+index 382828fde505..3af2377515ad 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -399,8 +399,13 @@ static void lru_gen_inc_refs(struct folio *folio)
  
- #ifdef CONFIG_MIGRATION
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 047131f6c839..7e1ba6001596 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2731,5 +2731,36 @@ int migrate_misplaced_folio(struct folio *folio, int node)
- 	BUG_ON(!list_empty(&migratepages));
- 	return nr_remaining ? -EAGAIN : 0;
- }
-+
-+/*
-+ * Batch variant of migrate_misplaced_folio. Attempts to migrate
-+ * a folio list to the specified destination.
-+ *
-+ * Caller is expected to have isolated the folios by calling
-+ * migrate_misplaced_folio_prepare(), which will result in an
-+ * elevated reference count on the folio.
-+ *
-+ * This function will un-isolate the folios, dereference them, and
-+ * remove them from the list before returning.
-+ */
-+int migrate_misplaced_folio_batch(struct list_head *folio_list, int node)
-+{
-+	pg_data_t *pgdat = NODE_DATA(node);
-+	unsigned int nr_succeeded;
-+	int nr_remaining;
-+
-+	nr_remaining = migrate_pages(folio_list, alloc_misplaced_dst_folio,
-+				     NULL, node, MIGRATE_ASYNC,
-+				     MR_NUMA_MISPLACED, &nr_succeeded);
-+	if (nr_remaining)
-+		putback_movable_pages(folio_list);
-+
-+	if (nr_succeeded) {
-+		count_vm_numa_events(NUMA_PAGE_MIGRATE, nr_succeeded);
-+		mod_node_page_state(pgdat, PGPROMOTE_SUCCESS, nr_succeeded);
-+	}
-+	BUG_ON(!list_empty(folio_list));
-+	return nr_remaining ? -EAGAIN : 0;
-+}
- #endif /* CONFIG_NUMA_BALANCING */
- #endif /* CONFIG_NUMA */
+ 	do {
+ 		if ((old_flags & LRU_REFS_MASK) == LRU_REFS_MASK) {
+-			if (!folio_test_workingset(folio))
++			if (!folio_test_workingset(folio)) {
+ 				folio_set_workingset(folio);
++			} else if (!folio_test_isolated(folio) &&
++				  (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING) &&
++				   numa_pagecache_promotion_enabled) {
++				promotion_candidate(folio);
++			}
+ 			return;
+ 		}
+ 
 -- 
 2.49.0
 
