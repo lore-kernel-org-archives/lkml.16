@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11DB2BD5A0
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1141A2BD5B7
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:43:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744350191; cv=none; b=sruEU3UT+STtBxGosAZpbBg1Ox4aeQtOkxc6ZFzKwRijMeIPcu1bWxdW7ul9GCFRNo3in0bo+S2BJ7j+pGe6NxObPHMQaHZYH7a8FumSxsZBPgNgr1+HOWh5LL6bB6pbdN65FiBHQz3CjfMiqKjOsXlOZ+dghdz3NjZdCSaU7Po=
+	t=1744350194; cv=none; b=XLXfDUO7XHp1wkw5EwwwQDwCuAegvidAXQbOsSZKRs1jfMq4VwcuO8blxxorN+VXjjfoedJnRxrrXI+dtJbp0QJDjpxlfF1aJh3xNr5ASZXBcP8P0hvrzdIo1HpM6a9/mtBq/JPFeFB6LMy0HI+cMtNo8mDUglq3h8yP+XeCdjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744350191; c=relaxed/simple;
-	bh=egCr3mkvet3/AXmCOBCu30nw3QjIoKNyGxc4UXsVQsE=;
+	s=arc-20240116; t=1744350194; c=relaxed/simple;
+	bh=badTX7FT8IohDN00i2VjzI29ky2TF4awZx5U6VyzMFk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c1GDEiTbhiBl2gY4uFLWJ9FjIIAPP5ql0+/ko7SeT+KFGvMuyelyZQtgNNAnnjDkqtFZtSTk1dwUibpCpbvT6gz3znmeQURV8ZgMfLj5Mx/vFPyETIIE8rZul0tuWxlIBt3gbd2UsVnoZBeLGWy6BWtmVEn0iapdw0nOjw+Q9Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=awMgx7WE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OMX0uecMIxv9gQBk58o3LC+Rpq9XrkUUs3nPAWYTHY4tY48OduOotcDUIp7kIw8d7ahe4yqGgKFg66cSsgMnGptINB97tQ2D6tQQ6P0LslNNYZIfyhBOXhVuRUJuEMAqAcOb+KHHObd4jkEP774uuasUbNB88JBXG8e3uvXYjcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HcDO9Pch; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="awMgx7WE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4DF6C4CEE2;
-	Fri, 11 Apr 2025 05:43:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HcDO9Pch"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7D3C4CEE5;
+	Fri, 11 Apr 2025 05:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744350191;
-	bh=egCr3mkvet3/AXmCOBCu30nw3QjIoKNyGxc4UXsVQsE=;
+	s=k20201202; t=1744350193;
+	bh=badTX7FT8IohDN00i2VjzI29ky2TF4awZx5U6VyzMFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=awMgx7WEAuauQIn+TqQMWMJpMpZ3ir8lsSu+s71IofVRRRgimhgQRoeCmlr9+Zzqu
-	 equVfDQC71iGaRUtUnsqiWFBU5GCtLqv9Pw2dBR44BqRZ2m5dPyfa5Xvnv6sq5cCTS
-	 mVf3AfRG5p1xl3qCDP43QatEMhzav/MqV8bj8GMJCFA+c9m9ugbmI8JAfov39/ZSe5
-	 bV9GVlcXx0jlJ+vqhonU281NW0IGfD2c3yTvIx4jikDBUlyS9xPBksvjH8Dq7W7NvW
-	 NUJITfJ73bdU6PBb295/Pz9tkOWLcFOMXqop6HYE97+WlFp7yONngwAqBLGF2RUu2i
-	 3l/8EQi0y5HGQ==
+	b=HcDO9PchsMf0EyHUg2b6ZODqgZPR8tFsEH+t8nw9rKERrxjjIlc2mor7xizqOtaCz
+	 zr4WwKDYzfgFiVhNRwkOSXRbrKAC77UKqy2lzAGHw6PAfTatEDAPMN255VgaIHo3vD
+	 yYidC/znKIv7N6gw4DljjJbuXZkuABc8j4+JJGO8q5rQf+HUxuROqxzaRUZKdzvLEn
+	 s4DFe0QvRQ9SZKvDUC7EjwJT1U7nDaXzn1zTXrlPn/Q4lH3M7FX9iITMN6rsY81hLW
+	 gVNgu7mc7/qPZqSknRd/a9VT8OV0sQRk2wCCNbtFjveK5lalwFPHMJQKsiSlDdM5Rs
+	 KBHzpo5pe6NTA==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -35,9 +35,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 50/53] x86/alternatives: Update the comments in smp_text_poke_batch_process()
-Date: Fri, 11 Apr 2025 07:41:02 +0200
-Message-ID: <20250411054105.2341982-51-mingo@kernel.org>
+Subject: [PATCH 51/53] x86/alternatives: Rename 'apply_relocation()' to 'text_poke_apply_relocation()'
+Date: Fri, 11 Apr 2025 07:41:03 +0200
+Message-ID: <20250411054105.2341982-52-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250411054105.2341982-1-mingo@kernel.org>
 References: <20250411054105.2341982-1-mingo@kernel.org>
@@ -49,83 +49,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
- - Capitalize 'INT3' consistently,
-
- - make it clear that 'sync cores' means an SMP sync to all CPUs,
-
- - fix typos and spelling.
+Join the text_poke_*() API namespace.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/text-patching.h | 2 +-
+ arch/x86/kernel/alternative.c        | 6 +++---
+ arch/x86/kernel/callthunks.c         | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index a45ac8a223f3..5337f1be18f6 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -15,7 +15,7 @@
+ 
+ extern void text_poke_early(void *addr, const void *opcode, size_t len);
+ 
+-extern void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len);
++extern void text_poke_apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len);
+ 
+ /*
+  * Clear and restore the kernel write-protection flag on the local CPU.
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index c0be0663425e..9ee6f879bce5 100644
+index 9ee6f879bce5..231b2acbe360 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2561,24 +2561,26 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
- 
- /**
-  * smp_text_poke_batch_process() -- update instructions on live kernel on SMP
-- * @text_poke_array.vec:		vector of instructions to patch
-- * @text_poke_array.nr_entries:	number of entries in the vector
-  *
-- * Modify multi-byte instruction by using int3 breakpoint on SMP.
-- * We completely avoid stop_machine() here, and achieve the
-- * synchronization using int3 breakpoint.
-+ * Input state:
-+ *  text_poke_array.vec: vector of instructions to patch
-+ *  text_poke_array.nr_entries: number of entries in the vector
-+ *
-+ * Modify multi-byte instructions by using INT3 breakpoints on SMP.
-+ * We completely avoid using stop_machine() here, and achieve the
-+ * synchronization using INT3 breakpoints and SMP cross-calls.
-  *
-  * The way it is done:
-  *	- For each entry in the vector:
-- *		- add a int3 trap to the address that will be patched
-- *	- sync cores
-+ *		- add an INT3 trap to the address that will be patched
-+ *	- SMP sync all CPUs
-  *	- For each entry in the vector:
-  *		- update all but the first byte of the patched range
-- *	- sync cores
-+ *	- SMP sync all CPUs
-  *	- For each entry in the vector:
-- *		- replace the first byte (int3) by the first byte of
-+ *		- replace the first byte (INT3) by the first byte of the
-  *		  replacing opcode
-- *	- sync cores
-+ *	- SMP sync all CPUs
-  */
- static void smp_text_poke_batch_process(void)
- {
-@@ -2606,13 +2608,13 @@ static void smp_text_poke_batch_process(void)
- 	cond_resched();
- 
- 	/*
--	 * Corresponding read barrier in int3 notifier for making sure the
-+	 * Corresponding read barrier in INT3 notifier for making sure the
- 	 * text_poke_array.nr_entries and handler are correctly ordered wrt. patching.
- 	 */
- 	smp_wmb();
- 
- 	/*
--	 * First step: add a int3 trap to the address that will be patched.
-+	 * First step: add a INT3 trap to the address that will be patched.
- 	 */
- 	for (i = 0; i < text_poke_array.nr_entries; i++) {
- 		text_poke_array.vec[i].old = *(u8 *)text_poke_addr(&text_poke_array.vec[i]);
-@@ -2685,7 +2687,7 @@ static void smp_text_poke_batch_process(void)
+@@ -340,7 +340,7 @@ static void __apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen,
  	}
+ }
  
+-void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len)
++void text_poke_apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len)
+ {
+ 	__apply_relocation(buf, instr, instrlen, repl, repl_len);
+ 	optimize_nops(instr, buf, instrlen);
+@@ -496,7 +496,7 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 		for (; insn_buff_sz < a->instrlen; insn_buff_sz++)
+ 			insn_buff[insn_buff_sz] = 0x90;
+ 
+-		apply_relocation(insn_buff, instr, a->instrlen, replacement, a->replacementlen);
++		text_poke_apply_relocation(insn_buff, instr, a->instrlen, replacement, a->replacementlen);
+ 
+ 		DUMP_BYTES(ALT, instr, a->instrlen, "%px:   old_insn: ", instr);
+ 		DUMP_BYTES(ALT, replacement, a->replacementlen, "%px:   rpl_insn: ", replacement);
+@@ -1981,7 +1981,7 @@ __visible noinline void __init __alt_reloc_selftest(void *arg)
+ static noinline void __init alt_reloc_selftest(void)
+ {
  	/*
--	 * Third step: replace the first byte (int3) by the first byte of
-+	 * Third step: replace the first byte (INT3) by the first byte of the
- 	 * replacing opcode.
- 	 */
- 	for (do_sync = 0, i = 0; i < text_poke_array.nr_entries; i++) {
+-	 * Tests apply_relocation().
++	 * Tests text_poke_apply_relocation().
+ 	 *
+ 	 * This has a relative immediate (CALL) in a place other than the first
+ 	 * instruction and additionally on x86_64 we get a RIP-relative LEA:
+diff --git a/arch/x86/kernel/callthunks.c b/arch/x86/kernel/callthunks.c
+index d86d7d6e750c..a951333c5995 100644
+--- a/arch/x86/kernel/callthunks.c
++++ b/arch/x86/kernel/callthunks.c
+@@ -185,7 +185,7 @@ static void *patch_dest(void *dest, bool direct)
+ 	u8 *pad = dest - tsize;
+ 
+ 	memcpy(insn_buff, skl_call_thunk_template, tsize);
+-	apply_relocation(insn_buff, pad, tsize, skl_call_thunk_template, tsize);
++	text_poke_apply_relocation(insn_buff, pad, tsize, skl_call_thunk_template, tsize);
+ 
+ 	/* Already patched? */
+ 	if (!bcmp(pad, insn_buff, tsize))
+@@ -294,7 +294,7 @@ static bool is_callthunk(void *addr)
+ 	pad = (void *)(dest - tmpl_size);
+ 
+ 	memcpy(insn_buff, skl_call_thunk_template, tmpl_size);
+-	apply_relocation(insn_buff, pad, tmpl_size, skl_call_thunk_template, tmpl_size);
++	text_poke_apply_relocation(insn_buff, pad, tmpl_size, skl_call_thunk_template, tmpl_size);
+ 
+ 	return !bcmp(pad, insn_buff, tmpl_size);
+ }
+@@ -312,7 +312,7 @@ int x86_call_depth_emit_accounting(u8 **pprog, void *func, void *ip)
+ 		return 0;
+ 
+ 	memcpy(insn_buff, skl_call_thunk_template, tmpl_size);
+-	apply_relocation(insn_buff, ip, tmpl_size, skl_call_thunk_template, tmpl_size);
++	text_poke_apply_relocation(insn_buff, ip, tmpl_size, skl_call_thunk_template, tmpl_size);
+ 
+ 	memcpy(*pprog, insn_buff, tmpl_size);
+ 	*pprog += tmpl_size;
 -- 
 2.45.2
 
