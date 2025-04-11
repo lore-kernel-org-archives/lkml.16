@@ -1,292 +1,299 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2074.outbound.protection.outlook.com [40.107.21.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBC91DEFE1
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377363; cv=fail; b=rm2EwW14AEgZfJa81txp17dliVjGq9G4FZGJFSieYeQfAsdQvXgJm+xfqmksCNQDrK+I+doRgGdwwBZyhbgYFWQRyMJ85CNUhjRkVtJ6OnzLB5s8F5paczM/X/dKz660Hj2qDUex8CSvWDeJRVc4J+rlyYdlRUwQ0RyVWVsavg0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377363; c=relaxed/simple;
-	bh=qE0clyk1dzQxtO0OQ1Wy1u9YSda03bJ+9FPAgTj8aL8=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=brIVP9klfRM2NYFWOab2w3tVeGq39KwW19Ij+ERHFP7BV8bb88cbghQKE1SrDauh5uKH7r52eJ77vnwlqMbHJ/tdVQw6385nvchHkhim+XfJIfGf/npSkF9pwrpwGS7tDxYtWM9kC0MMo71yDthNswyrpJydZE0HyVvL+T2cDmc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=aUKIM0Xk; arc=fail smtp.client-ip=40.107.21.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356CC1E260C
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744377365; cv=none; b=aB2F1h6aiJA8js56I8Cl1BAmdpCOznt1sehsyiM+MGsAsTuV7M8pYYE/ifexlf7GSHCoipcXE2BlLX1Z941Pw7KSXlhKYphUbzCuq1CAG96ByVb6uAVeiso3/j+YvdEonZU93tnCJ+Hf73dh5ruiYtOUmj5BFEKMPCTSasDoyiU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744377365; c=relaxed/simple;
+	bh=MjIPXLoM5IUhIoZhl+wifWQND7T3/kSCdIUtGuu23/U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IX5JUIHeI6oYRSkwIuLUmz1+4a8r4CAgCRlIwnH8flHjgOGLHUoDMMuLtCIL7go6OJOals7/pyVACMq90FwlPaPyP1U92/FWLniy6EI9ZaInGg6mG9h3Fc+ypTox0BFfDJ3HIRpAkvggERxGaImk4JfYRKpj1PCYlOoT1D8F8SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=odpgcOrr; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="aUKIM0Xk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jGRqiFRkG5zyEim5036j2EtErz+Psz3G4BSdUkal1fvjzJm1CndZ2evZTQrKs6whLdK5f/6avDSHCoDlWGFt630sW/dk/Ds3G+y8pk9dsiy5hVlqGgQVB8tUdxOyWFTeGbqbGehM1EtKMjQl6jCPuPf8CgVYhNWvbnGcNrqQJRh7n+zisx+9LHGaS48cOXfoVFF8covytH5QuLndz+7XdnCzguFX2afpro2qhRjIzDVNouFi5JWWxR8SQua26688F7uD5eNdoSXNCxX6FVFgkBK6qMWMSC+BpXqVUbwioErHoxDz6O8ib7GRMMCTM6Gb4O4Pd3XwMV8eeyD8ps/1lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9Ek9PlQL3L7F/GT5aHQ9Ql/XYFXtYwJ848RD7txB0GQ=;
- b=L+U7jUep8xJ573lStgyyvvaZ5XvEJmcz5L4h3XpVBx/jwqdRf+8jna0e47zrJvJX9VJDsJq9oQyRynLnNypjkrNhAkkOJ6W6qzKC7BopRJSUaKPgv2KDTMshP7AqNHuljR/Mkvho/m4xqT9YE4VghUsu/nDo4JPTwWqCFO8I+S/TywvowwkVFoDeEe+YRZrZWqBBaGoeZkSnwjq3xfzu9iZ5M0fCUc0aXi9Isuoq5eIPkejWvadSuZMbIiCWqKankMUwhsuSerK1ORQwxaR7lBz4hgIEiT9VoB8+Fe0A5bpKA6RGqZMumX7uRbzDdUWa4wEf35ya7q0zXMvYZFUX/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9Ek9PlQL3L7F/GT5aHQ9Ql/XYFXtYwJ848RD7txB0GQ=;
- b=aUKIM0XkQGxW67Xo0SzER0R63ZwG0c1x+XL4fBW0Ff+e2UslhkKnE61VfXcZVHv+olHf5Y1IM2xBgTESFU1M8QybUf6Q6iiioCL2iV5olEOcIfqetwzvQyd1x48c7rZLe77HmHT5V8FDr0lntIu2ISv/LfJKo7oCRt7jRFYZCYs+J6D4FJiFKlo1KFUzKrTxEtq/9uEmPsMTOUXBPCpRDWcq1A2IomUHZojmQXa838uD/yoCQ5j7xaQj9+hrtwicSV+yarALO56L/eWKnZ5d/f9s9ZevQ7fGpNb4alItSIEFLxz6CYKlgMhzzkYQKJ/RNE3sQ/1YiMfv2l0b94mvRQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by PA1PR04MB10674.eurprd04.prod.outlook.com (2603:10a6:102:483::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.28; Fri, 11 Apr
- 2025 13:15:58 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8632.025; Fri, 11 Apr 2025
- 13:15:58 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Fri, 11 Apr 2025 21:14:13 +0800
-Subject: [PATCH 5/6] mailbox: Use guard/scoped_guard for con_mutex
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-mailbox-cleanup-v1-5-8db541394dc2@nxp.com>
-References: <20250411-mailbox-cleanup-v1-0-8db541394dc2@nxp.com>
-In-Reply-To: <20250411-mailbox-cleanup-v1-0-8db541394dc2@nxp.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Elliot Berman <quic_eberman@quicinc.com>, 
- Thierry Reding <treding@nvidia.com>, Sudeep Holla <sudeep.holla@arm.com>, 
- linux-kernel@vger.kernel.org, mailbox@lists.linux.dev, 
- Peng Fan <peng.fan@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744377279; l=3115;
- i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=r0VYGdsKbpTESeFSS5JyC7sEdaPJ+c5WRhpXb4zBr/I=;
- b=sUx1TVg/qmjp6O85mjCi88OAfDTekjeAlVQJKgULHJmvQfOMXN0nzR8WvcanRw3xzbpabBFp6
- wkNXSne9OYhB5Wg6SK8qIiJYR5I+WpD3pwh+rtl8tqS6ZJZTiIC4rWK
-X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
- pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
-X-ClientProxiedBy: MAXPR01CA0104.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::22) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="odpgcOrr"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2240b4de12bso26442545ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744377362; x=1744982162; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Iq/zLUOAjmqMOQyCH6CedvdIB7nhaB2p2wb10oaF0qQ=;
+        b=odpgcOrrn8ZqSaSCAdG37wsEEL3dyRUBAF3pfqHPTrSQyvt3PTWeZqHA9umviBMHf8
+         9bgrYqw5nbNA5VrBNbNUq4x+ENZlzQdt5uBhpcEREAfsbibGKoGTh0T1BrumJBdKN1sq
+         V2E8eZuqsOjQsmES2n3Vf73FbvCthPdbESxjCBg0NB4vNiwWLn6J/ShAnbvYhX/OyaK3
+         7MKU8giQydMOpMVOMHs97hnrlEc0biUs9MlkizS7cu89ZniOJ8gqegaCbBLcsdk4KRN6
+         759j0/VBjpRVgTFrAv9RvfAP2OP1j1lSoNFY6AhAyvp+fwpmYZihuokilA4sPcMhWYJg
+         18yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744377362; x=1744982162;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Iq/zLUOAjmqMOQyCH6CedvdIB7nhaB2p2wb10oaF0qQ=;
+        b=lrPYnCjBnPzxqpztxmwPdoeu8zwatTIR8l+kvK8GYESuY3VngVuyCYl4sV8ipRM6Wr
+         nn6/HAlucSN+9Zu78IkMuLhJxwsWSF0JQ74qUSMQcN0RRljf7rSKAJG4Qyehg5k/1WpB
+         yFiV1DcpsN0GWytNpWCSgYZKOY9MjPAd/ou10kmoA2rTOqNrNnnUbPZ4hNS8ZxPLyI0u
+         OTBkXKYeprWUfZ2Z64nxGRwOyzT3w5GrVXnm9w1XzxjMrxyXeEtT3cEHaLkzTfS0jyrj
+         ZGmTVbZICaAGUG1glTI6v0bqltkpIwNW9UZCq2HrwVuFlr7i8BoKQkhVR0icrWPcrngB
+         CgIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWojgUNSkoP0wPHMknbMvuw2lZmC21Sw+gcil/zkIJ7SEV1rzMfiyV/3ENTBoU6ZO3RKNqv1kJiLGf9hQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys2vYyxj6NFA1u9FArNo6cFUpSpTZ6h1+xS4AENoz6RVOOwcqM
+	vsiIRa13AfBNWJo8IqD6o3dJtEWpPO7GdNcRdp+v4SBRJbEu5qVgWnC3G1ho/IM=
+X-Gm-Gg: ASbGncv1syK+kt6JB/hDQOd7kVX/C4wQF36gT15z9xn8GTMZ81uX3mp/2a5KZpmAR3F
+	gFBUL18MTsW7dJtmnXHZH4iDhVh/VzqOtnnywoZ0GvuVfTei7BGTg9iSA+rKZXa+nALZvFRwVlI
+	UWet7Ft9ZKX/x0BLjCsuo1rQvdazwKJsputUOINQL97KrsfNCq/t8HTuW8ft0mMwwKxRzb+mmt9
+	GdgEJOnnl09RJKJwnuw9tMNVCOA5MHaJSeMqabX/BAQ1p28f19e4VoOP0hIzvgTn06pnCTb1cpI
+	hURX0xUMX/HscW0+NcZrXe6XC42rXv8=
+X-Google-Smtp-Source: AGHT+IFYuzue8rTIhMXZdvGPMyvl0e8z93Koxv1rsyMMhwoJlET+hmldcsrrZX6b0qlRAdpPJUNnxg==
+X-Received: by 2002:a17:902:f68f:b0:215:7421:262 with SMTP id d9443c01a7336-22bea4b40f9mr36467045ad.12.1744377362506;
+        Fri, 11 Apr 2025 06:16:02 -0700 (PDT)
+Received: from localhost.localdomain ([2a12:a305:4::308a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cc6sm48245005ad.122.2025.04.11.06.15.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 06:16:02 -0700 (PDT)
+From: Guodong Xu <guodong@riscstar.com>
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	dlan@gentoo.org,
+	p.zabel@pengutronix.de,
+	drew@pdp7.com,
+	inochiama@gmail.com,
+	geert+renesas@glider.be,
+	heylenay@4d2.org,
+	tglx@linutronix.de,
+	hal.feng@starfivetech.com,
+	unicorn_wang@outlook.com,
+	duje.mihanovic@skole.hr
+Cc: elder@riscstar.com,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: [PATCH 5/9] riscv: dts: spacemit: add PWM support for K1 SoC
+Date: Fri, 11 Apr 2025 21:14:19 +0800
+Message-ID: <20250411131423.3802611-6-guodong@riscstar.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250411131423.3802611-1-guodong@riscstar.com>
+References: <20250411131423.3802611-1-guodong@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA1PR04MB10674:EE_
-X-MS-Office365-Filtering-Correlation-Id: fd5ec770-8899-4e9c-fd65-08dd78faffd1
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|376014|1800799024|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Tm83Q1VqeFd5NmdqNlZwNVFyS1c2WDloNlYvRjRDRWEyTmc0WnNpTDZBSHJs?=
- =?utf-8?B?OU4zc1lPeHgzK0ZvVndkbDRLZEdpd3hydHdjcForbE5Ta2l4aVdIL2lYaVJ2?=
- =?utf-8?B?cWE1NkIvV0k3RVV1MGFZV2xCcUxEOTFRWlY4U2hFM010RlhHWm5rZE03d1hS?=
- =?utf-8?B?MmdEd3hjWnVIK3F3VlhEOXJZRjVta1hiU0J4dUtSZTcwUzkyQ0ZkSHU5QU8x?=
- =?utf-8?B?K1phNkR1cWVFbnZHeXFSNkhUVmdEMWliaVRiWXdoMWxyWmxLdDdabmU5TnNH?=
- =?utf-8?B?cmdDMFRBb1JZRkllaTVoWnE3S2c2QnZjeTFEd3ZLWTIxZXU2VytrWVZ4anY4?=
- =?utf-8?B?ZWY3MnFkbTVveXlORjZlR1lqa0JxWTh6Q2VtQW9LOTNSSjBLNXJMVHNvaWQ2?=
- =?utf-8?B?ejV0UkcrSkpKcEFJTzd6MlNBMjRhUFhOYjdDYmtXTDBHTXBuc1ZBRHNjVkFs?=
- =?utf-8?B?dmRSandWMlQ0V0FzeHgyVlpDVjVzSlh0VldDaW9aQytyTUc0Z3NZZlR5SENS?=
- =?utf-8?B?eGpvU2lybjV1bmRFNnkwazNSYzFBclJteDZCaWZPMHRRdWgybGhhVlpLRVBv?=
- =?utf-8?B?U0xudzhMZjhlMXFvR3BvMkpBdW1nZGl1VmJ4d05UNzU3dGhmQU5RdHpxQ2gz?=
- =?utf-8?B?Y1ByTFN2V0RobVI2K21YQys5b29uN1hJaFZTL0J0S1dZc0JrUDVkUjRmMlpm?=
- =?utf-8?B?bW9kZnNGVmlpVkJBKzQ3QU4zL3FSQUIrOERVd01RQjVhT3RMQ2hvMlBadnAr?=
- =?utf-8?B?STZBL0t2YWJmOVBEdjlUQVhWaWp2cnYxYVlxL3RLZTdqOThjRmJVOWd0N0g5?=
- =?utf-8?B?NHlob2ZoRjBkTjc1ajc3VEt2eUhrdWUzcXROd3NsYmFrQk9JdzNYOTcycGtV?=
- =?utf-8?B?N2JLVkZDcEFnZG5kMzhrK1ZyaHJ5RFlBWnJrUXVOcGpQaEpPMXJtMmVlTFdz?=
- =?utf-8?B?LzFQdnZZUUZCNDFUVVExTTJVTmFIZEsyVDlOK2FJNy8ycjBjQXdKV2pOMEdp?=
- =?utf-8?B?OXZGbGxCek95N0ZjSVVJVTJybXUrMkdQNi9IVzZpakl3S0pXaEtiUUpFLytV?=
- =?utf-8?B?cFhNSkxQOFJrNG42cmJGYUo2N3NObTJWRDdmUEQxRVJ2RU40M2RhTzJpSEZC?=
- =?utf-8?B?WWh4Sm9UdVYzMWx2aDIxbkVrcEJWRjJTNXBvV2F5dW8xendsY2UvYjdPRlJH?=
- =?utf-8?B?bThOY1JvNWpOM3ZFem04U3BkNWh5R3ZDc2tjaTltUGFuVC8yM2NJMW84a2d2?=
- =?utf-8?B?a3FxQTZneUQ5WU43Qi9td3NWVzAzOVVzSDN2R2FFYXc2TWpPSzV4bjVMVENq?=
- =?utf-8?B?T3pITHZvSm5TK3NZRFZVclFuRVhYV0cyWWRuOWdmMDcvYWUxT2lyQUFPYWxj?=
- =?utf-8?B?blF3MTFzNk9KMFA3UVFETkJwcUxVcGhKVGZNc3pCWDI0R0JVeTNBOE91U3B2?=
- =?utf-8?B?K2JhRjhHYnpCK2pXQlJMblNmTytBcWVWalN3WkJNS0lTY3hHVldTOU12WGgw?=
- =?utf-8?B?ZkNnenN4WERweHB2aGRzdXM4Y3E5M2xHYllkRlMwT2l5ZEF2N3EyYlNOZHUr?=
- =?utf-8?B?cVhoV0QxVkJPY21EVTZkaENjN3d3SkwvU3dzSy9nMk42VHBiSzliTVBaZGpM?=
- =?utf-8?B?dXJxTkdCb2JhczNkQ1Z6dzNXR3paM2paZGs2VzhLWUlTY1VNOVNQNzlPaWly?=
- =?utf-8?B?OUt0cnpjNDZ4S0hkbnNBaGw3NUZQdyt1Z0ZHMFNIaCtaK1M4M2lJNjlkaEJj?=
- =?utf-8?B?M3FCNnNUdytiSnQwcjI1ZDlaTm9HSXBERnFORys0T2N3TzJkUGV0NTBibmtN?=
- =?utf-8?B?c1lpaDFUOWloOU8yUER1NlVqM29reXFFcGlnWVRSVHNFNk1ISGw3ZS81djh6?=
- =?utf-8?B?czVPbjN1NjdlQVdkTVJsQXVXSGw0Q0I5OE1KOTh2Y3B2QkRKZ1MwNkh5R0M4?=
- =?utf-8?B?WlpzTVBLam92djJHaU1jbndCdXYyS3ovM2lhZnd5YzYyeFlNbWk3NDU3dXNR?=
- =?utf-8?B?NjNmYzl6TjV3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TWQxQlN2NEhkckc0QlpwN1JKMGxzZlYvYmxQS2RzSllTcDZoaDZXSTdQd29I?=
- =?utf-8?B?U0lGUVNTc1dCdEhsTkxkUHRCYW92REF5c3dyL0Zra2hwNk9ZV2pKNnFRaTAv?=
- =?utf-8?B?eG0vOW56T0tKeXJSdnhTUTczaUI1MGJJRHpZbitMbTh4bWc1SFhZMERpZzJ1?=
- =?utf-8?B?RTRESThCM1dYSHQxSks5RjlHNXd3bDM5NTZaZWFROHQzK3ZqWUhSWitVUjg2?=
- =?utf-8?B?VHRNNVl2b3NTc3JJNWlmVGNITWZzbkxWUlRseklucXVJQmJNMmRvbThQbVhk?=
- =?utf-8?B?R3FiSzV3UC9pNTJFdHZqai9PZlRnZkVtVGRPa3dkUyt1V3QxNWliVk40VE1p?=
- =?utf-8?B?Uk1DUXBVSmJsVFA5a1RBeFRKVkd1d3NNZUVGVXIxSThuUUo5d3ROc1FOSUtW?=
- =?utf-8?B?OFZYTVZxUTNCNERORkZ5dFVEM1diQmNWSCtaQmRlVUZObmR0L1d3MzdnWTgr?=
- =?utf-8?B?NGZDaGlRQmRCaTJqRE1Sb2NRK2NOY3h0TS8wRzJqNDViUDVRTlhZKzM4L2pt?=
- =?utf-8?B?Q0ZUdHNqaFQvdThHcXhGZmZ4UVBmWUlZOEJocUZ3OERwUHZlWnExZzZiQVNh?=
- =?utf-8?B?UnFKaWVQQXNmam43c1FieVVKNk1mbmdQMVltT2RTUkhHSlFHZVE2VmtndDdL?=
- =?utf-8?B?STZtRVkzdUFMTnFKTmxxWXliTXR1Q3ZzSnZTcHpZRlRjSGkvSjdESnZZY3pS?=
- =?utf-8?B?LzRoRTV4QjNMVUEyUkNUYnV5MzRCUjRuMmRTTzNNcFIwSVI1Q0dRTGxZS0Ni?=
- =?utf-8?B?L2JhOU82RkFVb3N5eTV0YXZaZjZxSnE2b1Y3aUwveitCUDY5NnlsMGdhaVZK?=
- =?utf-8?B?cXM4UnBhcHJjazd5N2p5amVKRlVBeTJzOCt3cndSc2JFcXh6MktBOUVhWGRQ?=
- =?utf-8?B?RG5sY2wvTDlmd3NQZmg0STRXWHZXZFA0cklRRFl4MWdQckNmQWtTUFl5Nkkz?=
- =?utf-8?B?NlhKUXVSekwrSzFGOHNjcTcyU2NrZUVJck5HOFBERjgrN2NLbEV2UmZ5ZE1U?=
- =?utf-8?B?ZjdBeXVLNGtwOGNIRm4ydXhKRUc4NVdOajRxTy9BYjRuZDR2VmdmMXJ3M0hS?=
- =?utf-8?B?ZDhsckhibmtIWDNBM2txcjh4ekZXVWVlbGhYRjdDQW5ZWGk5MStsY0M2VWJk?=
- =?utf-8?B?WUdzb0c1TzF1bGNDNjlxTDZWeFROdFNLWjZMaktlMGRuODBDUGdvWTBrQkJG?=
- =?utf-8?B?QlRoM0xkQUJVczFVRlJ5MWJ2SGsrSXdIdmZBOXZ0S1J5QU5NemRqK00xWUlI?=
- =?utf-8?B?a1JYcGY2WUdyZUJCdkRlcXJFL2ttZjlVL3E4T0tPbjdORHdUUkhqQU8rdnU4?=
- =?utf-8?B?WXE2R0NqaUhPbmZxQmhZSW1kbzZ0WUh5am84Mis1QmlOTXdFdDVFU0M2REZa?=
- =?utf-8?B?NkI2c2YrV05UWlBnb01ZbGhlSm54dGVYM0xwU3RFMDhiN2JSelRLTTRVU3Nh?=
- =?utf-8?B?djh2aUtTREFoYlFrWjBlVnBIbUVsSWJzZmYwYnpia2xVQXhlcW5kNjJJb1Rn?=
- =?utf-8?B?eVNJak0wVHEvVmtEcWNCQWJpdTBYZXFBUWtaS01GMXBnczZIQUU3S2FRK0wr?=
- =?utf-8?B?dlpPQ2k5blRSbURvdXFPWkxpbjlsVW9DekhkQ01xODlvL01RbmlEd3NNLzR3?=
- =?utf-8?B?amJFdDRRQmtCQnhRbUIyWDlvUFJRTlV3emk2Y2VqdXBCSTlKZE9pNlM4SC9k?=
- =?utf-8?B?ck1TV2p6V3Y4TllqUkdHUEZaTGtFT3ZuMEpMNWU4d1FLNjB3VlJqVFYwdWtV?=
- =?utf-8?B?RmVhTDlRTDdhb0xpbUozN0JnOGdQTzlJTDVVS2I4TVlpOERRZmRlZGdxMWk4?=
- =?utf-8?B?UlZTRFZvZzJiRS9zQjBDT1dnVE5tSmRMblRJVk5wL3NDYkI5bGxWNUtrNVdh?=
- =?utf-8?B?NGZxMENLTklLbHgya0NGbXF2amhzMnQ2cHFJejJGY2RXQ1JJMWVIR2FadlNS?=
- =?utf-8?B?d1hMYW5zZUIyYldHNEMxYUNmazVHbDJETkplTFFOMXJYL0hUSFk2N1gveWNQ?=
- =?utf-8?B?UGVxbWM0cVhyYWNlMktHeVRWbFhJSjFYL244Si9sM0pqRXdDSlF3VGsvaEpU?=
- =?utf-8?B?Tmh6Y1NVcjd4QnZVcURCK0lYSFdsZUszYjV6dFBXa1Fpb3l2T0pGVDZxUEVD?=
- =?utf-8?Q?QBlxPnHj3LHModZhNs1LZZ66q?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd5ec770-8899-4e9c-fd65-08dd78faffd1
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 13:15:58.6586
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: D7VWpeqKzw6sSGLzi5ZJtzPSieusahxx4kYEBIoN+vUUx1tiUGjHnBrFUPcFKY2vEJCwVuInsTxLZEKristNyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10674
+Content-Transfer-Encoding: 8bit
 
-From: Peng Fan <peng.fan@nxp.com>
+The SpacemiT K1 SoC features a PWM controller with 20 independent
+channels. Add the corresponding 20 PWM nodes to the device tree.
 
-Use guard and scoped_guard for con_mutex to simplify code.
-
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
 ---
- drivers/mailbox/mailbox.c | 61 ++++++++++++++++++++---------------------------
- 1 file changed, 26 insertions(+), 35 deletions(-)
+ arch/riscv/boot/dts/spacemit/k1.dtsi | 180 +++++++++++++++++++++++++++
+ 1 file changed, 180 insertions(+)
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 3c3bdf278b8e729f494b0e61c008b63dbc4f9344..0d2f3ab79189731974a58bf7b90a60c972f7261f 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -6,6 +6,7 @@
-  * Author: Jassi Brar <jassisinghbrar@gmail.com>
-  */
- 
-+#include <linux/cleanup.h>
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -370,13 +371,9 @@ static int __mbox_bind_client(struct mbox_chan *chan, struct mbox_client *cl)
-  */
- int mbox_bind_client(struct mbox_chan *chan, struct mbox_client *cl)
- {
--	int ret;
--
--	mutex_lock(&con_mutex);
--	ret = __mbox_bind_client(chan, cl);
--	mutex_unlock(&con_mutex);
-+	guard(mutex)(&con_mutex);
- 
--	return ret;
-+	return __mbox_bind_client(chan, cl);
- }
- EXPORT_SYMBOL_GPL(mbox_bind_client);
- 
-@@ -417,28 +414,25 @@ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
- 		return ERR_PTR(ret);
- 	}
- 
--	mutex_lock(&con_mutex);
-+	scoped_guard(mutex, &con_mutex) {
-+		chan = ERR_PTR(-EPROBE_DEFER);
-+		list_for_each_entry(mbox, &mbox_cons, node)
-+			if (mbox->dev->of_node == spec.np) {
-+				chan = mbox->of_xlate(mbox, &spec);
-+				if (!IS_ERR(chan))
-+					break;
-+			}
- 
--	chan = ERR_PTR(-EPROBE_DEFER);
--	list_for_each_entry(mbox, &mbox_cons, node)
--		if (mbox->dev->of_node == spec.np) {
--			chan = mbox->of_xlate(mbox, &spec);
--			if (!IS_ERR(chan))
--				break;
--		}
-+		of_node_put(spec.np);
- 
--	of_node_put(spec.np);
-+		if (IS_ERR(chan))
-+			return chan;
- 
--	if (IS_ERR(chan)) {
--		mutex_unlock(&con_mutex);
--		return chan;
-+		ret = __mbox_bind_client(chan, cl);
-+		if (ret)
-+			chan = ERR_PTR(ret);
- 	}
- 
--	ret = __mbox_bind_client(chan, cl);
--	if (ret)
--		chan = ERR_PTR(ret);
--
--	mutex_unlock(&con_mutex);
- 	return chan;
- }
- EXPORT_SYMBOL_GPL(mbox_request_channel);
-@@ -547,9 +541,8 @@ int mbox_controller_register(struct mbox_controller *mbox)
- 	if (!mbox->of_xlate)
- 		mbox->of_xlate = of_mbox_index_xlate;
- 
--	mutex_lock(&con_mutex);
--	list_add_tail(&mbox->node, &mbox_cons);
--	mutex_unlock(&con_mutex);
-+	scoped_guard(mutex, &con_mutex)
-+		list_add_tail(&mbox->node, &mbox_cons);
- 
- 	return 0;
- }
-@@ -566,17 +559,15 @@ void mbox_controller_unregister(struct mbox_controller *mbox)
- 	if (!mbox)
- 		return;
- 
--	mutex_lock(&con_mutex);
--
--	list_del(&mbox->node);
-+	scoped_guard(mutex, &con_mutex) {
-+		list_del(&mbox->node);
- 
--	for (i = 0; i < mbox->num_chans; i++)
--		mbox_free_channel(&mbox->chans[i]);
-+		for (i = 0; i < mbox->num_chans; i++)
-+			mbox_free_channel(&mbox->chans[i]);
- 
--	if (mbox->txdone_poll)
--		hrtimer_cancel(&mbox->poll_hrt);
--
--	mutex_unlock(&con_mutex);
-+		if (mbox->txdone_poll)
-+			hrtimer_cancel(&mbox->poll_hrt);
-+	}
- }
- EXPORT_SYMBOL_GPL(mbox_controller_unregister);
- 
-
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index c0cc4b99c935..609135cb5282 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -556,5 +556,185 @@ sec_uart1: serial@f0612000 {
+ 			reg-io-width = <4>;
+ 			status = "reserved"; /* for TEE usage */
+ 		};
++
++		pwm0: pwm@d401a000 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd401a000 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM0>;
++			resets = <&syscon_apbc RESET_PWM0>;
++			status = "disabled";
++		};
++
++		pwm1: pwm@d401a400 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd401a400 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM1>;
++			resets = <&syscon_apbc RESET_PWM1>;
++			status = "disabled";
++		};
++
++		pwm2: pwm@d401a800 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd401a800 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM2>;
++			resets = <&syscon_apbc RESET_PWM2>;
++			status = "disabled";
++		};
++
++		pwm3: pwm@d401ac00 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd401ac00 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM3>;
++			resets = <&syscon_apbc RESET_PWM3>;
++			status = "disabled";
++		};
++
++		pwm4: pwm@d401b000 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd401b000 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM4>;
++			resets = <&syscon_apbc RESET_PWM4>;
++			status = "disabled";
++		};
++
++		pwm5: pwm@d401b400 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd401b400 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM5>;
++			resets = <&syscon_apbc RESET_PWM5>;
++			status = "disabled";
++		};
++
++		pwm6: pwm@d401b800 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd401b800 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM6>;
++			resets = <&syscon_apbc RESET_PWM6>;
++			status = "disabled";
++		};
++
++		pwm7: pwm@d401bc00 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd401bc00 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM7>;
++			resets = <&syscon_apbc RESET_PWM7>;
++			status = "disabled";
++		};
++
++		pwm8: pwm@d4020000 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4020000 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM8>;
++			resets = <&syscon_apbc RESET_PWM8>;
++			status = "disabled";
++		};
++
++		pwm9: pwm@d4020400 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4020400 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM9>;
++			resets = <&syscon_apbc RESET_PWM9>;
++			status = "disabled";
++		};
++
++		pwm10: pwm@d4020800 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4020800 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM10>;
++			resets = <&syscon_apbc RESET_PWM10>;
++			status = "disabled";
++		};
++
++		pwm11: pwm@d4020c00 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4020c00 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM11>;
++			resets = <&syscon_apbc RESET_PWM11>;
++			status = "disabled";
++		};
++
++		pwm12: pwm@d4021000 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4021000 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM12>;
++			resets = <&syscon_apbc RESET_PWM12>;
++			status = "disabled";
++		};
++
++		pwm13: pwm@d4021400 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4021400 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM13>;
++			resets = <&syscon_apbc RESET_PWM13>;
++			status = "disabled";
++		};
++
++		pwm14: pwm@d4021800 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4021800 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM14>;
++			resets = <&syscon_apbc RESET_PWM14>;
++			status = "disabled";
++		};
++
++		pwm15: pwm@d4021c00 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4021c00 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM15>;
++			resets = <&syscon_apbc RESET_PWM15>;
++			status = "disabled";
++		};
++
++		pwm16: pwm@d4022000 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4022000 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM16>;
++			resets = <&syscon_apbc RESET_PWM16>;
++			status = "disabled";
++		};
++
++		pwm17: pwm@d4022400 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4022400 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM17>;
++			resets = <&syscon_apbc RESET_PWM17>;
++			status = "disabled";
++		};
++
++		pwm18: pwm@d4022800 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4022800 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM18>;
++			resets = <&syscon_apbc RESET_PWM18>;
++			status = "disabled";
++		};
++
++		pwm19: pwm@d4022c00 {
++			compatible = "spacemit,k1-pwm";
++			reg = <0x0 0xd4022c00 0x0 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&syscon_apbc CLK_PWM19>;
++			resets = <&syscon_apbc RESET_PWM19>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
-2.37.1
+2.43.0
 
