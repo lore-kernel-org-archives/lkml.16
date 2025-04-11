@@ -1,160 +1,150 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4D51F37D8;
-	Fri, 11 Apr 2025 14:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E71C1F4616
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380222; cv=none; b=ewkcaVYfHYhow7q2kEWoCWu9hGADqk95W1TcBmr4AlSlvXTQvpwNOjqnZXRBktwIvUj8lOYYQGyvBkH0GlvouNzv4ab4iwy7oPf3xXiaVpBIloW2g7XNXjrIxmZwCKn2ZmZX+KIP/M3+yrga63G0+oZ+qliL5dhWXwDPX2GjNdg=
+	t=1744380226; cv=none; b=RopfxEtxBLsAw5nO2m3lZPI1UiTyyAosH/bRhnNUgMw+XbyjoQYWxdnlVSNuk7x8oVnpGE+c+oacL5SMnUVQTfYm+J/RxTKNaq0s5iq2Z3TrpoqQ7yviRFWQ5DF+EQ1r39BdTvI4ONkr/PxMHsrUUfjVu7CZlRb/qrie0vKwLQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380222; c=relaxed/simple;
-	bh=Ns1e3L/IMBtWBIq2EJ8Q7nkRbzMXS8QMJmt1EKKPMcE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DkmwUg6lXVnyDv9o9vG+eA1WZ4dfTd/uBrZPyTJ1cFCnpWOiFsWvdRyTtia89rqqFN2X6J74jOO/6ra3vuiTotjJOL2rPDqtgP59mXjE6Mo6/eTQCt4jH004NWwicVU/nn2O5EpIe0AZs7yksCADZExBm31yc+qx8BqRSfcodZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iwi6Dsmy; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744380226; c=relaxed/simple;
+	bh=i/7zlwAJIjzPQYT2vnSF8gZ49qBJM600G17+gPhJlFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C3z8xWW0eGvwoorl9SgZnKpOc2WmYNgAZt1Su7IYJUT6cSWKiPQPn6XhznT4FnVVNkUXg4fcmGLdhgam7NIILWtrAUztObDoVElhOl/ylk832GQqI6aE7nFeno0vGlMrEUnB/NISVipva6KcUG5kukcS8UT+wBawYo31btcYQ2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eIhXh+Zf; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iwi6Dsmy"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7376e311086so2601301b3a.3;
-        Fri, 11 Apr 2025 07:03:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eIhXh+Zf"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso9860555e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:03:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744380220; x=1744985020; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=aSqmoz4W2Qpz+EROreX9HulA0/vYEtNIQOH9MGn8boc=;
-        b=Iwi6DsmykNP2YtsOglthn8QTL4nHrPtUdw8cUSpfUCK/YNIlgRqi6/XHS6sduhuz7I
-         thVSFTl+Gbc0LYHxxpYBanYdDSTx5WD1wCrIw0qCF9p62Er6OIXVS6szdBd83TkZOm02
-         z5PHG8zLnfLfildmcmuUS/oieSuTRUlgkBcFdrzrUButBMinWR7UBVZ7N4m+Y4yamR3L
-         wjVBv6hQY2HkLZ10M06rwbQlOMaJTxTnv7V3ZZYWycnWPA8fTy87yL98ybt6ot5N6cv1
-         JqH45GpyoBad3wtAXfkrrOlS9vkJzfLR1KJytPTysKT0aMzWfQTNABkQObgqmziGZoow
-         zO0Q==
+        d=suse.com; s=google; t=1744380222; x=1744985022; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WapZo+xzIjTKewOPVPt6LLWBOyxWAzBf4gfdfN+8PBo=;
+        b=eIhXh+Zflsoko/pmrj5KDrMWUxvyZCiISxSpqzzlFFFpjjauGcUDXMi9r+17wXsecV
+         JYQNzsV+whnx6cczY06OEqOl9LhO0qUzTb11TWKZ95JHBYBvQ7zp0WslEkEvIaRRmYhU
+         4bhG/kVeRGERi1GAV7O5bKqrimmB/izKAe4RbAxL/HaeLpw+guNyogWqWblp87EQbEmE
+         S7ydak35X2oSokuqyGoRFo1jrlqpDJEmHc2R1W8rlbIjnTygO3a9GByPIsWQIoeO3RjT
+         +2dc8qGgJN4R98Dtlbqgr7cIrrU7eUMJ8fXKDJlOUx5xvR1gbLgzxpQdgwGpMR78aJdT
+         DmkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744380220; x=1744985020;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1744380222; x=1744985022;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aSqmoz4W2Qpz+EROreX9HulA0/vYEtNIQOH9MGn8boc=;
-        b=NNI9zI1nyymVizlxexw3fNzHZvsW0LGH8QGiBo+vi9r6GCcOGr9sbH992CAOx757p7
-         HFnUB6XoUvM1U61SLahtjQTJSTY+ALJ1NXJfCcpnld2UiZeUHtwe3tk7dZl/xDfXE5xU
-         vsfDGOmitITeDAyWUCj+zPvwK58k3TfPGx1fZWVwlY4fju1eK4YA5wpkDmAO/PnQiDbR
-         iDlQ/beVInutzNEKp38dTVuUyJeqKAGvh4T6kHepDVKpBYlV5osrAz6eSluhk5arSnCQ
-         Gcug0mnCzaR6jBG9fvvvogK1ReG++TTaablBnmzJwoIiMOC7wwwyn5RltBYjcDbYE0Ti
-         wdvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXDRkeIJrIq+mVs+grf406u4nNMgqNIqn5By95UgyuS6gFE59WNR2swBeGpDrT1PCk67mBPXAl9VLTMGhF@vger.kernel.org, AJvYcCX/ClYk3G5fILs2UPRuhmlN32oGwjOXcVgU2aUm6jQl4FoVjw+vL/Rj/DjV+Hui/KKcsyRt0Om8ApvtJQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDgWqV4QgLfa3ui6DLw2wix1OrwRUQxAetrhkZ26xhzTKtB22q
-	4ciwPAashj3l1Ruco8MCmk98L/bkyWmmvZD+EmUzpFvS0o7vV6ECVvgR4Q==
-X-Gm-Gg: ASbGncvdFarEVmWXMjPVPyAaWJyxKcG2fxvAnBDAf5QYxngziD5LcV/1FFfVf7S3CG6
-	wY78AFvISkIRgPh4nBiDoknSK/ZEu7CnqFfTQpdm4dUJ1pC0jtMGha1Sg17MLb33MnSCYz7d/jz
-	9bLMEDGKAVBtls1u1u+M8D5aASOfBetCo3MHs2Zer5+SMMGhGnvpYMTO3qnpPZM0IX0HFBjN2sl
-	P8sCB36Pu9nInApK9t9zSPGTw9sNFAQT8NS7jpLCxcFXWJmmLT7IRi+e1RHP2AX4PLKtWne1p8x
-	EFT7DWhFyvR60RuVuOEbEDZPv/+SMmCRGBlDrafoc7Jc7N7Gjm1X0aC5KYVbtOaBN5QH8QyFi8r
-	KZx+7rR5S9B+D1g==
-X-Google-Smtp-Source: AGHT+IGpHD1mQ7+2yVdg1uHTVSNjp8+oRF/lePIAXNTlFAMCDr2vK8GcHad9Go1qdHo5ZSnxh3cwHQ==
-X-Received: by 2002:aa7:88d2:0:b0:737:6fdf:bb69 with SMTP id d2e1a72fcca58-73bd1211412mr3465831b3a.13.1744380219729;
-        Fri, 11 Apr 2025 07:03:39 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21e0469sm1507234b3a.79.2025.04.11.07.03.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 07:03:39 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <ef19ce31-fb9a-455b-8db9-f803154f8723@roeck-us.net>
-Date: Fri, 11 Apr 2025 07:03:37 -0700
+        bh=WapZo+xzIjTKewOPVPt6LLWBOyxWAzBf4gfdfN+8PBo=;
+        b=TvT/4HLmIXWNPJhOdolgwSmpmL/bp4xAYpvS4wZVNE0shPOC0F8wEMoJyK8mTZxpvk
+         Sb/7H5z//FH9Jd5D3GlMNdFk6vR/U87vJ2e6M0hXqk2pUbMePCSvvY0KFv6a1bGT0KMK
+         ez0g72CemwgO+CnmKKG4e9DGF7rDSdewr/YSoNVxWC3p7TuUoK6rg1JOZetNoaHAjjBr
+         A7T5tbJspI/++ZQl3BjPzDv+JIdXa8e4p48UNqj9E463y0IYzQvSHBOAAZsMGysI9qlQ
+         GYokM7b4UYzq703DP8u2wc8pUUhCRLDAkDtInK5UgeKALsJsHxifL0AdCzufdCKpIOX7
+         4diw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAoaJdDIfUmMlRvm8NDGxUWaNxeQlBq2C0S14HhwA4rlDkHmlYAycCZ0zuhjatQiFLPcRGBtlAgOxCYOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi7+ZMQ6WpRr3aCztpmR0f9hfSLvesNxwMrTins5ojuQ8pMROb
+	SMASSvH60jzX5BC+muPSVDDfryDUEJGoYGkmU4Jn7fPb4nc+ZXH0gS+sNYseHgKyRJdegFpURpF
+	W
+X-Gm-Gg: ASbGncvKM9op6IOj6jLASwfkexdrGZM9We057fzIdiHPWotVmxQ5TFx9g/ME+c5DkAe
+	Ar+o19l1Ta4Fhlm8sDgrLbUz8IYQGojMqq5eE9derQIN+udnRCq4xmKXgvZGojlhHhhhMnrwQe4
+	nHndYNr9JIyiD26Qkw8u9Le+pSiySMNahWAFPESFaSUwJkCdHrCLyFtvGJiZYYhmrTc3++lfl3o
+	xaXXyzHPK+QVBKznQVAjWj76o+lHYE+ooGUu1vEUlE2xzd5yrfuomhTFfGNe3fYm/CEhV/xx2zd
+	pyJyXo1Esdk3+Al7ow09xLZjF2WQCUczPHUKnZre+B15TeARu8JwTQ==
+X-Google-Smtp-Source: AGHT+IEmky7QdW0XPdHOi9QKSyqguYVdEl1Cs0e8F/bsOgGuHfphpW56d1/l8duOACJXebBDlLQDZQ==
+X-Received: by 2002:a05:600c:35cf:b0:43c:fd27:a216 with SMTP id 5b1f17b1804b1-43f3a9ab0f2mr19660595e9.23.1744380221383;
+        Fri, 11 Apr 2025 07:03:41 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c81f6sm83339045e9.20.2025.04.11.07.03.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 07:03:40 -0700 (PDT)
+Date: Fri, 11 Apr 2025 16:03:38 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: carlos.bilbao@kernel.org
+Cc: tglx@linutronix.de, bilbao@vt.edu, akpm@linux-foundation.org,
+	jan.glauber@gmail.com, jani.nikula@intel.com,
+	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+	takakura@valinux.co.jp, john.ogness@linutronix.de,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH 1/2] panic: Allow archs to reduce CPU consumption after
+ panic
+Message-ID: <Z_khOuvPGEWBAQbp@pathway.suse.cz>
+References: <20250326151204.67898-1-carlos.bilbao@kernel.org>
+ <20250326151204.67898-2-carlos.bilbao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] hwmon: (xgene-hwmon) Simplify PCC shared memory region
- handling
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-References: <20250411112053.1148624-1-sudeep.holla@arm.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250411112053.1148624-1-sudeep.holla@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326151204.67898-2-carlos.bilbao@kernel.org>
 
-On 4/11/25 04:20, Sudeep Holla wrote:
-> The PCC driver now handles mapping and unmapping of shared memory
-> areas as part of pcc_mbox_{request,free}_channel(). Without these before,
-> this xgene hwmon driver did handling of those mappings like several
-> other PCC mailbox client drivers.
+Added Linus and Jiri (tty) into Cc.
+
+On Wed 2025-03-26 10:12:03, carlos.bilbao@kernel.org wrote:
+> From: Carlos Bilbao <carlos.bilbao@kernel.org>
 > 
-> There were redundant operations, leading to unnecessary code. Maintaining
-> the consistency across these driver was harder due to scattered handling
-> of shmem.
+> After handling a panic, the kernel enters a busy-wait loop, unnecessarily
+> consuming CPU and potentially impacting other workloads including other
+> guest VMs in the case of virtualized setups.
 > 
-> Just use the mapped shmem and remove all redundant operations from this
-> driver.
-> 
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Introduce cpu_halt_after_panic(), a weak function that archs can override
+> for a more efficient halt of CPU work. By default, it preserves the
+> pre-existing behavior of delay.
+>
+> Signed-off-by: Carlos Bilbao (DigitalOcean) <carlos.bilbao@kernel.org>
+> Reviewed-by: Jan Glauber (DigitalOcean) <jan.glauber@gmail.com>
 > ---
->   drivers/hwmon/xgene-hwmon.c | 39 ++++---------------------------------
->   1 file changed, 4 insertions(+), 35 deletions(-)
+>  kernel/panic.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
 > 
-> Hi,
-> 
-> This is just resend of the same patch that was part of a series [1].
-> Only core PCC mailbox changes were merged during v6.15 merge window.
-> So dropping all the maintainer acks and reposting it so that it can
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index fbc59b3b64d0..fafe3fa22533 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -276,6 +276,16 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
+>  		crash_smp_send_stop();
+>  }
+>  
+> +/*
+> + * Called after a kernel panic has been handled, at which stage halting
+> + * the CPU can help reduce unnecessary CPU consumption. In the absence of
+> + * arch-specific implementations, just delay
+> + */
+> +static void __weak cpu_halt_after_panic(void)
+> +{
+> +	mdelay(PANIC_TIMER_STEP);
+> +}
+> +
+>  /**
+>   *	panic - halt the system
+>   *	@fmt: The text string to print
+> @@ -474,7 +484,7 @@ void panic(const char *fmt, ...)
+>  			i += panic_blink(state ^= 1);
+>  			i_next = i + 3600 / PANIC_BLINK_SPD;
+>  		}
+> -		mdelay(PANIC_TIMER_STEP);
+> +		cpu_halt_after_panic();
 
-Why drop my Ack ? To have me review it again ?
+The 2nd patch implements this functions using safe_halt().
 
-FWIW, I had expected that the patch will be picked up with the series.
+IMHO, it makes perfect sense to halt a virtualized system or
+a system without a registered "graphical" console.
 
-Anyway, applied.
+I think that the blinking diods were designed for desktops
+and laptops with some "graphical" terminal attached. The
+infinite loop allows to read the last lines, ideally
+the backtrace on the screen.
 
-Guenter
+I wonder if we could make it more clever and do the halt
+only when the system is virtualized or when there is no
+"graphical" console registered.
 
+One way to detect graphical console might a check of
+the existence of the c->unblank callback, see console_unblank().
+But I am not sure if it is good enough.
+
+Best Regards,
+Petr
