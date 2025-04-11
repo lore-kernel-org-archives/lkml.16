@@ -1,46 +1,46 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2052.outbound.protection.outlook.com [40.107.237.52])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2088.outbound.protection.outlook.com [40.107.243.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB4E1F236E;
-	Fri, 11 Apr 2025 13:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308601F30C0;
+	Fri, 11 Apr 2025 13:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.88
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744378336; cv=fail; b=OEaw/B0eX2RYlBnuRM8MH+/J3s2cPX8FtxzVCmpYMTXiv7zYFVKEYvUNNb4r1LXyGngE61/q1scX5hzZrXZv5lH3Um2jZtoeSmUfqhDgEkK8f6JWSznKEO8I4I/uYwp4LnPrORvtpTpvx0sAL4RqDl5YkZmgvjvGhQI5jyyQQ8U=
+	t=1744378337; cv=fail; b=MLbmmzhLPN+rMA5hDxPh756pNjxj5y5QO7GFtF3YTlk3Rg85H3FfFY9McQKi6+68p1g8iCPs68Z3Vml30KlzcEFicn+/R0mJyFALf+yQuN7wuySmMPWe6DaidLUPJl3mE5HrPgtvNxxjgL3wK2LKeTlBC4SEHS0lkFP3iTSiQaE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744378336; c=relaxed/simple;
-	bh=8opl4y0hnuZ9gx2dEW2/a9TrekbQPLO1eMV1qq96I2Q=;
+	s=arc-20240116; t=1744378337; c=relaxed/simple;
+	bh=Ajxinnx1WhIkCBbGXkJv0VNAzoT0mXU7yxYmCFN3+VY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mTmWgISufjonYP8GHB8irIIFdviylLlRWQqmqAit6ENMmjnP1us5iyH344/GbAg93BW5b+9fHrdxcaZPhHv2mZt6pE/rLD1VIRy4sAfENI4TS9uJljnCKNKi5kkO8CfFWE3VOjgqzfizHCRwCOFMo3ar86sOg1whIEgHpc5oRYE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rVVLyKnE; arc=fail smtp.client-ip=40.107.237.52
+	 MIME-Version:Content-Type; b=a1Zms6Altp4HIS4FrcsR+NAASW/pfT8JpqwvdLVV6mShMtZW+MZ1965tcTHvP9E64PqGTAqwSnEoRoJShMSt+7Bwk+ga7uvjVxQ95eWwBTvEMspmsuiQk6DXUVQtV8Y4zmvIoXICTERQx6aw3Z9GIkEVTWhTcyjkSQAfRjbCfOU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3eFrmgBg; arc=fail smtp.client-ip=40.107.243.88
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rVVLyKnE"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3eFrmgBg"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pJ79Y9KI7MnFaK1JGQ2Xjcu8JJDG0PD7azvopKPOcWQ2s1mk16gfdANGpxy5BMDAXRgWkzyqQKTwKXpRgdTgY1uqQooni/ZhuB3JT48BXeljufFthEYVTE17+yuNkbT/82tw9cZpupA1vIl7Aj5NOLecJpvOauFSfNNhBw+62X5tWjPE2aPMxMDIpnK/5TMbDwTgnT75co84tvpJ6MY8BaxPEC2JVE2AvnkrKs+37ydEFxZQrPJqOttlz8ToAmA0L/cm0qc1WkC8ii6k8lyjUWlrRdMO/6DP+vmW/LWb2s/+MrH4+feG1zvH7c7vSs80vdneG2Zo1/j8tmcvBfURVA==
+ b=M9n65tS95fsdo6Ao6DxtnfIxfAovegaVa9mPwaxRInkNxCYaG6roBUtH2On4H3pHgiGrjlqdthb6NeNDqZoBPHLpdTga4Bgx7SapyLRcdGxYTIwK+JLJm0ahuBp815XcgJyqfbseiQ5ES1l4iPG6DPgc8e7TUoaZwQ7xTgLAFZd+H+OaPck7rIoklXBuBMCbU69Dgm5e8KEXUZ5W0r3Ap1OL529D7FI2rNy2MTPpEJjGN5nMvG0SOU5p1VmcNafIqQW4uYu6FxeB12//MHqRLvIKh+2PXKYZvQkJ1HU+piIp3qoBcAo3aUbfuL8PRRx/I/WBwrhZxpzgkz0NB0BMiQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LENG8yRUDJ2eVDDiT8rg4/91BvisxWe9lf7dFLhlMyo=;
- b=AOyJJ6yU7nw09M4dPburnQsLQoG/HX4S5UfiFfM+a0FRYaFJo3tkCCXbYwa3malQTs2WlQHxCqHwjIk3m4V5rw+AAyj4NSGXHTja+KdgtKke8YW2R+yNbsB2Mf/Zkbr32v/kczcTc8l4QIMLYsvxGZydfuPyGuIng9qDIgDZvjOp6Aop/YGoLif6k75eZYMyvomTKxe3DzQo+gDNJUugLncN2KiG/fz/qU7QBbOWVs2wtwBh1gyMQ1GFVqKcxOILPpSu7TexdQtXWF37733PIbRIEbxOXGxqjLeVBht9utSWqFjA6Nzl+WQjhu4JDwFUfZ7xFL7Prcal3SxAr/lhbA==
+ bh=sukqhytJrB92xdFirbsnSNXn43Q9X5b85qTqslMqKlY=;
+ b=wfBnYrqrbOddEgF2MxijO6FEKG9RaI0aJtu5NK/pd4IR3bbzRMf1KDlDhIUveZFZk3cpBOle3r9ih8lsTlrhbJnD4h/lS9YxEBrYls/n5kN/G5hT4sUcTxXkCLehnhBnpnVWox4UJNW3CiJF3xMFXdSotaRHnEPC3CM2pT0+uNywrmC/i53O63F1aksLJxG8EkGJ288oBs6mmw9vvP3maN1hA7+WwnIX+KlPoosjkK6kf+LY1Sx0qUu5JF3Ew7KfcxX4dPC1gONWie0sGT72mL3uPwjecu9ugyPMxObbvWGuNkhLXbqLktOA3IN0/PlUtEVCdwS/iaM98Zkf8t6Bog==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LENG8yRUDJ2eVDDiT8rg4/91BvisxWe9lf7dFLhlMyo=;
- b=rVVLyKnErCee9LbfXd8AYLPZzamwMLBubMuiWqUZtPtMhQJ9AK/iv+iYrl4RwsNmAS2qi0ptR1fvTRJViyD/Dv+KBecx/MiXljsGjUGw8gaOfBvVXV6g5esj5ZflCXNY+uFdMeBtxMj5/7vPQtJ8/y2U/qSE01bo5bRdhkRhE5I=
-Received: from PH8PR07CA0026.namprd07.prod.outlook.com (2603:10b6:510:2cf::21)
- by BL1PR12MB5778.namprd12.prod.outlook.com (2603:10b6:208:391::22) with
+ bh=sukqhytJrB92xdFirbsnSNXn43Q9X5b85qTqslMqKlY=;
+ b=3eFrmgBg54Lf+7EkMPrTe3mPzBVHJOuvy/VxtAAFwS7Tcz9a+MpUs7whPVETbr/fshJLrF+AngmkQeHaEimZJCSdDdeDjnxS5JUjULB+g7vm6y1S5ejxVTSJSbfnPc4fSryThFHAsG/iAv8dyATy3J4N/0as3gjXpHJaNNjR/QY=
+Received: from PH8PR07CA0028.namprd07.prod.outlook.com (2603:10b6:510:2cf::23)
+ by DS7PR12MB6286.namprd12.prod.outlook.com (2603:10b6:8:95::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Fri, 11 Apr
- 2025 13:32:09 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
+ 2025 13:32:12 +0000
 Received: from MWH0EPF000A672F.namprd04.prod.outlook.com
- (2603:10b6:510:2cf:cafe::94) by PH8PR07CA0026.outlook.office365.com
- (2603:10b6:510:2cf::21) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:510:2cf:cafe::38) by PH8PR07CA0028.outlook.office365.com
+ (2603:10b6:510:2cf::23) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Fri,
- 11 Apr 2025 13:32:09 +0000
+ 11 Apr 2025 13:32:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,20 +50,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  MWH0EPF000A672F.mail.protection.outlook.com (10.167.249.21) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Fri, 11 Apr 2025 13:32:09 +0000
+ 15.20.8655.12 via Frontend Transport; Fri, 11 Apr 2025 13:32:11 +0000
 Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Apr
- 2025 08:32:04 -0500
+ 2025 08:32:08 -0500
 From: Akshay Gupta <akshay.gupta@amd.com>
 To: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <linux@roeck-us.net>, <gregkh@linuxfoundation.org>, <arnd@arndb.de>,
 	<shyam-sundar.s-k@amd.com>, <gautham.shenoy@amd.com>,
 	<mario.limonciello@amd.com>, <naveenkrishna.chatradhi@amd.com>,
 	<anand.umarji@amd.com>, Akshay Gupta <akshay.gupta@amd.com>
-Subject: [PATCH v8 07/10] misc: amd-sbi: Add support for CPUID protocol
-Date: Fri, 11 Apr 2025 13:31:19 +0000
-Message-ID: <20250411133122.1806991-8-akshay.gupta@amd.com>
+Subject: [PATCH v8 08/10] misc: amd-sbi: Add support for read MCA register protocol
+Date: Fri, 11 Apr 2025 13:31:20 +0000
+Message-ID: <20250411133122.1806991-9-akshay.gupta@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250411133122.1806991-1-akshay.gupta@amd.com>
 References: <20250411133122.1806991-1-akshay.gupta@amd.com>
@@ -79,58 +79,59 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000A672F:EE_|BL1PR12MB5778:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1b7d4d7b-99aa-4aeb-0883-08dd78fd427a
+X-MS-TrafficTypeDiagnostic: MWH0EPF000A672F:EE_|DS7PR12MB6286:EE_
+X-MS-Office365-Filtering-Correlation-Id: 023a7c8e-7da5-4349-0a46-08dd78fd4420
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ymDqY2sAdAh3M9qOHiKOvw2bSTDmVqtKIIq4cbkMPZizDOaqFuKnTFxHzo1N?=
- =?us-ascii?Q?iqy5Os0OXbYs8X/43UkgYPkM6cMImyQmqP3xmE17grgQoL2syCbHSPr3mpPM?=
- =?us-ascii?Q?4cWNLneZb0oukjKK/b2SSzVIDKuC7DFV2YKP3s4OHiRR2T1Su5z+aHJDXB/W?=
- =?us-ascii?Q?sA4ApJbIA1xOnL6oUBG+h4qt6YWilMVx+QShIiAjLw/yMeAstZyJuGgA7w/z?=
- =?us-ascii?Q?P1euWFtQa5iPY0jGCMti/77iJMX+1c+LXlQkj74kbCeogdAvntokJhJ5TfoO?=
- =?us-ascii?Q?iXWuvABqXYTXG2+GRBGr9yxjrLfVC6VrB/qedvcwio065S4qqe7dqdi6FPn3?=
- =?us-ascii?Q?5XLKvTTPchASE3It8464QyYayA6VcytGugnacahadyaI6hLEi12xd1x19glZ?=
- =?us-ascii?Q?SYhYiYz1iKA7+6ootzXoKcCPqP2Ca6nTbakHfd9fLRuo3Ii4ADkYDC9CiMQa?=
- =?us-ascii?Q?r4Bk6gVBSnKq6peVodhaIm6621BacWnRp24S1CJxc4SjlTannV4CAImGQT8S?=
- =?us-ascii?Q?R61HGB27P3jCpEqca6xE6w16sUhI/VcwK9zffDZi7sl37OE8vGxyZiy8nNcW?=
- =?us-ascii?Q?v3LwFG2WJH4DoxhmqJ/ZvaXA3Jc46V1ID66Z3yCsws2I7TsfEdDWpjT1nT4R?=
- =?us-ascii?Q?MQgiCLg307l2cmD9U7ID5qdUlYFmD0vLcE5n4c9NboJbSft+MNVky9CGq9Ot?=
- =?us-ascii?Q?+D5T/yXqq3UPH3aHt6sGoAUoAvgRswbFhGurBeNbMdAKtQpFT6IPFgHQfSA7?=
- =?us-ascii?Q?nb7lVmboVGa/MyR1pE28FdY/wSCQ2++gaKuOa5qSoID211tiG8Foguzcf5vQ?=
- =?us-ascii?Q?6yGAd9i5IDSJD6t733J4jboDECFjBYm4HVjm3Ny4OCt9nFQ5dYrcoz7jGOfp?=
- =?us-ascii?Q?ZW/1n276YRCiGGZ1tripaqB5VxRP3JdDY+3t5TGnGOZ/Xa25Zia9oewDnBx2?=
- =?us-ascii?Q?w0Sln4fNTJDvBJiUj29Z2eDAc7gMCXSPD3GTNuvc2R5snWiV7WvmZGG7reTA?=
- =?us-ascii?Q?hdIsti92dkkm9Dw6LYge6P2NoYPQiRuTiPzNpRl2ngxUA/vctzQlWs1K1gnS?=
- =?us-ascii?Q?D1AxghMWa0nyyJWlqYR/r9T6e9z8TNn88TDBs/JaIpsFK53HKxhqTK5PrwdI?=
- =?us-ascii?Q?8hn36CYOix4ORgy2DYgeKz+GXdUGzf+bkbnbUXUSMtVGR9b9ty5FQX5luLdA?=
- =?us-ascii?Q?h9Xatfs6j77wCA3xuo8w0ToJmS0Z+8SSYQuQ6ckHJjafwp18frO5RsKNzIAX?=
- =?us-ascii?Q?+g90zpRCsUeVFaDReCYvESt4A5Y0trv8AAuLj/cuJrTKz5OWknh55ysTWq0x?=
- =?us-ascii?Q?kHNMofZGqkvQ2KNTkgprvDvxISFviycmO0x3YXb1ocKxk6GR/qsvaJyIVu09?=
- =?us-ascii?Q?1XEHs9FoJsCSByCO3os/wfKvujMWktT99Jy/BTvy3WBrTPAXKS3YhHYpDQAB?=
- =?us-ascii?Q?loWKjndW+9XuV3ulFt+TN5uaVhxybhV0apmsltDFTCP1mQ3B/kOtAsOm7alj?=
- =?us-ascii?Q?hxcTYqwy7nTlb8pQAR3DB3cqiOOr2+9ihhaZ?=
+	=?us-ascii?Q?UWAKasdp30sXYdAnF+TmQZMzcjh45LLBd4SPWiLyCzCItRL0J41IjfhedesW?=
+ =?us-ascii?Q?6H68l0BMMJQ+1ZHN01vLD7ojBrMg6pMHphlTDGw/xzPE1XVZupotaGTjn2f5?=
+ =?us-ascii?Q?QBjGc8/hEcn+QOL5bCNIAgX1bBWf/kRs/YLSbwgl+zk9g6GwGPz/QF4xFHe2?=
+ =?us-ascii?Q?vZsmAHUfccRiej22EILvbgrMgLEbLqm4osK2cSA+f6HSrqschD9eKdFh5nGc?=
+ =?us-ascii?Q?UVFU6wgvxg0jsmVnFBsumqIEaWb2sZObCe3SmhecvnhG04OKrvVG7JZKijQc?=
+ =?us-ascii?Q?ZhE63iv4/D7ghVP0VLavOb/zZjwth/jHl7GQYLo4uHGylpM9ps+r5euVcI2x?=
+ =?us-ascii?Q?RHDW9TjthAVQ86MXfQXPF1uQarFeLgziVPHZ+zge+mfacLVmSBNFOFgXdgOm?=
+ =?us-ascii?Q?SfHXm3A18ohLfI6lwnW4yaPVjm4CcSeuZz3SQLFAOOX+vWoLkDhu21XqxcPa?=
+ =?us-ascii?Q?dsCIOMf6Pb/6PkBcGnNLHJyNRnHjmTxK8UqNCEXGKVaL10MlcMadbzR2FVWN?=
+ =?us-ascii?Q?oEN3j/JBUg+mvs7zL28SlIerFapmXoO+8DgkurRKAW2YEAueUuPq5LctXsCG?=
+ =?us-ascii?Q?OkbzotZhiG5lR4j4VnU03GAql5zpl1o6jdKxw3gVIg3XDZ9WBCprgTWR6Rs0?=
+ =?us-ascii?Q?mBqT+oAA+9la20wQ2KI/J34ZRAvxHy5iMPoqgHnLVnVT//IojWX5Hp0ay8Ah?=
+ =?us-ascii?Q?B9f8WEIJgo9LOj2j4W4aXY/sxcad2krQA+qitE6SgB+6BM2YEQYU38z5fmZq?=
+ =?us-ascii?Q?OHIrfyO2SEAI4CNhm+9ECyQpIhlanH/kYQva5+dDelo4/fCiJnUaFQFlgp/C?=
+ =?us-ascii?Q?Nv9qMmUnJojBxF6EvqApGT3c3qw21/lOf5Lxr/of4j8XkDJ1EdVJH9+Fgw/C?=
+ =?us-ascii?Q?72G6G6YhImysOMexS0da2EJPlhnKWk+47dnfyDpRfVGtfih34C8ndhZ0IS1+?=
+ =?us-ascii?Q?K+n7Su7o32OVS4+DWYCOwQSj14kaefKYyyT3kUZHDPETcKdrGegDoqkplq0G?=
+ =?us-ascii?Q?JhV9H17D2pYRKpnBwxM7UkGltGtJBa+oT794xjNxHdiCaz37XXsK1GJZrChl?=
+ =?us-ascii?Q?mHgWhZd0L8qmarkDILoSj4TfdFm/93A6sD2UITCfgab79ZxN15qmAufEQi4y?=
+ =?us-ascii?Q?6RJaYLk/uIkT0dxSm5GbllyIrEqF94wGEhI1rqjsnV2ZRCum5BDlMoBah9GJ?=
+ =?us-ascii?Q?Vm1QA6ZWczgZIGFFRtI2b53Kl0WYbnpjEIDDiMPMuJdt7Am52bGcqDv2Q/QY?=
+ =?us-ascii?Q?Zh9Y8XpXusxTSrPCsaSLSqmj9LAaJhuH1IgCKMUDvxKxXiUIZhNwFfSor9ty?=
+ =?us-ascii?Q?6k2M4adeG59ACpcW7jnJOlo7d1UYE9x3myC0kWsr34FC96nuZbFMhMh55zzi?=
+ =?us-ascii?Q?DYX8N+JpZsGDQtFpRSRdm06OQAfnU4xNSuYYxxL/9ACk5EfXQ8npLhLlpWh/?=
+ =?us-ascii?Q?7BcdTuXhFuscOz/eWRKp6Y8HSVUfwfMy2NS0y6WKUNtteMesTIQqWyDrKLda?=
+ =?us-ascii?Q?/wkVkB3hCFWaOEDPCbdsOOO7gAKGItqZMtLU?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 13:32:09.2268
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 13:32:11.9925
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b7d4d7b-99aa-4aeb-0883-08dd78fd427a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 023a7c8e-7da5-4349-0a46-08dd78fd4420
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	MWH0EPF000A672F.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5778
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6286
 
-- AMD provides custom protocol to read Processor feature
-  capabilities and configuration information through side band.
-  The information is accessed by providing CPUID Function,
-  extended function and thread ID to the protocol.
-  Undefined function returns 0.
+- AMD provides custom protocol to read Machine Check Architecture(MCA)
+  registers over sideband. The information is accessed for range of
+  MCA registers by passing register address and thread ID to the protocol.
+  MCA register read command using the register address to access
+  Core::X86::Msr::MCG_CAP which determines the number of MCA banks.
+  Access is read-only
 
 Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
@@ -141,16 +142,14 @@ Changes since v7:
     ioctl for each protocol
 
 Changes since v6:
-- Address Arnd comment
-  - Add padding to the uapi structure
-- Rebased patch, previously patch 8
+- Rebased patch, previously patch 9
 
 Changes since v5:
 - Patch rebased
 
 Changes since v4:
-- Previously patch 6
-- Address review comments
+- Previously patch 7
+- Address review comment for documentation warning
 
 Changes since v3:
 - Address review comments:
@@ -164,100 +163,60 @@ Changes since v1:
 - bifurcated from previous patch 5
 
 
- drivers/misc/amd-sbi/rmi-core.c | 168 ++++++++++++++++++++++++++++++++
- drivers/misc/amd-sbi/rmi-core.h |   5 +-
- include/uapi/misc/amd-apml.h    |  37 +++++++
- 3 files changed, 209 insertions(+), 1 deletion(-)
+ drivers/misc/amd-sbi/rmi-core.c | 114 ++++++++++++++++++++++++++++++++
+ include/uapi/misc/amd-apml.h    |  33 +++++++++
+ 2 files changed, 147 insertions(+)
 
 diff --git a/drivers/misc/amd-sbi/rmi-core.c b/drivers/misc/amd-sbi/rmi-core.c
-index 7d13c049c98d..471f50f0c368 100644
+index 471f50f0c368..171d6e871373 100644
 --- a/drivers/misc/amd-sbi/rmi-core.c
 +++ b/drivers/misc/amd-sbi/rmi-core.c
-@@ -17,11 +17,160 @@
+@@ -30,10 +30,16 @@
+ #define CPUID_WR_DATA_LEN	0x8
+ #define CPUID_RD_REG_LEN	0xa
+ #define CPUID_WR_REG_LEN	0x9
++/* MSR */
++#define MSR_RD_REG_LEN		0xa
++#define MSR_WR_REG_LEN		0x8
++#define MSR_RD_DATA_LEN		0x8
++#define MSR_WR_DATA_LEN		0x7
  
- /* Mask for Status Register bit[1] */
- #define SW_ALERT_MASK	0x2
-+/* Mask to check H/W Alert status bit */
-+#define HW_ALERT_MASK	0x80
+ /* CPUID MSR Command Ids */
+ #define CPUID_MCA_CMD	0x73
+ #define RD_CPUID_CMD	0x91
++#define RD_MCA_CMD	0x86
  
- /* Software Interrupt for triggering */
- #define START_CMD	0x80
- #define TRIGGER_MAILBOX	0x01
+ /* CPUID MCAMSR mask & index */
+ #define CPUID_MCA_THRD_MASK	GENMASK(15, 0)
+@@ -76,6 +82,16 @@ static inline void prepare_cpuid_input_message(struct cpu_msr_indata *input,
+ 	input->ext		= ext_func;
+ }
  
-+/* Default message lengths as per APML command protocol */
-+/* CPUID */
-+#define CPUID_RD_DATA_LEN	0x8
-+#define CPUID_WR_DATA_LEN	0x8
-+#define CPUID_RD_REG_LEN	0xa
-+#define CPUID_WR_REG_LEN	0x9
-+
-+/* CPUID MSR Command Ids */
-+#define CPUID_MCA_CMD	0x73
-+#define RD_CPUID_CMD	0x91
-+
-+/* CPUID MCAMSR mask & index */
-+#define CPUID_MCA_THRD_MASK	GENMASK(15, 0)
-+#define CPUID_MCA_THRD_INDEX	32
-+#define CPUID_MCA_FUNC_MASK	GENMASK(31, 0)
-+#define CPUID_EXT_FUNC_INDEX	56
-+
-+/* input for bulk write to CPUID protocol */
-+struct cpu_msr_indata {
-+	u8 wr_len;	/* const value */
-+	u8 rd_len;	/* const value */
-+	u8 proto_cmd;	/* const value */
-+	u8 thread;	/* thread number */
-+	union {
-+		u8 reg_offset[4];	/* input value */
-+		u32 value;
-+	} __packed;
-+	u8 ext; /* extended function */
-+};
-+
-+/* output for bulk read from CPUID protocol */
-+struct cpu_msr_outdata {
-+	u8 num_bytes;	/* number of bytes return */
-+	u8 status;	/* Protocol status code */
-+	union {
-+		u64 value;
-+		u8 reg_data[8];
-+	} __packed;
-+};
-+
-+static inline void prepare_cpuid_input_message(struct cpu_msr_indata *input,
-+					       u8 thread_id, u32 func,
-+					       u8 ext_func)
++static inline void prepare_mca_msr_input_message(struct cpu_msr_indata *input,
++						 u8 thread_id, u32 data_in)
 +{
-+	input->rd_len		= CPUID_RD_DATA_LEN;
-+	input->wr_len		= CPUID_WR_DATA_LEN;
-+	input->proto_cmd	= RD_CPUID_CMD;
++	input->rd_len		= MSR_RD_DATA_LEN;
++	input->wr_len		= MSR_WR_DATA_LEN;
++	input->proto_cmd	= RD_MCA_CMD;
 +	input->thread		= thread_id << 1;
-+	input->value		= func;
-+	input->ext		= ext_func;
++	input->value		= data_in;
 +}
 +
-+static int sbrmi_get_rev(struct sbrmi_data *data)
+ static int sbrmi_get_rev(struct sbrmi_data *data)
+ {
+ 	unsigned int rev;
+@@ -171,6 +187,85 @@ static int rmi_cpuid_read(struct sbrmi_data *data,
+ 	return ret;
+ }
+ 
++/* MCA MSR protocol */
++static int rmi_mca_msr_read(struct sbrmi_data *data,
++			    struct apml_mcamsr_msg  *msg)
 +{
-+	unsigned int rev;
-+	u16 offset = SBRMI_REV;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, offset, &rev);
-+	if (ret < 0)
-+		return ret;
-+
-+	data->rev = rev;
-+	return 0;
-+}
-+
-+/* Read CPUID function protocol */
-+static int rmi_cpuid_read(struct sbrmi_data *data,
-+			  struct apml_cpuid_msg *msg)
-+{
-+	struct cpu_msr_indata input = {0};
 +	struct cpu_msr_outdata output = {0};
-+	int val = 0;
-+	int ret, hw_status;
++	struct cpu_msr_indata input = {0};
++	int ret, val = 0;
++	int hw_status;
 +	u16 thread;
 +
 +	mutex_lock(&data->lock);
@@ -267,13 +226,13 @@ index 7d13c049c98d..471f50f0c368 100644
 +		if (ret < 0)
 +			goto exit_unlock;
 +	}
-+	/* CPUID protocol for REV 0x10 is not supported*/
++	/* MCA MSR protocol for REV 0x10 is not supported*/
 +	if (data->rev == 0x10) {
 +		ret = -EOPNOTSUPP;
 +		goto exit_unlock;
 +	}
 +
-+	thread = msg->cpu_in_out << CPUID_MCA_THRD_INDEX & CPUID_MCA_THRD_MASK;
++	thread = msg->mcamsr_in_out << CPUID_MCA_THRD_INDEX & CPUID_MCA_THRD_MASK;
 +
 +	/* Thread > 127, Thread128 CS register, 1'b1 needs to be set to 1 */
 +	if (thread > 127) {
@@ -284,12 +243,11 @@ index 7d13c049c98d..471f50f0c368 100644
 +	if (ret < 0)
 +		goto exit_unlock;
 +
-+	prepare_cpuid_input_message(&input, thread,
-+				    msg->cpu_in_out & CPUID_MCA_FUNC_MASK,
-+				    msg->cpu_in_out >> CPUID_EXT_FUNC_INDEX);
++	prepare_mca_msr_input_message(&input, thread,
++				      msg->mcamsr_in_out & CPUID_MCA_FUNC_MASK);
 +
 +	ret = regmap_bulk_write(data->regmap, CPUID_MCA_CMD,
-+				&input, CPUID_WR_REG_LEN);
++				&input, MSR_WR_REG_LEN);
 +	if (ret < 0)
 +		goto exit_unlock;
 +
@@ -305,7 +263,7 @@ index 7d13c049c98d..471f50f0c368 100644
 +		goto exit_unlock;
 +
 +	ret = regmap_bulk_read(data->regmap, CPUID_MCA_CMD,
-+			       &output, CPUID_RD_REG_LEN);
++			       &output, MSR_RD_REG_LEN);
 +	if (ret < 0)
 +		goto exit_unlock;
 +
@@ -314,7 +272,7 @@ index 7d13c049c98d..471f50f0c368 100644
 +	if (ret < 0)
 +		goto exit_unlock;
 +
-+	if (output.num_bytes != CPUID_RD_REG_LEN - 1) {
++	if (output.num_bytes != MSR_RD_REG_LEN - 1) {
 +		ret = -EMSGSIZE;
 +		goto exit_unlock;
 +	}
@@ -323,10 +281,9 @@ index 7d13c049c98d..471f50f0c368 100644
 +		msg->fw_ret_code = output.status;
 +		goto exit_unlock;
 +	}
-+	msg->cpu_in_out = output.value;
++	msg->mcamsr_in_out = output.value;
++
 +exit_unlock:
-+	if (ret < 0)
-+		msg->cpu_in_out = 0;
 +	mutex_unlock(&data->lock);
 +	return ret;
 +}
@@ -334,90 +291,57 @@ index 7d13c049c98d..471f50f0c368 100644
  int rmi_mailbox_xfer(struct sbrmi_data *data,
  		     struct apml_mbox_msg *msg)
  {
-@@ -123,6 +272,23 @@ static int apml_mailbox_xfer(struct sbrmi_data *data, struct apml_mbox_msg __use
- 	return copy_to_user(arg, &msg, sizeof(struct apml_mbox_msg));
+@@ -289,6 +384,23 @@ static int apml_cpuid_xfer(struct sbrmi_data *data, struct apml_cpuid_msg __user
+ 	return copy_to_user(arg, &msg, sizeof(struct apml_cpuid_msg));
  }
  
-+static int apml_cpuid_xfer(struct sbrmi_data *data, struct apml_cpuid_msg __user *arg)
++static int apml_mcamsr_xfer(struct sbrmi_data *data, struct apml_mcamsr_msg __user *arg)
 +{
-+	struct apml_cpuid_msg msg = { 0 };
++	struct apml_mcamsr_msg msg = { 0 };
 +	int ret;
 +
 +	/* Copy the structure from user */
-+	if (copy_from_user(&msg, arg, sizeof(struct apml_cpuid_msg)))
++	if (copy_from_user(&msg, arg, sizeof(struct apml_mcamsr_msg)))
 +		return -EFAULT;
 +
-+	/* CPUID Protocol */
-+	ret = rmi_cpuid_read(data, &msg);
++	/* MCAMSR Protocol */
++	ret = rmi_mca_msr_read(data, &msg);
 +	if (ret && ret != -EPROTOTYPE)
 +		return ret;
 +
-+	return copy_to_user(arg, &msg, sizeof(struct apml_cpuid_msg));
++	return copy_to_user(arg, &msg, sizeof(struct apml_mcamsr_msg));
 +}
 +
  static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
  {
  	void __user *argp = (void __user *)arg;
-@@ -132,6 +298,8 @@ static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 	switch (cmd) {
- 	case SBRMI_IOCTL_MBOX_CMD:
+@@ -300,6 +412,8 @@ static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
  		return apml_mailbox_xfer(data, argp);
-+	case SBRMI_IOCTL_CPUID_CMD:
-+		return apml_cpuid_xfer(data, argp);
+ 	case SBRMI_IOCTL_CPUID_CMD:
+ 		return apml_cpuid_xfer(data, argp);
++	case SBRMI_IOCTL_MCAMSR_CMD:
++		return apml_mcamsr_xfer(data, argp);
  	default:
  		return -ENOTTY;
  	}
-diff --git a/drivers/misc/amd-sbi/rmi-core.h b/drivers/misc/amd-sbi/rmi-core.h
-index 8ab31c6852d1..975ae858e9fd 100644
---- a/drivers/misc/amd-sbi/rmi-core.h
-+++ b/drivers/misc/amd-sbi/rmi-core.h
-@@ -15,7 +15,8 @@
- 
- /* SB-RMI registers */
- enum sbrmi_reg {
--	SBRMI_CTRL		= 0x01,
-+	SBRMI_REV,
-+	SBRMI_CTRL,
- 	SBRMI_STATUS,
- 	SBRMI_OUTBNDMSG0	= 0x30,
- 	SBRMI_OUTBNDMSG1,
-@@ -34,6 +35,7 @@ enum sbrmi_reg {
- 	SBRMI_INBNDMSG6,
- 	SBRMI_INBNDMSG7,
- 	SBRMI_SW_INTERRUPT,
-+	SBRMI_THREAD128CS	= 0x4b,
- };
- 
- /*
-@@ -56,6 +58,7 @@ struct sbrmi_data {
- 	struct mutex lock;
- 	u32 pwr_limit_max;
- 	u8 dev_static_addr;
-+	u8 rev;
- };
- 
- int rmi_mailbox_xfer(struct sbrmi_data *data, struct apml_mbox_msg *msg);
 diff --git a/include/uapi/misc/amd-apml.h b/include/uapi/misc/amd-apml.h
-index a5f086f84b06..bb57dc75758a 100644
+index bb57dc75758a..f718675d3966 100644
 --- a/include/uapi/misc/amd-apml.h
 +++ b/include/uapi/misc/amd-apml.h
-@@ -25,6 +25,24 @@ struct apml_mbox_msg {
- 	__u32 fw_ret_code;
+@@ -43,6 +43,21 @@ struct apml_cpuid_msg {
+ 	__u32 pad;
  };
  
-+struct apml_cpuid_msg {
++struct apml_mcamsr_msg {
 +	/*
-+	 * CPUID input
-+	 * [0]...[3] cpuid func,
-+	 * [4][5] cpuid: thread
-+	 * [6] cpuid: ext function & read eax/ebx or ecx/edx
-+	 *	[7:0] -> bits [7:4] -> ext function &
-+	 *	bit [0] read eax/ebx or ecx/edx
-+	 * CPUID output
++	 * MCAMSR input
++	 * [0]...[3] mca msr func,
++	 * [4][5] thread
++	 * MCAMSR output
 +	 */
-+	__u64 cpu_in_out;
++	__u64 mcamsr_in_out;
 +	/*
-+	 * Status code for CPUID read
++	 * Status code for MCA/MSR access
 +	 */
 +	__u32 fw_ret_code;
 +	__u32 pad;
@@ -426,28 +350,27 @@ index a5f086f84b06..bb57dc75758a 100644
  /*
   * AMD sideband interface base IOCTL
   */
-@@ -48,4 +66,23 @@ struct apml_mbox_msg {
+@@ -85,4 +100,22 @@ struct apml_cpuid_msg {
   */
- #define SBRMI_IOCTL_MBOX_CMD		_IOWR(SB_BASE_IOCTL_NR, 0, struct apml_mbox_msg)
+ #define SBRMI_IOCTL_CPUID_CMD		_IOWR(SB_BASE_IOCTL_NR, 1, struct apml_cpuid_msg)
  
 +/**
-+ * DOC: SBRMI_IOCTL_CPUID_CMD
++ * DOC: SBRMI_IOCTL_MCAMSR_CMD
 + *
 + * @Parameters
 + *
-+ * @struct apml_cpuid_msg
-+ *	Pointer to the &struct apml_cpuid_msg that will contain the protocol
++ * @struct apml_mcamsr_msg
++ *	Pointer to the &struct apml_mcamsr_msg that will contain the protocol
 + *	information
 + *
 + * @Description
 + * IOCTL command for APML messages using generic _IOWR
-+ * The IOCTL provides userspace access to AMD sideband cpuid protocol
-+ * - CPUID protocol to get CPU details for Function/Ext Function
-+ * at thread level
++ * The IOCTL provides userspace access to AMD sideband MCAMSR protocol
++ * - MCAMSR protocol to get MCA bank details for Function at thread level
 + * - returning "-EFAULT" if none of the above
 + * "-EPROTOTYPE" error is returned to provide additional error details
 + */
-+#define SBRMI_IOCTL_CPUID_CMD		_IOWR(SB_BASE_IOCTL_NR, 1, struct apml_cpuid_msg)
++#define SBRMI_IOCTL_MCAMSR_CMD		_IOWR(SB_BASE_IOCTL_NR, 2, struct apml_mcamsr_msg)
 +
  #endif /*_AMD_APML_H_*/
 -- 
