@@ -1,101 +1,87 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B8827CCC6;
-	Fri, 11 Apr 2025 05:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A03800;
+	Fri, 11 Apr 2025 05:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744348503; cv=none; b=AnKb7/4j5Cs6YDD5QHoRlfNBO2EhKIGG2qIEZpT9ssj35qF0GCaJJC9J8XoG9Log2vdJEXjMPKtEbo4GaIbd3FJahDmbqpnYRqcFnGiJTwZKhvAKQmgJYSHwzfQSF9mV4lKAZEUzcXnHIO7xVzRvZcf0KOu9tfOSRzs34zx1pYM=
+	t=1744348744; cv=none; b=LtSSdfh1gq330nLBTxEhY4NF+Xf9PUTT6UUE4rXb6BtUTmr8+bcRuWHBz85BmxfzzEoldl97j9VyYTmgEW2Kkp89uMrPJlOOfLOZo1PJxXZ/y8MRfk0bWcveoVfKX1qlMbve+9K/aus/iBbjRAc68bdqaHGWPRisAOh4nnDRwZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744348503; c=relaxed/simple;
-	bh=FqzIv61qjaBq3HQwMm6m2HdY43aUYAekO851IFQD+hY=;
+	s=arc-20240116; t=1744348744; c=relaxed/simple;
+	bh=IqSRQOutg+lSKvgxnPhObEbWxO6AaTi44G63FPoeKyQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mVxC/YO0Uh5rck1MQEK6YfO38SRiN/D6am69ne93okjG9ka+bvxWfalp0bid4olDNjYFriGSz85km2sDrcANRFUGFFySrWYpMHNhfYPUtCJBbd9IHmwvdmHzPa8ujYqN7aAy+MFzfWom0cBLq5biiEGWu/8PvM4oJqV4xB6HegM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P0Ab6SQ9; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gDZvq+DbC0NG6JsRWjrIJRx6vf6IPYbow0++ObtevrGblLarKeg7CGlcVIstGllabrjhFaAX7i6ikF3Hoq7pqhtVnV1mANGRtNedFvvMXrB2WutvRRBJ6Da1A4MEYYXu+6kxpY3LMhrUKyEa8H4GPKqe+IMikMgm7vtprxWZ1U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=SEJsE1vc; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0Ab6SQ9"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736a7e126c7so1441711b3a.3;
-        Thu, 10 Apr 2025 22:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744348501; x=1744953301; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FqzIv61qjaBq3HQwMm6m2HdY43aUYAekO851IFQD+hY=;
-        b=P0Ab6SQ9b6Wvih8GMrfQ/N4575Zf8YT+Gg/fzVik/I5acjW1lACXSZLq7YiDbSP7Eh
-         0uOOl5WE1t4H6XeRQrBKU456GwHfCvU8DN0O91QmwPFaGTLZGG3mnCmCKTufSNX8+W8P
-         rLQ4fDpSAtgqrtPM8NzycT1MFL+UNDVqY2KJNVE1s6s+ZwtNVTgo1kl+lBT6GaxQ8hvW
-         UmDm5VsbbDOebJVJRHX5tRq+eTzYS+wm1fhl+ErN/xyCrI7f4+I7Im9zPnkfg8VUTpaU
-         Rl1MgRVINjIp3T4pggCPQ56hzYIQBSZFWvmH7eF42s5a15AM1Av2SovFV05fBPyOkXuG
-         dMZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744348501; x=1744953301;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FqzIv61qjaBq3HQwMm6m2HdY43aUYAekO851IFQD+hY=;
-        b=NB5ni+N7o1wjE9MqYkrhyng/pkJAJjjLL1FuOLPOhqEfXqLTuI13nlLeG7XReKoqVh
-         JAV9RFw9B3J+T2Lr9xuY8eL0onXv4Uq9b23e/YNe1rEQCf8q3f1GaFI5WMmsHVf3HHYU
-         zMBVgXj8OgmCkB44JHa8R0A9Diepbxnpyy17sD9Lt3x7a7HPDZToZI47dKBxHmhPLy/L
-         +Bk1ImfsuvPuUYdNc2m4fxoGlBcXQ7Ddpcbb9X4iA6hSS8RyC+vsr8/0K3Ph4/a0E8OE
-         mUThQAJhq6fyeuochLvjePJyXG0x3yNyx6M7n/OyjTKAMV94mg2n1rH709q2MGBdjnpo
-         OsPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYfN6fdsPbAj56fEFzPef7arcEz94vD7faqxWGkvz6bFtmPG2M1VyiIuW38ghHt4xKoxwOomBdYRVnp0o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMhpk+hDkN7xY9X73UA5GYJEl/RkMpyjnVhlA4i1aH+Q09vvOK
-	vXWKwoTSFbOVHwc8TzI4+QDI5MWjaZJmeEomjztwmX9+JQ1bz7MT/wmG/A==
-X-Gm-Gg: ASbGncukOA+YZvsbW0VDVvvH03I1mC+amACnzw7aa/pxhvvg4JOxb+fe1M0VeBOi0I3
-	ToviSq1ZkQ1F1ZKkjxvJ+n4UkqXCZamzGprubqgfJ/rnOZ8uEKizvUq8ktT2uVClLxt67CfluRD
-	R/63Mu0mSBcF1or4dRYbAbg+sU5ti+wmN+ZukNifLhhkF1XJ+Hphc2Q/t7UvYYYnjzHFXsQTHZG
-	HjUW3ZfOonj6jgr/puZ7i3IWmC5Y+1De5NotyhYsBOeOt5YQ8/paQtXZ+JjbR1VSY1NtordoE20
-	EwnectP1B2OJYv8OaIRqxxj2bwQtLH0HfQ==
-X-Google-Smtp-Source: AGHT+IHSRZgGM4nOz+W7TZodJ8i547Me4tXuvyxwsh9vyWPxSQCZRcvxoxwDJ+V0F8bLLps9/MvV7g==
-X-Received: by 2002:a05:6a20:d70f:b0:1f5:8cc8:9cbe with SMTP id adf61e73a8af0-2017978b0d7mr2164327637.5.1744348501559;
-        Thu, 10 Apr 2025 22:15:01 -0700 (PDT)
-Received: from nsys ([103.158.43.24])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0cf3604sm3973222a12.25.2025.04.10.22.14.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 22:15:00 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:44:55 +0530
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Edward Cree <ecree.xilinx@gmail.com>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Jiawen Wu <jiawenwu@trustnetic.com>, 
-	Mengyuan Lou <mengyuanlou@net-swift.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Sai Krishna <saikrishnag@marvell.com>, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH net-next] net: ngbe: fix memory leak in ngbe_probe()
- error path
-Message-ID: <pok6kit3b7c7sv34mpvmzulycblqys3ntdrz7oyeofxhtfcht6@xa7iihddqrf5>
-References: <20250409053804.47855-1-abdun.nihaal@gmail.com>
- <7ff3877b-1a76-45a1-ad03-922582679397@web.de>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="SEJsE1vc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ZEklUjidFtoZ8deAmHVTu5AXS7JqIfMBRiWA0f30O4w=; b=SEJsE1vcfLwUzViAOvFAa03FHq
+	hKs8L2h5zIqqPxeOtapJSUfDV4xVQxLdGV8ObjLEpAg2SQ1wtZnR81UTflRwhygxJLC+CZ+WInIky
+	zPFxN0hV3W1iVlN74szYpV2KswJ/rV/yvB124B3IcL8MKZDrbuL4wje7PmyyMMdpAC1hElC0sKPwH
+	TdxAKqEflV1FCBOKb1z9MvJJsYRW6elY81+mfCSnGnLHKhnpWCPVV4Jb21LGNs949jM/gLMYWquy/
+	hE9c4q+YWLmYZemAd1GNg1h2UvPlma0ybfbgZRwhgRN4AeSb1bYww6f9mSRQ2vRd5FnulN1P3rolD
+	AwCpb9SA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u36m2-00Ek2o-1T;
+	Fri, 11 Apr 2025 13:17:55 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 11 Apr 2025 13:17:54 +0800
+Date: Fri, 11 Apr 2025 13:17:54 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: "Gupta, Nipun" <nipun.gupta@amd.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, davem@davemloft.net,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, krzk+dt@kernel.org,
+	gregkh@linuxfoundation.org, robh@kernel.org, conor+dt@kernel.org,
+	ogabbay@kernel.org, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, derek.kiernan@amd.com, dragan.cvetic@amd.com,
+	arnd@arndb.de, praveen.jain@amd.com, harpreet.anand@amd.com,
+	nikhil.agarwal@amd.com, srivatsa@csail.mit.edu, code@tyhicks.com,
+	ptsm@linux.microsoft.com, linux-crypto@vger.kernel.org,
+	David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>, keyrings@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] accel/amdpk: add driver for AMD PKI accelerator
+Message-ID: <Z_imAnYu1hGRb8An@gondor.apana.org.au>
+References: <20250409173033.2261755-1-nipun.gupta@amd.com>
+ <20250409173033.2261755-2-nipun.gupta@amd.com>
+ <20250410-sly-inventive-squirrel-ddecbc@shite>
+ <bf851be7-74a5-8f9d-375b-b617691b6765@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7ff3877b-1a76-45a1-ad03-922582679397@web.de>
+In-Reply-To: <bf851be7-74a5-8f9d-375b-b617691b6765@amd.com>
 
-Hello Markus,
+On Fri, Apr 11, 2025 at 10:21:03AM +0530, Gupta, Nipun wrote:
+>
+> added crypto maintainers for comments.
+> IMO, as accel framework is designed to support any type of compute
+> accelerators, the PKI crypto accelerator in accel framework is not
+> completely out of place here, as also suggested at:
+> https://lore.kernel.org/all/2025031352-gyration-deceit-5563@gregkh/
+> 
+> Having the crypto accelerator as part of accel also enables to extract
+> the most performance from the HW PKI engines, given that the queue
+> assignment is handled per drm device open call.
 
-On Wed, Apr 09, 2025 at 05:23:39PM +0200, Markus Elfring wrote:
-> How do you think about to add any tags (like “Fixes” and “Cc”) accordingly?
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.15-rc1#n145
+There is actually a user-space interface for asymmetric crypto
+through the keyring subsystem.  Adding the maintainers of those
+in case they wish to comment on your driver.
 
-Thanks for pointing that out. Actually I wasn't sure about which commit
-to add as the Fixes tag, so I left it assuming that the maintainers
-would know better.
-
-I was confused between the following two commits both of which change
-the kfree(wx->mac_table) line.
-- 02338c484ab6 ("net: ngbe: Initialize sw info and register netdev")
-- 9607a3e62645 ("net: wangxun: Rename private structure in libwx")
-
-Regards,
-Nihaal
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
