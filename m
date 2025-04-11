@@ -1,81 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAE526FA65;
-	Fri, 11 Apr 2025 03:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D2C6FB9;
+	Fri, 11 Apr 2025 03:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744340854; cv=none; b=i9gBItqhi0v2ZXxh6/QOYyp71wwmBfwfTnHbIAYQqgqgcLmzX9gOrtbDwjxVdaxbVixvtP+J5hU69/yRnvmvyO0msaAxZrJNIr2rFEhHmni/cniKgugjSoHJYjya9ZtmpPwFUcf+WbB36OdNvRaUtPd9XkPMTKZXb5SFrWs/1Gw=
+	t=1744341091; cv=none; b=PyuQAw3TZw5KtwpjXy/hmATm+S3Xry+ArJXuaAdrtxQGJeqhIBa7tNZgs0z5JB5zJGusMy9q3fIc7wtZjoFUCpELGh9rTPS/kQZFnjsFfqS3UMskGTQLUvMtmPPpENa4bTT3kDXu9IVHJFGU+yQlzn00yzF7dEpLBdhEN3ufLAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744340854; c=relaxed/simple;
-	bh=q/d5G1A5ErYINEVHEdS+Kp1TEKYUBI8nJNPQ1hWXajg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QWf0Zhb8SMYtrUo/O0n/laN2gNF0OM2aif8LVDRcnq5WZ2QtE0tfmKpwTgLGasgk+UtgJjSJZlqX73RurOLgKlJSq+q5VJoE/L+0OpAi+HhJadaAilGx3C2XWobM8U8e9O3QfvMQc/COaB5Of+uw7T5o3OeXZgSSS5Ht6aeRGeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJJyt5NW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744341091; c=relaxed/simple;
+	bh=+I1LKR5/GFel5Hnsw++Z7Q1F/FET2wm6yRqFmjbIVmA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=XDCV2BK5Ck2ACsU1yLVwGHQhbaswMd5gwJ3wqhmJTXqxZNLTt+s55YXuTNZN744gq2Stz3VBOOtO8rnMqO0clAZ4bAwPx+sZYP9PE2uIL0MuvSH5svh+btWF4uxQNcHnYOrcYN4n6oMF6m1zyde2jD+6iC2KR3F/MRdFv2O9DJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gtCLTFGg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJJyt5NW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0696DC4CEEA;
-	Fri, 11 Apr 2025 03:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744340854;
-	bh=q/d5G1A5ErYINEVHEdS+Kp1TEKYUBI8nJNPQ1hWXajg=;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gtCLTFGg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4954EC4CEDD;
+	Fri, 11 Apr 2025 03:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744341090;
+	bh=+I1LKR5/GFel5Hnsw++Z7Q1F/FET2wm6yRqFmjbIVmA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OJJyt5NWunYLI5VwPqhNMo3XqfhdXvxn8/NorrPfgttzpZXGZmp4x+UsTzkQhiYTx
-	 Pb+CP0olEO7RtfA+ldHgN1dXmeE/f9nqyVRNE89jO2iI+Qu9/kMTsJl694Tqg+s1d0
-	 BHX0KJff1otG3lzqRaOa0v0GRk5djb6MpeE2dywN2nxAkUldHE10gPkGBC/9Fj7wh3
-	 UVQVTTJ+feq78Aldb27RpnBW7Hg04Tdg4KCgDCdHDsvt4DyJ5UJ9aj6VuoEEMFoW4E
-	 JEOS9jYN1SlvGxknEVdWYj9KBUgC/VqGSozFa1VQrnPWoBUA7skkXC/yeuJ8ovRBWN
-	 AOiysi+FrmEFQ==
-Date: Thu, 10 Apr 2025 20:07:33 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, Shuah Khan
- <shuah@kernel.org>, sd@queasysnail.net, ryazanov.s.a@gmail.com, Andrew Lunn
- <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, Xiao Liang
- <shaw.leon@gmail.com>
-Subject: Re: [PATCH net-next v25 07/23] ovpn: implement basic TX path (UDP)
-Message-ID: <20250410200733.4fea860f@kernel.org>
-In-Reply-To: <20250407-b4-ovpn-v25-7-a04eae86e016@openvpn.net>
-References: <20250407-b4-ovpn-v25-0-a04eae86e016@openvpn.net>
-	<20250407-b4-ovpn-v25-7-a04eae86e016@openvpn.net>
+	b=gtCLTFGgRKY6euMdDXye/Rn3aGQFaJQUjvO+8duaHDulgk6VjvxGQa6wu3241kEla
+	 tvSWVm2wTyRpqO7F8agliERkDylSoP6IB/UkQUnmuMPp9GABwRAaknq0m46r6KBMzX
+	 gmu3kbLrywL+4phpVCJ2KVmusqbwNd1Ky42lQqWw=
+Date: Thu, 10 Apr 2025 20:11:29 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: gourry@gourry.net, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
+ ying.huang@linux.alibaba.com, david@redhat.com,
+ Jonathan.Cameron@huawei.com, osalvador@suse.de, kernel_team@skhynix.com,
+ honggyu.kim@sk.com, yunjeong.mun@sk.com, Dan Williams
+ <dan.j.williams@intel.com>
+Subject: Re: [PATCH v7 2/3] mm/mempolicy: Prepare weighted interleave sysfs
+ for memory hotplug
+Message-Id: <20250410201129.59daece11914dc086bd32f2c@linux-foundation.org>
+In-Reply-To: <20250410080629.564-1-rakie.kim@sk.com>
+References: <20250410075341.549-1-rakie.kim@sk.com>
+	<20250410080629.564-1-rakie.kim@sk.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 07 Apr 2025 21:46:15 +0200 Antonio Quartulli wrote:
-> diff --git a/drivers/net/ovpn/socket.c b/drivers/net/ovpn/socket.c
-> index 97f6a249b09fe26cc6d078d80abc955f8d35e821..200036757fcd0a7f2ae554a1e3a3c03915c0e32f 100644
-> --- a/drivers/net/ovpn/socket.c
-> +++ b/drivers/net/ovpn/socket.c
-> @@ -185,9 +185,8 @@ struct ovpn_socket *ovpn_socket_new(struct socket *sock, struct ovpn_peer *peer)
->  		goto sock_release;
->  	}
->  
-> -	ovpn_sock->ovpn = peer->ovpn;
-> -	ovpn_sock->sock = sock;
->  	kref_init(&ovpn_sock->refcount);
-> +	ovpn_sock->sock = sock;
+On Thu, 10 Apr 2025 17:06:19 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
 
-> @@ -31,7 +262,7 @@ int ovpn_udp_socket_attach(struct ovpn_socket *ovpn_sock,
->  {
->  	struct socket *sock = ovpn_sock->sock;
->  	struct ovpn_socket *old_data;
-> -	int ret = 0;
-> +	int ret;
->  
->  	/* make sure no pre-existing encapsulation handler exists */
->  	rcu_read_lock();
+> I sincerely apologize for the inconvenience. It appears that this commit still
+> requires additional corrections. I would appreciate it if you could drop the
+> changes you merged into -mm, mm-new branch yesterday.
 
-Some unrelated-looking chunks here
-
-> +			dev_core_stats_tx_dropped_inc(ovpn->dev);
-
-Since you're already using TSTATS could you switch to DSTATS 
-to count drops, and leave the core stats for the core ?
+No problems, it happens, glad to be of service.  Dropped.
