@@ -1,148 +1,107 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722DB28F948;
-	Fri, 11 Apr 2025 21:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE87290BD2
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 21:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744407030; cv=none; b=Fv8WMBiM9kHCCEhTgCZmsJ2rk1mrx7RF621y79lMzyUigVc8rCcvAE35OersbW9GQvp31UkddcMcJWGj/iMiPYOpCkISbN/GMoF+DI/He2GtccOD8oBW8d+bEiqsBp2r+NfWxHKMCgFyZRicPANCQvxZ0lHONmsAIyTJ4IkDl3Y=
+	t=1744407173; cv=none; b=ZpoN8VouH04kPRu5n8ao7Afnvq+Pf/bmpLGQ1pCGkbJtqD0gCJzdSIU9vD9XEE2JlakPWqUCIi/5rb0r6iT0thgDEp0hghU8jYGxFzqfU4F2Qwo5BRzRsFLdCuVIxhN2UEv00xNsiLYRbAqhUt3B0D2dvPE6gWntwC5Hzf/Uj0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744407030; c=relaxed/simple;
-	bh=NK+PMuBUPUJ6Uqqi5FVej1Q0hExaLxjl/NqH3NKGqRM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KlrG+1mW9JZrYA6DWrD5kys+tWdGoDw6fhstmQ+e4vU4+Q9SUQtr9YItgEFEsNZWC8fwhHc3YFlKdHf7v7JoDluueuRZZXdOGyTnDgzNXA7h9KsoW4NNwjPuYaJSlaAoAUMgIAe/bFzc7mSUBbj6bdBaZe2MEynxwOSeoNO1ByQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pwRp0W5r; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744407173; c=relaxed/simple;
+	bh=/3tH8CvukO+vlevVOFlntDYEjBrYdIAzSgCsbqTQLxI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oVjlPfbX/GNc+CiyQ6sXXkSRpyDqTuFxFoDO8KuaV27tILKn/7mRZN+eTzNBH8BU+2y3x8hMNE6/bO5qRyd0KK/p0TlLdDGsPMJzS07h0llEOTZwnafWuhFwI+Bmit06o54nZxNwj6uWQdPuwuFvcx3exh/3jQYIikjt2hIwMlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LMOt1crC; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pwRp0W5r"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BEhWbf019687;
-	Fri, 11 Apr 2025 21:30:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=jdhyv9hjm6QUrsT/wcxw2z
-	TNKs20yDomAVmT1aUQSfE=; b=pwRp0W5ryybSH390VH0XdIRdKMmb/GsOq/cSGW
-	Mwfj3t+XhIJVxZzgEGJ1J29qJMMpveZzDXcoM/wpceeDqYJFAc3GvwMPXDpUbmaF
-	FgBbJylk1CkStlv8pWHixPBRpnQGyUg5klGw5EP5oW9ZZ0Aq6ISZNPsPe3WSdLTQ
-	1U7fed5lKBCwbwLKtHiWvUyBYYYLTLZsEuRfocgcHcRBAH07CAylj+Oj3Gn/bqX4
-	VMn+AWU3uMv8PuDTnumEv9CWRNW+haGUl1x/kjbCMnz5JnFpCTm5QZtwUDtaAka9
-	EaUKFlpjm+TEU68t27UO6HZz8x6mbPheml/XQvKLwagulZ1Q==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcrutbk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 21:30:15 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53BLUEIE001413
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 21:30:14 GMT
-Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 11 Apr 2025 14:30:14 -0700
-From: Mike Tipton <quic_mdtipton@quicinc.com>
-To: Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi
-	<cristian.marussi@arm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "Viresh
- Kumar" <viresh.kumar@linaro.org>
-CC: <arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mike Tipton
-	<quic_mdtipton@quicinc.com>
-Subject: [PATCH] cpufreq: scmi: Skip SCMI devices that aren't used by the CPUs
-Date: Fri, 11 Apr 2025 14:29:41 -0700
-Message-ID: <20250411212941.1275572-1-quic_mdtipton@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LMOt1crC"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225505d1ca5so22081265ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744407171; x=1745011971; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K1L8eJTBYOe3IqPq2LCTPLnMwB1yCh94JwNwUb/2VUY=;
+        b=LMOt1crCRQs73eNK2HbRb9PqL0BMPWtRzEolG5uHstDhtEf6oySC8qL8wXuxEcGGlw
+         BR1D+F2lQNPzP75CsCeXYG5c3kJHdmXo9a1kW2pVoMZyPwemqYA+zajtzMDCi8/cnXuS
+         r3mpjyyx7LfG4900x6md4uTxy3EpqOwiWLTkJEHB/dpAKW45qM6t3YTEkuzEljFWydw/
+         fdntwATFSZZReekXEs9GYif0OFS62ygEV+Ge1s4ojEP+ErT/eySDKOXeC/pdO3K8CM1n
+         5s+NqTpF56oW6pv3e5a394w48ZUaP7dmaDgUvWz9irepb7efgmgQxnQcK5ejyeUWeP/f
+         1chw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744407171; x=1745011971;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K1L8eJTBYOe3IqPq2LCTPLnMwB1yCh94JwNwUb/2VUY=;
+        b=oE0uKKEZ0rzQIGqWkZH3lT1xfv7tzL9TgmHj+s/KbInKi2Et19iPW1WszpwDH30/v/
+         WCVzDExl4IRxY/Eu8GP7sQuzMcoSfpXatmIWOlDuKfmUR8c32U2e/jRm5pvTg4XT6g5b
+         UGYhAKyaft4zIedY8Uqguiz5kFVgbPT9SXmWQVQFTttv/2pJ/qHwuTBdKIM3Vy4Amu2B
+         4XHckcHQNIeZM+qgbvVlpefAHO0lNBAzgLzWRk6DmFIfFnweQg0dngt9uPbnKdi1x9N7
+         R5YCpGHbtzI0X9FfsGFPNtcy7JrJ0/375B3jy0Ea+mmdCJ0g1eMeXvxIY4x1bmhUx3Oz
+         C18w==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ4T0pXLvF9sS532QQZc34I5nbcJTWwH2h4LfsYB4mlqF8n8uqSl+hlDZAStpS8OrIsAMDJThlasallFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt6M4IFSby+czfXcb+zXDi7nx7QSKHGu9/drscqF2QPScIhmVw
+	6qOVvQmaIEPElb7jiuN2eqt6vxiW0ui6PvmVknEpdZGrYVekvKVyGtwI/g0LaMdsAtxSTgKV1Ct
+	BgQ==
+X-Google-Smtp-Source: AGHT+IGWRveftZO1wji7CvlkOdr/kE0uz4l6esz3nDwfvBuY+d4Ew0jp3EjBMobySbyO9+duVZkiSgztRF8=
+X-Received: from pfvf19.prod.google.com ([2002:a05:6a00:1ad3:b0:732:51fc:618f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cccd:b0:224:910:23f6
+ with SMTP id d9443c01a7336-22bea4fcc8dmr67226125ad.45.1744407171250; Fri, 11
+ Apr 2025 14:32:51 -0700 (PDT)
+Date: Fri, 11 Apr 2025 14:32:49 -0700
+In-Reply-To: <b06b187a-54e2-460e-8fc5-b440184b6f7a@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 2wjL0GughldwcNUypIhw6NcJCtHR9kIA
-X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f989e7 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=RUjNBLSMCPId_BJTEh8A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 2wjL0GughldwcNUypIhw6NcJCtHR9kIA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_08,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- clxscore=1011 phishscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110138
+Mime-Version: 1.0
+References: <20250410204149.2576104-1-ross.philipson@oracle.com>
+ <20250410204149.2576104-2-ross.philipson@oracle.com> <f816c36c-cb7e-4143-b58c-f96a40699f7a@oracle.com>
+ <b06b187a-54e2-460e-8fc5-b440184b6f7a@oracle.com>
+Message-ID: <Z_mKgfZznBZgS-Pb@google.com>
+Subject: Re: [PATCH v13 01/19] Documentation/x86: Secure Launch kernel documentation
+From: Sean Christopherson <seanjc@google.com>
+To: ross.philipson@oracle.com
+Cc: ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-efi@vger.kernel.org, iommu@lists.linux.dev, 
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org, 
+	mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, 
+	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
+	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
+	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com, 
+	trenchboot-devel@googlegroups.com
+Content-Type: text/plain; charset="us-ascii"
 
-Currently, all SCMI devices with performance domains attempt to register
-a cpufreq driver, even if their performance domains aren't used to
-control the CPUs. The cpufreq framework only supports registering a
-single driver, so only the first device will succeed. And if that device
-isn't used for the CPUs, then cpufreq will scale the wrong domains.
+On Fri, Apr 11, 2025, ross.philipson@oracle.com wrote:
+> On 4/10/25 10:50 PM, ALOK TIWARI wrote:
+> > 
+> > 
+> > On 11-04-2025 02:11, Ross Philipson wrote:
+> > > +
+> > > + - Entry from the dynamic launch jumps to the SL stub.
+> > > + - SL stub fixes up the world on the BSP.
+> > > + - For TXT, SL stub wakes the APs, fixes up their worlds.
+> > > + - For TXT, APs are left halted using MONITOR/MWAIT intructions.
+> > 
+> > typo intructions -> instruction
+> 
+> Thanks for the review. They are two separate instructions so is this really
+> incorrect?
 
-To avoid this, return early from scmi_cpufreq_probe() if the probing
-SCMI device isn't referenced by the CPU device phandles.
+From the peanut gallery, I'd just drop the "instruction(s)" qualifier, i.e.
 
-This keeps the existing assumption that all CPUs are controlled by a
-single SCMI device.
+	- For TXT, APs are left halted using MONITOR/MWAIT.
 
-Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
----
- drivers/cpufreq/scmi-cpufreq.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Pedantically, it's the combination of MONTIOR+MWAIT that puts the CPU into a
+sleep state, not the individual instructions.
 
-diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-index 944e899eb1be..7981a879974b 100644
---- a/drivers/cpufreq/scmi-cpufreq.c
-+++ b/drivers/cpufreq/scmi-cpufreq.c
-@@ -393,6 +393,32 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
- 	.set_boost	= cpufreq_boost_set_sw,
- };
- 
-+static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
-+{
-+	struct device_node *scmi_np = scmi_dev->of_node;
-+	struct device_node *np;
-+	struct device *cpu_dev;
-+	int cpu, idx;
-+
-+	for_each_possible_cpu(cpu) {
-+		cpu_dev = get_cpu_device(cpu);
-+		if (!cpu_dev)
-+			continue;
-+
-+		np = cpu_dev->of_node;
-+
-+		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
-+			return true;
-+
-+		idx = of_property_match_string(np, "power-domain-names", "perf");
-+
-+		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static int scmi_cpufreq_probe(struct scmi_device *sdev)
- {
- 	int ret;
-@@ -404,6 +430,9 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
- 	if (!handle)
- 		return -ENODEV;
- 
-+	if (!scmi_dev_used_by_cpus(dev))
-+		return 0;
-+
- 	scmi_cpufreq_driver.driver_data = sdev;
- 
- 	perf_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PERF, &ph);
--- 
-2.34.1
+And while I'm picking nits, the documentation is also a bit misleading as the CPU
+isn't halted per se.  I'd go with something like:
 
+	- For TXT, APs are left in an optimized (MONITOR/MWAIT) wait state.
