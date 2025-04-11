@@ -1,173 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346892980AD
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81D02980A4
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361085; cv=none; b=QN/NlpltCr9jKTTQPHSP95APyIW/M7aEaRJvVdQtV9EVF30BJL7B91NZHLfV+UQBV/sNNwjd0RWB+F1mYevO5YDH/okAc3Ya6+Fd9N4JSUvVkhfn65RccMEbst5/TNNB6Eeo1Elk0ZO7MU5aErwyj2A/llJLcTwy8wUE3PZ/rTw=
+	t=1744361087; cv=none; b=A2/LvfVVX5b86LmCp/I/ywQiSHWe/LClu1X+syo3N58EoJpOtYWtIddzOn/u1Wvr6CS0ZOzSSNGazJkJQKN5wSEmjVNRsOgpg+TkQcmzAhW10FT3r1f19nbLi/4aeWJSFxPs5l5JYq9kULyjFu748Bs8ZtmmetqA9EgLlVY6S90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361085; c=relaxed/simple;
-	bh=Z05gpGg22X+6974bS2D3IM1jQC5nyZYK9vmn3GDWFHA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YRQ4IrFU51n2ShNxE/F9ND/Y8EATrhv722Jyzhov6YYVltYJ89iHzJpDNUi8RbOOknTmVYmi261ne6l2lb4sIGfrq2YzFbITnaCUL+X5gcbK5C+8YivozVxEksHKVi3Hc4BsjekmA2ohepKRQAcPTeJ6Y1R+E0tV3RpB58xDrjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D9ukn2Ex; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744361087; c=relaxed/simple;
+	bh=lHO6aNOn5EwTvO2wFlp/SwAPagQH5zCdbSrrXnM1y3g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kr07xx7QCnrG0+qEcSR3RFrui5I4TffMIk+majlDBTNYQsk4wOtE9FVGgRozSy6251E+SUkxIJlArWkCUTvh0D3fvofpQx0xqKWV/4AE6DIXpQUZhV2eA68KTIEYO929M048yYtIWL3GeKVlFm3ZucZFp85JGc61c83q1JmuPGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CTWa7HoJ; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D9ukn2Ex"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744361080;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CTWa7HoJ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744361081;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8UwurWG4XQGRseFWRwijIo5i7c41uQZ3O7HLReHkubA=;
-	b=D9ukn2ExMc/HX4AYAIwtDUgXIZA9uQylVAv5x9VLyehsb/wSvxubAsIHOo7CvcdMGsdUSk
-	fThfjMJeViG455vqvdpJdArdS7cKRdmYUYXLJ7Kdv9D1aBQTUT5OW4s2fvva+gc6LdFQWU
-	ntnlhmRUypBIaK5PPlvqNS+/jdG7Lcg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-369-Tu4frGqgPqeEAA2YX_B46g-1; Fri, 11 Apr 2025 04:44:38 -0400
-X-MC-Unique: Tu4frGqgPqeEAA2YX_B46g-1
-X-Mimecast-MFC-AGG-ID: Tu4frGqgPqeEAA2YX_B46g_1744361077
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so15668355e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:44:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744361077; x=1744965877;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8UwurWG4XQGRseFWRwijIo5i7c41uQZ3O7HLReHkubA=;
-        b=vrm4Va0Q5PyjNJJ8srjSz/kxZDpcLoJK8W0A2Cic3YRpa/vuZMDyIuCC46imNJB55+
-         MOPbEOX2kNQzmHwCGhb2HNR06X2x2515zj8jPIKyJobZqZOZwCG/hOGPJa8S8+yAYlo2
-         8oKdQ66z3ORe21RV1TRWbtAQzu9jcS8Lqf8svE/qorSWhmBkh4lgc6GN9H2RYA2L0uz0
-         ktsnpoVHXIKMt9FCEKS5ouqXiFfvISbEA7qzZGE1E/lHwZM9FZIsIKg2szRnQZbQrHrv
-         +lPTtSoJ7TWomlgnYIQdL+dcKUZwJHYQxHu+qNPto6cDiVmZiiKWO21TxsQ+DYHmZ9Xs
-         BGDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/SzQi6bfXn1Capoffcc36IPEy5jv1XCpX87IudmYxLghLZ+HMq1VSPfLW/EIfip4U5UU+TJWVoiHUe1s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvmPfMagavJFt9QpaqYp3IyB8UXPK7ZW2oIDbmJt3XCLwEL1oa
-	Ge9XnmxwD0ZQAXGM/V82k0V7NRFEHLjDcKwFKDHqBwGihQg3kEjWYBqhdFfydFh3pJohVZLjDAC
-	Z1OQ17Vc1e0ZQYi4dI+DTZUFzyAG7HUhDcmW51CeZJIyJKt8Uj7YNZ7wjkeSQDgRD4WHgvyCx
-X-Gm-Gg: ASbGnculo1XdTgZO1qTIxpbgEhl9XpN0kqnj1Dnt+zpHIGH1mEDZUKLXsZCEnEWVxq4
-	CJgzq8cHKbgEk8v8wnGop1Dwu6BcfNlo21XgRfpvUzMGITrTaks/TGximGUwtXBmhLpu59oR+jM
-	ZRO/1CNBlgrxL2Y3Ol3lRRReEzSidSLIufNhXBeT2Cx+5XvV1n5veKEnCgwClhupXU4c62XoiKi
-	cpmbpkl6bohb8X0LQn/bjqQMd2Hpo6ub7gJaehKeFjLghRfFF413KsDLkY/WB5UOUv+IMeyYjo1
-	1L6dEm+tgInifJhu/5rogVB6Dnf8NF8KxDF1wlTYYFMA8NnCvgqD09LR5w08D6rBA48ApDb/WrG
-	dDGdLcZKqbicD+21x+Q/Se2V1mi0wVPm8aZZl
-X-Received: by 2002:a05:600c:4f45:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-43f3a959a54mr16594575e9.15.1744361077309;
-        Fri, 11 Apr 2025 01:44:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF1yXrAjR8f83dkADb2rKYb3m67+FD3YlVi4ltf+mzQPczAXtXgQZ20dNHdLZBQkLb34RAkuw==
-X-Received: by 2002:a05:600c:4f45:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-43f3a959a54mr16594285e9.15.1744361076912;
-        Fri, 11 Apr 2025 01:44:36 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c726:6800:7ddf:5fc:2ee5:f08a? (p200300cbc72668007ddf05fc2ee5f08a.dip0.t-ipconnect.de. [2003:cb:c726:6800:7ddf:5fc:2ee5:f08a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f207aeaccsm78562285e9.33.2025.04.11.01.44.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 01:44:36 -0700 (PDT)
-Message-ID: <65aa6e41-ff13-4c27-8a78-e7d6f2471834@redhat.com>
-Date: Fri, 11 Apr 2025 10:44:34 +0200
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Xcey4MLmxG1qv2MDXN4YFYZKnSncQZSjL+M9HUoeNcU=;
+	b=CTWa7HoJpG3999H2QBJIg6wcyQBwbHXqSHSX7e8mXQ4cEyyghaOLgfhO2IqRzjz0BChWj7
+	hQUuXx1dgozYD00/uhXIfdgeNuyV4/nz1pvkGfUAjcDPQJoJuS+UIRdTAE7SK9iy3oA5M4
+	hcJ9XXxgw3oZb/xwUy16cOzo8NQIRto=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] pcmcia: Use str_off_on() and str_yes_no() helpers
+Date: Fri, 11 Apr 2025 10:44:29 +0200
+Message-ID: <20250411084434.7178-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] mm/gup: fix wrongly calculated returned value in
- fault_in_safe_writeable()
-To: Baoquan He <bhe@redhat.com>, linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, osalvador@suse.de, yanjun.zhu@linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250410035717.473207-1-bhe@redhat.com>
- <20250410035717.473207-2-bhe@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250410035717.473207-2-bhe@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 10.04.25 05:57, Baoquan He wrote:
-> Not like fault_in_readable() or fault_in_writeable(), in
-> fault_in_safe_writeable() local variable 'start' is increased page
-> by page to loop till the whole address range is handled. However,
-> it mistakenly calcalates the size of handled range with 'uaddr - start'.
-> 
-> Fix it here.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Fixes: fe673d3f5bf1 ("mm: gup: make fault_in_safe_writeable() use fixup_user_fault()")
-> ---
->   mm/gup.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 92351e2fa876..84461d384ae2 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2207,8 +2207,8 @@ size_t fault_in_safe_writeable(const char __user *uaddr, size_t size)
->   	} while (start != end);
->   	mmap_read_unlock(mm);
->   
-> -	if (size > (unsigned long)uaddr - start)
-> -		return size - ((unsigned long)uaddr - start);
-> +	if (size > start - (unsigned long)uaddr)
-> +		return size - (start - (unsigned long)uaddr);
->   	return 0;
->   }
->   EXPORT_SYMBOL(fault_in_safe_writeable);
+Remove hard-coded strings by using the str_off_on() and str_yes_no()
+helper functions.
 
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/pcmcia/socket_sysfs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Acked-by: David Hildenbrand <david@redhat.com>
-
+diff --git a/drivers/pcmcia/socket_sysfs.c b/drivers/pcmcia/socket_sysfs.c
+index c7a906664c36..4eadd0485066 100644
+--- a/drivers/pcmcia/socket_sysfs.c
++++ b/drivers/pcmcia/socket_sysfs.c
+@@ -10,6 +10,7 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/string.h>
++#include <linux/string_choices.h>
+ #include <linux/major.h>
+ #include <linux/errno.h>
+ #include <linux/mm.h>
+@@ -98,7 +99,7 @@ static ssize_t pccard_show_card_pm_state(struct device *dev,
+ 					 char *buf)
+ {
+ 	struct pcmcia_socket *s = to_socket(dev);
+-	return sysfs_emit(buf, "%s\n", s->state & SOCKET_SUSPEND ? "off" : "on");
++	return sysfs_emit(buf, "%s\n", str_off_on(s->state & SOCKET_SUSPEND));
+ }
+ 
+ static ssize_t pccard_store_card_pm_state(struct device *dev,
+@@ -177,7 +178,7 @@ static ssize_t pccard_show_resource(struct device *dev,
+ 				    struct device_attribute *attr, char *buf)
+ {
+ 	struct pcmcia_socket *s = to_socket(dev);
+-	return sysfs_emit(buf, "%s\n", s->resource_setup_done ? "yes" : "no");
++	return sysfs_emit(buf, "%s\n", str_yes_no(s->resource_setup_done));
+ }
+ 
+ static ssize_t pccard_store_resource(struct device *dev,
 -- 
-Cheers,
-
-David / dhildenb
+2.49.0
 
