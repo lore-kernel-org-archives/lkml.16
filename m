@@ -1,207 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1971D86F7;
-	Fri, 11 Apr 2025 09:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F522980D9
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744362879; cv=none; b=PO4W796XpidOYFKCTyPR4GQknJx5+PTLJzovAoCg6VXABijV29qiM5o4K1T35TsobUGXbnkvfpN5P0u5ZXbrekVXm+T0eqUbeClFYk1IlAAYnhvKeuVfPt9Op/4JBIcfYRxYd6wv8RD3uYYrSOUC21nHSDEqPM8C1mzOfHx4vzI=
+	t=1744362914; cv=none; b=cdBErndFYxw1EV/vk/Cnatg7Ne3bY0JsV53Ux6VxU35cRYyam/I+YUeXk4PrRnxNZayPXjEbmXlabQzXJBiZtuvoLy6rqERN9Ij6ipwQSYHLFKr3VlM4sY1TCZMk6WRIQaIEr85a3LUJce2aV7/s6hARr3NWnOlqwz/tTxX5+hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744362879; c=relaxed/simple;
-	bh=868/K9j7i9CpRgNIlqwpSUwNkGMQ9DAI50kwksQWn4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lM+2YOMJ1KhqYY2qo54fd2v9hADHEKXyrdjw/BtsA2x18dQC1VrqHTkvrXbtLGL1krfTw5TJrBxoPYWFhMgNe/VSPQXBeA75V1aZBX/4GafemyF+VM66hJAI1c6zL8dns+GUyhAwGwlheTKdBnGaZwt9sIUkMhpI45PYiQNG2YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNegJKWG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744362914; c=relaxed/simple;
+	bh=wSDiSTIMzZ8AzbSlo0H6dx6Tq5uu0BrhmY/nA2lB3N8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=deV1+RlKZWxoiHPGU7NLuIog+O7pCl9vLhaH7WPvTR/C/f46khc+TAQkPRIDs8cOgMtP/Bibkm0ukANuWk7nKUFoTpPRfEOCPTCJNbbay/ruN/TKdqzm+LZlu3jQ3t749kOSI24+bX9ge+rG3cMYAV8cx7zLkOn7Ooa28MqGwOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kWZhNUqc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNegJKWG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD3F8C4CEE2;
-	Fri, 11 Apr 2025 09:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744362879;
-	bh=868/K9j7i9CpRgNIlqwpSUwNkGMQ9DAI50kwksQWn4E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fNegJKWGMW/aOtWnDGQXCW3FGjcSNj4DUA44VL1Xh2lP+T0OdaYwS0un9ukjguoNs
-	 NF0SViB08fXB3OdeLrRe6KEcju3zcuJ+nF3tQZj27Rt63D2HbXxaKXQpigqKJhMjTu
-	 HKNe9VNL/asPqL4Y8CsAujBL0J7m3XUBusOW198vBBJEf2Obm1fWXPn+EmC5KfHlI6
-	 MTfivl+COvhWm76FKqUCB1DCFUvhVESjn8kkg++e6fBjAFtN9+b1nym4fWa0P9utn1
-	 7iZ0k4FhKAfE2KF9x6V5JODIY6d4WHY5nm2m4ByyjVK/Z8yGLAXGX7AeBDx8vLkAbZ
-	 E3eYBqZuGqusw==
-Date: Fri, 11 Apr 2025 10:14:31 +0100
-From: Srinivas Kandagatla <srini@kernel.org>
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Luca Weiss <luca.weiss@fairphone.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexey Klimov <alexey.klimov@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: Remove unnecessary MM_[UD]L audio
- routes
-Message-ID: <20250411091431.GA58323@srini-hackbase>
-References: <20250411-cleanup-mm-routes-v1-1-ba98f653aa69@fairphone.com>
- <Z_jWLq6qJuGH3sNx@linaro.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kWZhNUqc"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B4vD7j000699
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:15:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	X5doLk99y/BQBx6tHm6rmyRjgyjHDIBKbmZ7562z09Q=; b=kWZhNUqcE2V0dB02
+	Dy6TINSzNplcmyqE8oahY+6kMQFiEhJWuFq1iYSuaGoDl+tcixwyWl3OdZylw2qX
+	YS2ICAozNk1O6BhXqQGWNM/PuQkweccACVrLh67FXCVlYdk4R3/DhvCJwRja1Kod
+	yIHwbjNF4Ng1H7G/jecyLb4303ZwalBtksP/TWeZE50ATzSDxVSk1hRFxoYj7GiK
+	+BdQvfrYiqM0wj4C/kVOw4ehBG7E+oMRmHEftPrHwT0990vKuEflnB1ote8p8fRE
+	DYs9o6Nzx3cauYRLClGk0EmnDCx2yRciSKlKhCwvrygEDYX/c33n3fz8a9cDyubk
+	TjDq+A==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd31ud4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:15:11 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8f3766737so2672746d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:15:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744362910; x=1744967710;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5doLk99y/BQBx6tHm6rmyRjgyjHDIBKbmZ7562z09Q=;
+        b=GSdyc8x12+gNMzNgZN5bRm5aGI5SDRilxCE4sCktZTK/c5N4DJvrrmNVziw3StdC6r
+         DGKyhyna8wGidRytwTzOsPjn6w1iBZtfu2mvQZnUTqUgGf+JMak1pta+3oFQRQQDybp+
+         OiQwgC7FrmIEg1wFeFdC8TpHnywAeddklDNtfwogTU+/VWpSglL1ZBrNTmKUQKsKcZZK
+         L6duc96Y7vBBQn1gpT67nLQisB5omIeXiF0xW79aU0EQMB0w8xtKRErdmcjZK8v3tz6q
+         qeTjR8aWR1KIl8bLcqmjfxS32ivw0qlo3DVAB0mW++P9ihz9LgLw0wydOh4WHGpxj6Lr
+         qF0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXMs7jsWTkr0EAW1sJRcVrrnvPFgcKzItgfEz5RaHlpdnR545bt6Y5MtJge4CnglU8rZ6RzuOhAL2O4e5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOkqQezAkSlGJCKi7WXOGz6vOtjGuW7p8Zy9Rj2l4A1FPVex2c
+	3rLJaRIaAfl73N2pmaAPn6uhmmA1eFo9FX34uHqETD2zp/1HFyjObGFLfD+EeVTDLBkxTuDWVe7
+	zVu/dyuPu5iXBy1QXrz6IObuzD7LHgOqBJcl0PgFX5audQ9XATmN1s10IgM9Niqc=
+X-Gm-Gg: ASbGncuPHK6IowN+kONh9TkZu3vGr1dMyXVjjzx/uzKK8zVNCsKmb/QZSIPvZniwZJM
+	z/UdEiulpLdYrB2HDn7G68vv+HuxgdR9JxkAc46vjUDXxXJF+ZZHybblBqXey99IiISUkW+6Fc1
+	RPY7JBL+c6QZCdAxYh2djoGIVl6joJ/42cngig450FHS4Gbnb+kXme0+nGsTqlcCzLdU2GcdYjA
+	3nqjKqJwAFFoGPT/W1zdu9OyGNLf4KXUHlIRcW0SzO81TkSHsTGTZpHhx8bTEAv0XXrk8djzB/h
+	P0IYCu/pimS7RaR22cytHiQPGLhMcEp0Hsgs9RXn34cEXsNDGvWXro1qI6CwUR7xqQ==
+X-Received: by 2002:a05:6214:212f:b0:6d8:99b2:63c7 with SMTP id 6a1803df08f44-6f23f1679e4mr10552076d6.9.1744362910108;
+        Fri, 11 Apr 2025 02:15:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxpGlXszdxNQCnjkhwWTXgQ8wOks/BBU6emAo6r1j/KIqv8QPgKc0i8th3uVqdCc0PKf177A==
+X-Received: by 2002:a05:6214:212f:b0:6d8:99b2:63c7 with SMTP id 6a1803df08f44-6f23f1679e4mr10551796d6.9.1744362909745;
+        Fri, 11 Apr 2025 02:15:09 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acad99c4456sm25883766b.110.2025.04.11.02.15.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 02:15:09 -0700 (PDT)
+Message-ID: <e2cc6dca-0c7a-4607-a23f-7623212dbd8e@oss.qualcomm.com>
+Date: Fri, 11 Apr 2025 11:15:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_jWLq6qJuGH3sNx@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 15/18] arm64: dts: qcom: Add MXC power domain to
+ videocc node on SM8650
+To: Jagadeesh Kona <quic_jkona@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
+ <20250327-videocc-pll-multi-pd-voting-v3-15-895fafd62627@quicinc.com>
+ <12986cda-99eb-4a1b-a97b-544ea01e2dbb@oss.qualcomm.com>
+ <44dad3b5-ea3d-47db-8aca-8f67294fced9@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <44dad3b5-ea3d-47db-8aca-8f67294fced9@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: gJIjpLw_BF-HCx6cfFw2qYWKO53s47Md
+X-Proofpoint-GUID: gJIjpLw_BF-HCx6cfFw2qYWKO53s47Md
+X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f8dd9f cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=hak5HkhHT8-G3VIbWWkA:9
+ a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110056
 
-On Fri, Apr 11, 2025 at 10:43:26AM +0200, Stephan Gerhold wrote:
-> +Cc Srini, Alexey: FYI
+On 4/11/25 9:16 AM, Jagadeesh Kona wrote:
 > 
-> On Fri, Apr 11, 2025 at 10:33:29AM +0200, Luca Weiss wrote:
-> > Since commit 6fd8d2d275f7 ("ASoC: qcom: qdsp6: Move frontend AIFs to
-> > q6asm-dai") from over 4 years ago the audio routes beween MM_DL* +
-> > MultiMedia* Playback and MultiMedia* Capture + MM_UL* are not necessary
-> > anymore and can be removed from the dts files. It also helps to stop
-> > anyone copying these into new dts files.
-> > 
-> > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 > 
-> Thanks, I always forgot/postponed making this cleanup. :-)
+> On 4/1/2025 8:57 PM, Konrad Dybcio wrote:
+>> On 3/27/25 10:52 AM, Jagadeesh Kona wrote:
+>>> Videocc requires both MMCX and MXC rails to be powered ON to configure
+>>> the video PLLs on SM8650 platform. Hence add MXC power domain to videocc
+>>> node on SM8650.
+>>>
+>>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>>> ---
+>>>  arch/arm64/boot/dts/qcom/sm8650.dtsi | 3 ++-
+>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+>>> index 818db6ba3b3be99c187512ea4acf2004422f6a18..ad60596b71d25bb0198b26660dc41195a1210a23 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+>>> @@ -4959,7 +4959,8 @@ videocc: clock-controller@aaf0000 {
+>>>  			reg = <0 0x0aaf0000 0 0x10000>;
+>>>  			clocks = <&bi_tcxo_div2>,
+>>>  				 <&gcc GCC_VIDEO_AHB_CLK>;
+>>> -			power-domains = <&rpmhpd RPMHPD_MMCX>;
+>>> +			power-domains = <&rpmhpd RPMHPD_MMCX>,
+>>> +					<&rpmhpd RPMHPD_MXC>;
+>>
+>> So all other DTs touched in this series reference low_svs in required-opps
+>>
+>> Is that an actual requirement? Otherwise since Commit e3e56c050ab6
+>> ("soc: qcom: rpmhpd: Make power_on actually enable the domain") we get the
+>> first nonzero state, which can be something like low_svs_d2
+>>
+> Yes, commit e3e56c050ab6 enables the power-domain at first non-zero level, but in
+> some chipsets, the first nonzero state could be retention, which is not sufficient
+> for clock controller to operate. So required-opps is needed to ensure the rails are
+> at a level above retention for clock controller to operate. low_svs was choosen since
+> that is a level that is generally supported across all the chipsets, but low_svs_d2
+> may not be supported on some chipsets.
 > 
-> Reviewed-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> And required-opps is not mandatory for MXC power domain due to commit f0cc5f7cb43f
+> (pmdomain: qcom: rpmhpd: Skip retention level for Power Domains), which ensures MXC
+> always gets enabled above retention level. But it was added to make number of
+> required-opps uniform with the number of power domains based on discussion at [1].
+> 
+> [1]: https://lore.kernel.org/all/eoqqz5hyyq6ej5uo6phijbeu5qafbpfxlnreyzzcyfw23pl2yq@ftxnasc6sr2t/#t
 
-LGTM
+Alright, thanks for the explanation!
 
-Reviewed-by: Srinivas Kandagatla <srini@kernel.org>
-
-> 
-> > ---
-> >  arch/arm64/boot/dts/qcom/apq8096-db820c.dts          | 5 +----
-> >  arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts   | 5 +----
-> >  arch/arm64/boot/dts/qcom/qrb4210-rb2.dts             | 2 --
-> >  arch/arm64/boot/dts/qcom/qrb5165-rb5.dts             | 6 +-----
-> >  arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 6 +-----
-> >  arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 5 +----
-> >  arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts     | 5 +----
-> >  7 files changed, 6 insertions(+), 28 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> > index e8148b3d6c50c670d6bc8045e42074162dc1c6d9..1089964e6c0d819e166fd5a959f7f1e6fe688d65 100644
-> > --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> > +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> > @@ -1012,10 +1012,7 @@ wcd9335: codec@1,0 {
-> >  &sound {
-> >  	compatible = "qcom,apq8096-sndcard";
-> >  	model = "DB820c";
-> > -	audio-routing = "RX_BIAS", "MCLK",
-> > -		"MM_DL1",  "MultiMedia1 Playback",
-> > -		"MM_DL2",  "MultiMedia2 Playback",
-> > -		"MultiMedia3 Capture", "MM_UL3";
-> > +	audio-routing = "RX_BIAS", "MCLK";
-> >  
-> >  	mm1-dai-link {
-> >  		link-name = "MultiMedia1";
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts b/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-> > index dbad8f57f2fa34575440caa7f0a19d5893efcfbb..d7fa56808747ae1290b884430d5fa5443bdd9be1 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-> > +++ b/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-> > @@ -156,10 +156,7 @@ &slpi_pil {
-> >  &sound {
-> >  	compatible = "qcom,apq8096-sndcard";
-> >  	model = "gemini";
-> > -	audio-routing = "RX_BIAS", "MCLK",
-> > -		"MM_DL1",  "MultiMedia1 Playback",
-> > -		"MM_DL2",  "MultiMedia2 Playback",
-> > -		"MultiMedia3 Capture", "MM_UL3";
-> > +	audio-routing = "RX_BIAS", "MCLK";
-> >  
-> >  	mm1-dai-link {
-> >  		link-name = "MultiMedia1";
-> > diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-> > index d485249bcda44055689b5556eec9dd057b92d0ae..a37860175d2733214f1b257e84d5cb4821033242 100644
-> > --- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-> > +++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-> > @@ -110,8 +110,6 @@ sound {
-> >  		pinctrl-0 = <&lpi_i2s2_active>;
-> >  		pinctrl-names = "default";
-> >  		model = "Qualcomm-RB2-WSA8815-Speakers-DMIC0";
-> > -		audio-routing = "MM_DL1", "MultiMedia1 Playback",
-> > -				"MM_DL2", "MultiMedia2 Playback";
-> >  
-> >  		mm1-dai-link {
-> >  			link-name = "MultiMedia1";
-> > diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-> > index 4cc14ab1b9ea0f92a12a12ef4df1cdc37bf5591c..dcb998b8b05498d8f9a82ff9a984c1e237a61308 100644
-> > --- a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-> > +++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-> > @@ -1053,11 +1053,7 @@ &sound {
-> >  		"SpkrLeft IN", "WSA_SPK1 OUT",
-> >  		"SpkrRight IN", "WSA_SPK2 OUT",
-> >  		"VA DMIC0", "vdd-micb",
-> > -		"VA DMIC1", "vdd-micb",
-> > -		"MM_DL1",  "MultiMedia1 Playback",
-> > -		"MM_DL2",  "MultiMedia2 Playback",
-> > -		"MultiMedia3 Capture", "MM_UL3",
-> > -		"MM_DL4", "MultiMedia4 Playback";
-> > +		"VA DMIC1", "vdd-micb";
-> >  
-> >  	mm1-dai-link {
-> >  		link-name = "MultiMedia1";
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> > index 2b2ef4dbad2fc55b27fd176baf1b4205802e1c42..adfd916270055df0a957c573868302e0d77c614d 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> > @@ -777,11 +777,7 @@ &quat_mi2s_sd2_active
-> >  		"DMIC2", "MIC BIAS3",
-> >  		"DMIC3", "MIC BIAS3",
-> >  		"SpkrLeft IN", "SPK1 OUT",
-> > -		"SpkrRight IN", "SPK2 OUT",
-> > -		"MM_DL1",  "MultiMedia1 Playback",
-> > -		"MM_DL2",  "MultiMedia2 Playback",
-> > -		"MM_DL4",  "MultiMedia4 Playback",
-> > -		"MultiMedia3 Capture", "MM_UL3";
-> > +		"SpkrRight IN", "SPK2 OUT";
-> >  
-> >  	mm1-dai-link {
-> >  		link-name = "MultiMedia1";
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > index e8012205954e76627febda14ee51ecff9d29e4fb..7677acd08e2d176be932d3f726fe5602cf8d50d1 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > @@ -632,10 +632,7 @@ &sound {
-> >  		"RX_BIAS", "MCLK",
-> >  		"AMIC2", "MIC BIAS2",
-> >  		"SpkrLeft IN", "SPK1 OUT",
-> > -		"SpkrRight IN", "SPK2 OUT",
-> > -		"MM_DL1",  "MultiMedia1 Playback",
-> > -		"MM_DL3",  "MultiMedia3 Playback",
-> > -		"MultiMedia2 Capture", "MM_UL2";
-> > +		"SpkrRight IN", "SPK2 OUT";
-> >  
-> >  	mm1-dai-link {
-> >  		link-name = "MultiMedia1";
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-> > index 26217836c2707ba2f7b0030c9801d7de3a797315..d6d4e7184c5603864668057de79c7497ad361ab3 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-> > @@ -445,10 +445,7 @@ &sound {
-> >  		"RX_BIAS", "MCLK",
-> >  		"AMIC2", "MIC BIAS2",
-> >  		"SpkrLeft IN", "SPK1 OUT",
-> > -		"SpkrRight IN", "SPK2 OUT",
-> > -		"MM_DL1",  "MultiMedia1 Playback",
-> > -		"MM_DL3",  "MultiMedia3 Playback",
-> > -		"MultiMedia2 Capture", "MM_UL2";
-> > +		"SpkrRight IN", "SPK2 OUT";
-> >  
-> >  	mm1-dai-link {
-> >  		link-name = "MultiMedia1";
-> > 
-> > ---
-> > base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
-> > change-id: 20250411-cleanup-mm-routes-7b9e92962553
-> > 
-> > Best regards,
-> > -- 
-> > Luca Weiss <luca.weiss@fairphone.com>
-> > 
+Konrad
