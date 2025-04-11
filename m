@@ -1,49 +1,25 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007C3231A2A;
-	Fri, 11 Apr 2025 17:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54766230D0D
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744392583; cv=none; b=SLcVAsbyA27LW3bD8RthurtbYvjuLsb9eZBaIQf0EiBD9m481u1dCP58TPxLlZzW7p0TvJmzTnF3ufCUSuLjX2XAoHmfopz5qL+BE5fS9wRiawkp4G/TgsSI4CfqH2SWZs3K70kbK5LupBEtsfAwUcuQCywsWeK05bmKMnFAk1E=
+	t=1744392654; cv=none; b=GF4gDNyA3VxThMrN3UW+wgr4QhNPpZFbokIdioaJzE6vhY2fGs49CRQS1VFGdLM33v7mIqYBNc7+zB2n4R7aJVE89THGLqcKN9rgPcx4YtSRwBZmarQa32bAY+51Dfw9qWHbo3fD+TveBg3FiK8BVQ4P8QxPds3OLwSq5pE9Q98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744392583; c=relaxed/simple;
-	bh=SNjjkvPi8mDPCgliOBOb/sKtvfgDejUzyhE44uJp3mk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rxdLVEmYVgQgse4KCMmYuPwa6pULMO2rsl5S43l1pAMO3glKvyAgmUQGLCbP0UnlKtkVIIjzZhHeo09auZh+6bGLP4YAdtLmogNKjrgDbyirKCYmL7s5UC9lvtGil9jLfu2vkxTDWmtFuaTYMWATXMqQmeQ6yZfhYNN54hqL3lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HDjyd73M; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HDjyd73M"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BHTU492187578
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 12:29:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744392570;
-	bh=0CmmRFEk2Mpf6bDBwWDF9TSqpw/smnpuGGU09f+E/SM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=HDjyd73MFFe9fhAPqvvRBo9bMJaUdSpHxcNQ+s2jLa7FRWsF95qQFJI28yYTJnrgw
-	 kurLC3kqP8AQpXiN6ku8PhT40Z6xpOuEXqM2CzDPTtL98ozxh+QrmViA83CT5KocVZ
-	 BXkuXhCqtcE8eY7cTNpEn5+iVZq4oOHiM8VrTIkA=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BHTUF6128866
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 12:29:30 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 12:29:30 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 12:29:29 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BHTPSt002976;
-	Fri, 11 Apr 2025 12:29:26 -0500
-Message-ID: <624fd8c5-1315-4af3-8fb2-486ca95045f2@ti.com>
-Date: Fri, 11 Apr 2025 22:59:25 +0530
+	s=arc-20240116; t=1744392654; c=relaxed/simple;
+	bh=gXCUSf3XDzPifGKQZ5fcXPrPfIH4zdU2bln8aCuqOvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qSUYxmabsDG25v00Mku7cWJ0WMOK+GH4SbRyo6uA/X43l74IJNCYoK5RgZnAeWXFdLt5uzEmHROK2CW1+m+fa2GQvc11cj7ciFLhgZdtWKmR4/r7eF35mIaGY7e7xyNx8qBq2Cq1F1f+wPglHQG2BGtQkV8kgU79lLqS8xXvjC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D8BC106F;
+	Fri, 11 Apr 2025 10:30:50 -0700 (PDT)
+Received: from [10.163.75.48] (unknown [10.163.75.48])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 91C733F59E;
+	Fri, 11 Apr 2025 10:30:45 -0700 (PDT)
+Message-ID: <7dccb3a2-f5e2-4f9e-8f5c-465a1d3ffdb6@arm.com>
+Date: Fri, 11 Apr 2025 23:00:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,75 +27,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] arm64: dts: ti: am68-sk: Fix regulator hierarchy
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, <u-kumar1@ti.com>
-References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
- <20250409134128.2098195-3-y-abhilashchandra@ti.com>
+Subject: Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant
+ operations
+To: Barry Song <21cnbao@gmail.com>, Xavier <xavier_qy@163.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, akpm@linux-foundation.org,
+ ryan.roberts@arm.com, ioworker0@gmail.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Zi Yan <ziy@nvidia.com>
+References: <20250407092243.2207837-1-xavier_qy@163.com>
+ <CAGsJ_4wsW+urp6gbp+yDG40fZw9Bszny2iJVsV_AzzGqgQy+4g@mail.gmail.com>
 Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250409134128.2098195-3-y-abhilashchandra@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <CAGsJ_4wsW+urp6gbp+yDG40fZw9Bszny2iJVsV_AzzGqgQy+4g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
++others
 
-On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
-> Update the vin-supply of the TLV71033 regulator from LM5141 (vsys_3v3) to
-> LM61460 (vsys_5v0) to match the schematics. Add a fixed regulator node for
-> the LM61460 5V supply to support this change.
->
-> AM68-SK schematics: https://www.ti.com/lit/zip/sprr463
-> Fixes: a266c180b398 ("arm64: dts: ti: k3-am68-sk: Add support for AM68 SK base board")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> index 11522b36e0ce..5fa70a874d7b 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-> @@ -44,6 +44,17 @@ vusb_main: regulator-vusb-main5v0 {
->   		regulator-boot-on;
->   	};
->   
-> +	vsys_5v0: regulator-vsys5v0 {
-> +		/* Output of LM61460 */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vsys_5v0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vusb_main>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
->   	vsys_3v3: regulator-vsys3v3 {
->   		/* Output of LM5141 */
->   		compatible = "regulator-fixed";
-> @@ -76,7 +87,7 @@ vdd_sd_dv: regulator-tlv71033 {
->   		regulator-min-microvolt = <1800000>;
->   		regulator-max-microvolt = <3300000>;
->   		regulator-boot-on;
-> -		vin-supply = <&vsys_3v3>;
-> +		vin-supply = <&vsys_5v0>;
->   		gpios = <&main_gpio0 49 GPIO_ACTIVE_HIGH>;
+On 11/04/25 2:55 am, Barry Song wrote:
+> On Mon, Apr 7, 2025 at 9:23 PM Xavier <xavier_qy@163.com> wrote:
+>>
+>> This commit optimizes the contpte_ptep_get function by adding early
+>>   termination logic. It checks if the dirty and young bits of orig_pte
+>>   are already set and skips redundant bit-setting operations during
+>>   the loop. This reduces unnecessary iterations and improves performance.
+>>
+>> Signed-off-by: Xavier <xavier_qy@163.com>
+>> ---
+>>   arch/arm64/mm/contpte.c | 13 +++++++++++--
+>>   1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+>> index bcac4f55f9c1..ca15d8f52d14 100644
+>> --- a/arch/arm64/mm/contpte.c
+>> +++ b/arch/arm64/mm/contpte.c
+>> @@ -163,17 +163,26 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+>>
+>>          pte_t pte;
+>>          int i;
+>> +       bool dirty = false;
+>> +       bool young = false;
+>>
+>>          ptep = contpte_align_down(ptep);
+>>
+>>          for (i = 0; i < CONT_PTES; i++, ptep++) {
+>>                  pte = __ptep_get(ptep);
+>>
+>> -               if (pte_dirty(pte))
+>> +               if (!dirty && pte_dirty(pte)) {
+>> +                       dirty = true;
+>>                          orig_pte = pte_mkdirty(orig_pte);
+>> +               }
+>>
+>> -               if (pte_young(pte))
+>> +               if (!young && pte_young(pte)) {
+>> +                       young = true;
+>>                          orig_pte = pte_mkyoung(orig_pte);
+>> +               }
+>> +
+>> +               if (dirty && young)
+>> +                       break;
+> 
+> This kind of optimization is always tricky. Dev previously tried a similar
+> approach to reduce the loop count, but it ended up causing performance
+> degradation:
+> https://lore.kernel.org/linux-mm/20240913091902.1160520-1-dev.jain@arm.com/
+> 
+> So we may need actual data to validate this idea.
 
+The original v2 patch does not work, I changed it to the following:
 
-Please ignore previous comment , I realized you are changing parent for 
-tlv71033 not for vsys_3v3.
+diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+index bcac4f55f9c1..db0ad38601db 100644
+--- a/arch/arm64/mm/contpte.c
++++ b/arch/arm64/mm/contpte.c
+@@ -152,6 +152,16 @@ void __contpte_try_unfold(struct mm_struct *mm, 
+unsigned long addr,
+  }
+  EXPORT_SYMBOL_GPL(__contpte_try_unfold);
 
-With that
++#define CHECK_CONTPTE_FLAG(start, ptep, orig_pte, flag) \
++       int _start; \
++       pte_t *_ptep = ptep; \
++       for (_start = start; _start < CONT_PTES; _start++, ptep++) { \
++               if (pte_##flag(__ptep_get(_ptep))) { \
++                       orig_pte = pte_mk##flag(orig_pte); \
++                       break; \
++               } \
++       }
++
+  pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+  {
+         /*
+@@ -169,11 +179,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+         for (i = 0; i < CONT_PTES; i++, ptep++) {
+                 pte = __ptep_get(ptep);
 
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+-               if (pte_dirty(pte))
++               if (pte_dirty(pte)) {
+                         orig_pte = pte_mkdirty(orig_pte);
++                       CHECK_CONTPTE_FLAG(i, ptep, orig_pte, young);
++                       break;
++               }
 
+-               if (pte_young(pte))
++               if (pte_young(pte)) {
+                         orig_pte = pte_mkyoung(orig_pte);
++                       CHECK_CONTPTE_FLAG(i, ptep, orig_pte, dirty);
++                       break;
++               }
+         }
 
->   		states = <1800000 0x0>,
->   			 <3300000 0x1>;
+         return orig_pte;
+
+Some rudimentary testing with micromm reveals that this may be 
+*slightly* faster. I cannot say for sure yet.
+
+> 
+>>          }
+>>
+>>          return orig_pte;
+>> --
+>> 2.34.1
+>>
+> 
+> Thanks
+> Barry
+> 
+
