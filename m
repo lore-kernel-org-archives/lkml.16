@@ -1,127 +1,134 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1924F1925AB
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB03F8635A;
+	Fri, 11 Apr 2025 14:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380094; cv=none; b=KlVcirfVp1JZSbBzOoG5IUOh+lJeA9UaxQMYpUBR7w0sK/JvwyhtNc59v04jylGkXHD1pk3BlVvTOVTDUObyI7PWzW/kVDLu3qE1Ma8qBmhx2kq8IYUFbI0KT8ESLNscPj5NHd0Qpy0seSrekcRUCLA3Dj5Gj77AyZGPH7iKlm0=
+	t=1744380131; cv=none; b=bbbGvX4i9PbZO3Va9xdoydQR0/nMJb7+KX7PehxWvp0XZAUNDjHa7M129ldlU0k5FDG1jSOLhlWe07Q5VGjCNwIntIuuxPc6P4JGw0AGBqkAham0YBCN9Fd7sbjGR2dIssupcvsm0FRXuOR/2mtazOsE0WNkEPq+0DnYVi6wP5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380094; c=relaxed/simple;
-	bh=pDyKbO56Ddz2WZ550CfuDnQcBTRpV4zOKeY8l0cY+wQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Zr+6OBt4SpqkX4j9wt8Yf3bJvPS1Vmh/kmBoz83TsOqYUAeftPrBKV+jPqrWGihNTZsoIVs2d6S/gEhZOKuIUhqBpSIVO+PVqHvVon95N8Sl/OG9CdztdOrad4QgbYOP5QjwinBMaTc03aNgEO04AvWHxDj9iVZFgXgD+Zivhqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1hFC9UUb; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744380131; c=relaxed/simple;
+	bh=q/DKf6OWuSdOgKa56EAtz9WZzfj6dx/OHtCNT2ExXeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oKtVpAoYCTnVQLgmsDks0YmxAayQWwxriMGA8Y6DW7DdLx7vbmDzmyJmeaoFsxmpdYQYt0gsLDfRUSMfWL0+4BWc5gEuPwvvYvJk/UspPoEEx6lGO9LNElZrquxs2vBLmjkLIyjuPxauckfz2UuAG3nAsa7of+P8I559VB3RCtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OTJw5ugN; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1hFC9UUb"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7398d70abbfso2618262b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744380092; x=1744984892; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XcPVK4CSR1aU1haxpBUR9PW1y+UHdkqysUSf0PjchSg=;
-        b=1hFC9UUbFhsEd/V37F87mXNsMykMQLD+SY5/oFINRk5kwxEq7wv5tk6rF0YRcCyaLQ
-         yNuyh2x4Q5XsBQPCWOMxVAXMa9RPGW259lWgIgDFmBR4OYmb9QNUX/Lvs7E5EXyIwaA7
-         xjxxtq+zSOgYW4QIKHpjZI1nvC9kPFl1Ti5ZD1PHeucuxEf1a/7CzIhVnOEh1yX/FrO2
-         yyUwnkYJuXRRgN+BvLEqNDMx0NVpeb68cG/l4EguvT5AobKYDfm64gDeKvsYfZkxywJO
-         jvMa3dx8er8ew0lybor8E9nk/Go0fKf9UDwwyV7B1x5cXObmU8cN1Ni9SdfG12cMTx/K
-         i9IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744380092; x=1744984892;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XcPVK4CSR1aU1haxpBUR9PW1y+UHdkqysUSf0PjchSg=;
-        b=kQM8Zyzy8mrw9/gRd93hYcHAUa/6CcfK9zTqavcR8gtFv9jYWKs18wHkW0+U9W3Sd/
-         AJ+h/Y0m6ZhvbPjhFqP+jArCK6Yun8r7kPSanHZH/HS/aP0ZGOOZPRcZYb4rXi0kmtE3
-         hXozXpic+0V6WW3bwTo3mi6Q+Yox1at3lSaAxqTjVUvWYAZbX3VsDclUt/o8Vf5mQZIB
-         D6q+OMH+2PXIraziKwWF3v30QMOY1sp+j10s7/aSK6y7tAEI5r08e7EXX6aYuEBTdKbx
-         6CaUCVNQRIk5woRsFc5YS0HhVBprjGdG6v3TCtj7uXJJxQQWZ02Rl6TogtQmXuMM1XBZ
-         zq1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXpa3cXOLUkh6y6gn7MDVTkmO4gv9ZHmQSmlqI1RfwjTept7V7ZVB9WSppSjMcXW5kygE57jeryoa/eAWs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0YUGHIrCK71GyW+vzH1qP6cY1Mk0bJMDz1RzbOUpy052DcOdn
-	OOw1O8EpQ+d5Mr+N5eBc8YDcfdT6Oe/o9xLx0PAgqmdbC9qr5UVKJylOoikw+LNMSTo73cyeC/f
-	Lxg==
-X-Google-Smtp-Source: AGHT+IGZRfCJBvkjvkPw1lUwltol4QErnPiBwQVl7jFbl+mdLZpKnJ7rCvLlx42UvY0fGa+iXwvt2U/eiSs=
-X-Received: from pfbln21.prod.google.com ([2002:a05:6a00:3cd5:b0:730:743a:f2b0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3cc2:b0:736:bfc4:ef2c
- with SMTP id d2e1a72fcca58-73bd0e8f5b1mr3705655b3a.0.1744380090507; Fri, 11
- Apr 2025 07:01:30 -0700 (PDT)
-Date: Fri, 11 Apr 2025 07:01:29 -0700
-In-Reply-To: <6f76183f-a903-47fd-8c84-0d9892632fca@amd.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OTJw5ugN"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BE1w511458980
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 09:01:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744380118;
+	bh=Genc+foR3TLZU1XFpVYp4UeiPJ0ZTyJwWiJkAOrjZJU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=OTJw5ugNRiRefNzTa0I1IZ9RO1Er+xZPNrg9Pa++8XsYAQAyQi+BBXx2h+iNtuOAb
+	 Wy9lOthCxRPOV33NzxIfs4r48KLgpcbwDXoAfQ+QviEhS4mxsOYZnc86kckG0zOShG
+	 0NNndGpv1a9zPejSxb/wk+SPJ0PTK9rVkBGM86mk=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BE1wtx097818
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 09:01:58 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 09:01:58 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 09:01:57 -0500
+Received: from [10.249.141.75] ([10.249.141.75])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BE1rOJ020355;
+	Fri, 11 Apr 2025 09:01:53 -0500
+Message-ID: <7b2f69ad-48aa-4aa9-be0e-f0edae272bdb@ti.com>
+Date: Fri, 11 Apr 2025 19:31:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-9-seanjc@google.com>
- <6f76183f-a903-47fd-8c84-0d9892632fca@amd.com>
-Message-ID: <Z_kgbna7grb833Fy@google.com>
-Subject: Re: [PATCH 08/67] KVM: x86: Pass new routing entries and irqfd when
- updating IRTEs
-From: Sean Christopherson <seanjc@google.com>
-To: Sairaj Arun Kodilkar <sarunkod@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	David Matlack <dmatlack@google.com>, Naveen N Rao <naveen.rao@amd.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: ti: k3-j722s-main: Disable
+ "serdes_wiz0" and "serdes_wiz1"
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <rogerq@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <u-kumar1@ti.com>
+References: <20250408103606.3679505-1-s-vadapalli@ti.com>
+ <20250408103606.3679505-3-s-vadapalli@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250408103606.3679505-3-s-vadapalli@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Apr 11, 2025, Arun Kodilkar, Sairaj wrote:
-> On 4/5/2025 1:08 AM, Sean Christopherson wrote:
-> > +int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
-> > +			unsigned int host_irq, uint32_t guest_irq,
-> > +			struct kvm_kernel_irq_routing_entry *new)
-> >   {
-> >   	struct kvm_kernel_irq_routing_entry *e;
-> >   	struct kvm_irq_routing_table *irq_rt;
-> >   	bool enable_remapped_mode = true;
-> > +	bool set = !!new;
-> >   	int idx, ret = 0;
-> >   	if (!kvm_arch_has_assigned_device(kvm) || !kvm_arch_has_irq_bypass())
-> > @@ -925,6 +919,8 @@ int avic_pi_update_irte(struct kvm *kvm, unsigned int host_irq,
-> >   		if (e->type != KVM_IRQ_ROUTING_MSI)
-> >   			continue;
-> > +		WARN_ON_ONCE(new && memcmp(e, new, sizeof(*new)));
-> > +
-> > 
-> 
-> Hi Sean,
-> 
-> In kvm_irq_routing_update() function, its possible that there are
-> multiple entries in the `kvm_irq_routing_table`,
 
-Not if one of them is an MSI.  In setup_routing_entry():
+On 4/8/2025 4:06 PM, Siddharth Vadapalli wrote:
+> Since "serdes0" and "serdes1" which are the sub-nodes of "serdes_wiz0"
+> and "serdes_wiz1" respectively, have been disabled in the SoC file already,
+> and, given that these sub-nodes will only be enabled in a board file if the
+> board utilizes any of the SERDES instances and the peripherals bound to
+> them, we end up in a situation where the board file doesn't explicitly
+> disable "serdes_wiz0" and "serdes_wiz1". As a consequence of this, the
+> following errors show up when booting Linux:
+>
+>    wiz bus@f0000:phy@f000000: probe with driver wiz failed with error -12
+>    ...
+>    wiz bus@f0000:phy@f010000: probe with driver wiz failed with error -12
+>
+> To not only fix the above, but also, in order to follow the convention of
+> disabling device-tree nodes in the SoC file and enabling them in the board
+> files for those boards which require them, disable "serdes_wiz0" and
+> "serdes_wiz1" device-tree nodes.
+>
+> Fixes: 628e0a0118e6 ("arm64: dts: ti: k3-j722s-main: Add SERDES and PCIe support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+>
+> v1 of this patch is at:
+> https://lore.kernel.org/r/20250408060636.3413856-3-s-vadapalli@ti.com/
+> Changes since v1:
+> - Added "Fixes" tag and updated commit message accordingly.
+>
+> Regards,
+> Siddharth.
+>
+>   arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> index 6850f50530f1..beda9e40e931 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> @@ -32,6 +32,8 @@ serdes_wiz0: phy@f000000 {
+>   		assigned-clocks = <&k3_clks 279 1>;
+>   		assigned-clock-parents = <&k3_clks 279 5>;
+>   
+> +		status = "disabled";
+> +
 
-	/*
-	 * Do not allow GSI to be mapped to the same irqchip more than once.
-	 * Allow only one to one mapping between GSI and non-irqchip routing.
-	 */
-	hlist_for_each_entry(ei, &rt->map[gsi], link)
-		if (ei->type != KVM_IRQ_ROUTING_IRQCHIP ||
-		    ue->type != KVM_IRQ_ROUTING_IRQCHIP ||
-		    ue->u.irqchip.irqchip == ei->irqchip.irqchip)
-			return -EINVAL;
+Since you are disabling parent node.
 
-> and `irqfd_update()` ends up setting up the new entry type to 0 instead of
-> copying the entry.
-> 
-> if (n_entries == 1)
->     irqfd->irq_entry = *e;
-> else
->     irqfd->irq_entry.type = 0;
-> 
-> Since irqfd_update() did not copy the entry to irqfd->entries, the "new"
-> will not match entry "e" obtained from irq_rt, which can trigger a false
-> WARN_ON.
+Do you still want to carry status = "disabled" in child nodes serdes0 
+and serdes1.
 
-And since there can only be one MSI, if there are multiple routing entries, then
-the WARN won't be reached thanks to the continue that's just above:
 
-		if (e->type != KVM_IRQ_ROUTING_MSI)
-			continue;
+>   		serdes0: serdes@f000000 {
+>   			compatible = "ti,j721e-serdes-10g";
+>   			reg = <0x0f000000 0x00010000>;
+> @@ -70,6 +72,8 @@ serdes_wiz1: phy@f010000 {
+>   		assigned-clocks = <&k3_clks 280 1>;
+>   		assigned-clock-parents = <&k3_clks 280 5>;
+>   
+> +		status = "disabled";
+> +
+>   		serdes1: serdes@f010000 {
+>   			compatible = "ti,j721e-serdes-10g";
+>   			reg = <0x0f010000 0x00010000>;
