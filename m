@@ -1,168 +1,175 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BFD1E98FB;
-	Fri, 11 Apr 2025 07:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B133E27EC71;
+	Fri, 11 Apr 2025 07:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744355473; cv=none; b=QW/a2QQWhkl4PW3lJ3A6tacNL/jBSXH5nLVCh03vOznQapXYTo//1W/Fla7Hg7XTtea8YSQVTvzsFs3um4bHzGBkM8CePZXp3LuCYEkbGU5/c/Tn7eXrvj1yf2eawxESLXfav/13TvwlwywKNKtBCGqrYT5U4o/FvDOGfXBFzLE=
+	t=1744355532; cv=none; b=FiQjKKVntTMWIpPDF2EQsD3t4lemDCT5PNKJuQG4armhi1nhuPJUyJO9r9mgrcH5zTuQI6bE6bXX3YE634ZG49MN7r03W7f1AFqzfhIe611nPEizadKkNmbORS2zmEkY8/8adzvONEaIF3VEjb1um+x4zo5mGkn/Ho9+shNXNNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744355473; c=relaxed/simple;
-	bh=d1asBId/vImwN+l9IIgHITylI4P4oM+6PNnKpdlyGyY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Kj5k9D71BbVYlQdSlxAvjhVQwvJZdg0UPMq2l7252XNrGPqx2udBWnuUmUZUEYTpkjq2Wvy9w1ri3dqVkJJnasYhyB1bQUxl+5qjTj1PrggMXSOqPs1FD/GWCtk0fv+QWpCfWdsLHhN8Qx9IRdH1ZE8xMtt5pRAASoQK47V7mPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5AfLo028040;
-	Fri, 11 Apr 2025 07:10:22 GMT
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tug8qxyh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 11 Apr 2025 07:10:22 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Fri, 11 Apr 2025 00:10:21 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Fri, 11 Apr 2025 00:10:16 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
-        <ast@kernel.org>, <daniel@iogearbox.net>, <john.fastabend@gmail.com>,
-        <andrii@kernel.org>, <martin.lau@linux.dev>, <song@kernel.org>,
-        <yhs@fb.com>, <kpsingh@kernel.org>, <sdf@google.com>,
-        <haoluo@google.com>, <jolsa@kernel.org>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <hawk@kernel.org>, <bpf@vger.kernel.org>,
-        <xukuohai@huawei.com>
-Subject: [PATCH 6.1.y] bpf: Prevent tail call between progs attached to different hooks
-Date: Fri, 11 Apr 2025 15:10:15 +0800
-Message-ID: <20250411071015.3418413-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744355532; c=relaxed/simple;
+	bh=gdrhVumeTce66VFXx6iutWVlsPAzxQz8fQdDaFP5jWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S3GmwvIn9nR46qvZuZsrZCB3c3qCtjTmgNpcuzw+0ls172OqEyxlS1NOcS999uabVBPvfDhD50r+1BmFeiNQM9KV5mn3DesV8YIOLJBEUc/3BLyLYLdRUsB7CccXtEd7IylCHyJ+4DVAxREA5TRxNovAU5lZsAWOWLaIRcyjLDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IyHmTNLo; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IyHmTNLo"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1902901f8f.1;
+        Fri, 11 Apr 2025 00:12:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744355529; x=1744960329; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C7XvJyaIebd7Gra2hTpcbnV/bUDd+9pSKlR1cZwTqv0=;
+        b=IyHmTNLoBC4j0+ImOWqtepfDX4KtI8CMjKQJTLImV5cKXShaVheX92tKj91iquLe1k
+         wfAUPSV0/dNKCaSGBhVqIvTnKV3WUsU0K5drw9pnqwck0dPgNLQIadHLf76ulhT+Rf4r
+         q/JP+8JDbjcDlLfcAakZSb88xNrKGbEQ6ZYbF3LJfz/6+NvvckYuJz59CWv967VmkBW6
+         OSBNUqk/QojzD2y5+pwtvfd8msBbsnKswkVZQu6c65tC/JF2nTCg+NaHx719Cm0OVyzr
+         9BsuUmbhoGyoJlw0y3HFb5mbB8kvtIR3LAncI5MYTM+W1vadkOQHSTB/sX91oFZzt++A
+         mhWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744355529; x=1744960329;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C7XvJyaIebd7Gra2hTpcbnV/bUDd+9pSKlR1cZwTqv0=;
+        b=jeWad6Kdu2Jzvybay8c1A+fTvq/gfrHhkGZBZ9PTT/+RY12YD7P01vc/nuAOL/n7sW
+         7MIltEkvuwkCNic/Wbel+kWajwioAXwhpaUwhz694sZgbaVObn8YtGUHxOwdPsfSRVbH
+         orVIl4grAyrfIuY1wl2go/4MbGkasH22hYaudiBBHPx0mAeTDbLrA/+Qc7mW3/NRy+B9
+         +j6blEdIFYYcudBA4ke2jBXRkArNKh7LTr6boJ+iBLmtMuSTvu8cdrMvr2CpqhRVnnc6
+         Nar8nyyrs0h33xEqnv3xlyqfSXOwHM3Dcwuy+GOlwsHzZ4IA9Zldj9JK6I2S5oAoPPh0
+         N4uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ9MSG++QRi6pfPuOrZlqbaN4f68X3bF/a9L446q5X1NYy5uRDOPaEiMFa7oOmrlxleuOQ2nBZyUgEPdCG@vger.kernel.org, AJvYcCVnpypBNZiMBmb5F6b2OkRi4usaeZAlWZtALsAHhQbB5Xwi1jbcgG2+Eb34hIFLtfZBv4y/1U8IjlT6@vger.kernel.org, AJvYcCW1YRUb4higcStLV9rv08FITgKU6P7V+fjWBgNLA+wjunogXEFW4glCKc+8vUTS65JfBAW+Dmvn8eUA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHtgVwHhyTPHeXexpjO9VAXFQ1Uti7XPXoanaDVLlfGMZngLxx
+	1Zmh8DlqIkz+45+u5ldaYyFJaYPTwvkpHn/yCpklHKZPZr60K8nDyAvrDP3HfPXx8w==
+X-Gm-Gg: ASbGncu2KUzcXVj1ODQnCYLaUEFHxRsFqj9Ccspv/lKqdSWRr5UJGjRlHL7g5iGkl6h
+	akxuawhTEIK/gScaCl9mvsh+8GNh4iUiAwsZT/bbGLPVbaBjppHvOAUw1sA75zEhzKDXKNc/4pK
+	+QY9QBYuQWUoAGS0gH6bvd/DOhVbggWX9NffAd0N6jThHoVtJaK2DQg8j+L3L24AsCgZO5vaDWB
+	Fw3XYiv1VEtET2EJuU0hdVK1HSSzkJnpxAIJ6ZhKdBM8rBKjL2I7lXsHIOjQrVtAMBR0vnR7u7k
+	pgfANh5ApPCWAYUmp0m5/mBj4nlNIKGGRZ4e1F9Gc3QGVeSQtnb1YZw7KFLNiKnaSLQMdxpPWur
+	ag1af2GjvAQ==
+X-Google-Smtp-Source: AGHT+IHl/LN8pzBCnYdaddscA9zS4QyZ1eGKpY2s4nEo1vuy8PrG4l6gk9J2fhiJN5HFEaJ7977gNA==
+X-Received: by 2002:a5d:648d:0:b0:391:65c:1b05 with SMTP id ffacd0b85a97d-39e6e48d03dmr1267790f8f.11.1744355528773;
+        Fri, 11 Apr 2025 00:12:08 -0700 (PDT)
+Received: from antoni-VivoBook-ASUSLaptop-X512FAY-K512FA ([37.161.217.206])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf4456fdsm1104793f8f.86.2025.04.11.00.12.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 00:12:08 -0700 (PDT)
+Date: Fri, 11 Apr 2025 09:11:50 +0200
+From: Antoni Pokusinski <apokusinski01@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: alexandre.belloni@bootlin.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	alexander.stein@ew.tq-group.com, linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] dt-bindings: rtc: add binding for RV8063
+Message-ID: <20250411071118.6fwnmpsgm46oejeb@antoni-VivoBook-ASUSLaptop-X512FAY-K512FA>
+References: <20250407193521.634807-1-apokusinski01@gmail.com>
+ <20250407193521.634807-4-apokusinski01@gmail.com>
+ <20250410211351.GA1076944-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: tT9gAepxN9zNWcm2eSIYEBdIy9MSnCNk
-X-Authority-Analysis: v=2.4 cv=YJefyQGx c=1 sm=1 tr=0 ts=67f8c05e cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=AiHppB-aAAAA:8 a=i0EeH86SAAAA:8 a=t7CeM3EgAAAA:8 a=iaREAby1aPJEnX_tXCEA:9
- a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: tT9gAepxN9zNWcm2eSIYEBdIy9MSnCNk
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1011 impostorscore=0 phishscore=0 spamscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504110049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410211351.GA1076944-robh@kernel.org>
 
-From: Xu Kuohai <xukuohai@huawei.com>
+On Thu, Apr 10, 2025 at 04:13:51PM -0500, Rob Herring wrote:
+> On Mon, Apr 07, 2025 at 09:35:21PM +0200, Antoni Pokusinski wrote:
+> > Microcrystal RV8063 is a real-time clock module with SPI interface.
+> > 
+> > Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
+> > ---
+> >  .../devicetree/bindings/rtc/nxp,pcf85063.yaml | 33 ++++++++++++++++++-
+> >  1 file changed, 32 insertions(+), 1 deletion(-)
+> 
+> Bindings come before users (driver).
+> 
+Fixed in v3 already.
 
-[ Upstream commit 28ead3eaabc16ecc907cfb71876da028080f6356 ]
+Kind regards,
+Antoni
 
-bpf progs can be attached to kernel functions, and the attached functions
-can take different parameters or return different return values. If
-prog attached to one kernel function tail calls prog attached to another
-kernel function, the ctx access or return value verification could be
-bypassed.
-
-For example, if prog1 is attached to func1 which takes only 1 parameter
-and prog2 is attached to func2 which takes two parameters. Since verifier
-assumes the bpf ctx passed to prog2 is constructed based on func2's
-prototype, verifier allows prog2 to access the second parameter from
-the bpf ctx passed to it. The problem is that verifier does not prevent
-prog1 from passing its bpf ctx to prog2 via tail call. In this case,
-the bpf ctx passed to prog2 is constructed from func1 instead of func2,
-that is, the assumption for ctx access verification is bypassed.
-
-Another example, if BPF LSM prog1 is attached to hook file_alloc_security,
-and BPF LSM prog2 is attached to hook bpf_lsm_audit_rule_known. Verifier
-knows the return value rules for these two hooks, e.g. it is legal for
-bpf_lsm_audit_rule_known to return positive number 1, and it is illegal
-for file_alloc_security to return positive number. So verifier allows
-prog2 to return positive number 1, but does not allow prog1 to return
-positive number. The problem is that verifier does not prevent prog1
-from calling prog2 via tail call. In this case, prog2's return value 1
-will be used as the return value for prog1's hook file_alloc_security.
-That is, the return value rule is bypassed.
-
-This patch adds restriction for tail call to prevent such bypasses.
-
-Signed-off-by: Xu Kuohai <xukuohai@huawei.com>
-Link: https://lore.kernel.org/r/20240719110059.797546-4-xukuohai@huaweicloud.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-[Minor conflict resolved due to code context change.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- include/linux/bpf.h |  1 +
- kernel/bpf/core.c   | 19 +++++++++++++++++--
- 2 files changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 2189c0d18fa7..e9c1338851e3 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -250,6 +250,7 @@ struct bpf_map {
- 	 * same prog type, JITed flag and xdp_has_frags flag.
- 	 */
- 	struct {
-+		const struct btf_type *attach_func_proto;
- 		spinlock_t lock;
- 		enum bpf_prog_type type;
- 		bool jited;
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 83b416af4da1..c281f5b8705e 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2121,6 +2121,7 @@ bool bpf_prog_map_compatible(struct bpf_map *map,
- {
- 	enum bpf_prog_type prog_type = resolve_prog_type(fp);
- 	bool ret;
-+	struct bpf_prog_aux *aux = fp->aux;
- 
- 	if (fp->kprobe_override)
- 		return false;
-@@ -2132,12 +2133,26 @@ bool bpf_prog_map_compatible(struct bpf_map *map,
- 		 */
- 		map->owner.type  = prog_type;
- 		map->owner.jited = fp->jited;
--		map->owner.xdp_has_frags = fp->aux->xdp_has_frags;
-+		map->owner.xdp_has_frags = aux->xdp_has_frags;
-+		map->owner.attach_func_proto = aux->attach_func_proto;
- 		ret = true;
- 	} else {
- 		ret = map->owner.type  == prog_type &&
- 		      map->owner.jited == fp->jited &&
--		      map->owner.xdp_has_frags == fp->aux->xdp_has_frags;
-+		      map->owner.xdp_has_frags == aux->xdp_has_frags;
-+		if (ret &&
-+		    map->owner.attach_func_proto != aux->attach_func_proto) {
-+			switch (prog_type) {
-+			case BPF_PROG_TYPE_TRACING:
-+			case BPF_PROG_TYPE_LSM:
-+			case BPF_PROG_TYPE_EXT:
-+			case BPF_PROG_TYPE_STRUCT_OPS:
-+				ret = false;
-+				break;
-+			default:
-+				break;
-+			}
-+		}
- 	}
- 	spin_unlock(&map->owner.lock);
- 
--- 
-2.34.1
-
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
+> > index 2f892f8640d1..cb31c7619d66 100644
+> > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
+> > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
+> > @@ -12,6 +12,7 @@ maintainers:
+> >  properties:
+> >    compatible:
+> >      enum:
+> > +      - microcrystal,rv8063
+> >        - microcrystal,rv8263
+> >        - nxp,pcf85063
+> >        - nxp,pcf85063a
+> > @@ -44,7 +45,12 @@ properties:
+> >  
+> >    wakeup-source: true
+> >  
+> > +  spi-cs-high: true
+> > +
+> > +  spi-3wire: true
+> > +
+> >  allOf:
+> > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> >    - $ref: rtc.yaml#
+> >    - if:
+> >        properties:
+> > @@ -52,6 +58,7 @@ allOf:
+> >            contains:
+> >              enum:
+> >                - microcrystal,rv8263
+> > +              - microcrystal,rv8063
+> >      then:
+> >        properties:
+> >          quartz-load-femtofarads: false
+> > @@ -65,12 +72,23 @@ allOf:
+> >        properties:
+> >          quartz-load-femtofarads:
+> >            const: 7000
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          not:
+> > +            contains:
+> > +              enum:
+> > +                - microcrystal,rv8063
+> > +    then:
+> > +      properties:
+> > +        spi-cs-high: false
+> > +        spi-3wire: false
+> >  
+> >  required:
+> >    - compatible
+> >    - reg
+> >  
+> > -additionalProperties: false
+> > +unevaluatedProperties: false
+> >  
+> >  examples:
+> >    - |
+> > @@ -90,3 +108,16 @@ examples:
+> >            };
+> >          };
+> >        };
+> > +
+> > +  - |
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        rtc@0 {
+> > +          compatible = "microcrystal,rv8063";
+> > +          reg = <0>;
+> > +          spi-cs-high;
+> > +          spi-3wire;
+> > +        };
+> > +    };
+> > -- 
+> > 2.25.1
+> > 
