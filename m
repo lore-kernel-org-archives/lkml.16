@@ -1,115 +1,91 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D081DE3C7;
-	Fri, 11 Apr 2025 11:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EA31DE3C7;
+	Fri, 11 Apr 2025 11:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744372629; cv=none; b=QDehOBUiv4OtSLFcyKQrIMRXzMAskTGX/WInx9A5w0Uske+hWXbHvoj595V5kxTjmavA0Tmwr+8m2AJqv+JW6b2qwrHe2OP6UzpbZuyY1qqQCbsvjHmjcNI2yRXxN+XZiYN/uano8vf9ItYmtLbf3jUoTl8QX2aVBUR3+LorV/8=
+	t=1744372716; cv=none; b=FqpnaIJa7qLYFxAY4CyBkkd0LQYVlZ1MGtXfBi5pvwbQhln6fkrXWQY9EB+s6wbuRdvv63By8u4ncaW2ehoSxugAMwMy5jfXIDdpUHOLcmdV20LKHWLTuCozrY0loM0v5mX5TqzyToJp75SVVQdhVzgmiMoD89csMWYTtkcyk58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744372629; c=relaxed/simple;
-	bh=oIteQ/tvHzLSAAC/MB+HZxCV80HJ0PTZaCBMsYbAyFA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=Ns4k5qdWFbjE1sS2CxRB1n3Y3djYHFW/0hwXXb7eRk+mso2cL0NityEq1FYM5zMP8Ji3rtszs6v9nw5SHZoOz+fol2ceKxX+WmqEglSLfEethNIGT54qiBxrPdN7rBm2U28NhDsMU7a5nXH5QelFo/O3wAdUc79RQmtmyK6zzng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HIabQ4a3; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744372716; c=relaxed/simple;
+	bh=1SoWvdTHhDsps5p1Ia5cr7bCYvRyvBzxp3ueudtHSQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ONLmaBcp5KVU25t/vokl8ZxrWYZ3e6cuWQg+WQEv/KPeX038RMyVzpRrEF+KK8Rmj0ExpzYo9ndhlSY6kPu3ddf8QsxoV5IEOBGGgdSOU+tDW2a/W1QwXWcsDRyU5biQ9xYeTPpDvdvEMzePlf/3twsbm/QhGk1MU8HZxFC2Hn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQ9rPBm6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HIabQ4a3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 40FF1443EE;
-	Fri, 11 Apr 2025 11:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744372619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K145FFCIIAY8UZ52tUpZam9y5R7S/V4gSakdeIN5yGI=;
-	b=HIabQ4a3XH+XJ1dIAooguguvh735/Vxb9YXk+7ytzMhP4jQqmDt/zQtjCaJIOg5c67Oz8+
-	LENJdrfnDW3XM4+ah+ZZE/1lZ45cg96jks2WPCaZ7OWXopnW2V8s9tLV4HNKks/0XPJ5TW
-	zOVLrRNEsRGSlG/2/1DleaTl36lvrA+IqM2G/wHnJlIG19yke+F9Tr2AMkmTar/2RxLfuH
-	aqPy06FtRXe+e69aKG70w9AVuNebSK4gCSLcIDQccQ/E2nFlW+YrgRmUlrDLVX/Jr21XnT
-	TDZ7lRETbwc3UEoJ4LcBprI1VTSH5ZUO0ThOqxjOZNyl8hinpE7ekHLdKScQRw==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQ9rPBm6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FFBBC4CEE7;
+	Fri, 11 Apr 2025 11:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744372715;
+	bh=1SoWvdTHhDsps5p1Ia5cr7bCYvRyvBzxp3ueudtHSQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WQ9rPBm6MatRuA9DkJmuGNqY9cqC7cTngLeLeYIlVM6CukN4EJFDvcl6MFIB7uvUF
+	 yMZwPISFSDAH+Qh6uk1q/tgPkNqF+laRlM5cNIjeTlCIJODf9MaGC3iZOZrw3oUJMX
+	 1ZfGHKP8w+gmUt0fQXBHJFbmZlt39Qq/X7hRtRkMeqYyrp2lIHUpCMInGrDrIQQ/l+
+	 rKxNJB1GH9G07G7QagNuccQ4ynaYy2htA3POnq+8SUd+Si6eanb+2QNMlbDojqFycA
+	 4X56Znfxhk8SHhVlLoTCLFctam8bKNxezzGCK3dKZ+t68D0tMtG3x3MJmy59wC53kv
+	 O5jk62PuHXR6g==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u3D1s-00000000103-02SD;
+	Fri, 11 Apr 2025 13:58:40 +0200
+Date: Fri, 11 Apr 2025 13:58:40 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e001de-devkit: Fix pin config
+ for USB0 retimer vregs
+Message-ID: <Z_kD8DJCPCJSu9-F@hovoldconsulting.com>
+References: <20250318-x1e001de-devkit-dts-fix-retimer-gpios-v1-0-1c092f630b0c@linaro.org>
+ <20250318-x1e001de-devkit-dts-fix-retimer-gpios-v1-2-1c092f630b0c@linaro.org>
+ <abcf5f26-930a-4ce8-89ff-fc5405fe7b19@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 11 Apr 2025 13:56:58 +0200
-Message-Id: <D93SHIBVZQTE.1U2YFWQT253SW@bootlin.com>
-Subject: Re: [PATCH] gpiolib: Allow to use setters with return value for
- output-only gpios
-Cc: "Linus Walleij" <linus.walleij@linaro.org>,
- <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250411-mdb-gpiolib-setters-fix-v1-1-dea302ab7440@bootlin.com>
- <CAMRc=MegvXZGAVA210rjnFuKZwg4appN4nAJNejfC2jpY0JLOg@mail.gmail.com>
-In-Reply-To: <CAMRc=MegvXZGAVA210rjnFuKZwg4appN4nAJNejfC2jpY0JLOg@mail.gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddujeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegsvgejudemkeeftdgumehfkegvvgemfeegugdunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegsvgejudemkeeftdgumehfkegvvgemfeegugdupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdpr
- hgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <abcf5f26-930a-4ce8-89ff-fc5405fe7b19@oss.qualcomm.com>
 
-On Fri Apr 11, 2025 at 1:38 PM CEST, Bartosz Golaszewski wrote:
-> On Fri, Apr 11, 2025 at 12:31=E2=80=AFPM Mathieu Dubois-Briand
-> <mathieu.dubois-briand@bootlin.com> wrote:
->>
->> The gpiod_direction_output_raw_commit() function checks if any setter
->> callback is present before doing anything. As the new GPIO setters with
->> return values were introduced, make this check also succeed if one is
->> present.
->>
->> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->> ---
->>  drivers/gpio/gpiolib.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->> index b8197502a5ac..cd4fecbb41f2 100644
->> --- a/drivers/gpio/gpiolib.c
->> +++ b/drivers/gpio/gpiolib.c
->> @@ -2879,7 +2879,7 @@ static int gpiod_direction_output_raw_commit(struc=
-t gpio_desc *desc, int value)
->>          * output-only, but if there is then not even a .set() operation=
- it
->>          * is pretty tricky to drive the output line.
->>          */
->> -       if (!guard.gc->set && !guard.gc->direction_output) {
->> +       if (!guard.gc->set && !guard.gc->set_rv && !guard.gc->direction_=
-output) {
->>                 gpiod_warn(desc,
->>                            "%s: missing set() and direction_output() ope=
-rations\n",
->>                            __func__);
->>
->> ---
->> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
->> change-id: 20250411-mdb-gpiolib-setters-fix-b87976992070
->>
->> Best regards,
->> --
->> Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->>
->
-> Ah good catch. Since the culprit is already in mainline, would you
-> mind resending with Cc: stable and Fixes: tags?
->
-> Bart
+On Sat, Apr 05, 2025 at 01:08:46AM +0200, Konrad Dybcio wrote:
+> On 3/18/25 4:50 PM, Abel Vesa wrote:
+> > Describe the missing power source, bias and direction for each of the USB0
+> > retimer gpio-controlled voltage regulators related pin configuration.
+> > 
+> > Fixes: 019e1ee32fec ("arm64: dts: qcom: x1e001de-devkit: Enable external DP support")
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+> > index 902335396c586a991c4a2de19906b039d887780f..8e88e00c335a05d0d36b4b08b85df82f38ef4355 100644
+> > --- a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+> > +++ b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+> > @@ -1039,6 +1039,10 @@ rtmr0_default: rtmr0-reset-n-active-state {
+> >  	usb0_3p3_reg_en: usb0-3p3-reg-en-state {
+> >  		pins = "gpio11";
+> >  		function = "normal";
+> > +		power-source = <1>; /* 1.8V */
+> 
+> Not sure if I'm a fan of these comments but sure
 
-Thanks, I had a doubt about stable, as I believe this only reached rc1
-so far. I will send a new version a bit later today.
+How come? 
 
-Mathieu
+Due to the incomplete bindings for these PMICs this is currently the
+only way we have to document this information. And AFAIU the voltage
+mapping can even differ from pin to pin on the same device.
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+I would prefer to see a space before the SI unit though.
 
+Johan
