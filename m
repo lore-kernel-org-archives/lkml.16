@@ -1,152 +1,109 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839FC35961;
-	Fri, 11 Apr 2025 15:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B8B1FDA;
+	Fri, 11 Apr 2025 15:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744386739; cv=none; b=GULv4SLwgCLnV3NPIsyKuJcEPIiMTtVVSbia/WUcU2OhKou/TJxOyLQruS5gT/grkujfG/9m5HdiPGQx6QcuTPLabT/S039gYzTCNpnjeQMgRG96LwtbozvlqUJB9uXlTF5xatgoiJeTfEXp5v/75r9q0OgYXOAyX6Hs8lNEr7c=
+	t=1744386808; cv=none; b=NmEYmo0+ybqEGwIkQqcitGRQlCNLysQxk2diM9r73EXo8Uv0aV8QD8lgPh7WLyrCy9+moKf0xGYd2Iz0LUVeanEBbD2VTvFZpU+Wu6rQMFmfZL7n4YWJd857TQJScwp0eaFRP29tY31ObubgK7WS+pYqJqitVGR1gtnXG9VBsUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744386739; c=relaxed/simple;
-	bh=E8+IDs1XgDEHII66e1FhtR8QtgunZIE14bTYSZOPaYo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=j5KnP48F3lY2mf7IN3vxs15PO5Bzf6uxP/56c0wZH1Wki8n5kvVoBijXvE566k7ONSv4xEJbgL5jL4n3ZCkGeS+rtdNprcegDwWOhjrjmDrcSQI7Jp7M8knH6v0GBFiSYVwqLg6DD8YmMywtkk13Ty2q8rldPOog16HGS/sIeHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=T4zt6GBZ; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744386808; c=relaxed/simple;
+	bh=WpLLjD7bOW1+fhZZ7vlzZrNDNsR7j0cmT3HhyvWs3dE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BO5kQhy2sfONziC7o0XSu4uUtwvQqu2MgNacgeTHz1lT1VRjCGcA2i8c0onwr/i9KyuSRt1eQm58+6KD8UHiIbc3748CRe1Rmq5wIzytntzAHLq8mOWiLLsxCQxb45pPMxWbWZFb8AxYt+sZoAP90+fT/yEh6Owa+jTRPn2oSB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CbhzcTJ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T4zt6GBZ"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BFq57r1486028
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 10:52:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744386725;
-	bh=VEBB3+nk9eRMLAfQSWyx+3KioB6f3dgvNv/THggbzWE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=T4zt6GBZzgqzkard/K33ATb/J8UEtV1ATL2CoVX6zoLf3NqE+q+B632UQ+o3WNjdQ
-	 fjCFyGf7+NwZ+fTX6DTSFxTkz+4bOVH6V1X9Wcn7XhaRRPkU2TQS1KiElgDpB9DIfk
-	 mb8Q4etS63M/MZirOyG+nGK8UOMoGI/KpWTI3Wt0=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BFq52E035194
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 10:52:05 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 10:52:05 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 10:52:05 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BFq1dm026503;
-	Fri, 11 Apr 2025 10:52:01 -0500
-Message-ID: <28f1e0b7-9947-43f3-9a47-f3c6ecd69b91@ti.com>
-Date: Fri, 11 Apr 2025 21:22:00 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CbhzcTJ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84F5CC4CEE2;
+	Fri, 11 Apr 2025 15:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744386808;
+	bh=WpLLjD7bOW1+fhZZ7vlzZrNDNsR7j0cmT3HhyvWs3dE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CbhzcTJ/RcGu4IXToUC3ZYA40ZZJtE9BKTx9YhPlHKNMv9K3T70fHI/McAFA9hPHY
+	 cg6juXNyihAA4hVHHcsfqtlhAC6GMkMOkKKJRszHAeHE+zi3M0ilQPCTQ2KGv2L/b9
+	 LBY8ggDrYbuhadgyBz7t1e7lZ+PYdoD2xvFpkwJJe76TbWVHAcTp4aROeJPnGUlg4x
+	 xtVfg/CA1u0/3qj04YOkSocRlsTIZIn8SaHwlbjWpf7SREQsWNTgQmU5MlPzwtCP1t
+	 GbtbU27P5qU2qVnIZXt2pMVpNfEhFE/zJBg8+nGh3rY/KwE2zw23P8eDPqQBia2DCN
+	 DWZDUwWqjkErQ==
+Date: Fri, 11 Apr 2025 16:53:23 +0100
+From: Simon Horman <horms@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Russell King <rmk+kernel@armlinux.org.uk>
+Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
+Message-ID: <20250411155323.GK395307@horms.kernel.org>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+ <20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
+ <20250408154934.GZ395307@horms.kernel.org>
+ <20250409100757.07b00067@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] arm64: dts: ti: k3-j722s-main: Disable
- "serdes_wiz0" and "serdes_wiz1"
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <rogerq@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <u-kumar1@ti.com>
-References: <20250408103606.3679505-1-s-vadapalli@ti.com>
- <20250408103606.3679505-3-s-vadapalli@ti.com>
- <7b2f69ad-48aa-4aa9-be0e-f0edae272bdb@ti.com>
- <475a1ac1-abb1-4c6e-b5b2-3f1a3399d5c4@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <475a1ac1-abb1-4c6e-b5b2-3f1a3399d5c4@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409100757.07b00067@kmaincent-XPS-13-7390>
 
-Hi
+On Wed, Apr 09, 2025 at 10:07:57AM +0200, Kory Maincent wrote:
+> On Tue, 8 Apr 2025 16:49:34 +0100
+> Simon Horman <horms@kernel.org> wrote:
+> 
+> > On Mon, Apr 07, 2025 at 04:03:01PM +0200, Kory Maincent wrote:
+> > > From: Russell King <rmk+kernel@armlinux.org.uk>
+> > > 
+> > > From: Russell King <rmk+kernel@armlinux.org.uk>
+> > > 
+> > > Add PTP basic support for Marvell 88E151x PHYs. These PHYs support
+> > > timestamping the egress and ingress of packets, but does not support
+> > > any packet modification.
+> > > 
+> > > The PHYs support hardware pins for providing an external clock for the
+> > > TAI counter, and a separate pin that can be used for event capture or
+> > > generation of a trigger (either a pulse or periodic).  This code does
+> > > not support either of these modes.
+> > > 
+> > > The driver takes inspiration from the Marvell 88E6xxx DSA and DP83640
+> > > drivers.  The hardware is very similar to the implementation found in
+> > > the 88E6xxx DSA driver, but the access methods are very different,
+> > > although it may be possible to create a library that both can use
+> > > along with accessor functions.
+> > > 
+> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> > > 
+> > > Add support for interruption.
+> > > Fix L2 PTP encapsulation frame detection.
+> > > Fix first PTP timestamp being dropped.
+> > > Fix Kconfig to depends on MARVELL_PHY.
+> > > Update comments to use kdoc.
+> > > 
+> > > Co-developed-by: Kory Maincent <kory.maincent@bootlin.com>
+> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>  
+> > 
+> > Hi Kory,
+> > 
+> > Some minor feedback from my side.
+> > 
+> > > ---
+> > > 
+> > > Russell I don't know which email I should use, so I keep your old SOB.  
+> > 
+> > Russell's SOB seems to be missing.
+> 
+> It is, 5 lines higher, but maybe you prefer to have them all together. 
 
-On 4/11/2025 7:47 PM, Siddharth Vadapalli wrote:
-> On Fri, Apr 11, 2025 at 07:31:52PM +0530, Kumar, Udit wrote:
->
-> Hello Udit,
->
->> On 4/8/2025 4:06 PM, Siddharth Vadapalli wrote:
->>> Since "serdes0" and "serdes1" which are the sub-nodes of "serdes_wiz0"
->>> and "serdes_wiz1" respectively, have been disabled in the SoC file already,
->>> and, given that these sub-nodes will only be enabled in a board file if the
->>> board utilizes any of the SERDES instances and the peripherals bound to
->>> them, we end up in a situation where the board file doesn't explicitly
->>> disable "serdes_wiz0" and "serdes_wiz1". As a consequence of this, the
->>> following errors show up when booting Linux:
->>>
->>>     wiz bus@f0000:phy@f000000: probe with driver wiz failed with error -12
->>>     ...
->>>     wiz bus@f0000:phy@f010000: probe with driver wiz failed with error -12
->>>
->>> To not only fix the above, but also, in order to follow the convention of
->>> disabling device-tree nodes in the SoC file and enabling them in the board
->>> files for those boards which require them, disable "serdes_wiz0" and
->>> "serdes_wiz1" device-tree nodes.
->>>
->>> Fixes: 628e0a0118e6 ("arm64: dts: ti: k3-j722s-main: Add SERDES and PCIe support")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
->>> ---
->>>
->>> v1 of this patch is at:
->>> https://lore.kernel.org/r/20250408060636.3413856-3-s-vadapalli@ti.com/
->>> Changes since v1:
->>> - Added "Fixes" tag and updated commit message accordingly.
->>>
->>> Regards,
->>> Siddharth.
->>>
->>>    arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ++++
->>>    1 file changed, 4 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
->>> index 6850f50530f1..beda9e40e931 100644
->>> --- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
->>> +++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
->>> @@ -32,6 +32,8 @@ serdes_wiz0: phy@f000000 {
->>>    		assigned-clocks = <&k3_clks 279 1>;
->>>    		assigned-clock-parents = <&k3_clks 279 5>;
->>> +		status = "disabled";
->>> +
->> Since you are disabling parent node.
->>
->> Do you still want to carry status = "disabled" in child nodes serdes0 and
->> serdes1.
-> I could drop it, but then the patches will look something like:
-> 1) Patch 1: Same as the first patch in this series
-> 2) Patch 2: Current patch + Remove status = "disabled" within serdes0/1
-> 3) Patch 3: Removed redundant status = "okay" within serdes0/1 in
->              k3-j722s-evm.dts
->
-> Updated Patch 2 and the new Patch 3 mentioned above aren't necessarily a
-> complete "Fix" and have other changes in addition to the "Fix". For that
-> reason, the changes associated with the updated patch 2 and the new patch 3
-> could be a separate series, unless you believe that they should go
-> together in the current series. Please let me know.
+This thread seems to have subsequently gone elsewhere.
+But, FTR, yes, I would prefer all tags together.
 
-I don't see any use case where serdes_wiz0 is enabled and serdes0 is 
-disabled.
-
-So your comment 3) is valid. you can take this clean up in other series
-
-
-For now
-
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
-
-
-
-> Regards,
-> Siddharth.
+...
