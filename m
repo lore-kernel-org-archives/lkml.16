@@ -1,178 +1,140 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEAD202C50;
-	Fri, 11 Apr 2025 21:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BF029614E;
+	Fri, 11 Apr 2025 21:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744408551; cv=none; b=SGa71A9dTqmuRjQVRzkYoMscyJSvIBBgUeb5OySMbESo6PCq8VK5kyPzFOieQJ46W0Q6Fk4y6bW2uxTn2sLnUP2YQWDLPR8pqOiTbAsKqa61zE2B5eYd2LJlELIZPySEr0nSh/GHmS3Q/jgNWQhzJK3XyEJUWzPcwucRTGT4ysc=
+	t=1744408625; cv=none; b=Byue7GwopnlPPB4rrTyWWC0OWhmNiCoH2jSWhy3DW4gl5bEMnws4ZexPEUfgfLLIFSM1DSUiDC9STSUtw8K0grjP27eILBL5JPshEXtmOjNZaIM9t056FabpgQngQojKOB8ZBjrc8wEjVT9VM/YfJGNodPfQIaj8Z6kSx0mDrtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744408551; c=relaxed/simple;
-	bh=7zzgHuOIC2U8JzosNjyDA6dKxu+qBHRi4JPoRSmT0FM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Qf5/j76a1KWK0x+1IDgYTzV9qe5LfxpVqsJk30cJEHSfaXmZ1eSi362TTycnFUubGeDbwHVe/O7FgzqRf7y/D13+uDDMp+r8qRIuyVWud7AlLhc2vCNSXbUwAIRFJHHwwFzMngbAsNSttO0iiqtv3oG2Bc4rmuUtpcH+td40Zyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kvzfUy2H; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744408625; c=relaxed/simple;
+	bh=9lqL6w8ioJBIb400JDr1aMOA+gQyuzdy50q+tNYdS9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lb34KiPOu/inX1x1/TEs8Zm2Ebr+yjyEYPBBcmEY/9gsiIjxxMALExTWW9rK3CjjeT2gsMoUGhWQm6k1fAAfubsIfXs4OYmmmCGwzD7iFm///34kev6B/T8H6Qt0D0Uk6MQYaVX+RnD2l6aYzmFf7EZCKNP3nJNsLbrVELNhpd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K9J451W6; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kvzfUy2H"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BLtd321671044
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 16:55:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744408539;
-	bh=fIAqjnlgAjGFVtKWkUlkUIQ4jDIS6e+nd/Af9aU92ss=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=kvzfUy2HmLWCuvStJcT2FvB2QcoBUtpuFHZnfYdPfIgRNO+K8OblDX5RysxO2sl5R
-	 hCJOtcWJjviIo7H9rZmL2DZYLfhSLe7+U5QZZEx004SqFvcBWk9y6T9Lnd6Q7repyT
-	 gNnk6i0sgyNCeG3XGmzPLzzdF2SQ2keSjEva5hms=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BLtdxi029694
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 16:55:39 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
- Apr 2025 16:55:39 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 11 Apr 2025 16:55:39 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BLtdXB043549;
-	Fri, 11 Apr 2025 16:55:39 -0500
-Message-ID: <5f36ec5d-bb31-4b6c-aa4e-4ec48cb1d067@ti.com>
-Date: Fri, 11 Apr 2025 16:55:39 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K9J451W6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744408624; x=1775944624;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9lqL6w8ioJBIb400JDr1aMOA+gQyuzdy50q+tNYdS9s=;
+  b=K9J451W6bxM2Uxmu05u+SGuUkLFmrBZuiG1ms+PElP6/gQSroVcXZ23/
+   2Ug+fqrPxDMmpl2VtB2oVsgICUhmUeps4Qax3DbFyp82nCUAg/STMz1ux
+   nCIAw8/Rhu9TAfDpycNpgWkJ3peI2RPqDbXmJhVD5Nf5f5I1PV8tqkVL+
+   bfNxg9ax8EA4Q8EX5bxK1bLb/WxeSvT8d03AtDQ+EA3hZvHQym+bqCic0
+   FFoOYBrYKFfvfERoNrx++vaF3g/wOf0eHrXN1+NKax4vSbxH6Ff7A2luW
+   4cgMELG+5vpJs41AUijV4L8hRdTd4sbv7VTcj6V017ir7bQ9MgOi/mmga
+   g==;
+X-CSE-ConnectionGUID: Vf/VCCovQ4Sa1pPV1Cs/PA==
+X-CSE-MsgGUID: /fSyAxPNRGOO75sQxcLpbg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="63372554"
+X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
+   d="scan'208";a="63372554"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 14:57:03 -0700
+X-CSE-ConnectionGUID: zd6gV9HCTKGZWCbJY6KlFA==
+X-CSE-MsgGUID: J7/chT6BQx2vpqcsea1xQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
+   d="scan'208";a="129867334"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 11 Apr 2025 14:56:59 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u3MMr-000BPO-0i;
+	Fri, 11 Apr 2025 21:56:57 +0000
+Date: Sat, 12 Apr 2025 05:56:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"(maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
+ definition to amd_node.h
+Message-ID: <202504120558.sq3IpWdH-lkp@intel.com>
+References: <20250410200202.2974062-3-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Fix V1P8_SIGNAL_ENA and HIGH_SPEED_ENA
-To: Hiago De Franco <hiagofranco@gmail.com>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>
-CC: Josua Mayer <josua@solid-run.com>, Ulf Hansson <ulf.hansson@linaro.org>,
-        <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Moteen Shah
-	<m-shah@ti.com>,
-        Hiago De Franco <hiago.franco@toradex.com>
-References: <20250407222702.2199047-1-jm@ti.com>
- <20250411130354.dc3sv3e7ruekkhkp@hiago-nb>
- <d8e45e50-f0eb-41d0-9c50-56147eaf262a@ti.com>
- <20250411194813.c4ft2uxgdiuza5cm@hiago-nb>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20250411194813.c4ft2uxgdiuza5cm@hiago-nb>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410200202.2974062-3-superm1@kernel.org>
 
-Hi Hilago,
+Hi Mario,
 
+kernel test robot noticed the following build errors:
 
-On 4/11/25 2:48 PM, Hiago De Franco wrote:
-> On Fri, Apr 11, 2025 at 11:37:14AM -0500, Judith Mendez wrote:
->>
->> The reason that patches fixes SD init for you is because in original patch,
->> quirk was applied for both SD and eMMC with the exception of SD for am64x
->> SoC. This patch only applies the quirk for eMMC.
->>
->> We cannot use the original implementation because the logic applying the
->> quirk is based off of vmmc/vqmmc nodes in DT. The assumption was that am64x
->> based boards will only have vmmc node since there is an internal LDO that is
->> used to switch IO signal voltage instead of vqmmc. However, SolidRun
->> HimmingBoard-T board has a different implementation on voltage regulator
->> nodes in DT and the quirk applied to them as well and breaks their SD boot.
->> So we now only apply the quirk for eMMC. Without this quirk applied to SD,
->> am62x SD will continue having some stability issues.
->>
->> ~ Judith
-> 
-> I got the idea now, thanks for the explanation, I missed in the original
-> patches this was only about the eMMC and *not* the SD card. Is there any
-> plans to send patches to the SD card as well?
-> 
-> About that, I was wondering if instead of checking the bus_width to
-> apply the fix for the eMMC, we could set a devicetree property to
-> explicity apply the quirk. This way, we could also decide to apply it on
-> the SD node without checking any bus width. As example:
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
-> index 1ea8f64b1b3b..c4423c09e809 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
-> @@ -1466,6 +1466,7 @@ &sdhci1 {
->   	vmmc-supply = <&reg_sdhc1_vmmc>;
->   	vqmmc-supply = <&reg_sdhc1_vqmmc>;
->   	ti,fails-without-test-cd;
-> +	ti,suppress-v1p8-ena;
->   	status = "disabled";
->   };
->   
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index 4e1156a2f1b8..a0485c2bb549 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -87,7 +87,6 @@
->   #define CLOCK_TOO_SLOW_HZ	50000000
->   #define SDHCI_AM654_AUTOSUSPEND_DELAY	-1
->   #define RETRY_TUNING_MAX	10
-> -#define BUS_WIDTH_8		8
->   
->   /* Command Queue Host Controller Interface Base address */
->   #define SDHCI_AM654_CQE_BASE_ADDR 0x200
-> @@ -844,7 +843,6 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
->   	struct device *dev = &pdev->dev;
->   	int drv_strength;
->   	int ret;
-> -	u32 bus_width;
->   
->   	if (sdhci_am654->flags & DLL_PRESENT) {
->   		ret = device_property_read_u32(dev, "ti,trm-icp",
-> @@ -886,9 +884,11 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
->   	if (device_property_read_bool(dev, "ti,fails-without-test-cd"))
->   		sdhci_am654->quirks |= SDHCI_AM654_QUIRK_FORCE_CDTEST;
->   
-> -	/* Suppress V1P8_SIGNAL_ENA for eMMC */
-> -	device_property_read_u32(dev, "bus-width", &bus_width);
-> -	if (bus_width == BUS_WIDTH_8)
-> +	/*
-> +	 * Suppress V1P8_SIGNAL_ENA for MMC devices if ti,suppress-v1p8-ena
-> +	 * flag is present.
-> +	 */
-> +	if (device_property_read_bool(dev, "ti,suppress-v1p8-ena"))
->   		sdhci_am654->quirks |= SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA;
->   
->   	sdhci_get_of_property(pdev);
-> 
-> Which makes our Kingston SD card work again:
-> 
-> root@verdin-am62-15412807:~# dmesg | grep -i mmc1
-> [    1.897055] mmc1: CQHCI version 5.10
-> [    2.043673] mmc1: SDHCI controller on fa00000.mmc [fa00000.mmc] using ADMA 64-bit
-> [    2.260610] mmc1: new UHS-I speed SDR104 SDHC card at address 0001
-> [    2.268150] mmcblk1: mmc1:0001 SD32G 29.1 GiB
-> 
-> Sorry if I missed something, would also be a valid solution?
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on andi-shyti/i2c/i2c-host tip/master linus/master v6.15-rc1 next-20250411]
+[cannot apply to bp/for-next tip/auto-latest]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Actually this was one of the previous implementations, I should have 
-that original patch somewhere. My understanding was that we do not like 
-adding new DT properties if we can find a way to apply the quirk in the 
-driver.
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/Documentation-Add-AMD-Zen-debugging-document/20250411-040641
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20250410200202.2974062-3-superm1%40kernel.org
+patch subject: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd_node.h
+config: arm64-randconfig-003-20250412 (https://download.01.org/0day-ci/archive/20250412/202504120558.sq3IpWdH-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250412/202504120558.sq3IpWdH-lkp@intel.com/reproduce)
 
-If this implementation flies with the maintainers, then we can go back 
-to DT property implementation.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504120558.sq3IpWdH-lkp@intel.com/
 
-Adrian, is this fine with you?
+All errors (new ones prefixed by >>):
 
-~ Judith
+>> drivers/i2c/busses/i2c-piix4.c:24:10: fatal error: asm/amd_node.h: No such file or directory
+    #include <asm/amd_node.h>
+             ^~~~~~~~~~~~~~~~
+   compilation terminated.
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for FB_IOMEM_HELPERS
+   Depends on [n]: HAS_IOMEM [=y] && FB_CORE [=n]
+   Selected by [m]:
+   - DRM_XE_DISPLAY [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_XE [=m] && DRM_XE [=m]=m [=m] && HAS_IOPORT [=y]
 
 
+vim +24 drivers/i2c/busses/i2c-piix4.c
 
+    23	
+  > 24	#include <asm/amd_node.h>
+    25	#include <linux/module.h>
+    26	#include <linux/moduleparam.h>
+    27	#include <linux/pci.h>
+    28	#include <linux/kernel.h>
+    29	#include <linux/delay.h>
+    30	#include <linux/stddef.h>
+    31	#include <linux/ioport.h>
+    32	#include <linux/i2c.h>
+    33	#include <linux/i2c-smbus.h>
+    34	#include <linux/slab.h>
+    35	#include <linux/dmi.h>
+    36	#include <linux/acpi.h>
+    37	#include <linux/io.h>
+    38	
 
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
