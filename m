@@ -1,56 +1,102 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42FDC1F0982;
-	Fri, 11 Apr 2025 08:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716AE1F0982
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744359151; cv=none; b=K7r5BgvE08F3ygRRWprgCeunNPMsCsUP8godGFjViwvzw1kZ4pqM9NokbyD+Uw1iSLqKVfr+mwv2Y4uQdCuI6YA7oocF5KGZcQa30H2PWo5WvzWq1RICD3Vbrr5ZpspXjbTo/Bk0KpuB2svcK4eIjPmM8Fx13P4bd92Hrxb3VeI=
+	t=1744359195; cv=none; b=qtM1aKeC3ONB3W8hHKnEsBAs3WNzUyrsDYACfc1dHzx/CuH1yNV9G/OD+eWuCv8WTa3NsKQyYIPVrxhPsvsN9fPvSZBtUjjlglrZwBoXvjg2oecWZHUWUH4ox5ZOSYYTrq7FRNXZVOjIWcLnZYA3ABtQ443AfbKuUpoVncYtgas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744359151; c=relaxed/simple;
-	bh=N3v23ps0BMU0zoGkJGEymMvqf/aSSi6y2ah1N1AxHaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zk4ucvUmi/BwqhvzUIcw1+RnkvBTA1lSZh1skM37c13lKH707+9MkNIEJUFmdZvMnP57nGeZWoVDw7TNjf6DCzUN8RnaMn4DLwM8Apd8Z47OBf3wZbJkMbJAd7+vMGRhC5wWa2Xs/7xwnxkl4lQ62AfSm3kULZN8ZfnMxm3ZHpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XmKKRHs8; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XmKKRHs8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=N3v23ps0BMU0zoGkJGEymMvqf/aSSi6y2ah1N1AxHaM=;
-	b=XmKKRHs84Pz7LwJgsbA8+0s0A4dodbjE23LIJkkQRlp567AchN7n1k/yYwxL3E
-	did4x9DQg640FGxjzuREwbLl6UZ08SBWpbwd1wbkpi1KMh7AeOOmI/LDBnXjavun
-	ImKqbnbrpwmx8pXStNAjWNcLuGagd5B7rl9ZIHk17X3Jo=
-Received: from localhost (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wBnVRRDy_hn3isnFw--.47534S2;
-	Fri, 11 Apr 2025 15:56:53 +0800 (CST)
-Date: Fri, 11 Apr 2025 15:56:51 +0800
-From: Honggang LI <honggangli@163.com>
-To: "Daisuke Matsuda (Fujitsu)" <matsuda-daisuke@fujitsu.com>
-Cc: "zyjzyj2000@gmail.com" <zyjzyj2000@gmail.com>,
-	"jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org" <leon@kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RDMA/rxe: Fix kernel panic for fast registered MR
-Message-ID: <Z_jLQ0c6t2LigbFJ@fedora>
-References: <20250411071141.82619-1-honggangli@163.com>
- <OS3PR01MB98657E6B788DBC4B11115102E5B62@OS3PR01MB9865.jpnprd01.prod.outlook.com>
+	s=arc-20240116; t=1744359195; c=relaxed/simple;
+	bh=DeFj3YnYPJgXrhdKjKmrH+wYJx9uVlscYvffq2WUEm0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=feEZG/cqTphbl9Dg+u3VuQWfT1iceOeRxndZC85HNPYPDIar55nRLYxMohXDv1Dnf7pOqxAs8Kbg4doz4fyyd0zySsFq6H6ackOQxFbdRzNMWIsiIUVclyBfpFc14d8EbnwVyrY1GH50K/FkUy+j1h5AGqfelQ56Etl60WDX5jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1214E106F;
+	Fri, 11 Apr 2025 01:13:11 -0700 (PDT)
+Received: from K4MQJ0H1H2.arm.com (unknown [10.163.73.102])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 068CB3F694;
+	Fri, 11 Apr 2025 01:13:05 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com,
+	david@redhat.com,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	hughd@google.com,
+	vishal.moola@gmail.com,
+	yang@os.amperecomputing.com,
+	ziy@nvidia.com,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH] mempolicy: Optimize queue_folios_pte_range by PTE batching
+Date: Fri, 11 Apr 2025 13:43:01 +0530
+Message-Id: <20250411081301.8533-1-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OS3PR01MB98657E6B788DBC4B11115102E5B62@OS3PR01MB9865.jpnprd01.prod.outlook.com>
-X-CM-TRANSID:_____wBnVRRDy_hn3isnFw--.47534S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUnksgUUUUU
-X-CM-SenderInfo: 5krqwwxdqjzxi6rwjhhfrp/xtbBDwksRWf4xqp3MgACsb
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 11, 2025 at 07:31:51AM +0000, Daisuke Matsuda (Fujitsu) wrote:
-> However, this issue is already addressed in the for-rc tree.
-> Cf. https://lore.kernel.org/linux-rdma/f845e90c-50ff-4e0f-9b73-55a704ba934f@linux.dev/T/#t
+After the check for queue_folio_required(), the code only cares about the
+folio in the for loop, i.e the PTEs are redundant. Therefore, optimize this
+loop by skipping over a PTE batch mapping the same folio.
 
-Yes, you are right. Please drop this patch.
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
+Unfortunately I have only build tested this since my test environment is
+broken.
+
+ mm/mempolicy.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index b28a1e6ae096..b019524da8a2 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -573,6 +573,9 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 	pte_t *pte, *mapped_pte;
+ 	pte_t ptent;
+ 	spinlock_t *ptl;
++	int max_nr;
++	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
++	int nr = 1;
+ 
+ 	ptl = pmd_trans_huge_lock(pmd, vma);
+ 	if (ptl) {
+@@ -586,7 +589,8 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 		walk->action = ACTION_AGAIN;
+ 		return 0;
+ 	}
+-	for (; addr != end; pte++, addr += PAGE_SIZE) {
++	for (; addr != end; pte += nr, addr += nr * PAGE_SIZE) {
++		nr = 1;
+ 		ptent = ptep_get(pte);
+ 		if (pte_none(ptent))
+ 			continue;
+@@ -607,6 +611,11 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 		if (!queue_folio_required(folio, qp))
+ 			continue;
+ 		if (folio_test_large(folio)) {
++			max_nr = (end - addr) >> PAGE_SHIFT;
++			if (max_nr != 1)
++				nr = folio_pte_batch(folio, addr, pte, ptent,
++						     max_nr, fpb_flags,
++						     NULL, NULL, NULL);
+ 			/*
+ 			 * A large folio can only be isolated from LRU once,
+ 			 * but may be mapped by many PTEs (and Copy-On-Write may
+@@ -633,6 +642,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 			qp->nr_failed++;
+ 			if (strictly_unmovable(flags))
+ 				break;
++			qp->nr_failed += nr - 1;
+ 		}
+ 	}
+ 	pte_unmap_unlock(mapped_pte, ptl);
+-- 
+2.30.2
 
