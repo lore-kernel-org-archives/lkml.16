@@ -1,225 +1,138 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC262BD58F
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD003224888
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744413378; cv=none; b=TGVwx8EzAS8Z8TV+L2ImGB6Bzt4g5DEbWH+a4wgh5gsCHOSsK4tMcwtAUM3UoMgNqq7yeQe9f7An0uR7+jx6HzEHWxb+cGZ0X67yBwMsBT+YlmCTB5t+bhOCKEmLlATiyOQMYYV4K91YuqIFhiPmAv1Fl6Ec9GLSxE48CjYIge8=
+	t=1744413646; cv=none; b=M37KRr3Ah0TTvBA3zs8m61OQ9jcX2HIpJv9eSA5FphVK96TgzaMgw+okU2jYUNn/UVFVNDXHAkgx82P0y8AYv/3UVR4tpOkWNgFyuEJKM/+ieQU8g1KY78OjVKM3I1fSh0oIArY7xvNoCwwWN6ENftnZgCdLgpg+3LOYF+5mhdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744413378; c=relaxed/simple;
-	bh=y/67TUX3SKsxvpdITZXAWtpG9m+MFwkW0ufwvWD8ZvE=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Subject:
-	 References:In-Reply-To; b=mDjvqSaaplIF7niGxwGb/uB37GUg2LX93JSXsGTl0WqFbQU3/S/knxZTJ4wbF63PvaVFuC/BkvJ+iaGAsGYsVolQOiNeN8tAYIkHxFqU7H4paAzHwf+AdovT6tNeUwvekeRcpjFPMXlyb2zt/Bi4WS3ggGkZkpFE7pjzyCebPaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=CGH2A03s; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1744413646; c=relaxed/simple;
+	bh=ItVv9aECvS4v/j8NAaEYqjsxXiY/DwMuKLH03BU4TEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tzr16IXtpR2NuQhQ4uHkSucx5zh+mYSHL6twNtc4NW6GLLBKmSPk2FO+zGlLIhk3ENYNuyYl2iD+5Ia0QQUqD7SKrkqXSft6fmxcn89yI433lv1/D6jBtMhzh+3n2w7N06sEhUsRcE7SqaKrlFLHzz2d5aS9ALRKf1Q2kaYx2iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GIxDHCjO; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="CGH2A03s"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6ecfc2cb1aaso25504586d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1744413375; x=1745018175; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tuGybtALY1nU6Xel+qCGNU6dttZXpp155m7wcuPBHmI=;
-        b=CGH2A03s0jbQ0NeVAtNFM33HSQKWcni5JvcOrXTTi1eyn4Yl2Iry5DT53kX7+PNHh9
-         4Cg66M9NJLPEUWO4LKzfu74A/imSgIRVEHmFvMUAL8BVKdfpSQ47dVvA5VxKDqp65CpF
-         ns0mmdM3gHZ3W5LddtB1PrvVYE8wtZkh6jR0eDhdxuhgihatPMfomvUF4yYj7xK8XQVB
-         yqrhr+GNxyU4HjWTS4/r2nRVz88wkipQjJrhrSYee77FITP7WbqL+tQHZ0fkYJPwqRcr
-         zlrm4iHl3bdf+o7JntX9HCaLBrxUx1/7sYMNw64dtjVENasNPybDgrA0N+ivth1mR0fQ
-         IuBA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GIxDHCjO"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BEcvJc000699
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:20:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0ynZ5lGPahO++H1E3LeYAHNYzJtD91JsU9K6PqBRu/8=; b=GIxDHCjOIQbX2CIA
+	DxLe36WT9vyNNzSE0DqQK7L1dzfcgY5VQRdsA4Ab1uuBBujqoq8bO2d6BSbCL3ff
+	JmAZrEYEL7P2pqagVDoqThzRVceMPWF06wQWiTgEiGxRBBUdD7FzL3FO8ZrQVQFD
+	r9Ex9FHKotbZPjFfAc4GIsfda9u9OoYx8Q+8gYjwlHiH/IuGMuDx/kuM+ozCKrEF
+	93wCNtjCGsGDKaJ5ndn6og76a2GC1X9ZVXoaJjWawxpiHshZSpvZwgMs38mq+zqx
+	3nQscxhnHt6S3+GnE/hcH0MCQ1R9UnuFhWt44Rx/86YcU9HRaZ/x3dXSiuCLDBlV
+	R1uXLw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd33ufj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:20:43 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5af539464so66572585a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:20:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744413375; x=1745018175;
-        h=in-reply-to:references:subject:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tuGybtALY1nU6Xel+qCGNU6dttZXpp155m7wcuPBHmI=;
-        b=Y1cImkxsntU9SUR8frRVCOKs+NhSPVM3yKChAAzuqNFsjs2zlGe5kZvmryI2wdxkk2
-         lB0+l3RYD+aYFXQlRg25rVMjUc/hkgKcQGiOfr5FpvbgFBROSIf7MyZTspvC4nk+6jv7
-         FXEFjbzCE/MBbA6wFbXmfBlshXUUvr2TRNrZpfxnrcGY8JpfzRdZY4DO39vdQe12lE9h
-         YjhwdyZ5fB/jo7stuXQbYI9+ZB6kF9zyu3hAPS8X992x2Zg2UT2R7Epnwio+2EQ3+7v4
-         84uCaYWYpBM+yqp1oz+GvKqAAKSM5x9PSTikgCXDuCNLpNRTWbTmd2zopDyuVNRZ+phZ
-         SExg==
-X-Forwarded-Encrypted: i=1; AJvYcCWckbwGF6k+h/WVcFKP0iL5VtxXFNUr9Z7zmNTeHMWRrEbmmgPtGr/7b9iErWVceYp8A4GGvlDVzD+OZE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHxYeqAXh6LlYnyUb0mcBhNWye+AePFUJk/fRZWi7LW5NyBjut
-	wCPpxiWAwWgQgvIZOVTP3O9WesCqqSGjuZBMFJ/Cm4ugEqI7VCyNJs4twC6nXQ==
-X-Gm-Gg: ASbGncu6XgyPu4wo+pXl5dFc2+XvJRrV29EDoBzbba0BsGCGoAtFUK0DCJFnrHpy882
-	dNLrugSLSl1tSWHOZrkin4KWh2DHei1TtyC+3Vb9OZ3BCwPOaEuMthVZHnInp8pfTycv6bIwXiL
-	jSb/WUiXmiV0VQlWQutEViA3kME6wsQkzE2T/KXdYfs1+XIQDPPzHzUDDgmtDX9EwkX1PGCWhRv
-	NefeRvgJZN5BAYITJI93uC1gxrYMUq9FFxM60hWBH1en8DfGj/lq8jduBUS/0UWIoc1t3s/xQr0
-	BwTu8g9rVRvzO64xeuZMJ/7RcAlHEPYejb2Tn3FV9epXrcu2IsM5bBJqVaJcB64L1YCQcIkMZWw
-	swbJkKSY6JQ==
-X-Google-Smtp-Source: AGHT+IGjduBmlSpWU0mlp+40mGyjda74cdL2upZ68BYIBvIaRlX1u4yCfExf6wZG67mqfhzmsnsAMA==
-X-Received: by 2002:a05:6214:4015:b0:6e6:6c10:76fb with SMTP id 6a1803df08f44-6f230db4864mr77277436d6.25.1744413375163;
-        Fri, 11 Apr 2025 16:16:15 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0dea10697sm42931066d6.108.2025.04.11.16.16.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 16:16:14 -0700 (PDT)
-Date: Fri, 11 Apr 2025 19:16:14 -0400
-Message-ID: <d3ad9a7bb9eb68a3ae5dd18bf091825d@paul-moore.com>
+        d=1e100.net; s=20230601; t=1744413642; x=1745018442;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0ynZ5lGPahO++H1E3LeYAHNYzJtD91JsU9K6PqBRu/8=;
+        b=hNfGBBEQ9qCA7ndvYiOrXGfC0Wo4rjxSLJZP6v0yQ7uJ+oU+RSwjRySn1monMRTIvI
+         eT4t30XxTZxxJJ/RaChAcev8F7DVPizFRT9SwbPR/0Pr7QCxy4531xINc8B44We53kFR
+         wtKYxcO30QGon+gsBNkQKpieaMRqDep2mISf2B0Rg7B/Re6JdPvz0paAk3oRjOPfCbNw
+         aHLoZa35M28U9RV5U/LVdSxro4xnv4OXQ+Gzn3kDBi/hl7U0tR7WuyzRvBOBT2kfdGB5
+         muZL7xJyrxqcE2CFgdUNgipEN+teKkteC+w76zZwFppxjkgoiw7XavOXfpylmYvJNO2p
+         HjRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOj1lpUIlWH00hNy96M8yI/4amWFV+WFoUoNeZxmSmbkxNFq+kxDwASC75AJJOpqyGysUASZedjKOB4Aw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCM/Y0cHCG/HkAfxf0Ji1BhwXhNoG24XhNmSh5T0J1noMs+01A
+	JvfqVW6RKJIkN405y7Za34+N2bg7h494FFDxMtklorzZJSKc18eTbNL/1ohSyGP6dCtT9O/HADU
+	/UOt6pRmGtYiZJUI/BNcNWgY7M6K8UkzTZD4e+K+7BT3mFSKX2jIgGuTUKzkBSic=
+X-Gm-Gg: ASbGncvVWQCz8e8YpMmR0wSQKcPphQ/zpN7iilEFvLyOfuTze2njyNqCoS9yHFLhF9D
+	oAnhJU0CvqGRrqFmK7PTxg57RlSC5T4FAWkSBAHxV6hTIc1WuR3h7QhJXISkxuq7l32zTzGR3WJ
+	Gkl7yESfG3JWLJJ8qZsmxW5x5SxzaHfSvENdcH9GOO5q4kKGK7wZEONxXGV+WSZDBr7c/2Kqrpt
+	nGM0TKx4oASmn0rwC71NoCCKMaQLegaA3lrW6kzZdkjyI24+6hwMcrbMRYKkus1Zk+eRGv1+ggf
+	kdHTLmn63f5i716gV87nJk7YyFvRasMn+MrCChMAQrb13fdmkGAC3Zs9x64+YfKY9A==
+X-Received: by 2002:a05:620a:404d:b0:7c0:a898:92fd with SMTP id af79cd13be357-7c7b1af6badmr181749585a.13.1744413642521;
+        Fri, 11 Apr 2025 16:20:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IErC3V5L5WaKtK5ntsNCBMz1sCeflCPCZiPX/TOLUhw62NWHCCe20rY0BgJeksBKJFfhu2ytw==
+X-Received: by 2002:a05:620a:404d:b0:7c0:a898:92fd with SMTP id af79cd13be357-7c7b1af6badmr181747385a.13.1744413641914;
+        Fri, 11 Apr 2025 16:20:41 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1be9c1csm513064866b.58.2025.04.11.16.20.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 16:20:41 -0700 (PDT)
+Message-ID: <eb6e8452-db37-47f7-9265-fd47d4cb69b8@oss.qualcomm.com>
+Date: Sat, 12 Apr 2025 01:20:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250411_1406/pstg-lib:20250411_1552/pstg-pwork:20250411_1406
-From: Paul Moore <paul@paul-moore.com>
-To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, Jonathan Corbet <corbet@lwn.net>, 
-	David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S. Miller" <davem@davemloft.net>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, llvm@lists.linux.dev, nkapron@google.com, 
-	teknoraver@meta.com, roberto.sassu@huawei.com, xiyou.wangcong@gmail.com
-Subject: Re: [PATCH v2 1/4] security: Hornet LSM
-References: <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
-In-Reply-To: <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] Add Qualcomm i3c controller driver support
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+        alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
+        linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: andersson@kernel.org, konradybcio@kernel.org
+References: <20250411113516.87958-1-quic_msavaliy@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250411113516.87958-1-quic_msavaliy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: -oYizNYffFQ6Y2n3NSh-0vZ6sE-I1-ip
+X-Proofpoint-GUID: -oYizNYffFQ6Y2n3NSh-0vZ6sE-I1-ip
+X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f9a3cb cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=XURAWvRzPrrx6AlyFGwA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_09,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110153
 
-On Apr  4, 2025 Blaise Boscaccy <bboscaccy@linux.microsoft.com> wrote:
+On 4/11/25 1:35 PM, Mukesh Kumar Savaliya wrote:
+> This patchset adds i3c controller support for the qualcomm's QUPV3 based 
+> Serial engine (SE) hardware controller. 
 > 
-> This adds the Hornet Linux Security Module which provides signature
-> verification of eBPF programs. This allows users to continue to
-> maintain an invariant that all code running inside of the kernel has
-> been signed.
+> The I3C SE(Serial Engine) controller implements I3C master functionality
+> as defined in the MIPI Specifications for I3C, Version 1.0. 
 > 
-> The primary target for signature verification is light-skeleton based
-> eBPF programs which was introduced here:
-> https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov@gmail.com/
+> This patchset was tested on Kailua SM8550 MTP device and data transfer
+> has been tested in I3C SDR mode.
 > 
-> eBPF programs, before loading, undergo a complex set of operations
-> which transform pseudo-values within the immediate operands of
-> instructions into concrete values based on the running
-> system. Typically, this is done by libbpf in
-> userspace. Light-skeletons were introduced in order to support
-> preloading of bpf programs and user-mode-drivers by removing the
-> dependency on libbpf and userspace-based operations.
+> Features tested and supported :
+>   Standard CCC commands.
+>   I3C SDR mode private transfers in PIO mode.
+>   I2C transfers in PIO mode.
 > 
-> Userpace modifications, which may change every time a program gets
-> loaded or runs on a slightly different kernel, break known signature
-> verification algorithms. A method is needed for passing unadulterated
-> binary buffers into the kernel in-order to use existing signature
-> verification algorithms. Light-skeleton loaders with their support of
-> only in-kernel relocations fit that constraint.
-> 
-> Hornet employs a signature verification scheme similar to that of
-> kernel modules. A signature is appended to the end of an
-> executable file. During an invocation of the BPF_PROG_LOAD subcommand,
-> a signature is extracted from the current task's executable file. That
-> signature is used to verify the integrity of the bpf instructions and
-> maps which were passed into the kernel. Additionally, Hornet
-> implicitly trusts any programs which were loaded from inside kernel
-> rather than userspace, which allows BPF_PRELOAD programs along with
-> outputs for BPF_SYSCALL programs to run.
-> 
-> The validation check consists of checking a PKCS#7 formatted signature
-> against a data buffer containing the raw instructions of an eBPF
-> program, followed by the initial values of any maps used by the
-> program. Maps are frozen before signature verification checking to
-> stop TOCTOU attacks.
-> 
-> Signed-off-by: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-> ---
->  Documentation/admin-guide/LSM/Hornet.rst |  55 ++++++
->  Documentation/admin-guide/LSM/index.rst  |   1 +
->  MAINTAINERS                              |   9 +
->  crypto/asymmetric_keys/pkcs7_verify.c    |  10 +
->  include/linux/kernel_read_file.h         |   1 +
->  include/linux/verification.h             |   1 +
->  include/uapi/linux/lsm.h                 |   1 +
->  security/Kconfig                         |   3 +-
->  security/Makefile                        |   1 +
->  security/hornet/Kconfig                  |  11 ++
->  security/hornet/Makefile                 |   4 +
->  security/hornet/hornet_lsm.c             | 239 +++++++++++++++++++++++
->  12 files changed, 335 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/admin-guide/LSM/Hornet.rst
->  create mode 100644 security/hornet/Kconfig
->  create mode 100644 security/hornet/Makefile
->  create mode 100644 security/hornet/hornet_lsm.c
+> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> ----
+> Link to V3: https://lore.kernel.org/lkml/20250403134644.3935983-1-quic_msavaliy@quicinc.com/T/
+> v3->v4:
+>  - Dropped "clock-names" property from dt-bindings as suggested by krzysztof.
+>  - Makefile: Correct order sequence for i3c-qcom-geni.c.
+>  - Indentation corrected around print statement.
+>  - geni_i3c_probe() : Exit with return 0 instead of ret for success.
+>  - Added sparse annotations around i3c_geni_runtime_get_mutex_lock()/_unlock().
 
-...
+So this is the third time I got this revision in my inbox, previous were
+<20250410084813.3594436-1-quic_msavaliy@quicinc.com> 10.04
+<20250331164648.2321899-1-quic_msavaliy@quicinc.com> 31.03
 
-> diff --git a/security/hornet/hornet_lsm.c b/security/hornet/hornet_lsm.c
-> new file mode 100644
-> index 000000000000..d9e36764f968
-> --- /dev/null
-> +++ b/security/hornet/hornet_lsm.c
+b4 should be automatically upticking the revision counter, please don't mess
+with it manually
 
-...
+Konrad
 
-> +/* kern_sys_bpf is declared as an EXPORT_SYMBOL in kernel/bpf/syscall.c, however no definition is
-> + * provided in any bpf header files. If/when this function has a proper definition provided
-> + * somewhere this declaration should be removed
-> + */
-> +int kern_sys_bpf(int cmd, union bpf_attr *attr, unsigned int size);
 
-I believe the maximum generally accepted line length is now up to 100
-characters, but I remain a big fan of the ol' 80 character terminal
-width and would encourage you to stick to that if possible.  However,
-you're the one who is signing on for maintenence of Hornet, not me, so
-if you love those >80 char lines, you do you :)
-
-I also understand why you are doing the kern_sys_bpf() declaration here,
-but once this lands in Linus' tree I would encourage you to try moving
-the declaration into a kernel-wide BPF header where it really belongs.
-
-> +static int hornet_check_binary(struct bpf_prog *prog, union bpf_attr *attr,
-> +			       struct hornet_maps *maps)
-> +{
-> +	struct file *file = get_task_exe_file(current);
-> +	const unsigned long markerlen = sizeof(EBPF_SIG_STRING) - 1;
-> +	void *buf = NULL;
-> +	size_t sz = 0, sig_len, prog_len, buf_sz;
-> +	int err = 0;
-> +	struct module_signature sig;
-> +
-> +	buf_sz = kernel_read_file(file, 0, &buf, INT_MAX, &sz, READING_EBPF);
-> +	fput(file);
-> +	if (!buf_sz)
-> +		return -1;
-
-I'm pretty sure I asked you about this already off-list, but I can't
-remember the answer so I'm going to bring this up again :)
-
-This file read makes me a bit nervous about a mismatch between the
-program copy operation done in the main BPF code and the copy we do
-here in kernel_read_file().  Is there not some way to build up the
-buffer with the BPF program from the attr passed into this function
-(e.g. attr.insns?)?
-
-If there is some clever reason why all of this isn't an issue, it might
-be a good idea to put a small comment above the kernel_read_file()
-explaining why it is both safe and good.
-
-> +	prog_len = buf_sz;
-> +
-> +	if (prog_len > markerlen &&
-> +	    memcmp(buf + prog_len - markerlen, EBPF_SIG_STRING, markerlen) == 0)
-> +		prog_len -= markerlen;
-> +
-> +	memcpy(&sig, buf + (prog_len - sizeof(sig)), sizeof(sig));
-> +	sig_len = be32_to_cpu(sig.sig_len);
-> +	prog_len -= sig_len + sizeof(sig);
-> +
-> +	err = mod_check_sig(&sig, prog->len * sizeof(struct bpf_insn), "ebpf");
-> +	if (err)
-> +		return err;
-> +	return hornet_verify_lskel(prog, maps, buf + prog_len, sig_len);
-> +}
-
---
-paul-moore.com
