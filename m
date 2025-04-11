@@ -1,127 +1,168 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8794327CCE4;
-	Fri, 11 Apr 2025 06:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E8E1EE019
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744351736; cv=none; b=BTNFPHuo7hmPEk0VBpmDtvjHzOTkgOZTIYIigDyhiqveEs85owaqUKKtHPAwYyHEupXLKp5C1aUqjAQV6N1i99FRaOdG2/kP+srQsLGVOKS3TO4GQGWzY/cyAFkC5OdOQhhgF+tO/xiLZmO8lw7RQViVBMJaU87KPb1OXApzoQs=
+	t=1744351761; cv=none; b=dM1npQ1wS9FKuCXQk1nmkwZ19+xjohgg2kAaJtPFoSE3gsmhRfmScrBg6HOsYwwAklN9uXUd2hr0ieURY1gDUFanpYa8xA59BkmCgdTI+kPM119kd/iPoS2qQj29TR4N46L1WWdV5DR2s+l767l16EyOQo2sDripmruZM2rUxZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744351736; c=relaxed/simple;
-	bh=WouuxWKXIXaHJdNjkcZzsFrXBb+9BPzw8tsW2/aQSNg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lTcHrJrlN+FqawCqX8TJoE3A/MQfS/vAp0Ay07Sa1pdr+O3b+eM+fS54k0iS/GF4lgPq7jl71gKOtrAB2pUXEshf9LNHL4Fr2vHuRlU0Ns0rxIytdw/si8K46kz7xkSgojGF/ahCJS07fDoZR4XCGydVoPuhk971cDR8MGGOJsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrNxE96D; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744351761; c=relaxed/simple;
+	bh=fF3zlNOao4yJFnQIBs8A+l0xxD4t0vYm+VXrEfTfCu4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ftzMwEZgmh+y5qthRYkT9DhRKo8rXbJJN3LU88oqAMWP5L1TauIDbPW9qaOwFcGE1LJD7LaOCn03vINb3e2zfRHshfIVMfhHYyzWUCFb0w+6bkpeSZsiaYjgCrdJnPNkFXpKG12NrMICE3BjpzbGVy6nj6UZZeJl5respavsqjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UUaMhvYH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrNxE96D"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7376dd56eccso1782660b3a.0;
-        Thu, 10 Apr 2025 23:08:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744351733; x=1744956533; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=50hxH2EGQQWIvDNzL74QsMeOx3mDaobRYvxxKWb0q9Q=;
-        b=lrNxE96Dl5eUCskhkwNLtSlN5/yQ9z3i6khD21hpZm+MetWk6qF+L1bFUioQFwZ5dH
-         ceyuwsyAVT2fgUmg5u5wu/l1eegxNOp1/YbYjSt7E7wqvqSEtABiDjqA2RG6j6TLugiu
-         tNeBCqGi9fGGfF136606uW5mi0Snbf3ahpqPhlRkodSDdhRUhF5nnZ3LknKWDwH5GKcs
-         oRkP0dpQZbnw+5uEyHLNYVr3r7ndkZpXpKEzogpFGHQAVMA7iQFc5pzKj/lIgxASQwKD
-         3bf1YyZCsXPp+N7Toq32hgIM+HKOReWnvPVtkuv2v4FBlS/7tE5HofFsaNcksnptoXVj
-         o6fA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UUaMhvYH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744351758;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bduNq/HDxv96vZuLWz4nrmlejiXvLwQ3iviE7jW85Lw=;
+	b=UUaMhvYHyf9P1SQgpmgsO4o3kHUwshNFHSIjNjaaIPZVB8Fy4MFrItg12Ft06nMgnb/2we
+	Ei6GlvLjv10W4SXfNQqVgbTOfCKdV1rlVeNHTVAP1Fwm2Gjno9q6cwhk4B4UdCHZ0DCMHi
+	ECV9MQR0pDJMlrBmTepsjuTNp/zzjGI=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-318-nRjYTKUmOOmBwijsNULreA-1; Fri, 11 Apr 2025 02:09:16 -0400
+X-MC-Unique: nRjYTKUmOOmBwijsNULreA-1
+X-Mimecast-MFC-AGG-ID: nRjYTKUmOOmBwijsNULreA_1744351755
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac2a113c5d8so113555566b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 23:09:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744351733; x=1744956533;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=50hxH2EGQQWIvDNzL74QsMeOx3mDaobRYvxxKWb0q9Q=;
-        b=l35LO4uRkIkSc6oZQ659QT5Aq/JXeeOzpxWpZDZ4up6y0V0wpPKRWNQnflCAPCOOxE
-         P4aXIXQjiy0rIO+7roVUMzgbfY11fPZZTND/xap0FidGCFW0Cv/JBTCcN4Nwg6l4TEwm
-         37RM8Djr+hzy6UfAwV1EwOUQj2OV7jgZnuAdRIZLQwC6jReoXcRW5e8I/ZRy/4PRQrFl
-         CAXSGj9S+SpRqwmeJoQ1wVd3vJ8f48rU+CjGk7Jy6XiNxfj9i/z+B/YmE/YFLYPSVEG9
-         wiboeLAqjn8tUW9dUKWI6Nx7xnCxuH+TI50cYd1bhr36OQj/u/T+gAtMNaheS0Dgoogd
-         oxDw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+xM3p2Jwu35QUpN7jmiCNoh6SwXOJH0M7JkWd+NNCbjkXua+ZhnEtXRe4cf5mVfUNx/s5R4/0@vger.kernel.org, AJvYcCXsdHk4ctVY6Js4mB5HCKkLcEYc2K+HLQxi5fWbwJ+ctW63nTgQU+JOo04rdt26+qEJQ2z8FkvQBi6RC1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvEyDQxthUp0dnHz7LZ1ZggqUKap+0ElMwfWtutMEPAXNdoY1d
-	s3XuPIaBALYkKFA2Fe257bSbIXHz1jZIWRVS2ft+Q0CM5NR/mUiQ
-X-Gm-Gg: ASbGncuhxFA5cgpa5VHIRcyPWMDPY/Y4Qjk8edvZVim+wrZbhi7QolyX6Ygi9oJygdd
-	eLjj1qdKUEcDfOQ3R4oSrfYzIdgfv9MGIHda/cCyYM+z+sL4NJ72a2yZimCBF/ILEkvKPF9o6Lq
-	0HW3ZKXTyyYnhx0xlqzT5lgGr5sT7J3GMapUrcI4JsX6vi00wYqfniX8ukFcrkr5tjoBelgCMNv
-	IlCDpJIxb6CEKw3om6nmjVxZIXTEtPIdvc1e+dcIDZkKUn5IkY+NTcQasNTpY/Wpb9wz7SxsRQW
-	0iHi5pnRAgzOMuZD8t2Us+9HVfcM1g5YOk9qfu55soh4Ua9w6gpVlJ8s/hM=
-X-Google-Smtp-Source: AGHT+IHHKmCThas9V8uvHhyBV40jdH5I/sNyIn7KwfblLgO395ERfwFGclBVoIOKeawjjUbdqv32+Q==
-X-Received: by 2002:a05:6a00:b89:b0:736:562b:9a9c with SMTP id d2e1a72fcca58-73bd12b1a09mr2332868b3a.18.1744351732606;
-        Thu, 10 Apr 2025 23:08:52 -0700 (PDT)
-Received: from localhost.localdomain ([2401:4900:4fe1:c798:5bf3:ef7a:ab5:388f])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21e0469sm647640b3a.79.2025.04.10.23.08.47
+        d=1e100.net; s=20230601; t=1744351755; x=1744956555;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bduNq/HDxv96vZuLWz4nrmlejiXvLwQ3iviE7jW85Lw=;
+        b=PPHw1XcSfNLyevpWq3r4GWNKnPAq0WSrwfDkmnXUUeqfCTp1u3thtNgOlfAzCyFdtS
+         oNf94bdGmy88EjJ4xBhK1uFY5TFjYWHwn/N2IL1zbODLQBOKPEWyGXW5gPQ4q+IR4hab
+         CxkuqhCQJbcLxUxB1VeDi7zYjRFsBYT9zAM1NIoKGeDCJyB7LP86dMqWoT7s37+o2xAC
+         nhvm69dBWNPFv0px7WKknK169pa/C76DZTQt7L1es0GPn4M5lWIRUnPoSrLiEB0EGIuK
+         Yc1hBzNtfjqpcVOCqzKoO6lzyS8ZENeSzcGXH5eT+41bx/5RvsHKTzWsz4UjC1dZ9dX4
+         h8sA==
+X-Gm-Message-State: AOJu0YyzjY3slHhZjQ3iwHMVMbj+9qDcDWUC/+s2GaO3hNqGKKhcn/vt
+	KEg9Rp6okldcwY2k9vt8eQkde2b5g9E7YeO6yduNpotxKZdQyrGFNxWzXnq0TuBIam+LxvAMsFy
+	RI6jDMgj1xmXrqM7Sw4+sb66rKe2nbUYYvBqgwrf8M2aHIZyXZYarYbg3rK8qTw==
+X-Gm-Gg: ASbGnct0a4iodQEPfTiSi74S/JqDGfdjCwBIJ5ue7h2qROUj6Un4jRMYeBge0HwRANd
+	qh/qxuiHNRGLwRgUTCJ36wzKeY/9s2mbYIaW/NcJVjk9gD3ivxB1KeO65WY/rLBqNHmYIlqxHk1
+	kb2h3juWQY7i5JDPxJTQT1zDkSaz5ki+9uVJp0wGrLgsx6FXDPO/fOtFKQObKtJR0ivqtqA1cw1
+	/2mUHSC+orn0miZ0zp4aasAj5mauoNSzBLbo0CgJ2AWUP/FEIYcW1QUIxEnZcbGZ44/Hs69dqZc
+	w2OyfuIPx8hIKAX6qjAWM4xhl6HCZ1fwNSt3N9Y=
+X-Received: by 2002:a17:906:f1d1:b0:aca:d649:72ea with SMTP id a640c23a62f3a-acad6497352mr59422266b.34.1744351754781;
+        Thu, 10 Apr 2025 23:09:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGx5COGNoO1BzAij6r3Tq85m1WsO99uIIPdBpPpSn6yEkwUnzsBHgs3C0kwKICd4VlbxAtivw==
+X-Received: by 2002:a17:906:f1d1:b0:aca:d649:72ea with SMTP id a640c23a62f3a-acad6497352mr59420366b.34.1744351754388;
+        Thu, 10 Apr 2025 23:09:14 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1be941asm393302666b.54.2025.04.10.23.09.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 23:08:52 -0700 (PDT)
-From: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-To: jmaloy@redhat.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	netdev@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	tung.quang.nguyen@est.tech
-Cc: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-Subject: [PATCH net-next] Removing deprecated strncpy()
-Date: Fri, 11 Apr 2025 11:37:54 +0530
-Message-Id: <20250411060754.11955-1-kevinpaul468@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Thu, 10 Apr 2025 23:09:14 -0700 (PDT)
+Message-ID: <360fe1770511702e35081e950bf2a362a4c092a8.camel@redhat.com>
+Subject: Re: [RFC PATCH 7/9] rv: Retry when da monitor detects race
+ conditions
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Tomas Glozar <tglozar@redhat.com>, Juri
+ Lelli <jlelli@redhat.com>
+Date: Fri, 11 Apr 2025 08:09:12 +0200
+In-Reply-To: <20250411045225.gP4DqmFt@linutronix.de>
+References: <20250404084512.98552-11-gmonaco@redhat.com>
+	 <20250404084512.98552-18-gmonaco@redhat.com>
+	 <20250411045225.gP4DqmFt@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This patch suggests the replacement of strncpy with strscpy
-as per Documentation/process/deprecated.
-The strncpy() fails to guarantee NULL termination,
-The function adds zero pads which isn't really convenient for short strings
-as it may cause performance issues.
+On Fri, 2025-04-11 at 06:52 +0200, Nam Cao wrote:
+> On Fri, Apr 04, 2025 at 10:45:20AM +0200, Gabriele Monaco wrote:
+> > DA monitor can be accessed from multiple cores simultaneously, this
+> > is
+> > likely, for instance when dealing with per-task monitors reacting
+> > on
+> > events that do not always occur on the CPU where the task is
+> > running.
+> > This can cause race conditions where two events change the next
+> > state
+> > and we see inconsistent values. E.g.:
+> >=20
+> > =C2=A0 [62] event_srs: 27: sleepable x sched_wakeup -> running (final)
+> > =C2=A0 [63] event_srs: 27: sleepable x sched_set_state_sleepable ->
+> > sleepable
+> > =C2=A0 [63] error_srs: 27: event sched_switch_suspend not expected in
+> > the state running
+> >=20
+> > In this case the monitor fails because the event on CPU 62 wins
+> > against
+> > the one on CPU 63, although the correct state should have been
+> > sleepable, since the task get suspended.
+> >=20
+> > Detect if the current state was modified by using try_cmpxchg while
+> > storing the next value. If it was, try again reading the current
+> > state.
+> > After a maximum number of failed retries, react as if it was an
+> > error
+> > with invalid current state (we cannot determine it).
+> >=20
+> > Monitors where this type of condition can occur must be able to
+> > account
+> > for racing events in any possible order, as we cannot know the
+> > winner.
+>=20
+> Is locking not simpler? I understand raw_spin_lock() doesn't work
+> because
+> it steps on some tracepoints. But how about adding something like
+> raw_spin_lock_notrace()?
 
-strscpy() is a preferred replacement because
-it overcomes the limitations of strncpy mentioned above.
+It is probably simpler, but I think it would require also to disable
+interrupts (some events occur in interrupt context), I'm not sure the
+introduced overhead is going to be worth it in the fast path, but
+that's kinda what I wanted to learn in this RFC ;)
 
-Compile Tested
+>=20
+> static inline bool raw_spin_lock_notrace(raw_spinlock_t *lock)
+> {
+> 	preempt_disable_notrace(); //probably not required,
+> tracepoint handlers do this already
+>=20
+> 	if (!do_raw_spin_trylock(lock))
+> 		do_raw_spin_lock(lock);
+> }
+>=20
+> My LTL series theoretically also has this problem, but I have never
+> got it
+> during testing yet. We should use the same solution for both DA and
+> LTL.
 
-Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
----
- net/tipc/link.c | 2 +-
- net/tipc/node.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Yes totally, on the long run we might get some common utilities for
+this kind of things that aren't too monitor specific. But for now I
+wouldn't worry too much.
 
-diff --git a/net/tipc/link.c b/net/tipc/link.c
-index 18be6ff4c3db..3ee44d731700 100644
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -2228,7 +2228,7 @@ static int tipc_link_proto_rcv(struct tipc_link *l, struct sk_buff *skb,
- 			break;
- 		if (msg_data_sz(hdr) < TIPC_MAX_IF_NAME)
- 			break;
--		strncpy(if_name, data, TIPC_MAX_IF_NAME);
-+		strscpy(if_name, data, TIPC_MAX_IF_NAME);
- 
- 		/* Update own tolerance if peer indicates a non-zero value */
- 		if (tipc_in_range(peers_tol, TIPC_MIN_LINK_TOL, TIPC_MAX_LINK_TOL)) {
-diff --git a/net/tipc/node.c b/net/tipc/node.c
-index ccf5e427f43e..cb43f2016a70 100644
---- a/net/tipc/node.c
-+++ b/net/tipc/node.c
-@@ -1581,7 +1581,7 @@ int tipc_node_get_linkname(struct net *net, u32 bearer_id, u32 addr,
- 	tipc_node_read_lock(node);
- 	link = node->links[bearer_id].link;
- 	if (link) {
--		strncpy(linkname, tipc_link_name(link), len);
-+		strscpy(linkname, tipc_link_name(link), len);
- 		err = 0;
- 	}
- 	tipc_node_read_unlock(node);
--- 
-2.39.5
+>=20
+> Also, can you please Cc me in your RV patches?
+>=20
+
+Right.. will do!
+
+Thanks for your feedback,
+Gabriele
 
