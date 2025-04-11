@@ -1,221 +1,269 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2099.outbound.protection.outlook.com [40.107.244.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D0B1FBE8B
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360423; cv=none; b=m1Eh82/qqLPLU2JbRF3N7u4O0E8h3DtfPfgYKszbSOpVT88LunoSQhWayCO8eFOwXpdnwJoZXTIMjG6EeGs4sgN97JYPKXeAfO0g5Lmq5qoqHTOTvqziHvkvTiYtykBisv6hJooU8ZTkGKY1fnryVye6n26JECSn2x9Lm/oU0tQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360423; c=relaxed/simple;
-	bh=YtyEfPCLhxuh+HxbSQ37x4q0L+ygNb73OUpvm28vAvM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=a/PBdV/UUPcZjHuuxbSTp6eF4+SnWowTIGyHvtAz3Mz/Uz0gYpTr1COqJQ5yVB2IsUOO70Nc+dDFXnDkuLa4HUSYxzV2SDnZOBJ7oLSSQ0BlHHLh4s5xad5lS0QxPU1vTrmXMgtr5+v6JEVijl4M9fGO9uIOH7hT1HaUeOwoOrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=S7o0qsbP; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C6E296167;
+	Fri, 11 Apr 2025 08:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.99
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744360434; cv=fail; b=rYa2XZxqAMYY6uAWnzhtdnNYhiEjJF0Y1SX0nBOY781X/chfULulBDgpD5EWXgLYxqbpjtyg5VpI6nfXx30tSMPJIXPtl753e4I6Y6KU47z8zmcV7vPUCeW0eRBIpcDBW7Vu+GuA6lwCWfQ+fyRPcC3JLm2iCKCfYBBoEkBRFVg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744360434; c=relaxed/simple;
+	bh=DRebbNBpF0UxSbsbvEzfvOrBhsrwCl3aptMV4VzFp1s=;
+	h=From:Date:Subject:Content-Type:Message-Id:To:Cc:MIME-Version; b=AaGJ21wAVqSVyunNhZy7lqhHaoYXbOJL3NUy6XfBtJhsPWhu9QbNSz/TgKutw+7nmComOFVVEQFjKgmsn67DGNi2e9Vbl/J9ihBUlDkp8HOZJ7YxeusWRtJcDVaqnTPEGXJanfyjwR1wMhogvYv5kHooTZRNtPlcDlmC9QVX5vk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kneron.us; spf=pass smtp.mailfrom=kneron.us; dkim=pass (1024-bit key) header.d=kneron.us header.i=@kneron.us header.b=GvI9mNAz; arc=fail smtp.client-ip=40.107.244.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kneron.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kneron.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="S7o0qsbP"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so293694866b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1744360419; x=1744965219; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5/OEIkhs5i/56iKsf6Ln6xmh08Ek/lCXrCNvVIOB0uw=;
-        b=S7o0qsbPxtvT0a7pl9GDP7ZK/zfsxgYD4IkQSDdnp+eIYceMiZTuhQdlL/auXdc09e
-         Pwe9SYFobseAe2ucfW2vTgWbmPQH+UjZ7uAGeVWU6/7BJ8GLwu0WouyEfvOAUlQcaLcM
-         BizmjRLBzKQ697xhkajEKnkggAhhEYNHhnhQ/D/FOXvsE7mdUk/6hpezL+KbEjSbZxUg
-         KmBYEoyDHfO04K5n2yEUTW4j97awngz+MgqGS+UnFkEavwIUSRjHyusdZTbsL+wNclp9
-         fZcgIsCUxeRE2goKvkqTD7EaKAOtyRRwG7cXNiV7/HqIlPlVCKiqKKh4iRVrAS+5+HvJ
-         9r8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744360419; x=1744965219;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5/OEIkhs5i/56iKsf6Ln6xmh08Ek/lCXrCNvVIOB0uw=;
-        b=etvXg8NKjh8Oqj4Xby2TTEA2NcWym9RMBWDAEyPBMY903S3IIG/wRPWh3JbeiUTAMS
-         bMQ1Q7P16tbVimHKGOz3u3aFDes6clMDgJuB+Q0kkElDWOCO6WQnmZSCmAiBaqnExGSc
-         Bsgg/+GS5V86gnO2wz0zobWenV8EXCfXbkZeufRcJdxIPytMK43MB4slpNjGzRbT2HrA
-         vWHDS3X46xug5/Qjgqt2V3POTeO5qsYI/A/etqQ5SPMoJgqrFyA9FKgNp+/2YMPkgl94
-         ymFlMTt+yEsdQ/7Kj5To7+9rxtbamfhE5kY815IDrqDALNZjeuX2/uuoB6peu5sN5otW
-         c9bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnk4GuqgLw3pvmMHqjhoMDfr2X5qGs0WBl9zc31NoJGj/+NniczJOyUOhuemTbRAzbGYuOfF6cxIZ0p6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTnn86p8yHpAYsQ4NFHTBbQ4h35gKeklwWZ0fxLtNs2rQ8q1b0
-	FC7L2fdUJMhcuEZoDT6ApkkyA5BmIGBGp0zx0akJsv3GxrEWm9Gx7v6kZfnNnOU=
-X-Gm-Gg: ASbGncs1IwK5ueUBYgurTsi3NyNuMgsXukv/vAHFWvNnAZXprYcarTfeZX/4aVkobg5
-	LutFRUlaHqpByU0Tj8H6yWTmIvgkyTxeZrb0AOSUzijTmCaQZ/omah1B5ed2kEeabUGVLWcsLHm
-	/qGvw47OIs/BOQRLk/B28Q2pw/N4IzN4yPvURUV7ufHIYuIOygk9bwRcbzn7Q/HggYn42c9FoPe
-	JR+7ZipfaXtT4Mrya2pb7J4R353ZUZXUOssM5RRBD6o5gT/L6ea5MRn5gqmXaqlRC9h4OMqh+W2
-	hAYnfJqHfv9DzB5JQAseYC+jjPUmykVRkOlpXEvpLtjhvZLZNJd9mjC1gJjGPk75MwWi+lL7xv3
-	RLsb1BRyxui/4qQ==
-X-Google-Smtp-Source: AGHT+IGoM4A7Qtqtt1Dy9i6pdPwoGCXRAZYCNHk6wtIo7PyTKrh0k7tkODDWcluBWIFiL+qyGGp5HQ==
-X-Received: by 2002:a17:907:6e87:b0:aca:96a7:d373 with SMTP id a640c23a62f3a-acad36c4587mr149028766b.57.1744360419442;
-        Fri, 11 Apr 2025 01:33:39 -0700 (PDT)
-Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb2ee1sm417729266b.12.2025.04.11.01.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 01:33:39 -0700 (PDT)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Fri, 11 Apr 2025 10:33:29 +0200
-Subject: [PATCH] arm64: dts: qcom: Remove unnecessary MM_[UD]L audio routes
+	dkim=pass (1024-bit key) header.d=kneron.us header.i=@kneron.us header.b="GvI9mNAz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XISxRv9lE6D1v0hPocXKCsmPtRPP0UrqEWBqDEMVxmyX6EezouXckPviixFVcJKxEEDLMyw5m+vygdtFmKkKA4JIJ/D3TOn0bJbWhEZANiGZnJDqhFFyaP4ND6mYhwOZfRskoSIGy+zw/w1ooFoJjMEpz7xpIgfyr8z1APom/Y7fVjuAJZwbn2nWrlihGCnB16SaxPPZfMkr/aghDR06ENMMX5w7pxkwtdbdSzSrTZdqgcybY25jHGWBwunOna508iJtn7SCjiLMFVduCToohXn4wg5O61693mHHArtZAzrQW5Tz/PIjcz8AmTG5pV+zVDtSl4rj6H3HHpe8Tar5gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AUHRfWIMoMbD83dtpUDHNme/8QDOJanePcJNlxm5Qqo=;
+ b=i4bU1qVIny5iDwTQxNF2p3LjnGGcJV+XYxIxQWbGt/GKSMbAieezx0dJRhypcqRHBWh+JiV7o1lUi/VAlSGhbxEa1DkiwfQHjBnHg0akkKoGpZORhsi9GxuGAFh5yuX/sCSYNzzcsKHY12C8mhocAUELpE+KAulDodQYfKyv6pzopUCimQ9OWKp11olOwd/OzU4hOJtrZpgik0LnLhtoTTiXAfqd+FLj/8AOqdg2fLg1Wgp61XfkcqFxEl8jA9bAfl6W9qoiVHq7t37L4qDq+SH9x5u7iDsaavpJrTnuUvtWlIHpFrpfpMdhe0blyAGcypVjNZMarABH1fS2GLU3zQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kneron.us; dmarc=pass action=none header.from=kneron.us;
+ dkim=pass header.d=kneron.us; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kneron.us;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AUHRfWIMoMbD83dtpUDHNme/8QDOJanePcJNlxm5Qqo=;
+ b=GvI9mNAzUOVlXjSBALM0XEYLcDQsK9b3/WqQhQzgSyKsc+OAk908C1xNElCtoL8lQuIoEILWhI64UdRFu0FTA67mzUBNjDP9YHdQdC/d2RnRXJMeKxDZ0LXVx099QuUR/4zmoLX15AF93UvQON/q8Ssz9xEUdzzBg0bzAx93ZDg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kneron.us;
+Received: from PH0PR14MB4360.namprd14.prod.outlook.com (2603:10b6:510:26::18)
+ by PH0PR14MB4264.namprd14.prod.outlook.com (2603:10b6:510:49::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.42; Fri, 11 Apr
+ 2025 08:33:49 +0000
+Received: from PH0PR14MB4360.namprd14.prod.outlook.com
+ ([fe80::f91d:52ba:8284:3e02]) by PH0PR14MB4360.namprd14.prod.outlook.com
+ ([fe80::f91d:52ba:8284:3e02%6]) with mapi id 15.20.8606.029; Fri, 11 Apr 2025
+ 08:33:49 +0000
+From: Chance Yang <chance.yang@kneron.us>
+Date: Fri, 11 Apr 2025 16:33:26 +0800
+Subject: [PATCH v3] usb: common: usb-conn-gpio: use a unique name for usb
+ connector device
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250411-work-next-v3-1-7cd9aa80190c@kneron.us>
+X-B4-Tracking: v=1; b=H4sIANXT+GcC/3WMyw6CMBBFf4XM2hqmtDxc+R/GBaWDNCQtabFiC
+ P9uYeVCl+fmnrNCIG8owCVbwVM0wTiboDhl0A2tfRAzOjHwnMtcILKX8yOztMxM11hVdaXLoue
+ Q/pOn3ixH63ZPPJgwO/8+0hH39VclIkPWFJ1QjSQqO7yOlryz52eAvRL5X5MnU+SKVM11L9vm2
+ 9y27QO5X/8c3AAAAA==
+X-Change-ID: 20250411-work-next-d817787d63f2
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ morgan.chang@kneron.us, stable@vger.kernel.org, 
+ Chance Yang <chance.yang@kneron.us>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3228; i=chance.yang@kneron.us;
+ h=from:subject:message-id; bh=DRebbNBpF0UxSbsbvEzfvOrBhsrwCl3aptMV4VzFp1s=;
+ b=owGbwMvMwCVmsuR+7eedxj8YT6slMaT/uPyy2jfIePa8xx5RhepB6mtj5p/oXrBewXCNYlrrT
+ 753i48od5SyMIhxMciKKbJ8zlba793SPO/WlZ79MHNYmUCGMHBxCsBEtvxm+B8S+K9l96rwCWef
+ /TnWZ/N7vf9hdrcHfBKxdw48jfNK3bGb4X9EdFj9iiJRZnGHzK+98vMeGvSfnJARZh+mdffEved
+ Br3kB
+X-Developer-Key: i=chance.yang@kneron.us; a=openpgp;
+ fpr=F36B22BF4B84839EDAD48CBF34A4DF7DF3B933F8
+X-ClientProxiedBy: TPYP295CA0021.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:a::11) To PH0PR14MB4360.namprd14.prod.outlook.com
+ (2603:10b6:510:26::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-cleanup-mm-routes-v1-1-ba98f653aa69@fairphone.com>
-X-B4-Tracking: v=1; b=H4sIANjT+GcC/x3MTQqAIBBA4avErBtQy8KuEi36mWqgLDQjCO+et
- PwW773gyTF5aLIXHN3s+bAJMs9gXHu7EPKUDEooLUopcdyot+HEfUd3hIs81oMho0yltC4gdae
- jmZ//2XYxfnOj4vJjAAAA
-X-Change-ID: 20250411-cleanup-mm-routes-7b9e92962553
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.14.2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR14MB4360:EE_|PH0PR14MB4264:EE_
+X-MS-Office365-Filtering-Correlation-Id: c223021a-f4eb-44c6-f139-08dd78d39502
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|52116014|366016|80162021|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ajRPNXEzQ2pYdG5QQmU2azlCUjZKOVFSM3oxQjlXdEkvc0gyMkR0c2lxczE0?=
+ =?utf-8?B?OXorZXhWZnF6RmkyejdTWEd1d2RrSDdsY0EvZDFXMUJUVElvQkgyK1dqUmN2?=
+ =?utf-8?B?d25RRnNERTFFZ1V4cXJQNndsaktoTjhmeGZydllhaEEzNnVJdlp1WGhWUkhN?=
+ =?utf-8?B?ckZqMWRXZkkzRG0vZURhUm1seE5HeXFSdWtaa0JUSzlqeDU1L1FrUDBYeFAz?=
+ =?utf-8?B?T2svbDZpZ1EvM0ttem9yTUhKYndGZkw5OHh3RHFwejNlN2NHVTJFWU1keVdS?=
+ =?utf-8?B?dmw5VnNyaUpYTFd3UEpyL0RQbkhkaStwSHZ6YTAwR1BZc3I0U2thZTV3a3k2?=
+ =?utf-8?B?SFBLVmRDR1ZSOVFCMlRhc3BLN01IV2FuNkI0eDhvdnBUVk1QZU5WTEN5NjBy?=
+ =?utf-8?B?Mm9HajlIU3RHS2RtbjV0NWtaWEtLbXBnODVmVythelo0eFFUcHZxbkR6OEZv?=
+ =?utf-8?B?c2J0UXhhdGwwOTl1ZERyZDFvUGN2aW82U3FNd3loWUt4cFZyNHZZM0FHN3Vq?=
+ =?utf-8?B?OSttNVJzVFpCMnlqK0NFOVBUbkJlSHplUjJvczJINWxEa1ZOZEhxZy9ZbExN?=
+ =?utf-8?B?ekl6WVRiR0VEay85aUpHcVFYK1FCSmZZaG5HWEhoY3FJV2dQZDkzRHYxck1O?=
+ =?utf-8?B?WEN6OXVIWmE0TVBJZ2NpTHdUd1JWZ1M0S3p2enR6V1VBQUpZTUhQY2xIOG83?=
+ =?utf-8?B?eWxrV2RqTFg4UWVDWmYzNVIxbmY5QVRVRG5oYXNHdmRLS2FscDk3T2Q1bWNF?=
+ =?utf-8?B?VWVybVlMM2F2OGV2VVh2Qlk1cm5wTGd1dmlPb3ZWSTdDY3lZWWp6Y0JYWHBn?=
+ =?utf-8?B?Sld0bWhWS1JySVJKZDJVZDUvcnprMkdYYWF5TC80MzNjL3lBRDk4aTlGMVFY?=
+ =?utf-8?B?QTF4QTU4MFVDTE84aXNMaGU4WjFYWGNieVhJM1RhT2dqSnJ4a1FzMUR0ckdk?=
+ =?utf-8?B?SE0yNGN0MHY3NWhsenN3WnQ1RnZub2s0bEdUeUd5c2QzY3U4eEI1STN4MDdl?=
+ =?utf-8?B?eXgvbXM4YWJJdWtETlo1Mis4ZHpXQTZubzk0ZWFEc3hwVnRTVWVkUXkybXJM?=
+ =?utf-8?B?aDJYeER3RmN2ei9wc1RhQ256R1ZjS2tFSStrcUZxT29rVnpOSGtqV2JLbTBk?=
+ =?utf-8?B?S2tsSEdidlI4MUx0RVhIT0xUQjZMY1FXQlB0bWdtY0x4cHEwRmNaaDNtc3ZV?=
+ =?utf-8?B?RVBGazE4N1FVQ3dSVkYvZW9oeHl3c2lyS0JRUkV1QTJjZHlHYnBIU1hGYUlw?=
+ =?utf-8?B?em9xLzlzbklHTFNnR05OVHZEbXFmNjFOZERaaElicE1SajRyc2YvL0xRbDlS?=
+ =?utf-8?B?SmlyMkZYR2I4c01vYVVNT0s2M21wdTE2eUIyMW5HbjRDTEYyWXh2SU1kemFk?=
+ =?utf-8?B?WEFDS0p2ZTJUMTgxbjhhT21lWmludSthQ2NpRTZyK0xBUVU5dE8zU3hnck1k?=
+ =?utf-8?B?NmphNkVjVFBaN0Z1c2NnREJTanhjNFEzRnFUSWQ0ellmWkg0akNBVitjUTdP?=
+ =?utf-8?B?VXhQait0bmQvVklBVmdvZkdpQVpQdTc0ck5rLzl5czlvb1NLWVNHb3h4Nko0?=
+ =?utf-8?B?U2IxR3lwNm5EMWlORUxCd3FtQW1vOXkxM2FDWXo2MkJaZ2R2eEU0dERaR1o5?=
+ =?utf-8?B?aWpEMkZNenBSWi9kR25iKzhWcTlEUXZkbHhsdzdMWUk0VzBoNDlTSG04MTlJ?=
+ =?utf-8?B?SnZqbWdoU0JSQWl3TWc2Wi9DOTJHcVROdWsrVFlYd3NLbDN4M0RiNXdnZjls?=
+ =?utf-8?B?WUVZaXJVb045cTBxcWw2bFo5aXZzcXBEN1NKWVNsUVhSS1EyUktmQW8zMmdk?=
+ =?utf-8?B?elA2WVVEU09DTENLOEh0VkphK2xIMzQ5RXE2N1lSNldGT2ZndE5UMEpzaFVI?=
+ =?utf-8?B?VUlXYk9HdVFSTUdRbGtYQ24xbzZDcjRVbksrMG5zVHczK212c2VJUTRKTEpX?=
+ =?utf-8?B?aXZyWWkxdk9rekh2MnFiOGs1dWRyVjNjRFhNZTY5cWJPNUZTL0svbzJNMXZW?=
+ =?utf-8?B?YXRRR1c2a2MvQ2pnWEw4bk5wNnhKZjVuMnFZZ0picGhtTzB5UWNrU3lNSkVo?=
+ =?utf-8?Q?79McTw?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR14MB4360.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(52116014)(366016)(80162021)(38350700014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N012NldiN25jRFFjaG55UW0waHJzcVJqSy90bXB0Rk1rcXdPVk9JOGlVN21W?=
+ =?utf-8?B?ZytJYVhhbVhadDAzZEdXM2RSRjR5c2JnL1JFdDRWUWtrd0QzSytkUWE4Wm5H?=
+ =?utf-8?B?OE5icVVKZEpCaEtmdFNDWTNCdWZqSFFReVdJREs4V1NXRXpydkUzdm5ESDM4?=
+ =?utf-8?B?eXFXcEE2K1NrUmtlb1BTZHFaQjZ1TWxjSGlHSnlHeDM4bnZBMEw3bjBxWWQr?=
+ =?utf-8?B?dko4V0doSGhqeDNoWDlpZXcwNDM0Z0ZNTDAxTDVyUmZVNFNpd2JxRW9VSCtZ?=
+ =?utf-8?B?TnF0MmtJNHpicExGZTQ0ZzU5ZGszWittcWQ1dzdKemw5V3NUbXZmdEdIL0FF?=
+ =?utf-8?B?elRlSGordUpLVUFrNVFORldFWlhZYnRsYUEwK01vK1I4blZ1bktpblBWNVVG?=
+ =?utf-8?B?eEU5ZGVFTkVuRTh4bEJwRVgwNkgzTDJSTHQ0UW1LeHJwVWhUdHhGK1RCaml4?=
+ =?utf-8?B?Qlo5N2F0YXBUUW1WN2RtNTk3M0VZSWtXcnRMY3lzTjB1cTQ2NXNZZkcwVFlt?=
+ =?utf-8?B?aWhjMEJLUXpFcjNUME12aEZUMXQyUkk0UDZTNkdHeEw5ZVdUL0t2VmtFTmEy?=
+ =?utf-8?B?OE95QndYcjBvd2dOR3A1TjVRMXJ5ejlPYU5IV0ttZ2Z4bEgzNFU5c1hsVjhL?=
+ =?utf-8?B?ZnFZQ1RGcVZ6NnBzUHB3cWJPdXF5dDF3RW9uMTVEeis1UGF0OU1FU0FqSFM2?=
+ =?utf-8?B?dlljYmZqeGZHYndYbHBOeXFwSFFoalpvWFRPWkFadWNYVmlEbEhzL2hTK2tJ?=
+ =?utf-8?B?clBVOWV6WTJpY3N1TTVEalJ5WU5XVmd3MzhLL0Y4bUFoMkkwVmpnWDQ5NXE4?=
+ =?utf-8?B?SGVYZXYwM0NSckNjclBjbEdGbWhVaStpMWJyM0pabjkrUnFaMVlMT3c3SXhj?=
+ =?utf-8?B?OW55dmFpNEVQWHR5cHZBSERnY2QxN093MnNsWGZ3bDMzR1pLZzE4Mml5SGVz?=
+ =?utf-8?B?MG1oQk45bDZHcTZZUzFoWXRGNnhFVXN3ekQxSXdsa1VUNmRJc0RuTTZHVjBp?=
+ =?utf-8?B?eGZjS2lCMngvUThaU3J3KytRMjZuQWQ0YVd4azczenN3dlFNVkhZZmVMMmNv?=
+ =?utf-8?B?dHhOUUtIeGhaVllaSEt3MFpraWwzTWovK285Qml3emQwZFd0d3ZRZGtpaTlV?=
+ =?utf-8?B?N3A4Q1FaMFR2NXBCTHV0OU9pTFVRTHZPclN2ZmJsdVV5UFlmRjlrY2c5SzRB?=
+ =?utf-8?B?UXFTUTFMK1BkWmh5SUlobmU0T3BiUWIwRXVEdG1hMENHd0RGbmlKWFhQbE1U?=
+ =?utf-8?B?ZEIxa3FBZ3VZMEFFQjBKZ3hFeVR5Z0o5aVV0eEFmdy8raTRnVUxtaG9ZT0M3?=
+ =?utf-8?B?bnlORkluVk9ZTmZuU2tRMUN6YWdHa212RHpNSzhBYm56SkhQcFhLMzR4R0dk?=
+ =?utf-8?B?RStPYm1JeHlyeVFQK25pVlo4VmVYSTRqaWxSMzg3K2lHdG1YTkd5dERRcTN5?=
+ =?utf-8?B?aldUcXdydnBYQnlOc1F1eWRPRzRGRzFnaXk3OTdsT09vWm5HNk5CUnRsSnhn?=
+ =?utf-8?B?aWNqSXJ2U2M2eWtFQkhqS0FFSUlmbXB0R2RWak1EQmVwdUNXTzRRSjFHRGdl?=
+ =?utf-8?B?VDJiWnRwdXp5TzFZTlpNRmpGTHhtZFpyemNtVnYxMWVaOXR3ZzVFWllBYWxn?=
+ =?utf-8?B?SXd1bmlJUnpOWGwwejErZTExM3VDVVdQSysvWS9qVERpdUcwTzlFb3RCZkQ3?=
+ =?utf-8?B?MlJMRDZhMk9pVGNIK2RKaUZYL2FYSmx0emRjUkVFeWJFUUFBSm8vWWJMdUZ5?=
+ =?utf-8?B?aEFYZVlXSkN5U3FFZDIvcWo3WWxveG1DY2JselBiMTRPT3I2MTNBU2RmYnhu?=
+ =?utf-8?B?K0ExWGFXdjhaWXFicm9zTlVPQmFxTHp0Q1NiTmNTUG5QWW44Q2pwcWdiN2dH?=
+ =?utf-8?B?dWYzK3pmMzdwa0xvT2JIbEtTeExMS1ZFOVdkOXB5Tk56cDZqS3RKTFlyeFc2?=
+ =?utf-8?B?ZDdtU1B4bVVCKzlJTU01bjcyOUk2RDF1b2pLMTlPMkFJNEYrUTErdmIveGds?=
+ =?utf-8?B?ZjFkeEVobll2Zy9QQytGVDk5RnpmUm4vUitjUWhtMGI2eGJSL0dSRjBHdjAv?=
+ =?utf-8?B?em9JT2JnaEpoSlUyUTNWRGJKSWZjWHNQQWVVODIyOHBva092REJ1cjlHbnl0?=
+ =?utf-8?Q?w8HEJeSnGVGw2sp/rsUbCZ11u?=
+X-OriginatorOrg: kneron.us
+X-MS-Exchange-CrossTenant-Network-Message-Id: c223021a-f4eb-44c6-f139-08dd78d39502
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR14MB4360.namprd14.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 08:33:49.1959
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f92b0f4b-650a-4d8a-bae3-0e64697d65f2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wg47pSrYinSE5pMsoHESGIigreHWABTRm6T30ar/yudACKKcN1t5Q++Ew7Mh2iz9+t/Yq1jiTOwQfQOWzza7FA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR14MB4264
 
-Since commit 6fd8d2d275f7 ("ASoC: qcom: qdsp6: Move frontend AIFs to
-q6asm-dai") from over 4 years ago the audio routes beween MM_DL* +
-MultiMedia* Playback and MultiMedia* Capture + MM_UL* are not necessary
-anymore and can be removed from the dts files. It also helps to stop
-anyone copying these into new dts files.
+The current implementation of the usb-conn-gpio driver uses a fixed
+"usb-charger" name for all USB connector devices. This causes conflicts
+in the power supply subsystem when multiple USB connectors are present,
+as duplicate names are not allowed.
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+Use IDA to manage unique IDs for naming usb connectors (e.g.,
+usb-charger-0, usb-charger-1).
+
+Fixes: 880287910b189 ("usb: common: usb-conn-gpio: fix NULL pointer dereference of charger")
+Cc: stable@vger.kernel.org
+Signed-off-by: Chance Yang <chance.yang@kneron.us>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dts          | 5 +----
- arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts   | 5 +----
- arch/arm64/boot/dts/qcom/qrb4210-rb2.dts             | 2 --
- arch/arm64/boot/dts/qcom/qrb5165-rb5.dts             | 6 +-----
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 6 +-----
- arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 5 +----
- arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts     | 5 +----
- 7 files changed, 6 insertions(+), 28 deletions(-)
+Changes in v3:
+- Added Cc stable
+- Link to v2: https://lore.kernel.org/r/20250411-work-next-v2-1-40beb82df5a9@kneron.us
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-index e8148b3d6c50c670d6bc8045e42074162dc1c6d9..1089964e6c0d819e166fd5a959f7f1e6fe688d65 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-@@ -1012,10 +1012,7 @@ wcd9335: codec@1,0 {
- &sound {
- 	compatible = "qcom,apq8096-sndcard";
- 	model = "DB820c";
--	audio-routing = "RX_BIAS", "MCLK",
--		"MM_DL1",  "MultiMedia1 Playback",
--		"MM_DL2",  "MultiMedia2 Playback",
--		"MultiMedia3 Capture", "MM_UL3";
-+	audio-routing = "RX_BIAS", "MCLK";
+Changes in v2:
+- Replaced atomic_t with IDA for unique ID management
+- Link to v1: https://lore.kernel.org/r/20250411-work-next-v1-1-93c4b95ee6c1@kneron.us
+---
+ drivers/usb/common/usb-conn-gpio.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
+index 1e36be2a28fd5ca5e1495b7923e4d3e25d7cedef..421c3af38e06975259f4a1792aa3b3708a192d59 100644
+--- a/drivers/usb/common/usb-conn-gpio.c
++++ b/drivers/usb/common/usb-conn-gpio.c
+@@ -21,6 +21,9 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/string_choices.h>
+ #include <linux/usb/role.h>
++#include <linux/idr.h>
++
++static DEFINE_IDA(usb_conn_ida);
  
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts b/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-index dbad8f57f2fa34575440caa7f0a19d5893efcfbb..d7fa56808747ae1290b884430d5fa5443bdd9be1 100644
---- a/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8996-xiaomi-gemini.dts
-@@ -156,10 +156,7 @@ &slpi_pil {
- &sound {
- 	compatible = "qcom,apq8096-sndcard";
- 	model = "gemini";
--	audio-routing = "RX_BIAS", "MCLK",
--		"MM_DL1",  "MultiMedia1 Playback",
--		"MM_DL2",  "MultiMedia2 Playback",
--		"MultiMedia3 Capture", "MM_UL3";
-+	audio-routing = "RX_BIAS", "MCLK";
+ #define USB_GPIO_DEB_MS		20	/* ms */
+ #define USB_GPIO_DEB_US		((USB_GPIO_DEB_MS) * 1000)	/* us */
+@@ -30,6 +33,7 @@
  
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-index d485249bcda44055689b5556eec9dd057b92d0ae..a37860175d2733214f1b257e84d5cb4821033242 100644
---- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-@@ -110,8 +110,6 @@ sound {
- 		pinctrl-0 = <&lpi_i2s2_active>;
- 		pinctrl-names = "default";
- 		model = "Qualcomm-RB2-WSA8815-Speakers-DMIC0";
--		audio-routing = "MM_DL1", "MultiMedia1 Playback",
--				"MM_DL2", "MultiMedia2 Playback";
+ struct usb_conn_info {
+ 	struct device *dev;
++	int conn_id; /* store the IDA-allocated ID */
+ 	struct usb_role_switch *role_sw;
+ 	enum usb_role last_role;
+ 	struct regulator *vbus;
+@@ -161,7 +165,17 @@ static int usb_conn_psy_register(struct usb_conn_info *info)
+ 		.fwnode = dev_fwnode(dev),
+ 	};
  
- 		mm1-dai-link {
- 			link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-index 4cc14ab1b9ea0f92a12a12ef4df1cdc37bf5591c..dcb998b8b05498d8f9a82ff9a984c1e237a61308 100644
---- a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-@@ -1053,11 +1053,7 @@ &sound {
- 		"SpkrLeft IN", "WSA_SPK1 OUT",
- 		"SpkrRight IN", "WSA_SPK2 OUT",
- 		"VA DMIC0", "vdd-micb",
--		"VA DMIC1", "vdd-micb",
--		"MM_DL1",  "MultiMedia1 Playback",
--		"MM_DL2",  "MultiMedia2 Playback",
--		"MultiMedia3 Capture", "MM_UL3",
--		"MM_DL4", "MultiMedia4 Playback";
-+		"VA DMIC1", "vdd-micb";
+-	desc->name = "usb-charger";
++	info->conn_id = ida_alloc(&usb_conn_ida, GFP_KERNEL);
++	if (info->conn_id < 0)
++		return info->conn_id;
++
++	desc->name = devm_kasprintf(dev, GFP_KERNEL, "usb-charger-%d",
++				    info->conn_id);
++	if (!desc->name) {
++		ida_free(&usb_conn_ida, info->conn_id);
++		return -ENOMEM;
++	}
++
+ 	desc->properties = usb_charger_properties;
+ 	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
+ 	desc->get_property = usb_charger_get_property;
+@@ -169,8 +183,10 @@ static int usb_conn_psy_register(struct usb_conn_info *info)
+ 	cfg.drv_data = info;
  
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 2b2ef4dbad2fc55b27fd176baf1b4205802e1c42..adfd916270055df0a957c573868302e0d77c614d 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -777,11 +777,7 @@ &quat_mi2s_sd2_active
- 		"DMIC2", "MIC BIAS3",
- 		"DMIC3", "MIC BIAS3",
- 		"SpkrLeft IN", "SPK1 OUT",
--		"SpkrRight IN", "SPK2 OUT",
--		"MM_DL1",  "MultiMedia1 Playback",
--		"MM_DL2",  "MultiMedia2 Playback",
--		"MM_DL4",  "MultiMedia4 Playback",
--		"MultiMedia3 Capture", "MM_UL3";
-+		"SpkrRight IN", "SPK2 OUT";
+ 	info->charger = devm_power_supply_register(dev, desc, &cfg);
+-	if (IS_ERR(info->charger))
+-		dev_err(dev, "Unable to register charger\n");
++	if (IS_ERR(info->charger)) {
++		dev_err(dev, "Unable to register charger %d\n", info->conn_id);
++		ida_free(&usb_conn_ida, info->conn_id);
++	}
  
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index e8012205954e76627febda14ee51ecff9d29e4fb..7677acd08e2d176be932d3f726fe5602cf8d50d1 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -632,10 +632,7 @@ &sound {
- 		"RX_BIAS", "MCLK",
- 		"AMIC2", "MIC BIAS2",
- 		"SpkrLeft IN", "SPK1 OUT",
--		"SpkrRight IN", "SPK2 OUT",
--		"MM_DL1",  "MultiMedia1 Playback",
--		"MM_DL3",  "MultiMedia3 Playback",
--		"MultiMedia2 Capture", "MM_UL2";
-+		"SpkrRight IN", "SPK2 OUT";
+ 	return PTR_ERR_OR_ZERO(info->charger);
+ }
+@@ -278,6 +294,9 @@ static void usb_conn_remove(struct platform_device *pdev)
  
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-index 26217836c2707ba2f7b0030c9801d7de3a797315..d6d4e7184c5603864668057de79c7497ad361ab3 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
-@@ -445,10 +445,7 @@ &sound {
- 		"RX_BIAS", "MCLK",
- 		"AMIC2", "MIC BIAS2",
- 		"SpkrLeft IN", "SPK1 OUT",
--		"SpkrRight IN", "SPK2 OUT",
--		"MM_DL1",  "MultiMedia1 Playback",
--		"MM_DL3",  "MultiMedia3 Playback",
--		"MultiMedia2 Capture", "MM_UL2";
-+		"SpkrRight IN", "SPK2 OUT";
+ 	cancel_delayed_work_sync(&info->dw_det);
  
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
++	if (info->charger)
++		ida_free(&usb_conn_ida, info->conn_id);
++
+ 	if (info->last_role == USB_ROLE_HOST && info->vbus)
+ 		regulator_disable(info->vbus);
+ 
 
 ---
-base-commit: 01c6df60d5d4ae00cd5c1648818744838bba7763
-change-id: 20250411-cleanup-mm-routes-7b9e92962553
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250411-work-next-d817787d63f2
 
 Best regards,
 -- 
-Luca Weiss <luca.weiss@fairphone.com>
+Chance Yang <chance.yang@kneron.us>
 
