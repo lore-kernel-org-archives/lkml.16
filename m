@@ -1,112 +1,99 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149FE2777E6;
-	Fri, 11 Apr 2025 19:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C241D89E3;
+	Fri, 11 Apr 2025 19:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744398876; cv=none; b=ljap9saD2NY2SdoiObvVt+/nFBpf1rbBbkKC5YJ5PTviorGboMdfTfx9cexUuwYcJYx1jNulwQazbzILSVQ+moPmHwF5IUOrLTX3IV61wL9T28FNfNFptWtaeqh8W04NrRwZ70X+AnxOi+N98iSrDwYvE9ya3jI/leCB2xBgXRE=
+	t=1744398922; cv=none; b=ldq/bpiop4HXUbxcle1p0mlSs/V0Iccd+yv2b+/x6uoIr0OgnJ4k7Zo6mvdIzoQDWmHV9W5iiiI8n5GQEDeRrY7LWjHfcn/EJQ+5VdNVtQVjvqIDxRcwtBbdVFitHJJuk+YhkGKXP1XrPQU4Vf8AijSHPKofam1HHeb8Jk5TZ+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744398876; c=relaxed/simple;
-	bh=WDI8AHSxcouOiGKBzyJF4GF/gQt4/zkOMb6XKdO/S9w=;
+	s=arc-20240116; t=1744398922; c=relaxed/simple;
+	bh=p5E4jzbJsjtPzisWgDf+2fFSm8/uNEdo+bU8P1gyV30=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZarKxCmFLG+gECf32JUxuUdmqo5p+8zLO2qDubBvnWHBzDFxPb2YBrk8oyvSTbtL7kl9aQoPjOb8fjhabwS/U5gnrnt+tw+486T0sxZA50a0Cr6RJX/W7wl1oa7TTg2/t/d5I+8UEyYMNdB0mqxWUgN62rPO6/46Cen0WCc5UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FWrMeXGV; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Te2sGD1UrXw/RumcLFFfAptEW9GDl421nJy1qBfWxaJDN43lJVW5Kw7ejHkzetGMDRYVpTIYQF6UzL68BFzPXfiG7J2tdXWiU3rUpzL9doBifR7NXjSJYrw7sJJC3zUSGURHgD/O7nFHRyrV921AKjCedv8eoZL5jywMdQ8v4es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXAVJFgx; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FWrMeXGV"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 977DA40E0243;
-	Fri, 11 Apr 2025 19:14:31 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id mkVW_60QBI94; Fri, 11 Apr 2025 19:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744398868; bh=mvbauw3IMdzaqgZIFEMMu1DZnqX6HT8Q0VdVTCO+BGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FWrMeXGVxBi2R3KdfThs34lisXSW2+FDcEeJkSEsfDKq6SGFGMTmOT+LPNpO//iXh
-	 p/y/F6ETdmbE8gnxAClj1ZjwkFz56XWUIO4Oo+q79BTsES8vte4qyyHk5CgnMn3OMl
-	 F4y/8IPsGVHw7nQNSBvWMmhnQpu7igRR0+6nVzebjisK6YQbGYBfGi0zVTH77g77W2
-	 rkBdlenOvWkE7WPSaeSYTMaC4w1XNdQcpWfWNyOqoRXtMla7DIHT9z++/RC/rehNbJ
-	 pmMIi4OgHaJDp0A83kuINhUbt7AkRr3RS8uJ0iRseMAzUKVAkL/y3ZCq6ez3WY4mz8
-	 YaMkdPhV55WY4Z15Aq5x067Jj4/d4OXMD3CdhFQBUu16zw44lh2AUPz2R7yGD4bvS+
-	 GcguVHG44pZPqjcVQWeAptObglWN0JI/bmxoIVqYOlphZmHD5MI9VLCo/6CRwYBtR1
-	 0j4s10obuN7fS+smPlwQBLLXlXijRut1lxSjksvODsQaJW6vpmVTFFinQ8rrmIPl4d
-	 2mlm1le6Rah0q1UgBcWOWDcQunopNIx1KyPoSsUSzLW+orVJQkH1luwHzZSQikQfv+
-	 B4aE8w2mnlBcAyFbxS9+Uw52TZalrdpNoxUJjUZitpp2EUcwC254tBahcad53BOxa9
-	 mSghWJCdKVFT4IZ++TUS0tqU=
-Received: from rn.tnic (ip-185-104-138-50.ptr.icomera.net [185.104.138.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6EDE040E01FF;
-	Fri, 11 Apr 2025 19:14:19 +0000 (UTC)
-Date: Fri, 11 Apr 2025 21:15:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-efi@vger.kernel.org, x86@kernel.org, mingo@kernel.org,
-	linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v4 00/11] x86: Refactor and consolidate startup code
-Message-ID: <20250411191512.GDZ_lqQAJRiQyjHqjC@renoirsky.local>
-References: <20250410134117.3713574-13-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXAVJFgx"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7043db8491dso24481547b3.0;
+        Fri, 11 Apr 2025 12:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744398920; x=1745003720; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z3M2ksm7ZNotH00YuRSfmtJ3TDHSlVqunlfQget/e54=;
+        b=FXAVJFgxBbuGv9WEuKPyreL2Qv5DkXJkbN8sNXxN4CyX/epNSXdm15G71MFkrbi3Fu
+         5ZiW1fUx0F/5M89B6tQxcB7Pc+lFEAact3UNWXkNb9MbHMPlVzxLRp7GlGu1syuY7C22
+         kgBGsOANJLuvBMIKYfVGEXRi942ZD4Qr6EAqI1uPvPrmqJzLzKnJXUASLeO9vbQXsjce
+         HUGwmnWg+naURx8M5giLbWTGWy7EIHtgnUiFnkOR6lNlIH8ZzSc9fZ4ZcnIvjab6r6ZI
+         OxRu3SwuCUHlyu6lBPecw5TH5kTsUbPx8VZ2DyJeAGK2WaacMSD7zaV9Io1z5WAh1s0V
+         XGHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744398920; x=1745003720;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z3M2ksm7ZNotH00YuRSfmtJ3TDHSlVqunlfQget/e54=;
+        b=YIzkxdBf34QEFAMUgLnKJB4NIP+8LknDq40QNqHyiRhO6BLnfYz/0FkvO58WguBJPB
+         i9qOlTWSb8n2humuV2HrhqoMT1aqBeq16njtc1cQKyAZdzFPEdofGdzOnQSvWuEbJak5
+         V9LhDwIYohBg/kAAraKO4E+UGEUSwmyk0VawKuqhaiYpHpETXsUjollPrxL+ehSkdnNg
+         QCRgyF0IIz+6EqywG453FO12PIt0WIt/OQM00jfPhTDDg1+xSNDpOECYwd6M+FdYZwdv
+         31TX9q7goUc0vTfYB8MHMSpQuLE50Hx/59UBqIttXzhGxWPRhQ0xO7AELVFUoJdGNVbM
+         eZOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUG91Dx3CX3B23zP1341go04wKBM4BHbS3gi2GmA/AkqwkMiB60Y5/nIlkQPT5Dy7mpKiQzq5QHMKPWbg==@vger.kernel.org, AJvYcCVjKYZw4kvqqakL4/NeAOkykHXpxlP8xFlHh8lENQdz6yiUTky4VLS3hO331t5mGqm9G3pKu2KX2BhMOBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDPjNCKGr7zt+gy24fz8MhmfqAOKKrixHcxfl9mAR39l4rfMZz
+	XFuVbYSwocflXdYcnBGxOXPtI1u9aCxn9BOU/4oQWDKwapodPzwsZGXs/vRq
+X-Gm-Gg: ASbGnctfC4DynvMfswBC+tZMBVIBF83EXgxjBeb1BH1sVIggey0dta2YAqlf0c6tj9i
+	4GOKWvbmTqlj9uafAxEmO10TV++Nt3uBWR+xZEsa9SUr2RwGozPGOByaqiMzlr7HPP2hgMLET6v
+	rgYxxBmoYgAYLboE92txrKx/6N+uvi+3rGzsYqW1+svzLFFH03ngrijvKM+QKePQOwinG6SuTHS
+	RmDEH3pC82i1bb4Gx+V6WnVtdsKQ71njY2YamyLjV0dIi7JYyGJLB9KSPGwzg1xHfoRPeG/wfBE
+	+VfVnFhp5rFySZDY0mgf9mBI2o+PCDAbSUgGog==
+X-Google-Smtp-Source: AGHT+IHZtYGR4wzPKIni8qIrVhsiAmx3LfOm7Ku3doCQQI0y4sBD8aJvfTBj6p1X2cajBUvi4gj3pw==
+X-Received: by 2002:a05:690c:6d88:b0:6f9:7b99:8a29 with SMTP id 00721157ae682-70559a8ed8dmr63113557b3.34.1744398919754;
+        Fri, 11 Apr 2025 12:15:19 -0700 (PDT)
+Received: from fedora.attlocal.net ([2600:1700:89c0:5780::42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7053e372b6dsm15913617b3.88.2025.04.11.12.15.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 12:15:19 -0700 (PDT)
+Date: Fri, 11 Apr 2025 12:15:16 -0700
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: nifan.cxl@gmail.com
+Cc: willy@infradead.org, mcgrof@kernel.org, a.manzanares@samsung.com,
+	dave@stgolabs.net, akpm@linux-foundation.org, david@redhat.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, will@kernel.org,
+	aneesh.kumar@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
+	linux-s390@vger.kernel.org, ziy@nvidia.com,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH] mm: Introduce free_folio_and_swap_cache() to replace
+ free_page_and_swap_cache()
+Message-ID: <Z_lqRPL9HIyN1f6P@fedora.attlocal.net>
+References: <20250410180254.164118-1-nifan.cxl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250410134117.3713574-13-ardb+git@google.com>
+In-Reply-To: <20250410180254.164118-1-nifan.cxl@gmail.com>
 
-On Thu, Apr 10, 2025 at 03:41:18PM +0200, Ard Biesheuvel wrote:
-> Ard Biesheuvel (11):
->   x86/asm: Make rip_rel_ptr() usable from fPIC code
->   x86/boot: Move the early GDT/IDT setup code into startup/
->   x86/boot: Move early kernel mapping code into startup/
->   x86/boot: Drop RIP_REL_REF() uses from early mapping code
->   x86/boot: Move early SME init code into startup/
->   x86/boot: Drop RIP_REL_REF() uses from SME startup code
->   x86/sev: Prepare for splitting off early SEV code
->   x86/sev: Split off startup code from core code
->   x86/boot: Move SEV startup code into startup/
->   x86/boot: Drop RIP_REL_REF() uses from early SEV code
->   x86/asm: Retire RIP_REL_REF()
+On Thu, Apr 10, 2025 at 11:00:31AM -0700, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
 > 
->  arch/x86/boot/compressed/Makefile                          |    2 +-
->  arch/x86/boot/compressed/sev.c                             |   17 +-
->  arch/x86/boot/startup/Makefile                             |   16 +
->  arch/x86/boot/startup/gdt_idt.c                            |   84 +
->  arch/x86/boot/startup/map_kernel.c                         |  225 +++
->  arch/x86/{coco/sev/shared.c => boot/startup/sev-shared.c}  |  375 +----
->  arch/x86/boot/startup/sev-startup.c                        | 1395 ++++++++++++++++
->  arch/x86/{mm/mem_encrypt_identity.c => boot/startup/sme.c} |   19 +-
->  arch/x86/coco/sev/Makefile                                 |   19 -
->  arch/x86/coco/sev/core.c                                   | 1726 ++++----------------
->  arch/x86/include/asm/asm.h                                 |    5 -
->  arch/x86/include/asm/coco.h                                |    2 +-
->  arch/x86/include/asm/mem_encrypt.h                         |    2 +-
->  arch/x86/include/asm/sev-internal.h                        |  112 ++
->  arch/x86/include/asm/sev.h                                 |   37 +
->  arch/x86/kernel/head64.c                                   |  285 +---
->  arch/x86/mm/Makefile                                       |    6 -
->  17 files changed, 2208 insertions(+), 2119 deletions(-)
->  create mode 100644 arch/x86/boot/startup/gdt_idt.c
->  create mode 100644 arch/x86/boot/startup/map_kernel.c
->  rename arch/x86/{coco/sev/shared.c => boot/startup/sev-shared.c} (78%)
->  create mode 100644 arch/x86/boot/startup/sev-startup.c
->  rename arch/x86/{mm/mem_encrypt_identity.c => boot/startup/sme.c} (97%)
->  create mode 100644 arch/x86/include/asm/sev-internal.h
+> The function free_page_and_swap_cache() takes a struct page pointer as
+> input parameter, but it will immediately convert it to folio and all
+> operations following within use folio instead of page.  It makes more
+> sense to pass in folio directly.
+> 
+> Introduce free_folio_and_swap_cache(), which takes folio as input to
+> replace free_page_and_swap_cache().  And apply it to all occurrences
+> where free_page_and_swap_cache() was used.
+> 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 
-Looks sensible at a glance. The devil's in the detail with that stuff,
-ofc, so we will have to test it with as many toolchains and usage
-scenarios as possible.
+Aside from the unnecessary folio_test_slab() others have already
+mentioned, LGTM.
 
-Thx.
+Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
