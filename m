@@ -1,120 +1,159 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E29C9278174
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0107238C27;
+	Fri, 11 Apr 2025 11:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744371444; cv=none; b=RLw+QY5MT7NwtmhpuMQxCDaG9JCFH1N1wKb/2VT3eqCvDhJZUB1uZdeIbNhnZPFIvDRDO7eonswkAkt0Y/yz5xdTRI9tt6/2/AhejvZWWRRhBpxYqBHRcFwpHfvW4wSp4mVwgDsBAOabBt1tyycWhhZdGlUE5kH7EFiDmLhF5bg=
+	t=1744371470; cv=none; b=MHKWT8P/DsC4y1ehxT6gb4j8u/TgRNN/2UM+u7/356N4ulhC9gskxwNwdsBzvQ5VkuzNoP1Vdsjpa6CaPJi83X0sE/+8DPF8PqJLQshvrt/ANUzzL5Ss7PqUTUdxff1H6OV+cJXE/E79QXmcN8EUkFVnReIjvXCiT80mt7KSioc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744371444; c=relaxed/simple;
-	bh=GgvsIiMSWI7ot2dKymYgJgOK0zbQ7qHM79BD698yXeI=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=p0thM1K2NDP9XdVxobqs+RsVDxs7UWYgZhwZaYvCBxRn0DE9t7d8L8mmwwo5STdEGpiwTYxVOTJ/z1jzVfCQWqJsjXkAckc40c54tDh0Do+1QktOo7i1Ve2lcbFv1HXmRal/JR9HKphU0k0j+4nWP3htXbeEV/C2tC3WgfWJ9YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxG6zs_vhngMu4AA--.12835S3;
-	Fri, 11 Apr 2025 19:37:16 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxPcXr_vhniKl6AA--.36349S3;
-	Fri, 11 Apr 2025 19:37:15 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
- <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
- <0b5039c3-019b-fd3d-e822-5d2a52c4111d@loongson.cn>
- <56519aed-b23e-fece-3e91-f8db44da6d45@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <5c0db0f8-bab8-7cdb-172e-931658ed0548@loongson.cn>
-Date: Fri, 11 Apr 2025 19:37:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1744371470; c=relaxed/simple;
+	bh=Kw2t04XUNLRM4wS/GspaB4ARdTcOcJffLKspSqUjU9s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Vpp8duGvIYeVxlIGMZuOGxWgcrUusSJvRM+WelMNEgS/NNBUQTgUPKjvvNSApPqQ2/ycsV9GEJ7hxehAB9DLQ9RRXfe4LueVhlLW/EPM6TI8nXRxzodlU0EZicRJX2vWRdfDVZnATmhak0pu3QD0Xvc7Rn61nS9xrLSzXskNZjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FuDHU6Be; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FuDHU6Be"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B62xf1016319;
+	Fri, 11 Apr 2025 11:37:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	j40li0hUXJG8aKZAfoP+JUQjN0C/lLCXQbNkfXbS/v8=; b=FuDHU6BenHQhdj1F
+	LIjq5nM9OtX+0gKjnnUq0fZtrlwcL8Tg+JLp+uDGlWuiMqKA8uhFFWzeN1KjLs9R
+	rp3CWosFfjDj5JfN4qhVlI7JZNPVE4PDFWCdqjYQbV5AMlzmNB/+ygGL6xMJXSTS
+	Na7ARkX7iDEWfbHKUZkGZDj4fXbVXUlWf5dY+Q2D3vQ183JokdCv1Lrvc0vYvl9N
+	WNtdgxosRG1xo4y1/9pNud78YyHh9ovF4XLZySLKrxjp00ef3sHQb26qQuqa5RrW
+	KE1647hCcMRWAs2IlA9RerTeG6BQGNP6nag9VO/xJdf00rY0KQB8YF33uDR3tXHH
+	J5Dt9Q==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1t29q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 11:37:40 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53BBbdla003584
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 11:37:39 GMT
+Received: from [10.218.22.7] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 11 Apr
+ 2025 04:37:34 -0700
+Message-ID: <69fba227-ed47-4004-9451-777ca19b687f@quicinc.com>
+Date: Fri, 11 Apr 2025 17:07:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <56519aed-b23e-fece-3e91-f8db44da6d45@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: sm6350: Add video clock
+ controller
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Luca Weiss
+	<luca.weiss@fairphone.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Michael
+ Turquette" <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Konrad
+ Dybcio" <konradybcio@kernel.org>
+CC: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250324-sm6350-videocc-v2-0-cc22386433f4@fairphone.com>
+ <20250324-sm6350-videocc-v2-4-cc22386433f4@fairphone.com>
+ <1c09fee5-9626-4540-83fb-6d90db2ce595@oss.qualcomm.com>
+ <9eb6dfd7-2716-4150-9392-98e26892d82d@quicinc.com>
+ <e3dda8bf-e19e-4dde-83a4-7876ca81e5e6@oss.qualcomm.com>
+Content-Language: en-US
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+In-Reply-To: <e3dda8bf-e19e-4dde-83a4-7876ca81e5e6@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMDxPcXr_vhniKl6AA--.36349S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kr1xAr1rKr4UuFy7Ar18Zwc_yoW8Wr1xpF
-	W7AF4kGrZ7WF1kZFyDJw4Sv3WxJrZ3K34xCa1vk3yfuF43Cr95Xrn7C347Z3Wqv395AF10
-	9FyDtwnIqFsxAFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUU
-	U
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: LjnntO8tf29NEwcfn2mZ6AKG0KlDzgFO
+X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f8ff04 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=6H0WHjuAAAAA:8
+ a=pBxsQiL28MlgmQOkK-EA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-GUID: LjnntO8tf29NEwcfn2mZ6AKG0KlDzgFO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110074
 
-On 04/11/2025 12:46 PM, Jinyang He wrote:
->
-> On 2025-04-11 10:48, Tiezhu Yang wrote:
->> On 04/09/2025 10:17 AM, Jinyang He wrote:
->>> On 2025-04-08 17:27, Tiezhu Yang wrote:
 
-...
 
-> I have just explained the previous status may be broken by IRQ.
+On 4/11/2025 2:42 PM, Konrad Dybcio wrote:
+> On 4/11/25 9:15 AM, Jagadeesh Kona wrote:
+>>
+>>
+>> On 4/1/2025 10:03 PM, Konrad Dybcio wrote:
+>>> On 3/24/25 9:41 AM, Luca Weiss wrote:
+>>>> Add a node for the videocc found on the SM6350 SoC.
+>>>>
+>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/qcom/sm6350.dtsi | 14 ++++++++++++++
+>>>>  1 file changed, 14 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/sm6350.dtsi b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+>>>> index 42f9d16c2fa6da66a8bb524a33c2687a1e4b40e0..4498d6dfd61a7e30a050a8654d54dae2d06c220c 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/sm6350.dtsi
+>>>> +++ b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+>>>> @@ -1952,6 +1952,20 @@ usb_1_dwc3_ss_out: endpoint {
+>>>>  			};
+>>>>  		};
+>>>>  
+>>>> +		videocc: clock-controller@aaf0000 {
+>>>> +			compatible = "qcom,sm6350-videocc";
+>>>> +			reg = <0x0 0x0aaf0000 0x0 0x10000>;
+>>>> +			clocks = <&gcc GCC_VIDEO_AHB_CLK>,
+>>>> +				 <&rpmhcc RPMH_CXO_CLK>,
+>>>> +				 <&sleep_clk>;
+>>>> +			clock-names = "iface",
+>>>> +				      "bi_tcxo",
+>>>> +				      "sleep_clk";
+>>>> +			#clock-cells = <1>;
+>>>> +			#reset-cells = <1>;
+>>>> +			#power-domain-cells = <1>;
+>>>> +		};
+>>>
+>>> You'll probably want to hook up some additional power domains here, see
+>>>
+>>> https://lore.kernel.org/linux-arm-msm/20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com/
+>>>
+>>
+>> On SM6350, videocc doesn't need multiple power domains at HW level, it is only on CX rail which would be ON
+>> when system is active, hence power-domains are not mandatory here.
+> 
+> 6350 doesn't have either MMCX nor a split MX - shouldn't both normal
+> CX and MX be in there?
+> 
 
-The initial aim is to make sure the irq is disabled at the end of
-do_bp(), so let us narrow down the scope.
+All clocks & GDSC's of SM6350 videocc are only on CX rail, so it requires only CX power domain. But when HLOS
+is active, CX rail will be ON and operate at a level above retention, which is sufficient for videocc to operate.
+Hence clock driver don't need to explicitly vote on CX rail.
 
-> On the other hand, have you tried only fix do_bp weather cause hang?
->
-> bool this_bp_ie = regs->csr_prmd & CSR_PRMD_PIE;
-> if (this_bp_ie)
->   local_irq_enable();
-> ...
-> if (this_bp_ie)
->   local_irq_disable();
-
-This is a good idea, thank you.
-
-I will test the following change, if it works well and no more comments,
-I will send v2 in the next week.
-
----8<---
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 2ec3106c0da3..68cc4165578a 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -710,11 +710,12 @@ asmlinkage void noinstr do_bce(struct pt_regs *regs)
-  asmlinkage void noinstr do_bp(struct pt_regs *regs)
-  {
-         bool user = user_mode(regs);
-+       bool pie = regs->csr_prmd & CSR_PRMD_PIE;
-         unsigned int opcode, bcode;
-         unsigned long era = exception_era(regs);
-         irqentry_state_t state = irqentry_enter(regs);
-
--       if (regs->csr_prmd & CSR_PRMD_PIE)
-+       if (pie)
-                 local_irq_enable();
-
-         if (__get_inst(&opcode, (u32 *)era, user))
-@@ -780,7 +781,7 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
-         }
-
-  out:
--       if (regs->csr_prmd & CSR_PRMD_PIE)
-+       if (pie)
-                 local_irq_disable();
-
-         irqentry_exit(regs, state);
+The same is not true for other rails like MMCX and Split MX(MXC), hence clock drivers had to explicitly vote on
+those rails.
 
 Thanks,
-Tiezhu
-
+Jagadeesh 
+ 
+> Konrad
