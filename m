@@ -1,213 +1,184 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACB21FBCB1
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99FC1FBCB1
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361657; cv=none; b=UVMYVdoh3Na8vjN18ql6DW6M+fAKsRUnEdk0EUoVWGUZRC024bFZkB3ttXPOh4jPFuriNtwktV9cbL/fgp7B0ay7vVfI2P+DhnqapRAnYgmndlhtZMcnY9ZlxAOc2UARG5/0jsqB9uQ6wVRv8aoBtbNsYoPlsq5JKk2iWswHx+Q=
+	t=1744361684; cv=none; b=RNeObzUbP4r9B2oAc75PJ09kIuEkD5h8u4iz1R12A/lVe6LwCNnnT2Jz3KVBUaTXT8Dpaz/hOLqSXq6mnZhzJH/CBIWo41vVVDguuL69lHmTBymSfAzkPzVQ0UojaJhrYBzTte7o9EBVmsIN66elyRmXLXrg3vfLSwKBfHKqGQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361657; c=relaxed/simple;
-	bh=qjO090hnYvSO7+q5RyTsNvTDWzwLtjmFLi7+QUNA+Nk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O5DBeZU22NukDvyoMPyX1U+EuLKcQa6NrBGSrxmVtLefcoBKehbINAw+rAAg/LLUFAt+KkecWlz+y6XnJWF5Qkh3auVh3gL5McXM6a86JJD+gA0Ia8rBhfEv80Htiwr8eO9AEfKaMSyN5XeRBz5keBCxdWVaK1dgjKySlAgnkMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S6hP7Cp+; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1744361684; c=relaxed/simple;
+	bh=H3BP+VdZh1B3W1dvCEQ5RMGskhqEgCZX1CctJVO+8zg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bjv3lfzBguT8gLrd04TF6PK5BeXMOCnLfm10HNfuQVH4t8M9iJNBATpd7JeHisdQSaujxzKcRr4f9WGCgoMYbuPWvnrZeEwV4IdiZLfa9vsIwOj3t4wG5pcrbHh8gC1nPtBOfO/imdYInBczjD3AhjSofMBC/FcbqaOIceUNImA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fRUa5SCt; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S6hP7Cp+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fRUa5SCt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744361653;
+	s=mimecast20190719; t=1744361681;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lUHjzYBwpvrIsKo7sSrLS26Mz4GzgpGjSzm2tB0vXgE=;
-	b=S6hP7Cp+WyRsb2Dgvmj3G/DueLVsKXK0F1JwmOTYxbB0VpJSKzY6TF/gpdkqIb5PJaKQot
-	RicthfSVyk57MFfhx6T5mQNEwLnH9579I1aKhku45Cr/s1UiEtosUB5dD+6+vQP/9DDRPO
-	5/udBl1rXz9i/lF/ATxMPwUQqp+mHfc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=uEk1279QwRzc7uUG0zLaPNPISbUS02DqA+kwAbF+xq8=;
+	b=fRUa5SCtj/9KJZRdrSnn8+/QVvZ8Vn7TqZxTb1CtEDleaFnD2Kj21wI29cJmezAQr08AbR
+	k7vxxPI6XjAFYQR6LXJ9enQn+0y1/sZSy15ZtfZXSXoz7I14Se9FdCJqFvFQ8rGfILA3pK
+	dl8vqbkXv1zCJinmnLrx7RH7zqDbKEM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-577-EZ31ElFaOSy9HmkjXtHYag-1; Fri, 11 Apr 2025 04:54:11 -0400
-X-MC-Unique: EZ31ElFaOSy9HmkjXtHYag-1
-X-Mimecast-MFC-AGG-ID: EZ31ElFaOSy9HmkjXtHYag_1744361651
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39ac9b0cb6aso1105912f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:54:11 -0700 (PDT)
+ us-mta-663-Tw0LS6ipNZGVhYC5DlyOvg-1; Fri, 11 Apr 2025 04:54:40 -0400
+X-MC-Unique: Tw0LS6ipNZGVhYC5DlyOvg-1
+X-Mimecast-MFC-AGG-ID: Tw0LS6ipNZGVhYC5DlyOvg_1744361679
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d01024089so14324585e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:54:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744361651; x=1744966451;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lUHjzYBwpvrIsKo7sSrLS26Mz4GzgpGjSzm2tB0vXgE=;
-        b=CA/bOLIFhsDy00rpSp4DQfRGAbH923n/fveiJywyVMKe5gc8QVNj1ZE/l6JP4Qoev2
-         nHENRAZaIW2m9mSQ2o1E/Uc4vbpbKg+1HqO4SqLBkAdjkSFxv6BkTVV1qbY0HULsW4lC
-         4Jq4IvJuo2KfXJnz4HvTuO46G1cdgh9+K5c6QeT//B2mizGug+Yjt4poCUAl0fJOEvrw
-         QGVu+XTWY0WarRWxEVRCja8V2skCd7O++WSvBjnSojNgLsyPZBbPBmrZRGopiNI7Xdv1
-         1DCegk7ieVdjOfWCk5z+pxlETYWgWmSPrax75b7m7eF74mR7IbVXNFogkEqNx8LjUnUZ
-         zWKA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+rLTFsiAiDeD4i84Iki/zYjlamFgx0FDwhikXx5U8mWQwz4C9vNoT9qayld9BJxp/Oakf/1U80iaAYeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYbLQilumPOmZkdGhpgU8GHRheY1Z+Jb+FUpCSONY1iOO5Chqf
-	pv9Rf1j181ICs4XYkIKW00B/T66qJSsd3Hf1/a8Ht31Kpe3CUXPBmACTes+QgPlU+iQ/kBnXGnI
-	UIiTgHY+3CZb3KpSE0+6MCpxdQbD0lZLYOZG7JSaIIhp9SEmi5wRvuHRdCO0g8Q==
-X-Gm-Gg: ASbGncsnsxabHNN08Jl8s3glOmwofREXWiwM9jakzwY5M77GDnUmTNxDhezs+zFihoV
-	a4CX/xW3sAf+ny/9othlf50PVXITd8+4yjDCrdjmdA6MMonM9ohOTH6X8FqQt8hJc80cigqCnOd
-	z5KuErBtZQ/G8v3bIjkT8FDBKIX79bQGgoqJx351HDLxNqy+t3dUInJe9Zf0Sx8kPwSh1NAmZkw
-	/KJZ5fhFAxB5v1HVYfgir4aujn5EAduMSkGJKxh1uITW/oIPHhenYoNPlv4Oi1d94eTobxRaHID
-	SDm7T3mC4sjBq+rpXHhp7wvGlvL7IjCtIAaHvLf4IRZavTJQmtnAJQfmM9ub48YHtKoQfTsrfa0
-	jn3ecJj5iCCUFR60z+snTB80VqvoKtcR8xza5
-X-Received: by 2002:a05:6000:22c1:b0:38f:6287:6474 with SMTP id ffacd0b85a97d-39ea51f45bemr1272186f8f.15.1744361650772;
-        Fri, 11 Apr 2025 01:54:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH33DDjaZp2a66XGNnz3i3XKByjcm2LRqZFjma/j5OURalaa1m61K6BdzZVPlt2Z7fND7LBjQ==
-X-Received: by 2002:a05:6000:22c1:b0:38f:6287:6474 with SMTP id ffacd0b85a97d-39ea51f45bemr1272177f8f.15.1744361650431;
-        Fri, 11 Apr 2025 01:54:10 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c726:6800:7ddf:5fc:2ee5:f08a? (p200300cbc72668007ddf05fc2ee5f08a.dip0.t-ipconnect.de. [2003:cb:c726:6800:7ddf:5fc:2ee5:f08a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae977a7fsm1367091f8f.45.2025.04.11.01.54.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 01:54:10 -0700 (PDT)
-Message-ID: <f03f7e13-3d37-4d4a-87a6-61731744f476@redhat.com>
-Date: Fri, 11 Apr 2025 10:54:09 +0200
+        d=1e100.net; s=20230601; t=1744361679; x=1744966479;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uEk1279QwRzc7uUG0zLaPNPISbUS02DqA+kwAbF+xq8=;
+        b=Tl/DmpgmV6x9wVPTnu8d1uLYD/1dzK7PzGzOK/chXCPuaG01Oe9wKwZ2Awuhl440nt
+         6pkcpfXXayyD5XQM//1P1JXJde7UBN8cUwcmUnC/wEp/CVIARFt/iDEOC8a25Sj3Bmgm
+         Jh3rU/f70VerCBSgk6hkYX5yg3wui6/HR4xD2mELAWVrOCKJbMhduj9/j9CBspJIIp6C
+         2tByIeEDbr+5MxgQZAYcKg/7CDeV01DKmat3MRxe+iSFCQY7TR2vLOhaGOLvrhLusR8Q
+         ySx9GLH8iONNJVL1VLALwBzW+Jfmfdp7jmLms+WQA/sojFU792sOukDfKMqKjUmYbaeZ
+         Wacg==
+X-Forwarded-Encrypted: i=1; AJvYcCURPHP8UkIuW8dx/NW7Op0wr7CM9nQVjcY9MfqbF+2+Tl08Ew4cTrBUDINlXh3yIeUgqXN4bMWmhyum0og=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC9r23VoFWMpxrSNQ1vvxXlpKnqkTJL826doC0uoKkyHZ1F24+
+	Qoqq6bPu3npZiXtSj604b1e+e0/1TFlL+dnEiwudW0TsJxjZ+C03X5Xe5WMqHl6ifQXjszEaYtv
+	A04J4CL52DTSDzk3tVqNeWs4NVbWnwDn6wqw17SCuamzzbVUCkcu0IOEiToxgkQ==
+X-Gm-Gg: ASbGncsZcU6WSb8kdnMzHc9rfh60laPKkPdxv9wbFmzTW0HuquRlVeAj4euWjbE0IeO
+	36uF5+wjvySjIs/TawLSNY3UT6iVXioTBFma8WSVjAyLSGDwiCaRaOiUACr0rym/NR18v77TlJn
+	dLIzz+MOFna/USp621CnYkvu1cMac3UtdS/COpUuv9P2g70bHSx3w5wxthPaOcsgm4n3fY9+nBk
+	2Omf+Pdr+4PaSMy6jDQLbb8K3LDgXDmEVu5fO1htyjSfkCnswYSBGeHmzcC0TvEuMIr7R7coUEp
+	JM0eq5p4/5cMy8yU6j08MBs1k+C4ephIzNUUkQ==
+X-Received: by 2002:a05:600c:a4b:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-43f3a9aa6c9mr13610705e9.22.1744361679061;
+        Fri, 11 Apr 2025 01:54:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH2cyMks8qOD992VBRAPRGFfHOnKsXUuTT/bpdJZD9OZqw4EWf4mUKHmqEFEEoNwjkrfPC9lw==
+X-Received: by 2002:a05:600c:a4b:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-43f3a9aa6c9mr13610405e9.22.1744361678519;
+        Fri, 11 Apr 2025 01:54:38 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f23572b5bsm76585995e9.28.2025.04.11.01.54.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 01:54:38 -0700 (PDT)
+Message-ID: <615e60dfd21c48d6300f46729a98ad4dc25a3cd1.camel@redhat.com>
+Subject: Re: [PATCH v2 05/22] verification/dot2k: Make a separate
+ dot2k_templates/Kconfig_container
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de
+Date: Fri, 11 Apr 2025 10:54:36 +0200
+In-Reply-To: <45b0fd8fc129cab7bac784fc1eeab9826ee7e241.1744355018.git.namcao@linutronix.de>
+References: <cover.1744355018.git.namcao@linutronix.de>
+	 <45b0fd8fc129cab7bac784fc1eeab9826ee7e241.1744355018.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] mm/gup: clean up codes in fault_in_xxx() functions
-To: Baoquan He <bhe@redhat.com>, linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, osalvador@suse.de, yanjun.zhu@linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250410035717.473207-1-bhe@redhat.com>
- <20250410035717.473207-5-bhe@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250410035717.473207-5-bhe@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 10.04.25 05:57, Baoquan He wrote:
-> The code style in fault_in_readable() and fault_in_writable() is a
-> little inconsistent with fault_in_safe_writeable(). In fault_in_readable()
-> and fault_in_writable(), it uses 'uaddr' passed in as loop cursor. While
-> in fault_in_safe_writeable(), local variable 'start' is used as loop
-> cursor. This may mislead people when reading code or making change in
-> these codes.
-> 
-> Here define explicit loop cursor and use for loop to simplify codes in
-> these three functions. These cleanup can make them be consistent in
-> code style and improve readability.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+
+
+On Fri, 2025-04-11 at 09:37 +0200, Nam Cao wrote:
+> A generated container's Kconfig has an incorrect line:
+>=20
+> =C2=A0=C2=A0=C2=A0 select DA_MON_EVENTS_IMPLICIT
+>=20
+> This is due to container generation uses the same template Kconfig
+> file as
+> deterministic automaton monitor.
+>=20
+> Therefore, make a separate Kconfig template for container which has
+> only
+> the necessaries for container.
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 > ---
->   mm/gup.c | 65 +++++++++++++++++++++++---------------------------------
->   1 file changed, 26 insertions(+), 39 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 77a5bc622567..a76bd7e90a71 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2113,28 +2113,24 @@ static long __get_user_pages_locked(struct mm_struct *mm, unsigned long start,
->    */
->   size_t fault_in_writeable(char __user *uaddr, size_t size)
->   {
-> -	char __user *start = uaddr, *end;
-> +	const unsigned long start = (unsigned long)uaddr;
-> +	const unsigned long end = start + size;
-> +	unsigned long cur = start;
+> Alternatively, we could also modify the Python scripts. I tried both
+> and
+> this solution seems cleaner.
+> ---
+> =C2=A0tools/verification/dot2/dot2/dot2k.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 3 ++-
+> =C2=A0tools/verification/dot2/dot2k_templates/Kconfig_container | 5 +++++
+> =C2=A02 files changed, 7 insertions(+), 1 deletion(-)
+> =C2=A0create mode 100644
+> tools/verification/dot2/dot2k_templates/Kconfig_container
+>=20
+> diff --git a/tools/verification/dot2/dot2/dot2k.py
+> b/tools/verification/dot2/dot2/dot2k.py
+> index 745d35a4a379..dd4b5528a4f2 100644
+> --- a/tools/verification/dot2/dot2/dot2k.py
+> +++ b/tools/verification/dot2/dot2/dot2k.py
+> @@ -35,6 +35,7 @@ class dot2k(Dot2c):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.states =3D []
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.main_c =3D
+> self.__read_file(self.monitor_templates_dir + "main_container.c")
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.main_h =3D
+> self.__read_file(self.monitor_templates_dir + "main_container.h")
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.=
+kconfig =3D
+> self.__read_file(self.monitor_templates_dir + "Kconfig_container")
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+super().__init__(file_path,
+> extra_params.get("model_name"))
+> =C2=A0
+> @@ -44,7 +45,7 @@ class dot2k(Dot2c):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.monitor_type =3D MonitorType
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.main_c =3D
+> self.__read_file(self.monitor_templates_dir + "main.c")
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.trace_h =3D
+> self.__read_file(self.monitor_templates_dir + "trace.h")
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.kconfig =3D self.__read_=
+file(self.monitor_templates_dir +
+> "Kconfig")
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.=
+kconfig =3D
+> self.__read_file(self.monitor_templates_dir + "Kconfig")
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.enum_suffix =3D "_%=
+s" % self.name
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.description =3D ext=
+ra_params.get("description",
+> self.name) or "auto-generated"
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.auto_patch =3D extr=
+a_params.get("auto_patch")
+> diff --git
+> a/tools/verification/dot2/dot2k_templates/Kconfig_container
+> b/tools/verification/dot2/dot2k_templates/Kconfig_container
+> new file mode 100644
+> index 000000000000..a606111949c2
+> --- /dev/null
+> +++ b/tools/verification/dot2/dot2k_templates/Kconfig_container
+> @@ -0,0 +1,5 @@
+> +config RV_MON_%%MODEL_NAME_UP%%
+> +	depends on RV
+> +	bool "%%MODEL_NAME%% monitor"
+> +	help
+> +	=C2=A0 %%DESCRIPTION%%
 
-I would initialize cur in the for loop header, makes the loop easier to 
-read.
+Good catch
 
->   
->   	if (unlikely(size == 0))
->   		return 0;
-> +
-
-Would not add that line to keep it like fault_in_readable() below.
-
->   	if (!user_write_access_begin(uaddr, size))
->   		return size;
-> -	if (!PAGE_ALIGNED(uaddr)) {
-> -		unsafe_put_user(0, uaddr, out);
-> -		uaddr = (char __user *)PAGE_ALIGN((unsigned long)uaddr);
-> -	}
-> -	end = (char __user *)PAGE_ALIGN((unsigned long)start + size);
-> -	if (unlikely(end < start))
-> -		end = NULL;
-> -	while (uaddr != end) {
-> -		unsafe_put_user(0, uaddr, out);
-> -		uaddr += PAGE_SIZE;
-> -	}
-> +
-> +	/* Stop once we overflow to 0. */
-> +	for (; cur && cur < end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
-> +		unsafe_put_user(0, (char __user *)cur, out);
->   
-
-Staring at fault_in_safe_writeable(), we could also do
-
-/* Stop once we overflow to 0. */
-end = PAGE_ALIGN(end)
-if (start < end)
-	end = 0;
-
-for (cur = start; cur != end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
-	unsafe_put_user(0, (char __user *)cur, out);
-
-Essentially, removing the "cur" check from the loop condition. Not sure 
-if that is better.
-
-In any case, if all functions later look similar and clearer it's a big win.
-
--- 
-Cheers,
-
-David / dhildenb
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 
