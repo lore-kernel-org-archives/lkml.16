@@ -1,243 +1,464 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6052147F5;
-	Fri, 11 Apr 2025 02:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E532147F5
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744339907; cv=none; b=tzISls20FWPfwEcN75bhstgoGilwa0f7EBQd3aOA393f1s0L0lP+rAIo5pNlWyPTy/QFnsU5FTWi2blNGWxFgGknwIZ2a78cdtq2pLV9F58OY7tBOJQ7nejhBHSPxNJnjepZLMjE7r6APnb19gkPdFbIqq55ejeQRk//1NthjeA=
+	t=1744339915; cv=none; b=qASpWtYrqz5vJygMG0zyb7ZAEfer0HkluGQ4CE98abr3r6KlcAlBK4AyiFrEpC6ycbd1RkEzKlv/KJQuSdk39zZMrgjnQZ7FcAgXLz9lXo7er+vir9pROmhdEw1/bWojXb/KUcfIlGRNE3xBWbbaKmm+briazDQN9N2/fKBaES0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744339907; c=relaxed/simple;
-	bh=QGmAWk8YW54uZtf6oYIyPCnnrkMMqHu+DmUgJe2uWVw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SyEOjQwXqHXOiUWOncTfxKkuAGW7k70QyzXIEEWFhJfBIIbE3u7rwcBfcxc+37R7tHSQoYNK8VlUT/ynY9X2qSWLVabDey313setEGBRtRM1y19cHzkeJC8O9xMQlJB0zbxTxmvT3ik89tA19it4gjRq1rALvvcXx76hKlC/efg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FouJLVrr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744339915; c=relaxed/simple;
+	bh=n/2p0J/wLw3svQVC4sW8sRmCsZS9mNb4RjrAzXFlPkM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eAEkDcF158StRxKC+lqE0YOhWr3TS5jb0G/+q68h7XFgeH7ggoGU81cBs9eHB9u6/A00VfAI/Y2cajhqG0TlpeZDGdoifs2UDxlHyT//RswCgVyQ68eeWR9vYhsJ9COH3YJJTa2NMcJXGNSMJKxCcvL4pcmObkai8gdZ61ZRmgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=WBF1M5xX; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FouJLVrr"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B21LgN007233;
-	Fri, 11 Apr 2025 02:51:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	54+weeQ0kRcPU5YNIxAUX0uPK9WSQdfhUffh6J44FZo=; b=FouJLVrrEvwqi8kP
-	U3d+nXa3Ol1gUQ7c3EQyhF1pky5nlkQfeKHeLqkjV/zY2rjBVLVlwNVjwYm1zm4H
-	sx4abW3elBnO5MZq3WJ2kJXi3MfgNDEAo3c6Erpd4ZTm5Zv6jPgBHM7kY7RcwNSF
-	7cuTKddQtp5s7xB2uc0L4Wl0ytFd5CT8JG1gpZuDverb/FAKC/+D2ko9/JTbVM40
-	bWiTZylSkRGIH0+x2uXWs9TtW1ihKKw+z4Xdr3VI8aak/vCDpr4Ss5EFpQGpP9ka
-	Fd8HFsXzw1vTU71KWZwptVKBMTDeOKjKuLuAK8HI92iWfWLTHH8+uDyxVED7w/uR
-	pG44dA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45xeh3hy84-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 02:51:32 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53B2pU2w001014
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 02:51:30 GMT
-Received: from [10.239.133.242] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
- 2025 19:51:27 -0700
-Message-ID: <808b2ae5-5286-487c-8f52-03936c3686ef@quicinc.com>
-Date: Fri, 11 Apr 2025 10:51:24 +0800
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="WBF1M5xX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1744339579;
+	bh=cM7TsBMwF8jVHB13yyeB0Yu4XGBYSPsgpZ/oxHtmNv8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WBF1M5xXNJW/D5XNXOoUGbg/ov7f49iikCFPVbCbw52d7YXA+AzVmtENUSPMgT0pQ
+	 lQjJV34ITzEMuu5S8G9tY9RYjHEvkdF1TAK5yj7ehqAXWVVTs+SyHG7Fi0AxeYSXme
+	 1mA94LNe5/2l/8f2lDiisz/63ogtEr54PJgytd/M=
+Received: from localhost.localdomain (unknown [223.104.122.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 9338B65F59;
+	Thu, 10 Apr 2025 22:46:17 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Guo Ren <guoren@kernel.org>
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH v2] RISC-V: vDSO: Wire up getrandom() vDSO implementation
+Date: Fri, 11 Apr 2025 10:46:00 +0800
+Message-ID: <20250411024600.16045-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] coresight-tgu: add reset node to initialize
-To: Mike Leach <mike.leach@linaro.org>
-CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Clark
-	<james.clark@arm.com>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Songwei Chai
-	<quic_songchai@quicinc.com>
-References: <20250227092640.2666894-1-quic_songchai@quicinc.com>
- <20250227092640.2666894-8-quic_songchai@quicinc.com>
- <CAJ9a7Vh4OTZdbEygtwc7BxRJSLgkALoaNRPEiQLJQgZvFtnTtw@mail.gmail.com>
-Content-Language: en-US
-From: songchai <quic_songchai@quicinc.com>
-In-Reply-To: <CAJ9a7Vh4OTZdbEygtwc7BxRJSLgkALoaNRPEiQLJQgZvFtnTtw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=VbH3PEp9 c=1 sm=1 tr=0 ts=67f883b4 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=vmeuUHBbrc6izfGtevMA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: M3FgirXRwWiVEtVfkR1R1N9M31nazOhl
-X-Proofpoint-ORIG-GUID: M3FgirXRwWiVEtVfkR1R1N9M31nazOhl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 suspectscore=0 adultscore=0 spamscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 bulkscore=0 mlxscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110020
+Content-Transfer-Encoding: 8bit
 
+Hook up the generic vDSO implementation to the generic vDSO getrandom
+implementation by providing the required __arch_chacha20_blocks_nostack
+and getrandom_syscall implementations. Also wire up the selftests.
 
-On 3/7/2025 9:33 PM, Mike Leach wrote:
-> Hi,
->
-> On Thu, 27 Feb 2025 at 09:27, songchai <quic_songchai@quicinc.com> wrote:
->> From: Songwei Chai <quic_songchai@quicinc.com>
->>
->> Add reset node to initialize the value of
->> priority/condition_decode/condition_select/timer/counter nodes
->>
->> Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
->> Signed-off-by: songchai <quic_songchai@quicinc.com>
->> ---
->>   .../testing/sysfs-bus-coresight-devices-tgu   |  7 ++
->>   drivers/hwtracing/coresight/coresight-tgu.c   | 79 +++++++++++++++++++
->>   2 files changed, 86 insertions(+)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
->> index d88d05fbff43..8fb5afd7c655 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
->> +++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
->> @@ -42,3 +42,10 @@ KernelVersion   6.15
->>   Contact:        Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
->>   Description:
->>                   (RW) Set/Get the counter value with specific step for TGU.
->> +
->> +What:           /sys/bus/coresight/devices/<tgu-name>/reset_tgu
->> +Date:           February 2025
->> +KernelVersion   6.15
->> +Contact:        Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
->> +Description:
->> +                (Write) Reset the dataset for TGU.
-> Document the value needed to initiate the reset.
-Done.
->
->> diff --git a/drivers/hwtracing/coresight/coresight-tgu.c b/drivers/hwtracing/coresight/coresight-tgu.c
->> index 693d632fb079..b36ced761c0d 100644
->> --- a/drivers/hwtracing/coresight/coresight-tgu.c
->> +++ b/drivers/hwtracing/coresight/coresight-tgu.c
->> @@ -343,6 +343,84 @@ static ssize_t enable_tgu_store(struct device *dev,
->>   }
->>   static DEVICE_ATTR_RW(enable_tgu);
->>
->> +/* reset_tgu_store - Reset Trace and Gating Unit (TGU) configuration. */
->> +static ssize_t reset_tgu_store(struct device *dev,
->> +                              struct device_attribute *attr, const char *buf,
->> +                              size_t size)
->> +{
->> +       unsigned long value;
->> +       struct tgu_drvdata *drvdata = dev_get_drvdata(dev->parent);
->> +       int i, j, ret;
->> +
->> +       if (kstrtoul(buf, 0, &value))
->> +               return -EINVAL;
->> +
-> Check "value" here and bail out with an error code if 0.
-Done.
->
->> +       if (!drvdata->enable) {
->> +               ret = pm_runtime_get_sync(drvdata->dev);
->> +               if (ret < 0) {
->> +                       pm_runtime_put(drvdata->dev);
->> +                       return ret;
->> +               }
->> +       }
->> +
->> +       spin_lock(&drvdata->spinlock);
->> +       CS_UNLOCK(drvdata->base);
->> +
->> +       if (value) {
-> drop this line
-Done.
->
->> +               tgu_writel(drvdata, 0, TGU_CONTROL);
->> +
->> +               if (drvdata->value_table->priority)
->> +                       memset(drvdata->value_table->priority, 0,
->> +                              MAX_PRIORITY * drvdata->max_step *
->> +                                      drvdata->max_reg * sizeof(unsigned int));
->> +
->> +               if (drvdata->value_table->condition_decode)
->> +                       memset(drvdata->value_table->condition_decode, 0,
->> +                              drvdata->max_condition_decode * drvdata->max_step *
->> +                                      sizeof(unsigned int));
->> +
->> +               /* Initialize all condition registers to NOT(value=0x1000000) */
->> +               for (i = 0; i < drvdata->max_step; i++) {
->> +                       for (j = 0; j < drvdata->max_condition_decode; j++) {
->> +                               drvdata->value_table
->> +                                       ->condition_decode[calculate_array_location(
->> +                                               drvdata, i, TGU_CONDITION_DECODE, j)] =
->> +                                       0x1000000;
->> +                       }
->> +               }
->> +
->> +               if (drvdata->value_table->condition_select)
->> +                       memset(drvdata->value_table->condition_select, 0,
->> +                              drvdata->max_condition_select * drvdata->max_step *
->> +                                      sizeof(unsigned int));
->> +
->> +               if (drvdata->value_table->timer)
->> +                       memset(drvdata->value_table->timer, 0,
->> +                              (drvdata->max_step) *
->> +                                      (drvdata->max_timer_counter) *
->> +                                      sizeof(unsigned int));
->> +
->> +               if (drvdata->value_table->counter)
->> +                       memset(drvdata->value_table->counter, 0,
->> +                              (drvdata->max_step) *
->> +                                      (drvdata->max_timer_counter) *
->> +                                      sizeof(unsigned int));
->> +
->> +               dev_dbg(dev, "Coresight-TGU reset complete\n");
->> +       } else {
->> +               dev_dbg(dev, "Coresight-TGU invalid input\n");
-> not needed if early exit on input errror
-Done.
->
->> +       }
->> +
->> +       CS_LOCK(drvdata->base);
->> +
->> +       drvdata->enable = false;
->> +       spin_unlock(&drvdata->spinlock);
->> +       pm_runtime_put(drvdata->dev);
->> +
->> +       return size;
->> +}
->> +static DEVICE_ATTR_WO(reset_tgu);
->> +
->>   static const struct coresight_ops_helper tgu_helper_ops = {
->>          .enable = tgu_enable,
->>          .disable = tgu_disable,
->> @@ -354,6 +432,7 @@ static const struct coresight_ops tgu_ops = {
->>
->>   static struct attribute *tgu_common_attrs[] = {
->>          &dev_attr_enable_tgu.attr,
->> +       &dev_attr_reset_tgu.attr,
->>          NULL,
->>   };
->>
->>
->
-> Regards
->
-> Mike
->
+The benchmark result:
+
+	vdso: 25000000 times in 2.466341333 seconds
+	libc: 25000000 times in 41.447720005 seconds
+	syscall: 25000000 times in 41.043926672 seconds
+
+	vdso: 25000000 x 256 times in 162.286219353 seconds
+	libc: 25000000 x 256 times in 2953.855018685 seconds
+	syscall: 25000000 x 256 times in 2796.268546000 seconds
+
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+
+[v1]->v2:
+- Fix the commit message.
+- Only build the vDSO getrandom code if CONFIG_VDSO_GETRANDOM, to
+  unbreak RV32 build.
+- Likewise, only enable the selftest if __riscv_xlen == 64.
+
+[v1]: https://lore.kernel.org/all/20250224122541.65045-1-xry111@xry111.site/
+
+ arch/riscv/Kconfig                            |   1 +
+ arch/riscv/include/asm/vdso/getrandom.h       |  30 +++
+ arch/riscv/kernel/vdso/Makefile               |  12 +
+ arch/riscv/kernel/vdso/getrandom.c            |  10 +
+ arch/riscv/kernel/vdso/vdso.lds.S             |   1 +
+ arch/riscv/kernel/vdso/vgetrandom-chacha.S    | 244 ++++++++++++++++++
+ .../selftests/vDSO/vgetrandom-chacha.S        |   2 +
+ 7 files changed, 300 insertions(+)
+ create mode 100644 arch/riscv/include/asm/vdso/getrandom.h
+ create mode 100644 arch/riscv/kernel/vdso/getrandom.c
+ create mode 100644 arch/riscv/kernel/vdso/vgetrandom-chacha.S
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index bbec87b79309..fbca724302ab 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -218,6 +218,7 @@ config RISCV
+ 	select THREAD_INFO_IN_TASK
+ 	select TRACE_IRQFLAGS_SUPPORT
+ 	select UACCESS_MEMCPY if !MMU
++	select VDSO_GETRANDOM if HAVE_GENERIC_VDSO
+ 	select USER_STACKTRACE_SUPPORT
+ 	select ZONE_DMA32 if 64BIT
+ 
+diff --git a/arch/riscv/include/asm/vdso/getrandom.h b/arch/riscv/include/asm/vdso/getrandom.h
+new file mode 100644
+index 000000000000..8dc92441702a
+--- /dev/null
++++ b/arch/riscv/include/asm/vdso/getrandom.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2025 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
++ */
++#ifndef __ASM_VDSO_GETRANDOM_H
++#define __ASM_VDSO_GETRANDOM_H
++
++#ifndef __ASSEMBLY__
++
++#include <asm/unistd.h>
++
++static __always_inline ssize_t getrandom_syscall(void *_buffer, size_t _len, unsigned int _flags)
++{
++	register long ret asm("a0");
++	register long nr asm("a7") = __NR_getrandom;
++	register void *buffer asm("a0") = _buffer;
++	register size_t len asm("a1") = _len;
++	register unsigned int flags asm("a2") = _flags;
++
++	asm volatile ("ecall\n"
++		      : "+r" (ret)
++		      : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
++		      : "memory");
++
++	return ret;
++}
++
++#endif /* !__ASSEMBLY__ */
++
++#endif /* __ASM_VDSO_GETRANDOM_H */
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index 4a5d131506fc..8d12f5646eb5 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -13,9 +13,17 @@ vdso-syms += flush_icache
+ vdso-syms += hwprobe
+ vdso-syms += sys_hwprobe
+ 
++ifdef CONFIG_VDSO_GETRANDOM
++vdso-syms += getrandom
++endif
++
+ # Files to link into the vdso
+ obj-vdso = $(patsubst %, %.o, $(vdso-syms)) note.o
+ 
++ifdef CONFIG_VDSO_GETRANDOM
++obj-vdso += vgetrandom-chacha.o
++endif
++
+ ccflags-y := -fno-stack-protector
+ ccflags-y += -DDISABLE_BRANCH_PROFILING
+ ccflags-y += -fno-builtin
+@@ -24,6 +32,10 @@ ifneq ($(c-gettimeofday-y),)
+   CFLAGS_vgettimeofday.o += -fPIC -include $(c-gettimeofday-y)
+ endif
+ 
++ifneq ($(c-getrandom-y),)
++  CFLAGS_getrandom.o += -fPIC -include $(c-getrandom-y)
++endif
++
+ CFLAGS_hwprobe.o += -fPIC
+ 
+ # Build rules
+diff --git a/arch/riscv/kernel/vdso/getrandom.c b/arch/riscv/kernel/vdso/getrandom.c
+new file mode 100644
+index 000000000000..f21922e8cebd
+--- /dev/null
++++ b/arch/riscv/kernel/vdso/getrandom.c
+@@ -0,0 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
++ */
++#include <linux/types.h>
++
++ssize_t __vdso_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state, size_t opaque_len)
++{
++	return __cvdso_getrandom(buffer, len, flags, opaque_state, opaque_len);
++}
+diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.lds.S
+index 8e86965a8aae..abc69cda0445 100644
+--- a/arch/riscv/kernel/vdso/vdso.lds.S
++++ b/arch/riscv/kernel/vdso/vdso.lds.S
+@@ -80,6 +80,7 @@ VERSION
+ #ifndef COMPAT_VDSO
+ 		__vdso_riscv_hwprobe;
+ #endif
++		__vdso_getrandom;
+ 	local: *;
+ 	};
+ }
+diff --git a/arch/riscv/kernel/vdso/vgetrandom-chacha.S b/arch/riscv/kernel/vdso/vgetrandom-chacha.S
+new file mode 100644
+index 000000000000..d793cadc78a6
+--- /dev/null
++++ b/arch/riscv/kernel/vdso/vgetrandom-chacha.S
+@@ -0,0 +1,244 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2025 Xi Ruoyao <xry111@xry111.site>. All Rights Reserved.
++ *
++ * Based on arch/loongarch/vdso/vgetrandom-chacha.S.
++ */
++
++#include <asm/asm.h>
++#include <linux/linkage.h>
++
++.text
++
++.macro	ROTRI	rd rs imm
++	slliw	t0, \rs, 32 - \imm
++	srliw	\rd, \rs, \imm
++	or	\rd, \rd, t0
++.endm
++
++.macro	OP_4REG	op d0 d1 d2 d3 s0 s1 s2 s3
++	\op	\d0, \d0, \s0
++	\op	\d1, \d1, \s1
++	\op	\d2, \d2, \s2
++	\op	\d3, \d3, \s3
++.endm
++
++/*
++ *	a0: output bytes
++ * 	a1: 32-byte key input
++ *	a2: 8-byte counter input/output
++ *	a3: number of 64-byte blocks to write to output
++ */
++SYM_FUNC_START(__arch_chacha20_blocks_nostack)
++
++#define output		a0
++#define key		a1
++#define counter		a2
++#define nblocks		a3
++#define i		a4
++#define state0		s0
++#define state1		s1
++#define state2		s2
++#define state3		s3
++#define state4		s4
++#define state5		s5
++#define state6		s6
++#define state7		s7
++#define state8		s8
++#define state9		s9
++#define state10		s10
++#define state11		s11
++#define state12		a5
++#define state13		a6
++#define state14		a7
++#define state15		t1
++#define cnt		t2
++#define copy0		t3
++#define copy1		t4
++#define copy2		t5
++#define copy3		t6
++
++/* Packs to be used with OP_4REG */
++#define line0		state0, state1, state2, state3
++#define line1		state4, state5, state6, state7
++#define line2		state8, state9, state10, state11
++#define line3		state12, state13, state14, state15
++
++#define line1_perm	state5, state6, state7, state4
++#define line2_perm	state10, state11, state8, state9
++#define line3_perm	state15, state12, state13, state14
++
++#define copy		copy0, copy1, copy2, copy3
++
++#define _16		16, 16, 16, 16
++#define _20		20, 20, 20, 20
++#define _24		24, 24, 24, 24
++#define _25		25, 25, 25, 25
++
++	addi		sp, sp, -12*SZREG
++	REG_S		s0,         (sp)
++	REG_S		s1,    SZREG(sp)
++	REG_S		s2,  2*SZREG(sp)
++	REG_S		s3,  3*SZREG(sp)
++	REG_S		s4,  4*SZREG(sp)
++	REG_S		s5,  5*SZREG(sp)
++	REG_S		s6,  6*SZREG(sp)
++	REG_S		s7,  7*SZREG(sp)
++	REG_S		s8,  8*SZREG(sp)
++	REG_S		s9,  9*SZREG(sp)
++	REG_S		s10, 10*SZREG(sp)
++	REG_S		s11, 11*SZREG(sp)
++
++	ld		cnt, (counter)
++
++	li		copy0, 0x61707865
++	li		copy1, 0x3320646e
++	li		copy2, 0x79622d32
++	li		copy3, 0x6b206574
++
++.Lblock:
++	/* state[0,1,2,3] = "expand 32-byte k" */
++	mv		state0, copy0
++	mv		state1, copy1
++	mv		state2, copy2
++	mv		state3, copy3
++
++	/* state[4,5,..,11] = key */
++	lw		state4,   (key)
++	lw		state5,  4(key)
++	lw		state6,  8(key)
++	lw		state7,  12(key)
++	lw		state8,  16(key)
++	lw		state9,  20(key)
++	lw		state10, 24(key)
++	lw		state11, 28(key)
++
++	/* state[12,13] = counter */
++	mv		state12, cnt
++	srli		state13, cnt, 32
++
++	/* state[14,15] = 0 */
++	mv		state14, zero
++	mv		state15, zero
++
++	li		i, 10
++.Lpermute:
++	/* odd round */
++	OP_4REG	addw	line0, line1
++	OP_4REG	xor	line3, line0
++	OP_4REG	ROTRI	line3, _16
++
++	OP_4REG	addw	line2, line3
++	OP_4REG	xor	line1, line2
++	OP_4REG	ROTRI	line1, _20
++
++	OP_4REG	addw	line0, line1
++	OP_4REG	xor	line3, line0
++	OP_4REG	ROTRI	line3, _24
++
++	OP_4REG	addw	line2, line3
++	OP_4REG	xor	line1, line2
++	OP_4REG	ROTRI	line1, _25
++
++	/* even round */
++	OP_4REG	addw	line0, line1_perm
++	OP_4REG	xor	line3_perm, line0
++	OP_4REG	ROTRI	line3_perm, _16
++
++	OP_4REG	addw	line2_perm, line3_perm
++	OP_4REG	xor	line1_perm, line2_perm
++	OP_4REG	ROTRI	line1_perm, _20
++
++	OP_4REG	addw	line0, line1_perm
++	OP_4REG	xor	line3_perm, line0
++	OP_4REG	ROTRI	line3_perm, _24
++
++	OP_4REG	addw	line2_perm, line3_perm
++	OP_4REG	xor	line1_perm, line2_perm
++	OP_4REG	ROTRI	line1_perm, _25
++
++	addi		i, i, -1
++	bnez		i, .Lpermute
++
++	/* output[0,1,2,3] = copy[0,1,2,3] + state[0,1,2,3] */
++	OP_4REG	addw	line0, copy
++	sw		state0,   (output)
++	sw		state1,  4(output)
++	sw		state2,  8(output)
++	sw		state3, 12(output)
++
++	/* from now on state[0,1,2,3] are scratch registers  */
++
++	/* state[0,1,2,3] = lo(key) */
++	lw		state0,   (key)
++	lw		state1,  4(key)
++	lw		state2,  8(key)
++	lw		state3, 12(key)
++
++	/* output[4,5,6,7] = state[0,1,2,3] + state[4,5,6,7] */
++	OP_4REG	addw	line1, line0
++	sw		state4, 16(output)
++	sw		state5, 20(output)
++	sw		state6, 24(output)
++	sw		state7, 28(output)
++
++	/* state[0,1,2,3] = hi(key) */
++	lw		state0, 16(key)
++	lw		state1, 20(key)
++	lw		state2, 24(key)
++	lw		state3, 28(key)
++
++	/* output[8,9,10,11] = tmp[0,1,2,3] + state[8,9,10,11] */
++	OP_4REG	addw	line2, line0
++	sw		state8,  32(output)
++	sw		state9,  36(output)
++	sw		state10, 40(output)
++	sw		state11, 44(output)
++
++	/* output[12,13,14,15] = state[12,13,14,15] + [cnt_lo, cnt_hi, 0, 0] */
++	addw		state12, state12, cnt
++	srli		state0, cnt, 32
++	addw		state13, state13, state0
++	sw		state12, 48(output)
++	sw		state13, 52(output)
++	sw		state14, 56(output)
++	sw		state15, 60(output)
++
++	/* ++counter */
++	addi		cnt, cnt, 1
++
++	/* output += 64 */
++	addi		output, output, 64
++	/* --nblocks */
++	addi		nblocks, nblocks, -1
++	bnez		nblocks, .Lblock
++
++	/* counter = [cnt_lo, cnt_hi] */
++	sd		cnt, (counter)
++
++	/* Zero out the potentially sensitive regs, in case nothing uses these
++	 * again.  As at now copy[0,1,2,3] just contains "expand 32-byte k" and
++	 * state[0,...,11] are s0-s11 those we'll restore in the epilogue, we
++	 * only need to zero state[12,...,15].
++	 */
++	mv		state12, zero
++	mv		state13, zero
++	mv		state14, zero
++	mv		state15, zero
++
++	REG_L		s0,         (sp)
++	REG_L		s1,    SZREG(sp)
++	REG_L		s2,  2*SZREG(sp)
++	REG_L		s3,  3*SZREG(sp)
++	REG_L		s4,  4*SZREG(sp)
++	REG_L		s5,  5*SZREG(sp)
++	REG_L		s6,  6*SZREG(sp)
++	REG_L		s7,  7*SZREG(sp)
++	REG_L		s8,  8*SZREG(sp)
++	REG_L		s9,  9*SZREG(sp)
++	REG_L		s10, 10*SZREG(sp)
++	REG_L		s11, 11*SZREG(sp)
++	addi		sp, sp, 12*SZREG
++
++	ret
++SYM_FUNC_END(__arch_chacha20_blocks_nostack)
+diff --git a/tools/testing/selftests/vDSO/vgetrandom-chacha.S b/tools/testing/selftests/vDSO/vgetrandom-chacha.S
+index d6e09af7c0a9..a4a82e1c28a9 100644
+--- a/tools/testing/selftests/vDSO/vgetrandom-chacha.S
++++ b/tools/testing/selftests/vDSO/vgetrandom-chacha.S
+@@ -11,6 +11,8 @@
+ #include "../../../../arch/loongarch/vdso/vgetrandom-chacha.S"
+ #elif defined(__powerpc__) || defined(__powerpc64__)
+ #include "../../../../arch/powerpc/kernel/vdso/vgetrandom-chacha.S"
++#elif defined(__riscv) && __riscv_xlen == 64
++#include "../../../../arch/riscv/kernel/vdso/vgetrandom-chacha.S"
+ #elif defined(__s390x__)
+ #include "../../../../arch/s390/kernel/vdso64/vgetrandom-chacha.S"
+ #elif defined(__x86_64__)
+-- 
+2.49.0
+
