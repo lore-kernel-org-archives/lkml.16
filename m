@@ -1,276 +1,240 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E093E278E51;
-	Fri, 11 Apr 2025 10:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F112278E51
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744366548; cv=none; b=N+ba5noYnzRsu/66kJrpLFVbmdjiDSgvWs7XMPj0+V4HcHWkI9mwJpGbM2iaU3PINmjNvPZU5xOzicLgotlOVQBSiPjAoEqOG+BfFEbBwan+7GOZl+vZjn/rS4zDyC3/zlID2GDAxYT4HAxZJvzEW3rhHNQ+AufZWV5qRbSAJEw=
+	t=1744366611; cv=none; b=asYYI2HIgbXDbxYmjcGOzEpDoNkgLNq7utrnGgMn19U2gnqq2LidIiekacz71omFQsgH77/cal/Zv608pedGHbgv9KNhP72wO9GxRh8sltS5lu2YSsovnNHhBcBen1IFUu0FF3z7rGtQ1nHGn9jk6rIItEbuQpqWb4Alm8VyzLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744366548; c=relaxed/simple;
-	bh=Jh8DD3IFc9zI0c4Jtpz8t6t+NCItFvt6dAI799oyBXc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JwXDzpNpF4fGL/noNEgvH33giNP57hj6H25ye7z8tj8k8LZDQNPk6rQRyNpUsV9dRMrHVfNtSWtP7DTdCzemhX7+7dBDU4b7oMzywWq0xjt8x+mOn2RRRTYpTdx5STd8LVOTIuX2Fb59kfo46Mquok0w2Q/rGLqUa5XKfiNiL10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tEItYojZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qEIHPgS1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744366611; c=relaxed/simple;
+	bh=1hotVe9BlhwBGJJos/NulxBjTlOD2ZF1/TLgGJwSgxE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oL0cGwraxctKmMew7XkfERjob56zZqsPq7sne9AjYIr08ZvYyNAqJne7JT3CGAILFldI5i6hFE/LlctF9BLk4OfZCK/eRJ+G/TFqEOXN6BKgyN30C0pIdflrOP4RXm3Jhk2qyqDS+dN1N3dodGNLyLedzMkJX8A/ILVSK5h9Pz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AeprfV+g; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tEItYojZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qEIHPgS1"
-Date: Fri, 11 Apr 2025 10:15:41 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744366542;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sVZR7fCMZ3UbVw/IWtglDPHL2+xVWxpNNBaVWQ5QBOY=;
-	b=tEItYojZVFUCPjAsl7z29sQwwWHnwDLK1tpyiYQ7dNH4zJXeq4RajBzSXpnhA4MPalD5NQ
-	gS0tPOyrSeV65YFEveWYMT1LID4Cf8AoUcrPxKOuNS9NEQLu0DPX1+lKAcSsMfM72RRN0W
-	R09hnPq8t3n6Cmc+y4b4mzs0dY338RKEhXpeX46KzGSVExk0E6c0rDW5ZBt3MJI7WLlc2t
-	DKTB3K2sBj5FKjrJi1tR+Xc/sIUMJwcEp2QftwI4QKIGhUv4pSKeIQRFplNLDCDUTymxwU
-	sOKXQSFHMb+vTZW+t5Qwgnv5wCqBwwS+BDe1hZsbbGT7Q9ijFE0N93MFqOz98Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744366542;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sVZR7fCMZ3UbVw/IWtglDPHL2+xVWxpNNBaVWQ5QBOY=;
-	b=qEIHPgS1BhwdB6EsQi/pjm1XUnUvE+/E3YsnnW5//+1yFCUhfwIrhz+7XKzmZoojdifbvK
-	XL6ETw5OScasklCA==
-From: "tip-bot2 for Stefano Garzarella" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sev] tpm: Add SNP SVSM vTPM driver
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Jarkko Sakkinen <jarkko@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250410135118.133240-4-sgarzare@redhat.com>
-References: <20250410135118.133240-4-sgarzare@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AeprfV+g"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22403cbb47fso18829185ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 03:16:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744366608; x=1744971408; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=El+yBbYFfa3m33PcQZ+/sv5AA9CYKsrtHMnxQf73yYk=;
+        b=AeprfV+g+QIa1hL1zFvDhMoeBqecv+AGDgEWbTbS8/gj7PFCWAB6Da0F3TDYSjH+qp
+         JofLEPjszsrcDCQe0EODD8dApTnbULQVcIwHaOzWgcBfDiRFbklqTo06uwDy+rJuTSzo
+         sGH6E+tu9T7wVn5O2lHPwxx/R4T00VgYbp9/aT/0KSI+mb/zMDkvWNnApO9IeuFhYjiw
+         L/S/chgEbFTs7K7CvgW2nrL7Oob2FmKFq/Rk/iIzi3R9poJ6lzLOu5DX4b0+TXFmXLNq
+         +ukY/D0wq84dg/pzLnyyTRWNouLMzMqVLuuwWZlIhdBgFwH0YS0kT3wnwwMV+9ozmvZW
+         F0ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744366608; x=1744971408;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=El+yBbYFfa3m33PcQZ+/sv5AA9CYKsrtHMnxQf73yYk=;
+        b=tP8WpwD2GtXFqAuSTU5zNNE/JJaMM9Qq4zIW66pKBrNUEe8DWqdYMbURol1dFUc5WS
+         qL1miwfHcD3vrhMqfqwnTMm45aXhIcIAKb8JVmTmsou7FJ6tDJ8PhYAuheWeTFRnMW7Q
+         /RJ+7q6GFWQWfzLDMuEGOvqrqxrZPb+JdszzZ0zYNsKqfClPRfYT9PatU2Jl24sumIB6
+         T+sm7cHFBaaHdq1cAc+4sueI6IQ8w0NpGUTbJRG90wOLK5LrJ5jj+lPIZskDBIBLM2cM
+         JHoPz54l8NVlU9RoCbEmCKqrOVbHvjOEJPQSTRpKZCiloUD44PLUKkrrFUmcpEKXA8eV
+         sgoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhE9o1vTFekMIWvjZbmu8V+YzselZv/nnCQBiizgiXBTOK9LW7DmdrEkG2Khm+F40QKcmKySB66Ahqy/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypmqzD/nO7SlGrQGjdDUyJ3xksQ+n3NwUQG+WOAVKlMnB0Wo18
+	KdoGTBC7WTqiBsdRGhFmn4PxwKzQkHg6oSQhH+mM3YrD4d5W6gOfXcXPIwjgTSqRI7aESZki8FT
+	08kgHXkrZfrYMTfxBVPPfYng3jk6RQ3hUHPIlJA==
+X-Gm-Gg: ASbGncut0dL6nMSbsPql8rzLu7obr2FcqAzju4OTB0X7EDYqIAv2PqdM3m2n4c6RtFJ
+	0nz25+veTzgbUszEHJ1e5OPByhz66zwAkt2hE/SEuGZRM6HwBCbtcaPWMhlP6qRY+TVqyV8X+s8
+	/bkiqtDCYL8tPXdxT76gWNz6I=
+X-Google-Smtp-Source: AGHT+IFS/a80yyyuZi5urEnORY3xQw5mQjSwHZr0ekHuMVLTC+K2x+MxrDzUzO/bjiGCm5Susl2ueRJyb258GnM4w9s=
+X-Received: by 2002:a17:902:f705:b0:227:ac2a:1dd6 with SMTP id
+ d9443c01a7336-22bea4c6e17mr42758175ad.24.1744366608577; Fri, 11 Apr 2025
+ 03:16:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174436654133.31282.1172867310137729031.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250410013330.3609482-1-jie.gan@oss.qualcomm.com>
+In-Reply-To: <20250410013330.3609482-1-jie.gan@oss.qualcomm.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Fri, 11 Apr 2025 11:16:37 +0100
+X-Gm-Features: ATxdqUEraod8yrwnTn49b9tk1NYUizm-a1oIyjVCeHuX2V2MVcCKfTUobsggqZA
+Message-ID: <CAJ9a7VjzxnOGNbAM974ybRAD4eXxWhr8d+UC1rEG=yMtug2XRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] coresight: ctcu: Enable byte-cntr function for TMC ETR
+To: Jie Gan <jie.gan@oss.qualcomm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, James Clark <james.clark@linaro.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Tingwei Zhang <quic_tingweiz@quicinc.com>, Jinlong Mao <quic_jinlmao@quicinc.com>, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 
-The following commit has been merged into the x86/sev branch of tip:
+Hi,
 
-Commit-ID:     93b7c6b3ce918c3d24de82dcff7a87b8bd631b2e
-Gitweb:        https://git.kernel.org/tip/93b7c6b3ce918c3d24de82dcff7a87b8bd631b2e
-Author:        Stefano Garzarella <sgarzare@redhat.com>
-AuthorDate:    Thu, 10 Apr 2025 15:51:15 +02:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 10 Apr 2025 16:24:29 +02:00
+I can see that this patchset has fixed some of the issues raised from
+v1 - using the existing file handle for read, and stopping the ETR to
+read the RWP.
 
-tpm: Add SNP SVSM vTPM driver
+However the fundamental problem that it is still attempting to read
+memory without stopping the ETR has not been addressed.
 
-Add driver for the vTPM defined by the AMD SVSM spec [1].
+As mentioned in mine and Suzuki's comments for v1, this means:-
 
-The specification defines a protocol that a SEV-SNP guest OS can use to
-discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM) in
-the guest context, but at a more privileged level (VMPL0).
+1) you cannot guarantee that the buffer has not wrapped when reading
+data back, which will corrupt the trace decode process.
+2) The DMA buffers are not being synchronized, so the PE could be
+reading stale data rather than the new data written by the ETR.
 
-The new tpm-svsm platform driver uses API exposed by the x86/sev core
-implementation interface to a SVSM to send commands and receive responses.
 
-The device cannot be hot-plugged/unplugged as it is emulated by the platform,
-so module_platform_driver_probe() can be used. The device will be registered
-by the platform only when it's available, so the probe function just needs to
-setup the tpm_chip.
+Regards
 
-This device does not support interrupts and sends responses to commands
-synchronously.
+Mike
 
-In order to have .recv() called just after .send() in tpm_try_transmit(), the
-.status() callback is not implemented as recently supported by commit
+On Thu, 10 Apr 2025 at 02:33, Jie Gan <jie.gan@oss.qualcomm.com> wrote:
+>
+> The byte-cntr function provided by the CTCU device is used to transfer data
+> from the ETR buffer to the userspace. An interrupt is tiggered if the data
+> size exceeds the threshold set in the BYTECNTRVAL register. The interrupt
+> handler counts the number of triggered interruptions and the read function
+> will read the data from the ETR buffer if the IRQ count is greater than 0.
+> The read work will be conducted ASAP after the byte-cntr is started.
+> Each successful read process will decrement the IRQ count by 1.
+>
+> The byte cntr function will start when the device node is opened for reading,
+> and the IRQ count will reset when the byte cntr function has stopped. When
+> the file node is opened, the w_offset of the ETR buffer will be read and
+> stored in byte_cntr_data, serving as the original r_offset (indicating
+> where reading starts) for the byte counter function.
+>
+> The work queue for the read operation will wake up once when ETR is stopped,
+> ensuring that the remaining data in the ETR buffer has been flushed based on
+> the w_offset read at the time of stopping.
+>
+> The byte-cntr read work has integrated with the file node tmc_etr, e.g.
+> /dev/tmc_etr0
+> /dev/tmc_etr1
+>
+> There are two scenarios for the ETR file nodes with byte-cntr function:
+> 1. BYTECNTRVAL register has configured -> byte-cntr read
+> 2. BYTECNTRVAL register is disabled -> original behavior, flush the etr_buf
+>
+> We still can flush the etr buffer once after the byte-cntr function has
+> triggered.
+> 1. Enable byte-cntr
+> 2. Byte-cntr read
+> 3. Disable byte-cntr
+> 4. Flush etr buffer
+>
+> Since the ETR operates in circular buffer mode, we cannot fully guarantee
+> that no overwrites occur when the byte-cntr read function reads the data.
+> The read function will read the data ASAP when the interrupt is
+> triggered and we should not configure a threshold greater than the
+> buffer size of the ETR buffer.
+>
+> The following shell commands write threshold to BYTECNTRVAL registers.
+>
+> Only enable byte-cntr for ETR0:
+> echo 0x10000 > /sys/devices/platform/soc@0/4001000.ctcu/ctcu0/byte_cntr_val
+>
+> Enable byte-cntr for both ETR0 and ETR1(support both hex and decimal values):
+> echo 0x10000 4096 > /sys/devices/platform/soc@0/4001000.ctcu/ctcu0/byte_cntr_val
+>
+> Setting the BYTECNTRVAL registers to 0 disables the byte-cntr function.
+> Disable byte-cntr for ETR0:
+> echo 0 > /sys/devices/platform/soc@0/4001000.ctcu/ctcu0/byte_cntr_val
+>
+> Disable byte-cntr for both ETR0 and ETR1:
+> echo 0 0 > /sys/devices/platform/soc@0/4001000.ctcu/ctcu0/byte_cntr_val
+>
+> There is a minimum threshold to prevent generating too many interrupts.
+> The minimum threshold is 4096 bytes. The write process will fail if user try
+> to set the BYTECNTRVAL registers to a value less than 4096 bytes(except
+> for 0).
+>
+> Way to enable and start byte-cntr for ETR0:
+> echo 0x10000 > /sys/devices/platform/soc@0/4001000.ctcu/ctcu0/byte_cntr_val
+> echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
+> echo 1 > /sys/bus/coresight/devices/etm0/enable_source
+> cat /dev/tmc_etr0
+>
+> Testing case has conducted for the byte-cntr read work:
+> 1. Setting the buffer_size of the ETR as large as possile, here is for ETR0
+>    echo 0x1000000 > /sys/bus/coresight/devices/tmc_etr0/buffer_size
+> 2. Setting the threshold for the ETR0 to 0x10000
+>    echo 0x10000 > /sys/bus/coresight/devices/ctcu0/byte_cntr_val
+> 3. Enable ETR0
+>    echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
+> 4. Enable ETM0 as source and enable byte-cntr to read data
+>    echo 1 > /sys/bus/coresight/devices/etm0/enable_source;
+>    cat /dev/tmc_etr0 > /tmp/file_byte_cntr.bin &
+> 5. Disable ETM0
+>    echo 0 > /sys/bus/coresight/devices/etm0/enable_source
+> 6. Disable byte-cntr and flush the etr buffer
+>    echo 0 > /sys/bus/coresight/devices/ctcu0/byte_cntr_val;
+>    cat /dev/tmc_etr0 > /tmp/file_etr0.bin
+>    ls -l /tmp
+>
+> -rw-r--r--    1 root     root      12628960 Apr 28 17:44 file_byte_cntr.bin
+> -rw-r--r--    1 root     root      12669296 Apr 28 17:45 file_etr0.bin
+>
+> 7. Deal with the file_etr0.bin with following command:
+>    dd if=/tmp/file_etr0.bin of=/tmp/file_etr0_aligned.bin bs=1
+> count=12628960 skip=40336
+>    ls -l /tmp
+>
+> -rw-r--r--    1 root     root      12628960 Apr 28 17:44 file_byte_cntr.bin
+> -rw-r--r--    1 root     root      12669296 Apr 28 17:45 file_etr0.bin
+> -rw-r--r--    1 root     root      12628960 Apr 28 17:49 file_etr0_aligned.bin
+>
+> 8. Compared file_byte_cntr.bin with file_etr0_aligned.bin and identified
+> they are competely same.
+>    diff file_byte_cntr.bin file_etr0_aligned.bin
+>
+> =======================
+> Changes in V2:
+> 1. Removed the independent file node /dev/byte_cntr.
+> 2. Integrated the byte-cntr's file operations with current ETR file
+>    node.
+> 3. Optimized the driver code of the CTCU that associated with byte-cntr.
+> 4. Add kernel document for the export API tmc_etr_get_rwp_offset.
+> 5. Optimized the way to read the rwp_offset according to Mike's
+>    suggestion.
+> 6. Removed the dependency of the dts patch.
+> Link to V1 - https://lore.kernel.org/all/20250310090407.2069489-1-quic_jiegan@quicinc.com/
+>
+> Jie Gan (5):
+>   coresight: tmc: Introduce new APIs to get the RWP offset of ETR buffer
+>   dt-bindings: arm: Add an interrupt property for Coresight CTCU
+>   coresight: ctcu: Enable byte-cntr for TMC ETR devices
+>   coresight: tmc: add functions for byte-cntr operation
+>   arm64: dts: qcom: sa8775p: Add interrupts to CTCU device
+>
+>  .../bindings/arm/qcom,coresight-ctcu.yaml     |  17 ++
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi         |   5 +
+>  drivers/hwtracing/coresight/Makefile          |   2 +-
+>  .../coresight/coresight-ctcu-byte-cntr.c      | 119 ++++++++++++
+>  .../hwtracing/coresight/coresight-ctcu-core.c |  88 ++++++++-
+>  drivers/hwtracing/coresight/coresight-ctcu.h  |  49 ++++-
+>  .../hwtracing/coresight/coresight-tmc-core.c  |  29 ++-
+>  .../hwtracing/coresight/coresight-tmc-etr.c   | 175 ++++++++++++++++++
+>  drivers/hwtracing/coresight/coresight-tmc.h   |  10 +-
+>  9 files changed, 483 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/hwtracing/coresight/coresight-ctcu-byte-cntr.c
+>
+> --
+> 2.34.1
+>
 
-  980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt").
 
-  [1] "Secure VM Service Module for SEV-SNP Guests"
-      Publication # 58019 Revision: 1.00
-
-  [ bp: Massage commit message. ]
-
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Link: https://lore.kernel.org/r/20250410135118.133240-4-sgarzare@redhat.com
----
- drivers/char/tpm/Kconfig    |  10 +++-
- drivers/char/tpm/Makefile   |   1 +-
- drivers/char/tpm/tpm_svsm.c | 125 +++++++++++++++++++++++++++++++++++-
- 3 files changed, 136 insertions(+)
- create mode 100644 drivers/char/tpm/tpm_svsm.c
-
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index fe4f3a6..dddd702 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -234,5 +234,15 @@ config TCG_FTPM_TEE
- 	help
- 	  This driver proxies for firmware TPM running in TEE.
- 
-+config TCG_SVSM
-+	tristate "SNP SVSM vTPM interface"
-+	depends on AMD_MEM_ENCRYPT
-+	help
-+	  This is a driver for the AMD SVSM vTPM protocol that a SEV-SNP guest
-+	  OS can use to discover and talk to a vTPM emulated by the Secure VM
-+	  Service Module (SVSM) in the guest context, but at a more privileged
-+	  level (usually VMPL0).  To compile this driver as a module, choose M
-+	  here; the module will be called tpm_svsm.
-+
- source "drivers/char/tpm/st33zp24/Kconfig"
- endif # TCG_TPM
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index 2b004df..9de1b3e 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -45,3 +45,4 @@ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
- obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
- obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
- obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-+obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
-diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
-new file mode 100644
-index 0000000..4280edf
---- /dev/null
-+++ b/drivers/char/tpm/tpm_svsm.c
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-+ *
-+ * Driver for the vTPM defined by the AMD SVSM spec [1].
-+ *
-+ * The specification defines a protocol that a SEV-SNP guest OS can use to
-+ * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
-+ * in the guest context, but at a more privileged level (usually VMPL0).
-+ *
-+ * [1] "Secure VM Service Module for SEV-SNP Guests"
-+ *     Publication # 58019 Revision: 1.00
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/tpm_svsm.h>
-+
-+#include <asm/sev.h>
-+
-+#include "tpm.h"
-+
-+struct tpm_svsm_priv {
-+	void *buffer;
-+};
-+
-+static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
-+{
-+	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-+	int ret;
-+
-+	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The SVSM call uses the same buffer for the command and for the
-+	 * response, so after this call, the buffer will contain the response
-+	 * that can be used by .recv() op.
-+	 */
-+	return snp_svsm_vtpm_send_command(priv->buffer);
-+}
-+
-+static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
-+{
-+	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-+
-+	/*
-+	 * The internal buffer contains the response after we send the command
-+	 * to SVSM.
-+	 */
-+	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
-+}
-+
-+static struct tpm_class_ops tpm_chip_ops = {
-+	.flags = TPM_OPS_AUTO_STARTUP,
-+	.recv = tpm_svsm_recv,
-+	.send = tpm_svsm_send,
-+};
-+
-+static int __init tpm_svsm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct tpm_svsm_priv *priv;
-+	struct tpm_chip *chip;
-+	int err;
-+
-+	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/*
-+	 * The maximum buffer supported is one page (see SVSM_VTPM_MAX_BUFFER
-+	 * in tpm_svsm.h).
-+	 */
-+	priv->buffer = (void *)devm_get_free_pages(dev, GFP_KERNEL, 0);
-+	if (!priv->buffer)
-+		return -ENOMEM;
-+
-+	chip = tpmm_chip_alloc(dev, &tpm_chip_ops);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	dev_set_drvdata(&chip->dev, priv);
-+
-+	err = tpm2_probe(chip);
-+	if (err)
-+		return err;
-+
-+	err = tpm_chip_register(chip);
-+	if (err)
-+		return err;
-+
-+	dev_info(dev, "SNP SVSM vTPM %s device\n",
-+		 (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2");
-+
-+	return 0;
-+}
-+
-+static void __exit tpm_svsm_remove(struct platform_device *pdev)
-+{
-+	struct tpm_chip *chip = platform_get_drvdata(pdev);
-+
-+	tpm_chip_unregister(chip);
-+}
-+
-+/*
-+ * tpm_svsm_remove() lives in .exit.text. For drivers registered via
-+ * module_platform_driver_probe() this is ok because they cannot get unbound
-+ * at runtime. So mark the driver struct with __refdata to prevent modpost
-+ * triggering a section mismatch warning.
-+ */
-+static struct platform_driver tpm_svsm_driver __refdata = {
-+	.remove = __exit_p(tpm_svsm_remove),
-+	.driver = {
-+		.name = "tpm-svsm",
-+	},
-+};
-+
-+module_platform_driver_probe(tpm_svsm_driver, tpm_svsm_probe);
-+
-+MODULE_DESCRIPTION("SNP SVSM vTPM Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:tpm-svsm");
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
