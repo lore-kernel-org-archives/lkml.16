@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A8729AB04;
-	Fri, 11 Apr 2025 12:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE122BD588;
+	Fri, 11 Apr 2025 12:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744373425; cv=none; b=Erq1e1WmQWVEF9XVrqQN0DgYrGaF5ZjbNkuDoOKO1FfMCekPOj96N9nh0p6Js3HL5HkxVTNXyM1Ddnx0jfWtAgcWU7MeJAbDEpffD/jmL7KBJw9oQFHYKsGXrfpY3kv8ylCS8LOZ+0dXuIo4C+u58oi+RNveghlm2quApFXBDJM=
+	t=1744373428; cv=none; b=HEdh/aBG7ZfONE17xFyxjrzN2eO7nK4U2tVGxXHyVp/y1xnLW5LN+/wXxvl3mS2N6ahXpGU2lHYUDeuU3l0BTvd3ScV0VgscUF7rEQAFHMGKYjbQHkPozWxYOIslGudHLt+QA8rQ8FR4DYg5ZFd5bALwRlNl5bDFkhyD7RUzVp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744373425; c=relaxed/simple;
-	bh=qXkPvfz3L7QpP8yVqLZ0PU/tFO/qVu8LhU3z4fOHiro=;
+	s=arc-20240116; t=1744373428; c=relaxed/simple;
+	bh=ma8HZgD9JZlh64w2TGnecb0nKKh08kqyZOYZMMtYpZc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ZYxCVDggfUoY9a7JoBSTMAntEjstJymYvB5CWDsLtqzPVIc3z6laR1hi1PWVK+De8A/Z06hUgeItsa4vZnoqRN1KhH/Jyx2CYX9JyShfO0rv3EAD7Bq3bZM/eSgVCLWo2xh2T7jS8Bu3XcceVxLKehyhAxxjEb+33K2H94KpbYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWN2NuBd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZluvN0g9Ih1WXi0/X2KhKGr1vAxcfs0BIEwpfckcT1LsIgKQjwRpzBqC1Jaxl0GguDNwDzjj/wcxnp4H6Ug3G7q7StPPcT0rmkfKy3zXLafEwuhLv2kKGnKlvf7TeMed7CCODOP2C9YUqalr34knVBNB45LHTslATREQNFcavbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ae+o/cyx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWN2NuBd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 757CDC4CEE2;
-	Fri, 11 Apr 2025 12:10:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ae+o/cyx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44787C4CEE7;
+	Fri, 11 Apr 2025 12:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744373424;
-	bh=qXkPvfz3L7QpP8yVqLZ0PU/tFO/qVu8LhU3z4fOHiro=;
+	s=k20201202; t=1744373428;
+	bh=ma8HZgD9JZlh64w2TGnecb0nKKh08kqyZOYZMMtYpZc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=TWN2NuBdVDDlw3kPSmU0YMURJZS1GCuKN7uiC7/aztJz0NLViIJIOmRq1+ficTjXL
-	 bY+9dTyD5rvl1zPjLrS3+qqlQNFcqO1DMIqo6fqeU/pfYn/n4LYXAXteAnndXFtspL
-	 d5s/7ZEBGSJjpb7nCCa1j3K+RDa6zDRbnU6z+MWORYiyzXLsMKYEko4tPJXmgorYMR
-	 TMT/lXOP25xwZL6QUZX/c0aycsGcV9eCPdvqmtW37FnPHz/3cd1T8hZZjL4AdOowAv
-	 exwd8vw0fz4J/e4iMp/tuNfiNckeOhdC/exsKeFDDKF/9Erkol7OCvZVFbsve/VJOD
-	 ajDbGi0+0n/7w==
+	b=ae+o/cyx/enaKuzdD4bQBh/9s+5M5131Dr+2RiZwwfY5LAiT3IEoCPvAOXERoleSi
+	 sRq8Y2YFvVkDjW34zP9dk++8HSs4Rw+ZXUCXkvYr9/PMc2XX6gJNGDx4vW0Q0TBTlq
+	 7YSIJK7i2sY7X3tv5aZUeHzJSRSxOnoGIaMBfoQZrCEaMcyYdEv0r+xpOqSvQg2yTg
+	 tDJUYRJIFVbAySqmhQouOka/cTTn5x4ufHEdAw5xQ+B4L0rQ06qEcr/uMJS7nUc620
+	 a4q1SZgvu/oVfyFaMygtVr2g6dR1MzQ8IWDtv6V7LB2eNRMEKB3lbrRfQ2Hi9f5enF
+	 6l7yMKHi8ZQxw==
 From: Vinod Koul <vkoul@kernel.org>
-To: Rob Herring <robh@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, 
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Aswath Govindraju <a-govindraju@ti.com>, 
- Biju Das <biju.das.jz@bp.renesas.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-can@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <3d7e0d723908284e8cf06ad1f7950c03173178f3.1742483710.git.geert+renesas@glider.be>
-References: <3d7e0d723908284e8cf06ad1f7950c03173178f3.1742483710.git.geert+renesas@glider.be>
-Subject: Re: [PATCH v2] phy: can-transceiver: Re-instate "mux-states"
- property presence check
-Message-Id: <174437342110.673813.5478003699967879937.b4-ty@kernel.org>
-Date: Fri, 11 Apr 2025 17:40:21 +0530
+To: Heiko Stuebner <heiko.stuebner@cherry.de>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Heiko Stuebner <heiko@sntech.de>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <e64265a4-9543-4728-a49f-ea910fccef7c@stanley.mountain>
+References: <e64265a4-9543-4728-a49f-ea910fccef7c@stanley.mountain>
+Subject: Re: [PATCH next] phy: rockchip-samsung-dcphy: Add missing
+ assignment
+Message-Id: <174437342490.673813.7534992392289400859.b4-ty@kernel.org>
+Date: Fri, 11 Apr 2025 17:40:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,21 +52,15 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Thu, 20 Mar 2025 16:15:42 +0100, Geert Uytterhoeven wrote:
-> On the Renesas Gray Hawk Single development board:
+On Fri, 21 Mar 2025 17:36:14 +0300, Dan Carpenter wrote:
+> The "ret = " was accidentally dropped so the error handling doesn't work.
 > 
->     can-transceiver-phy can-phy0: /can-phy0: failed to get mux-state (0)
 > 
-> "mux-states" is an optional property for CAN transceivers.  However,
-> mux_get() always prints an error message in case of an error, including
-> when the property is not present, confusing the user.
-> 
-> [...]
 
 Applied, thanks!
 
-[1/1] phy: can-transceiver: Re-instate "mux-states" property presence check
-      commit: e153fdea9db04dd0e2e536e2eb125b16bbbc2af7
+[1/1] phy: rockchip-samsung-dcphy: Add missing assignment
+      commit: 9cf118aafd6682793c40dde31b5f24d271da3996
 
 Best regards,
 -- 
