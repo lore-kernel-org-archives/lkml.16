@@ -1,158 +1,237 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2056.outbound.protection.outlook.com [40.107.237.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916211F0982;
-	Fri, 11 Apr 2025 08:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744359263; cv=none; b=Ox8U0NwXs/kY1SxYLOnIgN9vn2aHlyZZm6a842BpJfNkkvDQSg2cISwpiaYGZSRjUKJiN9vSyTCHWOns8fOEHdJ8fUrQ0ZsTb3O1w3qVUDYF1eEUxAV6GjSZnMkCtOCDEdLjWwfu56g1E0NttZl4adzOYXVTEY2+CrNfj4QOHs8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744359263; c=relaxed/simple;
-	bh=nLPhOzKf5J1D0ZjOk2I4+vvVxOm3rCKvUhG1XJpGOv4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gQpmLgAqw/R7Lejc0lw2ndui5huDzge/ZifqH4Q5N4Rzmmcl9wVVOaPh1F/KOqZQfQqVcAJ0f+5Y2LZpaz2r8U9/VKo8C8Zd/r/1WjKnw91SSjlwSz6ZgXeYq4ilfHz2gHZwmec7GCKZcJUpkjQlxtnogU5LfwElhAfSvsvrFmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YmyTnQxC; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C86293B49;
+	Fri, 11 Apr 2025 08:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744359306; cv=fail; b=ajwDW1MCo4ZtwhGGIGS8pKgsyV1BzFy5Z3m15Kko/sgU/YFXUIVv5360W7wVeeVA/iHGdkLBGc+kLNhC3qSYDv74WD6AR6Ad9W3L2QnM4dZuz1EMSMj177HUBLqc3gLbo71iMSxNuryhfyDlQMaONAGgpQzvkNsIsq7amjeKIAE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744359306; c=relaxed/simple;
+	bh=cWDHCI/iFjQj1gv6BzJP8SWUl3QglS2OjZOSrklIC4A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a7YjrkU2TWyscHdpq/rn4hHBZaBfRwAdQQFVkmX4mEDMVby/Lf8aNlor2MnJQ0n3C2I1hXvn/kuAStNEwn5zJv6jU9GBkMmk1WltMbw7p/UUHQfixOC/kBMdylizD2hFH76x+PCHO9p6yuA9oBZBbgb7GAdkEo1g6+KalZNWlNk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hIu6DLzL; arc=fail smtp.client-ip=40.107.237.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YmyTnQxC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 34A0643137;
-	Fri, 11 Apr 2025 08:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744359258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=afHRpr9hNgOZHrTlQnPrI03bZg/5yASgV0Nawh6heQc=;
-	b=YmyTnQxClkeT7De9n44GnKxNoLkwFEDh5p45ANDmyAHffwCLFlcg2OyaktuDMLzYA/S1Fp
-	q21g1poX5kc5uUl9BSUEgQN0kqnKtm8i3/sMSMYMgR2Do8L6ZvnHyOzaYMIhN8YHB+dxb6
-	ZDT5fNrMI01U26DTyL+UUTzmK4ag2nMdRnRlrQifOToA24lNb0W2gXV9DtR3/W5zpjGqrR
-	31m2cc+ayXe6CoVgyllDN8TIzP+rPN3C+qCiJeNeETKGXQDyXBGJdhQBQNmF8F7aFhd09E
-	K9fl0cPQPjmOJrWI59BEqkjwIa7Vx2hN2yxqu2wamSwkGk8JNNlG6B5wQJCWFQ==
-Message-ID: <60e2d844-418a-4bde-b6ef-76d10448d5ec@bootlin.com>
-Date: Fri, 11 Apr 2025 10:14:17 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hIu6DLzL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=d8VoL6JqcwgYWtPk23MWDsyxbfElX+OKu5l4nbo7PpespbHOUXawMmnDW4C3MjHWg2PQgOBXUkxgLIQKMelPKWgM+YTz9DQDIY2gqsQE8JFTCjIJA6rOFO5Vk7Kr5T/qiFjd4r4W3zibFCb1FmOZnXdmzvBzYUfGMbQIdxWefOe3wz7Jsjgm0lcs9ZnZO1K0OhqWN8GEnbH4k7EvF7YC13wHElqXNuF6201YR0aMiPgBL/Ky3lKEj1c5okaoiXzvVgLC5TCFAbpGaS2DdTvGVqfNLFzJD2Wc4KjkxjbPsI6mK24Af0RUS8DswqEJW1oqwDCoVTLtp+ORXUz9bOpDnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sGJjk857vg3I3BkUU4n+5qV5IfGvTd8lMkJaYdRJAPU=;
+ b=l9dsQ/wsGQKjp7QQoSyWGmDu4x2EpdrAzZQcZHAE8Qmtd2jGd0uiIZa4cnualiyRAaVxWuQ2fkWvvsZACFn3ApMqNmf5ZT65fo1OzfAPrIhH0GNGnE/iiZrNdHSJoKyRZLmB+Yf/KMUVPrDfgqHsgO0f7UduDRDtCSxbq8EFOC9zT3tmSoOWaF/nlscOEIU+njOvm8IzuokVRy/Rm9z6uspD6+V6VpetArxmmG+haMv6CX0UWYVCWUa06DO8MS8EEj1wTA0wlAHnPJRQNCrwuxDZdqCd6Bg5rFk1tLC2t+SoEqDhsDPzAWUp9POfrNsB6uWCBwxcpEETee2ZBIDlKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sGJjk857vg3I3BkUU4n+5qV5IfGvTd8lMkJaYdRJAPU=;
+ b=hIu6DLzLB40BWylwPL8Oxkx9Fx53hbmIiENwOEEdYgE6bIxNEa2g8VoexjOryn5PfWakpxd3VZ1l2DFpZwBbuxTvyEOBZcjW65ZlA6L4AIti8e9vwWrYvV9tFokyTfZfv9pPGfnhmTr/JEUGL2cAzLwy6iKm022COiOcgmCKYGA=
+Received: from MW4PR04CA0209.namprd04.prod.outlook.com (2603:10b6:303:86::34)
+ by DS0PR12MB7608.namprd12.prod.outlook.com (2603:10b6:8:13b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
+ 2025 08:14:56 +0000
+Received: from MWH0EPF000989E7.namprd02.prod.outlook.com
+ (2603:10b6:303:86:cafe::e8) by MW4PR04CA0209.outlook.office365.com
+ (2603:10b6:303:86::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Fri,
+ 11 Apr 2025 08:14:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000989E7.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8632.13 via Frontend Transport; Fri, 11 Apr 2025 08:14:56 +0000
+Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Apr
+ 2025 03:14:52 -0500
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Mario Limonciello
+	<mario.limonciello@amd.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Viresh
+ Kumar" <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, Huang Rui
+	<ray.huang@amd.com>, Perry Yuan <perry.yuan@amd.com>, Meng Li
+	<li.meng@amd.com>
+Subject: [PATCH v2] cpufreq/amd-pstate: Enable ITMT support after initializing core rankings
+Date: Fri, 11 Apr 2025 08:14:39 +0000
+Message-ID: <20250411081439.27652-1-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA addresses.
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
- <09a5beeb-bae3-4a00-9aff-66adf68064e6@amd.com>
- <20250410214307.361e373f@windsurf>
- <b596c9af-c0e3-4557-b45a-462a33179235@amd.com>
-From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Content-Language: en-US
-In-Reply-To: <b596c9af-c0e3-4557-b45a-462a33179235@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvuddufedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepuegrshhtihgvnhcuvehurhhuthgthhgvthcuoegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeefffeufeektdeugffgteeiffevgfdvieegueelieekteegfeelkeelheetfeevueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtoheptghhrhhishhtihgrnhdrkhhovghnihhgsegrmhgurdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepshhumhhithdrshgvmhifrghlsehlihhnrghrohdrohhrghdprhgtphhtthhopehgrhgvghhkhhesl
- hhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehlihhnrghrohdqmhhmqdhsihhgsehlihhsthhsrdhlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: bastien.curutchet@bootlin.com
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|DS0PR12MB7608:EE_
+X-MS-Office365-Filtering-Correlation-Id: e2a74526-e280-45b7-c5ee-08dd78d0f1e2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?XDKN/1+NTb0FTwt7ZefFOGTYthPWgmN/Rd/evptzzgt+sHO5v/VyG4zpi1BO?=
+ =?us-ascii?Q?jPuAqmk/3AJJc2wPTsoNYsqLI4uWFrL1kVINQjy94H5tLQbdIrje2lZUvv2R?=
+ =?us-ascii?Q?koqz/TAoH5y5fS8dQZz4wFd1S5NlL3slpTBjK3+HsvDCB0e5ThYXoga4foD0?=
+ =?us-ascii?Q?k5wkE6hWsu20yC+KHMZG5zNYUV9CAbUHZQlN5LsTKmuaQP8jR6MAT/wZBZKy?=
+ =?us-ascii?Q?hJdeJZJpzuYNFIGnkEIJaG+69o61+h+UgPNVXseFEchKjhEV4mvICplMLy7H?=
+ =?us-ascii?Q?3NEOW6f89UpWxTmMAikEQKjwAWkrRPinZcHBDYfDAyQLmqvDc4sqYByDznct?=
+ =?us-ascii?Q?ecr6eZeA7KfADYwpbXjfLq6fHjheOVzzaOb8dRDIx9Goe5cCC4qz2q2m7g0L?=
+ =?us-ascii?Q?EqqnEH7rCs7K6kDF0vZiqcUYIYjZLRS3awM0VjxZGyyF2OueMW/Cdh6uQbvd?=
+ =?us-ascii?Q?CikRr7aMF79BC8O5BGpKtdIY8yz42VR5f8IIlexrk4w7N0EbCAeVpEri632H?=
+ =?us-ascii?Q?/cQzzizGjV9rSsWDNqBxXaPbstXeEVHQyc6vxXjEDHFmqI5hjFFC9QWvs0op?=
+ =?us-ascii?Q?FcdRzv6bEiy3ySzE272lhDMjUAC6SB891ktEPeZ/J43OBHGRRQxjOQWM+KxO?=
+ =?us-ascii?Q?vChIp56MIe8wdlZAuyvd2ozemq9t5wtDo92AgETqfDwJmtMEnXCZP3mta5Pm?=
+ =?us-ascii?Q?2z8kJXkn1FuRl0uryn84J7FviPvuB1WNlnuDxoKBviIkvARNWizhEdzGzYuy?=
+ =?us-ascii?Q?Jc1zDN8lo1JnXB8bmZu0laJmOufgZQjlrQ46XylIXHsmRCKnoAO5GwVrmUOH?=
+ =?us-ascii?Q?L+CIZ5Pj+T3+C29hSdB5jv8DzCf3LWALh+qAOKHdKy6FeP5BA/EUlNf6iQ3R?=
+ =?us-ascii?Q?N2NLWyufnafdWzVVRk1iRs01YEw6B+ItTVtbv/Ai0Z1FUDTC9vBEV+wslWq7?=
+ =?us-ascii?Q?RtZ9lyYwi5ScvyWJpHIGMAw+BIPyW60SrvdUVDfSk3N0bMt5dO776ECcNY8d?=
+ =?us-ascii?Q?EYTRv6pcljPeaPRxmoDSGk5oS+PSj41fW86V+N4fNUZAVzTNLrG6HEJpChdu?=
+ =?us-ascii?Q?0m0uTJrYxJaVVIpFUiFpadHkextmSK4pCJzyHBvCxGAJDyEdIjUHW5wyszPF?=
+ =?us-ascii?Q?PphWPiWAH+oRD4yGzaZnKUmhlwhatNJqOWDeb35YDO6UsrZgVi1ubI5GxqAI?=
+ =?us-ascii?Q?T+z9oF4/4cELFKaEKoAfjeR9fvSeavw7x0N15Vb407Juz1TVKd7sUtET2t8x?=
+ =?us-ascii?Q?RNNVeySo13N3xtph+MZ8yuMN1wXWfkBplD91vysJxDb4v7PNmeRHtC29qX8+?=
+ =?us-ascii?Q?dUWFIfKdkqKTJgBaWfrU8Dxo3Iobepn+d0+oBt2mmFNGEhevTv1hLAzxdzST?=
+ =?us-ascii?Q?7F30nfq6Sag2atu3bgQUjkcoh0cTlLaSY8nxJpVxhbPTxuJ9pcIpDBNwKqIS?=
+ =?us-ascii?Q?CzvB/e0FFx5YzAhvnvbEgGXfLTQsNlrBiL5sS33kRlBgdL7XXC2iPMSgHW3F?=
+ =?us-ascii?Q?OgSSuZ3wCl8IHOFtM34Y7nB5PgyFs9FxVJk4Zkev7A0ewloaWDwJTTzRSQ?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 08:14:56.1773
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2a74526-e280-45b7-c5ee-08dd78d0f1e2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E7.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7608
 
-Hi Christian,
+When working on dynamic ITMT priority support, it was observed that
+"asym_prefer_cpu" on AMD systems supporting Preferred Core ranking
+was always set to the first CPU in the sched group when the system boots
+up despite another CPU in the group having a higher ITMT ranking.
 
-On 4/11/25 9:30 AM, Christian König wrote:
-> Hi Thomas,
-> 
-> Am 10.04.25 um 21:43 schrieb Thomas Petazzoni:
->> Hello Christian,
->>
->> Thanks for your feedback!
->>
->> On Thu, 10 Apr 2025 18:29:12 +0200
->> Christian König<christian.koenig@amd.com> wrote:
->>
->>>> Many UIO users performing DMA from their UIO device need to access the
->>>> DMA addresses of the allocated buffers. There are out-of-tree drivers
->>>> that allow to do it but nothing in the mainline.
->>> Well that basically disqualifies this patch set in the first paragraph.
->>>
->>> To justify some kernel change we always need an in kernel user of the
->>> interface, since this is purely for out-of-tree drivers this is a
->>> no-go to begin with.
->> I'm not sure to understand your comment here. This patch series is
->> about extending the UIO interface... which is a user-space interface.
->> So obviously it has no "in-kernel user" because it's meant to be used
->> from user-space. Could you clarify what you meant here?
-> 
-> Bastien wrote about "out-of-tree drivers" which is something the 
-> upstream kernel explicitly does not support.
-> 
+"asym_prefer_cpu" is cached when the sched domain hierarchy is
+constructed. On AMD systems that support Preferred Core rankings, sched
+domains are rebuilt when ITMT support is enabled for the first time from
+amd_pstate*_cpu_init().
 
-Sorry maybe it wasn't clear, but what I meant is that the goal of this 
-series is to replace 'out-of-tree drivers' with something upstream.
+Since amd_pstate*_cpu_init() is called to initialize the cpudata for
+each CPU, the ITMT support is enabled after the first CPU initializes
+its asym priority but this is too early since other CPUs have not yet
+initialized their asym priorities and the sched domain is rebuilt only
+once when the support is toggled on for the first time.
 
-> When you make that UIO API and have an open source userspace driver then 
-> that is probably a good justification to do this.
-> 
-> What the kernel community tries to prevent here is that people start 
-> using the UAPI to write closed source drivers in userspace.
-> 
+Initialize the asym priorities first in amd_pstate*_cpu_init() and then
+enable ITMT support later in amd_pstate_register_driver() to ensure all
+CPUs have correctly initialized their asym priorities before sched
+domain hierarchy is rebuilt.
 
->>> What you could potentially do is to create an UIO driver which
->>> imports DMA-bufs, pins them and then provide the DMA addresses to
->>> userspace.
->>>
->>> But please be aware that DMA-fences are fundamentally incompatible
->>> with UIO. So you won't be able to do any form of synchronization
->>> which probably makes the implementation pretty limited.
->> Could you clarify why DMA-fences would be needed here, and for what
->> synchronization?
-> 
-> In general DMA-buf is an interface which enables you do share device 
-> specific buffers between different drivers as well as between userspace 
-> processes.
-> 
-> For this to work with for example cameras, GPUs or RDMA NICs you need to 
-> some kind of synchronization primitive, e.g. device A can only starts 
-> it's DMA transaction when device B has completed his.
-> 
-> The problem is that this synchronization approach is fundamentally 
-> incompatible with UIO. See here for more details: https:// 
-> www.kernel.org/doc/html/latest/driver-api/dma-buf.html#indefinite-dma-fences
->
->> The DMA buffers allocated here are DMA coherent buffers. So the
->> user-space application that uses UIO will allocate such buffers once at
->> application start, retrieve their DMA address, and then program DMA
->> transfers as it sees fit using the memory-mapped registers accessible
->> through UIO. I'm not sure which synchronization you are referring to.
->> We are not "chaining" DMA transfers, with for example a camera
->> interface feeding its DMA buffers to an ISP or something like that. The
->> typical use case here is some IP block in an FPGA that does DMA
->> transfers to transfer data to/from some sort of specialized I/O
->> interface. We get an interrupt when the transfer is done, and we can
->> re-use the buffer for the next transfer.
-> 
-> Well why do you then want to use DMA-buf in the first place? As far as I 
-> know what you describe can perfectly be done with the normal UIO memory 
-> management interfaces.
-> 
-> DMA-buf is only interesting when you actually want to share something in 
-> between devices or between applications.
->
+Clear the ITMT support when the amd-pstate driver unregisters since core
+rankings cannot be trusted unless the update_limits() callback is
+operational.
 
-I wanted to use DMA-buf because it allows to dynamically 
-allocate/release coherent buffers from userspace. UIO doesn't provide 
-such interface.
-I'm aware that exposing DMA addresses to userspace isn't a good 
-practice. That's why this series create a new heap specific to UIO that 
-will be the only one implementing the new ioctl.
+Remove the delayed work mechanism now that ITMT support is only toggled
+from the driver init path which is outside the cpuhp critical section.
 
+Fixes: f3a052391822 ("cpufreq: amd-pstate: Enable amd-pstate preferred core support")
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+---
+v1..v2:
 
-Best regards,
-Bastien
+o Retained the name amd_pstate_init_prefcore() (Mario)
 
+o Moved sched_set_itmt_support() towards the end of
+  amd_pstate_register_driver() to address mode switch scenarios.
 
+o Disable ITMT support when driver unregisters to prevent incorrect ITMT
+  behavior in absence of update_limits() callback.
+
+v1: https://lore.kernel.org/lkml/20250409030004.23008-1-kprateek.nayak@amd.com/
+---
+ drivers/cpufreq/amd-pstate.c | 25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index c54c031939c8..b961f3a3b580 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -794,16 +794,6 @@ static void amd_perf_ctl_reset(unsigned int cpu)
+ 	wrmsrl_on_cpu(cpu, MSR_AMD_PERF_CTL, 0);
+ }
+ 
+-/*
+- * Set amd-pstate preferred core enable can't be done directly from cpufreq callbacks
+- * due to locking, so queue the work for later.
+- */
+-static void amd_pstste_sched_prefcore_workfn(struct work_struct *work)
+-{
+-	sched_set_itmt_support();
+-}
+-static DECLARE_WORK(sched_prefcore_work, amd_pstste_sched_prefcore_workfn);
+-
+ #define CPPC_MAX_PERF	U8_MAX
+ 
+ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
+@@ -814,14 +804,8 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
+ 
+ 	cpudata->hw_prefcore = true;
+ 
+-	/*
+-	 * The priorities can be set regardless of whether or not
+-	 * sched_set_itmt_support(true) has been called and it is valid to
+-	 * update them at any time after it has been called.
+-	 */
++	/* Priorities must be initialized before ITMT support can be toggled on. */
+ 	sched_set_itmt_core_prio((int)READ_ONCE(cpudata->prefcore_ranking), cpudata->cpu);
+-
+-	schedule_work(&sched_prefcore_work);
+ }
+ 
+ static void amd_pstate_update_limits(unsigned int cpu)
+@@ -1196,6 +1180,9 @@ static ssize_t show_energy_performance_preference(
+ 
+ static void amd_pstate_driver_cleanup(void)
+ {
++	if (amd_pstate_prefcore)
++		sched_clear_itmt_support();
++
+ 	cppc_state = AMD_PSTATE_DISABLE;
+ 	current_pstate_driver = NULL;
+ }
+@@ -1238,6 +1225,10 @@ static int amd_pstate_register_driver(int mode)
+ 		return ret;
+ 	}
+ 
++	/* Enable ITMT support once all CPUs have initialized their asym priorities. */
++	if (amd_pstate_prefcore)
++		sched_set_itmt_support();
++
+ 	return 0;
+ }
+ 
+
+base-commit: 56a49e19e1aea1374e9ba58cfd40260587bb7355
+-- 
+2.34.1
 
