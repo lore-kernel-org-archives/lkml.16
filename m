@@ -1,426 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F94298987
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B10189B84
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360381; cv=none; b=jzShJqHqD1K1RS92I4TyvJOBs/m8Mnr/C+CPxUkoy9OfdsDhm7BOwQ5AS/rVYjdAwN4wsXXrdDnRojzwlndrbCrgNu41Fa+iERqnrqBVgs5PFDMPKVKg9MwVNEsHaEajMXi+0o5fKYnlCvJIrN3YH1tWMB0v+3MQCvPXcb5prSc=
+	t=1744360389; cv=none; b=KAgyIECpZX6jxVEc62IYUkreAreH4MDMpwhAZobWC0E2JjbERac1i8JhVcQmFVVSjL9WhemlWJ/Omu0zL437JOivs/hv/0mP4dvGjfR9XulDQe1KJTSlkdA9myYPbUb8TOkq1bKPitajlelWyrswNkVXOBnIFZTV1RpROMMShjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360381; c=relaxed/simple;
-	bh=lgrNRIFjhj6cjp4P03cOwtb0ckMI+mMDroBzDgh4FQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjHFnCwYT2n1lsuhtsrgekbbNGbX5O0WQlq1PNXmDIeno4JFgv4uxzMyrYxzX0X3JKBeWPuFE2nGsLp41y0iXrU4a+R21OKSbSvIEH/UN8UgKXVXYiLOFsDHjg/OMebuo0VgnvoX/07J/lsZ3dyOsAKhptGgaZWtlgogruGXMYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XrDmoL3c; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744360389; c=relaxed/simple;
+	bh=HAyZGybeCz9h4PHTXPASf1dhJui7CR5lGJo26SGl6OY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=tTlr/xyduAEzOt5FV2CN8QZ9+0m5KLiX7FHe++AYCPlaCmED6VMs7M3AsYjRBMIaqzSGHsjX1KEW6Qq8A8iAKHjjx1nn+35nAy6nk0YfifigVXbY0VDjRjSdH7MEw8DUKBp588cawW5iv31bA0WZKP9tjVCgQcCEyA73ESoB+6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RPhmyjQl; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XrDmoL3c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744360377;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d8ujDQyl7nKAjtDljWHbr44QpF+FLzPUnk9PsDaPq38=;
-	b=XrDmoL3crjMP0Gj1WiS5NATc22HbGfXzLhhoqGFhweul8RJKB/7W6Yt0GK/DHxhTHq3MbI
-	TEz8VXbbwASSDNgrL2A5X8YqpKmlqM8PlEKqDt6n77dv8M5qIy6um/MQSBbafsQNrI45n4
-	OFOC0kiM1joAFvvaiklYMQWUO+U1bW4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-275--dpBvjRzOcuy8P_XjocpCw-1; Fri, 11 Apr 2025 04:32:55 -0400
-X-MC-Unique: -dpBvjRzOcuy8P_XjocpCw-1
-X-Mimecast-MFC-AGG-ID: -dpBvjRzOcuy8P_XjocpCw_1744360374
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39d917b105bso890257f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:32:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RPhmyjQl"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f2f391864so915412f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744360386; x=1744965186; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EK9rCz5R2JGRLR/abCueMGVjM/KpF6kJW3tcRtlcRvM=;
+        b=RPhmyjQlEM7vEt3UFiTQeq9JUAnrUaUukHi29lorlFV/v5euOVMMFTtUPTjQMq4wzq
+         1Q6cBdyPE++pORxWl0p4/uGo5HofL4Zc/ybhP3X5delV67sySCq0xftDHxgHByEL8FSF
+         38fEC9E0suqJ/2DAx2J4gYYhr06JtSlTCK/GRQctKFNm+Z3YZWQTbdAPDFoixhfgX6QO
+         pWdewkDqi8j+crVd9iYmo+4uM8USVWwkMtCCPSloQf8cH/CxnQbD73QiR0GeU67oYJhk
+         At467oC1cEyOGKQKtrQj5N71f6pw0DKZrqrEkVIKpKnOORYfE6twpz0vuiZzRsJR01d9
+         o2oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744360374; x=1744965174;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d8ujDQyl7nKAjtDljWHbr44QpF+FLzPUnk9PsDaPq38=;
-        b=WpdAh1kVf4xzVhZXw/keKJxlrAwA06ZPuHfD+5mWXRnfjTI+SM6WmjogSJxWDNulVt
-         as6b72QPl9bp6fobviIFHB5GrNdDScMpn2lhVd5Ry/C95YafubvnGULMBwcWHUCr24KU
-         KuDZAh3RPhskE63QUY+nA6ZTZy9zljBAvwYwHl1KUt6K4xpruOEEV9AUseEhm312Ld30
-         px0iVMB32k4Lv4inT61sU21aYwcYDMp+qYbI8Qu7QiwGBjmEAe8eGm0AYr2egmejWa7D
-         CeN5molWq8B+GD6fGMXsBdSKevxY+U9nUV3QfJ+5SQhXBAitx8LiQYq1IvEh3FjQoIPr
-         7V6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVEaqvHSCbbzobyHoZ8l2SWoJDbLaMj9ZaoJF6SLK5NonZIGq9Hr7mjaefAxBVYlBnjFBo+VbpA8Zv6F40=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTWRHqR7hW5+2dbFZB0CczNIdsCx9pElL4IUVp0Drancv+nYqQ
-	WYW3SgBLFRa6PC/2hqIKHiEZN7q+hCATNJmKQTLhSz+qahmJMwFZFJ7c4/YomGRy2wR/MeAmJBd
-	jzZaI9qV3fv7hNN6AZ9h1Oh8uVkfwhUg6Up2IGRL8/yfwt8QxZrw5trzhD6M3cQ==
-X-Gm-Gg: ASbGncsoPBZtjWMqDGHAaP8Y2Py8i2GSw7K1mBAMrn+A+xjRxh7pyN7RPV0WtttKXQD
-	eBvrT9d0MKNJIOs4fiMjDoAnwcF09IUX79EKcydH7/zu8R/WhtNBDbVG8Ba4FCMQYlQkpK8LNdp
-	rZ4fyDDCp7moQz8szKy9jGzvze62Fgb56ubjrInRS5Bk1BeepvYL+ye/lkHSGDuYSISs+FTKRRF
-	gdhcERMZR8ssF02OuJapdzJXzgBFlDJVMaWR9bDFdUR9dJxIM6ULiu4/DYlonFXdAhR+LqFV23D
-	JwcZOiyZH8LoaIcf/bZ3GWaWlhtqGckFuiUKRmKdex3of5QH4RXT5NGnJpzH
-X-Received: by 2002:a05:6000:1867:b0:391:3124:f287 with SMTP id ffacd0b85a97d-39ea52071d9mr1169989f8f.16.1744360373887;
-        Fri, 11 Apr 2025 01:32:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHYRObXGVdy7Fk5Huz1lKq/zXGFWZpzxM8mzE0+DPpVva9VRqqW0i3itgSpYq9hY1Wb+D8CEg==
-X-Received: by 2002:a05:6000:1867:b0:391:3124:f287 with SMTP id ffacd0b85a97d-39ea52071d9mr1169957f8f.16.1744360373377;
-        Fri, 11 Apr 2025 01:32:53 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cd17sm1302888f8f.78.2025.04.11.01.32.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 01:32:52 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:32:45 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next] selftests/vsock: add initial vmtest.sh for vsock
-Message-ID: <36wtdlekqx7hii6s7uydxeyrwwj7x5dmx5k5g474eseds6lshk@yrefm7laynyp>
-References: <20250410-vsock-vmtest-v1-1-f35a81dab98c@gmail.com>
+        d=1e100.net; s=20230601; t=1744360386; x=1744965186;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EK9rCz5R2JGRLR/abCueMGVjM/KpF6kJW3tcRtlcRvM=;
+        b=phpH4yi/w3ktqXAJwi9PFA1QVEiO7fWxoSCyFIIKxh2GIOmB5FqVnwVbD685qkG4dR
+         Y2x55CzJ6G8BLZUdjoSX2DwGQDnEejswJl83u/LhJQlvX7AY3E4XAxdC51V3RNu8ILkt
+         gtRZVqUDsU/XNC70faWnZU6x4LQuZ+LXsxJR4QkDOc9nQd9m/YqpabYyCE9a7AdxIfPw
+         bHcxMdQb+ozYWezY8/17zCXaQvWPQUYWc7ySP5YUcq7iPWPWt0lyKbL6PbRrdBxu9yYn
+         3HTphp5WXDj7pWMj8kZN7AYqfMFLMipR4yy8YCEN4bG1hKkqwNyoY4rIUTXqHoKlFkVo
+         l4DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+C4cLkRPuh6srlZY7eesMXk7m/KOBT0AaMNta9p5UnmuPtWm7fXcP4T2zqpBXUKtBISOlisSez97GRT8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy0RBPNtHCS9c1cS7Xw+4pWpescOjtoRb8MWG+hKyqFs8Zulv+
+	7inu4+0Z0Gp6DwyD5ehjqgjdcjzMIJv/aHX4ElSb2+Jnbll2K8ZH7Ndw4mcnWo0=
+X-Gm-Gg: ASbGncubWrBuUMNVCBi5/JjoFclUoqtieKfWmaEQ8NFRLZNeeP196IkEd4RS55WhpDd
+	s+LMMZln1ABheK9jnQg2R8OAGtt6dHFJW7VJwnDCQVSE6xbVaTchuplrWJVxkjwRRWPbtL9BPMH
+	YM3p+Bhiq23QCpdVcU2e96hei6vgmcw5tEaQqNsxpX3exal62G300LeDZ2KtKEaGUry4aUsthGm
+	fBW4WDLAV7mBfWCPAtrpzjNuDkxcgFnV/a1KtTD66urWUSE0Rpbdyw/pW0JlmMboaPcafrQUddu
+	aojHiBr+Qt6Sctl1u/2Nw4TkunNRZyTjbFy/RqKusaX0T8QyhqSsu37c5csUVA0jF5lkV2B9P83
+	95NGru22VcTuTdMd/8A==
+X-Google-Smtp-Source: AGHT+IHlLQ8VnWkMNxW6NJ/2XfY1PSwDp+GZZTngXF4ukLUEAUWIscJaYqmOWxV7FEHDv1xafn6WCA==
+X-Received: by 2002:a05:6000:144b:b0:390:f2f1:2a17 with SMTP id ffacd0b85a97d-39eaaed2b6fmr1302713f8f.53.1744360385924;
+        Fri, 11 Apr 2025 01:33:05 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:f77b:949e:1d61:69a8? ([2a01:e0a:3d9:2080:f77b:949e:1d61:69a8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c074sm1290725f8f.28.2025.04.11.01.33.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 01:33:05 -0700 (PDT)
+Message-ID: <8e8aff0f-36cf-42cf-88a4-a9e3a646b73b@linaro.org>
+Date: Fri, 11 Apr 2025 10:33:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250410-vsock-vmtest-v1-1-f35a81dab98c@gmail.com>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v1 6/6] phy: amlogic: phy-meson-axg-pcie: Fix PHY creation
+ order in axg-pcie probe
+To: Anand Moon <linux.amoon@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
+ "moderated list:ARM/Amlogic Meson SoC support"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:ARM/Amlogic Meson SoC support"
+ <linux-amlogic@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+References: <20250410133332.294556-1-linux.amoon@gmail.com>
+ <20250410133332.294556-7-linux.amoon@gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250410133332.294556-7-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 10, 2025 at 06:07:59PM -0700, Bobby Eshleman wrote:
->This commit introduces a new vmtest.sh runner for vsock.
->
->It uses virtme-ng/qemu to run tests in a VM. The tests are designed to
->validate both G2H and H2G paths. The testing tools from tools from
->tools/testing/vsock/ are reused. Currently, only vsock_test is used.
+On 10/04/2025 15:33, Anand Moon wrote:
+> Reorder the PHY creation in the axg-pcie probe function to ensure all
+> the resource is mapped before creating the PHY. This change addresses
+> the issue where the PHY creation was attempted before
+> mapping the necessary resources, potentially causing failures.
+> 
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>   drivers/phy/amlogic/phy-meson-axg-pcie.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> index 54baf7b8930e1..14dee73f9cb57 100644
+> --- a/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> @@ -136,11 +136,6 @@ static int phy_axg_pcie_probe(struct platform_device *pdev)
+>   	if (!priv)
+>   		return -ENOMEM;
+>   
+> -	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
+> -	if (IS_ERR(priv->phy))
+> -		return dev_err_probe(dev, PTR_ERR(priv->phy),
+> -				     "failed to create PHY\n");
+> -
+>   	base = devm_platform_ioremap_resource(pdev, 0);
+>   	if (IS_ERR(base))
+>   		return PTR_ERR(base);
+> @@ -158,6 +153,11 @@ static int phy_axg_pcie_probe(struct platform_device *pdev)
+>   	if (IS_ERR(priv->analog))
+>   		return PTR_ERR(priv->analog);
+>   
+> +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
+> +	if (IS_ERR(priv->phy))
+> +		return dev_err_probe(dev, PTR_ERR(priv->phy),
+> +				     "failed to create PHY\n");
+> +
+>   	phy_set_drvdata(priv->phy, priv);
+>   	dev_set_drvdata(dev, priv);
+>   	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
 
-Coool, thanks for that.
-I'll leave some comments, but I'll try this next week since today I'm a 
-bit busy.
-
->
->Only tested on x86.
->
->To run:
->
->  $ tools/testing/selftests/vsock/vmtest.sh
->
->Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
->---
-> MAINTAINERS                                |   1 +
-> tools/testing/selftests/vsock/.gitignore   |   1 +
-> tools/testing/selftests/vsock/config.vsock |   6 +
-> tools/testing/selftests/vsock/vmtest.sh    | 247 +++++++++++++++++++++++++++++
-> 4 files changed, 255 insertions(+)
->
->diff --git a/MAINTAINERS b/MAINTAINERS
->index c3fce441672349f7850c57d788bc1a29b203fba5..f214cf7c4fb59ec67885ee6c81daa44e17c80f5f 100644
->--- a/MAINTAINERS
->+++ b/MAINTAINERS
->@@ -25323,6 +25323,7 @@ F:	include/uapi/linux/vm_sockets.h
-> F:	include/uapi/linux/vm_sockets_diag.h
-> F:	include/uapi/linux/vsockmon.h
-> F:	net/vmw_vsock/
->+F:	tools/testing/selftests/vsock/
-> F:	tools/testing/vsock/
->
-> VMALLOC
->diff --git a/tools/testing/selftests/vsock/.gitignore b/tools/testing/selftests/vsock/.gitignore
->new file mode 100644
->index 0000000000000000000000000000000000000000..1950aa8ac68c0831c12c1aaa429da45bbe41e60f
->--- /dev/null
->+++ b/tools/testing/selftests/vsock/.gitignore
->@@ -0,0 +1 @@
->+vsock_selftests.log
->diff --git a/tools/testing/selftests/vsock/config.vsock b/tools/testing/selftests/vsock/config.vsock
->new file mode 100644
->index 0000000000000000000000000000000000000000..a229c329d44e4a0b650d073b74949b577da3dc64
->--- /dev/null
->+++ b/tools/testing/selftests/vsock/config.vsock
->@@ -0,0 +1,6 @@
->+CONFIG_VSOCKETS=y
->+CONFIG_VSOCKETS_DIAG=y
->+CONFIG_VSOCKETS_LOOPBACK=y
->+CONFIG_VIRTIO_VSOCKETS=y
->+CONFIG_VIRTIO_VSOCKETS_COMMON=y
->+CONFIG_VHOST_VSOCK=y
-
-Should we enabled also other transports?
-
-(I'm not sure since we don't test it)
-
->diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
->new file mode 100755
->index 0000000000000000000000000000000000000000..f2dafcb893232f95ebb22104a62ce1e0312f4e89
->--- /dev/null
->+++ b/tools/testing/selftests/vsock/vmtest.sh
->@@ -0,0 +1,247 @@
->+#!/bin/bash
->+# SPDX-License-Identifier: GPL-2.0
->+#
->+# Copyright (c) 2025 Meta Platforms, Inc. and affiliates
->+#
->+# Dependencies:
->+#		* virtme-ng
->+#		* busybox-static (used by virtme-ng)
->+#		* qemu	(used by virtme-ng)
->+
->+SCRIPT_DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
->+KERNEL_CHECKOUT=$(realpath ${SCRIPT_DIR}/../../../..)
->+PLATFORM=${PLATFORM:-$(uname -m)}
->+
->+if [[ -z "${QEMU:-}" ]]; then
->+	QEMU=$(which qemu-system-${PLATFORM})
->+fi
->+
->+VSOCK_TEST=${KERNEL_CHECKOUT}/tools/testing/vsock/vsock_test
->+
->+TEST_GUEST_PORT=51000
->+TEST_HOST_PORT=50000
->+TEST_HOST_PORT_LISTENER=50001
->+SSH_GUEST_PORT=22
->+SSH_HOST_PORT=2222
->+VSOCK_CID=1234
->+
->+QEMU_PIDFILE=/tmp/qemu.pid
->+
->+# virtme-ng offers a netdev for ssh when using "--ssh", but we also need a
->+# control port forwarded for vsock_test.  Because virtme-ng doesn't support
->+# adding an additional port to forward to the device created from "--ssh" and
->+# virtme-init mistakenly sets identical IPs to the ssh device and additional
->+# devices, we instead opt out of using --ssh, add the device manually, and also
->+# add the kernel cmdline options that virtme-init uses to setup the interface.
->+QEMU_OPTS=""
->+QEMU_OPTS="${QEMU_OPTS} -netdev user,id=n0,hostfwd=tcp::${TEST_HOST_PORT}-:${TEST_GUEST_PORT}"
->+QEMU_OPTS="${QEMU_OPTS},hostfwd=tcp::${SSH_HOST_PORT}-:${SSH_GUEST_PORT}"
->+QEMU_OPTS="${QEMU_OPTS} -device virtio-net-pci,netdev=n0"
->+QEMU_OPTS="${QEMU_OPTS} -device vhost-vsock-pci,guest-cid=${VSOCK_CID}"
->+QEMU_OPTS="${QEMU_OPTS} --pidfile ${QEMU_PIDFILE}"
->+KERNEL_CMDLINE="virtme.dhcp net.ifnames=0 biosdevname=0 virtme.ssh virtme_ssh_user=$USER"
->+
->+LOG=${SCRIPT_DIR}/vsock_selftests.log
->+
->+#		Name				Description
->+tests="
->+	vm_server_host_client			Run vsock_test in server mode on the VM and in client mode on the host.
->+	vm_client_host_server			Run vsock_test in client mode on the VM and in server mode on the host.
-
-What about adding tests also with loopback in the VM?
-
->+"
->+
->+usage() {
->+	echo
->+	echo "$0 [OPTIONS]"
->+	echo
->+	echo "Options"
->+	echo "  -v: verbose output"
->+	echo
->+	echo "Available tests${tests}"
->+	exit 1
->+}
->+
->+die() {
->+	echo "$*" >&2
->+	exit 1
->+}
->+
->+vm_ssh() {
->+	ssh -q -o UserKnownHostsFile=/dev/null -p 2222 localhost $*
->+	return $?
->+}
->+
->+cleanup() {
->+	if [[ -f "${QEMU_PIDFILE}" ]]; then
->+		pkill -9 -F ${QEMU_PIDFILE} 2>&1 >/dev/null
->+	fi
->+}
->+
->+build() {
->+	log_setup "Building kernel and tests"
->+
->+	pushd ${KERNEL_CHECKOUT} >/dev/null
->+	vng \
->+		--kconfig \
->+		--config ${KERNEL_CHECKOUT}/tools/testing/selftests/vsock/config.vsock
->+	make -j$(nproc)
->+	make -C ${KERNEL_CHECKOUT}/tools/testing/vsock
->+	popd >/dev/null
->+	echo
->+}
->+
->+vm_setup() {
->+	local VNG_OPTS=""
->+	if [[ "${VERBOSE}" = 1 ]]; then
->+		VNG_OPTS="--verbose"
->+	fi
->+	vng \
->+		$VNG_OPTS	\
->+		--run ~/local/linux \
->+		--qemu /bin/qemu-system-x86_64 \
->+		--qemu-opts="${QEMU_OPTS}" \
->+		--user root \
->+		--append "${KERNEL_CMDLINE}" \
->+		--rw  2>&1 >/dev/null &
->+}
->+
->+vm_wait_for_ssh() {
->+	i=0
->+	while [[ true ]]; do
->+		if (( i > 20 )); then
->+			die "Timed out waiting for guest ssh"
->+		fi
->+		vm_ssh -- true
->+		if [[ $? -eq 0 ]]; then
->+			break
->+		fi
->+		i=$(( i + 1 ))
->+		sleep 5
->+	done
->+}
->+
->+wait_for_listener() {
->+	local PORT=$1
->+	local i=0
->+	while ! ss -ltn | grep -q ":${PORT}"; do
->+		if (( i > 30 )); then
->+			die "Timed out waiting for listener on port ${PORT}"
->+		fi
->+		sleep 3
->+		i=$(( i + 1 ))
->+	done
->+}
->+
->+vm_wait_for_listener() {
->+	vm_ssh -- "$(declare -f wait)for_listener); wait_for_listener 
->${TEST_GUEST_PORT}"
->+}
->+
->+host_wait_for_listener() {
->+	wait_for_listener ${TEST_HOST_LISTENER_PORT}
->+}
->+
->+log() {
->+	local prefix="$1"
->+	shift
->+
->+	if [[ "$#" -eq 0 ]]; then
->+		cat | awk '{ printf "%s:\t%s\n","'"${prefix}"'", $0 }' | tee -a ${LOG}
->+	else
->+		echo "$*" | awk '{ printf "%s:\t%s\n","'"${prefix}"'", $0 }' | tee -a ${LOG}
->+	fi
->+}
->+
->+log_setup() {
->+	log "setup" "$@"
->+}
->+
->+log_host() {
->+	testname=$1
->+	shift
->+	log "test:${testname}:host" "$@"
->+}
->+
->+log_guest() {
->+	testname=$1
->+	shift
->+	log "test:${testname}:guest" "$@"
->+}
->+
->+test_vm_server_host_client() {
->+	local testname="vm_server_host_client"
->+	vm_ssh -- "${VSOCK_TEST}" \
->+							--mode=server \
->+							--control-port="${TEST_GUEST_PORT}" \
->+							--peer-cid=2 \
->+							2>&1 | log_guest "${testname}" &
-
-Strange indentation here.
-
->+
->+	vm_wait_for_listener
->+	${VSOCK_TEST}	\
->+		--mode=client	\
->+		--control-host=127.0.0.1	\
->+		--peer-cid="${VSOCK_CID}"	\
->+		--control-port="${TEST_HOST_PORT}" 2>&1 | log_host "${testname}"
->+
->+	rc=$?
->+}
->+
->+test_vm_client_host_server() {
->+	local testname="vm_client_host_server"
->+
->+	${VSOCK_TEST}	\
->+		--mode "server" \
->+		--control-port "${TEST_HOST_PORT_LISTENER}" \
->+		--peer-cid "${VSOCK_CID}" 2>&1 | log_host "${testname}" &
->+
->+	host_wait_for_listener
->+
->+	vm_ssh -- "${VSOCK_TEST}"	\
->+		--mode=client	\
->+		--control-host=10.0.2.2	\
->+		--peer-cid=2	\
->+		--control-port="${TEST_HOST_PORT_LISTENER}" 2>&1 | log_guest "${testname}"
->+
->+	rc=$?
->+}
->+
->+run_test() {
->+	unset IFS
->+	name=$(echo "${1}" | awk '{ print $1 }')
->+	eval test_"${name}"
->+}
->+
->+while getopts :hv o
->+do
->+	case $o in
->+	v) VERBOSE=1;;
->+	h|*) usage;;
->+	esac
->+done
->+shift $((OPTIND-1))
->+
->+trap cleanup EXIT
->+
->+> ${LOG}
->+build
->+log_setup "Booting up VM"
->+vm_setup
->+vm_wait_for_ssh
->+log_setup "VM booted up"
->+
->+IFS="
->+"
->+cnt=0
->+for t in ${tests}; do
->+	rc=0
->+	run_test "${t}"
->+	if [[ ${rc} != 0 ]]; then
->+		cnt=$(( cnt + 1 ))
->+	fi
->+done
->+
->+if [[ ${cnt} = 0 ]]; then
->+	echo OK
-
-In my suite I also check if we have some kernel warnings or oops.
-Should we add something similar or does the infrastructure already
-handle that?
-
-Thanks,
-Stefano
-
->+else
->+	echo FAILED: ${cnt}
->+fi
->+echo "Log: ${LOG}"
->+exit ${cnt}
->
->---
->base-commit: cc04ed502457412960d215b9cd55f0d966fda255
->change-id: 20250325-vsock-vmtest-b3a21d2102c2
->
->Best regards,
->-- 
->Bobby Eshleman <bobbyeshleman@gmail.com>
->
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
