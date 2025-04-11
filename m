@@ -1,86 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27312202F70;
-	Fri, 11 Apr 2025 16:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532C721A451
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744390438; cv=none; b=jGxGl8fvI+8qi2YGh8c7aGwa2pWytG7WoPgDGpwdw//3Pi3KHZcSgdjEetMbSFptqY1l4HY9x8C3/nFRuQRXZyFWU1tOsM3MOGJBQ/vxMttrIF9csW0Vuttso/1zBdBbsy6ekD51z3fgFFTV4+7ZjBTye7C8bG3/WH+PULE2NHk=
+	t=1744390504; cv=none; b=tZjMjLp0TfxXgVW7u8FIfee2401qhm57Sa4v46JKBEgdNnwIblTzuPlU3g016h2yyabTbGUKfhvQJqdBNy85X6W/puG92ua/8/0Nf4/KlvfxjtFGlqEUS1b0WLFhiPl9VnOpGY/JnHLuKhwf6Js9vztiujhyKB3JPrRejEYrzyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744390438; c=relaxed/simple;
-	bh=AF4RjAgYfBcqR9rc19DAX62S1KIV6sMe+X020c/P1Tc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Va6xcabhKeVgvHqVZxT3W3C/yvDYrhx/trWhKC+E4uhTTzYs4reZMi5pC3ORg+5RasbAndxLMyt6X+2FbsTPnYioDMkK/JmsGzERJr9DXQMy6wZDbnYoSIkV3r9xkLRbTeibW4oJsUPVgTIw+3zLK6kZaWGrEahBmwjFxr7VDDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tR2Tz26S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744390504; c=relaxed/simple;
+	bh=eQUbKB5MlOrjoSK4E9qLGEKlAJfBrbmh04JyjJb8mTQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PcrIIiR+9zfXdbeS3UpYpxPeHH9NrrJJhUKm/mQDfLHN7HAmfPX/MOdylJA77UlwYvk850BoowC9fObnGvT7M4VMUueZqvY1GsR/Rr0c/sHPTWNfgn5aJ/pQF4U77r/Pok8COTVvyvQbSCM/MldL5c/f7Z0mzBnsIsFq4yrXXqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cX9Hd4p3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tR2Tz26S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A56C2C4CEE2;
-	Fri, 11 Apr 2025 16:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744390437;
-	bh=AF4RjAgYfBcqR9rc19DAX62S1KIV6sMe+X020c/P1Tc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tR2Tz26SEwY/Iqqp+8Dc1SdxxwQ/Oe4pzKoi0FYMsNjzpsuIMXep/4LJxe5x/BUAw
-	 ai98mdp8UD9p6MIquQKTK/MRJOOzdOwDkVLhHxoUlmwZdMMXiwelCsSjzeuvl6JrBX
-	 pfd/jKpQpyIGLykhtDNcFydRUWQjrslj7kJIBd9jH23sQFoRhBQ8uMk9hT9YlicNkV
-	 h6MLif0NZf9/QlHdF7QZ+WA0nEXrkFGUnR/PKvNJKdiojDix9LKDBPe3wij9GhW+Af
-	 ZTSSaxokBnI6NGQlPDCBCHkBTtC4neqfozELV2C8BeWchmVQIm7HjvmMDmpuiL1kcC
-	 4iZ0NcTVkCj6w==
-Date: Fri, 11 Apr 2025 17:53:53 +0100
-From: Simon Horman <horms@kernel.org>
-To: Thangaraj Samynathan <thangaraj.s@microchip.com>
-Cc: netdev@vger.kernel.org, bryan.whitehead@microchip.com,
-	UNGLinuxDriver@microchip.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: ethernet: microchip: lan743x: Fix
- memory allocation failure
-Message-ID: <20250411165353.GN395307@horms.kernel.org>
-References: <20250410041034.17423-1-thangaraj.s@microchip.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cX9Hd4p3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744390501;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KBcgGdLhrEqsLmtx1ScSEvmWJKw+htq0uliyA+SEq3w=;
+	b=cX9Hd4p3j+4DtcN3ytx60HMMvcNNd9mv1UCVgKGins6BZRgRtGxEMrN4LwCyviPoe6lTsU
+	XNvIjwOTCLFA7s/q9Pst5Ba5WuUySUgURMbS8ChDiOkzQi6JVTdCof6jACvHqaeJMxem1Y
+	4MOfeZJOb3TSu06Kj7IJb+IDGtE9Q+Q=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-3xMtwCtPNjumNzDnoeQkHQ-1; Fri,
+ 11 Apr 2025 12:54:57 -0400
+X-MC-Unique: 3xMtwCtPNjumNzDnoeQkHQ-1
+X-Mimecast-MFC-AGG-ID: 3xMtwCtPNjumNzDnoeQkHQ_1744390497
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DB57D1956087;
+	Fri, 11 Apr 2025 16:54:56 +0000 (UTC)
+Received: from f39.redhat.com (unknown [10.44.32.127])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F2DDF180175D;
+	Fri, 11 Apr 2025 16:54:54 +0000 (UTC)
+From: Eder Zulian <ezulian@redhat.com>
+To: Basavaraj.Natikar@amd.com,
+	vkoul@kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Eder Zulian <ezulian@redhat.com>
+Subject: [PATCH] dmaengine: ptdma: Remove dead code from pt_dmaengine_register()
+Date: Fri, 11 Apr 2025 18:54:51 +0200
+Message-ID: <20250411165451.240830-1-ezulian@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410041034.17423-1-thangaraj.s@microchip.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, Apr 10, 2025 at 09:40:34AM +0530, Thangaraj Samynathan wrote:
-> The driver allocates ring elements using GFP_DMA flags. There is
-> no dependency from LAN743x hardware on memory allocation should be
-> in DMA_ZONE. Hence modifying the flags to use only GFP_ATOMIC
-> 
-> Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
-> ---
-> v0
-> -Initial Commit
-> 
-> v1
-> -Modified GFP flags from GFP_KERNEL to GFP_ATOMIC
-> -added fixes tag
-> 
-> v2
-> -Resubmit net-next instead of net
+devm_kasprintf() is used to allocate and format a string and the
+returned pointer is assigned to 'cmd_cache_name'. However, the variable
+'cmd_cache_name' is not effectively used.
 
-Hi Thangaraj,
+Remove the dead code.
 
-Thanks for the update. And sorry for not noticing this
-in my earlier review. But I have some more feedback:
+Signed-off-by: Eder Zulian <ezulian@redhat.com>
+---
+ drivers/dma/amd/ptdma/ptdma-dmaengine.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-* I don't think it is correct to refer to this as fixing a failure
-  in the subject.
+diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+index 715ac3ae067b..3a8014fb9cb4 100644
+--- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
++++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+@@ -565,7 +565,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+ 	struct ae4_device *ae4 = NULL;
+ 	struct pt_dma_chan *chan;
+ 	char *desc_cache_name;
+-	char *cmd_cache_name;
+ 	int ret, i;
+ 
+ 	if (pt->ver == AE4_DMA_VERSION)
+@@ -581,12 +580,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+ 	if (!pt->pt_dma_chan)
+ 		return -ENOMEM;
+ 
+-	cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+-					"%s-dmaengine-cmd-cache",
+-					dev_name(pt->dev));
+-	if (!cmd_cache_name)
+-		return -ENOMEM;
+-
+ 	desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+ 					 "%s-dmaengine-desc-cache",
+ 					 dev_name(pt->dev));
+-- 
+2.49.0
 
-* I do think the subject prefix can be shortened to 'net: lan743x: '
-
-
-
-Perhaps something more like this?
-
-	[PATCH net-next v3] net: lan743x: Allocate rings outside ZONE_DMA
-
-And perhaps also mention in the commit message that this
-is consistent with the other caller of lan743x_rx_init_ring_element().
-
-Thanks!
