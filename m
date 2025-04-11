@@ -1,106 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F3021C183;
-	Fri, 11 Apr 2025 18:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C10E2327A7;
+	Fri, 11 Apr 2025 18:16:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744395396; cv=none; b=hsOJ2SW7qVC6AJ3nTHf49BqzBvSBtSMNTLqLxsyMvX8oiI1ZkTK82LBLDXPH4mZrskhQZLguVgln1CLdRjnt2G/AxIeJ8kRMXmnEXf5+beAR9nu/No24M0J4+MX7rbqj3TlalMwOMLPrcORqMNOeqzjbs5S3lOCVThielrjflJk=
+	t=1744395414; cv=none; b=ZzRCSbJMn96VEQv8v5xq14peRU6Kd0vkhAizTUjosPWmEbAhJrUh5KM3U8Sh9jjTaPTQnH3xpVXG6+pqC551PVLfB/CSm8hGeDECV4A/9s/Du/0VSyqKRAK4qVNixxu4SvfrWl7qn4vkSTOms6bwpaVTxqULgb7REQ1axaH1iU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744395396; c=relaxed/simple;
-	bh=97CJDVIv7elwt7wEHhch9Ec7mXBTWpOIxu0q047UETo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=llkP38Zx4q8HqGDIK8DsClfHH1+beyMZOODSVUXw5aDnHwNpRFemxEZYCPax4w6GUaKtS/HVhvSHEIB1KLQdh8jklGjC7/IpphR0Ii7kGEnut++tLZc7yRxNr2oCLNQ0YBmIhB/g2wEz3Oc3PJ3gt02tnMNNpG5yiBDwfl7cJH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzFy/D3j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744395414; c=relaxed/simple;
+	bh=XNtqqAHgR695XgtcHPHjLS8pXle7c+HwYMOiA7eo3Yk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Fwb372C6Las37q30DtfSMbP9Eaakqgj9kqT9rARqzdnYLUyzENt3PgyLjCjAy0O8y85XJcjlQqR/LzFc8On9ZWTWqIV+IKQPLh71aXfudlBjXrOjVRCOMHyiDWprRoxjPZXJYCd8wRkB1DviDiYn4gppshNtZRnihLN0NfO6SgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYFuECb0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzFy/D3j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B572DC4CEE2;
-	Fri, 11 Apr 2025 18:16:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYFuECb0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C668C4CEE2;
+	Fri, 11 Apr 2025 18:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744395395;
-	bh=97CJDVIv7elwt7wEHhch9Ec7mXBTWpOIxu0q047UETo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AzFy/D3jJz8D/x+BYXWwdG+hwtew9TM0sLH2wlScG3ajcVa2LPSH2EO3bgR3nRx32
-	 A2ARw69HTyd/7Xg/IbELGdCnQ5Utc2h5X+i0TJlZfUaWMsTS0vzmQ3ETs+wiRt4K8/
-	 e6vCVD/jFj85FR9JI09af/AgViYKUkqMLL3Pu2sb2tJMOaYqU21q3gZOuW3+/FEZza
-	 sN2pmBfjMYpaOC6Il3cAli37GN2z2yWNixhsDdYe8lF+Qxh9hg65Py4rYOchnPVbKh
-	 vZ62g9Iod+Wpuf1ShwFhm9v3QPUTjf1MtrpC9HvwiKIdBFTHDDXX1r4JEKEzWgUlcb
-	 Joh14hlVnwB+Q==
-Date: Fri, 11 Apr 2025 19:16:29 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Donglin Peng <dolinux.peng@gmail.com>,
-	Zheng Yejian <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <9dafc156-1272-4039-a9c0-3448a1bd6d1f@sirena.org.uk>
-References: <20250227185804.639525399@goodmis.org>
- <20250227185822.810321199@goodmis.org>
- <ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
- <20250410131745.04c126eb@gandalf.local.home>
- <c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
- <20250411124552.36564a07@gandalf.local.home>
- <2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
- <20250411131254.3e6155ea@gandalf.local.home>
- <350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
+	s=k20201202; t=1744395413;
+	bh=XNtqqAHgR695XgtcHPHjLS8pXle7c+HwYMOiA7eo3Yk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=OYFuECb0NNpnTKoGuCwefHFNYdNH8h+Xdtqa2j6p/yqSucd3UhC6iMBHT8QvU3Lgq
+	 beAOjX87+GvYEnJreoXarAXtRXrAsPF6Vcox4Zfo7T6CRiI/vfKu661z8Gh9zA+ZaX
+	 AQ1nK4pd8ZH+Onv3cXNR9Pf7fhYdqeVsuFW8DPyh31SMrywhpUuUALiK4ukux2qx3d
+	 LVCAzNjuhTXicQanAHVzyTxmzVav/psRQ3j4Ii62cpvmCBGM4Xr5OihhV5q4FTlAJL
+	 SoH1SZkN+1fjZONtIkp2jf5an9pcevsAa96Iqh5XNv6mv5cMNF4mnz6nCeKwTaCRuO
+	 iIRa2wAEAB/IQ==
+Date: Fri, 11 Apr 2025 13:16:50 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Zhangfei Gao <zhangfei.gao@linaro.org>,
+	Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
+Subject: [GIT PULL] PCI fixes for v6.15
+Message-ID: <20250411181650.GA372618@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="H170P4jA6J8FG5IG"
-Content-Disposition: inline
-In-Reply-To: <350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
-X-Cookie: You will be awarded some great honor.
-
-
---H170P4jA6J8FG5IG
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Apr 11, 2025 at 06:39:12PM +0100, Mark Brown wrote:
-> On Fri, Apr 11, 2025 at 01:12:54PM -0400, Steven Rostedt wrote:
-> > Mark Brown <broonie@kernel.org> wrote:
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-> > > # not ok 25 Checking dynamic events limitations
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-> > > which isn't flagged as a regression (there's some other UNRESOLVED ones).
+are available in the Git repository at:
 
-> > Hmm, don't know about that one.
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.15-fixes-1
 
-...
+for you to fetch changes up to c8ba3f8aff672a5ea36e895f0f8f657271d855d7:
 
-> which smells a bit of a shell incompatibility issue.  I'll try to find
-> time to have a look.
+  PCI: Run quirk_huawei_pcie_sva() before arm_smmu_probe_device() (2025-04-11 12:53:21 -0500)
 
-Yeah, if I bodge ftracetest to be a bash script then the test runs fine
-so it'll be a bashism.  We're running the tests in a Debian rootfs so
-/bin/sh will be dash.
+----------------------------------------------------------------
 
---H170P4jA6J8FG5IG
-Content-Type: application/pgp-signature; name="signature.asc"
+- Run quirk_huawei_pcie_sva() before arm_smmu_probe_device(), which depends
+  on the quirk, to avoid IOMMU initialization failures (Zhangfei Gao)
 
------BEGIN PGP SIGNATURE-----
+----------------------------------------------------------------
+Zhangfei Gao (1):
+      PCI: Run quirk_huawei_pcie_sva() before arm_smmu_probe_device()
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf5XH0ACgkQJNaLcl1U
-h9CGeAf+O3vXSWVrkdpLMZpe5T6g5JzYEJlokIjsViSRQ9L4iIXwohqixf3XJG3Z
-sZ7KsbpSJPHbxTflLGpPnC3MwFp4ZtG7d9w0eegCro9WGMlfpcL3Wo2rSPttA882
-OC8KNhDN7frA+FylfBe/8yh89eLjTB3dGO1WEw22yGuJL0Dwn4+U8wJMRbIU5Fs/
-hD54R+DypzraIPB96AzhrRsav2jI32ZLRFCTnwg7hhoWd1wHwircs19AxeBzD/9C
-VBW/W6b+Hhi7q99WWG2niI5nHi27oL/qFXxshS4Oj5SRd5Bvt6VSzUWYFq+PTI23
-vgXHCo9RyMHICrubMCsBq09yXjf9dw==
-=E6ir
------END PGP SIGNATURE-----
-
---H170P4jA6J8FG5IG--
+ drivers/pci/quirks.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
