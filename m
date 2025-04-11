@@ -1,144 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA442D1F47;
-	Fri, 11 Apr 2025 09:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB812D3A75
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744362127; cv=none; b=VncrrYvG91TC8KnWM23fSmtbqzO7Qc73y06QYkjtIHBmbk0ipw9SUOXe7G11lupsykcQKYJ6PmIe8vXWeYWcyhMqgDbGN+kXrxwfW7mewLUq9xk8HwrM3J6sLYDjVl+Ok4urCK1aCXGKoeGf8BngpJSk8BsuFitiMf9VpzA27CM=
+	t=1744362134; cv=none; b=AzfjT5JrFUM2dHHA2BA7TYbq+xWWNkW/PCSF+n0/+kIh5d5fdJESupNk8fY689DSanRkWdsgQB0kmGCQ7bMaArvSLPWLq3CfCLl3+xvwylXUg77Z2ur551mWkvjAJtxTifddK4AqwOTy5bwd2mt/qhtilh9zKlH33DRr3Cv9pcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744362127; c=relaxed/simple;
-	bh=4PWMuyjdFGi/rGm+eh3+GEBgJVFiFZN51q5MAPLIuoQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VkRdPj/pO3vanScfqxhS0H+g4u9MYh+jJjsroDVpyvxhtDcxvFE7qdQ5VQwklAZi1/b7JV478DuvRNz6sLsXF6/TgTgkAI97HfkD4G8GkyZ36tmdB4Mks0u6/GaIrvBihVc1UPbNVSbhir5QNhhVk8prrPDjw31Ozmb2pMgTuyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UM8acNMw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IICcBQqn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744362134; c=relaxed/simple;
+	bh=4FRGKxUjmT5V97OsFFUs9UKwCeGpR9rkrqnQkUrp31M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Er6ByWXaKu8VdLflzjYUReX0e0/qmkAGFSeVWHm7O0SPw5FM3PJP89+ofi0361+x8h/8Oufu7oS79hNWS1T1368c+jGVOZxbqmuU9OJ5PweniIil4HDeZ32AHNYUbYpncbA72L7jL6LVglOXX9vJMynIyEEyZesYBfeJEUfVOWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=guaWKyh0; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UM8acNMw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IICcBQqn"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744362123;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WupVzBzhpR9wEE1wxtcIpqdyGm1uGqU4Sj1sAih5bIM=;
-	b=UM8acNMwlbNtilAsoJBq3NNM2v5cPLGJq0pzkbH1McBkXfh5nrZOEU4RPJQaSk0fm/Sr4a
-	E+x6AXK20VzMbgEHZKPQ/1ZwWXzJtqwVIhgFjpzKOLUPr0PU6ZYxUDNJWrNq1HyhiXQFV4
-	jLxKdSZS3g4Fflk5FYfRpFif1sPo8+cbFPsHTceYhU80H4QVU2dkGxa0DXaPUsHehRCDL/
-	QxUujNGtdvSmGaJwFCmfxLfE/9wntJqLkNYtUDibJ8sUKl/Ucgqfn3jQnkfTEzy3utfrBT
-	Pf1uXvME30V5gnDpaCnRwblL1EVstB5bW5jbEPqBcI97Rzz3mA24WgeRq90X5A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744362123;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WupVzBzhpR9wEE1wxtcIpqdyGm1uGqU4Sj1sAih5bIM=;
-	b=IICcBQqnXLEJSOd4B3tzfGRBH2GVLFFL9B+7gRP+bwd5jRQweCZ/a28dW5wr3xU38n8Pyu
-	2CdoY8v99782bJDw==
-Date: Fri, 11 Apr 2025 11:00:55 +0200
-Subject: [PATCH v3 31/32] tools/nolibc: implement width padding in printf()
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="guaWKyh0"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-391315098b2so711885f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744362130; x=1744966930; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHnGewIV1agnoOjGZwgUR7YbP805CZBtE+LcY2jKnig=;
+        b=guaWKyh0ETUKUrxGok2gg/uJgNYTfRlxo9LUwHPFgOeKB8mXhBVdYgoGqbvkJ+G/hv
+         0ICKn/a1JexWCDbfbenTjjwnSKyyiBTUkO9Bz9Mv44etPlsw2lLuvUzc2rT1/sogg6DK
+         63T+/0uoorqHfng5Ewe0TzOdGLiDmB7TI8/nW1+y+wMkiNuvtVDZogWNSAdarvKjz/8S
+         ge7GrPBsGr3TIyK15+vWnzNn7LttfwxR6VeFUV7kQYkiilF3Wi6GP0NLOD2uZW53ROxr
+         vuv2SfUu12Q9WW8+awiEf88ATB0FPkn2HvH12fbGkf7gr3rv1BYxlHbkI+auyMpBWyYY
+         6X2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744362130; x=1744966930;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHnGewIV1agnoOjGZwgUR7YbP805CZBtE+LcY2jKnig=;
+        b=jy2EC0s6vAsAioelwt3yt36JdCdLLj8gdCYlHBAO+NgUsIXtjMMMP6dn2awD0idrez
+         0eu+wOm88HHasaw9vqmRy0CofSFdH4Y0WFoODwOeRqsc1oWr8oF3PiW8Ymu44RZc7X0N
+         HaChWvXarhr8HzfAI3kpGkdGdfG9fF6RKf2kBXRuEAmSbbPAMN38i2KpKg5AKAjL/H5z
+         CJ1bj6E5t2a0EVH4vfW+h85tzqYwCx7V6hhWLCFSOFwX7ACS92VdyqeCL1B/SXFwEZiH
+         qt+tErac/ICOnfPVUQ4Bv23Tbf6KPOrZm690qXiNcOYOVdre8utMlygEPhbTXZO4Bb++
+         LF2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWG7OixAw5K/6/xC+Xe9cF+z3BTXvOk44Sm26hIc7kl/uaafvSYnq5mkkPqIm4PF3egapAw22MJicTkiRw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXMAGYeteMOetpGjF56zBpnZTNLImtm3rTtLtq/wwTWKqdwQEI
+	ChSA8zay+SZvPzPiVmF5raEg1dbA1sq8sb+e13SFmm3uuo3Q3W91GAgsPgVsvTSH+fhne7q2fRo
+	wYj9OorLw19IAFg==
+X-Google-Smtp-Source: AGHT+IGknNB36GwS9G8tRiPkbu2Av2DOm6kWwYYKMcuyvBuMkSEKDm/6GTJWrFS/W+dxqv11gdhJsHkpVK/R1Lw=
+X-Received: from wmbev17.prod.google.com ([2002:a05:600c:8011:b0:43e:fb23:3edc])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:40d9:b0:391:3f4f:a169 with SMTP id ffacd0b85a97d-39ea5214ecdmr1468410f8f.32.1744362130477;
+ Fri, 11 Apr 2025 02:02:10 -0700 (PDT)
+Date: Fri, 11 Apr 2025 09:02:08 +0000
+In-Reply-To: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com>
+Message-ID: <Z_jakOS8mciIpxy0@google.com>
+Subject: Re: [PATCH] rust: retain pointer mut-ness in `container_of!`
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250411-nolibc-kselftest-harness-v3-31-4d9c0295893f@linutronix.de>
-References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
-In-Reply-To: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
-To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
- Willy Tarreau <w@1wt.eu>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Kees Cook <kees@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744362103; l=2908;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=4PWMuyjdFGi/rGm+eh3+GEBgJVFiFZN51q5MAPLIuoQ=;
- b=UkxEY9GedZRL5ANsdnHTP2map3v1Ep3TNo6I+jZuB/S7IBb1ORcYjXiMtEK1NsLeGb9iaZXfm
- qgi1IdJCe8PA5nQEYjaD2/hbl7ciWG1/Ik0/FksDYTx3Da4evKPC7Gj
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-printf can pad each argument to a certain width.
-Implement this for compatibility with the kselftest harness.
-Currently only padding with spaces is supported.
+On Wed, Apr 09, 2025 at 10:43:16AM -0400, Tamir Duberstein wrote:
+> Avoid casting the input pointer to `*const _`, allowing the output
+> pointer to be `*mut` if the input is `*mut`. This allows a number of
+> `*const` to `*mut` conversions to be removed at the cost of slightly
+> worse ergonomics when the macro is used with a reference rather than a
+> pointer; the only example of this was in the macro's own doctest.
+> 
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+> This patch is extracted from 3 other series to reduce duplication.
+> ---
+>  rust/kernel/lib.rs    |  5 ++---
+>  rust/kernel/rbtree.rs | 23 ++++++++++-------------
+>  2 files changed, 12 insertions(+), 16 deletions(-)
+> 
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index de07aadd1ff5..1df11156302a 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -190,7 +190,7 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+>  /// }
+>  ///
+>  /// let test = Test { a: 10, b: 20 };
+> -/// let b_ptr = &test.b;
+> +/// let b_ptr: *const _ = &test.b;
+>  /// // SAFETY: The pointer points at the `b` field of a `Test`, so the resulting pointer will be
+>  /// // in-bounds of the same allocation as `b_ptr`.
+>  /// let test_alias = unsafe { container_of!(b_ptr, Test, b) };
+> @@ -199,9 +199,8 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+>  #[macro_export]
+>  macro_rules! container_of {
+>      ($ptr:expr, $type:ty, $($f:tt)*) => {{
+> -        let ptr = $ptr as *const _ as *const u8;
+>          let offset: usize = ::core::mem::offset_of!($type, $($f)*);
+> -        ptr.sub(offset) as *const $type
+> +        $ptr.byte_sub(offset).cast::<$type>()
+>      }}
+>  }
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Acked-by: Willy Tarreau <w@1wt.eu>
----
- tools/include/nolibc/stdio.h                 | 17 ++++++++++++++++-
- tools/testing/selftests/nolibc/nolibc-test.c |  3 +++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+This implementation does not check the type of `ptr`. Would we not want
+it to have the type of the field?
 
-diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
-index 46bd90f96d654fadda20292baddc98358a3afc62..fb0417477759ee6c9663e84807c1d1067e735dec 100644
---- a/tools/include/nolibc/stdio.h
-+++ b/tools/include/nolibc/stdio.h
-@@ -220,7 +220,7 @@ int __nolibc_printf(__nolibc_printf_cb cb, intptr_t state, size_t n, const char
- {
- 	char escape, lpref, c;
- 	unsigned long long v;
--	unsigned int written;
-+	unsigned int written, width;
- 	size_t len, ofs, w;
- 	char tmpbuf[21];
- 	const char *outstr;
-@@ -228,10 +228,20 @@ int __nolibc_printf(__nolibc_printf_cb cb, intptr_t state, size_t n, const char
- 	written = ofs = escape = lpref = 0;
- 	while (1) {
- 		c = fmt[ofs++];
-+		width = 0;
- 
- 		if (escape) {
- 			/* we're in an escape sequence, ofs == 1 */
- 			escape = 0;
-+
-+			/* width */
-+			while (c >= '0' && c <= '9') {
-+				width *= 10;
-+				width += c - '0';
-+
-+				c = fmt[ofs++];
-+			}
-+
- 			if (c == 'c' || c == 'd' || c == 'u' || c == 'x' || c == 'p') {
- 				char *out = tmpbuf;
- 
-@@ -309,6 +319,11 @@ int __nolibc_printf(__nolibc_printf_cb cb, intptr_t state, size_t n, const char
- 			if (n) {
- 				w = len < n ? len : n;
- 				n -= w;
-+				while (width-- > w) {
-+					if (cb(state, " ", 1) != 0)
-+						break;
-+					written += 1;
-+				}
- 				if (cb(state, outstr, w) != 0)
- 					break;
- 			}
-diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index 9bd0a9c68b903cbd660ff81d4b0386b0b7c13977..16ec4f658bbec43440679c5d5c35014827c377bc 100644
---- a/tools/testing/selftests/nolibc/nolibc-test.c
-+++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -1415,6 +1415,9 @@ static int run_printf(int min, int max)
- 		CASE_TEST(uintmax_t);    EXPECT_VFPRINTF(20, "18446744073709551615", "%ju", 0xffffffffffffffffULL); break;
- 		CASE_TEST(intmax_t);     EXPECT_VFPRINTF(20, "-9223372036854775807", "%jd", 0x8000000000000001LL); break;
- 		CASE_TEST(truncation);   EXPECT_VFPRINTF(25, "01234567890123456789", "%s", "0123456789012345678901234"); break;
-+		CASE_TEST(string_width); EXPECT_VFPRINTF(10, "         1", "%10s", "1"); break;
-+		CASE_TEST(number_width); EXPECT_VFPRINTF(10, "         1", "%10d", 1); break;
-+		CASE_TEST(width_trunc);  EXPECT_VFPRINTF(25, "                    ", "%25d", 1); break;
- 		CASE_TEST(scanf);        EXPECT_ZR(1, test_scanf()); break;
- 		case __LINE__:
- 			return ret; /* must be last */
-
--- 
-2.49.0
-
+Alice
