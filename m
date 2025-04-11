@@ -1,162 +1,178 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BEAB2356DE
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A22AD5E;
+	Fri, 11 Apr 2025 02:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744339724; cv=none; b=pHWA/fT5JfZKbciUj0V59m0qcwIvJihjt1RWr3O3c/fKeVs0jsaKJPQaHH5Q+NFrG3Xk40JYyiA1mdTJjrXIlsb6B4hFcn2jEv47yRK4AagihxEEgtE4nxl4AVCYC7vsQIMuh8ZvZXGIZziHtCM9fQq1YB+3KXatAtDA9JsI+zI=
+	t=1744339869; cv=none; b=rdBPrZtkkPjciNCirQk2c3A4/zu4Qc7Fbkr7Sa1sOCp/CHwGFfoc2vQAV7iQng0B70jjjRorHhOE4vOxCemd1QUcUpUkCuDmAr7JJMe2CT7y5HwPWlJShNJ0X+fOntLN+4af/jv/nCUC9ASNzU4afZNcIteaLI/oCgWqAaT7t0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744339724; c=relaxed/simple;
-	bh=8WlF5XVV0ZGzLD33sGA//s7anOwy8zzyeGAAmUR2obY=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jzjx7ueyhx3zvf3ech0JoRXXQSllH0zQI8s8F8ReMDBmOXNZaFu704rviiE0gvfhngB3JHeVqNuby2Yq4hk1KBfGaLJWOsw1aPj9HjJf9pUuRUpvsr+YrY7SVCVVdMhaLT44WL8zGaCjPtA3j7jMvwYYMjfsRj/zkSXzow3oPP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Ax3eIDg_hnhy+4AA--.5057S3;
-	Fri, 11 Apr 2025 10:48:35 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMBxb8f_gvhnh8F5AA--.34849S3;
-	Fri, 11 Apr 2025 10:48:34 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
- <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <0b5039c3-019b-fd3d-e822-5d2a52c4111d@loongson.cn>
-Date: Fri, 11 Apr 2025 10:48:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1744339869; c=relaxed/simple;
+	bh=fgryNa5zKi0ubunnKee26qgUsuQa2NNmIwewh06CCgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X1rNmXQPZGWuGYZyxJv95T6awm6ygihYApVGdrWRL0sM03BZMDryA7JHhixaMlrn68rW2+bUgvEvCnEi4Eh8iWv27Zqmwc9Puwr8koGS7RxmygfRCfvOTBsGD6N3M/nhmFLOfzYDRTLsSYcM0CCGxRis0cmJl8M3m+uJmOu/tBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YUQJq/7I; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YUQJq/7I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744339858;
+	bh=fgryNa5zKi0ubunnKee26qgUsuQa2NNmIwewh06CCgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=YUQJq/7IJCN60T8VvoYp5xIxY37lgeXEj7Sl9yiqGvB7Y9jM0vZt6mepp2ZYKIwkx
+	 GifV+wUmaAVGtongz2iiCBo1+Hh7F5pCIA9F0mUkBVIfOn3ZWHRwK5DaDSNeDQMJ/Y
+	 wnTxzZZmoBKRlKF3p0xbIvc2EZ5kmtaVU2b4ItIs=
+X-QQ-mid: bizesmtpip3t1744339815t829151
+X-QQ-Originating-IP: LC/XEJPQIUQsCRmlXxovOrl/EJd+6nGplA2WrNLXio0=
+Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 11 Apr 2025 10:50:12 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 12992929127869699408
+EX-QQ-RecipientCnt: 18
+Message-ID: <A8ED9B14F380E4B2+7fc9a2e8-5661-4344-9ac2-481da95cc6f8@uniontech.com>
+Date: Fri, 11 Apr 2025 10:50:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBxb8f_gvhnh8F5AA--.34849S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxuFy7Cr4fur4xXr45JFy3WrX_yoW5Kr1xpF
-	ZrCas5tF48XFy8ZasrAw15Zw1Fy3yDCrWxWw4Yk343Kws8Cwn0yF1xu3yDuF98Ww4Fyr4S
-	vFn5try0qFy8CacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7MmhUUUU
-	U
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug Report] A compilation failure occurs when landlock and
+ RANDSTRUCT are combined with GCC 14.2.0.
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>
+Cc: gnoack@google.com, paul@paul-moore.com, jmorris@namei.org,
+ serge@hallyn.com, kees@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
+ nicolas@fjasle.eu, linux-security-module@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ =?UTF-8?B?6ZmI6bqf6L2p?= <chenlinxuan@uniontech.com>,
+ =?UTF-8?B?5Y2g5L+K?= <zhanjun@uniontech.com>, =?UTF-8?B?6IGC6K+a?=
+ <niecheng1@uniontech.com>, =?UTF-8?B?5YWz5paH5rab?=
+ <guanwentao@uniontech.com>
+References: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
+ <20250410.926dbc57c00b@gnoack.org> <20250410.Ahkoo7ihae8a@digikod.net>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <20250410.Ahkoo7ihae8a@digikod.net>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------AcCCyMoaNchApTkF4A5pC4gu"
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MXE8fio8DejkOlTwN+HkZ2iRb50HfFI3px6ZyfQzXOPtaPlK2G8WiPh+
+	Mmut3ttxebf81MRnB9ee5hmdmmDVk8byzPsJWOgAjp0HXr3EISgJpykB6YlMYxgrLP3/J/c
+	O2WvJRkwqCE8PI4SBOIQ8P2Sk16jrRtHGo9Lk5mEiQdK8zux+0Q/Xr4LaP+Nd51TB2mAIdJ
+	1sojo69I6DqJkxHNKPtRgfDU0UWy8vzgo2mrkB/VlrzMUL+Br2bMcFMsb3gSfHGOkP9MCSf
+	mHinVAUaD5j9/MEu+ROmhISvZoqtby8REBks1sc9Tj/202A/y+yfs6vRS/ayYmNHEVQLje6
+	sfZ8JkkNkD7s7hDd6Gi1oRGeA6dL1+9s74nMlZbdBbwZPCqizT+w9u9gVnQwfEfV94Umw7b
+	o6J3IjnroOY//BPtiTd+RJX4MSDCq/WmloC/G+skbCczZdvEpuXT1/uG2hGkBvBhYgt68nb
+	jMEHDCoD3W2lvypcieHHLSnJH5aeSLTaNF9DBjo3vWLypZ4+j9ORBURxaEIJ8x37ehpHERZ
+	/OUEwXh9uXLU7HUFJy4gh5DQjLHGYNP1ug3Lx8UXNiyHfOgDLtj3rPj1oDUAyvgFsPoE+gM
+	xSQYw+zEy1FA+3+FUJfThB6ECnUFkP4wjhxLt6yyYWFLG/eOrwVAjeIe0hYZICycKimx7Y2
+	+R/FgF2JkAZA6pZx2raQbdNUUlL1qM4Xxlx1CH7eOZMywJV54jDwCZwSW2vrfOqSawRbf6e
+	/KhxQ1PjqY/0o0h28J5RFrquUda8oXqzwPCiRoNOJfkqJOKvMCbalqqEymFj+GO/nefjR95
+	20NsdWUUuGTO8tNhPRAQQvbCYkAqXPBlh9tLxaxAPi7j+mxHK/ceEXIXayYEh3pa4uHnVGi
+	XKu9BEBHB8YDEWzk6FuvQ3NvC5/lJAaCAbjTo0rJqeI81IqtGsu4fh5+4e65BJaEBToy+pW
+	m0THyCYURT+sUOaBaZP/Sj1kRkeckRcZ0UI9SJZPGoe3HZjPGgS5p6JNLpeBLCGqEcY3f5S
+	CPVDeZP504CF2XFV1F
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-On 04/09/2025 10:17 AM, Jinyang He wrote:
-> On 2025-04-08 17:27, Tiezhu Yang wrote:
->
->> Currently, interrupts need to be disabled before single-step mode is set,
->> it requires that the CSR_PRMD_PIE must be cleared in save_local_irqflag()
->> which is called by setup_singlestep(), this is reasonable.
->>
->> But in the first kprobe breakpoint exception, if the irq is enabled at
->> the
->> beginning of do_bp(), it will not be disabled at the end of do_bp()
->> due to
->> the CSR_PRMD_PIE has been cleared in save_local_irqflag(). For this case,
->> it may corrupt exception context when restoring exception after
->> do_bp() in
->> handle_bp(), this is not reasonable.
->>
->> Based on the above analysis, in order to make sure the irq is disabled at
->> the end of do_bp() for the first kprobe breakpoint exception, it is
->> proper
->> to disable irq first before clearing CSR_PRMD_PIE in
->> save_local_irqflag().
->>
->> Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
->> Co-developed-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   arch/loongarch/kernel/kprobes.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/loongarch/kernel/kprobes.c
->> b/arch/loongarch/kernel/kprobes.c
->> index 8ba391cfabb0..6eab97636e6b 100644
->> --- a/arch/loongarch/kernel/kprobes.c
->> +++ b/arch/loongarch/kernel/kprobes.c
->> @@ -113,6 +113,7 @@ NOKPROBE_SYMBOL(set_current_kprobe);
->>   static void save_local_irqflag(struct kprobe_ctlblk *kcb,
->>                      struct pt_regs *regs)
->>   {
->> +    local_irq_disable();
->>       kcb->saved_status = regs->csr_prmd;
->>       regs->csr_prmd &= ~CSR_PRMD_PIE;
->>   }
->
-> Hi, Tiezhu,
->
-> I think the carsh is caused by "irq-triggered re-re-enter" clear
-> the previous_kprobe status. An example things like,
->
-> ...
->   static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
->                    struct kprobe_ctlblk *kcb, int reenter)
->   {
->       union loongarch_instruction insn;
->
->       if (reenter) {
->           save_previous_kprobe(kcb);
->  ===================   <- irq and trigger re-re-enter in its handler
->           set_current_kprobe(p);
->           kcb->kprobe_status = KPROBE_REENTER;
->       } else {
->           kcb->kprobe_status = KPROBE_HIT_SS;
->       }
-> ...
->
-> We should assure the previous_kprobe status not be changed after re-enter.
-> So this `local_irq_disable` should be set in reenter block begin.
-> And for !reenter block, `local_irq_disable` may be not needed.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------AcCCyMoaNchApTkF4A5pC4gu
+Content-Type: multipart/mixed; boundary="------------FLHyHPO1D30HsUP8vKO5gYtQ";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>
+Cc: gnoack@google.com, paul@paul-moore.com, jmorris@namei.org,
+ serge@hallyn.com, kees@kernel.org, masahiroy@kernel.org, nathan@kernel.org,
+ nicolas@fjasle.eu, linux-security-module@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ =?UTF-8?B?6ZmI6bqf6L2p?= <chenlinxuan@uniontech.com>,
+ =?UTF-8?B?5Y2g5L+K?= <zhanjun@uniontech.com>, =?UTF-8?B?6IGC6K+a?=
+ <niecheng1@uniontech.com>, =?UTF-8?B?5YWz5paH5rab?=
+ <guanwentao@uniontech.com>
+Message-ID: <7fc9a2e8-5661-4344-9ac2-481da95cc6f8@uniontech.com>
+Subject: Re: [Bug Report] A compilation failure occurs when landlock and
+ RANDSTRUCT are combined with GCC 14.2.0.
+References: <337D5D4887277B27+3c677db3-a8b9-47f0-93a4-7809355f1381@uniontech.com>
+ <20250410.926dbc57c00b@gnoack.org> <20250410.Ahkoo7ihae8a@digikod.net>
+In-Reply-To: <20250410.Ahkoo7ihae8a@digikod.net>
 
-If you mean to do the following change:
+--------------FLHyHPO1D30HsUP8vKO5gYtQ
+Content-Type: multipart/mixed; boundary="------------tnDSPJ2ztk0RQK4ARmV9VKjf"
 
-diff --git a/arch/loongarch/kernel/kprobes.c 
-b/arch/loongarch/kernel/kprobes.c
-index 8ba391cfabb0..1ad67a3c7b70 100644
---- a/arch/loongarch/kernel/kprobes.c
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -158,6 +158,7 @@ static void setup_singlestep(struct kprobe *p, 
-struct pt_regs *regs,
-         union loongarch_instruction insn;
+--------------tnDSPJ2ztk0RQK4ARmV9VKjf
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-         if (reenter) {
-+               local_irq_disable();
-                 save_previous_kprobe(kcb);
-                 set_current_kprobe(p);
-                 kcb->kprobe_status = KPROBE_REENTER;
+SGkgR8O8bnRoZXIgYW5kIE1pY2thw6tsIFNhbGHDvG4sDQoNCk9uIDIwMjUvNC8xMSAwMTow
+NSwgTWlja2HDq2wgU2FsYcO8biB3cm90ZToNCj4+IFRoaXMgaXMgaW4gbXkgdW5kZXJzdGFu
+ZGluZyBhIGR1cGxpY2F0ZSBvZiB0aGUgZGlzY3Vzc2lvbiBpbg0KPj4gaHR0cHM6Ly9sb3Jl
+Lmtlcm5lbC5vcmcvYWxsLzIwMjUwNDA3LWtidWlsZC1kaXNhYmxlLWdjYy1wbHVnaW5zLXYx
+LTEtNWQ0NmFlNTgzZjVlQGtlcm5lbC5vcmcvDQo+IFllcywgYSBuZXcgcGF0Y2ggaGFzIGJl
+ZW4gc3VibWl0dGVkOg0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNTA0MDkx
+NTExNTQud29yay44NzIta2Vlc0BrZXJuZWwub3JnLw0KDQpUaGFuayB5b3UgYm90aCBmb3Ig
+dGhlIHJlbWluZGVyIQ0KDQpCdXQgSSdtIHN0aWxsIGEgYml0IGxvc3QuDQoNCldpdGggR0ND
+IDE0LCBJIGNhbiByZXByb2R1Y2UgdGhpcyBwcm9ibGVtIGJ5IG1lcmVseSBlbmFibGluZyBs
+YW5kbG9jayANCmFuZCBSQU5EU1RSVUNUIG9uIHRvcCBvZiB0aGUgYmFzZSB4ODZfNjRfZGVm
+Y29uZmlnLg0KDQpJdCBkb2Vzbid0IGFwcGVhciB0aGF0IG1ha2luZyBHQ0NfUExVR0lOUyBk
+ZXBlbmQgb24gIUNPTVBJTEVfVEVTVCBvciANCnJlc3RyaWN0aW5nIFJBTkRTVFJVQ1QgdG8g
+b25seSBiZSBlbmFibGVkIHdoZW4gQ0NfSEFTX1JBTkRTVFJVQ1QgaXMgc2V0IA0KYWN0dWFs
+bHkgYWRkcmVzc2VzIHRoZSByb290IGNhdXNlLg0KDQpJJ20gcXVpdGUgY3VyaW91cyB0byBr
+bm93IHdoYXQgdGhlIGFjdHVhbCBkaXJlY3QgY2F1c2Ugb2YgdGhpcyBpbnRlcm5hbCANCkdD
+QyBlcnJvciBpcy4NCg0KVGhhbmtzLA0KLS0gDQpXYW5nWXVsaQ0K
+--------------tnDSPJ2ztk0RQK4ARmV9VKjf
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-then it can not fix the case Tianyang and I have met.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-With the above change, the issue of kernel hang can
-still be reproduced after a few hours.
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
 
-With the original change of this patch, the issue of
-kernel hang can not be reproduced for several days,
-it works well.
+--------------tnDSPJ2ztk0RQK4ARmV9VKjf--
 
-Maybe what you said is another case, but anyway, the
-original change of this patch is safe for any case
-because its coverage is more extensive, so just keep
-it as is.
+--------------FLHyHPO1D30HsUP8vKO5gYtQ--
 
-Thanks,
-Tiezhu
+--------------AcCCyMoaNchApTkF4A5pC4gu
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/iDZAUDAAAAAAAKCRDF2h8wRvQL7k4R
+AP9d0MMFidIuBt7QMhq+wOU60bUHjNOTKTNdPGrY5IOV2wD8D3aj3NLa9eLjBSKVcNvyIZ/6MGXU
+cRwiiHlC0kHpLAg=
+=rFvs
+-----END PGP SIGNATURE-----
+
+--------------AcCCyMoaNchApTkF4A5pC4gu--
