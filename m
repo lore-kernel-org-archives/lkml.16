@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0266829C358
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6449127F4E4
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744350173; cv=none; b=M2DIeECBixyQrotg+Xd5FuP9NHvqW9JN9pd1+4DFEgvXpF0Cm44+551M+V/+lIimDnfzPW3ZVu1iug++D10CPvWDPQWONcd/7w8PSelmEI+m7bZL6TOORujEk2T6nvO6WR39I8OWaGdkAJ7p8cV35dovkD2jLauPJsTjYtEkjAI=
+	t=1744350176; cv=none; b=lp5IgBNBVqKecl0gEoj34US3r+QRe0HfSKFkQYUGHyOeTYIMsdusOcyk+K0UC3QWvV+7bavXWYP0bpUcMQkWBzgScsC42OJmh0JLksXQmpeoT7MnD8XdWsb75xsiRl5eaaLa4RSVm9lHwC9kqdHiVfSQvFIsD31kXjh/BEJRHc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744350173; c=relaxed/simple;
-	bh=O2zkaR2kW2P6AgmlTPYVLnVaHIZDOoTZSfQFD0K2MAI=;
+	s=arc-20240116; t=1744350176; c=relaxed/simple;
+	bh=6zdgSV9K8OdJ8/4BsSMe+UCengCTWOkuOFeCX5WC8VU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sl2DX0JmRxRhZv31zCSE8gSKJzE8Br07v/U3OCtZy+q+L5maRJOZg7XNt+oL3nzmeZWNdNVrgIQr3EPKqPsZaFTe+2TcbD1lGwFfLof3cfGURJx1AGflRV3QlveklQaubd4fXQc0+Fug5LjmE9W+urU0u0sACUzEOkKBEocCzYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fzeuMb3o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EQXGFSZBWcX+Pl/CEESQkUrSjDoOF8R2AJcKIOt9EnfSJ4gLUImtFy5RovH0+62HNOQJ2ubWeqi20OFdPIJJd7x4g7kf/s/Uv3WgFdHX8q2lIxwuVKLqfLy0Kk6TT55NLmJ63z62pcEcoFA+hqGG1adnNDfO74DEBmEm9185hqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzISamqg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fzeuMb3o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97C20C4CEE2;
-	Fri, 11 Apr 2025 05:42:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzISamqg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08D76C4CEE9;
+	Fri, 11 Apr 2025 05:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744350172;
-	bh=O2zkaR2kW2P6AgmlTPYVLnVaHIZDOoTZSfQFD0K2MAI=;
+	s=k20201202; t=1744350174;
+	bh=6zdgSV9K8OdJ8/4BsSMe+UCengCTWOkuOFeCX5WC8VU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fzeuMb3ofgXIUCY4TZLT0C6hYH0wIMi6zEt3ZlBsWEvfr4GaMuYfsz1Vv4cM20o81
-	 FMT19HLaFjBengRs+oE9W9+23f34KuTjcti/qNa3VbBtc+1k7FfNVT9BQs5P1tYMR3
-	 NzmYDNxsqgzq4ZbR8Wg4t3Hogkqw3IZIe/cyu0Nb0OfaSgWliihdnvsipIfDHzZ4ra
-	 p2SK+30TqCLFtqQhHLLuVr3nDwgkWQnVLWDUgXXs2GUkg0TBnPXLb0DvDkKUibRhZQ
-	 P1VDmmJiHfpq38+w9LkY0v9oA70923lwyc/KRHJTCb53y2BCdN1TgyndKtAiNGTkoP
-	 az6AOmYImeoCQ==
+	b=PzISamqgxRCstxoLN0GELLHQzkrYfaviJmMg7Zhn7Ej320+fJ+KHzYCA4qhImhNHG
+	 yOFvhWr2+RIrXeiI2AKs/OOXiYnabjnErPtGAwWURsp4u1OEjZSumpSHgr56YIsMgz
+	 cio4BPjltomfR0rpqnwnP1AyWLAvqNdalaHkpkDup1eUgAEXIhACZWJIedW8zU4fyg
+	 ZgKWQlQj8UINj4TRuS4nufhdlzHms9ofRWMgqKSP9mhY641coLDop0miEPQbyHJxU5
+	 PpBth1W1ZN8SefN/BtdKLmn0ZWnwrUYxDaIXjJgE6zXlh3QChtLt3RvELjbigTti7U
+	 zYccJFqYLCiWQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -35,9 +35,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 42/53] x86/alternatives: Constify text_poke_addr()
-Date: Fri, 11 Apr 2025 07:40:54 +0200
-Message-ID: <20250411054105.2341982-43-mingo@kernel.org>
+Subject: [PATCH 43/53] x86/alternatives: Simplify and clean up patch_cmp()
+Date: Fri, 11 Apr 2025 07:40:55 +0200
+Message-ID: <20250411054105.2341982-44-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250411054105.2341982-1-mingo@kernel.org>
 References: <20250411054105.2341982-1-mingo@kernel.org>
@@ -49,25 +49,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This will also allow the simplification of patch_cmp().
+- No need to cast over to 'struct smp_text_poke_loc *', void * is just fine
+  for a binary search,
+
+- Use the canonical (a, b) input parameter nomenclature of cmp_func_t
+  functions and rename the input parameters from (tp, elt) to
+  (tpl_a, tpl_b).
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/alternative.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index a747b0885f9a..14ca17dc36e8 100644
+index 14ca17dc36e8..f278655f0950 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2493,7 +2493,7 @@ static __always_inline void put_text_poke_array(void)
- 	raw_atomic_dec(refs);
+@@ -2498,13 +2498,11 @@ static __always_inline void *text_poke_addr(const struct smp_text_poke_loc *tp)
+ 	return _stext + tp->rel_addr;
  }
  
--static __always_inline void *text_poke_addr(struct smp_text_poke_loc *tp)
-+static __always_inline void *text_poke_addr(const struct smp_text_poke_loc *tp)
+-static __always_inline int patch_cmp(const void *key, const void *elt)
++static __always_inline int patch_cmp(const void *tpl_a, const void *tpl_b)
  {
- 	return _stext + tp->rel_addr;
+-	struct smp_text_poke_loc *tp = (struct smp_text_poke_loc *) elt;
+-
+-	if (key < text_poke_addr(tp))
++	if (tpl_a < text_poke_addr(tpl_b))
+ 		return -1;
+-	if (key > text_poke_addr(tp))
++	if (tpl_a > text_poke_addr(tpl_b))
+ 		return 1;
+ 	return 0;
  }
 -- 
 2.45.2
