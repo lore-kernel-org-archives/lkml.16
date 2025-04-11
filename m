@@ -1,73 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C791F0E32;
-	Fri, 11 Apr 2025 14:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4D51F37D8;
+	Fri, 11 Apr 2025 14:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380221; cv=none; b=K5PkueYYtcxCUlz8sgCUADpS9ZQxrkNi7Vc3trVL7fRxeDMpbyvo6IFXZhtgDOIC2jEiQQOpAFqVhJDHEojD9/eg+pXt3sD3ItXAc0ARaomXdXek5YoC6R1t8sCmqMn5jL8IVnDrumdcEGURQYLi76Vc952pU5tx5GV0BuUqMYQ=
+	t=1744380222; cv=none; b=ewkcaVYfHYhow7q2kEWoCWu9hGADqk95W1TcBmr4AlSlvXTQvpwNOjqnZXRBktwIvUj8lOYYQGyvBkH0GlvouNzv4ab4iwy7oPf3xXiaVpBIloW2g7XNXjrIxmZwCKn2ZmZX+KIP/M3+yrga63G0+oZ+qliL5dhWXwDPX2GjNdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380221; c=relaxed/simple;
-	bh=A9uWHZeLASAeqV3pcSaRLVnFs8sczJhLPZO/60JuIrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fFUufGyu2I4nz+3QXzorYg5QvSviI4UIjSSq68DE/UPXq2ClKwlx+IbchCQjdMiTtbTuFtB/sr5s8+UEB5qRjSFCn6VErdOhIj0KhmmGk5epxc5SABA9IIym7kqdVpCatKtZY5hd6sTlEic4lTezNd0sSl7FZZ8QW9qs8/2PFhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pilFz60U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744380222; c=relaxed/simple;
+	bh=Ns1e3L/IMBtWBIq2EJ8Q7nkRbzMXS8QMJmt1EKKPMcE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DkmwUg6lXVnyDv9o9vG+eA1WZ4dfTd/uBrZPyTJ1cFCnpWOiFsWvdRyTtia89rqqFN2X6J74jOO/6ra3vuiTotjJOL2rPDqtgP59mXjE6Mo6/eTQCt4jH004NWwicVU/nn2O5EpIe0AZs7yksCADZExBm31yc+qx8BqRSfcodZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iwi6Dsmy; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pilFz60U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CD64C4CEE2;
-	Fri, 11 Apr 2025 14:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744380221;
-	bh=A9uWHZeLASAeqV3pcSaRLVnFs8sczJhLPZO/60JuIrI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pilFz60UlyKzY1WZZ9dfMwWMkW+uicFjF2tMAeTdYrC0y/DBhCyS12drndRX8Ypnt
-	 htzM95GA7M+5XIXlyee3xXx/e43qK82np0I/bWLssRM0IORmnMZ0rwKb93jMcJWZmM
-	 /yxKYIe2JuARQCYCosK2zVhZajBH0K+VQM+w3lxIUz4djrkPyzUqOM3fXDMMm6RfDE
-	 8H1KKJH5Hhxk8DQWy1vGjI30yYSWPYdQui4eFwdnUjuDDBfVjc5nUoCwuPZEl+acdB
-	 M6QVof35nhfs3XgBbkwfvsvHb7mOgbe+OKdeEOznQ8er0iTQtvCDOMyVT5JcQQ2OYv
-	 HGhE+xMz/deZg==
-Date: Fri, 11 Apr 2025 16:03:29 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Alistair Popple <apopple@nvidia.com>, 
-	kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Asahi Lina <lina@asahilina.net>, 
-	Balbir Singh <balbirs@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Christoph Hellwig <hch@lst.de>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Dave Chinner <david@fromorbit.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	David Hildenbrand <david@redhat.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ira Weiny <ira.weiny@intel.com>, Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, linmiaohe <linmiaohe@huawei.com>, 
-	Logan Gunthorpe <logang@deltatee.com>, Matthew Wilcow <willy@infradead.org>, 
-	Michael Camp Drill Sergeant Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Peter Xu <peterx@redhat.com>, Sven Schnelle <svens@linux.ibm.com>, Ted Ts'o <tytso@mit.edu>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Vivek Goyal <vgoyal@redhat.com>, WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-xfs@vger.kernel.org
-Subject: Re: [linus:master] [fs/dax]  bde708f1a6:
- WARNING:at_mm/truncate.c:#truncate_folio_batch_exceptionals
-Message-ID: <20250411-sehgewohnheiten-blicken-7830519934ab@brauner>
-References: <202504101036.390f29a5-lkp@intel.com>
- <v66t3szdfsfwyl4lw6ns2ykmxrfqecba2nb5wa64l5qqq2kfpb@x7zxzuijty7d>
- <uiu7rcmtooxgbscaiiim7czqsca52bgrt6aiszsafq7jj4n3e7@ge6mfzcmnorl>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iwi6Dsmy"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7376e311086so2601301b3a.3;
+        Fri, 11 Apr 2025 07:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744380220; x=1744985020; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSqmoz4W2Qpz+EROreX9HulA0/vYEtNIQOH9MGn8boc=;
+        b=Iwi6DsmykNP2YtsOglthn8QTL4nHrPtUdw8cUSpfUCK/YNIlgRqi6/XHS6sduhuz7I
+         thVSFTl+Gbc0LYHxxpYBanYdDSTx5WD1wCrIw0qCF9p62Er6OIXVS6szdBd83TkZOm02
+         z5PHG8zLnfLfildmcmuUS/oieSuTRUlgkBcFdrzrUButBMinWR7UBVZ7N4m+Y4yamR3L
+         wjVBv6hQY2HkLZ10M06rwbQlOMaJTxTnv7V3ZZYWycnWPA8fTy87yL98ybt6ot5N6cv1
+         JqH45GpyoBad3wtAXfkrrOlS9vkJzfLR1KJytPTysKT0aMzWfQTNABkQObgqmziGZoow
+         zO0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744380220; x=1744985020;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aSqmoz4W2Qpz+EROreX9HulA0/vYEtNIQOH9MGn8boc=;
+        b=NNI9zI1nyymVizlxexw3fNzHZvsW0LGH8QGiBo+vi9r6GCcOGr9sbH992CAOx757p7
+         HFnUB6XoUvM1U61SLahtjQTJSTY+ALJ1NXJfCcpnld2UiZeUHtwe3tk7dZl/xDfXE5xU
+         vsfDGOmitITeDAyWUCj+zPvwK58k3TfPGx1fZWVwlY4fju1eK4YA5wpkDmAO/PnQiDbR
+         iDlQ/beVInutzNEKp38dTVuUyJeqKAGvh4T6kHepDVKpBYlV5osrAz6eSluhk5arSnCQ
+         Gcug0mnCzaR6jBG9fvvvogK1ReG++TTaablBnmzJwoIiMOC7wwwyn5RltBYjcDbYE0Ti
+         wdvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXDRkeIJrIq+mVs+grf406u4nNMgqNIqn5By95UgyuS6gFE59WNR2swBeGpDrT1PCk67mBPXAl9VLTMGhF@vger.kernel.org, AJvYcCX/ClYk3G5fILs2UPRuhmlN32oGwjOXcVgU2aUm6jQl4FoVjw+vL/Rj/DjV+Hui/KKcsyRt0Om8ApvtJQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDgWqV4QgLfa3ui6DLw2wix1OrwRUQxAetrhkZ26xhzTKtB22q
+	4ciwPAashj3l1Ruco8MCmk98L/bkyWmmvZD+EmUzpFvS0o7vV6ECVvgR4Q==
+X-Gm-Gg: ASbGncvdFarEVmWXMjPVPyAaWJyxKcG2fxvAnBDAf5QYxngziD5LcV/1FFfVf7S3CG6
+	wY78AFvISkIRgPh4nBiDoknSK/ZEu7CnqFfTQpdm4dUJ1pC0jtMGha1Sg17MLb33MnSCYz7d/jz
+	9bLMEDGKAVBtls1u1u+M8D5aASOfBetCo3MHs2Zer5+SMMGhGnvpYMTO3qnpPZM0IX0HFBjN2sl
+	P8sCB36Pu9nInApK9t9zSPGTw9sNFAQT8NS7jpLCxcFXWJmmLT7IRi+e1RHP2AX4PLKtWne1p8x
+	EFT7DWhFyvR60RuVuOEbEDZPv/+SMmCRGBlDrafoc7Jc7N7Gjm1X0aC5KYVbtOaBN5QH8QyFi8r
+	KZx+7rR5S9B+D1g==
+X-Google-Smtp-Source: AGHT+IGpHD1mQ7+2yVdg1uHTVSNjp8+oRF/lePIAXNTlFAMCDr2vK8GcHad9Go1qdHo5ZSnxh3cwHQ==
+X-Received: by 2002:aa7:88d2:0:b0:737:6fdf:bb69 with SMTP id d2e1a72fcca58-73bd1211412mr3465831b3a.13.1744380219729;
+        Fri, 11 Apr 2025 07:03:39 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21e0469sm1507234b3a.79.2025.04.11.07.03.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 07:03:39 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <ef19ce31-fb9a-455b-8db9-f803154f8723@roeck-us.net>
+Date: Fri, 11 Apr 2025 07:03:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <uiu7rcmtooxgbscaiiim7czqsca52bgrt6aiszsafq7jj4n3e7@ge6mfzcmnorl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hwmon: (xgene-hwmon) Simplify PCC shared memory region
+ handling
+To: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+References: <20250411112053.1148624-1-sudeep.holla@arm.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250411112053.1148624-1-sudeep.holla@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> didn't lift off and DAX ended up being kind of niche, I think the effort
-> to maintain DAX in ext2 is not justified and we should just drop it (and
-> direct existing users to use ext4 driver instead for the cases where they
-> need it). I'll have a look into it.
+On 4/11/25 04:20, Sudeep Holla wrote:
+> The PCC driver now handles mapping and unmapping of shared memory
+> areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+> this xgene hwmon driver did handling of those mappings like several
+> other PCC mailbox client drivers.
+> 
+> There were redundant operations, leading to unnecessary code. Maintaining
+> the consistency across these driver was harder due to scattered handling
+> of shmem.
+> 
+> Just use the mapped shmem and remove all redundant operations from this
+> driver.
+> 
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-hwmon@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>   drivers/hwmon/xgene-hwmon.c | 39 ++++---------------------------------
+>   1 file changed, 4 insertions(+), 35 deletions(-)
+> 
+> Hi,
+> 
+> This is just resend of the same patch that was part of a series [1].
+> Only core PCC mailbox changes were merged during v6.15 merge window.
+> So dropping all the maintainer acks and reposting it so that it can
 
-+1
+Why drop my Ack ? To have me review it again ?
+
+FWIW, I had expected that the patch will be picked up with the series.
+
+Anyway, applied.
+
+Guenter
+
