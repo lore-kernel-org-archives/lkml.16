@@ -1,305 +1,486 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A46189B84;
-	Fri, 11 Apr 2025 08:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2B5296176
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360784; cv=none; b=q6miVDS1dLTnbvC8GKkHV3IsFlCGaHELT7ObGBRjyogsK/pX8psQS7PgLpbkK1Dgd2WK1fZv/466ZdeVdzVvlrjRYJzHTbO/APePXrkCwL4UIyVXTeu2Vh1YbJMyFVvSoYu7bSf4j8uO9PnI6QlkEPKLOIMdNSfuqvXk2Ku7Fcc=
+	t=1744360789; cv=none; b=g9yQ9V+LpnZSh1+5zucQMRHbUN0J5Ge//2nu2cN4d6RWlJ5POHcB4HFOB+STPN88PWJrbwoYHXbsjbDB4dLdlDM3RBy9XZDtv9H2c1ZZSHe74uztzHpyEgGB3x4QVujzWrycKKIFBNZQbstTsejGBDAXMMk/ytuQkCRat3Z6oCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360784; c=relaxed/simple;
-	bh=cvUnRLkTQUNK6LV3f7i9nx8RlpjLVwCmjS8uqBMZ8ZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DLj5JNG6AcuQa5KqwmrGMFAc5FJdWaKBfrYWh9iycvNF2kvbPDQISfxFjbGzIFInT3GdCh8je7e28KYNoqRM+olx2kjMb7zrCjtOCvTEYwNeL7bpueP7UESZy0BSxCrHY2/v6tJB28wfyhq99lnJgMiToJamVMIFEI1O4Nf+CWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IKwoNSg0; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744360789; c=relaxed/simple;
+	bh=/fw0aHXXg7z4Hgf4IA+Uzoiq/Cwny0deEwiWzOIl2X0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=t3JI2GDJKPB39YLjJYnq/FJahRDs1+uuaVE0q6gQtpuyGjADtTMk4oZMJD3o+2l+6YuIcBwsdcsiPvkizawOKr5CMCY3cMlyWS28AW4KMckIItSfBzvP9fhzDx1W44UJKYEknxO8qEBtGYw1ZNx3JZWQDi3g6y7ep/7rXGt2eyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fKIoKpkJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IKwoNSg0"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B5KCDw019674;
-	Fri, 11 Apr 2025 08:39:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TCWt6WEw4JDv4PZNtQ1EhUmj7iwZw5s+q6V6H91MTGg=; b=IKwoNSg0cR9IM1pt
-	s/Rqqu+HBCKo7lDy8Zp615QYBYJzLuWnIV0QTEKNGZvqwWgI+YttBC24NNspN6Go
-	/skFVWYbIU/wZOSClM9NREms9hJ9FdDKgDoRkrwwMI/MsK2K7CJFou5MmAgtGvsU
-	dOhEHSNgzrb4/lJR7pE5TUfGoCSCmrAXI1BlOo6Ws5Fsbd0POxTwK5bQm/dOfzqn
-	4fkESsFdFwBrtpUiCvfFhR2RtP8p5zp1yZrERl2VVBDsnPkOX2rnNjIpUPmjflCL
-	wvN5JxNqOgUhskuvgDOkL++t8plMn9J8UPwNiwqw+9yMi6Bc64zVLGE//Q4XVEyH
-	9FSp5w==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcrsxdf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 08:39:21 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53B8dKf6006316
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 08:39:20 GMT
-Received: from [10.216.48.35] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 11 Apr
- 2025 01:39:14 -0700
-Message-ID: <e0159cb8-fe21-7f71-1ebe-744ed26bd698@quicinc.com>
-Date: Fri, 11 Apr 2025 14:09:11 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKIoKpkJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744360786;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=4kbzhowOrdb284WCQY6VYg5xlBwQ2Vxr3h44Uzh92yk=;
+	b=fKIoKpkJRNrOcXqK/EGaZF7D8cwWx5aSVkixqUXcWUqqdopDpO/LCn+aSwbJgIzciP0fdD
+	Tm1dtKJTOvSPmbOiQu8+uiN5YYJb1SX7Y/tKdGUIQkDpepbhOPOvCsVbadMtlzmEPNDJ6p
+	R11ud0TgyTXy4A3bvqEKXXyPKaN1ByU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-313-GoBai_T5PfyECqh5aRZ93Q-1; Fri, 11 Apr 2025 04:39:45 -0400
+X-MC-Unique: GoBai_T5PfyECqh5aRZ93Q-1
+X-Mimecast-MFC-AGG-ID: GoBai_T5PfyECqh5aRZ93Q_1744360784
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cec217977so10389785e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:39:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744360784; x=1744965584;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4kbzhowOrdb284WCQY6VYg5xlBwQ2Vxr3h44Uzh92yk=;
+        b=UMWhezPFsYOxdP/Z49+VZL82sU6LAivTVCjwI7LBsXEsCyO8k4qTOpVzDCxCphwVXb
+         us38s5xTeeZwHM4KGRjqRilwq7C6slWe9ij6FYPoY/MeXRJ16kZNoscxXm9jOOJEn/NL
+         MXu9MhxNKtZNpwvPL/FYRDzvmVcfQ0RMgUS0ojbXUZEQB30yUWnIDQMgVT4sVhjBDf4c
+         u3Q9IYw6gSaS0l5yQc5oTUUofpbQKn21fXHg9yU8HmJv+Zw3N/qAaPz/swJGf2GT4dCr
+         ZVPoEfjC+tzLPvYsAoguimZ5/mQHwOHF/btqKiVW07CgC1Hs/ne7K6MfqK6NJoBifYnE
+         Aozw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3NsT+18nhZkoYmcl7WYaBU4sQ/Lvnnrfah17UbqnNpD33wv9YIOoDiahQ7CpzT9hXJJMfbk8SL+CZEtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyF46dq6x4f1qGCFnpcOFzAaS7hEdT98L9NBGtB/8DqzNvNqGo
+	ldj75LlVOoii4Y8ZQlLj4+HVfokKjzi0rdgD9uszeoRhGwU+CWOaLh51tMViekaPAtgilJnWDiq
+	Oh1EOF92CoRoSLcrruBdfEue5aWhvz0gN543/4TZ9YIJ2P23N5RqIljwnFmw7nw==
+X-Gm-Gg: ASbGnctYbVEdy51xZY/axvLpGQvuk0lrE+Q9qL8tWjAKH6jTAiHVDa+uddwy265qEgV
+	EdC/3Qd11eIfsU+MN3ch0klS5U94n/UqTRoR7EZITAZ05Y5O5lnLf3BOSZqUR53/GMqFh/+AW3J
+	bS0yoDv8zoVLCZJkFjgZgZ5mNpnYQkzE3X4Ad3g6utFxvbL0QlhWtBhQX7Jcd92sSDc5paFp02T
+	S8BqQalOMy3Bvgb/vM62niUyeABbKI1UhoSNIp8AYxNt9FadyggYep16EIjjPXzvKNyK0hUBVco
+	2C4o1rflPG1CBYZbDIC55DsPK3UoiZzaiIWloQ==
+X-Received: by 2002:a05:600c:348f:b0:43c:f597:d584 with SMTP id 5b1f17b1804b1-43f3a9b039fmr12927235e9.29.1744360783868;
+        Fri, 11 Apr 2025 01:39:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEJZJQoEi7GiI72EPYHpaydqlLw3rRu5pjFRDqfw++7ZZIgj9Ga/PdXmA0PYbR0EkLquJO+Ng==
+X-Received: by 2002:a05:600c:348f:b0:43c:f597:d584 with SMTP id 5b1f17b1804b1-43f3a9b039fmr12927025e9.29.1744360783464;
+        Fri, 11 Apr 2025 01:39:43 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a2f08sm76432275e9.12.2025.04.11.01.39.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 01:39:42 -0700 (PDT)
+Message-ID: <40ad385f81151320a3c9d380d35a0504d15e0041.camel@redhat.com>
+Subject: Re: [PATCH v2 03/22] rv: Let the reactors take care of buffers
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de, Petr Mladek <pmladek@suse.com>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>
+Date: Fri, 11 Apr 2025 10:39:40 +0200
+In-Reply-To: <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
+References: <cover.1744355018.git.namcao@linutronix.de>
+	 <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
- suspend/hibernation
-Content-Language: en-US
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        Jeffrey Hugo
-	<quic_jhugo@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
-        Youssef Samir
-	<quic_yabdulra@quicinc.com>,
-        Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder
-	<elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Kunwu
- Chan" <chentao@kylinos.cn>
-CC: <kernel@collabora.com>, <mhi@lists.linux.dev>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>
-References: <20250410145704.207969-1-usama.anjum@collabora.com>
- <ba09ae0c-fe8d-8f4e-a1b8-9c7e5913c84e@quicinc.com>
- <fc9ca0da-9f6a-42b5-aa79-abcd43c97043@collabora.com>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <fc9ca0da-9f6a-42b5-aa79-abcd43c97043@collabora.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 5b03attd76ZLwvjFA-XltP6v--DKUWgN
-X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f8d53a cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=QX4gbG5DAAAA:8 a=vUAfYKqKNF1bBtrGfecA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=AbAUZ8qAyYyZVLSsDulk:22
-X-Proofpoint-GUID: 5b03attd76ZLwvjFA-XltP6v--DKUWgN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_03,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110049
 
 
 
-On 4/11/2025 12:32 PM, Muhammad Usama Anjum wrote:
-> On 4/11/25 8:37 AM, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 4/10/2025 8:26 PM, Muhammad Usama Anjum wrote:
->>> Fix dma_direct_alloc() failure at resume time during bhie_table
->>> allocation. There is a crash report where at resume time, the memory
->>> from the dma doesn't get allocated and MHI fails to re-initialize.
->>> There may be fragmentation of some kind which fails the allocation
->>> call.
->>>
->>> To fix it, don't free the memory at power down during suspend /
->>> hibernation. Instead, use the same allocated memory again after every
->>> resume / hibernation. This patch has been tested with resume and
->>> hibernation both.
->>>
->>> The rddm is of constant size for a given hardware. While the fbc_image
->>> size depends on the firmware. If the firmware changes, we'll free and
->> If firmware image will change between suspend and resume ?
-> Yes, correct.
-> 
-why the firmware image size will change between suspend & resume?
-who will update the firmware image after bootup?
-It is not expected behaviour.
+On Fri, 2025-04-11 at 09:37 +0200, Nam Cao wrote:
+> Each RV monitor has one static buffer to send to the reactors. If
+> multiple
+> errors are detected simultaneously, the one buffer could be
+> overwritten.
+>=20
+> Instead, leave it to the reactors to handle buffering.
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: John Ogness <john.ogness@linutronix.de>
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+> =C2=A0include/linux/panic.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +++
+> =C2=A0include/linux/printk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 5 ++++
+> =C2=A0include/linux/rv.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 +++++--
+> =C2=A0include/rv/da_monitor.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 45 +++++++-----------------------
+> --
+> =C2=A0kernel/panic.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 17 ++++++++----
+> =C2=A0kernel/printk/internal.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0 1 -
+> =C2=A0kernel/trace/rv/reactor_panic.c=C2=A0 |=C2=A0 8 ++++--
+> =C2=A0kernel/trace/rv/reactor_printk.c |=C2=A0 8 ++++--
+> =C2=A0kernel/trace/rv/rv_reactors.c=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A09 files changed, 50 insertions(+), 48 deletions(-)
+>=20
+> diff --git a/include/linux/panic.h b/include/linux/panic.h
+> index 54d90b6c5f47..3522f8c441f4 100644
+> --- a/include/linux/panic.h
+> +++ b/include/linux/panic.h
+> @@ -3,6 +3,7 @@
+> =C2=A0#define _LINUX_PANIC_H
+> =C2=A0
+> =C2=A0#include <linux/compiler_attributes.h>
+> +#include <linux/stdarg.h>
+> =C2=A0#include <linux/types.h>
+> =C2=A0
+> =C2=A0struct pt_regs;
+> @@ -10,6 +11,8 @@ struct pt_regs;
+> =C2=A0extern long (*panic_blink)(int state);
+> =C2=A0__printf(1, 2)
+> =C2=A0void panic(const char *fmt, ...) __noreturn __cold;
+> +__printf(1, 0)
+> +void vpanic(const char *fmt, va_list args) __noreturn __cold;
+> =C2=A0void nmi_panic(struct pt_regs *regs, const char *msg);
+> =C2=A0void check_panic_on_warn(const char *origin);
+> =C2=A0extern void oops_enter(void);
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index 4217a9f412b2..1b7eebe13f14 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -154,6 +154,7 @@ int vprintk_emit(int facility, int level,
+> =C2=A0
+> =C2=A0asmlinkage __printf(1, 0)
+> =C2=A0int vprintk(const char *fmt, va_list args);
+> +__printf(1, 0) int vprintk_deferred(const char *fmt, va_list args);
+> =C2=A0
+> =C2=A0asmlinkage __printf(1, 2) __cold
+> =C2=A0int _printk(const char *fmt, ...);
+> @@ -213,6 +214,10 @@ int vprintk(const char *s, va_list args)
+> =C2=A0{
+> =C2=A0	return 0;
+> =C2=A0}
+> +__printf(1, 0) int vprintk_deferred(const char *fmt, va_list args)
+> +{
+> +	return 0;
+> +}
+> =C2=A0static inline __printf(1, 2) __cold
+> =C2=A0int _printk(const char *s, ...)
+> =C2=A0{
 
-- Krishna chaitanya.
->>> allocate new memory for it.
->>>
->>> Here are the crash logs:
->>>
->>> [ 3029.338587] mhi mhi0: Requested to power ON
->>> [ 3029.338621] mhi mhi0: Power on setup success
->>> [ 3029.668654] kworker/u33:8: page allocation failure: order:7,
->>> mode:0xc04(GFP_NOIO|GFP_DMA32), nodemask=(null),cpuset=/,mems_allowed=0
->>> [ 3029.668682] CPU: 4 UID: 0 PID: 2744 Comm: kworker/u33:8 Not tainted
->>> 6.11.11-valve10-1-neptune-611-gb69e902b4338
->>> #1ed779c892334112fb968aaa3facf9686b5ff0bd7
->>> [ 3029.668690] Hardware name: Valve Galileo/Galileo, BIOS F7G0112
->>> 08/01/2024
->>> [ 3029.668694] Workqueue: mhi_hiprio_wq mhi_pm_st_worker [mhi]
->>> [ 3029.668717] Call Trace:
->>> [ 3029.668722]  <TASK>
->>> [ 3029.668728]  dump_stack_lvl+0x4e/0x70
->>> [ 3029.668738]  warn_alloc+0x164/0x190
->>> [ 3029.668747]  ? srso_return_thunk+0x5/0x5f
->>> [ 3029.668754]  ? __alloc_pages_direct_compact+0xaf/0x360
->>> [ 3029.668761]  __alloc_pages_slowpath.constprop.0+0xc75/0xd70
->>> [ 3029.668774]  __alloc_pages_noprof+0x321/0x350
->>> [ 3029.668782]  __dma_direct_alloc_pages.isra.0+0x14a/0x290
->>> [ 3029.668790]  dma_direct_alloc+0x70/0x270
->>> [ 3029.668796]  mhi_alloc_bhie_table+0xe8/0x190 [mhi
->>> faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
->>> [ 3029.668814]  mhi_fw_load_handler+0x1bc/0x310 [mhi
->>> faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
->>> [ 3029.668830]  mhi_pm_st_worker+0x5c8/0xaa0 [mhi
->>> faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
->>> [ 3029.668844]  ? srso_return_thunk+0x5/0x5f
->>> [ 3029.668853]  process_one_work+0x17e/0x330
->>> [ 3029.668861]  worker_thread+0x2ce/0x3f0
->>> [ 3029.668868]  ? __pfx_worker_thread+0x10/0x10
->>> [ 3029.668873]  kthread+0xd2/0x100
->>> [ 3029.668879]  ? __pfx_kthread+0x10/0x10
->>> [ 3029.668885]  ret_from_fork+0x34/0x50
->>> [ 3029.668892]  ? __pfx_kthread+0x10/0x10
->>> [ 3029.668898]  ret_from_fork_asm+0x1a/0x30
->>> [ 3029.668910]  </TASK>
->>>
->>> Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-
->>> QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
->>>
->>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->>> ---
->>> Changes sice v1:
->>> - Don't free bhie tables during suspend/hibernation only
->>> - Handle fbc_image changed size correctly
->>> - Remove fbc_image getting set to NULL in *free_bhie_table()
->>> ---
->>>    drivers/bus/mhi/host/boot.c           | 15 +++++++++++----
->>>    drivers/bus/mhi/host/init.c           | 13 ++++++++++---
->>>    drivers/net/wireless/ath/ath11k/mhi.c |  9 +++++----
->>>    include/linux/mhi.h                   |  7 +++++++
->>>    4 files changed, 33 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
->>> index 9dcc7184817d5..0df26100c8f9c 100644
->>> --- a/drivers/bus/mhi/host/boot.c
->>> +++ b/drivers/bus/mhi/host/boot.c
->>> @@ -487,10 +487,17 @@ void mhi_fw_load_handler(struct mhi_controller
->>> *mhi_cntrl)
->>>         * device transitioning into MHI READY state
->>>         */
->>>        if (mhi_cntrl->fbc_download) {
->>> -        ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image,
->>> fw_sz);
->>> -        if (ret) {
->>> -            release_firmware(firmware);
->>> -            goto error_fw_load;
->>> +        if (mhi_cntrl->fbc_image && fw_sz != mhi_cntrl->prev_fw_sz) {
->>> +            mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
->>> +            mhi_cntrl->fbc_image = NULL;
->>> +        }
->>> +        if (!mhi_cntrl->fbc_image) {
->>> +            ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl-
->>>> fbc_image, fw_sz);
->>> +            if (ret) {
->>> +                release_firmware(firmware);
->>> +                goto error_fw_load;
->>> +            }
->>> +            mhi_cntrl->prev_fw_sz = fw_sz;
->>>            }
->>>              /* Load the firmware into BHIE vec table */
->>> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
->>> index a9b1f8beee7bc..09b946b86ac46 100644
->>> --- a/drivers/bus/mhi/host/init.c
->>> +++ b/drivers/bus/mhi/host/init.c
->>> @@ -1173,8 +1173,9 @@ int mhi_prepare_for_power_up(struct
->>> mhi_controller *mhi_cntrl)
->>>            /*
->>>             * Allocate RDDM table for debugging purpose if specified
->>>             */
->>> -        mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
->>> -                     mhi_cntrl->rddm_size);
->>> +        if (!mhi_cntrl->rddm_image)
->>> +            mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
->>> +                         mhi_cntrl->rddm_size);
->>>            if (mhi_cntrl->rddm_image) {
->>>                ret = mhi_rddm_prepare(mhi_cntrl,
->>>                               mhi_cntrl->rddm_image);
->>> @@ -1212,12 +1213,18 @@ void mhi_unprepare_after_power_down(struct
->>> mhi_controller *mhi_cntrl)
->>>            mhi_cntrl->rddm_image = NULL;
->>>        }
->>>    +    mhi_partial_unprepare_after_power_down(mhi_cntrl);
->>> +}
->>> +EXPORT_SYMBOL_GPL(mhi_unprepare_after_power_down);
->>> +
->>> +void mhi_partial_unprepare_after_power_down(struct mhi_controller
->>> *mhi_cntrl)
->>> +{
->>>        mhi_cntrl->bhi = NULL;
->>>        mhi_cntrl->bhie = NULL;
->>>          mhi_deinit_dev_ctxt(mhi_cntrl);
->>>    }
->>> -EXPORT_SYMBOL_GPL(mhi_unprepare_after_power_down);
->>> +EXPORT_SYMBOL_GPL(mhi_partial_unprepare_after_power_down);
->>>    
->> Instead of adding new API you can free memory from the unregister
->> controller also.
->>
->> - Krishna Chaitanya.
->>>    static void mhi_release_device(struct device *dev)
->>>    {
->>> diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/
->>> wireless/ath/ath11k/mhi.c
->>> index acd76e9392d31..f77cec79b5b80 100644
->>> --- a/drivers/net/wireless/ath/ath11k/mhi.c
->>> +++ b/drivers/net/wireless/ath/ath11k/mhi.c
->>> @@ -460,12 +460,13 @@ void ath11k_mhi_stop(struct ath11k_pci *ab_pci,
->>> bool is_suspend)
->>>         * workaround, otherwise ath11k_core_resume() will timeout
->>>         * during resume.
->>>         */
->>> -    if (is_suspend)
->>> +    if (is_suspend) {
->>>            mhi_power_down_keep_dev(ab_pci->mhi_ctrl, true);
->>> -    else
->>> +        mhi_partial_unprepare_after_power_down(ab_pci->mhi_ctrl);
->>> +    } else {
->>>            mhi_power_down(ab_pci->mhi_ctrl, true);
->>> -
->>> -    mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
->>> +        mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
->>> +    }
->>>    }
->>>      int ath11k_mhi_suspend(struct ath11k_pci *ab_pci)
->>> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
->>> index 059dc94d20bb6..65a47c712b3a0 100644
->>> --- a/include/linux/mhi.h
->>> +++ b/include/linux/mhi.h
->>> @@ -382,6 +382,7 @@ struct mhi_controller {
->>>        const char *fw_image;
->>>        const u8 *fw_data;
->>>        size_t fw_sz;
->>> +    size_t prev_fw_sz;
->>>        const char *edl_image;
->>>        size_t rddm_size;
->>>        size_t sbl_size;
->>> @@ -662,6 +663,12 @@ void mhi_power_down_keep_dev(struct
->>> mhi_controller *mhi_cntrl, bool graceful);
->>>     */
->>>    void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl);
->>>    +/**
->>> + * mhi_partial_unprepare_after_power_down - Free any allocated memory
->>> after power down partially
->>> + * @mhi_cntrl: MHI controller
->>> + */
->>> +void mhi_partial_unprepare_after_power_down(struct mhi_controller
->>> *mhi_cntrl);
->>> +
->>>    /**
->>>     * mhi_pm_suspend - Move MHI into a suspended state
->>>     * @mhi_cntrl: MHI controller
-> 
-> 
+From the RV perspective this patch looks really good to me, although
+you're doing a bit more than just RV here.
+I hate to be the one telling you to split patches (22 is already scary
+as it is!) but probably the vpanic and vprintk_deferred belong in
+separate patches.
+
+Feel free to mark the RV part (and also 1/22 2/22)
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+
+Thanks,
+Gabriele
+
+> diff --git a/include/linux/rv.h b/include/linux/rv.h
+> index 3452b5e4b29e..c7c18c06911b 100644
+> --- a/include/linux/rv.h
+> +++ b/include/linux/rv.h
+> @@ -38,7 +38,7 @@ union rv_task_monitor {
+> =C2=A0struct rv_reactor {
+> =C2=A0	const char		*name;
+> =C2=A0	const char		*description;
+> -	void			(*react)(char *msg);
+> +	__printf(1, 2) void	(*react)(const char *msg, ...);
+> =C2=A0};
+> =C2=A0#endif
+> =C2=A0
+> @@ -50,7 +50,7 @@ struct rv_monitor {
+> =C2=A0	void			(*disable)(void);
+> =C2=A0	void			(*reset)(void);
+> =C2=A0#ifdef CONFIG_RV_REACTORS
+> -	void			(*react)(char *msg);
+> +	__printf(1, 2) void	(*react)(const char *msg, ...);
+> =C2=A0#endif
+> =C2=A0};
+> =C2=A0
+> @@ -64,6 +64,11 @@ void rv_put_task_monitor_slot(int slot);
+> =C2=A0bool rv_reacting_on(void);
+> =C2=A0int rv_unregister_reactor(struct rv_reactor *reactor);
+> =C2=A0int rv_register_reactor(struct rv_reactor *reactor);
+> +#else
+> +bool rv_reacting_on(void)
+> +{
+> +	return false;
+> +}
+> =C2=A0#endif /* CONFIG_RV_REACTORS */
+> =C2=A0
+> =C2=A0#endif /* CONFIG_RV */
+> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+> index 510c88bfabd4..15f9ed4e4bb6 100644
+> --- a/include/rv/da_monitor.h
+> +++ b/include/rv/da_monitor.h
+> @@ -19,45 +19,22 @@
+> =C2=A0#ifdef CONFIG_RV_REACTORS
+> =C2=A0
+> =C2=A0#define DECLARE_RV_REACTING_HELPERS(name,
+> type)							\
+> -static char
+> REACT_MSG_##name[1024];								\
+> -
+> 												\
+> -static inline char *format_react_msg_##name(type curr_state, type
+> event)			\
+> -
+> {												\
+> -	snprintf(REACT_MSG_##name,
+> 1024,							\
+> -		 "rv: monitor %s does not allow event %s on state
+> %s\n",			\
+> -	=09
+> #name,										\
+> -	=09
+> model_get_event_name_##name(event),						\
+> -	=09
+> model_get_state_name_##name(curr_state));					\
+> -	return
+> REACT_MSG_##name;								\
+> -
+> }												\
+> -
+> 												\
+> -static void cond_react_##name(char
+> *msg)							\
+> +static void cond_react_##name(type curr_state, type
+> event)					\
+> =C2=A0{							=09
+> 				\
+> -	if
+> (rv_##name.react)									\
+> -
+> 		rv_##name.react(msg);								\
+> -
+> }												\
+> -
+> 												\
+> -static bool
+> rv_reacting_on_##name(void)								\
+> -
+> {												\
+> -	return
+> rv_reacting_on();								\
+> +	if (!rv_reacting_on() ||
+> !rv_##name.react)						\
+> +		return;				=09
+> 					\
+> +	rv_##name.react("rv: monitor %s does not allow event %s on
+> state %s\n",			\
+> +			#name,				=09
+> 				\
+> +			model_get_event_name_##name(event),=09
+> 				\
+> +			model_get_state_name_##name(curr_state));
+> 				\
+> =C2=A0}
+> =C2=A0
+> =C2=A0#else /* CONFIG_RV_REACTOR */
+> =C2=A0
+> =C2=A0#define DECLARE_RV_REACTING_HELPERS(name,
+> type)							\
+> -static inline char *format_react_msg_##name(type curr_state, type
+> event)			\
+> -
+> {												\
+> -	return
+> NULL;										\
+> -
+> }												\
+> -
+> 												\
+> -static void cond_react_##name(char
+> *msg)							\
+> +static void cond_react_##name(type curr_state, type
+> event)					\
+> =C2=A0{							=09
+> 				\
+> =C2=A0	return;					=09
+> 					\
+> -
+> }												\
+> -
+> 												\
+> -static bool
+> rv_reacting_on_##name(void)								\
+> -
+> {												\
+> -	return
+> 0;										\
+> =C2=A0}
+> =C2=A0#endif
+> =C2=A0
+> @@ -170,8 +147,7 @@ da_event_##name(struct da_monitor *da_mon, enum
+> events_##name event)				\
+> =C2=A0		return
+> true;									\
+> =C2=A0	}						=09
+> 				\
+> =C2=A0							=09
+> 				\
+> -	if
+> (rv_reacting_on_##name())								\
+> -
+> 		cond_react_##name(format_react_msg_##name(curr_state, event));			\
+> +	cond_react_##name(curr_state,
+> event);							\
+> =C2=A0							=09
+> 				\
+> =C2=A0	trace_error_##name(model_get_state_name_##name(curr_state),
+> 				\
+> =C2=A0			=C2=A0=C2=A0
+> model_get_event_name_##name(event));					\
+> @@ -202,8 +178,7 @@ static inline bool da_event_##name(struct
+> da_monitor *da_mon, struct task_struct
+> =C2=A0		return
+> true;									\
+> =C2=A0	}						=09
+> 				\
+> =C2=A0							=09
+> 				\
+> -	if
+> (rv_reacting_on_##name())								\
+> -
+> 		cond_react_##name(format_react_msg_##name(curr_state, event));			\
+> +	cond_react_##name(curr_state,
+> event);							\
+> =C2=A0							=09
+> 				\
+> =C2=A0	trace_error_##name(tsk-
+> >pid,								\
+> =C2=A0			=C2=A0=C2=A0
+> model_get_state_name_##name(curr_state),				\
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index d8635d5cecb2..df799d784b61 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -277,17 +277,16 @@ static void panic_other_cpus_shutdown(bool
+> crash_kexec)
+> =C2=A0}
+> =C2=A0
+> =C2=A0/**
+> - *	panic - halt the system
+> + *	vpanic - halt the system
+> =C2=A0 *	@fmt: The text string to print
+> =C2=A0 *
+> =C2=A0 *	Display a message, then perform cleanups.
+> =C2=A0 *
+> =C2=A0 *	This function never returns.
+> =C2=A0 */
+> -void panic(const char *fmt, ...)
+> +void vpanic(const char *fmt, va_list args)
+> =C2=A0{
+> =C2=A0	static char buf[1024];
+> -	va_list args;
+> =C2=A0	long i, i_next =3D 0, len;
+> =C2=A0	int state =3D 0;
+> =C2=A0	int old_cpu, this_cpu;
+> @@ -338,9 +337,7 @@ void panic(const char *fmt, ...)
+> =C2=A0
+> =C2=A0	console_verbose();
+> =C2=A0	bust_spinlocks(1);
+> -	va_start(args, fmt);
+> =C2=A0	len =3D vscnprintf(buf, sizeof(buf), fmt, args);
+> -	va_end(args);
+> =C2=A0
+> =C2=A0	if (len && buf[len - 1] =3D=3D '\n')
+> =C2=A0		buf[len - 1] =3D '\0';
+> @@ -477,7 +474,17 @@ void panic(const char *fmt, ...)
+> =C2=A0		mdelay(PANIC_TIMER_STEP);
+> =C2=A0	}
+> =C2=A0}
+> +EXPORT_SYMBOL(vpanic);
+> =C2=A0
+> +/* Identical to vpanic(), except it takes variadic arguments instead
+> of va_list */
+> +void panic(const char *fmt, ...)
+> +{
+> +	va_list args;
+> +
+> +	va_start(args, fmt);
+> +	vpanic(fmt, args);
+> +	va_end(args);
+> +}
+> =C2=A0EXPORT_SYMBOL(panic);
+> =C2=A0
+> =C2=A0#define TAINT_FLAG(taint, _c_true, _c_false,
+> _module)			\
+> diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+> index a91bdf802967..28afdeb58412 100644
+> --- a/kernel/printk/internal.h
+> +++ b/kernel/printk/internal.h
+> @@ -71,7 +71,6 @@ int vprintk_store(int facility, int level,
+> =C2=A0		=C2=A0 const char *fmt, va_list args);
+> =C2=A0
+> =C2=A0__printf(1, 0) int vprintk_default(const char *fmt, va_list args);
+> -__printf(1, 0) int vprintk_deferred(const char *fmt, va_list args);
+> =C2=A0
+> =C2=A0void __printk_safe_enter(void);
+> =C2=A0void __printk_safe_exit(void);
+> diff --git a/kernel/trace/rv/reactor_panic.c
+> b/kernel/trace/rv/reactor_panic.c
+> index 0186ff4cbd0b..2587f23db80b 100644
+> --- a/kernel/trace/rv/reactor_panic.c
+> +++ b/kernel/trace/rv/reactor_panic.c
+> @@ -13,9 +13,13 @@
+> =C2=A0#include <linux/init.h>
+> =C2=A0#include <linux/rv.h>
+> =C2=A0
+> -static void rv_panic_reaction(char *msg)
+> +static void rv_panic_reaction(const char *msg, ...)
+> =C2=A0{
+> -	panic(msg);
+> +	va_list args;
+> +
+> +	va_start(args, msg);
+> +	vpanic(msg, args);
+> +	va_end(args);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static struct rv_reactor rv_panic =3D {
+> diff --git a/kernel/trace/rv/reactor_printk.c
+> b/kernel/trace/rv/reactor_printk.c
+> index 178759dbf89f..a15db3fc8b82 100644
+> --- a/kernel/trace/rv/reactor_printk.c
+> +++ b/kernel/trace/rv/reactor_printk.c
+> @@ -12,9 +12,13 @@
+> =C2=A0#include <linux/init.h>
+> =C2=A0#include <linux/rv.h>
+> =C2=A0
+> -static void rv_printk_reaction(char *msg)
+> +static void rv_printk_reaction(const char *msg, ...)
+> =C2=A0{
+> -	printk_deferred(msg);
+> +	va_list args;
+> +
+> +	va_start(args, msg);
+> +	vprintk_deferred(msg, args);
+> +	va_end(args);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static struct rv_reactor rv_printk =3D {
+> diff --git a/kernel/trace/rv/rv_reactors.c
+> b/kernel/trace/rv/rv_reactors.c
+> index 9501ca886d83..4ce6ebb9d095 100644
+> --- a/kernel/trace/rv/rv_reactors.c
+> +++ b/kernel/trace/rv/rv_reactors.c
+> @@ -490,7 +490,7 @@ void reactor_cleanup_monitor(struct
+> rv_monitor_def *mdef)
+> =C2=A0/*
+> =C2=A0 * Nop reactor register
+> =C2=A0 */
+> -static void rv_nop_reaction(char *msg)
+> +static void rv_nop_reaction(const char *msg, ...)
+> =C2=A0{
+> =C2=A0}
+> =C2=A0
+
