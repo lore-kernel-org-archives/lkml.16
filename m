@@ -1,167 +1,135 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E31A3FC7
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0EC1CA84;
+	Fri, 11 Apr 2025 02:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744336708; cv=none; b=YIkmTnOEgCnLLd5YJA6T9e134UaGbrkzwB8EHwMBzhUaBFEFJMY5alSWy7clYi+o8IZ7tthSWbKQgBY15iXzB/wfE+ZcCPem0Aiqf0CLNJojCMXrArztVoC1umqaPY3SZ6z3BwOOV4BJ/hWPoShFgpTACS9JCrk0JkDkaekpj7E=
+	t=1744337079; cv=none; b=YWbPPxPknGinnvLyJb6gNvZGhd8kuJeNDCs4OcKLlp1N4Jm0GaPWqZ8gYW7ZnIr5fryVcysBr/G7tNN8UHu8J+ANNGnpj+gqXNdZ1ojTNVdsL8+VxHyGI+Eo5iYv+iq7se/KjxhaTxFMB5Ut2YvCijpkP2t+ADLHs7MG3KfxLjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744336708; c=relaxed/simple;
-	bh=/yNlZxFmBIUVxwqLPWf/sm8KHxLprNEp4EjE0VfwWsQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=i3AMA/uRBsBi+pRJBpuxpmqXNlSUbfXdQ4NFfEVUcTZ6QmDqOwh6GDZoFJIQFvEpD6ym80pA7XRrizlByafRX0KpPLux5Q+RegJxWNyICZB685ekSzQAWWs1uTiEMlXiJQlg/CyKP4F2GHRQ0fm1nHBy2Qz5GDtvwQCO0EIWdaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZYfph4Qwvz1jBZF;
-	Fri, 11 Apr 2025 09:53:16 +0800 (CST)
-Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id C331F1A0188;
-	Fri, 11 Apr 2025 09:58:15 +0800 (CST)
-Received: from [10.159.166.136] (10.159.166.136) by
- kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 11 Apr 2025 09:58:14 +0800
-Message-ID: <d10f2456-23c8-4695-89bb-f587882368c8@huawei.com>
-Date: Fri, 11 Apr 2025 09:58:13 +0800
+	s=arc-20240116; t=1744337079; c=relaxed/simple;
+	bh=g9/x8XVo04TJwsErizKXE+KW7n7KBUBQb8/FWxPLymg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NbHZTEZxxoOLSoyq/CMGqbsSDJUK6rvTrTGq7vPw5YPDz4o0mTSN+9OEphcOwIqGzgLyLqn2GtAhQxDkIFsVLDMjO49itH0VCFE4c3LeWLhdpease3N+nQIPUxSvPU/4MyblH79jvsuiu8ZyeEvaFf/kmNm28r5W4IoweUnPZXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2963dc379so236664566b.2;
+        Thu, 10 Apr 2025 19:04:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744337075; x=1744941875;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g5z1I+Yl9dtmBZZ8N6P8UIj5dgbJQZua1H9d8D+bvII=;
+        b=w/sZ9P9rQaFphBuYZRJyGzR6SF43l4oLaaATBi9Gg/xF2BOhapkbHahOgCTFOpDFy7
+         5SLqHCGRDyBdjsdLHSyUpzBnyDJS/VcRBINvyNAOXt+EbOMFGIqAsdsdPDoTJE+2s/NL
+         Grto5LZHgGdiZFwGR5kgo0eQFidcOVgXM2c07bUT4A3ct3ri9WbhhZYt+s+yhtsB4Td0
+         gjQnUxM0u/EX8Fibzc5XE57lwpPvO4Ssujynt94+zOvwihL7RO3l3xG3C7D5lG4fzm3w
+         FWCDRWsaQrXHl8xNJklYDpQEcEomEtqScqVP0Qf6uCc3XWpFrwV2MneJKZqEgf/nw0q7
+         cAfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5DjzIbqSkr7SgKF3WBuS7muq8am+tcEjzFOWRfamaTq3Dv07hFf/dwM9APY7cvoMfyUB4QAggesqPpXne@vger.kernel.org, AJvYcCVfcBKj0N2RDoWTBlW/xH9RLZTLT6ql1+w6n1ERxexV4verSlIdVvnmAONdaHRelhdLCCBLWcLcoulG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy73C9L7S6DGsDCB8fBliPeZagGOH8+jy50hMkdL3qCLUE3qmct
+	1NNrda8INYH/qj8Q0nySdJ4yeGU0EWjLI+UiEqZNfPGHvztWRuZOwLpFlmLxHfQ=
+X-Gm-Gg: ASbGncs/fRWkqO0Tv9Fm3zVAfWiVI60BFYxmpEIrAblSXC5sYG990VkT70AU/g0cdJZ
+	AziB+BjEB5fdxLeirXNLs7+urnweGy7Oivo8wrcXVuEhiNmBoqXmAB5uC90ciNjlUJbv9vGv/rV
+	qprSj1SqioDYvKe1vip8qAMSoOnWzYjVGATao4ryiqGt5YB/ZzJl9HHCleVC15TPyqr/6kkU2zy
+	h7RSd/3yk3z9K6UFGTCCpUtfYEDLYTJ5YfXGsuMcOcilElG4KXo+O8NPUuPHVZOw8Ol9Qv4UKS8
+	c3qPeEM1Ao51KXtRaLiuWwxLuFWPjpO0ozIcmjfdN+M4OF8cWAbhaO40/+sVCswqJmyjxS+IomK
+	mGUD1bg==
+X-Google-Smtp-Source: AGHT+IFvxZZrQ7asbaqTnZj9oRNLPRZ1myUouFHcRiJne2AI36eem2HQRTjCSYM300IiFWl4iOde0g==
+X-Received: by 2002:a17:907:3d4a:b0:ac7:82b3:7ad with SMTP id a640c23a62f3a-acad36a3f5fmr96559866b.46.1744337075446;
+        Thu, 10 Apr 2025 19:04:35 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb3d9asm369703166b.105.2025.04.10.19.04.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 19:04:34 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so2304799a12.1;
+        Thu, 10 Apr 2025 19:04:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVQzbGmvEcWscQghPIbqkjiRdkCh4RF1JBpbGacCDeuKoaUPvFOtrvzIHKRXBi+dZeMPgQB9bJZdoKT@vger.kernel.org, AJvYcCXsk/B1C9vN7o4XPKy/Cyx2U+mIE5x6klV7M1EreCXTzzUCZqqWhLR20HgXWHTc9hm+EYJ06DpUKeYEjyva@vger.kernel.org
+X-Received: by 2002:a17:907:7215:b0:ac7:805f:905a with SMTP id
+ a640c23a62f3a-acad34c6e4fmr59887566b.28.1744337074794; Thu, 10 Apr 2025
+ 19:04:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 drm-dp 0/9] Add HPD, getting EDID, colorbar features in
- DP function
-To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>
-CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
-	<lidongming5@huawei.com>, <libaihan@huawei.com>, <shenjian15@huawei.com>,
-	<shaojijie@huawei.com>, <jani.nikula@linux.intel.com>,
-	<dmitry.baryshkov@oss.qualcomm.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250331074212.3370287-1-shiyongbang@huawei.com>
-From: Yongbang Shi <shiyongbang@huawei.com>
-In-Reply-To: <20250331074212.3370287-1-shiyongbang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd500013.china.huawei.com (7.221.188.12)
+References: <20250409-spmi-v4-0-eb81ecfd1f64@gmail.com>
+In-Reply-To: <20250409-spmi-v4-0-eb81ecfd1f64@gmail.com>
+From: Neal Gompa <neal@gompa.dev>
+Date: Thu, 10 Apr 2025 22:03:57 -0400
+X-Gmail-Original-Message-ID: <CAEg-Je9xarQK2jP=+7P_Ug5oM=HbBLsc-Sad_wp1tQkfSgXA=g@mail.gmail.com>
+X-Gm-Features: ATxdqUFptu85Pq5XS2Y77lz4M0bInU8AWjExnkfiEk-bZJ-0RHCXCTLUmPDmg_M
+Message-ID: <CAEg-Je9xarQK2jP=+7P_Ug5oM=HbBLsc-Sad_wp1tQkfSgXA=g@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Driver for the Apple SPMI controller
+To: fnkl.kernel@gmail.com
+Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Jean-Francois Bortolotti <jeff@borto.fr>, 
+	Nick Chan <towinchenmi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Gracious ping for this series, it's been posted over 10 days.
-
-Baihan,
-Thanks.
-
-
-> From: Baihan Li <libaihan@huawei.com>
+On Wed, Apr 9, 2025 at 5:52=E2=80=AFPM Sasha Finkelstein via B4 Relay
+<devnull+fnkl.kernel.gmail.com@kernel.org> wrote:
 >
-> To support DP HPD, edid printing, and colorbar display features based on
-> the Hisislcon DP devices.
+> Hi.
+>
+> This patch series adds support for the SPMI controller persent in most
+> Apple SoCs. The drivers for the attached PMU and subdevices will be in
+> further patch series.
+>
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
 > ---
-> ChangeLog:
-> v8 -> v9:
->    - modify the adaptation of hibmc_dp_link_reduce_rate().
->    - fix the leak problem in hibmc_dp_aux_init(), suggested by Jani Nikula.
->    v8: https://lore.kernel.org/all/20250320101455.2538835-1-shiyongbang@huawei.com/
-> v7 -> v8:
->    - use drm_edid_read() in hibmc_dp_connector_get_modes(), suggested by Jani Nikula
->    v7: https://lore.kernel.org/all/20250319032435.1119469-1-shiyongbang@huawei.com/
-> v6 -> v7:
->    - add if statement about drm aux in hibmc_dp_connector_get_modes(), suggested by Jani Nikula
->    v6: https://lore.kernel.org/all/20250310040138.2025715-1-shiyongbang@huawei.com/
-> v5 -> v6:
->    - fix the DP_SERDES_VOL2_PRE0 value after electrical test.
->    - move the detect_ctx() to the patch 7/9.
->    - add detect_ctx with 200ms delay, suggested by Dmitry Baryshkov.
->    v5: https://lore.kernel.org/all/20250307101640.4003229-1-shiyongbang@huawei.com/
-> v4 -> v5:
->    - add commit log about hibmc_kms_init(), suggested by Dmitry Baryshkov.
->    - fix the format of block comments, suggested by Dmitry Baryshkov.
->    - add hibmc_dp_get_serdes_rate_cfg() to correct transferring serdes cfg.
->    - separate the vga part commit, suggested by Dmitry Baryshkov.
->    - remove pci_disable_msi() in hibmc_unload()
->    v4: https://lore.kernel.org/all/20250305112647.2344438-1-shiyongbang@huawei.com/
-> v3 -> v4:
->    - fix the serdes cfg in hibmc_dp_serdes_set_tx_cfg(), suggested by Dmitry Baryshkov.
->    - move the dp serdes registers to dp_reg.h, suggested by Dmitry Baryshkov.
->    - add comments for if-statement of dp_init(), suggested by Dmitry Baryshkov.
->    - fix the comment log to imperative sentence, suggested by Dmitry Baryshkov.
->    - add comments in hibmc_control_write(), suggested by Dmitry Baryshkov.
->    - add link reset of rates and lanes in pre link training process, suggested by Dmitry Baryshkov.
->    - add vdac detect and connected/disconnected status to enable HPD process, suggested by Dmitry Baryshkov.
->    - remove a drm_client, suggested by Dmitry Baryshkov.
->    - fix build errors reported by kernel test robot <lkp@intel.com>
->      Closes: https://lore.kernel.org/oe-kbuild-all/202502231304.BCzV4Y8D-lkp@intel.com/
->    v3: https://lore.kernel.org/all/20250222025102.1519798-1-shiyongbang@huawei.com/
-> v2 -> v3:
->    - restructuring the header p_reg.h, suggested by Dmitry Baryshkov.
->    - add commit log about dp serdes, suggested by Dmitry Baryshkov.
->    - return value in hibmc_dp_serdes_init(), suggested by Dmitry Baryshkov.
->    - add static const in the array of serdes_tx_cfg[], suggested by Dmitry Baryshkov.
->    - change drm_warn to drm_dbg_dp, suggested by Dmitry Baryshkov.
->    - add explanations about dp serdes macros, suggested by Dmitry Baryshkov.
->    - change commit to an imperative sentence, suggested by Dmitry Baryshkov.
->    - put HIBMC_DP_HOST_SERDES_CTRL in dp_serdes.h, suggested by Dmitry Baryshkov.
->    - split the patch into two parts, suggested by Dmitry Baryshkov.
->    - Capitalized EDID and AUX, suggested by Dmitry Baryshkov.
->    - rewrite the commit log, suggested by Dmitry Baryshkov.
->    - move colorbar debugfs entry to this patch, suggested by Dmitry Baryshkov.
->    - change binary format to integer format, suggested by Dmitry Baryshkov.
->    - remove mdelay(100) hpd function in ISR, suggested by Dmitry Baryshkov.
->    - remove enble_display in ISR, suggested by Dmitry Baryshkov.
->    - change drm_kms_helper_connector_hotplug_event() to
->      drm_connector_helper_hpd_irq_event(), suggested by Dmitry Baryshkov.
->    - move macros to dp_reg.h, suggested by Dmitry Baryshkov.
->    - remove struct irqs, suggested by Dmitry Baryshkov.
->    - split this patch into two parts, suggested by Dmitry Baryshkov.
->    v2: https://lore.kernel.org/all/20250210144959.100551-1-shiyongbang@huawei.com/
-> v1 -> v2:
->    - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
->    - changing all names of dp phy to dp serdes.
->    - deleting type conversion, suggested by Dmitry Baryshkov.
->    - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
->    - add colorbar introduction in commit, suggested by Dmitry Baryshkov.
->    - deleting edid decoder and its debugfs, suggested by Dmitry Baryshkov.
->    - using debugfs_init() callback, suggested by Dmitry Baryshkov.
->    - splittting colorbar and debugfs in different patches, suggested by Dmitry Baryshkov.
->    - optimizing the description in commit message, suggested by Dmitry Baryshkov.
->    - add mdelay(100) comments, suggested by Dmitry Baryshkov.
->    - deleting display enable in hpd event, suggested by Dmitry Baryshkov.
->    v1: https://lore.kernel.org/all/20250127032024.1542219-1-shiyongbang@huawei.com/
+> Changes in v4:
+> - Rebase on 6.14
+> - Link to v3: https://lore.kernel.org/r/20250310-spmi-v3-0-92a82e7d9f0d@g=
+mail.com
+>
+> Changes in v3:
+> - Inlined helpers, dropped unneccesary error prefixes
+> - Link to v2: https://lore.kernel.org/r/20250307-spmi-v2-0-eccdb06afb99@g=
+mail.com
+>
+> Changes in v2:
+> - Removed redundant error prints
+> - Various style fixes
+> - Better explanation of why the driver is needed
+> - Link to v1: https://lore.kernel.org/r/20250305-spmi-v1-0-c98f561fa99f@g=
+mail.com
+>
 > ---
-> Baihan Li (9):
->    drm/hisilicon/hibmc: Restructuring the header dp_reg.h
->    drm/hisilicon/hibmc: Add dp serdes cfg to adjust serdes rate, voltage
->      and pre-emphasis
->    drm/hisilicon/hibmc: Add dp serdes cfg in dp process
->    drm/hisilicon/hibmc: Refactor the member of drm_aux in struct hibmc_dp
->    drm/hisilicon/hibmc: Getting connector info and EDID by using AUX
->      channel
->    drm/hisilicon/hibmc: Add colorbar-cfg feature and its debugfs file
->    drm/hisilicon/hibmc: Enable this hot plug detect of irq feature
->    drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
->    drm/hisilicon/hibmc: Add vga connector detect functions
+> Jean-Francois Bortolotti (1):
+>       spmi: add a spmi driver for Apple SoC
 >
->   drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
->   drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  16 ++-
->   drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  10 +-
->   .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |   2 +
->   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  91 +++++++++++-
->   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  36 +++++
->   drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  |  90 +++++++++---
->   drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   | 130 +++++++++++++-----
->   .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.c    |  71 ++++++++++
->   .../drm/hisilicon/hibmc/hibmc_drm_debugfs.c   | 104 ++++++++++++++
->   .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    |  74 +++++++++-
->   .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  87 +++++++++---
->   .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  12 ++
->   .../gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c  |   3 +
->   14 files changed, 636 insertions(+), 93 deletions(-)
->   create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
->   create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+> Sasha Finkelstein (2):
+>       dt-bindings: spmi: Add Apple SPMI controller
+>       arm64: dts: apple: Add SPMI controller nodes
 >
+>  .../devicetree/bindings/spmi/apple,spmi.yaml       |  49 ++++++
+>  MAINTAINERS                                        |   2 +
+>  arch/arm64/boot/dts/apple/t600x-die0.dtsi          |   7 +
+>  arch/arm64/boot/dts/apple/t8103.dtsi               |   8 +
+>  arch/arm64/boot/dts/apple/t8112.dtsi               |   7 +
+>  drivers/spmi/Kconfig                               |   8 +
+>  drivers/spmi/Makefile                              |   1 +
+>  drivers/spmi/spmi-apple-controller.c               | 168 +++++++++++++++=
+++++++
+>  8 files changed, 250 insertions(+)
+> ---
+> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+> change-id: 20250304-spmi-6d3c24b9027a
+>
+
+Series LGTM.
+
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+
+
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
