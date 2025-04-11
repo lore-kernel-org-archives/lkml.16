@@ -1,208 +1,136 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C351D89E3;
-	Fri, 11 Apr 2025 06:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.238
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744354084; cv=fail; b=Uelp+HgQaEK/LPw7hKAKjOC707EjDR32zxf1jTZsXZbJ6YVE2X5OmThd9pjD5qgWLyKfDwTY5U7noZJ3I5g7wffpTmNMihyK1ASYd2/Au/GOnK96PMDwhgTo3kTGCXM0CtMSij0v+fXdx1qzXDrFo2ZrdlEG96TvJ9HRWlVhCBM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744354084; c=relaxed/simple;
-	bh=zZAhf8B2JuBTHZZCtIBhLeRNuwTr9bwzNKUC2YxdL7U=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=E+yB77qIE7nqy5U0TJPO7+td3XiMVa37RWSWmrZ+jOIr9yaug9YFv86DPN8QSSOaR6X9Xa2ZEZeLeNKso1j0xWX5Ccv+pa/9CzSFTaf/V5cxQXBdfUo9nGLQN0sfcY3cEIPupIGf++vWbj+jvBlAa+aflWeqcHhjO/GwzDCdK+c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B4wwJv005403;
-	Thu, 10 Apr 2025 23:47:42 -0700
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45u41m7fmn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 23:47:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BqLRNlu4CGzM4jzmTePUFVZJ3pzeDHRBwHsS2FDcba6sMaclyZOtYzDOcQbPnCHxUpLlb3sFmaF+ArBbWzRVJQ7aT/uAoS3utDsY0ZJu0g5EABazwdIAov+TxRNCenjLcDrkBH8Q+NyTAKEpHu8ZXDhx4mWifTbiqgp1toI7CtI4MSfGvn0UtL2/eell7eYt9XXO9L5DWB7797Bsxtqr3EsTemapBUPZbBlxgS2QCL+UlpbHnbmVlr+i4sWOPzxdR80U2ej8M5w8U+OhaphFqNlTZK0JTp8rvji1vB2JZFZW/YRN86Lf2Ib6hcInU6Ct9tDmcMFlBi55YZxd2I6aHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tene+uVPQQUNudrCLR4yr7PBpTmNpCXpUJ10UlLgBW4=;
- b=GINBuKTyxwkUeLmw9pb7FRWaQBSsEenDLWC6sVjcv2tdZd+XGJSwDGozwCWP5JYJtOAmR/s3m9C9kPPoGP6JXz9uJPZohZOQRfrDc9WBfEG2DBTZbnq5TnBQo6oTsd3naeEfUmzzWJmBIs4x9aerwXVJa53AIWEPOfOBQJyPFMVlc/vP2m1O+kzW0kJ/4P5Tfb/NtfqqGs3iU3wmX6vmidl1u935FdewSF+WNWNXiHIBAb//EAYm/DCvC+dW1qg78UC9rxEfv2mKotU1ip8phGkz8MCoNCn0V5rZOIp3Ee09Hjttw+yLa9558F43QhchN2wtw69lpG6qPwMW1GSKOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from CY8PR11MB7012.namprd11.prod.outlook.com (2603:10b6:930:54::6)
- by SA2PR11MB5161.namprd11.prod.outlook.com (2603:10b6:806:fa::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.25; Fri, 11 Apr
- 2025 06:47:39 +0000
-Received: from CY8PR11MB7012.namprd11.prod.outlook.com
- ([fe80::83d5:946f:3692:8c0d]) by CY8PR11MB7012.namprd11.prod.outlook.com
- ([fe80::83d5:946f:3692:8c0d%4]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
- 06:47:39 +0000
-From: Cliff Liu <donghua.liu@windriver.com>
-To: stable@vger.kernel.org
-Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        donghua.liu@windriver.com, nathanl@linux.ibm.com, leitao@debian.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Zhe.He@windriver.com
-Subject: [PATCH 6.1.y] powerpc/rtas: Prevent Spectre v1 gadget construction in sys_rtas()
-Date: Fri, 11 Apr 2025 14:47:27 +0800
-Message-Id: <20250411064727.3654037-1-donghua.liu@windriver.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0126.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b6::10) To CY8PR11MB7012.namprd11.prod.outlook.com
- (2603:10b6:930:54::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30D127D76A;
+	Fri, 11 Apr 2025 06:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744354149; cv=none; b=Oop1ed8prAi051GQ4CSylf7iz49zHmQsGtHj/iinWRABh8jbJTfoq2trzg2+lPHLb+D/NO6m4q/t0sPYjFxsKLyoDyza1iJBQgOLqcFQsSH5PVMiJ4CGdYgo13n0wdSMOXCzIE9+uH1uWXhEZwLPxR9112e7knnnJpUY+zZ1zDA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744354149; c=relaxed/simple;
+	bh=ap4fFUt7Nt9pvfKKbQPIQnmk/cOf0KnT4sqhbq9PEbc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UISbM3u9lwNFuJIxu7JJ0SL3WorMijFzRBVUIdbwyf8D/s8uGIa28NxIW3XSvLbptb3SPmUrzq11SyBH4y/l1DYTdVAd24RRJ7cc640kxBVhxVLz3E+q2OJ2616nG18K4AOpTncJmiDYkKMO6yDE0g17ICNBOncJ3lUitXhnJcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHwKAcKg; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHwKAcKg"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf257158fso12053245e9.2;
+        Thu, 10 Apr 2025 23:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744354146; x=1744958946; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PA1WMrd1BmfdXlxY8bxgo+05D1+gze9bzZtcNu0kKvI=;
+        b=LHwKAcKg3OfTsgF+M57ES7XGUwgRJESmkFkWyv6rUXDnGpQ0o56ap5lrgBQGXjc6uY
+         CSlZOCuhSk7TyDvJWxO8r9NonV2qOA4jD6w7BHz6RhvsWHhY/z+72mYx/Xkm35MjFsuZ
+         7qbKInpe9xE1Dsu5VT+A4LnN4iwzeXC9kkJeQ3l2hqvUibOHavH/cZrDHilq04dMZIyX
+         gpyUQe1Tky98TYyCLpiTw73LI0JdvuRdn3JtJumHbRrpwKw1371Bvl1W15JoCHeAP+EE
+         yl8O9ZZi4zC1NCHAcSXYolKDiA/bYQp4ZQ/X4IUuxjkKdNK0lbfBmUaQmPrP72GxsATZ
+         T6Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744354146; x=1744958946;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PA1WMrd1BmfdXlxY8bxgo+05D1+gze9bzZtcNu0kKvI=;
+        b=T881AiIFJDM2xlrooemEwmyel+RvQyTvvrS8rIC1+MD9oxDheKxu6iCBltp1UWhA8U
+         94Rq8Xa7jdTYzNRjr9/vT/+0n1FGWTRI+9Sdwp0/ljP/E6YAXMvBrRfNdE4Iko/eS5XD
+         n+Oun0ez39QJwJcA6+qFnyGpq/vEwPOS/adUbCJou30pi71CxT9Ob0pMulV+DahJKVXm
+         CRmiDSETkzzfbWxpD27JIINfX4T2sBeiZyOZ7xrqLzOYCMWdHg++HHkPjtnOWj9/NYC7
+         6EO7jymYz+QsXZL2y9k9gPWiMj3oSVpAyuXKVYYxbpMX0w9Gl9wFGC9qLdSf/KDgHljc
+         p86Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU2banA+i/ePR2R7qQsPcm+ZR6Ed8EFQ+xWIZgt4RDF8R/kjA1cIHb3b1FYfbbYq0oByfO/8zrmMCN+05c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhJCIw0lFqHL6EgtisvIeqgswLmTMb7SvAdfTZK+HPxDmXIgS0
+	J0yTYrYepqizgK4t3gUGyzIGUO7ur+dCi1H/t0m5HU3aAVgDZV6v
+X-Gm-Gg: ASbGncvdJ4r33FJsVLO1qE/Eq98XjxN3ux48iSQV0zvQzecvoihIPNup2dScS/YcNWb
+	mj42cJC4ErEcj7a+HQBz9CmKvTtE3AapF5TPIUEJnu8V0ytQmk9XCDtb7hHw38LexbucBeudmoP
+	o8t+3FslQ2NLBVoON5Cz0cLQRu95gGge42QVqKL/GYlJ6XidmY9HcdKw5K7ILhRRymaN0wA4sZq
+	xtY+LidjrjRaZn/E4MNZ6Wgf/clpJthkAXdTHRcDRPgj2PUEcJPm5yd2ZPhRjTeJGRpvOBvzW82
+	W1bbkHdW6wR+5aN5dneJu6lgnUw3A5pwz0BjNf/bT881UX6+V+Krf5z1UcpCR/Pdx4bVFhgIPm7
+	XmDwFanRx0hJK/NE=
+X-Google-Smtp-Source: AGHT+IE0oYJ/I0kmM46PQvxHKHRpeqSNvLtBp69e//j2haDX0cFUfrAooiUaxGg3Dm5x4kDxaWDAnw==
+X-Received: by 2002:a05:6000:2586:b0:39a:c9d9:877b with SMTP id ffacd0b85a97d-39ea5213d7cmr1027249f8f.27.1744354145790;
+        Thu, 10 Apr 2025 23:49:05 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae977fc8sm1059232f8f.48.2025.04.10.23.49.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 23:49:05 -0700 (PDT)
+Message-ID: <10a9dd5cdf55b6a9845fb9543cdef5f2251ffa6a.camel@gmail.com>
+Subject: Re: [PATCH] iio: addac: ad74115: Fix use of uninitialized variable
+ rate
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Purva Yeshi
+ <purvayeshi550@gmail.com>,  cosmin.tanislav@analog.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com,  jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 11 Apr 2025 06:49:24 +0100
+In-Reply-To: <1254dfd7-e872-4c65-bd17-8015e1b2eba4@baylibre.com>
+References: <20250409202945.205088-1-purvayeshi550@gmail.com>
+	 <1254dfd7-e872-4c65-bd17-8015e1b2eba4@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY8PR11MB7012:EE_|SA2PR11MB5161:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a568b5b-e6c0-4ff2-bcef-08dd78c4c046
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NvksYIcZWaYLcvtNERfNfRwgwxRaqJ2zTswvN1J8BqBO2WE25uHXECMWReL7?=
- =?us-ascii?Q?R9vZxaFpGRpE1eoYeSrLIKU7nKgHY5xvydyx+15Ie5hzJYDLW53bzpWk9Hoo?=
- =?us-ascii?Q?tow6PssyKAyeKZoeDzz+rkZAkNK9ZU3wVwqIx/t9LSnj4MZwoBTGMtiE1Z/0?=
- =?us-ascii?Q?DnO1zXNB0Khv0sr/Iy6UTFT5l2QeK+zNhmMlPXQrMyO5Qi7FCWLf/StF0/Sh?=
- =?us-ascii?Q?xWikyYYy78ewjAvT8ZSd+2QBX1dseiUjf5aY/3ioPk2kNTXyrLPIdI4YswNb?=
- =?us-ascii?Q?Iu38l4Ch0M1hvBXe/tL1A3c6Wu5RwCbiYPLhybdL9jcHlfNXeb1SmNvIra10?=
- =?us-ascii?Q?Yfi8nAwkQSn7XaWrn3ZvrfMBXzGn3/0hnKo1n8Dz8HG3jJNkbHNMWxE4qbqs?=
- =?us-ascii?Q?mXQyG4FDnZk13KyYC5W/SZ/5kxOeYp3NpuowmwpclKVKOiA9QqV8WP4V1zPY?=
- =?us-ascii?Q?j8k5Jz+TIxwnSPCQ/GQdm15kLwC8w/lsbo/x2Aa3xsSJFjhHy87L7ish/opE?=
- =?us-ascii?Q?O/pWWpBZ1BlJ10ilmmY9y88mfBt/emrQ/XioLpXJF+Z9DJSJio+bKV1DGrt9?=
- =?us-ascii?Q?nkl2cy5p/8Z921lq0JCO+qML8c0RHkYdOQADwkeT4FXvokcwrk26u2jL5DFf?=
- =?us-ascii?Q?VmuCQNX1+F81uQrbwA/bieD92SpS9jtv6PPUM2ZqAV9xp42rgeAMsY9sepSb?=
- =?us-ascii?Q?FuPYPB+5+FI1Z2yzW5gNTCMJOJplDwD/iwoJgJhtpjy05WPUoDpzqJ1sWK96?=
- =?us-ascii?Q?R+i+/32dc7qMb2HyYLJd4trJMVA75V6g5U/nXkow5m04S3Xdp0hb6oe32mlI?=
- =?us-ascii?Q?ywgFWYzHXRStzaHJjnw+wzC6oWvkS7Bw62pEENOAfKW4C4aqYdxxv6cDslKE?=
- =?us-ascii?Q?podGpoiO2e4nP8uMQXYj7bviaD1YBB2daL3jN0UptcQedqECXVHPjDMaKfWt?=
- =?us-ascii?Q?StW5xsVVXA0wMSVeINh7aAAHssMB8Uzl3usJYzAP8cc0gA4nujGw6yK/rZah?=
- =?us-ascii?Q?9r995u9wMF6UlwF/Yf3JKfhspyNeWVvEgpUWtv3T3r6IPAjiUutIHU6XEZs2?=
- =?us-ascii?Q?630pEDHXtM9MExnRNaXL85hfJN/MANO9XGTEsgrDAqXDsQ3ZyhYwkcJDu5ky?=
- =?us-ascii?Q?rrOURYa0MT/yxE6CgncTpXdMqfM5G14PZWHaEMbmQTlCffPzP0GdJ0+iBPsJ?=
- =?us-ascii?Q?ciNhH7UqCZDpciEABoZmgwC/uRt64I7BsGnIaYhzkkN5T4AdRrQrXmAOd6ih?=
- =?us-ascii?Q?ermSXUapoUSu/u19ZWUSGTypSlAxrfS9FwkzVBzNDEecx/WTFLlYfgsh/8+R?=
- =?us-ascii?Q?AOO1psTQoEOmv2HEANBWVbU98dTPvtok1VCVg8ISkupN/eMa0UMFtk7+U9kv?=
- =?us-ascii?Q?VdGfu68ftRR+7diW/f8MnKD3kao/TgE9P/a57rSkla9JwRjnzdWFTK3JH9u/?=
- =?us-ascii?Q?HhX+mEkkE+I=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7012.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VPeovPHBWA6rfpd2F54mNIihOgvn+/p729a52JGkiVBPC7AlKtkknTqibH41?=
- =?us-ascii?Q?aakFDAA7sIMVQbPyNNrTtukoXie7/rxx5YBjE5resj2cdA3vBUclfGFOLaf5?=
- =?us-ascii?Q?h5FPlTrcr64Pi49d4GrnVR/sk/g9gJ7N+UKzws2C+awbTiKVEd79Fiz9gORz?=
- =?us-ascii?Q?zv/ju4nU/BBB1I4IViqpiVFgLXs4Mad4QyAEfrpuaf+Jhz9BVTtnOj/L0s6b?=
- =?us-ascii?Q?JcBQmk+2QeY5v0ZTy726GNYVZWkysXMpaWsuGqw/MPnOOm9MdFaMBLLHAwKp?=
- =?us-ascii?Q?n2mx2knNp00nVqPdNmulSCdyFhnqXvFhreZ+4s+E5Vb7eALM9XsgaDhR7Ff7?=
- =?us-ascii?Q?6FoqXBB/1ixsWwmBaz4B3aH4VxXgR65PHB6LZ2gDdrujQJF3EVHFeo/ZBSaI?=
- =?us-ascii?Q?e1HESpyGWDvcyjp908wbftfcVRO8AkvczapCQVVjLnL6AIGSheSNBTh7Yle4?=
- =?us-ascii?Q?Cy3+KccQcLnHE6DoMLMqB619Xvn6PXZk8YQ/FUMWrYb74bds+EigHM5gGJ7d?=
- =?us-ascii?Q?GeQMKF3x7457YTjG8pueX2fq3Q62LtU15mkVw30rRvdqK4lHdvtrHM8DmZcn?=
- =?us-ascii?Q?rEb/EP0GytioJAuqdLZqoyDQJ8ZDEHibsF8WERZiftRLlEGmDulD8iINK1St?=
- =?us-ascii?Q?GP2cs2vfCovsIIhUXgAbRddpwL73nN5z4/a38Rwg7uvwYzA5CWPSiK3oxB2t?=
- =?us-ascii?Q?DG1038N6i9S/g70muTmpMjCe+ij8FHyy3/VIn5GV6M8PCGwmxRkH4pKqyckR?=
- =?us-ascii?Q?ovJgUyr2jb2qVjylp+2GslJRpMxDRTduCh/8/B94qjwrNTTQ0YzS2s1dnwd6?=
- =?us-ascii?Q?kyY1cAAhfUc7n11yiBjl21bEKt15LHmMIifvj6vDByDlQ2iFAIR8AIDEyD8m?=
- =?us-ascii?Q?k8siwWj0auKDWD2205bTwKR3GBHsdeCYyyxDH+QpGLTF/7gHSVGGDTRW1BcI?=
- =?us-ascii?Q?OZVtxDw58TKBdQsYMz2XCz01Sd8UOvFW078Objf0bE2EKGN7OfwDyoUMgNQm?=
- =?us-ascii?Q?U5NpAEcG8Qa2llKHklYka5ULScP/zlAkToEq9bEEGntdTcZUHKGQmUlqAjAF?=
- =?us-ascii?Q?npCHbLL0XbP3PDJvC3lvwUvw6IUFTBZqOQnKdggz55khFUxLckcrI3fDtNjI?=
- =?us-ascii?Q?7tuNYOgenoUv7USDX2zEa4sIBWTSdqqQkIDu/V6dDlBqTEk4ABnrnJXVolO8?=
- =?us-ascii?Q?KuX5Ry7q56oHeb1LGgqigEVn1hDa8ArKbknJfYqd5I2cfESC5pQB7NLWcjgc?=
- =?us-ascii?Q?164C8y6rZPXvllAzkqMoNCQwEshjbTXFJPRXGVwYbQcZottpDJwG+jR7+28w?=
- =?us-ascii?Q?SRYT+7qy0SMmP1NhhzY/OKjQ7E239y67eSNfY6viDQzQQJMMIe+7Hujvx+sh?=
- =?us-ascii?Q?aiE0noTKlFEOJtccc2hNT8aTrgwroMdD9FhOMyq+pjdb+XeztJYvFEiNaKc1?=
- =?us-ascii?Q?0cVPFg1ywX+g74AFBzRaxSvgxqwCOSNQeeXJq1cpbU8S/xW9NtoTfMEgvkP2?=
- =?us-ascii?Q?rvZooWmrfH9gA7FMhwvrPGrdfFIjPmvn3ZEfCU1GG6inS5y/kj50BjZgF6mU?=
- =?us-ascii?Q?WBEAUiLuzJByABV++Nf0naCLvQ9KXj+yEAqUWHb37RQt9kw/vlu0jOrSB8q1?=
- =?us-ascii?Q?Ag=3D=3D?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a568b5b-e6c0-4ff2-bcef-08dd78c4c046
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7012.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 06:47:39.2951
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yPfCbgGlMVTkFA5IbsXDphptTeyITBXi/xrlgJ7MuIhtUksmblQI8Gaxywjh62CzzEQqxVi5oaMYH5cHijNZjikBdHZ1iQbIuN6HYnHHk8c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5161
-X-Proofpoint-GUID: g34A48K9pZhvBrdrAcc3ySWiaPWPDAcw
-X-Proofpoint-ORIG-GUID: g34A48K9pZhvBrdrAcc3ySWiaPWPDAcw
-X-Authority-Analysis: v=2.4 cv=QOZoRhLL c=1 sm=1 tr=0 ts=67f8bb0e cx=c_pps a=ZuQraZtzrhlqXEa35WAx3g==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=XR8D0OoHHMoA:10
- a=bC-a23v3AAAA:8 a=VnNF1IyMAAAA:8 a=xNf9USuDAAAA:8 a=t7CeM3EgAAAA:8 a=u2LiicgN0kIDZIMe9SoA:9 a=-FEs8UIgK8oA:10 a=FO4_E8m0qiDe52t0p3_H:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_02,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=990 bulkscore=0 phishscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 spamscore=0 mlxscore=0
- malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504110047
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+On Thu, 2025-04-10 at 09:51 -0500, David Lechner wrote:
+> On 4/9/25 3:29 PM, Purva Yeshi wrote:
+> > Fix Smatch-detected error:
+> > drivers/iio/addac/ad74115.c:823 _ad74115_get_adc_code() error:
+> > uninitialized symbol 'rate'.
+> >=20
+> > The variable rate was declared but not given any value before being use=
+d
+> > in a division. If the code reached that point without setting rate, it
+> > would cause unpredictable behavior.
+> >=20
+> > Declare and initialize 'rate' to zero inside the 'else' block where it =
+is
+> > used. This ensures 'rate' is always initialized before being passed to
+> > DIV_ROUND_CLOSEST.
+> >=20
+> > Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> > ---
+> > =C2=A0drivers/iio/addac/ad74115.c | 2 +-
+> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
+> > index a7e480f2472d..26770c68e5fa 100644
+> > --- a/drivers/iio/addac/ad74115.c
+> > +++ b/drivers/iio/addac/ad74115.c
+> > @@ -814,7 +814,7 @@ static int _ad74115_get_adc_code(struct ad74115_sta=
+te *st,
+> > =C2=A0			return -ETIMEDOUT;
+> > =C2=A0	} else {
+> > =C2=A0		unsigned int regval, wait_time;
+> > -		int rate;
+> > +		int rate =3D 0;
+> > =C2=A0
+> > =C2=A0		ret =3D ad74115_get_adc_rate(st, channel, &rate);
+> > =C2=A0		if (ret < 0)
+>=20
+> I don't see how rate could be used uninitialized since we are
+> returning the error if ad74115_get_adc_rate() fails.
+>=20
+> Also, initializing to 0 would then cause a divide by 0 error
+> if that value was actually used later in the code.
+>=20
 
-[ Upstream commit 0974d03eb479384466d828d65637814bee6b26d7 ]
+Agreed... A better check could actually be (in ad74115_get_adc_rate()):
 
-Smatch warns:
 
-  arch/powerpc/kernel/rtas.c:1932 __do_sys_rtas() warn: potential
-  spectre issue 'args.args' [r] (local cap)
+if (i >=3D ARRAY_SIZE(ad74115_get_adc_rate))
+    return -EIO;
 
-The 'nargs' and 'nret' locals come directly from a user-supplied
-buffer and are used as indexes into a small stack-based array and as
-inputs to copy_to_user() after they are subject to bounds checks.
+Kind of a paranoid check but just making sure a faulty chip does not lead t=
+o an out
+of bounds access.
 
-Use array_index_nospec() after the bounds checks to clamp these values
-for speculative execution.
-
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reported-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/20240530-sys_rtas-nargs-nret-v1-1-129acddd4d89@linux.ibm.com
-[Minor context change fixed]
-Signed-off-by: Cliff Liu <donghua.liu@windriver.com>
-Signed-off-by: He Zhe <Zhe.He@windriver.com>
----
-Verified the powerpc build test.
----
- arch/powerpc/kernel/rtas.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index f8d3caad4cf3..3c06c8389e05 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -25,6 +25,7 @@
- #include <linux/reboot.h>
- #include <linux/security.h>
- #include <linux/syscalls.h>
-+#include <linux/nospec.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- 
-@@ -1178,6 +1179,9 @@ SYSCALL_DEFINE1(rtas, struct rtas_args __user *, uargs)
- 	    || nargs + nret > ARRAY_SIZE(args.args))
- 		return -EINVAL;
- 
-+	nargs = array_index_nospec(nargs, ARRAY_SIZE(args.args));
-+	nret = array_index_nospec(nret, ARRAY_SIZE(args.args) - nargs);
-+
- 	/* Copy in args. */
- 	if (copy_from_user(args.args, uargs->args,
- 			   nargs * sizeof(rtas_arg_t)) != 0)
--- 
-2.34.1
-
+- Nuno S=C3=A1=20
