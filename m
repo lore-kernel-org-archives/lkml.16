@@ -1,81 +1,67 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA4115D5B6
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5F715D5B6
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361744; cv=none; b=qLVI2VNdnufbsh61b3jn15NUBkOH64xnDTV6h/q4dHPaoMNnC7s+zYJhA3zjfDEfnWn5HwgAKxIbI9KJ8Crsu1PtLmhwSOYu32YYzIM7WvUuAvlWZgevBcM24CSIX1JKTKsAHs6RNJefAe5oXGS9GLgvwHWnP9mZMvFoKYp6Fok=
+	t=1744361760; cv=none; b=eaXfF4kRjcbXCFeQJ4tlaxbKa+QhaPxqR/9LbYgY29cqo7+JaeqNu1MfNxwc8L4XEi+eracJgHQIi5a6wcrUtcJ9KnERizbJ3h0Y3nQj1APNWsycg7i5APxHe2VCUpM6YTxYM4ZsGU6D5dn25j3/CPuCzvt0nYiRK+1T9PCt96A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361744; c=relaxed/simple;
-	bh=2poye6+6Vutphe9me56NWy9liA6pThOpOwOGfw7sTBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G8kJpASSaRAklqUBTRLmucOzJBVIYq8RphY4g+maDF01KxUhVU6KbdlYPOcwyexpk+xkClovTWRqqL6Gueb6HIPSYcQEs4If4H2uWaeADTWhw4mHiNeapx9ZJjH6QMsPfcuMJVdzsdTezZDj4q6GUtLkcofCGE2H5X5b6nDuBuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=u9B5PZCW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FfMuOjZq; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FYJ9zMTf; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XeuVFsF/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744361760; c=relaxed/simple;
+	bh=2tgMt1sse1LvM8GVxklg0FPJWv5iZuw3NO90IPBMi+M=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GNLfwJIVz2vwWW0v1dw6/1FqNJwtmSPV91JEupyrFCrSBnIT+yQB0Q7xirQ/3iLngqgRiyK3MnvgQkB/tpeGghYvUouM6g0eHzozEoas/qe7SgBLFjVcebd3r+/yuLWUhy7C0Vfd8zJoObceAFkuaGTsS1pGyWdj9+Iotvzpkb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IgSHOxYs; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="u9B5PZCW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FfMuOjZq";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FYJ9zMTf";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XeuVFsF/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C3A672111F;
-	Fri, 11 Apr 2025 08:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744361740; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GfvyC1oEfaoFU1OlMVjxBeeOBg2Vuu9BudnrP3LNhms=;
-	b=u9B5PZCWO519DSz+mCtR8iPH+cLgFlRHYddri+uInF81uhKn1KQ4alBuBdS5+roUs+ioAk
-	eQ5bkdiqJwRIHSRWcm4Z+AUBZ/Qo2c8bdVdWev5Wodh5RFpnnHI10oM16WlVa5JrJ1gFPp
-	BPZc8JxAxi7PkeBQzhVH1baZyghQER8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744361740;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GfvyC1oEfaoFU1OlMVjxBeeOBg2Vuu9BudnrP3LNhms=;
-	b=FfMuOjZqWG4uNRMCYImmKUfJdmnrZayb1Q5wgDCsUeyruudU7EjDcLIChCyeISiHPQyj0F
-	e0SzUqowGq8dgoCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=FYJ9zMTf;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="XeuVFsF/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744361739; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GfvyC1oEfaoFU1OlMVjxBeeOBg2Vuu9BudnrP3LNhms=;
-	b=FYJ9zMTf9vdanwD4bv25RtyYYchRm7BW/RtpXUEp9vYg0+I6RvpkDc4u1a4qHoxUcGFayk
-	qXWrzjrwaRLZ2aSA5UMTTyLLGnqSILd0grE1iOQ0Muw/U942pDXFE//8aWon4GGvNsDztp
-	cn9uFlcsMydEFvE517B6eariW/2xb4A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744361739;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GfvyC1oEfaoFU1OlMVjxBeeOBg2Vuu9BudnrP3LNhms=;
-	b=XeuVFsF/SjSyMZdseF5pAZyTVPZfrODQp7EUOyZT7xk8MEwfsWIpKvA3eBp7b8jVa2HJcQ
-	OPE5kBQ4ojtZ+ABQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A40BE136A4;
-	Fri, 11 Apr 2025 08:55:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id sg24JwvZ+GfiHAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 11 Apr 2025 08:55:39 +0000
-Message-ID: <0e9e2d5d-ec64-4ad4-a184-0c53832ff565@suse.cz>
-Date: Fri, 11 Apr 2025 10:55:31 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IgSHOxYs"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so19594635e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:55:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744361756; x=1744966556; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GgQKbWLox9NVg1QwDNLTEsGI9L1B5W9chUOopG1dkzI=;
+        b=IgSHOxYsUqdTK6XKVa7rvhgTTnaSYnBCVCYH/ziuEyQdPa9GuVFCP46hgg1F1dwkh4
+         L+7RROcF/VIj4GeUXV+q9l0CnmUSWf9doCBP6ATDj+s11xUz/+auIoNi7yxEWczCHMU5
+         S0bsDeZtgf8sGxEnZ9wOMY1QTbAxZtKImDGhVmfDCGuhNOnczk+hyy/Ur+S25ALgHa8b
+         QCNNp3GXMw2Ex6HvRqFj+Bpmq1CoNp/NtjggLwVQeRKfQIFH1Y6q61skUs7fvhrljZMQ
+         PoWsKZIpcB2UIWETCl6ZsporfvCibd+18QseARn7vPOTQS2z0d7l/dCaOKf5qCxMJ21q
+         Xvbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744361756; x=1744966556;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GgQKbWLox9NVg1QwDNLTEsGI9L1B5W9chUOopG1dkzI=;
+        b=YDvD3uznd8jaPoI+KOCpGjdijck4KCaOnJKdGTHxR7rYaBFuQz8PMv4TnEvGCNyLKh
+         4aU8AlvNWO0UjyiNKxkU3STTI+fR7nQkjAlKCsi4K8SDCwTM2ogZynU9n2qVV3EFr43B
+         fLnNYuCOG5BNGmpoo0lQSEL0e82CK5qgQmYw9t6MQVtMZv7jnbMo2CDXPHxUUK+2Dj4I
+         cHLOn63Np8Leo2Jb4pHHti61CQt3mM2GdmmWnWhchplFvzx/dLp//H85g6G/+uaWMt/N
+         VHI2mAg+P83MzKrw46WHzPPSro0SdgnFt8FwboEQwZC80KbcgRq32NZcgrlXpsynMNz1
+         fsYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDaN81WcIA8Zc3pmkpeB2kfdGPZMeR1rWzkkQaFwkS8rvEzDQQJ4dxVlAxVGfgeUorjBy+18kMrwuZnRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk4Y3IVXBjIKY+XUfTCXeARm0WWn6Cbeqw9rL7CZXybl32bPhu
+	fcng3vHp+HtYgAFqY4WgE/d9x7E3qFkrNqBXQZeuDySIGZHbkXWQPDMp+8QvcrM=
+X-Gm-Gg: ASbGncuuFLdG/ZXYU3Tqhww+Ru8RLMb1WKPSgWiQDRHm9Z2zZvpoi/QODaJs29/3rpg
+	UP3ZsAK1vawuwzrh11SplSZBygapUEU0wL/U0gixErXOIvza7jxR9YdZZq74rm02YatPLzRoq7n
+	7bKeSk8LzYheAW1jWOnA1oXx4mpevFfBmSZXLv/teL90SOlePyyfKIAVtm40DBpEOgatopZ0f7P
+	/+66IbmeCJXc1R3Hek1HmW9Y4phB21I22IS6RCDxz+BYK6QWRzznoeQZGvKAQ6FqPydAc/MTwE8
+	bpDzbcNfTt4qAs6O0UHoc0EQ3Gk6vjCQN1Qyx4Ad/JgeCm8ROR699R9s/fZ1JVDrlXN1VWd43ip
+	4g1LqUiyyGVzIVkzIBg==
+X-Google-Smtp-Source: AGHT+IEVq2vyPSDk3mZeBJ2nFdHQf/8MPDkyfLJnef1pf5xR+tKiYrLMkUUN01oPGLJiHTMgAUdnsw==
+X-Received: by 2002:a05:6000:4022:b0:38d:e0a9:7e5e with SMTP id ffacd0b85a97d-39d8f2676a3mr4601535f8f.6.1744361756583;
+        Fri, 11 Apr 2025 01:55:56 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:f77b:949e:1d61:69a8? ([2a01:e0a:3d9:2080:f77b:949e:1d61:69a8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96bf97sm1354424f8f.25.2025.04.11.01.55.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 01:55:56 -0700 (PDT)
+Message-ID: <3d0cff04-07f3-49cb-83cc-afd4f052e8d5@linaro.org>
+Date: Fri, 11 Apr 2025 10:55:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,124 +69,276 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
-Content-Language: en-US
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>,
- Waiman Long <llong@redhat.com>, linux-mm@kvack.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-References: <20250410210623.1016767-1-shakeel.butt@linux.dev>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250410210623.1016767-1-shakeel.butt@linux.dev>
-Content-Type: text/plain; charset=UTF-8
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 7/7] drm/panel: make prepare/enable and disable/unprepare
+ calls return void
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
+ <20250401-panel-return-void-v1-7-93e1be33dc8d@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250401-panel-return-void-v1-7-93e1be33dc8d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C3A672111F
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,linux.dev:email,suse.cz:mid,suse.cz:dkim];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-On 4/10/25 23:06, Shakeel Butt wrote:
-> The function memcg_hotplug_cpu_dead works on the stock of a remote dead
-> CPU and drain_obj_stock works on the given stock instead of local stock,
-> so there is no need to take local stock_lock anymore.
+On 01/04/2025 07:11, Dmitry Baryshkov wrote:
+> Now there are no users of the return value of the drm_panel_prepare(),
+> drm_panel_unprepare(), drm_panel_enable() and drm_panel_disable() calls.
+> Usually these calls are performed from the atomic callbacks, where it is
+> impossible to return an error. Stop returning error codes and return
+> void instead.
 > 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 > ---
->  mm/memcontrol.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
+>   drivers/gpu/drm/drm_panel.c                     | 54 +++++++++----------------
+>   drivers/gpu/drm/panel/panel-newvision-nv3051d.c |  9 +----
+>   include/drm/drm_panel.h                         |  8 ++--
+>   3 files changed, 26 insertions(+), 45 deletions(-)
 > 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index f23a4d0ad239..2178a051bd09 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1789,7 +1789,7 @@ static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
->  };
->  static DEFINE_MUTEX(percpu_charge_mutex);
->  
-> -static void drain_obj_stock(struct memcg_stock_pcp *stock);
-> +static void __drain_obj_stock(struct memcg_stock_pcp *stock);
->  static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
->  				     struct mem_cgroup *root_memcg);
->  
-> @@ -1873,7 +1873,7 @@ static void drain_local_stock(struct work_struct *dummy)
->  	local_lock_irqsave(&memcg_stock.stock_lock, flags);
->  
->  	stock = this_cpu_ptr(&memcg_stock);
-> -	drain_obj_stock(stock);
-> +	__drain_obj_stock(stock);
->  	drain_stock(stock);
->  	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
->  
-> @@ -1964,10 +1964,10 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
->  
->  	stock = &per_cpu(memcg_stock, cpu);
->  
-> -	/* drain_obj_stock requires stock_lock */
-> -	local_lock_irqsave(&memcg_stock.stock_lock, flags);
-> -	drain_obj_stock(stock);
-> -	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-> +	local_irq_save(flag);
+> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> index c627e42a7ce70459f50eb5095fffc806ca45dabf..faa7a76b63b53b3a45b3400d8bf3b58a027a340e 100644
+> --- a/drivers/gpu/drm/drm_panel.c
+> +++ b/drivers/gpu/drm/drm_panel.c
+> @@ -105,21 +105,21 @@ EXPORT_SYMBOL(drm_panel_remove);
+>    *
+>    * Calling this function will enable power and deassert any reset signals to
+>    * the panel. After this has completed it is possible to communicate with any
+> - * integrated circuitry via a command bus.
+> - *
+> - * Return: 0 on success or a negative error code on failure.
+> + * integrated circuitry via a command bus. This function cannot fail (as it is
+> + * called from the pre_enable call chain). There will always be a call to
+> + * drm_panel_disable() afterwards.
+>    */
+> -int drm_panel_prepare(struct drm_panel *panel)
+> +void drm_panel_prepare(struct drm_panel *panel)
+>   {
+>   	struct drm_panel_follower *follower;
+>   	int ret;
+>   
+>   	if (!panel)
+> -		return -EINVAL;
+> +		return;
+>   
+>   	if (panel->prepared) {
+>   		dev_warn(panel->dev, "Skipping prepare of already prepared panel\n");
+> -		return 0;
+> +		return;
+>   	}
+>   
+>   	mutex_lock(&panel->follower_lock);
+> @@ -138,11 +138,8 @@ int drm_panel_prepare(struct drm_panel *panel)
+>   				 follower->funcs->panel_prepared, ret);
+>   	}
+>   
+> -	ret = 0;
+>   exit:
+>   	mutex_unlock(&panel->follower_lock);
+> -
+> -	return ret;
+>   }
+>   EXPORT_SYMBOL(drm_panel_prepare);
+>   
+> @@ -154,16 +151,14 @@ EXPORT_SYMBOL(drm_panel_prepare);
+>    * reset, turn off power supplies, ...). After this function has completed, it
+>    * is usually no longer possible to communicate with the panel until another
+>    * call to drm_panel_prepare().
+> - *
+> - * Return: 0 on success or a negative error code on failure.
+>    */
+> -int drm_panel_unprepare(struct drm_panel *panel)
+> +void drm_panel_unprepare(struct drm_panel *panel)
+>   {
+>   	struct drm_panel_follower *follower;
+>   	int ret;
+>   
+>   	if (!panel)
+> -		return -EINVAL;
+> +		return;
+>   
+>   	/*
+>   	 * If you are seeing the warning below it likely means one of two things:
+> @@ -176,7 +171,7 @@ int drm_panel_unprepare(struct drm_panel *panel)
+>   	 */
+>   	if (!panel->prepared) {
+>   		dev_warn(panel->dev, "Skipping unprepare of already unprepared panel\n");
+> -		return 0;
+> +		return;
+>   	}
+>   
+>   	mutex_lock(&panel->follower_lock);
+> @@ -195,11 +190,8 @@ int drm_panel_unprepare(struct drm_panel *panel)
+>   	}
+>   	panel->prepared = false;
+>   
+> -	ret = 0;
+>   exit:
+>   	mutex_unlock(&panel->follower_lock);
+> -
+> -	return ret;
+>   }
+>   EXPORT_SYMBOL(drm_panel_unprepare);
+>   
+> @@ -209,26 +201,26 @@ EXPORT_SYMBOL(drm_panel_unprepare);
+>    *
+>    * Calling this function will cause the panel display drivers to be turned on
+>    * and the backlight to be enabled. Content will be visible on screen after
+> - * this call completes.
+> - *
+> - * Return: 0 on success or a negative error code on failure.
+> + * this call completes. This function cannot fail (as it is called from the
+> + * enable call chain). There will always be a call to drm_panel_disable()
+> + * afterwards.
+>    */
+> -int drm_panel_enable(struct drm_panel *panel)
+> +void drm_panel_enable(struct drm_panel *panel)
+>   {
+>   	int ret;
+>   
+>   	if (!panel)
+> -		return -EINVAL;
+> +		return;
+>   
+>   	if (panel->enabled) {
+>   		dev_warn(panel->dev, "Skipping enable of already enabled panel\n");
+> -		return 0;
+> +		return;
+>   	}
+>   
+>   	if (panel->funcs && panel->funcs->enable) {
+>   		ret = panel->funcs->enable(panel);
+>   		if (ret < 0)
+> -			return ret;
+> +			return;
+>   	}
+>   	panel->enabled = true;
+>   
+> @@ -236,8 +228,6 @@ int drm_panel_enable(struct drm_panel *panel)
+>   	if (ret < 0)
+>   		DRM_DEV_INFO(panel->dev, "failed to enable backlight: %d\n",
+>   			     ret);
+> -
+> -	return 0;
+>   }
+>   EXPORT_SYMBOL(drm_panel_enable);
+>   
+> @@ -248,15 +238,13 @@ EXPORT_SYMBOL(drm_panel_enable);
+>    * This will typically turn off the panel's backlight or disable the display
+>    * drivers. For smart panels it should still be possible to communicate with
+>    * the integrated circuitry via any command bus after this call.
+> - *
+> - * Return: 0 on success or a negative error code on failure.
+>    */
+> -int drm_panel_disable(struct drm_panel *panel)
+> +void drm_panel_disable(struct drm_panel *panel)
+>   {
+>   	int ret;
+>   
+>   	if (!panel)
+> -		return -EINVAL;
+> +		return;
+>   
+>   	/*
+>   	 * If you are seeing the warning below it likely means one of two things:
+> @@ -269,7 +257,7 @@ int drm_panel_disable(struct drm_panel *panel)
+>   	 */
+>   	if (!panel->enabled) {
+>   		dev_warn(panel->dev, "Skipping disable of already disabled panel\n");
+> -		return 0;
+> +		return;
+>   	}
+>   
+>   	ret = backlight_disable(panel->backlight);
+> @@ -280,11 +268,9 @@ int drm_panel_disable(struct drm_panel *panel)
+>   	if (panel->funcs && panel->funcs->disable) {
+>   		ret = panel->funcs->disable(panel);
+>   		if (ret < 0)
+> -			return ret;
+> +			return;
+>   	}
+>   	panel->enabled = false;
+> -
+> -	return 0;
+>   }
+>   EXPORT_SYMBOL(drm_panel_disable);
+>   
+> diff --git a/drivers/gpu/drm/panel/panel-newvision-nv3051d.c b/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
+> index 5d115ecd5dd44c8e5e7d1fb8afe573324e987f59..b6429795e8f518646443dd8179f3ec28cef4dc0f 100644
+> --- a/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
+> +++ b/drivers/gpu/drm/panel/panel-newvision-nv3051d.c
+> @@ -413,15 +413,10 @@ static int panel_nv3051d_probe(struct mipi_dsi_device *dsi)
+>   static void panel_nv3051d_shutdown(struct mipi_dsi_device *dsi)
+>   {
+>   	struct panel_nv3051d *ctx = mipi_dsi_get_drvdata(dsi);
+> -	int ret;
+>   
+> -	ret = drm_panel_unprepare(&ctx->panel);
+> -	if (ret < 0)
+> -		dev_err(&dsi->dev, "Failed to unprepare panel: %d\n", ret);
+> +	drm_panel_unprepare(&ctx->panel);
+>   
+> -	ret = drm_panel_disable(&ctx->panel);
+> -	if (ret < 0)
+> -		dev_err(&dsi->dev, "Failed to disable panel: %d\n", ret);
+> +	drm_panel_disable(&ctx->panel);
+>   }
+>   
+>   static void panel_nv3051d_remove(struct mipi_dsi_device *dsi)
+> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> index a9c042c8dea1a82ef979c7a68204e0b55483fc28..18bf338c8b96254dc3f2880106b944e71ea4c9a7 100644
+> --- a/include/drm/drm_panel.h
+> +++ b/include/drm/drm_panel.h
+> @@ -275,11 +275,11 @@ void drm_panel_init(struct drm_panel *panel, struct device *dev,
+>   void drm_panel_add(struct drm_panel *panel);
+>   void drm_panel_remove(struct drm_panel *panel);
+>   
+> -int drm_panel_prepare(struct drm_panel *panel);
+> -int drm_panel_unprepare(struct drm_panel *panel);
+> +void drm_panel_prepare(struct drm_panel *panel);
+> +void drm_panel_unprepare(struct drm_panel *panel);
+>   
+> -int drm_panel_enable(struct drm_panel *panel);
+> -int drm_panel_disable(struct drm_panel *panel);
+> +void drm_panel_enable(struct drm_panel *panel);
+> +void drm_panel_disable(struct drm_panel *panel);
+>   
+>   int drm_panel_get_modes(struct drm_panel *panel, struct drm_connector *connector);
+>   
+> 
 
-I think for RT this is not great? At least in theory, probably it's not
-actually used together with cpu hotplug? As it relies on memcg_stats_lock()
-I think no irq save/enable is necessary there. local_lock_irqsave wasn't
-actually a irq disable on RT. I don't know if there's a handy wrapper for this.
+LGTM
 
-> +	/* stock of a remote dead cpu, no need for stock_lock. */
-> +	__drain_obj_stock(stock);
-> +	local_irq_restore(flag);
->  
->  	drain_stock(stock);
->  
-> @@ -2837,7 +2837,11 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
->  	return ret;
->  }
->  
-> -static void drain_obj_stock(struct memcg_stock_pcp *stock)
-> +/*
-> + * Works on the given stock. The callers are responsible for the proper locking
-> + * for the local or remote stocks.
-> + */
-> +static void __drain_obj_stock(struct memcg_stock_pcp *stock)
->  {
->  	struct obj_cgroup *old = READ_ONCE(stock->cached_objcg);
->  
-> @@ -2925,7 +2929,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
->  
->  	stock = this_cpu_ptr(&memcg_stock);
->  	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
-> -		drain_obj_stock(stock);
-> +		__drain_obj_stock(stock);
->  		obj_cgroup_get(objcg);
->  		stock->nr_bytes = atomic_read(&objcg->nr_charged_bytes)
->  				? atomic_xchg(&objcg->nr_charged_bytes, 0) : 0;
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
