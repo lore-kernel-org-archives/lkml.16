@@ -1,134 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB4C1E47C5;
-	Fri, 11 Apr 2025 23:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DDE298CBE
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 23:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744412948; cv=none; b=FrR8BUqKp6OdIlHws99u83eR8itVzo66FL+qpZpF7mMSqTyq+nhzfmyPSFQEMnVeOQVo14XGc9stVrmpfiTSQVcRG7cx8xzIvcIkETJDmn6el8+W6ySScQtVxJUPnAmvbk4ckfxluslvsRyr6UFwzh1AAySIStBdYT6sX6fc1IE=
+	t=1744413235; cv=none; b=UdqgojqASwUUHhkHHa2FzPU6LeWvEoSYM1nlozUYqurZRvc1rZAtJV/kje5uSAaINQbpp88q+fx7fG3x+3kEt24UcePjJjyBzo6zuJdHTEf6roTnmpaAY6A7Gub9EYUlyc6TykBaHXvGc+1MsJNNv+x9V7+0iNc6ncRDS6Qp670=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744412948; c=relaxed/simple;
-	bh=c7UxXBtne8skLpO72LdJxHRQelC/35DaBCxhVZhPcBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tfyY0tLCbcUCWfMDR6p2Lo5TT37KNAjsirZYjDS/OVzSYo4/WWox2GTggH7ob0b4X2Ckt8zXIwXYSVOzwsHK8mrmU/S4bq3Q3GlFDz0/C006KkhhTci7BzqpxpODZqnLu5vbayIZnyTmQcVwCGQ6eNVmA7mWSYOMwp2fwOj4n30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJDl/dWI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744413235; c=relaxed/simple;
+	bh=ZuIcrKzR77S3rywuzIWFvcaLlqxr+h3zktfH9J5ndLU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zg5MBV6QupKVEUGVO2d4g/ok1EH8nAV6wOcYhjcOE1DP4wfWa4xJiPIasVL5kgq0td6/4Z/YiVNutdP9PEGyl7nVmNKZ1/kLzXn4hzQTxBubGstgSkf/lEKS5aXu6r8nP+eTonbxY5T5UbWDshbAKtXKP8xl5Zqs3+t1JHbaGZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XkkEmCMf; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJDl/dWI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27BD2C4CEE2;
-	Fri, 11 Apr 2025 23:09:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744412947;
-	bh=c7UxXBtne8skLpO72LdJxHRQelC/35DaBCxhVZhPcBE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IJDl/dWIhxvzyXHqkbb6wsWFH97RcHXIR0gvQmOhFzCyd1B8EkO6/VLPbd4M1LHKo
-	 6O/BLPWjafWhMYkZVjII67kr90ajDslhqRd76g7DsUdO7rxYca4+GEWoGs+8DcVpUp
-	 hyct5EzY7Dxl8FpXGYPuFOtqGyt7XsVxrRVTbH+q44wMkRRJ9iyl2IKKycpb0JzUUk
-	 bC4FqQAKh9foP1cIpxJfhnWm7DLgwC2SuxD5/Nlq3v+WDHNlM/J7v9a+tOqkq0bpDL
-	 CNRFvhWPxqk8yTxRjuB5njtIrSRYrBXqqImF61ysTdvXp+bfZL4Y6mrI3v16CtTgj/
-	 TZR07JfYM/06w==
-Date: Fri, 11 Apr 2025 16:09:05 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Howard Chu <howardchu95@gmail.com>, Levi Yun <yeoreum.yun@arm.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/16] Intel TPEBS min/max/mean/last support
-Message-ID: <Z_mhEc5GAWM5cUTh@z2>
-References: <20250409061043.700792-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XkkEmCMf"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7020d8b110aso23214147b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744413232; x=1745018032; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YKlZigizjEVKoGnzIAZvuzGR7lV+iJHJRXEgqXvc8+0=;
+        b=XkkEmCMfN0uJqGZXi6WRXay8/vI6a3m9oAhYgehkxBT0V/1/RiVBzbByGSwUTK724j
+         6olLgYKeTvxgbQc6FBbwy0vcS7ET6UBghEGUbQ8jV8PpDAGDIqyTW2XLJ6KzgwimnCv2
+         SxmY5S3NFr+9DS6cH80Zmn2T61wqd+0cWJ6qevf0jJsXzQkYabVmSZ847H9CSRY9DdiY
+         sfnar4tVdhGSUtteT8kLFZpZRh/ODtVSGxtEAzGZkAyrIc6SgIufDeybiHIY4XK0BrPe
+         H1Nfw0Dsp6DZUAv3xzPyLHyvbosk4WkuHW4iStRmYhNGPfCg0wfEHoEeHQSW9kkXBxXB
+         iDqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744413232; x=1745018032;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YKlZigizjEVKoGnzIAZvuzGR7lV+iJHJRXEgqXvc8+0=;
+        b=fRf83S7+PZhEbS6HirCvLCO6cIdAZ310LquyEvjRN+Au6y698koO5RyUzvodhtskLB
+         h9aURwOQp/z5UfRmcOGLmE0lCE5gVC2yxzNXIsCAXD8ZhUaXACsyyu8tcpNs57L4TMNS
+         HiuP0z1TCEYm9yC5WUeIcs56MT6qNfV44SZPW48H3HWHgLAJRj7jkRqYxIBYioqkkpB4
+         QZj6wUqUCCbwTc5YKA1wxXJ6FbmbMGSdCiyQcjFMH2LX1s4qf5rfr1Cp93IJ54rLqc+Z
+         aDuqyATCYDG4sRy57WgwHt8f4h65tWZ0VGT1M9Stjjy/fhJBttpp+yLm1iSqnph1vqpz
+         X46g==
+X-Forwarded-Encrypted: i=1; AJvYcCUfwX3X+hc/A8iO3ceB5Ff6C+PTKrz8O5d27P24T+voNvdOCMDPRTICBr60cthqBP1oBWSfNxrWweP79hY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjRnQppUpnLihcEoyDHUSo7mPhvmxWWH1htKMTWiKZ1c8HBYhG
+	v1occnTyIe4Tu575eDaO2qYUdi4j3wCrDgIEGQ2Vvs74+6kQ1VgEo3TNh0tmOsWgdWxJvDhRdUa
+	Uqx6DoKHoky+mAy+/KdEVZVrq951Rig10bRpo
+X-Gm-Gg: ASbGnctnkWEs8PjUQK4eMZI+PG8HSeAsT9kvYVfOtY+F6WG3gZJRZN2r4Y1yc3IwHHo
+	bkDnusa7VT3K0HxGGI+KAWTFtqScJ79Ob8hpWuKJ3VmAy/H2ZpslfIUO/IMCi3hlzBIWtORhKle
+	2Wnc+99yrW8V3dx7WUgalGUQ==
+X-Google-Smtp-Source: AGHT+IHUa0aOwFiR93RonLdgGAycz902QQYijJ1KESM3WoGwo/vcnDBRRDtj6oj7TNBsL6Aa9rmB1pjYuwu+8AZzwxA=
+X-Received: by 2002:a05:690c:f93:b0:703:b770:80fa with SMTP id
+ 00721157ae682-705599cd6e4mr85757587b3.13.1744413232272; Fri, 11 Apr 2025
+ 16:13:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250409061043.700792-1-irogers@google.com>
+References: <20250331213025.3602082-1-jthoughton@google.com>
+ <20250331213025.3602082-2-jthoughton@google.com> <Z_mFxiXcWKcxRo8g@google.com>
+In-Reply-To: <Z_mFxiXcWKcxRo8g@google.com>
+From: James Houghton <jthoughton@google.com>
+Date: Fri, 11 Apr 2025 16:13:16 -0700
+X-Gm-Features: ATxdqUHr4RtBhVEB1WBBU3luDedsUJxjRd02o3MEmhcbXrN14SY5_nC8Tj2kKog
+Message-ID: <CADrL8HWum=2uJu6N23SaWHd4r4Pu96GbEqELRms_tq8gtMBbMg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] KVM: selftests: Extract guts of THP accessor to
+ standalone sysfs helpers
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Yu Zhao <yuzhao@google.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 11:10:27PM -0700, Ian Rogers wrote:
-> The patches add support to computing the min, max, mean or last
-> retirement latency and then using that value as the basis for metrics.
-> When values aren't available, support is added to use the retirement
-> latency as recorded for an event in the perf json.
-> 
-> Support is added for reading the retirement latency from the forked
-> perf command more than once. To avoid killing the process commands are
-> sent through the control fd. Some name handling is changed to make it
-> more robust.
-> 
-> Rather than retirement latency events having issues with perf record,
-> make it so that the retirement latency modifier enables sample
-> weights.
-> 
-> v4: Don't use json min/max in retirement latency stats as they will
->     never update afterwards. Warn once if json data is used when TPEBS
->     recording was requested.
-> 
-> v3: Two fixes from Kan Liang. Ensure min/max statistics don't vary
->     when real samples are encountered.
-> 
-> v2: Addition of header cleanup patch originally posted:
->     https://lore.kernel.org/lkml/20241210191823.612631-1-irogers@google.com/
->     as there are no arch specific reasons not to build this code.
->     Fix bug in "perf pmu-events: Add retirement latency to JSON events
->     inside of perf" where "t->stats.n != 0" should have been
->     "t->stats.n == 0".
->     Add patch so that perf record of a retirement latency event
->     doesn't crash but instead enables sample weights for the event.
-> 
-> Ian Rogers (16):
->   perf intel-tpebs: Cleanup header
->   perf intel-tpebs: Simplify tpebs_cmd
->   perf intel-tpebs: Rename tpebs_start to evsel__tpebs_open
->   perf intel-tpebs: Separate evsel__tpebs_prepare out of
->     evsel__tpebs_open
->   perf intel-tpebs: Move cpumap_buf out of evsel__tpebs_open
->   perf intel-tpebs: Reduce scope of tpebs_events_size
->   perf intel-tpebs: Inline get_perf_record_args
->   perf intel-tpebs: Ensure events are opened, factor out finding
->   perf intel-tpebs: Refactor tpebs_results list
->   perf intel-tpebs: Add support for updating counts in evsel__tpebs_read
->   perf intel-tpebs: Add mutex for tpebs_results
->   perf intel-tpebs: Don't close record on read
->   perf intel-tpebs: Use stats for retirement latency statistics
->   perf stat: Add mean, min, max and last --tpebs-mode options
->   perf pmu-events: Add retirement latency to JSON events inside of perf
->   perf record: Retirement latency cleanup in evsel__config
+On Fri, Apr 11, 2025 at 2:12=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Mon, Mar 31, 2025, James Houghton wrote:
+> > From: Sean Christopherson <seanjc@google.com>
+> >
+> > Extract the guts of thp_configured() and get_trans_hugepagesz() to
+> > standalone helpers so that the core logic can be reused for other sysfs
+> > files, e.g. to query numa_balancing.
+> >
+> > Opportunistically assert that the initial fscanf() read at least one by=
+te,
+> > and add a comment explaining the second call to fscanf().
+> >
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+>
+> Needs your SoB.  It's a bit absurd for this particular patch, but please =
+provide
+> it anyway, if only so that I can get a giggle out of the resulting chain =
+of SoBs :-)
 
-I have a nitpick but otherwise looks good to me.
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
-> 
->  tools/perf/Documentation/perf-stat.txt   |   7 +
->  tools/perf/builtin-stat.c                |  29 +-
->  tools/perf/pmu-events/empty-pmu-events.c | 216 +++----
->  tools/perf/pmu-events/jevents.py         |   6 +
->  tools/perf/pmu-events/pmu-events.h       |   3 +
->  tools/perf/util/Build                    |   2 +-
->  tools/perf/util/evlist.c                 |   1 -
->  tools/perf/util/evsel.c                  |  22 +-
->  tools/perf/util/evsel.h                  |   6 +
->  tools/perf/util/intel-tpebs.c            | 682 ++++++++++++++---------
->  tools/perf/util/intel-tpebs.h            |  40 +-
->  tools/perf/util/parse-events.c           |   4 +
->  tools/perf/util/pmu.c                    |  52 +-
->  tools/perf/util/pmu.h                    |   3 +
->  14 files changed, 666 insertions(+), 407 deletions(-)
-> 
-> -- 
-> 2.49.0.504.g3bcea36a83-goog
-> 
+Ah! I meant to include it. I'll repost the v3 with David's change to
+patch 3 and my SoB here. Thanks!
