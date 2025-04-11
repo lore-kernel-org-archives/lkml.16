@@ -1,153 +1,66 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8151E27E1B0
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 20:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FA422D7AA;
+	Fri, 11 Apr 2025 20:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744403381; cv=none; b=ljYHqVvDbDji5VaO2RDybYRTbn7tNUj0GbHqJMwjqgo/KmgHVYllPPXmzr4bqLVKT2sm2paJHxJ7vM72pM0545NWWcfi6i7D99ALRSD5gMMDUvB+Vur7xyYUm8GHk8LJusnP8/aFXKScEhTw+mGr9K6k/8Vtr+w4d7pfaObpGZQ=
+	t=1744403455; cv=none; b=Ur/vSeM7ybgjiTk+LSXyO3M1Muq/qJyzgh8e4sQPrLbfz9BdWObbA+2rf48eJ4BHVp1NMtiYpkZBn5uQpTzxkOYPSckf8diub78LWaM07aSYu/ppxE2KbnDgLExG53PdeWc+D3MMZ1y6KReZQShZETbGyaL9um4AZgWgJwL1xI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744403381; c=relaxed/simple;
-	bh=Zz8alp7eLPIwTzedMMr8/MJPGI2MAf5TOo/6UlH4/vw=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=PyrmdglF+41AlTV4ByK6nGwntxdBpYIIHtpfsyBDRm16ndOoZYgRPItgigwHZJ64kSUvq9K7F7Dyi/SQjOK87T+T1IAMDuku9ijajaOrK1T8F7I01ks6frkwr5SqpU/h9L4CmWlJgKq1q4RiN8aqCuqWjq9v+yCqXgwlJ9qEKVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=I8u4OxPU; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1744403455; c=relaxed/simple;
+	bh=IgZpynRK7I4zg1Vh1VMqbr8T90CF+k7sF5KdcrTjxEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UsT0MLieWeFJjucGMxlturPgoU6UPrHbhA5pgLhyex43Ab2UMwk8Da6NAQJmnXDD7xjEZuocIJTZiPz1cepDoz5n85Wr1j99JZsB28g8Ua4xzOO265pNBjqB7Mlh9qQyUasQBNowXa0rNgVn2q0Dkdp60NUOoab5MF7Zmn4411s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPHH7uM/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="I8u4OxPU"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8f7019422so21624436d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1744403377; x=1745008177; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JbHr93LO4bs0ZMoXRyryi8G/f9qfrVu4Cl+FMwxiTZ8=;
-        b=I8u4OxPUBdDE1vZ0s0xDjkdQxI3Sbz4HS11OjZqj/AZCzFdRIWHVjkqc5awE81BKBS
-         j7Kc/cHuvqOlGR3Y9d3jWA+QjngKx5Fa8LlCtYpuRDOufqQ2FChLBKUCCqDyIa+QGonL
-         caMLtseK48RqSJCx05L7kqRD5nZOhqTRsBum3lu7XZZ7RP7WTKHu6xmUDdSw70b7JqQS
-         2e3YcahcuxAT4aN4m3byuhSYGJxmMM8NUbxYCY2bLxo/9FKXFmCiJcTJ1b21pkqiTlRi
-         kKRYPy5BPP5q2OMKEwueDaXPnvzLZd8TpVOUV2d67RpDdUhEK5OZaTSMtrU6+y3F+U6G
-         2a9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744403377; x=1745008177;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JbHr93LO4bs0ZMoXRyryi8G/f9qfrVu4Cl+FMwxiTZ8=;
-        b=OyDrT/rkJCI00cEa8+uzYkB3kVhVi7C6Sbwi3kea1SM6lP6lEcyiOPmcRG0oOl65Hk
-         +56Ie2NgI1oE7dju7jGuKVDRphi28f1XUHvedb4c4QMDgwwi+UiK9yngRglJLEV4XNl5
-         Zb0cgNUA7HRuCGqjRijia7tG4lCqIi0wN4a/C/BE+PWxXOnopcjFHG2oBEmwh78xSAoo
-         Zsez8zRzl1fcNZjhAIJIHL41Od0JQU4sxHTxxp/FqoZ6fsB0NcTI2KzsyX0sivWLHiOo
-         Or2tZbsWcAHiEUi7xnohMbHCBpVMIiy2KaUaGELgEESPgi8MsaPluxrX8/WHLilF10UZ
-         Fn+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVmXm+jb1ssSfD1GXNW+J1IUCcNUyXgKrLxAA2PoUtnnZxV30ZvJjiE9U77v6FzRliNzIhu3PmXLz7bflQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKtEH9uRPp7lMDLxlZ5fNiEkE/lOZ4Npobwu+p+zFr8r3Pjl64
-	UcQt1YoqGTLtNkMRFYxoV+8dyE7ndsvaPi1dTZVRB/no9ko6F4AtV4ygIcmSDQ==
-X-Gm-Gg: ASbGncvXlEXAPjSv4YWu2A7yq14lD2lrYiLJHoih7xWOj9N+yTT3U+QAv7WQuT4P/lr
-	00FoNfZ3dXyk2u5CO2l5aZE8Nq1sWkWHuFG0I0+Nctw+J7tMIsx8XAoNWrNRt/UToENp/4k0ANj
-	yp0f0Draf+pxgLQqsS1vaYodXKBST8b/FdiXVm4NBfqdplfW1eUQ96Jq0GGssOA/hxDA0Yceps+
-	XptqNHjX4v/qp+ampoDByj/ULB9Qu7AfAlOpaic6dF+IHYVnBVf8zJBW0RzkChJIAAkyf8NWbmF
-	qBQwMA+3Y6LJRvpzdVeB5InOiSp5oC6voqjYsQRvxQqXWYJ1ANH4nD3+vsoF3dWmVj8juQDb4wQ
-	SdZ/WBjejHA==
-X-Google-Smtp-Source: AGHT+IEBKJDajZYrrZ3gDKTry1qqALA694IS63BLywJqibFp8HFfvqn3OIAivhRbWMwLbAA37COABg==
-X-Received: by 2002:ad4:5dc6:0:b0:6e8:f3b0:fa33 with SMTP id 6a1803df08f44-6f230cb96d5mr64559166d6.8.1744403377434;
-        Fri, 11 Apr 2025 13:29:37 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0de98096bsm41240806d6.59.2025.04.11.13.29.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 13:29:36 -0700 (PDT)
-Date: Fri, 11 Apr 2025 16:29:36 -0400
-Message-ID: <7ed70f417b10ae1510dbbea501da892c@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPHH7uM/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5593BC4CEE2;
+	Fri, 11 Apr 2025 20:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744403454;
+	bh=IgZpynRK7I4zg1Vh1VMqbr8T90CF+k7sF5KdcrTjxEM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EPHH7uM/Qu0KE1Ki08vAe0SQly95cP11L1X41U2O4z0rKo9qDBuZq1t1fEcwT56WS
+	 +XXHKa4eFQF7zSPmePs+9eOm0wjvKz99exST793SpBJV4jYTvxUcWuMBgerq39Uw0R
+	 sp5uB8Sb0QmWxWPYkuSaH8kMbZdfF30L5ExKDo45ftSOyEvduFHhqBra54sqwguyEq
+	 2c5i+ynAjxai6Z+B+QQxR5a03vfjfx+10TpNaYi+l5ivxn6MMhFu2VRq9WLq134Zqk
+	 4RAh7EW2X96oTj3NvM3urA8bCdDXBhZeeZjm15g4YJ6gwcL1m6diIgdHQGZFVoAsQj
+	 GoWGDeU1Xc2Kw==
+Date: Fri, 11 Apr 2025 15:30:53 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: alexandre.belloni@bootlin.com, linux-i3c@lists.infradead.org,
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+	andersson@kernel.org, krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	konradybcio@kernel.org, jarkko.nikula@linux.intel.com
+Subject: Re: [PATCH v4 1/3] dt-bindings: i3c: Add support for Qualcomm I3C
+ controller
+Message-ID: <174440334691.3918820.6898145674623743895.robh@kernel.org>
+References: <20250411113516.87958-1-quic_msavaliy@quicinc.com>
+ <20250411113516.87958-2-quic_msavaliy@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250411_1406/pstg-lib:20250411_1552/pstg-pwork:20250411_1406
-From: Paul Moore <paul@paul-moore.com>
-To: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
-Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, =?UTF-8?q?Thi=C3=A9baud=20Weksteen?= <tweek@google.com>, =?UTF-8?q?Bram=20Bonn=C3=A9?= <brambonne@google.com>, Casey Schaufler <casey@schaufler-ca.com>, GUO Zihua <guozihua@huawei.com>, Canfeng Guo <guocanfeng@uniontech.com>, selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 4/6] selinux: improve network lookup failure warnings
-References: <20250318083422.21489-3-cgoettsche@seltendoof.de>
-In-Reply-To: <20250318083422.21489-3-cgoettsche@seltendoof.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411113516.87958-2-quic_msavaliy@quicinc.com>
 
-On Mar 18, 2025 =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de> wrote:
+
+On Fri, 11 Apr 2025 17:05:14 +0530, Mukesh Kumar Savaliya wrote:
+> Add device tree bindings for the Qualcomm I3C controller. This includes
+> the necessary documentation and properties required to describe the
+> hardware in the device tree.
 > 
-> Rate limit the warnings and include additional available information.
-> 
-> Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
 > ---
->  security/selinux/netif.c   | 8 ++++----
->  security/selinux/netnode.c | 4 ++--
->  security/selinux/netport.c | 4 ++--
->  3 files changed, 8 insertions(+), 8 deletions(-)
+>  .../bindings/i3c/qcom,geni-i3c.yaml           | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml
+> 
 
-How many of these messages were you seeing that rate limiting was a
-concern?  Also, what were you doing that was causing this?
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-> diff --git a/security/selinux/netif.c b/security/selinux/netif.c
-> index 43a0d3594b72..38fdba1e64bf 100644
-> --- a/security/selinux/netif.c
-> +++ b/security/selinux/netif.c
-> @@ -141,8 +141,8 @@ static int sel_netif_sid_slow(struct net *ns, int ifindex, u32 *sid)
->  
->  	dev = dev_get_by_index(ns, ifindex);
->  	if (unlikely(dev == NULL)) {
-> -		pr_warn("SELinux: failure in %s(), invalid network interface (%d)\n",
-> -			__func__, ifindex);
-> +		pr_warn_ratelimited("SELinux: failure in %s(), invalid network interface (%d)\n",
-> +				    __func__, ifindex);
->  		return -ENOENT;
->  	}
->  
-> @@ -169,8 +169,8 @@ static int sel_netif_sid_slow(struct net *ns, int ifindex, u32 *sid)
->  	spin_unlock_bh(&sel_netif_lock);
->  	dev_put(dev);
->  	if (unlikely(ret))
-> -		pr_warn("SELinux: failure in %s(), unable to determine network interface label (%d)\n",
-> -			__func__, ifindex);
-> +		pr_warn_ratelimited("SELinux: failure in %s(), unable to determine network interface label (%d):  %d\n",
-> +				    __func__, ifindex, ret);
->  	return ret;
->  }
->  
-> diff --git a/security/selinux/netnode.c b/security/selinux/netnode.c
-> index 8bb456d80dd5..76cf531af110 100644
-> --- a/security/selinux/netnode.c
-> +++ b/security/selinux/netnode.c
-> @@ -228,8 +228,8 @@ static int sel_netnode_sid_slow(const void *addr, u16 family, u32 *sid)
->  
->  	spin_unlock_bh(&sel_netnode_lock);
->  	if (unlikely(ret))
-> -		pr_warn("SELinux: failure in %s(), unable to determine network node label\n",
-> -			__func__);
-> +		pr_warn_ratelimited("SELinux: failure in %s(), unable to determine network node label (%d):  %d\n",
-> +				    __func__, family, ret);
->  	return ret;
->  }
->  
-> diff --git a/security/selinux/netport.c b/security/selinux/netport.c
-> index 7d2207384d40..dadf14984fb4 100644
-> --- a/security/selinux/netport.c
-> +++ b/security/selinux/netport.c
-> @@ -162,8 +162,8 @@ static int sel_netport_sid_slow(u8 protocol, u16 pnum, u32 *sid)
->  out:
->  	spin_unlock_bh(&sel_netport_lock);
->  	if (unlikely(ret))
-> -		pr_warn("SELinux: failure in %s(), unable to determine network port label\n",
-> -			__func__);
-> +		pr_warn_ratelimited("SELinux: failure in %s(), unable to determine network port label (%d:%d):  %d\n",
-> +				    __func__, protocol, pnum, ret);
->  	return ret;
->  }
->  
-> -- 
-> 2.49.0
-
---
-paul-moore.com
