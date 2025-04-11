@@ -1,75 +1,104 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989FF339A1
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E14C26F465;
+	Fri, 11 Apr 2025 00:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744332705; cv=none; b=ciShemotCcWRWmwGTMl9JVB2KArxO2mA6yzITOTM6Py4o+A0n7DyFnCYjcOJ3/o1bW+dLpguKYIL2nnA7WlzcUoZ2gyvSnQ7R8Bnq0EX5/19aQgzfzMmvK4j6wOrrEsD4sbJ1YLIb0cBohpStQUSZGApIr7YGSqlbflS4s6aImY=
+	t=1744332834; cv=none; b=IMsApGOYlNt5K0WD+R+NOh692i+6JMUodzWTgTnb3OY29UXYC4Wi0niISex+iRjs9DVYX4Nf/Fj9TlPl/z4ddMouOTFXCR9gHaJYX+fpvqg/v2viTEJZfOE+nAXaaOAlFx2bqg23aYfrhkYPXWfVDOWk8umm3RSZdG7ezI+C9vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744332705; c=relaxed/simple;
-	bh=IEP3rqifU1tIsQbQc9VDOCa6QO+KC2Gz1sa71nAMnsI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=a6Edm4GrtctRaf0qAxdweb2S56XpICDKektHFoKTeo7qA2FHzGm74UW+I6nlg8uM2cXQZ7OBtgZJwU9cSUDVMgEMa7m+c0gTAAUH1112X3tM5mzVN9n1XKo1c+JaAokd0aCc0vEZn1UehUS4ATdnsj9/1BuP13W/afKPCT8lPXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b4ee2e69bso158332939f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:51:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744332702; x=1744937502;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=idpPrGTfB1fOM/owthYM0865ri8hrMhLiBjxpxye+i0=;
-        b=dBWwvLfRwaA404L5yNjiYAiwiqR0MwOt3Jb9h07LRj6CVwlmbzCwvh6tt96n4cl4o1
-         JRYndDhfoEJNXxsqBx9Mv0kRaso4ciFeYlQnZXWmdB9sjqxRZp7QdJnMUu0RUlxa5jBx
-         uuMjoxhPA/535jkTAd0i6mw+SgnGP0lZqpLv4lytbzeRRAEa2vCV1seNyL1s4BNaVFpT
-         NoJ5k/+Hj8q0vJzhwFhO+/sP1ETh82+8AT6wq+BTMZ3wRRhHPvVT7IJ6zDefIKu9rwzy
-         pOHNjOZj9wQRTcuYLJS+bkpprlD5ukHocFWBSx7T9HmPdCTG0LzvyWyb6kB09q5d4LKj
-         Bu1Q==
-X-Gm-Message-State: AOJu0YykHi+TMm6C7P4PBEn0KAvxKmcTyQrNWeDAfEsf48MWDKiLxF4c
-	il5HTPS+hu/3xEemjDZSv+aiJGhUpBMrLG2m7rLwu0IV5J1lDQXw46Q+RgzWvNket7ka5oJ/wS9
-	MMPIGbfvZoE/DBSDDaq1vJLCpEoB2yMWG5wxaqQ0vqImjKq4gkqeEqWM=
-X-Google-Smtp-Source: AGHT+IGu3uDb0XR6QNjre9vZp+qzyGAKPSx3wCY84ly6nmuBb2M5Bob4FuFXlZk0drLTvahVADgAttYrnd+W+Zp9sOWztdncoy2B
+	s=arc-20240116; t=1744332834; c=relaxed/simple;
+	bh=ohHhBlLmK53yYy+NEi9vJNeM2BRaT/ofomSIVkO2Q2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QhI8M49LIL/MmWoAMS19EcoJZ2cPfmI8G3XxmCA97wNKTU3sw3Z0d4VfhagLfFf1xa1pg9jCrlVnKEaNCi5u3Xwz+qD2ZNWmBmmz1T5yyxBdRfN0q8724V+DxiJoBYl7nH9g8S2Kpm+NUYGhL6ifbbKfQwJ8j5iXNNcn/fEi1Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeCz7UVL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeCz7UVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E2DC4CEDD;
+	Fri, 11 Apr 2025 00:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744332833;
+	bh=ohHhBlLmK53yYy+NEi9vJNeM2BRaT/ofomSIVkO2Q2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AeCz7UVLSJznuAvAEcPJTNJ68f2jtaYwcpI5JoTkxv3uZW70TNCRQQrZoxZEJMp1x
+	 4rJPiU0j3LePmjZb3oGB1LeLzBZXTxJhYkcQkyce+D/HasrYsn6nf3wwJIF2kGaZAB
+	 11aqnxU6LIlYZFyXs/Z9CJ1Drtl1Q3lv8BnaQGwydd9Mihom7t2b8rbO8hd5YAKSPh
+	 BkU2+8av0gCM/7cHF8qnZBuuTAoks46Ru/lxuQ6HFPvbrwgLzncm7Q64wwlXz1OKrU
+	 Vd4akma9pUWj3hytPvIzPQ83dATKNx/fB91qAC7iBauonDN82qPQk+j6b7p7siR2JM
+	 Z3G62zyIPGgpQ==
+Date: Thu, 10 Apr 2025 17:53:51 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Haibo Xu <haibo1.xu@intel.com>
+Cc: xiaobo55x@gmail.com, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] perf symbols: Ignore mapping symbols on riscv
+Message-ID: <Z_hoH0fu_NnEUUfe@google.com>
+References: <20250409025202.201046-1-haibo1.xu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b89:b0:3d3:fdcc:8fb8 with SMTP id
- e9e14a558f8ab-3d7ec2035camr10335485ab.10.1744332702671; Thu, 10 Apr 2025
- 17:51:42 -0700 (PDT)
-Date: Thu, 10 Apr 2025 17:51:42 -0700
-In-Reply-To: <67f818d3.050a0220.355867.000d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f8679e.050a0220.355867.0018.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [ntfs3?] BUG: unable to handle kernel NULL
- pointer dereference in generic_file_read_iter
-From: syzbot <syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250409025202.201046-1-haibo1.xu@intel.com>
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+Hello,
 
-***
+On Wed, Apr 09, 2025 at 10:51:56AM +0800, Haibo Xu wrote:
+> RISCV ELF use mapping symbols with special names $x, $d to
+> identify regions of RISCV code or code with different ISAs[1].
+> These symbols don't identify functions, so will confuse the
+> perf output.
+> 
+> The patch filters out these symbols at load time, similar to
+> "4886f2ca perf symbols: Ignore mapping symbols on aarch64".
+> 
+> [1] https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/
+>     master/riscv-elf.adoc#mapping-symbol
+> 
+> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
 
-Subject: Re: [syzbot] [ntfs3?] BUG: unable to handle kernel NULL pointer dereference in generic_file_read_iter
-Author: lizhi.xu@windriver.com
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-missing direct io func.
-#syz test
+Thanks,
+Namhyung
 
-diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-index 3e2957a1e360..50524f573d3a 100644
---- a/fs/ntfs3/inode.c
-+++ b/fs/ntfs3/inode.c
-@@ -2068,5 +2068,6 @@ const struct address_space_operations ntfs_aops_cmpr = {
- 	.read_folio	= ntfs_read_folio,
- 	.readahead	= ntfs_readahead,
- 	.dirty_folio	= block_dirty_folio,
-+	.direct_IO	= ntfs_direct_IO,
- };
- // clang-format on
+
+> ---
+>  tools/perf/util/symbol-elf.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index fbf6d0f73af9..55b1409b0593 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -1733,6 +1733,12 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  				continue;
+>  		}
+>  
+> +		/* Reject RISCV ELF "mapping symbols" */
+> +		if (ehdr.e_machine == EM_RISCV) {
+> +			if (elf_name[0] == '$' && strchr("dx", elf_name[1]))
+> +				continue;
+> +		}
+> +
+>  		if (runtime_ss->opdsec && sym.st_shndx == runtime_ss->opdidx) {
+>  			u32 offset = sym.st_value - syms_ss->opdshdr.sh_addr;
+>  			u64 *opd = opddata->d_buf + offset;
+> -- 
+> 2.43.0
+> 
