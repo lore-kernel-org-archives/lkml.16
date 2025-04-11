@@ -1,121 +1,145 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BBC27D791;
-	Fri, 11 Apr 2025 06:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E726620468C;
+	Fri, 11 Apr 2025 06:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744354474; cv=none; b=M8jG7ILCHS3ygl5QZz8+5hs1L1DLqWzd6mRiJ6/RHtlC15/ACqX4XON9kNS+DDmk0TmPxQ4WPnE4EEuMiMrlE1CIH9NXdK5Q/xtdhbvPRuPTFaLuTXLpZA5h9G5LPT671Anm2F5a5ieJ+rXleYJvHErRglNdAhaw/NKChYWCaYg=
+	t=1744354578; cv=none; b=mO2Rhsv4T29vcKsDo15cdnFjtTUFPFuCXld4BU4dNwkfADT1/aJZT7LE1es+Ege2eLHKvKQ0ulQ9v6FMQ8/BqIkY+tUWfl2sSidTeUbHHTPOUiVwF5xyA3sp3CVA/1rb+WFgbdfDqq0zRtmQfhQ3u/QmLjI/UGFMCRlCu4QEt+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744354474; c=relaxed/simple;
-	bh=AD4eyDZxuR/f6Z+QbrfpNlGENoSPYRxphAgwFhEw03M=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=dS1pSKVOIWZxG93CCV1hjUn5LKnT9WHNi4FTgJWDZEzxTrMX5ShVsqLO2kxqYmXeQiQNqqQjtQWjI+LTfDH7vfgDkDamSFy2LwlMYCljHaG8qszJyln16G2rafuGTQWqQKsvOj0Pa5pGXYeF+rxZ6gvkGYowgFnTkr980yIWQVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zj5w2QV+; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1744354578; c=relaxed/simple;
+	bh=5WP/vU5PDewgpkWN/3Fd2MxMTnu2oLhshOwmHHIIhR8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lBcTBm3UJy2RNyMHtWWDkyJhze66m++ZSxnEZClqCCyHqOmtd+5pQ9th4mVUMUIRZHE7Vg2qet8+RnuDUXvtt7EAXXxEn4Pj/dNr3ATql+GFd1yWRN9hWSiyk13uynVX6CA8G/p2w/+oWyJyfgmwldRqkAMSd/BmIhCk6xvMeU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eD3F9eDs; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zj5w2QV+"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22928d629faso16678915ad.3;
-        Thu, 10 Apr 2025 23:54:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eD3F9eDs"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736ee709c11so1317444b3a.1;
+        Thu, 10 Apr 2025 23:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744354472; x=1744959272; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EMrPec0FtWGKoKqlWKZKVYlPugkOpwSx2KisPfbkQKU=;
-        b=Zj5w2QV+Yg0TzuHGoRod60Ej3kuo4oYG+P7Gfm6yDk4UFfUpdwaBb7i/jnUCc6qe85
-         5EsFHylsDKp79HmpmA9xOHFRqV40xEI7aE5mURUUtlq4LQ+1r2VgQKELAi+w9mvBdunV
-         zkQ+b9ef0hpGHHibVXFSb2UUgjzcguQSCMTBByovkarf4vkMJuMvwjQwjjFxSOxq6FBQ
-         KOBJFrXmIuATVNybQQ+/K3NN4VsVgjmDGJJ0KPoZKUA0G38VMj9TOpNlPhWut4Zd/X0L
-         xBWzH7dz3nfPfXP71HLJscBVDEsyjrLYYEef5w6IEyH2GzOfiKmOg9vKwRwKAy+YhZ6O
-         LMzg==
+        d=gmail.com; s=20230601; t=1744354576; x=1744959376; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vfuuxX8hIrtK9DMaogg2N+2ARGcrO8WGuGbvU5xMwvU=;
+        b=eD3F9eDswmCCINkfLC9CUzGDd2syKwhh2WSJ76FU+YIfPY55Dp7UgNuVWD5z00dBZn
+         Se0ONiDjRSInfTXyLllOt42vjxCtJYOiRbSOVm3shON0TCepxLKBHNgYSqsSTb4ts7ZB
+         yPFzTED+q70ha0XiL2hjr0/qdrSpfgmdLB6HMCtojHS/kF/aY16A7oXMCa07KLZ5puIV
+         2Kg8t3G95LxNNo1jDksRMkAV9ChmuwE6RZRdOt57+Ohts6+r7ZJMMt0wfAcwQFxW7ala
+         sgCRsrG0NdAZUaXIfpurDutq5UTwPXVH8njPuGlMbqR+/p0jpTriZWOZ3GkmOFY515sl
+         /fBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744354472; x=1744959272;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EMrPec0FtWGKoKqlWKZKVYlPugkOpwSx2KisPfbkQKU=;
-        b=KTCkTDoTBeDXqC2wACG8giYkgDLybwRwWxLgt0sruh4bCh6jBrrjoQnOA2F6fwnmjd
-         eJtMc+wuGwe2rJGQkfMhJlUthc642XD901pfjENaH5VPeiLljnsepVRM4eKxzQP0IhWx
-         DewA8/Fs+3JjLG9SS/1uWrDWdIKfYCyrXwERIkZd7DlSkEdgGX+8M+eVIE+AA1I3jT+U
-         joQCjG0AtODpuGOmTqq8FbOnBykf1RBSxIvOrQFxRUgACn0HNdiD6vX23Pi0Lu1bQdeH
-         +/J9D9cZH8VbIWkhlb36af7nJSWxOaZCf2KzNY4H9cw0C7itYmHmWylJTdp7p+rWKnem
-         OsTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5afdzyYNr1G2tiS2TLPV77rpWJEEfo4bmYkRAtw73JX1vyrVBnCHt/j+QNfE96W2HpS22dOMv0ciELQ==@vger.kernel.org, AJvYcCVQmjxVRaxjVWXc2mKUurLkGObTjAVU1zthlS6Yoi+KKE68ccjkdrnhEIQEgDv/ocX4EXxJObokKP4S96o=@vger.kernel.org, AJvYcCXzgWijLxnxwuyVShGZ3A6j/j0JR8M2rG23UaGSidmEgTIOfXYJwzHQbUQOsd7Oz/2MAiSt8vn0SwGiSQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjGlDYRkHrV7V0TH62aYWrS/R/Eb4l4+fQk+hbORrJOZ3JYwIr
-	0ALVKlGStrebc8ckYuio74/iDC6EL+dK1ArtzQBeTvPaxhhIENKC
-X-Gm-Gg: ASbGncvcIFybe0/Z8P/5Neq/6/FuFMFU59lfSa7tzXVKTVEgVvqiQ1vKvAVumBBMkJr
-	dcfcMcQuwjp/+UGi3nFsHiR6SN6tmtXqpR51lXxJ55dDUpMOfLuMtuZW2SUBAuerkTNEvxDxXbK
-	w7x0dFM5/gGNH0IGDz3oTT7HEvda+kX/oC4rRUru63Qc7ERQyY5oTO+mYEWQELbrwfU0PyZIIdi
-	l6/O+SiGIoimQeR/4hmNi9aZBLKRY0/ng9Y4fU/ZmSSu3VY5XqQd33FlsEhKLEAN+xMqSScWdKc
-	PisuF/pGaQUsHvg2Qa8pDLbY7ZFm5ZsPFA==
-X-Google-Smtp-Source: AGHT+IGSH0OgLf53VF7UhNZNnJ/VcLJp7S3R1+Mq4jeyNCKlAufgShNsDG1jyYvvXL3wLn/jNMdw9A==
-X-Received: by 2002:a17:902:ce8a:b0:224:191d:8a87 with SMTP id d9443c01a7336-22bea4bc62emr24301425ad.26.1744354472347;
-        Thu, 10 Apr 2025 23:54:32 -0700 (PDT)
-Received: from localhost ([220.253.99.94])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd23342ddsm728537b3a.164.2025.04.10.23.54.27
+        d=1e100.net; s=20230601; t=1744354576; x=1744959376;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfuuxX8hIrtK9DMaogg2N+2ARGcrO8WGuGbvU5xMwvU=;
+        b=LwNEmSI6d04j2yd8hbZqvyTmmj8BUUhFAL+C0/SaVs4SVTnrgXzwBUCg5JDLxE/pJz
+         PagQIiy7Oge4kfQa0XvxkeN0c3OqVAEgfVuueQWOuXugQ/tJImx2vYtq1CqQsn/txoMS
+         aEw061fzGh3WmTPmiLxmIMGciMMTBLy0P/zU3PmfbmHEq2+M8Xf4041Zj055UAC7sEQb
+         aBjKAYk2ktJ85hBl1ar0raMQaGqbZH6Lp9ZksxyZLzH/mQBRHzRXNEG6Y4eCMfPfc24j
+         cIrCgyBwSnzt0zaK9vGYh426e/89hQwACWj+ylvb5VSjrPyJvmiHpuD3JDqfQL1Rbhe9
+         JOiw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/uN6lBY0+khh04UJ3wERxIuS67as/t2Ni4t/D2lUmU+69O5GSLgiLf2kGy9jZIQUSAERti3gpsVl9GjbZ@vger.kernel.org, AJvYcCVu/ltO4L5Z9YZhuFhWWZogGEtlS7pXaYIyRhae5fIFHoWWR50dGWSxY6IVFBG++V/ZIMak4RBPyxopsQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsnk8QLvArgBtiTzxg13C7f1izNtuWq1E4OBWKgoVL1a4v5vyg
+	9ftDPaYMV+yaWEE1z6ZDWStdIdBuhADE3OQFG/STWBc+ZupeKCn2
+X-Gm-Gg: ASbGncvdu89ZY6n4AHiSRy+1QNB/WlD+AHbkhwjNOxEtbLw1f5J3ckiebszvAOpNWzl
+	0nBDtcNwsCiAK/dj9oHY5NdzpjcEtBGs5wRGRZhoDb0WVTZueoDgCHU3KbEJ3uilzvl5n0ltGM1
+	JBk0i1QonCV1gA+Sdb3PlJAnL0icRbGCilO0mZI2JYKFKO+UaI/tYHO7r1hfc37GoH56bIz35HC
+	U93rgEtQ1lfIz10sRzNJX3S3FU1kKtcLmK/089+Va3LKxS2ytYblkhOZfqVN+IIQ8iECoCWdY8+
+	viOy8CFXEWhDg0c66fimKPrrxa07Ds3yIkAE9xDdqnE2neA6AA==
+X-Google-Smtp-Source: AGHT+IGezBemc+XoSzOeO1EuLMONf4zEDZd2si8T3oAdFqqazHTyYZyGFQbn07TBHpCAxJh6ZeuV3Q==
+X-Received: by 2002:a05:6a21:6d84:b0:1f5:535c:82d6 with SMTP id adf61e73a8af0-201799831dbmr2591357637.35.1744354576060;
+        Thu, 10 Apr 2025 23:56:16 -0700 (PDT)
+Received: from [192.168.0.161] ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0cf2eb3sm4117955a12.24.2025.04.10.23.56.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 23:54:31 -0700 (PDT)
+        Thu, 10 Apr 2025 23:56:15 -0700 (PDT)
+Message-ID: <26872134-1022-4cd5-bd04-215d54c55791@gmail.com>
+Date: Fri, 11 Apr 2025 12:26:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 11 Apr 2025 16:54:25 +1000
-Message-Id: <D93M1ULKMFVB.FY9I2463RQ68@gmail.com>
-Cc: "Hugh Dickins" <hughd@google.com>, "Guenter Roeck" <linux@roeck-us.net>,
- "Juergen Gross" <jgross@suse.com>, "Jeremy Fitzhardinge" <jeremy@goop.org>,
- <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
- <kasan-dev@googlegroups.com>, <sparclinux@vger.kernel.org>,
- <xen-devel@lists.xenproject.org>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-s390@vger.kernel.org>
-Subject: Re: [PATCH v1 1/4] kasan: Avoid sleepable page allocation from
- atomic context
-From: "Nicholas Piggin" <npiggin@gmail.com>
-To: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>
-X-Mailer: aerc 0.19.0
-References: <cover.1744037648.git.agordeev@linux.ibm.com>
- <ad1b313b6e3e1a84d2df6f686680ad78ae99710c.1744037648.git.agordeev@linux.ibm.com>
-In-Reply-To: <ad1b313b6e3e1a84d2df6f686680ad78ae99710c.1744037648.git.agordeev@linux.ibm.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hwmon: max31827: Fix uninitialized variable lsb_idx in
+ max31827_init_client
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250410194833.21366-1-purvayeshi550@gmail.com>
+ <f0ad5113-eab9-4e71-8363-1b7a005189c4@roeck-us.net>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <f0ad5113-eab9-4e71-8363-1b7a005189c4@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue Apr 8, 2025 at 1:11 AM AEST, Alexander Gordeev wrote:
-> apply_to_page_range() enters lazy MMU mode and then invokes
-> kasan_populate_vmalloc_pte() callback on each page table walk
-> iteration. The lazy MMU mode may only be entered only under
-> protection of the page table lock. However, the callback can
-> go into sleep when trying to allocate a single page.
->
-> Change __get_free_page() allocation mode from GFP_KERNEL to
-> GFP_ATOMIC to avoid scheduling out while in atomic context.
->
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> ---
->  mm/kasan/shadow.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
-> index 88d1c9dcb507..edfa77959474 100644
-> --- a/mm/kasan/shadow.c
-> +++ b/mm/kasan/shadow.c
-> @@ -301,7 +301,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, un=
-signed long addr,
->  	if (likely(!pte_none(ptep_get(ptep))))
->  		return 0;
-> =20
-> -	page =3D __get_free_page(GFP_KERNEL);
-> +	page =3D __get_free_page(GFP_ATOMIC);
->  	if (!page)
->  		return -ENOMEM;
-> =20
+On 11/04/25 01:31, Guenter Roeck wrote:
+> On Fri, Apr 11, 2025 at 01:18:33AM +0530, Purva Yeshi wrote:
+>> Fix Smatch-detected issue:
+>> drivers/hwmon/max31827.c:564 max31827_init_client() error:
+>> uninitialized symbol 'lsb_idx'.
+>>
+>> ​In the max31827_init_client() function, the variable lsb_idx is assigned
+>> a value only when data has exactly one bit set (hweight32(data) == 1).
+>> If this condition isn't met, lsb_idx remains uninitialized, leading to
+>> undefined behavior when it's subsequently used.
+> 
+> That is not correct.
+> 
+>>
+>> Ensure that data is non-zero and has exactly one bit set before
+>> calling __ffs(data) to determine lsb_idx. Additionally, verify that
+>> lsb_idx does not exceed 4. This approach prevents the use of an
+>> uninitialized lsb_idx and resolves the Smatch warning.
+>>
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>> ---
+>>   drivers/hwmon/max31827.c | 9 ++++++---
+>>   1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/max31827.c b/drivers/hwmon/max31827.c
+>> index 48e8f8ba4d05..c62eaf186d9d 100644
+>> --- a/drivers/hwmon/max31827.c
+>> +++ b/drivers/hwmon/max31827.c
+>> @@ -558,10 +558,13 @@ static int max31827_init_client(struct max31827_state *st,
+>>   		/*
+>>   		 * Convert the desired fault queue into register bits.
+>>   		 */
+>> -		if (data != 0)
+>> -			lsb_idx = __ffs(data);
+> 
+> lsb_idx is assigned if data != 0, not if hweight32(data) == 1 ...
+> 
+>> +		if (data == 0 || hweight32(data) != 1) {
+>> +			dev_err(dev, "Invalid data in adi,fault-q\n");
+>> +			return -EINVAL;
+>> +		}
+>>   
+>> -		if (hweight32(data) != 1 || lsb_idx > 4) {
+> 
+> ... and if hweight32(data) != 1, it bails out here before using lsb_idx.
+> The problem you describe does not exist.
+> 
+> Guenter
 
-Oh of course you can't make it GFP_KERNEL after the
-patch to take ptl even for archs that don't use lazy
-mmu.
+Thank you for reviewing the patch and clarifying the behavior regarding 
+lsb_idx. I understand the existing control flow.​
 
-Thanks,
-Nick
+> 
+>> +		lsb_idx = __ffs(data);
+>> +		if (lsb_idx > 4) {
+>>   			dev_err(dev, "Invalid data in adi,fault-q\n");
+>>   			return -EINVAL;
+>>   		}
+>> -- 
+>> 2.34.1
+>>
+
+Best regards,
+Purva
