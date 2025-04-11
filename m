@@ -1,83 +1,185 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A2E221FDA
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C771221FDB;
+	Fri, 11 Apr 2025 17:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744391169; cv=none; b=CUx8JnyRz6TPMmQB/jAtI4CFDFKi2YoMSgh1fyiDjYXC4fNANXEpI4D5ZKR4ia3+5TqprTCV+q/OSmqvi+2CIOZF1JlfjcaC5cQzc0MKoekOhxTZEzrehXZorLoK0n5DtDUPAf51aahFwexuJmRgabd7UhVE8q7OG1c9g7i0abs=
+	t=1744391177; cv=none; b=CFYwU7AyMhj9PRsLNrDF2JGL9pZ6o0rKH79nusatDiLBXOybUVzwRmzfseLwpEHrZPNe9R8Js4Ot9BPFukfb8hw8LnxU+1yMma3TgNtBul8ApFUYnu0ZJRnpLkr4Hn3GszfHNSsGvlhHfUGE8MlBCRmu7OJFIdilyt+mgHL6drw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744391169; c=relaxed/simple;
-	bh=fINXpZWLyb0M8y4RLoMLlTf+NC6oxDWOp6G4HE2YyC0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=aWMgugtdTBzW/UT0NUcVRGl8EmX6YTaY00o/KB19Lcny7ZfC6EhcBoNAFaO4txrCPf5WaCjTDpYIxAhhtMCyBdVCobEhLftJrg2cPnLK2IBkljfmxKLOrKd3n+xHP5JG0Kg2kjnhEOq9sL+MxBD98FYtygHg3IrSYLBF2WsJ9Nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d5d6c997d2so21828475ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:06:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744391167; x=1744995967;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tDkd2xkO9DmzeJHD8IW67m+nmrFduYYu+jMcteSAmww=;
-        b=ksuLamoZUjQNUyLE5catWG3Qlq+r6U2jkJ66FgmH99mVxxlyZPEJ0FLslvs9Xs2PSh
-         SIeiFhhMz6mhJ6TxPiZAMd/OgGE0zJ5wZMJ3p2Gff4FiHXqfGYlG3O9d8yKGHP8n3f0Q
-         pJPQtdM5SVtHEfEgISbkC3H5L3BbzcnTWqi18va9iZqdz/fN92ePcp9OaEgXEzYEUydf
-         yaSCPd0KkFTlkoFTYjjB1uikjl0gfdPBUDQEJKKdUF0u4A9GT90XnWIf1WwqFq4ru7yu
-         pxJvc7HZtRf6aIN5yImPTWLeQrFXmdxJ8wQwYhg38xI5ey1A8nw8UU0kdmHS64hTZMjG
-         5kvA==
-X-Gm-Message-State: AOJu0Yx6Fsf0NbBI79XYrqufMOUdSllmTNSNEHKJhePqfNVBfhn3UQw5
-	4c9JG/vIwa2csmLiPZLEPj3u68I7rxDr3+Y7Q2p/JYw8KTkAbYwRCDaLrvqqYFL2yJ0Dm9r+bsR
-	0wLwQnpxDszaNjkhDzkJqFB7Xe2ZhPVDw8nWYJID9xIXb6Rhwx++TCT8=
-X-Google-Smtp-Source: AGHT+IFubsGiI8M39KW4/CkseSwaMxCXNG8WWIJfHm2tL7xuBMjlTv+eKtJiYeyXulv2fmEl/h6SgfRGUA4gVJgy46tT4GFetJe+
+	s=arc-20240116; t=1744391177; c=relaxed/simple;
+	bh=LCpOJCeSOBB59YaAWLr3Fa430+JRYrnTRAqBnQl3nDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VT6EKXsbGk7w9r+6TmZeqLWCjIdX7KQhJJXjb/1F4/EQcxX27yf25HQPuffhNbrSnKRxadYeSRwfsz3BTQ7AtZ/s+JGgZDuxd764mCiNWRwoagQnf26iRz1mYS1sFu1bvLiiA9b3Xnmv4hbbDQLBFN1JpJ1Gm9DmsGGGJdnc9qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khB2ukdP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khB2ukdP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD2DC4CEE2;
+	Fri, 11 Apr 2025 17:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744391176;
+	bh=LCpOJCeSOBB59YaAWLr3Fa430+JRYrnTRAqBnQl3nDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=khB2ukdP9E7ti/hWeipsjfCxlbBBJqi3+4gJYHi5XMJbNV9jvfxiVYgF5eMeVvMoa
+	 Y0UlV7DtSyHXnwwQoa9s7A7jz5vJ73aMZ0wmHZljZzU/jZMALX0Vl0wmdCI5opihXS
+	 iq7OwCh0j6bwL78DWHoXhkB0Kogu+9cn8b+cGzAuxm/a4n6xw6wAJzrmsPaMIFyBQa
+	 18iLaTQdaEYxrtDSnBK3RJZfsPvuB91u03+NXu5auzG7SFmf7VY6LgvngbYuNyTKsV
+	 PxzbSPg6vsnuSmPgkJiG/R0WQnVrShiYHxTC1pB+e82PHEbDpKZBdF774NhGdOGwMw
+	 wgydXuYTfOPIg==
+Date: Fri, 11 Apr 2025 19:06:09 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 18/24] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <Z/lMASBtEVggMyV/@lpieralisi>
+References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
+ <20250408-gicv5-host-v1-18-1f26db465f8d@kernel.org>
+ <877c3uuy7u.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b07:b0:3d1:a34b:4d01 with SMTP id
- e9e14a558f8ab-3d7ec202344mr40883735ab.8.1744391167328; Fri, 11 Apr 2025
- 10:06:07 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:06:07 -0700
-In-Reply-To: <000000000000c80abd0616517df9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f94bff.050a0220.378c5e.0001.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [bpf?] possible deadlock in queue_stack_map_push_elem
-From: syzbot <syzbot+252bc5c744d0bba917e1@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877c3uuy7u.ffs@tglx>
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On Tue, Apr 08, 2025 at 11:42:29PM +0200, Thomas Gleixner wrote:
 
-***
+[...]
 
-Subject: Re: [syzbot] [bpf?] possible deadlock in queue_stack_map_push_elem
-Author: memxor@gmail.com
+> > +static int gicv5_ppi_irq_set_irqchip_state(struct irq_data *d,
+> > +					   enum irqchip_irq_state which,
+> > +					   bool val)
+> > +{
+> > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> > +
+> > +	switch (which) {
+> > +	case IRQCHIP_STATE_PENDING:
+> > +		if (val) {
+> > +			if (d->hwirq < 64)
+> > +				write_sysreg_s(hwirq_id_bit,
+> > +					       SYS_ICC_PPI_SPENDR0_EL1);
+> > +			else
+> > +				write_sysreg_s(hwirq_id_bit,
+> > +					       SYS_ICC_PPI_SPENDR1_EL1);
+> > +
+> > +		} else {
+> > +			if (d->hwirq < 64)
+> > +				write_sysreg_s(hwirq_id_bit,
+> > +					       SYS_ICC_PPI_CPENDR0_EL1);
+> > +			else
+> > +				write_sysreg_s(hwirq_id_bit,
+> > +					       SYS_ICC_PPI_CPENDR1_EL1);
+> > +		}
+> > +
+> > +		return 0;
+> > +	case IRQCHIP_STATE_ACTIVE:
+> > +		if (val) {
+> > +			if (d->hwirq < 64)
+> > +				write_sysreg_s(hwirq_id_bit,
+> > +					       SYS_ICC_PPI_SACTIVER0_EL1);
+> > +			else
+> > +				write_sysreg_s(hwirq_id_bit,
+> > +					       SYS_ICC_PPI_SACTIVER1_EL1);
+> > +		} else {
+> > +			if (d->hwirq < 64)
+> > +				write_sysreg_s(hwirq_id_bit,
+> > +					       SYS_ICC_PPI_CACTIVER0_EL1);
+> > +			else
+> > +				write_sysreg_s(hwirq_id_bit,
+> > +					       SYS_ICC_PPI_CACTIVER1_EL1);
+> > +		}
+> 
+> You already precalculate hwirq_id_bit. Can't you do something similar
+> for the registers?
+> 
+> 	case IRQCHIP_STATE_PENDING:
+>         	u32 reg = val ? SYS_ICC_PPI_SPENDR1_EL1 : SYS_ICC_PPI_SPENDR0_EL1;
+> 
+>                 write_sysreg_s(hwirq_id_bit, reg);
+>                 return 0;
+> 	case IRQCHIP_STATE_ACTIVE:
+>                 ....
+> 
+> Ditto in the get_state() function.
+> 
+> No?
 
-#syz test: https://github.com/kkdwivedi/linux.git res-lock-next
+Can't do it like that, write_sysreg_s takes a register encoding, not a
+u32 offset, I will see if I can wrap it in a macro, even though that
+might obfuscate a bit rather than clarify.
 
-On Thu, 10 Apr 2025 at 15:08, syzbot
-<syzbot+252bc5c744d0bba917e1@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> unregister_netdevice: waiting for DEV to become free
->
-> unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
->
->
-> Tested on:
->
-> commit:         e403941b bpf: Convert ringbuf.c to rqspinlock
-> git tree:       https://github.com/kkdwivedi/linux.git res-lock-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1511f74c580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ea2b297a0891c87e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=252bc5c744d0bba917e1
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
->
-> Note: no patches were applied.
+> > +static asmlinkage void __exception_irq_entry
+> > +gicv5_handle_irq(struct pt_regs *regs)
+> > +{
+> > +	u64 ia;
+> > +	bool valid;
+> > +	u32 hwirq;
+> 
+> See above
+> 
+> > +	ia = gicr_insn(GICV5_OP_GICR_CDIA);
+> > +	valid = GICV5_GIC_CDIA_VALID(ia);
+> 
+> And please move that to the declaration lines
+
+gicr_insn() is an instruction ACK'ing the IRQ, I would leave it like this
+explicitly if you don't mind lest it gave the impression that it
+is an initializer.
+
+Thanks,
+Lorenzo
+
+> > +static int __init gicv5_init_domains(struct fwnode_handle *handle)
+> > +{
+> > +	gicv5_global_data.fwnode = handle;
+> > +	gicv5_global_data.ppi_domain = irq_domain_create_linear(
+> > +		handle, 128, &gicv5_irq_ppi_domain_ops, NULL);
+> 
+> The ever changing choice of coding styles across functions is really
+> interesting. Obviously the length of 'gicv5_global_data.ppi_domain'
+> forces ugly, but that does not mean it needs to be that way:
+> 
+>        struct irqdomain *d;
+> 
+>        d = irq_domain_create_linear(handle, 128, &gicv5_irq_ppi_domain_ops, NULL);
+>        if (!d)
+>        		return - ENOMEM;
+> 
+>        irq_domain_update_bus_token(d, DOMAIN_BUS_WIRED);
+>        gicv5_global_data.fwnode = handle;
+>        gicv5_global_data.ppi_domain = d;
+>        return 0;
+> 
+> No?
+> 
+> > +static int __init gicv5_of_init(struct device_node *node,
+> > +				struct device_node *parent)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = gicv5_init_domains(&node->fwnode);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	gicv5_set_cpuif_pribits();
+> > +
+> > +	ret = gicv5_starting_cpu(smp_processor_id());
+> 
+> You invoke the CPU hotplug callback for the boot CPU explicitly, but
+> what the heck installs the actual hotplug callback for the secondary
+> CPUs?
+> 
+> Thanks,
+> 
+>         tglx
