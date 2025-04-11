@@ -1,96 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091E51F3B89;
-	Fri, 11 Apr 2025 13:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CD71C863E
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744379843; cv=none; b=ZZr0ZrtAUjlOkHi/6Y1lBLBFPMSuxhYH0UbZd19QeLGG4ONxxSN/zF89fISVsSLG9cfM8ToVeEpZO7qGTdarZhxJ/YNySgtXqEwdD6vB1YThGS0k4O2CD29nw3lwNEmne7N/+o2ypJC79rgEnv/CPDsecpwYLNw8tmP3/YZWy7w=
+	t=1744379918; cv=none; b=KIYhEgTxopAp/cT7vu+AMNoxLHmSiE4PTVACQQpohJ+FDLeTY+XhocZzdEi8C6gs5LlR7CEE1+Hl6x4BaQfSRR7RJOO1cOclENBG1wRbivI7i+hupRi4NlnkKFvKrmgvLWBuP9bG1X27lh7kY16kGGo5Zp5QQdsj3jz4jAGTN3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744379843; c=relaxed/simple;
-	bh=qKM86nHSsdV+O0qGr33nuoJcLArnt2t2yHur6JnRC5Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IdbJDS4zlNOq4peBXWqKt0DCmpkqOhdsX3t8x3kDfMnLOhdMiH9ikBfvMiSfjufM8EHLe2mI3OT/4Yne1QJ5jmcUUezGgY/MkTfbX9Mcw2ryXO70WjGY3CYNAGob/TijjJD8UnV5QYc82W/Sp1arJOt7Hv3Ego154JiiR3uOy3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XrCatCov; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744379918; c=relaxed/simple;
+	bh=vDnLG72LCYd10fHlImIqsQps4BBiquf11s9rZSx7hyQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=izTQTX8nCxo4K2bOGougReAvlBohpvqP9X5i0NRB5mwdxTglK5LSmMaER1D+i0bUs0nAifn7TWlhZ8KELyRZ78ZjQQTAssnOSh5FCRwQkB/s2Gixdg0c1+SKUQusgpl6WsvQ29pwI17z1eEF+i9Hxa3LDnnLIraI3bGvYefvi/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c7BDzRiH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XrCatCov"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 029D9C4CEE7;
-	Fri, 11 Apr 2025 13:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744379842;
-	bh=qKM86nHSsdV+O0qGr33nuoJcLArnt2t2yHur6JnRC5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XrCatCovTvxZdMoG/QMZeli3flXHRA/5zIqVIf8nzEVPAPp2VuigF+znX/J02B1ua
-	 TpQsDPU8lQQxB4f3WL+KtohICnlRh8Bfkpp5tb2Q1tHGiRD2zWmh82x5dKCb9GKfpf
-	 YOQr+EcBpZTgZdOnpvg++nWW5DLcAtEDPRokb678=
-Date: Fri, 11 Apr 2025 15:57:19 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: core: warn if a GFP zone flag is passed to
- hcd_buffer_alloc()
-Message-ID: <2025041110-starch-abroad-5311@gregkh>
-References: <20250320154733.392410-1-ptesarik@suse.com>
- <20250325134000.575794-1-ptesarik@suse.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7BDzRiH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744379912;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pkb2rwVHMrQO1vrCc1zgV2cwtlIuml/FIIAdKay+62E=;
+	b=c7BDzRiHTidn8I/brcxUBI5ghJEjmOZcUj7khvAg+WEWDK5G2FJf6i3Z8Qf5LY+1I7uzUx
+	8gpVdZ9A4fAlyWKjueBb8ZLH1JxLs+sQyWUFDNg0PM924XejiSAUJziDja3BHIcfakq1gx
+	/Nfum6xrxObyLLd6sdN7Y7q8hmiUIP8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-692-h-qS1FRYO-y5ttDd6TFTNQ-1; Fri,
+ 11 Apr 2025 09:57:19 -0400
+X-MC-Unique: h-qS1FRYO-y5ttDd6TFTNQ-1
+X-Mimecast-MFC-AGG-ID: h-qS1FRYO-y5ttDd6TFTNQ_1744379838
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A6ABD180034D;
+	Fri, 11 Apr 2025 13:57:17 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.58.2])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 21A7419560AD;
+	Fri, 11 Apr 2025 13:57:15 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Omar Sandoval <osandov@osandov.com>, Sargun Dillon <sargun@sargun.me>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] nfs: don't share pNFS DS connections between net
+ namespaces
+Date: Fri, 11 Apr 2025 09:57:13 -0400
+Message-ID: <1587C44B-7BDE-4B36-8CE6-C654CB154228@redhat.com>
+In-Reply-To: <20250410-nfs-ds-netns-v2-1-f80b7979ba80@kernel.org>
+References: <20250410-nfs-ds-netns-v2-0-f80b7979ba80@kernel.org>
+ <20250410-nfs-ds-netns-v2-1-f80b7979ba80@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325134000.575794-1-ptesarik@suse.com>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, Mar 25, 2025 at 02:40:00PM +0100, Petr Tesarik wrote:
-> Remove a misleading comment and issue a warning if a zone modifier is
-> specified when allocating a hcd buffer.
-> 
-> There is no valid use case for a GFP zone modifier in hcd_buffer_alloc():
-> - PIO mode can use any kernel-addressable memory
-> - dma_alloc_coherent() ignores memory zone bits
-> 
-> This function is called by usb_alloc_coherent() and indirectly by
-> usb_submit_urb(). Despite the comment, no in-tree users currently pass
-> GFP_DMA.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
->  drivers/usb/core/buffer.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/core/buffer.c b/drivers/usb/core/buffer.c
-> index 87230869e1fa..10844cd42e66 100644
-> --- a/drivers/usb/core/buffer.c
-> +++ b/drivers/usb/core/buffer.c
-> @@ -108,10 +108,6 @@ void hcd_buffer_destroy(struct usb_hcd *hcd)
->  }
->  
->  
-> -/* sometimes alloc/free could use kmalloc with GFP_DMA, for
-> - * better sharing and to leverage mm/slab.c intelligence.
-> - */
-> -
->  void *hcd_buffer_alloc(
->  	struct usb_bus		*bus,
->  	size_t			size,
-> @@ -128,6 +124,12 @@ void *hcd_buffer_alloc(
->  	if (hcd->localmem_pool)
->  		return gen_pool_dma_alloc(hcd->localmem_pool, size, dma);
->  
-> +	/*
-> +	 * Zone modifiers are ignored by DMA API, and PIO should always use
-> +	 * GFP_KERNEL.
-> +	 */
-> +	WARN_ON_ONCE(mem_flags & GFP_ZONEMASK);
+On 10 Apr 2025, at 16:42, Jeff Layton wrote:
 
-You just rebooted the box if this happens, do you REALLY want to do
-that?  People generally do not like their data lost :(
+> Currently, different NFS clients can share the same DS connections, even
+> when they are in different net namespaces. If a containerized client
+> creates a DS connection, another container can find and use it. When the
+> first client exits, the connection will which can lead to stalls in
 
-Why not just fix the callers, OR if this really isn't going to be
-allowed, return an error and just fail the whole submission?  And stick
-around to fix up all of the drivers that end up triggering this...
+                                         ^^ close ?
 
-thanks,
+> other clients.
+>
+> Add a net namespace pointer to struct nfs4_pnfs_ds, and compare those
+> value to the caller's netns in _data_server_lookup_locked() when
+> searching for a nfs4_pnfs_ds to match.
+>
+> Reported-by: Omar Sandoval <osandov@osandov.com>
+> Reported-by: Sargun Dillon <sargun@sargun.me>
+> Closes: https://lore.kernel.org/linux-nfs/Z_ArpQC_vREh_hEA@telecaster/
+> Tested-by: Sargun Dillon <sargun@sargun.me>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-greg k-h
+Looks good to me,
+
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+
+Ben
+
