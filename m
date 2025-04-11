@@ -1,53 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541F929B20E;
-	Fri, 11 Apr 2025 12:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C732729AB05
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744373900; cv=none; b=V2uUtNX1fj25yyUG4VD4k3Ddq6z4nZ0d3i2c+CngYTDcTAXMSv2XTG9Bxm+WonLxFKTkfGIFTK1rmskAjoU+ZQuh2IWkAHAiOkv4YIc+Sy4ow4ZK2h1moYyaxknEOA8YP22JmnN+pjW2VpX7hp+8TqnOfgIEq96VX+eDPF5gRO0=
+	t=1744373901; cv=none; b=N/D6fCkYTwa0B9S05tfAgrHBbsq8+x3XLGRwv5wkZotvZl9jvllCxzB+xl2XdkgxktgchnPszZqDpxQk6N5IhyUaLddt5SMM/CLOPgAWSm/5tbOI4KUD+p0c54Bd4NGzTAc9+FOKml7OhTaECV7Rn+6KwPeZAQICkyijMpRGSE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744373900; c=relaxed/simple;
-	bh=ILfVuLymqUPwgpbXMf4YH+PUBfgIPrXUs3zMoGXuMG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WKy6crTAzenHnNx67kVF6AcT/+n57d4PzcLXMusBgAXPnOOwd3wwKfoLPLKM/YoE+GszfK9mkKiD1+8WRIIKyBtjXgyAbWyev89SCEMleTHuq71l0D+184VUNC35s8BwW52UDGlHFNuyLHodlhavkIS/a4jl2hagk0qxpvHxoXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOCDrYZR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOCDrYZR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6115AC4CEE8;
-	Fri, 11 Apr 2025 12:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744373899;
-	bh=ILfVuLymqUPwgpbXMf4YH+PUBfgIPrXUs3zMoGXuMG8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cOCDrYZR6R/5SQR7qt2WRm4ouWUXMr0x8dqu1ptJuSyIhVHnp5a5bWxzhWkoZBy26
-	 wzi4WkY31gXKWHj6mgfNi3hst7RBJ9Qln8BPP7E9OzSUOaTARc36DHZ+Danc/I9uiB
-	 JM3L6sQAwaeoSj4K63I8TnzBtlv6L4jGjd6lG7tXV0If3344IsGAI9Z2uI4H9aSK44
-	 jU113xH8J3am0Gz9iPxpgAEbNoxjxvGvem2dVa1mDgpcn/jb5QC2i/HbihbGJ8N2EU
-	 /zl95lNEGWv7iwHdGk1qhpWB7bFFLW1b6szpB7TBtuu8oleZ4JnuwjBjMv9DyV3W5f
-	 JtQ2ClK1kC+xA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
+	s=arc-20240116; t=1744373901; c=relaxed/simple;
+	bh=penylcrZjRjoRlt2DxZgzg5QOoQPPyQfH7KISVKYXtg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ewBEJxOtD1wGeHEcgdmpTihRfV8A0Ppti4TkP9vozBeAA46ZDU0UU/oPYWYE9pyJQVQX0luGTFz30AdBF2N7VTrltyEx6ennwPHQXvbHb8BC77OW/ENfBcIdU4uolUAX8ifpoUwZOBpQEXh+NCBbyg0AsjQA8AJNx614pmrG+kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u3DKZ-0006JY-Fv; Fri, 11 Apr 2025 14:17:59 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u3DKY-004Qkc-2A;
+	Fri, 11 Apr 2025 14:17:58 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u3DKY-002PCM-1k;
+	Fri, 11 Apr 2025 14:17:58 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Sebastian Reichel <sre@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCHv2 perf/core 2/2] selftests/bpf: Add 5-byte nop uprobe trigger bench
-Date: Fri, 11 Apr 2025 14:17:56 +0200
-Message-ID: <20250411121756.567274-2-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250411121756.567274-1-jolsa@kernel.org>
-References: <20250411121756.567274-1-jolsa@kernel.org>
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
+	Guenter Roeck <groeck@chromium.org>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	chrome-platform@lists.linux.dev
+Subject: [PATCH v8 7/7] Documentation: Add sysfs documentation for PSCRR reboot reason tracking
+Date: Fri, 11 Apr 2025 14:17:57 +0200
+Message-Id: <20250411121757.573419-8-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250411121757.573419-1-o.rempel@pengutronix.de>
+References: <20250411121757.573419-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,124 +63,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
-uprobes/uretprobes on top of nop5 instruction.
+Add documentation for the Power State Change Reason Recorder (PSCRR)
+sysfs interface, which allows tracking of system shutdown and reboot
+reasons. The documentation provides details on available sysfs entries
+under `/sys/kernel/pscrr/`, explaining their functionality, example usage,
+and how they interact with different backend storage options (e.g., NVMEM).
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
 ---
- tools/testing/selftests/bpf/bench.c           | 12 ++++++
- .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
- .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
- 3 files changed, 55 insertions(+), 1 deletion(-)
+changes v8:
+- Simplify and clarify example sysfs value comments
+- Add note that not all values are meaningful on every system
+changes v7:
+- document expected values
+---
+ .../ABI/testing/sysfs-kernel-reboot-pscrr     | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
 
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index 1bd403a5ef7b..0fd8c9b0d38f 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -526,6 +526,12 @@ extern const struct bench bench_trig_uprobe_multi_push;
- extern const struct bench bench_trig_uretprobe_multi_push;
- extern const struct bench bench_trig_uprobe_multi_ret;
- extern const struct bench bench_trig_uretprobe_multi_ret;
-+#ifdef __x86_64__
-+extern const struct bench bench_trig_uprobe_nop5;
-+extern const struct bench bench_trig_uretprobe_nop5;
-+extern const struct bench bench_trig_uprobe_multi_nop5;
-+extern const struct bench bench_trig_uretprobe_multi_nop5;
-+#endif
- 
- extern const struct bench bench_rb_libbpf;
- extern const struct bench bench_rb_custom;
-@@ -586,6 +592,12 @@ static const struct bench *benchs[] = {
- 	&bench_trig_uretprobe_multi_push,
- 	&bench_trig_uprobe_multi_ret,
- 	&bench_trig_uretprobe_multi_ret,
-+#ifdef __x86_64__
-+	&bench_trig_uprobe_nop5,
-+	&bench_trig_uretprobe_nop5,
-+	&bench_trig_uprobe_multi_nop5,
-+	&bench_trig_uretprobe_multi_nop5,
-+#endif
- 	/* ringbuf/perfbuf benchmarks */
- 	&bench_rb_libbpf,
- 	&bench_rb_custom,
-diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-index 32e9f194d449..82327657846e 100644
---- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-@@ -333,6 +333,20 @@ static void *uprobe_producer_ret(void *input)
- 	return NULL;
- }
- 
-+#ifdef __x86_64__
-+__nocf_check __weak void uprobe_target_nop5(void)
-+{
-+	asm volatile (".byte 0x0f, 0x1f, 0x44, 0x00, 0x00");
-+}
+diff --git a/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr b/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
+new file mode 100644
+index 000000000000..96369422ed6e
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
+@@ -0,0 +1,74 @@
++What:		/sys/kernel/pscrr/reason
++Date:		April 2025
++KernelVersion:  6.16
++Contact:	Oleksij Rempel <o.rempel@pengutronix.de>
++Description:
++		This file provides access to the current power state
++		change reason. If supported, the reason may be stored
++		persistently in an NVMEM cell or another backend.
 +
-+static void *uprobe_producer_nop5(void *input)
-+{
-+	while (true)
-+		uprobe_target_nop5();
-+	return NULL;
-+}
-+#endif
++		Reading this file returns an integer representing the
++		current shutdown or reboot cause.
 +
- static void usetup(bool use_retprobe, bool use_multi, void *target_addr)
- {
- 	size_t uprobe_offset;
-@@ -448,6 +462,28 @@ static void uretprobe_multi_ret_setup(void)
- 	usetup(true, true /* use_multi */, &uprobe_target_ret);
- }
- 
-+#ifdef __x86_64__
-+static void uprobe_nop5_setup(void)
-+{
-+	usetup(false, false /* !use_multi */, &uprobe_target_nop5);
-+}
++		Writing an integer value to this file sets the reason
++		to be stored for system analysis on next reboot.
 +
-+static void uretprobe_nop5_setup(void)
-+{
-+	usetup(true, false /* !use_multi */, &uprobe_target_nop5);
-+}
++		Example usage:
++		  Read:
++			$ cat /sys/kernel/pscrr/reason
++			1   # (Example: Under-voltage shutdown)
 +
-+static void uprobe_multi_nop5_setup(void)
-+{
-+	usetup(false, true /* use_multi */, &uprobe_target_nop5);
-+}
++		  Write:
++			$ echo 4 > /sys/kernel/pscrr/reason
++			# Sets the reason to 4 (Example: Over-temperature shutdown)
 +
-+static void uretprobe_multi_nop5_setup(void)
-+{
-+	usetup(true, true /* use_multi */, &uprobe_target_nop5);
-+}
-+#endif
++		Note:
++		  Not all systems support all reason values. Hardware or
++		  configuration may limit which reasons are applicable.
 +
- const struct bench bench_trig_syscall_count = {
- 	.name = "trig-syscall-count",
- 	.validate = trigger_validate,
-@@ -506,3 +542,9 @@ BENCH_TRIG_USERMODE(uprobe_multi_ret, ret, "uprobe-multi-ret");
- BENCH_TRIG_USERMODE(uretprobe_multi_nop, nop, "uretprobe-multi-nop");
- BENCH_TRIG_USERMODE(uretprobe_multi_push, push, "uretprobe-multi-push");
- BENCH_TRIG_USERMODE(uretprobe_multi_ret, ret, "uretprobe-multi-ret");
-+#ifdef __x86_64__
-+BENCH_TRIG_USERMODE(uprobe_nop5, nop5, "uprobe-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_nop5, nop5, "uretprobe-nop5");
-+BENCH_TRIG_USERMODE(uprobe_multi_nop5, nop5, "uprobe-multi-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_multi_nop5, nop5, "uretprobe-multi-nop5");
-+#endif
-diff --git a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-index af169f831f2f..03f55405484b 100755
---- a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-+++ b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-@@ -2,7 +2,7 @@
- 
- set -eufo pipefail
- 
--for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret}
-+for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret,nop5}
- do
- 	summary=$(sudo ./bench -w2 -d5 -a trig-$i | tail -n1 | cut -d'(' -f1 | cut -d' ' -f3-)
- 	printf "%-15s: %s\n" $i "$summary"
++		Values are defined in:
++		  - include/linux/reboot.h (enum psc_reason)
++
++		Supported Values:
++		  (from include/linux/reboot.h)
++
++		+-------+---------------------------+--------------------------+
++		| Value | Symbol                    | Description              |
++		+-------+---------------------------+--------------------------+
++		| 0     | PSCR_UNKNOWN              | Unknown or unspecified   |
++		|       |                           | power state change reason|
++		+-------+---------------------------+--------------------------+
++		| 1     | PSCR_UNDER_VOLTAGE        | Supply voltage dropped   |
++		|       |                           | below safe threshold     |
++		+-------+---------------------------+--------------------------+
++		| 2     | PSCR_OVER_CURRENT         | Excessive current draw or|
++		|       |                           | potential short circuit  |
++		+-------+---------------------------+--------------------------+
++		| 3     | PSCR_REGULATOR_FAILURE    | Voltage regulator failure|
++		|       |                           | preventing stable supply |
++		+-------+---------------------------+--------------------------+
++		| 4     | PSCR_OVER_TEMPERATURE     | Unsafe system temperature|
++		|       |                           | detected by sensors      |
++		+-------+---------------------------+--------------------------+
++		| 5     | PSCR_EC_PANIC             | Reboot triggered by EC   |
++		|       |                           | (Embedded Controller)    |
++		+-------+---------------------------+--------------------------+
++
++What:		/sys/kernel/pscrr/reason_boot
++Date:		April 2025
++KernelVersion:  6.16
++Contact:	Oleksij Rempel <o.rempel@pengutronix.de>
++Description:
++		This file provides the last recorded power state change
++		reason from before the current boot. If a supported backend
++		is configured (e.g., NVMEM), the value is retained across
++		reboots.
++
++		Example usage:
++		  Read:
++			$ cat /sys/kernel/pscrr/reason_boot
++			4   # (Example: Over-temperature shutdown)
++
++		Supported values:
++		  Same as /sys/kernel/pscrr/reason (see above).
++
 -- 
-2.49.0
+2.39.5
 
