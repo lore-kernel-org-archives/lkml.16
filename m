@@ -1,101 +1,100 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9030B16FF44
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BD12AD14;
+	Fri, 11 Apr 2025 15:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744386069; cv=none; b=YfH9vtiLUg4kr6N3UT2EY2Li1L/Btv1oPxVybx2bekErQSpBNzRYeSagQKw4apHdo16pmTUsc3MdPsv2KHv9zhhTbSzEo+sX1DrPzKeSyh//PRFmhU9jIDZFG3gp142FpdlDj0Oswt0EGRHZCzjIQCRdASjY4T6w+ySYG5obecI=
+	t=1744386143; cv=none; b=ighlB7Ri/kTHIF0QO2cbVcJuvbimMNt+uzZ0YjXSoOO/ha4K0fHrcOUZC3QqMmzeJgznRpIeu0eGb2wK4xc6EdqfVlXsNOe+zp6seHxVBrwJyDvywcSRxr7Cj75dRg0JB+8OEc6Q65/zvLF8xGN+V3Pa6afN5rLY/ziez3zJzdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744386069; c=relaxed/simple;
-	bh=6xqHOzSEtizESNQeKofm4qGWhQziFiLceka4SYrVITY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MjgqYJ/tQHwvZLgGYrZXIu/hnMgNmw27IpXl1B9ld2zW44ogh+/ceOs8z3Et4+9TIpSVKXyK6ZpxvIUfTfQOXIiLBtqXKgfGKneU0Epu0oEHh2tVRMbXcDUEdtiTXFHKEy6QhQld/AM+bCsDvTNR73SwE2MVGUCy6n/bwBZUi8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=Dql7r5rm; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1744386143; c=relaxed/simple;
+	bh=It2VnWFeoAs2/AO81MkBMka6daEY9+eiPuA3+Nx/GX0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WXCQUY/4Pb+fUjNW0hsU1bDoMsizkJK05l0ZCEGjFAv1lLt+5o7337AoXH4r2wR9j16f4/aqSoot3Aajis2YoggCss7p7xNxifaBMe09gVC/pnBSVRqgX/bbz70g79NZ8dNN8l3R+GAzxgfapLQkbM++GeVxJjwtIlgxTlE4998=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxId31xc; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="Dql7r5rm"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so1891802f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:41:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxId31xc"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5e34f4e89so4348651a12.1;
+        Fri, 11 Apr 2025 08:42:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1744386065; x=1744990865; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m1ER5xB9Jg+xmJZBLV8A7QxFaT92qRl63hkizFpOJiI=;
-        b=Dql7r5rmQzMOlU6VW6yqRnZysUz/nR/j+OfMlApbmo1Cmr4MUs/GB9K+FARMSM4590
-         VZxxURd09WiXmPp39CBnYKE2cidBT2ib7hbLBnVGj3DbR0HK1V8reI96Oyw1eWB44fzh
-         FvrS5mGEJUlee+nqv6TSiMCjXevbjQsGJr1QA+ixLCYSSoEr2wx7+ZGDMrqbHg6hLeXW
-         SxsosR1lTQAHh24uswbK6XQkRalKX3EzP0p3xZlshEA4DdwdD2h8U2rDm9K7s+tJpQgR
-         9sXG2LZcoUeB7aTjentuirYFgPNKCl8Pwofw97jlKgq4s0ntjyrauBu9SkGcHgwj8nLj
-         iOHg==
+        d=gmail.com; s=20230601; t=1744386140; x=1744990940; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=It2VnWFeoAs2/AO81MkBMka6daEY9+eiPuA3+Nx/GX0=;
+        b=MxId31xcG0nNt8Oys25Ykt0MDpra0f1aO9oT1Uz1oKyfrU5xDroiKxkqP4eAS+ncWO
+         KV28v08+R/PHe+Be+qWFn9wg9byjtaO72z5fTXs87acZvHm0NRl5sVomM+c6k70i2kp/
+         woyNsDDTOA5AEvg7c7vLVsbi30TWJhPtfTC/EziYR0vj7GIExbuofcByAXvmAEk751x9
+         T3RH+YgimOpsxWtyZsZ3cPVMyCsRZbCB1sfcKPY8Y2QPTaqxoRnfIJyTPzMcAlksjPr7
+         6dnpO8lUPC8r6LuRV9eRrkNFYOPYyGeBJ6OZxG4jTn+mLVgviIxSRUbzpCA32TTYd+/I
+         W8Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744386065; x=1744990865;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m1ER5xB9Jg+xmJZBLV8A7QxFaT92qRl63hkizFpOJiI=;
-        b=IUjQzvkIQer2lPDnwE3o5cDj5oUtN8q6v4N4EPQMc7K7wLG1Z1G8wsnDWkZj6Dd7VB
-         XUfvwRLBDZ342BYXYKoX7m/VfHY+X3WbWIHAmOK+RU2Lt/GY2U7EFPoTqjLpTVptU+sw
-         V8MkV1TUxqBquN+EpKg2JZN82uS03u3CghONlYFc4lBZjmchMvAyW7WMt47DwSoNqnaY
-         iW9H4o6NHG71oqlMEpOYVYd5u38pUI/GzpanEK5+b/QkXzu9IgWiHMYbrq3EAAu7wOfn
-         ShscPHCoXdSItpe1rLiK0nkPKOmWIkmF3taZMZYUQXcjLri3D4NAdNWCLn8gT9RKpxQm
-         OROA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/fgvVYhFXjU9myXWx/8lVslypWXqyCthuW5CxxlyshkXPPtHrXTDBMo+U0cVrIJEwSPKCLbO86xoXLdY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqHOlRQsNHRb3NHJ9EQ5B7BpS8QwOOnxHLlQDx/LjH4D53kK/u
-	NMYGudDpn0W/fY7Jlyd2zivUHSKo0dJUhURRNZZWe2EUQDHp6HKHRDq8tfbVi18=
-X-Gm-Gg: ASbGnct44+JLpE1cvJ9SjRHrq6KBKzjIh5kur7DGy3NfKZ0RBghi1Cz/m/7VK6s2q31
-	UbBsUIypg9QIgsD+nKesk7L/IE0heSsayAKZwEPeJBKxWEKpJvsJiE9Z4Yr84W9gkIZGHTYXKkT
-	KcBvO9gpJ3Lp7RQpFj5st3p7alLkvYtqnGf48G6XaC1ezZCtceShEUgnRXePVt0f5xjtRuKEtxf
-	WkIRWbszOP7L9QoKu0X6q46IN8WHZi9hbXbMBbsdNOzEYZHJ55ZWDmq/g4LoEglpYZ2Yyw9sFKc
-	ExjBpwJSTMcQMG5pAjQlGAiO06W5AWKVeDvckoCC+b6bRgXU9Y9C66PeoYl27BU9Cv8VML3atvu
-	3/lwiR9E=
-X-Google-Smtp-Source: AGHT+IEisQGsleHy4Zv5Gzb/47cBIzfdWyFjOgUR75w0kWOWSpMn5SkcGKo3Imt6toqDOuEhLNofAQ==
-X-Received: by 2002:a5d:5f94:0:b0:39c:1f02:44ae with SMTP id ffacd0b85a97d-39ea54fd3d6mr3226660f8f.27.1744386064350;
-        Fri, 11 Apr 2025 08:41:04 -0700 (PDT)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235b050fsm90397935e9.40.2025.04.11.08.41.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 08:41:03 -0700 (PDT)
-Message-ID: <7e7746f3-3113-4f80-b9e1-71d28048c2d3@blackwall.org>
-Date: Fri, 11 Apr 2025 18:41:02 +0300
+        d=1e100.net; s=20230601; t=1744386140; x=1744990940;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=It2VnWFeoAs2/AO81MkBMka6daEY9+eiPuA3+Nx/GX0=;
+        b=WP+QZe5V+uj3KUAvBnJMB+7cZmJFGMZ+63WENbD6V6toF5gGxZdhWTnQljOb2y3FYe
+         +lHZv7qeYr+rMa4pJdSDMigI5mmbjC8qA8G3vozwreLqOyrwMK+gQWh0LnWs63+arlu5
+         XRsfIrje1BLlPBS6QOGgXLD3LRPct22t3F4kYaEjx/9xX8frNLSAfS53vdLiYr4QdFGv
+         E6190ZTLUImNWij3lfasmK3yCXguIWTsP/vakTL5IB8ikIVsGxDrUSLO8Iqt/b6+QXEt
+         gJeV3voG4eEW1IZsQkGm9Al2AAu+V0EmD0EZ2pvw5yM8VvaNTW2JsIWr3NQpwP+XiLX+
+         VG8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUemsTugXoJ58B3zrq1dhk50VdJk1zc8lLlD5MFdjP4Geat5OcBkAUvRLnUwec48mGJhMBSwF3ChATAsOuk@vger.kernel.org, AJvYcCWOy4RgrwdVaybF/kZcnnkGPA596+o23cohMthl4ThEit7doIvvbDiTe2NxZepEP+3jJ0L9GILp6HGMANUX@vger.kernel.org, AJvYcCXTgjbO06ie7MYC6SltNZZeSdow/5xHHu7PnvXo5dJ2hnFIDvSJgwMUrtHQtfclUxiPucZASeU9+burNg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiCCIMaPC74yEMR4UinVT3Gj+YMb8tds47qS2EJ88h42nIbfyA
+	HwvcXTx/BC/4Pz6IWCe6Tquu/d84CTdMIxNx8B3SdW29PeaJJUej
+X-Gm-Gg: ASbGncvbPd1DL7sS4ZXzCwFMfEPS9xDzLuPjEXwsmlFf9Pn9BwaGKjT0TtOGQYjf4qa
+	ci3u366eX2dum772XOW/fInFdRAzCkgGP9f8/VAqNaoUWJmnGGlAEwp+OONtOdSDeJfViwzI3D+
+	3pOwS/oj+elOWgA+7M1ysciddfDOSA9z50UsjufJbOjoGvARJcZM+ZIHX6WgDXjpjKL/+FINwIx
+	V/0VPK9r0Fh2d5eSC/CpUST0NVrUuge0uiBg3nnppBZFWogkOwr90XeYqMtnUdQCsCoOOJiwvqt
+	6CM8RAasZVFaF2x+V7wfMgyHF2L3Z78PJPuk6vrkWLY=
+X-Google-Smtp-Source: AGHT+IEtSIaJ3H+ZraLLFCodD6/LDQvZtvBke+gPK1x5t3vsMCHDWRB4OCz2umhxenATOBcALBtRxA==
+X-Received: by 2002:a17:907:1b03:b0:ac4:493:403 with SMTP id a640c23a62f3a-acad36a5b29mr264461366b.37.1744386140056;
+        Fri, 11 Apr 2025 08:42:20 -0700 (PDT)
+Received: from [10.176.234.34] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb3d8fsm464863166b.106.2025.04.11.08.42.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 08:42:19 -0700 (PDT)
+Message-ID: <995f5cd137d0b0b82a1d253cc081fe9e145738c5.camel@gmail.com>
+Subject: Re: [PATCH V3 2/2] scsi: ufs: introduce quirk to extend
+ PA_HIBERN8TIME for UFS devices
+From: Bean Huo <huobean@gmail.com>
+To: Manish Pandey <quic_mapa@quicinc.com>, "James E.J. Bottomley"
+	 <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+	 <martin.petersen@oracle.com>, Manivannan Sadhasivam
+	 <manivannan.sadhasivam@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman
+ <avri.altman@wdc.com>,  Bart Van Assche <bvanassche@acm.org>,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, quic_nitirawa@quicinc.com, 
+ quic_bhaskarv@quicinc.com, quic_rampraka@quicinc.com,
+ quic_cang@quicinc.com,  quic_nguyenb@quicinc.com
+Date: Fri, 11 Apr 2025 17:42:17 +0200
+In-Reply-To: <20250411121630.21330-3-quic_mapa@quicinc.com>
+References: <20250411121630.21330-1-quic_mapa@quicinc.com>
+	 <20250411121630.21330-3-quic_mapa@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v5 net-next 1/3] net: bridge: mcast: Add offload failed
- mdb flag
-To: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
-Cc: Joseph Huang <joseph.huang.2024@gmail.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, bridge@lists.linux.dev
-References: <20250411150323.1117797-1-Joseph.Huang@garmin.com>
- <20250411150323.1117797-2-Joseph.Huang@garmin.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250411150323.1117797-2-Joseph.Huang@garmin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 4/11/25 18:03, Joseph Huang wrote:
-> Add MDB_FLAGS_OFFLOAD_FAILED and MDB_PG_FLAGS_OFFLOAD_FAILED to indicate
-> that an attempt to offload the MDB entry to switchdev has failed.
-> 
-> Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
-> ---
->  include/uapi/linux/if_bridge.h |  9 +++++----
->  net/bridge/br_mdb.c            |  2 ++
->  net/bridge/br_private.h        | 20 +++++++++++++++-----
->  net/bridge/br_switchdev.c      |  9 +++++----
->  4 files changed, 27 insertions(+), 13 deletions(-)
-> 
+On Fri, 2025-04-11 at 17:46 +0530, Manish Pandey wrote:
+> Samsung UFS devices require additional time in hibern8 mode before
+> exiting,
+> beyond the negotiated handshaking phase between the host and device.
+> Introduce a quirk to increase the PA_HIBERN8TIME parameter by 100 =C2=B5s=
+,
+> a value derived from experiments, to ensure a properhibernation
+> process.
+>=20
+> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
 
-Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
 
+Reviewed-by: Bean Huo <beanhuo@micron.com>
