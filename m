@@ -1,138 +1,95 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79505D299
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C11BD299;
+	Fri, 11 Apr 2025 01:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744334410; cv=none; b=Yb6Iac8yvgzYOn6oHIHuKYEPR+cpIZjUL/bBEccOXnivZbGMz6kzwPf+x2YQXZNxrZbQwSliLJsCRdxsDVFyFMt9PtjVadB/HrvQPulo9ay33s2S/s+6eeIaMHIkiQTGTkaI79Grrayq6QU8nNsHENNw1NgUqCrCactk+DYjx1U=
+	t=1744334474; cv=none; b=BxdZb2U+xCH9np0DN8yE0fsnflP/CwzMz6VsNK7GY/7f2e4fFQYHvDQdY0cexX1QxbQoKp0mOuyrouVRGS9VlWwA0wST4aSjEEhwDF+CmBhj2wpIA5Uq+pLfRfLyamk5pdeRsLbus1Azvb+T1lkz7pO6kcU+rIyhLUdI7jN6URc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744334410; c=relaxed/simple;
-	bh=2+nmyoImJkTyFiJQ3V7xm+XM4qK48C1ZERRdK3pbc5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tkqprt85V1oGLnx7EYWk9OYi45nEaWiioOrdjqZP6+3HftCI0ar8dLgYKXp+kttMusHv04VRkfdQvlGPYpux7CnOO1HMoNNOw/xgXwp+Wv1YxSV+8lb1UZFp9iLJZ1qKErcD+ls5OE/94dop07DpsX2n6pXOdpN0uU4nOi24asY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HYy9qEmF; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744334474; c=relaxed/simple;
+	bh=o046V02WtqlkkRSSA2YGh7WNKcRkrZEbNpFokx1S5W0=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Uzgi81XEngTwSN+s9eRTJshvm8qoNloxWBXq9wGEfc1pxfKS470AHOQUnYc+aOqFAZ0UiW2s6fEa6bL24hyM7iYaDrCqi4x3u+TImTR1oaHss7SX3HBJK0pqW5DGyhq4z0/ES1MQ4rjay8BaPvtWl7Ca+NYLQovqm2vzr8ZVEKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTlPmKyP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HYy9qEmF"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744334403; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=amhcLDqbTnuD6tlVLNEDxIaRocgED5CdIhUH1OvSHG0=;
-	b=HYy9qEmFCBxIp4YUivkUrmFx0e/1fs8r2vV2EWhBxYlARbe7BK4HsT2NI545IF4JCNc5agoU+ntSArRxgsF4QRmbuIzOGi84uogMGmEoNAGSDQa26PSQl9TpZ3qb64KxSzTGzsfNCbe+H7ygTcRJBs1wlnkeyCqSCcK41qvbrCo=
-Received: from 30.74.144.105(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WWR2HW9_1744334402 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 11 Apr 2025 09:20:02 +0800
-Message-ID: <247fca57-8280-41a6-85b0-03a32ea08210@linux.alibaba.com>
-Date: Fri, 11 Apr 2025 09:20:01 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTlPmKyP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D109C4CEDD;
+	Fri, 11 Apr 2025 01:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744334473;
+	bh=o046V02WtqlkkRSSA2YGh7WNKcRkrZEbNpFokx1S5W0=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=JTlPmKyPES5VA7ZmxJLYX1Msxt/oigWQD0OYiLRLmvQ4k5N4T8xhUdZ5xzhOfWfuU
+	 2QirmG6s7SD3uYGjXNTWWb45j1z9JkqnBu7gopdKbjSvx9rbMggpw5ony3HE8patxh
+	 UqDtEJx0igTWcE0PJwIO1gX2qY9tq4pWjs2IxBRyBg+4a42zX1PngeGYx+LOBBsXHw
+	 J1NZwi8Z8/HI45/GGHSFJWQcYdavbZJDJl5zz3gu3UIqCLLyTtC59/DeNxPHEJ1+So
+	 4yKPPFKWwyvqnuCfRaxSFcTsAecRigu1p04AelE1h1NBItayGmFO3F3QY0YCYUFDxr
+	 stsTG6NEuqFRg==
+Date: Thu, 10 Apr 2025 20:21:12 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm: huge_memory: add folio_mark_accessed() when
- zapping file THP
-To: Barry Song <21cnbao@gmail.com>, Zi Yan <ziy@nvidia.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, david@redhat.com,
- ryan.roberts@arm.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <34bab7a60930472377afbfeefe05b980d0512aa4.1744118089.git.baolin.wang@linux.alibaba.com>
- <CAGsJ_4wnvWmOz-FNvYzkqEW1kz0UCfzythbeJSbSyWy_=ib5MA@mail.gmail.com>
- <5c52b67a-8e7e-4dd7-9127-96944715d883@linux.alibaba.com>
- <CAGsJ_4yPxoF5P87WdXbXVb8BqovVvxhKg40YVddkEQmFjFsRYw@mail.gmail.com>
- <1E123113-7A0B-4D3A-AC7A-01767D7BF2D8@nvidia.com>
- <CAGsJ_4zMthcj0dtCX1OKQ1_A01OdF=P1n9FGLpGsbkTRwWoqVA@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAGsJ_4zMthcj0dtCX1OKQ1_A01OdF=P1n9FGLpGsbkTRwWoqVA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+ Andre Przywara <andre.przywara@arm.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Yangtao Li <tiny.windzz@gmail.com>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, linux-kernel@vger.kernel.org, 
+ linux-sunxi@lists.linux.dev, Conor Dooley <conor+dt@kernel.org>, 
+ Vasily Khoruzhick <anarsoul@gmail.com>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, 
+ Piotr Oniszczuk <piotr.oniszczuk@gmail.com>, 
+ "Rafael J . Wysocki" <rafael@kernel.org>
+To: iuncuim <iuncuim@gmail.com>
+In-Reply-To: <20250411003827.782544-7-iuncuim@gmail.com>
+References: <20250411003827.782544-1-iuncuim@gmail.com>
+ <20250411003827.782544-7-iuncuim@gmail.com>
+Message-Id: <174433447237.1635065.9681378963946489764.robh@kernel.org>
+Subject: Re: [PATCH 6/6] dt-bindings: thermal: sun8i: Add A523 THS0/1
+ controllers
 
 
-
-On 2025/4/11 05:56, Barry Song wrote:
-> On Fri, Apr 11, 2025 at 3:13 AM Zi Yan <ziy@nvidia.com> wrote:
->>
->> On 10 Apr 2025, at 6:29, Barry Song wrote:
->>
->>> On Thu, Apr 10, 2025 at 9:05 PM Baolin Wang
->>> <baolin.wang@linux.alibaba.com> wrote:
->>>>
->>>>
->>>>
->>>> On 2025/4/10 16:14, Barry Song wrote:
->>>>> On Wed, Apr 9, 2025 at 1:16 AM Baolin Wang
->>>>> <baolin.wang@linux.alibaba.com> wrote:
->>>>>>
->>>>>> When investigating performance issues during file folio unmap, I noticed some
->>>>>> behavioral differences in handling non-PMD-sized folios and PMD-sized folios.
->>>>>> For non-PMD-sized file folios, it will call folio_mark_accessed() to mark the
->>>>>> folio as having seen activity, but this is not done for PMD-sized folios.
->>>>>>
->>>>>> This might not cause obvious issues, but a potential problem could be that,
->>>>>> it might lead to more frequent refaults of PMD-sized file folios under memory
->>>>>> pressure. Therefore, I am unsure whether the folio_mark_accessed() should be
->>>>>> added for PMD-sized file folios?
->>>>>>
->>>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>>>>> ---
->>>>>>    mm/huge_memory.c | 4 ++++
->>>>>>    1 file changed, 4 insertions(+)
->>>>>>
->>>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->>>>>> index 6ac6d468af0d..b3ade7ac5bbf 100644
->>>>>> --- a/mm/huge_memory.c
->>>>>> +++ b/mm/huge_memory.c
->>>>>> @@ -2262,6 +2262,10 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
->>>>>>                                   zap_deposited_table(tlb->mm, pmd);
->>>>>>                           add_mm_counter(tlb->mm, mm_counter_file(folio),
->>>>>>                                          -HPAGE_PMD_NR);
->>>>>> +
->>>>>> +                       if (flush_needed && pmd_young(orig_pmd) &&
->>>>>> +                           likely(vma_has_recency(vma)))
->>>>>> +                               folio_mark_accessed(folio);
->>>>>
->>>>> Acked-by: Barry Song <baohua@kernel.org>
->>>>
->>>> Thanks.
->>>>
->>>>> I also came across an interesting observation: on a memory-limited system,
->>>>> demoting unmapped file folios in the LRU—specifically when their mapcount
->>>>> drops from 1 to 0—can actually improve performance.
->>>>
->>>> These file folios are used only once? Can folio_set_dropbehind() be used
->>>> to optimize it, which can avoid the LRU activity movement in
->>>> folio_mark_accessed()?
->>>
->>> For instance, when a process, such as a game, just exits, it can be expected
->>> that it won't be used again in the near future. As a result, demoting
->>> its previously
->>> unmapped file pages can improve performance.
->>
->> Is it possible to mark the dying VMAs either VM_SEQ_READ or VM_RAND_READ
->> so that folio_mark_accessed() will be skipped? Or a new vm_flag?
->> Will it work?
+On Fri, 11 Apr 2025 08:38:26 +0800, iuncuim wrote:
+> From: Mikhail Kalashnikov <iuncuim@gmail.com>
 > 
-> Actually took a more aggressive approach and observed good performance
-> improvements on phones. After zap_pte_range() called remove_rmap(),
-> the following logic was added:
+> Add dt-bindings description of the thermal sensors in the A523 processor.
 > 
-> if (file_folio && !folio_mapped())
->      deactivate_file_folio();
+> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+> ---
+>  .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml           | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> This helps file folios from exiting processes get reclaimed more quickly
-> during the MGLRU's min generation scan while the folios are probably
-> in max gen.
-> 
-> I'm not entirely sure if this is universally applicable or worth submitting as
-> a patch.
 
-IMHO, I'm afraid this is not universally applicable. Although these file 
-folios have been unmapped, it's not certain that they won't be accessed 
-again. These file folios might be remapped and accessed again soon, or 
-accessed through read()/write() operations using a file descriptor.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I agree with Zi's suggestion. Using some kind of madvise() hint to mark 
-these file folios as those that won't be accessed after being unmapped, 
-seems can work?
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.example.dtb: thermal-sensor@1c25000 (allwinner,sun8i-h3-ths): clock-names:1: 'gpadc' was expected
+	from schema $id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250411003827.782544-7-iuncuim@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
