@@ -1,57 +1,98 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E4F29DB61;
-	Fri, 11 Apr 2025 09:17:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37FB329DB6F
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:17:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744363075; cv=none; b=RBrY9INtLtJMyl/JoZUSTv31CRVD5u6SAKpdBxqDHd3B/38L3iifJFi8K9u8BBMhoi8ceJmdY8ywFkQjDtVKS/clrdueA5qE2BlPHy4wAv3A+8+2IOYCNEsspF9aS+HQKDJZ1NeWLLp64KOPuaVnEbRsyd5ANTOK/v4aRYXTVl4=
+	t=1744363077; cv=none; b=Cu3rXfK+gfSSqlXZwM/k/TxPON5Eld8t2voQAN9f8UR69KHMOIkKlgj8sQYPbt/hDOH/3yAJZOgj+IBeAKRDbXeBOH5xbovgh3Z13szO2P7Nuq8tL0i3+TbRW7m4OqNs9jbtc/5cD+ANpQt1aF4+7f9Y7c+HQQ+VR4EkgjvgzA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744363075; c=relaxed/simple;
-	bh=N4eTL6WIHRbdnA83qpIhZxPELiqtSuWeaMVjW27k1EU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=niEGPztdM5t6lgcsGPFuzAZxsnE1SAwN9xBeLdWZ9r4yzggTixbEihCjdpAzeGXPIJltKC9Bb4RauWNibx1C3vNHzVfMXE3bvVYfkEnnR6pEXSJnvF5Fx1tgJ0GC4URz8SCX4TdRX0se/edBW8hv5cVgdqob1w2wCPrSinLyDs4=
+	s=arc-20240116; t=1744363077; c=relaxed/simple;
+	bh=Pp53llZfJy7BQH6YugsN1HLR+mGCMps3QxoJJ+hk3i4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IyU5EJANr1gYrC6y2PjlghKQFfaRlH541qmZDo6Tf9f0ibx90R8Lg5ob3LqYzcepl2JSlIeUsRebS0NWB1WCKub49BPqgF7NpRo/ZpdOIpsUMTgX8V5HTi+NIMvkLBEcd4A9UTV/38W0fsiet+hk8E8bhBAXaVdBdIDTEDwuYJE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7137D1596;
-	Fri, 11 Apr 2025 02:17:53 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C6AC3F792;
-	Fri, 11 Apr 2025 02:17:52 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:17:49 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: <peterhuewe@gmx.de>, <jarkko@kernel.org>, <jgg@ziepe.ca>,
-	Sudeep Holla <sudeep.holla@arm.com>, <stuart.yoder@arm.com>,
-	<linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tpm_ffa_crb: access tpm service over FF-A direct
- message request v2
-Message-ID: <20250411-olive-wolverine-of-chaos-513a2b@sudeepholla>
-References: <20250411090856.1417021-1-yeoreum.yun@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5604C1692;
+	Fri, 11 Apr 2025 02:17:54 -0700 (PDT)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C41DE3F6A8;
+	Fri, 11 Apr 2025 02:17:50 -0700 (PDT)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Kees Cook <kees@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	Quentin Perret <qperret@google.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org
+Subject: [RFC PATCH v4 14/18] arm64: kpkeys: Support KPKEYS_LVL_PGTABLES
+Date: Fri, 11 Apr 2025 10:16:27 +0100
+Message-ID: <20250411091631.954228-15-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250411091631.954228-1-kevin.brodsky@arm.com>
+References: <20250411091631.954228-1-kevin.brodsky@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411090856.1417021-1-yeoreum.yun@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 11, 2025 at 10:08:56AM +0100, Yeoreum Yun wrote:
-> For secure partition with multi service, tpm_ffa_crb can access tpm
-> service with direct message request v2 interface according to chapter 3.3,
-> TPM Service Command Response Buffer Interface Over FF-A specification [0].
-> 
-> This patch reflects this spec to access tpm service over
-> FF-A direct message request v2 ABI.
-> 
+Enable RW access to KPKEYS_PKEY_PGTABLES (used to map page table
+pages) if switching to KPKEYS_LVL_PGTABLES, otherwise only grant RO
+access.
 
-From FF-A interface usage perspective,
+Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+---
+ arch/arm64/include/asm/kpkeys.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-
-
+diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
+index 79ae33388088..64d6e22740ec 100644
+--- a/arch/arm64/include/asm/kpkeys.h
++++ b/arch/arm64/include/asm/kpkeys.h
+@@ -12,7 +12,8 @@
+  * Equivalent to por_set_kpkeys_level(0, KPKEYS_LVL_DEFAULT), but can also be
+  * used in assembly.
+  */
+-#define POR_EL1_INIT	POR_ELx_PERM_PREP(KPKEYS_PKEY_DEFAULT, POE_RWX)
++#define POR_EL1_INIT	(POR_ELx_PERM_PREP(KPKEYS_PKEY_DEFAULT, POE_RWX) | \
++			 POR_ELx_PERM_PREP(KPKEYS_PKEY_PGTABLES, POE_R))
+ 
+ #ifndef __ASSEMBLY__
+ 
+@@ -26,6 +27,8 @@ static inline bool arch_kpkeys_enabled(void)
+ static inline u64 por_set_kpkeys_level(u64 por, int level)
+ {
+ 	por = por_elx_set_pkey_perms(por, KPKEYS_PKEY_DEFAULT, POE_RWX);
++	por = por_elx_set_pkey_perms(por, KPKEYS_PKEY_PGTABLES,
++				     level == KPKEYS_LVL_PGTABLES ? POE_RW : POE_R);
+ 
+ 	return por;
+ }
 -- 
-Regards,
-Sudeep
+2.47.0
+
