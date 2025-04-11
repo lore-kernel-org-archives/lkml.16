@@ -1,46 +1,46 @@
 Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9F1278E46
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A21D20B804;
+	Fri, 11 Apr 2025 11:33:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744371239; cv=none; b=U/up+IvOoi2RMunA1qgvB0XxOIixA4sil/hFz/RynQBXSfHG2K3b2PPOcfzM9m3hNMHt4+xz0VKANYUCLZOcix3+O+1EdDk+vDURxCkamRkUHsHB4CZ09zpYGc7esWEwDfyuwxlNzaqRKJ9kQmat643UU/SoLhdEnKenWhu6C1k=
+	t=1744371239; cv=none; b=hJE4Q/fFMIjQ0+mYpAilycCMuEz+3cmnsKjEZCehkK1QEep3JR2a6wsdvaFzmj4BGOZXVb2JjxUkmitlqBRSilurC3o0RR3rlMdE+wbEupwXPAorgU5rU/TgXMv+zQqF0J+aavqYiq9E8jbCBd2A5LDBzp8ljFjQRIaZK26q6ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744371239; c=relaxed/simple;
-	bh=5HjaKrb4OSnZq4HKsJZh48cCqPwW7cyhlHLZdAr8QI4=;
+	bh=f4KpgmCqOigkBjPwzV16BC/e9Qc4m4O2EWw+5lMtBGk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eqcYBaVxCHyBUc/axJ3UTWId8uBSgmYgi59Jt0vsG2kf9s9M//9XJlHhV2o4bw4K2YmDcpTebBeRUYSFr97CPK5JqhO0j3z/wZnBVXz8Dgb8scaTX39BR2I3T+t9+6Tkxe09xkOToG2JQw6v6e0vwiEyKCdT1eF1mRHUQUHtICk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=G4E2swKG; arc=none smtp.client-ip=185.226.149.37
+	 In-Reply-To:To:Cc; b=k4CNWAmvgA1Sa7S/hbB1R6nAr15XphjfbC/Pmw+8Fd9P8tTIjM5etWZVhOaudDF5b0j7pQvq5XhfeLWf6sW/KJCENphUKSyvwp/funD1pRrdJBfgaiJBPhRudfxs4r/a+AzrdntaUzpaA5t6iCQaHnSjA0KsySqgAOWm9VBSpkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=An7mSEKg; arc=none smtp.client-ip=185.226.149.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="G4E2swKG"
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="An7mSEKg"
 Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
 	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <mhal@rbox.co>)
-	id 1u3Cdm-005wxk-MW; Fri, 11 Apr 2025 13:33:46 +0200
+	id 1u3Cdu-005wyY-TK; Fri, 11 Apr 2025 13:33:54 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
 	s=selector1; h=Cc:To:In-Reply-To:References:Message-Id:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=bRBtGUHo2mfXsbLumHd/r9ed2RVyNnk36YPXlBUTUBI=; b=G4E2swKGpA+n2ZhxtF2l0a13Ak
-	ucO3c4GWByMiOa9f6x7tgkQ+j7wp+VrYrbCMVonnJfe+wTlwf+J4VRG2vuFL6RBZTV/eSpe3NXWi2
-	qSgHfYCxkKNBDZ/xnVLyXgnCZ3pgCy4ntTdSMd2wJ/Gr2D/7c/dkJmmSFEOcvrbiSDBxPvl2hHnlM
-	m3F+SidVtDRfy2+MoGE+CeodfIJgpeoJcfih6X4kmx/d50N1MfmQ3gMUzOqgW3PhJcFMhzcpiVRwV
-	ikgvs9kJmeyeM6tXzqWJ99M5IZcO+Fc4WM01Yomiuf1ued1aSC7JsCoj1WgjiPMuD0H0X3cEPq429
-	dK/la4pg==;
+	bh=BshLwRbnRgKmAKUdavGcdRLsg9XdubR2FSewY8nY1kA=; b=An7mSEKgHL91s6iZ6n+w1Fg2St
+	17SAieI9jdTm4fDQxvASj67rscZHZiazxccKv7+z7bIVq0Cfl36F+k1h6ZbBB9FHzFMD0+R5kXO8/
+	WgxbTijnoMaCPJn1GEuwpltIqS9O2F2FUqy8nG5kgJWexTzrjZLzPAo2yItt/B8U02bT8ulgYthwe
+	MACobSmVBHjXqxa6HH/tiC/k9rKTrDeZx6xSqen48RK//5Gy+u+WEOMaCXOVfNU9IGCpnh6GQWfDd
+	W4zDOpkJ3PGzhITiHt3OzhT6aoTwE9eSMu8HLS9QsMIGxSSUTiz/JanLoHzWzX3M4kZUvV4w5KFdw
+	tzS+9/ZQ==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
 	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <mhal@rbox.co>)
-	id 1u3Cdg-0005qc-1Q; Fri, 11 Apr 2025 13:33:40 +0200
+	id 1u3Cdp-0005tQ-16; Fri, 11 Apr 2025 13:33:49 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.93)
-	id 1u3CdW-00D5Ut-8V; Fri, 11 Apr 2025 13:33:30 +0200
+	id 1u3CdV-00D5Ut-8R; Fri, 11 Apr 2025 13:33:29 +0200
 From: Michal Luczaj <mhal@rbox.co>
-Date: Fri, 11 Apr 2025 13:32:40 +0200
-Subject: [PATCH bpf-next v2 4/9] selftests/bpf: Allow setting BPF_F_INGRESS
- in prog_msg_verdict()
+Date: Fri, 11 Apr 2025 13:32:39 +0200
+Subject: [PATCH bpf-next v2 3/9] selftests/bpf: Add u32()/u64() to
+ sockmap_helpers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250411-selftests-sockmap-redir-v2-4-5f9b018d6704@rbox.co>
+Message-Id: <20250411-selftests-sockmap-redir-v2-3-5f9b018d6704@rbox.co>
 References: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
 In-Reply-To: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
 To: Andrii Nakryiko <andrii@kernel.org>, 
@@ -66,48 +66,98 @@ Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
  Jakub Sitnicki <jakub@cloudflare.com>, Michal Luczaj <mhal@rbox.co>
 X-Mailer: b4 0.14.2
 
-Let a selftest set BPF_F_INGRESS for map/hash redirect.
+Add integer wrappers for convenient sockmap usage.
 
-In run_tests(), explicitly reset skel->bss->test_ingress to false. Earlier
-tests might have left it flipped.
+While there, fix misaligned trailing slashes.
 
+Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
 Signed-off-by: Michal Luczaj <mhal@rbox.co>
 ---
- tools/testing/selftests/bpf/prog_tests/sockmap_listen.c | 2 ++
- tools/testing/selftests/bpf/progs/test_sockmap_listen.c | 6 ++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ .../selftests/bpf/prog_tests/sockmap_helpers.h     | 25 ++++++++++------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
-index 4ee1148d22be3d7f26a5c899542e6a29ca5e7d6c..c8b736f96503829cba51da0f08c545028b48b8c6 100644
---- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
-+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
-@@ -1858,6 +1858,8 @@ static void test_udp_unix_redir(struct test_sockmap_listen *skel, struct bpf_map
- static void run_tests(struct test_sockmap_listen *skel, struct bpf_map *map,
- 		      int family)
- {
-+	skel->bss->test_ingress = false;
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_helpers.h b/tools/testing/selftests/bpf/prog_tests/sockmap_helpers.h
+index 3e5571dd578d12a6f8195bf3d25e069a1e477416..d815efac52fda9592274bb8606c8698fa4baf9c6 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_helpers.h
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_helpers.h
+@@ -5,12 +5,15 @@
+ 
+ #define MAX_TEST_NAME 80
+ 
++#define u32(v) ((u32){(v)})
++#define u64(v) ((u64){(v)})
 +
- 	test_ops(skel, map, family, SOCK_STREAM);
- 	test_ops(skel, map, family, SOCK_DGRAM);
- 	test_redir(skel, map, family, SOCK_STREAM);
-diff --git a/tools/testing/selftests/bpf/progs/test_sockmap_listen.c b/tools/testing/selftests/bpf/progs/test_sockmap_listen.c
-index b7250eb9c30cca8f77675e56529e6b780d76ab2e..5a3504d5dfc32f75f49f969b4935b1c1f3f7c773 100644
---- a/tools/testing/selftests/bpf/progs/test_sockmap_listen.c
-+++ b/tools/testing/selftests/bpf/progs/test_sockmap_listen.c
-@@ -106,9 +106,11 @@ int prog_msg_verdict(struct sk_msg_md *msg)
- 	int verdict;
+ #define __always_unused	__attribute__((__unused__))
  
- 	if (test_sockmap)
--		verdict = bpf_msg_redirect_map(msg, &sock_map, zero, 0);
-+		verdict = bpf_msg_redirect_map(msg, &sock_map, zero,
-+					       test_ingress ? BPF_F_INGRESS : 0);
- 	else
--		verdict = bpf_msg_redirect_hash(msg, &sock_hash, &zero, 0);
-+		verdict = bpf_msg_redirect_hash(msg, &sock_hash, &zero,
-+						test_ingress ? BPF_F_INGRESS : 0);
+ #define xbpf_map_delete_elem(fd, key)                                          \
+ 	({                                                                     \
+ 		int __ret = bpf_map_delete_elem((fd), (key));                  \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("map_delete");                              \
+ 		__ret;                                                         \
+ 	})
+@@ -18,7 +21,7 @@
+ #define xbpf_map_lookup_elem(fd, key, val)                                     \
+ 	({                                                                     \
+ 		int __ret = bpf_map_lookup_elem((fd), (key), (val));           \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("map_lookup");                              \
+ 		__ret;                                                         \
+ 	})
+@@ -26,7 +29,7 @@
+ #define xbpf_map_update_elem(fd, key, val, flags)                              \
+ 	({                                                                     \
+ 		int __ret = bpf_map_update_elem((fd), (key), (val), (flags));  \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("map_update");                              \
+ 		__ret;                                                         \
+ 	})
+@@ -35,7 +38,7 @@
+ 	({                                                                     \
+ 		int __ret =                                                    \
+ 			bpf_prog_attach((prog), (target), (type), (flags));    \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("prog_attach(" #type ")");                  \
+ 		__ret;                                                         \
+ 	})
+@@ -43,7 +46,7 @@
+ #define xbpf_prog_detach2(prog, target, type)                                  \
+ 	({                                                                     \
+ 		int __ret = bpf_prog_detach2((prog), (target), (type));        \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("prog_detach2(" #type ")");                 \
+ 		__ret;                                                         \
+ 	})
+@@ -66,21 +69,15 @@
+ 		__ret;                                                         \
+ 	})
  
- 	count = bpf_map_lookup_elem(&verdict_map, &verdict);
- 	if (count)
+-static inline int add_to_sockmap(int sock_mapfd, int fd1, int fd2)
++static inline int add_to_sockmap(int mapfd, int fd1, int fd2)
+ {
+-	u64 value;
+-	u32 key;
+ 	int err;
+ 
+-	key = 0;
+-	value = fd1;
+-	err = xbpf_map_update_elem(sock_mapfd, &key, &value, BPF_NOEXIST);
++	err = xbpf_map_update_elem(mapfd, &u32(0), &u64(fd1), BPF_NOEXIST);
+ 	if (err)
+ 		return err;
+ 
+-	key = 1;
+-	value = fd2;
+-	return xbpf_map_update_elem(sock_mapfd, &key, &value, BPF_NOEXIST);
++	return xbpf_map_update_elem(mapfd, &u32(1), &u64(fd2), BPF_NOEXIST);
+ }
+ 
+ #endif // __SOCKMAP_HELPERS__
 
 -- 
 2.49.0
