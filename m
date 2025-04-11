@@ -1,110 +1,91 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9AC1DF974
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839F7296142;
+	Fri, 11 Apr 2025 08:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744359710; cv=none; b=E6km62KyHVEeqcNEVY+CGHlc0mVgulrMqrzstNuK15+dn7IIpEv9i1XyvyDQODI2OlQseCUvW+EWVjd6NzS/HMJsd0TQPpR7Cpht0DYZ3LaHuFcwIuoeIWvjMHG9herEEqH+2eJNGn7B+kmF5WARG4tI5fIklnmefOCsBzfgCYE=
+	t=1744359722; cv=none; b=N392CbzX5zCjDC5W0VKQhNQo1V+N2f95+IAxW1C9fGBqkT+ACaXe1CSbmJrb0OxUEWQCiWnYNaA2i/6Q0h5Cpdsl57MIYDeXZOFQfn4r63JSYQjSpWNjwBlKAPKztf2WZmsEsQGGBT0qpjw0456R6ULSyHXbbtrny2DlQwpreic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744359710; c=relaxed/simple;
-	bh=2DvWBQ9yOXFxUOCe5zNzMFNh6hjobZtSgyoeVn6y7M8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BcIlhqdTgHBtDJowp+siNim46mCQN8vacJ7cqCYG95Yig9Giu0su/igXQGGhokodBGADPfjrbsdCOm6o2aCbTRsBY4wsxEnbg4xRsXfsPcSr//iAheMOxKAYzAz/Aaxl/998Y1wBa6ZL6d9ibk5mRG0Q9fj1rlC5VoIt1XKrQc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1u39dm-0007rF-5N; Fri, 11 Apr 2025 10:21:34 +0200
-Message-ID: <f11dd5bc-1753-4685-8385-397ab9c28475@pengutronix.de>
-Date: Fri, 11 Apr 2025 10:21:34 +0200
+	s=arc-20240116; t=1744359722; c=relaxed/simple;
+	bh=TYK0Wf2IsL1LKt6W8g2I+knobB+KB8JlobtmFnUY1eE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sYx0YBFYkL3uN4g5UGi77rXNJHp7rUsyr+ZprAzyFQPt5UTleLbVi4p+qdSj0VxXif/z4DGZPgGNdIMV9J/ioVfQvekQtu2ZA8BsJY9uXKi0I3t+rT3KtI2BLR3+ilmjseByKA6TDO/gWVBycHu4Pz+DCA++Hv06m1BbF8VbVDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gTnvDiDB; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTnvDiDB"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476af5479feso16759041cf.2;
+        Fri, 11 Apr 2025 01:22:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744359719; x=1744964519; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TYK0Wf2IsL1LKt6W8g2I+knobB+KB8JlobtmFnUY1eE=;
+        b=gTnvDiDBtskUrSvCF/Qy+kJE8JJMXJzro8Zq/KavCs7vie+aM7b4VHJN4GitB33f95
+         5P5+l0GP4pbWSnY+yA0nG4BD1VpWhYYnfZd3qMRYtyrNxwm2KNDplw2myPIELjN5Ywf0
+         RvEkpQiqjuHzPdgtojdiSz8isNqCS3DsiLRgMiqpIWKflG+Kg5AlZ8z5slP/13lQwHpn
+         FSUBsIGeM24E/VTQJ0Axs9SYbyFrpxh3Vjy6tLLoEkF90pdkAgfrGmQm57A1G9BqkO77
+         oG9jEeUOUWMTzP8nM/V9wnsrYQ6Hz7KeegOgRWGet0tthZU8APAbkZ8qKuEnh8KFS0Db
+         kjBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744359719; x=1744964519;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TYK0Wf2IsL1LKt6W8g2I+knobB+KB8JlobtmFnUY1eE=;
+        b=Kr6hMUrUeQ7p60qUsZt6M5fYxkWbmH/wXvFyw94+cn0oWg5jYUAu8XzLGZnotL5C+n
+         cfWNdNDz1d9MYU7ZVCRUAY3SKRAOXDZ7YuPGeX5qwOmSki2ClfgdtepZ5kaIA874MfPF
+         oc1KhHLGK9aRw6Co5lnNG53wXECC2X9qJmaK/pj8gyKzawJKLakEmCCMIgtdXkYpzWPr
+         yWaqHcpwptu7SkQRQ2itQzVDoFBQwrtg033y0KE6zBJ0nYjFsJTAVN5vxW4eY0DUizlE
+         UI9RugnKukigRu8oX/DIAda83W4YtoNnvS+wokVBWN4H6XUXyqBP5ORlCyD/BbM7RQ7i
+         bhaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMjg2lXNagUyK9T1oWXnmkn2S2J5jhSb80o5KUM01ljSMRLD4+uqrHURCv67d7wM9ghQSXY2rrbiJE6rY=@vger.kernel.org, AJvYcCW43+P3STxsRjEeq0tc6Ie+RlmhMkHMFMUPiU55rL2pfVqB+JhreDT5Ik/xbxZsxJi/TYnULfj6LGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBmzuWt1RMnBiv8rQm19XS9arZimFCIBTa8FBJNhVv/LbKyzoD
+	TEcMDeuOX2PJzx7Ml28ioJayw3+yke8Izkz8Do9d8I/YlR8fOXsx1jS2kXMgG+7PXmZsOIJwTrl
+	C2gI1Rr96uvsSANSrrq9WNmA9O6hhSqoD
+X-Gm-Gg: ASbGncsHXL8HHIm5CbuugdCJPSe5fPcVqBC1TcFfU+ZGabfsnkqoLsGIW9QI9rWcs0D
+	7qutnbqwqcQfMm2D9X3cqRmsIcqDpqUHOOTI+Kbzpzcdg1balGyrP4Lfok31l0cS34VjZ2WjneD
+	cAX63nlXOq+tvMhHYUjCbtaeg=
+X-Google-Smtp-Source: AGHT+IEtKuCH9UnBosO14/ngAFvPxV0CRBDOD2T0Hg1J9ZT3B5F5Oc4UU7uJUaMRqVTEL8CO6+6qB4X6wZMCcTE/cUk=
+X-Received: by 2002:a05:622a:44f:b0:476:b4c9:f495 with SMTP id
+ d75a77b69052e-479775b886emr26586951cf.35.1744359719314; Fri, 11 Apr 2025
+ 01:21:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/13] arm64: dts: freescale: imx93-phyboard-segin: Add
- USB support
-To: Frank Li <Frank.li@nxp.com>, Primoz Fiser <primoz.fiser@norik.com>
-Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, upstream@lists.phytec.de,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- linux-arm-kernel@lists.infradead.org
-References: <20250410090251.1103979-1-primoz.fiser@norik.com>
- <20250410090251.1103979-12-primoz.fiser@norik.com>
- <Z/fi2W9UdFkwKpSa@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <Z/fi2W9UdFkwKpSa@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250410024439.20859-1-sultan@kerneltoast.com> <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com>
+From: Xuewen Yan <xuewen.yan94@gmail.com>
+Date: Fri, 11 Apr 2025 16:21:48 +0800
+X-Gm-Features: ATxdqUFKut-uH_0aQScHb7EaGHsMdOjhXCoo1oB35HQwlfLoMO68Ox5bJZ6Gr9E
+Message-ID: <CAB8ipk-EAALE1bhihF3k8i=uk_cPtDom+dD0KP-U3k=vgVj9ZA@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: schedutil: Don't ignore limit changes when util
+ is unchanged
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Sultan Alsawaf <sultan@kerneltoast.com>, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 10.04.25 17:25, Frank Li wrote:
-> On Thu, Apr 10, 2025 at 11:02:49AM +0200, Primoz Fiser wrote:
->> Add support for both USB controllers. Set first controller in OTG mode
->> (USB micro-AB connector X8) and the second one in host mode (USB type A
->> connector X7) by default. Note, the second controller is not OTG capable
->> due to HW design choice.
-> 
-> I think note is reduntant. USB type A connector means host only.
+...
+>
+> AFAICS, after this code modification, a limit change may be missed due
+> to a possible race with sugov_limits() which cannot happen if
+> sg_policy->limits_changed is only cleared when it is set before
+> updating sg_policy->need_freq_update.
+>
+could the following patch prevent the race?
 
-It's not uncommon for flashing to happen via a USB-A to USB-A cable, even
-if it's against the spec. I'd say the note is useful.
+https://lore.kernel.org/all/CAB8ipk_Ayqmh=Ch2aH2c+i-q+qdiQ317VBH1kOHYN=R9dt6LOw@mail.gmail.com/
 
-Thanks,
-Ahmad
-
-> Frank
->>
->> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
->> ---
->>  .../boot/dts/freescale/imx93-phyboard-segin.dts     | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> index 027a34dbaf04..faad3c3e627c 100644
->> --- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> @@ -82,6 +82,19 @@ &lpuart1 {
->>  	status = "okay";
->>  };
->>
->> +/* USB  */
->> +&usbotg1 {
->> +	disable-over-current;
->> +	dr_mode = "otg";
->> +	status = "okay";
->> +};
->> +
->> +&usbotg2 {
->> +	disable-over-current;
->> +	dr_mode = "host";
->> +	status = "okay";
->> +};
->> +
->>  /* SD-Card */
->>  &usdhc2 {
->>  	pinctrl-names = "default", "state_100mhz", "state_200mhz";
->> --
->> 2.34.1
->>
-> 
-> 
-
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks!
+Regards
