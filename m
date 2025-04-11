@@ -1,209 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAECB29DB7F
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A111D2BF3DF;
+	Fri, 11 Apr 2025 12:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744373477; cv=none; b=sc0TmwxpsmNwy+YI2uDSLeBaKyUFvEXPsdNlIDwCpyGcA39+qSU2Ha+ftf3WMRupmJv9iG1DNEsDvr4XXHCqHozSbuIsYHVkPtVTtHoePWEjnQ/tAksSzwfm+yFTPZxdliESp4puNjRuyY6Hr6oxe2t6L6UsjURt/FyLZ13HOpY=
+	t=1744373479; cv=none; b=aij4CgPGVQkySSXi0TARSksd/JdqDE5Yp9+VYYZpoRubs0yAAPuf3CC82XoT0UdP5eghz78Yz2E60OP0ImnLzpQnmOmuRNX+1u9Fg/kWvYHZXNFaaVPfmHGEmcVmcjJW9NEgIXT1m3ikbahWAKqQQIMa3jwZwBBnyF9IBG4m8As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744373477; c=relaxed/simple;
-	bh=X+DN+3mbXF2eSdl3gYrRAxrQHeBLbRe3zMRKj7ZCiW8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jNQEINVEotxVIboXKc2dlDDgUbwbuaXPXahL96kqfCBnozcStPq/janM990iD3c2lt6Yifs1fZk/SFJhQJUBfDXhIjPnwbhTffC3zlkLl1I4kGnp9X5hV5TPNm7iWGZV+6qawQmcV3CNEfGYmh6U2O5+iKSu8Frwb4fVKGilOqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0550106F;
-	Fri, 11 Apr 2025 05:11:13 -0700 (PDT)
-Received: from [10.57.71.210] (unknown [10.57.71.210])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D9EC3F694;
-	Fri, 11 Apr 2025 05:11:12 -0700 (PDT)
-Message-ID: <b62f5ea3-99cd-4e9e-a2a8-cb325308ed34@arm.com>
-Date: Fri, 11 Apr 2025 13:10:29 +0100
+	s=arc-20240116; t=1744373479; c=relaxed/simple;
+	bh=yzF33gKvYRvTTNQyiHSKd1m6sCWnvqK2EfrNCow/rKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qd0quCBjdTksYbOM4/cSfYqlDOUXoB26lEbWJC4dATODuQEN4SxlYFyI5Hq2f3J114ESvUEmVmaiCzF9tDqa/YjSc7V+NeC8dHVVd2J9Wf9gxAc8gxd0WrHBWyy6K/Z5DgMyVdWjyYi2S67dLcsdrtjorR/4wx5WGfKugD/9s0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KJrmP+Jo; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KJrmP+Jo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=rNYHj+jMsjKcQ0NBqVY00CTxiyNat9iFuHkI3uiocOY=; b=KJrmP+JovP2P9xpa3JDZx/JtZP
+	JtWQwOoCQvVCPB4QGUr5YlNkKzL3r7Q5mOODeZKTr1+MR3Dhk7G+Paus7+haNrtDezlEwg0j3NSKd
+	YcQudvJbx9SMzW55WVSP0oT924FtLAFG5eyLkvjBQKf+Cie6VGV/D73o5BfqDN5fT+Pkc67908pAp
+	0KhKLNFsCx4PTo+fip5FDCjhK/MFYrHbEOofJZiTd3Gp0CMf4cuYeGZtr8rxgKVUBtzqY5m6NtZ8k
+	PYv2jHn1UBaDECx067z/Fi7ZPPXJ/bPK0S5bsXIhQsnWK6ENdII4+oKiiHi/5bVoTtEiKwGkKZXc7
+	1nPsgQIg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54684)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u3DDq-0003Js-0Q;
+	Fri, 11 Apr 2025 13:11:02 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u3DDh-0004bC-1Y;
+	Fri, 11 Apr 2025 13:10:53 +0100
+Date: Fri, 11 Apr 2025 13:10:53 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Frank Sae <Frank.Sae@motor-comm.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Parthiban.Veerasooran@microchip.com, linux-kernel@vger.kernel.org,
+	"andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>, lee@trager.us,
+	horms@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
+	geert+renesas@glider.be, xiaogang.fan@motor-comm.com,
+	fei.zhang@motor-comm.com, hua.sun@motor-comm.com
+Subject: Re: [PATCH net-next v4 00/14] yt6801: Add Motorcomm yt6801 PCIe
+ driver
+Message-ID: <Z_kGzeUfQB9qa2EN@shell.armlinux.org.uk>
+References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
+ <Z_T6vv013jraCzSD@shell.armlinux.org.uk>
+ <da434f13-fb08-4036-96ed-7de579cb9ddc@motor-comm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu/arm-smmu-v3: Allow stream table to have nodes with
- the same ID
-To: Nicolin Chen <nicolinc@nvidia.com>, will@kernel.org
-Cc: joro@8bytes.org, jgg@nvidia.com, jsnitsel@redhat.com, praan@google.com,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250411044706.356395-1-nicolinc@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250411044706.356395-1-nicolinc@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <da434f13-fb08-4036-96ed-7de579cb9ddc@motor-comm.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 2025-04-11 5:47 am, Nicolin Chen wrote:
-> From: Jason Gunthorpe <jgg@nvidia.com>
+On Fri, Apr 11, 2025 at 05:50:55PM +0800, Frank Sae wrote:
 > 
-> ASPEED VGA card has two built-in devices:
->   0008:06:00.0 PCI bridge: ASPEED Technology, Inc. AST1150 PCI-to-PCI Bridge (rev 06)
->   0008:07:00.0 VGA compatible controller: ASPEED Technology, Inc. ASPEED Graphics Family (rev 52)
 > 
-> Its toplogy looks like this:
->   +-[0008:00]---00.0-[01-09]--+-00.0-[02-09]--+-00.0-[03]----00.0  Sandisk Corp Device 5017
->                               |               +-01.0-[04]--
->                               |               +-02.0-[05]----00.0  NVIDIA Corporation Device
->                               |               +-03.0-[06-07]----00.0-[07]----00.0  ASPEED Technology, Inc. ASPEED Graphics Family
->                               |               +-04.0-[08]----00.0  Renesas Technology Corp. uPD720201 USB 3.0 Host Controller
->                               |               \-05.0-[09]----00.0  Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller
->                               \-00.1  PMC-Sierra Inc. Device 4028
+> On 2025/4/8 18:30, Russell King (Oracle) wrote:
+> > On Tue, Apr 08, 2025 at 05:28:21PM +0800, Frank Sae wrote:
+> >> This series includes adding Motorcomm YT6801 Gigabit ethernet driver
+> >>  and adding yt6801 ethernet driver entry in MAINTAINERS file.
+> >> YT6801 integrates a YT8531S phy.
+> > 
+> > What is different between this and the Designware GMAC4 core supported
+> > by drivers/net/ethernet/stmicro/stmmac/ ?
+> > 
 > 
-> Being a legacy PCI device that does not have RID on the wire, the system
-> does not preserve a RID for that PCI bridge (0008:06), so the IORT code
-> has to dma alias for iort_pci_iommu_init() via pci_for_each_dma_alias(),
-> resulting in both of them getting the same Stream ID.
-> 
-> On a kernel prior to v6.15-rc1, there has been an overlooked warning:
->    pci 0008:07:00.0: vgaarb: setting as boot VGA device
->    pci 0008:07:00.0: vgaarb: bridge control possible
->    pci 0008:07:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
->    pcieport 0008:06:00.0: Adding to iommu group 14
->    ast 0008:07:00.0: stream 67328 already in tree   <===== WARNING
->    ast 0008:07:00.0: enabling device (0002 -> 0003)
->    ast 0008:07:00.0: Using default configuration
->    ast 0008:07:00.0: AST 2600 detected
->    ast 0008:07:00.0: [drm] Using analog VGA
->    ast 0008:07:00.0: [drm] dram MCLK=396 Mhz type=1 bus_width=16
->    [drm] Initialized ast 0.1.0 for 0008:07:00.0 on minor 0
->    ast 0008:07:00.0: [drm] fb0: astdrmfb frame buffer device
-> 
-> As such a legacy system might not use DMA at all, an iommu_probe_device()
-> failure didn't actually break it, except that warning that does not block
-> the system boot flow.
-> 
-> With v6.15-rc, since the commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing
-> into the proper probe path"), the error returned with the warning is moved
-> to the IOMMU device probe flow, e.g. call trace with SMMUv3:
->    arm_smmu_probe_device+0x15c/0x4c0
->    __iommu_probe_device+0x150/0x4f8
->    probe_iommu_group+0x44/0x80
->    bus_for_each_dev+0x7c/0x100
->    bus_iommu_probe+0x48/0x1a8
->    iommu_device_register+0xb8/0x178
->    arm_smmu_device_probe+0x1350/0x1db0
-> 
-> This then fails the entire SMMU driver probe:
->    arm-smmu-v3 arm-smmu-v3.9.auto: found companion CMDQV device: NVDA200C:04
->    arm-smmu-v3 arm-smmu-v3.9.auto: option mask 0x10
->    arm-smmu-v3 arm-smmu-v3.9.auto: ias 48-bit, oas 48-bit (features 0x001e1fbf)
->    arm-smmu-v3 arm-smmu-v3.9.auto: allocated 524288 entries for cmdq
->    arm-smmu-v3 arm-smmu-v3.9.auto: allocated 524288 entries for evtq
->    arm-smmu-v3 arm-smmu-v3.9.auto: allocated 524288 entries for priq
->    arm-smmu-v3 arm-smmu-v3.9.auto: allocated 524288 entries for vcmdq0
->    arm-smmu-v3 arm-smmu-v3.9.auto: allocated 524288 entries for vcmdq1
->    arm-smmu-v3 arm-smmu-v3.9.auto: msi_domain absent - falling back to wired irqs
->    arm-smmu-v3 arm-smmu-v3.9.auto: no priq irq - PRI will be broken
->    pci 0008:00:00.0: Adding to iommu group 10
->    pci 0008:01:00.0: Adding to iommu group 11
->    pci 0008:01:00.1: Adding to iommu group 12
->    pci 0008:02:00.0: Adding to iommu group 13
->    pci 0008:02:01.0: Adding to iommu group 14
->    pci 0008:02:02.0: Adding to iommu group 15
->    pci 0008:02:03.0: Adding to iommu group 16
->    pci 0008:02:04.0: Adding to iommu group 17
->    pci 0008:02:05.0: Adding to iommu group 18
->    pci 0008:03:00.0: Adding to iommu group 19
->    pci 0008:05:00.0: Adding to iommu group 20
->    pci 0008:06:00.0: Adding to iommu group 21
->    pci 0008:07:00.0: stream 67328 already in tree
->    arm-smmu-v3 arm-smmu-v3.9.auto: Failed to register iommu
->    arm-smmu-v3 arm-smmu-v3.9.auto: probe with driver arm-smmu-v3 failed with error -22
-> 
-> Given that a device bundled with a legacy PCI bridge could have duplicated
-> Stream IDs, the concept of a stream_id tree with unique node in the SMMUv3
-> driver doesn't work any more.
-> 
-> Change the arm_smmu_streams_cmp_node() to allow the stream table to hold
-> multiple nodes with the same Stream ID. Meanwhile, the reverse lookup from
-> the Stream ID to a device pointer will have to be broken, i.e. the eventq
-> handler will no longer find the device with a Stream ID in such cases.
+> We support more features: NS, RSS, wpi, wol pattern and aspm control.
 
-Heh, I was about to start looking at this one myself once I finished 
-making sense of the Juno issue...
+Is it not possible to add those features?
 
-This is adding support for StreamID aliasing between devices, and as 
-such it is incomplete. It's not OK to just allow devices to arbitrarily 
-rewrite each other's STEs, that's the whole reason this uniqueness check 
-exists in the first place! Aliases can only be permitted within a group, 
-which means arm_smmu_device_group() also has to check and account for 
-them in the first place - note that that applies to PCI devices as well, 
-because as soon as we allow StreamID aliasing at all then we're 
-inherently allowing RID->SID mappings to alias outside the PCI hierarchy 
-in ways that pci_device_group() can't know about. It should work out 
-basically the same as SMMUv2, just with the streams tree in place of the 
-S2CR array.
-
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Tested-by: Nicolin Chen <nicolinc@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 31 +++++++++++++++++++--
->   1 file changed, 29 insertions(+), 2 deletions(-)
+> > Looking at the register layout, it looks very similar. The layout of the
+> > MAC control register looks similar. The RX queue and PMT registers are
+> > at the same relative offset. The MDIO registers as well.
+> > 
+> > Can you re-use the stmmac driver?
+> > 
 > 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index b4c21aaed126..5ce64dc78e12 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -1762,8 +1762,25 @@ static int arm_smmu_streams_cmp_key(const void *lhs, const struct rb_node *rhs)
->   static int arm_smmu_streams_cmp_node(struct rb_node *lhs,
->   				     const struct rb_node *rhs)
->   {
-> -	return arm_smmu_streams_cmp_key(
-> -		&rb_entry(lhs, struct arm_smmu_stream, node)->id, rhs);
-> +	struct arm_smmu_stream *stream_lhs =
-> +		rb_entry(lhs, struct arm_smmu_stream, node);
-> +	struct arm_smmu_stream *stream_rhs =
-> +		rb_entry(rhs, struct arm_smmu_stream, node);
-> +
-> +	if (stream_lhs->id < stream_rhs->id)
-> +		return -1;
-> +	if (stream_lhs->id > stream_rhs->id)
-> +		return 1;
-> +
-> +	/*
-> +	 * The stream table can have multiple nodes with the same ID if there
-> +	 * are DMA aliases.
-> +	 */
-> +	if (stream_lhs < stream_rhs)
-> +		return -1;
-> +	if (stream_lhs > stream_rhs)
-> +		return 1;
-> +	return 0;
->   }
->   
->   static struct arm_smmu_master *
-> @@ -1776,6 +1793,16 @@ arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
->   	node = rb_find(&sid, &smmu->streams, arm_smmu_streams_cmp_key);
->   	if (!node)
->   		return NULL;
-> +	/*
-> +	 * If there are DMA alises then there are multiple devices with the same
-> +	 * stream ID and we cannot reliably convert from SID to master.
-> +	 */
-> +	if (node->rb_left &&
-> +	    rb_entry(node->rb_left, struct arm_smmu_stream, node)->id == sid)
-> +		return NULL;
-> +	if (node->rb_right &&
-> +	    rb_entry(node->rb_right, struct arm_smmu_stream, node)->id == sid)
-> +		return NULL;
+> I can not re-use the stmmac driver, because pcie and ephy can not work well on
+> the stmmac driver.
 
-This doesn't really work - the whole mechanism needs to fundamentally 
-change to mapping StreamIDs to groups rather than to devices. Then it's 
-really up to individual callers what they want to do if the group has 
-more than one device.
+Doesn't the stmmac driver support PCIe already (e.g. for Intel
+platforms?) Can't it be fixed?
 
-Thanks,
-Robin.
+We shouldn't be duplicating what we already have, but fixing it if
+there are problems.
 
->   	return rb_entry(node, struct arm_smmu_stream, node)->master;
->   }
->   
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
