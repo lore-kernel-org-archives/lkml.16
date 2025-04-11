@@ -1,157 +1,159 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BA927D760;
-	Fri, 11 Apr 2025 07:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 729C4283C8A;
+	Fri, 11 Apr 2025 07:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744355558; cv=none; b=ADjacDwh1eeNNrkrRU6jEVbZHxT1PI09Qn5om2cadJ8b6l5bM/b2ZJzkTkmHeCNvOmDjwJdkrlqYC4nY7XCCMfGBif9EiZooo7S05JAY2nv4mJxrLKTfZDZnlKUyJASRd4zCaBPG4D3dc5GC57PfTE/e6Vi8NNMWk/BL0CUhCwo=
+	t=1744355562; cv=none; b=Bg0wTjfrhdyfk0kq9ScmuLQrWCWB/i7wP6VkjXnGvXZOkhqpTMSC1+KuBeVmDR6Dzw8tq4/jfl0yKlbZ2VP71EQxB3TRNUiEW3hN0dIxf7nro0u+KvPUUTANusD8YYIeaUu6iYHhutT/H2a7TBxoAf5pWaAv+o8y0olivMUxEc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744355558; c=relaxed/simple;
-	bh=mZ5yZ/RRH5jPH/YqF59ciQA4yPAyUYG2Z7W2fOiCoww=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=XLhcK6tN/RtQ6oWf3Vr3qkeC87rFcS25SBZZ/htThiz3f54ZwBES8nTtzqS17r4B/2fnlxMbOAjc19yiY05rnfw8T/XKVs+fmbEogW1IVkXTTQdDvLzC+be1N6FPTcCkPtP8M++Sxk+4YsaKwawX3uqPTzInjHREn7MQ59JRIvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GTW0m84Z; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744355562; c=relaxed/simple;
+	bh=yY1oHUe582lGxyx4eCz34x3c0y9yzaNniW+6J65cqqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lNwTltcd5kxI7dXEb/KRwV7eL/nK7sok//OfsyKobw+RT+kApU5/hQxT+FKQ8HnUCopEFoh2TLB/pNsScnX4G2ErH2C0WSU0WQ6NJtyFMgb6hk6G5/MyZMzapyMirn4uCY0JHuB6VjGRjN7F2IYewtRQmQw+e6AuxAdKjVOOU6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WUO4j2Cx; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTW0m84Z"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-879d2e419b9so1472838a12.2;
-        Fri, 11 Apr 2025 00:12:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744355555; x=1744960355; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KzShCwppEme7OMOnT5z5FD+rJw9aaKOfx1ISsPkjuh4=;
-        b=GTW0m84ZCjUe97nVIDfVEFewCEv/JL9SfDQXndJoTQfYt5h0PQNGAjsLTvQwH1sMfC
-         /9Ed3iPQFio3xY8t2gxEFxhlgc099oepFFTYSkTpLFJNvRA2pmiqtHJeBGGGM4XWHWYW
-         OsVdGo3Aqo/fWnjnB6BbBvUI2GksOcfNrhXtVZBhduK3x/OxgD7Y7bEuKtDEKDfqr0zI
-         wOc0FIgrUlul2Nejy4hYi70jFoDaNovyjZhusQPaplXOfX0Ki7LaQLZZuBkvpuochkjo
-         poKjs+661eFXfJK9YfDmNHvI/Img3YSvVvnMui+lkroHH23EnZ+BLPkLoauDkT8B4JLK
-         XdlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744355555; x=1744960355;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KzShCwppEme7OMOnT5z5FD+rJw9aaKOfx1ISsPkjuh4=;
-        b=oesXQ/Zo0ocHJUFXHCnGih2yHNkp7OCLCkDIb5US6cyc+sXxnvXjM5bRzXBVad97/D
-         NUCITSwylTvusPMGI6jC2gXf5OWVN7wtuffBXtlhT67ZPLFhUF0lhvaj2ue8oLnXUsKg
-         MDP3NoqI926IV5dMOOPSczmaBFQ+AhIxgSdNgy/lzguvayYbBVlDXq+QddOyrUX3vX9B
-         QU5KivGPoUTNbFodpq+98zb1ukkw0+Tph8ggLm/NQPMbkhNSYPCUWj9kGst3G4F0+yp7
-         eRaeYpf0z0UuPdNijxTznMuyOD1FyGFPfr+9lAza5llWOiQDSBnssWVxxmDeoimb8QxE
-         r6sw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6kLmmMo/iugTBda3rExPVhWoFMIkGeyyYU2awBdKrWzdXK2EXy5OcJZg81mtpd6sbTGOHHdR7xvm7fg==@vger.kernel.org, AJvYcCWNU3LJ1TAWr1zTt3aCojcu8o1LMBGP0FfV6hOaxgAbi8zys3jmRENhlvOz2u51QCEzE3pYEaVitv3Xd/s=@vger.kernel.org, AJvYcCXnP2eBT2dnoAfvdyc9JzAjhZYMR2b1pKrgT5q/RXZOF0Uh5DTeTvJ85kWOh6sJAtrKmvFMCjMEO1EbVg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKKM7XqkUSfSfVlP04WAu4Hj50cGxtTFCH2khK6jxWkvRm392A
-	d4CZxFxICxI5emXFQt+fa6oaESyxHRzUtfYPZ0YclkI77hboGO22
-X-Gm-Gg: ASbGnctlYEferU/hFw1OUAgpN1t6CMN4v69xWkKTww/DJe7IHHPKTUzAmbl/iqW6iae
-	BdBpKEj3CiXJdU4Np9MTzXQ+r2sk3K6F5mVzlfKHy+k6d5WQEpmulSvOm+UKn8uN9o2LSFH0mAR
-	hqe6GsfMu8WxePqYXv7OXwZZ4a1Ww0jeJq58+39FewyQDrGGDprHU4CqqXRBVz5KPn6XRak3he6
-	kMJhLc6ikP2Vj1t6SSYjC55dm02vANml8G3+ejAMxb0gOus9RS5snPYA82e3Ey1miNPpu3oSfzc
-	oNohYoUm1yWbn2Z/S/T5lQVeYrzZwiZoZw==
-X-Google-Smtp-Source: AGHT+IHpSOk8rGIiMZXty/hbuCSKlXyveZLgB4pNTJ04Shha/BPkKtAvaM61qadHeDDYt8o+ld2JZA==
-X-Received: by 2002:a17:90b:5245:b0:2ff:784b:ffe with SMTP id 98e67ed59e1d1-3082377c271mr2980340a91.11.1744355555591;
-        Fri, 11 Apr 2025 00:12:35 -0700 (PDT)
-Received: from localhost ([220.253.99.94])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd171942sm4948139a91.33.2025.04.11.00.12.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 00:12:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WUO4j2Cx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=hTcAR
+	Rvnn8qq+1dZy1r2KQFiwbDtnMu0NN5G/m8h1rY=; b=WUO4j2Cx0zqDMuEg6OOfF
+	dAL+rj23i/NN4VUrnQUzMyL/bLmRtaJcTAMa9X/20nde/OHqa88CI5ifj/KHxkxI
+	iY9JBihV8EYUO7iUD4vdmob/0WvgYgyiYsCGckXHxzPnt59WC16BIyUwu8y+/4OZ
+	v76b+v5RN77UiGDF3dUER0=
+Received: from localhost (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgBXThbEwPhnm38MAA--.12885S2;
+	Fri, 11 Apr 2025 15:12:04 +0800 (CST)
+From: Honggang LI <honggangli@163.com>
+To: zyjzyj2000@gmail.com,
+	jgg@ziepe.ca,
+	leon@kernel.org,
+	matsuda-daisuke@fujitsu.com
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Honggang LI <honggangli@163.com>
+Subject: [PATCH] RDMA/rxe: Fix kernel panic for fast registered MR
+Date: Fri, 11 Apr 2025 15:11:41 +0800
+Message-ID: <20250411071141.82619-1-honggangli@163.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 11 Apr 2025 17:12:28 +1000
-Message-Id: <D93MFO5IGN4M.2FWKFWQ9G807P@gmail.com>
-Cc: "Hugh Dickins" <hughd@google.com>, "Guenter Roeck" <linux@roeck-us.net>,
- "Juergen Gross" <jgross@suse.com>, "Jeremy Fitzhardinge" <jeremy@goop.org>,
- <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
- <kasan-dev@googlegroups.com>, <sparclinux@vger.kernel.org>,
- <xen-devel@lists.xenproject.org>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-s390@vger.kernel.org>
-Subject: Re: [PATCH v1 0/4] mm: Fix apply_to_pte_range() vs lazy MMU mode
-From: "Nicholas Piggin" <npiggin@gmail.com>
-To: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>
-X-Mailer: aerc 0.19.0
-References: <cover.1744037648.git.agordeev@linux.ibm.com>
-In-Reply-To: <cover.1744037648.git.agordeev@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgBXThbEwPhnm38MAA--.12885S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Gw43tF4fGryUtF48Cw47XFb_yoW7ur4DpF
+	WrJ3WYkF48G3WUZa1DAr1jg3y7Za17Za4DWr9Fq3sruF15urWUWasxtryjgryDtr1DJay2
+	qF1UXw4vkw4fGaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEeMK9UUUUU=
+X-CM-SenderInfo: 5krqwwxdqjzxi6rwjhhfrp/1tbiOgksRWf4vxhJ4wAAsI
 
-On Tue Apr 8, 2025 at 1:11 AM AEST, Alexander Gordeev wrote:
-> Hi All,
->
-> This series is an attempt to fix the violation of lazy MMU mode context
-> requirement as described for arch_enter_lazy_mmu_mode():
->
->     This mode can only be entered and left under the protection of
->     the page table locks for all page tables which may be modified.
->
-> On s390 if I make arch_enter_lazy_mmu_mode() -> preempt_enable() and
-> arch_leave_lazy_mmu_mode() -> preempt_disable() I am getting this:
->
->     [  553.332108] preempt_count: 1, expected: 0
->     [  553.332117] no locks held by multipathd/2116.
->     [  553.332128] CPU: 24 PID: 2116 Comm: multipathd Kdump: loaded Taint=
-ed:
->     [  553.332139] Hardware name: IBM 3931 A01 701 (LPAR)
->     [  553.332146] Call Trace:
->     [  553.332152]  [<00000000158de23a>] dump_stack_lvl+0xfa/0x150
->     [  553.332167]  [<0000000013e10d12>] __might_resched+0x57a/0x5e8
->     [  553.332178]  [<00000000144eb6c2>] __alloc_pages+0x2ba/0x7c0
->     [  553.332189]  [<00000000144d5cdc>] __get_free_pages+0x2c/0x88
->     [  553.332198]  [<00000000145663f6>] kasan_populate_vmalloc_pte+0x4e/=
-0x110
->     [  553.332207]  [<000000001447625c>] apply_to_pte_range+0x164/0x3c8
->     [  553.332218]  [<000000001448125a>] apply_to_pmd_range+0xda/0x318
->     [  553.332226]  [<000000001448181c>] __apply_to_page_range+0x384/0x76=
-8
->     [  553.332233]  [<0000000014481c28>] apply_to_page_range+0x28/0x38
->     [  553.332241]  [<00000000145665da>] kasan_populate_vmalloc+0x82/0x98
->     [  553.332249]  [<00000000144c88d0>] alloc_vmap_area+0x590/0x1c90
->     [  553.332257]  [<00000000144ca108>] __get_vm_area_node.constprop.0+0=
-x138/0x260
->     [  553.332265]  [<00000000144d17fc>] __vmalloc_node_range+0x134/0x360
->     [  553.332274]  [<0000000013d5dbf2>] alloc_thread_stack_node+0x112/0x=
-378
->     [  553.332284]  [<0000000013d62726>] dup_task_struct+0x66/0x430
->     [  553.332293]  [<0000000013d63962>] copy_process+0x432/0x4b80
->     [  553.332302]  [<0000000013d68300>] kernel_clone+0xf0/0x7d0
->     [  553.332311]  [<0000000013d68bd6>] __do_sys_clone+0xae/0xc8
->     [  553.332400]  [<0000000013d68dee>] __s390x_sys_clone+0xd6/0x118
->     [  553.332410]  [<0000000013c9d34c>] do_syscall+0x22c/0x328
->     [  553.332419]  [<00000000158e7366>] __do_syscall+0xce/0xf0
->     [  553.332428]  [<0000000015913260>] system_call+0x70/0x98
->
-> This exposes a KASAN issue fixed with patch 1 and apply_to_pte_range()
-> issue fixed with patches 2-3. Patch 4 is a debug improvement on top,
-> that could have helped to notice the issue.
->
-> Commit b9ef323ea168 ("powerpc/64s: Disable preemption in hash lazy mmu
-> mode") looks like powerpc-only fix, yet not entirely conforming to the
-> above provided requirement (page tables itself are still not protected).
-> If I am not mistaken, xen and sparc are alike.
+`rxe_reg_fast_mr` does not set the `umem` for fast registered MRs.
+Check the `umem` pointer before check `umem->is_odp` flag, otherwise
+we will have kernel panic issue.
 
-Huh. powerpc actually has some crazy code in __switch_to() that is
-supposed to handle preemption while in lazy mmu mode. So we probably
-don't even need to disable preemption, just use the raw per-cpu
-accessors (or keep disabling preemption and remove the now dead code
-from context switch).
+[ 1475.416503] BUG: kernel NULL pointer dereference, address: 0000000000000028
+[ 1475.416560] #PF: supervisor read access in kernel mode
+[ 1475.416583] #PF: error_code(0x0000) - not-present page
+[ 1475.416607] PGD 0 P4D 0
+[ 1475.416625] Oops: Oops: 0000 [#1] SMP PTI
+[ 1475.416649] CPU: 2 UID: 0 PID: 6106 Comm: kworker/u33:0 Kdump: loaded Not tainted 6.15.0-0.rc0.20250401git08733088b566.8.fc43.x86_64 #1 PREEMPT(lazy)
+[ 1475.416694] Hardware name: Powerleader PR1715R/X9DRD-iF, BIOS 3.3 09/10/2018
+[ 1475.416721] Workqueue: rxe_wq do_work [rdma_rxe]
+[ 1475.416774] RIP: 0010:rxe_mr_copy+0x71/0xf0 [rdma_rxe]
+[ 1475.416819] Code: 3c 24 4c 8b 4c 24 08 85 c0 44 8b 5c 24 18 4c 8b 54 24 10 44 8b 44 24 1c 75 4f 48 8b 87 f0 00 00 00 44 89 d9 4c 89 d2 4c 89 ce <f6> 40 28 02 74 09 48 83 c4 20 e9 20 47 00 00 48 83 c4 20 e9 57 f7
+[ 1475.416874] RSP: 0018:ffffcbcfc936fd70 EFLAGS: 00010246
+[ 1475.416897] RAX: 0000000000000000 RBX: ffff8a9c48314328 RCX: 000000000000003c
+[ 1475.416924] RDX: ffff8a9dc5f7110a RSI: ffff8a9c4ce40024 RDI: ffff8a9c44ae9200
+[ 1475.416949] RBP: ffff8a9c4007f800 R08: 0000000000000000 R09: ffff8a9c4ce40024
+[ 1475.416974] R10: ffff8a9dc5f7110a R11: 000000000000003c R12: ffff8a9c45112000
+[ 1475.416999] R13: ffff8a9c4007f800 R14: 0000000000000000 R15: ffff8a9c4007fc28
+[ 1475.417024] FS:  0000000000000000(0000) GS:ffff8a9dfb58e000(0000) knlGS:0000000000000000
+[ 1475.417052] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1475.417075] CR2: 0000000000000028 CR3: 000000040282e006 CR4: 00000000001726f0
+[ 1475.417103] Call Trace:
+[ 1475.417119]  <TASK>
+[ 1475.417135]  execute+0x281/0x310 [rdma_rxe]
+[ 1475.417179]  rxe_receiver+0x41f/0xda0 [rdma_rxe]
+[ 1475.417219]  do_task+0x61/0x1d0 [rdma_rxe]
+[ 1475.417256]  process_one_work+0x18e/0x350
+[ 1475.417286]  worker_thread+0x25a/0x3a0
+[ 1475.417309]  ? __pfx_worker_thread+0x10/0x10
+[ 1475.417334]  kthread+0xfc/0x240
+[ 1475.417354]  ? __pfx_kthread+0x10/0x10
+[ 1475.417374]  ret_from_fork+0x34/0x50
+[ 1475.417396]  ? __pfx_kthread+0x10/0x10
+[ 1475.417416]  ret_from_fork_asm+0x1a/0x30
+[ 1475.418046]  </TASK>
+[ 1475.418615] Modules linked in: rnbd_server rtrs_server rtrs_core rdma_cm iw_cm ib_cm brd rdma_rxe ib_uverbs ip6_udp_tunnel udp_tunnel ib_core rfkill intel_rapl_msr intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel sunrpc kvm binfmt_misc rapl intel_cstate iTCO_wdt intel_pmc_bxt iTCO_vendor_support ipmi_ssif intel_uncore pcspkr isci acpi_ipmi i2c_i801 i2c_smbus mgag200 ipmi_si mei_me lpc_ich libsas mei scsi_transport_sas ipmi_devintf ioatdma joydev ipmi_msghandler acpi_pad ip6_tables ip_tables fuse loop nfnetlink zram lz4hc_compress lz4_compress igb polyval_clmulni polyval_generic ghash_clmulni_intel sha512_ssse3 sha256_ssse3 dca sha1_ssse3 i2c_algo_bit wmi
+[ 1475.422332] CR2: 0000000000000028
 
-IIRC all this got built up over a long time with some TLB flush
-rules changing at the same time, we could probably stay in lazy mmu
-mode for a longer time until it was discovered we really need to
-flush before dropping the PTL.
+Fixes: 2fae67ab63db ("RDMA/rxe: Add support for Send/Recv/Write/Read with ODP")
+Fixes: d03fb5c6599e ("RDMA/rxe: Allow registering MRs for On-Demand Paging")
+Signed-off-by: Honggang LI <honggangli@163.com>
+---
+ drivers/infiniband/sw/rxe/rxe_mr.c   | 4 ++--
+ drivers/infiniband/sw/rxe/rxe_odp.c  | 2 +-
+ drivers/infiniband/sw/rxe/rxe_resp.c | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-ppc64 and sparc I think don't even need lazy mmu mode for kasan (TLBs
-do not require flushing) and will function just fine if not in lazy
-mode (they just flush one TLB at a time), not sure about xen. We could
-actually go the other way and require that archs operate properly when
-not in lazy mode (at least for kernel page tables) and avoid it for
-apply_to_page_range()?
+diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c b/drivers/infiniband/sw/rxe/rxe_mr.c
+index 868d2f0b74e9..7aebb359f69d 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mr.c
++++ b/drivers/infiniband/sw/rxe/rxe_mr.c
+@@ -323,7 +323,7 @@ int rxe_mr_copy(struct rxe_mr *mr, u64 iova, void *addr,
+ 		return err;
+ 	}
+ 
+-	if (mr->umem->is_odp)
++	if (mr->umem && mr->umem->is_odp)
+ 		return rxe_odp_mr_copy(mr, iova, addr, length, dir);
+ 	else
+ 		return rxe_mr_copy_xarray(mr, iova, addr, length, dir);
+@@ -536,7 +536,7 @@ int rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
+ 	u64 *va;
+ 
+ 	/* ODP is not supported right now. WIP. */
+-	if (mr->umem->is_odp)
++	if (mr->umem && mr->umem->is_odp)
+ 		return RESPST_ERR_UNSUPPORTED_OPCODE;
+ 
+ 	/* See IBA oA19-28 */
+diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
+index 9f6e2bb2a269..066a50da06f4 100644
+--- a/drivers/infiniband/sw/rxe/rxe_odp.c
++++ b/drivers/infiniband/sw/rxe/rxe_odp.c
+@@ -229,7 +229,7 @@ int rxe_odp_mr_copy(struct rxe_mr *mr, u64 iova, void *addr, int length,
+ 	if (length == 0)
+ 		return 0;
+ 
+-	if (unlikely(!mr->umem->is_odp))
++	if (unlikely(!(mr->umem && mr->umem->is_odp)))
+ 		return -EOPNOTSUPP;
+ 
+ 	switch (dir) {
+diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
+index 54ba9ee1acc5..e27efc93a138 100644
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@ -650,7 +650,7 @@ static enum resp_states process_flush(struct rxe_qp *qp,
+ 	struct resp_res *res = qp->resp.res;
+ 
+ 	/* ODP is not supported right now. WIP. */
+-	if (mr->umem->is_odp)
++	if (mr->umem && mr->umem->is_odp)
+ 		return RESPST_ERR_UNSUPPORTED_OPCODE;
+ 
+ 	/* oA19-14, oA19-15 */
+@@ -706,7 +706,7 @@ static enum resp_states atomic_reply(struct rxe_qp *qp,
+ 	if (!res->replay) {
+ 		u64 iova = qp->resp.va + qp->resp.offset;
+ 
+-		if (mr->umem->is_odp)
++		if (mr->umem && mr->umem->is_odp)
+ 			err = rxe_odp_atomic_op(mr, iova, pkt->opcode,
+ 						atmeth_comp(pkt),
+ 						atmeth_swap_add(pkt),
+-- 
+2.49.0
 
-Thanks,
-Nick
