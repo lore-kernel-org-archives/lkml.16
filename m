@@ -1,58 +1,68 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9F71DED56
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F31189B84
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744356855; cv=none; b=izWJl/aKsLmM4zaNtgELYOmVemuXjtRT2fqAMl3w33ai2UknctofeHzEKe8SF0nLzfeVflsBAXKyUjZN2VVvl0iQ2ATa5L3mvzMGjpY6EnJd4NgnJ5Yu487LW5rnFiMCpy9RMVevELQk7D7hMRyMPbiy5nsxrfwgy5h8acw6XPY=
+	t=1744357020; cv=none; b=OEYgEzV3/xJqyj6c+CDEmREsArosOZtzL1xwaVmZbj33wREQIwQYcEHx1US/UV3JQ+UC2GES6GLEJZqfpwf0N9fFJ3igxn3kjNityopcK9uBSATnXysJK3NyTb8oZ0Uz6LD+netZHyrLt0zT47W3f0qAKt8rggZw9rGo/gsKmsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744356855; c=relaxed/simple;
-	bh=GQSY4n3NRJog1bda4ITkgQYSFl+YVkb7GieEnd7A4hA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G3kWupYSLeIyGYDTDtDGVNv0uDI+xKpgbWeXCp0fm7OYsk4AU+sObnxKJ9b50kzbhhwUqbHldYsp7KMLyaCvggimKmDWOzWePopUlfUkmIh2eEHev6q82Fm4Xw5yd1b+dy2NLYlGfDTQTZk2fYPhh7l5Xi9vGHLvFITmkHpPjt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=iIOgSk69; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744357020; c=relaxed/simple;
+	bh=Eot6P+KVGStRurl8Bhy1OmACevaHt3aZ1MNpvvOPV2Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V5xvlXYl/poRYkWLjWmUd1WqHJS+8bXKla9/zqaTi1QCZyErhgxgdsjMNAWHWcPXwVKK8t9yHolzEOVxPBm+2YLP8PCXB7oAZANxtaYxcBEf8XfhwvhS1zCr3gijhWaeOqNZ5hUpgaLlCANh1opQRtk5NC+E78aZFTMsfvCLYCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xb+RrrgQ; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="iIOgSk69"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744356768;
-	bh=sd+Nl/eaYzN8NjAAOpF0InQ3lgV2aivi7Oa4f7/cTMQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=iIOgSk69q4aMhB1sFz4ecADvx0FTbhutrlvSGNq58rIM9JSEr6LIvLwzuBLfDdjeG
-	 eQaWEfELw4z3LyMrjB8x1ycElr77nnVs8KVVjuU3CG/833nOTQYNk2GzEM3SxBO6X/
-	 47Zzj51Oqkvg/49FbUQiH4h7BEKVGBEu81L0ebY0=
-X-QQ-mid: bizesmtpip4t1744356756t660852
-X-QQ-Originating-IP: dp3YO1nfHeRSP4/c/LdDabyOm2l79Z0gF2bkZ4hRILM=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 11 Apr 2025 15:32:31 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8021715095780151493
-EX-QQ-RecipientCnt: 14
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com
-Cc: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	chenhuacai@kernel.org,
-	guanwentao@uniontech.com,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	niecheng1@uniontech.com,
-	palmer@dabbelt.com,
-	palmerdabbelt@google.com,
-	paul.walmsley@sifive.com,
-	samuel.holland@sifive.com,
-	vincent.chen@sifive.com,
-	zhanjun@uniontech.com
-Subject: [PATCH v4 2/2] riscv: KGDB: Remove ".option norvc/.option rvc" for kgdb_compiled_break
-Date: Fri, 11 Apr 2025 15:32:22 +0800
-Message-ID: <8B431C6A4626225C+20250411073222.56820-2-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <D5A83DF3A06E1DF9+20250411072905.55134-1-wangyuli@uniontech.com>
-References: <D5A83DF3A06E1DF9+20250411072905.55134-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xb+RrrgQ"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af9a6b3da82so1193033a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744357018; x=1744961818; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7vdbBaoGrQbAlkZQgYnERkJPOi1id01r4Ys3QBFfKms=;
+        b=Xb+RrrgQhzZTFqbQhVII0BNoiS5ZThECtE7uP5MnrFpb8mLw2clxwCetEMZveuQFzf
+         wLj9kBoPqCxX6XH9CpcWGzEo5qknBSkHAkan0sV9CuPonJHobgguWNSd/Hpa8kG9eQvd
+         VdSuCCHXeZLipTpPOZ7seCrpCtULPbJ0IGn1PMTibVP2LfbLRfTIl9Hx1RfECRpA0t2Z
+         6tOrFPHVUItj98yMDnKKpCkktowciUJgaX6Tj2yKZC9E0ClmviF7WuPx9MDserKISp8y
+         XxkH6JDGnnF41YwGOefFDPGkwMarCXp4Yx7q7mmOSrtebTVy8fOHA8NFI04pKlIVljUA
+         lyGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744357018; x=1744961818;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7vdbBaoGrQbAlkZQgYnERkJPOi1id01r4Ys3QBFfKms=;
+        b=cvE/vZpAauL0JxuyAM9s6mA3aDsYBWqxbNzkUP0D7E163f/qF0m2VS+Acz8AMLDRc/
+         VwRpo/OwYXEiAjUCpFltfL62HELHESHf5U2CQgZc06vBHDKzj5pIAP1yge0P3n2jnG0J
+         /lxrPg9GcU6r7a8I57XsikQzmkXo3yXyWV88KnFdJpQSJQeFHM2mOe09j8+BXjvRwbO0
+         6CHA3LiJJ2fyTZ1ORbi8vqHLTutnNp8h8+HFxUvODPM4ZYSXbM+NWVCfNmjAxxQhU0kk
+         WqHcEyfOLiSAMXFh0kxEc50KY8DOCNYxNKtOU4/kwAKGs+kjXdiTjCGKyvWN877D7zRG
+         Xs1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWHxvbPe35SD1E5WMyBFABL2zWPDpr82u4dBp8Ela4IGRy4grfauRTVufHWlZ63pwsbqSPMQmx9WMNGHwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyba2JYSDjQ2c5jKqpPCO03SIUswSTTEgm+eNKIvnnRAv+yFdM1
+	ezNzABcdBs0zkLyBBDe2Xbj3g8hTWdP6/7CVmhOqp3vAMmbGE2Qg5cS0GHnBURY=
+X-Gm-Gg: ASbGncudktzVG22gC8DrYHtjMjKpwowaYtV6fiu4J0l9PwqI+/IeOdIc3+mnjfuZnr3
+	kKFFCOI9AzcmmUlGdSA3KgEwZwEcef2E0b9NKofnVzKMtFhSCVXZXRN8ye+KlCcC99z2iTBzAXL
+	jZSacJIpYSswc1PA6fDB18Nwz3pL04NC/1YRrLaFiBfxkO4evT0yxVhF81qxFWtAS1Gp8VV6hIm
+	0rS27KtvRjV1g1c8y0hFLnfhR0prrjJjHP7qdePDzMrlihf3uKJpHUckf+8v7BToBnk3UYHHg+N
+	G3fWCjb0kyYZ2J4HdSa28khaXDz5tf9nL2h253zJ4bZkTrQVMg==
+X-Google-Smtp-Source: AGHT+IF+2lsSFkWzcEluMF1ylRV9Yqv71iReRkzlwAY2r/XwE2sl77FRzSjVoleE3jvMY0xzl/MUDg==
+X-Received: by 2002:a17:90b:1344:b0:305:5f2c:c577 with SMTP id 98e67ed59e1d1-30823675d07mr2671999a91.3.1744357018221;
+        Fri, 11 Apr 2025 00:36:58 -0700 (PDT)
+Received: from jemmy.. ([223.167.142.48])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd17192asm5018171a91.35.2025.04.11.00.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 00:36:57 -0700 (PDT)
+From: Jemmy Wong <jemmywong512@gmail.com>
+To: linux@weissschuh.net
+Cc: w@1wt.eu,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] tools/nolibc/types.h: fix mismatched parenthesis in minor()
+Date: Fri, 11 Apr 2025 15:36:24 +0800
+Message-ID: <20250411073624.22153-1-jemmywong512@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,75 +70,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MowBDtlQhFJIGhz6nIsmDMS1L+Ged06XYVsc0ui1ECiZXIgsFdsEcQ0E
-	wcr1QaADniCw7+hJbxyhdNfNM6RwJy1HWTktQkPt7xIBHy1jKXIOEGOedsWJ0sQot+QX6fK
-	2KHKbwt8Y1hb+MCdBJvxw98sLVjAYTb4+fsgVPUqBX0GQvyJUMWWlCSL0x6f2o2kcm/hoOd
-	hF81lsBoeUHMnImHN3za4/NL2cDxOBPR7YxptFYDVcBZLhHMG91hGQhjgknlFeyAQxLH6wa
-	IOgaXKN52+/GTxymvAOl7TccPCWjScYa08UhP/+pwuWHGnWS0RweuGwSSU8FA9OnXR9ytSK
-	5ISMj37TpkYJZDQJaH5dcVrrkUmVAL7jXmlE+whvwG6hv/TsLNUM0imbr64aIf3VH2JH884
-	VB2q5GzUyqj5QnP9xyEf+nP3N935oGk+wjwxc0R7tXFA4duVpiGSrE1/IMRRDhGBJ+9Wwe2
-	8CtJn54CPWD6s4gshvGeK/8GjkaBY4s/sH3++mVBeJ5RzplhkZlTShm5pidzbemex/GkO5N
-	2YKqwExhsu+1kTO6ZE6tF9mZ5nBBMTMSMly6MPEfbhbRiDde5NDUFwRpY9DNCkVgE5TRtQy
-	DzBMNkqAJjxEYFbOW8CDrzCj1/aXxuEXtLXnHi9RiQ5c6of4HFj3N9MPr4/McFo/DeQplEB
-	zzuwQvkm9w2Ik7HYjS00Y9B4i3dwuGglH0HT6KVnFEovJ4tXYoRMp78P9C0HAqxhlFkzfe/
-	mqp8n1n94RyX1MfdK86ZAN6OlS9n+u1iIUVHkWIKil3Pi6a5P7N7GntNgPa2GGW9jAfibqn
-	ISWd9hzOwu07Olld113/fBbxBGpUBqUXcRl+eccCbvhUPekSsyMjBxF4vg7UVlgOPY/lUxp
-	df5Rfb693AW0+xkugbOmASF/PerXExBruJRQBONUWwPlQGcMT5D3EKJQeUAh5lfCrWce05Y
-	oX71oIvKhx9XhkcvCgZGlEqhn9JbtM3G0DMBy+8VIysnqiRf7MDmxJSToO2fnhnPl7kyJAp
-	4uAyTpbakFc1IiSjXM7r2WpIgIF3YzfYDcnLXbiQ==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
 
-[ Quoting Samuel Holland: ]
+Fix an imbalance where opening parentheses exceed closing ones.
 
-  This is a separate issue, but using ".option rvc" here is a bug.
-  It will unconditionally enable the C extension for the rest of
-  the file, even if the kernel is being built with CONFIG_RISCV_ISA_C=n.
+Fixes: eba6d00d38e7c ("tools/nolibc/types: move makedev to types.h and make it a macro")
+Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
+Acked-by: Willy Tarreau <w@1wt.eu>
 
-[ Quoting Palmer Dabbelt: ]
-
-  We're just looking at the address of kgdb_compiled_break, so it's
-  fine if it ends up as a c.ebreak.
-
-[ Quoting Alexandre Ghiti: ]
-
-  .option norvc is used to prevent the assembler from using compressed
-  instructions, but it's generally used when we need to ensure the
-  size of the instructions that are used, which is not the case here
-  as noted by Palmer since we only care about the address. So yes
-  it will work fine with C enabled :)
-
-So let's just remove them all.
-
-Link: https://lore.kernel.org/all/4b4187c1-77e5-44b7-885f-d6826723dd9a@sifive.com/
-Link: https://lore.kernel.org/all/mhng-69513841-5068-441d-be8f-2aeebdc56a08@palmer-ri-x1c9a/
-Link: https://lore.kernel.org/all/23693e7f-4fff-40f3-a437-e06d827278a5@ghiti.fr/
-Fixes: fe89bd2be866 ("riscv: Add KGDB support")
-Cc: Samuel Holland <samuel.holland@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
- arch/riscv/kernel/kgdb.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Changes in v3:
+- Fix identity of sender and Signed-off-by
+- Add Fixes tag
 
-diff --git a/arch/riscv/kernel/kgdb.c b/arch/riscv/kernel/kgdb.c
-index 5d1ce8dacaf5..9f3db3503dab 100644
---- a/arch/riscv/kernel/kgdb.c
-+++ b/arch/riscv/kernel/kgdb.c
-@@ -257,9 +257,7 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
- noinline void arch_kgdb_breakpoint(void)
- {
- 	asm(".global kgdb_compiled_break\n"
--	    ".option norvc\n"
--	    "kgdb_compiled_break: ebreak\n"
--	    ".option rvc\n");
-+	    "kgdb_compiled_break: ebreak\n");
- }
+Changes in v2:
+- https://lore.kernel.org/all/20250409191436.75658-1-jemmywong512@gmail.com/
+- Formalize patch commit msg
+- Add subject prefix: "tools/nolibc/types.h:"
+
+Changes in v1:
+- https://lore.kernel.org/all/20250409181934.5589-1-jemmywong512@gmail.com/
+- Remove redundant '('
+
+---
+ tools/include/nolibc/types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
+index b26a5d0c417c..32d0929c633b 100644
+--- a/tools/include/nolibc/types.h
++++ b/tools/include/nolibc/types.h
+@@ -201,7 +201,7 @@ struct stat {
+ /* WARNING, it only deals with the 4096 first majors and 256 first minors */
+ #define makedev(major, minor) ((dev_t)((((major) & 0xfff) << 8) | ((minor) & 0xff)))
+ #define major(dev) ((unsigned int)(((dev) >> 8) & 0xfff))
+-#define minor(dev) ((unsigned int)(((dev) & 0xff))
++#define minor(dev) ((unsigned int)((dev) & 0xff))
  
- void kgdb_arch_handle_qxfer_pkt(char *remcom_in_buffer,
+ #ifndef offsetof
+ #define offsetof(TYPE, FIELD) ((size_t) &((TYPE *)0)->FIELD)
 -- 
-2.49.0
+2.43.0
 
