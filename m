@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A766127F4E0
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2414F280A2E
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744349918; cv=none; b=r9BhZWkwRiD0QhpXZQRIZiNCWU6KiNsIbdaNW/uGqpGcQsz/+0cM9ni6mjIarXFBMkOb6Pknad95yFYI1YzvjflXH7Es7aQr2p/qH39c1sIbuDQm2cirr6jr+n9nZaVDxRU44iATS5Jt+4yaW2zYdJMBiF85d6Ac1hJf8kzO5Uw=
+	t=1744349920; cv=none; b=s34OW9rldidX7EKByqgGYuKrf3C2D05aEUTV9OO8fy+cLkqg6E5H0jXt3YWmTGe6cB0/rQ+tV3mPkHcC5ck8TmoYMehz1TqJS2U9qojvQpzGgeo4K7ZwWefMNHQwH4NzAiIkeZVZDtWJv+fnh8QALu306jiwsxZ6eLo7U7Bac8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744349918; c=relaxed/simple;
-	bh=rjICgeUIqy4q+6BA6gJjSL9PfHRSNpxlfOZzBViefZQ=;
+	s=arc-20240116; t=1744349920; c=relaxed/simple;
+	bh=v9lrMVZhKNFZxoLDI4hHR+N4Zr7YuKL4/oewG3Z2Ea8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Vk0tz/fzqjW7LoF8jGy41z/HmZg2+zW3MZrmJ7PkzjuA+6nCK9A5ZFzhCxIZY8Vngq0RjwAqhR/9a9odn+AluOTsBa88tUJ6m6gH6clvPCE8DW4eFXzH9NG+/FJ/D0YcdP8xslx22Ol3+1Lfgbl9QY6Gp0tHLwrVHFtxcBJ3VRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JIR/nXO2; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=tbkCF6IQjo7rbWRCgSKZDJG1Q9bLfP5ul+QiWutLzrVAChzvGqxDEsPQlbuXwAhGzHrtsra/+KSrMFmn0WixBkAxXbLPJtUs7wZd+B80QVgY4fLPBuzDC/mvpSzr1ZOMolTS5BqfA1ZNTPEopTJJ67K/wCdB8u7aaRkAbxJFjm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sJFSf8eA; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JIR/nXO2"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2255ae39f8fso25014405ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:38:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sJFSf8eA"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7aecba07so1582195a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744349916; x=1744954716; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744349918; x=1744954718; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XwVp4OOgPlRngbn5ra+015ZDy9PB79QtA1kcHgCX6xE=;
-        b=JIR/nXO2Anwt3RYgl5HWlTOXA3NHOeJE8V8gU/xDJCIIe/p9DEfIcdOyL39mOEOm9+
-         J4LBM6AJsOsK7MZ3wJdVin6Wm7nMarl/+Jclt9oosxqKuLoF84+03v3DdiGYB5eFPh48
-         +KcRgtXGzwB5lXjZvUHACBopJHSvAEKfu7yGabVft4HvISQxHzPI/WcIY060NgxVfqNp
-         GD+Pm2ScnvOVplIzsvYa4ROwdeM5LROBP2J41aYIU11e63hYaqp7hUG7sUPazLrqOoQf
-         mIG/DVVN62UT67iahbvbs97UvUqbmMD8LnbFsu+8DZo7WmYIQs/DPThsEEWfgIVDsveQ
-         CWSw==
+        bh=lv1l1I9z2A9RMTDP3pEjoh98A/jPPW1Y8prl67P6/Ys=;
+        b=sJFSf8eAsINQl+e8RfindwXy+h7LJXW7QWvdrYf/PMChlK66DV3U+7r883PpsiUyB/
+         YD51zp6xXQ6oMB61Me5qN6J6puPsy1ejybbRgghofpudfYMb0Zoa4Q5YK7KoVOmtkxfl
+         m2wFnBbfQRUwPO9bQt9YfWNLO79frznwdS5U5YlAwZpxcVHhhB7PvjlU7z+CYMcLonSV
+         LfiSlkqjGS39JJpiyH0eHrF4gHVt9rxpl8IOpKEX8+PGzYsqM/NeRpnw8/Ob7HRPhzTr
+         MrWb5i7EFB7p9ntoVIH/9BtY+qbiyYZvlUgW48Xq4SOqkA+m35muPMVqEMRi7wIUCaTg
+         dAUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744349916; x=1744954716;
+        d=1e100.net; s=20230601; t=1744349918; x=1744954718;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XwVp4OOgPlRngbn5ra+015ZDy9PB79QtA1kcHgCX6xE=;
-        b=CmvGDEvKGYZI+wDwSdOucaEZ/3TqFSkRrdO0gtKJwePof5PqhpDyawIeh/pJSVOlKp
-         bVGUJBJFFlg1ZLFZjWPeCtrjn3Qkfx73sJo1ubhtBnowORCVMUOPcY0rc/NvOF4Xdy7e
-         LQqbLEgJnZz2MvH+QHKFSS63QpmkqBiMB31dZkyt+vxjLkXnwcRcf3fEaXEf03mt9+Pz
-         N/jC8qXYLahNARSo2oVghqg0HhEmyi9xWK9MZxBMseB6gubN1lVqMxt3uM+94Ay6iiTT
-         pggIke5qyy+eELaZGhP3XugZQeMs/iSD729v/auE+IQPw+02b5qvZxqLsLOV9OLc+zrW
-         hQFQ==
-X-Gm-Message-State: AOJu0YxQXicSNr3ubPusF42Qh8cRZl+DBf2Sx8NZ/9zWLUaFi/TMKbi4
-	bPCC78qi1GDe/CsLi7DYNbQOOeSIjrWtUznf/htNbk0rnz7LgTqWi7RHiHOVruTggO1hiWRXpf0
-	PjE8Nrv0UnwV9/JWTlELvZbVcvsKNVuSmfYD7kskRcdjzyiZz/2ZL6Ok2u1nBBQeyuleOGIhMUx
-	IRLM6UyYYGx0tiYvWm1ihRG6mAjrEgpDLHK2Pg0soDDEZCl5cw81lZnovJlxIXCg==
-X-Google-Smtp-Source: AGHT+IHxdPnuc2TYfLwCd9IDe8ouX7KQHFzd57k3DfleSG8BDX2oEcNCF76lTSltuytpC8emM71yRGFfu+F93+HC
-X-Received: from plgf6.prod.google.com ([2002:a17:902:ce86:b0:223:fb3a:ac08])
+        bh=lv1l1I9z2A9RMTDP3pEjoh98A/jPPW1Y8prl67P6/Ys=;
+        b=Mvqh5yFR7f9u6zEOj3W4ZGL+kw8Vbu/4WUXKjhCb6ra7DS6A8YhQKPKeF+sbZsGEY8
+         r0ETKdJq24qS5xFWlUY4T/mAs2lvufYLRODnyfbK05nhw1XxK304Hy4QKNysCUlDE7EQ
+         jXAyL78KbU94P06jVcH1UIEc8nxyl3oD59g1n5VXR6N37JI+Uv3YsFYMoa7idf1OGCHV
+         g3zIiS9B/fEbx7V1vglpg5zcEykaohE0zJQvkyxLda5XXQktGaOSIbsgC0eWIpzZXFm7
+         0bzjrky6b+UH40fPcPG6JTZlzDcC+YjXWdW9sXObD1wXE5NUamcy7yGhj33Tce9LBi/X
+         srdQ==
+X-Gm-Message-State: AOJu0Yy3yR+4uzQCLqzlWmgIC4fhcFHmz6aNxH3Lg0LzvzG9xigFrZ4h
+	EUBzqFz4OVqUjJ+9j9wBmJADVDptG8kkJWt1W7WAejmaE950+HnaVrEaD4b8eCmpN29mLcI0VS8
+	Mz25Q4SjGE1OUvMm/LBTGgOXH6MoXVKd0o0XSfb7H3XFIcXencarqxtj42bExY+xDetT8Z0TaRm
+	qQtcPh8h7luEa7DSLqep7V1X2gB70G/wzn3qGzNWOSCPn9jImVLTy5f7WAfxGzmA==
+X-Google-Smtp-Source: AGHT+IFDqnNrJ1yb2xJtOtea7MkZiHxum/paNcnypq1SzNi+wbhuEeT68KNiC92Vyv1O3vh0BoBg+A6LFRWhbKjQ
+X-Received: from pjc12.prod.google.com ([2002:a17:90b:2f4c:b0:2f4:465d:5c61])
  (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:ebcb:b0:21a:7e04:7021 with SMTP id d9443c01a7336-22bea0c6794mr26802705ad.24.1744349915769;
- Thu, 10 Apr 2025 22:38:35 -0700 (PDT)
-Date: Thu, 10 Apr 2025 22:37:40 -0700
+ 2002:a17:90b:274e:b0:2fe:80cb:ac05 with SMTP id 98e67ed59e1d1-3082367024emr2450558a91.9.1744349918309;
+ Thu, 10 Apr 2025 22:38:38 -0700 (PDT)
+Date: Thu, 10 Apr 2025 22:37:41 -0700
 In-Reply-To: <20250411053745.1817356-1-changyuanl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250411053745.1817356-1-changyuanl@google.com>
 X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250411053745.1817356-10-changyuanl@google.com>
-Subject: [PATCH v6 09/14] arm64: add KHO support
+Message-ID: <20250411053745.1817356-11-changyuanl@google.com>
+Subject: [PATCH v6 10/14] x86/setup: use memblock_reserve_kern for memory used
+ by kernel
 From: Changyuan Lyu <changyuanl@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
@@ -77,160 +78,86 @@ Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
 	will@kernel.org, x86@kernel.org, Changyuan Lyu <changyuanl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Alexander Graf <graf@amazon.com>
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-We now have all bits in place to support KHO kexecs. Add awareness of
-KHO in the kexec file as well as boot path for arm64 and adds the
-respective kconfig option to the architecture so that it can use KHO
-successfully.
+memblock_reserve() does not distinguish memory used by firmware from memory
+used by kernel.
 
-Changes to the "chosen" node have been sent to
-https://github.com/devicetree-org/dt-schema/pull/158.
+The distinction is nice to have for accounting of early memory allocations
+and reservations, but it is essential for kexec handover (kho) to know how
+much memory kernel consumes during boot.
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Use memblock_reserve_kern() to reserve kernel memory, such as kernel image,
+initrd and setup data.
+
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Co-developed-by: Changyuan Lyu <changyuanl@google.com>
 Signed-off-by: Changyuan Lyu <changyuanl@google.com>
 ---
- arch/arm64/Kconfig |  3 +++
- drivers/of/fdt.c   | 34 ++++++++++++++++++++++++++++++++++
- drivers/of/kexec.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 79 insertions(+)
+ arch/x86/kernel/setup.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index a182295e6f08b..34c79f4fee3f9 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1602,6 +1602,9 @@ config ARCH_SUPPORTS_KEXEC_IMAGE_VERIFY_SIG
- config ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
- 	def_bool y
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 9d2a13b37833c..766176c4f5ee8 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -286,8 +286,8 @@ static void __init cleanup_highmap(void)
+ static void __init reserve_brk(void)
+ {
+ 	if (_brk_end > _brk_start)
+-		memblock_reserve(__pa_symbol(_brk_start),
+-				 _brk_end - _brk_start);
++		memblock_reserve_kern(__pa_symbol(_brk_start),
++				      _brk_end - _brk_start);
  
-+config ARCH_SUPPORTS_KEXEC_HANDOVER
-+	def_bool y
-+
- config ARCH_SUPPORTS_CRASH_DUMP
- 	def_bool y
+ 	/* Mark brk area as locked down and no longer taking any
+ 	   new allocations */
+@@ -360,7 +360,7 @@ static void __init early_reserve_initrd(void)
+ 	    !ramdisk_image || !ramdisk_size)
+ 		return;		/* No initrd provided by bootloader */
  
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index aedd0e2dcd890..0edd639898a63 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -25,6 +25,7 @@
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
- #include <linux/random.h>
-+#include <linux/kexec_handover.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -875,6 +876,36 @@ void __init early_init_dt_check_for_usable_mem_range(void)
- 		memblock_add(rgn[i].base, rgn[i].size);
+-	memblock_reserve(ramdisk_image, ramdisk_end - ramdisk_image);
++	memblock_reserve_kern(ramdisk_image, ramdisk_end - ramdisk_image);
  }
  
-+/**
-+ * early_init_dt_check_kho - Decode info required for kexec handover from DT
-+ */
-+static void __init early_init_dt_check_kho(void)
-+{
-+	unsigned long node = chosen_node_offset;
-+	u64 fdt_start, fdt_size, scratch_start, scratch_size;
-+	const __be32 *p;
-+	int l;
-+
-+	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER) || (long)node < 0)
-+		return;
-+
-+	p = of_get_flat_dt_prop(node, "linux,kho-fdt", &l);
-+	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-+		return;
-+
-+	fdt_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-+	fdt_size = dt_mem_next_cell(dt_root_addr_cells, &p);
-+
-+	p = of_get_flat_dt_prop(node, "linux,kho-scratch", &l);
-+	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-+		return;
-+
-+	scratch_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-+	scratch_size = dt_mem_next_cell(dt_root_addr_cells, &p);
-+
-+	kho_populate(fdt_start, fdt_size, scratch_start, scratch_size);
-+}
-+
- #ifdef CONFIG_SERIAL_EARLYCON
- 
- int __init early_init_dt_scan_chosen_stdout(void)
-@@ -1169,6 +1200,9 @@ void __init early_init_dt_scan_nodes(void)
- 
- 	/* Handle linux,usable-memory-range property */
- 	early_init_dt_check_for_usable_mem_range();
-+
-+	/* Handle kexec handover */
-+	early_init_dt_check_kho();
- }
- 
- bool __init early_init_dt_scan(void *dt_virt, phys_addr_t dt_phys)
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index 5b924597a4deb..1ee2d31816aeb 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -264,6 +264,43 @@ static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
- }
- #endif /* CONFIG_IMA_KEXEC */
- 
-+static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node)
-+{
-+	int ret = 0;
-+#ifdef CONFIG_KEXEC_HANDOVER
-+	phys_addr_t fdt_mem = 0;
-+	phys_addr_t fdt_len = 0;
-+	phys_addr_t scratch_mem = 0;
-+	phys_addr_t scratch_len = 0;
-+
-+	ret = fdt_delprop(fdt, chosen_node, "linux,kho-fdt");
-+	if (ret && ret != -FDT_ERR_NOTFOUND)
-+		return ret;
-+	ret = fdt_delprop(fdt, chosen_node, "linux,kho-scratch");
-+	if (ret && ret != -FDT_ERR_NOTFOUND)
-+		return ret;
-+
-+	if (!image->kho.fdt || !image->kho.scratch)
-+		return 0;
-+
-+	fdt_mem = image->kho.fdt;
-+	fdt_len = PAGE_SIZE;
-+	scratch_mem = image->kho.scratch->mem;
-+	scratch_len = image->kho.scratch->bufsz;
-+
-+	pr_debug("Adding kho metadata to DT");
-+
-+	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-fdt",
-+				       fdt_mem, fdt_len);
-+	if (ret)
-+		return ret;
-+	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
-+				       scratch_mem, scratch_len);
-+
-+#endif /* CONFIG_KEXEC_HANDOVER */
-+	return ret;
-+}
-+
- /*
-  * of_kexec_alloc_and_setup_fdt - Alloc and setup a new Flattened Device Tree
-  *
-@@ -414,6 +451,11 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
- #endif
+ static void __init reserve_initrd(void)
+@@ -413,7 +413,7 @@ static void __init add_early_ima_buffer(u64 phys_addr)
  	}
  
-+	/* Add kho metadata if this is a KHO image */
-+	ret = kho_add_chosen(image, fdt, chosen_node);
-+	if (ret)
-+		goto out;
-+
- 	/* add bootargs */
- 	if (cmdline) {
- 		ret = fdt_setprop_string(fdt, chosen_node, "bootargs", cmdline);
+ 	if (data->size) {
+-		memblock_reserve(data->addr, data->size);
++		memblock_reserve_kern(data->addr, data->size);
+ 		ima_kexec_buffer_phys = data->addr;
+ 		ima_kexec_buffer_size = data->size;
+ 	}
+@@ -553,7 +553,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 		len = sizeof(*data);
+ 		pa_next = data->next;
+ 
+-		memblock_reserve(pa_data, sizeof(*data) + data->len);
++		memblock_reserve_kern(pa_data, sizeof(*data) + data->len);
+ 
+ 		if (data->type == SETUP_INDIRECT) {
+ 			len += data->len;
+@@ -567,7 +567,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 			indirect = (struct setup_indirect *)data->data;
+ 
+ 			if (indirect->type != SETUP_INDIRECT)
+-				memblock_reserve(indirect->addr, indirect->len);
++				memblock_reserve_kern(indirect->addr, indirect->len);
+ 		}
+ 
+ 		pa_data = pa_next;
+@@ -770,8 +770,8 @@ static void __init early_reserve_memory(void)
+ 	 * __end_of_kernel_reserve symbol must be explicitly reserved with a
+ 	 * separate memblock_reserve() or they will be discarded.
+ 	 */
+-	memblock_reserve(__pa_symbol(_text),
+-			 (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
++	memblock_reserve_kern(__pa_symbol(_text),
++			      (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
+ 
+ 	/*
+ 	 * The first 4Kb of memory is a BIOS owned area, but generally it is
 -- 
 2.49.0.604.gff1f9ca942-goog
 
