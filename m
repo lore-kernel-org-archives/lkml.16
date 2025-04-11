@@ -1,64 +1,116 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA73928EA52;
-	Fri, 11 Apr 2025 07:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E6B283684
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357322; cv=none; b=SiGK6c18Ugyq3YhmL5T/8ujrNVOHbrWSWIRLqOAJFCKVudg2qoUxjIArXIPiZnS6V3aQE171D1OJSxJLZd8V0W6VbLhHc/E77ohE28K0d3i4I/zNgKQH9rA99M33P9QJjzGKe0Q9H+/L6XLF7AqdMS02FC3fpuNyFmkZxj8X9Ec=
+	t=1744357419; cv=none; b=fySvdhEuriFsOHlJ4tZbaXF2eQ44JV+fUjB6SpLkpz/a+PWAiRLusapxUQFigzMkbB/INZN22h4iNr+eULWXujXXvfe2ZIY6zVQO0jLJNOuUS6peSMdL2YgUASDoXYHScyjUQFpZtX/2Qu6zRmFEsYMLebXronX8lRJanwkUQV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357322; c=relaxed/simple;
-	bh=lDciwDSB+Q8RHrtpBmFw8CuEsorY9NR80tu5cfO+FKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GJhfCLfiujhy3+X8oGbtV3t1RQO0eHvxYGdIKz1hLRWa485r7gL/wljwtFhZj5C3rEfUv7HtUiE1dkpn6iZJE+HvIwugAzaIXlS8nT9R2OJz1Z7B+UlxdmLSaXlo85td+TiaysUo7xU4qXMf1dmwo3vXjeTNrSQvxwaXvlmhHdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=HD1Z8DLC; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1744357419; c=relaxed/simple;
+	bh=H1iNItrNAcVVubh6PQ1XE3t0Tvyjo+jQ6fDUAqtrHTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MWByURRpEeGrs/ZoeUDOJyfROPY7qopzQwrl2hYNHI1qxjMFsoNVSn9dwdg7+rBEaJ6gxQIIl6z9RcdcljjcLMuuFWXO9+Lw8heoqZZcCcUQ1EsxFqRYwFiq4c9JZM4e5vc0mYMDMP7nTUT8+sO9DsjKyazc7+DXSpO/2VvpWMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xja4ahKU; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="HD1Z8DLC"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 921A71F902;
-	Fri, 11 Apr 2025 09:41:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744357308;
-	bh=qzlruQ0UPIPGDnxKdS/af/06MdcIsKAg/0N3dWvtqv8=; h=From:To:Subject;
-	b=HD1Z8DLCvxEj8dKDHipjhqUxD17mn+N+6lil99+0xgT6qAZd4ll6CcqkJSWq5lZ82
-	 FbMbmwpZ0Kp6FLMco83BoYIe6aBZgKY3R6fNgF5VwjSY9ELXCx+657dOiLfKFrYeR3
-	 qnieKVJHADn6kv0PgOUFny5T1x4vzIdBmXI8iOJMrkbVLn7/eEwGgL6qLz5G3oTeGT
-	 HNlce8SYkL9T1g6vpcZfuC518M4fHEN4WdnZ1jsGLkmX1+LlWws/YI03OX6L1/svDi
-	 oS3Qj1RftqZBLNVb2SF4BwQSSAuSqiv7+8mpX4c3bNhUh5G1plhUPgZUQvatGLDVup
-	 l25mdgW/OGVjA==
-Date: Fri, 11 Apr 2025 09:41:44 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 1/4] wifi: mwifiex: remove unnecessary queue empty check
-Message-ID: <20250411074144.GA12707@francesco-nb>
-References: <20250410-mwifiex-drop-asynchronous-init-v1-0-6a212fa9185e@pengutronix.de>
- <20250410-mwifiex-drop-asynchronous-init-v1-1-6a212fa9185e@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xja4ahKU"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-523ffbe0dbcso1819592e0c.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 00:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744357416; x=1744962216; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H1iNItrNAcVVubh6PQ1XE3t0Tvyjo+jQ6fDUAqtrHTs=;
+        b=Xja4ahKUdEvYzuY1rbV9OD+ZghUSrMtUoWVWiM7tJpZKzJH4KLsIzIKTHv1GNYvwzv
+         NVXSF0yh+Pr/3ukBmu6+JGrr0m3lkaMwFBTfOOyQfwG7g0c+On0vkYuUzF+iREQgwbex
+         XL67WCnF7AsF0fzklo5dAMRAcVM6vHv5QPToethxB+wt9zogXipapmkMyXMIPoLvCLmG
+         d+iQwBw5CxldqVYO+ZTDeLhkzFwtmEjMZhUssrEjHsOh7vCylWtC0HZpHHxEMyhfjlEE
+         8MgovoriVoCyQE2OYcxvLHBIcHj65Gl1a/oMdoa3BhQYBB5CWd2s1Dd33PYjNKe7Q36v
+         iaiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744357416; x=1744962216;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H1iNItrNAcVVubh6PQ1XE3t0Tvyjo+jQ6fDUAqtrHTs=;
+        b=gGNAUgtaXrRDM1k4aoi0XdKKJLqYBtOQ/5JHK3vSuPwcowCceKUkv+FVkF3E7IEooa
+         CRpdLk4it42wOmk6BBhS1u0DL8SOdrhR7UgnS4lkF9WYD1aqL+Llpd5GIMBV9aCS9K0c
+         GpCeh2EMO2AtiWYJSRWeWQ8pypY8m3Qd23jmtupNxq3y/k/6t7OKiF4OzLGa/VsFGyzL
+         n8UShXJSD3Tzy8sDyTFmJrhrfT0ONZIbH4n8WuMwbsssbjoQ72yM2gUCfYcy7XOeNQXt
+         OxnOQiNi4Fu/xVUXSF+j95bgRrnVp04/1NENJTqpYSwXL+Gfx3RzQVK9QpY3KXhTQ8oX
+         T19A==
+X-Forwarded-Encrypted: i=1; AJvYcCVnCR6tiCqqlHSXesYigFz7RckxDVev6wi5X11REgVdoSs2LTehoYyaE+xi2MrxDUsuyH8hj+5dJljlavg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0Vop8OiJCjrCo6hyWe/Rpc21e2Aj77c1Jx/FSG7V/Tykp7Alb
+	jmdUJPvauGWH4flIQZwnkwgTGdvUDmhEpS6LJuo2zwdnG/VQ91w7mRa5JaJIsH3pb/DYthypsMU
+	5O8LmFwOsWeFdk3zVHJP6shXjqsw=
+X-Gm-Gg: ASbGncsgVp+RBfdTY7YFpm3AKTWvxRFUPNRMkHffkwqEOdWfWMf23BooS4M3wKSo5Wk
+	mlHzKkqnnLZHa42ikziJ6874Bx4yZ0vA2YfSVbaobudOS+1Zk+u5sS5llo7+dqhpQFZtU8WuqSr
+	K9Ls8nttptKM06joPUCFYZHZM=
+X-Google-Smtp-Source: AGHT+IH/nsZ73n13m8DI++AjCwNN9ubVsT2FQykIFqDBIKtWwVSP5oMfTX1HJz9BRPnYe+C2so6tCNeTfV+2Pz4BZeI=
+X-Received: by 2002:a05:6122:1682:b0:523:7c70:bc9c with SMTP id
+ 71dfb90a1353d-527c3516e4cmr1056591e0c.5.1744357416465; Fri, 11 Apr 2025
+ 00:43:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410-mwifiex-drop-asynchronous-init-v1-1-6a212fa9185e@pengutronix.de>
+References: <Z/bA4tMF5uKLe55p@ubuntu> <CAHp75Vd0PUFv_tigmKp7MEiOOuHpFhB_i8u42jZdQ1jajjq0rw@mail.gmail.com>
+In-Reply-To: <CAHp75Vd0PUFv_tigmKp7MEiOOuHpFhB_i8u42jZdQ1jajjq0rw@mail.gmail.com>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Fri, 11 Apr 2025 08:43:26 +0100
+X-Gm-Features: ATxdqUFBakkl6mnloP_SLGH7-FzGtLRxl3pEfw3W4Ceoh7Jl3zD2F5lST2gYKcA
+Message-ID: <CADYq+fbHCUigvrTuCLiF1TXN=VEBO42PvHQqvgfmTgJejLqS4Q@mail.gmail.com>
+Subject: Re: [PATCH] staging: rtl8723bs: Replace `& 0xfff` with `% 4096u`
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, 
+	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, 
+	dan.carpenter@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 12:28:43PM +0200, Sascha Hauer wrote:
-> Since 7bff9c974e1a ("mwifiex: send firmware initialization commands
-> synchronously") all initialization commands are sent synchronously which
-> means the command queue is empty when mwifiex_sta_init_cmd() returns. No
-> need to check for entries in the command code then, so remove the check.
-> 
-> Add a WARN_ON() just in case there is something wrong with the
-> reasoning.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+On Thu, Apr 10, 2025 at 6:44=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Wed, Apr 9, 2025 at 9:48=E2=80=AFPM Abraham Samuel Adekunle
+> <abrahamadekunle50@gmail.com> wrote:
+> >
+> > The sequence number is constrained to a range of [0, 4095], which
+> > is a total of 4096 values. The bitmask operation using `& 0xfff` is
+> > used to perform this wrap-around. While this is functionally correct,
+> > it obscures the intended semantic of a 4096-based wrap.
+> >
+> > Using a modulo operation `% 4096u` makes the wrap-around logic
+> > explicit and easier to understand. It clearly signals that the
+> > sequence number cycles through a range of 4096 values.
+> > It also makes the code robust against potential changes of the 4096
+> > upper limit, especially when it becomes a non power-of-2 value while
+> > the AND(&) works solely for power-of-2 values.
+> >
+> > The use of `% 4096u` also guarantees that the modulo operation is
+> > performed with unsigned arithmetic, preventing potential issues with
+> > the signed types.
+> >
+> > Found by Coccinelle.
+>
+> This should be folded to the initial change since it's the same driver
+> and values most likely are related to each other.
 
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Okay noted.
+>
+>
+> > $ make drivers/staging/rtl8723bs/core/rtw_xmit.o
+> > $ cmp rtw_xmit_before.o rtw_xmit_after.o
+>
+> cmp is good but not good enough in general. Here it shows the 1:1
+> binary, but in some cases code can be the same, while binaries are
+> different. To make sure the code is the same use the bloat-o-meter
+> tool instead.
 
+Okay, thanks for the suggestion. I will check out the bloat-o-meter tool.
+Adekunle.
