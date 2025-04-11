@@ -1,64 +1,67 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E726620468C;
-	Fri, 11 Apr 2025 06:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B9427CB1A;
+	Fri, 11 Apr 2025 06:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744354578; cv=none; b=mO2Rhsv4T29vcKsDo15cdnFjtTUFPFuCXld4BU4dNwkfADT1/aJZT7LE1es+Ege2eLHKvKQ0ulQ9v6FMQ8/BqIkY+tUWfl2sSidTeUbHHTPOUiVwF5xyA3sp3CVA/1rb+WFgbdfDqq0zRtmQfhQ3u/QmLjI/UGFMCRlCu4QEt+s=
+	t=1744354737; cv=none; b=Ri8xjkwxaC5QsqXSIZm7JvwpSyWsWrn0XcQjskivsfdKJ1MrEguKSKr+WQwbfYDmtehBesoCrZUGccIxK+0O5fA1SW9KgazUtjIYFpRt/fjWrGYDdZI6uWg1u2hNRjn9XDkxMOthSSwDtvo+RdSGCD1WMLcRB780Q10UYfRq+6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744354578; c=relaxed/simple;
-	bh=5WP/vU5PDewgpkWN/3Fd2MxMTnu2oLhshOwmHHIIhR8=;
+	s=arc-20240116; t=1744354737; c=relaxed/simple;
+	bh=GmLFsC6Fs2/66dx1rzmBxOZiZDZJWqhmWvqJHTynw1U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lBcTBm3UJy2RNyMHtWWDkyJhze66m++ZSxnEZClqCCyHqOmtd+5pQ9th4mVUMUIRZHE7Vg2qet8+RnuDUXvtt7EAXXxEn4Pj/dNr3ATql+GFd1yWRN9hWSiyk13uynVX6CA8G/p2w/+oWyJyfgmwldRqkAMSd/BmIhCk6xvMeU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eD3F9eDs; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=N8i1N0aTvDf6fwxFk9lc/HrJ+GYFOAE8X/ysTRaQX1GvkxuPDrr9mhxhS/cOI5mk7v24LH8zZyKT7TszFojAUzoeYGoE8aXLuQkTIsHPIhXcHioHhj+uyfUyhF4xyy1Rif9vgl6rJJDFOT1t6LfUFBnfOxHsfv2W0nra8sVTITc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UQDyVGDL; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eD3F9eDs"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736ee709c11so1317444b3a.1;
-        Thu, 10 Apr 2025 23:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744354576; x=1744959376; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vfuuxX8hIrtK9DMaogg2N+2ARGcrO8WGuGbvU5xMwvU=;
-        b=eD3F9eDswmCCINkfLC9CUzGDd2syKwhh2WSJ76FU+YIfPY55Dp7UgNuVWD5z00dBZn
-         Se0ONiDjRSInfTXyLllOt42vjxCtJYOiRbSOVm3shON0TCepxLKBHNgYSqsSTb4ts7ZB
-         yPFzTED+q70ha0XiL2hjr0/qdrSpfgmdLB6HMCtojHS/kF/aY16A7oXMCa07KLZ5puIV
-         2Kg8t3G95LxNNo1jDksRMkAV9ChmuwE6RZRdOt57+Ohts6+r7ZJMMt0wfAcwQFxW7ala
-         sgCRsrG0NdAZUaXIfpurDutq5UTwPXVH8njPuGlMbqR+/p0jpTriZWOZ3GkmOFY515sl
-         /fBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744354576; x=1744959376;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vfuuxX8hIrtK9DMaogg2N+2ARGcrO8WGuGbvU5xMwvU=;
-        b=LwNEmSI6d04j2yd8hbZqvyTmmj8BUUhFAL+C0/SaVs4SVTnrgXzwBUCg5JDLxE/pJz
-         PagQIiy7Oge4kfQa0XvxkeN0c3OqVAEgfVuueQWOuXugQ/tJImx2vYtq1CqQsn/txoMS
-         aEw061fzGh3WmTPmiLxmIMGciMMTBLy0P/zU3PmfbmHEq2+M8Xf4041Zj055UAC7sEQb
-         aBjKAYk2ktJ85hBl1ar0raMQaGqbZH6Lp9ZksxyZLzH/mQBRHzRXNEG6Y4eCMfPfc24j
-         cIrCgyBwSnzt0zaK9vGYh426e/89hQwACWj+ylvb5VSjrPyJvmiHpuD3JDqfQL1Rbhe9
-         JOiw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/uN6lBY0+khh04UJ3wERxIuS67as/t2Ni4t/D2lUmU+69O5GSLgiLf2kGy9jZIQUSAERti3gpsVl9GjbZ@vger.kernel.org, AJvYcCVu/ltO4L5Z9YZhuFhWWZogGEtlS7pXaYIyRhae5fIFHoWWR50dGWSxY6IVFBG++V/ZIMak4RBPyxopsQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsnk8QLvArgBtiTzxg13C7f1izNtuWq1E4OBWKgoVL1a4v5vyg
-	9ftDPaYMV+yaWEE1z6ZDWStdIdBuhADE3OQFG/STWBc+ZupeKCn2
-X-Gm-Gg: ASbGncvdu89ZY6n4AHiSRy+1QNB/WlD+AHbkhwjNOxEtbLw1f5J3ckiebszvAOpNWzl
-	0nBDtcNwsCiAK/dj9oHY5NdzpjcEtBGs5wRGRZhoDb0WVTZueoDgCHU3KbEJ3uilzvl5n0ltGM1
-	JBk0i1QonCV1gA+Sdb3PlJAnL0icRbGCilO0mZI2JYKFKO+UaI/tYHO7r1hfc37GoH56bIz35HC
-	U93rgEtQ1lfIz10sRzNJX3S3FU1kKtcLmK/089+Va3LKxS2ytYblkhOZfqVN+IIQ8iECoCWdY8+
-	viOy8CFXEWhDg0c66fimKPrrxa07Ds3yIkAE9xDdqnE2neA6AA==
-X-Google-Smtp-Source: AGHT+IGezBemc+XoSzOeO1EuLMONf4zEDZd2si8T3oAdFqqazHTyYZyGFQbn07TBHpCAxJh6ZeuV3Q==
-X-Received: by 2002:a05:6a21:6d84:b0:1f5:535c:82d6 with SMTP id adf61e73a8af0-201799831dbmr2591357637.35.1744354576060;
-        Thu, 10 Apr 2025 23:56:16 -0700 (PDT)
-Received: from [192.168.0.161] ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0cf2eb3sm4117955a12.24.2025.04.10.23.56.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 23:56:15 -0700 (PDT)
-Message-ID: <26872134-1022-4cd5-bd04-215d54c55791@gmail.com>
-Date: Fri, 11 Apr 2025 12:26:11 +0530
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UQDyVGDL"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AKd1Mf013182;
+	Fri, 11 Apr 2025 06:58:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=oTe4j4
+	3kHg8/zm+xNdrivAb3CTTMqczYkB128gpUdhY=; b=UQDyVGDLgQAZ313gCsnaJt
+	OMi9HwkX/g21R9DAl8xV1uZsRBAhEeEIHggV7sTetTzEkWgOWHtOgwSGKf7aBdOY
+	NZcrHnZVf3tqQAvq5AUP2h2hRrYAbM90pVEAwPLvh5y9NxPu/Ga5W/pesIGckR2z
+	QguABWRXGw9kySDDw3j//91kfM9FRo9qC/wwvfji3wIiiEagWB4u9I+iYj+tWM7j
+	LWKprqJEWaar56OApv+qmG58hEPi+cgWsloq0Mpd5ZaJcCmDLswZGwSWflU1qqCW
+	HdeISaMVS7WWfnZd7zfEBY7XoG/7ydVMWlncb1RAoQvn+9BkXaQudQQhs7Ae8rxA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xn71a1ck-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 06:58:51 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53B6omw9008432;
+	Fri, 11 Apr 2025 06:58:51 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45xn71a1ch-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 06:58:51 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53B3mnZs029520;
+	Fri, 11 Apr 2025 06:58:50 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45x1k77ppb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 06:58:50 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53B6wk1b45613520
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 06:58:46 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C1AF22004E;
+	Fri, 11 Apr 2025 06:58:46 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4A1A62004D;
+	Fri, 11 Apr 2025 06:58:46 +0000 (GMT)
+Received: from [9.171.64.254] (unknown [9.171.64.254])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 11 Apr 2025 06:58:46 +0000 (GMT)
+Message-ID: <27901544-619e-4704-a2a6-132e8ab6a6e4@linux.ibm.com>
+Date: Fri, 11 Apr 2025 08:58:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,80 +69,142 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] hwmon: max31827: Fix uninitialized variable lsb_idx in
- max31827_init_client
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250410194833.21366-1-purvayeshi550@gmail.com>
- <f0ad5113-eab9-4e71-8363-1b7a005189c4@roeck-us.net>
+Subject: Re: [PATCH v3] perf test: Allow tolerance for leader sampling test
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, ctshao@google.com,
+        rogers@google.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
+        sumanthk@linux.ibm.com, hca@linux.ibm.com,
+        Ian Rogers <irogers@google.com>
+References: <20250410085522.465401-1-tmricht@linux.ibm.com>
+ <Z_hkF6R9giaDGQZD@google.com>
 Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <f0ad5113-eab9-4e71-8363-1b7a005189c4@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <Z_hkF6R9giaDGQZD@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: mgHeVlParuItWwpAApKfDzZ4A0bUQtEt
+X-Proofpoint-GUID: nfbx7SrZZ8SfJDdmsYMzJ3_dQU-4e9h-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_02,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
+ phishscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504110045
 
-On 11/04/25 01:31, Guenter Roeck wrote:
-> On Fri, Apr 11, 2025 at 01:18:33AM +0530, Purva Yeshi wrote:
->> Fix Smatch-detected issue:
->> drivers/hwmon/max31827.c:564 max31827_init_client() error:
->> uninitialized symbol 'lsb_idx'.
->>
->> ​In the max31827_init_client() function, the variable lsb_idx is assigned
->> a value only when data has exactly one bit set (hweight32(data) == 1).
->> If this condition isn't met, lsb_idx remains uninitialized, leading to
->> undefined behavior when it's subsequently used.
+On 4/11/25 02:36, Namhyung Kim wrote:
+> Hello,
 > 
-> That is not correct.
-> 
+> On Thu, Apr 10, 2025 at 10:55:22AM +0200, Thomas Richter wrote:
+>> V3: Added check for missing samples as suggested by Chun-Tse.
+>> V2: Changed bc invocation to return 0 on success and 1 on error.
 >>
->> Ensure that data is non-zero and has exactly one bit set before
->> calling __ffs(data) to determine lsb_idx. Additionally, verify that
->> lsb_idx does not exceed 4. This approach prevents the use of an
->> uninitialized lsb_idx and resolves the Smatch warning.
+>> There is a known issue that the leader sampling is inconsistent, since
+>> throttle only affect leader, not the slave. The detail is in [1]. To
+>> maintain test coverage, this patch sets a tolerance rate of 80% to
+>> accommodate the throttled samples and prevent test failures due to
+>> throttling.
 >>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+>>
+>> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+>> Suggested-by: Ian Rogers <irogers@google.com>
+>> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+>> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 >> ---
->>   drivers/hwmon/max31827.c | 9 ++++++---
->>   1 file changed, 6 insertions(+), 3 deletions(-)
+>>  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+>>  1 file changed, 27 insertions(+), 6 deletions(-)
 >>
->> diff --git a/drivers/hwmon/max31827.c b/drivers/hwmon/max31827.c
->> index 48e8f8ba4d05..c62eaf186d9d 100644
->> --- a/drivers/hwmon/max31827.c
->> +++ b/drivers/hwmon/max31827.c
->> @@ -558,10 +558,13 @@ static int max31827_init_client(struct max31827_state *st,
->>   		/*
->>   		 * Convert the desired fault queue into register bits.
->>   		 */
->> -		if (data != 0)
->> -			lsb_idx = __ffs(data);
+>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>> index ba8d873d3ca7..0075ffe783ad 100755
+>> --- a/tools/perf/tests/shell/record.sh
+>> +++ b/tools/perf/tests/shell/record.sh
+>> @@ -238,22 +238,43 @@ test_leader_sampling() {
+>>      err=1
+>>      return
+>>    fi
+>> +  perf script -i "${perfdata}" | grep brstack > $script_output
+>> +  # Check if the two instruction counts are equal in each record.
+>> +  # However, the throttling code doesn't consider event grouping. During throttling, only the
+>> +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
+>> +  # let's set the tolerance rate to 80%.
+>> +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+>>    index=0
+>> -  perf script -i "${perfdata}" > $script_output
+>> +  valid_counts=0
+>> +  invalid_counts=0
+>> +  tolerance_rate=0.8
+>>    while IFS= read -r line
+>>    do
+>> -    # Check if the two instruction counts are equal in each record
+>>      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+>>      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+>>      then
+>> -      echo "Leader sampling [Failed inconsistent cycles count]"
+>> -      err=1
+>> -      return
+>> +      invalid_counts=$(($invalid_counts+1))
+>> +    else
+>> +      valid_counts=$(($valid_counts+1))
+>>      fi
+>>      index=$(($index+1))
+>>      prev_cycles=$cycles
+>>    done < $script_output
+>> -  echo "Basic leader sampling test [Success]"
+>> +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
+>> +  if (( $(bc <<< "$total_counts <= 0") ))
+>> +  then
+>> +    echo "Leader sampling [No sample generated]"
+>> +    err=1
+>> +    return
+>> +  fi
+>> +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
 > 
-> lsb_idx is assigned if data != 0, not if hweight32(data) == 1 ...
+> Is 'scale=2' really needed?  Does something similar to the above like
 > 
->> +		if (data == 0 || hweight32(data) != 1) {
->> +			dev_err(dev, "Invalid data in adi,fault-q\n");
->> +			return -EINVAL;
->> +		}
->>   
->> -		if (hweight32(data) != 1 || lsb_idx > 4) {
+>   if (( $(bc <<< "($invalid_counts / $total_counts) < (1 - $tolerance_rate)") ))
 > 
-> ... and if hweight32(data) != 1, it bails out here before using lsb_idx.
-> The problem you describe does not exist.
+> work?
 > 
-> Guenter
+> Thanks,
+> Namhyung
+> 
+> 
 
-Thank you for reviewing the patch and clarifying the behavior regarding 
-lsb_idx. I understand the existing control flow.​
+From the man page of bc:
 
-> 
->> +		lsb_idx = __ffs(data);
->> +		if (lsb_idx > 4) {
->>   			dev_err(dev, "Invalid data in adi,fault-q\n");
->>   			return -EINVAL;
->>   		}
->> -- 
->> 2.34.1
->>
 
-Best regards,
-Purva
+NUMBERS
+       The most basic element in bc is the number.  Numbers are arbitrary precision numbers.   This
+       precision  is both in the integer part and the fractional part.  All numbers are represented
+       internally in decimal and all computation is done in decimal.  (This version  truncates  re‐
+       sults from divide and multiply operations.)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This can be proved with:
+# bc <<< "2/27"
+0
+# bc <<< "scale=2;2/27"
+.07
+#
+
+Without scale there is no fractional part and integer arithmetic will lead to wrong results.
+
+I think scale=2 is necessary or we need to use something different like awk.
+
+Thanks
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
