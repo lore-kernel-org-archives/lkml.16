@@ -1,89 +1,122 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C43290083;
-	Fri, 11 Apr 2025 09:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F620DD47;
+	Fri, 11 Apr 2025 09:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744363135; cv=none; b=sEq5KBg77RYxwTC5YRI0vkxgLFD2KJ8eNMEFUS8+Ok5FuncBUVvbU4TwOZ5G6kMFhKR5jl9w+sVR/ypp3KnFlx/i/bYjYXjStT2BD58qXiYIPnV1vwaveQLEIUNE69oEj/xdHaCPYAYMwm3thD5Hy52MiTmUXkRdtg65HCLL8Ms=
+	t=1744363294; cv=none; b=lli1xI+yBkk5+DrP/R5jfpH/bKMCICKhuAcCZpd3LfdZBdruLICNvgybd8N6Aa5MZl934eAktiC/V3NmjwhE4qSy+faz1WV4peck5Wsn5jXQK9b4zBqXKNgG5osw/lZ+IOMm6tMQvjKQAMauGJgi4ukz8kEWj0dDF1wVC9Y5oqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744363135; c=relaxed/simple;
-	bh=7yUILR2HHoVy6WM/2coCWGrDjXlSF1kGC0dNtca/tpI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pucuv6xe3B22cGgHWRx6BFIxCxSSPijnaE4l8opjd2ck3O2pRW2/xUaGPvuDQX4xV5pu7tNueMm5AzD8U5RagGeWIPBMdNRf8sF964ZiDSqT074LYgIEKxmtgKda8g4zOdAL0e8/xOYBJotK4W2hv8B6uZRDN9cgzR5/jHQtXGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: f74939c216b511f0a216b1d71e6e1362-20250411
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:97bd0d2f-92db-49d9-89fb-6bbdd8a2c89e,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:0cef45754f47842cd311d779ca37ae05,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
-	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: f74939c216b511f0a216b1d71e6e1362-20250411
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <xiaopei01@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1327214905; Fri, 11 Apr 2025 17:18:44 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id EE66F160038D0;
-	Fri, 11 Apr 2025 17:18:43 +0800 (CST)
-X-ns-mid: postfix-67F8DE73-8881991508
-Received: from [10.42.13.56] (unknown [10.42.13.56])
-	by node4.com.cn (NSMail) with ESMTPA id 2D1CC16003810;
-	Fri, 11 Apr 2025 09:18:42 +0000 (UTC)
-Message-ID: <ae40b4bc-4635-4b5d-bc2a-4c304605e3a1@kylinos.cn>
-Date: Fri, 11 Apr 2025 17:18:22 +0800
+	s=arc-20240116; t=1744363294; c=relaxed/simple;
+	bh=GF5I4HDrY8UX8vkATNsvnxdK5wqH9mXL9n37eldxjZM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sRJK+l5GyG9qR/Lw70TMbc5ckCm8KX7jS9x0jCRfUf3GpKxCQNjfsQU4l9Z+PpOXsbieon2FBx5YXoeBO+Zx6k4KPxCKjuy6sMgXAZFlv0+k5Lml+SyCdCet8Kkbln2qW0bTnLVBCH6HbZ4mpLGyZZaWQKdGnO70Nfj5zNnEbaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VDswg6FJ; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VDswg6FJ"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53B9LH5U2078754
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 04:21:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744363278;
+	bh=0NX2vOw4ZRae1V2JRwjOkGJo9DQjMbPoKMVpYg1An7o=;
+	h=From:To:CC:Subject:Date;
+	b=VDswg6FJmWylPIyKVoVYZJFRFJ1MAgSyVk0C8+MFMxyL/C1AUMpXGGNf/AKa8okqM
+	 B9iK/4Joci6KdGBoXX5gwGvHssIWeBKou5CPRYX7jvptu2xQChMn0YIKZCA/MplJbX
+	 X+OJf0RdlC3amiQvcH8Lv/o8wbfBnPJrKq8XErYA=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53B9LHvS054119
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 04:21:17 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 04:21:17 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 04:21:17 -0500
+Received: from pratham-Workstation-PC (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53B9LGv1053002;
+	Fri, 11 Apr 2025 04:21:16 -0500
+From: T Pratham <t-pratham@ti.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: T Pratham <t-pratham@ti.com>, <linux-crypto@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kamlesh
+ Gurudasani <kamlesh@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>
+Subject: [PATCH v2 0/2] Add support for Texas Instruments DTHE V2 crypto accelerator
+Date: Fri, 11 Apr 2025 14:43:20 +0530
+Message-ID: <20250411091321.2925308-1-t-pratham@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty/sysrq: make sysrq_replay_logs_op const
-To: xiaopeitux@foxmail.com, gregkh@linuxfoundation.org, jirislaby@kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <tencent_E7CD9DB87A448073E350F9400678ED9F9C0A@qq.com>
-From: Pei Xiao <xiaopei01@kylinos.cn>
-In-Reply-To: <tencent_E7CD9DB87A448073E350F9400678ED9F9C0A@qq.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-=E5=9C=A8 2025/4/3 16:38, xiaopeitux@foxmail.com =E5=86=99=E9=81=93:
+This series adds support for TI DTHE V2 crypto accelerator. DTHE V2 is a
+new crypto accelerator which contains multiple crypto IPs [1].
+This series implements support for ECB and CBC modes of AES for the AES
+Engine of DTHE, using skcipher APIs of the kernel.
 
-> From: Pei Xiao <xiaopei01@kylinos.cn>
->
-> Mark sysrq_replay_logs_op as const, preventing accidental modification.
->
-> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
-> ---
->  drivers/tty/sysrq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index f85ce02e4725..e9ada1c14e26 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -454,7 +454,7 @@ static void sysrq_handle_replay_logs(u8 key)
->  {
->  	console_try_replay_all();
->  }
-> -static struct sysrq_key_op sysrq_replay_logs_op =3D {
-> +static const struct sysrq_key_op sysrq_replay_logs_op =3D {
->  	.handler        =3D sysrq_handle_replay_logs,
->  	.help_msg       =3D "replay-kernel-logs(R)",
->  	.action_msg     =3D "Replay kernel logs on consoles",
+Tested with:
+CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
 
-now, split into a single patch.
+and tcrypt,
+sudo modprobe tcrypt mode=500 sec=1
 
-Thanks!
+Signed-off-by: T Pratham <t-pratham@ti.com>
+---
+[1]: Section 14.6.3 (DMA Control Registers -> DMASS_DTHE)
+Link: https://www.ti.com/lit/ug/sprujb4/sprujb4.pdf
 
-Pei.
+Chnage log:
+v2:
+ - Corrected dt-bindings syntax errors and other review comments in v1.
+ - Completely changed driver code structure, splitting code into
+   multiple files
+
+Link to previous versions:
+v1: https://lore.kernel.org/all/20250206-dthe-v2-aes-v1-0-1e86cf683928@ti.com/
+---
+T Pratham (2):
+  dt-bindings: crypto: Add binding for TI DTHE V2 driver
+  crypto: ti: Add driver for DTHE V2 AES Engine (ECB, CBC)
+
+ .../devicetree/bindings/crypto/ti,dthev2.yaml |  50 +++
+ MAINTAINERS                                   |   7 +
+ drivers/crypto/Makefile                       |   1 +
+ drivers/crypto/ti/Kconfig                     |  10 +
+ drivers/crypto/ti/Makefile                    |   3 +
+ drivers/crypto/ti/dthev2-aes.c                | 416 ++++++++++++++++++
+ drivers/crypto/ti/dthev2-common.c             | 206 +++++++++
+ drivers/crypto/ti/dthev2-common.h             | 110 +++++
+ 8 files changed, 803 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
+ create mode 100644 drivers/crypto/ti/Kconfig
+ create mode 100644 drivers/crypto/ti/Makefile
+ create mode 100644 drivers/crypto/ti/dthev2-aes.c
+ create mode 100644 drivers/crypto/ti/dthev2-common.c
+ create mode 100644 drivers/crypto/ti/dthev2-common.h
+
+-- 
+2.34.1
 
