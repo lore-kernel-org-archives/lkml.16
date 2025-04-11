@@ -1,62 +1,62 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C63B15098F
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC86126BF1
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377313; cv=none; b=LdF6yInKphtNBhLeWaKWE34+FG0EE4Qy2tIiMyae033O7cwpWAjBFxuPLGU2MMkBW+5O/Z2vTJY402gS4hiROhyoMn4H3qI5k+BfHY2XYlaY2iUsq9tQ9e4JxA2UMVeq3wlmLhGdMA7yk2Mk/xPPQwXaruWyV1O2oSt4obAsII0=
+	t=1744377331; cv=none; b=h+drNvvLIpItmoWnQ2B5Pl79VfpwvDMMA1lkWoHzlJhYf3iOL+l2Fgfhub3+t/wXTuTyYGJgSZCswaEi5s6pUHxjz68htmg2mhgfUGK9WgwxPSUkTDsMGPa1Gk1oG2eLpErSPYZ/eqfbz07+inmYX7uxi6noo4kL/br6/mc+9nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377313; c=relaxed/simple;
-	bh=UlAsKNHUgln7eAumKMzvqbycdRrzhxEOvoeet7XkcNU=;
+	s=arc-20240116; t=1744377331; c=relaxed/simple;
+	bh=1swIy7rxFEZEpzVbtoG003Ve9GvpHlafYnb4ccnIdDA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MwX5QMDXForCZdwqzyFfHeZQe7eUDv1BC7ZJqkb0+iragmzxJS2zqQefTZmlmREo/492dt2+1+pkQesV7d9ssPsRGU84McQ+L5zD2ON77rzvCXWH8T6N4U6C29pIHrh5dxIzT50vy1SFeBPWva7g0hwrWIBwc9335hc9xg2ECmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=DXvP1l+R; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=a4+3QA+zn5OB/hyw1c1xebI3NRA6IjZ+PtLiv5HhvwGeWkM+ypiFMGZP/VvoUezcM/hQJF00O54Bus2LgVZdUKJ+atLoqAurvjLH9X/vc16QXGsZevvHuQ4//h/E84wv4NZOc3MbiVBYRxF+fJ+11qdKYGYCWG45z73GqB1BnNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ezFwS2pD; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="DXvP1l+R"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22928d629faso19696845ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:15:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ezFwS2pD"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-227b650504fso18804635ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744377310; x=1744982110; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744377329; x=1744982129; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EWAPb5H6B8HVYPSKWIXFA9rVM/O356OndjYJjviUmrA=;
-        b=DXvP1l+RztnBGu56rBULaljSaXdM/ENvEblXvAg0Yrd1RSkRTFK6gZYuT/dXIiNFk2
-         VndpQVNw+QPnj5YDKNFJu0Z9G7RXroUnlxVci6TAdyDXmkSPNpR+T8PIm+CoLkqR4li6
-         9PZyx7dfrsmQv5Q6ZZQGlhPbMWaj6kXQoSCMuAVp++OBJKz8fhcBioY3N5AR6dHovfpz
-         yCkNMeN97okI8/TF3CstIR+Irrp9oBTyPXDUI3jcT1rb38Yv7COBq1FaM6qaPrjMQsks
-         MZE78a09Qw9OB7wUY0PFMTwJq9kHz+pKOcmWp97txRT5ohOT20FFCqucrxCqbbqyd46y
-         39Dg==
+        bh=m/PuzfNro6+y5gilkjTT2xRfkKu3sAMB/YAOWIAOfRU=;
+        b=ezFwS2pDzDzWZIZh3ySYop5umZohIo3OIWo8pbiIKCMWM97e7RM/sd5lMOAXJhMapi
+         QPm4GaZ9ih4wi4wFxvizSsA/Wph/7Q/kESaUxUG23Wfl74/cVk8baBiJkFBMlCuH1rw2
+         nxGQoqGmBWzB8iv7w8l7veDd6ZGwR0eXB0sJVjRF5R/IQT3jOcyc/trvyhfezx91sqaG
+         F89IKrfv3A9iD8NyYXcJq7n7cS/2Vup3poDiqsu/bIZ0gCegMi+uH07KJZ/jojxRt/OD
+         NFArmOFxfyPa9QBIpmpjhrTDCL8AyywWO72UbtL0az5+XSHuFYYUqlFwjVrXIfWBGA9w
+         NPGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744377310; x=1744982110;
+        d=1e100.net; s=20230601; t=1744377329; x=1744982129;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EWAPb5H6B8HVYPSKWIXFA9rVM/O356OndjYJjviUmrA=;
-        b=YOetuQqcE7EDhk6pVywBEetZLHC9w8KgmWQ9lDPPpjfI6qI0O4ubhl55ZXcQCYpN7P
-         F5pAiA3Ko0nLzFXhTD1nbP+it4URSt1FJ9DzAUO516xVR4cqNrXaekLLRMdJ/IgZEiOW
-         eHOme2UN+6WPzcA9+mM0QObd0lcOsJyy1eUMs4G/s13i/11WuJTEELKKPES4O+CNkaeq
-         ThFpHgjecI8NgV+xo63PiqEnytboPEe0KXqen56/aWD8RHoflB/39+0aL5l6oiVHxpOG
-         5qQbHhAsbPXJsHBTUD2jH9KraHsiMm2Z3HRooCXdPFS+81o+EE6t+nNgXDSNtBlYVWic
-         BfIw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8+dClIJPhuGPyikjWtObN7ew2uiefnGzMJ3xFYRyD5Y0qvI+VW50kGp6Bk70Rhe706GG+qi/vlhQeJYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztLnQwCPwSJ4lOYfhgqIh/Crw49aveZHZSw4Ui4LNrs34+sgVO
-	Qh+qgkcIbhngYBhaA734j/ZzT2tGVmW4/5YqVQgzojNvgCTCkLp3t02Kqaf5C7c=
-X-Gm-Gg: ASbGncuBAVngrZL++j46uMbZ5IrAjQUqxMkiOMJjUPTuO4QLcYv5qDA7P1Wr8NwD+RF
-	0Zv4mDcHIXqyblhLZm16lq/j59nxJVlkQi2osmEmXxyhxP4flDcFAY8Am3bPazDlyKWwnSGdl4g
-	gZN7YimuQE6olp3PVJYeT5agXKeA11ahar2TZCOVr+i7wFDt15tcj7FfZuHTEMxCRF837lKtJJc
-	KwR0JTj1yZUomRl5q3C5wULb/3peo7fv22CARRrTcFdq3DKysvOVCJETeUaSX4tTxNl01lSMdck
-	bOuzDSxiU/zAW7+yIYa355YeVDXqndI=
-X-Google-Smtp-Source: AGHT+IHIndEecRT3AvZxYCriHYkwaE37vFsVhEAY5FozYiaAsXwZj9EbWpr4y1scyShWVdTuh6BCLg==
-X-Received: by 2002:a17:902:dac3:b0:223:66a1:4503 with SMTP id d9443c01a7336-22bea4bce88mr32987205ad.30.1744377309837;
-        Fri, 11 Apr 2025 06:15:09 -0700 (PDT)
+        bh=m/PuzfNro6+y5gilkjTT2xRfkKu3sAMB/YAOWIAOfRU=;
+        b=slTmD/Cj8MLjRodey406uu7U6BTOTXT2hFrANfLFJF3Pp/qnphZatnKi5sHDnav7AS
+         qPWSwFYnkFEigLY4AKgB9YzYLfKJDaPjyk9azsN6wgXky2Y7YRPXzev2+7v04ZbgcbD0
+         OPtDj3w8ZTr3vPO89Vbe0grs5kQQJSUht99nO1KXJoSpH7u5118vsaMIkG2i6YcMFKUf
+         ObrJ/N9lEUfJpsv0lwUpLBGNjcYWv6qQQIeL/YZwZCWWHLR26mLEvamE6Xg8EV+by/jZ
+         GQZkNeaM9TIx/aU95q4S+6gLpNwTcSHsSL7zM/E0vDzyFjiQLejtlPWIoFceRLfkStB0
+         FPGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjmnCp4cGbniN6MI/YqFKsvt5Op/AAAntPzeAQG1lDkY0ASTwUKrcwrH3GGpRlAtg1qc1YHbXP/lwxiC8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG7u4umTTfKsjt0s9N3/tybggiN/k3jnncosMKrQ1JCW2hGgZq
+	TOTnUqIT1/iFhEaZ0loXf299v6tiaBqOHlpPccsnV7WUgqYm9Y9CHbFbNiUte70=
+X-Gm-Gg: ASbGncs+3pyPJfpgtGjujj2eA9dhn2JvEwRjRJmz6IofNrp86z30dWR0jjI6Leozxww
+	JXsllfPaGEv+/q6labZyPIib12hImhDne1pgri2wngSQSwDcTjiUp9Ew70x+lufBoM0JY63vvPC
+	X+dvYVwWNtbVpfK0qG/mAELEVBg89aeZL+AryMRZE9skvhMNVB48Bb2eHCLaMmcjH+aGwQAHvPX
+	Zttu6o/YQ0NMFHQK1HW4rmsaGIf1ozO7+lQ7ihEglL5d0bIZ0O652xKqJG0++DRHa4GQdo6XYM0
+	CzB0CwTHKpDiWA/G8C8cV6ojgFsolgE=
+X-Google-Smtp-Source: AGHT+IHitAgPlQRhs5N+Pq3jnUrMsP733j1aryRrbpuBG1bREkPzJLptIcFojxxM3RnqxYYr08nnJw==
+X-Received: by 2002:a17:903:41c3:b0:223:60ce:2451 with SMTP id d9443c01a7336-22bea4adea2mr41309915ad.15.1744377329094;
+        Fri, 11 Apr 2025 06:15:29 -0700 (PDT)
 Received: from localhost.localdomain ([2a12:a305:4::308a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cc6sm48245005ad.122.2025.04.11.06.15.01
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cc6sm48245005ad.122.2025.04.11.06.15.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 06:15:09 -0700 (PDT)
+        Fri, 11 Apr 2025 06:15:28 -0700 (PDT)
 From: Guodong Xu <guodong@riscstar.com>
 To: ukleinek@kernel.org,
 	robh@kernel.org,
@@ -82,9 +82,9 @@ Cc: elder@riscstar.com,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev
-Subject: [PATCH 2/9] pwm: pxa: add optional reset control
-Date: Fri, 11 Apr 2025 21:14:16 +0800
-Message-ID: <20250411131423.3802611-3-guodong@riscstar.com>
+Subject: [PATCH 3/9] dt-bindings: pwm: marvell,pxa: add support to spacemit K1
+Date: Fri, 11 Apr 2025 21:14:17 +0800
+Message-ID: <20250411131423.3802611-4-guodong@riscstar.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250411131423.3802611-1-guodong@riscstar.com>
 References: <20250411131423.3802611-1-guodong@riscstar.com>
@@ -96,56 +96,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support optional reset control for the PWM PXA driver.
-
-During the probe, it acquires the reset controller using
-devm_reset_control_get_optional_exclusive_deasserted() to get and deassert
-the reset controller to enable the PWM channel.
+Add "spacemit,k1-pwm" as a compatible string to support the PWM
+controller on the SpacemiT K1 platform.
 
 Signed-off-by: Guodong Xu <guodong@riscstar.com>
 ---
- drivers/pwm/pwm-pxa.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
-index 430bd6a709e9..dd9c6af0f672 100644
---- a/drivers/pwm/pwm-pxa.c
-+++ b/drivers/pwm/pwm-pxa.c
-@@ -25,6 +25,7 @@
- #include <linux/io.h>
- #include <linux/pwm.h>
- #include <linux/of.h>
-+#include <linux/reset.h>
+diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+index 9640d4b627c2..1e3cabf6a89a 100644
+--- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+@@ -19,6 +19,7 @@ properties:
+       - marvell,pxa270-pwm
+       - marvell,pxa168-pwm
+       - marvell,pxa910-pwm
++      - spacemit,k1-pwm
  
- #include <asm/div64.h>
- 
-@@ -49,10 +50,10 @@ MODULE_DEVICE_TABLE(platform, pwm_id_table);
- #define PWMDCR_FD	(1 << 10)
- 
- struct pxa_pwm_chip {
--	struct device	*dev;
--
--	struct clk	*clk;
--	void __iomem	*mmio_base;
-+	struct device		*dev;
-+	struct clk		*clk;
-+	void __iomem		*mmio_base;
-+	struct reset_control	*reset;
- };
- 
- static inline struct pxa_pwm_chip *to_pxa_pwm_chip(struct pwm_chip *chip)
-@@ -179,6 +180,11 @@ static int pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pc->clk))
- 		return PTR_ERR(pc->clk);
- 
-+	pc->reset = devm_reset_control_get_optional_exclusive_deasserted(
-+			&pdev->dev, NULL);
-+	if (IS_ERR(pc->reset))
-+		return PTR_ERR(pc->reset);
-+
- 	chip->ops = &pxa_pwm_ops;
- 
- 	if (IS_ENABLED(CONFIG_OF))
+   reg:
+     # Length should be 0x10
 -- 
 2.43.0
 
