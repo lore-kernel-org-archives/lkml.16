@@ -1,111 +1,159 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8052586ED
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 17:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FC52586EA;
+	Fri, 11 Apr 2025 17:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744394093; cv=none; b=DzW1O8JlKuoGN6BdevSJA0LIYzWRG8kqDcHPd+Bd4zPYIDpx6qpxko9giJhpMJzf0B83rEaesIaupa3VlxBBJbEcTvGr/ZXzrz7jgdE2lVwHBeswYuMXO/WhVyseXYRX0SlnE2Vji0rKl8ngPsnqFSVOYTdBc+rrq7Omthemc/M=
+	t=1744394252; cv=none; b=bWP8Ho90u1xiy3U7X8Mnj3KuRyZ2NQJKHsSnpgSr4yKCaOIhXj82qw5ahysfaRjmWzSzFBh1aG1wXH1rwuE2oC48g5QMoRq1DjxklGm2IW6HgEuplTBX6BnSh6Ho6h028RP45po/xFoD3RjtZBilKjNgv3E4abLQ1pBsNVEfqgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744394093; c=relaxed/simple;
-	bh=ucba/TyRjphp5QB5NmFsNbDWb/WFdcnndSRrwoEMpJA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=StrHfNj5RWvvGO+8/JcmL+gxT+lfTeTL51kc+dLikOJzWj9cEvdwtIYmXTVxWaydRFlMr6/O6EkPelhlq4LfvD/Zlw2IHfLiAop8eY3a7eP05QFevsRVO/mtDurUDxLnTthyw8M7uYxyvQ0ScTrbgQbo1S9dEU8gNWyYmQ5TA70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=XIe8zYUP; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1744394252; c=relaxed/simple;
+	bh=1/CULNrp6gAuXONzF0vqUued6nOAitWEc5QO9k0BcfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=njuFd64YES7ExutJKF7BzzS90a7tRth+Ub9lSXzjkdwvv53PZmV5dUslPynaJ6fuejwYBL9nfmdc6eF+8dUl+Xdg8QqLknYFROhEfE+EsyVIYXPTy2lxAMRM49wmZc+QYzxQlvTw6NDwezOVPm2/ggffwqt5m7aHIzShs7IyktI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQL8jzqT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="XIe8zYUP"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac25d2b2354so368438466b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1744394089; x=1744998889; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uZElioqvOJMRGLrrbRjtOKF/8Aggf8tT1T8UOQr1p6A=;
-        b=XIe8zYUPdcuX4Vl9xiQHoFR6q7oqLvwv7yFoLGQk/648ktFbwV4erdH8vnG4UNV7W/
-         4gqjXnDyTNzYf7Ro1TApfEldZpVvs2o4d5tZRSfNwQZZGsfeSL3BlxAtULHN1M7aKQgi
-         XXFwNGzogrlL+z+9HIxZiUIR/mQLyNwX3Anda/UWqZiSq1c5axT8sqvWU3EutLven15V
-         Jj8OWgsfRDeufCHi0tqPqmDdZifzNWFXR2NNmESArXmCMW25jJJlFQucVAgGt52nsfLc
-         G1lnt9LX1ARITZ1pqid+Mb/R8j46HIDBhKJkvRaFHjCILoxzPbQrs4h+2d/2HnkwD9hH
-         P7PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744394089; x=1744998889;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uZElioqvOJMRGLrrbRjtOKF/8Aggf8tT1T8UOQr1p6A=;
-        b=f8QiQLTcyBNnET71arsl/7q41zioMsQd5ahMeZ1yWnQoflgYXn/LntfnoDKN26QGV9
-         iuo4SsQbjJTkmrp8ILvdRGnBP3zJbajhUZKZ5zc0lFasxSGWwq7/WcshCpwnfEIehvWl
-         GIQtv8+imm3RZEafXRYloodKsXrJBSDCRDoC+HaVihQpH5Ga/2SZ52JaM0V2l/gC0VED
-         MIhCZhnelcFKRZXlyLzL2aOlIpu/E1ckL8H1GScD982xZ4oyDFQ2xaJBGNQEr+WdDZ7P
-         HLPPeL6FAYfjdLwX3v40WMmyIehLvjthMTJPLqfg4PEXeBVjx6ek02el0i/6UtjN8Vux
-         6hEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcnMKlLrvFJ6a13MhhezZRaoKsAWnUWWHXpD1zEikSafAV/Urh97vlMwTVhHzuNBDaUO4/3HQrECKeums=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9zB4iyA+LWU7qFRojJ0aEzoMwZItpt2PPLfUu+qnKbHSoJPUK
-	mikR40vCQ0obp7wB/Xjp3kVwP6y3MAok3007jl8kyamI51XtRPlRSC0md9i2N98=
-X-Gm-Gg: ASbGncvHJs9LAo1oOLiOSq9r0ucDIzBArXf67SLKwNhyKyHf9M+rA34JpYUFvbOodHe
-	KhNeNJmCSZqsT6lUsdWKoC//gkHpRB+6BeBD8RkDLq5EeQm89ksZSfOLQ783jWlOGCt8gLrrLBN
-	QXBee0B6CgGAmoOpeUUq6KRY+mieG6o/ENzfxIVNHaPfl07eCE0Y8ZWY3UVd7M8X/PPdv0cxuyV
-	AJMwNpBemRo46hMwshKpxA8IQTSw9Br1Lh4f6IQfuM9PMWS8tvaCQHK1Yp205iXYfo9Ff0lZAE6
-	zPp9iP2ttWOco5GwivIOp4KxkObDfudc
-X-Google-Smtp-Source: AGHT+IHlsd1OjqlMWlAQPwwAuOKfCl8uk/pGPlrihEPFE8d9StcXjSTkGzgHNBrELNxLTW7C3iUInw==
-X-Received: by 2002:a17:907:6d0b:b0:ac2:cae8:e153 with SMTP id a640c23a62f3a-acad3445f7emr328570666b.4.1744394089440;
-        Fri, 11 Apr 2025 10:54:49 -0700 (PDT)
-Received: from cloudflare.com ([2a09:bac5:506a:2387::38a:3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce70ebsm479714666b.178.2025.04.11.10.54.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 10:54:48 -0700 (PDT)
-From: Jakub Sitnicki <jakub@cloudflare.com>
-To: Jiayuan Chen <mrpre@163.com>, Michal Luczaj <mhal@rbox.co>
-Cc: Andrii Nakryiko <andrii@kernel.org>,  Eduard Zingerman
- <eddyz87@gmail.com>,  Mykola Lysenko <mykolal@fb.com>,  Alexei Starovoitov
- <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>,  Martin KaFai
- Lau <martin.lau@linux.dev>,  Song Liu <song@kernel.org>,  Yonghong Song
- <yonghong.song@linux.dev>,  John Fastabend <john.fastabend@gmail.com>,  KP
- Singh <kpsingh@kernel.org>,  Stanislav Fomichev <sdf@fomichev.me>,  Hao
- Luo <haoluo@google.com>,  Jiri Olsa <jolsa@kernel.org>,  Shuah Khan
- <shuah@kernel.org>,  Jonathan Corbet <corbet@lwn.net>,
-  bpf@vger.kernel.org,  linux-kselftest@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 5/9] selftests/bpf: Add selftest for
- sockmap/hashmap redirection
-In-Reply-To: <fnsy7wey4vaewoyur5363w2q2nb7dvljmaroijflgq2hfqbumo@gqdged7tly47>
-	(Jiayuan Chen's message of "Fri, 11 Apr 2025 21:09:53 +0800")
-References: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
-	<20250411-selftests-sockmap-redir-v2-5-5f9b018d6704@rbox.co>
-	<fnsy7wey4vaewoyur5363w2q2nb7dvljmaroijflgq2hfqbumo@gqdged7tly47>
-Date: Fri, 11 Apr 2025 19:54:47 +0200
-Message-ID: <87a58mh9co.fsf@cloudflare.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQL8jzqT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADAA8C4CEE2;
+	Fri, 11 Apr 2025 17:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744394251;
+	bh=1/CULNrp6gAuXONzF0vqUued6nOAitWEc5QO9k0BcfM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vQL8jzqTq0Mt9e5/JneJadi8HlMfBW1lUfP29jeKA7AXF17GrRL7EGjSF+OcxDTT+
+	 Q50Le5Uho9FyrtY+DS4gnwRNTMhp/OUFgUvRVrNTKuE3RBQ/08g1tBRNipNXvacs4I
+	 ftH0qnbINyOjg7oXIJ/ksRpF0whK+c8FL3a01Hjcl5BJrCbccsmdBbUemLNby+jJeM
+	 mf2OPQgQV7mxABw09VRCzxGJhc+rCD5IUckA9shSmPoerGfaMXVpjTtVhGXwnVRj8X
+	 xoKkQgPqQ3GtFcbeilxBgRG+WI2yZ4YZvo8719+bMdMHD8AqcjXj1QkjBycLBEidbx
+	 49MTgDL6i9Qfw==
+Date: Fri, 11 Apr 2025 12:57:30 -0500
+From: Rob Herring <robh@kernel.org>
+To: Praveen Talari <quic_ptalari@quicinc.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pm@vger.kernel.org, psodagud@quicinc.com, djaggi@quicinc.com,
+	quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
+	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
+	quic_shazhuss@quicinc.com, Nikunj Kela <quic_nkela@quicinc.com>
+Subject: Re: [PATCH v1 2/9] dt-bindings: serial: describe SA8255p
+Message-ID: <20250411175730.GA3642862-robh@kernel.org>
+References: <20250410174010.31588-1-quic_ptalari@quicinc.com>
+ <20250410174010.31588-3-quic_ptalari@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410174010.31588-3-quic_ptalari@quicinc.com>
 
-On Fri, Apr 11, 2025 at 09:09 PM +08, Jiayuan Chen wrote:
-> On Fri, Apr 11, 2025 at 01:32:41PM +0200, Michal Luczaj wrote:
->> Test redirection logic. All supported and unsupported redirect combinations
->> are tested for success and failure respectively.
->> 
->> BPF_MAP_TYPE_SOCKMAP
->> BPF_MAP_TYPE_SOCKHASH
->> 	x
->> sk_msg-to-egress
->> sk_msg-to-ingress
->> sk_skb-to-egress
->> sk_skb-to-ingress
->
-> Could we also add test cases for SK_PASS (and even SK_DROP)?
-> Previously, we encountered deadlocks and incorrect sequence issues when
-> the program returned SK_PASS, so explicit testing for these cases would
-> be helpful.
->
-> If implemented, this test would fully exercise all code paths and
-> demonstrate a complete example that covers every aspect of
-> sockmap's packet steering and connection management capabilities.
+On Thu, Apr 10, 2025 at 11:10:03PM +0530, Praveen Talari wrote:
+> From: Nikunj Kela <quic_nkela@quicinc.com>
+> 
+> SA8255p platform abstracts resources such as clocks, interconnect and
+> GPIO pins configuration in Firmware. SCMI power and perf protocols are
+> used to send request for resource configurations.
+> 
+> Add DT bindings for the QUP GENI UART controller on sa8255p platform.
+> 
+> Co-developed-by: Praveen Talari <quic_ptalari@quicinc.com>
+> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
 
-This could easily be a follow up in my mind.
+Your tags go last because you touched this last (I assume). The order 
+here would be correct if you were the original author, but Nikunj made 
+significant enough changes to change the author and also sent the 
+patches. The sender always has the last S-o-b (until the maintainer 
+adds their's when applying).
 
-[...]
+> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+> ---
+>  .../serial/qcom,sa8255p-geni-uart.yaml        | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
+> new file mode 100644
+> index 000000000000..0dbfbfa1d504
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/qcom,sa8255p-geni-uart.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Geni based QUP UART interface
+> +
+> +maintainers:
+> +  - Praveen Talari <quic_ptalari@quicinc.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/serial/serial.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sa8255p-geni-uart
+> +      - qcom,sa8255p-geni-debug-uart
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    items:
+> +      - description: UART core irq
+> +      - description: Wakeup irq (RX GPIO)
+
+If this is a wakeup source, then you should have interrupt-names with 
+'wakeup' for the 2nd irq.
+
+> +
+> +  power-domains:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  power-domain-names:
+> +    items:
+> +      - const: power
+> +      - const: perf
+> +
+> +  reg:
+> +    maxItems: 1
+
+'reg' goes after compatible.
+
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - reg
+> +  - power-domains
+> +  - power-domain-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    serial@990000 {
+> +        compatible = "qcom,sa8255p-geni-uart";
+> +        reg = <0x990000 0x4000>;
+> +        interrupts = <GIC_SPI 531 IRQ_TYPE_LEVEL_HIGH>;
+> +        power-domains = <&scmi0_pd 0>, <&scmi0_dvfs 0>;
+> +        power-domain-names = "power", "perf";
+> +    };
+> +...
+> -- 
+> 2.17.1
+> 
