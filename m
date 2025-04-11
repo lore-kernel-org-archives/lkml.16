@@ -1,280 +1,370 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0EC1DE2DB;
-	Fri, 11 Apr 2025 16:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65911DE2DB
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744389278; cv=none; b=XB330HtAdLO6RDBz87rDlJYK5FSdchBJ0CTg/bqzHTpmUiT/WwGaaUJ6XDnzC6bqbxDjmYf3+XLLD4LqMKVD79jx7btKjTX36et0zSo/22Gtf7wcFlbkQYbMZXx0SbIJKqD/booBu48awxB2ds/OTYVWTihqMwSJr7S+M0GjbIU=
+	t=1744389291; cv=none; b=D2bS6/zcDfsnRn4G4h2NaFgkotOQcRe1CValk6IsgOkmuvVXVTFIQu0bJ1V3+QP30/WDKU2hxoOOMj5EckhLLFkDdkXzEM+PEbZXW4EVeUiUp0wKp1DvgPvoPsCK/3/ZFgJIBUrEvsxpjJiI1yXUV81qE6BTk8rusXXMgG8BJII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744389278; c=relaxed/simple;
-	bh=TPsDNdO0J5tFY3gM6ug4IFFbTqGLVdNs3Fa7k4whx34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hFNnwUi87wgH6V5KAHM03eH//r8Qjb5urhQvHuATDmqhMn3chA8qDb/LCfH1LxxLN1FTSVmxBDk0wGepHRbQKv/0Dyi9t4EL8vJEvGMJe1WtuDS7SDSbemWIFWH6IbJdAXc48X2XTP5QBrYo1p/AYt5AhCW9tgmnqr/A1pUdW0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gVc59QP6; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744389291; c=relaxed/simple;
+	bh=cUytIB6JD4u8jSksVRBv65CJh/bQDLtRlJvAHpLvoNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PxZQAKha0qXYliV9oP6s7M9m/CvIbx+MiNyGSILidin0RlXwNU+KIixOQLtfOW4IMiRlMP63lUxDClnQKkGJ6wuckcgkG0n8leY7mAsnLXPcaCP2JRQ1cZoL+71vsDC5JiJdjhBUFFpJ0br1T50y2C/p0PyJ6+ZSfmzZ7eEpc4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mil10c8x; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVc59QP6"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736c062b1f5so1937487b3a.0;
-        Fri, 11 Apr 2025 09:34:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744389275; x=1744994075; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i2OP7V+QE6E9gg3GbdLcYE8UHgSFfj9Jnjg73a7+53s=;
-        b=gVc59QP68gF8RNguvnLf7TKxOBGzr11uH3fLOvbaypk4RDbI1QIl1E4bzXB3HdjwVx
-         EV8Wf7D1EK9HPYtfSdq9Z+6ZGA9iw26/r8eft9zkFNrtFfFJRmz5K3UHaIO9SXz5XkyO
-         NIpohQMHLrsnTCK5xkzF2swRkbhQXBwsjGpbZT2GsdSVebSPu7VjgtI73pqC4LM6e04o
-         dkRo7uFs4Jr+G13i2PSY2r2+3LEW1RAstPvuUKg07s7wUR5Bxc8parJ6drQ5MEChbcr1
-         Dfk/Mhd/nPLnT+yVPVdZW1cs6BU9M8qlUO46z5bm3mo/xkwMmokmmgzb3p4iIrXDSS7U
-         jPVA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mil10c8x"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BGPxZL032531
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:34:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jvva2kE3vYVEBaJ0888Bum0UF9gFfTGvSCYYnphqITg=; b=mil10c8xL+HfNBzP
+	GYA6yUcePBV3DXzcJPgKMLr3bNKVTBfWXuCYFQsG5CbDk+IPON0lpjIMC3mGo10X
+	cnIatcq2HRpx0XYMIIY33HKg5eyDJH7e0cBr7VmWfDF7YG0nZRH5rPeCTclOUGLV
+	GdsCS9gyVyS17Ga1acqm2brjkkQ0oJRwX2riD8z8Xgn29No6TpnmPUlGlUCdFA2M
+	0DWfYSVZHpA9gq9FlemApC6G7MW90TLDJhOKvDkaomZQXsW0vU6omPC4UnBnv/B9
+	Spqknnh4+44peIBNeB5rWjMlGeg0cDsxT9nJHGasm4iIF132WYRKf8MOyD7sw/p1
+	iDEU7g==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twfkttfp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:34:43 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-225429696a9so28528405ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:34:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744389275; x=1744994075;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i2OP7V+QE6E9gg3GbdLcYE8UHgSFfj9Jnjg73a7+53s=;
-        b=BCb9oXPoz9pR/aDamY9cPBXQWw5/SlfEJ7MZjCMkc4lr4HCMsi/Kv9X2POmlQOjJ/b
-         PhPZjdJFmtrEN3Ni0/Cri6P+fHZQkpwp3/rJnrGeiQK/bA/oPJuPGjPZ/e8AsLgwf4Gw
-         Tv8J3XYpcFhwIUX8bQfJP0daL7OR+CQYWPpuatT0Q9ju8Ntqum7j66B0gja+gzPE5vls
-         ID2cwt0KLmR85UiMtxK3ANawackkwdWrDdakUVkVB67LhGcn8XoFz1sddnw+jshwhOca
-         Ttw1QW4ETrn74JgkDPSvMJjWyZD8pfvkFvk0D7fEP+4yqFSt7RTC7mkQ6Qen97ch4eWN
-         3i6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUI/KgDsiA7f1xI/TLG89EhaMlm5LSvw1r3eptdg9GmswiQsTyJeu/k2jthm0eL2GUz4mz0vM9vspaw/xtu@vger.kernel.org, AJvYcCVYW1IVwPrSoAKWxWsB/nCClGs8N9UipmpsxTiAaw3uokVL58SzQDieLAq3cP1NlgI8/Y3OEcm5@vger.kernel.org, AJvYcCVaZTs7YG2x09BmjaeTk0Tq3LlAYSsnwCnREYML77r8kion6DO6CnXNOMmYzmOlEnKZuNf2/Gfm33ZlIUgN@vger.kernel.org, AJvYcCVuQsZ9R0Lw8PzgERdOAv4+Ih8vPHkyiCBisJlWmYUbAIDCVmUu0nWaJHy2cm4b42Q6CfIl6NT1rKlO2OI=@vger.kernel.org, AJvYcCWaOeSbAsVTtan1M6+6LyANIRi9uQeyLPjsohdKVDzbw4kg4dAy3C0BO5rHzsLifrQ/ZqI=@vger.kernel.org, AJvYcCXM4ju2CzYOvAiZ5MVTwns1PhkCGYB3TyKeBQmf7lA6M2EZ/ySd+C6Y12YIB27QXOwoDGZ49AvfsAp1nQA=@vger.kernel.org, AJvYcCXhou8VB7YSa8JszAHGL2KihBSBJ2dRM5OvRiCXxLzITQuTJDCIBogQqRycazOjOh66Bvb8ukZT8F2K6tyNyUE=@vger.kernel.org, AJvYcCXzp8Hc1t3QFwawh4FjZ0ynBUCTmASriqXeohL5gT9ywOUcuE/gTf29Kh13BklxOdmDcaVP3NtLXAJ/ZVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAuY+DxJFbyJwgkSdLPfqqF8OoEzszrXJCdRVpRznz4lPwgmhY
-	30ezz7BWFBeGcRAtiodZsrke2DJa9PM4vO50s37L3hldJaqb7dM1
-X-Gm-Gg: ASbGncvNFPpbRKPjaHvwHoLKT2muKrx87qlxKwy+B8tkix1lBUeFzHM/qB99Vv0Xlic
-	Kk+sTDI1Tlet7lbNCgKN6AISzVwIrD81z8pZ4wJhNg0MZ/W5ORObt/Gnkvk49v8U2WkMQfEHDLZ
-	MpTDls94znAlJ4U51/S6js9j/KNkVI3xGWw+kIFkdU3Fp15BqKaD+F0uq7X4FRV+sJXHGH/RSr0
-	1ojYoMap8bf7wG4YimOO6GJGiPCnxoRQTOw2et1BUraXTdGS/DD+CleHmWnmg9gUiaVrpJiCtTn
-	BdUPJqzM+P3v8i8o1BF9wlLaG4OWIZmadoKkiib2+3qA+LR+SyA1HJEXaPiPPP3f70Lz1MMtHK4
-	lvuU=
-X-Google-Smtp-Source: AGHT+IEYqWSvO9nmRhuvu9Nod5I62ZHK0q1nd8Adc2Nrxqu798p8njg5jLN2TKIb2S4uFWzFr2oiJA==
-X-Received: by 2002:a05:6a20:d503:b0:1f5:902e:1e97 with SMTP id adf61e73a8af0-2017998c2d3mr6583017637.41.1744389275369;
-        Fri, 11 Apr 2025 09:34:35 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b06161333a8sm258713a12.7.2025.04.11.09.34.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 09:34:34 -0700 (PDT)
-Date: Sat, 12 Apr 2025 00:34:24 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Yury Norov <yury.norov@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
-	andrzej.hajda@intel.com, neil.armstrong@linaro.org,
-	rfoss@kernel.org, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	simona@ffwll.ch, dmitry.torokhov@gmail.com, mchehab@kernel.org,
-	awalls@md.metrocast.net, hverkuil@xs4all.nl,
-	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	louis.peens@corigine.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, akpm@linux-foundation.org, jdelvare@suse.com,
-	linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com,
-	alistair@popple.id.au, linux@rasmusvillemoes.dk,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	oss-drivers@corigine.com, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw, Frank.Li@nxp.com,
-	linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH v4 00/13] Introduce parity_odd() and refactor redundant
- parity code
-Message-ID: <Z/lEkDwefWvw4ZA3@visitorckw-System-Product-Name>
-References: <20250409154356.423512-1-visitorckw@gmail.com>
- <Z_amQp3gK5Dm8Qz3@yury>
- <Z/a5Qh/OeLT8JBS4@visitorckw-System-Product-Name>
- <Z_a9YpE46Xf8581l@yury>
- <e97a83a2-dabd-4dc3-b69a-840ca17d70b5@zytor.com>
+        d=1e100.net; s=20230601; t=1744389282; x=1744994082;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jvva2kE3vYVEBaJ0888Bum0UF9gFfTGvSCYYnphqITg=;
+        b=flyqa+OS6/w5v9iz0s8lImvWhxu8ZtuWvqZzKdAnUCBbeA8H55lpq0YMV+lNdn8Ct6
+         XfNUWPgAC72T8I0bQaFouz7foebZIQzTrHIyvRFEJER+RmESHfJJWDGxX6kL6CvNnUUq
+         ns0EGqdEwe6Q4Y9C2LFlmbXIAeTvg726+0eAekhA/arpHYAAV9xBcQYXLUk+0pmajoK8
+         jYvSPWGpWAtAIzw7/kPZVI65sf/6+jNbq4t/TbxdotImFFujmAAYqqodaB+wPQdN/vpP
+         n1DNPK7ZzLuL5r6/mGRAbdESxk2yDd82ZZDCoX00ifGe3GnhvCkh4SbszBlL0wU3hP+4
+         fauA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmF59C5VcGhHGiGBqd89L4kSVknjDaORh/dm2GVORAdzQEVMKYX4OJbxaIi6JIm69vReWSPgBOmA2nvhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxxb8yrhWnExWFYfVG+iV6uGRG7mkocP6LA6Sitzp4XFifTw8te
+	avrTHujhFfv4Gv9PGMTXFBqkPlEou9FBvM7njWOB2tVqxkiXeSJEXVHMaDTreqf69JKQfWNdV5F
+	0Ur/0/oaI3aT7aJSU0lERaZBSJhaxjcB3FhhSdV35HfU8PNNkhnelp1+8ofTOTx4=
+X-Gm-Gg: ASbGncv1qSpqKx0pRaNbWTy30tbQyLzjqo88rgZeLKPYTVlEiacEfsCPW9pPL2/aKZD
+	eLlAy+FumkOUEtVJ8rJ4HNBqxg0CuOV75lWHanlDsRTqebrMvLztV/6PBJ2SFgcNxds3lKRjADw
+	qzp9qmBgcDd+qcKKByOYzATi9QUA15YbDfhmxtkF1VFMr96ZGhI/kgK3QVWN8ylNnWjKM1dRtl4
+	39Zr8cWbQCl6HwkAVADODC9DThrg8TZ9ZXvcmTGKEUgKeTVmg37tUMmY88crSdZ0Sls8I1lYtll
+	qB/gC+Z1htbih4juCse2lGHiDIj5N6fMiCml+NtYeY1hgO5W5sk1BizxwzxbUw==
+X-Received: by 2002:a17:903:13d0:b0:216:3c36:69a7 with SMTP id d9443c01a7336-22bea50bd92mr52568125ad.45.1744389281656;
+        Fri, 11 Apr 2025 09:34:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGjVbhg891hBTEU/fDXSGsCtHr9+7WqQeuL91yoDYRZ8Vj/jNkTHN9KHit1bNNOf3beOPdFtw==
+X-Received: by 2002:a17:903:13d0:b0:216:3c36:69a7 with SMTP id d9443c01a7336-22bea50bd92mr52567665ad.45.1744389281217;
+        Fri, 11 Apr 2025 09:34:41 -0700 (PDT)
+Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8c62dsm51759155ad.95.2025.04.11.09.34.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 09:34:40 -0700 (PDT)
+Message-ID: <3260d7de-9e8b-48ee-9d1b-13745e95d933@oss.qualcomm.com>
+Date: Fri, 11 Apr 2025 10:34:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e97a83a2-dabd-4dc3-b69a-840ca17d70b5@zytor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] accel/amdpk: add driver for AMD PKI accelerator
+To: Nipun Gupta <nipun.gupta@amd.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        krzk+dt@kernel.org, gregkh@linuxfoundation.org, robh@kernel.org,
+        conor+dt@kernel.org, ogabbay@kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+        derek.kiernan@amd.com, dragan.cvetic@amd.com, arnd@arndb.de
+Cc: praveen.jain@amd.com, harpreet.anand@amd.com, nikhil.agarwal@amd.com,
+        srivatsa@csail.mit.edu, code@tyhicks.com, ptsm@linux.microsoft.com
+References: <20250409173033.2261755-1-nipun.gupta@amd.com>
+ <20250409173033.2261755-2-nipun.gupta@amd.com>
+Content-Language: en-US
+From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+In-Reply-To: <20250409173033.2261755-2-nipun.gupta@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: xhQnYfTRa027M8LHtTSpfHvWfEFgfk4t
+X-Proofpoint-ORIG-GUID: xhQnYfTRa027M8LHtTSpfHvWfEFgfk4t
+X-Authority-Analysis: v=2.4 cv=b7Oy4sGx c=1 sm=1 tr=0 ts=67f944a3 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=e5mUnYsNAAAA:8 a=zd2uoN0lAAAA:8 a=t4VSQj1yoBEbmVwKJQYA:9 a=QEXdDO2ut3YA:10
+ a=uG9DUKGECoFWVXl0Dc02:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_06,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 mlxscore=0 impostorscore=0 phishscore=0
+ clxscore=1015 spamscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504110104
 
-On Wed, Apr 09, 2025 at 07:09:28PM -0700, H. Peter Anvin wrote:
-> On 4/9/25 11:33, Yury Norov wrote:
-> > > > 
-> > > I don't have a strong preference for the name, but if I had to guess
-> > > the return value from the function prototype, I would intuitively
-> > > expect an int to return "0 for even and 1 for odd," and a bool to
-> > > return "true for even, false for odd." I recall Jiri and Jacob shared
-> > > similar thoughts, which is why I felt adding _odd could provide better
-> > > clarity.
-> > 
-> > I think they said they are convinced that parity should return 1 for
-> > odd because of folding and __builtin_parity() arguments.
-> > 
-> 
-> And for bool, 0 == false, and 1 == true. In fact, the *definitions* for
-> false and true in C (but not C++) is:
-> 
-> <stdbool.h>:
-> typedef _Bool bool;
-> #define false	0
-> #define true	1
-> 
-> If someone wants to make more clear, it would be better to put "typedef bool
-> bit_t" in a common header, but that personally seems ridiculous to me.
->   >>>> type from u8 to u64 for broader applicability, and updates its return
-> > > > > type from int to bool to make its usage and return semantics more
-> > > > > intuitive-returning true for odd parity and false for even parity. It
-> > > > > also adds __attribute_const__ to enable compiler optimizations.
-> > > > 
-> > > > That's correct and nice, but can you support it with a bloat-o-meter's
-> > > > before/after and/or asm snippets? I also think it worth to be a separate
-> > > > patch, preferably the last patch in the series.
-> > > > 
-> > > I quickly tested it with the x86 defconfig, and it appears that the
-> > > generated code doesn't change. I forgot who requested the addition
-> > > during the review process, but I initially thought it would either
-> > > improve the generated code or leave it unchanged without significantly
-> > > increasing the source code size.
-> > 
-> > That's what I actually expected, but was shy to guess openly. :). It's
-> > hard to imagine how compiler may improve code generation in this case...
-> > 
-> > This attribute is used when there's an asm block, or some non-trivial
-> > function call. In this case, the function is self-consistent and makes
-> > no calls. And you see, const annotation raises more questions than
-> > solves problems. Let's drop it.
-> 
-> Ah yes; one of the quirks about gcc asm is that an asm is implicitly assumed
-> "const" (with no memory operands) or "pure" (with memory operands) unless
-> declared volatile or given an explicit "memory" clobber.
-> 
-> So yes, the compiler can most definitely derive the constness from the form
-> of the function even in the variable case.
-> 
-> I would still like to see __builtin_parity() being used as an architecture
-> opt-in; it can, of course, also be unconditionally used in the constant
-> case.
-> 
-> So in the end one of these two become my preferred implementation, and I
-> really don't think it is very complicated:
-> 
-> #ifndef use_builtin_parity
-> #define use_builtin_parity(x) __builtin_constant_p(x)
-> #endif
-> 
-> static inline bool parity8(u8 val)
-> {
-> 	if (use_builtin_parity(val))
-> 		return __builtin_parity(val);
-> 	val ^= val >> 4;
-> 	return (0x6996 >> (val & 0xf)) & 1;
-> }
-> 
-> static inline bool parity16(u16 val)
-> {
-> 	if (use_builtin_parity(val))
-> 		return __builtin_parity(val);
-> 	return parity8(val ^ (val >> 8));
-> }
-> 
-> static inline bool parity32(u32 val)
-> {
-> 	if (use_builtin_parity(val))
-> 		return __builtin_parity(val);
-> 	return parity16(val ^ (val >> 16));
-> }
-> 
-> static inline bool parity64(u64 val)
-> {
-> 	if (use_builtin_parity(val))
-> 		return __builtin_parityll(val);
-> 	return parity32(val ^ (val >> 32));
-> }
-> 
-> This means that an architecture -- in particular, x86 -- can still ask to
-> use __builtin_parity*() directly. It means that architectures on which
-> __builtin_parity*() produces bad code should either complain to the
-> gcc/clang team and have it fixed, or we can add additional mechanism for
-> them to override the implementation at that time.
-> 
-> The alternative is to stop worrying about overengineering, and just do it
-> once and for all:
-> 
-> #ifndef parity8
-> static inline bool parity8(u8 val)
-> {
-> 	val ^= val >> 4;
-> 	return (0x6996 >> (val & 0xf)) & 1;
-> }
-> #endif
-> 
-> #ifndef parity16
-> static inline bool parity16(u16 val)
-> {
-> 	return parity8(val ^ (val >> 8));
-> }
-> #endif
-> 
-> #ifndef parity32
-> static inline bool parity32(u32 val)
-> {
-> 	return parity16(val ^ (val >> 16));
-> }
-> #endif
-> 
-> #ifndef parity64
-> static inline bool parity64(u64 val)
-> {
-> 	return parity32(val ^ (val >> 32));
-> }
-> #endif
-> 
-> In either case, instead of packing the cascade into one function, make good
-> use of it.
-> 
-> In the latter case, __builtin_constant_p() isn't necessary as it puts the
-> onus on the architecture to separate out const and non-const cases, if it
-> matters -- which it doesn't if the architecture simply wants to use
-> __builtin_parity:
-> 
-> #define parity8(x)  ((bool) __builtin_parity((u8)(x)))
-> #define parity16(x) ((bool) __builtin_parity((u16)(x)))
-> #define parity32(x) ((bool) __builtin_parity((u32)(x)))
-> #define parity64(x) ((bool) __builtin_parityll((u64)(x)))
-> 
-> As stated before, I don't really see that the parity function itself would
-> be very suitable for a generic helper, but if it were to, then using the
-> "standard" macro construct for it would seem to be the better option.
-> 
-> (And I would be very much in favor of not open-coding the helper everywhere
-> but to macroize it; effectively creating a C++ template equivalent. It is
-> out of scope for this project, though.)
-> 
-IIUC, you prefer using the parity8/16/32/64() interface with
-__builtin_parity(), regardless of whether there are users on the hot
-path?
+On 4/9/2025 11:30 AM, Nipun Gupta wrote:
+> The AMD PKI accelerator driver provides a accel interface to interact
 
-If the maintainer has no concerns about maintenance burden, I also lean
-toward this interface. While I don't think the implementation is
-particularly complex, I'm not the maintainer, so I'd rather not argue
-about the maintenance aspect. Also, to be clear, I don't think I'm the
-right person to provide evidence that performance or code generation
-matters to any user.
+"an accel"
 
-OTOH, If we do end up going with one of the two approaches, since
-bitops.h is included (directly or indirectly) by many files while
-parity is only used in fewer than 20, perhaps we should move the
-parity-related code to a separate parity.h. It doesn't necessarily have
-to be maintained by Yury - it could be someone else, or me.
+> with the device for offloading and accelerating asymmetric crypto
+> operations.
+> 
+> Signed-off-by: Nipun Gupta <nipun.gupta@amd.com>
+> ---
+> 
+> Changes RFC->v2:
+> - moved from misc to accel
+> - added architecture and compile test dependency in Kconfig
+> - removed sysfs (and added debugfs in new patch 3/3)
+> - fixed platform compat
+> - removed redundant resource index 1 configuration (which was there in
+>    RFC patch)
+> 
+>   MAINTAINERS                     |   2 +
+>   drivers/accel/Kconfig           |   1 +
+>   drivers/accel/Makefile          |   1 +
+>   drivers/accel/amdpk/Kconfig     |  18 +
+>   drivers/accel/amdpk/Makefile    |   8 +
+>   drivers/accel/amdpk/amdpk_drv.c | 736 ++++++++++++++++++++++++++++++++
+>   drivers/accel/amdpk/amdpk_drv.h | 271 ++++++++++++
+>   include/uapi/drm/amdpk.h        |  49 +++
+>   8 files changed, 1086 insertions(+)
+>   create mode 100644 drivers/accel/amdpk/Kconfig
+>   create mode 100644 drivers/accel/amdpk/Makefile
+>   create mode 100644 drivers/accel/amdpk/amdpk_drv.c
+>   create mode 100644 drivers/accel/amdpk/amdpk_drv.h
+>   create mode 100644 include/uapi/drm/amdpk.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 11f8815daa77..cdc305a206aa 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1161,6 +1161,8 @@ L:	dri-devel@lists.freedesktop.org
+>   S:	Maintained
+>   T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>   F:	Documentation/devicetree/bindings/accel/amd,versal-net-pki.yaml
+> +F:	drivers/accel/amdpk/
+> +F:	include/uapi/drm/amdpk.h
+> 
+>   AMD PMC DRIVER
+>   M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> diff --git a/drivers/accel/Kconfig b/drivers/accel/Kconfig
+> index 5b9490367a39..5632c6c62c15 100644
+> --- a/drivers/accel/Kconfig
+> +++ b/drivers/accel/Kconfig
+> @@ -28,5 +28,6 @@ source "drivers/accel/amdxdna/Kconfig"
+>   source "drivers/accel/habanalabs/Kconfig"
+>   source "drivers/accel/ivpu/Kconfig"
+>   source "drivers/accel/qaic/Kconfig"
+> +source "drivers/accel/amdpk/Kconfig"
 
-Regards,
-Kuan-Wei
+Alphabetical order
+
+> 
+>   endif
+> diff --git a/drivers/accel/Makefile b/drivers/accel/Makefile
+> index a301fb6089d4..caea6d636ac8 100644
+> --- a/drivers/accel/Makefile
+> +++ b/drivers/accel/Makefile
+> @@ -4,3 +4,4 @@ obj-$(CONFIG_DRM_ACCEL_AMDXDNA)		+= amdxdna/
+>   obj-$(CONFIG_DRM_ACCEL_HABANALABS)	+= habanalabs/
+>   obj-$(CONFIG_DRM_ACCEL_IVPU)		+= ivpu/
+>   obj-$(CONFIG_DRM_ACCEL_QAIC)		+= qaic/
+> +obj-$(CONFIG_DRM_ACCEL_AMDPK)		+= amdpk/
+
+Alphabetical order
+
+> diff --git a/drivers/accel/amdpk/amdpk_drv.c b/drivers/accel/amdpk/amdpk_drv.c
+> new file mode 100644
+> index 000000000000..17c328d03db8
+> --- /dev/null
+> +++ b/drivers/accel/amdpk/amdpk_drv.c
+> @@ -0,0 +1,736 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+Deprecated SPDX tag.  Checkpatch will catch this.
+
+> +/*
+> + * Copyright (c) 2018-2021 Silex Insight sa
+> + * Copyright (c) 2018-2021 Beerten Engineering scs
+> + * Copyright (c) 2025 Advanced Micro Devices, Inc.
+> + */
+> +
+> +/*
+> + * Device Overview
+> + * ===============
+> + * AMD PKI accelerator is a device on AMD versal-net to execute public
+> + * key asymmetric crypto operations like ECDSA, ECDH, RSA etc. with high
+> + * performance. The driver provides accel interface to applications for
+> + * configuring the device and performing the required operations. AMD PKI
+> + * device comprises of multiple Barco Silex ba414 PKI engines bundled together,
+> + * and providing a queue based interface to interact with these devices on AMD
+> + * versal-net.
+> + *
+> + * Following figure provides the brief overview of the device interface with
+> + * the software:
+> + *
+> + * +------------------+
+> + * |    Software      |
+> + * +------------------+
+> + *     |          |
+> + *     |          v
+> + *     |     +-----------------------------------------------------------+
+> + *     |     |                     RAM                                   |
+> + *     |     |  +----------------------------+   +---------------------+ |
+> + *     |     |  |           RQ pages         |   |       CQ pages      | |
+> + *     |     |  | +------------------------+ |   | +-----------------+ | |
+> + *     |     |  | |   START (cmd)          | |   | | req_id | status | | |
+> + *     |     |  | |   TFRI (addr, sz)---+  | |   | | req_id | status | | |
+> + *     |     |  | | +-TFRO (addr, sz)   |  | |   | | ...             | | |
+> + *     |     |  | | | NTFY (req_id)     |  | |   | +-----------------+ | |
+> + *     |     |  | +-|-------------------|--+ |   |                     | |
+> + *     |     |  |   |                   v    |   +---------------------+ |
+> + *     |     |  |   |         +-----------+  |                           |
+> + *     |     |  |   |         | input     |  |                           |
+> + *     |     |  |   |         | data      |  |                           |
+> + *     |     |  |   v         +-----------+  |                           |
+> + *     |     |  |  +----------------+        |                           |
+> + *     |     |  |  |  output data   |        |                           |
+> + *     |     |  |  +----------------+        |                           |
+> + *     |     |  +----------------------------+                           |
+> + *     |     |                                                           |
+> + *     |     +-----------------------------------------------------------+
+> + *     |
+> + *     |
+> + * +---|----------------------------------------------------+
+> + * |   v                AMD PKI device                      |
+> + * |  +-------------------+     +------------------------+  |
+> + * |  | New request FIFO  | --> |       PK engines       |  |
+> + * |  +-------------------+     +------------------------+  |
+> + * +--------------------------------------------------------+
+> + *
+> + * To perform a crypto operation, the software writes a sequence of descriptors,
+> + * into the RQ memory. This includes input data and designated location for the
+> + * output data. After preparing the request, request offset (from the RQ memory
+> + * region) is written into the NEW_REQUEST register. Request is then stored in a
+> + * common hardware FIFO shared among all RQs.
+> + *
+> + * When a PK engine becomes available, device pops the request from the FIFO and
+> + * fetches the descriptors. It DMAs the input data from RQ memory and executes
+> + * the necessary computations. After computation is complete, the device writes
+> + * output data back to RAM via DMA. Device then writes a new entry in CQ ring
+> + * buffer in RAM, indicating completion of the request. Device also generates
+> + * an interrupt for notifying completion to the software.
+> + */
+
+Feels like this would be better served in Documentation
+
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/delay.h>
+> +#include <linux/eventfd.h>
+> +#include <drm/drm_accel.h>
+> +#include <drm/drm_ioctl.h>
+
+Alphabetical order
+
+> +
+> +#include "amdpk_drv.h"
+> +
+> +#define DRIVER_NAME "amdpk"
+> +
+> +static void amdpk_init_cq(struct amdpk_dev *pkdev, struct amdpk_cq *cq,
+> +			  int szcode, char *base)
+> +{
+> +	cq->pkdev = pkdev;
+> +	cq->generation = 1;
+> +	cq->szcode = szcode;
+> +	cq->base = (u32 *)base;
+> +	cq->tail = 0;
+> +}
+> +
+> +static int amdpk_pop_cq(struct amdpk_cq *cq, int *rid)
+> +{
+> +	u32 status = CQ_STATUS_VALID;
+> +	unsigned int sz;
+> +	u32 completion;
+> +
+> +	completion = cq->base[cq->tail + 1];
+> +	if ((completion & CQ_GENERATION_BIT) != cq->generation)
+> +		return CQ_STATUS_INVALID;
+> +
+> +	*rid = (completion >> 16) & 0xffff;
+> +	/* read memory barrier: to avoid a race condition, the status field should
+> +	 * not be read before the completion generation bit. Otherwise we could
+> +	 * get stale outdated status data.
+> +	 */
+
+Incorrect comment format.
+
+> +	rmb();
+
+Shouldn't you be using readl()?
+
+> +	status |= cq->base[cq->tail];
+> +	/* advance completion queue tail */
+> +	cq->tail += 2;
+> +	sz = 1 << (cq->szcode - 2);
+> +	if (cq->tail >= sz) {
+> +		cq->tail = 0;
+> +		cq->generation ^= 1; /* invert generation bit */
+> +	}
+> +
+> +	/* evaluate status from the completion queue */
+> +	if (completion & CQ_COMPLETION_BIT)
+> +		status |= CQ_COMPLETION_ERROR;
+> +
+> +	return status;
+> +}
+> +
+> +static const struct file_operations amdpk_accel_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= accel_open,
+> +	.release	= drm_release,
+> +	.unlocked_ioctl	= drm_ioctl,
+> +	.compat_ioctl	= drm_compat_ioctl,
+> +	.llseek		= noop_llseek,
+> +	.mmap		= amdpk_accel_mmap,
+> +};
+
+DEFINE_DRM_ACCEL_FOPS ?
+
+> diff --git a/include/uapi/drm/amdpk.h b/include/uapi/drm/amdpk.h
+> new file mode 100644
+> index 000000000000..e5e18fdbc2c4
+> --- /dev/null
+> +++ b/include/uapi/drm/amdpk.h
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Advanced Micro Devices, Inc.
+> + */
+> +
+> +#ifndef __AMDPK_H__
+> +#define __AMDPK_H__
+> +
+> +#if defined(__cplusplus)
+> +extern "C" {
+> +#endif
+> +
+> +#define MAX_PK_REQS		256
+> +
+> +struct amdpk_info {
+> +	/** maximum available queue depth */
+
+This doesn't look like valid kerneldoc
+
+> +	unsigned int avail_qdepth;
+> +};
+
+Doesn't look like this handles compat correctly.  Did you read the 
+documentation on creating ioctls?
+
