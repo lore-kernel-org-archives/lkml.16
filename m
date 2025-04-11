@@ -1,63 +1,93 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597FA2BF3F0;
-	Fri, 11 Apr 2025 12:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744375015; cv=none; b=WjcV2NgJtjgjxm+vMWqUjrwP+aMgzDq+n1XCT+9NfcK+BL/gWo1srbZTKS0W72cBpUS6m7LtYC7CGBfgsgkxvtmAZSeag9G6Q1Ltv0Ve3J4l6cOvCp66FDRJD/r98xVr6Tw72IkJmF+6Kjh6jeIckV6+rPzJjz4mjhg6RALj7ws=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744375015; c=relaxed/simple;
-	bh=uLv+jZVIylIH0VV0KD57hcrEwlYUJVcBTcr0iSVMHQw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FqVai3hGMvmbhTx0zpp1X0d9n3YUkcWvQJFGW/yer+i4VB6r6r8n661gITzPVq5Us1eHkoM0rUkx5tjBxTM6SSvVMH04tGElrFEtR/0SCo3p8IY5jEupPCmTVxgqOI8JfAMdxk9EJH+sy/kVcDItShUABsXblhW7vam0cpTpptU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=jNn5Uvif; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE792BE7DF;
+	Fri, 11 Apr 2025 12:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744375012; cv=fail; b=gs5Mq8EMhbv3i1MOjcHtQRVU9qqflB69+vuAsTd9GqOO/ExpS919hjmimgH+kyA53EeYEgA0Dauw7DVFYNDeGGuDEqt27dkZAHbyK3D3Z23ebVPSMATFdLSqDIYpmymsobOUc1Ke6BAmUDMM+lT+lkJYsWHbR1FGKqw9Cd2mW9k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744375012; c=relaxed/simple;
+	bh=Z7PFJImfNMsgR0AUuqeyefat9cVtKP8QeWlAiJpYXA4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZWCY3aFzFzDVNUnCvaO3jFVTE8Ndxa99tTO16U4K3p3izG1BYsh3d6zRbCkHFtXqls8WvsNRWyWXhLOsc3nUYcsNNxd+brhoSrz5CsZcTKYwneR//pRxTLGE1ob3quKUhqMhZCoYEQV9N6NTqHdQZLUExtLMFSX2O420Mhuj2yw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=QFZuXANg; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=l/1+Zs/S; arc=fail smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="jNn5Uvif"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B9CJrp015243;
-	Fri, 11 Apr 2025 08:36:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="QFZuXANg";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="l/1+Zs/S"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B9pLBb022297;
+	Fri, 11 Apr 2025 07:36:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=01F42
-	s9TJklF2DMaHuP3FLwj+p8Agg9m1Rgn87wyq9s=; b=jNn5UvifTn1HCoc1CTRxq
-	Ph8ZtGZtTSMQ/InHKdeixBsOMQhiq12LGQFunuFQN7XBVXrbCh6paZKbi2o70Vd2
-	lFu3OEzCZDcUxmq7k15KR692Nbf4pJiFP5NtTEKRmzr46fE4TfVCwA5NEfuLvGDO
-	WXHFv7BiHiU+gV2766gMfSVo6dgJr+xMmGiOZjG8K+KaNSNYmDmxWtLjnsScE30I
-	nsv/TbckC6xwgy6P7lpBu9T/FCp1T+QlBNYRGJijAM8Ak43ct/qWwqOOy4HR/MnB
-	bKEhxs/rwreJRJtMQjdofJ8Aa7rZ7wVRl6HH9dpR4jLdx/dAjeehpHW3FQ8PYuOy
-	g==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45u1e6u55g-1
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=1UrBHASLBqxzM8RhWWXux+B5TqxPPD+emGVd5gyQmzk=; b=
+	QFZuXANgEUpwdYM4KieX303o8RCN/0MVAN2uh2/Ypze7jmLhm4coyv2lec4NnVnM
+	xI47E2Ez6RbeotDiIzg2KqRPJQdECF6AhNrt69uNxhfd4EmgYnBd4HdIMH5j0Fky
+	ZX+HdQaowypiT/qpXyAZpwnHbabmfGdUnYzpqMFpRqaLa4Kbc7my5KUN9dTHFSP8
+	EJmSt0pRzQ2ofTmVhyJGUo2v32UG3VaHhe4qk9952UPC6mNQQsqF2HjL52Qa4n2h
+	Yn0TJbKbsH8Smfl9ffD2cyuZDTah1bmiEwakRFVI351C7BDhAKR8SWbNeP/2rR3Y
+	HNmUKTsu85pq6DUtFd39YQ==
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2172.outbound.protection.outlook.com [104.47.57.172])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 45wf0gutyq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 08:36:43 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53BCagDE005152
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 11 Apr 2025 08:36:42 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 11 Apr
- 2025 08:36:42 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 11 Apr 2025 08:36:42 -0400
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.151])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53BCaTPN006015;
-	Fri, 11 Apr 2025 08:36:37 -0400
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH v2 03/13] iio: backend: add support for self sync
-Date: Fri, 11 Apr 2025 15:36:17 +0300
-Message-ID: <20250411123627.6114-4-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250411123627.6114-1-antoniu.miclaus@analog.com>
-References: <20250411123627.6114-1-antoniu.miclaus@analog.com>
+	Fri, 11 Apr 2025 07:36:16 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l9Hx9xFHJQF6Z5UM8deRKM7P2mh+pjxqkMAHDo8BX8ZziYNBmAOyA+HMKpOzQKCsOpCNCVIaDCJdTd5ZBoI1eVJlpBJxwQUGsLL+klVkJHolHiBOaRWyovKS4tQO/Vs2ulAU0R/XDcA3eFi+FVJYz4oAoRC6uXgEChLylbeEcRg2+HVj3/Gdg2FMrN1MXmt5FcMGDaPVpHQoIVaw9Hdo9Ws69K14hOTngiUdWketfT5PtBm1H+hpxKgD0XEHRuknPSiK9ViCsdMBn9suPQgpVfkcOC3z34BRulqI63a/Pl6FPNXeipElHSQ9tKqGUouqOU7612SsdSeCwYpRj42Eaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1UrBHASLBqxzM8RhWWXux+B5TqxPPD+emGVd5gyQmzk=;
+ b=MKTCRJIe7L0wxJxNS3J79TaXm5nupqQvwWLZ8MsLrSYqc384nQRes9IRvPIJrUI+7ks9n/DhzYVn2XQ0MwHpH2lMKMSIH0CMGik2SyL0mwZ7k9an6KKDlHoeeNamGwvpdk5E8Op2COiOne+At9nQTcR3JBd2W7RBYgo4Va+XXeZJb7J4SnuzHKuS4/+HIvEFpbvkH1lfMzIySmhD021vOyAfr2HIMzY+7F+VQ+Eo4+qHfPFcaMrhL2mBtIJ0HvvMOwB0XSrCZM1Nl0ofTkaCLy0GWY2meM7mnFILSLRLQtqv6dY+wZBgLaISq27qiJJ5iHg3A5cHmIQ5eTT3OL3Tnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1UrBHASLBqxzM8RhWWXux+B5TqxPPD+emGVd5gyQmzk=;
+ b=l/1+Zs/SKVT3RJPiIHAZUYmLfXqL4nVgtUALq0BNU40k+o1oyj7nlwg/CMWZddc0fVpE5rQDd92poeAqe5VlL+0c2I1ILT8TA59ICPjRvtsEaXLilkIQE5KYizabUSRKTcOXe1iT6Sww1zrr9mH9gLFU2tJB7DY3pcW7LBgZnYw=
+Received: from CH2PR19CA0017.namprd19.prod.outlook.com (2603:10b6:610:4d::27)
+ by CH2PR19MB4120.namprd19.prod.outlook.com (2603:10b6:610:98::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.28; Fri, 11 Apr
+ 2025 12:36:11 +0000
+Received: from CH1PEPF0000A34B.namprd04.prod.outlook.com
+ (2603:10b6:610:4d:cafe::3a) by CH2PR19CA0017.outlook.office365.com
+ (2603:10b6:610:4d::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Fri,
+ 11 Apr 2025 12:36:10 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
+ designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
+ client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ CH1PEPF0000A34B.mail.protection.outlook.com (10.167.244.10) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.12
+ via Frontend Transport; Fri, 11 Apr 2025 12:36:09 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 52847406542;
+	Fri, 11 Apr 2025 12:36:08 +0000 (UTC)
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.23])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3DD1382025A;
+	Fri, 11 Apr 2025 12:36:08 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: broonie@kernel.org, brendan.higgins@linux.dev, davidgow@google.com,
+        rmoar@google.com, npache@redhat.com
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: [PATCH 1/3] kunit: configs: Add some Cirrus Logic modules to all_tests
+Date: Fri, 11 Apr 2025 13:36:06 +0100
+Message-Id: <20250411123608.1676462-2-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250411123608.1676462-1-rf@opensource.cirrus.com>
+References: <20250411123608.1676462-1-rf@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,104 +95,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34B:EE_|CH2PR19MB4120:EE_
 Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: xi4EhDRDXENvO0rCTdBA_2L6llpHvonq
-X-Authority-Analysis: v=2.4 cv=cdjSrmDM c=1 sm=1 tr=0 ts=67f90cdb cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=YZcm-HbQskwjXeElZPUA:9
-X-Proofpoint-GUID: xi4EhDRDXENvO0rCTdBA_2L6llpHvonq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015 mlxlogscore=999
- phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504110080
+X-MS-Office365-Filtering-Correlation-Id: 1ba72ed0-7f8d-4e8b-ac21-08dd78f57007
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|61400799027|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?w9t8hNfl2lJG0ltfLmsNNdrgPB7tV4zMJ0sxFo2lUIKD9XfAGmwKsQQxdVKX?=
+ =?us-ascii?Q?1E/Zdro7yw9G+MJB3AaRvpRubOdbpCMlZVVkkOZQcUpWXOfvxfrwA5x6EZ48?=
+ =?us-ascii?Q?6f9DWaS07CVmhNn/BR/9I8mHCTJ026l0AgngNo41xH9o/Dkyxxt2xoVFbk8K?=
+ =?us-ascii?Q?dJB/8a3q+FjXZZVuWUa0a5xABOr/E6G808lu8KzYfatES46IJllG6Ukkzh0V?=
+ =?us-ascii?Q?mePR4VcIiLAwMxAOZyq5rQnD4DUNur1ls+szOMTSo8qMsNpym+rdurHrazzm?=
+ =?us-ascii?Q?epAKpjPsHxSQVlxDFnKfU72yqn4PebCpa1IkyFOYC6Be5jXB2/hxsZyDS6Gf?=
+ =?us-ascii?Q?gDjwrTfcKNMIVPDNplFGhv75hx3awiiSlAsoUQza1ikfxwx9KNYbpa50ezCn?=
+ =?us-ascii?Q?MGM0KVql+r+wUwNIQz/pdL3gClOteiTOEuA8iPdm+4eWogYsVH183hKky5ZO?=
+ =?us-ascii?Q?4zGlYjTXf1TPG354w6FQUmW8S/C7ZR6hD7La332zU+sqg1ilCOoYubW2dBcH?=
+ =?us-ascii?Q?wUmzNsjE8NypuVswQQMbqIKSl3xgF/p0EUH8u65LBP/YAr/50wlscAI8WpIj?=
+ =?us-ascii?Q?eN4f83CwmAoYtTOnqCRgzVVwOk1gI/JIsEEjGxxESLCe03lt03inkCwXahKA?=
+ =?us-ascii?Q?OZ3hn1MnK8k2M9/4xYwvQwH1Jic1IGYVTh2XPPxHswbY/YLGH6m9G0w6lDH5?=
+ =?us-ascii?Q?g15zPniq/B0CB2fztE+8xaCRduIB7xpuOLzGI+wyDDV+AXop4OlIsopyP16B?=
+ =?us-ascii?Q?/2rhXWu271FilrSjGoBjRP2xehCMyT6E2iBcJY1jfATptKfq/lMovjHEtsoF?=
+ =?us-ascii?Q?svsXhI4iV9eopVkA0kEkP6npsajGnk4zMkSpOFX03iC566I/JFXG2fSKhQGm?=
+ =?us-ascii?Q?xnhMJjr4xS3mBt0Hs1VtmzqD86EazYIhOOAVPdXHCQOkWZdph6t41YS9p0Yx?=
+ =?us-ascii?Q?nvni+FIcWjBhjPvTk7ugEp/iuE1q+jDhvnFSzcjL2k8v/KngD2LmaTQq/vHP?=
+ =?us-ascii?Q?dJBp8qrAjph9NPQ8UubBbkJeyV58aA6P+XxbfQih2giGqNurwp7YDgjE+Q00?=
+ =?us-ascii?Q?z2W3oWNPProJoGbtqILmW83aBD1VY376rX46ojCyJ2Vx1W/2Ey0D8Pd+uc/c?=
+ =?us-ascii?Q?yj6a3HmWRzQxE0uNaMNOx9cgRuA3qpZVRn3X8YnU6UqBJ2BSd/b5z+IK7MpW?=
+ =?us-ascii?Q?LX4vYAwLudCMCC1vTZFeWTeYPchKOPDaJNSeXHQ58q+S0TCnszh6zF31wKs8?=
+ =?us-ascii?Q?o1Ac8FS7YCyz/7EKW7OwIzEQmbmmkkZ/0f36pZTWFtXWJEoB05ED3pywC2YL?=
+ =?us-ascii?Q?X+a8M844AOuaTNlMETxHTbtcv7lPjJ//AkjNUwSBMm24pX/tX0v+IWL5LjMI?=
+ =?us-ascii?Q?BvUpiRlxrnTHjoTZac9Fb06jlsxppc0Hl/3xpi3OQqJXPK7DYtfpyYT6Ky6T?=
+ =?us-ascii?Q?SnbC6MmLzAJwfYwxlgJgzfcBXab8P38S9IwtDiQD72Zr/ry42yHaqjXnXNkx?=
+ =?us-ascii?Q?9EkiKcyxMLnYIeU0VRSN4lHKJ18i9GwFsRlF?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(61400799027)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 12:36:09.5850
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ba72ed0-7f8d-4e8b-ac21-08dd78f57007
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A34B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR19MB4120
+X-Proofpoint-ORIG-GUID: o1yKg7Ia_CoucwzUMe3T89fS-FOgY3Pc
+X-Proofpoint-GUID: o1yKg7Ia_CoucwzUMe3T89fS-FOgY3Pc
+X-Authority-Analysis: v=2.4 cv=A71sP7WG c=1 sm=1 tr=0 ts=67f90cc0 cx=c_pps a=AHWEOuZXH7ukEk4XErmcRg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=XR8D0OoHHMoA:10 a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8
+ a=w-sTTJ3WBIU5oXKZYMYA:9 a=BGLuxUZjE2igh1l4FkT-:22
+X-Proofpoint-Spam-Reason: safe
 
-Add iio backend support for self sync enable/disable.
-When disabled data capture synchronization is done
-through CNV signal, otherwise through bit-slip.
+Add CONFIG_I2C and CONFIG_SND_SOC_CS35L56_I2C to all_tests.config
+so that Cirrus Logic modules with KUnit tests will be built.
 
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+The CS35L56 driver doesn't currently have any KUnit tests itself,
+but it enables two other libraries that have KUnit tests:
+cs_dsp and cs-amp-lib.
+
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 ---
-no changes in v2.
- drivers/iio/industrialio-backend.c | 30 ++++++++++++++++++++++++++++++
- include/linux/iio/backend.h        |  6 ++++++
- 2 files changed, 36 insertions(+)
+ tools/testing/kunit/configs/all_tests.config | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
-index 60578267643d..cb23433b22c6 100644
---- a/drivers/iio/industrialio-backend.c
-+++ b/drivers/iio/industrialio-backend.c
-@@ -830,6 +830,36 @@ int iio_backend_data_alignment_disable(struct iio_backend *back)
- }
- EXPORT_SYMBOL_NS_GPL(iio_backend_data_alignment_disable, "IIO_BACKEND");
+diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
+index 4a60bb71fe72..4ce38c4f697f 100644
+--- a/tools/testing/kunit/configs/all_tests.config
++++ b/tools/testing/kunit/configs/all_tests.config
+@@ -21,6 +21,7 @@ CONFIG_VFAT_FS=y
  
-+/**
-+ * iio_backend_self_sync_enable - Enable the self sync data capture.
-+ * @back: Backend device
-+ *
-+ * Data capture synchronization is done through bit-slip.
-+ *
-+ * RETURNS:
-+ * 0 on success, negative error number on failure.
-+ */
-+int iio_backend_self_sync_enable(struct iio_backend *back)
-+{
-+	return iio_backend_op_call(back, self_sync_enable);
-+}
-+EXPORT_SYMBOL_NS_GPL(iio_backend_self_sync_enable, "IIO_BACKEND");
-+
-+/**
-+ * iio_backend_self_sync_disable - Disable the self sync data capture.
-+ * @back: Backend device
-+ *
-+ * Data capture synchronization is done through CNV signal.
-+ *
-+ * RETURNS:
-+ * 0 on success, negative error number on failure.
-+ */
-+int iio_backend_self_sync_disable(struct iio_backend *back)
-+{
-+	return iio_backend_op_call(back, self_sync_disable);
-+}
-+EXPORT_SYMBOL_NS_GPL(iio_backend_self_sync_disable, "IIO_BACKEND");
-+
- /**
-  * iio_backend_ddr_enable - Enable interface DDR (Double Data Rate) mode
-  * @back: Backend device
-diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
-index beff66d18151..6d006cb0da5a 100644
---- a/include/linux/iio/backend.h
-+++ b/include/linux/iio/backend.h
-@@ -104,6 +104,8 @@ enum iio_backend_interface_type {
-  * @filter_disable: Disable filter.
-  * @data_alignment_enable: Enable sync process.
-  * @data_alignment_disable: Disable sync process.
-+ * @self_sync_enable: Enable the self sync data capture.
-+ * @self_sync_disable: Disable the self sync data capture.
-  * @ddr_enable: Enable interface DDR (Double Data Rate) mode.
-  * @ddr_disable: Disable interface DDR (Double Data Rate) mode.
-  * @data_stream_enable: Enable data stream.
-@@ -158,6 +160,8 @@ struct iio_backend_ops {
- 	int (*filter_disable)(struct iio_backend *back);
- 	int (*data_alignment_enable)(struct iio_backend *back);
- 	int (*data_alignment_disable)(struct iio_backend *back);
-+	int (*self_sync_enable)(struct iio_backend *back);
-+	int (*self_sync_disable)(struct iio_backend *back);
- 	int (*ddr_enable)(struct iio_backend *back);
- 	int (*ddr_disable)(struct iio_backend *back);
- 	int (*data_stream_enable)(struct iio_backend *back);
-@@ -202,6 +206,8 @@ int iio_backend_filter_enable(struct iio_backend *back);
- int iio_backend_filter_disable(struct iio_backend *back);
- int iio_backend_data_alignment_enable(struct iio_backend *back);
- int iio_backend_data_alignment_disable(struct iio_backend *back);
-+int iio_backend_self_sync_enable(struct iio_backend *back);
-+int iio_backend_self_sync_disable(struct iio_backend *back);
- int iio_backend_ddr_enable(struct iio_backend *back);
- int iio_backend_ddr_disable(struct iio_backend *back);
- int iio_backend_data_stream_enable(struct iio_backend *back);
+ CONFIG_PCI=y
+ CONFIG_USB4=y
++CONFIG_I2C=y
+ 
+ CONFIG_NET=y
+ CONFIG_MCTP=y
+@@ -52,3 +53,4 @@ CONFIG_SOUND=y
+ CONFIG_SND=y
+ CONFIG_SND_SOC=y
+ CONFIG_SND_SOC_TOPOLOGY_BUILD=y
++CONFIG_SND_SOC_CS35L56_I2C=y
 -- 
-2.49.0
+2.39.5
 
