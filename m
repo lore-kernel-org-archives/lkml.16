@@ -1,86 +1,129 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A371625634
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 13:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 354BC2367A7;
+	Fri, 11 Apr 2025 13:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744376843; cv=none; b=Ay7XuLlhjzfrJlA7SrJ221AGal/6VZtg4n5ye9MeJt/QmwmVdndeSNHOBzyvlkBWiCZoTu0/QGM+2l5G4rZ5/I8ODnXAygZ4eWPpNFjeR6luWLMzF1FZAC8IOIO9BRWL8Z4/xtIkSJUHGtITCngXgw+X+tHAiRbhNRMFbvxIVs8=
+	t=1744376877; cv=none; b=MyjHinhaGqBUqAj3Vo+c8DdvCL+k4FZ7EFlb0cmhyQdswp4LzXVFyUAbTFrt4iksxt3nxluV9cZzLOsEFQY6+dKiIfGZsUcnFgIUSXkJhSN8mgl6NkfzL1AbHdUjo/V+z2KLsJDVWxckaUjI5+5KPwLpUciCrMXcxjRay4Gt334=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744376843; c=relaxed/simple;
-	bh=spH96PgGCe3FyPMJbH7IqkgbG26PXyo76sOr+JoBPS8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=XLvdZ2ZQoxRBsEgsVCdtWe/iE/ffMNRYmI6h9sReJ1G0QPOnzjtfFDAs7M6uPwrjeY1Jd44UxW0Swe9begoDm5vTgP8vi1y4DJQX+7ourQkmy64rI3UgjLcjJu9z5ZqfnAH8DdShSv/0bRyZfim4jcUD8vHJWdWkgiSWcQFQb80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ce843b51c3so40444705ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 06:07:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744376841; x=1744981641;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v5t+V+PJBNrCRf7SuNBoLNK8zVU0kFwToI+VtpEMXY4=;
-        b=KES8Aua4ygrg6YzUpEf+yXL/ENGL0usCiFeAsouWv45svdPybONdreNAHwknOP1MuI
-         F06VtqT5cX9AyNMZjmp8lSZ6piBN0ILbZ5+LZ6E4o3SLiLcJMocPq55cu2qt6IoQPRm/
-         27qg79M5kLVCetGQKxyz35wLyG6WcVdERRjH3H5KkFG2jJ6yPsKBTBVZbxMAw4xubff9
-         TDzrxtTtgoHEBIgfdbrJZ5Qr8D0jSww29DJba0QYlEEcjrZLOGfbjuTaM6PMyo1DnOZh
-         Bhv+ZEoHfJxsEHIcm6GdEaIZvO8tdh/w0Llcd2zGSxO3gO8pNypEJWxEfsw6kn6bmvWO
-         7Sig==
-X-Forwarded-Encrypted: i=1; AJvYcCUXd8cgEnBUlICILvpgLEPXNlIvg7wVYe2Nzac2Yb2RnBEjphu4yhpjC0Vf21ZSzHGyNkrWGGykI3ZEQBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxsavfdyp6CV6i1zgmZyLr5i4AIA+itpZd1G3Xx1wq4AAnWRLT1
-	k+r5nn0FVUMzkjm6XtAfRT82o31Wt+CJan0PEEAggjBDWeQIpdTSVKsQ6zT9xIs1q6WkmcRW027
-	WuYVzMfPaGNFeqjsAmqh2PoJ1gRXqlmAkP5lM7oVufinjuEgScomGjAY=
-X-Google-Smtp-Source: AGHT+IHylQSQLPuTufArzk4fimUu3VvUqWSvI7rPJeLl7KDcZ0xfZf/P8RL8ka9hymqKn2mPM/LuDeJZGEgwSL5mj/z8hLh+fTgK
+	s=arc-20240116; t=1744376877; c=relaxed/simple;
+	bh=I8a9dN6aHQZms/YtghSSJ1hw1q/pOboZ1oI3gg8yojA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OWceN87XBmUlE36cgX3gvBiZ2YjLOSr3opdDKxe+SUWhVIFnUy1JpNd1+XncHAxfT1rfUlR19BnDs4Dgsnf8rGTEqXCdXqxNsh9XAglgPbOXQU29ubGnNlRC2mO9KFRYa5+9KdKVMFeqzm0lMwbstJ7P0jGAtpnj9mf+AAUk8hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WBTw0Qfn; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WBTw0Qfn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=lyZXs2Zi6ekjJ4FW1SSFkba/dKS2ypdHY1EDXydc9FY=;
+	b=WBTw0QfnbMMZ5lGVGzxWAKb6PenYP1x8fkL2XRfhbE5DseqQ2A8jmcACuffw2a
+	KWe0OO/sZ0UcO6XF7fmbU0ynBLC9sV1XW2LoCw25b0c9L6s5k2MKqe8lSPi8Ol4O
+	309F2KhpoJVXGzulzJHcm9COUBJjV5XY3PsX/DYKa/WDo=
+Received: from iZj6c3ewsy61ybpk7hrb16Z (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wC3t1nPE_lncFMNFg--.46424S2;
+	Fri, 11 Apr 2025 21:06:26 +0800 (CST)
+Date: Fri, 11 Apr 2025 21:06:23 +0800
+From: Jiayuan Chen <mrpre@163.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>
+Subject: Re: [PATCH bpf-next v2 0/9] selftests/bpf: Test sockmap/sockhash
+ redirection
+Message-ID: <sgdbbkc2nzbnvkchrs23nss4c7cohebn2qwbfdxtyupbmxunqu@afosvfyylrdg>
+References: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3792:b0:3d4:337f:121b with SMTP id
- e9e14a558f8ab-3d7ec1f3fb5mr32697045ab.8.1744376840793; Fri, 11 Apr 2025
- 06:07:20 -0700 (PDT)
-Date: Fri, 11 Apr 2025 06:07:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f91408.050a0220.355867.0025.GAE@google.com>
-Subject: [syzbot] Monthly wpan report (Apr 2025)
-From: syzbot <syzbot+listab49c99c53036ef082c3@syzkaller.appspotmail.com>
-To: alex.aring@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-wpan@vger.kernel.org, miquel.raynal@bootlin.com, netdev@vger.kernel.org, 
-	stefan@datenfreihafen.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
+X-CM-TRANSID:_____wC3t1nPE_lncFMNFg--.46424S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxuF47tF1DAr43tw18tF4DCFg_yoW5Xr1fpa
+	93A3W3KFWxJFWIgw43WFWI9F4rKF48Jw15G3Wjgw1rZwnFkryxtr1Sg3yrW3Z8JrW5ZF15
+	u3y7KF93Gw1UCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UcTmhUUUUU=
+X-CM-SenderInfo: xpus2vi6rwjhhfrp/1tbiWxcsp2f5DlK-YAAAsa
 
-Hello wpan maintainers/developers,
+On Fri, Apr 11, 2025 at 01:32:36PM +0200, Michal Luczaj wrote:
+> The idea behind this series is to comprehensively test the BPF redirection:
+> 
+> BPF_MAP_TYPE_SOCKMAP,
+> BPF_MAP_TYPE_SOCKHASH
+> 	x
+> sk_msg-to-egress,
+> sk_msg-to-ingress,
+> sk_skb-to-egress,
+> sk_skb-to-ingress
+> 	x
+> AF_INET, SOCK_STREAM,
+> AF_INET6, SOCK_STREAM,
+> AF_INET, SOCK_DGRAM,
+> AF_INET6, SOCK_DGRAM,
+> AF_UNIX, SOCK_STREAM,
+> AF_UNIX, SOCK_DGRAM,
+> AF_VSOCK, SOCK_STREAM,
+> AF_VSOCK, SOCK_SEQPACKET
+> 
+> New module is introduced, sockmap_redir: all supported and unsupported
+> redirect combinations are tested for success and failure respectively. Code
+> is pretty much stolen/adapted from Jakub Sitnicki's sockmap_redir_matrix.c
+> [1].
+> 
+> Usage:
+> $ cd tools/testing/selftests/bpf
+> $ make
+> $ sudo ./test_progs -t sockmap_redir
+> ...
+> Summary: 1/576 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> [1]: https://github.com/jsitnicki/sockmap-redir-matrix/blob/main/sockmap_redir_matrix.c
 
-This is a 31-day syzbot report for the wpan subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/wpan
+This is exactly what we need, thanks.
+> 
+> Changes in v2:
+> - Verify that the unsupported redirect combos do fail [Jakub]
+> - Dedup tests in sockmap_listen
+> - Cosmetic changes and code reordering
+> - Link to v1: https://lore.kernel.org/bpf/42939687-20f9-4a45-b7c2-342a0e11a014@rbox.co/
+> 
+> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+> ---
+> Michal Luczaj (9):
+>       selftests/bpf: Support af_unix SOCK_DGRAM socket pair creation
+>       selftests/bpf: Add socket_kind_to_str() to socket_helpers
+>       selftests/bpf: Add u32()/u64() to sockmap_helpers
+>       selftests/bpf: Allow setting BPF_F_INGRESS in prog_msg_verdict()
+>       selftests/bpf: Add selftest for sockmap/hashmap redirection
+>       selftests/bpf: sockmap_listen cleanup: Drop af_vsock redir tests
+>       selftests/bpf: sockmap_listen cleanup: Drop af_unix redir tests
+>       selftests/bpf: sockmap_listen cleanup: Drop af_inet SOCK_DGRAM redir tests
+>       docs/bpf: sockmap: Add a missing comma
+> 
+>  Documentation/bpf/map_sockmap.rst                  |   2 +-
+>  .../selftests/bpf/prog_tests/socket_helpers.h      |  84 +++-
+>  .../selftests/bpf/prog_tests/sockmap_helpers.h     |  25 +-
+>  .../selftests/bpf/prog_tests/sockmap_listen.c      | 459 +-------------------
+>  .../selftests/bpf/prog_tests/sockmap_redir.c       | 461 +++++++++++++++++++++
+>  .../selftests/bpf/progs/test_sockmap_listen.c      |   6 +-
+>  6 files changed, 558 insertions(+), 479 deletions(-)
+> ---
+> base-commit: a27a97f713947b20ba91b23a3ef77fa92d74171b
+> change-id: 20240922-selftests-sockmap-redir-5d839396c75e
+> 
+> Best regards,
+> -- 
+> Michal Luczaj <mhal@rbox.co>
+> 
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 5 issues are still open and 26 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 265     Yes   KMSAN: uninit-value in ieee802154_hdr_push (2)
-                  https://syzkaller.appspot.com/bug?extid=60a66d44892b66b56545
-<2> 32      No    KASAN: global-out-of-bounds Read in mac802154_header_create (2)
-                  https://syzkaller.appspot.com/bug?extid=844d670c418e0353c6a8
-<3> 14      Yes   WARNING in __dev_change_net_namespace (3)
-                  https://syzkaller.appspot.com/bug?extid=3344d668bbbc12996d46
-<4> 11      Yes   WARNING in cfg802154_switch_netns (3)
-                  https://syzkaller.appspot.com/bug?extid=bd5829ba3619f08e2341
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
