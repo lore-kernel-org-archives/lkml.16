@@ -1,243 +1,486 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C93B1C8639
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB751C8639;
+	Fri, 11 Apr 2025 09:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744363703; cv=none; b=i1UiDUCHIp7a1HAGVfvyb8oLTs0UXD5SksfK5oghpNYRZwwr6ArOHRuU9dASOMlskfBRmkGeCtGp4gWLQ2Kjc8xAEF3lU9QEifEc8eSsR3Cv/kYA3JL98VqMMU+9fGBNxZaEUWpFIyx0wvqj7zNIvk6dQ3Pyn0WAYy1DoXCeN5o=
+	t=1744363763; cv=none; b=kL2JRwfuszBa/hl8hpX7tr0tQOaW1SLiIVnmiAISR6nLztEujJFrzpdW2HHLibLdsv8ZYMuy3pRtJGq/eFtv2NUF7yK2GrrfWtkxHfNd1OZs8PaYL8oTHAbvE+9PhK3+rBzbvmCfSW7f01qu/5pw7cfql6F/53BhNWZlxh5eDYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744363703; c=relaxed/simple;
-	bh=GB3fR/d4uOOhcjjcZFYSOxX6NOupDAuzhUiUS5UjAz4=;
+	s=arc-20240116; t=1744363763; c=relaxed/simple;
+	bh=AoNBQIPQWxghYwG76l2hQj29+DpLKnCEVn5/qJWdfvg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Gl2UcQAtMLiwePpf7EEKeyu4VIRXHFvYfTsdOXS/r3+r1RcOXq364B3eWqjpqmYhOu8Xe55bsLz57k0a5TzWGxl0dEsPNgKWVu6QJT/UM7N+PbCgO5rXdm2WazX8aLGRZSZW2gufqgGGocpJptGvrQuODh52SEJ06gkIg4sbo7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BDcAIumD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:MIME-Version; b=EJKNl9Til7YYwzqPo+rMpGlHXenPXkIsj8j9J/XEUyVXthN3s/fwZZPoioNlbks4gLlqs8irof+PHUepSvhftrjlUuPaK1kE0TOgjQ4CG5GBtWvZJ5Udng0yA0Bd+Mq96ybarLNZBSVzhoHydHaPQN/knGDaIqHi6DGdjGimw0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=jXbEVltp; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BDcAIumD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744363700;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="jXbEVltp"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZYrwp6qX4z9skn;
+	Fri, 11 Apr 2025 11:29:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1744363755; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GB3fR/d4uOOhcjjcZFYSOxX6NOupDAuzhUiUS5UjAz4=;
-	b=BDcAIumDejWXS13i6MuKRhtXEa+YGOmq1PsHFB8dLRbZoy19RG1eSzHCq4bJiiteXHaE5I
-	8FTp9X6pNfRJK8ACj65+hAG+s48ykv/LVF7x1nK8JCDf0527q3990y/2I587ofSieXFa2b
-	kVNyuS0gYIJJxzfwGzc05dnOpScGi84=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-674-G5J5ymC4PsS3-gS2q0jFHg-1; Fri, 11 Apr 2025 05:28:19 -0400
-X-MC-Unique: G5J5ymC4PsS3-gS2q0jFHg-1
-X-Mimecast-MFC-AGG-ID: G5J5ymC4PsS3-gS2q0jFHg_1744363698
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so15991835e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 02:28:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744363698; x=1744968498;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GB3fR/d4uOOhcjjcZFYSOxX6NOupDAuzhUiUS5UjAz4=;
-        b=YngmCN69gWvfdY5jXfdICelihOHLQmAmOuIvV1KuhRkx5d0/Q0k0TBvWfRoNyRO+yi
-         A8ibKG+07P+gVmrnDNIOZ/LMC2K+lZ2I/zsdBrTGTjpFkRQOwHl8mgELqpE7Kodk6mM6
-         7P3GH2CoHZwRaasxmcRRTfR8TeJhZMTXEkVGOhwxDZ8XLviIRtp1XCykhuwrZwFM2p2X
-         6YuRhZx1HKI50KEpBakaMO7S0cFHsw+btRdO/kbcSSzhqVUWsAAzgm92m0Zh24L8iI4t
-         OwKBh8huxy6SnXmR69qJ6+tIKj6fUomdDdblEIwry05+1QpBY+PQbMmEelfMYXbAYOth
-         0Vng==
-X-Forwarded-Encrypted: i=1; AJvYcCWyk0sfolcT4+sbzEwIbNRcTrmVTwr+DG0F2a6qZGWHT9Am+HF47pq3mTaZqHU0YH7zuAO39nyKsKdmMwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfSR6jM6OE6KdUpLH3txlvOjVL8yutsJv9HG1EdC7JL4ssa5bd
-	USsdnv694FQTTsYQYEETS50yOaIz9N6O3M9+tI36O1BPUSeuzDlruZGqNX9b2gpzXpZbCDFZE7B
-	qAkOYMVJQJlzmwwilkFuJa9ES2ppx2yxBJrxRdcl302A80Az0nSUsj+qeSImjjg==
-X-Gm-Gg: ASbGncu4UqbkWdMzmy4H7gDgxUf8hzQrih4gG41C6KNeNWamsQPyzOLU0LXHZkEJT20
-	1pBv02rBTodmpWVmN0ggCJXI2bQastqeyUw1ftv9MZaghmPNH31eO+Yz2lnrZ8IWd5KtPF//Vyq
-	lvaPBeogjYx5XX/RN7vujdGhsOHwTxa3dDxLmoG3Cu1DZHd9kTb6N5M0COqN/lUpdD6LLUZafbf
-	0S8t70ALqViB6KZf37AfHygcGK/20Qlx70EIzHRtDkD1zhVSPVgGxAbabHBLzU7fCC0tXiJ3H/0
-	5TbJDAu4k8wYHtKV9eVqzd4KpiOizbKyKEHcIA==
-X-Received: by 2002:a05:6000:2c5:b0:39c:30f1:be8a with SMTP id ffacd0b85a97d-39ea52117d8mr1453469f8f.18.1744363697714;
-        Fri, 11 Apr 2025 02:28:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWYQpYmbXkd0V6Txw1PpBadqqXlstQkd8R9y2WHe+r6euYoYIS+kDVUzeqDq/HI/oHPxggSQ==
-X-Received: by 2002:a05:6000:2c5:b0:39c:30f1:be8a with SMTP id ffacd0b85a97d-39ea52117d8mr1453444f8f.18.1744363697371;
-        Fri, 11 Apr 2025 02:28:17 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae978023sm1451830f8f.47.2025.04.11.02.28.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 02:28:17 -0700 (PDT)
-Message-ID: <99fd51dd68f7f95fe4eb0363577876f7d6cbd737.camel@redhat.com>
-Subject: Re: [PATCH v2 10/22] Documentation/rv: Prepare monitor synthesis
- document for LTL inclusion
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de
-Date: Fri, 11 Apr 2025 11:28:15 +0200
-In-Reply-To: <e2572077addfccd2005e90c884271079d260ddca.1744355018.git.namcao@linutronix.de>
-References: <cover.1744355018.git.namcao@linutronix.de>
-	 <e2572077addfccd2005e90c884271079d260ddca.1744355018.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q5zTpwouEWfIDk/tDwSvuusiMSydk0PC8z/fa/PfMis=;
+	b=jXbEVltp9FKxICxLsQtMoUJsdhI8kO66dqOhfh4zSnII7ghoeRMGedBQZFW3nAW1ys4HNB
+	kjldNEZui3/Vut1ffqXbcq9bJi6Gl3Je7FP4OxbRpyE2wVw6BxQcPO3djmdZhXDjXxJVQz
+	/R2POFMWT7/IJu5aWoj2nGalo4IsQ6Pqa8ps6TfRa9m4VuIEdUwYSfS670v+IvTcXayNSa
+	lqdFpL6Qmy/N95pAF5XK2JZMbLDyspQxyPfVJf+WhMWp4emx7Py2nwn/M2w2on3mtpAy5R
+	5cPvFkKG5EXLRuaLm+YPLhbcn7/XrwnihZ3fko+X86/yFd8lWZPr0NqrdVKM6Q==
+Message-ID: <d3dee321cd6b70d6ca98768fbcf6f1e6134c43a1.camel@mailbox.org>
+Subject: Re: [PATCH 1/3] drm/nouveau: Prevent signaled fences in pending list
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: phasta@kernel.org, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <christian.koenig@amd.com>, Lyude Paul <lyude@redhat.com>, Danilo Krummrich
+ <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Sabrina Dubroca <sd@queasysnail.net>, Sumit Semwal
+ <sumit.semwal@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+	stable@vger.kernel.org
+Date: Fri, 11 Apr 2025 11:29:09 +0200
+In-Reply-To: <1a73e5fe4350d6ee4b7d807612264eb637c4f2a9.camel@mailbox.org>
+References: <20250410092418.135258-2-phasta@kernel.org>
+	 <20250410092418.135258-3-phasta@kernel.org>
+	 <8583665a-6886-4245-be49-fd8839cfe212@amd.com>
+	 <c737c89c7ce9174e349c61ab4e5712eee8946f13.camel@mailbox.org>
+	 <50c9530d-e274-4f89-8620-16afe0981239@amd.com>
+	 <1a73e5fe4350d6ee4b7d807612264eb637c4f2a9.camel@mailbox.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MBO-RS-META: 36cyd77yo4dstwirgwo1yeikuk9x6jpp
+X-MBO-RS-ID: 9e7d41134df5cc8be07
 
-
-
-On Fri, 2025-04-11 at 09:37 +0200, Nam Cao wrote:
-> Monitor synthesis from deterministic automaton and linear temporal
-> logic
-> have a lot in common. Therefore a single document should describe
-> both.
+On Thu, 2025-04-10 at 17:36 +0200, Philipp Stanner wrote:
+> On Thu, 2025-04-10 at 15:16 +0200, Christian K=C3=B6nig wrote:
+> > Am 10.04.25 um 15:09 schrieb Philipp Stanner:
+> > > On Thu, 2025-04-10 at 14:58 +0200, Christian K=C3=B6nig wrote:
+> > > > Am 10.04.25 um 11:24 schrieb Philipp Stanner:
+> > > > > Nouveau currently relies on the assumption that dma_fences
+> > > > > will
+> > > > > only
+> > > > > ever get signaled through nouveau_fence_signal(), which takes
+> > > > > care
+> > > > > of
+> > > > > removing a signaled fence from the list
+> > > > > nouveau_fence_chan.pending.
+> > > > >=20
+> > > > > This self-imposed rule is violated in nouveau_fence_done(),
+> > > > > where
+> > > > > dma_fence_is_signaled() (somewhat surprisingly, considering
+> > > > > its
+> > > > > name)
+> > > > > can signal the fence without removing it from the list. This
+> > > > > enables
+> > > > > accesses to already signaled fences through the list, which
+> > > > > is
+> > > > > a
+> > > > > bug.
+> > > > >=20
+> > > > > In particular, it can race with nouveau_fence_context_kill(),
+> > > > > which
+> > > > > would then attempt to set an error code on an already
+> > > > > signaled
+> > > > > fence,
+> > > > > which is illegal.
+> > > > >=20
+> > > > > In nouveau_fence_done(), the call to nouveau_fence_update()
+> > > > > already
+> > > > > ensures to signal all ready fences. Thus, the signaling
+> > > > > potentially
+> > > > > performed by dma_fence_is_signaled() is actually not
+> > > > > necessary.
+> > > > Ah, I now got what you are trying to do here! But that won't
+> > > > help.
+> > > >=20
+> > > > The problem is it is perfectly valid for somebody external
+> > > > (e.g.
+> > > > other driver, TTM etc...) to call dma_fence_is_signaled() on a
+> > > > nouveau fence.
+> > > >=20
+> > > > This will then in turn still signal the fence and leave it on
+> > > > the
+> > > > pending list and creating the problem you have.
+> > > Good to hear =E2=80=93 precisely that then is the use case for a
+> > > dma_fence
+> > > callback! ^_^ It guarantees that, no matter who signals a fence,
+> > > no
+> > > matter at what place, a certain action will always be performed.
+> > >=20
+> > > I can't think of any other mechanism which could guarantee that a
+> > > signaled fence immediately gets removed from nouveau's pending
+> > > list,
+> > > other than the callbacks.
+> > >=20
+> > > But seriously, I don't think that anyone does this currently, nor
+> > > do I
+> > > think that anyone could get away with doing it without the entire
+> > > computer burning down.
+> >=20
+> > Yeah, I don't think that this is possible at the moment.
+> >=20
+> > When you do stuff like that from the provider side you will always
+> > run into lifetime issues because in the signaling from interrupt
+> > case
+> > you then drop the last reference before the signaling is completed.
+> >=20
+> > How about the attached (not even compile tested) patch? I think it
+> > should fix the issue.
 >=20
-> Change da_monitor_synthesis.rst to monitor_synthesis.rst. LTL monitor
-> synthesis will be added to this file by a follow-up commit.
+> This patch looked correct enough for me to try it out on top of my
+> memleak fix series [1] (which seems to reveal all those problems
+> through races appearing due to the removal of the waitqueue in
+> nouveau_sched_fini()).
 >=20
-> This makes the diff far easier to read. If renaming and adding LTL
-> info is
-> done in a single commit, git wouldn't recognize it as a rename, but a
-> file
-> removal and a file addition.
+> The code looked correct to me, but it still makes boom-boom, again
+> because two parties get their fingers onto list_del():
 >=20
-> While at it, correct the old dot2k commands to the new rvgen
-> commands.
+> [paste in case my editor explodes again:
+> https://paste.debian.net/1368705/=C2=A0]
 >=20
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
-> =C2=A0Documentation/trace/rv/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> =C2=A0...or_synthesis.rst =3D> monitor_synthesis.rst} | 20 +++++++++-----=
----
-> --
-> =C2=A02 files changed, 11 insertions(+), 11 deletions(-)
-> =C2=A0rename Documentation/trace/rv/{da_monitor_synthesis.rst =3D>
-> monitor_synthesis.rst} (92%)
+> [=C2=A0=C2=A0 41.681698] list_del corruption, ff31ae696cdc86a0->next is
+> LIST_POISON1 (dead000000000100)
+> [=C2=A0=C2=A0 41.681720] ------------[ cut here ]------------
+> [=C2=A0=C2=A0 41.681722] kernel BUG at lib/list_debug.c:56!
+> [=C2=A0=C2=A0 41.681729] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPT=
+I
+> [=C2=A0=C2=A0 41.681732] CPU: 22 UID: 42 PID: 1733 Comm: gnome-shell Not
+> tainted
+> 6.14.0-rc4+ #11
+> [=C2=A0=C2=A0 41.681735] Hardware name: Dell Inc. Precision 7960 Tower/01=
+G0M6,
+> BIOS 2.7.0 12/17/2024
+> [=C2=A0=C2=A0 41.681737] RIP: 0010:__list_del_entry_valid_or_report+0x76/=
+0xf0
+> [=C2=A0=C2=A0 41.681743] Code: 75 66 5b b8 01 00 00 00 5d 41 5c c3 cc cc =
+cc cc
+> 48
+> 89 ef e8 4c e7 b0 ff 48 89 ea 48 89 de 48 c7 c7 38 fb b5 a0 e8 3a 6d
+> 6b
+> ff <0f> 0b 4c 89 e7 e8 30 e7 b0 ff 4c 89 e2 48 89 de 48 c7 c7 70 fb
+> b5
+> [=C2=A0=C2=A0 41.681745] RSP: 0018:ff4fe30cc0f83b30 EFLAGS: 00010246
+> [=C2=A0=C2=A0 41.681748] RAX: 000000000000004e RBX: ff31ae696cdc86a0 RCX:
+> 0000000000000027
+> [=C2=A0=C2=A0 41.681749] RDX: 0000000000000000 RSI: 0000000000000001 RDI:
+> ff31ae8850321900
+> [=C2=A0=C2=A0 41.681751] RBP: dead000000000100 R08: 0000000000000000 R09:
+> 0000000000000000
+> [=C2=A0=C2=A0 41.681752] R10: 7572726f63206c65 R11: 6c65645f7473696c R12:
+> dead000000000122
+> [=C2=A0=C2=A0 41.681753] R13: ff31ae696cdc8662 R14: ff4fe30cc0f83cb8 R15:
+> 00007f68b7f9a000
+> [=C2=A0=C2=A0 41.681754] FS:=C2=A0 00007f68bd0396c0(0000) GS:ff31ae885030=
+0000(0000)
+> knlGS:0000000000000000
+> [=C2=A0=C2=A0 41.681756] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080=
+050033
+> [=C2=A0=C2=A0 41.681757] CR2: 00005577caaad68c CR3: 000000010407c003 CR4:
+> 0000000000f71ef0
+> [=C2=A0=C2=A0 41.681758] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> 0000000000000000
+> [=C2=A0=C2=A0 41.681759] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7:
+> 0000000000000400
+> [=C2=A0=C2=A0 41.681760] PKRU: 55555554
+> [=C2=A0=C2=A0 41.681761] Call Trace:
+> [=C2=A0=C2=A0 41.681763]=C2=A0 <TASK>
+> [=C2=A0=C2=A0 41.681764]=C2=A0 ? __die_body.cold+0x19/0x27
+> [=C2=A0=C2=A0 41.681768]=C2=A0 ? die+0x2e/0x50
+> [=C2=A0=C2=A0 41.681772]=C2=A0 ? do_trap+0xca/0x110
+> [=C2=A0=C2=A0 41.681775]=C2=A0 ? do_error_trap+0x6a/0x90
+> [=C2=A0=C2=A0 41.681776]=C2=A0 ? __list_del_entry_valid_or_report+0x76/0x=
+f0
+> [=C2=A0=C2=A0 41.681778]=C2=A0 ? exc_invalid_op+0x50/0x70
+> [=C2=A0=C2=A0 41.681781]=C2=A0 ? __list_del_entry_valid_or_report+0x76/0x=
+f0
+> [=C2=A0=C2=A0 41.681782]=C2=A0 ? asm_exc_invalid_op+0x1a/0x20
+> [=C2=A0=C2=A0 41.681788]=C2=A0 ? __list_del_entry_valid_or_report+0x76/0x=
+f0
+> [=C2=A0=C2=A0 41.681789]=C2=A0 nouveau_fence_is_signaled+0x47/0xc0 [nouve=
+au]
+> [=C2=A0=C2=A0 41.681961]=C2=A0 dma_resv_iter_walk_unlocked.part.0+0xbd/0x=
+170
+> [=C2=A0=C2=A0 41.681966]=C2=A0 dma_resv_test_signaled+0x53/0x100
+> [=C2=A0=C2=A0 41.681969]=C2=A0 ttm_bo_release+0x12d/0x2f0 [ttm]
+> [=C2=A0=C2=A0 41.681979]=C2=A0 nouveau_gem_object_del+0x54/0x80 [nouveau]
+> [=C2=A0=C2=A0 41.682090]=C2=A0 ttm_bo_vm_close+0x41/0x60 [ttm]
+> [=C2=A0=C2=A0 41.682097]=C2=A0 remove_vma+0x2c/0x70
+> [=C2=A0=C2=A0 41.682100]=C2=A0 vms_complete_munmap_vmas+0xd8/0x180
+> [=C2=A0=C2=A0 41.682102]=C2=A0 do_vmi_align_munmap+0x1d7/0x250
+> [=C2=A0=C2=A0 41.682106]=C2=A0 do_vmi_munmap+0xd0/0x170
+> [=C2=A0=C2=A0 41.682109]=C2=A0 __vm_munmap+0xb1/0x180
+> [=C2=A0=C2=A0 41.682112]=C2=A0 __x64_sys_munmap+0x1b/0x30
+> [=C2=A0=C2=A0 41.682115]=C2=A0 do_syscall_64+0x82/0x160
+> [=C2=A0=C2=A0 41.682117]=C2=A0 ? do_user_addr_fault+0x55a/0x7b0
+> [=C2=A0=C2=A0 41.682121]=C2=A0 ? exc_page_fault+0x7e/0x1a0
+> [=C2=A0=C2=A0 41.682124]=C2=A0 entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [=C2=A0=C2=A0 41.682127] RIP: 0033:0x7f68cceff02b
+> [=C2=A0=C2=A0 41.682130] Code: 73 01 c3 48 8b 0d e5 6d 0f 00 f7 d8 64 89 =
+01 48
+> 83
+> c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 0b 00 00 00
+> 0f
+> 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d b5 6d 0f 00 f7 d8 64 89 01
+> 48
+> [=C2=A0=C2=A0 41.682131] RSP: 002b:00007ffed8d00c08 EFLAGS: 00000206 ORIG=
+_RAX:
+> 000000000000000b
+> [=C2=A0=C2=A0 41.682134] RAX: ffffffffffffffda RBX: 00005577ca99ef50 RCX:
+> 00007f68cceff02b
+> [=C2=A0=C2=A0 41.682135] RDX: 0000000000000000 RSI: 0000000000001000 RDI:
+> 00007f68b7f9a000
+> [=C2=A0=C2=A0 41.682136] RBP: 00007ffed8d00c50 R08: 00005577cacc4160 R09:
+> 00005577caccf930
+> [=C2=A0=C2=A0 41.682137] R10: 000199999996d999 R11: 0000000000000206 R12:
+> 0000000000000000
+> [=C2=A0=C2=A0 41.682138] R13: 00007ffed8d00c60 R14: 00005577caf6c550 R15:
+> 0000000000000035
+> [=C2=A0=C2=A0 41.682141]=C2=A0 </TASK>
+> [=C2=A0=C2=A0 41.682141] Modules linked in: nf_conntrack_netbios_ns
+> nf_conntrack_broadcast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib
+> nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct
+> nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+> rfkill
+> ip_set nf_tables qrtr sunrpc snd_sof_pci_intel_tgl
+> snd_sof_pci_intel_cnl snd_sof_intel_hda_generic snd_sof_pci
+> snd_sof_xtensa_dsp snd_sof_intel_hda_common snd_soc_hdac_hda
+> snd_sof_intel_hda snd_sof snd_sof_utils snd_soc_acpi_intel_match
+> snd_soc_acpi snd_soc_acpi_intel_sdca_quirks snd_sof_intel_hda_mlink
+> snd_soc_sdca snd_soc_avs snd_ctl_led intel_rapl_msr snd_soc_hda_codec
+> snd_hda_ext_core intel_rapl_common snd_hda_codec_realtek snd_soc_core
+> intel_uncore_frequency snd_hda_codec_generic
+> intel_uncore_frequency_common intel_ifs snd_hda_scodec_component
+> snd_hda_codec_hdmi i10nm_edac snd_compress skx_edac_common
+> binfmt_misc
+> nfit snd_hda_intel snd_intel_dspcfg snd_hda_codec libnvdimm snd_hwdep
+> snd_hda_core snd_seq snd_seq_device x86_pkg_temp_thermal dell_pc
+> dell_wmi
+> [=C2=A0=C2=A0 41.682195]=C2=A0 dax_hmem platform_profile intel_powerclamp
+> sparse_keymap cxl_acpi snd_pcm cxl_port coretemp iTCO_wdt cxl_core
+> spi_nor intel_pmc_bxt dell_wmi_sysman rapl pmt_telemetry dell_smbios
+> iTCO_vendor_support pmt_class intel_cstate snd_timer vfat dcdbas
+> isst_if_mmio mtd dell_smm_hwmon dell_wmi_ddv dell_wmi_descriptor
+> intel_uncore firmware_attributes_class wmi_bmof atlantic fat einj
+> pcspkr isst_if_mbox_pci snd isst_if_common intel_vsec i2c_i801 mei_me
+> e1000e spi_intel_pci macsec soundcore i2c_smbus spi_intel mei joydev
+> loop nfnetlink zram nouveau drm_ttm_helper ttm iaa_crypto
+> polyval_clmulni rtsx_pci_sdmmc polyval_generic mmc_core gpu_sched
+> ghash_clmulni_intel i2c_algo_bit nvme sha512_ssse3 drm_gpuvm drm_exec
+> sha256_ssse3 idxd nvme_core sha1_ssse3 drm_display_helper rtsx_pci
+> cec
+> nvme_auth idxd_bus pinctrl_alderlake ip6_tables ip_tables fuse
+> [=C2=A0=C2=A0 41.682269] ---[ end trace 0000000000000000 ]---
+> [=C2=A0=C2=A0 41.969442] RIP: 0010:__list_del_entry_valid_or_report+0x76/=
+0xf0
+> [=C2=A0=C2=A0 41.969458] Code: 75 66 5b b8 01 00 00 00 5d 41 5c c3 cc cc =
+cc cc
+> 48
+> 89 ef e8 4c e7 b0 ff 48 89 ea 48 89 de 48 c7 c7 38 fb b5 a0 e8 3a 6d
+> 6b
+> ff <0f> 0b 4c 89 e7 e8 30 e7 b0 ff 4c 89 e2 48 89 de 48 c7 c7 70 fb
+> b5
+> [=C2=A0=C2=A0 41.969461] RSP: 0018:ff4fe30cc0f83b30 EFLAGS: 00010246
+> [=C2=A0=C2=A0 41.969464] RAX: 000000000000004e RBX: ff31ae696cdc86a0 RCX:
+> 0000000000000027
+> [=C2=A0=C2=A0 41.969466] RDX: 0000000000000000 RSI: 0000000000000001 RDI:
+> ff31ae8850321900
+> [=C2=A0=C2=A0 41.969468] RBP: dead000000000100 R08: 0000000000000000 R09:
+> 0000000000000000
+> [=C2=A0=C2=A0 41.969469] R10: 7572726f63206c65 R11: 6c65645f7473696c R12:
+> dead000000000122
+> [=C2=A0=C2=A0 41.969470] R13: ff31ae696cdc8662 R14: ff4fe30cc0f83cb8 R15:
+> 00007f68b7f9a000
+> [=C2=A0=C2=A0 41.969471] FS:=C2=A0 00007f68bd0396c0(0000) GS:ff31ae885030=
+0000(0000)
+> knlGS:0000000000000000
+> [=C2=A0=C2=A0 41.969473] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080=
+050033
+> [=C2=A0=C2=A0 41.969474] CR2: 00005577caaad68c CR3: 000000010407c003 CR4:
+> 0000000000f71ef0
+> [=C2=A0=C2=A0 41.969476] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> 0000000000000000
+> [=C2=A0=C2=A0 41.969477] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7:
+> 0000000000000400
+> [=C2=A0=C2=A0 41.969478] PKRU: 55555554
 >=20
-> diff --git a/Documentation/trace/rv/index.rst
-> b/Documentation/trace/rv/index.rst
-> index e80e0057feb4..8e411b76ec82 100644
-> --- a/Documentation/trace/rv/index.rst
-> +++ b/Documentation/trace/rv/index.rst
-> @@ -8,7 +8,7 @@ Runtime Verification
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0 runtime-verification.rst
-> =C2=A0=C2=A0=C2=A0 deterministic_automata.rst
-> -=C2=A0=C2=A0 da_monitor_synthesis.rst
-> +=C2=A0=C2=A0 monitor_synthesis.rst
-> =C2=A0=C2=A0=C2=A0 da_monitor_instrumentation.rst
-> =C2=A0=C2=A0=C2=A0 monitor_wip.rst
-> =C2=A0=C2=A0=C2=A0 monitor_wwnr.rst
-> diff --git a/Documentation/trace/rv/da_monitor_synthesis.rst
-> b/Documentation/trace/rv/monitor_synthesis.rst
-> similarity index 92%
-> rename from Documentation/trace/rv/da_monitor_synthesis.rst
-> rename to Documentation/trace/rv/monitor_synthesis.rst
-> index 0a92729c8a9b..7d848e204687 100644
-> --- a/Documentation/trace/rv/da_monitor_synthesis.rst
-> +++ b/Documentation/trace/rv/monitor_synthesis.rst
-> @@ -1,5 +1,5 @@
-> -Deterministic Automata Monitor Synthesis
-> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +Runtime verification Monitor Synthesis
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> I fail to see why exactly right now, but am also quite tired. Might
+> take another look the next days.
+>=20
+> Although I'm not convinced that my solution is bad either. It's
+> Nouveau, after all. On this ranch a cowboy has to defend himself with
+> the pitchfork instead of the colt at times.
+>=20
+>=20
+> [1]
+> https://lore.kernel.org/all/20250407152239.34429-2-phasta@kernel.org/
+>=20
 
-+Runtime Verification Monitor Synthesis
+I think I see the issue now. Let's look at your code, Christian:
 
-The title is capitalised here.
+/*
+ * In an ideal world, read would not assume the channel context is
+still alive.
+ * This function may be called from another device, running into free
+memory as a
+ * result. The drm node should still be there, so we can derive the
+index from
+ * the fence context.
+ */
+static bool nouveau_fence_is_signaled(struct dma_fence *f)
+{
+	struct nouveau_fence *fence =3D from_fence(f);
+	struct nouveau_fence_chan *fctx =3D nouveau_fctx(fence);
+	struct nouveau_channel *chan;
+	bool ret =3D false;
 
-The rest looks good, thanks.
+	rcu_read_lock();
+	chan =3D rcu_dereference(fence->channel);
+	if (chan)
+		ret =3D (int)(fctx->read(chan) - fence->base.seqno) >=3D
+0;
+	rcu_read_unlock();
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+	if (ret) {
+		/*
+		 * caller should have a reference on the fence,
+		 * else fence could get freed here
+		 */
+		WARN_ON(kref_read(&fence->base.refcount) <=3D 1);
 
-> =C2=A0
-> =C2=A0The starting point for the application of runtime verification (RV)
-> techniques
-> =C2=A0is the *specification* or *modeling* of the desired (or undesired)
-> behavior
-> @@ -36,24 +36,24 @@ below::
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 +----> pa=
-nic ?
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-------> <user-s=
-pecified>
-> =C2=A0
-> -DA monitor synthesis
-> +RV monitor synthesis
-> =C2=A0--------------------
-> =C2=A0
-> =C2=A0The synthesis of automata-based models into the Linux *RV monitor*
-> abstraction
-> -is automated by the dot2k tool and the rv/da_monitor.h header file
-> that
-> +is automated by the rvgen tool and the rv/da_monitor.h header file
-> that
-> =C2=A0contains a set of macros that automatically generate the monitor's
-> code.
-> =C2=A0
-> -dot2k
-> +rvgen
-> =C2=A0-----
-> =C2=A0
-> -The dot2k utility leverages dot2c by converting an automaton model
-> in
-> +The rvgen utility leverages dot2c by converting an automaton model
-> in
-> =C2=A0the DOT format into the C representation [1] and creating the
-> skeleton of
-> =C2=A0a kernel monitor in C.
-> =C2=A0
-> =C2=A0For example, it is possible to transform the wip.dot model present
-> in
-> =C2=A0[1] into a per-cpu monitor with the following command::
-> =C2=A0
-> -=C2=A0 $ dot2k -d wip.dot -t per_cpu
-> +=C2=A0 $ rvgen monitor -c da -s wip.dot -t per_cpu
-> =C2=A0
-> =C2=A0This will create a directory named wip/ with the following files:
-> =C2=A0
-> @@ -87,7 +87,7 @@ the second for monitors with per-cpu instances, and
-> the third with per-task
-> =C2=A0instances.
-> =C2=A0
-> =C2=A0In all cases, the 'name' argument is a string that identifies the
-> monitor, and
-> -the 'type' argument is the data type used by dot2k on the
-> representation of
-> +the 'type' argument is the data type used by rvgen on the
-> representation of
-> =C2=A0the model in C.
-> =C2=A0
-> =C2=A0For example, the wip model with two states and three events can be
-> @@ -134,7 +134,7 @@ Final remarks
-> =C2=A0-------------
-> =C2=A0
-> =C2=A0With the monitor synthesis in place using the rv/da_monitor.h and
-> -dot2k, the developer's work should be limited to the instrumentation
-> +rvgen, the developer's work should be limited to the instrumentation
-> =C2=A0of the system, increasing the confidence in the overall approach.
-> =C2=A0
-> =C2=A0[1] For details about deterministic automata format and the
-> translation
-> @@ -142,6 +142,6 @@ from one representation to another, see::
-> =C2=A0
-> =C2=A0=C2=A0 Documentation/trace/rv/deterministic_automata.rst
-> =C2=A0
-> -[2] dot2k appends the monitor's name suffix to the events enums to
-> +[2] rvgen appends the monitor's name suffix to the events enums to
-> =C2=A0avoid conflicting variables when exporting the global vmlinux.h
-> =C2=A0use by BPF programs.
+		list_del(&fence->head);
+		dma_fence_put(&fence->base);
+	}
+
+	return ret;
+}
+
+[snip]
+
+static const struct dma_fence_ops nouveau_fence_ops_uevent =3D {
+	.get_driver_name =3D nouveau_fence_get_get_driver_name,
+	.get_timeline_name =3D nouveau_fence_get_timeline_name,
+	.enable_signaling =3D nouveau_fence_enable_signaling,
+	.signaled =3D nouveau_fence_is_signaled,
+	.release =3D nouveau_fence_release
+};
+
+
+So the nouveau_fence_done() will run into nouveau_fence_is_signaled().
+This will remove the list entry without any locking, because
+dma_fence_is_signaled() expects its callback to take the lock itself:
+
+bool
+nouveau_fence_done(struct nouveau_fence *fence)
+{
+	if (fence->base.ops =3D=3D &nouveau_fence_ops_legacy ||
+	    fence->base.ops =3D=3D &nouveau_fence_ops_uevent) {
+		struct nouveau_fence_chan *fctx =3D nouveau_fctx(fence);
+		struct nouveau_channel *chan;
+		unsigned long flags;
+
+		if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence-
+>base.flags))
+			return true;
+
+		spin_lock_irqsave(&fctx->lock, flags);
+		chan =3D rcu_dereference_protected(fence->channel,
+lockdep_is_held(&fctx->lock));
+		if (chan && nouveau_fence_update(chan, fctx))
+			nvif_event_block(&fctx->event);
+		spin_unlock_irqrestore(&fctx->lock, flags);
+	}
+	return dma_fence_is_signaled(&fence->base);
+}
+
+
+
+It could be, however, that at the same moment nouveau_fence_signal() is
+removing that entry, holding the appropriate lock.
+
+So we have a race. Again.
+
+You see, fixing things in Nouveau is difficult :)
+It gets more difficult if you want to clean it up "properly", so it
+conforms to rules such as those from dma_fence.
+
+I have now provided two fixes that both work, but you are not satisfied
+with from the dma_fence-maintainer's perspective. I understand that,
+but please also understand that it's actually not my primary task to
+work on Nouveau. I just have to fix this bug to move on with my
+scheduler work.
+
+So if you have another idea, feel free to share it. But I'd like to
+know how we can go on here.
+
+I'm running out of ideas. What I'm wondering if we couldn't just remove
+performance hacky fastpath functions such as
+nouveau_fence_is_signaled() completely. It seems redundant to me.
+
+Or we might add locking to it, but IDK what was achieved with RCU here.
+In any case it's definitely bad that Nouveau has so many redundant and
+half-redundant mechanisms.
+
+
+P.
+
+>=20
+>=20
+> P.
+>=20
+> >=20
+> > Regards,
+> > Christian.
+> >=20
+> > >=20
+> > > P.
+> > >=20
+> > >=20
+> > >=20
+> > > > Regards,
+> > > > Christian.
+> > > >=20
+> > > > > Replace the call to dma_fence_is_signaled() with
+> > > > > nouveau_fence_base_is_signaled().
+> > > > >=20
+> > > > > Cc: <stable@vger.kernel.org> # 4.10+, precise commit not to
+> > > > > be
+> > > > > determined
+> > > > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> > > > > ---
+> > > > > =C2=A0drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+> > > > > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >=20
+> > > > > diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c
+> > > > > b/drivers/gpu/drm/nouveau/nouveau_fence.c
+> > > > > index 7cc84472cece..33535987d8ed 100644
+> > > > > --- a/drivers/gpu/drm/nouveau/nouveau_fence.c
+> > > > > +++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+> > > > > @@ -274,7 +274,7 @@ nouveau_fence_done(struct nouveau_fence
+> > > > > *fence)
+> > > > > =C2=A0			nvif_event_block(&fctx->event);
+> > > > > =C2=A0		spin_unlock_irqrestore(&fctx->lock, flags);
+> > > > > =C2=A0	}
+> > > > > -	return dma_fence_is_signaled(&fence->base);
+> > > > > +	return test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence-
+> > > > > > base.flags);
+> > > > > =C2=A0}
+> > > > > =C2=A0
+> > > > > =C2=A0static long
+>=20
 
