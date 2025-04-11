@@ -1,121 +1,108 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9F41F541E
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C5E45948;
+	Fri, 11 Apr 2025 14:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381972; cv=none; b=crkv4kSeAEszdmFWwdBCp2rYJ6ThlC76AOjzAK4cf7mUD27E1/Yigm5e4k4N3jLT02Ou5bKaIkmzcXTQxk3nxPGqIMgGwu0+WJVuFJ3y64788N1yoh+3GfE/bx+mzQnLmX6G7PvKP8mmaCuS0NfJxLrHOnRZR2DNDxXFpYq6gsU=
+	t=1744382027; cv=none; b=e4qKsjNrfkVzLH4KQ9NF4tg8WVp3Uu/YpwQyHstnw8LBU7Yh4K21DEyVlTpINCk6Jfhv8ni+xjtOOPq6LZz/59eKVNTG7jfMVHfKnUepWfEv2GEhwUEpUwYZhT5l+eMp5Vw2HP2OPSfGHBk216gg6iRrEcQAcuXZ2PhuFCjURpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381972; c=relaxed/simple;
-	bh=0uBVlVl6zt2smmydXiApRvxiKMlTSisj2Yu/ktHw5O8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sawVkB2FNSttRmfuL2qTE/1JOAm1JVnpYTrXJV/Msx/87dS+xdd3yyrTKpROUCI58sEMQQoWBZk9ko2R0DgL8ZTmudV0XUXwP5XUb6q4TbgcelhxqS4kYXrGZCAUjX/PVnhDp/n8fake8MPO7ZmLxdj3fNzqUH6zprgtVSkVoEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DAtGMazO; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744382027; c=relaxed/simple;
+	bh=oVuRtuSjG5JGh6JU+d825kCCzZGN6r/zZRQW1ttQVdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R5yBdJvx9lqhlPBxaHiYEkQhjpl09ijG3IKaeMf9jknfta8NWuSZgHgB1crxHlfr78F0fVQJBoQz9b1KCPLZb+qreU4Oj/vhC5BcJqGhNSUCpQB1UjNIlSh1lcaB8EmbWfxV7iuP1uZHqsDdJOZSmh3DLMRSeIaUTDl/PT3Se30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pcj7niJK; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DAtGMazO"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736cd27d51fso1821317b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744381969; x=1744986769; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WdYWtwGlFqkOjqypokEB9CfaYMOynOKxQo9pc/iInzs=;
-        b=DAtGMazOexbsnVylG+qaPeTSMiyZv5B15i+WJ1hP8Ro4dTtSuAUE/azDMa18iM9M/Q
-         Bf3L1LSGcreyFuXBiNcovZtjsRKXoGfTa2RHzLuOlDH5KPR5uUre8KguPYMLWb9Z5Bq4
-         DR56vkXzGd4g/GjpPuq1RPqmO1VfbE22OCN4X1XqNJghwycE4CwUM5xLK6na5tjna5+P
-         MAQuLAtwQesxYr9HfG7OryyOm7+KpSlabIDjCyujJ+4neo0R697Dn/VdTUQzkCoafJ+k
-         Ux3A+L1cq/+FmvOM+an0wtKv2OcXlCIdl0jk+Xt/fG6g3VEygHmnC6AnHWl19Jpk6oIk
-         SZcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744381969; x=1744986769;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WdYWtwGlFqkOjqypokEB9CfaYMOynOKxQo9pc/iInzs=;
-        b=eQM6vQKtrQN3PpS5icovJ0Lk/GoHAYwVHXBCakD7kXkCfvCAf+kOtYJ6MhXSVVl6PJ
-         P01e1Zz6cnSRyLt4yP1DHR9soj3cpAErkQgciCWHSCfuFtHnsCVD0cpAIu5HEjSfYp1A
-         dF8cBlf4nuAgSPY/MZBWmwmcgvaf9pAJ1em1MNOzBpg1ARYXDpv/RZPPmX+bebAIUnHb
-         WTi8dgBdHsw5Beu7OazjPxpoJ3yTKDJAT8mqGVPo0ri/kLw6Mk6jtzSX2qVjNjNsMiqi
-         DDxZzo6SJ+WpNp/U51VRmMIeGFglT5vk/FxawjEgT1UY0Fr4WlPXLtreG9PQQlXctzXG
-         efJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVS+0U5n1OisVvU4lveHUrndG6txlmdiXvJSbnrQtTjzYjvoGAscpHRs0EE7fqleD5swUfCixv91mQG8AA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK/RAcTtPaR4dt6er+Fyw7nu85uZMbqf5Bgtg/wuRgo9QJ5OnN
-	FhR4Q/ou7NAxMyoWdEXPSRpqJ/qJ0s/e9gIP4cjqJgYXh2WzvvzcFKOmx1c+eLNorTRiAobcfS2
-	MQA==
-X-Google-Smtp-Source: AGHT+IFyxCzl6htX/DS8ClLuQoR7pJ/TqB4Bmf2NEvfb9DmOqq4wCNxnwjdldtCmTRsZzd2uBHMx+RmD5A4=
-X-Received: from pggs1.prod.google.com ([2002:a63:dc01:0:b0:af2:50f0:bc79])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:32a2:b0:1f5:7007:9eb7
- with SMTP id adf61e73a8af0-20179983274mr4861364637.37.1744381968654; Fri, 11
- Apr 2025 07:32:48 -0700 (PDT)
-Date: Fri, 11 Apr 2025 07:32:47 -0700
-In-Reply-To: <d6ccf531-2ed0-4e38-97a5-2b747497fadb@amd.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pcj7niJK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=ItP1aVb1e+h9azvx3WYwQtH0ZEUzn4mgScjro0lkdMU=;
+	b=pcj7niJKjKWu9W5yhl0cVbt1ENSSl//cUrActJg0c539Uvm/1E21WWyHnVFheF
+	ItMczQoOy6DKtOl6/D74wxp0xrsBUnjnYAeuIDgvoCd911ec6jh2LDPCPF5EpODu
+	vI1htwPdi7cQYHE2+2M6S3+bwdMwe7gAbPWqFmMpnWheM=
+Received: from iZj6c3ewsy61ybpk7hrb16Z (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCHg23NJ_lnU8isFg--.61454S2;
+	Fri, 11 Apr 2025 22:31:44 +0800 (CST)
+Date: Fri, 11 Apr 2025 22:31:41 +0800
+From: Jiayuan Chen <mrpre@163.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>
+Subject: Re: [PATCH bpf-next v2 5/9] selftests/bpf: Add selftest for
+ sockmap/hashmap redirection
+Message-ID: <ghhz3pi3oh3rylyd5t6gfa3x7m35q4ei5liwytmcbfit4r4pit@4al5vrpx7exl>
+References: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
+ <20250411-selftests-sockmap-redir-v2-5-5f9b018d6704@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-10-seanjc@google.com>
- <d6ccf531-2ed0-4e38-97a5-2b747497fadb@amd.com>
-Message-ID: <Z_knw1j6KeaEHVxr@google.com>
-Subject: Re: [PATCH 09/67] KVM: SVM: Track per-vCPU IRTEs using
- kvm_kernel_irqfd structure
-From: Sean Christopherson <seanjc@google.com>
-To: Sairaj Arun Kodilkar <sarunkod@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411-selftests-sockmap-redir-v2-5-5f9b018d6704@rbox.co>
+X-CM-TRANSID:_____wCHg23NJ_lnU8isFg--.61454S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uF43Ar45KrWUWF1DCrW8Xrb_yoW8Xr45pa
+	40gFZ7GFWSq3W5XryYqws2grZrZw1FvrWDX343GrW3Jw1q9r9rWrn5GFWYyr4fAFnxCr17
+	XFn5CF47K3s29F7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UiNV9UUUUU=
+X-CM-SenderInfo: xpus2vi6rwjhhfrp/1tbiOhwsp2f5JzcV7gAAsY
 
-On Fri, Apr 11, 2025, Arun Kodilkar, Sairaj wrote:
-> On 4/5/2025 1:08 AM, Sean Christopherson wrote:
-> > diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
-> > index 8ad43692e3bb..6510a48e62aa 100644
-> > --- a/include/linux/kvm_irqfd.h
-> > +++ b/include/linux/kvm_irqfd.h
-> > @@ -59,6 +59,9 @@ struct kvm_kernel_irqfd {
-> >   	struct work_struct shutdown;
-> >   	struct irq_bypass_consumer consumer;
-> >   	struct irq_bypass_producer *producer;
-> > +
-> > +	struct list_head vcpu_list;
-> > +	void *irq_bypass_data;
-> >   };
-> >   #endif /* __LINUX_KVM_IRQFD_H */
-> 
-> Hi Sean,
-> You missed to update the functions avic_set_pi_irte_mode and
-> avic_update_iommu_vcpu_affinity, which iterate over the ir_list.
+On Fri, Apr 11, 2025 at 01:32:41PM +0200, Michal Luczaj wrote:
+> +static void test_send_redir_recv(int sd_send, int send_flags, int sd_peer,
+> +				 int sd_in, int sd_out, int sd_recv,
+> +				 struct maps *maps, int status)
+> +{
+> +	unsigned int drop, pass;
+> +	char *send_buf = "ab";
+> +	char recv_buf = '\0';
+> +	ssize_t n, len = 1;
+> +	/* Zero out the verdict map */
+> +	if (xbpf_map_update_elem(maps->verd, &u32(SK_DROP), &u32(0), BPF_ANY) ||
+> +	    xbpf_map_update_elem(maps->verd, &u32(SK_PASS), &u32(0), BPF_ANY))
+> +		return;
+> +
+> +	if (xbpf_map_update_elem(maps->in, &u32(0), &u64(sd_in), BPF_NOEXIST))
+> +		return;
+> +
+> +	if (xbpf_map_update_elem(maps->out, &u32(0), &u64(sd_out), BPF_NOEXIST))
+> +		goto del_in;
+> +
+> +	/* Last byte is OOB data when send_flags has MSG_OOB bit set */
+> +	if (send_flags & MSG_OOB)
+> +		len++;
+> +	n = send(sd_send, send_buf, len, send_flags);
+> +	if (n >= 0 && n < len)
+> +		FAIL("incomplete send");
+> +	if (n < 0) {
+> +		/* sk_msg redirect combo not supported? */
+> +		if (status & SUPPORTED || errno != EACCES)
+> +			FAIL_ERRNO("send");
+> +		goto out;
+> +	}
+> +
+> +	if (!(status & SUPPORTED)) {
+> +		handle_unsupported(sd_send, sd_peer, sd_in, sd_out, sd_recv,
+> +				   maps->verd, status);
+> +		goto out;
+> +	}
+> +
+> +	errno = 0;
+> +	n = recv_timeout(sd_recv, &recv_buf, 1, 0, IO_TIMEOUT_SEC);
+> +	if (n != 1) {
+> +		FAIL_ERRNO("recv_timeout()");
+> +		goto out;
+> +	}
+I prefer multiple send and receive operations, or implementing a loop at
+the outer level.
 
-Well bugger, I did indeed.  And now I'm questioning my (hacky) testing, as I don't
-see how avic_update_iommu_vcpu_affinity() survived.
+Thanks.
 
-Oh, wow.  This is disgustingly hilarious.  By dumb luck, the offset of the data
-pointer relative to the list_head structure is the same in amd_svm_iommu_ir and
-kvm_kernel_irqfd.  And the usage in avic_set_pi_irte_mode() and
-avic_update_iommu_vcpu_affinity() only ever touches the data, not "svm".
-
-So even though the structure is completely wrong, the math works out and
-avic_set_pi_irte_mode() and avic_update_iommu_vcpu_affinity() unknowingly pass in
-irq_bypass_data, and all is well.
-
-struct amd_svm_iommu_ir {
-	struct list_head node;	/* Used by SVM for per-vcpu ir_list */
-	void *data;		/* Storing pointer to struct amd_ir_data */
-	struct vcpu_svm *svm;
-};
-
-
-struct kvm_kernel_irqfd {
-	...
-
-	struct kvm_vcpu *irq_bypass_vcpu;
-	struct list_head vcpu_list;
-	void *irq_bypass_data;
-};
-
-Great catch!  And thanks for the reviews!
