@@ -1,63 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D50A1372;
-	Fri, 11 Apr 2025 07:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4816027E1B8
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744355056; cv=none; b=Y3tSpnPC+9wAW+nkdcolvw/PVoKrwVKotwNy+/0kH6TFYoTatTMG6kZSWxhKHSvwUklMww1cKV8dCmbpufgDpaXQhEKDTCSaAuSytvIvs1PjDWIVVI/7EKuN1x94SGOx0UtikOlZq+rpqsDKpm+BW63ZVQYXcnNCWhwkp9A+lSU=
+	t=1744355060; cv=none; b=U0P0Qlfy7ZV1dFgee4vPWGwARmxsM1qHzLv4HUwVQHUAs7HEnPhP9m/C0k4TI9sT/224WrZaQH9WcJAFsVR+xd8sG0Yc0X2WU7D5FkqgZvNPZGVAH50yI/KlXCJ7z3Osay0UkwDmLhFG1OYA8FCZ5ayygzEDbwdqXn7LaNXU/D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744355056; c=relaxed/simple;
-	bh=AjLGdudkEww13Nz7cV5HJs58X3vRvdgMVqM4PyTJpeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AkKrTIII7qR87BWppk7ccJa0rFXT6/odoODIqBlQZczWrBMa8YCif5hnEjMldzfrvPP2+TSeimFtrIsb0giGXhKqkofaFG7l7MjxoBPSKwivOppb996rkUTv1tZ9IeHZUO0N5TrS/Fx/Yj6LXUWzr7A+kodu9p0vYyRk6X9U8z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMVJvaKI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744355060; c=relaxed/simple;
+	bh=q2G+U8CaoptHtEtK3D5eWFTwp4B2DaR3+8vYx7hfQH4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gtB8Dc1xTOsUumZBWCpk3WAw2UipCt443Bo8yTInq0rRwP6u6YqF41yDOOiZN/ury8bbLqoIzipmsG9C49DlZJ5fH7CwLO4VCcFiP7MUymmEhMMNqzjHr3vQ36ECqaI9TCh12UpHbPtvdLRnHOdueirrYRYZDPsz8SwK33dQZaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xr5pAMQ+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MsoBFBh0; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMVJvaKI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF37DC4CEE2;
-	Fri, 11 Apr 2025 07:04:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744355054;
-	bh=AjLGdudkEww13Nz7cV5HJs58X3vRvdgMVqM4PyTJpeA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QMVJvaKIvCEhjqbl5AqKs0cpHMyvu1N9cmHbvDrhBSxs7Kdh9vGOrbqCV8OyzU1oj
-	 MoAAUhaKELSnT1jYgtHsWFZBKmuto0m8G1IXj1Nq3YBPlyB7bbpOfObfcyroYfONfz
-	 JkM7glCX0GBEqBz8N3wVhBliQdK6gIybFR9tGH+6TgjPJma7eFyN2ZhnZn5+BhDYMp
-	 Xe6XktaRK5r+dvJK6M12cOtwfUp5pssjCa21VPmtLv0sGiAVEUFBEOFsucn+0HNebo
-	 5UufgYKdWdB7vcKKMQLZ6LQ82uZg91TUzR/+WTVa9WieLyWaJExYxLoPI58HaKOWYE
-	 ybvRBYUI1P+WQ==
-Date: Fri, 11 Apr 2025 12:34:10 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	Varadarajan Narayanan <quic_varada@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: qcom-qusb2: Update the phy settings for IPQ5424
-Message-ID: <Z/i+6k6VseihdQ69@vaman>
-References: <20250407-revert_hs_phy_settings-v1-1-ec94e316ea19@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xr5pAMQ+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MsoBFBh0"
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744355057;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=96NwC/14vz1WaxiPztrYCtku/XpQxqQSIQBLpHPku8c=;
+	b=xr5pAMQ+Nrax1d3NltDi0V9OETjOB0MutyuYUc87lMSqUSkNJLWKRSoEYfYEe2Sdk3ejHP
+	y42yTQynL6pMtZck4+yD0ttIJ7w4Vr0MMt+nkrnwzDQZQF6cE0osMsoj3mG6U84Z8lPzj5
+	+UOO2n+laMTI/ASuRNQcqAugUto+4KH1rerBjkWbIk0fREjdEItWoE0VV+ryw49XIdq0Ov
+	sBHR3L3txrJOrE7QpS9XJ40sw5JM8Qz2+NuiH/9chf3DEBN2PPeqggkU1TJvQx1Zxp8kWq
+	uP8WYbCoi6l1Sxn5GTDIH4eD9zTtz6orUHjXZG6kR/q2CUx4BiJpTBl40BtIeg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744355057;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=96NwC/14vz1WaxiPztrYCtku/XpQxqQSIQBLpHPku8c=;
+	b=MsoBFBh0vu1cxAjY6/TJA2sgNLVS7E7KkTVArucqzi3tpXxhZmamd9GnIIY37ltQlgiD+W
+	iwu5ChfMbpQKJJDw==
+To: Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	x86@kernel.org,
+	x86-cpuid@lists.linux.dev,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: [PATCH v1 0/2] x86: CPUID refactorings: follow-up
+Date: Fri, 11 Apr 2025 09:03:59 +0200
+Message-ID: <20250411070401.1358760-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-revert_hs_phy_settings-v1-1-ec94e316ea19@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-On 07-04-25, 19:51, Kathiravan Thirumoorthy wrote:
-> Update the phy settings for IPQ5424 to meet compliance requirements.
+Hi,
 
-Can you specify which requirements are these?
+These are minor post-mortem patches for the merged CPUID bugfixes and
+refactorings at tip:x86/cpu.
 
-> The current settings do not meet the requirements, and the design team
-> has requested to use the settings used for IPQ6018.
-> 
-> Revert the commit 9c56a1de296e ("phy: qcom-qusb2: add QUSB2 support for
-> IPQ5424") and reuse the IPQ6018 settings.
+The first removes a no-longer-used macro.
 
-Why not do revert first and then add the settings?
+The second standardizes all instances of CPUID(N) to CPUID(0xN), as the
+CPUID(0xN) style is now the standard in the upcoming cached CPUID model.
+It is more concise than "CPUID leaf 0xN" as used in the previous patch
+queues commit logs and aligns better with extended leaf references like
+CPUID(0x80000005) and CPUID(0x8000001d).
 
+Thanks,
+
+8<-----
+
+Ahmed S. Darwish (2):
+  x86/cpuid: Remove obsolete CPUID(0x2) iteration macro
+  x86/cacheinfo: Standardize header files and CPUID references
+
+ arch/x86/include/asm/cpuid/leaf_0x2_api.h | 23 -----------------------
+ arch/x86/kernel/cpu/cacheinfo.c           | 20 ++++++++++----------
+ 2 files changed, 10 insertions(+), 33 deletions(-)
+
+base-commit: d02c83d75f9f76dda046edbd9f39b911427677c9
 -- 
-~Vinod
+2.49.0
+
