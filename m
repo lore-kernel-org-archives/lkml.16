@@ -1,66 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE95238C1D;
-	Fri, 11 Apr 2025 10:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF99E24DC43;
+	Fri, 11 Apr 2025 10:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365740; cv=none; b=rkvmVXx6nnqPl1vFj4Nk9otU/Oc4mkoNcv3yLMKabtFgy+UGI4TCfZYb5v8q7IgIZ+aNUOPCLtFookBg1yuf8PSsHS62cVw/atS7qv7xtNEPWmE+3kilokxIxOsO6ZQ22z8M0xu9Xo4jJpVRKHDviGkhwqDAFnHDfqUIKCdqcDM=
+	t=1744365742; cv=none; b=McuWPQYWkecKbg1GQzjpNGn7k7aBZfyPKf/B8Q5vWzwvUOYQ9DbaRGvjKinHWV1o0bFwMhvWq84yslrfGCat7UEO0re1tO4dxbj8txSiPb/WLqV2WD/OvqQ9Re8x41uM/AF42dxLrrGzoaO626srkU7Ef1RSQML55wNs2WVvDmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365740; c=relaxed/simple;
-	bh=rXYUoCY5cTRw9oWxdtC17jPUYcuqZrcw1fG3lqV4Yo8=;
+	s=arc-20240116; t=1744365742; c=relaxed/simple;
+	bh=QPj+T2aTm3YQ/EThm5+WTuv8ki3lGSWBb4a38xZYH/w=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=cJuwX1np6EwEN8oxMRiE1lOyW2s+OLA8gZLMHpU36S7xDGkz0tfxrelMnocHctHrIguffzayhwqUS+gpX5Nzid/7SVdBv9p0AnsgE5WAqFAk2NanL2vAVqrVIE1ZZwValVbAG7e/UkogUKfJKPuz7KTumnriH24/kSwwMShy+rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gHD+D87i; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jVP9xNl3; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Pm5FUUHXGKxtQEzpe9YMKu/ZyJAl/yH77AK0sHronNZYjHFLLgZOkC7/utmBrB/nW5sZhyNsvD2CQkrPpcXGt3KXWctQCJIfnTrPlOdORJ3mDIQ52RnDJ+wE0T9aJE6zbXUno+hlbnKflKwFYww8cZUvooSdVQuWoP8OzHqO9Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Co4q5kQQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sDwbGPN6; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gHD+D87i";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jVP9xNl3"
-Date: Fri, 11 Apr 2025 10:02:16 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Co4q5kQQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sDwbGPN6"
+Date: Fri, 11 Apr 2025 10:02:17 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744365737;
+	s=2020; t=1744365738;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=owvqiXSL4GyNicDFwG13QMzNwtQ5P3as10A2Ol+xxaE=;
-	b=gHD+D87ivgHZFQir1UputCKM3t/YyY1//OcPCa9XJiLRYQuDn+RmELlfJd0hxKlpY4wgli
-	hCZqpihOok0MRNunA9+Q8BRfsKr6O5eOgthO6pBerf7+YV/pCC/rM5wTHn6KJsbnPeIEo/
-	lzNLplOb+xqARhE63i+95JXzUwVfCYRGYcuXks7mKbmw4xfbUvFRdcYH5BR+LjqF49Ipxr
-	nyWylpTGOjEJnDuN8LWLFahq4sBId0PcaN9VwLs1V5ZNzpbOtdck+zJ0WsPEiExltalmyB
-	gSpjygNk6sJU+DmkbZ4SdldQxA0vm5ydTc680axtZe0v+Egfw4qCrD7hcpEhWA==
+	bh=5VnJ4KBESD4ejXQG1Z5e4HgxBK38HrMq03NQyYAuk1c=;
+	b=Co4q5kQQz9lKEHQiiGmsv/IXMDJlVB1vV14i18wP0TYs6/tS8fG540tpux7GYBiXTFkojl
+	fPxtuEi3CT9mRow9tZ+IDP6eJOQsm25IRBRBAI8eKmeQOffjUjuPFPzff4WVLxOaPf/SOR
+	nRlRHeUhLSQ35WfFMiSBZZd8n8yvOOV8eBajJKeB52SvmL7tONFhYy1LHtnVomNXauwPjO
+	/dOdg9Sy1zLK0QvqXG4YKTddRYir2yiBmYGJRtJBjuFn7M8K9ZYM9CA4RybTTT2OOZcFDj
+	/NWFzwJ+O1lw93cmAkHGo07thrW9+hcl2XeLcxZfGiLr9mG1uj9rC+UDKaRZfg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744365737;
+	s=2020e; t=1744365738;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=owvqiXSL4GyNicDFwG13QMzNwtQ5P3as10A2Ol+xxaE=;
-	b=jVP9xNl3tcz4zWNrBC4oJJc03ZmFdt/L6EFt6IqR6rxKfo8YtUFWpYXA2uf2C7Cu+6lrJ0
-	7zv7xAPfqu7nLqAw==
+	bh=5VnJ4KBESD4ejXQG1Z5e4HgxBK38HrMq03NQyYAuk1c=;
+	b=sDwbGPN6Tsrj+0cscYfXVbraBQUTt9MNF+9AsuwOEmlXQwxDz1NuXlO+DEO7hyq7zO3y43
+	Q2uPbTe5skBAhcAQ==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/alternatives] x86/alternatives: Rename 'poking_addr' to
- 'text_poke_mm_addr'
+Subject: [tip: x86/alternatives] x86/alternatives: Rename
+ 'poke_int3_handler()' to 'smp_text_poke_int3_handler()'
 Cc: Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
  "H . Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250411054105.2341982-10-mingo@kernel.org>
-References: <20250411054105.2341982-10-mingo@kernel.org>
+In-Reply-To: <20250411054105.2341982-8-mingo@kernel.org>
+References: <20250411054105.2341982-8-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174436573633.31282.4677765718126736719.tip-bot2@tip-bot2>
+Message-ID: <174436573771.31282.11272916613256807782.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,135 +70,78 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     da364fc547897ed98fbf2192d86b5242439d7762
-Gitweb:        https://git.kernel.org/tip/da364fc547897ed98fbf2192d86b5242439d7762
+Commit-ID:     5236b6a0fe921f5de53b8eeea2d8fdd6d643dd7f
+Gitweb:        https://git.kernel.org/tip/5236b6a0fe921f5de53b8eeea2d8fdd6d643dd7f
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 11 Apr 2025 07:40:21 +02:00
+AuthorDate:    Fri, 11 Apr 2025 07:40:19 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 11 Apr 2025 11:01:33 +02:00
 
-x86/alternatives: Rename 'poking_addr' to 'text_poke_mm_addr'
+x86/alternatives: Rename 'poke_int3_handler()' to 'smp_text_poke_int3_handler()'
 
-Put it into the text_poke_* namespace of <asm/text-patching.h>.
+All related functions in this subsystem already have a
+text_poke_int3_ prefix - add it to the trap handler
+as well.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Juergen Gross <jgross@suse.com>
 Cc: "H . Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250411054105.2341982-10-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250411054105.2341982-8-mingo@kernel.org
 ---
- arch/x86/include/asm/text-patching.h |  2 +-
- arch/x86/kernel/alternative.c        | 16 ++++++++--------
- arch/x86/mm/init.c                   | 10 +++++-----
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/text-patching.h | 2 +-
+ arch/x86/kernel/alternative.c        | 2 +-
+ arch/x86/kernel/traps.c              | 6 +++---
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index 7a95c08..c8eac8c 100644
+index 5189188..93a6b7b 100644
 --- a/arch/x86/include/asm/text-patching.h
 +++ b/arch/x86/include/asm/text-patching.h
-@@ -129,7 +129,7 @@ void *text_gen_insn(u8 opcode, const void *addr, const void *dest)
+@@ -38,7 +38,7 @@ extern void *text_poke_copy(void *addr, const void *opcode, size_t len);
+ #define text_poke_copy text_poke_copy
+ extern void *text_poke_copy_locked(void *addr, const void *opcode, size_t len, bool core_ok);
+ extern void *text_poke_set(void *addr, int c, size_t len);
+-extern int poke_int3_handler(struct pt_regs *regs);
++extern int smp_text_poke_int3_handler(struct pt_regs *regs);
+ extern void smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate);
  
- extern int after_bootmem;
- extern __ro_after_init struct mm_struct *text_poke_mm;
--extern __ro_after_init unsigned long poking_addr;
-+extern __ro_after_init unsigned long text_poke_mm_addr;
- 
- #ifndef CONFIG_UML_X86
- static __always_inline
+ extern void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate);
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 8ce0d46..62d7444 100644
+index 222021a..d2cd0d8 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2192,7 +2192,7 @@ static inline temp_mm_state_t use_temporary_mm(struct mm_struct *mm)
+@@ -2515,7 +2515,7 @@ static __always_inline int patch_cmp(const void *key, const void *elt)
+ 	return 0;
  }
  
- __ro_after_init struct mm_struct *text_poke_mm;
--__ro_after_init unsigned long poking_addr;
-+__ro_after_init unsigned long text_poke_mm_addr;
- 
- static inline void unuse_temporary_mm(temp_mm_state_t prev_state)
+-noinstr int poke_int3_handler(struct pt_regs *regs)
++noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
  {
-@@ -2266,7 +2266,7 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
+ 	struct text_poke_int3_vec *desc;
+ 	struct text_poke_loc *tp;
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 9f88b8a..d67407c 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -882,16 +882,16 @@ static void do_int3_user(struct pt_regs *regs)
+ DEFINE_IDTENTRY_RAW(exc_int3)
+ {
  	/*
- 	 * The lock is not really needed, but this allows to avoid open-coding.
+-	 * poke_int3_handler() is completely self contained code; it does (and
++	 * smp_text_poke_int3_handler() is completely self contained code; it does (and
+ 	 * must) *NOT* call out to anything, lest it hits upon yet another
+ 	 * INT3.
  	 */
--	ptep = get_locked_pte(text_poke_mm, poking_addr, &ptl);
-+	ptep = get_locked_pte(text_poke_mm, text_poke_mm_addr, &ptl);
+-	if (poke_int3_handler(regs))
++	if (smp_text_poke_int3_handler(regs))
+ 		return;
  
  	/*
- 	 * This must not fail; preallocated in poking_init().
-@@ -2276,11 +2276,11 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
- 	local_irq_save(flags);
- 
- 	pte = mk_pte(pages[0], pgprot);
--	set_pte_at(text_poke_mm, poking_addr, ptep, pte);
-+	set_pte_at(text_poke_mm, text_poke_mm_addr, ptep, pte);
- 
- 	if (cross_page_boundary) {
- 		pte = mk_pte(pages[1], pgprot);
--		set_pte_at(text_poke_mm, poking_addr + PAGE_SIZE, ptep + 1, pte);
-+		set_pte_at(text_poke_mm, text_poke_mm_addr + PAGE_SIZE, ptep + 1, pte);
- 	}
- 
- 	/*
-@@ -2290,7 +2290,7 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
- 	prev = use_temporary_mm(text_poke_mm);
- 
- 	kasan_disable_current();
--	func((u8 *)poking_addr + offset_in_page(addr), src, len);
-+	func((u8 *)text_poke_mm_addr + offset_in_page(addr), src, len);
- 	kasan_enable_current();
- 
- 	/*
-@@ -2299,9 +2299,9 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
- 	 */
- 	barrier();
- 
--	pte_clear(text_poke_mm, poking_addr, ptep);
-+	pte_clear(text_poke_mm, text_poke_mm_addr, ptep);
- 	if (cross_page_boundary)
--		pte_clear(text_poke_mm, poking_addr + PAGE_SIZE, ptep + 1);
-+		pte_clear(text_poke_mm, text_poke_mm_addr + PAGE_SIZE, ptep + 1);
- 
- 	/*
- 	 * Loading the previous page-table hierarchy requires a serializing
-@@ -2314,7 +2314,7 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
- 	 * Flushing the TLB might involve IPIs, which would require enabled
- 	 * IRQs, but not if the mm is not used, as it is in this point.
- 	 */
--	flush_tlb_mm_range(text_poke_mm, poking_addr, poking_addr +
-+	flush_tlb_mm_range(text_poke_mm, text_poke_mm_addr, text_poke_mm_addr +
- 			   (cross_page_boundary ? 2 : 1) * PAGE_SIZE,
- 			   PAGE_SHIFT, false);
- 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 84b52a1..f8c74d1 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -835,20 +835,20 @@ void __init poking_init(void)
- 	 * will be mapped at the same PMD. We need 2 pages, so find space for 3,
- 	 * and adjust the address if the PMD ends after the first one.
- 	 */
--	poking_addr = TASK_UNMAPPED_BASE;
-+	text_poke_mm_addr = TASK_UNMAPPED_BASE;
- 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
--		poking_addr += (kaslr_get_random_long("Poking") & PAGE_MASK) %
-+		text_poke_mm_addr += (kaslr_get_random_long("Poking") & PAGE_MASK) %
- 			(TASK_SIZE - TASK_UNMAPPED_BASE - 3 * PAGE_SIZE);
- 
--	if (((poking_addr + PAGE_SIZE) & ~PMD_MASK) == 0)
--		poking_addr += PAGE_SIZE;
-+	if (((text_poke_mm_addr + PAGE_SIZE) & ~PMD_MASK) == 0)
-+		text_poke_mm_addr += PAGE_SIZE;
- 
- 	/*
- 	 * We need to trigger the allocation of the page-tables that will be
- 	 * needed for poking now. Later, poking may be performed in an atomic
- 	 * section, which might cause allocation to fail.
- 	 */
--	ptep = get_locked_pte(text_poke_mm, poking_addr, &ptl);
-+	ptep = get_locked_pte(text_poke_mm, text_poke_mm_addr, &ptl);
- 	BUG_ON(!ptep);
- 	pte_unmap_unlock(ptep, ptl);
- }
+ 	 * irqentry_enter_from_user_mode() uses static_branch_{,un}likely()
+-	 * and therefore can trigger INT3, hence poke_int3_handler() must
++	 * and therefore can trigger INT3, hence smp_text_poke_int3_handler() must
+ 	 * be done before. If the entry came from kernel mode, then use
+ 	 * nmi_enter() because the INT3 could have been hit in any context
+ 	 * including NMI.
