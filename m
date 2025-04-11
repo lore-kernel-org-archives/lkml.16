@@ -1,370 +1,195 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2133.outbound.protection.outlook.com [40.107.92.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD1C2E62A7;
-	Fri, 11 Apr 2025 06:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744353960; cv=none; b=Grg/sDx0NuK7C+/meKLHPLY2QTKD7qyKThDoagygoA5+8Iu3bb3gFUK+dJgXPNGHCLcVSN9KC7wqTdkDPA/+gvKRS3oP1Eyz94+hXlK7nSTz2QwWIySybCPwAzOJbQurmw8EqEI40f+ldA2kwvYNJTmgFqOIMY67eMyvSI+AwTA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744353960; c=relaxed/simple;
-	bh=10Ziy3jcJKOprR/fU+6CyZGW0L6ZCnb3h3abs6jVrMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EhdBArlD886KMg2RgHRTs3Vql72/kfAgt1bPGm2lGruZYBbJIoY4fg7Hogyt4uVcrlQbG7p1Z+uL0PYClZKK9HNUWGsH2ZwceAjP0DZJ6Thfk5G30BMdnKNyqdoCO/2cx2Xz4SI36p+H+tiOcFKMgquKpZN0SEsThCPMI0LJXN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=sc7ZlrFV; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341901EDA08;
+	Fri, 11 Apr 2025 06:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.133
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744353971; cv=fail; b=HRgYiIaCEXcTtL2iatShMhLAQQYrL8m0cZbNGMMlEhjxSF4w6aOF+eZZlE6BkFRPwTMwUX4hv6bq8hW+Jww7g3fTG5oSfQEQNY1Hz7GTjCKeAwDPlwFa+IYoK8JRNAO5fnSlYL6Ibu4BNc0YOz5xO+3WKfgGKMwLQRea5jx0yR8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744353971; c=relaxed/simple;
+	bh=NDAtl+4mLKv1yl5hfJz194/BrQpWwHvwp7K7DPOGlgc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=ORWwyzRO28z1KLg63R0vo74y0ATZtf1nYql6Slb6V1ydj3HUrz5Xj3ZhEeghk12T9ZMK9op4hlqNaPWsFWVY6g+gnk6R6dCJPN4/a8IRq42GNLuv778r6kosTn69UweRZWuCpHSgbXX4KbkzEZcNoUDhkaPwlyztuU69T1vA4CY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kneron.us; spf=pass smtp.mailfrom=kneron.us; dkim=pass (1024-bit key) header.d=kneron.us header.i=@kneron.us header.b=kG+BYZVj; arc=fail smtp.client-ip=40.107.92.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kneron.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kneron.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sc7ZlrFV"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c68:389d:1fcb:c0f8:ff7c:208d])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9EC03667;
-	Fri, 11 Apr 2025 08:43:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744353836;
-	bh=10Ziy3jcJKOprR/fU+6CyZGW0L6ZCnb3h3abs6jVrMg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sc7ZlrFVKbOa/P3OwvaHd4QXPZ+dbPoAzOJzNEf9oCSxro9+V4nhjyVXfULJWg93D
-	 36RBmOrl3nTiiejffOXDW45+uZtX9Ncp1GxlUNW3RrOCOiTEUEgAjNFt499KdG8to8
-	 6x1Xtxzjf5wPRN1dqhIWCxDbBMdJoZp2G2WN4Cfo=
-Date: Fri, 11 Apr 2025 12:15:50 +0530
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-To: Andrew Davis <afd@ti.com>
-Cc: Devarsh Thakkar <devarsht@ti.com>, Judith Mendez <jm@ti.com>, 
-	Nishanth Menon <nm@ti.com>, Hari Nagalla <hnagalla@ti.com>, Tero Kristo <kristo@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Beleswar Padhi <b-padhi@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Markus Schneider-Pargmann <msp@baylibre.com>, praneeth@ti.com, 
-	"Khasim, Syed Mohammed" <khasim@ti.com>, tomi.valkeinen@ideasonboard.com, v-krishnamoorthy@ti.com, 
-	s-tripathy@ti.com, s-tripathi1@ti.com, c-shilwant@ti.com, r-ravikumar@ti.com
-Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-Message-ID: <tp4v4kbe7j2opr4ba2kpujmzjtsesnq3by2lbi6ympe2lh6owg@tjchqh2bqkjg>
-References: <20250405001518.1315273-1-jm@ti.com>
- <20250405001518.1315273-7-jm@ti.com>
- <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
- <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
- <e131298f-3713-482a-a740-ff89709270b4@ti.com>
- <091c0869-525b-4b40-b5fe-a5c1907ec606@ti.com>
- <czmir7yvss3oreveesyrjqfdcawyn2axtstomsj3yx5sntqwo2@r3udnsyrxvkp>
- <5969e1e8-0bb7-4334-a0c5-b4c396b8b6af@ti.com>
- <dccef5d7-46c6-4e08-98f3-ba0e8168aaff@ti.com>
+	dkim=pass (1024-bit key) header.d=kneron.us header.i=@kneron.us header.b="kG+BYZVj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UhRFpCsCN9bB155n7NdEYMAItVCOXYLeD/N9aY87rY97pzN8IB9IlesMf8NjjIZL6qjCWHkaFy7MewCjQTQkewTzwvzApesnpH1HWKNLbNuTogroGPq8SFvr5BXguEPP86QhJW6OmTjpaVjdSCY0Xr0upP6rBXtlq8m06rlE+t2Bz3KkL1ETn0p8ZlXR8bofSgtecLTFMcwC13xi2ipYF5SKby3zioeKFVSiJjsk0MOMCs/ak5Nlamm3QUe1WjR5NoHOoEwJtwXrABWqvfzAJu9wq7R48YWUJy9JxfA1lkNGKcES7nqP8y35/UIZGmehQz+cxTEGBicrsaXQvav+mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P6TgS5LT+HhdLc1PqXy2gCN3J1IkakaMka4s47K/biE=;
+ b=SxGQr2HGjH8NqA2QeeP+KFiAySATkvZKvNU3xiAPfQljgv6+RJkRZa9sKa8qCRZE/EWOvhfgMYFZStQxDIG1BwWYYhTNI/0yCj0o74GWsXzhpTyVdK0knQCLpqUPunDC/2EuEFycAVu1Gq/MRhpd4Ud+sUFkOXuzfqziAH95h83A9ZzJFHSLncKZNLFPfU3oeDr+vzoylKC9L5cSViiPxHk3CiHjuYPuSPzMcww3/R2TW7oxoca0IdCiwsh4gokP3BrS6K43O7B4CRMKmHz2zk/3hpMXlQInq3JkPqb4o0qHtKqE2mPDsEIKUBmx7K4T3nQvAWwkbmnXvN/SH8lTzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kneron.us; dmarc=pass action=none header.from=kneron.us;
+ dkim=pass header.d=kneron.us; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kneron.us;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P6TgS5LT+HhdLc1PqXy2gCN3J1IkakaMka4s47K/biE=;
+ b=kG+BYZVjBNC04X2CNBAFFdlbJxavbmjiTRn0D+JofY/leyH3svEz86i0kjIYeHhEpun6Ivsb0t2lSv/1FzMuNNHSH37y/AWXa4fbnbXg1VD4KAQ7vMdRqSn2z3hx12Xt38RhE76P1xIsbncKTs+mgVsyow3DZimEB9gNsYd1uB8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kneron.us;
+Received: from PH0PR14MB4360.namprd14.prod.outlook.com (2603:10b6:510:26::18)
+ by CY8PR14MB6756.namprd14.prod.outlook.com (2603:10b6:930:78::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Fri, 11 Apr
+ 2025 06:46:03 +0000
+Received: from PH0PR14MB4360.namprd14.prod.outlook.com
+ ([fe80::f91d:52ba:8284:3e02]) by PH0PR14MB4360.namprd14.prod.outlook.com
+ ([fe80::f91d:52ba:8284:3e02%6]) with mapi id 15.20.8606.029; Fri, 11 Apr 2025
+ 06:46:03 +0000
+From: Chance Yang <chance.yang@kneron.us>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>,  linux-usb@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  morgan.chang@kneron.us
+Subject: Re: [PATCH] usb: common: usb-conn-gpio: use a unique names for usb
+ connector devices
+In-Reply-To: <2025041131-datebook-tumble-a759@gregkh> (Greg Kroah-Hartman's
+	message of "Fri, 11 Apr 2025 07:55:09 +0200")
+References: <20250411-work-next-v1-1-93c4b95ee6c1@kneron.us>
+	<2025041131-datebook-tumble-a759@gregkh>
+User-Agent: mu4e 1.12.8; emacs 30.1
+Date: Fri, 11 Apr 2025 14:45:59 +0800
+Message-ID: <83tt6v2o2g.fsf@kneron.us>
+Content-Type: text/plain
+X-ClientProxiedBy: TP0P295CA0034.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:910:4::19) To PH0PR14MB4360.namprd14.prod.outlook.com
+ (2603:10b6:510:26::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5qa2kcidthusc3og"
-Content-Disposition: inline
-In-Reply-To: <dccef5d7-46c6-4e08-98f3-ba0e8168aaff@ti.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR14MB4360:EE_|CY8PR14MB6756:EE_
+X-MS-Office365-Filtering-Correlation-Id: 022246cc-3f33-46dc-f322-08dd78c486d7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|7053199007|38350700014|80162021;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?K5VZsE6KWrwj+KNKEjwgtymw79Ihxy8nur3dz9udTIrVF9wY3ASnZunz3EN+?=
+ =?us-ascii?Q?DVcCWi2kUms/Naic2O2yydIRIvh+3jvNt3Tcw8Ixe5Wg+yNlSxKI/2J3MQKT?=
+ =?us-ascii?Q?JRUbBcydWoCeWk/AM/JTxmhgOHVRNZGmtsOOq0FQvF23XsE3JdIuXuLbHsJF?=
+ =?us-ascii?Q?GctIiWkMtFl4/UlSSMjx+9hT+Hefg6kLjDFkBMIibHM7uTxExT+T4n3gRz61?=
+ =?us-ascii?Q?Y7bp+MmK+dl8x2VoAPtre146nkBNbWPu5dYuSLV508Vn+O/z9CkntVWGmwo5?=
+ =?us-ascii?Q?dx1QmwO5Xum1+ZytR6aAYcRCBDVwZDx37DmFbBjCD1CHvuunTrZK7adcPZ93?=
+ =?us-ascii?Q?DTVX4OuPLEfziYk1QmyzBVxr4r3iEZVupJXX1tLS7iEIHWZbKsA4m0fMjVrh?=
+ =?us-ascii?Q?QBgthsz8Vs3rcwIOi3tXsr5GTzBeE0152hAfOuT4asNYjk6wFHmrtQ4iU41h?=
+ =?us-ascii?Q?ElMpOjDznBk7JWX2tVZKyhKRrttTDksd6VIMHL0FNa4epIP0pb5pJVVAfzVe?=
+ =?us-ascii?Q?YdK3Spi0mZQnAity11nwx3KiT1OyndTImmO2CrsVL3Iu5aRGmJBF+NnDFbpK?=
+ =?us-ascii?Q?Gkj0BxZXdF+aumlS0HVE1g9dtixht+dAufIfTXjsgXg0aRmYl+C8LEmPRKAV?=
+ =?us-ascii?Q?Zanihv1nFwahidKeOtiw660G0lWuAwWeHySvU8qQOAaQURS2pmi8lnZO4sre?=
+ =?us-ascii?Q?SLB61u68VPck6BK7mRHHg35HKjp+1nwFE2y0aQLsAXm58aV9uxgnl0+4H9gQ?=
+ =?us-ascii?Q?qSP3Fwsn6XkjIzss6dY4DGAgRdNH4JWNeeTROCqsmwzazLwQmiMEcowB7NYS?=
+ =?us-ascii?Q?o3Ltzl+ER8IzHZ8TwePqzKGLu4Yh1IX6WGaWvaTzIyAwUC3eI8bBXNEglJYq?=
+ =?us-ascii?Q?Vjwl/o7LkXgUU/aLUxFPZXuLueFpPSw9ccvgR+c5fGQ3Fn2AH8ZvpLCIyd7t?=
+ =?us-ascii?Q?jKxopHkW/zYNUeFJDcEo+gaRieF0TLfn5KYF3msuHwc+qKR4aM8X96VY+XIc?=
+ =?us-ascii?Q?2W7O030dQonrfFZI7EpCGPXtsgTUnWw2lptaoEu128BKVudOp53gKAbFmyT1?=
+ =?us-ascii?Q?CN0JkxVXaf4iB6p+QvKJHUEMamKb2rWY3tH6tApnxl/xyVcKHMql6O85uPtH?=
+ =?us-ascii?Q?B281Z4sWsoCBdsa9oAPTSRtqkabWfUjtWSbBXYCA6QRKYvhph/Z2OLMZTMgF?=
+ =?us-ascii?Q?17dpp02Th1zFL29nVSrcyLGRW0h1Cbu8Bma+CYvi1JgaSLxQ+TDDGalKgQeJ?=
+ =?us-ascii?Q?tLscpsFvyW8+ZiNAyEgG4T8y9baRrZr9igbDxmJeTabpF0RzveVcKgmPSQgJ?=
+ =?us-ascii?Q?w/DzFIMAEZqb7Lt/Ew0f4mcfWfwv9J7LKFcv7JBbt09u05foV9kKV5bNqmGj?=
+ =?us-ascii?Q?VVfZ8MxqQR8sz92EQjYmdirhbQhRDPt6hsRoU3bXyZ6Ak6ch84AG63+k5luK?=
+ =?us-ascii?Q?5PeWbW9ni9DrZxMORrzdZ/19zl+oP/R7hJwPxgVD/mDdDBVcZQ0n30sCOZlf?=
+ =?us-ascii?Q?YH7EKQdk9tkpekmWkO0HHBvI8STGPtF5Rhtm?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR14MB4360.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(7053199007)(38350700014)(80162021);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ANBZlZzD3SMdOA9xShilAbtNUqDsVcDJiCO2+kLhjN1zD+E5UVlibctd3iC5?=
+ =?us-ascii?Q?1PDypb2fXIF899zgML2J/FfiqCKCDaJEUi4X9M6m6/4dl8XP4CojYkhijC8M?=
+ =?us-ascii?Q?nLilpNGvRCK61buPq1EOihqmH0yWeHVP2VF2E8JXKcF5yR0FecFj5xdbhc/S?=
+ =?us-ascii?Q?xe7LOV3gDLX690MyxS4hOvBED8sCRUOar6XfKzaQqOuSCGA6JQToyGT+pazD?=
+ =?us-ascii?Q?0kAzesebf6/GtLiloYeT0xt6z10+uK4By/Q/a/q5VO20EMsXfJ6jfu8EoMKq?=
+ =?us-ascii?Q?MFso8bUgu7pl8qLNl/WR1QyPjzxTI1plGnN7W6pJibGQb53DRUns9KDQebmp?=
+ =?us-ascii?Q?QEuh2waE/aWyOQfa9vSelpM/4bkXxbmNrEi7XvmfzdoUvRybqzWorXJabwCd?=
+ =?us-ascii?Q?vEdb4Mc5NKOvHxhb8zTatHdJTQfL7NXupiH8oifYuxrTrS0LVGE79WVuBDKB?=
+ =?us-ascii?Q?PBQfRmZDabQzjg7EPrheLJVTdvBe6VcFX52QPBdLAGVfgxkNKVqQM/GlCuRH?=
+ =?us-ascii?Q?oLLHqYZwYJhLBq9Qu7X1dkOrtSrzSqap3Rf04aLjeG0Tc/SmkItbSPGITw2V?=
+ =?us-ascii?Q?CEExCsV1FCEMUSLWgdtikvIYA2MIuDa+eZVGeJtQVZATY0h8qPuN99EXFCcn?=
+ =?us-ascii?Q?wKigmO949LKW6y3PxWovGuXCCyrxwfH4v2xW1S/QCHef/fjqyR1QoxzCkpAE?=
+ =?us-ascii?Q?Au9lD1C51KOMs4589n2iLXAvMh3gbL2tAdFb1pHg4UeVhZQpvcj8eCNlbp9T?=
+ =?us-ascii?Q?/a0hkPxxkEFlizQWBWc1st4VSzhxq/0Of4/uBM9c1FNWrCbW0NzNmZTDdVkq?=
+ =?us-ascii?Q?DsQW7xt4ulHpWm/E6I2/qJDiuftAhnFWVPvGnl88+4ov3X1H9ValEEak9XXS?=
+ =?us-ascii?Q?BB0nuFVtBKuwBInOYj4zIDnI51GMXdkh/FdUYet/sCgtWig7dOLCk6UYd/bm?=
+ =?us-ascii?Q?PLsLaui2xa3e8m9SD2+z2rY0hQmDoFkPag7fLt0OWNNJkGoxr8WoAOCBTb24?=
+ =?us-ascii?Q?yIbhGMxhZPeNeUwFTyusBfRlMJnCY2zEH4RX1+FXI7tvf5pbZLfkTSdMwlCI?=
+ =?us-ascii?Q?YSzWzARk2Laa8JCL2d8CIWs4DdANB412cXw8tYyWZMgG4K877//aIFhdQrzc?=
+ =?us-ascii?Q?qyp5dV5A+09IX+yIfbgAsiIG7/aRv6QleqIkmfEtSOl7o9nu9Mie8sKDBHEB?=
+ =?us-ascii?Q?W1N+FtDfRJpihUVkNToiVDExjYXvmN/br2k9uXyCcoN72e1AgdqgcnmBwqbF?=
+ =?us-ascii?Q?gfJpIIWF1l/LuIwlXIVYI+0OLpbx5RjtnTWd0W8VdmzQsZ2OWFITp4sMF0KQ?=
+ =?us-ascii?Q?M5//cASijhMoVrKjFnwn5r+OrTz5ZLI1D1sMEXcEwamz2/3QlhNIquEj9Cg8?=
+ =?us-ascii?Q?MXB2Gc/90wBFIjmYDpz2aggDDnxBnGrU8vGBO5cG1ermmj+iHwaitOC7bTVW?=
+ =?us-ascii?Q?ejnbAMvre2vUkGDMxn1UmEQpdKCPDsL2b0GcPzq4LiqbpF2wYBeFKJV6770J?=
+ =?us-ascii?Q?vgyHKeUZI00zxKme3L51z4jeYSASajZkJAkT6IUr/5r0+K6BmMCHSuxi5kNn?=
+ =?us-ascii?Q?WkRdJIo0sPUX7x0OLbMhDrA30nONysgg3Qq4xvTE?=
+X-OriginatorOrg: kneron.us
+X-MS-Exchange-CrossTenant-Network-Message-Id: 022246cc-3f33-46dc-f322-08dd78c486d7
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR14MB4360.namprd14.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 06:46:03.0893
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f92b0f4b-650a-4d8a-bae3-0e64697d65f2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UoK44OyBCjI9SaaayTFa8Wp0OpgP0ymqouwu/aWzsLkQp4UHrdxq0yomnoUsitECk+23bvrochv1Aq5pb9sqPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR14MB6756
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+
+> On Fri, Apr 11, 2025 at 11:27:33AM +0800, Chance Yang wrote:
+>> The current implementation uses "usb-charger" as a generic name for
+>> usb connector. This prevents us to have two usb connector devices
+>> attached as the power system will complain about the name which is
+>> already registered.
+>> 
+>> Use an incremental name for each usb connector attached.
+>> 
+>> Fixes: 880287910b189 ("usb: common: usb-conn-gpio: fix NULL pointer dereference of charger")
+>> Signed-off-by: Chance Yang <chance.yang@kneron.us>
+>> ---
+>> This patch addresses an issue in the usb-conn-gpio driver where the
+>> generic "usb-charger" name is used for all USB connector devices. This
+>> causes conflicts in the power supply subsystem when multiple USB
+>> connectors are present, as duplicate names are not allowed.
+>> 
+>> The fix introduces an incremental naming scheme (e.g., usb-charger-0,
+>> usb-charger-1) for each USB connector device, ensuring uniqueness and
+>> preventing registration errors.
+>> ---
+>>  drivers/usb/common/usb-conn-gpio.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
+>> index 1e36be2a28fd5ca5e1495b7923e4d3e25d7cedef..2702e1a26634770500febd567f9d0891e63a8c4c 100644
+>> --- a/drivers/usb/common/usb-conn-gpio.c
+>> +++ b/drivers/usb/common/usb-conn-gpio.c
+>> @@ -155,13 +155,19 @@ static int usb_charger_get_property(struct power_supply *psy,
+>>  
+>>  static int usb_conn_psy_register(struct usb_conn_info *info)
+>>  {
+>> +	static atomic_t usb_conn_no = ATOMIC_INIT(0);
+>
+> Please use a proper data structure for this (hint, not an atomic_t, but
+> rather a idr, or is it ida?)
+>
+> thanks,
+>
+> greg k-h
+
+Thanks for the feedback !
+
+I will use ida to genrate unique name (e.g., usb-charger-0,
+usb-charger-1) and send v2 version of this patch.
 
 
---5qa2kcidthusc3og
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-MIME-Version: 1.0
-
-On Apr 10, 2025 at 13:22:29 -0500, Andrew Davis wrote:
-> On 4/10/25 6:38 AM, Devarsh Thakkar wrote:
-> > Hi Jai,
-> >=20
-> > On 10/04/25 15:48, Jai Luthra wrote:
-> > > Hi Devarsh,
-> > >=20
-> > > Thanks for the cc here.
-> >=20
-> > Thanks for the quick comments.
-> >=20
-> > >=20
-> > <snip>
-> >=20
-> > > On the basic camera + ISP usecase, afaiu the downstream edgeAI SDK us=
-es
-> > > custom gstreamer elements that make calls to the aforementioned R5 co=
-re
-> > > that controls the ISP. On top of that there are additional gstreamer
-> > > patches that are not yet posted upstream for review from the communit=
-y,
-> > > so the userspace design isn't really set in stone, or upstream-friend=
-ly
-> > > yet.
-> > >=20
-> >=20
-> > I don't see much relation of carve-outs with Gstreamer or it's pending =
-downstream patches. The memory is mainly managed from firmwares (mainly ope=
-nvx layer being used underneath) and there are even non-gstreamer pure open=
-vx based use-cases/tests which use these carveouts. At the end of the day, =
-the firmwares from the only SDK which is released publicly for AM62A uses a=
-ll these carveouts.
-> >=20
->=20
-> These are programmable cores, you can run whatever you want on them. You =
-can
-> make your own firmware if you like, we have support for them in our MCU+(=
-FreeRTOS)
-> offering today[0](look at all these firmware you can build/run!).
->=20
-> In a week or so I'll start pushing support for these cores into Zephyr,
-> bringing in even more firmware options for these cores.
->=20
-> I simply do not see why one firmware, shipped with one of our SDKs*, doing
-> things wrong should force us to hack up our DT here in upstream Linux.
->=20
-
-I see, if the not-yet-upstream firmware can be updated, then I don't see=20
-any reason to hardcode carveouts here.
-
-For this patch as is,
-Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
-
-> *Speaking of the "only" SDK's firmware, if you take our Yocto meta-ti lay=
-er and
-> build an SDK yourself, you get firmware by default that *doesn't need ext=
-ra
-> carveouts*! [1][2]
->=20
-> Andrew
->=20
-> [0] https://github.com/TexasInstruments/mcupsdk-core-k3/blob/k3_main/make=
-file.am62ax
-> [1] https://git.yoctoproject.org/meta-ti/tree/meta-ti-bsp/recipes-bsp/ti-=
-rtos-fw/ti-rtos-echo-test-fw.bb
-> [2] https://git.ti.com/cgit/processor-firmware/ti-linux-firmware/tree/ti-=
-ipc/am62axx?h=3Dti-linux-firmware
->=20
-> >=20
-> > > IMO if that architecture is still under discussion, it might be better
-> > > to keep the edgeAI specific carveouts out of the upstream DTs.. just =
-in
-> > > case the carevouts have to go away, or change significantly.
-> > >=20
-> > > If you are sure that the regions and firmware architecture is set in
-> > > stone and won't be updated even if there is a complete redesign of the
-> > > userspace/application level stack for accessing the ISP (let's say u
-> > sing> libcamera), only then it makes sense to add the carveouts right n=
-ow.
-> >=20
-> >=20
-> > Yes as I said if whole firmware arch is getting updated then better to =
-wait. I think probably the firmware team marked in cc can comment on that. =
-Moreover I don't see any point of adding only half the regions as that woul=
-d anyway not work with SDK supplied firmwares, for e.g. RTOS-to-RTOS ipc te=
-st run by firmwares on bootup would fail, along with other camera+ISP and A=
-I use-cases.
-> >=20
-
-PS: Devarsh your mail client has format=3Dflowed enabled, which causes=20
-line length overflows when replying to it.
-
-Please disable it, as advised here:
-https://www.kernel.org/doc/html/latest/process/email-clients.html#thunderbi=
-rd-gui
-
-> > Regards
-> > Devarsh
-> >=20
-> > > > > >=20
-> > > > > > I understand your point, currently with this patch remoteproc l=
-oading
-> > > > > > will not work for some cores. However, the goal here is to stan=
-dardize
-> > > > > > as much as possible the memory carveout sizes, push the "demo f=
-irmware"
-> > > > > > to request resources the correct way from resource table, and m=
-ove away
-> > > > > > from this dependency and limitations that we have with our firm=
-ware.
-> > > >=20
-> > > > I understand this, but my view is that w.r.t firmware only goal sho=
-uld not
-> > > > just be tp demonstrate correct way of requesting resources from
-> > > > resource-tables, optimize the carve-outs etc but also to demonstrat=
-e the
-> > > > primary use-cases (camera+ISP+edgeAI) which the device is capable o=
-f.
-> > > >=20
-> > > > > > should soon be able to generate our own firmware using Zephyr,=
-=C2=A0 which
-> > > > > > Andrew is pioneering, so with this firmware we should move to t=
-he
-> > > > > > correct direction upstream. Downstream we are still using the m=
-emory
-> > > > > > carveout sizes that the firmware folk want so desperately to ke=
-ep, for
-> > > > > > now..
-> > > > > >=20
-> > > > >=20
-> > > > > +1
-> > > > >=20
-> > > > > I have this Zephyr based firmware for AM62A working and it uses t=
-he
-> > > > > standard IPC regions as specified in this patch. I'll be posting =
-the PR
-> > > > > for it in Zephyr upstream by the end of week.
-> > > > >=20
-> > > >=20
-> > > > I understand this, but will this zephyr based firmware support visi=
-on +
-> > > > edgeAI analytics ? Does it demonstrate all the unique capabilities =
-of AM62A
-> > > > SoC ? If not, then what would be utility of such firmware on AM62A =
-where
-> > > > these are the primary use-cases w.r.t AM62A ?
-> > > >=20
-> > > > Why should upstream device-tree use carve-outs which match to this =
-demo
-> > > > zephyr based firmware (which apparently not many are using and is n=
-ot going
-> > > > into any official SDK release) instead of official firmwares going =
-into SDK
-> > > > ? SDK released firmwares are being used by so many customers and SDK
-> > > > documentation maps to it, but zephyr firmware that is being pitched=
- here,
-> > > > who would be the potential users and what would be it's utility ?
-> > > >=20
-> > > > [1]: https://www.ti.com/tool/PROCESSOR-SDK-J721E
-> > > >=20
-> > > > Regards
-> > > > Devarsh
-> > > >=20
-> > > > > For this patch as it is:
-> > > > >=20
-> > > > > Acked-by: Andrew Davis <afd@ti.com>
-> > > > >=20
-> > > >=20
-> > > >=20
-> > > > > Andrew
-> > > > >=20
-> > > > > [0] https://lore.kernel.org/lkml/20241011123922.23135-1-richard@n=
-od.at/
-> > > > > [1] https://git.ti.com/cgit/edgeai/meta-edgeai/tree/recipes-kerne=
-l/
-> > > > > linux/linux-ti-staging/j721e-evm/0001-arm64-dts-ti-Add-DTB-overla=
-ys-for-
-> > > > > vision-apps-and-ed.patch?h=3Dkirkstone
-> > > > >=20
-> > > > > > ~ Judith
-> > > > > >=20
-> > > > > > >=20
-> > > > > > > [1]:
-> > > > > > > https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/
-> > > > > > > arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=3Dti-linux-6.6.y-ci=
-cd#n103
-> > > > > > > [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
-> > > > > > >=20
-> > > > > > > Regards
-> > > > > > > Devarsh
-> > > > > > >=20
-> > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 opp-table {
-> > > > > > > > @@ -741,3 +771,57 @@ dpi1_out: endpoint {
-> > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 };
-> > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
-> > > > > > > > =C2=A0=C2=A0 };
-> > > > > > > > +
-> > > > > > > > +&mailbox0_cluster0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
-> > > > > > > > +
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 mbox_r5_0: mbox-r5-0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-rx =3D =
-<0 0 0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-tx =3D =
-<1 0 0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 };
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +&mailbox0_cluster1 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
-> > > > > > > > +
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 mbox_c7x_0: mbox-c7x-0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-rx =3D =
-<0 0 0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-tx =3D =
-<1 0 0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 };
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +&mailbox0_cluster2 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
-> > > > > > > > +
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 mbox_mcu_r5_0: mbox-mcu-r5-0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-rx =3D =
-<0 0 0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ti,mbox-tx =3D =
-<1 0 0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 };
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +&wkup_r5fss0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +&wkup_r5fss0_core0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 mboxes =3D <&mailbox0_cluster0>, <&mbox=
-_r5_0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 memory-region =3D <&wkup_r5fss0_core0_d=
-ma_memory_region>,
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 <&wkup_r5fss0_core0_memory_region>;
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +&mcu_r5fss0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +&mcu_r5fss0_core0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 mboxes =3D <&mailbox0_cluster2>, <&mbox=
-_mcu_r5_0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 memory-region =3D <&mcu_r5fss0_core0_dm=
-a_memory_region>,
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 <&mcu_r5fss0_core0_memory_region>;
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +&c7x_0 {
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 mboxes =3D <&mailbox0_cluster1>, <&mbox=
-_c7x_0>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 memory-region =3D <&c7x_0_dma_memory_re=
-gion>,
-> > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 <&c7x_0_memory_region>;
-> > > > > > > > +=C2=A0=C2=A0=C2=A0 status =3D "okay";
-> > > > > > > > +};
-> > > > > > >=20
-> > > > > >=20
-> > > > >=20
-> > > >=20
-> > > >=20
-> > >=20
-> >=20
-
---=20
-Thanks,
-Jai
-
---5qa2kcidthusc3og
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmf4up4ACgkQQ96R+SSa
-cUWHnBAAsnTCPfRwfgVpFb0AOE+j+oPJRLwuQVa+QsvI3Oq7mTmVvPPyzhQkzROI
-77st6GKuoOhDOO3xR8wubgWmIsDxvsdbIbZTWfC9Wjn/wg9wpEQw9tJwEk/SCFOL
-m+1htpMQts7DDsK2IMhy7d0GeRt/Vv55uFITgW4YyFQYfT22dvmEGAoENBShik+Y
-b3Y+OhVGKAyl+wuJdkb9QrV1np19Ty2KEvg0xyFyxgL/SrdOpQWa5sLk//BOt3Hq
-pn2I0hQ9AN4Gjee0iH+fdcr/1I3JGrIg0kztYCSk14net/xj8Ja0XrVE6NvogBfq
-gHImn8DHSeUyPamJrqtTpp6PAq7H/OBlCK28dBF7Up6aJ0pwirqfh11arpo/5K76
-dVSawQD3X2CvLyl2sylVivTQBJy8CrcTlF+arwC05R1fK3QGAQWyM4DI45cWf/a7
-MiN+rQvnFpBqJNOVrORYxsUecIe8uP+fV4uxqyLpXB1oEjwpCJiJuweouCBIWg6g
-60SyERhRJA+PLmtd2LwPxaJUV1rJuuPNeLb/QLUvm96ORN2zrpBUnrwzQIrLzxyH
-yoMDRayjh7p97VuvKd7sRKkuNi71ohBqr7EEF4UwsTHhefjYuoIuMt4WqPNAeG1E
-BFSp/+FnSQLb6thmSsqXwVc5R/kxQCIO5oLzHjCDDanJ+0iHesI=
-=HZyO
------END PGP SIGNATURE-----
-
---5qa2kcidthusc3og--
+-- 
+Sincerely,
+Chance Yang
