@@ -1,63 +1,63 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D4F202C50
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 22:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9EF2BE7C2
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 22:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744409500; cv=none; b=FPQO7JB5JFbTWi2yWW8DW430rmVyC9r44ZQYAB0b2yn37OX8m1cSqmAsCKFHr+NDPaga3v1WKFEveeuLocxt1cTMBYs9K1AUFYRvyX/PiBxsSB4eA+5Dbc0i8atVMZcQot4tp/zuqtbmiMNBwnLSFF90cJhdfv0i3l+Vyhwt53c=
+	t=1744409499; cv=none; b=Y+fpJjy1L6i4Nm3JnTtIPk/jueaJQC8SYP3jT9gPsLmd6yrsC8wdmCIEg4toEFtlf27+XkNeuYDd+bvnFyCxCW+9eD0ymmJQKhKluKDUO/GtoySIsZHkT5Zqv5ofHPBNtg5C8iiBNXJbZcqzazHv0a1WMW0gijSVOvvJ4B9skcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744409500; c=relaxed/simple;
-	bh=iipUogHWKqbSnD4CjJCUz99hy1w9mLc5GhkbwJjFgE8=;
+	s=arc-20240116; t=1744409499; c=relaxed/simple;
+	bh=f7F65iJNRwwFOnKLUsW/N2/0B+v7LEPDycDyEgqrlEU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VRQDbgBRWnMCgs+6mlzORLYEK5OdIK3bFUpZNwo2k+NTYdH6lbS0OwzkDNwKVBtYIJ4tZ8f1W59IjvgsPQM1rlSA4b3qDM+aqTgr/2Kzu9LkS0teHa/UxOFXTxduVkGHsTbdEQWBzDKK0e0JVCIrF8E+1vgvGpGzmiQW8MVeMKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LZ6ak8wR; arc=none smtp.client-ip=209.85.222.169
+	 MIME-Version; b=hkcZk55eefLQMISAOhAw97jzC4/x0wdhoCKYxqrPeBCQUq+1fxzI8+1UAZplhRGDFXplD2NuM8Bi5ZAhImJr+LrX16OJAJRzemfDm3QP/VJbRH5cr2kyaAmQH4PGqLCVvzKYFVZJEl0vQXw33zgO/ffZgVwIDSfRdISU9gSP4cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=PyqJ9Mry; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LZ6ak8wR"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7be49f6b331so283319285a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:11:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="PyqJ9Mry"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c07cd527e4so239457885a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:11:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1744409498; x=1745014298; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1744409496; x=1745014296; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lWwZ2vfL+KhsRUswnAKZ8QRNf9jCtW28RDZA6bxWNqI=;
-        b=LZ6ak8wR1fshCx0fXAjvmT/MFyk5V3oySomvy27rN65222y2m+kiIAq7DC0VBJWW95
-         9qXTGAq+4CFncw+tOmtqQRAmU4IlOkz/f6FJErAmD0HJo+mwY4OhqS5HNLBqqPlYGspl
-         yda+kscupelujuOAG00hQPejteMZrfi5NXXKf9WXq9A1tRqgqaXYMkLXjY/bL64ni02S
-         nYNNRo2QI2ILeXJMUcBrcx4TlAgzUJjNcqrbuHyyY1vXRWFzuYw+dXMmwAY4vCeD9ifl
-         /X990Ptl41isNUeFi7rFioLVSgiFhwl7jHFtJLrbh/XW8XjGRfI7vvmrEzJnHFnTL2uO
-         gqPw==
+        bh=sViCxxrVWn6k5e2quQJqbzJ+9t3Kukzk7HEz/YFKfPM=;
+        b=PyqJ9Mryt5ydzC0pwIr9pgMFnMr7CM9K95FDq6RyO746h3l2Sm4udd7G7C356rR5Zb
+         gIzqmTiBP3bD1pMLZPx8aEUjoxKAfKqApDwtN6PzhTSZyEjggUtfiDGo5hH5aM9VvBef
+         NGm3FRyUpCT8wMInTsktEzJNr7E/QA49Zn/rLX10n8BHyzxaohBiB9dRGC6tSfpBLef3
+         amsz2YFEhC6vtc+xF01UqP0PEgbzujaIN7n97Wny1pVpZ+eclSU1Rb3ecTtTKDwI97rA
+         G94bQfe/9EXAdBhy7eNwnyWp+Oe/X7Gf3IOrmKubtsVIcUZhDPu7DYkCRa+g7oDJOztR
+         +k0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744409498; x=1745014298;
+        d=1e100.net; s=20230601; t=1744409496; x=1745014296;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lWwZ2vfL+KhsRUswnAKZ8QRNf9jCtW28RDZA6bxWNqI=;
-        b=U+ajiUMxgbPyEb+khB0NoPgrawWQeiNO5VGoVIOrcK3zF6MH4iZXjx3iEfpPAwAWt9
-         7xnARUTjR45AEsF5Cug/Pl5ibg4HHqAapkK8IbTWz8/z/6XTW/xlwAlLRSQJTv/lL6Ij
-         ytCJ3ztbZHkmrXHhh2kCaPrfoKefFpL/jdnJma4QGSb8FVvIg6lDGgMBEHgnCvQxNKXK
-         4Sd6iW9FXSzaprY6vip66uE/CmKQ21ZoT1gBKGtR1yQ2H84jY8xsTT2Mtp0YfZpN0tCG
-         D4nmO6d2fs2hlesStK9Vh2eGMrjqAB0YAJgsnDMsA1og0F/jbQ9RS8FmaCIubjdpCpnP
-         EitQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0ZqwbCVTxksgMIjtegKNme/qHUlA9lOCZlpY8repasAB4XHtKw0afO75ELQsAF/0FFivpxQ4SwC+wSKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtqwgBrbiwp7bXUh6VmJRuK2wY8rCAS3RY7TXSVCjIXdWXSG79
-	eWxtwTZ5bsfXW0GTks1qp+bk0zzqnvou+Uo9jRy1TLTsiMA+l3vUzIllqYM85Ng=
-X-Gm-Gg: ASbGncu9Sp9xqpdr696pX6DVIiYx+vh981Fnpy7Ga5g5JeQL1LVk2fpdiCbFtZt8StQ
-	0tyTU/lDtKlsCwBbA2PgVRcd6Ab4lGkSyitBb7GfzKjHHW84N1GKIZSaKT6tIvD//4xCynnIKmQ
-	/CPavhkCUTQocIKsJ0z7+dTkgZb+AhSyx9A+x8h/sOG4Ps8T33bavzVa65/tOzAN9pCMUgOjyC1
-	dT+siqW82bn+cGJ3Eo96uNCmzbHi8pP5XnnAv0cL+CbdD1hufq8GLJbenmIMF/2aLNrU0PDpf/N
-	KXGvpSJQv/u1nV6RNVseZMBVeqvIIOx+bmDfn/BVWuiSXoQ6ETPjQ4GN4IXmhtM4Iq2DqfQYq++
-	ImCzbRDDB6ZAeojmSqUiSRglDN0UR
-X-Google-Smtp-Source: AGHT+IGLtJZR0JJVKRILz/ZiqYmeVboSBH4PK1DJ0UoO9oX8aCb9uz98PkTHNKxCb1p4ZJETUczmng==
-X-Received: by 2002:a05:620a:3913:b0:7c7:a602:66ee with SMTP id af79cd13be357-7c7af0bd2fbmr513370685a.10.1744409497970;
-        Fri, 11 Apr 2025 15:11:37 -0700 (PDT)
+        bh=sViCxxrVWn6k5e2quQJqbzJ+9t3Kukzk7HEz/YFKfPM=;
+        b=foTRmDQP/n79lHf3OwJDnf8ZYWkjDvS4Rez9xGc5JcBJ2pSlNCRWaDHWUNJA6fjzIj
+         CKer6vVLS7Ahi0ceicbwe/k6kJ4p2UTJJGF70NowfKJcPRPm3yw+2J8ufpDA/h6yAoUv
+         5lHdka75M5yw0TdVW6GwlkYFDkzyZulWkFS1lxHnBXTTye6ZlcTwztdMiSbk9GGFmZvO
+         QMMr2X0InoBhB2ptj2W27Qkcpp0xhdGMdUFKuqcjNfRgtnq2Dx5rBXrDxqFmBgiYdTN3
+         /BxIuIOOlnwJimzGPNlGjsbHFfui2d8NmG3ylS4gLoupriefIYW1HEdgyXcm47PaEsND
+         Tp1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWrOfxYManrnFRMf7JXCTKPyrhSjJ0Gc4M0ZHBz3k8LhCG3l96jUxjbbZHR0G3epO/TTJ6WTpTett64rME=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYzTdaduOsZ+ZopNW5jhM8q1RLgExBaXwG/oQN2kFQA6H3kZWQ
+	7aSEmN7vuFFzbEyFLqKxMr0LMjZHaA3YWLqSsaofQbnTYMT2yf9NADQCRjD70yY=
+X-Gm-Gg: ASbGncsP0rXc/6+2v/Gtxw2akUwlsmhKLWYBmcshtmbQAADigSqQp+wlgeDGX9d/qFh
+	6JjkKEx/J24S06JW/4L1QiRL6FfIspz+U5fZ6FiDaIappnQzLfYtb1+HbmRLdbtE7agiTNzqb63
+	PDwzkYgcslaXMWka+yIlF/Zc5VHDaoN9w6o7xFleSIvkgGSFwrlzDPd05cl2vGsiFfQMs80XP6S
+	4CKveN+5f9hq1wq9B50Z+LLSlik7lqZNAnjycGJFZjhH+aV17U7hs+lB66JmmlXU5ujgLuvFkBT
+	o8vSd54oTqh1G6GLlGYCsVRH8bUKj6u6/GfaWdD32jQ0V8+LUXTfBfim12pFLUKrgEtIv6KJxZz
+	m14NY6J86yW4QGFX1oxx4EPo2QzK7
+X-Google-Smtp-Source: AGHT+IExdpUhhYAxtoS0uyKY1ixer8VJGq3qLZsJqoU1EB3wCRca50MB5XLvwdg1DuKXWzaQ2U8qAg==
+X-Received: by 2002:a05:620a:468a:b0:7c0:be39:1a34 with SMTP id af79cd13be357-7c7af12dde8mr747537185a.43.1744409496346;
+        Fri, 11 Apr 2025 15:11:36 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8943afcsm321264485a.16.2025.04.11.15.11.37
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8943afcsm321264485a.16.2025.04.11.15.11.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 15:11:37 -0700 (PDT)
+        Fri, 11 Apr 2025 15:11:35 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: cgroups@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: cgroups@vger.kernel.org,
 	roman.gushchin@linux.dev,
 	shakeel.butt@linux.dev,
 	donettom@linux.ibm.com
-Subject: [RFC PATCH v4 6/6] mm/swap.c: Enable promotion of unmapped MGLRU page cache pages
-Date: Fri, 11 Apr 2025 18:11:11 -0400
-Message-ID: <20250411221111.493193-7-gourry@gourry.net>
+Subject: [RFC PATCH v4 5/6] migrate,sysfs: add pagecache promotion
+Date: Fri, 11 Apr 2025 18:11:10 -0400
+Message-ID: <20250411221111.493193-6-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250411221111.493193-1-gourry@gourry.net>
 References: <20250411221111.493193-1-gourry@gourry.net>
@@ -85,94 +85,374 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Donet Tom <donettom@linux.ibm.com>
+adds /sys/kernel/mm/numa/pagecache_promotion_enabled
 
-Extend MGLRU to support promotion of page cache pages.
+When page cache lands on lower tiers, there is no way for promotion
+to occur unless it becomes memory-mapped and exposed to NUMA hint
+faults.  Just adding a mechanism to promote pages unconditionally,
+however, opens up significant possibility of performance regressions.
 
-An MGLRU page cache page is eligible for promotion when:
+Similar to the `demotion_enabled` sysfs entry, provide a sysfs toggle
+to enable and disable page cache promotion.  This option will enable
+opportunistic promotion of unmapped page cache during syscall access.
 
-1. Memory Tiering and pagecache_promotion_enabled are enabled
-2. It resides in a lower memory tier.
-3. It is referenced.
-4. It is part of the working set.
-5. folio reference count is maximun (LRU_REFS_MASK).
+This option is intended for operational conditions where demoted page
+cache will eventually contain memory which becomes hot - and where
+said memory likely to cause performance issues due to being trapped on
+the lower tier of memory.
 
-When a page is accessed through a file descriptor, folio_inc_refs()
-is invoked. The first access will set the folio’s referenced flag,
-and subsequent accesses will increment the reference count in the
-folio flag (reference counter size in folio flags is 2 bits). Once
-the referenced flag is set, and the folio’s reference count reaches
-the maximum value (LRU_REFS_MASK), the working set flag will be set
-as well.
+A Page Cache folio is considered a promotion candidates when:
+  0) tiering and pagecache-promotion are enabled
+  1) the folio resides on a node not in the top tier
+  2) the folio is already marked referenced and active.
+  3) Multiple accesses in (referenced & active) state occur quickly.
 
-If a folio has both the referenced and working set flags set, and its
-reference count equals LRU_REFS_MASK, it becomes a good candidate for
-promotion. These pages will be added to the promotion list. The
-per-process task task_numa_promotion_work() takes the pages from the
-promotion list and promotes them to a higher memory tier.
+Since promotion is not safe to execute unconditionally from within
+folio_mark_accessed, we defer promotion to a new task_work captured
+in the task_struct.  This ensures that the task doing the access has
+some hand in promoting pages - even among deduplicated read only files.
 
-In the MGLRU, for folios accessed through a file descriptor, if the
-folio’s referenced and working set flags are set, and the folio's
-reference count is equal to LRU_REFS_MASK, the folio is lazily
-promoted to the second oldest generation in the eviction path. When
-folio_inc_gen() does this, it clears the LRU_REFS_FLAGS so that
-lru_gen_inc_refs() can start over.
+We limit the total number of folios on the promotion list to the
+promotion rate limit to limit the amount of inline work done during
+large reads - avoiding significant overhead.  We do not use the existing
+rate-limit check function this checked during the migration anyway.
 
-Test process:
-We measured the read time in below scenarios for both LRU and MGLRU.
-Scenario 1: Pages are on Lower tier + promotion off
-Scenario 2: Pages are on Lower tier + promotion on
-Scenario 3: Pages are on higher tier
+The promotion node is always the local node of the promoting cpu.
 
-Test Results MGLRU
-----------------------------------------------------------------
-Pages on higher   | Pages Lower tier |  Pages on Lower Tier    |
-   Tier           |  promotion off   |   Promotion On          |
-----------------------------------------------------------------
-  0.48s           |    1.6s          |During Promotion - 3.3s  |
-                  |                  |After Promotion  - 0.48s |
-                  |                  |                         |
-----------------------------------------------------------------
-
-Test Results LRU
-----------------------------------------------------------------
-Pages on higher   | Pages Lower tier |  Pages on Lower Tier    |
-   Tier           |  promotion off   |   Promotion On          |
-----------------------------------------------------------------
-   0.48s          |    1.6s          |During Promotion - 3.3s  |
-                  |                  |After Promotion  - 0.48s |
-                  |                  |                         |
-----------------------------------------------------------------
-
-MGLRU and LRU are showing similar performance benefit.
-
-Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- mm/swap.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ .../ABI/testing/sysfs-kernel-mm-numa          | 20 +++++++
+ include/linux/memory-tiers.h                  |  2 +
+ include/linux/migrate.h                       |  5 ++
+ include/linux/sched.h                         |  4 ++
+ include/linux/sched/sysctl.h                  |  1 +
+ init/init_task.c                              |  2 +
+ kernel/sched/fair.c                           | 24 +++++++-
+ mm/memory-tiers.c                             | 27 +++++++++
+ mm/migrate.c                                  | 55 +++++++++++++++++++
+ mm/swap.c                                     |  8 +++
+ 10 files changed, 147 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-numa b/Documentation/ABI/testing/sysfs-kernel-mm-numa
+index 77e559d4ed80..ebb041891db2 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-mm-numa
++++ b/Documentation/ABI/testing/sysfs-kernel-mm-numa
+@@ -22,3 +22,23 @@ Description:	Enable/disable demoting pages during reclaim
+ 		the guarantees of cpusets.  This should not be enabled
+ 		on systems which need strict cpuset location
+ 		guarantees.
++
++What:		/sys/kernel/mm/numa/pagecache_promotion_enabled
++Date:		January 2025
++Contact:	Linux memory management mailing list <linux-mm@kvack.org>
++Description:	Enable/disable promoting pages during file access
++
++		Page migration during file access is intended for systems
++		with tiered memory configurations that have significant
++		unmapped file cache usage. By default, file cache memory
++		on slower tiers will not be opportunistically promoted by
++		normal NUMA hint faults, because the system has no way to
++		track them.  This option enables opportunistic promotion
++		of pages that are accessed via syscall (e.g. read/write)
++		if multiple accesses occur in quick succession.
++
++		It may move data to a NUMA node that does not fall into
++		the cpuset of the allocating process which might be
++		construed to violate the guarantees of cpusets.  This
++		should not be enabled on systems which need strict cpuset
++		location guarantees.
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index 0dc0cf2863e2..fa96a67b8996 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -37,6 +37,7 @@ struct access_coordinate;
+ 
+ #ifdef CONFIG_NUMA
+ extern bool numa_demotion_enabled;
++extern bool numa_pagecache_promotion_enabled;
+ extern struct memory_dev_type *default_dram_type;
+ extern nodemask_t default_dram_nodes;
+ struct memory_dev_type *alloc_memory_type(int adistance);
+@@ -76,6 +77,7 @@ static inline bool node_is_toptier(int node)
+ #else
+ 
+ #define numa_demotion_enabled	false
++#define numa_pagecache_promotion_enabled	false
+ #define default_dram_type	NULL
+ #define default_dram_nodes	NODE_MASK_NONE
+ /*
+diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+index 2df756128316..3f8f30ae3a67 100644
+--- a/include/linux/migrate.h
++++ b/include/linux/migrate.h
+@@ -146,6 +146,7 @@ int migrate_misplaced_folio_prepare(struct folio *folio,
+ 		struct vm_area_struct *vma, int node);
+ int migrate_misplaced_folio(struct folio *folio, int node);
+ int migrate_misplaced_folio_batch(struct list_head *foliolist, int node);
++void promotion_candidate(struct folio *folio);
+ #else
+ static inline int migrate_misplaced_folio_prepare(struct folio *folio,
+ 		struct vm_area_struct *vma, int node)
+@@ -161,6 +162,10 @@ static inline int migrate_misplaced_folio_batch(struct list_head *foliolist,
+ {
+ 	return -EAGAIN; /* can't migrate now */
+ }
++static inline void promotion_candidate(struct folio *folio)
++{
++	return;
++}
+ #endif /* CONFIG_NUMA_BALANCING */
+ 
+ #ifdef CONFIG_MIGRATION
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 9c15365a30c0..392aec1f947c 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1370,6 +1370,10 @@ struct task_struct {
+ 	unsigned long			numa_faults_locality[3];
+ 
+ 	unsigned long			numa_pages_migrated;
++
++	struct callback_head		numa_promo_work;
++	struct list_head		promo_list;
++	unsigned long			promo_count;
+ #endif /* CONFIG_NUMA_BALANCING */
+ 
+ #ifdef CONFIG_RSEQ
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index 5a64582b086b..50b1d1dc27e2 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -25,6 +25,7 @@ enum sched_tunable_scaling {
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+ extern int sysctl_numa_balancing_mode;
++extern unsigned int sysctl_numa_balancing_promote_rate_limit;
+ #else
+ #define sysctl_numa_balancing_mode	0
+ #endif
+diff --git a/init/init_task.c b/init/init_task.c
+index e557f622bd90..47162ed14106 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -187,6 +187,8 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
+ 	.numa_preferred_nid = NUMA_NO_NODE,
+ 	.numa_group	= NULL,
+ 	.numa_faults	= NULL,
++	.promo_list	= LIST_HEAD_INIT(init_task.promo_list),
++	.promo_count	= 0,
+ #endif
+ #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+ 	.kasan_depth	= 1,
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c798d2795243..68efbd4a9452 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -43,6 +43,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/memory-tiers.h>
+ #include <linux/mempolicy.h>
++#include <linux/migrate.h>
+ #include <linux/mutex_api.h>
+ #include <linux/profile.h>
+ #include <linux/psi.h>
+@@ -129,7 +130,7 @@ static unsigned int sysctl_sched_cfs_bandwidth_slice		= 5000UL;
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+ /* Restrict the NUMA promotion throughput (MB/s) for each target node. */
+-static unsigned int sysctl_numa_balancing_promote_rate_limit = 65536;
++unsigned int sysctl_numa_balancing_promote_rate_limit = 65536;
+ #endif
+ 
+ #ifdef CONFIG_SYSCTL
+@@ -3535,6 +3536,25 @@ static void task_numa_work(struct callback_head *work)
+ 	}
+ }
+ 
++static void task_numa_promotion_work(struct callback_head *work)
++{
++	struct task_struct *p = current;
++	struct list_head *promo_list = &p->promo_list;
++	int nid = numa_node_id();
++
++	SCHED_WARN_ON(p != container_of(work, struct task_struct, numa_promo_work));
++
++	work->next = work;
++
++	if (list_empty(promo_list))
++		return;
++
++	migrate_misplaced_folio_batch(promo_list, nid);
++	current->promo_count = 0;
++	return;
++}
++
++
+ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+ {
+ 	int mm_users = 0;
+@@ -3559,8 +3579,10 @@ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+ 	RCU_INIT_POINTER(p->numa_group, NULL);
+ 	p->last_task_numa_placement	= 0;
+ 	p->last_sum_exec_runtime	= 0;
++	INIT_LIST_HEAD(&p->promo_list);
+ 
+ 	init_task_work(&p->numa_work, task_numa_work);
++	init_task_work(&p->numa_promo_work, task_numa_promotion_work);
+ 
+ 	/* New address space, reset the preferred nid */
+ 	if (!(clone_flags & CLONE_VM)) {
+diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+index fc14fe53e9b7..e8acb54aa8df 100644
+--- a/mm/memory-tiers.c
++++ b/mm/memory-tiers.c
+@@ -935,6 +935,7 @@ static int __init memory_tier_init(void)
+ subsys_initcall(memory_tier_init);
+ 
+ bool numa_demotion_enabled = false;
++bool numa_pagecache_promotion_enabled;
+ 
+ #ifdef CONFIG_MIGRATION
+ #ifdef CONFIG_SYSFS
+@@ -957,11 +958,37 @@ static ssize_t demotion_enabled_store(struct kobject *kobj,
+ 	return count;
+ }
+ 
++static ssize_t pagecache_promotion_enabled_show(struct kobject *kobj,
++						struct kobj_attribute *attr,
++						char *buf)
++{
++	return sysfs_emit(buf, "%s\n",
++			  numa_pagecache_promotion_enabled ? "true" : "false");
++}
++
++static ssize_t pagecache_promotion_enabled_store(struct kobject *kobj,
++						 struct kobj_attribute *attr,
++						 const char *buf, size_t count)
++{
++	ssize_t ret;
++
++	ret = kstrtobool(buf, &numa_pagecache_promotion_enabled);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++
+ static struct kobj_attribute numa_demotion_enabled_attr =
+ 	__ATTR_RW(demotion_enabled);
+ 
++static struct kobj_attribute numa_pagecache_promotion_enabled_attr =
++	__ATTR_RW(pagecache_promotion_enabled);
++
+ static struct attribute *numa_attrs[] = {
+ 	&numa_demotion_enabled_attr.attr,
++	&numa_pagecache_promotion_enabled_attr.attr,
+ 	NULL,
+ };
+ 
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 7e1ba6001596..e6b4bf364837 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -44,6 +44,8 @@
+ #include <linux/sched/sysctl.h>
+ #include <linux/memory-tiers.h>
+ #include <linux/pagewalk.h>
++#include <linux/sched/numa_balancing.h>
++#include <linux/task_work.h>
+ 
+ #include <asm/tlbflush.h>
+ 
+@@ -2762,5 +2764,58 @@ int migrate_misplaced_folio_batch(struct list_head *folio_list, int node)
+ 	BUG_ON(!list_empty(folio_list));
+ 	return nr_remaining ? -EAGAIN : 0;
+ }
++
++/**
++ * promotion_candidate: report a promotion candidate folio
++ *
++ * The folio will be isolated from LRU if selected, and task_work will
++ * putback the folio on promotion failure.
++ *
++ * Candidates may not be promoted and may be returned to the LRU.
++ *
++ * Takes a folio reference that will be released in task work.
++ */
++void promotion_candidate(struct folio *folio)
++{
++	struct task_struct *task = current;
++	struct list_head *promo_list = &task->promo_list;
++	struct callback_head *work = &task->numa_promo_work;
++	int nid = folio_nid(folio);
++	int flags, last_cpupid;
++
++	/* do not migrate toptier folios or in kernel context */
++	if (node_is_toptier(nid) || task->flags & PF_KTHREAD)
++		return;
++
++	/*
++	 * Limit per-syscall migration rate to balancing rate limit. This avoids
++	 * excessive work during large reads knowing that task work is likely to
++	 * hit the rate limit and put excess folios back on the LRU anyway.
++	 */
++	if (task->promo_count >= sysctl_numa_balancing_promote_rate_limit)
++		return;
++
++	/* Isolate the folio to prepare for migration */
++	nid = numa_migrate_check(folio, NULL, 0, &flags, folio_test_dirty(folio),
++				 &last_cpupid);
++	if (nid == NUMA_NO_NODE)
++		return;
++
++	if (migrate_misplaced_folio_prepare(folio, NULL, nid))
++		return;
++
++	/*
++	 * If work is pending, add this folio to the list. Otherwise, ensure
++	 * the task will execute the work, otherwise we can leak folios.
++	 */
++	if (list_empty(promo_list) && task_work_add(task, work, TWA_RESUME)) {
++		folio_putback_lru(folio);
++		return;
++	}
++	list_add_tail(&folio->lru, promo_list);
++	task->promo_count += folio_nr_pages(folio);
++	return;
++}
++EXPORT_SYMBOL(promotion_candidate);
+ #endif /* CONFIG_NUMA_BALANCING */
+ #endif /* CONFIG_NUMA */
 diff --git a/mm/swap.c b/mm/swap.c
-index 382828fde505..3af2377515ad 100644
+index 7523b65d8caa..382828fde505 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
-@@ -399,8 +399,13 @@ static void lru_gen_inc_refs(struct folio *folio)
+@@ -37,6 +37,10 @@
+ #include <linux/page_idle.h>
+ #include <linux/local_lock.h>
+ #include <linux/buffer_head.h>
++#include <linux/migrate.h>
++#include <linux/memory-tiers.h>
++#include <linux/sched/sysctl.h>
++#include <linux/sched/numa_balancing.h>
  
- 	do {
- 		if ((old_flags & LRU_REFS_MASK) == LRU_REFS_MASK) {
--			if (!folio_test_workingset(folio))
-+			if (!folio_test_workingset(folio)) {
- 				folio_set_workingset(folio);
-+			} else if (!folio_test_isolated(folio) &&
-+				  (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING) &&
-+				   numa_pagecache_promotion_enabled) {
-+				promotion_candidate(folio);
-+			}
- 			return;
- 		}
+ #include "internal.h"
  
+@@ -476,6 +480,10 @@ void folio_mark_accessed(struct folio *folio)
+ 			__lru_cache_activate_folio(folio);
+ 		folio_clear_referenced(folio);
+ 		workingset_activation(folio);
++	} else if (!folio_test_isolated(folio) &&
++		   (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING) &&
++		   numa_pagecache_promotion_enabled) {
++		promotion_candidate(folio);
+ 	}
+ 	if (folio_test_idle(folio))
+ 		folio_clear_idle(folio);
 -- 
 2.49.0
 
