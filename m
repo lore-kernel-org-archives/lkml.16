@@ -1,65 +1,73 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD28290BCF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346892980AD
 	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361082; cv=none; b=gV/DPmxbX6hg0gg68dI4g0aM7zeSUcDyydXtr1Nuivyq1Th5iDG4zdOaY6AVg4aTcL9oaL4I49obLpMZ7ChEuybXhREzajF5M1CNieto6Hc0XAWL0r6ZB1zau4L4sSPRwqBaB8sTxMOObKtcSMnhdKv19CQLGGF3wYbruYgsTr8=
+	t=1744361085; cv=none; b=QN/NlpltCr9jKTTQPHSP95APyIW/M7aEaRJvVdQtV9EVF30BJL7B91NZHLfV+UQBV/sNNwjd0RWB+F1mYevO5YDH/okAc3Ya6+Fd9N4JSUvVkhfn65RccMEbst5/TNNB6Eeo1Elk0ZO7MU5aErwyj2A/llJLcTwy8wUE3PZ/rTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361082; c=relaxed/simple;
-	bh=uQms5T9GBYZwPgvuRXFc7lqMU5m7t7Nv9XiicuMUwDI=;
+	s=arc-20240116; t=1744361085; c=relaxed/simple;
+	bh=Z05gpGg22X+6974bS2D3IM1jQC5nyZYK9vmn3GDWFHA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I9gb4/9Ro5tY6/Xy10h9KWNmjO0SKaC4B9cWYsVWwKqcLqmh+Xw0A2UAwkI0MkwBS5ICYZ51Zk+PPxV3AKvnn9bkgEHnK9gaJxqcw+YS0Xg3M9s04FcmyidvrzLSSfsomTVt0XvjukaFOcg7ceM7kp80a8rcVXYHIjl3LvQC3FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dq7bU5a0; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=YRQ4IrFU51n2ShNxE/F9ND/Y8EATrhv722Jyzhov6YYVltYJ89iHzJpDNUi8RbOOknTmVYmi261ne6l2lb4sIGfrq2YzFbITnaCUL+X5gcbK5C+8YivozVxEksHKVi3Hc4BsjekmA2ohepKRQAcPTeJ6Y1R+E0tV3RpB58xDrjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D9ukn2Ex; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dq7bU5a0"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso11698635e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744361078; x=1744965878; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ym+swB0IGqW3GD8TUu3RUZwOm8qCGuP91NxIKul8xpM=;
-        b=dq7bU5a0KSFRSffiEK5ouQV9VLS5yS93sRok4aCUxCu/6rwFfH5ZnradTr163QTDrQ
-         Twaw8EKp6vlPa4QOqXH/l8LJPgYhZP8r55aK/MQWlEuF3m1n0SSRPyx5M8Js+dffd2Hw
-         J95jZsU8bqDJ10EDZrrzGRqLS0R829vJ6uvVgJXqfj71d26MwGmNO9/oXhL6CjtDU4fE
-         OdNP8SqXsVal6GGcXtOTeAJwIlkd60gurg0gOaRCClbAWGf2ByYOYhRV1fomQaSfHxHO
-         HS+lVAAWzKW/z/c08zwfhZGIhRfrM+SxYhweuoBXvulTbcHf0rVBcjI7+stlL6pOSweo
-         2KDg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D9ukn2Ex"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744361080;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=8UwurWG4XQGRseFWRwijIo5i7c41uQZ3O7HLReHkubA=;
+	b=D9ukn2ExMc/HX4AYAIwtDUgXIZA9uQylVAv5x9VLyehsb/wSvxubAsIHOo7CvcdMGsdUSk
+	fThfjMJeViG455vqvdpJdArdS7cKRdmYUYXLJ7Kdv9D1aBQTUT5OW4s2fvva+gc6LdFQWU
+	ntnlhmRUypBIaK5PPlvqNS+/jdG7Lcg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-369-Tu4frGqgPqeEAA2YX_B46g-1; Fri, 11 Apr 2025 04:44:38 -0400
+X-MC-Unique: Tu4frGqgPqeEAA2YX_B46g-1
+X-Mimecast-MFC-AGG-ID: Tu4frGqgPqeEAA2YX_B46g_1744361077
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so15668355e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:44:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744361078; x=1744965878;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ym+swB0IGqW3GD8TUu3RUZwOm8qCGuP91NxIKul8xpM=;
-        b=teQRKXXsmWc+FXVaZnY1EG7OqeftwvaxgMt5GIvdwoYKaGwlTAbRvL+C74TBPvWGEP
-         YwCLsAAEVj5XNDNijuRXzmrJYDtXvy7jmjShtEQwyAV9o9Q55HXFdcEMVp0aSLmdjx6a
-         H329h5owaI+YX3uUu2XzPlwXtmY7zXS8qgrnksBt7hhZ07nB6O5+Ezv78WW90L85FxFv
-         2IIPrHysxa5zBRAUzloCUIL0LzS4fPoHfpw028R1+FXFVk2Jv8shAo+GiwCv3kOkEWC9
-         Hc/qOylnSzyvsfkqdFIA6B15x+LH7Xl3Hh+FSIsIE/xO+5y1uPxhRuq9/RalgNgV2pVl
-         G/RA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5BYyejNRcxkdeF9uqMB87ffOVhHLHtsoMFp7+3VfFKfM2t4ZRvl9cEo3SCCibYyJzjOYbZ4Mk1MJTH84=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9j6th/ZhhYtrGyDd9IpXUU9WqsM5lqwOKkjHhP9KnRlVwlpXS
-	wBt5xNEP1+Bb4C01MZLd+xjwrGA+ha9T7pErRZAkcUM76O0XAjyZ+dydiRpjB3I=
-X-Gm-Gg: ASbGncucPxlh1OnaYSQ/Py5bLu2s2f06axQS9bHXq2ZCAj4Yy/i0Uo6tFlcWKzJziY8
-	kfza8d+IhQAVuzJpDw/2+5On8PpwUzDa739opFHdE1v24WAgy2kyBp2a8ki1+u2nkpb6t4KP/HC
-	uHYqtftL6+hOkQ4M7cbhwXfY28uPLkMa468IwtZxEUoBjn+IZeU3OMIKZQa4v3xcExZb3snQyG4
-	Eaz86N8jGvQj1umrkTil8R1F44wTyNqBxtdVRcf+JcXwKnP47nPsp5lXr5mGWaxllEYBPDCrdEQ
-	Ak5l1h6pkVPBKlWc7ZmPHd245Zob7y20yb/Csw==
-X-Google-Smtp-Source: AGHT+IFKNUhGZrGZqRnXSCGsdpeGUvavp84OjEvM5R0nmvrxT8ATRqB5MuH3sqH0n0cc88cvltPmyw==
-X-Received: by 2002:a05:600c:1e0e:b0:439:8490:d1e5 with SMTP id 5b1f17b1804b1-43f2ea2a1a9mr53082445e9.4.1744361078490;
-        Fri, 11 Apr 2025 01:44:38 -0700 (PDT)
-Received: from [192.168.2.177] ([81.0.8.231])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f206269c8sm82609535e9.16.2025.04.11.01.44.37
+        d=1e100.net; s=20230601; t=1744361077; x=1744965877;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8UwurWG4XQGRseFWRwijIo5i7c41uQZ3O7HLReHkubA=;
+        b=vrm4Va0Q5PyjNJJ8srjSz/kxZDpcLoJK8W0A2Cic3YRpa/vuZMDyIuCC46imNJB55+
+         MOPbEOX2kNQzmHwCGhb2HNR06X2x2515zj8jPIKyJobZqZOZwCG/hOGPJa8S8+yAYlo2
+         8oKdQ66z3ORe21RV1TRWbtAQzu9jcS8Lqf8svE/qorSWhmBkh4lgc6GN9H2RYA2L0uz0
+         ktsnpoVHXIKMt9FCEKS5ouqXiFfvISbEA7qzZGE1E/lHwZM9FZIsIKg2szRnQZbQrHrv
+         +lPTtSoJ7TWomlgnYIQdL+dcKUZwJHYQxHu+qNPto6cDiVmZiiKWO21TxsQ+DYHmZ9Xs
+         BGDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/SzQi6bfXn1Capoffcc36IPEy5jv1XCpX87IudmYxLghLZ+HMq1VSPfLW/EIfip4U5UU+TJWVoiHUe1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvmPfMagavJFt9QpaqYp3IyB8UXPK7ZW2oIDbmJt3XCLwEL1oa
+	Ge9XnmxwD0ZQAXGM/V82k0V7NRFEHLjDcKwFKDHqBwGihQg3kEjWYBqhdFfydFh3pJohVZLjDAC
+	Z1OQ17Vc1e0ZQYi4dI+DTZUFzyAG7HUhDcmW51CeZJIyJKt8Uj7YNZ7wjkeSQDgRD4WHgvyCx
+X-Gm-Gg: ASbGnculo1XdTgZO1qTIxpbgEhl9XpN0kqnj1Dnt+zpHIGH1mEDZUKLXsZCEnEWVxq4
+	CJgzq8cHKbgEk8v8wnGop1Dwu6BcfNlo21XgRfpvUzMGITrTaks/TGximGUwtXBmhLpu59oR+jM
+	ZRO/1CNBlgrxL2Y3Ol3lRRReEzSidSLIufNhXBeT2Cx+5XvV1n5veKEnCgwClhupXU4c62XoiKi
+	cpmbpkl6bohb8X0LQn/bjqQMd2Hpo6ub7gJaehKeFjLghRfFF413KsDLkY/WB5UOUv+IMeyYjo1
+	1L6dEm+tgInifJhu/5rogVB6Dnf8NF8KxDF1wlTYYFMA8NnCvgqD09LR5w08D6rBA48ApDb/WrG
+	dDGdLcZKqbicD+21x+Q/Se2V1mi0wVPm8aZZl
+X-Received: by 2002:a05:600c:4f45:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-43f3a959a54mr16594575e9.15.1744361077309;
+        Fri, 11 Apr 2025 01:44:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF1yXrAjR8f83dkADb2rKYb3m67+FD3YlVi4ltf+mzQPczAXtXgQZ20dNHdLZBQkLb34RAkuw==
+X-Received: by 2002:a05:600c:4f45:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-43f3a959a54mr16594285e9.15.1744361076912;
+        Fri, 11 Apr 2025 01:44:36 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c726:6800:7ddf:5fc:2ee5:f08a? (p200300cbc72668007ddf05fc2ee5f08a.dip0.t-ipconnect.de. [2003:cb:c726:6800:7ddf:5fc:2ee5:f08a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f207aeaccsm78562285e9.33.2025.04.11.01.44.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 01:44:38 -0700 (PDT)
-Message-ID: <25d92af3-5aa4-4090-a60b-fff3bc30fcf4@suse.com>
-Date: Fri, 11 Apr 2025 10:44:36 +0200
+        Fri, 11 Apr 2025 01:44:36 -0700 (PDT)
+Message-ID: <65aa6e41-ff13-4c27-8a78-e7d6f2471834@redhat.com>
+Date: Fri, 11 Apr 2025 10:44:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,142 +75,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] dt-bindings: power: mediatek: Support Dimensity
- 1200 MT6893 MTCMOS
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- robh@kernel.org
-Cc: krzk+dt@kernel.org, conor+dt@kernel.org, ulf.hansson@linaro.org,
- matthias.bgg@gmail.com, fshao@chromium.org, y.oudjana@protonmail.com,
- wenst@chromium.org, lihongbo22@huawei.com, mandyjh.liu@mediatek.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, kernel@collabora.com
-References: <20250410143944.475773-1-angelogioacchino.delregno@collabora.com>
- <20250410143944.475773-2-angelogioacchino.delregno@collabora.com>
-Content-Language: en-US, ca-ES, es-ES
-From: Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; keydata=
- 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
- PVrr2NoUqi/bxI8fFQJD1jVj8K0=
-In-Reply-To: <20250410143944.475773-2-angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v4 1/4] mm/gup: fix wrongly calculated returned value in
+ fault_in_safe_writeable()
+To: Baoquan He <bhe@redhat.com>, linux-mm@kvack.org
+Cc: akpm@linux-foundation.org, osalvador@suse.de, yanjun.zhu@linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250410035717.473207-1-bhe@redhat.com>
+ <20250410035717.473207-2-bhe@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250410035717.473207-2-bhe@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 10/04/2025 16:39, AngeloGioacchino Del Regno wrote:
-> Add support for the Power Domains (MTCMOS) integrated into the
-> MediaTek Dimensity 1200 (MT6893) SoC.
+On 10.04.25 05:57, Baoquan He wrote:
+> Not like fault_in_readable() or fault_in_writeable(), in
+> fault_in_safe_writeable() local variable 'start' is increased page
+> by page to loop till the whole address range is handled. However,
+> it mistakenly calcalates the size of handled range with 'uaddr - start'.
 > 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
-
+> Fix it here.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Fixes: fe673d3f5bf1 ("mm: gup: make fault_in_safe_writeable() use fixup_user_fault()")
 > ---
->   .../power/mediatek,power-controller.yaml      |  2 ++
->   .../dt-bindings/power/mediatek,mt6893-power.h | 35 +++++++++++++++++++
->   2 files changed, 37 insertions(+)
->   create mode 100644 include/dt-bindings/power/mediatek,mt6893-power.h
+>   mm/gup.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml b/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
-> index 591a080ca3ff..9c7cc632abee 100644
-> --- a/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
-> +++ b/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
-> @@ -25,6 +25,7 @@ properties:
->       enum:
->         - mediatek,mt6735-power-controller
->         - mediatek,mt6795-power-controller
-> +      - mediatek,mt6893-power-controller
->         - mediatek,mt8167-power-controller
->         - mediatek,mt8173-power-controller
->         - mediatek,mt8183-power-controller
-> @@ -88,6 +89,7 @@ $defs:
->           description: |
->             Power domain index. Valid values are defined in:
->                 "include/dt-bindings/power/mt6795-power.h" - for MT8167 type power domain.
-> +              "include/dt-bindings/power/mediatek,mt6893-power.h" - for MT6893 type power domain.
->                 "include/dt-bindings/power/mt8167-power.h" - for MT8167 type power domain.
->                 "include/dt-bindings/power/mt8173-power.h" - for MT8173 type power domain.
->                 "include/dt-bindings/power/mt8183-power.h" - for MT8183 type power domain.
-> diff --git a/include/dt-bindings/power/mediatek,mt6893-power.h b/include/dt-bindings/power/mediatek,mt6893-power.h
-> new file mode 100644
-> index 000000000000..aeab51bb2ad8
-> --- /dev/null
-> +++ b/include/dt-bindings/power/mediatek,mt6893-power.h
-> @@ -0,0 +1,35 @@
-> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-> +/*
-> + * Copyright (c) 2025 Collabora Ltd
-> + *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_POWER_MT6893_POWER_H
-> +#define _DT_BINDINGS_POWER_MT6893_POWER_H
-> +
-> +#define MT6893_POWER_DOMAIN_CONN		0
-> +#define MT6893_POWER_DOMAIN_MFG0		1
-> +#define MT6893_POWER_DOMAIN_MFG1		2
-> +#define MT6893_POWER_DOMAIN_MFG2		3
-> +#define MT6893_POWER_DOMAIN_MFG3		4
-> +#define MT6893_POWER_DOMAIN_MFG4		5
-> +#define MT6893_POWER_DOMAIN_MFG5		6
-> +#define MT6893_POWER_DOMAIN_MFG6		7
-> +#define MT6893_POWER_DOMAIN_ISP			8
-> +#define MT6893_POWER_DOMAIN_ISP2		9
-> +#define MT6893_POWER_DOMAIN_IPE			10
-> +#define MT6893_POWER_DOMAIN_VDEC0		11
-> +#define MT6893_POWER_DOMAIN_VDEC1		12
-> +#define MT6893_POWER_DOMAIN_VENC0		13
-> +#define MT6893_POWER_DOMAIN_VENC1		14
-> +#define MT6893_POWER_DOMAIN_MDP			15
-> +#define MT6893_POWER_DOMAIN_DISP		16
-> +#define MT6893_POWER_DOMAIN_AUDIO		17
-> +#define MT6893_POWER_DOMAIN_ADSP		18
-> +#define MT6893_POWER_DOMAIN_CAM			19
-> +#define MT6893_POWER_DOMAIN_CAM_RAWA		20
-> +#define MT6893_POWER_DOMAIN_CAM_RAWB		21
-> +#define MT6893_POWER_DOMAIN_CAM_RAWC		22
-> +#define MT6893_POWER_DOMAIN_DP_TX		23
-> +
-> +#endif /* _DT_BINDINGS_POWER_MT6893_POWER_H */
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 92351e2fa876..84461d384ae2 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2207,8 +2207,8 @@ size_t fault_in_safe_writeable(const char __user *uaddr, size_t size)
+>   	} while (start != end);
+>   	mmap_read_unlock(mm);
+>   
+> -	if (size > (unsigned long)uaddr - start)
+> -		return size - ((unsigned long)uaddr - start);
+> +	if (size > start - (unsigned long)uaddr)
+> +		return size - (start - (unsigned long)uaddr);
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL(fault_in_safe_writeable);
+
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
 
