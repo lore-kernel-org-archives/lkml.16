@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3972927EC68
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7720927EC92
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744350082; cv=none; b=Oh8xWnjo9gvOlrHWygNrUqZndhmTTxRynvjg+JrWBAQW8yeKzcYqOSXIG99BQoJdvyWstrr6376tzd/EGoKsJAQl206cYxgmwjHT0THrQ8miL/IvdifAR6oQEQlph+cvdJBkrqyAKv3nj1RXfGSR5tnqtAVZzDoJf6NkaLSFUlQ=
+	t=1744350084; cv=none; b=tMAH5nCfdHhhP4WxJMYG9ry5nbMfKE/D5uPfmONJ85t9AVGSZhcu1N4a2GN1J5YX04Jdup0V3gfkUUNUheHS3zcKrnaHXzyD3mFV9OwG6onOTJT63kS1T3SFPlFPP+PSt4BGsIfx5dE7RcXFxr3R9xFZmaJ+DN/SgKNcjRr5IA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744350082; c=relaxed/simple;
-	bh=eH4uwFqoC9JgVc1kv7VNnXR333bL5REyM/EgEQ04P/4=;
+	s=arc-20240116; t=1744350084; c=relaxed/simple;
+	bh=7JfDcVoLgx2cHFr+F4A6UUUHRHLY28KYtLPQwaCZdD8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dxowmoPdyMlahnQc3VotVPnuZgVnVfm3yLphSfCD9tgv1bvZ4cYCik2wRUGP7gqT4OsfpgeO7gWPePzm6bhdtcP+nqe/E9KVYEQWQ5F2h0KlaW1SrLXnDMYyq6Vix2ED/6yZCTO6UCEX9qoYYhYB3CTnl5ctT+J1qLY5D6hEcQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LgX7uXqX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Kf9iXoEgj5l/rahUNR1eSGZ1vQxVo6ZyJjdzqYfKWZi6bNT2sY/okGmQZ1O0CC8VoDgfJX0tPK+DiRU+nbwxkB0yCURkG4EEr1Rqiuaseyr28XaA/3AhDqkNyqvZvcP2u4M/V6bqOtTeXtQPavZaNF4E4zrzQSyycSlzankhyVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQPCmPB7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LgX7uXqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4EEC4CEE9;
-	Fri, 11 Apr 2025 05:41:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQPCmPB7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E27DC4CEE2;
+	Fri, 11 Apr 2025 05:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744350082;
-	bh=eH4uwFqoC9JgVc1kv7VNnXR333bL5REyM/EgEQ04P/4=;
+	s=k20201202; t=1744350084;
+	bh=7JfDcVoLgx2cHFr+F4A6UUUHRHLY28KYtLPQwaCZdD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LgX7uXqXRTOj42RdPRWlSHsGJndFDWvhf5eHkyfnleGF32ZsbgCOuV7tVu1Q0x0OE
-	 jBr4w6IUPFgFW2DinSCoYHQWX8dVCIfXLiX4mE24arUv7MwPDPhAH0wchKTV4QnXgH
-	 GFxK5uJMYjlqqtYcxA7HSqqI3A8eNI2ZRgqtxVmQaea4hYiABbpEDTjWfJbGXQ4sG5
-	 s9GCYHPjaJHKRh0ZdSCvHRXodEhWrN8dv1eHh5Ch9EhmnlRQiyWDCBspB/B6/iwknq
-	 iW4EzC9Sd7X0+4rallopGqzAcK8mtRsKYvB+piZSiSxc9w2AWIxOdS9twuA+BC2et2
-	 4qpaifQETAGSA==
+	b=RQPCmPB7rxVqSiJYRCW264eCfrS/DwYfnoe5iMhi1pO8FXjVA7EBtYIDQhmEPyPOF
+	 v4/K+C15AAqnK2VHr+yA5TXHCfPAu3nEp98DK04ZxeLFGVWJjW3uKSvgEx9n3uNB60
+	 sYU5qvCHWDhdK6lGkoVN0BWXn3QJJDc1vDztmrMI7fTcPdn1UK+Ze11emHw1M7/QoW
+	 khJmK2wDkx4WUPC11sI+rhvY5baiYkH2bU0qxjq/a+Lfv3a09SO1TdVZPuApSgGZQJ
+	 10aIPMRTjRX+7r/hnqIfmCvUHrIXaEn3aiTmd3f4AxLT7dvQG73R5nJ0jxKx8R2DMI
+	 BU4+PmxBwrpaQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -35,9 +35,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 04/53] x86/alternatives: Rename 'bp_refs' to 'int3_refs'
-Date: Fri, 11 Apr 2025 07:40:16 +0200
-Message-ID: <20250411054105.2341982-5-mingo@kernel.org>
+Subject: [PATCH 05/53] x86/alternatives: Rename 'text_poke_bp_batch()' to 'smp_text_poke_batch_process()'
+Date: Fri, 11 Apr 2025 07:40:17 +0200
+Message-ID: <20250411054105.2341982-6-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250411054105.2341982-1-mingo@kernel.org>
 References: <20250411054105.2341982-1-mingo@kernel.org>
@@ -51,69 +51,65 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/kernel/alternative.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 4e932e95c744..cb9ac69694fb 100644
+index cb9ac69694fb..7305c29bc8d1 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2476,14 +2476,14 @@ struct int3_patching_desc {
- 	int nr_entries;
+@@ -2467,7 +2467,7 @@ struct text_poke_loc {
+ 	u8 len;
+ 	u8 opcode;
+ 	const u8 text[POKE_MAX_OPCODE_SIZE];
+-	/* see text_poke_bp_batch() */
++	/* see smp_text_poke_batch_process() */
+ 	u8 old;
  };
  
--static DEFINE_PER_CPU(atomic_t, bp_refs);
-+static DEFINE_PER_CPU(atomic_t, int3_refs);
- 
- static struct int3_patching_desc bp_desc;
- 
- static __always_inline
- struct int3_patching_desc *try_get_desc(void)
- {
--	atomic_t *refs = this_cpu_ptr(&bp_refs);
-+	atomic_t *refs = this_cpu_ptr(&int3_refs);
- 
- 	if (!raw_atomic_inc_not_zero(refs))
- 		return NULL;
-@@ -2493,7 +2493,7 @@ struct int3_patching_desc *try_get_desc(void)
- 
- static __always_inline void put_desc(void)
- {
--	atomic_t *refs = this_cpu_ptr(&bp_refs);
-+	atomic_t *refs = this_cpu_ptr(&int3_refs);
- 
- 	smp_mb__before_atomic();
- 	raw_atomic_dec(refs);
-@@ -2529,9 +2529,9 @@ noinstr int poke_int3_handler(struct pt_regs *regs)
- 	 * Having observed our INT3 instruction, we now must observe
- 	 * bp_desc with non-zero refcount:
- 	 *
--	 *	bp_refs = 1		INT3
-+	 *	int3_refs = 1		INT3
- 	 *	WMB			RMB
--	 *	write INT3		if (bp_refs != 0)
-+	 *	write INT3		if (int3_refs != 0)
- 	 */
- 	smp_rmb();
- 
-@@ -2638,7 +2638,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 	 * ensure reading a non-zero refcount provides up to date bp_desc data.
- 	 */
- 	for_each_possible_cpu(i)
--		atomic_set_release(per_cpu_ptr(&bp_refs, i), 1);
-+		atomic_set_release(per_cpu_ptr(&int3_refs, i), 1);
+@@ -2540,7 +2540,7 @@ noinstr int poke_int3_handler(struct pt_regs *regs)
+ 		return 0;
  
  	/*
- 	 * Function tracing can enable thousands of places that need to be
-@@ -2760,7 +2760,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 	 * unused.
+-	 * Discount the INT3. See text_poke_bp_batch().
++	 * Discount the INT3. See smp_text_poke_batch_process().
  	 */
- 	for_each_possible_cpu(i) {
--		atomic_t *refs = per_cpu_ptr(&bp_refs, i);
-+		atomic_t *refs = per_cpu_ptr(&int3_refs, i);
+ 	ip = (void *) regs->ip - INT3_INSN_SIZE;
  
- 		if (unlikely(!atomic_dec_and_test(refs)))
- 			atomic_cond_read_acquire(refs, !VAL);
+@@ -2602,7 +2602,7 @@ static struct text_poke_loc tp_vec[TP_VEC_MAX];
+ static int tp_vec_nr;
+ 
+ /**
+- * text_poke_bp_batch() -- update instructions on live kernel on SMP
++ * smp_text_poke_batch_process() -- update instructions on live kernel on SMP
+  * @tp:			vector of instructions to patch
+  * @nr_entries:		number of entries in the vector
+  *
+@@ -2622,7 +2622,7 @@ static int tp_vec_nr;
+  *		  replacing opcode
+  *	- sync cores
+  */
+-static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
++static void smp_text_poke_batch_process(struct text_poke_loc *tp, unsigned int nr_entries)
+ {
+ 	unsigned char int3 = INT3_INSN_OPCODE;
+ 	unsigned int i;
+@@ -2866,7 +2866,7 @@ static bool tp_order_fail(void *addr)
+ static void text_poke_flush(void *addr)
+ {
+ 	if (tp_vec_nr == TP_VEC_MAX || tp_order_fail(addr)) {
+-		text_poke_bp_batch(tp_vec, tp_vec_nr);
++		smp_text_poke_batch_process(tp_vec, tp_vec_nr);
+ 		tp_vec_nr = 0;
+ 	}
+ }
+@@ -2902,5 +2902,5 @@ void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *
+ 	struct text_poke_loc tp;
+ 
+ 	text_poke_loc_init(&tp, addr, opcode, len, emulate);
+-	text_poke_bp_batch(&tp, 1);
++	smp_text_poke_batch_process(&tp, 1);
+ }
 -- 
 2.45.2
 
