@@ -1,125 +1,120 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D1881F3BAA
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744381884; cv=none; b=FvdE10N3n5/vdPcavGd71yuBuApmIYBbIODXDiNt2EbnDgE5+2vfb8GTvAaz+5FuGvaArHl3gK6sJUryAzKdwYPqAvfvuSGgCZcTkey+AtLaZqiA5R3bm/3ewCxfP48ywZuKFxd4hCs4ywEhD7PqxjfH353AQYeFglXoyAXULe4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744381884; c=relaxed/simple;
-	bh=cR0MT7SIQsZS0BIRcyRHwHriDkdMJJMU+eMrzLmaREU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PhdmD0s6MTfFqehFeZoR8Uy+9z3ZdMFqFI1eCNJGAJw+AkkFFV7UKbzL9tFdHFkgVMfZPWBabXMrQfmI5N2CY4WqiM5yNW6PYdjeoO6NZRVpu8aKh3UK92v/0+BQOJzW337D12s4wmNE0SKH7hJMKt/JPelbDoL7J2mwoYfBhkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=Eqfq7KUF; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="Eqfq7KUF"
-Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 123A347F1E;
-	Fri, 11 Apr 2025 16:31:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1744381880;
-	bh=cR0MT7SIQsZS0BIRcyRHwHriDkdMJJMU+eMrzLmaREU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Eqfq7KUF1hdvzAztdS6DA1TZugK0wED97mI9mkRTLOmxyBmaOIPZ1TgunhBlufqvm
-	 pu9YSTdeA3LQMhkNVCIAjP9XETen2jA0Im2KV53GsDVS8tpj9bnxdcDWrjani9Y0qW
-	 KrlO0xD2AhoRoohidRsoRUKY8GAv62DOXeGDTf2qHEt0YWlZxoWO/8Jdi22kuvQ1+v
-	 rRWsVUdTks5lLoMfijHuJaIShaejjFoEgXjReWdxO+/NfMA10EjP696kSK2MiyogXw
-	 GPU4OpFx1ELrszlsWiQxSQQuucmL2J2T4zR4pXLOrH6+IyNnptuYJwdWA95JHYxPkk
-	 Xj03A0G/j61pA==
-Date: Fri, 11 Apr 2025 16:31:18 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev
-Subject: [git pull] IOMMU Fixes for Linux v6.15-rc1
-Message-ID: <Z_kntkZxksOfGwpt@8bytes.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1461F3BAA;
+	Fri, 11 Apr 2025 14:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744381899; cv=none; b=Or2fSCXK9AgB/aJPbPUVT8pcqePCg91euMvtbXKblTE3a6CubLpCtSQmHeT0IwnRBgyFil69aGsyUxmIiHA1B1mzoBP1rI7Yuouni/GIJtosZqgA4qkBiJBpWkvmvyB9SvAKaFme7e7e9yWAjyFxhpa7etU+oLLDEmIEnidW76Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744381899; c=relaxed/simple;
+	bh=IMWWQoV6XgsAIBjP+0e9XF5KfO27dqPvBibjMqOGD2Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ozUgm9dUKweXXTjU8y/rqWAJMv1R2a71H5P4CnMUlJlQSX3ecNWrx7cm57IfOCN5umKKsWfGAo7g+DukpDVZcs/PNotQ9KCOcQs8C6JgpBYXsbmp51OfEgZEUs56I7Yto+JHl8wgEeg6bIjfwrwOQdRti9K9iWXpomnUWZ3DlPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWURmFXb; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWURmFXb"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5568355ffso173982885a.0;
+        Fri, 11 Apr 2025 07:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744381896; x=1744986696; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=difcHV0OPhFj1AfUwlESUFw3g3cjarJaUpijEascCyg=;
+        b=KWURmFXbNBNZMvSNOTBALvEMgRHOAcDUB6gr1ar11SYOp/N5lTX+rLw/DT+0vSj+ql
+         gk4jT5xumUEIXUeTm5pZT3ovwzWYPJEtxwv5KhY6hn/b7wERHUSlcE6Cdv9OB41hq3/c
+         yJlsgavDvqYDt8gDZ6KhlREJzjrvJAZSzsXmxEwUhjbbGK49zEuBge6dFmZBYXz+jZtp
+         egCmBvY+1Ptw/xT/ZvcbHKUd3L6STjRO/7QfJUcmPTj7YwujGV1cz0LGbmjq2s6ebkVy
+         JaeMgxeEceiWqfoD6EyL6WNMSLTTz+mQ+kkBVoc16F72R9HZ2WVXmR84kVfXMnK6oJto
+         BAnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744381896; x=1744986696;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=difcHV0OPhFj1AfUwlESUFw3g3cjarJaUpijEascCyg=;
+        b=D1+EEtyGI9Rg6UgALiyLNPWlhqkGAYv7YewPrara9aqpOG7cdFZjjdJIEjwR5J6OTM
+         iviWbISFmFFkthUoS+aI+F0Pdm3g1RUW54WbhVSCdZouKzTlxTeTLjl0SYnD2F57pHy8
+         WZZ7E6aQ5qmmToWFR3XrVx3RIQBeX5zFik8IWp1DcadFfpK9KbqTzEr11OiDiw+/b1Fp
+         hulT0epXMvTbV0IzFLSKga7/SDcnQ5Jg0KgGhp+W10+uPuh/DVCdksHKNMo1wkCDTQU5
+         MHLbNnk95xeCn2JaIkzR3qazQCwhDjm9RA/c95hOr2wZEpASsr5frMAXoosAmME0lY5J
+         558w==
+X-Forwarded-Encrypted: i=1; AJvYcCUGQKzawUKwGKD/W6qHa8dmmJai1j6CQr57KLH8k4NpY/H+cza3IRuI755LvC/kP0aLR6kZGyTCvezjxbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmPukugEe0ZU0xprOnZLSgei+hkzN/GwAvA/2gGkmkfM1pudB1
+	TBiF5dQ81qPuwGdlgBsxDiqcNn/T0Sex33wkNlP/pjnGDVTAT81RwnqOeTz5
+X-Gm-Gg: ASbGncuKGdDRa/sJPsQvX8KICro98BOY9kcykrDgr5cr61UkWsoaOUMowSIIvY4KtcC
+	EUpWdOCLgmsZLofsch2W9hCj3SWWpjVrO1YeuWK6K8My9DQJx8XGv2PeCmUUIJMwluIe2AJJwiN
+	AggmACWICyLJNAN9QROAjvu2AFR+ZkKRDn3MLNzdtSeZMfZ58wJwOsRfZO219deH8E9Kr00t2Hh
+	hHaq12CqTy+m2pyZwaLVR5/UpuCF0p9BefcOu7OEjEV0k5lIpQoKVEUy7fujERRNcOndgdIlx69
+	Kcz9d73wim7H0CVDQhrMmKe5l0/xXEWplhia4ZpIy9ZnkRhlXlvcryOzfZj8vgT7JKAh
+X-Google-Smtp-Source: AGHT+IGjjK6g3geem/Fdq4ott7uEPaYO25FdmFHFodlM5kmfBdoQkR5TAe+R2NinfXPgXY9EKvb41w==
+X-Received: by 2002:a05:620a:8009:b0:7c5:3d85:728f with SMTP id af79cd13be357-7c7af0e2355mr567252285a.25.1744381895970;
+        Fri, 11 Apr 2025 07:31:35 -0700 (PDT)
+Received: from tamird-mac.local ([2600:4041:5be7:7c00:1d83:73da:5aa:7e95])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8969e5bsm267478485a.53.2025.04.11.07.31.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 07:31:35 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 11 Apr 2025 10:31:31 -0400
+Subject: [PATCH] rust: check type of `$ptr` in `container_of!`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250411-b4-container-of-type-check-v1-1-08262ef67c95@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAMIn+WcC/1WOyw7CIBREf6W5a0m4lBLaXzEueFwsMaUKaDSm/
+ y6xG12eSWbmvKFQjlRg6t6Q6RFLXFMDPHTgZpPOxKJvDIKLgUtEZiVza6omJspsDay+rsTcTO7
+ CuDIBneAyDCO0gWumEJ/f8eNp50y3e/uoewjWlFZelyXWqeMmiKAsoZVCY68Hq1A7q5Xxo1Tky
+ XM9Gqfh123qdjM+/mst95qoFGZx6L2xstfaTw+E07Z9AHg/hT/0AAAA
+X-Change-ID: 20250411-b4-container-of-type-check-06af1c204f59
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Hi Linus,
+Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*`.
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+Suggested-by: Alice Ryhl <aliceryhl@google.com>
+Link: https://lore.kernel.org/all/CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP5wBuGPYh9ZTAiww@mail.gmail.com/
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+ rust/kernel/lib.rs | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 1df11156302a..da9e36aa7967 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -200,7 +200,10 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+ macro_rules! container_of {
+     ($ptr:expr, $type:ty, $($f:tt)*) => {{
+         let offset: usize = ::core::mem::offset_of!($type, $($f)*);
+-        $ptr.byte_sub(offset).cast::<$type>()
++        let container = $ptr.byte_sub(offset).cast::<$type>();
++        fn assert_same_type<T>(_: T, _: T) {}
++        assert_same_type($ptr, ::core::mem::addr_of!((*container).$($f)*).cast_mut());
++        container
+     }}
+ }
+ 
 
-are available in the Git repository at:
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250411-b4-container-of-type-check-06af1c204f59
+prerequisite-change-id: 20250409-container-of-mutness-b153dab4388d:v1
+prerequisite-patch-id: 53d5889db599267f87642bb0ae3063c29bc24863
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git tags/iommu-fixes-v6.15-rc1
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
 
-for you to fetch changes up to 767e22001dfce64cc03b7def1562338591ab6031:
-
-  iommu/tegra241-cmdqv: Fix warnings due to dmam_free_coherent() (2025-04-11 12:44:27 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v6.15-rc1
-
-Including:
-
-	- Fix two crashes, one in core code and a NULL-ptr dereference in the
-	  Mediatek IOMMU driver.
-
-	- Dma_ops cleanup fix for core code.
-
-	- Two fixes for Intel VT-d driver:
-	  - Fix posted MSI issue when users change cpu affinity.
-	  - Remove invalid set_dma_ops() call in the iommu driver.
-
-	- Warning fix for Tegra IOMMU driver.
-
-	- Suspend/Resume fix for Exynos IOMMU driver.
-
-	- Probe failure fix for Renesas IOMMU driver
-
-	- Cosmetic fix
-
-----------------------------------------------------------------
-Fedor Pchelkin (1):
-      iommu: Fix crash in report_iommu_fault()
-
-Louis-Alexis Eyraud (1):
-      iommu/mediatek: Fix NULL pointer deference in mtk_iommu_device_group
-
-Marek Szyprowski (1):
-      iommu/exynos: Fix suspend/resume with IDENTITY domain
-
-Nicolin Chen (1):
-      iommu/tegra241-cmdqv: Fix warnings due to dmam_free_coherent()
-
-Pei Xiao (1):
-      iommu: remove unneeded semicolon
-
-Petr Tesarik (1):
-      iommu/vt-d: Remove an unnecessary call set_dma_ops()
-
-Robin Murphy (2):
-      iommu: Clear iommu-dma ops on cleanup
-      iommu/ipmmu-vmsa: Register in a sensible order
-
-Sean Christopherson (1):
-      iommu/vt-d: Wire up irq_ack() to irq_move_irq() for posted MSIs
-
- drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c | 32 ++++----------------------
- drivers/iommu/dma-iommu.c                      |  4 ++--
- drivers/iommu/exynos-iommu.c                   |  4 ++--
- drivers/iommu/intel/iommu.c                    |  1 -
- drivers/iommu/intel/irq_remapping.c            | 29 ++++++++++++-----------
- drivers/iommu/iommu.c                          |  6 ++++-
- drivers/iommu/ipmmu-vmsa.c                     | 27 ++++++++--------------
- drivers/iommu/mtk_iommu.c                      | 26 ++++++++++-----------
- 8 files changed, 52 insertions(+), 77 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
