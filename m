@@ -1,260 +1,323 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4242A29C342;
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2061.outbound.protection.outlook.com [40.107.20.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37E229C339;
 	Fri, 11 Apr 2025 10:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744366681; cv=none; b=gO7JknhwJO73hhRSiDWqDQf5gFnP5e8UVDk5YmeoFlv+C+8SVzfe1oVHJ+6eozmus9QTyb9WPAqj56y4bR6ZiOx/Ep8x2o3gtJB7YgPa3dEW3DD+lnQVYribAIpaJODgQX2Xf4V5ewtGtfcFs2wssmwVv/ff1AqzzazfjVtTklI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744366681; cv=fail; b=Ijda8MTDd6CzLcw4RyXbhyugclbRc3EA7XqVyqwhufluB2QaDeeT1rVefjez2FS7YncDv5qxJmLueQrIKCfitSpShe3BVie9pFdq7iyVyqxtaWWR4rf+H9NDAh9YqGhBqgfvEqe7upAfPnfb26O0xUZLIg0+t6ZrYn5o6CH2yas=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744366681; c=relaxed/simple;
-	bh=U0RjtkfD8KU+TN+Jz93BStnHYL0o+9zR+0KwS1KcHVc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bfs9GVZ6HC3tHxRM7B/CTAz/kpMIofakLI7LO2vVaSAb21AwzdS8PA1ONWUGaF1VAHalJeDbtTOENbzGm9pqZV7Y1nsyfhRG1DSORpOMaLXoqncwwSooUyY/q4jVVUH0jpaaf/aUMW5mNsEGgkbLOydwaRYPxLH1C0FVMhQlF/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ncHgkJ8V; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	bh=hYUXqx7+biT28x6KnrJgVUuCsURnnv01cYuGsokElWQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rObhecR9lK1iWxjbyy4szcq//BRrBRFQ0GPXeWrDky9LQeO72W6eBaImBW22b2QDdy/dzXVcAbkVS7oYo1EOuSIq0psh0X0CwOVFpU4w/zHS/PYIy71UM8RZSQPJEI0dCz/L1QubK5iQIOz46AFwqhThNYG4X/XTydBpGMtHTpk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Dlo1ZsYr; arc=fail smtp.client-ip=40.107.20.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ncHgkJ8V"
-Received: from [10.95.65.22] (unknown [167.220.238.22])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AE0712027DE4;
-	Fri, 11 Apr 2025 03:17:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AE0712027DE4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744366673;
-	bh=YMuw+VqxevDb1QQRwLEoZdXylBzFyjvS0XVquic1B9Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ncHgkJ8VHmmn1JXSlZTisKVS/ZDcIbRtpv3RovX5kLBfdegZnfAeYWRb9yMSRmjl9
-	 U5DNM1HbTnerlKlgLoIREd/OGjniEmlclhCVQJ/h2EjYdeT2wcKnHreAhxpBw9YFYH
-	 avbnrqlMSNB6yhkipNUC7ThhAcpdHqW+PUqKF4RY=
-Message-ID: <5495e39e-f5c7-464c-8186-22cbd6c344be@linux.microsoft.com>
-Date: Fri, 11 Apr 2025 15:47:49 +0530
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Dlo1ZsYr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x7A8pECrWopJ0f/eACWLzAsAjhVSlfG0xb94psd2Wm7SsXY4G90qwpVO9giq+ecoulCpQoq6du1jAwDiHWA9UXCE+5rN4okKhrhQ6/cpP6pzGM1oa2mbOS8BQ0+zJ0leNSLpZkcpZI3XQk2aqeyR0AqebFdbsG1L8ANkBDzPanjeZabes6EjkC4OXcIIFLbTywqvNzpGb1Va5AbEo1pBpiWulQQ81jmmwpmykNSzdwxlkN3Fy1XSwTBFQRO8hSGqCCGD0kt36533hNK7VfmrsfmB0/HAuVjK0OdbNGQlfhRVvY52RbdqpsPNpJUUsMyRyfqM80oxxXCTbG9PoH2bCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b6qd5WwkupPB4CzTmiXmEiyLijwZnXHBr7Acr0eGQ1g=;
+ b=aj8qThdZ8d/I8TtG2Arkz5kRDrI2ycnbNNr0YP+dArl9U6kVUHCSgRP2wi1fUsB8i4Su2IcBF+W2pfC8ihBRDJ6uzrOWeUUTDqTbhuKP4PW2Wi3+yMpJVpEQEsBsqUgqgcVdcN0sX7Smao7fPCxQfwN7n7JjTsavJzwuRvtFY3txHWHWeDoz9UnoR3PXnTMkCb8V+8TVOO6dZnGs3kyJ78LIot80pKEfg5PcsU7XnY/QEG3w3vC7a4F2upcPITNABhBnnOkMpyyk283ry2Vyzn0Z15j0qyfR7gzibtrMZAKRwIwc1yW/ZG6KCq9Syc0iZCplczec3NfH2zo2uQ8EqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b6qd5WwkupPB4CzTmiXmEiyLijwZnXHBr7Acr0eGQ1g=;
+ b=Dlo1ZsYrTT2DPKtD8JXtKWGVKq6XXuwxt9J9PJtfR8la1XEwNFt6JoxAtVEnNtp2PwQ/BtMIHgIgm2e2oSldMDgbDD81S6RpRhiAWLsZSRoO4n+zja0C/BQskLhYFoKQfzrpSIDpMGqO2bpr6gwDQ2cZQBhya3PaQcASXzw5RzHtc/B4E0osOHGZc2vghAi5SgbL9kGGwk0E9x0E1jq3aI9y7GyVINtVPKOf1Skq7idJA5GJaHJ++XfXPcvTRGEDkqxbZjDCbPbxEREpxlVGADnjGtMmRSTp1cKnH9tHX1pBpBiANM96yWx/2s6iWOpk4MOHdznpfVxH4tPF59xCZQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM9PR04MB8505.eurprd04.prod.outlook.com (2603:10a6:20b:40a::14)
+ by AS8PR04MB8900.eurprd04.prod.outlook.com (2603:10a6:20b:42f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
+ 2025 10:17:57 +0000
+Received: from AM9PR04MB8505.eurprd04.prod.outlook.com
+ ([fe80::bb21:d7c8:f7f7:7868]) by AM9PR04MB8505.eurprd04.prod.outlook.com
+ ([fe80::bb21:d7c8:f7f7:7868%3]) with mapi id 15.20.8606.028; Fri, 11 Apr 2025
+ 10:17:57 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: claudiu.manoil@nxp.com,
+	vladimir.oltean@nxp.com,
+	xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: christophe.leroy@csgroup.eu,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 net-next 12/14] net: enetc: move generic VLAN hash filter functions to enetc_pf_common.c
+Date: Fri, 11 Apr 2025 17:57:50 +0800
+Message-Id: <20250411095752.3072696-13-wei.fang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250411095752.3072696-1-wei.fang@nxp.com>
+References: <20250411095752.3072696-1-wei.fang@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0021.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::19) To AM9PR04MB8505.eurprd04.prod.outlook.com
+ (2603:10a6:20b:40a::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@microsoft.com>
-References: <1743929288-7181-1-git-send-email-shradhagupta@linux.microsoft.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <1743929288-7181-1-git-send-email-shradhagupta@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8505:EE_|AS8PR04MB8900:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd5c9260-99a9-4055-59d9-08dd78e22105
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?eIzwXuM/edCxxqB3mKmq4MNy/eAH3ekKZmgP0Twzsw5re8x/BPEQa88gqnVU?=
+ =?us-ascii?Q?dvhnv9/YV/pw4423Xkbqxv//dCP/l9Vu6ALeTNC0Y0eDM8PXGQtXVG1GsRhX?=
+ =?us-ascii?Q?+xgdy0xSwexbQvEXRW7Muvu/nBQLW769lbXBGDlNQWsMXsW6y7FuV6cBItEJ?=
+ =?us-ascii?Q?MdWkZ5RGt1Glgm4PRcAtdlOKU5Q/NcyT65MxzzbFDKN+ElJY7X5Ro/oreROt?=
+ =?us-ascii?Q?QBhMJy7y9KmCYr5p9R3kx7JCtLi2wUY7EkrskKjDF1gRNqnZZ3nLqZ316bHj?=
+ =?us-ascii?Q?5xbRytU64LyCzs+NiEpXKcGCyDoZZlpCSSjnkHUS7iodw+mNDNGK6f6vR2F+?=
+ =?us-ascii?Q?j3/64PC34Tc5KUMDlMOhqTwoZ4rswkHZ+mY2o5xOMmLpTH3lbO8xcxn+cEfi?=
+ =?us-ascii?Q?yNYD+/u8/t65BFiyqL3ww37+kpiWFZsJlUyHCzu3/AMymlA01B0Aa9U3a+J6?=
+ =?us-ascii?Q?FBPE5SnXzx1hkfroNqkjK4RGhpLSfgZ6TMVJ7m3wXbJBJgaZh6zIForyQ/qc?=
+ =?us-ascii?Q?PsGFH5PxRIIcCTlHV+uaaPoWG+NfInd+JODOjrW2+HVc5lrsjgsjju4F5Un0?=
+ =?us-ascii?Q?dEwbXGdMfmH5O8+8ToJZNKZnvYlQrEatoU0D5B3FVRdBFDDodOfDWYYrzEeW?=
+ =?us-ascii?Q?2OMFfPy7zgbNzIxdJc0UNytv0N9FZ1BiQwDtH7TeAQNVtqWD2FhThPOwSkCb?=
+ =?us-ascii?Q?/KmZP+FtJWN3/YHTfHk5eKae2ImoLBlIqOrqP9kBzkkiT288iv3bsyVIzwBa?=
+ =?us-ascii?Q?RBgEKAgElLxct2RJYDo6Up3F2OffVTY+xZDK0JP61nxzlZXOdBoLyuC8kqKz?=
+ =?us-ascii?Q?Dn8CTt3b8fvLf4XvvZ7fb4q3fkqGe7nurQ+sA7/Nqpv5BhKFH6clfWPkKXNt?=
+ =?us-ascii?Q?fsVsL2RwqZpKo1WvqRosNy3Ka3puQLJQ+3M+AsGfcc4741LJQr3LtgMmM9p9?=
+ =?us-ascii?Q?+kySoPU4POw1I3hrUBu0zcmxiDmElTuNK+geDaG/wP+v5YlvYlXUutGULUU2?=
+ =?us-ascii?Q?X6EitBAFXzC6eD4pJImoJKkG5f9L8p3f9PytsdH7DLmT2TNX2lkXiw9TUVXO?=
+ =?us-ascii?Q?FyHTu8lGNXw9Egdze/6pJjSY9r5ti+nEMob7mgjjjqfrKC9stUm553QNdl7w?=
+ =?us-ascii?Q?lwF5Kkb3G2wDQAmqTbeh/+TEgezqtYROFT7JEU94DwQ5z7o3NFDASc51DKiU?=
+ =?us-ascii?Q?jB/5BmaObk6v3MhG7JfrNVHhfz0HxjV9wTkI1yw1jHFKCMomihMEJIqgeYPa?=
+ =?us-ascii?Q?TPQ8SwmCOp1dW5w/jzRXOgZzBZpZjVHDTbkOkDiLzkbyv1lmMxzyTDdEqCtH?=
+ =?us-ascii?Q?HUeRSUhFO8Fls4nSURxV7EFp91pbxfMCBGB0QzUr3M1QSx/jOlDy05WxHeTP?=
+ =?us-ascii?Q?EMKZB/gaKWaWArOTpfDD/camwhx113G1bLgJSgopXhRWpln7Mwa80jJmbE2O?=
+ =?us-ascii?Q?SOYt+l2Zkbaya9hX/dJ59kyWkPTXyqwVAt7dYu50pbtmnA72cChpAg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8505.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Abe9vtZnYPGM1fP07GMnyYXrWUhrcnHlZfeMThYxjz9XobwvpE8vSB944c1L?=
+ =?us-ascii?Q?CF0vJj1fjnTovLsNeLwOLj7tmR13bkFA+7QvQq8LoKQzFvn+sdowTV+ROGvx?=
+ =?us-ascii?Q?QC0LjF8Ly99C21GUCfMTLY4MlqNc0LjvREcuDaEcNOJWM2uZzssdK1n0pMuB?=
+ =?us-ascii?Q?Y/DQhDo346wrYnY1Z2gecMZPbl1MUwAYTSKq6iEjSeMvABnqVMa11CjIqKcZ?=
+ =?us-ascii?Q?uruOg6n+IxMkfoj8ndxybO5NjroL/UNhfk86Qje1v6DZ4BlC+Ab5FQkFJ4JZ?=
+ =?us-ascii?Q?dq8hnKxc4y6IEyLo4ng1exYOcNmN/KR2U7S9F7tx8nXZqaFA8276+NwWUGiA?=
+ =?us-ascii?Q?JxM0TByVrYJVL35vQML5R8TpbG/mbjqN2YLrwZJLnltt4MZUcdEL1K/kDLs7?=
+ =?us-ascii?Q?EJqhl888a92N6rskMNgiDoP1nArc1rxnoyoVX0qu0eA5BAgjrlyv2S6kywaV?=
+ =?us-ascii?Q?HCmwDsKoy/e4a0ZLBLgPzq6EogoSW4g85bHwRwmd3SD0yHL2zJLTx4ci+LaB?=
+ =?us-ascii?Q?CgYyHaw2f7fLNVNXgtNGMx78lf9Q/hJob/QYzO5JI1fzinlnXVvizbdJEkos?=
+ =?us-ascii?Q?vQuCRKdouNzK2vqmkMzuKuRgcRFxLVnseyY9YFQ+WKAtBZ0o/HiggZIHQBOo?=
+ =?us-ascii?Q?SYiHRgsDypcp5CAo+p4EHRKRs8SBfWFFbwq/4rKIm1RrXKArDCh/j0E48Z+u?=
+ =?us-ascii?Q?/GMAxOGoh2jfVCYB3Cs5yMTB5thn2rqk5fKPJNykZiQ4nmKmdqPfKnNQ34RK?=
+ =?us-ascii?Q?H5awl4VOlpvgEB+Q0LwGi4wQWLYqgO+dM6Hez20qC5WyDdxk6NkzxgcvZOCH?=
+ =?us-ascii?Q?ku+AsUUrf5fPc9Hg4BV3YPuTGCcM139VQ/m1vK2IYL04pstJg8Si7V+QCLII?=
+ =?us-ascii?Q?F52GCIkCzfX4XNcN7+2Aeb/prlHPZdPOCGLtesRMOzMycBQ0WwwHeFlGMCQd?=
+ =?us-ascii?Q?IFltSmo/CckFDIFu0X7ZyWiCgwJ6mtSOmTf6rK0jZqpi4zGU2LfcZxMIyX5y?=
+ =?us-ascii?Q?jXKJgWtxczCB8UlQR8YY0OiBBQ4Hc2vVvbFVXsFW972fNKIn7vKgxrA8ae+p?=
+ =?us-ascii?Q?t04/x0eMV0w8rnNifrmQ4eafYRxMZKT1fHBxQge6EZ4hLVw9mAC4RKNyoFN+?=
+ =?us-ascii?Q?/XsOFeNZXAm42XtBZmVOolIx9A7npGcCH33/Y9x+iY7SYTKmrY8hf5zYKFKb?=
+ =?us-ascii?Q?Nw21exxyijx/4fl+uRg6+x48Eoajdz9XMMtnqFvqPn2fzNtmR4W8BRG6X4m+?=
+ =?us-ascii?Q?EOKyTDfE5W038+ktBwazg+AxiVQrjldOOCdinnlzJGgqDId+QTa7O/ClK1j7?=
+ =?us-ascii?Q?WT4p5+PJgguM7tK96CfIloQRHWGjcUJeXMOncNOarY2XCI/pei5YZx8i2WOi?=
+ =?us-ascii?Q?XOw18Z0qLErIjRg02bx0Yrl3EoSlr3HgGj7C64B4Pf1nTzs6uBmrA0xCcr3A?=
+ =?us-ascii?Q?y1zU1drR61MdJ6fbPCP4deMdwpmE7lvgYXwHt9K3nbpSzORgRCWdeY26xLmm?=
+ =?us-ascii?Q?7TD1u+/gPhFMof89SwhWvvuIsVFUai64EL/Utj7wErFg7ZKTBI9idm248ATy?=
+ =?us-ascii?Q?uXstEWvo/a+xQ+vdnuc9ZW4fr/y8K9pTj94fOWMh?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd5c9260-99a9-4055-59d9-08dd78e22105
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8505.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 10:17:57.1654
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xrOpvg1C93dGJ65brvjDuY0XQwkaR96sVbXVcvlDnQMtSRWzm9JYc52Vr5SnNRKd/HZaEqZZA3xCONITeQZ3Gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8900
 
+The VLAN hash filters of ENETC v1 and v4 are basically the same, the only
+difference is that the offset of the VLAN hash filter registers has been
+changed in ENETC v4. So some functions like enetc_vlan_rx_add_vid() and
+enetc_vlan_rx_del_vid() only need to be slightly modified to be reused
+by ENETC v4. Currently, we just move these functions from enetc_pf.c to
+enetc_pf_common.c. Appropriate modifications will be made for ENETC4 in
+a subsequent patch.
 
+Signed-off-by: Wei Fang <wei.fang@nxp.com>
+---
+v5 changes
+Remove set_si_vlan_hash_filter() hook
+---
+ .../net/ethernet/freescale/enetc/enetc_pf.c   | 57 ------------------
+ .../freescale/enetc/enetc_pf_common.c         | 60 +++++++++++++++++++
+ .../freescale/enetc/enetc_pf_common.h         |  2 +
+ 3 files changed, 62 insertions(+), 57 deletions(-)
 
-On 4/6/2025 2:18 PM, Shradha Gupta wrote:
-> Allow the KVP daemon to log the KVP updates triggered in the VM
-> with a new debug flag(-d).
-> When the daemon is started with this flag, it logs updates and debug
-> information in syslog with loglevel LOG_DEBUG. This information comes
-> in handy for debugging issues where the key-value pairs for certain
-> pools show mismatch/incorrect values.
-> The distro-vendors can further consume these changes and modify the
-> respective service files to redirect the logs to specific files as
-> needed.
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> ---
->   Changes in v3:
->   * remove timestamp from raw message
->   * use i+1 instead of i while printing record array
->   * add debug logs in delete operation
-> ---
->   Changes in v2:
->   * log the debug logs in syslog(debug) instead of a seperate file that
->     we will have to maintain.
->   * fix the commit message to indicate the same.
-> ---
->   tools/hv/hv_kvp_daemon.c | 71 +++++++++++++++++++++++++++++++++++-----
->   1 file changed, 63 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index 04ba035d67e9..7a1b7b0a9233 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -83,6 +83,7 @@ enum {
->   };
->   
->   static int in_hand_shake;
-> +static int debug_enabled;
->   
->   static char *os_name = "";
->   static char *os_major = "";
-> @@ -183,6 +184,20 @@ static void kvp_update_file(int pool)
->   	kvp_release_lock(pool);
->   }
->   
-> +static void kvp_dump_initial_pools(int pool)
-> +{
-> +	int i;
-> +
-> +	syslog(LOG_DEBUG, "===Start dumping the contents of pool %d ===\n",
-> +	       pool);
-> +
-> +	for (i = 0; i < kvp_file_info[pool].num_records; i++)
-> +		syslog(LOG_DEBUG, "pool: %d, %d/%d key=%s val=%s\n",
-> +		       pool, i + 1, kvp_file_info[pool].num_records,
-> +		       kvp_file_info[pool].records[i].key,
-> +		       kvp_file_info[pool].records[i].value);
-> +}
-> +
->   static void kvp_update_mem_state(int pool)
->   {
->   	FILE *filep;
-> @@ -270,6 +285,8 @@ static int kvp_file_init(void)
->   			return 1;
->   		kvp_file_info[i].num_records = 0;
->   		kvp_update_mem_state(i);
-> +		if (debug_enabled)
-> +			kvp_dump_initial_pools(i);
->   	}
->   
->   	return 0;
-> @@ -297,6 +314,9 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
->   		 * Found a match; just move the remaining
->   		 * entries up.
->   		 */
-> +		if (debug_enabled)
-> +			syslog(LOG_DEBUG, "%s: deleting the KVP: pool=%d key=%s val=%s",
-> +			       __func__, pool, record[i].key, record[i].value);
->   		if (i == (num_records - 1)) {
->   			kvp_file_info[pool].num_records--;
->   			kvp_update_file(pool);
-> @@ -315,20 +335,36 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
->   		kvp_update_file(pool);
->   		return 0;
->   	}
-> +
-> +	if (debug_enabled)
-> +		syslog(LOG_DEBUG, "%s: could not delete KVP: pool=%d key=%s. Record not found",
-> +		       __func__, pool, key);
-> +
->   	return 1;
->   }
->   
->   static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
->   				 const __u8 *value, int value_size)
->   {
-> -	int i;
-> -	int num_records;
->   	struct kvp_record *record;
-> +	int num_records;
->   	int num_blocks;
-> +	int i;
-> +
-> +	if (debug_enabled)
-> +		syslog(LOG_DEBUG, "%s: got a KVP: pool=%d key=%s val=%s",
-> +		       __func__, pool, key, value);
->   
->   	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
-> -		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
-> +		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
-> +		syslog(LOG_ERR, "Got a too long key or value: key=%s, val=%s",
-> +		       key, value);
-> +
-> +		if (debug_enabled)
-> +			syslog(LOG_DEBUG, "%s: Got a too long key or value: pool=%d, key=%s, val=%s",
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+index ae2dbd159ab4..6560bdbff287 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+@@ -216,63 +216,6 @@ static void enetc_pf_set_rx_mode(struct net_device *ndev)
+ 	enetc_port_wr(hw, ENETC_PSIPMR, psipmr);
+ }
+ 
+-static void enetc_set_vlan_ht_filter(struct enetc_hw *hw, int si_idx,
+-				     unsigned long hash)
+-{
+-	enetc_port_wr(hw, ENETC_PSIVHFR0(si_idx), lower_32_bits(hash));
+-	enetc_port_wr(hw, ENETC_PSIVHFR1(si_idx), upper_32_bits(hash));
+-}
+-
+-static int enetc_vid_hash_idx(unsigned int vid)
+-{
+-	int res = 0;
+-	int i;
+-
+-	for (i = 0; i < 6; i++)
+-		res |= (hweight8(vid & (BIT(i) | BIT(i + 6))) & 0x1) << i;
+-
+-	return res;
+-}
+-
+-static void enetc_refresh_vlan_ht_filter(struct enetc_pf *pf)
+-{
+-	int i;
+-
+-	bitmap_zero(pf->vlan_ht_filter, ENETC_VLAN_HT_SIZE);
+-	for_each_set_bit(i, pf->active_vlans, VLAN_N_VID) {
+-		int hidx = enetc_vid_hash_idx(i);
+-
+-		__set_bit(hidx, pf->vlan_ht_filter);
+-	}
+-}
+-
+-static int enetc_vlan_rx_add_vid(struct net_device *ndev, __be16 prot, u16 vid)
+-{
+-	struct enetc_ndev_priv *priv = netdev_priv(ndev);
+-	struct enetc_pf *pf = enetc_si_priv(priv->si);
+-	int idx;
+-
+-	__set_bit(vid, pf->active_vlans);
+-
+-	idx = enetc_vid_hash_idx(vid);
+-	if (!__test_and_set_bit(idx, pf->vlan_ht_filter))
+-		enetc_set_vlan_ht_filter(&pf->si->hw, 0, *pf->vlan_ht_filter);
+-
+-	return 0;
+-}
+-
+-static int enetc_vlan_rx_del_vid(struct net_device *ndev, __be16 prot, u16 vid)
+-{
+-	struct enetc_ndev_priv *priv = netdev_priv(ndev);
+-	struct enetc_pf *pf = enetc_si_priv(priv->si);
+-
+-	__clear_bit(vid, pf->active_vlans);
+-	enetc_refresh_vlan_ht_filter(pf);
+-	enetc_set_vlan_ht_filter(&pf->si->hw, 0, *pf->vlan_ht_filter);
+-
+-	return 0;
+-}
+-
+ static void enetc_set_loopback(struct net_device *ndev, bool en)
+ {
+ 	struct enetc_ndev_priv *priv = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
+index a751862a70b1..ed8afd174c9e 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
+@@ -353,5 +353,65 @@ void enetc_set_default_rss_key(struct enetc_pf *pf)
+ }
+ EXPORT_SYMBOL_GPL(enetc_set_default_rss_key);
+ 
++static int enetc_vid_hash_idx(unsigned int vid)
++{
++	int res = 0;
++	int i;
++
++	for (i = 0; i < 6; i++)
++		res |= (hweight8(vid & (BIT(i) | BIT(i + 6))) & 0x1) << i;
++
++	return res;
++}
++
++static void enetc_refresh_vlan_ht_filter(struct enetc_pf *pf)
++{
++	int i;
++
++	bitmap_zero(pf->vlan_ht_filter, ENETC_VLAN_HT_SIZE);
++	for_each_set_bit(i, pf->active_vlans, VLAN_N_VID) {
++		int hidx = enetc_vid_hash_idx(i);
++
++		__set_bit(hidx, pf->vlan_ht_filter);
++	}
++}
++
++static void enetc_set_vlan_ht_filter(struct enetc_hw *hw, int si_idx,
++				     unsigned long hash)
++{
++	enetc_port_wr(hw, ENETC_PSIVHFR0(si_idx), lower_32_bits(hash));
++	enetc_port_wr(hw, ENETC_PSIVHFR1(si_idx), upper_32_bits(hash));
++}
++
++int enetc_vlan_rx_add_vid(struct net_device *ndev, __be16 prot, u16 vid)
++{
++	struct enetc_ndev_priv *priv = netdev_priv(ndev);
++	struct enetc_pf *pf = enetc_si_priv(priv->si);
++	int idx;
++
++	__set_bit(vid, pf->active_vlans);
++
++	idx = enetc_vid_hash_idx(vid);
++	if (!__test_and_set_bit(idx, pf->vlan_ht_filter))
++		enetc_set_vlan_ht_filter(&pf->si->hw, 0, *pf->vlan_ht_filter);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(enetc_vlan_rx_add_vid);
++
++int enetc_vlan_rx_del_vid(struct net_device *ndev, __be16 prot, u16 vid)
++{
++	struct enetc_ndev_priv *priv = netdev_priv(ndev);
++	struct enetc_pf *pf = enetc_si_priv(priv->si);
++
++	if (__test_and_clear_bit(vid, pf->active_vlans)) {
++		enetc_refresh_vlan_ht_filter(pf);
++		enetc_set_vlan_ht_filter(&pf->si->hw, 0, *pf->vlan_ht_filter);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(enetc_vlan_rx_del_vid);
++
+ MODULE_DESCRIPTION("NXP ENETC PF common functionality driver");
+ MODULE_LICENSE("Dual BSD/GPL");
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.h b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.h
+index e07cf3c35001..96d4840a3107 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.h
+@@ -13,6 +13,8 @@ int enetc_phylink_create(struct enetc_ndev_priv *priv, struct device_node *node,
+ 			 const struct phylink_mac_ops *ops);
+ void enetc_phylink_destroy(struct enetc_ndev_priv *priv);
+ void enetc_set_default_rss_key(struct enetc_pf *pf);
++int enetc_vlan_rx_add_vid(struct net_device *ndev, __be16 prot, u16 vid);
++int enetc_vlan_rx_del_vid(struct net_device *ndev, __be16 prot, u16 vid);
+ 
+ static inline u16 enetc_get_ip_revision(struct enetc_hw *hw)
+ {
+-- 
+2.34.1
 
-There's a checkpatch warning here for 100 chars, but splitting it across 
-2 lines again complains. So I think its fine. Otherwise we can change it to:
-"%s: Too long key or value: pool=%d, key=%s, val=%s"
-
-
-> +			       __func__, pool, key, value);
->   		return 1;
-> +	}
->   
->   	/*
->   	 * First update the in-memory state.
-> @@ -348,6 +384,9 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
->   		 */
->   		memcpy(record[i].value, value, value_size);
->   		kvp_update_file(pool);
-> +		if (debug_enabled)
-> +			syslog(LOG_DEBUG, "%s: updated: pool=%d key=%s val=%s",
-> +			       __func__, pool, key, value);
->   		return 0;
->   	}
->   
-> @@ -359,8 +398,10 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
->   		record = realloc(record, sizeof(struct kvp_record) *
->   			 ENTRIES_PER_BLOCK * (num_blocks + 1));
->   
-> -		if (record == NULL)
-> +		if (!record) {
-> +			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
->   			return 1;
-> +		}
->   		kvp_file_info[pool].num_blocks++;
->   
->   	}
-> @@ -368,6 +409,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
->   	memcpy(record[i].key, key, key_size);
->   	kvp_file_info[pool].records = record;
->   	kvp_file_info[pool].num_records++;
-> +
-> +	if (debug_enabled)
-> +		syslog(LOG_DEBUG, "%s: added: pool=%d key=%s val=%s",
-> +		       __func__, pool, key, value);
-> +
->   	kvp_update_file(pool);
->   	return 0;
->   }
-> @@ -1662,6 +1708,7 @@ void print_usage(char *argv[])
->   	fprintf(stderr, "Usage: %s [options]\n"
->   		"Options are:\n"
->   		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
-> +		"  -d, --debug-enabled    Enable debug logs(syslog debug by default)\n"
->   		"  -h, --help             print this help\n", argv[0]);
->   }
->   
-> @@ -1681,12 +1728,13 @@ int main(int argc, char *argv[])
->   	int daemonize = 1, long_index = 0, opt;
->   
->   	static struct option long_options[] = {
-> -		{"help",	no_argument,	   0,  'h' },
-> -		{"no-daemon",	no_argument,	   0,  'n' },
-> -		{0,		0,		   0,  0   }
-> +		{"help",		no_argument,	   0,  'h' },
-> +		{"no-daemon",		no_argument,	   0,  'n' },
-> +		{"debug-enabled",	no_argument,	   0,  'd' },
-> +		{0,			0,		   0,  0   }
->   	};
->   
-> -	while ((opt = getopt_long(argc, argv, "hn", long_options,
-> +	while ((opt = getopt_long(argc, argv, "hnd", long_options,
->   				  &long_index)) != -1) {
->   		switch (opt) {
->   		case 'n':
-> @@ -1695,6 +1743,9 @@ int main(int argc, char *argv[])
->   		case 'h':
->   			print_usage(argv);
->   			exit(0);
-> +		case 'd':
-> +			debug_enabled = 1;
-> +			break;
->   		default:
->   			print_usage(argv);
->   			exit(EXIT_FAILURE);
-> @@ -1717,6 +1768,9 @@ int main(int argc, char *argv[])
->   	 */
->   	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
->   
-> +	if (debug_enabled)
-> +		syslog(LOG_INFO, "Logging debug info in syslog(debug)");
-> +
->   	if (kvp_file_init()) {
->   		syslog(LOG_ERR, "Failed to initialize the pools");
->   		exit(EXIT_FAILURE);
-
-LGTM.
-
-Reviewed-by: Naman Jain <namjain@linux.microsoft.com>
