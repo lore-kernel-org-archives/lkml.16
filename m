@@ -1,102 +1,110 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B3135961;
-	Fri, 11 Apr 2025 13:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F9713AD1C;
+	Fri, 11 Apr 2025 13:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744378578; cv=none; b=tyinrubefOCeNH9OI6Vig6o/xwTQblVjpcWC5JsT9ec3Vrvj69qcmrG+wth23HmX7jr0LLf+nqpjnCP5VWxnSApR4XsdU7vux6IagHcAW0M9I1+wDZnT4lX/EcBr5HAEhKQffKnvWtHPwKWjD4688QCHP/VPdJADz4scUooMs9E=
+	t=1744378612; cv=none; b=O3RRzekuNXJqt1geHGuR3/Rk+MLbwHC8JZ+oOduw70jrlz1ohdY5yNqmTdQCzQB5EQPEzK0ncZhNbidozEBcsvx/HfpvFG74IsB9UoUcIHHoTsT1HsM5Ot44NgEsdZbX+zOVkWLSSj0B0o23A2gpMJgDP2LCO5dkqE1WesFO9ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744378578; c=relaxed/simple;
-	bh=t8rEUG8Mlt6yj5BQ1zbe9hIkunyXUBQCPigkv9xncUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b0Fd0IN2CngD4+PJOe5gx/354l4XB2Mw8zdeR6DV3T9fK3DFejQRetmVgCj3XBnir7k11ahHhljrGJHyH3GLnLD9QOoT1gWC2q4b+SRY6VD43ytqNSMw1+5Uy8upKkFcmcwbVkEkzAIeWIW792lU9MnAXZOHAJGjZZvxvwIMLuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=idbthJOU; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744378612; c=relaxed/simple;
+	bh=2WoG5QbFhLPkFnSAl8HNWy0ssox+zGp1y7NHPDM2HmM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hE94RsrSJiJ9/uOT5ziCAiJEV9fngoa7pF5xAoZKqqccj0oCOcjpX5nNip5pIvA46F03MClODDdby3lUN0p2kgny4hFajQPr9xsqqWtb4FVQOwulxjAw2BkXOpwuvpSBR6V9QUt2D2dKMU2u71R41vkH6Rx9mVSvDjozMVzsBI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Xl2sU1NQ; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="idbthJOU"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 852C81FCF0;
-	Fri, 11 Apr 2025 13:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744378572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=idxYTJjFmT4fgYqivFM6ttZ4OS4qYnYpnIJHNpNYu30=;
-	b=idbthJOU3vn0Or4ETSk4EPNuKDkkQqLUGIFkkT/RWv+pQ876YU0HpOh0rEVa3QWUvB7AM6
-	dR0NF4Nhgubi+L2OJSS2Oyt8hk6FGwePpBOaBftnpxZR8bmHIwvu/s+em4vTI211o6D97K
-	ESYXH+mwjlWPFtskkZeNp2Bqgme6IY7nwDOlGIQKdJ4ARiO4989kzuI+ksnEoiD09E1nsm
-	gjoXQZiO+0eHMhqQ3d6cgWI8GTk+rX7Umjmjm22bIiLBBDxcxg3rO7R1ooyTyzBX/kjSrW
-	/XVCi0duHSezGIwzF7pxLpptJNCilZrLi37cb/rUh10Wn9Z34GJ8MF5/DpSnig==
-Date: Fri, 11 Apr 2025 15:36:09 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Alexandre Mergnat <amergnat@baylibre.com>
-Cc: Eddie Huang <eddie.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] rtc: mt6397: Remove start time parameters
-Message-ID: <20250411133609a1295543@mail.local>
-References: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
- <20250109-enable-rtc-v3-4-f003e8144419@baylibre.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xl2sU1NQ"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDaNJQ2136636
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 08:36:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744378583;
+	bh=xDUMCTXFu4uLKL+OFwJXlFB+AWT2Hkl0QAnzYqKMYGg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Xl2sU1NQHPutSZTWoY7f/RrdwqYNc6FLamyMo95w99jELXr3CCZDPPJ0lzE70Aasp
+	 LcY2yTBorG9bEMJ54hbAiWZ1tTQp3I4hY4LSXs7UFuuiQdr8YrP/WdPNDlObHGNu0Y
+	 6Uvg5/x4IVo3N4lIwtcAPNPFfVmvVZ1cF8zKSKrw=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53BDaNL0023224
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Apr 2025 08:36:23 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Apr 2025 08:36:22 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Apr 2025 08:36:22 -0500
+Received: from [10.249.136.157] ([10.249.136.157])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53BDaGkJ112287;
+	Fri, 11 Apr 2025 08:36:17 -0500
+Message-ID: <0aedae21-b8dd-420f-af1e-ec609de3b0d5@ti.com>
+Date: Fri, 11 Apr 2025 19:06:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250109-enable-rtc-v3-4-f003e8144419@baylibre.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeiudeuteehhfekgeejveefhfeiudejuefhgfeljefgjeegkeeujeeugfehgefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheprghmvghrghhnrghtsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopegvugguihgvrdhhuhgrnhhgsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhop
- ehsvggrnhdrfigrnhhgsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehmrghtthhhihgrshdrsghgghesghhmrghilhdrtghomhdprhgtphhtthhopegrnhhgvghlohhgihhorggttghhihhnohdruggvlhhrvghgnhhosegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexandre.belloni@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/7] arm64: dts: ti: k3-j721e-sk: Remove clock-names
+ property from IMX219 overlay
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>, <stable@vger.kernel.org>
+References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
+ <20250409134128.2098195-4-y-abhilashchandra@ti.com>
+Content-Language: en-US
+From: "Francis, Neha" <n-francis@ti.com>
+In-Reply-To: <20250409134128.2098195-4-y-abhilashchandra@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 11/04/2025 14:35:57+0200, Alexandre Mergnat wrote:
-> The start time parameters is currently hardcoded to the driver, but
-> it may not fit with all equivalent RTC that driver is able to support.
+On 4/9/2025 7:11 PM, Yemike Abhilash Chandra wrote:
+> The IMX219 sensor device tree bindings do not include a clock-names
+> property. Remove the incorrectly added clock-names entry to avoid
+> dtbs_check warnings.
 > 
-> Remove the start_secs and set_start_time value setup because it
-> will be handled by the rtc_device_get_offset function using the
-> start-year DTS property.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> Fixes: f767eb918096 ("arm64: dts: ti: k3-j721e-sk: Add overlay for IMX219")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
 > ---
->  drivers/rtc/rtc-mt6397.c | 2 --
+>  arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso | 2 --
 >  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index 692c00ff544b2..d47626d47602f 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -291,8 +291,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	rtc->rtc_dev->ops = &mtk_rtc_ops;
->  	rtc->rtc_dev->range_min = RTC_TIMESTAMP_BEGIN_1900;
->  	rtc->rtc_dev->range_max = mktime64(2027, 12, 31, 23, 59, 59);
-> -	rtc->rtc_dev->start_secs = mktime64(1968, 1, 2, 0, 0, 0);
-> -	rtc->rtc_dev->set_start_time = true;
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
+> index 47bb5480b5b0..4a395d1209c8 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
+> @@ -34,7 +34,6 @@ imx219_0: imx219-0@10 {
+>  		reg = <0x10>;
 >  
+>  		clocks = <&clk_imx219_fixed>;
+> -		clock-names = "xclk";
+>  
+>  		port {
+>  			csi2_cam0: endpoint {
+> @@ -56,7 +55,6 @@ imx219_1: imx219-1@10 {
+>  		reg = <0x10>;
+>  
+>  		clocks = <&clk_imx219_fixed>;
+> -		clock-names = "xclk";
+>  
+>  		port {
+>  			csi2_cam1: endpoint {
 
-This is going to break the time for people upgrading their kernel, you
-are unfortunately stuck with this.
-
->  	return devm_rtc_register_device(rtc->rtc_dev);
->  }
-> 
-> -- 
-> 2.25.1
-> 
+Reviewed-by: Neha Malcom Francis <n-francis@ti.com>
 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanking You
+Neha Malcom Francis
+
