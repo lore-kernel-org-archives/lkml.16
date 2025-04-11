@@ -1,137 +1,251 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2049.outbound.protection.outlook.com [40.107.249.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DC945948
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 14:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744382338; cv=none; b=a8rzBWj/d3vSlSuOhq1RCqZj2QDkBuza5dafwT/9HHKJiM1KdxdoeOH3QW1FGKXg3NmOdSan3zrOcXTV0+Ixj92r+PTjwhJxuQ2ui97Z8N9Uj8zZlwZfdIb/AEJ8Zq4EfuVZa1ybu+RuZhcLli5btbK1mT97ti53ZYXabOcAw/M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744382338; c=relaxed/simple;
-	bh=ohJk3QsHM1JB9lq0IkFIUIWyxmERIi01XFrnAZY3zGs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EGoYSREYlSkJr4pWHX1PM2Km9M5N8IIaeOzjjhVAxozLgkT1+zTTDN6TAp5EumLFXEU4YT7vGkL6is7+Jc8ZjFDr5dgmCBAg0/LskXzz5XLMQQLC0SO4CX9vv31b0n7cG1Sn09w+HMeulgk7NaZLuLuT48QenpaK+0cpKiGPX1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rb3rTVU7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294F61F4C8B;
+	Fri, 11 Apr 2025 14:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744382348; cv=fail; b=LRlKl79tuh/913KN9FCX/q3glll3w4lCYC+ai5xIaS9fEcPURIrLk1UtOxB7FG9FSiG1KcvVIEI2AEBee83JABlvpdHDl7Rm60xT+zDp1yw91Z07HHyH10dZRTJYKSK4jcjyEk6xrq56OONVOW+3SIIfkcBN2dVr//aABVIhThg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744382348; c=relaxed/simple;
+	bh=5U5oI6DwsGMQqIeUUWeiZmdFY2FgGKnoykiywF6xwYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bDazWdzstgKjXjANTTIiih1188vsAAJcp5MFjGTQR6BN1aBFHqH4/Zb66RsRJswwd2Df+7tW4wt2dFOpoeulHljXAb3lSQ+uUj/s5FCE4hEwFLy0ilBTxa6yl0itjQ8iRMjE2ttQZdxJr7gif2J+ut9q7QaTEjLWPmaZLKOn0JQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Sam0pGoe; arc=fail smtp.client-ip=40.107.249.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rb3rTVU7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744382336;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8/gT2LiqvF91XS1z32OuHsw8JByYyLEcktwoMVwoN8s=;
-	b=Rb3rTVU7STJLhM5KSDm4WmUlWmoJk1/Fzxm6j1W6c6TNI4w354m6XMNWuFksMkFreb/ky2
-	pvVN2V/aN+CyMmm59quw2C43lZaV0kviSoGmn8F6xMxksCkhznu7GIYaWxjdYTykhSsul6
-	e3k4DeL/EvDZ8Sa8kSsFyqZepcmK+lk=
-Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com
- [209.85.160.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-685-vtzoepGTNAO8nvUN_uTrYA-1; Fri, 11 Apr 2025 10:38:54 -0400
-X-MC-Unique: vtzoepGTNAO8nvUN_uTrYA-1
-X-Mimecast-MFC-AGG-ID: vtzoepGTNAO8nvUN_uTrYA_1744382334
-Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-2d0df57d30dso56416fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 07:38:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744382334; x=1744987134;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8/gT2LiqvF91XS1z32OuHsw8JByYyLEcktwoMVwoN8s=;
-        b=DHp4Ziovs2EwmtYa/r582FmgZRdwNpTa3J5U4WffBhCZTaWw82sbknK+SiJRXsDR2W
-         A7WZQhDYEQpKU5GGj8s6IOxcXCOGNv6MU0PWpfrBkEO3MOb3SOTpVwnmy3TV7b6nqLxc
-         PSV92mLRWz3Q/fx0b5wNp8WvDAeGMBLbEyC0AY9kHLOIgdEwi1ZM2yoLalmpa6SE9shg
-         ZFvoOphcnkcqS9+KAF8PqA5w0i0YsZMTMtOvI48CGOgDkDpK2mBYUeK0TGB833IJIfCQ
-         1/v9b073gd75xTbTmXCVmtvDt5EV4C+Pio0g/DtF1tu5/AjWh5342vWPhh5RvvxmHCst
-         pBXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgko/bXpn4Udxrb55W0XIXSDtAFt/htqM/xyHVqqaZFwUHCdHSdNJXvGYS8OpqiqQXw242H9RuALEBl1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvL0IPSYnKUx//tYimxw5R6+93x4s7RVWIvtdUNi3ubyGWI/0H
-	aOCktZLo661l5nc1JaA2Lkge8OKU1XvJcnGA24H2L5ag97/YHZ2S8ANVqQ+V9oDl24o9R3PJ6yH
-	Q2OSCu9FFMCu+3eILOTP3ILUxpYPuQeMoZS1/4GhbkwZQoaVSDbwg/W/lFTYsNuNqii2DrOpz9Z
-	/f2R1konW5qO7D4Uu7DqNFgD7MxiaTzjkMEQdL
-X-Gm-Gg: ASbGncsAm6P8mUCGrO/Jx9WIhBlSY7U1maVkuKhMSswtpahQGV42AkWenTqRBQsfAJI
-	x57kfe4Nlkff7s8h7KX8x7Wc6B2Jp8YyjwIoDC5E1BfOMR6PVc3X4t5lBXLxNSMiYA4Y=
-X-Received: by 2002:a05:6871:7420:b0:297:276e:7095 with SMTP id 586e51a60fabf-2d0d5f8c00amr688035fac.11.1744382333824;
-        Fri, 11 Apr 2025 07:38:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZ40FSxApw5yS1+TbnTIpuzdl8qJ1ag6yfohHYzJ0JscM4meYKAlkqxF6dxd7SQMlRn7hemIvUqcEzCGQm9QA=
-X-Received: by 2002:a05:6871:7420:b0:297:276e:7095 with SMTP id
- 586e51a60fabf-2d0d5f8c00amr688018fac.11.1744382333556; Fri, 11 Apr 2025
- 07:38:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Sam0pGoe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U2RCoZJeXU/+ALIbiqpFe1IX5va9jaTU2AcqD79z3eOCfAZ1flyNJ8NMuj1La2vc/hhGEKzA7roHiXbsz+dsNo9PXGicsyu7DoWSlkqlT3zUUEQPkoUHSMygWWs5zO8w1ynxJ30+mtga9Kveg2e7xrbGw9cPIa4PXzSInxUqzWhX3UnbMpKxwmlJC4oYJw9wm6zZcDlYO/F3isMHS4O7leOgsLyxF+mmxXX2lEZvPXH2wrMU/pcJbd2a8wrlBakkqpepTxLm+qTjai1naCxLEHKkP6FCwl5ACe5rNLx5ozvvGXtWBa3OWfu4zYMw7pdrgFVb+Ei0+s4oQdfgcw07dA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mzh0EVKhcbat8LcQpFsLp50tI8/w1NSgEhc/jFwx36o=;
+ b=WJJYJ7uOv/GofZ99hhwjIJsoPo3dZfHe8vcIyexbonq1OeLlHfKGn9I33mNpGAmDib5m19unXMTogY77w/v5DiynmdYO1EdiAPO72s4iQjT33Y1MfCSzbnjllBSsR98SAbJ/cave49kN/RYOUWRDLZik2DlQFTFt1nUZSTyjPa6K6N+NH4dJzuz1qeBgxfj56n3+9VDvdlgoTTc3xnecmTuhmQYK8Q0J6rLAl8XyETxkef/76J4e3szhO59aauzAe1U/xu7jzsiG+es4N8ZXKF8GhIc1UEfUS2p9/TboRrvoeKVaYEAeWl1vjRrfMB+6YDern3nNlAK/SZC7MwsE3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mzh0EVKhcbat8LcQpFsLp50tI8/w1NSgEhc/jFwx36o=;
+ b=Sam0pGoer0OL0wmHNBbx7WDGlQf7NCPq+2aqoejHtrz/oc1B3O7sX1odhD0Rn9yyWbjTCplDSPix2kWtc0nUYsIW1BktlN2uzwlupehbEQSyrL2FACT7GD+D3wOkYk2VRJ9d/XHyQ+z1RqH9KRAQZWb7/FPdNr5epQq/ZXevQCnqkI8YPaHzdmdIMNrK2AbE5bRtHDycV8Vkg7/o3Nku3JjcricCrtPhLK5D48yHNMxK6GmGzIgX53FX2/BC4S16A+X5MLjWv2aCniqbNeeE/eYYQdltMsxipLSq6/KFxTbLxGhlMlRPXr6rjo0Ttk+zFFSQpNulTkZuZkZZ2hVQ9w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by PA1PR04MB10228.eurprd04.prod.outlook.com (2603:10a6:102:454::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Fri, 11 Apr
+ 2025 14:39:03 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
+ 14:39:03 +0000
+Date: Fri, 11 Apr 2025 10:38:55 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: ming.qian@oss.nxp.com
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
+	imx@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 4/4] media: imx-jpeg: Check decoding is ongoing for
+ motion-jpeg
+Message-ID: <Z/kpf30xQppEzbNH@lizhi-Precision-Tower-5810>
+References: <20250411074347.809-1-ming.qian@oss.nxp.com>
+ <20250411074347.809-5-ming.qian@oss.nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411074347.809-5-ming.qian@oss.nxp.com>
+X-ClientProxiedBy: PH7PR17CA0063.namprd17.prod.outlook.com
+ (2603:10b6:510:325::27) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409144250.206590-1-ivecera@redhat.com> <20250411072616.GU372032@google.com>
- <CADEbmW1XBDT39Cs5WcAP_GHJ+4_CTdgFA4yoyiTTnJfC7M2YVQ@mail.gmail.com>
-In-Reply-To: <CADEbmW1XBDT39Cs5WcAP_GHJ+4_CTdgFA4yoyiTTnJfC7M2YVQ@mail.gmail.com>
-From: Michal Schmidt <mschmidt@redhat.com>
-Date: Fri, 11 Apr 2025 16:38:41 +0200
-X-Gm-Features: ATxdqUE1g8MGxUwcCJZuvbWj2uUxcIOOQXjW4BwHw2sCBCCuDYcjVEft3WRWQUo
-Message-ID: <CADEbmW0CTTCXjasu2yGJt_Qe2=wH5-Vp+TtbUxxDNaCN49Ev9g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/14] Add Microchip ZL3073x support (part 1)
-To: Lee Jones <lee@kernel.org>
-Cc: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org, 
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PA1PR04MB10228:EE_
+X-MS-Office365-Filtering-Correlation-Id: fbb26194-029f-46f6-fe85-08dd79069a94
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?UNbXE8hzbajqzlhEXWArXyUub/zq1wTUMm3QhOoZanR4dVQVSrZ5Ye2pvVs5?=
+ =?us-ascii?Q?dX501sgpxuZ48A9sSfNAtC2UuElwD7MYLijt34gFmYrU6ZCrYGvqyZO8s24l?=
+ =?us-ascii?Q?I5xG/rT89Qqav/Crtt+R+YNnY8rVOXgE1IHVb8+l0UJuVBZxxUuUQqVmzW3O?=
+ =?us-ascii?Q?4roL8JQWVT7z/BIEJLgrDPN1PPXA1yELW8de6X1ocGN+kNMbQ2lVTRq5RKLv?=
+ =?us-ascii?Q?4yQLqs27Y9yDO1pgWem1rc7iL/SrBNVQ8vz7moQdSlMfAC21stg/JzwZ+jZJ?=
+ =?us-ascii?Q?y1TqFf2zqTEaqypD38DswPDX3asvBauyNpZ+9c0O3WVZvA9pSjNBWz4viyzd?=
+ =?us-ascii?Q?wlcE9HlIOUUAAzGBSYKfodHHjo/P9qRlK91sDF4b4tyCP6G04bCE1hqfTmRR?=
+ =?us-ascii?Q?AMhB+vvZFgQl1bt8ZIks5jI7C2eJGtLPHOcII4HF7mo18rqlf80VwKFvmqqS?=
+ =?us-ascii?Q?K8tPMYOk/Yff8og5WkM1YZJuWzP/a3M50lOO5sdfVGn9NY/8lrhPoi0bQFdr?=
+ =?us-ascii?Q?E0PxL+oBeOZ+2uuIuaxV1ixJlayErdIoqZXeTj83Hs683en8kOFg38kEpR7N?=
+ =?us-ascii?Q?LW1rNh+6nSG7MEg5rHYFfKEjh7TjHpgFtPRP7k1/i2DA7eqfMfM9CYbygWPK?=
+ =?us-ascii?Q?fAHk4BVvo+Oj3VDCdAF0GmZvLO/iiUn9E1EY0qS4yaeB3zJbup+WcR8axept?=
+ =?us-ascii?Q?OlRrGK7XRbHNiXLkhvB64/WPAVYN74nq83tiFxhV33kpvaewOXVoFWKP2Nsg?=
+ =?us-ascii?Q?fCPyS8ywE3ahVhY0g2/xqhPigV1GU7ktGPgrvZbNxsRv4aT0JQaL/WtWzmMs?=
+ =?us-ascii?Q?CNl7Nhib++TOsTZqLojNtkXvbGuC5982WOD1jKdh1LAwGIVa8FJKv6Miy4kz?=
+ =?us-ascii?Q?vMPX8sgQ+qIm5mpeLSm/h5uBqqWQu+mIkxbupl2mt6a+kUiZHP50IaIT3tE4?=
+ =?us-ascii?Q?mL59yBLIzjz7VjUM53fGmtidXmMlmW3/c0rLp6AlILt4tBkJfyX/EKvEimkZ?=
+ =?us-ascii?Q?XAphQnTY91c71cmCt0cHP0RXfoSNwcvMXFCE/ofrfIRYik8vZQr9PnbeFixp?=
+ =?us-ascii?Q?Pvm3hKAwkboqacB7dgal2L7XCN/NweaG77H/4wcu/aNrB1is8FW4WvLB7Djz?=
+ =?us-ascii?Q?9x5/nSpimv1U2pTGbDvgV6C4dpfdWOOYYk2lI6Kl75/KsYz5dtWW5bLSVWM5?=
+ =?us-ascii?Q?Yfl8abF0j/hCgKg/Ap+fcqPmP1av3PzleQkG1dSQdZSqEO99xR7zVvyNluWX?=
+ =?us-ascii?Q?uJzRK3FGoMGeZp5VkGRQ+0MGM/5IfnkyFJN7Z5PENpNHUzFuu5zPZlhaQfVt?=
+ =?us-ascii?Q?1Er5G0E+lS/ZRzG78Lr52e6E4VtfzU0bcQ0H3im4Oi2VBH2Zft6B43ALjhce?=
+ =?us-ascii?Q?kVflBjKJgViOFzHy3Gh3P/c90FXjTeU7RQaz0pi4n55+BHdbSHkHQo1pwo5k?=
+ =?us-ascii?Q?n8fkQP0z7xGP5+7paiVE9XSSi+3A6b0tijbPvvxTnaVDfUt94N1gjJlYP1Vy?=
+ =?us-ascii?Q?juXrwDfmI27O5SE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?02asZeo9ekyK83XK08ZtUpqndtgfOFEdlGpTDJVg4qVedSXk9OucF6g+6EGb?=
+ =?us-ascii?Q?WaTHxX9tJCLvTApJdH0E24wNIcUmylfrIJBx+oIyOc9Oxo5hcN5Rw9kTrVBU?=
+ =?us-ascii?Q?tBbAZ6NebNF0KyD7sNbh8qEPUpvH9SHSkFtdaKOMsmH5aQBwlhHgqaNylhw2?=
+ =?us-ascii?Q?07UckloCLvQS+n/JJAifMC/lmNr3LNXgjdRrWm5tqihYG+Nn/AgEJUWdRY3z?=
+ =?us-ascii?Q?qkjvLcSUU3jm6VYO+8CgzV/k5nsXbaEPhz+wwIQsMxHY8Da9sd8+FDZSJKNb?=
+ =?us-ascii?Q?3gGkIkfO27rKmAr+L7kWbCfJGNUdPJVt+bfz7tXbgV4ZZy70qr0TCWoXwx2v?=
+ =?us-ascii?Q?SU33JUU9hD0HXwZLNGbL1UdhDwngbVpQ74ZUMNQ05a0SKzAr4mUCvD2rt+hn?=
+ =?us-ascii?Q?0MiqH6yImpfRPLfLm+YLhWGP+Kk3oErupzCf7l4DohTqV9SyChPE9wlVk2O7?=
+ =?us-ascii?Q?DvDugUkrbfuBVjSyLrLKopRSeZ6qpOcvRf3a9pNn55+qaGeU99x5Oad1fmDu?=
+ =?us-ascii?Q?1RMyrb7mofw5Gj45Yt4HSCCSI0AT0izgSLFbk4Sv3xvRXFyQKKoAzSM74J8O?=
+ =?us-ascii?Q?oK+2+XK/2S7e9FI+H6lLfG4Ty3PWgqjZRgcRxvMFWJ1NbUiYZvE5JNn9ZezT?=
+ =?us-ascii?Q?tyYG4cjqdhXHWwH+GMKGbwb5uZRgjxIAWrMEZS80leTvI0736APj5jGCZADu?=
+ =?us-ascii?Q?ptCjQaGHXO0+ww4AJsiZ6d/rWJDXAYP3tKxZOv8OnQVM5vwwPi8c/oOtMiCA?=
+ =?us-ascii?Q?rl+nzMxZtRPRiaguSCpRRrNNsRtQ9Yd+NXUpaUZ8YwGLvuO33z5LQVyDcaIe?=
+ =?us-ascii?Q?2hGzDGd4zsX03I8rOmKCL6t6ONoISYXbUxaN/+F+7b7w31vqZOZxS7JMjtjc?=
+ =?us-ascii?Q?/4sG3B8kVTJfJqO+hkBvFsPK4rsOLiPcY7qXoMPdWgvyXGNAG7PAxrWNyj6B?=
+ =?us-ascii?Q?Tk+EXJCjShDR4PdIqEOoUEb4qAypw8TnjOj69M+UcCayVaFcBkwECdQ03ChP?=
+ =?us-ascii?Q?I1r7sIDBftvp569A2qSXNn7lHNsVHp1Px1ytW8+kuxPWm/2OHNA5ClIdVMBJ?=
+ =?us-ascii?Q?UgRx3+Esl+/rD4AIssX0SjQk9ytHOrB4ESj3vMQKNQUY7by+erDjV8vnCDVy?=
+ =?us-ascii?Q?99/Z/3zvBgVxJ7O7kX1hssAcC82fYwm0aJ9qxoKhS0nY1pv05tMnqzEfSxOY?=
+ =?us-ascii?Q?tXd5iBJUMt0m4RZv0sABdv9VB9hQ7tZFyq1WfMOx8p+KP2viCggaAZPjjwhj?=
+ =?us-ascii?Q?qxNYo8IUdiIsMN2ShIfbfFCNWu1fhESgi9vpeNHSEIJoKBCS5O0vLr1XeFCz?=
+ =?us-ascii?Q?tmdlt9RuxqLZzZxWKh0zQri4ovJOb9wbMGuvQZf1VYNVDyB1eSeMlzHoi0II?=
+ =?us-ascii?Q?F8a3VR4iEw1WAvVuUgoTMS+anxixKEDEswpp7Su+7nXRft6GACP0zfC1X4WF?=
+ =?us-ascii?Q?rc9SllX2rmB1FkW+30Fm7sZZmOp3k2yWTN5Ql73diq/eA/ok0IgoVqsP+zlG?=
+ =?us-ascii?Q?Vd9O/HMKKy07uxcSJOFy605m0TKljNjeaHSp7pbvQNMP3AeWW6MC+UJ9PNC1?=
+ =?us-ascii?Q?exrZnD/snpKWmlrqykrxeBQcYu6TB9CPq+TfxGJa?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbb26194-029f-46f6-fe85-08dd79069a94
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 14:39:02.9762
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MEL4wC8otjVGaMlpPBvdv5vB6FrZ8urND9Evw5mpdTiV0b0VhhjQmPwq0ci3FERONcfv+R2l3woCMOgLRCAZOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10228
 
-On Fri, Apr 11, 2025 at 4:27=E2=80=AFPM Michal Schmidt <mschmidt@redhat.com=
-> wrote:
-> On Fri, Apr 11, 2025 at 9:26=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
-> > On Wed, 09 Apr 2025, Ivan Vecera wrote:
-> > > Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
-> > > provides DPLL and PTP functionality. This series bring first part
-> > > that adds the common MFD driver that provides an access to the bus
-> > > that can be either I2C or SPI.
-> > > [...]
-> >
-> > Not only are all of the added abstractions and ugly MACROs hard to read
-> > and troublesome to maintain, they're also completely unnecessary at thi=
-s
-> > (driver) level.  Nicely authored, easy to read / maintain code wins ove=
-r
-> > clever code 95% of the time.
+On Fri, Apr 11, 2025 at 03:43:43PM +0800, ming.qian@oss.nxp.com wrote:
+> From: Ming Qian <ming.qian@oss.nxp.com>
 >
-> Hello Lee,
+> As the first frame in "repeat-mode" is the pattern, the pattern done
+> interrupt is ignored by the driver. With small resolution bitstreams,
+> the interrupts might fire too quickly and hardware combine two irqs to
+> once because irq handle have latency. Thus the driver might miss the
+> frame decode done interrupt from the first actual frame.
 >
-> IMHO defining the registers with the ZL3073X_REG*_DEF macros is both
-> clever and easy to read / maintain. On one line I can see the register
-> name, size and address. For the indexed registers also their count and
-> the stride. It's almost like looking at a datasheet. And the
-> type-checking for accessing the registers using the correct size is
-> nice. I even liked the paranoid WARN_ON for checking the index
-> overflows.
+> In order to avoid the driver wait for the frame done interrupt that has
+> been combined to the pattern done interrupt and been ignored, driver
+> will check the curr_desc and slot_status registers to figure out if the
+> decoding of actual frame is finished or not.
 >
-> The weak point is the non-obvious usage in call sites. Seeing:
->   rc =3D zl3073x_read_id(zldev, &id);
-> can be confusing. One will not find the function with cscope or grep.
-> Nothing immediately suggests that there's macro magic behind it.
-> What if usage had to be just slightly more explicit?:
->   rc =3D ZL3073X_READ(id, zldev, &id);
+> Firstly we check the curr_desc register,
+> - if it is still pointing to the pattern descriptor, the second actual
+> frame is not started, we can wait for its frame-done interrupt.
+> - if the curr_desc has pointed to the frame descriptor, then we check the
+> ongoing bit of slot_status register.
+> - if the ongoing bit is set to 1, the decoding of the actual frame is not
+> finished, we can wait for its frame-done interrupt.
+> - if the ongoing bit is set to 0, the decoding of the actual frame is
+> finished, we can't wait for the second interrupt, but mark it as done.
 >
-> I could immediately see that ZL3073X_READ is a macro. Its definition
-> would be near the definitions of the ZL3073X_REG*_DEF macros, so I
-> could correctly guess these things are related.
-> The 1st argument of the ZL3073X_READ macro is the register name.
-> (There would be a ZL3073X_READ_IDX with one more argument for indexed
-> registers.)
-> In vim, having the cursor on the 1st argument (id) and pressing gD
-> takes me to the corresponding ZL3073X_REG16_DEF line.
+> But there is still a small problem, that the curr_desc and slot_status
+> registers are not synchronous. curr_desc is updated when the
+> next_descpt_ptr is loaded, but the ongoing bit of slot_status is set
+> after the 32 bytes descriptor is loaded, there will be a short time
+> interval in between, which may cause fake false. Consider read register
+> is quite slow compared with IP read 32byte from memory, read twice
+> slot_status can avoid this situation.
 >
-> Would it still be too ugly in your view?
+> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
 
-And if having "id" as both the register name and the local variable
-name is irritating, the registers can get a prefix, e.g. the register
-name could be defined as REG_id.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Michal
-
+> ---
+>  .../media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h |  1 +
+>  .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 31 ++++++++++++++++++-
+>  2 files changed, 31 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
+> index d579c804b047..adb93e977be9 100644
+> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
+> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h
+> @@ -89,6 +89,7 @@
+>  /* SLOT_STATUS fields for slots 0..3 */
+>  #define SLOT_STATUS_FRMDONE			(0x1 << 3)
+>  #define SLOT_STATUS_ENC_CONFIG_ERR		(0x1 << 8)
+> +#define SLOT_STATUS_ONGOING			(0x1 << 31)
+>
+>  /* SLOT_IRQ_EN fields TBD */
+>
+> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> index 45705c606769..4346dcdc9697 100644
+> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+> @@ -910,6 +910,34 @@ static u32 mxc_jpeg_get_plane_size(struct mxc_jpeg_q_data *q_data, u32 plane_no)
+>  	return size;
+>  }
+>
+> +static bool mxc_dec_is_ongoing(struct mxc_jpeg_ctx *ctx)
+> +{
+> +	struct mxc_jpeg_dev *jpeg = ctx->mxc_jpeg;
+> +	u32 curr_desc;
+> +	u32 slot_status;
+> +
+> +	curr_desc = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_CUR_DESCPT_PTR));
+> +	if (curr_desc == jpeg->slot_data.cfg_desc_handle)
+> +		return true;
+> +
+> +	slot_status = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_STATUS));
+> +	if (slot_status & SLOT_STATUS_ONGOING)
+> +		return true;
+> +
+> +	/*
+> +	 * The curr_desc register is updated when next_descpt_ptr is loaded,
+> +	 * the ongoing bit of slot_status is set when the 32 bytes descriptor is loaded.
+> +	 * So there will be a short time interval in between, which may cause fake false.
+> +	 * Consider read register is quite slow compared with IP read 32byte from memory,
+> +	 * read twice slot_status can avoid this situation.
+> +	 */
+> +	slot_status = readl(jpeg->base_reg + MXC_SLOT_OFFSET(ctx->slot, SLOT_STATUS));
+> +	if (slot_status & SLOT_STATUS_ONGOING)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static irqreturn_t mxc_jpeg_dec_irq(int irq, void *priv)
+>  {
+>  	struct mxc_jpeg_dev *jpeg = priv;
+> @@ -979,7 +1007,8 @@ static irqreturn_t mxc_jpeg_dec_irq(int irq, void *priv)
+>  		mxc_jpeg_enc_mode_go(dev, reg, mxc_jpeg_is_extended_sequential(q_data->fmt));
+>  		goto job_unlock;
+>  	}
+> -	if (jpeg->mode == MXC_JPEG_DECODE && jpeg_src_buf->dht_needed) {
+> +	if (jpeg->mode == MXC_JPEG_DECODE && jpeg_src_buf->dht_needed &&
+> +	    mxc_dec_is_ongoing(ctx)) {
+>  		jpeg_src_buf->dht_needed = false;
+>  		dev_dbg(dev, "Decoder DHT cfg finished. Start decoding...\n");
+>  		goto job_unlock;
+> --
+> 2.43.0-rc1
+>
