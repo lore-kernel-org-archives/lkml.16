@@ -1,119 +1,66 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447631F3FC3;
-	Fri, 11 Apr 2025 14:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E431865EE;
+	Fri, 11 Apr 2025 14:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380419; cv=none; b=NBK+G1utnDHevkT3/oYkyBEZiZjWcC8H/UIA5XMH00iK6GKPLRqufmbxl5Ej9OSOwhWuqfvcMjNIKul5IILjh3wDewNwPlb51B+C2rRqOIMuHqwS8Ic/ftJp8NgB9ygEAwfUndtcOSqC+Gr11St0qH105V+W0K0fIRdIYvLvHYQ=
+	t=1744380497; cv=none; b=Q7FOxjeGrsE5eQnbu9IzD5lNdQFNu0pq9vodS76v6R4h3MZXaJG+ST9su6OyG7TubyRiPzcg183B97F48PH7H3ygYRPTEiA4AbZyHmSFZTPbjHccyNBQqzzueO5Cqee5oawjtVbCSbq9R7gc5dL29ynT7+MEJx/ym3vspzu0q4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380419; c=relaxed/simple;
-	bh=NOvfAcC4nSHwovxfMmc7lJ6Xohxm7kKLQxmp9yLUv58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AqyQGLdwG0z9f3oBrl+9qpROKOG9uUwNhofACYTVQr94zcjeYz/L1P4v6R9orSQutz4SI3zBsLk1/tZBynJ/xI4b2ajt19Y8y1v3+kqnI0Lm1Uxy0dgYNl0otfbbMUztexNA5GFFVuPbTiWujUprxaoSlVA8Ppd1p6wHVGvcesM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SM2WS/bn; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744380497; c=relaxed/simple;
+	bh=PodhmP7IA+b1pr+LJt26zz1zpXSXHObcfFT8DaM85BI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uAvFANlZL/3B+/fO0oBbsNjP++LUK8miyPLCiebi1rSNtTOPudlzzWsS/o3W04oWJiFltGHYMqN4qyWObvWVA6amllf2oqayq9ZRhp6JQA1QRugWKucXcOIv3HJWnBWwxvoFcv1vmdNY25JjWF4PLTwBZIt944dlVxJlLzbDdpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6P/XPij; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SM2WS/bn"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so3749241a12.2;
-        Fri, 11 Apr 2025 07:06:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744380415; x=1744985215; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NOvfAcC4nSHwovxfMmc7lJ6Xohxm7kKLQxmp9yLUv58=;
-        b=SM2WS/bng0Webpqq68WV7vdAwqPjIPHu7rmH8f3d1Llk9bjRMSCk5T/OWM0rDjqGk2
-         6z68Mr5yGBrrkZrW4mu4RQAUtNgo2Ne61BRYWJP6g7dlqpo7VETQozsaWkoFqrz5yNqH
-         cSqrl5/5yFtm8GyPgKZVSf0LTRhrn2H3FIuQuxB896PQxdIh4HRJz283+kmrLjp3bJsT
-         IlYqVmAC0sQ0ApbSC3ncFiPL++20hp6a5tiRlPUBLdVTIBa/nPZLoPgnq4i/x2ZrQlG+
-         LNEsgjnYcHIGuUDdKn78YIx/TsHnPzG1XWLK2/CFHItDLmdYGQ87bIsRElXU92wzx+yo
-         Q5RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744380415; x=1744985215;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NOvfAcC4nSHwovxfMmc7lJ6Xohxm7kKLQxmp9yLUv58=;
-        b=ZKGZbuWwsneSeVPRWsfxrIA1stX6fhRL2bW5T3eDBHgKSE/NMRs811jDHlJ9o7wne9
-         TnxJVdNws0UaxRMn+HG2JwoIyuCvnWm91Lgi52UTFTebnNosiD1IAN9821ObAVO6lN4S
-         1vVeyFetOksHxFTdW5mVn+p1lEIzYD1Uh/P2y0lnjrozQOqgNygZLfn/K6epy2tLJgx9
-         nsgnUvOzJW/qjCUQ0MocS2o2UQKj1vGh5DNW2sPUmp8BWWQXyi02TGK/zPMWyk8tUdjQ
-         2TVnqnbMymZwT6LUx6Nhq+urb75xIk25hEisbLR/idSM3iwn2GQ8+7oWk5ZcT3hu2upk
-         Ro4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVfJf7RaPmDMZsW8DVYss6eJTnOi5arTYb/2chrQ3V94uRT3bL25Wmu2ud7EGUhLqSPmusZld/sI3/ZaiYu@vger.kernel.org, AJvYcCXL8NhFxOSHUcc8D4QuRh2WwMkD8vMWPMrvLvDwGIZy6gr4ihYJQC/r7aNYMRT84nrnyI4Wmu1TfkU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycW2X1mUnCaMq7m4CeCJjcpFDH4RcppK6CkjCUp/p7zgxggF64
-	a083ez0TQRW54zr/z+KVMyxYXHvMkIHWBbbkqg216oK/JHA+Xq0fGfw3tpP+
-X-Gm-Gg: ASbGncuZtMXAbqmLnWpOuQwNLP6saHZ/ChpEa5Baf1FOnwU2RiIYdGNVL3PuVzjKMIv
-	kj6xB+t9FwQMqnxvlLyLc5JEenTtAsi4MHLrLcohsy9G+eAUXWwraxnM7gAKH9NdpSMRUYj3P1K
-	ouusyCCt9sg1kaFRvG/R8glTqidCyk9agM9s7yhp1mNccdi65+aYTjke3ViKqBRN1r7rj79l8HL
-	vq8Ouf+0nqXe1ZbD+aejRm//V3A6sfjDZr3MB21Otx3u/1kY14zkgtHDFZLD4s1RBVZZozmaF+p
-	MckGWzo8N2onPzwLe+ggsJgnYqaizJC0t1xRrKvNt05QsFFY9YU1cJjYvBsX7I/XJ9BWArVO/G1
-	He74WnN/bx+B8Fag0AA==
-X-Google-Smtp-Source: AGHT+IE1yOeDj9VvnJ4cJ143MdQvjsuVm7s+alTj6cIAtIkzd0ZDaU4JF1U6ysR5rjPt1629SVONMQ==
-X-Received: by 2002:a05:6402:1ecc:b0:5ec:9352:7b20 with SMTP id 4fb4d7f45d1cf-5f36ee45999mr2263715a12.0.1744380415128;
-        Fri, 11 Apr 2025 07:06:55 -0700 (PDT)
-Received: from ?IPV6:2001:b07:aac:705d:8db5:5583:1b6d:7bba? ([2001:b07:aac:705d:8db5:5583:1b6d:7bba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee54fa9sm1005741a12.1.2025.04.11.07.06.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 07:06:54 -0700 (PDT)
-Message-ID: <2af51b9c-cde6-4347-b062-daa87bddd8ff@gmail.com>
-Date: Fri, 11 Apr 2025 16:06:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6P/XPij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B854DC4CEE2;
+	Fri, 11 Apr 2025 14:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744380497;
+	bh=PodhmP7IA+b1pr+LJt26zz1zpXSXHObcfFT8DaM85BI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s6P/XPij9+owbKpkyZK9j5tfz6QnlYAynhLzSYkbVQhR3FFQBjQ5FIKBsjmAATWJr
+	 4DZUesZcpvW84Z54FW3Egotjy5/BbempjQu9xE2pEt9Hj2y/kswR5a+o1BYqSY98bx
+	 cU8a6j7V3IF2EmsUziAjKeWj9C09E1+x23/JRoEvWrK53d9M0K25ydjigBElLsoKCi
+	 oAUDJGfF5DTUA6tUo61KicRQXnBJHaQQEAcknO3gv7yz4LvogfgfZTwhO0+vMk++H7
+	 TUmABjBBE1vSXGiFGYR7RCgIwvNi8TmDFtISm7f4ElgYXxHXwAAdpL5VcSspi4RXvS
+	 lfYJrp0ZJSX3w==
+Date: Fri, 11 Apr 2025 16:08:13 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Stancek <jstancek@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: use namespace_{lock,unlock} in dissolve_on_fput()
+Message-ID: <20250411-umlegen-herauf-508fe182fffa@brauner>
+References: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] i2c: lpi2c: implement master_xfer_atomic callback
-To: Carlos Song <carlos.song@nxp.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
- "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Francesco Dolcini <francesco.dolcini@toradex.com>,
- Francesco Dolcini <francesco@dolcini.it>, Aisheng Dong
- <aisheng.dong@nxp.com>, Andi Shyti <andi.shyti@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
-References: <20250319145114.50771-1-francesco@dolcini.it>
- <20250411114738.GA43965@francesco-nb>
- <FRWPR04MB11150B555044300A70102DAF5E8B62@FRWPR04MB11150.eurprd04.prod.outlook.com>
-Content-Language: en-US
-From: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
-In-Reply-To: <FRWPR04MB11150B555044300A70102DAF5E8B62@FRWPR04MB11150.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cad2f042b886bf0ced3d8e3aff120ec5e0125d61.1744297468.git.jstancek@redhat.com>
 
-On 11/04/2025 13:55, Carlos Song wrote:
->> On Wed, Mar 19, 2025 at 03:51:14PM +0100, Francesco Dolcini wrote:
->>> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
->>>
->>> Rework the read and write code paths in the driver to support
->>> operation in atomic contexts. To achieve this, the driver must not
->>> rely on IRQs or perform any scheduling, e.g., via a sleep or schedule
->>> routine. Even jiffies do not advance in atomic contexts, so timeouts
->>> based on them are substituted with delays.
->>>
->>> Implement atomic, sleep-free, and IRQ-less operation. This increases
->>> complexity but is necessary for atomic I2C transfers required by some
->>> hardware configurations, e.g., to trigger reboots on an external PMIC chip.
->>>
->>> Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
->>> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
->>
->> Any comment on this?
-> Looks good. Thank you for your work!
-> Do you test it at some board? How can we test simply?
+On Thu, Apr 10, 2025 at 05:05:42PM +0200, Jan Stancek wrote:
+> In commit b73ec10a4587 ("fs: add fastpath for dissolve_on_fput()"),
+> the namespace_{lock,unlock} has been replaced with scoped_guard
+> using the namespace_sem. This however now also skips processing of
+> 'unmounted' list in namespace_unlock(), and mount is not (immediately)
+> cleaned up.
 
-We tested it also by using the xfer_atomic for "normal" transfers
-(.master_xfer = lpi2c_imx_xfer_atomic).
-The driver is used to drive multiple buses with different devices.
+Thank you for spotting and fixing this! My bad.
 
-Emanuele
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 14935a0500a2..ee1fdb3baee0 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -1830,6 +1830,8 @@ static inline void namespace_lock(void)
+>  	down_write(&namespace_sem);
+>  }
+>  
+> +DEFINE_GUARD(namespace_locked, struct rw_semaphore *, namespace_lock(), namespace_unlock())
 
+I'll call that namespace_lock instead if you don't mind.
