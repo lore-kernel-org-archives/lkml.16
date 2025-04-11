@@ -1,248 +1,112 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3E2188006;
-	Fri, 11 Apr 2025 05:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D8B27CCD7;
+	Fri, 11 Apr 2025 05:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744348002; cv=none; b=FVt2A7B2s9houCqGrfK5PpJjQRRf37tTtoi7mRDyOth4zw6AGXe4sUMClLmNZlcRMN8fKZAIkzj9wbYpRU3yV1TGDxFyOBoqdjmSY/dE6NIIZk12kX6A7fsYrMAkuoY+lA3hmfJbNx8yLxLpyzXhl7OpccHmcTfJU9cXybGSDVQ=
+	t=1744348005; cv=none; b=pdaTZnO89+9hkLatMH0faeKwReeqrT82KOUzOPlt7ZiqYbSh4DtkOEtwmOgWc3Hdzvo/8mrX8YcA/T6wc9mE4EgCfySjU06RmM7qNthvKELu7ysMrHH7bbF4OC/EXEsh+xSza3gAigrHmyN/IAuIPuzCXGZ3yZQBacyAquC74w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744348002; c=relaxed/simple;
-	bh=TbDuMl/Sq2ZXQvnZuR7kS1Hdjn8lYRMBDvDmno+c6x8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UNtf1qmrb4qKAKkl6JV8VmyKsOoIIorXwIc0muTlJHmDfHN2d/xuyBrjWDDZlQ/tA878itfPLeUjkI8iyZgbvNp6PdhJT/tAFF4PDBSdBm3xPPgGep4k5Q25HFFg/1LngKTxuBL4RgBPIu6tgOAwCp9ooi67VnKBviLArJ1rGdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eQs5h59b; arc=none smtp.client-ip=209.85.160.176
+	s=arc-20240116; t=1744348005; c=relaxed/simple;
+	bh=ph9yxNJxjytif7MW6JGpN2VeP3cdtJrpIHatp3pjQx8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lK0S9FWxRn+ujO5wvGc8hqoFSm21Xw88L+VT5YE++OKshlv7gLYAgY+tf4cq0AAaiSa5NKz2uiuGJg5+GG/wRY/F3AWobG02CVyr0Phr+UVKdEoZrqqsnkDO9c+Rbl6/zU9XnRCJokJQDtP6o1Q4DCrL/vbtFCu3OE5XFOX81T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B621/crY; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQs5h59b"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47664364628so16986541cf.1;
-        Thu, 10 Apr 2025 22:06:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B621/crY"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7370a2d1981so1236500b3a.2;
+        Thu, 10 Apr 2025 22:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744347999; x=1744952799; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WRb/BCzXnzLKk6r4YRRQWPkMbuh8VxUF58IC7wx4Qyo=;
-        b=eQs5h59bReedvxOqO/rBHlw67zz3Kbntt6zmnc/1vF//DoX8a8xZwxxITMztajxdYT
-         ejpaLDNgB8kWjDgKNuF680vCY9niW0LQDaugmPvRbrkHkAcoGdEYosFwKz6M3JJIpzYF
-         Bn1inqWnDQ4Uy6QUL4OZp1tPzY0Zlli4BFT7c8RZvs1uJYN89QjN4lSKPNp40HQhH6CD
-         bliEe2GijtX3vX9jJjzYveYk3a9sUNn1alJ4/fqb3otxQmhrmaPZqwa4rvK2vfLZkloy
-         wrAMdX115TmdFb7YoDDFDyT7Z5iXU45Ax6bUcBZ2A87F/8XHrWRPCu3+HSVlfRsgErmR
-         4mIg==
+        d=gmail.com; s=20230601; t=1744348003; x=1744952803; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5UnJapsshMAFNTg0PJpSBNJuS/1ozPTcqpFD6vI6lxo=;
+        b=B621/crYDeWP4HAetCsiXYcpu6+oOu1Y9mDyMskKgrOZCuOjrsExVTb4ozbUfG4IqJ
+         i9F7xeHav0C3ASIN4jSMBIVbAcKNBXUYyNh/HbTxC24fyL+Mi80/l1VybDQripC+4PlT
+         DLpsQYGlDcnrtbimuQlS8ZrJL828TljtMhdEB17+3WDM0FxI2gvwRbSQEK+NALpgbnXR
+         5tqHGjr59vstvSaRDd26y9B4TYsnCeZt8v4AZtQEvHDe03d08XolomdCTEWKWtnGZUdB
+         709rgkXqUs6R8Op184ntlEoiufxp1XNHXT5DiYeaxgaMqJA9eM3oZlQpXCoYkEFvRl2+
+         brMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744347999; x=1744952799;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WRb/BCzXnzLKk6r4YRRQWPkMbuh8VxUF58IC7wx4Qyo=;
-        b=nhJ63BNQlJB94siZNyTzEIUygvsF73vRm5Ke5HpB3FQ8egfwrMiDJTSn4wJNmGcOv+
-         LGTxPUKo8dBEKOji6VUVlpCfJI/v7SYsR1yGpMPs2R7JcUcW7kVoalphJi5m1ovBWXzE
-         b2ats85DVjwUvVHxPv6gOlg/WgMwDwiYiRpHzym5i9lrLWe2bx2YYA79PeSthrXXTNcI
-         dc3XGeQaZEtmNsmepB56oM1KTkfKQYk+ALsp+QH27gxqbWB0C0prT66bF0GmAzS+0jWd
-         1q5NZco5eiWBpK72MDHKfhxsqsiHg8W63N2jryOYGlHSfuRL/MjRy4no4OG0w8xJKqnc
-         gDSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuEyEOoF6bWbkFiLTbtDa+oeJCK7RMCBN1SpQt2OhB+F9mzD/e2dDoZxgGEwRaJDEBtve192CxsVwy0vU=@vger.kernel.org, AJvYcCWHkGFGedzhlCl/uJuK71KFPk0KzsDpmgIdfQvfKfbDHSls3TYDZ5XmclDxnHJGDdoou1r2QF9oVLzAer4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzti2XnR8TFyUfEpoIiWstfYxxAP7mTzMoifmYrI1NOtOHwQ61O
-	d383X1hUB3bcwM4S78irFK7MmeT9zWiETQBMQqhXkijkJF6niJFGenSpLW6RVsQAeCHU5/4BxN9
-	yNvcrJfvic797ZSeYrMzpDz9qAOo=
-X-Gm-Gg: ASbGncuZGIsTxbuWCHeq3pJww+4EdkcoaAOs59NcXQA1b6uJjtZyDSdz26Xiq2Sr97N
-	XR5gB/AiIhl8nDA23zjfooHmXo8Y0eCtF+tDhuwlYOX70NlVaZZJVD/dXfrOCXPLqohvF6Gx0GV
-	yoPShHpwc3I1fwKd/HBlKyJCw4Lxl1LJ6z+oqaREfBwLAckRXy9+qPWA==
-X-Google-Smtp-Source: AGHT+IGH8blIjeDOAZg5z0GQj77DusDHZUwOzxUmaMEMsOsLsHxldpdQ9ObvlObvrzkIXG3Wp0sbtxtNfEKUkMgBckA=
-X-Received: by 2002:a05:622a:180b:b0:471:9e02:365e with SMTP id
- d75a77b69052e-47976cf0474mr26662631cf.8.1744347998872; Thu, 10 Apr 2025
- 22:06:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744348003; x=1744952803;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5UnJapsshMAFNTg0PJpSBNJuS/1ozPTcqpFD6vI6lxo=;
+        b=XFqhnO56fc0xMlYCxQqdtA7d1KdIk4PdEARbKSbVREelOHQJs2Mt/c5Fp4YM1Um3QT
+         JjHvZW86nLEyZ+VUl4O71rHskVjeZLZWHngwm52xlWqYkvcCIIbhqz+ccPjPgfOY/HnR
+         gbI6fRaEPgFi4viEl3CT/NcZFNuXmlJFB05FwhIM/HVpdiq5C0vJpCbIF3Fkzv8QIQYn
+         r3OwBZiL9NSelkB5PZDYQOMu2JxoFHQgfeeNVa2SnqBmSZwCQnCRY1piu2PwuIfsMxXI
+         F81nzdbb/NLsMFeeuny8WiWPPyTQtlMJ/yyqSPGQYGHs96VnX/eA9+9PHKEvwOEJKBMA
+         BU8A==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ms2j0LfyG456zhqIv6Cs7xfWDWU6bU3raA8mvGq/65XP6vsZ0JKGHRZzTrTNVXwcxsC37RcZ/xFbbeE=@vger.kernel.org, AJvYcCWghIuCVhwTNJo5lVRngaAdaylnt6ik8pjOwZkagxcL1T1cZGHH7cBfJ4tDh80bj5mXCTkQ3nlp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd/UtTgbMkDXNmIzEd+TrG/D1W9Sg/hcHBUHI7p64PV4XQQN8c
+	g/mz9+oC3RAdOI7PgkQT95VkVKYbMsKqVM7jNEB5dwjY1ueiK4ku7SDduZ15Q1k=
+X-Gm-Gg: ASbGncvil4YGlfBIz6J11uN21FZNBE6lmOEVcGaMWYtXOfKjGYrRADah24MSniyVMGc
+	ilPcVP+tuLaD2MrF9ZeWbA4u2l4mJliSXRbxq9aDFNb4hmndRzx9nyW9mjh6oxhXKpbL490vrZh
+	GSLWU/ZCY7wS1RqDlle7jVYDMQ8UKysvwj5I7VLtsFvXAJc9xEwh2irUPI6aavoF6bbUpS0gwpA
+	pQt6a2fIRda12wCkCyoECOdXD4jFcApwR4wIUyHtOxZB9RWvUpDSsh6oyX8u8rP9yHsIg9OQz0E
+	QyDXEB2j6rSmNahC2XB0Llr6WacFEKlU7kEttF7sHvZRFHHe3YT5OVariaQ=
+X-Google-Smtp-Source: AGHT+IGLIi/7HyMpkoEks+uXZ/UWMvLn9AKsYBa2512q1PEkAkv3NJRwEgNHcO1lAPn2wY8N9VWyfQ==
+X-Received: by 2002:a05:6a00:a8e:b0:736:50d1:fc84 with SMTP id d2e1a72fcca58-73bd12a1937mr1899353b3a.21.1744348003106;
+        Thu, 10 Apr 2025 22:06:43 -0700 (PDT)
+Received: from localhost.localdomain ([2401:4900:4fe1:c798:5bf3:ef7a:ab5:388f])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230da87sm525712b3a.127.2025.04.10.22.06.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 22:06:42 -0700 (PDT)
+From: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+To: jmaloy@redhat.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	kevinpaul468@gmail.com
+Subject: [PATCH] Removing deprecated strncpy()
+Date: Fri, 11 Apr 2025 10:36:13 +0530
+Message-Id: <20250411050613.10550-1-kevinpaul468@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67e26157.0c0a0220.36adcd.506e@mx.google.com> <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
- <CAKUZ0zJjdSDH3cw=8iKJauU5dmcq9TFhAaJX4yS5UQoiCUaguA@mail.gmail.com>
- <20250326001336.GA23984@pendragon.ideasonboard.com> <CAKUZ0zKDy47cQ0ZQo-=1c7wmazbutF=VF3qX09DfZFBz01hh-g@mail.gmail.com>
- <20250402002948.GC4845@pendragon.ideasonboard.com> <CAKUZ0z+V0pBvAf1VRGcWf_QcROZFsTUcHmNM1T1=DpBw56yi8A@mail.gmail.com>
- <20250409205426.GA12162@pendragon.ideasonboard.com>
-In-Reply-To: <20250409205426.GA12162@pendragon.ideasonboard.com>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Fri, 11 Apr 2025 01:05:00 -0400
-X-Gm-Features: ATxdqUH8eL4Lmr0vwwzRy8Nge0IwfyWriQBevvgqTS8bu8Att64H7FTQtit9JFQ
-Message-ID: <CAKUZ0zKow-wstck4nq7JFbXfxYXR94phRG_bEuWBY2H7p3EWyg@mail.gmail.com>
-Subject: Re: [PATCH] media: Fix invalid link creation when source entity has 0 pads
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, hdegoede@redhat.com, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com, 
-	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-> > > Can you share the USB descriptors.
-> >
-> > The USB descriptors via the Syzkaller reproducer:
-> >          "\x12\x01\x00\x00\xfb\x5d\x7d\x08\x6d\x04\xc3\x08\x16\x6b\x01\=
-x02\x03"
-> >          "\x01\x09\x02\x50\x00\x01\x00\x00\x00\x00\x09\x04\x1f\x00\x00\=
-xff\x01"
-> >          "\x00\x00\x0a\x24\x02\x00\x00\x05\x02\x01\x02\x07\x24\x07\x05\=
-x00\x00"
-> >          "\x18\xc2\x24\x08\x05\x04\x00\x04\x96\x0d\x24\x06\x01\x01\x03\=
-x02\x00"
-> >          "\x01\x00\x06\x00\x06\x09\x24\x03\x05\x05\x03\x06\x05\x81\x09\=
-x24\x03"
-> >          "\x06\x01\x01\x04\x05\x05\x07\x24\x04\x05\x01\x00\x9c\xbd\x89"
->
-> If I haven't made any mistake in the manual decode process (is there any
-> Linux tool that can decode a binary descriptors dump the same way lsusb
-> decodes descriptors from a device ?), the relevant UVC descriptors there
-> are
-I tried looking around and couldn=E2=80=99t find anything. The closest I co=
-uld
-find was defining the structure and then using a parser or reverse
-engineering it using wireshark. Do you think there is a need for such
-a tool? I would be interested in making one.
+This patch suggests the replacement of strncpy with strscpy
+as per Documentation/process/deprecated.
+The strncpy() fails to guarntee NULL termination,
+The function adds zero pads which isn't really convenient for short strings
+as it may cause performce issues
 
->
-> 0x0a            bLength
-> 0x24            bDescriptorType USB_DT_CS_INTERFACE
-> 0x02            bDescriptorSubtype VC_INPUT_TERMINAL
-> 0x00            bTerminalID 0 (invalid)
-> 0x00, 0x05      bTerminalType 0x0500 (invalid)
-> 0x02            bAssocTerminal 2 (invalid)
-> 0x01            iTerminal 1
-> 0x02, 0x07
->
-> 0x09            bLength
-> 0x24            bDescriptorType USB_DT_CS_INTERFACE
-> 0x03            bDescriptorSubtype VC_OUTPUT_TERMINAL
-> 0x06            bTerminalID 6
-> 0x01, 0x01      bTerminalType TT_STREAMING
-> 0x04            bAssocTerminal 4 (invalid)
-> 0x05            bSourceID 5
-> 0x05            iTerminal 5
->
-> 0x07            bLength
-> 0x24            bDescriptorType USB_DT_CS_INTERFACE
-> 0x04            bDescriptorSubtype VC_SELECTOR_UNIT
-> 0x05            bUnitID 5
-> 0x01            bNrInPins 1
-> 0x00            baSourceID(1) 0
-> 0x9c            iSelector 156
-This looks correct. I compared it with the Universal Serial Bus Device
-Class Definition for Video Devices: Video Device Examples (revision
-1.5 2012). I only got slightly different results (only formatting
-related - w prefix instead of b for 2 bytes).
+strscpy() is a preffered replacement because
+it overcomes the limitations of strncpy mentioned above
 
->
-> Ignoring a few invalid values (bTerminalID shouldb't be 0, bTerminalType
-> 0x0500 is defined by the specification, and the two bAssocTerminal ids
-> are also invalid), this creates the following chain:
->
-> VC_INPUT_TERMINAL (0) -> VC_SELECTOR_UNIT (5) -> VC_OUTPUT_TERMINAL (6)
->
-> Looking at uvc_mc_init_entity() where the media_entity->num_pads field
-> gets assigned by calling media_entity_pads_init(), a media entity is
-> only initialized when the entity type is not TT_STREAMING (so it's a
-> subdev), or when the entity has an associated video device. I think
-> that what is happening here is that the second entity in the above list
-> (VC_OUTPUT_TERMINAL, id 6) fails to initialize properly in
-> uvc_register_terms() is there is no corresponding streaming interface in
-> the device. This is confirmed by the
->
-> usb 1-1: No streaming interface found for terminal 6.
->
-> message in the syzbot kernel log. No video device is created for the
-> terminal, and no media_entity is initialized. Trying to later link the
-> entity in uvc_mc_create_links() then fails.
->
-> I don't want to address this in uvc_mc_create_links() as the invalid
-> terminal in the chain means we could have other issues elsewhere. One
-> option is to fail turn the missing streaming interface check in a hard
-> failure, at least for the chain being registered. The driver could still
-> proceed to registering other chains.
->
-> There's a small risk of regression for buggy devices. If that's a
-> problem, we could instead remove invalid terminals from the device
-> entities list before we proceed to scanning chains.
-Which solution do you recommend? I can try implementing the one for
-the hard failure while letting it proceed to register other chains. It
-seems like testing for a regression would require feedback from the
-community which might be hard since it would most likely only affect a
-few devices.
+Compile Tested
 
+Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+---
+ net/tipc/node.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/net/tipc/node.c b/net/tipc/node.c
+index ccf5e427f43e..cb43f2016a70 100644
+--- a/net/tipc/node.c
++++ b/net/tipc/node.c
+@@ -1581,7 +1581,7 @@ int tipc_node_get_linkname(struct net *net, u32 bearer_id, u32 addr,
+ 	tipc_node_read_lock(node);
+ 	link = node->links[bearer_id].link;
+ 	if (link) {
+-		strncpy(linkname, tipc_link_name(link), len);
++		strscpy(linkname, tipc_link_name(link), len);
+ 		err = 0;
+ 	}
+ 	tipc_node_read_unlock(node);
+-- 
+2.39.5
 
-
-
->
-> > > > I confirmed this by changing the terminal ID in the format descript=
-or
-> > > > from 6 to 5, which eliminates both warnings. This shows the warning=
- is
-> > > > correctly identifying an invalid descriptor configuration, not a
-> > > > kernel bug.
-> > >
-> > > There's still something not quite right. uvc_entity->num_pads should
-> > > always be equal to the corresponding media_entity->num_pads. That's n=
-ot
-> > > the case here, and I think it indicates a bug.
-> >
-> > Ah ok - the mismatch itself shouldn't happen regardless of the descript=
-or
-> >
-> > > > Since the USB descriptor is invalid, I believe the warning is
-> > > > necessary and should remain. The code should stay as is.
-> > >
-> > > There should be a warning, but I think it needs to be caught in a
-> > > different place, earlier.
-> >
-> > Got it.
-> >
-> > > > On Tue, Mar 25, 2025 at 8:13=E2=80=AFPM Laurent Pinchart wrote:
-> > > > > On Tue, Mar 25, 2025 at 06:05:00PM -0400, Gabriel wrote:
-> > > > > > Hi Ricardo,
-> > > > > >
-> > > > > > > I cannot reach that URL
-> > > > > > I was unable to access the URL from my email client when I init=
-ially
-> > > > > > sent the email, but a couple of hours later, I was able to. Ini=
-tially,
-> > > > > > copying and pasting the URL into the browser provided a workaro=
-und.
-> > > > > >
-> > > > > > > Shouldn't it be?:
-> > > > > > > Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices f=
-or each entity")
-> > > > > > You're right, I incorrectly referenced the wrong commit. Howeve=
-r, I=E2=80=99m
-> > > > > > not certain if it should reference a96aa5342d57 (Fixes: a96aa53=
-42d57 -
-> > > > > > '[media] uvcvideo: Ignore entities for terminals with no suppor=
-ted
-> > > > > > format') as it's the latest commit affecting the line I'm chang=
-ing or
-> > > > > > the one you mentioned.
-> > > > > >
-> > > > > > > Shouldn't source->num_pads be the same as remote->num_pads?
-> > > > > > The fuzzer (Syzkaller) that triggered the warning appears to ha=
-ve
-> > > > > > encountered a case where source->num_pads and remote->num_pads =
-were
-> > > > > > different. When analyzing the case in GDB, remote->num_pads was=
- 1,
-> > > > > > while source->num_pads was 0.
-> > > > >
-> > > > > This seems like the real bug that should be fixed.
-> > > > >
-> > > > > > > Are you sure that your kernel does not contain?
-> > > > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/=
-linux.git/commit/drivers/media/usb/uvc/uvc_entity.c?id=3D41ddb251c68ac75c10=
-1d3a50a68c4629c9055e4c
-> > > > > > Yes, it should be included since I am running the upstream kern=
-el.
->
-> --
-> Regards,
->
-> Laurent Pinchart
