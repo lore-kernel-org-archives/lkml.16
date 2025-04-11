@@ -1,54 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444D8376F1;
-	Fri, 11 Apr 2025 16:05:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA7B1DE2DB;
+	Fri, 11 Apr 2025 16:06:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744387533; cv=none; b=BwmN8zC13nE58rW4/YKKN5yNiOJyfxEhtlsl3aI8YUJN3a6a9Cz0NUkfAlUnRlf0ENceYR+H639pXOl9g9ZNId6SMamUrQyCO+zIACFBI17kUVtZ6ETgQLcZL3fnlZHsZEHW2xCkmPKta0qq48kh+HasSOO2Ct/1bDv1Q+nacZo=
+	t=1744387562; cv=none; b=OU2xtpz1yQfqIaIispvdr95KduQgOLa3PQj81Qi5eGWu/cyYWcPGwL1fYLXQsSCkuXJ8ht/vqAQjQKAGhkpbwEQWmuH0SV9+sW+NZfRgYO2PDO6KHMYjgidQP9LZ89/m+ldKd4pU5Gd3c6Ifupb5IjK/8vPbivQ2KXyJeyUrwpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744387533; c=relaxed/simple;
-	bh=Ql4MKbHYn0LYUmCqBEk+Nsc4K3zGFojAGH/c0V7kks8=;
+	s=arc-20240116; t=1744387562; c=relaxed/simple;
+	bh=M99sWfsJPm8fWrF+XjWYyms9cW6zbPtp4LnJwowmtYM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=reyGcKjexLqM++FNF6HVASXiWBb7//4a0ly01fGi6+azDAU4FRvzx6Luj7fkDVrJw+I1n+wuIi74HFN757pvDmpzDXssHgX6M1y0P7ERs3uivfhz9gGaO0ihZ/A2RXPFWiBPiTIVdKSEQC/kZEc3Tb50yIVbl04KIEoZ+Jo8gTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXhVy8mq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=elBLAU+/9S/7ETUl29q9Cx4ErVkbjc9IoGCjHEUA55KYxKd/t8/BQtP+KhEkj3Shx8Fm+yKdkhcqNQNORUoSNKwuZWBKVetEPCKENHBDpy8E/yKfAicDmxR/hRQXM+acy5Ze6J7oVH2P/2ua/QJuw0qtf/Dsq4qwnb6G9oyemlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVnFYRwP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXhVy8mq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C5AFC4CEE2;
-	Fri, 11 Apr 2025 16:05:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVnFYRwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22CD7C4CEE2;
+	Fri, 11 Apr 2025 16:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744387532;
-	bh=Ql4MKbHYn0LYUmCqBEk+Nsc4K3zGFojAGH/c0V7kks8=;
+	s=k20201202; t=1744387561;
+	bh=M99sWfsJPm8fWrF+XjWYyms9cW6zbPtp4LnJwowmtYM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oXhVy8mqPgH6iNMP4+lN8KNPVXoFje6XG5rQFRyuLKVcYXED8/uujYcMza1jW81ST
-	 t2FpJ0iq8DIs7wAIvSxUDGbD7ttiEtdyzun9uvrWkiNsI9AWQ4jwRqYR8nsW+kIDIW
-	 nt+WxmSkLSoZf3VmG0zjf4EClldhybwBxLF2drK3FKSBAIgpCf9WBjfeBd3dnCSwI2
-	 WKgGRFwrbXArZFQO7r6aea1VNmzD/dLb86VzcqTt5i4J/BapByaUpYtCLUAJKRZo5d
-	 M70gZwtqbyIaSVoKl5FkS0IjqO4oX8DlzW0eJxZCXovJyZtXaxOp2kgmnEbaNVi48p
-	 ORB5HE8Gwq34Q==
-Date: Fri, 11 Apr 2025 11:05:31 -0500
+	b=eVnFYRwPABjtS8+Gx4d+P2bEEtWYQCZTSdiDsuI7nlAcUZbTRpFh1hhqNCjPXrVUS
+	 FyNEOMUvo7jhWNaHITyuvuG7M2R+hHIL8KSxINBrRFgOpp4SmZoNhF5s7n7TKtdmpM
+	 4vU12mwpmQyHTQRtiOjrDZUCHG807KwF49jsV5i6AUHiEt09jqjKmO0AQMPF0Okqao
+	 pvqHr1XyjBQhCfRFnJZnZ0NP8UI4AMCE8PLP6au56Jt3ltA6cfhUsv9w43z9xtEq2b
+	 2T+XsO8iZwiWV0U2+NT2O/R/y3uI/gyP1MWgHRSdgA6J+jGPnx50jWiWit0zybcZJ6
+	 2vPOT7+GWc8fg==
+Date: Fri, 11 Apr 2025 11:05:59 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	andriy.shevchenko@intel.com,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	linux-kernel@vger.kernel.org, Michael Walle <mwalle@kernel.org>,
-	linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Danilo Krummrich <dakr@kernel.org>, Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 01/12] dt-bindings: mfd: gpio: Add MAX7360
-Message-ID: <174438751337.3319673.5204335405880872375.robh@kernel.org>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+To: Martyn Welch <martyn.welch@collabora.com>
+Cc: Conor Dooley <conor+dt@kernel.org>, kernel@collabora.com,
+	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: fsl: Add Boundary Device
+ Nitrogen8M Plus ENC Carrier Board
+Message-ID: <174438755847.3320605.6458962348055629831.robh@kernel.org>
+References: <20250409183730.1972967-1-martyn.welch@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,21 +45,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+In-Reply-To: <20250409183730.1972967-1-martyn.welch@collabora.com>
 
 
-On Wed, 09 Apr 2025 16:55:48 +0200, Mathieu Dubois-Briand wrote:
-> Add device tree bindings for Maxim Integrated MAX7360 device with
-> support for keypad, rotary, gpios and pwm functionalities.
+On Wed, 09 Apr 2025 19:37:26 +0100, Martyn Welch wrote:
+> Adds support for the Nitrogen8M Plus System on Module and the Nitrogen8M
+> Plus ENC Carrier Board.
 > 
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
 > ---
->  .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++++++
->  .../devicetree/bindings/mfd/maxim,max7360.yaml     | 171 +++++++++++++++++++++
->  2 files changed, 254 insertions(+)
+> 
+> Changes in v3:
+>   - New patch
+> 
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-With the typos fixed,
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
