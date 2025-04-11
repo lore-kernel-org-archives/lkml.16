@@ -1,83 +1,73 @@
-Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD81203716;
-	Fri, 11 Apr 2025 11:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.165
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744371610; cv=pass; b=uKxUxH81SiGbRC+xNzSO0ANtFWYOashgIP+VTgteXxtW3DWys+pHzw7lvtVxbH2mRwlzts1cXlx5DEAbBkCPR+zmI91fc2TvfHp46VJCvf6wLXHZmKqey2pGkkPDoIEfCgysQl6h+kgd/SfVVULgkbbF2zvqsVz5RcKquj7sfBw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744371610; c=relaxed/simple;
-	bh=eZ7not74ayGyErQY97GIAbWimn+2ZHtNHi2jpeugyx4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0057278E46
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744371683; cv=none; b=eiSJCb9q9A30lsJ9keZJgxfgJ9o2q1FxNCkG8wYDQRzQMW4Q1bet/+6K1rtSJvZmMj537erwbIi5gwvbiE7oufbuUBjG7SOW/mITWRcwtojUBn1JTE9SN49fA/x/2M7mHteHxON69VwSBan0jXFa98OX6/DOWqfbgeTG5qPk/9E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744371683; c=relaxed/simple;
+	bh=2CXlJb03DPfCYWFhFaWJESoUWwe+3XynY7bKk2AxuuI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U8gkDHGcjXpiMCDV9bp5m53mwy//VHgwwU5bH/Qa0rUuGT2YR9IN1P9OpKXLjIDXFzEzWlunfRiUdtPHCCs55A9kF0Ke6tJjQr+mT45/NS4lRKkm/C+GXU6U2D8/UhvLPlFLNOxr63u2Lg1X2m59eXADad7xHQqsr3u8IYqKJ1E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=nkBQ91k7; arc=pass smtp.client-ip=23.83.223.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
+	 In-Reply-To:Content-Type; b=rawy3nEpgemOi+M0GylevtwgBgmNAxOVdv3NBiELTMOBS7lKUh22T1JkPS5X3d/UiTJRDLnKuahy6OUuJOlFNMGl9WnucpNGtnlylvibpPUeQeHDRVKjnY+TQkGvHDoRhia1Z3iMifb4PycubtwkhJpx7oggV3PzKkS7MOt+ZqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bIbTnBBh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="nkBQ91k7"
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 1115E8A3BDD;
-	Fri, 11 Apr 2025 11:25:46 +0000 (UTC)
-Received: from pdx1-sub0-mail-a230.dreamhost.com (trex-5.trex.outbound.svc.cluster.local [100.107.20.214])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 883768A3F3E;
-	Fri, 11 Apr 2025 11:25:45 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1744370745; a=rsa-sha256;
-	cv=none;
-	b=TPsLdr6dZ2BhAH4E345JeFCYsm0G2TnumsTCY1Ilub/9FV8+DBVHwxeumGBfDUCv8RphG4
-	Kxgi+DrCceZQ+DmWUYZV1SJ+qAISjK3W+HQS0MZw/PKvFjNZCxMzCMxtYF+SnHv2xRBs9l
-	+svlj1w/mv6IhbgviOmTid8Ae0ti/m8wpre4JGTV5KY8Yi9wiMY0cv3nOr4jHpCWOirztc
-	jgkK2DprIlyHQd7CeNF1LtLKHNrNPesUAn/RBzbiMJaEvsGFL+Em1qo+ndRK07NEscyiR7
-	6hdUAJ1eSu7k0mkf9dv/NNVZoEXpGQvpxNGOyRdyg4w0En8+IjdgJb0RlBDsBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1744370745;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bIbTnBBh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744371679;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=75ipyekksOM5Ri+JXFAQmqUxDl2VTW0Cqiu2vU7L33g=;
-	b=2HFGKAdBD3yTFIuPbD5v7zJxcotuv766D9IjMOWOYL1dJQBTo0epj7S9jNK1PGpX6u+L8/
-	PFebKug1w+zvqYP/YRlZBsSYS7xymqdeRG+EzzKjbQk6BSHUOfxnXlwp8GND/eyJUl5Fhm
-	cU+WnvmwgMCkwTbFnBMCQkWtUJiHZdj804jtoQPpq4m0TOmCGFPH72UrOSSvylcI2atA7R
-	V5ZghU5fS6SqiZz2Z+gkx0a3Q3/gu/XTKLcgEvwmSRyfo+AIxeloMjem2okhXdpKZpsNsn
-	N5X+88/fHqxuSjW+Mlpyidh93Dw+lf8fYGkA+UDS+32px6uJRWbndo6F8v42tw==
-ARC-Authentication-Results: i=1;
-	rspamd-7d787bdb4f-jxj67;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
-X-MailChannels-Auth-Id: dreamhost
-X-Chemical-Cooing: 1fa47b837051dce2_1744370745843_230911863
-X-MC-Loop-Signature: 1744370745843:2240973692
-X-MC-Ingress-Time: 1744370745842
-Received: from pdx1-sub0-mail-a230.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.107.20.214 (trex/7.0.3);
-	Fri, 11 Apr 2025 11:25:45 +0000
-Received: from [172.22.7.54] (unknown [198.232.126.195])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: rob@landley.net)
-	by pdx1-sub0-mail-a230.dreamhost.com (Postfix) with ESMTPSA id 4ZYvWD2Q8szFh;
-	Fri, 11 Apr 2025 04:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
-	s=dreamhost; t=1744370745;
-	bh=75ipyekksOM5Ri+JXFAQmqUxDl2VTW0Cqiu2vU7L33g=;
-	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-	b=nkBQ91k7vY1XDAEskO+FcFbCEFC0W4ZJ1yOUSLwkzdnEAT5i4nZSFbjOyCrUX/NpP
-	 nQjY0k9JRbymra0/BJd1KXHsgyq56CO8PviX214E7TnvLf+xaWeAeTMcj9+nerguyr
-	 ic951PGOQFcSQdpTW28eeSuOw0vzo9LBbsv2D6AkDAvNNZqYeJOiRR9M41xa2zHAbG
-	 BJCqPpmP8kDEl5ezYaWxcMdYg5ZR3fEJgrWufr+GlYA5/8NoqRK+LOfFsVYUkqGM8w
-	 dpBROtmFSqTd9Tpxdw7TDZTh8l3+vyc7+Oq8NimBZ1xJ84vzPkgPkmPZv4jIl2ZF1i
-	 YFq1zfZyXBQqQ==
-Message-ID: <5656d614-c851-4600-a79c-92edebc9c55e@landley.net>
-Date: Fri, 11 Apr 2025 06:25:43 -0500
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rpgiXN1GdSRlMHMHlX6jTDGMaHiSB1vrsLY0H8e7mfw=;
+	b=bIbTnBBhPZYZPQIvTTnojwddv8I0Wbeu6HjKAEm0ODfg7ZngMuOwGV1ru+LIzIcblpaBkw
+	cf5nPpxGgBHUX+dDt+5hUDhuT/JLI6At5FxUqbsJEVr2jE5UEtzx+MgZ0L7iS08B2hfdvr
+	nfo01MNVkcfxhnb3kX1MwpsNU5SdVXo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-125-7K5NPavwOk6GJGw89g8wow-1; Fri, 11 Apr 2025 07:41:18 -0400
+X-MC-Unique: 7K5NPavwOk6GJGw89g8wow-1
+X-Mimecast-MFC-AGG-ID: 7K5NPavwOk6GJGw89g8wow_1744371677
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43f251dc364so12703215e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 04:41:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744371677; x=1744976477;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rpgiXN1GdSRlMHMHlX6jTDGMaHiSB1vrsLY0H8e7mfw=;
+        b=Rm+0AmTLbsIDFjAlh0c4/EIS0KqmPJESadPGTImW6LcCYA/+K4WPFkO/MY9wufHl9L
+         QbN4weWIeOQ+mg6oIXOE6gYmLfv0ECONWXA1NK2oVVm1RE3amFxbIB6oz4JXDO8vf8xN
+         y3AlaoVw+R3NdU4FTdt9ax6d5N27+4AtCXpZw1bx9GSg8TQRwNByzMMshc5vpHbG//Uf
+         ChuKUc+8EOx59lp5X4mXLPdSTBoT+KFWeOVC+ooP2Q/WJwTZ+5WQSQYF04iGU7GiuiJu
+         JjPmWEOcJ3ARvFcjyD7vHrcO/711Jhf05vKv/v/nkrst959n+SDESihxlqY1yHFlqEkx
+         QlnA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+Z7I65ldubjVRWn11oimxpDkffUF/RpJRp7WCMZKpY4wRuOqU/kPW/PlT4pZJswZhza2ABMFx9vyXqG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa6++mvmDmUXmIlQXl7uj2fIL4LiQJnCLPy3oCFsmzeprXE2fY
+	sOJqzGm1Gb9lCNThNVFPKstvlJhySqianeq+gpXoAfd5i9Hws01I6h8CMjEk1Ir+WOotBm54tx8
+	f5hHmKrpQrRZkcHmlHx6qhX3a3QnQumckMD26lKmBn46RIIxQmLrWQBEYSw50gg==
+X-Gm-Gg: ASbGncs8PE++auz8l2X4dSVb1ko5alOI4oR/e6hArPVFp4zvBKxyUCCSz0QfrOQb8EU
+	MRLSEoRVd5q0vLF4DUAlLzNM4njnDm/CUF8b6BQjV7Yi9RnlPOx8lJfa9aIQzP1YKAcM9i3wVQZ
+	zhoMuyForwO3Sqg1Fuey127iB7EC2d9KgSnMoMNVBWwhk8Qe7V6db2fyiemd1YU8ZdD6kqTelyq
+	P/sILHkmX9PxA+64URxhggCxvjcDaSERln+TynPv6d9gjXw/aYfFh0NMryhiZ0Oa6eUSAPnLRKk
+	k3fP35q29z0RtSZVtfHYIfpSyekljBDDQAstdbmv2/6rDwDaI4ar34gdBdIdY2RDWMMTV4CsSZN
+	z8jgdA7LPnZsUSsad3azFwP0mfA8ui1+21WER
+X-Received: by 2002:a5d:64e8:0:b0:390:f745:bbfb with SMTP id ffacd0b85a97d-39ea52171f7mr2050575f8f.26.1744371676879;
+        Fri, 11 Apr 2025 04:41:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGWT+Wrq8/yLw2xOdYfWGeNI9DWGbQ2gESFnyzGQibk6n5vbhxkmM1zfjg7hr4aTrnDDXLOg==
+X-Received: by 2002:a5d:64e8:0:b0:390:f745:bbfb with SMTP id ffacd0b85a97d-39ea52171f7mr2050541f8f.26.1744371676438;
+        Fri, 11 Apr 2025 04:41:16 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c726:6800:7ddf:5fc:2ee5:f08a? (p200300cbc72668007ddf05fc2ee5f08a.dip0.t-ipconnect.de. [2003:cb:c726:6800:7ddf:5fc:2ee5:f08a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9807b7sm1776611f8f.60.2025.04.11.04.41.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 04:41:15 -0700 (PDT)
+Message-ID: <332ce477-59f6-47f9-9687-10b642b86230@redhat.com>
+Date: Fri, 11 Apr 2025 13:41:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,76 +75,129 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] J2 Turtle Board fixes
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Artur Rojek <contact@artur-rojek.eu>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- "D . Jeff Dionne" <jeff@coresemi.io>, linux-sh@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250216175545.35079-1-contact@artur-rojek.eu>
- <f574808500e2c5fb733c1e5d9b4d17c2884d1b9f.camel@physik.fu-berlin.de>
- <1551804b-fc78-4a3f-add8-af693f340a01@landley.net>
- <48881e2d8efa9d7df8156f5f81cd662c2286e597.camel@physik.fu-berlin.de>
- <9cf43bbe-898f-4b29-bd85-04f5320bce77@landley.net>
- <afec7233266c6c1fd1e70ac615ff129d9dc3f710.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v4 4/4] mm/gup: clean up codes in fault_in_xxx() functions
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, osalvador@suse.de,
+ yanjun.zhu@linux.dev, linux-kernel@vger.kernel.org
+References: <20250410035717.473207-1-bhe@redhat.com>
+ <20250410035717.473207-5-bhe@redhat.com>
+ <f03f7e13-3d37-4d4a-87a6-61731744f476@redhat.com>
+ <Z/j5y6frIT2jIsv7@MiWiFi-R3L-srv>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <afec7233266c6c1fd1e70ac615ff129d9dc3f710.camel@physik.fu-berlin.de>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z/j5y6frIT2jIsv7@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/8/25 10:23, John Paul Adrian Glaubitz wrote:
-> Hi Rob,
-> 
-> On Fri, 2025-02-28 at 16:19 -0600, Rob Landley wrote:
->>>> Which was fixed a year ago, which is why I told you to use the new
->>>> toolchain with a current musl-libc:
->>>>
->>>> http://lists.landley.net/pipermail/toybox-landley.net/2024-February/030040.html
->>>>
->>>> Unless you're hitting the OTHER issue I fixed last year...
->>>>
->>>> https://github.com/landley/toybox/commit/0b2d5c2bb3f1
+On 11.04.25 13:15, Baoquan He wrote:
+> On 04/11/25 at 10:54am, David Hildenbrand wrote:
+>> On 10.04.25 05:57, Baoquan He wrote:
+>>> The code style in fault_in_readable() and fault_in_writable() is a
+>>> little inconsistent with fault_in_safe_writeable(). In fault_in_readable()
+>>> and fault_in_writable(), it uses 'uaddr' passed in as loop cursor. While
+>>> in fault_in_safe_writeable(), local variable 'start' is used as loop
+>>> cursor. This may mislead people when reading code or making change in
+>>> these codes.
 >>>
->>> I just downloaded the latest toolchain from:
+>>> Here define explicit loop cursor and use for loop to simplify codes in
+>>> these three functions. These cleanup can make them be consistent in
+>>> code style and improve readability.
 >>>
->>> https://landley.net/bin/toolchains/latest/sh2eb-linux-muslfdpic-cross.tar.xz
+>>> Signed-off-by: Baoquan He <bhe@redhat.com>
+>>> ---
+>>>    mm/gup.c | 65 +++++++++++++++++++++++---------------------------------
+>>>    1 file changed, 26 insertions(+), 39 deletions(-)
 >>>
->>> and the issue still persists.
->>>
->>> Am I missing anything?
+>>> diff --git a/mm/gup.c b/mm/gup.c
+>>> index 77a5bc622567..a76bd7e90a71 100644
+>>> --- a/mm/gup.c
+>>> +++ b/mm/gup.c
+>>> @@ -2113,28 +2113,24 @@ static long __get_user_pages_locked(struct mm_struct *mm, unsigned long start,
+>>>     */
+>>>    size_t fault_in_writeable(char __user *uaddr, size_t size)
+>>>    {
+>>> -	char __user *start = uaddr, *end;
+>>> +	const unsigned long start = (unsigned long)uaddr;
+>>> +	const unsigned long end = start + size;
+>>> +	unsigned long cur = start;
 >>
->> The march 2024 rebuild was in response to that Feb 2024 bugfix, so it
->> _should_ have the fix? (I'm waiting for another musl release to rebuild
->> them again...)
->>
->> I just downloaded the toolchain currently at that URL and built mkroot
->> and it worked for me:
->>
->> Run /init as init process
->> sntp: time.google.com:123: Try again
->> Type exit when done.
->> $ cat /proc/version
->> Linux version 6.14.0-rc3 (landley@driftwood) (sh2eb-linux-muslfdpic-cc
->> (GCC) 11.2.0, GNU ld (GNU Binutils) 2.33.1) #1 SMP Fri Feb 28 15:47:36
->> CST 2025
->>
->> And the failure _without_ the fix was deterministic rather than
->> intermittent, so...
->>
->> Keep in mind the init script has a 3 second timeout trying to call sntp
->> to set the clock, which will fail if the ethernet isn't connected (or no
->> driver, or no internet...)
+>> I would initialize cur in the for loop header, makes the loop easier to
+>> read.
 > 
-> I just gave it another try and it still hangs for me at:
-> 
-> 	Run /init as init process
-> 
-> with the latest toolchain, toybox and kernel (v6.15-rc-1).
+> Both is fine to me. It's to satisfy checkpatch.sh which complains about
+> exceeding 80 char in the line.
 
-FYI I reproduced this but haven't tracked it down yet.
+Did checkpatch.sh actually complain? You might be happy to learn that 
+the new limit is 100. :)
 
-Rob
+[...]
+
+>> /* Stop once we overflow to 0. */
+>> end = PAGE_ALIGN(end)
+>> if (start < end)
+>> 	end = 0;
+>>
+>> for (cur = start; cur != end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
+>> 	unsafe_put_user(0, (char __user *)cur, out);
+>>
+>> Essentially, removing the "cur" check from the loop condition. Not sure if
+>> that is better.
+> 
+> The current code is simpler. Your now saying may save the CPU execution
+> instructions a little bit. Both is fine to me.
+> 
+> I don't have strong preference, I can make v4 to address these concerns
+> if decided. Thanks for careful checking.
+
+Whatever you prefer!
+
+-- 
+Cheers,
+
+David / dhildenb
+
