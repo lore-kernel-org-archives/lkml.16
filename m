@@ -1,67 +1,67 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BF9296171
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66221296171
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744360372; cv=none; b=ByuoSZFeZaU3rhdO9pas9jWkyabm7p3eHk/iPtygSnPnjGNSSi8DGXLDGoyKdMM3zR/jvW0+GYpjAdlZkC8Jx3iX0+MmbaydRma3oAjQMM9tnhPGCECwdC/U5iDIGb34AXBITpzEvAK+Xdf5P0JvkYH0zzk5/D+WjUiYZzvFiPg=
+	t=1744360380; cv=none; b=ZYtJpxSEXK2gcYlsxsb1/G5bwbb2ceUGO+L+Fg+1hDbv1z2Ld4rKo0Qu/ZU8N2G6uFfuCkOLCDgdWVXb6tdgL/5wLaC1/XiWqXyO/BGiYxG3WDVkn2Q4qT9nOBW/ZhLA/zptVg50J9+Pcj7dsZH7vGHB0ZQnEhAbzqEHtgQ4lHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744360372; c=relaxed/simple;
-	bh=9RZerGKG8SO4VX0D3J4UbqtxBn8WW5UyyhMDSi2tpkc=;
+	s=arc-20240116; t=1744360380; c=relaxed/simple;
+	bh=3LcopmI3mKFYwkhU4wqrjwgtrhm3kXCRyBZ2qL7V10E=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=F2WWaJ/auA2M7Esi4jPS+ajLguhveEYs2cIoGdZBcGuAO3+kWQRuV3EphN+ME0Kf1IFE+qxOI8B8dLp+lLdoJXXooBJyLRkxR8svhYGuvAH1WzKMPHTOqSWnz8ODRp3aZVPZxYvsOAN9nWTKYAd3QQA0BRod1PTxmASCSYcE8ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BwQuAU2L; arc=none smtp.client-ip=209.85.128.43
+	 In-Reply-To:Content-Type; b=s4q+XlnJeri9ArqmcN9ANG7Zio0u6f1Tyd1421FdAdPpqAepW4iiokUO/1+4EHzIUT8l/zvg3z2onDyEUDCJv9DQRdEySOG3Lq4SSbSczjTOYRUhQON9UkynYARX6yP48mOOQsEDURKmJgGiqksn7mvuVCmK35HkwLWtSG+2Zyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aY2ZjH8f; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BwQuAU2L"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso18173945e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:32:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aY2ZjH8f"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1efc4577so920820f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:32:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744360369; x=1744965169; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744360376; x=1744965176; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IbVkeLK39LFwQz4RDz6whx6Ldo7wvDT7KsOAIVNVIN0=;
-        b=BwQuAU2LFJdSLjxr+UKdEeeOSxh6Z1RlBlpGYZXB7vG+8Kw4LCAjRVg81/yuikhh4q
-         4boXu/D6Z6/OZ205N6qAkxN/E6P82fAlHZAdoYn/BO1iBP+0poeIIO6z+Oj0oz5uxS2Z
-         70t9KHkXfVhQK202iah+YRrZTXiDDr1UCGfzqhOXuiRgWq+hKjnlSQ6mZKwzISNrZ9lA
-         pbrDfxLl8dH9b9remAe73nSxl3+kuT5HhPFCTcsZgiZ/WHNkv0HpgNKz+Thzda9kTywA
-         e/iXCg4Dqmclxa8rp8MQTPQT4U5cNtqK7RKfoF5cqIkr6go5+DKNVh9etc0kC4oRmHAU
-         jlxA==
+        bh=kZSanJ7iQqFkDAT7N/R6RJIht4vmzcKXzsOruL2cJuA=;
+        b=aY2ZjH8f1ozBUiQ/QXXMxDPD1ChAyQKMgrSLrFPaZvxf+xGQo8a8Lxd8jJnD5O3G9e
+         eskLO/daE7CIoKMt5PKukN3SJ2WEpNyKbEG84KfdPqCK8maaY5Vo3YTIOdFQWrjwKuUK
+         D7facXGuBbwqRv09p3WrEG9Hc4+mNvSorPnlMq+KSb2vA4DvE5nyhWZVZ3ysz5Zd+Vka
+         L1Ye9vVhfBOHkphg2rvhiyUm+bcKLOguo0aV00FV7NZ+Dl86I1iJQLsJzQd3fe43SIyP
+         EkhVW3U4XTw7LnrwFPKAf/377g1wTIvGVhJOcDVTPr6s9CnvH4SQVuRZeM8I2dvq+rOq
+         3NMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744360369; x=1744965169;
+        d=1e100.net; s=20230601; t=1744360376; x=1744965176;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=IbVkeLK39LFwQz4RDz6whx6Ldo7wvDT7KsOAIVNVIN0=;
-        b=JQbQVWmFpoTLXRdZvXz0EgA6nFD1L6j7IfZHqX+WjqrkU34zIRULgUIzL4QOxLQgOG
-         72ElS3ZXk8Lwpq6QqIxgckuwSuIjGYK3UOVBE7R10P6BwXFboEimsUxvm2Iqq4FqpIaS
-         aXhIeMrU8cXXedIWKrLj0veWLkzkULyjCqBbSdkD6XdPhPF4glaj26z79+dPbeZVJsKf
-         zEsOJatYkGrwnlibOnh6cn7D+VFV5EWMYQ+jALE1qxNi3skJZvkvy7OE55y+dIiR2UTH
-         YEFE3hGbUjouMjno+C4x5bEkVK5ifHkVaoqAPU6b6RSDFWHNvJip/DX6mkc2bgYG3QOI
-         62kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXeQw1FRo/yDid2Q5SfE6jQ9wUY/v46QZlc+2Vao2mywqUc3BpMARL8JKz4q26wkk8tg/T7jqCTFMY/+qI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAazjOEEMl1pRyr8RRZiuKj5j/rZFZQ/9zZDcQhlloQoB8ZX8k
-	T1vop3jhTHdLJL2J1TMiKd15OnB43kI/z9C4Ar/Wagw5oZxk6cZIxkaH10O8Ruc=
-X-Gm-Gg: ASbGncsx0h2iAXLDdvIOlSixqNvInKC7SeUxIDHiYUTdnk1HD/y8Vv5FxTmFRvciQxB
-	jKM+G09pND8dCkVcF9wPxQJDFCOs47jTnYVGflX10jXNelCwzS0CfZJ+jmt61pImtpJ1o3mdg3b
-	4eVKBSsGNKKyYVzWJndR6kJzvYVYUjsl77dI2ojF0Xzi7Ho2lrKvZUOeTt7n5aG/IGELBhNbaf8
-	Wc/1E0+rPVbw28O91jzh7a/kJHPWFbAQH+EAKlIAnNEc97gn+X8jInLYzlTNvXRT2heu4yrhxYY
-	PDSHls87+sIHzYG7M4AxJXtKZhATBbrzogsrH1/PFgIkm+febJyjnwsSrQ6LBUM3GTIcxMD1Dub
-	m1JZJkjUqgmuDr+aFRQ==
-X-Google-Smtp-Source: AGHT+IGH2fzidsFm+EDJBudyWzrKTJzkhwFaqOYPlAnwX3LCJSEq7mJu+xZyf3CKma7vYDj28bKAxQ==
-X-Received: by 2002:a05:600c:5008:b0:43c:fc00:f94f with SMTP id 5b1f17b1804b1-43f3a9aa623mr13734005e9.23.1744360369350;
-        Fri, 11 Apr 2025 01:32:49 -0700 (PDT)
+        bh=kZSanJ7iQqFkDAT7N/R6RJIht4vmzcKXzsOruL2cJuA=;
+        b=W/qCTmw1pBUQ4mIFdLktIwldygyk62ajx254HJJhdNrwG9S3qJxy5R7OZD9Z7WMBcX
+         r7nn11+fpzKRJGIjwHTWCXC95y0FC4uJcd+1wLjTyu+GzJqNge2+0Y3phYBsCTeIveDB
+         Fiq1Z6G6Ifa0+0Um4KQPzdIFGPEiEF9vaDesE9sbmfwu8CqI12pLb4XHjVGlJOPxL5dS
+         1+7jNiNqJ4hKjvFuoTUFvJkBmasb0+SyIHxW8+v37WtqU3VEupYTS+zLrLZcgS2StT/P
+         AbvGvvrSORrWym7s5UyqUvL1GQkt8inHrxeXEWEbb/BtAFHRB4RYys2/nYfHy4SK6lvs
+         ilpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCXWS24E/Z7lWniMPSQCPNTjJQFhCSWd4YCY0v2OhqhKxB51MpqkNmKYDysletdyGyht09MvGSqUkl/K8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5LuC6Zt8ALpZ83nhIB7F3431PzomSUk8KzbSgIJK6VPZab6do
+	3FUp33sQR+fWjJ1kPzuiH8VGh0RrzqYBaoRaij0w2mWVdAwwh6gbATEkTLT+ig0=
+X-Gm-Gg: ASbGnctb1P0CODl3JBRCR42yodMiVVNqLpOjJSl8dRe6n/xjH+nevPUd/jd3JRoVqjR
+	oZrA9hyirjCoOW/QHKsXcFCvfyIDkUNjwGutKGESNS4djUedff2YgoDHEPnIMQQVMfhzA0GlOvV
+	CVT6SWpRCQeiA07zfhtNj2bRKWBrR8mO3d5Xyz72SnmgrYHbeGrvErbhi3wqcT7RH2QSIKUHmyF
+	+BVsdGgRCCSNXTFV/A0U/qlmsEEMd9qhQsdsBsucwqH3K20a5t1IEYVC31Dne/vvm3Cy5yFB/gS
+	NVNZFGUUAppa/IRckfR6yGVTo69sbSUkx/BjMqtigyZh3J/Du6/rVWlUAPeS2vQ+WFTZ0FMVfXm
+	z270VDg4WTfCwS8WJcg==
+X-Google-Smtp-Source: AGHT+IESUznTZ2n4XVtcjPJCVmr0eQyeDF65o+HShMPgDvAAkIvnxepbxU/WEqcRhEcANAnPMJQR5Q==
+X-Received: by 2002:a05:6000:2ca:b0:391:48d4:bcf2 with SMTP id ffacd0b85a97d-39ea51eede3mr1406485f8f.12.1744360376608;
+        Fri, 11 Apr 2025 01:32:56 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:f77b:949e:1d61:69a8? ([2a01:e0a:3d9:2080:f77b:949e:1d61:69a8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f207c914csm78489115e9.39.2025.04.11.01.32.48
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae979835sm1328253f8f.57.2025.04.11.01.32.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 01:32:49 -0700 (PDT)
-Message-ID: <fc00e007-3248-4b4b-a6e0-2f362b0ae996@linaro.org>
-Date: Fri, 11 Apr 2025 10:32:48 +0200
+        Fri, 11 Apr 2025 01:32:56 -0700 (PDT)
+Message-ID: <808d2fb4-4511-448e-81e9-52319fdc8673@linaro.org>
+Date: Fri, 11 Apr 2025 10:32:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,8 +71,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v1 4/6] phy: amlogic: phy-meson-axg-mipi-dphy: Simplify
- error handling with dev_err_probe()
+Subject: Re: [PATCH v1 5/6] phy: amlogic: phy-meson-axg-pcie: Simplify error
+ handling with dev_err_probe()
 To: Anand Moon <linux.amoon@gmail.com>, Vinod Koul <vkoul@kernel.org>,
  Kishon Vijay Abraham I <kishon@kernel.org>,
  Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
@@ -83,7 +83,7 @@ To: Anand Moon <linux.amoon@gmail.com>, Vinod Koul <vkoul@kernel.org>,
  "open list:ARM/Amlogic Meson SoC support"
  <linux-amlogic@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 References: <20250410133332.294556-1-linux.amoon@gmail.com>
- <20250410133332.294556-5-linux.amoon@gmail.com>
+ <20250410133332.294556-6-linux.amoon@gmail.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -110,7 +110,7 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250410133332.294556-5-linux.amoon@gmail.com>
+In-Reply-To: <20250410133332.294556-6-linux.amoon@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -120,29 +120,35 @@ On 10/04/2025 15:33, Anand Moon wrote:
 > 
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->   drivers/phy/amlogic/phy-meson-axg-mipi-dphy.c | 10 +++-------
+>   drivers/phy/amlogic/phy-meson-axg-pcie.c | 10 +++-------
 >   1 file changed, 3 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-dphy.c b/drivers/phy/amlogic/phy-meson-axg-mipi-dphy.c
-> index 08a86962d9492..c4a56b9d32897 100644
-> --- a/drivers/phy/amlogic/phy-meson-axg-mipi-dphy.c
-> +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-dphy.c
-> @@ -377,13 +377,9 @@ static int phy_meson_axg_mipi_dphy_probe(struct platform_device *pdev)
->   		return ret;
+> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> index 60be5cdc600b3..54baf7b8930e1 100644
+> --- a/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> @@ -131,19 +131,15 @@ static int phy_axg_pcie_probe(struct platform_device *pdev)
+>   	struct phy_axg_pcie_priv *priv;
+>   	struct device_node *np = dev->of_node;
+>   	void __iomem *base;
+> -	int ret;
 >   
->   	phy = devm_phy_create(dev, NULL, &phy_meson_axg_mipi_dphy_ops);
-> -	if (IS_ERR(phy)) {
-> -		ret = PTR_ERR(phy);
+>   	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+>   	if (!priv)
+>   		return -ENOMEM;
+>   
+>   	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
+> -	if (IS_ERR(priv->phy)) {
+> -		ret = PTR_ERR(priv->phy);
 > -		if (ret != -EPROBE_DEFER)
 > -			dev_err(dev, "failed to create PHY\n");
-> -
 > -		return ret;
 > -	}
-> +	if (IS_ERR(phy))
-> +		return dev_err_probe(dev, PTR_ERR(phy),
+> +	if (IS_ERR(priv->phy))
+> +		return dev_err_probe(dev, PTR_ERR(priv->phy),
 > +				     "failed to create PHY\n");
 >   
->   	phy_set_drvdata(phy, priv);
->   
+>   	base = devm_platform_ioremap_resource(pdev, 0);
+>   	if (IS_ERR(base))
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
