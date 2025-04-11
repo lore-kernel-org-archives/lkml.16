@@ -1,97 +1,85 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C43C1DFE8;
-	Fri, 11 Apr 2025 15:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ED41F584C
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385606; cv=none; b=l4PbGWaygdTHgU3r7g/CnsJWtBRRWJlNvsDxw/IE/PH2cLMewqMq4kUyL7UMp/y2pMfOFd+jxLXxJ4CcWmHAY2l+rMQQhQsdoKI98dM2kSnkq5PnoMqq3utcYV4xg1hrKDUegJlr6DmzOBKlxYj2vTGVxBI8p4chbg2pWyORTzw=
+	t=1744385656; cv=none; b=Qj+Na/jd7WSvPOOgzCpI5kGnK4AZoktuKRCnSG9rw36SfaGhUtB4TWVmWrXAztvCYjM/aj22dxXkHtwUC27H3uTphf/vnQlW4BXVM+ruP5uBfbOl+/T6uDh92F0Y80un53VfyMeFrmO8zjWA6diQJ57N1ndfvNfv+jeTfoOfJkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385606; c=relaxed/simple;
-	bh=kg3VXemwiKmKd4G0Z2R0124+RUSjZF/WWLbtBHb58c0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=K8gToATqUGFmiUBFN4V2FThhN5XoCOz5ht0OVSIEKuLRRrXd1Np4B3BL3vxAmVDOcBff4r7L54wtwpDfXBzYV/XvWQI37gSemWYdEpa2Xzia9Pi8qdDUjQELQJSe+MBtTfncmHyiAzgKJ9tYT0o5s09BoKU1klnKgEh/OKoQ2Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eaVrzHSO; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744385656; c=relaxed/simple;
+	bh=rG9dFgpUFs+9Utfiof1P9qMSsV1pNeVw+D8FvtrrL1Y=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=hgZ+6+koTap5w2ESetqaDIYiyuJoNFAN4nUbK1oSLqIaulbQePNRkfaakNoxfVnvjx0ZMbWwKlR2gtVM+zsiy9/vS9C6Nhl3MwqqP1YeV8O8pOoMzBVT9q+TqAY9W+VoHSt7h+WcHm731QLGKODGY4GyZlBe8nf7HVgaIbXD/0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OAny5Zre; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaVrzHSO"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso3361820a12.0;
-        Fri, 11 Apr 2025 08:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744385603; x=1744990403; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kg3VXemwiKmKd4G0Z2R0124+RUSjZF/WWLbtBHb58c0=;
-        b=eaVrzHSODiVs/ta75uBPW6PUOUmrZ2k+mxgdSdU1sxfDZK4Grcgn6Y/RMFV2FYoopX
-         DubR1uyp+IYU5UbCT3aBfO7m+QKs4VC3wKUq9LJjZnedA+WfuDiFn44C4dMaIlYbByz1
-         XWmkivksg2dGtB1BOg/PS6lVNDufK3Fa0/DblD79S0xgpX+hMCsP9zA42jsmVAjN7nxE
-         AK+aB/2j6fjFBrgNIbab7HUdnq+v0Hw2l8dfAsfwU//B5HVv4OwdWKXo96yMDiI/qs1i
-         VGJIv4pPF5lcV6NTTn28NZj5gkJOsLaIRyTgYT0qjD8ki3ZjvQZwo14HRyx5bt6G0JMA
-         HeTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744385603; x=1744990403;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kg3VXemwiKmKd4G0Z2R0124+RUSjZF/WWLbtBHb58c0=;
-        b=qY6o5IdPBGKQqqAd5pLg6eqReb6UW2i6K7Q0wmRca04CEzyikqDGEWKugMvIfuz2Il
-         PygoKVaqnYMXLZ66g4RJX2szK+anXukiWA0cWc/GBiA6mXuV/H7DMoWK0KgZAVpSrNfq
-         4KVgdftoeuELk0Dm7uVMpH+thS4G8yIdNNl8xWOkqtlVobqpcMPv1R0BT53xQ++pYtt8
-         pThz25mcUbApliH7rMCdnl/iFPM2fVsDLmdmP+vJ8mCviq70psGmdopIQPRpk00Lp3ux
-         DH0iqYgM6smpfPZrxDbm9paBdktVtqSWKsfU3EzYXR7Ul3nmMj6xL4xoIV2RUX5M+dbF
-         b8Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZSaFjctppFo0vLkiPPqsQrJtD9Wnzmj2/OIlqjFrwSmUQOI85mwmn6ZpSnj8hNcI6B1NMe6XyogNGlCGV@vger.kernel.org, AJvYcCVfvGIx4IpueKoowtRiEyEt/zKgMlCViF0OJg/VF4pHgQWYe42yas6QPfgSMwoVvnUQJ1MpQ0iAiqMWLw==@vger.kernel.org, AJvYcCXhogMpGccu2hf9x62ZuzoMWPbrYPN04EvTcDOjgQud+BbhGndQwzIPJcCGcaQ+CaZNq1UdwqMOSlCIYERl@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYSRe0Z5IawtlGEgIyoRZ2+NdbDqoGpbJkqaX3Eog8c5upRgQO
-	KnVCTH+drXYNMwmY3f+lT8wmuQCwioGgL8gWtUqO1WwX8qW8xp2u
-X-Gm-Gg: ASbGncst3CH/tLfdsNQHGCICCJ+paj/OQSJfst9Vq1Rgxso6WjlIYnvlN2g4df+2Ru8
-	Gp29jXUIRIlWikztXjz3yuE011MSsRFOhUVj+Opj8fukKQTMMfAmrObZDHWbcPQKBuaiu4K0Ck0
-	fnnNosth3IpL3VbOsnqlWeluDm5xX7omSMC3POhvbZxqwhqTeCUCT8Drpt+03aAvXfK0bAJp2vR
-	kU8P8O8iwAgoOTOwHjeD2OULWU4wEktnhVjUQCP0b4T+Fz3zQ5ISMkUuHHVC5v+2yGIV3Th3pyk
-	eNmgD4FuxlS3NLPv2GYrQrnZqAwG2y8sW56R5ce8ii0KZoneBS/5gA==
-X-Google-Smtp-Source: AGHT+IFolPfgBh4MqDlhl5CFTWgay9WZHGjuX99wTZEKev4h2CnxJ5Ib471SmxyPwOcN/aFAO+58zw==
-X-Received: by 2002:a17:906:f58c:b0:ac3:8988:deda with SMTP id a640c23a62f3a-acad36a5de5mr300024066b.40.1744385603057;
-        Fri, 11 Apr 2025 08:33:23 -0700 (PDT)
-Received: from [10.176.234.34] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ccd69asm456861266b.159.2025.04.11.08.33.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 08:33:22 -0700 (PDT)
-Message-ID: <3939a945088f4b43bf4e69c05a5718b31bc151b7.camel@gmail.com>
-Subject: Re: [PATCH V3 1/2] ufs: qcom: Add quirks for Samsung UFS devices
-From: Bean Huo <huobean@gmail.com>
-To: Manish Pandey <quic_mapa@quicinc.com>, "James E.J. Bottomley"
-	 <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
-	 <martin.petersen@oracle.com>, Manivannan Sadhasivam
-	 <manivannan.sadhasivam@linaro.org>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman
- <avri.altman@wdc.com>,  Bart Van Assche <bvanassche@acm.org>,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, quic_nitirawa@quicinc.com, 
- quic_bhaskarv@quicinc.com, quic_rampraka@quicinc.com,
- quic_cang@quicinc.com,  quic_nguyenb@quicinc.com
-Date: Fri, 11 Apr 2025 17:33:20 +0200
-In-Reply-To: <20250411121630.21330-2-quic_mapa@quicinc.com>
-References: <20250411121630.21330-1-quic_mapa@quicinc.com>
-	 <20250411121630.21330-2-quic_mapa@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OAny5Zre"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744385654;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YhYsOJdsfx866WPJGrSolHlP/LFfcf7OlKxeuxGvw9Y=;
+	b=OAny5ZrectCBO8pjvkTDm/+8twImUlzkJYTcbjOtmGrfaiGT86VOJim7WsQAQFwmZM0sy2
+	kbCHYCLy/4Spaw9SQO2bM4Upq/YVZqcqEFaq+xOmfrGRDh9MJIIBqjHPvZVnVODv96Mtjk
+	m5FoIPJ/fqZ26FP817pCZB+TRrDcujk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-DFLz-8QhPbOMGRTUZG__Sg-1; Fri,
+ 11 Apr 2025 11:34:10 -0400
+X-MC-Unique: DFLz-8QhPbOMGRTUZG__Sg-1
+X-Mimecast-MFC-AGG-ID: DFLz-8QhPbOMGRTUZG__Sg_1744385649
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D87018001F3;
+	Fri, 11 Apr 2025 15:34:09 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 29DEE19560AD;
+	Fri, 11 Apr 2025 15:34:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250410-fix_fs-v1-1-7c14ccc8ebaa@quicinc.com>
+References: <20250410-fix_fs-v1-1-7c14ccc8ebaa@quicinc.com> <20250410-fix_fs-v1-0-7c14ccc8ebaa@quicinc.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+    Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+    Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH 1/5] fs/filesystems: Fix potential unsigned integer underflow in fs_name()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2425259.1744385645.1@warthog.procyon.org.uk>
+Date: Fri, 11 Apr 2025 16:34:05 +0100
+Message-ID: <2425260.1744385645@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, 2025-04-11 at 17:46 +0530, Manish Pandey wrote:
-> Introduce quirks for Samsung UFS devices to adjust PA TX HSG1 sync
-> length
-> and TX_HS_EQUALIZER settings on the Qualcomm UFS Host controller.
-> This
-> ensures proper functionality of Samsung UFS devices with the Qualcomm
-> UFS Host controller.
->=20
-> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
+Zijun Hu <zijun_hu@icloud.com> wrote:
 
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+> fs_name() has @index as unsigned int, so there is underflow risk for
+> operation '@index--'.
+> 
+> Fix by breaking the for loop when '@index == 0' which is also more proper
+> than '@index <= 0' for unsigned integer comparison.
+
+There isn't really a risk.  The list walked by "tmp" and the checks that this
+is or is not NULL will prevent a problem.
+
+I also feel that breaking out of the loop with "<= 0" - even if the variable
+is unsigned - is safer, on the off chance that someone in the future changes
+the signedness of the variable.
+
+David
+
