@@ -1,64 +1,66 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2E11D79B8;
-	Fri, 11 Apr 2025 14:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8871607B4;
+	Fri, 11 Apr 2025 14:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744382218; cv=none; b=UPqekO9vDCqGjLYNYjP+sX37CYViWpewqV4VYKCPARVKp285AFJxYOvQAkYm9U12GAXTYRB7BbO8SNyYBVaNBJ4mG5lSy3tT7qVpZ3ckk6vOYtBvkGCXDvL0ioQ7L2P/Kh+RKFrA3Qwto1enIdUr/r1kW+REdT2V8KFLpCVROqU=
+	t=1744382218; cv=none; b=QHN5oeK2l3HkwkMDnltFgBLeGs9fQbn4lhk5NOr4Eh8u6E9gGJVfc2eusCvTV82QmEMgGdGNraRGoZ+jUy+TXyqss1GVFtDrWJU60YS9zMMzzruBm1K7ZPY0lAC6XWZHEJA9hL9J/xQOYWqc2gwQqOxb5TmWx9AjuFGC9+oh6Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744382218; c=relaxed/simple;
-	bh=MDMZyOrDI1AJ1Ze12LYcqz8KZ/LNZ7rG2FZPC6LCaNc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fQIHlNQd9mnNG2OQt5pQTDs557+bN1P6Yg6mhbhCAh/R/CZYKLghEqhF1gQJIz4H0F7q3Jghf6Lmo6Q1OLqGvnii53dZ0OyxCZQh7hHhdBtqyyyi2aQmOvcLpTJ8cF9/6rWIVEyuYJzMt0KRsQiYYd8ovvhyZ+M9IXQz3ThdgUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XwNH3FDM; arc=none smtp.client-ip=209.85.215.175
+	bh=SrM3/nW46b/Up1uYmcAJVJKRqJerTsXY35JIMkLNcaI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ncrS2ZQwX2/OFMN+sil8RmGQ5DfPsHtVvZyybrypPCLfeEROvI2nkcoFhf0WcOTHlVcJFqbfc5JCKpkVzWI2NpD96VEhUSBYmASZmAE39a7m7PZ6mWIo/HQRaim/qtSy9wZSQj7xwOsTvzi4jMxKE4irQnHmBl/ejm/9hN2yYW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TRQELaie; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwNH3FDM"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-879d2e419b9so1817331a12.2;
-        Fri, 11 Apr 2025 07:36:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRQELaie"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30820167b47so1515126a91.0;
+        Fri, 11 Apr 2025 07:36:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744382215; x=1744987015; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gw2dO8vS6OgIF2LvBFKNBF2YrfGqh6ki+p5neWQ9t0Y=;
-        b=XwNH3FDM/3bsSaDK4ZJc2oUq/sjuIAEH/kPM0zZiql8EoY0OlZDFDRemDG8oWSUP2z
-         YwBDPXO6A/4h8HXYG22DwnF26USLzck1kK0rWlo1cW7jA1HLkXJ0T1/uHQ3u4vlzAF17
-         jTxOTqmza3hzVx95MLZeim79vHFXMeczb7LQFsT14HEk35xhlB5nxNgGq3W6SGndgCi2
-         LSA4bVu2W8IOy5hcmno0mnLji7NbJz79s79HQJYL0G0RCBFq//77pEzj9Ig0Ig4dy9dS
-         NVcwC4EyXW6M9fICpP+eaGmuDHJjFlugZGRbbnem+aFO7erAr+4JqqF7g/JnGsgl2I0d
-         bpxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744382215; x=1744987015;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1744382217; x=1744987017; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gw2dO8vS6OgIF2LvBFKNBF2YrfGqh6ki+p5neWQ9t0Y=;
-        b=RidSKdakx43o+Gty6ZlW3/0I2g9Y6KV1POLiekzeXY2elwSO2TOeF2GvYm3wshbame
-         gRa2rFfZAxPVE0+0fpb5Di9UZjmc7zAX81OZfeFDGTDkVzD2Eos1h1iF8HZ3rZGXmpGp
-         ZCovYE5XfryP9gLBb2SPfftHQxAZCeD9LWy0ITc+VGt/ciPcBtXIzz6PIvUKM91lmF3S
-         13+4yPBW7/Ws0KarDyYwINdNwBWYD3hk47zIX3hXqjSTAJRljzhstBZZMwzM6XSpMxSO
-         HOL2XXHAI/2fhb37ETcCgyMq7dR2DSFlRfLkybps1PAWsCXtVLCvg3Qfl0R29bnRNzIL
-         W4SA==
-X-Forwarded-Encrypted: i=1; AJvYcCVjtbkIHCgfLMo6u6S9/bT/fZqo6p+EfoDXnUiAMxP8i1fopw35xVSLJjYJV+61OZtVYZnZv9gmlb2JRQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+0lvoN9mk8brb4J0fIGDCkhDPk8wRXOBiZFPc0egEn1jhyVJ0
-	02SDmP8mdlARvzmqMfzdbm+LH1qxiA0cqd4gmcaaJgN+SKU/Scg0
-X-Gm-Gg: ASbGncufuD3qza0tGjrH7w8cOruFHINpnUYN8a6dbMB6RJmFq1b0BZrV8cth7lBx3L1
-	j6pJ9YUZProQRC5U33wfAf6cGymAy/BoUMSglXx2xAMbQ5jjxTlKBHCI0J1dUBkU188am4Rz6oD
-	JQ8nrbXqwGX+iJ947IYTbKP3FCnEzjQXK5jv/0BdTXfqNjM6zNQRUyHshB9g4tuxyazQHIL/H7s
-	eTVAGhAKDvXuKR5/5Q1lbzrN4XQ7TJX+2867g6dqfgXag8PcNvEeXuzObReZzc51XFF9IW1oevK
-	oI1UFlFoemQ0NH459Y0jzLuMFHov5+4LdxsPiiIv
-X-Google-Smtp-Source: AGHT+IHuejsi8XeZLddNc0+AGQbP62F+n4HF023AKKUVHKsJERbvM3IWwYHT7xFCw4t8bAwZk0BLjA==
-X-Received: by 2002:a17:90b:5448:b0:2ee:b4bf:2d06 with SMTP id 98e67ed59e1d1-3082378e686mr4379078a91.19.1744382214834;
-        Fri, 11 Apr 2025 07:36:54 -0700 (PDT)
+        bh=JmStyPiy4hw3LWA0hjvsecRLO8wk5l4wDE5cpFveI9w=;
+        b=TRQELaiebilzLX7u+LFHGi3VE/Osa8L4KlvsbnSM0YViPXq/tz01hPrJvg4NkGJlhE
+         GbCLzcCBh1IF2Yc8ddPfW1fS4M1gB6vmtHGZs5o1RI9U5UXMcFZ2L6Veiak7hV9Pyiqt
+         /4+IASP/l5gPzeQRekFIJ5O7yKQvNMbvhZWyQyYPkMCElS+Z7tEap5+KSABQNHoFGriX
+         dGgbbMv8XQykTspdMNJcElQPexLO3cOdGFC0MWxyxJLrnVM/0s4Isnrh81emDFyoSlsw
+         4vev6nAdij2ABcJxNZDd2s4kb8jyEZSqLkmFgKEkOIjU6VVFAlZoBEknhLjQHbpWy0ZB
+         EMNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744382217; x=1744987017;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JmStyPiy4hw3LWA0hjvsecRLO8wk5l4wDE5cpFveI9w=;
+        b=Xo8QJ6NLcw49oo7yiJoDskOKslK0jSVMkV6dCO1cCOVMYYmqnO4ZKf0xdV/G+apqCk
+         qYj2U/ZOqbx3YwD8wU58/6MUO08IsfxyWTflMnNwa9eX+B+mpY/CpuJ7ztsbgOp9VjNd
+         NX2VhWnB9wRwuNUkWp+HUVnYBA5lE3ksKk/tvjAJQVPQv5W/PWR9DWaPkAWRovmVEOSM
+         y/LmHu7Swo+XeUY+zIVLosIajweyLFNxwP7c32WDo/LhuVgZfLVFzHcDMWXhfMBqHvuq
+         6jzlJp5XX73FFF5ywImWESPzYeVnbspazX34nKmGw1lJESQ/hs6Y5fdfHWwZiPk0ASGE
+         tIMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbWPusIVwO0jeMcJgxiwsKSSWG7yUCkxKv2YFJwW7l8zzgQ6d/svkk4OaR5bYIJkUOCfMQjJJ3NNBsWq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz30pupRiiziU4bVLQG+QumDmCVqFt6bfdyQ4v410C4UC9Qk7i3
+	cd8X5NS9ZBVI36KS8l2xRqEACH9R4jIos7Ab8ZguENf9/wXdutcy
+X-Gm-Gg: ASbGncsFHtTwPgqFPV8BZEy0YeAcIvWgwePwEmxfzzGVkLjMnbgP5xFUUAlbtZH+35j
+	IHNF/oIc1PrnShSRDe1rCwwWT6XX4KwdgyWIbHtAvwLH9vn1SVl44P+4N3sSnntfcWtz9UiTF5g
+	ea2zjDRsvPdL/G7OAo8lpLEeXzyaWdSRTDiITSY9EPwO+N/03eDUbWAwzuCXJUFgRqJiq3f0VuB
+	SLokuz4nTjYL9/f3qVXxbePAwpgc+IpanzNcn5t2h/6aY3lX+GZH9lPeUE+0j6Wi++NN/4oCR2j
+	5bK7QiX4pVk3p9KqREhpajuSX4r69xN/1RvAwWGN
+X-Google-Smtp-Source: AGHT+IEPpzHRyCtkekhPOaZLwY2OqbUef4IqAFen1PMWIynzEewjeDHUOYVEVgWaguQ5f5cyn8PgZQ==
+X-Received: by 2002:a17:90b:5608:b0:2ff:5267:e7da with SMTP id 98e67ed59e1d1-3082362265bmr4491874a91.3.1744382216799;
+        Fri, 11 Apr 2025 07:36:56 -0700 (PDT)
 Received: from [192.168.1.26] ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a14bsm5630754a91.1.2025.04.11.07.36.52
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a14bsm5630754a91.1.2025.04.11.07.36.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 07:36:54 -0700 (PDT)
+        Fri, 11 Apr 2025 07:36:56 -0700 (PDT)
 From: Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH 0/3] platform/x86: dell-pc: Transition to faux device
-Date: Fri, 11 Apr 2025 11:36:40 -0300
-Message-Id: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
+Date: Fri, 11 Apr 2025 11:36:41 -0300
+Subject: [PATCH 1/3] platform/x86: dell-pc: Propagate errors when detecting
+ feature support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,10 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPgo+WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYyNz3ZTUnBzdtMTSCl1To1QjE1NDg0RTcxMloPqCotS0zAqwWdGxtbU
- AcSyOBFsAAAA=
-X-Change-ID: 20250327-dell-faux-52e24510a574
+Message-Id: <20250411-dell-faux-v1-1-ea1f1c929b7e@gmail.com>
+References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
+In-Reply-To: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
 To: Lyndon Sanche <lsanche@lyndeno.ca>, Hans de Goede <hdegoede@redhat.com>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
  Mario Limonciello <mario.limonciello@amd.com>
@@ -78,34 +79,58 @@ Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  Kurt Borja <kuurtb@gmail.com>
 X-Mailer: b4 0.14.2
 
-Hi all,
-
-In commit 
-
-	35fa2d88ca94 ("driver core: add a faux bus for use when a simple device/bus is needed")
-
-the new faux bus was introduced. It was designed for cases where a
-module needs a fake parent device.
-
-When I saw this, dell-pc immediately came to mind so I wrote this small
-patchset.
-
-Compile tested only.
+The dell-pc module only supports the thermal management Dell SMBIOS
+feature, therefore it is pointless to have it loaded if this is not
+available.
 
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
-Kurt Borja (3):
-      platform/x86: dell-pc: Propagate errors when detecting feature support
-      platform/x86: dell-pc: Use non-atomic bitmap operations
-      platform/x86: dell-pc: Transition to faux device
+ drivers/platform/x86/dell/dell-pc.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
- drivers/platform/x86/dell/dell-pc.c | 67 +++++++++++--------------------------
- 1 file changed, 19 insertions(+), 48 deletions(-)
----
-base-commit: 70081121e24cacbef8b3be849cc13bea31f8a158
-change-id: 20250327-dell-faux-52e24510a574
+diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/dell/dell-pc.c
+index 483240bb36e77d2118dfcbd6bf271e12e82e042f..38f198a7330006333b01787a9934b8eb146ce75e 100644
+--- a/drivers/platform/x86/dell/dell-pc.c
++++ b/drivers/platform/x86/dell/dell-pc.c
+@@ -146,11 +146,6 @@ static int thermal_get_supported_modes(int *supported_bits)
+ 
+ 	dell_fill_request(&buffer, 0x0, 0, 0, 0);
+ 	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
+-	/* Thermal function not supported */
+-	if (ret == -ENXIO) {
+-		*supported_bits = 0;
+-		return 0;
+-	}
+ 	if (ret)
+ 		return ret;
+ 	*supported_bits = FIELD_GET(DELL_THERMAL_SUPPORTED, buffer.output[1]);
+@@ -255,16 +250,12 @@ static int thermal_init(void)
+ 	struct device *ppdev;
+ 	int ret;
+ 
+-	/* If thermal commands are not supported, exit without error */
+ 	if (!dell_smbios_class_is_supported(CLASS_INFO))
+-		return 0;
++		return -ENODEV;
+ 
+-	/* If thermal modes are not supported, exit without error */
+ 	ret = thermal_get_supported_modes(&supported_modes);
+ 	if (ret < 0)
+ 		return ret;
+-	if (!supported_modes)
+-		return 0;
+ 
+ 	platform_device = platform_device_register_simple("dell-pc", PLATFORM_DEVID_NONE, NULL, 0);
+ 	if (IS_ERR(platform_device))
+@@ -297,7 +288,6 @@ static int __init dell_init(void)
+ 	if (!dmi_check_system(dell_device_table))
+ 		return -ENODEV;
+ 
+-	/* Do not fail module if thermal modes not supported, just skip */
+ 	ret = thermal_init();
+ 	if (ret)
+ 		goto fail_thermal;
 
-Best regards,
 -- 
- ~ Kurt
+2.49.0
 
