@@ -1,137 +1,140 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979BFF507;
-	Fri, 11 Apr 2025 13:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0352367C0;
+	Fri, 11 Apr 2025 13:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744376642; cv=none; b=A30UoBYDUFd1stmYjky54rsqIncnzj928d5SYEe/WeDvX5EHRVXmhDVL47vbt8v6NEn6AXCymPd+kK7Wcg6Ylr2gjmE70+wuMYKzfVnbSuDe0guA/YTegUwb6eDHt7uaiv5P6zLGDC4bSFpnNFxrnCAySvB/VYX2qcDFxho8trs=
+	t=1744376779; cv=none; b=E5rC6TcBkgXyYv08Ga1p5debVlyqVUDjx7AuYkcobOPhT+etq7pHT/WLiZTWDcvtRJCarO2bIiGT6hT/nRkkFPRYtWxDZVAoZkAZ0XeDD3CLMBZgXgxIZf2I9zqK0H7WIhYY9+hLPStP8oMso8XahD87v+jVQma31hZ2hzV37iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744376642; c=relaxed/simple;
-	bh=vbc6ZmWyf+jriZz7JjhFNLIzxydbUNT0CCpHcuBbacI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTgjgDfR8qsF2QSVY0MuIY4qIM4Ktq7b3zoO8QdF36X08xYpaOX67n+ycVqeW/3tWO31VEeN4RJ4rI2iL3i6Q5sLr6290lP9aAKjPVhdPsZOtor4YxCCWcfz9rjeo27igPYjz8CfQb74D/r4Jrjh9T/m2TdPWrCGIcYQkXiCk+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJKIaJ21; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1744376779; c=relaxed/simple;
+	bh=i1D2Ou97CKVNAPnCQI00E6G84TcUKij7uykbq1EQXK0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ADBHxHEND026rEs7mpma0RZYGVLG90pM6OASM03bUnk3k3JBxBgQb8Zf3kH5fFQEpiMsbKV+WvStHs2BzkAE46Gp52ivkx0Q5yJsqt6hyLxttXIQmFRxzhznsmVvJV/NGt1fkMaeQFb4/d6io7G21e+yhvN4rnajWrrMvlWulhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGipx4Hv; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJKIaJ21"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22a976f3131so20613355ad.3;
-        Fri, 11 Apr 2025 06:04:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGipx4Hv"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af9925bbeb7so1539576a12.3;
+        Fri, 11 Apr 2025 06:06:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744376640; x=1744981440; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oDx/ZAMBg1+kC52mKLqsxpIV3ktRutOE6TDlgFN8gTM=;
-        b=KJKIaJ21LSDIagiUGUjbArjXIL/KWNSrFJxPXJyNCJ6RtKo+V1k3sfbmg3k+E6qK1B
-         hTUlklyX2vYdqqCYXsb/URyC0whDNwbjj7hPie5n+IDk2UBz5TeobgdS+uOM/Sm9axPo
-         f/gq6DZpW7pLFJp4GjYkBS2y7llT33ckQS1+Dr7rUay4Iqx5mrm9rcHqHFn5c/BtE5WN
-         UzxVjr32T4c1C3ywE0FLz4K4E2xM2/jVnNflcRh+FW1nFxhcto2u3/O9NnCjGukK7mMF
-         AlxG0M82CXuRhYwIzsSBprcFSSRmjs7fKCd2a3v8mjha8wgy7AxnF9IGXLARpa0h1qQH
-         N1CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744376640; x=1744981440;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744376777; x=1744981577; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oDx/ZAMBg1+kC52mKLqsxpIV3ktRutOE6TDlgFN8gTM=;
-        b=RoTBLRYdyT03kg/9tkpXHcytaI+ZtZ3YewrTsqHX0TgyDBxNGJOwUU5rGoIdRfEYwg
-         w7bFVgp4qodXV8VMRnOYhJSBWbXF4BVFGCnoIaVVKl23liZspjX4NKxDz7alRsiWmH7u
-         kYCX5KB4WVHfjaNvFn4OFCcI87/04zC4K9ook8U45L9Kyvd/55N6O3v1ZYTYbR6Vi71c
-         VrfKL42+OEM6k3Lh/hWtlRCvOEo0b+FEzQYQbVWDzBrztXe6dkRUZrrMwlarVsKCsb2W
-         dtRAZ7Q2FrLY2u7LkDAQEfnE4RHeA7kJ+ba3mAsjtDlqAqaeR8Q6AiapLRlnzDXdSc7O
-         4DLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSN2ik2u+6d315dLTNAL2/GjhQAUfwNTfAOBQ1rprsSy+3zwJP1aR4P4OyJHrQXtW2xbfb+HJ42CqY6P0=@vger.kernel.org, AJvYcCWDQio39FpNRM1g/QizrZLZihKYmJUswuDdcEp2irMgKMHuWdeEDWJx5/dpjlBEjyWQkShzJe6BaJxy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ78UfdAVVY9+1Fm14aS+2YZAN9IDMAmpdGnREthj+NY0DnDzZ
-	jBcqQBMv+y7IiZIYASC29ULiNLVeE+/Mww8KQ8GrD3DV6MbBTHf7
-X-Gm-Gg: ASbGncvcVRs3LTowYDqfomcqEj8tXu5Mo13JajjQHZWq5f1jQiAHBmcNCBV9AHgy5bZ
-	W9IaEG3yuLogUDdAjpfJKoI3WYva9ZSXV7fIL5PppLE4Zj/aYj+K+F2cxawN+l95p8KlCICnXhR
-	+ZhWlcJaQQw8lPGwByGy1I89K4jdiNsTT3dLbm3Ep94i/KsF33XA1ZgA5STTVz5y5fuWdde7y4T
-	3+QXmYVP7KOKhkpq51qI0KDDE1Fr7z4o2khTIEwlhh68EdxxTgLbJYpvJapdmSKCUlQ8/QW633m
-	aYOvk4HytBuW7n7CJg9NUuWqp/f81ZV7nzSSjUg=
-X-Google-Smtp-Source: AGHT+IFFi8JWAgq5wOqZtji/k7J0vMYGZAG2gd6+p+0IwD6TF71Ar7ISQaduUvALS+2LnqeWQzG0BA==
-X-Received: by 2002:a17:902:ce8f:b0:224:10a2:cad9 with SMTP id d9443c01a7336-22bea501532mr35861515ad.41.1744376639096;
-        Fri, 11 Apr 2025 06:03:59 -0700 (PDT)
-Received: from hiago-nb ([2804:1b3:a7c3:a964:9277:4e8:b712:66e2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb554bsm47982875ad.199.2025.04.11.06.03.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 06:03:58 -0700 (PDT)
-Date: Fri, 11 Apr 2025 10:03:54 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Judith Mendez <jm@ti.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Josua Mayer <josua@solid-run.com>,
-	Moteen Shah <m-shah@ti.com>,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [PATCH 0/2] Fix V1P8_SIGNAL_ENA and HIGH_SPEED_ENA
-Message-ID: <20250411130354.dc3sv3e7ruekkhkp@hiago-nb>
-References: <20250407222702.2199047-1-jm@ti.com>
+        bh=16Z5M5DcOE9Lnz/2YoHjE2xbLvcfJFwuxbZ0rHOXp1c=;
+        b=TGipx4HvMS4zU5F4RlzHJTOnTwWBHJRAeX1jNccXPmN251//Y0pqGGAc3faSNcddRf
+         fd2R3hlh8JYrxwfUt0ldQEKWLHGjaagd/riD0n2h+UJ8wIYO1FDxjfNNmcLe0cpMxvG1
+         rAe68mDMc6BhkXoIEpsuH8Fv+HEaFHBau6LUkQZtk7TDOoMwmjLuZzjfmYRJNKZygTL4
+         pz6OGxpq7S+C3kl4AvLNT2/aGpvYMbLCT6yZTcE6CGkBOPpniD3kZuyx5Q0nBZRDQueQ
+         Qi0FQFIkgQ4C5QNIpH4x2WVTPV/Kd9G4s3lkEYIiV14KgdsovXCnvWmY0sYig9Xdd4tj
+         4pjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744376777; x=1744981577;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=16Z5M5DcOE9Lnz/2YoHjE2xbLvcfJFwuxbZ0rHOXp1c=;
+        b=w2VVpBVAAvDblnMLWb/VYi7KvK1yzouVer7w8BkQn+gZODxIpKLvjrcLuFiEox0aWt
+         ZNX5TKn0ve8fLRZMoolIIjRf4L4o/iA6pcHcRsFCMk1K2xKYKOB5ZeL5LmqLeZ7fB2Oq
+         lqdSXv80hYtSMLkZoEFx5ebe8a0vSxbXjnabrT8/H/1EL3WiX9gZuLlm/qladocQGlf+
+         kuDH20zaoukqaWr/MBFMrskwl2UPO2rgcnmstyuoFslKVNersAqAl1+NzkW2RhEVbyV3
+         QQ1p4EPh4EH7hA/Rl/wVzW/Q51bSV/2BLnlAkwEFA65rdlmeilXSX9CsX4zExmnO0o+5
+         NLtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWlHhnVqJahGJugYRhL+HkKIJcd3ASmChaXEGMydaARtKPyd/C+VLQfi9tmhdsT8m9yL8iCELXTio2dqzUk@vger.kernel.org, AJvYcCXCEHoZk04h2BPoaxqbR061C9dpVyS3RTBR1YC+jB70sU7nGXhcUCL3wKWc04+KwLyleeiZl5mHsWsRYcO/s4Tb5Wuwtg==@vger.kernel.org, AJvYcCXSYhKH/w+bwtKgTBWIiIxEDmBqbe9KD7hXHduIMJx3TtxFcSHbx4eNbz9iP+BDssXF5EgYE2wA4iVYdQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkZ+g/pDFPEnsVOShkZ4Yrq3R+SW3EWsYd/c92ULHIzvWi8MyL
+	N4+81JF5eAR85jPQXfFWC4n/azBmpZPEhQK7utmTvRIah0TmuEKn
+X-Gm-Gg: ASbGnctuSwfsMe1tMnqbp3XVN3sGbx6tHHavwf8mgBCKFKoL3cvbsBM5U5hTC1cWeX7
+	IUIONij22MUW18ksd4MIfmtD4nvCnBmhE2PZghy1Y7XBNVe7h8wztrDlhJxvDmK2BG1l0e6lMyT
+	JFtBCYM5mv28FyjwsR4WtkiHakr7o3qG57llJUDih7fKg4vb6vidaprjXwTfNpgY/CJcd5jFYpH
+	rQZv9M0gCVnC3BBvbe+/LyTUW/SCBpr4DUez/KLwXujsFQyHGnX5BpVqgeBILdmBPbUNwLSo1+u
+	c0U0XprbxIvb7rwGdCeUvrTZSHno2ykInA/dz6YFFMAz
+X-Google-Smtp-Source: AGHT+IHXQQJNr5f+2rw8eFFY8+eyi02x6fIaImpu1b5SZ9n1NvT8kBsWxbUjmHZDGm5jodN/VR8VFw==
+X-Received: by 2002:a17:90b:582d:b0:2f4:4500:bb4d with SMTP id 98e67ed59e1d1-3082367494fmr4128050a91.20.1744376776800;
+        Fri, 11 Apr 2025 06:06:16 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd18580esm5628306a91.46.2025.04.11.06.06.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Apr 2025 06:06:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407222702.2199047-1-jm@ti.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 11 Apr 2025 10:06:12 -0300
+Message-Id: <D93TYI9ZM4N1.R9F1FMQ8H12S@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>, "Guenter Roeck" <linux@roeck-us.net>, "Jean
+ Delvare" <jdelvare@suse.com>, <linux-hwmon@vger.kernel.org>, "Bagas
+ Sanjaya" <bagasdotme@gmail.com>
+Subject: Re: [PATCH v7 00/12] platform/x86: alienware-wmi-wmax: HWMON
+ support + DebugFS + Improvements
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Armin
+ Wolf" <W_Armin@gmx.de>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250329-hwm-v7-0-a14ea39d8a94@gmail.com>
+ <174437423366.3859.4617952203843157795.b4-ty@linux.intel.com>
+In-Reply-To: <174437423366.3859.4617952203843157795.b4-ty@linux.intel.com>
 
-Hi Judith,
-
-On Mon, Apr 07, 2025 at 05:27:00PM -0500, Judith Mendez wrote:
-> For all TI devices, timing was closed For Legacy and HS modes in
-> half cycle timing, where data is launched on the negative edge of
-> clock and latched on the following positive edge of clock. The
-> switch to full cycle timing happens when any of HIGH_SPEED_ENA,
-> V1P8_SIGNAL_ENA, or UHS_MODE_SELECT is set.
-> 
-> Currently HIGH_SPEED_ENA is set for HS modes and violates timing
-> requirements for TI devices so add a .set_hs_ena callback in
-> sdhci_am654 driver so that HIGH_SPEED_ENA is not set for this mode.
-> 
-> There are eMMC boot failures seen with V1P8_SIGNAL_ENA with a
-> specific Kingston eMMC due to the sequencing when enumerating to
-> HS200 mode. Since V1P8_SIGNAL_ENA is optional for eMMC, do not
-> set V1P8_SIGNAL_ENA be default. This fix was previously merged in
-> the kernel, but was reverted due to the "heuristics for enabling
-> the quirk"[0]. The new implementation applies the quirk based-off of
-> bus width, which should not be an issue since there is no internal
-> LDO for MMC0 8bit wide interface and hence V1P8_SIGNAL_ENA should only
-> effect timing for MMC0 interface.
-> 
-> [0] https://lore.kernel.org/linux-mmc/20250127-am654-mmc-regression-v2-1-9bb39fb12810@solid-run.com/
-> 
-> Judith Mendez (2):
->   PENDING: mmc: sdhci*: Add set_hs_ena to sdhci_ops
->   mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch
-> 
->  drivers/mmc/host/sdhci.c       | 55 +++++++++++++++++++++-------------
->  drivers/mmc/host/sdhci.h       |  2 ++
->  drivers/mmc/host/sdhci_am654.c | 48 +++++++++++++++++++++++++++++
->  3 files changed, 85 insertions(+), 20 deletions(-)
-> 
-> -- 
-> 2.49.0
+On Fri Apr 11, 2025 at 9:23 AM -03, Ilpo J=C3=A4rvinen wrote:
+> On Sat, 29 Mar 2025 04:32:17 -0300, Kurt Borja wrote:
 >
+>> This set mainly adds hwmon and manual fan control support (patches 7-8)
+>> to the alienware-wmi driver, after some improvements.
+>>=20
+>> Thank you for your feedback :)
+>>=20
+>
+>
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo-next branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+> local branch there, which might take a while.
+>
+> The list of commits applied:
+> [01/12] platform/x86: alienware-wmi-wmax: Rename thermal related symbols
+>         commit: 8a1a0fb55f8a8e482314d2769a9cac0703016fd4
+> [02/12] platform/x86: alienware-wmi-wmax: Improve ID processing
+>         commit: a000da9dbc249642233587a80df03130e8983d10
+> [03/12] platform/x86: alienware-wmi-wmax: Improve internal AWCC API
+>         commit: 45983d19f305a562386f4d13accd11056b99f48a
+> [04/12] platform/x86: alienware-wmi-wmax: Modify supported_thermal_profil=
+es[]
+>         commit: 77bb2ec55700ee3af0cd902398fa903363826679
+> [05/12] platform/x86: alienware-wmi-wmax: Improve platform profile probe
+>         commit: 32b6372ddd4385a47a6a4b6ccff0c22b7be8765a
+> [06/12] platform/x86: alienware-wmi-wmax: Add support for the "custom" th=
+ermal profile
+>         commit: 3dde0ae1eb5f00c1d61959d1fcce2b1b46ccc199
+> [07/12] platform/x86: alienware-wmi-wmax: Add HWMON support
+>         commit: d699907834959c87a6b6c5214d5e9a3e8ba6b5a1
+> [08/12] platform/x86: alienware-wmi-wmax: Add support for manual fan cont=
+rol
+>         commit: 07ac275981b1f11a58dd7bb7790eed66252b072c
+> [09/12] platform/x86: alienware-wmi-wmax: Add a DebugFS interface
+>         commit: b028fb497c152febbdc48b544aaaadbe06406dbf
+> [10/12] Documentation: wmi: Improve and update alienware-wmi documentatio=
+n
+>         commit: a56d188a0a8f3df4860acf66a6af89318ce611be
+> [11/12] Documentation: admin-guide: laptops: Add documentation for alienw=
+are-wmi
+>         commit: 3e48767ab53b56d31c77a063d022ca9aca43bf22
+> [12/12] Documentation: ABI: Add sysfs platform and debugfs ABI documentat=
+ion for alienware-wmi
+>         commit: 361813db5d9ba33434754c0de1207a2b91264ab1
+>
+> --
+>  i.
 
-Thanks for the patches. We are currently experiencing this issue on the
-AM62 Solo SoC (hardware: Toradex Verdin AM62 Solo 512 MB), with the
-latest kernel 6.15-rc1. I tested your patches (added both on top of
-6.15-rc1) and I can still see the issue, when the kernel boots:
+Thanks a lot for your work on this, Armin and Ilpo!
 
-root@verdin-am62-15412807:~# dmesg | grep -i mmc1
-[    1.912123] mmc1: CQHCI version 5.10
-[    1.985262] mmc1: SDHCI controller on fa00000.mmc [fa00000.mmc] using ADMA 64-bit
-[    2.186954] mmc1: error -110 whilst initialising SD card
-[    2.620625] mmc1: error -110 whilst initialising SD card
-[    2.997642] mmc1: error -110 whilst initialising SD card
-[    3.337071] mmc1: error -110 whilst initialising SD card
+:)
 
-This does not happen if I use commit 941a7abd4666 ("mmc: sdhci_am654:
-Add sdhci_am654_start_signal_voltage_switch"), as you described.
-
-Is there anything I missing or should test to make it work?
-
-Cheers,
-Hiago.
+--=20
+ ~ Kurt
