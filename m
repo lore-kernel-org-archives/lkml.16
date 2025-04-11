@@ -1,107 +1,71 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A23B204080
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA2F204581
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 10:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744367910; cv=none; b=oE9h4p3M9nBCdksUiYqQK9DWc5+jjSlyNfeKleD9DTE2kTlNUHjbV1ZGCEDpR8arBfRtPQbDoB+ploQwJ1nCXdGH+mN64eTPHe8t84d3NeDB7928cfJo+scnCBREGlwLkq/lJHjt75v//ggtJsaRC9evgv56OvLXTGabZ2TssdM=
+	t=1744368087; cv=none; b=aZdVRdtRiHL8nHNdZpXmRs1LDbf2T6w0oqcQqA//zqzqzmn4tyZHYXjG/J0FTEnl30MvV5lUYnZbU2nCiLUEhcRSON6qDsbSz1X0C8KOPnjUudXayQiIcipjOMnNc7mmqA6DGhBcBMB6Pb/MDLvbvKNOKGxGDe65Bw9StxfARnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744367910; c=relaxed/simple;
-	bh=LSFvTnNTsbpJ9swbTsXsXWuYKH66fTIbQ3NKlbX2TmI=;
+	s=arc-20240116; t=1744368087; c=relaxed/simple;
+	bh=70nnKZkKDKtDgnl0C06+b7gMrrVZkXvMJyhTaYQG0kQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pUuAsQzVmTa1U+3AGEGtFxBHQuSPOcmII++Siao6RQZFBBQm/x/p73pa3FjacH1FBSV2UB9MeQXX9bG08j/I/pHsmKnyhuN982reUk58AdttTfwDu1PJNZR5iUsi3er1UQyw3vodEHoJGbKPasmit3/S5GS540idnl+7XjEhBK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=CYvwwGY8; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GfFwJUnmU2T0tqbKvZWwvKIHiq53tKHPJ9+fCgRnk8cVl7epiO78Ujz1QXg3Q2PpLJtUVKEtGnN0v6YgygVyIPf8w4AC4RQKcilow470GTDlc+29T9xudbagDRuI3TM01m5AKA7UQp1eIECjRdzs2rpjXxwHmi75BFeG+CC9+O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=DWi5QG7e; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="CYvwwGY8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=LSFv
-	TnNTsbpJ9swbTsXsXWuYKH66fTIbQ3NKlbX2TmI=; b=CYvwwGY8fapqE3k4T6vJ
-	kfy0MIemphfYiUMP85LhP+Rzr8q+Gf7bIuCDSv7kBoGT/eVwUq9+3AISYnn57lxB
-	/owSIxAggWXoLxP3lK61qVx1ZxIgQTvnasVDwo8nh7G0BDPEQx7j5wmGBV5RXyTF
-	QuE8zhpMpbW2Leg0gf1WRg/W55ku8Qd4XQmHxvEgtQD1IFTYM21lqBgVNuphPHm4
-	WRRkh4DK3RjyEPj48JQNIREGRsw8qcM6Fo03jExRpAMpkm4vJ2hG1ZvJR3YBeNWl
-	jlbJMm4hIjXlG1CH6hiTGd2RxJd2pAiwC62YnU2RAMOfqMz/NpqlP0wLqFY2kMzC
-	Sw==
-Received: (qmail 1257912 invoked from network); 11 Apr 2025 12:38:26 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Apr 2025 12:38:26 +0200
-X-UD-Smtp-Session: l3s3148p1@bcZkTX4yvsYujnsS
-Date: Fri, 11 Apr 2025 12:38:25 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: Re: [PATCH v4] ARM: dts: r9a06g032: add r9a06g032-rzn1d400-eb board
- device-tree
-Message-ID: <Z_jxIV1Oavm2J2wq@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-References: <20250324-rzn1d400-eb-v4-1-d7ebbbad1918@bootlin.com>
- <CAMuHMdVM66ni0opbUopt6mCPshoQzO5GPEUZDji39CxtkoFLSA@mail.gmail.com>
- <CAMuHMdVs07oLC=rch8qvgdaLZ9oyPah4UNaXqteAJPpK1G6POg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="DWi5QG7e"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 8F47F47AD4;
+	Fri, 11 Apr 2025 12:41:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1744368084;
+	bh=70nnKZkKDKtDgnl0C06+b7gMrrVZkXvMJyhTaYQG0kQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DWi5QG7ej+qLvmgNEz+7skZ+UgpGFhKZo4QUJHJR47RLZtnYRe2KX8rah5lHuGl75
+	 eKjc8TR17twq+klB7ik3z6QbgHXqDHIEulq1gMzYDoDFAxJ1hwapmpI70mg0CX3atL
+	 /G4Kr4jc79mTq8dqsYJmmaKoQRjKkRnH10zJosJ3groxjVukSgQfd2X/5/ZJLbPdL1
+	 6zBP7nBgKfH/+cKfgmYzelDSF98eefKtzWq5vU+oBB0rYyljIw8Dyn1XvPm+e7u3WJ
+	 KLiDw4yZGDLhdA5Tqwt4piV5+nXFmvgDYWFTaxHmphu9j30+oMOlr7E43fEfqSFvqP
+	 4Ojaodk6vvonQ==
+Date: Fri, 11 Apr 2025 12:41:23 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Cc: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rob Herring (Arm)" <robh@kernel.org>, kernel@collabora.com,
+	Joerg Roedel <jroedel@suse.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	iommu@lists.linux.dev, linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Chen-Yu Tsai <wenst@chromium.org>
+Subject: Re: [PATCH v2] iommu/mediatek: Fix NULL pointer deference in
+ mtk_iommu_device_group
+Message-ID: <Z_jx07MlkOf8E2zj@8bytes.org>
+References: <20250403-fix-mtk-iommu-error-v2-1-fe8b18f8b0a8@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SDJIJ+gmpVbSOkxP"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVs07oLC=rch8qvgdaLZ9oyPah4UNaXqteAJPpK1G6POg@mail.gmail.com>
-
-
---SDJIJ+gmpVbSOkxP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250403-fix-mtk-iommu-error-v2-1-fe8b18f8b0a8@collabora.com>
 
+On Thu, Apr 03, 2025 at 12:22:12PM +0200, Louis-Alexis Eyraud wrote:
+> ---
+> Changes in v2:
+> - Fix goto label usage in device registration error case
+> - Add review and test trailers
+> - Link to v1: https://lore.kernel.org/r/20250327-fix-mtk-iommu-error-v1-1-df969158e752@collabora.com
+> ---
+>  drivers/iommu/mtk_iommu.c | 26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
 
-> I will fix these while folding in "[PATCH] ARM: dts: renesas:
-> r9a06g032-rzn1d400-eb: correct LAN LED nodes" and queuing in
-> renesas-devel for v6.16.
-
-Thanks, Geert!
-
-
---SDJIJ+gmpVbSOkxP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf48SEACgkQFA3kzBSg
-KbakQA//dLcHMf1flK8numBv8QKSOf36e8peyc6be9wP6VshVho3MkJR+4UbKHiU
-x52tROipe5rZ7+QlM23WSXU9v8PCt55BeS9OTlIiHOvb11xQeZk/dmNejd2WZVGD
-UoDvu324Ae3iQM8mFA9b9hKDVbNEYYSZTIluv7avhPGG122J2IhTvg+PPaS0ig9g
-MWGtysg329sboMLQrMjE1cAiXefhFvyPWU4TzXHGottNYK2ArFQSb6QmTOS4WdMs
-se9666q5hKri4lZMnnoAolpQufvhuwufKB7VHQny0CGg/NtEWZcozeUcFFMvj6UD
-Zpqw3vxOOdGrGCbY65aONrUWmJu4JeswdNusDc2yAAelh+jrwEJWs4Dpb1a9cZf0
-OINJxDpBtLO+D+PtJ7pD0+l6/21t4JzX6VqtGh/5rxWdxNN1hjP2C874ybbNbXjo
-uiTp6+924TYTy0c/qFnYidkBZpnc98+O5y0Ecbw7Bf6eu8eirVPEgRnscoUVF+cE
-FINXF/ZQwzWB9qPzq1feVKnx2hbhWZYCsv6In2t6nE0AsAyAV11303q3RHAvXFja
-YqYhusTbDnZTBAT9hC6ZOhbBBQwtOFv6mO0FmUz9zJGeqsDOf8/xVj/qBVtxXgWA
-/f+ZwBFqWYgnxEbsysHmCqrPrg9KSjWadyFxchWd5k6TIT3AONA=
-=shHn
------END PGP SIGNATURE-----
-
---SDJIJ+gmpVbSOkxP--
+Replaced the previously applied patch with this one.
