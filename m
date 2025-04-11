@@ -1,71 +1,99 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F4F1D9A5F
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 18:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EF01D9A5F;
+	Fri, 11 Apr 2025 18:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744394465; cv=none; b=mQEDkmlLNwL9RwER4qezzBEq464WN7uIJjcCNfcAAPKjAy5Ihf4zIC4Kl6j/Nd3+DGvzE984Or+ql4G59tG5QXIX9l9TGr4VIr95K1pukhr2fk0NfLkopdocNEHacliq1wIi8LvJJ/iI4DG7FUe19U6hOQP2lTDBbJNPRowV0mc=
+	t=1744394517; cv=none; b=tv5JahRtEY2ECgsvy/WyFMEvMzUcNqA55qkN6+uD1KOHL7EuSgTMPiTHzYL5Oc1zQcmMT62J3M0MVShWjPDUHCk7OW8HpOI9fSE/2Yqvj73upxdq8gHbfY9gIYBektPpkCdkZOH99Ii0bGhFv295vMOsFRmJ7P7hYsJ6MO+AdOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744394465; c=relaxed/simple;
-	bh=29F5/4brLuTIUNZs0SGB0imlFrxYlFI20ycy5m0lvAI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=egVVKLa/B7XA9giM07mikFjuczerqeVBsb7xzKYNQPFdplHrzwvX3yDL8lgTZoiIv1NCfIba/8LcjiAOtxBpKDjzpjAdZAIN+RIY1ZVW9bfNmrs4BPtovQ7/NhW08EEJTv2uhnbA9/jiRH+rtvQpppJ6ZddxYSMCa/7g4qvLLUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d43d1df18bso23518365ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:01:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744394462; x=1744999262;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OVK9582xJ/K6d/nWSfhNSTUPLLFVBAToLF5CLvCzU6c=;
-        b=iWV+mc7ITszlLnOaAOVBdER/SgNuyqwzJUNj0EqGBfHZzB+J8CLGxZhFCVbU+pIovD
-         lGoVPQ4D/4Vn3dnXb5P2ELEa5LGHPitpsYAuLBSI/veOBtuYndvtESp171y1DhIYwBvO
-         O4GRIi7yIsYbfiURLGg8harw+MVdraRJPswgojC2woQTNYxF2RbSglB8WUPeDef5MUyk
-         Cm/TJRsyRZUk7aFIMRQ7OxR37ERlo9MZRM+d0G6Y7Ro9fhcTctyr00Ng9SnwiHluzXm4
-         HfqiycWzerxwsLVkJXsHtnIgBCBN58KeO4yItYDfzIOr97lcI7Pfg4D+V37CQZ/cOTfk
-         ijMg==
-X-Gm-Message-State: AOJu0Yy6yGk/Ap0QozpYUl2d3+iO0HGXBvQhPqst5iBp4nASbrwl8kau
-	9zGRNQlupt2Xm8aa95u2z8VgNWRh6n6r0cBLmR+xNzsW9qMvx/aDaSdwIYitmCvHtsQv+dPNzcC
-	Hr3apfpJe17kZ6hhQjy5WnV2u3VVAGLfqzmnAFpPGi++uydCv20DK8fU=
-X-Google-Smtp-Source: AGHT+IGhi9o59dU6k2gMxcIg1hQgp3Ck0Mvr7t/t0ubWyyA8RVKUTduF1sJp9JJVyXFNosJxzw41KmK2cNsmoRbl5uMwXgkaRLj+
+	s=arc-20240116; t=1744394517; c=relaxed/simple;
+	bh=jPqSQEgdetj1cQhBqh5DPo/z29J5ovjpZyUv7yi8J7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtlcFMEC7M6w2izLibVOGm2AEGzbzeIzFz+jkiqF0+Vrl69ZOYpzpOyRcoIoe1TSMySXWguEeCujIX+1WZh/vphxwjW+oQutotUQlt+zI/wlvHaN6m2QZ+Dj1qElsVBjO3lmp0cfdLsl6ItHQar6ZQyOrbj83IbjW7M9is6pg6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZpQ2vSQu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZpQ2vSQu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA48EC4CEE2;
+	Fri, 11 Apr 2025 18:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744394517;
+	bh=jPqSQEgdetj1cQhBqh5DPo/z29J5ovjpZyUv7yi8J7w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZpQ2vSQuBBjrX+xwNs0LTLsSaiExNoc5yDBAksFFdEyIC4ijhyVQK/OE7LygcCHlN
+	 +b+rwzLjYU3ad2sDQPpGsly9EwYCXr5Z5ODKxUzfjljakpt34OtycgQ/KK2EmOZpr9
+	 3wjfN1k7sESNJ38iMavxoA8w3yE78R9VJRAZ3UAMn4GhNfF3g/1/5P12NwgKSKEmLS
+	 EDh+8su4tjEDSU5WniO5xb+t+M9xiV9Ths07KG2aJJkPV52gAIz1kZhcKfA+fTsh7X
+	 G6Ys4Mzo1xTrI3t9KagX/v4jdx5vhJqcEhNsGXQjX61Oio3gwOqkOxv1/EgtdnwOXL
+	 VkwxAwiE/iaiQ==
+Date: Fri, 11 Apr 2025 21:01:50 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Chengchang Tang <tangchengchang@huawei.com>,
+	Junxian Huang <huangjunxian6@hisilicon.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Winston Wen <wentao@uniontech.com>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 5/7] RDMA/hns: initialize db in update_srq_db()
+Message-ID: <20250411180150.GY199604@unreal>
+References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
+ <20250411105459.90782-1-chenlinxuan@uniontech.com>
+ <FF922C77946229B6+20250411105459.90782-5-chenlinxuan@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c261:0:b0:3d3:e284:afbb with SMTP id
- e9e14a558f8ab-3d7ec2276f9mr36758595ab.11.1744394462425; Fri, 11 Apr 2025
- 11:01:02 -0700 (PDT)
-Date: Fri, 11 Apr 2025 11:01:02 -0700
-In-Reply-To: <CAP01T77pot4y_m1eb6AP5K24CM3u8=yfJhFW7R9H-nZTmFgo9g@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f958de.050a0220.2c5fcf.0006.GAE@google.com>
-Subject: Re: [syzbot] [bpf?] possible deadlock in __bpf_ringbuf_reserve
-From: syzbot <syzbot+850aaf14624dc0c6d366@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, memxor@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <FF922C77946229B6+20250411105459.90782-5-chenlinxuan@uniontech.com>
 
-Hello,
+On Fri, Apr 11, 2025 at 06:54:53PM +0800, Chen Linxuan wrote:
+> On x86_64 with gcc version 13.3.0, I compile
+> drivers/infiniband/hw/hns/hns_roce_hw_v2.c with:
+> 
+>   make defconfig
+>   ./scripts/kconfig/merge_config.sh .config <(
+>     echo CONFIG_COMPILE_TEST=y
+>     echo CONFIG_HNS3=m
+>     echo CONFIG_INFINIBAND=m
+>     echo CONFIG_INFINIBAND_HNS_HIP08=m
+>   )
+>   make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once" \
+>     drivers/infiniband/hw/hns/hns_roce_hw_v2.o
+> 
+> Then I get a compile error:
+> 
+>     CALL    scripts/checksyscalls.sh
+>     DESCEND objtool
+>     INSTALL libsubcmd_headers
+>     CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
+>   In file included from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:47:
+>   drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function 'update_srq_db':
+>   drivers/infiniband/hw/hns/hns_roce_common.h:74:17: error: 'db' is used uninitialized [-Werror=uninitialized]
+>      74 |                 *((__le32 *)_ptr + (field_h) / 32) &=                          \
+>         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   drivers/infiniband/hw/hns/hns_roce_common.h:90:17: note: in expansion of macro '_hr_reg_clear'
+>      90 |                 _hr_reg_clear(ptr, field_type, field_h, field_l);              \
+>         |                 ^~~~~~~~~~~~~
+>   drivers/infiniband/hw/hns/hns_roce_common.h:95:39: note: in expansion of macro '_hr_reg_write'
+>      95 | #define hr_reg_write(ptr, field, val) _hr_reg_write(ptr, field, val)
+>         |                                       ^~~~~~~~~~~~~
+>   drivers/infiniband/hw/hns/hns_roce_hw_v2.c:948:9: note: in expansion of macro 'hr_reg_write'
+>     948 |         hr_reg_write(&db, DB_TAG, srq->srqn);
+>         |         ^~~~~~~~~~~~
+>   drivers/infiniband/hw/hns/hns_roce_hw_v2.c:946:31: note: 'db' declared here
+>     946 |         struct hns_roce_v2_db db;
+>         |                               ^~
+>   cc1: all warnings being treated as errors
+> 
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> Co-Developed-by: Winston Wen <wentao@uniontech.com>
+> Signed-off-by: Winston Wen <wentao@uniontech.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Applied to rdma-next.
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
-
-
-Tested on:
-
-commit:         e403941b bpf: Convert ringbuf.c to rqspinlock
-git tree:       https://github.com/kkdwivedi/linux.git res-lock-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=110a8f4c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea2b297a0891c87e
-dashboard link: https://syzkaller.appspot.com/bug?extid=850aaf14624dc0c6d366
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
+Thanks
