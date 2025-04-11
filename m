@@ -1,72 +1,71 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EC627C16B
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85EA2F5A
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744347684; cv=none; b=Mwh7PQLcU1cC5xvYeSL2Ro8Oy2NUvG/E2qch/Geg262coLgYtjasQalNM7Lv2IxbT6PkXMNeDVib7IITT4+edYtGxZjHokTp+IYT8JrP6ull570XpG13XDf/73N/TkI3CPC6+NaUSxGTPnv1xXPu/XB5EDN6+LM8m5Kjf9VAaXY=
+	t=1744347869; cv=none; b=aNkmPZgd7wsNqmN0Z6U7wR/G7EIzCiiMyRiR7XlW35Pcs9dNojN82ZOveCyo2u8Lm0I8LjXDz8Pz1AfQeLcYA7v//LZ9gLCM9GhIRg5IRJ1fAKrxErFB2Dxsneki2PuZmOVLC9s5rBJ8kM8UZ2Zj4XrgiarbnSDXJKGepUgQfAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744347684; c=relaxed/simple;
-	bh=Bqqip6vv1AXlW007YF0paom7H9l2UwCGujjxv1oS0Io=;
+	s=arc-20240116; t=1744347869; c=relaxed/simple;
+	bh=T8mPvhM5+YZk3TzevX8v4LHU0QxvAI+FrdjtKRyhYDM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pgu0UoeO47GAqSxS1kEfMLOvyM80ZggcDrXASibn9sVopMXn+cPZ0Hp18DO6JkEpibv+4GkKruMrLgceceQDiVwRHfJ3FqFoaxVLz+VaZHyML6d+tFi8H/eQwTLzgDNlnjvdOY5r9zEZrZ4c4vsRoDbtLuwE1NmSMO50XfW0nTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SnnRPlaO; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=jrPde1vcurpclcaxowgr2xFM692D8fLkT0R9Qgj9twj7Glhw7qUGYDUC2GK6Ki9Ft2VN8Fmp6JbdRES6UbV3Rp/wnKX4kOoNQDdqtKb/uVM/V2NgJNSt88NyIp/U+CwvqRdnS9Za3X+nBq5aphW5nE0f9EkfkCCXzCGxVwb1nUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gfz8xR2/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SnnRPlaO"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AFlQiY028831
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:01:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iU3jF42CcRbDvr47i+k1eJkOuCjg/GXrWsAC7AGbOiU=; b=SnnRPlaOCdmkVqZq
-	gb6vEUDOmCtJa/M2Kejm6+mqBauZf5wNspnKNhoDa0aVWUlMXjjSiQO5BMfQj0N1
-	850wLswsmidsF7o8UnqBGIW+SFssP0fUgrjSDCFmEsdljWZRPRLLoxCmRQZUdisP
-	eXFzRyOpOHX8PnKrunk4uvT6mq7XEIIvKZ9xBmg/h+sHBN9YdCOccuGNtqcaiK6G
-	TLKbKMClnAYUWQq7yKyL/LJE3LLZYJrsv1ZWTVBl5JCs+wGg/PzBTUM1ftrTZUSw
-	B/qnposh/BzXZFiT9EJFzthnb9Al/Q9jhIqy8RBd4OtTMAmTqLHI1WB688hzPe63
-	aBcy6A==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbus7v1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 05:01:21 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-739764217ecso1418062b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:01:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gfz8xR2/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744347866;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yvlX/1zzhednfD/RRLGt51k7nZ3MkpYSEZj6G3Ys+3s=;
+	b=Gfz8xR2/LU1e8McMTLpv/sG65cgvsvUhD/wDXKU3FGTcLruPsM0NNGS3cNU8lLSBtxLFFk
+	Gr/CrKE4te57ki3cqsIiNrNdQctbjDolXM8vPjfIpf1GeHEpEAU+7XuW47cd+ACvFO7gIV
+	wkcFa6wTDAXD6ASXAqQfu3gh31hm0CM=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-524-85D1zAMpN3aCc8KY-RT0YQ-1; Fri, 11 Apr 2025 01:04:25 -0400
+X-MC-Unique: 85D1zAMpN3aCc8KY-RT0YQ-1
+X-Mimecast-MFC-AGG-ID: 85D1zAMpN3aCc8KY-RT0YQ_1744347864
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-7377139d8b1so1198325b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 22:04:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744347681; x=1744952481;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1744347864; x=1744952664;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iU3jF42CcRbDvr47i+k1eJkOuCjg/GXrWsAC7AGbOiU=;
-        b=fYjSmKeNEpCeHUiAayWoUR+A0cjOP2O+LOwjKCC2E7wrF3MqBMp0QK9iQ4TjJo3ktV
-         fBsOHK1dsGr9bSc9cCV4/QF/jsJBYd/EVrICweQhN1/YUY4YRW8s4YSmb9M8WOoSHCx2
-         g8ZuY/AGWdIwJ9mjtbij9XOfPX9eaKCLhY65FJUHDn8Zd12TZZLDyPTwKERE2FWDkNoJ
-         NZTd99agjeu5JaarSnzxDCThAncQe0uoI9sU7t/azizFmAX4yh7mK8+0zM16muBT34BL
-         JjUOvWlBDsanCUKelxulHHJ1/uJG02yW7xCjnvGYTq++c/IEsgS+G8V2NNsKhKOuRAF7
-         Ao9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUil+xxpX7Emp8d8WlN/Ced4BGrA3JbCp+pEO1S4d+sOeWfn0WwnYdbdfPJQvcul3gcD0ZsBFm1fFwKEn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyToHVop/7ggBWCYJtot7GF07gS0GvVAu5fbn7B8DEUfSBXDJd4
-	plTTRgbJKy1Gs2dzdclTrXovEObIsWUxz62C1vi0VaiYNoG4/COUQLJDeuOt7bq96n8EdEc6LpS
-	udA8/JgOYDjg6G4PEdh1AYTmRZKn5k9yznoIUH+9/591o+rfu8hsq2AaJH00+ChI=
-X-Gm-Gg: ASbGncuWXiWLB/T6TDRjZNsB+cCVEGk+SDlDFSLi8uIF2fhWhW6wvqgwedwMPIL1/M1
-	Euzyw9bPPTi2Sk1+lGsBcvWoZZIDy0lqo/gEsI8EEqSHEscUxgOmI5aj63NUqOrbEPRFxzBkQ7E
-	zsFtrs6ACofWDmfE5fXNubROwDVSe3SWhrsrYuOzHDQw1ua/ISGcdViCQjlS0OvUuCrDArJHvQN
-	4IQRU8ca9z5jsmINTCaXsOCNsQdWlZQRIhfGF1NTyHjzA+mKDn6eiabwuCGaR4oquCM9PRaXxnY
-	RIo1L5afZJ871vyZG0ktcgbWxgCVdiH+Gb5NesKLsz1qYikYBmKj
-X-Received: by 2002:a05:6a00:98b:b0:736:5969:2b6f with SMTP id d2e1a72fcca58-73bd0c23517mr2253800b3a.6.1744347680609;
-        Thu, 10 Apr 2025 22:01:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFIC6y3kfTqx6FOCy0TY1K2LPWbtvRdwzYJO2IyUfSa5wij8amglx6d0xzJSPEL9BxFADh8lw==
-X-Received: by 2002:a05:6a00:98b:b0:736:5969:2b6f with SMTP id d2e1a72fcca58-73bd0c23517mr2253757b3a.6.1744347680105;
-        Thu, 10 Apr 2025 22:01:20 -0700 (PDT)
-Received: from [10.151.37.217] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2198c17sm529769b3a.36.2025.04.10.22.01.16
+        bh=yvlX/1zzhednfD/RRLGt51k7nZ3MkpYSEZj6G3Ys+3s=;
+        b=Ju7tt60K1wrNM3UwIomvJcynW3fL5GTGy+E+YHiVRV31YVVSkShtBFVtgxk/c3j9ex
+         7QutFryUqdIljDAlM+70juDQcKMvdeaSTjyN9aLPYjpoMS7MBMyKmm8q865bWdUrlBnf
+         A6r8nDSGVWS+D8wuJHj83BiKcFlWIRxo/iIhW6Sun17X/rS6m7+PwnbH6786k3FuiO4A
+         stC3Ta5Imcs5s5skvAaqrYpDRsqY1gkVvSNw0cT9aEJHFy1bWyRe34RwMm8KspS7m7XM
+         6ou92Ftk46xRRFbKThZV6WNLCdqUdZIWFwtvHbWX2NFO7+1ixdI0XRtcQCHtth8IJpCl
+         FI2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW/K3BevTqw2rBn+Uj4/PbnzsNBv1vUGPY47SvTU/FEeHpmk+KMVW5U7YBuFXowhdcYr3DmTmOxvvHrAAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfvBw0zbKH80KDLcr9VDE16Dqeh6kkEeR4hEFm0tdCs6aH0iSW
+	xf0ePC8Yuq4x6AQEzWLkivGv78l2Wp/1x108Bt2eX3SJZV/47134ctWGZNyQv9fClNXGNlYDfI4
+	YxNANpV3IvyF68PmniscHfgG79IETBJQhD2ARFjVyzWbPcL+8BMY+tTN7ILgOzC3JYC1ceA==
+X-Gm-Gg: ASbGncsClNBOItuEiPB9lG1fZxKmxKUiiiF5QfKLl8K0KTwE04z9zEe02sBB/O+VSfn
+	RxPiXW5b0l4+TEblQBbL5n43QzrnDtR8YNn9AYhWL8YyIAYkrRSs/UQ1UZBtpDAQfQbFhAvp5HK
+	KRXe4NuXLfqTMhxhhpqHjB/Qj4PwcYVBDJ0QJRHi2ETWRIggSxlw3MJLlo3j0aN3oJA0yHAihtu
+	A9XFEJpyAR8bYR+vnXAuMe45hkbEoCRFdnRa45gWNO4HoobqbjSVuC4IWVAPySqedOm69iRYIGe
+	laQbwbZBNtog
+X-Received: by 2002:a05:6a00:4608:b0:736:450c:fa56 with SMTP id d2e1a72fcca58-73bd11a2d89mr2013398b3a.5.1744347863624;
+        Thu, 10 Apr 2025 22:04:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEuHd5b/4/FiYUP9OhKyCUlRjGkb1liUBaCYJIzX4FfjPycAoW/qWjzgb6sjOPDw4JJJvUT/Q==
+X-Received: by 2002:a05:6a00:4608:b0:736:450c:fa56 with SMTP id d2e1a72fcca58-73bd11a2d89mr2013365b3a.5.1744347863151;
+        Thu, 10 Apr 2025 22:04:23 -0700 (PDT)
+Received: from [192.168.68.55] ([180.233.125.65])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230f09bsm519649b3a.156.2025.04.10.22.04.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 22:01:19 -0700 (PDT)
-Message-ID: <54efe237-01ea-4f98-8dbe-390d344aa6cf@oss.qualcomm.com>
-Date: Fri, 11 Apr 2025 10:31:14 +0530
+        Thu, 10 Apr 2025 22:04:21 -0700 (PDT)
+Message-ID: <44dff493-9d79-4343-ba81-0c262d7a5b4e@redhat.com>
+Date: Fri, 11 Apr 2025 15:04:16 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,71 +73,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/6] arm64: dts: qcom: ipq5424: Add the IMEM node
+Subject: Re: [PATCH] drivers/base/memory: Avoid overhead from
+ for_each_present_section_nr()
+To: David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, adityag@linux.ibm.com,
+ donettom@linux.ibm.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org, akpm@linux-foundation.org, shan.gavin@gmail.com
+References: <20250410125110.1232329-1-gshan@redhat.com>
+ <9deb3725-8991-43d1-8c3d-56523fabff28@redhat.com>
+ <Z_fNx7hTOR8St0SM@localhost.localdomain>
+ <Z_fR6c4o1V57ZAXR@localhost.localdomain>
+ <a950dd20-d7eb-429b-b638-2df68208918d@redhat.com>
 Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com>
- <20250408-wdt_reset_reason-v1-2-e6ec30c2c926@oss.qualcomm.com>
- <6298f149-caae-49d0-af68-c3d102d0ef7d@oss.qualcomm.com>
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <6298f149-caae-49d0-af68-c3d102d0ef7d@oss.qualcomm.com>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <a950dd20-d7eb-429b-b638-2df68208918d@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 9DuuNFS3-oIvHBT_RkC-k8F4JaDuesEP
-X-Proofpoint-ORIG-GUID: 9DuuNFS3-oIvHBT_RkC-k8F4JaDuesEP
-X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f8a221 cx=c_pps a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=jTFA79TV-ThCIif_KeMA:9 a=QEXdDO2ut3YA:10
- a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxlogscore=883 phishscore=0 mlxscore=0 spamscore=0
- malwarescore=0 clxscore=1015 adultscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504110035
 
-
-On 4/10/2025 12:11 AM, Konrad Dybcio wrote:
-> On 4/8/25 10:49 AM, Kathiravan Thirumoorthy wrote:
->> Add the IMEM node to the device tree to extract debugging information
->> like system restart reason, which is populated via IMEM. Define the
->> IMEM region to enable this functionality. Corresponding DTS and driver
->> changes will be added incrementally.
+On 4/11/25 12:25 AM, David Hildenbrand wrote:
+> On 10.04.25 16:12, Oscar Salvador wrote:
+>> On Thu, Apr 10, 2025 at 03:55:19PM +0200, Oscar Salvador wrote:
+>>> All in all, I think we are better, and the code is slightly simpler?
 >>
->> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
->> ---
->>   arch/arm64/boot/dts/qcom/ipq5424.dtsi | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
->> index 5d6ed2172b1bb0a57c593f121f387ec917f42419..a772736f314f46d11c473160c522af4edeb900b7 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
->> @@ -486,6 +486,15 @@ ssphy_0: phy@7d000 {
->>   			status = "disabled";
->>   		};
->>   
->> +		sram@8600000 {
->> +			compatible = "qcom,ipq5424-imem", "syscon", "simple-mfd";
->> +			reg = <0 0x08600000 0 0x1000>;
->> +			ranges = <0 0 0x08600000 0x1000>;
-> It looks like this should be a little longer
+>> One thing to notice is that maybe we could further improve and leap 'nr'
+>> by the number of sections_per_block, so in those scenarios where
+>> a memory-block spans multiple sections this could be faster?
+> 
+> Essentially, when we created a block we could always start with the next section that starts after the block.
+> 
 
+I think it's a good point. Tried a quick test on a ARM64 machine whose memory
+capacity is 1TB. Leaping 'nr' by 'sections_per_block' improves the performance a bit,
+even it's not too much. The time taken by memory_dev_init() drops from 110ms to 100ms.
+For the IBM Power9 machine (64GB memory) I have, there are not too much space to be
+improved because the time taken by memory_dev_init() is only 10ms. I will post a patch
+for review after this patch gets merged, if you agree.
 
-Yes. It is 112KB. But only first 4KB is accessible by all masters in the 
-system, remaining regions are access protected by TZ. I shall mention 
-this in the commit message in the next version.
+         for_each_present_section_nr(0, nr) {
+-               if (block_id != ULONG_MAX && memory_block_id(nr) == block_id)
+-                       continue;
+-
+-               block_id = memory_block_id(nr);
+-               ret = add_memory_block(block_id, MEM_ONLINE, NULL, NULL);
++               ret = add_memory_block(memory_block_id(nr), MEM_ONLINE, NULL, NULL);
+                 if (ret) {
+                         panic("%s() failed to add memory block: %d\n",
+                               __func__, ret);
+                 }
++
++               /* Align to next block, minus one section */
++               nr = ALIGN(nr + 1, sections_per_block) - 1;
+	}
 
+Thanks,
+Gavin
 
->
-> Konrad
