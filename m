@@ -1,125 +1,95 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02B5221FCC;
-	Fri, 11 Apr 2025 12:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C8D29CB45;
+	Fri, 11 Apr 2025 12:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744375480; cv=none; b=kSFMO0JzGpws6S11kvkWo/54W6sSa9J39rbUnHw/LoFB4nrmbMp0mF0+8pRrAltY8NZmkqrSpz6cu8eWLLvLRpnvl2+p+bUw1zAc886Sp47/jYMGjWFyzNso1wf/wDnxz74pF2xuJ9hYnMqSXxZbyhPmXh0Ol0pdWYun8hDaU+8=
+	t=1744375514; cv=none; b=BswFTzgnppAEv5qN+k84HXHxKVKwSYMe2yvTJSu/AjIdQ6T/Yx4jeMwoNn2zxqG3JU+3gewfc+Hlz6+0HfqGnHnnxhE0vowHAoZvEWTiNoHCA31CHMzTBC/kHnzaydarxI5Ni//c0cYCQ29M3wiJxwNSF+kzhVAEb/dNH83Atmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744375480; c=relaxed/simple;
-	bh=yaUO2wL2QZRtPLq/CI2DMbiztG8WerJslPzyJ0YUv5I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Dm6C0CLjNwzLL8M1VzVE0FIdw7aCY6qQcxmDJ5KnpQd8GrM3/Q8XETBn7D+5aNICEYUIW2aoUIuCTCFWb49ETPAbU0GNHLEN8UYgsFHwWdYkhF45u5MWY45N9Ol7Yxb0UDOOM0PUj/7jyeeaEDlwjROQSnwsRHlATSPWOqEBPLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ylW+4u6y; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1744375514; c=relaxed/simple;
+	bh=WAzcFcI71tXaQvtAcB35sAIj1TDS9c1uJ0DpNK+KFqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D89eRrdPQ8Yso0Z25g83Ttc6VyBk7K6w3MmmGR5GFdpQ7WFqRJVPXr12LY9glbGOYsOJ6J+O6sLXCJ7opSPy30ttQDLpAvlI37+FEXBzCN+go1SJVVOEISsqEYyeUq9j+etmmKXWApcj60u14Q3jm1CHA+A9BClLzYUBreljRac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ronU8A2V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ylW+4u6y"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53B9hCOH001911;
-	Fri, 11 Apr 2025 14:43:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	f9ssr1sIFT0/yy99wQbn3SekrD91xN1Xl5jyop03qFk=; b=ylW+4u6yodi3J3bf
-	y4h/jTBAgNeNgADFMk3x76TMxNcNT0p985nrubnJXPq9XQXLM4Ob1Klv6lDEL/Vw
-	r59CbXTSot4w0fCEcPYWWewAD+ZK6xkHGWkPheO//qB1WelWGnkZSfqoatU3CASt
-	wRdjhoGZslaCa/2PGk73C9NkgGS7fkFt10NesnzJJx1ddJX9/1asHduU+Qc2SP/z
-	gr/CpHjhnFilXBKBPaAaL0bxHnadwXG2cSkee3h2ZMg29Qoh2xVfOCGd8wT+3aBW
-	T3yDgnhE5RCi+d5Z49QZDvzPsbvmKgkA88eYpe7wzNvbKM4bRyweoDIcbrQJbO07
-	zcJfrA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw8pwnbx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 14:43:52 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 138EA40046;
-	Fri, 11 Apr 2025 14:42:59 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CAA0A9EC297;
-	Fri, 11 Apr 2025 14:41:13 +0200 (CEST)
-Received: from localhost (10.252.25.37) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 11 Apr
- 2025 14:41:13 +0200
-From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Fri, 11 Apr 2025 14:41:11 +0200
-Subject: [PATCH v2 2/2] spi: stm32-ospi: Make usage of
- reset_control_acquire/release() API
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ronU8A2V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09DD5C4CEE2;
+	Fri, 11 Apr 2025 12:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744375513;
+	bh=WAzcFcI71tXaQvtAcB35sAIj1TDS9c1uJ0DpNK+KFqA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ronU8A2VUCuwUfONMv5yE+nrEwG2Dwx+iH/+z1gLLQFjamftXlhOVJmPy8fQcO0uQ
+	 8/m/NM+IcgibS2bWdyDpc1dwC690I57+NR3xE4zOVDxduD8u3HA3SyTZqBuoPnNoQj
+	 edEjaijRrbhp7rgssznzkmkSJ/nj8Uo75gIZnN9w=
+Date: Fri, 11 Apr 2025 14:45:10 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Samuel Holland <samuel@sholland.org>,
+	David Lechner <david@lechnology.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
+	Purism Kernel Team <kernel@puri.sm>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/7] usb: common: usb-conn-gpio: switch psy_cfg from
+ of_node to fwnode
+Message-ID: <2025041142-earmuff-dwarf-04ff@gregkh>
+References: <20250225-psy-core-convert-to-fwnode-v1-0-d5e4369936bb@collabora.com>
+ <20250225-psy-core-convert-to-fwnode-v1-3-d5e4369936bb@collabora.com>
+ <2025022542-recital-ebony-d9b5@gregkh>
+ <lhtljyn52wkhotaf2cn6fcj2vqx3dzipv2663kzwtw2tjjlxye@5l3xytkyvocy>
+ <2025030845-pectin-facility-a474@gregkh>
+ <0401fdf9-7665-40d6-9ec7-7222b2eda866@oss.qualcomm.com>
+ <eqfqv2tkfretqzvt74o5dvj5yixkfc3h3my4bhskvhtsrbmtwp@poryvs4oipnp>
+ <2025030831-various-monthly-4ae0@gregkh>
+ <5ef97125-2b27-4961-8755-09fcea062f78@oss.qualcomm.com>
+ <20250321-famous-acrid-monkey-ab9c07@lemur>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250411-b4-upstream_ospi_reset_update-v2-2-4de7f5dd2a91@foss.st.com>
-References: <20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com>
-In-Reply-To: <20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Patrice Chotard
-	<patrice.chotard@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_04,2025-04-10_01,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321-famous-acrid-monkey-ab9c07@lemur>
 
-As ospi reset is consumed by both OMM and OSPI drivers, use the reset
-acquire/release mechanism which ensure exclusive reset usage.
+On Fri, Mar 21, 2025 at 12:36:53PM -0400, Konstantin Ryabitsev wrote:
+> On Sat, Mar 08, 2025 at 07:27:28PM +0100, Konrad Dybcio wrote:
+> > > I do use b4, but it wants to suck the whole series down.  If I want to
+> > > pick an individual one out, I have to manually cut the message-id out
+> > > of the email and type out the command and pick the individual commit
+> > > out (or use the -P 3 as was said).
+> > > 
+> > > But that's a world away from me just hitting a single key in my email
+> > > client to suck down the whole thread and apply it to my tree.
+> 
+> Would it help to have an "interactive cherry-pick mode" where it grabs the
+> whole thread but before it applies it to your tree, it lets you pick the
+> subset of the patches you want? So, instead of passing -P 3,4, you have a file
+> open in your $EDITOR where you can just delete the patches you don't want?
 
-This avoid to call reset_control_get/put() in OMM driver each time
-we need to reset OSPI children and guarantee the reset line stays
-deasserted.
+Sure, that would be nice, but don't do it just for me, I can live with
+having people resend patches to me :)
 
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
----
- drivers/spi/spi-stm32-ospi.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+thanks,
 
-diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
-index d002b9c16714684e4e4623f9255a7f2660c46fd1..ef840f377459891b559be6d6c0435408fb58a1e9 100644
---- a/drivers/spi/spi-stm32-ospi.c
-+++ b/drivers/spi/spi-stm32-ospi.c
-@@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ospi->rstc = devm_reset_control_array_get_exclusive(dev);
-+	ospi->rstc = devm_reset_control_array_get_exclusive_released(dev);
- 	if (IS_ERR(ospi->rstc))
- 		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
- 				     "Can't get reset\n");
-@@ -936,11 +936,14 @@ static int stm32_ospi_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_pm_enable;
- 
--	if (ospi->rstc) {
--		reset_control_assert(ospi->rstc);
--		udelay(2);
--		reset_control_deassert(ospi->rstc);
--	}
-+	ret = reset_control_acquire(ospi->rstc);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
-+
-+	reset_control_assert(ospi->rstc);
-+	udelay(2);
-+	reset_control_deassert(ospi->rstc);
-+	reset_control_release(ospi->rstc);
- 
- 	ret = spi_register_controller(ctrl);
- 	if (ret) {
-
--- 
-2.25.1
-
+greg k-h
