@@ -1,182 +1,153 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CE31DA61B
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E1C1DE3A8
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744370063; cv=none; b=jnYi5RejejtHFqb2n6wkU24unpFdfX7ghUXEybPccPI9N45skhhZ56ZY1etcK0qDXx5FQedqBrhwRuvIheAcSpwrq3vh3S2wauuMdSHLlweP6/d2OMUsgPsEB8x53gsMCEGu9ldaPrl5ZUAhJ+ta5o5EwiRoAcS4jJZ5d3cRgb4=
+	t=1744370138; cv=none; b=dsIjASTRgayTVrfKYDAT/sLKd7JdizROknVssh0Qa5/NGptFpfETWUxwPpacnhVcO0pXnM0U84tq3D/BXVFIiOqNd6T19y9l94O/JEIszWX6sm4BwmdU82gnHRKFjq2+t9+AsPVPWcpCmFBwCq9BEqXjXGKUnvDUnDMC1QG0VKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744370063; c=relaxed/simple;
-	bh=9Xw3Mh/wFjiiLBBXROAQuUST13ypnhOe4s9HiOsX754=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=OCbZYdjFXCeOfIXLPfR7LorUWr+c9u1buDAqCwnD4ZvXzI+53eyQmQLoWuPakd1nQZHxK13Zz4SL4c0aoKuzoFE3jRENHysH8PxSIwTs/vdGAM+mRyUvrS46lXgH8/6vPVIODxWSUELPkS3bpnKobJyeeS+1gbpZ487ih1xTetA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=D1mIDsiD; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744370138; c=relaxed/simple;
+	bh=t/3syKxztlxyYt+6x5hxHB8q6nWyGfHeYF3kRejueTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s/LgCHf7xjuNUNLajzvKY9jwc+nFPHzrVxLK7cm+edUVQTmmRMSSCXjGO1BVjxtnMlu+SmL8KuMFzRiEI+cJJnEVtDgsW4G9jQvisic9Ph22GUuBIHVjbp/5mRHZuJDztwln2fwdndIs3e5NSePjlhPoswEGtJTr8hkD08/Ft6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZTrHqxTO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D1mIDsiD"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250411111414epoutp02c466ab7dc266fe7a7cea381e4aa34091~1P1KEh-lp3236132361epoutp02M
-	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 11:14:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250411111414epoutp02c466ab7dc266fe7a7cea381e4aa34091~1P1KEh-lp3236132361epoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744370054;
-	bh=0OoFQEgWGWV4qLariaW+VEJCc18NgTNJXjDGI90Tkc4=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=D1mIDsiDqoHnxacBbma8C9uYET30EiJ4pDlsGVqXVDBqeyJcuTt9A3wJ6cqJbnDSJ
-	 1Gyd5K2VRG5I/RMbfFI+onOGnpW58MU+sxAksbSD+981Iup471gPRZu51ZNnjmZnid
-	 UKGc9XWqnLQdc8YT24MvRa61y7qx8unJO4YQQfT4=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250411111413epcas5p34a91076073c61611c51cbc767660919a~1P1Jkuz-I1933419334epcas5p37;
-	Fri, 11 Apr 2025 11:14:13 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZYvFv5tYNz3hhTB; Fri, 11 Apr
-	2025 11:14:11 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	4A.14.10144.389F8F76; Fri, 11 Apr 2025 20:14:11 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250411070733epcas5p25789fe1804b84c7e00793466c057e249~1Mdx_uxv13187431874epcas5p2J;
-	Fri, 11 Apr 2025 07:07:33 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250411070733epsmtrp1271edd4020b75b269d23543ab838957e~1Mdx9w6sI1309013090epsmtrp1L;
-	Fri, 11 Apr 2025 07:07:33 +0000 (GMT)
-X-AuditID: b6c32a49-b77fe700000027a0-e4-67f8f98321a0
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	63.25.08766.5BFB8F76; Fri, 11 Apr 2025 16:07:33 +0900 (KST)
-Received: from INBRO000519 (unknown [107.122.1.150]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250411070731epsmtip23121513fc26b7213ba22a6d817c81c61~1MdwTQTFN1089410894epsmtip2x;
-	Fri, 11 Apr 2025 07:07:31 +0000 (GMT)
-From: "Faraz Ata" <faraz.ata@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <alim.akhtar@samsung.com>,
-	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-Cc: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<rosa.pila@samsung.com>, <dev.tailor@samsung.com>,
-	<suyash.bitti@samsung.com>
-In-Reply-To: <befe7d30-1727-4540-9072-f21ef96ea504@kernel.org>
-Subject: RE: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
-Date: Fri, 11 Apr 2025 12:37:19 +0530
-Message-ID: <03e501dbaab0$65bb47a0$3131d6e0$@samsung.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZTrHqxTO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744370135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CA31YbKQ9t+xwlWojz0Bu12fhPmL96OxavjpM95pz3I=;
+	b=ZTrHqxTOnAzo68CsHk61S3ta5+gMzTyIJWoU6CsLHt2DzKodrKkUssnRUFZGuz42CZMvL+
+	WB2i4QMNmDadm1YNdE0Cq2H+ooyhubAG8shQbwVj7eA/sLhK6SkJBHOMErfNfssg5w8fqD
+	IwxX06jULLuMW7eaKp+nuWPVSt0WPs8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-382-6tv7J8avPSGWnMDhrjdRhA-1; Fri,
+ 11 Apr 2025 07:15:32 -0400
+X-MC-Unique: 6tv7J8avPSGWnMDhrjdRhA-1
+X-Mimecast-MFC-AGG-ID: 6tv7J8avPSGWnMDhrjdRhA_1744370131
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D5B9D195608A;
+	Fri, 11 Apr 2025 11:15:30 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.38])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 787E01955DCE;
+	Fri, 11 Apr 2025 11:15:28 +0000 (UTC)
+Date: Fri, 11 Apr 2025 19:15:23 +0800
+From: Baoquan He <bhe@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, osalvador@suse.de,
+	yanjun.zhu@linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] mm/gup: clean up codes in fault_in_xxx() functions
+Message-ID: <Z/j5y6frIT2jIsv7@MiWiFi-R3L-srv>
+References: <20250410035717.473207-1-bhe@redhat.com>
+ <20250410035717.473207-5-bhe@redhat.com>
+ <f03f7e13-3d37-4d4a-87a6-61731744f476@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIiLJ9Qel8GAkpX5i6PIbvAaC3kAAM/bP3AAeJrQQOy5+zv4A==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLJsWRmVeSWpSXmKPExsWy7bCmum7zzx/pBlfa9S0ezNvGZrFm7zkm
-	i3s7lrFbzD9yjtXi5ax7bBbnz29gt9j0+BqrxeVdc9gsZpzfx2Txf88OdosvPx8wW8yeX+PA
-	47FpVSebx+Yl9R59W1YxenzeJBfAEpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hp
-	Ya6kkJeYm2qr5OIToOuWmQN0mJJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwKRA
-	rzgxt7g0L10vL7XEytDAwMgUqDAhO6Pp5FTGgsV8FV2LzzE1MD7g6mLk5JAQMJE4evg2G4gt
-	JLCbUeLdD/4uRi4g+xOjREvbMXYI5xujxOl309lgOiac2Q+V2MsoMWtBExuE85JRYuLGTSwg
-	VWwCmhJ3Pj9lAkmICHQxSux8MJkVxGEWeMQoceDTP6AqDg5OATuJw580QRqEBbwk+ppuMYLY
-	LAKqEocPbQRbxytgKTHt6WsmCFtQ4uTMJ2ALmAXkJba/ncMMcZKCxM+ny1hBbBEBJ4kVL9ew
-	Q9SIS7w8egTsVAmBHRwSc07eh/rBReJRdzeULSzx6vgWdghbSuJlfxuU7SMx+eg3RpA7JQQy
-	JO6sFYEI20usXnCGFSTMDPTk+l36EGFZiamn1jFBrOWT6P39hAkiziuxYx6MrSxxcs8eVghb
-	UuLQ7ResExiVZiH5bBaSz2Yh+WAWwrYFjCyrGCVTC4pz01OLTQsM81LL4RGenJ+7iRGcbrU8
-	dzDeffBB7xAjEwfjIUYJDmYlEd724B/pQrwpiZVVqUX58UWlOanFhxhNgcE9kVlKNDkfmPDz
-	SuINTSwNTMzMzEwsjc0MlcR5m3e2pAsJpCeWpGanphakFsH0MXFwSjUw5WzfEnJ47vvDwaWc
-	3LPnrnFl1ZgaPb+Qj8kqq7J0Ts8XjccBoc1axbcMsnl9XWfvykwtSwy/X2eUfSb623zTAE3l
-	Jz9YZ9zxZLq1ZWHYd5PNT49lx/+KmiQU2/ypc2Ja4C5liQ/iivxHI8QZD8eE6v7R3lTJYMT+
-	3ervmfxz9+o+8ac8U+v8otsWtcpz9v6zeuzT9ii57Pi2ZsO2S1KTFhnIllgISS8vyzlUcPEY
-	7/tJXjcPb3n5uM59wc6tD6Jb83orDi/cvGvrNzatzzujZV5un7RcZWmEkPfk1Qc2WV7vd5g0
-	08FZyNPqZKiFwgGbmzs83A7cY12Y94brecCBt9JFCcfvsfNOtOeZ897hrRJLcUaioRZzUXEi
-	AN+PvM5ABAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsWy7bCSvO7W/T/SDZ6817B4MG8bm8WaveeY
-	LO7tWMZuMf/IOVaLl7PusVmcP7+B3WLT42usFpd3zWGzmHF+H5PF/z072C2+/HzAbDF7fo0D
-	j8emVZ1sHpuX1Hv0bVnF6PF5k1wASxSXTUpqTmZZapG+XQJXRtPJqYwFi/kquhafY2pgfMDV
-	xcjJISFgIjHhzH72LkYuDiGB3YwSt1++ZodISEocfnqXFcIWllj57zlU0XNGic/PPzGCJNgE
-	NCXufH7KBJIQEZjAKDFly0Ywh1ngBaPEkwUnWCFaDjBKfP3SAdTCwcEpYCdx+JMmSLewgJdE
-	X9MtsEksAqoShw9tZAOxeQUsJaY9fc0EYQtKnJz5hAXEZhbQlnh68ymULS+x/e0cZojzFCR+
-	Pl0GdqqIgJPEipdr2CFqxCVeHj3CPoFReBaSUbOQjJqFZNQsJC0LGFlWMUqmFhTnpucWGxYY
-	5qWW6xUn5haX5qXrJefnbmIEx52W5g7G7as+6B1iZOJgPMQowcGsJMLbHvwjXYg3JbGyKrUo
-	P76oNCe1+BCjNAeLkjiv+IveFCGB9MSS1OzU1ILUIpgsEwenVAPT7F2zXM9tPnxlN0tCpG/O
-	3GsOPXdPx5YEth6uO11XwPmpJGr9n6lPDxs41bv2X1gcFXAlbZL8Ia66HztNps66vqzHv3Xj
-	r2VBFRsFFK9+j1zsxeNW/X7pyYtJeQ58pyMZyn/M0FrTH2679CuPdmX7jf1lB8wT8kWSC1yf
-	rea8/OjHxcJbO961Tor7cpmZh/WWlC5/7i+ue1+LPv/iWXXyWU35j3WHvkqEcC41bpG19lz7
-	YE+gQVnU001n9ltmF27dX7Pud2Gr0v8wl45P23qYDxhsq73guf9f10+nQ+W/ua+VVDNN8FIp
-	vOW74mqN0mJNNl7xH5e6dlw6W79yYnqncfnXL2cUXzjlSpn/2uwupcRSnJFoqMVcVJwIABoX
-	J+EqAwAA
-X-CMS-MailID: 20250411070733epcas5p25789fe1804b84c7e00793466c057e249
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80
-References: <CGME20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80@epcas5p3.samsung.com>
-	<20250318075635.3372599-1-faraz.ata@samsung.com>
-	<befe7d30-1727-4540-9072-f21ef96ea504@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f03f7e13-3d37-4d4a-87a6-61731744f476@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Hello Krzysztof
+On 04/11/25 at 10:54am, David Hildenbrand wrote:
+> On 10.04.25 05:57, Baoquan He wrote:
+> > The code style in fault_in_readable() and fault_in_writable() is a
+> > little inconsistent with fault_in_safe_writeable(). In fault_in_readable()
+> > and fault_in_writable(), it uses 'uaddr' passed in as loop cursor. While
+> > in fault_in_safe_writeable(), local variable 'start' is used as loop
+> > cursor. This may mislead people when reading code or making change in
+> > these codes.
+> > 
+> > Here define explicit loop cursor and use for loop to simplify codes in
+> > these three functions. These cleanup can make them be consistent in
+> > code style and improve readability.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >   mm/gup.c | 65 +++++++++++++++++++++++---------------------------------
+> >   1 file changed, 26 insertions(+), 39 deletions(-)
+> > 
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 77a5bc622567..a76bd7e90a71 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -2113,28 +2113,24 @@ static long __get_user_pages_locked(struct mm_struct *mm, unsigned long start,
+> >    */
+> >   size_t fault_in_writeable(char __user *uaddr, size_t size)
+> >   {
+> > -	char __user *start = uaddr, *end;
+> > +	const unsigned long start = (unsigned long)uaddr;
+> > +	const unsigned long end = start + size;
+> > +	unsigned long cur = start;
+> 
+> I would initialize cur in the for loop header, makes the loop easier to
+> read.
 
-> Subject: Re: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
-> 
-> On 18/03/2025 08:56, Faraz Ata wrote:
-> > +
-> > +		usi_17: usi@10d800c0 {
-> 
-> Messed order. Keep nodes sorted by unit address (see DTS coding style).
-> 
->
-Thanks for your review
-Based on the DTS coding style, it is acceptable to group nodes
-of the same type together, even if it breaks the unit address ordering.
-https://docs.kernel.org/6.12/devicetree/bindings/dts-coding-style.html
-Please let me know your opinion on this.
-Do you mean I should move all the USI_ node after pwm node?
+Both is fine to me. It's to satisfy checkpatch.sh which complains about
+exceeding 80 char in the line.
 
-> > +			compatible = "samsung,exynosautov920-usi",
-> > +				     "samsung,exynos850-usi";
-> > +			reg = <0x10d800c0 0x20>;
-> > +			samsung,sysreg = <&syscon_peric1 0x1040>;
-> > +			samsung,mode = <USI_V2_UART>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <1>;
-> > +			ranges;
-> > +			clocks = <&cmu_peric1
-> CLK_MOUT_PERIC1_NOC_USER>,
-> > +				 <&cmu_peric1
-> CLK_DOUT_PERIC1_USI17_USI>;
-> > +			clock-names = "pclk", "ipclk";
-> > +			status = "disabled";
-> > +
-> > +			serial_17: serial@10d80000 {
-> > +				compatible = "samsung,exynosautov920-
-> uart",
-> > +					     "samsung,exynos850-uart";
-> > +				reg = <0x10d80000 0xc0>;
-> > +				interrupts = <GIC_SPI 803
-> IRQ_TYPE_LEVEL_HIGH>;
-> > +				pinctrl-names = "default";
-> > +				pinctrl-0 = <&uart17_bus>;
-> > +				clocks = <&cmu_peric1
-> CLK_MOUT_PERIC1_NOC_USER>,
-> > +					 <&cmu_peric1
-> CLK_DOUT_PERIC1_USI17_USI>;
-> > +				clock-names = "uart", "clk_uart_baud0";
-> > +				samsung,uart-fifosize = <64>;
-> > +				status = "disabled";
-> > +			};
-> > +		};
-> > +
-> >  		pwm: pwm@109b0000 {
-> >  			compatible = "samsung,exynosautov920-pwm",
-> >  				     "samsung,exynos4210-pwm";
 > 
+> >   	if (unlikely(size == 0))
+> >   		return 0;
+> > +
 > 
-> Best regards,
-> Krzysztof
+> Would not add that line to keep it like fault_in_readable() below.
+
+Will remove it.
+
+> 
+> >   	if (!user_write_access_begin(uaddr, size))
+> >   		return size;
+> > -	if (!PAGE_ALIGNED(uaddr)) {
+> > -		unsafe_put_user(0, uaddr, out);
+> > -		uaddr = (char __user *)PAGE_ALIGN((unsigned long)uaddr);
+> > -	}
+> > -	end = (char __user *)PAGE_ALIGN((unsigned long)start + size);
+> > -	if (unlikely(end < start))
+> > -		end = NULL;
+> > -	while (uaddr != end) {
+> > -		unsafe_put_user(0, uaddr, out);
+> > -		uaddr += PAGE_SIZE;
+> > -	}
+> > +
+> > +	/* Stop once we overflow to 0. */
+> > +	for (; cur && cur < end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
+> > +		unsafe_put_user(0, (char __user *)cur, out);
+> 
+> Staring at fault_in_safe_writeable(), we could also do
+> 
+> /* Stop once we overflow to 0. */
+> end = PAGE_ALIGN(end)
+> if (start < end)
+> 	end = 0;
+> 
+> for (cur = start; cur != end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
+> 	unsafe_put_user(0, (char __user *)cur, out);
+> 
+> Essentially, removing the "cur" check from the loop condition. Not sure if
+> that is better.
+
+The current code is simpler. Your now saying may save the CPU execution
+instructions a little bit. Both is fine to me.
+
+I don't have strong preference, I can make v4 to address these concerns
+if decided. Thanks for careful checking. 
+
+> 
+> In any case, if all functions later look similar and clearer it's a big win.
+
+Agreed.
 
