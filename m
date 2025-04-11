@@ -1,230 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EA41F91F6;
-	Fri, 11 Apr 2025 15:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744384908; cv=none; b=MPGnRyi2Xgk2HrMeb7VK7vX/QOWggwNrk1EdpgSmojPLWHY6S+wmBSHK61wQM2aI2voRHa9jDOlTpoLqmKmpU4uhvDva13nlyXZDcE3gyGxOU6/Oj21TUtJLAnUAP/NKE9N6dH+OxflZljOudXd2Mg//Ahq21fhjwFdgcMxPoJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744384908; c=relaxed/simple;
-	bh=Tw87e5Z2+o3Cia05sESpVVc5/dF27IORpEOYljJX210=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=R7F2u8PohkiPCWSaJcB8kdZWHYyg/595vQ2iBnO/xtOGONWJFvLgU/BOZyBOkQkFLlc5kFFOK0UL1qZKUqpyX1BVFHjpC4MdALss7OoGYFLLqLj7rQwE4HiPsVLMCakOfIGRdJxTdQS9JYUzOFijKN8RmRAebk13SbyfcFn8BEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L+Z6WGPt; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFE21C5489
+	for <linux-kernel@vger.kernel.org>; Fri, 11 Apr 2025 15:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744384945; cv=fail; b=WtOSimRJE1cgkGvIMjpOBIsspBGoXrA+9F5QFgK4L7vjMz89oOEsg3GB2tJG69azbfOeIoVWpNVdTtIDSZn5a3aph20lzyANULWdO53DZmHOl6X22ikwwEMVsHsIbuW7tn/vtANyAC0Ov6U4rsB6qXT6bPhAFbCuxkUk60mZgUo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744384945; c=relaxed/simple;
+	bh=fPj+VgWo3d7INXQcEpW5U85401DW4GO0tUcii7bPQ0Y=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tY3P6VEcVU54sn3yGhB+84mmaaL2nNFUHRCO+ZYsyKCRQgMmNsjR0+84gccJsx17aM1B3x97uorpqeAMYqfnrNyTNF474X1/6/0hdP8PB+v7DMF6TyXnP5WXFj0oe7gwaAGJ3w/J3PJsRbOx1kOkigiHP0kzF2a0nSCrHIWJ7GA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fd1q/GON; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L+Z6WGPt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fd1q/GON"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744384907; x=1775920907;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Tw87e5Z2+o3Cia05sESpVVc5/dF27IORpEOYljJX210=;
-  b=L+Z6WGPtYczkhFqOT1d2LnNSaJPqmbhIqYYU+kzg29vIJJDyuc1DLxyq
-   kKYO8TPysKVszmE/5Xhx/613tcxNk3TvtU1KvYPUYfEbfbTdxxTVxWZCL
-   sEaahRxqf2S1Fx4s1otP57DpmztCM2Scyf5jzBeST4NR37q71FdriH3bk
-   mohpvnxHFzzuVx9WubVGX+klUUuCEF6EIqyLklEJTMyf7JBjb1AdZQYeU
-   DaHo1o4y9WE7irbs7bljT7RFmwv/4oNfblEY5bxvVy2i4Hrafx99mGlPq
-   36PsU6WBfsucQlgRFCG+vRI1Nmu/k2sr2TMelJwEbUHsf6VjXhb4HkE+m
-   g==;
-X-CSE-ConnectionGUID: 83xC6K++QYafxUIn+ntV5Q==
-X-CSE-MsgGUID: 1vObuezeRTO66Z67nkuJAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="49744352"
+  t=1744384943; x=1775920943;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=fPj+VgWo3d7INXQcEpW5U85401DW4GO0tUcii7bPQ0Y=;
+  b=Fd1q/GONriCWKWY5fQbYUDwrHaR5kqys5cUgykP+bR4O7NNj2918+Kpx
+   p2nSIhSK3arXSRrKXEha6cKg9moe0+feX6163REB7Y49vK5M5ep54WQF4
+   HY1aKnBtlwBXhEw9SOkguqRddr4RCW1pU8qLIMbvmCTljfA9oK4jmA+PI
+   L2WFtJx8t5taq/oOZyGN2JxMwoZyPOJo9GUlLNurAJpNHY9Tf4Dk58aQn
+   esuwxsJO4V7UkHZ9853S7hXfiI965aWf20TbPpvs5MEv82myoen2+jp5F
+   8uXToVdWwfVVDDO53YC5OKyqY7A8lazd3S+f8y5VD6FBnZLfsrrd+DLny
+   w==;
+X-CSE-ConnectionGUID: HSE0cpLQQaWN3po6a2GZMw==
+X-CSE-MsgGUID: TLMML9dfS8yi4iqP+PrPwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="49593037"
 X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="49744352"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:21:46 -0700
-X-CSE-ConnectionGUID: ZN7F5R2QSnS6gU9u+heceQ==
-X-CSE-MsgGUID: OgdXmu7hQnWi10VVkYsecg==
+   d="scan'208";a="49593037"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:22:22 -0700
+X-CSE-ConnectionGUID: bv0D+bXmR8ORk8gTpa2tqw==
+X-CSE-MsgGUID: BCqSv1ziQTieRCfWO9FQNw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="128993003"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:21:40 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 11 Apr 2025 18:21:36 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
-    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
-    Jonathan Corbet <corbet@lwn.net>, 
-    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
-    Derek J Clark <derekjohn.clark@gmail.com>, 
-    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
-    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
-    Eileen <eileen@one-netbook.com>, LKML <linux-kernel@vger.kernel.org>, 
-    sre@kernel.org, linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>, 
-    mario.limonciello@amd.com
-Subject: Re: [PATCH v8 07/14] platform/x86: oxpec: Add turbo led support to
- X1 devices
-In-Reply-To: <20250322103606.680401-8-lkml@antheas.dev>
-Message-ID: <b63450af-e3e9-41a6-fd14-81a4ac22a69e@linux.intel.com>
-References: <20250322103606.680401-1-lkml@antheas.dev> <20250322103606.680401-8-lkml@antheas.dev>
+   d="scan'208";a="133328450"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:22:22 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 11 Apr 2025 08:22:21 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 11 Apr 2025 08:22:21 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 11 Apr 2025 08:22:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GGYyiaW9bCDo5IlONBFMi+E0HwM0E6Q3ZlTjIXLAAhqeKlVhb7WlyHQygSRIYDn66oQq/PLphWinWz0AfVy1Tlmc9z/RTkh5s4fLKT8jA1O1gbcEoI82KFfFis+PP7DS036idmLlJhCctbnAhsGOT+yEoF7k4vVfTXFXgqVSASGARrsMCmgS0bgoaeFlo9f73y3RZU3MJudRW/4RH5ubNWtpOPKhWLhqCk0OgW5ahfPvo/ST1b8/GS1SSwG2W+T+v1H4dj7zcqiC/hy9CFdudXRrzEem2u93gLUCHj3sdthtgt9v/CNXKtHz+HDzy+rmhplzvruw7vnpVHl23xUy+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=97fQiomMbH8eAJ6WIYPN5ueKPQKzkKMTQ1juTaENhrQ=;
+ b=EXae/SbN+2ODlonaEXPqUW3F+lRXeYJTDBFoHCosPUtoferMlUR3r2ht96VNPF19hey3UzvBnbxnXDDXZ2aA8HCKbDo6Nc99EeQll4qiL/eUkRsQdbWKoo3pwyQH3oLTZZsvHGcvOUquSFiWRNWkRpU3F2Ecw+i/1PKwz1jEBvc/Sm9sMFYJ8rtqwUG/YFNgHvXUkWQdUUtsfSrPNphRLMfNLyjQJL/iwNoNNW5V17x9hviIxJ95HQXDLwl0ruPe1lhkOS1LAqEPddIGOsQBdHoJQX9w7dqrTJxrzkd8QFp56UYXe2Hri2pG0Ui5n3hzgYI0j1J5k998ctSvn7FXSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7925.namprd11.prod.outlook.com (2603:10b6:8:f8::18) by
+ DM4PR11MB6189.namprd11.prod.outlook.com (2603:10b6:8:ae::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8632.27; Fri, 11 Apr 2025 15:22:20 +0000
+Received: from DS0PR11MB7925.namprd11.prod.outlook.com
+ ([fe80::b1ef:c95b:554d:19c9]) by DS0PR11MB7925.namprd11.prod.outlook.com
+ ([fe80::b1ef:c95b:554d:19c9%4]) with mapi id 15.20.8632.025; Fri, 11 Apr 2025
+ 15:22:19 +0000
+Message-ID: <bc06b0e7-8325-4044-93cd-a365ea745c0a@intel.com>
+Date: Fri, 11 Apr 2025 08:22:16 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/8] x86/fpu: Make sure x86_task_fpu() doesn't get called
+ for PF_KTHREAD|PF_USER_WORKER tasks during exit
+To: Ingo Molnar <mingo@kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Andy Lutomirski <luto@amacapital.net>, Dave Hansen <dave@sr71.net>, "Brian
+ Gerst" <brgerst@gmail.com>, Peter Zijlstra <peterz@infradead.org>, "Borislav
+ Petkov" <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Linus Torvalds
+	<torvalds@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>
+References: <20250409211127.3544993-1-mingo@kernel.org>
+ <20250409211127.3544993-7-mingo@kernel.org>
+Content-Language: en-US
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+In-Reply-To: <20250409211127.3544993-7-mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0174.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::29) To DS0PR11MB7925.namprd11.prod.outlook.com
+ (2603:10b6:8:f8::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-207892103-1744384896=:944"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7925:EE_|DM4PR11MB6189:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2bda3cc4-c8d6-46f5-7ef7-08dd790ca64b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cmZYOWk0RFhVL0E2VjYwZlVsUHM2VlhBNmZJUE11REN0ZDJUUUgvR3ZFWDZi?=
+ =?utf-8?B?dUhkc01rNUJraDIyazQ2RHVLU1ZTTGNibUQzam8yY0cycnRIcWc3UkczRVhG?=
+ =?utf-8?B?ekRNUWcvUS96WUlDZ2FVVkNnZUI0Ui9RSEQ0azVKQmRQa2xqdVhpZDR3akVl?=
+ =?utf-8?B?RGdrMDV1Z2JzT1FOWG52VkZrKzVQVDc1S0tRWDIvSE5wTGRYM0J4bGgzMmhH?=
+ =?utf-8?B?a3Fkd3phejNlNWFlK3RqU3VXcTRFQlFMaEIyNW40M0kzRDJaZjA1OXBPUmxy?=
+ =?utf-8?B?VHl3emdBTjFnQ011QkxDeEQrTlRGL281VWdublk5bDNaYk9Icmxqd3ljZnBS?=
+ =?utf-8?B?WkhNaENQMVZwTW44NjN4b2NaRnphTkRPSUlCUnIvTCs5TDltSGRZbkoxOGNh?=
+ =?utf-8?B?QlduaDdaQ2FOZE9MYTFMaDNvU3YwVnJpL0M2MWIzN2dXMmZ0MTNjUElzQjIx?=
+ =?utf-8?B?WTM3Tzh4RUV0RWtoTlhFL1JGYjdIOTVmc0hlNHRsQkdEZ1g0Z2MzdURWbHRI?=
+ =?utf-8?B?eEtOU2xQdUVBem5rU0JMNkR3b1cwMWhHcGVCUlo1Kzl5Y0ZrKzJBTHdkbG9V?=
+ =?utf-8?B?TVNaK2hFaVlqNGwzbWZtVTdtdGdlT3l2VzR4Z0ozOFpxZTFJTVllUkRQbWRR?=
+ =?utf-8?B?V0tTUmpTcUUzd0drc24vcS80cFAxZ2daSlpxWk9yM0FwQzdtNUlGQUpaT3pS?=
+ =?utf-8?B?QzBlRHBZaU9NRURHYzByVTh1YVIyWEFob2VDSFRLZzlZd3BSNWVBbnBiNTIv?=
+ =?utf-8?B?MzdpSlBNT3l3eDAzVjN3MGtsZFRBTE5aQnpiZnZNeVNIWnhMNjNaVi96K3g4?=
+ =?utf-8?B?YzBoaVhjWUdWOGlOVmo0WFdVSkdIU1pUcXF5bU5yUk9panRDdU5rRzM2eG05?=
+ =?utf-8?B?bzhTZC9WNWtjeUNjUHg4a1VjaVNaQytjMXVHS1RZak53eExXSUlrRHR5T1JX?=
+ =?utf-8?B?d29Dd2U4RnZoRmpWUWJmOWlLb0V3b3lCRWFxMlBHUC95TlFOL0JIckkydTNW?=
+ =?utf-8?B?K3ZuMVJLaWltR3hOUnNQT0R6dENCeGFmMlVudVB6ckFpc0JlNDlRZ2NvbzJh?=
+ =?utf-8?B?TTZwYVNGUVNaZFlmWXFMdmtxamRrWXpsaFBZd212alJLYjJpcU15QjVVV3kx?=
+ =?utf-8?B?MVVmME0xZ005ZXdrbk5vYzRnZ3VOa3UzUWdqODRuc3VjRG1HVHVudkxFZzQz?=
+ =?utf-8?B?MEt0MXdvYTFrczZxUlN6SlZxVlU2Um5ZTXR5a01UZzlNazFPajRLQVNPTkY0?=
+ =?utf-8?B?d2hidzFGc3UxMVhSVGJKSnh1MXlXc01vYktRRmxaMEtWM2w4TVNYSnYyWkVC?=
+ =?utf-8?B?Vm8xVVVMS0xHeDViVXVaV0ZkOVJGSmhmdkhuZkxsQmVrdEN4TkttWVU0VDhD?=
+ =?utf-8?B?NktwODliQ3cvWU5TcU9COW5zZjBMdW4vVGVpMUR0aFNWdmJNS091TGk1eUxw?=
+ =?utf-8?B?UG14N3AvK2VtMkFDRFNPMmlhRnB3VXNIcUtBTnY5RmRHaXlSVU9mRTRJdEx4?=
+ =?utf-8?B?TW8wRkJtWUh6dUVNZ3JvVGsyNkhmR3Z3QW9WbXVmVUlpQWsvMzRUdVorN1lt?=
+ =?utf-8?B?NU5DLzJlc3ZHSlc0c1VTQ3hZQWJXb3NYWEFOUkNFS2hVcWtzMW9peEhqNUVi?=
+ =?utf-8?B?WTd3b1hYaDROcWtCV1ptYkR2ajVJZUJRZGNnM3BYUVJaZTV5TVFuWWZkTDAx?=
+ =?utf-8?B?SmlGMkQyWmgzNVhyNmRrTmdlTnN3bkx1NXlqREFXUnpNRGRuUExaWEdldFJ2?=
+ =?utf-8?B?c2kxejU2SFpKRStVaFZTb3Brd2c4RDdDMFVwYVNvMTZ4UW5yS2RpNTUxZEVj?=
+ =?utf-8?B?UDVhWnFlY0hrTElRblk5NFJSZ1VlY2JkUkxES3czeFFZR3JlWXNFQ3ZvZmg1?=
+ =?utf-8?B?Z215WlVUNVhOOFJxc0h1aW4yVmV2YWUyZjFqOGdqdEZranhIaDluUkZUeFJK?=
+ =?utf-8?Q?kuLX/4nzU3A=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7925.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VkNqQThuZENXOHFSMkMwNVlGWVl2ZUltY3dXQnZIYW9JUHlJcDEzZDRMWUZ3?=
+ =?utf-8?B?K3Vvdm9IeDQ0OEg2bEZZTUYwM0I1bUU2UkIwcVhQcWJNUG9zNEs3TmNTSGJF?=
+ =?utf-8?B?TlU4K01xSkY5dHVpUzZ0Y3BYVXVaRyttU3A4NjFGRnYzZXF6QnJaRU55VEt6?=
+ =?utf-8?B?dmFSZ0M3a2gwSXY2a1ZkYjhiZHY4MTg4d0FtTTIybDR2UDhsVkwvRFNPRFVZ?=
+ =?utf-8?B?YXhsUzgzdk5xY05RT0JVbWVaTVhwRlV3MjVFNGRiSDUxL1NFT1pOQkpjNkxz?=
+ =?utf-8?B?NkhYM0V6NkxmcWxSdUhhSFNiK1Z3VWJhOVVPTU1RRFI1aE9WSks2ZXRLTEti?=
+ =?utf-8?B?K3lFQkpYQlpkNXRXUVlIanovSnRSY3E4RkxNMlNWYU9zVk1vd0tMWllERVhR?=
+ =?utf-8?B?NTBHQnlYNlVnaUtsRDZ4NVB6UENYUG9UUGdPaWQxRHNWa2VWanVkTUF6cnMr?=
+ =?utf-8?B?SS8vZmNYS3cvTmxsSnQyM1RLT1VyV1hEWFh3MHBzRUpja0NCSk10bzNScFFC?=
+ =?utf-8?B?VCtsb3FtUmtmWjZubFAyQms5Q3R6V3BLakJ0Q3hjS3dFc240MlI4YnRFRFkv?=
+ =?utf-8?B?NFUycDUvMUdiakthVERBOEtNY0NiOVY1QnNTeDlhK0Q1bGdNVWhKU2ZiQlpQ?=
+ =?utf-8?B?cXc2Tko5WjVQRE1jeWJXeHVIL2F1ditiMWRpWUsxdTh2NkZHM3Y5dExuWmdB?=
+ =?utf-8?B?NTFKT2xGTHpUTGo2bkN6UytzejZmeUNFWmx2K3BkOXNETFp4Y24vdEdKRGpo?=
+ =?utf-8?B?WEZtVHIwYzA4bHRydm5QRmFFWEFVajV5czNHc1pLQVdBdDBXR0VsSldjSDFs?=
+ =?utf-8?B?dWtROE1hMFFVMEh0cFljNGlJSTNSSmV2UE16cnVRbCtQN0JDd1VpZTQ4K2xB?=
+ =?utf-8?B?bHk2Ui9sNG1aSFQ0MTRxb2s1ZnVOODdwQTUzYTd0Z1hkWjYyVzFDYXBncW5K?=
+ =?utf-8?B?aDl4Wmk2bVFrRisvM0dWQUl1dUFxbFJGaFFhRGNsME1zblZWS0Z6bUJGNXZo?=
+ =?utf-8?B?dmQycmZUclFXNmV3bVluVzVHU1dWWnBObG1UZDBjR2NBajlTSCs1Um9jU29U?=
+ =?utf-8?B?YnpBSTBEUlpFNTl6YmxJeEE0SC9wTzlkSTJOdWNudUZPMFpQVVlscldKWEpX?=
+ =?utf-8?B?dHUwSEtpSG00SS9acUxTYVBUNEtTOUJRUEtwUmo2V3RRR3RTN1U1Y3g2SDVr?=
+ =?utf-8?B?TFNhOGdGenhQQVd6dFR3UkxQZWVxSGdSYXNCYTVKT05hVmp6dE9TZlRFVEhy?=
+ =?utf-8?B?SElnM3F1TWc1SUpFaHpRTVJUb20xOFB6bVBydG9WTlBad2xndUowT2J2ekM3?=
+ =?utf-8?B?ampkaE1mL0VPV0pEWXNZZWtyUktnSjM5QVJoRHpqUFd0RVE5SzZTdVBWdUkw?=
+ =?utf-8?B?eSsyWXF3T2haamQwVWJIMVZKY1hSQlhycWMvQ3Bvb1diSEdtSEtLL1dkWW1B?=
+ =?utf-8?B?UFJxTGQrSC9rSXRNd2hEbFliQVp0UGRMb056RFVhWTNEV1RMK1ZNN0FXY3Zo?=
+ =?utf-8?B?Si92SE40OXRpbk5uSDRqbjh1VWFBc2FrVXRiamdrd2R4d1hjN2RXNDdUczNO?=
+ =?utf-8?B?NzRwUXplS0NsUVBHVGZzREJqQWV5TG8xK2xGVDEvYS9GcUlDanFyaVowaHNv?=
+ =?utf-8?B?elZKTjlOeVk1WFpOVmtuMWdrQ0U3UVNKS2NCcDZsZWhndjNTa0JvMHpRR00z?=
+ =?utf-8?B?ckkyaXVLc3VRWXo2NXo4YTliaEQ1elFTZnBGWVBJWkoySWdiWFQwMVNYSm9j?=
+ =?utf-8?B?SGRuWDVoT1M2V29jN0ltWkxWY2I2cmRMU1ZaTXRQNkRobUxYQ2wvRC81bnp6?=
+ =?utf-8?B?M01GU3VxZEY3MUNuM1BmMEZFSWkweVBJN1NNR2xmTERHUzlXQ2M1QWpVdDFI?=
+ =?utf-8?B?REhBMllkVG5zZ2JxU3dQN2NsNWUyN1JrRU05RjhWUTdtOE93UWY5MFFrV1Zu?=
+ =?utf-8?B?WVR6RkRqbUlWbC95ZXl0aVFrYnEyeWJiQ0FNaFRlNFF2bGxaY2JrY3FCenZ4?=
+ =?utf-8?B?bHFzSlE4WGV5S1RVTVg0V1Y0MDdSaWxwZWpmQmN6SWZsYzYzN2xVTDFCSFBS?=
+ =?utf-8?B?dFcrRjJKVTlzZmhsSmxiRzJtZFVUK1A2UXJ0bDBETmlybU96ZWZTUXZDOEtY?=
+ =?utf-8?B?YWwrN1R0ZjBmeXFTamJvZWh0aUtBU3FuN0g4RDlGL3hMVUpTRXlUekM0K2dh?=
+ =?utf-8?B?M0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bda3cc4-c8d6-46f5-7ef7-08dd790ca64b
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7925.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 15:22:19.8454
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zocFS4EpcVCjHETBu1FINXOJu57/8nYOWSYJBGK6IYTRFmCde5txob3CxRVsLwly2Im1/ROh787xWZKrYxcudA6DEmYezKkpJZPeqwOin0A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6189
+X-OriginatorOrg: intel.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 4/9/2025 2:11 PM, Ingo Molnar wrote:
+>   
+>   void arch_release_task_struct(struct task_struct *tsk)
+>   {
+> -	if (fpu_state_size_dynamic())
+> +	if (fpu_state_size_dynamic() && !(current->flags & (PF_KTHREAD | PF_USER_WORKER)))
+>   		fpstate_free(x86_task_fpu(tsk));
+>   }
 
---8323328-207892103-1744384896=:944
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Looks like the AMX system couldn't boot properly, and I found that 
+referencing tsk->flags here resolves the issue.
 
-On Sat, 22 Mar 2025, Antheas Kapenekakis wrote:
-
-> The X1 and X1 mini lineups feature an LED nested within their turbo
-> button. When turbo takeover is not enabled, the turbo button allows
-> the device to switch from 18W to 25W TDP. When the device is in the
-> 25W TDP mode, the LED is turned on.
->=20
-> However, when we engage turbo takeover, the turbo led remains on its
-> last state, which might be illuminated and cannot be currently
-> controlled. Therefore, add the register that controls it under sysfs,
-> to allow userspace to turn it off once engaging turbo takeover and
-> then control it as they wish.
->=20
-> 2024 OneXPlayer devices, other than the X1s, do not have a turbo LED.
-> However, earlier models do, so this can be extended to them as well
-> when the register for it is found.
->=20
-> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/platform/x86/oxpec.c | 84 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> index ee37070ec54fc..384d525402def 100644
-> --- a/drivers/platform/x86/oxpec.c
-> +++ b/drivers/platform/x86/oxpec.c
-> @@ -87,6 +87,12 @@ static enum oxp_board board;
-> =20
->  #define OXP_TURBO_RETURN_VAL           0x00 /* Common return val */
-> =20
-> +/* X1 Turbo LED */
-> +#define OXP_X1_TURBO_LED_REG           0x57
-> +
-> +#define OXP_X1_TURBO_LED_OFF           0x01
-> +#define OXP_X1_TURBO_LED_ON            0x02
-> +
->  static const struct dmi_system_id dmi_table[] =3D {
->  =09{
->  =09=09.matches =3D {
-> @@ -434,6 +440,73 @@ static ssize_t tt_toggle_show(struct device *dev,
-> =20
->  static DEVICE_ATTR_RW(tt_toggle);
-> =20
-> +/* Callbacks for turbo LED attribute */
-> +static umode_t tt_led_is_visible(struct kobject *kobj,
-> +=09=09=09=09    struct attribute *attr, int n)
-> +{
-> +=09switch (board) {
-> +=09case oxp_x1:
-> +=09=09return attr->mode;
-> +=09default:
-> +=09=09break;
-> +=09}
-> +=09return 0;
-> +}
-> +
-> +static ssize_t tt_led_store(struct device *dev,
-> +=09=09=09       struct device_attribute *attr, const char *buf,
-> +=09=09=09       size_t count)
-> +{
-> +=09u8 reg, val;
-> +=09bool value;
-> +=09int rval;
-> +
-> +=09rval =3D kstrtobool(buf, &value);
-> +=09if (rval)
-> +=09=09return rval;
-> +
-> +=09switch (board) {
-> +=09case oxp_x1:
-> +=09=09reg =3D OXP_X1_TURBO_LED_REG;
-> +=09=09val =3D value ? OXP_X1_TURBO_LED_ON : OXP_X1_TURBO_LED_OFF;
-> +=09=09break;
-> +=09default:
-> +=09=09return -EINVAL;
-> +=09}
-> +=09rval =3D write_to_ec(reg, val);
-> +
-> +=09if (rval)
-
-Please don't put empty lines in between call and its error handling.
-
-Please change "rval" to "ret".
-
-(I'd add also a patch to convert the another rval to ret if it remains and=
-=20
-change "retval" too to ret for consistency).
-
-> +=09=09return rval;
-> +
-> +=09return count;
-> +}
-> +
-> +static ssize_t tt_led_show(struct device *dev,
-> +=09=09=09      struct device_attribute *attr, char *buf)
-> +{
-> +=09int retval;
-> +=09long enval;
-> +=09long val;
-> +=09u8 reg;
-> +
-> +=09switch (board) {
-> +=09case oxp_x1:
-> +=09=09reg =3D OXP_X1_TURBO_LED_REG;
-> +=09=09enval =3D OXP_X1_TURBO_LED_ON;
-> +=09=09break;
-> +=09default:
-> +=09=09return -EINVAL;
-> +=09}
-> +
-> +=09retval =3D read_from_ec(reg, 1, &val);
-> +=09if (retval)
-> +=09=09return retval;
-> +
-> +=09return sysfs_emit(buf, "%d\n", val =3D=3D enval);
-> +}
-> +
-> +static DEVICE_ATTR_RW(tt_led);
-> +
->  /* PWM enable/disable functions */
->  static int oxp_pwm_enable(void)
->  {
-> @@ -691,8 +764,19 @@ static const struct attribute_group oxp_tt_toggle_at=
-tribute_group =3D {
->  =09.attrs =3D oxp_tt_toggle_attrs,
->  };
-> =20
-> +static struct attribute *oxp_tt_led_attrs[] =3D {
-> +=09&dev_attr_tt_led.attr,
-> +=09NULL
-> +};
-> +
-> +static const struct attribute_group oxp_tt_led_attribute_group =3D {
-> +=09.is_visible =3D tt_led_is_visible,
-> +=09.attrs =3D oxp_tt_led_attrs,
-> +};
-> +
->  static const struct attribute_group *oxp_ec_groups[] =3D {
->  =09&oxp_tt_toggle_attribute_group,
-> +=09&oxp_tt_led_attribute_group,
->  =09NULL
->  };
-> =20
->=20
-
---=20
- i.
-
---8323328-207892103-1744384896=:944--
+Thanks,
+Chang
