@@ -1,560 +1,821 @@
-Received: from CY4PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11010071.outbound.protection.outlook.com [40.93.198.71])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2057.outbound.protection.outlook.com [40.107.20.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAEB293B46;
-	Fri, 11 Apr 2025 08:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824FC293B50;
+	Fri, 11 Apr 2025 08:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744358963; cv=fail; b=XR7+6Yz1Vg4LxwOJsKR0XF7sLjRfcbotq8/Zb3eRhFlhSdmNu2fHc2is8c1nTPtVtgLcJKuVeNXzadmxXoxWr6a+9jGuV8rAXfqqgkJkYRHgcrm0Y19DKX/qksYCZWRyZy5ViqUWVMMH82B7KJe+BtE/6Su9EKo/ySFZNns9Guc=
+	t=1744358974; cv=fail; b=BfNlCpHUCPj7X9X8A6rz6sABDHjSCv61bDL+pSDis3A7MNyr6vQ2AxDqdOLwChV7mPNN7gljlReLH06yinbzbwLTuZloo57LmBd0wws8JLolamaMVeFwSh5JmX4exF0pRRbmb913UZOrckx5lsoubpvHPWqDB95yKIFgxe7Y6S8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744358963; c=relaxed/simple;
-	bh=15bLSZfBcDTnkOv/cT5WuOMas6Z3ySqYLODcwlLzDuc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Yq3x9Nmp43Djo+vQzZEgQFI4jMikgOX3Qgn5rghPefd+tCoqJCRhdc0eORvfYSGbE1lAmdc1ocanZYVdYaTUm+hRGMJnJ6dqpYu6t7jRB1e6aGt4FG1+hXgCeK6nNr39HlHbcVSuo2QO0EnkyJWMASpj94NE2kyalvFleNVqog4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (1024-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=RXeGzFfg; arc=fail smtp.client-ip=40.93.198.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=einfochips.com
+	s=arc-20240116; t=1744358974; c=relaxed/simple;
+	bh=SIyamjms6Wclpd72ci4mWRF7kYhgsn12aG3nDwvXN4s=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gXZSBFrWQ0uagvDPlxhPqn79EzzIFPTSJF5XRiu6mQprB3YUAjqoULM4ZNV4cX368awJ/2pCwD0CC3i/zKeNFqoMBLIf/fXzAZ2PKKq4lTna5bFFW7rLZvcPs+qgbUNjgIAOlO/6ujD5KD6xDEbP4Fx728lNypUpK77US7QKqzQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=tZYTpqyV; arc=fail smtp.client-ip=40.107.20.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="RXeGzFfg"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="tZYTpqyV"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oK9fZTELS03ruN1+33SD58ytxNTFWyDpgmFCz0tKaBmJs/d5FjKdw+LU/3PdruaWOj9PL2TGq0ybuxJNtofRunN97WLNphBgpMU0RVa805Ql6iFVrZ0/25ke/9ZEWQAGjrr+7zFXYFTe1juRtKHXfu5N9Y9j8m8uDRtZm26wNjRlwKaexcrUxaq5Wz7xzR/RuVQzj54VJyDDh5WhKHbcgaNVTb+HvhvBLCkWjtM85pU2Hr5WVn3grzQxNbU/8oDMP4Tb6fiLzWsWTke+A8jBZcZvw/iVxiVODnKNf1RX0Z0uSaM3IhoZmp7Kq5uCJnzDKlv/U9Tujx7ibFlACt/WlA==
+ b=d09M6zyIrKcvd9tiDLnkSvMEz9GUiTSEnq1OlomnMPcfCYNQmDCK6HcoTqrKQwFSDorWEacgDpF87BzqF8XyPkBSEiKSd+9XJunNSWDJtV3lq4vW50Z1l7RrkP7gZWFKD/9q5HLFl8b3Vw7dU92sM04o0Fg0VYML2k//e2j0/emSTuRL1ei0YpBkRjFyVDzLORRnoLKSUzOMJlGd2XIO7PQ5E8sFxlYfuuqg5v8brqJKkGGqikdsF2bEpaNNubv5GGOqupkQQdhiK4ZZBEDW4YwwkiqPEQ5pZrmDuw2DSNPwnXV0pZeLpkqsCANOue2XSNuikWGBlILnnPgSAm0V5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eAbxaSboH43W6drahySyZx9kwZs9jJ4QRwqToZCNLUI=;
- b=bIsEqgu3m+PtU3uSnWcusrfAIx85Kilr2nE8LPLOoj9MH2WeQQ2G2JDFnYi6SQ7nJJKGDF8589Rul/ZHfCC3n9kg1BfZrLNLSohfgbF1/XLnnx4gPdEIShcRtBhIrNdx5+5h8CVezoVUcIrDUoGHE9wmP7ExaVh9lR8+6Oy73MR/sx1YYBioYALMy4zPh8QMxZOhofeKTMPj/ZklyCbmoDz50jt40iuVU46epRNiLWRqkHJw6IHg9i54UMFwkDaQsqJkO9v/o/V6Ri4vL94NUO/CONnKtsJG2KyaFriIi1RJ9MRvns9fwVXk0DqRcU13rC7e1TQOXBhjkpYvW+yldQ==
+ bh=V9URa2F0JWMe/eQZrPCqCQr4l3P0C7Jl2AZkDDah0JY=;
+ b=gdozPQDFE7gm4GW0dQwTOw4TtQaNg8dfjqdJkJZSRfRkK4L+l9Y4CZjJXvTrFXh9rnLt6vkkuRGzEXQNYqVP8zE+lQZd0W2phaymTa0j0Qz7ZU0m2EVOkGHgw1tUKNlFsvmBoPK1ZeUK3PTs5m67duPnAgOPFt9O9mNCd6rffB0pg1ZdVEjKSZaBOgfnDrCFUfgsXm4QaHZo9NZ0Gwbsw9Disdo96ngB3UfNSumU9yaRqU3KAqoUzL38xMyN0lBp8PCwBmRumzG3S3r80PsUTp+6gfK4UZbx/ZJW7o8wvnhbUU3lY4jOGk4QX77hlDBQ1O5vZRDWcSVmdr9eV9VxpQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=einfochips.com; dmarc=pass action=none
- header.from=einfochips.com; dkim=pass header.d=einfochips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=einfochips.com;
- s=selector1;
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eAbxaSboH43W6drahySyZx9kwZs9jJ4QRwqToZCNLUI=;
- b=RXeGzFfgU5ePfO4OZXmNePa8BtvzvFjZ2pLyiZ2VwCq3DSpnSJShb7UUPS/63tsDyEskCZPp7StMd2fvIWidRHTsvXN88cGD/JnUFT9xHJFfdEnsmp43ofHzd5hwNRX3e93ojyV50Z3Am/vqsNTdo4AEfxsXyir2AjGsdOzvjkg=
-Received: from SA3PR04MB8931.namprd04.prod.outlook.com (2603:10b6:806:381::22)
- by CH5PR04MB9549.namprd04.prod.outlook.com (2603:10b6:610:210::8) with
+ bh=V9URa2F0JWMe/eQZrPCqCQr4l3P0C7Jl2AZkDDah0JY=;
+ b=tZYTpqyVOVBWp7hEIjUlZd4c8Bjmygzz+4tumfNeu2GYzTFmWWu88+k3bn0IsYWBVOzLFhRzD4ZxhJQeIFYE5MB2DgPswT8thAKp5oO18uw/LKpLfiipdQrmndyRgl1WCY5UrbRDH0hPy6vUhE9ENvXMjIVHxyMeHujvAfV3axf82U97aDHK9RIxW4g51KnyqQex6HZrFmSI8yYw5NqFf3yZ5vYOH/xz+m5RPUUzYGLrWD4+Lh4krPD5wBj5BjzZcDy7KlYLUemLkXpXZ0401GV0TQ6/klAX5TW4S18WpUks97mdGRnewraln2M6WADVMinJEkYt0yTjV5RTNjFaHg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9251.eurprd04.prod.outlook.com (2603:10a6:10:352::15)
+ by GVXPR04MB10136.eurprd04.prod.outlook.com (2603:10a6:150:1bc::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Fri, 11 Apr
- 2025 08:09:19 +0000
-Received: from SA3PR04MB8931.namprd04.prod.outlook.com
- ([fe80::f323:b482:8b18:af1d]) by SA3PR04MB8931.namprd04.prod.outlook.com
- ([fe80::f323:b482:8b18:af1d%5]) with mapi id 15.20.8606.029; Fri, 11 Apr 2025
- 08:09:18 +0000
-From: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-CC: Anup Patel <anup@brainfault.org>, Yu Chien Peter Lin
-	<peterlin@andestech.com>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>, Kanak Shilledar
-	<kanakshilledar@gmail.com>, Samuel Holland <samuel.holland@sifive.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Pritesh Patel
-	<pritesh.patel@einfochips.com>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, Darshan Prajapati
-	<darshan.prajapati@einfochips.com>, Charlie Jenkins <charlie@rivosinc.com>,
-	Heiko Stuebner <heiko@sntech.de>, Palmer Dabbelt <palmer@dabbelt.com>, Thomas
- Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Albert Ou <aou@eecs.berkeley.edu>, Lad Prabhakar
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, Aradhya Bhatia <a-bhatia1@ti.com>,
-	Yangyu Chen <cyy@cyyself.name>, "rafal@milecki.pl" <rafal@milecki.pl>, Conor
- Dooley <conor@kernel.org>, Min Lin <linmin@eswincomputing.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 03/10] dt-bindings: vendor-prefixes: add eswin
-Thread-Topic: [PATCH v3 03/10] dt-bindings: vendor-prefixes: add eswin
-Thread-Index: AQHbqrkGJfwKBoayPkqibQBseIrSMQ==
-Date: Fri, 11 Apr 2025 08:09:18 +0000
-Message-ID:
- <SA3PR04MB8931CE58B77461178FA2662883B62@SA3PR04MB8931.namprd04.prod.outlook.com>
-References: <20250410152519.1358964-1-pinkesh.vaghela@einfochips.com>
- <20250410152519.1358964-4-pinkesh.vaghela@einfochips.com>
- <174430638306.431792.13578234809737502743.robh@kernel.org>
-In-Reply-To: <174430638306.431792.13578234809737502743.robh@kernel.org>
-Accept-Language: en-US, en-GB
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Fri, 11 Apr
+ 2025 08:09:27 +0000
+Received: from DU0PR04MB9251.eurprd04.prod.outlook.com
+ ([fe80::708f:69ee:15df:6ebd]) by DU0PR04MB9251.eurprd04.prod.outlook.com
+ ([fe80::708f:69ee:15df:6ebd%4]) with mapi id 15.20.8606.033; Fri, 11 Apr 2025
+ 08:09:27 +0000
+Message-ID: <689511b2-c4a4-4047-a932-ff9ebfcedf22@oss.nxp.com>
+Date: Fri, 11 Apr 2025 11:09:16 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 2/4] rtc: s32g: add NXP S32G2/S32G3 SoC support
+From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ NXP S32 Linux <s32@nxp.com>, imx@lists.linux.dev,
+ Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
+ Eric Chanudet <echanude@redhat.com>, Bogdan Hamciuc
+ <bogdan.hamciuc@nxp.com>, Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
+ Frank Li <Frank.Li@nxp.com>, Enric Balletbo <eballetb@redhat.com>
+References: <20250403103346.3064895-1-ciprianmarian.costea@oss.nxp.com>
+ <20250403103346.3064895-3-ciprianmarian.costea@oss.nxp.com>
+ <CALE0LRs3VA9kLy4QSEOBCixZbptW4B4DVjZqbN=GDoONHq2oeA@mail.gmail.com>
+ <9f982548-c5e3-45ed-963a-afb5256acf31@oss.nxp.com>
+ <CALE0LRvUXck_FSP0jCZ1Ene-LCEa8MDFQWVCHGpOzd_yGk+v4g@mail.gmail.com>
+ <64843c72-37e3-4080-880f-a020e372b521@oss.nxp.com>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_879e395e-e3b5-421f-8616-70a10f9451af_ActionId=ad4383c1-4cc5-4fb7-b128-1a4a858532b4;MSIP_Label_879e395e-e3b5-421f-8616-70a10f9451af_ContentBits=0;MSIP_Label_879e395e-e3b5-421f-8616-70a10f9451af_Enabled=true;MSIP_Label_879e395e-e3b5-421f-8616-70a10f9451af_Method=Standard;MSIP_Label_879e395e-e3b5-421f-8616-70a10f9451af_Name=879e395e-e3b5-421f-8616-70a10f9451af;MSIP_Label_879e395e-e3b5-421f-8616-70a10f9451af_SetDate=2025-04-11T08:04:48Z;MSIP_Label_879e395e-e3b5-421f-8616-70a10f9451af_SiteId=0beb0c35-9cbb-4feb-99e5-589e415c7944;MSIP_Label_879e395e-e3b5-421f-8616-70a10f9451af_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=einfochips.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR04MB8931:EE_|CH5PR04MB9549:EE_
-x-ms-office365-filtering-correlation-id: 4a97ba34-06c3-42f4-d644-08dd78d028c6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?XUasaOJ9rjNtGX7QteXRHkOF/jCZMkfDqiC7420RczTakLzSNUwUb8WMu8cd?=
- =?us-ascii?Q?sfCuhfvCsJUxV5S/Cwm414i4YSdSUUYR8Be0whBYodoW1g8x8LqaDfDSuhK0?=
- =?us-ascii?Q?JbImhI4+YKGvjo00T460mFABbK8ZVnqd/4DUGxEHf6DZNLzZnhO+VfBgTAke?=
- =?us-ascii?Q?mV4713cd57QuJCxgBcHZUBCzlzA5k715P4S1Msu6f/I5Zs1f0wPfAsEC4J2A?=
- =?us-ascii?Q?7zXaMM62vmkp2eFlXwSb4Exx+12wLVdQjbIe8G9wWS+/Kcy6XEKCgbiCq8AG?=
- =?us-ascii?Q?ggWr1DPyP/MTy0HGGWEyEVF6Khi8Ycd66f8Zud4QDfyqGT1OLtAp6HvP6DQ2?=
- =?us-ascii?Q?bZOy0GxuCa5VUvGxWbQRLlr2sS7VFaByIctZiKB23cyAmI6lUfpiQQV+J7qa?=
- =?us-ascii?Q?BRMACYI10XuBTQ/tt358LetXJ1+gnTS67MI1egHCUR0IePwSpjVmszHQ14Rg?=
- =?us-ascii?Q?VVfeOUscLkBnhlzk5ZeDZq7th/WZ06dJwyVpT0bIjtiX7UVsbDHZfwYJC/8a?=
- =?us-ascii?Q?7HVpmQKzvdTNNDFmRsjcvhVhOos0amxNsqUj1ztTfM27FPbmKrWEsZg8v6iF?=
- =?us-ascii?Q?hhQDCkUHRMDf+s0iHB7j5ueoPRU/Bic6fb3j8IZtvLGemGnBoOv3gjm36u+Z?=
- =?us-ascii?Q?gdRt3JmJ8y4pBBBCF5uP5tuaNdCq5OWVFsWktO9KBfbgEbkzu14E9+yO3ovI?=
- =?us-ascii?Q?P2nKbXF9qKnGJrqozi188Xb252TQ871eCu0yXnWfLliX6eQG6JsrFbpcHJIh?=
- =?us-ascii?Q?ColccoCTJ6ZXtYTB8TossMlfbVLS8dAqXgCGvqI1UXoOXamQYMdb7XKhvQE6?=
- =?us-ascii?Q?zOnU0nVuCIGxbWp3Um+oIqBVDwckBmMlLO9GphCZaRYFirNw7BbEtptThBy9?=
- =?us-ascii?Q?w9JZ4g1nwds64RQA7GbVTIL2mXuytvKYhaeQeVF4NUhxRU6v1i9nymas5o++?=
- =?us-ascii?Q?EjPGoaNUKfjG23B+luwzv9mhMGWSChia/oH8V87O+PeiNLnmBXvCnJm6ot2t?=
- =?us-ascii?Q?Tgq3ahXzn7qfRLKPs8DNYIuFy8s7k2YoXQR+RwU7ineFkybL/c95rR5tAFfN?=
- =?us-ascii?Q?EB8ywQWvYxZZ634YzPtLpBwFMYytfU5C9xdPQuSNCSz1qB5oWi3FB/WPu3Cu?=
- =?us-ascii?Q?+Lg9L8Z5z72x6DJ7Mc8so1v0431qVDNJ5/926BGaMTad9Tg79I2GqsI6aCC7?=
- =?us-ascii?Q?V8GKvYmhlQTnebBunVKY+8UcMASiymroNXfLshvz2Uehle4jEar/4+3IMeum?=
- =?us-ascii?Q?7ZAkw2yn6GvT4WjSY5KGSIg343jUyR/YgMJ9vyVZJI4ehP6VcXd1dq2Z+le1?=
- =?us-ascii?Q?Ct+xynNdMqMWdm7aRK3g9aj5MDU8bnmBMai6C/yDfoRQhZEWve9iW02er4+3?=
- =?us-ascii?Q?0QyrQ5Ul7tQNBh0Q9G8rGao9OjjdDUNU5QnNfoTyezAfosIEBNts+F+ThUNz?=
- =?us-ascii?Q?wRneX/VPeKAqsyUp8/JxBybHrwo4WXu4z66OjD+qM+CqRFs/hDosMg=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR04MB8931.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?oXxtKbIriXW6uLqFVSAid2CxJVNmifGd2qiG5N54x4hbDBvZqu8Fsp3IH5f9?=
- =?us-ascii?Q?mCxaZAbL38V+7gVC2yErnWYtMsOP9STGBsSyGiFMxlN4e1Pat4kvvBw5N1rU?=
- =?us-ascii?Q?o2m2Lie3wpm0pdofPfR0I2yk+tAuXrvZ/5/+FbYnkgwpnjNletORkwiXCUQk?=
- =?us-ascii?Q?+aNKv8jZ0ufy+zQIAyeF/XVKakILW+lm69lXAdSQRyqAGe9aXQ2v9zBYwKaP?=
- =?us-ascii?Q?LoeqmHck2xFPzh5xXOsi5WbU2sVix0bB8/c2qCCW97agsV3Qp1U9t3PbZDVu?=
- =?us-ascii?Q?HYlzAvVcn8I1MetxRMDCJn5+fSBzbf16Hq1tWc5ktU+p1lLVWjSbaPqom1GA?=
- =?us-ascii?Q?FfuJvrO2Si4r793qUjO+JyO4XzzCrL2/9JWh7roShi8mj3dl1yHBN84nMhgx?=
- =?us-ascii?Q?f3PYl+ptOkkBKWs/C7eACrkh7kOOs+c+CGGamXCD2weK97uYDLoQ6JrINsaz?=
- =?us-ascii?Q?/8kid4rGCHkDAkBFRMkjDehwsqW4TZaMI1cOEM2bHhd3A+ebxzdzkWi/g49C?=
- =?us-ascii?Q?XtYUyoGIqB+8ZZpGBW4wu7y3I9vsl0byodm0MyxgJm29sKQx6ukaX/aAFqTl?=
- =?us-ascii?Q?Si1sXHFPELPf9hXZfMH8/YhHWKOY2PjrjYkBUK+fkYYN4CTuh9cfo4rOayt2?=
- =?us-ascii?Q?FLzwbxWYalCeIB0C8/sHZtQq/wnkAJ9tBB7o/LZai2z61WMVEo1jJyqCu7Ko?=
- =?us-ascii?Q?FsYTb9r1Vt80WMg/Q0uRX+3FwGc/xryyP4npgw6w8mkhp2vQYQRCUh4Zblxl?=
- =?us-ascii?Q?0yclrYrv+3GLE9U5ywhfRSG78PZ7WJWiVWXQTuHCmCNWi1A5HDmGVmUY9XeJ?=
- =?us-ascii?Q?tdJxfPgtpMJa+QmGTmJszHaz82cJmnOj05Peudc0DtIuHHr2Zuk13KqSHa6Y?=
- =?us-ascii?Q?ER5085E5UWvYn79ko0hG0RIpqInkFj6s+nV6+1BgtemHmKcl0hQVJVFdmzW+?=
- =?us-ascii?Q?TdhTzH4ecVHxXoFUaRdpq+ep3Su4Af6k/tJbaNuM3nssUj767J1/UUHOJbEF?=
- =?us-ascii?Q?vRGXOHx4A6CCZKfIX5jwyhN1G1biDxHyMwb8vPP7xBx+unDEsJ36r+1NtiRs?=
- =?us-ascii?Q?MKWlZsPt5Bkt/f6LGTQpl7qfPvx2gY+6fGh5ZDsu9aFYC3Cld4w6qpfUsxyV?=
- =?us-ascii?Q?NB/0zVnvmzcJfrkvy9ctk9hTzTUPAnLXxFfsBNz6EK4fzsH3YM4ODlsfR7Mm?=
- =?us-ascii?Q?nRKb4at2bdyCW8dDpCkSy5kiXpdX3DyCaIj1ee5x5TtNcGGbvF2X/4FV2kRC?=
- =?us-ascii?Q?oxs4CTlSY6wBTnGTYOvrFAxOdDdPvsMipQxqogm3DXy1ai1ifPR3PtAP1LBa?=
- =?us-ascii?Q?dKgfH3EGLQ+ojG0Dlr/hkUW3vryp29u+cy/n3wYlOLQFngO7rcbdqZh6Zyv9?=
- =?us-ascii?Q?Q4pbd+YJKu0bhaPyTmWYOnxQwOQ1WHYLXko9agAHSVu4CWbJDSTjZ5yyAOeW?=
- =?us-ascii?Q?Ht9DGmfgFtX3127gAXWgJaD5ngnUtm7zFjyexDErKzv15QVGajhdWOaY0wjX?=
- =?us-ascii?Q?D9p2k9LKtE4/CQ+yvWXjNTIaOFoBJ3FUcqqH21hiPoTXUhoA1y5RgChXMoL5?=
- =?us-ascii?Q?9+8atso97ZiQH87xLhLX3ZUzVC+3GUj3GSXxDiPQD0eTCrmICOFt+2TN8wzp?=
- =?us-ascii?Q?gw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <64843c72-37e3-4080-880f-a020e372b521@oss.nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AS4P190CA0041.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d1::15) To DU0PR04MB9251.eurprd04.prod.outlook.com
+ (2603:10a6:10:352::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: einfochips.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9251:EE_|GVXPR04MB10136:EE_
+X-MS-Office365-Filtering-Correlation-Id: 67cfb4cc-1b28-43c5-5dbe-08dd78d02d7f
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Ulk5VXpFTk9LWmgzZjRFS2lEWXhuWloydnUxcEYrYUFaWkJkMWZZR09wdjll?=
+ =?utf-8?B?MnVQVlF2S0grNjRCYUszVUFCTHNveUc1R2l1TTJnVVVRdWpmVE5PNmh4b1Iz?=
+ =?utf-8?B?RERNZ0ZWZnlmOTJWcUNNNXF4bDVKSmNRdEhIK2l3ZEZvemFFbnNkdmpwTUoz?=
+ =?utf-8?B?ZUQ2VnZRR0pQdUY3d3FzTW5kMVBsdEJib1hzSGVpbVRYenZXc0pqbHAzR00w?=
+ =?utf-8?B?amN2ckdiU1ZJL3JrL0JJVkZGMUNIM05ZTDJTdG5NQytuaWFUdVZkbWNDd3Mv?=
+ =?utf-8?B?aTQvdHBOTkRYZzFLdld1N2RiRVZMeU5PYzN6T2hkZjhlNzQyZW9aam1DYm0v?=
+ =?utf-8?B?SC9na2dyZkxzMmxuWGF2ckYxeVlraWxlWko4THlmcDlKV3UrVkpzMGdMK2N6?=
+ =?utf-8?B?RHVGcmlwM2ltMnZOOG5FVzFoeG40RHJ2dWhSczROdUdRWmt3WHVGaG9aSFZQ?=
+ =?utf-8?B?N21nN1lzTzF4MTZVK2VxUGxNUytjeTdSQkZZWURNeThmQUF2b0czRVNSMmFn?=
+ =?utf-8?B?dUJMSnFQdHRDR0tTS1FGR0w5VDNjNEhTWVoyZEZuOFZ4SUtta2hpYWxVRHVC?=
+ =?utf-8?B?UUoyZkdoaWk5U3YxYXp2Q2xXVnpKS3pxUUhpWDRLVXppZXJMczV3d0NIZ3hF?=
+ =?utf-8?B?cnhNNWZ3QStWekExWDZTaDVwTmM3cnhsUDFJdzdxbzJUUGZiell0TTQwd1Fn?=
+ =?utf-8?B?a3hHQ0YvOHpHNW9yRzRNSDRnSEllRWFCL0FpWC90TzFIV0VmY251Y1NvWlE3?=
+ =?utf-8?B?WmI0K2hWTnM2YllIMXd1cDJGYlFRamNic1ZienBoWE1ZcFdlb3lyQU8vK2FM?=
+ =?utf-8?B?T2dkTGkwcHBuL0dhbmpJSC9pSm1pVEtYUmxGUWZoRmFWeFl4Yk5lQjFVTXlq?=
+ =?utf-8?B?ZE1WTW0wbDlXaC9aNlN3K1lzMncra0JGMUswNHZCdExQZzdOOTNrY21CMFV4?=
+ =?utf-8?B?emZIWEdpb0ljVE8vUklmQ2RoTGNYa0JyREV0NWpuZDhEcjlyTTdwM2ZRK1h1?=
+ =?utf-8?B?eTNIMXk1aEgrZU52S2lUOFNOVDR3YXRpWmZYLzF0MGg3KzQzWmJRd08zMlRP?=
+ =?utf-8?B?UUU0ZzZ4YmJ0eWNaQWh6bFJWQjRLc2ZvK3hZVFJBSVJxa1p4bFU5MEtCQyty?=
+ =?utf-8?B?MUF5UDdJTlpoU0hWa3o2aGp4SFMvazdTbXA4Rk5HN3lGUDZJOHp0dGZFZ09Q?=
+ =?utf-8?B?alY2cld6dGw3Y2NtdFp1dFpuaXZ0Uzl6RjRoNE5LS1ZSQWxjTW1XYVRtVGZZ?=
+ =?utf-8?B?bTNPdG03a2ZMWUtpVk93LzlGSXQveG5zR3dJTHE0d3l0eUV4OHRMU0lBNjdm?=
+ =?utf-8?B?UWlLMzg3SmJ4cUdvc0pYTGF2NWllL0JEVmNWeGpHRm5Gd0srOW9EcmtWUFQ5?=
+ =?utf-8?B?NXA0OEpTRTdJMUJIWVBML05tQmRtL0tSUkZKbTlweTJycHlaS2tVSFNwS1JN?=
+ =?utf-8?B?c2ZjenprN3BiR0tvYTJHREp2dTRGeFEvanRLRmV3ckprcHNXQVhDMHlvcERD?=
+ =?utf-8?B?eWlUcTFyUXNabThQUlNXT254ZjF3T2xDN1g0eXpXMktqczNzNGJiY0hkYlVs?=
+ =?utf-8?B?eUMzcmlybkJBd1piQXU2M0hoaEw4YTJ2MEtBT2xJU2F4WDFtL01Md1d5OHlr?=
+ =?utf-8?B?R1lqZ0VrbEY2STNxYkovUUtJRnZOQ1hYL29uMnpiMnZ1dVo4NHNMMDY2bStj?=
+ =?utf-8?B?ck1IZklsQTEycHI4djVkMnU3QXdKSm1BeE4zREczb2IxZzBQd2V4TjhyOTNQ?=
+ =?utf-8?B?REd5em4xVDdaM2hUcVlzTmpCUFM1MGZ0NzVNblA1TW5WaDI1a1lBVUdpZEJt?=
+ =?utf-8?B?L0w0RDdqTks5SFdIakYrT3hrS293dGlXRlR2b2l6ZElvV3lqQkp1TW94V05a?=
+ =?utf-8?B?Q2V4czh5Z1B1VGdhUGJBTS9jYnE1YnBPTCt3TnoydWVZSlRMMDE0Nk9zV2NC?=
+ =?utf-8?Q?C5Coi7+gRDY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9251.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Snd0L1BkLzNUUHk3ZlZITDl5YTNlVk5kdXlJT2FrWE45NTNzalRBN0x3cEZ1?=
+ =?utf-8?B?dEdOdWFaL1hLQVZDVDgwa0FCV2c2LzZqczNtWWEycGwwUFNzRmsxRkVWUks0?=
+ =?utf-8?B?R1VWWVJZMXRCRVI5VC9aWk80NTVJL29zV0k5UnVodUhjaUlBRTl0K0RwRDg4?=
+ =?utf-8?B?UXcya3dZUWpXb3ZIZWdITGY2V3M5enpjNjhDdTl4czFGSEtqUlNVVVVYdGFS?=
+ =?utf-8?B?ZUtWeVA2WTRuYWpwRGlxR2NzdGhGbTZZQjBhb0kwcmlVMksvcER6Ym9iOWF0?=
+ =?utf-8?B?c0F4ZU9hQUN1Unc5MnRBNEF1S2hqSWhGRHdLQ01HOXZvYm83YWk4cjF6YjBr?=
+ =?utf-8?B?TXliUnUwY0xGNm1hcUE4bjdFY1N1Z1VxVGZSNStjMXd2OTY1eCsvNjJrbFFp?=
+ =?utf-8?B?bGRVL0ZZaU1QU2dsTHMyTUFRbS9hRlNsOTRmbjlHdVZ2b2hrQ3h0U2RNUEk4?=
+ =?utf-8?B?em00d29RMmRXUjh5SExRZU9EVmZMdm40SmMzaTlDMmVnbGU1UTZKeG5ka3Qy?=
+ =?utf-8?B?ZEUrQURyUDRzRzRqNkpMTFFpcVZ4Vyt4VWxtMG5qbXJGMzhsdWtLeng0NEVZ?=
+ =?utf-8?B?MTFHaUtMN1F1RUV4Vk9OSDhDUTNtRjNwUTlHaDEwQ1p0M2YrRkxSRllhejBE?=
+ =?utf-8?B?RXZpY2VqdXFvYm13VktSY2NYdjlSU0RCb1V6eEswbmE1azFRaFcyeFFmbE9T?=
+ =?utf-8?B?MlE3aithMmU5akhuZ1hwVjZra1NXTmNnSEdmSW9wZTJwTzdzV1dwQ0g4OFRj?=
+ =?utf-8?B?N2VFVXlqVUZvQXFvK3hHV21uS1d2cndVUmJOOXd3bGErS3VTTW01eklyUUh4?=
+ =?utf-8?B?V1BJN0d6a3ZiQjI2eDVjNlFPZnpzeGx0Rlh4bUtZcjgyRnlOYWpWbXFkM1Az?=
+ =?utf-8?B?cm41dm52QzNxSWplVnYwQkRmRmRoc2VxcHFMZkt6OWk1YUZMSjkrUTBxU2RH?=
+ =?utf-8?B?UHNyWUkydDkzNTNxcU1VODljMEc1MDEvdncvdityTHVXNVlWckY2eUloRDdo?=
+ =?utf-8?B?dC9VV1ZjZHVYK1MrUGg1K0R1NUYzKzFQTCt3NkZwUkhOWHJKcnhvUjlyazVF?=
+ =?utf-8?B?NFZ4Wm4zdTI2WXVUUk8wVEZGcUUrRUNra2dsT29PaWdIYms5Q0pCMmRXM0tx?=
+ =?utf-8?B?eUx4aW1ZMk1WMGVMTnJEWXRJdlJLWWRyT3RGd1ZxSWRnZXdpY1REQ0wweUgv?=
+ =?utf-8?B?SGNWOGxucFlEMDFHWUZTNjBPSFlab0NaaEE5ZUYrMHhNTDduRlZ1Slo5cXp2?=
+ =?utf-8?B?WXZYbmI0UDJRNFRUNnRFWFZ1RFJpbno2K29QQk9YeTRuYjJjc0FaOTRSOUJo?=
+ =?utf-8?B?bXNyYllVd0dhT0IvQ3hjWTBzZ2hKZnM4K0xXbkE5UEJkTE9JSEdaYm1JUmRn?=
+ =?utf-8?B?aDd4a3hKd2hwcnY2MVE2Nkc4WENrQ0xwUnBza1RxMmxZcWdGaXFnRjJScHpj?=
+ =?utf-8?B?eDBMbmtMN2FMVTdVWm92dzB2eTQvUDI5a0hOTXRVTDNnV0EwRVNjRUVYQkhG?=
+ =?utf-8?B?d1dnM1MybFl2Y0NuaE5GL1c5TU9aZ3BYSjlnNzhiVHB5SXBlVUlrWnJNcFp6?=
+ =?utf-8?B?czlnTE1pWHZrbVJNRzF0UHFvWUJkbWptNkEwSFpuZm9raVpWeU1PWXRIdU9B?=
+ =?utf-8?B?ZUwyTnIwRXhtc3ByNlFWQy8xMVR0N0Q1dkdPYk1aN3ZpVEQzVWVHbjhYSXYy?=
+ =?utf-8?B?T2tXWitqQmpsNG1qVVRJUEZvSFR5c0k2M3l2K0Ivd3RmNjA1bC93RnNHOEVI?=
+ =?utf-8?B?cXBJWENRMmNlOEZLTGJiZ1FSd21xdEoxcmcrSk1iZjRYSDBGR2kzZncvMG81?=
+ =?utf-8?B?MW80RWxmTE01MVFTS045elArNWV1dG9uZXBqMTd1aHUzb2l1RzZCbVVlUmtT?=
+ =?utf-8?B?WmtneTEySzdSUHJUVm1MVzhVa1ZvbThjKzZXTWI0SDhFWjBqcng5S2ZRSTNt?=
+ =?utf-8?B?T1A2Z2lySm90Rjl2d2oxNVlWTzVkUGEzelU4STZsYWEyZzE1TFV0ZTFyRzNC?=
+ =?utf-8?B?R20yNXNPVmd3eldkcmc2RmFyaE9UZjQ2YXdNY3VMbys5SXg1V3NJb2lNdVk0?=
+ =?utf-8?B?ZDRvOXkrZjJxOVBWRngrdDc0NndLMGNLa2ZodXgxa2ZPNDZhTk9GMEt3TkF5?=
+ =?utf-8?B?OHZzYmtXVENsKzVrZGYzcFA0QUNvWVFFL1dFcS9ZK0tUVFovQlZVK1FXKzc0?=
+ =?utf-8?Q?uh9b7psap6fjtdKqo7+YNxo=3D?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67cfb4cc-1b28-43c5-5dbe-08dd78d02d7f
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9251.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR04MB8931.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a97ba34-06c3-42f4-d644-08dd78d028c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 08:09:18.8852
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2025 08:09:27.2378
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0beb0c35-9cbb-4feb-99e5-589e415c7944
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uoIYa0quM+AUZxE7E1MBYRYW+05FZxH5QJbXUphJ9AFL8NRkXoBhsnEbGdfEq55nODOdJSfqU0O1GANKEjxxeQ7ZpzDFxbgHEQamSxiKfRU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH5PR04MB9549
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rr20/jfMlF/Oh/xQ8laVIKcjsUo2VVYIh470r+7SlvBrKUxmJHzLebuLJUVhS241pqhs9HbcoV9N4FaFWkyMYtvdK6YIu9G8ujBWUdg23DM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10136
 
+On 4/9/2025 5:58 PM, Ciprian Marian Costea wrote:
+> On 4/9/2025 5:42 PM, Enric Balletbo i Serra wrote:
+>> Hi Ciprian,
+>>
+>>
+>> On Wed, Apr 9, 2025 at 4:26 PM Ciprian Marian Costea
+>> <ciprianmarian.costea@oss.nxp.com> wrote:
+>>>
+>>> On 4/9/2025 5:14 PM, Enric Balletbo i Serra wrote:
+>>>> Hi Ciprian,
+>>>>
+>>>> Many thanks for your patch.
+>>>>
+>>>> On Thu, Apr 3, 2025 at 12:34 PM Ciprian Costea
+>>>> <ciprianmarian.costea@oss.nxp.com> wrote:
+>>>>>
+>>>>> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+>>>>>
+>>>>> Add a RTC driver for NXP S32G2/S32G3 SoCs.
+>>>>>
+>>>>> RTC tracks clock time during system suspend. It can be a wakeup source
+>>>>> for the S32G2/S32G3 SoC based boards.
+>>>>>
+>>>>> The RTC module from S32G2/S32G3 is not battery-powered and it is 
+>>>>> not kept
+>>>>> alive during system reset.
+>>>>>
+>>>>> Co-developed-by: Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
+>>>>> Signed-off-by: Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
+>>>>> Co-developed-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+>>>>> Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+>>>>> Signed-off-by: Ciprian Marian Costea 
+>>>>> <ciprianmarian.costea@oss.nxp.com>
+>>>>> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+>>>>
+>>>> I went through the code and it looks good to me, so:
+>>>>
+>>>> However, I did a basic rtctest selftest in my S32G-VNP-RDB3 board,
+>>>> and some tests failed (it shows a small deviation), any idea what
+>>>> could be wrong?
+>>>>
+>>>> This is the output of the test:
+>>>>
+>>>> # ./rtctest
+>>>> TAP version 13
+>>>> 1..8
+>>>> # Starting 8 tests from 1 test cases.
+>>>> #  RUN           rtc.date_read ...
+>>>> # rtctest.c:59:date_read:Current RTC date/time is 28/01/2025 00:17:49.
+>>>> #            OK  rtc.date_read
+>>>> ok 1 rtc.date_read
+>>>> #  RUN           rtc.date_read_loop ...
+>>>> # rtctest.c:124:date_read_loop:Continuously reading RTC time for 30s
+>>>> (with 11ms breaks after every read).
+>>>> # rtctest.c:151:date_read_loop:Performed 2638 RTC time reads.
+>>>> #            OK  rtc.date_read_loop
+>>>> ok 2 rtc.date_read_loop
+>>>> #  RUN           rtc.uie_read ...
+>>>> #            OK  rtc.uie_read
+>>>> ok 3 rtc.uie_read
+>>>> #  RUN           rtc.uie_select ...
+>>>> #            OK  rtc.uie_select
+>>>> ok 4 rtc.uie_select
+>>>> #  RUN           rtc.alarm_alm_set ...
+>>>> # rtctest.c:262:alarm_alm_set:Alarm time now set to 00:18:31.
+>>>> # rtctest.c:282:alarm_alm_set:data: 1a0
+>>>> #            OK  rtc.alarm_alm_set
+>>>> ok 5 rtc.alarm_alm_set
+>>>> #  RUN           rtc.alarm_wkalm_set ...
+>>>> # rtctest.c:334:alarm_wkalm_set:Alarm time now set to 28/01/2025 
+>>>> 00:18:34.
+>>>> # rtctest.c:353:alarm_wkalm_set:Expected new (1738023515) == secs 
+>>>> (1738023514)
+>>>> # alarm_wkalm_set: Test terminated by assertion
+>>>> #          FAIL  rtc.alarm_wkalm_set
+>>>> not ok 6 rtc.alarm_wkalm_set
+>>>> #  RUN           rtc.alarm_alm_set_minute ...
+>>>> # rtctest.c:394:alarm_alm_set_minute:Alarm time now set to 00:19:00.
+>>>> # rtctest.c:414:alarm_alm_set_minute:data: 1a0
+>>>> # rtctest.c:420:alarm_alm_set_minute:Expected new (1738023541) == secs
+>>>> (1738023540)
+>>>> # alarm_alm_set_minute: Test terminated by assertion
+>>>> #          FAIL  rtc.alarm_alm_set_minute
+>>>> not ok 7 rtc.alarm_alm_set_minute
+>>>> #  RUN           rtc.alarm_wkalm_set_minute ...
+>>>> # rtctest.c:464:alarm_wkalm_set_minute:Alarm time now set to
+>>>> 28/01/2025 00:20:00.
+>>>> # rtctest.c:483:alarm_wkalm_set_minute:Expected new (1738023601) ==
+>>>> secs (1738023600)
+>>>> # alarm_wkalm_set_minute: Test terminated by assertion
+>>>> #          FAIL  rtc.alarm_wkalm_set_minute
+>>>> not ok 8 rtc.alarm_wkalm_set_minute
+>>>> # FAILED: 5 / 8 tests passed.
+>>>> # Totals: pass:5 fail:3 xfail:0 xpass:0 skip:0 error:0
+>>>>
+>>>> Best regards,
+>>>>     Enric
+>>>>
+>>>
+>>> Hello Enric,
+>>>
+>>> In order to obtain a better resolution/precision you could try to only
+>>> use DIV512 hardware divisor instead of both DIV32 and DIV512.
+>>>
+>>
+>> That makes the tests pass, so I'm wondering if by default you should
+>> set DIV512 in platform data instead. With that change you can add my
+>>
+>> Tested-by: Enric Balletbo i Serra <eballetbo@kernel.org>
+>>
+> 
+> This change would decrease the RTC rollover time. Initially indeed only 
+> DIV512 was enabled, but during review [1] I've agreed enabling both 
+> hardware divisors to increase the RTC rollover time. Personally, I am ok 
+> with the current 1 second resolution capability.
+> 
+> Alexandre Belloni, are you ok with the current version of this driver ? 
+> Or should I send a V10 patch in which I enable back only the DIV512 
+> divisor in order to increase the RTC precision at the downside of losing 
+> rollover time.
+> 
+> [1] 
+> https://lore.kernel.org/all/9f4fc9d8-ec7f-43b4-8bdd-01a4ba4855c5@oss.nxp.com/
+> 
+> Regards,
+> Ciprian
+> 
 
-Hi Rob,
+Hello Alexandre,
 
-On Thu, Apr 10, 2025 at 11:03 PM, Rob Herring wrote:
-> On Thu, 10 Apr 2025 20:55:12 +0530, Pinkesh Vaghela wrote:
-> > From: Pritesh Patel <pritesh.patel@einfochips.com>
-> >
-> > Add new vendor string to dt bindings.
-> > This new vendor string is used by
-> > - ESWIN EIC770X SoC
-> > - HiFive Premier P550 board which uses EIC7700 SoC.
-> >
-> > Link:
-> >
-> https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww.
-> >
-> eswin.com%2Fen%2F&data=3D05%7C02%7Cpinkesh.vaghela%40einfochips.com
-> %7C87
-> >
-> cd3ca4575c4f4e664908dd7855c0a2%7C0beb0c359cbb4feb99e5589e415c794
-> 4%7C1%
-> >
-> 7C0%7C638799032006858529%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1
-> hcGkiOnRyd
-> >
-> WUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3
-> D%3
-> >
-> D%7C0%7C%7C%7C&sdata=3DlkMx%2BsV%2BmsaAdojVnWDZAvQnY1rR%2ByS
-> 4VB%2FK7JxCS
-> > Iw%3D&reserved=3D0
-> > Signed-off-by: Pritesh Patel <pritesh.patel@einfochips.com>
-> > Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
-> > Signed-off-by: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> yamllint warnings/errors:
->=20
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-
-> ci/linux/Documentation/devicetree/bindings/interrupt-
-> controller/econet,en751221-intc.example.dtb: interrupt-controller@1fb4000=
-0
-> (econet,en751221-intc): 'econet,shadow-interrupts' does not match any of
-> the regexes: '^#.*', '^(at25|bm|devbus|dmacap|dsa|exynos|fsi[ab]|gpio-
-> fan|gpio-key|gpio|gpmc|hdmi|i2c-gpio),.*',
-> '^(keypad|m25p|max8952|max8997|max8998|mpmc),.*', '^(pciclass|pinctrl-
-> single|#pinctrl-single|PowerPC),.*', '^(pl022|pxa-mmc|rcar_sound|rotary-
-> encoder|s5m8767|sdhci),.*', '^(simple-audio-card|st-plgpio|st-spics|ts),.=
-*',
-> '^100ask,.*', '^70mai,.*', '^8dev,.*', '^GEFanuc,.*', '^IBM,.*', '^ORCL,.=
-*',
-> '^SUNW,.*', '^[a-zA-Z0-9#_][a-zA-Z0-9+\\-._@]{0,63}$', '^[a-zA-Z0-9+\\-
-> ._]*@[0-9a-zA-Z,]*$', '^abb,.*', '^abilis,.*', '^abracon,.*', '^abt,.*', =
-'^acbel,.*',
-> '^acelink,.*', '^acer,.*', '^acme,.*', '^actions,.*', '^active-semi,.*', =
-'^ad,.*',
-> '^adafruit,.*', '^adapteva,.*', '^adaptrum,.*', '^adh,.*', '^adi,.*', '^a=
-dieng,.*',
-> '^admatec,.*', '^advantech,.*', '^a  eroflexgaisler,.*', '^aesop,.*', '^a=
-iroha,.*',
-> '^al,.*', '^alcatel,.*', '^aldec,.*', '^alfa-network,.*', '^allegro,.*',
-> '^allegromicro,.*', '^alliedvision,.*', '^allo,.*', '^allwinner,.*', '^al=
-phascale,.*',
-> '^alps,.*', '^alt,.*', '^altr,.*', '^amarula,.*', '^amazon,.*', '^amcc,.*=
-', '^amd,.*',
-> '^amediatech,.*', '^amlogic,.*', '^ampere,.*', '^amphenol,.*', '^ampire,.=
-*',
-> '^ams,.*', '^amstaos,.*', '^analogix,.*', '^anbernic,.*', '^andestech,.*'=
-,
-> '^anvo,.*', '^aosong,.*', '^apm,.*', '^apple,.*', '^aptina,.*', '^arasan,=
-.*',
-> '^archermind,.*', '^arcom,.*', '^arctic,.*', '^arcx,.*', '^ariaboard,.*',=
- '^aries,.*',
-> '^arm,.*', '^armadeus,.*', '^armsom,.*', '^arrow,.*', '^artesyn,.*', '^as=
-ahi-
-> kasei,.*', '^asc,.*', '^asix,.*', '^aspeed,.*', '^asrock,.*', '^asteralab=
-s,.*',
-> '^asus,.*', '^atheros,.*', '^atlas,.*', '^atmel,.*', '^auo,.*', '^auvidea=
-,.*',
-> '^avago,.*', '^avia,.*', '^avic,.*', '^avnet,.*', '^awinic,.*', '^axentia=
-,.*', '^axis,.*',
-> '^azoteq,.*', '^azw,.*', '^baikal,.*', '^bananapi,.*', '^be  acon,.*', '^=
-beagle,.*',
-> '^belling,.*', '^bhf,.*', '^bigtreetech,.*', '^bitmain,.*', '^blaize,.*',=
- '^blutek,.*',
-> '^boe,.*', '^bosch,.*', '^boundary,.*', '^brcm,.*', '^broadmobi,.*', '^bs=
-h,.*',
-> '^bticino,.*', '^buffalo,.*', '^bur,.*', '^bytedance,.*', '^calamp,.*', '=
-^calao,.*',
-> '^calaosystems,.*', '^calxeda,.*', '^cameo,.*', '^canaan,.*', '^caninos,.=
-*',
-> '^capella,.*', '^cascoda,.*', '^catalyst,.*', '^cavium,.*', '^cct,.*', '^=
-cdns,.*',
-> '^cdtech,.*', '^cellwise,.*', '^ceva,.*', '^chargebyte,.*', '^checkpoint,=
-.*',
-> '^chefree,.*', '^chipidea,.*', '^chipone,.*', '^chipspark,.*', '^chongzho=
-u,.*',
-> '^chrontel,.*', '^chrp,.*', '^chunghwa,.*', '^chuwi,.*', '^ciaa,.*', '^ci=
-rrus,.*',
-> '^cisco,.*', '^clockwork,.*', '^cloos,.*', '^cloudengines,.*', '^cnm,.*',=
- '^cnxt,.*',
-> '^colorfly,.*', '^compulab,.*', '^comvetia,.*', '^congatec,.*', '^coolpi,=
-.*',
-> '^coreriver,.*', '^corpro,.*', '^cortina,.*', '^cosmic,.*', '^crane,.*', =
-'^creative,.*',
-> '^crystalfontz,.*', '^csky,.*', '^csot,.*', '^csq,.*', '^ctera,.*'
->  , '^ctu,.*', '^cubietech,.*', '^cudy,.*', '^cui,.*', '^cypress,.*', '^cy=
-x,.*', '^cznic,.*',
-> '^dallas,.*', '^dataimage,.*', '^davicom,.*', '^deepcomputing,.*', '^dell=
-,.*',
-> '^delta,.*', '^densitron,.*', '^denx,.*', '^devantech,.*', '^dfi,.*', '^d=
-frobot,.*',
-> '^dh,.*', '^difrnce,.*', '^digi,.*', '^digilent,.*', '^dimonoff,.*', '^di=
-odes,.*',
-> '^dioo,.*', '^dlc,.*', '^dlg,.*', '^dlink,.*', '^dmo,.*', '^domintech,.*'=
-,
-> '^dongwoon,.*', '^dptechnics,.*', '^dragino,.*', '^dream,.*', '^ds,.*',
-> '^dserve,.*', '^dynaimage,.*', '^ea,.*', '^ebang,.*', '^ebbg,.*', '^ebs-s=
-ystart,.*',
-> '^ebv,.*', '^eckelmann,.*', '^edgeble,.*', '^edimax,.*', '^edt,.*', '^ees=
-,.*',
-> '^eeti,.*', '^einfochips,.*', '^eink,.*', '^elan,.*', '^element14,.*', '^=
-elgin,.*',
-> '^elida,.*', '^elimo,.*', '^elpida,.*', '^embedfire,.*', '^embest,.*', '^=
-emcraft,.*',
-> '^emlid,.*', '^emmicro,.*', '^empire-electronix,.*', '^emtrion,.*', '^enc=
-lustra,.*',
-> '^endless,.*', '^ene,.*', '^energymicro,.*', '^engicam,.*', '^engleder,.*=
-',
-> '^epcos,.*', '^e  pfl,.*', '^epson,.*', '^esp,.*', '^est,.*', '^eswin,.*'=
-, '^ettus,.*',
-> '^eukrea,.*', '^everest,.*', '^everspin,.*', '^evervision,.*', '^exar,.*'=
-, '^excito,.*',
-> '^exegin,.*', '^ezchip,.*', '^facebook,.*', '^fairchild,.*', '^fairphone,=
-.*',
-> '^faraday,.*', '^fascontek,.*', '^fastrax,.*', '^fcs,.*', '^feixin,.*', '=
-^feiyang,.*',
-> '^fii,.*', '^firefly,.*', '^focaltech,.*', '^forlinx,.*', '^freebox,.*', =
-'^freecom,.*',
-> '^frida,.*', '^friendlyarm,.*', '^fsl,.*', '^fujitsu,.*', '^fxtec,.*', '^=
-galaxycore,.*',
-> '^gameforce,.*', '^gardena,.*', '^gateway,.*', '^gateworks,.*', '^gcw,.*'=
-, '^ge,.*',
-> '^geekbuying,.*', '^gef,.*', '^gehc,.*', '^gemei,.*', '^gemtek,.*', '^gen=
-esys,.*',
-> '^genexis,.*', '^geniatech,.*', '^giantec,.*', '^giantplus,.*', '^glinet,=
-.*',
-> '^globalscale,.*', '^globaltop,.*', '^gmt,.*', '^gocontroll,.*', '^goldel=
-ico,.*',
-> '^goodix,.*', '^google,.*', '^goramo,.*', '^gplus,.*', '^grinn,.*', '^grm=
-n,.*',
-> '^gumstix,.*', '^gw,.*', '^hannstar,.*', '^haochuangyi,.*', '^haoyu,.*',
-> '^hardkernel,.*  ', '^hechuang,.*', '^hideep,.*', '^himax,.*', '^hirschma=
-nn,.*',
-> '^hisi,.*', '^hisilicon,.*', '^hit,.*', '^hitex,.*', '^holt,.*', '^holtek=
-,.*',
-> '^honestar,.*', '^honeywell,.*', '^hoperf,.*', '^hoperun,.*', '^hp,.*', '=
-^hpe,.*',
-> '^hsg,.*', '^htc,.*', '^huawei,.*', '^hugsun,.*', '^hwacom,.*', '^hxt,.*'=
-,
-> '^hycon,.*', '^hydis,.*', '^hynitron,.*', '^hynix,.*', '^hyundai,.*', '^i=
-2se,.*',
-> '^ibm,.*', '^icplus,.*', '^idt,.*', '^iei,.*', '^ifi,.*', '^ilitek,.*', '=
-^imagis,.*', '^img,.*',
-> '^imi,.*', '^inanbo,.*', '^incircuit,.*', '^indiedroid,.*', '^inet-tek,.*=
-',
-> '^infineon,.*', '^inforce,.*', '^ingenic,.*', '^ingrasys,.*', '^injoinic,=
-.*',
-> '^innocomm,.*', '^innolux,.*', '^inside-secure,.*', '^insignal,.*', '^ins=
-pur,.*',
-> '^intel,.*', '^intercontrol,.*', '^invensense,.*', '^inventec,.*', '^inve=
-rsepath,.*',
-> '^iom,.*', '^irondevice,.*', '^isee,.*', '^isil,.*', '^issi,.*', '^ite,.*=
-', '^itead,.*',
-> '^itian,.*', '^ivo,.*', '^iwave,.*', '^jadard,.*', '^jasonic,.*', '^jdi,.=
-*', '^jedec,.*',
-> '^jenson,.*', '^  jesurun,.*', '^jethome,.*', '^jianda,.*', '^jide,.*', '=
-^joz,.*',
-> '^kam,.*', '^karo,.*', '^keithkoep,.*', '^keymile,.*', '^khadas,.*',
-> '^kiebackpeter,.*', '^kinetic,.*', '^kingdisplay,.*', '^kingnovel,.*', '^=
-kionix,.*',
-> '^kobo,.*', '^kobol,.*', '^koe,.*', '^kontron,.*', '^kosagi,.*', '^kvg,.*=
-', '^kyo,.*',
-> '^lacie,.*', '^laird,.*', '^lamobo,.*', '^lantiq,.*', '^lattice,.*', '^lc=
-kfb,.*',
-> '^lctech,.*', '^leadtek,.*', '^leez,.*', '^lego,.*', '^lemaker,.*', '^len=
-ovo,.*',
-> '^lg,.*', '^lgphilips,.*', '^libretech,.*', '^licheepi,.*', '^linaro,.*',=
- '^lincolntech,.*',
-> '^lineartechnology,.*', '^linksprite,.*', '^linksys,.*', '^linutronix,.*'=
-, '^linux,.*',
-> '^linx,.*', '^liteon,.*', '^litex,.*', '^lltc,.*', '^logicpd,.*', '^logic=
-techno,.*',
-> '^longcheer,.*', '^lontium,.*', '^loongmasses,.*', '^loongson,.*', '^lsi,=
-.*',
-> '^lunzn,.*', '^luxul,.*', '^lwn,.*', '^lxa,.*', '^m5stack,.*', '^macnica,=
-.*',
-> '^mantix,.*', '^mapleboard,.*', '^marantec,.*', '^marvell,.*', '^maxbotix=
-,.*',
-> '^maxim,.*', '^maxlinear,.
->  *', '^mbvl,.*', '^mcube,.*', '^meas,.*', '^mecer,.*', '^mediatek,.*',
-> '^megachips,.*', '^mele,.*', '^melexis,.*', '^melfas,.*', '^mellanox,.*',
-> '^memsensing,.*', '^memsic,.*', '^menlo,.*', '^mentor,.*', '^meraki,.*',
-> '^merrii,.*', '^methode,.*', '^micrel,.*', '^microchip,.*', '^microcrysta=
-l,.*',
-> '^micron,.*', '^microsoft,.*', '^microsys,.*', '^microtips,.*', '^mikroe,=
-.*',
-> '^mikrotik,.*', '^milkv,.*', '^miniand,.*', '^minix,.*', '^mips,.*', '^mi=
-ramems,.*',
-> '^mitsubishi,.*', '^mitsumi,.*', '^mixel,.*', '^miyoo,.*', '^mntre,.*',
-> '^mobileye,.*', '^modtronix,.*', '^moortec,.*', '^mosaixtech,.*',
-> '^motorcomm,.*', '^motorola,.*', '^moxa,.*', '^mpl,.*', '^mps,.*',
-> '^mqmaker,.*', '^mrvl,.*', '^mscc,.*', '^msi,.*', '^mstar,.*', '^mti,.*',=
- '^multi-
-> inno,.*', '^mundoreader,.*', '^murata,.*', '^mxic,.*', '^mxicy,.*', '^myi=
-r,.*',
-> '^national,.*', '^neardi,.*', '^nec,.*', '^neofidelity,.*', '^neonode,.*'=
-,
-> '^netcube,.*', '^netgear,.*', '^netlogic,.*', '^netron-dy,.*', '^netronix=
-,.*',
-> '^netxeon,.*', '
->  ^neweast,.*', '^newhaven,.*', '^newvision,.*', '^nexbox,.*', '^nextthing=
-,.*',
-> '^ni,.*', '^nintendo,.*', '^nlt,.*', '^nokia,.*', '^nordic,.*', '^nothing=
-,.*',
-> '^novatek,.*', '^novtech,.*', '^numonyx,.*', '^nutsboard,.*', '^nuvoton,.=
-*',
-> '^nvd,.*', '^nvidia,.*', '^nxp,.*', '^oceanic,.*', '^ocs,.*', '^oct,.*', =
-'^okaya,.*',
-> '^oki,.*', '^olimex,.*', '^olpc,.*', '^oneplus,.*', '^onie,.*', '^onion,.=
-*',
-> '^onnn,.*', '^ontat,.*', '^opalkelly,.*', '^openailab,.*', '^opencores,.*=
-',
-> '^openembed,.*', '^openpandora,.*', '^openrisc,.*', '^openwrt,.*',
-> '^option,.*', '^oranth,.*', '^orisetech,.*', '^ortustech,.*', '^osddispla=
-ys,.*',
-> '^osmc,.*', '^ouya,.*', '^overkiz,.*', '^ovti,.*', '^oxsemi,.*', '^ozzmak=
-er,.*',
-> '^panasonic,.*', '^parade,.*', '^parallax,.*', '^pda,.*', '^pericom,.*',
-> '^pervasive,.*', '^phicomm,.*', '^phytec,.*', '^picochip,.*', '^pine64,.*=
-',
-> '^pineriver,.*', '^pixcir,.*', '^plantower,.*', '^plathome,.*', '^plda,.*=
-', '^plx,.*',
-> '^ply,.*', '^pni,.*', '^pocketbook,.*', '^polaroid,.*', '^p  olyhex,.*',
-> '^portwell,.*', '^poslab,.*', '^pov,.*', '^powertip,.*', '^powervr,.*',
-> '^powkiddy,.*', '^pri,.*', '^primeview,.*', '^primux,.*', '^probox2,.*', =
-'^prt,.*',
-> '^pulsedlight,.*', '^purism,.*', '^puya,.*', '^qca,.*', '^qcom,.*', '^qem=
-u,.*',
-> '^qi,.*', '^qiaodian,.*', '^qihua,.*', '^qishenglong,.*', '^qnap,.*', '^q=
-uanta,.*',
-> '^radxa,.*', '^raidsonic,.*', '^ralink,.*', '^ramtron,.*', '^raspberrypi,=
-.*',
-> '^raydium,.*', '^rda,.*', '^realtek,.*', '^relfor,.*', '^remarkable,.*', =
-'^renesas,.*',
-> '^rervision,.*', '^revotics,.*', '^rex,.*', '^richtek,.*', '^ricoh,.*', '=
-^rikomagic,.*',
-> '^riot,.*', '^riscv,.*', '^rockchip,.*', '^rocktech,.*', '^rohm,.*', '^ro=
-nbo,.*',
-> '^roofull,.*', '^roseapplepi,.*', '^rve,.*', '^saef,.*', '^samsung,.*', '=
-^samtec,.*',
-> '^sancloud,.*', '^sandisk,.*', '^satoz,.*', '^sbs,.*', '^schindler,.*',
-> '^schneider,.*', '^sciosense,.*', '^seagate,.*', '^seeed,.*', '^seiroboti=
-cs,.*',
-> '^semtech,.*', '^senseair,.*', '^sensirion,.*', '^sensortek,.*', '^sercom=
-m,.*',
-> '^sff,.*'
->  , '^sgd,.*', '^sgmicro,.*', '^sgx,.*', '^sharp,.*', '^shift,.*', '^shima=
-fuji,.*',
-> '^shineworld,.*', '^shiratech,.*', '^si-en,.*', '^si-linux,.*', '^siemens=
-,.*',
-> '^sifive,.*', '^siflower,.*', '^sigma,.*', '^sii,.*', '^sil,.*', '^silabs=
-,.*', '^silan,.*',
-> '^silead,.*', '^silergy,.*', '^silex-insight,.*', '^siliconfile,.*', '^si=
-liconmitus,.*',
-> '^silvaco,.*', '^simtek,.*', '^sinlinx,.*', '^sinovoip,.*', '^sinowealth,=
-.*',
-> '^sipeed,.*', '^sirf,.*', '^sis,.*', '^sitronix,.*', '^skov,.*', '^skywor=
-ks,.*',
-> '^smartlabs,.*', '^smartrg,.*', '^smi,.*', '^smsc,.*', '^snps,.*', '^soch=
-ip,.*',
-> '^socionext,.*', '^solidrun,.*', '^solomon,.*', '^sony,.*', '^sophgo,.*',
-> '^sourceparts,.*', '^spacemit,.*', '^spansion,.*', '^sparkfun,.*', '^spin=
-alhdl,.*',
-> '^sprd,.*', '^square,.*', '^ssi,.*', '^sst,.*', '^sstar,.*', '^st,.*', '^=
-st-ericsson,.*',
-> '^starfive,.*', '^starry,.*', '^startek,.*', '^starterkit,.*', '^ste,.*',=
- '^stericsson,.*',
-> '^storlink,.*', '^storm,.*', '^storopack,.*', '^summit,.*', '^sunchip,.*'=
-,
-> '^sundance,.*', '^sunplus,.*', '^supermicro,.*', '^swir,.*', '^syna,.*',
-> '^synology,.*', '^synopsys,.*', '^tbs,.*', '^tbs-biometrics,.*', '^tcg,.*=
-', '^tcl,.*',
-> '^tcs,.*', '^tdo,.*', '^team-source-display,.*', '^technexion,.*', '^tech=
-nologic,.*',
-> '^techstar,.*', '^techwell,.*', '^teejet,.*', '^teltonika,.*', '^tempo,.*=
-',
-> '^terasic,.*', '^tesla,.*', '^test,.*', '^tfc,.*', '^thead,.*', '^thine,.=
-*', '^thingyjp,.*',
-> '^thundercomm,.*', '^thwc,.*', '^ti,.*', '^tianma,.*', '^tlm,.*', '^tmt,.=
-*',
-> '^topeet,.*', '^topic,.*', '^topland,.*', '^toppoly,.*', '^topwise,.*', '=
-^toradex,.*',
-> '^toshiba,.*', '^toumaz,.*', '^tpk,.*', '^tplink,.*', '^tpo,.*', '^tq,.*'=
-,
-> '^transpeed,.*', '^traverse,.*', '^tronfy,.*', '^tronsmart,.*', '^truly,.=
-*', '^tsd,.*',
-> '^turing,.*', '^tyan,.*', '^tyhx,.*', '^u-blox,.*', '^u-boot,.*', '^ubnt,=
-.*',
-> '^ucrobotics,.*', '^udoo,.*', '^ufispace,.*', '^ugoos,.*', '^uni-t,.*', '=
-^uniwest,.*',
-> '^upisemi,.*', '^urt,.*', '^usi,.*', '^usr,.*', '^utoo,.*', '^v3,.*', '^v=
-aisala,.*', '^vam
-> rs,.*', '^variscite,.*', '^vdl,.*', '^vertexcom,.*', '^via,.*', '^vialab,=
-.*', '^vicor,.*',
-> '^videostrong,.*', '^virtio,.*', '^virtual,.*', '^vishay,.*', '^visionox,=
-.*',
-> '^vitesse,.*', '^vivante,.*', '^vivax,.*', '^vocore,.*', '^voipac,.*', '^=
-voltafield,.*',
-> '^vot,.*', '^vscom,.*', '^vxt,.*', '^wacom,.*', '^wanchanglong,.*', '^wan=
-d,.*',
-> '^waveshare,.*', '^wd,.*', '^we,.*', '^welltech,.*', '^wetek,.*', '^wexle=
-r,.*',
-> '^whwave,.*', '^wi2wi,.*', '^widora,.*', '^wiligear,.*', '^willsemi,.*',
-> '^winbond,.*', '^wingtech,.*', '^winlink,.*', '^winstar,.*', '^wirelessta=
-g,.*',
-> '^wits,.*', '^wlf,.*', '^wm,.*', '^wobo,.*', '^wolfvision,.*', '^x-powers=
-,.*',
-> '^xen,.*', '^xes,.*', '^xiaomi,.*', '^xillybus,.*', '^xingbangda,.*', '^x=
-inpeng,.*',
-> '^xiphera,.*', '^xlnx,.*', '^xnano,.*', '^xunlong,.*', '^xylon,.*', '^yad=
-ro,.*',
-> '^yamaha,.*', '^yes-optoelectronics,.*', '^yic,.*', '^yiming,.*', '^ylm,.=
-*',
-> '^yna,.*', '^yones-toptech,.*', '^ys,.*', '^ysoft,.*', '^yuridenki,.*',
-> '^yuzukihd,.*', '^zarlink,.*', '
->  ^zealz,.*', '^zeitec,.*', '^zidoo,.*', '^zii,.*', '^zinitix,.*', '^zkmag=
-ic,.*', '^zte,.*',
-> '^zyxel,.*', 'pinctrl-[0-9]+'
->         from schema $id:
-> https://nam04.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevice=
-t
-> ree.org%2Fschemas%2Fvendor-
-> prefixes.yaml%23&data=3D05%7C02%7Cpinkesh.vaghela%40einfochips.com%7C
-> 87cd3ca4575c4f4e664908dd7855c0a2%7C0beb0c359cbb4feb99e5589e415c7
-> 944%7C1%7C0%7C638799032006878189%7CUnknown%7CTWFpbGZsb3d8ey
-> JFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiT
-> WFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DpzMClfDGuAFiIexgRZJo
-> 7JZpMuGIUzeHj2hXghDFiHA%3D&reserved=3D0
->=20
-> doc reference errors (make refcheckdocs):
->=20
-> See
-> https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch
-> work.ozlabs.org%2Fproject%2Fdevicetree-
-> bindings%2Fpatch%2F20250410152519.1358964-4-
-> pinkesh.vaghela%40einfochips.com&data=3D05%7C02%7Cpinkesh.vaghela%40e
-> infochips.com%7C87cd3ca4575c4f4e664908dd7855c0a2%7C0beb0c359cbb4f
-> eb99e5589e415c7944%7C1%7C0%7C638799032006888279%7CUnknown%7C
-> TWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJX
-> aW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DmC
-> 1yzKGp4zGCCVmpokRiTcl3mEsm1mYLuylQM3t2Tng%3D&reserved=3D0
->=20
-> The base for the series is generally the latest rc1. A different dependen=
-cy
-> should be noted in *this* patch.
->=20
-> If you already ran 'make dt_binding_check' and didn't see the above error=
-(s),
-> then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->=20
-> pip3 install dtschema --upgrade
->=20
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your
-> schema.
+I just want to make sure this email reaches you with my above question, 
+since you were just in CC previously.
+Sorry for the inconvenience, I just do not want all the effort invested 
+in this driver (development + review) to get lost.
 
-Thanks for your time.
-This warnings/errors is because of "econet" is not introduced as vendor in=
-=20
-vendor-prefixes.yaml. We also observe the same warnings/errors on latest rc=
-1
-without our patches.
 
 Regards,
-Pinkesh
+Ciprian
+
+>> # ./rtctest
+>> TAP version 13
+>> 1..8
+>> # Starting 8 tests from 1 test cases.
+>> #  RUN           rtc.date_read ...
+>> # rtctest.c:59:date_read:Current RTC date/time is 28/01/2025 00:00:34.
+>> #            OK  rtc.date_read
+>> ok 1 rtc.date_read
+>> #  RUN           rtc.date_read_loop ...
+>> # rtctest.c:124:date_read_loop:Continuously reading RTC time for 30s
+>> (with 11ms breaks after every read).
+>> # rtctest.c:151:date_read_loop:Performed 2656 RTC time reads.
+>> #            OK  rtc.date_read_loop
+>> ok 2 rtc.date_read_loop
+>> #  RUN           rtc.uie_read ...
+>> #            OK  rtc.uie_read
+>> ok 3 rtc.uie_read
+>> #  RUN           rtc.uie_select ...
+>> #            OK  rtc.uie_select
+>> ok 4 rtc.uie_select
+>> #  RUN           rtc.alarm_alm_set ...
+>> # rtctest.c:262:alarm_alm_set:Alarm time now set to 00:01:14.
+>> # rtctest.c:282:alarm_alm_set:data: 1a0
+>> #            OK  rtc.alarm_alm_set
+>> ok 5 rtc.alarm_alm_set
+>> #  RUN           rtc.alarm_wkalm_set ...
+>> # rtctest.c:334:alarm_wkalm_set:Alarm time now set to 28/01/2025 
+>> 00:01:17.
+>> #            OK  rtc.alarm_wkalm_set
+>> ok 6 rtc.alarm_wkalm_set
+>> #  RUN           rtc.alarm_alm_set_minute ...
+>> # rtctest.c:394:alarm_alm_set_minute:Alarm time now set to 00:02:00.
+>> # rtctest.c:414:alarm_alm_set_minute:data: 1a0
+>> #            OK  rtc.alarm_alm_set_minute
+>> ok 7 rtc.alarm_alm_set_minute
+>> #  RUN           rtc.alarm_wkalm_set_minute ...
+>> # rtctest.c:464:alarm_wkalm_set_minute:Alarm time now set to
+>> 28/01/2025 00:03:00.
+>> #            OK  rtc.alarm_wkalm_set_minute
+>> ok 8 rtc.alarm_wkalm_set_minute
+>> # PASSED: 8 / 8 tests passed.
+>> # Totals: pass:8 fail:0 xfail:0 xpass:0 skip:0 error:0
+>>
+>>
+>> Thanks,
+>>   Enric
+>>
+>>> Regards,
+>>> Ciprian
+>>>
+>>>>> ---
+>>>>>    drivers/rtc/Kconfig    |  11 ++
+>>>>>    drivers/rtc/Makefile   |   1 +
+>>>>>    drivers/rtc/rtc-s32g.c | 385 
+>>>>> +++++++++++++++++++++++++++++++++++++++++
+>>>>>    3 files changed, 397 insertions(+)
+>>>>>    create mode 100644 drivers/rtc/rtc-s32g.c
+>>>>>
+>>>>> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+>>>>> index 0bbbf778ecfa..510dc2db745d 100644
+>>>>> --- a/drivers/rtc/Kconfig
+>>>>> +++ b/drivers/rtc/Kconfig
+>>>>> @@ -2103,4 +2103,15 @@ config RTC_DRV_AMLOGIC_A4
+>>>>>             This driver can also be built as a module. If so, the 
+>>>>> module
+>>>>>             will be called "rtc-amlogic-a4".
+>>>>>
+>>>>> +config RTC_DRV_S32G
+>>>>> +       tristate "RTC driver for S32G2/S32G3 SoCs"
+>>>>> +       depends on ARCH_S32 || COMPILE_TEST
+>>>>> +       depends on COMMON_CLK
+>>>>> +       help
+>>>>> +         Say yes to enable RTC driver for platforms based on the
+>>>>> +         S32G2/S32G3 SoC family.
+>>>>> +
+>>>>> +         This RTC module can be used as a wakeup source.
+>>>>> +         Please note that it is not battery-powered.
+>>>>> +
+>>>>>    endif # RTC_CLASS
+>>>>> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+>>>>> index 489b4ab07068..e4b616ecd5ce 100644
+>>>>> --- a/drivers/rtc/Makefile
+>>>>> +++ b/drivers/rtc/Makefile
+>>>>> @@ -161,6 +161,7 @@ obj-$(CONFIG_RTC_DRV_RX8111)        += 
+>>>>> rtc-rx8111.o
+>>>>>    obj-$(CONFIG_RTC_DRV_RX8581)   += rtc-rx8581.o
+>>>>>    obj-$(CONFIG_RTC_DRV_RZN1)     += rtc-rzn1.o
+>>>>>    obj-$(CONFIG_RTC_DRV_RENESAS_RTCA3)    += rtc-renesas-rtca3.o
+>>>>> +obj-$(CONFIG_RTC_DRV_S32G)     += rtc-s32g.o
+>>>>>    obj-$(CONFIG_RTC_DRV_S35390A)  += rtc-s35390a.o
+>>>>>    obj-$(CONFIG_RTC_DRV_S3C)      += rtc-s3c.o
+>>>>>    obj-$(CONFIG_RTC_DRV_S5M)      += rtc-s5m.o
+>>>>> diff --git a/drivers/rtc/rtc-s32g.c b/drivers/rtc/rtc-s32g.c
+>>>>> new file mode 100644
+>>>>> index 000000000000..3a0818e972eb
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/rtc/rtc-s32g.c
+>>>>> @@ -0,0 +1,385 @@
+>>>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>>>> +/*
+>>>>> + * Copyright 2025 NXP
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/bitfield.h>
+>>>>> +#include <linux/clk.h>
+>>>>> +#include <linux/iopoll.h>
+>>>>> +#include <linux/of_irq.h>
+>>>>> +#include <linux/platform_device.h>
+>>>>> +#include <linux/rtc.h>
+>>>>> +
+>>>>> +#define RTCC_OFFSET    0x4ul
+>>>>> +#define RTCS_OFFSET    0x8ul
+>>>>> +#define APIVAL_OFFSET  0x10ul
+>>>>> +
+>>>>> +/* RTCC fields */
+>>>>> +#define RTCC_CNTEN                             BIT(31)
+>>>>> +#define RTCC_APIEN                             BIT(15)
+>>>>> +#define RTCC_APIIE                             BIT(14)
+>>>>> +#define RTCC_CLKSEL_MASK               GENMASK(13, 12)
+>>>>> +#define RTCC_DIV512EN                  BIT(11)
+>>>>> +#define RTCC_DIV32EN                   BIT(10)
+>>>>> +
+>>>>> +/* RTCS fields */
+>>>>> +#define RTCS_INV_API   BIT(17)
+>>>>> +#define RTCS_APIF              BIT(13)
+>>>>> +
+>>>>> +#define APIVAL_MAX_VAL         GENMASK(31, 0)
+>>>>> +#define RTC_SYNCH_TIMEOUT      (100 * USEC_PER_MSEC)
+>>>>> +
+>>>>> +/*
+>>>>> + * S32G2 and S32G3 SoCs have RTC clock source1 reserved and
+>>>>> + * should not be used.
+>>>>> + */
+>>>>> +#define RTC_CLK_SRC1_RESERVED          BIT(1)
+>>>>> +
+>>>>> +/*
+>>>>> + * S32G RTC module has a 512 value and a 32 value hardware frequency
+>>>>> + * divisors (DIV512 and DIV32) which could be used to achieve higher
+>>>>> + * counter ranges by lowering the RTC frequency.
+>>>>> + */
+>>>>> +enum {
+>>>>> +       DIV1 = 1,
+>>>>> +       DIV32 = 32,
+>>>>> +       DIV512 = 512,
+>>>>> +       DIV512_32 = 16384
+>>>>> +};
+>>>>> +
+>>>>> +static const char *const rtc_clk_src[] = {
+>>>>> +       "source0",
+>>>>> +       "source1",
+>>>>> +       "source2",
+>>>>> +       "source3"
+>>>>> +};
+>>>>> +
+>>>>> +struct rtc_priv {
+>>>>> +       struct rtc_device *rdev;
+>>>>> +       void __iomem *rtc_base;
+>>>>> +       struct clk *ipg;
+>>>>> +       struct clk *clk_src;
+>>>>> +       const struct rtc_soc_data *rtc_data;
+>>>>> +       u64 rtc_hz;
+>>>>> +       time64_t sleep_sec;
+>>>>> +       int irq;
+>>>>> +       u32 clk_src_idx;
+>>>>> +};
+>>>>> +
+>>>>> +struct rtc_soc_data {
+>>>>> +       u32 clk_div;
+>>>>> +       u32 reserved_clk_mask;
+>>>>> +};
+>>>>> +
+>>>>> +static const struct rtc_soc_data rtc_s32g2_data = {
+>>>>> +       .clk_div = DIV512_32,
+>>>>> +       .reserved_clk_mask = RTC_CLK_SRC1_RESERVED,
+>>>>> +};
+>>>>> +
+>>>>> +static irqreturn_t s32g_rtc_handler(int irq, void *dev)
+>>>>> +{
+>>>>> +       struct rtc_priv *priv = platform_get_drvdata(dev);
+>>>>> +       u32 status;
+>>>>> +
+>>>>> +       status = readl(priv->rtc_base + RTCS_OFFSET);
+>>>>> +
+>>>>> +       if (status & RTCS_APIF) {
+>>>>> +               writel(0x0, priv->rtc_base + APIVAL_OFFSET);
+>>>>> +               writel(status | RTCS_APIF, priv->rtc_base + 
+>>>>> RTCS_OFFSET);
+>>>>> +       }
+>>>>> +
+>>>>> +       rtc_update_irq(priv->rdev, 1, RTC_IRQF | RTC_AF);
+>>>>> +
+>>>>> +       return IRQ_HANDLED;
+>>>>> +}
+>>>>> +
+>>>>> +/*
+>>>>> + * The function is not really getting time from the RTC since the 
+>>>>> S32G RTC
+>>>>> + * has several limitations. Thus, to setup alarm use system time.
+>>>>> + */
+>>>>> +static int s32g_rtc_read_time(struct device *dev,
+>>>>> +                             struct rtc_time *tm)
+>>>>> +{
+>>>>> +       struct rtc_priv *priv = dev_get_drvdata(dev);
+>>>>> +       time64_t sec;
+>>>>> +
+>>>>> +       if (check_add_overflow(ktime_get_real_seconds(),
+>>>>> +                              priv->sleep_sec, &sec))
+>>>>> +               return -ERANGE;
+>>>>> +
+>>>>> +       rtc_time64_to_tm(sec, tm);
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int s32g_rtc_read_alarm(struct device *dev, struct 
+>>>>> rtc_wkalrm *alrm)
+>>>>> +{
+>>>>> +       struct rtc_priv *priv = dev_get_drvdata(dev);
+>>>>> +       u32 rtcc, rtcs;
+>>>>> +
+>>>>> +       rtcc = readl(priv->rtc_base + RTCC_OFFSET);
+>>>>> +       rtcs = readl(priv->rtc_base + RTCS_OFFSET);
+>>>>> +
+>>>>> +       alrm->enabled = rtcc & RTCC_APIIE;
+>>>>> +       if (alrm->enabled)
+>>>>> +               alrm->pending = !(rtcs & RTCS_APIF);
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int s32g_rtc_alarm_irq_enable(struct device *dev, unsigned 
+>>>>> int enabled)
+>>>>> +{
+>>>>> +       struct rtc_priv *priv = dev_get_drvdata(dev);
+>>>>> +       u32 rtcc;
+>>>>> +
+>>>>> +       /* RTC API functionality is used both for triggering 
+>>>>> interrupts
+>>>>> +        * and as a wakeup event. Hence it should always be enabled.
+>>>>> +        */
+>>>>> +       rtcc = readl(priv->rtc_base + RTCC_OFFSET);
+>>>>> +       rtcc |= RTCC_APIEN | RTCC_APIIE;
+>>>>> +       writel(rtcc, priv->rtc_base + RTCC_OFFSET);
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int s32g_rtc_set_alarm(struct device *dev, struct 
+>>>>> rtc_wkalrm *alrm)
+>>>>> +{
+>>>>> +       struct rtc_priv *priv = dev_get_drvdata(dev);
+>>>>> +       unsigned long long cycles;
+>>>>> +       long long t_offset;
+>>>>> +       time64_t alrm_time;
+>>>>> +       u32 rtcs;
+>>>>> +       int ret;
+>>>>> +
+>>>>> +       alrm_time = rtc_tm_to_time64(&alrm->time);
+>>>>> +       t_offset = alrm_time - ktime_get_real_seconds() - 
+>>>>> priv->sleep_sec;
+>>>>> +       if (t_offset < 0)
+>>>>> +               return -ERANGE;
+>>>>> +
+>>>>> +       cycles = t_offset * priv->rtc_hz;
+>>>>> +       if (cycles > APIVAL_MAX_VAL)
+>>>>> +               return -ERANGE;
+>>>>> +
+>>>>> +       /* APIVAL could have been reset from the IRQ handler.
+>>>>> +        * Hence, we wait in case there is a synchronization process.
+>>>>> +        */
+>>>>> +       ret = read_poll_timeout(readl, rtcs, !(rtcs & RTCS_INV_API),
+>>>>> +                               0, RTC_SYNCH_TIMEOUT, false, 
+>>>>> priv->rtc_base + RTCS_OFFSET);
+>>>>> +       if (ret)
+>>>>> +               return ret;
+>>>>> +
+>>>>> +       writel(cycles, priv->rtc_base + APIVAL_OFFSET);
+>>>>> +
+>>>>> +       return read_poll_timeout(readl, rtcs, !(rtcs & RTCS_INV_API),
+>>>>> +                               0, RTC_SYNCH_TIMEOUT, false, 
+>>>>> priv->rtc_base + RTCS_OFFSET);
+>>>>> +}
+>>>>> +
+>>>>> +/*
+>>>>> + * Disable the 32-bit free running counter.
+>>>>> + * This allows Clock Source and Divisors selection
+>>>>> + * to be performed without causing synchronization issues.
+>>>>> + */
+>>>>> +static void s32g_rtc_disable(struct rtc_priv *priv)
+>>>>> +{
+>>>>> +       u32 rtcc = readl(priv->rtc_base + RTCC_OFFSET);
+>>>>> +
+>>>>> +       rtcc &= ~RTCC_CNTEN;
+>>>>> +       writel(rtcc, priv->rtc_base + RTCC_OFFSET);
+>>>>> +}
+>>>>> +
+>>>>> +static void s32g_rtc_enable(struct rtc_priv *priv)
+>>>>> +{
+>>>>> +       u32 rtcc = readl(priv->rtc_base + RTCC_OFFSET);
+>>>>> +
+>>>>> +       rtcc |= RTCC_CNTEN;
+>>>>> +       writel(rtcc, priv->rtc_base + RTCC_OFFSET);
+>>>>> +}
+>>>>> +
+>>>>> +static int rtc_clk_src_setup(struct rtc_priv *priv)
+>>>>> +{
+>>>>> +       u32 rtcc;
+>>>>> +
+>>>>> +       rtcc = FIELD_PREP(RTCC_CLKSEL_MASK, priv->clk_src_idx);
+>>>>> +
+>>>>> +       switch (priv->rtc_data->clk_div) {
+>>>>> +       case DIV512_32:
+>>>>> +               rtcc |= RTCC_DIV512EN;
+>>>>> +               rtcc |= RTCC_DIV32EN;
+>>>>> +               break;
+>>>>> +       case DIV512:
+>>>>> +               rtcc |= RTCC_DIV512EN;
+>>>>> +               break;
+>>>>> +       case DIV32:
+>>>>> +               rtcc |= RTCC_DIV32EN;
+>>>>> +               break;
+>>>>> +       case DIV1:
+>>>>> +               break;
+>>>>> +       default:
+>>>>> +               return -EINVAL;
+>>>>> +       }
+>>>>> +
+>>>>> +       rtcc |= RTCC_APIEN | RTCC_APIIE;
+>>>>> +       /*
+>>>>> +        * Make sure the CNTEN is 0 before we configure
+>>>>> +        * the clock source and dividers.
+>>>>> +        */
+>>>>> +       s32g_rtc_disable(priv);
+>>>>> +       writel(rtcc, priv->rtc_base + RTCC_OFFSET);
+>>>>> +       s32g_rtc_enable(priv);
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static const struct rtc_class_ops rtc_ops = {
+>>>>> +       .read_time = s32g_rtc_read_time,
+>>>>> +       .read_alarm = s32g_rtc_read_alarm,
+>>>>> +       .set_alarm = s32g_rtc_set_alarm,
+>>>>> +       .alarm_irq_enable = s32g_rtc_alarm_irq_enable,
+>>>>> +};
+>>>>> +
+>>>>> +static int rtc_clk_dts_setup(struct rtc_priv *priv,
+>>>>> +                            struct device *dev)
+>>>>> +{
+>>>>> +       u32 i;
+>>>>> +
+>>>>> +       priv->ipg = devm_clk_get_enabled(dev, "ipg");
+>>>>> +       if (IS_ERR(priv->ipg))
+>>>>> +               return dev_err_probe(dev, PTR_ERR(priv->ipg),
+>>>>> +                               "Failed to get 'ipg' clock\n");
+>>>>> +
+>>>>> +       for (i = 0; i < ARRAY_SIZE(rtc_clk_src); i++) {
+>>>>> +               if (priv->rtc_data->reserved_clk_mask & BIT(i))
+>>>>> +                       return -EOPNOTSUPP;
+>>>>> +
+>>>>> +               priv->clk_src = devm_clk_get_enabled(dev, 
+>>>>> rtc_clk_src[i]);
+>>>>> +               if (!IS_ERR(priv->clk_src)) {
+>>>>> +                       priv->clk_src_idx = i;
+>>>>> +                       break;
+>>>>> +               }
+>>>>> +       }
+>>>>> +
+>>>>> +       if (IS_ERR(priv->clk_src))
+>>>>> +               return dev_err_probe(dev, PTR_ERR(priv->clk_src),
+>>>>> +                               "Failed to get rtc module clock 
+>>>>> source\n");
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int s32g_rtc_probe(struct platform_device *pdev)
+>>>>> +{
+>>>>> +       struct device *dev = &pdev->dev;
+>>>>> +       struct rtc_priv *priv;
+>>>>> +       unsigned long rtc_hz;
+>>>>> +       int ret;
+>>>>> +
+>>>>> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>>>>> +       if (!priv)
+>>>>> +               return -ENOMEM;
+>>>>> +
+>>>>> +       priv->rtc_data = of_device_get_match_data(dev);
+>>>>> +       if (!priv->rtc_data)
+>>>>> +               return -ENODEV;
+>>>>> +
+>>>>> +       priv->rtc_base = devm_platform_ioremap_resource(pdev, 0);
+>>>>> +       if (IS_ERR(priv->rtc_base))
+>>>>> +               return PTR_ERR(priv->rtc_base);
+>>>>> +
+>>>>> +       device_init_wakeup(dev, true);
+>>>>> +
+>>>>> +       ret = rtc_clk_dts_setup(priv, dev);
+>>>>> +       if (ret)
+>>>>> +               return ret;
+>>>>> +
+>>>>> +       priv->rdev = devm_rtc_allocate_device(dev);
+>>>>> +       if (IS_ERR(priv->rdev))
+>>>>> +               return PTR_ERR(priv->rdev);
+>>>>> +
+>>>>> +       ret = rtc_clk_src_setup(priv);
+>>>>> +       if (ret)
+>>>>> +               return ret;
+>>>>> +
+>>>>> +       priv->irq = platform_get_irq(pdev, 0);
+>>>>> +       if (priv->irq < 0) {
+>>>>> +               ret = priv->irq;
+>>>>> +               goto disable_rtc;
+>>>>> +       }
+>>>>> +
+>>>>> +       rtc_hz = clk_get_rate(priv->clk_src);
+>>>>> +       if (!rtc_hz) {
+>>>>> +               dev_err(dev, "Failed to get RTC frequency\n");
+>>>>> +               ret = -EINVAL;
+>>>>> +               goto disable_rtc;
+>>>>> +       }
+>>>>> +
+>>>>> +       priv->rtc_hz = DIV_ROUND_UP(rtc_hz, priv->rtc_data->clk_div);
+>>>>> +
+>>>>> +       platform_set_drvdata(pdev, priv);
+>>>>> +       priv->rdev->ops = &rtc_ops;
+>>>>> +
+>>>>> +       ret = devm_request_irq(dev, priv->irq,
+>>>>> +                              s32g_rtc_handler, 0, dev_name(dev), 
+>>>>> pdev);
+>>>>> +       if (ret) {
+>>>>> +               dev_err(dev, "Request interrupt %d failed, error: 
+>>>>> %d\n",
+>>>>> +                       priv->irq, ret);
+>>>>> +               goto disable_rtc;
+>>>>> +       }
+>>>>> +
+>>>>> +       ret = devm_rtc_register_device(priv->rdev);
+>>>>> +       if (ret)
+>>>>> +               goto disable_rtc;
+>>>>> +
+>>>>> +       return 0;
+>>>>> +
+>>>>> +disable_rtc:
+>>>>> +       s32g_rtc_disable(priv);
+>>>>> +       return ret;
+>>>>> +}
+>>>>> +
+>>>>> +static int s32g_rtc_suspend(struct device *dev)
+>>>>> +{
+>>>>> +       struct rtc_priv *priv = dev_get_drvdata(dev);
+>>>>> +       u32 apival = readl(priv->rtc_base + APIVAL_OFFSET);
+>>>>> +
+>>>>> +       if (check_add_overflow(priv->sleep_sec, div64_u64(apival, 
+>>>>> priv->rtc_hz),
+>>>>> +                              &priv->sleep_sec)) {
+>>>>> +               dev_warn(dev, "Overflow on sleep cycles occurred. 
+>>>>> Resetting to 0.\n");
+>>>>> +               priv->sleep_sec = 0;
+>>>>> +       }
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int s32g_rtc_resume(struct device *dev)
+>>>>> +{
+>>>>> +       struct rtc_priv *priv = dev_get_drvdata(dev);
+>>>>> +
+>>>>> +       /* The transition from resume to run is a reset event.
+>>>>> +        * This leads to the RTC registers being reset after resume 
+>>>>> from
+>>>>> +        * suspend. It is uncommon, but this behaviour has been 
+>>>>> observed
+>>>>> +        * on S32G RTC after issuing a Suspend to RAM operation.
+>>>>> +        * Thus, reconfigure RTC registers on the resume path.
+>>>>> +        */
+>>>>> +       return rtc_clk_src_setup(priv);
+>>>>> +}
+>>>>> +
+>>>>> +static const struct of_device_id rtc_dt_ids[] = {
+>>>>> +       { .compatible = "nxp,s32g2-rtc", .data = &rtc_s32g2_data },
+>>>>> +       { /* sentinel */ },
+>>>>> +};
+>>>>> +
+>>>>> +static DEFINE_SIMPLE_DEV_PM_OPS(s32g_rtc_pm_ops,
+>>>>> +                        s32g_rtc_suspend, s32g_rtc_resume);
+>>>>> +
+>>>>> +static struct platform_driver s32g_rtc_driver = {
+>>>>> +       .driver = {
+>>>>> +               .name = "s32g-rtc",
+>>>>> +               .pm = pm_sleep_ptr(&s32g_rtc_pm_ops),
+>>>>> +               .of_match_table = rtc_dt_ids,
+>>>>> +       },
+>>>>> +       .probe = s32g_rtc_probe,
+>>>>> +};
+>>>>> +module_platform_driver(s32g_rtc_driver);
+>>>>> +
+>>>>> +MODULE_AUTHOR("NXP");
+>>>>> +MODULE_DESCRIPTION("NXP RTC driver for S32G2/S32G3");
+>>>>> +MODULE_LICENSE("GPL");
+>>>>> -- 
+>>>>> 2.45.2
+>>>>>
+>>>>
+>>>
+>>
+> 
 
