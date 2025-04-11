@@ -1,60 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4082C8635A;
-	Fri, 11 Apr 2025 14:02:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B2C1F0E32;
+	Fri, 11 Apr 2025 14:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380142; cv=none; b=QMKrPBfolNcexEVuGB9qXotmRyrCzdNBqnUljPUliZR7uJDhNfWo/yDrEGkArGwl5IToqUXlRP8bXpbiuXkd0/Ux33osExm+qz7K0g/Tom8x4gHmKjhR9uBQVGILDFUX6dA/OaNJ4NaraG2OlNpJKDH0DheZLA4ZjiP+apkAbi8=
+	t=1744380173; cv=none; b=mPTbc1sbM6ilDCqt0h0hMgMlg7vtBgRm6TaN8aB7D/Tuj3DaZfbwWSKF0ltFSsTC3zvvM6t+LiMQZ5omLFDw5VkfV3zQPdbQ/8ZDMF3hlW/B8vkfP+6x4sbU3LASP8lSkhK5CNNyuSOuK++9uEqnEVn5S0WJezRitMvdHy2BOw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380142; c=relaxed/simple;
-	bh=6gZYC8dYoQ73OQgYvOUcUOQs/hk7/YC48r0jnFZSK14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NV+0mY+Fji5OZxLMuw1CEFPmfkY3O01Pkz+C+f3yx6n3RtFt+Q7S+oMfmNm38WmBzGEZTIanPXoSDYekd1V3h77h3m7Go26ylTPMpSbCCX/OShgMAtifpGfjAZIMxY/yspCd+HcKDV2jo6RhMfz3Mg6yzpvnHEmGXmDLpquNC5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=X4jfO+uL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744380173; c=relaxed/simple;
+	bh=L028CyjHdE2jxczbIM6pBy9pM8llSElkIkRS2OiXwDc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qpr08Ei8vSCPdgyIrX+37Zaf2VnfKDLAW6dArrQzHE7qte+XO9vs34egf6rTMpTTECbNIRPk51zveVjddqFzWFVbp2BxdBxFWVmF3Hcdb6PVzT18P1aRCzWwEwYCgHBXUvVnFJGzd2bytkunSz4QSxGNan2qglGs4ntcR6C7ebc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pp7E9eCg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X4jfO+uL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E8DC4CEE2;
-	Fri, 11 Apr 2025 14:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744380141;
-	bh=6gZYC8dYoQ73OQgYvOUcUOQs/hk7/YC48r0jnFZSK14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X4jfO+uLKXDmb4EKG4z/dQdCKfVL0iYVZL9uA2HYnM2r7sqscNWkTZJxk+lTN7+pJ
-	 zHQGB4Eed8+FTO+iBMA+SPVhltK4lLTK7WnZgY9v6b0ah2q/0ShypZjtEALhqlGG9V
-	 OOD7NEEK28yji5SnWF+KzGbuqW9G9fZgcDRU3FE4=
-Date: Fri, 11 Apr 2025 16:02:18 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Guan-Yu Lin <guanyulin@google.com>
-Cc: mathias.nyman@intel.com, stern@rowland.harvard.edu,
-	gargaditya08@live.com, kekrby@gmail.com,
-	jeff.johnson@oss.qualcomm.com, elder@kernel.org,
-	quic_zijuhu@quicinc.com, ben@decadent.org.uk,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 4/4] usb: host: enable USB offload during system sleep
-Message-ID: <2025041140-fernlike-reconvene-b2e5@gregkh>
-References: <20250408035833.844821-1-guanyulin@google.com>
- <20250408035833.844821-5-guanyulin@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pp7E9eCg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 848DEC4CEE7;
+	Fri, 11 Apr 2025 14:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744380172;
+	bh=L028CyjHdE2jxczbIM6pBy9pM8llSElkIkRS2OiXwDc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Pp7E9eCgI9DFYb5sLbeeMuVNF457lPAOtI0tZDKWJsevrSA/kg5avoarhIqKUl0or
+	 4EsbDFP1tEYXc8tRRzc6VkVOAxG53WXcfgunBVz9jOshAk8A8lZmz2dNp4Pfgtk7XQ
+	 PacQnSFcNwImN07bw4o5OubUTOLSR/oeEaoMwAGoOaboOB5K9M2cXPsxGUcnjE5dTJ
+	 Nn/JnId6zL717stJSLpO6xDKcflGYOljRDQcAMvyZ/CFqShK1JCTOTwQgseB2OQsoN
+	 Bvlz+Zpe23oJpTPS0hbXSFXOU0d+/EdakMbV5z69ltll3eXxeFr6nf+8K68xZP8ko2
+	 +saTpy3nZCgVQ==
+From: Christian Brauner <brauner@kernel.org>
+To: djwong@kernel.org,
+	hch@infradead.org,
+	Gou Hao <gouhao@uniontech.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	gouhaojake@163.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	wangyuli@uniontech.com
+Subject: Re: [PATCH V3] iomap: skip unnecessary ifs_block_is_uptodate check
+Date: Fri, 11 Apr 2025 16:02:44 +0200
+Message-ID: <20250411-ermorden-sagenhaft-dea43a3c41f9@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250410071236.16017-1-gouhao@uniontech.com>
+References: <20250408172924.9349-1-gouhao@uniontech.com> <20250410071236.16017-1-gouhao@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408035833.844821-5-guanyulin@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1241; i=brauner@kernel.org; h=from:subject:message-id; bh=L028CyjHdE2jxczbIM6pBy9pM8llSElkIkRS2OiXwDc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/VGQ5d/6RNrMYY6o774XS86cvit0S+1v26chxL/8f+ +8Z1slwdZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzEup+RYckPh1zRewnhj9eK ypwJFSly43/zPf3SyyXlX3YZ+m8oKGZkOJHK+sfbpsZGd1J8j030rqK1H1rv3Vy6a6eZiqmrUog ZBwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 03:57:24AM +0000, Guan-Yu Lin wrote:
-> @@ -736,6 +737,7 @@ struct usb_device {
->  	unsigned use_generic_driver:1;
->  
->  	refcount_t offload_usage;
-> +	unsigned offload_at_suspend:1;
+On Thu, 10 Apr 2025 15:12:36 +0800, Gou Hao wrote:
+> In iomap_adjust_read_range, i is either the first !uptodate block, or it
+> is past last for the second loop looking for trailing uptodate blocks.
+> Assuming there's no overflow (there's no combination of huge folios and
+> tiny blksize) then yeah, there is no point in retesting that the same
+> block pointed to by i is uptodate since we hold the folio lock so nobody
+> else could have set it uptodate.
+> 
+> [...]
 
-Please take a second and think about how the memory is now layed out
-here with your new addition.  The tool 'pahole' is your friend...
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-thanks,
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-greg k-h
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] iomap: skip unnecessary ifs_block_is_uptodate check
+      https://git.kernel.org/vfs/vfs/c/8e3c15ee0d29
